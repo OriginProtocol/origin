@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { fbt } from 'fbt-runtime'
 
-import Action from 'pages/growth/Action'
+import Action from 'components/growth/Action'
 import Modal from 'components/Modal'
 
 class ActionList extends Component {

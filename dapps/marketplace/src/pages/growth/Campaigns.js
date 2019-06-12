@@ -6,8 +6,9 @@ import formatTimeDifference from 'utils/formatTimeDifference'
 import QueryError from 'components/QueryError'
 import profileQuery from 'queries/Profile'
 import AccountTokenBalance from 'queries/TokenBalance'
-import ActionList from 'pages/growth/ActionList'
+import ActionGroupList from 'components/growth/ActionGroupList'
 import GrowthInvite from 'pages/growth/Invite'
+import MobileDownloadAction from 'components/growth/MobileDownloadAction'
 import ProgressBar from 'components/ProgressBar'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withIsMobile from 'hoc/withIsMobile'
@@ -24,7 +25,7 @@ const GrowthTranslation = ({ stringKey }) => {
 }
 
 function NavigationItem(props) {
-  const { selected, onClick, title } = props
+  const { selected, onClick, title, isMobile } = props
   return (
     <a
       href="#"
@@ -35,7 +36,7 @@ function NavigationItem(props) {
       className="pt-4 pr-4"
     >
       <div className="d-flex flex-column align-items-center">
-        <div className={`title ${selected ? 'active' : ''}`}>{title}</div>
+        <div className={`title ${isMobile ? 'px-3' : '' } ${selected ? 'active' : ''}`}>{title}</div>
         {selected && <div className="select-bar" />}
       </div>
     </a>
@@ -44,24 +45,35 @@ function NavigationItem(props) {
 
 function CampaignNavList(props) {
   const { onNavigationClick, navigation, isMobile } = props
-  return (
+  const navigationLinks = () => (
     <div
-      className={`campaign-list d-flex justify-content-left ${
-        !isMobile ? 'mt-4' : ''
+      className={`campaign-list d-flex ${
+        isMobile ? 'justify-content-center' : 'mt-4 justify-content-left'
       }`}
     >
       <NavigationItem
         selected={navigation === 'currentCampaign'}
         onClick={() => onNavigationClick('currentCampaign')}
         title={fbt('Current Campaign', 'growth.campaigns.currentCampaign')}
+        isMobile={isMobile}
       />
       <NavigationItem
         selected={navigation === 'pastCampaigns'}
         onClick={() => onNavigationClick('pastCampaigns')}
         title={fbt('Past Campaigns', 'growth.campaigns.pastCampaigns')}
+        isMobile={isMobile}
       />
     </div>
   )
+
+
+  return <Fragment>
+    {isMobile && navigationLinks()}
+    {!isMobile && <div className="d-flex justify-content-between mt-4 pt-3">
+      <img className="rewards-logo" src="images/origin-rewards-logo.svg"/>
+      {navigationLinks()}
+    </div>}
+  </Fragment>
 }
 
 function Campaign(props) {
@@ -85,8 +97,8 @@ function Campaign(props) {
       'RewardCampaigns.timeLeft'
     )}:${formatTimeDifference(Date.now(), endDate)}`
     subTitleText = fbt(
-      'Get Origin Tokens by completing the steps below',
-      'RewardCampaigns.getOriginTokensSteps'
+      'Earn Origin Tokens in many ways',
+      'RewardCampaigns.earnOriginTokensInManyWays'
     )
   } else if (status === 'Pending') {
     timeLabel = `${fbt(
@@ -104,6 +116,14 @@ function Campaign(props) {
     )
   }
 
+  // TODO replace with the real thing
+  const mobileAction = {
+    status: 'Active',
+    //status: 'Exhausted',
+    reward: { currency: 'OGN', amount: '500000000000000000000'},
+    rewardEarned: { currency: 'OGN', amount: '530000000000000000000'}
+  }
+
   // campaign rewards converted normalized to token value according to number of decimals
   const tokensEarned = web3.utils
     .toBN(rewardEarned ? rewardEarned.amount : 0)
@@ -115,8 +135,8 @@ function Campaign(props) {
 
   return (
     <Fragment>
-      <div className="d-flex justify-content-between">
-        <h1 className="mb-2 pt-3">
+      <div className={`d-flex ${isMobile ? 'justify-content-center' : 'justify-content-start'}`}>
+        <h1 className={`mb-2 pt-4 ${isMobile ? 'mt-2' : 'mt-4'}`}>
           {GrowthEnum[nameKey] ? (
             <GrowthTranslation stringKey={nameKey} />
           ) : (
@@ -144,9 +164,14 @@ function Campaign(props) {
       <ProgressBar
         maxValue={maxProgressBarTokens}
         progress={tokenEarnProgress}
-        showIndicators={!isMobile}
+        showIndicators={false}
       />
-      <ActionList
+      <MobileDownloadAction
+        action={mobileAction}
+        decimalDivision={decimalDivision}
+        isMobile={isMobile}
+      />
+      <ActionGroupList
         actions={actions}
         decimalDivision={decimalDivision}
         handleNavigationChange={handleNavigationChange}
@@ -391,6 +416,15 @@ class GrowthCampaigns extends Component {
                           isMobile={isMobile}
                         />
                       )}
+                      {navigation === 'verifications' && (
+                        "verifications"
+                      )}
+                      {navigation === 'purchases' && (
+                        "purchases"
+                      )}
+                      {navigation === 'invitations' && (
+                        "invitations"
+                      )}
                     </Fragment>
                   )
                 }}
@@ -409,6 +443,9 @@ require('react-styl')(`
   .growth-campaigns.container
     max-width: 760px
   .growth-campaigns
+    .rewards-logo
+      width: 164px
+      margin-bottom: -20px
     .info-icon
       padding-top: 30px
     .info-icon img
@@ -420,6 +457,9 @@ require('react-styl')(`
       top: -3px
     .campaign-info
       padding-top: 40px
+    h1
+      font-size: 2.5rem
+      font-weight: 500
     h5
       text-align: center
     .action-title
@@ -438,6 +478,7 @@ require('react-styl')(`
         line-height: 1.93
         color: var(--bluey-grey)
         font-weight: normal
+        white-space: nowrap
       .title.active
         color: var(--dark)
     .past-campaigns
@@ -477,9 +518,10 @@ require('react-styl')(`
           height: 20px
   .growth-campaigns.mobile
     h1
-      font-size: 2rem
+      font-size: 1.5rem
     .subtitle
       font-size: 1rem
+      text-align: center
     .campaign-info
       font-size: 1rem
       padding-top: 1.875rem

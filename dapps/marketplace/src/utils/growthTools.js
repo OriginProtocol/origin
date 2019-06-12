@@ -1,3 +1,5 @@
+import numberFormat from 'utils/numberFormat'
+
 export function getAttestationReward({
   growthCampaigns,
   attestation,
@@ -63,6 +65,19 @@ export function getMaxRewardPerUser({ growthCampaigns, tokenDecimals }) {
     return 0
   }
 }
+
+export function formatTokens (tokenAmount, decimalDivision) {
+    return numberFormat(
+      web3.utils
+        .toBN(tokenAmount)
+        .div(decimalDivision)
+        .toString(),
+      2,
+      '.',
+      ',',
+      true
+    )
+  }
 
 export function getTokensEarned({
   growthCampaigns,

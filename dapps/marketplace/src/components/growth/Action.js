@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react'
 import { fbt } from 'fbt-runtime'
 import { Link } from 'react-router-dom'
-import numberFormat from 'utils/numberFormat'
+import { formatTokens } from 'utils/growthTools'
 
 const GrowthEnum = require('Growth$FbtEnum')
 
@@ -21,7 +21,8 @@ function Action(props) {
 
   const { isMobile, onMobileLockClick } = props
 
-  const actionLocked = status === 'Inactive'
+  //const actionLocked = status === 'Inactive'
+  const actionLocked = false // TODO: do not forget to comment this out
 
   const actionCompleted = ['Exhausted', 'Completed'].includes(status)
 
@@ -30,19 +31,6 @@ function Action(props) {
     backgroundImgSrc = 'images/identity/verification-shape-green.svg'
   } else if (actionLocked) {
     backgroundImgSrc = 'images/identity/verification-shape-grey.svg'
-  }
-
-  const formatTokens = tokenAmount => {
-    return numberFormat(
-      web3.utils
-        .toBN(tokenAmount)
-        .div(props.decimalDivision)
-        .toString(),
-      2,
-      '.',
-      ',',
-      true
-    )
   }
 
   const [detailsToggled, toggleDetails] = useState(false)
@@ -113,7 +101,7 @@ function Action(props) {
     return (
       <div className="reward d-flex align-items-left pl-2 justify-content-start align-items-center flex-grow-1">
         <img src="images/ogn-icon.svg" />
-        <div className="value">{formatTokens(amount)}</div>
+        <div className="value">{formatTokens(amount, props.decimalDivision)}</div>
       </div>
     )
   }
