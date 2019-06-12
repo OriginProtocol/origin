@@ -36,10 +36,14 @@ app.use(bundle)
 const server = new ApolloServer({
   resolvers,
   typeDefs,
-  context: async () => {
+  context: async context => {
+    const headers = context.req.headers
+    if (headers['x-discovery-auth-token']) {
+      context.discoveryAuthToken = headers['x-discovery-auth-token']
+    }
     // Update listing Metadata in a non blocking way
     listingMetadata.updateHiddenFeaturedListings()
-    return {}
+    return context
   },
   // Always enable GraphQL playground and schema introspection, regardless of NODE_ENV value.
   introspection: true,

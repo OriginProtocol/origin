@@ -217,6 +217,16 @@ const typeDefs = gql`
   }
 
   #
+  # Moderation
+  #
+
+  type AccessToken {
+    authToken: String!
+    secondsToExpiration: Int!
+    ethAddress: String!
+  }
+
+  #
   # The "Query" type is the root of all GraphQL queries.
   #
   type Query {
@@ -246,6 +256,11 @@ const typeDefs = gql`
       signature: String!
     ): Listing
     listingSetScoreTags(id: ID!, scoreTags: [String]): Listing
+    accessTokenCreate(
+      message: String!
+      signature: String!
+      ethAddress: String!
+    ): AccessToken!
   }
 `
 

@@ -154,6 +154,9 @@ class Listing {
     hiddenIds = [],
     featuredIds = []
   ) {
+    if(filters === undefined){
+      filters = []
+    }
     const esQuery = {
       bool: {
         must: [],
@@ -362,6 +365,14 @@ class Listing {
     ])
     const listings = []
     searchResponse.hits.hits.forEach(hit => {
+      console.log(
+        `${hit._score.toFixed(3)}\t${hit._source.scoreMultiplier.toFixed(1)}\t${
+          hit._id
+        }\t${hit._source.title} ${(hit._source.price || {}).amount} ${
+          (hit._source.price || {}).currency.id
+        }`
+      )
+      // console.log(hit)
       listings.push({
         id: hit._id,
         title: hit._source.title,
