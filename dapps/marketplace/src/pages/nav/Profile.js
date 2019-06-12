@@ -120,6 +120,7 @@ class CreateIdentity extends Component {
             className="btn btn-primary"
             onClick={this.onClose}
             onClose={this.onClose}
+            location={{ pathname: '/profile' }}
           />
         </div>
       </>
@@ -294,15 +295,15 @@ require('react-styl')(`
   .dropdown.profile.show
     background-color: black !important
   .user-image-mask
-    width: 26px
-    height: 26px
+    width: 26px !important
+    height: 26px !important
     padding-top: 3px
     border-radius: 40px
     border: solid 1px var(--white)
     background-color: var(--dark-grey-blue)
     &.large
-      width: 80px
-      height: 80px
+      width: 80px !important
+      height: 80px !important
       padding-top: 9px
       margin-top: 1rem
       margin-bottom: 0.5rem

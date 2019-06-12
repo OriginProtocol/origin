@@ -92,7 +92,12 @@ class CreateListing extends Component {
     }
 
     if (!this.props.identity) {
-      return <UserActivationLink forceRedirect={true} />
+      return (
+        <UserActivationLink
+          location={{ pathname: '/create' }}
+          forceRedirect={true}
+        />
+      )
     }
 
     // Force a given listing type/category
