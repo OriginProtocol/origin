@@ -65,6 +65,10 @@ export function activeAuthToken() {
  */
 export function persistAccessToken(access) {
   const { authToken, expires, ethAddress } = access
+  if (!authToken) {
+    clearAccessToken()
+    return
+  }
   window.localStorage[TOKEN_STORAGE_KEY] = JSON.stringify({
     authToken,
     expires,
