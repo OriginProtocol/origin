@@ -17,7 +17,7 @@ const ListingCards = ({ listings, ognListingRewards }) => {
 
   return (
     <div className="row">
-      {redirect && <Redirect to={redirect} />}
+      {redirect && <Redirect to={redirect} push />}
       {listings.map(a => (
         <div
           key={a.id}

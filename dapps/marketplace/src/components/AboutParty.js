@@ -18,7 +18,7 @@ const AboutParty = ({ id, owner }) => {
   const [redirect, setRedirect] = useState(false)
 
   if (redirect) {
-    return <Redirect to={`/user/${id}`} />
+    return <Redirect push to={`/user/${id}`} />
   }
 
   return (
