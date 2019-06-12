@@ -12,7 +12,8 @@ import {
   changesToPublishExist,
   updateVerifiedAccounts,
   clearVerifiedAccounts,
-  getVerifiedAccounts
+  getVerifiedAccounts,
+  getProviderDisplayName
 } from 'utils/profileTools'
 
 import {
@@ -396,55 +397,14 @@ class UserProfile extends Component {
                 </fbt>
               </label>
               <div className="profile-attestations">
-                {this.renderAtt(
-                  'email',
-                  fbt('Email', '_ProvisionedChanges.email')
-                )}
-                {this.renderAtt(
-                  'phone',
-                  fbt('Phone', '_ProvisionedChanges.phone')
-                )}
-                {this.renderAtt(
-                  'facebook',
-                  fbt('Facebook', '_ProvisionedChanges.facebook')
-                )}
-                {this.renderAtt(
-                  'twitter',
-                  fbt('Twitter', '_ProvisionedChanges.twitter')
-                )}
-                {this.renderAtt(
-                  'airbnb',
-                  fbt('Airbnb', '_ProvisionedChanges.airbnb')
-                )}
-                {this.renderAtt(
-                  'google',
-                  fbt('Google', '_ProvisionedChanges.google')
-                )}
-                {this.renderAtt(
-                  'website',
-                  fbt('Website', '_ProvisionedChanges.website')
-                  // { hidden: process.env.ENABLE_WEBSITE_ATTESTATION !== 'true' }
-                )}
-                {this.renderAtt(
-                  'kakao',
-                  fbt('KaKao', '_ProvisionedChanges.kakao'),
-                  { hidden: process.env.ENABLE_KAKAO_ATTESTATION !== 'true' }
-                )}
-                {this.renderAtt(
-                  'github',
-                  fbt('GitHub', '_ProvisionedChanges.github'),
-                  { hidden: process.env.ENABLE_GITHUB_ATTESTATION !== 'true' }
-                )}
-                {this.renderAtt(
-                  'linkedin',
-                  fbt('LinkedIn', '_ProvisionedChanges.linkedin'),
-                  { hidden: process.env.ENABLE_LINKEDIN_ATTESTATION !== 'true' }
-                )}
-                {this.renderAtt(
-                  'wechat',
-                  fbt('WeChat', '_ProvisionedChanges.wechat'),
-                  { hidden: process.env.ENABLE_WECHAT_ATTESTATION !== 'true' }
-                )}
+                {
+                  this.props.attestationProviders.map(provider => {
+                    return this.renderAtt(
+                      provider,
+                      getProviderDisplayName(provider)
+                    )
+                  })
+                }
               </div>
             </div>
 
@@ -618,7 +578,7 @@ class UserProfile extends Component {
     }
 
     return (
-      <>
+      <Fragment key={type}>
         <div
           id={`attestation-component-${type}`}
           className={`profile-attestation ${type}${status}`}
@@ -641,7 +601,7 @@ class UserProfile extends Component {
           )}
         </div>
         {AttestationComponent}
-      </>
+      </Fragment>
     )
   }
 
