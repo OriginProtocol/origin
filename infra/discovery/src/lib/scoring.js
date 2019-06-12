@@ -60,7 +60,6 @@ async function scoreListing(listing) {
   if (listing.scoreTags && listing.scoreTags.length > 0) {
     for (const tag of listing.scoreTags) {
       const tagMultiplier = TAG_MULTIPLIERS[tag]
-      console.log('applying', tag, tagMultiplier)
       if (tagMultiplier !== undefined) {
         score *= TAG_MULTIPLIERS[tag]
       }
