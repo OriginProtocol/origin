@@ -123,7 +123,7 @@ class DistributeRewards {
       fromAddress: this.distributor.supplier.toLowerCase(),
       toAddress: ethAddress,
       status: enums.GrowthPayoutStatuses.Pending,
-      type: enums.GrowthPayout.CampaignDistribution,
+      type: enums.GrowthPayoutTypes.CampaignDistribution,
       campaignId,
       amount,
       currency
@@ -287,7 +287,7 @@ class DistributeRewards {
     for (const ethAddress of ethAddresses) {
       const payout = await db.GrowthPayout.findOne({
         where: {
-          ethAddress,
+          toAddress: ethAddress,
           campaignId,
           status: enums.GrowthPayoutStatuses.Confirmed
         }
@@ -368,12 +368,18 @@ class DistributeRewards {
 
       if (allConfirmed && allUsersPaid) {
         // All checks passed. Flip campaign reward status to Distributed.
-        await campaign.update({
-          rewardStatus: enums.GrowthCampaignRewardStatuses.Distributed
-        })
-        logger.info(
-          `Updated campaign ${campaign.id} reward status to Distributed.`
-        )
+        if (this.config.doIt) {
+          await campaign.update({
+            rewardStatus: enums.GrowthCampaignRewardStatuses.Distributed
+          })
+          logger.info(
+            `Updated campaign ${campaign.id} reward status to Distributed.`
+          )
+        } else {
+          logger.info(
+            `Would update campaign ${campaign.id} reward status to Distributed.`
+          )
+        }
       } else {
         logger.error('Campaign reward status NOT updated to Distributed.')
         logger.error('Manual intervention required.')

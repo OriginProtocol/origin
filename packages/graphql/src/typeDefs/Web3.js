@@ -45,8 +45,6 @@ module.exports = `
     arbitrator: String
     discovery: String
     bridge: String
-    facebookAuthUrl: String
-    googleAuthUrl: String
     ipfsRPC: String
     ipfsGateway: String
     ipfsEventCache: String

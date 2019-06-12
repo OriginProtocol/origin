@@ -23,7 +23,11 @@ const progressPct = {
   twitterVerified: 10,
   googleVerified: 10,
   airbnbVerified: websiteAttestationEnabled ? 5 : 10,
-  websiteVerified: websiteAttestationEnabled ? 5 : 0
+  websiteVerified: websiteAttestationEnabled ? 5 : 0,
+  kakaoVerified: 0,
+  githubVerified: 0,
+  linkedinVerified: 0,
+  wechatVerified: 0
 }
 
 function getAttestations(account, attestations) {
@@ -34,7 +38,11 @@ function getAttestations(account, attestations) {
     twitterVerified: false,
     airbnbVerified: false,
     googleVerified: false,
-    websiteVerified: false
+    websiteVerified: false,
+    kakaoVerified: false,
+    githubVerified: false,
+    linkedinVerified: false,
+    wechatVerified: false
   }
   attestations.forEach(attestation => {
     if (validateAttestation(account, attestation)) {
@@ -48,21 +56,35 @@ function getAttestations(account, attestations) {
         result.websiteVerified = true
       }
       const siteName = get(attestation, 'data.attestation.site.siteName')
-      if (siteName === 'facebook.com') {
-        result.facebookVerified = get(
-          attestation,
-          'data.attestation.site.userId.verified',
-          false
-        )
-      }
-      if (siteName === 'airbnb.com') {
-        result.airbnbVerified = true
-      }
-      if (siteName === 'twitter.com') {
-        result.twitterVerified = true
-      }
-      if (siteName === 'google.com') {
-        result.googleVerified = true
+      switch (siteName) {
+        case 'facebook.com':
+          result.facebookVerified = get(
+            attestation,
+            'data.attestation.site.userId.verified',
+            false
+          )
+          break
+        case 'airbnb.com':
+          result.airbnbVerified = true
+          break
+        case 'twitter.com':
+          result.twitterVerified = true
+          break
+        case 'google.com':
+          result.googleVerified = true
+          break
+        case 'kakao.com':
+          result.kakaoVerified = true
+          break
+        case 'github.com':
+          result.githubVerified = true
+          break
+        case 'linkedin.com':
+          result.linkedinVerified = true
+          break
+        case 'wechat.com':
+          result.wechatVerified = true
+          break
       }
     }
   })
@@ -149,7 +171,7 @@ export function identity({ id, ipfsHash }) {
       try {
         const avatarBinary = dataURItoBinary(identity.avatar)
         const avatarHash = await IpfsHash.of(avatarBinary.buffer)
-        identity.avatarUrl = 'ifps://' + avatarHash
+        identity.avatarUrl = 'ipfs://' + avatarHash
       } catch {
         // If we can't translate an old avatar for any reason, don't worry about it.
         // We've already tested the backfill script, and not seen a problem
@@ -237,55 +259,32 @@ export async function identities(
   return getConnection({ start, first, nodes, ids, totalCount })
 }
 
+/**
+ * Returns authorization URL for all attestation providers
+ * @param {String} provider One of supported attestation provider
+ * @param {Object} args Arguments from GraphQL query resolver
+ */
+async function getAuthUrl(provider, args) {
+  const bridgeServer = contracts.config.bridge
+  if (!bridgeServer) {
+    return null
+  }
+  let authUrl = `${bridgeServer}/api/attestations/${provider}/auth-url`
+  if (args.redirect) {
+    authUrl += `?redirect=${args.redirect}`
+  }
+  const response = await fetch(authUrl, {
+    headers: { 'content-type': 'application/json' },
+    credentials: 'include'
+  })
+  const authData = await response.json()
+  return authData.url
+}
+
 export default {
   id: contract => contract.options.address,
   identities,
-  facebookAuthUrl: async (_, args) => {
-    const bridgeServer = contracts.config.bridge
-    if (!bridgeServer) {
-      return null
-    }
-    let authUrl = `${bridgeServer}/api/attestations/facebook/auth-url`
-    if (args.redirect) {
-      authUrl += `?redirect=${args.redirect}`
-    }
-    const response = await fetch(authUrl, {
-      headers: { 'content-type': 'application/json' },
-      credentials: 'include'
-    })
-    const authData = await response.json()
-    return authData.url
-  },
-  twitterAuthUrl: async (_, args) => {
-    const bridgeServer = contracts.config.bridge
-    if (!bridgeServer) {
-      return null
-    }
-    let authUrl = `${bridgeServer}/api/attestations/twitter/auth-url`
-    if (args.redirect) {
-      authUrl += `?redirect=${args.redirect}`
-    }
-    const response = await fetch(authUrl, {
-      headers: { 'content-type': 'application/json' },
-      credentials: 'include'
-    })
-    const authData = await response.json()
-    return authData.url
-  },
-  googleAuthUrl: async (_, args) => {
-    const bridgeServer = contracts.config.bridge
-    if (!bridgeServer) {
-      return null
-    }
-    let authUrl = `${bridgeServer}/api/attestations/google/auth-url`
-    if (args.redirect) {
-      authUrl += `?redirect=${args.redirect}`
-    }
-    const response = await fetch(authUrl, {
-      headers: { 'content-type': 'application/json' },
-      credentials: 'include'
-    })
-    const authData = await response.json()
-    return authData.url
+  getAuthUrl: (_, { provider, ...args }) => {
+    return getAuthUrl(provider, args)
   }
 }

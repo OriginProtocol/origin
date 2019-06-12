@@ -105,44 +105,55 @@ async function sales(seller, { first = 10, after, filter }, _, info) {
   return await resultsFromIds({ after, allIds, first, fields })
 }
 
-async function reviews(user) {
+async function reviews(user, { first = 10, after }) {
   let party = user.id
   const owner = await proxyOwner(party)
   if (owner) {
     party = [party, owner]
   }
 
+  // Find all the OfferFinalized events associated with this user
   const listings = await ec().getEvents({ event: 'ListingCreated', party })
   const listingIds = listings.map(e => String(e.returnValues.listingID))
-  const events = await ec().getEvents({
+  let events = await ec().getEvents({
     listingID: listingIds,
     event: 'OfferFinalized'
   })
 
-  let nodes = await Promise.all(
-    events.map(event =>
-      contracts.eventSource.getReview(
-        event.returnValues.listingID,
-        event.returnValues.offerID,
-        event.returnValues.party,
-        event.returnValues.ipfsHash,
-        event
-      )
+  events = sortBy(events, event => -event.blockNumber)
+
+  const totalCount = events.length
+  const idEvents = {}
+  for (const event of events) {
+    const id = await contracts.eventSource.getOfferIdExp(
+      event.returnValues.listingID,
+      event.returnValues.offerID
     )
-  )
+    idEvents[id] = event
+  }
+  const allIds = Object.keys(idEvents)
+  const { ids, start } = getIdsForPage({ after, ids: allIds })
 
-  nodes = sortBy(nodes.filter(n => n.rating), n => -n.event.blockNumber)
-
-  return {
-    totalCount: nodes.length,
-    nodes,
-    pageInfo: {
-      endCursor: '',
-      hasNextPage: false,
-      hasPreviousPage: false,
-      startCursor: ''
+  // Fetch reviews one at a time until we have enough nodes
+  const nodes = []
+  for (const id of ids) {
+    const event = idEvents[id]
+    const review = await contracts.eventSource.getReview(
+      event.returnValues.listingID,
+      event.returnValues.offerID,
+      event.returnValues.party,
+      event.returnValues.ipfsHash,
+      event
+    )
+    if (review.rating) {
+      nodes.push(review)
+    }
+    if (nodes.length >= first) {
+      break
     }
   }
+
+  return getConnection({ start, first, nodes, ids, totalCount })
 }
 
 // Sourced from offer events where user is alternate party

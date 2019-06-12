@@ -14,6 +14,7 @@ const db = { ..._discoveryModels, ..._identityModels }
 const { handleEvent } = require('../src/listener/handler')
 const MarketplaceEventHandler = require('../src/listener/handler_marketplace')
 const IdentityEventHandler = require('../src/listener/handler_identity')
+const ProxyEventHandler = require('../src/listener/handler_proxy')
 
 const seller = '0x2ae595eddb54f4234b10cd31fc00790e379fc6b1'
 const buyer = '0x6c6e93874216112ef12a0d04e2679ecc6c3625cc'
@@ -100,6 +101,7 @@ describe('Listener Handlers', () => {
     this.config = {
       marketplace: true,
       identity: true,
+      proxy: true,
       growth: true,
       networkId: 999
     }
@@ -115,12 +117,30 @@ describe('Listener Handlers', () => {
       offerId: offerId
     })
 
-    this.marketplaceEvent = {
+    this.offerCreatedEvent = {
+      id: 'log_e8ed0355',
+      event: 'OfferCreated',
+      address: '0xf3884ecBC6C43383bF7a38c891021380f50AbC49',
+      transactionHash: 'testTransactionHash',
+      blockNumber: 1,
+      logIndex: 1,
+      returnValues: {
+        party: '123',
+        listingID: '240',
+        ipfsHash:
+          '0x7f154a14b9975c7b2269475892fa3f875dc518b6a3f76259fd29212e956c7f64'
+      },
+      raw: {
+        topics: ['topic0', 'topic1', 'topic2', 'topic3']
+      }
+    }
+
+    this.offerFinalizedEvent = {
       id: 'log_e8ed0356',
       event: 'OfferFinalized',
       address: '0xf3884ecBC6C43383bF7a38c891021380f50AbC49',
       transactionHash: 'testTransactionHash',
-      blockNumber: 1,
+      blockNumber: 2,
       logIndex: 1,
       returnValues: {
         party: '123',
@@ -156,7 +176,7 @@ describe('Listener Handlers', () => {
       .stub(MarketplaceEventHandler.prototype, 'process')
       .returns({})
 
-    const handler = await handleEvent(this.marketplaceEvent, this.context)
+    const handler = await handleEvent(this.offerFinalizedEvent, this.context)
     expect(handler.process.calledOnce).to.equal(true)
     expect(handler.webhookEnabled.calledOnce).to.equal(true)
     expect(handler.discordWebhookEnabled.calledOnce).to.equal(true)
@@ -171,9 +191,12 @@ describe('Listener Handlers', () => {
       this.context.graphqlClient
     )
 
+    // Offer must be created before it can be finalized
+    await handler.process({ timestamp: 1 }, this.offerCreatedEvent)
+
     const result = await handler.process(
-      { timestamp: 1 },
-      this.marketplaceEvent
+      { timestamp: 2 },
+      this.offerFinalizedEvent
     )
 
     // Check output
@@ -278,5 +301,48 @@ describe('Listener Handlers', () => {
       null
     )
     expect(phoneEvents.length).to.equal(1)
+  })
+
+  it(`Proxy`, async () => {
+    const handler = new ProxyEventHandler(
+      this.config,
+      this.context.graphqlClient
+    )
+
+    const proxyAddress = '0xAB123'
+    const ownerAddress = '0xCD456'
+    handler._getProxyOwner = () => {
+      return ownerAddress
+    }
+
+    const proxyEvent = {
+      id: 'log_e8ed0358',
+      event: 'ProxyCreation',
+      address: proxyAddress,
+      transactionHash: 'testTransactionHash',
+      blockNumber: 1,
+      logIndex: 1,
+      returnValues: {
+        proxy: proxyAddress
+      },
+      raw: {
+        topics: ['topic0']
+      }
+    }
+
+    const result = await handler.process({ timestamp: 1 }, proxyEvent)
+
+    // Check output.
+    expect(result.proxyAddress).to.equal(proxyEvent.address)
+    expect(result.ownerAddress).to.equal(ownerAddress)
+
+    // Check expected entry was added to the proxy DB table.
+    const proxyRows = await db.Proxy.findAll({
+      where: {
+        address: proxyEvent.address.toLowerCase(),
+        ownerAddress: ownerAddress.toLowerCase()
+      }
+    })
+    expect(proxyRows.length).to.equal(1)
   })
 })
