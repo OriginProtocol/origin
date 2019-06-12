@@ -32,6 +32,7 @@ import {
 import { setAccountBalances, setIdentity } from 'actions/Wallet'
 import withOriginGraphql from 'hoc/withOriginGraphql'
 import withWeb3Accounts from 'hoc/withWeb3Accounts'
+import { getCurrentRoute } from '../NavigationService'
 
 class MarketplaceScreen extends Component {
   static navigationOptions = () => {
@@ -111,6 +112,8 @@ class MarketplaceScreen extends Component {
       return
     }
 
+    const currentRoute = getCurrentRoute()
+
     if (msgData.targetFunc === 'getAccounts') {
       // Call get account method from OriginWallet HOC
       const response = this.props.getAccounts()
@@ -119,12 +122,21 @@ class MarketplaceScreen extends Component {
       // Function handler exists, use that
       const response = this[msgData.targetFunc].apply(this, [msgData.data])
       this.handleBridgeResponse(msgData, response)
-    } else {
+    } else if (currentRoute === 'Ready' && msgData.targetFunc === 'signPersonalMessage') {
+      // Identity publication from the end of the onboarding flow. This is a
+      // special case where we sign a transaction to publish the identity
+      const { signature } = this.props.signMessage(msgData.data)
+      this.handleBridgeResponse(msgData, signature)
+      // Stop processing message to avoid popping up any further modals, e.g.
+      // fallback if relayer fails
+      return
+    } else if (currentRoute !== 'Ready') {
+      // Not handled yet, display a modal that deals with the target function
       PushNotification.checkPermissions(permissions => {
         const newModals = []
         // Check if we lack notification permissions, and we are processing a
-        // web3 transactiotn that isn't updating our identitty. If we are then
-        // display a modal requesting notifications be enabled
+        // web3 transaction that isn't updating our identity. If so display a
+        // modal requesting notifications be enabled
         if (
           !__DEV__ &&
           !permissions.alert &&

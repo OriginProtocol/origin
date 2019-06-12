@@ -33,6 +33,10 @@ class ReadyScreen extends Component {
   }
 
   async componentDidMount() {
+    this.publishIdentity()
+  }
+
+  publishIdentity = async () => {
     const profile = {
       firstName: this.props.onboarding.firstName,
       lastName: 'Test', //this.props.onboarding.lastName,
@@ -48,6 +52,8 @@ class ReadyScreen extends Component {
     }
 
     const from = this.props.wallet.activeAccount.address
+
+    console.debug('Publishing identity')
 
     let response
     try {
