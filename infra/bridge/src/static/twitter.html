@@ -10,7 +10,9 @@
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   }
 
-  var oauthVerifier = getParameterByName('oauth_verifier');
-  window.opener.postMessage("origin-code:" + oauthVerifier, '*')
+  window.opener.postMessage({
+    originCode: getParameterByName('oauth_verifier'),
+    sid: getParameterByName('sid')
+  }, '*')
   window.close()
 </script>

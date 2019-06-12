@@ -15,6 +15,35 @@ import Link from 'components/Link'
 import query from 'queries/Identity'
 import withOwner from 'hoc/withOwner'
 
+const getVerifiedTooltip = provider => {
+  switch (provider) {
+    case 'email':
+      return fbt('Email Verified', 'Email Verified')
+    case 'phone':
+      return fbt('Phone Verified', 'Phone Verified')
+    case 'website':
+      return fbt('Website Verified', 'Website Verified')
+    case 'airbnb':
+      return fbt('Airbnb Account Verified', 'Airbnb Account Verified')
+    case 'github':
+      return fbt('GitHub Account Verified', 'GitHub Account Verified')
+    case 'facebook':
+      return fbt('Facebook Account Verified', 'Facebook Account Verified')
+    case 'twitter':
+      return fbt('Twitter Account Verified', 'Twitter Account Verified')
+    case 'google':
+      return fbt('Google Account Verified', 'Google Account Verified')
+    case 'kakao':
+      return fbt('Kakao Account Verified', 'Kakao Account Verified')
+    case 'linkedin':
+      return fbt('LinkedIn Account Verified', 'LinkedIn Account Verified')
+    case 'wechat':
+      return fbt('WeChat Account Verified', 'WeChat Account Verified')
+  }
+
+  return provider
+}
+
 const AboutParty = ({ id, owner }) => {
   const [redirect, setRedirect] = useState(false)
 
@@ -36,109 +65,25 @@ const AboutParty = ({ id, owner }) => {
             return null
           }
 
+          const verifiedAttestations = profile.verifiedAttestations || []
+
           return (
             <div className="profile" onClick={() => setRedirect(true)}>
               <Avatar profile={profile} size={50} />
               <div className="user-detail">
                 <div className="name">{profile.fullName}</div>
                 <div className="attestations">
-                  {profile.twitterVerified && (
-                    <Tooltip
-                      tooltip={fbt(
-                        'Twitter Account Verified',
-                        'Twitter Account Verified'
-                      )}
-                      placement="bottom"
-                    >
-                      <div className="attestation twitter" />
-                    </Tooltip>
-                  )}
-                  {profile.googleVerified && (
-                    <Tooltip
-                      tooltip={fbt(
-                        'Google Account Verified',
-                        'Google Account Verified'
-                      )}
-                      placement="bottom"
-                    >
-                      <div className="attestation google" />
-                    </Tooltip>
-                  )}
-                  {profile.phoneVerified && (
-                    <Tooltip
-                      tooltip={fbt('Phone Verified', 'Phone Verified')}
-                      placement="bottom"
-                    >
-                      <div className="attestation phone" />
-                    </Tooltip>
-                  )}
-                  {profile.emailVerified && (
-                    <Tooltip
-                      tooltip={fbt('Email Verified', 'Email Verified')}
-                      placement="bottom"
-                    >
-                      <div className="attestation email" />
-                    </Tooltip>
-                  )}
-                  {profile.facebookVerified && (
-                    <Tooltip
-                      tooltip={fbt('Facebook Verified', 'Facebook Verified')}
-                      placement="bottom"
-                    >
-                      <div className="attestation facebook" />
-                    </Tooltip>
-                  )}
-                  {profile.airbnbVerified && (
-                    <Tooltip
-                      tooltip={fbt(
-                        'Airbnb Account Verified',
-                        'Airbnb Account Verified'
-                      )}
-                      placement="bottom"
-                    >
-                      <div className="attestation airbnb" />
-                    </Tooltip>
-                  )}
-                  {profile.websiteVerified && (
-                    <Tooltip
-                      tooltip={fbt('Website Verified', 'Website Verified')}
-                      placement="bottom"
-                    >
-                      <div className="attestation website" />
-                    </Tooltip>
-                  )}
-                  {profile.kakaoVerified && (
-                    <Tooltip
-                      tooltip={fbt('KaKao Verified', 'KaKao Verified')}
-                      placement="bottom"
-                    >
-                      <div className="attestation kakao" />
-                    </Tooltip>
-                  )}
-                  {profile.githubVerified && (
-                    <Tooltip
-                      tooltip={fbt('GitHub Verified', 'GitHub Verified')}
-                      placement="bottom"
-                    >
-                      <div className="attestation github" />
-                    </Tooltip>
-                  )}
-                  {profile.linkedinVerified && (
-                    <Tooltip
-                      tooltip={fbt('LinkedIn Verified', 'LinkedIn Verified')}
-                      placement="bottom"
-                    >
-                      <div className="attestation linkedin" />
-                    </Tooltip>
-                  )}
-                  {profile.wechatVerified && (
-                    <Tooltip
-                      tooltip={fbt('WeChat Verified', 'WeChat Verified')}
-                      placement="bottom"
-                    >
-                      <div className="attestation wechat" />
-                    </Tooltip>
-                  )}
+                  {verifiedAttestations.map(attestation => {
+                    return (
+                      <Tooltip
+                        key={attestation.id}
+                        placement="bottom"
+                        tooltip={getVerifiedTooltip(attestation.id)}
+                      >
+                        <div className={`attestation ${attestation.id}`} />
+                      </Tooltip>
+                    )
+                  })}
                 </div>
               </div>
             </div>

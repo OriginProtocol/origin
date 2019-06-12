@@ -20,7 +20,10 @@ async function verifyOAuthAttestation(
   }
 
   if (!authUrl) {
-    const getAuthUrl = `${bridgeServer}/api/attestations/${provider}/auth-url`
+    let getAuthUrl = `${bridgeServer}/api/attestations/${provider}/auth-url`
+    if (redirect) {
+      getAuthUrl += `?redirect=${redirect}`
+    }
     const response = await fetch(getAuthUrl, {
       headers: { 'content-type': 'application/json' }
     })
@@ -71,10 +74,12 @@ async function verifyOAuthAttestation(
     const gWindow = window.open(authUrl, '', 'width=650,height=500')
 
     const finish = async e => {
-      const iframeData = String(e.data)
-      if (!iframeData.match(/^origin-code:/)) {
+      const iframeData = e.data
+
+      if (!iframeData.originCode) {
         return
       }
+
       window.removeEventListener('message', finish, false)
       if (!gWindow.closed) {
         gWindow.close()
@@ -82,14 +87,20 @@ async function verifyOAuthAttestation(
 
       const url = `${bridgeServer}/api/attestations/${provider}/verify`
 
+      const verifyParams = {
+        code: iframeData.originCode,
+        identity
+      }
+
+      if (iframeData.sid) {
+        verifyParams.sid = iframeData.sid
+      }
+
       const response = await fetch(url, {
         headers: { 'content-type': 'application/json' },
         credentials: 'include',
         method: 'POST',
-        body: JSON.stringify({
-          code: iframeData.split(':')[1],
-          identity
-        })
+        body: JSON.stringify(verifyParams)
       })
 
       const data = await response.json()
