@@ -122,45 +122,46 @@ class MarketplaceScreen extends Component {
       // Function handler exists, use that
       const response = this[msgData.targetFunc].apply(this, [msgData.data])
       this.handleBridgeResponse(msgData, response)
-    } else if (currentRoute === 'Ready' && msgData.targetFunc === 'signPersonalMessage') {
-      // Identity publication from the end of the onboarding flow. This is a
-      // special case where we sign a transaction to publish the identity
-      const { signature } = this.props.signMessage(msgData.data)
-      this.handleBridgeResponse(msgData, signature)
-      // Stop processing message to avoid popping up any further modals, e.g.
-      // fallback if relayer fails
-      return
-    } else if (currentRoute !== 'Ready') {
-      // Not handled yet, display a modal that deals with the target function
-      PushNotification.checkPermissions(permissions => {
-        const newModals = []
-        // Check if we lack notification permissions, and we are processing a
-        // web3 transaction that isn't updating our identity. If so display a
-        // modal requesting notifications be enabled
-        if (
-          !__DEV__ &&
-          !permissions.alert &&
-          msgData.targetFunc === 'processTransaction' &&
-          decodeTransaction(msgData.data.data).functionName !==
-            'emitIdentityUpdated'
-        ) {
-          newModals.push({ type: 'enableNotifications' })
+    } else {
+      if (currentRoute === 'Ready') {
+        if (msgData.targetFunc === 'signMessage') {
+          // Identity publication from the end of the onboarding flow. This is a
+          // special case where we sign a transaction to publish the identity
+          const { signature } = this.props.signMessage(msgData.data)
+          this.handleBridgeResponse(msgData, signature)
         }
-        // Transaction/signature modal
-        const web3Modal = { type: msgData.targetFunc, msgData: msgData }
-        // Modals render in different ordering on Android/iOS so use a different
-        // method of adding the modal to the array to get the notifications modal
-        // to display on top of the web3 modal
-        if (Platform.OS === 'ios') {
-          newModals.push(web3Modal)
-        } else {
-          newModals.unshift(web3Modal)
-        }
-        // Update the state with the new modals
-        this.setState(prevState => ({
-          modals: [...prevState.modals, ...newModals]
-        }))
-      })
+      } else {
+        // Not handled yet, display a modal that deals with the target function
+        PushNotification.checkPermissions(permissions => {
+          const newModals = []
+          // Check if we lack notification permissions, and we are processing a
+          // web3 transaction that isn't updating our identity. If so display a
+          // modal requesting notifications be enabled
+          if (
+            !__DEV__ &&
+            !permissions.alert &&
+            msgData.targetFunc === 'processTransaction' &&
+            decodeTransaction(msgData.data.data).functionName !==
+              'emitIdentityUpdated'
+          ) {
+            newModals.push({ type: 'enableNotifications' })
+          }
+          // Transaction/signature modal
+          const web3Modal = { type: msgData.targetFunc, msgData: msgData }
+          // Modals render in different ordering on Android/iOS so use a different
+          // method of adding the modal to the array to get the notifications modal
+          // to display on top of the web3 modal
+          if (Platform.OS === 'ios') {
+            newModals.push(web3Modal)
+          } else {
+            newModals.unshift(web3Modal)
+          }
+          // Update the state with the new modals
+          this.setState(prevState => ({
+            modals: [...prevState.modals, ...newModals]
+          }))
+        })
+      }
     }
   }
 
