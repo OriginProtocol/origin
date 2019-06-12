@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'discovery_access_token'
     }
   )
-  DiscoveryAccessToken.associate = function(models) {
+  DiscoveryAccessToken.associate = function() {
     // associations can be defined here
   }
   return DiscoveryAccessToken

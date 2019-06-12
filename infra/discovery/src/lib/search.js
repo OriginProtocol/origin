@@ -154,7 +154,7 @@ class Listing {
     hiddenIds = [],
     featuredIds = []
   ) {
-    if(filters === undefined){
+    if (filters === undefined) {
       filters = []
     }
     const esQuery = {

@@ -1,11 +1,9 @@
 'use strict'
 module.exports = {
-  up: (queryInterface) => {
+  up: queryInterface => {
     return queryInterface.addIndex('discovery_tag_action', {
-        fields: ['listing_id']
+      fields: ['listing_id']
     })
   },
-  down: () => {
-    
-  }
+  down: () => {}
 }

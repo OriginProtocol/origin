@@ -93,6 +93,7 @@ const resolvers = {
       }
 
       const match = message.match(
+        // eslint-disable-next-line no-control-regex
         /^\u0019Ethereum Signed Message:\nOrigin Moderation Login\nNonce: (0x[a-fA-F0-9]+)$/
       )
       if (!match) {
