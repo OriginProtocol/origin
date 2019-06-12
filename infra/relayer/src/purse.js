@@ -34,6 +34,7 @@ const DEFAULT_MAX_PENDING_PER_ACCOUNT = 3
 const ZERO = new BN('0', 10)
 const BASE_FUND_VALUE = new BN('50000000000000000', 10) // 0.05 Ether
 const MIN_CHILD_BALANCE = new BN('1000000000000000', 10) // 0.001 Ether
+const MAX_GAS_PRICE = new BN('20000000000', 10) // 20 gwei
 const REDIS_TX_COUNT_PREFIX = 'txcount_'
 
 async function tick(wait = 1000) {
@@ -245,6 +246,15 @@ class Purse {
       ...tx,
       from: address,
       nonce: await this.txCount(address)
+    }
+
+    if (!tx.gasPrice) {
+      const gasPrice = stringToBN(await this.web3.eth.getGasPrice())
+      if (gasPrice.gt(MAX_GAS_PRICE)) {
+        // TODO: best way to handle this?
+        throw new Error('Current gas prices are too high!')
+      }
+      tx.gasPrice = gasPrice
     }
 
     const signed = await this.signTx(address, tx)
