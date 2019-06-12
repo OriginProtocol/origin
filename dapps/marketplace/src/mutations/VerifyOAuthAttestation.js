@@ -5,7 +5,7 @@ export default gql`
     $provider: String!
     $identity: String!
     $authUrl: String
-    $redirect: Boolean
+    $redirect: String
     $code: String
   ) {
     verifyOAuthAttestation(

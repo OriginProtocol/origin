@@ -12,7 +12,8 @@ import {
   changesToPublishExist,
   updateVerifiedAccounts,
   clearVerifiedAccounts,
-  getVerifiedAccounts
+  getVerifiedAccounts,
+  getProviderDisplayName
 } from 'utils/profileTools'
 
 import {
@@ -24,6 +25,7 @@ import {
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
+import withAttestationProviders from 'hoc/withAttestationProviders'
 
 import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
@@ -74,16 +76,7 @@ const ProfileFields = [
   'avatarUrl',
   'strength',
   'attestations',
-  'facebookVerified',
-  'twitterVerified',
-  'airbnbVerified',
-  'phoneVerified',
-  'emailVerified',
-  'googleVerified',
-  'websiteVerified',
-  'kakaoVerified',
-  'githubVerified',
-  'linkedinVerified'
+  'verifiedAttestations'
 ]
 
 const resetAtts = Object.keys(AttestationComponents).reduce((m, o) => {
@@ -131,25 +124,43 @@ class UserProfile extends Component {
     clearTimeout(this.timeout)
   }
 
-  changesPublishedToBlockchain(props, prevProps) {
+  changesPublishedToBlockchain(props, prevProps, state, prevState) {
     const profile = get(props, 'identity') || {}
     const prevProfile = get(prevProps, 'identity') || {}
+
+    const verifiedAttestations = (state.verifiedAttestations || []).map(
+      att => att.id
+    )
+    const prevVerifiedAttestations = (prevState.verifiedAttestations || []).map(
+      att => att.id
+    )
+
+    if (verifiedAttestations.length !== prevVerifiedAttestations.length) {
+      // short-circuit
+      return false
+    }
+
+    const newlyAdded = verifiedAttestations.filter(
+      att => !prevVerifiedAttestations.includes(att)
+    )
+    if (newlyAdded.length > 0) {
+      // short-circuit
+      return false
+    }
+
+    const removedAttestations = prevVerifiedAttestations.filter(
+      att => !verifiedAttestations.includes(att)
+    )
+    if (removedAttestations.length > 0) {
+      // short-circuit
+      return false
+    }
 
     return (
       (profile.firstName !== prevProfile.firstName ||
         profile.lastName !== prevProfile.lastName ||
         profile.description !== prevProfile.description ||
-        profile.avatarUrl !== prevProfile.avatarUrl ||
-        profile.emailVerified !== prevProfile.emailVerified ||
-        profile.phoneVerified !== prevProfile.phoneVerified ||
-        profile.facebookVerified !== prevProfile.facebookVerified ||
-        profile.googleVerified !== prevProfile.googleVerified ||
-        profile.twitterVerified !== prevProfile.twitterVerified ||
-        profile.airbnbVerified !== prevProfile.airbnbVerified ||
-        profile.websiteVerified !== prevProfile.websiteVerified ||
-        profile.kakaoVerified !== prevProfile.kakaoVerified ||
-        profile.githubVerified !== prevProfile.githubVerified ||
-        profile.linkedinVerified !== prevProfile.linkedinVerified) &&
+        profile.avatarUrl !== prevProfile.avatarUrl) &&
       profile.id === prevProfile.id &&
       // initial profile data population
       prevProfile.id !== undefined
@@ -183,7 +194,14 @@ class UserProfile extends Component {
       this.toasterTimeout()
     }
 
-    if (this.changesPublishedToBlockchain(this.props, prevProps)) {
+    if (
+      this.changesPublishedToBlockchain(
+        this.props,
+        prevProps,
+        this.state,
+        prevState
+      )
+    ) {
       this.handleShowNotification(
         fbt(
           'Changes published to blockchain',
@@ -240,6 +258,10 @@ class UserProfile extends Component {
       {
         attestation: 'linkedinAttestation',
         message: fbt('LinkedIn updated', 'profile.linkedinUpdated')
+      },
+      {
+        attestation: 'wechatAttestation',
+        message: fbt('WeChat updated', 'profile.wechatUpdated')
       }
     ]
 
@@ -310,6 +332,16 @@ class UserProfile extends Component {
     this.setState({ editProfile: true })
   }
 
+  hasPhoneAttestation() {
+    if (this.state.phoneAttestation) {
+      return true
+    }
+
+    return !!(this.state.verifiedAttestations || []).find(
+      attestation => attestation.id === 'phone'
+    )
+  }
+
   renderProfile(arrivedFromOnboarding) {
     const attestations = Object.keys(AttestationComponents).reduce((m, key) => {
       if (this.state[`${key}Attestation`]) {
@@ -325,7 +357,7 @@ class UserProfile extends Component {
 
     const profileCreated =
       this.props.growthEnrollmentStatus === 'Enrolled' &&
-      (this.state.PhoneAttestation || this.state.phoneVerified)
+      this.hasPhoneAttestation()
 
     return (
       <div className="container profile-edit">
@@ -365,50 +397,12 @@ class UserProfile extends Component {
                 </fbt>
               </label>
               <div className="profile-attestations">
-                {this.renderAtt(
-                  'email',
-                  fbt('Email', '_ProvisionedChanges.email')
-                )}
-                {this.renderAtt(
-                  'phone',
-                  fbt('Phone', '_ProvisionedChanges.phone')
-                )}
-                {this.renderAtt(
-                  'facebook',
-                  fbt('Facebook', '_ProvisionedChanges.facebook')
-                )}
-                {this.renderAtt(
-                  'twitter',
-                  fbt('Twitter', '_ProvisionedChanges.twitter')
-                )}
-                {this.renderAtt(
-                  'airbnb',
-                  fbt('Airbnb', '_ProvisionedChanges.airbnb')
-                )}
-                {this.renderAtt(
-                  'google',
-                  fbt('Google', '_ProvisionedChanges.google')
-                )}
-                {this.renderAtt(
-                  'website',
-                  fbt('Website', '_ProvisionedChanges.website'),
-                  { hidden: process.env.ENABLE_WEBSITE_ATTESTATION !== 'true' }
-                )}
-                {this.renderAtt(
-                  'kakao',
-                  fbt('KaKao', '_ProvisionedChanges.kakao'),
-                  { hidden: process.env.ENABLE_KAKAO_ATTESTATION !== 'true' }
-                )}
-                {this.renderAtt(
-                  'github',
-                  fbt('GitHub', '_ProvisionedChanges.github'),
-                  { hidden: process.env.ENABLE_GITHUB_ATTESTATION !== 'true' }
-                )}
-                {this.renderAtt(
-                  'linkedin',
-                  fbt('LinkedIn', '_ProvisionedChanges.linkedin'),
-                  { hidden: process.env.ENABLE_LINKEDIN_ATTESTATION !== 'true' }
-                )}
+                {this.props.attestationProviders.map(provider => {
+                  return this.renderAtt(
+                    provider,
+                    getProviderDisplayName(provider)
+                  )
+                })}
               </div>
             </div>
 
@@ -429,9 +423,9 @@ class UserProfile extends Component {
                       tokenDecimals: this.props.tokenDecimals || 18
                     })}
                     earned={getTokensEarned({
-                      verifiedServices: Object.keys(
-                        AttestationComponents
-                      ).filter(a => this.state[`${a}Verified`]),
+                      verifiedServices: (
+                        this.state.verifiedAttestations || []
+                      ).map(att => att.id),
                       growthCampaigns: this.props.growthCampaigns,
                       tokenDecimals: this.props.tokenDecimals || 18
                     })}
@@ -523,12 +517,15 @@ class UserProfile extends Component {
       return null
     }
 
-    const profile = get(this.props, 'identity') || {}
+    // const profile = get(this.props, 'identity') || {}
     let attestationPublished = false
     let attestationProvisional = false
 
     let status = ''
-    if (profile[`${type}Verified`]) {
+    if (
+      this.state.verifiedAttestations &&
+      this.state.verifiedAttestations.find(att => att.id === type)
+    ) {
       status = ' published'
       attestationPublished = true
     } else if (this.state[`${type}Attestation`]) {
@@ -579,7 +576,7 @@ class UserProfile extends Component {
     }
 
     return (
-      <>
+      <Fragment key={type}>
         <div
           id={`attestation-component-${type}`}
           className={`profile-attestation ${type}${status}`}
@@ -602,7 +599,7 @@ class UserProfile extends Component {
           )}
         </div>
         {AttestationComponent}
-      </>
+      </Fragment>
     )
   }
 
@@ -658,7 +655,9 @@ class UserProfile extends Component {
   }
 }
 
-export default withWallet(withIdentity(withGrowthCampaign(UserProfile)))
+export default withAttestationProviders(
+  withWallet(withIdentity(withGrowthCampaign(UserProfile)))
+)
 
 require('react-styl')(`
   .profile-edit

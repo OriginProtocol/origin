@@ -1,6 +1,5 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
-import Link from './Link'
 
 const UserProfileCreated = ({ onCompleted }) => (
   <div className="profile-created">
@@ -14,24 +13,6 @@ const UserProfileCreated = ({ onCompleted }) => (
         continue your journey in the Origin Marketplace.
       </fbt>
     </div>
-    <div className="info white mt-6 mb-3">
-      <div className="image">
-        <img src="images/blue-coins.svg" />
-      </div>
-      <div className="content">
-        <div className="title">
-          <fbt desc="UserActivation.earnOgnTokens">Earn OGN Tokens</fbt>
-        </div>
-        <fbt desc="UserActivation.completeTasks">
-          Complete tasks and earn tokens.
-        </fbt>
-        <div>
-          <Link to="/welcome" target="_blank">
-            <fbt desc="learnMore">Learn More &gt;</fbt>
-          </Link>
-        </div>
-      </div>
-    </div>
     <div className="actions">
       <button
         type="button"
@@ -41,7 +22,7 @@ const UserProfileCreated = ({ onCompleted }) => (
             onCompleted()
           }
         }}
-        className="btn btn-primary mt-3 mb-3"
+        className="btn btn-primary mt-5 mb-3"
         children={fbt('Ok', 'Ok')}
       />
     </div>
@@ -52,6 +33,9 @@ export default UserProfileCreated
 
 require('react-styl')(`
   .profile-created
+    height: 100%
+    display: flex
+    flex-direction: column
     text-align: center
     > img
         margin-top: 2.5rem

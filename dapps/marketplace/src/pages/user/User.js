@@ -12,6 +12,7 @@ import LoadingSpinner from 'components/LoadingSpinner'
 import FormattedDescription from 'components/FormattedDescription'
 
 import UserListings from './_UserListings'
+import { getProviderDisplayName } from 'utils/profileTools'
 
 const User = ({ match }) => {
   const id = match.params.id
@@ -26,9 +27,10 @@ const User = ({ match }) => {
           if (loading) return <LoadingSpinner />
 
           const profile = get(data, 'web3.account.identity') || {}
-          const noVerifications = !Object.keys(profile).some(k =>
-            k.match(/verified/i)
-          )
+          const verifiedAttestations = profile.verifiedAttestations
+
+          const noVerifications =
+            !verifiedAttestations || verifiedAttestations.length === 0
 
           return (
             <>
@@ -47,72 +49,12 @@ const User = ({ match }) => {
                       <h5>
                         <fbt desc="User.verifiedInfo">Verified Info</fbt>
                       </h5>
-                      {profile.emailVerified && (
-                        <div>
-                          <div className="attestation email" />
-                          <fbt desc="User.email">Email</fbt>
+                      {verifiedAttestations.map(attestation => (
+                        <div key={attestation.id}>
+                          <div className={`attestation ${attestation.id}`} />
+                          {getProviderDisplayName(attestation.id)}
                         </div>
-                      )}
-                      {profile.phoneVerified && (
-                        <div>
-                          <div className="attestation phone" />
-                          <fbt desc="User.phone">Phone</fbt>
-                        </div>
-                      )}
-                      {profile.facebookVerified && (
-                        <div>
-                          <div className="attestation facebook" />
-                          <fbt desc="Facebook">Facebook</fbt>
-                        </div>
-                      )}
-                      {profile.twitterVerified && (
-                        <div>
-                          <div className="attestation twitter" />
-                          <fbt desc="Twitter">Twitter</fbt>
-                        </div>
-                      )}
-                      {profile.airbnbVerified && (
-                        <div>
-                          <div className="attestation airbnb" />
-                          <fbt desc="AirBnb">AirBnb</fbt>
-                        </div>
-                      )}
-                      {profile.googleVerified && (
-                        <div>
-                          <div className="attestation google" />
-                          <fbt desc="Google">Google</fbt>
-                        </div>
-                      )}
-                      {profile.websiteVerified && (
-                        <div>
-                          <div className="attestation website" />
-                          <fbt desc="Website">Website</fbt>
-                        </div>
-                      )}
-                      {profile.kakaoVerified && (
-                        <div>
-                          <div className="attestation kakao" />
-                          <fbt desc="Kakao">Kakao</fbt>
-                        </div>
-                      )}
-                      {profile.githubVerified && (
-                        <div>
-                          <div className="attestation github" />
-                          <fbt desc="GitHub">GitHub</fbt>
-                        </div>
-                      )}
-                      {profile.linkedinVerified && (
-                        <div>
-                          <div className="attestation linkedin" />
-                          <fbt desc="LinkedIn">LinkedIn</fbt>
-                        </div>
-                      )}
-                      {profile.wechatVerified && (
-                        <div>
-                          <div className="attestation wechat" />
-                          <fbt desc="WeChat">WeChat</fbt>
-                        </div>
-                      )}
+                      ))}
                     </div>
                   )}
                 </div>
@@ -201,6 +143,14 @@ require('react-styl')(`
       background-image: url(images/identity/google-icon-verified.svg)
     &.website
       background-image: url(images/identity/website-icon-verified.svg)
+    &.kakao
+      background-image: url(images/identity/kakao-icon-small.svg)
+    &.github
+      background-image: url(images/identity/github-icon-small.svg)
+    &.linkedin
+      background-image: url(images/identity/linkedin-icon-small.svg)
+    &.wechat
+      background-image: url(images/identity/wechat-icon-small.svg)
 
   @media (max-width: 767.98px)
     .user-profile

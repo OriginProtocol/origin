@@ -125,10 +125,11 @@ const phoneVerifyCode = [
 
 const twitterVerifyCode = [
   identityValidation,
-  check('oauth-verifier')
+  check('sid')
     .not()
     .isEmpty()
-    .withMessage('Field oauth-verifier must not be empty.'),
+    .withMessage('Field sid must not be empty.')
+    .trim(),
   handleValidationError
 ]
 

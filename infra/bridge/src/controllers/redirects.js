@@ -25,14 +25,15 @@ const oauth2RedirectHandler = async (req, res) => {
 }
 
 router.get('/twitter', async (req, res) => {
-  const sessionID = req.query.state
+  const sessionID = req.query.sid
 
-  if (sessionID) {
-    const session = await req.sessionStore.get(sessionID)
-    if (!session) {
-      return res.status(400).send('Session not found')
-    }
+  const session = await req.sessionStore.get(sessionID)
+  if (!session) {
+    return res.status(400).send('Session not found')
+  }
 
+  if (session.redirect) {
+    // In case of redirect, verifier code is stored to session
     req.session.code = session.code = req.query.oauth_verifier
     await req.sessionStore.set(sessionID, session)
 
