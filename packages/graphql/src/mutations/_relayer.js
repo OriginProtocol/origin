@@ -44,13 +44,26 @@ export default async function relayerHelper({ tx, from, proxy, to }) {
     throw new Error('Relayer server unavailable')
   }
 
-  const dataToSign = contracts.web3.utils.soliditySha3(
-    { t: 'address', v: from },
-    { t: 'address', v: to },
-    { t: 'uint256', v: contracts.web3.utils.toWei('0', 'ether') },
-    { t: 'bytes', v: txData },
-    { t: 'uint256', v: nonce }
-  )
+  let dataToSign
+  if (window.ReactNativeWebView && contracts.web3.currentProvider.isOrigin) {
+    // Marketplace mobile app, send the complete object so the mobile app can
+    // verify what it is signing, and then generate the sha3 hash
+    dataToSign = JSON.stringify({
+      to,
+      from,
+      txData,
+      provider,
+      proxy
+    })
+  } else {
+    dataToSign = contracts.web3.utils.soliditySha3(
+      { t: 'address', v: from },
+      { t: 'address', v: to },
+      { t: 'uint256', v: contracts.web3.utils.toWei('0', 'ether') },
+      { t: 'bytes', v: txData },
+      { t: 'uint256', v: nonce }
+    )
+  }
 
   // Fall back to eth.sign... but if that fails too, throw original error
   let signature, sigErr

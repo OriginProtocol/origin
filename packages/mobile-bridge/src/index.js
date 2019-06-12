@@ -73,6 +73,26 @@ class MobileBridge {
     window.webViewBridge.send('signMessage', data, onSuccess, onError)
   }
 
+  signPersonalMessage(data, callback) {
+    let onSuccess, onError
+    if (callback) {
+      onSuccess = result => {
+        callback(undefined, result)
+      }
+      onError = result => {
+        callback(undefined, result)
+      }
+    } else {
+      onSuccess = result => {
+        return new Promise(resolve => resolve(result))
+      }
+      onError = result => {
+        return new Promise((resolve, reject) => reject(result))
+      }
+    }
+    window.webViewBridge.send('signPersonalMessage', data, onSuccess, onError)
+  }
+
   getProvider() {
     const rpcUrl = this.web3.eth.net.currentProvider.host
 
@@ -81,7 +101,7 @@ class MobileBridge {
       getAccounts: this.getAccounts.bind(this),
       processTransaction: this.processTransaction.bind(this),
       signMessage: this.signMessage.bind(this),
-      signPersonalMessage: this.signMessage.bind(this)
+      signPersonalMessage: this.signPersonalMessage.bind(this)
     })
 
     // Disable caching subProviders, because they interfere with the provider
