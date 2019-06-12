@@ -1,6 +1,35 @@
 import React from 'react'
 import { Tag } from '@blueprintjs/core'
-import { mapVerifiedAttestations } from '@origin/marketplace/src/utils/profileTools'
+
+const getDisplayName = provider => {
+  // TBD: Should this be translated?
+  switch (provider) {
+    case 'email':
+      return 'Email'
+    case 'phone':
+      return 'Phone'
+    case 'website':
+      return 'Website'
+    case 'airbnb':
+      return 'Airbnb'
+    case 'github':
+      return 'GitHub'
+    case 'facebook':
+      return 'Facebook'
+    case 'twitter':
+      return 'Twitter'
+    case 'google':
+      return 'Google'
+    case 'kakao':
+      return 'Kakao'
+    case 'linkedin':
+      return 'LinkedIn'
+    case 'wechat':
+      return 'WeChat'
+  }
+
+  return provider
+}
 
 const Verified = props => (
   <Tag intent="success" className="mr-1" rightIcon="tick">
@@ -12,8 +41,6 @@ const UserProfile = ({ profile }) => {
   if (!profile) {
     return 'No profile set up'
   }
-
-  const verifiedAttestations = mapVerifiedAttestations(profile)
 
   return (
     <div style={{ display: 'flex', alignItems: 'end' }}>
@@ -27,17 +54,13 @@ const UserProfile = ({ profile }) => {
         {!profile.description ? null : (
           <div style={{ marginBottom: 10 }}>{profile.description}</div>
         )}
-        {verifiedAttestations.emailVerified ? <Verified>Email</Verified> : null}
-        {verifiedAttestations.phoneVerified ? <Verified>Phone</Verified> : null}
-        {verifiedAttestations.facebookVerified ? (
-          <Verified>Facebook</Verified>
-        ) : null}
-        {verifiedAttestations.twitterVerified ? (
-          <Verified>Twitter</Verified>
-        ) : null}
-        {verifiedAttestations.airbnbVerified ? (
-          <Verified>Airbnb</Verified>
-        ) : null}
+        {
+          profile.verifiedAttestations && profile.verifiedAttestations.map(attestation => {
+            return (
+              <Verified key={attestation.id}>{getDisplayName(attestation.id)}</Verified>
+            )
+          })
+        }
       </div>
     </div>
   )

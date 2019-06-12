@@ -1,4 +1,5 @@
 import get from 'lodash/get'
+import { fbt } from 'fbt-runtime'
 
 const websiteAttestationEnabled =
   process.env.ENABLE_WEBSITE_ATTESTATION === 'true'
@@ -6,64 +7,58 @@ const websiteAttestationEnabled =
 export function unpublishedStrength({ props, state }) {
   // TODO: Retrieve stregths from GraphQL?
   const profile = get(props, 'identity') || {}
-  const verifiedAttestations = mapVerifiedAttestations(profile)
+  const verifiedAttestations = profile.verifiedAttestations || []
 
-  let strength = 0
+  let strength = verifiedAttestations.reduce((sum, att) => {
+    switch (att.id) {
+      case 'email':
+      case 'phone':
+      case 'facebook':
+      case 'google':
+      case 'twitter':
+        sum += 10
+        break
+      case 'airbnb':
+        sum += websiteAttestationEnabled ? 5 : 10
+        break
+      case 'website':
+        sum += websiteAttestationEnabled ? 5 : 0
+    }
+
+    // TODO: Add strength for KaKao, GitHub, Linkedin and WeChat
+
+    return sum
+  }, 0)
+
   if (!profile.firstName && state.firstName) strength += 10
   if (!profile.lastName && state.lastName) strength += 10
   if (!profile.description && state.description) strength += 10
   if (!profile.avatarUrl && state.avatarUrl) strength += 10
-  if (!verifiedAttestations.emailVerified && state.emailAttestation)
-    strength += 10
-  if (!verifiedAttestations.phoneVerified && state.phoneAttestation)
-    strength += 10
-  if (!verifiedAttestations.facebookVerified && state.facebookAttestation)
-    strength += 10
-  if (!verifiedAttestations.googleVerified && state.googleAttestation)
-    strength += 10
-  if (!verifiedAttestations.twitterVerified && state.twitterAttestation)
-    strength += 10
-  if (!verifiedAttestations.airbnbVerified && state.airbnbAttestation)
-    strength += websiteAttestationEnabled ? 5 : 10
-  if (!verifiedAttestations.websiteVerified && state.websiteAttestation)
-    strength += websiteAttestationEnabled ? 5 : 0
-
-  // TODO: Add strength for KaKao, GitHub, Linkedin and WeChat
 
   return strength
 }
 
 export function changesToPublishExist({ props, state }) {
   const profile = get(props, 'identity') || {}
-  const verifiedAttestations = mapVerifiedAttestations(profile)
+  const verifiedAttestations = (profile.verifiedAttestations || []).map(att => att.id)
+  const allProviders = props.attestationProviders
+
+  const attestationChanges = allProviders.reduce((hasChange, att) => {
+    if (
+      verifiedAttestations.includes(att.id) === (!!state[`${att.id}Attestation`] || !!state[`${att.id}Verified`])
+    ) {
+      return true
+    }
+
+    return hasChange
+  }, false)
 
   return !(
     (profile.firstName || '') === state.firstName &&
     (profile.lastName || '') === state.lastName &&
     (profile.description || '') === state.description &&
     (profile.avatarUrl || '') === state.avatarUrl &&
-    !!verifiedAttestations.emailVerified ===
-      (!!state.emailAttestation || !!state.emailVerified) &&
-    !!verifiedAttestations.phoneVerified ===
-      (!!state.phoneAttestation || !!state.phoneVerified) &&
-    !!verifiedAttestations.facebookVerified ===
-      (!!state.facebookAttestation || !!state.facebookVerified) &&
-    !!verifiedAttestations.googleVerified ===
-      (!!state.googleAttestation || !!state.googleVerified) &&
-    !!verifiedAttestations.twitterVerified ===
-      (!!state.twitterAttestation || !!state.twitterVerified) &&
-    !!verifiedAttestations.airbnbVerified ===
-      (!!state.airbnbAttestation || !!state.airbnbVerified) &&
-    !!verifiedAttestations.websiteVerified ===
-      (!!state.websiteAttestation || !!state.websiteVerified) &&
-    !!verifiedAttestations.kakaoVerified ===
-      (!!state.kakaoAttestation || !!state.kakaoVerified) &&
-    !!verifiedAttestations.githubVerified ===
-      (!!state.githubAttestation || !!state.githubVerified) &&
-    !!verifiedAttestations.linkedinVerified ===
-      (!!state.linkedinAttestation || !!state.linkedinVerified) &&
-    !!verifiedAttestations.wechatVerified ===
-      (!!state.wechatAttestation || !!state.wechatVerified)
+    attestationChanges
   )
 }
 
@@ -129,12 +124,32 @@ export function clearVerifiedAccounts() {
   window.localStorage.removeItem(ATTESTATIONS_LOCALSTORAGE_KEY)
 }
 
-export function mapVerifiedAttestations(profile = {}) {
-  const verifiedAttestations = {}
+export function getProviderDisplayName(provider) {
+  switch (provider) {
+    case 'email':
+      return fbt('Email', 'Email')
+    case 'phone':
+      return fbt('Phone', 'Phone')
+    case 'airbnb':
+      return fbt('Airbnb', 'Airbnb')
+    case 'website':
+      return fbt('Website', 'Website')
+    case 'github':
+      return fbt('GitHub', 'GitHub')
+    case 'facebook':
+      return fbt('Facebook', 'Facebook')
+    case 'twitter':
+      return fbt('Twitter', 'Twitter')
+    case 'google':
+      return fbt('Google', 'Google')
+    case 'kakao':
+      return fbt('Kakao', 'Kakao')
+    case 'linkedin':
+      return fbt('LinkedIn', 'LinkedIn')
+    case 'wechat':
+      return fbt('WeChat', 'WeChat')
+  }
 
-  Array.from(profile.verifiedAttestations || []).forEach(attestation => {
-    verifiedAttestations[`${attestation.id}Verified`] = true
-  })
-
-  return verifiedAttestations
+  console.error(`Unknown attestation provider: ${provider}`)
+  return provider
 }

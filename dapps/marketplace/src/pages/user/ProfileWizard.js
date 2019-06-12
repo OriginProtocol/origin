@@ -191,7 +191,8 @@ class ProfileWizard extends Component {
       skipRewardsEnroll ||
       (growthEnrollmentStatus === 'Enrolled' &&
         this.hasPhoneAttestation(currentProfile)) ||
-      localStorage.useWeb3Identity
+      localStorage.useWeb3Identity ||
+      uiStep === 'Publish'
     )
       return this.renderPublish()
 

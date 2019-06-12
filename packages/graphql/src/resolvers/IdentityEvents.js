@@ -33,99 +33,120 @@ const attestationProgressPct = {
 }
 
 function getAttestations(account, attestations) {
-  return attestations
+  const verifiedAttestations = attestations
     .map(attestation => {
-      if (validateAttestation(account, attestation)) {
-        const issuedDate = {
-          type: 'created',
-          value: get(attestation, 'data.issueDate')
-        }
-        if (get(attestation, 'data.attestation.email.verified', false)) {
-          return {
-            id: 'email',
-            properties: [issuedDate]
-          }
-        }
-        if (get(attestation, 'data.attestation.phone.verified', false)) {
-          return {
-            id: 'phone',
-            properties: [issuedDate]
-          }
-        }
-        if (get(attestation, 'data.attestation.domain.verified', false)) {
-          let domainName = get(
-            attestation,
-            'data.verificationMethod.pubAuditableUrl.proofUrl',
-            ''
-          )
+      if (!validateAttestation(account, attestation)) {
+        return null
+      }
 
-          if (domainName) {
-            try {
-              domainName = new URL(domainName).origin
-            } catch (e) {
-              console.log(`Failed to parse domain ${domainName}: ${e.message}`)
-            }
-          }
-          return {
-            id: 'website',
-            properties: [{ type: 'domainName', value: domainName }, issuedDate]
-          }
-        }
+      const issuedDate = {
+        type: 'created',
+        value: get(attestation, 'data.issueDate')
+      }
 
-        const siteName = get(attestation, 'data.attestation.site.siteName')
-        const userId = get(
+      if (get(attestation, 'data.attestation.email.verified', false)) {
+        return {
+          id: 'email',
+          properties: [issuedDate]
+        }
+      }
+      if (get(attestation, 'data.attestation.phone.verified', false)) {
+        return {
+          id: 'phone',
+          properties: [issuedDate]
+        }
+      }
+      if (get(attestation, 'data.attestation.domain.verified', false)) {
+        let domainName = get(
           attestation,
-          'data.attestation.site.userId.verified',
+          'data.verificationMethod.pubAuditableUrl.proofUrl',
           ''
         )
 
-        switch (siteName) {
-          case 'facebook.com':
-            return {
-              id: 'facebook',
-              properties: [issuedDate]
-            }
-          case 'airbnb.com':
-            return {
-              id: 'airbnb',
-              properties: [{ type: 'userId', value: userId }, issuedDate]
-            }
-          case 'twitter.com':
-            return {
-              id: 'twitter',
-              properties: [{ type: 'userId', value: userId }, issuedDate]
-            }
-          case 'google.com':
-            return {
-              id: 'google',
-              properties: [issuedDate]
-            }
-          case 'kakao.com':
-            return {
-              id: 'kakao',
-              properties: [issuedDate]
-            }
-          case 'github.com':
-            return {
-              id: 'github',
-              properties: [issuedDate]
-            }
-          case 'linkedin.com':
-            return {
-              id: 'linkedin',
-              properties: [issuedDate]
-            }
-          case 'wechat.com':
-            return {
-              id: 'wechat',
-              properties: [issuedDate]
-            }
+        if (domainName) {
+          try {
+            domainName = new URL(domainName).origin
+          } catch (e) {
+            console.log(`Failed to parse domain ${domainName}: ${e.message}`)
+          }
         }
+        return {
+          id: 'website',
+          properties: [{ type: 'domainName', value: domainName }, issuedDate]
+        }
+      }
+
+      const siteName = get(attestation, 'data.attestation.site.siteName')
+      const userId = get(
+        attestation,
+        'data.attestation.site.userId.verified',
+        ''
+      )
+
+      switch (siteName) {
+        case 'facebook.com':
+          return {
+            id: 'facebook',
+            properties: [issuedDate]
+          }
+        case 'airbnb.com':
+          return {
+            id: 'airbnb',
+            properties: [{ type: 'userId', value: userId }, issuedDate]
+          }
+        case 'twitter.com':
+          return {
+            id: 'twitter',
+            properties: [{ type: 'userId', value: userId }, issuedDate]
+          }
+        case 'google.com':
+          return {
+            id: 'google',
+            properties: [issuedDate]
+          }
+        case 'kakao.com':
+          return {
+            id: 'kakao',
+            properties: [issuedDate]
+          }
+        case 'github.com':
+          return {
+            id: 'github',
+            properties: [issuedDate]
+          }
+        case 'linkedin.com':
+          return {
+            id: 'linkedin',
+            properties: [issuedDate]
+          }
+        case 'wechat.com':
+          return {
+            id: 'wechat',
+            properties: [issuedDate]
+          }
       }
 
       return null
     })
     .filter(attestation => !!attestation)
+
+  return sortAttestations(verifiedAttestations)
+}
+
+function sortAttestations(attestations) {
+  const m = new Map()
+  // In case of a multiple events for same provider,
+  // only the latest one will be returned
+  attestations.forEach(att => m.set(att.id, att))
+
+  return getAttestationProviders()
+    .reduce((filtered, provider) => {
+      if (m.has(provider)) {
+        filtered.push(m.get(provider))
+      }
+
+      return filtered
+    }, [])
 }
 
 export function identity({ id, ipfsHash }) {
@@ -324,10 +345,46 @@ async function getAuthUrl(provider, args) {
   return authData.url
 }
 
+// The order of this list will affect the order of rendering in DApp
+const ATTESTATION_PROVIDERS = [
+  'email',
+  'phone',
+  'facebook',
+  'twitter',
+  'airbnb',
+  'google'
+]
+
+if (process.env.ENABLE_WEBSITE_ATTESTATION === 'true') {
+  ATTESTATION_PROVIDERS.push('website')
+}
+
+if (process.env.ENABLE_KAKAO_ATTESTATION === 'true') {
+  ATTESTATION_PROVIDERS.push('kakao')
+}
+
+if (process.env.ENABLE_GITHUB_ATTESTATION === 'true') {
+  ATTESTATION_PROVIDERS.push('github')
+}
+
+if (process.env.ENABLE_LINKEDIN_ATTESTATION === 'true') {
+  ATTESTATION_PROVIDERS.push('linkedin')
+}
+
+if (process.env.ENABLE_WECHAT_ATTESTATION === 'true') {
+  ATTESTATION_PROVIDERS.push('wechat')
+}
+
+/**
+ * Returns a list of all supported attestation providers
+ */
+function getAttestationProviders() {
+  return ATTESTATION_PROVIDERS
+}
+
 export default {
   id: contract => contract.options.address,
   identities,
-  getAuthUrl: (_, { provider, ...args }) => {
-    return getAuthUrl(provider, args)
-  }
+  getAuthUrl: (_, { provider, ...args }) => getAuthUrl(provider, args),
+  attestationProviders: () => getAttestationProviders()
 }

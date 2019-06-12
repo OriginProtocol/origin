@@ -13,26 +13,7 @@ import AutoMutate from 'components/AutoMutate'
 import VerifyOAuthAttestation from 'mutations/VerifyOAuthAttestation'
 import query from 'queries/GetAuthUrl'
 
-function getProviderDisplayName(provider) {
-  switch (provider) {
-    case 'github':
-      return fbt('GitHub', 'GitHub')
-    case 'facebook':
-      return fbt('Facebook', 'Facebook')
-    case 'twitter':
-      return fbt('Twitter', 'Twitter')
-    case 'google':
-      return fbt('Google', 'Google')
-    case 'kakao':
-      return fbt('Kakao', 'Kakao')
-    case 'linkedin':
-      return fbt('LinkedIn', 'LinkedIn')
-    case 'wechat':
-      return fbt('WeChat', 'WeChat')
-  }
-
-  console.error(`Unknown attestation provider: ${provider}`)
-}
+import { getProviderDisplayName } from 'utils/profileTools'
 
 function InfoStoredOnChain({ provider, isMobile }) {
   const providerName = getProviderDisplayName(provider)

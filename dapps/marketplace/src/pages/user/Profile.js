@@ -24,6 +24,7 @@ import {
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
+import withAttestationProviders from 'hoc/withAttestationProviders'
 
 import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
@@ -42,7 +43,6 @@ import Onboard from 'pages/onboard/Onboard'
 
 import EditProfile from './_EditModal'
 import ToastNotification from './ToastNotification'
-import { mapVerifiedAttestations } from 'utils/profileTools'
 
 const store = Store('sessionStorage')
 
@@ -88,8 +88,7 @@ function getState(profile) {
     firstName: '',
     lastName: '',
     description: '',
-    ...pickBy(pick(profile, ProfileFields), k => k),
-    mappedVerifiedAttestations: mapVerifiedAttestations(profile)
+    ...pickBy(pick(profile, ProfileFields), k => k)
   }
 }
 
@@ -128,34 +127,33 @@ class UserProfile extends Component {
     const profile = get(props, 'identity') || {}
     const prevProfile = get(prevProps, 'identity') || {}
 
-    const verifiedAttestations = state.mappedVerifiedAttestations
-    const prevVerifiedAttestations = prevState.mappedVerifiedAttestations
+    const verifiedAttestations = (state.verifiedAttestations || []).map(att => att.id)
+    const prevVerifiedAttestations = (prevState.verifiedAttestations || []).map(att => att.id)
+
+    if (verifiedAttestations.length !== prevVerifiedAttestations.length) {
+      // short-circuit 
+      return false
+    }
+    
+    const newlyAdded = verifiedAttestations
+      .filter(att => !prevVerifiedAttestations.includes(att))
+    if (newlyAdded.length > 0) {
+      // short-circuit 
+      return false
+    }
+
+    const removedAttestations = prevVerifiedAttestations
+      .filter(att => !verifiedAttestations.includes(att))
+    if (removedAttestations.length > 0) {
+      // short-circuit 
+      return false
+    }
 
     return (
       (profile.firstName !== prevProfile.firstName ||
         profile.lastName !== prevProfile.lastName ||
         profile.description !== prevProfile.description ||
-        profile.avatarUrl !== prevProfile.avatarUrl ||
-        verifiedAttestations.emailVerified !==
-          prevVerifiedAttestations.emailVerified ||
-        verifiedAttestations.phoneVerified !==
-          prevVerifiedAttestations.phoneVerified ||
-        verifiedAttestations.facebookVerified !==
-          prevVerifiedAttestations.facebookVerified ||
-        verifiedAttestations.googleVerified !==
-          prevVerifiedAttestations.googleVerified ||
-        verifiedAttestations.twitterVerified !==
-          prevVerifiedAttestations.twitterVerified ||
-        verifiedAttestations.airbnbVerified !==
-          prevVerifiedAttestations.airbnbVerified ||
-        verifiedAttestations.websiteVerified !==
-          prevVerifiedAttestations.websiteVerified ||
-        verifiedAttestations.kakaoVerified !==
-          prevVerifiedAttestations.kakaoVerified ||
-        verifiedAttestations.githubVerified !==
-          prevVerifiedAttestations.githubVerified ||
-        verifiedAttestations.linkedinVerified !==
-          prevVerifiedAttestations.linkedinVerified) &&
+        profile.avatarUrl !== prevProfile.avatarUrl) &&
       profile.id === prevProfile.id &&
       // initial profile data population
       prevProfile.id !== undefined
@@ -253,7 +251,11 @@ class UserProfile extends Component {
       {
         attestation: 'linkedinAttestation',
         message: fbt('LinkedIn updated', 'profile.linkedinUpdated')
-      }
+      },
+      {
+        attestation: 'wechatAttestation',
+        message: fbt('WeChat updated', 'profile.wechatUpdated')
+      },
     ]
 
     attestationNotificationConf.forEach(({ attestation, message }) => {
@@ -415,7 +417,7 @@ class UserProfile extends Component {
                 {this.renderAtt(
                   'website',
                   fbt('Website', '_ProvisionedChanges.website'),
-                  { hidden: process.env.ENABLE_WEBSITE_ATTESTATION !== 'true' }
+                  // { hidden: process.env.ENABLE_WEBSITE_ATTESTATION !== 'true' }
                 )}
                 {this.renderAtt(
                   'kakao',
@@ -431,6 +433,11 @@ class UserProfile extends Component {
                   'linkedin',
                   fbt('LinkedIn', '_ProvisionedChanges.linkedin'),
                   { hidden: process.env.ENABLE_LINKEDIN_ATTESTATION !== 'true' }
+                )}
+                {this.renderAtt(
+                  'wechat',
+                  fbt('WeChat', '_ProvisionedChanges.wechat'),
+                  { hidden: process.env.ENABLE_WECHAT_ATTESTATION !== 'true' }
                 )}
               </div>
             </div>
@@ -452,12 +459,7 @@ class UserProfile extends Component {
                       tokenDecimals: this.props.tokenDecimals || 18
                     })}
                     earned={getTokensEarned({
-                      verifiedServices: Object.keys(
-                        AttestationComponents
-                      ).filter(
-                        a =>
-                          this.state.mappedVerifiedAttestations[`${a}Verified`]
-                      ),
+                      verifiedServices: (this.state.verifiedAttestations || []).map(att => att.id),
                       growthCampaigns: this.props.growthCampaigns,
                       tokenDecimals: this.props.tokenDecimals || 18
                     })}
@@ -554,7 +556,7 @@ class UserProfile extends Component {
     let attestationProvisional = false
 
     let status = ''
-    if (this.state.mappedVerifiedAttestations[`${type}Verified`]) {
+    if (this.state.verifiedAttestations && this.state.verifiedAttestations.find(att => att.id === type)) {
       status = ' published'
       attestationPublished = true
     } else if (this.state[`${type}Attestation`]) {
@@ -684,7 +686,7 @@ class UserProfile extends Component {
   }
 }
 
-export default withWallet(withIdentity(withGrowthCampaign(UserProfile)))
+export default withAttestationProviders(withWallet(withIdentity(withGrowthCampaign(UserProfile))))
 
 require('react-styl')(`
   .profile-edit

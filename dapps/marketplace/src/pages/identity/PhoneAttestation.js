@@ -379,7 +379,6 @@ require('react-styl')(`
         flex-direction: column
         align-items: center
         .form-control
-          max-width: 15rem
           text-align: center
       .actions
         display: flex
@@ -388,7 +387,10 @@ require('react-styl')(`
         margin-top: 1.5rem
         .btn-link
           text-decoration: none
-
+    &.phone
+      > div
+        .verification-code
+          max-width: 15rem
     &.phone > div h2::before
       background-image: url(images/identity/phone-icon-dark.svg)
       background-size: 2rem

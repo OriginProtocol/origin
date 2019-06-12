@@ -40,6 +40,8 @@ export const types = `
     ): IdentityConnection
 
     getAuthUrl(provider: String!, redirect: String): String
+
+    attestationProviders: [String]
   }
 
   type IdentityConnection {
