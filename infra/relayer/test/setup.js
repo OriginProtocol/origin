@@ -12,7 +12,10 @@ let shutdown
 before(async function() {
   this.timeout(30000)
   // Start Ganache (in-memory) and IPFS
-  shutdown = await services({ ganache: { inMemory: true, total_accounts: 20 } })
+  shutdown = await services({
+    ganache: { inMemory: true, total_accounts: 20 },
+    deployContracts: true
+  })
 })
 
 // Override exit code to prevent error when using Ctrl-c after `npm run test:watch`
