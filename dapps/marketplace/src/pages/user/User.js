@@ -30,8 +30,7 @@ const User = ({ match }) => {
           const verifiedAttestations = profile.verifiedAttestations
 
           const noVerifications =
-            !verifiedAttestations ||
-            verifiedAttestations.length === 0
+            !verifiedAttestations || verifiedAttestations.length === 0
 
           return (
             <>
@@ -50,14 +49,12 @@ const User = ({ match }) => {
                       <h5>
                         <fbt desc="User.verifiedInfo">Verified Info</fbt>
                       </h5>
-                      {
-                        verifiedAttestations.map(attestation => (
-                          <div key={attestation.id}>
-                            <div className={`attestation ${attestation.id}`} />
-                            {getProviderDisplayName(attestation.id)}
-                          </div>
-                        ))
-                      }
+                      {verifiedAttestations.map(attestation => (
+                        <div key={attestation.id}>
+                          <div className={`attestation ${attestation.id}`} />
+                          {getProviderDisplayName(attestation.id)}
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>

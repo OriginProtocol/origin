@@ -73,15 +73,17 @@ const AboutParty = ({ id, owner }) => {
               <div className="user-detail">
                 <div className="name">{profile.fullName}</div>
                 <div className="attestations">
-                  {
-                    verifiedAttestations.map(attestation => {
-                      return (
-                        <Tooltip key={attestation.id} placement="bottom" tooltip={getVerifiedTooltip(attestation.id)}>
-                          <div className={`attestation ${attestation.id}`} />
-                        </Tooltip>
-                      )
-                    })
-                  }
+                  {verifiedAttestations.map(attestation => {
+                    return (
+                      <Tooltip
+                        key={attestation.id}
+                        placement="bottom"
+                        tooltip={getVerifiedTooltip(attestation.id)}
+                      >
+                        <div className={`attestation ${attestation.id}`} />
+                      </Tooltip>
+                    )
+                  })}
                 </div>
               </div>
             </div>

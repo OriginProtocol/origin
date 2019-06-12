@@ -9,11 +9,9 @@ const Attestations = ({ profile = {} }) => {
 
   return (
     <div className="attestations">
-      {
-        verifiedAttestations.map(attestation => {
-          <div key={attestation.id} className={`attestation ${attestation.id}`} />
-        })
-      }
+      {verifiedAttestations.map(attestation => (
+        <div key={attestation.id} className={`attestation ${attestation.id}`} />
+      ))}
     </div>
   )
 }

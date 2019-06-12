@@ -127,25 +127,31 @@ class UserProfile extends Component {
     const profile = get(props, 'identity') || {}
     const prevProfile = get(prevProps, 'identity') || {}
 
-    const verifiedAttestations = (state.verifiedAttestations || []).map(att => att.id)
-    const prevVerifiedAttestations = (prevState.verifiedAttestations || []).map(att => att.id)
+    const verifiedAttestations = (state.verifiedAttestations || []).map(
+      att => att.id
+    )
+    const prevVerifiedAttestations = (prevState.verifiedAttestations || []).map(
+      att => att.id
+    )
 
     if (verifiedAttestations.length !== prevVerifiedAttestations.length) {
-      // short-circuit 
-      return false
-    }
-    
-    const newlyAdded = verifiedAttestations
-      .filter(att => !prevVerifiedAttestations.includes(att))
-    if (newlyAdded.length > 0) {
-      // short-circuit 
+      // short-circuit
       return false
     }
 
-    const removedAttestations = prevVerifiedAttestations
-      .filter(att => !verifiedAttestations.includes(att))
+    const newlyAdded = verifiedAttestations.filter(
+      att => !prevVerifiedAttestations.includes(att)
+    )
+    if (newlyAdded.length > 0) {
+      // short-circuit
+      return false
+    }
+
+    const removedAttestations = prevVerifiedAttestations.filter(
+      att => !verifiedAttestations.includes(att)
+    )
     if (removedAttestations.length > 0) {
-      // short-circuit 
+      // short-circuit
       return false
     }
 
@@ -255,7 +261,7 @@ class UserProfile extends Component {
       {
         attestation: 'wechatAttestation',
         message: fbt('WeChat updated', 'profile.wechatUpdated')
-      },
+      }
     ]
 
     attestationNotificationConf.forEach(({ attestation, message }) => {
@@ -416,7 +422,7 @@ class UserProfile extends Component {
                 )}
                 {this.renderAtt(
                   'website',
-                  fbt('Website', '_ProvisionedChanges.website'),
+                  fbt('Website', '_ProvisionedChanges.website')
                   // { hidden: process.env.ENABLE_WEBSITE_ATTESTATION !== 'true' }
                 )}
                 {this.renderAtt(
@@ -459,7 +465,9 @@ class UserProfile extends Component {
                       tokenDecimals: this.props.tokenDecimals || 18
                     })}
                     earned={getTokensEarned({
-                      verifiedServices: (this.state.verifiedAttestations || []).map(att => att.id),
+                      verifiedServices: (
+                        this.state.verifiedAttestations || []
+                      ).map(att => att.id),
                       growthCampaigns: this.props.growthCampaigns,
                       tokenDecimals: this.props.tokenDecimals || 18
                     })}
@@ -556,7 +564,10 @@ class UserProfile extends Component {
     let attestationProvisional = false
 
     let status = ''
-    if (this.state.verifiedAttestations && this.state.verifiedAttestations.find(att => att.id === type)) {
+    if (
+      this.state.verifiedAttestations &&
+      this.state.verifiedAttestations.find(att => att.id === type)
+    ) {
       status = ' published'
       attestationPublished = true
     } else if (this.state[`${type}Attestation`]) {
@@ -686,7 +697,9 @@ class UserProfile extends Component {
   }
 }
 
-export default withAttestationProviders(withWallet(withIdentity(withGrowthCampaign(UserProfile))))
+export default withAttestationProviders(
+  withWallet(withIdentity(withGrowthCampaign(UserProfile)))
+)
 
 require('react-styl')(`
   .profile-edit

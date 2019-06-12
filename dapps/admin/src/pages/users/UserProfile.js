@@ -54,13 +54,14 @@ const UserProfile = ({ profile }) => {
         {!profile.description ? null : (
           <div style={{ marginBottom: 10 }}>{profile.description}</div>
         )}
-        {
-          profile.verifiedAttestations && profile.verifiedAttestations.map(attestation => {
+        {profile.verifiedAttestations &&
+          profile.verifiedAttestations.map(attestation => {
             return (
-              <Verified key={attestation.id}>{getDisplayName(attestation.id)}</Verified>
+              <Verified key={attestation.id}>
+                {getDisplayName(attestation.id)}
+              </Verified>
             )
-          })
-        }
+          })}
       </div>
     </div>
   )

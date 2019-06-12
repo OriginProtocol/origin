@@ -8,8 +8,15 @@ function withAttestationProviders(WrappedComponent) {
   const WithAttestationProviders = ({ ...props }) => (
     <Query query={query}>
       {({ data, networkStatus }) => {
-        const attestationProviders = get(data, 'identityEvents.attestationProviders') || []
-        return <WrappedComponent {...props} attestationProviders={attestationProviders} attestationProvidersLoading={networkStatus === 1} />
+        const attestationProviders =
+          get(data, 'identityEvents.attestationProviders') || []
+        return (
+          <WrappedComponent
+            {...props}
+            attestationProviders={attestationProviders}
+            attestationProvidersLoading={networkStatus === 1}
+          />
+        )
       }}
     </Query>
   )

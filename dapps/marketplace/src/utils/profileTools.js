@@ -8,10 +8,15 @@ export function unpublishedStrength({ props, state }) {
   // TODO: Retrieve stregths from GraphQL?
   const profile = get(props, 'identity') || {}
   const allProviders = props.attestationProviders
-  const verifiedAttestations = (profile.verifiedAttestations || []).map(att => att.id)
+  const verifiedAttestations = (profile.verifiedAttestations || []).map(
+    att => att.id
+  )
 
   let strength = allProviders.reduce((sum, provider) => {
-    if (verifiedAttestations.includes(provider) || !state[`${provider}Attestation`]) {
+    if (
+      verifiedAttestations.includes(provider) ||
+      !state[`${provider}Attestation`]
+    ) {
       return sum
     }
 
@@ -45,12 +50,15 @@ export function unpublishedStrength({ props, state }) {
 
 export function changesToPublishExist({ props, state }) {
   const profile = get(props, 'identity') || {}
-  const verifiedAttestations = (profile.verifiedAttestations || []).map(att => att.id)
+  const verifiedAttestations = (profile.verifiedAttestations || []).map(
+    att => att.id
+  )
   const allProviders = props.attestationProviders
 
   const attestationChanges = allProviders.reduce((hasChange, att) => {
     if (
-      verifiedAttestations.includes(att.id) === (!!state[`${att.id}Attestation`] || !!state[`${att.id}Verified`])
+      verifiedAttestations.includes(att.id) ===
+      (!!state[`${att.id}Attestation`] || !!state[`${att.id}Verified`])
     ) {
       return true
     }

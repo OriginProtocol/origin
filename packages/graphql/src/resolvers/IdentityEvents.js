@@ -139,14 +139,13 @@ function sortAttestations(attestations) {
   // only the latest one will be returned
   attestations.forEach(att => m.set(att.id, att))
 
-  return getAttestationProviders()
-    .reduce((filtered, provider) => {
-      if (m.has(provider)) {
-        filtered.push(m.get(provider))
-      }
+  return getAttestationProviders().reduce((filtered, provider) => {
+    if (m.has(provider)) {
+      filtered.push(m.get(provider))
+    }
 
-      return filtered
-    }, [])
+    return filtered
+  }, [])
 }
 
 export function identity({ id, ipfsHash }) {
