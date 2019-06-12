@@ -348,20 +348,20 @@ require('react-styl')(`
     padding-bottom: 1.5rem !important
     > div
       h2
-        background: url(images/identity/verification-shape-grey.svg) no-repeat center;
-        background-size: 7rem;
-        padding-top: 9rem;
-        background-position: center top;
+        background: url(images/identity/verification-shape-grey.svg) no-repeat center
+        background-size: 7rem
+        padding-top: 9rem
+        background-position: center top
         position: relative
         &::before
           content: ""
-          position: absolute;
-          top: 0;
-          left: 0;
-          height: 7.5rem;
-          right: 0;
-          background-repeat: no-repeat;
-          background-position: center;
+          position: absolute
+          top: 0
+          left: 0
+          height: 7.5rem
+          right: 0
+          background-repeat: no-repeat
+          background-position: center
       font-size: 18px
       .form-control-wrap
         flex: 1
@@ -375,11 +375,10 @@ require('react-styl')(`
         font-size: 14px
         margin-top: 1rem
       .verification-code
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        display: flex
+        flex-direction: column
+        align-items: center
         .form-control
-          max-width: 15rem
           text-align: center
       .actions
         display: flex
@@ -388,39 +387,42 @@ require('react-styl')(`
         margin-top: 1.5rem
         .btn-link
           text-decoration: none
-
+    &.phone
+      > div
+        .verification-code
+          max-width: 15rem
     &.phone > div h2::before
-      background-image: url(images/identity/phone-icon-dark.svg);
-      background-size: 2rem;
+      background-image: url(images/identity/phone-icon-dark.svg)
+      background-size: 2rem
     &.email > div h2::before
-      background-image: url(images/identity/email-icon-dark.svg);
+      background-image: url(images/identity/email-icon-dark.svg)
       background-size: 3.5rem
     &.facebook > div h2::before
-      background-image: url(images/identity/facebook-icon-dark.svg);
+      background-image: url(images/identity/facebook-icon-dark.svg)
       background-size: 2rem
     &.twitter > div h2::before
-      background-image: url(images/identity/twitter-icon-dark.svg);
+      background-image: url(images/identity/twitter-icon-dark.svg)
       background-size: 3.5rem
     &.airbnb > div h2::before
-      background-image: url(images/identity/airbnb-icon-dark.svg);
+      background-image: url(images/identity/airbnb-icon-dark.svg)
       background-size: 4rem
     &.google > div h2::before
-      background-image: url(images/identity/google-icon-dark.svg);
+      background-image: url(images/identity/google-icon-dark.svg)
       background-size: 4rem
     &.website > div h2::before
-      background-image: url(images/identity/website-icon-dark.svg);
+      background-image: url(images/identity/website-icon-dark.svg)
       background-size: 4rem
     &.kakao > div h2::before
-      background-image: url(images/identity/kakao-icon-large-dark.svg);
+      background-image: url(images/identity/kakao-icon-large-dark.svg)
       background-size: 4rem
     &.github > div h2::before
-      background-image: url(images/identity/github-icon-large-dark.svg);
+      background-image: url(images/identity/github-icon-large-dark.svg)
       background-size: 4rem
     &.linkedin > div h2::before
-      background-image: url(images/identity/linkedin-icon-large-dark.svg);
+      background-image: url(images/identity/linkedin-icon-large-dark.svg)
       background-size: 4rem
     &.wechat > div h2::before
-      background-image: url(images/identity/wechat-icon-large-dark.svg);
+      background-image: url(images/identity/wechat-icon-large-dark.svg)
       background-size: 4rem
 
     &.success
@@ -428,14 +430,14 @@ require('react-styl')(`
         h2
           color: var(--greenblue)
           background-image: url(images/circular-check-button.svg)
-          background-size: 3.5rem;
-          padding-top: 5rem;
+          background-size: 3.5rem
+          padding-top: 5rem
           &::before
             background-image: none
         .actions
           margin-bottom: 1.5rem
 
-  .mobile-modal-light .attestation-modal.phone
+  .mobile-modal-light .attestation-modal
     padding: 20px
     text-align: center
     h2
@@ -474,6 +476,34 @@ require('react-styl')(`
         display: block
         font-weight: bold
         margin-bottom: 3px
-    > div h2::before
-      background-image: url(images/identity/phone-icon-light.svg);
+    &.phone > div h2::before
+      background-image: url(images/identity/phone-icon-light.svg)
+    &.email > div h2::before
+      background-image: url(images/identity/email-icon-light.svg)
+    &.facebook > div h2::before
+      background-image: url(images/identity/facebook-icon-light.svg)
+    &.twitter > div h2::before
+      background-image: url(images/identity/twitter-icon-light.svg)
+    &.airbnb > div h2::before
+      background-image: url(images/identity/airbnb-icon-light.svg)
+    &.google > div h2::before
+      background-image: url(images/identity/google-icon.svg)
+    &.website > div h2::before
+      background-image: url(images/identity/website-icon-light.svg)
+    &.kakao > div h2::before
+      background-image: url(images/identity/kakao-icon-large.svg)
+    &.github > div h2::before
+      background-image: url(images/identity/github-icon-large.svg)
+    &.linkedin > div h2::before
+      background-image: url(images/identity/linkedin-icon-large.svg)
+    &.wechat > div h2::before
+      background-image: url(images/identity/wechat-icon-large.svg)
+
+    > div
+      flex: auto
+      display: flex
+      flex-direction: column
+  
+    &.success > div h2::before
+      background-image: none
 `)

@@ -1,20 +1,20 @@
 import React from 'react'
 
-const Attestations = ({ profile = {}, small }) => (
-  <div className={`attestations${small ? ' attestations-small' : ''}`}>
-    {profile.emailVerified && <div className="attestation email" />}
-    {profile.phoneVerified && <div className="attestation phone" />}
-    {profile.facebookVerified && <div className="attestation facebook" />}
-    {profile.twitterVerified && <div className="attestation twitter" />}
-    {profile.airbnbVerified && <div className="attestation airbnb" />}
-    {profile.googleVerified && <div className="attestation google" />}
-    {profile.websiteVerified && <div className="attestation website" />}
-    {profile.kakaoVerified && <div className="attestation kakao" />}
-    {profile.githubVerified && <div className="attestation github" />}
-    {profile.linkedinVerified && <div className="attestation linkedin" />}
-    {profile.wechatVerified && <div className="attestation wechat" />}
-  </div>
-)
+const Attestations = ({ profile = {}, small }) => {
+  const verifiedAttestations = profile.verifiedAttestations
+
+  if (!verifiedAttestations) {
+    return null
+  }
+
+  return (
+    <div className={`attestations${small ? ' attestations-small' : ''}`}>
+      {verifiedAttestations.map(attestation => (
+        <div key={attestation.id} className={`attestation ${attestation.id}`} />
+      ))}
+    </div>
+  )
+}
 
 export default Attestations
 

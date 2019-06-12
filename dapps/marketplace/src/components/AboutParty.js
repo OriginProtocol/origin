@@ -45,6 +45,8 @@ const AboutParty = ({ id, owner }) => {
             )
           }
 
+          const verifiedAttestations = profile.verifiedAttestations || []
+
           return (
             <div className="profile" onClick={() => setRedirect(true)}>
               <Avatar profile={profile} size={50} />
