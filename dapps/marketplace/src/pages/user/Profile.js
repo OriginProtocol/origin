@@ -294,6 +294,85 @@ class UserProfile extends Component {
     }, 3000)
   }
 
+  renderPage() {
+    const growthEnrolled = this.props.growthEnrollmentStatus === 'Enrolled'
+
+    let verifiedAttestations = get(this.props, 'identity.verifiedAttestations', [])
+
+    if (verifiedAttestations.length < 10) {
+      // Show a minimum of 10 icons
+      verifiedAttestations = verifiedAttestations.concat(new Array(10 - verifiedAttestations.length).fill(null))
+    } else if (verifiedAttestations.length > 10 && (verifiedAttestations % 5 !== zero)) {
+      // Show icons in multiples of 5
+      const lengthToAppend = (5 - (verifiedAttestations.length % 5))
+      verifiedAttestations = verifiedAttestations.concat(new Array(lengthToAppend).fill(null))
+    }
+
+    return (
+      <div className="container profile-page">
+        <div className="row">
+          <div className="col-md-8 profile-content">
+            <div className="profile-info-container">
+              <div className="avatar-container">
+                <Avatar className="with-edit-icon" avatarUrl={this.state.avatarUrl} />
+              </div>
+              <div className="user-bio-container">
+                <h2>
+                  {`${this.state.firstName} ${this.state.lastName}`}
+                </h2>
+                <div className="description">
+                  My name is Aure and I like chickens. It’s been a lifelong obsession and I don’t think it’ll ever go away so I hope you’re not turned off by it or anything.
+                </div>
+              </div>
+            </div>
+            <div className="user-progress-container">
+              <div className="profile-strength-container">
+                <ProfileStrength
+                  published={get(this.props, 'identity.strength') || 0}
+                  unpublished={unpublishedStrength(this)}
+                />
+              </div>
+              {growthEnrolled && (
+                <div className="user-earnings-container">
+                  <Earnings
+                    total={getMaxRewardPerUser({
+                      growthCampaigns: this.props.growthCampaigns,
+                      tokenDecimals: this.props.tokenDecimals || 18
+                    })}
+                    earned={getTokensEarned({
+                      verifiedServices: (
+                        this.state.verifiedAttestations || []
+                      ).map(att => att.id),
+                      growthCampaigns: this.props.growthCampaigns,
+                      tokenDecimals: this.props.tokenDecimals || 18
+                    })}
+                  />
+                </div>
+              )}
+            </div>
+            <div className="attestations-container text-center">
+              <button type="button" className="btn btn-outline-primary btn-rounded">
+                <fbt desc="Profile.addVerifications">Add Verifications</fbt>
+              </button>
+              <div className="attestation-badges">
+                {verifiedAttestations.map((att, index) => {
+                  if (!att) {
+                    return <div key={index} className="attestation-badge"></div>
+                  }
+
+                  return (
+                    <div key={att.id} className={`attestation-badge verified ${att.id}`}></div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+          <div className="col-md-3 profile-sidebar"></div>
+        </div>
+      </div>
+    )
+  }
+
   render() {
     return (
       <Fragment>
@@ -303,28 +382,39 @@ class UserProfile extends Component {
         <DocumentTitle
           pageTitle={<fbt desc="Profile.title">Welcome to Origin Protocol</fbt>}
         />
-        <Switch>
-          {/* Accessed only when onboarding started by clicking on Growth Enroll Box in profile view.
-           * For that reason Origin wallet is disabled.
-           */}
-          <Route
-            path="/profile/onboard"
-            render={() => (
-              <Onboard
-                hideOriginWallet={true}
-                linkprefix="/profile"
-                redirectTo="/profile/continue"
-              />
-            )}
-          />
-          <Route
-            path="/profile/continue"
-            render={() => this.renderProfile(true)}
-          />
-          <Route render={() => this.renderProfile(false)} />
-        </Switch>
+        {this.renderPage()}
       </Fragment>
     )
+    // return (
+    //   <Fragment>
+    //     <ToastNotification
+    //       setShowHandler={handler => (this.handleShowNotification = handler)}
+    //     />
+    //     <DocumentTitle
+    //       pageTitle={<fbt desc="Profile.title">Welcome to Origin Protocol</fbt>}
+    //     />
+    //     <Switch>
+    //       {/* Accessed only when onboarding started by clicking on Growth Enroll Box in profile view.
+    //        * For that reason Origin wallet is disabled.
+    //        */}
+    //       <Route
+    //         path="/profile/onboard"
+    //         render={() => (
+    //           <Onboard
+    //             hideOriginWallet={true}
+    //             linkprefix="/profile"
+    //             redirectTo="/profile/continue"
+    //           />
+    //         )}
+    //       />
+    //       <Route
+    //         path="/profile/continue"
+    //         render={() => this.renderProfile(true)}
+    //       />
+    //       <Route render={() => this.renderProfile(false)} />
+    //     </Switch>
+    //   </Fragment>
+    // )
   }
 
   openEditProfile(e) {
@@ -368,7 +458,7 @@ class UserProfile extends Component {
           <div className="col-md-8">
             <div className="profile d-flex">
               <div className="avatar-wrap">
-                <Avatar avatarUrl={this.state.avatarUrl} />
+                <Avatar avatarUrl={this.props.identity.avatarUrl} />
               </div>
               <div className="info">
                 <a
@@ -662,6 +752,122 @@ export default withAttestationProviders(
 )
 
 require('react-styl')(`
+  .profile-page
+    margin-top: 2rem
+    .profile-content
+      .profile-info-container
+        display: flex
+        direction: row
+        padding: 1rem
+        .avatar-container
+          flex: auto 0 0
+          padding: 0.5rem 0
+          .avatar
+            width: 110px
+            height: 110px
+        .user-bio-container
+          flex: auto 1 1
+          padding: 0 2rem
+          h2
+            font-family: Poppins
+            font-size: 2.25rem
+            font-weight: 500
+            color: var(--dark)
+            margin-bottom: 0.5rem
+          .description
+            font-family: Lato
+            font-size: 1rem
+            font-weight: 300
+            line-height: 1.56
+            color: var(--dark)
+      .user-progress-container
+        margin-top: 1rem
+        display: flex
+        flex-direction: row
+        .profile-strength-container, .user-earnings-container
+          flex: 50% 1 1
+          padding: 1rem
+      .attestations-container
+        margin: 0 1rem
+        border-radius: 5px
+        border: solid 1px #c2cbd3
+        background-color: var(--white)
+        padding: 3rem
+        .attestation-badges
+          margin-top: 1.5rem
+          .attestation-badge
+            display: inline-block
+            width: 6rem
+            height: 6rem
+            border-radius: 50%
+            border: dashed 1px #c2cbd3
+            flex: auto 1 1
+            margin: 0.5rem
+            background-repeat: no-repeat
+            background-position: center
+            &.verified
+              border: solid 6px #c2cbd3
+            &.disabled
+              background-color: #dfe6ea
+              border-color: #dfe6ea
+            &.email
+              background-image: url('images/identity/mail-icon-small.svg')
+              &.verified
+                border-color: #1ec68e
+                background-color: #27d198
+            &.phone
+              background-image: url('images/identity/mail-icon-small.svg')
+              &.verified
+                border-color: #e8b506
+                background-color: #f4c111
+            &.facebook
+              background-image: url('images/identity/mail-icon-small.svg')
+              &.verified
+                border-color: #2d4a89
+                background-color: #3a5997
+            &.twitter
+              background-image: url('images/identity/mail-icon-small.svg')
+              &.verified
+                border-color: #169aeb
+                background-color: #1fa1f1
+            &.airbnb
+              background-image: url('images/identity/mail-icon-small.svg')
+              &.verified
+                border-color: #ee4f54
+                background-color: #ff5b60
+            &.website
+              background-image: url('images/identity/mail-icon-small.svg')
+              &.verified
+                border-color: #6331dd
+                background-color: #6e3bea
+            &.google
+              background-image: url('images/identity/mail-icon-small.svg')
+              &.verified
+                border-color: #1ec68e
+                background-color: #27d198
+            &.wechat
+              background-image: url('images/identity/mail-icon-small.svg')
+              &.verified
+                border-color: #00b500
+                background-color: #02c602
+            &.kakao
+              background-image: url('images/identity/mail-icon-small.svg')
+              &.verified
+                border-color: #ebd500
+                background-color: #ffe815
+            &.github
+              background-image: url('images/identity/mail-icon-small.svg')
+              &.verified
+                border-color: #1ec68e
+                background-color: #27d198
+            &.linkedin
+              background-image: url('images/identity/mail-icon-small.svg')
+              &.verified
+                border-color: #1ec68e
+                background-color: #27d198
+
+    .profile-sidebar
+      margin-left: 8.33333%
   .profile-edit
     margin-top: 3rem
     h3
