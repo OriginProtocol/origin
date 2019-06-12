@@ -14,13 +14,11 @@ const identityQuery = gql`
           avatarUrl
           strength
           attestations
-          facebookVerified
-          twitterVerified
-          airbnbVerified
-          phoneVerified
-          emailVerified
-          googleVerified
-          websiteVerified
+
+          verifiedAttestations {
+            id
+          }
+
           ipfsHash
         }
       }
