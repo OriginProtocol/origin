@@ -482,10 +482,14 @@ class Purse {
     const txCost = fundingValue.add(numberToBN(this.gasPrice * 21000))
     const masterPrivkey = this.masterWallet.getPrivateKey()
     const masterAddress = this.masterWallet.getChecksumAddressString()
-    const masterBalance = stringToBN(await this.web3.eth.getBalance(masterAddress))
+    const masterBalance = stringToBN(
+      await this.web3.eth.getBalance(masterAddress)
+    )
 
     if (masterBalance.lt(BASE_FUND_VALUE)) {
-      logger.error(`Unable to find child account because master account (${masterAddress}) does't have the funds!`)
+      logger.error(
+        `Unable to find child account because master account (${masterAddress}) does't have the funds!`
+      )
       return
     }
 
