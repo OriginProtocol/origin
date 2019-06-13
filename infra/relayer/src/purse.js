@@ -221,6 +221,7 @@ class Purse {
    */
   async signTx(address, tx) {
     this._enforceChild(address)
+    await this.init()
 
     const privKey = this.accounts[address].wallet.getPrivateKey()
     return await this.web3.eth.accounts.signTransaction(
@@ -481,7 +482,12 @@ class Purse {
     const txCost = fundingValue.add(numberToBN(this.gasPrice * 21000))
     const masterPrivkey = this.masterWallet.getPrivateKey()
     const masterAddress = this.masterWallet.getChecksumAddressString()
-    const masterBalance = await this.web3.eth.getBalance(masterAddress)
+    const masterBalance = stringToBN(await this.web3.eth.getBalance(masterAddress))
+
+    if (masterBalance.lt(BASE_FUND_VALUE)) {
+      logger.error(`Unable to find child account because master account (${masterAddress}) does't have the funds!`)
+      return
+    }
 
     logger.info(
       `Sending ${fundingValue.toString()} (total cost: ${txCost}) from ${masterAddress} (bal: ${masterBalance})`
