@@ -10,6 +10,7 @@ export const OnboardingConstants = keyMirror(
     SET_PHONE_VERIFIED: null,
     SET_NAME: null,
     SET_AVATAR_URI: null,
+    SET_COMPLETE: null,
     RESET: null
   },
   'ONBOARDING'
@@ -54,6 +55,13 @@ export function setAvatarUri(avatarUri) {
   return {
     type: OnboardingConstants.SET_AVATAR_URI,
     avatarUri
+  }
+}
+
+export function setComplete(complete) {
+  return {
+    type: OnboardingConstants.SET_COMPLETE,
+    complete
   }
 }
 

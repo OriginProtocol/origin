@@ -9,7 +9,8 @@ const initialState = {
   phoneVerified: false,
   firstName: null,
   lastName: null,
-  avatarUri: null
+  avatarUri: null,
+  complete: false
 }
 
 export default function Onboarding(state = initialState, action = {}) {
@@ -35,6 +36,9 @@ export default function Onboarding(state = initialState, action = {}) {
 
     case OnboardingConstants.SET_AVATAR_URI:
       return { ...state, avatarUri: action.avatarUri }
+
+    case OnboardingConstants.SET_COMPLETE:
+      return { ...state, complete: action.complete }
 
     case OnboardingConstants.RESET:
       return initialState

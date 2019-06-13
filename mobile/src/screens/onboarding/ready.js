@@ -13,7 +13,11 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import { connect } from 'react-redux'
 
-import { setEmailVerified, setPhoneVerified } from 'actions/Onboarding'
+import {
+  setEmailVerified,
+  setPhoneVerified,
+  setComplete
+} from 'actions/Onboarding'
 import withOriginGraphql from 'hoc/withOriginGraphql'
 import OriginButton from 'components/origin-button'
 
@@ -68,6 +72,8 @@ class ReadyScreen extends Component {
         this.props.setPhoneVerified(true)
       }
     }
+
+    this.props.setOnboardingComplete(true)
 
     this.setState({ loading: false })
   }
@@ -136,7 +142,8 @@ const mapDispatchToProps = dispatch => ({
   setEmailAttestation: value => dispatch(setEmailVerified(value)),
   setEmailVerified: email => dispatch(setEmailVerified(email)),
   setPhoneAttestation: value => dispatch(setPhoneVerified(value)),
-  setPhoneVerified: phone => dispatch(setPhoneVerified(phone))
+  setPhoneVerified: phone => dispatch(setPhoneVerified(phone)),
+  setOnboardingComplete: complete => dispatch(setComplete(complete))
 })
 
 export default withOriginGraphql(
