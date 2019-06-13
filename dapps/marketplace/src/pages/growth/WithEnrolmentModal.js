@@ -761,7 +761,6 @@ require('react-styl')(`
     .terms-body
       color: var(--dark)
       padding: 0
-      margin: 0px 25px
     .explanation
       font-size: 12px
       text-align: left
@@ -780,7 +779,7 @@ require('react-styl')(`
       font-size: 0.75rem
       overflow-y: scroll
       height: 9.375rem
-      margin: 1.5rem 0px
+      margin: 1.5rem
       text-align: left
     .join-campaign
       .btn
@@ -830,7 +829,7 @@ require('react-styl')(`
         max-width: 15rem
         font-weight: 500
       .terms
-        margin: 16px 25px
+        margin: 1rem 1.56rem
       .checkbox-holder
         font-size: 15px
       .terms
@@ -847,6 +846,7 @@ require('react-styl')(`
         font-size: 0.875rem
         font-weight: 300
         line-height: 1.4
+        margin: 0px 25px
         padding: 0
       .btn-no-outline-link
         font-size: 0.875rem
