@@ -13,7 +13,7 @@ const Loading = (props) => (
       />
     </View>
     <View style={styles.indicatorContainer}>
-      <ActivityIndicator size="large" color="white" />
+      <ActivityIndicator size="small" color="white" />
       {props.text && (
         <Text style={styles.indicatorText}>{props.text}</Text>
       )}
