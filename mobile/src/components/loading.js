@@ -1,19 +1,49 @@
 'use strict'
 
 import React from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, Image, SafeAreaView, Text, View } from 'react-native'
 
-const Loading = () => (
-  <View style={styles.loading}>
-    <ActivityIndicator size="large" color="white" />
-  </View>
+const IMAGES_PATH = '../../assets/images/'
+
+const Loading = (props) => (
+  <SafeAreaView style={styles.container}>
+    <View style={styles.content}>
+      <Image
+        source={require(IMAGES_PATH + 'origin-white-logo.png')}
+      />
+    </View>
+    <View style={styles.indicatorContainer}>
+      <ActivityIndicator size="large" color="white" />
+      {props.text && (
+        <Text style={styles.indicatorText}>{props.text}</Text>
+      )}
+    </View>
+  </SafeAreaView>
 )
 
 const styles = {
-  loading: {
-    backgroundColor: '#293f55',
+  container: {
     flex: 1,
-    justifyContent: 'space-around'
+    backgroundColor: '#007fff'
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%'
+  },
+  indicatorContainer: {
+    marginBottom: 80,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  indicatorText: {
+    marginLeft: 10,
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600'
   }
 }
 

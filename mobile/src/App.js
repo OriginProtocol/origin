@@ -9,7 +9,6 @@ import Web3 from 'web3'
 import Configs from '@origin/graphql/src/configs'
 
 import Store, { persistor } from './Store'
-import Loading from 'components/loading'
 import AppContainer from './Navigation'
 import NavigationService from './NavigationService'
 import setLanguage from 'utils/language'
@@ -67,7 +66,6 @@ class App extends Component {
     return (
       <ReduxProvider store={Store}>
         <PersistGate
-          loading={<Loading />}
           onBeforeLift={this.onBeforeLift}
           persistor={persistor}
         >

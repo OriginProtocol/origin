@@ -249,7 +249,7 @@ class MarketplaceApp extends React.Component {
         <BackupPrompt />
         <_MarketplaceApp navigation={navigation} />
         <Modal visible={!this.props.marketplace.ready}>
-          <Loading />
+          <Loading text="Loading marketplace..." />
         </Modal>
       </>
     )
