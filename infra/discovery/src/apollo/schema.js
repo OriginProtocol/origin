@@ -98,7 +98,9 @@ const typeDefs = gql`
     marketplacePublisher: String
     createDate: String
     updateVersion: Int
+    # Moderator access required to read
     scoreMultiplier: Float
+    # Moderator access required to read
     scoreTags: [String]
     # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
   }

@@ -37,7 +37,20 @@ const resolvers = {
       }
     },
 
-    async listing(root, args) {
+    async listing(root, args, context, info) {
+      // Check if moderator access is required
+      const moderatorOnlyFields = ['scoreTags', 'scoreMultiplier']
+      const selections = info.fieldNodes[0].selectionSet.selections
+      const requestedModFields = selections.filter(
+        x => x.name && moderatorOnlyFields.includes(x.name.value)
+      )
+      if (requestedModFields.length > 0) {
+        const auth = await authenticate(context.discoveryAuthToken)
+        if (!auth) {
+          throw 'You must be a moderator in order to view these fields'
+        }
+      }
+      // Load a listing
       const id = args.id
       const listing = await search.Listing.get(id)
       if (listing._source.scoreTags === undefined) {
@@ -129,6 +142,9 @@ const resolvers = {
 }
 
 async function authenticate(authToken) {
+  if (!authToken) {
+    return undefined
+  }
   const accessToken = await db.DiscoveryAccessToken.findOne({
     where: { authToken }
   })
