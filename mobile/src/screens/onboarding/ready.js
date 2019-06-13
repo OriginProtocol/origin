@@ -13,7 +13,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import { connect } from 'react-redux'
 
-import { setEmailVerified, setPhoneVerified } from 'actions/Onboarding'
+import { setEmailAttestation, setEmailVerified, setPhoneAttestation, setPhoneVerified } from 'actions/Onboarding'
 import withOriginGraphql from 'hoc/withOriginGraphql'
 import OriginButton from 'components/origin-button'
 
@@ -34,7 +34,7 @@ class ReadyScreen extends Component {
   publishIdentity = async () => {
     const profile = {
       firstName: this.props.onboarding.firstName,
-      lastName: 'Linton', //this.props.onboarding.lastName,
+      lastName: this.props.onboarding.lastName,
       avatarUrl: this.props.onboarding.avatarUri
     }
 
@@ -60,9 +60,11 @@ class ReadyScreen extends Component {
 
     // Identity publish success, add some flags
     if (this.props.onboarding.emailAttestation) {
+      this.props.setEmailAttestation(false)
       this.props.setEmailVerified(true)
     }
     if (this.props.onboarding.phoneAttestation) {
+      this.props.setPhoneAttestation(false)
       this.props.setPhoneVerified(true)
     }
 
@@ -130,7 +132,9 @@ const mapStateToProps = ({ onboarding, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
+  setEmailAttestation: value => dispatch(setEmailVerified(value)),
   setEmailVerified: email => dispatch(setEmailVerified(email)),
+  setPhoneAttestation: value => dispatch(setPhoneVerified(value)),
   setPhoneVerified: phone => dispatch(setPhoneVerified(phone))
 })
 
