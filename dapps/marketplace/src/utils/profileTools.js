@@ -1,9 +1,6 @@
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
-const websiteAttestationEnabled =
-  process.env.ENABLE_WEBSITE_ATTESTATION === 'true'
-
 export function unpublishedStrength({ props, state }) {
   // TODO: Retrieve stregths from GraphQL?
   const profile = get(props, 'identity') || {}
@@ -20,30 +17,17 @@ export function unpublishedStrength({ props, state }) {
       return sum
     }
 
-    switch (provider) {
-      case 'email':
-      case 'phone':
-      case 'facebook':
-      case 'google':
-      case 'twitter':
-        sum += 10
-        break
-      case 'airbnb':
-        sum += websiteAttestationEnabled ? 5 : 10
-        break
-      case 'website':
-        sum += websiteAttestationEnabled ? 5 : 0
-    }
-
-    // TODO: Add strength for KaKao, GitHub, Linkedin and WeChat
-
-    return sum
+    return sum + 10
   }, 0)
 
   if (!profile.firstName && state.firstName) strength += 10
   if (!profile.lastName && state.lastName) strength += 10
   if (!profile.description && state.description) strength += 10
   if (!profile.avatarUrl && state.avatarUrl) strength += 10
+
+  if (strength > 100) {
+    strength = 100
+  }
 
   return strength
 }
