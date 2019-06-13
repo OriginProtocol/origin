@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React from 'react'
 import { fbt } from 'fbt-runtime'
 import Link from 'components/Link'
 
@@ -17,24 +17,26 @@ function Purchases(props) {
     campaign => campaign.status === 'Active'
   )
 
-  const purchaseRewardTypes = ['ListingCreated', 'ListingPurchased', 'ListingIdPurchased', 'ListingSold']
-  const purchaseActions = activeCampaign.actions.filter(action => purchaseRewardTypes.includes(action.type))
+  const purchaseRewardTypes = [
+    'ListingCreated',
+    'ListingPurchased',
+    'ListingIdPurchased',
+    'ListingSold'
+  ]
+  const purchaseActions = activeCampaign.actions.filter(action =>
+    purchaseRewardTypes.includes(action.type)
+  )
   return (
     <div className={`container growth-purchases ${isMobile ? 'mobile' : ''}`}>
       <div>
-        <Link
-          className="back d-flex mr-auto"
-          to="/campaigns"
-        >
+        <Link className="back d-flex mr-auto" to="/campaigns">
           <img src="/images/caret-blue.svg" />
           <div>
             <fbt desc="RewardInvite.backToCampaign">Back to Campaign</fbt>
           </div>
         </Link>
         <h1 className={`mb-2 pt-md-3 mt-3`}>
-          <fbt desc="GrowthPurhcases.purchases">
-            Purchases
-          </fbt>
+          <fbt desc="GrowthPurhcases.purchases">Purchases</fbt>
         </h1>
         <fbt desc="GrowthPurhcases.completeToEarnTokens">
           Successfully complete certain purchases to earn Origin Tokens.

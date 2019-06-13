@@ -1,14 +1,10 @@
-import React, { Fragment, useState } from 'react'
+import React from 'react'
 import { fbt } from 'fbt-runtime'
 import { formatTokens } from 'utils/growthTools'
 import Link from 'components/Link'
 
 function ActionGroup(props) {
-  const {
-    isMobile,
-    type,
-    hasBorder
-  } = props
+  const { isMobile, type, hasBorder } = props
 
   let iconSource, title
 
@@ -18,7 +14,7 @@ function ActionGroup(props) {
   } else if (type === 'purchases') {
     iconSource = 'images/growth/purchases-icon.svg'
     title = fbt('Purchases', 'growth.actionGroup.purchases')
-  }  else if (type === 'invitations') {
+  } else if (type === 'invitations') {
     iconSource = 'images/growth/invitations-icon.svg'
     title = fbt('Invitations', 'growth.actionGroup.invitations')
   }
@@ -27,18 +23,22 @@ function ActionGroup(props) {
     return (
       <div className="reward d-flex pl-2 justify-content-start align-items-center flex-grow-1">
         <img className="act-group-ogn-icon mr-1" src="images/ogn-icon.svg" />
-        <div className="value">{formatTokens(amount, props.decimalDivision)}</div>
+        <div className="value">
+          {formatTokens(amount, props.decimalDivision)}
+        </div>
       </div>
     )
   }
 
   const renderRewardHolder = (amount, text, className) => {
     return (
-      <div className={`d-flex align-items-center ${isMobile ? 'm-2 flex-column' : 'm-3 flex-row'} ${className ? className : ''}`}>
+      <div
+        className={`d-flex align-items-center ${
+          isMobile ? 'm-2 flex-column' : 'm-3 flex-row'
+        } ${className ? className : ''}`}
+      >
         {isMobile && renderReward(amount)}
-        <div className="sub-text ml-2">
-          {text}
-        </div>
+        <div className="sub-text ml-2">{text}</div>
         {!isMobile && renderReward(amount)}
       </div>
     )
@@ -46,12 +46,18 @@ function ActionGroup(props) {
 
   return (
     <Link
-      className={`growth-action-group d-flex align-items-center ${isMobile ? 'mobile' : ''} ${hasBorder ? 'with-border' : ''}`}
+      className={`growth-action-group d-flex align-items-center ${
+        isMobile ? 'mobile' : ''
+      } ${hasBorder ? 'with-border' : ''}`}
       to={`campaigns/${type}`}
     >
-      <img className="icon" src={iconSource}/>
+      <img className="icon" src={iconSource} />
       <div className="title">{title}</div>
-      {renderRewardHolder(0, fbt('Pending', 'RewardActions.pending'), 'ml-auto')}
+      {renderRewardHolder(
+        0,
+        fbt('Pending', 'RewardActions.pending'),
+        'ml-auto'
+      )}
       {renderRewardHolder(0, fbt('Earned', 'RewardActions.earned'), 'ml-3')}
     </Link>
   )

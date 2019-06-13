@@ -374,7 +374,10 @@ function withEnrolmentModal(WrappedComponent) {
         <div className="container d-flex flex-column align-items-center">
           <div>
             <div className="image-holder text-center mr-auto ml-auto">
-              <img className="world-image" src="images/growth/not-eligible-graphic.svg" />
+              <img
+                className="world-image"
+                src="images/growth/not-eligible-graphic.svg"
+              />
             </div>
           </div>
           <div className="title mt-4 text-center">
@@ -420,9 +423,7 @@ function withEnrolmentModal(WrappedComponent) {
             {isRestricted && !notCitizenChecked && (
               <button
                 className={`btn btn-rounded btn-lg btn-outline-light mb-0 ${
-                  isMobile
-                    ? 'wide-btn'
-                    : ''
+                  isMobile ? 'wide-btn' : ''
                 }`}
                 onClick={() => this.handleCloseModal()}
                 children={fbt('Done', 'Done')}

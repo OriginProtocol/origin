@@ -1,19 +1,16 @@
-import React, { Fragment, useState } from 'react'
+import React from 'react'
 import { fbt } from 'fbt-runtime'
 import numberFormat from 'utils/numberFormat'
 
-const appStoreLink = 'https://itunes.apple.com/us/app/origin-marketplace/id1446091928'
-const playStoreLink = 'https://play.google.com/store/apps/details?id=com.origincatcher'
+const appStoreLink =
+  'https://itunes.apple.com/us/app/origin-marketplace/id1446091928'
+const playStoreLink =
+  'https://play.google.com/store/apps/details?id=com.origincatcher'
 
 function MobileDownloadAction(props) {
-  if (!props.action)
-    return ''
+  if (!props.action) return ''
 
-  const {
-    status,
-    reward,
-    rewardEarned
-  } = props.action
+  const { status, reward, rewardEarned } = props.action
 
   const { isMobile } = props
 
@@ -33,8 +30,7 @@ function MobileDownloadAction(props) {
   }
 
   const storeLinks = () => {
-    if (actionCompleted)
-      return ''
+    if (actionCompleted) return ''
 
     return (
       <div className={`d-flex mt-1 ${!isMobile ? 'mr-3' : ''}`}>
@@ -49,34 +45,43 @@ function MobileDownloadAction(props) {
   }
 
   return (
-    <div className={`mobile-rewards-box d-flex ${!isMobile ? 'align-items-center' : 'mobile'}`}>
+    <div
+      className={`mobile-rewards-box d-flex ${
+        !isMobile ? 'align-items-center' : 'mobile'
+      }`}
+    >
       <div className="phone-holder">
         <img
           className={`phones mr-3 ${actionCompleted ? 'small' : ''}`}
           src="images/mobile/devices-layered.png"
         />
-        {actionCompleted && <img
-          className="green-tick"
-          src="images/growth/green-tick-icon.svg"
-        />}
+        {actionCompleted && (
+          <img className="green-tick" src="images/growth/green-tick-icon.svg" />
+        )}
       </div>
       <div className="d-flex flex-column mr-0 mr-md-4">
         <h2>
-          {!actionCompleted && <fbt desc="growth.mobileRewards.downloadMarketplaceApp">
-            Download the Origin Marketplace app
-          </fbt>}
-          {actionCompleted && <fbt desc="growth.mobileRewards.marketplaceInstalled">
-            Origin Marketplace installed
-          </fbt>}
+          {!actionCompleted && (
+            <fbt desc="growth.mobileRewards.downloadMarketplaceApp">
+              Download the Origin Marketplace app
+            </fbt>
+          )}
+          {actionCompleted && (
+            <fbt desc="growth.mobileRewards.marketplaceInstalled">
+              Origin Marketplace installed
+            </fbt>
+          )}
         </h2>
         <div className="d-flex">
           <div className="install">
-            {!actionCompleted && <fbt desc="growth.mobileRewards.installAndEarn">
-              Install and earn
-            </fbt>}
-            {actionCompleted && <fbt desc="growth.mobileRewards.earned">
-              Earned
-            </fbt>}
+            {!actionCompleted && (
+              <fbt desc="growth.mobileRewards.installAndEarn">
+                Install and earn
+              </fbt>
+            )}
+            {actionCompleted && (
+              <fbt desc="growth.mobileRewards.earned">Earned</fbt>
+            )}
           </div>
           <img className="ogn-icon-small" src="images/ogn-icon.svg" />
           <div className="ogn-value">
@@ -89,7 +94,6 @@ function MobileDownloadAction(props) {
       {!isMobile && storeLinks()}
     </div>
   )
-
 }
 
 export default MobileDownloadAction

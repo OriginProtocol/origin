@@ -39,7 +39,13 @@ function NavigationItem(props) {
       className="pt-4 pr-4"
     >
       <div className="d-flex flex-column align-items-center">
-        <div className={`title ${isMobile ? 'px-3' : '' } ${selected ? 'active' : ''}`}>{title}</div>
+        <div
+          className={`title ${isMobile ? 'px-3' : ''} ${
+            selected ? 'active' : ''
+          }`}
+        >
+          {title}
+        </div>
         {selected && <div className="select-bar" />}
       </div>
     </a>
@@ -69,14 +75,17 @@ function CampaignNavList(props) {
     </div>
   )
 
-
-  return <Fragment>
-    {isMobile && navigationLinks()}
-    {!isMobile && <div className="d-flex justify-content-between mt-4 pt-3">
-      <img className="rewards-logo" src="images/origin-rewards-logo.svg"/>
-      {navigationLinks()}
-    </div>}
-  </Fragment>
+  return (
+    <Fragment>
+      {isMobile && navigationLinks()}
+      {!isMobile && (
+        <div className="d-flex justify-content-between mt-4 pt-3">
+          <img className="rewards-logo" src="images/origin-rewards-logo.svg" />
+          {navigationLinks()}
+        </div>
+      )}
+    </Fragment>
+  )
 }
 
 function Campaign(props) {
@@ -123,8 +132,8 @@ function Campaign(props) {
   const mobileAction = {
     status: 'Active',
     //status: 'Exhausted',
-    reward: { currency: 'OGN', amount: '500000000000000000000'},
-    rewardEarned: { currency: 'OGN', amount: '530000000000000000000'}
+    reward: { currency: 'OGN', amount: '500000000000000000000' },
+    rewardEarned: { currency: 'OGN', amount: '530000000000000000000' }
   }
 
   // campaign rewards converted normalized to token value according to number of decimals
@@ -138,7 +147,11 @@ function Campaign(props) {
 
   return (
     <Fragment>
-      <div className={`d-flex ${isMobile ? 'justify-content-center' : 'justify-content-start'}`}>
+      <div
+        className={`d-flex ${
+          isMobile ? 'justify-content-center' : 'justify-content-start'
+        }`}
+      >
         <h1 className={`mb-2 pt-4 ${isMobile ? 'mt-2' : 'mt-4'}`}>
           {GrowthEnum[nameKey] ? (
             <GrowthTranslation stringKey={nameKey} />
@@ -266,12 +279,7 @@ class GrowthCampaign extends Component {
   render() {
     const { navigation } = this.state
 
-    const {
-      campaigns,
-      accountId,
-      decimalDivision,
-      isMobile
-    } = this.props
+    const { campaigns, accountId, decimalDivision, isMobile } = this.props
 
     const activeCampaign = campaigns.find(
       campaign => campaign.status === 'Active'

@@ -38,7 +38,7 @@ function Action(props) {
   let foregroundImgSrc
   let title
   let buttonLink = '/profile'
-  let buttonOnClick = () => {
+  const buttonOnClick = () => {
     window.scrollTo(0, 0)
   }
 
@@ -93,7 +93,9 @@ function Action(props) {
     return (
       <div className="reward d-flex align-items-left pl-2 justify-content-start align-items-center flex-grow-1">
         <img src="images/ogn-icon.svg" />
-        <div className="value">{formatTokens(amount, props.decimalDivision)}</div>
+        <div className="value">
+          {formatTokens(amount, props.decimalDivision)}
+        </div>
       </div>
     )
   }

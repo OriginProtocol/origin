@@ -66,18 +66,18 @@ export function getMaxRewardPerUser({ growthCampaigns, tokenDecimals }) {
   }
 }
 
-export function formatTokens (tokenAmount, decimalDivision) {
-    return numberFormat(
-      web3.utils
-        .toBN(tokenAmount)
-        .div(decimalDivision)
-        .toString(),
-      2,
-      '.',
-      ',',
-      true
-    )
-  }
+export function formatTokens(tokenAmount, decimalDivision) {
+  return numberFormat(
+    web3.utils
+      .toBN(tokenAmount)
+      .div(decimalDivision)
+      .toString(),
+    2,
+    '.',
+    ',',
+    true
+  )
+}
 
 export function getTokensEarned({
   growthCampaigns,

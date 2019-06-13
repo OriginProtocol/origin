@@ -529,10 +529,7 @@ class GrowthInvite extends Component {
     return (
       <div className={`container growth-invite ${isMobile ? 'mobile' : ''}`}>
         <div>
-          <Link
-            className="back d-flex mr-auto"
-            to="/campaigns"
-          >
+          <Link className="back d-flex mr-auto" to="/campaigns">
             <img src="images/caret-blue.svg" />
             <div>
               <fbt desc="RewardInvite.backToCampaign">Back to Campaign</fbt>
