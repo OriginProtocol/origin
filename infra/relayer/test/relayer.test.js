@@ -50,6 +50,8 @@ describe('Relayer', async () => {
     Rando = accounts[1]
 
     const contractsJSON = getAddresses()
+
+    console.log('cotracts.json: ', contractsJSON)
     ProxyFactoryAddress = contractsJSON['ProxyFactory']
     IdentityEventsAddress = contractsJSON['IdentityEvents']
     IdentityProxyMaster = contractsJSON['IdentityProxyImplementation']
