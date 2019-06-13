@@ -824,7 +824,7 @@ require('react-styl')(`
         max-width: 15rem
         font-weight: 500
       .terms
-        margin: 16px 0px
+        margin: 16px 25px
       .checkbox-holder
         font-size: 15px
       .terms

@@ -1,13 +1,13 @@
 import React, { Fragment, useState } from 'react'
 import { fbt } from 'fbt-runtime'
 import { formatTokens } from 'utils/growthTools'
+import Link from 'components/Link'
 
 function ActionGroup(props) {
   const {
     isMobile,
     type,
-    hasBorder,
-    handleNavigationChange
+    hasBorder
   } = props
 
   let iconSource, title
@@ -45,15 +45,15 @@ function ActionGroup(props) {
   }
 
   return (
-    <div 
+    <Link
       className={`growth-action-group d-flex align-items-center ${isMobile ? 'mobile' : ''} ${hasBorder ? 'with-border' : ''}`}
-      onClick={() => handleNavigationChange(type)}
+      to={`campaigns/${type}`}
     >
       <img className="icon" src={iconSource}/>
       <div className="title">{title}</div>
       {renderRewardHolder(0, fbt('Pending', 'RewardActions.pending'), 'ml-auto')}
       {renderRewardHolder(0, fbt('Earned', 'RewardActions.earned'), 'ml-3')}
-    </div>
+    </Link>
   )
 }
 

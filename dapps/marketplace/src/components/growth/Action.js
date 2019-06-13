@@ -85,14 +85,6 @@ function Action(props) {
     foregroundImgSrc = 'images/growth/sell-icon.svg'
     title = fbt('Sell a Listing', 'RewardActions.listingSoldTitle')
     buttonLink = '/create'
-  } else if (type === 'Referral') {
-    foregroundImgSrc = 'images/growth/invite-icon.svg'
-    title = fbt('Invite Friends to Join Origin', 'RewardActions.referralTitle')
-    buttonOnClick = () => {
-      window.scrollTo(0, 0)
-      props.handleNavigationChange('Invite')
-    }
-    buttonLink = null
   }
 
   //TODO: hover button

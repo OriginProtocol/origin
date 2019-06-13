@@ -82,7 +82,6 @@ class ActionList extends Component {
     const {
       title,
       decimalDivision,
-      handleNavigationChange,
       isMobile
     } = this.props
 
@@ -151,7 +150,6 @@ class ActionList extends Component {
                   key={`${action.type}:${action.status}:${
                     action.listingId ? action.listingId : '0'
                   }`}
-                  handleNavigationChange={handleNavigationChange}
                   isMobile={isMobile}
                   onMobileLockClick={requirementText => {
                     this.setState({

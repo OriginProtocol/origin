@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { withApollo, Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
+import get from 'lodash/get'
 
 import formatTimeDifference from 'utils/formatTimeDifference'
 import QueryError from 'components/QueryError'
@@ -8,6 +9,8 @@ import profileQuery from 'queries/Profile'
 import AccountTokenBalance from 'queries/TokenBalance'
 import ActionGroupList from 'components/growth/ActionGroupList'
 import GrowthInvite from 'pages/growth/Invite'
+import Purchases from 'pages/growth/Purchases'
+import Verifications from 'pages/growth/Verifications'
 import MobileDownloadAction from 'components/growth/MobileDownloadAction'
 import ProgressBar from 'components/ProgressBar'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
@@ -77,7 +80,7 @@ function CampaignNavList(props) {
 }
 
 function Campaign(props) {
-  const { campaign, handleNavigationChange, decimalDivision, isMobile } = props
+  const { campaign, decimalDivision, isMobile } = props
 
   const {
     startDate,
@@ -174,7 +177,6 @@ function Campaign(props) {
       <ActionGroupList
         actions={actions}
         decimalDivision={decimalDivision}
-        handleNavigationChange={handleNavigationChange}
         isMobile={isMobile}
       />
     </Fragment>
@@ -265,7 +267,6 @@ class GrowthCampaign extends Component {
     const { navigation } = this.state
 
     const {
-      handleNavigationChange,
       campaigns,
       accountId,
       decimalDivision,
@@ -290,9 +291,6 @@ class GrowthCampaign extends Component {
           <Campaign
             campaign={activeCampaign}
             accountId={accountId}
-            handleNavigationChange={navigation =>
-              handleNavigationChange(navigation)
-            }
             decimalDivision={decimalDivision}
             isMobile={isMobile}
           />
@@ -310,12 +308,7 @@ class GrowthCampaign extends Component {
 
 class GrowthCampaigns extends Component {
   state = {
-    first: 5,
-    navigation: 'Campaigns'
-  }
-
-  handleNavigationChange(navigation) {
-    this.setState({ navigation })
+    first: 5
   }
 
   componentDidUpdate() {
@@ -328,7 +321,8 @@ class GrowthCampaigns extends Component {
   }
 
   render() {
-    const { navigation } = this.state
+    const navigation = get(this.props, 'match.params.navigation') || 'Campaigns'
+
     const isMobile = this.props.ismobile === 'true'
 
     return (
@@ -400,30 +394,29 @@ class GrowthCampaigns extends Component {
                           campaigns={campaigns}
                           accountId={accountId}
                           decimalDivision={decimalDivision}
-                          handleNavigationChange={navigation =>
-                            this.handleNavigationChange(navigation)
-                          }
                           isMobile={isMobile}
                         />
                       )}
-                      {navigation === 'Invite' && (
+                      {navigation === 'invitations' && (
                         <GrowthInvite
-                          handleNavigationChange={navigation =>
-                            this.handleNavigationChange(navigation)
-                          }
                           activeCampaign={activeCampaign}
                           decimalDivision={decimalDivision}
                           isMobile={isMobile}
                         />
                       )}
                       {navigation === 'verifications' && (
-                        "verifications"
+                        <Verifications
+                          campaigns={campaigns}
+                          decimalDivision={decimalDivision}
+                          isMobile={isMobile}
+                        />
                       )}
                       {navigation === 'purchases' && (
-                        "purchases"
-                      )}
-                      {navigation === 'invitations' && (
-                        "invitations"
+                        <Purchases
+                          campaigns={campaigns}
+                          decimalDivision={decimalDivision}
+                          isMobile={isMobile}
+                        />
                       )}
                     </Fragment>
                   )

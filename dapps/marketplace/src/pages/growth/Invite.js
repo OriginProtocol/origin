@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { withApollo, Query, Mutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
+import Link from 'components/Link'
 import QueryError from 'components/QueryError'
 import inviteCodeQuery from 'queries/InviteCode'
 import { formInput, formFeedback } from 'utils/formHelpers'
@@ -519,7 +520,7 @@ class GrowthInvite extends Component {
 
   render() {
     const { subPage } = this.state
-    const { activeCampaign, handleNavigationChange, isMobile } = this.props
+    const { activeCampaign, isMobile } = this.props
 
     const referralAction = activeCampaign.actions.filter(
       action => action.type === 'Referral'
@@ -528,15 +529,15 @@ class GrowthInvite extends Component {
     return (
       <div className={`container growth-invite ${isMobile ? 'mobile' : ''}`}>
         <div>
-          <div
+          <Link
             className="back d-flex mr-auto"
-            onClick={() => handleNavigationChange('Campaigns')}
+            to="/campaigns"
           >
             <img src="images/caret-blue.svg" />
             <div>
               <fbt desc="RewardInvite.backToCampaign">Back to Campaign</fbt>
             </div>
-          </div>
+          </Link>
           <h1 className={`mb-2 pt-md-3 mt-3`}>
             <fbt desc="RewardInvite.inviteYourFriends">
               Invite your friends to Origin
