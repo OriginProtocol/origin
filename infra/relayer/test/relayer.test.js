@@ -30,7 +30,7 @@ const {
 const web3 = new Web3(TEST_PROVIDER_URL)
 
 function getAddresses() {
-  const contractsJSON = require('@origin/contracts/build/contracts.json')
+  const contractsJSON = require('@origin/contracts/build/tests.json')
   return contractsJSON
 }
 
@@ -51,7 +51,7 @@ describe('Relayer', async () => {
 
     const contractsJSON = getAddresses()
 
-    console.log('cotracts.json: ', contractsJSON)
+    console.log('contracts.json: ', contractsJSON)
     ProxyFactoryAddress = contractsJSON['ProxyFactory']
     IdentityEventsAddress = contractsJSON['IdentityEvents']
     IdentityProxyMaster = contractsJSON['IdentityProxyImplementation']
@@ -70,6 +70,7 @@ describe('Relayer', async () => {
   })
 
   it('creates a proxy', async () => {
+    console
     const relayer = new Relayer(netId)
     
     // Init the keys now so we can fund them for the test

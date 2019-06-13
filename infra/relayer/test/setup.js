@@ -15,7 +15,8 @@ before(async function() {
   shutdown = await services({
     ganache: { inMemory: true, total_accounts: 20 },
     deployContracts: true,
-    ipfs: true
+    ipfs: true,
+    contractsFile: 'tests'
   })
 })
 

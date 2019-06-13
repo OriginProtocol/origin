@@ -40,10 +40,9 @@ const ContractAddresses = {
 
 const ZeroAddress = '0x00000000000000000000000000000000000000'
 
-/* TODO: what's this all about now?
 if (isTestEnv) {
   ContractAddresses['999'] = '@origin/contracts/build/tests.json'
-}*/
+}
 
 const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
   const signedData = web3.utils.soliditySha3(
