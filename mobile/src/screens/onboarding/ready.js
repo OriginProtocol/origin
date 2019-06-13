@@ -33,9 +33,9 @@ class ReadyScreen extends Component {
 
   publishIdentity = async () => {
     const profile = {
-      firstName: this.props.onboarding.firstName,
-      lastName: this.props.onboarding.lastName,
-      avatarUrl: this.props.onboarding.avatarUri
+      firstName: this.props.onboarding.firstName || '',
+      lastName: this.props.onboarding.lastName || '',
+      avatarUrl: this.props.onboarding.avatarUri || ''
     }
 
     const attestations = []
@@ -55,17 +55,18 @@ class ReadyScreen extends Component {
       response = await this.props.publishIdentity(from, profile, attestations)
     } catch (error) {
       console.warn('Identity publication failed: ', error)
-      return
     }
 
-    // Identity publish success, add some flags
-    if (this.props.onboarding.emailAttestation) {
-      this.props.setEmailAttestation(false)
-      this.props.setEmailVerified(true)
-    }
-    if (this.props.onboarding.phoneAttestation) {
-      this.props.setPhoneAttestation(false)
-      this.props.setPhoneVerified(true)
+    if (response) {
+      // Identity publish success, add some flags
+      if (this.props.onboarding.emailAttestation) {
+        this.props.setEmailAttestation(false)
+        this.props.setEmailVerified(true)
+      }
+      if (this.props.onboarding.phoneAttestation) {
+        this.props.setPhoneAttestation(false)
+        this.props.setPhoneVerified(true)
+      }
     }
 
     this.setState({ loading: false })
