@@ -98,6 +98,8 @@ class MarketplaceScreen extends Component {
       return
     }
 
+    const currentRoute = getCurrentRoute()
+
     if (msgData.targetFunc === 'getAccounts') {
       // Call get account method from OriginWallet HOC
       const response = this.props.getAccounts()
@@ -129,6 +131,14 @@ class MarketplaceScreen extends Component {
       } else {
         console.debug('Invalid meta transaction: ', decodedTransaction)
       }
+    } else if (currentRoute === 'Ready') {
+      // Relayer failure fallback, if we are on the onboarding step where identity
+      // gets published reject the transaction because we don't want to display a
+      // modal, the user most likely can't proceed because the account is new and
+      // has no balance
+      this.handleBridgeResponse(msgData, {
+        message: 'User denied transaction signature'
+      })
     } else {
       // Not handled yet, display a modal that deals with the target function
       PushNotification.checkPermissions(permissions => {
@@ -164,7 +174,7 @@ class MarketplaceScreen extends Component {
   }
 
   isValidMetaTransaction = data => {
-    const validFunctions = ['createProxyWithSenderNonce', 'createListing', 'updateListing']
+    const validFunctions = ['createProxyWithSenderNonce', 'swapAndMakeOffer', 'createListing', 'updateListing']
     return validFunctions.includes(data.functionName)
   }
 
@@ -216,7 +226,7 @@ class MarketplaceScreen extends Component {
     const language = this.props.settings.language
       ? this.props.settings.language
       : findBestAvailableLanguage()
-    const languageInjection = `
+    const injectedJavaScript = `
       (function() {
         if (window && window.appComponent) {
           window.appComponent.onLocale('${language}');
@@ -224,7 +234,7 @@ class MarketplaceScreen extends Component {
       })()
     `
     if (this.dappWebView) {
-      this.dappWebView.injectJavaScript(languageInjection)
+      this.dappWebView.injectJavaScript(injectedJavaScript)
     }
   }
 
@@ -393,7 +403,6 @@ class MarketplaceScreen extends Component {
     this.injectMessagingKeys()
     // Fetch exchange rates for the default currency
     this.updateExchangeRates()
-    //
     const periodicUpdates = () => {
       // Periodically grab the uiState from local storage to detect currency
       // changes
@@ -549,8 +558,8 @@ class MarketplaceScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ activation, marketplace, wallet, settings }) => {
-  return { activation, marketplace, wallet, settings }
+const mapStateToProps = ({ activation, marketplace, onboarding, wallet, settings }) => {
+  return { activation, marketplace, onboarding, wallet, settings }
 }
 
 const mapDispatchToProps = dispatch => ({
