@@ -164,9 +164,8 @@ class MarketplaceScreen extends Component {
   }
 
   isValidMetaTransaction = data => {
-    if (data.functionName === 'createProxyWithSenderNonce') {
-      return true
-    }
+    const validFunctions = ['createProxyWithSenderNonce', 'createListing', 'updateListing']
+    return validFunctions.includes(data.functionName)
   }
 
   /* Remove a modal and return the given result to the DApp
