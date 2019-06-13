@@ -273,9 +273,9 @@ function withEnrolmentModal(WrappedComponent) {
         <button
           className={`btn btn-lg ${
             termsAccepted
-              ? 'btn-primary btn-rounded'
+              ? `btn-primary btn-rounded ${isMobile ? 'm-0' : ''}`
               : isMobile
-              ? 'btn-primary mt-5 mb-0 wide-btn'
+              ? 'btn-primary wide-btn m-0'
               : 'ml-2 btn-outline-light'
           }`}
           onClick={() => this.handleTermsContinue()}
@@ -416,33 +416,35 @@ function withEnrolmentModal(WrappedComponent) {
               </div>
             </Fragment>
           )}
-          {isRestricted && !notCitizenChecked && (
-            <button
-              className={`btn btn-rounded btn-lg btn-outline-light ${
-                isMobile
-                  ? 'btn-primary mt-auto wide-btn'
-                  : ''
-              }`}
-              onClick={() => this.handleCloseModal()}
-              children={fbt('Done', 'Done')}
-            />
-          )}
-          {isRestricted && notCitizenChecked && (
-            <button
-              className={`btn btn-primary btn-rounded btn-lg ${
-                isMobile ? 'mt-auto wide-btn' : ''
-              }`}
-              onClick={() => this.handleEligibilityContinue()}
-              children={fbt('Continue', 'Continue')}
-            />
-          )}
-          {isMobile && (
-            <button
-              className="btn-no-outline-link"
-              onClick={() => this.handleCloseModal()}
-              children={fbt('Back to home', 'Back to home')}
-            />
-          )}
+          <div className={`buttons-holder ${isMobile ? 'mt-auto' : ''}`}>
+            {isRestricted && !notCitizenChecked && (
+              <button
+                className={`btn btn-rounded btn-lg btn-outline-light mb-0 ${
+                  isMobile
+                    ? 'wide-btn'
+                    : ''
+                }`}
+                onClick={() => this.handleCloseModal()}
+                children={fbt('Done', 'Done')}
+              />
+            )}
+            {isRestricted && notCitizenChecked && (
+              <button
+                className={`btn btn-primary btn-rounded btn-lg mb-0 ${
+                  isMobile ? 'wide-btn' : ''
+                }`}
+                onClick={() => this.handleEligibilityContinue()}
+                children={fbt('Continue', 'Continue')}
+              />
+            )}
+            {isMobile && (
+              <button
+                className="btn-no-outline-link"
+                onClick={() => this.handleCloseModal()}
+                children={fbt('Back to home', 'Back to home')}
+              />
+            )}
+          </div>
         </div>
       )
     }
@@ -698,6 +700,8 @@ require('react-styl')(`
       bottom: 20px
     .checkbox-holder input:checked ~ .checkmark:after
       display: block
+    .buttons-holder
+      width: 100%
     .btn
       margin-top: 30px
       min-width: 9rem
@@ -752,9 +756,11 @@ require('react-styl')(`
     .terms-title
       font-weight: 500
       color: black
+      margin: 0px 25px
     .terms-body
       color: var(--dark)
       padding: 0
+      margin: 0px 25px
     .explanation
       font-size: 12px
       text-align: left
@@ -807,7 +813,6 @@ require('react-styl')(`
     background-color: var(--pale-grey-four)
     padding: 0px
     border-radius: 0px
-    height: 100%
     width: 100%
   @media (max-width: 767.98px)
     .growth-enrollment-modal
@@ -846,7 +851,7 @@ require('react-styl')(`
         font-size: 0.875rem
         color: var(--clear-blue)
         font-weight: normal
-        margin-top: 1.2rem
+        margin: 1.2rem
         font-size: 1rem
         font-weight: bold
       .checkbox-holder
