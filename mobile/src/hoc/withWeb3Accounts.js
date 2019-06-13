@@ -250,6 +250,7 @@ const withWeb3Accounts = WrappedComponent => {
           getAccounts={this.getAccounts}
           signTransaction={this.signTransaction}
           signMessage={this.signMessage}
+          signPersonalMessage={this.signMessage}
           sendTransaction={this.sendTransaction}
           {...this.props}
         />

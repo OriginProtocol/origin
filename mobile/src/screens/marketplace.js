@@ -55,14 +55,6 @@ class MarketplaceScreen extends Component {
     )
   }
 
-  componentDidMount = () => {
-    console.log('Mounted')
-  }
-
-  componentWillUnmount = () => {
-    console.log('Unmounted')
-  }
-
   componentDidUpdate = prevProps => {
     if (prevProps.settings.language !== this.props.settings.language) {
       // Language has changed, need to reload the DApp
@@ -106,8 +98,6 @@ class MarketplaceScreen extends Component {
       return
     }
 
-    const currentRoute = getCurrentRoute()
-
     if (msgData.targetFunc === 'getAccounts') {
       // Call get account method from OriginWallet HOC
       const response = this.props.getAccounts()
@@ -116,53 +106,66 @@ class MarketplaceScreen extends Component {
       // Function handler exists, use that
       const response = this[msgData.targetFunc].apply(this, [msgData.data])
       this.handleBridgeResponse(msgData, response)
-    } else {
-      if (currentRoute === 'Ready') {
-        if (msgData.targetFunc === 'signMessage') {
-          // Identity publication from the end of the onboarding flow. This is a
-          // special case where we sign a transaction to publish the identity
-          const { signature } = this.props.signMessage(msgData.data)
-          this.handleBridgeResponse(msgData, signature)
-        } else if (msgData.targetFunc === 'processTransaction') {
-          // If we get a processTransaction request in the Ready view its the
-          // fallback from the relayer. Nothing to do here, we can't ask the user
-          // to pay gas because this is likely a new account. Reject.
-          this.handleBridgeResponse(msgData, {
-            message: 'Transaction could not be processed'
-          })
-        }
-      } else {
-        // Not handled yet, display a modal that deals with the target function
-        PushNotification.checkPermissions(permissions => {
-          const newModals = []
-          // Check if we lack notification permissions, and we are processing a
-          // web3 transaction that isn't updating our identity. If so display a
-          // modal requesting notifications be enabled
-          if (
-            !__DEV__ &&
-            !permissions.alert &&
-            msgData.targetFunc === 'processTransaction' &&
-            decodeTransaction(msgData.data.data).functionName !==
-              'emitIdentityUpdated'
-          ) {
-            newModals.push({ type: 'enableNotifications' })
-          }
-          // Transaction/signature modal
-          const web3Modal = { type: msgData.targetFunc, msgData: msgData }
-          // Modals render in different ordering on Android/iOS so use a different
-          // method of adding the modal to the array to get the notifications modal
-          // to display on top of the web3 modal
-          if (Platform.OS === 'ios') {
-            newModals.push(web3Modal)
-          } else {
-            newModals.unshift(web3Modal)
-          }
-          // Update the state with the new modals
-          this.setState(prevState => ({
-            modals: [...prevState.modals, ...newModals]
-          }))
+    } else if (msgData.targetFunc === 'signPersonalMessage') {
+      // Personal sign is for handling meta transaction requests
+      const decodedData = JSON.parse(global.web3.utils.hexToUtf8(msgData.data.data))
+      const decodedTransaction = decodeTransaction(decodedData.txData)
+      // If the transaction validate the sha3 hash and sign that for the relayer
+      if (this.isValidMetaTransaction(decodedTransaction)) {
+        const dataToSign = global.web3.utils.soliditySha3(
+          { t: 'address', v: decodedData.from },
+          { t: 'address', v: decodedData.to },
+          { t: 'uint256', v: global.web3.utils.toWei('0', 'ether') },
+          { t: 'bytes', v: decodedData.txData },
+          { t: 'uint256', v: decodedData.nonce }
+        )
+        // Sign it
+        const { signature } = this.props.signPersonalMessage({
+          data: dataToSign,
+          from: decodedData.from.toLowerCase()
         })
+        // Send the response back to the webview
+        this.handleBridgeResponse(msgData, signature)
+      } else {
+        console.debug('Invalid meta transaction: ', decodedTransaction)
       }
+    } else {
+      // Not handled yet, display a modal that deals with the target function
+      PushNotification.checkPermissions(permissions => {
+        const newModals = []
+        // Check if we lack notification permissions, and we are processing a
+        // web3 transaction that isn't updating our identity. If so display a
+        // modal requesting notifications be enabled
+        if (
+          !__DEV__ &&
+          !permissions.alert &&
+          msgData.targetFunc === 'processTransaction' &&
+          decodeTransaction(msgData.data.data).functionName !==
+            'emitIdentityUpdated'
+        ) {
+          newModals.push({ type: 'enableNotifications' })
+        }
+        // Transaction/signature modal
+        const web3Modal = { type: msgData.targetFunc, msgData: msgData }
+        // Modals render in different ordering on Android/iOS so use a different
+        // method of adding the modal to the array to get the notifications modal
+        // to display on top of the web3 modal
+        if (Platform.OS === 'ios') {
+          newModals.push(web3Modal)
+        } else {
+          newModals.unshift(web3Modal)
+        }
+        // Update the state with the new modals
+        this.setState(prevState => ({
+          modals: [...prevState.modals, ...newModals]
+        }))
+      })
+    }
+  }
+
+  isValidMetaTransaction = data => {
+    if (data.functionName === 'createProxyWithSenderNonce') {
+      return true
     }
   }
 
