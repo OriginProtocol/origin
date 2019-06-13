@@ -487,14 +487,12 @@ class UserProfile extends Component {
                 </fbt>
               </label>
               <div className="profile-attestations">
-                {
-                  this.props.attestationProviders.map(provider => {
-                    return this.renderAtt(
-                      provider,
-                      getProviderDisplayName(provider)
-                    )
-                  })
-                }
+                {this.props.attestationProviders.map(provider => {
+                  return this.renderAtt(
+                    provider,
+                    getProviderDisplayName(provider)
+                  )
+                })}
               </div>
             </div>
 
