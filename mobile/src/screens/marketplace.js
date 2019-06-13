@@ -222,6 +222,7 @@ class MarketplaceScreen extends Component {
         })()
       `
       if (this.dappWebView) {
+        console.debug('Injecting messaging keys')
         this.dappWebView.injectJavaScript(keyInjection)
       }
     }
@@ -241,6 +242,7 @@ class MarketplaceScreen extends Component {
       })()
     `
     if (this.dappWebView) {
+      console.debug('Injecting language')
       this.dappWebView.injectJavaScript(injectedJavaScript)
     }
   }
@@ -259,6 +261,7 @@ class MarketplaceScreen extends Component {
       })();
     `
     if (this.dappWebView) {
+      console.debug('Injecting scroll handler')
       this.dappWebView.injectJavaScript(injectedJavaScript)
     }
   }
@@ -291,6 +294,7 @@ class MarketplaceScreen extends Component {
       })();
     `
     if (this.dappWebView) {
+      console.debug('Injecting GraphQL query')
       this.dappWebView.injectJavaScript(injectedJavaScript)
     }
   }
@@ -315,6 +319,7 @@ class MarketplaceScreen extends Component {
       })();
     `
     if (this.dappWebView) {
+      console.debug('Injecting GraphQL mutatiion')
       this.dappWebView.injectJavaScript(injectedJavaScript)
     }
   }
@@ -339,6 +344,7 @@ class MarketplaceScreen extends Component {
       })();
     `
     if (this.dappWebView) {
+      console.debug('Injecting uiState request')
       this.dappWebView.injectJavaScript(injectedJavaScript)
     }
   }
@@ -353,6 +359,7 @@ class MarketplaceScreen extends Component {
       })();
     `
     if (this.dappWebView) {
+      console.debug('Injecting enable relayer')
       this.dappWebView.injectJavaScript(injectedJavaScript)
     }
   }
@@ -420,7 +427,10 @@ class MarketplaceScreen extends Component {
       this.updateBalance()
     }
     periodicUpdates()
-    setInterval(periodicUpdates, 5000)
+    this.updater = setInterval(periodicUpdates, 5000)
+    if (this.updater) {
+      clearInterval(this.updater)
+    }
     // Set state to ready in redux
     this.props.setMarketplaceReady(true)
   }
@@ -433,6 +443,9 @@ class MarketplaceScreen extends Component {
 
   updateIdentity = async address => {
     const primaryAccount = await this.walletQuery()
+    if (!primaryAccount) {
+      return
+    }
     // Request the identity through proxy if necessary
     const identityAddress = primaryAccount.proxy.id
       ? primaryAccount.proxy.id
@@ -443,8 +456,13 @@ class MarketplaceScreen extends Component {
   }
 
   walletQuery = async () => {
-    const graphqlResponse = await this.props.getWallet()
-    return get(graphqlResponse, 'data.web3.primaryAccount')
+    let graphqlResponse
+    try {
+      graphqlResponse = await this.props.getWallet()
+      return get(graphqlResponse, 'data.web3.primaryAccount')
+    } catch (error) {
+      console.warn('Could not retrieve wallet using GraphQL: ', error)
+    }
   }
 
   updateBalance = async () => {
