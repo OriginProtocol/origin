@@ -13,10 +13,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import { connect } from 'react-redux'
 
-import {
-  setEmailVerified,
-  setPhoneVerified
-} from 'actions/Onboarding'
+import { setEmailVerified, setPhoneVerified } from 'actions/Onboarding'
 import withOriginGraphql from 'hoc/withOriginGraphql'
 import OriginButton from 'components/origin-button'
 
