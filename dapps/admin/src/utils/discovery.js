@@ -31,7 +31,10 @@ export function query(query, variables) {
       .then(r => r.json())
       .then(data => {
         if (data.errors && data.errors[0]) {
-          if (data.errors[0].message.indexOf('You are not logged in') !== -1) {
+          if (
+            data.errors[0].message.indexOf('You are not logged in') !== -1 ||
+            data.errors[0].message.indexOf('You must be a moderator') !== -1
+          ) {
             clearAccessToken()
           }
         }
