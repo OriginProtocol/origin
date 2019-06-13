@@ -110,7 +110,9 @@ class MarketplaceScreen extends Component {
       this.handleBridgeResponse(msgData, response)
     } else if (msgData.targetFunc === 'signPersonalMessage') {
       // Personal sign is for handling meta transaction requests
-      const decodedData = JSON.parse(global.web3.utils.hexToUtf8(msgData.data.data))
+      const decodedData = JSON.parse(
+        global.web3.utils.hexToUtf8(msgData.data.data)
+      )
       const decodedTransaction = decodeTransaction(decodedData.txData)
       // If the transaction validate the sha3 hash and sign that for the relayer
       if (this.isValidMetaTransaction(decodedTransaction)) {
@@ -174,7 +176,12 @@ class MarketplaceScreen extends Component {
   }
 
   isValidMetaTransaction = data => {
-    const validFunctions = ['createProxyWithSenderNonce', 'swapAndMakeOffer', 'createListing', 'updateListing']
+    const validFunctions = [
+      'createProxyWithSenderNonce',
+      'swapAndMakeOffer',
+      'createListing',
+      'updateListing'
+    ]
     return validFunctions.includes(data.functionName)
   }
 
@@ -558,7 +565,13 @@ class MarketplaceScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ activation, marketplace, onboarding, wallet, settings }) => {
+const mapStateToProps = ({
+  activation,
+  marketplace,
+  onboarding,
+  wallet,
+  settings
+}) => {
   return { activation, marketplace, onboarding, wallet, settings }
 }
 

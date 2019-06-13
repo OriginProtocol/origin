@@ -65,10 +65,7 @@ class App extends Component {
   render() {
     return (
       <ReduxProvider store={Store}>
-        <PersistGate
-          onBeforeLift={this.onBeforeLift}
-          persistor={persistor}
-        >
+        <PersistGate onBeforeLift={this.onBeforeLift} persistor={persistor}>
           <AppContainer
             ref={navigatorRef => {
               NavigationService.setTopLevelNavigator(navigatorRef)

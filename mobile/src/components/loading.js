@@ -1,22 +1,24 @@
 'use strict'
 
 import React from 'react'
-import { ActivityIndicator, Image, SafeAreaView, Text, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Image,
+  SafeAreaView,
+  Text,
+  View
+} from 'react-native'
 
 const IMAGES_PATH = '../../assets/images/'
 
-const Loading = (props) => (
+const Loading = props => (
   <SafeAreaView style={styles.container}>
     <View style={styles.content}>
-      <Image
-        source={require(IMAGES_PATH + 'origin-white-logo.png')}
-      />
+      <Image source={require(IMAGES_PATH + 'origin-white-logo.png')} />
     </View>
     <View style={styles.indicatorContainer}>
       <ActivityIndicator size="small" color="white" />
-      {props.text && (
-        <Text style={styles.indicatorText}>{props.text}</Text>
-      )}
+      {props.text && <Text style={styles.indicatorText}>{props.text}</Text>}
     </View>
   </SafeAreaView>
 )
@@ -30,7 +32,6 @@ const styles = {
     flex: 1,
     justifyContent: 'space-around',
     alignItems: 'center',
-    justifyContent: 'center',
     width: '100%'
   },
   indicatorContainer: {
