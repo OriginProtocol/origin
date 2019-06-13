@@ -45,7 +45,10 @@ export default async function relayerHelper({ tx, from, proxy, to }) {
   }
 
   let dataToSign
-  if (window.ReactNativeWebView && contracts.web3Exec.currentProvider.isOrigin) {
+  if (
+    window.ReactNativeWebView &&
+    contracts.web3Exec.currentProvider.isOrigin
+  ) {
     // Marketplace mobile app, send the complete object so the mobile app can
     // verify what it is signing, and then generate the sha3 hash
     dataToSign = JSON.stringify({
