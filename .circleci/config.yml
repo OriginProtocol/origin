@@ -53,9 +53,6 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Set env vars
-          command: echo 'export LOG_LEVEL="DEBUG"' >> $BASH_ENV
-      - run:
           name: Run Marketplace Tests
           command: cd dapps/marketplace && yarn test
 
