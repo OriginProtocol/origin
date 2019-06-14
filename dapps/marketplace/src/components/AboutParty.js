@@ -14,31 +14,33 @@ import Link from 'components/Link'
 
 import query from 'queries/Identity'
 import withOwner from 'hoc/withOwner'
+import { getProviderDisplayName } from 'utils/profileTools'
 
 const getVerifiedTooltip = provider => {
   switch (provider) {
     case 'email':
-      return fbt('Email Verified', 'Email Verified')
     case 'phone':
-      return fbt('Phone Verified', 'Phone Verified')
     case 'website':
-      return fbt('Website Verified', 'Website Verified')
+      return fbt(
+        `${fbt.param('provider', getProviderDisplayName(provider))} Verified`,
+        'Attestation.verified'
+      )
+
     case 'airbnb':
-      return fbt('Airbnb Account Verified', 'Airbnb Account Verified')
     case 'github':
-      return fbt('GitHub Account Verified', 'GitHub Account Verified')
     case 'facebook':
-      return fbt('Facebook Account Verified', 'Facebook Account Verified')
     case 'twitter':
-      return fbt('Twitter Account Verified', 'Twitter Account Verified')
     case 'google':
-      return fbt('Google Account Verified', 'Google Account Verified')
     case 'kakao':
-      return fbt('Kakao Account Verified', 'Kakao Account Verified')
     case 'linkedin':
-      return fbt('LinkedIn Account Verified', 'LinkedIn Account Verified')
     case 'wechat':
-      return fbt('WeChat Account Verified', 'WeChat Account Verified')
+      return fbt(
+        `${fbt.param(
+          'provider',
+          getProviderDisplayName(provider)
+        )} Account Verified`,
+        'Attestation.accountVerified'
+      )
   }
 
   return provider
