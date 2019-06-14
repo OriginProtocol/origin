@@ -114,14 +114,24 @@ class OAuthAttestation extends Component {
         }`}
         shouldClose={this.state.shouldClose}
         onClose={() => {
+          const completed = this.state.completed
+
+          if (completed) {
+            this.props.onComplete(this.state.data)
+          }
+
           this.setState({
             shouldClose: false,
             error: false,
-            stage: 'GenerateCode'
+            stage: 'GenerateCode',
+            completed: false,
+            data: null
           })
-          this.props.onClose()
+
+          this.props.onClose(completed)
           this.props.history.replace('/profile')
         }}
+        lightMode={true}
       >
         <Query
           query={query}
@@ -219,16 +229,17 @@ class OAuthAttestation extends Component {
         mutation={VerifyOAuthAttestation}
         onCompleted={res => {
           const result = res.verifyOAuthAttestation
-          if (result.success) {
-            this.setState({
-              stage: 'VerifiedOK',
-              data: result.data,
-              loading: false
-            })
-            this.props.history.replace('/profile')
-          } else {
-            this.setState({ error: result.reason, loading: false })
+          if (!result.success) {
+            this.setState({ error: result.reason, loading: false, data: null })
+            return
           }
+
+          this.setState({
+            data: result.data,
+            loading: false,
+            completed: true,
+            shouldClose: true
+          })
         }}
         onError={errorData => {
           console.error('Error', errorData)
@@ -252,12 +263,10 @@ class OAuthAttestation extends Component {
           return (
             <>
               {sid && this.props.wallet ? (
-                <AutoMutate mutatation={runMutation} />
+                <AutoMutate mutation={runMutation} />
               ) : null}
               <button
-                className={`btn ${
-                  isMobile ? 'btn-primary' : 'btn-outline-light'
-                }`}
+                className="btn btn-primary"
                 onClick={runMutation}
                 children={
                   this.state.loading
@@ -269,38 +278,6 @@ class OAuthAttestation extends Component {
           )
         }}
       </Mutation>
-    )
-  }
-
-  renderVerifiedOK() {
-    const providerName = getProviderDisplayName(this.props.provider)
-    const isMobile = this.isMobile()
-
-    return (
-      <>
-        <h2>
-          <fbt desc="OAuthAttestation.verified">
-            <fbt:param name="provider">{providerName}</fbt:param> account
-            verified!
-          </fbt>
-        </h2>
-        <div className="instructions">
-          <fbt desc="Attestation.DontForget">
-            Don&apos;t forget to publish your changes.
-          </fbt>
-        </div>
-        <InfoStoredOnChain provider={this.props.provider} isMobile={isMobile} />
-        <div className="actions mt-5">
-          <button
-            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
-            onClick={() => {
-              this.props.onComplete(this.state.data)
-              this.setState({ shouldClose: true })
-            }}
-            children={fbt('Continue', 'Continue')}
-          />
-        </div>
-      </>
     )
   }
 }

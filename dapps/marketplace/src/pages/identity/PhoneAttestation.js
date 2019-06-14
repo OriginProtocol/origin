@@ -51,13 +51,23 @@ class PhoneAttestation extends Component {
         }`}
         shouldClose={this.state.shouldClose}
         onClose={() => {
+          const completed = this.state.completed
+
+          if (completed) {
+            this.props.onComplete(this.state.data)
+          }
+
           this.setState({
             shouldClose: false,
             error: false,
-            stage: 'GenerateCode'
+            stage: 'GenerateCode',
+            completed: false,
+            data: null
           })
-          this.props.onClose()
+
+          this.props.onClose(completed)
         }}
+        lightMode={true}
       >
         <div>{this[`render${this.state.stage}`]()}</div>
       </ModalComponent>
@@ -77,24 +87,13 @@ class PhoneAttestation extends Component {
       </fbt>
     ) : (
       <fbt desc="PhoneAttestation.description">
-        Enter your phone number below and OriginID will send you a verification
-        code via SMS.
+        Enter your 10-digit phone number below
       </fbt>
     )
 
-    const storedOnBlockchain = isMobile ? (
-      <div className="info mt-3 mb-3">
-        <span className="title">
-          <fbt desc="PhoneAttestation.visibleOnBlockchain">
-            What will be visible on the blockchain?
-          </fbt>
-        </span>
-        <fbt desc="PhoneAttestation.verifiedButNotNumber">
-          That you have a verified phone number, but NOT your actual phone
-          number
-        </fbt>
-      </div>
-    ) : null
+    const helpText = isMobile ? 
+      fbt('By continuing, you give Origin permission to send you occasional messages such as notifications about your transactions.', 'Attestatio.mobile.phonePublishClarification') :
+      fbt('By verifying your phone number, you give Origin permission to send you occasional text messages such as notifications about your transactions.', 'Attestation.phonePublishClarification')
 
     return (
       <Mutation
@@ -124,8 +123,8 @@ class PhoneAttestation extends Component {
             }}
           >
             <h2>{header}</h2>
-            <div className="instructions">{descEl}</div>
-            <div className="d-flex mt-3">
+            <div className="instructions mb-3">{descEl}</div>
+            <div className="d-flex my-3">
               <CountryDropdown
                 onChange={({ code, prefix }) =>
                   this.setState({ active: code, prefix })
@@ -146,20 +145,24 @@ class PhoneAttestation extends Component {
             {this.state.error && (
               <div className="alert alert-danger mt-3">{this.state.error}</div>
             )}
-            <div className="help">
-              <fbt desc="Attestation.phonePublishClarification">
-                By verifying your phone number, you give Origin permission to
-                send you occasional text messages such as notifications about
-                your transactions.
+            <div className="help mt-3 mb-3">
+              {helpText}
+            </div>
+            <div className="info mt-3 mb-0">
+              <span className="title">
+                <fbt desc="PhoneAttestation.visibleOnBlockchain">
+                  What will be visible on the blockchain?
+                </fbt>
+              </span>
+              <fbt desc="PhoneAttestation.verifiedButNotNumber">
+                That you have a verified phone number, but NOT your actual phone
+                number
               </fbt>
             </div>
-            {storedOnBlockchain}
             <div className="actions">
               <button
                 type="submit"
-                className={`btn ${
-                  isMobile ? 'btn-primary' : 'btn-outline-light'
-                }`}
+                className="btn btn-primary"
                 disabled={this.state.loading}
                 children={
                   this.state.loading
@@ -185,34 +188,37 @@ class PhoneAttestation extends Component {
   renderVerifyCode() {
     const isMobile = this.isMobile()
 
-    const storedOnBlockchain = isMobile ? (
-      <div className="info mt-3 mb-3">
-        <span className="title">
-          <fbt desc="PhoneAttestation.visibleOnBlockchain">
-            What will be visible on the blockchain?
-          </fbt>
-        </span>
-        <fbt desc="PhoneAttestation.verifiedButNotNumber">
-          That you have a verified phone number, but NOT your actual phone
-          number
-        </fbt>
-      </div>
-    ) : null
+    const header = isMobile ? null : (
+      <fbt desc="PhoneAttestation.title">Verify your Phone Number</fbt>
+    )
+
+    const instructions = isMobile ? (
+      <fbt desc="PhoneAttestation.mobile.enterCode">
+        Enter the code we sent you below
+      </fbt>
+    ) : (
+      <fbt desc="PhoneAttestation.enterCode">
+        We’ve sent you a verification code via SMS. Please enter it below
+      </fbt>
+    )
 
     return (
       <Mutation
         mutation={VerifyPhoneCodeMutation}
         onCompleted={res => {
           const result = res.verifyPhoneCode
-          if (result.success) {
-            this.setState({
-              stage: 'VerifiedOK',
-              data: result.data,
-              loading: false
-            })
-          } else {
-            this.setState({ error: result.reason, loading: false })
+
+          if (!result.success) {
+            this.setState({ error: result.reason, loading: false, data: null })
+            return
           }
+
+          this.setState({
+            data: result.data,
+            loading: false,
+            completed: true,
+            shouldClose: true
+          })
         }}
         onError={errorData => {
           console.error('Error', errorData)
@@ -255,12 +261,10 @@ class PhoneAttestation extends Component {
             }}
           >
             <h2>
-              <fbt desc="PhoneAttestation.title">Verify your Phone Number</fbt>
+              {header}
             </h2>
             <div className="instructions">
-              <fbt desc="PhoneAttestation.enterCode">
-                Enter the code we sent you below
-              </fbt>
+              {instructions}
             </div>
             <div className="my-3 verification-code">
               <input
@@ -272,19 +276,27 @@ class PhoneAttestation extends Component {
                 value={this.state.code}
                 onChange={e => this.setState({ code: e.target.value })}
               />
-              {this.state.error && (
-                <div className="alert alert-danger mt-3">
-                  {this.state.error}
-                </div>
-              )}
             </div>
-            {storedOnBlockchain}
+            {this.state.error && (
+              <div className="alert alert-danger mt-3">
+                {this.state.error}
+              </div>
+            )}
+            <div className="info mt-3 mb-0">
+              <span className="title">
+                <fbt desc="PhoneAttestation.visibleOnBlockchain">
+                  What will be visible on the blockchain?
+                </fbt>
+              </span>
+              <fbt desc="PhoneAttestation.verifiedButNotNumber">
+                That you have a verified phone number, but NOT your actual phone
+                number
+              </fbt>
+            </div>
             <div className="actions">
               <button
                 type="submit"
-                className={`btn ${
-                  isMobile ? 'btn-primary' : 'btn-outline-light'
-                }`}
+                className="btn btn-primary"
                 disabled={this.state.loading}
                 children={
                   this.state.loading
@@ -306,39 +318,6 @@ class PhoneAttestation extends Component {
       </Mutation>
     )
   }
-
-  renderVerifiedOK() {
-    const isMobile = this.isMobile()
-
-    return (
-      <>
-        <h2>
-          <fbt desc="PhoneAttestation.verified">Phone number verified!</fbt>
-        </h2>
-        <div className="instructions">
-          <fbt desc="Attestation.DontForget">
-            Don&apos;t forget to publish your changes.
-          </fbt>
-        </div>
-        <div className="help">
-          <fbt desc="Attestation.publishingBlockchain">
-            Publishing to the blockchain lets other users know that you have a
-            verified profile.
-          </fbt>
-        </div>
-        <div className="actions">
-          <button
-            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
-            onClick={() => {
-              this.props.onComplete(this.state.data)
-              this.setState({ shouldClose: true })
-            }}
-            children={fbt('Continue', 'Continue')}
-          />
-        </div>
-      </>
-    )
-  }
 }
 
 export default withWallet(withIsMobile(PhoneAttestation))
@@ -353,6 +332,15 @@ require('react-styl')(`
         padding-top: 9rem
         background-position: center top
         position: relative
+        font-family: Poppins
+        font-size: 1.5rem
+        font-weight: 500
+        font-style: normal
+        font-stretch: normal
+        line-height: 1.67
+        letter-spacing: normal
+        color: #000000
+        margin-botton: 0.75rem
         &::before
           content: ""
           position: absolute
@@ -366,18 +354,27 @@ require('react-styl')(`
       .form-control-wrap
         flex: 1
       .form-control
-        background-color: var(--dark-two)
-        border: 0
-        color: var(--white)
+        border: solid 1px #c2cbd3
+        background-color: var(--white)
+        color: black
         &::-webkit-input-placeholder
-          color: var(--dusk)
+          color: var(--dark)
       .help
-        font-size: 14px
         margin-top: 1rem
+        font-family: Lato
+        font-size: 0.9rem
+        font-weight: normal
+        font-style: normal
+        font-stretch: normal
+        line-height: normal
+        letter-spacing: normal
+        text-align: center
+        color: #6f8294
       .verification-code
         display: flex
         flex-direction: column
         align-items: center
+        width: 80%
         .form-control
           text-align: center
       .actions
@@ -391,10 +388,6 @@ require('react-styl')(`
         display: flex
         flex: auto
         flex-direction: column
-    &.phone
-      > div
-        .verification-code
-          max-width: 15rem
     &.phone > div h2::before
       background-image: url(images/identity/phone-icon-dark.svg)
       background-size: 2rem
@@ -441,6 +434,20 @@ require('react-styl')(`
         .actions
           margin-bottom: 1.5rem
 
+    .info
+      text-align: center
+      border-radius: 5px
+      border: solid 1px var(--bluey-grey)
+      background-color: rgba(152, 167, 180, 0.1)
+      font-family: Lato
+      font-size: 14px
+      color: black
+      padding: 10px
+      .title
+        display: block
+        font-weight: bold
+        margin-bottom: 3px
+
   .mobile-modal-light .attestation-modal
     padding: 20px
     text-align: center
@@ -452,34 +459,6 @@ require('react-styl')(`
       padding: 0.75rem
     .verification-code .form-control
       display: inline-block
-    .country-code, .form-control
-      border: solid 1px #c2cbd3
-      background-color: var(--white)
-      color: black
-    .dropdown .dropdown-menu
-      border: solid 1px #c2cbd3
-      background-color: var(--white)
-      .dropdown-item
-        .name
-          color: black
-        .prefix
-          color: #6f8294
-        &:hover
-          background-color: var(--light-footer)
-    .info
-      text-align: center
-      border-radius: 5px
-      border: solid 1px var(--bluey-grey)
-      background-color: rgba(152, 167, 180, 0.1)
-      font-family: Lato
-      font-size: 14px
-      color: black
-      padding: 10px
-      margin-top: 1rem
-      .title
-        display: block
-        font-weight: bold
-        margin-bottom: 3px
     &.phone > div h2::before
       background-image: url(images/identity/phone-icon-light.svg)
     &.email > div h2::before

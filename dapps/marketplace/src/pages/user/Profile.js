@@ -8,11 +8,6 @@ import validator from '@origin/validator'
 
 import Store from 'utils/store'
 import {
-  unpublishedStrength,
-  changesToPublishExist,
-  updateVerifiedAccounts,
-  clearVerifiedAccounts,
-  getVerifiedAccounts,
   getProviderDisplayName
 } from 'utils/profileTools'
 
@@ -49,6 +44,7 @@ import Onboard from 'pages/onboard/Onboard'
 
 import EditProfile from './_EditModal'
 import ToastNotification from './ToastNotification'
+import DeployIdentity from 'pages/identity/mutations/DeployIdentity';
 
 const store = Store('sessionStorage')
 
@@ -94,6 +90,7 @@ function getState(profile) {
     firstName: '',
     lastName: '',
     description: '',
+    avatarUrl: null,
     ...pickBy(pick(profile, ProfileFields), k => k)
   }
 }
@@ -103,73 +100,22 @@ class UserProfile extends Component {
     super(props)
     const profile = get(props, 'identity')
 
-    const storedAttestations = this.getStoredAttestions()
-
     this.state = {
       ...resetAtts,
-      ...getState(profile),
-      ...storedAttestations
+      ...getState(profile)
     }
     const activeAttestation = get(props, 'match.params.attestation')
     if (activeAttestation) {
       this.state[activeAttestation] = true
     }
-    this.toasterTimeout()
   }
 
   componentDidMount() {
-    document.body.style.backgroundColor = 'var(--pale-grey-four)'
+    document.body.classList.add('has-profile-page')
   }
 
   componentWillUnmount() {
-    /* unfortunately this needs to be hardcoded and can not be read from document.body.style.backgroundColor
-     * since it initially returns an empty string
-     */
-    document.body.style.backgroundColor = 'white'
-    clearTimeout(this.timeout)
-  }
-
-  changesPublishedToBlockchain(props, prevProps, state, prevState) {
-    const profile = get(props, 'identity') || {}
-    const prevProfile = get(prevProps, 'identity') || {}
-
-    const verifiedAttestations = (state.verifiedAttestations || []).map(
-      att => att.id
-    )
-    const prevVerifiedAttestations = (prevState.verifiedAttestations || []).map(
-      att => att.id
-    )
-
-    if (verifiedAttestations.length !== prevVerifiedAttestations.length) {
-      // short-circuit
-      return false
-    }
-
-    const newlyAdded = verifiedAttestations.filter(
-      att => !prevVerifiedAttestations.includes(att)
-    )
-    if (newlyAdded.length > 0) {
-      // short-circuit
-      return false
-    }
-
-    const removedAttestations = prevVerifiedAttestations.filter(
-      att => !verifiedAttestations.includes(att)
-    )
-    if (removedAttestations.length > 0) {
-      // short-circuit
-      return false
-    }
-
-    return (
-      (profile.firstName !== prevProfile.firstName ||
-        profile.lastName !== prevProfile.lastName ||
-        profile.description !== prevProfile.description ||
-        profile.avatarUrl !== prevProfile.avatarUrl) &&
-      profile.id === prevProfile.id &&
-      // initial profile data population
-      prevProfile.id !== undefined
-    )
+    document.body.classList.remove('has-profile-page')
   }
 
   profileDataUpdated(state, prevState) {
@@ -177,126 +123,32 @@ class UserProfile extends Component {
       (state.firstName !== prevState.firstName ||
         state.lastName !== prevState.lastName ||
         state.description !== prevState.description ||
-        state.avatarUrl !== prevState.avatarUrl) &&
-      !this.accountsSwitched
+        state.avatarUrl !== prevState.avatarUrl)
     )
   }
 
-  attestationUpdated(state, prevState, attestation) {
-    return (
-      state[attestation] !== prevState[attestation] && !this.accountsSwitched
-    )
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.walletProxy !== prevProps.walletProxy) {
-      const storedAttestations = this.getStoredAttestions()
-      this.setState({ ...resetAtts, ...storedAttestations })
-    }
-
+  componentDidUpdate(prevProps) {
     if (get(this.props, 'identity.id') !== get(prevProps, 'identity.id')) {
       this.setState(getState(get(this.props, 'identity')))
-      this.toasterTimeout()
     }
-
-    if (
-      this.changesPublishedToBlockchain(
-        this.props,
-        prevProps,
-        this.state,
-        prevState
-      )
-    ) {
-      this.handleShowNotification(
-        fbt(
-          'Changes published to blockchain',
-          'profile.changesPublishedToBlockchain'
-        ),
-        'green'
-      )
+    if (this.state.deployIdentity === 'profile' && !this.profileDataUpdated(this.state, get(this.props, 'identity'))) {
+      this.setState({
+        deployIdentity: null
+      })
     }
-
-    if (this.profileDataUpdated(this.state, prevState)) {
-      this.handleShowNotification(
-        fbt('Profile updated', 'profile.profileUpdated'),
-        'blue'
-      )
-    }
-
-    const attestationNotificationConf = [
-      {
-        attestation: 'emailAttestation',
-        message: fbt('Email updated', 'profile.emailUpdated')
-      },
-      {
-        attestation: 'phoneAttestation',
-        message: fbt('Phone number updated', 'profile.phoneUpdated')
-      },
-      {
-        attestation: 'facebookAttestation',
-        message: fbt('Facebook updated', 'profile.facebookUpdated')
-      },
-      {
-        attestation: 'googleAttestation',
-        message: fbt('Google updated', 'profile.googleUpdated')
-      },
-      {
-        attestation: 'twitterAttestation',
-        message: fbt('Twitter updated', 'profile.twitterUpdated')
-      },
-      {
-        attestation: 'airbnbAttestation',
-        message: fbt('Airbnb updated', 'profile.airbnbUpdated')
-      },
-      {
-        attestation: 'websiteAttestation',
-        message: fbt('Website updated', 'profile.websiteUpdated')
-      },
-      {
-        attestation: 'kakaoAttestation',
-        message: fbt('KaKao updated', 'profile.kakaoUpdated')
-      },
-      {
-        attestation: 'githubAttestation',
-        message: fbt('GitHub updated', 'profile.githubUpdated')
-      },
-      {
-        attestation: 'linkedinAttestation',
-        message: fbt('LinkedIn updated', 'profile.linkedinUpdated')
-      },
-      {
-        attestation: 'wechatAttestation',
-        message: fbt('WeChat updated', 'profile.wechatUpdated')
-      }
-    ]
-
-    attestationNotificationConf.forEach(({ attestation, message }) => {
-      if (this.attestationUpdated(this.state, prevState, attestation)) {
-        this.handleShowNotification(message, 'blue')
-      }
-    })
   }
 
-  /**
-   * Semi ugly hack - can not find a better solution to the problem.
-   *
-   * The problem: To show toast notification when a user changes profile or attestation
-   * data we are observing this component's state. False positive notifications
-   * need to be prevented to not falsely fire when state is initially populated or when user
-   * changes wallets.
-   *
-   * The biggest challenge is that wallet id prop changes immediately when the wallet
-   * changes and bit later identity information prop is populated (which can also be empty). It
-   * is hard to connect the wallet change to the identity change, to rule out profile switches.
-   *
-   * Current solution is just to disable any notifications firing 3 seconds after
-   * account switch.
-   */
-  toasterTimeout() {
-    this.accountsSwitched = true
-    this.timeout = setTimeout(() => {
-      this.accountsSwitched = false
-    }, 3000)
+  showDeploySuccessMessage() {
+    let message = getProviderDisplayName(this.state.deployIdentity)
+    
+    if (message === this.state.deployIdentity) {
+      // Not one of attestation changes
+      message = fbt('Profile updated', 'profile.profileUpdated')
+    } else {
+      message = fbt(fbt.param('provider', message) + ' updated', 'profile.attestationUpdated')
+    }
+
+    this.handleShowNotification(message, 'blue')
   }
 
   isMobile() {
@@ -316,7 +168,12 @@ class UserProfile extends Component {
           <div className="col-md-8 profile-content">
             <div className="profile-info-container">
               <div className="avatar-container">
-                <Avatar className="with-edit-icon" avatarUrl={this.state.avatarUrl} />
+                <Avatar avatarUrl={this.state.avatarUrl} />
+                <div className="profile-edit-icon" onClick={() => {
+                  this.setState({
+                    editProfile: true
+                  })
+                }}></div>
               </div>
               <div className="user-bio-container">
                 <h2>
@@ -331,7 +188,6 @@ class UserProfile extends Component {
               <div className="profile-strength-container">
                 <ProfileStrength
                   published={get(this.props, 'identity.strength') || 0}
-                  unpublished={unpublishedStrength(this)}
                 />
               </div>
               {growthEnrolled && (
@@ -440,8 +296,6 @@ class UserProfile extends Component {
           tokenDecimals: this.props.tokenDecimals || 18
         })
 
-        console.log(providerName, reward)
-
         return {
           id: providerName,
           verified,
@@ -458,7 +312,12 @@ class UserProfile extends Component {
       >
         {header}
         <div className="sub-header"><fbt desc="Profile.tapToStart">Tap an icon below to verify and earn OGN.</fbt></div>
-        <AttestationBadges providers={providers} minCount={6} fillToNearest={3} />
+        <AttestationBadges providers={providers} minCount={6} fillToNearest={3} onClick={providerName => {
+          this.setState({
+            [providerName]: true,
+            shouldCloseVerifyModal: true
+          })
+        }} />
         <div className="actions">
           <button className="btn btn-link" onClick={() => {
             this.setState({
@@ -467,6 +326,91 @@ class UserProfile extends Component {
           }}><fbt desc="Cancel">Cancel</fbt></button>
         </div>
       </ModalComp>
+    )
+  }
+
+  renderAttestationComponents() {
+    return this.props.attestationProviders.map(providerName => {
+      const AttestationComponent = AttestationComponents[providerName]
+
+      if (!AttestationComponent) {
+        return null
+      }
+
+      return (
+        <AttestationComponent
+          key={providerName}
+          wallet={this.props.walletProxy}
+          open={this.state[providerName]}
+          onClose={() => this.setState({ [providerName]: false })}
+          onComplete={newAttestation => {
+            const attestations = get(this.state, 'attestations', [])
+            attestations.push(newAttestation)
+
+            this.setState({
+              deployIdentity: providerName,
+              attestations
+            })
+          }}
+        />
+      )
+    })
+  }
+
+  renderDeployIdentityMutation() {
+    if (!this.state.deployIdentity) {
+      return null
+    }
+
+    if (this.state.deployIdentity === 'profile' && !this.profileDataUpdated(this.state, get(this.props, 'identity'))) {
+      // Skip deploy if no change
+      return null
+    }
+
+    return (
+      <DeployIdentity
+        identity={get(this.props, 'identity.id')}
+        refetch={this.props.identityRefetch}
+        autoDeploy={true}
+        skipSuccessScreen={true}
+        onComplete={() => {
+          this.showDeploySuccessMessage()
+          this.setState({
+            deployIdentity: null
+          })
+        }}
+        profile={pick(this.state, [
+          'firstName',
+          'lastName',
+          'description',
+          'avatarUrl'
+        ])}
+        attestations={this.state.attestations || []}
+      />
+    )
+  }
+
+  renderEditProfile() {
+    if (!this.state.editProfile) {
+      return null
+    }
+
+    return (
+      <EditProfile
+        {...pick(this.state, [
+          'firstName',
+          'lastName',
+          'description',
+          'avatarUrl'
+        ])}
+        avatarUrl={this.state.avatarUrl}
+        onClose={() => this.setState({ editProfile: false, deployIdentity: 'profile' })}
+        onChange={newState =>
+          this.setState(newState, () => this.validate())
+        }
+        onAvatarChange={avatarUrl => this.setState({ avatarUrl })}
+        lightMode={true}
+      />
     )
   }
 
@@ -481,312 +425,9 @@ class UserProfile extends Component {
         />
         {this.renderPage()}
         {this.renderVerifyModal()}
-      </Fragment>
-    )
-    // return (
-    //   <Fragment>
-    //     <ToastNotification
-    //       setShowHandler={handler => (this.handleShowNotification = handler)}
-    //     />
-    //     <DocumentTitle
-    //       pageTitle={<fbt desc="Profile.title">Welcome to Origin Protocol</fbt>}
-    //     />
-    //     <Switch>
-    //       {/* Accessed only when onboarding started by clicking on Growth Enroll Box in profile view.
-    //        * For that reason Origin wallet is disabled.
-    //        */}
-    //       <Route
-    //         path="/profile/onboard"
-    //         render={() => (
-    //           <Onboard
-    //             hideOriginWallet={true}
-    //             linkprefix="/profile"
-    //             redirectTo="/profile/continue"
-    //           />
-    //         )}
-    //       />
-    //       <Route
-    //         path="/profile/continue"
-    //         render={() => this.renderProfile(true)}
-    //       />
-    //       <Route render={() => this.renderProfile(false)} />
-    //     </Switch>
-    //   </Fragment>
-    // )
-  }
-
-  openEditProfile(e) {
-    e.preventDefault()
-    this.setState({ editProfile: true })
-  }
-
-  hasPhoneAttestation() {
-    if (this.state.phoneAttestation) {
-      return true
-    }
-
-    return !!(this.state.verifiedAttestations || []).find(
-      attestation => attestation.id === 'phone'
-    )
-  }
-
-  renderProfile(arrivedFromOnboarding) {
-    const attestations = Object.keys(AttestationComponents).reduce((m, key) => {
-      if (this.state[`${key}Attestation`]) {
-        m.push(this.state[`${key}Attestation`])
-      }
-      return m
-    }, [])
-
-    const name = []
-    if (this.state.firstName) name.push(this.state.firstName)
-    if (this.state.lastName) name.push(this.state.lastName)
-    const enableGrowth = process.env.ENABLE_GROWTH === 'true'
-
-    const profileCreated =
-      this.props.growthEnrollmentStatus === 'Enrolled' &&
-      this.hasPhoneAttestation()
-
-    return (
-      <div className="container profile-edit">
-        <DocumentTitle>
-          <fbt desc="Profile.edit">Edit your profile</fbt>
-        </DocumentTitle>
-        <div className="row">
-          <div className="col-md-8">
-            <div className="profile d-flex">
-              <div className="avatar-wrap">
-                <Avatar avatarUrl={this.props.identity.avatarUrl} />
-              </div>
-              <div className="info">
-                <a
-                  className="edit"
-                  href="#"
-                  onClick={e => this.openEditProfile(e)}
-                />
-                <h1>{name.length ? name.join(' ') : 'Unnamed User'}</h1>
-                <div className="description">
-                  {this.state.description ||
-                    fbt(
-                      'An Origin user without a description',
-                      'Profile.noDescriptionUser'
-                    )}
-                </div>
-              </div>
-            </div>
-            <h3>
-              <fbt desc="Profile.originVerifications">Origin Verifications</fbt>
-            </h3>
-            <div className="attestation-container">
-              <label className="mb-4">
-                <fbt desc="_Services.pleaseConnectAccounts">
-                  Please connect your accounts below to strengthen your identity
-                  on Origin.
-                </fbt>
-              </label>
-              <div className="profile-attestations">
-                {this.props.attestationProviders.map(provider => {
-                  return this.renderAtt(
-                    provider,
-                    getProviderDisplayName(provider)
-                  )
-                })}
-              </div>
-            </div>
-
-            <div className="profile-progress">
-              <div>
-                <ProfileStrength
-                  large={true}
-                  published={get(this.props, 'identity.strength') || 0}
-                  unpublished={unpublishedStrength(this)}
-                />
-              </div>
-              {profileCreated && (
-                <div>
-                  <Earnings
-                    large={true}
-                    total={getMaxRewardPerUser({
-                      growthCampaigns: this.props.growthCampaigns,
-                      tokenDecimals: this.props.tokenDecimals || 18
-                    })}
-                    earned={getTokensEarned({
-                      verifiedServices: (
-                        this.state.verifiedAttestations || []
-                      ).map(att => att.id),
-                      growthCampaigns: this.props.growthCampaigns,
-                      tokenDecimals: this.props.tokenDecimals || 18
-                    })}
-                  />
-                </div>
-              )}
-            </div>
-
-            <div className="actions">
-              <ProfileWizard
-                deployIdentityProps={{
-                  className: `btn btn-primary btn-rounded btn-lg`,
-                  identity: get(this.props, 'identity.id'),
-                  refetch: this.props.identityRefetch,
-                  profile: pick(this.state, [
-                    'firstName',
-                    'lastName',
-                    'description',
-                    'avatarUrl'
-                  ]),
-                  attestations: [
-                    ...(this.state.attestations || []),
-                    ...attestations
-                  ],
-                  validate: () => this.validate(),
-                  onComplete: () => {
-                    store.set(
-                      `attestations-${this.props.walletProxy}`,
-                      undefined
-                    )
-                    clearVerifiedAccounts()
-                  },
-                  children: fbt('Publish Now', 'Profile.publishNow')
-                }}
-                publishedProfile={this.props.identity || {}}
-                currentProfile={this.state}
-                changesToPublishExist={changesToPublishExist(this)}
-                publishedStrength={get(this.props, 'identity.strength') || 0}
-                openEditProfile={e => this.openEditProfile(e)}
-                onEnrolled={() => {
-                  // Open phone attestation once enrollment is complete
-                  this.setState({
-                    phone: true
-                  })
-                }}
-              />
-            </div>
-          </div>
-          <div className="col-md-4">
-            <Wallet />
-            {enableGrowth && (
-              <GrowthCampaignBox openmodalonstart={arrivedFromOnboarding} />
-            )}
-            <div className="gray-box profile-help">
-              <fbt desc="onboarding-steps.stepTwoContent">
-                <b>Verifying your profile</b> allows other users to know that
-                you are a real person and increases the chances of successful
-                transactions on Origin.
-              </fbt>
-            </div>
-          </div>
-        </div>
-
-        {!this.state.editProfile ? null : (
-          <EditProfile
-            {...pick(this.state, [
-              'firstName',
-              'lastName',
-              'description',
-              'avatarUrl'
-            ])}
-            avatarUrl={this.state.avatarUrl}
-            onClose={() => this.setState({ editProfile: false })}
-            onChange={newState =>
-              this.setState(newState, () => this.validate())
-            }
-            onAvatarChange={avatarUrl => this.setState({ avatarUrl })}
-          />
-        )}
-      </div>
-    )
-  }
-
-  renderAtt(type, text, attProps = {}) {
-    const { soon, disabled, hidden } = attProps
-    const { walletProxy } = this.props
-
-    if (hidden) {
-      return null
-    }
-
-    // const profile = get(this.props, 'identity') || {}
-    let attestationPublished = false
-    let attestationProvisional = false
-
-    let status = ''
-    if (
-      this.state.verifiedAttestations &&
-      this.state.verifiedAttestations.find(att => att.id === type)
-    ) {
-      status = ' published'
-      attestationPublished = true
-    } else if (this.state[`${type}Attestation`]) {
-      status = ' provisional'
-      attestationProvisional = true
-    }
-
-    if (soon) {
-      status = ' soon'
-    } else if (disabled) {
-      status = ' disabled'
-    } else {
-      status += ' interactive'
-    }
-
-    let AttestationComponent = AttestationComponents[type]
-    if (AttestationComponent && !soon && !disabled) {
-      AttestationComponent = (
-        <AttestationComponent
-          wallet={walletProxy}
-          open={!soon && this.state[type]}
-          onClose={() => this.setState({ [type]: false })}
-          onComplete={att => {
-            this.setState({ [`${type}Attestation`]: att }, () => {
-              this.storeAttestations()
-            })
-          }}
-        />
-      )
-    } else {
-      AttestationComponent = <AttestationComponent wallet={walletProxy} />
-    }
-
-    let attestationReward = 0
-    if (
-      this.props.growthCampaigns &&
-      this.props.growthEnrollmentStatus === 'Enrolled'
-    ) {
-      const capitalize = function(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1)
-      }
-
-      attestationReward = getAttestationReward({
-        growthCampaigns: this.props.growthCampaigns,
-        attestation: capitalize(type),
-        tokenDecimals: this.props.tokenDecimals || 18
-      })
-    }
-
-    return (
-      <Fragment key={type}>
-        <div
-          id={`attestation-component-${type}`}
-          className={`profile-attestation ${type}${status}`}
-          onClick={() => this.setState({ [type]: true })}
-        >
-          <i />
-          {text}
-          {attestationPublished && (
-            <img className="ml-auto" src="images/identity/completed-tick.svg" />
-          )}
-          {attestationProvisional && <div className="indicator" />}
-          {!attestationPublished && attestationReward !== 0 && (
-            <div
-              className={`growth-reward ml-auto d-flex justify-content-center ${
-                attestationProvisional ? 'provisional' : ''
-              }`}
-            >
-              {attestationReward.toString()}
-            </div>
-          )}
-        </div>
-        {AttestationComponent}
+        {this.renderAttestationComponents()}
+        {this.renderDeployIdentityMutation()}
+        {this.renderEditProfile()}
       </Fragment>
     )
   }
@@ -801,46 +442,6 @@ class UserProfile extends Component {
     this.setState(newState)
     return newState.valid
   }
-
-  storeAttestations() {
-    const attestations = Object.keys(AttestationComponents).reduce((m, key) => {
-      if (this.state[`${key}Attestation`]) {
-        m[`${key}Attestation`] = this.state[`${key}Attestation`]
-      }
-      return m
-    }, {})
-    store.set(`attestations-${this.props.walletProxy}`, attestations)
-    updateVerifiedAccounts({
-      wallet: this.props.walletProxy,
-      data: attestations
-    })
-  }
-
-  getAttestations() {
-    const wallet = this.props.walletProxy
-    const defaultValue = store.get(`attestations-${wallet}`, {})
-    return getVerifiedAccounts({ wallet }, defaultValue)
-  }
-
-  getStoredAttestions() {
-    const attestations = this.getAttestations()
-    const storedAttestations = {}
-
-    Object.keys(attestations).forEach(key => {
-      try {
-        validator('https://schema.originprotocol.com/attestation_1.0.0.json', {
-          ...JSON.parse(attestations[key]),
-          schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json'
-        })
-        storedAttestations[key] = attestations[key]
-      } catch (e) {
-        // Invalid attestation
-        console.log('Invalid attestation', attestations[key])
-      }
-    })
-
-    return storedAttestations
-  }
 }
 
 export default withIsMobile(withAttestationProviders(
@@ -848,6 +449,8 @@ export default withIsMobile(withAttestationProviders(
 ))
 
 require('react-styl')(`
+  body.has-profile-page
+    background-color: var(--pale-grey-four)
   .profile-page
     margin-top: 2rem
     .profile-content
@@ -858,9 +461,22 @@ require('react-styl')(`
         .avatar-container
           flex: auto 0 0
           padding: 0.5rem 0
+          position: relative
           .avatar
             width: 110px
             height: 110px
+          .profile-edit-icon
+            position: absolute
+            background-image: url('images/edit-icon.svg')
+            background-position: center
+            background-repeat: no-repeat
+            background-size: 1.6rem
+            display: inline-block
+            height: 2rem
+            width: 2rem
+            right: -0.3rem
+            bottom: 0.3rem
+            cursor: pointer
         .user-bio-container
           flex: auto 1 1
           padding: 0 2rem

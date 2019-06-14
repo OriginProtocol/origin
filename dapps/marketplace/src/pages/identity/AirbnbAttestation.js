@@ -44,13 +44,23 @@ class AirbnbAttestation extends Component {
         }`}
         shouldClose={this.state.shouldClose}
         onClose={() => {
+          const completed = this.state.completed
+
+          if (completed) {
+            this.props.onComplete(this.state.data)
+          }
+
           this.setState({
             shouldClose: false,
             error: false,
-            stage: 'GenerateCode'
+            stage: 'GenerateCode',
+            completed: false,
+            data: null
           })
-          this.props.onClose()
+
+          this.props.onClose(completed)
         }}
+        lightMode={true}
       >
         <div>{this[`render${this.state.stage}`]()}</div>
       </ModalComponent>
@@ -188,16 +198,19 @@ class AirbnbAttestation extends Component {
       <Mutation
         mutation={GenerateAirbnbCodeMutation}
         onCompleted={res => {
-          const result = res.generateAirbnbCode
-          if (result.success) {
-            this.setState({
-              stage: 'VerifyCode',
-              code: result.code,
-              loading: false
-            })
-          } else {
-            this.setState({ error: result.reason, loading: false })
+          const result = res.GenerateAirbnbCodeMutation
+
+          if (!result.success) {
+            this.setState({ error: result.reason, loading: false, data: null })
+            return
           }
+
+          this.setState({
+            data: result.data,
+            loading: false,
+            completed: true,
+            shouldClose: true
+          })
         }}
         onError={errorData => {
           console.error('Error', errorData)
@@ -206,7 +219,7 @@ class AirbnbAttestation extends Component {
       >
         {generateCode => (
           <button
-            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
+            className="btn btn-primary"
             disabled={this.state.loading}
             onClick={() => {
               if (this.state.loading) return
@@ -254,7 +267,7 @@ class AirbnbAttestation extends Component {
       >
         {verifyCode => (
           <button
-            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
+            className="btn btn-primary"
             disabled={this.state.loading}
             onClick={() => {
               if (this.state.loading) return
@@ -274,39 +287,6 @@ class AirbnbAttestation extends Component {
           />
         )}
       </Mutation>
-    )
-  }
-
-  renderVerifiedOK() {
-    const isMobile = this.isMobile()
-
-    return (
-      <>
-        <h2>
-          <fbt desc="AirbnbAttestation.verified">Airbnb account verified!</fbt>
-        </h2>
-        <div className="instructions">
-          <fbt desc="Attestation.DontForget">
-            Don&apos;t forget to publish your changes.
-          </fbt>
-        </div>
-        <div className="help">
-          <fbt desc="Attestation.publishingBlockchain">
-            Publishing to the blockchain lets other users know that you have a
-            verified profile.
-          </fbt>
-        </div>
-        <div className="actions">
-          <button
-            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
-            onClick={() => {
-              this.props.onComplete(this.state.data)
-              this.setState({ shouldClose: true })
-            }}
-            children={fbt('Continue', 'Continue')}
-          />
-        </div>
-      </>
     )
   }
 }

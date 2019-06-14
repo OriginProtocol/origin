@@ -27,7 +27,7 @@ class EditProfileModal extends Component {
   }
 
   render() {
-    const input = formInput(this.state, state => this.setState(state), 'dark')
+    const input = formInput(this.state, state => this.setState(state), this.props.lightMode ? '' : 'dark')
     const Feedback = formFeedback(this.state)
     const hasAvatar = this.state.avatarUrl
 
@@ -37,9 +37,10 @@ class EditProfileModal extends Component {
         onClose={() => this.props.onClose()}
         shouldClose={this.state.shouldClose}
         classNameOuter={this.state.imageCropperOpened ? 'd-none' : ''}
+        lightMode={this.props.lightMode}
       >
         <form
-          className="edit-profile-modal"
+          className={`edit-profile-modal${this.props.lightMode ? ' light-theme' : ''}`}
           onSubmit={e => {
             e.preventDefault()
             this.validate()
@@ -171,13 +172,17 @@ require('react-styl')(`
       border-radius: 1rem
       background-color: var(--dark-two)
     .help
-      font-size: 14px;
-      line-height: normal;
-      text-align: center;
-      margin-top: 2rem;
+      font-size: 14px
+      line-height: normal
+      text-align: center
+      margin-top: 2rem
     .actions
       display: flex
       flex-direction: column
       margin: 2rem auto 0 auto
       width: 50%
+    &.light-theme
+      .avatar
+        background-color: white
+        border-radius: 50%
 `)

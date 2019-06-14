@@ -47,13 +47,23 @@ class EmailAttestation extends Component {
         }`}
         shouldClose={this.state.shouldClose}
         onClose={() => {
+          const completed = this.state.completed
+
+          if (completed) {
+            this.props.onComplete(this.state.data)
+          }
+
           this.setState({
             shouldClose: false,
             error: false,
-            stage: 'GenerateCode'
+            stage: 'GenerateCode',
+            completed: false,
+            data: null
           })
-          this.props.onClose()
+
+          this.props.onClose(completed)
         }}
+        lightMode={true}
       >
         <div>{this[`render${this.state.stage}`]()}</div>
       </ModalComponent>
@@ -136,9 +146,7 @@ class EmailAttestation extends Component {
             <div className="actions">
               <button
                 type="submit"
-                className={`btn ${
-                  isMobile ? 'btn-primary' : 'btn-outline-light'
-                }`}
+                className="btn btn-primary"
                 disabled={this.state.loading}
                 children={
                   this.state.loading
@@ -170,15 +178,18 @@ class EmailAttestation extends Component {
         mutation={VerifyEmailCodeMutation}
         onCompleted={res => {
           const result = res.verifyEmailCode
-          if (result.success) {
-            this.setState({
-              stage: 'VerifiedOK',
-              data: result.data,
-              loading: false
-            })
-          } else {
-            this.setState({ error: result.reason, loading: false })
+
+          if (!result.success) {
+            this.setState({ error: result.reason, loading: false, data: null })
+            return
           }
+
+          this.setState({
+            data: result.data,
+            loading: false,
+            completed: true,
+            shouldClose: true
+          })
         }}
         onError={errorData => {
           console.error('Error', errorData)
@@ -233,18 +244,16 @@ class EmailAttestation extends Component {
                 value={this.state.code}
                 onChange={e => this.setState({ code: e.target.value })}
               />
-              {this.state.error && (
-                <div className="alert alert-danger mt-3">
-                  {this.state.error}
-                </div>
-              )}
             </div>
+            {this.state.error && (
+              <div className="alert alert-danger mt-3">
+                {this.state.error}
+              </div>
+            )}
             <div className="actions">
               <button
                 type="submit"
-                className={`btn ${
-                  isMobile ? 'btn-primary' : 'btn-outline-light'
-                }`}
+                className="btn btn-primary"
                 disabled={this.state.loading}
                 children={
                   this.state.loading
@@ -264,39 +273,6 @@ class EmailAttestation extends Component {
           </form>
         )}
       </Mutation>
-    )
-  }
-
-  renderVerifiedOK() {
-    const isMobile = this.isMobile()
-
-    return (
-      <>
-        <h2>
-          <fbt desc="EmailAttestation.verified">Email address verified!</fbt>
-        </h2>
-        <div className="instructions">
-          <fbt desc="Attestation.DontForget">
-            Don&apos;t forget to publish your changes.
-          </fbt>
-        </div>
-        <div className="help">
-          <fbt desc="Attestation.publishingBlockchain">
-            Publishing to the blockchain lets other users know that you have a
-            verified profile.
-          </fbt>
-        </div>
-        <div className="actions">
-          <button
-            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
-            onClick={() => {
-              this.props.onComplete(this.state.data)
-              this.setState({ shouldClose: true })
-            }}
-            children={fbt('Continue', 'Continue')}
-          />
-        </div>
-      </>
     )
   }
 }
