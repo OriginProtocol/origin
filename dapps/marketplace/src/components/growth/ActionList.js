@@ -171,6 +171,14 @@ require('react-styl')(`
     max-width: 25rem
   .action-list
     margin-top: 1rem
+    .action-title
+      font-size: 1.125rem
+      font-weight: normal
+      font-family: Lato
+      margin-left: 5px
+      font-family: Lato
+      border-bottom: 1px solid #c0cbd4
+      padding-bottom: 10px
     .filters
       font-size: 18px
       .show
@@ -192,6 +200,8 @@ require('react-styl')(`
         color: var(--dusk)
   .action-list.mobile
     margin-top: 1rem
+    .action-title
+      font-size: 0.875rem
     .filters
       .filter
         min-width: 5.31rem

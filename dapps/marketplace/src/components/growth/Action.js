@@ -398,6 +398,8 @@ require('react-styl')(`
   .growth-campaigns.container.mobile
     .action
       min-height: 80px
+      .verification-icon
+        width: 2.375rem
       .action-main
         padding: 18px 0px
       .background
@@ -428,7 +430,10 @@ require('react-styl')(`
         margin-bottom: 15px
         margin-left: -4px
       .status-icon
-        width: 1.56rem
+        width: 1rem
+        &.verification
+          right: -2px
+          bottom: 0px
       .listingpurchased
         left: 13px
         top: 17px

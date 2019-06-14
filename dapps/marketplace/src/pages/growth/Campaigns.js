@@ -463,12 +463,6 @@ require('react-styl')(`
       font-weight: 500
     h5
       text-align: center
-    .action-title
-      font-weight: bold
-      color: var(--steel)
-      margin-top: 30px
-      margin-left: 5px
-      margin-bottom: -5px
     .campaign-list
       .select-bar
         background-color: var(--clear-blue)

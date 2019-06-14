@@ -8,11 +8,9 @@ import MobileModalHeader from 'components/MobileModalHeader'
 
 function Verifications(props) {
   const {
-    title,
     decimalDivision,
     campaigns,
-    isMobile,
-    handleNavigationChange
+    isMobile
   } = props
 
   const activeCampaign = campaigns.find(
@@ -30,9 +28,17 @@ function Verifications(props) {
     'Facebook',
     'Google'
   ]
+
+  //const actionCompleted = (action) => ['Exhausted', 'Completed'].includes(action.status)
+  const actionCompleted = (action) => action.type === 'Facebook'
+
   const verificationActions = activeCampaign.actions.filter(action =>
     verificationRewardTypes.includes(action.type)
   )
+
+  const completedActions = verificationActions.filter(action => actionCompleted(action))
+  const notCompletedActions = verificationActions.filter(action => !actionCompleted(action))
+
   return (
     <Fragment>
       {isMobile && (
@@ -73,12 +79,16 @@ function Verifications(props) {
         </div>
 
         <ActionList
-          title={title}
           decimalDivision={decimalDivision}
           isMobile={isMobile}
-          actions={verificationActions}
-          handleNavigationChange={handleNavigationChange}
+          actions={notCompletedActions}
         />
+        {completedActions.length > 0 && <ActionList
+          title={fbt('Completed', 'growth.verifications.completed')}
+          decimalDivision={decimalDivision}
+          isMobile={isMobile}
+          actions={completedActions}
+        />}
       </div>
     </Fragment>
   )

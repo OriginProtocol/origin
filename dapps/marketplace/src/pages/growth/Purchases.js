@@ -8,11 +8,9 @@ import MobileModalHeader from 'components/MobileModalHeader'
 
 function Purchases(props) {
   const {
-    title,
     decimalDivision,
     campaigns,
-    isMobile,
-    handleNavigationChange
+    isMobile
   } = props
 
   const activeCampaign = campaigns.find(
@@ -25,9 +23,17 @@ function Purchases(props) {
     'ListingIdPurchased',
     'ListingSold'
   ]
+
+  //const actionCompleted = (action) => ['Exhausted', 'Completed'].includes(action.status)
+  const actionCompleted = (action) => Math.random() > 0.5
+
   const purchaseActions = activeCampaign.actions.filter(action =>
     purchaseRewardTypes.includes(action.type)
   )
+
+  const completedActions = purchaseActions.filter(action => actionCompleted(action))
+  const notCompletedActions = purchaseActions.filter(action => !actionCompleted(action))
+
   return (
     <Fragment>
       {isMobile && (
@@ -68,12 +74,16 @@ function Purchases(props) {
         </div>
 
         <ActionList
-          title={title}
           decimalDivision={decimalDivision}
           isMobile={isMobile}
-          actions={purchaseActions}
-          handleNavigationChange={handleNavigationChange}
+          actions={notCompletedActions}
         />
+        {completedActions.length > 0 && <ActionList
+          title={fbt('Completed', 'growth.purchases.completed')}
+          decimalDivision={decimalDivision}
+          isMobile={isMobile}
+          actions={completedActions}
+        />}
       </div>
     </Fragment>
   )
