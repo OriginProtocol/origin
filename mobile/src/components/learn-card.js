@@ -14,16 +14,18 @@ class LearnCard extends Component {
           <fbt desc="LearnCard.title">Blockchain & Your Personal Data</fbt>
         </Text>
         <Text style={styles.content}>
-          By creating a profile, you are associating your name and photo with
-          your Ethereum account. This means that others will be able to connect
-          your blockchain transactions to your name and photo.
+          <fbt desc="LearnCard.content">
+            By creating a profile, you are associating your name and photo with
+            your Ethereum account. This means that others will be able to
+            connect your blockchain transactions to your name and photo.
+          </fbt>
         </Text>
         <View style={styles.buttonContainer}>
           <OriginButton
             size="large"
             type="primary"
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={'Got it'}
+            title={fbt('Got it', 'LearnCard.continue')}
             onPress={this.props.onRequestClose}
           />
         </View>

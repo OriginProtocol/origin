@@ -5,6 +5,7 @@ import {
   DeviceEventEmitter,
   Dimensions,
   Image,
+  Modal,
   StyleSheet,
   Text,
   View
@@ -14,6 +15,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
+import NoRewardsCard from 'components/no-rewards-card'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import withWeb3Accounts from 'hoc/withWeb3Accounts'
 import OnboardingStyles from 'styles/onboarding'
@@ -24,6 +26,7 @@ class ImportWarningScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      displayModal: false,
       loading: false
     }
   }
@@ -53,6 +56,7 @@ class ImportWarningScreen extends Component {
             </fbt>
           </Text>
         </View>
+        {this.renderModal()}
         <View style={styles.buttonsContainer}>
           <OriginButton
             size="large"
@@ -68,8 +72,42 @@ class ImportWarningScreen extends Component {
               this.props.navigation.navigate('ImportAccount')
             }}
           />
+          <OriginButton
+            size="large"
+            type="link"
+            style={styles.button}
+            textStyle={{ fontSize: 18, fontWeight: '900' }}
+            title={fbt(
+              `Continue without rewards`,
+              'ImportWarningScreen.continueButton'
+            )}
+            onPress={() => {
+              this.setState({ displayModal: true })
+            }}
+          />
         </View>
       </SafeAreaView>
+    )
+  }
+
+  renderModal() {
+    return (
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={this.state.displayModal}
+        onRequestClose={() => this.toggleModal()}
+      >
+        <SafeAreaView style={styles.modalSafeAreaView}>
+          <NoRewardsCard
+            onRequestClose={() => this.setState({ displayModal: false })}
+            onConfirm={() => {
+              this.setState({ displayModal: false })
+              this.props.navigation.navigate('ImportAccount')
+            }}
+          />
+        </SafeAreaView>
+      </Modal>
     )
   }
 }
@@ -84,6 +122,10 @@ export default withWeb3Accounts(
 
 const styles = StyleSheet.create({
   ...OnboardingStyles,
+  modalSafeAreaView: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)'
+  },
   image: {
     marginBottom: 30
   }
