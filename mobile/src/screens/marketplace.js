@@ -596,7 +596,8 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = dispatch => ({
   setMarketplaceReady: ready => dispatch(setMarketplaceReady(ready)),
-  setMarketplaceWebViewError: error => dispatch(setMarketplaceWebViewError(error)),
+  setMarketplaceWebViewError: error =>
+    dispatch(setMarketplaceWebViewError(error)),
   setIdentity: payload => dispatch(setIdentity(payload)),
   setAccountBalances: balance => dispatch(setAccountBalances(balance))
 })

@@ -250,7 +250,8 @@ class MarketplaceApp extends React.Component {
     let activityIndicator = true
     let errorText = false
     if (this.props.marketplace.error) {
-      errorText = 'An error occurred loading the Origin Marketplace. Please check your internet connection.'
+      errorText =
+        'An error occurred loading the Origin Marketplace. Please check your internet connection.'
       loadingText = false
       activityIndicator = false
     }
@@ -261,7 +262,11 @@ class MarketplaceApp extends React.Component {
         <BackupPrompt />
         <_MarketplaceApp navigation={navigation} />
         <Modal visible={!this.props.marketplace.ready}>
-          <Loading loadingText={loadingText} activityIndicator={activityIndicator} errorText={errorText} />
+          <Loading
+            loadingText={loadingText}
+            activityIndicator={activityIndicator}
+            errorText={errorText}
+          />
         </Modal>
       </>
     )

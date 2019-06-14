@@ -18,10 +18,12 @@ const Loading = props => (
       <Text style={styles.errorText}>{props.errorText}</Text>
     </View>
     <View style={styles.indicatorContainer}>
-      {props.activityIndicator !== false &&
+      {props.activityIndicator !== false && (
         <ActivityIndicator size="small" color="white" />
-      }
-      {props.loadingText && <Text style={styles.indicatorText}>{props.loadingText}</Text>}
+      )}
+      {props.loadingText && (
+        <Text style={styles.indicatorText}>{props.loadingText}</Text>
+      )}
     </View>
   </SafeAreaView>
 )
