@@ -36,6 +36,7 @@ function Action(props) {
 
   let foregroundImgSrc
   let title
+  let isVerificationAction = true
   let buttonLink = '/profile'
   const buttonOnClick = () => {
     window.scrollTo(0, 0)
@@ -66,10 +67,12 @@ function Action(props) {
     foregroundImgSrc = 'images/growth/purchase-icon.svg'
     title = fbt('Create a Listing', 'RewardActions.listingCreatedTitle')
     buttonLink = '/create'
+    isVerificationAction = false
   } else if (type === 'ListingPurchased') {
     foregroundImgSrc = 'images/growth/purchase-icon.svg'
     title = fbt('Purchase a Listing', 'RewardActions.listingPurchasedTitle')
     buttonLink = '/'
+    isVerificationAction = false
   } else if (type === 'ListingIdPurchased') {
     foregroundImgSrc = iconSrc
     title = (
@@ -80,10 +83,12 @@ function Action(props) {
       </Fragment>
     )
     buttonLink = `/listing/${listingId}`
+    isVerificationAction = false
   } else if (type === 'ListingSold') {
     foregroundImgSrc = 'images/growth/sell-icon.svg'
     title = fbt('Sell a Listing', 'RewardActions.listingSoldTitle')
     buttonLink = '/create'
+    isVerificationAction = false
   }
 
   const renderReward = amount => {
@@ -211,7 +216,10 @@ function Action(props) {
               </div>
             )}
             {isMobile && actionLocked && (
-              <img className="lock" src="images/growth/lock-icon.svg" />
+              <img className={`status-icon ${isVerificationAction ? 'verification' : ''}`} src="images/growth/lock-icon.svg" />
+            )}
+            {isMobile && actionCompleted && (
+              <img className={`status-icon ${isVerificationAction ? 'verification' : ''}`} src="images/growth/green-tick-icon.svg" />
             )}
           </div>
         </div>
@@ -262,10 +270,12 @@ function Action(props) {
             </div>
           )}
           {!isMobile && actionLocked && (
-            <img className="lock" src="images/growth/lock-icon.svg" />
+            <img className="status-icon" src="images/growth/lock-icon.svg" />
           )}
           {/* Just a padding placeholder*/}
-          {!isMobile && actionCompleted && <div className="placeholder" />}
+          {!isMobile && actionCompleted && (
+            <img className="status-icon" src="images/growth/green-tick-icon.svg" />
+          )}
         </div>
       </div>
       {detailsEmpty || !detailsToggled ? null : (
@@ -292,10 +302,13 @@ require('react-styl')(`
         border-bottom: 1px solid #c0cbd4
       .listing-icon-holder
         position:relative
-        .lock
+        .status-icon
           position: absolute
           right: -5px
           bottom: -5px
+          &.verification
+            right: -4px
+            bottom: 4px
       .verification-icon
         width: 3.5rem
       .icon-holder
@@ -325,7 +338,7 @@ require('react-styl')(`
         left: 15px
         top: 16px
         width: 29px
-      .lock
+      .status-icon
         width: 2.5rem
       .image-holder
         position: relative
@@ -414,7 +427,7 @@ require('react-styl')(`
         width: 16px
         margin-bottom: 15px
         margin-left: -4px
-      .lock
+      .status-icon
         width: 1.56rem
       .listingpurchased
         left: 13px
