@@ -109,7 +109,7 @@ class ActionList extends Component {
           </Modal>
         )}
         <div className={`action-list ${isMobile ? 'mobile' : ''}`}>
-          <div className="filters d-flex justify-content-between">
+          {/*<div className="filters d-flex justify-content-between">
             {!isMobile && (
               <div className="show">
                 <fbt desc="growth.action-list.show">Show</fbt>
@@ -135,13 +135,14 @@ class ActionList extends Component {
               'completed',
               isMobile
             )}
-          </div>
+          </div>*/}
           <div className="d-flex flex-column">
             {title !== undefined && <div className="action-title">{title}</div>}
-            {actionsToDisplay.map(action => {
+            {actionsToDisplay.map((action, i) => {
               return (
                 <Action
                   action={action}
+                  hasBorder={i !== actionsToDisplay.length - 1}
                   decimalDivision={decimalDivision}
                   key={`${action.type}:${action.status}:${
                     action.listingId ? action.listingId : '0'
@@ -169,7 +170,7 @@ require('react-styl')(`
   .action-list-modal.pl-modal .pl-modal-table .pl-modal-cell .action-list-modal
     max-width: 25rem
   .action-list
-    margin-top: 50px
+    margin-top: 1rem
     .filters
       font-size: 18px
       .show
@@ -190,7 +191,7 @@ require('react-styl')(`
         background-color: var(--pale-grey)
         color: var(--dusk)
   .action-list.mobile
-    margin-top: 2.2rem
+    margin-top: 1rem
     .filters
       .filter
         min-width: 5.31rem

@@ -6,6 +6,7 @@ import { fbt } from 'fbt-runtime'
 
 import withWeb3 from 'hoc/withWeb3'
 import withCreatorConfig from 'hoc/withCreatorConfig'
+import withIsMobile from 'hoc/withIsMobile'
 
 import Nav from './nav/Nav'
 import TranslationModal from './_TranslationModal'
@@ -93,11 +94,19 @@ class App extends Component {
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
 
+    const isMobile = this.props.ismobile === 'true'
     // hide navigation bar on growth welcome screen and show it
     // in onboarding variation of that screen
+
     const hideNavbar =
-      !this.props.location.pathname.match(/^\/welcome\/onboard.*$/g) &&
-      this.props.location.pathname.match(/^\/welcome.*$/g)
+      (!this.props.location.pathname.match(/^\/welcome\/onboard.*$/g) &&
+        this.props.location.pathname.match(/^\/welcome.*$/g)) ||
+      (isMobile &&
+        this.props.location.pathname.match(/^\/campaigns\/purchases$/g)) ||
+      (isMobile &&
+        this.props.location.pathname.match(/^\/campaigns\/invitations$/g)) ||
+      (isMobile &&
+        this.props.location.pathname.match(/^\/campaigns\/verifications$/g))
 
     return (
       <CurrencyContext.Provider value={this.state.currency}>
@@ -173,7 +182,7 @@ class App extends Component {
   }
 }
 
-export default withWeb3(withCreatorConfig(withRouter(App)))
+export default withIsMobile(withWeb3(withCreatorConfig(withRouter(App))))
 
 require('react-styl')(`
   .app-spinner

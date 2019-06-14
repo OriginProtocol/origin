@@ -19,10 +19,12 @@ function Action(props) {
     iconSrc
   } = props.action
 
-  const { isMobile, onMobileLockClick } = props
+  const detailsEmpty =
+    !detailsKey || detailsKey === 'growth.purchase.empty.details'
+  const { isMobile, onMobileLockClick, hasBorder } = props
 
-  //const actionLocked = status === 'Inactive'
-  const actionLocked = false // TODO: do not forget to comment this out
+  const actionLocked = status === 'Inactive'
+  //const actionLocked = false // TODO: do not forget to comment this out
 
   const actionCompleted = ['Exhausted', 'Completed'].includes(status)
 
@@ -91,7 +93,11 @@ function Action(props) {
   // hover color of the button: #111d28
   const renderReward = amount => {
     return (
-      <div className="reward d-flex align-items-left pl-2 justify-content-start align-items-center flex-grow-1">
+      <div
+        className={`reward d-flex align-items-left pl-2 ${
+          isMobile ? 'justify-content-end' : 'justify-content-start'
+        } align-items-center flex-grow-1`}
+      >
         <img src="images/ogn-icon.svg" />
         <div className="value">
           {formatTokens(amount, props.decimalDivision)}
@@ -175,25 +181,47 @@ function Action(props) {
     )
   }
 
+  const detailsLink = !detailsEmpty && (
+    <div
+      className={`toggle-details mr-1 mr-md-3`}
+      onClick={e => {
+        e.preventDefault()
+        e.stopPropagation()
+        toggleDetails(!detailsToggled)
+      }}
+    >
+      {detailsToggled ? (
+        <fbt desc="RewardActions.lessDetails">Less Details</fbt>
+      ) : (
+        <fbt desc="RewardActions.viewDetails">View Details</fbt>
+      )}
+    </div>
+  )
+
   return wrapIntoInteraction(
     <div
-      className={`action${isInteractable ? ' active' : ''}${
-        isMobile ? ' mobile' : ''
-      }`}
+      className={`action ${isInteractable ? 'active' : ''} ${
+        isMobile ? 'mobile' : ''
+      } ${hasBorder ? 'has-border' : ''}`}
     >
       <div className="d-flex action-main">
-        <div className="col-1 pr-0 pl-0 d-flex justify-content-center align-items-center">
-          {type === 'ListingIdPurchased' ? (
-            <img className={type.toLowerCase()} src={foregroundImgSrc} />
-          ) : (
-            <div className="icon-holder">
-              <img className="background" src={backgroundImgSrc} />
+        <div className="col-2 col-md-1 pr-0 pl-0 d-flex justify-content-center align-items-center">
+          <div className="listing-icon-holder">
+            {type === 'ListingIdPurchased' ? (
               <img className={type.toLowerCase()} src={foregroundImgSrc} />
-            </div>
-          )}
+            ) : (
+              <div className="icon-holder">
+                <img className="background" src={backgroundImgSrc} />
+                <img className={type.toLowerCase()} src={foregroundImgSrc} />
+              </div>
+            )}
+            {isMobile && actionLocked && (
+              <img className="lock" src="images/growth/lock-icon.svg" />
+            )}
+          </div>
         </div>
         <div
-          className={`d-flex flex-column justify-content-center col-5 col-md-6`}
+          className={`d-flex flex-column p-2 p-md-3 justify-content-center col-7 col-md-8`}
         >
           <div className="title">{title}</div>
           {actionLocked && !isMobile && unlockConditions.length > 0 && (
@@ -203,31 +231,9 @@ function Action(props) {
               </div>
             </Fragment>
           )}
+          {!actionLocked && detailsLink}
         </div>
-        <div className="pl-0 pl-md-3 col-6 col-md-5 d-flex align-items-center justify-content-between">
-          <a
-            href="#"
-            className={`toggle-details${
-              detailsKey ? '' : ' invisible'
-            } mr-1 mr-md-3`}
-            onClick={e => {
-              e.preventDefault()
-              e.stopPropagation()
-              toggleDetails(!detailsToggled)
-            }}
-          >
-            {detailsToggled ? (
-              isMobile ? (
-                <fbt desc="RewardActions.less">Less</fbt>
-              ) : (
-                <fbt desc="RewardActions.lessDetails">Less Details</fbt>
-              )
-            ) : isMobile ? (
-              <fbt desc="RewardActions.more">More</fbt>
-            ) : (
-              <fbt desc="RewardActions.moreDetails">More Details</fbt>
-            )}
-          </a>
+        <div className="pr-0 pr-md-3 pl-0 pl-md-3 col-3 col-md-3 d-flex align-items-center justify-content-between">
           {showReferralPending && (
             <div className="d-flex flex-column flex-grow-1">
               {renderReward(rewardPending.amount)}
@@ -255,19 +261,19 @@ function Action(props) {
               </div>
             )}
           {showPossibleRewardAmount && renderReward(reward.amount)}
-          {!actionCompleted && !actionLocked && (
+          {!actionCompleted && !actionLocked && !isMobile && (
             <div className="btn btn-primary mt-2 mb-2">
               <img className="button-caret" src="images/caret-white.svg" />
             </div>
           )}
-          {actionLocked && (
+          {!isMobile && actionLocked && (
             <img className="lock" src="images/growth/lock-icon.svg" />
           )}
           {/* Just a padding placeholder*/}
           {actionCompleted && <div className="placeholder" />}
         </div>
       </div>
-      {!detailsKey || !detailsToggled ? null : (
+      {detailsEmpty || !detailsToggled ? null : (
         <div className="details">
           <fbt desc="growth">
             <fbt:enum enum-range={GrowthEnum} value={detailsKey} />
@@ -283,16 +289,18 @@ export default Action
 require('react-styl')(`
   .growth-campaigns.container
     .action
-      min-height: 100px
-      border: 1px solid var(--light)
-      border-radius: 5px
-      margin-top: 20px
+      min-height: 80px
       color: var(--dark)
       .action-main
-        padding: 20px
-      &.active:hover
-        background-color: var(--pale-grey-three)
-        color: var(--dark)
+        padding: 30px 20px
+      &.has-border
+        border-bottom: 1px solid #c0cbd4
+      .listing-icon-holder
+        position:relative
+        .lock
+          position: absolute
+          right: -5px
+          bottom: -5px
       .icon-holder
         position: relative
       .background
@@ -344,6 +352,7 @@ require('react-styl')(`
         width: 35px
       .listingidpurchased
         width: 60px
+        border-radius: 5px
       .referral
         position: absolute
         left: 15px
@@ -354,7 +363,7 @@ require('react-styl')(`
       .image-holder
         position: relative
       .title
-        font-size: 18px
+        font-size: 1.31rem
         font-weight: bold
         line-height: 1.25
       .info-text
@@ -383,11 +392,11 @@ require('react-styl')(`
         color: var(--dusk)
         font-size: 14px
         font-weight: normal
-        border-top: 1px solid var(--light)
         background-color: #f7f8f8
         text-align: center
-        border-radius: 0 0 5px 5px
-        padding: 10px
+        border-radius: 5px
+        padding: 10px 40px
+        margin-bottom: 10px
       .btn
         border-radius: 15rem
         width: 2.5rem
@@ -405,12 +414,12 @@ require('react-styl')(`
         font-size: 14px
         font-weight: normal
         white-space: nowrap
+        color: var(--clear-blue)
   .growth-campaigns.container.mobile
     .action
       min-height: 80px
-      margin-top: 10px
       .action-main
-        padding: 17px 0px 17px 20px
+        padding: 18px 0px
       .background
         width: 2.5rem
       .reward .value
