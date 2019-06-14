@@ -26,6 +26,7 @@ import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withAttestationProviders from 'hoc/withAttestationProviders'
+import withIsMobile from 'hoc/withIsMobile'
 
 import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
@@ -33,6 +34,10 @@ import Wallet from 'components/Wallet'
 import DocumentTitle from 'components/DocumentTitle'
 import GrowthCampaignBox from 'components/GrowthCampaignBox'
 import Earnings from 'components/Earning'
+import Link from 'components/Link'
+import Modal from 'components/Modal'
+import MobileModal from 'components/MobileModal'
+import AttestationBadges from 'components/AttestationBadges'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
@@ -294,19 +299,16 @@ class UserProfile extends Component {
     }, 3000)
   }
 
+  isMobile() {
+    return this.props.ismobile === 'true'
+  }
+
   renderPage() {
     const growthEnrolled = this.props.growthEnrollmentStatus === 'Enrolled'
+    
+    const isMobile = this.isMobile()
 
-    let verifiedAttestations = get(this.props, 'identity.verifiedAttestations', [])
-
-    if (verifiedAttestations.length < 10) {
-      // Show a minimum of 10 icons
-      verifiedAttestations = verifiedAttestations.concat(new Array(10 - verifiedAttestations.length).fill(null))
-    } else if (verifiedAttestations.length > 10 && (verifiedAttestations % 5 !== zero)) {
-      // Show icons in multiples of 5
-      const lengthToAppend = (5 - (verifiedAttestations.length % 5))
-      verifiedAttestations = verifiedAttestations.concat(new Array(lengthToAppend).fill(null))
-    }
+    const verifiedAttestations = get(this.props, 'identity.verifiedAttestations', [])
 
     return (
       <div className="container profile-page">
@@ -351,25 +353,120 @@ class UserProfile extends Component {
               )}
             </div>
             <div className="attestations-container text-center">
-              <button type="button" className="btn btn-outline-primary btn-rounded">
+              <button type="button" className="btn btn-outline-primary btn-rounded" onClick={() => {
+                this.setState({
+                  verifyModal: true
+                })
+              }}>
                 <fbt desc="Profile.addVerifications">Add Verifications</fbt>
               </button>
-              <div className="attestation-badges">
-                {verifiedAttestations.map((att, index) => {
-                  if (!att) {
-                    return <div key={index} className="attestation-badge"></div>
+              <AttestationBadges
+                providers={verifiedAttestations.map(att => {
+                  return {
+                    id: att.id,
+                    disabled: false,
+                    soon: false
                   }
-
-                  return (
-                    <div key={att.id} className={`attestation-badge verified ${att.id}`}></div>
-                  )
                 })}
+                minCount={isMobile ? 8 : 10}
+                fillToNearest={isMobile ? 4 : 5}
+              />
+            </div>
+          </div>
+          <div className="col-md-3 profile-sidebar">
+            <div className="profile-widget campaign-earnings">
+              <h3><fbt desc="Profie.campaignEarnings">Campaign Earnings</fbt></h3>
+              <Earnings
+                total={getMaxRewardPerUser({
+                  growthCampaigns: this.props.growthCampaigns,
+                  tokenDecimals: this.props.tokenDecimals || 18
+                })}
+                earned={getTokensEarned({
+                  verifiedServices: (
+                    this.state.verifiedAttestations || []
+                  ).map(att => att.id),
+                  growthCampaigns: this.props.growthCampaigns,
+                  tokenDecimals: this.props.tokenDecimals || 18
+                })}
+              />
+              <div className="time-left">
+                <fbt desc="Profile.timeLeft">Time left: </fbt> 25d 13h 34m
+              </div>
+              <div className="help">
+                <fbt desc="Profile.paidOutAfterCampaign">Paid out after campaign is finished</fbt>
+              </div>
+              <Link to="/campaigns"><fbt desc="Profile.visitCampaignHome">Visit Campaign Home</fbt> &gt;</Link>
+            </div>
+            <div className="profile-widget verification">
+              <img src="images/identity/identity-module-icon.svg" />
+              <div>
+                <fbt desc="Profile.verifyForSuccessfulTx">
+                  <strong>Verifying your profile</strong> allows other users to know that you are real and increases the chances of successful transactions on Origin.
+                </fbt>
               </div>
             </div>
           </div>
-          <div className="col-md-3 profile-sidebar"></div>
         </div>
       </div>
+    )
+  }
+
+  capitalizeString(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1)
+  }
+
+  renderVerifyModal() {
+    if (!this.state.verifyModal) {
+      return null
+    }
+    
+    const ModalComp = this.isMobile() ? MobileModal : Modal
+
+    const headerContent = fbt('Add Verifications', 'Profile.addVerifications')
+
+    const header = this.isMobile() ? null : (
+      <h2>{headerContent}</h2>
+    )
+
+    const verifiedAttestations = get(this.props, 'identity.verifiedAttestations', [])
+      .map(att => att.id)
+
+    const providers = this.props.attestationProviders
+      .map(providerName => {
+        const verified = verifiedAttestations.includes(providerName)
+        const reward = verified ? null : getAttestationReward({
+          growthCampaigns: this.props.growthCampaigns,
+          attestation: this.capitalizeString(providerName),
+          tokenDecimals: this.props.tokenDecimals || 18
+        })
+
+        console.log(providerName, reward)
+
+        return {
+          id: providerName,
+          verified,
+          reward
+        }
+      })
+
+    return (
+      <ModalComp
+        title={headerContent}
+        className="profile-verifications-modal"
+        shouldClose={this.state.shouldCloseVerifyModal}
+        onClose={() => this.setState({ shouldCloseVerifyModal: false, verifyModal: false })}
+      >
+        {header}
+        <div className="sub-header"><fbt desc="Profile.tapToStart">Tap an icon below to verify and earn OGN.</fbt></div>
+        <AttestationBadges providers={providers} minCount={6} fillToNearest={3} />
+        <div className="actions">
+          <button className="btn btn-link" onClick={() => {
+            this.setState({
+              shouldCloseVerifyModal: true
+            })
+          }}><fbt desc="Cancel">Cancel</fbt></button>
+        </div>
+      </ModalComp>
     )
   }
 
@@ -383,6 +480,7 @@ class UserProfile extends Component {
           pageTitle={<fbt desc="Profile.title">Welcome to Origin Protocol</fbt>}
         />
         {this.renderPage()}
+        {this.renderVerifyModal()}
       </Fragment>
     )
     // return (
@@ -745,9 +843,9 @@ class UserProfile extends Component {
   }
 }
 
-export default withAttestationProviders(
+export default withIsMobile(withAttestationProviders(
   withWallet(withIdentity(withGrowthCampaign(UserProfile)))
-)
+))
 
 require('react-styl')(`
   .profile-page
@@ -791,81 +889,81 @@ require('react-styl')(`
         border: solid 1px #c2cbd3
         background-color: var(--white)
         padding: 3rem
-        .attestation-badges
-          margin-top: 1.5rem
-          .attestation-badge
-            display: inline-block
-            width: 6rem
-            height: 6rem
-            border-radius: 50%
-            border: dashed 1px #c2cbd3
-            flex: auto 1 1
-            margin: 0.5rem
-            background-repeat: no-repeat
-            background-position: center
-            &.verified
-              border: solid 6px #c2cbd3
-            &.disabled
-              background-color: #dfe6ea
-              border-color: #dfe6ea
-            &.email
-              background-image: url('images/identity/mail-icon-small.svg')
-              &.verified
-                border-color: #1ec68e
-                background-color: #27d198
-            &.phone
-              background-image: url('images/identity/mail-icon-small.svg')
-              &.verified
-                border-color: #e8b506
-                background-color: #f4c111
-            &.facebook
-              background-image: url('images/identity/mail-icon-small.svg')
-              &.verified
-                border-color: #2d4a89
-                background-color: #3a5997
-            &.twitter
-              background-image: url('images/identity/mail-icon-small.svg')
-              &.verified
-                border-color: #169aeb
-                background-color: #1fa1f1
-            &.airbnb
-              background-image: url('images/identity/mail-icon-small.svg')
-              &.verified
-                border-color: #ee4f54
-                background-color: #ff5b60
-            &.website
-              background-image: url('images/identity/mail-icon-small.svg')
-              &.verified
-                border-color: #6331dd
-                background-color: #6e3bea
-            &.google
-              background-image: url('images/identity/mail-icon-small.svg')
-              &.verified
-                border-color: #1ec68e
-                background-color: #27d198
-            &.wechat
-              background-image: url('images/identity/mail-icon-small.svg')
-              &.verified
-                border-color: #00b500
-                background-color: #02c602
-            &.kakao
-              background-image: url('images/identity/mail-icon-small.svg')
-              &.verified
-                border-color: #ebd500
-                background-color: #ffe815
-            &.github
-              background-image: url('images/identity/mail-icon-small.svg')
-              &.verified
-                border-color: #1ec68e
-                background-color: #27d198
-            &.linkedin
-              background-image: url('images/identity/mail-icon-small.svg')
-              &.verified
-                border-color: #1ec68e
-                background-color: #27d198
-
     .profile-sidebar
       margin-left: 8.33333%
+      .profile-widget
+        border-radius: 5px
+        border: solid 1px var(--pale-grey-two)
+        background-color: var(--pale-grey-four)
+        margin: 1rem 0
+        padding: 1.5rem
+        &.campaign-earnings
+          h3
+            font-family: Lato
+            font-size: 0.8rem
+            color: var(--dark)
+            font-weight: 500
+          a
+            font-size: 0.75rem
+            font-weight: normal
+            font-family: Lato
+            color: var(--clear-blue)
+          .help
+            font-weight: normal
+            font-size: 0.75rem
+            color: #6f8294
+            margin-bottom: 1rem
+          .time-left
+            font-weight: normal
+            font-size: 0.75rem
+            margin-bottom: 0.5rem
+        &.verification
+          > img
+            height: 60px
+            width: 60px
+            display: block
+            margin: 0 auto 1rem auto
+          > div
+            font-size: 0.8rem
+            font-family: Lato
+            font-weight: 300
+            line-height: 1.43
+            color: var(--dark-blue-grey)
+  .profile-verifications-modal
+    background-color: white !important
+    color: var(--dark) !important
+    h2
+      font-weight: 500
+      font-size: 1.75rem
+      font-family: Poppins
+      font-style: normal
+      font-stretch: normal
+      line-height: 1.43
+      letter-spacing: normal
+      text-align: center
+      color: #000000
+    .sub-header
+      height: 22px
+      font-family: Lato
+      font-size: 1rem
+      font-weight: normal
+      font-style: normal
+      font-stretch: normal
+      line-height: normal
+      letter-spacing: normal
+      text-align: center
+      color: #000000
+    .actions
+      .btn-link
+        font-family: Lato
+        font-size: 0.9rem
+        font-weight: 900
+        font-style: normal
+        font-stretch: normal
+        line-height: normal
+        letter-spacing: normal
+        color: var(--clear-blue)
+        text-decoration: none
   .profile-edit
     margin-top: 3rem
     h3
