@@ -1,5 +1,5 @@
 /**
- * Wallet abstraction and stuff
+ * Wallet abstraction for high-volume transactions
  *
  * References
  * ----------
@@ -9,7 +9,6 @@
  * TODO
  * ----
  * - Correct redis stored nonce if a tx fails?
- * - Add optional onReceipt callback to sendTx
  * - Locks and support for parallelism so multiple instances can work at the same time?
  * - Auto-scale children when all accounts hit the max pending setting?
  */
@@ -54,13 +53,12 @@ class Account {
  * Purse is an account abstraction that allows relayer to feed it arbitrary transactions to send
  * with whatever account it has avilable.  It does not block and wait for transactions to be mined.
  * You can not choose which account to send from.  No transactions, except those to fund the
- * derived children will sent from the master account (of the mnemonic provided).
+ * derived children will be sent from the master account (of the mnemonic provided).
  *
- * It can
- *
- * Usage (proposed)
+ * Usage
  * -----
  * a = Accounts({ web3, mnemonic: 'one two three' })
+ * await a.init()
  * await a.sendTx({ from: you, to: me, data: '0xdeadbeef' })
  */
 class Purse {
@@ -187,11 +185,6 @@ class Purse {
     do {
       let lowestPending = this.maxPendingPerAccount
       for (const child of this.children) {
-        /*logger.debug(
-          `checking child ${child}  pending: ${
-            this.accounts[child].pendingCount
-          }`
-        )*/
         const childBal = stringToBN(await this.web3.eth.getBalance(child))
         if (
           this.accounts[child].pendingCount < lowestPending &&
@@ -214,7 +207,7 @@ class Purse {
   }
 
   /**
-   * Send a transaction from an available sender account
+   * Sign a transaction using a specific child account
    * @param address {string} - The address of the account to sign the tx
    * @param tx {object} - The transaction object
    * @returns {object} The signed transaction object from web3.js
@@ -236,7 +229,7 @@ class Purse {
    * NOTE: This does not wait for the transaction to be mined!
    *
    * @param tx {object} - The transaction object, sans `from` and `nonce`
-   * @param onReceipt {function} - A callback to call when a receipt is found
+   * @param onReceipt {function} - An optional callback to call when a receipt is found
    * @returns {string} The transaction hash of the sent transaction
    */
   async sendTx(tx, onReceipt) {
@@ -421,7 +414,7 @@ class Purse {
   /**
    * Sets up the Redis connection to be used for persistant nonce tracking
    * @param redisHost {string} A redis URL to conect to
-   * @returns {'redis client'} A node_redist instance
+   * @returns {'redis client'} A node_redis instance
    */
   _setupRedis(redisHost) {
     // TODO: Does prod use auth? How to make testing clean?
@@ -589,7 +582,7 @@ class Purse {
 
       /**
        * Handle incoming receipts and remove pending transactions and adjust pending counts.  This
-       * is processed in reverse order so we can alter the array without it effecting the rest as
+       * is processed in reverse order so we can alter the array without it affecting the rest as
        * we go.
        */
       const pendingHashes = Object.keys(this.pendingTransactions)

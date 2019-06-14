@@ -80,7 +80,7 @@ describe('Purse', () => {
     }
 
     // Do initial funding
-    await purse.fundChildren() // TODO use autofundChildren?
+    await purse.fundChildren()
 
     // Verify the children are 0 balance
     for(let i = 0; i < purse.children.length; i++) {
@@ -392,7 +392,6 @@ describe('Purse', () => {
     })
   })
 
-  // TODO, not yet implemented
   it('can drain child accounts', async () => {
       const childCount = 5
       const purse = new Purse({
