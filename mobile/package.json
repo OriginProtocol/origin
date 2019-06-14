@@ -71,6 +71,7 @@
     "react-native-randombytes": "^3.5.3",
     "react-native-safe-area-view": "^0.14.5",
     "react-native-sentry": "^0.43.1",
+    "react-native-test-flight": "^1.0.1",
     "react-native-touch-id": "^4.4.1",
     "react-native-user-agent": "^1.0.3",
     "react-native-webview": "^5.11.0",

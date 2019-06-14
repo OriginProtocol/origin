@@ -162,6 +162,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-test-flight')
     implementation project(':react-native-image-resizer')
     implementation project(':react-native-image-picker')
     implementation project(':react-native-localize')

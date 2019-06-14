@@ -1,15 +1,19 @@
 'use strict'
 
+import RNTestFlight from 'react-native-test-flight'
+
 import { SettingsConstants } from 'actions/Settings'
 import { NETWORKS } from '../constants'
 
-const mainnet = NETWORKS.find(n => n.name === 'Mainnet')
-const rinkeby = NETWORKS.find(n => n.name === 'Rinkeby')
-// const localhost = NETWORKS.find(n => n.name === 'Localhost')
-// const docker = NETWORKS.find(n => n.name === 'Docker')
+let defaultNetwork
+if (__DEV__ || RNTestFlight.isTestFlight) {
+  defaultNetwork = NETWORKS.find(n => n.name === 'Rinkeby')
+} else {
+  defaultNetwork = NETWORKS.find(n => n.name === 'Mainnet')
+}
 
 const initialState = {
-  network: __DEV__ ? rinkeby : mainnet,
+  network: defaultNetwork,
   deviceToken: null,
   language: null,
   pin: null,
