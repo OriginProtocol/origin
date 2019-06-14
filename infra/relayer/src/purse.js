@@ -297,7 +297,7 @@ class Purse {
     if (txCount > 0) return txCount
 
     // Check redis, if available
-    if (txCount === 0 && this.rclient) {
+    if (txCount === 0 && this.rclient && this.rclient.connected) {
       const countFromRedis = await this.rclient.getAsync(
         `${REDIS_TX_COUNT_PREFIX}${address}`
       )
@@ -305,6 +305,8 @@ class Purse {
       if (countFromRedis) {
         txCount = countFromRedis
       }
+    } else {
+      logger.warn('Redis unavailable')
     }
 
     /**
@@ -339,8 +341,11 @@ class Purse {
 
     this.accounts[address].txCount += 1
     this.accounts[address].pendingCount += 1
-    if (this.rclient)
+    if (this.rclient && this.rclient.connected) {
       await this.rclient.incrAsync(`${REDIS_TX_COUNT_PREFIX}${address}`)
+    } else {
+      logger.warn('Redis unavailable')
+    }
   }
 
   /**
