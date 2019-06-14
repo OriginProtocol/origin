@@ -11,6 +11,7 @@ export const OnboardingConstants = keyMirror(
     SET_NAME: null,
     SET_AVATAR_URI: null,
     SET_COMPLETE: null,
+    SET_NO_REWARDS_DISMISSED: null,
     RESET: null
   },
   'ONBOARDING'
@@ -62,6 +63,13 @@ export function setComplete(complete) {
   return {
     type: OnboardingConstants.SET_COMPLETE,
     complete
+  }
+}
+
+export function setNoRewardsDismissed(dismissed) {
+  return {
+    type: OnboardingConstants.SET_NO_REWARDS_DISMISSED,
+    dismissed
   }
 }
 

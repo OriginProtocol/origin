@@ -25,10 +25,6 @@ class EmailScreen extends Component {
       verifyError: '',
       verificationCode: ''
     }
-
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmitEmail = this.handleSubmitEmail.bind(this)
-    this.handleSubmitVerification = this.handleSubmitVerification.bind(this)
   }
 
   componentDidMount() {
@@ -38,14 +34,14 @@ class EmailScreen extends Component {
     })
   }
 
-  handleChange(emailValue) {
+  handleChange = emailValue => {
     this.setState({ emailError: '', emailValue })
   }
 
   /* Override the back function because of the verify step being present on this
    * screen and not on a separate route.
    */
-  handleBack() {
+  handleBack = () => {
     this.state.verify
       ? this.setState({ verify: false })
       : this.props.navigation.goBack(null)
@@ -53,9 +49,9 @@ class EmailScreen extends Component {
 
   /* Handle submission of email. Check if an identity with this phone
    * number exists, and if so redirect to a warning. Otherwise generate a
-   * verificationn code and email it to the user.
+   * verification code and email it to the user.
    */
-  async handleSubmitEmail() {
+  handleSubmitEmail = async () => {
     // Naive/simple email regex but should catch most issues
     const emailPattern = /.+@.+\..+/
     if (!emailPattern.test(this.state.emailValue)) {
@@ -71,13 +67,18 @@ class EmailScreen extends Component {
     }
 
     this.setState({ loading: true })
-    //
-    // Check if account exists
-    const exists = await this.checkDuplicateIdentity()
-    if (exists) {
-      this.setState({ loading: false })
-      this.props.navigation.navigate('ImportWarning')
-      return
+
+    if (!this.props.onboarding.noRewardsDismissed) {
+      // Check if account exists
+      const exists = await this.checkDuplicateIdentity()
+      if (exists) {
+        this.setState({ loading: false })
+        this.props.navigation.navigate('ImportWarning', {
+          // Call this function again on return from import warning
+          onGoBack: () => this.handleSubmitEmail()
+        })
+        return
+      }
     }
 
     const response = await this.generateVerificationCode()
@@ -94,7 +95,7 @@ class EmailScreen extends Component {
 
   /* Send a request to @origin/bridge looking for a duplicate for this email
    */
-  async checkDuplicateIdentity() {
+  checkDuplicateIdentity = async () => {
     const url = `${this.props.config.bridge}/utils/exists`
     const response = await fetch(url, {
       headers: { 'content-type': 'application/json' },
@@ -109,7 +110,7 @@ class EmailScreen extends Component {
 
   /* Request a verification code from @origin/bridge
    */
-  async generateVerificationCode() {
+  generateVerificationCode = async () => {
     const url = `${this.props.config.bridge}/api/attestations/email/generate-code`
     return await fetch(url, {
       headers: { 'content-type': 'application/json' },
@@ -122,7 +123,7 @@ class EmailScreen extends Component {
   /* Handle submission of the verification code. Send it to @origin/bridge and
    * store the resulting attestation, or display an error.
    */
-  async handleSubmitVerification() {
+  handleSubmitVerification = async () => {
     this.setState({ loading: true })
     const url = `${this.props.config.bridge}/api/attestations/email/verify`
     const response = await fetch(url, {
@@ -171,7 +172,7 @@ class EmailScreen extends Component {
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
-            multiline={true}
+            multiline={false}
             onChangeText={this.handleChange}
             onSubmitEditing={this.handleSubmit}
             value={this.state.emailValue}

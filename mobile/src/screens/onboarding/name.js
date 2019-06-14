@@ -57,7 +57,7 @@ class NameScreen extends Component {
               autoCapitalize="none"
               autoFocus={true}
               autoCorrect={false}
-              multiline={true}
+              multiline={false}
               onChangeText={value => this.handleChange('firstName', value)}
               onSubmitEditing={this.handleSubmit}
               value={this.state.firstNameValue}
@@ -77,7 +77,7 @@ class NameScreen extends Component {
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
-              multiline={true}
+              multiline={false}
               onChangeText={value => this.handleChange('lastName', value)}
               onSubmitEditing={this.handleSubmit}
               value={this.state.lastNameValue}
@@ -95,7 +95,7 @@ class NameScreen extends Component {
           <Text style={styles.visibilityWarningHeader}>
             What will be visible on the blockchain?
           </Text>
-          <Text style={styles.visibilityWarningHeader}>
+          <Text style={styles.visibilityWarningText}>
             Your name will be visible on the blockchain
           </Text>
         </View>

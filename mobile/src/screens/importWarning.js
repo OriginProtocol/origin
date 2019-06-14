@@ -19,6 +19,7 @@ import NoRewardsCard from 'components/no-rewards-card'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import withWeb3Accounts from 'hoc/withWeb3Accounts'
 import OnboardingStyles from 'styles/onboarding'
+import { setNoRewardsDismissed } from 'actions/Onboarding'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -101,9 +102,11 @@ class ImportWarningScreen extends Component {
         <SafeAreaView style={styles.modalSafeAreaView}>
           <NoRewardsCard
             onRequestClose={() => this.setState({ displayModal: false })}
-            onConfirm={() => {
-              this.setState({ displayModal: false })
-              this.props.navigation.navigate('ImportAccount')
+            onConfirm={async () => {
+              await this.props.setNoRewardsDismissed(true)
+              await this.setState({ displayModal: false })
+              this.props.navigation.state.params.onGoBack()
+              this.props.navigation.goBack()
             }}
           />
         </SafeAreaView>
@@ -116,8 +119,17 @@ const mapStateToProps = ({ wallet }) => {
   return { wallet }
 }
 
+const mapDispatchToProps = dispatch => ({
+  setNoRewardsDismissed: dismissed => dispatch(setNoRewardsDismissed(dismissed))
+})
+
 export default withWeb3Accounts(
-  withOnboardingSteps(connect(mapStateToProps)(ImportWarningScreen))
+  withOnboardingSteps(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(ImportWarningScreen)
+  )
 )
 
 const styles = StyleSheet.create({

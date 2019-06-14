@@ -45,7 +45,7 @@ class NoRewardsCard extends Component {
             size="large"
             type="primary"
             textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={fbt("I'm sure", 'NoRewardsCard.goBack')}
+            title={fbt('No, wait', 'NoRewardsCard.goBack')}
             onPress={this.props.onRequestClose}
             outline
           />

@@ -49,14 +49,14 @@ class PhoneScreen extends Component {
     })
   }
 
-  handleChange(field, value) {
+  handleChange = (field, value) => {
     this.setState({ [`${field}Error`]: '', [`${field}Value`]: value })
   }
 
   /* Override the back function because of the verify step being present on this
    * screen and not on a separate route.
    */
-  handleBack() {
+  handleBack = () => {
     this.state.verify
       ? this.setState({ verify: false })
       : this.props.navigation.goBack(null)
@@ -64,16 +64,22 @@ class PhoneScreen extends Component {
 
   /* Handle submission of phone number. Check if an identity with this phone
    * number exists, and if so redirect to a warning. Otherwise generate a
-   * verificationn code and SMS it to the user.
+   * verification code and SMS it to the user.
    */
   handleSubmitPhone = async () => {
     this.setState({ loading: true })
 
-    const exists = await this.checkDuplicateIdentity()
-    if (exists) {
-      this.setState({ loading: false })
-      this.props.navigation.navigate('ImportWarning')
-      return
+    if (!this.props.onboarding.noRewardsDismissed) {
+      const exists = await this.checkDuplicateIdentity()
+      if (exists) {
+        this.setState({ loading: false })
+        this.props.navigation.navigate('ImportWarning', {
+          // Call this function again on return from import warning, except
+          // the noRewardsDismissed predicate will be true now
+          onGoBack: () => this.handleSubmitPhone(true)
+        })
+        return
+      }
     }
 
     const response = await this.generateVerificationCode()

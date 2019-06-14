@@ -230,7 +230,7 @@ class MarketplaceApp extends React.Component {
       )
       if (
         nextOnboardingStep &&
-        !this.props.onboarding.coplete &&
+        !this.props.onboarding.complete &&
         nextOnboardingStep !== 'Ready'
       ) {
         this.props.navigation.navigate('Welcome')
