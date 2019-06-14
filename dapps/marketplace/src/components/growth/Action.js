@@ -9,9 +9,8 @@ function Action(props) {
   const {
     type,
     status,
-    reward,
-    rewardEarned,
-    rewardPending,
+    //reward,
+    //rewardEarned,
     unlockConditions,
     listingId,
     titleKey,
@@ -19,21 +18,19 @@ function Action(props) {
     iconSrc
   } = props.action
 
+  const reward = {currency: 'OGN', amount: '123000000000000000000'}
+  const rewardEarned = {currency: 'OGN', amount: '155000000000000000000'}
+
   const detailsEmpty =
     !detailsKey || detailsKey === 'growth.purchase.empty.details'
   const { isMobile, onMobileLockClick, hasBorder } = props
 
-  const actionLocked = status === 'Inactive'
+  //const actionLocked = status === 'Inactive'
   //const actionLocked = false // TODO: do not forget to comment this out
 
-  const actionCompleted = ['Exhausted', 'Completed'].includes(status)
-
-  let backgroundImgSrc = 'images/identity/verification-shape-blue.svg'
-  if (actionCompleted) {
-    backgroundImgSrc = 'images/identity/verification-shape-green.svg'
-  } else if (actionLocked) {
-    backgroundImgSrc = 'images/identity/verification-shape-grey.svg'
-  }
+  //const actionCompleted = ['Exhausted', 'Completed'].includes(status)
+  const actionCompleted = Math.random() < 0.5
+  const actionLocked = !actionCompleted && Math.random() < 0.5
 
   const [detailsToggled, toggleDetails] = useState(false)
 
@@ -45,25 +42,25 @@ function Action(props) {
   }
 
   if (type === 'Email') {
-    foregroundImgSrc = 'images/identity/email-icon-light.svg'
+    foregroundImgSrc = 'images/growth/email-icon.svg'
     title = fbt('Verify your Email', 'RewardActions.emailTitle')
   } else if (type === 'Profile') {
     foregroundImgSrc = 'images/growth/profile-icon.svg'
     title = fbt('Add name and photo to profile', 'RewardActions.profileTitle')
   } else if (type === 'Phone') {
-    foregroundImgSrc = 'images/identity/phone-icon-light.svg'
+    foregroundImgSrc = 'images/growth/phone-icon.svg'
     title = fbt('Verify your Phone Number', 'RewardActions.phoneTitle')
   } else if (type === 'Twitter') {
-    foregroundImgSrc = 'images/identity/twitter-icon-light.svg'
+    foregroundImgSrc = 'images/growth/twitter-icon.svg'
     title = fbt('Verify your Twitter Profile', 'RewardActions.twitterTitle')
   } else if (type === 'Airbnb') {
-    foregroundImgSrc = 'images/identity/airbnb-icon-light.svg'
+    foregroundImgSrc = 'images/growth/airbnb-icon.svg'
     title = fbt('Verify your Airbnb Profile', 'RewardActions.airbnbTitle')
   } else if (type === 'Facebook') {
-    foregroundImgSrc = 'images/identity/facebook-icon-light.svg'
+    foregroundImgSrc = 'images/growth/facebook-icon.svg'
     title = fbt('Verify your Facebook Profile', 'RewardActions.facebookTitle')
   } else if (type === 'Google') {
-    foregroundImgSrc = 'images/identity/google-icon.svg'
+    foregroundImgSrc = 'images/growth/google-icon.svg'
     title = fbt('Verify your Google Profile', 'RewardActions.googleTitle')
   } else if (type === 'ListingCreated') {
     foregroundImgSrc = 'images/growth/purchase-icon.svg'
@@ -89,13 +86,11 @@ function Action(props) {
     buttonLink = '/create'
   }
 
-  //TODO: hover button
-  // hover color of the button: #111d28
   const renderReward = amount => {
     return (
       <div
-        className={`reward d-flex align-items-left pl-2 ${
-          isMobile ? 'justify-content-end' : 'justify-content-start'
+        className={`reward d-flex align-items-left pl-2 justify-content-center ${
+          isMobile ? 'pr-0' : ''
         } align-items-center flex-grow-1`}
       >
         <img src="images/ogn-icon.svg" />
@@ -111,21 +106,22 @@ function Action(props) {
   const showUnlockModalOnClick =
     actionLocked && isMobile && unlockConditions.length > 0
 
-  let showReferralPending,
-    showReferralEarned = false
+  // let showReferralPending,
+  //   showReferralEarned = false
+
   // with Invite Friends reward show how much of a reward a
   // user can earn only if pending and earned are both 0
-  if (type === 'Referral') {
-    showReferralEarned = rewardEarned !== null && rewardEarned.amount !== '0'
-    showReferralPending = rewardPending !== null && rewardPending.amount !== '0'
+  // if (type === 'Referral') {
+  //   showReferralEarned = rewardEarned !== null && rewardEarned.amount !== '0'
+  //   showReferralPending = rewardPending !== null && rewardPending.amount !== '0'
 
-    // when on mobile layout show only 1 reward type at a time
-    showReferralPending = isMobile
-      ? showReferralPending && !showReferralEarned
-      : showReferralPending
+  //   // when on mobile layout show only 1 reward type at a time
+  //   showReferralPending = isMobile
+  //     ? showReferralPending && !showReferralEarned
+  //     : showReferralPending
 
-    showPossibleRewardAmount = !showReferralPending && !showReferralEarned
-  }
+  //   showPossibleRewardAmount = !showReferralPending && !showReferralEarned
+  // }
 
   const unlockConditionText = (
     <Fragment>
@@ -211,8 +207,7 @@ function Action(props) {
               <img className={type.toLowerCase()} src={foregroundImgSrc} />
             ) : (
               <div className="icon-holder">
-                <img className="background" src={backgroundImgSrc} />
-                <img className={type.toLowerCase()} src={foregroundImgSrc} />
+                <img className="verification-icon" src={foregroundImgSrc} />
               </div>
             )}
             {isMobile && actionLocked && (
@@ -233,8 +228,8 @@ function Action(props) {
           )}
           {!actionLocked && detailsLink}
         </div>
-        <div className="pr-0 pr-md-3 pl-0 pl-md-3 col-3 col-md-3 d-flex align-items-center justify-content-between">
-          {showReferralPending && (
+        <div className="pr-0 pr-md-3 pl-0 pl-md-3 col-3 col-md-3 d-flex align-items-center justify-content-end">
+          {/*{showReferralPending && (
             <div className="d-flex flex-column flex-grow-1">
               {renderReward(rewardPending.amount)}
               <div className="sub-text ml-2">
@@ -249,11 +244,11 @@ function Action(props) {
                 <fbt desc="RewardActions.earned">Earned</fbt>
               </div>
             </div>
-          )}
+          )}*/}
           {actionCompleted &&
             rewardEarned !== null &&
             rewardEarned.amount !== '0' && (
-              <div className="d-flex flex-column flex-grow-1">
+              <div className="d-flex flex-column flex-grow-1 align-items-center">
                 {renderReward(rewardEarned.amount)}
                 <div className="d-center sub-text ml-2">
                   <fbt desc="RewardActions.earned">Earned</fbt>
@@ -270,7 +265,7 @@ function Action(props) {
             <img className="lock" src="images/growth/lock-icon.svg" />
           )}
           {/* Just a padding placeholder*/}
-          {actionCompleted && <div className="placeholder" />}
+          {!isMobile && actionCompleted && <div className="placeholder" />}
         </div>
       </div>
       {detailsEmpty || !detailsToggled ? null : (
@@ -301,6 +296,8 @@ require('react-styl')(`
           position: absolute
           right: -5px
           bottom: -5px
+      .verification-icon
+        width: 3.5rem
       .icon-holder
         position: relative
       .background
@@ -310,36 +307,6 @@ require('react-styl')(`
         left: 16.5px
         top: 16px
         width: 27px
-      .email
-        position: absolute
-        left: 16px
-        top: 22px
-        width: 27px
-      .phone
-        position: absolute
-        left: 22px
-        top: 17px
-        width: 17px
-      .facebook
-        position: absolute
-        left: 21px
-        top: 18px
-        width: 15px
-      .airbnb
-        position: absolute
-        left: 14px
-        top: 16px
-        width: 34px
-      .twitter
-        position: absolute
-        left: 16px
-        top: 20px
-        width: 29px
-       .google
-        position: absolute
-        left: 16px
-        top: 16px
-        width: 29px
       .listingsold
         position: absolute
         left: 12px
@@ -424,34 +391,6 @@ require('react-styl')(`
         width: 2.5rem
       .reward .value
         font-size: 0.875rem
-      .profile
-        left: 10.5px
-        top: 12px
-        width: 18px
-      .email
-        left: 10.5px
-        top: 15px
-        width: 18px
-      .phone
-        left: 14px
-        top: 12px
-        width: 11.5px
-      .facebook
-        left: 14px
-        top: 12px
-        width: 10px
-      .airbnb
-        left: 9px
-        top: 11px
-        width: 22.5px
-      .twitter
-        left: 9.5px
-        top: 13px
-        width: 20px
-      .google
-        left: 10px
-        top: 10px
-        width: 21px
       .listingsold
         left: 9px
         top: 10px
@@ -460,10 +399,6 @@ require('react-styl')(`
         left: 0px
         top: 0px
         width: 23px
-      .referral
-        left: 10px
-        top: 11px
-        width: 20px
       .title
         font-size: 14px
         line-height: 1.1rem
