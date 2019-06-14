@@ -246,6 +246,14 @@ class MarketplaceApp extends React.Component {
 
   render() {
     const { navigation } = this.props
+    let loadingText = 'Loading marketplace...'
+    let activityIndicator = true
+    let errorText = false
+    if (this.props.marketplace.error) {
+      errorText = 'An error occurred loading the Origin Marketplace. Please check your internet connection.'
+      loadingText = false
+      activityIndicator = false
+    }
     return (
       <>
         <PushNotifications />
@@ -253,7 +261,7 @@ class MarketplaceApp extends React.Component {
         <BackupPrompt />
         <_MarketplaceApp navigation={navigation} />
         <Modal visible={!this.props.marketplace.ready}>
-          <Loading text="Loading marketplace..." />
+          <Loading loadingText={loadingText} activityIndicator={activityIndicator} errorText={errorText} />
         </Modal>
       </>
     )

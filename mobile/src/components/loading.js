@@ -15,10 +15,13 @@ const Loading = props => (
   <SafeAreaView style={styles.container}>
     <View style={styles.content}>
       <Image source={require(IMAGES_PATH + 'origin-white-logo.png')} />
+      <Text style={styles.errorText}>{props.errorText}</Text>
     </View>
     <View style={styles.indicatorContainer}>
-      <ActivityIndicator size="small" color="white" />
-      {props.text && <Text style={styles.indicatorText}>{props.text}</Text>}
+      {props.activityIndicator !== false &&
+        <ActivityIndicator size="small" color="white" />
+      }
+      {props.loadingText && <Text style={styles.indicatorText}>{props.loadingText}</Text>}
     </View>
   </SafeAreaView>
 )
@@ -30,9 +33,17 @@ const styles = {
   },
   content: {
     flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center',
     width: '100%'
+  },
+  errorText: {
+    width: '80%',
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginTop: 20
   },
   indicatorContainer: {
     marginBottom: 80,

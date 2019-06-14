@@ -319,7 +319,7 @@ class MarketplaceScreen extends Component {
       })();
     `
     if (this.dappWebView) {
-      console.debug('Injecting GraphQL mutatiion')
+      console.debug('Injecting GraphQL mutation')
       this.dappWebView.injectJavaScript(injectedJavaScript)
     }
   }
@@ -406,7 +406,7 @@ class MarketplaceScreen extends Component {
     updateExchangeRate(this.state.fiatCurrency[1], 'DAI')
   }
 
-  onWebViewLoad = () => {
+  onWebViewLoad = async () => {
     // Enable proxy accounts
     this.injectEnableProxyAccounts()
     // Set the language in the DApp to the same as the mobile app
@@ -432,7 +432,7 @@ class MarketplaceScreen extends Component {
       clearInterval(this.updater)
     }
     // Set state to ready in redux
-    this.props.setMarketplaceReady(true)
+    await this.props.setMarketplaceReady(true)
   }
 
   updateIdentities = () => {
@@ -501,9 +501,10 @@ class MarketplaceScreen extends Component {
           source={{ uri: this.props.settings.network.dappUrl }}
           onMessage={this.onWebViewMessage}
           onLoad={this.onWebViewLoad}
+          onLoadStart={async () => this.props.setMarketplaceWebViewError(false)}
           onError={syntheticEvent => {
             const { nativeEvent } = syntheticEvent
-            this.props.setWebViewError(nativeEvent.description)
+            this.props.setMarketplaceWebViewError(nativeEvent.description)
           }}
           renderLoading={() => {
             return (
@@ -595,7 +596,7 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = dispatch => ({
   setMarketplaceReady: ready => dispatch(setMarketplaceReady(ready)),
-  setMarketplaceWebViewError: error => setMarketplaceWebViewError(error),
+  setMarketplaceWebViewError: error => dispatch(setMarketplaceWebViewError(error)),
   setIdentity: payload => dispatch(setIdentity(payload)),
   setAccountBalances: balance => dispatch(setAccountBalances(balance))
 })
