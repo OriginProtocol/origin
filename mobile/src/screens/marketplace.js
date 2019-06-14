@@ -180,7 +180,8 @@ class MarketplaceScreen extends Component {
       'createProxyWithSenderNonce',
       'swapAndMakeOffer',
       'createListing',
-      'updateListing'
+      'updateListing',
+      'emitIdentityUpdated'
     ]
     return validFunctions.includes(data.functionName)
   }

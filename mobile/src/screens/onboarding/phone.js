@@ -49,8 +49,8 @@ class PhoneScreen extends Component {
     })
   }
 
-  handleChange = (field, value) => {
-    this.setState({ [`${field}Error`]: '', [`${field}Value`]: value })
+  handleChange = async (field, value) => {
+    await this.setState({ [`${field}Error`]: '', [`${field}Value`]: value })
   }
 
   /* Override the back function because of the verify step being present on this
@@ -182,18 +182,21 @@ class PhoneScreen extends Component {
           <RNPickerSelect
             placeholder={{ label: 'Select a country', value: null }}
             items={countryCodes}
-            onValueChange={value => this.handleChange('countryCode', value)}
+            onValueChange={async value =>
+              await this.handleChange('countryCode', value)
+            }
             style={pickerSelectStyles}
           />
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
-            multiline={true}
+            autoFocus={false}
+            multiline={false}
+            returnKeyType="next"
             onChangeText={value => this.handleChange('phone', value)}
-            onSubmitEditing={this.handleSubmit}
+            onSubmitEditing={this.handleSubmitPhone}
             value={this.state.phoneValue}
             style={[styles.input, this.state.phoneError ? styles.invalid : {}]}
-            autofocus={true}
           />
           {this.state.phoneError.length > 0 && (
             <Text style={styles.invalid}>{this.state.phoneError}</Text>
@@ -244,12 +247,15 @@ class PhoneScreen extends Component {
           <PinInput
             value={this.state.verificationCode}
             pinLength={6}
-            onChangeText={value =>
-              this.setState({
+            onChangeText={async value => {
+              await this.setState({
                 verificationCode: value.substr(0, 6),
                 verifyError: ''
               })
-            }
+              if (this.state.verificationCode.length === 6) {
+                this.handleSubmitVerification()
+              }
+            }}
           />
           {this.state.verifyError.length > 0 && (
             <Text style={styles.invalid}>{this.state.verifyError}</Text>

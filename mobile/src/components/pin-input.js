@@ -26,10 +26,10 @@ export default class PinInput extends Component {
           ref={ref => (this.textInput = ref)}
           autoFocus={true}
           value={this.props.value}
-          enablesReturnKeyAutomatically={false}
           keyboardType="numeric"
           pinLength={this.props.pinLength || 6}
           onChangeText={this.props.onChangeText}
+          onSubmitEditing={this.props.onSubmitEditing}
           style={styles.input}
         />
       </>

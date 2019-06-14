@@ -34,8 +34,8 @@ class EmailScreen extends Component {
     })
   }
 
-  handleChange = emailValue => {
-    this.setState({ emailError: '', emailValue })
+  handleChange = async emailValue => {
+    await this.setState({ emailError: '', emailValue })
   }
 
   /* Override the back function because of the verify step being present on this
@@ -172,12 +172,13 @@ class EmailScreen extends Component {
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
+            autoFocus={true}
             multiline={false}
+            returnKeyType="next"
             onChangeText={this.handleChange}
-            onSubmitEditing={this.handleSubmit}
+            onSubmitEditing={this.handleSubmitEmail}
             value={this.state.emailValue}
             style={[styles.input, this.state.emailError ? styles.invalid : {}]}
-            autofocus={true}
           />
           {this.state.emailError.length > 0 && (
             <Text style={styles.invalid}>{this.state.emailError}</Text>
@@ -227,12 +228,16 @@ class EmailScreen extends Component {
           <PinInput
             value={this.state.verificationCode}
             pinLength={6}
-            onChangeText={value =>
-              this.setState({
+            onChangeText={async value => {
+              await this.setState({
                 verificationCode: value.substr(0, 6),
                 verifyError: ''
               })
-            }
+              if (this.state.verificationCode.length === 6) {
+                this.handleSubmitVerification()
+              }
+            }}
+            onSubmitEditing={() => this.handleSubmitVerification}
           />
           {this.state.verifyError.length > 0 && (
             <Text style={styles.invalid}>{this.state.verifyError}</Text>
