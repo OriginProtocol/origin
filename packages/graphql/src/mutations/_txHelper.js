@@ -98,6 +98,9 @@ async function useProxy({ proxy, addr, to, from, mutation }) {
   } else if (mutation === 'swapToToken') {
     debug('cannot useProxy: swapToToken disabled')
     return
+  } else if (mutation === 'swapAndMakeOffer') {
+    debug('cannot useProxy: swapAndMakeOffer')
+    return
   }
 
   if (proxy) {
@@ -171,7 +174,7 @@ export default function txHelper({
       // gas = await toSend.estimateGas({ from })
       gas = 1000000
     } else if (shouldUseProxy && !shouldUseRelayer) {
-      debug('wrapping tx with Proxy.execute')
+      debug(`wrapping tx with Proxy.execute. value: ${value}`)
       const Proxy = new web3.eth.Contract(IdentityProxy.abi, proxy)
       const txData = await tx.encodeABI()
       toSend = Proxy.methods.execute(0, addr, value || '0', txData)
@@ -228,6 +231,7 @@ export default function txHelper({
     }
     toSend
       .once('transactionHash', async hash => {
+        debug(`got hash ${hash}`)
         txHash = hash
         resolve({ id: hash })
 

@@ -16,11 +16,12 @@ const ListingCards = ({ listings, ognListingRewards }) => {
   if (!listings) return null
 
   return (
-    <div className="row">
+    <div className="listing-cards">
       {redirect && <Redirect to={redirect} push />}
       {listings.map(a => (
         <div
           key={a.id}
+          className="listing-card"
           onClick={e => {
             if (altClick(e)) {
               setRedirect(`/listing/${a.id}`)
@@ -28,7 +29,6 @@ const ListingCards = ({ listings, ognListingRewards }) => {
               window.open(`#/listing/${a.id}`, '_blank')
             }
           }}
-          className="col-md-4 col-lg-3 listing-card"
         >
           {a.media && a.media.length ? (
             <div
@@ -69,14 +69,18 @@ const ListingCards = ({ listings, ognListingRewards }) => {
 export default withGrowthRewards(ListingCards)
 
 require('react-styl')(`
+  .listing-cards
+    display: grid
+    grid-column-gap: 1.5rem
+    grid-row-gap: 1.5rem
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr))
+
   .listing-card
     position: relative
     overflow: hidden
     display: flex
     flex-direction: column
     justify-content: flex-start
-    margin-bottom: 1rem
-    margin-top: 1rem
     cursor: pointer
 
     .main-pic
@@ -129,10 +133,40 @@ require('react-styl')(`
       font-weight: bold
       line-height: 1
       justify-content: space-between
+      > div
+        min-width: 0
+        white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsis
       span.desc
         color: var(--steel)
         font-size: 14px
         font-weight: normal
         margin-left: 0.25rem
         margin-bottom: 0.12rem
+
+  @media (max-width: 767.98px)
+    .listing-cards
+      grid-template-columns: repeat(auto-fill,minmax(135px, 1fr))
+      grid-column-gap: 1rem
+      grid-row-gap: 1rem
+    .listing-card
+      .category
+        display: none
+      h5
+        margin: 0.5rem 0 0 0
+        font-size: 14px
+      .price
+        font-size: 12px
+        span.desc
+          font-size: 10px
+        .growth-reward-amount
+          .earn
+            font-size: 11px
+          img
+            width: 11px
+            height: 11px
+          .ogn
+            font-size: 11px
+            padding-left: 0.125rem
 `)

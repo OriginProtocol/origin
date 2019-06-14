@@ -339,8 +339,6 @@ require('react-styl')(`
         color: var(--dark)
         font-weight: bold
         line-height: 1
-        padding-bottom: 1.5rem
-        border-bottom: 1px solid #dde6ea
         margin-bottom: 1.5rem
         span.desc
           font-weight: normal
@@ -353,6 +351,10 @@ require('react-styl')(`
           margin-left: 1rem
           font-size: 16px
           display: none
+      &.multi,&.fractional
+        .price
+          padding-bottom: 1.5rem
+          border-bottom: 1px solid #dde6ea
       &.fractional
         .choose-dates
           display: flex;
