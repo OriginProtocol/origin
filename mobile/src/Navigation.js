@@ -17,6 +17,7 @@ import AuthenticationGuard from 'components/authentication-guard'
 import UpdatePrompt from 'components/update-prompt'
 import BackupPrompt from 'components/backup-prompt'
 import Loading from 'components/loading'
+import { setComplete } from 'actions/Onboarding'
 // Onboarding
 import WelcomeScreen from 'screens/onboarding/welcome'
 import ImportAccountScreen from 'screens/import'
@@ -235,10 +236,11 @@ class MarketplaceApp extends React.Component {
       ) {
         this.props.navigation.navigate('Welcome')
       } else if (
-        (this.props.settings.pin.length > 0 ||
+        ((this.props.settings.pin && this.props.settings.pin.length > 0) ||
           this.props.settings.biometryType) &&
         !__DEV__
       ) {
+        this.props.setOnboardingComplete(true)
         this.props.navigation.navigate('Auth')
       }
     }
@@ -277,6 +279,10 @@ const mapStateToProps = ({ onboarding, marketplace, settings }) => {
   return { onboarding, marketplace, settings }
 }
 
+const mapDispatchToProps = dispatch => ({
+  setOnboardingComplete: complete => dispatch(setComplete(complete))
+})
+
 export default createAppContainer(
   createStackNavigator(
     {
@@ -286,7 +292,10 @@ export default createAppContainer(
           navigateOnSuccess: 'App'
         }
       },
-      App: connect(mapStateToProps)(MarketplaceApp),
+      App: connect(
+        mapStateToProps,
+        mapDispatchToProps
+      )(MarketplaceApp),
       GuardedBackup: BackupStack,
       Onboarding: OnboardingStack
     },
