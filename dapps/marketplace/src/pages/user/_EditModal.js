@@ -70,9 +70,8 @@ class EditProfileModal extends Component {
                 }
               >
                 <Avatar
-                  className={`avatar ${hasAvatar ? 'with-cam' : ''}`}
+                  className="avatar with-cam"
                   avatarUrl={this.state.avatarUrl}
-                  emptyClass="camera"
                 />
               </ImageCropper>
             </div>
@@ -118,7 +117,7 @@ class EditProfileModal extends Component {
 
           <div className="actions d-flex">
             <button
-              className="btn btn-outline-light"
+              className="btn btn-primary"
               children={fbt('OK', 'OK')}
               onClick={() => {
                 if (this.validate()) {
@@ -169,8 +168,7 @@ require('react-styl')(`
     h2
       text-align: center
     .avatar
-      border-radius: 1rem
-      background-color: var(--dark-two)
+      border-radius: 50%
     .help
       font-size: 14px
       line-height: normal
@@ -181,8 +179,4 @@ require('react-styl')(`
       flex-direction: column
       margin: 2rem auto 0 auto
       width: 50%
-    &.light-theme
-      .avatar
-        background-color: white
-        border-radius: 50%
 `)

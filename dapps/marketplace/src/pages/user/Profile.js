@@ -180,7 +180,7 @@ class UserProfile extends Component {
                   {`${this.state.firstName} ${this.state.lastName}`}
                 </h2>
                 <div className="description">
-                  My name is Aure and I like chickens. It’s been a lifelong obsession and I don’t think it’ll ever go away so I hope you’re not turned off by it or anything.
+                  {this.state.description}
                 </div>
               </div>
             </div>
@@ -342,7 +342,16 @@ class UserProfile extends Component {
           key={providerName}
           wallet={this.props.walletProxy}
           open={this.state[providerName]}
-          onClose={() => this.setState({ [providerName]: false })}
+          onClose={completed => {
+            const newState = {
+              [providerName]: false
+            }
+            if (!completed) {
+              newState.verifyModal = true
+            }
+
+            this.setState(newState)
+          }}
           onComplete={newAttestation => {
             const attestations = get(this.state, 'attestations', [])
             attestations.push(newAttestation)
