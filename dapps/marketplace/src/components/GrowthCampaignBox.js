@@ -8,34 +8,12 @@ import QueryError from 'components/QueryError'
 
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import profileQuery from 'queries/Profile'
-import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import ProgressBar from 'components/ProgressBar'
+import Link from 'components/Link'
 import formatTimeDifference from 'utils/formatTimeDifference'
 
-const EnrollButton = withEnrolmentModal('button')
 //TODO: put this into constants
 const maxProgressBarTokens = 1000
-
-const renderNotEnrolledBox = openmodalonstart => {
-  return (
-    <div className="enroll-gray-box campaign-enroll d-flex flex-column align-items-center">
-      <fbt desc="profile.enrollExplanation">
-        <b>Enroll</b> to earn Origin cryptocurrency tokens (OGN).
-      </fbt>
-      <EnrollButton
-        className="btn-enroll mt-3"
-        type="submit"
-        skipjoincampaign="false"
-        urlforonboarding="/profile/onboard"
-        startopen={(openmodalonstart || false).toString()}
-      >
-        <fbt desc="profile.enrollButton">
-          <b>Enroll Now</b>
-        </fbt>
-      </EnrollButton>
-    </div>
-  )
-}
 
 const renderEnrolledBox = (props, walletAddress) => {
   const campaigns = props.growthCampaigns
@@ -61,75 +39,66 @@ const renderEnrolledBox = (props, walletAddress) => {
   }
 
   return (
-    <div
-      className="enroll-gray-box pointer"
-      onClick={() => {
-        props.history.push('/campaigns')
-      }}
+    <Query
+      query={AccountTokenBalance}
+      variables={{ account: walletAddress, token: 'OGN' }}
     >
-      <Query
-        query={AccountTokenBalance}
-        variables={{ account: walletAddress, token: 'OGN' }}
-      >
-        {({ loading, error, data }) => {
-          let decimalDivision = web3.utils.toBN(10).pow(web3.utils.toBN(18))
+      {({ loading, error, data }) => {
+        let decimalDivision = web3.utils.toBN(10).pow(web3.utils.toBN(18))
 
-          if (!loading && !error) {
-            const tokenHolder = data.web3.account.token
-            if (tokenHolder && tokenHolder.token) {
-              decimalDivision = web3.utils
-                .toBN(10)
-                .pow(web3.utils.toBN(tokenHolder.token.decimals))
-            }
+        if (!loading && !error) {
+          const tokenHolder = data.web3.account.token
+          if (tokenHolder && tokenHolder.token) {
+            decimalDivision = web3.utils
+              .toBN(10)
+              .pow(web3.utils.toBN(tokenHolder.token.decimals))
           }
-          const { rewardEarned, endDate } = activeCampaign
-          const tokensEarned = web3.utils
-            .toBN(rewardEarned ? rewardEarned.amount : 0)
-            .div(decimalDivision)
-          const tokenEarnProgress = Math.min(
-            maxProgressBarTokens,
-            tokensEarned.toString()
-          )
+        }
+        const { rewardEarned, endDate } = activeCampaign
+        const tokensEarned = web3.utils
+          .toBN(rewardEarned ? rewardEarned.amount : 0)
+          .div(decimalDivision)
+        const tokenEarnProgress = Math.min(
+          maxProgressBarTokens,
+          tokensEarned.toString()
+        )
 
-          return (
-            <div>
-              <div className="title mt-1">
-                <fbt desc="profile.growthCampaignEarning">
-                  Campaign Earnings
-                </fbt>
-              </div>
-              <div className="mt-2">
-                <img className="ogn-icon pr-2" src="images/ogn-icon.svg" />
-                <span className="ogn-amount font-weight-bold big">
-                  {tokensEarned.toString()}
-                </span>
-                <span className="ogn-amount font-weight-bold small ml-1">
-                  OGN
-                </span>
-              </div>
-              <ProgressBar
-                maxValue={maxProgressBarTokens}
-                progress={tokenEarnProgress}
-                showIndicators={false}
-              />
-              <div className="small-dark">
-                {`Time left: ${formatTimeDifference(Date.now(), endDate)}`}
-              </div>
-              <div className="small-steel">
-                <fbt desc="profile.growthPaidOut">
-                  Paid out after campaign is finished
-                </fbt>
-              </div>
-              <div className="small-steel">
-                <fbt desc="profile.notSeeingEarnings">
-                  Not seeing your earnings? Make sure you publish your changes.
-                </fbt>
-              </div>
+        const timeLeft = formatTimeDifference(Date.now(), endDate)
+
+        return (
+          <>
+            <h3>
+              <fbt desc="profile.growthCampaignEarning">
+                Campaign Earnings
+              </fbt>
+            </h3>
+            <div className="mt-2">
+              <img className="ogn-icon pr-2" src="images/ogn-icon.svg" />
+              <span className="ogn-amount font-weight-bold big">
+                {tokensEarned.toString()}
+              </span>
+              <span className="ogn-amount font-weight-bold small ml-1">
+                OGN
+              </span>
             </div>
-          )
-        }}
-      </Query>
-    </div>
+            <ProgressBar
+              maxValue={maxProgressBarTokens}
+              progress={tokenEarnProgress}
+              showIndicators={false}
+            />
+            <div className="time-left">
+              {fbt(`Time left: ${fbt.param('timeLeft', timeLeft)}`, 'profile.campaignTimeLeft')}
+            </div>
+            <div className="help">
+              <fbt desc="profile.growthPaidOut">
+                Paid out after campaign is finished
+              </fbt>
+            </div>
+            <Link to="/campaigns"><fbt desc="Profile.visitCampaignHome">Visit Campaign Home</fbt> &gt;</Link>
+          </>
+        )
+      }}
+    </Query>
   )
 }
 
@@ -153,10 +122,13 @@ const GrowthCampaignBox = props => (
         )
       }
 
+      if (notEnrolled) {
+        return null
+      }
+
       return (
         <div className="growth-campaign-box">
-          {notEnrolled && renderNotEnrolledBox(props.openmodalonstart)}
-          {!notEnrolled && renderEnrolledBox(props, walletAddress)}
+          {renderEnrolledBox(props, walletAddress)}
         </div>
       )
     }}
@@ -167,45 +139,34 @@ export default withRouter(withGrowthCampaign(GrowthCampaignBox))
 
 require('react-styl')(`
   .growth-campaign-box
-    .enroll-gray-box
-      border: 1px solid var(--light)
-      border-radius: var(--default-radius)
-      padding: 1rem
-      margin-bottom: 2rem
-    .enroll-gray-box.pointer
-      cursor: pointer
-    .campaign-enroll
-      font-size: 14px;
-      background: url(images/growth/token-stack.svg) no-repeat center 1.5rem;
-      background-size: 7rem;
-      padding-top: 8rem;
-    .btn-enroll
-      font-size: 14px
-      font-weight: 900
+    border-radius: 5px
+    border: solid 1px var(--pale-grey-two)
+    background-color: var(--pale-grey-four)
+    margin: 1rem 0
+    padding: 1.5rem
+    h3
+      font-family: Lato
+      font-size: 0.8rem
+      color: var(--dark)
+      font-weight: 500
+    a
+      font-size: 0.75rem
+      font-weight: normal
+      font-family: Lato
       color: var(--clear-blue)
-      border: 0px
-      background-color: white
+    .help
+      font-weight: normal
+      font-size: 0.75rem
+      color: #6f8294
+      margin-bottom: 1rem
+    .time-left
+      font-weight: normal
+      font-size: 0.75rem
+      margin-bottom: 0.5rem
+      margin-top: 1rem
     .ogn-icon
       position: relative
       top: -3px
     .ogn-amount
       color: var(--clear-blue)
-    .title
-      font-weight: normal
-      color: var(--dark)
-      font-size: 14px
-    .small
-      font-size: 10px
-    .big
-      font-size: 24px
-    .small-dark
-      font-size: 10px
-      color: var(--dark)
-      margin-top: 7px
-      font-weight: normal
-    .small-steel
-      font-size: 10px
-      margin-top: 7px
-      color: var(--steel)
-      font-weight: normal
 `)

@@ -44,7 +44,8 @@ import Onboard from 'pages/onboard/Onboard'
 
 import EditProfile from './_EditModal'
 import ToastNotification from './ToastNotification'
-import DeployIdentity from 'pages/identity/mutations/DeployIdentity';
+import VerifyProfileHelp from './_VerifyProfileHelp'
+import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 
 const store = Store('sessionStorage')
 
@@ -230,37 +231,8 @@ class UserProfile extends Component {
             </div>
           </div>
           <div className="col-md-3 profile-sidebar">
-            <div className="profile-widget campaign-earnings">
-              <h3><fbt desc="Profie.campaignEarnings">Campaign Earnings</fbt></h3>
-              <Earnings
-                total={getMaxRewardPerUser({
-                  growthCampaigns: this.props.growthCampaigns,
-                  tokenDecimals: this.props.tokenDecimals || 18
-                })}
-                earned={getTokensEarned({
-                  verifiedServices: (
-                    this.state.verifiedAttestations || []
-                  ).map(att => att.id),
-                  growthCampaigns: this.props.growthCampaigns,
-                  tokenDecimals: this.props.tokenDecimals || 18
-                })}
-              />
-              <div className="time-left">
-                <fbt desc="Profile.timeLeft">Time left: </fbt> 25d 13h 34m
-              </div>
-              <div className="help">
-                <fbt desc="Profile.paidOutAfterCampaign">Paid out after campaign is finished</fbt>
-              </div>
-              <Link to="/campaigns"><fbt desc="Profile.visitCampaignHome">Visit Campaign Home</fbt> &gt;</Link>
-            </div>
-            <div className="profile-widget verification">
-              <img src="images/identity/identity-module-icon.svg" />
-              <div>
-                <fbt desc="Profile.verifyForSuccessfulTx">
-                  <strong>Verifying your profile</strong> allows other users to know that you are real and increases the chances of successful transactions on Origin.
-                </fbt>
-              </div>
-            </div>
+            <GrowthCampaignBox />
+            <VerifyProfileHelp />
           </div>
         </div>
       </div>
@@ -465,7 +437,7 @@ require('react-styl')(`
     .profile-content
       .profile-info-container
         display: flex
-        direction: row
+        flex-direction: row
         padding: 1rem
         .avatar-container
           flex: auto 0 0
@@ -516,44 +488,6 @@ require('react-styl')(`
         padding: 3rem
     .profile-sidebar
       margin-left: 8.33333%
-      .profile-widget
-        border-radius: 5px
-        border: solid 1px var(--pale-grey-two)
-        background-color: var(--pale-grey-four)
-        margin: 1rem 0
-        padding: 1.5rem
-        &.campaign-earnings
-          h3
-            font-family: Lato
-            font-size: 0.8rem
-            color: var(--dark)
-            font-weight: 500
-          a
-            font-size: 0.75rem
-            font-weight: normal
-            font-family: Lato
-            color: var(--clear-blue)
-          .help
-            font-weight: normal
-            font-size: 0.75rem
-            color: #6f8294
-            margin-bottom: 1rem
-          .time-left
-            font-weight: normal
-            font-size: 0.75rem
-            margin-bottom: 0.5rem
-        &.verification
-          > img
-            height: 60px
-            width: 60px
-            display: block
-            margin: 0 auto 1rem auto
-          > div
-            font-size: 0.8rem
-            font-family: Lato
-            font-weight: 300
-            line-height: 1.43
-            color: var(--dark-blue-grey)
   .profile-verifications-modal
     background-color: white !important
     color: var(--dark) !important
