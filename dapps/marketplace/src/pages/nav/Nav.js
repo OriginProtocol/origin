@@ -62,7 +62,7 @@ const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
     )
 
     return (
-      <nav className="navbar no-border">
+      <nav className={`navbar no-border${isProfilePage ? ' fixed-nav' : ''}`}>
         <Mobile {...navProps('mobile')} />
         {
           isProfilePage ? null : titleAndWallet
@@ -231,6 +231,9 @@ require('react-styl')(`
       margin-right: 0
     .navbar
       padding: 0
+      &.fixed-nav
+        position: absolute
+        z-index: 100
       h1
         font-size: 24px
         position: absolute

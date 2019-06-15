@@ -45,6 +45,7 @@ require('react-styl')(`
 
   @media (max-width: 767.98px)
     .profile-strength
+      margin-bottom: 1.5rem
       .title
         font-size: 14px
 

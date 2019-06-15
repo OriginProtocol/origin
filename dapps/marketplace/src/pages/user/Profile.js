@@ -531,8 +531,35 @@ require('react-styl')(`
         text-decoration: none
 
   @media (max-width: 767.98px)
+    body.has-profile-page
+      background-color: var(--pale-grey-four)
     .profile-page
+      margin-top: 0
       .profile-sidebar
         margin-left: 0
-
+      .profile-content
+        padding: 0
+        .user-progress-container
+          background-color: white
+          box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.12)
+          margin-top: 0
+          margin-bottom: 1rem
+        .profile-info-container
+          background-color: white
+          flex-direction: column
+          .user-bio-container
+            text-align: center
+            padding: 0
+            h2
+              margin-top: 1rem
+          .avatar-container
+            display: inline-block
+            margin: 0 auto
+            .avatar
+              padding-top: 0
+        .attestations-container
+          margin-top: 2rem
+          border: none
+          background-color: transparent
+          padding: 0
 `)

@@ -3,6 +3,7 @@ import pick from 'lodash/pick'
 import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
+import MobileModal from 'components/MobileModal'
 import Avatar from 'components/Avatar'
 import ImageCropper from 'components/ImageCropper'
 import { uploadImages } from 'utils/uploadImages'
@@ -10,6 +11,7 @@ import { uploadImages } from 'utils/uploadImages'
 import { formInput, formFeedback } from 'utils/formHelpers'
 
 import withConfig from 'hoc/withConfig'
+import withIsMobile from 'hoc/withIsMobile'
 
 class EditProfileModal extends Component {
   constructor(props) {
@@ -26,14 +28,25 @@ class EditProfileModal extends Component {
     }
   }
 
+  isMobile() {
+    return this.props.ismobile === 'true'
+  }
+
   render() {
     const input = formInput(this.state, state => this.setState(state), this.props.lightMode ? '' : 'dark')
     const Feedback = formFeedback(this.state)
     const hasAvatar = this.state.avatarUrl
 
+    const isMobile = this.isMobile()
+
+    const ModalComp = isMobile ? MobileModal : Modal
+
+    const titleContent = fbt('Edit Profile', 'EditModal.editProfile')
+
     return (
       // Using css hide Edit Profile dialog when image cropper is opened
-      <Modal
+      <ModalComp
+        title={titleContent}
         onClose={() => this.props.onClose()}
         shouldClose={this.state.shouldClose}
         classNameOuter={this.state.imageCropperOpened ? 'd-none' : ''}
@@ -47,7 +60,7 @@ class EditProfileModal extends Component {
           }}
         >
           <h2>
-            <fbt desc="EditModal.editProfile">Edit Profile</fbt>
+            {isMobile ? null : titleContent}
           </h2>
           <div className="row">
             <div className="col-6">
@@ -131,14 +144,18 @@ class EditProfileModal extends Component {
                 }
               }}
             />
-            <button
-              className="btn btn-link"
-              children={fbt('Cancel', 'Cancel')}
-              onClick={() => this.setState({ shouldClose: true })}
-            />
+            {
+              isMobile ? null : (
+                <button
+                  className="btn btn-link"
+                  children={fbt('Cancel', 'Cancel')}
+                  onClick={() => this.setState({ shouldClose: true })}
+                />
+              )
+            }
           </div>
         </form>
-      </Modal>
+      </ModalComp>
     )
   }
 
@@ -159,7 +176,7 @@ class EditProfileModal extends Component {
   }
 }
 
-export default withConfig(EditProfileModal)
+export default withIsMobile(withConfig(EditProfileModal))
 
 require('react-styl')(`
   .edit-profile-modal

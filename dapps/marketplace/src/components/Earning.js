@@ -51,6 +51,7 @@ require('react-styl')(`
         vertical-align: middle
   @media (max-width: 767.98px)
     .earnings-progress
+      margin-bottom: 1.5rem
       .title
         font-size: 14px
 `)
