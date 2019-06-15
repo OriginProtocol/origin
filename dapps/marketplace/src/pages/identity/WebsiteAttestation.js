@@ -102,17 +102,22 @@ class WebsiteAttestation extends Component {
         </div>
         <div className="actions">
           {this.renderCodeButton()}
-          <button
-            className="btn btn-link"
-            onClick={() => this.setState({ shouldClose: true })}
-            children={fbt('Cancel', 'VerifyWebsite.cancel')}
-          />
+          {
+            isMobile ? null : (
+              <button
+                className="btn btn-link"
+                onClick={() => this.setState({ shouldClose: true })}
+                children={fbt('Cancel', 'VerifyWebsite.cancel')}
+              />
+            )
+          }
         </div>
       </>
     )
   }
 
   renderDownloadCode() {
+    const isMobile = this.isMobile()
     return (
       <>
         <h2>
@@ -126,7 +131,18 @@ class WebsiteAttestation extends Component {
             website:
           </fbt>
         </div>
-        <div className="actions">{this.renderDownloadButton()}</div>
+        <div className="actions">
+          {this.renderDownloadButton()}
+          {
+            isMobile ? null : (
+              <button
+                className="btn btn-link"
+                onClick={() => this.setState({ shouldClose: true })}
+                children={fbt('Cancel', 'VerifyWebsite.cancel')}
+              />
+            )
+          }
+        </div>
       </>
     )
   }
@@ -153,11 +169,15 @@ class WebsiteAttestation extends Component {
         </div>
         <div className="actions">
           {this.renderVerifyButton()}
-          <button
-            className="btn btn-link"
-            onClick={() => this.setState({ shouldClose: true })}
-            children={fbt('Cancel', 'VerifyWebsite.cancel')}
-          />
+          {
+            isMobile ? null : (
+              <button
+                className="btn btn-link"
+                onClick={() => this.setState({ shouldClose: true })}
+                children={fbt('Cancel', 'VerifyWebsite.cancel')}
+              />
+            )
+          }
         </div>
       </>
     )

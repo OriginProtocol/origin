@@ -209,11 +209,15 @@ class OAuthAttestation extends Component {
         {helpContent}
         <div className="actions mt-5">
           {this.renderVerifyButton({ authUrl, redirect })}
-          <button
-            className="btn btn-link"
-            onClick={() => this.setState({ shouldClose: true })}
-            children={fbt('Cancel', 'Cancel')}
-          />
+          {
+            isMobile ? null : (
+              <button
+                className="btn btn-link"
+                onClick={() => this.setState({ shouldClose: true })}
+                children={fbt('Cancel', 'VerifyWebsite.cancel')}
+              />
+            )
+          }
         </div>
       </>
     )
@@ -274,6 +278,15 @@ class OAuthAttestation extends Component {
                     : fbt('Continue', 'Continue')
                 }
               />
+              {
+                isMobile ? null : (
+                  <button
+                    className="btn btn-link"
+                    onClick={() => this.setState({ shouldClose: true })}
+                    children={fbt('Cancel', 'VerifyWebsite.cancel')}
+                  />
+                )
+              }
             </>
           )
         }}

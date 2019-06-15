@@ -248,11 +248,13 @@ class UserProfile extends Component {
       return null
     }
     
-    const ModalComp = this.isMobile() ? MobileModal : Modal
+    const isMobile = this.isMobile()
+    
+    const ModalComp = isMobile ? MobileModal : Modal
 
     const headerContent = fbt('Add Verifications', 'Profile.addVerifications')
 
-    const header = this.isMobile() ? null : (
+    const header = isMobile ? null : (
       <h2>{headerContent}</h2>
     )
 
@@ -290,13 +292,17 @@ class UserProfile extends Component {
             shouldCloseVerifyModal: true
           })
         }} />
-        <div className="actions">
-          <button className="btn btn-link" onClick={() => {
-            this.setState({
-              shouldCloseVerifyModal: true
-            })
-          }}><fbt desc="Cancel">Cancel</fbt></button>
-        </div>
+        {
+          isMobile ? null : (
+            <div className="actions">
+              <button className="btn btn-link mb-0" onClick={() => {
+                this.setState({
+                  shouldCloseVerifyModal: true
+                })
+              }}><fbt desc="Cancel">Cancel</fbt></button>
+            </div>
+          )
+        }
       </ModalComp>
     )
   }
