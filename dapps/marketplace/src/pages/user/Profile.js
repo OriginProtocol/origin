@@ -529,94 +529,10 @@ require('react-styl')(`
         letter-spacing: normal
         color: var(--clear-blue)
         text-decoration: none
-  .profile-edit
-    margin-top: 3rem
-    h3
-      font-size: 24px
-      font-weight: 300
-      color: var(--dark)
-    .attestation-container
-      padding-bottom: 1rem
-      margin-bottom: 2rem
-      label
-        font-family: Lato
-        font-size: 16px
-        font-weight: 300
-        color: var(--dark-blue-grey)
-    .gray-box
-      border: 1px solid var(--light)
-      border-radius: var(--default-radius)
-      padding: 1rem
-    .avatar-wrap
-      margin-right: 2rem
-      width: 7.5rem
-      .avatar
-        border-radius: 1rem
-    .actions
-      text-align: center
-    .profile
-      position: relative
-      h1
-        margin: 0
-      margin-bottom: 2rem
-      .info
-        flex: 1
-      a.edit
-        float: right
-        background: url(images/edit-icon.svg) no-repeat center
-        background-size: cover
-        width: 2rem
-        height: 2rem
-        display: block
-        margin: 0.75rem 0 0 0.5rem
-    .profile-help
-      font-size: 14px
-      background: url(images/identity/identity.svg) no-repeat center 1.5rem
-      background-size: 5rem
-      padding-top: 8rem
-    .attestation-container
-      .growth-reward
-        font-family: Lato
-        font-size: 16px
-        font-weight: bold
-        color: var(--pale-grey-two)
-        img
-          width: 15px
-        &::before
-          display: block
-          position: relative
-          content: ""
-          background: url(images/ogn-icon-grayed-out.svg) no-repeat center
-          background-size: 1rem
-          width: 1rem
-          height: 1rem
-          margin-right: 0.25rem
-          margin-top: 0.25rem
-      .growth-reward.provisional
-        color: var(--clear-blue)
-        &::before
-          background: url(images/ogn-icon.svg) no-repeat center
-          background-size: 1rem
-    .profile-progress
-      display: flex
-      > div
-        flex: 50% 1 1
-        padding: 1rem
 
   @media (max-width: 767.98px)
-    .profile-edit
-      margin-top: 1rem
-      .avatar-wrap
-        margin-right: 1rem
-      .profile
-        flex-direction: column
-        margin-bottom: 1rem
-        .avatar-wrap
-          width: 8rem
-          align-self: center
-      .profile-strength
-        margin-bottom: 1rem
-      .actions
-        margin-bottom: 2rem
+    .profile-page
+      .profile-sidebar
+        margin-left: 0
 
 `)
