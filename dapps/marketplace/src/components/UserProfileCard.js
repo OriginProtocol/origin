@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import withIsMobile from 'hoc/withIsMobile'
+
 import Avatar from './Avatar'
 import ProfileStrength from './ProfileStrength'
 import Earnings from './Earning'
@@ -7,7 +9,9 @@ import Attestations from './Attestations'
 
 class UserProfileCard extends Component {
   render() {
+    // TBD: Should this take these many arguments? Or can we just pass the `profile` and destructure it here?
     const {
+      wallet,
       avatarUrl,
       onEdit,
       firstName,
@@ -19,8 +23,17 @@ class UserProfileCard extends Component {
       verifiedAttestations
     } = this.props
 
+    const isMobile = this.props.ismobile === 'true'
+
     const hasProfileStrength = Number.isNaN(parseInt(profileStrength))
     const shouldShowEarnings = !!maxEarnable
+
+    const hasWallet = !!wallet
+    const walletAddress = !hasWallet ? null : (
+      <span className="wallet-address">{`${wallet.slice(0, 4)}...${wallet.slice(
+        -4
+      )}`}</span>
+    )
 
     return (
       <div className="user-profile-component">
@@ -32,8 +45,17 @@ class UserProfileCard extends Component {
             )}
           </div>
           <div className="user-bio-container">
-            <h2>{`${firstName} ${lastName}`}</h2>
+            <h2>
+              {`${firstName} ${lastName}`}
+              {isMobile || !hasWallet ? null : walletAddress}
+            </h2>
             <div className="description">{description}</div>
+            {!isMobile || !hasWallet ? null : walletAddress}
+            <Attestations
+              className="verified-attestations"
+              profile={{ verifiedAttestations }}
+              small
+            />
           </div>
         </div>
         {!hasProfileStrength && !shouldShowEarnings ? null : (
@@ -50,17 +72,12 @@ class UserProfileCard extends Component {
             )}
           </div>
         )}
-        <Attestations
-          className="verified-attestations"
-          profile={{ verifiedAttestations }}
-          small
-        />
       </div>
     )
   }
 }
 
-export default UserProfileCard
+export default withIsMobile(UserProfileCard)
 
 require('react-styl')(`
   .user-profile-component
@@ -96,12 +113,27 @@ require('react-styl')(`
           font-weight: 500
           color: var(--dark)
           margin-bottom: 0.5rem
+        .wallet-address
+          font-family: Lato
+          font-size: 0.75rem
+          font-weight: normal
+          font-style: normal
+          font-stretch: normal
+          line-height: normal
+          letter-spacing: normal
+          color: #6a8296
+          margin-left: 0.75rem
         .description
           font-family: Lato
           font-size: 1rem
           font-weight: 300
           line-height: 1.56
           color: var(--dark)
+        .verified-attestations
+          margin-top: 1rem
+          > div
+            width: 1.7rem
+            height: 1.7rem
     .user-progress-container
       margin-top: 1rem
       display: flex
@@ -129,6 +161,10 @@ require('react-styl')(`
             font-size: 1.5rem
           .description
             font-size: 0.75rem
+          .verified-attestations
+            display: flex
+            flex-direction: row
+            justify-content: center
         .avatar-container
           display: inline-block
           margin: 0 auto

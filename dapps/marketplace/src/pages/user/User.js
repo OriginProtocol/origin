@@ -10,6 +10,7 @@ import DocumentTitle from 'components/DocumentTitle'
 import QueryError from 'components/QueryError'
 import LoadingSpinner from 'components/LoadingSpinner'
 import FormattedDescription from 'components/FormattedDescription'
+import UserProfileCard from 'components/UserProfileCard'
 
 import UserListings from './_UserListings'
 import { getProviderDisplayName } from 'utils/profileTools'
@@ -18,7 +19,7 @@ const User = ({ match }) => {
   const id = match.params.id
   const vars = { id: match.params.id }
   return (
-    <div className="container user-profile">
+    <div className="container user-public-profile">
       <Query query={query} variables={vars}>
         {({ data, loading, error }) => {
           if (error) {
@@ -27,11 +28,6 @@ const User = ({ match }) => {
           if (loading) return <LoadingSpinner />
 
           const profile = get(data, 'web3.account.identity') || {}
-          const verifiedAttestations = profile.verifiedAttestations
-
-          const noVerifications =
-            !verifiedAttestations || verifiedAttestations.length === 0
-
           return (
             <>
               <DocumentTitle
@@ -40,36 +36,16 @@ const User = ({ match }) => {
                 }
               />
               <div className="row">
-                <div className="col-lg-2 col-md-3">
-                  <div className="avatar-wrap">
-                    <Avatar profile={profile} className="main-avatar" />
-                  </div>
-                  {noVerifications ? null : (
-                    <div className="verified-info">
-                      <h5>
-                        <fbt desc="User.verifiedInfo">Verified Info</fbt>
-                      </h5>
-                      {verifiedAttestations.map(attestation => (
-                        <div key={attestation.id}>
-                          <div className={`attestation ${attestation.id}`} />
-                          {getProviderDisplayName(attestation.id)}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div className="col-lg-10 col-md-9">
-                  <h1 className="mb-0">
-                    {profile.fullName || fbt('Unnamed User', 'User.unamedUser')}
-                  </h1>
-                  <div className="description">
-                    {profile.description ? (
-                      <FormattedDescription text={profile.description} />
-                    ) : (
-                      fbt('No description', 'User.noDescription')
-                    )}
-                  </div>
-
+                {/* <div className="col-md-2" /> */}
+                <div className="col-md-8">
+                  <UserProfileCard
+                    wallet={profile.id}
+                    avatarUrl={profile.avatarUrl}
+                    firstName={profile.firstName}
+                    lastName={profile.lastName}
+                    description={profile.description}
+                    verifiedAttestations={profile.verifiedAttestations}
+                  />
                   <UserListings user={id} />
                   <Reviews id={id} hideWhenZero />
                 </div>
@@ -85,6 +61,10 @@ const User = ({ match }) => {
 export default User
 
 require('react-styl')(`
+  .user-public-profile
+    padding-top: 2rem
+    > .row > .col-md-8
+      margin: 0 auto
   .user-profile
     padding-top: 3rem
     h1

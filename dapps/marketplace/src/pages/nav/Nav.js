@@ -38,8 +38,12 @@ const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
   })
 
   if (isMobile) {
-    let title
+    if (pathname.startsWith('/user')) {
+      // Hide navbar for public user profile
+      return null
+    }
 
+    let title
     if (pathname.startsWith('/my-listings')) {
       title = <fbt desc="Listings.title">Listings</fbt>
     } else if (pathname.startsWith('/my-purchases')) {
@@ -48,6 +52,7 @@ const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
       title = <fbt desc="Sales.title">Sales</fbt>
     }
 
+    // Make the hamburger menu absolute and hide branding and profile icon.
     const isProfilePage = pathname.startsWith('/profile')
 
     const titleAndWallet = (

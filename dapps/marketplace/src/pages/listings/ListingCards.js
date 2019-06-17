@@ -11,7 +11,7 @@ function altClick(e) {
   return e.button === 0 && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey
 }
 
-const ListingCards = ({ listings, ognListingRewards }) => {
+const ListingCards = ({ listings, ognListingRewards, hideCategory }) => {
   const [redirect, setRedirect] = useState()
   if (!listings) return null
 
@@ -40,12 +40,14 @@ const ListingCards = ({ listings, ognListingRewards }) => {
           ) : (
             <div className="main-pic empty" />
           )}
-          <div className="header">
-            <div className="category">
-              <Category listing={a} showPrimary={false} />
+          {!!hideCategory ? null : (
+            <div className="header">
+              <div className="category">
+                <Category listing={a} showPrimary={false} />
+              </div>
+              <ListingBadge status={a.status} featured={a.featured} />
             </div>
-            <ListingBadge status={a.status} featured={a.featured} />
-          </div>
+          )}
           <h5>
             <a href={`#/listing/${a.id}`}>{a.title}</a>
           </h5>
