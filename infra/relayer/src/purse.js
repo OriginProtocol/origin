@@ -8,9 +8,9 @@
  *
  * TODO
  * ----
- * - Correct redis stored nonce if a tx fails?
  * - Locks and support for parallelism so multiple instances can work at the same time?
  * - Auto-scale children when all accounts hit the max pending setting?
+ * - If the service is restarted, tracking and callbacks are lost for pending transactions.  How to deal?
  */
 const { promisify } = require('util')
 const redis = require('redis')
@@ -83,8 +83,6 @@ class Purse {
     this.ready = false
     this.masterKey = null
     this.masterWallet = null
-
-    this.gasPrice = new BN('3000000000', 10) // 3 gwei TODO: floating source?
 
     this.children = []
     this.accounts = {}
@@ -167,6 +165,30 @@ class Purse {
   }
 
   /**
+   * Get the gas price to use for a transaction
+   * @returns {BN} The gas price in gwei
+   */
+  async gasPrice() {
+    let gp = new BN('3000000000', 10)  // 3gwei
+    try {
+      const netGp = stringToBN(await this.web3.eth.getGasPrice())
+      if (netGp) {
+        gp = netGp
+      }
+    } catch (err) {
+      logger.warn('Failed getting network gas price')
+      logger.debug(err)
+    }
+
+    if (gp.gt(MAX_GAS_PRICE)) {
+      // TODO: best way to handle this?
+      throw new Error('Current gas prices are too high!')
+    }
+
+    return gp
+  }
+
+  /**
    * Select an available account
    * @returns {string} address of the available account
    */
@@ -243,12 +265,7 @@ class Purse {
     }
 
     if (!tx.gasPrice) {
-      const gasPrice = stringToBN(await this.web3.eth.getGasPrice())
-      if (gasPrice.gt(MAX_GAS_PRICE)) {
-        // TODO: best way to handle this?
-        throw new Error('Current gas prices are too high!')
-      }
-      tx.gasPrice = gasPrice
+      tx.gasPrice = await this.gasPrice()
     }
 
     logger.debug('Sending tx: ', tx)
@@ -385,7 +402,7 @@ class Purse {
    * Draain all children back to the master account
    */
   async drainChildren() {
-    const gasPrice = stringToBN(await this.web3.eth.getGasPrice())
+    const gasPrice = await this.gasPrice()
     const gas = new BN('21000', 10)
     const valueTxFee = gas.mul(gasPrice)
     const masterAddress = this.masterWallet.getChecksumAddressString()
@@ -477,7 +494,8 @@ class Purse {
     }
 
     const fundingValue = value ? value : BASE_FUND_VALUE
-    const txCost = fundingValue.add(numberToBN(this.gasPrice * 21000))
+    const gasPrice = await this.gasPrice()
+    const txCost = fundingValue.add(gasPrice.mul(new BN(21000)))
     const masterPrivkey = this.masterWallet.getPrivateKey()
     const masterAddress = this.masterWallet.getChecksumAddressString()
     const masterBalance = stringToBN(
@@ -501,7 +519,7 @@ class Purse {
       to: address,
       value: fundingValue.toString(),
       gas: 21000,
-      gasPrice: this.gasPrice.toString()
+      gasPrice: await this.gasPrice()
     }
 
     /**
