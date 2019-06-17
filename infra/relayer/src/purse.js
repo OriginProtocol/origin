@@ -286,10 +286,11 @@ class Purse {
 
     // In case it needs to be rebroadcast
     this.pendingTransactions[txHash] = rawTx
-    await this.incrementTxCount(address)
 
     // blast it
     await sendRawTransaction(this.web3, rawTx)
+
+    await this.incrementTxCount(address)
 
     logger.info(`Sent ${txHash}`)
 
