@@ -319,14 +319,3 @@ export default createAppContainer(
     }
   )
 )
-
-const styles = {
-  loadingErrorText: {
-    width: '80%',
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
-    marginTop: 20
-  }
-}

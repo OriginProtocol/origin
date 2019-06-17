@@ -53,7 +53,9 @@ class MarketplaceScreen extends Component {
       'graphqlMutation',
       this.injectGraphqlMutation
     )
-    DeviceEventEmitter.addListener('reloadMarketplace', () => this.dappWebView.reload())
+    DeviceEventEmitter.addListener('reloadMarketplace', () =>
+      this.dappWebView.reload()
+    )
   }
 
   componentDidUpdate = prevProps => {

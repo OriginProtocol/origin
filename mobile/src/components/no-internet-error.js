@@ -1,7 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { DeviceEventEmitter, Text, View } from 'react-native'
+import { DeviceEventEmitter, Text } from 'react-native'
 import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
@@ -25,12 +25,12 @@ class NoInternetError extends Component {
           textStyle={{ fontSize: 18, fontWeight: '900' }}
           title={fbt('Retry', 'NoInternetError.retryButton')}
           onPress={() => {
-            this.setState({'loading': true })
+            this.setState({ loading: true })
             DeviceEventEmitter.emit('reloadMarketplace')
             // Simulate a load to prevent instant flash
             setTimeout(() => {
-              this.setState({'loading': false })
-            }, 5000);
+              this.setState({ loading: false })
+            }, 5000)
           }}
           loading={this.state.loading}
         />
