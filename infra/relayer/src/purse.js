@@ -41,11 +41,10 @@ async function tick(wait = 1000) {
 }
 
 class Account {
-  constructor({ txCount, pendingCount = 0, wallet, funded }) {
+  constructor({ txCount, pendingCount = 0, wallet }) {
     this.txCount = txCount
     this.pendingCount = pendingCount // needed?
     this.wallet = wallet
-    this.funded = funded
   }
 }
 
@@ -120,14 +119,10 @@ class Purse {
     this.masterWallet = this.masterKey.getWallet()
 
     const masterAddress = this.masterWallet.getChecksumAddressString()
-    const masterBalance = stringToBN(
-      await this.web3.eth.getBalance(masterAddress)
-    )
     this.accounts[masterAddress] = new Account({
       txCount: await this.txCount(masterAddress),
       pendingCount: 0,
-      wallet: this.masterWallet,
-      funded: masterBalance.gt(ZERO)
+      wallet: this.masterWallet
     })
 
     logger.info(`Initialized master key for account ${masterAddress}`)
@@ -141,8 +136,7 @@ class Purse {
       this.accounts[address] = new Account({
         txCount: await this.txCount(address),
         pendingCount: 0, // assumed
-        wallet: childWallet,
-        funded: false
+        wallet: childWallet
       })
 
       logger.info(`Initialized child account ${address}`)
@@ -338,7 +332,11 @@ class Purse {
      * bigger the load, the likelier this becomes.
      */
     const w3txCount = parseInt(await this.web3.eth.getTransactionCount(address))
-    if (txCount < w3txCount) txCount = w3txCount
+    if (txCount < w3txCount) {
+      if (txCount > 0)
+        logger.warn('Transaction counts appear lower than on the chain!')
+      txCount = w3txCount
+    }
 
     return txCount
   }
@@ -384,7 +382,10 @@ class Purse {
 
     // If the equal split between all children is less than the base fund value
     // use it instead of trying to overdraw
-    const eqSplit = masterBalance.div(numberToBN(this.children.length))
+    const childrenCount = numberToBN(this.children.length)
+    const gasPrice = await this.gasPrice()
+    const fullFees = gasPrice.mul(numberToBN(21000)).mul(childrenCount)
+    const eqSplit = masterBalance.div(childrenCount).sub(fullFees)
     const useAvg = eqSplit.lt(BASE_FUND_VALUE)
     const fundAmount = useAvg ? eqSplit : BASE_FUND_VALUE
 
@@ -394,8 +395,6 @@ class Purse {
       const txHash = await this._fundChild(child, fundAmount)
 
       logger.debug(`${child} funded with ${txHash}`)
-
-      this.accounts[child].funded = true
     }
   }
 
@@ -502,7 +501,7 @@ class Purse {
       await this.web3.eth.getBalance(masterAddress)
     )
 
-    if (masterBalance.lt(BASE_FUND_VALUE)) {
+    if (masterBalance.lt(txCost)) {
       logger.error(
         `Unable to find child account because master account (${masterAddress}) does't have the funds!`
       )
@@ -519,7 +518,7 @@ class Purse {
       to: address,
       value: fundingValue.toString(),
       gas: 21000,
-      gasPrice: await this.gasPrice()
+      gasPrice
     }
 
     /**
@@ -605,7 +604,7 @@ class Purse {
       for (const txHash of pendingHashes) {
         const receipt = await this.web3.eth.getTransactionReceipt(txHash)
 
-        if (!receipt) continue
+        if (!receipt || !receipt.blockNumber) continue
 
         logger.debug(`Transaction ${txHash} has been mined.`)
 
