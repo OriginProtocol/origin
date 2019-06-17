@@ -160,7 +160,7 @@ async function reviews(user, { first = 10, after }, context, info) {
       )
     }
 
-    if (review.rating) {
+    if (review.rating && review.reviewer.id) {
       nodes.push(review)
     }
     if (nodes.length >= first) {

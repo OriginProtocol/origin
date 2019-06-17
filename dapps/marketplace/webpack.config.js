@@ -25,7 +25,7 @@ const config = {
   entry: {
     app: './src/index.js'
   },
-  devtool: 'cheap-module-source-map',
+  devtool: isProduction ? false : 'cheap-module-source-map',
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'public')
