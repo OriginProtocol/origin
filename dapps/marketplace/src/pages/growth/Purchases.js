@@ -24,8 +24,7 @@ function Purchases(props) {
     'ListingSold'
   ]
 
-  //const actionCompleted = (action) => ['Exhausted', 'Completed'].includes(action.status)
-  const actionCompleted = (action) => Math.random() > 0.5
+  const actionCompleted = (action) => ['Exhausted', 'Completed'].includes(action.status)
 
   const purchaseActions = activeCampaign.actions.filter(action =>
     purchaseRewardTypes.includes(action.type)

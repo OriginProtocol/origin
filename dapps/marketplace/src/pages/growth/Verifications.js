@@ -26,11 +26,13 @@ function Verifications(props) {
     'Google',
     'Airbnb',
     'Facebook',
-    'Google'
+    'Google',
+    'Website',
+    'Kakao',
+    'Wechat'
   ]
 
-  //const actionCompleted = (action) => ['Exhausted', 'Completed'].includes(action.status)
-  const actionCompleted = (action) => action.type === 'Facebook'
+  const actionCompleted = (action) => ['Exhausted', 'Completed'].includes(action.status)
 
   const verificationActions = activeCampaign.actions.filter(action =>
     verificationRewardTypes.includes(action.type)

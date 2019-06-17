@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { withApollo, Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
-import get from 'lodash/get'
+import { get, find } from 'lodash'
 
 import formatTimeDifference from 'utils/formatTimeDifference'
 import QueryError from 'components/QueryError'
@@ -128,13 +128,7 @@ function Campaign(props) {
     )
   }
 
-  // TODO replace with the real thing
-  const mobileAction = {
-    status: 'Active',
-    //status: 'Exhausted',
-    reward: { currency: 'OGN', amount: '500000000000000000000' },
-    rewardEarned: { currency: 'OGN', amount: '530000000000000000000' }
-  }
+  const mobileAction = find(actions, action => action.type === 'MobileApp')
 
   // campaign rewards converted normalized to token value according to number of decimals
   const tokensEarned = web3.utils

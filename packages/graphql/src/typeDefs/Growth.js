@@ -33,6 +33,10 @@ module.exports = `
     Airbnb
     Facebook
     Google
+    Website
+    MobileApp
+    Kakao
+    Wechat
     Referral
     Profile
     ListingCreated

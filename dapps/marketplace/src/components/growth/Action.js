@@ -9,8 +9,8 @@ function Action(props) {
   const {
     type,
     status,
-    //reward,
-    //rewardEarned,
+    reward,
+    rewardEarned,
     unlockConditions,
     listingId,
     titleKey,
@@ -18,19 +18,16 @@ function Action(props) {
     iconSrc
   } = props.action
 
-  const reward = {currency: 'OGN', amount: '123000000000000000000'}
-  const rewardEarned = {currency: 'OGN', amount: '155000000000000000000'}
-
   const detailsEmpty =
     !detailsKey || detailsKey === 'growth.purchase.empty.details'
   const { isMobile, onMobileLockClick, hasBorder } = props
 
-  //const actionLocked = status === 'Inactive'
-  //const actionLocked = false // TODO: do not forget to comment this out
-
-  //const actionCompleted = ['Exhausted', 'Completed'].includes(status)
-  const actionCompleted = Math.random() < 0.5
-  const actionLocked = !actionCompleted && Math.random() < 0.5
+  const actionLocked = status === 'Inactive'
+  const actionCompleted = ['Exhausted', 'Completed'].includes(status)
+  // const actionCompleted = Math.random() < 0.5
+  // const actionLocked = !actionCompleted && Math.random() < 0.5
+  // const reward = {currency: 'OGN', amount: '123000000000000000000'}
+  // const rewardEarned = {currency: 'OGN', amount: '155000000000000000000'}
 
   const [detailsToggled, toggleDetails] = useState(false)
 
@@ -63,6 +60,15 @@ function Action(props) {
   } else if (type === 'Google') {
     foregroundImgSrc = 'images/growth/google-icon.svg'
     title = fbt('Verify your Google Profile', 'RewardActions.googleTitle')
+  } else if (type === 'Website') {
+    foregroundImgSrc = 'images/growth/website-icon.svg'
+    title = fbt('Verify your Website', 'RewardActions.websiteTitle')
+  } else if (type === 'Kakao') {
+    foregroundImgSrc = 'images/growth/kakao-icon.svg'
+    title = fbt('Verify your Kakao Profile', 'RewardActions.kakaoTitle')
+  } else if (type === 'Wechat') {
+    foregroundImgSrc = 'images/growth/wechat-icon.svg'
+    title = fbt('Verify your Wechat Profile', 'RewardActions.wechatTitle')
   } else if (type === 'ListingCreated') {
     foregroundImgSrc = 'images/growth/purchase-icon.svg'
     title = fbt('Create a Listing', 'RewardActions.listingCreatedTitle')
