@@ -9,6 +9,7 @@ import OriginButton from 'components/origin-button'
 const IMAGES_PATH = '../../assets/images/'
 
 const NoRewardsCard = props => {
+  /* eslint-disable-next-line no-extra-semi */
   ;<View style={styles.card}>
     <View style={styles.imageContainer}>
       <Image

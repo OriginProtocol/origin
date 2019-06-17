@@ -7,6 +7,7 @@ import { fbt } from 'fbt-runtime'
 import OriginButton from 'components/origin-button'
 
 const LearnCard = props => {
+  /* eslint-disable-next-line no-extra-semi */
   ;<View style={styles.card}>
     <Text style={styles.heading}>
       <fbt desc="LearnCard.title">Blockchain & Your Personal Data</fbt>

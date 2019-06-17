@@ -4,6 +4,7 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
 const Separator = ({ padded }) => {
+  /* eslint-disable-next-line no-extra-semi */
   ;<View style={styles.container}>
     {padded && <View style={styles.space} />}
     <View style={styles.line} />
