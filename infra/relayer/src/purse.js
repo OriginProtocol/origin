@@ -169,7 +169,7 @@ class Purse {
    * @returns {BN} The gas price in gwei
    */
   async gasPrice() {
-    let gp = new BN('3000000000', 10)  // 3gwei
+    let gp = new BN('3000000000', 10) // 3gwei
     try {
       const netGp = stringToBN(await this.web3.eth.getGasPrice())
       if (netGp) {

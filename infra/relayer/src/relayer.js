@@ -103,7 +103,8 @@ class Relayer {
       web3: this.web3,
       mnemonic: env.FORWARDER_MNEMONIC,
       children: env.FORWARDER_ACCOUNTS ? parseInt(env.FORWARDER_ACCOUNTS) : 3,
-      autofundChildren: true
+      autofundChildren: true,
+      redisHost: env.REDIS_URL
     })
 
     this.ProxyFactory = new this.web3.eth.Contract(ProxyFactoryContract.abi)
