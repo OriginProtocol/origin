@@ -10,6 +10,8 @@ import MobileModal from 'components/MobileModal'
 import GenerateAirbnbCodeMutation from 'mutations/GenerateAirbnbCode'
 import VerifyAirbnbCodeMutation from 'mutations/VerifyAirbnbCode'
 
+import PublishedInfoBox from 'components/_PublishedInfoBox'
+
 class AirbnbAttestation extends Component {
   state = {
     stage: 'GenerateCode',
@@ -76,24 +78,6 @@ class AirbnbAttestation extends Component {
       </fbt>
     )
 
-    const storedOnChain = isMobile ? (
-      <div className="info yellow mt-auto">
-        <span className="title">
-          <fbt desc="VerifyAirbnb.visibleOnBlockchain">
-            What will be visible on the blockchain?
-          </fbt>
-        </span>
-        <fbt desc="VerifyAirbnb.yourAirbnbId">Your Airbnb user ID</fbt>
-      </div>
-    ) : (
-      <div className="help">
-        <fbt desc="VerifyAirbnb.airbnbProfilePublished">
-          Other users will know that you have a verified Airbnb profile and your
-          user id will be published on the blockchain.
-        </fbt>
-      </div>
-    )
-
     return (
       <>
         <h2>{header}</h2>
@@ -114,7 +98,12 @@ class AirbnbAttestation extends Component {
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
-        {storedOnChain}
+        <PublishedInfoBox
+          className="mt-auto"
+          pii={true}
+          title={fbt('What will be visible on the blockchain?', 'VerifyAirbnb.visibleOnBlockchain')}
+          children={(<fbt desc="VerifyAirbnb.yourAirbnbId">Your Airbnb user ID</fbt>)}
+        />
         <div className={`actions mt-5`}>
           {this.renderCodeButton()}
           {!isMobile && (
@@ -314,28 +303,4 @@ require('react-styl')(`
           border-radius: 0
           border-left: 1px solid #c2cbd3
           cursor: pointer
-    .info
-      text-align: center
-      border-radius: 5px
-      border: solid 1px var(--bluey-grey)
-      background-color: rgba(152, 167, 180, 0.1)
-      font-family: Lato
-      font-size: 14px
-      color: black
-      padding: 10px
-      margin-top: 1rem
-      .title
-        display: block
-        font-weight: bold
-        margin-bottom: 3px
-        & ~ a
-          margin-left: 5px
-      &.yellow
-        border: solid 1px var(--golden-rod)
-        background-color: rgba(244, 193, 16, 0.1)
-      &.white
-        border: solid 1px #c2cbd3
-        background-color: white
-        display: flex
-        text-align: left
 `)

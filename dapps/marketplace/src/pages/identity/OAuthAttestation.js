@@ -9,14 +9,17 @@ import withIsMobile from 'hoc/withIsMobile'
 import Modal from 'components/Modal'
 import MobileModal from 'components/MobileModal'
 import AutoMutate from 'components/AutoMutate'
+import PublishedInfoBox from 'components/_PublishedInfoBox'
 
 import VerifyOAuthAttestation from 'mutations/VerifyOAuthAttestation'
 import query from 'queries/GetAuthUrl'
 
 import { getProviderDisplayName } from 'utils/profileTools'
 
-function InfoStoredOnChain({ provider, isMobile }) {
+function InfoStoredOnChain({ provider }) {
   const providerName = getProviderDisplayName(provider)
+
+  let piiStored = false
 
   let content = (
     <fbt desc="OAuthAttestation.verify.explanation">
@@ -26,9 +29,7 @@ function InfoStoredOnChain({ provider, isMobile }) {
       post on your behalf.
     </fbt>
   )
-
-  let classList = ''
-
+  
   switch (provider) {
     case 'facebook':
       content = (
@@ -40,27 +41,21 @@ function InfoStoredOnChain({ provider, isMobile }) {
       break
 
     case 'twitter':
-      classList += ' yellow'
+      piiStored = true
       content = (
         <fbt desc="OAuthAttestation.twitterOnChain">Your Twitter username</fbt>
       )
       break
   }
 
-  if (isMobile) {
-    return (
-      <div className={`info mt-auto${classList}`}>
-        <span className="title">
-          <fbt desc="OAuthAttestation.visibleOnBlockchain">
-            What will be visible on the blockchain?
-          </fbt>
-        </span>
-        {content}
-      </div>
-    )
-  }
-
-  return <div className="help">{content}</div>
+  return (
+    <PublishedInfoBox
+      className="mt-auto"
+      pii={piiStored}
+      title={fbt('What will be visible on the blockchain?', 'OAuthAttestation.visibleOnBlockchain')}
+      children={content}
+    />
+  )
 }
 
 class OAuthAttestation extends Component {
@@ -171,53 +166,20 @@ class OAuthAttestation extends Component {
       </fbt>
     )
 
-    let helpContent = (
-      <fbt desc="OAuthAttestation.verify.explanation">
-        Other users will know that you have a verified{' '}
-        <fbt:param name="provider">{providerName}</fbt:param> account, but your
-        account details will not be published on the blockchain. We will never
-        post on your behalf.
-      </fbt>
-    )
-
-    helpContent = isMobile ? (
-      <div className={`info mt-auto`}>
-        <span className="title">
-          <fbt desc="OAuthAttestation.visibleOnBlockchain">
-            What will be visible on the blockchain?
-          </fbt>
-        </span>
-        {helpContent}
-      </div>
-    ) : (
-      <div className="help">{helpContent}</div>
-    )
-
     return (
       <>
         <h2>{header}</h2>
-        {!isMobile ? null : (
-          <div className="help mt-0 mb-3">
-            <fbt desc="OAuthAttestation.neverPost">
-              We will never post on your behalf.
-            </fbt>
-          </div>
-        )}
+        <div className="help mt-0 mb-3">
+          <fbt desc="OAuthAttestation.neverPost">
+            We will never post on your behalf.
+          </fbt>
+        </div>
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
-        {helpContent}
+        <InfoStoredOnChain provider={this.props.provider} />
         <div className="actions mt-5">
           {this.renderVerifyButton({ authUrl, redirect })}
-          {
-            isMobile ? null : (
-              <button
-                className="btn btn-link"
-                onClick={() => this.setState({ shouldClose: true })}
-                children={fbt('Cancel', 'VerifyWebsite.cancel')}
-              />
-            )
-          }
         </div>
       </>
     )

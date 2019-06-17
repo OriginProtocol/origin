@@ -529,6 +529,8 @@ require('react-styl')(`
         letter-spacing: normal
         color: var(--clear-blue)
         text-decoration: none
+    .attestation-badges .attestation-badge
+      margin: 1rem
 
   @media (max-width: 767.98px)
     body.has-profile-page
@@ -570,4 +572,5 @@ require('react-styl')(`
       .attestation-badges .attestation-badge
         width: 93px
         height: 93px
+        margin: 0.5rem
 `)

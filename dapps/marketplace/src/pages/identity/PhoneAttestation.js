@@ -8,6 +8,7 @@ import withWallet from 'hoc/withWallet'
 
 import Modal from 'components/Modal'
 import MobileModal from 'components/MobileModal'
+import PublishedInfoBox from 'components/_PublishedInfoBox'
 import CountryDropdown from './_CountryDropdown'
 
 import GeneratePhoneCodeMutation from 'mutations/GeneratePhoneCode'
@@ -148,17 +149,16 @@ class PhoneAttestation extends Component {
             <div className="help mt-3 mb-3">
               {helpText}
             </div>
-            <div className="info mt-3 mb-0">
-              <span className="title">
-                <fbt desc="PhoneAttestation.visibleOnBlockchain">
-                  What will be visible on the blockchain?
+            <PublishedInfoBox
+              className="mt-3 mb-0"
+              title={<fbt desc="PhoneAttestation.visibleOnBlockchain">What will be visible on the blockchain?</fbt>}
+              children={
+                <fbt desc="PhoneAttestation.verifiedButNotNumber">
+                  That you have a verified phone number, but NOT your actual phone
+                  number
                 </fbt>
-              </span>
-              <fbt desc="PhoneAttestation.verifiedButNotNumber">
-                That you have a verified phone number, but NOT your actual phone
-                number
-              </fbt>
-            </div>
+              }
+            />
             <div className="actions">
               <button
                 type="submit"
@@ -433,20 +433,6 @@ require('react-styl')(`
             background-image: none
         .actions
           margin-bottom: 1.5rem
-
-    .info
-      text-align: center
-      border-radius: 5px
-      border: solid 1px var(--bluey-grey)
-      background-color: rgba(152, 167, 180, 0.1)
-      font-family: Lato
-      font-size: 14px
-      color: black
-      padding: 10px
-      .title
-        display: block
-        font-weight: bold
-        margin-bottom: 3px
 
   .mobile-modal-light .attestation-modal
     padding: 20px

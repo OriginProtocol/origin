@@ -259,7 +259,7 @@ require('react-styl')(`
     > .modal-content > div 
       .actions
         margin-top: auto !important
-      .info
+      .published-info-box
         margin-top: auto !important
         & + .actions
           margin-top: 3rem !important

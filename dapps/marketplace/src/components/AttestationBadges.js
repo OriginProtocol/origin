@@ -176,4 +176,5 @@ require('react-styl')(`
       .attestation-badge
         width: 75px
         height: 75px
+        margin: 0.3rem
 `)
