@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Attestations = ({ profile = {}, small }) => {
+const Attestations = ({ profile = {}, small, className }) => {
   const verifiedAttestations = profile.verifiedAttestations
 
   if (!verifiedAttestations) {
@@ -8,7 +8,11 @@ const Attestations = ({ profile = {}, small }) => {
   }
 
   return (
-    <div className={`attestations${small ? ' attestations-small' : ''}`}>
+    <div
+      className={`attestations${small ? ' attestations-small' : ''}${
+        className ? ' ' + className : ''
+      }`}
+    >
       {verifiedAttestations.map(attestation => (
         <div key={attestation.id} className={`attestation ${attestation.id}`} />
       ))}

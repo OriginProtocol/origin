@@ -18,8 +18,7 @@ import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withAttestationProviders from 'hoc/withAttestationProviders'
 import withIsMobile from 'hoc/withIsMobile'
 
-import ProfileStrength from 'components/ProfileStrength'
-import Avatar from 'components/Avatar'
+import UserProfileCard from 'components/UserProfileCard'
 import DocumentTitle from 'components/DocumentTitle'
 import GrowthCampaignBox from 'components/GrowthCampaignBox'
 import Earnings from 'components/Earning'
@@ -152,8 +151,6 @@ class UserProfile extends Component {
   }
 
   renderPage() {
-    const growthEnrolled = this.props.growthEnrollmentStatus === 'Enrolled'
-
     const isMobile = this.isMobile()
 
     const verifiedAttestations = this.state.verifiedAttestations || []
@@ -162,45 +159,27 @@ class UserProfile extends Component {
       <div className="container profile-page">
         <div className="row">
           <div className="col-md-8 profile-content">
-            <div className="profile-info-container">
-              <div className="avatar-container">
-                <Avatar avatarUrl={this.state.avatarUrl} />
-                <div
-                  className="profile-edit-icon"
-                  onClick={() => {
-                    this.setState({
-                      editProfile: true
-                    })
-                  }}
-                />
-              </div>
-              <div className="user-bio-container">
-                <h2>{`${this.state.firstName} ${this.state.lastName}`}</h2>
-                <div className="description">{this.state.description}</div>
-              </div>
-            </div>
-            <div className="user-progress-container">
-              <div className="profile-strength-container">
-                <ProfileStrength
-                  published={get(this.props, 'identity.strength') || 0}
-                />
-              </div>
-              {growthEnrolled && (
-                <div className="user-earnings-container">
-                  <Earnings
-                    total={getMaxRewardPerUser({
-                      growthCampaigns: this.props.growthCampaigns,
-                      tokenDecimals: this.props.tokenDecimals || 18
-                    })}
-                    earned={getTokensEarned({
-                      verifiedServices: verifiedAttestations.map(att => att.id),
-                      growthCampaigns: this.props.growthCampaigns,
-                      tokenDecimals: this.props.tokenDecimals || 18
-                    })}
-                  />
-                </div>
-              )}
-            </div>
+            <UserProfileCard
+              avatarUrl={this.state.avatarUrl}
+              firstName={this.state.firstName}
+              lastName={this.state.lastName}
+              description={this.state.description}
+              profileStrength={this.state.strength}
+              tokensEarned={getTokensEarned({
+                verifiedServices: verifiedAttestations.map(att => att.id),
+                growthCampaigns: this.props.growthCampaigns,
+                tokenDecimals: this.props.tokenDecimals || 18
+              })}
+              maxEarnable={getMaxRewardPerUser({
+                growthCampaigns: this.props.growthCampaigns,
+                tokenDecimals: this.props.tokenDecimals || 18
+              })}
+              onEdit={() => {
+                this.setState({
+                  editProfile: true
+                })
+              }}
+            />
             <div className="attestations-container text-center">
               <button
                 type="button"
@@ -477,51 +456,6 @@ require('react-styl')(`
   .profile-page
     margin-top: 2rem
     .profile-content
-      .profile-info-container
-        display: flex
-        flex-direction: row
-        padding: 1rem
-        .avatar-container
-          flex: auto 0 0
-          padding: 0.5rem 0
-          position: relative
-          .avatar
-            width: 110px
-            height: 110px
-          .profile-edit-icon
-            position: absolute
-            background-image: url('images/edit-icon.svg')
-            background-position: center
-            background-repeat: no-repeat
-            background-size: 1.6rem
-            display: inline-block
-            height: 2rem
-            width: 2rem
-            right: -0.3rem
-            bottom: 0.3rem
-            cursor: pointer
-        .user-bio-container
-          flex: auto 1 1
-          padding: 0 2rem
-          h2
-            font-family: Poppins
-            font-size: 2.25rem
-            font-weight: 500
-            color: var(--dark)
-            margin-bottom: 0.5rem
-          .description
-            font-family: Lato
-            font-size: 1rem
-            font-weight: 300
-            line-height: 1.56
-            color: var(--dark)
-      .user-progress-container
-        margin-top: 1rem
-        display: flex
-        flex-direction: row
-        .profile-strength-container, .user-earnings-container
-          flex: 50% 1 1
-          padding: 1rem
       .attestations-container
         margin: 0 1rem
         border-radius: 5px
@@ -581,28 +515,6 @@ require('react-styl')(`
         margin-left: 0
       .profile-content
         padding: 0
-        .user-progress-container
-          background-color: white
-          box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.12)
-          margin-top: 0
-          margin-bottom: 1rem
-        .profile-info-container
-          background-color: white
-          flex-direction: column
-          .user-bio-container
-            text-align: center
-            padding: 0
-            h2
-              margin-top: 1rem
-              margin-bottom: 0
-              font-size: 1.5rem
-            .description
-              font-size: 0.75rem
-          .avatar-container
-            display: inline-block
-            margin: 0 auto
-            .avatar
-              padding-top: 0
         .attestations-container
           margin: 2rem 0 0 0
           border: none
