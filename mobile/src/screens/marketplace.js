@@ -353,21 +353,6 @@ class MarketplaceScreen extends Component {
     }
   }
 
-  injectEnableProxyAccounts = () => {
-    const injectedJavaScript = `
-      (function() {
-        if (window && window.localStorage && window.webViewBridge) {
-          window.localStorage.proxyAccountsEnabled = true;
-          window.localStorage.enableRelayer = true;
-        }
-      })();
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting enable relayer')
-      this.dappWebView.injectJavaScript(injectedJavaScript)
-    }
-  }
-
   /* Handle the postMessagefrom the uiState request. The uiState localStorage object
    * can include information about the currency the DApp is set to.
    */
@@ -411,8 +396,6 @@ class MarketplaceScreen extends Component {
   }
 
   onWebViewLoad = async () => {
-    // Enable proxy accounts
-    this.injectEnableProxyAccounts()
     // Set the language in the DApp to the same as the mobile app
     this.injectLanguage()
     // Inject scroll handler for pull to refresh function
