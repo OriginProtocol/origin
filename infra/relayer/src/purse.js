@@ -434,7 +434,6 @@ class Purse {
    * @returns {'redis client'} A node_redis instance
    */
   _setupRedis(redisHost) {
-    // TODO: Does prod use auth? How to make testing clean?
     const client = redis.createClient({
       url: redisHost,
       retry_strategy: options => {
