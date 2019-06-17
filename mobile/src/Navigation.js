@@ -3,6 +3,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Image, Modal } from 'react-native'
+
 import {
   createAppContainer,
   createBottomTabNavigator,
@@ -12,12 +13,15 @@ import {
 } from 'react-navigation'
 
 import PushNotifications from './PushNotifications'
-// Utilities
+
+// Utility components
 import AuthenticationGuard from 'components/authentication-guard'
 import UpdatePrompt from 'components/update-prompt'
 import BackupPrompt from 'components/backup-prompt'
 import Loading from 'components/loading'
+import NoInternetError from 'components/no-internet-error'
 import { setComplete } from 'actions/Onboarding'
+
 // Onboarding
 import WelcomeScreen from 'screens/onboarding/welcome'
 import ImportAccountScreen from 'screens/import'
@@ -32,6 +36,7 @@ import PhoneScreen from 'screens/onboarding/phone'
 import NameScreen from 'screens/onboarding/name'
 import AvatarScreen from 'screens/onboarding/avatar'
 import ReadyScreen from 'screens/onboarding/ready'
+
 // Main screens
 import AccountsScreen from 'screens/accounts'
 import AccountScreen from 'screens/account'
@@ -39,6 +44,7 @@ import LanguageScreen from 'screens/language'
 import MarketplaceScreen from 'screens/marketplace'
 import SettingsScreen from 'screens/settings'
 import WalletScreen from 'screens/wallet'
+
 // Backup screen
 import BackupScreen from 'screens/backup'
 import { getNextOnboardingStep } from 'utils/user'
@@ -250,10 +256,9 @@ class MarketplaceApp extends React.Component {
     const { navigation } = this.props
     let loadingText = 'Loading marketplace...'
     let activityIndicator = true
-    let errorText = false
+    let errorComponent = false
     if (this.props.marketplace.error) {
-      errorText =
-        'An error occurred loading the Origin Marketplace. Please check your internet connection.'
+      errorComponent = <NoInternetError />
       loadingText = false
       activityIndicator = false
     }
@@ -267,7 +272,7 @@ class MarketplaceApp extends React.Component {
           <Loading
             loadingText={loadingText}
             activityIndicator={activityIndicator}
-            errorText={errorText}
+            errorComponent={errorComponent}
           />
         </Modal>
       </>
@@ -314,3 +319,14 @@ export default createAppContainer(
     }
   )
 )
+
+const styles = {
+  loadingErrorText: {
+    width: '80%',
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginTop: 20
+  }
+}

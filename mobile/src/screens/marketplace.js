@@ -53,6 +53,7 @@ class MarketplaceScreen extends Component {
       'graphqlMutation',
       this.injectGraphqlMutation
     )
+    DeviceEventEmitter.addListener('reloadMarketplace', () => this.dappWebView.reload())
   }
 
   componentDidUpdate = prevProps => {
@@ -434,6 +435,8 @@ class MarketplaceScreen extends Component {
     }
     // Set state to ready in redux
     await this.props.setMarketplaceReady(true)
+    // Make sure any error state is cleared
+    await this.props.setMarketplaceWebViewError(false)
   }
 
   updateIdentities = () => {
@@ -502,7 +505,6 @@ class MarketplaceScreen extends Component {
           source={{ uri: this.props.settings.network.dappUrl }}
           onMessage={this.onWebViewMessage}
           onLoad={this.onWebViewLoad}
-          onLoadStart={async () => this.props.setMarketplaceWebViewError(false)}
           onError={syntheticEvent => {
             const { nativeEvent } = syntheticEvent
             this.props.setMarketplaceWebViewError(nativeEvent.description)
