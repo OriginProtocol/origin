@@ -3,13 +3,8 @@ import pick from 'lodash/pick'
 import pickBy from 'lodash/pickBy'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
-import { Switch, Route } from 'react-router-dom'
-import validator from '@origin/validator'
 
-import Store from 'utils/store'
-import {
-  getProviderDisplayName
-} from 'utils/profileTools'
+import { getProviderDisplayName } from 'utils/profileTools'
 
 import {
   getAttestationReward,
@@ -25,11 +20,9 @@ import withIsMobile from 'hoc/withIsMobile'
 
 import ProfileStrength from 'components/ProfileStrength'
 import Avatar from 'components/Avatar'
-import Wallet from 'components/Wallet'
 import DocumentTitle from 'components/DocumentTitle'
 import GrowthCampaignBox from 'components/GrowthCampaignBox'
 import Earnings from 'components/Earning'
-import Link from 'components/Link'
 import Modal from 'components/Modal'
 import MobileModal from 'components/MobileModal'
 import AttestationBadges from 'components/AttestationBadges'
@@ -39,15 +32,11 @@ import EmailAttestation from 'pages/identity/EmailAttestation'
 import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
 import WebsiteAttestation from 'pages/identity/WebsiteAttestation'
 import OAuthAttestation from 'pages/identity/OAuthAttestation'
-import ProfileWizard from 'pages/user/ProfileWizard'
-import Onboard from 'pages/onboard/Onboard'
 
 import EditProfile from './_EditModal'
 import ToastNotification from './ToastNotification'
 import VerifyProfileHelp from './_VerifyProfileHelp'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
-
-const store = Store('sessionStorage')
 
 const withOAuthAttestationProvider = provider => {
   const WithOAuthAttestationProvider = props => {
@@ -121,10 +110,10 @@ class UserProfile extends Component {
 
   profileDataUpdated(state, prevState) {
     return (
-      (state.firstName !== prevState.firstName ||
-        state.lastName !== prevState.lastName ||
-        state.description !== prevState.description ||
-        state.avatarUrl !== prevState.avatarUrl)
+      state.firstName !== prevState.firstName ||
+      state.lastName !== prevState.lastName ||
+      state.description !== prevState.description ||
+      state.avatarUrl !== prevState.avatarUrl
     )
   }
 
@@ -132,7 +121,10 @@ class UserProfile extends Component {
     if (get(this.props, 'identity.id') !== get(prevProps, 'identity.id')) {
       this.setState(getState(get(this.props, 'identity')))
     }
-    if (this.state.deployIdentity === 'profile' && !this.profileDataUpdated(this.state, get(this.props, 'identity'))) {
+    if (
+      this.state.deployIdentity === 'profile' &&
+      !this.profileDataUpdated(this.state, get(this.props, 'identity'))
+    ) {
       this.setState({
         deployIdentity: null
       })
@@ -141,12 +133,15 @@ class UserProfile extends Component {
 
   showDeploySuccessMessage() {
     let message = getProviderDisplayName(this.state.deployIdentity)
-    
+
     if (message === this.state.deployIdentity) {
       // Not one of attestation changes
       message = fbt('Profile updated', 'profile.profileUpdated')
     } else {
-      message = fbt(fbt.param('provider', message) + ' updated', 'profile.attestationUpdated')
+      message = fbt(
+        fbt.param('provider', message) + ' updated',
+        'profile.attestationUpdated'
+      )
     }
 
     this.handleShowNotification(message, 'blue')
@@ -158,10 +153,14 @@ class UserProfile extends Component {
 
   renderPage() {
     const growthEnrolled = this.props.growthEnrollmentStatus === 'Enrolled'
-    
+
     const isMobile = this.isMobile()
 
-    const verifiedAttestations = get(this.props, 'identity.verifiedAttestations', [])
+    const verifiedAttestations = get(
+      this.props,
+      'identity.verifiedAttestations',
+      []
+    )
 
     return (
       <div className="container profile-page">
@@ -170,19 +169,18 @@ class UserProfile extends Component {
             <div className="profile-info-container">
               <div className="avatar-container">
                 <Avatar avatarUrl={this.state.avatarUrl} />
-                <div className="profile-edit-icon" onClick={() => {
-                  this.setState({
-                    editProfile: true
-                  })
-                }}></div>
+                <div
+                  className="profile-edit-icon"
+                  onClick={() => {
+                    this.setState({
+                      editProfile: true
+                    })
+                  }}
+                />
               </div>
               <div className="user-bio-container">
-                <h2>
-                  {`${this.state.firstName} ${this.state.lastName}`}
-                </h2>
-                <div className="description">
-                  {this.state.description}
-                </div>
+                <h2>{`${this.state.firstName} ${this.state.lastName}`}</h2>
+                <div className="description">{this.state.description}</div>
               </div>
             </div>
             <div className="user-progress-container">
@@ -210,11 +208,15 @@ class UserProfile extends Component {
               )}
             </div>
             <div className="attestations-container text-center">
-              <button type="button" className="btn btn-outline-primary btn-rounded" onClick={() => {
-                this.setState({
-                  verifyModal: true
-                })
-              }}>
+              <button
+                type="button"
+                className="btn btn-outline-primary btn-rounded"
+                onClick={() => {
+                  this.setState({
+                    verifyModal: true
+                  })
+                }}
+              >
                 <fbt desc="Profile.addVerifications">Add Verifications</fbt>
               </button>
               <AttestationBadges
@@ -247,84 +249,101 @@ class UserProfile extends Component {
     if (!this.state.verifyModal) {
       return null
     }
-    
+
     const isMobile = this.isMobile()
-    
+
     const ModalComp = isMobile ? MobileModal : Modal
 
     const headerContent = fbt('Add Verifications', 'Profile.addVerifications')
 
-    const header = isMobile ? null : (
-      <h2>{headerContent}</h2>
-    )
+    const header = isMobile ? null : <h2>{headerContent}</h2>
 
     const growthEnrolled = this.props.growthEnrollmentStatus === 'Enrolled'
 
-    const myEarnings = !isMobile || !growthEnrolled ? null : (
-      <div className="total-earnings-container">
-        <Earnings
-          title={fbt('Total Earnings', 'Profile.TotalEarnings')}
-          total={getMaxRewardPerUser({
+    const myEarnings =
+      !isMobile || !growthEnrolled ? null : (
+        <div className="total-earnings-container">
+          <Earnings
+            title={fbt('Total Earnings', 'Profile.TotalEarnings')}
+            total={getMaxRewardPerUser({
+              growthCampaigns: this.props.growthCampaigns,
+              tokenDecimals: this.props.tokenDecimals || 18
+            })}
+            earned={getTokensEarned({
+              verifiedServices: (this.state.verifiedAttestations || []).map(
+                att => att.id
+              ),
+              growthCampaigns: this.props.growthCampaigns,
+              tokenDecimals: this.props.tokenDecimals || 18
+            })}
+          />
+        </div>
+      )
+
+    const verifiedAttestations = get(
+      this.props,
+      'identity.verifiedAttestations',
+      []
+    ).map(att => att.id)
+
+    const providers = this.props.attestationProviders.map(providerName => {
+      const verified = verifiedAttestations.includes(providerName)
+      const reward = verified
+        ? null
+        : getAttestationReward({
             growthCampaigns: this.props.growthCampaigns,
+            attestation: this.capitalizeString(providerName),
             tokenDecimals: this.props.tokenDecimals || 18
-          })}
-          earned={getTokensEarned({
-            verifiedServices: (
-              this.state.verifiedAttestations || []
-            ).map(att => att.id),
-            growthCampaigns: this.props.growthCampaigns,
-            tokenDecimals: this.props.tokenDecimals || 18
-          })}
-        />
-      </div>
-    )
+          })
 
-    const verifiedAttestations = get(this.props, 'identity.verifiedAttestations', [])
-      .map(att => att.id)
-
-    const providers = this.props.attestationProviders
-      .map(providerName => {
-        const verified = verifiedAttestations.includes(providerName)
-        const reward = verified ? null : getAttestationReward({
-          growthCampaigns: this.props.growthCampaigns,
-          attestation: this.capitalizeString(providerName),
-          tokenDecimals: this.props.tokenDecimals || 18
-        })
-
-        return {
-          id: providerName,
-          verified,
-          reward
-        }
-      })
+      return {
+        id: providerName,
+        verified,
+        reward
+      }
+    })
 
     return (
       <ModalComp
         title={headerContent}
         className="profile-verifications-modal"
         shouldClose={this.state.shouldCloseVerifyModal}
-        onClose={() => this.setState({ shouldCloseVerifyModal: false, verifyModal: false })}
+        onClose={() =>
+          this.setState({ shouldCloseVerifyModal: false, verifyModal: false })
+        }
       >
         {header}
         {myEarnings}
-        <div className="sub-header"><fbt desc="Profile.tapToStart">Tap an icon below to verify and earn OGN.</fbt></div>
-        <AttestationBadges providers={providers} minCount={6} fillToNearest={3} onClick={providerName => {
-          this.setState({
-            [providerName]: true,
-            shouldCloseVerifyModal: true
-          })
-        }} />
-        {
-          isMobile ? null : (
-            <div className="actions">
-              <button className="btn btn-link mb-0" onClick={() => {
+        <div className="sub-header">
+          <fbt desc="Profile.tapToStart">
+            Tap an icon below to verify and earn OGN.
+          </fbt>
+        </div>
+        <AttestationBadges
+          providers={providers}
+          minCount={6}
+          fillToNearest={3}
+          onClick={providerName => {
+            this.setState({
+              [providerName]: true,
+              shouldCloseVerifyModal: true
+            })
+          }}
+        />
+        {isMobile ? null : (
+          <div className="actions">
+            <button
+              className="btn btn-link mb-0"
+              onClick={() => {
                 this.setState({
                   shouldCloseVerifyModal: true
                 })
-              }}><fbt desc="Cancel">Cancel</fbt></button>
-            </div>
-          )
-        }
+              }}
+            >
+              <fbt desc="Cancel">Cancel</fbt>
+            </button>
+          </div>
+        )}
       </ModalComp>
     )
   }
@@ -371,7 +390,10 @@ class UserProfile extends Component {
       return null
     }
 
-    if (this.state.deployIdentity === 'profile' && !this.profileDataUpdated(this.state, get(this.props, 'identity'))) {
+    if (
+      this.state.deployIdentity === 'profile' &&
+      !this.profileDataUpdated(this.state, get(this.props, 'identity'))
+    ) {
       // Skip deploy if no change
       return null
     }
@@ -413,10 +435,10 @@ class UserProfile extends Component {
           'avatarUrl'
         ])}
         avatarUrl={this.state.avatarUrl}
-        onClose={() => this.setState({ editProfile: false, deployIdentity: 'profile' })}
-        onChange={newState =>
-          this.setState(newState, () => this.validate())
+        onClose={() =>
+          this.setState({ editProfile: false, deployIdentity: 'profile' })
         }
+        onChange={newState => this.setState(newState, () => this.validate())}
         onAvatarChange={avatarUrl => this.setState({ avatarUrl })}
         lightMode={true}
       />
@@ -453,9 +475,11 @@ class UserProfile extends Component {
   }
 }
 
-export default withIsMobile(withAttestationProviders(
-  withWallet(withIdentity(withGrowthCampaign(UserProfile)))
-))
+export default withIsMobile(
+  withAttestationProviders(
+    withWallet(withIdentity(withGrowthCampaign(UserProfile)))
+  )
+)
 
 require('react-styl')(`
   body.has-profile-page

@@ -29,7 +29,7 @@ function InfoStoredOnChain({ provider }) {
       post on your behalf.
     </fbt>
   )
-  
+
   switch (provider) {
     case 'facebook':
       content = (
@@ -52,7 +52,10 @@ function InfoStoredOnChain({ provider }) {
     <PublishedInfoBox
       className="mt-auto"
       pii={piiStored}
-      title={fbt('What will be visible on the blockchain?', 'OAuthAttestation.visibleOnBlockchain')}
+      title={fbt(
+        'What will be visible on the blockchain?',
+        'OAuthAttestation.visibleOnBlockchain'
+      )}
       children={content}
     />
   )
@@ -240,15 +243,13 @@ class OAuthAttestation extends Component {
                     : fbt('Continue', 'Continue')
                 }
               />
-              {
-                isMobile ? null : (
-                  <button
-                    className="btn btn-link"
-                    onClick={() => this.setState({ shouldClose: true })}
-                    children={fbt('Cancel', 'VerifyWebsite.cancel')}
-                  />
-                )
-              }
+              {isMobile ? null : (
+                <button
+                  className="btn btn-link"
+                  onClick={() => this.setState({ shouldClose: true })}
+                  children={fbt('Cancel', 'VerifyWebsite.cancel')}
+                />
+              )}
             </>
           )
         }}

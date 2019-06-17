@@ -64,9 +64,7 @@ const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
     return (
       <nav className={`navbar no-border${isProfilePage ? ' fixed-nav' : ''}`}>
         <Mobile {...navProps('mobile')} />
-        {
-          isProfilePage ? null : titleAndWallet
-        }
+        {isProfilePage ? null : titleAndWallet}
       </nav>
     )
   }

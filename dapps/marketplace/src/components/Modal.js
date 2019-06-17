@@ -63,7 +63,9 @@ export default class Modal extends Component {
           }`}
         />
         <div
-          className={`${this.props.classNameOuter || ''} pl-modal${this.props.lightMode ? ' light-theme' : ''}`}
+          className={`${this.props.classNameOuter || ''} pl-modal${
+            this.props.lightMode ? ' light-theme' : ''
+          }`}
           onMouseDown={e => this.onClose(e)}
         >
           <div className="pl-modal-table">

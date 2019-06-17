@@ -8,7 +8,9 @@ const VerifyProfileHelp = () => {
       <img src="images/identity/identity-module-icon.svg" />
       <div>
         <fbt desc="Profile.verifyForSuccessfulTx">
-          <strong>Verifying your profile</strong> allows other users to know that you are real and increases the chances of successful transactions on Origin.
+          <strong>Verifying your profile</strong> allows other users to know
+          that you are real and increases the chances of successful transactions
+          on Origin.
         </fbt>
       </div>
     </div>

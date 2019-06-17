@@ -102,15 +102,13 @@ class WebsiteAttestation extends Component {
         </div>
         <div className="actions">
           {this.renderCodeButton()}
-          {
-            isMobile ? null : (
-              <button
-                className="btn btn-link"
-                onClick={() => this.setState({ shouldClose: true })}
-                children={fbt('Cancel', 'VerifyWebsite.cancel')}
-              />
-            )
-          }
+          {isMobile ? null : (
+            <button
+              className="btn btn-link"
+              onClick={() => this.setState({ shouldClose: true })}
+              children={fbt('Cancel', 'VerifyWebsite.cancel')}
+            />
+          )}
         </div>
       </>
     )
@@ -133,15 +131,13 @@ class WebsiteAttestation extends Component {
         </div>
         <div className="actions">
           {this.renderDownloadButton()}
-          {
-            isMobile ? null : (
-              <button
-                className="btn btn-link"
-                onClick={() => this.setState({ shouldClose: true })}
-                children={fbt('Cancel', 'VerifyWebsite.cancel')}
-              />
-            )
-          }
+          {isMobile ? null : (
+            <button
+              className="btn btn-link"
+              onClick={() => this.setState({ shouldClose: true })}
+              children={fbt('Cancel', 'VerifyWebsite.cancel')}
+            />
+          )}
         </div>
       </>
     )
@@ -169,15 +165,13 @@ class WebsiteAttestation extends Component {
         </div>
         <div className="actions">
           {this.renderVerifyButton()}
-          {
-            isMobile ? null : (
-              <button
-                className="btn btn-link"
-                onClick={() => this.setState({ shouldClose: true })}
-                children={fbt('Cancel', 'VerifyWebsite.cancel')}
-              />
-            )
-          }
+          {isMobile ? null : (
+            <button
+              className="btn btn-link"
+              onClick={() => this.setState({ shouldClose: true })}
+              children={fbt('Cancel', 'VerifyWebsite.cancel')}
+            />
+          )}
         </div>
       </>
     )

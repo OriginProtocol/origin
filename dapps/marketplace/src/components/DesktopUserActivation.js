@@ -269,13 +269,16 @@ class UserActivation extends Component {
               </div>
             </div>
             <PublishedInfoBox
-              title={fbt('What will be visible on the blockchain?', 'UserActivation.visibleOnBlockchain')}
-              children={(
+              title={fbt(
+                'What will be visible on the blockchain?',
+                'UserActivation.visibleOnBlockchain'
+              )}
+              children={
                 <fbt desc="UserActivation.verifiedButNotEmail">
                   That you have a verified email, but NOT your actual email
                   address
                 </fbt>
-              )}
+              }
             />
             <div className="actions">
               <button
@@ -425,13 +428,16 @@ class UserActivation extends Component {
                   </div>
                 </div>
                 <PublishedInfoBox
-                  title={fbt('What will be visible on the blockchain?', 'UserActivation.visibleOnBlockchain')}
-                  children={(
+                  title={fbt(
+                    'What will be visible on the blockchain?',
+                    'UserActivation.visibleOnBlockchain'
+                  )}
+                  children={
                     <fbt desc="UserActivation.verifiedButNotEmail">
                       That you have a verified email, but NOT your actual email
                       address
                     </fbt>
-                  )}
+                  }
                 />
                 <div className="actions">
                   <button
@@ -554,27 +560,30 @@ class UserActivation extends Component {
             </fbt>
           </div>
         </div>
-          <PublishedInfoBox
-            title={fbt('What will be visible on the blockchain?', 'UserActivation.visibleOnBlockchain')}
-            children={(
-              <>
-                <fbt desc="UserActivation.nameAndPhoto">Your name and photo.</fbt>
-                <a
-                  href="#"
-                  onClick={e => {
-                    e.preventDefault()
-                    this.setState({
-                      personalDataModal: true,
-                      shouldClosePersonalDataModal: false
-                    })
-                  }}
-                >
-                  <fbt desc="UserActivation.learnMore">Learn more</fbt>
-                </a>
-              </>
-            )}
-            pii={true}
-          />
+        <PublishedInfoBox
+          title={fbt(
+            'What will be visible on the blockchain?',
+            'UserActivation.visibleOnBlockchain'
+          )}
+          children={
+            <>
+              <fbt desc="UserActivation.nameAndPhoto">Your name and photo.</fbt>
+              <a
+                href="#"
+                onClick={e => {
+                  e.preventDefault()
+                  this.setState({
+                    personalDataModal: true,
+                    shouldClosePersonalDataModal: false
+                  })
+                }}
+              >
+                <fbt desc="UserActivation.learnMore">Learn more</fbt>
+              </a>
+            </>
+          }
+          pii={true}
+        />
         <div className="actions">
           <button
             type="submit"

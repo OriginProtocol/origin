@@ -11,12 +11,14 @@ const PublishedInfoBox = ({ title, children, className, pii = false }) => {
     classList.push('critical')
   }
 
-  const titleEl = !title ? null : (
-    <span className="title">{title}</span>
-  )
+  const titleEl = !title ? null : <span className="title">{title}</span>
 
   return (
-    <div className={`published-info-box${classList.length ? ' ' + classList.join(' ') : ''}`}>
+    <div
+      className={`published-info-box${
+        classList.length ? ' ' + classList.join(' ') : ''
+      }`}
+    >
       {titleEl}
       {children}
     </div>

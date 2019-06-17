@@ -31,9 +31,7 @@ class DeployIdentity extends Component {
         {upsertIdentity => (
           <>
             {this.props.autoDeploy ? (
-              <AutoMutate
-                mutation={() => this.onDeployClick(upsertIdentity)}
-              />
+              <AutoMutate mutation={() => this.onDeployClick(upsertIdentity)} />
             ) : (
               <button
                 className={`${this.props.className} ${

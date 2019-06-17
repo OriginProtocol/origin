@@ -1,15 +1,20 @@
 import React from 'react'
 
-const AttestationBadges = ({ className, providers, minCount = 10, fillToNearest = 5, onClick }) => {
-  
+const AttestationBadges = ({
+  className,
+  providers,
+  minCount = 10,
+  fillToNearest = 5,
+  onClick
+}) => {
   let badges = providers || []
 
   if (badges.length < minCount) {
     badges = badges.concat(new Array(minCount - badges.length).fill(null))
     // Show a minimum of `minCount` icons
-  } else if (badges.length > minCount && (badges % fillToNearest !== zero)) {
+  } else if (badges.length > minCount && badges % fillToNearest !== 0) {
     // Show icons in multiples of `fillToNearest`
-    const lengthToAppend = (fillToNearest - (badges.length % fillToNearest))
+    const lengthToAppend = fillToNearest - (badges.length % fillToNearest)
     badges = badges.concat(new Array(lengthToAppend).fill(null))
   }
 
@@ -17,7 +22,7 @@ const AttestationBadges = ({ className, providers, minCount = 10, fillToNearest 
     <div className={`attestation-badges${className ? ' ' + className : ''}`}>
       {badges.map((badge, index) => {
         if (!badge) {
-          return <div key={index} className="attestation-badge"></div>
+          return <div key={index} className="attestation-badge" />
         }
 
         let rewardElement
@@ -35,11 +40,15 @@ const AttestationBadges = ({ className, providers, minCount = 10, fillToNearest 
         }
 
         return (
-          <div key={badge.id} className={`attestation-badge${classList} ${badge.id}`} onClick={() => {
-            if (onClick) {
-              onClick(badge.id)
-            }
-          }}>
+          <div
+            key={badge.id}
+            className={`attestation-badge${classList} ${badge.id}`}
+            onClick={() => {
+              if (onClick) {
+                onClick(badge.id)
+              }
+            }}
+          >
             {rewardElement}
           </div>
         )

@@ -146,8 +146,14 @@ class EmailAttestation extends Component {
             </div>
             <PublishedInfoBox
               className="mt-auto"
-              title={fbt('What will be visible on the blockchain?', 'EmailAttestation.visibleOnBlockchain')}
-              children={fbt('That you have a verified Email address but NOT your actual email address', 'EmailAttestation.storedOnChain')}
+              title={fbt(
+                'What will be visible on the blockchain?',
+                'EmailAttestation.visibleOnBlockchain'
+              )}
+              children={fbt(
+                'That you have a verified Email address but NOT your actual email address',
+                'EmailAttestation.storedOnChain'
+              )}
             />
             <div className="actions">
               <button
@@ -252,14 +258,18 @@ class EmailAttestation extends Component {
               />
             </div>
             {this.state.error && (
-              <div className="alert alert-danger my-3">
-                {this.state.error}
-              </div>
+              <div className="alert alert-danger my-3">{this.state.error}</div>
             )}
             <PublishedInfoBox
               className="mt-auto"
-              title={fbt('What will be visible on the blockchain?', 'EmailAttestation.visibleOnBlockchain')}
-              children={fbt('That you have a verified Email address but NOT your actual email address', 'EmailAttestation.storedOnChain')}
+              title={fbt(
+                'What will be visible on the blockchain?',
+                'EmailAttestation.visibleOnBlockchain'
+              )}
+              children={fbt(
+                'That you have a verified Email address but NOT your actual email address',
+                'EmailAttestation.storedOnChain'
+              )}
             />
             <div className="actions">
               <button

@@ -2,12 +2,17 @@ import React from 'react'
 import { fbt } from 'fbt-runtime'
 
 const Earnings = ({ total = 0, earned = 0, large, title, showTotal }) => {
-  const titleEl = title ? title : (
-    <fbt desc="Earnings.Earnings">Earnings</fbt>
-  )
+  const titleEl = title ? title : <fbt desc="Earnings.Earnings">Earnings</fbt>
 
-  const earningTitle = !showTotal ? <span className="earned">{earned}</span> : (
-    fbt(fbt.param('earned', <span className="earned">{earned}</span>) + ' of ' + fbt.param('total', total), 'Earnings.earnProgress')
+  const earningTitle = !showTotal ? (
+    <span className="earned">{earned}</span>
+  ) : (
+    fbt(
+      fbt.param('earned', <span className="earned">{earned}</span>) +
+        ' of ' +
+        fbt.param('total', total),
+      'Earnings.earnProgress'
+    )
   )
   return (
     <div className={`earnings-progress${large ? ' large' : ''}`}>

@@ -92,9 +92,15 @@ class PhoneAttestation extends Component {
       </fbt>
     )
 
-    const helpText = isMobile ? 
-      fbt('By continuing, you give Origin permission to send you occasional messages such as notifications about your transactions.', 'Attestatio.mobile.phonePublishClarification') :
-      fbt('By verifying your phone number, you give Origin permission to send you occasional text messages such as notifications about your transactions.', 'Attestation.phonePublishClarification')
+    const helpText = isMobile
+      ? fbt(
+          'By continuing, you give Origin permission to send you occasional messages such as notifications about your transactions.',
+          'Attestatio.mobile.phonePublishClarification'
+        )
+      : fbt(
+          'By verifying your phone number, you give Origin permission to send you occasional text messages such as notifications about your transactions.',
+          'Attestation.phonePublishClarification'
+        )
 
     return (
       <Mutation
@@ -146,16 +152,18 @@ class PhoneAttestation extends Component {
             {this.state.error && (
               <div className="alert alert-danger mt-3">{this.state.error}</div>
             )}
-            <div className="help mt-3 mb-3">
-              {helpText}
-            </div>
+            <div className="help mt-3 mb-3">{helpText}</div>
             <PublishedInfoBox
               className="mt-3 mb-0"
-              title={<fbt desc="PhoneAttestation.visibleOnBlockchain">What will be visible on the blockchain?</fbt>}
+              title={
+                <fbt desc="PhoneAttestation.visibleOnBlockchain">
+                  What will be visible on the blockchain?
+                </fbt>
+              }
               children={
                 <fbt desc="PhoneAttestation.verifiedButNotNumber">
-                  That you have a verified phone number, but NOT your actual phone
-                  number
+                  That you have a verified phone number, but NOT your actual
+                  phone number
                 </fbt>
               }
             />
@@ -260,12 +268,8 @@ class PhoneAttestation extends Component {
               })
             }}
           >
-            <h2>
-              {header}
-            </h2>
-            <div className="instructions">
-              {instructions}
-            </div>
+            <h2>{header}</h2>
+            <div className="instructions">{instructions}</div>
             <div className="my-3 verification-code">
               <input
                 type="tel"
@@ -278,17 +282,19 @@ class PhoneAttestation extends Component {
               />
             </div>
             {this.state.error && (
-              <div className="alert alert-danger my-3">
-                {this.state.error}
-              </div>
+              <div className="alert alert-danger my-3">{this.state.error}</div>
             )}
             <PublishedInfoBox
               className="mt-3 mb-0"
-              title={<fbt desc="PhoneAttestation.visibleOnBlockchain">What will be visible on the blockchain?</fbt>}
+              title={
+                <fbt desc="PhoneAttestation.visibleOnBlockchain">
+                  What will be visible on the blockchain?
+                </fbt>
+              }
               children={
                 <fbt desc="PhoneAttestation.verifiedButNotNumber">
-                  That you have a verified phone number, but NOT your actual phone
-                  number
+                  That you have a verified phone number, but NOT your actual
+                  phone number
                 </fbt>
               }
             />

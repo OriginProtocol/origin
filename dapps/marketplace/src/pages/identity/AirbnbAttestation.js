@@ -101,8 +101,13 @@ class AirbnbAttestation extends Component {
         <PublishedInfoBox
           className="mt-auto"
           pii={true}
-          title={fbt('What will be visible on the blockchain?', 'VerifyAirbnb.visibleOnBlockchain')}
-          children={(<fbt desc="VerifyAirbnb.yourAirbnbId">Your Airbnb user ID</fbt>)}
+          title={fbt(
+            'What will be visible on the blockchain?',
+            'VerifyAirbnb.visibleOnBlockchain'
+          )}
+          children={
+            <fbt desc="VerifyAirbnb.yourAirbnbId">Your Airbnb user ID</fbt>
+          }
         />
         <div className={`actions mt-5`}>
           {this.renderCodeButton()}
@@ -181,8 +186,6 @@ class AirbnbAttestation extends Component {
   }
 
   renderCodeButton() {
-    const isMobile = this.isMobile()
-
     return (
       <Mutation
         mutation={GenerateAirbnbCodeMutation}
@@ -232,8 +235,6 @@ class AirbnbAttestation extends Component {
   }
 
   renderVerifyButton() {
-    const isMobile = this.isMobile()
-
     return (
       <Mutation
         mutation={VerifyAirbnbCodeMutation}

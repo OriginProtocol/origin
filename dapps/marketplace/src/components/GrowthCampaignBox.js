@@ -68,9 +68,7 @@ const renderEnrolledBox = (props, walletAddress) => {
         return (
           <>
             <h3>
-              <fbt desc="profile.growthCampaignEarning">
-                Campaign Earnings
-              </fbt>
+              <fbt desc="profile.growthCampaignEarning">Campaign Earnings</fbt>
             </h3>
             <div className="mt-2">
               <img className="ogn-icon pr-2" src="images/ogn-icon.svg" />
@@ -87,14 +85,20 @@ const renderEnrolledBox = (props, walletAddress) => {
               showIndicators={false}
             />
             <div className="time-left">
-              {fbt(`Time left: ${fbt.param('timeLeft', timeLeft)}`, 'profile.campaignTimeLeft')}
+              {fbt(
+                `Time left: ${fbt.param('timeLeft', timeLeft)}`,
+                'profile.campaignTimeLeft'
+              )}
             </div>
             <div className="help">
               <fbt desc="profile.growthPaidOut">
                 Paid out after campaign is finished
               </fbt>
             </div>
-            <Link to="/campaigns"><fbt desc="Profile.visitCampaignHome">Visit Campaign Home</fbt> &gt;</Link>
+            <Link to="/campaigns">
+              <fbt desc="Profile.visitCampaignHome">Visit Campaign Home</fbt>{' '}
+              &gt;
+            </Link>
           </>
         )
       }}

@@ -6,7 +6,9 @@ import useIsMobile from 'utils/useMobile'
 const ProfileStrength = ({ published = 0, unpublished = 0, large }) => {
   const isMobile = useIsMobile()
 
-  const title = isMobile ? fbt('Strength', 'ProfileStrength.Strength') :  fbt('Profile Strength', 'ProfileStrength.ProfileStrength')
+  const title = isMobile
+    ? fbt('Strength', 'ProfileStrength.Strength')
+    : fbt('Profile Strength', 'ProfileStrength.ProfileStrength')
 
   return (
     <div className={`profile-strength${large ? ' large' : ''}`}>

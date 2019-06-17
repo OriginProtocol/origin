@@ -34,9 +34,12 @@ class EditProfileModal extends Component {
   }
 
   render() {
-    const input = formInput(this.state, state => this.setState(state), this.props.lightMode ? '' : 'dark')
+    const input = formInput(
+      this.state,
+      state => this.setState(state),
+      this.props.lightMode ? '' : 'dark'
+    )
     const Feedback = formFeedback(this.state)
-    const hasAvatar = this.state.avatarUrl
 
     const isMobile = this.isMobile()
 
@@ -54,15 +57,15 @@ class EditProfileModal extends Component {
         lightMode={this.props.lightMode}
       >
         <form
-          className={`edit-profile-modal${this.props.lightMode ? ' light-theme' : ''}`}
+          className={`edit-profile-modal${
+            this.props.lightMode ? ' light-theme' : ''
+          }`}
           onSubmit={e => {
             e.preventDefault()
             this.validate()
           }}
         >
-          <h2>
-            {isMobile ? null : titleContent}
-          </h2>
+          <h2>{isMobile ? null : titleContent}</h2>
           <div className="profile-fields-container">
             <ImageCropper
               onChange={async avatarBase64 => {
@@ -118,13 +121,18 @@ class EditProfileModal extends Component {
             </div>
           </div>
           <PublishedInfoBox
-            title={fbt('What will be visible on the blockchain?', 'EditModal.visibleOnChain')}
-            children={(
+            title={fbt(
+              'What will be visible on the blockchain?',
+              'EditModal.visibleOnChain'
+            )}
+            children={
               <>
                 <fbt desc="EditModal.nameAndPhoto">Your name and photo.</fbt>
-                <a href="#"><fbt desc="EditModal.learnMore">Learn more</fbt></a>
+                <a href="#">
+                  <fbt desc="EditModal.learnMore">Learn more</fbt>
+                </a>
               </>
-            )}
+            }
           />
           <div className="actions d-flex">
             <button
@@ -142,15 +150,13 @@ class EditProfileModal extends Component {
                 }
               }}
             />
-            {
-              isMobile ? null : (
-                <button
-                  className="btn btn-link"
-                  children={fbt('Cancel', 'Cancel')}
-                  onClick={() => this.setState({ shouldClose: true })}
-                />
-              )
-            }
+            {isMobile ? null : (
+              <button
+                className="btn btn-link"
+                children={fbt('Cancel', 'Cancel')}
+                onClick={() => this.setState({ shouldClose: true })}
+              />
+            )}
           </div>
         </form>
       </ModalComp>
