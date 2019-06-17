@@ -71,6 +71,7 @@ export default {
       console.log(
         '========================================================================='
       )
+      return null
     }
     return { id: args.id, account: { id: args.id } }
   }
