@@ -278,21 +278,20 @@ class PhoneAttestation extends Component {
               />
             </div>
             {this.state.error && (
-              <div className="alert alert-danger mt-3">
+              <div className="alert alert-danger my-3">
                 {this.state.error}
               </div>
             )}
-            <div className="info mt-3 mb-0">
-              <span className="title">
-                <fbt desc="PhoneAttestation.visibleOnBlockchain">
-                  What will be visible on the blockchain?
+            <PublishedInfoBox
+              className="mt-3 mb-0"
+              title={<fbt desc="PhoneAttestation.visibleOnBlockchain">What will be visible on the blockchain?</fbt>}
+              children={
+                <fbt desc="PhoneAttestation.verifiedButNotNumber">
+                  That you have a verified phone number, but NOT your actual phone
+                  number
                 </fbt>
-              </span>
-              <fbt desc="PhoneAttestation.verifiedButNotNumber">
-                That you have a verified phone number, but NOT your actual phone
-                number
-              </fbt>
-            </div>
+              }
+            />
             <div className="actions">
               <button
                 type="submit"
@@ -354,9 +353,14 @@ require('react-styl')(`
       .form-control-wrap
         flex: 1
       .form-control
-        border: solid 1px #c2cbd3
+        border: 0
+        border-bottom: solid 1px #c2cbd3
+        border-radius: 0
         background-color: var(--white)
         color: black
+        &:focus
+          border-color: #80bdff
+          box-shadow: unset
         &::-webkit-input-placeholder
           color: var(--dark)
       .help
@@ -373,6 +377,7 @@ require('react-styl')(`
       .verification-code
         display: flex
         flex-direction: column
+        border: 0
         align-items: center
         width: 80%
         .form-control
@@ -472,7 +477,7 @@ require('react-styl')(`
       flex: auto
       display: flex
       flex-direction: column
-  
+
     &.success > div h2::before
       background-image: none
 `)

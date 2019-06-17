@@ -258,6 +258,27 @@ class UserProfile extends Component {
       <h2>{headerContent}</h2>
     )
 
+    const growthEnrolled = this.props.growthEnrollmentStatus === 'Enrolled'
+
+    const myEarnings = !isMobile || !growthEnrolled ? null : (
+      <div className="total-earnings-container">
+        <Earnings
+          title={fbt('Total Earnings', 'Profile.TotalEarnings')}
+          total={getMaxRewardPerUser({
+            growthCampaigns: this.props.growthCampaigns,
+            tokenDecimals: this.props.tokenDecimals || 18
+          })}
+          earned={getTokensEarned({
+            verifiedServices: (
+              this.state.verifiedAttestations || []
+            ).map(att => att.id),
+            growthCampaigns: this.props.growthCampaigns,
+            tokenDecimals: this.props.tokenDecimals || 18
+          })}
+        />
+      </div>
+    )
+
     const verifiedAttestations = get(this.props, 'identity.verifiedAttestations', [])
       .map(att => att.id)
 
@@ -285,6 +306,7 @@ class UserProfile extends Component {
         onClose={() => this.setState({ shouldCloseVerifyModal: false, verifyModal: false })}
       >
         {header}
+        {myEarnings}
         <div className="sub-header"><fbt desc="Profile.tapToStart">Tap an icon below to verify and earn OGN.</fbt></div>
         <AttestationBadges providers={providers} minCount={6} fillToNearest={3} onClick={providerName => {
           this.setState({
@@ -531,6 +553,10 @@ require('react-styl')(`
         text-decoration: none
     .attestation-badges .attestation-badge
       margin: 1rem
+    .total-earnings-container
+      padding: 12px 20px
+      .title
+        padding: 0
 
   @media (max-width: 767.98px)
     body.has-profile-page
@@ -569,6 +595,15 @@ require('react-styl')(`
           background-color: transparent
           padding: 0
     .profile-verifications-modal
+      .sub-header
+        font-family: Lato
+        font-size: 0.9rem
+        font-weight: normal
+        font-style: italic
+        font-stretch: normal
+        line-height: normal
+        letter-spacing: normal
+        color: #455d75
       .attestation-badges .attestation-badge
         width: 93px
         height: 93px

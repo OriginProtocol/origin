@@ -290,8 +290,12 @@ require('react-styl')(`
         flex-direction: row
         max-width: 24rem
         margin: 0 auto
-        border: solid 1px #c2cbd3
-        border-radius: 0.3rem
+        border: 0
+        border-bottom: solid 1px #c2cbd3
+        border-radius: 0
+        &:focus
+          border-color: #80bdff
+          box-shadow: unset
         .form-control.airbnb-verification-code
           flex: auto
           text-align: left

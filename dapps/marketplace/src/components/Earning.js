@@ -1,20 +1,29 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
 
-const Earnings = ({ total = 0, earned = 0, large }) => (
-  <div className={`earnings-progress${large ? ' large' : ''}`}>
-    <div className="title">
-      <fbt desc="Earnings.Earnings">Earnings</fbt>
-      <div className="total-rewards">{earned}</div>
+const Earnings = ({ total = 0, earned = 0, large, title, showTotal }) => {
+  const titleEl = title ? title : (
+    <fbt desc="Earnings.Earnings">Earnings</fbt>
+  )
+
+  const earningTitle = !showTotal ? <span className="earned">{earned}</span> : (
+    fbt(fbt.param('earned', <span className="earned">{earned}</span>) + ' of ' + fbt.param('total', total), 'Earnings.earnProgress')
+  )
+  return (
+    <div className={`earnings-progress${large ? ' large' : ''}`}>
+      <div className="title">
+        {titleEl}
+        <div className="total-rewards">{earningTitle}</div>
+      </div>
+      <div className="progress">
+        <div
+          className="progress-bar"
+          style={{ width: `${(earned / total) * 100}%` }}
+        />
+      </div>
     </div>
-    <div className="progress">
-      <div
-        className="progress-bar"
-        style={{ width: `${(earned / total) * 100}%` }}
-      />
-    </div>
-  </div>
-)
+  )
+}
 
 export default Earnings
 
@@ -57,6 +66,9 @@ require('react-styl')(`
       font-stretch: normal
       line-height: 1.36
       letter-spacing: normal
+      color: var(--bluey-grey)
+      > span
+        color: var(--dark)
       &::before
         content: ''
         display: inline-block
@@ -75,7 +87,7 @@ require('react-styl')(`
         padding: 0 12px
         font-family: Lato
         line-height: 1.36
-        .total-rewards
+        .total-rewards > span
           font-size: 0.9rem
           font-weight: 900
           color: var(--clear-blue)

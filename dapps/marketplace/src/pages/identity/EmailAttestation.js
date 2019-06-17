@@ -6,6 +6,7 @@ import withIsMobile from 'hoc/withIsMobile'
 
 import Modal from 'components/Modal'
 import MobileModal from 'components/MobileModal'
+import PublishedInfoBox from 'components/_PublishedInfoBox'
 
 import GenerateEmailCodeMutation from 'mutations/GenerateEmailCode'
 import VerifyEmailCodeMutation from 'mutations/VerifyEmailCode'
@@ -137,12 +138,17 @@ class EmailAttestation extends Component {
             {this.state.error && (
               <div className="alert alert-danger mt-3">{this.state.error}</div>
             )}
-            <div className="help">
+            <div className="help mb-3">
               <fbt desc="Attestation.emailPublishClarification">
                 By verifying your email, you give Origin permission to send you
                 occasional emails such as notifications about your transactions.
               </fbt>
             </div>
+            <PublishedInfoBox
+              className="mt-auto"
+              title={fbt('What will be visible on the blockchain?', 'EmailAttestation.visibleOnBlockchain')}
+              children={fbt('That you have a verified Email address but NOT your actual email address', 'EmailAttestation.storedOnChain')}
+            />
             <div className="actions">
               <button
                 type="submit"
@@ -246,10 +252,15 @@ class EmailAttestation extends Component {
               />
             </div>
             {this.state.error && (
-              <div className="alert alert-danger mt-3">
+              <div className="alert alert-danger my-3">
                 {this.state.error}
               </div>
             )}
+            <PublishedInfoBox
+              className="mt-auto"
+              title={fbt('What will be visible on the blockchain?', 'EmailAttestation.visibleOnBlockchain')}
+              children={fbt('That you have a verified Email address but NOT your actual email address', 'EmailAttestation.storedOnChain')}
+            />
             <div className="actions">
               <button
                 type="submit"
