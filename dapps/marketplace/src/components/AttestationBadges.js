@@ -170,4 +170,10 @@ require('react-styl')(`
             background-repeat: no-repeat
             display: inline-block
             margin-right: 5px
+
+  @media (max-width: 767.98px)
+    .attestation-badges
+      .attestation-badge
+        width: 75px
+        height: 75px
 `)

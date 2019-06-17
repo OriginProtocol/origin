@@ -552,14 +552,22 @@ require('react-styl')(`
             padding: 0
             h2
               margin-top: 1rem
+              margin-bottom: 0
+              font-size: 1.5rem
+            .description
+              font-size: 0.75rem
           .avatar-container
             display: inline-block
             margin: 0 auto
             .avatar
               padding-top: 0
         .attestations-container
-          margin-top: 2rem
+          margin: 2rem 0 0 0
           border: none
           background-color: transparent
           padding: 0
+    .profile-verifications-modal
+      .attestation-badges .attestation-badge
+        width: 93px
+        height: 93px
 `)

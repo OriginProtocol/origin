@@ -10,6 +10,7 @@ const MobileModalHeader = ({
   headerImageUrl,
   className = '',
   showBackButton = true,
+  showCloseButton = false,
   onBack
 }) => {
   if (!children && !headerImageUrl) {
@@ -36,13 +37,19 @@ const MobileModalHeader = ({
     headerClassList = headerClassList.concat(className.split(' '))
   }
 
+  let closeButton
+
+  if (showCloseButton) {
+    closeButton = <a className="modal-action-button close-button" onClick={onBack} />
+  } else if (showBackButton) {
+    closeButton = <a className="modal-action-button back-button" onClick={onBack} />
+  }
+
   return (
     <div className={`${headerClassList.join(' ')}`} style={headerStyle}>
-      {showBackButton && (
-        <a className="modal-action-button back-button" onClick={onBack} />
-      )}
+      {closeButton}
       <h3 className="modal-title">{children}</h3>
-      {showBackButton && <span className="modal-action-button" />}
+      {closeButton === null ? null : <span className="modal-action-button" />}
     </div>
   )
 }
@@ -279,6 +286,11 @@ require('react-styl')(`
           background-size: 1.5rem
           background-position: center
           transform: rotateZ(270deg)
+          background-repeat: no-repeat
+        &.close-button
+          background-image: url('images/close-button.svg')
+          background-size: 1.5rem
+          background-position: center
           background-repeat: no-repeat
       .modal-title
         flex: auto
