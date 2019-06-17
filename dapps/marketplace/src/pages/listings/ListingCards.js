@@ -40,7 +40,7 @@ const ListingCards = ({ listings, ognListingRewards, hideCategory }) => {
           ) : (
             <div className="main-pic empty" />
           )}
-          {!!hideCategory ? null : (
+          {hideCategory ? null : (
             <div className="header">
               <div className="category">
                 <Category listing={a} showPrimary={false} />

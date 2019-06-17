@@ -5,15 +5,12 @@ import { fbt } from 'fbt-runtime'
 
 import query from 'queries/Identity'
 import Reviews from 'components/Reviews'
-import Avatar from 'components/Avatar'
 import DocumentTitle from 'components/DocumentTitle'
 import QueryError from 'components/QueryError'
 import LoadingSpinner from 'components/LoadingSpinner'
-import FormattedDescription from 'components/FormattedDescription'
 import UserProfileCard from 'components/UserProfileCard'
 
 import UserListings from './_UserListings'
-import { getProviderDisplayName } from 'utils/profileTools'
 
 const User = ({ match }) => {
   const id = match.params.id
