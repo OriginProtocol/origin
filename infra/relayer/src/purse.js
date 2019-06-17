@@ -599,13 +599,10 @@ class Purse {
       }
 
       /**
-       * Handle incoming receipts and remove pending transactions and adjust pending counts.  This
-       * is processed in reverse order so we can alter the array without it affecting the rest as
-       * we go.
+       * Handle incoming receipts and remove pending transactions and adjust pending counts.
        */
       const pendingHashes = Object.keys(this.pendingTransactions)
-      for (let i = pendingHashes.length - 1; i >= 0; i--) {
-        const txHash = pendingHashes[i]
+      for (const txHash of pendingHashes) {
         const receipt = await this.web3.eth.getTransactionReceipt(txHash)
 
         if (!receipt) continue
@@ -614,7 +611,6 @@ class Purse {
 
         // Remove from pending if it exists(it should)
         if (!receipt.status) {
-          // TODO Should this be communicated to the user and/or tracked?
           logger.warn(`Transaction ${txHash} has failed!`)
         }
 
