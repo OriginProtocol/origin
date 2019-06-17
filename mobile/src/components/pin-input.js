@@ -1,50 +1,42 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React from 'react'
 import { StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native'
 
-export default class PinInput extends Component {
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
-    const placeholder = []
-    for (let i = 0; i < this.props.pinLength; i++) {
-      placeholder.push(this.renderPlaceholder(i))
-    }
-
-    return (
-      <>
-        <TouchableOpacity
-          style={styles.pinCode}
-          onPress={() => this.textInput.focus()}
-        >
-          {placeholder}
-        </TouchableOpacity>
-        <TextInput
-          ref={ref => (this.textInput = ref)}
-          autoFocus={true}
-          value={this.props.value}
-          keyboardType="numeric"
-          pinLength={this.props.pinLength || 6}
-          onChangeText={this.props.onChangeText}
-          onSubmitEditing={this.props.onSubmitEditing}
-          style={styles.input}
-        />
-      </>
-    )
-  }
-
-  renderPlaceholder(i) {
-    const value = this.props.value[i] ? this.props.value[i] : '-'
-    return (
+const PinInput = props => {
+  const placeholder = []
+  for (let i = 0; i < props.pinLength; i++) {
+    const value = props.value[i] ? props.value[i] : '-'
+    placeholder.push(
       <Text style={styles.pinCodeText} key={i}>
         {value}
       </Text>
     )
   }
+
+  return (
+    <>
+      <TouchableOpacity
+        style={styles.pinCode}
+        onPress={() => this.textInput.focus()}
+      >
+        {placeholder}
+      </TouchableOpacity>
+      <TextInput
+        ref={ref => (this.textInput = ref)}
+        autoFocus={true}
+        value={props.value}
+        keyboardType="numeric"
+        pinLength={props.pinLength || 6}
+        onChangeText={props.onChangeText}
+        onSubmitEditing={props.onSubmitEditing}
+        style={styles.input}
+      />
+    </>
+  )
 }
+
+export default PinInput
 
 const styles = StyleSheet.create({
   pinCode: {

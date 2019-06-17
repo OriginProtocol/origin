@@ -1,37 +1,33 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 
-class LearnCard extends Component {
-  render() {
-    return (
-      <View style={styles.card}>
-        <Text style={styles.heading}>
-          <fbt desc="LearnCard.title">Blockchain & Your Personal Data</fbt>
-        </Text>
-        <Text style={styles.content}>
-          <fbt desc="LearnCard.content">
-            By creating a profile, you are associating your name and photo with
-            your Ethereum account. This means that others will be able to
-            connect your blockchain transactions to your name and photo.
-          </fbt>
-        </Text>
-        <View style={styles.buttonContainer}>
-          <OriginButton
-            size="large"
-            type="primary"
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={fbt('Got it', 'LearnCard.continue')}
-            onPress={this.props.onRequestClose}
-          />
-        </View>
-      </View>
-    )
-  }
+const LearnCard = props => {
+  ;<View style={styles.card}>
+    <Text style={styles.heading}>
+      <fbt desc="LearnCard.title">Blockchain & Your Personal Data</fbt>
+    </Text>
+    <Text style={styles.content}>
+      <fbt desc="LearnCard.content">
+        By creating a profile, you are associating your name and photo with your
+        Ethereum account. This means that others will be able to connect your
+        blockchain transactions to your name and photo.
+      </fbt>
+    </Text>
+    <View style={styles.buttonContainer}>
+      <OriginButton
+        size="large"
+        type="primary"
+        textStyle={{ fontSize: 18, fontWeight: '900' }}
+        title={fbt('Got it', 'LearnCard.continue')}
+        onPress={props.onRequestClose}
+      />
+    </View>
+  </View>
 }
 
 export default LearnCard

@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { fbt } from 'fbt-runtime'
 
@@ -8,51 +8,47 @@ import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../assets/images/'
 
-class NoRewardsCard extends Component {
-  render() {
-    return (
-      <View style={styles.card}>
-        <View style={styles.imageContainer}>
-          <Image
-            resizeMethod={'scale'}
-            resizeMode={'cover'}
-            source={require(IMAGES_PATH + 'tout-header-image.png')}
-            style={styles.image}
-          />
-        </View>
-        <Text style={styles.heading}>
-          <fbt desc="NoRewardsCard.title">
-            Are you sure you don&apos;t want Origin Rewards?
-          </fbt>
-        </Text>
-        <Text style={styles.content}>
-          <Text style={styles.subtitle}>
-            <fbt desc="NoRewardsCard.subtitle">
-              Your new wallet will be ineligible to earn OGN.
-            </fbt>
-          </Text>
-        </Text>
-        <View style={styles.buttonContainer}>
-          <OriginButton
-            size="large"
-            type="primary"
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={fbt("I'm sure", 'NoRewardsCard.continue')}
-            onPress={this.props.onConfirm}
-            style={{ marginBottom: 10 }}
-          />
-          <OriginButton
-            size="large"
-            type="primary"
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={fbt('No, wait', 'NoRewardsCard.goBack')}
-            onPress={this.props.onRequestClose}
-            outline
-          />
-        </View>
-      </View>
-    )
-  }
+const NoRewardsCard = props => {
+  ;<View style={styles.card}>
+    <View style={styles.imageContainer}>
+      <Image
+        resizeMethod={'scale'}
+        resizeMode={'cover'}
+        source={require(IMAGES_PATH + 'tout-header-image.png')}
+        style={styles.image}
+      />
+    </View>
+    <Text style={styles.heading}>
+      <fbt desc="NoRewardsCard.title">
+        Are you sure you don&apos;t want Origin Rewards?
+      </fbt>
+    </Text>
+    <Text style={styles.content}>
+      <Text style={styles.subtitle}>
+        <fbt desc="NoRewardsCard.subtitle">
+          Your new wallet will be ineligible to earn OGN.
+        </fbt>
+      </Text>
+    </Text>
+    <View style={styles.buttonContainer}>
+      <OriginButton
+        size="large"
+        type="primary"
+        textStyle={{ fontSize: 18, fontWeight: '900' }}
+        title={fbt("I'm sure", 'NoRewardsCard.continue')}
+        onPress={props.onConfirm}
+        style={{ marginBottom: 10 }}
+      />
+      <OriginButton
+        size="large"
+        type="primary"
+        textStyle={{ fontSize: 18, fontWeight: '900' }}
+        title={fbt('No, wait', 'NoRewardsCard.goBack')}
+        onPress={props.onRequestClose}
+        outline
+      />
+    </View>
+  </View>
 }
 
 export default NoRewardsCard

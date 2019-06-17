@@ -12,7 +12,6 @@ import {
 export default class OriginButton extends Component {
   constructor(props) {
     super(props)
-
     this.state = { pressed: false }
   }
 

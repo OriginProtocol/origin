@@ -1,51 +1,47 @@
-import React, { Component } from 'react'
+'use strict'
+
+import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 const IMAGES_PATH = '../../assets/images/'
 
-export default class Currency extends Component {
-  render() {
-    const {
-      abbreviation,
-      balance,
-      imageSource,
-      labelColor,
-      name,
-      precision = 5,
-      onPress
-    } = this.props
-
-    return (
-      <View style={styles.container}>
-        <View style={{ height: 28 }}>
-          <Text style={styles.name}>{name}</Text>
-          <View style={styles.colored}>
-            <Image source={imageSource} style={styles.icon} />
-            <Text
-              style={{
-                ...styles.abbreviation,
-                color: labelColor
-              }}
-            >
-              {abbreviation}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.right}>
-          <TouchableOpacity onPress={onPress}>
-            <Image
-              source={require(`${IMAGES_PATH}plus-icon.png`)}
-              style={styles.plus}
-            />
-          </TouchableOpacity>
-          <Text style={styles.balance}>
-            {Number(balance).toFixed(precision)}
-          </Text>
-        </View>
+const Currency = ({
+  abbreviation,
+  balance,
+  imageSource,
+  labelColor,
+  name,
+  precision = 5,
+  onPress
+}) => {
+  ;<View style={styles.container}>
+    <View style={{ height: 28 }}>
+      <Text style={styles.name}>{name}</Text>
+      <View style={styles.colored}>
+        <Image source={imageSource} style={styles.icon} />
+        <Text
+          style={{
+            ...styles.abbreviation,
+            color: labelColor
+          }}
+        >
+          {abbreviation}
+        </Text>
       </View>
-    )
-  }
+    </View>
+    <View style={styles.right}>
+      <TouchableOpacity onPress={onPress}>
+        <Image
+          source={require(`${IMAGES_PATH}plus-icon.png`)}
+          style={styles.plus}
+        />
+      </TouchableOpacity>
+      <Text style={styles.balance}>{Number(balance).toFixed(precision)}</Text>
+    </View>
+  </View>
 }
+
+export default Currency
 
 const styles = StyleSheet.create({
   abbreviation: {
