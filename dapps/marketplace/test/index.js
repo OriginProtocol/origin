@@ -382,7 +382,7 @@ function listingTests() {
     })
 
     it('should open the edit modal', async function() {
-      await clickBySelector(page, '.profile a.edit')
+      await clickBySelector(page, '.profile-page .profile-edit-icon')
     })
 
     it('should enter new profile information', async function() {
@@ -401,15 +401,9 @@ function listingTests() {
       await page.waitForSelector('.pl-modal', { hidden: true })
     })
 
-    it('should publish the profile changes', async function() {
-      await pic(page, 'profile-before-publish')
-      await clickByText(page, 'Publish Changes')
-    })
-
     it('should reach a success page', async function() {
-      await waitForText(page, 'Success')
+      await waitForText(page, 'Profile updated')
       await pic(page, 'profile-edited')
-      await clickByText(page, 'OK', 'button')
     })
   })
 }

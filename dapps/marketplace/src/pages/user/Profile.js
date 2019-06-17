@@ -156,11 +156,7 @@ class UserProfile extends Component {
 
     const isMobile = this.isMobile()
 
-    const verifiedAttestations = get(
-      this.props,
-      'identity.verifiedAttestations',
-      []
-    )
+    const verifiedAttestations = this.state.verifiedAttestations || []
 
     return (
       <div className="container profile-page">
@@ -197,9 +193,7 @@ class UserProfile extends Component {
                       tokenDecimals: this.props.tokenDecimals || 18
                     })}
                     earned={getTokensEarned({
-                      verifiedServices: (
-                        this.state.verifiedAttestations || []
-                      ).map(att => att.id),
+                      verifiedServices: verifiedAttestations.map(att => att.id),
                       growthCampaigns: this.props.growthCampaigns,
                       tokenDecimals: this.props.tokenDecimals || 18
                     })}
@@ -280,11 +274,7 @@ class UserProfile extends Component {
         </div>
       )
 
-    const verifiedAttestations = get(
-      this.props,
-      'identity.verifiedAttestations',
-      []
-    ).map(att => att.id)
+    const verifiedAttestations = this.state.verifiedAttestations || []
 
     const providers = this.props.attestationProviders.map(providerName => {
       const verified = verifiedAttestations.includes(providerName)
