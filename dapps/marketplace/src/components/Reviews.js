@@ -62,6 +62,10 @@ export default class Reviews extends Component {
     const { id, after } = this.props
     const first = this.props.first || 3
 
+    if (!id) {
+      console.error('Error: Reviews: id missing!')
+    }
+
     return (
       <Query
         query={query}

@@ -17,6 +17,11 @@ import { getProviderDisplayName } from 'utils/profileTools'
 const User = ({ match }) => {
   const id = match.params.id
   const vars = { id: match.params.id }
+
+  if (!id) {
+    console.error('Error: User: User ID not provided!')
+  }
+
   return (
     <div className="container user-profile">
       <Query query={query} variables={vars}>

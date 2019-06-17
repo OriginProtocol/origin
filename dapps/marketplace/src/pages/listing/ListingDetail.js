@@ -77,6 +77,12 @@ class ListingDetail extends Component {
     const { listing } = this.props
     const isMobile = this.state.mobile
 
+    if (!listing || !listing.seller || !listing.seller.id) {
+      console.error(
+        'Error: ListingDetail: Unable to get seller ID due to missing dta!'
+      )
+    }
+
     return (
       <div className="container listing-detail">
         <DocumentTitle pageTitle={listing.title} />

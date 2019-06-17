@@ -13,6 +13,7 @@ import ReactDOM from 'react-dom'
 import { ApolloProvider } from 'react-apollo'
 // import { persistCache } from 'apollo-cache-persist'
 import { HashRouter } from 'react-router-dom'
+import { createBrowserHistory } from 'history'
 import Styl from 'react-styl'
 import client from '@origin/graphql'
 import * as Sentry from '@sentry/browser'
@@ -22,6 +23,9 @@ import setLocale from 'utils/setLocale'
 import App from './pages/App'
 import Analytics from './components/Analytics'
 import './css/app.css'
+
+let browserHistory
+
 if (process.env.NODE_ENV === 'production') {
   try {
     require('../public/app.css')
@@ -34,6 +38,24 @@ if (process.env.NODE_ENV === 'production') {
       release: `marketplace-dapp@${process.env.GIT_COMMIT_HASH}`,
       environment: process.env.NAMESPACE
     })
+    // Update the `url` on route change
+    try {
+      browserHistory = createBrowserHistory()
+      browserHistory.listen(loc => {
+        console.log('browserHistory loc: ', loc)
+        Sentry.configureScope(scope => {
+          const winLoc = window.location
+          const fullURL = `${winLoc.protocol}//${winLoc.host}${loc.pathname}${
+            loc.search
+          }${loc.hash}`
+          console.debug('changed path: ', fullURL)
+          scope.setTag('url', fullURL)
+        })
+      })
+    } catch (err) {
+      console.warn('Unable to configure browser history')
+      console.debug(err)
+    }
   }
 } else {
   try {
@@ -67,7 +89,7 @@ class AppWrapper extends Component {
     if (!ready) return null
     return (
       <ApolloProvider client={client}>
-        <HashRouter>
+        <HashRouter history={browserHistory}>
           <Analytics>
             <App locale={locale} onLocale={this.onLocale} />
           </Analytics>
