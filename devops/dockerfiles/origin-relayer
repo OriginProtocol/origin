@@ -15,9 +15,7 @@ COPY yarn.lock ./
 COPY lerna.json ./
 COPY ./packages/contracts ./packages/contracts
 COPY ./packages/ip2geo ./packages/ip2geo
-COPY ./infra/bridge ./infra/bridge
 COPY ./infra/relayer ./infra/relayer
-COPY ./infra/identity ./infra/identity
 
 RUN yarn install
 
