@@ -17,6 +17,9 @@ const { transactionEmailSend, messageEmailSend } = require('./emailSend')
 const { transactionMobilePush, messageMobilePush } = require('./mobilePush')
 const MobileRegistry = require('./models').MobileRegistry
 
+const { GrowthEventTypes } = require('@origin/growth/src/enums')
+const { GrowthEvent } = require('@origin/growth/src/resources/event')
+
 const app = express()
 const port = 3456
 const emailAddress = process.env.VAPID_EMAIL_ADDRESS
@@ -215,6 +218,18 @@ app.post('/mobile/register', async (req, res) => {
     // Nothing exists, create a new row
     logger.debug('Adding new mobile device to registry: ', req.body)
     registryRow = await MobileRegistry.create(mobileRegister)
+
+    // Record a mobile install in the growth_event table.
+    await GrowthEvent.insert(
+      logger,
+      1,
+      mobileRegister.ethAddress,
+      GrowthEventTypes.MobileAppInstalled,
+      mobileRegister.deviceToken,
+      { deviceType: mobileRegister.deviceType },
+      new Date()
+    )
+
     res.sendStatus(201)
   } else {
     // Row exists, permissions might have changed, update if required

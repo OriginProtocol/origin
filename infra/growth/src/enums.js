@@ -59,7 +59,8 @@ const GrowthEventTypes = new Enum(
   'GoogleAttestationPublished',
   'ListingCreated',
   'ListingPurchased', // Buyer side event.
-  'ListingSold' // Seller side event.
+  'ListingSold', // Seller side event.
+  'MobileAppInstalled',
 )
 
 const GrowthParticipantStatuses = new Enum('Active', 'Banned')
