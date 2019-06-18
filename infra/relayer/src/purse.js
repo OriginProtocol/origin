@@ -26,6 +26,7 @@ const {
 } = require('./util')
 const logger = require('./logger')
 
+const MAX_LOCK_TIME = 15000
 const REDIS_RETRY_TIMEOUT = 30000
 const REDIS_RETRY_DELAY = 500
 const DEFAULT_CHILDREN = 5
@@ -45,6 +46,7 @@ class Account {
     this.txCount = txCount
     this.pendingCount = pendingCount // needed?
     this.wallet = wallet
+    this.locked = null
   }
 }
 
@@ -204,7 +206,8 @@ class Purse {
         const childBal = stringToBN(await this.web3.eth.getBalance(child))
         if (
           this.accounts[child].pendingCount < lowestPending &&
-          childBal.gt(MIN_CHILD_BALANCE)
+          childBal.gt(MIN_CHILD_BALANCE) &&
+          this.accounts[child].locked === null
         ) {
           lowestPending = this.accounts[child].pendingCount
           resolvedAccount = child
@@ -213,6 +216,7 @@ class Purse {
       }
 
       if (resolvedAccount) {
+        this.accounts[resolvedAccount].locked = new Date()
         break
       } else {
         logger.debug('waiting for an account to become available...')
@@ -350,6 +354,7 @@ class Purse {
 
     this.accounts[address].txCount += 1
     this.accounts[address].pendingCount += 1
+    this.accounts[address].locked = null
     if (this.rclient && this.rclient.connected) {
       await this.rclient.incrAsync(`${REDIS_TX_COUNT_PREFIX}${address}`)
     } else {
@@ -665,6 +670,26 @@ class Purse {
             this.rebroadcastCounters[txHash] += 1
           } else {
             this.rebroadcastCounters[txHash] = 1
+          }
+        }
+      }
+
+      /**
+       * Clean up any locks that are inexplicably open.  This really shouldn't happen, but it's
+       * worth clearing these in case they do otherwise the whole system could come to a halt.
+       */
+      if (interval % (MAX_LOCK_TIME / 1000) === 0) {
+        for (const child of this.children) {
+          const account = this.accounts[child]
+          if (
+            account.locked !== null &&
+            new Date(Number(account.locked) + MAX_LOCK_TIME) < new Date() &&
+            account.pendingCount === 0
+          ) {
+            logger.error(
+              'Found a locked account without any pending transactions!'
+            )
+            account.locked = false
           }
         }
       }
