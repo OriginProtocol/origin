@@ -2,7 +2,6 @@ import React from 'react'
 import { Tag } from '@blueprintjs/core'
 
 const getDisplayName = provider => {
-  // TBD: Should this be translated?
   switch (provider) {
     case 'email':
       return 'Email'

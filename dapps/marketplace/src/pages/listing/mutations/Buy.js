@@ -49,7 +49,8 @@ class Buy extends Component {
       />
     )
 
-    if (!this.props.identity || !this.props.wallet) {
+    const hasIdentity = localStorage.noIdentity || this.props.identity
+    if (!hasIdentity || !this.props.wallet) {
       action = (
         <UserActivationLink
           className={this.props.className}
@@ -58,6 +59,8 @@ class Buy extends Component {
         />
       )
     } else {
+      const hasEth = get(this.props, 'tokenStatus.hasEthBalance', false)
+
       if (this.state.error) {
         content = this.renderTransactionError()
       } else if (this.state.waitFor) {
@@ -68,6 +71,8 @@ class Buy extends Component {
         content = this.renderWaitSwapModal()
       } else if (this.state.allow) {
         content = this.renderAllowTokenModal()
+      } else if (hasEth && get(this.props, 'config.proxyAccountsEnabled')) {
+        action = this.renderMakeOfferMutation(null, true)
       } else if (!this.hasBalance()) {
         action = this.renderSwapTokenMutation(
           this.props.cannotTransact ? 'Purchase' : 'Swap Now'
@@ -248,7 +253,7 @@ class Buy extends Component {
     )
   }
 
-  renderMakeOfferMutation(btnContent) {
+  renderMakeOfferMutation(btnContent, autoswap) {
     return (
       <Mutation
         mutation={MakeOfferMutation}
@@ -262,7 +267,7 @@ class Buy extends Component {
         {makeOffer => (
           <button
             className={btnContent ? 'btn btn-clear' : this.props.className}
-            onClick={() => this.onClick(makeOffer)}
+            onClick={() => this.onClick(makeOffer, autoswap)}
             children={btnContent || this.props.children}
           />
         )}
@@ -270,7 +275,7 @@ class Buy extends Component {
     )
   }
 
-  onClick(makeOffer) {
+  onClick(makeOffer, autoswap = false) {
     if (!this.canTransact()) {
       return
     }
@@ -291,7 +296,8 @@ class Buy extends Component {
       value,
       currency: currency || 'token-ETH',
       from: this.props.walletProxy,
-      quantity: Number(quantity)
+      quantity: Number(quantity),
+      autoswap
     }
 
     if (

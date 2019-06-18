@@ -16,7 +16,6 @@ body {
   color: var(--dark);
   font-family: var(--default-font);
   font-size: 1.125rem;
-  font-weight: 300;
   height: 100%;
   line-height: 1.5;
   /* If you change background-color update color in origin/dapps/marketplace/src/pages/user/Profile.js
