@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 
-import mnemonicToAccounts from '../src/utils/mnemonicToAccount'
+import mnemonicToAccounts, { mnemonicToMasterAccount } from '../src/utils/mnemonicToAccount'
 import demoListings from './_demoListings'
 import get from 'lodash/get'
 import sortBy from 'lodash/sortBy'
@@ -199,6 +199,12 @@ export default async function populate(gqlClient, log, done) {
     autoWhitelist: true
   })
   log(`Deployed marketplace to ${Marketplace.contractAddress}`)
+
+  const relayerMasterAddress = mnemonicToMasterAccount(
+    process.env.FORWARDER_MNEMONIC || 'one two three four five six'
+  )
+  await mutate(SendFromNodeMutation, NodeAccount, { to: relayerMasterAddress, value: '3' })
+  log(`Sent eth to Relayer master account(${relayerMasterAddress})`)
 
   const ProxyFactory = await mutate(DeployProxyFactoryContractMutation, Admin)
   log(`Deployed Proxy Factory to ${ProxyFactory.contractAddress}`)
