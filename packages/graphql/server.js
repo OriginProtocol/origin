@@ -1,7 +1,4 @@
-import 'envkey'
-import dotenv from 'dotenv'
-dotenv.config()
-
+import './env'
 import server from './src/server'
 
 server
