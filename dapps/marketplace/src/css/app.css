@@ -16,10 +16,9 @@ body {
   color: var(--dark);
   font-family: var(--default-font);
   font-size: 1.125rem;
-  font-weight: 300;
   height: 100%;
   line-height: 1.5;
-  /* If you change background-color update color in origin/dapps/marketplace/src/pages/user/Profile.js 
+  /* If you change background-color update color in origin/dapps/marketplace/src/pages/user/Profile.js
    * in componentWillUnmount function.
    */
   background-color: white;
@@ -50,15 +49,6 @@ hr {
   padding: 2rem 0 0;
 }
 
-hr.dark {
-  border-bottom: 1px solid var(--steel);
-}
-
-hr.sm {
-  margin-bottom: 1rem;
-  padding-top: 1rem;
-}
-
 h1,
 h2,
 h3 {
@@ -67,8 +57,8 @@ h3 {
 }
 
 h1 {
-  font-size: 2.5rem;
-  font-weight: 200;
+  font-size: 2.25rem;
+  font-weight: 500;
   margin-bottom: 1.5rem;
 }
 

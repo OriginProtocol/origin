@@ -1,18 +1,27 @@
 import React from 'react'
 
-const ListingPic = ({ listing }) => (
-  <div className="main-pic-wrap">
-    {listing.media && listing.media.length ? (
+import get from 'lodash/get'
+
+const ListingPic = ({ listing }) => {
+  const pic = get(listing, 'media[0].urlExpanded')
+  if (!pic) {
+    return (
+      <div className="pic">
+        <div className="main-pic empty" />
+      </div>
+    )
+  }
+
+  return (
+    <div className="pic">
       <div
         className="main-pic"
         style={{
           backgroundImage: `url(${listing.media[0].urlExpanded})`
         }}
       />
-    ) : (
-      <div className="main-pic empty" />
-    )}
-  </div>
-)
+    </div>
+  )
+}
 
 export default ListingPic

@@ -5,16 +5,15 @@ import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
+import withIsMobile from 'hoc/withIsMobile'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withTokenBalance from 'hoc/withTokenBalance'
 import withGrowthRewards from 'hoc/withGrowthRewards'
 
 import Gallery from 'components/Gallery'
+import GalleryScroll from 'components/GalleryScroll'
 import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
-import ListingBadge from 'components/ListingBadge'
-import Calendar from 'components/Calendar'
-import WeekCalendar from 'components/WeekCalendar'
 import DocumentTitle from 'components/DocumentTitle'
 import Category from 'components/Category'
 
@@ -28,14 +27,14 @@ import MultiUnit from './_BuyMultiUnit'
 import Fractional from './_BuyFractional'
 import FractionalHourly from './_BuyFractionalHourly'
 
-import countryCodeMapping from '@origin/graphql/src/constants/CountryCodes'
-import { CurrenciesByCountryCode } from 'constants/Currencies'
+import GiftCardDetail from './listing-types/GiftCard'
+import FractionalNightlyDetail from './listing-types/FractionalNightly'
+import FractionalHourlyDetail from './listing-types/FractionalHourly'
 
 class ListingDetail extends Component {
   constructor(props) {
     super(props)
-    this.state = { mobile: window.innerWidth < 767 }
-    this.onResize = this.onResize.bind(this)
+    this.state = {}
     if (props.listing.__typename === 'FractionalListing') {
       this.state.availability = new AvailabilityCalculator({
         weekdayPrice: get(props, 'listing.price.amount'),
@@ -57,25 +56,8 @@ class ListingDetail extends Component {
     }
   }
 
-  componentDidMount() {
-    window.addEventListener('resize', this.onResize)
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.onResize)
-  }
-
-  onResize() {
-    if (window.innerWidth < 767 && !this.state.mobile) {
-      this.setState({ mobile: true })
-    } else if (window.innerWidth >= 767 && this.state.mobile) {
-      this.setState({ mobile: false })
-    }
-  }
-
   render() {
-    const { listing } = this.props
-    const isMobile = this.state.mobile
+    const { listing, isMobile } = this.props
 
     if (!listing || !listing.seller || !listing.seller.id) {
       console.error(
@@ -86,20 +68,13 @@ class ListingDetail extends Component {
     return (
       <div className="container listing-detail">
         <DocumentTitle pageTitle={listing.title} />
-        <div className="header">
-          <div className="category">
-            <Category listing={listing} />
-          </div>
-          <ListingBadge status={listing.status} featured={listing.featured} />
-        </div>
-        <h2>{listing.title}</h2>
-
         {isMobile ? (
           <>
+            {this.renderHeading()}
             {this.renderListing()}
             {this.renderAction()}
             <h5>
-              <fbt desc="listingDetail.about-the-seller">About the Seller</fbt>
+              <fbt desc="listingDetail.about-the-seller">About the seller</fbt>
             </h5>
             <AboutParty id={listing.seller.id} />
             <Reviews id={listing.seller.id} seller />
@@ -112,10 +87,11 @@ class ListingDetail extends Component {
               <Reviews id={listing.seller.id} seller />
             </div>
             <div className="col-md-4">
+              {this.renderHeading()}
               {this.renderAction()}
               <h5>
                 <fbt desc="listingDetail.about-the-seller">
-                  About the Seller
+                  About the seller
                 </fbt>
               </h5>
               <AboutParty id={listing.seller.id} />
@@ -130,152 +106,64 @@ class ListingDetail extends Component {
     const { listing } = this.props
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
-    const isGiftCard = listing.__typename === 'GiftCardListing'
     const isOwnerViewing = listing.seller.id === this.props.walletProxy
-    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-    const isDifferentTimeZone = listing.timeZone !== userTimeZone
+
+    const description = (
+      <div className="description">
+        <h3>
+          <fbt desc="ListingDetail.productDescription">Product Description</fbt>
+        </h3>
+        {String(listing.description).replace(/^\s+/, '')}
+      </div>
+    )
+
+    let detail = description
+
+    if (listing.__typename === 'GiftCardListing') {
+      detail = <GiftCardDetail listing={listing} description={description} />
+    } else if (isFractional) {
+      detail = (
+        <FractionalNightlyDetail
+          listing={listing}
+          description={description}
+          availability={this.state.availability}
+          isOwnerViewing={isOwnerViewing}
+          onChange={state => this.setState(state)}
+        />
+      )
+    } else if (isFractionalHourly) {
+      detail = (
+        <FractionalHourlyDetail
+          listing={listing}
+          description={description}
+          availability={this.state.availabilityHourly}
+          isOwnerViewing={isOwnerViewing}
+          onChange={state => this.setState(state)}
+        />
+      )
+    }
+
     return (
       <>
-        <Gallery pics={listing.media} />
-
-        {isGiftCard || isFractional || isFractionalHourly ? null : (
-          <div className="description">{listing.description}</div>
+        {this.props.isMobile ? (
+          <GalleryScroll pics={listing.media} />
+        ) : (
+          <Gallery pics={listing.media} />
         )}
-        {!isGiftCard ? null : (
-          <>
-            <div className="row">
-              <div className="card-details col-sm-6">
-                <div className="field-row">
-                  <span>
-                    <fbt desc="create.details.retailer">Retailer</fbt>
-                  </span>
-                  <span>{listing.retailer}</span>
-                </div>
-                <div className="field-row">
-                  <span>
-                    <fbt desc="create.details.cardAmount">Amount on Card</fbt>
-                  </span>
-                  <span>
-                    {CurrenciesByCountryCode[listing.issuingCountry][2]}
-                    {listing.cardAmount}
-                  </span>
-                </div>
-                <div className="field-row">
-                  <span>
-                    <fbt desc="create.details.issuingCountry">
-                      Issuing Country
-                    </fbt>
-                  </span>
-                  <span>
-                    <img
-                      className="country-flag-img"
-                      src={`images/flags/${listing.issuingCountry.toLowerCase()}.svg`}
-                    />
-                    {countryCodeMapping['en'][listing.issuingCountry]}
-                  </span>
-                </div>
-              </div>
-              <div className="card-details col-sm-6">
-                <div className="field-row">
-                  <span>
-                    <fbt desc="create.details.giftcard.isDigital">
-                      Card type
-                    </fbt>
-                  </span>
-                  <span>
-                    {listing.isDigital ? (
-                      <fbt desc="digital">Digital</fbt>
-                    ) : (
-                      <fbt desc="physical">Physical</fbt>
-                    )}
-                  </span>
-                </div>
-                <div className="field-row">
-                  <span>
-                    <fbt desc="create.details.giftcard.isCashPurchase">
-                      Was this a cash purchase?
-                    </fbt>
-                  </span>
-                  <span>
-                    {listing.isCashPurchase ? (
-                      <fbt desc="yes">Yes</fbt>
-                    ) : (
-                      <fbt desc="no">No</fbt>
-                    )}
-                  </span>
-                </div>
-                <div className="field-row">
-                  <span>
-                    <fbt desc="create.details.giftcard.receiptAvailable">
-                      Is a receipt available?
-                    </fbt>
-                  </span>
-                  <span>
-                    {listing.receiptAvailable ? (
-                      <fbt desc="yes">Yes</fbt>
-                    ) : (
-                      <fbt desc="no">No</fbt>
-                    )}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className="description">{listing.description}</div>
-          </>
-        )}
-        {!isFractional ? null : (
-          <>
-            <div className="description">{listing.description}</div>
-
-            <hr />
-            <Calendar
-              interactive={!isOwnerViewing}
-              small={true}
-              onChange={state => this.setState(state)}
-              availability={this.state.availability}
-              currency={listing.price.currency}
-            />
-            <div className="availability-help">
-              <fbt desc="listingDetail.calendarDateRange">
-                * Click to select start date and again to select end date.
-              </fbt>
-            </div>
-          </>
-        )}
-        {!isFractionalHourly ? null : (
-          <>
-            <div className="description">{listing.description}</div>
-
-            <hr />
-            <div className="timeZone">
-              <div>
-                <fbt desc="listingDetail.timeZone">Time Zone:</fbt>{' '}
-                {listing.timeZone}
-                {isDifferentTimeZone && (
-                  <div>
-                    <fbt desc="listingDetail.timeZoneWarning">
-                      NOTE: This is different from your time zone of
-                      <fbt:param name="userTimeZone">{userTimeZone}</fbt:param>
-                    </fbt>
-                  </div>
-                )}
-              </div>
-            </div>
-            <WeekCalendar
-              interactive={!isOwnerViewing}
-              small={true}
-              onChange={state => this.setState(state)}
-              availability={this.state.availabilityHourly}
-              currency={listing.price.currency}
-            />
-            <div className="availability-help">
-              <fbt desc="listingDetail.weekCalendarRangeHelp">
-                * Click to select start time and again for end time
-              </fbt>
-            </div>
-          </>
-        )}
+        {detail}
       </>
+    )
+  }
+
+  renderHeading() {
+    const { listing } = this.props
+    return (
+      <div className="heading">
+        <div className="category">
+          <Category listing={listing} />
+        </div>
+        <h2>{listing.title}</h2>
+      </div>
     )
   }
 
@@ -288,9 +176,8 @@ class ListingDetail extends Component {
       b => b.id === this.props.walletProxy
     )
 
-    const growthReward = this.props.ognListingRewards[listing.id]
-
     const props = { ...this.props }
+    const growthReward = this.props.ognListingRewards[listing.id]
     if (growthReward) {
       props.growthReward = growthReward
     }
@@ -345,7 +232,7 @@ class ListingDetail extends Component {
 }
 
 export default withGrowthCampaign(
-  withWallet(withTokenBalance(withGrowthRewards(ListingDetail))),
+  withWallet(withTokenBalance(withGrowthRewards(withIsMobile(ListingDetail)))),
   {
     fetchPolicy: 'cache-first',
     queryEvenIfNotEnrolled: true,
@@ -359,11 +246,16 @@ require('react-styl')(`
 
     h2
       font-family: var(--heading-font)
-      font-size: 40px
-      font-weight: 200
+      font-size: 36px
+      font-weight: normal
       font-style: normal
       color: var(--dark)
       line-height: 1.25
+
+    h5
+      font-family: var(--heading-font)
+      font-size: 18px
+      margin-bottom: 1.25rem
 
     .header
       display: flex
@@ -383,16 +275,26 @@ require('react-styl')(`
 
     .gallery
       margin-bottom: 1rem
-
-    .main-pic
-      padding-top: 56.6%
-      background-size: contain
-      background-repeat: no-repeat
-      background-position: top center
-      border: 1px solid var(--pale-grey-two)
+      .main-pic
+        padding-top: 56.6%
+        background-size: contain
+        background-repeat: no-repeat
+        background-position: top center
+        border: 1px solid var(--pale-grey-two)
+        border-radius: 10px
+      .thumbnails
+        margin-top: 1rem
 
     .description
+      border-top: 1px solid #dde6ea
       white-space: pre-wrap
+      font-weight: normal
+      margin-top: 4rem
+      padding-top: 2rem
+      h3
+        font-family: Poppins
+        font-size: 24px
+        font-weight: 500
 
     .timeZone
       font-size: 1rem
@@ -416,14 +318,14 @@ require('react-styl')(`
       margin-right: .5rem;
 
     .listing-buy
-      padding: 1.5rem
-      border-radius: var(--default-radius)
-      background-color: var(--pale-grey-eight)
-      margin-bottom: 1rem
+      padding-bottom: 2rem
+      border-bottom: 1px solid #dde6ea
+      margin-bottom: 2rem
       .btn-primary
         border-radius: 2rem
         padding: 0.5rem 1rem
         width: 100%
+        font-size: 20px
       .quantity,.total
         font-family: var(--default-font)
         font-size: 18px
@@ -431,7 +333,7 @@ require('react-styl')(`
         font-weight: normal
         display: flex
         justify-content: space-between
-        margin-bottom: 1rem
+        margin-bottom: 1.5rem
         span:last-child
           font-weight: bold
       .total
@@ -439,42 +341,26 @@ require('react-styl')(`
 
       .price
         font-family: var(--default-font)
-        font-size: 22px
+        font-size: 36px
         color: var(--dark)
         font-weight: bold
         line-height: 1
-        margin-bottom: 1rem
+        margin-bottom: 1.5rem
         span.desc
           font-weight: normal
           margin-left: 0.25rem
+          font-size: 18px
+          color: var(--steel)
         .orig
           color: var(--steel)
           font-weight: normal
           margin-left: 1rem
           font-size: 16px
-      .price-old
-        display: flex
-        align-items: baseline
-        margin-bottom: 1.5rem
-        white-space: nowrap
-        flex-wrap: wrap
-        .eth
-          background: url(images/eth-icon.svg) no-repeat
-          background-size: 1.5rem
-          padding-left: 2rem
-          line-height: 1.5rem
-          font-family: var(--default-font)
-          font-size: 24px
-          font-weight: bold
-          font-style: normal
-          color: #000000
-          > span
-            font-weight: normal
-        .usd
-          color: var(--steel)
-          font-weight: normal
-          margin-left: 1rem
-          font-size: 16px
+          display: none
+      &.multi,&.fractional
+        .price
+          padding-bottom: 1.5rem
+          border-bottom: 1px solid #dde6ea
       &.fractional
         .choose-dates
           display: flex;

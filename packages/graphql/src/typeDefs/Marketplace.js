@@ -43,7 +43,7 @@ const ListingInterface = `
 `
 
 export const mutations = `
-extend type Mutation {
+  extend type Mutation {
     deployMarketplace(token: String!, version: String, from: String, autoWhitelist: Boolean): Transaction
 
     createListing(
@@ -82,6 +82,7 @@ extend type Mutation {
       from: String
       withdraw: String
       quantity: Int
+      autoswap: Boolean
 
       # Optional: normally inherited from listing
       arbitrator: String

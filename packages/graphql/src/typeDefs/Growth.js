@@ -33,6 +33,10 @@ module.exports = `
     Airbnb
     Facebook
     Google
+    Website
+    MobileApp
+    Kakao
+    Wechat
     Referral
     Profile
     ListingCreated
@@ -113,6 +117,7 @@ module.exports = `
     rewardEarned: GrowthPrice
     rewardPending: GrowthPrice
     reward: GrowthPrice            # information about reward
+    limit: Int!     # limit the number of total possible referrals
     # first property specifies the number of items to return
     # after is the cursor
     invites(first: Int, after: String): GrowthInviteConnection

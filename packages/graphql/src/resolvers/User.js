@@ -318,7 +318,7 @@ async function counterparty(user, { first = 100, after, id }, _, info) {
 
   const unfilteredEvents = await ec().getEvents({
     listingID: allListingIds,
-    party: [u1, u2]
+    party: [...u1, ...u2]
   })
   const unsortedEvents = unfilteredEvents.filter(e => {
     const listingOffers = allOfferIds[e.returnValues.listingID]
