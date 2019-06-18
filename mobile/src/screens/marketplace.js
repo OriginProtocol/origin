@@ -470,7 +470,10 @@ class MarketplaceScreen extends Component {
   updateIdentity = async () => {
     const graphqlResponse = await this.props.getIdentity()
     const identity = get(graphqlResponse, 'data.web3.account.identity')
-    this.props.setIdentity({ address: this.props.wallet.activeAccount.address, identity })
+    this.props.setIdentity({
+      address: this.props.wallet.activeAccount.address,
+      identity
+    })
   }
 
   updateBalance = async () => {
