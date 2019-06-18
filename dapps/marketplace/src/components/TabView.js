@@ -3,74 +3,86 @@ import get from 'lodash/get'
 
 // TBD: Notify Domen about this component
 class TabView extends Component {
-    constructor(props) {
-      super(props)
+  constructor(props) {
+    super(props)
 
-      const selectedTabId = props.selectedTabId !== undefined ? props.selectedTabId : (
-        get(props, 'tabs[0].id')
-      )
+    const selectedTabId =
+      props.selectedTabId !== undefined
+        ? props.selectedTabId
+        : get(props, 'tabs[0].id')
 
-      this.state = {
-        selectedTabId
-      }
+    this.state = {
+      selectedTabId
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.selectedTabId !== prevProps.selectedTabId) {
+      this.setState({
+        selectedTabId: this.props.selectedTabId
+      })
+    } else if (!this.state.selectedTabId && get(this.props, 'tabs.length')) {
+      this.setState({
+        selectedTabId: get(this.props, 'tabs[0].id')
+      })
     }
 
-    componentDidUpdate(prevProps, prevState) {
-      if (this.props.selectedTabId !== prevProps.selectedTabId) {
-        this.setState({
-          selectedTabId: this.props.selectedTabId
-        })
-      } else if (!this.state.selectedTabId && get(this.props, 'tabs.length')) {
-        this.setState({
-          selectedTabId: get(this.props, 'tabs[0].id')
-        })
-      }
+    if (
+      this.props.onTabChanged &&
+      this.state.selectedTabId !== prevState.selectedTabId
+    ) {
+      this.props.onTabChanged(this.state.selectedTabId)
+    }
+  }
 
-      if (this.props.onTabChanged && this.state.selectedTabId !== prevState.selectedTabId) {
-        this.props.onTabChanged(this.state.selectedTabId)
-      }
+  render() {
+    const { tabs, className } = this.props
+    const { selectedTabId } = this.state
+
+    if (!tabs || tabs.length === 0) {
+      return null
     }
 
-    render() {
-        const { tabs, className } = this.props
-        const { selectedTabId } = this.state
-
-        if (!tabs || tabs.length === 0) {
-          return null
-        }
-
-        return (
-            <div className={`tab-view${className ? ' ' + className : ''}`}>
-              <div className="tab-headers">
-                {tabs.map(({id, title}) => {
-                  const tabHeaderId = `tab-header__${id}`
-                  return (
-                    <a
-                      key={tabHeaderId}
-                      className={`tab-header ${tabHeaderId}${selectedTabId === id ? ' selected' : ''}`}
-                      onClick={() => {
-                        this.setState({
-                          selectedTabId: id
-                        })
-                      }}
-                    >{title}</a>
-                  )
-                })}
+    return (
+      <div className={`tab-view${className ? ' ' + className : ''}`}>
+        <div className="tab-headers">
+          {tabs.map(({ id, title }) => {
+            const tabHeaderId = `tab-header__${id}`
+            return (
+              <a
+                key={tabHeaderId}
+                className={`tab-header ${tabHeaderId}${
+                  selectedTabId === id ? ' selected' : ''
+                }`}
+                onClick={() => {
+                  this.setState({
+                    selectedTabId: id
+                  })
+                }}
+              >
+                {title}
+              </a>
+            )
+          })}
+        </div>
+        <div className="tab-content-container">
+          {tabs.map(({ id, component }) => {
+            const tabId = `tab-component__${id}`
+            return (
+              <div
+                key={tabId}
+                className={`tab ${tabId}${
+                  selectedTabId === id ? '' : ' d-none'
+                }`}
+              >
+                {component}
               </div>
-              <div className="tab-content-container">
-                {tabs.map(({id, component}) => {
-                  const tabId = `tab-component__${id}`
-                  return (
-                    <div
-                      key={tabId}
-                      className={`tab ${tabId}${selectedTabId === id ? '' : ' d-none'}`}
-                    >{component}</div>
-                  )
-                })}
-              </div>
-            </div>
-        )
-    }
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
 }
 
 export default TabView

@@ -100,7 +100,9 @@ export default class Reviews extends Component {
               {this.props.hideHeader ? null : (
                 <h3>
                   {this.props.seller && (
-                    <fbt desc="reviews.headingSeller">Reviews of this seller</fbt>
+                    <fbt desc="reviews.headingSeller">
+                      Reviews of this seller
+                    </fbt>
                   )}
                   {!this.props.seller && (
                     <fbt desc="reviews.headingUser">Reviews</fbt>
@@ -122,7 +124,10 @@ export default class Reviews extends Component {
                               <fbt desc="reviews.unamedUser">Unnamed User</fbt>
                             )}
                           </div>
-                          <EthAddress address={review.reviewer.id} short={true} />
+                          <EthAddress
+                            address={review.reviewer.id}
+                            short={true}
+                          />
                         </div>
                         <div className="info">
                           <div className="purchase">
@@ -136,7 +141,9 @@ export default class Reviews extends Component {
                     </div>
                     <div className="review-meta">
                       <StarRating small={true} active={review.rating} />
-                      <div className="timestamp">{distanceToNow(review.event.timestamp)}</div>
+                      <div className="timestamp">
+                        {distanceToNow(review.event.timestamp)}
+                      </div>
                     </div>
                     <div className="text">{review.review}</div>
                   </div>

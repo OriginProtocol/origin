@@ -30,7 +30,7 @@ class User extends React.Component {
     const id = match.params.id
     const vars = { id: match.params.id }
     const isMobile = ismobile === 'true'
-  
+
     return (
       <div className="container user-public-profile">
         <Query query={query} variables={vars}>
@@ -39,11 +39,15 @@ class User extends React.Component {
               return <QueryError error={error} query={query} vars={vars} />
             }
             if (loading) return <LoadingSpinner />
-  
+
             const profile = get(data, 'web3.account.identity') || {}
-  
-            const reviewsComp = <Reviews id={id} hideWhenZero hideHeader={isMobile} />
-            const listingsComp = <UserListings user={id} hideHeader={isMobile} />
+
+            const reviewsComp = (
+              <Reviews id={id} hideWhenZero hideHeader={isMobile} />
+            )
+            const listingsComp = (
+              <UserListings user={id} hideHeader={isMobile} />
+            )
             return (
               <>
                 <DocumentTitle

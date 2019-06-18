@@ -11,7 +11,12 @@ function altClick(e) {
   return e.button === 0 && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey
 }
 
-const ListingCards = ({ listings, ognListingRewards, hideCategory, horizontalList }) => {
+const ListingCards = ({
+  listings,
+  ognListingRewards,
+  hideCategory,
+  horizontalList
+}) => {
   const [redirect, setRedirect] = useState()
   if (!listings) return null
 
@@ -28,7 +33,9 @@ const ListingCards = ({ listings, ognListingRewards, hideCategory, horizontalLis
               window.open(`#/listing/${a.id}`, '_blank')
             }
           }}
-          className={`${horizontalList ? '' : 'col-md-4 col-lg-3 '}listing-card`}
+          className={`${
+            horizontalList ? '' : 'col-md-4 col-lg-3 '
+          }listing-card`}
         >
           {a.media && a.media.length ? (
             <div

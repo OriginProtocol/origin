@@ -24,7 +24,9 @@ function plainAddress(address) {
 const EthAddress = ({ address, short }) => (
   <Query query={configQuery} skip={!address}>
     {({ error, data, networkStatus }) => {
-      const addressToShow = short ? `${address.slice(0, 4)}...${address.slice(-4)}` : address
+      const addressToShow = short
+        ? `${address.slice(0, 4)}...${address.slice(-4)}`
+        : address
 
       if (networkStatus === 1 || error || !data) {
         return plainAddress(addressToShow)
