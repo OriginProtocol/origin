@@ -66,6 +66,7 @@ export default class Reviews extends Component {
       <Query
         query={query}
         variables={{ id, first, after }}
+        skip={!id}
         notifyOnNetworkStatusChange
       >
         {({ data, loading, error, fetchMore, networkStatus }) => {
