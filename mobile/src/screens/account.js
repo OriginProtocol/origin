@@ -14,9 +14,9 @@ import {
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
 
+import { setAccountActive, removeAccount } from 'actions/Wallet'
 import OriginButton from 'components/origin-button'
 import { truncateAddress } from 'utils/user'
-import withWeb3Accounts from 'hoc/withWeb3Accounts'
 
 const ONE_MINUTE = 1000 * 60
 
@@ -115,7 +115,7 @@ class AccountScreen extends Component {
     const account = navigation.getParam('account')
     const { address, privateKey, mnemonic } = account
     const multipleAccounts = wallet.accounts.length > 1
-    const isActive = address === wallet.activeAccount.address
+    const isActive = address === wallet.accounts[0].address
 
     return (
       <KeyboardAvoidingView style={styles.keyboardWrapper} behavior="padding">
@@ -243,7 +243,15 @@ const mapStateToProps = ({ wallet }) => {
   return { wallet }
 }
 
-export default withWeb3Accounts(connect(mapStateToProps)(AccountScreen))
+const mapDispatchToProps = dispatch => ({
+  removeAccount: account => dispatch(removeAccount(account)),
+  setAccountActive: account => dispatch(setAccountActive(account))
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AccountScreen)
 
 const styles = StyleSheet.create({
   keyboardWrapper: {

@@ -20,7 +20,7 @@ class BackupPrompt extends React.Component {
 
   async componentDidMount() {
     const { activation, wallet } = this.props
-    const activeAddress = get(wallet.activeAccount, 'address', null)
+    const activeAddress = get(wallet, 'account[0].address')
 
     const hasBalance =
       Object.keys(wallet.accountBalance).find(currency => {
@@ -42,8 +42,6 @@ class BackupPrompt extends React.Component {
   }
 
   renderModal() {
-    const { wallet } = this.props
-
     return (
       <Modal
         animationType="fade"
@@ -62,7 +60,7 @@ class BackupPrompt extends React.Component {
             }}
             onRequestClose={async () => {
               await this.props.setBackupWarningStatus(
-                wallet.activeAccount.address
+                this.props.wallet.accounts[0].address
               )
               this.setState({ displayBackupModal: false })
             }}

@@ -7,7 +7,7 @@ import { fbt } from 'fbt-runtime'
 import OriginButton from 'components/origin-button'
 
 const BackupCard = ({ onRequestBackup, onRequestClose, wallet }) => {
-  const isPrivateKey = wallet.activeAccount.mnemonic === undefined
+  const isPrivateKey = wallet.accounts[0].mnemonic === undefined
 
   return (
     <View style={styles.card}>

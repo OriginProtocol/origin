@@ -131,8 +131,8 @@ class PushNotifications extends Component {
 
     const registerConditions = [
       // Change of active account
-      get(prevProps.wallet.activeAccount, 'address') !==
-        get(this.props.wallet.activeAccount, 'address'),
+      get(prevProps, 'wallet.accounts[0].address') !==
+        get(this.props, 'wallet.accounts[0].address'),
       // Change of device token
       get(prevProps.settings, 'deviceToken') !==
         get(this.props.settings, 'deviceToken'),
@@ -205,7 +205,7 @@ class PushNotifications extends Component {
    * notification server
    */
   async register() {
-    const activeAddress = get(this.props, 'wallet.activeAccount.address')
+    const activeAddress = get(this.props, 'wallet.accounts[0].address')
     if (!activeAddress) {
       console.debug('No active address')
       return

@@ -31,8 +31,8 @@ import {
 } from 'actions/Marketplace'
 import { setAccountBalances, setIdentity } from 'actions/Wallet'
 import withOriginGraphql from 'hoc/withOriginGraphql'
-import withWeb3Accounts from 'hoc/withWeb3Accounts'
 import { getCurrentRoute } from '../NavigationService'
+import { PROMPT_MESSAGE, PROMPT_PUB_KEY } from '../constants'
 
 class MarketplaceScreen extends Component {
   static navigationOptions = () => {
@@ -66,6 +66,13 @@ class MarketplaceScreen extends Component {
         this.injectLanguage()
       }
     }
+    if (
+      get(prevProps, 'wallet.accounts[0].address') !==
+      get(this.props, 'wallet.accounts[0].address')
+    ) {
+      // Active account changed, update messaging keys
+      this.injectMessagingKeys()
+    }
   }
 
   /* Enables left and right swiping to go forward/back in the WebView.
@@ -90,6 +97,10 @@ class MarketplaceScreen extends Component {
     })
   }
 
+  /* Generate the signatures required for activating messaging
+   */
+  generateMessagingKeys = async () => {}
+
   /* Handles messages received from the WebView via window.postMessage.
    */
   onWebViewMessage = event => {
@@ -104,18 +115,22 @@ class MarketplaceScreen extends Component {
     const currentRoute = getCurrentRoute()
 
     if (msgData.targetFunc === 'getAccounts') {
-      // Call get account method from OriginWallet HOC
-      const response = this.props.getAccounts()
-      this.handleBridgeResponse(msgData, response)
+      this.handleBridgeResponse(msgData, this.props.wallet.accounts.map(a => a.address))
     } else if (this[msgData.targetFunc]) {
       // Function handler exists, use that
       const response = this[msgData.targetFunc].apply(this, [msgData.data])
       this.handleBridgeResponse(msgData, response)
     } else if (msgData.targetFunc === 'signPersonalMessage') {
+      const activeAccount = this.props.wallet.accounts[0]
       // Personal sign is for handling meta transaction requests
       const decodedData = JSON.parse(
         global.web3.utils.hexToUtf8(msgData.data.data)
       )
+      // Sanity check on addresses
+      if (decodedData.from !== activeAccount.address.toLowerCase()) {
+        console.error('Account mismatch')
+        return null
+      }
       const decodedTransaction = decodeTransaction(decodedData.txData)
       // If the transaction validate the sha3 hash and sign that for the relayer
       if (this.isValidMetaTransaction(decodedTransaction)) {
@@ -127,10 +142,13 @@ class MarketplaceScreen extends Component {
           { t: 'uint256', v: decodedData.nonce }
         )
         // Sign it
-        const { signature } = this.props.signPersonalMessage({
-          data: dataToSign,
-          from: decodedData.from.toLowerCase()
-        })
+        const { signature } = global.web3.eth.accounts.sign(
+          {
+            data: dataToSign,
+            from: decodedData.from.toLowerCase()
+          },
+          activeAccount.privateKey
+        )
         // Send the response back to the webview
         this.handleBridgeResponse(msgData, signature)
       } else {
@@ -211,24 +229,44 @@ class MarketplaceScreen extends Component {
    * for accounts
    */
   injectMessagingKeys = () => {
-    const keys = this.props.wallet.messagingKeys
-    if (keys) {
-      const keyInjection = `
-        (function() {
-          if (window && window.context && window.context.messaging) {
-            window.context.messaging.onPreGenKeys({
-              address: '${keys.address}',
-              signatureKey: '${keys.signatureKey}',
-              pubMessage: '${keys.pubMessage}',
-              pubSignature: '${keys.pubSignature}'
-            });
-          }
-        })()
-      `
-      if (this.dappWebView) {
-        console.debug('Injecting messaging keys')
-        this.dappWebView.injectJavaScript(keyInjection)
-      }
+    const activeAccount = this.props.wallet.accounts[0]
+    if (!activeAccount) {
+      return
+    }
+
+    let privateKey = activeAccount.privateKey
+    if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
+      privateKey = '0x' + privateKey
+    }
+
+    // Sign the first message
+    const signatureKey = global.web3.eth.accounts
+      .sign(PROMPT_MESSAGE, privateKey)
+      .signature.substring(0, 66)
+    const msgAccount = global.web3.eth.accounts.privateKeyToAccount(
+      signatureKey
+    )
+
+    // Sign the second message
+    const pubMessage = PROMPT_PUB_KEY + msgAccount.address
+    const pubSignature = global.web3.eth.accounts.sign(pubMessage, privateKey)
+      .signature
+
+    const keyInjection = `
+      (function() {
+        if (window && window.context && window.context.messaging) {
+          window.context.messaging.onPreGenKeys({
+            address: '${activeAccount.address}',
+            signatureKey: '${signatureKey}',
+            pubMessage: '${pubMessage}',
+            pubSignature: '${pubSignature}'
+          });
+        }
+      })()
+    `
+    if (this.dappWebView) {
+      console.debug('Injecting messaging keys')
+      this.dappWebView.injectJavaScript(keyInjection)
     }
   }
 
@@ -455,8 +493,9 @@ class MarketplaceScreen extends Component {
   }
 
   updateBalance = async () => {
-    if (this.props.wallet.activeAccount) {
-      const activeAddress = this.props.wallet.activeAccount.address
+    const activeAccount = this.props.wallet.accounts[0]
+    if (activeAccount) {
+      const activeAddress = activeAccount.address
       try {
         const balances = {}
         // Get ETH balance, decimals don't need modifying
@@ -519,7 +558,7 @@ class MarketplaceScreen extends Component {
                 msgData={modal.msgData}
                 fiatCurrency={this.state.fiatCurrency}
                 onConfirm={() => {
-                  this.props
+                  global.web3.eth
                     .sendTransaction(modal.msgData.data)
                     .on('transactionHash', hash => {
                       this.toggleModal(modal, hash)
@@ -537,8 +576,17 @@ class MarketplaceScreen extends Component {
               <SignatureCard
                 msgData={modal.msgData}
                 onConfirm={() => {
-                  const { signature } = this.props.signMessage(
-                    modal.msgData.data
+                  const activeAccount = this.props.wallet.accounts[0]
+                  if (
+                    modal.msgData.data.from !==
+                    activeAccount.address.toLowerCase()
+                  ) {
+                    console.error('Account mismatch')
+                    return
+                  }
+                  const { signature } = global.web3.eth.accounts.sign(
+                    modal.msgData.data,
+                    activeAccount.privateKey
                   )
                   this.toggleModal(modal, signature)
                 }}
@@ -591,12 +639,10 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default withOriginGraphql(
-  withWeb3Accounts(
-    connect(
-      mapStateToProps,
-      mapDispatchToProps
-    )(MarketplaceScreen)
-  )
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(MarketplaceScreen)
 )
 
 const styles = StyleSheet.create({

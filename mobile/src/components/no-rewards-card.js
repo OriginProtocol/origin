@@ -8,9 +8,8 @@ import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../assets/images/'
 
-const NoRewardsCard = props => {
-  /* eslint-disable-next-line no-extra-semi */
-  ;<View style={styles.card}>
+const NoRewardsCard = props => (
+  <View style={styles.card}>
     <View style={styles.imageContainer}>
       <Image
         resizeMethod={'scale'}
@@ -50,7 +49,7 @@ const NoRewardsCard = props => {
       />
     </View>
   </View>
-}
+)
 
 export default NoRewardsCard
 

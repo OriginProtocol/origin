@@ -14,9 +14,8 @@ import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 
-const NotificationCard = props => {
-  /* eslint-disable-next-line no-extra-semi */
-  ;<View style={styles.card}>
+const NotificationCard = props => (
+  <View style={styles.card}>
     <Text style={styles.heading}>
       <fbt desc="NotificationCard.heading">Enable Notifications</fbt>
     </Text>
@@ -48,7 +47,7 @@ const NotificationCard = props => {
       </Text>
     </TouchableOpacity>
   </View>
-}
+)
 
 export default NotificationCard
 

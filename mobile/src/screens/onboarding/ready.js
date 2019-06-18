@@ -50,13 +50,15 @@ class ReadyScreen extends Component {
       attestations.push(JSON.stringify(this.props.onboarding.phoneAttestation))
     }
 
-    const from = this.props.wallet.activeAccount.address
-
     console.debug('Publishing identity')
 
     let response
     try {
-      response = await this.props.publishIdentity(from, profile, attestations)
+      response = await this.props.publishIdentity(
+        this.props.wallet.accounts[0].address,
+        profile,
+        attestations
+      )
     } catch (error) {
       console.warn('Identity publication failed: ', error)
     }

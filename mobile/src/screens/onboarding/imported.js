@@ -3,7 +3,6 @@
 import React, { Component } from 'react'
 import {
   ActivityIndicator,
-  DeviceEventEmitter,
   Image,
   Modal,
   StyleSheet,
@@ -29,7 +28,7 @@ import {
   setName,
   setAvatarUri
 } from 'actions/Onboarding'
-import { setIdentity } from 'actions/Wallet'
+import { removeAccount, setIdentity } from 'actions/Wallet'
 
 const IMAGES_PATH = '../../../assets/images/'
 
@@ -47,7 +46,7 @@ class ImportedScreen extends Component {
     let response
     try {
       response = await this.props.getIdentity(
-        this.props.wallet.activeAccount.address
+        this.props.wallet.accounts[0].address
       )
     } catch (error) {
       // Skip, identity couldn't be loaded
@@ -220,10 +219,7 @@ class ImportedScreen extends Component {
               'ImportedScreen.startOverButton'
             )}
             onPress={() => {
-              DeviceEventEmitter.emit(
-                'removeAccount',
-                this.props.wallet.activeAccount
-              )
+              this.props.removeAccount(this.props.wallet.accounts[0])
               this.props.navigation.navigate('Welcome')
             }}
           />
@@ -253,6 +249,7 @@ const mapStateToProps = ({ marketplace, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
+  removeAccount: account => dispatch(removeAccount(account)),
   setEmailVerified: email => dispatch(setEmailVerified(email)),
   setPhoneVerified: phone => dispatch(setPhoneVerified(phone)),
   setName: payload => dispatch(setName(payload)),

@@ -8,8 +8,8 @@ import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
-import withWeb3Accounts from 'hoc/withWeb3Accounts'
 import OnboardingStyles from 'styles/onboarding'
+import { createAccount } from 'actions/Wallet'
 
 const IMAGES_PATH = '../../../assets/images/'
 
@@ -114,8 +114,15 @@ const mapStateToProps = ({ wallet }) => {
   return { wallet }
 }
 
-export default withWeb3Accounts(
-  withOnboardingSteps(connect(mapStateToProps)(WelcomeScreen))
+const mapDispatchToProps = dispatch => ({
+  createAccount: () => dispatch(createAccount())
+})
+
+export default withOnboardingSteps(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(WelcomeScreen)
 )
 
 const styles = StyleSheet.create({

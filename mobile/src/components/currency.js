@@ -13,9 +13,8 @@ const Currency = ({
   name,
   precision = 5,
   onPress
-}) => {
-  /* eslint-disable-next-line no-extra-semi */
-  ;<View style={styles.container}>
+}) => (
+  <View style={styles.container}>
     <View style={{ height: 28 }}>
       <Text style={styles.name}>{name}</Text>
       <View style={styles.colored}>
@@ -40,7 +39,7 @@ const Currency = ({
       <Text style={styles.balance}>{Number(balance).toFixed(precision)}</Text>
     </View>
   </View>
-}
+)
 
 export default Currency
 

@@ -6,9 +6,8 @@ import { fbt } from 'fbt-runtime'
 
 import { evenlySplitAddress, truncateAddress } from 'utils/user'
 
-const Address = ({ address, chars, label, style, onPress }) => {
-  /* eslint-disable-next-line no-extra-semi */
-  ;<TouchableOpacity
+const Address = ({ address, chars, label, style, onPress }) => (
+  <TouchableOpacity
     activeOpacity={onPress ? 0.5 : 1}
     onPress={() => {
       if (typeof onPress === 'function') {
@@ -31,6 +30,6 @@ const Address = ({ address, chars, label, style, onPress }) => {
   >
     <Text style={style}>{truncateAddress(address, chars)}</Text>
   </TouchableOpacity>
-}
+)
 
 export default Address

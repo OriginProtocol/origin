@@ -136,7 +136,7 @@ class PhoneScreen extends Component {
       method: 'POST',
       body: JSON.stringify({
         code: this.state.verificationCode,
-        identity: this.props.wallet.activeAccount.address,
+        identity: this.props.wallet.accounts[0].address,
         country_calling_code: this.state.countryCodeValue,
         phone: this.state.phoneValue
       })

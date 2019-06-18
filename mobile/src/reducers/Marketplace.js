@@ -4,7 +4,7 @@ import { MarketplaceConstants } from 'actions/Marketplace'
 
 const initialState = {
   ready: false,
-  error: null
+  error: false
 }
 
 export default function Marketplace(state = initialState, action = {}) {

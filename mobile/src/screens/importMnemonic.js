@@ -7,8 +7,8 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 
 import { setBackupWarningStatus } from 'actions/Activation'
+import { importAccountFromMnemonic } from 'actions/Wallet'
 import OriginButton from 'components/origin-button'
-import withWeb3Accounts from 'hoc/withWeb3Accounts'
 import OnboardingStyles from 'styles/onboarding'
 
 class ImportAccountScreen extends Component {
@@ -118,15 +118,15 @@ const mapStateToProps = ({ activation, settings, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
+  importAccountFromMnemonic: mnemonic =>
+    dispatch(importAccountFromMnemonic(mnemonic)),
   setBackupWarningStatus: address => dispatch(setBackupWarningStatus(address))
 })
 
-export default withWeb3Accounts(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(ImportAccountScreen)
-)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ImportAccountScreen)
 
 const styles = StyleSheet.create({
   ...OnboardingStyles,

@@ -53,7 +53,7 @@ const AccountItem = ({ item, navigation, wallet }) => {
         </View>
         {
           <View style={styles.iconContainer}>
-            {wallet.activeAccount.address === item.address && (
+            {wallet.accounts[0].address === item.address && (
               <Image
                 source={require(`${IMAGES_PATH}selected.png`)}
                 style={styles.selected}

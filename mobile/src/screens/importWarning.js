@@ -1,15 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import {
-  DeviceEventEmitter,
-  Dimensions,
-  Image,
-  Modal,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { Dimensions, Image, Modal, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
@@ -17,9 +9,9 @@ import { fbt } from 'fbt-runtime'
 import OriginButton from 'components/origin-button'
 import NoRewardsCard from 'components/no-rewards-card'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
-import withWeb3Accounts from 'hoc/withWeb3Accounts'
 import OnboardingStyles from 'styles/onboarding'
 import { setNoRewardsDismissed } from 'actions/Onboarding'
+import { removeAccount } from 'actions/Wallet'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -66,10 +58,7 @@ class ImportWarningScreen extends Component {
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Import a wallet', 'ImportWarningScreen.continueButton')}
             onPress={() => {
-              DeviceEventEmitter.emit(
-                'removeAccount',
-                this.props.wallet.activeAccount
-              )
+              this.props.removeAccount(this.props.wallet.accounts[0])
               this.props.navigation.navigate('ImportAccount')
             }}
           />
@@ -120,16 +109,15 @@ const mapStateToProps = ({ wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
+  removeAccount: account => dispatch(removeAccount(account)),
   setNoRewardsDismissed: dismissed => dispatch(setNoRewardsDismissed(dismissed))
 })
 
-export default withWeb3Accounts(
-  withOnboardingSteps(
-    connect(
-      mapStateToProps,
-      mapDispatchToProps
-    )(ImportWarningScreen)
-  )
+export default withOnboardingSteps(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ImportWarningScreen)
 )
 
 const styles = StyleSheet.create({

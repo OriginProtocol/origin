@@ -132,7 +132,7 @@ class EmailScreen extends Component {
       method: 'POST',
       body: JSON.stringify({
         code: this.state.verificationCode,
-        identity: this.props.wallet.activeAccount.address,
+        identity: this.props.wallet.accounts[0].address,
         email: this.state.emailValue
       })
     })
