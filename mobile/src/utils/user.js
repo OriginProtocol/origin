@@ -1,6 +1,7 @@
 'use strict'
 
 import Web3 from 'web3'
+import get from 'lodash.get'
 
 const web3 = new Web3()
 const MAX_ADDRESS_LENGTH = 10
@@ -56,11 +57,14 @@ export function truncate(data, chars = 5) {
  * a react-navigation navigator. The HOC is not compatible.
  */
 export function getNextOnboardingStep(onboardingStore, settingsStore) {
-  if (!onboardingStore.emailAttestation && !onboardingStore.emailVerified) {
+  if (
+    !onboardingStore.emailAttestation &&
+    !get(onboardingStore, 'verifiedAttestations', []).includes('email')
+  ) {
     return 'Email'
   } else if (
     onboardingStore.phoneAttestation === null &&
-    !onboardingStore.phoneVerified
+    !get(onboardingStore, 'verifiedAttestations', []).includes('phone')
   ) {
     return 'Phone'
   } else if (!onboardingStore.firstName || !onboardingStore.lastName) {

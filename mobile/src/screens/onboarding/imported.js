@@ -23,8 +23,7 @@ import withConfig from 'hoc/withConfig'
 import withOriginGraphql from 'hoc/withOriginGraphql'
 import OnboardingStyles from 'styles/onboarding'
 import {
-  setEmailVerified,
-  setPhoneVerified,
+  setVerifiedAttestations,
   setName,
   setAvatarUri
 } from 'actions/Onboarding'
@@ -57,8 +56,8 @@ class ImportedScreen extends Component {
     if (identity) {
       // Update the onboarding store so we know withOnboardingSteps can correctly
       // calculate the next onboardinig step based on what the user has completed
-      this.props.setEmailVerified(identity.emailVerified)
-      this.props.setPhoneVerified(identity.phoneVerified)
+      const verifiedAttestations = identity.verifiedAttestations.map(x => x.id)
+      this.props.setVerifiedAttestations(verifiedAttestations)
       this.props.setName({
         firstName: identity.firstName,
         lastName: identity.lastName
@@ -250,8 +249,8 @@ const mapStateToProps = ({ marketplace, wallet }) => {
 
 const mapDispatchToProps = dispatch => ({
   removeAccount: account => dispatch(removeAccount(account)),
-  setEmailVerified: email => dispatch(setEmailVerified(email)),
-  setPhoneVerified: phone => dispatch(setPhoneVerified(phone)),
+  setVerifiedAttestations: attestations =>
+    dispatch(setVerifiedAttestations(attestations)),
   setName: payload => dispatch(setName(payload)),
   setAvatarUri: avatarUri => dispatch(setAvatarUri(avatarUri)),
   setIdentity: identity => dispatch(setIdentity(identity))

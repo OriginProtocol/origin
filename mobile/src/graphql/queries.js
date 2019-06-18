@@ -18,6 +18,9 @@ export const identity = gql`
           avatarUrlExpanded
           strength
           attestations
+          verifiedAttestations {
+            id
+          }
         }
       }
     }

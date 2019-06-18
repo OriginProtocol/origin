@@ -4,13 +4,12 @@ import { OnboardingConstants } from 'actions/Onboarding'
 
 const initialState = {
   emailAttestation: null,
-  emailVerified: false,
   phoneAttestation: null,
-  phoneVerified: false,
   firstName: null,
   lastName: null,
   avatarUri: null,
   noRewardsDismissed: false,
+  verifiedAttestations: [],
   complete: false
 }
 
@@ -19,14 +18,11 @@ export default function Onboarding(state = initialState, action = {}) {
     case OnboardingConstants.SET_EMAIL_ATTESTATION:
       return { ...state, emailAttestation: action.emailAttestation }
 
-    case OnboardingConstants.SET_EMAIL_VERIFIED:
-      return { ...state, emailVerified: action.emailVerified }
-
     case OnboardingConstants.SET_PHONE_ATTESTATION:
       return { ...state, phoneAttestation: action.phoneAttestation }
 
-    case OnboardingConstants.SET_PHONE_VERIFIED:
-      return { ...state, phoneVerified: action.phoneVerified }
+    case OnboardingConstants.SET_VERIFIED_ATTESTATIONS:
+      return { ...state, verifiedAttestations: action.verifiedAttestations }
 
     case OnboardingConstants.SET_NAME:
       return {
