@@ -55,7 +55,7 @@ class ReadyScreen extends Component {
     let response
     try {
       response = await this.props.publishIdentity(
-        this.props.wallet.accounts[0].address,
+        this.props.wallet.activeAccount.address,
         profile,
         attestations
       )

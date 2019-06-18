@@ -60,7 +60,7 @@ class BackupPrompt extends React.Component {
             }}
             onRequestClose={async () => {
               await this.props.setBackupWarningStatus(
-                this.props.wallet.accounts[0].address
+                this.props.wallet.activeAccount.address
               )
               this.setState({ displayBackupModal: false })
             }}

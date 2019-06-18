@@ -18,18 +18,6 @@ export const identity = gql`
           avatarUrlExpanded
           strength
           attestations
-
-          facebookVerified
-          googleVerified
-          twitterVerified
-          airbnbVerified
-          phoneVerified
-          emailVerified
-          websiteVerified
-          kakaoVerified
-          githubVerified
-          linkedinVerified
-          wechatVerified
         }
       }
     }

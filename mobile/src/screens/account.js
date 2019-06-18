@@ -108,14 +108,12 @@ class AccountScreen extends Component {
     )
   }
 
-  handleSetAccountActive = () => {}
-
   render() {
     const { navigation, wallet } = this.props
     const account = navigation.getParam('account')
     const { address, privateKey, mnemonic } = account
     const multipleAccounts = wallet.accounts.length > 1
-    const isActive = address === wallet.accounts[0].address
+    const isActive = address === wallet.activeAccount.address
 
     return (
       <KeyboardAvoidingView style={styles.keyboardWrapper} behavior="padding">

@@ -46,7 +46,7 @@ class ImportedScreen extends Component {
     let response
     try {
       response = await this.props.getIdentity(
-        this.props.wallet.accounts[0].address
+        this.props.wallet.activeAccount.address
       )
     } catch (error) {
       // Skip, identity couldn't be loaded
@@ -219,7 +219,7 @@ class ImportedScreen extends Component {
               'ImportedScreen.startOverButton'
             )}
             onPress={() => {
-              this.props.removeAccount(this.props.wallet.accounts[0])
+              this.props.removeAccount(this.props.wallet.activeAccount.address)
               this.props.navigation.navigate('Welcome')
             }}
           />

@@ -13,6 +13,8 @@ import AppContainer from './Navigation'
 import NavigationService from './NavigationService'
 import setLanguage from 'utils/language'
 import { NETWORKS } from './constants'
+import { setNetwork } from 'actions/Settings'
+import { setAccountActive } from 'actions/Wallet'
 
 YellowBox.ignoreWarnings([
   // https://github.com/facebook/react-native/issues/18868
@@ -47,7 +49,22 @@ class App extends Component {
     const networkExists = NETWORKS.find(n => n.name === settings.network.name)
     // If network wasn't found, default to mainnet
     if (!networkExists) {
-      await Store.dispatch(NETWORKS.find(n => n.id === 1))
+      await Store.dispatch(setNetwork(NETWORKS.find(n => n.id === 1)))
+    }
+
+    // Verify there is a valid active account, and if not set one
+    let hasValidActiveAccount = false
+    if (wallet.activeAccount) {
+      hasValidActiveAccount = wallet.accounts.find(
+        a => a.address === wallet.activeAccount.address
+      )
+    }
+    // Setup the active account
+    if (!hasValidActiveAccount) {
+      const activeAccount = hasValidActiveAccount
+        ? wallet.activeAccount
+        : wallet.accounts[0]
+      Store.dispatch(setAccountActive(activeAccount))
     }
 
     // Set the web3 provider from the configured network

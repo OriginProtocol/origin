@@ -159,7 +159,7 @@ const TransactionCard = props => {
             {`: `}
           </Text>
           <Address
-            address={wallet.accounts[0].address}
+            address={wallet.activeAccount.address}
             style={styles.account}
           />
         </View>

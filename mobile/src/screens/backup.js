@@ -34,17 +34,19 @@ class BackupScreen extends Component {
 
   constructor(props) {
     super(props)
-    const activeAccount = this.props.wallet[0]
-    this.isPrivateKey = activeAccount.mnemonic === undefined
+
+    const { wallet } = this.props
+
+    this.isPrivateKey = wallet.activeAccount.mnemonic === undefined
 
     // Create an empty array the same length as the mnemonic to fill when
     // verifying, or null for private keys
     let verify, shuffledMnemonic
     if (!this.isPrivateKey) {
-      verify = new Array(activeAccount.mnemonic.split(' ').length).fill(
+      verify = new Array(wallet.activeAccount.mnemonic.split(' ').length).fill(
         undefined
       )
-      shuffledMnemonic = shuffleArray(activeAccount.mnemonic.split(' '))
+      shuffledMnemonic = shuffleArray(wallet.activeAccount.mnemonic.split(' '))
     }
 
     this.state = {
@@ -123,11 +125,10 @@ class BackupScreen extends Component {
 
   backupIsVerified() {
     const { wallet } = this.props
-    const activeAccount = wallet.accounts[0]
     if (this.isPrivateKey) {
-      return this.state.verify === activeAccount.privateKey
+      return this.state.verify === wallet.activeAccount.privateKey
     } else {
-      return this.state.verify.join(' ') === activeAccount.mnemonic
+      return this.state.verify.join(' ') === wallet.activeAccount.mnemonic
     }
   }
 
@@ -143,7 +144,6 @@ class BackupScreen extends Component {
 
   renderBackup() {
     const { wallet } = this.props
-    const activeAccount = wallet.accounts[0]
 
     return (
       <SafeAreaView style={styles.container}>
@@ -163,7 +163,7 @@ class BackupScreen extends Component {
                 </Text>
                 <View style={styles.privateKeyContainer}>
                   <Text style={styles.privateKey}>
-                    {activeAccount.privateKey}
+                    {wallet.activeAccount.privateKey}
                   </Text>
                 </View>
               </>
@@ -181,7 +181,7 @@ class BackupScreen extends Component {
                   </fbt>
                 </Text>
                 <View style={styles.recoveryContainer}>
-                  {activeAccount.mnemonic.split(' ').map((word, i) => {
+                  {wallet.activeAccount.mnemonic.split(' ').map((word, i) => {
                     return (
                       <View style={styles.recoveryWordContainer} key={i}>
                         <Text style={styles.recoveryWordNumber}>{i + 1} </Text>
@@ -201,8 +201,8 @@ class BackupScreen extends Component {
                 title={fbt('Copy to clipboard', 'BackupScreen.copyButton')}
                 onPress={() =>
                   this.isPrivateKey
-                    ? this.handleDangerousCopy(activeAccount.privateKey)
-                    : this.handleDangerousCopy(activeAccount.mnemonic)
+                    ? this.handleDangerousCopy(wallet.activeAccount.privateKey)
+                    : this.handleDangerousCopy(wallet.activeAccount.mnemonic)
                 }
               />
             </View>
@@ -350,7 +350,6 @@ class BackupScreen extends Component {
 
   renderSuccess() {
     const { wallet } = this.props
-    const activeAccount = wallet.accounts[0]
     const { height } = Dimensions.get('window')
     const smallScreen = height < 812
 
@@ -377,7 +376,9 @@ class BackupScreen extends Component {
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Done', 'BackupScreen.doneButton')}
             onPress={async () => {
-              await this.props.setBackupWarningStatus(activeAccount.address)
+              await this.props.setBackupWarningStatus(
+                wallet.activeAccount.address
+              )
               // Navigate to subroute to skip authentication requirement
               this.props.navigation.navigate(
                 'GuardedApp',

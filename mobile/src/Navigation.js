@@ -240,7 +240,7 @@ class MarketplaceApp extends React.Component {
         !this.props.onboarding.complete &&
         nextOnboardingStep !== 'Ready'
       ) {
-        this.props.navigation.navigate('Welcome')
+        this.props.navigation.navigate('App')
       } else if (
         ((this.props.settings.pin && this.props.settings.pin.length > 0) ||
           this.props.settings.biometryType) &&

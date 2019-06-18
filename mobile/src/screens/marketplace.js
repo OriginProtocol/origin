@@ -67,8 +67,8 @@ class MarketplaceScreen extends Component {
       }
     }
     if (
-      get(prevProps, 'wallet.accounts[0].address') !==
-      get(this.props, 'wallet.accounts[0].address')
+      get(prevProps, 'wallet.activeAccount.address') !==
+      get(this.props, 'wallet.activeAccount.address')
     ) {
       // Active account changed, update messaging keys
       this.injectMessagingKeys()
@@ -113,6 +113,7 @@ class MarketplaceScreen extends Component {
     }
 
     const currentRoute = getCurrentRoute()
+    const { wallet } = this.props
 
     if (msgData.targetFunc === 'getAccounts') {
       this.handleBridgeResponse(
@@ -124,13 +125,12 @@ class MarketplaceScreen extends Component {
       const response = this[msgData.targetFunc].apply(this, [msgData.data])
       this.handleBridgeResponse(msgData, response)
     } else if (msgData.targetFunc === 'signPersonalMessage') {
-      const activeAccount = this.props.wallet.accounts[0]
       // Personal sign is for handling meta transaction requests
       const decodedData = JSON.parse(
         global.web3.utils.hexToUtf8(msgData.data.data)
       )
       // Sanity check on addresses
-      if (decodedData.from !== activeAccount.address.toLowerCase()) {
+      if (decodedData.from !== wallet.activeAccount.address.toLowerCase()) {
         console.error('Account mismatch')
         return null
       }
@@ -150,7 +150,7 @@ class MarketplaceScreen extends Component {
             data: dataToSign,
             from: decodedData.from.toLowerCase()
           },
-          activeAccount.privateKey
+          wallet.activeAccount.privateKey
         )
         // Send the response back to the webview
         this.handleBridgeResponse(msgData, signature)
@@ -232,12 +232,13 @@ class MarketplaceScreen extends Component {
    * for accounts
    */
   injectMessagingKeys = () => {
-    const activeAccount = this.props.wallet.accounts[0]
-    if (!activeAccount) {
+    const { wallet } = this.props
+
+    if (!wallet.activeAccount) {
       return
     }
 
-    let privateKey = activeAccount.privateKey
+    let privateKey = wallet.activeAccount.privateKey
     if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
       privateKey = '0x' + privateKey
     }
@@ -259,7 +260,7 @@ class MarketplaceScreen extends Component {
       (function() {
         if (window && window.context && window.context.messaging) {
           window.context.messaging.onPreGenKeys({
-            address: '${activeAccount.address}',
+            address: '${wallet.activeAccount.address}',
             signatureKey: '${signatureKey}',
             pubMessage: '${pubMessage}',
             pubSignature: '${pubSignature}'
@@ -450,28 +451,23 @@ class MarketplaceScreen extends Component {
       // changes
       this.injectUiStateRequest()
       // Update account identity
-      this.updateIdentities()
+      this.updateIdentity()
       // Update balance
       this.updateBalance()
     }
-    periodicUpdates()
-    this.updater = setInterval(periodicUpdates, 5000)
+    // Clear existing updater if exists
     if (this.updater) {
       clearInterval(this.updater)
     }
+    periodicUpdates()
+    this.updater = setInterval(periodicUpdates, 10000)
     // Set state to ready in redux
     await this.props.setMarketplaceReady(true)
     // Make sure any error state is cleared
     await this.props.setMarketplaceWebViewError(false)
   }
 
-  updateIdentities = () => {
-    this.props.wallet.accounts.forEach(async account => {
-      await this.updateIdentity(account.address)
-    })
-  }
-
-  updateIdentity = async address => {
+  updateIdentity = async () => {
     const primaryAccount = await this.walletQuery()
     if (!primaryAccount) {
       return
@@ -482,7 +478,7 @@ class MarketplaceScreen extends Component {
       : primaryAccount.id
     const graphqlResponse = await this.props.getIdentity(identityAddress)
     const identity = get(graphqlResponse, 'data.web3.account.identity')
-    this.props.setIdentity({ address, identity })
+    this.props.setIdentity({ address: identityAddress, identity })
   }
 
   walletQuery = async () => {
@@ -496,9 +492,8 @@ class MarketplaceScreen extends Component {
   }
 
   updateBalance = async () => {
-    const activeAccount = this.props.wallet.accounts[0]
-    if (activeAccount) {
-      const activeAddress = activeAccount.address
+    if (this.props.wallet.activeAccount) {
+      const activeAddress = this.props.wallet.activeAccount.address
       try {
         const balances = {}
         // Get ETH balance, decimals don't need modifying
@@ -579,17 +574,16 @@ class MarketplaceScreen extends Component {
               <SignatureCard
                 msgData={modal.msgData}
                 onConfirm={() => {
-                  const activeAccount = this.props.wallet.accounts[0]
                   if (
                     modal.msgData.data.from !==
-                    activeAccount.address.toLowerCase()
+                    this.props.wallet.activeAccount.address.toLowerCase()
                   ) {
                     console.error('Account mismatch')
                     return
                   }
                   const { signature } = global.web3.eth.accounts.sign(
                     modal.msgData.data,
-                    activeAccount.privateKey
+                    this.props.wallet.activeAccount.privateKey
                   )
                   this.toggleModal(modal, signature)
                 }}

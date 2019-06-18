@@ -58,7 +58,7 @@ class ImportWarningScreen extends Component {
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Import a wallet', 'ImportWarningScreen.continueButton')}
             onPress={() => {
-              this.props.removeAccount(this.props.wallet.accounts[0])
+              this.props.removeAccount(this.props.wallet.activeAccount)
               this.props.navigation.navigate('ImportAccount')
             }}
           />

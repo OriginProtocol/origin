@@ -28,7 +28,7 @@ class WalletScreen extends Component {
   }
 
   handleFunding(currency) {
-    const { address } = this.props.wallet.accounts[0]
+    const { address } = this.props.wallet.activeAccount.address
 
     Alert.alert(
       String(fbt('Funding', 'WalletScreen.fundingAlertTitle')),
@@ -82,13 +82,12 @@ class WalletScreen extends Component {
 
   render() {
     const { wallet } = this.props
-    const activeAccount = wallet.accounts[0]
 
     return (
       <>
         <View style={styles.addressContainer}>
           <Address
-            address={activeAccount.address}
+            address={wallet.activeAccount.address}
             label={fbt('Wallet Address', 'WalletScreen.addressLabel')}
             style={styles.address}
           />

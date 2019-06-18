@@ -4,6 +4,7 @@ import { WalletConstants } from 'actions/Wallet'
 
 const initialState = {
   accounts: [],
+  activeAccount: null,
   accountBalance: {
     eth: 0,
     dai: 0,
@@ -24,7 +25,8 @@ export default function Wallet(state = initialState, action = {}) {
       if (!exists && action.account.address && action.account.privateKey) {
         return {
           ...state,
-          accounts: [action.account, ...state.accounts]
+          accounts: [...state.accounts, action.account],
+          activeAccount: action.account
         }
       } else {
         return state
@@ -39,16 +41,10 @@ export default function Wallet(state = initialState, action = {}) {
       }
 
     case WalletConstants.SET_ACCOUNT_ACTIVE:
-      const activeAccountIndex = state.accounts.find(
-        a => a.address !== action.account.address
-      )
-      if (activeAccountIndex !== -1) {
+      if (action.account.address && action.account.privateKey) {
         return {
           ...state,
-          accounts: [
-            state.accounts[activeAccountIndex],
-            ...state.accounts.splice(activeAccountIndex, 1)
-          ]
+          activeAccount: action.account
         }
       } else {
         return state
