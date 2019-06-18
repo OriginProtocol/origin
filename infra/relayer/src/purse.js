@@ -686,6 +686,7 @@ class Purse {
 
       /**
        * Handle incoming receipts and remove pending transactions and adjust pending counts.
+       * TODO: refactor to create a Promise for each of these?
        */
       const pendingHashes = Object.keys(this.pendingTransactions)
       for (const txHash of pendingHashes) {
