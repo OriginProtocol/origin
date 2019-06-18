@@ -326,7 +326,7 @@ require('react-styl')(`
       .image-holder
         position: relative
       .title
-        font-size: 1.31rem
+        font-size: 21px
         font-weight: bold
         line-height: 1.25
       .info-text
@@ -391,7 +391,7 @@ require('react-styl')(`
       .background
         width: 2.5rem
       .reward .value
-        font-size: 0.875rem
+        font-size: 14px
       .listingsold
         left: 9px
         top: 10px
