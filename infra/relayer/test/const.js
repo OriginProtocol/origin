@@ -15,6 +15,7 @@ module.exports = {
   // Amounts in BN
   ZERO: new BN('0', 10),
   ONE_ETHER: new BN('1000000000000000000', 10),
+  FIVE_ETHER: new BN('5000000000000000000', 10),
   TWO_GWEI: new BN('2000000000', 10),
 
   JUNK_HASH: '0x16c55d9e9ca5b673cafaa112195a5ad78ceb104e612ff2afbf34c233d6e7482b',

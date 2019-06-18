@@ -81,7 +81,7 @@ describe('Relayer', async () => {
     const masterReceipt = await web3.eth.sendTransaction({
       from: Funder,
       to: masterAddress,
-      value: web3.utils.toWei('1', 'ether'),
+      value: web3.utils.toWei('5', 'ether'),
       gas: 21000,
       gasPrice: TWO_GWEI
     })

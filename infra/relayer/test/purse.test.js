@@ -21,7 +21,7 @@ const {
   TEST_NET_ID,
   TEST_PROVIDER_URL,
   ZERO,
-  ONE_ETHER,
+  FIVE_ETHER,
   TWO_GWEI
 } = require('./const')
 
@@ -53,7 +53,7 @@ describe('Purse', () => {
       const tx = await web3.eth.sendTransaction({
         to: masterAddress,
         from: Funder,
-        value: ONE_ETHER,
+        value: FIVE_ETHER,
         gas: 21000,
         gasPrice: TWO_GWEI
       })
@@ -63,7 +63,7 @@ describe('Purse', () => {
       assert(receipt.status)
     
       masterBalance = await getBalance(web3, masterAddress)
-      assert(masterBalance.eq(ONE_ETHER))
+      assert(masterBalance.eq(FIVE_ETHER))
     }
 
     const actualChildCount = purse.children.length
@@ -295,14 +295,14 @@ describe('Purse', () => {
     const receipt = await web3.eth.sendTransaction({
       from: Funder,
       to: masterAddress,
-      value: ONE_ETHER,
+      value: FIVE_ETHER,
       gas: 22000,
       gasPrice: TWO_GWEI
     })
     assert(receipt.status, 'funding tx failed')
 
     masterBalance = await getBalance(web3, masterAddress)
-    assert(masterBalance.eq(ONE_ETHER), 'balance on master after funding is wrong')
+    assert(masterBalance.eq(FIVE_ETHER), 'balance on master after funding is wrong')
 
     // Wait 1s per child. 
     await wait(childCount * 1000)
@@ -370,7 +370,7 @@ describe('Purse', () => {
     const receipt = await web3.eth.sendTransaction({
       to: masterAddress,
       from: Funder,
-      value: ONE_ETHER.mul(new BN(3, 10)),
+      value: FIVE_ETHER.mul(new BN(3, 10)),
       gas: 21000,
       gasPrice: TWO_GWEI
     })
@@ -415,7 +415,7 @@ describe('Purse', () => {
       const receipt = await web3.eth.sendTransaction({
         from: Funder,
         to: masterAddress,
-        value: ONE_ETHER,
+        value: FIVE_ETHER,
         gas: 22000,
         gasPrice: TWO_GWEI
       })
@@ -449,7 +449,7 @@ describe('Purse', () => {
     const receipt = await web3.eth.sendTransaction({
       from: Funder,
       to: masterAddress,
-      value: ONE_ETHER,
+      value: FIVE_ETHER,
       gas: 22000,
       gasPrice: TWO_GWEI
     })
