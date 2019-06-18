@@ -111,11 +111,6 @@ function listingTests(autoSwap) {
       await pic(page, 'add-listing')
     })
 
-    it('should continue to boost', async function() {
-      await clickByText(page, 'Continue')
-      await pic(page, 'add-listing')
-    })
-
     it('should continue to review', async function() {
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
@@ -178,11 +173,6 @@ function listingTests(autoSwap) {
       await input.uploadFile(__dirname + '/fixtures/image-1.jpg')
       await page.waitForSelector('.image-picker .preview-row')
 
-      await pic(page, 'add-listing')
-    })
-
-    it('should continue to boost', async function() {
-      await clickByText(page, 'Continue', 'button')
       await pic(page, 'add-listing')
     })
 
@@ -282,11 +272,6 @@ function listingTests(autoSwap) {
       await pic(page, 'add-listing')
     })
 
-    it('should continue to boost', async function() {
-      await clickByText(page, 'Continue', 'button')
-      await pic(page, 'add-listing')
-    })
-
     it('should continue to review', async function() {
       await clickByText(page, 'Continue', 'button')
       await pic(page, 'add-listing')
@@ -345,7 +330,6 @@ function listingTests(autoSwap) {
       await page.focus('input[name=quantity]')
       await page.keyboard.press('Backspace')
       await page.type('input[name=quantity]', '10')
-      await clickByText(page, 'Continue')
       await clickByText(page, 'Continue')
       await clickByText(page, 'Done')
       await clickByText(page, 'View Listing', 'button')

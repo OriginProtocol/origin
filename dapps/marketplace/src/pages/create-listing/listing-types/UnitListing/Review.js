@@ -13,7 +13,7 @@ import FormattedDescription from 'components/FormattedDescription'
 import CreateListing from '../../mutations/CreateListing'
 import UpdateListing from '../../mutations/UpdateListing'
 
-const Review = ({ listing }) => {
+const Review = ({ listing, ...props }) => {
   const quantity = Number(listing.quantity || 0)
 
   return (
@@ -93,21 +93,21 @@ const Review = ({ listing }) => {
         </div>
 
         <div className="actions">
-          <Link className="btn btn-outline-primary" to={this.props.prev}>
+          <Link className="btn btn-outline-primary" to={props.prev}>
             <fbt desc="back">Back</fbt>
           </Link>
           {listing.id ? (
             <UpdateListing
               listing={listing}
-              tokenBalance={this.props.tokenBalance}
-              refetch={this.props.refetch}
+              tokenBalance={props.tokenBalance}
+              refetch={props.refetch}
               className="btn btn-primary"
               children={fbt('Done', 'Done')}
             />
           ) : (
             <CreateListing
               listing={listing}
-              tokenBalance={this.props.tokenBalance}
+              tokenBalance={props.tokenBalance}
               className="btn btn-primary"
               children={fbt('Done', 'Done')}
             />

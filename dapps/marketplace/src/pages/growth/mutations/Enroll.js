@@ -138,7 +138,7 @@ class Enroll extends Component {
                               loop
                             >
                               <source
-                                src="images/growth/metamask_in_browser_dark_bg.mp4"
+                                src="images/metamask.mp4"
                                 type="video/mp4"
                               />
                               <fbt desc="growth.errorVideoTag">
