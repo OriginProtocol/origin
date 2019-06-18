@@ -44,6 +44,7 @@ server.listen({ port: 4000 }).then(srv => {
     const output = process.argv[2] || 'contracts'
     try {
       const path = `${__dirname}/../../contracts/build/${output}.json`
+      console.log(`Writing addresses to ${path}`)
       const json = JSON.stringify(addresses, null, 4)
       fs.writeFileSync(path, json)
     } catch (e) {

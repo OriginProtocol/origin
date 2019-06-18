@@ -22,13 +22,15 @@
     "logplease": "^1.2.15",
     "per-env": "^1.0.2",
     "pg": "^7.7.1",
+    "redis": "^2.8.0",
     "sequelize": "^5.0.0-beta.14",
     "sequelize-cli": "^5.4.0",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
     "mocha": "^5.2.0",
-    "nodemon": "^1.18.7"
+    "nodemon": "^1.18.7",
+    "prettier": "^1.16.4"
   },
   "scripts": {
     "lint": "eslint . && npm run prettier:check",
@@ -38,7 +40,7 @@
     "start": "per-env",
     "start:development": "nodemon src/app.js",
     "start:production": "node src/app.js",
-    "test": "NODE_ENV=test mocha --timeout 10000 --exit"
+    "test": "NODE_ENV=test mocha --timeout 10000 --file test/setup --exit"
   },
   "prettier": {
     "semi": false,

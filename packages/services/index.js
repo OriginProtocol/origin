@@ -188,7 +188,7 @@ const startRelayer = () =>
       env: {
         ...process.env,
         NETWORK_ID: '999',
-        LOG_LEVEL: 'NONE'
+        LOG_LEVEL: process.env.LOG_LEVEL || 'NONE'
       }
     })
     startServer.on('exit', () => {
