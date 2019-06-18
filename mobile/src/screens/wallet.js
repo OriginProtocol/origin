@@ -28,7 +28,7 @@ class WalletScreen extends Component {
   }
 
   handleFunding(currency) {
-    const { address } = this.props.wallet.activeAccount.address
+    const { address } = this.props.wallet.activeAccount
 
     Alert.alert(
       String(fbt('Funding', 'WalletScreen.fundingAlertTitle')),
