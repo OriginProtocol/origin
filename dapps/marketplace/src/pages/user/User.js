@@ -17,9 +17,10 @@ import { getProviderDisplayName } from 'utils/profileTools'
 const User = ({ match }) => {
   const id = match.params.id
   const vars = { id: match.params.id }
+
   return (
     <div className="container user-profile">
-      <Query query={query} variables={vars}>
+      <Query query={query} variables={vars} skip={!id}>
         {({ data, loading, error }) => {
           if (error) {
             return <QueryError error={error} query={query} vars={vars} />
