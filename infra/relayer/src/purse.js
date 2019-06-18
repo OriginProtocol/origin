@@ -32,8 +32,8 @@ const REDIS_RETRY_DELAY = 500
 const DEFAULT_CHILDREN = 5
 const DEFAULT_MAX_PENDING_PER_ACCOUNT = 3
 const ZERO = new BN('0', 10)
-const BASE_FUND_VALUE = new BN('50000000000000000', 10) // 0.05 Ether
-const MIN_CHILD_BALANCE = new BN('1000000000000000', 10) // 0.001 Ether
+const BASE_FUND_VALUE = new BN('500000000000000000', 10) // 0.5 Ether
+const MIN_CHILD_BALANCE = new BN('10000000000000000', 10) // 0.1 Ether
 const MAX_GAS_PRICE = new BN('20000000000', 10) // 20 gwei
 const REDIS_TX_COUNT_PREFIX = 'txcount_'
 const REDIS_PENDING_KEY = `pending_txs`
@@ -710,7 +710,7 @@ class Purse {
           delete this.receiptCallbacks[txHash]
         }
 
-        delete this.pendingTransactions[txHash]
+        await this.removePending(txHash)
 
         logger.debug(`Removed ${txHash} from pending`)
 
