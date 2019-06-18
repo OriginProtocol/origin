@@ -344,40 +344,40 @@ async function getAuthUrl(provider, args) {
   return authData.url
 }
 
-// The order of this list will affect the order of rendering in DApp
-const ATTESTATION_PROVIDERS = [
-  'email',
-  'phone',
-  'facebook',
-  'twitter',
-  'airbnb',
-  'google'
-]
-
-if (process.env.ENABLE_WEBSITE_ATTESTATION === 'true') {
-  ATTESTATION_PROVIDERS.push('website')
-}
-
-if (process.env.ENABLE_KAKAO_ATTESTATION === 'true') {
-  ATTESTATION_PROVIDERS.push('kakao')
-}
-
-if (process.env.ENABLE_GITHUB_ATTESTATION === 'true') {
-  ATTESTATION_PROVIDERS.push('github')
-}
-
-if (process.env.ENABLE_LINKEDIN_ATTESTATION === 'true') {
-  ATTESTATION_PROVIDERS.push('linkedin')
-}
-
-if (process.env.ENABLE_WECHAT_ATTESTATION === 'true') {
-  ATTESTATION_PROVIDERS.push('wechat')
-}
-
 /**
  * Returns a list of all supported attestation providers
  */
 function getAttestationProviders() {
+  // The order of this list will affect the order of rendering in DApp
+  const ATTESTATION_PROVIDERS = [
+    'email',
+    'phone',
+    'facebook',
+    'twitter',
+    'airbnb',
+    'google'
+  ]
+
+  if (process.env.ENABLE_WEBSITE_ATTESTATION === 'true') {
+    ATTESTATION_PROVIDERS.push('website')
+  }
+
+  if (process.env.ENABLE_KAKAO_ATTESTATION === 'true') {
+    ATTESTATION_PROVIDERS.push('kakao')
+  }
+
+  if (process.env.ENABLE_GITHUB_ATTESTATION === 'true') {
+    ATTESTATION_PROVIDERS.push('github')
+  }
+
+  if (process.env.ENABLE_LINKEDIN_ATTESTATION === 'true') {
+    ATTESTATION_PROVIDERS.push('linkedin')
+  }
+
+  if (process.env.ENABLE_WECHAT_ATTESTATION === 'true') {
+    ATTESTATION_PROVIDERS.push('wechat')
+  }
+
   return ATTESTATION_PROVIDERS
 }
 
