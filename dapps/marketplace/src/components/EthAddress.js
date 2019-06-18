@@ -21,15 +21,17 @@ function plainAddress(address) {
   return <span className="eth-address">{address}</span>
 }
 
-const EthAddress = ({ address }) => (
+const EthAddress = ({ address, short }) => (
   <Query query={configQuery} skip={!address}>
     {({ error, data, networkStatus }) => {
+      const addressToShow = short ? `${address.slice(0, 4)}...${address.slice(-4)}` : address
+
       if (networkStatus === 1 || error || !data) {
-        return plainAddress(address)
+        return plainAddress(addressToShow)
       }
       const prefix = urlForNetwork(data.config)
       if (!prefix) {
-        return plainAddress(address)
+        return plainAddress(addressToShow)
       }
       return (
         <a
@@ -39,7 +41,7 @@ const EthAddress = ({ address }) => (
           rel="noopener noreferrer"
           onClick={e => e.stopPropagation()}
         >
-          {address}
+          {addressToShow}
         </a>
       )
     }}

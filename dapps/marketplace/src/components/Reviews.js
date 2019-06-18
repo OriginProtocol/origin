@@ -97,14 +97,16 @@ export default class Reviews extends Component {
 
           return (
             <div className="reviews">
-              <h3>
-                {this.props.seller && (
-                  <fbt desc="reviews.headingSeller">Reviews of this seller</fbt>
-                )}
-                {!this.props.seller && (
-                  <fbt desc="reviews.headingUser">Reviews of this user</fbt>
-                )}
-              </h3>
+              {this.props.hideHeader ? null : (
+                <h3>
+                  {this.props.seller && (
+                    <fbt desc="reviews.headingSeller">Reviews of this seller</fbt>
+                  )}
+                  {!this.props.seller && (
+                    <fbt desc="reviews.headingUser">Reviews</fbt>
+                  )}
+                </h3>
+              )}
               {reviews.map((review, idx) => {
                 const profile = get(review, 'reviewer.account.identity') || {}
                 return (
@@ -120,8 +122,7 @@ export default class Reviews extends Component {
                               <fbt desc="reviews.unamedUser">Unnamed User</fbt>
                             )}
                           </div>
-                          <EthAddress address={review.reviewer.id} />
-                          <StarRating small={true} active={review.rating} />
+                          <EthAddress address={review.reviewer.id} short={true} />
                         </div>
                         <div className="info">
                           <div className="purchase">
@@ -130,11 +131,12 @@ export default class Reviews extends Component {
                               {review.listing.title}
                             </Link>
                           </div>
-                          <div className="time">
-                            {distanceToNow(review.event.timestamp)}
-                          </div>
                         </div>
                       </div>
+                    </div>
+                    <div className="review-meta">
+                      <StarRating small={true} active={review.rating} />
+                      <div className="timestamp">{distanceToNow(review.event.timestamp)}</div>
                     </div>
                     <div className="text">{review.review}</div>
                   </div>
@@ -172,16 +174,26 @@ export default class Reviews extends Component {
 require('react-styl')(`
   .reviews
     margin-bottom: 2rem
+    h3
+      font-family: Poppins
+      font-size: 1.5rem
+      font-weight: 500
+      font-style: normal
+      font-stretch: normal
+      line-height: 1.42
+      letter-spacing: normal
+      color: var(--dark)
     .review
       .user-info
         display: flex
-        width: 100%;
+        width: 100%
         align-items: flex-start
         .avatar
           margin-right: 1rem
         .user
           min-width: 0
           flex: 1
+          margin-top: 0.6rem
           .top
             flex: 1
             min-width: 0
@@ -189,9 +201,14 @@ require('react-styl')(`
             flex-direction: row
             align-items: baseline
             .name
-              font-size: 18px
+              font-family: Lato
+              font-size: 1.1rem
               font-weight: bold
-              color: var(--black)
+              font-style: normal
+              font-stretch: normal
+              line-height: normal
+              letter-spacing: normal
+              color: #000000
               margin-right: 0.5rem
               overflow: hidden
               text-overflow: ellipsis
@@ -210,15 +227,43 @@ require('react-styl')(`
             white-space: nowrap
             overflow: hidden
             text-overflow: ellipsis
-            margin-right: 0.5rem
+            font-family: Lato
+            font-size: 1rem
+            font-weight: 300
+            font-style: normal
+            font-stretch: normal
+            line-height: normal
+            letter-spacing: normal
+            margin-top: 5px
         .info
           display: flex
           min-width: 0
           flex-direction: row
           justify-content: space-around
           color: var(--steel)
+      .review-meta
+        display: flex
+        justify-content: space-between
+        margin-top: 1.5rem
+        .timestamp
+          font-family: Lato
+          font-size: 1rem
+          font-weight: 300
+          font-style: normal
+          font-stretch: normal
+          line-height: normal
+          letter-spacing: normal
+          color: #6f8294
       .text
         margin: 0.5rem 0 3rem 0
+        font-family: Lato
+        font-size: 1rem
+        font-weight: 300
+        font-style: normal
+        font-stretch: normal
+        line-height: 1.5
+        letter-spacing: normal
+        color: var(--dark)
       &:last-child .text
         margin-bottom: 0
       &:last-of-type .text

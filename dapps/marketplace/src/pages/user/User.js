@@ -9,130 +9,106 @@ import DocumentTitle from 'components/DocumentTitle'
 import QueryError from 'components/QueryError'
 import LoadingSpinner from 'components/LoadingSpinner'
 import UserProfileCard from 'components/UserProfileCard'
+import TabView from 'components/TabView'
+
+import withIsMobile from 'hoc/withIsMobile'
 
 import UserListings from './_UserListings'
 
-const User = ({ match }) => {
-  const id = match.params.id
-  const vars = { id: match.params.id }
-  return (
-    <div className="container user-public-profile">
-      <Query query={query} variables={vars}>
-        {({ data, loading, error }) => {
-          if (error) {
-            return <QueryError error={error} query={query} vars={vars} />
-          }
-          if (loading) return <LoadingSpinner />
+class User extends React.Component {
+  componentDidMount() {
+    document.body.classList.add('has-profile-page')
+  }
 
-          const profile = get(data, 'web3.account.identity') || {}
-          return (
-            <>
-              <DocumentTitle
-                pageTitle={
-                  profile.fullName || fbt('Unnamed User', 'User.title')
-                }
-              />
-              <div className="row">
-                {/* <div className="col-md-2" /> */}
-                <div className="col-md-8">
-                  <UserProfileCard
-                    wallet={profile.id}
-                    avatarUrl={profile.avatarUrl}
-                    firstName={profile.firstName}
-                    lastName={profile.lastName}
-                    description={profile.description}
-                    verifiedAttestations={profile.verifiedAttestations}
-                  />
-                  <UserListings user={id} />
-                  <Reviews id={id} hideWhenZero />
+  componentWillUnmount() {
+    document.body.classList.remove('has-profile-page')
+  }
+
+  render() {
+    const { match, ismobile } = this.props
+
+    const id = match.params.id
+    const vars = { id: match.params.id }
+    const isMobile = ismobile === 'true'
+  
+    return (
+      <div className="container user-public-profile">
+        <Query query={query} variables={vars}>
+          {({ data, loading, error }) => {
+            if (error) {
+              return <QueryError error={error} query={query} vars={vars} />
+            }
+            if (loading) return <LoadingSpinner />
+  
+            const profile = get(data, 'web3.account.identity') || {}
+  
+            const reviewsComp = <Reviews id={id} hideWhenZero hideHeader={isMobile} />
+            const listingsComp = <UserListings user={id} />
+            return (
+              <>
+                <DocumentTitle
+                  pageTitle={
+                    profile.fullName || fbt('Unnamed User', 'User.title')
+                  }
+                />
+                <div className="row">
+                  <div className="col-md-8">
+                    <UserProfileCard
+                      wallet={profile.id}
+                      avatarUrl={profile.avatarUrl}
+                      firstName={profile.firstName}
+                      lastName={profile.lastName}
+                      description={profile.description}
+                      verifiedAttestations={profile.verifiedAttestations}
+                    />
+                    {isMobile ? (
+                      <TabView
+                        tabs={[
+                          {
+                            id: 'reviews',
+                            title: fbt('Reviews', 'Reviews'),
+                            component: reviewsComp
+                          },
+                          {
+                            id: 'listings',
+                            title: fbt('Listings', 'Listings'),
+                            component: listingsComp
+                          }
+                        ]}
+                      />
+                    ) : (
+                      <>
+                        {listingsComp}
+                        {reviewsComp}
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </>
-          )
-        }}
-      </Query>
-    </div>
-  )
+              </>
+            )
+          }}
+        </Query>
+      </div>
+    )
+  }
 }
 
-export default User
+export default withIsMobile(User)
 
 require('react-styl')(`
   .user-public-profile
     padding-top: 2rem
     > .row > .col-md-8
       margin: 0 auto
-  .user-profile
-    padding-top: 3rem
-    h1
-      line-height: 1.25
-    .listings-count
-      font-size: 32px
-    .avatar-wrap
-      .main-avatar
-        border-radius: 1rem
-    .description
-      max-width: 50rem
-      margin-bottom: 2rem
 
-    .verified-info
-      background-color: var(--pale-grey)
-      padding: 1rem
-      margin-top: 2rem
-      border-radius: 1rem
-      font-size: 14px
-      h5
-        font-size: 14px
-        margin-bottom: 0.75rem
-      > div
-        display: flex
-        align-items: center
-        margin-bottom: 0.5rem
-        &:last-child
-          margin-bottom: 0
-        .attestation
-          margin-right: 0.5rem
-          width: 1.5rem
-          height: 1.5rem
-    .reviews
-      margin-top: 2rem
-
-  .attestations
-    display: flex
-  .attestation
-    background-repeat: no-repeat
-    background-position: center
-    background-size: contain
-    width: 1.25rem
-    height: 1.25rem
-    margin-right: 0.25rem
-    &.email
-      background-image: url(images/identity/email-icon-verified.svg)
-    &.facebook
-      background-image: url(images/identity/facebook-icon-verified.svg)
-    &.phone
-      background-image: url(images/identity/phone-icon-verified.svg)
-    &.twitter
-      background-image: url(images/identity/twitter-icon-verified.svg)
-    &.airbnb
-      background-image: url(images/identity/airbnb-icon-verified.svg)
-    &.google
-      background-image: url(images/identity/google-icon-verified.svg)
-    &.website
-      background-image: url(images/identity/website-icon-verified.svg)
-    &.kakao
-      background-image: url(images/identity/kakao-icon-small.svg)
-    &.github
-      background-image: url(images/identity/github-icon-small.svg)
-    &.linkedin
-      background-image: url(images/identity/linkedin-icon-small.svg)
-    &.wechat
-      background-image: url(images/identity/wechat-icon-small.svg)
+      > .user-listings, > .reviews
+        padding: 1.5rem 0
+        border-top: 1px solid #dde6ea
+        margin-top: 0.5rem
 
   @media (max-width: 767.98px)
-    .user-profile
-      padding-top: 2rem
-      .avatar-wrap
-        max-width: 8rem
-        margin: 0 auto 1rem auto
+    .user-public-profile
+      padding-top: 0
+      > .row > .col-md-8
+        padding: 0
 `)

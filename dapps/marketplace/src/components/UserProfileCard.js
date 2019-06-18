@@ -25,7 +25,7 @@ class UserProfileCard extends Component {
 
     const isMobile = this.props.ismobile === 'true'
 
-    const hasProfileStrength = Number.isNaN(parseInt(profileStrength))
+    const hasProfileStrength = !Number.isNaN(parseInt(profileStrength))
     const shouldShowEarnings = !!maxEarnable
 
     const hasWallet = !!wallet
