@@ -26,7 +26,8 @@ const isTestEnv = env.NODE_ENV === 'test'
 
 const DefaultProviders = {
   1: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
-  4: 'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI',
+  //4: 'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI',
+  4: 'https://rinkeby.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
   999: 'http://localhost:8545',
   2222: 'https://testnet.originprotocol.com/rpc'
 }
