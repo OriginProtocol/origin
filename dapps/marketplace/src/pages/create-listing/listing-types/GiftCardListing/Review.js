@@ -6,7 +6,6 @@ import withWallet from 'hoc/withWallet'
 
 import Wallet from 'components/Wallet'
 import Price from 'components/Price'
-import CoinPrice from 'components/CoinPrice'
 import Category from 'components/Category'
 import Link from 'components/Link'
 import FormattedDescription from 'components/FormattedDescription'
@@ -54,10 +53,7 @@ class Review extends Component {
     const { ipfsGateway } = this.props.config
 
     const listing = this.addDerivedProps(this.props.listing)
-    const tokenBalance = this.props.tokenBalance
     const quantity = Number(listing.quantity || 0)
-    const isMulti = quantity > 1
-    const boost = tokenBalance >= Number(listing.boost) ? listing.boost : '0'
 
     return (
       <div className="row create-listing-review">
@@ -196,25 +192,6 @@ class Review extends Component {
                   <fbt desc="create.review.quantity">Quantity</fbt>
                 </div>
                 <div className="col-9">{listing.quantity}</div>
-              </div>
-            )}
-            <div className="row">
-              <div className="col-3 label">
-                <fbt desc="listing.review.boost-level">Boost Level</fbt>
-              </div>
-              <div className="col-9">
-                <CoinPrice price={boost} coin="ogn" />
-                {isMulti ? fbt(' / unit', 'per unit') : ''}
-              </div>
-            </div>
-            {!isMulti ? null : (
-              <div className="row">
-                <div className="col-3 label">
-                  <fbt desc="create.review.unit.boostLimit">Boost Cap</fbt>
-                </div>
-                <div className="col-9">
-                  <CoinPrice price={listing.boostLimit} coin="ogn" />
-                </div>
               </div>
             )}
             {listing.media.length <= 1 ? null : (

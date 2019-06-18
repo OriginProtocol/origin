@@ -7,7 +7,6 @@ import withWallet from 'hoc/withWallet'
 
 import Link from 'components/Link'
 import BottomScrollListener from 'components/BottomScrollListener'
-import NavLink from 'components/NavLink'
 import QueryError from 'components/QueryError'
 import Redirect from 'components/Redirect'
 import DocumentTitle from 'components/DocumentTitle'
@@ -19,30 +18,6 @@ import query from 'queries/UserNotifications'
 
 const nextPage = nextPageFactory('marketplace.user.notifications')
 
-const NavPills = () => (
-  <ul className="nav nav-pills flex-column">
-    <li className="nav-item">
-      <NavLink
-        className="nav-link"
-        to="/notifications"
-        exact
-        children={fbt('All', 'All')}
-      />
-    </li>
-    {/* TODO: Re-enable filters
-    <li clas sName="nav-item">
-      <NavLink className="nav-link" to="/notifications/all" children={fbt("All", "All")} />
-    </li>
-    <li className="nav-item">
-      <NavLink className="nav-link" to="/notifications/buy" children={fbt("Buy", "Buy")} />
-    </li>
-    <li className="nav-item">
-      <NavLink className="nav-link" to="/notifications/sell" children={fbt("Sell", "Sell")} />
-    </li>
-    */}
-  </ul>
-)
-
 class Notifications extends Component {
   state = {}
   render() {
@@ -53,7 +28,7 @@ class Notifications extends Component {
     if (!vars.id) return null
 
     return (
-      <div className="container purchases">
+      <div className="container transactions">
         <DocumentTitle
           pageTitle={<fbt desc="notifications.title">Notifications</fbt>}
         />
@@ -98,39 +73,27 @@ class Notifications extends Component {
                 onBottom={() => nextPage(fetchMore, { ...vars, after })}
               >
                 <>
-                  <h1>{`${totalCount} Notifications`}</h1>
-                  <div className="row">
-                    <div className="col-md-3">
-                      <NavPills />
-                    </div>
-                    <div className="col-md-9">
-                      <div className="notifications-list">
-                        {nodes.map(node => (
-                          <NotificationRow
-                            key={node.id}
-                            node={node}
-                            onClick={() => this.setState({ redirect: node })}
-                          />
-                        ))}
-                      </div>
-                      {!hasNextPage ? null : (
-                        <button
-                          children={
-                            networkStatus === 3
-                              ? fbt('notifications.item.loading', 'Loading')
-                              : fbt(
-                                  'notifications.item.loadmore',
-                                  'Load more...'
-                                )
-                          }
-                          className="btn btn-outline-primary btn-rounded mt-3"
-                          onClick={() =>
-                            nextPage(fetchMore, { ...vars, after })
-                          }
-                        />
-                      )}
-                    </div>
+                  <h1>{`Notifications`}</h1>
+                  <div className="notifications-list">
+                    {nodes.map(node => (
+                      <NotificationRow
+                        key={node.id}
+                        node={node}
+                        onClick={() => this.setState({ redirect: node })}
+                      />
+                    ))}
                   </div>
+                  {!hasNextPage ? null : (
+                    <button
+                      children={
+                        networkStatus === 3
+                          ? fbt('Loading', 'notifications.item.loading')
+                          : fbt('Load more...', 'notifications.item.loadmore')
+                      }
+                      className="btn btn-outline-primary btn-rounded mt-3"
+                      onClick={() => nextPage(fetchMore, { ...vars, after })}
+                    />
+                  )}
                 </>
               </BottomScrollListener>
             )
@@ -142,16 +105,14 @@ class Notifications extends Component {
 }
 
 const NoNotifications = () => (
-  <div className="row">
-    <div className="col-12 text-center">
-      <img src="images/empty-listings-graphic.svg" />
-      <h1>You don&apos;t have any notifications.</h1>
-      <p>Click below to view all listings.</p>
-      <br />
-      <Link to="/" className="btn btn-lg btn-primary btn-rounded">
-        Browse Listings
-      </Link>
-    </div>
+  <div className="text-center">
+    <img src="images/empty-listings-graphic.svg" />
+    <h1>You don&apos;t have any notifications.</h1>
+    <p>Click below to view all listings.</p>
+    <br />
+    <Link to="/" className="btn btn-lg btn-primary btn-rounded">
+      Browse Listings
+    </Link>
   </div>
 )
 
