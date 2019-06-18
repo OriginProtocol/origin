@@ -276,7 +276,7 @@ function withEnrolmentModal(WrappedComponent) {
               ? `btn-primary btn-rounded ${isMobile ? 'm-0' : ''}`
               : isMobile
               ? 'btn-primary wide-btn m-0'
-              : 'ml-2 btn-outline-light'
+              : 'btn-outline-light'
           }`}
           onClick={() => this.handleTermsContinue()}
           disabled={termsAccepted ? undefined : 'disabled'}

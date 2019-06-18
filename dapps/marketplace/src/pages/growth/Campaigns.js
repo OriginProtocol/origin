@@ -15,6 +15,7 @@ import MobileDownloadAction from 'components/growth/MobileDownloadAction'
 import ProgressBar from 'components/ProgressBar'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withIsMobile from 'hoc/withIsMobile'
+import { calculatePendingAndAvailableActions } from 'utils/growthTools'
 
 const GrowthEnum = require('Growth$FbtEnum')
 const maxProgressBarTokens = 1000
@@ -182,6 +183,7 @@ function Campaign(props) {
         isMobile={isMobile}
       />
       <ActionGroupList
+        campaign={campaign}
         actions={actions}
         decimalDivision={decimalDivision}
         isMobile={isMobile}
@@ -192,7 +194,7 @@ function Campaign(props) {
 
 class PastCampaigns extends Component {
   render() {
-    const { campaigns, decimalDivision } = this.props
+    const { campaigns, decimalDivision, isMobile } = this.props
 
     const pastCampaigns = campaigns.filter(
       campaign =>
@@ -213,12 +215,18 @@ class PastCampaigns extends Component {
 
     return (
       <div className="past-campaigns d-flex flex-column">
-        <div className="title">
-          <fbt desc="growth.campaigns.totalEarnings">Total Earnings</fbt>
-        </div>
-        <div className="total-earned d-flex mt-2 align-items-center">
-          <img className="mr-1" src="images/ogn-icon.svg" />
-          <div>{totalEarnings.toString()}</div>
+        <div
+          className={`d-flex flex-column ${
+            isMobile ? 'align-items-center' : ''
+          }`}
+        >
+          <div className="title">
+            <fbt desc="growth.campaigns.totalEarnings">Total Earnings</fbt>
+          </div>
+          <div className="total-earned d-flex mt-2 align-items-center">
+            <img className="mr-1" src="images/ogn-icon.svg" />
+            <div>{totalEarnings.toString()}</div>
+          </div>
         </div>
         <div>
           {pastCampaigns.map(campaign => {
@@ -236,13 +244,19 @@ class PastCampaigns extends Component {
                     'Campaign'
                   )}
                 </div>
-                <div className="d-flex align-items-center tokens-earned-holder">
+                <div
+                  className={`d-flex align-items-center tokens-earned-holder ${
+                    isMobile ? 'justify-content-between' : ''
+                  }`}
+                >
                   <div className="tokens-earned mr-2">
-                    <fbt desc="growth.campaigns.tokensEarned">
-                      Tokens earned
-                    </fbt>
+                    <fbt desc="growth.campaigns.totalEarned">Total earned</fbt>
                   </div>
-                  <div className="total-earned d-flex align-items-center">
+                  <div
+                    className={`total-earned d-flex align-items-center ${
+                      isMobile ? 'mr-2' : ''
+                    }`}
+                  >
                     <img className="mr-1" src="images/ogn-icon.svg" />
                     <div>{tokensEarned.toString()}</div>
                   </div>
@@ -301,6 +315,7 @@ class GrowthCampaign extends Component {
           <PastCampaigns
             campaigns={campaigns}
             decimalDivision={decimalDivision}
+            isMobile={isMobile}
           />
         )}
       </Fragment>
@@ -324,7 +339,6 @@ class GrowthCampaigns extends Component {
 
   render() {
     const navigation = get(this.props, 'match.params.navigation') || 'Campaigns'
-
     const isMobile = this.props.ismobile === 'true'
 
     return (
@@ -370,6 +384,13 @@ class GrowthCampaigns extends Component {
               campaign => campaign.status === 'Active'
             )
 
+            const {
+              completedPurchaseActions,
+              notCompletedPurchaseActions,
+              completedVerificationActions,
+              notCompletedVerificationActions
+            } = calculatePendingAndAvailableActions(activeCampaign)
+
             return (
               <Query
                 query={AccountTokenBalance}
@@ -397,6 +418,16 @@ class GrowthCampaigns extends Component {
                           accountId={accountId}
                           decimalDivision={decimalDivision}
                           isMobile={isMobile}
+                          completedVerificationActions={
+                            completedVerificationActions
+                          }
+                          notCompletedVerificationActions={
+                            notCompletedVerificationActions
+                          }
+                          completedPurchaseActions={completedPurchaseActions}
+                          notCompletedPurchaseActions={
+                            notCompletedPurchaseActions
+                          }
                         />
                       )}
                       {navigation === 'invitations' && (
@@ -408,16 +439,24 @@ class GrowthCampaigns extends Component {
                       )}
                       {navigation === 'verifications' && (
                         <Verifications
-                          campaigns={campaigns}
                           decimalDivision={decimalDivision}
                           isMobile={isMobile}
+                          completedVerificationActions={
+                            completedVerificationActions
+                          }
+                          notCompletedVerificationActions={
+                            notCompletedVerificationActions
+                          }
                         />
                       )}
                       {navigation === 'purchases' && (
                         <Purchases
-                          campaigns={campaigns}
                           decimalDivision={decimalDivision}
                           isMobile={isMobile}
+                          completedPurchaseActions={completedPurchaseActions}
+                          notCompletedPurchaseActions={
+                            notCompletedPurchaseActions
+                          }
                         />
                       )}
                     </Fragment>
@@ -475,7 +514,7 @@ require('react-styl')(`
         font-size: 1.31rem
         font-weight: bold
         font-style: normal
-        padding-top: 1.875rem
+        padding-top: 4.875rem
       .total-earned
         font-size: 38px
         font-weight: bold
@@ -518,17 +557,18 @@ require('react-styl')(`
         width: 1.875rem
     .past-campaigns
       .title
-        font-size: 1.12rem
-        padding-top: 0.8rem
+        font-size: 1.56rem
+        padding-top: 2.9rem
       .total-earned
-        font-size: 1.6rem
+        font-size: 3rem
       .total-earned img
-        width: 1.6rem
-        height: 1.6rem
+        width: 3.125rem
+        height: 3.125rem
       .past-campaign
-        margin-top: 2rem
+        margin-top: 3.5rem
         .campaign-title
           font-size: 1.3rem
+          font-weight: 500
         .tokens-earned-holder
           margin-top: 0.6rem
           .tokens-earned

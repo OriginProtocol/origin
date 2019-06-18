@@ -23,7 +23,13 @@ function NavigationItem(props) {
       className="pt-4 pr-4 navigation-item"
     >
       <div className="d-flex flex-column align-items-center">
-        <div className={`title ${isMobile ? 'px-3' : ''} ${selected ? 'active' : ''}`}>{title}</div>
+        <div
+          className={`title ${isMobile ? 'px-3' : ''} ${
+            selected ? 'active' : ''
+          }`}
+        >
+          {title}
+        </div>
         {selected && <div className="select-bar" />}
       </div>
     </a>
@@ -403,9 +409,7 @@ class GrowthInvite extends Component {
     ) => {
       return (
         <div className="track-invites">
-          <div
-            className="pt-2 d-flex justify-content-between"
-          >
+          <div className="pt-2 d-flex justify-content-between">
             <div className="emphasis">{title}</div>
             <div
               className={`reward-holder d-flex flex-column ${
@@ -416,69 +420,71 @@ class GrowthInvite extends Component {
               <div>{rewardTitle}</div>
             </div>
           </div>
-          {invites.length == 0 && <div className="explanation">
-            {emptyText}
-          </div>}
-          {invites.length > 0 && <div className="mt-3">
-            <div className="normal-font d-flex pb-2">
-              <div className={`${isMobile ? 'col-6' : 'col-4'} p-0`}>
-                <fbt desc="RewardInvite.contact">Contact</fbt>
-              </div>
-              <div className="col-2 p-0">
-                <fbt desc="RewardInvite.invite">Reward</fbt>
-              </div>
-              <div className={`${isMobile ? 'col-4' : 'col-6'} p-0`}>
-                {showStatus ? fbt('Status', 'RewardInvite.status') : ''}
-              </div>
-            </div>
-            {invites.map(invite => {
-              const name = invite.contact
-                ? invite.contact
-                : invite.walletAddress
-              return (
-                <div
-                  className="invite-row d-flex pt-2 pb-2"
-                  key={invite.pendingId}
-                >
-                  <div
-                    className={`${
-                      isMobile ? 'col-6' : 'col-4'
-                    } p-0 d-flex align-items-center`}
-                  >
-                    <div className="name">{name}</div>
-                  </div>
-                  <div className="col-2 p-0 d-flex">
-                    {renderReward(invite.reward.amount, false, false)}
-                  </div>
-                  <div
-                    className={`${
-                      isMobile ? 'col-4' : 'col-6'
-                    } p-0 d-flex justify-content-between align-items-center`}
-                  >
-                    <div>
-                      {showStatus
-                        ? fbt(
-                            'Hasn’t completed user activation',
-                            'RewardInvite.hasntCompletedActivation'
-                          )
-                        : ''}
-                    </div>
-                    <div className="pr-3">
-                      {showRemindButton && (
-                        <button
-                          className="remind-button"
-                          onClick={async e =>
-                            await this.handleRemindClick(invite.pendingId, e)
-                          }
-                          children={fbt('Remind', 'RewardInvite.remind')}
-                        />
-                      )}
-                    </div>
-                  </div>
+          {invites.length == 0 && (
+            <div className="explanation">{emptyText}</div>
+          )}
+          {invites.length > 0 && (
+            <div className="mt-3">
+              <div className="normal-font d-flex pb-2">
+                <div className={`${isMobile ? 'col-6' : 'col-4'} p-0`}>
+                  <fbt desc="RewardInvite.contact">Contact</fbt>
                 </div>
-              )
-            })}
-          </div>}
+                <div className="col-2 p-0">
+                  <fbt desc="RewardInvite.invite">Reward</fbt>
+                </div>
+                <div className={`${isMobile ? 'col-4' : 'col-6'} p-0`}>
+                  {showStatus ? fbt('Status', 'RewardInvite.status') : ''}
+                </div>
+              </div>
+              {invites.map(invite => {
+                const name = invite.contact
+                  ? invite.contact
+                  : invite.walletAddress
+                return (
+                  <div
+                    className="invite-row d-flex pt-2 pb-2"
+                    key={invite.pendingId}
+                  >
+                    <div
+                      className={`${
+                        isMobile ? 'col-6' : 'col-4'
+                      } p-0 d-flex align-items-center`}
+                    >
+                      <div className="name">{name}</div>
+                    </div>
+                    <div className="col-2 p-0 d-flex">
+                      {renderReward(invite.reward.amount, false, false)}
+                    </div>
+                    <div
+                      className={`${
+                        isMobile ? 'col-4' : 'col-6'
+                      } p-0 d-flex justify-content-between align-items-center`}
+                    >
+                      <div>
+                        {showStatus
+                          ? fbt(
+                              'Hasn’t completed user activation',
+                              'RewardInvite.hasntCompletedActivation'
+                            )
+                          : ''}
+                      </div>
+                      <div className="pr-3">
+                        {showRemindButton && (
+                          <button
+                            className="remind-button"
+                            onClick={async e =>
+                              await this.handleRemindClick(invite.pendingId, e)
+                            }
+                            children={fbt('Remind', 'RewardInvite.remind')}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
       )
     }
@@ -492,7 +498,10 @@ class GrowthInvite extends Component {
           ),
           referralAction.rewardPending.amount,
           fbt('Pending', 'RewardInvite.pendingTitle'),
-          fbt('You have no pending invitations.', 'RewardInvite.noPendingInvitations'),
+          fbt(
+            'You have no pending invitations.',
+            'RewardInvite.noPendingInvitations'
+          ),
           !isMobile,
           true
         )}
@@ -504,7 +513,10 @@ class GrowthInvite extends Component {
           ),
           referralAction.rewardEarned.amount,
           fbt('Earned', 'RewardInvite.earnedTitle'),
-          fbt('You have no successful invitations.', 'RewardInvite.noSuccessfulInvitations'),
+          fbt(
+            'You have no successful invitations.',
+            'RewardInvite.noSuccessfulInvitations'
+          ),
           false,
           false
         )}
@@ -540,7 +552,9 @@ class GrowthInvite extends Component {
                 <Link className="back d-flex mr-auto" to="/campaigns">
                   <img src="images/caret-blue.svg" />
                   <div>
-                    <fbt desc="RewardInvite.backToCampaign">Back to Campaign</fbt>
+                    <fbt desc="RewardInvite.backToCampaign">
+                      Back to Campaign
+                    </fbt>
                   </div>
                 </Link>
                 <h1 className={`mb-2 pt-md-3 mt-3`}>
@@ -554,12 +568,17 @@ class GrowthInvite extends Component {
               className={`invites-subtitle ${isMobile ? 'text-center' : ''}`}
             >
               <fbt desc="RewardInvite.getOgnByGettingFriendsToSignUp">
-                Invite friends and earn Origin Tokens when they sign up and create profiles.
+                Invite friends and earn Origin Tokens when they sign up and
+                create profiles.
               </fbt>
             </div>
           </div>
 
-          <div className={`navigation-list ${isMobile ? 'justify-content-center' : 'justify-content-left'} d-flex mt-1 mt-md-4`}>
+          <div
+            className={`navigation-list ${
+              isMobile ? 'justify-content-center' : 'justify-content-left'
+            } d-flex mt-1 mt-md-4`}
+          >
             <NavigationItem
               selected={subPage === 'sendInvites'}
               onClick={() => this.handleNavigationClick('sendInvites')}

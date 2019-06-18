@@ -4,7 +4,13 @@ import { formatTokens } from 'utils/growthTools'
 import Link from 'components/Link'
 
 function ActionGroup(props) {
-  const { isMobile, type, hasBorder } = props
+  const {
+    isMobile,
+    type,
+    hasBorder,
+    completedActions,
+    notCompletedActions
+  } = props
 
   let iconSource, title
 
@@ -17,6 +23,32 @@ function ActionGroup(props) {
   } else if (type === 'invitations') {
     iconSource = 'images/growth/invitations-icon.svg'
     title = fbt('Invitations', 'growth.actionGroup.invitations')
+  }
+
+  const sumActionRewards = (actions, type, fetchEarnedAmounts) => {
+    let aggregate = web3.utils.toBN('0')
+    actions.forEach(action => {
+      if (type === 'invitations') {
+        if (fetchEarnedAmounts) {
+          if (action.rewardEarned)
+            aggregate = web3.utils
+              .toBN(action.rewardEarned.amount)
+              .add(aggregate)
+        } else {
+          if (action.reward) {
+            aggregate = web3.utils
+              .toBN(action.reward.amount)
+              .mul(web3.utils.toBN(25))
+              .add(aggregate)
+          }
+        }
+      } else {
+        const rewardField = fetchEarnedAmounts ? 'rewardEarned' : 'reward'
+        if (action[rewardField])
+          aggregate = web3.utils.toBN(action[rewardField].amount).add(aggregate)
+      }
+    })
+    return aggregate
   }
 
   const renderReward = amount => {
@@ -54,11 +86,27 @@ function ActionGroup(props) {
       <img className="icon" src={iconSource} />
       <div className="title">{title}</div>
       {renderRewardHolder(
-        0,
-        fbt('Pending', 'RewardActions.pending'),
+        sumActionRewards(
+          type === 'invitations'
+            ? [...completedActions, ...notCompletedActions]
+            : notCompletedActions,
+          type,
+          false
+        ),
+        fbt('Available', 'RewardActions.available'),
         'ml-auto'
       )}
-      {renderRewardHolder(0, fbt('Earned', 'RewardActions.earned'), 'ml-3')}
+      {renderRewardHolder(
+        sumActionRewards(
+          type === 'invitations'
+            ? [...completedActions, ...notCompletedActions]
+            : completedActions,
+          type,
+          true
+        ),
+        fbt('Earned', 'RewardActions.earned'),
+        'ml-3'
+      )}
     </Link>
   )
 }

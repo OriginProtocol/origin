@@ -9,29 +9,10 @@ import MobileModalHeader from 'components/MobileModalHeader'
 function Purchases(props) {
   const {
     decimalDivision,
-    campaigns,
-    isMobile
+    isMobile,
+    completedPurchaseActions,
+    notCompletedPurchaseActions
   } = props
-
-  const activeCampaign = campaigns.find(
-    campaign => campaign.status === 'Active'
-  )
-
-  const purchaseRewardTypes = [
-    'ListingCreated',
-    'ListingPurchased',
-    'ListingIdPurchased',
-    'ListingSold'
-  ]
-
-  const actionCompleted = (action) => ['Exhausted', 'Completed'].includes(action.status)
-
-  const purchaseActions = activeCampaign.actions.filter(action =>
-    purchaseRewardTypes.includes(action.type)
-  )
-
-  const completedActions = purchaseActions.filter(action => actionCompleted(action))
-  const notCompletedActions = purchaseActions.filter(action => !actionCompleted(action))
 
   return (
     <Fragment>
@@ -75,14 +56,16 @@ function Purchases(props) {
         <ActionList
           decimalDivision={decimalDivision}
           isMobile={isMobile}
-          actions={notCompletedActions}
+          actions={notCompletedPurchaseActions}
         />
-        {completedActions.length > 0 && <ActionList
-          title={fbt('Completed', 'growth.purchases.completed')}
-          decimalDivision={decimalDivision}
-          isMobile={isMobile}
-          actions={completedActions}
-        />}
+        {completedPurchaseActions.length > 0 && (
+          <ActionList
+            title={fbt('Completed', 'growth.purchases.completed')}
+            decimalDivision={decimalDivision}
+            isMobile={isMobile}
+            actions={completedPurchaseActions}
+          />
+        )}
       </div>
     </Fragment>
   )

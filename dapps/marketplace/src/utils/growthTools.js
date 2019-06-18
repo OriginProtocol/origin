@@ -79,6 +79,59 @@ export function formatTokens(tokenAmount, decimalDivision) {
   )
 }
 
+export function calculatePendingAndAvailableActions(activeCampaign) {
+  const actionCompleted = action =>
+    ['Exhausted', 'Completed'].includes(action.status)
+  const purchaseRewardTypes = [
+    'ListingCreated',
+    'ListingPurchased',
+    'ListingIdPurchased',
+    'ListingSold'
+  ]
+  const verificationRewardTypes = [
+    'Email',
+    'Profile',
+    'Phone',
+    'Twitter',
+    'Airbnb',
+    'Facebook',
+    'Google',
+    'Airbnb',
+    'Facebook',
+    'Google',
+    'Website',
+    'Kakao',
+    'Wechat'
+  ]
+
+  const purchaseActions = activeCampaign.actions.filter(action =>
+    purchaseRewardTypes.includes(action.type)
+  )
+  const verificationActions = activeCampaign.actions.filter(action =>
+    verificationRewardTypes.includes(action.type)
+  )
+
+  const completedPurchaseActions = purchaseActions.filter(action =>
+    actionCompleted(action)
+  )
+  const notCompletedPurchaseActions = purchaseActions.filter(
+    action => !actionCompleted(action)
+  )
+  const completedVerificationActions = verificationActions.filter(action =>
+    actionCompleted(action)
+  )
+  const notCompletedVerificationActions = verificationActions.filter(
+    action => !actionCompleted(action)
+  )
+
+  return {
+    completedPurchaseActions,
+    notCompletedPurchaseActions,
+    completedVerificationActions,
+    notCompletedVerificationActions
+  }
+}
+
 export function getTokensEarned({
   growthCampaigns,
   verifiedServices,

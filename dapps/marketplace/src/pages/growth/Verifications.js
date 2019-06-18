@@ -9,37 +9,10 @@ import MobileModalHeader from 'components/MobileModalHeader'
 function Verifications(props) {
   const {
     decimalDivision,
-    campaigns,
-    isMobile
+    isMobile,
+    completedVerificationActions,
+    notCompletedVerificationActions
   } = props
-
-  const activeCampaign = campaigns.find(
-    campaign => campaign.status === 'Active'
-  )
-  const verificationRewardTypes = [
-    'Email',
-    'Profile',
-    'Phone',
-    'Twitter',
-    'Airbnb',
-    'Facebook',
-    'Google',
-    'Airbnb',
-    'Facebook',
-    'Google',
-    'Website',
-    'Kakao',
-    'Wechat'
-  ]
-
-  const actionCompleted = (action) => ['Exhausted', 'Completed'].includes(action.status)
-
-  const verificationActions = activeCampaign.actions.filter(action =>
-    verificationRewardTypes.includes(action.type)
-  )
-
-  const completedActions = verificationActions.filter(action => actionCompleted(action))
-  const notCompletedActions = verificationActions.filter(action => !actionCompleted(action))
 
   return (
     <Fragment>
@@ -54,28 +27,33 @@ function Verifications(props) {
           <fbt desc="GrowthVerifications.verifications">Verifications</fbt>
         </MobileModalHeader>
       )}
-      <div
-        className={`growth-verifications ${isMobile ? 'mobile' : ''}`}
-      >
+      <div className={`growth-verifications ${isMobile ? 'mobile' : ''}`}>
         <div>
           {!isMobile && (
             <Fragment>
               <Link className="back d-flex mr-auto" to="/campaigns">
                 <img src="/images/caret-blue.svg" />
                 <div>
-                  <fbt desc="GrowthVerifications.backToCampaign">Back to Campaign</fbt>
+                  <fbt desc="GrowthVerifications.backToCampaign">
+                    Back to Campaign
+                  </fbt>
                 </div>
               </Link>
               <h1 className={`mb-2 pt-md-3 mt-3`}>
-                <fbt desc="GrowthVerifications.verifications">Verifications</fbt>
+                <fbt desc="GrowthVerifications.verifications">
+                  Verifications
+                </fbt>
               </h1>
             </Fragment>
           )}
           <div
-            className={`verifications-subtitle ${isMobile ? 'text-center' : ''}`}
+            className={`verifications-subtitle ${
+              isMobile ? 'text-center' : ''
+            }`}
           >
             <fbt desc="GrowthVerifications.strenghtenToEarnTokens">
-              Strengthen your profile and earn Origin Tokens by completing verifications.
+              Strengthen your profile and earn Origin Tokens by completing
+              verifications.
             </fbt>
           </div>
         </div>
@@ -83,14 +61,16 @@ function Verifications(props) {
         <ActionList
           decimalDivision={decimalDivision}
           isMobile={isMobile}
-          actions={notCompletedActions}
+          actions={notCompletedVerificationActions}
         />
-        {completedActions.length > 0 && <ActionList
-          title={fbt('Completed', 'growth.verifications.completed')}
-          decimalDivision={decimalDivision}
-          isMobile={isMobile}
-          actions={completedActions}
-        />}
+        {completedVerificationActions.length > 0 && (
+          <ActionList
+            title={fbt('Completed', 'growth.verifications.completed')}
+            decimalDivision={decimalDivision}
+            isMobile={isMobile}
+            actions={completedVerificationActions}
+          />
+        )}
       </div>
     </Fragment>
   )

@@ -26,7 +26,7 @@ function Action(props) {
   const actionCompleted = ['Exhausted', 'Completed'].includes(status)
   // const actionCompleted = Math.random() < 0.5
   // const actionLocked = !actionCompleted && Math.random() < 0.5
-  // const reward = {currency: 'OGN', amount: '123000000000000000000'}
+  // const dapps/marketplace/src/components/ProgressBar.js  = {currency: 'OGN', amount: '123000000000000000000'}
   // const rewardEarned = {currency: 'OGN', amount: '155000000000000000000'}
 
   const [detailsToggled, toggleDetails] = useState(false)
@@ -97,22 +97,22 @@ function Action(props) {
     isVerificationAction = false
   }
 
-  const renderReward = amount => {
+  const renderReward = (amount, style = 'normal') => {
     return (
       <div
         className={`reward d-flex align-items-left pl-2 justify-content-center ${
           isMobile ? 'pr-0' : ''
         } align-items-center flex-grow-1`}
       >
-        <img src="images/ogn-icon.svg" />
-        <div className="value">
+        {style === 'normal' && <img src="images/ogn-icon.svg" />}
+        {style === 'grayed-out' && <img src="images/ogn-icon-grayed-out.svg" />}
+        <div className={`value ${style}`}>
           {formatTokens(amount, props.decimalDivision)}
         </div>
       </div>
     )
   }
 
-  let showPossibleRewardAmount = !actionCompleted && reward !== null
   const isInteractable = !actionCompleted && !actionLocked
   const showUnlockModalOnClick =
     actionLocked && isMobile && unlockConditions.length > 0
@@ -222,10 +222,20 @@ function Action(props) {
               </div>
             )}
             {isMobile && actionLocked && (
-              <img className={`status-icon ${isVerificationAction ? 'verification' : ''}`} src="images/growth/lock-icon.svg" />
+              <img
+                className={`status-icon ${
+                  isVerificationAction ? 'verification' : ''
+                }`}
+                src="images/growth/lock-icon.svg"
+              />
             )}
             {isMobile && actionCompleted && (
-              <img className={`status-icon ${isVerificationAction ? 'verification' : ''}`} src="images/growth/green-tick-icon.svg" />
+              <img
+                className={`status-icon ${
+                  isVerificationAction ? 'verification' : ''
+                }`}
+                src="images/growth/green-tick-icon.svg"
+              />
             )}
           </div>
         </div>
@@ -269,7 +279,11 @@ function Action(props) {
                 </div>
               </div>
             )}
-          {showPossibleRewardAmount && renderReward(reward.amount)}
+          {reward !== null &&
+            renderReward(
+              reward.amount,
+              actionCompleted ? 'grayed-out' : 'normal'
+            )}
           {!actionCompleted && !actionLocked && !isMobile && (
             <div className="btn btn-primary mt-2 mb-2">
               <img className="button-caret" src="images/caret-white.svg" />
@@ -280,7 +294,10 @@ function Action(props) {
           )}
           {/* Just a padding placeholder*/}
           {!isMobile && actionCompleted && (
-            <img className="status-icon" src="images/growth/green-tick-icon.svg" />
+            <img
+              className="status-icon"
+              src="images/growth/green-tick-icon.svg"
+            />
           )}
         </div>
       </div>
@@ -361,8 +378,11 @@ require('react-styl')(`
         font-size: 18px
         font-weight: bold
         color: var(--clear-blue)
-      .reward .value
-        padding-bottom: 1px
+      .reward
+        .value
+          padding-bottom: 1px
+          &.grayed-out
+            color: #c0cbd4
       .sub-text
         font-size: 14px
         font-weight: normal
