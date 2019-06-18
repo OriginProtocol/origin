@@ -115,7 +115,10 @@ class MarketplaceScreen extends Component {
     const currentRoute = getCurrentRoute()
 
     if (msgData.targetFunc === 'getAccounts') {
-      this.handleBridgeResponse(msgData, this.props.wallet.accounts.map(a => a.address))
+      this.handleBridgeResponse(
+        msgData,
+        this.props.wallet.accounts.map(a => a.address)
+      )
     } else if (this[msgData.targetFunc]) {
       // Function handler exists, use that
       const response = this[msgData.targetFunc].apply(this, [msgData.data])
