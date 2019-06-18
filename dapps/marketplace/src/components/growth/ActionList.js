@@ -149,7 +149,7 @@ require('react-styl')(`
         border-bottom: 1px solid #c0cbd4
     margin-top: 1rem
     .action-title
-      font-size: 1.125rem
+      font-size: 18px
       font-weight: normal
       font-family: Lato
       margin-left: 5px
@@ -178,7 +178,7 @@ require('react-styl')(`
   .action-list.mobile
     margin-top: 1rem
     .action-title
-      font-size: 0.875rem
+      font-size: 14px
     .filters
       .filter
         min-width: 5.31rem

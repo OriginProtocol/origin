@@ -81,7 +81,7 @@ require('react-styl')(`
       white-space: nowrap
       text-align: center
       font-family: Poppins
-      font-size: 1.5rem
+      font-size: 24px
       font-weight: 500
       color: var(--dark-grey-blue)
 `)

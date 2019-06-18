@@ -493,7 +493,7 @@ require('react-styl')(`
     .campaign-info
       padding-top: 40px
     h1
-      font-size: 2.5rem
+      font-size: 40px
       font-weight: 500
     h5
       text-align: center
@@ -503,7 +503,7 @@ require('react-styl')(`
         height: 4px
         width: 100%
       .title
-        font-size: 0.88rem
+        font-size: 14px
         line-height: 1.93
         color: var(--bluey-grey)
         font-weight: normal
@@ -512,7 +512,7 @@ require('react-styl')(`
         color: var(--dark)
     .past-campaigns
       .title
-        font-size: 1.31rem
+        font-size: 21px
         font-weight: bold
         font-style: normal
         padding-top: 4.875rem
@@ -547,35 +547,35 @@ require('react-styl')(`
           height: 20px
   .growth-campaigns.mobile
     h1
-      font-size: 1.5rem
+      font-size: 24px
     .subtitle
-      font-size: 1rem
+      font-size: 16px
       text-align: center
     .campaign-info
-      font-size: 1rem
+      font-size: 16px
       padding-top: 1.875rem
       .ogn-icon
         width: 1.875rem
     .past-campaigns
       .title
-        font-size: 1.56rem
+        font-size: 25px
         padding-top: 2.9rem
       .total-earned
-        font-size: 3rem
+        font-size: 48px
       .total-earned img
         width: 3.125rem
         height: 3.125rem
       .past-campaign
         margin-top: 3.5rem
         .campaign-title
-          font-size: 1.3rem
+          font-size: 21px
           font-weight: 500
         .tokens-earned-holder
           margin-top: 0.6rem
           .tokens-earned
-            font-size: 1.1rem
+            font-size: 18px
         .total-earned
-          font-size: 1rem
+          font-size: 16px
           line-height: 1.3
         .total-earned img
           width: 1rem

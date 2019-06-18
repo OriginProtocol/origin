@@ -117,18 +117,18 @@ require('react-styl')(`
       height: 63px
     h2
       font-family: Lato    
-      font-size: 1.5rem
+      font-size: 24px
       font-weight: bold
       line-height: 1.17
       color: #0d1d29
       margin-bottom: 2px
     .install
-      font-size: 1.125rem
+      font-size: 18px
       font-weight: normal
       line-height: 1.93
       color: var(--dark)
     .ogn-value
-      font-size: 1.125rem
+      font-size: 18px
       font-weight: bold
       line-height: 1.93
       color: #007fff
@@ -150,11 +150,11 @@ require('react-styl')(`
       bottom: -6px
       left: 25px
     h2  
-      font-size: 1.125rem
+      font-size: 18px
     .install
-      font-size: 0.875rem
+      font-size: 14px
     .ogn-value
-      font-size: 0.875rem
+      font-size: 14px
     .ogn-icon-small
       width: 14px
     .download-icon

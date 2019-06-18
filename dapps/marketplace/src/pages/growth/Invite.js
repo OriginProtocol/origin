@@ -612,7 +612,7 @@ require('react-styl')(`
       font-weight: normal
     .navigation-item
       .title
-        font-size: 0.88rem
+        font-size: 14px
         line-height: 1.93
         color: var(--bluey-grey)
         font-weight: normal
@@ -620,12 +620,12 @@ require('react-styl')(`
       .title.active
         color: var(--dark)
     .invites-subtitle
-      font-size: 1rem
+      font-size: 16px
     .back
       font-weight: bold
       color: var(--clear-blue)
       cursor: pointer
-      font-size: 0.875rem
+      font-size: 14px
       margin-top: 70px
     .back img
       width: 15px
@@ -637,7 +637,7 @@ require('react-styl')(`
         height: 4px
         width: 100%
       .title
-        font-size: 0.88rem
+        font-size: 14px
         line-height: 1.93
         color: var(--bluey-grey)
         font-weight: normal
@@ -697,7 +697,7 @@ require('react-styl')(`
       .invalid-feedback
         font-size: 18px
       .invite-error
-        font-size: 1.125rem
+        font-size: 18px
         color: var(--red)
     .track-invites
       margin-top: 30px
@@ -705,10 +705,10 @@ require('react-styl')(`
         font-weight: bold
       .reward-holder
         margin-top: -20px
-        font-size: 0.875rem
+        font-size: 14px
         font-weight: normal
       .reward
-        font-size: 0.875rem
+        font-size: 14px
         font-weight: bold
         color: var(--clear-blue)
       .reward .value
@@ -716,7 +716,7 @@ require('react-styl')(`
       .reward img
         width: 19px
       .reward.big
-        font-size: 1.375rem
+        font-size:22px
       .reward.big .value
         padding-bottom: 1px
       .reward.big img
@@ -733,16 +733,16 @@ require('react-styl')(`
         color: var(--clear-blue)
         background-color: white
   .growth-invite.mobile
-    font-size: 1rem
+    font-size: 16px
     margin-top: 1rem
     h1
-      font-size: 1.6rem !important
+      font-size: 26px !important
     .invite-error
-        font-size: 1rem
+        font-size: 16px
     .btn-primary
       width: 100%
     .lesser-title
-      font-size: 1.125rem
+      font-size: 18px
     .reward.big
       margin-bottom: -5px
     .social-btn
@@ -751,7 +751,7 @@ require('react-styl')(`
     .track-invites
       margin-top: 35px
       .reward.big
-        font-size: 1.125rem
+        font-size: 18px
         height: 2rem
         padding-right: 0.75rem
         img

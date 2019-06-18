@@ -54,7 +54,7 @@ class MobileModal extends Component {
                 className="btn btn-primary"
                 onClick={() => {
                   const growthCode = localStorage.getItem('growth_invite_code')
-                  if (growthCode){
+                  if (growthCode) {
                     copy(`origin:growth_invite_code:${growthCode}`)
                   }
                   window.location.href = 'https://originprotocol.com/mobile'

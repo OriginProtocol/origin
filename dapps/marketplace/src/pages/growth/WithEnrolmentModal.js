@@ -667,10 +667,10 @@ require('react-styl')(`
       color: var(--clear-blue)
       border-color: var(--clear-blue)
     .eligibility-question
-      font-size: 1rem
+      font-size: 16px
       font-weight: bold
     .normal-explanation
-      font-size: 1rem
+      font-size: 16px
     .header
       background-color: var(--dusk)
       height: 3.75rem
@@ -679,7 +679,7 @@ require('react-styl')(`
       .container
         height: 100%
         font-family: Lato
-        font-size: 1.375rem
+        font-size: 22px
         font-weight: bold
         color: white
     .normal-line-height
@@ -776,7 +776,7 @@ require('react-styl')(`
       border-radius: 0.312rem
       border: solid 1px var(--light)
       font-weight: normal
-      font-size: 0.75rem
+      font-size: 12px
       overflow-y: scroll
       height: 9.375rem
       margin: 1.5rem
@@ -824,7 +824,7 @@ require('react-styl')(`
       .btn
         margin-top: 1.5rem
       .title
-        font-size: 1.5rem
+        font-size: 24px
         line-height: 1.21
         max-width: 15rem
         font-weight: 500
@@ -840,20 +840,20 @@ require('react-styl')(`
         border: solid 1px var(--light)
         font-weight: normal
       .terms-title
-        font-size: 1.125rem
+        font-size: 18px
         font-weight: normal
       .terms-body
-        font-size: 0.875rem
+        font-size: 14px
         font-weight: 300
         line-height: 1.4
         margin: 0px 25px
         padding: 0
       .btn-no-outline-link
-        font-size: 0.875rem
+        font-size: 14px
         color: var(--clear-blue)
         font-weight: normal
         margin: 1.2rem
-        font-size: 1rem
+        font-size: 16px
         font-weight: bold
       .checkbox-holder
         color: var(--dark)

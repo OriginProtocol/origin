@@ -125,7 +125,7 @@ require('react-styl')(`
     .icon
       width: 40px
     .title
-      font-size: 1.125rem
+      font-size: 18px
       margin-left: 11px
     .act-group-ogn-icon
       width: 14px
@@ -133,7 +133,7 @@ require('react-styl')(`
       font-size: 0.875rem
     .sub-text
       margin-top: -5px
-      font-size: 0.68rem
+      font-size: 11px
   .growth-action-group
     padding-top: 30px
     padding-bottom: 30px
@@ -141,7 +141,7 @@ require('react-styl')(`
     .icon
       width: 60px
     .title
-      font-size: 1.5rem
+      font-size: 24px
       font-family: Lato
       font-weight: bold
       color: black
@@ -150,11 +150,11 @@ require('react-styl')(`
     .act-group-ogn-icon
       width: 20px
     .value
-      font-size: 1.125rem
+      font-size: 18px
       font-weight: bold
       color: var(--clear-blue)
     .sub-text
-      font-size: 1rem
+      font-size: 16px
       font-weight: normal
       line-height: 2.45
       text-align: center

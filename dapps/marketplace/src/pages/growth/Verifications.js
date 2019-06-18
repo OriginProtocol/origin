@@ -81,18 +81,18 @@ export default withRouter(Verifications)
 require('react-styl')(`
   .growth-verifications.mobile
     .verifications-subtitle
-      font-size: 1rem
+      font-size: 16px
   .growth-verifications
     .verifications-subtitle
       font-weight: 300
       line-height: 1.25
       color: var(--dark)
-      font-size: 1.125rem
+      font-size: 18px
     .back
       font-weight: bold
       color: var(--clear-blue)
       cursor: pointer
-      font-size: 0.875rem
+      font-size: 14px
       margin-top: 70px
     .back img
       width: 15px
