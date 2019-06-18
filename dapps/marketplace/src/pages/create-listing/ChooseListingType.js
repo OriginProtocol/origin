@@ -5,7 +5,6 @@ import { fbt } from 'fbt-runtime'
 
 import Steps from 'components/Steps'
 import Redirect from 'components/Redirect'
-import Wallet from 'components/Wallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 
 const CategoriesEnum = require('Categories$FbtEnum') // Localized category names
@@ -80,7 +79,7 @@ class ChooseListingType extends Component {
 
     return (
       <div className="row">
-        <div className="col-md-8">
+        <div className="col-md-8 offset-md-3">
           <div className="create-listing-choose-listingtype">
             {!isEdit ? null : (
               <h2>
@@ -122,9 +121,6 @@ class ChooseListingType extends Component {
               </form>
             </div>
           </div>
-        </div>
-        <div className="col-md-4 d-none d-md-block">
-          <Wallet />
         </div>
       </div>
     )
