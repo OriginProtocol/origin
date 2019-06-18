@@ -9,7 +9,7 @@ import query from 'queries/UserListings'
 
 const nextPage = nextPageFactory('marketplace.user.listings')
 
-const UserListings = ({ user }) => {
+const UserListings = ({ user, hideHeader }) => {
   const vars = {
     first: 8,
     filter: 'active',
@@ -46,15 +46,18 @@ const UserListings = ({ user }) => {
 
         return (
           <div className="user-listings">
-            <h5 className="listings-header">
-              <fbt desc="UserListing.sellerListings">
-                Listings by this seller
-              </fbt>
-            </h5>
+            {hideHeader ? null : (
+              <h5 className="listings-header">
+                <fbt desc="UserListing.sellerListings">
+                  Listings by this seller
+                </fbt>
+              </h5>
+            )}
             <ListingsGallery
               listings={nodes}
               hasNextPage={hasNextPage}
               hideCategory
+              horizontalList
             />
             {!hasNextPage ? null : (
               <button

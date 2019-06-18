@@ -43,7 +43,7 @@ class User extends React.Component {
             const profile = get(data, 'web3.account.identity') || {}
   
             const reviewsComp = <Reviews id={id} hideWhenZero hideHeader={isMobile} />
-            const listingsComp = <UserListings user={id} />
+            const listingsComp = <UserListings user={id} hideHeader={isMobile} />
             return (
               <>
                 <DocumentTitle

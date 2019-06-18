@@ -11,12 +11,12 @@ function altClick(e) {
   return e.button === 0 && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey
 }
 
-const ListingCards = ({ listings, ognListingRewards, hideCategory }) => {
+const ListingCards = ({ listings, ognListingRewards, hideCategory, horizontalList }) => {
   const [redirect, setRedirect] = useState()
   if (!listings) return null
 
   return (
-    <div className="row">
+    <div className={horizontalList ? 'listing-horizontal-cards' : 'row'}>
       {redirect && <Redirect to={redirect} />}
       {listings.map(a => (
         <div
@@ -28,7 +28,7 @@ const ListingCards = ({ listings, ognListingRewards, hideCategory }) => {
               window.open(`#/listing/${a.id}`, '_blank')
             }
           }}
-          className="col-md-4 col-lg-3 listing-card"
+          className={`${horizontalList ? '' : 'col-md-4 col-lg-3 '}listing-card`}
         >
           {a.media && a.media.length ? (
             <div
@@ -137,4 +137,38 @@ require('react-styl')(`
         font-weight: normal
         margin-left: 0.25rem
         margin-bottom: 0.12rem
+
+  .listing-horizontal-cards
+    width: 100%
+    overflow-x: scroll
+    white-space: nowrap
+    .listing-card
+      width: 165px
+      display: inline-block
+      margin: 0.5rem
+      .main-pic
+        margin-bottom: 0.5rem
+        height: 165px
+
+  @media (max-width: 767.98px)
+    .listing-horizontal-cards
+      text-align: center
+      overflow-x: hidden
+      white-space: normal
+      .listing-card
+        max-width: 165px
+        display: inline-block
+        padding: 0 0.5rem
+        text-align: left
+        margin: 0.5rem 0
+
+  @media (max-width: 330px)
+    // For really small screens (iPhone SE, etc..)
+    .listing-horizontal-cards
+      text-align: center
+      overflow-x: hidden
+      white-space: normal
+      .listing-card
+        max-width: 100%
+        width: 100%
 `)
