@@ -61,6 +61,7 @@ function CampaignNavList(props) {
         isMobile ? 'justify-content-center' : 'mt-4 justify-content-left'
       }`}
     >
+      {/* TODO: Move this to a TabView component */}
       <NavigationItem
         selected={navigation === 'currentCampaign'}
         onClick={() => onNavigationClick('currentCampaign')}

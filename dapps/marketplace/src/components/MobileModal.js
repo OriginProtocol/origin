@@ -173,12 +173,6 @@ require('react-styl')(`
       overflow: hidden !important
       max-height: 100% !important
       max-width: 100% !important
-    .navbar.light
-      background-color: white !important
-      .modal-title
-        color: var(--dark-grey-blue)
-        font-size: 1.375rem
-        font-weight: 500
   .mobile-modal-light-overlay
     position: fixed
     touch-action: none

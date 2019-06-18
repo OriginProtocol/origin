@@ -20,14 +20,10 @@ function Action(props) {
 
   const detailsEmpty =
     !detailsKey || detailsKey === 'growth.purchase.empty.details'
-  const { isMobile, onMobileLockClick, hasBorder } = props
+  const { isMobile, onMobileLockClick } = props
 
   const actionLocked = status === 'Inactive'
   const actionCompleted = ['Exhausted', 'Completed'].includes(status)
-  // const actionCompleted = Math.random() < 0.5
-  // const actionLocked = !actionCompleted && Math.random() < 0.5
-  // const dapps/marketplace/src/components/ProgressBar.js  = {currency: 'OGN', amount: '123000000000000000000'}
-  // const rewardEarned = {currency: 'OGN', amount: '155000000000000000000'}
 
   const [detailsToggled, toggleDetails] = useState(false)
 
@@ -158,7 +154,7 @@ function Action(props) {
     return (
       <Fragment>
         {isInteractable && (
-          <div>
+          <div className="action-with-border">
             {buttonLink && (
               <Link
                 to={buttonLink}
@@ -178,7 +174,7 @@ function Action(props) {
         {!isInteractable && !showUnlockModalOnClick && actionComponent}
         {showUnlockModalOnClick && (
           <div
-            className="mt-auto mb-auto"
+            className="mt-auto mb-auto action-with-border"
             onClick={() => onMobileLockClick(unlockConditionText)}
           >
             {actionComponent}
@@ -207,9 +203,9 @@ function Action(props) {
 
   return wrapIntoInteraction(
     <div
-      className={`action ${isInteractable ? 'active' : ''} ${
+      className={`action action-with-border ${isInteractable ? 'active' : ''} ${
         isMobile ? 'mobile' : ''
-      } ${hasBorder ? 'has-border' : ''}`}
+      }`}
     >
       <div className="d-flex action-main">
         <div className="col-2 col-md-1 pr-0 pl-0 d-flex justify-content-center align-items-center">
@@ -321,8 +317,6 @@ require('react-styl')(`
       color: var(--dark)
       .action-main
         padding: 30px 20px
-      &.has-border
-        border-bottom: 1px solid #c0cbd4
       .listing-icon-holder
         position:relative
         .status-icon

@@ -148,7 +148,7 @@ class App extends Component {
             <Route
               exact
               path="/campaigns/:navigation"
-              render={props => <GrowthCampaigns {...props} />}
+              component={GrowthCampaigns}
             />
             <Route exact path="/rewards/banned" component={GrowthBanned} />
             <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />
