@@ -52,7 +52,7 @@ class ImportedScreen extends Component {
       console.warn(error)
     }
 
-    const identity = get(response.data, 'identity')
+    const identity = get(response.data, 'web3.account.identity')
     if (identity) {
       // Update the onboarding store so we know withOnboardingSteps can correctly
       // calculate the next onboardinig step based on what the user has completed

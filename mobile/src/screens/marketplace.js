@@ -468,27 +468,9 @@ class MarketplaceScreen extends Component {
   }
 
   updateIdentity = async () => {
-    const primaryAccount = await this.walletQuery()
-    if (!primaryAccount) {
-      return
-    }
-    // Request the identity through proxy if necessary
-    const identityAddress = primaryAccount.proxy.id
-      ? primaryAccount.proxy.id
-      : primaryAccount.id
-    const graphqlResponse = await this.props.getIdentity(identityAddress)
+    const graphqlResponse = await this.props.getIdentity()
     const identity = get(graphqlResponse, 'data.web3.account.identity')
-    this.props.setIdentity({ address: identityAddress, identity })
-  }
-
-  walletQuery = async () => {
-    let graphqlResponse
-    try {
-      graphqlResponse = await this.props.getWallet()
-      return get(graphqlResponse, 'data.web3.primaryAccount')
-    } catch (error) {
-      console.warn('Could not retrieve wallet using GraphQL: ', error)
-    }
+    this.props.setIdentity({ address: this.props.wallet.activeAccount.address, identity })
   }
 
   updateBalance = async () => {

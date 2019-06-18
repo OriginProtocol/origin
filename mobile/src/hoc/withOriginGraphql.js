@@ -10,6 +10,7 @@ import uuid from 'uuid/v1'
 import React, { Component } from 'react'
 import { DeviceEventEmitter } from 'react-native'
 import { connect } from 'react-redux'
+import get from 'lodash.get'
 
 import { balance, identity, tokenBalance, wallet } from 'graphql/queries'
 import { deployIdentity } from 'graphql/mutations'
@@ -80,8 +81,19 @@ const withOriginGraphql = WrappedComponent => {
       })
     }
 
-    getIdentity = ethAddress => {
-      return this._sendGraphqlQuery(identity, { id: ethAddress })
+    getIdentity = async () => {
+      // Get the wallet in case the identity was deployed via proxy
+      const walletResponse = await this.getWallet()
+      const primaryAccount = get(walletResponse, 'data.web3.primaryAccount')
+      if (!primaryAccount) {
+        return
+      }
+      // Request the identity through proxy if necessary
+      const identityAddress = primaryAccount.proxy.id
+        ? primaryAccount.proxy.id
+        : primaryAccount.id
+
+      return this._sendGraphqlQuery(identity, { id: identityAddress })
     }
 
     getWallet = () => {
