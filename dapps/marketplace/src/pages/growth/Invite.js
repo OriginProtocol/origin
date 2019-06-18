@@ -1,15 +1,18 @@
 import React, { Component, Fragment } from 'react'
 import { withApollo, Query, Mutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
+import { withRouter } from 'react-router-dom'
 
+import Link from 'components/Link'
 import QueryError from 'components/QueryError'
 import inviteCodeQuery from 'queries/InviteCode'
 import { formInput, formFeedback } from 'utils/formHelpers'
 import InviteFriends from 'mutations/InviteFriends'
 import InviteRemind from 'mutations/InviteRemind'
+import MobileModalHeader from 'components/MobileModalHeader'
 
 function NavigationItem(props) {
-  const { selected, onClick, title } = props
+  const { selected, onClick, title, isMobile } = props
   return (
     <a
       href="#"
@@ -17,10 +20,16 @@ function NavigationItem(props) {
         e.preventDefault()
         onClick()
       }}
-      className="pt-4 pr-4"
+      className="pt-4 pr-4 navigation-item"
     >
       <div className="d-flex flex-column align-items-center">
-        <div className={`title ${selected ? 'active' : ''}`}>{title}</div>
+        <div
+          className={`title ${isMobile ? 'px-3' : ''} ${
+            selected ? 'active' : ''
+          }`}
+        >
+          {title}
+        </div>
         {selected && <div className="select-bar" />}
       </div>
     </a>
@@ -137,19 +146,19 @@ class GrowthInvite extends Component {
 
           return (
             <div className="send-invites mt-4 pt-2">
-              <div className="emphasis">
+              <div className="emphasis lesser-title">
                 <fbt desc="RewardInvite.inviteWithYourCode">
                   Invite with your code
                 </fbt>
               </div>
               <div>
                 <fbt desc="RewardInvite.sendFriendInviteCode">
-                  Send your friend your unique invite code.
+                  Send a friend your unique invitation code.
                 </fbt>
               </div>
 
               <div className={`d-flex pt-3 ${isMobile ? 'flex-column' : ''}`}>
-                <div className="col-8 pl-0 pr-0">
+                <div className="col-12 col-md-8 pl-0 pr-0">
                   <div className="normal">
                     <fbt desc="RewardInvite.copyCode">Copy code</fbt>
                   </div>
@@ -181,7 +190,7 @@ class GrowthInvite extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="col-4 pl-0 pl-md-4 pr-0 mt-3 mt-md-0">
+                <div className="col-12 col-md-4 pl-0 pl-md-4 pr-0 mt-3 mt-md-0">
                   <div className="normal">
                     <fbt desc="RewardInvite.shareOrTweet">Share or Tweet</fbt>
                   </div>
@@ -190,13 +199,13 @@ class GrowthInvite extends Component {
                       className="social-btn fb"
                       onClick={() => this.handleFbShareClick()}
                     >
-                      <img src="images/growth/facebook-icon.svg" />
+                      <img src="images/growth/facebook-invite-icon.svg" />
                     </button>
                     <button
                       className="social-btn tw"
                       onClick={() => this.handleTwitterShareClick()}
                     >
-                      <img src="images/growth/twitter-icon.svg" />
+                      <img src="images/growth/twitter-invite-icon.svg" />
                     </button>
                   </div>
                 </div>
@@ -244,7 +253,7 @@ class GrowthInvite extends Component {
                       this.validateEmailsInput(invite)
                     }}
                   >
-                    <div className="emphasis mt-md-5 mt-4">
+                    <div className="emphasis lesser-title mt-md-5 mt-4">
                       <fbt desc="RewardInvite.inviteViaEmail">
                         Invite via Email
                       </fbt>
@@ -378,10 +387,10 @@ class GrowthInvite extends Component {
         <div
           className={`reward ${
             isBig ? 'big' : ''
-          } d-flex align-items-center pl-2 pt-2 pb-2 mt-1`}
+          } d-flex align-items-center mt-1`}
         >
           <img src="images/ogn-icon.svg" />
-          <div className="value">
+          <div className={`value ${isBig ? 'ml-2' : 'ml-1'}`}>
             {renderPlusSign ? '+' : ''}
             {formatTokens(amount)}
           </div>
@@ -391,93 +400,91 @@ class GrowthInvite extends Component {
 
     const renderInvitesTable = (
       title,
-      subTitle,
       invites,
       reward,
       rewardTitle,
+      emptyText,
       showStatus,
       showRemindButton
     ) => {
       return (
         <div className="track-invites">
-          <div
-            className={`pt-2 d-flex justify-content-between ${
-              isMobile ? 'flex-column' : ''
-            }`}
-          >
-            <div>
-              <div className="emphasis">{title}</div>
-              <div>{subTitle}</div>
-            </div>
+          <div className="pt-2 d-flex justify-content-between">
+            <div className="emphasis">{title}</div>
             <div
               className={`reward-holder d-flex flex-column ${
                 isMobile ? 'align-items-start' : 'align-items-center'
               } `}
             >
+              {renderReward(reward, false, true)}
               <div>{rewardTitle}</div>
-              {renderReward(reward, true, true)}
             </div>
           </div>
-          <div className="mt-3">
-            <div className="emphasis d-flex pb-2">
-              <div className={`${isMobile ? 'col-6' : 'col-4'} p-0`}>
-                <fbt desc="RewardInvite.contact">Contact</fbt>
-              </div>
-              <div className="col-2 p-0">
-                <fbt desc="RewardInvite.invite">Reward</fbt>
-              </div>
-              <div className={`${isMobile ? 'col-4' : 'col-6'} p-0`}>
-                {showStatus ? fbt('Status', 'RewardInvite.status') : ''}
-              </div>
-            </div>
-            {invites.map(invite => {
-              const name = invite.contact
-                ? invite.contact
-                : invite.walletAddress
-              return (
-                <div
-                  className="invite-row d-flex pt-2 pb-2"
-                  key={invite.pendingId}
-                >
-                  <div
-                    className={`${
-                      isMobile ? 'col-6' : 'col-4'
-                    } p-0 d-flex align-items-center`}
-                  >
-                    <div className="name">{name}</div>
-                  </div>
-                  <div className="col-2 p-0 d-flex">
-                    {renderReward(invite.reward.amount, true, false)}
-                  </div>
-                  <div
-                    className={`${
-                      isMobile ? 'col-4' : 'col-6'
-                    } p-0 d-flex justify-content-between align-items-center`}
-                  >
-                    <div>
-                      {showStatus
-                        ? fbt(
-                            'Hasn’t completed user activation',
-                            'RewardInvite.hasntCompletedActivation'
-                          )
-                        : ''}
-                    </div>
-                    <div className="pr-3">
-                      {showRemindButton && (
-                        <button
-                          className="remind-button"
-                          onClick={async e =>
-                            await this.handleRemindClick(invite.pendingId, e)
-                          }
-                          children={fbt('Remind', 'RewardInvite.remind')}
-                        />
-                      )}
-                    </div>
-                  </div>
+          {invites.length == 0 && (
+            <div className="explanation">{emptyText}</div>
+          )}
+          {invites.length > 0 && (
+            <div className="mt-3">
+              <div className="normal-font d-flex pb-2">
+                <div className={`${isMobile ? 'col-6' : 'col-4'} p-0`}>
+                  <fbt desc="RewardInvite.contact">Contact</fbt>
                 </div>
-              )
-            })}
-          </div>
+                <div className="col-2 p-0">
+                  <fbt desc="RewardInvite.invite">Reward</fbt>
+                </div>
+                <div className={`${isMobile ? 'col-4' : 'col-6'} p-0`}>
+                  {showStatus ? fbt('Status', 'RewardInvite.status') : ''}
+                </div>
+              </div>
+              {invites.map(invite => {
+                const name = invite.contact
+                  ? invite.contact
+                  : invite.walletAddress
+                return (
+                  <div
+                    className="invite-row d-flex pt-2 pb-2"
+                    key={invite.pendingId}
+                  >
+                    <div
+                      className={`${
+                        isMobile ? 'col-6' : 'col-4'
+                      } p-0 d-flex align-items-center`}
+                    >
+                      <div className="name">{name}</div>
+                    </div>
+                    <div className="col-2 p-0 d-flex">
+                      {renderReward(invite.reward.amount, false, false)}
+                    </div>
+                    <div
+                      className={`${
+                        isMobile ? 'col-4' : 'col-6'
+                      } p-0 d-flex justify-content-between align-items-center`}
+                    >
+                      <div>
+                        {showStatus
+                          ? fbt(
+                              'Hasn’t completed user activation',
+                              'RewardInvite.hasntCompletedActivation'
+                            )
+                          : ''}
+                      </div>
+                      <div className="pr-3">
+                        {showRemindButton && (
+                          <button
+                            className="remind-button"
+                            onClick={async e =>
+                              await this.handleRemindClick(invite.pendingId, e)
+                            }
+                            children={fbt('Remind', 'RewardInvite.remind')}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
       )
     }
@@ -485,31 +492,31 @@ class GrowthInvite extends Component {
     return (
       <Fragment>
         {renderInvitesTable(
-          fbt('Pending Invites', 'RewardInvite.pendingInvites'),
-          fbt(
-            'Track progress of friends who sign up with your invite code.',
-            'RewardInvite.trackProgress'
-          ),
+          fbt('Pending Invitations', 'RewardInvite.pendingInvitations'),
           referralAction.invites.nodes.filter(
             invite => invite.status !== 'Completed'
           ),
           referralAction.rewardPending.amount,
           fbt('Pending', 'RewardInvite.pendingTitle'),
+          fbt(
+            'You have no pending invitations.',
+            'RewardInvite.noPendingInvitations'
+          ),
           !isMobile,
           true
         )}
         <div className="mt-5" />
         {renderInvitesTable(
-          fbt('Successful Invites', 'RewardInvite.successfulInvites'),
-          fbt(
-            'Help your friends earn OGN just like you.',
-            'RewardInvite.helpFriendsEarnOgn'
-          ),
+          fbt('Successful Invitations', 'RewardInvite.successfulInvitations'),
           referralAction.invites.nodes.filter(
             invite => invite.status === 'Completed'
           ),
           referralAction.rewardEarned.amount,
           fbt('Earned', 'RewardInvite.earnedTitle'),
+          fbt(
+            'You have no successful invitations.',
+            'RewardInvite.noSuccessfulInvitations'
+          ),
           false,
           false
         )}
@@ -519,76 +526,118 @@ class GrowthInvite extends Component {
 
   render() {
     const { subPage } = this.state
-    const { activeCampaign, handleNavigationChange, isMobile } = this.props
+    const { activeCampaign, isMobile } = this.props
 
     const referralAction = activeCampaign.actions.filter(
       action => action.type === 'Referral'
     )[0]
 
     return (
-      <div className={`container growth-invite ${isMobile ? 'mobile' : ''}`}>
-        <div>
-          <div
-            className="back d-flex mr-auto"
-            onClick={() => handleNavigationChange('Campaigns')}
+      <Fragment>
+        {isMobile && (
+          <MobileModalHeader
+            showBackButton={true}
+            className="px-0"
+            onBack={() => {
+              this.props.history.push('/campaigns')
+            }}
           >
-            <img src="images/caret-blue.svg" />
-            <div>
-              <fbt desc="RewardInvite.backToCampaign">Back to Campaign</fbt>
+            <fbt desc="RewardInvite.invite">Invitations</fbt>
+          </MobileModalHeader>
+        )}
+        <div className={`container growth-invite ${isMobile ? 'mobile' : ''}`}>
+          <div>
+            {!isMobile && (
+              <Fragment>
+                <Link className="back d-flex mr-auto" to="/campaigns">
+                  <img src="images/caret-blue.svg" />
+                  <div>
+                    <fbt desc="RewardInvite.backToCampaign">
+                      Back to Campaign
+                    </fbt>
+                  </div>
+                </Link>
+                <h1 className={`mb-2 pt-md-3 mt-3`}>
+                  <fbt desc="RewardInvite.inviteYourFriends">
+                    Invite your friends to Origin
+                  </fbt>
+                </h1>
+              </Fragment>
+            )}
+            <div
+              className={`invites-subtitle ${isMobile ? 'text-center' : ''}`}
+            >
+              <fbt desc="RewardInvite.getOgnByGettingFriendsToSignUp">
+                Invite friends and earn Origin Tokens when they sign up and
+                create profiles.
+              </fbt>
             </div>
           </div>
-          <h1 className={`mb-2 pt-md-3 mt-3`}>
-            <fbt desc="RewardInvite.inviteYourFriends">
-              Invite your friends to Origin
-            </fbt>
-          </h1>
-          <fbt desc="RewardInvite.getOgnByCompletingTasks">
-            Get Origin Tokens by completing the tasks below.
-          </fbt>
-        </div>
 
-        <div className="navigation-list d-flex justify-content-left mt-2 mt-md-4">
-          <NavigationItem
-            selected={subPage === 'sendInvites'}
-            onClick={() => this.handleNavigationClick('sendInvites')}
-            title={fbt('SEND INVITES', 'RewardInvite.sendInvites')}
-          />
-          <NavigationItem
-            selected={subPage === 'trackInvites'}
-            onClick={() => this.handleNavigationClick('trackInvites')}
-            title={fbt('TRACK INVITES', 'RewardInvite.trackInvites')}
-          />
+          <div
+            className={`navigation-list ${
+              isMobile ? 'justify-content-center' : 'justify-content-left'
+            } d-flex mt-1 mt-md-4`}
+          >
+            <NavigationItem
+              selected={subPage === 'sendInvites'}
+              onClick={() => this.handleNavigationClick('sendInvites')}
+              title={fbt('Send Invitations', 'RewardInvite.sendInvitations')}
+              isMobile={isMobile}
+            />
+            <NavigationItem
+              selected={subPage === 'trackInvites'}
+              onClick={() => this.handleNavigationClick('trackInvites')}
+              title={fbt('Track Invitations', 'RewardInvite.trackInvitations')}
+              isMobile={isMobile}
+            />
+          </div>
+          {subPage === 'sendInvites' && this.renderSendInvites()}
+          {subPage === 'trackInvites' &&
+            this.renderTrackInvites(referralAction, isMobile)}
         </div>
-        {subPage === 'sendInvites' && this.renderSendInvites()}
-        {subPage === 'trackInvites' &&
-          this.renderTrackInvites(referralAction, isMobile)}
-      </div>
+      </Fragment>
     )
   }
 }
 
-export default withApollo(GrowthInvite)
+export default withRouter(withApollo(GrowthInvite))
 
 require('react-styl')(`
   .growth-invite.container
     max-width: 760px
   .growth-invite
     margin-top: 70px
-    .back img
-      width: 15px
-      margin-right: 6px
-      transform: rotate(270deg)
+    .normal-font
+      font-weight: normal
+    .navigation-item
+      .title
+        font-size: 14px
+        line-height: 1.93
+        color: var(--bluey-grey)
+        font-weight: normal
+        white-space: nowrap
+      .title.active
+        color: var(--dark)
+    .invites-subtitle
+      font-size: 16px
     .back
       font-weight: bold
       color: var(--clear-blue)
       cursor: pointer
+      font-size: 14px
+      margin-top: 70px
+    .back img
+      width: 15px
+      margin-right: 6px
+      transform: rotate(270deg)
     .navigation-list
       .select-bar
         background-color: var(--clear-blue)
         height: 4px
         width: 100%
       .title
-        font-size: 0.88rem
+        font-size: 14px
         line-height: 1.93
         color: var(--bluey-grey)
         font-weight: normal
@@ -619,7 +668,7 @@ require('react-styl')(`
         background-color: var(--pale-grey)
       .email-text
         width: 100%
-        heigh: 140px
+        height: 140px
         border-radius: 5px
         border: 1px solid var(--light)
         resize: none
@@ -648,7 +697,7 @@ require('react-styl')(`
       .invalid-feedback
         font-size: 18px
       .invite-error
-        font-size: 1.125rem
+        font-size: 18px
         color: var(--red)
     .track-invites
       margin-top: 30px
@@ -659,25 +708,18 @@ require('react-styl')(`
         font-size: 14px
         font-weight: normal
       .reward
-        padding-right: 10px
-        height: 28px
-        background-color: var(--pale-grey)
-        border-radius: 52px
         font-size: 14px
         font-weight: bold
         color: var(--clear-blue)
       .reward .value
         padding-bottom: 1px
       .reward img
-        margin-right: 6px
+        width: 19px
       .reward.big
-        padding-right: 15px
-        height: 38px
-        font-size: 22px
+        font-size:22px
       .reward.big .value
         padding-bottom: 1px
       .reward.big img
-        margin-right: 9px
         width: 24px
       .invite-row
         border-top: 1px solid var(--pale-grey-two)
@@ -691,21 +733,25 @@ require('react-styl')(`
         color: var(--clear-blue)
         background-color: white
   .growth-invite.mobile
-    font-size: 1rem
-    margin-top: 1.5rem
+    font-size: 16px
+    margin-top: 1rem
     h1
-      font-size: 1.6rem !important
-    .back
-      font-size: 0.875rem
+      font-size: 26px !important
     .invite-error
-        font-size: 1rem
+        font-size: 16px
     .btn-primary
       width: 100%
+    .lesser-title
+      font-size: 18px
+    .reward.big
+      margin-bottom: -5px
+    .social-btn
+      border-radius: 25px
+      border: solid 1px #007fff
     .track-invites
-      .reward-holder
-        margin-top: 0.625rem
+      margin-top: 35px
       .reward.big
-        font-size: 1.125rem
+        font-size: 18px
         height: 2rem
         padding-right: 0.75rem
         img
