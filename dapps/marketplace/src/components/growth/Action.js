@@ -113,23 +113,6 @@ function Action(props) {
   const showUnlockModalOnClick =
     actionLocked && isMobile && unlockConditions.length > 0
 
-  // let showReferralPending,
-  //   showReferralEarned = false
-
-  // with Invite Friends reward show how much of a reward a
-  // user can earn only if pending and earned are both 0
-  // if (type === 'Referral') {
-  //   showReferralEarned = rewardEarned !== null && rewardEarned.amount !== '0'
-  //   showReferralPending = rewardPending !== null && rewardPending.amount !== '0'
-
-  //   // when on mobile layout show only 1 reward type at a time
-  //   showReferralPending = isMobile
-  //     ? showReferralPending && !showReferralEarned
-  //     : showReferralPending
-
-  //   showPossibleRewardAmount = !showReferralPending && !showReferralEarned
-  // }
-
   const unlockConditionText = (
     <Fragment>
       <fbt desc="RewardActions.requires">Requires:</fbt>{' '}
@@ -154,7 +137,7 @@ function Action(props) {
     return (
       <Fragment>
         {isInteractable && (
-          <div className="action-with-border">
+          <div className="with-border">
             {buttonLink && (
               <Link
                 to={buttonLink}
@@ -174,7 +157,7 @@ function Action(props) {
         {!isInteractable && !showUnlockModalOnClick && actionComponent}
         {showUnlockModalOnClick && (
           <div
-            className="mt-auto mb-auto action-with-border"
+            className="mt-auto mb-auto with-border"
             onClick={() => onMobileLockClick(unlockConditionText)}
           >
             {actionComponent}
@@ -203,7 +186,7 @@ function Action(props) {
 
   return wrapIntoInteraction(
     <div
-      className={`action action-with-border ${isInteractable ? 'active' : ''} ${
+      className={`action with-border ${isInteractable ? 'active' : ''} ${
         isMobile ? 'mobile' : ''
       }`}
     >
@@ -249,22 +232,6 @@ function Action(props) {
           {!actionLocked && detailsLink}
         </div>
         <div className="pr-0 pr-md-3 pl-0 pl-md-3 col-3 col-md-3 d-flex align-items-center justify-content-end">
-          {/*{showReferralPending && (
-            <div className="d-flex flex-column flex-grow-1">
-              {renderReward(rewardPending.amount)}
-              <div className="sub-text ml-2">
-                <fbt desc="RewardActions.pending">Pending</fbt>
-              </div>
-            </div>
-          )}
-          {showReferralEarned && (
-            <div className="d-flex flex-column flex-grow-1">
-              {renderReward(rewardEarned.amount)}
-              <div className="d-center sub-text ml-2">
-                <fbt desc="RewardActions.earned">Earned</fbt>
-              </div>
-            </div>
-          )}*/}
           {actionCompleted &&
             rewardEarned !== null &&
             rewardEarned.amount !== '0' && (
@@ -288,7 +255,6 @@ function Action(props) {
           {!isMobile && actionLocked && (
             <img className="status-icon" src="images/growth/lock-icon.svg" />
           )}
-          {/* Just a padding placeholder*/}
           {!isMobile && actionCompleted && (
             <img
               className="status-icon"

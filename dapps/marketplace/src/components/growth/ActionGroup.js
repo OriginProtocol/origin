@@ -25,11 +25,14 @@ function ActionGroup(props) {
     title = fbt('Invitations', 'growth.actionGroup.invitations')
   }
 
-  const sumActionRewards = (actions, type, fetchEarnedAmounts) => {
+  const sumActionRewards = (actions, type, mode = 'earned') => {
+    if (!['earned', 'available'].includes(mode))
+      throw new Error(`Unrecognised mode sum action mode: ${mode}`)
+
     let aggregate = web3.utils.toBN('0')
     actions.forEach(action => {
       if (type === 'invitations') {
-        if (fetchEarnedAmounts) {
+        if (mode === 'earned') {
           if (action.rewardEarned)
             aggregate = web3.utils
               .toBN(action.rewardEarned.amount)
@@ -43,7 +46,7 @@ function ActionGroup(props) {
           }
         }
       } else {
-        const rewardField = fetchEarnedAmounts ? 'rewardEarned' : 'reward'
+        const rewardField = mode === 'earned' ? 'rewardEarned' : 'reward'
         if (action[rewardField])
           aggregate = web3.utils.toBN(action[rewardField].amount).add(aggregate)
       }
@@ -91,7 +94,7 @@ function ActionGroup(props) {
             ? [...completedActions, ...notCompletedActions]
             : notCompletedActions,
           type,
-          false
+          'available'
         ),
         fbt('Available', 'RewardActions.available'),
         'ml-auto'
@@ -102,7 +105,7 @@ function ActionGroup(props) {
             ? [...completedActions, ...notCompletedActions]
             : completedActions,
           type,
-          true
+          'earned'
         ),
         fbt('Earned', 'RewardActions.earned'),
         'ml-3'

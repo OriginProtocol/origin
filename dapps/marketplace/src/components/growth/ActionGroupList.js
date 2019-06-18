@@ -49,7 +49,3 @@ function ActionGroupList(props) {
 }
 
 export default ActionGroupList
-
-// require('react-styl')(`
-//   .action-list-group
-// `)

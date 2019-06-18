@@ -144,7 +144,7 @@ require('react-styl')(`
   .action-list-modal.pl-modal .pl-modal-table .pl-modal-cell .action-list-modal
     max-width: 25rem
   .action-list
-    .action-with-border
+    .with-border
       &:not(:last-of-type)
         border-bottom: 1px solid #c0cbd4
     margin-top: 1rem
