@@ -8,9 +8,9 @@
  *
  * TODO
  * ----
- * - Locks and support for parallelism so multiple instances can work at the same time?
+ * - Non-memory locks and support for mmultiple instances?
  * - Auto-scale children when all accounts hit the max pending setting?
- * - If the service is restarted, tracking and callbacks are lost for pending transactions.  How to deal?
+ * - If the service is restarted, callbacks are lost for pending transactions.  How to deal?
  */
 const { promisify } = require('util')
 const redis = require('redis')
@@ -36,6 +36,8 @@ const BASE_FUND_VALUE = new BN('50000000000000000', 10) // 0.05 Ether
 const MIN_CHILD_BALANCE = new BN('1000000000000000', 10) // 0.001 Ether
 const MAX_GAS_PRICE = new BN('20000000000', 10) // 20 gwei
 const REDIS_TX_COUNT_PREFIX = 'txcount_'
+const REDIS_PENDING_KEY = `pending_txs`
+const REDIS_PENDING_PREFIX = `pending_tx_`
 
 async function tick(wait = 1000) {
   return new Promise(resolve => setTimeout(() => resolve(true), wait))
@@ -144,6 +146,9 @@ class Purse {
       logger.info(`Initialized child account ${address}`)
     }
 
+    // Load pending tx state
+    await this._populatePending()
+
     this.ready = true
   }
 
@@ -205,9 +210,9 @@ class Purse {
       for (const child of this.children) {
         const childBal = stringToBN(await this.web3.eth.getBalance(child))
         if (
+          this.accounts[child].locked === null &&
           this.accounts[child].pendingCount < lowestPending &&
-          childBal.gt(MIN_CHILD_BALANCE) &&
-          this.accounts[child].locked === null
+          childBal.gt(MIN_CHILD_BALANCE)
         ) {
           lowestPending = this.accounts[child].pendingCount
           resolvedAccount = child
@@ -283,7 +288,7 @@ class Purse {
     }
 
     // In case it needs to be rebroadcast
-    this.pendingTransactions[txHash] = rawTx
+    await this.addPending(txHash, rawTx)
 
     // blast it
     await sendRawTransaction(this.web3, rawTx)
@@ -363,6 +368,37 @@ class Purse {
   }
 
   /**
+   * Adds a pending transaction we should keep an eye on
+   * @param txHash {string} - The transaction hash
+   * @param rawTx {string} - The raw transaction
+   */
+  async addPending(txHash, rawTx) {
+    this.pendingTransactions[txHash] = rawTx
+
+    if (this.rclient && this.rclient.connected) {
+      await this.rclient.saddAsync(`${REDIS_PENDING_KEY}`, txHash)
+      await this.rclient.setAsync(`${REDIS_PENDING_PREFIX}${txHash}`, rawTx)
+    } else {
+      logger.warn('Redis unavailable')
+    }
+  }
+
+  /**
+   * Remove a pending transaction from tracking
+   * @param address {string} - The account address to increment
+   */
+  async removePending(txHash) {
+    delete this.pendingTransactions[txHash]
+
+    if (this.rclient && this.rclient.connected) {
+      await this.rclient.sremAsync(`${REDIS_PENDING_KEY}`, txHash)
+      await this.rclient.delAsync(`${REDIS_PENDING_PREFIX}${txHash}`)
+    } else {
+      logger.warn('Redis unavailable')
+    }
+  }
+
+  /**
    * Fund all the children from the master account
    */
   async fundChildren() {
@@ -426,10 +462,34 @@ class Purse {
         })
         const rawTx = signed.rawTransaction
         const txHash = this.web3.utils.sha3(rawTx)
-        this.pendingTransactions[txHash] = rawTx
+        await this.addPending(txHash, rawTx)
         await sendRawTransaction(this.web3, rawTx)
         await this.incrementTxCount(child)
       }
+    }
+  }
+
+  /**
+   * Get all pending transactions and populate this.pendintTransactions
+   */
+  async _populatePending() {
+    if (this.rclient && this.rclient.connected) {
+      const pendingHashes = await this.rclient.smembersAsync(REDIS_PENDING_KEY)
+
+      for (const txHash of pendingHashes) {
+        const tx = await this.web3.eth.getTransaction(txHash)
+        if (tx && this.accounts[tx.from]) {
+          this.accounts[tx.from].pendingCount += 1
+        }
+        const rawTx = await this.rclient.getAsync(
+          `${REDIS_PENDING_PREFIX}${txHash}`
+        )
+        if (rawTx) {
+          this.pendingTransactions[txHash] = rawTx
+        }
+      }
+    } else {
+      logger.warn('Redis unavailable')
     }
   }
 
@@ -460,8 +520,13 @@ class Purse {
       }
     })
     client.getAsync = promisify(client.get).bind(client)
+    client.setAsync = promisify(client.set).bind(client)
+    client.saddAsync = promisify(client.sadd).bind(client)
+    client.sremAsync = promisify(client.srem).bind(client)
+    client.smembersAsync = promisify(client.smembers).bind(client)
     client.incrAsync = promisify(client.incr).bind(client)
     client.keysAsync = promisify(client.keys).bind(client)
+    client.delAsync = promisify(client.del).bind(client)
     return client
   }
 
@@ -479,6 +544,23 @@ class Purse {
       logger.info(`Clearing ${purseKeys.length} keys from redis...`)
 
       for (const key of purseKeys) {
+        logger.debug(`Deleting ${key} from redis`)
+        await this.rclient.del(key)
+      }
+    }
+
+    // Remove the pending tx set
+    await this.rclient.del(REDIS_PENDING_KEY)
+
+    // Remove all pending transactions
+    const pendingKeys = await this.rclient.keysAsync(
+      `${REDIS_TX_COUNT_PREFIX}*`
+    )
+
+    if (pendingKeys.length > 0) {
+      logger.info(`Clearing ${pendingKeys.length} keys from redis...`)
+
+      for (const key of pendingKeys) {
         logger.debug(`Deleting ${key} from redis`)
         await this.rclient.del(key)
       }
@@ -508,7 +590,7 @@ class Purse {
 
     if (masterBalance.lt(txCost)) {
       logger.error(
-        `Unable to find child account because master account (${masterAddress}) does't have the funds!`
+        `Unable to fund child account because master account (${masterAddress}) does't have the funds!`
       )
       return
     }
@@ -689,7 +771,7 @@ class Purse {
             logger.error(
               'Found a locked account without any pending transactions!'
             )
-            account.locked = false
+            account.locked = null
           }
         }
       }

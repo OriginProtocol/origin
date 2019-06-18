@@ -8,6 +8,7 @@ module.exports = {
   MNEMONIC_FOUR: 'four two three four five six',
   MNEMONIC_FIVE: 'five two three four five six',
   MNEMONIC_SIX: 'six two three four five six',
+  MNEMONIC_SEVEN: 'seven two three four five six',
   TEST_NET_ID: 999,
   TEST_PROVIDER_URL: 'http://localhost:8545/',
 

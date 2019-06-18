@@ -236,6 +236,41 @@ describe('Purse', () => {
     await purseTwo.teardown(true)
   })
 
+  // This is best tested with Redis, but not required
+  it('keeps persistent and accurate track of pending transactions', async () => {
+    const purseOne = new Purse({ web3, mnemonic: MNEMONIC_ONE, children: 2 })
+    await purseOne.init()
+
+    // We want to keep transactions in a pending state
+    await stopMining(web3)
+
+    const txHash = await purseOne.sendTx({
+      to: Rando,
+      value: '1',
+      gas: 22000,
+      gasPrice: TWO_GWEI.toString()
+    })
+
+    // Make sure the txHash is in pending
+    const pendingHashesOne = Object.keys(purseOne.pendingTransactions)
+    assert(pendingHashesOne[0] === txHash)
+
+    // Second instance should come up with the right tx count
+    const purseTwo = new Purse({ web3, mnemonic: MNEMONIC_ONE, children: 2 })
+    await purseTwo.init()
+
+    // Make sure the txHash is in pending in the new instance
+    const pendingHashesTwo = Object.keys(purseTwo.pendingTransactions)
+    assert(pendingHashesTwo.length === 1, 'Should have loaded one pending tx')
+    assert(pendingHashesTwo[0] === txHash, 'Did not load the expected pending tx')
+
+    // Restart miner
+    await startMining(web3)
+
+    await purseOne.teardown(true)
+    await purseTwo.teardown(true)
+  })
+
   // Not yet implemented
   it('should init once master account is funded and autofund children', async () => {
     const childCount = 2
@@ -277,6 +312,8 @@ describe('Purse', () => {
       const chidlBal = await getBalance(web3, purse.children[i])
       assert(chidlBal.gt(ZERO), 'zero balance on child')
     }
+
+    await purse.teardown(true)
   })
 
   it('rebroadcasts transactions that are dropped', async () => {
@@ -311,6 +348,8 @@ describe('Purse', () => {
 
     // Check that the counter went up
     assert(purse.rebroadcastCounters[txHash] === 1)
+
+    await purse.teardown(true)
   })
 
   it('should be able to handle a large volume of transactions', async function () {
@@ -355,6 +394,8 @@ describe('Purse', () => {
     assert(Object.keys(purse.pendingTransactions).length > 0, 'no pending transactions')
     await wait(10000) // give it a bit to process the transactions
     assert(Object.keys(purse.pendingTransactions).length === 0, 'there are still pending transactions')
+
+    await purse.teardown(true)
   })
 
   it('onReceipt callbacks are utilized', () => {
@@ -387,51 +428,54 @@ describe('Purse', () => {
         gasPrice: TWO_GWEI,
         data: `0x01`
       }, async () => {
+        await purse.teardown(true)
         resolve()
       })
     })
   })
 
   it('can drain child accounts', async () => {
-      const childCount = 5
-      const purse = new Purse({
-        web3,
-        mnemonic: MNEMONIC_SIX,
-        children: childCount,
-        autofundChildren: true
-      })
-      await purse.init()
+    const childCount = 5
+    const purse = new Purse({
+      web3,
+      mnemonic: MNEMONIC_SIX,
+      children: childCount,
+      autofundChildren: true
+    })
+    await purse.init()
 
-      // Fund the master account
-      const masterAddress = purse.masterWallet.getChecksumAddressString()
-      const receipt = await web3.eth.sendTransaction({
-        from: Funder,
-        to: masterAddress,
-        value: ONE_ETHER,
-        gas: 22000,
-        gasPrice: TWO_GWEI
-      })
-      assert(receipt.status, 'funding tx failed')
+    // Fund the master account
+    const masterAddress = purse.masterWallet.getChecksumAddressString()
+    const receipt = await web3.eth.sendTransaction({
+      from: Funder,
+      to: masterAddress,
+      value: ONE_ETHER,
+      gas: 22000,
+      gasPrice: TWO_GWEI
+    })
+    assert(receipt.status, 'funding tx failed')
 
-      // Give it a few seconds to fund the children...
-      await wait(5000)
+    // Give it a few seconds to fund the children...
+    await wait(5000)
 
-      // verify they have balances
-      for (let i = 0; i < childCount; i++) {
-        const chidlBal = await getBalance(web3, purse.children[i])
-        assert(chidlBal.gt(ZERO), 'zero balance on child')
-      }
+    // verify they have balances
+    for (let i = 0; i < childCount; i++) {
+      const chidlBal = await getBalance(web3, purse.children[i])
+      assert(chidlBal.gt(ZERO), 'zero balance on child')
+    }
 
-      // Draing
-      await purse.drainChildren()
+    // Draing
+    await purse.drainChildren()
 
-      // Give it a bit to process
-      wait(5000)
+    // Give it a bit to process
+    wait(5000)
 
-      // Verify they'r eempty
-      for (let i = 0; i < childCount; i++) {
-        const chidlBal = await getBalance(web3, purse.children[i])
-        assert(chidlBal.eq(ZERO), 'non-zero balance on child')
-      }
+    // Verify they'r eempty
+    for (let i = 0; i < childCount; i++) {
+      const chidlBal = await getBalance(web3, purse.children[i])
+      assert(chidlBal.eq(ZERO), 'non-zero balance on child')
+    }
+
+    await purse.teardown(true)
   })
 })
