@@ -92,8 +92,9 @@ require('react-styl')(`
       width: 100%
       .listing-card
         margin-right: 1.5rem
-        min-width: 210px
-        max-width: 30%
+        width: 170px
+        .main-pic
+          height: 170px
 
   .listing-card
     position: relative

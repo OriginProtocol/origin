@@ -90,24 +90,26 @@ class EditProfileModal extends Component {
                 avatarUrl={this.state.avatarUrl}
               />
             </ImageCropper>
-            <div className="form-group mt-3">
-              <label>
-                <fbt desc="EditModal.firstName">First Name</fbt>
-              </label>
-              <input
-                type="text"
-                maxLength="40"
-                {...input('firstName')}
-                ref={r => (this.input = r)}
-              />
-              {Feedback('firstName')}
-            </div>
-            <div className="form-group">
-              <label>
-                <fbt desc="EditModal.lastName">Last Name</fbt>
-              </label>
-              <input type="text" maxLength="40" {...input('lastName')} />
-              {Feedback('lastName')}
+            <div className="profile-name-fields mt-3">
+              <div className="form-group">
+                <label>
+                  <fbt desc="EditModal.firstName">First Name</fbt>
+                </label>
+                <input
+                  type="text"
+                  maxLength="40"
+                  {...input('firstName')}
+                  ref={r => (this.input = r)}
+                />
+                {Feedback('firstName')}
+              </div>
+              <div className="form-group">
+                <label>
+                  <fbt desc="EditModal.lastName">Last Name</fbt>
+                </label>
+                <input type="text" maxLength="40" {...input('lastName')} />
+                {Feedback('lastName')}
+              </div>
             </div>
             <div className="form-group">
               <label>
@@ -127,17 +129,18 @@ class EditProfileModal extends Component {
             )}
             children={
               <>
-                <fbt desc="EditModal.nameAndPhoto">Your name and photo.</fbt>
-                <a href="#">
-                  <fbt desc="EditModal.learnMore">Learn more</fbt>
-                </a>
+                <fbt desc="EditModal.nameAndPhoto">
+                  Your photo, name, and description will be visible to other
+                  users on the blockchain.
+                </fbt>
               </>
             }
+            pii={true}
           />
           <div className="actions d-flex">
             <button
-              className="btn btn-primary"
-              children={fbt('OK', 'OK')}
+              className="btn btn-primary btn-rounded"
+              children={fbt('Save', 'Save')}
               onClick={() => {
                 if (this.validate()) {
                   this.props.onChange(
@@ -209,12 +212,19 @@ require('react-styl')(`
       display: flex
       flex-direction: column
       flex: auto
-
       .avatar
         max-width: 110px
         max-height: 110px
         padding-top: 110px
         margin: 0 auto
+      .profile-name-fields
+        display: flex
+        flex-direction: row
+        > div
+          margin-right: 10px
+          &:last-child
+            margin-left: 10px
+            margin-right: 0
 
   @media (max-width: 767.98px)
     .edit-profile-modal
@@ -225,10 +235,6 @@ require('react-styl')(`
           max-height: 100px
           padding-top: 100px
           margin: 0 auto
-        .form-group
-          text-align: center
-        input
-          text-align: center
       .actions
         margin-top: auto
         .btn

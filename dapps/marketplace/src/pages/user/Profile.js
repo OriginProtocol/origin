@@ -435,10 +435,7 @@ class UserProfile extends Component {
   render() {
     if (this.state.redirectToOnboarding) {
       return (
-        <UserActivationLink
-          location={{ pathname: '/' }}
-          forceRedirect={true}
-        />
+        <UserActivationLink location={{ pathname: '/' }} forceRedirect={true} />
       )
     }
     return (
