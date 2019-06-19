@@ -21,7 +21,7 @@ const ListingCards = ({
   if (!listings) return null
 
   return (
-    <div className={horizontalList ? 'listing-horizontal-cards' : 'listing-cards'}>
+    <div className={`listing-cards${horizontalList ? ' listing-horizontal-cards' : ''}`}>
       {redirect && <Redirect to={redirect} />}
       {listings.map(a => (
         <div
@@ -81,6 +81,15 @@ require('react-styl')(`
     grid-column-gap: 1.5rem
     grid-row-gap: 1.5rem
     grid-template-columns: repeat(auto-fill, minmax(210px, 1fr))
+
+    &.listing-horizontal-cards
+      display: inline-flex
+      overflow-x: scroll
+      width: 100%
+      .listing-card
+        margin-right: 1.5rem
+        min-width: 210px
+        max-width: 30%
 
   .listing-card
     position: relative

@@ -5,6 +5,7 @@ function MobileModalHeader({
   headerImageUrl,
   className = '',
   showBackButton = true,
+  showCloseButton = false,
   onBack,
   fullscreen = false
 }) {
@@ -34,13 +35,23 @@ function MobileModalHeader({
     headerClassList = headerClassList.concat(className.split(' '))
   }
 
+  let closeButton
+
+  if (showCloseButton) {
+    closeButton = (
+      <a className="modal-action-button close-button" onClick={onBack} />
+    )
+  } else if (showBackButton) {
+    closeButton = (
+      <a className="modal-action-button back-button" onClick={onBack} />
+    )
+  }
+
   return (
     <div className={`${headerClassList.join(' ')}`} style={headerStyle}>
-      {showBackButton && (
-        <a className="modal-action-button back-button" onClick={onBack} />
-      )}
+      {closeButton}
       <h3 className="modal-title">{children}</h3>
-      {showBackButton && <span className="modal-action-button" />}
+      {closeButton === null ? null : <span className="modal-action-button" />}
     </div>
   )
 }

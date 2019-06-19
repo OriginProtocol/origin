@@ -6,6 +6,7 @@ import QueryError from 'components/QueryError'
 import nextPageFactory from 'utils/nextPageFactory'
 import ListingsGallery from 'pages/listings/ListingCards'
 import query from 'queries/UserListings'
+import useIsMobile from 'utils/useMobile'
 
 const nextPage = nextPageFactory('marketplace.user.listings')
 
@@ -16,6 +17,8 @@ const UserListings = ({ user, hideHeader }) => {
     sort: 'featured',
     hidden: true
   }
+
+  const isMobile = useIsMobile()
 
   return (
     <Query
@@ -57,7 +60,7 @@ const UserListings = ({ user, hideHeader }) => {
               listings={nodes}
               hasNextPage={hasNextPage}
               hideCategory
-              horizontalList
+              horizontalList={isMobile ? false : true}
             />
             {!hasNextPage ? null : (
               <button
