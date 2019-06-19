@@ -12,7 +12,7 @@ import relayer from './_relayer'
 const debug = createDebug('origin:tx-helper:')
 const formatAddr = address => (address ? address.substr(0, 8) : '')
 const isOriginMobile =
-  window &&
+  typeof window !== 'undefined' &&
   window.ReactNativeWebView &&
   contracts.web3Exec.currentProvider.isOrigin
 
