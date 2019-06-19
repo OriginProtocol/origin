@@ -241,7 +241,7 @@ class BackupScreen extends Component {
               textStyle={{ fontSize: 18, fontWeight: '900' }}
               title={fbt('Cancel', 'BackupScreen.cancelButton')}
               onPress={() => {
-                this.props.navigation.navigate('Wallet')
+                this.props.navigation.navigate('App')
               }}
             />
           </View>
@@ -379,12 +379,7 @@ class BackupScreen extends Component {
               await this.props.setBackupWarningStatus(
                 wallet.activeAccount.address
               )
-              // Navigate to subroute to skip authentication requirement
-              this.props.navigation.navigate(
-                'GuardedApp',
-                {},
-                NavigationActions.navigate({ routeName: 'App' })
-              )
+              this.props.navigation.navigate('App')
             }}
           />
         </View>

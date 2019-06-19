@@ -51,7 +51,7 @@ class BackupPrompt extends React.Component {
           this.setState({ displayBackupModal: false })
         }}
       >
-        <SafeAreaView style={styles.svContainer}>
+        <SafeAreaView style={styles.modalSafeAreaView}>
           <BackupCard
             wallet={this.props.wallet}
             onRequestBackup={async () => {
@@ -85,7 +85,8 @@ export default connect(
 )(BackupPrompt)
 
 const styles = StyleSheet.create({
-  svContainer: {
-    flex: 1
+  modalSafeAreaView: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)'
   }
 })
