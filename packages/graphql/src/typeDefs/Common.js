@@ -53,7 +53,7 @@ module.exports = `
     totalSupply: String
 
     # Balance of given address
-    balance(address: String!): String
+    balance(address: String!, format: Boolean): String
 
     # Allowance of given address
     allowance(address: String!, target: String!): String

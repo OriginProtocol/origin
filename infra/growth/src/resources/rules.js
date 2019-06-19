@@ -538,6 +538,7 @@ class BaseRule {
       ethAddress,
       visible: this.config.visible,
       campaign: this.campaign,
+      limit: this.limit,
       status: omitUserData
         ? null
         : await this.getStatus(ethAddress, events, level),

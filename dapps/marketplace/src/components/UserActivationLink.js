@@ -21,10 +21,6 @@ const UserActivationLink = props => {
   const [modal, setModal] = useState(false)
   const [redirectToHome, setRedirectToHome] = useState(false)
 
-  if (redirectToHome) {
-    return <Redirect to={sessionStore.get('getStartedRedirect', '/')} />
-  }
-
   const shouldShowMobileModal = modal || (isMobile && props.forceRedirect)
 
   useEffect(() => {
@@ -32,6 +28,10 @@ const UserActivationLink = props => {
       storeLocationToStore(props)
     }
   }, [props.location])
+
+  if (redirectToHome) {
+    return <Redirect to={sessionStore.get('getStartedRedirect', '/')} />
+  }
 
   if (shouldShowMobileModal) {
     return (
@@ -52,7 +52,11 @@ const UserActivationLink = props => {
     return <Redirect to="/onboard" />
   }
 
-  let content = <fbt desc="navigation.getStarted.getStarted">Get Started</fbt>
+  let content = (
+    <span>
+      <fbt desc="navigation.getStarted.getStarted">Get Started</fbt>
+    </span>
+  )
 
   if (props.children) {
     content = props.children

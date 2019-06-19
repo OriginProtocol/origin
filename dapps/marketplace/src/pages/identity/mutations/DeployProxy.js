@@ -69,7 +69,7 @@ class DeployProxy extends Component {
     const { skipSuccessScreen } = this.props
     const content = skipSuccessScreen ? (
       <AutoMutate
-        mutatation={() => {
+        mutation={() => {
           this.setState({
             shouldClose: true
           })

@@ -44,13 +44,23 @@ class WebsiteAttestation extends Component {
         }`}
         shouldClose={this.state.shouldClose}
         onClose={() => {
+          const completed = this.state.completed
+
+          if (completed) {
+            this.props.onComplete(this.state.data)
+          }
+
           this.setState({
             shouldClose: false,
             error: false,
-            stage: 'GenerateCode'
+            stage: 'GenerateCode',
+            completed: false,
+            data: null
           })
-          this.props.onClose()
+
+          this.props.onClose(completed)
         }}
+        lightMode={true}
       >
         <div>{this[`render${this.state.stage}`]()}</div>
       </ModalComponent>
@@ -92,17 +102,20 @@ class WebsiteAttestation extends Component {
         </div>
         <div className="actions">
           {this.renderCodeButton()}
-          <button
-            className="btn btn-link"
-            onClick={() => this.setState({ shouldClose: true })}
-            children={fbt('Cancel', 'VerifyWebsite.cancel')}
-          />
+          {isMobile ? null : (
+            <button
+              className="btn btn-link"
+              onClick={() => this.setState({ shouldClose: true })}
+              children={fbt('Cancel', 'VerifyWebsite.cancel')}
+            />
+          )}
         </div>
       </>
     )
   }
 
   renderDownloadCode() {
+    const isMobile = this.isMobile()
     return (
       <>
         <h2>
@@ -116,7 +129,16 @@ class WebsiteAttestation extends Component {
             website:
           </fbt>
         </div>
-        <div className="actions">{this.renderDownloadButton()}</div>
+        <div className="actions">
+          {this.renderDownloadButton()}
+          {isMobile ? null : (
+            <button
+              className="btn btn-link"
+              onClick={() => this.setState({ shouldClose: true })}
+              children={fbt('Cancel', 'VerifyWebsite.cancel')}
+            />
+          )}
+        </div>
       </>
     )
   }
@@ -143,11 +165,13 @@ class WebsiteAttestation extends Component {
         </div>
         <div className="actions">
           {this.renderVerifyButton()}
-          <button
-            className="btn btn-link"
-            onClick={() => this.setState({ shouldClose: true })}
-            children={fbt('Cancel', 'VerifyWebsite.cancel')}
-          />
+          {isMobile ? null : (
+            <button
+              className="btn btn-link"
+              onClick={() => this.setState({ shouldClose: true })}
+              children={fbt('Cancel', 'VerifyWebsite.cancel')}
+            />
+          )}
         </div>
       </>
     )
@@ -176,9 +200,7 @@ class WebsiteAttestation extends Component {
       >
         {generateCode => (
           <button
-            className={`btn ${
-              this.isMobile() ? 'btn-primary' : 'btn-outline-light'
-            }`}
+            className="btn btn-primary"
             disabled={this.state.loading}
             onClick={() => {
               if (this.state.loading) return
@@ -204,9 +226,7 @@ class WebsiteAttestation extends Component {
   renderDownloadButton() {
     return (
       <button
-        className={`btn ${
-          this.isMobile() ? 'btn-primary' : 'btn-outline-light'
-        }`}
+        className="btn btn-primary"
         onClick={() => {
           this.setState({
             stage: 'VerifyCode'
@@ -225,15 +245,18 @@ class WebsiteAttestation extends Component {
         mutation={VerifyWebsiteMutation}
         onCompleted={res => {
           const result = res.verifyWebsite
-          if (result.success) {
-            this.setState({
-              stage: 'VerifiedOK',
-              data: result.data,
-              loading: false
-            })
-          } else {
-            this.setState({ error: result.reason, loading: false })
+
+          if (!result.success) {
+            this.setState({ error: result.reason, loading: false, data: null })
+            return
           }
+
+          this.setState({
+            data: result.data,
+            loading: false,
+            completed: true,
+            shouldClose: true
+          })
         }}
         onError={errorData => {
           console.error('Error', errorData)
@@ -242,9 +265,7 @@ class WebsiteAttestation extends Component {
       >
         {verifyCode => (
           <button
-            className={`btn ${
-              this.isMobile() ? 'btn-primary' : 'btn-outline-light'
-            }`}
+            className="btn btn-primary"
             onClick={() => {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
@@ -263,41 +284,6 @@ class WebsiteAttestation extends Component {
           />
         )}
       </Mutation>
-    )
-  }
-
-  renderVerifiedOK() {
-    const isMobile = this.isMobile()
-
-    const header = isMobile ? null : (
-      <fbt desc="WebsiteAttestation.verified">Website verified!</fbt>
-    )
-
-    return (
-      <>
-        <h2>{header}</h2>
-        <div className="instructions">
-          <fbt desc="Attestation.DontForget">
-            Don&apos;t forget to publish your changes.
-          </fbt>
-        </div>
-        <div className="help">
-          <fbt desc="Attestation.publishingBlockchain">
-            Publishing to the blockchain lets other users know that you have a
-            verified website.
-          </fbt>
-        </div>
-        <div className="actions">
-          <button
-            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
-            onClick={() => {
-              this.props.onComplete(this.state.data)
-              this.setState({ shouldClose: true })
-            }}
-            children={fbt('Continue', 'Continue')}
-          />
-        </div>
-      </>
     )
   }
 

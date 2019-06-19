@@ -10,6 +10,8 @@ import MobileModal from 'components/MobileModal'
 import GenerateAirbnbCodeMutation from 'mutations/GenerateAirbnbCode'
 import VerifyAirbnbCodeMutation from 'mutations/VerifyAirbnbCode'
 
+import PublishedInfoBox from 'components/_PublishedInfoBox'
+
 class AirbnbAttestation extends Component {
   state = {
     stage: 'GenerateCode',
@@ -44,13 +46,23 @@ class AirbnbAttestation extends Component {
         }`}
         shouldClose={this.state.shouldClose}
         onClose={() => {
+          const completed = this.state.completed
+
+          if (completed) {
+            this.props.onComplete(this.state.data)
+          }
+
           this.setState({
             shouldClose: false,
             error: false,
-            stage: 'GenerateCode'
+            stage: 'GenerateCode',
+            completed: false,
+            data: null
           })
-          this.props.onClose()
+
+          this.props.onClose(completed)
         }}
+        lightMode={true}
       >
         <div>{this[`render${this.state.stage}`]()}</div>
       </ModalComponent>
@@ -64,24 +76,6 @@ class AirbnbAttestation extends Component {
       <fbt desc="VerifyAirbnb.averifyAirbnbAccount">
         Verify your Airbnb account
       </fbt>
-    )
-
-    const storedOnChain = isMobile ? (
-      <div className="info yellow mt-auto">
-        <span className="title">
-          <fbt desc="VerifyAirbnb.visibleOnBlockchain">
-            What will be visible on the blockchain?
-          </fbt>
-        </span>
-        <fbt desc="VerifyAirbnb.yourAirbnbId">Your Airbnb user ID</fbt>
-      </div>
-    ) : (
-      <div className="help">
-        <fbt desc="VerifyAirbnb.airbnbProfilePublished">
-          Other users will know that you have a verified Airbnb profile and your
-          user id will be published on the blockchain.
-        </fbt>
-      </div>
     )
 
     return (
@@ -104,7 +98,17 @@ class AirbnbAttestation extends Component {
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
-        {storedOnChain}
+        <PublishedInfoBox
+          className="mt-auto"
+          pii={true}
+          title={fbt(
+            'What will be visible on the blockchain?',
+            'VerifyAirbnb.visibleOnBlockchain'
+          )}
+          children={
+            <fbt desc="VerifyAirbnb.yourAirbnbId">Your Airbnb user ID</fbt>
+          }
+        />
         <div className={`actions mt-5`}>
           {this.renderCodeButton()}
           {!isMobile && (
@@ -182,22 +186,23 @@ class AirbnbAttestation extends Component {
   }
 
   renderCodeButton() {
-    const isMobile = this.isMobile()
-
     return (
       <Mutation
         mutation={GenerateAirbnbCodeMutation}
         onCompleted={res => {
-          const result = res.generateAirbnbCode
-          if (result.success) {
-            this.setState({
-              stage: 'VerifyCode',
-              code: result.code,
-              loading: false
-            })
-          } else {
-            this.setState({ error: result.reason, loading: false })
+          const result = res.GenerateAirbnbCodeMutation
+
+          if (!result.success) {
+            this.setState({ error: result.reason, loading: false, data: null })
+            return
           }
+
+          this.setState({
+            data: result.data,
+            loading: false,
+            completed: true,
+            shouldClose: true
+          })
         }}
         onError={errorData => {
           console.error('Error', errorData)
@@ -206,7 +211,7 @@ class AirbnbAttestation extends Component {
       >
         {generateCode => (
           <button
-            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
+            className="btn btn-primary"
             disabled={this.state.loading}
             onClick={() => {
               if (this.state.loading) return
@@ -230,8 +235,6 @@ class AirbnbAttestation extends Component {
   }
 
   renderVerifyButton() {
-    const isMobile = this.isMobile()
-
     return (
       <Mutation
         mutation={VerifyAirbnbCodeMutation}
@@ -254,7 +257,7 @@ class AirbnbAttestation extends Component {
       >
         {verifyCode => (
           <button
-            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
+            className="btn btn-primary"
             disabled={this.state.loading}
             onClick={() => {
               if (this.state.loading) return
@@ -276,39 +279,6 @@ class AirbnbAttestation extends Component {
       </Mutation>
     )
   }
-
-  renderVerifiedOK() {
-    const isMobile = this.isMobile()
-
-    return (
-      <>
-        <h2>
-          <fbt desc="AirbnbAttestation.verified">Airbnb account verified!</fbt>
-        </h2>
-        <div className="instructions">
-          <fbt desc="Attestation.DontForget">
-            Don&apos;t forget to publish your changes.
-          </fbt>
-        </div>
-        <div className="help">
-          <fbt desc="Attestation.publishingBlockchain">
-            Publishing to the blockchain lets other users know that you have a
-            verified profile.
-          </fbt>
-        </div>
-        <div className="actions">
-          <button
-            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
-            onClick={() => {
-              this.props.onComplete(this.state.data)
-              this.setState({ shouldClose: true })
-            }}
-            children={fbt('Continue', 'Continue')}
-          />
-        </div>
-      </>
-    )
-  }
 }
 
 export default withIsMobile(AirbnbAttestation)
@@ -321,8 +291,12 @@ require('react-styl')(`
         flex-direction: row
         max-width: 24rem
         margin: 0 auto
-        border: solid 1px #c2cbd3
-        border-radius: 0.3rem
+        border: 0
+        border-bottom: solid 1px #c2cbd3
+        border-radius: 0
+        &:focus
+          border-color: #80bdff
+          box-shadow: unset
         .form-control.airbnb-verification-code
           flex: auto
           text-align: left
@@ -334,28 +308,4 @@ require('react-styl')(`
           border-radius: 0
           border-left: 1px solid #c2cbd3
           cursor: pointer
-    .info
-      text-align: center
-      border-radius: 5px
-      border: solid 1px var(--bluey-grey)
-      background-color: rgba(152, 167, 180, 0.1)
-      font-family: Lato
-      font-size: 14px
-      color: black
-      padding: 10px
-      margin-top: 1rem
-      .title
-        display: block
-        font-weight: bold
-        margin-bottom: 3px
-        & ~ a
-          margin-left: 5px
-      &.yellow
-        border: solid 1px var(--golden-rod)
-        background-color: rgba(244, 193, 16, 0.1)
-      &.white
-        border: solid 1px #c2cbd3
-        background-color: white
-        display: flex
-        text-align: left
 `)

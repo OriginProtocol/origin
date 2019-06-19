@@ -6,11 +6,11 @@ import { fbt } from 'fbt-runtime'
 
 import withWeb3 from 'hoc/withWeb3'
 import withCreatorConfig from 'hoc/withCreatorConfig'
+import withIsMobile from 'hoc/withIsMobile'
 
-import RewardsBanner from './_RewardsBanner'
+import Nav from './nav/Nav'
 import TranslationModal from './_TranslationModal'
 import MobileModal from './_MobileModal'
-import Nav from './_Nav'
 import Footer from './_Footer'
 
 import Onboard from './onboard/Onboard'
@@ -94,22 +94,28 @@ class App extends Component {
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
 
-    // hide the rewards bar if you're on any of the rewards pages or using
-    // the DApp via the webview in the mobile app
-    const hideRewardsBar =
-      this.props.location.pathname.match(/^\/welcome$/g) ||
-      this.props.location.pathname.match(/^\/campaigns$/g)
-
+    const isMobile = this.props.ismobile === 'true'
     // hide navigation bar on growth welcome screen and show it
     // in onboarding variation of that screen
+
     const hideNavbar =
-      !this.props.location.pathname.match(/^\/welcome\/onboard.*$/g) &&
-      this.props.location.pathname.match(/^\/welcome.*$/g)
+      (!this.props.location.pathname.match(/^\/welcome\/onboard.*$/g) &&
+        this.props.location.pathname.match(/^\/welcome.*$/g)) ||
+      (isMobile &&
+        this.props.location.pathname.match(/^\/campaigns\/purchases$/g)) ||
+      (isMobile &&
+        this.props.location.pathname.match(/^\/campaigns\/invitations$/g)) ||
+      (isMobile &&
+        this.props.location.pathname.match(/^\/campaigns\/verifications$/g)) ||
+      (isMobile && this.props.location.pathname.match(/^\/users\/.*$/g))
 
     return (
       <CurrencyContext.Provider value={this.state.currency}>
-        {!hideRewardsBar && <RewardsBanner />}
-        {!hideNavbar && <Nav />}
+        {!hideNavbar && (
+          <Nav
+            onGetStarted={() => this.setState({ mobileModalDismissed: false })}
+          />
+        )}
         <main>
           <Switch>
             <Route path="/onboard" component={Onboard} />
@@ -140,6 +146,11 @@ class App extends Component {
             <Route path="/about/payments" component={AboutPayments} />
             <Route path="/about/tokens" component={AboutToken} />
             <Route exact path="/campaigns" component={GrowthCampaigns} />
+            <Route
+              exact
+              path="/campaigns/:navigation"
+              component={GrowthCampaigns}
+            />
             <Route exact path="/rewards/banned" component={GrowthBanned} />
             <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />
             <Route component={Listings} />
@@ -172,7 +183,7 @@ class App extends Component {
   }
 }
 
-export default withWeb3(withCreatorConfig(withRouter(App)))
+export default withIsMobile(withWeb3(withCreatorConfig(withRouter(App))))
 
 require('react-styl')(`
   .app-spinner

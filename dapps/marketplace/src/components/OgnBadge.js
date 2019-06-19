@@ -17,7 +17,7 @@ export default OgnBadge
 
 require('react-styl')(`
   .growth-reward-amount.listing-card-growth-reward
-    margin-left: 1rem
+    margin-left: 0.5rem
   .growth-reward-amount.listing-detail-growth-reward
     margin-left: auto
     background-color: var(--pale-grey-two)

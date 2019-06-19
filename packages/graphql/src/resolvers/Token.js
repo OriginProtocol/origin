@@ -48,13 +48,29 @@ export default {
     const currency = await currencies.get(token.id)
     return currency ? currency.priceInUSD : null
   },
-  balance: async (token, { address }) => {
+  balance: async (token, { address, format }) => {
+    const web3 = contracts.web3
+    const toBN = web3.utils.toBN
+    let balance
     if (token.code === 'ETH') {
-      return await contracts.web3.eth.getBalance(address)
+      balance = await web3.eth.getBalance(address)
+    } else {
+      const contract = tokenContract(token.code)
+      if (!contract) return null
+      balance = await contract.methods.balanceOf(address).call()
     }
-    const contract = tokenContract(token.code)
-    if (!contract) return null
-    return await contract.methods.balanceOf(address).call()
+
+    if (format && token.decimals && balance) {
+      const base = toBN(10).pow(toBN(token.decimals))
+      const dm = toBN(balance).divmod(base)
+      const mod = dm.mod
+        .toString()
+        .substr(0, 5)
+        .replace(/0+$/, '')
+      return `${dm.div}${mod ? `.${mod}` : ''}`
+    }
+
+    return balance
   },
   allowance: async (token, { address, target }) => {
     const contract = tokenContract(token.code)

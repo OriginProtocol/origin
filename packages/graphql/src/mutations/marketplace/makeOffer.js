@@ -7,6 +7,9 @@ import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 import currencies from '../../utils/currencies'
 import { proxyOwner, predictedProxy, resetProxyCache } from '../../utils/proxy'
+import { swapToTokenTx } from '../uniswap/swapToToken'
+import createDebug from 'debug'
+const debug = createDebug('origin:makeOffer:')
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
@@ -16,6 +19,7 @@ async function makeOffer(_, data) {
   const buyer = data.from || contracts.defaultMobileAccount
   const marketplace = contracts.marketplaceExec
   const ipfsData = await toIpfsData(data)
+  let mutation = 'makeOffer'
 
   const affiliateWhitelistDisabled = await marketplace.methods
     .allowedAffiliates(marketplace.options.address)
@@ -71,9 +75,11 @@ async function makeOffer(_, data) {
     args.push(offerId)
   }
 
+  let ethValue = currencyAddress === ZeroAddress ? value : 0
   let tx = marketplace.methods.makeOffer(...args)
   if (contracts.config.proxyAccountsEnabled) {
     let owner = await proxyOwner(buyer)
+    const isProxy = owner ? true : false
     if (currencyAddress !== ZeroAddress) {
       let proxy = buyer
       if (!owner) {
@@ -85,22 +91,42 @@ async function makeOffer(_, data) {
         proxy
       )
       const txData = await tx.encodeABI()
-      tx = Proxy.methods.transferTokenMarketplaceExecute(
-        owner,
-        contracts.marketplace._address,
-        txData,
-        currencyAddress,
-        value
-      )
+
+      if (data.autoswap) {
+        const swapTx = await swapToTokenTx(value)
+        const swapABI = await swapTx.tx.encodeABI()
+        tx = Proxy.methods.swapAndMakeOffer(
+          owner, // address _owner,
+          contracts.marketplace._address, // address _marketplace,
+          txData, // bytes _offer,
+          contracts.daiExchange._address, // address _exchange,
+          swapABI, // bytes _swap,
+          currencyAddress, // address _token,
+          value // uint _value
+        )
+        ethValue = swapTx.value // Eth value should cover exchange costs
+        if (isProxy) {
+          mutation = 'swapAndMakeOffer'
+        }
+        debug(`attempting to autoswap ${value} Eth`)
+      } else {
+        tx = Proxy.methods.transferTokenMarketplaceExecute(
+          owner,
+          contracts.marketplace._address,
+          txData,
+          currencyAddress,
+          value
+        )
+      }
     }
   }
 
   return txHelper({
     tx,
     from: buyer,
-    mutation: 'makeOffer',
+    mutation,
     gas: cost.makeOffer,
-    value: currencyAddress === ZeroAddress ? value : 0,
+    value: ethValue,
     onConfirmation: () => resetProxyCache()
   })
 }
