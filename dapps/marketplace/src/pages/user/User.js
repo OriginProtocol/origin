@@ -45,7 +45,9 @@ const User = ({ match, isMobile, history }) => {
           const reviewsComp = (
             <Reviews id={id} hideWhenZero hideHeader={isMobile} />
           )
-          const listingsComp = <UserListings user={id} hideHeader={isMobile} />
+          const listingsComp = (
+            <UserListings user={id} hideHeader={isMobile} hideLoadMore />
+          )
           return (
             <>
               <DocumentTitle
