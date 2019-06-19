@@ -120,7 +120,7 @@ class UserProfile extends Component {
   componentDidUpdate(prevProps) {
     if (get(this.props, 'identity.id') !== get(prevProps, 'identity.id')) {
       this.setState(getState(get(this.props, 'identity')))
-      if (!this.props.identity) {
+      if (!this.props.identity && !this.state.redirectToOnboarding) {
         this.setState({
           redirectToOnboarding: true
         })
@@ -137,7 +137,8 @@ class UserProfile extends Component {
     if (
       !this.props.identityLoading &&
       prevProps.identityLoading &&
-      !this.props.identity
+      !this.props.identity &&
+      !this.state.redirectToOnboarding
     ) {
       // redirect to onboarding, if user doesn't have a deployed profile
       this.setState({
@@ -391,6 +392,7 @@ class UserProfile extends Component {
         skipSuccessScreen={true}
         onComplete={() => {
           this.showDeploySuccessMessage()
+          this.props.identityRefetch()
           this.setState({
             deployIdentity: null
           })
@@ -434,7 +436,7 @@ class UserProfile extends Component {
     if (this.state.redirectToOnboarding) {
       return (
         <UserActivationLink
-          location={{ pathname: '/profile' }}
+          location={{ pathname: '/' }}
           forceRedirect={true}
         />
       )
