@@ -162,39 +162,6 @@ require('react-styl')(`
         margin-left: 0.25rem
         margin-bottom: 0.12rem
 
-  // .listing-horizontal-cards
-  //   width: 100%
-  //   overflow-x: scroll
-  //   white-space: nowrap
-  //   .listing-card
-  //     width: 165px
-  //     display: inline-block
-  //     margin: 0.5rem
-  //     .main-pic
-  //       margin-bottom: 0.5rem
-  //       height: 165px
-
-  // @media (max-width: 767.98px)
-  //   .listing-horizontal-cards
-  //     text-align: center
-  //     overflow-x: hidden
-  //     white-space: normal
-  //     .listing-card
-  //       max-width: 165px
-  //       display: inline-block
-  //       padding: 0 0.5rem
-  //       text-align: left
-  //       margin: 0.5rem 0
-
-  // @media (max-width: 330px)
-  //   // For really small screens (iPhone SE, etc..)
-  //   .listing-horizontal-cards
-  //     text-align: center
-  //     overflow-x: hidden
-  //     white-space: normal
-  //     .listing-card
-  //       max-width: 100%
-  //       width: 100%
   @media (max-width: 767.98px)
     .listing-cards
       grid-template-columns: repeat(auto-fill,minmax(135px, 1fr))
