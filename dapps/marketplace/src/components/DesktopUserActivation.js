@@ -15,6 +15,7 @@ import ImageCropper from './ImageCropper'
 import Avatar from './Avatar'
 import UserProfileCreated from './_UserProfileCreated'
 import MobileModal from './MobileModal'
+import PublishedInfoBox from './_PublishedInfoBox'
 
 import GenerateEmailCodeMutation from 'mutations/GenerateEmailCode'
 import VerifyEmailCodeMutation from 'mutations/VerifyEmailCode'
@@ -267,17 +268,18 @@ class UserActivation extends Component {
                 </fbt>
               </div>
             </div>
-            <div className="info">
-              <span className="title">
-                <fbt desc="UserActivation.visibleOnBlockchain">
-                  What will be visible on the blockchain?
+            <PublishedInfoBox
+              title={fbt(
+                'What will be visible on the blockchain?',
+                'UserActivation.visibleOnBlockchain'
+              )}
+              children={
+                <fbt desc="UserActivation.verifiedButNotEmail">
+                  That you have a verified email, but NOT your actual email
+                  address
                 </fbt>
-              </span>
-              <fbt desc="UserActivation.verifiedButNotEmail">
-                That you have a verified email, but NOT your actual email
-                address
-              </fbt>
-            </div>
+              }
+            />
             <div className="actions">
               <button
                 type="submit"
@@ -425,17 +427,18 @@ class UserActivation extends Component {
                     </a>
                   </div>
                 </div>
-                <div className="info">
-                  <span className="title">
-                    <fbt desc="UserActivation.visibleOnBlockchain">
-                      What will be visible on the blockchain?
+                <PublishedInfoBox
+                  title={fbt(
+                    'What will be visible on the blockchain?',
+                    'UserActivation.visibleOnBlockchain'
+                  )}
+                  children={
+                    <fbt desc="UserActivation.verifiedButNotEmail">
+                      That you have a verified email, but NOT your actual email
+                      address
                     </fbt>
-                  </span>
-                  <fbt desc="UserActivation.verifiedButNotEmail">
-                    That you have a verified email, but NOT your actual email
-                    address
-                  </fbt>
-                </div>
+                  }
+                />
                 <div className="actions">
                   <button
                     type="submit"
@@ -557,26 +560,30 @@ class UserActivation extends Component {
             </fbt>
           </div>
         </div>
-        <div className="info yellow">
-          <span className="title">
-            <fbt desc="UserActivation.visibleOnBlockchain">
-              What will be visible on the blockchain?
-            </fbt>
-          </span>
-          <fbt desc="UserActivation.nameAndPhoto">Your name and photo.</fbt>
-          <a
-            href="#"
-            onClick={e => {
-              e.preventDefault()
-              this.setState({
-                personalDataModal: true,
-                shouldClosePersonalDataModal: false
-              })
-            }}
-          >
-            <fbt desc="UserActivation.learnMore">Learn more</fbt>
-          </a>
-        </div>
+        <PublishedInfoBox
+          title={fbt(
+            'What will be visible on the blockchain?',
+            'UserActivation.visibleOnBlockchain'
+          )}
+          children={
+            <>
+              <fbt desc="UserActivation.nameAndPhoto">Your name and photo.</fbt>
+              <a
+                href="#"
+                onClick={e => {
+                  e.preventDefault()
+                  this.setState({
+                    personalDataModal: true,
+                    shouldClosePersonalDataModal: false
+                  })
+                }}
+              >
+                <fbt desc="UserActivation.learnMore">Learn more</fbt>
+              </a>
+            </>
+          }
+          pii={true}
+        />
         <div className="actions">
           <button
             type="submit"

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import MobileModalHeader from 'components/MobileModalHeader'
+
 function freezeVp(e) {
   e.preventDefault()
 }
@@ -214,7 +215,7 @@ require('react-styl')(`
     > .modal-content > div 
       .actions
         margin-top: auto !important
-      .info
+      .published-info-box
         margin-top: auto !important
         & + .actions
           margin-top: 3rem !important

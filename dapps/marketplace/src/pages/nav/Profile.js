@@ -58,7 +58,7 @@ const ProfileNav = ({ identity, identityLoading, open, onOpen, onClose }) => (
   </Query>
 )
 
-const CreateIdentity = onClose => (
+const CreateIdentity = ({ onClose }) => (
   <>
     <div className="create-identity text-center">
       <Avatar />
@@ -84,8 +84,8 @@ const CreateIdentity = onClose => (
 
       <UserActivationLink
         className="btn btn-primary"
-        onClick={() => onClose()}
-        onClose={() => onClose()}
+        onClose={onClose}
+        onClick={onClose}
       />
     </div>
   </>
@@ -158,7 +158,7 @@ const ProfileDropdownRaw = ({
 
   return (
     <>
-      <div className="dropdown-menu-bg" onClick={() => onClose()} />
+      <div className="dropdown-menu-bg" onClick={onClose} />
       <div className="dropdown-menu dropdown-menu-right show profile">
         <a
           className="d-sm-none close-icon"

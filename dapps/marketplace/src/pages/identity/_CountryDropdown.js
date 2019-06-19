@@ -65,13 +65,15 @@ require('react-styl')(`
 
   .country-code
     cursor: pointer
-    background-color: var(--dark-two)
     border-radius: var(--default-radius)
     padding: 0.5rem
     margin-right: 0.5rem
     display: flex
+    border: solid 1px #c2cbd3
+    background-color: var(--white)
+    color: black
     &.show
-      background-color: var(--dark)
+      background-color: var(--light-footer)
     .active-country
       background-image: url(images/flags/us.svg)
       width: 3rem
@@ -83,7 +85,8 @@ require('react-styl')(`
       overflow: auto
       max-height: 200px
       max-width: 320px
-      background-color: var(--dark-two)
+      border: solid 1px #c2cbd3
+      background-color: var(--white)
       .dropdown-item
         color: var(--white)
         display: flex
@@ -93,12 +96,13 @@ require('react-styl')(`
         padding-left: 4rem;
         font-size: 18px
         &:hover
-          background-color: var(--dark)
+          background-color: var(--light-footer)
           color: var(--white)
         .name
           flex: 1
           overflow: hidden
           text-overflow: ellipsis
+          color: black
         .prefix
-          color: var(--dusk)
+          color: #6f8294
 `)

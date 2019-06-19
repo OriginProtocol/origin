@@ -11,17 +11,25 @@ function altClick(e) {
   return e.button === 0 && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey
 }
 
-const ListingCards = ({ listings, ognListingRewards }) => {
+const ListingCards = ({
+  listings,
+  ognListingRewards,
+  hideCategory,
+  horizontalList
+}) => {
   const [redirect, setRedirect] = useState()
   if (!listings) return null
 
   return (
-    <div className="listing-cards">
-      {redirect && <Redirect to={redirect} push />}
+    <div
+      className={`listing-cards${
+        horizontalList ? ' listing-horizontal-cards' : ''
+      }`}
+    >
+      {redirect && <Redirect to={redirect} />}
       {listings.map(a => (
         <div
           key={a.id}
-          className="listing-card"
           onClick={e => {
             if (altClick(e)) {
               setRedirect(`/listing/${a.id}`)
@@ -29,6 +37,7 @@ const ListingCards = ({ listings, ognListingRewards }) => {
               window.open(`#/listing/${a.id}`, '_blank')
             }
           }}
+          className="listing-card"
         >
           {a.media && a.media.length ? (
             <div
@@ -40,12 +49,14 @@ const ListingCards = ({ listings, ognListingRewards }) => {
           ) : (
             <div className="main-pic empty" />
           )}
-          <div className="header">
-            <div className="category">
-              <Category listing={a} showPrimary={false} />
+          {hideCategory ? null : (
+            <div className="header">
+              <div className="category">
+                <Category listing={a} showPrimary={false} />
+              </div>
+              <ListingBadge status={a.status} featured={a.featured} />
             </div>
-            <ListingBadge status={a.status} featured={a.featured} />
-          </div>
+          )}
           <h5>
             <a href={`#/listing/${a.id}`}>{a.title}</a>
           </h5>
@@ -75,12 +86,24 @@ require('react-styl')(`
     grid-row-gap: 1.5rem
     grid-template-columns: repeat(auto-fill, minmax(210px, 1fr))
 
+    &.listing-horizontal-cards
+      display: inline-flex
+      overflow-x: scroll
+      width: 100%
+      .listing-card
+        margin-right: 1.5rem
+        width: 170px
+        .main-pic
+          height: 170px
+
   .listing-card
     position: relative
     overflow: hidden
     display: flex
     flex-direction: column
     justify-content: flex-start
+    margin-bottom: 1rem
+    margin-top: 1rem
     cursor: pointer
 
     .main-pic
@@ -133,11 +156,6 @@ require('react-styl')(`
       font-weight: bold
       line-height: 1
       justify-content: space-between
-      > div
-        min-width: 0
-        white-space: nowrap
-        overflow: hidden
-        text-overflow: ellipsis
       span.desc
         color: var(--steel)
         font-size: 14px
