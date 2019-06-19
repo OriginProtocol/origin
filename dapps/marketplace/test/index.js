@@ -384,7 +384,7 @@ function listingTests(autoSwap) {
     })
 
     it('should close the edit modal', async function() {
-      await clickByText(page, 'OK', 'button')
+      await clickByText(page, 'Save', 'button')
       await page.waitForSelector('.pl-modal', { hidden: true })
     })
 
