@@ -148,7 +148,7 @@ require('react-styl')(`
         font-weight: bold
         position: relative
         line-height: normal
-        padding: 0.5rem 1.5rem 0.5rem 3.75rem
+        padding: 0.75rem 1.5rem 0.75rem 4rem
         overflow: hidden
         text-overflow: ellipsis
         &::before
@@ -159,16 +159,21 @@ require('react-styl')(`
           top: 0
           bottom: 0
           background-repeat: no-repeat
-          background-position: center left
+          background-position: center
           background-size: 22px
         &.close-dropdown::before
           background-image: url(images/nav/close-icon.svg)
-          background-size: 26px
-          left: 18px
+          background-size: 30px
+          left: 13px
+          width: 30px
+          height: 30px
+          top: 4px
         &.home::before
           background-image: url(images/nav/home-icon.svg)
+          background-size: 80%
         &.add::before
           background-image: url(images/nav/add-listing-icon.svg)
+          background-size: 75%
         &.earn::before
           background-image: url(images/nav/ogn-icon.svg)
         &.purchases::before
@@ -177,6 +182,7 @@ require('react-styl')(`
           background-image: url(images/nav/listings-icon.svg)
         &.sales::before
           background-image: url(images/nav/sales-icon.svg)
+          background-size: 85%
         &.messages::before
           background-image: url(images/nav/chatbubble-icon.svg)
         &.notifications::before
