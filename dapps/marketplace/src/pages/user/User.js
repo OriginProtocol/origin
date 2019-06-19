@@ -12,6 +12,7 @@ import UserProfileCard from 'components/UserProfileCard'
 import TabView from 'components/TabView'
 
 import withIsMobile from 'hoc/withIsMobile'
+import { withRouter } from 'react-router-dom'
 
 import UserListings from './_UserListings'
 
@@ -25,7 +26,7 @@ class User extends React.Component {
   }
 
   render() {
-    const { match, ismobile } = this.props
+    const { match, ismobile, history } = this.props
 
     const id = match.params.id
     const vars = { id: match.params.id }
@@ -33,6 +34,17 @@ class User extends React.Component {
 
     return (
       <div className="container user-public-profile">
+        <a
+          className="back-icon"
+          onClick={() => {
+            // TBD: is history.length safe to use?
+            if (history.length <= 1) {
+              history.push('/')
+            } else {
+              history.goBack()
+            }
+          }}
+        />
         <Query query={query} variables={vars}>
           {({ data, loading, error }) => {
             if (error) {
@@ -97,10 +109,11 @@ class User extends React.Component {
   }
 }
 
-export default withIsMobile(User)
+export default withRouter(withIsMobile(User))
 
 require('react-styl')(`
   .user-public-profile
+    position: relative
     padding-top: 2rem
     > .row > .col-md-8
       margin: 0 auto
@@ -109,10 +122,25 @@ require('react-styl')(`
         padding: 1.5rem 0
         border-top: 1px solid #dde6ea
         margin-top: 0.5rem
+    .back-icon
+      display: none
+      height: 2rem
+      width: 2rem
+      top: 1rem
+      left: 0.5rem
+      position: absolute
+      background-image: url('images/caret-grey.svg')
+      background-size: 1.5rem
+      background-position: center
+      transform: rotateZ(270deg)
+      background-repeat: no-repeat
+      z-index: 10
 
   @media (max-width: 767.98px)
     .user-public-profile
       padding-top: 0
       > .row > .col-md-8
         padding: 0
+      .back-icon
+        display: inline-block
 `)
