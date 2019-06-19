@@ -63,8 +63,6 @@ class DeployIdentity extends Component {
       return
     }
 
-    console.log(this.props)
-
     let canDeploy = true
     if (this.props.validate) {
       canDeploy = this.props.validate()
