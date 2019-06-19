@@ -98,7 +98,7 @@ export default class Reviews extends Component {
 
           return (
             <div className="reviews">
-              {this.props.hideHeader ? null : (
+              {!this.props.hideHeader && (
                 <h3>
                   {this.props.seller && (
                     <fbt desc="reviews.headingSeller">

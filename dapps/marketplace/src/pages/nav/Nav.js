@@ -38,11 +38,6 @@ const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
   })
 
   if (isMobile) {
-    if (pathname.startsWith('/user')) {
-      // Hide navbar for public user profile
-      return null
-    }
-
     let title
     if (pathname.startsWith('/my-listings')) {
       title = <fbt desc="Listings.title">Listings</fbt>

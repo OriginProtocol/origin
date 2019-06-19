@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import get from 'lodash/get'
 
-// TBD: Notify Domen about this component
 class TabView extends Component {
   constructor(props) {
     super(props)

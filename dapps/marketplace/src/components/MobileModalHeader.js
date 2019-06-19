@@ -37,13 +37,14 @@ function MobileModalHeader({
 
   let closeButton
 
-  if (showCloseButton) {
+  if (showCloseButton || showBackButton) {
     closeButton = (
-      <a className="modal-action-button close-button" onClick={onBack} />
-    )
-  } else if (showBackButton) {
-    closeButton = (
-      <a className="modal-action-button back-button" onClick={onBack} />
+      <a
+        className={`modal-action-button ${
+          showCloseButton ? 'close-button' : 'back-button'
+        }`}
+        onClick={onBack}
+      />
     )
   }
 

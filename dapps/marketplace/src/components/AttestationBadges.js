@@ -12,7 +12,7 @@ const AttestationBadges = ({
   if (badges.length < minCount) {
     badges = badges.concat(new Array(minCount - badges.length).fill(null))
     // Show a minimum of `minCount` icons
-  } else if (badges.length > minCount && badges % fillToNearest !== 0) {
+  } else if (badges.length > minCount && badges.length % fillToNearest !== 0) {
     // Show icons in multiples of `fillToNearest`
     const lengthToAppend = fillToNearest - (badges.length % fillToNearest)
     badges = badges.concat(new Array(lengthToAppend).fill(null))
