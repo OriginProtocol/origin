@@ -84,8 +84,7 @@ const CreateIdentity = onClose => (
 
       <UserActivationLink
         className="btn btn-primary"
-        onClick={() => onClose()}
-        onClose={() => onClose()}
+        onClose={onClose}
       />
     </div>
   </>
@@ -158,7 +157,7 @@ const ProfileDropdownRaw = ({
 
   return (
     <>
-      <div className="dropdown-menu-bg" onClick={() => onClose()} />
+      <div className="dropdown-menu-bg" onClick={onClose} />
       <div className="dropdown-menu dropdown-menu-right show profile">
         <a
           className="d-sm-none close-icon"

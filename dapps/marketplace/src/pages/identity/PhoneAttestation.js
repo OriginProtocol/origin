@@ -332,7 +332,7 @@ require('react-styl')(`
     padding-bottom: 1.5rem !important
     > div
       h2
-        background: url(images/identity/verification-shape-grey.svg) no-repeat center
+        background: url(images/growth/profile-icon.svg) no-repeat center
         background-size: 7rem
         padding-top: 9rem
         background-position: center top
@@ -346,15 +346,6 @@ require('react-styl')(`
         letter-spacing: normal
         color: #000000
         margin-botton: 0.75rem
-        &::before
-          content: ""
-          position: absolute
-          top: 0
-          left: 0
-          height: 7.5rem
-          right: 0
-          background-repeat: no-repeat
-          background-position: center
       font-size: 18px
       .form-control-wrap
         flex: 1
@@ -399,39 +390,28 @@ require('react-styl')(`
         display: flex
         flex: auto
         flex-direction: column
-    &.phone > div h2::before
-      background-image: url(images/identity/phone-icon-dark.svg)
-      background-size: 2rem
-    &.email > div h2::before
-      background-image: url(images/identity/email-icon-dark.svg)
-      background-size: 3.5rem
-    &.facebook > div h2::before
-      background-image: url(images/identity/facebook-icon-dark.svg)
-      background-size: 2rem
-    &.twitter > div h2::before
-      background-image: url(images/identity/twitter-icon-dark.svg)
-      background-size: 3.5rem
-    &.airbnb > div h2::before
-      background-image: url(images/identity/airbnb-icon-dark.svg)
-      background-size: 4rem
-    &.google > div h2::before
-      background-image: url(images/identity/google-icon-dark.svg)
-      background-size: 4rem
-    &.website > div h2::before
-      background-image: url(images/identity/website-icon-dark.svg)
-      background-size: 4rem
-    &.kakao > div h2::before
-      background-image: url(images/identity/kakao-icon-large-dark.svg)
-      background-size: 4rem
-    &.github > div h2::before
-      background-image: url(images/identity/github-icon-large-dark.svg)
-      background-size: 4rem
-    &.linkedin > div h2::before
-      background-image: url(images/identity/linkedin-icon-large-dark.svg)
-      background-size: 4rem
-    &.wechat > div h2::before
-      background-image: url(images/identity/wechat-icon-large-dark.svg)
-      background-size: 4rem
+    &.phone > div h2
+      background-image: url(images/growth/phone-icon.svg)
+    &.email > div h2
+      background-image: url(images/growth/email-icon.svg)
+    &.facebook > div h2
+      background-image: url(images/growth/facebook-icon.svg)
+    &.twitter > div h2
+      background-image: url(images/growth/twitter-icon.svg)
+    &.airbnb > div h2
+      background-image: url(images/growth/airbnb-icon.svg)
+    &.google > div h2
+      background-image: url(images/growth/google-icon.svg)
+    &.website > div h2
+      background-image: url(images/growth/website-icon.svg)
+    &.kakao > div h2
+      background-image: url(images/growth/kakao-icon.svg)
+    &.github > div h2
+      background-image: url(images/growth/profile-icon.svg)
+    &.linkedin > div h2
+      background-image: url(images/growth/profile-icon.svg)
+    &.wechat > div h2
+      background-image: url(images/growth/wechat-icon.svg)
 
     &.success
       > div

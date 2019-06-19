@@ -73,10 +73,11 @@ require('react-styl')(`
       margin: 0.5rem
       background-repeat: no-repeat
       background-position: center
+      background-size: cover
       position: relative
       &.active
-        border: solid 6px #c2cbd3
         cursor: pointer
+        border: 0
       &.disabled
         background-color: #dfe6ea
         border-color: #dfe6ea
@@ -84,71 +85,37 @@ require('react-styl')(`
         content: ''
         display: inline-block
         position: absolute
-        height: 28px
-        width: 28px
+        height: 29px
+        width: 29px
         box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3)
-        border: solid 2px var(--white)
-        background-color: var(--greenblue)
         border-radius: 50%
-        background-image: url('images/identity/verification-shape-green.svg')
-        background-size: 28px
-        bottom: -0.3rem
-        right: -0.3rem
+        background-image: url('images/checkmark-icon.svg')
+        background-size: auto
+        background-position: center
+        bottom: -0.1rem
+        right: -0.1rem
       &.email
-        background-image: url('images/identity/mail-icon-small.svg')
-        &.active
-          border-color: #1ec68e
-          background-color: #27d198
+        background-image: url('images/growth/email-icon.svg')
       &.phone
-        background-image: url('images/identity/mail-icon-small.svg')
-        &.active
-          border-color: #e8b506
-          background-color: #f4c111
+        background-image: url('images/growth/phone-icon.svg')
       &.facebook
-        background-image: url('images/identity/mail-icon-small.svg')
-        &.active
-          border-color: #2d4a89
-          background-color: #3a5997
+        background-image: url('images/growth/facebook-icon.svg')
       &.twitter
-        background-image: url('images/identity/mail-icon-small.svg')
-        &.active
-          border-color: #169aeb
-          background-color: #1fa1f1
+        background-image: url('images/growth/twitter-icon.svg')
       &.airbnb
-        background-image: url('images/identity/mail-icon-small.svg')
-        &.active
-          border-color: #ee4f54
-          background-color: #ff5b60
+        background-image: url('images/growth/airbnb-icon.svg')
       &.website
-        background-image: url('images/identity/mail-icon-small.svg')
-        &.active
-          border-color: #6331dd
-          background-color: #6e3bea
+        background-image: url('images/growth/website-icon.svg')
       &.google
-        background-image: url('images/identity/mail-icon-small.svg')
-        &.active
-          border-color: #1ec68e
-          background-color: #27d198
+        background-image: url('images/growth/google-icon.svg')
       &.wechat
-        background-image: url('images/identity/mail-icon-small.svg')
-        &.active
-          border-color: #00b500
-          background-color: #02c602
+        background-image: url('images/growth/wechat-icon.svg')
       &.kakao
-        background-image: url('images/identity/mail-icon-small.svg')
-        &.active
-          border-color: #ebd500
-          background-color: #ffe815
+        background-image: url('images/growth/kakao-icon.svg')
       &.github
-        background-image: url('images/identity/mail-icon-small.svg')
-        &.active
-          border-color: #1ec68e
-          background-color: #27d198
+        background-image: url('images/growth/profile-icon.svg')
       &.linkedin
-        background-image: url('images/identity/mail-icon-small.svg')
-        &.active
-          border-color: #1ec68e
-          background-color: #27d198
+        background-image: url('images/growth/profile-icon.svg')
 
       .badge-label
         position: absolute
