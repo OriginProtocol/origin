@@ -471,11 +471,11 @@ class MarketplaceScreen extends Component {
       }
     }
     // Clear existing updater if exists
-    if (this.updater) {
-      clearInterval(this.updater)
+    if (this.periodicUpdater) {
+      clearInterval(this.periodicUpdater)
     }
     periodicUpdates()
-    this.updater = setInterval(periodicUpdates, 10000)
+    this.periodicUpdater = setInterval(periodicUpdates, 10000)
     // Set state to ready in redux
     await this.props.setMarketplaceReady(true)
     // Make sure any error state is cleared
