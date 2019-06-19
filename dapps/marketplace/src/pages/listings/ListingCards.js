@@ -90,9 +90,11 @@ require('react-styl')(`
       display: inline-flex
       overflow-x: scroll
       width: 100%
+      flex-wrap: nowrap
       .listing-card
         margin-right: 1.5rem
         width: 170px
+        flex: auto 0 0
         .main-pic
           height: 170px
 
