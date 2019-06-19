@@ -50,6 +50,7 @@ function withCanTransact(WrappedComponent) {
             <WrappedComponent
               {...props}
               {...cannotTransact({ data, error, loading, canTransactConfig })}
+              loadingCanTransact={loading}
             />
           )
         }}

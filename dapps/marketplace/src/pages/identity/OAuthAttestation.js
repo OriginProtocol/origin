@@ -9,14 +9,17 @@ import withIsMobile from 'hoc/withIsMobile'
 import Modal from 'components/Modal'
 import MobileModal from 'components/MobileModal'
 import AutoMutate from 'components/AutoMutate'
+import PublishedInfoBox from 'components/_PublishedInfoBox'
 
 import VerifyOAuthAttestation from 'mutations/VerifyOAuthAttestation'
 import query from 'queries/GetAuthUrl'
 
 import { getProviderDisplayName } from 'utils/profileTools'
 
-function InfoStoredOnChain({ provider, isMobile }) {
+function InfoStoredOnChain({ provider }) {
   const providerName = getProviderDisplayName(provider)
+
+  let piiStored = false
 
   let content = (
     <fbt desc="OAuthAttestation.verify.explanation">
@@ -26,8 +29,6 @@ function InfoStoredOnChain({ provider, isMobile }) {
       post on your behalf.
     </fbt>
   )
-
-  let classList = ''
 
   switch (provider) {
     case 'facebook':
@@ -40,27 +41,24 @@ function InfoStoredOnChain({ provider, isMobile }) {
       break
 
     case 'twitter':
-      classList += ' yellow'
+      piiStored = true
       content = (
         <fbt desc="OAuthAttestation.twitterOnChain">Your Twitter username</fbt>
       )
       break
   }
 
-  if (isMobile) {
-    return (
-      <div className={`info mt-auto${classList}`}>
-        <span className="title">
-          <fbt desc="OAuthAttestation.visibleOnBlockchain">
-            What will be visible on the blockchain?
-          </fbt>
-        </span>
-        {content}
-      </div>
-    )
-  }
-
-  return <div className="help">{content}</div>
+  return (
+    <PublishedInfoBox
+      className="mt-auto"
+      pii={piiStored}
+      title={fbt(
+        'What will be visible on the blockchain?',
+        'OAuthAttestation.visibleOnBlockchain'
+      )}
+      children={content}
+    />
+  )
 }
 
 class OAuthAttestation extends Component {
@@ -114,14 +112,24 @@ class OAuthAttestation extends Component {
         }`}
         shouldClose={this.state.shouldClose}
         onClose={() => {
+          const completed = this.state.completed
+
+          if (completed) {
+            this.props.onComplete(this.state.data)
+          }
+
           this.setState({
             shouldClose: false,
             error: false,
-            stage: 'GenerateCode'
+            stage: 'GenerateCode',
+            completed: false,
+            data: null
           })
-          this.props.onClose()
+
+          this.props.onClose(completed)
           this.props.history.replace('/profile')
         }}
+        lightMode={true}
       >
         <Query
           query={query}
@@ -161,49 +169,20 @@ class OAuthAttestation extends Component {
       </fbt>
     )
 
-    let helpContent = (
-      <fbt desc="OAuthAttestation.verify.explanation">
-        Other users will know that you have a verified{' '}
-        <fbt:param name="provider">{providerName}</fbt:param> account, but your
-        account details will not be published on the blockchain. We will never
-        post on your behalf.
-      </fbt>
-    )
-
-    helpContent = isMobile ? (
-      <div className={`info mt-auto`}>
-        <span className="title">
-          <fbt desc="OAuthAttestation.visibleOnBlockchain">
-            What will be visible on the blockchain?
-          </fbt>
-        </span>
-        {helpContent}
-      </div>
-    ) : (
-      <div className="help">{helpContent}</div>
-    )
-
     return (
       <>
         <h2>{header}</h2>
-        {!isMobile ? null : (
-          <div className="help mt-0 mb-3">
-            <fbt desc="OAuthAttestation.neverPost">
-              We will never post on your behalf.
-            </fbt>
-          </div>
-        )}
+        <div className="help mt-0 mb-3">
+          <fbt desc="OAuthAttestation.neverPost">
+            We will never post on your behalf.
+          </fbt>
+        </div>
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
-        {helpContent}
+        <InfoStoredOnChain provider={this.props.provider} />
         <div className="actions mt-5">
           {this.renderVerifyButton({ authUrl, redirect })}
-          <button
-            className="btn btn-link"
-            onClick={() => this.setState({ shouldClose: true })}
-            children={fbt('Cancel', 'Cancel')}
-          />
         </div>
       </>
     )
@@ -219,16 +198,17 @@ class OAuthAttestation extends Component {
         mutation={VerifyOAuthAttestation}
         onCompleted={res => {
           const result = res.verifyOAuthAttestation
-          if (result.success) {
-            this.setState({
-              stage: 'VerifiedOK',
-              data: result.data,
-              loading: false
-            })
-            this.props.history.replace('/profile')
-          } else {
-            this.setState({ error: result.reason, loading: false })
+          if (!result.success) {
+            this.setState({ error: result.reason, loading: false, data: null })
+            return
           }
+
+          this.setState({
+            data: result.data,
+            loading: false,
+            completed: true,
+            shouldClose: true
+          })
         }}
         onError={errorData => {
           console.error('Error', errorData)
@@ -252,12 +232,10 @@ class OAuthAttestation extends Component {
           return (
             <>
               {sid && this.props.wallet ? (
-                <AutoMutate mutatation={runMutation} />
+                <AutoMutate mutation={runMutation} />
               ) : null}
               <button
-                className={`btn ${
-                  isMobile ? 'btn-primary' : 'btn-outline-light'
-                }`}
+                className="btn btn-primary"
                 onClick={runMutation}
                 children={
                   this.state.loading
@@ -265,42 +243,17 @@ class OAuthAttestation extends Component {
                     : fbt('Continue', 'Continue')
                 }
               />
+              {isMobile ? null : (
+                <button
+                  className="btn btn-link"
+                  onClick={() => this.setState({ shouldClose: true })}
+                  children={fbt('Cancel', 'VerifyWebsite.cancel')}
+                />
+              )}
             </>
           )
         }}
       </Mutation>
-    )
-  }
-
-  renderVerifiedOK() {
-    const providerName = getProviderDisplayName(this.props.provider)
-    const isMobile = this.isMobile()
-
-    return (
-      <>
-        <h2>
-          <fbt desc="OAuthAttestation.verified">
-            <fbt:param name="provider">{providerName}</fbt:param> account
-            verified!
-          </fbt>
-        </h2>
-        <div className="instructions">
-          <fbt desc="Attestation.DontForget">
-            Don&apos;t forget to publish your changes.
-          </fbt>
-        </div>
-        <InfoStoredOnChain provider={this.props.provider} isMobile={isMobile} />
-        <div className="actions mt-5">
-          <button
-            className={`btn ${isMobile ? 'btn-primary' : 'btn-outline-light'}`}
-            onClick={() => {
-              this.props.onComplete(this.state.data)
-              this.setState({ shouldClose: true })
-            }}
-            children={fbt('Continue', 'Continue')}
-          />
-        </div>
-      </>
     )
   }
 }

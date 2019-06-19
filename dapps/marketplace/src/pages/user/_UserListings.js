@@ -6,16 +6,19 @@ import QueryError from 'components/QueryError'
 import nextPageFactory from 'utils/nextPageFactory'
 import ListingsGallery from 'pages/listings/ListingCards'
 import query from 'queries/UserListings'
+import useIsMobile from 'utils/useMobile'
 
 const nextPage = nextPageFactory('marketplace.user.listings')
 
-const UserListings = ({ user }) => {
+const UserListings = ({ user, hideHeader }) => {
   const vars = {
     first: 8,
     filter: 'active',
     sort: 'featured',
     hidden: true
   }
+
+  const isMobile = useIsMobile()
 
   return (
     <Query
@@ -41,19 +44,24 @@ const UserListings = ({ user }) => {
           )
         }
 
-        const { nodes, pageInfo, totalCount } = data.marketplace.user.listings
+        const { nodes, pageInfo } = data.marketplace.user.listings
         const { hasNextPage, endCursor: after } = pageInfo
 
         return (
-          <>
-            <h5 className="listings-count">
-              <fbt desc="Num Listings">
-                <fbt:plural count={totalCount} showCount="yes">
-                  Listing
-                </fbt:plural>
-              </fbt>
-            </h5>
-            <ListingsGallery listings={nodes} hasNextPage={hasNextPage} />
+          <div className="user-listings">
+            {hideHeader ? null : (
+              <h5 className="listings-header">
+                <fbt desc="UserListing.sellerListings">
+                  Listings by this seller
+                </fbt>
+              </h5>
+            )}
+            <ListingsGallery
+              listings={nodes}
+              hasNextPage={hasNextPage}
+              hideCategory
+              horizontalList={isMobile ? false : true}
+            />
             {!hasNextPage ? null : (
               <button
                 className="btn btn-outline-primary btn-rounded mt-3"
@@ -68,7 +76,7 @@ const UserListings = ({ user }) => {
                   : fbt('Load more', 'userListing.loadMore')}
               </button>
             )}
-          </>
+          </div>
         )
       }}
     </Query>
@@ -76,3 +84,43 @@ const UserListings = ({ user }) => {
 }
 
 export default UserListings
+
+require('react-styl')(`
+  .user-listings
+    .listings-header
+      font-family: Poppins
+      font-size: 1.5rem
+      font-weight: 500
+      font-style: normal
+      font-stretch: normal
+      line-height: 1.42
+      letter-spacing: normal
+      color: var(--dark)
+
+    .row
+      flex-wrap: nowrap
+      overflow: auto
+      .listing-card
+        .main-pic
+          height: 170px
+          width: 170px
+        h5
+          margin-top: 10px
+          font-family: Lato
+          font-size: 1.1rem
+          font-weight: normal
+          font-style: normal
+          font-stretch: normal
+          line-height: 1.22
+          letter-spacing: normal
+          color: #293f55
+        .price > div
+          font-family: Lato
+          font-size: 0.9rem
+          font-weight: bold
+          font-style: normal
+          font-stretch: normal
+          line-height: normal
+          letter-spacing: normal
+          color: #293f55
+`)

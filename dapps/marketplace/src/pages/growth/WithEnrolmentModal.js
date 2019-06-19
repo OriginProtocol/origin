@@ -809,7 +809,7 @@ require('react-styl')(`
       color: var(--steel)
   .growth-enrollment-modal.pl-modal.mobile .pl-modal-table .pl-modal-cell
     padding: 0px
-  .mobile-modal-light .modal-content
+  .mobile-modal-light .modal-content.growth-enrollment-modal
     background-color: var(--pale-grey-four)
     padding: 0px
     border-radius: 0px

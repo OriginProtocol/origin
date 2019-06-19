@@ -47,15 +47,24 @@ const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
       title = <fbt desc="Sales.title">Sales</fbt>
     }
 
-    return (
-      <nav className="navbar no-border">
-        <Mobile {...navProps('mobile')} />
+    // Make the hamburger menu absolute and hide branding and profile icon.
+    const isProfilePage = pathname.startsWith('/profile')
+
+    const titleAndWallet = (
+      <>
         {title ? <h1>{title}</h1> : <Brand />}
         {wallet ? (
           <Profile {...navProps('profile')} />
         ) : (
           <GetStarted onClick={() => onGetStarted()} />
         )}
+      </>
+    )
+
+    return (
+      <nav className={`navbar no-border${isProfilePage ? ' fixed-nav' : ''}`}>
+        <Mobile {...navProps('mobile')} />
+        {isProfilePage ? null : titleAndWallet}
       </nav>
     )
   }
@@ -220,6 +229,9 @@ require('react-styl')(`
       margin-right: 0
     .navbar
       padding: 0
+      &.fixed-nav
+        position: absolute
+        z-index: 100
       h1
         font-size: 24px
         position: absolute

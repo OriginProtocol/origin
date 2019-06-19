@@ -5,6 +5,7 @@ function MobileModalHeader({
   headerImageUrl,
   className = '',
   showBackButton = true,
+  showCloseButton = false,
   onBack,
   fullscreen = false
 }) {
@@ -34,13 +35,24 @@ function MobileModalHeader({
     headerClassList = headerClassList.concat(className.split(' '))
   }
 
+  let closeButton
+
+  if (showCloseButton || showBackButton) {
+    closeButton = (
+      <a
+        className={`modal-action-button ${
+          showCloseButton ? 'close-button' : 'back-button'
+        }`}
+        onClick={onBack}
+      />
+    )
+  }
+
   return (
     <div className={`${headerClassList.join(' ')}`} style={headerStyle}>
-      {showBackButton && (
-        <a className="modal-action-button back-button" onClick={onBack} />
-      )}
+      {closeButton}
       <h3 className="modal-title">{children}</h3>
-      {showBackButton && <span className="modal-action-button" />}
+      {closeButton === null ? null : <span className="modal-action-button" />}
     </div>
   )
 }
@@ -48,7 +60,7 @@ function MobileModalHeader({
 export default MobileModalHeader
 
 require('react-styl')(`
-  mobile-modal-light.contained
+  .mobile-modal-light.contained
     .modal-header
       max-width: 400px
       margin: 0 auto
