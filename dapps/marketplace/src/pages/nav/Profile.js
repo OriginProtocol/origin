@@ -2,6 +2,7 @@ import React from 'react'
 import { Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
+import formatHash from 'utils/formatHash'
 
 import withIdentity from 'hoc/withIdentity'
 import withWallet from 'hoc/withWallet'
@@ -140,21 +141,20 @@ const Identity = ({ id, wallet, identity, identityLoading, onClose }) => {
         title={<fbt desc="nav.profile.walletBalance">Wallet Balances</fbt>}
         className="pt-3 pb-3"
       />
-      <div className="eth-address">
-        {`ETH Address: ${wallet.substr(0, 7)}...`}
-      </div>
     </div>
   )
 }
 
 const ProfileDropdownRaw = ({
   walletProxy,
+  wallet,
   data,
   identity,
   identityLoading,
   onClose
 }) => {
   const { id } = data.web3.primaryAccount
+  const address = `ETH Address: ${formatHash(wallet)}`
 
   return (
     <>
@@ -178,8 +178,8 @@ const ProfileDropdownRaw = ({
             identityLoading={identityLoading}
             onClose={onClose}
           />
+          <div className="eth-address">{address}</div>
         </div>
-        {/* <ActiveWalletInfo /> */}
       </div>
     </>
   )
@@ -210,11 +210,15 @@ require('react-styl')(`
   .dropdown-menu.profile
     width: 250px
     font-size: 14px
+    display: flex
     &:before
       display: none !important
     > div
       padding: 0.75rem 1.5rem
     .identity-info
+      width: 100%
+      display: flex
+      flex-direction: column
       .avatar
         border-radius: 50%
         width: 4.5rem
@@ -224,6 +228,7 @@ require('react-styl')(`
         display: flex
         flex-direction: column
         align-items: center
+        flex: 1
         h3
           padding: 0.5rem 0
           margin-bottom: 0.5rem
@@ -249,6 +254,7 @@ require('react-styl')(`
       .identity
         font-weight: bold
         text-align: center
+        flex: 1
         .info
           margin-bottom: 1rem
           margin-top: 0.75rem
@@ -275,11 +281,6 @@ require('react-styl')(`
             font-family: var(--heading-font)
             font-size: 14px
             text-align: center
-        .eth-address
-          color: var(--steel)
-          font-size: 10px
-          font-weight: normal
-          margin: 0.5rem 0 1rem 0
 
       .strength
         width: 100%
@@ -293,6 +294,13 @@ require('react-styl')(`
           margin-bottom: 0.5rem
           .progress-bar
             background-color: var(--greenblue)
+
+      .eth-address
+        color: var(--steel)
+        font-size: 10px
+        font-weight: normal
+        margin: 0.5rem 0 1rem 0
+        text-align: center
 
   @media (max-width: 767.98px)
     .dropdown.show .nav-link
