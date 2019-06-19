@@ -60,7 +60,7 @@ const UserListings = ({ user, hideHeader }) => {
               listings={nodes}
               hasNextPage={hasNextPage}
               hideCategory
-              horizontalList={isMobile ? false : true}
+              horizontal={isMobile ? false : true}
             />
             {!hasNextPage ? null : (
               <button

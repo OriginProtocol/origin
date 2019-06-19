@@ -15,7 +15,7 @@ const ListingCards = ({
   listings,
   ognListingRewards,
   hideCategory,
-  horizontalList
+  horizontal
 }) => {
   const [redirect, setRedirect] = useState()
   if (!listings) return null
@@ -23,7 +23,7 @@ const ListingCards = ({
   return (
     <div
       className={`listing-cards${
-        horizontalList ? ' listing-horizontal-cards' : ''
+        horizontal ? ' listing-horizontal-cards' : ''
       }`}
     >
       {redirect && <Redirect to={redirect} />}

@@ -16,97 +16,82 @@ import { withRouter } from 'react-router-dom'
 
 import UserListings from './_UserListings'
 
-class User extends React.Component {
-  componentDidMount() {
-    document.body.classList.add('has-profile-page')
-  }
+const User = ({ match, isMobile, history }) => {
+  const id = match.params.id
+  const vars = { id: match.params.id }
 
-  componentWillUnmount() {
-    document.body.classList.remove('has-profile-page')
-  }
+  return (
+    <div className="container user-public-profile">
+      <a
+        className="back-icon"
+        onClick={() => {
+          // TBD: is history.length safe to use?
+          if (history.length <= 1) {
+            history.push('/')
+          } else {
+            history.goBack()
+          }
+        }}
+      />
+      <Query query={query} variables={vars}>
+        {({ data, loading, error }) => {
+          if (error) {
+            return <QueryError error={error} query={query} vars={vars} />
+          }
+          if (loading) return <LoadingSpinner />
 
-  render() {
-    const { match, ismobile, history } = this.props
+          const profile = get(data, 'web3.account.identity') || {}
 
-    const id = match.params.id
-    const vars = { id: match.params.id }
-    const isMobile = ismobile === 'true'
-
-    return (
-      <div className="container user-public-profile">
-        <a
-          className="back-icon"
-          onClick={() => {
-            // TBD: is history.length safe to use?
-            if (history.length <= 1) {
-              history.push('/')
-            } else {
-              history.goBack()
-            }
-          }}
-        />
-        <Query query={query} variables={vars}>
-          {({ data, loading, error }) => {
-            if (error) {
-              return <QueryError error={error} query={query} vars={vars} />
-            }
-            if (loading) return <LoadingSpinner />
-
-            const profile = get(data, 'web3.account.identity') || {}
-
-            const reviewsComp = (
-              <Reviews id={id} hideWhenZero hideHeader={isMobile} />
-            )
-            const listingsComp = (
-              <UserListings user={id} hideHeader={isMobile} />
-            )
-            return (
-              <>
-                <DocumentTitle
-                  pageTitle={
-                    profile.fullName || fbt('Unnamed User', 'User.title')
-                  }
-                />
-                <div className="row">
-                  <div className="col-md-8">
-                    <UserProfileCard
-                      wallet={profile.id}
-                      avatarUrl={profile.avatarUrl}
-                      firstName={profile.firstName}
-                      lastName={profile.lastName}
-                      description={profile.description}
-                      verifiedAttestations={profile.verifiedAttestations}
+          const reviewsComp = (
+            <Reviews id={id} hideWhenZero hideHeader={isMobile} />
+          )
+          const listingsComp = <UserListings user={id} hideHeader={isMobile} />
+          return (
+            <>
+              <DocumentTitle
+                pageTitle={
+                  profile.fullName || fbt('Unnamed User', 'User.title')
+                }
+              />
+              <div className="row">
+                <div className="col-md-8">
+                  <UserProfileCard
+                    wallet={profile.id}
+                    avatarUrl={profile.avatarUrl}
+                    firstName={profile.firstName}
+                    lastName={profile.lastName}
+                    description={profile.description}
+                    verifiedAttestations={profile.verifiedAttestations}
+                  />
+                  {isMobile ? (
+                    <TabView
+                      tabs={[
+                        {
+                          id: 'reviews',
+                          title: fbt('Reviews', 'Reviews'),
+                          component: reviewsComp
+                        },
+                        {
+                          id: 'listings',
+                          title: fbt('Listings', 'Listings'),
+                          component: listingsComp
+                        }
+                      ]}
                     />
-                    {isMobile ? (
-                      <TabView
-                        tabs={[
-                          {
-                            id: 'reviews',
-                            title: fbt('Reviews', 'Reviews'),
-                            component: reviewsComp
-                          },
-                          {
-                            id: 'listings',
-                            title: fbt('Listings', 'Listings'),
-                            component: listingsComp
-                          }
-                        ]}
-                      />
-                    ) : (
-                      <>
-                        {listingsComp}
-                        {reviewsComp}
-                      </>
-                    )}
-                  </div>
+                  ) : (
+                    <>
+                      {listingsComp}
+                      {reviewsComp}
+                    </>
+                  )}
                 </div>
-              </>
-            )
-          }}
-        </Query>
-      </div>
-    )
-  }
+              </div>
+            </>
+          )
+        }}
+      </Query>
+    </div>
+  )
 }
 
 export default withRouter(withIsMobile(User))
@@ -117,7 +102,6 @@ require('react-styl')(`
     padding-top: 2rem
     > .row > .col-md-8
       margin: 0 auto
-
       > .user-listings, > .reviews
         padding: 1.5rem 0
         border-top: 1px solid #dde6ea
