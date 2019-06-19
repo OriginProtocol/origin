@@ -58,14 +58,14 @@ class UserProfileCard extends Component {
             />
           </div>
         </div>
-        {!hasProfileStrength && !shouldShowEarnings ? null : (
+        {(hasProfileStrength || shouldShowEarnings) && (
           <div className="user-progress-container">
-            {hasProfileStrength ? null : (
+            {hasProfileStrength && (
               <div className="profile-strength-container">
                 <ProfileStrength published={profileStrength} />
               </div>
             )}
-            {!shouldShowEarnings ? null : (
+            {shouldShowEarnings && (
               <div className="user-earnings-container">
                 <Earnings total={maxEarnable} earned={tokensEarned} />
               </div>
