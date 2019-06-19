@@ -7,50 +7,18 @@ import Redirect from 'components/Redirect'
 import Identicon from 'components/Identicon'
 import Avatar from 'components/Avatar'
 import SendMessage from 'components/SendMessage'
-import Tooltip from 'components/Tooltip'
 import EthAddress from 'components/EthAddress'
 import QueryError from 'components/QueryError'
-import Link from 'components/Link'
+import Attestations from 'components/Attestations'
 
 import query from 'queries/Identity'
 import withOwner from 'hoc/withOwner'
-import { getProviderDisplayName } from 'utils/profileTools'
-
-const getVerifiedTooltip = provider => {
-  switch (provider) {
-    case 'email':
-    case 'phone':
-    case 'website':
-      return fbt(
-        `${fbt.param('provider', getProviderDisplayName(provider))} Verified`,
-        'Attestation.verified'
-      )
-
-    case 'airbnb':
-    case 'github':
-    case 'facebook':
-    case 'twitter':
-    case 'google':
-    case 'kakao':
-    case 'linkedin':
-    case 'wechat':
-      return fbt(
-        `${fbt.param(
-          'provider',
-          getProviderDisplayName(provider)
-        )} Account Verified`,
-        'Attestation.accountVerified'
-      )
-  }
-
-  return provider
-}
 
 const AboutParty = ({ id, owner }) => {
   const [redirect, setRedirect] = useState(false)
 
   if (redirect) {
-    return <Redirect to={`/user/${id}`} />
+    return <Redirect push to={`/user/${id}`} />
   }
 
   return (
@@ -64,55 +32,34 @@ const AboutParty = ({ id, owner }) => {
 
           const profile = get(data, 'web3.account.identity')
           if (!profile) {
-            return null
+            return (
+              <div className="eth-address">
+                <Identicon size={40} address={owner} />
+                <div>
+                  <div>ETH Address:</div>
+                  <div>
+                    <EthAddress address={owner} />
+                  </div>
+                </div>
+              </div>
+            )
           }
-
-          const verifiedAttestations = profile.verifiedAttestations || []
 
           return (
             <div className="profile" onClick={() => setRedirect(true)}>
               <Avatar profile={profile} size={50} />
               <div className="user-detail">
                 <div className="name">{profile.fullName}</div>
-                <div className="attestations">
-                  {verifiedAttestations.map(attestation => {
-                    return (
-                      <Tooltip
-                        key={attestation.id}
-                        placement="bottom"
-                        tooltip={getVerifiedTooltip(attestation.id)}
-                      >
-                        <div className={`attestation ${attestation.id}`} />
-                      </Tooltip>
-                    )
-                  })}
-                </div>
+                <Attestations profile={profile} small />
               </div>
             </div>
           )
         }}
       </Query>
-      <div className="eth-address">
-        <Identicon size={40} address={owner} />
-        <div>
-          <div>ETH Address:</div>
-          <div>
-            <EthAddress address={owner} />
-          </div>
-        </div>
-      </div>
       <div className="actions">
-        <SendMessage
-          to={id}
-          className="btn btn-outline-primary btn-rounded"
-          children={fbt('Send Message', 'Send Message')}
-        />
-        <Link
-          to={`/user/${id}`}
-          className="btn btn-outline-primary btn-rounded"
-        >
-          View Profile
-        </Link>
+        <SendMessage to={id} className="btn btn-link">
+          <fbt desc="AboutParty.contactSeller">Contact seller</fbt> &rsaquo;
+        </SendMessage>
       </div>
     </div>
   )
@@ -122,9 +69,6 @@ export default withOwner(AboutParty)
 
 require('react-styl')(`
   .about-party
-    background: var(--pale-grey-eight)
-    border-radius: var(--default-radius)
-    padding: 1rem 1rem 0.5rem 1rem
     font-size: 14px
     font-weight: normal
     .profile
@@ -143,21 +87,13 @@ require('react-styl')(`
         white-space: nowrap
         overflow: hidden
         text-overflow: ellipsis
-    .eth-address
-      display: flex
-      > img
-        margin: 0 5px
-      > div
-        margin-left: 1rem
     .actions
       margin: 1rem -0.25rem 0 -0.25rem
       display: flex
       align-items: center
       flex-wrap: wrap
-    .btn-rounded
-      flex: 1
-      padding-left: 1rem
-      padding-right: 1rem
-      white-space: nowrap
-      margin: 0 0.25rem 0.5rem 0.25rem
+      font-size: 18px
+      .btn-link
+        padding: 0
+        font-weight: normal
 `)

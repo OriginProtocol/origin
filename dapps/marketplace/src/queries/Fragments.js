@@ -232,6 +232,7 @@ export default {
               amount
               currency
             }
+            limit
             invites {
               nodes {
                 pendingId
