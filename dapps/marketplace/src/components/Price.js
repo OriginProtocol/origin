@@ -33,50 +33,42 @@ const Price = ({ className, target, currencies, descriptor, ...props }) => {
   const formatted = isFiat ? numberFormat(amount, 2).replace('.00', '') : amount
   const symbol = get(CurrenciesByKey, `${targetCurrency.id}.2`, '')
 
-  const spanContent = (
-    <span className={className}>{`${symbol}${formatted}${
-      showCode ? ` ${targetCurrency.code}` : ''
-    }`}</span>
-  )
-
-  const divContent = (
-    <div className={className}>{`${symbol}${formatted}${
-      showCode ? ` ${targetCurrency.code}` : ''
-    }`}</div>
-  )
+  const content = `${symbol}${formatted}${
+    showCode ? ` ${targetCurrency.code}` : ''
+  }`
 
   if (descriptor) {
     if (listingType === 'FractionalListing') {
       return (
-        <div>
+        <span className={className}>
           <fbt desc="Price.fractionalNightlyShort">
-            <fbt:param name="content">{spanContent}</fbt:param>
+            <fbt:param name="content">{content}</fbt:param>
             <span className="desc">/ night</span>
           </fbt>
-        </div>
+        </span>
       )
     } else if (listingType === 'FractionalHourlyListing') {
       return (
-        <div>
+        <span className={className}>
           <fbt desc="Price.fractionalHourlyShort">
-            <fbt:param name="content">{spanContent}</fbt:param>
+            <fbt:param name="content">{content}</fbt:param>
             <span className="desc">/ hour</span>
           </fbt>
-        </div>
+        </span>
       )
     } else if (get(props, 'listing.multiUnit')) {
       return (
-        <div>
+        <span className={className}>
           <fbt desc="Price.multiUnitShort">
-            <fbt:param name="content">{spanContent}</fbt:param>
+            <fbt:param name="content">{content}</fbt:param>
             <span className="desc">each</span>
           </fbt>
-        </div>
+        </span>
       )
     }
   }
 
-  return divContent
+  return <span className={className}>{content}</span>
 }
 
 export default withCurrencies(Price)

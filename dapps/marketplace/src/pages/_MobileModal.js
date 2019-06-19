@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
+import copy from 'copy-to-clipboard'
 
 import Modal from 'components/Modal'
 
@@ -19,8 +20,8 @@ class MobileModal extends Component {
       >
         <div className="mobile-modal">
           <div className="screenshots">
-            {!isMobile && <img src="/images/mobile/devices.png" />}
-            {isMobile && <img src="/images/mobile/devices-layered.png" />}
+            {!isMobile && <img src="images/mobile/devices.png" />}
+            {isMobile && <img src="images/mobile/devices-layered.png" />}
           </div>
           <div className="description">
             <div className="blurb">
@@ -43,7 +44,7 @@ class MobileModal extends Component {
             </div>
             {!isMobile && (
               <div className="qr">
-                <img src="/images/mobile/qr.svg" />
+                <img src="images/mobile/qr.svg" />
               </div>
             )}
           </div>
@@ -52,6 +53,10 @@ class MobileModal extends Component {
               <button
                 className="btn btn-primary"
                 onClick={() => {
+                  const growthCode = localStorage.getItem('growth_invite_code')
+                  if (growthCode) {
+                    copy(`origin:growth_invite_code:${growthCode}`)
+                  }
                   window.location.href = 'https://originprotocol.com/mobile'
                 }}
                 children={fbt('Open App', 'MobileModal.openAppButton')}

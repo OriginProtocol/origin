@@ -17,9 +17,10 @@ import { getProviderDisplayName } from 'utils/profileTools'
 const User = ({ match }) => {
   const id = match.params.id
   const vars = { id: match.params.id }
+
   return (
     <div className="container user-profile">
-      <Query query={query} variables={vars}>
+      <Query query={query} variables={vars} skip={!id}>
         {({ data, loading, error }) => {
           if (error) {
             return <QueryError error={error} query={query} vars={vars} />
@@ -119,38 +120,6 @@ require('react-styl')(`
           height: 1.5rem
     .reviews
       margin-top: 2rem
-
-  .attestations
-    display: flex
-  .attestation
-    background-repeat: no-repeat
-    background-position: center
-    background-size: contain
-    width: 1.25rem
-    height: 1.25rem
-    margin-right: 0.25rem
-    &.email
-      background-image: url(images/identity/email-icon-verified.svg)
-    &.facebook
-      background-image: url(images/identity/facebook-icon-verified.svg)
-    &.phone
-      background-image: url(images/identity/phone-icon-verified.svg)
-    &.twitter
-      background-image: url(images/identity/twitter-icon-verified.svg)
-    &.airbnb
-      background-image: url(images/identity/airbnb-icon-verified.svg)
-    &.google
-      background-image: url(images/identity/google-icon-verified.svg)
-    &.website
-      background-image: url(images/identity/website-icon-verified.svg)
-    &.kakao
-      background-image: url(images/identity/kakao-icon-small.svg)
-    &.github
-      background-image: url(images/identity/github-icon-small.svg)
-    &.linkedin
-      background-image: url(images/identity/linkedin-icon-small.svg)
-    &.wechat
-      background-image: url(images/identity/wechat-icon-small.svg)
 
   @media (max-width: 767.98px)
     .user-profile

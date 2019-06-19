@@ -1,16 +1,21 @@
 import React, { Component, Fragment } from 'react'
 import { withApollo, Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
+import { get, find } from 'lodash'
 
 import formatTimeDifference from 'utils/formatTimeDifference'
 import QueryError from 'components/QueryError'
 import profileQuery from 'queries/Profile'
 import AccountTokenBalance from 'queries/TokenBalance'
-import ActionList from 'pages/growth/ActionList'
+import ActionGroupList from 'components/growth/ActionGroupList'
 import GrowthInvite from 'pages/growth/Invite'
+import Purchases from 'pages/growth/Purchases'
+import Verifications from 'pages/growth/Verifications'
+import MobileDownloadAction from 'components/growth/MobileDownloadAction'
 import ProgressBar from 'components/ProgressBar'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withIsMobile from 'hoc/withIsMobile'
+import { calculatePendingAndAvailableActions } from 'utils/growthTools'
 
 const GrowthEnum = require('Growth$FbtEnum')
 const maxProgressBarTokens = 1000
@@ -24,7 +29,7 @@ const GrowthTranslation = ({ stringKey }) => {
 }
 
 function NavigationItem(props) {
-  const { selected, onClick, title } = props
+  const { selected, onClick, title, isMobile } = props
   return (
     <a
       href="#"
@@ -35,7 +40,13 @@ function NavigationItem(props) {
       className="pt-4 pr-4"
     >
       <div className="d-flex flex-column align-items-center">
-        <div className={`title ${selected ? 'active' : ''}`}>{title}</div>
+        <div
+          className={`title ${isMobile ? 'px-3' : ''} ${
+            selected ? 'active' : ''
+          }`}
+        >
+          {title}
+        </div>
         {selected && <div className="select-bar" />}
       </div>
     </a>
@@ -44,28 +55,43 @@ function NavigationItem(props) {
 
 function CampaignNavList(props) {
   const { onNavigationClick, navigation, isMobile } = props
-  return (
+  const navigationLinks = () => (
     <div
-      className={`campaign-list d-flex justify-content-left ${
-        !isMobile ? 'mt-4' : ''
+      className={`campaign-list d-flex ${
+        isMobile ? 'justify-content-center' : 'mt-4 justify-content-left'
       }`}
     >
+      {/* TODO: Move this to a TabView component */}
       <NavigationItem
         selected={navigation === 'currentCampaign'}
         onClick={() => onNavigationClick('currentCampaign')}
         title={fbt('Current Campaign', 'growth.campaigns.currentCampaign')}
+        isMobile={isMobile}
       />
       <NavigationItem
         selected={navigation === 'pastCampaigns'}
         onClick={() => onNavigationClick('pastCampaigns')}
         title={fbt('Past Campaigns', 'growth.campaigns.pastCampaigns')}
+        isMobile={isMobile}
       />
     </div>
+  )
+
+  return (
+    <Fragment>
+      {isMobile && navigationLinks()}
+      {!isMobile && (
+        <div className="d-flex justify-content-between mt-4 pt-3">
+          <img className="rewards-logo" src="images/origin-rewards-logo.svg" />
+          {navigationLinks()}
+        </div>
+      )}
+    </Fragment>
   )
 }
 
 function Campaign(props) {
-  const { campaign, handleNavigationChange, decimalDivision, isMobile } = props
+  const { campaign, decimalDivision, isMobile } = props
 
   const {
     startDate,
@@ -85,8 +111,8 @@ function Campaign(props) {
       'RewardCampaigns.timeLeft'
     )}:${formatTimeDifference(Date.now(), endDate)}`
     subTitleText = fbt(
-      'Get Origin Tokens by completing the steps below',
-      'RewardCampaigns.getOriginTokensSteps'
+      'Earn Origin Tokens in many ways',
+      'RewardCampaigns.earnOriginTokensInManyWays'
     )
   } else if (status === 'Pending') {
     timeLabel = `${fbt(
@@ -104,6 +130,8 @@ function Campaign(props) {
     )
   }
 
+  const mobileAction = find(actions, action => action.type === 'MobileApp')
+
   // campaign rewards converted normalized to token value according to number of decimals
   const tokensEarned = web3.utils
     .toBN(rewardEarned ? rewardEarned.amount : 0)
@@ -115,8 +143,12 @@ function Campaign(props) {
 
   return (
     <Fragment>
-      <div className="d-flex justify-content-between">
-        <h1 className="mb-2 pt-3">
+      <div
+        className={`d-flex ${
+          isMobile ? 'justify-content-center' : 'justify-content-start'
+        }`}
+      >
+        <h1 className={`mb-2 pt-4 ${isMobile ? 'mt-2' : 'mt-4'}`}>
           {GrowthEnum[nameKey] ? (
             <GrowthTranslation stringKey={nameKey} />
           ) : (
@@ -144,12 +176,17 @@ function Campaign(props) {
       <ProgressBar
         maxValue={maxProgressBarTokens}
         progress={tokenEarnProgress}
-        showIndicators={!isMobile}
+        showIndicators={false}
       />
-      <ActionList
+      <MobileDownloadAction
+        action={mobileAction}
+        decimalDivision={decimalDivision}
+        isMobile={isMobile}
+      />
+      <ActionGroupList
+        campaign={campaign}
         actions={actions}
         decimalDivision={decimalDivision}
-        handleNavigationChange={handleNavigationChange}
         isMobile={isMobile}
       />
     </Fragment>
@@ -158,7 +195,7 @@ function Campaign(props) {
 
 class PastCampaigns extends Component {
   render() {
-    const { campaigns, decimalDivision } = this.props
+    const { campaigns, decimalDivision, isMobile } = this.props
 
     const pastCampaigns = campaigns.filter(
       campaign =>
@@ -179,12 +216,18 @@ class PastCampaigns extends Component {
 
     return (
       <div className="past-campaigns d-flex flex-column">
-        <div className="title">
-          <fbt desc="growth.campaigns.totalEarnings">Total Earnings</fbt>
-        </div>
-        <div className="total-earned d-flex mt-2 align-items-center">
-          <img className="mr-1" src="images/ogn-icon.svg" />
-          <div>{totalEarnings.toString()}</div>
+        <div
+          className={`d-flex flex-column ${
+            isMobile ? 'align-items-center' : ''
+          }`}
+        >
+          <div className="title">
+            <fbt desc="growth.campaigns.totalEarnings">Total Earnings</fbt>
+          </div>
+          <div className="total-earned d-flex mt-2 align-items-center">
+            <img className="mr-1" src="images/ogn-icon.svg" />
+            <div>{totalEarnings.toString()}</div>
+          </div>
         </div>
         <div>
           {pastCampaigns.map(campaign => {
@@ -202,13 +245,19 @@ class PastCampaigns extends Component {
                     'Campaign'
                   )}
                 </div>
-                <div className="d-flex align-items-center tokens-earned-holder">
+                <div
+                  className={`d-flex align-items-center tokens-earned-holder ${
+                    isMobile ? 'justify-content-between' : ''
+                  }`}
+                >
                   <div className="tokens-earned mr-2">
-                    <fbt desc="growth.campaigns.tokensEarned">
-                      Tokens earned
-                    </fbt>
+                    <fbt desc="growth.campaigns.totalEarned">Total earned</fbt>
                   </div>
-                  <div className="total-earned d-flex align-items-center">
+                  <div
+                    className={`total-earned d-flex align-items-center ${
+                      isMobile ? 'mr-2' : ''
+                    }`}
+                  >
                     <img className="mr-1" src="images/ogn-icon.svg" />
                     <div>{tokensEarned.toString()}</div>
                   </div>
@@ -239,13 +288,7 @@ class GrowthCampaign extends Component {
   render() {
     const { navigation } = this.state
 
-    const {
-      handleNavigationChange,
-      campaigns,
-      accountId,
-      decimalDivision,
-      isMobile
-    } = this.props
+    const { campaigns, accountId, decimalDivision, isMobile } = this.props
 
     const activeCampaign = campaigns.find(
       campaign => campaign.status === 'Active'
@@ -265,9 +308,6 @@ class GrowthCampaign extends Component {
           <Campaign
             campaign={activeCampaign}
             accountId={accountId}
-            handleNavigationChange={navigation =>
-              handleNavigationChange(navigation)
-            }
             decimalDivision={decimalDivision}
             isMobile={isMobile}
           />
@@ -276,6 +316,7 @@ class GrowthCampaign extends Component {
           <PastCampaigns
             campaigns={campaigns}
             decimalDivision={decimalDivision}
+            isMobile={isMobile}
           />
         )}
       </Fragment>
@@ -285,12 +326,7 @@ class GrowthCampaign extends Component {
 
 class GrowthCampaigns extends Component {
   state = {
-    first: 5,
-    navigation: 'Campaigns'
-  }
-
-  handleNavigationChange(navigation) {
-    this.setState({ navigation })
+    first: 5
   }
 
   componentDidUpdate() {
@@ -303,7 +339,7 @@ class GrowthCampaigns extends Component {
   }
 
   render() {
-    const { navigation } = this.state
+    const navigation = get(this.props, 'match.params.navigation') || 'Campaigns'
     const isMobile = this.props.ismobile === 'true'
 
     return (
@@ -349,6 +385,13 @@ class GrowthCampaigns extends Component {
               campaign => campaign.status === 'Active'
             )
 
+            const {
+              completedPurchaseActions,
+              notCompletedPurchaseActions,
+              completedVerificationActions,
+              notCompletedVerificationActions
+            } = calculatePendingAndAvailableActions(activeCampaign)
+
             return (
               <Query
                 query={AccountTokenBalance}
@@ -375,20 +418,46 @@ class GrowthCampaigns extends Component {
                           campaigns={campaigns}
                           accountId={accountId}
                           decimalDivision={decimalDivision}
-                          handleNavigationChange={navigation =>
-                            this.handleNavigationChange(navigation)
-                          }
                           isMobile={isMobile}
+                          completedVerificationActions={
+                            completedVerificationActions
+                          }
+                          notCompletedVerificationActions={
+                            notCompletedVerificationActions
+                          }
+                          completedPurchaseActions={completedPurchaseActions}
+                          notCompletedPurchaseActions={
+                            notCompletedPurchaseActions
+                          }
                         />
                       )}
-                      {navigation === 'Invite' && (
+                      {navigation === 'invitations' && (
                         <GrowthInvite
-                          handleNavigationChange={navigation =>
-                            this.handleNavigationChange(navigation)
-                          }
                           activeCampaign={activeCampaign}
                           decimalDivision={decimalDivision}
                           isMobile={isMobile}
+                        />
+                      )}
+                      {navigation === 'verifications' && (
+                        <Verifications
+                          decimalDivision={decimalDivision}
+                          isMobile={isMobile}
+                          completedVerificationActions={
+                            completedVerificationActions
+                          }
+                          notCompletedVerificationActions={
+                            notCompletedVerificationActions
+                          }
+                        />
+                      )}
+                      {navigation === 'purchases' && (
+                        <Purchases
+                          decimalDivision={decimalDivision}
+                          isMobile={isMobile}
+                          completedPurchaseActions={completedPurchaseActions}
+                          notCompletedPurchaseActions={
+                            notCompletedPurchaseActions
+                          }
                         />
                       )}
                     </Fragment>
@@ -409,6 +478,9 @@ require('react-styl')(`
   .growth-campaigns.container
     max-width: 760px
   .growth-campaigns
+    .rewards-logo
+      width: 164px
+      margin-bottom: -20px
     .info-icon
       padding-top: 30px
     .info-icon img
@@ -420,32 +492,30 @@ require('react-styl')(`
       top: -3px
     .campaign-info
       padding-top: 40px
+    h1
+      font-size: 40px
+      font-weight: 500
     h5
       text-align: center
-    .action-title
-      font-weight: bold
-      color: var(--steel)
-      margin-top: 30px
-      margin-left: 5px
-      margin-bottom: -5px
     .campaign-list
       .select-bar
         background-color: var(--clear-blue)
         height: 4px
         width: 100%
       .title
-        font-size: 0.88rem
+        font-size: 14px
         line-height: 1.93
         color: var(--bluey-grey)
         font-weight: normal
+        white-space: nowrap
       .title.active
         color: var(--dark)
     .past-campaigns
       .title
-        font-size: 1.31rem
+        font-size: 21px
         font-weight: bold
         font-style: normal
-        padding-top: 1.875rem
+        padding-top: 4.875rem
       .total-earned
         font-size: 38px
         font-weight: bold
@@ -477,33 +547,35 @@ require('react-styl')(`
           height: 20px
   .growth-campaigns.mobile
     h1
-      font-size: 2rem
+      font-size: 24px
     .subtitle
-      font-size: 1rem
+      font-size: 16px
+      text-align: center
     .campaign-info
-      font-size: 1rem
+      font-size: 16px
       padding-top: 1.875rem
       .ogn-icon
         width: 1.875rem
     .past-campaigns
       .title
-        font-size: 1.12rem
-        padding-top: 0.8rem
+        font-size: 25px
+        padding-top: 2.9rem
       .total-earned
-        font-size: 1.6rem
+        font-size: 48px
       .total-earned img
-        width: 1.6rem
-        height: 1.6rem
+        width: 3.125rem
+        height: 3.125rem
       .past-campaign
-        margin-top: 2rem
+        margin-top: 3.5rem
         .campaign-title
-          font-size: 1.3rem
+          font-size: 21px
+          font-weight: 500
         .tokens-earned-holder
           margin-top: 0.6rem
           .tokens-earned
-            font-size: 1.1rem
+            font-size: 18px
         .total-earned
-          font-size: 1rem
+          font-size: 16px
           line-height: 1.3
         .total-earned img
           width: 1rem

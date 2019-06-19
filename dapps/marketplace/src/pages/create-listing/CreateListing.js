@@ -36,8 +36,8 @@ class CreateListing extends Component {
         category: '',
         subCategory: '',
         location: '',
-        boost: '50',
-        boostLimit: '100',
+        boost: '0',
+        boostLimit: '0',
         media: [],
 
         // Unit fields:
