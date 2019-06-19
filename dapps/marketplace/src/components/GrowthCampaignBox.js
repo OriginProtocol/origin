@@ -3,6 +3,8 @@ import { Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 import { withRouter } from 'react-router-dom'
 
+import get from 'lodash/get'
+
 import AccountTokenBalance from 'queries/TokenBalance'
 import QueryError from 'components/QueryError'
 
@@ -110,14 +112,10 @@ const GrowthCampaignBox = props => (
   <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
     {({ error, data, networkStatus, loading }) => {
       if (networkStatus === 1 || loading) {
-        return ''
+        return null
       } else if (error) {
         return <QueryError error={error} query={profileQuery} />
       }
-
-      const walletAddress = data.web3.primaryAccount
-        ? data.web3.primaryAccount.id
-        : null
 
       let notEnrolled = true
       if (props.growthEnrollmentStatus) {
@@ -129,6 +127,8 @@ const GrowthCampaignBox = props => (
       if (notEnrolled) {
         return null
       }
+
+      const walletAddress = get(data, 'web3.primaryAccount.id')
 
       return (
         <div className="growth-campaign-box">

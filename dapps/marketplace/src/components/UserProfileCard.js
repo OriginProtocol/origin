@@ -41,7 +41,7 @@ class UserProfileCard extends Component {
           <div className="avatar-container">
             <Avatar avatarUrl={avatarUrl} />
             {!onEdit ? null : (
-              <div className="profile-edit-icon" onClick={onEdit} />
+              <a className="profile-edit-icon" onClick={onEdit} />
             )}
           </div>
           <div className="user-bio-container">

@@ -14,7 +14,10 @@ import AutoMutate from 'components/AutoMutate'
 class DeployIdentity extends Component {
   state = {}
   render() {
-    if (this.props.autoDeploy && this.props.loadingCanTransact) {
+    if (
+      this.props.autoDeploy &&
+      (this.props.loadingCanTransact || this.props.walletLoading)
+    ) {
       return null
     }
 
@@ -59,6 +62,8 @@ class DeployIdentity extends Component {
     if (this.props.disabled) {
       return
     }
+
+    console.log(this.props)
 
     let canDeploy = true
     if (this.props.validate) {
