@@ -122,6 +122,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - run: cd infra/growth && yarn migrate
       - run:
           name: Run Notification Tests
           command: cd infra/notifications && yarn migrate && yarn test
