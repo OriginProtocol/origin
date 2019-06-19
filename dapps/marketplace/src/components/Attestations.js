@@ -1,10 +1,7 @@
 import React from 'react'
-import { fbt } from 'fbt-runtime'
 
 import Tooltip from 'components/Tooltip'
-
 import { getVerifiedTooltip } from 'utils/profileTools'
-
 
 const Attestations = ({ profile = {}, small, className }) => {
   const verifiedAttestations = profile.verifiedAttestations

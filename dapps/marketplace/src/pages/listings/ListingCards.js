@@ -21,7 +21,11 @@ const ListingCards = ({
   if (!listings) return null
 
   return (
-    <div className={`listing-cards${horizontalList ? ' listing-horizontal-cards' : ''}`}>
+    <div
+      className={`listing-cards${
+        horizontalList ? ' listing-horizontal-cards' : ''
+      }`}
+    >
       {redirect && <Redirect to={redirect} />}
       {listings.map(a => (
         <div

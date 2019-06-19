@@ -164,10 +164,16 @@ export function getVerifiedTooltip(provider) {
     case 'kakao':
     case 'linkedin':
     case 'wechat':
-      return fbt(fbt.param('provider', displayName) + ' Account Verified', 'profileTools.providerAccountVerified')
+      return fbt(
+        fbt.param('provider', displayName) + ' Account Verified',
+        'profileTools.providerAccountVerified'
+      )
     case 'email':
     case 'website':
     default:
-      return fbt(fbt.param('provider', displayName) + ' Verified', 'profileTools.providerVerified')
+      return fbt(
+        fbt.param('provider', displayName) + ' Verified',
+        'profileTools.providerVerified'
+      )
   }
 }

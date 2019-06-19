@@ -82,10 +82,7 @@ const CreateIdentity = onClose => (
         </fbt>
       </p>
 
-      <UserActivationLink
-        className="btn btn-primary"
-        onClose={onClose}
-      />
+      <UserActivationLink className="btn btn-primary" onClose={onClose} />
     </div>
   </>
 )
