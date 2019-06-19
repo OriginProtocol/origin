@@ -58,7 +58,7 @@ const ProfileNav = ({ identity, identityLoading, open, onOpen, onClose }) => (
   </Query>
 )
 
-const CreateIdentity = onClose => (
+const CreateIdentity = ({ onClose }) => (
   <>
     <div className="create-identity text-center">
       <Avatar />
@@ -82,7 +82,7 @@ const CreateIdentity = onClose => (
         </fbt>
       </p>
 
-      <UserActivationLink className="btn btn-primary" onClose={onClose} />
+      <UserActivationLink className="btn btn-primary" onClose={onClose} onClick={onClose} />
     </div>
   </>
 )
