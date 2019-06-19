@@ -38,6 +38,12 @@ const urlValidation = website => {
   return true
 }
 
+const oauth2CallbackVerify = [
+  identityValidation,
+  check('code').custom(codeValidation),
+  handleValidationError
+]
+
 const airbnbGenerateCode = [
   identityValidation,
   check('airbnbUserId')
@@ -79,11 +85,7 @@ const emailVerifyCode = [
   handleValidationError
 ]
 
-const facebookVerify = [
-  identityValidation,
-  check('code').custom(codeValidation),
-  handleValidationError
-]
+const facebookVerify = oauth2CallbackVerify
 
 const phoneGenerateCode = [
   check('country_calling_code')
@@ -123,24 +125,29 @@ const phoneVerifyCode = [
 
 const twitterVerifyCode = [
   identityValidation,
-  check('oauth-verifier')
+  check('sid')
     .not()
     .isEmpty()
-    .withMessage('Field oauth-verifier must not be empty.'),
+    .withMessage('Field sid must not be empty.')
+    .trim(),
   handleValidationError
 ]
 
-const googleVerify = [
-  identityValidation,
-  check('code').custom(codeValidation),
-  handleValidationError
-]
+const googleVerify = oauth2CallbackVerify
 
 const websiteGenerateCode = [
   identityValidation,
   check('website').custom(urlValidation),
   handleValidationError
 ]
+
+const kakaoVerify = oauth2CallbackVerify
+
+const githubVerify = oauth2CallbackVerify
+
+const linkedinVerify = oauth2CallbackVerify
+
+const wechatVerify = oauth2CallbackVerify
 
 const websiteVerify = websiteGenerateCode
 
@@ -155,5 +162,9 @@ module.exports = {
   twitterVerifyCode,
   googleVerify,
   websiteGenerateCode,
-  websiteVerify
+  websiteVerify,
+  kakaoVerify,
+  githubVerify,
+  linkedinVerify,
+  wechatVerify
 }

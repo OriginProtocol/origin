@@ -1,4 +1,5 @@
 const addresses = require('@origin/contracts/build/contracts_mainnet.json')
+const localStorageHas = require('./_localStorageHas')
 
 export default {
   // Web3 provider
@@ -32,6 +33,9 @@ export default {
     'QmNQuZynZNNepPR4ntZYoGDa9JUKBwApXvLQHM9chBXKWo',
     'QmZ9ANQNA1r3cbPSMNc9YFyAEijXif2j9m6SyaKDMJ8RsL'
   ],
+  ProxyFactory: addresses.ProxyFactory,
+  ProxyFactory_Epoch: addresses.ProxyFactoryEpoch,
+  IdentityProxyImplementation: addresses.IdentityProxyImplementation,
   OriginToken: addresses.OGN,
   V00_Marketplace: addresses.Marketplace,
   V00_Marketplace_Epoch: addresses.MarketplaceEpoch,
@@ -75,5 +79,6 @@ export default {
   messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
 
   // Configs
-  performanceMode: true
+  performanceMode: true,
+  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled')
 }

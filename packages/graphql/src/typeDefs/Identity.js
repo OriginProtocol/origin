@@ -38,15 +38,26 @@ export const types = `
       after: String
       sort: String
     ): IdentityConnection
-    facebookAuthUrl(redirect: String): String
-    twitterAuthUrl(redirect: String): String
-    googleAuthUrl(redirect: String): String
+
+    getAuthUrl(provider: String!, redirect: String): String
+
+    attestationProviders: [String]
   }
 
   type IdentityConnection {
     nodes: [Identity]
     pageInfo: PageInfo!
     totalCount: Int!
+  }
+
+  type VerifiedAttestationProperty {
+    type: String!
+    value: String
+  }
+
+  type VerifiedAttestation {
+    id: String!
+    properties: [VerifiedAttestationProperty]
   }
 
   type Identity {
@@ -65,13 +76,7 @@ export const types = `
     avatarUrlExpanded: String
     strength: Int
 
-    facebookVerified: Boolean
-    twitterVerified: Boolean
-    airbnbVerified: Boolean
-    phoneVerified: Boolean
-    emailVerified: Boolean
-    googleVerified: Boolean
-    websiteVerified: Boolean
+    verifiedAttestations: [VerifiedAttestation]
 
     name: String
     ipfsHash: String

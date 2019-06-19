@@ -14,11 +14,14 @@ import Modal from 'components/Modal'
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
+import UserActivationLink from 'components/UserActivationLink'
 
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 import withWeb3 from 'hoc/withWeb3'
+import withIdentity from 'hoc/withIdentity'
 import withConfig from 'hoc/withConfig'
+
 import { fbt } from 'fbt-runtime'
 
 class Buy extends Component {
@@ -38,10 +41,6 @@ class Buy extends Component {
     }
     let content
 
-    if (!this.props.wallet) {
-      return null
-    }
-
     let action = (
       <button
         className={this.props.className}
@@ -50,26 +49,41 @@ class Buy extends Component {
       />
     )
 
-    if (this.state.error) {
-      content = this.renderTransactionError()
-    } else if (this.state.waitFor) {
-      content = this.renderWaitModal()
-    } else if (this.state.waitForAllow) {
-      content = this.renderWaitAllowModal()
-    } else if (this.state.waitForSwap) {
-      content = this.renderWaitSwapModal()
-    } else if (this.state.allow) {
-      content = this.renderAllowTokenModal()
-    } else if (!this.hasBalance()) {
-      action = this.renderSwapTokenMutation(
-        this.props.cannotTransact ? 'Purchase' : 'Swap Now'
+    const hasIdentity = localStorage.noIdentity || this.props.identity
+    if (!hasIdentity || !this.props.wallet) {
+      action = (
+        <UserActivationLink
+          className={this.props.className}
+          children={this.props.children}
+          location={{ pathname: `/listing/${this.props.listing.id}` }}
+        />
       )
-      content = this.renderSwapTokenModal()
-    } else if (!this.hasAllowance()) {
-      action = this.renderAllowTokenMutation('Purchase')
-      content = this.renderAllowTokenModal()
     } else {
-      action = this.renderMakeOfferMutation()
+      const hasEth = get(this.props, 'tokenStatus.hasEthBalance', false)
+
+      if (this.state.error) {
+        content = this.renderTransactionError()
+      } else if (this.state.waitFor) {
+        content = this.renderWaitModal()
+      } else if (this.state.waitForAllow) {
+        content = this.renderWaitAllowModal()
+      } else if (this.state.waitForSwap) {
+        content = this.renderWaitSwapModal()
+      } else if (this.state.allow) {
+        content = this.renderAllowTokenModal()
+      } else if (hasEth && get(this.props, 'config.proxyAccountsEnabled')) {
+        action = this.renderMakeOfferMutation(null, true)
+      } else if (!this.hasBalance()) {
+        action = this.renderSwapTokenMutation(
+          this.props.cannotTransact ? 'Purchase' : 'Swap Now'
+        )
+        content = this.renderSwapTokenModal()
+      } else if (!this.hasAllowance()) {
+        action = this.renderAllowTokenMutation('Purchase')
+        content = this.renderAllowTokenModal()
+      } else {
+        action = this.renderMakeOfferMutation()
+      }
     }
 
     return (
@@ -239,7 +253,7 @@ class Buy extends Component {
     )
   }
 
-  renderMakeOfferMutation(btnContent) {
+  renderMakeOfferMutation(btnContent, autoswap) {
     return (
       <Mutation
         mutation={MakeOfferMutation}
@@ -253,7 +267,7 @@ class Buy extends Component {
         {makeOffer => (
           <button
             className={btnContent ? 'btn btn-clear' : this.props.className}
-            onClick={() => this.onClick(makeOffer)}
+            onClick={() => this.onClick(makeOffer, autoswap)}
             children={btnContent || this.props.children}
           />
         )}
@@ -261,7 +275,7 @@ class Buy extends Component {
     )
   }
 
-  onClick(makeOffer) {
+  onClick(makeOffer, autoswap = false) {
     if (!this.canTransact()) {
       return
     }
@@ -282,7 +296,8 @@ class Buy extends Component {
       value,
       currency: currency || 'token-ETH',
       from: this.props.walletProxy,
-      quantity: Number(quantity)
+      quantity: Number(quantity),
+      autoswap
     }
 
     if (
@@ -419,7 +434,7 @@ class Buy extends Component {
 }
 
 export default withConfig(
-  withWeb3(withWallet(withCanTransact(withRouter(Buy))))
+  withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy)))))
 )
 
 require('react-styl')(`

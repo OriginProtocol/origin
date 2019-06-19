@@ -75,6 +75,19 @@ functionality.
 - [Google](https://developers.google.com/identity/protocols/OAuth2WebServer)
   - GOOGLE_CLIENT_ID
   - GOOGLE_CLIENT_SECRET
+- [KaKao](https://developers.kakao.com/docs/restapi/user-management)
+  - KAKAO_CLIENT_ID
+  - KAKAO_CLIENT_SECRET
+- [GitHub](https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/)
+  - GITHUB_CLIENT_ID
+  - GITHUB_CLIENT_SECRET
+- [LinkedIn](https://open.wechat.com/cgi-bin/newreadtemplate?t=overseas_open/docs/web/login/getting-user-profile#login_getting-user-profile)
+  - LINKEDIN_CLIENT_ID
+  - LINKEDIN_CLIENT_SECRET
+- [WeChat](https://docs.microsoft.com/en-us/linkedin/shared/authentication/authentication)
+  - WECHAT_CLIENT_ID
+  - WECHAT_CLIENT_SECRET
+
 
 ### Set Up Your Database
 

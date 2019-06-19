@@ -54,7 +54,7 @@ const CanceledStages = [
   }
 ]
 
-const TransactionStages = ({ offer }) => {
+const TransactionStages = ({ offer, mini }) => {
   let stages = SaleStages
   if (offer.status === 3 || offer.status === 5) {
     stages = DisputeStages
@@ -98,6 +98,17 @@ const TransactionStages = ({ offer }) => {
       </EventTick>
     )
   })
+
+  if (mini) {
+    const numStages = stages.length - 1
+    const completedStages = stages.filter(s => offer[s.event]).length - 1
+    const pct = (completedStages / numStages) * 100
+    return (
+      <div className="stages-mini" style={{ '--pct': `${pct}%` }}>
+        {events}
+      </div>
+    )
+  }
 
   return <div className="stages">{events}</div>
 }
@@ -159,4 +170,27 @@ require('react-styl')(`
         background: var(--greenblue)
       &.bgl::after
         background-image: linear-gradient(to right, var(--greenblue), var(--greenblue) 50%, var(--pale-grey-two) 50%, var(--pale-grey-two))
+  .stages-mini
+    width: 100%
+    display: flex
+    justify-content: space-between
+    position: relative
+    &::before
+      content: ""
+      background-image: linear-gradient(to right, var(--greenblue), var(--greenblue) var(--pct), var(--pale-grey-two) var(--pct), var(--pale-grey-two))
+      height: 2px
+      left: 0
+      right: 0
+      top: 4px
+      position: absolute
+    > div
+      text-indent: -9999px
+      position: relative
+      width: 10px
+      height: 10px
+      background-color: var(--pale-grey-two)
+      border-radius: 1rem
+      &.active
+        background: var(--greenblue)
+
 `)

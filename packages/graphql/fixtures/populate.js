@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 
-import mnemonicToAccounts from '../src/utils/mnemonicToAccount'
+import mnemonicToAccounts, { mnemonicToMasterAccount } from '../src/utils/mnemonicToAccount'
 import demoListings from './_demoListings'
 import get from 'lodash/get'
 import sortBy from 'lodash/sortBy'
@@ -117,6 +117,33 @@ export async function createAccount(gqlClient) {
   return user
 }
 
+// export async function deployIdentity(gqlClient, ethAddress) {
+//   const variables = {
+//     profile: {
+//       firstName: 'Test',
+//       lastName: 'Account',
+//       description: 'Tester',
+//       avatar: ''
+//     },
+//     attestations: [],
+//     from: ethAddress
+//   }
+
+//   let result
+//   try {
+//     result = await gqlClient.mutate({ DeployIdentityMutation, variables })
+//   } catch (e) {
+//     console.log(JSON.stringify(e, null, 4))
+//     throw e
+//   }
+//   const key = Object.keys(result.data)[0]
+//   const hash = result.data[key].id
+//   if (hash) {
+//     return await transactionConfirmed(hash, gqlClient)
+//   }
+//   return result.data[key]
+// }
+
 export default async function populate(gqlClient, log, done) {
   async function mutate(mutation, from, variables = {}) {
     variables.from = from
@@ -172,6 +199,12 @@ export default async function populate(gqlClient, log, done) {
     autoWhitelist: true
   })
   log(`Deployed marketplace to ${Marketplace.contractAddress}`)
+
+  const relayerMasterAddress = mnemonicToMasterAccount(
+    process.env.FORWARDER_MNEMONIC || 'one two three four five six'
+  )
+  await mutate(SendFromNodeMutation, NodeAccount, { to: relayerMasterAddress, value: '3' })
+  log(`Sent eth to Relayer master account(${relayerMasterAddress})`)
 
   const ProxyFactory = await mutate(DeployProxyFactoryContractMutation, Admin)
   log(`Deployed Proxy Factory to ${ProxyFactory.contractAddress}`)

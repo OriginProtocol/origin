@@ -7,8 +7,6 @@ import store from 'utils/store'
 
 import Wallet from './Wallet'
 import MetaMask from './MetaMask'
-import { Messaging } from './Messaging'
-import Notifications from './Notifications'
 import Profile from './Profile'
 import Finished from './Finished'
 
@@ -33,20 +31,18 @@ class Onboard extends Component {
             )}
           />
           <Route
-            path={`${linkPathPrefix}/onboard/messaging`}
-            render={() => (
-              <Messaging listing={listing} linkPrefix={linkPrefix} />
-            )}
-          />
-          <Route
-            path={`${linkPathPrefix}/onboard/notifications`}
-            render={() => (
-              <Notifications listing={listing} linkPrefix={linkPrefix} />
-            )}
-          />
-          <Route
             path={`${linkPathPrefix}/onboard/profile`}
             render={() => <Profile listing={listing} linkPrefix={linkPrefix} />}
+          />
+          <Route
+            path={`${linkPathPrefix}/onboard/rewards`}
+            render={() => (
+              <Profile
+                listing={listing}
+                linkPrefix={linkPrefix}
+                rewards={true}
+              />
+            )}
           />
           <Route
             path={`${linkPathPrefix}/onboard/finished`}
@@ -79,6 +75,9 @@ export default Onboard
 require('react-styl')(`
   .onboard
     margin-top: 3.5rem
+    h1
+      font-weight: 500
+      font-family: Poppins
     .btn
       border-radius: 2rem
       padding: 0.75rem 2rem
@@ -141,6 +140,7 @@ require('react-styl')(`
     flex-direction: column
     align-items: center
     text-align: center
+    max-width: 610px
 
     .status
       font-family: var(--heading-font)

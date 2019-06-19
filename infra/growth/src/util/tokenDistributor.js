@@ -18,6 +18,23 @@ class TokenDistributor {
     this.token = new Token({ providers: createProviders([networkId]) })
     this.supplier = await this.token.defaultAccount(networkId)
     this.web3 = this.token.web3(networkId)
+
+    await this.info()
+  }
+
+  /**
+   * Prints out info about the distributor.
+   * @returns {Promise<void>}
+   */
+  async info() {
+    const balance = await this.token.balance(this.networkId, this.supplier)
+
+    logger.info('TokenDistributor:')
+    logger.info(`  Network id: ${this.networkId}`)
+    logger.info(`  Provider URL: ${this.web3.currentProvider.host}`)
+    logger.info(`  Address: ${this.supplier}`)
+    logger.info(`  Balance: ${this.token.toTokenUnit(balance)} OGN`)
+    logger.info(`  Gas price multiplier: ${this.gasPriceMultiplier}`)
   }
 
   /**
@@ -38,7 +55,7 @@ class TokenDistributor {
       const gasPrice = BigNumber(medianGasPrice).times(this.gasPriceMultiplier)
       return gasPrice.integerValue()
     }
-    return medianGasPrice
+    return BigNumber(medianGasPrice)
   }
 
   /**

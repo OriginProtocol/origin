@@ -19,13 +19,13 @@ export default gql`
           strength
           attestations
 
-          facebookVerified
-          googleVerified
-          twitterVerified
-          airbnbVerified
-          phoneVerified
-          emailVerified
-          websiteVerified
+          verifiedAttestations {
+            id
+            properties {
+              type
+              value
+            }
+          }
         }
       }
     }

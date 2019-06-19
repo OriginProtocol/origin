@@ -1,13 +1,4 @@
-import dotenv from 'dotenv'
-dotenv.config()
-
-// No conditional imports available yet
-try {
-  require('envkey')
-} catch (error) {
-  console.warn('EnvKey not configured')
-}
-
+import './env'
 import server from './src/server'
 
 server

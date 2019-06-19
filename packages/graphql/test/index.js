@@ -2,7 +2,7 @@ import assert from 'assert'
 import get from 'lodash/get'
 
 import client from '../src/index'
-import contracts from '../src/contracts'
+import contracts, { shutdown } from '../src/contracts'
 
 import { getOffer, mutate } from './_helpers'
 import queries from './_queries'
@@ -24,6 +24,8 @@ describe('Marketplace', function() {
 
   after(async function() {
     await showGasTable()
+    // web3-provider-engine can hang this process if not called
+    shutdown()
   })
 
   it('should deploy the token contract', async function() {

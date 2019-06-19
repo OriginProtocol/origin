@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react'
-import Modal from 'components/Modal'
 import { Query } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
+
+import omit from 'lodash/omit'
 
 import { rewardsOnMobileEnabled } from 'constants/SystemInfo'
 import growthEligibilityQuery from 'queries/GrowthEligibility'
@@ -10,6 +11,8 @@ import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import allCampaignsQuery from 'queries/AllGrowthCampaigns'
 import profileQuery from 'queries/Profile'
 import QueryError from 'components/QueryError'
+import Modal from 'components/Modal'
+import MobileModal from 'components/MobileModal'
 import Enroll from 'pages/growth/mutations/Enroll'
 import { mobileDevice } from 'utils/mobile'
 import withIsMobile from 'hoc/withIsMobile'
@@ -46,7 +49,11 @@ function withEnrolmentModal(WrappedComponent) {
         notCitizenChecked: false,
         notCitizenConfirmed: false,
         termsAccepted: false,
-        userAlreadyEnrolled: false
+        userAlreadyEnrolled: false,
+        modalTitle: fbt(
+          'Sign Up for Origin Rewards',
+          'WithEnrolmentModal.SignUpForOrigin'
+        )
       }
     }
 
@@ -55,6 +62,32 @@ function withEnrolmentModal(WrappedComponent) {
         if (this.props.onClose) {
           this.props.onClose()
         }
+      } else if (this.state.stage !== previousState.stage) {
+        let title = fbt(
+          'Sign Up for Origin Rewards',
+          'WithEnrolmentModal.SignUpForOrigin'
+        )
+        switch (this.state.stage) {
+          case 'JoinActiveCampaign':
+            title = fbt('Join Campaign', 'WithEnrolmentModal.JoinCampaign')
+            break
+
+          case 'TermsModal':
+            title = fbt(
+              'Origin Rewards Terms',
+              'WithEnrolmentModal.SignUpForOrigin'
+            )
+            break
+
+          case 'RestrictedModal':
+            title = fbt(
+              'Country not eligible',
+              'WithEnrolmentModal.CountryNotEligible'
+            )
+            break
+        }
+
+        this.setMobileHeader(title)
       }
     }
 
@@ -130,31 +163,19 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     // Renders mobile header with close button when on mobile device
-    renderMobileHeaderOption(title) {
-      if (this.props.ismobile === 'false') return ''
+    setMobileHeader(title) {
+      if (this.state.modalTitle === title) {
+        return
+      }
 
-      return (
-        <div className="header d-flex mb-4">
-          <div
-            className="col-2 d-flex justify-content-center align-items-center back"
-            onClick={() => {
-              this.setState({
-                open: false
-              })
-            }}
-          >
-            <img src="images/close-button.svg" />
-          </div>
-          <div className="container d-flex justify-content-center align-items-center col-8">
-            {title}
-          </div>
-          <div className="col-2" />
-        </div>
-      )
+      this.setState({
+        modalTitle: title
+      })
     }
 
     renderJoinActiveCampaign() {
       const vars = { first: 10 }
+
       return (
         <Query
           query={allCampaignsQuery}
@@ -185,9 +206,6 @@ function withEnrolmentModal(WrappedComponent) {
 
             return (
               <div className="join-campaign">
-                {this.renderMobileHeaderOption(
-                  fbt('Join Campaign', 'WithEnrolmentModal.JoinCampaign')
-                )}
                 <div className="internal-modal-content">
                   <div>
                     <img
@@ -242,7 +260,9 @@ function withEnrolmentModal(WrappedComponent) {
       const cancelButton = (
         <button
           className={`btn ${
-            isMobile ? 'btn-no-outline-link' : 'btn-outline-light mr-2'
+            isMobile
+              ? 'btn-no-outline-link mt-3 mb-3'
+              : 'btn-outline-light mr-2'
           }`}
           onClick={() => this.handleCloseModal()}
           children={fbt('Cancel', 'Cancel')}
@@ -253,10 +273,10 @@ function withEnrolmentModal(WrappedComponent) {
         <button
           className={`btn btn-lg ${
             termsAccepted
-              ? 'btn-primary btn-rounded'
+              ? `btn-primary btn-rounded ${isMobile ? 'm-0' : ''}`
               : isMobile
-              ? 'btn-primary'
-              : 'ml-2 btn-outline-light'
+              ? 'btn-primary wide-btn m-0'
+              : 'btn-outline-light'
           }`}
           onClick={() => this.handleTermsContinue()}
           disabled={termsAccepted ? undefined : 'disabled'}
@@ -266,48 +286,47 @@ function withEnrolmentModal(WrappedComponent) {
 
       return (
         <div>
-          {this.renderMobileHeaderOption(
-            fbt('Sign Up for Origin', 'WithEnrolmentModal.SignUpForOrigin')
-          )}
           <div className="internal-modal-content">
             {!isMobile && (
               <div className="title title-light mt-2">
-                <fbt desc="EnrollmentModal.termsTitle">Sign Up for Origin</fbt>
+                <fbt desc="EnrollmentModal.termsTitle">
+                  Sign Up for Origin Rewards
+                </fbt>
               </div>
             )}
-            <div className="px-2 px-md-5 mt-3 normal-line-height terms-title">
-              {/*<fbt desc="EnrollmentModal.termsSubTitle">*/}
-              Join Origin’s reward program to earn Origin tokens (OGN). Terms
-              and conditions apply.
-              {/*</fbt>*/}
+            <div className="px-4 mt-3 normal-line-height terms-title">
+              <fbt desc="EnrollmentModal.termsSubTitle">
+                Join Origin’s reward program to earn Origin tokens (OGN). Terms
+                and conditions apply.
+              </fbt>
             </div>
             <div className="pt-1 mt-4 normal-line-height terms-body explanation">
-              {/*<fbt desc="EnrollmentModal.termsExplanationParagraph1">*/}
-              Earned OGN will be distributed at the end of each campaign. OGN is
-              currently locked for usage on the Origin platform and cannot be
-              transferred. It is expected that OGN will be unlocked and
-              transferrable in the future.
-              {/*</fbt>*/}
+              <fbt desc="EnrollmentModal.termsExplanationParagraph1">
+                Earned OGN will be distributed at the end of each campaign. OGN
+                is currently locked for usage on the Origin platform and cannot
+                be transferred. It is expected that OGN will be unlocked and
+                transferrable in the future.
+              </fbt>
             </div>
             <div className="mt-3 normal-line-height terms-body explanation">
-              {/*<fbt desc="EnrollmentModal.termsExplanationParagraph2">*/}
-              By joining the Origin rewards program, you agree that you will not
-              transfer or sell future earned Origin tokens to other for at least
-              1 year from the date of earning your tokens.
-              {/*</fbt>*/}
+              <fbt desc="EnrollmentModal.termsExplanationParagraph2">
+                By joining the Origin rewards program, you agree that you will
+                not transfer or sell future earned Origin tokens to other for at
+                least 1 year from the date of earning your tokens.
+              </fbt>
             </div>
             <div className="terms">
-              {/*<fbt desc="EnrollmentModal.termsBody">*/}
-              OGN are being issued in a transaction originally exempt from
-              registration under the U.S. Securities Act of 1933, as amended
-              (the “Securities Act”), and may not be transferred in the United
-              States to, or for the account or benefit of, any U.S. person
-              except pursuant to an available exemption from the registration
-              requirements of the Securities Act and all applicable state
-              securities laws. Terms used above have the meanings given to them
-              in Regulation S under the Securities Act and all applicable laws
-              and regulations.
-              {/*</fbt>*/}
+              <fbt desc="EnrollmentModal.termsBody">
+                OGN are being issued in a transaction originally exempt from
+                registration under the U.S. Securities Act of 1933, as amended
+                (the “Securities Act”), and may not be transferred in the United
+                States to, or for the account or benefit of, any U.S. person
+                except pursuant to an available exemption from the registration
+                requirements of the Securities Act and all applicable state
+                securities laws. Terms used above have the meanings given to
+                them in Regulation S under the Securities Act and all applicable
+                laws and regulations.
+              </fbt>
             </div>
             <div className="mt-1 d-flex country-check-label justify-content-center">
               <label className="checkbox-holder">
@@ -326,7 +345,7 @@ function withEnrolmentModal(WrappedComponent) {
             </div>
             <div
               className={`d-flex justify-content-center ${
-                isMobile ? 'flex-column' : ''
+                isMobile ? 'flex-column mt-auto px-4' : ''
               }`}
             >
               {!isMobile && (
@@ -349,30 +368,26 @@ function withEnrolmentModal(WrappedComponent) {
 
     renderRestrictedModal(country, eligibility, notCitizenChecked) {
       const isRestricted = eligibility === 'Restricted'
-      const isForbidden = eligibility === 'Forbidden'
+      const isMobile = this.props.ismobile === 'true'
 
       return (
-        <div>
-          {this.renderMobileHeaderOption(
-            fbt('Country not eligible', 'WithEnrolmentModal.CountryNotEligible')
-          )}
+        <div className="container d-flex flex-column align-items-center">
           <div>
-            <div className="image-holder mr-auto ml-auto">
-              <img src="images/growth/earth-graphic.svg" />
+            <div className="image-holder text-center mr-auto ml-auto">
               <img
-                className="red-x-image"
-                src="images/growth/red-x-graphic.svg"
+                className="world-image"
+                src="images/growth/not-eligible-graphic.svg"
               />
             </div>
           </div>
-          <div className="title mt-4">
+          <div className="title mt-4 text-center">
             <fbt desc="GrowthEnrollment.notEligibleTitle">
               Oops,
               <fbt:param name="country">{country}</fbt:param>
               is not eligible
             </fbt>
           </div>
-          <div className="mt-3 mr-auto ml-auto normal-line-height info-text">
+          <div className="normal-explanation mt-3 mr-auto ml-auto normal-line-height info-text text-center">
             <fbt desc="GrowthEnrollment.notEligibleExplanation">
               Unfortunately, it looks like you’re currently in a country where
               government regulations do not allow you to participate in Origin
@@ -381,12 +396,12 @@ function withEnrolmentModal(WrappedComponent) {
           </div>
           {isRestricted && (
             <Fragment>
-              <div className="mt-4 pt-2">
+              <div className="eligibility-question mt-4 pt-1 pb-1 text-center">
                 <fbt desc="GrowthEnrollment.restrictedQuestion">
                   Did we detect your your country incorrectly?
                 </fbt>
               </div>
-              <div className="mt-1 d-flex country-check-label justify-content-center">
+              <div className="mt-3 d-flex country-check-label justify-content-center">
                 <label className="checkbox-holder">
                   <input
                     type="checkbox"
@@ -404,24 +419,33 @@ function withEnrolmentModal(WrappedComponent) {
               </div>
             </Fragment>
           )}
-          {(isForbidden || (isRestricted && !notCitizenChecked)) && (
-            <button
-              className={`btn ${
-                this.props.ismobile === 'true'
-                  ? 'btn-primary'
-                  : 'btn-outline-light'
-              }`}
-              onClick={() => this.handleCloseModal()}
-              children={fbt('Done', 'Done')}
-            />
-          )}
-          {isRestricted && notCitizenChecked && (
-            <button
-              className="btn btn-primary btn-rounded btn-lg"
-              onClick={() => this.handleEligibilityContinue()}
-              children={fbt('Continue', 'Continue')}
-            />
-          )}
+          <div className={`buttons-holder ${isMobile ? 'mt-auto' : ''}`}>
+            {isRestricted && !notCitizenChecked && (
+              <button
+                className={`btn btn-rounded btn-lg btn-outline-light mb-0 ${
+                  isMobile ? 'wide-btn' : ''
+                }`}
+                onClick={() => this.handleCloseModal()}
+                children={fbt('Done', 'Done')}
+              />
+            )}
+            {isRestricted && notCitizenChecked && (
+              <button
+                className={`btn btn-primary btn-rounded btn-lg mb-0 ${
+                  isMobile ? 'wide-btn' : ''
+                }`}
+                onClick={() => this.handleEligibilityContinue()}
+                children={fbt('Continue', 'Continue')}
+              />
+            )}
+            {isMobile && (
+              <button
+                className="btn-no-outline-link"
+                onClick={() => this.handleCloseModal()}
+                children={fbt('Back to home', 'Back to home')}
+              />
+            )}
+          </div>
         </div>
       )
     }
@@ -476,16 +500,31 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     enrollmentSuccessful() {
-      this.historyNavigate('/campaigns')
+      if (this.props.onCompleted) {
+        this.props.onCompleted()
+      } else {
+        this.historyNavigate('/campaigns')
+      }
       this.handleCloseModal()
     }
 
     renderMetamaskSignature() {
+      const isMobile = this.props.ismobile === 'true'
       return (
         <Enroll
-          isMobile={this.props.ismobile === 'true'}
+          isMobile={isMobile}
           onSuccess={() => this.enrollmentSuccessful()}
-          onAccountBlocked={() => this.historyNavigate('/rewards/banned')}
+          onAccountBlocked={() => {
+            if (this.props.onAccountBlocked) {
+              this.props.onAccountBlocked()
+              if (isMobile) {
+                this.historyNavigate('/rewards/banned')
+              }
+            } else {
+              this.historyNavigate('/rewards/banned')
+            }
+            this.handleCloseModal()
+          }}
         />
       )
     }
@@ -508,6 +547,8 @@ function withEnrolmentModal(WrappedComponent) {
 
     render() {
       const { open } = this.state
+      const isMobile = this.props.isMobile
+      const ModalComponent = isMobile ? MobileModal : Modal
 
       return (
         <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
@@ -538,7 +579,6 @@ function withEnrolmentModal(WrappedComponent) {
                     )
                   }
 
-                  const isMobile = this.props.ismobile === 'true'
                   const displayMobileModal =
                     isMobile && this.state.stage !== 'MetamaskSignature'
                   const snowSmallerModal =
@@ -547,7 +587,13 @@ function withEnrolmentModal(WrappedComponent) {
                   return (
                     <Fragment>
                       <WrappedComponent
-                        {...this.props}
+                        {...omit(this.props, [
+                          'onClose',
+                          'onNavigation',
+                          'onCompleted',
+                          'isMobile',
+                          'onAccountBlocked'
+                        ])}
                         onClick={e =>
                           this.handleClick(
                             e,
@@ -557,10 +603,12 @@ function withEnrolmentModal(WrappedComponent) {
                         }
                       />
                       {open && (
-                        <Modal
+                        <ModalComponent
+                          title={this.state.modalTitle}
                           className={`growth-enrollment-modal ${
                             snowSmallerModal ? 'small' : ''
                           } ${displayMobileModal ? 'mobile' : ''}`}
+                          shouldClose={this.state.shouldClose}
                           onClose={() => {
                             this.setState({
                               open: false
@@ -568,7 +616,7 @@ function withEnrolmentModal(WrappedComponent) {
                           }}
                         >
                           {this[`render${this.state.stage}`]()}
-                        </Modal>
+                        </ModalComponent>
                       )}
                     </Fragment>
                   )
@@ -600,8 +648,29 @@ require('react-styl')(`
     .growth-enrollment-modal.small
       max-width: 300px !important
   .growth-enrollment-modal .input:checked ~ .checkmark
-      background-color: #2196F3
+    background-color: #2196F3
+  .pl-modal .pl-modal-table .pl-modal-cell .growth-enrollment-modal.pl-modal-content
+    color: var(--dark)
+    background-color: white
   .growth-enrollment-modal
+    &.modal-content
+      padding: 20px
+      > div, .internal-modal-content
+        height: 100%
+        display: flex
+        flex-direction: column
+      .btn
+        width: 100%
+        margin: 2rem 0
+        padding: 0.5rem
+    .btn-outline-light
+      color: var(--clear-blue)
+      border-color: var(--clear-blue)
+    .eligibility-question
+      font-size: 16px
+      font-weight: bold
+    .normal-explanation
+      font-size: 16px
     .header
       background-color: var(--dusk)
       height: 3.75rem
@@ -610,7 +679,7 @@ require('react-styl')(`
       .container
         height: 100%
         font-family: Lato
-        font-size: 1.375rem
+        font-size: 22px
         font-weight: bold
         color: white
     .normal-line-height
@@ -622,20 +691,27 @@ require('react-styl')(`
       font-weight: 300
     .image-holder
       position: relative
-      width: 400px
+      max-width: 200px
+      height: 150px
     .info-text
       max-width: 400px
     .red-x-image
       position: absolute
-      right: 110px
-      bottom: 10px
+      right: -10px
+      bottom: 20px
     .checkbox-holder input:checked ~ .checkmark:after
       display: block
+    .buttons-holder
+      width: 100%
     .btn
       margin-top: 30px
       min-width: 9rem
+    .wide-btn
+      width: 100%
+      margin-left: auto
+      margin-right: auto
     .checkbox-holder
-      color: var(--pale-grey)
+      color: var(--steel-blue)
       font-family: Lato
       font-weight: normal
       display: block
@@ -679,9 +755,12 @@ require('react-styl')(`
     .country-check-label
       font-weight: 300
     .terms-title
-      color: var(--pale-grey)
+      font-weight: 500
+      color: black
+      margin: 0px 25px
     .terms-body
-      color: var(--pale-grey)
+      color: var(--dark)
+      padding: 0
     .explanation
       font-size: 12px
       text-align: left
@@ -689,15 +768,19 @@ require('react-styl')(`
       padding-right: 25px
       line-height: 1.58
     .terms
-      font-size: 0.75rem
+      background-color: var(--pale-grey-four)
+      color: var(--steel)
+      margin-left: 1.5rem
+      margin-right: 1.5rem
+      padding: 0.625rem 1rem
+      border-radius: 0.312rem
+      border: solid 1px var(--light)
+      font-weight: normal
+      font-size: 12px
       overflow-y: scroll
       height: 9.375rem
-      background-color: var(--dark-two)
-      margin: 1.5rem 0px
+      margin: 1.5rem
       text-align: left
-      padding: 1.125rem 1.56rem
-      font-weight: 300
-      color: var(--pale-grey)
     .join-campaign
       .btn
         padding: 0.7rem 2rem
@@ -706,14 +789,19 @@ require('react-styl')(`
         font-weight: normal
         text-decoration: underline
         color: white
-        margin-top: 1.2rem
-  .growth-enrollment-modal.pl-modal.mobile .pl-modal-table .pl-modal-cell .growth-enrollment-modal.mobile
+  .mobile-modal-light .growth-enrollment-modal.mobile.modal-content .container
+    max-width: 520px
+    margin-left: auto
+    margin-right: auto
+    padding-top: 20px
+  .mobile-modal-light .growth-enrollment-modal.small
+    text-align: center
+  .mobile-modal-light .growth-enrollment-modal.mobile
     max-width: 767px !important
     color: var(--dark)
-    .internal-modal-content
-      max-width: 520px
-      margin-left: auto
-      margin-right: auto
+    text-align: center
+    border: 0px
+    background-color: white
     .join-campaign
       .btn-no-outline
         color: var(--clear-blue)
@@ -721,15 +809,12 @@ require('react-styl')(`
       color: var(--steel)
   .growth-enrollment-modal.pl-modal.mobile .pl-modal-table .pl-modal-cell
     padding: 0px
-  .growth-enrollment-modal.pl-modal.mobile .pl-modal-table .pl-modal-cell .pl-modal-content
+  .mobile-modal-light .modal-content
     background-color: var(--pale-grey-four)
     padding: 0px
     border-radius: 0px
-    height: 100%
     width: 100%
   @media (max-width: 767.98px)
-    .growth-enrollment-modal.pl-modal .pl-modal-table .pl-modal-cell .pl-modal-content
-      font-size: 15px
     .growth-enrollment-modal
       .join-campaign
         img
@@ -737,35 +822,44 @@ require('react-styl')(`
         .btn-no-outline
           margin-top: 0.8rem
       .btn
-        margin-top: 1.2rem
-        margin-left: 1.5rem
-        margin-right: 1.5rem
+        margin-top: 1.5rem
       .title
-        font-size: 20px
-        line-height: 1.3
+        font-size: 24px
+        line-height: 1.21
+        max-width: 15rem
+        font-weight: 500
       .terms
-        margin: 16px 0px
+        margin: 1rem 1.56rem
       .checkbox-holder
         font-size: 15px
       .terms
         background-color: var(--pale-grey-four)
         color: var(--steel)
-        margin-left: 1.5rem
-        margin-right: 1.5rem
         padding: 0.625rem 1rem
         border-radius: 0.312rem
         border: solid 1px var(--light)
+        font-weight: normal
       .terms-title
-        color: black
-        font-size: 1.125rem
+        font-size: 18px
+        font-weight: normal
       .terms-body
-        color: var(--dark)
-        font-size: 0.875rem
+        font-size: 14px
         font-weight: 300
         line-height: 1.4
+        margin: 0px 25px
+        padding: 0
       .btn-no-outline-link
-        font-size: 0.875rem
+        font-size: 14px
         color: var(--clear-blue)
         font-weight: normal
-        margin-top: 0.8rem
+        margin: 1.2rem
+        font-size: 16px
+        font-weight: bold
+      .checkbox-holder
+        color: var(--dark)
+      .image-holder
+        .world-image
+          max-width: 135px
+        .red-x-image
+          width: 40px
 `)

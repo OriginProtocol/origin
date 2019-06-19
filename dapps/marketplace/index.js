@@ -27,6 +27,7 @@ async function start() {
     deployContracts: true,
     ipfs: true,
     populate: true,
+    graphqlServer: process.env.PERFORMANCE ? true : false,
     skipContractsIfExists: process.env.CLEAN ? false : true,
     sslProxy
   })
@@ -50,7 +51,9 @@ async function start() {
   const PORT = process.env.PORT || 3000
   app.listen(PORT, () => {
     console.log(`\nListening on port ${PORT}\n`)
-    setTimeout(() => opener(`http://${HOST}:${PORT}`), 2000)
+    if (!process.env.NOOPENER) {
+      setTimeout(() => opener(`http://${HOST}:${PORT}`), 2000)
+    }
   })
 }
 

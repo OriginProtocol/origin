@@ -56,6 +56,17 @@ function useRelayer({ mutation, value }) {
 }
 
 /**
+ * trigger the EVM to mine a block, supporting the WPE-style providers, and
+ * the standard ones...
+ * @param web3 {Web3} a Web3 instance
+ */
+function mineBlock(web3Inst) {
+  const hasAsync = typeof web3Inst.currentProvider.sendAsync !== 'undefined'
+  const sendMethod = hasAsync ? 'sendAsync' : 'send'
+  return web3Inst.currentProvider[sendMethod]({ method: 'evm_mine' }, () => {})
+}
+
+/**
  * Should we use existing proxy, create new proxy, or don't use proxy at all.
  * @param proxy     Existing proxy address
  * @param addr      Contract address
@@ -86,6 +97,9 @@ async function useProxy({ proxy, addr, to, from, mutation }) {
     return
   } else if (mutation === 'swapToToken') {
     debug('cannot useProxy: swapToToken disabled')
+    return
+  } else if (mutation === 'swapAndMakeOffer') {
+    debug('cannot useProxy: swapAndMakeOffer')
     return
   }
 
@@ -160,7 +174,7 @@ export default function txHelper({
       // gas = await toSend.estimateGas({ from })
       gas = 1000000
     } else if (shouldUseProxy && !shouldUseRelayer) {
-      debug('wrapping tx with Proxy.execute')
+      debug(`wrapping tx with Proxy.execute. value: ${value}`)
       const Proxy = new web3.eth.Contract(IdentityProxy.abi, proxy)
       const txData = await tx.encodeABI()
       toSend = Proxy.methods.execute(0, addr, value || '0', txData)
@@ -217,6 +231,7 @@ export default function txHelper({
     }
     toSend
       .once('transactionHash', async hash => {
+        debug(`got hash ${hash}`)
         txHash = hash
         resolve({ id: hash })
 
@@ -266,10 +281,7 @@ export default function txHelper({
         })
         if (contracts.automine) {
           setTimeout(() => {
-            contracts.web3.currentProvider.send(
-              { method: 'evm_mine' },
-              () => {}
-            )
+            mineBlock(contracts.web3)
           }, contracts.automine)
         }
       })

@@ -32,7 +32,7 @@ describe('June campaign rules', () => {
     expect(this.crules.levels[1]).to.be.an('object')
     expect(this.crules.levels[1].rules.length).to.equal(6)
     expect(this.crules.levels[2]).to.be.an('object')
-    expect(this.crules.levels[2].rules.length).to.equal(31)
+    expect(this.crules.levels[2].rules.length).to.equal(32)
 
     this.userA = '0x123'
     this.userB = '0x456' // User A is the referrer for user B.
@@ -43,7 +43,10 @@ describe('June campaign rules', () => {
     // Mock the getEvents method to use events from this.events.
     // When writing a test, be aware that this.events is global and shared with other tests.
     this.events = []
-    this.crules.getEvents = () => { return this.events }
+    this.crules.getEvents = (ethAddress) => {
+      return this.events
+        .filter(event => event.ethAddress === ethAddress)
+    }
 
     // Mock the _getReferees method of the Referral rule.
     this.crules.levels[2].rules[0]._getReferees = () => { return [] }

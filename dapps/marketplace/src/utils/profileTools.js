@@ -1,49 +1,61 @@
 import get from 'lodash/get'
-
-const websiteAttestationEnabled =
-  process.env.ENABLE_WEBSITE_ATTESTATION === 'true'
+import { fbt } from 'fbt-runtime'
 
 export function unpublishedStrength({ props, state }) {
   // TODO: Retrieve stregths from GraphQL?
   const profile = get(props, 'identity') || {}
-  let strength = 0
+  const allProviders = props.attestationProviders
+  const verifiedAttestations = (profile.verifiedAttestations || []).map(
+    att => att.id
+  )
+
+  let strength = allProviders.reduce((sum, provider) => {
+    if (
+      verifiedAttestations.includes(provider) ||
+      !state[`${provider}Attestation`]
+    ) {
+      return sum
+    }
+
+    return sum + 10
+  }, 0)
+
   if (!profile.firstName && state.firstName) strength += 10
   if (!profile.lastName && state.lastName) strength += 10
   if (!profile.description && state.description) strength += 10
   if (!profile.avatarUrl && state.avatarUrl) strength += 10
-  if (!profile.emailVerified && state.emailAttestation) strength += 10
-  if (!profile.phoneVerified && state.phoneAttestation) strength += 10
-  if (!profile.facebookVerified && state.facebookAttestation) strength += 10
-  if (!profile.googleVerified && state.googleAttestation) strength += 10
-  if (!profile.twitterVerified && state.twitterAttestation) strength += 10
-  if (!profile.airbnbVerified && state.airbnbAttestation)
-    strength += websiteAttestationEnabled ? 5 : 10
-  if (!profile.websiteVerified && state.websiteAttestation)
-    strength += websiteAttestationEnabled ? 5 : 0
+
+  if (strength > 100) {
+    strength = 100
+  }
+
   return strength
 }
 
 export function changesToPublishExist({ props, state }) {
   const profile = get(props, 'identity') || {}
+  const verifiedAttestations = (profile.verifiedAttestations || []).map(
+    att => att.id
+  )
+  const allProviders = props.attestationProviders
+
+  const attestationChanges = allProviders.reduce((hasChange, att) => {
+    if (
+      verifiedAttestations.includes(att.id) ===
+      (!!state[`${att.id}Attestation`] || !!state[`${att.id}Verified`])
+    ) {
+      return true
+    }
+
+    return hasChange
+  }, false)
+
   return !(
     (profile.firstName || '') === state.firstName &&
     (profile.lastName || '') === state.lastName &&
     (profile.description || '') === state.description &&
     (profile.avatarUrl || '') === state.avatarUrl &&
-    !!profile.emailVerified ===
-      (!!state.emailAttestation || !!state.emailVerified) &&
-    !!profile.phoneVerified ===
-      (!!state.phoneAttestation || !!state.phoneVerified) &&
-    !!profile.facebookVerified ===
-      (!!state.facebookAttestation || !!state.facebookVerified) &&
-    !!profile.googleVerified ===
-      (!!state.googleAttestation || !!state.googleVerified) &&
-    !!profile.twitterVerified ===
-      (!!state.twitterAttestation || !!state.twitterVerified) &&
-    !!profile.airbnbVerified ===
-      (!!state.airbnbAttestation || !!state.airbnbVerified) &&
-    !!profile.websiteVerified ===
-      (!!state.websiteAttestation || !!state.websiteVerified)
+    attestationChanges
   )
 }
 
@@ -107,4 +119,34 @@ export function updateVerifiedAccounts({ wallet, data }) {
 
 export function clearVerifiedAccounts() {
   window.localStorage.removeItem(ATTESTATIONS_LOCALSTORAGE_KEY)
+}
+
+export function getProviderDisplayName(provider) {
+  switch (provider) {
+    case 'email':
+      return fbt('Email', 'Email')
+    case 'phone':
+      return fbt('Phone', 'Phone')
+    case 'airbnb':
+      return fbt('Airbnb', 'Airbnb')
+    case 'website':
+      return fbt('Website', 'Website')
+    case 'github':
+      return fbt('GitHub', 'GitHub')
+    case 'facebook':
+      return fbt('Facebook', 'Facebook')
+    case 'twitter':
+      return fbt('Twitter', 'Twitter')
+    case 'google':
+      return fbt('Google', 'Google')
+    case 'kakao':
+      return fbt('Kakao', 'Kakao')
+    case 'linkedin':
+      return fbt('LinkedIn', 'LinkedIn')
+    case 'wechat':
+      return fbt('WeChat', 'WeChat')
+  }
+
+  console.error(`Unknown attestation provider: ${provider}`)
+  return provider
 }

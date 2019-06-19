@@ -52,10 +52,11 @@ export default withConfig(Avatar)
 require('react-styl')(`
   .avatar
     position: relative
+    min-width: 25px
     width: 100%
     padding-top: 100%
-    background-size: contain
-    border-radius: var(--default-radius)
+    background-size: cover
+    border-radius: 50%
     background-repeat: no-repeat
     background-position: center
 
@@ -71,7 +72,8 @@ require('react-styl')(`
       content: ""
       width: 2rem
       height: 2rem
-      background: url(images/camera-icon-circle.svg) no-repeat center
+      background: url(images/camera-icon-circle-filled.svg) no-repeat center
+      border-radius: 50%
       background-size: 100%
       position: absolute
       bottom: 0.3rem

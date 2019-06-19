@@ -6,6 +6,7 @@ import get from 'lodash/get'
 import contracts from '../contracts'
 import { getIdsForPage, getConnection } from './_pagination'
 import validateAttestation from '../utils/validateAttestation'
+import { proxyOwner } from '../utils/proxy'
 
 const websiteAttestationEnabled =
   process.env.ENABLE_WEBSITE_ATTESTATION === 'true'
@@ -14,70 +15,159 @@ const progressPct = {
   firstName: 10,
   lastName: 10,
   description: 10,
-  avatar: 10,
+  avatar: 10
+}
 
-  emailVerified: 10,
-  phoneVerified: 10,
-  facebookVerified: 10,
-  twitterVerified: 10,
-  googleVerified: 10,
-  airbnbVerified: websiteAttestationEnabled ? 5 : 10,
-  websiteVerified: websiteAttestationEnabled ? 5 : 0
+const attestationProgressPct = {
+  email: 10,
+  phone: 10,
+  facebook: 10,
+  twitter: 10,
+  google: 10,
+  airbnb: websiteAttestationEnabled ? 5 : 10,
+  website: websiteAttestationEnabled ? 5 : 0,
+  kakao: 0,
+  github: 0,
+  linkedin: 0,
+  wechat: 0
 }
 
 function getAttestations(account, attestations) {
-  const result = {
-    emailVerified: false,
-    phoneVerified: false,
-    facebookVerified: false,
-    twitterVerified: false,
-    airbnbVerified: false,
-    googleVerified: false,
-    websiteVerified: false
-  }
-  attestations.forEach(attestation => {
-    if (validateAttestation(account, attestation)) {
+  const verifiedAttestations = attestations
+    .map(attestation => {
+      if (!validateAttestation(account, attestation)) {
+        return null
+      }
+
+      const issuedDate = {
+        type: 'created',
+        value: get(attestation, 'data.issueDate')
+      }
+
       if (get(attestation, 'data.attestation.email.verified', false)) {
-        result.emailVerified = true
+        return {
+          id: 'email',
+          properties: [issuedDate]
+        }
       }
       if (get(attestation, 'data.attestation.phone.verified', false)) {
-        result.phoneVerified = true
+        return {
+          id: 'phone',
+          properties: [issuedDate]
+        }
       }
       if (get(attestation, 'data.attestation.domain.verified', false)) {
-        result.websiteVerified = true
-      }
-      const siteName = get(attestation, 'data.attestation.site.siteName')
-      if (siteName === 'facebook.com') {
-        result.facebookVerified = get(
+        let domainName = get(
           attestation,
-          'data.attestation.site.userId.verified',
-          false
+          'data.verificationMethod.pubAuditableUrl.proofUrl',
+          ''
         )
+
+        if (domainName) {
+          try {
+            domainName = new URL(domainName).origin
+          } catch (e) {
+            console.log(`Failed to parse domain ${domainName}: ${e.message}`)
+          }
+        }
+        return {
+          id: 'website',
+          properties: [{ type: 'domainName', value: domainName }, issuedDate]
+        }
       }
-      if (siteName === 'airbnb.com') {
-        result.airbnbVerified = true
+
+      const siteName = get(attestation, 'data.attestation.site.siteName')
+      const userId = get(
+        attestation,
+        'data.attestation.site.userId.verified',
+        ''
+      )
+
+      switch (siteName) {
+        case 'facebook.com':
+          return {
+            id: 'facebook',
+            properties: [issuedDate]
+          }
+        case 'airbnb.com':
+          return {
+            id: 'airbnb',
+            properties: [{ type: 'userId', value: userId }, issuedDate]
+          }
+        case 'twitter.com':
+          return {
+            id: 'twitter',
+            properties: [{ type: 'userId', value: userId }, issuedDate]
+          }
+        case 'google.com':
+          return {
+            id: 'google',
+            properties: [issuedDate]
+          }
+        case 'kakao.com':
+          return {
+            id: 'kakao',
+            properties: [issuedDate]
+          }
+        case 'github.com':
+          return {
+            id: 'github',
+            properties: [issuedDate]
+          }
+        case 'linkedin.com':
+          return {
+            id: 'linkedin',
+            properties: [issuedDate]
+          }
+        case 'wechat.com':
+          return {
+            id: 'wechat',
+            properties: [issuedDate]
+          }
       }
-      if (siteName === 'twitter.com') {
-        result.twitterVerified = true
-      }
-      if (siteName === 'google.com') {
-        result.googleVerified = true
-      }
+
+      return null
+    })
+    .filter(attestation => !!attestation)
+
+  return sortAttestations(verifiedAttestations)
+}
+
+function sortAttestations(attestations) {
+  const m = new Map()
+  // In case of a multiple events for same provider,
+  // only the latest one will be returned
+  attestations.forEach(att => m.set(att.id, att))
+
+  return getAttestationProviders().reduce((filtered, provider) => {
+    if (m.has(provider)) {
+      filtered.push(m.get(provider))
     }
-  })
-  return result
+
+    return filtered
+  }, [])
 }
 
 export function identity({ id, ipfsHash }) {
+  if (typeof localStorage !== 'undefined' && localStorage.useWeb3Identity) {
+    return JSON.parse(localStorage.useWeb3Identity)
+  }
+
   const [account, blockNumber] = id.split('-')
   id = account
   return new Promise(async resolve => {
     if (!contracts.identityEvents.options.address || !id) {
       return null
     }
+    let accounts = id
     if (!ipfsHash) {
+      const owner = await proxyOwner(id)
+      if (owner) {
+        accounts = [id, owner]
+      }
+
       const events = await contracts.identityEvents.eventCache.getEvents({
-        account: id
+        account: accounts
       })
       events.forEach(event => {
         if (blockNumber < event.blockNumber) {
@@ -110,7 +200,7 @@ export function identity({ id, ipfsHash }) {
         'avatarUrl',
         'description'
       ]),
-      ...getAttestations(id, data.attestations || []),
+      verifiedAttestations: getAttestations(accounts, data.attestations || []),
       strength: 0,
       ipfsHash,
       owner: {
@@ -138,7 +228,7 @@ export function identity({ id, ipfsHash }) {
       try {
         const avatarBinary = dataURItoBinary(identity.avatar)
         const avatarHash = await IpfsHash.of(avatarBinary.buffer)
-        identity.avatarUrl = 'ifps://' + avatarHash
+        identity.avatarUrl = 'ipfs://' + avatarHash
       } catch {
         // If we can't translate an old avatar for any reason, don't worry about it.
         // We've already tested the backfill script, and not seen a problem
@@ -163,10 +253,16 @@ export function identity({ id, ipfsHash }) {
       )
     }
 
+    // Strength for firstName, lastName, etc..
     Object.keys(progressPct).forEach(key => {
       if (identity[key]) {
         identity.strength += progressPct[key]
       }
+    })
+
+    // Strength for attestations
+    Array.from(identity.verifiedAttestations || []).map(attestation => {
+      identity.strength += attestationProgressPct[attestation.id] || 0
     })
 
     resolve(identity)
@@ -226,55 +322,68 @@ export async function identities(
   return getConnection({ start, first, nodes, ids, totalCount })
 }
 
+/**
+ * Returns authorization URL for all attestation providers
+ * @param {String} provider One of supported attestation provider
+ * @param {Object} args Arguments from GraphQL query resolver
+ */
+async function getAuthUrl(provider, args) {
+  const bridgeServer = contracts.config.bridge
+  if (!bridgeServer) {
+    return null
+  }
+  let authUrl = `${bridgeServer}/api/attestations/${provider}/auth-url`
+  if (args.redirect) {
+    authUrl += `?redirect=${args.redirect}`
+  }
+  const response = await fetch(authUrl, {
+    headers: { 'content-type': 'application/json' },
+    credentials: 'include'
+  })
+  const authData = await response.json()
+  return authData.url
+}
+
+/**
+ * Returns a list of all supported attestation providers
+ */
+function getAttestationProviders() {
+  // The order of this list will affect the order of rendering in DApp
+  const ATTESTATION_PROVIDERS = [
+    'email',
+    'phone',
+    'facebook',
+    'twitter',
+    'airbnb',
+    'google'
+  ]
+
+  if (process.env.ENABLE_WEBSITE_ATTESTATION === 'true') {
+    ATTESTATION_PROVIDERS.push('website')
+  }
+
+  if (process.env.ENABLE_KAKAO_ATTESTATION === 'true') {
+    ATTESTATION_PROVIDERS.push('kakao')
+  }
+
+  if (process.env.ENABLE_GITHUB_ATTESTATION === 'true') {
+    ATTESTATION_PROVIDERS.push('github')
+  }
+
+  if (process.env.ENABLE_LINKEDIN_ATTESTATION === 'true') {
+    ATTESTATION_PROVIDERS.push('linkedin')
+  }
+
+  if (process.env.ENABLE_WECHAT_ATTESTATION === 'true') {
+    ATTESTATION_PROVIDERS.push('wechat')
+  }
+
+  return ATTESTATION_PROVIDERS
+}
+
 export default {
   id: contract => contract.options.address,
   identities,
-  facebookAuthUrl: async (_, args) => {
-    const bridgeServer = contracts.config.bridge
-    if (!bridgeServer) {
-      return null
-    }
-    let authUrl = `${bridgeServer}/api/attestations/facebook/auth-url`
-    if (args.redirect) {
-      authUrl += `?redirect=${args.redirect}`
-    }
-    const response = await fetch(authUrl, {
-      headers: { 'content-type': 'application/json' },
-      credentials: 'include'
-    })
-    const authData = await response.json()
-    return authData.url
-  },
-  twitterAuthUrl: async (_, args) => {
-    const bridgeServer = contracts.config.bridge
-    if (!bridgeServer) {
-      return null
-    }
-    let authUrl = `${bridgeServer}/api/attestations/twitter/auth-url`
-    if (args.redirect) {
-      authUrl += `?redirect=${args.redirect}`
-    }
-    const response = await fetch(authUrl, {
-      headers: { 'content-type': 'application/json' },
-      credentials: 'include'
-    })
-    const authData = await response.json()
-    return authData.url
-  },
-  googleAuthUrl: async (_, args) => {
-    const bridgeServer = contracts.config.bridge
-    if (!bridgeServer) {
-      return null
-    }
-    let authUrl = `${bridgeServer}/api/attestations/google/auth-url`
-    if (args.redirect) {
-      authUrl += `?redirect=${args.redirect}`
-    }
-    const response = await fetch(authUrl, {
-      headers: { 'content-type': 'application/json' },
-      credentials: 'include'
-    })
-    const authData = await response.json()
-    return authData.url
-  }
+  getAuthUrl: (_, { provider, ...args }) => getAuthUrl(provider, args),
+  attestationProviders: () => getAttestationProviders()
 }

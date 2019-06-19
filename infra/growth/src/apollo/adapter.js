@@ -90,6 +90,7 @@ class ApolloAdapter {
       ruleId: data.ruleId,
       type: this._ruleIdToActionType(data.ruleId),
       status: data.status,
+      limit: data.limit,
       rewardEarned: Money.sum(
         data.rewards.map(r => r.value),
         data.campaign.currency

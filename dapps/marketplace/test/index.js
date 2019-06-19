@@ -1,11 +1,11 @@
 import {
   changeAccount,
   waitForText,
-  hasText,
   clickByText,
   clickBySelector,
   pic,
-  createAccount
+  createAccount,
+  giveRating
 } from './_helpers'
 import services from './_services'
 import assert from 'assert'
@@ -20,6 +20,7 @@ before(async function() {
 const reset = async () => {
   const seller = await createAccount(page)
   const buyer = await createAccount(page)
+
   await page.evaluate(() => {
     window.transactionPoll = 100
     window.sessionStorage.clear()
@@ -56,7 +57,11 @@ const finalizeOffer = async ({ buyer }) => {
   await changeAccount(page, buyer)
   await waitForText(page, 'Finalize', 'button')
   await pic(page, 'transaction-finalize')
+  await giveRating(page, 3)
+  await pic(page, 'transaction-finalize-rated')
   await clickByText(page, 'Finalize', 'button')
+  await pic(page, 'transaction-finalize-confirmation')
+  await clickByText(page, 'Yes, please', 'button')
   await clickByText(page, 'OK', 'button')
   await waitForText(page, 'Transaction Finalized')
   await pic(page, 'transaction-finalized')
@@ -66,7 +71,7 @@ function randomTitle() {
   return `T-Shirt ${Math.floor(Math.random() * 100000)}`
 }
 
-function listingTests() {
+function listingTests(autoSwap) {
   describe('Single Unit Listing for Eth', function() {
     let seller, buyer
     before(async function() {
@@ -103,11 +108,6 @@ function listingTests() {
       await input.uploadFile(__dirname + '/fixtures/image-1.jpg')
       await page.waitForSelector('.image-picker .preview-row')
 
-      await pic(page, 'add-listing')
-    })
-
-    it('should continue to boost', async function() {
-      await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
 
@@ -176,11 +176,6 @@ function listingTests() {
       await pic(page, 'add-listing')
     })
 
-    it('should continue to boost', async function() {
-      await clickByText(page, 'Continue', 'button')
-      await pic(page, 'add-listing')
-    })
-
     it('should continue to review', async function() {
       await clickByText(page, 'Continue', 'button')
       await pic(page, 'add-listing')
@@ -200,24 +195,27 @@ function listingTests() {
     it('should allow a new listing to be purchased', async function() {
       await changeAccount(page, buyer)
       await waitForText(page, 'Payment', 'span')
-      await clickByText(page, 'Swap Now', 'button')
+      await clickByText(page, autoSwap ? 'Purchase' : 'Swap Now', 'button')
     })
 
-    it('should prompt the user to approve their Dai', async function() {
-      await waitForText(page, 'Approve', 'button')
-      await pic(page, 'listing-detail')
-      await clickByText(page, 'Approve', 'button')
+    if (!autoSwap) {
+      it('should prompt the user to approve their Dai', async function() {
+        await waitForText(page, 'Approve', 'button')
+        await pic(page, 'listing-detail')
+        await clickByText(page, 'Approve', 'button')
 
-      await waitForText(page, 'Origin may now move DAI on your behalf.')
-      await pic(page, 'listing-detail')
-    })
+        await waitForText(page, 'Origin may now move DAI on your behalf.')
+        await pic(page, 'listing-detail')
+      })
 
-    it('should prompt to continue with purchase', async function() {
-      await clickByText(page, 'Continue', 'button')
+      it('should prompt to continue with purchase', async function() {
+        await clickByText(page, 'Continue', 'button')
+        await waitForText(page, 'View Purchase', 'button')
+        await pic(page, 'purchase-listing')
+      })
+    }
 
-      await waitForText(page, 'View Purchase', 'button')
-      await pic(page, 'purchase-listing')
-
+    it('should view the purchase', async function() {
       await clickByText(page, 'View Purchase', 'button')
       await waitForText(page, 'Transaction Progress')
       await pic(page, 'transaction-wait-for-seller')
@@ -271,11 +269,6 @@ function listingTests() {
       await input.uploadFile(__dirname + '/fixtures/image-1.jpg')
       await page.waitForSelector('.image-picker .preview-row')
 
-      await pic(page, 'add-listing')
-    })
-
-    it('should continue to boost', async function() {
-      await clickByText(page, 'Continue', 'button')
       await pic(page, 'add-listing')
     })
 
@@ -338,7 +331,6 @@ function listingTests() {
       await page.keyboard.press('Backspace')
       await page.type('input[name=quantity]', '10')
       await clickByText(page, 'Continue')
-      await clickByText(page, 'Continue')
       await clickByText(page, 'Done')
       await clickByText(page, 'View Listing', 'button')
     })
@@ -396,12 +388,6 @@ function listingTests() {
       await page.waitForSelector('.pl-modal', { hidden: true })
     })
 
-    it('should skip the wizard', async function() {
-      if (await hasText(page, 'Skip', 'button')) {
-        await clickByText(page, 'Skip', 'button')
-      }
-    })
-
     it('should publish the profile changes', async function() {
       await pic(page, 'profile-before-publish')
       await clickByText(page, 'Publish Changes')
@@ -440,7 +426,7 @@ describe('Marketplace Dapp with proxies enabled', function() {
     })
     await page.goto('http://localhost:8083')
   })
-  listingTests()
+  listingTests(true)
 })
 
 describe('Marketplace Dapp with proxies, relayer and performance mode enabled', function() {
@@ -473,5 +459,5 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
     assert(!didThrow, 'Page error detected: ' + didThrow)
   })
 
-  listingTests()
+  listingTests(true)
 })

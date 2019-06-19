@@ -12,13 +12,15 @@ import LoadingSpinner from 'components/LoadingSpinner'
 import FormattedDescription from 'components/FormattedDescription'
 
 import UserListings from './_UserListings'
+import { getProviderDisplayName } from 'utils/profileTools'
 
 const User = ({ match }) => {
   const id = match.params.id
   const vars = { id: match.params.id }
+
   return (
     <div className="container user-profile">
-      <Query query={query} variables={vars}>
+      <Query query={query} variables={vars} skip={!id}>
         {({ data, loading, error }) => {
           if (error) {
             return <QueryError error={error} query={query} vars={vars} />
@@ -26,9 +28,10 @@ const User = ({ match }) => {
           if (loading) return <LoadingSpinner />
 
           const profile = get(data, 'web3.account.identity') || {}
-          const noVerifications = !Object.keys(profile).some(k =>
-            k.match(/verified/i)
-          )
+          const verifiedAttestations = profile.verifiedAttestations
+
+          const noVerifications =
+            !verifiedAttestations || verifiedAttestations.length === 0
 
           return (
             <>
@@ -47,48 +50,12 @@ const User = ({ match }) => {
                       <h5>
                         <fbt desc="User.verifiedInfo">Verified Info</fbt>
                       </h5>
-                      {profile.emailVerified && (
-                        <div>
-                          <div className="attestation email" />
-                          <fbt desc="User.email">Email</fbt>
+                      {verifiedAttestations.map(attestation => (
+                        <div key={attestation.id}>
+                          <div className={`attestation ${attestation.id}`} />
+                          {getProviderDisplayName(attestation.id)}
                         </div>
-                      )}
-                      {profile.phoneVerified && (
-                        <div>
-                          <div className="attestation phone" />
-                          <fbt desc="User.phone">Phone</fbt>
-                        </div>
-                      )}
-                      {profile.facebookVerified && (
-                        <div>
-                          <div className="attestation facebook" />
-                          Facebook
-                        </div>
-                      )}
-                      {profile.twitterVerified && (
-                        <div>
-                          <div className="attestation twitter" />
-                          Twitter
-                        </div>
-                      )}
-                      {profile.airbnbVerified && (
-                        <div>
-                          <div className="attestation airbnb" />
-                          AirBnb
-                        </div>
-                      )}
-                      {profile.googleVerified && (
-                        <div>
-                          <div className="attestation google" />
-                          Google
-                        </div>
-                      )}
-                      {profile.websiteVerified && (
-                        <div>
-                          <div className="attestation website" />
-                          Website
-                        </div>
-                      )}
+                      ))}
                     </div>
                   )}
                 </div>
@@ -104,9 +71,8 @@ const User = ({ match }) => {
                     )}
                   </div>
 
-                  <Reviews id={id} hideWhenZero />
-
                   <UserListings user={id} />
+                  <Reviews id={id} hideWhenZero />
                 </div>
               </div>
             </>
@@ -154,6 +120,7 @@ require('react-styl')(`
           height: 1.5rem
     .reviews
       margin-top: 2rem
+
   @media (max-width: 767.98px)
     .user-profile
       padding-top: 2rem
