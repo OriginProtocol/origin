@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
+import copy from 'copy-to-clipboard'
 
 import Modal from 'components/Modal'
 
@@ -52,6 +53,10 @@ class MobileModal extends Component {
               <button
                 className="btn btn-primary"
                 onClick={() => {
+                  const growthCode = localStorage.getItem('growth_invite_code')
+                  if (growthCode) {
+                    copy(`origin:growth_invite_code:${growthCode}`)
+                  }
                   window.location.href = 'https://originprotocol.com/mobile'
                 }}
                 children={fbt('Open App', 'MobileModal.openAppButton')}

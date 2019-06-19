@@ -181,7 +181,9 @@ const Listing = ({ listing, refetch }) => (
               .format('MMMM D, YYYY')}`}
       </div>
       <div className="price">
-        <Price listing={listing} descriptor />
+        <div>
+          <Price listing={listing} descriptor />
+        </div>
         {listing.unitsTotal === undefined ? null : (
           <div>
             <fbt desc="Listings.unitsSold">
@@ -240,6 +242,11 @@ require('react-styl')(`
             background-size: cover
             background-position: center
             border-radius: 5px
+            &.empty
+              background: var(--light) url(images/default-image.svg)
+              background-repeat: no-repeat
+              background-position: center
+              background-size: 40%
           .quantity
             position: absolute
             bottom: -8px

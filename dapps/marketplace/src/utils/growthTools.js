@@ -1,3 +1,5 @@
+import numberFormat from 'utils/numberFormat'
+
 export function getAttestationReward({
   growthCampaigns,
   attestation,
@@ -61,6 +63,72 @@ export function getMaxRewardPerUser({ growthCampaigns, tokenDecimals }) {
     )
   } catch (e) {
     return 0
+  }
+}
+
+export function formatTokens(tokenAmount, decimalDivision) {
+  return numberFormat(
+    web3.utils
+      .toBN(tokenAmount)
+      .div(decimalDivision)
+      .toString(),
+    2,
+    '.',
+    ',',
+    true
+  )
+}
+
+export function calculatePendingAndAvailableActions(activeCampaign) {
+  const actionCompleted = action =>
+    ['Exhausted', 'Completed'].includes(action.status)
+  const purchaseRewardTypes = [
+    'ListingCreated',
+    'ListingPurchased',
+    'ListingIdPurchased',
+    'ListingSold'
+  ]
+  const verificationRewardTypes = [
+    'Email',
+    'Profile',
+    'Phone',
+    'Twitter',
+    'Airbnb',
+    'Facebook',
+    'Google',
+    'Airbnb',
+    'Facebook',
+    'Google',
+    'Website',
+    'Kakao',
+    'Wechat'
+  ]
+
+  const purchaseActions = activeCampaign.actions.filter(action =>
+    purchaseRewardTypes.includes(action.type)
+  )
+  const verificationActions = activeCampaign.actions.filter(action =>
+    verificationRewardTypes.includes(action.type)
+  )
+
+  const completedPurchaseActions = purchaseActions.filter(action =>
+    actionCompleted(action)
+  )
+  const notCompletedPurchaseActions = purchaseActions.filter(
+    action => !actionCompleted(action)
+  )
+  const completedVerificationActions = verificationActions.filter(action =>
+    actionCompleted(action)
+  )
+  const notCompletedVerificationActions = verificationActions.filter(
+    action => !actionCompleted(action)
+  )
+
+  return {
+    completedPurchaseActions,
+    notCompletedPurchaseActions,
+    completedVerificationActions,
+    notCompletedVerificationActions
   }
 }
 

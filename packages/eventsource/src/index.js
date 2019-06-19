@@ -546,7 +546,7 @@ class OriginEventSource {
     const listing = await this.getListing(listingId, event.blockNumber)
     return {
       id: offerIdExp,
-      reviewer: { id: party, account: { id: party } },
+      reviewer: party ? { id: party, account: { id: party } } : null,
       listing,
       offer: { id: offerIdExp },
       review: data.text,

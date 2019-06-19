@@ -21,7 +21,7 @@ const ListingCards = ({
   if (!listings) return null
 
   return (
-    <div className={horizontalList ? 'listing-horizontal-cards' : 'row'}>
+    <div className={horizontalList ? 'listing-horizontal-cards' : 'listing-cards'}>
       {redirect && <Redirect to={redirect} />}
       {listings.map(a => (
         <div
@@ -33,9 +33,7 @@ const ListingCards = ({
               window.open(`#/listing/${a.id}`, '_blank')
             }
           }}
-          className={`${
-            horizontalList ? '' : 'col-md-4 col-lg-3 '
-          }listing-card`}
+          className="listing-card"
         >
           {a.media && a.media.length ? (
             <div
@@ -78,6 +76,12 @@ const ListingCards = ({
 export default withGrowthRewards(ListingCards)
 
 require('react-styl')(`
+  .listing-cards
+    display: grid
+    grid-column-gap: 1.5rem
+    grid-row-gap: 1.5rem
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr))
+
   .listing-card
     position: relative
     overflow: hidden
@@ -145,37 +149,61 @@ require('react-styl')(`
         margin-left: 0.25rem
         margin-bottom: 0.12rem
 
-  .listing-horizontal-cards
-    width: 100%
-    overflow-x: scroll
-    white-space: nowrap
-    .listing-card
-      width: 165px
-      display: inline-block
-      margin: 0.5rem
-      .main-pic
-        margin-bottom: 0.5rem
-        height: 165px
+  // .listing-horizontal-cards
+  //   width: 100%
+  //   overflow-x: scroll
+  //   white-space: nowrap
+  //   .listing-card
+  //     width: 165px
+  //     display: inline-block
+  //     margin: 0.5rem
+  //     .main-pic
+  //       margin-bottom: 0.5rem
+  //       height: 165px
 
+  // @media (max-width: 767.98px)
+  //   .listing-horizontal-cards
+  //     text-align: center
+  //     overflow-x: hidden
+  //     white-space: normal
+  //     .listing-card
+  //       max-width: 165px
+  //       display: inline-block
+  //       padding: 0 0.5rem
+  //       text-align: left
+  //       margin: 0.5rem 0
+
+  // @media (max-width: 330px)
+  //   // For really small screens (iPhone SE, etc..)
+  //   .listing-horizontal-cards
+  //     text-align: center
+  //     overflow-x: hidden
+  //     white-space: normal
+  //     .listing-card
+  //       max-width: 100%
+  //       width: 100%
   @media (max-width: 767.98px)
-    .listing-horizontal-cards
-      text-align: center
-      overflow-x: hidden
-      white-space: normal
-      .listing-card
-        max-width: 165px
-        display: inline-block
-        padding: 0 0.5rem
-        text-align: left
-        margin: 0.5rem 0
-
-  @media (max-width: 330px)
-    // For really small screens (iPhone SE, etc..)
-    .listing-horizontal-cards
-      text-align: center
-      overflow-x: hidden
-      white-space: normal
-      .listing-card
-        max-width: 100%
-        width: 100%
+    .listing-cards
+      grid-template-columns: repeat(auto-fill,minmax(135px, 1fr))
+      grid-column-gap: 1rem
+      grid-row-gap: 1rem
+    .listing-card
+      .category
+        display: none
+      h5
+        margin: 0.5rem 0 0 0
+        font-size: 14px
+      .price
+        font-size: 12px
+        span.desc
+          font-size: 10px
+        .growth-reward-amount
+          .earn
+            font-size: 11px
+          img
+            width: 11px
+            height: 11px
+          .ogn
+            font-size: 11px
+            padding-left: 0.125rem
 `)

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { fbt } from 'fbt-runtime'
 
-import Action from 'pages/growth/Action'
+import Action from 'components/growth/Action'
 import Modal from 'components/Modal'
 
 class ActionList extends Component {
@@ -79,12 +79,7 @@ class ActionList extends Component {
   }
 
   render() {
-    const {
-      title,
-      decimalDivision,
-      handleNavigationChange,
-      isMobile
-    } = this.props
+    const { title, decimalDivision, isMobile } = this.props
 
     const { actionsToDisplay, modalOpen, modalText } = this.state
 
@@ -113,56 +108,30 @@ class ActionList extends Component {
             </Fragment>
           </Modal>
         )}
-        <div className={`action-list ${isMobile ? 'mobile' : ''}`}>
-          <div className="filters d-flex justify-content-between">
-            {!isMobile && (
-              <div className="show">
-                <fbt desc="growth.action-list.show">Show</fbt>
-              </div>
-            )}
-            {this.renderFilter(
-              fbt('All', 'growth.action-list.all'),
-              'all',
-              isMobile
-            )}
-            {this.renderFilter(
-              fbt('Unlocked', 'growth.action-list.unlocked'),
-              'unlocked',
-              isMobile
-            )}
-            {this.renderFilter(
-              fbt('Locked', 'growth.action-list.locked'),
-              'locked',
-              isMobile
-            )}
-            {this.renderFilter(
-              fbt('Completed', 'growth.action-list.completed'),
-              'completed',
-              isMobile
-            )}
-          </div>
-          <div className="d-flex flex-column">
-            {title !== undefined && <div className="action-title">{title}</div>}
-            {actionsToDisplay.map(action => {
-              return (
-                <Action
-                  action={action}
-                  decimalDivision={decimalDivision}
-                  key={`${action.type}:${action.status}:${
-                    action.listingId ? action.listingId : '0'
-                  }`}
-                  handleNavigationChange={handleNavigationChange}
-                  isMobile={isMobile}
-                  onMobileLockClick={requirementText => {
-                    this.setState({
-                      modalOpen: true,
-                      modalText: requirementText
-                    })
-                  }}
-                />
-              )
-            })}
-          </div>
+        <div
+          className={`action-list ${
+            isMobile ? 'mobile' : ''
+          } d-flex flex-column`}
+        >
+          {title !== undefined && <div className="action-title">{title}</div>}
+          {actionsToDisplay.map(action => {
+            return (
+              <Action
+                action={action}
+                decimalDivision={decimalDivision}
+                key={`${action.type}:${action.status}:${
+                  action.listingId ? action.listingId : '0'
+                }`}
+                isMobile={isMobile}
+                onMobileLockClick={requirementText => {
+                  this.setState({
+                    modalOpen: true,
+                    modalText: requirementText
+                  })
+                }}
+              />
+            )
+          })}
         </div>
       </Fragment>
     )
@@ -175,7 +144,18 @@ require('react-styl')(`
   .action-list-modal.pl-modal .pl-modal-table .pl-modal-cell .action-list-modal
     max-width: 25rem
   .action-list
-    margin-top: 50px
+    .with-border
+      &:not(:last-of-type)
+        border-bottom: 1px solid #c0cbd4
+    margin-top: 1rem
+    .action-title
+      font-size: 18px
+      font-weight: normal
+      font-family: Lato
+      margin-left: 5px
+      font-family: Lato
+      border-bottom: 1px solid #c0cbd4
+      padding-bottom: 10px
     .filters
       font-size: 18px
       .show
@@ -196,7 +176,9 @@ require('react-styl')(`
         background-color: var(--pale-grey)
         color: var(--dusk)
   .action-list.mobile
-    margin-top: 2.2rem
+    margin-top: 1rem
+    .action-title
+      font-size: 14px
     .filters
       .filter
         min-width: 5.31rem

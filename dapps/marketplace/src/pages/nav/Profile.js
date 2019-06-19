@@ -92,7 +92,7 @@ const CreateIdentity = onClose => (
 )
 
 const Identity = ({ id, wallet, identity, identityLoading, onClose }) => {
-  if (identityLoading) {
+  if (identityLoading || !wallet) {
     return (
       <div className="identity-loading">
         <fbt desc="nav.profile.identityLoading">

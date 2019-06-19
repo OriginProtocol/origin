@@ -3,7 +3,6 @@ import { fbt } from 'fbt-runtime'
 import omit from 'lodash/omit'
 
 import Steps from 'components/Steps'
-import Wallet from 'components/Wallet'
 import ImagePicker from 'components/ImagePicker'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
@@ -348,9 +347,7 @@ class Details extends Component {
             </div>
           </div>
         </div>
-        <div className="col-md-4 d-none d-md-block">
-          <Wallet />
-        </div>
+        <div className="col-md-4 d-none d-md-block" />
       </div>
     )
   }

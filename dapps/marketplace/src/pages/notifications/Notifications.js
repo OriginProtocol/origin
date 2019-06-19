@@ -87,8 +87,8 @@ class Notifications extends Component {
                     <button
                       children={
                         networkStatus === 3
-                          ? fbt('notifications.item.loading', 'Loading')
-                          : fbt('notifications.item.loadmore', 'Load more...')
+                          ? fbt('Loading', 'notifications.item.loading')
+                          : fbt('Load more...', 'notifications.item.loadmore')
                       }
                       className="btn btn-outline-primary btn-rounded mt-3"
                       onClick={() => nextPage(fetchMore, { ...vars, after })}

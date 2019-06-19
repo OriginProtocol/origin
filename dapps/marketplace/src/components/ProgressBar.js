@@ -18,14 +18,10 @@ class ProgressBar extends Component {
         this.forceUpdate()
       }, 250)
     }
-
+    const isCompact = style === 'compact'
     return (
-      <div
-        className={`blue-progress-bar-holder ${
-          style === 'compact' ? 'compact' : ''
-        }`}
-      >
-        <div className="blue-progress-bar mt-3">
+      <div className={`blue-progress-bar-holder ${isCompact ? 'compact' : ''}`}>
+        <div className={`blue-progress-bar ${isCompact ? 'mt-2' : 'mt-3'}`}>
           <div className="background" />
           {progress > 0 && (
             <div
@@ -88,9 +84,8 @@ require('react-styl')(`
   .blue-progress-bar-holder.compact
     .blue-progress-bar
       .background
-        border: 0px
-        height: 2px
+        height: 6px
       .foreground
         border: 0px
-      height: 2px
+      height: 6px
 `)

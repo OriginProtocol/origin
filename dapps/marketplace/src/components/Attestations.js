@@ -1,4 +1,10 @@
 import React from 'react'
+import { fbt } from 'fbt-runtime'
+
+import Tooltip from 'components/Tooltip'
+
+import { getVerifiedTooltip } from 'utils/profileTools'
+
 
 const Attestations = ({ profile = {}, small, className }) => {
   const verifiedAttestations = profile.verifiedAttestations
@@ -14,7 +20,13 @@ const Attestations = ({ profile = {}, small, className }) => {
       }`}
     >
       {verifiedAttestations.map(attestation => (
-        <div key={attestation.id} className={`attestation ${attestation.id}`} />
+        <Tooltip
+          key={attestation.id}
+          placement="bottom"
+          tooltip={getVerifiedTooltip(attestation.id)}
+        >
+          <div className={`attestation ${attestation.id}`} />
+        </Tooltip>
       ))}
     </div>
   )

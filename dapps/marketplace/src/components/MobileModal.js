@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-
+import MobileModalHeader from 'components/MobileModalHeader'
 function freezeVp(e) {
   e.preventDefault()
 }
@@ -123,7 +123,8 @@ export default class MobileModal extends Component {
       children,
       headerImageUrl = '',
       onBack,
-      showBackButton
+      showBackButton,
+      fullscreen
     } = this.props
 
     return (
@@ -135,6 +136,7 @@ export default class MobileModal extends Component {
         <div className="modal-spacer" />
         <MobileModalHeader
           className={className}
+          fullscreen={fullscreen}
           headerImageUrl={headerImageUrl}
           showBackButton={showBackButton}
           onBack={() => {
@@ -162,13 +164,15 @@ export default class MobileModal extends Component {
       children,
       headerImageUrl = '',
       onBack,
-      showBackButton
+      showBackButton,
+      fullscreen
     } = this.props
 
     return (
       <>
         <MobileModalHeader
           className={className}
+          fullscreen={fullscreen}
           headerImageUrl={headerImageUrl}
           showBackButton={showBackButton}
           onBack={() => {
@@ -321,7 +325,7 @@ require('react-styl')(`
         flex-grow: 0
         border-radius: 0
         border: 0
-      .modal-content, .modal-header
+      .modal-content
         max-width: 400px
         margin: 0 auto
 `)

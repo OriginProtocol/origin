@@ -273,9 +273,9 @@ function withEnrolmentModal(WrappedComponent) {
         <button
           className={`btn btn-lg ${
             termsAccepted
-              ? 'btn-primary btn-rounded'
+              ? `btn-primary btn-rounded ${isMobile ? 'm-0' : ''}`
               : isMobile
-              ? 'btn-primary mt-5 mb-0'
+              ? 'btn-primary wide-btn m-0'
               : 'btn-outline-light'
           }`}
           onClick={() => this.handleTermsContinue()}
@@ -294,7 +294,7 @@ function withEnrolmentModal(WrappedComponent) {
                 </fbt>
               </div>
             )}
-            <div className="normal-line-height terms-title">
+            <div className="px-4 mt-3 normal-line-height terms-title">
               <fbt desc="EnrollmentModal.termsSubTitle">
                 Join Origin’s reward program to earn Origin tokens (OGN). Terms
                 and conditions apply.
@@ -345,7 +345,7 @@ function withEnrolmentModal(WrappedComponent) {
             </div>
             <div
               className={`d-flex justify-content-center ${
-                isMobile ? 'flex-column mt-auto' : ''
+                isMobile ? 'flex-column mt-auto px-4' : ''
               }`}
             >
               {!isMobile && (
@@ -368,13 +368,16 @@ function withEnrolmentModal(WrappedComponent) {
 
     renderRestrictedModal(country, eligibility, notCitizenChecked) {
       const isRestricted = eligibility === 'Restricted'
-      const isForbidden = eligibility === 'Forbidden'
+      const isMobile = this.props.ismobile === 'true'
 
       return (
-        <div>
+        <div className="container d-flex flex-column align-items-center">
           <div>
-            <div className="image-holder text-center">
-              <img src="images/growth/not-eligible-graphic.svg" />
+            <div className="image-holder text-center mr-auto ml-auto">
+              <img
+                className="world-image"
+                src="images/growth/not-eligible-graphic.svg"
+              />
             </div>
           </div>
           <div className="title mt-4 text-center">
@@ -384,7 +387,7 @@ function withEnrolmentModal(WrappedComponent) {
               is not eligible
             </fbt>
           </div>
-          <div className="mt-3 mr-auto ml-auto normal-line-height info-text text-center">
+          <div className="normal-explanation mt-3 mr-auto ml-auto normal-line-height info-text text-center">
             <fbt desc="GrowthEnrollment.notEligibleExplanation">
               Unfortunately, it looks like you’re currently in a country where
               government regulations do not allow you to participate in Origin
@@ -393,7 +396,7 @@ function withEnrolmentModal(WrappedComponent) {
           </div>
           {isRestricted && (
             <Fragment>
-              <div className="mt-4 pt-2 text-center">
+              <div className="eligibility-question mt-4 pt-1 pb-1 text-center">
                 <fbt desc="GrowthEnrollment.restrictedQuestion">
                   Did we detect your your country incorrectly?
                 </fbt>
@@ -416,26 +419,33 @@ function withEnrolmentModal(WrappedComponent) {
               </div>
             </Fragment>
           )}
-          {(isForbidden || (isRestricted && !notCitizenChecked)) && (
-            <button
-              className={`btn ${
-                this.props.ismobile === 'true'
-                  ? 'btn-primary mt-auto'
-                  : 'btn-outline-light'
-              }`}
-              onClick={() => this.handleCloseModal()}
-              children={fbt('Done', 'Done')}
-            />
-          )}
-          {isRestricted && notCitizenChecked && (
-            <button
-              className={`btn btn-primary btn-rounded btn-lg${
-                this.props.ismobile === 'true' ? ' mt-auto' : ''
-              }`}
-              onClick={() => this.handleEligibilityContinue()}
-              children={fbt('Continue', 'Continue')}
-            />
-          )}
+          <div className={`buttons-holder ${isMobile ? 'mt-auto' : ''}`}>
+            {isRestricted && !notCitizenChecked && (
+              <button
+                className={`btn btn-rounded btn-lg btn-outline-light mb-0 ${
+                  isMobile ? 'wide-btn' : ''
+                }`}
+                onClick={() => this.handleCloseModal()}
+                children={fbt('Done', 'Done')}
+              />
+            )}
+            {isRestricted && notCitizenChecked && (
+              <button
+                className={`btn btn-primary btn-rounded btn-lg mb-0 ${
+                  isMobile ? 'wide-btn' : ''
+                }`}
+                onClick={() => this.handleEligibilityContinue()}
+                children={fbt('Continue', 'Continue')}
+              />
+            )}
+            {isMobile && (
+              <button
+                className="btn-no-outline-link"
+                onClick={() => this.handleCloseModal()}
+                children={fbt('Back to home', 'Back to home')}
+              />
+            )}
+          </div>
         </div>
       )
     }
@@ -638,7 +648,10 @@ require('react-styl')(`
     .growth-enrollment-modal.small
       max-width: 300px !important
   .growth-enrollment-modal .input:checked ~ .checkmark
-      background-color: #2196F3
+    background-color: #2196F3
+  .pl-modal .pl-modal-table .pl-modal-cell .growth-enrollment-modal.pl-modal-content
+    color: var(--dark)
+    background-color: white
   .growth-enrollment-modal
     &.modal-content
       padding: 20px
@@ -650,6 +663,14 @@ require('react-styl')(`
         width: 100%
         margin: 2rem 0
         padding: 0.5rem
+    .btn-outline-light
+      color: var(--clear-blue)
+      border-color: var(--clear-blue)
+    .eligibility-question
+      font-size: 16px
+      font-weight: bold
+    .normal-explanation
+      font-size: 16px
     .header
       background-color: var(--dusk)
       height: 3.75rem
@@ -658,7 +679,7 @@ require('react-styl')(`
       .container
         height: 100%
         font-family: Lato
-        font-size: 1.375rem
+        font-size: 22px
         font-weight: bold
         color: white
     .normal-line-height
@@ -670,14 +691,25 @@ require('react-styl')(`
       font-weight: 300
     .image-holder
       position: relative
+      max-width: 200px
       height: 150px
     .info-text
       max-width: 400px
+    .red-x-image
+      position: absolute
+      right: -10px
+      bottom: 20px
     .checkbox-holder input:checked ~ .checkmark:after
       display: block
+    .buttons-holder
+      width: 100%
     .btn
       margin-top: 30px
       min-width: 9rem
+    .wide-btn
+      width: 100%
+      margin-left: auto
+      margin-right: auto
     .checkbox-holder
       color: var(--steel-blue)
       font-family: Lato
@@ -723,10 +755,11 @@ require('react-styl')(`
     .country-check-label
       font-weight: 300
     .terms-title
-      color: var(--pale-grey)
       font-weight: 500
+      color: black
+      margin: 0px 25px
     .terms-body
-      color: var(--pale-grey)
+      color: var(--dark)
       padding: 0
     .explanation
       font-size: 12px
@@ -735,15 +768,19 @@ require('react-styl')(`
       padding-right: 25px
       line-height: 1.58
     .terms
-      font-size: 0.75rem
+      background-color: var(--pale-grey-four)
+      color: var(--steel)
+      margin-left: 1.5rem
+      margin-right: 1.5rem
+      padding: 0.625rem 1rem
+      border-radius: 0.312rem
+      border: solid 1px var(--light)
+      font-weight: normal
+      font-size: 12px
       overflow-y: scroll
       height: 9.375rem
-      background-color: var(--dark-two)
-      margin: 1.5rem 0px
+      margin: 1.5rem
       text-align: left
-      padding: 1.125rem 1.56rem
-      font-weight: 300
-      color: var(--pale-grey)
     .join-campaign
       .btn
         padding: 0.7rem 2rem
@@ -752,30 +789,32 @@ require('react-styl')(`
         font-weight: normal
         text-decoration: underline
         color: white
-        margin-top: 1.2rem
-  .growth-enrollment-modal.pl-modal.mobile .pl-modal-table .pl-modal-cell .growth-enrollment-modal.mobile
+  .mobile-modal-light .growth-enrollment-modal.mobile.modal-content .container
+    max-width: 520px
+    margin-left: auto
+    margin-right: auto
+    padding-top: 20px
+  .mobile-modal-light .growth-enrollment-modal.small
+    text-align: center
+  .mobile-modal-light .growth-enrollment-modal.mobile
     max-width: 767px !important
     color: var(--dark)
-    .internal-modal-content
-      max-width: 520px
-      margin-left: auto
-      margin-right: auto
+    text-align: center
+    border: 0px
+    background-color: white
     .join-campaign
       .btn-no-outline
         color: var(--clear-blue)
     .checkbox-holder
-      color: var(--dark)
+      color: var(--steel)
   .growth-enrollment-modal.pl-modal.mobile .pl-modal-table .pl-modal-cell
     padding: 0px
-  .growth-enrollment-modal.pl-modal.mobile .pl-modal-table .pl-modal-cell .pl-modal-content
+  .mobile-modal-light .modal-content
     background-color: var(--pale-grey-four)
     padding: 0px
     border-radius: 0px
-    height: 100%
     width: 100%
   @media (max-width: 767.98px)
-    .growth-enrollment-modal.pl-modal .pl-modal-table .pl-modal-cell .pl-modal-content
-      font-size: 15px
     .growth-enrollment-modal
       .join-campaign
         img
@@ -783,14 +822,14 @@ require('react-styl')(`
         .btn-no-outline
           margin-top: 0.8rem
       .btn
-        margin-top: 1.2rem
-        margin-left: 1.5rem
-        margin-right: 1.5rem
+        margin-top: 1.5rem
       .title
-        font-size: 20px
-        line-height: 1.3
+        font-size: 24px
+        line-height: 1.21
+        max-width: 15rem
+        font-weight: 500
       .terms
-        margin: 16px 0px
+        margin: 1rem 1.56rem
       .checkbox-holder
         font-size: 15px
       .terms
@@ -799,20 +838,28 @@ require('react-styl')(`
         padding: 0.625rem 1rem
         border-radius: 0.312rem
         border: solid 1px var(--light)
+        font-weight: normal
       .terms-title
-        color: black
-        font-size: 1.125rem
+        font-size: 18px
+        font-weight: normal
       .terms-body
-        color: var(--dark)
-        font-size: 0.875rem
+        font-size: 14px
         font-weight: 300
         line-height: 1.4
+        margin: 0px 25px
         padding: 0
       .btn-no-outline-link
-        font-size: 0.875rem
+        font-size: 14px
         color: var(--clear-blue)
         font-weight: normal
-        margin-top: 0.8rem
+        margin: 1.2rem
+        font-size: 16px
+        font-weight: bold
       .checkbox-holder
         color: var(--dark)
+      .image-holder
+        .world-image
+          max-width: 135px
+        .red-x-image
+          width: 40px
 `)
