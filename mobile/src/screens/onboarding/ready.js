@@ -13,11 +13,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import { connect } from 'react-redux'
 
-import {
-  setEmailVerified,
-  setPhoneVerified,
-  setComplete
-} from 'actions/Onboarding'
+import { setComplete } from 'actions/Onboarding'
 import withOriginGraphql from 'hoc/withOriginGraphql'
 import OriginButton from 'components/origin-button'
 
@@ -61,18 +57,6 @@ class ReadyScreen extends Component {
       )
     } catch (error) {
       console.warn('Identity publication failed: ', error)
-    }
-
-    if (response) {
-      // Identity publish success, add some flags
-      if (this.props.onboarding.emailAttestation) {
-        this.props.setEmailAttestation(false)
-        this.props.setEmailVerified(true)
-      }
-      if (this.props.onboarding.phoneAttestation) {
-        this.props.setPhoneAttestation(false)
-        this.props.setPhoneVerified(true)
-      }
     }
 
     this.props.setOnboardingComplete(true)
@@ -141,10 +125,6 @@ const mapStateToProps = ({ onboarding, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  setEmailAttestation: value => dispatch(setEmailVerified(value)),
-  setEmailVerified: email => dispatch(setEmailVerified(email)),
-  setPhoneAttestation: value => dispatch(setPhoneVerified(value)),
-  setPhoneVerified: phone => dispatch(setPhoneVerified(phone)),
   setOnboardingComplete: complete => dispatch(setComplete(complete))
 })
 

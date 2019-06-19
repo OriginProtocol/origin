@@ -116,10 +116,23 @@ class MarketplaceScreen extends Component {
     const { wallet } = this.props
 
     if (msgData.targetFunc === 'getAccounts') {
-      this.handleBridgeResponse(
-        msgData,
-        this.props.wallet.accounts.map(a => a.address)
-      )
+      // Calculated state of accounts by placing activeAccount at the front
+      // of the accounts array
+      // TODO: handle this with something like reselect so the logic
+      // can be moved into a selector as this is just computed from redux state
+      let accounts
+      if (wallet.activeAccount) {
+        const filteredAccounts = wallet.accounts.filter(
+          a => a.address !== wallet.activeAccount.address
+        )
+        accounts = [
+          wallet.activeAccount.address,
+          ...filteredAccounts.map(a => a.address)
+        ]
+      } else {
+        accounts = wallet.accounts.map(a => a.address)
+      }
+      this.handleBridgeResponse(msgData, accounts)
     } else if (this[msgData.targetFunc]) {
       // Function handler exists, use that
       const response = this[msgData.targetFunc].apply(this, [msgData.data])
@@ -130,7 +143,10 @@ class MarketplaceScreen extends Component {
         global.web3.utils.hexToUtf8(msgData.data.data)
       )
       // Sanity check on addresses
-      if (decodedData.from !== wallet.activeAccount.address.toLowerCase()) {
+      if (
+        decodedData.from.toLowerCase() !==
+        wallet.activeAccount.address.toLowerCase()
+      ) {
         console.error('Account mismatch')
         return null
       }
@@ -146,10 +162,7 @@ class MarketplaceScreen extends Component {
         )
         // Sign it
         const { signature } = global.web3.eth.accounts.sign(
-          {
-            data: dataToSign,
-            from: decodedData.from.toLowerCase()
-          },
+          dataToSign,
           wallet.activeAccount.privateKey
         )
         // Send the response back to the webview
@@ -451,9 +464,11 @@ class MarketplaceScreen extends Component {
       // changes
       this.injectUiStateRequest()
       // Update account identity
-      this.updateIdentity()
-      // Update balance
-      this.updateBalance()
+      if (this.props.wallet.activeAccount) {
+        this.updateIdentity()
+        // Update balance
+        this.updateBalance()
+      }
     }
     // Clear existing updater if exists
     if (this.updater) {
@@ -477,25 +492,23 @@ class MarketplaceScreen extends Component {
   }
 
   updateBalance = async () => {
-    if (this.props.wallet.activeAccount) {
-      const activeAddress = this.props.wallet.activeAccount.address
-      try {
-        const balances = {}
-        // Get ETH balance, decimals don't need modifying
-        const ethBalanceResponse = await this.props.getBalance(activeAddress)
-        balances['eth'] = Number(
-          get(ethBalanceResponse.data, 'web3.account.balance.eth', 0)
-        )
-        balances['dai'] = tokenBalanceFromGql(
-          await this.props.getTokenBalance(activeAddress, 'DAI')
-        )
-        balances['ogn'] = tokenBalanceFromGql(
-          await this.props.getTokenBalance(activeAddress, 'OGN')
-        )
-        this.props.setAccountBalances(balances)
-      } catch (error) {
-        console.warn('Could not retrieve balances using GraphQL: ', error)
-      }
+    const activeAddress = this.props.wallet.activeAccount.address
+    try {
+      const balances = {}
+      // Get ETH balance, decimals don't need modifying
+      const ethBalanceResponse = await this.props.getBalance(activeAddress)
+      balances['eth'] = Number(
+        get(ethBalanceResponse.data, 'web3.account.balance.eth', 0)
+      )
+      balances['dai'] = tokenBalanceFromGql(
+        await this.props.getTokenBalance(activeAddress, 'DAI')
+      )
+      balances['ogn'] = tokenBalanceFromGql(
+        await this.props.getTokenBalance(activeAddress, 'OGN')
+      )
+      this.props.setAccountBalances(balances)
+    } catch (error) {
+      console.warn('Could not retrieve balances using GraphQL: ', error)
     }
   }
 
@@ -560,7 +573,7 @@ class MarketplaceScreen extends Component {
                 msgData={modal.msgData}
                 onConfirm={() => {
                   if (
-                    modal.msgData.data.from !==
+                    modal.msgData.data.from.toLowerCase() !==
                     this.props.wallet.activeAccount.address.toLowerCase()
                   ) {
                     console.error('Account mismatch')
