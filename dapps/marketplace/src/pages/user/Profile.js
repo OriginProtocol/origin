@@ -85,6 +85,15 @@ function getState(profile) {
   }
 }
 
+function profileDataUpdated(state, prevState) {
+  return (
+    state.firstName !== prevState.firstName ||
+    state.lastName !== prevState.lastName ||
+    state.description !== prevState.description ||
+    state.avatarUrl !== prevState.avatarUrl
+  )
+}
+
 class UserProfile extends Component {
   constructor(props) {
     super(props)
@@ -100,23 +109,6 @@ class UserProfile extends Component {
     }
   }
 
-  componentDidMount() {
-    document.body.classList.add('has-profile-page')
-  }
-
-  componentWillUnmount() {
-    document.body.classList.remove('has-profile-page')
-  }
-
-  profileDataUpdated(state, prevState) {
-    return (
-      state.firstName !== prevState.firstName ||
-      state.lastName !== prevState.lastName ||
-      state.description !== prevState.description ||
-      state.avatarUrl !== prevState.avatarUrl
-    )
-  }
-
   componentDidUpdate(prevProps) {
     if (get(this.props, 'identity.id') !== get(prevProps, 'identity.id')) {
       this.setState(getState(get(this.props, 'identity')))
@@ -128,11 +120,9 @@ class UserProfile extends Component {
     }
     if (
       this.state.deployIdentity === 'profile' &&
-      !this.profileDataUpdated(this.state, get(this.props, 'identity'))
+      !profileDataUpdated(this.state, get(this.props, 'identity'))
     ) {
-      this.setState({
-        deployIdentity: null
-      })
+      this.setState({ deployIdentity: null })
     }
     if (
       !this.props.identityLoading &&
@@ -141,9 +131,7 @@ class UserProfile extends Component {
       !this.state.redirectToOnboarding
     ) {
       // redirect to onboarding, if user doesn't have a deployed profile
-      this.setState({
-        redirectToOnboarding: true
-      })
+      this.setState({ redirectToOnboarding: true })
     }
   }
 
@@ -163,68 +151,55 @@ class UserProfile extends Component {
     this.handleShowNotification(message, 'blue')
   }
 
-  isMobile() {
-    return this.props.ismobile === 'true'
-  }
-
   renderPage() {
-    const isMobile = this.isMobile()
-
     const verifiedAttestations = this.state.verifiedAttestations || []
+    const providers = verifiedAttestations.map(att => ({
+      id: att.id,
+      disabled: false,
+      soon: false
+    }))
 
     return (
-      <div className="container profile-page">
-        <div className="row">
-          <div className="col-md-8 profile-content">
-            <UserProfileCard
-              avatarUrl={this.state.avatarUrl}
-              firstName={this.state.firstName}
-              lastName={this.state.lastName}
-              description={this.state.description}
-              profileStrength={this.state.strength}
-              tokensEarned={getTokensEarned({
-                verifiedServices: verifiedAttestations.map(att => att.id),
-                growthCampaigns: this.props.growthCampaigns,
-                tokenDecimals: this.props.tokenDecimals || 18
-              })}
-              maxEarnable={getMaxRewardPerUser({
-                growthCampaigns: this.props.growthCampaigns,
-                tokenDecimals: this.props.tokenDecimals || 18
-              })}
-              onEdit={() => {
-                this.setState({
-                  editProfile: true
-                })
-              }}
-            />
-            <div className="attestations-container text-center">
-              <button
-                type="button"
-                className="btn btn-outline-primary btn-rounded"
-                onClick={() => {
-                  this.setState({
-                    verifyModal: true
-                  })
-                }}
-              >
-                <fbt desc="Profile.addVerifications">Add Verifications</fbt>
-              </button>
-              <AttestationBadges
-                providers={verifiedAttestations.map(att => {
-                  return {
-                    id: att.id,
-                    disabled: false,
-                    soon: false
-                  }
+      <div className="profile-page">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-8 profile-content">
+              <UserProfileCard
+                avatarUrl={this.state.avatarUrl}
+                firstName={this.state.firstName}
+                lastName={this.state.lastName}
+                description={this.state.description}
+                profileStrength={this.state.strength}
+                tokensEarned={getTokensEarned({
+                  verifiedServices: verifiedAttestations.map(att => att.id),
+                  growthCampaigns: this.props.growthCampaigns,
+                  tokenDecimals: this.props.tokenDecimals || 18
                 })}
-                minCount={isMobile ? 8 : 10}
-                fillToNearest={isMobile ? 4 : 5}
+                maxEarnable={getMaxRewardPerUser({
+                  growthCampaigns: this.props.growthCampaigns,
+                  tokenDecimals: this.props.tokenDecimals || 18
+                })}
+                onEdit={() => this.setState({ editProfile: true })}
               />
+              <div className="attestations-container text-center">
+                <button
+                  type="button"
+                  className="btn btn-outline-primary btn-rounded"
+                  onClick={() => this.setState({ verifyModal: true })}
+                >
+                  <fbt desc="Profile.addVerifications">Add Verifications</fbt>
+                </button>
+                <AttestationBadges
+                  providers={providers}
+                  minCount={this.props.isMobile ? 8 : 10}
+                  fillToNearest={this.props.isMobile ? 4 : 5}
+                />
+              </div>
             </div>
-          </div>
-          <div className="col-md-3 profile-sidebar">
-            <GrowthCampaignBox />
-            <VerifyProfileHelp />
+            <div className="col-md-3 profile-sidebar">
+              <GrowthCampaignBox />
+              <VerifyProfileHelp />
+            </div>
           </div>
         </div>
       </div>
@@ -240,7 +215,7 @@ class UserProfile extends Component {
       return null
     }
 
-    const isMobile = this.isMobile()
+    const isMobile = this.props.isMobile
 
     const ModalComp = isMobile ? MobileModal : Modal
 
@@ -378,7 +353,7 @@ class UserProfile extends Component {
 
     if (
       this.state.deployIdentity === 'profile' &&
-      !this.profileDataUpdated(this.state, get(this.props, 'identity'))
+      !profileDataUpdated(this.state, get(this.props, 'identity'))
     ) {
       // Skip deploy if no change
       return null
@@ -474,10 +449,12 @@ export default withIsMobile(
 )
 
 require('react-styl')(`
-  body.has-profile-page
-    background-color: var(--pale-grey-four)
   .profile-page
-    margin-top: 2rem
+    background-color: var(--pale-grey-four)
+    > .container
+      padding-top: 2rem
+      margin-bottom: -4rem
+      padding-bottom: 4rem
     .profile-content
       .attestations-container
         margin: 0 1rem
@@ -530,10 +507,9 @@ require('react-styl')(`
         padding: 0
 
   @media (max-width: 767.98px)
-    body.has-profile-page
-      background-color: var(--pale-grey-four)
     .profile-page
-      margin-top: 0
+      > .container
+        padding-top: 0
       .profile-sidebar
         margin-left: 0
       .profile-content
