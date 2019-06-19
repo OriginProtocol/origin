@@ -32,7 +32,7 @@ function Verifications(props) {
           {!isMobile && (
             <Fragment>
               <Link className="back d-flex mr-auto" to="/campaigns">
-                <img src="/images/caret-blue.svg" />
+                <img src="images/caret-blue.svg" />
                 <div>
                   <fbt desc="GrowthVerifications.backToCampaign">
                     Back to Campaign
