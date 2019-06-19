@@ -55,6 +55,18 @@ const TransactionCard = props => {
       ognInvolved = parseInt(_commission) > 0
       daiInvolved = paymentCurrency === 'dai'
       break
+    case 'swapAndMakeOffer':
+      heading = fbt('Purchase', 'TransactionCard.headingPurchase')
+      payment = global.web3.utils.fromWei(_value.toString()) / ethExchangeRate
+      paymentCurrency = 'eth'
+      ethRequired += Number(payment)
+      break
+    case 'execute':
+      heading = fbt('Purchase', 'TransactionCard.headingPurchase')
+      payment = global.web3.utils.fromWei(_value)
+      paymentCurrency = 'eth'
+      ethRequired += Number(payment)
+      break
     case 'emitIdentityUpdated':
       payment = 0
       heading = fbt(
