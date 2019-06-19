@@ -29,7 +29,6 @@
   "dependencies": {
     "@origin/identity": "^0.1.0",
     "@sendgrid/mail": "^6.3.1",
-    "bcrypt": "^3.0.4",
     "body-parser": "^1.18.3",
     "connect-session-sequelize": "^6.0.0",
     "cors": "^2.8.5",

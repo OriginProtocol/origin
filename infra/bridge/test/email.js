@@ -1,6 +1,5 @@
 const chai = require('chai')
 const expect = chai.expect
-const express = require('express')
 const request = require('supertest')
 const sinon = require('sinon')
 const sendgridMail = require('@sendgrid/mail')
@@ -56,8 +55,6 @@ describe('email attestations', () => {
   })
 
   it('should generate attestation on valid verification code', async () => {
-    const now = new Date()
-
     await client.set('origin@protocol.foo', 123456)
 
     const response = await request(app)
