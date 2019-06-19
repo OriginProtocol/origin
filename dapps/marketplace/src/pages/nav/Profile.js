@@ -137,7 +137,7 @@ const Identity = ({ id, wallet, identity, identityLoading, onClose }) => {
       <Balances
         account={id}
         onClose={onClose}
-        title={<fbt desc="nav.profile.walletBalance">Wallet balances</fbt>}
+        title={<fbt desc="nav.profile.walletBalance">Wallet Balances</fbt>}
         className="pt-3 pb-3"
       />
       <div className="eth-address">
@@ -295,6 +295,10 @@ require('react-styl')(`
             background-color: var(--greenblue)
 
   @media (max-width: 767.98px)
+    .dropdown.show .nav-link
+      &::after
+        content: unset
+
     .dropdown-menu.profile
       max-width: 300px
       .close-icon

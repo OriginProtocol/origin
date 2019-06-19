@@ -453,6 +453,8 @@ require('react-styl')(`
     background-color: var(--pale-grey-four)
     > .container
       padding-top: 2rem
+      margin-bottom: -4rem
+      padding-bottom: 4rem
     .profile-content
       .attestations-container
         margin: 0 1rem
