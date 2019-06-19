@@ -60,7 +60,7 @@ const GrowthEventTypes = new Enum(
   'ListingCreated',
   'ListingPurchased', // Buyer side event.
   'ListingSold', // Seller side event.
-  'MobileAppInstalled',
+  'MobileAccountCreated' // User installed Origin mobile app and registered an account.
 )
 
 const GrowthParticipantStatuses = new Enum('Active', 'Banned')

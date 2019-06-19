@@ -3,12 +3,11 @@
 module.exports = {
   up: queryInterface => {
     return queryInterface.sequelize.query(`
-      ALTER TYPE enum_growth_event_type ADD VALUE 'GoogleAttestationPublished';
+      ALTER TYPE enum_growth_event_type ADD VALUE IF NOT EXISTS 'GoogleAttestationPublished';
     `)
   },
-  down: queryInterface => {
-    return queryInterface.sequelize.query(`
-      ALTER TYPE enum_growth_event_type REMOVE VALUE 'GoogleAttestationPublished';
-    `)
+  down: () => {
+    // Return an empty promise since Postgres does not support deleting an enum value.
+    return Promise.resolve()
   }
 }

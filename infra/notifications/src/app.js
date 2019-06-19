@@ -219,12 +219,12 @@ app.post('/mobile/register', async (req, res) => {
     logger.debug('Adding new mobile device to registry: ', req.body)
     registryRow = await MobileRegistry.create(mobileRegister)
 
-    // Record a mobile install in the growth_event table.
+    // Record the mobile account creation in the growth_event table.
     await GrowthEvent.insert(
       logger,
       1,
       mobileRegister.ethAddress,
-      GrowthEventTypes.MobileAppInstalled,
+      GrowthEventTypes.MobileAccountCreated,
       mobileRegister.deviceToken,
       { deviceType: mobileRegister.deviceType },
       new Date()
