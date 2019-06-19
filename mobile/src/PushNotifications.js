@@ -144,6 +144,7 @@ class PushNotifications extends Component {
     // Trigger a register query to notifications server if any of the above
     // conditions are true
     if (registerConditions.includes(true)) {
+      console.debug('Registering with notifications server')
       await this.register()
     }
   }
@@ -207,13 +208,13 @@ class PushNotifications extends Component {
   async register() {
     const activeAddress = get(this.props, 'wallet.activeAccount.address')
     if (!activeAddress) {
-      console.debug('No active address')
+      console.debug('Could not register with notifications server, no active address')
       return
     }
 
     const deviceToken = get(this.props, 'settings.deviceToken')
     if (!deviceToken) {
-      console.debug('No device token')
+      console.debug('Could not register with notifications server, no device token')
       return
     }
 
