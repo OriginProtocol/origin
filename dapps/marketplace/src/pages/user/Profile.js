@@ -25,6 +25,7 @@ import Earnings from 'components/Earning'
 import Modal from 'components/Modal'
 import MobileModal from 'components/MobileModal'
 import AttestationBadges from 'components/AttestationBadges'
+import UserActivationLink from 'components/UserActivationLink'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestation from 'pages/identity/EmailAttestation'
@@ -119,6 +120,11 @@ class UserProfile extends Component {
   componentDidUpdate(prevProps) {
     if (get(this.props, 'identity.id') !== get(prevProps, 'identity.id')) {
       this.setState(getState(get(this.props, 'identity')))
+      if (!this.props.identity) {
+        this.setState({
+          redirectToOnboarding: true
+        })
+      }
     }
     if (
       this.state.deployIdentity === 'profile' &&
@@ -126,6 +132,16 @@ class UserProfile extends Component {
     ) {
       this.setState({
         deployIdentity: null
+      })
+    }
+    if (
+      !this.props.identityLoading &&
+      prevProps.identityLoading &&
+      !this.props.identity
+    ) {
+      // redirect to onboarding, if user doesn't have a deployed profile
+      this.setState({
+        redirectToOnboarding: true
       })
     }
   }
@@ -233,6 +249,10 @@ class UserProfile extends Component {
 
     const growthEnrolled = this.props.growthEnrollmentStatus === 'Enrolled'
 
+    const verifiedAttestationsIds = (this.state.verifiedAttestations || []).map(
+      att => att.id
+    )
+
     const myEarnings =
       !isMobile || !growthEnrolled ? null : (
         <div className="total-earnings-container">
@@ -243,9 +263,7 @@ class UserProfile extends Component {
               tokenDecimals: this.props.tokenDecimals || 18
             })}
             earned={getTokensEarned({
-              verifiedServices: (this.state.verifiedAttestations || []).map(
-                att => att.id
-              ),
+              verifiedServices: verifiedAttestationsIds,
               growthCampaigns: this.props.growthCampaigns,
               tokenDecimals: this.props.tokenDecimals || 18
             })}
@@ -253,10 +271,8 @@ class UserProfile extends Component {
         </div>
       )
 
-    const verifiedAttestations = this.state.verifiedAttestations || []
-
     const providers = this.props.attestationProviders.map(providerName => {
-      const verified = verifiedAttestations.includes(providerName)
+      const verified = verifiedAttestationsIds.includes(providerName)
       const reward = verified
         ? null
         : getAttestationReward({
@@ -415,6 +431,14 @@ class UserProfile extends Component {
   }
 
   render() {
+    if (this.state.redirectToOnboarding) {
+      return (
+        <UserActivationLink
+          location={{ pathname: '/profile' }}
+          forceRedirect={true}
+        />
+      )
+    }
     return (
       <Fragment>
         <ToastNotification
