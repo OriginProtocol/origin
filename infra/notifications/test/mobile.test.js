@@ -17,7 +17,7 @@ describe('register device token endpoint', () => {
     await request(app)
       .post('/mobile/register')
       .send({
-        eth_address: '1234',
+        eth_address: '0x78655B524c1dc1CbfacDA55620249F3AFDbFBf3B',
         device_token: '5678',
         device_type: 'FCM',
         permissions: {}
@@ -26,7 +26,9 @@ describe('register device token endpoint', () => {
 
     const results = await MobileRegistry.findAll()
     expect(results.length).to.equal(1)
-    expect(results[0].ethAddress).to.equal('1234')
+    expect(results[0].ethAddress).to.equal(
+      '0x78655B524c1dc1CbfacDA55620249F3AFDbFBf3B'
+    )
     expect(results[0].deviceToken).to.equal('5678')
     expect(results[0].deviceType).to.equal('FCM')
     expect(results[0].deleted).to.equal(false)
@@ -36,7 +38,7 @@ describe('register device token endpoint', () => {
     await request(app)
       .post('/mobile/register')
       .send({
-        eth_address: '1234',
+        eth_address: '0x78655B524c1dc1CbfacDA55620249F3AFDbFBf3B',
         device_token: '5678',
         device_type: 'FCM',
         permissions: {}
@@ -46,7 +48,7 @@ describe('register device token endpoint', () => {
     await request(app)
       .post('/mobile/register')
       .send({
-        eth_address: '1234',
+        eth_address: '0x78655B524c1dc1CbfacDA55620249F3AFDbFBf3B',
         device_token: '5678',
         device_type: 'FCM',
         permissions: { alert: 1, sound: 1, badge: 1 }
@@ -64,7 +66,7 @@ describe('register device token endpoint', () => {
     await request(app)
       .post('/mobile/register')
       .send({
-        eth_address: '1234',
+        eth_address: '0x78655B524c1dc1CbfacDA55620249F3AFDbFBf3B',
         device_token: '5678',
         device_type: 'FCM',
         permissions: {}
@@ -74,7 +76,7 @@ describe('register device token endpoint', () => {
     await request(app)
       .delete('/mobile/register')
       .send({
-        eth_address: '1234',
+        eth_address: '0x78655B524c1dc1CbfacDA55620249F3AFDbFBf3B',
         device_token: '5678'
       })
       .expect(200)

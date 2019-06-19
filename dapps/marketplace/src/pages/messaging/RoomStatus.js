@@ -38,7 +38,7 @@ const RoomStatus = ({ conversation, identity, onClick, active }) => {
   )
 }
 
-export default withIdentity(RoomStatus)
+export default withIdentity(RoomStatus, 'wallet')
 
 require('react-styl')(`
   .room-status

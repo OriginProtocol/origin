@@ -14,6 +14,13 @@ import AutoMutate from 'components/AutoMutate'
 class DeployIdentity extends Component {
   state = {}
   render() {
+    if (
+      this.props.autoDeploy &&
+      (this.props.loadingCanTransact || this.props.walletLoading)
+    ) {
+      return null
+    }
+
     return (
       <Mutation
         mutation={DeployIdentityMutation}
@@ -26,25 +33,17 @@ class DeployIdentity extends Component {
       >
         {upsertIdentity => (
           <>
-            <button
-              className={`${this.props.className} ${
-                this.props.disabled ? 'disabled' : ''
-              }`}
-              onClick={() => {
-                if (this.props.disabled) {
-                  return
-                }
-
-                let canDeploy = true
-                if (this.props.validate) {
-                  canDeploy = this.props.validate()
-                }
-                if (canDeploy) {
-                  this.onClick(upsertIdentity)
-                }
-              }}
-              children={this.props.children}
-            />
+            {this.props.autoDeploy ? (
+              <AutoMutate mutation={() => this.onDeployClick(upsertIdentity)} />
+            ) : (
+              <button
+                className={`${this.props.className} ${
+                  this.props.disabled ? 'disabled' : ''
+                }`}
+                onClick={() => this.onDeployClick(upsertIdentity)}
+                children={this.props.children}
+              />
+            )}
             {this.renderWaitModal()}
             {this.state.error && (
               <TransactionError
@@ -57,6 +56,20 @@ class DeployIdentity extends Component {
         )}
       </Mutation>
     )
+  }
+
+  onDeployClick(upsertIdentity) {
+    if (this.props.disabled) {
+      return
+    }
+
+    let canDeploy = true
+    if (this.props.validate) {
+      canDeploy = this.props.validate()
+    }
+    if (canDeploy) {
+      this.onClick(upsertIdentity)
+    }
   }
 
   onClick(upsertIdentity) {
@@ -85,7 +98,7 @@ class DeployIdentity extends Component {
     const { skipSuccessScreen } = this.props
     const content = skipSuccessScreen ? (
       <AutoMutate
-        mutatation={() => {
+        mutation={() => {
           this.setState({
             shouldClose: true
           })
@@ -114,7 +127,9 @@ class DeployIdentity extends Component {
           if (this.props.refetch) {
             this.props.refetch()
           }
-          this.props.client.reFetchObservableQueries()
+          if (this.props.refetchObservables !== false) {
+            this.props.client.reFetchObservableQueries()
+          }
           this.setState({ waitFor: false, error: false, shouldClose: false })
           if (this.props.onComplete && this.state.mutationCompleted) {
             this.props.onComplete()

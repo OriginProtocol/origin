@@ -36,8 +36,8 @@ class CreateListing extends Component {
         category: '',
         subCategory: '',
         location: '',
-        boost: '50',
-        boostLimit: '100',
+        boost: '0',
+        boostLimit: '0',
         media: [],
 
         // Unit fields:
@@ -92,7 +92,12 @@ class CreateListing extends Component {
     }
 
     if (!this.props.identity) {
-      return <UserActivationLink forceRedirect={true} />
+      return (
+        <UserActivationLink
+          location={{ pathname: '/create' }}
+          forceRedirect={true}
+        />
+      )
     }
 
     // Force a given listing type/category

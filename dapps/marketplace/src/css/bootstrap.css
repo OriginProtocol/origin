@@ -57,6 +57,7 @@
   color: var(--dusk);
 }
 
-.dropdown-item.active, .dropdown-item:active {
-  background-color: var(--dusk)
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: var(--dusk);
 }

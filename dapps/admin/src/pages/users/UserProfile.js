@@ -1,6 +1,35 @@
 import React from 'react'
 import { Tag } from '@blueprintjs/core'
 
+const getDisplayName = provider => {
+  switch (provider) {
+    case 'email':
+      return 'Email'
+    case 'phone':
+      return 'Phone'
+    case 'website':
+      return 'Website'
+    case 'airbnb':
+      return 'Airbnb'
+    case 'github':
+      return 'GitHub'
+    case 'facebook':
+      return 'Facebook'
+    case 'twitter':
+      return 'Twitter'
+    case 'google':
+      return 'Google'
+    case 'kakao':
+      return 'Kakao'
+    case 'linkedin':
+      return 'LinkedIn'
+    case 'wechat':
+      return 'WeChat'
+  }
+
+  return provider
+}
+
 const Verified = props => (
   <Tag intent="success" className="mr-1" rightIcon="tick">
     {props.children}
@@ -11,6 +40,7 @@ const UserProfile = ({ profile }) => {
   if (!profile) {
     return 'No profile set up'
   }
+
   return (
     <div style={{ display: 'flex', alignItems: 'end' }}>
       {!profile.avatar ? null : (
@@ -23,11 +53,14 @@ const UserProfile = ({ profile }) => {
         {!profile.description ? null : (
           <div style={{ marginBottom: 10 }}>{profile.description}</div>
         )}
-        {profile.emailVerified ? <Verified>Email</Verified> : null}
-        {profile.phoneVerified ? <Verified>Phone</Verified> : null}
-        {profile.facebookVerified ? <Verified>Facebook</Verified> : null}
-        {profile.twitterVerified ? <Verified>Twitter</Verified> : null}
-        {profile.airbnbVerified ? <Verified>Airbnb</Verified> : null}
+        {profile.verifiedAttestations &&
+          profile.verifiedAttestations.map(attestation => {
+            return (
+              <Verified key={attestation.id}>
+                {getDisplayName(attestation.id)}
+              </Verified>
+            )
+          })}
       </div>
     </div>
   )

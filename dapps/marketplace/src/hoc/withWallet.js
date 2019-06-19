@@ -7,7 +7,7 @@ import WalletQuery from 'queries/Wallet'
 function withWallet(WrappedComponent) {
   const WithWallet = props => {
     return (
-      <Query query={WalletQuery} pollInterval={1000}>
+      <Query fetchPolicy="network-only" query={WalletQuery} pollInterval={1000}>
         {/* TODO: see if there's a way to avoid polling */}
         {({ data, error, networkStatus }) => {
           if (error) console.error(error)

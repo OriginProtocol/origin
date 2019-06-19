@@ -7,10 +7,9 @@ import Redirect from 'components/Redirect'
 import Identicon from 'components/Identicon'
 import Avatar from 'components/Avatar'
 import SendMessage from 'components/SendMessage'
-import Tooltip from 'components/Tooltip'
 import EthAddress from 'components/EthAddress'
 import QueryError from 'components/QueryError'
-import Link from 'components/Link'
+import Attestations from 'components/Attestations'
 
 import query from 'queries/Identity'
 import withOwner from 'hoc/withOwner'
@@ -19,7 +18,7 @@ const AboutParty = ({ id, owner }) => {
   const [redirect, setRedirect] = useState(false)
 
   if (redirect) {
-    return <Redirect to={`/user/${id}`} />
+    return <Redirect push to={`/user/${id}`} />
   }
 
   return (
@@ -33,7 +32,17 @@ const AboutParty = ({ id, owner }) => {
 
           const profile = get(data, 'web3.account.identity')
           if (!profile) {
-            return null
+            return (
+              <div className="eth-address">
+                <Identicon size={40} address={owner} />
+                <div>
+                  <div>ETH Address:</div>
+                  <div>
+                    <EthAddress address={owner} />
+                  </div>
+                </div>
+              </div>
+            )
           }
 
           return (
@@ -41,131 +50,16 @@ const AboutParty = ({ id, owner }) => {
               <Avatar profile={profile} size={50} />
               <div className="user-detail">
                 <div className="name">{profile.fullName}</div>
-                <div className="attestations">
-                  {profile.twitterVerified && (
-                    <Tooltip
-                      tooltip={fbt(
-                        'Twitter Account Verified',
-                        'Twitter Account Verified'
-                      )}
-                      placement="bottom"
-                    >
-                      <div className="attestation twitter" />
-                    </Tooltip>
-                  )}
-                  {profile.googleVerified && (
-                    <Tooltip
-                      tooltip={fbt(
-                        'Google Account Verified',
-                        'Google Account Verified'
-                      )}
-                      placement="bottom"
-                    >
-                      <div className="attestation google" />
-                    </Tooltip>
-                  )}
-                  {profile.phoneVerified && (
-                    <Tooltip
-                      tooltip={fbt('Phone Verified', 'Phone Verified')}
-                      placement="bottom"
-                    >
-                      <div className="attestation phone" />
-                    </Tooltip>
-                  )}
-                  {profile.emailVerified && (
-                    <Tooltip
-                      tooltip={fbt('Email Verified', 'Email Verified')}
-                      placement="bottom"
-                    >
-                      <div className="attestation email" />
-                    </Tooltip>
-                  )}
-                  {profile.facebookVerified && (
-                    <Tooltip
-                      tooltip={fbt('Facebook Verified', 'Facebook Verified')}
-                      placement="bottom"
-                    >
-                      <div className="attestation facebook" />
-                    </Tooltip>
-                  )}
-                  {profile.airbnbVerified && (
-                    <Tooltip
-                      tooltip={fbt(
-                        'Airbnb Account Verified',
-                        'Airbnb Account Verified'
-                      )}
-                      placement="bottom"
-                    >
-                      <div className="attestation airbnb" />
-                    </Tooltip>
-                  )}
-                  {profile.websiteVerified && (
-                    <Tooltip
-                      tooltip={fbt('Website Verified', 'Website Verified')}
-                      placement="bottom"
-                    >
-                      <div className="attestation website" />
-                    </Tooltip>
-                  )}
-                  {profile.kakaoVerified && (
-                    <Tooltip
-                      tooltip={fbt('KaKao Verified', 'KaKao Verified')}
-                      placement="bottom"
-                    >
-                      <div className="attestation kakao" />
-                    </Tooltip>
-                  )}
-                  {profile.githubVerified && (
-                    <Tooltip
-                      tooltip={fbt('GitHub Verified', 'GitHub Verified')}
-                      placement="bottom"
-                    >
-                      <div className="attestation github" />
-                    </Tooltip>
-                  )}
-                  {profile.linkedinVerified && (
-                    <Tooltip
-                      tooltip={fbt('LinkedIn Verified', 'LinkedIn Verified')}
-                      placement="bottom"
-                    >
-                      <div className="attestation linkedin" />
-                    </Tooltip>
-                  )}
-                  {profile.wechatVerified && (
-                    <Tooltip
-                      tooltip={fbt('WeChat Verified', 'WeChat Verified')}
-                      placement="bottom"
-                    >
-                      <div className="attestation wechat" />
-                    </Tooltip>
-                  )}
-                </div>
+                <Attestations profile={profile} small />
               </div>
             </div>
           )
         }}
       </Query>
-      <div className="eth-address">
-        <Identicon size={40} address={owner} />
-        <div>
-          <div>ETH Address:</div>
-          <div>
-            <EthAddress address={owner} />
-          </div>
-        </div>
-      </div>
       <div className="actions">
-        <SendMessage
-          to={id}
-          className="btn btn-outline-primary btn-rounded"
-          children={fbt('Send Message', 'Send Message')}
-        />
-        <Link
-          to={`/user/${id}`}
-          className="btn btn-outline-primary btn-rounded"
-        >
-          View Profile
-        </Link>
+        <SendMessage to={id} className="btn btn-link">
+          <fbt desc="AboutParty.contactSeller">Contact seller</fbt> &rsaquo;
+        </SendMessage>
       </div>
     </div>
   )
@@ -175,9 +69,6 @@ export default withOwner(AboutParty)
 
 require('react-styl')(`
   .about-party
-    background: var(--pale-grey-eight)
-    border-radius: var(--default-radius)
-    padding: 1rem 1rem 0.5rem 1rem
     font-size: 14px
     font-weight: normal
     .profile
@@ -196,21 +87,13 @@ require('react-styl')(`
         white-space: nowrap
         overflow: hidden
         text-overflow: ellipsis
-    .eth-address
-      display: flex
-      > img
-        margin: 0 5px
-      > div
-        margin-left: 1rem
     .actions
       margin: 1rem -0.25rem 0 -0.25rem
       display: flex
       align-items: center
       flex-wrap: wrap
-    .btn-rounded
-      flex: 1
-      padding-left: 1rem
-      padding-right: 1rem
-      white-space: nowrap
-      margin: 0 0.25rem 0.5rem 0.25rem
+      font-size: 18px
+      .btn-link
+        padding: 0
+        font-weight: normal
 `)

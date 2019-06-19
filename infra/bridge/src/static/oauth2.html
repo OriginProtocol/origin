@@ -10,7 +10,8 @@
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   }
 
-  var code = getParameterByName('code');
-  window.opener.postMessage("origin-code:" + code, '*')
+  window.opener.postMessage({
+    originCode: getParameterByName('code')
+  }, '*')
   window.close()
 </script>

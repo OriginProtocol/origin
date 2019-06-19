@@ -14,6 +14,12 @@ db: &db
   environment:
     DATABASE_URL: postgres://postgres@localhost/circle_ci_test
 
+redis: &redis
+  docker:
+    - image: circleci/node:10-browsers
+    - image: circleci/redis:5
+  working_directory: ~/origin
+
 version: 2
 jobs:
   Setup:
@@ -73,6 +79,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - run: cd infra/identity && yarn migrate
       - run:
           name: Run Bridge Tests
           command: cd infra/bridge && yarn migrate && yarn test
@@ -97,7 +104,7 @@ jobs:
       - run: cd infra/identity && yarn migrate
       - run:
           name: Run Discovery Tests
-          command: cd infra/bridge && yarn test
+          command: cd infra/discovery && yarn test
 
   Growth:
     <<: *db
@@ -115,9 +122,19 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - run: cd infra/growth && yarn migrate
       - run:
           name: Run Notification Tests
           command: cd infra/notifications && yarn migrate && yarn test
+
+  Relayer:
+    <<: *redis
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run Relayer Tests
+          command: cd infra/relayer && yarn test
 
 workflows:
   version: 2
@@ -149,5 +166,8 @@ workflows:
           requires:
             - Setup
       - Notifications:
+          requires:
+            - Setup
+      - Relayer:
           requires:
             - Setup

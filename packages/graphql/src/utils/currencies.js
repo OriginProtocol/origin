@@ -60,16 +60,22 @@ class Currencies {
         id: 'token-ETH',
         address: '0x0000000000000000000000000000000000000000',
         code: 'ETH',
-        name: 'Ether',
+        name: 'Ethereum',
         priceInUSD: 158.16,
         decimals: 18
       },
       'token-DAI': {
         id: 'token-DAI',
         // address: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359',
-        name: 'DAI Stablecoin',
+        name: 'Maker Dai',
         code: 'DAI',
         priceInUSD: 1,
+        decimals: 18
+      },
+      'token-OGN': {
+        id: 'token-OGN',
+        name: 'Origin Token',
+        code: 'OGN',
         decimals: 18
       },
       'token-USDC': {
@@ -110,7 +116,9 @@ class Currencies {
    * @returns {Promise<boolean>} Returns true if rates updated successfully. False otherwise.
    */
   async _poll() {
-    const currencyCodes = this.currencyCodes.filter(c => c !== 'DAI').join(',')
+    const currencyCodes = this.currencyCodes
+      .filter(c => c !== 'DAI' && c !== 'OGN')
+      .join(',')
     // Fetch rates from CryptoCompare.
     const url =
       'https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=' +
@@ -124,6 +132,7 @@ class Currencies {
       return false
     }
     rates.DAI = 1
+    rates.OGN = 1
 
     // Update rates in our data structure.
     for (const key of Object.keys(this.data)) {

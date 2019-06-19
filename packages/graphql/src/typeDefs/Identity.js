@@ -40,12 +40,24 @@ export const types = `
     ): IdentityConnection
 
     getAuthUrl(provider: String!, redirect: String): String
+
+    attestationProviders: [String]
   }
 
   type IdentityConnection {
     nodes: [Identity]
     pageInfo: PageInfo!
     totalCount: Int!
+  }
+
+  type VerifiedAttestationProperty {
+    type: String!
+    value: String
+  }
+
+  type VerifiedAttestation {
+    id: String!
+    properties: [VerifiedAttestationProperty]
   }
 
   type Identity {
@@ -64,17 +76,7 @@ export const types = `
     avatarUrlExpanded: String
     strength: Int
 
-    facebookVerified: Boolean
-    twitterVerified: Boolean
-    airbnbVerified: Boolean
-    phoneVerified: Boolean
-    emailVerified: Boolean
-    googleVerified: Boolean
-    websiteVerified: Boolean
-    kakaoVerified: Boolean
-    githubVerified: Boolean
-    linkedinVerified: Boolean
-    wechatVerified: Boolean
+    verifiedAttestations: [VerifiedAttestation]
 
     name: String
     ipfsHash: String

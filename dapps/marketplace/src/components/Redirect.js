@@ -6,7 +6,7 @@ const ScrollToTopRedirect = props => {
   if (typeof to === 'string') {
     to = { pathname: to, state: { scrollToTop: true } }
   }
-  return <Redirect push {...props} to={to} />
+  return <Redirect {...props} to={to} />
 }
 
 export default ScrollToTopRedirect

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { fbt } from 'fbt-runtime'
+import { useEffect } from 'react'
 
 import Link from './Link'
 import Redirect from './Redirect'
@@ -8,16 +9,31 @@ import MobileUserActivation from './MobileUserActivation'
 import store from 'utils/store'
 const sessionStore = store('sessionStorage')
 
+const storeLocationToStore = props => {
+  if (props.location) {
+    const { pathname, search } = props.location
+    sessionStore.set('getStartedRedirect', { pathname, search })
+  }
+}
+
 const UserActivationLink = props => {
   const isMobile = useIsMobile()
   const [modal, setModal] = useState(false)
   const [redirectToHome, setRedirectToHome] = useState(false)
 
+  const shouldShowMobileModal = modal || (isMobile && props.forceRedirect)
+
+  useEffect(() => {
+    if (shouldShowMobileModal) {
+      storeLocationToStore(props)
+    }
+  }, [props.location])
+
   if (redirectToHome) {
-    return <Redirect to="/" />
+    return <Redirect to={sessionStore.get('getStartedRedirect', '/')} />
   }
 
-  if (modal || (isMobile && props.forceRedirect)) {
+  if (shouldShowMobileModal) {
     return (
       <MobileUserActivation
         onClose={() => {
@@ -36,7 +52,11 @@ const UserActivationLink = props => {
     return <Redirect to="/onboard" />
   }
 
-  let content = <fbt desc="navigation.getStarted.getStarted">Get Started</fbt>
+  let content = (
+    <span>
+      <fbt desc="navigation.getStarted.getStarted">Get Started</fbt>
+    </span>
+  )
 
   if (props.children) {
     content = props.children
@@ -58,11 +78,7 @@ const UserActivationLink = props => {
         if (props.onClick) {
           props.onClick()
         }
-
-        if (props.location) {
-          const { pathname, search } = props.location
-          sessionStore.set('getStartedRedirect', { pathname, search })
-        }
+        storeLocationToStore(props)
       }}
     >
       {content}

@@ -7,6 +7,7 @@ import { listingsBySeller } from './marketplace/listings'
 import { identity } from './IdentityEvents'
 import { getIdsForPage, getConnection } from './_pagination'
 import { proxyOwner } from '../utils/proxy'
+import apolloPathToString from '../utils/apolloPathToString'
 import { transactions } from './web3/transactions'
 
 const ec = () => contracts.marketplace.eventCache
@@ -105,7 +106,7 @@ async function sales(seller, { first = 10, after, filter }, _, info) {
   return await resultsFromIds({ after, allIds, first, fields })
 }
 
-async function reviews(user, { first = 10, after }) {
+async function reviews(user, { first = 10, after }, context, info) {
   let party = user.id
   const owner = await proxyOwner(party)
   if (owner) {
@@ -145,7 +146,21 @@ async function reviews(user, { first = 10, after }) {
       event.returnValues.ipfsHash,
       event
     )
-    if (review.rating) {
+
+    if (review.reviewer && !review.reviewer.id) {
+      console.log(
+        '============== Non-nullable error in User.reviews resolver! ============='
+      )
+      console.log('User.id', review.reviewer.id)
+      console.log('path: ', apolloPathToString(info.path))
+      console.log('returnType: ', info.returnType)
+      console.log('operation: ', info.operation.operation)
+      console.log(
+        '========================================================================='
+      )
+    }
+
+    if (review.rating && review.reviewer.id) {
       nodes.push(review)
     }
     if (nodes.length >= first) {
@@ -303,7 +318,7 @@ async function counterparty(user, { first = 100, after, id }, _, info) {
 
   const unfilteredEvents = await ec().getEvents({
     listingID: allListingIds,
-    party: [u1, u2]
+    party: [...u1, ...u2]
   })
   const unsortedEvents = unfilteredEvents.filter(e => {
     const listingOffers = allOfferIds[e.returnValues.listingID]

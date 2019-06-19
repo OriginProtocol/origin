@@ -65,7 +65,7 @@ const FractionalHourly = ({
         return (
           <div className="listing-buy fractional">
             <div className="price">
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex">
                   <Price price={listing.price} />
                   <div className="desc">/ hour</div>
