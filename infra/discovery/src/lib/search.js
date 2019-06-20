@@ -180,7 +180,7 @@ class Listing {
     // Never return any listings moderated as hidden
     esQuery.bool.must_not.push({
       terms: {
-        scoreTags: ['Hide', 'hide', 'Super Hide', 'super hide']
+        scoreTags: ['Hide', 'Delete']
       }
     })
 

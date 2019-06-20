@@ -10,7 +10,7 @@ const ALL_TAGS = [
   { tag: 'Normal', icon: 'circle' },
   { tag: 'Low Quality', icon: 'thumbs-down' },
   { tag: 'Hide', icon: 'ban-circle' },
-  { tag: 'Super Hide', icon: 'ban-circle' }
+  { tag: 'Delete', icon: 'ban-circle' }
 ]
 
 const SCORING_QUERY = `
