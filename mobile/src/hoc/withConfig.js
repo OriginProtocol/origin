@@ -12,6 +12,7 @@ function withConfig(WrappedComponent) {
         <WrappedComponent
           {...this.props}
           config={Configs[this.props.settings.network.name.toLowerCase()]}
+          configs={Configs}
         />
       )
     }

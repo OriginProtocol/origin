@@ -15,7 +15,6 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
-import { NavigationActions } from 'react-navigation'
 import { fbt } from 'fbt-runtime'
 
 import { setBackupWarningStatus } from 'actions/Activation'
@@ -34,18 +33,19 @@ class BackupScreen extends Component {
 
   constructor(props) {
     super(props)
-    this.isPrivateKey = this.props.wallet.activeAccount.mnemonic === undefined
+
+    const { wallet } = this.props
+
+    this.isPrivateKey = wallet.activeAccount.mnemonic === undefined
 
     // Create an empty array the same length as the mnemonic to fill when
     // verifying, or null for private keys
     let verify, shuffledMnemonic
     if (!this.isPrivateKey) {
-      verify = new Array(
-        this.props.wallet.activeAccount.mnemonic.split(' ').length
-      ).fill(undefined)
-      shuffledMnemonic = shuffleArray(
-        this.props.wallet.activeAccount.mnemonic.split(' ')
+      verify = new Array(wallet.activeAccount.mnemonic.split(' ').length).fill(
+        undefined
       )
+      shuffledMnemonic = shuffleArray(wallet.activeAccount.mnemonic.split(' '))
     }
 
     this.state = {
@@ -240,7 +240,7 @@ class BackupScreen extends Component {
               textStyle={{ fontSize: 18, fontWeight: '900' }}
               title={fbt('Cancel', 'BackupScreen.cancelButton')}
               onPress={() => {
-                this.props.navigation.navigate('Wallet')
+                this.props.navigation.navigate('App')
               }}
             />
           </View>
@@ -378,12 +378,7 @@ class BackupScreen extends Component {
               await this.props.setBackupWarningStatus(
                 wallet.activeAccount.address
               )
-              // Navigate to subroute to skip authentication requirement
-              this.props.navigation.navigate(
-                'GuardedApp',
-                {},
-                NavigationActions.navigate({ routeName: 'App' })
-              )
+              this.props.navigation.navigate('App')
             }}
           />
         </View>
