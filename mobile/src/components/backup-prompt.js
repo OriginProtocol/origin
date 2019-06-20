@@ -4,9 +4,9 @@ import React from 'react'
 import { Modal, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
+import get from 'lodash.get'
 
 import { setBackupWarningStatus } from 'actions/Activation'
-import { get } from 'utils'
 import BackupCard from 'components/backup-card'
 import NavigationService from '../NavigationService'
 
@@ -20,7 +20,7 @@ class BackupPrompt extends React.Component {
 
   async componentDidMount() {
     const { activation, wallet } = this.props
-    const activeAddress = get(wallet.activeAccount, 'address', null)
+    const activeAddress = get(wallet, 'account[0].address')
 
     const hasBalance =
       Object.keys(wallet.accountBalance).find(currency => {
@@ -42,8 +42,6 @@ class BackupPrompt extends React.Component {
   }
 
   renderModal() {
-    const { wallet } = this.props
-
     return (
       <Modal
         animationType="fade"
@@ -53,7 +51,7 @@ class BackupPrompt extends React.Component {
           this.setState({ displayBackupModal: false })
         }}
       >
-        <SafeAreaView style={styles.svContainer}>
+        <SafeAreaView style={styles.modalSafeAreaView}>
           <BackupCard
             wallet={this.props.wallet}
             onRequestBackup={async () => {
@@ -62,7 +60,7 @@ class BackupPrompt extends React.Component {
             }}
             onRequestClose={async () => {
               await this.props.setBackupWarningStatus(
-                wallet.activeAccount.address
+                this.props.wallet.activeAccount.address
               )
               this.setState({ displayBackupModal: false })
             }}
@@ -87,7 +85,8 @@ export default connect(
 )(BackupPrompt)
 
 const styles = StyleSheet.create({
-  svContainer: {
-    flex: 1
+  modalSafeAreaView: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)'
   }
 })

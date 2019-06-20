@@ -4,20 +4,13 @@ import { WalletConstants } from 'actions/Wallet'
 
 const initialState = {
   accounts: [],
-  accountNameMapping: {},
+  activeAccount: null,
   accountBalance: {
     eth: 0,
     dai: 0,
     ogn: 0
   },
-  activeAccount: null,
-  accountServerNotifications: {},
-  messagingKeys: {
-    address: null,
-    signattureKey: null,
-    pubMessage: null,
-    pubSignature: null
-  }
+  identities: {}
 }
 
 export default function Wallet(state = initialState, action = {}) {
@@ -32,7 +25,8 @@ export default function Wallet(state = initialState, action = {}) {
       if (!exists && action.account.address && action.account.privateKey) {
         return {
           ...state,
-          accounts: [...state.accounts, action.account]
+          accounts: [...state.accounts, action.account],
+          activeAccount: action.account
         }
       } else {
         return state
@@ -47,7 +41,6 @@ export default function Wallet(state = initialState, action = {}) {
       }
 
     case WalletConstants.SET_ACCOUNT_ACTIVE:
-      // Remove the account from the accounts array
       if (action.account.address && action.account.privateKey) {
         return {
           ...state,
@@ -63,19 +56,13 @@ export default function Wallet(state = initialState, action = {}) {
         accountBalance: action.balances
       }
 
-    case WalletConstants.SET_ACCOUNT_NAME:
+    case WalletConstants.SET_IDENTITY:
       return {
         ...state,
-        accountNameMapping: {
-          ...state.accountNameMapping,
-          [action.payload.address]: action.payload.name
+        identities: {
+          ...state.identities,
+          [action.payload.address]: action.payload.identity
         }
-      }
-
-    case WalletConstants.SET_MESSAGING_KEYS:
-      return {
-        ...state,
-        messagingKeys: action.payload
       }
   }
 

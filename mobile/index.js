@@ -1,6 +1,7 @@
 'use strict'
 
-import '@babel/polyfill'
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
 
 import { AppRegistry } from 'react-native'
 
@@ -14,7 +15,7 @@ if (!__DEV__) {
 import './global'
 import App from './src/App'
 
-// Shims required by ethersjsA
+// Shims required by ethersjs
 // https://github.com/ethers-io/ethers.js/issues/304
 import 'ethers/dist/shims.js'
 
