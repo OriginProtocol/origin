@@ -47,7 +47,9 @@ const resolvers = {
       if (requestedModFields.length > 0) {
         const auth = await authenticate(context.discoveryAuthToken)
         if (!auth) {
-          throw new Error('You must be a moderator in order to view these fields')
+          throw new Error(
+            'You must be a moderator in order to view these fields'
+          )
         }
       }
       // Load a listing

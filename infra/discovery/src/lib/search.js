@@ -97,11 +97,11 @@ class Listing {
   }
 
   /**
-   * Updates the score tags and score for a listing. 
+   * Updates the score tags and score for a listing.
    * Uses a small painless script that runs on the server to update the values.
    * This reduces the race condition window when two systems could be updating
    * the same listing at the same time. It also scales better.
-   * 
+   *
    * @param {string} id
    * @param {string[]} scoreTags
    */
