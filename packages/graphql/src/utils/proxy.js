@@ -16,7 +16,7 @@ async function predictedProxyRaw(address) {
   ) {
     return null
   }
-  const web3 = contracts.web3Exec
+  const web3 = contracts.web3
   const salt = web3.utils.soliditySha3(address, 0)
   const creationCode = await proxyCreationCode()
   const creationHash = web3.utils.sha3(creationCode)
@@ -46,7 +46,7 @@ async function hasProxyRaw(address) {
     const predicted = await predictedProxyRaw(address)
 
     // Return the predicted address if code exists there, or false otherwise
-    const code = await contracts.web3Exec.eth.getCode(predicted)
+    const code = await contracts.web3.eth.getCode(predicted)
     return code.slice(2).length > 0 ? predicted : false
   } catch (e) {
     return false

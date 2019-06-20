@@ -1,17 +1,18 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React from 'react'
 import { StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native'
 
-export default class PinInput extends Component {
-  constructor(props) {
-    super(props)
-  }
-
+class PinInput extends React.Component {
   render() {
     const placeholder = []
     for (let i = 0; i < this.props.pinLength; i++) {
-      placeholder.push(this.renderPlaceholder(i))
+      const value = this.props.value[i] ? this.props.value[i] : '-'
+      placeholder.push(
+        <Text style={styles.pinCodeText} key={i}>
+          {value}
+        </Text>
+      )
     }
 
     return (
@@ -26,25 +27,18 @@ export default class PinInput extends Component {
           ref={ref => (this.textInput = ref)}
           autoFocus={true}
           value={this.props.value}
-          enablesReturnKeyAutomatically={false}
           keyboardType="numeric"
           pinLength={this.props.pinLength || 6}
           onChangeText={this.props.onChangeText}
+          onSubmitEditing={this.props.onSubmitEditing}
           style={styles.input}
         />
       </>
     )
   }
-
-  renderPlaceholder(i) {
-    const value = this.props.value[i] ? this.props.value[i] : '-'
-    return (
-      <Text style={styles.pinCodeText} key={i}>
-        {value}
-      </Text>
-    )
-  }
 }
+
+export default PinInput
 
 const styles = StyleSheet.create({
   pinCode: {

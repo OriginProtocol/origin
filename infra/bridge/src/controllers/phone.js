@@ -123,9 +123,13 @@ router.post('/verify', phoneVerifyCode, async (req, res) => {
     })
   }
 
+  const method = req.session.phoneVerificationMethod
+    ? req.session.phoneVerificationMethod
+    : 'sms'
+
   const attestationBody = {
     verificationMethod: {
-      [req.session.phoneVerificationMethod]: true
+      [method]: true
     },
     phone: {
       verified: true

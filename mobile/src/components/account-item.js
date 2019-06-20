@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React from 'react'
 import {
   Dimensions,
   Image,
@@ -11,68 +11,60 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
+import get from 'lodash.get'
 
 import Address from 'components/address'
-import Identicon from 'components/identicon'
+import Avatar from 'components/avatar'
 import { truncate } from 'utils/user'
 
 const IMAGES_PATH = '../../assets/images/'
 
-class AccountItem extends Component {
-  constructor(props) {
-    super(props)
-  }
+const AccountItem = ({ item, navigation, wallet }) => {
+  // Truncate the account name to something that looks reasonable, the upper
+  // bound was set from an iPhone X
+  const truncateLength = Dimensions.get('window').width < 375 ? 15 : 20
+  const identity = get(wallet.identities, item.address, {})
+  const name = get(identity, 'fullName')
+  const avatarUrl = get(identity, 'avatarUrl')
 
-  render() {
-    const { item, navigation, wallet } = this.props
-    // Truncate the account name to something that looks reasonable, the upper
-    // bound was set from an iPhone X
-    const truncateLength = Dimensions.get('window').width < 375 ? 15 : 20
-
-    return (
-      <TouchableHighlight
-        onPress={() =>
-          navigation.navigate('Account', {
-            account: {
-              ...item
-            }
-          })
-        }
-      >
-        <View style={styles.listItem}>
-          <View style={styles.textContainer}>
-            <View style={[styles.iconContainer, styles.identiconContainer]}>
-              <Identicon address={item.address} />
-            </View>
-            {wallet.accountNameMapping[item.address] && (
-              <Text style={styles.name}>
-                {truncate(
-                  wallet.accountNameMapping[item.address],
-                  truncateLength
-                )}
-              </Text>
-            )}
-            <Address
-              address={item.address}
-              label={fbt('Address', 'AccountItem.address')}
-              style={styles.address}
-            />
-          </View>
-          {
-            <View style={styles.iconContainer}>
-              {wallet.activeAccount.address === item.address && (
-                <Image
-                  source={require(`${IMAGES_PATH}selected.png`)}
-                  style={styles.selected}
-                />
-              )}
-              <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
-            </View>
+  return (
+    <TouchableHighlight
+      onPress={() =>
+        navigation.navigate('Account', {
+          account: {
+            ...item
           }
+        })
+      }
+    >
+      <View style={styles.listItem}>
+        <View style={styles.textContainer}>
+          <View style={[styles.iconContainer, styles.identiconContainer]}>
+            <Avatar source={avatarUrl} />
+          </View>
+          {name && (
+            <Text style={styles.name}>{truncate(name, truncateLength)}</Text>
+          )}
+          <Address
+            address={item.address}
+            label={fbt('Address', 'AccountItem.address')}
+            style={styles.address}
+          />
         </View>
-      </TouchableHighlight>
-    )
-  }
+        {
+          <View style={styles.iconContainer}>
+            {wallet.activeAccount.address === item.address && (
+              <Image
+                source={require(`${IMAGES_PATH}selected.png`)}
+                style={styles.selected}
+              />
+            )}
+            <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
+          </View>
+        }
+      </View>
+    </TouchableHighlight>
+  )
 }
 
 const mapStateToProps = ({ wallet }) => {
