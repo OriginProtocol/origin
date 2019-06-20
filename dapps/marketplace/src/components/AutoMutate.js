@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
-const AutoMutate = ({ mutatation }) => {
-  useEffect(() => mutatation(), [true])
+const AutoMutate = ({ mutation }) => {
+  useEffect(() => mutation(), [true])
   return null
 }
 

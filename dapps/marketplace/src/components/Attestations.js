@@ -1,38 +1,9 @@
 import React from 'react'
-import { fbt } from 'fbt-runtime'
 
 import Tooltip from 'components/Tooltip'
+import { getVerifiedTooltip } from 'utils/profileTools'
 
-const getVerifiedTooltip = provider => {
-  switch (provider) {
-    case 'email':
-      return fbt('Email Verified', 'Email Verified')
-    case 'phone':
-      return fbt('Phone Verified', 'Phone Verified')
-    case 'website':
-      return fbt('Website Verified', 'Website Verified')
-    case 'airbnb':
-      return fbt('Airbnb Account Verified', 'Airbnb Account Verified')
-    case 'github':
-      return fbt('GitHub Account Verified', 'GitHub Account Verified')
-    case 'facebook':
-      return fbt('Facebook Account Verified', 'Facebook Account Verified')
-    case 'twitter':
-      return fbt('Twitter Account Verified', 'Twitter Account Verified')
-    case 'google':
-      return fbt('Google Account Verified', 'Google Account Verified')
-    case 'kakao':
-      return fbt('Kakao Account Verified', 'Kakao Account Verified')
-    case 'linkedin':
-      return fbt('LinkedIn Account Verified', 'LinkedIn Account Verified')
-    case 'wechat':
-      return fbt('WeChat Account Verified', 'WeChat Account Verified')
-  }
-
-  return provider
-}
-
-const Attestations = ({ profile = {}, small }) => {
+const Attestations = ({ profile = {}, small, className }) => {
   const verifiedAttestations = profile.verifiedAttestations
 
   if (!verifiedAttestations) {
@@ -40,7 +11,11 @@ const Attestations = ({ profile = {}, small }) => {
   }
 
   return (
-    <div className={`attestations${small ? ' attestations-small' : ''}`}>
+    <div
+      className={`attestations${small ? ' attestations-small' : ''}${
+        className ? ' ' + className : ''
+      }`}
+    >
       {verifiedAttestations.map(attestation => (
         <Tooltip
           key={attestation.id}
