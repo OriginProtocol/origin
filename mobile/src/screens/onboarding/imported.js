@@ -44,9 +44,7 @@ class ImportedScreen extends Component {
   async componentDidMount() {
     let response
     try {
-      response = await this.props.getIdentity(
-        this.props.wallet.activeAccount.address
-      )
+      response = await this.props.getIdentity()
     } catch (error) {
       // Skip, identity couldn't be loaded
       console.warn(error)
