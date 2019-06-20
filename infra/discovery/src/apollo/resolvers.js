@@ -47,7 +47,7 @@ const resolvers = {
       if (requestedModFields.length > 0) {
         const auth = await authenticate(context.discoveryAuthToken)
         if (!auth) {
-          throw 'You must be a moderator in order to view these fields'
+          throw new Error('You must be a moderator in order to view these fields')
         }
       }
       // Load a listing
@@ -77,13 +77,13 @@ const resolvers = {
     async listingSetScoreTags(_, data, context) {
       const auth = await authenticate(context.discoveryAuthToken)
       if (!auth) {
-        throw 'You are not logged in'
+        throw new Error('You are not logged in')
       }
       const { ethAddress } = auth
 
       const { id, scoreTags } = data
       await db.DiscoveryTagAction.create({
-        ethAddress,
+        ethAddress: ethAddress.toLowerCase(),
         ListingId: id,
         data: { tags: scoreTags }
       })
@@ -96,13 +96,13 @@ const resolvers = {
       const ethAddress = data.ethAddress.toLowerCase()
       const recoveredAddress = web3.eth.accounts.recover(message, signature)
       if (!recoveredAddress) {
-        throw 'Unable to recover signed message sender'
+        throw new Error('Unable to recover signed message sender')
       }
       if (ethAddress != recoveredAddress.toLowerCase()) {
-        throw 'Signature did not match ethAddress'
+        throw new Error('Signature did not match ethAddress')
       }
       if (!canModerate(ethAddress)) {
-        throw 'This eth address is not allowed to moderate listings'
+        throw new Error('This eth address is not allowed to moderate listings')
       }
 
       const match = message.match(
@@ -110,14 +110,14 @@ const resolvers = {
         /^\u0019Ethereum Signed Message:\nOrigin Moderation Login\nNonce: (0x[a-fA-F0-9]+)$/
       )
       if (!match) {
-        throw 'Message was not correctly formatted'
+        throw new Error('Message was not correctly formatted')
       }
       const nonce = match[1]
       const usedCount = await db.DiscoveryAccessToken.count({
         where: { nonce, ethAddress }
       })
       if (usedCount > 0) {
-        throw 'Nonces may only be used one time'
+        throw new Error('Nonces may only be used one time')
       }
 
       const authToken = Web3.utils.randomHex(16)
@@ -125,7 +125,7 @@ const resolvers = {
       const now = new Date().getTime()
       const expires = new Date(now + secondsToExpiration * 1000)
 
-      db.DiscoveryAccessToken.create({
+      await db.DiscoveryAccessToken.create({
         authToken,
         ethAddress,
         nonce,
