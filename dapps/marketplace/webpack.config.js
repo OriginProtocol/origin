@@ -25,7 +25,7 @@ const config = {
   entry: {
     app: './src/index.js'
   },
-  devtool: isProduction ? false : 'cheap-module-source-map',
+  devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'public')
@@ -148,12 +148,12 @@ const config = {
 if (isProduction) {
   config.output.filename = '[name].[hash:8].js'
   config.optimization.minimizer = [
-    new TerserPlugin({ cache: true, parallel: true }),
+    new TerserPlugin({ cache: true, parallel: true, sourceMap: true }),
     new OptimizeCSSAssetsPlugin({})
   ]
   config.plugins.push(
     new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: ['app.*.css', 'app.*.js']
+      cleanOnceBeforeBuildPatterns: ['app.*.css', 'app.*.js', 'app.*.js.map']
     }),
     new MiniCssExtractPlugin({ filename: '[name].[hash:8].css' }),
     new webpack.IgnorePlugin(/redux-logger/),

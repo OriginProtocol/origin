@@ -11,6 +11,10 @@ import relayer from './_relayer'
 
 const debug = createDebug('origin:tx-helper:')
 const formatAddr = address => (address ? address.substr(0, 8) : '')
+const isOriginMobile =
+  typeof window !== 'undefined' &&
+  window.ReactNativeWebView &&
+  contracts.web3Exec.currentProvider.isOrigin
 
 export async function checkMetaMask(from) {
   if (contracts.metaMask && contracts.metaMaskEnabled) {
@@ -40,8 +44,10 @@ const isServer = typeof window === 'undefined'
 function useRelayer({ mutation, value }) {
   if (isServer) return
 
+  const relayerEnabled = window.localStorage.enableRelayer || isOriginMobile
+
   let reason
-  if (!window.localStorage.enableRelayer) reason = 'disabled in localStorage'
+  if (!relayerEnabled) reason = 'disabled in localStorage and not mobile'
   if (!contracts.config.relayer) reason = 'relayer not configured'
   if (!mutation) reason = 'no mutation specified'
 
