@@ -208,13 +208,17 @@ class PushNotifications extends Component {
   async register() {
     const activeAddress = get(this.props, 'wallet.activeAccount.address')
     if (!activeAddress) {
-      console.debug('Could not register with notifications server, no active address')
+      console.debug(
+        'Could not register with notifications server, no active address'
+      )
       return
     }
 
     const deviceToken = get(this.props, 'settings.deviceToken')
     if (!deviceToken) {
-      console.debug('Could not register with notifications server, no device token')
+      console.debug(
+        'Could not register with notifications server, no device token'
+      )
       return
     }
 
