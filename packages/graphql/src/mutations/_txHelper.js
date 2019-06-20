@@ -87,8 +87,7 @@ function mineBlock(web3Inst) {
  */
 async function useProxy({ proxy, addr, to, from, mutation }) {
   if (isServer) return
-  const proxyAccountsEnabled =
-    contracts.config.proxyAccountsEnabled || isOriginMobile
+  const { proxyAccountsEnabled } = contracts.config
   const predicted = await predictedProxy(from)
   const targetIsProxy = addr === predicted
 
