@@ -287,15 +287,20 @@ class Purse {
       this.receiptCallbacks[txHash] = onReceipt
     }
 
-    // In case it needs to be rebroadcast
-    await this.addPending(txHash, rawTx)
+    try {
+      // blast it
+      await sendRawTransaction(this.web3, rawTx)
 
-    // blast it
-    await sendRawTransaction(this.web3, rawTx)
+      // In case it needs to be rebroadcast
+      await this.addPending(txHash, rawTx)
 
-    await this.incrementTxCount(address)
+      await this.incrementTxCount(address)
 
-    logger.info(`Sent ${txHash}`)
+      logger.info(`Sent ${txHash}`)
+    } catch (err) {
+      logger.error(`Error sending transaction ${txHash}`)
+      throw err
+    }
 
     return txHash
   }
