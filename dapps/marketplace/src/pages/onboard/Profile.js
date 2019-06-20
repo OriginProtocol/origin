@@ -3,7 +3,7 @@ import { fbt } from 'fbt-runtime'
 
 import Redirect from 'components/Redirect'
 import UserActivation from 'components/DesktopUserActivation'
-import HelpOriginWallet from './_HelpOriginWallet'
+import HelpOriginWallet from 'components/DownloadApp'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
 import { withRouter } from 'react-router-dom'

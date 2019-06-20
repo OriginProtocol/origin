@@ -182,42 +182,18 @@ require('react-styl')(`
       padding: 2rem
       background-color: var(--pale-grey-eight)
 
-    .step
-      font-family: var(--default-font)
-      font-size: 14px
-      color: var(--dusk)
-      font-weight: normal
-      text-transform: uppercase
-      margin-top: 0.75rem
     .step-description
-      font-family: var(--heading-font)
-      font-size: 24px
+      font-size: 18px
       font-weight: 300
       line-height: normal
-
-    .actions
-      margin-top: 2.5rem
-      display: flex
-      justify-content: space-between
-      .btn
-        min-width: 10rem
-        border-radius: 2rem
-        padding: 0.625rem
-        font-size: 18px
+      margin-bottom: 2.5rem
 
   @media (max-width: 767.98px)
     .create-listing
       padding-top: 1rem
-      .actions
-        margin-top: 2rem
-        .btn
-          min-width: auto
-          flex: 1
-          margin: 0 0.5rem
-          &:first-child
-            margin-left: 0
-          &:last-child
-            margin-right: 0
+      .step-description
+        font-size: 16px
         margin-bottom: 2rem
+        text-align: center
 
 `)

@@ -1,7 +1,7 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
 
-const OnboardHelpOriginWallet = () => (
+const DownloadApp = () => (
   <div className="onboard-help origin-wallet">
     <div className="app-image mb-3">
       <img src="images/blue-coins.svg" />
@@ -27,7 +27,7 @@ const OnboardHelpOriginWallet = () => (
   </div>
 )
 
-export default OnboardHelpOriginWallet
+export default DownloadApp
 
 require('react-styl')(`
   .onboard-help.origin-wallet

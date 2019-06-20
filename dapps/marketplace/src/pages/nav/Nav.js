@@ -45,6 +45,8 @@ const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
       title = <fbt desc="Purchases.title">Purchases</fbt>
     } else if (pathname.startsWith('/my-sales')) {
       title = <fbt desc="Sales.title">Sales</fbt>
+    } else if (pathname.startsWith('/create')) {
+      title = <fbt desc="CreateListing.title">Create Listing</fbt>
     }
 
     // Make the hamburger menu absolute and hide branding and profile icon.
