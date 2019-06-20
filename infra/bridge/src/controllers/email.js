@@ -55,8 +55,6 @@ router.post('/verify', emailVerifyCode, async (req, res) => {
     })
   }
 
-  console.log(code)
-
   if (String(code) !== String(req.body.code)) {
     return res.status(400).send({
       errors: ['Verification code is incorrect.']

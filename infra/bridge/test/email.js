@@ -64,8 +64,7 @@ describe('email attestations', () => {
         code: '123456',
         identity: ethAddress
       })
-
-    // .expect(200)
+      .expect(200)
 
     expect(response.body.schemaId).to.equal(
       'https://schema.originprotocol.com/attestation_1.0.0.json'
