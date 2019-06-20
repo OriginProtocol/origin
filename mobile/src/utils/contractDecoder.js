@@ -23,9 +23,11 @@ export function decodeTransaction(data) {
   for (contractName in contractAbi) {
     const functions = contractAbi[contractName]
     functionAbiMatch = functions.find(functionAbi => {
-      const sig = global.web3.eth.abi.encodeFunctionSignature(functionAbi)
-      // First 4 bytes of data is the function signature
-      return data.substr(0, 10) === sig
+      if (functionAbi.type === 'function') {
+        const sig = global.web3.eth.abi.encodeFunctionSignature(functionAbi)
+        // First 4 bytes of data is the function signature
+        return data.substr(0, 10) === sig
+      }
     })
     if (functionAbiMatch) {
       break
