@@ -174,8 +174,9 @@ require('react-styl')(`
           background-color: initial
           padding: 0 0.25rem
           span
-            padding: 0.25rem 0.75rem;
-            border-radius: 1rem;
+            color: var(--dusk)
+            padding: 0.25rem 0.75rem
+            border-radius: 1rem
             &:hover,&.active
               background-color: rgba(0,0,0,0.1)
           &.active span

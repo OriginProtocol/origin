@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import PushNotification from 'react-native-push-notification'
 import { connect } from 'react-redux'
+import get from 'lodash.get'
 
 import { addNotification } from 'actions/Notification'
 import { setDeviceToken, setNetwork } from 'actions/Settings'
@@ -18,7 +19,6 @@ import {
   ETH_NOTIFICATION_TYPES,
   NETWORKS
 } from './constants'
-import { get } from 'utils'
 import NavigationService from './NavigationService'
 import withConfig from 'hoc/withConfig'
 
@@ -131,8 +131,8 @@ class PushNotifications extends Component {
 
     const registerConditions = [
       // Change of active account
-      get(prevProps.wallet.activeAccount, 'address') !==
-        get(this.props.wallet.activeAccount, 'address'),
+      get(prevProps, 'wallet.activeAccount.address') !==
+        get(this.props, 'wallet.activeAccount.address'),
       // Change of device token
       get(prevProps.settings, 'deviceToken') !==
         get(this.props.settings, 'deviceToken'),
@@ -144,6 +144,7 @@ class PushNotifications extends Component {
     // Trigger a register query to notifications server if any of the above
     // conditions are true
     if (registerConditions.includes(true)) {
+      console.debug('Registering with notifications server')
       await this.register()
     }
   }
@@ -207,13 +208,17 @@ class PushNotifications extends Component {
   async register() {
     const activeAddress = get(this.props, 'wallet.activeAccount.address')
     if (!activeAddress) {
-      console.debug('No active address')
+      console.debug(
+        'Could not register with notifications server, no active address'
+      )
       return
     }
 
     const deviceToken = get(this.props, 'settings.deviceToken')
     if (!deviceToken) {
-      console.debug('No device token')
+      console.debug(
+        'Could not register with notifications server, no device token'
+      )
       return
     }
 
