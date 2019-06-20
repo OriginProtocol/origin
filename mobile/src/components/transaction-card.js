@@ -34,9 +34,8 @@ const TransactionCard = props => {
   const daiExchangeRate = props.exchangeRates[`${fiatCurrency[1]}/DAI`].rate
   const balances = wallet.accountBalance
 
-  const boost = 0
-
   let heading,
+    boost,
     payment = 0,
     paymentCurrency,
     daiRequired = 0,
@@ -46,6 +45,7 @@ const TransactionCard = props => {
   switch (functionName) {
     case 'createListing':
       heading = fbt('Create Listing', 'TransactionCard.headingCreate')
+      boost = 0
       break
     case 'makeOffer':
       heading = fbt('Purchase', 'TransactionCard.headingPurchase')
