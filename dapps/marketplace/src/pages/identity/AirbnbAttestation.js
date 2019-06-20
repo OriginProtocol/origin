@@ -86,7 +86,7 @@ class AirbnbAttestation extends Component {
             Enter Airbnb profile URL below
           </fbt>
         </div>
-        <div className="mt-5">
+        <div className="my-5">
           <input
             ref={ref => (this.inputRef = ref)}
             className="form-control form-control-lg"
@@ -284,8 +284,8 @@ class AirbnbAttestation extends Component {
 export default withIsMobile(AirbnbAttestation)
 
 require('react-styl')(`
-  .attestation-modal 
-    > div 
+  .attestation-modal
+    > div
       .verification-code
         display: flex
         flex-direction: row
