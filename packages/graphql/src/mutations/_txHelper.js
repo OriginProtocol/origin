@@ -107,6 +107,9 @@ async function useProxy({ proxy, addr, to, from, mutation }) {
   } else if (mutation === 'swapAndMakeOffer') {
     debug('cannot useProxy: swapAndMakeOffer')
     return
+  } else if (mutation === 'transferTokenMarketplaceExecute') {
+    debug('cannot useProxy: transferTokenMarketplaceExecute')
+    return
   }
 
   if (proxy) {

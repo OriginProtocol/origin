@@ -45,21 +45,14 @@ require('react-styl')(`
       font-family: Poppins
       font-size: 18px
       font-weight: 300
-      font-style: normal
-      font-stretch: normal
       line-height: 1.06
-      letter-spacing: normal
       color: var(--dark)
     .pct
       font-family: Lato
-      font-weight: normal
-      font-style: normal
-      font-stretch: normal
       line-height: 1.36
-      letter-spacing: normal
     .progress
       background-color: var(--pale-grey)
-      border: solid 1px var(--pale-grey-two)
+      box-shadow: inset 0 0 1.5px var(--bluey-grey)
       height: 6px
       .progress-bar
         background-color: var(--greenblue)

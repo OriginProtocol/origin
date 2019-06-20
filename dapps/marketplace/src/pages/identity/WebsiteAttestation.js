@@ -96,8 +96,7 @@ class WebsiteAttestation extends Component {
         )}
         <div className="help">
           <fbt desc="VerifyWebsite.websitePublished">
-            Other users will know that you have a verified website and your user
-            id will be published on the blockchain.
+            Your website URL will be published on the blockchain.
           </fbt>
         </div>
         <div className="actions">

@@ -247,22 +247,24 @@ class UserProfile extends Component {
         </div>
       )
 
-    const providers = this.props.attestationProviders.map(providerName => {
-      const verified = verifiedAttestationsIds.includes(providerName)
-      const reward = verified
-        ? null
-        : getAttestationReward({
-            growthCampaigns: this.props.growthCampaigns,
-            attestation: this.capitalizeString(providerName),
-            tokenDecimals: this.props.tokenDecimals || 18
-          })
+    const providers = this.props.attestationProviders
+      .map(providerName => {
+        const verified = verifiedAttestationsIds.includes(providerName)
+        const reward = verified
+          ? null
+          : getAttestationReward({
+              growthCampaigns: this.props.growthCampaigns,
+              attestation: this.capitalizeString(providerName),
+              tokenDecimals: this.props.tokenDecimals || 18
+            })
 
-      return {
-        id: providerName,
-        verified,
-        reward
-      }
-    })
+        return {
+          id: providerName,
+          verified,
+          reward
+        }
+      })
+      .filter(p => (p.id === 'website' && this.props.isMobile ? false : true))
 
     return (
       <ModalComp

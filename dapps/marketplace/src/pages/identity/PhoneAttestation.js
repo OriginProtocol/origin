@@ -359,7 +359,7 @@ require('react-styl')(`
           border-color: #80bdff
           box-shadow: unset
         &::-webkit-input-placeholder
-          color: var(--dark)
+          color: var(--light)
       .help
         margin-top: 1rem
         font-family: Lato
