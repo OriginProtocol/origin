@@ -18,6 +18,7 @@ const TransactionCard = props => {
   if (contractName === 'IdentityProxyContract' && functionName === 'execute') {
     // Transaction is proxied, extract the original transaction by decoding the
     // _data parameter
+    /* eslint-disable-next-line no-extra-semi */
     ;({ functionName, contractName, parameters } = decodeTransaction(
       parameters._data
     ))
@@ -32,6 +33,8 @@ const TransactionCard = props => {
   const ethExchangeRate = props.exchangeRates[`${fiatCurrency[1]}/ETH`].rate
   const daiExchangeRate = props.exchangeRates[`${fiatCurrency[1]}/DAI`].rate
   const balances = wallet.accountBalance
+
+  const boost = 0
 
   let heading,
     payment = 0,
@@ -97,7 +100,7 @@ const TransactionCard = props => {
 
   const hasSufficientDai = daiRequired <= Number(balances['dai'] || 0)
   const hasSufficientEth = ethRequired <= Number(balances['eth'] || 0)
-  const hasSufficientOgn = ognRequired <= Number(balances['ogn'] || 0)
+  // const hasSufficientOgn = ognRequired <= Number(balances['ogn'] || 0)
 
   return (
     <View style={styles.card}>
