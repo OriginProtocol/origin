@@ -97,13 +97,7 @@ class DeployIdentity extends Component {
 
     const { skipSuccessScreen } = this.props
     const content = skipSuccessScreen ? (
-      <AutoMutate
-        mutation={() => {
-          this.setState({
-            shouldClose: true
-          })
-        }}
-      />
+      <AutoMutate mutation={() => this.setState({ shouldClose: true })} />
     ) : (
       <div className="make-offer-modal">
         <div className="success-icon" />
@@ -112,9 +106,7 @@ class DeployIdentity extends Component {
         </div>
         <button
           className="btn btn-outline-light"
-          onClick={async () => {
-            this.setState({ shouldClose: true })
-          }}
+          onClick={() => this.setState({ shouldClose: true })}
           children={fbt('OK', 'OK')}
         />
       </div>
