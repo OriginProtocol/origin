@@ -49,6 +49,7 @@ class Account {
     this.pendingCount = pendingCount // needed?
     this.wallet = wallet
     this.locked = null
+    this.hasPendingFundingTx = false
   }
 }
 
@@ -584,6 +585,13 @@ class Purse {
       throw new Error('provided value must be a BN.js instance')
     }
 
+    if (this.accounts[address] && this.accounts[address].hasPendingFundingTx) {
+      logger.info(
+        `Child ${address} alread yhas a pending funding transaction. Skipping...`
+      )
+      return
+    }
+
     const fundingValue = value ? value : BASE_FUND_VALUE
     const gasPrice = await this.gasPrice()
     const txCost = fundingValue.add(gasPrice.mul(new BN(21000)))
@@ -628,10 +636,17 @@ class Purse {
     // So we hash it ourself...
     const txHash = this.web3.utils.sha3(rawTx)
 
-    await sendRawTransaction(this.web3, rawTx)
-    await this.incrementTxCount(masterAddress)
+    try {
+      await sendRawTransaction(this.web3, rawTx)
+      await this.addPending(txHash, rawTx)
+      await this.incrementTxCount(masterAddress)
+      this.accounts[address].hasPendingFundingTx = true
 
-    logger.info(`Funded ${address} with ${txHash}`)
+      logger.info(`Funded ${address} with ${txHash}`)
+    } catch (err) {
+      logger.error(`Error sending transaction to fund child ${address}.`)
+      logger.errro(err)
+    }
 
     return txHash
   }
@@ -682,8 +697,15 @@ class Purse {
             const childBalance = numberToBN(
               await this.web3.eth.getBalance(child)
             )
-            if (childBalance.lte(MIN_CHILD_BALANCE)) {
+            // Fund the child if there's already not a tx out
+            if (
+              childBalance.lte(MIN_CHILD_BALANCE) &&
+              !this.accounts[child].hasPendingFundingTx
+            ) {
               await this._fundChild(child)
+            } else if (this.accounts[child].hasPendingFundingTx) {
+              // Reset the flag
+              this.accounts[child].hasPendingFundingTx = false
             }
           }
         }
@@ -751,7 +773,14 @@ class Purse {
         if (!tx) {
           logger.warn(`Transaction ${txHash} was dropped!  Re-broadcasting...`)
 
-          await sendRawTransaction(this.web3, this.pendingTransactions[txHash])
+          try {
+            await sendRawTransaction(
+              this.web3,
+              this.pendingTransactions[txHash]
+            )
+          } catch (err) {
+            logger.error(`error attempting to broadcast transaction ${txHash}`)
+          }
 
           // Increment our internal counter.  No functional use yet, but good for testing.
           if (this.rebroadcastCounters[txHash]) {
