@@ -281,8 +281,14 @@ class Relayer {
           logger.info(`Confirmed tx with hash ${hash}. Paid ${gas} gas`)
         })
       } catch (reason) {
+        let status = enums.RelayerTxnStatuses.Failed
+
+        if (reason.message && reason.message.indexOf('gas prices') > -1) {
+          status = enums.RelayerTxnStatuses.GasLimit
+        }
+
         if (dbTx) {
-          await dbTx.update({ status: enums.RelayerTxnStatuses.Failed })
+          await dbTx.update({ status })
         }
         logger.error('Transaction failure:', reason)
       }

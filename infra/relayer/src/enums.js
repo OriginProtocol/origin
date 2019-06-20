@@ -17,7 +17,8 @@ const RelayerTxnStatuses = new Enum(
   'Declined',
   'Pending',
   'Confirmed',
-  'Failed'
+  'Failed',
+  'GasLimit'
 )
 
 module.exports = { RelayerTxnStatuses }
