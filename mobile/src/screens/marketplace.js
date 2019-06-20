@@ -97,10 +97,6 @@ class MarketplaceScreen extends Component {
     })
   }
 
-  /* Generate the signatures required for activating messaging
-   */
-  generateMessagingKeys = async () => {}
-
   /* Handles messages received from the WebView via window.postMessage.
    */
   onWebViewMessage = event => {
@@ -312,10 +308,9 @@ class MarketplaceScreen extends Component {
     const injectedJavaScript = `
       (function() {
         window.onscroll = function() {
-          window.webviewBridge.send(JSON.stringify({
-            targetFunc: 'handleScrollHandlerResponse',
-            data: document.documentElement.scrollTop || document.body.scrollTop
-          }));
+          window.webViewBridge.send('handleScrollHandlerResponse', {
+            scrollTop: document.documentElement.scrollTop || document.body.scrollTop
+          });
         }
       })();
     `
@@ -327,7 +322,7 @@ class MarketplaceScreen extends Component {
 
   /* Handle the response from window.onScroll
    */
-  handleScrollHandlerResponse = scrollTop => {
+  handleScrollHandlerResponse = ({ scrollTop }) => {
     if (scrollTop < -60) {
       this.dappWebView.injectJavaScript(`document.location.reload()`)
     }
@@ -353,7 +348,7 @@ class MarketplaceScreen extends Component {
       })();
     `
     if (this.dappWebView) {
-      console.debug('Injecting GraphQL query')
+      // console.debug('Injecting GraphQL query: ', query.definitions[0].name.value)
       this.dappWebView.injectJavaScript(injectedJavaScript)
     }
   }
