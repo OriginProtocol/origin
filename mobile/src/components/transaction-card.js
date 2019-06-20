@@ -12,63 +12,63 @@ import { decodeTransaction } from '../utils/contractDecoder'
 
 const TransactionCard = props => {
   const { msgData, fiatCurrency, wallet } = props
-  const { functionName, parameters } = decodeTransaction(msgData.data.data)
-  const { _commission, _currency, _value } = parameters
-  const balances = wallet.accountBalance
+  let { functionName, contractName, parameters } = decodeTransaction(
+    msgData.data.data
+  )
+  if (contractName === 'IdentityProxyContract' && functionName === 'execute') {
+    // Transaction is proxied, extract the original transaction by decoding the
+    // _data parameter
+    ;({ functionName, contractName, parameters } = decodeTransaction(
+      parameters._data
+    ))
+  }
+
+  // Calculate gas in wei
   const gasWei = global.web3.utils
     .toBN(msgData.data.gasPrice)
     .mul(global.web3.utils.toBN(msgData.data.gasLimit))
+  // Convert gas price to ether
   const gas = global.web3.utils.fromWei(gasWei.toString(), 'ether')
-
   const ethExchangeRate = props.exchangeRates[`${fiatCurrency[1]}/ETH`].rate
   const daiExchangeRate = props.exchangeRates[`${fiatCurrency[1]}/DAI`].rate
+  const balances = wallet.accountBalance
 
-  let boost,
-    heading,
-    daiInvolved,
-    ognInvolved,
+  let heading,
     payment = 0,
     paymentCurrency,
     daiRequired = 0,
-    ethRequired = Number(gas)
+    ethRequired = Number(gas),
+    ognRequired = 0
 
   switch (functionName) {
     case 'createListing':
       heading = fbt('Create Listing', 'TransactionCard.headingCreate')
-      // To boost or not to boost, up to 100
-      boost = 0
-      // Boolean coercion
-      ognInvolved = !!boost
       break
     case 'makeOffer':
       heading = fbt('Purchase', 'TransactionCard.headingPurchase')
-      payment = global.web3.utils.fromWei(_value)
+      payment = global.web3.utils.fromWei(parameters._value)
       // TODO: handle this detection better, this will only work while there
       // is a single alternate payment currency
-      if (_currency === '0x0000000000000000000000000000000000000000') {
+      if (
+        parameters._currency === '0x0000000000000000000000000000000000000000'
+      ) {
         paymentCurrency = 'eth'
         ethRequired += Number(payment)
       } else {
         paymentCurrency = 'dai'
         daiRequired += Number(payment)
       }
-      ognInvolved = parseInt(_commission) > 0
-      daiInvolved = paymentCurrency === 'dai'
+      ognRequired = parseInt(parameters._commission)
       break
     case 'swapAndMakeOffer':
       heading = fbt('Purchase', 'TransactionCard.headingPurchase')
-      payment = global.web3.utils.fromWei(_value.toString()) / ethExchangeRate
-      paymentCurrency = 'eth'
-      ethRequired += Number(payment)
-      break
-    case 'execute':
-      heading = fbt('Purchase', 'TransactionCard.headingPurchase')
-      payment = global.web3.utils.fromWei(_value)
+      payment =
+        global.web3.utils.fromWei(parameters._value.toString()) /
+        ethExchangeRate
       paymentCurrency = 'eth'
       ethRequired += Number(payment)
       break
     case 'emitIdentityUpdated':
-      payment = 0
       heading = fbt(
         'Publish Identity',
         'TransactionCard.headingPublishIdentity'
@@ -84,7 +84,7 @@ const TransactionCard = props => {
       heading = fbt('Blockchain Transaction', 'TransactionCard.default')
   }
 
-  const calculableTotal = !ognInvolved
+  const calculableTotal = !ognRequired > 0
   const gasFiatPrice = gas * ethExchangeRate
   const paymentFiatPrice =
     paymentCurrency === 'eth'
@@ -97,6 +97,7 @@ const TransactionCard = props => {
 
   const hasSufficientDai = daiRequired <= Number(balances['dai'] || 0)
   const hasSufficientEth = ethRequired <= Number(balances['eth'] || 0)
+  const hasSufficientOgn = ognRequired <= Number(balances['ogn'] || 0)
 
   return (
     <View style={styles.card}>
@@ -177,7 +178,7 @@ const TransactionCard = props => {
         </View>
         <View style={styles.accountText}>
           <Text style={styles.account}>
-            {daiInvolved || ognInvolved
+            {daiRequired > 0 || ognRequired > 0
               ? fbt('Your Balances', 'TransactionCard.balances')
               : fbt('Your Balance', 'TransactionCard.balance')}
             :{' '}
@@ -185,12 +186,12 @@ const TransactionCard = props => {
           <Text style={styles.account}>
             {Number(balances['eth']).toFixed(5)} ETH{' '}
           </Text>
-          {daiInvolved && (
+          {daiRequired > 0 && (
             <Text style={styles.account}>
               {Number(balances['dai']).toFixed(2)} DAI{' '}
             </Text>
           )}
-          {ognInvolved && (
+          {ognRequired > 0 && (
             <Text style={styles.account}>{balances['ogn']} OGN</Text>
           )}
         </View>

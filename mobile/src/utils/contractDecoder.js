@@ -9,12 +9,12 @@ import { exchangeAbi } from '@origin/graphql/src/contracts/UniswapExchange'
 
 export function decodeTransaction(data) {
   const contractAbi = {
-    'MarketplaceContract': MarketplaceContract.abi,
-    'OriginTokenContract': OriginTokenContract.abi,
-    'IdentityEventsContract': IdentityEventsContract.abi,
-    'IdentityProxyContract': IdentityProxyContract.abi,
-    'ProxyFactoryContract': ProxyFactoryContract.abi,
-    'UniswapExchangeContract': exchangeAbi
+    MarketplaceContract: MarketplaceContract.abi,
+    OriginTokenContract: OriginTokenContract.abi,
+    IdentityEventsContract: IdentityEventsContract.abi,
+    IdentityProxyContract: IdentityProxyContract.abi,
+    ProxyFactoryContract: ProxyFactoryContract.abi,
+    UniswapExchangeContract: exchangeAbi
   }
 
   let functionAbiMatch
