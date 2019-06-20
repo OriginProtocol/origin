@@ -150,3 +150,30 @@ export function getProviderDisplayName(provider) {
   console.error(`Unknown attestation provider: ${provider}`)
   return provider
 }
+
+export function getVerifiedTooltip(provider) {
+  const displayName = getProviderDisplayName(provider)
+  switch (provider) {
+    case 'phone':
+      return fbt('Phone Number Verified', 'profileTools.phoneNumberVerified')
+    case 'airbnb':
+    case 'github':
+    case 'facebook':
+    case 'twitter':
+    case 'google':
+    case 'kakao':
+    case 'linkedin':
+    case 'wechat':
+      return fbt(
+        fbt.param('provider', displayName) + ' Account Verified',
+        'profileTools.providerAccountVerified'
+      )
+    case 'email':
+    case 'website':
+    default:
+      return fbt(
+        fbt.param('provider', displayName) + ' Verified',
+        'profileTools.providerVerified'
+      )
+  }
+}

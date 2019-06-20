@@ -5,22 +5,35 @@ import { fbt } from 'fbt-runtime'
 
 import query from 'queries/Identity'
 import Reviews from 'components/Reviews'
-import Avatar from 'components/Avatar'
 import DocumentTitle from 'components/DocumentTitle'
 import QueryError from 'components/QueryError'
 import LoadingSpinner from 'components/LoadingSpinner'
-import FormattedDescription from 'components/FormattedDescription'
+import UserProfileCard from 'components/UserProfileCard'
+import TabView from 'components/TabView'
+
+import withIsMobile from 'hoc/withIsMobile'
+import { withRouter } from 'react-router-dom'
 
 import UserListings from './_UserListings'
-import { getProviderDisplayName } from 'utils/profileTools'
 
-const User = ({ match }) => {
+const User = ({ match, isMobile, history }) => {
   const id = match.params.id
   const vars = { id: match.params.id }
 
   return (
-    <div className="container user-profile">
-      <Query query={query} variables={vars} skip={!id}>
+    <div className="container user-public-profile">
+      <a
+        className="back-icon"
+        onClick={() => {
+          // TBD: is history.length safe to use?
+          if (history.length <= 1) {
+            history.push('/')
+          } else {
+            history.goBack()
+          }
+        }}
+      />
+      <Query query={query} variables={vars}>
         {({ data, loading, error }) => {
           if (error) {
             return <QueryError error={error} query={query} vars={vars} />
@@ -28,11 +41,13 @@ const User = ({ match }) => {
           if (loading) return <LoadingSpinner />
 
           const profile = get(data, 'web3.account.identity') || {}
-          const verifiedAttestations = profile.verifiedAttestations
 
-          const noVerifications =
-            !verifiedAttestations || verifiedAttestations.length === 0
-
+          const reviewsComp = (
+            <Reviews id={id} hideWhenZero hideHeader={isMobile} />
+          )
+          const listingsComp = (
+            <UserListings user={id} hideHeader={isMobile} hideLoadMore />
+          )
           return (
             <>
               <DocumentTitle
@@ -41,38 +56,36 @@ const User = ({ match }) => {
                 }
               />
               <div className="row">
-                <div className="col-lg-2 col-md-3">
-                  <div className="avatar-wrap">
-                    <Avatar profile={profile} className="main-avatar" />
-                  </div>
-                  {noVerifications ? null : (
-                    <div className="verified-info">
-                      <h5>
-                        <fbt desc="User.verifiedInfo">Verified Info</fbt>
-                      </h5>
-                      {verifiedAttestations.map(attestation => (
-                        <div key={attestation.id}>
-                          <div className={`attestation ${attestation.id}`} />
-                          {getProviderDisplayName(attestation.id)}
-                        </div>
-                      ))}
-                    </div>
+                <div className="col-md-8">
+                  <UserProfileCard
+                    wallet={profile.id}
+                    avatarUrl={profile.avatarUrl}
+                    firstName={profile.firstName}
+                    lastName={profile.lastName}
+                    description={profile.description}
+                    verifiedAttestations={profile.verifiedAttestations}
+                  />
+                  {isMobile ? (
+                    <TabView
+                      tabs={[
+                        {
+                          id: 'reviews',
+                          title: fbt('Reviews', 'Reviews'),
+                          component: reviewsComp
+                        },
+                        {
+                          id: 'listings',
+                          title: fbt('Listings', 'Listings'),
+                          component: listingsComp
+                        }
+                      ]}
+                    />
+                  ) : (
+                    <>
+                      {listingsComp}
+                      {reviewsComp}
+                    </>
                   )}
-                </div>
-                <div className="col-lg-10 col-md-9">
-                  <h1 className="mb-0">
-                    {profile.fullName || fbt('Unnamed User', 'User.unamedUser')}
-                  </h1>
-                  <div className="description">
-                    {profile.description ? (
-                      <FormattedDescription text={profile.description} />
-                    ) : (
-                      fbt('No description', 'User.noDescription')
-                    )}
-                  </div>
-
-                  <UserListings user={id} />
-                  <Reviews id={id} hideWhenZero />
                 </div>
               </div>
             </>
@@ -83,48 +96,37 @@ const User = ({ match }) => {
   )
 }
 
-export default User
+export default withRouter(withIsMobile(User))
 
 require('react-styl')(`
-  .user-profile
-    padding-top: 3rem
-    h1
-      line-height: 1.25
-    .listings-count
-      font-size: 32px
-    .avatar-wrap
-      .main-avatar
-        border-radius: 1rem
-    .description
-      max-width: 50rem
-      margin-bottom: 2rem
-
-    .verified-info
-      background-color: var(--pale-grey)
-      padding: 1rem
-      margin-top: 2rem
-      border-radius: 1rem
-      font-size: 14px
-      h5
-        font-size: 14px
-        margin-bottom: 0.75rem
-      > div
-        display: flex
-        align-items: center
-        margin-bottom: 0.5rem
-        &:last-child
-          margin-bottom: 0
-        .attestation
-          margin-right: 0.5rem
-          width: 1.5rem
-          height: 1.5rem
-    .reviews
-      margin-top: 2rem
+  .user-public-profile
+    position: relative
+    padding-top: 2rem
+    > .row > .col-md-8
+      margin: 0 auto
+      > .user-listings, > .reviews
+        padding: 1.5rem 0
+        border-top: 1px solid #dde6ea
+        margin-top: 0.5rem
+    .back-icon
+      display: none
+      height: 2rem
+      width: 2rem
+      top: 1rem
+      left: 0.5rem
+      position: absolute
+      background-image: url('images/caret-grey.svg')
+      background-size: 1.5rem
+      background-position: center
+      transform: rotateZ(270deg)
+      background-repeat: no-repeat
+      z-index: 10
 
   @media (max-width: 767.98px)
-    .user-profile
-      padding-top: 2rem
-      .avatar-wrap
-        max-width: 8rem
-        margin: 0 auto 1rem auto
+    .user-public-profile
+      padding-top: 0
+      > .row > .col-md-8
+        padding: 0
+      .back-icon
+        display: inline-block
 `)

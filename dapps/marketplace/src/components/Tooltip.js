@@ -50,4 +50,5 @@ require('react-styl')(`
       padding: 0.75rem
     .arrow::before
       border-top-color: var(--dark-grey-blue)
+      opacity: 0.75
 `)

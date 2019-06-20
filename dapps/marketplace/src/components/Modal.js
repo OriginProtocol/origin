@@ -63,7 +63,9 @@ export default class Modal extends Component {
           }`}
         />
         <div
-          className={`${this.props.classNameOuter || ''} pl-modal`}
+          className={`${this.props.classNameOuter || ''} pl-modal${
+            this.props.lightMode ? ' light-theme' : ''
+          }`}
           onMouseDown={e => this.onClose(e)}
         >
           <div className="pl-modal-table">
@@ -270,6 +272,21 @@ require('react-styl')(`
       margin-top: 2rem
       .btn
         margin: 0 0.5rem 1rem 0.5rem
+  
+  .pl-modal.light-theme
+    .pl-modal-table .pl-modal-cell .pl-modal-content
+      background-color: #fff
+      color: #000000
+    .btn-link
+      color: var(--clear-blue)
+      font-family: Lato
+      font-size: 0.9rem
+      font-weight: 900
+      font-style: normal
+      font-stretch: normal
+      line-height: normal
+      letter-spacing: normal
+      text-decoration: none
 
   @media (max-width: 767.98px)
     .pl-modal

@@ -27,6 +27,8 @@ function sendRawTransaction(web3Inst, rawTx) {
       if (hasAsync) {
         web3Inst.currentProvider.sendAsync(
           {
+            id: Number(new Date()),
+            jsonrpc: '2.0',
             method: 'eth_sendRawTransaction',
             params: [rawTx]
           },
@@ -37,6 +39,8 @@ function sendRawTransaction(web3Inst, rawTx) {
       } else {
         web3Inst.currentProvider.send(
           {
+            id: Number(new Date()),
+            jsonrpc: '2.0',
             method: 'eth_sendRawTransaction',
             params: [rawTx]
           },
