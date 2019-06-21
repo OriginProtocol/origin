@@ -7,7 +7,7 @@ module.exports = {
     return queryInterface.sequelize.query(`ALTER TYPE ${ENUM_NAME} ADD VALUE IF NOT EXISTS 'GasLimit';`)
   },
 
-  down: () => {
+  down: async () => {
     // There's no reverse of this
   }
 }
