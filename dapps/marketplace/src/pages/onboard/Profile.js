@@ -1,31 +1,94 @@
 import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 
+import pick from 'lodash/pick'
+
+import withWallet from 'hoc/withWallet'
+import withIdentity from 'hoc/withIdentity'
+import withIsMobile from 'hoc/withIsMobile'
+import MobileModal from 'components/MobileModal'
+import EditProfile from 'pages/user/_EditProfile'
+
+import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
+
 import Redirect from 'components/Redirect'
-import UserActivation from 'components/DesktopUserActivation'
-import HelpOriginWallet from 'components/DownloadApp'
+import HelpOriginWallet from './_HelpOriginWallet'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
-import { withRouter } from 'react-router-dom'
+
+import { getVerifiedAccounts, clearVerifiedAccounts } from 'utils/profileTools'
 
 class OnboardProfile extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      finished: false
+      finished: false,
+      back: false
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.identity) {
+      this.setState({
+        finished: true
+      })
+    } else if (this.props.walletProxy !== prevProps.walletProxy) {
+      const storedAccounts = getVerifiedAccounts({
+        wallet: this.props.walletProxy
+      })
+      if (storedAccounts && storedAccounts.emailAttestation) {
+        this.setState({
+          attestations: [storedAccounts.emailAttestation]
+        })
+      } else {
+        this.setState({
+          back: true
+        })
+      }
     }
   }
 
   render() {
-    const { listing, linkPrefix, hideOriginWallet } = this.props
-    const { finished } = this.state
+    const { linkPrefix } = this.props
+    const { finished, back, signTxModal } = this.state
 
     if (finished) {
-      return <Redirect to={`${linkPrefix}/onboard/finished`} />
+      return <Redirect to={`${linkPrefix}/onboard/rewards`} />
+    } else if (back) {
+      return <Redirect to={`${linkPrefix}/onboard/email`} />
     }
 
-    const nextLink = `${linkPrefix}/onboard/rewards`
+    return (
+      <>
+        {signTxModal && this.renderSignTxModal()}
+        {this.renderContent()}
+      </>
+    )
+  }
+
+  renderContent() {
+    const { isMobile, listing, hideOriginWallet } = this.props
+    const content = (
+      <EditProfile
+        onChange={data => this.onChange(data)}
+        onAvatarChange={data => this.onAvatarChange(data)}
+        onClose={() => this.onCompleted()}
+        onboarding={true}
+      />
+    )
+
+    if (isMobile) {
+      return (
+        <MobileModal
+          title={fbt('Add name & photo', 'onboard.Profile.addNameAndPhoto')}
+          onBack={() => this.onBack()}
+          className="profile-bio"
+        >
+          {content}
+        </MobileModal>
+      )
+    }
 
     return (
       <>
@@ -40,32 +103,8 @@ class OnboardProfile extends Component {
         </p>
         <div className="row">
           <div className="col-md-8">
-            <div
-              className={`onboard-box profile${
-                this.props.rewards ? ' rewards' : ''
-              }`}
-            >
-              {this.props.rewards && (
-                <img
-                  src="images/onboard/ogn-image@3x.png"
-                  className="rewards-signup-header-image"
-                />
-              )}
-              <div className="pt-3">
-                <UserActivation
-                  stage={this.props.rewards ? 'RewardsSignUp' : null}
-                  onStageChanged={newStage => {
-                    if (newStage === 'RewardsSignUp' && !this.props.rewards) {
-                      this.props.history.push(nextLink)
-                    }
-                  }}
-                  onCompleted={() => {
-                    this.setState({
-                      finished: true
-                    })
-                  }}
-                />
-              </div>
+            <div className="onboard-box profile-bio">
+              <div className="pt-3">{content}</div>
             </div>
           </div>
           <div className="col-md-4">
@@ -77,204 +116,86 @@ class OnboardProfile extends Component {
       </>
     )
   }
+
+  renderSignTxModal() {
+    const { walletType } = this.props
+    const { shouldCloseSignTxModal, attestations } = this.state
+
+    return (
+      <MobileModal
+        headerImageUrl="images/onboard/tout-header-image@3x.png"
+        closeOnEsc={false}
+        shouldClose={shouldCloseSignTxModal}
+        className="user-activation sign-tx-modal onboarding text-center"
+        fullscreen={false}
+        onClose={() => this.setState({ signTxModal: false })}
+      >
+        <div className="padded-content">
+          <h2>
+            <fbt desc="UserActivation.signToPublish">Sign to Publish</fbt>
+          </h2>
+          <p>
+            <fbt desc="UserActivation.signToCreateWallet">
+              <fbt:param name="walletType">{walletType}</fbt:param>
+              will now ask you to sign your profile creation data.
+            </fbt>
+          </p>
+          <div className="actions">
+            <DeployIdentity
+              className="btn btn-primary btn-rounded mt-3 mb-3"
+              identity={this.props.wallet}
+              profile={pick(this.state, ['firstName', 'lastName', 'avatarUrl'])}
+              attestations={attestations}
+              children={fbt('Got it', 'Got it')}
+              skipSuccessScreen={true}
+              onComplete={() => {
+                clearVerifiedAccounts()
+                this.setState({ finished: true })
+              }}
+              onClose={() => this.setState({ shouldCloseSignTxModal: true })}
+            />
+          </div>
+        </div>
+      </MobileModal>
+    )
+  }
+
+  onChange(data) {
+    if (data) {
+      this.setState({
+        firstName: data.firstName,
+        lastName: data.lastName
+      })
+    }
+  }
+
+  onAvatarChange(avatarUrl) {
+    this.setState({ avatarUrl })
+  }
+
+  onBack() {
+    clearVerifiedAccounts()
+    this.setState({ back: true })
+  }
+
+  onCompleted() {
+    this.setState({ signTxModal: true })
+  }
 }
 
-export default withRouter(OnboardProfile)
+export default withIsMobile(withWallet(withIdentity(OnboardProfile)))
 
 require('react-styl')(`
-  .onboard .onboard-box.profile
-    padding: 1rem
-    &.rewards
-      padding: 0
-      > img
-        width: 100%
-        height: 250px
-        object-fit: cover
-    > .user-activation
-      max-width: 475px
-    .mask
-      position: relative
-      &::after
-        content: ""
-        position: absolute
-        background: rgba(255,255,255,0.6)
-        top: 0
-        bottom: 0
-        left: 0
-        right: 0
-    .no-funds
-      background-color: rgba(244, 193, 16, 0.1)
-      border: 1px solid var(--golden-rod)
-      border-radius: var(--default-radius)
-      padding: 1.6rem 2rem 2rem 5rem
-      position: relative
-      &::before
-        content: ""
-        background-color: var(--steel)
-        border-radius: 2rem
-        width: 3rem
-        height: 3rem
-        position: absolute
-        left: 1rem
-        top: 1rem
-      h5
-        font-family: var(--heading-font)
-        font-size: 24px
-        font-weight: 200
-
-    > form
-      text-align: left
-      width: 100%
-      .image-cropper
-        max-width: 10rem
-        margin: 0 auto 1rem auto
-      label
-        font-weight: normal
-        color: black
-        font-size: 18px
-      .form-control
-        font-size: 18px
-        background-color: var(--pale-grey-eight)
-        border-color: var(--light)
-        &::-webkit-input-placeholder
-          color: var(--bluey-grey)
-      input.form-control
-        padding-top: 1.5rem
-        padding-bottom: 1.5rem
-      textarea
-        min-height: 3rem
-    .profile-attestations
-      margin-bottom: 2rem
-      display: block
-
-  .profile-attestations
-    display: grid
-    grid-column-gap: 0.5rem
-    grid-row-gap: 0.5rem
-    grid-template-columns: repeat(auto-fill,minmax(220px, 1fr))
-    .indicator
-      position: absolute
-      width: 0.62rem
-      height: 0.62rem
-      border-radius: 0.62rem
-      background-color: var(--golden-rod)
-      right: 0.27rem
-      top: 0.27rem
-    .profile-attestation
-      padding: 0.65rem 1rem
-      border: 1px dashed var(--light)
-      border-radius: var(--default-radius)
-      display: flex
-      position: relative
-      font-size: 18px
-      font-weight: normal
-      color: var(--bluey-grey)
-      background-color: var(--pale-grey-eight)
-      align-items: center
-      overflow: hidden
-      &.interactive
-        cursor: pointer
-        color: black
-        &:hover
-          border-color: var(--clear-blue)
-          border-style: solid
-      > i
-        display: block
-        position: relative
-        background: url(images/identity/verification-shape-grey.svg) no-repeat center
-        width: 2rem
-        height: 2rem
-        background-size: 95%
-        display: flex
-        margin-right: 1rem
-        &::before
-          content: ""
-          flex: 1
-          background-repeat: no-repeat
-          background-position: center
-      &.phone > i::before
-        background-image: url(images/identity/phone-icon-light.svg)
-        background-size: 0.67rem
-      &.email > i::before
-        background-image: url(images/identity/email-icon-light.svg)
-        background-size: 1.05rem
-      &.airbnb > i::before
-        background-image: url(images/identity/airbnb-icon-light.svg)
-        background-size: 1.2rem
-        margin-left: 0.1rem
-      &.facebook > i::before
-        background-image: url(images/identity/facebook-icon-light.svg)
-        background-size: 0.6rem
-      &.twitter > i::before
-        background-image: url(images/identity/twitter-icon-light.svg)
-        background-size: 0.975rem
-      &.google > i::before
-        background-image: url(images/identity/google-icon.svg)
-        background-size: 1.1rem
-        margin-left: 0.1rem
-      &.website > i::before
-        background-image: url(images/identity/website-icon-light.svg)
-        background-size: 1rem
-      &.kakao > i::before
-        background-image: url(images/identity/kakao-icon-large.svg)
-        background-size: 1rem
-      &.github > i::before
-        background-image: url(images/identity/github-icon-large.svg)
-        background-size: 1rem
-      &.linkedin > i::before
-        background-image: url(images/identity/linkedin-icon-large.svg)
-        background-size: 1rem
-      &.wechat > i::before
-        background-image: url(images/identity/wechat-icon-large.svg)
-        background-size: 1rem
-
-      &.published,&.provisional
-        background-color: var(--pale-clear-blue)
-        border-style: solid
-        color: var(--dusk)
-        > i
-          background-image: url(images/identity/verification-shape-blue.svg)
-      &.disabled
-        opacity: 0.5
-      &.soon
-        opacity: 0.5
-        &::after
-          content: "Coming Soon"
-          background: var(--light)
-          position: absolute
-          color: var(--pale-grey-five)
-          font-size: 8px
-          font-weight: 900
-          right: -2.4rem
-          top: -1.1rem
-          text-transform: uppercase
-          transform: rotate(45deg)
-          padding: 2rem 2rem 0.2rem 2rem
-          width: 6rem
-          text-align: center
-          line-height: 8px
-      &.published
-        background-color: var(--pale-greenblue)
-        border-color: var(--greenblue)
-        > i
-          background-image: url(images/identity/verification-shape-green.svg)
-
-  .profile-attestations.with-checkmarks
-    .profile-attestation
-      &.published::after,&.provisional::after
-        content: ""
-        background: var(--greenblue) url(images/checkmark-white.svg) no-repeat center
-        width: 2rem
-        height: 2rem
-        border-radius: 2rem
-        margin-left: auto
-        background-size: 59%
+  .onboard .onboard-box.profile-bio
+    padding: 2rem 1rem
+    .onboarding
+      max-width: 400px
+  .modal-content.profile-bio .onboarding
+    .form-group, input
+      text-align: center
 
   @media (max-width: 767.98px)
-    .onboard .onboard-box.profile
+    .onboard .onboard-box.profile-bio
       > form .image-cropper
         max-width: 6rem
-    .profile-attestations
-      grid-template-columns: repeat(auto-fill,minmax(170px, 1fr))
-
 `)

@@ -110,6 +110,7 @@ async function makeOffer(_, data) {
         }
         debug(`attempting to autoswap ${value} Eth`)
       } else {
+        debug('transferTokenMarketplaceExecute', { value, currencyAddress })
         tx = Proxy.methods.transferTokenMarketplaceExecute(
           owner,
           contracts.marketplace._address,
@@ -117,6 +118,7 @@ async function makeOffer(_, data) {
           currencyAddress,
           value
         )
+        mutation = 'transferTokenMarketplaceExecute'
       }
     }
   }

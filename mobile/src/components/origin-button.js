@@ -12,7 +12,6 @@ import {
 export default class OriginButton extends Component {
   constructor(props) {
     super(props)
-
     this.state = { pressed: false }
   }
 
@@ -39,6 +38,11 @@ export default class OriginButton extends Component {
         backgroundColor = outline ? 'transparent' : '#1a82ff'
         borderColor = '#1a82ff'
         color = outline ? '#1a82ff' : 'white'
+        break
+      case 'white':
+        backgroundColor = 'transparent'
+        borderColor = 'white'
+        color = 'white'
         break
       case 'success':
         backgroundColor = outline ? 'transparent' : '#26d198'

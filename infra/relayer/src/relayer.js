@@ -281,10 +281,20 @@ class Relayer {
           logger.info(`Confirmed tx with hash ${hash}. Paid ${gas} gas`)
         })
       } catch (reason) {
-        if (dbTx) {
-          await dbTx.update({ status: enums.RelayerTxnStatuses.Failed })
+        let status = enums.RelayerTxnStatuses.Failed
+        let errMsg = 'Error sending transaction'
+
+        if (reason.message && reason.message.indexOf('gas prices') > -1) {
+          status = enums.RelayerTxnStatuses.GasLimit
+          errMsg = 'Network is too congested right now.  Try again later.'
         }
+
+        if (dbTx) {
+          await dbTx.update({ status })
+        }
+
         logger.error('Transaction failure:', reason)
+        return res.status(400).send({ errors: [errMsg] })
       }
 
       // Record the transaction hash in the DB.

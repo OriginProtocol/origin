@@ -1,18 +1,16 @@
-import React, { Component } from 'react'
+'use strict'
+
+import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-export default class Separator extends Component {
-  render() {
-    const { padded } = this.props
+const Separator = ({ padded }) => (
+  <View style={styles.container}>
+    {padded && <View style={styles.space} />}
+    <View style={styles.line} />
+  </View>
+)
 
-    return (
-      <View style={styles.container}>
-        {padded && <View style={styles.space} />}
-        <View style={styles.line} />
-      </View>
-    )
-  }
-}
+export default Separator
 
 const styles = StyleSheet.create({
   container: {

@@ -74,6 +74,9 @@ require('react-styl')(`
     &.image-only
       width: 100%
       max-height: 175px
+      padding: 0
+      img
+        width: 100%
     &.with-image
       height: 200px
       background-size: cover

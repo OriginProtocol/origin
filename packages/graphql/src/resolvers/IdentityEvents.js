@@ -6,7 +6,7 @@ import get from 'lodash/get'
 import contracts from '../contracts'
 import { getIdsForPage, getConnection } from './_pagination'
 import validateAttestation from '../utils/validateAttestation'
-import { proxyOwner } from '../utils/proxy'
+import { proxyOwner, hasProxy } from '../utils/proxy'
 
 const websiteAttestationEnabled =
   process.env.ENABLE_WEBSITE_ATTESTATION === 'true'
@@ -164,6 +164,11 @@ export function identity({ id, ipfsHash }) {
       const owner = await proxyOwner(id)
       if (owner) {
         accounts = [id, owner]
+      } else {
+        const proxy = await hasProxy(id)
+        if (proxy) {
+          accounts = [id, proxy]
+        }
       }
 
       const events = await contracts.identityEvents.eventCache.getEvents({

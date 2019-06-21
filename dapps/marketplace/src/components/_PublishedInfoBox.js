@@ -44,6 +44,8 @@ require('react-styl')(`
       margin-bottom: 3px
       & ~ a
         margin-left: 5px
+        color: #007bff
+        cursor: pointer
     &.critical
       border: solid 1px var(--golden-rod)
       background-color: rgba(244, 193, 16, 0.1)
