@@ -455,7 +455,9 @@ class MarketplaceScreen extends Component {
     // Set the language in the DApp to the same as the mobile app
     this.injectLanguage()
     // Inject scroll handler for pull to refresh function
-    // this.injectScrollHandler()
+    if (Platform.OS === 'android') {
+      this.injectScrollHandler()
+    }
     // Preload messaging keys so user doesn't have to enable messaging
     this.injectMessagingKeys()
     // Fetch exchange rates for the default currency
