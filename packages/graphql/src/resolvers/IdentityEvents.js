@@ -171,7 +171,6 @@ export function identity({ id, ipfsHash }) {
           accounts = [id, proxy]
         }
       }
-      console.log("IdentityEvents:identity accounts=", accounts)
 
       const events = await contracts.identityEvents.eventCache.getEvents({
         account: accounts

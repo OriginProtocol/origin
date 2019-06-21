@@ -17,9 +17,9 @@ module.exports = {
             fullName
             owner {
               id
-            }
-            proxy {
-              id
+              proxy {
+                id
+              }
             }
           }
         }
@@ -119,9 +119,9 @@ module.exports = {
             fullName
             owner {
               id
-            }
-            proxy {
-              id
+              proxy {
+                id
+              }
             }
           }
         }
