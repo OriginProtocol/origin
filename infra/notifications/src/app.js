@@ -360,7 +360,6 @@ app.post('/events', async (req, res) => {
   logger.info(`listing:`)
   logger.info(listing)
 
-  /*
   // Email notifications
   transactionEmailSend(
     eventName,
@@ -382,7 +381,6 @@ app.post('/events', async (req, res) => {
     listing,
     config
   )
-  */
 
   // Browser push subscripttions
   // browserPush(eventName, party, buyerAddress, sellerAddress, offer)
