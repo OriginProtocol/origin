@@ -6,7 +6,7 @@ export const ActivationConstants = keyMirror(
   {
     SET_BACKUP_WARNING_STATUS: null
   },
-  'App'
+  'ACTIVATION'
 )
 
 export function setBackupWarningStatus(address) {

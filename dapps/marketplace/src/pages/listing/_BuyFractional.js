@@ -63,7 +63,7 @@ const Fractional = ({
         return (
           <div className="listing-buy fractional">
             <div className="price">
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between align-items-center">
                 <Price listing={listing} descriptor />
                 <OgnBadge
                   amount={growthReward}

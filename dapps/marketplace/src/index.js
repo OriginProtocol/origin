@@ -22,6 +22,7 @@ import setLocale from 'utils/setLocale'
 import App from './pages/App'
 import Analytics from './components/Analytics'
 import './css/app.css'
+
 if (process.env.NODE_ENV === 'production') {
   try {
     require('../public/app.css')

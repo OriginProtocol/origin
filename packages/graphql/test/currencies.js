@@ -14,6 +14,7 @@ describe('Currencies', () => {
       'fiat-CNY',
       'token-ETH',
       'token-DAI',
+      'token-OGN',
       'token-USDC',
       'token-GUSD'
     ])

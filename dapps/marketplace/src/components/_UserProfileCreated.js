@@ -38,5 +38,5 @@ require('react-styl')(`
     flex-direction: column
     text-align: center
     > img
-        margin-top: 2.5rem
+      margin-top: 2.5rem
 `)

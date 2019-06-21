@@ -7,12 +7,6 @@ import typeDefs from './typeDefs/index'
 import resolvers from './resolvers/server'
 import { setNetwork, shutdown } from './contracts'
 
-try {
-  require('envkey')
-} catch (error) {
-  console.warn('EnvKey not configured')
-}
-
 setNetwork(process.env.NETWORK || 'test', {
   performanceMode: false,
   useMetricsProvider: process.env.USE_METRICS_PROVIDER === 'true',

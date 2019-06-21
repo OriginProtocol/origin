@@ -7,38 +7,65 @@ import { withRouter } from 'react-router-dom'
 import withIsMobile from 'hoc/withIsMobile'
 
 import Modal from 'components/Modal'
+import MobileModal from 'components/MobileModal'
 import AutoMutate from 'components/AutoMutate'
+import PublishedInfoBox from 'components/_PublishedInfoBox'
 
 import VerifyOAuthAttestation from 'mutations/VerifyOAuthAttestation'
 import query from 'queries/GetAuthUrl'
 
-function getProviderDisplayName(provider) {
+import { getProviderDisplayName } from 'utils/profileTools'
+
+function InfoStoredOnChain({ provider }) {
+  const providerName = getProviderDisplayName(provider)
+
+  let piiStored = false
+
+  let content = (
+    <fbt desc="OAuthAttestation.verify.explanation">
+      Other users will know that you have a verified{' '}
+      <fbt:param name="provider">{providerName}</fbt:param> account, but your
+      account details will not be published on the blockchain. We will never
+      post on your behalf.
+    </fbt>
+  )
+
   switch (provider) {
-    case 'github':
-      return fbt('GitHub', 'GitHub')
     case 'facebook':
-      return fbt('Facebook', 'Facebook')
+      content = (
+        <fbt desc="OAuthAttestation.facebookOnChain">
+          That you have a verified Facebook account but NOT any information
+          about you or your friends
+        </fbt>
+      )
+      break
+
     case 'twitter':
-      return fbt('Twitter', 'Twitter')
-    case 'google':
-      return fbt('Google', 'Google')
-    case 'kakao':
-      return fbt('Kakao', 'Kakao')
-    case 'linkedin':
-      return fbt('LinkedIn', 'LinkedIn')
-    case 'wechat':
-      return fbt('WeChat', 'WeChat')
+      piiStored = true
+      content = (
+        <fbt desc="OAuthAttestation.twitterOnChain">Your Twitter username</fbt>
+      )
+      break
   }
 
-  console.error(`Unknown attestation provider: ${provider}`)
+  return (
+    <PublishedInfoBox
+      className="mt-auto"
+      pii={piiStored}
+      title={fbt(
+        'What will be visible on the blockchain?',
+        'OAuthAttestation.visibleOnBlockchain'
+      )}
+      children={content}
+    />
+  )
 }
 
 class OAuthAttestation extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      stage: 'GenerateCode',
-      mobile: window.innerWidth < 767
+      stage: 'GenerateCode'
     }
   }
 
@@ -67,8 +94,10 @@ class OAuthAttestation extends Component {
       ? encodeURIComponent(`${origin}${pathname}#/profile/${provider}`)
       : null
 
+    const ModalComp = isMobile ? MobileModal : Modal
+
     return (
-      <Modal
+      <ModalComp
         title={
           <fbt desc="OAuthAttestation.verifyAccount">
             Verify{' '}
@@ -78,19 +107,29 @@ class OAuthAttestation extends Component {
             Account
           </fbt>
         }
-        className={`${provider} attestation-modal${
+        className={`${provider} attestation-modal oauth${
           this.state.stage === 'VerifiedOK' ? ' success' : ''
         }`}
         shouldClose={this.state.shouldClose}
         onClose={() => {
+          const completed = this.state.completed
+
+          if (completed) {
+            this.props.onComplete(this.state.data)
+          }
+
           this.setState({
             shouldClose: false,
             error: false,
-            stage: 'GenerateCode'
+            stage: 'GenerateCode',
+            completed: false,
+            data: null
           })
-          this.props.onClose()
+
+          this.props.onClose(completed)
           this.props.history.replace('/profile')
         }}
+        lightMode={true}
       >
         <Query
           query={query}
@@ -104,44 +143,46 @@ class OAuthAttestation extends Component {
               <div>
                 {this[`render${this.state.stage}`]({
                   authUrl,
-                  redirect: isMobile
+                  redirect
                 })}
               </div>
             )
           }}
         </Query>
-      </Modal>
+      </ModalComp>
     )
   }
 
   renderGenerateCode({ authUrl, redirect }) {
+    const isMobile = this.isMobile()
+
     const providerName = getProviderDisplayName(this.props.provider)
+
+    const header = isMobile ? (
+      <fbt desc="OAuthAttestation.tapToBegin">
+        Tap the button below to begin.
+      </fbt>
+    ) : (
+      <fbt desc="OAuthAttestation.verify">
+        Verify your <fbt:param name="provider">{providerName}</fbt:param>{' '}
+        Account
+      </fbt>
+    )
+
     return (
       <>
-        <h2>
-          <fbt desc="OAuthAttestation.verify">
-            Verify your <fbt:param name="provider">{providerName}</fbt:param>{' '}
-            Account
+        <h2>{header}</h2>
+        <div className="help mt-0 mb-3">
+          <fbt desc="OAuthAttestation.neverPost">
+            We will never post on your behalf.
           </fbt>
-        </h2>
+        </div>
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
-        <div className="help">
-          <fbt desc="OAuthAttestation.verify.explanation">
-            Other users will know that you have a verified{' '}
-            <fbt:param name="provider">{providerName}</fbt:param> account, but
-            your account details will not be published on the blockchain. We
-            will never post on your behalf.
-          </fbt>
-        </div>
-        <div className="actions">
+        <InfoStoredOnChain provider={this.props.provider} />
+        <div className="actions mt-5">
           {this.renderVerifyButton({ authUrl, redirect })}
-          <button
-            className="btn btn-link"
-            onClick={() => this.setState({ shouldClose: true })}
-            children={fbt('Cancel', 'Cancel')}
-          />
         </div>
       </>
     )
@@ -150,22 +191,24 @@ class OAuthAttestation extends Component {
   renderVerifyButton({ authUrl, redirect }) {
     const matchSid = window.location.href.match(/sid=([a-zA-Z0-9_-]+)/i)
     const sid = matchSid && matchSid[1] ? matchSid[1] : null
+    const isMobile = this.isMobile()
 
     return (
       <Mutation
         mutation={VerifyOAuthAttestation}
         onCompleted={res => {
           const result = res.verifyOAuthAttestation
-          if (result.success) {
-            this.setState({
-              stage: 'VerifiedOK',
-              data: result.data,
-              loading: false
-            })
-            this.props.history.replace('/profile')
-          } else {
-            this.setState({ error: result.reason, loading: false })
+          if (!result.success) {
+            this.setState({ error: result.reason, loading: false, data: null })
+            return
           }
+
+          this.setState({
+            data: result.data,
+            loading: false,
+            completed: true,
+            shouldClose: true
+          })
         }}
         onError={errorData => {
           console.error('Error', errorData)
@@ -189,10 +232,10 @@ class OAuthAttestation extends Component {
           return (
             <>
               {sid && this.props.wallet ? (
-                <AutoMutate mutatation={runMutation} />
+                <AutoMutate mutation={runMutation} />
               ) : null}
               <button
-                className="btn btn-outline-light"
+                className="btn btn-primary"
                 onClick={runMutation}
                 children={
                   this.state.loading
@@ -200,48 +243,24 @@ class OAuthAttestation extends Component {
                     : fbt('Continue', 'Continue')
                 }
               />
+              {isMobile ? null : (
+                <button
+                  className="btn btn-link"
+                  onClick={() => this.setState({ shouldClose: true })}
+                  children={fbt('Cancel', 'VerifyWebsite.cancel')}
+                />
+              )}
             </>
           )
         }}
       </Mutation>
     )
   }
-
-  renderVerifiedOK() {
-    const providerName = getProviderDisplayName(this.props.provider)
-
-    return (
-      <>
-        <h2>
-          <fbt desc="OAuthAttestation.verified">
-            <fbt:param name="provider">{providerName}</fbt:param> account
-            verified!
-          </fbt>
-        </h2>
-        <div className="instructions">
-          <fbt desc="Attestation.DontForget">
-            Don&apos;t forget to publish your changes.
-          </fbt>
-        </div>
-        <div className="help">
-          <fbt desc="Attestation.publishingBlockchain">
-            Publishing to the blockchain lets other users know that you have a
-            verified profile.
-          </fbt>
-        </div>
-        <div className="actions">
-          <button
-            className="btn btn-outline-light"
-            onClick={() => {
-              this.props.onComplete(this.state.data)
-              this.setState({ shouldClose: true })
-            }}
-            children={fbt('Continue', 'Continue')}
-          />
-        </div>
-      </>
-    )
-  }
 }
 
 export default withIsMobile(withRouter(OAuthAttestation))
+
+require('react-styl')(`
+  .mobile-modal-light .attestation-modal.oauth:not(.success) h2
+    padding-top: 9rem
+`)

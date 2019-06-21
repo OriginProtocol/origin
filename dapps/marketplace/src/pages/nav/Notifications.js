@@ -180,7 +180,7 @@ require('react-styl')(`
     .notifications-icon
       width: 2.2rem
       height: 1.6rem
-      background: url(images/alerts-icon.svg) no-repeat center
+      background: url(images/alerts-icon-selected.svg) no-repeat center
       background-size: contain
       position:relative
       &.active
@@ -190,7 +190,7 @@ require('react-styl')(`
           height: 14px
           background: var(--greenblue)
           border-radius: 10px
-          border: 2px solid var(--dusk)
+          border: 2px solid var(--white)
           position: absolute
           top: 0
           right: 2px

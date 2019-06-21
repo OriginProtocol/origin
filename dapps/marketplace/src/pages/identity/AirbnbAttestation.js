@@ -2,10 +2,15 @@ import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
+import withIsMobile from 'hoc/withIsMobile'
+
 import Modal from 'components/Modal'
+import MobileModal from 'components/MobileModal'
 
 import GenerateAirbnbCodeMutation from 'mutations/GenerateAirbnbCode'
 import VerifyAirbnbCodeMutation from 'mutations/VerifyAirbnbCode'
+
+import PublishedInfoBox from 'components/_PublishedInfoBox'
 
 class AirbnbAttestation extends Component {
   state = {
@@ -22,45 +27,66 @@ class AirbnbAttestation extends Component {
     }
   }
 
+  isMobile() {
+    return this.props.ismobile === 'true'
+  }
+
   render() {
     if (!this.props.open) {
       return null
     }
 
+    const ModalComponent = this.isMobile() ? MobileModal : Modal
+
     return (
-      <Modal
+      <ModalComponent
+        title={fbt('Verify Airbnb Account', 'VerifyAirbnb.verifyAirbnbAccount')}
         className={`attestation-modal airbnb${
           this.state.stage === 'VerifiedOK' ? ' success' : ''
         }`}
         shouldClose={this.state.shouldClose}
         onClose={() => {
+          const completed = this.state.completed
+
+          if (completed) {
+            this.props.onComplete(this.state.data)
+          }
+
           this.setState({
             shouldClose: false,
             error: false,
-            stage: 'GenerateCode'
+            stage: 'GenerateCode',
+            completed: false,
+            data: null
           })
-          this.props.onClose()
+
+          this.props.onClose(completed)
         }}
+        lightMode={true}
       >
         <div>{this[`render${this.state.stage}`]()}</div>
-      </Modal>
+      </ModalComponent>
     )
   }
 
   renderGenerateCode() {
+    const isMobile = this.isMobile()
+
+    const header = isMobile ? null : (
+      <fbt desc="VerifyAirbnb.averifyAirbnbAccount">
+        Verify your Airbnb account
+      </fbt>
+    )
+
     return (
       <>
-        <h2>
-          <fbt desc="VerifyAirbnb.averifyAirbnbAccount">
-            Verify your Airbnb account
-          </fbt>
-        </h2>
+        <h2>{header}</h2>
         <div className="instructions">
           <fbt desc="VerifyAirbnb.enterAirbnbProfileUrl">
             Enter Airbnb profile URL below
           </fbt>
         </div>
-        <div className="mt-3">
+        <div className="my-5">
           <input
             ref={ref => (this.inputRef = ref)}
             className="form-control form-control-lg"
@@ -72,32 +98,44 @@ class AirbnbAttestation extends Component {
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
-        <div className="help">
-          <fbt desc="VerifyAirbnb.airbnbProfilePublished">
-            Other users will know that you have a verified Airbnb profile and
-            your user id will be published on the blockchain.
-          </fbt>
-        </div>
-        <div className="actions">
+        <PublishedInfoBox
+          className="mt-auto"
+          pii={true}
+          title={fbt(
+            'What will be visible on the blockchain?',
+            'VerifyAirbnb.visibleOnBlockchain'
+          )}
+          children={
+            <fbt desc="VerifyAirbnb.yourAirbnbId">Your Airbnb user ID</fbt>
+          }
+        />
+        <div className="actions mt-5">
           {this.renderCodeButton()}
-          <button
-            className="btn btn-link"
-            onClick={() => this.setState({ shouldClose: true })}
-            children={fbt('Cancel', 'VerifyAirbnb.cancel')}
-          />
+          {!isMobile && (
+            <button
+              className="btn btn-link"
+              type="button"
+              onClick={() => this.setState({ shouldClose: true })}
+              children={fbt('Cancel', 'Cancel')}
+            />
+          )}
         </div>
       </>
     )
   }
 
   renderVerifyCode() {
+    const isMobile = this.isMobile()
+
+    const header = isMobile ? null : (
+      <fbt desc="VerifyAirbnb.averifyAirbnbAccount">
+        Verify your Airbnb account
+      </fbt>
+    )
+
     return (
       <>
-        <h2>
-          <fbt desc="VerifyAirbnb.averifyAirbnbAccount">
-            Verify your Airbnb account
-          </fbt>
-        </h2>
+        <h2>{header}</h2>
         <div className="instructions">
           <fbt desc="VerifyAirbnb.enterCodeIntoAirbnb">
             Go to the Airbnb website, edit your profile and paste the following
@@ -105,17 +143,27 @@ class AirbnbAttestation extends Component {
           </fbt>
         </div>
         <div className="my-3 verification-code">
-          <textarea
+          <input
             ref={ref => (this.inputRef = ref)}
             className="form-control form-control-lg airbnb-verification-code"
+            value={this.state.code}
             readOnly
+            type="text"
+          />
+          <button
+            type="button"
+            className="btn copy-btn"
+            onClick={() => {
+              this.inputRef.select()
+              document.execCommand('copy')
+            }}
           >
-            {this.state.code}
-          </textarea>
-          {this.state.error && (
-            <div className="alert alert-danger mt-3">{this.state.error}</div>
-          )}
+            <fbt desc="VerifyAirbnb.copy">Copy</fbt>
+          </button>
         </div>
+        {this.state.error && (
+          <div className="alert alert-danger mt-3">{this.state.error}</div>
+        )}
         <div className="help">
           <fbt desc="VerifyAirbnb.continueToConfirmationCodeCheck">
             Continue once the confirmation code is entered in your Airbnb
@@ -124,11 +172,14 @@ class AirbnbAttestation extends Component {
         </div>
         <div className="actions">
           {this.renderVerifyButton()}
-          <button
-            className="btn btn-link"
-            onClick={() => this.setState({ shouldClose: true })}
-            children={fbt('Cancel', 'VerifyAirbnb.cancel')}
-          />
+          {!isMobile && (
+            <button
+              className="btn btn-link"
+              type="button"
+              onClick={() => this.setState({ shouldClose: true })}
+              children={fbt('Cancel', 'Cancel')}
+            />
+          )}
         </div>
       </>
     )
@@ -140,15 +191,17 @@ class AirbnbAttestation extends Component {
         mutation={GenerateAirbnbCodeMutation}
         onCompleted={res => {
           const result = res.generateAirbnbCode
-          if (result.success) {
-            this.setState({
-              stage: 'VerifyCode',
-              code: result.code,
-              loading: false
-            })
-          } else {
-            this.setState({ error: result.reason, loading: false })
+
+          if (!result.success) {
+            this.setState({ error: result.reason, loading: false, data: null })
+            return
           }
+
+          this.setState({
+            code: result.code,
+            loading: false,
+            stage: 'VerifyCode'
+          })
         }}
         onError={errorData => {
           console.error('Error', errorData)
@@ -157,7 +210,8 @@ class AirbnbAttestation extends Component {
       >
         {generateCode => (
           <button
-            className="btn btn-outline-light"
+            className="btn btn-primary"
+            disabled={this.state.loading}
             onClick={() => {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
@@ -187,9 +241,10 @@ class AirbnbAttestation extends Component {
           const result = res.verifyAirbnbCode
           if (result.success) {
             this.setState({
-              stage: 'VerifiedOK',
               data: result.data,
-              loading: false
+              loading: false,
+              completed: true,
+              shouldClose: true
             })
           } else {
             this.setState({ error: result.reason, loading: false })
@@ -202,7 +257,8 @@ class AirbnbAttestation extends Component {
       >
         {verifyCode => (
           <button
-            className="btn btn-outline-light"
+            className="btn btn-primary"
+            disabled={this.state.loading}
             onClick={() => {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
@@ -223,44 +279,33 @@ class AirbnbAttestation extends Component {
       </Mutation>
     )
   }
-
-  renderVerifiedOK() {
-    return (
-      <>
-        <h2>
-          <fbt desc="AirbnbAttestation.verified">Airbnb account verified!</fbt>
-        </h2>
-        <div className="instructions">
-          <fbt desc="Attestation.DontForget">
-            Don&apos;t forget to publish your changes.
-          </fbt>
-        </div>
-        <div className="help">
-          <fbt desc="Attestation.publishingBlockchain">
-            Publishing to the blockchain lets other users know that you have a
-            verified profile.
-          </fbt>
-        </div>
-        <div className="actions">
-          <button
-            className="btn btn-outline-light"
-            onClick={() => {
-              this.props.onComplete(this.state.data)
-              this.setState({ shouldClose: true })
-            }}
-            children={fbt('Continue', 'Continue')}
-          />
-        </div>
-      </>
-    )
-  }
 }
 
-export default AirbnbAttestation
+export default withIsMobile(AirbnbAttestation)
 
 require('react-styl')(`
-  .attestation-modal > div .verification-code .form-control.airbnb-verification-code
-    height: 6rem
-    max-width: 24rem
-    resize: none
+  .attestation-modal
+    > div
+      .verification-code
+        display: flex
+        flex-direction: row
+        max-width: 24rem
+        margin: 0 auto
+        border: 0
+        border-bottom: solid 1px #c2cbd3
+        border-radius: 0
+        &:focus
+          border-color: #80bdff
+          box-shadow: unset
+        .form-control.airbnb-verification-code
+          flex: auto
+          text-align: left
+          border: 0
+        .btn.copy-btn
+          flex: auto 0 0
+          width: auto
+          border: 0
+          border-radius: 0
+          border-left: 1px solid #c2cbd3
+          cursor: pointer
 `)

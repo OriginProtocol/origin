@@ -9,9 +9,13 @@ import costs from '../_gasCost.js'
 
 async function deployIdentity(
   _,
-  { from = contracts.defaultMobileAccount, profile = {}, attestations = [] }
+  { from = contracts.defaultMobileAccount, profile, attestations }
 ) {
   await checkMetaMask(from)
+
+  attestations = attestations || []
+  profile = profile || {}
+  profile.avatarUrl = profile.avatarUrl || undefined
 
   let wallet = await hasProxy(from)
   if (!wallet) wallet = from

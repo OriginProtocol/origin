@@ -37,7 +37,7 @@ spec:
             value: "http://127.0.0.1:8080"
       - name: {{ template "ipfs.fullname" . }}
         image: "{{ .Values.ipfsImage }}:{{ .Values.ipfsImageTag }}"
-        command: ["/usr/local/bin/start_ipfs"]
+        command: ["/usr/local/bin/start_ipfs", "daemon"]
         ports:
         - containerPort: 5001
           name: api

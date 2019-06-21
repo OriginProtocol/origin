@@ -40,6 +40,7 @@ export default {
   ],
 
   // Accounts
+  attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
   affiliate: addresses.Affiliate,
   arbitrator: addresses.Arbitrator,
   messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',

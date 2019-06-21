@@ -1,26 +1,21 @@
 'use strict'
 
 import React, { Component } from 'react'
-import {
-  DeviceEventEmitter,
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
+import withOnboardingSteps from 'hoc/withOnboardingSteps'
+import OnboardingStyles from 'styles/onboarding'
+import { createAccount } from 'actions/Wallet'
 
 const IMAGES_PATH = '../../../assets/images/'
 
 class WelcomeScreen extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
       loading: false
     }
@@ -66,8 +61,10 @@ class WelcomeScreen extends Component {
                 onPress={() => {
                   this.setState({ loading: true }, () => {
                     setTimeout(() => {
-                      DeviceEventEmitter.emit('createAccount')
-                      this.props.navigation.navigate('Authentication')
+                      this.props.createAccount()
+                      this.props.navigation.navigate(
+                        this.props.nextOnboardingStep
+                      )
                     })
                   })
                 }}
@@ -94,9 +91,9 @@ class WelcomeScreen extends Component {
               type="primary"
               style={styles.button}
               textStyle={{ fontSize: 18, fontWeight: '900' }}
-              title={fbt('Next', 'WelcomeScreen.nextButton')}
+              title={fbt('Continue', 'WelcomeScreen.continueButton')}
               onPress={() => {
-                this.props.navigation.navigate('Authentication')
+                this.props.navigation.navigate(this.props.nextOnboardingStep)
               }}
             />
           )}
@@ -117,43 +114,20 @@ const mapStateToProps = ({ wallet }) => {
   return { wallet }
 }
 
-export default connect(mapStateToProps)(WelcomeScreen)
+const mapDispatchToProps = dispatch => ({
+  createAccount: () => dispatch(createAccount())
+})
+
+export default withOnboardingSteps(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(WelcomeScreen)
+)
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex: 1,
-    paddingTop: 0
-  },
-  content: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1
-  },
-  buttonsContainer: {
-    width: '100%'
-  },
-  button: {
-    marginBottom: 20,
-    marginHorizontal: 50
-  },
-  legalContainer: {
-    paddingBottom: 30,
-    width: '80%'
-  },
-  legal: {
-    textAlign: 'center',
-    color: '#98a7b4'
-  },
+  ...OnboardingStyles,
   image: {
-    marginBottom: '10%'
-  },
-  title: {
-    fontFamily: 'Lato',
-    fontSize: 30,
-    fontWeight: '600',
-    marginHorizontal: 50,
-    paddingBottom: 30,
-    textAlign: 'center'
+    marginBottom: 30
   }
 })

@@ -127,9 +127,11 @@ class MobileUserActivation extends Component {
   }
 
   onClose() {
-    this.setState({
-      modal: false
-    })
+    if (this.state.modal) {
+      this.setState({
+        modal: false
+      })
+    }
 
     if (this.props.onClose) {
       this.props.onClose()

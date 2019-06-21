@@ -116,7 +116,7 @@ class GrowthWelcome extends Component {
           } d-flex flex-column top-padding`}
         >
           <Link to="/" className="mr-auto">
-            <img className="logo" src="/images/origin-logo.svg" />
+            <img className="logo" src="images/origin-logo.svg" />
           </Link>
           {personalised && (
             <Fragment>

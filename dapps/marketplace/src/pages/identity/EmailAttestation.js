@@ -2,7 +2,11 @@ import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
+import withIsMobile from 'hoc/withIsMobile'
+
 import Modal from 'components/Modal'
+import MobileModal from 'components/MobileModal'
+import PublishedInfoBox from 'components/_PublishedInfoBox'
 
 import GenerateEmailCodeMutation from 'mutations/GenerateEmailCode'
 import VerifyEmailCodeMutation from 'mutations/VerifyEmailCode'
@@ -22,32 +26,58 @@ class EmailAttestation extends Component {
     }
   }
 
+  isMobile() {
+    return this.props.ismobile === 'true'
+  }
+
   render() {
     if (!this.props.open) {
       return null
     }
 
+    const ModalComponent = this.isMobile() ? MobileModal : Modal
+
     return (
-      <Modal
+      <ModalComponent
+        title={fbt(
+          'Verify Email Address',
+          'EmailAttestation.verifyEmailAddress'
+        )}
         className={`attestation-modal email${
           this.state.stage === 'VerifiedOK' ? ' success' : ''
         }`}
         shouldClose={this.state.shouldClose}
         onClose={() => {
+          const completed = this.state.completed
+
+          if (completed) {
+            this.props.onComplete(this.state.data)
+          }
+
           this.setState({
             shouldClose: false,
             error: false,
-            stage: 'GenerateCode'
+            stage: 'GenerateCode',
+            completed: false,
+            data: null
           })
-          this.props.onClose()
+
+          this.props.onClose(completed)
         }}
+        lightMode={true}
       >
         <div>{this[`render${this.state.stage}`]()}</div>
-      </Modal>
+      </ModalComponent>
     )
   }
 
   renderGenerateCode() {
+    const isMobile = this.isMobile()
+
+    const header = isMobile ? null : (
+      <fbt desc="EmailAttestation.title">Verify your Email Address</fbt>
+    )
+
     return (
       <Mutation
         mutation={GenerateEmailCodeMutation}
@@ -85,10 +115,10 @@ class EmailAttestation extends Component {
               })
             }}
           >
-            <h2>Verify your Email Address</h2>
+            <h2>{header}</h2>
             <div className="instructions">
               <fbt desc="Attestation.instructions">
-                Enter your email address below and OriginID will send you a
+                Enter your email address below and Origin will send you a
                 verification code
               </fbt>
             </div>
@@ -108,28 +138,42 @@ class EmailAttestation extends Component {
             {this.state.error && (
               <div className="alert alert-danger mt-3">{this.state.error}</div>
             )}
-            <div className="help">
+            <div className="help mb-3">
               <fbt desc="Attestation.emailPublishClarification">
                 By verifying your email, you give Origin permission to send you
                 occasional emails such as notifications about your transactions.
               </fbt>
             </div>
+            <PublishedInfoBox
+              className="mt-auto"
+              title={fbt(
+                'What will be visible on the blockchain?',
+                'EmailAttestation.visibleOnBlockchain'
+              )}
+              children={fbt(
+                'That you have a verified Email address but NOT your actual email address',
+                'EmailAttestation.storedOnChain'
+              )}
+            />
             <div className="actions">
               <button
-                className="btn btn-outline-light"
                 type="submit"
+                className="btn btn-primary"
+                disabled={this.state.loading}
                 children={
                   this.state.loading
                     ? fbt('Loading...', 'Loading...')
                     : fbt('Continue', 'Continue')
                 }
               />
-              <button
-                className="btn btn-link"
-                type="button"
-                onClick={() => this.setState({ shouldClose: true })}
-                children={fbt('Cancel', 'Cancel')}
-              />
+              {!isMobile && (
+                <button
+                  className="btn btn-link"
+                  type="button"
+                  onClick={() => this.setState({ shouldClose: true })}
+                  children={fbt('Cancel', 'Cancel')}
+                />
+              )}
             </div>
           </form>
         )}
@@ -138,21 +182,26 @@ class EmailAttestation extends Component {
   }
 
   renderVerifyCode() {
+    const isMobile = this.isMobile()
+
     const { email, code } = this.state
     return (
       <Mutation
         mutation={VerifyEmailCodeMutation}
         onCompleted={res => {
           const result = res.verifyEmailCode
-          if (result.success) {
-            this.setState({
-              stage: 'VerifiedOK',
-              data: result.data,
-              loading: false
-            })
-          } else {
-            this.setState({ error: result.reason, loading: false })
+
+          if (!result.success) {
+            this.setState({ error: result.reason, loading: false, data: null })
+            return
           }
+
+          this.setState({
+            data: result.data,
+            loading: false,
+            completed: true,
+            shouldClose: true
+          })
         }}
         onError={errorData => {
           console.error('Error', errorData)
@@ -207,67 +256,49 @@ class EmailAttestation extends Component {
                 value={this.state.code}
                 onChange={e => this.setState({ code: e.target.value })}
               />
-              {this.state.error && (
-                <div className="alert alert-danger mt-3">
-                  {this.state.error}
-                </div>
-              )}
             </div>
+            {this.state.error && (
+              <div className="alert alert-danger my-3">{this.state.error}</div>
+            )}
+            <PublishedInfoBox
+              className="mt-auto"
+              title={fbt(
+                'What will be visible on the blockchain?',
+                'EmailAttestation.visibleOnBlockchain'
+              )}
+              children={fbt(
+                'That you have a verified Email address but NOT your actual email address',
+                'EmailAttestation.storedOnChain'
+              )}
+            />
             <div className="actions">
               <button
                 type="submit"
-                className="btn btn-outline-light"
+                className="btn btn-primary"
+                disabled={this.state.loading}
                 children={
                   this.state.loading
                     ? fbt('Loading...', 'Loading...')
                     : fbt('Continue', 'Continue')
                 }
               />
-              <button
-                className="btn btn-link"
-                onClick={() => this.setState({ shouldClose: true })}
-                children={fbt('Cancel', 'Cancel')}
-              />
+              {!isMobile && (
+                <button
+                  className="btn btn-link"
+                  type="button"
+                  onClick={() => this.setState({ shouldClose: true })}
+                  children={fbt('Cancel', 'Cancel')}
+                />
+              )}
             </div>
           </form>
         )}
       </Mutation>
     )
   }
-
-  renderVerifiedOK() {
-    return (
-      <>
-        <h2>
-          <fbt desc="EmailAttestation.verified">Email address verified!</fbt>
-        </h2>
-        <div className="instructions">
-          <fbt desc="Attestation.DontForget">
-            Don&apos;t forget to publish your changes.
-          </fbt>
-        </div>
-        <div className="help">
-          <fbt desc="Attestation.publishingBlockchain">
-            Publishing to the blockchain lets other users know that you have a
-            verified profile.
-          </fbt>
-        </div>
-        <div className="actions">
-          <button
-            className="btn btn-outline-light"
-            onClick={() => {
-              this.props.onComplete(this.state.data)
-              this.setState({ shouldClose: true })
-            }}
-            children={fbt('Continue', 'Continue')}
-          />
-        </div>
-      </>
-    )
-  }
 }
 
-export default EmailAttestation
+export default withIsMobile(EmailAttestation)
 
 require('react-styl')(`
 `)
