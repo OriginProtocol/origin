@@ -407,9 +407,9 @@ require('react-styl')(`
     &.kakao > div h2
       background-image: url(images/growth/kakao-icon.svg)
     &.github > div h2
-      background-image: url(images/growth/profile-icon.svg)
+      background-image: url(images/growth/github-icon.svg)
     &.linkedin > div h2
-      background-image: url(images/growth/profile-icon.svg)
+      background-image: url(images/growth/linkedin-icon.svg)
     &.wechat > div h2
       background-image: url(images/growth/wechat-icon.svg)
 

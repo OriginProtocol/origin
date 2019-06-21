@@ -109,7 +109,7 @@ class AirbnbAttestation extends Component {
             <fbt desc="VerifyAirbnb.yourAirbnbId">Your Airbnb user ID</fbt>
           }
         />
-        <div className={`actions mt-5`}>
+        <div className="actions mt-5">
           {this.renderCodeButton()}
           {!isMobile && (
             <button
@@ -190,7 +190,7 @@ class AirbnbAttestation extends Component {
       <Mutation
         mutation={GenerateAirbnbCodeMutation}
         onCompleted={res => {
-          const result = res.GenerateAirbnbCodeMutation
+          const result = res.generateAirbnbCode
 
           if (!result.success) {
             this.setState({ error: result.reason, loading: false, data: null })
@@ -198,10 +198,9 @@ class AirbnbAttestation extends Component {
           }
 
           this.setState({
-            data: result.data,
+            code: result.code,
             loading: false,
-            completed: true,
-            shouldClose: true
+            stage: 'VerifyCode'
           })
         }}
         onError={errorData => {
@@ -242,9 +241,10 @@ class AirbnbAttestation extends Component {
           const result = res.verifyAirbnbCode
           if (result.success) {
             this.setState({
-              stage: 'VerifiedOK',
               data: result.data,
-              loading: false
+              loading: false,
+              completed: true,
+              shouldClose: true
             })
           } else {
             this.setState({ error: result.reason, loading: false })

@@ -113,9 +113,9 @@ require('react-styl')(`
       &.kakao
         background-image: url('images/growth/kakao-icon.svg')
       &.github
-        background-image: url('images/growth/profile-icon.svg')
+        background-image: url('images/growth/github-icon.svg')
       &.linkedin
-        background-image: url('images/growth/profile-icon.svg')
+        background-image: url('images/growth/linkedin-icon.svg')
 
       .badge-label
         position: absolute
