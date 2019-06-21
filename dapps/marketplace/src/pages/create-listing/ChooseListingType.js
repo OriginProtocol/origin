@@ -1,204 +1,51 @@
-import React, { Component } from 'react'
-import Categories from '@origin/graphql/src/constants/Categories'
-import pick from 'lodash/pick'
+import React, { useState } from 'react'
+import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import Redirect from 'components/Redirect'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 
-const CategoriesEnum = require('Categories$FbtEnum') // Localized category names
+import ChooseCategory from './_ChooseCategory'
 
-// import { formInput, formFeedback } from 'utils/formHelpers'
+const ChooseListingType = props => {
+  const isForceType = get(props, 'creatorConfig.forceType', false)
+  const [valid] = useState(false)
 
-class ChooseListingType extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { ...props.listing, fields: Object.keys(props.listing) }
+  if (valid || isForceType) {
+    return <Redirect to={props.next} push />
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.category !== this.state.category && this.catRef) {
-      this.catRef.focus()
-    }
-  }
+  const isEdit = props.listing.id ? true : false
+  return (
+    <>
+      <h1 className="d-none d-md-block">
+        {isEdit ? (
+          <fbt desc="chooselistingtype.letsupdate">
+            Let’s update your listing
+          </fbt>
+        ) : (
+          <fbt desc="chooseListingType.createListing">Create a Listing</fbt>
+        )}
+      </h1>
+      <div className="step-description">
+        {isEdit
+          ? fbt(`Update listing type`, `CreateListing.updateListingType`)
+          : fbt(
+              `What type of listing do you want to create?`,
+              `CreateListing.typeOfListing`
+            )}
+      </div>
 
-  render() {
-    const isForceType =
-      this.props.creatorConfig && this.props.creatorConfig.forceType
-    if (this.state.valid || isForceType) {
-      return <Redirect to={this.props.next} push />
-    }
-
-    const isEdit = this.props.listing.id ? true : false
-    // const input = formInput(this.state, state => this.setState(state))
-    // const Feedback = formFeedback(this.state)
-
-    // const Category = categoryId => {
-    //   const active = this.state.category === categoryId
-    //   const cls = categoryId.split('.')[1]
-    //   return (
-    //     <div
-    //       key={categoryId}
-    //       className={`category ${cls} ${active ? 'active' : 'inactive'}`}
-    //       onClick={() => {
-    //         if (active) return
-    //         this.setState({ category: categoryId, subCategory: '' })
-    //       }}
-    //     >
-    //       <div className="title">
-    //         <fbt desc="category">
-    //           <fbt:enum enum-range={CategoriesEnum} value={categoryId} />
-    //         </fbt>
-    //       </div>
-    //       {!active ? null : (
-    //         <div className="sub-cat">
-    //           <select {...input('subCategory')} ref={r => (this.catRef = r)}>
-    //             <option value="">
-    //               <fbt desc="select">Select</fbt>
-    //             </option>
-    //             {Categories[categoryId].map(([subcategoryId]) => (
-    //               <option key={subcategoryId} value={subcategoryId}>
-    //                 <fbt desc="category">
-    //                   {/* Localized subcategory name */}
-    //                   <fbt:enum
-    //                     enum-range={CategoriesEnum}
-    //                     value={subcategoryId}
-    //                   />
-    //                 </fbt>
-    //               </option>
-    //             ))}
-    //           </select>
-    //           {Feedback('subCategory')}
-    //         </div>
-    //       )}
-    //     </div>
-    //   )
-    // }
-
-    return (
-      <>
-        <h1 className="d-none d-md-block">
-          {isEdit ? (
-            <fbt desc="chooselistingtype.letsupdate">
-              Let’s update your listing
-            </fbt>
-          ) : (
-            <fbt desc="chooseListingType.createListing">Create a Listing</fbt>
-          )}
-        </h1>
-        <div className="step-description">
-          {isEdit
-            ? fbt(`Update listing type`, `CreateListing.updateListingType`)
-            : fbt(
-                `What type of listing do you want to create?`,
-                `CreateListing.typeOfListing`
-              )}
+      <div className="row">
+        <div className="col-md-8">
+          <ChooseCategory />
         </div>
-
-        <div className="row">
-          <div className="col-md-8">
-            <div className="choose-category">
-              {Categories.root.map(([categoryId]) => (
-                <a
-                  key={categoryId}
-                  href={`#category-${categoryId.split('.')[1]}`}
-                  className={`category ${categoryId.split('.')[1]}`}
-                  onClick={e => e.preventDefault()}
-                >
-                  <fbt desc="category">
-                    <fbt:enum enum-range={CategoriesEnum} value={categoryId} />
-                  </fbt>
-                </a>
-              ))}
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="gray-box" />
-          </div>
+        <div className="col-md-4">
+          <div className="gray-box" />
         </div>
-      </>
-    )
-  }
-
-  validate() {
-    const newState = {}
-
-    const hourlyFractional = [
-      'schema.atvsUtvsSnowmobiles',
-      'schema.bicycles',
-      'schema.boats',
-      'schema.carsTrucks',
-      'schema.healthBeauty',
-      'schema.heavyEquipment',
-      'schema.householdItems',
-      'schema.motorcyclesScooters',
-      'schema.other',
-      'schema.parking',
-      'schema.tools'
-    ]
-    const nightlyFractional = [
-      'schema.babyKidStuff',
-      'schema.cellPhones',
-      'schema.clothingAccessories',
-      'schema.computers',
-      'schema.electronics',
-      'schema.farmGarden',
-      'schema.furniture',
-      'schema.housing',
-      'schema.jewelry',
-      'schema.musicalInstruments',
-      'schema.recreationalVehicles',
-      'schema.sportingGoods',
-      'schema.storage',
-      'schema.toysGames',
-      'schema.trailers',
-      'schema.videoGaming'
-    ]
-
-    const { category, subCategory } = this.state
-
-    if (!subCategory) {
-      newState.subCategoryError = fbt(
-        'Category is required',
-        'Category is required'
-      )
-    }
-
-    newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
-
-    // Derive ListingType from category+subcategory
-    let __typename = 'UnitListing'
-    if (category === 'schema.announcements') {
-      __typename = 'AnnouncementListing'
-    } else if (
-      category === 'schema.forSale' &&
-      subCategory === 'schema.giftCards'
-    ) {
-      __typename = 'GiftCardListing'
-    } else if (
-      category === 'schema.forRent' &&
-      nightlyFractional.includes(subCategory)
-    ) {
-      __typename = 'FractionalListing'
-    } else if (
-      category === 'schema.forRent' &&
-      hourlyFractional.includes(subCategory)
-    ) {
-      __typename = 'FractionalHourlyListing'
-    }
-
-    if (!newState.valid) {
-      window.scrollTo(0, 0)
-    } else if (this.props.onChange) {
-      this.props.onChange({
-        ...pick(this.state, this.state.fields),
-        __typename
-      })
-    }
-
-    this.setState(newState)
-    return newState.valid
-  }
+      </div>
+    </>
+  )
 }
 
 export default withCreatorConfig(ChooseListingType)
@@ -222,6 +69,8 @@ require('react-styl')(`
         color: #000000
         &:not(:last-of-type)
           border-bottom: 1px solid var(--light)
+        &:hover
+          opacity: 0.75
         font-size: 24px
         font-weight: bold
         align-items: center
