@@ -68,7 +68,7 @@ class OnboardProfile extends Component {
   }
 
   renderContent() {
-    const { isMobile, listing, hideOriginWallet, walletProxy } = this.props
+    const { isMobile, listing, hideOriginWallet } = this.props
     const content = (
       <EditProfile
         onChange={data => this.onChange(data)}

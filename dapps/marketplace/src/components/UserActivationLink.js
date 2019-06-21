@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { fbt } from 'fbt-runtime'
 import { useEffect } from 'react'
 

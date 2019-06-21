@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Mutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
 import withIsMobile from 'hoc/withIsMobile'

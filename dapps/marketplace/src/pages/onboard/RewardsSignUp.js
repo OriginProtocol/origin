@@ -8,7 +8,6 @@ import { fbt } from 'fbt-runtime'
 import HelpOriginWallet from './_HelpOriginWallet'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
-import { withRouter } from 'react-router-dom'
 
 class OnboardRewardsSignUp extends Component {
   constructor(props) {
