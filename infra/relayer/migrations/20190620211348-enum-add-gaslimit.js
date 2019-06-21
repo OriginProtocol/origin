@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const ENUM_NAME = 'enum_relayer_txn_status'
 
