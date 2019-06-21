@@ -455,7 +455,7 @@ class MarketplaceScreen extends Component {
     // Set the language in the DApp to the same as the mobile app
     this.injectLanguage()
     // Inject scroll handler for pull to refresh function
-    this.injectScrollHandler()
+    // this.injectScrollHandler()
     // Preload messaging keys so user doesn't have to enable messaging
     this.injectMessagingKeys()
     // Fetch exchange rates for the default currency
@@ -521,9 +521,10 @@ class MarketplaceScreen extends Component {
           refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}
-              onRefresh={() =>
+              onRefresh={() => {
+                this.dappWebView.injectJavaScript(`document.location.reload()`)
                 setTimeout(() => this.setState({ refreshing: false }), 1000)
-              }
+              }}
             />
           }
         >
