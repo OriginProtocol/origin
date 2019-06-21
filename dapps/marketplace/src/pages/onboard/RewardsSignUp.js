@@ -69,8 +69,8 @@ class OnboardRewardsSignUp extends Component {
         </h2>
         <p>
           <fbt desc="UserActivation.verifyProfileWithoutEarning">
-            You will not be able to earn OGN on Origin, but you can still
-            verify your profile.
+            You will not be able to earn OGN on Origin, but you can still verify
+            your profile.
           </fbt>
         </p>
         <div className="actions">
@@ -82,9 +82,7 @@ class OnboardRewardsSignUp extends Component {
           </button>
           <button
             className="btn btn-outline btn-link"
-            onClick={() =>
-              this.setState({ shouldCloseConfirmSkipModal: true })
-            }
+            onClick={() => this.setState({ shouldCloseConfirmSkipModal: true })}
           >
             <fbt desc="UserActivation.noWait">No, wait</fbt>
           </button>
@@ -164,16 +162,12 @@ class OnboardRewardsSignUp extends Component {
         </p>
         <div className="row">
           <div className="col-md-8">
-            <div
-              className="onboard-box profile-rewards"
-            >
+            <div className="onboard-box profile-rewards">
               <img
                 src="images/onboard/ogn-image@3x.png"
                 className="rewards-signup-header-image"
               />
-              <div className="pt-3">
-                {this.renderRewardsSignUp()}
-              </div>
+              <div className="pt-3">{this.renderRewardsSignUp()}</div>
             </div>
           </div>
           <div className="col-md-4">

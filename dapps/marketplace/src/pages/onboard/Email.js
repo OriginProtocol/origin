@@ -28,7 +28,9 @@ class OnboardEmail extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.walletProxy !== prevProps.walletProxy) {
-      const storedAccounts = getVerifiedAccounts({ wallet: this.props.walletProxy })
+      const storedAccounts = getVerifiedAccounts({
+        wallet: this.props.walletProxy
+      })
       if (storedAccounts && storedAccounts.emailAttestation) {
         this.setState({
           finished: true
@@ -63,10 +65,7 @@ class OnboardEmail extends Component {
     if (isMobile) {
       return (
         <MobileModal
-          title={fbt(
-            'Create a profile',
-            'UserActivation.createProfile'
-          )}
+          title={fbt('Create a profile', 'UserActivation.createProfile')}
           onBack={() => this.onCompleted()}
           className="profile-email"
         >
@@ -89,9 +88,7 @@ class OnboardEmail extends Component {
         <div className="row">
           <div className="col-md-8">
             <div className="onboard-box profile-email">
-              <div className="pt-3">
-                {content}
-              </div>
+              <div className="pt-3">{content}</div>
             </div>
           </div>
           <div className="col-md-4">

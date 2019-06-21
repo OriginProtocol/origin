@@ -40,7 +40,7 @@ class EmailAttestationModal extends Component {
       >
         <EmailAttestation
           wallet={this.props.wallet}
-          onCompleted={(data) => {
+          onCompleted={data => {
             this.setState({
               shouldClose: true,
               data: data
@@ -50,7 +50,6 @@ class EmailAttestationModal extends Component {
       </ModalComponent>
     )
   }
-
 }
 
 export default withIsMobile(EmailAttestationModal)

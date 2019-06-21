@@ -28,7 +28,9 @@ class Onboard extends Component {
         <Switch>
           <Route
             path={`${linkPathPrefix}/onboard/metamask`}
-            render={() => <MetaMask listing={listing} linkPrefix={linkPrefix} />}
+            render={() => (
+              <MetaMask listing={listing} linkPrefix={linkPrefix} />
+            )}
           />
           <Route
             path={`${linkPathPrefix}/onboard/email`}
@@ -40,11 +42,15 @@ class Onboard extends Component {
           />
           <Route
             path={`${linkPathPrefix}/onboard/rewards`}
-            render={() => <RewardsSignUp listing={listing} linkPrefix={linkPrefix} />}
+            render={() => (
+              <RewardsSignUp listing={listing} linkPrefix={linkPrefix} />
+            )}
           />
           <Route
             path={`${linkPathPrefix}/onboard/finished`}
-            render={() => <Finished redirectto={redirectTo} linkPrefix={linkPrefix} />}
+            render={() => (
+              <Finished redirectto={redirectTo} linkPrefix={linkPrefix} />
+            )}
           />
           <Redirect
             from={`${linkPathPrefix}/onboard/back`}

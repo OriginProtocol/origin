@@ -16,10 +16,7 @@ import HelpOriginWallet from './_HelpOriginWallet'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
 
-import {
-  getVerifiedAccounts,
-  clearVerifiedAccounts
-} from 'utils/profileTools'
+import { getVerifiedAccounts, clearVerifiedAccounts } from 'utils/profileTools'
 
 class OnboardProfile extends Component {
   constructor(props) {
@@ -37,7 +34,9 @@ class OnboardProfile extends Component {
         finished: true
       })
     } else if (this.props.walletProxy !== prevProps.walletProxy) {
-      const storedAccounts = getVerifiedAccounts({ wallet: this.props.walletProxy })
+      const storedAccounts = getVerifiedAccounts({
+        wallet: this.props.walletProxy
+      })
       if (storedAccounts && storedAccounts.emailAttestation) {
         this.setState({
           attestations: [storedAccounts.emailAttestation]
@@ -82,10 +81,7 @@ class OnboardProfile extends Component {
     if (isMobile) {
       return (
         <MobileModal
-          title={fbt(
-            'Add name & photo',
-            'onboard.Profile.addNameAndPhoto'
-          )}
+          title={fbt('Add name & photo', 'onboard.Profile.addNameAndPhoto')}
           onBack={() => this.onBack()}
           className="profile-bio"
         >
@@ -108,9 +104,7 @@ class OnboardProfile extends Component {
         <div className="row">
           <div className="col-md-8">
             <div className="onboard-box profile-bio">
-              <div className="pt-3">
-                {content}
-              </div>
+              <div className="pt-3">{content}</div>
             </div>
           </div>
           <div className="col-md-4">
@@ -145,22 +139,17 @@ class OnboardProfile extends Component {
             <fbt desc="UserActivation.signToPublish">Sign to Publish</fbt>
           </h2>
           <p>
-            {
-              fbt(
-                fbt.param('walletType', walletType) + ' will now ask you to sign your profile creation data.',
-                'UserActivation.signToCreateWallet'
-              )
-            }
+            {fbt(
+              fbt.param('walletType', walletType) +
+                ' will now ask you to sign your profile creation data.',
+              'UserActivation.signToCreateWallet'
+            )}
           </p>
           <div className="actions">
             <DeployIdentity
               className="btn btn-primary btn-rounded mt-3 mb-3"
               identity={this.props.wallet}
-              profile={pick(this.state, [
-                'firstName',
-                'lastName',
-                'avatarUrl'
-              ])}
+              profile={pick(this.state, ['firstName', 'lastName', 'avatarUrl'])}
               attestations={attestations}
               children={fbt('Got it', 'Got it')}
               skipSuccessScreen={true}

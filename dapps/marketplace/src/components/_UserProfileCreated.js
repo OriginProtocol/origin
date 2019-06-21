@@ -42,11 +42,8 @@ const UserProfileCreated = ({ onCompleted }) => {
     )
   }
 
-  return (
-    content
-  )
+  return content
 }
-
 
 export default UserProfileCreated
 

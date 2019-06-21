@@ -30,21 +30,22 @@ class EditProfile extends Component {
   }
 
   render() {
-    const input = formInput(
-      this.state,
-      state => this.setState(state)
-    )
+    const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
     const { isMobile, onboarding } = this.props
 
-    const titleContent = onboarding ? fbt('Add name and photo', 'EditModal.addNameAndPhoto') : fbt('Edit Profile', 'EditModal.editProfile')
+    const titleContent = onboarding
+      ? fbt('Add name and photo', 'EditModal.addNameAndPhoto')
+      : fbt('Edit Profile', 'EditModal.editProfile')
 
     return (
       <>
         {this.renderPersonalDataModal()}
         <form
-          className={`edit-profile-modal light-theme${this.props.className ? ' ' + this.props.className : ''}${onboarding ? ' onboarding' : ''}`}
+          className={`edit-profile-modal light-theme${
+            this.props.className ? ' ' + this.props.className : ''
+          }${onboarding ? ' onboarding' : ''}`}
           onSubmit={e => {
             e.preventDefault()
             this.validate()
@@ -83,7 +84,11 @@ class EditProfile extends Component {
                   maxLength="40"
                   {...input('firstName')}
                   ref={r => (this.input = r)}
-                  placeholder={onboarding ? <fbt desc="EditModal.firstName">First Name</fbt> : null}
+                  placeholder={
+                    onboarding ? (
+                      <fbt desc="EditModal.firstName">First Name</fbt>
+                    ) : null
+                  }
                 />
                 {Feedback('firstName')}
               </div>
@@ -93,7 +98,16 @@ class EditProfile extends Component {
                     <fbt desc="EditModal.lastName">Last Name</fbt>
                   </label>
                 )}
-                <input type="text" maxLength="40" {...input('lastName')} placeholder={onboarding ? <fbt desc="EditModal.lastName">Last Name</fbt> : null} />
+                <input
+                  type="text"
+                  maxLength="40"
+                  {...input('lastName')}
+                  placeholder={
+                    onboarding ? (
+                      <fbt desc="EditModal.lastName">Last Name</fbt>
+                    ) : null
+                  }
+                />
                 {Feedback('lastName')}
               </div>
             </div>
@@ -112,8 +126,8 @@ class EditProfile extends Component {
             {onboarding && (
               <div className="help">
                 <fbt desc="UserActivation.easierToIdentify">
-                  By providing a photo and name, you’ll make it easier for buyers
-                  and sellers on Origin to identify you.
+                  By providing a photo and name, you’ll make it easier for
+                  buyers and sellers on Origin to identify you.
                 </fbt>
               </div>
             )}
@@ -227,8 +241,8 @@ class EditProfile extends Component {
         </h2>
         <p>
           <fbt desc="UserActivation.personalDataInfo">
-            By creating a profile, you are associating your name and photo
-            with your Ethereum account. This means that others will be able to
+            By creating a profile, you are associating your name and photo with
+            your Ethereum account. This means that others will be able to
             connect your blockchain transactions to your name and photo.
           </fbt>
         </p>
