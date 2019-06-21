@@ -34,7 +34,7 @@ const DEFAULT_MAX_PENDING_PER_ACCOUNT = 3
 const ZERO = new BN('0', 10)
 const BASE_FUND_VALUE = new BN('500000000000000000', 10) // 0.5 Ether
 const MIN_CHILD_BALANCE = new BN('10000000000000000', 10) // 0.1 Ether
-const MAX_GAS_PRICE = new BN('20000000000', 10) // 20 gwei
+const MAX_GAS_PRICE = new BN('25000000000', 10) // 25 gwei
 const REDIS_TX_COUNT_PREFIX = 'txcount_'
 const REDIS_PENDING_KEY = `pending_txs`
 const REDIS_PENDING_PREFIX = `pending_tx_`
@@ -49,6 +49,7 @@ class Account {
     this.pendingCount = pendingCount // needed?
     this.wallet = wallet
     this.locked = null
+    this.hasPendingFundingTx = false
   }
 }
 
@@ -287,15 +288,20 @@ class Purse {
       this.receiptCallbacks[txHash] = onReceipt
     }
 
-    // In case it needs to be rebroadcast
-    await this.addPending(txHash, rawTx)
+    try {
+      // blast it
+      await sendRawTransaction(this.web3, rawTx)
 
-    // blast it
-    await sendRawTransaction(this.web3, rawTx)
+      // In case it needs to be rebroadcast
+      await this.addPending(txHash, rawTx)
 
-    await this.incrementTxCount(address)
+      await this.incrementTxCount(address)
 
-    logger.info(`Sent ${txHash}`)
+      logger.info(`Sent ${txHash}`)
+    } catch (err) {
+      logger.error(`Error sending transaction ${txHash}`)
+      throw err
+    }
 
     return txHash
   }
@@ -579,6 +585,13 @@ class Purse {
       throw new Error('provided value must be a BN.js instance')
     }
 
+    if (this.accounts[address] && this.accounts[address].hasPendingFundingTx) {
+      logger.info(
+        `Child ${address} already has a pending funding transaction. Skipping...`
+      )
+      return
+    }
+
     const fundingValue = value ? value : BASE_FUND_VALUE
     const gasPrice = await this.gasPrice()
     const txCost = fundingValue.add(gasPrice.mul(new BN(21000)))
@@ -623,10 +636,17 @@ class Purse {
     // So we hash it ourself...
     const txHash = this.web3.utils.sha3(rawTx)
 
-    await sendRawTransaction(this.web3, rawTx)
-    await this.incrementTxCount(masterAddress)
+    try {
+      await sendRawTransaction(this.web3, rawTx)
+      await this.addPending(txHash, rawTx)
+      await this.incrementTxCount(masterAddress)
+      this.accounts[address].hasPendingFundingTx = true
 
-    logger.info(`Funded ${address} with ${txHash}`)
+      logger.info(`Funded ${address} with ${txHash}`)
+    } catch (err) {
+      logger.error(`Error sending transaction to fund child ${address}.`)
+      logger.errro(err)
+    }
 
     return txHash
   }
@@ -677,8 +697,15 @@ class Purse {
             const childBalance = numberToBN(
               await this.web3.eth.getBalance(child)
             )
-            if (childBalance.lte(MIN_CHILD_BALANCE)) {
+            // Fund the child if there's already not a tx out
+            if (
+              childBalance.lte(MIN_CHILD_BALANCE) &&
+              !this.accounts[child].hasPendingFundingTx
+            ) {
               await this._fundChild(child)
+            } else if (this.accounts[child].hasPendingFundingTx) {
+              // Reset the flag
+              this.accounts[child].hasPendingFundingTx = false
             }
           }
         }
@@ -746,7 +773,14 @@ class Purse {
         if (!tx) {
           logger.warn(`Transaction ${txHash} was dropped!  Re-broadcasting...`)
 
-          await sendRawTransaction(this.web3, this.pendingTransactions[txHash])
+          try {
+            await sendRawTransaction(
+              this.web3,
+              this.pendingTransactions[txHash]
+            )
+          } catch (err) {
+            logger.error(`error attempting to broadcast transaction ${txHash}`)
+          }
 
           // Increment our internal counter.  No functional use yet, but good for testing.
           if (this.rebroadcastCounters[txHash]) {

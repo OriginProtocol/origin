@@ -107,9 +107,7 @@ class OAuthAttestation extends Component {
             Account
           </fbt>
         }
-        className={`${provider} attestation-modal oauth${
-          this.state.stage === 'VerifiedOK' ? ' success' : ''
-        }`}
+        className={`${provider} attestation-modal oauth`}
         shouldClose={this.state.shouldClose}
         onClose={() => {
           const completed = this.state.completed
