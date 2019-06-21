@@ -17,11 +17,11 @@ const OnboardHelpProfile = () => (
         digital wallet.
       </fbt>
     </div>
-    <div className="learn-more">
+    {/*<div className="learn-more">
       <a href="#">
         <fbt desc="LearnMore">Learn more</fbt>
       </a>
-    </div>
+    </div>*/}
   </div>
 )
 
