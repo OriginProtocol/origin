@@ -35,6 +35,7 @@ const [commonCountries, uncommonCountries] = _countryCodes
       value: item.prefix
     }
   })
+  .sort((a, b) => (a.label > b.label ? 1 : -1))
   // Partition into common and uncommon countries to allow for a separator in
   // the select
   .reduce(
