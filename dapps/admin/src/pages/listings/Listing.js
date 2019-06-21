@@ -29,6 +29,8 @@ import Price from 'components/Price'
 import Gallery from 'components/Gallery'
 import LoadingSpinner from 'components/LoadingSpinner'
 import QueryError from 'components/QueryError'
+import EditScoring from './_EditScoring'
+import EnsureModerator from './_EnsureModerator'
 
 import query from 'queries/Listing'
 
@@ -89,6 +91,12 @@ class Listing extends Component {
                   <div>
                     <h3 className="bp3-heading mt-3">{listing.title}</h3>{' '}
                     {this.renderDetail(listing)}
+                    <div style={{ textAlign: 'right' }}>
+                      <EnsureModerator>
+                        <EditScoring listing={listing} key={listing.id} />
+                      </EnsureModerator>
+                    </div>
+                    <h3>More details</h3>
                     <Tabs
                       selectedTabId={selectedTabId}
                       onChange={(newTab, prevTab) => {

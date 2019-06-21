@@ -7,8 +7,10 @@ import store from 'utils/store'
 
 import Wallet from './Wallet'
 import MetaMask from './MetaMask'
+import Email from './Email'
 import Profile from './Profile'
 import Finished from './Finished'
+import RewardsSignUp from './RewardsSignUp'
 
 const sessionStore = store('sessionStorage')
 
@@ -31,17 +33,17 @@ class Onboard extends Component {
             )}
           />
           <Route
+            path={`${linkPathPrefix}/onboard/email`}
+            render={() => <Email listing={listing} linkPrefix={linkPrefix} />}
+          />
+          <Route
             path={`${linkPathPrefix}/onboard/profile`}
             render={() => <Profile listing={listing} linkPrefix={linkPrefix} />}
           />
           <Route
             path={`${linkPathPrefix}/onboard/rewards`}
             render={() => (
-              <Profile
-                listing={listing}
-                linkPrefix={linkPrefix}
-                rewards={true}
-              />
+              <RewardsSignUp listing={listing} linkPrefix={linkPrefix} />
             )}
           />
           <Route
@@ -74,7 +76,8 @@ export default Onboard
 
 require('react-styl')(`
   .onboard
-    margin-top: 3.5rem
+    padding-top: 3.5rem
+    min-height: 100vh
     h1
       font-weight: 500
       font-family: Poppins
@@ -142,6 +145,22 @@ require('react-styl')(`
     text-align: center
     max-width: 610px
 
+    h2
+      font-weight: 300
+      font-size: 24px
+
+    .help
+      text-align: center
+      font-family: Lato
+      font-size: 14px
+      color: var(--bluey-grey)
+      margin-top: 1rem
+      margin-bottom: 3rem
+      > a
+        margin-left: 5px
+        color: #007bff
+        cursor: pointer
+
     .status
       font-family: var(--heading-font)
       font-size: 24px
@@ -207,9 +226,35 @@ require('react-styl')(`
     background-size: contain
     height: 3.5rem
 
+  .modal-content .onboarding, .modal-content.onboarding
+    padding: 1.25rem
+    h2
+      text-align: center
+    &, form
+      display: flex
+      flex-direction: column
+      flex: auto
+    .help
+      text-align: center
+      font-family: Lato
+      font-size: 14px
+      color: var(--bluey-grey)
+      margin-top: 1rem
+      margin-bottom: 3rem
+      > a
+        margin-left: 5px
+        color: #007bff
+        cursor: pointer
+    .actions
+      width: 100%
+      button
+        width: 100%
+        padding: 0.75rem
+
   @media (max-width: 767.98px)
     .onboard
-      margin-top: 1.5rem
+      padding-top: 1.5rem
+      min-height: 100vh
       h2
         line-height: 1.25
       h3
