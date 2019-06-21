@@ -36,9 +36,7 @@ const UserProfileCreated = ({ onCompleted }) => {
 
   if (isMobile) {
     return (
-      <>
-        <MobileModal>{content}</MobileModal>
-      </>
+      <MobileModal>{content}</MobileModal>
     )
   }
 
