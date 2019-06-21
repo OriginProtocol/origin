@@ -587,7 +587,7 @@ class Purse {
 
     if (this.accounts[address] && this.accounts[address].hasPendingFundingTx) {
       logger.info(
-        `Child ${address} alread yhas a pending funding transaction. Skipping...`
+        `Child ${address} already has a pending funding transaction. Skipping...`
       )
       return
     }
