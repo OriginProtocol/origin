@@ -228,6 +228,8 @@ require('react-styl')(`
 
   .modal-content .onboarding, .modal-content.onboarding
     padding: 1.25rem
+    h2
+      text-align: center
     &, form
       display: flex
       flex-direction: column
