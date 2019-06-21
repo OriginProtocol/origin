@@ -17,11 +17,11 @@ const OnboardHelpOriginWallet = () => (
       </fbt>
     </div>
     <div className="actions">
-      <a href="#">
-        <img src="images/app-store-button.png" />
+      <a href="https://originprotocol.com/mobile">
+        <img src="images/app-store-button@2x.png" />
       </a>
-      <a href="#">
-        <img src="images/android-button.png" />
+      <a href="https://originprotocol.com/mobile">
+        <img src="images/android-button@2x.png" />
       </a>
     </div>
   </div>
@@ -33,8 +33,11 @@ require('react-styl')(`
   .onboard-help.origin-wallet
     text-align: center
     .actions
+      margin-top: 1.5rem
+      display: flex
       a
-        display: inline-block
-        padding: 0.5rem
-        margin-top: 1.5rem
+        &:not(:last-of-type)
+          margin-right: 1rem
+        img
+          width: 100%
 `)

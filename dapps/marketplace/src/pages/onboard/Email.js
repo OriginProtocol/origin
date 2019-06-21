@@ -32,9 +32,7 @@ class OnboardEmail extends Component {
         wallet: this.props.walletProxy
       })
       if (storedAccounts && storedAccounts.emailAttestation) {
-        this.setState({
-          finished: true
-        })
+        this.setState({ finished: true })
       }
     }
   }
@@ -109,14 +107,10 @@ class OnboardEmail extends Component {
           emailAttestation: data
         }
       })
-      this.setState({
-        finished: true
-      })
+      this.setState({ finished: true })
     } else {
       clearVerifiedAccounts()
-      this.setState({
-        back: true
-      })
+      this.setState({ back: true })
     }
   }
 }
@@ -134,7 +128,7 @@ require('react-styl')(`
       color: #000000
       font-weight: 300
 
-    form 
+    form
       input
         text-align: center
 `)

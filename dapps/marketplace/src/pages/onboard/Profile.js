@@ -128,22 +128,17 @@ class OnboardProfile extends Component {
         shouldClose={shouldCloseSignTxModal}
         className="user-activation sign-tx-modal onboarding text-center"
         fullscreen={false}
-        onClose={() =>
-          this.setState({
-            signTxModal: false
-          })
-        }
+        onClose={() => this.setState({ signTxModal: false })}
       >
         <div className="padded-content">
           <h2>
             <fbt desc="UserActivation.signToPublish">Sign to Publish</fbt>
           </h2>
           <p>
-            {fbt(
-              fbt.param('walletType', walletType) +
-                ' will now ask you to sign your profile creation data.',
-              'UserActivation.signToCreateWallet'
-            )}
+            <fbt desc="UserActivation.signToCreateWallet">
+              <fbt:param name="walletType">{walletType}</fbt:param>
+              will now ask you to sign your profile creation data.
+            </fbt>
           </p>
           <div className="actions">
             <DeployIdentity
@@ -155,15 +150,9 @@ class OnboardProfile extends Component {
               skipSuccessScreen={true}
               onComplete={() => {
                 clearVerifiedAccounts()
-                this.setState({
-                  finished: true
-                })
+                this.setState({ finished: true })
               }}
-              onClose={() => {
-                this.setState({
-                  shouldCloseSignTxModal: true
-                })
-              }}
+              onClose={() => this.setState({ shouldCloseSignTxModal: true })}
             />
           </div>
         </div>
@@ -181,22 +170,16 @@ class OnboardProfile extends Component {
   }
 
   onAvatarChange(avatarUrl) {
-    this.setState({
-      avatarUrl
-    })
+    this.setState({ avatarUrl })
   }
 
   onBack() {
     clearVerifiedAccounts()
-    this.setState({
-      back: true
-    })
+    this.setState({ back: true })
   }
 
   onCompleted() {
-    this.setState({
-      signTxModal: true
-    })
+    this.setState({ signTxModal: true })
   }
 }
 
