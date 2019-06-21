@@ -672,6 +672,9 @@ class Purse {
         const masterBalance = numberToBN(
           await this.web3.eth.getBalance(masterAddress)
         )
+        const masterBalanceLow = masterBalance.lt(
+          BASE_FUND_VALUE.mul(new BN(this.children.length))
+        )
         const balanceEther = this.web3.utils.fromWei(
           masterBalance.toString(),
           'ether'
@@ -680,18 +683,16 @@ class Purse {
           logger.error(
             `Master account needs funding! Send funds to ${masterAddress}`
           )
-        } else if (
-          masterBalance.lt(BASE_FUND_VALUE.mul(new BN(this.children.length)))
-        ) {
+        } else if (masterBalanceLow) {
           logger.warn(
-            `Master account is low @ ${balanceEther} Ether. Add funds soon!`
+            `Master account is low @ ${balanceEther} Ether. Will not be able to auto-fund child accounts!`
           )
         } else {
           logger.info(`Master account balance: ${balanceEther} Ether`)
         }
 
         // Check for child balances dropping below set minimum and fund if necessary
-        if (this.ready && this.autofundChildren) {
+        if (this.ready && this.autofundChildren && !masterBalanceLow) {
           for (let i = 0; i < this.children.length; i++) {
             const child = this.children[i]
             const childBalance = numberToBN(
