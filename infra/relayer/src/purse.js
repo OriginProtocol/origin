@@ -780,6 +780,7 @@ class Purse {
             )
           } catch (err) {
             logger.error(`error attempting to broadcast transaction ${txHash}`)
+            logger.error(err)
           }
 
           // Increment our internal counter.  No functional use yet, but good for testing.
