@@ -28,7 +28,7 @@ import AttestationBadges from 'components/AttestationBadges'
 import UserActivationLink from 'components/UserActivationLink'
 
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
-import EmailAttestation from 'pages/identity/EmailAttestation'
+import EmailAttestationModal from 'pages/identity/EmailAttestationModal'
 import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
 import WebsiteAttestation from 'pages/identity/WebsiteAttestation'
 import OAuthAttestation from 'pages/identity/OAuthAttestation'
@@ -48,7 +48,7 @@ const withOAuthAttestationProvider = provider => {
 
 const AttestationComponents = {
   phone: PhoneAttestation,
-  email: EmailAttestation,
+  email: EmailAttestationModal,
   facebook: withOAuthAttestationProvider('facebook'),
   twitter: withOAuthAttestationProvider('twitter'),
   airbnb: AirbnbAttestation,
