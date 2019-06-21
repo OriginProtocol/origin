@@ -216,6 +216,7 @@ class PhoneScreen extends Component {
             autoCorrect={false}
             autoFocus={false}
             multiline={false}
+            keyboardType="phone-pad"
             returnKeyType="next"
             onChangeText={value => this.handleChange('phone', value)}
             onSubmitEditing={this.handleSubmitPhone}
