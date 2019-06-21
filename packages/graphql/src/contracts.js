@@ -343,9 +343,6 @@ function setMobileBridge() {
   const mobileBridgeProvider = context.mobileBridge.getProvider()
   context.web3Exec = applyWeb3Hack(new Web3(mobileBridgeProvider))
 
-  // Force enable proxy accounts
-  context.config.proxyAccountsEnabled = true
-
   // Replace all the contracts with versions that use our custom web3 provider
   // so that contract calls get routed through window.postMessage
   context.marketplaceExec = new context.web3Exec.eth.Contract(
