@@ -98,6 +98,10 @@ const typeDefs = gql`
     marketplacePublisher: String
     createDate: String
     updateVersion: Int
+    # Moderator access required to read
+    scoreMultiplier: Float
+    # Moderator access required to read
+    scoreTags: [String]
     # reviews(page: Page, order: ReviewOrder, filter: ReviewFilter): ReviewPage
   }
 
@@ -215,6 +219,16 @@ const typeDefs = gql`
   }
 
   #
+  # Moderation
+  #
+
+  type AccessToken {
+    authToken: String!
+    secondsToExpiration: Int!
+    ethAddress: String!
+  }
+
+  #
   # The "Query" type is the root of all GraphQL queries.
   #
   type Query {
@@ -243,6 +257,12 @@ const typeDefs = gql`
       listingInput: ListingInput
       signature: String!
     ): Listing
+    listingSetScoreTags(id: ID!, scoreTags: [String]): Listing
+    accessTokenCreate(
+      message: String!
+      signature: String!
+      ethAddress: String!
+    ): AccessToken!
   }
 `
 
