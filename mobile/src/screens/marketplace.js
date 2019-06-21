@@ -49,7 +49,11 @@ class MarketplaceScreen extends Component {
       modals: [],
       fiatCurrency: CURRENCIES.find(c => c[0] === 'fiat-USD')
     }
-    // this.setSwipeHandler()
+    if (Platform.OS === 'android') {
+      // Configure swipe handler for back forward navigation on Android because
+      // it does not support allowsBackForwardNavigationGestures
+      this.setSwipeHandler()
+    }
     DeviceEventEmitter.addListener('graphqlQuery', this.injectGraphqlQuery)
     DeviceEventEmitter.addListener(
       'graphqlMutation',
@@ -527,8 +531,8 @@ class MarketplaceScreen extends Component {
             ref={webview => {
               this.dappWebView = webview
             }}
-            allowsBackForwardNavigationGestures={true}
-            useWebKit={true}
+            allowsBackForwardNavigationGestures={Platform.OS === 'ios'}
+            useWebKit={Platform.OS === 'ios'}
             source={{ uri: this.props.settings.network.dappUrl }}
             onMessage={this.onWebViewMessage}
             onLoad={this.onWebViewLoad}
