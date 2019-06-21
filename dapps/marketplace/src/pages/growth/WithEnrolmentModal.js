@@ -592,6 +592,7 @@ function withEnrolmentModal(WrappedComponent) {
                           'onNavigation',
                           'onCompleted',
                           'isMobile',
+                          'isMobileApp',
                           'onAccountBlocked'
                         ])}
                         onClick={e =>
