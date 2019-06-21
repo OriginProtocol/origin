@@ -2,6 +2,7 @@ import contracts from '../contracts'
 import listings from './marketplace/listings'
 import users from './marketplace/users'
 import parseId from '../utils/parseId'
+import apolloPathToString from '../utils/apolloPathToString'
 
 export default {
   address: contract => {
@@ -58,5 +59,20 @@ export default {
     return events.length
   },
   users,
-  user: (_, args) => ({ id: args.id, account: { id: args.id } })
+  user: (_, args, context, info) => {
+    if (!args.id) {
+      console.log(
+        '================== Non-nullable error about to happen! =================='
+      )
+      console.log('User.id', args.id)
+      console.log('path: ', apolloPathToString(info.path))
+      console.log('returnType: ', info.returnType)
+      console.log('operation: ', info.operation.operation)
+      console.log(
+        '========================================================================='
+      )
+      return null
+    }
+    return { id: args.id, account: { id: args.id } }
+  }
 }

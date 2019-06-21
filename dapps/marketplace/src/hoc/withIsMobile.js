@@ -32,6 +32,8 @@ function withIsMobile(WrappedComponent) {
         <WrappedComponent
           {...this.props}
           ismobile={this.state.isMobile ? 'true' : 'false'}
+          isMobile={this.state.isMobile}
+          isMobileApp={typeof window.ReactNativeWebView !== 'undefined'}
         />
       )
     }

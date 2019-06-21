@@ -1,3 +1,11 @@
+# Discovery Servers
+
+The discovery server provides searching and content moderation features.
+
+### Configuration ENV variables
+
+MODERATOR_ADDRESSES - a comma sperated (no space), list of ETH addresses that can perform moderation actions.
+
 # To start the Apollo GraphQL server
 You can start the listener using either docker compose or lerna.
 

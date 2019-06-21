@@ -147,6 +147,19 @@ class MarketplaceEventHandler {
       event.logIndex
     }`)
 
+    // Pull latest tags for listing from DB
+    const latestTags = await db.DiscoveryTagAction.findOne({
+      where: { ListingId: removeListingIdBlockNumber(listing.id) },
+      order: [['id', 'DESC']]
+    })
+    if (latestTags && latestTags.data && latestTags.data.tags) {
+      listing.scoreTags = latestTags.data.tags
+    } else {
+      // Important to keep people from setting their own scoreTags from IPFS
+      listing.scoreTags = []
+    }
+
+    // Persist listing
     const listingData = {
       id: removeListingIdBlockNumber(listing.id),
       blockNumber: event.blockNumber,

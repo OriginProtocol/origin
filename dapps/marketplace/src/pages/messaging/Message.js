@@ -147,7 +147,7 @@ const Message = props => {
   )
 }
 
-export default withIdentity(Message)
+export default withIdentity(Message, 'wallet')
 
 require('react-styl')(`
   .message

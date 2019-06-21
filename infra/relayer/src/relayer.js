@@ -7,6 +7,7 @@ const IdentityProxyContract = require('@origin/contracts/build/contracts/Identit
 const MarketplaceContract = require('@origin/contracts/build/contracts/V00_Marketplace')
 const IdentityEventsContract = require('@origin/contracts/build/contracts/IdentityEvents')
 const { ip2geo } = require('@origin/ip2geo')
+const Purse = require('./purse')
 const logger = require('./logger')
 const db = require('./models')
 const enums = require('./enums')
@@ -37,6 +38,8 @@ const ContractAddresses = {
   2222: '@origin/contracts/build/contracts_origin.json'
 }
 
+const ZeroAddress = '0x00000000000000000000000000000000000000'
+
 if (isTestEnv) {
   ContractAddresses['999'] = '@origin/contracts/build/tests.json'
 }
@@ -60,9 +63,9 @@ const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
 
     const r = utils.toBuffer(signature.slice(0, 66))
     const s = utils.toBuffer('0x' + signature.slice(66, 130))
-    const v = utils.bufferToInt(
-      utils.toBuffer('0x' + signature.slice(130, 132))
-    )
+    let v = utils.bufferToInt(utils.toBuffer('0x' + signature.slice(130, 132)))
+    // In case whatever signs doesn't add the magic number, nor use EIP-155
+    if ([0, 1].indexOf(v) > -1) v += 27
 
     const pub = utils.ecrecover(prefixedMsg, v, r, s)
     const address = '0x' + utils.pubToAddress(pub).toString('hex')
@@ -96,12 +99,14 @@ class Relayer {
     logger.info(`Provider URL: ${providerUrl}`)
     this.web3 = new Web3(providerUrl)
 
-    const privateKey = env.FORWARDER_PK || env[`FORWARDER_PK_${networkId}`]
-    if (privateKey) {
-      const wallet = this.web3.eth.accounts.wallet.add(privateKey)
-      this.forwarder = wallet.address
-      logger.info(`Forwarder account ${this.forwarder}`)
-    }
+    this.purse = new Purse({
+      web3: this.web3,
+      mnemonic: env.FORWARDER_MNEMONIC,
+      children: env.FORWARDER_ACCOUNTS ? parseInt(env.FORWARDER_ACCOUNTS) : 3,
+      autofundChildren: true,
+      redisHost: env.REDIS_URL
+    })
+
     this.ProxyFactory = new this.web3.eth.Contract(ProxyFactoryContract.abi)
     this.Marketplace = new this.web3.eth.Contract(MarketplaceContract.abi)
     this.IdentityEvents = new this.web3.eth.Contract(IdentityEventsContract.abi)
@@ -165,13 +170,11 @@ class Relayer {
       preflight
     })
 
+    // Make sure keys are generated and ready
+    await this.purse.init()
+
     const web3 = this.web3
 
-    let Forwarder = this.forwarder
-    if (this.networkId === 999) {
-      const nodeAccounts = await web3.eth.getAccounts()
-      Forwarder = nodeAccounts[0]
-    }
     const method = this.methods[txData.substr(0, 10)]
 
     // Get the IP from the request header and resolve it into a country code.
@@ -188,7 +191,7 @@ class Relayer {
         from,
         to,
         method.name,
-        Forwarder,
+        ZeroAddress,
         ip,
         geo
       )
@@ -231,56 +234,69 @@ class Relayer {
           throw new Error('Incorrect ProxyFactory method provided')
         }
         logger.debug('Deploying proxy')
-        const args = { to, data: txData, from: Forwarder }
         const gas = 2000000 //await web3.eth.estimateGas(args)
+        tx = { to, data: txData, gas }
         dbTx = await this._createDbTx(
           req,
           enums.RelayerTxnStatuses.Pending,
           from,
           to,
           method.name,
-          Forwarder
+          ZeroAddress
         )
-        tx = web3.eth.sendTransaction({ ...args, gas })
       } else {
         logger.debug('Forwarding transaction to ' + to)
-        const rawTx = IdentityProxy.methods.forward(to, signature, from, txData)
+
+        const data = IdentityProxy.methods
+          .forward(to, signature, from, txData)
+          .encodeABI()
         // const gas = await rawTx.estimateGas({ from: Forwarder })
         // logger.debug('Estimated gas ' + gas)
+        // TODO: Not sure why we need extra gas here
         const gas = 1000000
+        tx = { to: proxy, data, gas }
         dbTx = await this._createDbTx(
           req,
           enums.RelayerTxnStatuses.Pending,
           from,
           to,
           method.name,
-          Forwarder
+          ZeroAddress
         )
-        // TODO: Not sure why we need extra gas here
-        tx = rawTx.send({ from: Forwarder, gas })
       }
 
-      txHash = await new Promise((resolve, reject) => {
-        tx.once('transactionHash', resolve)
-          .once('receipt', async receipt => {
-            // Once block is mined, record the amount of gas and update
-            // the status of the transaction in the DB.
-            const gas = receipt.gasUsed
-            const hash = receipt.transactionHash
-            if (dbTx) {
-              const status = enums.RelayerTxnStatuses.Confirmed
-              await dbTx.update({ status, gas })
-            }
-            logger.info(`Confirmed tx with hash ${hash}. Paid ${gas} gas`)
-          })
-          .catch(async reason => {
-            if (dbTx) {
-              await dbTx.update({ status: enums.RelayerTxnStatuses.Failed })
-            }
-            logger.error('Transaction failure:', reason)
-            reject(reason)
-          })
-      })
+      try {
+        txHash = await this.purse.sendTx(tx, async receipt => {
+          /**
+           * Once block is mined, record the amount of gas, the forwarding account,  and update the
+           * status of the transaction in the DB.
+           */
+          const gas = receipt.gasUsed
+          const hash = receipt.transactionHash
+          const forwarder = receipt.from
+          if (dbTx) {
+            const status = enums.RelayerTxnStatuses.Confirmed
+            await dbTx.update({ status, gas, forwarder })
+          }
+          logger.info(`Confirmed tx with hash ${hash}. Paid ${gas} gas`)
+        })
+      } catch (reason) {
+        let status = enums.RelayerTxnStatuses.Failed
+        let errMsg = 'Error sending transaction'
+
+        if (reason.message && reason.message.indexOf('gas prices') > -1) {
+          status = enums.RelayerTxnStatuses.GasLimit
+          errMsg = 'Network is too congested right now.  Try again later.'
+        }
+
+        if (dbTx) {
+          await dbTx.update({ status })
+        }
+
+        logger.error('Transaction failure:', reason)
+        return res.status(400).send({ errors: [errMsg] })
+      }
+
       // Record the transaction hash in the DB.
       logger.info(`Submitted tx with hash ${txHash}`)
       if (dbTx) {

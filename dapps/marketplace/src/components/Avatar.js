@@ -52,10 +52,11 @@ export default withConfig(Avatar)
 require('react-styl')(`
   .avatar
     position: relative
+    min-width: 25px
     width: 100%
     padding-top: 100%
-    background-size: contain
-    border-radius: var(--default-radius)
+    background-size: cover
+    border-radius: 50%
     background-repeat: no-repeat
     background-position: center
 

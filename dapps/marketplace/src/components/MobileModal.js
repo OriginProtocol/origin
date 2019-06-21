@@ -1,50 +1,9 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import MobileModalHeader from 'components/MobileModalHeader'
 
 function freezeVp(e) {
   e.preventDefault()
-}
-
-const MobileModalHeader = ({
-  children,
-  headerImageUrl,
-  className = '',
-  showBackButton = true,
-  onBack
-}) => {
-  if (!children && !headerImageUrl) {
-    return null
-  } else if (!children) {
-    return (
-      <div
-        className={`modal-header image-only${className ? ' ' + className : ''}`}
-      >
-        <img src={headerImageUrl} />
-      </div>
-    )
-  }
-
-  let headerClassList = ['modal-header']
-  let headerStyle
-
-  if (headerImageUrl) {
-    headerClassList.push('with-image')
-    headerStyle = { backgroundImage: `url(${headerImageUrl})` }
-  }
-
-  if (className) {
-    headerClassList = headerClassList.concat(className.split(' '))
-  }
-
-  return (
-    <div className={`${headerClassList.join(' ')}`} style={headerStyle}>
-      {showBackButton && (
-        <a className="modal-action-button back-button" onClick={onBack} />
-      )}
-      <h3 className="modal-title">{children}</h3>
-      {showBackButton && <span className="modal-action-button" />}
-    </div>
-  )
 }
 
 export default class MobileModal extends Component {
@@ -112,7 +71,8 @@ export default class MobileModal extends Component {
       children,
       headerImageUrl = '',
       onBack,
-      showBackButton
+      showBackButton,
+      fullscreen
     } = this.props
 
     return (
@@ -124,6 +84,7 @@ export default class MobileModal extends Component {
         <div className="modal-spacer" />
         <MobileModalHeader
           className={className}
+          fullscreen={fullscreen}
           headerImageUrl={headerImageUrl}
           showBackButton={showBackButton}
           onBack={() => {
@@ -151,13 +112,15 @@ export default class MobileModal extends Component {
       children,
       headerImageUrl = '',
       onBack,
-      showBackButton
+      showBackButton,
+      fullscreen
     } = this.props
 
     return (
       <>
         <MobileModalHeader
           className={className}
+          fullscreen={fullscreen}
           headerImageUrl={headerImageUrl}
           showBackButton={showBackButton}
           onBack={() => {
@@ -249,40 +212,13 @@ require('react-styl')(`
     .modal-spacer
       visibility: hidden
       flex-grow: 1
-    .actions
-      margin-top: auto
-    .modal-header
-      flex-grow: 0
-      flex-shrink: 0
-      display: flex
-      border-bottom: 0
-      border-radius: 0
-      width: 100%
-      &.image-only
-        width: 100%
-        max-height: 175px
-      &.with-image
-        height: 200px
-        background-size: cover
-        background-repeat: no-repeat
-      .modal-action-button
-        flex: 2rem 0 0
-        cursor: pointer
-        height: 2rem
-        &.back-button
-          background-image: url('images/caret-grey.svg')
-          background-size: 1.5rem
-          background-position: center
-          transform: rotateZ(270deg)
-          background-repeat: no-repeat
-      .modal-title
-        flex: auto
-        white-space: nowrap
-        text-align: center
-        font-family: Poppins
-        font-size: 1.5rem
-        font-weight: 500
-        color: var(--dark-grey-blue)
+    > .modal-content > div 
+      .actions
+        margin-top: auto !important
+      .published-info-box
+        margin-top: auto !important
+        & + .actions
+          margin-top: 3rem !important
     &.contained
       top: 100%
       bottom: -100%
@@ -300,7 +236,7 @@ require('react-styl')(`
         flex-grow: 0
         border-radius: 0
         border: 0
-      .modal-content, .modal-header
+      .modal-content
         max-width: 400px
         margin: 0 auto
 `)

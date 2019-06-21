@@ -26,12 +26,13 @@ const UserQuery = gql`
             description
             avatar
 
-            facebookVerified
-            twitterVerified
-            airbnbVerified
-            phoneVerified
-            emailVerified
-            websiteVerified
+            verifiedAttestations {
+              id
+              properties {
+                type
+                value
+              }
+            }
           }
         }
         listings {

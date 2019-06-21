@@ -97,7 +97,6 @@ export const changeAccount = async (page, account) => {
       strength: 0
     })
   }, account)
-  await new Promise(resolve => setTimeout(resolve, 1500))
 }
 
 export const createAccount = async page => {

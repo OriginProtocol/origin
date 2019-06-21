@@ -11,6 +11,10 @@ import relayer from './_relayer'
 
 const debug = createDebug('origin:tx-helper:')
 const formatAddr = address => (address ? address.substr(0, 8) : '')
+const isOriginMobile =
+  typeof window !== 'undefined' &&
+  window.ReactNativeWebView &&
+  contracts.web3Exec.currentProvider.isOrigin
 
 export async function checkMetaMask(from) {
   if (contracts.metaMask && contracts.metaMaskEnabled) {
@@ -40,8 +44,10 @@ const isServer = typeof window === 'undefined'
 function useRelayer({ mutation, value }) {
   if (isServer) return
 
+  const relayerEnabled = window.localStorage.enableRelayer || isOriginMobile
+
   let reason
-  if (!window.localStorage.enableRelayer) reason = 'disabled in localStorage'
+  if (!relayerEnabled) reason = 'disabled in localStorage and not mobile'
   if (!contracts.config.relayer) reason = 'relayer not configured'
   if (!mutation) reason = 'no mutation specified'
 
@@ -97,6 +103,12 @@ async function useProxy({ proxy, addr, to, from, mutation }) {
     return
   } else if (mutation === 'swapToToken') {
     debug('cannot useProxy: swapToToken disabled')
+    return
+  } else if (mutation === 'swapAndMakeOffer') {
+    debug('cannot useProxy: swapAndMakeOffer')
+    return
+  } else if (mutation === 'transferTokenMarketplaceExecute') {
+    debug('cannot useProxy: transferTokenMarketplaceExecute')
     return
   }
 
@@ -171,7 +183,7 @@ export default function txHelper({
       // gas = await toSend.estimateGas({ from })
       gas = 1000000
     } else if (shouldUseProxy && !shouldUseRelayer) {
-      debug('wrapping tx with Proxy.execute')
+      debug(`wrapping tx with Proxy.execute. value: ${value}`)
       const Proxy = new web3.eth.Contract(IdentityProxy.abi, proxy)
       const txData = await tx.encodeABI()
       toSend = Proxy.methods.execute(0, addr, value || '0', txData)
@@ -228,6 +240,7 @@ export default function txHelper({
     }
     toSend
       .once('transactionHash', async hash => {
+        debug(`got hash ${hash}`)
         txHash = hash
         resolve({ id: hash })
 
