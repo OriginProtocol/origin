@@ -1,9 +1,10 @@
 'use strict'
 
-const bcrypt = require('bcrypt')
 const express = require('express')
 const router = express.Router()
 const sendgridMail = require('@sendgrid/mail')
+const redis = require('redis')
+const { promisify } = require('util')
 
 const Attestation = require('../models/index').Attestation
 const AttestationTypes = Attestation.AttestationTypes
@@ -12,21 +13,16 @@ const { emailGenerateCode, emailVerifyCode } = require('../utils/validation')
 const { generateSixDigitCode } = require('../utils')
 const logger = require('../logger')
 
+const redisClient = redis.createClient(process.env.REDIS_URL)
+// getAsync for redis get
+const getAsync = promisify(redisClient.get).bind(redisClient)
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 router.post('/generate-code', emailGenerateCode, async (req, res) => {
   const code = generateSixDigitCode()
 
-  // Hash the email so it doesn't get stored in the session in plain text
-  const salt = bcrypt.genSaltSync(10)
-  const emailHash = bcrypt.hashSync(req.body.email, salt)
-
-  const now = new Date()
-  req.session.emailAttestation = {
-    emailHash: emailHash,
-    code: code,
-    expiry: now.setMinutes(now.getMinutes() + 30)
-  }
+  // Set the code in redis with a 30 minute expiry
+  redisClient.set(req.body.email, code, 'EX', 60 * 60 * 30)
 
   const email = {
     to: req.body.email,
@@ -50,44 +46,22 @@ router.post('/generate-code', emailGenerateCode, async (req, res) => {
 })
 
 router.post('/verify', emailVerifyCode, async (req, res) => {
-  if (
-    !req.session.emailAttestation ||
-    !req.session.emailAttestation.emailHash
-  ) {
+  const code = await getAsync(req.body.email)
+
+  if (!code) {
     logger.warn(`Attempted attestation for ${req.body.email} without session.`)
     return res.status(400).send({
       errors: ['No verification code was found for that email.']
     })
   }
 
-  const validHash = bcrypt.compareSync(
-    req.body.email,
-    req.session.emailAttestation.emailHash
-  )
-
-  if (!validHash) {
-    logger.warn(`Bad hash validation for ${req.body.email}.`)
-    return res.status(400).send({
-      errors: ['No verification code was found for that email.']
-    })
-  }
-
-  if (req.session.emailAttestation.expiry < new Date()) {
-    logger.warn(
-      `Attempted attestation for ${req.body.email} with expired code.`
-    )
-    return res.status(400).send({
-      errors: ['Verification code has expired.']
-    })
-  }
-
-  if (req.session.emailAttestation.code !== req.body.code) {
+  if (String(code) !== String(req.body.code)) {
     return res.status(400).send({
       errors: ['Verification code is incorrect.']
     })
   }
 
-  // Delete req.session.emailAttestation
+  // Generate the attestation
   const attestationBody = {
     verificationMethod: {
       email: true

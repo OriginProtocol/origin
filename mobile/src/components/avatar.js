@@ -1,57 +1,44 @@
 'use strict'
 
-import React, { Component } from 'react'
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
+import React from 'react'
+import { Image } from 'react-native'
+
+import withConfig from 'hoc/withConfig'
 
 const IMAGES_PATH = '../../assets/images/'
 
-export default class Avatar extends Component {
-  render() {
-    const { image, size, style, onPress } = this.props
-
-    return (
-      <TouchableOpacity
-        activeOpacity={onPress ? 0.5 : 1}
-        onPress={() => {
-          if (typeof onPress === 'function') {
-            onPress()
-          }
-        }}
-      >
-        <View
-          style={[
-            styles.container,
-            {
-              borderRadius: size / 8,
-              height: size,
-              paddingTop: size / 10,
-              width: size
-            },
-            style
-          ]}
-        >
-          <Image
-            source={
-              image ? { uri: image } : require(`${IMAGES_PATH}avatar.png`)
-            }
-            resizeMethod={'resize'}
-            resizeMode={'contain'}
-            style={[styles.image, { borderRadius: size / 8 }]}
-          />
-        </View>
-      </TouchableOpacity>
-    )
+const Avatar = ({ config, source, size = 30, style = {} }) => {
+  if (!source) {
+    source = require(IMAGES_PATH + 'partners-graphic.png')
+  } else if (typeof source === 'string') {
+    // Check if the source contains an IPFS hash, if it does rewrite the URL so it
+    // uses the configured IPFS gateway
+    // Note: regex pattern only valid while IPFS uses sha256 as its hashing algorithm
+    // No source provided, use default graphic
+    const ipfsHashPattern = /Qm[1-9A-HJ-NP-Za-km-z]{44}/
+    const ipfsHashMatch = source.match(ipfsHashPattern)
+    if (ipfsHashMatch) {
+      source = { uri: `${config.ipfsGateway}/ipfs/${ipfsHashMatch[0]}` }
+    } else {
+      // Might not be IPFS, use source directly
+      source = { uri: source }
+    }
   }
+
+  return (
+    <Image
+      resizeMethod={'resize'}
+      resizeMode={'contain'}
+      style={{
+        width: size,
+        height: size,
+        borderRadius: size / 2,
+        backgroundColor: '#233f53',
+        ...style
+      }}
+      source={source}
+    />
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#2e3f53',
-    alignItems: 'center'
-  },
-  image: {
-    // flex: 1,
-    height: '100%',
-    width: '100%'
-  }
-})
+export default withConfig(Avatar)

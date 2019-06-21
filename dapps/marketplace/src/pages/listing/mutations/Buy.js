@@ -71,7 +71,11 @@ class Buy extends Component {
         content = this.renderWaitSwapModal()
       } else if (this.state.allow) {
         content = this.renderAllowTokenModal()
-      } else if (hasEth && get(this.props, 'config.proxyAccountsEnabled')) {
+      } else if (
+        !this.hasBalance() &&
+        hasEth &&
+        get(this.props, 'config.proxyAccountsEnabled')
+      ) {
         action = this.renderMakeOfferMutation(null, true)
       } else if (!this.hasBalance()) {
         action = this.renderSwapTokenMutation(

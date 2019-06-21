@@ -1,5 +1,7 @@
 'use strict'
 
+import get from 'lodash.get'
+
 const IMAGES_PATH = '../../assets/images/'
 
 export default {
@@ -18,4 +20,20 @@ export default {
     icon: require(`${IMAGES_PATH}ogn-icon.png`),
     name: 'Origin Token'
   }
+}
+
+export function tokenBalanceFromGql(result, places = 0) {
+  const web3 = global.web3
+
+  const amount = get(result.data, 'web3.account.token.balance', 0)
+  const amountBN = web3.utils.toBN(amount)
+  const decimals = get(result.data, 'web3.account.token.token.decimals', 0)
+  const decimalsBN = web3.utils.toBN(
+    web3.utils.padRight('1', decimals + 1 - places)
+  )
+  const balance = amountBN.div(decimalsBN)
+  if (places > 0) {
+    return Number(balance / Math.pow(10, places))
+  }
+  return Number(balance)
 }

@@ -84,7 +84,7 @@ class AirbnbAttestation extends Component {
             Enter Airbnb profile URL below
           </fbt>
         </div>
-        <div className="mt-5">
+        <div className="my-5">
           <input
             ref={ref => (this.inputRef = ref)}
             className="form-control form-control-lg"
@@ -107,7 +107,7 @@ class AirbnbAttestation extends Component {
             <fbt desc="VerifyAirbnb.yourAirbnbId">Your Airbnb user ID</fbt>
           }
         />
-        <div className={`actions mt-5`}>
+        <div className="actions mt-5">
           {this.renderCodeButton()}
           {!isMobile && (
             <button
@@ -188,7 +188,7 @@ class AirbnbAttestation extends Component {
       <Mutation
         mutation={GenerateAirbnbCodeMutation}
         onCompleted={res => {
-          const result = res.GenerateAirbnbCodeMutation
+          const result = res.generateAirbnbCode
 
           if (!result.success) {
             this.setState({ error: result.reason, loading: false, data: null })
@@ -196,10 +196,9 @@ class AirbnbAttestation extends Component {
           }
 
           this.setState({
-            data: result.data,
+            code: result.code,
             loading: false,
-            completed: true,
-            shouldClose: true
+            stage: 'VerifyCode'
           })
         }}
         onError={errorData => {
@@ -285,8 +284,8 @@ class AirbnbAttestation extends Component {
 export default withIsMobile(AirbnbAttestation)
 
 require('react-styl')(`
-  .attestation-modal 
-    > div 
+  .attestation-modal
+    > div
       .verification-code
         display: flex
         flex-direction: row

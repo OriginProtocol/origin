@@ -33,10 +33,7 @@ class AuthenticationGuard extends Component {
   }
 
   componentDidMount() {
-    if (__DEV__) {
-      console.debug('Bypassing authentication prompt')
-      this.onSuccess()
-    } else if (this.props.settings.biometryType) {
+    if (this.props.settings.biometryType) {
       this.touchAuthenticate()
     }
   }
