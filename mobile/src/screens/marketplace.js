@@ -46,6 +46,7 @@ class MarketplaceScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      enablePullToRefresh: true,
       modals: [],
       fiatCurrency: CURRENCIES.find(c => c[0] === 'fiat-USD')
     }
@@ -329,9 +330,7 @@ class MarketplaceScreen extends Component {
   /* Handle the response from window.onScroll
    */
   handleScrollHandlerResponse = ({ scrollTop }) => {
-    if (scrollTop < -60) {
-      this.dappWebView.injectJavaScript(`document.location.reload()`)
-    }
+    this.setState({ enablePullToRefresh: scrollTop === 0 })
   }
 
   injectGraphqlQuery = (id, query, variables = {}) => {
@@ -522,6 +521,7 @@ class MarketplaceScreen extends Component {
           contentContainerStyle={{ flex: 1 }}
           refreshControl={
             <RefreshControl
+              enabled={this.state.enablePullToRefresh}
               refreshing={this.state.refreshing}
               onRefresh={() => {
                 this.dappWebView.injectJavaScript(`document.location.reload()`)
@@ -529,6 +529,7 @@ class MarketplaceScreen extends Component {
               }}
             />
           }
+          {...this._panResponder.panHandlers}
         >
           <WebView
             ref={webview => {
