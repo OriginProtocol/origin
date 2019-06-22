@@ -685,14 +685,16 @@ class Purse {
           )
         } else if (masterBalanceLow) {
           logger.warn(
-            `Master account is low @ ${balanceEther} Ether. Will not be able to auto-fund child accounts!`
+            `Master account is low @ ${balanceEther} Ether. Add funds soon!`
           )
         } else {
           logger.info(`Master account balance: ${balanceEther} Ether`)
         }
 
+        const childrenToFund = []
+
         // Check for child balances dropping below set minimum and fund if necessary
-        if (this.ready && this.autofundChildren && !masterBalanceLow) {
+        if (this.ready && this.autofundChildren) {
           for (let i = 0; i < this.children.length; i++) {
             const child = this.children[i]
             const childBalance = numberToBN(
@@ -703,11 +705,30 @@ class Purse {
               childBalance.lte(MIN_CHILD_BALANCE) &&
               !this.accounts[child].hasPendingFundingTx
             ) {
-              await this._fundChild(child)
+              childrenToFund.push(child)
             } else if (this.accounts[child].hasPendingFundingTx) {
               // Reset the flag
               this.accounts[child].hasPendingFundingTx = false
             }
+          }
+
+          let valueToSend = BASE_FUND_VALUE
+          const maxFee = MAX_GAS_PRICE.mul(new BN('21000')).mul(
+            new BN(childrenToFund.length)
+          )
+          if (
+            masterBalance.lt(
+              valueToSend.mul(new BN(childrenToFund.length)).add(maxFee)
+            )
+          ) {
+            valueToSend = masterBalance.sub(maxFee).div(childrenToFund.length)
+          }
+          if (valueToSend.gte(MIN_CHILD_BALANCE)) {
+            for (const child of childrenToFund) {
+              await this._fundChild(child, valueToSend)
+            }
+          } else {
+            logger.warn('Unable to fund children.  Balance too low.')
           }
         }
       }
