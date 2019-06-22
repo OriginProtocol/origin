@@ -16,6 +16,17 @@ const {
 } = require('@origin/growth/src/resources/event')
 const { ip2geo } = require('@origin/ip2geo')
 
+const siteNameToService = {
+  'airbnb.com': 'airbnb',
+  'facebook.com': 'facebook',
+  'github.com': 'github',
+  'google.com': 'google',
+  'kakao.com': 'kakao',
+  'linkedin.com': 'linkedin',
+  'twitter.com': 'twitter',
+  'wechat.com': 'wechat'
+}
+
 class IdentityEventHandler {
   constructor(config, graphqlClient) {
     this.config = config
@@ -28,17 +39,11 @@ class IdentityEventHandler {
   _getAttestationService(attestation) {
     if (attestation.data.attestation.site) {
       const siteName = attestation.data.attestation.site.siteName
-      if (siteName === 'facebook.com') {
-        return 'facebook'
-      } else if (siteName === 'twitter.com') {
-        return 'twitter'
-      } else if (siteName === 'airbnb.com') {
-        return 'airbnb'
-      } else if (siteName === 'google.com') {
-        return 'google'
-      } else {
+      const service = siteNameToService[siteName]
+      if (!service) {
         logger.error(`Unexpected siteName for attestation ${attestation}`)
       }
+      return service
     } else if (attestation.data.attestation.phone) {
       return 'phone'
     } else if (attestation.data.attestation.email) {
@@ -175,6 +180,7 @@ class IdentityEventHandler {
               'WEBSITE'
             )
             break
+          // TODO: handle github, linkedin, kakao, wechat
         }
       })
     )
@@ -218,6 +224,7 @@ class IdentityEventHandler {
       country: decoratedIdentity.country,
       avatarUrl: decoratedIdentity.avatarUrl,
       website: decoratedIdentity.website
+      // TODO: store linkedin, github, wechat, kakao ids
     }
 
     logger.debug('Identity=', identityRow)

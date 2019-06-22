@@ -105,7 +105,7 @@
   "3O3nPR": "Verify your Wechat Profile",
   "2peucP": "สร้างรายชื่อ",
   "2QerxF": "ซื้อรายชื่อ",
-  "HU81L": {
+  "2JIv8R": {
     "growth.jan2019.name": "แคมเปญมกราคม 2562",
     "growth.jan2019.short_name": "ม.ค. 2019",
     "growth.feb2019.name": "แคมเปญกุมภาพันธ์ 2019",
@@ -118,6 +118,8 @@
     "growth.may2019.short_name": "May 2019",
     "growth.june2019.name": "June 2019 Campaign",
     "growth.june2019.short_name": "June 2019",
+    "growth.july2019.name": "July 2019 Campaign",
+    "growth.july2019.short_name": "July 2019",
     "growth.profile.and.email.requirement": "ยืนยันอีเมลและโปรไฟล์ Origin แล้ว",
     "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
@@ -802,9 +804,9 @@
   "2hg0gR": "Unlock the full experience",
   "1pt6RF": "เกี่ยวกับตัวตนบนบล็อกเชน",
   "4o9sVo": "กระเป๋าเงินดิจิตอล cryptocurrency เป็นโปรแกรมซอฟต์แวร์ที่เก็บคีย์ส่วนตัวและสาธารณะและโต้ตอบกับ blockchain ต่าง ๆ เพื่อให้ผู้ใช้ส่งและรับสกุลเงินดิจิตอล หากคุณต้องการใช้ Bitcoin หรือเงินดิจิตอลอื่น ๆ คุณจะต้องมีกระเป๋าเงินดิจิทัล",
-  "1JNI6V": "เรียนรู้เพิ่มเติม",
   "3NRLhm": "Crypto Wallet คืออะไร",
   "2HUml2": "กระเป๋าเงินดิจิตอล cryptocurrency เป็นโปรแกรมซอฟต์แวร์ที่เก็บคีย์ส่วนตัวและสาธารณะและโต้ตอบกับ blockchain ต่าง ๆ เพื่อให้ผู้ใช้ส่งและรับสกุลเงินดิจิตอล หากคุณต้องการใช้ Bitcoin หรือเงินดิจิตอลอื่น ๆ คุณจะต้องมีกระเป๋าเงินดิจิทัล",
+  "1JNI6V": "เรียนรู้เพิ่มเติม",
   "28APX7": "รายชื่อของคุณกำลังรอ ...",
   "jC283": "เชื่อมต่อ Crypto Wallet",
   "1xQN4D": "In order to successfully transact with others on our DApp, you’ll need a wallet to store cryptocurrency.",

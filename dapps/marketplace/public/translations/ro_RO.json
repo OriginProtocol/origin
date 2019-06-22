@@ -105,7 +105,7 @@
   "3O3nPR": "Verify your Wechat Profile",
   "2peucP": "Creați o listă",
   "2QerxF": "Achiziționați o listă",
-  "HU81L": {
+  "2JIv8R": {
     "growth.jan2019.name": "Ianuarie 2019 Campanie",
     "growth.jan2019.short_name": "Jan 2019",
     "growth.feb2019.name": "Campania din februarie 2019",
@@ -118,6 +118,8 @@
     "growth.may2019.short_name": "May 2019",
     "growth.june2019.name": "June 2019 Campaign",
     "growth.june2019.short_name": "June 2019",
+    "growth.july2019.name": "July 2019 Campaign",
+    "growth.july2019.short_name": "July 2019",
     "growth.profile.and.email.requirement": "E-mail verificat și profil de origine",
     "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
@@ -802,9 +804,9 @@
   "2hg0gR": "Unlock the full experience",
   "1pt6RF": "Despre identitatea pe blocul de blocuri",
   "4o9sVo": "Un portofel de tip cryptocurrency este un program software care stochează chei private și publice și interacționează cu blocuri diferite pentru a permite utilizatorilor să trimită și să primească monedă digitală și să monitorizeze soldul acestora. Dacă doriți să utilizați Bitcoin sau orice altă criptocurrency, va trebui să aveți un portofel digital.",
-  "1JNI6V": "Află mai mult",
   "3NRLhm": "Ce este un portofel Crypto?",
   "2HUml2": "Un portofel de tip cryptocurrency este un program software care stochează chei private și publice și interacționează cu blocuri diferite pentru a permite utilizatorilor să trimită și să primească monedă digitală și să monitorizeze soldul acestora. Dacă doriți să utilizați Bitcoin sau orice altă criptocurrency, va trebui să aveți un portofel digital.",
+  "1JNI6V": "Află mai mult",
   "28APX7": "Lista dvs. așteaptă ...",
   "jC283": "Conectați un portofel Crypto",
   "1xQN4D": "In order to successfully transact with others on our DApp, you’ll need a wallet to store cryptocurrency.",
