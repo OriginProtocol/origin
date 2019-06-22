@@ -13,7 +13,7 @@ const ruleIdToActionType = {
   TwitterAttestation: 'Twitter',
   GoogleAttestation: 'Google',
   LinkedInAttestation: 'LinkedIn',
-  GitHubAttestation: 'Github',
+  GitHubAttestation: 'GitHub',
   KakaoAttestation: 'Kakao',
   WeChatAttestation: 'WeChat',
   WebsiteAttestation: 'Website',
