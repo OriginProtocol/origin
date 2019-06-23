@@ -162,7 +162,7 @@ describe('Apollo adapter - July campaign', () => {
         reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
       },
       GitHubAttestation: {
-        type: 'Github',
+        type: 'GitHub',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
