@@ -59,7 +59,7 @@ class NameScreen extends Component {
               autoCorrect={false}
               multiline={false}
               onChangeText={value => this.handleChange('firstName', value)}
-              onSubmitEditing={this.handleSubmit}
+              onSubmitEditing={() => this.lastNameTextInput.focus()}
               value={this.state.firstNameValue}
               style={[
                 styles.input,
@@ -75,6 +75,7 @@ class NameScreen extends Component {
               <fbt desc="NameScreen.lastNameSubtitle">Enter your last name</fbt>
             </Text>
             <TextInput
+              ref={ref => this.lastNameTextInput = ref}
               autoCapitalize="none"
               autoCorrect={false}
               multiline={false}
