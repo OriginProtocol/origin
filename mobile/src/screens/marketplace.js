@@ -546,7 +546,7 @@ class MarketplaceScreen extends Component {
               }}
             />
           }
-          {...this._panResponder.panHandlers}
+          {...(Platform.OS === 'android' ? this._panResponder.panHandlers : [])}
         >
           <WebView
             ref={webview => {
