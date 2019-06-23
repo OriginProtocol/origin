@@ -77,7 +77,7 @@ class NameScreen extends Component {
               <fbt desc="NameScreen.lastNameSubtitle">Enter your last name</fbt>
             </Text>
             <TextInput
-              ref={ref => this.lastNameTextInput = ref}
+              ref={ref => (this.lastNameTextInput = ref)}
               autoCapitalize="words"
               autoCompleteType="name"
               autoCorrect={false}
