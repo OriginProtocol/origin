@@ -1026,6 +1026,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		2EFFF35CA5E64E90BECC6A43 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			path = Application;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */

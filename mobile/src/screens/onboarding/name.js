@@ -54,7 +54,8 @@ class NameScreen extends Component {
               </fbt>
             </Text>
             <TextInput
-              autoCapitalize="none"
+              autoCapitalize="words"
+              autoCompleteType="name"
               autoFocus={true}
               autoCorrect={false}
               multiline={false}
@@ -65,6 +66,7 @@ class NameScreen extends Component {
                 styles.input,
                 this.state.firstNameError ? styles.invalid : {}
               ]}
+              textContentType="givenName"
             />
             {this.state.firstNameError.length > 0 && (
               <Text style={styles.invalid}>{this.state.firstNameError}</Text>
@@ -76,7 +78,8 @@ class NameScreen extends Component {
             </Text>
             <TextInput
               ref={ref => this.lastNameTextInput = ref}
-              autoCapitalize="none"
+              autoCapitalize="words"
+              autoCompleteType="name"
               autoCorrect={false}
               multiline={false}
               onChangeText={value => this.handleChange('lastName', value)}
@@ -86,6 +89,7 @@ class NameScreen extends Component {
                 styles.input,
                 this.state.lastNameError ? styles.invalid : {}
               ]}
+              textContentType="familyName"
             />
             {this.state.lastNameError.length > 0 && (
               <Text style={styles.invalid}>{this.state.lastNameError}</Text>
