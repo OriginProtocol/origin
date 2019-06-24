@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -34,4 +34,4 @@ module.exports = {
       queryInterface.removeColumn('identity', 'wechat')
     ])
   }
-};
+}
