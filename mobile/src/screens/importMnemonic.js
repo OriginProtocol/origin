@@ -85,6 +85,7 @@ class ImportAccountScreen extends Component {
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
+            autoFocus={true}
             multiline={true}
             returnKeyType="done"
             blurOnSubmit={true}

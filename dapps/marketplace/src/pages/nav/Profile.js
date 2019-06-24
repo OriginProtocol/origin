@@ -267,8 +267,8 @@ require('react-styl')(`
         text-align: center
         flex: 1
         .info
-          margin-bottom: 1rem
           margin-top: 0.75rem
+          margin-bottom: 0.75rem
           display: flex
           flex-direction: column
           align-items: center
@@ -281,6 +281,10 @@ require('react-styl')(`
            overflow: hidden
            width: 100%
            text-overflow: ellipsis
+          .attestations
+            flex-wrap: wrap
+            .attestation
+              margin-bottom: 0.5rem
         .earn-ogn
           border-radius: 3rem
           margin: 1.5rem 0 1.25rem 0

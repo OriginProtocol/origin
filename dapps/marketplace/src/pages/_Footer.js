@@ -5,6 +5,8 @@ import get from 'lodash/get'
 
 import NetworkQuery from 'queries/Network'
 import BetaModal from './_BetaModal'
+import ExternalAnchor from 'components/ExternalAnchor'
+import withIsMobile from 'hoc/withIsMobile'
 
 const GitHubLink = 'https://github.com/OriginProtocol/origin/issues/new'
 const SupportEmail = 'support@originprotocol.com'
@@ -13,8 +15,10 @@ class Footer extends Component {
   state = {
     reminders: false
   }
+
   render() {
-    const { creatorConfig } = this.props
+    const { creatorConfig, isMobileApp } = this.props
+
     return (
       <Query query={NetworkQuery}>
         {({ data }) => {
@@ -22,7 +26,7 @@ class Footer extends Component {
           return (
             <footer>
               <div className="container">
-                <a
+                <ExternalAnchor
                   href="https://www.originprotocol.com"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -33,7 +37,7 @@ class Footer extends Component {
                     )}
                     <div className="logo" />
                   </div>
-                </a>
+                </ExternalAnchor>
                 <div className="separator" />
                 <div className="about">
                   {creatorConfig.isCreatedMarketplace ? (
@@ -80,75 +84,83 @@ class Footer extends Component {
                               {SupportEmail}
                             </fbt:param>
                           </a>, open an issue on
-                          <a
+                          <ExternalAnchor
                             href={GitHubLink}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             GitHub
-                          </a>
+                          </ExternalAnchor>
                           or post in our #bug-reports channel on
-                          <a
+                          <ExternalAnchor
                             href="https://discord.gg/jyxpUSe"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             Discord
-                          </a>.
+                          </ExternalAnchor>.
                         </fbt>
                       </div>
                       <br />
                       <div className="copyright">
-                        © {new Date().getFullYear()} Origin Protocol, Inc.{' '}
-                        <span>&bull;</span>
-                        <a
-                          href="https://www.originprotocol.com/tos"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <fbt desc="footer.acceptableUsePolicy">Terms</fbt>
-                        </a>
-                        <span>&bull;</span>
-                        <a
-                          href="https://www.originprotocol.com/privacy"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <fbt desc="footer.privacy">Privacy</fbt>
-                        </a>
-                        <span>&bull;</span>
-                        <a
-                          href="https://www.originprotocol.com/aup"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <fbt desc="footer.acceptableUsePolicy">
-                            Acceptable Use Policy
-                          </fbt>
-                        </a>
+                        © {new Date().getFullYear()} Origin Protocol, Inc.
+                        {!isMobileApp && (
+                          <>
+                            <span>&bull;</span>
+                            <a
+                              href="https://www.originprotocol.com/tos"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <fbt desc="footer.acceptableUsePolicy">Terms</fbt>
+                            </a>
+                            <span>&bull;</span>
+                            <a
+                              href="https://www.originprotocol.com/privacy"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <fbt desc="footer.privacy">Privacy</fbt>
+                            </a>
+                            <span>&bull;</span>
+                            <a
+                              href="https://www.originprotocol.com/aup"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <fbt desc="footer.acceptableUsePolicy">
+                                Acceptable Use Policy
+                              </fbt>
+                            </a>
+                          </>
+                        )}
                       </div>
                     </>
                   )}
                 </div>
-                <div className="links">
-                  <a
-                    href="https://www.originprotocol.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <fbt desc="footer.websiteLink">Learn More About Origin</fbt>
-                  </a>
+                {!isMobileApp && (
+                  <div className="links">
+                    <a
+                      href="https://www.originprotocol.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <fbt desc="footer.websiteLink">
+                        Learn More About Origin
+                      </fbt>
+                    </a>
 
-                  <a
-                    href="https://www.originprotocol.com/creator"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <fbt desc="footer.creatorLink">
-                      Create Your Own Marketplace
-                    </fbt>
-                  </a>
-                </div>
+                    <a
+                      href="https://www.originprotocol.com/creator"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <fbt desc="footer.creatorLink">
+                        Create Your Own Marketplace
+                      </fbt>
+                    </a>
+                  </div>
+                )}
               </div>
             </footer>
           )
@@ -158,7 +170,7 @@ class Footer extends Component {
   }
 }
 
-export default Footer
+export default withIsMobile(Footer)
 
 require('react-styl')(`
   footer

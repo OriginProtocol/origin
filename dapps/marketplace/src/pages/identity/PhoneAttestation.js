@@ -47,9 +47,7 @@ class PhoneAttestation extends Component {
     return (
       <ModalComponent
         title={fbt('Verify Phone Number', 'PhoneAttestation.verifyPhoneNumber')}
-        className={`attestation-modal phone${
-          this.state.stage === 'VerifiedOK' ? ' success' : ''
-        }`}
+        className="attestation-modal phone"
         shouldClose={this.state.shouldClose}
         onClose={() => {
           const completed = this.state.completed
@@ -345,7 +343,7 @@ require('react-styl')(`
         line-height: 1.67
         letter-spacing: normal
         color: #000000
-        margin-botton: 0.75rem
+        margin-bottom: 0.75rem
       font-size: 18px
       .form-control-wrap
         flex: 1
@@ -407,23 +405,11 @@ require('react-styl')(`
     &.kakao > div h2
       background-image: url(images/growth/kakao-icon.svg)
     &.github > div h2
-      background-image: url(images/growth/profile-icon.svg)
+      background-image: url(images/growth/github-icon.svg)
     &.linkedin > div h2
-      background-image: url(images/growth/profile-icon.svg)
+      background-image: url(images/growth/linkedin-icon.svg)
     &.wechat > div h2
       background-image: url(images/growth/wechat-icon.svg)
-
-    &.success
-      > div
-        h2
-          color: var(--greenblue)
-          background-image: url(images/circular-check-button.svg)
-          background-size: 3.5rem
-          padding-top: 5rem
-          &::before
-            background-image: none
-        .actions
-          margin-bottom: 1.5rem
 
   .mobile-modal-light .attestation-modal
     padding: 20px

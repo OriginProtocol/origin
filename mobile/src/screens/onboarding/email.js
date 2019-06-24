@@ -111,7 +111,9 @@ class EmailScreen extends Component {
   /* Request a verification code from @origin/bridge
    */
   generateVerificationCode = async () => {
-    const url = `${this.props.config.bridge}/api/attestations/email/generate-code`
+    const url = `${
+      this.props.config.bridge
+    }/api/attestations/email/generate-code`
     return await fetch(url, {
       headers: { 'content-type': 'application/json' },
       credentials: 'include',
@@ -174,6 +176,7 @@ class EmailScreen extends Component {
             autoCorrect={false}
             autoFocus={true}
             multiline={false}
+            keyboardType="email-address"
             returnKeyType="next"
             onChangeText={this.handleChange}
             onSubmitEditing={this.handleSubmitEmail}

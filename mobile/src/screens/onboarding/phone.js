@@ -16,7 +16,19 @@ import withConfig from 'hoc/withConfig'
 import OnboardingStyles from 'styles/onboarding'
 import _countryCodes from 'utils/countryCodes'
 
-const countryCodes = _countryCodes
+const commonCountryCodes = [
+  '1', // US/CA
+  '7', // RU
+  '44', // UK
+  '61', // AU
+  '81', // JP
+  '82', // KR
+  '86', // CN,
+  '91' // IN
+]
+
+const [commonCountries, uncommonCountries] = _countryCodes
+  // Generate the options
   .map(item => {
     return {
       label: `${item.name} (${item.prefix})`,
@@ -24,8 +36,15 @@ const countryCodes = _countryCodes
     }
   })
   .sort((a, b) => (a.label > b.label ? 1 : -1))
-  // Filter to New Zealand in development
-  .filter(x => !__DEV__ || x.value == 64)
+  // Partition into common and uncommon countries to allow for a separator in
+  // the select
+  .reduce(
+    (result, option) => {
+      result[commonCountryCodes.includes(option.value) ? 0 : 1].push(option)
+      return result
+    },
+    [[], []]
+  )
 
 class PhoneScreen extends Component {
   constructor(props) {
@@ -111,7 +130,9 @@ class PhoneScreen extends Component {
   /* Request a verification code from @origin/bridge.
    */
   generateVerificationCode = async () => {
-    const url = `${this.props.config.bridge}/api/attestations/phone/generate-code`
+    const url = `${
+      this.props.config.bridge
+    }/api/attestations/phone/generate-code`
     return await fetch(url, {
       headers: { 'content-type': 'application/json' },
       credentials: 'include',
@@ -181,10 +202,14 @@ class PhoneScreen extends Component {
           </Text>
           <RNPickerSelect
             placeholder={{ label: 'Select a country', value: null }}
-            items={countryCodes}
-            onValueChange={async value =>
+            items={[
+              ...commonCountries,
+              { value: false, label: '---' },
+              ...uncommonCountries
+            ]}
+            onValueChange={async value => {
               await this.handleChange('countryCode', value)
-            }
+            }}
             style={pickerSelectStyles}
           />
           <TextInput
@@ -221,6 +246,7 @@ class PhoneScreen extends Component {
             title={fbt('Continue', 'PhoneScreen.continueButton')}
             disabled={
               !this.state.phoneValue.length ||
+              !this.state.countryCodeValue ||
               this.state.phoneError ||
               this.state.loading
             }

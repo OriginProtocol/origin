@@ -41,9 +41,7 @@ class AirbnbAttestation extends Component {
     return (
       <ModalComponent
         title={fbt('Verify Airbnb Account', 'VerifyAirbnb.verifyAirbnbAccount')}
-        className={`attestation-modal airbnb${
-          this.state.stage === 'VerifiedOK' ? ' success' : ''
-        }`}
+        className="attestation-modal airbnb"
         shouldClose={this.state.shouldClose}
         onClose={() => {
           const completed = this.state.completed
@@ -109,7 +107,7 @@ class AirbnbAttestation extends Component {
             <fbt desc="VerifyAirbnb.yourAirbnbId">Your Airbnb user ID</fbt>
           }
         />
-        <div className={`actions mt-5`}>
+        <div className="actions mt-5">
           {this.renderCodeButton()}
           {!isMobile && (
             <button
@@ -190,7 +188,7 @@ class AirbnbAttestation extends Component {
       <Mutation
         mutation={GenerateAirbnbCodeMutation}
         onCompleted={res => {
-          const result = res.GenerateAirbnbCodeMutation
+          const result = res.generateAirbnbCode
 
           if (!result.success) {
             this.setState({ error: result.reason, loading: false, data: null })
@@ -198,10 +196,9 @@ class AirbnbAttestation extends Component {
           }
 
           this.setState({
-            data: result.data,
+            code: result.code,
             loading: false,
-            completed: true,
-            shouldClose: true
+            stage: 'VerifyCode'
           })
         }}
         onError={errorData => {
@@ -240,15 +237,18 @@ class AirbnbAttestation extends Component {
         mutation={VerifyAirbnbCodeMutation}
         onCompleted={res => {
           const result = res.verifyAirbnbCode
-          if (result.success) {
-            this.setState({
-              stage: 'VerifiedOK',
-              data: result.data,
-              loading: false
-            })
-          } else {
-            this.setState({ error: result.reason, loading: false })
+
+          if (!result.success) {
+            this.setState({ error: result.reason, loading: false, data: null })
+            return
           }
+
+          this.setState({
+            data: result.data,
+            loading: false,
+            completed: true,
+            shouldClose: true
+          })
         }}
         onError={errorData => {
           console.error('Error', errorData)
