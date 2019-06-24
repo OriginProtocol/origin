@@ -19,8 +19,8 @@ async function pollExchangeRate() {
 /**
  * Fetch excahnge rate from remote URL
  */
-async function fetchExchangeRate(cryptoCode, fiatCode) {
-  const exchangeURL = `https://api.cryptonator.com/api/ticker/${cryptoCode}-${fiatCode}`
+async function fetchExchangeRate() {
+  const exchangeURL = `https://api.cryptonator.com/api/ticker/ETH-USD`
 
   return new Promise(async resolve => {
     const response = await request.post(exchangeURL)
