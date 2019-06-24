@@ -25,8 +25,12 @@ const WarningIcon = ({ tooltip }) => (
   </Tooltip>
 )
 
-function escrowStatus(status) {
+function escrowIsHeld(status) {
   return status.match(/accepted|disputed|pending/i)
+}
+
+function escrowStatus(status) {
+  return escrowIsHeld(status)
     ? fbt('Held', 'EscrowDetails.held')
     : fbt('Released', 'EscrowDetails.released')
 }
@@ -76,7 +80,7 @@ const EscrowDetails = ({ offer }) => (
       <span>
         <fbt desc="EscrowDetails.status">Status</fbt>
       </span>
-      <span>{escrowStatus(offer.statusStr)}</span>
+      <span className={escrowIsHeld(offer.statusStr) ? 'held' : 'released'}>{escrowStatus(offer.statusStr)}</span>
     </li>
   </ul>
 )
@@ -85,32 +89,27 @@ export default EscrowDetails
 
 require('react-styl')(`
   .escrow-details
-    background: var(--pale-grey-eight)
-    border-radius: var(--default-radius)
     font-size: 18px
     font-weight: normal
-    padding: 1rem 1.5rem
     li
       display: flex;
       justify-content: space-between;
-      padding: 0.375rem 0 0.375rem 1.25rem
-      span:nth-child(1)
-        color: var(--dusk)
-      span:nth-child(2)
-        color: #000
-        span
+      padding: 0.375rem 0 0.375rem 0
+      > span:nth-child(1)
+        font-weight: normal
+      > span:nth-child(2)
+        font-weight: bold
+      > span
           color: #000
+          &.held
+            color: var(--golden-rod)
+          &.released
+            color: #00d693
       background-position: left center
       background-repeat: no-repeat
       background-size: 0.75rem
-      &.escrow-amount
-        background-image: url(images/order/price-unit-icon.svg)
       &.escrow-value
-        background-image: url(images/order/total-price-icon.svg)
         .warning-icon
           margin-left: 0.5rem
           vertical-align: sub
-      &.escrow-status
-        background-image: url(images/order/escrow-status-icon.svg)
-
 `)

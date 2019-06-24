@@ -76,9 +76,13 @@ const TransactionProgress = ({
 const AcceptOrReject = ({ offer, refetch, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
-      <h4>Next Step:</h4>
-      <div className="next-step">Accept or Reject Offer</div>
-      <div className="help">Click the appropriate button</div>
+      <h4>
+        <fbt desc="Progress.offerHasBeenMade">Buyer has made an offer.</fbt>
+      </h4>
+      <Stages className="mt-4" mini="true" offer={offer} />
+      <div className="mt-4">
+        <fbt desc="Progress.acceptOrReject">Accept or reject it.</fbt>
+      </div>
       <div className="actions">
         <RejectOffer
           offer={offer}
@@ -96,7 +100,6 @@ const AcceptOrReject = ({ offer, refetch, loading }) => (
         </AcceptOffer>
       </div>
     </div>
-    <Stages offer={offer} />
   </div>
 )
 
@@ -156,7 +159,7 @@ class ReviewAndFinalize extends Component {
             </DisputeOffer>
           </div>
         </div>
-        <Stages offer={offer} />
+        <Stages mini="true" offer={offer} />
       </div>
     )
   }
@@ -188,7 +191,7 @@ const SellerFinalize = ({ offer, refetch, loading }) => (
         </FinalizeOffer>
       </div>
     </div>
-    <Stages offer={offer} />
+    <Stages mini="true" offer={offer} />
   </div>
 )
 
@@ -196,24 +199,21 @@ const MessageSeller = ({ offer, refetch, loading, party }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
       <h4>
-        <fbt desc="Progress.nextSteo">Next Step</fbt>
-      </h4>
-      <div className="next-step">
         <fbt desc="Progress.giveShipping">
           Give your shipping address to seller
         </fbt>
-      </div>
-      <div className="help">
-        <fbt desc="Progress.clickButton">
-          Click the link below to open messaging
+      </h4>
+      <Stages className="mt-4" mini="true" offer={offer} />
+      <div className="mt-4">
+        <fbt desc="Progress.giveShippingAddress">
+          Make sure the seller knows where to send your item.
         </fbt>
+        <SendMessage to={offer.listing.seller.id} className="btn btn-link ml-2">
+          <fbt desc="Progress.messageSeller">Message Seller</fbt>
+        </SendMessage>
       </div>
-      <SendMessage to={offer.listing.seller.id} className="btn btn-link">
-        <fbt desc="Progress.messageSeller">Message Seller</fbt> &rsaquo;
-      </SendMessage>
       <WithdrawOffer offer={offer} refetch={refetch} from={party} />
     </div>
-    <Stages offer={offer} />
   </div>
 )
 
@@ -231,7 +231,7 @@ const WaitForSeller = ({ offer, refetch, loading, party }) => (
       </div>
       <WithdrawOffer offer={offer} refetch={refetch} from={party} />
     </div>
-    <Stages offer={offer} />
+    <Stages mini="true" offer={offer} />
   </div>
 )
 
@@ -247,7 +247,7 @@ const OfferWithdrawn = ({ offer, party, loading }) => (
           : fbt('You withdrew your offer', 'Progress.youWithdrew')}
       </div>
     </div>
-    <Stages offer={offer} />
+    <Stages mini="true" offer={offer} />
   </div>
 )
 
@@ -266,7 +266,7 @@ const OfferRejected = ({ offer, party, loading }) => (
             )}
       </div>
     </div>
-    <Stages offer={offer} />
+    <Stages mini="true" offer={offer} />
   </div>
 )
 
@@ -282,7 +282,7 @@ const Disputed = ({ offer, loading }) => (
         </fbt>
       </div>
     </div>
-    <Stages offer={offer} />
+    <Stages mini="true" offer={offer} />
   </div>
 )
 
@@ -298,7 +298,7 @@ const DisputeResolved = ({ offer, loading }) => (
         </fbt>
       </div>
     </div>
-    <Stages offer={offer} />
+    <Stages mini="true" offer={offer} />
   </div>
 )
 
@@ -315,13 +315,13 @@ const Finalized = ({ offer, loading }) => (
         </fbt>
       </div>
     </div>
-    <Stages offer={offer} />
+    <Stages mini="true" offer={offer} />
   </div>
 )
 
 const TransactionStages = ({ offer, loading }) => (
   <div className={`transaction-progress view-only${loading ? ' loading' : ''}`}>
-    <Stages offer={offer} />
+    <Stages mini="true" offer={offer} />
   </div>
 )
 
@@ -329,9 +329,13 @@ export default TransactionProgress
 
 require('react-styl')(`
   .transaction-progress
-    border: 2px solid black
-    border-radius: var(--default-radius)
-    padding-top: 1.5rem
+    font-size: 18px
+    font-weight: normal
+    color: #000000
+    border: solid 1px #eaf0f3
+    border-radius: 10px
+    background-color: #f3f7f9
+    padding: 1.9rem
     display: flex
     flex-direction: column
     align-items: center
@@ -364,10 +368,9 @@ require('react-styl')(`
         z-index: 11
 
     .top
-      padding: 0 1rem
       display: flex
+      width: 100%
       flex-direction: column
-      align-items: center
     h4
       font-weight: bold
       font-size: 24px
@@ -395,12 +398,21 @@ require('react-styl')(`
         margin-top: 0.5rem
     .actions
       display: flex
+      padding-top: 1rem
       .btn
-        margin: 0 0.5rem 1rem 0.5rem
+        margin-right: 1rem
     .btn
       padding: 0.75rem 3rem
       border-radius: 2rem
+    .btn-link
+      padding: 0 0.5rem 0 0
+      text-decoration: none
       font-size: 18px
+      font-weight: bold
+      &.danger
+        color: #dc3545
+      &::after
+        content: " >"
       &.withdraw
         font-size: 12px
         padding-top: 0
@@ -409,10 +421,19 @@ require('react-styl')(`
       background-color: var(--pale-grey-eight)
       border-radius: 0 0 5px 5px
       margin-top: 1rem
-      padding: 1rem
+      padding-top: 1rem
+      padding-bottom: 1rem
 
   @media (max-width: 767.98px)
     .transaction-progress
+      border-radius: 0px
+      padding: 0rem
+      border-radius: 0px
+      padding: 0rem
+      .top
+        background-color: #f3f7f9
+        padding: 15px
+        width: 100vw
       .actions
         flex-direction: column-reverse
 `)

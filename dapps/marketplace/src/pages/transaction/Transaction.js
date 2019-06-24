@@ -3,6 +3,7 @@ import { Query } from 'react-apollo'
 import { Link } from 'react-router-dom'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
+import { withRouter } from 'react-router-dom'
 
 import withWallet from 'hoc/withWallet'
 import query from 'queries/Offer'
@@ -13,6 +14,7 @@ import QueryError from 'components/QueryError'
 import DocumentTitle from 'components/DocumentTitle'
 import LoadingSpinner from 'components/LoadingSpinner'
 import Tooltip from 'components/Tooltip'
+import MobileModalHeader from 'components/MobileModalHeader'
 
 import TxHistory from './_History'
 import TxProgress from './_Progress'
@@ -77,9 +79,6 @@ const Transaction = props => {
 
           const Progress = (
             <>
-              <h3>
-                <fbt desc="Transaction.progress">Transaction Progress</fbt>
-              </h3>
               <TxProgress
                 isBuyer={isOwner(buyer, props)}
                 isSeller={isSeller}
@@ -109,7 +108,7 @@ const Transaction = props => {
           const Offer = (
             <>
               <h3>
-                <fbt desc="Transaction.offerDetails">Offer Details</fbt>
+                <fbt desc="Transaction.purchaseDetails">Purchase Details</fbt>
                 <HelpIcon
                   tooltip={fbt(
                     'This includes the price at the time that the offer was made. The current value of the escrowed cryptocurrency may have changed due to market fluctuations.',
@@ -150,40 +149,67 @@ const Transaction = props => {
             </>
           )
 
+          const VerticalSeparator = (<div className="vertical-separator my-3"/>)
+          const HorizontalSeparator = (<div className="horizontal-separator mx-3"/>)
+
           return (
             <>
               <DocumentTitle>{offer.listing.title}</DocumentTitle>
-              {isSeller ? (
-                <Link to="/my-sales">
-                  &lsaquo; <fbt desc="Transaction.nySales">My Sales</fbt>
-                </Link>
+              {isMobile ? (
+                <MobileModalHeader
+                  onBack={() => {
+                    props.history.push(isSeller ? '/my-sales' : '/my-purchases')
+                    window.scrollTo(0, 0)
+                  }}
+                >
+                  <fbt desc="Transaction.transactionDetails">Transaction Details</fbt>
+                </MobileModalHeader>
               ) : (
-                <Link to="/my-purchases">
-                  &lsaquo;{' '}
-                  <fbt desc="Transaction.myPurchases">My Purchases</fbt>
-                </Link>
+                isSeller ? (
+                  <Link to="/my-sales">
+                    &lsaquo; <fbt desc="Transaction.nySales">My Sales</fbt>
+                  </Link>
+                ) : (
+                  <Link to="/my-purchases">
+                    &lsaquo;{' '}
+                    <fbt desc="Transaction.myPurchases">My Purchases</fbt>
+                  </Link>
+                )
               )}
               <h2>{offer.listing.title}</h2>
               {isMobile ? (
                 <>
                   {Progress}
                   {Offer}
+                  {VerticalSeparator}
                   {Escrow}
-                  {Listing}
+                  {VerticalSeparator}
                   {About}
+                  {VerticalSeparator}
                   {History}
                 </>
               ) : (
                 <div className="row">
-                  <div className="col-md-7 col-lg-8">
+                  <div className="col-12">
                     {Progress}
-                    {History}
-                    {Listing}
                   </div>
-                  <div className="col-md-5 col-lg-4 side-bar">
+                  <div className="col-3">
                     {Offer}
+                  </div>
+                  <div className="col-1">
+                    {HorizontalSeparator}
+                  </div>
+                  <div className="col-3">
                     {Escrow}
+                  </div>
+                  <div className="col-1">
+                    {HorizontalSeparator}
+                  </div>
+                  <div className="col-3">
                     {About}
+                  </div>
+                  <div className="col-12">
+                    {History}
                   </div>
                 </div>
               )}
@@ -195,7 +221,7 @@ const Transaction = props => {
   )
 }
 
-export default withWallet(Transaction)
+export default withRouter(withWallet(Transaction))
 
 require('react-styl')(`
   .transaction-detail
@@ -207,25 +233,28 @@ require('react-styl')(`
       font-size: 14px
       font-weight: normal
     > h2
-      font-family: var(--heading-font)
-      font-size: 40px
-      font-weight: 200
+      font-family: var(--default-font)
+      font-size: 36px
+      font-weight: normal
       color: var(--dark)
       line-height: 3rem
     h3
       font-family: var(--heading-font)
-      font-weight: 300
-      font-size: 24px
-    .side-bar
-      h3
-        font-size: 18px
-        &.mt-4
-          margin-top: 1.5rem
+      font-weight: 500
+      font-size: 16px
+      color: var(--dark)
+      margin-bottom: 0.875rem
     .about-party
       margin-bottom: 2rem
     .help-icon
       margin-left: 0.5rem
       vertical-align: sub
+    .vertical-separator
+      height: 1px
+      background-color: #dde6ea
+    .horizontal-separator
+      width: 1px
+      background-color: #dde6ea
 
   @media (max-width: 767.98px)
     .transaction-detail
