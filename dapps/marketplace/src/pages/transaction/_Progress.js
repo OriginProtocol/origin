@@ -212,7 +212,9 @@ const MessageSeller = ({ offer, refetch, loading, party }) => (
           <fbt desc="Progress.messageSeller">Message Seller</fbt>
         </SendMessage>
       </div>
-      <WithdrawOffer offer={offer} refetch={refetch} from={party} />
+      <div className="mr-auto">
+        <WithdrawOffer offer={offer} refetch={refetch} from={party} />
+      </div>
     </div>
   </div>
 )
@@ -221,9 +223,9 @@ const WaitForSeller = ({ offer, refetch, loading, party }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
       <h4>
-        <fbt desc="Progress.nextStep">Next Step</fbt>
+        <fbt desc="Progress.waitForSeller">Wait for seller</fbt>
       </h4>
-      <div className="next-step">Wait for seller</div>
+      <Stages className="mt-4" mini="true" offer={offer} />
       <div className="help">
         <fbt desc="Progress.sellerWillReview">
           The seller will review your booking
@@ -231,7 +233,6 @@ const WaitForSeller = ({ offer, refetch, loading, party }) => (
       </div>
       <WithdrawOffer offer={offer} refetch={refetch} from={party} />
     </div>
-    <Stages mini="true" offer={offer} />
   </div>
 )
 
@@ -257,7 +258,8 @@ const OfferRejected = ({ offer, party, loading }) => (
       <h4>
         <fbt desc="Progress.offerRejected">Offer Rejected</fbt>
       </h4>
-      <div className="help mb-0">
+      <Stages className="mt-4" mini="true" offer={offer} />
+      <div className="help mb-0 mt-3">
         {party === 'seller'
           ? fbt('You rejected this offer', 'Progress.youReject')
           : fbt(
@@ -266,7 +268,6 @@ const OfferRejected = ({ offer, party, loading }) => (
             )}
       </div>
     </div>
-    <Stages mini="true" offer={offer} />
   </div>
 )
 
@@ -412,7 +413,7 @@ require('react-styl')(`
       &.danger
         color: #dc3545
       &::after
-        content: " >"
+        content: " \\203A"
       &.withdraw
         font-size: 12px
         padding-top: 0

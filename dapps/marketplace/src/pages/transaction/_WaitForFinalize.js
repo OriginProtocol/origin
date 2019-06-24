@@ -4,6 +4,7 @@ import { fbt } from 'fbt-runtime'
 
 import DisputeOffer from './mutations/DisputeOffer'
 import EventTick from 'components/EventTick'
+import Stages from 'components/TransactionStages'
 
 class WaitForFinalize extends Component {
   state = {}
@@ -13,23 +14,24 @@ class WaitForFinalize extends Component {
     return (
       <div className="transaction-progress">
         <div className="top">
-          <h4>Next Step:</h4>
-          <div className="next-step">Wait for buyer to confirm receipt</div>
-          <div className="help">
+          <h4>
+            <fbt desc="WaitForFinalize.waitForBuyerToConfirm">Wait for buyer to confirm receipt</fbt>
+          </h4>
+          <Stages className="mt-4" mini="true" offer={offer} />
+          <div className="help mt-3 mb-0">
             <fbt desc="WaitForFinalize.makeSureYouFullfill">
               Make sure you fulfill the order and wait for the buyer’s
               confirmation
             </fbt>
           </div>
           <button
-            className="btn btn-link"
+            className="btn btn-link mt-2"
             onClick={() => this.setState({ open: true })}
             children=""
           >
             <fbt desc="WaitForFinalize.viewFullfillment">
               View Fulfillment Checklist
             </fbt>{' '}
-            &rsaquo;
           </button>
 
           <DisputeOffer
@@ -41,15 +43,6 @@ class WaitForFinalize extends Component {
           </DisputeOffer>
         </div>
 
-        <div className="stages">
-          <EventTick className="active bg" event={offer.createdEvent}>
-            Offer Placed
-          </EventTick>
-          <EventTick className="active bgl" event={offer.acceptedEvent}>
-            Offer Accepted
-          </EventTick>
-          <EventTick>SaleCompleted</EventTick>
-        </div>
         {!this.state.open ? null : (
           <Modal
             className="fulfillment-modal"
