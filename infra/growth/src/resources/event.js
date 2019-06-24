@@ -8,7 +8,12 @@ const AttestationServiceToEventType = {
   facebook: GrowthEventTypes.FacebookAttestationPublished,
   phone: GrowthEventTypes.PhoneAttestationPublished,
   twitter: GrowthEventTypes.TwitterAttestationPublished,
-  google: GrowthEventTypes.GoogleAttestationPublished
+  google: GrowthEventTypes.GoogleAttestationPublished,
+  github: GrowthEventTypes.GitHubAttestationPublished,
+  linkedin: GrowthEventTypes.LinkedInAttestationPublished,
+  kakao: GrowthEventTypes.KakaoAttestationPublished,
+  wechat: GrowthEventTypes.WeChatAttestationPublished,
+  website: GrowthEventTypes.WebsiteAttestationPublished
 }
 
 class GrowthEvent {

@@ -105,7 +105,7 @@
   "3O3nPR": "Verify your Wechat Profile",
   "2peucP": "创建列表",
   "2QerxF": "购买一件商品",
-  "HU81L": {
+  "2JIv8R": {
     "growth.jan2019.name": "2019年1月活动",
     "growth.jan2019.short_name": "2019年1月",
     "growth.feb2019.name": "2019年2月活动",
@@ -118,6 +118,8 @@
     "growth.may2019.short_name": "2019年5月",
     "growth.june2019.name": "June 2019 Campaign",
     "growth.june2019.short_name": "June 2019",
+    "growth.july2019.name": "July 2019 Campaign",
+    "growth.july2019.short_name": "July 2019",
     "growth.profile.and.email.requirement": "已验证电子邮件和 Origin 个人资料",
     "growth.two.attestations.requirement": "两项身份认证",
     "growth.profile.requirement": "照片和姓名",
@@ -802,9 +804,9 @@
   "2hg0gR": "Unlock the full experience",
   "1pt6RF": "关于区块链的身份",
   "4o9sVo": "加密货币钱包是一种软件程序，用于存储私钥和公钥，并与各种区块链交互，使用户能够发送和接收数字货币并监控其余额。如果您想使用比特币或任何其他加密货币，您将需要一个数字钱包。",
-  "1JNI6V": "了解更多",
   "3NRLhm": "什么是加密钱包？",
   "2HUml2": "加密货币钱包是一种软件程序，用于存储私钥和公钥，并与各种区块链交互，使用户能够发送和接收数字货币并监控其余额。如果您想使用比特币或任何其他加密货币，您将需要一个数字钱包。",
+  "1JNI6V": "了解更多",
   "28APX7": "您的商品列表在等待......",
   "jC283": "连接加密钱包",
   "1xQN4D": "In order to successfully transact with others on our DApp, you’ll need a wallet to store cryptocurrency.",

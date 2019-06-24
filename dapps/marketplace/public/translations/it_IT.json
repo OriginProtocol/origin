@@ -105,7 +105,7 @@
   "3O3nPR": "Verify your Wechat Profile",
   "2peucP": "Crea un annuncio",
   "2QerxF": "Acquista un annuncio",
-  "HU81L": {
+  "2JIv8R": {
     "growth.jan2019.name": "Campagna di Gennaio 2019",
     "growth.jan2019.short_name": "Gen 2019",
     "growth.feb2019.name": "Campagna di Febbraio 2019",
@@ -118,6 +118,8 @@
     "growth.may2019.short_name": "Maggio 2019",
     "growth.june2019.name": "June 2019 Campaign",
     "growth.june2019.short_name": "June 2019",
+    "growth.july2019.name": "July 2019 Campaign",
+    "growth.july2019.short_name": "July 2019",
     "growth.profile.and.email.requirement": "Email e profilo Origin verificati",
     "growth.two.attestations.requirement": "Due verifiche del profilo",
     "growth.profile.requirement": "Nome e foto del profilo",
@@ -802,9 +804,9 @@
   "2hg0gR": "Unlock the full experience",
   "1pt6RF": "Informazioni su Identity on the Blockchain",
   "4o9sVo": "Un portafoglio di criptovaluta è un programma software che memorizza le chiavi private e pubbliche e interagisce con vari blockchain per consentire agli utenti di inviare e ricevere valuta digitale e monitorare il loro equilibrio. Se si desidera utilizzare Bitcoin o qualsiasi altra criptovaluta, è necessario disporre di un portafoglio digitale.",
-  "1JNI6V": "Ulteriori informazioni",
   "3NRLhm": "Cos'è un portafoglio Crypto?",
   "2HUml2": "Un portafoglio di criptovaluta è un programma software che memorizza le chiavi private e pubbliche e interagisce con vari blockchain per consentire agli utenti di inviare e ricevere valuta digitale e monitorare il loro equilibrio. Se si desidera utilizzare Bitcoin o qualsiasi altra criptovaluta, è necessario disporre di un portafoglio digitale.",
+  "1JNI6V": "Ulteriori informazioni",
   "28APX7": "La tua inserzione sta aspettando ...",
   "jC283": "Collega un portafoglio Crypto",
   "1xQN4D": "In order to successfully transact with others on our DApp, you’ll need a wallet to store cryptocurrency.",
