@@ -323,7 +323,7 @@ class MarketplaceScreen extends Component {
   /* Handle the response from window.onScroll
    */
   handleScrollHandlerResponse = ({ scrollTop }) => {
-    if (scrollTop < -60) {
+    if (scrollTop < -100) {
       this.dappWebView.injectJavaScript(`document.location.reload()`)
     }
   }
@@ -430,6 +430,21 @@ class MarketplaceScreen extends Component {
     }
   }
 
+  injectEnableProxyAccounts = () => {
+    const injectedJavaScript = `
+      (function() {
+        if (window && window.localStorage && window.webViewBridge) {
+          window.localStorage.proxyAccountsEnabled = true;
+          window.localStorage.enableRelayer = true;
+        }
+      })();
+    `
+    if (this.dappWebView) {
+      console.debug('Injecting enable relayer')
+      this.dappWebView.injectJavaScript(injectedJavaScript)
+    }
+  }
+
   /* Send a response back to the DApp using postMessage in the webview
    */
   handleBridgeResponse = (msgData, result) => {
@@ -446,6 +461,8 @@ class MarketplaceScreen extends Component {
   }
 
   onWebViewLoad = async () => {
+    // Enable proxy accounts
+    this.injectEnableProxyAccounts()
     // Set the language in the DApp to the same as the mobile app
     this.injectLanguage()
     // Inject scroll handler for pull to refresh function

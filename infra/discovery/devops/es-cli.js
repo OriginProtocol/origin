@@ -48,7 +48,8 @@ const index = {
         description: { type: 'text', copy_to: 'all_text' },
         title: { type: 'text', copy_to: 'all_text' },
         all_text: { type: 'text' },
-        scoreMultiplier: { type: 'double' }
+        scoreMultiplier: { type: 'double' },
+        scoreTags: { type: 'keyword' }
       }
     }
   }
