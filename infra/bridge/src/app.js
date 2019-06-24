@@ -6,6 +6,8 @@ const cors = require('cors')
 const session = require('express-session')
 const bodyParser = require('body-parser')
 
+const { pollExchangeRate } = require('./utils/exchange-rate')
+
 const db = require('./models')
 // Initalize sequelize with session store
 const SequelizeStore = require('connect-session-sequelize')(session.Store)
@@ -43,6 +45,7 @@ app.use(require('./controllers'))
 
 app.listen(5000, () => {
   console.log('Origin-bridge listening on port 5000...')
+  pollExchangeRate()
 })
 
 module.exports = app
