@@ -20,6 +20,9 @@ const identityQuery = gql`
           }
 
           ipfsHash
+          owner {
+            id
+          }
         }
       }
     }
