@@ -426,14 +426,33 @@ require('react-styl')(`
 
   @media (max-width: 767.98px)
     .transaction-progress
-      border-radius: 0px
+      border: 0px
       padding: 0rem
-      border-radius: 0px
       padding: 0rem
-      .top
+      position: relative
+      &::after
+        border: solid 1px #eaf0f3
+        content: ""
         background-color: #f3f7f9
-        padding: 15px
+        position: absolute
+        margin-left: 50%
+        transform: translateX(-50%)
+        z-index: -1
         width: 100vw
+        height: 100%
+      &::before
+        border: solid 1px #eaf0f3
+        content: ""
+        background-color: #f3f7f9
+        position: absolute
+        margin-right: 50%
+        transform: translateX(50%)
+        z-index: -1
+        width: 100vw
+        height: 100%
+      .top
+        padding: 15px 0px
+        width: 100%
       .actions
         flex-direction: column-reverse
 `)

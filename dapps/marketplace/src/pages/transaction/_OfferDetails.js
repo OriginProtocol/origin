@@ -120,14 +120,14 @@ export default OfferDetails
 
 require('react-styl')(`
   .offer-details
-    font-size: 18px
+    font-size: 14px
     font-weight: normal
     .btn-link
       > div
         &::after
           content: " >"
-        font-size: 18px
-        font-weight: normal
+        font-size: 14px
+        font-weight: bold
     li
       display: flex;
       justify-content: space-between;
@@ -143,4 +143,11 @@ require('react-styl')(`
       background-position: left center
       background-repeat: no-repeat
       background-size: 0.75rem
+
+  @media (max-width: 767.98px)
+    .offer-details
+      font-size: 18px
+      .btn-link
+        > div
+          font-size: 18px
 `)

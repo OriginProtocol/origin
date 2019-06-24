@@ -44,7 +44,7 @@ const EscrowDetails = ({ offer }) => (
       <span>
         {offer.totalPrice.currency.id.match('DAI') && (
           <>
-            <CoinPrice iconOnly coin="dai" />
+            <CoinPrice iconOnly smaller coin="dai" />
             {numberFormat(offer.totalPrice.amount, 2)}
             &nbsp;
             {'DAI'}
@@ -52,7 +52,7 @@ const EscrowDetails = ({ offer }) => (
         )}
         {offer.totalPrice.currency.id.match('ETH') && (
           <>
-            <CoinPrice iconOnly coin="eth" />
+            <CoinPrice iconOnly smaller coin="eth" />
             {numberFormat(offer.totalPrice.amount, 5)}
             &nbsp;
             {'ETH'}
@@ -89,11 +89,12 @@ export default EscrowDetails
 
 require('react-styl')(`
   .escrow-details
-    font-size: 18px
+    font-size: 14px
     font-weight: normal
     li
       display: flex;
       justify-content: space-between;
+      padding: 0.375rem 0 0.375rem 0
       padding: 0.375rem 0 0.375rem 0
       > span:nth-child(1)
         font-weight: normal
@@ -112,4 +113,8 @@ require('react-styl')(`
         .warning-icon
           margin-left: 0.5rem
           vertical-align: sub
+
+  @media (max-width: 767.98px)
+    .escrow-details
+      font-size: 18px
 `)

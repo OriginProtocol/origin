@@ -150,7 +150,9 @@ const Transaction = props => {
           )
 
           const VerticalSeparator = (<div className="vertical-separator my-3"/>)
-          const HorizontalSeparator = (<div className="horizontal-separator mx-3"/>)
+          const HorizontalSeparator = (<div className="horizontal-separator px-3 d-flex justify-content-center">
+            <div/>
+          </div>)
 
           return (
             <>
@@ -193,20 +195,18 @@ const Transaction = props => {
                   <div className="col-12">
                     {Progress}
                   </div>
-                  <div className="col-3">
-                    {Offer}
-                  </div>
-                  <div className="col-1">
+                  <div className="col-12 d-flex">
+                    <div className="col-3 p-0">
+                      {Offer}
+                    </div>
                     {HorizontalSeparator}
-                  </div>
-                  <div className="col-3">
-                    {Escrow}
-                  </div>
-                  <div className="col-1">
+                    <div className="col-3 p-0">
+                      {Escrow}
+                    </div>
                     {HorizontalSeparator}
-                  </div>
-                  <div className="col-3">
-                    {About}
+                    <div className="col-3 p-0">
+                      {About}
+                    </div>
                   </div>
                   <div className="col-12">
                     {History}
@@ -253,8 +253,12 @@ require('react-styl')(`
       height: 1px
       background-color: #dde6ea
     .horizontal-separator
-      width: 1px
-      background-color: #dde6ea
+      flex: 0 0 13%
+      max-width: 13%
+      > div
+        width: 1px
+        height: 100%
+        background-color: #dde6ea
 
   @media (max-width: 767.98px)
     .transaction-detail
