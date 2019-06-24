@@ -98,7 +98,10 @@ router.post('/verify', googleVerify, async (req, res) => {
     site: {
       siteName: 'google.com',
       userId: {
-        verified: true
+        raw: String(userDataResponse.body.id)
+      },
+      username: {
+        raw: userDataResponse.body.email
       }
     }
   }
@@ -107,7 +110,10 @@ router.post('/verify', googleVerify, async (req, res) => {
     const attestation = await generateAttestation(
       AttestationTypes.GOOGLE,
       attestationBody,
-      userDataResponse.body.email,
+      {
+        uniqueId: userDataResponse.body.id,
+        username: userDataResponse.body.email
+      },
       req.body.identity,
       req.ip
     )

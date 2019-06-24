@@ -77,11 +77,30 @@ function getAttestations(account, attestations) {
       }
 
       const siteName = get(attestation, 'data.attestation.site.siteName')
-      const userId = get(
-        attestation,
-        'data.attestation.site.userId.verified',
-        ''
-      )
+
+      const userId = {
+        type: 'userId',
+        value: get(
+          attestation,
+          'data.attestation.site.userId.raw'
+        )
+      }
+
+      const username = {
+        type: 'username',
+        value: get(
+          attestation,
+          'data.attestation.site.username.raw'
+        )
+      }
+
+      const profileUrl = {
+        type: 'profileUrl',
+        value: get(
+          attestation,
+          'data.attestation.site.profileUrl.raw'
+        )
+      }
 
       switch (siteName) {
         case 'facebook.com':
@@ -92,37 +111,37 @@ function getAttestations(account, attestations) {
         case 'airbnb.com':
           return {
             id: 'airbnb',
-            properties: [{ type: 'userId', value: userId }, issuedDate]
+            properties: [issuedDate, userId]
           }
         case 'twitter.com':
           return {
             id: 'twitter',
-            properties: [{ type: 'userId', value: userId }, issuedDate]
+            properties: [issuedDate, userId, username, profileUrl]
           }
         case 'google.com':
           return {
             id: 'google',
-            properties: [issuedDate]
+            properties: [issuedDate, userId, username]
           }
         case 'kakao.com':
           return {
             id: 'kakao',
-            properties: [issuedDate]
+            properties: [issuedDate, userId]
           }
         case 'github.com':
           return {
             id: 'github',
-            properties: [issuedDate]
+            properties: [issuedDate, userId, username, profileUrl]
           }
         case 'linkedin.com':
           return {
             id: 'linkedin',
-            properties: [issuedDate]
+            properties: [issuedDate, userId]
           }
         case 'wechat.com':
           return {
             id: 'wechat',
-            properties: [issuedDate]
+            properties: [issuedDate, userId]
           }
       }
 

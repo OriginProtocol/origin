@@ -62,7 +62,12 @@ function verifyTwitterCredentials(oAuthAccessToken, oAuthAccessTokenSecret) {
         if (error) {
           reject(error)
         } else {
-          resolve(JSON.parse(response).screen_name)
+          const { id, screen_name } = JSON.parse(response)
+          resolve({
+            uniqueId: id,
+            username: screen_name,
+            profileUrl: `https://twitter.com/${screen_name}`
+          })
         }
       }
     )

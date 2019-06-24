@@ -47,7 +47,7 @@ describe('twitter attestations', async () => {
 
     nock('https://api.twitter.com')
       .get('/1.1/account/verify_credentials.json')
-      .reply(200, { screen_name: 'Origin Protocol' })
+      .reply(200, { id: '12345', screen_name: 'OriginProtocol' })
 
     // Fake a session
     const parentApp = express()
@@ -87,7 +87,13 @@ describe('twitter attestations', async () => {
     )
     expect(response.body.data.attestation.site.siteName).to.equal('twitter.com')
     expect(response.body.data.attestation.site.userId.raw).to.equal(
-      'Origin Protocol'
+      '12345'
+    )
+    expect(response.body.data.attestation.site.username.raw).to.equal(
+      'OriginProtocol'
+    )
+    expect(response.body.data.attestation.site.profileUrl.raw).to.equal(
+      'https://twitter.com/OriginProtocol'
     )
 
     // Verify attestation was recorded in the database
@@ -95,7 +101,9 @@ describe('twitter attestations', async () => {
     expect(results.length).to.equal(1)
     expect(results[0].ethAddress).to.equal(ethAddress)
     expect(results[0].method).to.equal(AttestationTypes.TWITTER)
-    expect(results[0].value).to.equal('Origin Protocol')
+    expect(results[0].value).to.equal('12345')
+    expect(results[0].username).to.equal('OriginProtocol')
+    expect(results[0].profileUrl).to.equal('https://twitter.com/OriginProtocol')
   })
 
   it('should generate attestation on valid verification code (from session)', async () => {
@@ -105,7 +113,7 @@ describe('twitter attestations', async () => {
 
     nock('https://api.twitter.com')
       .get('/1.1/account/verify_credentials.json')
-      .reply(200, { screen_name: 'Origin Protocol' })
+      .reply(200, { id: '12345', screen_name: 'OriginProtocol' })
 
     // Fake a session
     const parentApp = express()
@@ -146,7 +154,13 @@ describe('twitter attestations', async () => {
     )
     expect(response.body.data.attestation.site.siteName).to.equal('twitter.com')
     expect(response.body.data.attestation.site.userId.raw).to.equal(
-      'Origin Protocol'
+      '12345'
+    )
+    expect(response.body.data.attestation.site.username.raw).to.equal(
+      'OriginProtocol'
+    )
+    expect(response.body.data.attestation.site.profileUrl.raw).to.equal(
+      'https://twitter.com/OriginProtocol'
     )
 
     // Verify attestation was recorded in the database
@@ -154,7 +168,9 @@ describe('twitter attestations', async () => {
     expect(results.length).to.equal(1)
     expect(results[0].ethAddress).to.equal(ethAddress)
     expect(results[0].method).to.equal(AttestationTypes.TWITTER)
-    expect(results[0].value).to.equal('Origin Protocol')
+    expect(results[0].value).to.equal('12345')
+    expect(results[0].username).to.equal('OriginProtocol')
+    expect(results[0].profileUrl).to.equal('https://twitter.com/OriginProtocol')
   })
 
   it('should error on incorrect verifier', async () => {

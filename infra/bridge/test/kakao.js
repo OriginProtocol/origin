@@ -80,7 +80,7 @@ describe('kakao attestations', () => {
       true
     )
     expect(response.body.data.attestation.site.siteName).to.equal('kakao.com')
-    expect(response.body.data.attestation.site.userId.verified).to.equal(true)
+    expect(response.body.data.attestation.site.userId.raw).to.equal('Origin Protocol')
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
@@ -143,7 +143,7 @@ describe('kakao attestations', () => {
       true
     )
     expect(response.body.data.attestation.site.siteName).to.equal('kakao.com')
-    expect(response.body.data.attestation.site.userId.verified).to.equal(true)
+    expect(response.body.data.attestation.site.userId.raw).to.equal('Origin Protocol')
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
