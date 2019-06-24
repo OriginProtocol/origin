@@ -29,6 +29,9 @@ const mockListing = {
 }
 const mockIdentity = {
   id: seller,
+  owner: {
+    id: seller
+  },
   firstName: 'Origin',
   lastName: 'Protocol',
   avatar: '0xABCDEF',

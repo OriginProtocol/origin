@@ -136,6 +136,11 @@ class IdentityEventHandler {
   async _decorateIdentity(identity) {
     const decoratedIdentity = Object.assign({}, identity)
 
+    // Even if a proxy is used, attestation data is recorded
+    // under the user's wallet address (aka "owner"). Get it so that
+    // we can lookup attestation data.
+    const owner = decoratedIdentity.owner.id
+
     // Load attestation data.
     await Promise.all(
       decoratedIdentity.attestations.map(async attestationJson => {
@@ -144,25 +149,25 @@ class IdentityEventHandler {
         switch (attestationService) {
           case 'email':
             decoratedIdentity.email = await this._loadValueFromAttestation(
-              decoratedIdentity.id,
+              owner,
               'EMAIL'
             )
             break
           case 'phone':
             decoratedIdentity.phone = await this._loadValueFromAttestation(
-              decoratedIdentity.id,
+              owner,
               'PHONE'
             )
             break
           case 'twitter':
             decoratedIdentity.twitter = await this._loadValueFromAttestation(
-              decoratedIdentity.id,
+              owner,
               'TWITTER'
             )
             break
           case 'airbnb':
             decoratedIdentity.airbnb = await this._loadValueFromAttestation(
-              decoratedIdentity.id,
+              owner,
               'AIRBNB'
             )
             break
@@ -176,7 +181,7 @@ class IdentityEventHandler {
             break
           case 'website':
             decoratedIdentity.website = await this._loadValueFromAttestation(
-              decoratedIdentity.id,
+              owner,
               'WEBSITE'
             )
             break
@@ -186,7 +191,7 @@ class IdentityEventHandler {
     )
 
     // Add country of origin information based on IP.
-    decoratedIdentity.country = await this._countryLookup(identity.id)
+    decoratedIdentity.country = await this._countryLookup(owner)
 
     return decoratedIdentity
   }
@@ -210,8 +215,9 @@ class IdentityEventHandler {
 
     // Construct a decoratedIdentity object based on the user's profile
     // and data loaded from the attestation table.
+    // The identity is recorded under the user's wallet address (aka "owner")
     const identityRow = {
-      ethAddress: decoratedIdentity.id.toLowerCase(),
+      ethAddress: decoratedIdentity.owner.id.toLowerCase(),
       firstName: decoratedIdentity.firstName,
       lastName: decoratedIdentity.lastName,
       email: decoratedIdentity.email,
@@ -252,7 +258,8 @@ class IdentityEventHandler {
       return
     }
 
-    // Record the event.
+    // Note: we log the event using the identity.id address which may be either
+    // the owner or the proxy. The growth engine has logic to handle both.
     await GrowthEvent.insert(
       logger,
       1,
@@ -286,6 +293,8 @@ class IdentityEventHandler {
           return
         }
 
+        // Note: we log the event using the identity.id address which may be either
+        // the owner or the proxy. The growth engine has logic to handle both.
         return GrowthEvent.insert(
           logger,
           1,
