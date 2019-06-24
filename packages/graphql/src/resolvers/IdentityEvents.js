@@ -80,26 +80,17 @@ function getAttestations(account, attestations) {
 
       const userId = {
         type: 'userId',
-        value: get(
-          attestation,
-          'data.attestation.site.userId.raw'
-        )
+        value: get(attestation, 'data.attestation.site.userId.raw')
       }
 
       const username = {
         type: 'username',
-        value: get(
-          attestation,
-          'data.attestation.site.username.raw'
-        )
+        value: get(attestation, 'data.attestation.site.username.raw')
       }
 
       const profileUrl = {
         type: 'profileUrl',
-        value: get(
-          attestation,
-          'data.attestation.site.profileUrl.raw'
-        )
+        value: get(attestation, 'data.attestation.site.profileUrl.raw')
       }
 
       switch (siteName) {

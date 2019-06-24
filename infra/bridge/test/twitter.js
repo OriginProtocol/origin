@@ -86,9 +86,7 @@ describe('twitter attestations', async () => {
       true
     )
     expect(response.body.data.attestation.site.siteName).to.equal('twitter.com')
-    expect(response.body.data.attestation.site.userId.raw).to.equal(
-      '12345'
-    )
+    expect(response.body.data.attestation.site.userId.raw).to.equal('12345')
     expect(response.body.data.attestation.site.username.raw).to.equal(
       'OriginProtocol'
     )
@@ -153,9 +151,7 @@ describe('twitter attestations', async () => {
       true
     )
     expect(response.body.data.attestation.site.siteName).to.equal('twitter.com')
-    expect(response.body.data.attestation.site.userId.raw).to.equal(
-      '12345'
-    )
+    expect(response.body.data.attestation.site.userId.raw).to.equal('12345')
     expect(response.body.data.attestation.site.username.raw).to.equal(
       'OriginProtocol'
     )

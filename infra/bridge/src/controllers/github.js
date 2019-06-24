@@ -107,7 +107,7 @@ router.post('/verify', githubVerify, async (req, res) => {
       },
       profileUrl: {
         raw: userDataResponse.body.html_url
-      },
+      }
     }
   }
 

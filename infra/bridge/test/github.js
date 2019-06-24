@@ -62,7 +62,11 @@ describe('github attestations', () => {
     nock('https://api.github.com')
       .matchHeader('Authorization', 'token 12345')
       .get('/user')
-      .reply(200, { id: '67890', login: 'OriginProtocol', html_url: 'https://github.com/OriginProtocol' })
+      .reply(200, {
+        id: '67890',
+        login: 'OriginProtocol',
+        html_url: 'https://github.com/OriginProtocol'
+      })
 
     const response = await request(app)
       .post('/api/attestations/github/verify')
@@ -84,8 +88,12 @@ describe('github attestations', () => {
     )
     expect(response.body.data.attestation.site.siteName).to.equal('github.com')
     expect(response.body.data.attestation.site.userId.raw).to.equal('67890')
-    expect(response.body.data.attestation.site.username.raw).to.equal('OriginProtocol')
-    expect(response.body.data.attestation.site.profileUrl.raw).to.equal('https://github.com/OriginProtocol')
+    expect(response.body.data.attestation.site.username.raw).to.equal(
+      'OriginProtocol'
+    )
+    expect(response.body.data.attestation.site.profileUrl.raw).to.equal(
+      'https://github.com/OriginProtocol'
+    )
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
@@ -112,7 +120,11 @@ describe('github attestations', () => {
     nock('https://api.github.com')
       .matchHeader('Authorization', 'token 12345')
       .get('/user')
-      .reply(200, { id: '67890', login: 'OriginProtocol', html_url: 'https://github.com/OriginProtocol' })
+      .reply(200, {
+        id: '67890',
+        login: 'OriginProtocol',
+        html_url: 'https://github.com/OriginProtocol'
+      })
 
     // Fake session
     const parentApp = express()
@@ -150,8 +162,12 @@ describe('github attestations', () => {
     )
     expect(response.body.data.attestation.site.siteName).to.equal('github.com')
     expect(response.body.data.attestation.site.userId.raw).to.equal('67890')
-    expect(response.body.data.attestation.site.username.raw).to.equal('OriginProtocol')
-    expect(response.body.data.attestation.site.profileUrl.raw).to.equal('https://github.com/OriginProtocol')
+    expect(response.body.data.attestation.site.username.raw).to.equal(
+      'OriginProtocol'
+    )
+    expect(response.body.data.attestation.site.profileUrl.raw).to.equal(
+      'https://github.com/OriginProtocol'
+    )
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()

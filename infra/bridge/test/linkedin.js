@@ -87,7 +87,9 @@ describe('linkedin attestations', () => {
     expect(response.body.data.attestation.site.siteName).to.equal(
       'linkedin.com'
     )
-    expect(response.body.data.attestation.site.userId.raw).to.equal('Origin Protocol')
+    expect(response.body.data.attestation.site.userId.raw).to.equal(
+      'Origin Protocol'
+    )
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
@@ -152,7 +154,9 @@ describe('linkedin attestations', () => {
     expect(response.body.data.attestation.site.siteName).to.equal(
       'linkedin.com'
     )
-    expect(response.body.data.attestation.site.userId.raw).to.equal('Origin Protocol')
+    expect(response.body.data.attestation.site.userId.raw).to.equal(
+      'Origin Protocol'
+    )
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()

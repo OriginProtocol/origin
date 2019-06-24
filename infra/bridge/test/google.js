@@ -89,7 +89,9 @@ describe('google attestations', () => {
     )
     expect(response.body.data.attestation.site.siteName).to.equal('google.com')
     expect(response.body.data.attestation.site.userId.raw).to.equal('67890')
-    expect(response.body.data.attestation.site.username.raw).to.equal('origin@originprotocol.com')
+    expect(response.body.data.attestation.site.username.raw).to.equal(
+      'origin@originprotocol.com'
+    )
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
@@ -156,7 +158,9 @@ describe('google attestations', () => {
     )
     expect(response.body.data.attestation.site.siteName).to.equal('google.com')
     expect(response.body.data.attestation.site.userId.raw).to.equal('67890')
-    expect(response.body.data.attestation.site.username.raw).to.equal('origin@originprotocol.com')
+    expect(response.body.data.attestation.site.username.raw).to.equal(
+      'origin@originprotocol.com'
+    )
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
