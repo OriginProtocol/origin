@@ -20,7 +20,6 @@ import TxHistory from './_History'
 import TxProgress from './_Progress'
 import OfferDetails from './_OfferDetails'
 import EscrowDetails from './_EscrowDetails'
-import ListingDetail from './_ListingDetail'
 
 const HelpIcon = ({ tooltip }) => (
   <Tooltip tooltip={tooltip} placement="top">
@@ -97,14 +96,6 @@ const Transaction = props => {
               <TxHistory offer={offer} />
             </>
           )
-          const Listing = (
-            <>
-              <h3>
-                <fbt desc="Transaction.listingDetails">Listing Details</fbt>
-              </h3>
-              <ListingDetail listing={offer.listing} />
-            </>
-          )
           const Offer = (
             <>
               <h3>
@@ -149,10 +140,12 @@ const Transaction = props => {
             </>
           )
 
-          const VerticalSeparator = (<div className="vertical-separator my-3"/>)
-          const HorizontalSeparator = (<div className="horizontal-separator px-3 d-flex justify-content-center">
-            <div/>
-          </div>)
+          const VerticalSeparator = <div className="vertical-separator my-3" />
+          const HorizontalSeparator = (
+            <div className="horizontal-separator px-3 d-flex justify-content-center">
+              <div />
+            </div>
+          )
 
           return (
             <>
@@ -164,19 +157,19 @@ const Transaction = props => {
                     window.scrollTo(0, 0)
                   }}
                 >
-                  <fbt desc="Transaction.transactionDetails">Transaction Details</fbt>
+                  <fbt desc="Transaction.transactionDetails">
+                    Transaction Details
+                  </fbt>
                 </MobileModalHeader>
+              ) : isSeller ? (
+                <Link to="/my-sales">
+                  &lsaquo; <fbt desc="Transaction.nySales">My Sales</fbt>
+                </Link>
               ) : (
-                isSeller ? (
-                  <Link to="/my-sales">
-                    &lsaquo; <fbt desc="Transaction.nySales">My Sales</fbt>
-                  </Link>
-                ) : (
-                  <Link to="/my-purchases">
-                    &lsaquo;{' '}
-                    <fbt desc="Transaction.myPurchases">My Purchases</fbt>
-                  </Link>
-                )
+                <Link to="/my-purchases">
+                  &lsaquo;{' '}
+                  <fbt desc="Transaction.myPurchases">My Purchases</fbt>
+                </Link>
               )}
               <h2>{offer.listing.title}</h2>
               {isMobile ? (
@@ -192,25 +185,15 @@ const Transaction = props => {
                 </>
               ) : (
                 <div className="row">
-                  <div className="col-12">
-                    {Progress}
-                  </div>
+                  <div className="col-12">{Progress}</div>
                   <div className="col-12 d-flex">
-                    <div className="col-3 p-0">
-                      {Offer}
-                    </div>
+                    <div className="col-3 p-0">{Offer}</div>
                     {HorizontalSeparator}
-                    <div className="col-3 p-0">
-                      {Escrow}
-                    </div>
+                    <div className="col-3 p-0">{Escrow}</div>
                     {HorizontalSeparator}
-                    <div className="col-3 p-0">
-                      {About}
-                    </div>
+                    <div className="col-3 p-0">{About}</div>
                   </div>
-                  <div className="col-12">
-                    {History}
-                  </div>
+                  <div className="col-12">{History}</div>
                 </div>
               )}
             </>
@@ -255,7 +238,7 @@ require('react-styl')(`
     .horizontal-separator
       flex: 0 0 13%
       max-width: 13%
-      > div
+     z div
         width: 1px
         height: 100%
         background-color: #dde6ea

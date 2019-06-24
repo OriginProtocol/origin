@@ -3,7 +3,6 @@ import Modal from 'components/Modal'
 import { fbt } from 'fbt-runtime'
 
 import DisputeOffer from './mutations/DisputeOffer'
-import EventTick from 'components/EventTick'
 import Stages from 'components/TransactionStages'
 
 class WaitForFinalize extends Component {
@@ -15,7 +14,9 @@ class WaitForFinalize extends Component {
       <div className="transaction-progress">
         <div className="top">
           <h4>
-            <fbt desc="WaitForFinalize.waitForBuyerToConfirm">Wait for buyer to confirm receipt</fbt>
+            <fbt desc="WaitForFinalize.waitForBuyerToConfirm">
+              Wait for buyer to confirm receipt
+            </fbt>
           </h4>
           <Stages className="mt-4" mini="true" offer={offer} />
           <div className="help mt-3 mb-0">

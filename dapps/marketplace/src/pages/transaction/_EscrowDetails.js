@@ -80,7 +80,9 @@ const EscrowDetails = ({ offer }) => (
       <span>
         <fbt desc="EscrowDetails.status">Status</fbt>
       </span>
-      <span className={escrowIsHeld(offer.statusStr) ? 'held' : 'released'}>{escrowStatus(offer.statusStr)}</span>
+      <span className={escrowIsHeld(offer.statusStr) ? 'held' : 'released'}>
+        {escrowStatus(offer.statusStr)}
+      </span>
     </li>
   </ul>
 )

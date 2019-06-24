@@ -1,7 +1,11 @@
 import React from 'react'
 
 const CoinPrice = ({ price, smaller, coin, iconOnly, className }) => (
-  <div className={`coin-price ${smaller ? 'smaller' : ''} ${coin}${className ? ` ${className}` : ''}`}>
+  <div
+    className={`coin-price ${smaller ? 'smaller' : ''} ${coin}${
+      className ? ` ${className}` : ''
+    }`}
+  >
     {iconOnly ? (
       <>&nbsp;</>
     ) : (

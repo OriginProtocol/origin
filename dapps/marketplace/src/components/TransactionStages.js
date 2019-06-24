@@ -104,7 +104,10 @@ const TransactionStages = ({ offer, mini, className }) => {
     const completedStages = stages.filter(s => offer[s.event]).length - 1
     const pct = (completedStages / numStages) * 100
     return (
-      <div className={`stages-mini ${className ? className : ''}`} style={{ '--pct': `${pct}%` }}>
+      <div
+        className={`stages-mini ${className ? className : ''}`}
+        style={{ '--pct': `${pct}%` }}
+      >
         {events}
       </div>
     )
