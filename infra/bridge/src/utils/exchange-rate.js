@@ -12,8 +12,7 @@ const REDIS_EXCHANGE_RATE_KEY = 'ETH_USD_price'
  */
 async function pollExchangeRate() {
   setTimeout(() => {
-    fetchExchangeRate()
-      .then(() => pollExchangeRate())
+    fetchExchangeRate().then(() => pollExchangeRate())
   }, process.env.EXCHANGE_RATE_POLL_INTERVAL || 30000)
 }
 

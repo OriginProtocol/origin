@@ -86,7 +86,7 @@ describe('exchange rate poller', () => {
     expect(response.status).to.equal(200)
     expect(response.body.price).to.equal('234')
   })
-  
+
   it('should return default exchange rate if not cached', async () => {
     const response = await request(app)
       .get('/utils/exchange-rate')
@@ -95,5 +95,4 @@ describe('exchange rate poller', () => {
     expect(response.status).to.equal(200)
     expect(response.body.price).to.equal('12345.6789')
   })
-
 })
