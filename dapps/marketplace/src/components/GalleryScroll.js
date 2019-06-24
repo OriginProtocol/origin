@@ -75,8 +75,15 @@ require('react-styl')(`
       overflow-x: scroll
       overflow-y: hidden
       white-space: nowrap
+      -webkit-appearance: none
+      scrollbar-width: none
       &::-webkit-scrollbar
-        display: none
+        display: block
+        -webkit-appearance: none
+        background-color: transparent
+        &-thumb,&-track
+          background-color: transparent
+          -webkit-appearance: none
       .pic
         display: inline-block
         scroll-snap-align: center
