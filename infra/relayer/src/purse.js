@@ -346,7 +346,7 @@ class Purse {
      * breaker, but maybe some thought should be put into that in the future as volume goes up. The
      * bigger the load, the likelier this becomes.
      */
-    const w3txCount = parseInt(await this.web3.eth.getTransactionCount(address))
+    const w3txCount = parseInt(await this.web3.eth.getTransactionCount(address, 'pending'))
     if (txCount < w3txCount) {
       if (txCount > 0)
         logger.warn('Transaction counts appear lower than on the chain!')
