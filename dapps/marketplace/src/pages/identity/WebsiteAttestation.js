@@ -103,7 +103,7 @@ class WebsiteAttestation extends Component {
           )}
           children={
             <fbt desc="VerifyWebsite.websitePublished">
-              Your website's URL
+              Your website&apos;s URL
             </fbt>
           }
           pii={true}

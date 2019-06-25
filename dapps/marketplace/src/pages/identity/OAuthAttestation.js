@@ -30,11 +30,17 @@ function InfoStoredOnChain({ provider }) {
 
   switch (provider) {
     case 'facebook':
-      content = fbt('Your Facebook user ID', 'OAuthAttestation.onChain.facebook')
+      content = fbt(
+        'Your Facebook user ID',
+        'OAuthAttestation.onChain.facebook'
+      )
       break
 
     case 'twitter':
-      content = fbt('Your Twitter username and user ID', 'OAuthAttestation.onChain.twitter')
+      content = fbt(
+        'Your Twitter username and user ID',
+        'OAuthAttestation.onChain.twitter'
+      )
       break
 
     case 'google':
@@ -50,11 +56,17 @@ function InfoStoredOnChain({ provider }) {
       break
 
     case 'github':
-      content = fbt('Your GitHub username and user ID', 'OAuthAttestation.onChain.github')
+      content = fbt(
+        'Your GitHub username and user ID',
+        'OAuthAttestation.onChain.github'
+      )
       break
 
     case 'linkedin':
-      content = fbt('Your LinkedIn username', 'OAuthAttestation.onChain.linkedin')
+      content = fbt(
+        'Your LinkedIn username',
+        'OAuthAttestation.onChain.linkedin'
+      )
       break
   }
 
