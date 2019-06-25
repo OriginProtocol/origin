@@ -37,11 +37,11 @@ router.post('/exists', async (req, res) => {
 })
 
 /**
- * Returns ETH/USD excahnge rate
+ * Returns excahnge rate of given market
  */
 router.get('/exchange-rate', async (req, res) => {
   res.send({
-    price: await getExchangeRate()
+    price: await getExchangeRate(req.query.market)
   })
 })
 
