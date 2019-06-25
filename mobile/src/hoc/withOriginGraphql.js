@@ -12,7 +12,13 @@ import { DeviceEventEmitter } from 'react-native'
 import { connect } from 'react-redux'
 import get from 'lodash.get'
 
-import { balance, identity, tokenBalance, wallet } from 'graphql/queries'
+import {
+  balance,
+  growthEligible,
+  identity,
+  tokenBalance,
+  wallet
+} from 'graphql/queries'
 import { deployIdentity } from 'graphql/mutations'
 
 const withOriginGraphql = WrappedComponent => {
@@ -100,6 +106,10 @@ const withOriginGraphql = WrappedComponent => {
       return this._sendGraphqlQuery(wallet)
     }
 
+    getGrowthEligibility = () => {
+      return this._sendGraphqlQuery(growthEligible)
+    }
+
     publishIdentity = (from, profile, attestations) => {
       return this._sendGraphqlMutation(deployIdentity, {
         from,
@@ -111,8 +121,9 @@ const withOriginGraphql = WrappedComponent => {
     render() {
       return (
         <WrappedComponent
-          getIdentity={this.getIdentity}
           getBalance={this.getBalance}
+          getGrowthEligibility={this.getGrowthEligibility}
+          getIdentity={this.getIdentity}
           getTokenBalance={this.getTokenBalance}
           getWallet={this.getWallet}
           publishIdentity={this.publishIdentity}
