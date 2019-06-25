@@ -1,132 +1,132 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
 
-import withTokenBalance from 'hoc/withTokenBalance'
-import withWallet from 'hoc/withWallet'
-
-import Wallet from 'components/Wallet'
-import Price from 'components/Price'
-import Category from 'components/Category'
 import Link from 'components/Link'
+import Price from 'components/Price'
+import GalleryScroll from 'components/GalleryScroll'
+import Category from 'components/Category'
 import FormattedDescription from 'components/FormattedDescription'
 
 import CreateListing from '../../mutations/CreateListing'
 import UpdateListing from '../../mutations/UpdateListing'
 
-const Review = ({ listing, ...props }) => {
-  const quantity = Number(listing.quantity || 0)
+const ReviewListing = ({ listing, prev, ...props }) => {
+  // const quantity = Number(listing.quantity || 0)
 
   return (
-    <div className="row create-listing-review">
-      <div className="col-md-8">
-        <h2>
-          <fbt desc="creation.review.main-title">Review your listing</fbt>
-        </h2>
-
-        <div className="detail">
-          <div className="row">
-            <div className="col-12 col-sm-3 label">
-              <fbt desc="create.review.title">Title</fbt>
-            </div>
-            <div className="col-12 col-sm-9">{listing.title}</div>
-          </div>
-          <div className="row">
-            <div className="col-12 col-sm-3 label">
-              <fbt desc="create.review.category">Category</fbt>
-            </div>
-            <div className="col-12 col-sm-9">
-              <Category listing={listing} />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-12 col-sm-3 label">
-              <fbt desc="create.review.description">Description</fbt>
-            </div>
-            <div className="col-12 col-sm-9">
-              <FormattedDescription text={listing.description} />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-12 col-sm-3 label">
-              <fbt desc="create.review.price">Listing Price</fbt>
-            </div>
-            <div className="col-12 col-sm-9">
-              <Price
-                target={listing.currency}
-                price={{
-                  amount: listing.price,
-                  currency: { id: listing.currency }
-                }}
-              />
-            </div>
-          </div>
-          {quantity <= 1 ? null : (
-            <div className="row">
-              <div className="col-12 col-sm-3 label">
-                <fbt desc="create.review.quantity">Quantity</fbt>
-              </div>
-              <div className="col-12 col-sm-9">{listing.quantity}</div>
-            </div>
-          )}
-          <div className="row">
-            <div className="col-12 col-sm-3 label">
-              <fbt desc="create.review.photos">Photos</fbt>
-            </div>
-            <div className="col-12 col-sm-9">
-              {listing.media.length ? (
-                <div className="photos">
-                  {listing.media.map((image, idx) => (
-                    <div
-                      key={idx}
-                      className="photo-row"
-                      style={{ backgroundImage: `url(${image.urlExpanded})` }}
-                    />
-                  ))}
+    <>
+      <h1>
+        <Link to={prev} className="back d-md-none" />
+        <fbt desc="createListing.review">Review</fbt>
+      </h1>
+      <div className="step-description mb-0 mt-4">
+        <fbt desc="createListing.reviewDescription">
+          Review your listing and click Publish to make it available on Origin
+        </fbt>
+      </div>
+      <div className="row">
+        <div className="col-md-8">
+          <div className="listing-step no-pad">
+            <div className="listing-review">
+              <div className="title">{listing.title}</div>
+              <div className="price-quantity">
+                <div className="price">
+                  <Price
+                    target={listing.currency}
+                    price={{
+                      amount: listing.price,
+                      currency: { id: listing.currency }
+                    }}
+                  />
                 </div>
+                <div>
+                  <fbt desc="create.review.quantity">
+                    Quantity:
+                    <fbt:param name="quantity">{listing.quantity}</fbt:param>
+                  </fbt>
+                </div>
+              </div>
+              <GalleryScroll pics={listing.media} />
+              <div className="description">
+                <FormattedDescription text={listing.description} />
+              </div>
+              <dl>
+                <dt>
+                  <fbt desc="create.review.category">Category</fbt>
+                </dt>
+                <dd>
+                  <Category listing={listing} />
+                </dd>
+              </dl>
+            </div>
+            <div className="actions">
+              <Link
+                className="btn btn-outline-primary d-none d-md-inline-block"
+                to={prev}
+              >
+                <fbt desc="back">Back</fbt>
+              </Link>
+              {listing.id ? (
+                <UpdateListing
+                  listing={listing}
+                  tokenBalance={props.tokenBalance}
+                  refetch={props.refetch}
+                  className="btn btn-primary"
+                  children={fbt('Publish', 'createListing.publish')}
+                />
               ) : (
-                <i>
-                  <fbt desc="create.review.no photos">No Photos</fbt>
-                </i>
+                <CreateListing
+                  listing={listing}
+                  tokenBalance={props.tokenBalance}
+                  className="btn btn-primary"
+                  children={fbt('Publish', 'createListing.publish')}
+                />
               )}
             </div>
           </div>
         </div>
-
-        <div className="actions">
-          <Link className="btn btn-outline-primary" to={props.prev}>
-            <fbt desc="back">Back</fbt>
-          </Link>
-          {listing.id ? (
-            <UpdateListing
-              listing={listing}
-              tokenBalance={props.tokenBalance}
-              refetch={props.refetch}
-              className="btn btn-primary"
-              children={fbt('Done', 'Done')}
-            />
-          ) : (
-            <CreateListing
-              listing={listing}
-              tokenBalance={props.tokenBalance}
-              className="btn btn-primary"
-              children={fbt('Done', 'Done')}
-            />
-          )}
+        <div className="col-md-4 d-none d-md-block">
+          <div className="gray-box">
+            <fbt desc="create.details.help">
+              <h5>Add Listing Details</h5>
+              Be sure to give your listing an appropriate title and description
+              to let others know what you&apos;re offering. Adding some photos
+              will increase the chances of selling your listing.
+            </fbt>
+          </div>
         </div>
       </div>
-      <div className="col-md-4">
-        <Wallet />
-        <div className="gray-box">
-          <fbt desc="create.review.What happens next">
-            <h5>What happens next?</h5>
-            When you submit this listing, you will be asked to confirm your
-            transaction in MetaMask. Buyers will then be able to see your
-            listing and make offers on it.
-          </fbt>
-        </div>
-      </div>
-    </div>
+    </>
   )
 }
 
-export default withWallet(withTokenBalance(Review))
+export default ReviewListing
+
+require('react-styl')(`
+  .create-listing
+    .listing-step
+      .listing-review
+        width: 100%
+        max-width: 20rem
+        margin-bottom: 2rem
+        .title
+          font-size: 28px
+        .price-quantity
+          display: flex
+          justify-content: space-between
+          align-items: center
+          .price
+            font-size: 24px
+        .gallery-scroll-wrap
+          border: 1px solid var(--light)
+          border-radius: 0.5rem
+          margin: 1rem 0
+        dl
+          font-size: 20px
+          dt
+            color: var(--bluey-grey)
+            font-weight: normal
+            margin-top: 1rem
+            border-top: 1px solid var(--light)
+            padding-top: 1rem
+`)

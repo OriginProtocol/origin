@@ -49,6 +49,7 @@ export default GalleryScroll
 require('react-styl')(`
   .gallery-scroll-wrap
     position: relative
+    overflow: hidden
     .ticks
       display: flex
       flex-direction: row

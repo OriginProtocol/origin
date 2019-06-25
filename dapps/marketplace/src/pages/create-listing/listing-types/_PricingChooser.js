@@ -17,81 +17,111 @@ const HelpIcon = ({ tooltip }) => (
 
 const PricingChooser = ({ value, onChange, children }) => {
   return (
-    <div className="form-group">
-      <label>
-        <fbt desc="pricingChooser.payment">Payment</fbt>
-      </label>
-      <div className="pricing-chooser">
-        {children}
-        <div className="form-group accepted-currencies">
-          <label className="mb-0">
-            <fbt desc="pricingChooser.acceptedCurrenciesHeading">
-              Accepted Cryptocurrencies
-            </fbt>
-          </label>
-          <div className="help-text price mt-0">
-            <fbt desc="pricingChooser.acceptedCurrenciesDescription">
-              Buyers will be able to purchase your listing using either of these
-              currencies if you select both.
-            </fbt>
+    <div className="pricing-chooser">
+      {children}
+      <div className="form-group accepted-currencies">
+        <label>
+          <fbt desc="pricingChooser.acceptedCurrenciesHeading">
+            Accepted Cryptocurrencies
+          </fbt>
+        </label>
+        <div
+          className={`currency${
+            value.indexOf('token-DAI') >= 0 ? '' : ' disabled'
+          }`}
+          onClick={() => {
+            const newVal =
+              value.indexOf('token-DAI') >= 0
+                ? value.filter(v => v != 'token-DAI')
+                : [...value, 'token-DAI']
+            onChange(newVal.length ? newVal : ['token-ETH'])
+          }}
+        >
+          <CoinPrice coin="dai" iconOnly className="lg" />
+          <div className="name">
+            Maker Dai<div className="symbol">DAI</div>
           </div>
-          <div className="custom-control custom-checkbox">
-            <input
-              className="custom-control-input"
-              type="checkbox"
-              id="dai-checkbox"
-              checked={value.indexOf('token-DAI') >= 0}
-              onChange={() => {
-                const newVal =
-                  value.indexOf('token-DAI') >= 0
-                    ? value.filter(v => v != 'token-DAI')
-                    : [...value, 'token-DAI']
-                onChange(newVal.length ? newVal : ['token-ETH'])
-              }}
-            />
-            <label className="custom-control-label" htmlFor="dai-checkbox">
-              <CoinPrice coin="dai" iconOnly className="lg" />
-              Maker Dai (DAI)
-            </label>
-            <div className="help-text">
-              <fbt desc="PricingChooser.helpDai">Stable but less buyers</fbt>
-            </div>
-            <HelpIcon
-              tooltip={fbt(
-                'Maker Dai is good for long term listings like rentals or property sales.',
-                'PricingChooser.maker'
-              )}
-            />
-          </div>
-          <div className="custom-control custom-checkbox">
-            <input
-              className="custom-control-input"
-              type="checkbox"
-              id="eth-checkbox"
-              checked={value.indexOf('token-ETH') >= 0}
-              onChange={() => {
-                const newVal =
-                  value.indexOf('token-ETH') >= 0
-                    ? value.filter(v => v != 'token-ETH')
-                    : [...value, 'token-ETH']
-                onChange(newVal.length ? newVal : ['token-DAI'])
-              }}
-            />
-            <label className="custom-control-label" htmlFor="eth-checkbox">
-              <CoinPrice coin="eth" iconOnly className="lg" />
-              Ether (ETH)
-            </label>
-            <div className="help-text">
-              <fbt desc="PricingChooser.helpEth">Volatile but more buyers</fbt>
-            </div>
-            <HelpIcon
-              tooltip={fbt(
-                'Ether is good for short term listings.',
-                'pricingChooser.ether'
-              )}
-            />
-          </div>
+
+          <HelpIcon
+            tooltip={fbt(
+              'Maker Dai is good for long term listings like rentals or property sales.',
+              'PricingChooser.maker'
+            )}
+          />
         </div>
+        <div
+          className={`currency${
+            value.indexOf('token-ETH') >= 0 ? '' : ' disabled'
+          }`}
+          onClick={() => {
+            const newVal =
+              value.indexOf('token-ETH') >= 0
+                ? value.filter(v => v != 'token-ETH')
+                : [...value, 'token-ETH']
+            onChange(newVal.length ? newVal : ['token-DAI'])
+          }}
+        >
+          <CoinPrice coin="eth" iconOnly className="lg" />
+          <div className="name">
+            Ethereum <div className="symbol">ETH</div>
+          </div>
+          <HelpIcon
+            tooltip={fbt(
+              'Ether is good for short term listings.',
+              'pricingChooser.ether'
+            )}
+          />
+        </div>
+        {/*<div className="custom-control custom-checkbox">
+          <input
+            className="custom-control-input"
+            type="checkbox"
+            id="dai-checkbox"
+            checked={value.indexOf('token-DAI') >= 0}
+            onChange={() => {
+              const newVal =
+                value.indexOf('token-DAI') >= 0
+                  ? value.filter(v => v != 'token-DAI')
+                  : [...value, 'token-DAI']
+              onChange(newVal.length ? newVal : ['token-ETH'])
+            }}
+          />
+          <label className="custom-control-label" htmlFor="dai-checkbox">
+            <CoinPrice coin="dai" iconOnly className="lg" />
+            Maker Dai (DAI)
+          </label>
+          <HelpIcon
+            tooltip={fbt(
+              'Maker Dai is good for long term listings like rentals or property sales.',
+              'PricingChooser.maker'
+            )}
+          />
+        </div>
+        <div className="custom-control custom-checkbox">
+          <input
+            className="custom-control-input"
+            type="checkbox"
+            id="eth-checkbox"
+            checked={value.indexOf('token-ETH') >= 0}
+            onChange={() => {
+              const newVal =
+                value.indexOf('token-ETH') >= 0
+                  ? value.filter(v => v != 'token-ETH')
+                  : [...value, 'token-ETH']
+              onChange(newVal.length ? newVal : ['token-DAI'])
+            }}
+          />
+          <label className="custom-control-label" htmlFor="eth-checkbox">
+            <CoinPrice coin="eth" iconOnly className="lg" />
+            Ethereum (ETH)
+          </label>
+          <HelpIcon
+            tooltip={fbt(
+              'Ether is good for short term listings.',
+              'pricingChooser.ether'
+            )}
+          />
+        </div>*/}
       </div>
     </div>
   )
@@ -100,33 +130,38 @@ const PricingChooser = ({ value, onChange, children }) => {
 export default PricingChooser
 
 require('react-styl')(`
-  .create-listing .create-listing-step-2 .pricing-chooser
-    border: solid 1px var(--light)
-    background-color: #f4f6f7
-    border-radius: 5px
-    padding: 1rem
-    .accepted-currencies .custom-checkbox
-      display: flex
-      align-items: center
-      margin-bottom: 0.5rem
-      label
-        color: #000
-        margin-bottom: 0
-        &::before
-          width: 1.25rem
-          height: 1.25rem
-        &::after
-          width: 1.25rem
-          height: 1.25rem
-      .coin-price
-        margin-left: 0.375rem
-        margin-right: 0.125rem
-      .help-text
-        display: inline-block
-        color: var(--bluey-grey)
-        margin: 0 0 0 0.5rem
-      .help-icon
-        margin-left: auto
+
+  .create-listing
+    .listing-step
+      .pricing-chooser
+        .accepted-currencies
+          label
+            margin-bottom: 1.5rem
+        .currency
+          display: flex
+          border: 1px solid #c0cbd4
+          background: #eaf0f3
+          padding: 0.5rem 1rem
+          border-radius: 0.5rem
+          font-size: 20px
+          align-items: center
+          cursor: pointer
+          &:not(:last-child)
+            margin-bottom: 0.5rem
+          &.disabled
+            opacity: 0.4
+            .coin-price
+              filter: grayscale(100%)
+          .name
+            margin-right: auto
+            display: flex
+            align-items: baseline
+            margin-left: 0.5rem
+            .symbol
+              font-size: 14px
+              color: var(--bluey-grey)
+              font-weight: bold
+              margin-left: 0.5rem
   svg.help-icon
     path
       fill: var(--bluey-grey)
