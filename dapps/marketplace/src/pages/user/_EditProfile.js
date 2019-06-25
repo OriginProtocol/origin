@@ -140,8 +140,7 @@ class EditProfile extends Component {
             children={
               <>
                 <fbt desc="EditModal.nameAndPhoto">
-                  Your photo, name, and description will be visible to other
-                  users on the blockchain.
+                  Your photo, name, and description
                 </fbt>
                 <a
                   onClick={e => {

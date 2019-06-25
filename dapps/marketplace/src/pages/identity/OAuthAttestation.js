@@ -19,8 +19,6 @@ import { getProviderDisplayName } from 'utils/profileTools'
 function InfoStoredOnChain({ provider }) {
   const providerName = getProviderDisplayName(provider)
 
-  let piiStored = false
-
   let content = (
     <fbt desc="OAuthAttestation.verify.explanation">
       Other users will know that you have a verified{' '}
@@ -32,26 +30,38 @@ function InfoStoredOnChain({ provider }) {
 
   switch (provider) {
     case 'facebook':
-      content = (
-        <fbt desc="OAuthAttestation.facebookOnChain">
-          That you have a verified Facebook account but NOT any information
-          about you or your friends
-        </fbt>
-      )
+      content = fbt('Your Facebook user ID', 'OAuthAttestation.onChain.facebook')
       break
 
     case 'twitter':
-      piiStored = true
-      content = (
-        <fbt desc="OAuthAttestation.twitterOnChain">Your Twitter username</fbt>
-      )
+      content = fbt('Your Twitter username and user ID', 'OAuthAttestation.onChain.twitter')
+      break
+
+    case 'google':
+      content = fbt('Your Google user ID', 'OAuthAttestation.onChain.google')
+      break
+
+    case 'kakao':
+      content = fbt('Your Kakao user ID', 'OAuthAttestation.onChain.kakao')
+      break
+
+    case 'wechat':
+      content = fbt('Your Wechat user ID', 'OAuthAttestation.onChain.wechat')
+      break
+
+    case 'github':
+      content = fbt('Your GitHub username and user ID', 'OAuthAttestation.onChain.github')
+      break
+
+    case 'linkedin':
+      content = fbt('Your LinkedIn username', 'OAuthAttestation.onChain.linkedin')
       break
   }
 
   return (
     <PublishedInfoBox
       className="mt-auto"
-      pii={piiStored}
+      pii={true}
       title={fbt(
         'What will be visible on the blockchain?',
         'OAuthAttestation.visibleOnBlockchain'

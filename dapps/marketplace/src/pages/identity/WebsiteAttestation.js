@@ -6,6 +6,7 @@ import withIsMobile from 'hoc/withIsMobile'
 
 import Modal from 'components/Modal'
 import MobileModal from 'components/MobileModal'
+import PublishedInfoBox from 'components/_PublishedInfoBox'
 
 import GenerateWebsiteCodeMutation from 'mutations/GenerateWebsiteCode'
 import VerifyWebsiteMutation from 'mutations/VerifyWebsite'
@@ -94,11 +95,19 @@ class WebsiteAttestation extends Component {
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
-        <div className="help">
-          <fbt desc="VerifyWebsite.websitePublished">
-            Your website URL will be published on the blockchain.
-          </fbt>
-        </div>
+
+        <PublishedInfoBox
+          title={fbt(
+            'What will be visible on the blockchain?',
+            'VerifyWebsite.visibleOnChain'
+          )}
+          children={
+            <fbt desc="VerifyWebsite.websitePublished">
+              Your website's URL
+            </fbt>
+          }
+          pii={true}
+        />
         <div className="actions">
           {this.renderCodeButton()}
           {isMobile ? null : (
