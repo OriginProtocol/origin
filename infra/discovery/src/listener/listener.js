@@ -240,7 +240,10 @@ logger.info(
   )}`
 )
 
-setNetwork(config.network, { performanceMode: false })
+setNetwork(config.network, {
+  performanceMode: false,
+  proxyAccountsEnabled: process.env.PROXY_ACCOUNTS_ENABLED === 'true'
+})
 main().catch(err => {
   logger.error('Error occurred in listener main() process:', err)
   logger.error('Exiting')

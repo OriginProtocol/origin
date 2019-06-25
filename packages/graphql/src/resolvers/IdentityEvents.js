@@ -170,12 +170,13 @@ export function identity({ id, ipfsHash }) {
       return null
     }
     let accounts = id
+    let owner, proxy
     if (!ipfsHash) {
-      const owner = await proxyOwner(id)
+      owner = await proxyOwner(id)
       if (owner) {
         accounts = [id, owner]
       } else {
-        const proxy = await hasProxy(id)
+        proxy = await hasProxy(id)
         if (proxy) {
           accounts = [id, proxy]
         }
@@ -219,7 +220,10 @@ export function identity({ id, ipfsHash }) {
       strength: 0,
       ipfsHash,
       owner: {
-        id
+        id: owner ? owner : id
+      },
+      proxy: {
+        id: proxy ? proxy : id
       }
     }
 

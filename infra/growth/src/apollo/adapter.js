@@ -12,6 +12,11 @@ const ruleIdToActionType = {
   AirbnbAttestation: 'Airbnb',
   TwitterAttestation: 'Twitter',
   GoogleAttestation: 'Google',
+  LinkedInAttestation: 'LinkedIn',
+  GitHubAttestation: 'GitHub',
+  KakaoAttestation: 'Kakao',
+  WeChatAttestation: 'WeChat',
+  WebsiteAttestation: 'Website',
   Referral: 'Referral',
   // Any listing created.
   ListingCreated: 'ListingCreated',
@@ -25,7 +30,8 @@ const ruleIdToActionType = {
   ListingPurchaseCharity: 'ListingIdPurchased',
   ListingPurchaseHousing: 'ListingIdPurchased',
   ListingPurchaseInfluencer: 'ListingIdPurchased',
-  ListingPurchaseArt: 'ListingIdPurchased'
+  ListingPurchaseArt: 'ListingIdPurchased',
+  MobileAccountCreated: 'MobileAccountCreated'
 }
 
 /**
