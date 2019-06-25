@@ -4,7 +4,7 @@ import { fbt } from 'fbt-runtime'
 const DownloadApp = () => (
   <div className="onboard-help origin-wallet">
     <div className="app-image mb-3">
-      <img src="images/blue-coins.svg" />
+      <img src="images/mobile/devices-layered.png" />
     </div>
     <h5>
       <fbt desc="onboard.Wallet.downloadApp">
@@ -32,6 +32,9 @@ export default DownloadApp
 require('react-styl')(`
   .onboard-help.origin-wallet
     text-align: center
+    .app-image
+      img
+        width: 140px
     .actions
       margin-top: 1.5rem
       display: flex

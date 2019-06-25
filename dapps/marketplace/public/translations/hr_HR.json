@@ -105,7 +105,7 @@
   "3O3nPR": "Verify your Wechat Profile",
   "2peucP": "Izradite unos",
   "2QerxF": "Kupite Oglas",
-  "HU81L": {
+  "2JIv8R": {
     "growth.jan2019.name": "Kampanja u siječnju 2019. godine",
     "growth.jan2019.short_name": "Siječnja 2019",
     "growth.feb2019.name": "Kampanja veljače 2019. godine",
@@ -118,6 +118,8 @@
     "growth.may2019.short_name": "May 2019",
     "growth.june2019.name": "June 2019 Campaign",
     "growth.june2019.short_name": "June 2019",
+    "growth.july2019.name": "July 2019 Campaign",
+    "growth.july2019.short_name": "July 2019",
     "growth.profile.and.email.requirement": "Potvrđena adresa e-pošte i profil porijekla",
     "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
@@ -802,9 +804,9 @@
   "2hg0gR": "Unlock the full experience",
   "1pt6RF": "O identitetu na Blockchainu",
   "4o9sVo": "Novčanik za kripto valutu je softverski program koji pohranjuje privatne i javne ključeve i komunicira s raznim blockchainom kako bi korisnicima omogućio slanje i primanje digitalne valute i praćenje njihovog stanja. Ako želite koristiti Bitcoin ili bilo koju drugu kripto valutu, morat ćete imati digitalni novčanik.",
-  "1JNI6V": "Saznajte više",
   "3NRLhm": "Što je kripto novčanik?",
   "2HUml2": "Novčanik za kripto valutu je softverski program koji pohranjuje privatne i javne ključeve i komunicira s raznim blockchainom kako bi korisnicima omogućio slanje i primanje digitalne valute i praćenje njihovog stanja. Ako želite koristiti Bitcoin ili bilo koju drugu kripto valutu, morat ćete imati digitalni novčanik.",
+  "1JNI6V": "Saznajte više",
   "28APX7": "Vaš unos čeka ...",
   "jC283": "Povežite kripto novčanik",
   "1xQN4D": "In order to successfully transact with others on our DApp, you’ll need a wallet to store cryptocurrency.",

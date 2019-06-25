@@ -105,7 +105,7 @@
   "3O3nPR": "Verify your Wechat Profile",
   "2peucP": "상품 목록 만들기",
   "2QerxF": "상품 구매",
-  "HU81L": {
+  "2JIv8R": {
     "growth.jan2019.name": "2019 년 1 월 캠페인",
     "growth.jan2019.short_name": "2019 년 1 월",
     "growth.feb2019.name": "2019 년 2 월 캠페인",
@@ -118,6 +118,8 @@
     "growth.may2019.short_name": "2019년 5월",
     "growth.june2019.name": "June 2019 Campaign",
     "growth.june2019.short_name": "June 2019",
+    "growth.july2019.name": "July 2019 Campaign",
+    "growth.july2019.short_name": "July 2019",
     "growth.profile.and.email.requirement": "인증된 이메일 및 오리진 프로필",
     "growth.two.attestations.requirement": "두 개의 프로필 확인",
     "growth.profile.requirement": "프로필 이름 및 사진",
@@ -802,9 +804,9 @@
   "2hg0gR": "Unlock the full experience",
   "1pt6RF": "블록 체인에서의 본인인증",
   "4o9sVo": "cryptocurrency wallet은 개인 및 공개 키를 저장하고 다양한 블록 체인과 상호 작용하여 사용자가 디지털 통화를 보내고 받거나 균형을 모니터링 할 수있게 해주는 소프트웨어 프로그램입니다. Bitcoin 또는 다른 암호 화를 사용하려면 디지털 지갑이 있어야합니다.",
-  "1JNI6V": "더 알아보기",
   "3NRLhm": "암호화 지갑(Crypto Wallet) 이란 무엇입니까?",
   "2HUml2": "암호화폐 지갑은 개인 및 공개 키를 저장하고, 다양한 블록 체인과 상호 작용하여 사용자가 디지털 통화를 주고 받으며 자신의 잔액을 확인할 수 있도록 하는 소프트웨어 프로그램입니다. 비트코인 또는 다른 암호 화폐를 사용하기 위하여 디지털 지갑이 필요합니다.",
+  "1JNI6V": "더 알아보기",
   "28APX7": "당신의 상품 목록이 대기 중입니다....",
   "jC283": "암호화폐 지갑과 연동",
   "1xQN4D": "In order to successfully transact with others on our DApp, you’ll need a wallet to store cryptocurrency.",
