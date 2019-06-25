@@ -92,7 +92,8 @@ function profileDataUpdated(state, prevState) {
 
 function attestationsUpdated(state, prevState) {
   return (
-    get(state, 'verifiedAttestations.length') !== get(prevState, 'verifiedAttestations.length')
+    get(state, 'verifiedAttestations.length') !==
+    get(prevState, 'verifiedAttestations.length')
   )
 }
 
@@ -112,16 +113,25 @@ class UserProfile extends Component {
 
   componentDidUpdate(prevProps) {
     const identity = get(this.props, 'identity')
-    const walletChanged = get(this.props, 'identity.id') !== get(prevProps, 'identity.id')
+    const walletChanged =
+      get(this.props, 'identity.id') !== get(prevProps, 'identity.id')
     const profileChanged = profileDataUpdated(this.state, identity)
     const attestationsChanged = attestationsUpdated(this.state, identity)
 
-    if (walletChanged || (identity && (profileChanged || attestationsChanged))) {
+    if (
+      walletChanged ||
+      (identity && (profileChanged || attestationsChanged))
+    ) {
       this.setState(getState(identity))
     }
 
-    const identityLoaded = !this.props.identityLoading && prevProps.identityLoading
-    if ((walletChanged || identityLoaded) && !identity && !this.state.redirectToOnboarding) {
+    const identityLoaded =
+      !this.props.identityLoading && prevProps.identityLoading
+    if (
+      (walletChanged || identityLoaded) &&
+      !identity &&
+      !this.state.redirectToOnboarding
+    ) {
       // redirect to onboarding, if user doesn't have a deployed profile
       this.setState({
         redirectToOnboarding: true
@@ -362,12 +372,12 @@ class UserProfile extends Component {
       return null
     }
 
-    const profile = pick(this.state.deployIdentity === 'profile' ? this.state.unpublishedProfile : this.state, [
-      'firstName',
-      'lastName',
-      'description',
-      'avatarUrl'
-    ])
+    const profile = pick(
+      this.state.deployIdentity === 'profile'
+        ? this.state.unpublishedProfile
+        : this.state,
+      ['firstName', 'lastName', 'description', 'avatarUrl']
+    )
 
     return (
       <DeployIdentity

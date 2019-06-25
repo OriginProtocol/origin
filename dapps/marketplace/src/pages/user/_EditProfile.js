@@ -16,8 +16,8 @@ import withIsMobile from 'hoc/withIsMobile'
 function profileUpdated(state, prevState) {
   return (
     state.firstName !== prevState.firstName ||
-    state.lastName !== prevState.lastName || 
-    state.description !== prevState.description || 
+    state.lastName !== prevState.lastName ||
+    state.description !== prevState.description ||
     state.avatarUrl !== prevState.avatarUrl
   )
 }
@@ -58,7 +58,6 @@ class EditProfile extends Component {
           onSubmit={e => {
             e.preventDefault()
             if (this.validate()) {
-
               if (profileUpdated(this.state, this.props)) {
                 this.props.onChange(
                   pick(this.state, ['firstName', 'lastName', 'description'])
