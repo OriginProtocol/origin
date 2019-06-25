@@ -118,7 +118,7 @@ const withOriginGraphql = WrappedComponent => {
       })
     }
 
-    growthEnroll = (vars) => {
+    growthEnroll = vars => {
       return this._sendGraphqlMutation(growthEnroll, vars)
     }
 

@@ -37,7 +37,8 @@ class GrowthTermsScreen extends Component {
   }
 
   handleAcceptTerms = async () => {
-    const agreementMessage = 'I accept the terms of growth campaign version: 1.0'
+    const agreementMessage =
+      'I accept the terms of growth campaign version: 1.0'
     const vars = {
       accountId: this.props.wallet.activeAccount.address,
       agreementMessage,
@@ -94,22 +95,30 @@ class GrowthTermsScreen extends Component {
             government regulations do not allow you to participate in Origin
             Rewards.
           </Text>
-          <Text style={{ fontWeight: '600', marginTop: 20, marginBottom: 10, fontSize: 16 }}>
+          <Text
+            style={{
+              fontWeight: '600',
+              marginTop: 20,
+              marginBottom: 10,
+              fontSize: 16
+            }}
+          >
             Did we detect your country incorrectly?
           </Text>
           <CheckBox
             style={{ padding: 20 }}
-            onClick={()=>{
+            onClick={() => {
               this.setState({
                 isChecked: !this.state.isChecked
               })
             }}
             isChecked={this.state.isChecked}
-            checkBoxColor='#455d75'
-            uncheckedCheckBoxColor='#455d75'
+            checkBoxColor="#455d75"
+            uncheckedCheckBoxColor="#455d75"
             rightTextView={
               <Text style={{ fontSize: 16, marginLeft: 5, fontWeight: '300' }}>
-                I certify that I am not a citizen or resident of {this.state.countryName}
+                I certify that I am not a citizen or resident of{' '}
+                {this.state.countryName}
               </Text>
             }
           />
@@ -132,9 +141,7 @@ class GrowthTermsScreen extends Component {
             title={fbt('Cancel', 'GrowthTermsScreen.skipButton')}
             onPress={() => {
               this.props.setGrowth(false)
-              this.props.navigation.navigate(
-                this.props.nextOnboardingStep
-              )
+              this.props.navigation.navigate(this.props.nextOnboardingStep)
             }}
           />
         </View>

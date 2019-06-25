@@ -71,7 +71,10 @@ export function getNextOnboardingStep(onboardingStore, settingsStore) {
     return 'Name'
   } else if (onboardingStore.avatarUri === null) {
     return 'Avatar'
-  } else if (onboardingStore.growth === null && !onboardingStore.noRewardsDismissed) {
+  } else if (
+    onboardingStore.growth === null &&
+    !onboardingStore.noRewardsDismissed
+  ) {
     return 'Growth'
   } else if (!settingsStore.pin && !settingsStore.biometryType) {
     return 'Authentication'
