@@ -426,6 +426,7 @@ class Purse {
   /**
    * Get a pending transaction object
    * @param txHash {string} - The transaction hash
+   * @returns {object} representation of the transaction
    */
   async getPendingTransaction(txHash) {
     if (this.transactionObjects[txHash]) {
