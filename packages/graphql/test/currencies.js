@@ -12,6 +12,7 @@ describe('Currencies', () => {
       'fiat-KRW',
       'fiat-JPY',
       'fiat-CNY',
+      'fiat-SGD',
       'token-ETH',
       'token-DAI',
       'token-OGN',
