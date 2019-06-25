@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 
+import pick from 'lodash/pick'
+
 import Modal from 'components/Modal'
 import MobileModal from 'components/MobileModal'
 
@@ -39,28 +41,18 @@ class EditProfileModal extends Component {
               imageCropperOpened: open
             })
           }}
-          onChange={this.props.onChange}
-          onAvatarChange={this.props.onAvatarChange}
           onClose={() => this.setState({ shouldClose: true })}
+          {...pick(this.props, [
+            'firstName',
+            'lastName',
+            'description',
+            'avatarUrl',
+            'onChange',
+            'onAvatarChange'
+          ])}
         />
       </ModalComp>
     )
-  }
-
-  validate() {
-    const newState = {}
-
-    if (!this.state.firstName) {
-      newState.firstNameError = fbt(
-        'First Name is required',
-        'EditModel.firstNameRequired'
-      )
-    }
-
-    newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
-
-    this.setState(newState)
-    return newState.valid
   }
 }
 

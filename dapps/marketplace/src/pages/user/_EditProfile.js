@@ -13,6 +13,15 @@ import { formInput, formFeedback } from 'utils/formHelpers'
 import withConfig from 'hoc/withConfig'
 import withIsMobile from 'hoc/withIsMobile'
 
+function profileUpdated(state, prevState) {
+  return (
+    state.firstName !== prevState.firstName ||
+    state.lastName !== prevState.lastName || 
+    state.description !== prevState.description || 
+    state.avatarUrl !== prevState.avatarUrl
+  )
+}
+
 class EditProfile extends Component {
   constructor(props) {
     super(props)
@@ -48,30 +57,45 @@ class EditProfile extends Component {
           }${onboarding ? ' onboarding' : ''}`}
           onSubmit={e => {
             e.preventDefault()
-            this.validate()
+            if (this.validate()) {
+
+              if (profileUpdated(this.state, this.props)) {
+                this.props.onChange(
+                  pick(this.state, ['firstName', 'lastName', 'description'])
+                )
+
+                if (this.state.avatarUrl !== this.props.avatarUrl) {
+                  this.props.onAvatarChange(this.state.avatarUrl)
+                }
+              }
+
+              this.onClose()
+            }
           }}
         >
           {<h2>{isMobile ? null : titleContent}</h2>}
           <div className="profile-fields-container">
-            <ImageCropper
-              onChange={async avatarBase64 => {
-                const { ipfsRPC } = this.props.config
-                const uploadedImages = await uploadImages(ipfsRPC, [
-                  avatarBase64
-                ])
-                const avatarImg = uploadedImages[0]
-                if (avatarImg) {
-                  const avatarUrl = avatarImg.url
-                  this.setState({ avatarUrl })
-                }
-              }}
-              openChange={this.props.imageCropperToggled}
-            >
-              <Avatar
-                className="avatar with-cam"
-                avatarUrl={this.state.avatarUrl}
-              />
-            </ImageCropper>
+            <div className="avatar-image-container">
+              <ImageCropper
+                onChange={async avatarBase64 => {
+                  const { ipfsRPC } = this.props.config
+                  const uploadedImages = await uploadImages(ipfsRPC, [
+                    avatarBase64
+                  ])
+                  const avatarImg = uploadedImages[0]
+                  if (avatarImg) {
+                    const avatarUrl = avatarImg.url
+                    this.setState({ avatarUrl })
+                  }
+                }}
+                openChange={this.props.imageCropperToggled}
+              >
+                <Avatar
+                  className="avatar with-cam"
+                  avatarUrl={this.state.avatarUrl}
+                />
+              </ImageCropper>
+            </div>
             <div className="profile-name-fields mt-3">
               <div className="form-group">
                 {(!onboarding || isMobile) && (
@@ -162,17 +186,7 @@ class EditProfile extends Component {
             <button
               className="btn btn-primary btn-rounded"
               children={fbt('Save', 'Save')}
-              onClick={() => {
-                if (this.validate()) {
-                  this.props.onChange(
-                    pick(this.state, ['firstName', 'lastName', 'description'])
-                  )
-                  if (this.state.avatarUrl) {
-                    this.props.onAvatarChange(this.state.avatarUrl)
-                  }
-                  this.onClose()
-                }
-              }}
+              type="submit"
             />
             {!isMobile && !onboarding && (
               <button
@@ -290,11 +304,15 @@ require('react-styl')(`
       display: flex
       flex-direction: column
       flex: auto
+      .avatar-image-container
+        display: flex
+        flex-direction: row
+        justify-content: space-around
       .avatar
-        max-width: 110px
-        max-height: 110px
+        width: 110px
+        height: 110px
         padding-top: 110px
-        margin: 0 auto
+        margin: 0
       .profile-name-fields
         display: flex
         flex-direction: row
