@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react'
 import pick from 'lodash/pick'
-import pickBy from 'lodash/pickBy'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
@@ -75,18 +74,18 @@ function getState(profile) {
     firstName: '',
     lastName: '',
     description: '',
-    avatarUrl: null,
+    avatarUrl: '',
     verifiedAttestations: [],
-    ...pickBy(pick(profile, ProfileFields), k => k)
+    ...pick(profile, ProfileFields)
   }
 }
 
 function profileDataUpdated(state, prevState) {
   return (
-    get(state, 'firstName') !== get(prevState, 'firstName') ||
-    get(state, 'lastName') !== get(prevState, 'lastName') ||
-    get(state, 'description') !== get(prevState, 'description') ||
-    get(state, 'avatarUrl') !== get(prevState, 'avatarUrl')
+    get(prevState, 'firstName') !== get(state, 'firstName') ||
+    get(prevState, 'lastName') !== get(state, 'lastName') ||
+    get(prevState, 'description') !== get(state, 'description') ||
+    get(prevState, 'avatarUrl') !== get(state, 'avatarUrl')
   )
 }
 
@@ -115,15 +114,6 @@ class UserProfile extends Component {
     const identity = get(this.props, 'identity')
     const walletChanged =
       get(this.props, 'identity.id') !== get(prevProps, 'identity.id')
-    const profileChanged = profileDataUpdated(this.state, identity)
-    const attestationsChanged = attestationsUpdated(this.state, identity)
-
-    if (
-      walletChanged ||
-      (identity && (profileChanged || attestationsChanged))
-    ) {
-      this.setState(getState(identity))
-    }
 
     const identityLoaded =
       !this.props.identityLoading && prevProps.identityLoading
@@ -136,6 +126,17 @@ class UserProfile extends Component {
       this.setState({
         redirectToOnboarding: true
       })
+      return
+    }
+
+    const profileChanged = profileDataUpdated(this.state, identity)
+    const attestationsChanged = attestationsUpdated(this.state, identity)
+
+    if (
+      walletChanged ||
+      (identity && (profileChanged || attestationsChanged))
+    ) {
+      this.setState(getState(identity))
     }
   }
 
@@ -443,6 +444,7 @@ class UserProfile extends Component {
         <UserActivationLink location={{ pathname: '/' }} forceRedirect={true} />
       )
     }
+
     return (
       <Fragment>
         <ToastNotification
