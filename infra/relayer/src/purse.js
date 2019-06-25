@@ -518,8 +518,14 @@ class Purse {
    * Get all pending transactions and populate this.pendintTransactions
    */
   async _populatePending() {
+    logger.debug('Re-populating pending transactions from redis...')
+
     if (this.rclient && this.rclient.connected) {
       const pendingHashes = await this.rclient.smembersAsync(REDIS_PENDING_KEY)
+
+      logger.debug(`Loaded ${
+        pendingHashes ? pendingHashes.count : 0
+      } pending transaction hashes from redis`)
 
       for (const txHash of pendingHashes) {
         const tx = await this.web3.eth.getTransaction(txHash)
@@ -531,6 +537,12 @@ class Purse {
         )
         if (rawTx) {
           this.pendingTransactions[txHash] = rawTx
+        } else {
+          logger.error(`Unable to retrieve pending transaction for ${txHash}`)
+          // TODO: Pretending this never existed has its own potential issues
+          if (tx && this.accounts[tx.from]) {
+            this.accounts[tx.from].pendingCount -= 1
+          }
         }
       }
     } else {
