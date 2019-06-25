@@ -74,7 +74,9 @@ router.post('/verify', emailVerifyCode, async (req, res) => {
   const attestation = await generateAttestation(
     AttestationTypes.EMAIL,
     attestationBody,
-    req.body.email,
+    {
+      uniqueId: req.body.email
+    },
     req.body.identity,
     req.ip
   )
