@@ -19,7 +19,7 @@ import {
   tokenBalance,
   wallet
 } from 'graphql/queries'
-import { deployIdentity } from 'graphql/mutations'
+import { growthEnroll, deployIdentity } from 'graphql/mutations'
 
 const withOriginGraphql = WrappedComponent => {
   class WithOriginGraphql extends Component {
@@ -118,6 +118,10 @@ const withOriginGraphql = WrappedComponent => {
       })
     }
 
+    growthEnroll = (vars) => {
+      return this._sendGraphqlMutation(growthEnroll, vars)
+    }
+
     render() {
       return (
         <WrappedComponent
@@ -127,6 +131,7 @@ const withOriginGraphql = WrappedComponent => {
           getTokenBalance={this.getTokenBalance}
           getWallet={this.getWallet}
           publishIdentity={this.publishIdentity}
+          growthEnroll={this.growthEnroll}
           {...this.props}
         />
       )

@@ -7,6 +7,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash.get'
 import CheckBox from 'react-native-check-box'
+import DeviceInfo from 'react-native-device-info'
 
 import OriginButton from 'components/origin-button'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
@@ -30,12 +31,29 @@ class GrowthTermsScreen extends Component {
   async componentDidMount() {
     const eligibility = await this.props.getGrowthEligibility()
     const eligible =
-      get(eligibility, 'data.isEligible.eligibility', null) === 'Eligibled'
+      get(eligibility, 'data.isEligible.eligibility', null) === 'Eligible'
     const countryName = get(eligibility, 'data.isEligible.countryName')
     this.setState({ loading: false, eligible, countryName })
   }
 
-  growthEnroll() {}
+  handleAcceptTerms = async () => {
+    const agreementMessage = 'I accept the terms of growth campaign version: 1.0'
+    const vars = {
+      accountId: this.props.wallet.activeAccount.address,
+      agreementMessage,
+      signature: global.web3.eth.accounts.sign(
+        agreementMessage,
+        this.props.wallet.activeAccount.privateKey
+      ).signature,
+      // DeviceInfo.getUniqueId() can be carefully considered a persistent,
+      // cross-install unique ID for mobile:
+      // https://github.com/react-native-community/react-native-device-info#getuniqueid
+      fingerprintData: JSON.stringify({ uniqueId: DeviceInfo.getUniqueID() })
+    }
+    const result = await this.props.growthEnroll(vars)
+    await this.props.setGrowth(result.data.enroll.authToken)
+    this.props.navigation.navigate(this.props.nextOnboardingStep)
+  }
 
   render() {
     return (
@@ -164,7 +182,7 @@ class GrowthTermsScreen extends Component {
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Accept Terms', 'GrowthTermsScreen.acceptTermsButton')}
-            onPress={() => this.growthEnroll()}
+            onPress={() => this.handleAcceptTerms()}
           />
           <OriginButton
             size="large"

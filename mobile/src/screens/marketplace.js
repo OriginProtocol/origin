@@ -450,6 +450,23 @@ class MarketplaceScreen extends Component {
     }
   }
 
+  injectGrowthAuthToken = () => {
+    if (!this.props.onboarding.growth) {
+      return
+    }
+    const injectedJavaScript = `
+      (function() {
+        if (window && window.localStorage) {
+          window.localStorage.growth_auth_token = '${this.props.onboarding.growth}';
+        }
+      })();
+    `
+    if (this.dappWebView) {
+      console.debug('Injecting growth auth token')
+      this.dappWebView.injectJavaScript(injectedJavaScript)
+    }
+  }
+
   /* Send a response back to the DApp using postMessage in the webview
    */
   handleBridgeResponse = (msgData, result) => {
@@ -466,6 +483,7 @@ class MarketplaceScreen extends Component {
   }
 
   onWebViewLoad = async () => {
+    this.injectGrowthAuthToken()
     // Enable proxy accounts
     this.injectEnableProxyAccounts()
     // Set the language in the DApp to the same as the mobile app
