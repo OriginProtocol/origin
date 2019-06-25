@@ -64,7 +64,9 @@ router.post('/verify', websiteVerify, async (req, res) => {
     const attestation = await generateAttestation(
       AttestationTypes.WEBSITE,
       attestationBody,
-      remoteOrigin,
+      {
+        uniqueId: remoteOrigin
+      },
       req.body.identity,
       req.ip
     )

@@ -226,14 +226,30 @@ describe('Purse', () => {
     const purseTwo = new Purse({ web3, mnemonic: MNEMONIC_ONE, children: 2 })
     await purseTwo.init()
 
+    // Third instance should not have Redis
+    const purseThree = new Purse({
+      web3,
+      mnemonic: MNEMONIC_ONE,
+      children: 2,
+      redisHost: 'redis://localhost:666/999'
+    })
+    await purseThree.init()
+
     const firstTXCount = await purseOne.txCount(sentFrom)
     const secondTXCount = await purseTwo.txCount(sentFrom)
+    const thirdTXCount = await purseThree.txCount(sentFrom)
 
+    assert(typeof firstTXCount === 'number', 'txCount() should return a number')
+    assert(typeof secondTXCount === 'number', 'txCount() should return a number')
+    assert(typeof thirdTXCount === 'number', 'txCount() should return a number')
     assert(firstTXCount === secondTXCount)
+    assert(secondTXCount === thirdTXCount)
     assert(purseOne.accounts[sentFrom].txCount === purseTwo.accounts[sentFrom].txCount)
+    assert(purseTwo.accounts[sentFrom].txCount === purseThree.accounts[sentFrom].txCount)
 
     await purseOne.teardown(true)
     await purseTwo.teardown(true)
+    await purseThree.teardown(true)
   })
 
   // This is best tested with Redis, but not required
