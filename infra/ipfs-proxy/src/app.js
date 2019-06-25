@@ -21,12 +21,12 @@ const validImageTypes = [
   'image/icon'
 ]
 
-const validVideoTypes = [
-  'video/mp4'
-]
+const validVideoTypes = ['video/mp4']
 
 function isValidFile(buffer) {
-  return isValidImage(buffer) || isValidVideo(buffer) || isJSON(buffer.toString())
+  return (
+    isValidImage(buffer) || isValidVideo(buffer) || isJSON(buffer.toString())
+  )
 }
 
 function isValidImage(buffer) {
