@@ -38,6 +38,11 @@ async function messageEmailSend(receivers, sender, messageHash, config) {
     return r.toLowerCase()
   })
 
+  let shortHash = ''
+  if (messageHash && messageHash.startsWith('0x') && messageHash.length > 9) {
+    shortHash = messageHash.slice(2, 7)
+  }
+
   logger.info(
     `Messsage email: attempting to email addresses ${receivers.join(',')}`
   )
@@ -90,7 +95,8 @@ async function messageEmailSend(receivers, sender, messageHash, config) {
               sender,
               senderName,
               dappUrl: config.dappUrl,
-              ipfsGatewayUrl: config.ipfsGatewayUrl
+              ipfsGatewayUrl: config.ipfsGatewayUrl,
+              messageHash: shortHash
             }
             const email = {
               to: config.overrideEmail || s.email,
