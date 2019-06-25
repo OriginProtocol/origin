@@ -1,7 +1,7 @@
 const { tokenToNaturalUnits } = require('../src/util/token')
 
 
-const mayConfig = {
+const juneConfig = {
   numLevels: 3,
   levels: {
     0: {
@@ -742,4 +742,4 @@ const mayConfig = {
   }
 }
 
-module.exports = mayConfig
+module.exports = juneConfig

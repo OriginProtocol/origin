@@ -26,7 +26,7 @@ const ListingCards = ({
         horizontal ? ' listing-horizontal-cards' : ''
       }`}
     >
-      {redirect && <Redirect to={redirect} />}
+      {redirect && <Redirect to={redirect} push />}
       {listings.map(a => (
         <div
           key={a.id}

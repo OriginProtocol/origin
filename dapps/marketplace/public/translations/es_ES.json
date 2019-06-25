@@ -105,7 +105,7 @@
   "3O3nPR": "Verify your Wechat Profile",
   "2peucP": "Crear un listado",
   "2QerxF": "Comprar un listado",
-  "HU81L": {
+  "2JIv8R": {
     "growth.jan2019.name": "Campaña de enero de 2019",
     "growth.jan2019.short_name": "Ene 2019",
     "growth.feb2019.name": "Campaña de febrero de 2019",
@@ -118,6 +118,8 @@
     "growth.may2019.short_name": "May 2019",
     "growth.june2019.name": "June 2019 Campaign",
     "growth.june2019.short_name": "June 2019",
+    "growth.july2019.name": "July 2019 Campaign",
+    "growth.july2019.short_name": "July 2019",
     "growth.profile.and.email.requirement": "Correo electrónico verificado y perfil de origen",
     "growth.two.attestations.requirement": "Two profile verifications",
     "growth.profile.requirement": "Profile name and photo",
@@ -802,9 +804,9 @@
   "2hg0gR": "Unlock the full experience",
   "1pt6RF": "Sobre la identidad en la cadena de bloques",
   "4o9sVo": "Un monedero de criptomoneda es un programa de software que almacena claves privadas y públicas e interactúa con varios blockchain para permitir a los usuarios enviar y recibir dinero digital y monitorear su saldo. Si desea utilizar Bitcoin o cualquier otra criptomoneda, necesitará tener una billetera digital.",
-  "1JNI6V": "Sepa más",
   "3NRLhm": "¿Qué es una cartera criptográfica?",
   "2HUml2": "Un monedero de criptomoneda es un programa de software que almacena claves privadas y públicas e interactúa con varios blockchain para permitir a los usuarios enviar y recibir dinero digital y monitorear su saldo. Si desea utilizar Bitcoin o cualquier otra criptomoneda, necesitará tener una billetera digital.",
+  "1JNI6V": "Sepa más",
   "28APX7": "Tu anuncio está esperando ...",
   "jC283": "Conecte una billetera criptográfica",
   "1xQN4D": "In order to successfully transact with others on our DApp, you’ll need a wallet to store cryptocurrency.",
