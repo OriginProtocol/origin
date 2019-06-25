@@ -63,10 +63,8 @@ export default {
     if (format && token.decimals && balance) {
       const base = toBN(10).pow(toBN(token.decimals))
       const dm = toBN(balance).divmod(base)
-      const mod = dm.mod
-        .toString()
-        .substr(0, 5)
-        .replace(/0+$/, '')
+      let mod = web3.utils.padLeft(dm.mod.toString(), token.decimals, '0')
+      mod = mod.substr(0, 5).replace(/0+$/, '')
       return `${dm.div}${mod ? `.${mod}` : ''}`
     }
 

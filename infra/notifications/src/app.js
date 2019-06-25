@@ -334,9 +334,20 @@ app.post('/events', async (req, res) => {
     return
   }
 
-  const party = returnValues.party.toLowerCase()
-  const buyerAddress = buyer.id ? buyer.id.toLowerCase() : null
-  const sellerAddress = seller.id ? seller.id.toLowerCase() : null
+  // Normalize buyer, seller and party to use owner (aka "wallet") rather than proxy addresses.
+  // The reason is that identity and notification data is stored under owner address.
+  let party = returnValues.party.toLowerCase()
+  if (party === buyer.identity.owner.proxy.id.toLowerCase()) {
+    party = buyer.identity.owner.id.toLowerCase()
+  } else if (party === seller.owner.proxy.id.toLowerCase()) {
+    party = seller.identity.owner.id.toLowerCase()
+  }
+  const buyerAddress = buyer.identity.owner.id
+    ? buyer.identity.owner.id.toLowerCase()
+    : null
+  const sellerAddress = seller.identity.owner.id
+    ? seller.identity.owner.id.toLowerCase()
+    : null
 
   logger.info(`Info: Processing event ${eventDetailsSummary}`)
 
@@ -375,6 +386,8 @@ app.post('/events', async (req, res) => {
   // browserPush(eventName, party, buyerAddress, sellerAddress, offer)
 })
 
-app.listen(port, () => logger.log(`Notifications server listening at ${port}`))
+app.listen(port, () =>
+  logger.info(`Notifications server listening at http://localhost:${port}`)
+)
 
 module.exports = app

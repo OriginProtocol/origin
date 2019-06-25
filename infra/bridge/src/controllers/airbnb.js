@@ -62,7 +62,7 @@ router.post('/verify', airbnbVerifyCode, async (req, res) => {
     site: {
       siteName: 'airbnb.com',
       userId: {
-        raw: req.body.airbnbUserId
+        raw: String(req.body.airbnbUserId)
       }
     }
   }
@@ -70,7 +70,9 @@ router.post('/verify', airbnbVerifyCode, async (req, res) => {
   const attestation = await generateAttestation(
     AttestationTypes.AIRBNB,
     attestationBody,
-    req.body.airbnbUserId,
+    {
+      uniqueId: req.body.airbnbUserId
+    },
     req.body.identity,
     req.ip
   )

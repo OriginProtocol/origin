@@ -16,6 +16,17 @@ const {
 } = require('@origin/growth/src/resources/event')
 const { ip2geo } = require('@origin/ip2geo')
 
+const siteNameToService = {
+  'airbnb.com': 'airbnb',
+  'facebook.com': 'facebook',
+  'github.com': 'github',
+  'google.com': 'google',
+  'kakao.com': 'kakao',
+  'linkedin.com': 'linkedin',
+  'twitter.com': 'twitter',
+  'wechat.com': 'wechat'
+}
+
 class IdentityEventHandler {
   constructor(config, graphqlClient) {
     this.config = config
@@ -28,17 +39,11 @@ class IdentityEventHandler {
   _getAttestationService(attestation) {
     if (attestation.data.attestation.site) {
       const siteName = attestation.data.attestation.site.siteName
-      if (siteName === 'facebook.com') {
-        return 'facebook'
-      } else if (siteName === 'twitter.com') {
-        return 'twitter'
-      } else if (siteName === 'airbnb.com') {
-        return 'airbnb'
-      } else if (siteName === 'google.com') {
-        return 'google'
-      } else {
+      const service = siteNameToService[siteName]
+      if (!service) {
         logger.error(`Unexpected siteName for attestation ${attestation}`)
       }
+      return service
     } else if (attestation.data.attestation.phone) {
       return 'phone'
     } else if (attestation.data.attestation.email) {
@@ -131,6 +136,11 @@ class IdentityEventHandler {
   async _decorateIdentity(identity) {
     const decoratedIdentity = Object.assign({}, identity)
 
+    // Even if a proxy is used, attestation data is recorded
+    // under the user's wallet address (aka "owner"). Get it so that
+    // we can lookup attestation data.
+    const owner = decoratedIdentity.owner.id
+
     // Load attestation data.
     await Promise.all(
       decoratedIdentity.attestations.map(async attestationJson => {
@@ -139,48 +149,79 @@ class IdentityEventHandler {
         switch (attestationService) {
           case 'email':
             decoratedIdentity.email = await this._loadValueFromAttestation(
-              decoratedIdentity.id,
+              owner,
               'EMAIL'
             )
             break
           case 'phone':
             decoratedIdentity.phone = await this._loadValueFromAttestation(
-              decoratedIdentity.id,
+              owner,
               'PHONE'
             )
             break
           case 'twitter':
             decoratedIdentity.twitter = await this._loadValueFromAttestation(
-              decoratedIdentity.id,
+              owner,
               'TWITTER'
             )
             break
           case 'airbnb':
             decoratedIdentity.airbnb = await this._loadValueFromAttestation(
-              decoratedIdentity.id,
+              owner,
               'AIRBNB'
             )
             break
           case 'facebook':
-            // Note: we don't have access to the decoratedIdentity's fbook id,
-            // only whether the account was verified or not.
             decoratedIdentity.facebookVerified = true
+            decoratedIdentity.facebook = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
+              'FACEBOOK'
+            )
             break
           case 'google':
             decoratedIdentity.googleVerified = true
+            decoratedIdentity.google = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
+              'GOOGLE'
+            )
+            break
+          case 'linkedin':
+            decoratedIdentity.linkedin = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
+              'LINKEDIN'
+            )
+            break
+          case 'github':
+            decoratedIdentity.github = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
+              'GITHUB'
+            )
+            break
+          case 'kakao':
+            decoratedIdentity.kakao = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
+              'KAKAO'
+            )
+            break
+          case 'wechat':
+            decoratedIdentity.wechat = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
+              'WECHAT'
+            )
             break
           case 'website':
             decoratedIdentity.website = await this._loadValueFromAttestation(
-              decoratedIdentity.id,
+              owner,
               'WEBSITE'
             )
             break
+          // TODO: handle github, linkedin, kakao, wechat
         }
       })
     )
 
     // Add country of origin information based on IP.
-    decoratedIdentity.country = await this._countryLookup(identity.id)
+    decoratedIdentity.country = await this._countryLookup(owner)
 
     return decoratedIdentity
   }
@@ -204,8 +245,9 @@ class IdentityEventHandler {
 
     // Construct a decoratedIdentity object based on the user's profile
     // and data loaded from the attestation table.
+    // The identity is recorded under the user's wallet address (aka "owner")
     const identityRow = {
-      ethAddress: decoratedIdentity.id.toLowerCase(),
+      ethAddress: decoratedIdentity.owner.id.toLowerCase(),
       firstName: decoratedIdentity.firstName,
       lastName: decoratedIdentity.lastName,
       email: decoratedIdentity.email,
@@ -217,7 +259,13 @@ class IdentityEventHandler {
       data: { blockInfo },
       country: decoratedIdentity.country,
       avatarUrl: decoratedIdentity.avatarUrl,
-      website: decoratedIdentity.website
+      website: decoratedIdentity.website,
+      google: decoratedIdentity.google,
+      facebook: decoratedIdentity.facebook,
+      kakao: decoratedIdentity.kakao,
+      linkedin: decoratedIdentity.linkedin,
+      github: decoratedIdentity.github,
+      wechat: decoratedIdentity.wechat
     }
 
     logger.debug('Identity=', identityRow)
@@ -245,7 +293,8 @@ class IdentityEventHandler {
       return
     }
 
-    // Record the event.
+    // Note: we log the event using the identity.id address which may be either
+    // the owner or the proxy. The growth engine has logic to handle both.
     await GrowthEvent.insert(
       logger,
       1,
@@ -279,6 +328,8 @@ class IdentityEventHandler {
           return
         }
 
+        // Note: we log the event using the identity.id address which may be either
+        // the owner or the proxy. The growth engine has logic to handle both.
         return GrowthEvent.insert(
           logger,
           1,
