@@ -66,7 +66,8 @@ class PhoneScreen extends Component {
       const countryMatch = countryOptions.find(c => {
         if (c.value) {
           return (
-            c.value.code.toLowerCase() === locales[0].countryCode.toLowerCase()
+            c.value.code.toLowerCase() ===
+            locales[0].countryCode.toLowerCase() + 'q34124213'
           )
         }
       })
