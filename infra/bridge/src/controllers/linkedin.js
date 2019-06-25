@@ -102,7 +102,7 @@ router.post('/verify', linkedinVerify, async (req, res) => {
     site: {
       siteName: 'linkedin.com',
       userId: {
-        verified: true
+        raw: String(userDataResponse.body.id)
       }
     }
   }
@@ -111,7 +111,9 @@ router.post('/verify', linkedinVerify, async (req, res) => {
     const attestation = await generateAttestation(
       AttestationTypes.LINKEDIN,
       attestationBody,
-      userDataResponse.body.id,
+      {
+        uniqueId: userDataResponse.body.id
+      },
       req.body.identity,
       req.ip
     )
