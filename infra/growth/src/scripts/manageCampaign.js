@@ -6,6 +6,7 @@ const { tokenToNaturalUnits } = require('../../src/util/token')
 const aprilConfig = require('../../campaigns/april')
 const mayConfig = require('../../campaigns/may')
 const juneConfig = require('../../campaigns/june')
+const julyConfig = require('../../campaigns/july')
 
 async function createAprilProdCampaign() {
   console.log('Creating April campaign data in prod...')
@@ -81,6 +82,33 @@ async function updateJuneProdRules() {
   await campaign.update({ rules: JSON.stringify(juneConfig) })
 }
 
+async function createJulyProdCampaign() {
+  console.log('Creating July campaign data in prod...')
+
+  /* IMPORTANT when adding new translatable fields update the enums document:
+   * origin-dapp/src/constants/Growth$FbtEnum.js
+   */
+  await db.GrowthCampaign.create({
+    nameKey: 'growth.july2019.name',
+    shortNameKey: 'growth.july2019.short_name',
+    rules: JSON.stringify(julyConfig),
+    startDate: Date.parse('July 1, 2019, 00:00 UTC'),
+    endDate: Date.parse('August 1, 2019, 00:00 UTC'),
+    distributionDate: Date.parse('August 1, 2019, 00:00 UTC'),
+    cap: tokenToNaturalUnits(1000000), // Set cap to 1M tokens
+    capUsed: 0,
+    currency: 'OGN',
+    rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
+  })
+}
+
+async function updateJulyProdRules() {
+  console.log('Updating July campaign rules in prod...')
+
+  const campaign = await db.GrowthCampaign.findOne({ where: { id: 5 } })
+  await campaign.update({ rules: JSON.stringify(julyConfig) })
+}
+
 const args = {}
 process.argv.forEach(arg => {
   const t = arg.split('=')
@@ -88,33 +116,47 @@ process.argv.forEach(arg => {
   args[t[0]] = argVal
 })
 
-if (args['--action'] === 'create') {
-  if (args['--month'] === 'april') {
-    createAprilProdCampaign().then(() => {
-      console.log('Done')
-      process.exit()
-    })
-  } else if (args['--month'] === 'may') {
-    createMayProdCampaign().then(() => {
-      console.log('Done')
-      process.exit()
-    })
-  } else if (args['--month'] === 'june') {
-    createJuneProdCampaign().then(() => {
-      console.log('Done')
-      process.exit()
-    })
-  }
-} else if (args['--action'] === 'update') {
-  if (args['--month'] === 'may') {
-    updateMayProdRules().then(() => {
-      console.log('Done')
-      process.exit()
-    })
-  } else if (args['--month'] === 'june') {
-    updateJuneProdRules().then(() => {
-      console.log('Done')
-      process.exit()
-    })
-  }
+const createByMonth = {
+  april: createAprilProdCampaign,
+  may: createMayProdCampaign,
+  june: createJuneProdCampaign,
+  july: createJulyProdCampaign
 }
+
+const updateByMonth = {
+  may: updateMayProdRules,
+  june: updateJuneProdRules,
+  july: updateJulyProdRules
+}
+
+const action = args['--action']
+if (!action) {
+  console.err('Missing --action argument')
+  process.exit()
+}
+
+const month = args['--month']
+if (!month) {
+  console.err('Missing --month argument')
+  process.exit()
+}
+
+let fn
+if (action === 'create') {
+  fn = createByMonth[month]
+} else if (action === 'update') {
+  fn = updateByMonth[month]
+} else {
+  console.err(`Unexpected action ${action}`)
+  process.exit()
+}
+
+if (!fn) {
+  console.err(`No create function for month of ${month}`)
+  process.exit()
+}
+
+fn().then(() => {
+  console.log('Done')
+})
+process.exit()
