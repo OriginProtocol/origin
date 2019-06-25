@@ -1,124 +1,138 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import { fbt } from 'fbt-runtime'
 
 import Dropdown from 'components/Dropdown'
-import Link from 'components/Link'
+import Redirect from 'components/Redirect'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
-class MobileNav extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-    this.EarnTokens = withEnrolmentModal('a')
+const MobileNav = ({ open, onClose, onOpen }) => {
+  // Allow the menu to close before redirecting so it doesn't show when
+  // the user clicks or swipes back.
+  const [redirect, setRedirect] = useState()
+  const [doRedirect, setDoRedirect] = useState()
+
+  useEffect(() => {
+    if (redirect) {
+      setRedirect(null)
+      setDoRedirect(redirect)
+    }
+  }, [redirect])
+
+  useEffect(() => {
+    if (doRedirect) {
+      setDoRedirect(null)
+    }
+  }, [doRedirect])
+
+  if (doRedirect) {
+    return <Redirect to={doRedirect} push />
   }
 
-  render() {
-    const { onClose } = this.props
-    const hasUnread = ''
-    /* react uses upper/lower case convention to distinguish between DOM tags
-     * and user defined components. For that reason if the components starts with
-     * lowercase 'this.Earn...' it will miss interpret its attributes as DOM attributes
-     */
-    const EarnTokens = this.EarnTokens
-
-    return (
-      <>
-        <Dropdown
-          className="nav-item mobile"
-          open={this.props.open}
-          onClose={() => this.props.onClose()}
-          content={
-            <>
-              <div
-                className="dropdown-menu-bg"
-                onClick={() => this.props.onClose()}
-              />
-              <div className="dropdown-menu show">
-                <a
-                  href="#"
-                  onClick={e => {
-                    e.preventDefault()
-                    this.props.onClose()
-                  }}
-                  className="dropdown-item close-dropdown"
-                >
-                  &nbsp;
-                </a>
-                <Link
-                  onClick={() => onClose()}
-                  to="/"
-                  className="dropdown-item home"
-                  children={fbt('Home', 'navigation.Home')}
-                />
-                <Link
-                  onClick={() => onClose()}
-                  to="/create"
-                  className="dropdown-item add"
-                  children={fbt('Add a Listing', 'navigation.AddaListing')}
-                />
-                <EarnTokens
-                  className="dropdown-item earn"
-                  onClose={() => onClose()}
-                  onNavigation={() => onClose()}
-                >
-                  <fbt desc="navbar.earnTokens">Earn Origin Tokens</fbt>
-                </EarnTokens>
-                <div className="dropdown-divider" />
-                <Link
-                  onClick={() => onClose()}
-                  to="/my-purchases"
-                  className="dropdown-item purchases"
-                  children={fbt('Purchases', 'navigation.purchases')}
-                />
-                <Link
-                  onClick={() => onClose()}
-                  to="/my-listings"
-                  className="dropdown-item listings"
-                  children={fbt('Listings', 'navigation.listings')}
-                />
-                <Link
-                  onClick={() => onClose()}
-                  to="/my-sales"
-                  className="dropdown-item sales"
-                  children={fbt('Sales', 'navigation.sales')}
-                />
-                <div className="dropdown-divider" />
-                <Link
-                  onClick={() => onClose()}
-                  to="/messages"
-                  className="dropdown-item messages"
-                  children={fbt('Messages', 'navigation.messages')}
-                />
-                <Link
-                  onClick={() => onClose()}
-                  to="/notifications"
-                  className="dropdown-item notifications"
-                  children={fbt('Notifications', 'navigation.notifications')}
-                />
-                <Link
-                  onClick={() => onClose()}
-                  to="/settings"
-                  className="dropdown-item settings"
-                  children={fbt('Settings', 'navigation.settings')}
-                />
-              </div>
-            </>
-          }
-        >
-          <a
-            className="nav-link"
-            href="#"
-            onClick={e => {
-              e.preventDefault()
-              this.props.open ? this.props.onClose() : this.props.onOpen()
-            }}
-          >
-            <div className={`mobile-icon${hasUnread}`} />
-          </a>
-        </Dropdown>
-      </>
-    )
+  function click(e, to) {
+    e.preventDefault()
+    onClose()
+    setRedirect(to)
   }
+
+  const hasUnread = ''
+  /* react uses upper/lower case convention to distinguish between DOM tags
+   * and user defined components. For that reason if the components starts with
+   * lowercase 'this.Earn...' it will miss interpret its attributes as DOM attributes
+   */
+  const EarnTokens = withEnrolmentModal('a')
+
+  return (
+    <Dropdown
+      className="nav-item mobile"
+      open={open}
+      onClose={() => onClose()}
+      content={
+        <>
+          <div className="dropdown-menu-bg" onClick={() => onClose()} />
+          <div className="dropdown-menu show">
+            <a
+              href="#close"
+              onClick={e => {
+                e.preventDefault()
+                onClose()
+              }}
+              className="dropdown-item close-dropdown"
+            >
+              &nbsp;
+            </a>
+            <a
+              href="#/"
+              onClick={e => click(e, '/')}
+              className="dropdown-item home"
+              children={fbt('Home', 'navigation.Home')}
+            />
+            <a
+              href="#/create"
+              onClick={e => click(e, '/create')}
+              className="dropdown-item add"
+              children={fbt('Add a Listing', 'navigation.AddaListing')}
+            />
+            <EarnTokens
+              className="dropdown-item earn"
+              onClose={() => onClose()}
+              onNavigation={() => onClose()}
+            >
+              <fbt desc="navbar.earnTokens">Earn Origin Tokens</fbt>
+            </EarnTokens>
+            <div className="dropdown-divider" />
+            <a
+              href="#/my-purchases"
+              onClick={e => click(e, '/my-purchases')}
+              className="dropdown-item purchases"
+              children={fbt('Purchases', 'navigation.purchases')}
+            />
+            <a
+              href="#/my-listings"
+              onClick={e => click(e, '/my-listings')}
+              className="dropdown-item listings"
+              children={fbt('Listings', 'navigation.listings')}
+            />
+            <a
+              href="#/my-sales"
+              onClick={e => click(e, '/my-sales')}
+              className="dropdown-item sales"
+              children={fbt('Sales', 'navigation.sales')}
+            />
+            <div className="dropdown-divider" />
+            <a
+              href="#/messages"
+              onClick={e => click(e, '/messages')}
+              className="dropdown-item messages"
+              children={fbt('Messages', 'navigation.messages')}
+            />
+            <a
+              href="#/notifications"
+              onClick={e => click(e, '/notifications')}
+              className="dropdown-item notifications"
+              children={fbt('Notifications', 'navigation.notifications')}
+            />
+            <a
+              href="#/settings"
+              onClick={e => click(e, '/settings')}
+              className="dropdown-item settings"
+              children={fbt('Settings', 'navigation.settings')}
+            />
+          </div>
+        </>
+      }
+    >
+      <a
+        className="nav-link"
+        href="#"
+        onClick={e => {
+          e.preventDefault()
+          open ? onClose() : onOpen()
+        }}
+      >
+        <div className={`mobile-icon${hasUnread}`} />
+      </a>
+    </Dropdown>
+  )
 }
 
 export default MobileNav
