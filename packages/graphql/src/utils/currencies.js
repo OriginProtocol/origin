@@ -56,6 +56,13 @@ class Currencies {
         priceInUSD: 0.15,
         countryCodes: ['CN']
       },
+      'fiat-SGD': {
+        id: 'fiat-SGD',
+        name: 'Singapore Dollar',
+        code: 'SGD',
+        priceInUSD: 0.74,
+        countryCodes: ['SG']
+      },
       'token-ETH': {
         id: 'token-ETH',
         address: '0x0000000000000000000000000000000000000000',
