@@ -140,9 +140,4 @@ require('react-styl')(`
         .category
           font-size: 18px
           padding: 1.25rem 0
-          &::before
-            width: 2.25rem
-            height: 2.25rem
-            margin-right: 0.75rem
-
 `)
