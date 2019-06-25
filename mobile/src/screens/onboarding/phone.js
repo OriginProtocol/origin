@@ -55,8 +55,6 @@ const countryOptions = [
   ...uncommonCountries
 ]
 
-console.log(countryOptions)
-
 class PhoneScreen extends Component {
   constructor(props) {
     super(props)
