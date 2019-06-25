@@ -12,6 +12,7 @@ import UserActivationLink from 'components/UserActivationLink'
 
 import listingTypes from './listing-types'
 import ChooseListingType from './ChooseListingType'
+import ChooseCategory from './ChooseCategory'
 
 import Store from 'utils/store'
 const store = Store('sessionStorage')
@@ -144,15 +145,19 @@ const CreateListing = props => {
           )}
         />
         <Route
-          path="/create"
+          path="/create/listing-type"
           render={() => (
-            <ChooseListingType next="/create/listing-type" {...cmpProps} />
+            <ChooseCategory
+              prev="/create"
+              next="/create/details"
+              {...cmpProps}
+            />
           )}
         />
         <Route
-          path="/create/listing-type"
+          path="/create"
           render={() => (
-            <ChooseListingType next="/create/details" {...cmpProps} />
+            <ChooseListingType next="/create/listing-type" {...cmpProps} />
           )}
         />
       </Switch>

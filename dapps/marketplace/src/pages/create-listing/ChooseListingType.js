@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
+import Categories from '@origin/graphql/src/constants/Categories'
 
 import Redirect from 'components/Redirect'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 
-import ChooseCategory from './_ChooseCategory'
+const CategoriesEnum = require('Categories$FbtEnum') // Localized category names
 
 const ChooseListingType = props => {
   const isForceType = get(props, 'creatorConfig.forceType', false)
-  const [valid] = useState(false)
+  const [valid, setValid] = useState(false)
 
   if (valid || isForceType) {
     return <Redirect to={props.next} push />
@@ -38,7 +39,25 @@ const ChooseListingType = props => {
 
       <div className="row">
         <div className="col-md-8">
-          <ChooseCategory />
+          <div className="choose-category">
+            {Categories.root.map(([categoryId]) => (
+              <a
+                key={categoryId}
+                href={`#category-${categoryId.split('.')[1]}`}
+                className="category"
+                onClick={e => {
+                  e.preventDefault()
+                  props.onChange({ ...props.listing, category: categoryId })
+                  setValid(true)
+                }}
+              >
+                <div className={`category-icon ${categoryId.split('.')[1]}`} />
+                <fbt desc="category">
+                  <fbt:enum enum-range={CategoriesEnum} value={categoryId} />
+                </fbt>
+              </a>
+            ))}
+          </div>
         </div>
         <div className="col-md-4">
           <div className="gray-box" />
@@ -51,6 +70,29 @@ const ChooseListingType = props => {
 export default withCreatorConfig(ChooseListingType)
 
 require('react-styl')(`
+  .category-icon
+    border-radius: 50%
+    background-color: var(--light)
+    background-repeat: no-repeat
+    background-size: 60%
+    background-position: center
+    width: 3.5rem
+    height: 3.5rem
+    &.forSale
+      background-color: #7a26f3
+      background-image: url(images/listing-types/sale-icon.svg)
+      background-position: 62% 60%
+    &.forRent
+      background-color: #00d693
+      background-image: url(images/listing-types/rent-icon.svg)
+    &.services
+      background-color: #fec100
+      background-image: url(images/listing-types/services-icon.svg)
+      background-size: 66%
+      background-position: 50% 40%
+    &.announcements
+      background-color: #007fff
+
   .create-listing
     h1
       font-size: 40px
@@ -77,30 +119,8 @@ require('react-styl')(`
         line-height: 1
         padding: 1.5rem 0
         max-width: 25rem
-        &::before
-          content: ""
-          width: 3.5rem
-          height: 3.5rem
+        .category-icon
           margin-right: 1rem
-          border-radius: 50%
-          background-color: var(--light)
-          background-repeat: no-repeat
-          background-size: 60%
-          background-position: center
-        &.forSale::before
-          background-color: #7a26f3
-          background-image: url(images/listing-types/sale-icon.svg)
-          background-position: 62% 60%
-        &.forRent::before
-          background-color: #00d693
-          background-image: url(images/listing-types/rent-icon.svg)
-        &.services::before
-          background-color: #fec100
-          background-image: url(images/listing-types/services-icon.svg)
-          background-size: 66%
-          background-position: 50% 40%
-        &.announcements::before
-          background-color: #007fff
 
   @media (max-width: 767.98px)
     .create-listing

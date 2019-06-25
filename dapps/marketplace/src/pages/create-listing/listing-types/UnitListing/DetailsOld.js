@@ -31,16 +31,24 @@ class Details extends Component {
 
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
+    const isMulti = Number(this.state.quantity || 0) > 1
 
     return (
-      <>
-        <h1>
-          <Link to={'/create/listing-type'} className="back d-md-none" />
-          <fbt desc="createListing.listingDetails">Listing Details</fbt>
-        </h1>
-        <div className="row">
-          <div className="col-md-8">
-            <div className="create-listing-step-2">
+      <div className="row">
+        <div className="col-md-8">
+          <div className="create-listing-step-2">
+            <div className="wrap">
+              <div className="step">
+                <fbt desc="create.step">
+                  Step
+                  <fbt:param name="step">{this.props.step}</fbt:param>
+                </fbt>
+              </div>
+              <div className="step-description">
+                <fbt desc="create.details.title">Provide listing details</fbt>
+              </div>
+              <Steps steps={this.props.steps} step={this.props.step} />
+
               <form
                 onSubmit={e => {
                   e.preventDefault()
@@ -72,6 +80,77 @@ class Details extends Component {
                   {Feedback('description')}
                 </div>
 
+                {/* BEGIN Unit specific code */}
+
+                <div className="form-group">
+                  <label>
+                    <fbt desc="create.details.quantity">Quantity</fbt>
+                  </label>
+                  <input {...input('quantity')} />
+                  {Feedback('quantity')}
+                </div>
+
+                <PricingChooser {...input('acceptedTokens', true)}>
+                  <div className="form-group">
+                    <label>
+                      {!isMulti && <fbt desc="price-per-unit">Price</fbt>}
+                      {isMulti && (
+                        <fbt desc="price-per-unit">Price (per unit)</fbt>
+                      )}
+                    </label>
+                    <div className="with-symbol" style={{ maxWidth: 270 }}>
+                      <input {...input('price')} />
+                      <CurrencySelect {...input('currency', true)} />
+                    </div>
+                    {Feedback('price')}
+                    <div className="help-text price">
+                      <fbt desc="create.details.help-text.price">
+                        Price is an approximation of what you will receive.
+                      </fbt>
+                      <a
+                        href="#/about/payments"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        &nbsp;
+                        <fbt desc="create.details.help-text.price.more">
+                          Learn More
+                        </fbt>
+                      </a>
+                    </div>
+                  </div>
+                </PricingChooser>
+
+                {/* END Unit specific code */}
+
+                <div className="form-group">
+                  <label>
+                    <fbt desc="create.select-photos">Select photos</fbt>
+                  </label>
+                  <ImagePicker
+                    images={this.state.media}
+                    onChange={media => this.setState({ media })}
+                  >
+                    <div className="add-photos">
+                      <fbt desc="create.select-photos">Select photos</fbt>
+                    </div>
+                  </ImagePicker>
+                  <ul className="help-text photo-help list-unstyled">
+                    <fbt desc="create.listing.photos.help">
+                      <li>
+                        Hold down &apos;command&apos; (⌘) to select multiple
+                        images.
+                      </li>
+                      <li>Maximum 10 images per listing.</li>
+                      <li>
+                        First image will be featured - drag and drop images to
+                        reorder.
+                      </li>
+                      <li>Recommended aspect ratio is 4:3</li>
+                    </fbt>
+                  </ul>
+                </div>
+
                 <div className="actions">
                   <Link
                     className="btn btn-outline-primary"
@@ -86,18 +165,18 @@ class Details extends Component {
               </form>
             </div>
           </div>
-          <div className="col-md-4 d-none d-md-block">
-            <div className="gray-box">
-              <fbt desc="create.details.help">
-                <h5>Add Listing Details</h5>
-                Be sure to give your listing an appropriate title and
-                description to let others know what you&apos;re offering. Adding
-                some photos will increase the chances of selling your listing.
-              </fbt>
-            </div>
+        </div>
+        <div className="col-md-4 d-none d-md-block">
+          <div className="gray-box">
+            <fbt desc="create.details.help">
+              <h5>Add Listing Details</h5>
+              Be sure to give your listing an appropriate title and description
+              to let others know what you&apos;re offering. Adding some photos
+              will increase the chances of selling your listing.
+            </fbt>
           </div>
         </div>
-      </>
+      </div>
     )
   }
 
