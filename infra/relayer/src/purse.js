@@ -530,7 +530,7 @@ class Purse {
 
       logger.debug(
         `Loaded ${
-          pendingHashes ? pendingHashes.count : 0
+          pendingHashes ? pendingHashes.length : 0
         } pending transaction hashes from redis`
       )
 
