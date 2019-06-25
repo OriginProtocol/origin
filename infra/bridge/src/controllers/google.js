@@ -99,9 +99,6 @@ router.post('/verify', googleVerify, async (req, res) => {
       siteName: 'google.com',
       userId: {
         raw: String(userDataResponse.body.id)
-      },
-      username: {
-        raw: userDataResponse.body.email
       }
     }
   }
