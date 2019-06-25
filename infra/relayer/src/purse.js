@@ -161,7 +161,7 @@ class Purse {
    * @param clearRedis {boolean} - Remove all keys from redis
    */
   async teardown(clearRedis = false) {
-    if (this.rclient) {
+    if (this.rclient && this.rclient.connected) {
       if (clearRedis) {
         await this._resetRedis()
       }
@@ -331,7 +331,12 @@ class Purse {
       )
       // null defense
       if (countFromRedis) {
-        txCount = countFromRedis
+        try {
+          txCount = parseInt(countFromRedis)
+        } catch (err) {
+          logger.warn(err)
+          txCount = 0
+        }
       }
     } else {
       logger.warn('Redis unavailable')
@@ -523,9 +528,11 @@ class Purse {
     if (this.rclient && this.rclient.connected) {
       const pendingHashes = await this.rclient.smembersAsync(REDIS_PENDING_KEY)
 
-      logger.debug(`Loaded ${
-        pendingHashes ? pendingHashes.count : 0
-      } pending transaction hashes from redis`)
+      logger.debug(
+        `Loaded ${
+          pendingHashes ? pendingHashes.count : 0
+        } pending transaction hashes from redis`
+      )
 
       for (const txHash of pendingHashes) {
         const tx = await this.web3.eth.getTransaction(txHash)
