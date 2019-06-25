@@ -21,13 +21,22 @@ const validImageTypes = [
   'image/icon'
 ]
 
+const validVideoTypes = [
+  'video/mp4'
+]
+
 function isValidFile(buffer) {
-  return isValidImage(buffer) || isJSON(buffer.toString())
+  return isValidImage(buffer) || isValidVideo(buffer) || isJSON(buffer.toString())
 }
 
 function isValidImage(buffer) {
   const file = fileType(buffer)
   return file && validImageTypes.includes(file.mime)
+}
+
+function isValidVideo(buffer) {
+  const file = fileType(buffer)
+  return file && validVideoTypes.includes(file.mime)
 }
 
 function handleFileUpload(req, res) {
