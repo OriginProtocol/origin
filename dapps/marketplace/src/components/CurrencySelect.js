@@ -12,7 +12,7 @@ const CurrencySelect = ({ value, onChange, showCode = true }) => {
     return (
       <div className="currency-select-dropdown usd">
         <span data-content={CurrenciesByKey[value][2]}>
-          {CurrenciesByKey[value][1]}
+          {showCode ? `${CurrenciesByKey[value][1]} ` : null}
         </span>
       </div>
     )
@@ -48,7 +48,6 @@ const CurrencySelect = ({ value, onChange, showCode = true }) => {
           e.preventDefault()
           setOpen(!open)
         }}
-        children={CurrenciesByKey[value][1]}
       >
         {showCode ? `${CurrenciesByKey[value][1]} ` : null}
         <i />
@@ -67,19 +66,19 @@ require('react-styl')(`
     font-weight: bold
     font-size: 14px
     span
-      padding: 4px 12px 4px 5px
+      padding: 4px 5px
       border-radius: 16px
       background: var(--pale-grey)
       background-repeat: no-repeat
       background-position: 6px center
       background-size: 17px
       color: var(--steel)
-
       i
         position: relative
         display: inline-block
         // height should be double border
         height: 12px
+        width: 12px
         vertical-align: -4px
         margin: 0 8px 0 2px
         &:before,&:after

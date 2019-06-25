@@ -8,7 +8,7 @@ import CurrencySelect from 'components/CurrencySelect'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
-import PricingChooser from '../_PricingChooser'
+import PricingChooser from './_PricingChooser'
 
 class ListingPricing extends Component {
   constructor(props) {
@@ -151,6 +151,3 @@ class ListingPricing extends Component {
 }
 
 export default ListingPricing
-
-require('react-styl')(`
-`)

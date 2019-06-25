@@ -4,6 +4,7 @@ import { fbt } from 'fbt-runtime'
 import Categories from '@origin/graphql/src/constants/Categories'
 
 import Redirect from 'components/Redirect'
+import DownloadApp from 'components/DownloadApp'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 
 const CategoriesEnum = require('Categories$FbtEnum') // Localized category names
@@ -60,7 +61,9 @@ const ChooseListingType = props => {
           </div>
         </div>
         <div className="col-md-4">
-          <div className="gray-box" />
+          <div className="gray-box">
+            <DownloadApp />
+          </div>
         </div>
       </div>
     </>
@@ -92,6 +95,9 @@ require('react-styl')(`
       background-position: 50% 40%
     &.announcements
       background-color: #007fff
+      background-image: url(images/listing-types/announcements-icon.svg)
+      background-size: 66%
+      background-position: 50%
 
   .create-listing
     h1
@@ -121,6 +127,8 @@ require('react-styl')(`
         max-width: 25rem
         .category-icon
           margin-right: 1rem
+          width: 3.5rem
+          height: 3.5rem
 
   @media (max-width: 767.98px)
     .create-listing

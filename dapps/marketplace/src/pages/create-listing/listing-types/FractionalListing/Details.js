@@ -6,7 +6,7 @@ import Steps from 'components/Steps'
 import ImagePicker from 'components/ImagePicker'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
-import PricingChooser from '../_PricingChooser'
+import PricingChooser from '../../_PricingChooser'
 import CurrencySelect from 'components/CurrencySelect'
 
 import { formInput, formFeedback } from 'utils/formHelpers'

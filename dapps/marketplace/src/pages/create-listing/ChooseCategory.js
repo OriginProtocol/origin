@@ -5,6 +5,7 @@ import Categories from '@origin/graphql/src/constants/Categories'
 
 import Link from 'components/Link'
 import Redirect from 'components/Redirect'
+import DownloadApp from 'components/DownloadApp'
 
 const CategoriesEnum = require('Categories$FbtEnum') // Localized category names
 
@@ -88,7 +89,7 @@ const ChooseListingCategory = ({ listing, prev, next, onChange }) => {
 
       <div className="row">
         <div className="col-md-8">
-          <div className="choose-sub-category">
+          <div className="listing-step choose-sub-category">
             <div className={`category-icon ${categoryShortId}`} />
             <div className="sub-categories">
               {Categories[categoryId].map(([subcategoryId]) => (
@@ -114,10 +115,18 @@ const ChooseListingCategory = ({ listing, prev, next, onChange }) => {
                 </a>
               ))}
             </div>
+
+            <div className="actions d-none d-md-inline-block mt-4">
+              <Link className="btn btn-outline-primary" to={prev}>
+                <fbt desc="back">Back</fbt>
+              </Link>
+            </div>
           </div>
         </div>
         <div className="col-md-4">
-          <div className="gray-box" />
+          <div className="gray-box">
+            <DownloadApp />
+          </div>
         </div>
       </div>
     </>
@@ -129,9 +138,6 @@ export default ChooseListingCategory
 require('react-styl')(`
   .create-listing
     .choose-sub-category
-      align-items: center
-      display: flex
-      flex-direction: column
       .category-icon
         width: 4.5rem
         height: 4.5rem
@@ -152,15 +158,6 @@ require('react-styl')(`
 
   @media (min-width: 767.98px)
     .create-listing
-      .choose-sub-category
-        margin-top: 1.5rem
-        border: 1px solid var(--light)
-        padding: 1.5rem
-        align-items: center
-        display: flex
-        flex-direction: column
-        border-radius: 5px
-        max-width: 600px
       .category-icon
         width: 6rem
         height: 6rem
