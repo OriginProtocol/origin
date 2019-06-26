@@ -39,7 +39,6 @@ class Details extends Component {
     const Feedback = formFeedback(this.state)
 
     const issuingCountrySelect = Object.keys(CurrenciesByCountryCode)
-
     const retailerSelect = Object.keys(GiftCardRetailers).map(function(key) {
       return [key, GiftCardRetailers[key]]
     })
@@ -281,7 +280,7 @@ class Details extends Component {
                 {/* If we're forcing the type, there is no previous "choose type" step */}
                 {isForceType ? null : (
                   <Link
-                    className="btn btn-outline-primary"
+                    className="btn btn-outline-primary d-none d-md-inline-block"
                     to={this.props.prev}
                   >
                     <fbt desc="back">Back</fbt>
@@ -343,12 +342,28 @@ class Details extends Component {
       )
     }
 
+    const derivedFields = {}
+    if (this.state.retailer) {
+      const { cardAmount, retailer, issuingCountry } = this.state
+      const symbol = CurrenciesByCountryCode[issuingCountry][2]
+      derivedFields.title = `${symbol}${cardAmount} ${retailer} Gift Card`
+      const giftCardHash = GiftCardRetailers[retailer]
+      derivedFields.media = [
+        {
+          url: `ipfs://${giftCardHash}`,
+          urlExpanded: `${this.props.config.ipfsGateway}/ipfs/${giftCardHash}`,
+          contentType: 'image/jpeg'
+        },
+        ...this.state.media.filter(m => m.url !== `ipfs://${giftCardHash}`)
+      ]
+    }
+
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
 
     if (!newState.valid) {
       window.scrollTo(0, 0)
     } else if (this.props.onChange) {
-      this.props.onChange(this.state)
+      this.props.onChange({ ...this.state, ...derivedFields })
     }
     this.setState(newState)
     return newState.valid

@@ -12,7 +12,7 @@ const GiftCardListing = props => (
     {...props}
     steps={[
       { step: 1, component: Details, require: 'subCategory' },
-      { step: 2, component: Quantity, path: 'quantity', require: 'title' },
+      { step: 2, component: Quantity, path: 'quantity', require: 'retailer' },
       { step: 3, component: Pricing, path: 'pricing', require: 'quantity' },
       { step: 4, component: Images, path: 'images', require: 'price' },
       { step: 5, component: Review, path: 'review' }
