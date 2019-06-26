@@ -1,5 +1,6 @@
 'use strict'
 
+import * as RNLocalize from 'react-native-localize'
 import get from 'lodash.get'
 
 const IMAGES_PATH = '../../assets/images/'
@@ -36,4 +37,13 @@ export function tokenBalanceFromGql(result, places = 0) {
     return Number(balance / Math.pow(10, places))
   }
   return Number(balance)
+}
+
+export function findBestAvailableCurrency() {
+  const supportedCurrencies = ['USD', 'GBP', 'KRW', 'CNY', 'EUR']
+  const preferredCurrencies = RNLocalize.getCurrencies().filter(c =>
+    supportedCurrencies.includes(c)
+  )
+  const currency = preferredCurrencies.length ? preferredCurrencies[0] : 'USD'
+  return `fiat-${currency}`
 }

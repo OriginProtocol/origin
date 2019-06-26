@@ -26,7 +26,10 @@ import { decodeTransaction } from 'utils/contractDecoder'
 import { updateExchangeRate } from 'utils/price'
 import { webViewToBrowserUserAgent } from 'utils'
 import { findBestAvailableLanguage } from 'utils/language'
-import { tokenBalanceFromGql } from 'utils/currencies'
+import {
+  findBestAvailableCurrency,
+  tokenBalanceFromGql
+} from 'utils/currencies'
 import {
   setMarketplaceReady,
   setMarketplaceWebViewError
@@ -298,13 +301,28 @@ class MarketplaceScreen extends Component {
       : findBestAvailableLanguage()
     const injectedJavaScript = `
       (function() {
-        if (window && window.appComponent) {
+        if (window && window.appComponent && window.appComponent.onLocale) {
           window.appComponent.onLocale('${language}');
         }
       })()
     `
     if (this.dappWebView) {
       console.debug('Injecting language')
+      this.dappWebView.injectJavaScript(injectedJavaScript)
+    }
+  }
+
+  injectCurrency = () => {
+    const currency = findBestAvailableCurrency()
+    const injectedJavaScript = `
+      (function() {
+        if (window && window.appComponent && window.appComponent.onCurrency) {
+          window.appComponent.onCurrency('${currency}');
+        }
+      })()
+    `
+    if (this.dappWebView) {
+      console.debug('Injecting currency')
       this.dappWebView.injectJavaScript(injectedJavaScript)
     }
   }
@@ -470,6 +488,8 @@ class MarketplaceScreen extends Component {
     this.injectEnableProxyAccounts()
     // Set the language in the DApp to the same as the mobile app
     this.injectLanguage()
+    // Set the currency in the DApp
+    this.injectCurrency()
     // Inject scroll handler for pull to refresh function
     if (Platform.OS === 'android') {
       this.injectScrollHandler()
