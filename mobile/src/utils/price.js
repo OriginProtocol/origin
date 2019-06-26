@@ -27,6 +27,7 @@ export const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
   const settings = store.getState().settings
   const config = Configs[settings.network.name.toLowerCase()]
 
+  // prettier-ignore
   const exchangeURL = `${config.bridge}/utils/exchange-rate?market=${cryptoParam}-${fiatParam}`
   return new Promise(resolve => {
     fetch(exchangeURL)
