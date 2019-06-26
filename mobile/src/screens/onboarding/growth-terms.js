@@ -88,12 +88,16 @@ class GrowthTermsScreen extends Component {
             source={require(IMAGES_PATH + 'not-eligible-graphic.png')}
           />
           <Text style={styles.title}>
-            Oops, {this.state.countryName} is not eligible
+            <fbt desc="GrowthTermsScreen.ineligibleTitle">
+              Oops, {this.state.countryName} is not eligible
+            </fbt>
           </Text>
           <Text style={styles.subtitle}>
-            Unfortunately, it looks like you’re currently in a country where
-            government regulations do not allow you to participate in Origin
-            Rewards.
+            <fbt desc="GrowthTermsScreen.ineligibleSubtitle">
+              Unfortunately, it looks like you’re currently in a country where
+              government regulations do not allow you to participate in Origin
+              Rewards.
+            </fbt>
           </Text>
           <Text
             style={{
@@ -103,7 +107,9 @@ class GrowthTermsScreen extends Component {
               fontSize: 16
             }}
           >
-            Did we detect your country incorrectly?
+            <fbt desc="GrowthTermsScreen.ineligibleDetection">
+              Did we detect your country incorrectly?
+            </fbt>
           </Text>
           <CheckBox
             style={{ padding: 20 }}
@@ -117,8 +123,10 @@ class GrowthTermsScreen extends Component {
             uncheckedCheckBoxColor="#455d75"
             rightTextView={
               <Text style={{ fontSize: 16, marginLeft: 5, fontWeight: '300' }}>
-                I certify that I am not a citizen or resident of{' '}
-                {this.state.countryName}
+                <fbt desc="GrowthTermsScreen.nonResidentCertification">
+                  I certify that I am not a citizen or resident of{' '}
+                  {this.state.countryName}
+                </fbt>
               </Text>
             }
           />
@@ -154,31 +162,39 @@ class GrowthTermsScreen extends Component {
       <>
         <View style={styles.content}>
           <Text style={styles.termsHeader}>
-            Join Origin’s reward program to earn Origin tokens (OGN). Terms &
-            conditions apply.
+            <fbt desc="GrowthTermsScreen.termsHeader">
+              Join Origin’s reward program to earn Origin tokens (OGN). Terms &
+              conditions apply.
+            </fbt>
           </Text>
           <Text style={styles.termsText}>
-            Earned OGN will be distributed at the end of each campaign. OGN is
-            currently locked for usage on the Origin platform and cannot be
-            transferred. It is expected that OGN will be unlocked and
-            transferrable in the future.
+            <fbt desc="GrowthTermsScreen.termsTextOne">
+              Earned OGN will be distributed at the end of each campaign. OGN is
+              currently locked for usage on the Origin platform and cannot be
+              transferred. It is expected that OGN will be unlocked and
+              transferrable in the future.
+            </fbt>
           </Text>
           <Text style={styles.termsText}>
-            By joining the Origin rewards program, you agree that you will not
-            transfer or sell future earned Origin tokens to other for at least 1
-            year from the date of earning your tokens.
+            <fbt desc="GrowthTermsScreen.termsTextTwo">
+              By joining the Origin rewards program, you agree that you will not
+              transfer or sell future earned Origin tokens to other for at least
+              1 year from the date of earning your tokens.
+            </fbt>
           </Text>
           <View style={styles.termsHighlightContainer}>
             <Text style={styles.termsHighlightText}>
-              OGN are being issued in a transaction originally exempt from
-              registration under the U.S. Securities Act of 1933, as amended
-              (the “Securities Act”), and may not be transferred in the United
-              States to, or for the account or benefit of, any U.S. person
-              except pursuant to an available exemption from the registration
-              requirements of the Securities Act and all applicable state
-              securities laws. Terms used above have the meanings given to them
-              in Regulation S under the Securities Act and all applicable laws
-              and regulations.
+              <fbt desc="GrowthTermsScreen.termsHighlightText">
+                OGN are being issued in a transaction originally exempt from
+                registration under the U.S. Securities Act of 1933, as amended
+                (the “Securities Act”), and may not be transferred in the United
+                States to, or for the account or benefit of, any U.S. person
+                except pursuant to an available exemption from the registration
+                requirements of the Securities Act and all applicable state
+                securities laws. Terms used above have the meanings given to
+                them in Regulation S under the Securities Act and all applicable
+                laws and regulations.
+              </fbt>
             </Text>
           </View>
         </View>
