@@ -89,9 +89,9 @@ router.post('/verify', twitterVerifyCode, async (req, res) => {
     })
   }
 
-  let screenName
+  let userProfileData
   try {
-    screenName = await verifyTwitterCredentials(
+    userProfileData = await verifyTwitterCredentials(
       oAuthAccessToken,
       oAuthAccessTokenSecret
     )
@@ -109,7 +109,13 @@ router.post('/verify', twitterVerifyCode, async (req, res) => {
     site: {
       siteName: 'twitter.com',
       userId: {
-        raw: screenName
+        raw: String(userProfileData.uniqueId)
+      },
+      username: {
+        raw: userProfileData.username
+      },
+      profileUrl: {
+        raw: userProfileData.profileUrl
       }
     }
   }
@@ -118,7 +124,7 @@ router.post('/verify', twitterVerifyCode, async (req, res) => {
     const attestation = await generateAttestation(
       AttestationTypes.TWITTER,
       attestationBody,
-      screenName,
+      userProfileData,
       req.body.identity,
       req.ip
     )

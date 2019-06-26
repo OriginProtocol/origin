@@ -63,7 +63,7 @@ describe('airbnb attestations', () => {
       response.body.data.attestation.verificationMethod.pubAuditableUrl
     ).to.deep.equal({})
     expect(response.body.data.attestation.site.siteName).to.equal('airbnb.com')
-    expect(response.body.data.attestation.site.userId.raw).to.equal(123456)
+    expect(response.body.data.attestation.site.userId.raw).to.equal('123456')
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
