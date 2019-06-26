@@ -27,8 +27,7 @@
     "cross-fetch": "^3.0.1",
     "eslint": "^5.15.3",
     "mocha": "^6.1.4",
-    "prettier": "^1.16.4",
-    "webpack": "^4.29.6"
+    "prettier": "^1.16.4"
   },
   "prettier": {
     "semi": false,
