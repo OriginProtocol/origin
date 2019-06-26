@@ -161,7 +161,7 @@ class Purse {
    * @param clearRedis {boolean} - Remove all keys from redis
    */
   async teardown(clearRedis = false) {
-    if (this.rclient) {
+    if (this.rclient && this.rclient.connected) {
       if (clearRedis) {
         await this._resetRedis()
       }
@@ -331,7 +331,12 @@ class Purse {
       )
       // null defense
       if (countFromRedis) {
-        txCount = countFromRedis
+        try {
+          txCount = parseInt(countFromRedis)
+        } catch (err) {
+          logger.warn(err)
+          txCount = 0
+        }
       }
     } else {
       logger.warn('Redis unavailable')
@@ -518,8 +523,16 @@ class Purse {
    * Get all pending transactions and populate this.pendintTransactions
    */
   async _populatePending() {
+    logger.debug('Re-populating pending transactions from redis...')
+
     if (this.rclient && this.rclient.connected) {
       const pendingHashes = await this.rclient.smembersAsync(REDIS_PENDING_KEY)
+
+      logger.debug(
+        `Loaded ${
+          pendingHashes ? pendingHashes.length : 0
+        } pending transaction hashes from redis`
+      )
 
       for (const txHash of pendingHashes) {
         const tx = await this.web3.eth.getTransaction(txHash)
@@ -531,6 +544,12 @@ class Purse {
         )
         if (rawTx) {
           this.pendingTransactions[txHash] = rawTx
+        } else {
+          logger.error(`Unable to retrieve pending transaction for ${txHash}`)
+          // TODO: Pretending this never existed has its own potential issues
+          if (tx && this.accounts[tx.from]) {
+            this.accounts[tx.from].pendingCount -= 1
+          }
         }
       }
     } else {
