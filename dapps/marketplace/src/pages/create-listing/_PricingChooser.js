@@ -72,56 +72,6 @@ const PricingChooser = ({ value, onChange, children }) => {
             )}
           />
         </div>
-        {/*<div className="custom-control custom-checkbox">
-          <input
-            className="custom-control-input"
-            type="checkbox"
-            id="dai-checkbox"
-            checked={value.indexOf('token-DAI') >= 0}
-            onChange={() => {
-              const newVal =
-                value.indexOf('token-DAI') >= 0
-                  ? value.filter(v => v != 'token-DAI')
-                  : [...value, 'token-DAI']
-              onChange(newVal.length ? newVal : ['token-ETH'])
-            }}
-          />
-          <label className="custom-control-label" htmlFor="dai-checkbox">
-            <CoinPrice coin="dai" iconOnly className="lg" />
-            Maker Dai (DAI)
-          </label>
-          <HelpIcon
-            tooltip={fbt(
-              'Maker Dai is good for long term listings like rentals or property sales.',
-              'PricingChooser.maker'
-            )}
-          />
-        </div>
-        <div className="custom-control custom-checkbox">
-          <input
-            className="custom-control-input"
-            type="checkbox"
-            id="eth-checkbox"
-            checked={value.indexOf('token-ETH') >= 0}
-            onChange={() => {
-              const newVal =
-                value.indexOf('token-ETH') >= 0
-                  ? value.filter(v => v != 'token-ETH')
-                  : [...value, 'token-ETH']
-              onChange(newVal.length ? newVal : ['token-DAI'])
-            }}
-          />
-          <label className="custom-control-label" htmlFor="eth-checkbox">
-            <CoinPrice coin="eth" iconOnly className="lg" />
-            Ethereum (ETH)
-          </label>
-          <HelpIcon
-            tooltip={fbt(
-              'Ether is good for short term listings.',
-              'pricingChooser.ether'
-            )}
-          />
-        </div>*/}
       </div>
     </div>
   )
@@ -130,7 +80,6 @@ const PricingChooser = ({ value, onChange, children }) => {
 export default PricingChooser
 
 require('react-styl')(`
-
   .create-listing
     .listing-step
       .pricing-chooser

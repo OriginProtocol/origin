@@ -135,7 +135,7 @@ class ListingHourlyAvailability extends Component {
               onChange={() => this.setState({ available: true })}
             />
             <div>
-              <fbt desc="yes5">Yes</fbt>
+              <fbt desc="yes">Yes</fbt>
             </div>
           </div>
           <div>
@@ -145,7 +145,7 @@ class ListingHourlyAvailability extends Component {
               onChange={() => this.setState({ available: false })}
             />
             <div>
-              <fbt desc="no6">No</fbt>
+              <fbt desc="no">No</fbt>
             </div>
           </div>
         </div>
