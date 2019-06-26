@@ -2,15 +2,15 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: '00f25f5'
+bridgeImageTag: 'f825e30'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '00f25f5'
+dappImageTag: '836a974'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: '02eaa6b'
+ipfsProxyImageTag: '8836b8c'
 
 # origin-faucet
 faucetImage: origin-faucet
@@ -59,7 +59,7 @@ adminImageTag: '110ce2b'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: '3b7e253'
+relayerImageTag: 'bab9e84'
 
 # origin-graphql
 graphqlImage: origin-graphql

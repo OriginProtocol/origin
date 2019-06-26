@@ -7,6 +7,8 @@ const Op = Sequelize.Op
 
 const Identity = require('@origin/identity/src/models').Identity
 
+const { getExchangeRate } = require('../utils/exchange-rate')
+
 router.post('/exists', async (req, res) => {
   const or = []
   if (req.body.email) {
@@ -32,6 +34,15 @@ router.post('/exists', async (req, res) => {
     res.sendStatus(200)
   }
   res.end()
+})
+
+/**
+ * Returns exchange rate of given market
+ */
+router.get('/exchange-rate', async (req, res) => {
+  res.send({
+    price: await getExchangeRate(req.query.market)
+  })
 })
 
 module.exports = router

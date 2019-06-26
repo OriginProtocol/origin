@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.bitgo.randombytes.RandomBytesPackage;
-import com.reactlibrary.RNTestFlightPackage;
 import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.reactcommunity.rnlocalize.RNLocalizePackage;
@@ -36,7 +35,6 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new RandomBytesPackage(),
-            new RNTestFlightPackage(),
             new ImageResizerPackage(),
             new ImagePickerPackage(),
             new RNLocalizePackage(),
