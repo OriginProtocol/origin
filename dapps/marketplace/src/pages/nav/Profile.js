@@ -3,7 +3,6 @@ import { Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
 import formatHash from 'utils/formatHash'
-import Store from 'utils/store'
 
 import withIdentity from 'hoc/withIdentity'
 import withWallet from 'hoc/withWallet'
@@ -17,8 +16,6 @@ import Balances from 'components/Balances'
 import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
 import UserActivationLink from 'components/UserActivationLink'
-
-const store = Store('sessionStorage')
 
 const ProfileNav = ({ identity, identityLoading, open, onOpen, onClose }) => (
   <Query query={ProfileQuery} pollInterval={window.transactionPoll || 1000}>
@@ -158,7 +155,7 @@ const ProfileDropdownRaw = ({
 }) => {
   const { id } = data.web3.primaryAccount
   const address = `ETH Address: ${formatHash(wallet)}`
-  const devMode = store.get('developerMode')
+  const devMode = window.localStorage.devModeEnabled
 
   return (
     <>

@@ -100,11 +100,11 @@ export function setNetwork(net, customConfig) {
   let config = JSON.parse(JSON.stringify(Configs[net]))
   if (
     isBrowser &&
-    window.localStorage.customConfig &&
-    window.localStorage.customConfig !== 'undefined'
+    window.localStorage.devModeSettings &&
+    window.localStorage.devModeSettings !== 'undefined'
   ) {
     try {
-      config = { ...config, ...JSON.parse(window.localStorage.customConfig) }
+      config = { ...config, ...JSON.parse(window.localStorage.devModeSettings) }
     } catch (error) {
       console.log('Could not load custom config: ', error)
     }

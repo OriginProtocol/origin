@@ -13,7 +13,7 @@ import DocumentTitle from 'components/DocumentTitle'
 import Toggle from 'components/Toggle'
 
 import Store from 'utils/store'
-const store = Store('sessionStorage')
+const devModeSettings = Store('localStorage', 'devModeSettings')
 
 const configurableFields = [
   'bridge',
@@ -33,7 +33,7 @@ class Settings extends Component {
     this.state = {
       ...Object.assign(...configurableFields.map(key => ({ [key]: '' }))),
       ...pick(this.props.config, configurableFields),
-      developerMode: store.get('developerMode')
+      devModeEnabled: window.localStorage.devModeEnabled ? true : false
     }
 
     this.saveConfig = this.saveConfig.bind(this)
@@ -55,8 +55,13 @@ class Settings extends Component {
         ...pick(this.state, configurableFields),
         ...configUpdate
       }
+      configurableFields.forEach(key => {
+        devModeSettings.set(key, customConfig[key])
+      })
+    } else {
+      delete window.localStorage.devModeSettings
     }
-    window.localStorage.customConfig = JSON.stringify(customConfig)
+
     setNetwork({
       variables: {
         network: window.localStorage.ognNetwork || 'mainnet',
@@ -83,9 +88,13 @@ class Settings extends Component {
     )
   }
 
-  toggleDeveloperMode(on) {
-    store.set('developerMode', on)
-    this.setState({ developerMode: on })
+  toggleDeveloperMode(isEnabled) {
+    if (isEnabled) {
+      window.localStorage.devModeEnabled = true
+    } else {
+      delete window.localStorage.devModeEnabled
+    }
+    this.setState({ devModeEnabled: isEnabled })
   }
 
   render() {
@@ -189,7 +198,7 @@ class Settings extends Component {
                   <div className="settings-box">
                     <div
                       className={`form-group row${
-                        this.state.developerMode ? '' : ' no-border-bottom'
+                        this.state.devModeEnabled ? '' : ' no-border-bottom'
                       }`}
                     >
                       <div className="col">
@@ -210,7 +219,7 @@ class Settings extends Component {
                       <div className="col">
                         <Toggle
                           toggled={true}
-                          initialToggleState={this.state.developerMode}
+                          initialToggleState={this.state.devModeEnabled}
                           className="float-right"
                           onClickHandler={this.toggleDeveloperMode}
                         />
@@ -218,7 +227,7 @@ class Settings extends Component {
                     </div>
                     <div
                       className={`developer${
-                        this.state.developerMode ? '' : ' hide'
+                        this.state.devModeEnabled ? '' : ' hide'
                       }`}
                     >
                       <div className="form-group row">
@@ -325,16 +334,13 @@ class Settings extends Component {
                         <div className="col-sm d-flex align-items-center">
                           <Toggle
                             toggled={true}
-                            initialToggleState={
-                              localStorage.proxyAccountsEnabled ? true : false
-                            }
+                            initialToggleState={devModeSettings.get(
+                              'proxyAccountsEnabled',
+                              false
+                            )}
                             className="mt-0"
                             onClickHandler={on => {
-                              if (on) {
-                                localStorage.proxyAccountsEnabled = true
-                              } else {
-                                delete localStorage.proxyAccountsEnabled
-                              }
+                              devModeSettings.set('proxyAccountsEnabled', on)
                               window.location.reload()
                             }}
                           />
@@ -358,16 +364,13 @@ class Settings extends Component {
                         <div className="col-sm d-flex align-items-center">
                           <Toggle
                             toggled={true}
-                            initialToggleState={
-                              localStorage.enableRelayer ? true : false
-                            }
+                            initialToggleState={devModeSettings.get(
+                              'enableRelayer',
+                              false
+                            )}
                             className="mt-0"
                             onClickHandler={on => {
-                              if (on) {
-                                localStorage.enableRelayer = true
-                              } else {
-                                delete localStorage.enableRelayer
-                              }
+                              devModeSettings.set('enableRelayer', on)
                               window.location.reload()
                             }}
                           />
@@ -380,6 +383,7 @@ class Settings extends Component {
                           onClick={ev => {
                             ev.preventDefault()
                             this.saveConfig(setNetwork, {}, true)
+                            window.location.reload()
                           }}
                         >
                           Restore Defaults
