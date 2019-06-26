@@ -74,7 +74,7 @@ const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
       <nav className="navbar navbar-expand-md">
         <div className="container">
           <Brand />
-          <Search className="form-inline mr-auto" />
+          <Search className="form-inline mr-auto" showDropdown />
           <GetStarted onClick={() => onGetStarted()} />
         </div>
       </nav>
@@ -91,7 +91,7 @@ const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
     <nav className="navbar navbar-expand-md">
       <div className="container">
         <Brand />
-        <Search className="form-inline mr-auto" />
+        <Search className="form-inline mr-auto" showDropdown />
         <ul className="navbar-nav ml-3">
           <li className="nav-item">
             <NavLink to="/my-purchases" className="nav-link text">

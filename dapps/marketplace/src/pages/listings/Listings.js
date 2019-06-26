@@ -74,7 +74,7 @@ class Listings extends Component {
         <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
         <div className="container listings-container">
           {this.props.isMobile ? (
-            <Search className="search" placeholder />
+            <Search className="search" placeholder showDropdown />
           ) : null}
           <Query
             query={query}
