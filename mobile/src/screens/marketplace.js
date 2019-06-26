@@ -502,8 +502,16 @@ class MarketplaceScreen extends Component {
   }
 
   updateIdentity = async () => {
-    const graphqlResponse = await this.props.getIdentity()
-    const identity = get(graphqlResponse, 'data.web3.account.identity')
+    let identity
+    try {
+      const graphqlResponse = await this.props.getIdentity()
+      identity = get(graphqlResponse, 'data.web3.account.identity')
+    } catch (error) {
+      // Handle GraphQL errors for things like invalid JSON RPC response or we
+      // could crash the app
+      console.warn('Could not retrieve identity using GraphQL: ', error)
+      return
+    }
     this.props.setIdentity({
       address: this.props.wallet.activeAccount.address,
       identity
