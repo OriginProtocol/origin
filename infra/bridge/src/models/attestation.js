@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       // Ethereum address of the attestation. Lowercase.
       ethAddress: DataTypes.CHAR(42),
       // Value of the attestation
+      // For OAuth attestations, this contains the unique Id of the user
       value: DataTypes.STRING,
       // Signature of the attestation
       signature: DataTypes.STRING,
@@ -39,7 +40,11 @@ module.exports = (sequelize, DataTypes) => {
       createdAt: {
         type: DataTypes.DATE,
         defaultValue: Sequelize.fn('NOW')
-      }
+      },
+      // Username/user handle for OAuth Attestations
+      username: DataTypes.STRING,
+      // Link to public profile, if available
+      profileUrl: DataTypes.STRING
     },
     {
       tableName: 'attestation'

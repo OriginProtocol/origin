@@ -97,7 +97,7 @@ router.post('/verify', kakaoVerify, async (req, res) => {
     site: {
       siteName: 'kakao.com',
       userId: {
-        verified: true
+        raw: String(userDataResponse.body.id)
       }
     }
   }
@@ -106,7 +106,9 @@ router.post('/verify', kakaoVerify, async (req, res) => {
     const attestation = await generateAttestation(
       AttestationTypes.KAKAO,
       attestationBody,
-      userDataResponse.body.id,
+      {
+        uniqueId: userDataResponse.body.id
+      },
       req.body.identity,
       req.ip
     )
