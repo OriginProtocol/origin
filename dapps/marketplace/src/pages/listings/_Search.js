@@ -37,7 +37,7 @@ class Search extends Component {
 
     return (
       <form
-        className={`listing-search-wrapper${className ? ' ' + className : ''}${this.state.active && isMobile ? ' fullscreen' : ''}`}
+        className={`listing-search-wrapper${className ? ' ' + className : ''}${this.state.active && isMobile ? ' active' : ''}`}
         onSubmit={e => {
           e.preventDefault()
           this.doSearch()
@@ -197,7 +197,7 @@ require('react-styl')(`
         border-radius: 5px
         flex: auto 1 1
       .cancel-button
-        flex: 40px 0 0
+        flex: 3rem 0 0
         height: auto
         background-color: white
         display: inline-block
@@ -208,7 +208,7 @@ require('react-styl')(`
 
       .search-dropdown
         background-color: var(--white)
-        padding: 1.5rem
+        padding: 1.5rem 2rem
         &.floating
           z-index: 1000
           position: absolute
@@ -226,6 +226,7 @@ require('react-styl')(`
           color: var(--dusk)
           margin-bottom: 0.5rem
           text-transform: uppercase
+          margin-bottom: 1rem
         
         .featured-categories
           display: inline-flex
@@ -235,15 +236,12 @@ require('react-styl')(`
           .category-icon
             width: 60px
             flex: auto 0 0
-            margin: 0 5px 5px 5px
+            margin-right: 20px
             text-align: center
             color: var(--dark)
             font-size: 0.6rem
             text-overflow: ellipsis
             cursor: pointer
-
-            &:first-child
-              margin-left: 0
 
             &:before
               content: ''
@@ -277,7 +275,7 @@ require('react-styl')(`
           box-shadow: none
           outline: none
 
-    &.fullscreen
+    &.active
       position: fixed
       top: 0
       bottom: 0
