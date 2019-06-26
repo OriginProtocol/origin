@@ -6,7 +6,8 @@ import get from 'lodash/get'
 
 const categories = Categories.root.map(c => ({
   id: c[0],
-  type: c[0].split('.').slice(-1)[0]
+  type: c[0].split('.').slice(-1)[0],
+  name: c[1]
 }))
 
 const subCategories = categories
@@ -14,10 +15,11 @@ const subCategories = categories
   .reduce((cats, subCats) => [...cats, ...subCats], [])
   .map(c => ({
     id: c[0],
-    type: c[0].split('.').slice(-1)[0]
+    type: c[0].split('.').slice(-1)[0],
+    name: c[1]
   }))
 
-categories.unshift({ id: '', type: '' })
+categories.unshift({ id: '', type: '', name: '' })
 
 export function getFilters(search) {
   const filters = []

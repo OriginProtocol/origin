@@ -48,6 +48,55 @@ class Listings extends Component {
     }
   }
 
+  getHeader(totalCount, isSearch) {
+    let className = 'listings-count'
+    let content = (
+      <fbt desc="Num Listings">
+        <fbt:plural count={totalCount} showCount="yes">
+          Listing
+        </fbt:plural>
+      </fbt>
+    )
+
+    if (isSearch) {
+      className += ' search-results'
+      if (this.state.search.category.id) {
+        content = (
+          <fbt desc="NumCategoryResults">
+            <fbt:param name="count">{totalCount}</fbt:param>{' '}
+            <fbt:param name="category">
+              {this.state.search.category.name}
+            </fbt:param>{' '}
+            <fbt:plural count={totalCount} showCount="no">
+              result
+            </fbt:plural>
+          </fbt>
+        )
+      } else if (this.state.search.subCategory.id) {
+        content = (
+          <fbt desc="NumCategoryResults">
+            <fbt:param name="count">{totalCount}</fbt:param>{' '}
+            <fbt:param name="category">
+              {this.state.search.subCategory.name}
+            </fbt:param>{' '}
+            <fbt:plural count={totalCount} showCount="no">
+              result
+            </fbt:plural>
+          </fbt>
+        )
+      } else {
+        content = (
+          <fbt desc="NumResults">
+            <fbt:plural count={totalCount} showCount="yes">
+              result
+            </fbt:plural>
+          </fbt>
+        )
+      }
+    }
+    return <h5 className={className}>{content}</h5>
+  }
+
   render() {
     const isCreatedMarketplace = get(
       this.props,
@@ -161,15 +210,9 @@ class Listings extends Component {
 
                     {totalCount > 0 && (
                       <>
-                        {showCount ? (
-                          <h5 className="listings-count">
-                            <fbt desc="Num Listings">
-                              <fbt:plural count={totalCount} showCount="yes">
-                                Listing
-                              </fbt:plural>
-                            </fbt>
-                          </h5>
-                        ) : null}
+                        {showCount
+                          ? this.getHeader(totalCount, isSearch)
+                          : null}
                         <ListingsGallery
                           listings={nodes}
                           hasNextPage={hasNextPage}
@@ -231,7 +274,12 @@ require('react-styl')(`
   @media (max-width: 767.98px)
     .listings-container
       padding-top: 0
+      .search
+        margin-bottom: 1.5rem
     .listings-count
       margin: 0
       font-size: 32px
+      &.search-results
+        font-size: 14px
+        margin-bottom: 1rem
 `)
