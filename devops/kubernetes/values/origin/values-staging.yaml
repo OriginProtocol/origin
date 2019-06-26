@@ -12,7 +12,7 @@ dappReplicas: 2
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: '353faf5'
+ipfsProxyImageTag: '13525fd'
 
 # origin-faucet
 faucetImage: origin-faucet
