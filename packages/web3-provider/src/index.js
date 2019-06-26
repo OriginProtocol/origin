@@ -1,9 +1,9 @@
 /**
  * Web3 Provider Engine Subproviders
  */
-import ProviderEngine from 'web3-provider-engine'
-import MetricsProvider from './MetricsProvider'
-import ThrottleRPCProvider from './ThrottleRPCProvider'
+const ProviderEngine = require('web3-provider-engine')
+const MetricsProvider = require('./subproviders/MetricsProvider')
+const ThrottleRPCProvider = require('./subproviders/ThrottleRPCProvider')
 
 /**
  * Convert a standard provider to a web3-provider-engine subprovider
@@ -132,7 +132,7 @@ function initStandardSubproviders(web3Inst, options) {
   return web3Inst
 }
 
-export {
+module.exports = {
   createEngine,
   initStandardSubproviders,
   addSubprovider,
