@@ -18,6 +18,15 @@ class Search extends Component {
     }
   }
 
+  componentDidMount() {
+    this.onOutsideClick = this.onOutsideClick.bind(this)
+    document.body.addEventListener('click', this.onOutsideClick)
+  }
+
+  componentWillUnmount() {
+    document.body.removeEventListener('click', this.onOutsideClick)
+  }
+
   render() {
     return this.renderContent()
   }
@@ -28,11 +37,12 @@ class Search extends Component {
 
     return (
       <form
-        className={`listing-search-wrapper with-dropdown${className ? ' ' + className : ''}${this.state.active ? ' fullscreen' : ''}`}
+        className={`listing-search-wrapper${className ? ' ' + className : ''}${this.state.active && isMobile ? ' fullscreen' : ''}`}
         onSubmit={e => {
           e.preventDefault()
           this.doSearch()
         }}
+        ref={ref => (this.formRef = ref)}
       >
         <div className="search-input-wrapper">
           <div className="search-input">
@@ -45,7 +55,7 @@ class Search extends Component {
               value={this.state.searchInput}
               onChange={e => this.setState({ searchInput: e.target.value })}
               onFocus={() =>
-                this.setState({ active: isMobile })
+                this.setState({ active: true })
               }
               onKeyUp={e => {
                 if (e.keyCode === 13) this.doSearch()
@@ -81,6 +91,10 @@ class Search extends Component {
 
   renderSearchDropdown() {
     const { isMobile } = this.props
+
+    if (!this.state.active) {
+      return null
+    }
 
     return (
       // tabIndex to keep the focus on click
@@ -143,6 +157,14 @@ class Search extends Component {
     )
   }
 
+  onOutsideClick(e) {
+    if (!this.formRef.contains(e.target)) {
+      this.setState({
+        active: false
+      })
+    }
+  }
+
   doSearch() {
     const search = this.state
     this.props.history.push({
@@ -165,11 +187,10 @@ class Search extends Component {
 export default withIsMobile(withConfig(withRouter(Search)))
 
 require('react-styl')(`
-  .listing-search-wrapper.with-dropdown
+  .listing-search-wrapper
     .search-input-wrapper
       position: relative
       width: 100%
-      margin-bottom: 1.5rem
       .search-input
         display: flex
       .form-control
@@ -188,7 +209,6 @@ require('react-styl')(`
       .search-dropdown
         background-color: var(--white)
         padding: 1.5rem
-        display: none
         &.floating
           z-index: 1000
           position: absolute
@@ -253,7 +273,6 @@ require('react-styl')(`
         box-shadow: none
         outline: none
       .search-input-wrapper .search-dropdown.floating
-        display: block
         &:focus
           box-shadow: none
           outline: none
@@ -270,7 +289,6 @@ require('react-styl')(`
       .search-input-wrapper
         .search-dropdown
           padding: 1.5rem 0
-          display: block
 
 
   .navbar
@@ -299,4 +317,8 @@ require('react-styl')(`
           color: #94a7b5
         &:focus
           box-shadow: none
+
+  @media (max-width: 767.98px)
+    .listing-search-wrapper .search-input-wrapper
+          margin-bottom: 1.5rem
 `)
