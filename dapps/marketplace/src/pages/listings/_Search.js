@@ -28,7 +28,9 @@ class Search extends Component {
 
     return (
       <form
-        className={`listing-search-wrapper${className ? ' ' + className : ''}${showDropdown ? ' with-dropdown' : ''}${this.state.active ? ' fullscreen' : ''}`}
+        className={`listing-search-wrapper${className ? ' ' + className : ''}${
+          showDropdown ? ' with-dropdown' : ''
+        }${this.state.active ? ' fullscreen' : ''}`}
         onSubmit={e => {
           e.preventDefault()
           this.doSearch()
@@ -38,11 +40,15 @@ class Search extends Component {
           <div className="search-input">
             <input
               ref={ref => (this.inputRef = ref)}
-              className={`form-control${!this.state.searchInput ? ' empty' : ''}`}
+              className={`form-control${
+                !this.state.searchInput ? ' empty' : ''
+              }`}
               type="input"
               value={this.state.searchInput}
               onChange={e => this.setState({ searchInput: e.target.value })}
-              onFocus={() => this.setState({ active: isMobile && showDropdown })}
+              onFocus={() =>
+                this.setState({ active: isMobile && showDropdown })
+              }
               onKeyUp={e => {
                 if (e.keyCode === 13) this.doSearch()
               }}
@@ -61,7 +67,12 @@ class Search extends Component {
               }
             />
             {isMobile && showDropdown && this.state.active && (
-              <button className="cancel-button" onClick={() => { this.setState({ active: false })}}></button>
+              <button
+                className="cancel-button"
+                onClick={() => {
+                  this.setState({ active: false })
+                }}
+              />
             )}
           </div>
           {this.renderSearchDropdown()}
@@ -79,25 +90,60 @@ class Search extends Component {
 
     return (
       // tabIndex to keep the focus on click
-      <div className={`search-dropdown${isMobile ? '' : ' floating' }`} tabIndex={isMobile ? -1 : 0}>
-        {!isMobile && <div className="title"><fbt desc="Search.Categories">CATEGORIES</fbt></div>}
+      <div
+        className={`search-dropdown${isMobile ? '' : ' floating'}`}
+        tabIndex={isMobile ? -1 : 0}
+      >
+        {!isMobile && (
+          <div className="title">
+            <fbt desc="Search.Categories">CATEGORIES</fbt>
+          </div>
+        )}
         <div className="featured-categories">
-          <div className="category-icon apparel" onClick={() => this.onCategoryClick('apparel')}><fbt desc="Search.Apparel">Apparel</fbt></div>
-          <div className="category-icon gift-cards" onClick={() => this.onCategoryClick('gift-card')}><fbt desc="Search.GiftCards">Gift Cards</fbt></div>
-          <div className="category-icon housing" onClick={() => this.onCategoryClick('housing')}><fbt desc="Search.Housing">Housing</fbt></div>
-          <div className="category-icon services" onClick={() => this.onCategoryClick('services')}><fbt desc="Search.Services">Services</fbt></div>
-          <div className="category-icon art" onClick={() => this.onCategoryClick('art')}><fbt desc="Search.Art">Art</fbt></div>
+          <div
+            className="category-icon apparel"
+            onClick={() => this.onCategoryClick('apparel')}
+          >
+            <fbt desc="Search.Apparel">Apparel</fbt>
+          </div>
+          <div
+            className="category-icon gift-cards"
+            onClick={() => this.onCategoryClick('gift-card')}
+          >
+            <fbt desc="Search.GiftCards">Gift Cards</fbt>
+          </div>
+          <div
+            className="category-icon housing"
+            onClick={() => this.onCategoryClick('housing')}
+          >
+            <fbt desc="Search.Housing">Housing</fbt>
+          </div>
+          <div
+            className="category-icon services"
+            onClick={() => this.onCategoryClick('services')}
+          >
+            <fbt desc="Search.Services">Services</fbt>
+          </div>
+          <div
+            className="category-icon art"
+            onClick={() => this.onCategoryClick('art')}
+          >
+            <fbt desc="Search.Art">Art</fbt>
+          </div>
         </div>
       </div>
     )
   }
 
   onCategoryClick(category) {
-    this.setState({
-      category: {
-        type: category
-      }
-    }, () => this.doSearch())
+    this.setState(
+      {
+        category: {
+          type: category
+        }
+      },
+      () => this.doSearch()
+    )
   }
 
   doSearch() {
