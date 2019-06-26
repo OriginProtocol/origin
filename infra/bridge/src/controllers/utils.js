@@ -37,7 +37,7 @@ router.post('/exists', async (req, res) => {
 })
 
 /**
- * Returns excahnge rate of given market
+ * Returns exchange rate of given market
  */
 router.get('/exchange-rate', async (req, res) => {
   res.send({
