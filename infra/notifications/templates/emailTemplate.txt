@@ -12,4 +12,4 @@ To unsubscribe click here: <%= "\<%asm_group_unsubscribe_raw_url%\>" %>
   tag so it is ignored and passed through to Sendgrid.
 */ } %>
 
-<%= messageHash %>
+ref: <%= messageHash %>

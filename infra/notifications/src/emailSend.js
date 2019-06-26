@@ -98,10 +98,12 @@ async function messageEmailSend(receivers, sender, messageHash, config) {
               from: config.fromEmail,
               subject: message.subject(templateVars),
               text: emailTemplateTxt({
-                message: message.text(templateVars)
+                message: message.text(templateVars),
+                messageHash
               }),
               html: emailTemplateHtml({
-                message: message.html(templateVars)
+                message: message.html(templateVars),
+                messageHash
               }),
               asm: {
                 groupId: config.asmGroupId
