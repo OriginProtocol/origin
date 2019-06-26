@@ -27,6 +27,8 @@ import query from 'queries/Listings'
 
 import { getFilters, getStateFromQuery } from './_filters'
 
+const CategoriesEnum = require('Categories$FbtEnum')
+
 const memStore = store('memory')
 const nextPage = nextPageFactory('marketplace.listings')
 
@@ -48,6 +50,57 @@ class Listings extends Component {
     }
   }
 
+  getHeader(totalCount, isSearch) {
+    let className = 'listings-count'
+    let content = (
+      <fbt desc="Num Listings">
+        <fbt:plural count={totalCount} showCount="yes">
+          Listing
+        </fbt:plural>
+      </fbt>
+    )
+
+    if (isSearch) {
+      className += ' search-results'
+      if (this.state.search.category.id) {
+        content = (
+          <fbt desc="NumCategoryResults">
+            <fbt:param name="count">{totalCount}</fbt:param>{' '}
+            <fbt:param name="category">
+              {CategoriesEnum[this.state.search.category.id]}
+            </fbt:param>{' '}
+            <fbt:plural count={totalCount} showCount="no">
+              result
+            </fbt:plural>
+          </fbt>
+        )
+      } else if (this.state.search.subCategory.id) {
+        content = (
+          <fbt desc="NumCategoryResults">
+            <fbt:param name="count">{totalCount}</fbt:param>{' '}
+            <fbt:param name="category">
+              {this.state.search.subCategory.type === 'clothingAccessories'
+                ? CategoriesEnum['schema.apparel']
+                : CategoriesEnum[this.state.search.subCategory.id]}
+            </fbt:param>{' '}
+            <fbt:plural count={totalCount} showCount="no">
+              result
+            </fbt:plural>
+          </fbt>
+        )
+      } else {
+        content = (
+          <fbt desc="NumResults">
+            <fbt:plural count={totalCount} showCount="yes">
+              result
+            </fbt:plural>
+          </fbt>
+        )
+      }
+    }
+    return <h5 className={className}>{content}</h5>
+  }
+
   render() {
     const isCreatedMarketplace = get(
       this.props,
@@ -67,7 +120,8 @@ class Listings extends Component {
 
     const isSearch =
       get(this.state.search, 'searchInput', '') !== '' ||
-      !isEmpty(get(this.state.search, 'category', {}))
+      !isEmpty(get(this.state.search, 'category', {})) ||
+      !isEmpty(get(this.state.search, 'subCategory', {}))
 
     return (
       <>
@@ -161,15 +215,9 @@ class Listings extends Component {
 
                     {totalCount > 0 && (
                       <>
-                        {showCount ? (
-                          <h5 className="listings-count">
-                            <fbt desc="Num Listings">
-                              <fbt:plural count={totalCount} showCount="yes">
-                                Listing
-                              </fbt:plural>
-                            </fbt>
-                          </h5>
-                        ) : null}
+                        {showCount
+                          ? this.getHeader(totalCount, isSearch)
+                          : null}
                         <ListingsGallery
                           listings={nodes}
                           hasNextPage={hasNextPage}
@@ -236,4 +284,8 @@ require('react-styl')(`
     .listings-count
       margin: 0
       font-size: 32px
+      &.search-results
+        font-size: 14px
+        margin-bottom: 1rem
+        font-weight: normal
 `)
