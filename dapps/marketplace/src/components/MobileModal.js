@@ -173,7 +173,6 @@ export default class MobileModal extends Component {
 
 require('react-styl')(`
   .mobile-modal-light-open
-    overflow: hidden
     touch-action: none
     position: relative
     #app
@@ -195,7 +194,7 @@ require('react-styl')(`
       opacity: 1
   .mobile-modal-light
     touch-action: none
-    position: fixed
+    position: absolute
     z-index: 1000
     -webkit-transform: translate3d(0, 0, 0)
     opacity: 0
@@ -222,7 +221,7 @@ require('react-styl')(`
     .modal-spacer
       visibility: hidden
       flex-grow: 1
-    > .modal-content > div 
+    > .modal-content > div
       .actions
         margin-top: auto !important
       .published-info-box
