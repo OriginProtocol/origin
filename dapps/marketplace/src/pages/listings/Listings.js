@@ -27,6 +27,8 @@ import query from 'queries/Listings'
 
 import { getFilters, getStateFromQuery } from './_filters'
 
+const CategoriesEnum = require('Categories$FbtEnum')
+
 const memStore = store('memory')
 const nextPage = nextPageFactory('marketplace.listings')
 
@@ -65,7 +67,7 @@ class Listings extends Component {
           <fbt desc="NumCategoryResults">
             <fbt:param name="count">{totalCount}</fbt:param>{' '}
             <fbt:param name="category">
-              {this.state.search.category.name}
+              {CategoriesEnum[this.state.search.category.id]}
             </fbt:param>{' '}
             <fbt:plural count={totalCount} showCount="no">
               result
@@ -77,7 +79,9 @@ class Listings extends Component {
           <fbt desc="NumCategoryResults">
             <fbt:param name="count">{totalCount}</fbt:param>{' '}
             <fbt:param name="category">
-              {this.state.search.subCategory.name}
+              {this.state.search.subCategory.type === 'clothingAccessories'
+                ? CategoriesEnum['schema.apparels']
+                : CategoriesEnum[this.state.search.subCategory.id]}
             </fbt:param>{' '}
             <fbt:plural count={totalCount} showCount="no">
               result
