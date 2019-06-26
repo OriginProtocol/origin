@@ -235,7 +235,7 @@ export default ListingAvailability
 require('react-styl')(`
   .create-listing
     .listing-step
-      .calendar
+      .calendar,.weekCalendar
         align-self: stretch
 
     .availability-editor
@@ -276,7 +276,7 @@ require('react-styl')(`
   @media (min-width: 767.98px)
     .create-listing
       .listing-step
-        .calendar
+        .calendar,.weekCalendar
           margin-left: 1rem
           margin-right: 1rem
 

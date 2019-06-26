@@ -32,7 +32,7 @@ const workingHoursSelect = [
 ]
 
 const FractionalStandardHours = ({ workingHours, onChange }) => (
-  <>
+  <div className="standard-hours">
     {[
       fbt('Sunday', 'Sunday'),
       fbt('Monday', 'Monday'),
@@ -42,11 +42,10 @@ const FractionalStandardHours = ({ workingHours, onChange }) => (
       fbt('Friday', 'Friday'),
       fbt('Saturday', 'Saturday')
     ].map((dayName, dayIndex) => (
-      <div className="d-flex" key={dayIndex}>
-        <div style={{ height: '3.0rem' }}>
+      <div className="day" key={dayIndex}>
+        <div className="checkbox">
           <input
             type="checkbox"
-            style={{ marginRight: '1rem' }}
             checked={
               workingHours.length > 0 &&
               workingHours[dayIndex].indexOf('/') > -1
@@ -60,10 +59,10 @@ const FractionalStandardHours = ({ workingHours, onChange }) => (
             }}
           />
         </div>
-        <div className="mr-2" style={{ flex: 1 }}>
+        <div className="name">
           <div>{dayName}</div>
         </div>
-        <div className="mr-2" style={{ flex: 1 }}>
+        <div className="start">
           {workingHours[dayIndex] && (
             <select
               className="form-control"
@@ -90,7 +89,7 @@ const FractionalStandardHours = ({ workingHours, onChange }) => (
             </select>
           )}
         </div>
-        <div style={{ flex: 1 }}>
+        <div className="end">
           {workingHours[dayIndex] && (
             <select
               className="form-control"
@@ -119,7 +118,31 @@ const FractionalStandardHours = ({ workingHours, onChange }) => (
         </div>
       </div>
     ))}
-  </>
+  </div>
 )
 
 export default FractionalStandardHours
+
+require('react-styl')(`
+  .create-listing
+    .listing-step
+      .standard-hours
+        text-align: left
+        width: 100%
+        .day
+          display: flex
+          min-height: 3rem
+          align-items: center
+          .checkbox
+            margin-right: 1rem
+            input
+              vertical-align: 2px
+          .name
+            flex: 1
+            margin-right: 1rem
+          .start
+            flex: 1
+            margin-right: 1rem
+          .end
+            flex: 1
+`)
