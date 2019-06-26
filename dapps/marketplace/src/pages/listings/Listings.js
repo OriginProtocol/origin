@@ -74,7 +74,7 @@ class Listings extends Component {
         <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
         <div className="container listings-container">
           {this.props.isMobile ? (
-            <Search className="search" placeholder showDropdown />
+            <Search className="search" placeholder />
           ) : null}
           <Query
             query={query}
@@ -231,8 +231,6 @@ require('react-styl')(`
   @media (max-width: 767.98px)
     .listings-container
       padding-top: 0
-      .search
-        margin-bottom: 1.5rem
     .listings-count
       margin: 0
       font-size: 32px

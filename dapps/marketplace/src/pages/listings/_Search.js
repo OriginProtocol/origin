@@ -24,13 +24,11 @@ class Search extends Component {
 
   renderContent() {
     const enabled = get(this.props, 'config.discovery', false)
-    const { placeholder, className, showDropdown, isMobile } = this.props
+    const { placeholder, className, isMobile } = this.props
 
     return (
       <form
-        className={`listing-search-wrapper${className ? ' ' + className : ''}${
-          showDropdown ? ' with-dropdown' : ''
-        }${this.state.active ? ' fullscreen' : ''}`}
+        className={`listing-search-wrapper with-dropdown${className ? ' ' + className : ''}${this.state.active ? ' fullscreen' : ''}`}
         onSubmit={e => {
           e.preventDefault()
           this.doSearch()
@@ -47,7 +45,7 @@ class Search extends Component {
               value={this.state.searchInput}
               onChange={e => this.setState({ searchInput: e.target.value })}
               onFocus={() =>
-                this.setState({ active: isMobile && showDropdown })
+                this.setState({ active: isMobile })
               }
               onKeyUp={e => {
                 if (e.keyCode === 13) this.doSearch()
@@ -66,7 +64,7 @@ class Search extends Component {
                   : fbt('Note: Search unavailable', 'search.search-unavailable')
               }
             />
-            {isMobile && showDropdown && this.state.active && (
+            {isMobile && this.state.active && (
               <button
                 className="cancel-button"
                 onClick={() => {
@@ -82,10 +80,6 @@ class Search extends Component {
   }
 
   renderSearchDropdown() {
-    if (!this.props.showDropdown) {
-      return null
-    }
-
     const { isMobile } = this.props
 
     return (
@@ -96,37 +90,37 @@ class Search extends Component {
       >
         {!isMobile && (
           <div className="title">
-            <fbt desc="Search.Categories">CATEGORIES</fbt>
+            <fbt desc="Search.Categories">Categories</fbt>
           </div>
         )}
         <div className="featured-categories">
           <div
             className="category-icon apparel"
-            onClick={() => this.onCategoryClick('apparel')}
+            onClick={() => this.onCategoryClick({ subCategory: 'clothingAccessories' })}
           >
             <fbt desc="Search.Apparel">Apparel</fbt>
           </div>
           <div
             className="category-icon gift-cards"
-            onClick={() => this.onCategoryClick('gift-card')}
+            onClick={() => this.onCategoryClick({ subCategory: 'giftCards' })}
           >
             <fbt desc="Search.GiftCards">Gift Cards</fbt>
           </div>
           <div
             className="category-icon housing"
-            onClick={() => this.onCategoryClick('housing')}
+            onClick={() => this.onCategoryClick({ subCategory: 'housing' })}
           >
             <fbt desc="Search.Housing">Housing</fbt>
           </div>
           <div
             className="category-icon services"
-            onClick={() => this.onCategoryClick('services')}
+            onClick={() => this.onCategoryClick({ category: 'services' })}
           >
             <fbt desc="Search.Services">Services</fbt>
           </div>
           <div
             className="category-icon art"
-            onClick={() => this.onCategoryClick('art')}
+            onClick={() => this.onCategoryClick({ subCategory: 'artsCrafts' })}
           >
             <fbt desc="Search.Art">Art</fbt>
           </div>
@@ -135,11 +129,14 @@ class Search extends Component {
     )
   }
 
-  onCategoryClick(category) {
+  onCategoryClick({ category, subCategory }) {
     this.setState(
       {
         category: {
           type: category
+        },
+        subCategory: {
+          type: subCategory
         }
       },
       () => this.doSearch()
@@ -153,6 +150,7 @@ class Search extends Component {
       search: queryString.stringify({
         q: search.searchInput || undefined,
         category: search.category.type || undefined,
+        subCategory: search.subCategory.type || undefined,
         priceMin: search.priceMin || undefined,
         priceMax: search.priceMax || undefined
       })
@@ -171,6 +169,7 @@ require('react-styl')(`
     .search-input-wrapper
       position: relative
       width: 100%
+      margin-bottom: 1.5rem
       .search-input
         display: flex
       .form-control
@@ -206,6 +205,7 @@ require('react-styl')(`
           font-size: 12px
           color: var(--dusk)
           margin-bottom: 0.5rem
+          text-transform: uppercase
         
         .featured-categories
           display: inline-flex
@@ -299,5 +299,4 @@ require('react-styl')(`
           color: #94a7b5
         &:focus
           box-shadow: none
-
 `)
