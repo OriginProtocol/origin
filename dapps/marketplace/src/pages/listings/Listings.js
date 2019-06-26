@@ -120,7 +120,8 @@ class Listings extends Component {
 
     const isSearch =
       get(this.state.search, 'searchInput', '') !== '' ||
-      !isEmpty(get(this.state.search, 'category', {}))
+      !isEmpty(get(this.state.search, 'category', {})) ||
+      !isEmpty(get(this.state.search, 'subCategory', {}))
 
     return (
       <>
@@ -286,4 +287,5 @@ require('react-styl')(`
       &.search-results
         font-size: 14px
         margin-bottom: 1rem
+        font-weight: normal
 `)
