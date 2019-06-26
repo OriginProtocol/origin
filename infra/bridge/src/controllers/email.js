@@ -3,8 +3,6 @@
 const express = require('express')
 const router = express.Router()
 const sendgridMail = require('@sendgrid/mail')
-const redis = require('redis')
-const { promisify } = require('util')
 
 const Attestation = require('../models/index').Attestation
 const AttestationTypes = Attestation.AttestationTypes
@@ -13,9 +11,8 @@ const { emailGenerateCode, emailVerifyCode } = require('../utils/validation')
 const { generateSixDigitCode } = require('../utils')
 const logger = require('../logger')
 
-const redisClient = redis.createClient(process.env.REDIS_URL)
-// getAsync for redis get
-const getAsync = promisify(redisClient.get).bind(redisClient)
+const { redisClient, getAsync } = require('../utils/redis')
+
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 router.post('/generate-code', emailGenerateCode, async (req, res) => {
@@ -74,7 +71,9 @@ router.post('/verify', emailVerifyCode, async (req, res) => {
   const attestation = await generateAttestation(
     AttestationTypes.EMAIL,
     attestationBody,
-    req.body.email,
+    {
+      uniqueId: req.body.email
+    },
     req.body.identity,
     req.ip
   )

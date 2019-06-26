@@ -1,12 +1,10 @@
 'use strict'
 
-import RNTestFlight from 'react-native-test-flight'
-
 import { SettingsConstants } from 'actions/Settings'
 import { NETWORKS } from '../constants'
 
 let defaultNetwork
-if (__DEV__ || RNTestFlight.isTestFlight) {
+if (__DEV__) {
   defaultNetwork = NETWORKS.find(n => n.name === 'Rinkeby')
 } else {
   defaultNetwork = NETWORKS.find(n => n.name === 'Mainnet')

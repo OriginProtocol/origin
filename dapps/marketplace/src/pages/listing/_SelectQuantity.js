@@ -2,6 +2,7 @@ import React from 'react'
 import { fbt } from 'fbt-runtime'
 
 const SelectQuantity = ({ quantity, onChange, available }) => {
+  available = available > 20 ? 20 : available
   return (
     <div className="quantity">
       <span>

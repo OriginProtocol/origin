@@ -88,6 +88,7 @@ router.post('/verify', facebookVerify, async (req, res) => {
         appsecret_proof: appSecretProof,
         access_token: accessToken
       })
+    userDataResponse = JSON.parse(userDataResponse.text)
   } catch (error) {
     logger.error(error)
     return res.status(500).send({
@@ -102,7 +103,7 @@ router.post('/verify', facebookVerify, async (req, res) => {
     site: {
       siteName: 'facebook.com',
       userId: {
-        verified: true
+        raw: String(userDataResponse.id)
       }
     }
   }
@@ -111,7 +112,9 @@ router.post('/verify', facebookVerify, async (req, res) => {
     const attestation = await generateAttestation(
       AttestationTypes.FACEBOOK,
       attestationBody,
-      userDataResponse.body.name,
+      {
+        uniqueId: userDataResponse.id
+      },
       req.body.identity,
       req.ip
     )

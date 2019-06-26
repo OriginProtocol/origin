@@ -148,7 +148,7 @@ class EmailAttestation extends Component {
                 'EmailAttestation.visibleOnBlockchain'
               )}
               children={fbt(
-                'That you have a verified email but NOT your actual email address',
+                'That you have a verified email, but NOT your actual email address',
                 'EmailAttestation.storedOnChain'
               )}
             />
