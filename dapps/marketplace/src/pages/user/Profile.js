@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import pick from 'lodash/pick'
+import pickBy from 'lodash/pickBy'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
@@ -373,11 +374,14 @@ class UserProfile extends Component {
       return null
     }
 
-    const profile = pick(
-      this.state.deployIdentity === 'profile'
-        ? this.state.unpublishedProfile
-        : this.state,
-      ['firstName', 'lastName', 'description', 'avatarUrl']
+    const profile = pickBy(
+      pick(
+        this.state.deployIdentity === 'profile'
+          ? this.state.unpublishedProfile
+          : this.state,
+        ['firstName', 'lastName', 'description', 'avatarUrl']
+      ),
+      x => x
     )
 
     return (
