@@ -89,7 +89,9 @@ class GrowthTermsScreen extends Component {
           />
           <Text style={styles.title}>
             <fbt desc="GrowthTermsScreen.ineligibleTitle">
-              Oops, {this.state.countryName} is not eligible
+              Oops,{' '}
+              <fbt:param name="countryName">{this.state.countryName}</fbt:param>{' '}
+              is not eligible
             </fbt>
           </Text>
           <Text style={styles.subtitle}>
@@ -124,8 +126,10 @@ class GrowthTermsScreen extends Component {
             rightTextView={
               <Text style={{ fontSize: 16, marginLeft: 5, fontWeight: '300' }}>
                 <fbt desc="GrowthTermsScreen.nonResidentCertification">
-                  I certify that I am not a citizen or resident of{' '}
-                  {this.state.countryName}
+                  I certify that I am not a citizen or resident of
+                  <fbt:param name="countryName">
+                    {this.state.countryName}
+                  </fbt:param>
                 </fbt>
               </Text>
             }
