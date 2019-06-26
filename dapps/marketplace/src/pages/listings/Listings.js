@@ -80,7 +80,7 @@ class Listings extends Component {
             <fbt:param name="count">{totalCount}</fbt:param>{' '}
             <fbt:param name="category">
               {this.state.search.subCategory.type === 'clothingAccessories'
-                ? CategoriesEnum['schema.apparels']
+                ? CategoriesEnum['schema.apparel']
                 : CategoriesEnum[this.state.search.subCategory.id]}
             </fbt:param>{' '}
             <fbt:plural count={totalCount} showCount="no">
