@@ -149,7 +149,9 @@ router.post('/verify', phoneVerifyCode, async (req, res) => {
   const attestation = await generateAttestation(
     AttestationTypes.PHONE,
     attestationBody,
-    attestationValue,
+    {
+      uniqueId: attestationValue
+    },
     req.body.identity,
     req.ip
   )

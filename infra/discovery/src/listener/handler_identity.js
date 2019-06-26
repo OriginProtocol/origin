@@ -172,12 +172,42 @@ class IdentityEventHandler {
             )
             break
           case 'facebook':
-            // Note: we don't have access to the decoratedIdentity's fbook id,
-            // only whether the account was verified or not.
             decoratedIdentity.facebookVerified = true
+            decoratedIdentity.facebook = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
+              'FACEBOOK'
+            )
             break
           case 'google':
             decoratedIdentity.googleVerified = true
+            decoratedIdentity.google = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
+              'GOOGLE'
+            )
+            break
+          case 'linkedin':
+            decoratedIdentity.linkedin = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
+              'LINKEDIN'
+            )
+            break
+          case 'github':
+            decoratedIdentity.github = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
+              'GITHUB'
+            )
+            break
+          case 'kakao':
+            decoratedIdentity.kakao = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
+              'KAKAO'
+            )
+            break
+          case 'wechat':
+            decoratedIdentity.wechat = await this._loadValueFromAttestation(
+              decoratedIdentity.id,
+              'WECHAT'
+            )
             break
           case 'website':
             decoratedIdentity.website = await this._loadValueFromAttestation(
@@ -229,8 +259,13 @@ class IdentityEventHandler {
       data: { blockInfo },
       country: decoratedIdentity.country,
       avatarUrl: decoratedIdentity.avatarUrl,
-      website: decoratedIdentity.website
-      // TODO: store linkedin, github, wechat, kakao ids
+      website: decoratedIdentity.website,
+      google: decoratedIdentity.google,
+      facebook: decoratedIdentity.facebook,
+      kakao: decoratedIdentity.kakao,
+      linkedin: decoratedIdentity.linkedin,
+      github: decoratedIdentity.github,
+      wechat: decoratedIdentity.wechat
     }
 
     logger.debug('Identity=', identityRow)
