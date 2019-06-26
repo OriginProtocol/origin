@@ -90,7 +90,7 @@ const ChooseListingCategory = ({ listing, prev, next, onChange }) => {
       <div className="row">
         <div className="col-md-8">
           <div className="listing-step choose-sub-category">
-            <div className={`category-icon ${categoryShortId}`} />
+            <div className={`category-ico ${categoryShortId}`} />
             <div className="sub-categories">
               {Categories[categoryId].map(([subcategoryId]) => (
                 <a
@@ -138,7 +138,7 @@ export default ChooseListingCategory
 require('react-styl')(`
   .create-listing
     .choose-sub-category
-      .category-icon
+      .category-ico
         width: 4.5rem
         height: 4.5rem
         margin-top: 1rem
@@ -158,7 +158,7 @@ require('react-styl')(`
 
   @media (min-width: 767.98px)
     .create-listing
-      .category-icon
+      .category-ico
         width: 6rem
         height: 6rem
       .sub-category

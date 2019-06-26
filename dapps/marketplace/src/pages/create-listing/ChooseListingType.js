@@ -52,7 +52,7 @@ const ChooseListingType = props => {
                   setValid(true)
                 }}
               >
-                <div className={`category-icon ${categoryId.split('.')[1]}`} />
+                <div className={`category-ico ${categoryId.split('.')[1]}`} />
                 <fbt desc="category">
                   <fbt:enum enum-range={CategoriesEnum} value={categoryId} />
                 </fbt>
@@ -73,7 +73,7 @@ const ChooseListingType = props => {
 export default withCreatorConfig(ChooseListingType)
 
 require('react-styl')(`
-  .category-icon
+  .category-ico
     border-radius: 50%
     background-color: var(--light)
     background-repeat: no-repeat
@@ -125,7 +125,7 @@ require('react-styl')(`
         line-height: 1
         padding: 1.5rem 0
         max-width: 25rem
-        .category-icon
+        .category-ico
           margin-right: 1rem
           width: 3.5rem
           height: 3.5rem
