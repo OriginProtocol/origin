@@ -365,7 +365,15 @@ class Purse {
     if (txCount < w3txCount) {
       if (txCount > 0)
         logger.warn('Transaction counts appear lower than on the chain!')
+      // Set in-memory for this instances use
       txCount = w3txCount
+      // ...and make sure redis is up to date for future instances
+      if (this.rclient && this.rclient.connected) {
+        await this.rclient.setAsync(
+          `${REDIS_TX_COUNT_PREFIX}${address}`,
+          txCount
+        )
+      }
     }
 
     return txCount
