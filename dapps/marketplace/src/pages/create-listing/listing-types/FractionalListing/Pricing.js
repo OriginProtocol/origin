@@ -67,7 +67,7 @@ class ListingPricing extends Component {
                     />
                   </div>
                   {Feedback('price')}
-                  <div className="help-text price">
+                  <div className="help-text mt-2">
                     <fbt desc="create.fractional.price.help">
                       Price is an approximation of what you will receive.
                     </fbt>

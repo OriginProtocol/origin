@@ -11,16 +11,27 @@ import CurrencySelect from 'components/CurrencySelect'
 import { formInput, formFeedback } from 'utils/formHelpers'
 
 import PricingChooser from '../../_PricingChooser'
+import StandardHours from './_StandardHours'
+
+const defaultWorkingHours = [
+  '',
+  '09:00:00/17:00:00',
+  '09:00:00/17:00:00',
+  '09:00:00/17:00:00',
+  '09:00:00/17:00:00',
+  '09:00:00/17:00:00',
+  ''
+]
 
 class ListingPricing extends Component {
   constructor(props) {
     super(props)
     this.state = omit(props.listing, 'valid')
-  }
-
-  componentDidMount() {
-    if (this.quantityInput) {
-      this.quantityInput.focus()
+    if (!this.state.workingHours || !this.state.workingHours.length) {
+      this.state.workingHours = defaultWorkingHours
+    }
+    if (!this.state.timeZone) {
+      this.state.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
     }
   }
 
@@ -66,7 +77,7 @@ class ListingPricing extends Component {
                     />
                   </div>
                   {Feedback('price')}
-                  <div className="help-text price">
+                  <div className="help-text mt-2">
                     <fbt desc="create.fractional.price.help">
                       Price is an approximation of what you will receive.
                     </fbt>
@@ -81,6 +92,17 @@ class ListingPricing extends Component {
                   </div>
                 </div>
               </PricingChooser>
+
+              <div className="form-group">
+                <label>
+                  <fbt desc="create.hourly.hours">Standard Available Hours</fbt>
+                </label>
+
+                <StandardHours
+                  workingHours={this.state.workingHours}
+                  onChange={workingHours => this.setState({ workingHours })}
+                />
+              </div>
 
               <div className="form-group">
                 <label className="mb-0">
@@ -142,22 +164,17 @@ class ListingPricing extends Component {
       )
     }
 
-    // if (!this.state.weekendPrice) {
-    //   newState.weekendPriceError = fbt(
-    //     'Weekend pricing is required',
-    //     'Weekend pricing is required'
-    //   )
-    // } else if (!this.state.weekendPrice.match(/^-?[0-9.]+$/)) {
-    //   newState.weekendPriceError = fbt(
-    //     'Weekend pricing must be a number',
-    //     'Weekend pricing must be a number'
-    //   )
-    // } else if (Number(this.state.weekendPrice) <= 0) {
-    //   newState.weekendPriceError = fbt(
-    //     'Weekend pricing must be greater than zero',
-    //     'Weekend pricing must be greater than zero'
-    //   )
-    // }
+    if (!this.state.timeZone) {
+      newState.timeZoneError = fbt(
+        'Time Zone is required',
+        'Time Zone is required'
+      )
+    } else if (this.state.timeZone.length > 1024) {
+      newState.timeZoneError = fbt(
+        'Time Zone is too long',
+        'Time Zone is too long'
+      )
+    }
 
     newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
 

@@ -21,12 +21,6 @@ class Details extends Component {
     this.state = omit(props.listing, 'valid')
   }
 
-  componentDidMount() {
-    if (this.titleInput) {
-      this.titleInput.focus()
-    }
-  }
-
   render() {
     if (this.state.valid) {
       return <Redirect to={this.props.next} push />

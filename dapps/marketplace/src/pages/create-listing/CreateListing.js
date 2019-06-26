@@ -181,6 +181,9 @@ require('react-styl')(`
       line-height: normal
       margin-bottom: 2.5rem
 
+    .with-symbol
+      position: relative
+
   @media (max-width: 767.98px)
     .create-listing
       padding-top: 1rem
