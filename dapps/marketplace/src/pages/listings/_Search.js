@@ -37,7 +37,9 @@ class Search extends Component {
 
     return (
       <form
-        className={`listing-search-wrapper${className ? ' ' + className : ''}${this.state.active && isMobile ? ' active' : ''}`}
+        className={`listing-search-wrapper${className ? ' ' + className : ''}${
+          this.state.active && isMobile ? ' active' : ''
+        }`}
         onSubmit={e => {
           e.preventDefault()
           this.doSearch()
@@ -54,9 +56,7 @@ class Search extends Component {
               type="input"
               value={this.state.searchInput}
               onChange={e => this.setState({ searchInput: e.target.value })}
-              onFocus={() =>
-                this.setState({ active: true })
-              }
+              onFocus={() => this.setState({ active: true })}
               onKeyUp={e => {
                 if (e.keyCode === 13) this.doSearch()
               }}
@@ -110,7 +110,9 @@ class Search extends Component {
         <div className="featured-categories">
           <div
             className="category-icon apparel"
-            onClick={() => this.onCategoryClick({ subCategory: 'clothingAccessories' })}
+            onClick={() =>
+              this.onCategoryClick({ subCategory: 'clothingAccessories' })
+            }
           >
             <fbt desc="Search.Apparel">Apparel</fbt>
           </div>

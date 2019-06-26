@@ -9,13 +9,14 @@ const categories = Categories.root.map(c => ({
   type: c[0].split('.').slice(-1)[0]
 }))
 
-const subCategories = categories.map(({ id }) => Categories[id])
+const subCategories = categories
+  .map(({ id }) => Categories[id])
   .reduce((cats, subCats) => [...cats, ...subCats], [])
   .map(c => ({
     id: c[0],
     type: c[0].split('.').slice(-1)[0]
   }))
-  
+
 categories.unshift({ id: '', type: '' })
 
 export function getFilters(search) {
@@ -61,7 +62,8 @@ export function getStateFromQuery(props) {
   const search = memStore.get('listingsPage.search', {})
   const getParams = queryString.parse(props.location.search)
   search.category = categories.find(c => c.type === getParams.category) || {}
-  search.subCategory = subCategories.find(c => c.type === getParams.subCategory) || {}
+  search.subCategory =
+    subCategories.find(c => c.type === getParams.subCategory) || {}
   search.searchInput = getParams.q || ''
   if (getParams.priceMin) {
     search.priceMin = getParams.priceMin
