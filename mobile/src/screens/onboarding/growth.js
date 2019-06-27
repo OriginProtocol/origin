@@ -97,7 +97,6 @@ const mapDispatchToProps = dispatch => ({
 
 export default withOnboardingSteps(
   connect(
-    {},
     mapDispatchToProps
   )(GrowthScreen)
 )
