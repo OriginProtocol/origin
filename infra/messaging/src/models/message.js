@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       conversationId: { type: DataTypes.INTEGER, primaryKey: true },
       conversationIndex: { type: DataTypes.INTEGER, primaryKey: true },
       ethAddress: DataTypes.STRING(64),
+      contentHash: DataTypes.STRING(66),
       data: DataTypes.JSON,
       signature: DataTypes.STRING(256),
       isKeys: DataTypes.BOOLEAN
