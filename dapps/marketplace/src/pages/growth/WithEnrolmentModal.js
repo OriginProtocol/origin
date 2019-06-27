@@ -50,10 +50,7 @@ function withEnrolmentModal(WrappedComponent) {
         notCitizenConfirmed: false,
         termsAccepted: false,
         userAlreadyEnrolled: false,
-        modalTitle: fbt(
-          'Origin Rewards',
-          'WithEnrolmentModal.OriginRewards'
-        )
+        modalTitle: fbt('Origin Rewards', 'WithEnrolmentModal.OriginRewards')
       }
     }
 
@@ -63,10 +60,7 @@ function withEnrolmentModal(WrappedComponent) {
           this.props.onClose()
         }
       } else if (this.state.stage !== previousState.stage) {
-        let title = fbt(
-          'Origin Rewards',
-          'WithEnrolmentModal.OriginRewardsSignup'
-        )
+        let title = fbt('Origin Rewards', 'WithEnrolmentModal.OriginRewards')
         switch (this.state.stage) {
           case 'JoinActiveCampaign':
             title = fbt('Join Campaign', 'WithEnrolmentModal.JoinCampaign')
@@ -75,7 +69,7 @@ function withEnrolmentModal(WrappedComponent) {
           case 'TermsModal':
             title = fbt(
               'Origin Rewards Terms',
-              'WithEnrolmentModal.SignUpForOrigin'
+              'WithEnrolmentModal.OriginRewardsTerms'
             )
             break
 
