@@ -22,7 +22,8 @@ function Action(props) {
     !detailsKey || detailsKey === 'growth.purchase.empty.details'
   const { isMobile, onMobileLockClick } = props
 
-  const actionLocked = status === 'Inactive'
+  //const actionLocked = status === 'Inactive'
+  const actionLocked = false
   const actionCompleted = ['Exhausted', 'Completed'].includes(status)
 
   const [detailsToggled, toggleDetails] = useState(false)

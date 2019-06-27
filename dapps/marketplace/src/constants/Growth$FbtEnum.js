@@ -69,6 +69,7 @@ const Growth$FbtEnum = {
   'growth.purchase.listing259.title': 'Purchase a coffee mug',
 
   'growth.purchase.listing2553.title': 'Purchase a $25 Amazon Gift Card',
+  'growth.purchase.listing2555.title': 'Donate $100 to the GiveDirectly charity',
   'growth.purchase.listing2804.title': 'Purchase a $25 iTunes Gift Card',
   'growth.purchase.listing2805.title': 'Purchase a $25 Google Play Gift Card',
   'growth.purchase.listing2806.title': 'Purchase a $25 Walmart Gift Card',
@@ -76,7 +77,35 @@ const Growth$FbtEnum = {
   'growth.purchase.listing2809.title': 'Purchase a $25 Uber Gift Card',
 
   // July campaign
-  // TODO: add strings for every listing.
+  'growth.purchase.listing2867.title': '在线英语课程 （1 对 1 教学）',
+  'growth.purchase.listing2877.title': 'Cozy 1 BR Apartment in Singapore',
+  'growth.purchase.listing2882.title': 'GaiGai x Origin Drinks',
+  'growth.purchase.listing2892.title': 'Post Jobs on GrabJobs (3 months subscription)',
+  'growth.purchase.listing2865.title': 'Real-Life Korean Conversations For Beginners(Speaking) 일상 속 진짜 자연스러운 한국어 대화 초급',
+  'growth.purchase.listing2866.title': 'KGC Korean Red Ginseng Extract, Single Serving Packs for Healthy Immune Support - 30 Sticks',
+  'growth.purchase.listing2887.title': 'A Twosome Place Ice Americano(L) Gift Card 투썸플레이스 아이스 아메리카노(L) 모바일 상품권',
+  'growth.purchase.listing2886.title': 'MEGABOX Movie Ticket Gift Card(Tickets 2 + Popcorn L1 + Drink R2 (메가박스)2인 상품권 패키지(관람권2+팝콘L1개+음료R2개)',
+  'growth.purchase.listing2885.title': '[Goobne] Goobne Original Chiken + Coke 1.25L Gift Card [굽네치킨]굽네 오리지널+콜라1.25L 모바일 상품권',
+  'growth.purchase.listing2883.title': '[BBQ]Golden Olive &Marinated Golden Olive Chicken+ coke 1.25L Gift Card 황금올리브치킨반반+콜라 1.25L 모바일 상품권',
+  'growth.purchase.listing2881.title': '[BBQ]Golden Olive Oil Fried Chicken + coke 1.25L Gift Card 황금올리브치킨+콜라 1.25L 모바일 상품권',
+  'growth.purchase.listing2895.title': '<Elizabeth Taylor with Cruse 162x130cm Acrylic on canvas> 엘리자베스 테일러와 달항아리 162x130cm 캔버스 아크릴화',
+  'growth.purchase.listing2896.title': 'BUIDL Asia 2019 tickets (비들 아시아 2019 컨퍼런스 티켓)',
+  'growth.purchase.listing2878.title': 'Kontur-Extern - software complex',
+  'growth.purchase.listing2879.title': 'Service to connect to the electronic trading platform',
+  'growth.purchase.listing2893.title': 'Translation Services',
+  'growth.purchase.listing2894.title': 'Meteorite from space',
+
+  'growth.purchase.listing1103.title': 'Origin Rewards T-Shirt V3',
+  'growth.purchase.listing292.title': 'Venezuela 2: Trevor Jones Original Oil Painting',
+  'growth.purchase.listing471.title': 'iPhone Case (All Models)',
+  'growth.purchase.listing866.title': '$25 Uber Gift Card',
+  'growth.purchase.listing2812.title': '$50 AirBnB Gift Card',
+
+  // Where are these listings from?
+
+
+  // August campaign
+  // TODO
 
   'growth.purchase.empty.details': ''
 }
