@@ -14,8 +14,12 @@ async function deployIdentity(
   await checkMetaMask(from)
 
   attestations = attestations || []
-  profile = profile || {}
-  profile.avatarUrl = profile.avatarUrl || undefined
+  profile = {
+    firstName: '',
+    lastName: '',
+    description: '',
+    ...profile
+  }
 
   let wallet = await hasProxy(from)
   if (!wallet) wallet = from
