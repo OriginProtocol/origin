@@ -68,17 +68,24 @@ class MarketplaceScreen extends Component {
   componentDidUpdate = prevProps => {
     if (prevProps.settings.language !== this.props.settings.language) {
       // Language has changed, need to reload the DApp
-      if (this.dappWebView) {
-        // Reinject the language
-        this.injectLanguage()
-      }
+      this.injectLanguage()
     }
+
+    // Check for active Ethereum address changing
     if (
       get(prevProps, 'wallet.activeAccount.address') !==
       get(this.props, 'wallet.activeAccount.address')
     ) {
       // Active account changed, update messaging keys
       this.injectMessagingKeys()
+    }
+
+    // Check for growth enrollment changing
+    if (
+      get(prevProps, 'onboarding.growth') !==
+      get(this.props, 'onboarding.growth')
+    ) {
+      this.injectGrowthAuthToken()
     }
   }
 
@@ -450,6 +457,23 @@ class MarketplaceScreen extends Component {
     }
   }
 
+  injectGrowthAuthToken = () => {
+    if (!this.props.onboarding.growth) {
+      return
+    }
+    const injectedJavaScript = `
+      (function() {
+        if (window && window.localStorage && window.webViewBridge) {
+          window.localStorage.growth_auth_token = '${this.props.onboarding.growth}';
+        }
+      })();
+    `
+    if (this.dappWebView) {
+      console.debug('Injecting growth auth token')
+      this.dappWebView.injectJavaScript(injectedJavaScript)
+    }
+  }
+
   /* Send a response back to the DApp using postMessage in the webview
    */
   handleBridgeResponse = (msgData, result) => {
@@ -468,6 +492,7 @@ class MarketplaceScreen extends Component {
   onWebViewLoad = async () => {
     // Enable proxy accounts
     this.injectEnableProxyAccounts()
+    this.injectGrowthAuthToken()
     // Set the language in the DApp to the same as the mobile app
     this.injectLanguage()
     // Inject scroll handler for pull to refresh function
