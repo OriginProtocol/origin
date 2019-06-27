@@ -16,15 +16,17 @@ const GalleryScroll = ({ pics = [] }) => {
   }, [scrollEl.current])
 
   return (
-    <div className="gallery-scroll-wrap">
-      <div ref={scrollEl} className="gallery-scroll">
-        {pics.map((pic, idx) => (
-          <div
-            className="pic"
-            key={idx}
-            style={{ backgroundImage: `url(${pic.urlExpanded})` }}
-          />
-        ))}
+    <>
+      <div className="gallery-scroll-wrap">
+        <div ref={scrollEl} className="gallery-scroll">
+          {pics.map((pic, idx) => (
+            <div
+              className="pic"
+              key={idx}
+              style={{ backgroundImage: `url(${pic.urlExpanded})` }}
+            />
+          ))}
+        </div>
       </div>
       {pics.length === 1 ? null : (
         <div className="ticks">
@@ -40,7 +42,7 @@ const GalleryScroll = ({ pics = [] }) => {
           ))}
         </div>
       )}
-    </div>
+    </>
   )
 }
 
@@ -49,25 +51,6 @@ export default GalleryScroll
 require('react-styl')(`
   .gallery-scroll-wrap
     position: relative
-    overflow: hidden
-    .ticks
-      display: flex
-      flex-direction: row
-      position: absolute
-      bottom: 10px
-      left: 0
-      width: 100%
-      justify-content: center
-      .tick
-        width: 10px
-        height: 10px
-        border-radius: 50%
-        background-color: #bbb
-        box-shadow: 0px 0px 1px 1px white
-        margin: 0 4px
-        &.active
-          background-color: white
-          box-shadow: 0px 0px 1px 2px #aaa
     .gallery-scroll
       overscroll-behavior-x: contain
       height: 50vh
@@ -94,5 +77,20 @@ require('react-styl')(`
         background-size: contain
         background-repeat: no-repeat
         background-position: center
+  .ticks
+    display: flex
+    flex-direction: row
+    justify-content: center
+    margin-top: 1rem
+    .tick
+      width: 6px
+      height: 6px
+      border-radius: 50%
+      background-color: var(--dark)
+      box-shadow: 0px 0px 1px 1px white
+      margin: 0 4px
+      opacity: 0.1
+      &.active
+        opacity: 1
 
 `)
