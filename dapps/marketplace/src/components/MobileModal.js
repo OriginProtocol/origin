@@ -52,6 +52,7 @@ export default class MobileModal extends Component {
     this.portal.removeEventListener('click', this.onClick)
     this.overlay.removeEventListener('click', this.onClick)
     document.body.removeChild(this.overlay)
+    document.body.removeChild(this.portal)
     clearTimeout(this.timeout)
   }
 
