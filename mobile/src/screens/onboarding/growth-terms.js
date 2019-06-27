@@ -21,7 +21,8 @@ class GrowthTermsScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isChecked: false,
+      isAcceptChecked: false,
+      isCertifyChecked: false,
       loading: true,
       eligible: null,
       countryName: null
@@ -117,10 +118,10 @@ class GrowthTermsScreen extends Component {
             style={{ padding: 20 }}
             onClick={() => {
               this.setState({
-                isChecked: !this.state.isChecked
+                isChecked: !this.state.isCertifyChecked
               })
             }}
-            isChecked={this.state.isChecked}
+            isChecked={this.state.isCertifyChecked}
             checkBoxColor="#455d75"
             uncheckedCheckBoxColor="#455d75"
             rightTextView={
@@ -140,7 +141,7 @@ class GrowthTermsScreen extends Component {
             size="large"
             type="primary"
             style={styles.button}
-            disabled={!this.state.isChecked}
+            disabled={!this.state.isCertifyChecked}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Continue', 'GrowthTermsScreen.continueButton')}
             onPress={() => this.setState({ eligible: true })}
@@ -201,6 +202,24 @@ class GrowthTermsScreen extends Component {
               </fbt>
             </Text>
           </View>
+          <CheckBox
+            style={{ padding: 20 }}
+            onClick={() => {
+              this.setState({
+                isAcceptChecked: !this.state.isAcceptChecked
+              })
+            }}
+            isChecked={this.state.isAcceptChecked}
+            checkBoxColor="#455d75"
+            uncheckedCheckBoxColor="#455d75"
+            rightTextView={
+              <Text style={{ fontSize: 16, marginLeft: 5, fontWeight: '300' }}>
+                <fbt desc="GrowthTermsScreen.acceptCheckboxText">
+                  I accept the terms and conditions
+                </fbt>
+              </Text>
+            }
+          />
         </View>
         <View style={styles.buttonsContainer}>
           <OriginButton
@@ -209,6 +228,7 @@ class GrowthTermsScreen extends Component {
             style={styles.button}
             textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Accept Terms', 'GrowthTermsScreen.acceptTermsButton')}
+            disabled={!this.state.isAcceptChecked}
             onPress={() => this.handleAcceptTerms()}
           />
           <OriginButton
