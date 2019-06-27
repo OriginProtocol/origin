@@ -220,4 +220,6 @@ require('react-styl')(`
           width: 100%
           .btn
             width: 100%
+        .form-group
+          margin-bottom: 3rem
 `)

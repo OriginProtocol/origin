@@ -189,6 +189,7 @@ require('react-styl')(`
       padding-top: 1rem
       .step-description
         font-size: 16px
+        margin-top: 2rem
         margin-bottom: 2rem
         text-align: center
 

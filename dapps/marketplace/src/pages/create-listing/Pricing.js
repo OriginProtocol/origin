@@ -17,8 +17,8 @@ class ListingPricing extends Component {
   }
 
   componentDidMount() {
-    if (this.quantityInput) {
-      this.quantityInput.focus()
+    if (this.priceInput) {
+      this.priceInput.focus()
     }
   }
 
@@ -63,6 +63,7 @@ class ListingPricing extends Component {
                   </label>
                   <div className="with-symbol">
                     <input
+                      ref={r => (this.priceInput = r)}
                       {...input('price')}
                       placeholder={fbt(
                         'Enter amount',

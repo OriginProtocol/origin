@@ -13,7 +13,7 @@ const ReviewListing = ({ listing, prev, children, ...props }) => {
         <Link to={prev} className="back d-md-none" />
         <fbt desc="createListing.review">Review</fbt>
       </h1>
-      <div className="step-description mb-0 mt-4">
+      <div className="step-description mb-0">
         <fbt desc="createListing.reviewDescription">
           Review your listing and click Publish to make it available on Origin
         </fbt>
