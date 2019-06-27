@@ -11,7 +11,8 @@ import StarRating from 'components/StarRating'
 import SendMessage from 'components/SendMessage'
 import Stages from 'components/TransactionStages'
 
-import WaitForFinalize from './_WaitForFinalize'
+import OfferAcceptedSeller from './_OfferAcceptedSeller'
+import OfferAcceptedBuyer from './_OfferAcceptedBuyer'
 
 const TransactionProgress = ({
   offer,
@@ -38,13 +39,13 @@ const TransactionProgress = ({
       if (offer.finalizes < +new Date() / 1000) {
         return <SellerFinalize {...props} refetch={refetch} />
       } else {
-        return <WaitForFinalize {...props} />
+        return <OfferAcceptedSeller {...props} />
       }
     } else if (offer.status === 0) {
       if (offer.withdrawnBy && offer.withdrawnBy.id !== offer.buyer.id) {
-        return <OfferRejected party="seller" {...props} />
+        return <OfferRejected viewedBy="seller" {...props} />
       } else {
-        return <OfferWithdrawn party="seller" {...props} />
+        return <OfferWithdrawn viewedBy="seller" {...props} />
       }
     } else {
       return <AcceptOrReject {...props} refetch={refetch} />
@@ -55,14 +56,15 @@ const TransactionProgress = ({
 
   if (offer.status === 2) {
     if (isBuyer || isSeller) {
-      return <ReviewAndFinalize {...props} refetch={refetch} />
+      //return <ReviewAndFinalize {...props} refetch={refetch} />
+      return <OfferAcceptedBuyer {...props} refetch={refetch} />
     }
     return <TransactionStages {...props} />
   } else if (offer.status === 0) {
     if (offer.withdrawnBy && offer.withdrawnBy.id !== offer.buyer.id) {
-      return <OfferRejected party="buyer" {...props} />
+      return <OfferRejected viewedBy="buyer" {...props} />
     } else {
-      return <OfferWithdrawn party="buyer" {...props} />
+      return <OfferWithdrawn viewedBy="buyer" {...props} />
     }
   } else if (offer.listing.__typename === 'FractionalListing') {
     return <WaitForSeller {...props} refetch={refetch} />
@@ -77,11 +79,14 @@ const AcceptOrReject = ({ offer, refetch, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
       <h4>
-        <fbt desc="Progress.offerHasBeenMade">Buyer has made an offer.</fbt>
+        <span className="positive-emphasis">
+          <fbt desc="Progress.congratulations">Congratulations!</fbt>{' '}
+        </span>
+        <fbt desc="Progress.offerHasBeenMade">An offer has been made on this listing.</fbt>
       </h4>
       <Stages className="mt-4" mini="true" offer={offer} />
       <div className="mt-4">
-        <fbt desc="Progress.acceptOrReject">Accept or reject it.</fbt>
+        <fbt desc="Progress.fundsInEscrow">The buyer's funds are being held in escrow. Click below to accept or reject this offer.</fbt>
       </div>
       <div className="actions">
         <RejectOffer
@@ -89,7 +94,7 @@ const AcceptOrReject = ({ offer, refetch, loading }) => (
           className="btn btn-outline-danger"
           refetch={refetch}
         >
-          <fbt desc="Progress.rejectOffer">Reject Offer</fbt>
+          <fbt desc="Progress.declineOffer">Decline Offer</fbt>
         </RejectOffer>
         <AcceptOffer
           offer={offer}
@@ -225,47 +230,55 @@ const WaitForSeller = ({ offer, refetch, loading, party }) => (
       <h4>
         <fbt desc="Progress.waitForSeller">Wait for seller</fbt>
       </h4>
-      <Stages className="mt-4" mini="true" offer={offer} />
+      <Stages className="my-4" mini="true" offer={offer} />
       <div className="help">
         <fbt desc="Progress.sellerWillReview">
           The seller will review your booking
         </fbt>
       </div>
-      <WithdrawOffer offer={offer} refetch={refetch} from={party} />
+      <WithdrawOffer className="mr-auto" offer={offer} refetch={refetch} from={party} />
     </div>
   </div>
 )
 
-const OfferWithdrawn = ({ offer, party, loading }) => (
+const OfferWithdrawn = ({ offer, viewedBy, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
       <h4>
-        <fbt desc="Progress.offerWithdrawn">Offer Withdrawn</fbt>
+        {viewedBy === 'seller'
+          ? fbt('This offer has been canceled.', 'Progress.offerHasBeenCanceled')
+          : fbt(`You've canceled this purchase.`, 'Progress.youCanceledThisPurchase')
+        }        
       </h4>
+      <Stages className="my-4" mini="true" offer={offer} />
       <div className="help mb-0">
-        {party === 'seller'
-          ? fbt('The buyer withdrew their offer', 'Progress.buyerWithdrew')
-          : fbt('You withdrew your offer', 'Progress.youWithdrew')}
+        {viewedBy === 'seller'
+          ? fbt(`The buyer's funds have been refunded.`, 'Progress.buyerFundsHaveBeendRefunded')
+          : fbt('Your funds have been refunded.', 'Progress.yourFundsHaveBeenRefunded')
+        }
       </div>
     </div>
-    <Stages mini="true" offer={offer} />
   </div>
 )
 
-const OfferRejected = ({ offer, party, loading }) => (
+const OfferRejected = ({ offer, viewedBy, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
       <h4>
-        <fbt desc="Progress.offerRejected">Offer Rejected</fbt>
+        {viewedBy === 'seller'
+          ? fbt(`You've declined this offer.`, 'Progress.youDeclinedOffer')
+          : fbt(`Your offer has been declined by the seller.`, 'Progress.sellerDeclinedOffer')
+        }
       </h4>
       <Stages className="mt-4" mini="true" offer={offer} />
       <div className="help mb-0 mt-3">
-        {party === 'seller'
-          ? fbt('You rejected this offer', 'Progress.youReject')
+        {viewedBy === 'seller'
+          ? fbt(`The buyer's funds have been refunded.`, 'Progress.buyerFundsRefunded')
           : fbt(
-              'Your offer was rejected by the seller',
-              'Progress.offerWasRejected'
-            )}
+              'Your funds have been refunded.',
+              'Progress.yourFundsRefunded'
+            )
+        }
       </div>
     </div>
   </div>
@@ -372,6 +385,8 @@ require('react-styl')(`
       display: flex
       width: 100%
       flex-direction: column
+    .positive-emphasis
+      color: var(--greenblue)
     h4
       font-weight: bold
       font-size: 24px
@@ -386,7 +401,6 @@ require('react-styl')(`
     .help
       font-size: 14px
       margin-bottom: 1.5rem
-      text-align: center
     .review
       font-size: 18px
       color: var(--dusk)
@@ -452,8 +466,10 @@ require('react-styl')(`
         width: 100vw
         height: 100%
       .top
-        padding: 15px 0px
+        padding: 30px 0px
         width: 100%
       .actions
         flex-direction: column-reverse
+        button:last-of-type
+          margin-bottom: 10px
 `)

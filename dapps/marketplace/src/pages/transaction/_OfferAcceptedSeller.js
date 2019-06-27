@@ -5,7 +5,7 @@ import { fbt } from 'fbt-runtime'
 import DisputeOffer from './mutations/DisputeOffer'
 import Stages from 'components/TransactionStages'
 
-class WaitForFinalize extends Component {
+class OfferAcceptedSeller extends Component {
   state = {}
 
   render() {
@@ -14,19 +14,18 @@ class WaitForFinalize extends Component {
       <div className="transaction-progress">
         <div className="top">
           <h4>
-            <fbt desc="WaitForFinalize.waitForBuyerToConfirm">
-              Wait for buyer to confirm receipt
+            <fbt desc="WaitForFinalize.youVeAcceptedOffer">
+              You've accepted this offer.
             </fbt>
           </h4>
           <Stages className="mt-4" mini="true" offer={offer} />
           <div className="help mt-3 mb-0">
-            <fbt desc="WaitForFinalize.makeSureYouFullfill">
-              Make sure you fulfill the order and wait for the buyer’s
-              confirmation
+            <fbt desc="WaitForFinalize.makeSureYouFullfillOrder">
+              Make sure to fulfill the order promptly. Message the buyer if there is any information that you need.
             </fbt>
           </div>
           <button
-            className="btn btn-link mt-2"
+            className="btn btn-link mt-2 mr-auto"
             onClick={() => this.setState({ open: true })}
             children=""
           >
@@ -38,7 +37,7 @@ class WaitForFinalize extends Component {
           <DisputeOffer
             offer={this.props.offer}
             party="seller"
-            className="btn btn-link withdraw mt-3"
+            className="btn btn-link withdraw mt-3 mr-auto"
           >
             <fbt desc="WaitForFinalize.reportProblme">Report a Problem</fbt>
           </DisputeOffer>
@@ -46,7 +45,7 @@ class WaitForFinalize extends Component {
 
         {!this.state.open ? null : (
           <Modal
-            className="fulfillment-modal"
+            className="offer-accepted-seller"
             onClose={() => this.setState({ open: false, shouldClose: false })}
             shouldClose={this.state.shouldClose}
           >
@@ -121,10 +120,10 @@ class WaitForFinalize extends Component {
   }
 }
 
-export default WaitForFinalize
+export default OfferAcceptedSeller
 
 require('react-styl')(`
-  .fulfillment-modal
+  .offer-accepted-seller
     max-width: 580px
 
     .content
@@ -159,6 +158,6 @@ require('react-styl')(`
       align-self: center
 
   @media (max-width: 576px)
-    .fulfillment-modal
+    .offer-accepted-seller
       padding: 1rem !important
 `)

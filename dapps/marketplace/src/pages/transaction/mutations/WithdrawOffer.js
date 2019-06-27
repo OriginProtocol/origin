@@ -14,6 +14,8 @@ import withWallet from 'hoc/withWallet'
 class WithdrawOffer extends Component {
   state = {}
   render() {
+    const { className } = this.props
+
     return (
       <Mutation
         mutation={WithdrawOfferMutation}
@@ -31,7 +33,7 @@ class WithdrawOffer extends Component {
         {(withdrawOffer, { client }) => (
           <>
             <button
-              className="btn btn-link withdraw"
+              className={`btn btn-link withdraw ${className ? className : ''}`}
               onClick={() => this.setState({ sure: true })}
               children={fbt('Withdraw Offer', 'Withdraw Offer')}
             />

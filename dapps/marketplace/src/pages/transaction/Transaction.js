@@ -238,7 +238,7 @@ require('react-styl')(`
     .horizontal-separator
       flex: 0 0 13%
       max-width: 13%
-     z div
+      > div
         width: 1px
         height: 100%
         background-color: #dde6ea
