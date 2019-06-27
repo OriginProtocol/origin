@@ -175,6 +175,7 @@ require('react-styl')(`
   .mobile-modal-light-open
     touch-action: none
     position: relative
+    overflow: scroll
     #app
       overflow: hidden !important
       max-height: 100% !important
@@ -194,7 +195,7 @@ require('react-styl')(`
       opacity: 1
   .mobile-modal-light
     touch-action: none
-    position: absolute
+    position: fixed
     z-index: 1000
     -webkit-transform: translate3d(0, 0, 0)
     opacity: 0
