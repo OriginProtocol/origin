@@ -10,7 +10,7 @@ const { tokenToNaturalUnits } = require('../src/util/token')
 
 function checkExpectedState(state, expectedState) {
   expect(state.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-  expect(state.actions.length).to.equal(41) // TODO: Adjust when adding listings
+  expect(state.actions.length).to.equal(31) // TODO: Adjust when adding listings
 
   const actionByRuleId = {}
   for(const action of state.actions) {
@@ -82,7 +82,7 @@ describe('Apollo adapter - July campaign', () => {
     expect(this.crules.levels[1]).to.be.an('object')
     expect(this.crules.levels[1].rules.length).to.equal(11)
     expect(this.crules.levels[2]).to.be.an('object')
-    expect(this.crules.levels[2].rules.length).to.equal(29) // TODO: adjust when adding new listings
+    expect(this.crules.levels[2].rules.length).to.equal(19) // TODO: adjust when adding new listings
 
     // Mock the getEvents method to use events from this.events.
     // When writing a test, be aware that this.events is global and shared with other tests.
@@ -298,66 +298,6 @@ describe('Apollo adapter - July campaign', () => {
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenToNaturalUnits(75), currency: 'OGN' }
-      },
-      ListingPurchase679: {
-        type: 'ListingIdPurchased',
-        status: 'Inactive',
-        rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(500), currency: 'OGN' }
-      },
-      ListingPurchase2555: {
-        type: 'ListingIdPurchased',
-        status: 'Inactive',
-        rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(250), currency: 'OGN' }
-      },
-      ListingPurchase1103: {
-        type: 'ListingIdPurchased',
-        status: 'Inactive',
-        rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(20), currency: 'OGN' }
-      },
-      ListingPurchase2812: {
-        type: 'ListingIdPurchased',
-        status: 'Inactive',
-        rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(15), currency: 'OGN' }
-      },
-      ListingPurchase866: {
-        type: 'ListingIdPurchased',
-        status: 'Inactive',
-        rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(15), currency: 'OGN' }
-      },
-      ListingPurchase297: {
-        type: 'ListingIdPurchased',
-        status: 'Inactive',
-        rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(500), currency: 'OGN' }
-      },
-      ListingPurchase289: {
-        type: 'ListingIdPurchased',
-        status: 'Inactive',
-        rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(500), currency: 'OGN' }
-      },
-      ListingPurchase639: {
-        type: 'ListingIdPurchased',
-        status: 'Inactive',
-        rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(20), currency: 'OGN' }
-      },
-      ListingPurchase471: {
-        type: 'ListingIdPurchased',
-        status: 'Inactive',
-        rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(20), currency: 'OGN' }
-      },
-      ListingPurchase292: {
-        type: 'ListingIdPurchased',
-        status: 'Inactive',
-        rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(500), currency: 'OGN' }
       }
       // TODO: add more listings
     }
