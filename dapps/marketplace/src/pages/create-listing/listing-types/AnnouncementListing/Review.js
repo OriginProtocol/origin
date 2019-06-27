@@ -22,7 +22,7 @@ const ReviewAnnouncementListing = props => {
             <fbt desc="create.review.category">Category</fbt>
           </dt>
           <dd>
-            <Category listing={listing} />
+            <Category listing={listing} showPrimary={false} />
           </dd>
         </dl>
       </div>

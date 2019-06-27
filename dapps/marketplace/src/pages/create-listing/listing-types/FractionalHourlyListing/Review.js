@@ -36,7 +36,7 @@ const ReviewFractionalHourlyListing = props => {
             <fbt desc="create.review.category">Category</fbt>
           </dt>
           <dd>
-            <Category listing={listing} />
+            <Category listing={listing} showPrimary={false} />
           </dd>
           <dt>
             <fbt desc="lisitng.review.time-zone">Time Zone</fbt>

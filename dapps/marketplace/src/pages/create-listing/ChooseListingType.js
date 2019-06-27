@@ -61,7 +61,7 @@ const ChooseListingType = props => {
           </div>
         </div>
         <div className="col-md-4">
-          <div className="gray-box">
+          <div className="gray-box d-none d-md-block">
             <DownloadApp />
           </div>
         </div>
@@ -132,8 +132,6 @@ require('react-styl')(`
 
   @media (max-width: 767.98px)
     .create-listing
-      .step-description
-        font-size: 16px
       .choose-category
         border: unset
         padding: unset

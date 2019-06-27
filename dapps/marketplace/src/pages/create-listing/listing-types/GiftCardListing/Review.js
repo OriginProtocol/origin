@@ -50,7 +50,7 @@ const ReviewUnitListing = props => {
             <fbt desc="create.review.category">Category</fbt>
           </dt>
           <dd>
-            <Category listing={listing} />
+            <Category listing={listing} showPrimary={false} />
           </dd>
           <dt>
             <fbt desc="create.review.giftcard.retailer">Retailer</fbt>
