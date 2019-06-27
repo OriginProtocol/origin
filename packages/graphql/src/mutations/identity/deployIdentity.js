@@ -4,7 +4,7 @@ import validator from '@origin/validator'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import validateAttestation from '../../utils/validateAttestation'
-import { hasProxy, resetProxyCache } from '../../utils/proxy'
+import { hasProxy, proxyOwner, resetProxyCache } from '../../utils/proxy'
 import costs from '../_gasCost.js'
 
 async function deployIdentity(
@@ -21,8 +21,10 @@ async function deployIdentity(
     ...profile
   }
 
-  let wallet = await hasProxy(from)
-  if (!wallet) wallet = from
+  const proxy = await hasProxy(from)
+  const owner = !proxy ? await proxyOwner(from) : null
+  const wallet = proxy || from
+  const accounts = owner ? [wallet, owner] : [wallet]
 
   attestations = attestations
     .map(a => {
@@ -36,7 +38,7 @@ async function deployIdentity(
         return null
       }
     })
-    .filter(a => validateAttestation(wallet, a))
+    .filter(a => validateAttestation(accounts, a))
 
   profile.schemaId = 'https://schema.originprotocol.com/profile_2.0.0.json'
   profile.ethAddress = wallet

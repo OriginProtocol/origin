@@ -220,10 +220,14 @@ export default function txHelper({
 
         return resolve(relayerResponse)
       } catch (err) {
-        // Re-throw in a timeout so we can catch the error in tests
-        setTimeout(() => {
-          throw err
-        }, 1)
+        if (String(err).match(/denied message signature/)) {
+          return reject(err)
+        } else {
+          // Re-throw in a timeout so we can catch the error in tests
+          setTimeout(() => {
+            throw err
+          }, 1)
+        }
       }
     }
 

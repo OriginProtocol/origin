@@ -73,11 +73,16 @@ export default async function relayerHelper({ tx, from, proxy, to }) {
   let signature, sigErr
   try {
     signature = await contracts.web3Exec.eth.personal.sign(dataToSign, from)
-  } catch (e) {
-    try {
-      signature = await contracts.web3Exec.eth.sign(dataToSign, from)
-    } catch (e) {
-      /* Ignore */
+  } catch (err) {
+    // Don't try fallback if user declined signature
+    if (String(err).match(/denied message signature/)) {
+      sigErr = err
+    } else {
+      try {
+        signature = await contracts.web3Exec.eth.sign(dataToSign, from)
+      } catch (err) {
+        sigErr = err
+      }
     }
   }
   if (!signature) {
