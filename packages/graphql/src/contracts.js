@@ -9,8 +9,8 @@ import { exchangeAbi, factoryAbi } from './contracts/UniswapExchange'
 import Web3 from 'web3'
 import EventSource from '@origin/eventsource'
 import { patchWeb3Contract } from '@origin/event-cache'
+import { initStandardSubproviders, createEngine } from '@origin/web3-provider'
 
-import { initStandardSubproviders, createEngine } from './providers'
 import pubsub from './utils/pubsub'
 import currencies from './utils/currencies'
 
