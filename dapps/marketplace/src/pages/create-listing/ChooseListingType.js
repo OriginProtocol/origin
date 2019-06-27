@@ -132,8 +132,6 @@ require('react-styl')(`
 
   @media (max-width: 767.98px)
     .create-listing
-      .step-description
-        font-size: 16px
       .choose-category
         border: unset
         padding: unset
