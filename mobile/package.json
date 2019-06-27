@@ -92,7 +92,8 @@
     "@origin/messaging-client": "../packages/messaging-client",
     "@origin/services": "../packages/services",
     "@origin/validator": "../packages/validator",
-    "@origin/mobile-bridge": "../packages/mobile-bridge"
+    "@origin/mobile-bridge": "../packages/mobile-bridge",
+    "@origin/web3-provider": "../packages/web3-provider"
   },
   "rnpm": {
     "assets": [
