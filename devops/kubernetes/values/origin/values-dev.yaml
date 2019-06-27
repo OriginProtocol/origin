@@ -34,7 +34,7 @@ messagingImageTag: 'cdc2ff6'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '0e41ee7'
+notificationsImageTag: 'cdc2ff6'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
