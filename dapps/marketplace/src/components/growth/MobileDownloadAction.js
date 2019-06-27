@@ -29,7 +29,10 @@ function MobileDownloadAction(props) {
 
     return (
       <div className={`d-flex mt-1 ${!isMobile ? 'mr-3' : ''}`}>
-        <img className="mr-2 download-icon" src="images/app-store-button@2x.png" />
+        <img
+          className="mr-2 download-icon"
+          src="images/app-store-button@2x.png"
+        />
         <img className="download-icon" src="images/android-button@2x.png" />
       </div>
     )
@@ -79,11 +82,11 @@ function MobileDownloadAction(props) {
             {actionCompleted && (
               <fbt desc="growth.mobileRewards.earned">Earned</fbt>
             )}
-              <img className="ogn-icon-small" src="images/ogn-icon.svg" />
-              <span className="ogn-value">
-                {actionCompleted && formatTokens(rewardEarned.amount)}
-                {!actionCompleted && formatTokens(reward.amount)}
-              </span>
+            <img className="ogn-icon-small" src="images/ogn-icon.svg" />
+            <span className="ogn-value">
+              {actionCompleted && formatTokens(rewardEarned.amount)}
+              {!actionCompleted && formatTokens(reward.amount)}
+            </span>
           </div>
         </div>
         {isMobile && storeBadges()}

@@ -14,7 +14,10 @@ function ActionGroup(props) {
     notCompletedActions
   } = props
 
-  let iconSource, title, locked = false, unlockConditionText
+  let iconSource,
+    title,
+    locked = false,
+    unlockConditionText
 
   if (type === 'verifications') {
     iconSource = 'images/growth/verifications-icon.svg'
@@ -48,7 +51,9 @@ function ActionGroup(props) {
       )
     }
 
-    iconSource = locked ? 'images/growth/invitations-icon-disabled.svg' : 'images/growth/invitations-icon.svg'
+    iconSource = locked
+      ? 'images/growth/invitations-icon-disabled.svg'
+      : 'images/growth/invitations-icon.svg'
     title = fbt('Invitations', 'growth.actionGroup.invitations')
   }
 
@@ -115,7 +120,9 @@ function ActionGroup(props) {
     >
       <div className="icon-holder">
         <img className="icon" src={iconSource} />
-        {locked && <img className="lock-icon" src="images/growth/lock-icon.svg" />}
+        {locked && (
+          <img className="lock-icon" src="images/growth/lock-icon.svg" />
+        )}
       </div>
       <div className="d-flex flex-column">
         <div className="title">{title}</div>
@@ -125,28 +132,30 @@ function ActionGroup(props) {
           </div>
         )}
       </div>
-      {!locked && renderRewardHolder(
-        sumActionRewards(
-          type === 'invitations'
-            ? [...completedActions, ...notCompletedActions]
-            : notCompletedActions,
-          type,
-          'available'
-        ),
-        fbt('Available', 'RewardActions.available'),
-        'ml-auto'
-      )}
-      {!locked && renderRewardHolder(
-        sumActionRewards(
-          type === 'invitations'
-            ? [...completedActions, ...notCompletedActions]
-            : completedActions,
-          type,
-          'earned'
-        ),
-        fbt('Earned', 'RewardActions.earned'),
-        'ml-3'
-      )}
+      {!locked &&
+        renderRewardHolder(
+          sumActionRewards(
+            type === 'invitations'
+              ? [...completedActions, ...notCompletedActions]
+              : notCompletedActions,
+            type,
+            'available'
+          ),
+          fbt('Available', 'RewardActions.available'),
+          'ml-auto'
+        )}
+      {!locked &&
+        renderRewardHolder(
+          sumActionRewards(
+            type === 'invitations'
+              ? [...completedActions, ...notCompletedActions]
+              : completedActions,
+            type,
+            'earned'
+          ),
+          fbt('Earned', 'RewardActions.earned'),
+          'ml-3'
+        )}
     </Link>
   )
 }
