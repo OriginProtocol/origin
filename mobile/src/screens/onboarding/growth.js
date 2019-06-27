@@ -95,11 +95,7 @@ const mapDispatchToProps = dispatch => ({
   setGrowth: value => dispatch(setGrowth(value))
 })
 
-export default withOnboardingSteps(
-  connect(
-    mapDispatchToProps
-  )(GrowthScreen)
-)
+export default withOnboardingSteps(connect(mapDispatchToProps)(GrowthScreen))
 
 const styles = StyleSheet.create({
   ...OnboardingStyles
