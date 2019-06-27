@@ -9,44 +9,46 @@ import OriginButton from 'components/origin-button'
 const IMAGES_PATH = '../../assets/images/'
 
 const NoRewardsCard = props => (
-  <View style={styles.card}>
-    <View style={styles.imageContainer}>
-      <Image
-        resizeMethod={'scale'}
-        resizeMode={'cover'}
-        source={require(IMAGES_PATH + 'tout-header-image.png')}
-        style={styles.image}
-      />
-    </View>
-    <Text style={styles.heading}>
-      <fbt desc="NoRewardsCard.title">
-        Are you sure you don&apos;t want Origin Rewards?
-      </fbt>
-    </Text>
-    <Text style={styles.content}>
-      <Text style={styles.subtitle}>
-        <fbt desc="NoRewardsCard.subtitle">
-          Your new wallet will be ineligible to earn OGN.
+  <View style={styles.cardContainer}>
+    <View style={styles.card}>
+      <View style={styles.imageContainer}>
+        <Image
+          resizeMethod={'scale'}
+          resizeMode={'cover'}
+          source={require(IMAGES_PATH + 'tout-header-image.png')}
+          style={styles.image}
+        />
+      </View>
+      <Text style={styles.heading}>
+        <fbt desc="NoRewardsCard.title">
+          Are you sure you don&apos;t want Origin Rewards?
         </fbt>
       </Text>
-    </Text>
-    <View style={styles.buttonContainer}>
-      <OriginButton
-        size="large"
-        type="primary"
-        textStyle={{ fontSize: 18, fontWeight: '900' }}
-        title={fbt("I'm sure", 'NoRewardsCard.continue')}
-        onPress={props.onConfirm}
-        style={{ marginBottom: 10 }}
-      />
-      <OriginButton
-        size="large"
-        type="primary"
-        textStyle={{ fontSize: 18, fontWeight: '900' }}
-        title={fbt('No, wait', 'NoRewardsCard.goBack')}
-        onPress={props.onRequestClose}
-        outline
-      />
+      <Text style={styles.content}>
+        <Text style={styles.subtitle}>
+          <fbt desc="NoRewardsCard.subtitle">
+            Your new wallet will be ineligible to earn OGN.
+          </fbt>
+        </Text>
+      </Text>
+      <View style={styles.buttonContainer}>
+        <OriginButton
+          size="large"
+          type="primary"
+          textStyle={{ fontSize: 18, fontWeight: '900' }}
+          title={fbt("I'm sure", 'NoRewardsCard.continue')}
+          onPress={props.onConfirm}
+          style={{ marginBottom: 10 }}
+        />
+        <OriginButton
+          size="large"
+          type="primary"
+          textStyle={{ fontSize: 18, fontWeight: '900' }}
+          title={fbt('No, wait', 'NoRewardsCard.goBack')}
+          onPress={props.onRequestClose}
+          outline
+        />
+      </View>
     </View>
   </View>
 )
@@ -54,6 +56,10 @@ const NoRewardsCard = props => (
 export default NoRewardsCard
 
 const styles = StyleSheet.create({
+  cardContainer: {
+    flex: 1,
+    justifyContent: 'center'
+  },
   buttonContainer: {
     paddingBottom: 10
   },
@@ -85,7 +91,6 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: 'white',
     borderRadius: 20,
-    marginTop: 'auto',
     paddingHorizontal: 20,
     paddingVertical: 30,
     marginHorizontal: 20
