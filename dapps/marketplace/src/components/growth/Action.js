@@ -22,6 +22,7 @@ function Action(props) {
     !detailsKey || detailsKey === 'growth.purchase.empty.details'
   const { isMobile, onMobileLockClick } = props
 
+  //TODO: UNCOMMENT THIS!
   //const actionLocked = status === 'Inactive'
   const actionLocked = false
   const actionCompleted = ['Exhausted', 'Completed'].includes(status)
