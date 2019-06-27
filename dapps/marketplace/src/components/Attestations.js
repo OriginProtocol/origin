@@ -25,16 +25,6 @@ const Attestations = ({ profile = {}, small, className }) => {
           <div className={`attestation ${attestation.id}`} />
         </Tooltip>
       ))}
-      <div className={`attestation email`} />
-      <div className={`attestation facebook`} />
-      <div className={`attestation phone`} />
-      <div className={`attestation twitter`} />
-      <div className={`attestation airbnb`} />
-      <div className={`attestation google`} />
-      <div className={`attestation website`} />
-      <div className={`attestation github`} />
-      <div className={`attestation linkedin`} />
-      <div className={`attestation kakao`} />
     </div>
   )
 }
