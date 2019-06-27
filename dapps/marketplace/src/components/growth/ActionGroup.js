@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { fbt } from 'fbt-runtime'
 import { formatTokens } from 'utils/growthTools'
 import Link from 'components/Link'
+
+const GrowthEnum = require('Growth$FbtEnum')
 
 function ActionGroup(props) {
   const {
@@ -12,7 +14,7 @@ function ActionGroup(props) {
     notCompletedActions
   } = props
 
-  let iconSource, title
+  let iconSource, title, locked = false, unlockConditionText
 
   if (type === 'verifications') {
     iconSource = 'images/growth/verifications-icon.svg'
@@ -21,7 +23,32 @@ function ActionGroup(props) {
     iconSource = 'images/growth/purchases-icon.svg'
     title = fbt('Purchases', 'growth.actionGroup.purchases')
   } else if (type === 'invitations') {
-    iconSource = 'images/growth/invitations-icon.svg'
+    const invitationAction = completedActions[0]
+    locked = invitationAction.status === 'Inactive'
+
+    if (locked) {
+      unlockConditionText = (
+        <Fragment>
+          <fbt desc="RewardActions.requires">Requires:</fbt>{' '}
+          {invitationAction.unlockConditions
+            .map(unlockCondition => {
+              return GrowthEnum[unlockCondition.messageKey] ? (
+                <fbt desc="growth">
+                  <fbt:enum
+                    enum-range={GrowthEnum}
+                    value={unlockCondition.messageKey}
+                  />
+                </fbt>
+              ) : (
+                'Missing translation'
+              )
+            })
+            .join(', ')}
+        </Fragment>
+      )
+    }
+
+    iconSource = locked ? 'images/growth/invitations-icon-disabled.svg' : 'images/growth/invitations-icon.svg'
     title = fbt('Invitations', 'growth.actionGroup.invitations')
   }
 
@@ -84,11 +111,21 @@ function ActionGroup(props) {
       className={`growth-action-group d-flex align-items-center ${
         isMobile ? 'mobile' : ''
       } ${hasBorder ? 'with-border' : ''}`}
-      to={`campaigns/${type}`}
+      to={locked ? '' : `campaigns/${type}`}
     >
-      <img className="icon" src={iconSource} />
-      <div className="title">{title}</div>
-      {renderRewardHolder(
+      <div className="icon-holder">
+        <img className="icon" src={iconSource} />
+        {locked && <img className="lock-icon" src="images/growth/lock-icon.svg" />}
+      </div>
+      <div className="d-flex flex-column">
+        <div className="title">{title}</div>
+        {locked && unlockConditionText && (
+          <div className="requirement pr-2 d-flex align-items-center ">
+            {unlockConditionText}
+          </div>
+        )}
+      </div>
+      {!locked && renderRewardHolder(
         sumActionRewards(
           type === 'invitations'
             ? [...completedActions, ...notCompletedActions]
@@ -99,7 +136,7 @@ function ActionGroup(props) {
         fbt('Available', 'RewardActions.available'),
         'ml-auto'
       )}
-      {renderRewardHolder(
+      {!locked && renderRewardHolder(
         sumActionRewards(
           type === 'invitations'
             ? [...completedActions, ...notCompletedActions]
@@ -122,10 +159,14 @@ require('react-styl')(`
   .growth-action-group.mobile
     padding-top: 20px
     padding-bottom: 20px
+    .lock-icon
+      width: 16px
     .icon
       width: 40px
     .title
       font-size: 18px
+      margin-left: 11px
+    .requirement
       margin-left: 11px
     .act-group-ogn-icon
       width: 14px
@@ -138,6 +179,17 @@ require('react-styl')(`
     padding-top: 30px
     padding-bottom: 30px
     cursor: pointer
+    .requirement
+      font-size: 14px
+      color: #455d75
+      margin-left: 25px
+    .icon-holder
+      position: relative
+    .lock-icon
+      position: absolute
+      width: 24px
+      right: -2px
+      bottom: 0px  
     .icon
       width: 60px
     .title

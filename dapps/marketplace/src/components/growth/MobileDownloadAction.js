@@ -2,11 +2,6 @@ import React from 'react'
 import { fbt } from 'fbt-runtime'
 import numberFormat from 'utils/numberFormat'
 
-const appStoreLink =
-  'https://itunes.apple.com/us/app/origin-marketplace/id1446091928'
-const playStoreLink =
-  'https://play.google.com/store/apps/details?id=com.origincatcher'
-
 function MobileDownloadAction(props) {
   if (!props.action) return ''
 
@@ -29,17 +24,13 @@ function MobileDownloadAction(props) {
     )
   }
 
-  const storeLinks = () => {
+  const storeBadges = () => {
     if (actionCompleted) return ''
 
     return (
       <div className={`d-flex mt-1 ${!isMobile ? 'mr-3' : ''}`}>
-        <a className="mr-2" href={appStoreLink}>
-          <img className="download-icon" src="images/app-store-button@2x.png" />
-        </a>
-        <a href={playStoreLink}>
-          <img className="download-icon" src="images/android-button@2x.png" />
-        </a>
+        <img className="mr-2 download-icon" src="images/app-store-button@2x.png" />
+        <img className="download-icon" src="images/android-button@2x.png" />
       </div>
     )
   }
@@ -49,6 +40,9 @@ function MobileDownloadAction(props) {
       className={`mobile-rewards-box d-flex ${
         !isMobile ? 'align-items-center' : 'mobile'
       }`}
+      onClick={() => {
+        window.open('https://www.originprotocol.com/mobile', 'blank')
+      }}
     >
       <div className="featured">
         <fbt desc="growth.mobileRewards.featured">FEATURED</fbt>
@@ -92,9 +86,9 @@ function MobileDownloadAction(props) {
               </span>
           </div>
         </div>
-        {isMobile && storeLinks()}
+        {isMobile && storeBadges()}
       </div>
-      {!isMobile && storeLinks()}
+      {!isMobile && storeBadges()}
     </div>
   )
 }
@@ -103,6 +97,7 @@ export default MobileDownloadAction
 
 require('react-styl')(`
   .mobile-rewards-box
+    cursor: pointer
     border-radius: 10px
     background-color: #f3f7f9
     margin-top: 30px
