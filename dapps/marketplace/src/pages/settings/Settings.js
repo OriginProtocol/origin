@@ -88,13 +88,18 @@ class Settings extends Component {
     )
   }
 
-  toggleDeveloperMode(isEnabled) {
+  toggleDeveloperMode(setNetwork, isEnabled) {
+    const configUpdate = {}
     if (isEnabled) {
       window.localStorage.devModeEnabled = true
+      configurableFields.forEach(key => {
+        configUpdate[key] = devModeSettings.get(key)
+      })
     } else {
       delete window.localStorage.devModeEnabled
     }
     this.setState({ devModeEnabled: isEnabled })
+    this.saveConfig(setNetwork, configUpdate)
   }
 
   render() {
@@ -221,7 +226,9 @@ class Settings extends Component {
                           toggled={true}
                           initialToggleState={this.state.devModeEnabled}
                           className="float-right"
-                          onClickHandler={this.toggleDeveloperMode}
+                          onClickHandler={on =>
+                            this.toggleDeveloperMode(setNetwork, on)
+                          }
                         />
                       </div>
                     </div>

@@ -100,6 +100,7 @@ export function setNetwork(net, customConfig) {
   let config = JSON.parse(JSON.stringify(Configs[net]))
   if (
     isBrowser &&
+    window.localStorage.devModeEnabled &&
     window.localStorage.devModeSettings &&
     window.localStorage.devModeSettings !== 'undefined'
   ) {
