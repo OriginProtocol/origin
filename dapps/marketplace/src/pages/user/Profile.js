@@ -353,7 +353,8 @@ class UserProfile extends Component {
 
             this.setState({
               deployIdentity: providerName,
-              unpublishedAttestations
+              unpublishedAttestations,
+              [providerName]: false
             })
           }}
         />
