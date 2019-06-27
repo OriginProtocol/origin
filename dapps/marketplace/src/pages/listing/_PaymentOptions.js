@@ -30,27 +30,6 @@ const NotEnoughFunds = ({ noEthOrDai, daiPrice, ethPrice }) => (
   </div>
 )
 
-const PayWithDai = () => (
-  <fbt desc="paymentOptions.payWithDai">
-    Your DAI will be transferred to an escrow contract and held until the sale
-    is completed.
-  </fbt>
-)
-
-const PayWithEth = () => (
-  <fbt desc="paymentOptions.payWithEth">
-    Your ETH will be transferred to an escrow contract and held until the sale
-    is completed.
-  </fbt>
-)
-
-const SwapEthToDai = () => (
-  <fbt desc="paymentOptions.swapEthToDai">
-    ETH amount is an approximation and will be converted to DAI before being
-    transferred to an escrow contract.
-  </fbt>
-)
-
 const PaymentOptions = ({
   acceptedTokens,
   value,
@@ -78,45 +57,17 @@ const PaymentOptions = ({
   const daiPrice = <Price price={price} target="token-DAI" className="bold" />
 
   let cannotPurchase = false,
-    content,
-    needsSwap = false,
     noEthOrDai = false
 
-  if (acceptsDai && acceptsEth && daiActive) {
-    if (hasBalance) {
-      content = <PayWithDai />
-    } else if (!hasBalance && !hasEthBalance) {
-      cannotPurchase = true
-      noEthOrDai = true
-      content = <NotEnoughFunds noEthOrDai />
-    } else {
-      needsSwap = true
-      content = <SwapEthToDai ethPrice={ethPrice} />
-    }
-  } else if (acceptsDai && acceptsEth && ethActive) {
-    if (hasBalance) {
-      content = <PayWithEth />
-    } else {
-      cannotPurchase = true
-      content = <NotEnoughFunds />
-    }
-  } else if (acceptsDai) {
-    if (hasBalance) {
-      content = <PayWithDai />
-    } else if (hasEthBalance) {
-      needsSwap = true
-      content = <SwapEthToDai ethPrice={ethPrice} />
-    } else {
-      cannotPurchase = true
-      content = <NotEnoughFunds />
-    }
-  } else if (acceptsEth) {
-    if (hasBalance) {
-      content = <PayWithEth />
-    } else {
-      cannotPurchase = true
-      content = <NotEnoughFunds />
-    }
+  if (acceptsDai && acceptsEth && daiActive && !hasBalance && !hasEthBalance) {
+    cannotPurchase = true
+    noEthOrDai = true
+  } else if (
+    (acceptsDai && acceptsEth && ethActive && !hasBalance) ||
+    (acceptsDai && !hasBalance && !hasEthBalance) ||
+    (acceptsEth && !hasBalance)
+  ) {
+    cannotPurchase = true
   }
 
   return (
@@ -128,21 +79,7 @@ const PaymentOptions = ({
           noEthOrDai={noEthOrDai}
         />
       ) : (
-        <>
-          <div className="payment-total">
-            <span>
-              <fbt desc="paymentOptions.payment">Payment</fbt>
-            </span>
-            <span className={cannotPurchase ? 'danger' : ''}>
-              {needsSwap || ethActive ? ethPrice : daiPrice}
-            </span>
-          </div>
-          {ethActive || hasBalance || needsSwap ? null : (
-            <div className="exchanged">{ethPrice}</div>
-          )}
-          <div className="help">{content}</div>
-          {children}
-        </>
+        children
       )}
     </div>
   )
@@ -152,9 +89,7 @@ export default withWeb3(withWallet(withCanTransact(PaymentOptions)))
 
 require('react-styl')(`
   .payment-options
-    border-top: 1px solid var(--light)
-    padding-top: 1.5rem
-    margin-top: 1.5rem
+    margin: 1rem 0
     .bold
       font-weight: bold
     .payment-total

@@ -441,7 +441,6 @@ require('react-styl')(`
       &.multi,&.fractional
         .price
           padding-bottom: 1.5rem
-          border-bottom: 1px solid #dde6ea
       &.fractional
         .choose-dates
           display: flex;
@@ -523,6 +522,21 @@ require('react-styl')(`
         .price
           margin-bottom: 0
           font-size: 22px
+        &.fractional, &.multi, &.single
+          display: flex
+          margin-bottom: 0.5rem
+          .price
+            flex: auto 1 1
+            padding-bottom: 0
+          .payment-options
+            margin: 0
+            flex: auto 0 0
+            .btn
+              font-size: 14px
+              padding: 0.5rem 0.9rem
+        &.multi
+          .price
+            padding-bottom: 0.5rem
 
   @media (min-width: 1200px)
     .listing-detail.container
