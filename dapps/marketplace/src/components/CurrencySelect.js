@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import Dropdown from 'components/Dropdown'
 import { Currencies, CurrenciesByKey } from 'constants/Currencies'
 
-const CurrencySelect = ({ value, onChange }) => {
+const CurrencySelect = ({ value, onChange, showCode = true }) => {
   const [open, setOpen] = useState(false)
   if (!CurrenciesByKey[value]) {
     value = Currencies[0][0]
@@ -12,7 +12,7 @@ const CurrencySelect = ({ value, onChange }) => {
     return (
       <div className="currency-select-dropdown usd">
         <span data-content={CurrenciesByKey[value][2]}>
-          {CurrenciesByKey[value][1]}
+          {showCode ? `${CurrenciesByKey[value][1]} ` : null}
         </span>
       </div>
     )
@@ -48,9 +48,9 @@ const CurrencySelect = ({ value, onChange }) => {
           e.preventDefault()
           setOpen(!open)
         }}
-        children={CurrenciesByKey[value][1]}
       >
-        {CurrenciesByKey[value][1]} <i />
+        {showCode ? `${CurrenciesByKey[value][1]} ` : null}
+        <i />
       </span>
     </Dropdown>
   )
@@ -60,25 +60,25 @@ export default CurrencySelect
 
 require('react-styl')(`
   .currency-select-dropdown
-    position: absolute;
-    right: 10px;
-    top: 12px;
-    font-weight: bold;
-    font-size: 14px;
+    position: absolute
+    right: 0
+    top: 12px
+    font-weight: bold
+    font-size: 14px
     span
-      padding: 4px 12px 4px 12px;
-      border-radius: 16px;
-      background: var(--pale-grey);
-      background-repeat: no-repeat;
-      background-position: 6px center;
-      background-size: 17px;
+      padding: 4px 5px
+      border-radius: 16px
+      background: var(--pale-grey)
+      background-repeat: no-repeat
+      background-position: 6px center
+      background-size: 17px
       color: var(--steel)
-
       i
         position: relative
         display: inline-block
         // height should be double border
         height: 12px
+        width: 12px
         vertical-align: -4px
         margin: 0 8px 0 2px
         &:before,&:after
@@ -95,30 +95,29 @@ require('react-styl')(`
           // thickness
           top: -3px;
           // background color
-          border-top-color: var(--pale-grey);
+          border-top-color: var(--pale-grey)
       &.hover:hover i:before
         border-top-color: var(--pale-grey)
       &.hover:hover i:after
         border-top-color: var(--steel)
 
       &::before
-        content: attr(data-content);
-        margin-right: 0.25rem;
-        background-color: var(--steel);
-        color: var(--white);
-        width: 18px;
-        display: inline-block;
-        border-radius: 1rem;
-        line-height: 18px;
-        text-align: center;
-        font-weight: bold;
-        font-size: 14px;
+        content: attr(data-content)
+        margin-right: 0.25rem
+        background-color: var(--steel)
+        color: var(--white)
+        width: 18px
+        display: inline-block
+        border-radius: 1rem
+        line-height: 18px
+        text-align: center
+        font-weight: bold
+        font-size: 14px
       &.hover:hover
         cursor: pointer
-        background-color: var(--steel);
+        background-color: var(--steel)
         color: var(--white)
         &::before
-          background-color: var(--white);
-          color: var(--steel);
-
+          background-color: var(--white)
+          color: var(--steel)
 `)

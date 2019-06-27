@@ -1,99 +1,33 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
 
-import Wallet from 'components/Wallet'
+import GalleryScroll from 'components/GalleryScroll'
 import Category from 'components/Category'
-import Link from 'components/Link'
 import FormattedDescription from 'components/FormattedDescription'
 
-import CreateListing from '../../mutations/CreateListing'
-import UpdateListing from '../../mutations/UpdateListing'
+import Review from '../../Review'
 
-const Review = ({ listing, ...props }) => (
-  <div className="row create-listing-review">
-    <div className="col-md-8">
-      <h2>
-        <fbt desc="create.review.title">Review your listing</fbt>
-      </h2>
-      <div className="detail">
-        <div className="row">
-          <div className="col-12 col-sm-3 label">
-            <fbt desc="create.review.title">Title</fbt>
-          </div>
-          <div className="col-12 col-sm-9">{listing.title}</div>
+const ReviewAnnouncementListing = props => {
+  const listing = props.listing
+  return (
+    <Review {...props}>
+      <div className="listing-review">
+        <div className="title">{listing.title}</div>
+        <GalleryScroll pics={listing.media} />
+        <div className="description">
+          <FormattedDescription text={listing.description} />
         </div>
-        <div className="row">
-          <div className="col-12 col-sm-3 label">
+        <dl>
+          <dt>
             <fbt desc="create.review.category">Category</fbt>
-          </div>
-          <div className="col-12 col-sm-9">
+          </dt>
+          <dd>
             <Category listing={listing} />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-12 col-sm-3 label">
-            <fbt desc="create.review.description">Description</fbt>
-          </div>
-          <div className="col-12 col-sm-9">
-            <FormattedDescription text={listing.description} />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-12 col-sm-3 label">
-            <fbt desc="create.review.photos">Photos</fbt>
-          </div>
-          <div className="col-12 col-sm-9">
-            {listing.media.length ? (
-              <div className="photos">
-                {listing.media.map((image, idx) => (
-                  <div
-                    key={idx}
-                    className="photo-row"
-                    style={{ backgroundImage: `url(${image.urlExpanded})` }}
-                  />
-                ))}
-              </div>
-            ) : (
-              <i>
-                <fbt desc="create.review.no photos">No Photos</fbt>
-              </i>
-            )}
-          </div>
-        </div>
+          </dd>
+        </dl>
       </div>
+    </Review>
+  )
+}
 
-      <div className="actions">
-        <Link className="btn btn-outline-primary" to={props.prev}>
-          <fbt desc="back">Back</fbt>
-        </Link>
-        {listing.id ? (
-          <UpdateListing
-            listing={listing}
-            refetch={props.refetch}
-            className="btn btn-primary"
-            children={fbt('Done', 'Done')}
-          />
-        ) : (
-          <CreateListing
-            listing={listing}
-            className="btn btn-primary"
-            children={fbt('Done', 'Done')}
-          />
-        )}
-      </div>
-    </div>
-    <div className="col-md-4">
-      <Wallet />
-      <div className="gray-box">
-        <fbt desc="create.review.What happens next">
-          <h5>What happens next?</h5>
-          When you submit this listing, you will be asked to confirm your
-          transaction in MetaMask. Buyers will then be able to see your listing
-          and make offers on it.
-        </fbt>
-      </div>
-    </div>
-  </div>
-)
-
-export default Review
+export default ReviewAnnouncementListing
