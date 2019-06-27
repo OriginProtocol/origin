@@ -443,14 +443,6 @@ class UserProfile extends Component {
             }
           })
         }}
-        onAvatarChange={avatarUrl => {
-          this.setState({
-            unpublishedProfile: {
-              ...this.state.unpublishedProfile,
-              avatarUrl: avatarUrl
-            }
-          })
-        }}
         lightMode={true}
       />
     )
