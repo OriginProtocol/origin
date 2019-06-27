@@ -198,6 +198,8 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
     where: { externalId: conversationId }
   })
 
+  const contentHash = Web3.utils.sha3(JSON.stringify(content))
+
   let message
   let conv_addresses
   if (!conv) {
@@ -233,6 +235,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
           conversationIndex,
           ethAddress: address,
           data: { content },
+          contentHash,
           signature,
           isKeys: true
         },
@@ -268,6 +271,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
           conversationIndex: conversation.messageCount,
           ethAddress: address,
           data: { content },
+          contentHash,
           signature,
           isKeys: content.type == 'keys'
         },
@@ -279,6 +283,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
   }
 
   if (message) {
+    // Publish messages to be consumed by the websocket(below)
     for (const notify_address of conv_addresses) {
       // Push to redis
       await redis.publish(
@@ -296,7 +301,6 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
     // e.g. http://localhost:3456/messages
     if (config.NOTIFICATIONS_ENDPOINT_URL) {
       const sender = address
-      const messageHash = Web3.utils.keccak256(JSON.stringify(message))
 
       // Filter out the sender
       const receivers = conv_addresses.filter(a => a != address)
@@ -309,7 +313,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
         body: JSON.stringify({
           sender,
           receivers,
-          messageHash
+          messageHash: contentHash
         })
       })
     }
