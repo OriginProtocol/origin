@@ -15,6 +15,7 @@ COPY ./packages/mobile-bridge ./packages/mobile-bridge
 COPY ./packages/messaging-client ./packages/messaging-client
 COPY ./packages/services ./packages/services
 COPY ./packages/validator ./packages/validator
+COPY ./packages/web3-provider ./packages/web3-provider
 COPY ./packages/graphql ./packages/graphql
 
 RUN yarn install

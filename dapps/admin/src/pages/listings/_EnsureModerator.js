@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
+import Web3 from 'web3'
+import gqlClient from '@origin/graphql'
+import { SignMessageMutation } from '../../queries/Mutations'
 import { AnchorButton } from '@blueprintjs/core'
 import { query, timeRemaining, persistAccessToken } from '../../utils/discovery'
-import Web3 from 'web3'
 
 const AUTH_TOKEN_MUTATION = `
 mutation($message: String!, $signature: String!, $ethAddress: String!) {
@@ -38,7 +40,11 @@ class EnsureModerator extends Component {
     // Create message
     const nonce = Web3.utils.randomHex(12)
     const message = `\x19Ethereum Signed Message:\nOrigin Moderation Login\nNonce: ${nonce}`
-    const signature = await window.web3.eth.sign(message, ethAddress)
+    const signResponse = await gqlClient.mutate({
+      mutation: SignMessageMutation,
+      variables: { message, address: ethAddress }
+    })
+    const signature = signResponse.data.signMessage
 
     // Post to discovery server
     const data = await query(AUTH_TOKEN_MUTATION, {

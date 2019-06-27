@@ -3,7 +3,7 @@
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "repository": "https://github.com/OriginProtocol/origin/mobile",
-  "version": "0.13.0",
+  "version": "0.13.3",
   "scripts": {
     "android": "react-native run-android",
     "clean": "git clean -fdX .",
@@ -46,7 +46,7 @@
     "metro-react-native-babel-preset": "^0.54.1",
     "myetherwallet-blockies": "^0.1.1",
     "node-libs-react-native": "^1.0.3",
-    "prettier": "^1.18.2",
+    "prettier": "^1.16.3",
     "react": "^16.8.6",
     "react-devtools-core": "^3.6.1",
     "react-dom": "^16.8.6",

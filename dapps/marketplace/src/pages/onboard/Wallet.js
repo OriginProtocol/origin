@@ -9,7 +9,7 @@ import QueryError from 'components/QueryError'
 
 import ListingPreview from './_ListingPreview'
 import HelpWallet from './_HelpWallet'
-import HelpOriginWallet from './_HelpOriginWallet'
+import HelpOriginWallet from 'components/DownloadApp'
 import WalletHeader from './_WalletHeader'
 
 import query from 'queries/Wallet'

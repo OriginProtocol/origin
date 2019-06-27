@@ -1,8 +1,6 @@
 import React from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 
-// This components creates a <switch> for rendering the creation steps for each listing type
-
 const Steps = ({ steps, linkPrefix, listing, onChange, refetch }) => {
   const props = {
     listing,
@@ -13,7 +11,7 @@ const Steps = ({ steps, linkPrefix, listing, onChange, refetch }) => {
 
   function path(step) {
     if (!step) {
-      return linkPrefix.replace('/details', '')
+      return '/create/listing-type'
     }
     return `${linkPrefix}${step.path ? `/${step.path}` : ''}`
   }

@@ -176,6 +176,7 @@ class EmailScreen extends Component {
             autoCorrect={false}
             autoFocus={true}
             multiline={false}
+            keyboardType="email-address"
             returnKeyType="next"
             onChangeText={this.handleChange}
             onSubmitEditing={this.handleSubmitEmail}

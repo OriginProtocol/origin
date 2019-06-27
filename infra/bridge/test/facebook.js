@@ -69,7 +69,7 @@ describe('facebook attestations', () => {
         appsecret_proof: appSecretProof,
         access_token: 12345
       })
-      .reply(200, { name: 'Origin Protocol' })
+      .reply(200, { id: '67890', name: 'Origin Protocol' })
 
     const response = await request(app)
       .post('/api/attestations/facebook/verify')
@@ -92,14 +92,14 @@ describe('facebook attestations', () => {
     expect(response.body.data.attestation.site.siteName).to.equal(
       'facebook.com'
     )
-    expect(response.body.data.attestation.site.userId.verified).to.equal(true)
+    expect(response.body.data.attestation.site.userId.raw).to.equal('67890')
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
     expect(results.length).to.equal(1)
     expect(results[0].ethAddress).to.equal(ethAddress)
     expect(results[0].method).to.equal(AttestationTypes.FACEBOOK)
-    expect(results[0].value).to.equal('Origin Protocol')
+    expect(results[0].value).to.equal('67890')
   })
 
   it('should generate attestation on valid session', async () => {
@@ -125,7 +125,7 @@ describe('facebook attestations', () => {
         appsecret_proof: appSecretProof,
         access_token: 12345
       })
-      .reply(200, { name: 'Origin Protocol' })
+      .reply(200, { id: '67890', name: 'Origin Protocol' })
 
     // Fake session
     const parentApp = express()
@@ -164,14 +164,14 @@ describe('facebook attestations', () => {
     expect(response.body.data.attestation.site.siteName).to.equal(
       'facebook.com'
     )
-    expect(response.body.data.attestation.site.userId.verified).to.equal(true)
+    expect(response.body.data.attestation.site.userId.raw).to.equal('67890')
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
     expect(results.length).to.equal(1)
     expect(results[0].ethAddress).to.equal(ethAddress)
     expect(results[0].method).to.equal(AttestationTypes.FACEBOOK)
-    expect(results[0].value).to.equal('Origin Protocol')
+    expect(results[0].value).to.equal('67890')
   })
 
   it('should error on invalid session', async () => {

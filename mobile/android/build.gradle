@@ -35,6 +35,8 @@ buildscript {
         targetSdkVersion = 27
         compileSdkVersion = 28
         supportLibVersion = "27.1.0"
+        googlePlayServicesVersion = "16.0.0"
+        firebaseVersion = "17.3.4"
     }
     repositories {
         google()

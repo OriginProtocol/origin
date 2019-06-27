@@ -67,7 +67,7 @@ describe('google attestations', () => {
       .query({
         access_token: 12345
       })
-      .reply(200, { email: 'Origin Protocol' })
+      .reply(200, { id: '67890', email: 'origin@originprotocol.com' })
 
     const response = await request(app)
       .post('/api/attestations/google/verify')
@@ -88,14 +88,15 @@ describe('google attestations', () => {
       true
     )
     expect(response.body.data.attestation.site.siteName).to.equal('google.com')
-    expect(response.body.data.attestation.site.userId.verified).to.equal(true)
+    expect(response.body.data.attestation.site.userId.raw).to.equal('67890')
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
     expect(results.length).to.equal(1)
     expect(results[0].ethAddress).to.equal(ethAddress)
     expect(results[0].method).to.equal(AttestationTypes.GOOGLE)
-    expect(results[0].value).to.equal('Origin Protocol')
+    expect(results[0].value).to.equal('67890')
+    expect(results[0].username).to.equal('origin@originprotocol.com')
   })
 
   it('should generate attestation on valid session', async () => {
@@ -116,7 +117,7 @@ describe('google attestations', () => {
       .query({
         access_token: 12345
       })
-      .reply(200, { email: 'Origin Protocol' })
+      .reply(200, { id: '67890', email: 'origin@originprotocol.com' })
 
     // Fake session
     const parentApp = express()
@@ -153,14 +154,15 @@ describe('google attestations', () => {
       true
     )
     expect(response.body.data.attestation.site.siteName).to.equal('google.com')
-    expect(response.body.data.attestation.site.userId.verified).to.equal(true)
+    expect(response.body.data.attestation.site.userId.raw).to.equal('67890')
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
     expect(results.length).to.equal(1)
     expect(results[0].ethAddress).to.equal(ethAddress)
     expect(results[0].method).to.equal(AttestationTypes.GOOGLE)
-    expect(results[0].value).to.equal('Origin Protocol')
+    expect(results[0].value).to.equal('67890')
+    expect(results[0].username).to.equal('origin@originprotocol.com')
   })
 
   it('should error on invalid session', async () => {

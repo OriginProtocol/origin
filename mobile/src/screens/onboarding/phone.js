@@ -7,6 +7,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash.get'
 import RNPickerSelect from 'react-native-picker-select'
+import * as RNLocalize from 'react-native-localize'
 
 import { setPhoneAttestation } from 'actions/Onboarding'
 import OriginButton from 'components/origin-button'
@@ -16,22 +17,66 @@ import withConfig from 'hoc/withConfig'
 import OnboardingStyles from 'styles/onboarding'
 import _countryCodes from 'utils/countryCodes'
 
-const countryCodes = _countryCodes
+const commonCountryCodes = [
+  '1', // US/CA
+  '7', // RU
+  '44', // UK
+  '61', // AU
+  '81', // JP
+  '82', // KR
+  '86', // CN,
+  '91' // IN
+]
+
+const [commonCountries, uncommonCountries] = _countryCodes
+  // Generate the options
   .map(item => {
     return {
       label: `${item.name} (${item.prefix})`,
-      value: item.prefix
+      value: item
     }
   })
   .sort((a, b) => (a.label > b.label ? 1 : -1))
-  // Filter to New Zealand in development
-  .filter(x => !__DEV__ || x.value == 64)
+  // Partition into common and uncommon countries to allow for a separator in
+  // the select
+  .reduce(
+    (result, option) => {
+      result[commonCountryCodes.includes(option.value.prefix) ? 0 : 1].push(
+        option
+      )
+      return result
+    },
+    [[], []]
+  )
+
+const countryOptions = [
+  ...commonCountries,
+  { value: false, label: '---' }, // Separator
+  ...uncommonCountries
+]
 
 class PhoneScreen extends Component {
   constructor(props) {
     super(props)
+
+    let countryValue = ''
+
+    const locales = RNLocalize.getLocales()
+    if (locales) {
+      const countryMatch = countryOptions.find(c => {
+        if (c.value) {
+          return (
+            c.value.code.toLowerCase() === locales[0].countryCode.toLowerCase()
+          )
+        }
+      })
+      if (countryMatch) {
+        countryValue = countryMatch.value
+      }
+    }
+
     this.state = {
-      countryCodeValue: '',
+      countryValue: countryValue,
       phoneValue: '',
       phoneError: '',
       loading: false,
@@ -101,7 +146,7 @@ class PhoneScreen extends Component {
       headers: { 'content-type': 'application/json' },
       method: 'POST',
       body: JSON.stringify({
-        phone: `${this.state.countryCodeValue} ${this.state.phoneValue}`
+        phone: `${this.state.countryValue.prefix} ${this.state.phoneValue}`
       })
     })
     // 200 status code indicates account was found
@@ -119,7 +164,7 @@ class PhoneScreen extends Component {
       credentials: 'include',
       method: 'POST',
       body: JSON.stringify({
-        country_calling_code: this.state.countryCodeValue,
+        country_calling_code: this.state.countryValue.prefix,
         method: this.state.verificationMethod,
         phone: this.state.phoneValue
       })
@@ -139,7 +184,7 @@ class PhoneScreen extends Component {
       body: JSON.stringify({
         code: this.state.verificationCode,
         identity: this.props.wallet.activeAccount.address,
-        country_calling_code: this.state.countryCodeValue,
+        country_calling_code: this.state.countryValue.prefix,
         phone: this.state.phoneValue
       })
     })
@@ -183,11 +228,12 @@ class PhoneScreen extends Component {
           </Text>
           <RNPickerSelect
             placeholder={{ label: 'Select a country', value: null }}
-            items={countryCodes}
-            onValueChange={async value =>
-              await this.handleChange('countryCode', value)
-            }
+            items={countryOptions}
+            onValueChange={async value => {
+              await this.handleChange('country', value)
+            }}
             style={pickerSelectStyles}
+            value={this.state.countryValue}
           />
           <TextInput
             autoCapitalize="none"
@@ -223,6 +269,7 @@ class PhoneScreen extends Component {
             title={fbt('Continue', 'PhoneScreen.continueButton')}
             disabled={
               !this.state.phoneValue.length ||
+              !this.state.countryValue ||
               this.state.phoneError ||
               this.state.loading
             }

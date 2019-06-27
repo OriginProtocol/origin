@@ -146,6 +146,15 @@ jobs:
           name: Run Relayer Tests
           command: cd infra/relayer && yarn test
 
+  Web3Provider:
+    <<: *db
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run web3-provider Tests
+          command: cd packages/web3-provider && yarn test
+
 workflows:
   version: 2
   test:
@@ -179,5 +188,8 @@ workflows:
           requires:
             - Setup
       - Relayer:
+          requires:
+            - Setup
+      - Web3Provider:
           requires:
             - Setup

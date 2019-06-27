@@ -178,7 +178,7 @@ class AvatarScreen extends Component {
       <TouchableOpacity onPress={this.handleImageClick} style={styles.content}>
         <Avatar
           source={this.state.avatarSource}
-          size={120}
+          size={100}
           style={{ marginBottom: 30 }}
         />
         <Text style={styles.title}>

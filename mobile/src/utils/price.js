@@ -1,5 +1,7 @@
 'use strict'
 
+import Configs from '@origin/graphql/src/configs'
+
 import store from '../Store'
 import fetch from 'cross-fetch'
 
@@ -21,7 +23,13 @@ const EXCHANGE_RATE_CACHE_TTL = 2 * 60 * 1000 // 2 minutes
 export const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
   const cryptoParam = cryptoCurrencyCode.toLowerCase()
   const fiatParam = fiatCurrencyCode.toLowerCase()
-  const exchangeURL = `https://api.cryptonator.com/api/ticker/${cryptoParam}-${fiatParam}`
+
+  const settings = store.getState().settings
+  const config = Configs[settings.network.name.toLowerCase()]
+
+  const exchangeURL = `${
+    config.bridge
+  }/utils/exchange-rate?market=${cryptoParam}-${fiatParam}`
   return new Promise(resolve => {
     fetch(exchangeURL)
       .then(res => {
@@ -34,7 +42,7 @@ export const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
         try {
           const json = JSON.parse(text)
           resolve({
-            rate: parseFloat(json.ticker.price),
+            rate: parseFloat(json.price),
             cacheHit: false
           })
         } catch (error) {

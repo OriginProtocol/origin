@@ -11,6 +11,8 @@ const Growth$FbtEnum = {
   'growth.may2019.short_name': 'May 2019',
   'growth.june2019.name': 'June 2019 Campaign',
   'growth.june2019.short_name': 'June 2019',
+  'growth.july2019.name': 'July 2019 Campaign',
+  'growth.july2019.short_name': 'July 2019',
   'growth.profile.and.email.requirement': 'Verified email and Origin profile',
   'growth.two.attestations.requirement': 'Two profile verifications',
   'growth.profile.requirement': 'Profile name and photo',
@@ -72,6 +74,9 @@ const Growth$FbtEnum = {
   'growth.purchase.listing2806.title': 'Purchase a $25 Walmart Gift Card',
   'growth.purchase.listing2808.title': 'Purchase a $25 Target Gift Card',
   'growth.purchase.listing2809.title': 'Purchase a $25 Uber Gift Card',
+
+  // July campaign
+  // TODO: add strings for every listing.
 
   'growth.purchase.empty.details': ''
 }

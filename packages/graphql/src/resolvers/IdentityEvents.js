@@ -8,9 +8,6 @@ import { getIdsForPage, getConnection } from './_pagination'
 import validateAttestation from '../utils/validateAttestation'
 import { proxyOwner, hasProxy } from '../utils/proxy'
 
-const websiteAttestationEnabled =
-  process.env.ENABLE_WEBSITE_ATTESTATION === 'true'
-
 const progressPct = {
   firstName: 10,
   lastName: 10,
@@ -24,12 +21,12 @@ const attestationProgressPct = {
   facebook: 10,
   twitter: 10,
   google: 10,
-  airbnb: websiteAttestationEnabled ? 5 : 10,
-  website: websiteAttestationEnabled ? 5 : 0,
-  kakao: 0,
-  github: 0,
-  linkedin: 0,
-  wechat: 0
+  airbnb: 10,
+  website: 10,
+  kakao: 10,
+  github: 10,
+  linkedin: 10,
+  wechat: 10
 }
 
 function getAttestations(account, attestations) {
@@ -77,11 +74,21 @@ function getAttestations(account, attestations) {
       }
 
       const siteName = get(attestation, 'data.attestation.site.siteName')
-      const userId = get(
-        attestation,
-        'data.attestation.site.userId.verified',
-        ''
-      )
+
+      const userId = {
+        type: 'userId',
+        value: get(attestation, 'data.attestation.site.userId.raw')
+      }
+
+      const username = {
+        type: 'username',
+        value: get(attestation, 'data.attestation.site.username.raw')
+      }
+
+      const profileUrl = {
+        type: 'profileUrl',
+        value: get(attestation, 'data.attestation.site.profileUrl.raw')
+      }
 
       switch (siteName) {
         case 'facebook.com':
@@ -92,37 +99,37 @@ function getAttestations(account, attestations) {
         case 'airbnb.com':
           return {
             id: 'airbnb',
-            properties: [{ type: 'userId', value: userId }, issuedDate]
+            properties: [issuedDate, userId]
           }
         case 'twitter.com':
           return {
             id: 'twitter',
-            properties: [{ type: 'userId', value: userId }, issuedDate]
+            properties: [issuedDate, userId, username, profileUrl]
           }
         case 'google.com':
           return {
             id: 'google',
-            properties: [issuedDate]
+            properties: [issuedDate, userId, username]
           }
         case 'kakao.com':
           return {
             id: 'kakao',
-            properties: [issuedDate]
+            properties: [issuedDate, userId]
           }
         case 'github.com':
           return {
             id: 'github',
-            properties: [issuedDate]
+            properties: [issuedDate, userId, username, profileUrl]
           }
         case 'linkedin.com':
           return {
             id: 'linkedin',
-            properties: [issuedDate]
+            properties: [issuedDate, userId]
           }
         case 'wechat.com':
           return {
             id: 'wechat',
-            properties: [issuedDate]
+            properties: [issuedDate, userId]
           }
       }
 
@@ -160,12 +167,13 @@ export function identity({ id, ipfsHash }) {
       return null
     }
     let accounts = id
+    let owner, proxy
     if (!ipfsHash) {
-      const owner = await proxyOwner(id)
+      owner = await proxyOwner(id)
       if (owner) {
         accounts = [id, owner]
       } else {
-        const proxy = await hasProxy(id)
+        proxy = await hasProxy(id)
         if (proxy) {
           accounts = [id, proxy]
         }
@@ -209,7 +217,10 @@ export function identity({ id, ipfsHash }) {
       strength: 0,
       ipfsHash,
       owner: {
-        id
+        id: owner ? owner : id
+      },
+      proxy: {
+        id: proxy ? proxy : id
       }
     }
 
@@ -269,6 +280,9 @@ export function identity({ id, ipfsHash }) {
     Array.from(identity.verifiedAttestations || []).map(attestation => {
       identity.strength += attestationProgressPct[attestation.id] || 0
     })
+    if (identity.strength > 100) {
+      identity.strength = 100
+    }
 
     resolve(identity)
   })
@@ -360,24 +374,12 @@ function getAttestationProviders() {
     'facebook',
     'twitter',
     'airbnb',
-    'google'
+    'google',
+    'website',
+    'kakao',
+    'github',
+    'linkedin'
   ]
-
-  if (process.env.ENABLE_WEBSITE_ATTESTATION === 'true') {
-    ATTESTATION_PROVIDERS.push('website')
-  }
-
-  if (process.env.ENABLE_KAKAO_ATTESTATION === 'true') {
-    ATTESTATION_PROVIDERS.push('kakao')
-  }
-
-  if (process.env.ENABLE_GITHUB_ATTESTATION === 'true') {
-    ATTESTATION_PROVIDERS.push('github')
-  }
-
-  if (process.env.ENABLE_LINKEDIN_ATTESTATION === 'true') {
-    ATTESTATION_PROVIDERS.push('linkedin')
-  }
 
   if (process.env.ENABLE_WECHAT_ATTESTATION === 'true') {
     ATTESTATION_PROVIDERS.push('wechat')

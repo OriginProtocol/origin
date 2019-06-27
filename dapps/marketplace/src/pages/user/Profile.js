@@ -70,27 +70,30 @@ const ProfileFields = [
   'verifiedAttestations'
 ]
 
-const resetAtts = Object.keys(AttestationComponents).reduce((m, o) => {
-  m[`${o}Attestation`] = null
-  return m
-}, {})
-
 function getState(profile) {
   return {
     firstName: '',
     lastName: '',
     description: '',
-    avatarUrl: null,
-    ...pickBy(pick(profile, ProfileFields), k => k)
+    avatarUrl: '',
+    verifiedAttestations: [],
+    ...pick(profile, ProfileFields)
   }
 }
 
 function profileDataUpdated(state, prevState) {
   return (
-    state.firstName !== prevState.firstName ||
-    state.lastName !== prevState.lastName ||
-    state.description !== prevState.description ||
-    state.avatarUrl !== prevState.avatarUrl
+    get(prevState, 'firstName') !== get(state, 'firstName') ||
+    get(prevState, 'lastName') !== get(state, 'lastName') ||
+    get(prevState, 'description') !== get(state, 'description') ||
+    get(prevState, 'avatarUrl') !== get(state, 'avatarUrl')
+  )
+}
+
+function attestationsUpdated(state, prevState) {
+  return (
+    get(state, 'verifiedAttestations.length') !==
+    get(prevState, 'verifiedAttestations.length')
   )
 }
 
@@ -100,7 +103,6 @@ class UserProfile extends Component {
     const profile = get(props, 'identity')
 
     this.state = {
-      ...resetAtts,
       ...getState(profile)
     }
     const activeAttestation = get(props, 'match.params.attestation')
@@ -110,40 +112,44 @@ class UserProfile extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (get(this.props, 'identity.id') !== get(prevProps, 'identity.id')) {
-      this.setState(getState(get(this.props, 'identity')))
-      if (!this.props.identity && !this.state.redirectToOnboarding) {
-        this.setState({
-          redirectToOnboarding: true
-        })
-      }
-    }
+    const identity = get(this.props, 'identity')
+    const walletChanged =
+      get(this.props, 'identity.id') !== get(prevProps, 'identity.id')
+
+    const identityLoaded =
+      !this.props.identityLoading && prevProps.identityLoading
     if (
-      this.state.deployIdentity === 'profile' &&
-      !profileDataUpdated(this.state, get(this.props, 'identity'))
-    ) {
-      this.setState({ deployIdentity: null })
-    }
-    if (
-      !this.props.identityLoading &&
-      prevProps.identityLoading &&
-      !this.props.identity &&
+      (walletChanged || identityLoaded) &&
+      !identity &&
       !this.state.redirectToOnboarding
     ) {
       // redirect to onboarding, if user doesn't have a deployed profile
-      this.setState({ redirectToOnboarding: true })
+      this.setState({
+        redirectToOnboarding: true
+      })
+      return
+    }
+
+    const profileChanged = profileDataUpdated(this.state, identity)
+    const attestationsChanged = attestationsUpdated(this.state, identity)
+
+    if (
+      walletChanged ||
+      (identity && (profileChanged || attestationsChanged))
+    ) {
+      this.setState(getState(identity))
     }
   }
 
-  showDeploySuccessMessage() {
-    let message = getProviderDisplayName(this.state.deployIdentity)
+  showDeploySuccessMessage(type) {
+    let message
 
-    if (message === this.state.deployIdentity) {
+    if ('profile' === type) {
       // Not one of attestation changes
       message = fbt('Profile updated', 'profile.profileUpdated')
     } else {
       message = fbt(
-        fbt.param('provider', message) + ' updated',
+        fbt.param('provider', getProviderDisplayName(type)) + ' updated',
         'profile.attestationUpdated'
       )
     }
@@ -193,6 +199,12 @@ class UserProfile extends Component {
                   providers={providers}
                   minCount={this.props.isMobile ? 8 : 10}
                   fillToNearest={this.props.isMobile ? 4 : 5}
+                  onClick={providerName => {
+                    this.setState({
+                      [providerName]: true,
+                      showVerifyModalOnClose: false
+                    })
+                  }}
                 />
               </div>
             </div>
@@ -289,7 +301,8 @@ class UserProfile extends Component {
           onClick={providerName => {
             this.setState({
               [providerName]: true,
-              shouldCloseVerifyModal: true
+              shouldCloseVerifyModal: true,
+              showVerifyModalOnClose: true
             })
           }}
         />
@@ -328,19 +341,20 @@ class UserProfile extends Component {
             const newState = {
               [providerName]: false
             }
-            if (!completed) {
+            if (!completed && this.state.showVerifyModalOnClose) {
               newState.verifyModal = true
             }
 
             this.setState(newState)
           }}
           onComplete={newAttestation => {
-            const attestations = get(this.state, 'attestations', [])
-            attestations.push(newAttestation)
+            const unpublishedAttestations = [...get(this.state, 'attestations')]
+            unpublishedAttestations.push(newAttestation)
 
             this.setState({
               deployIdentity: providerName,
-              attestations
+              unpublishedAttestations,
+              [providerName]: false
             })
           }}
         />
@@ -355,11 +369,26 @@ class UserProfile extends Component {
 
     if (
       this.state.deployIdentity === 'profile' &&
-      !profileDataUpdated(this.state, get(this.props, 'identity'))
+      !this.state.unpublishedProfile
     ) {
       // Skip deploy if no change
       return null
     }
+
+    const profile = pickBy(
+      pick(
+        this.state.deployIdentity === 'profile'
+          ? this.state.unpublishedProfile
+          : this.state,
+        ['firstName', 'lastName', 'description', 'avatarUrl']
+      ),
+      x => x
+    )
+
+    const attestations =
+      this.state.deployIdentity === 'profile'
+        ? this.state.attestations
+        : this.state.unpublishedAttestations
 
     return (
       <DeployIdentity
@@ -368,19 +397,24 @@ class UserProfile extends Component {
         autoDeploy={true}
         skipSuccessScreen={true}
         onComplete={() => {
-          this.showDeploySuccessMessage()
+          this.showDeploySuccessMessage(this.state.deployIdentity)
           this.props.identityRefetch()
           this.setState({
-            deployIdentity: null
+            deployIdentity: null,
+            unpublishedProfile: null,
+            unpublishedAttestations: null
           })
         }}
-        profile={pick(this.state, [
-          'firstName',
-          'lastName',
-          'description',
-          'avatarUrl'
-        ])}
-        attestations={this.state.attestations || []}
+        onCancel={() => {
+          // Discard unpublished profile changes on cancel/error
+          this.setState({
+            deployIdentity: null,
+            unpublishedProfile: null,
+            unpublishedAttestations: null
+          })
+        }}
+        profile={profile}
+        attestations={attestations || []}
       />
     )
   }
@@ -402,8 +436,14 @@ class UserProfile extends Component {
         onClose={() =>
           this.setState({ editProfile: false, deployIdentity: 'profile' })
         }
-        onChange={newState => this.setState(newState, () => this.validate())}
-        onAvatarChange={avatarUrl => this.setState({ avatarUrl })}
+        onChange={newState => {
+          this.setState({
+            unpublishedProfile: {
+              ...this.state.unpublishedProfile,
+              ...newState
+            }
+          })
+        }}
         lightMode={true}
       />
     )
@@ -415,6 +455,7 @@ class UserProfile extends Component {
         <UserActivationLink location={{ pathname: '/' }} forceRedirect={true} />
       )
     }
+
     return (
       <Fragment>
         <ToastNotification
@@ -430,17 +471,6 @@ class UserProfile extends Component {
         {this.renderEditProfile()}
       </Fragment>
     )
-  }
-
-  validate() {
-    const newState = {}
-    if (!this.state.firstName) {
-      newState.firstNameError = 'First Name is required'
-    }
-    newState.valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
-
-    this.setState(newState)
-    return newState.valid
   }
 }
 
