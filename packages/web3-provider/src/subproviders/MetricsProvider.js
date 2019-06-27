@@ -1,9 +1,9 @@
-import SubProvider from 'web3-provider-engine/subproviders/subprovider'
+const SubProvider = require('web3-provider-engine/subproviders/subprovider')
 
 /**
  * A web3-provider-engine subprovider to gether metrics on JSON-RPC calls
  */
-export default class MetricsProvider extends SubProvider {
+class MetricsProvider extends SubProvider {
   constructor(options) {
     super()
 
@@ -117,3 +117,5 @@ export default class MetricsProvider extends SubProvider {
     return
   }
 }
+
+module.exports = MetricsProvider

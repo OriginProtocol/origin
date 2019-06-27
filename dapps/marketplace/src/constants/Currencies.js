@@ -7,7 +7,8 @@ export const Currencies = [
   ['fiat-EUR', 'EUR', '€'],
   ['fiat-KRW', 'KRW', '₩'],
   ['fiat-JPY', 'JPY', '¥'],
-  ['fiat-CNY', 'CNY', '¥']
+  ['fiat-CNY', 'CNY', '¥'],
+  ['fiat-SGD', 'SGD', 'S$']
 ]
 
 // Eg CurrenciesByKey['fiat-EUR'] = ['fiat-EUR', 'EUR', '€']
@@ -33,5 +34,6 @@ export const CurrenciesByCountryCode = {
   GB: CurrenciesByCode['GBP'],
   KR: CurrenciesByCode['KRW'],
   JP: CurrenciesByCode['JPY'],
-  CN: CurrenciesByCode['CNY']
+  CN: CurrenciesByCode['CNY'],
+  SG: CurrenciesByCode['SGD']
 }

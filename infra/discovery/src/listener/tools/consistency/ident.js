@@ -26,9 +26,15 @@ const ATTESTATION_TYPE_MAP_DB = {
   email: 'email',
   twitter: 'twitter',
   airbnb: 'airbnb',
-  facebook: 'facebookVerified',
-  google: 'googleVerified',
-  website: 'website'
+  facebookVerified: 'facebookVerified',
+  googleVerified: 'googleVerified',
+  website: 'website',
+  facebook: 'facebook',
+  google: 'google',
+  kakao: 'kakao',
+  github: 'github',
+  linkedin: 'linkedin',
+  wechat: 'wechat'
 }
 
 /**
@@ -47,6 +53,13 @@ function getAttestation(attestationArray, name) {
  * Get the DB equivalent value for an attestation
  */
 function getAttestationDBRepr(attestationDBRecord, name) {
+  if (name === 'facebook' || name === 'google') {
+    // For backward comptability
+    // If userId is not stored in the database, return boolean value from the DB
+    if (!attestationDBRecord[ATTESTATION_TYPE_MAP_DB[name]]) {
+      return attestationDBRecord[ATTESTATION_TYPE_MAP_DB[`${name}Verified`]]
+    }
+  }
   return attestationDBRecord[ATTESTATION_TYPE_MAP_DB[name]]
 }
 

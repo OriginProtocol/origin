@@ -74,7 +74,8 @@ const Categories$FbtEnum = {
   'schema.pets': 'Pets',
   'schema.politics': 'Politics',
   'schema.resumes': 'Resumes',
-  'schema.volunteers': 'Volunteers'
+  'schema.volunteers': 'Volunteers',
+  'schema.apparel': 'Apparel'
 }
 
 module.exports = Categories$FbtEnum

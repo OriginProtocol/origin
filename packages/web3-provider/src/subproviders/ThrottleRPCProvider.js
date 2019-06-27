@@ -4,11 +4,11 @@
  *
  * Blame: Mike Shultz <shultzm@gmail.com>
  */
-import fetch from 'cross-fetch'
-import Bottleneck from 'bottleneck/es5'
-import JsonRpcError from 'json-rpc-error'
-import createPayload from 'web3-provider-engine/util/create-payload'
-import SubProvider from 'web3-provider-engine/subproviders/subprovider'
+const fetch = require('cross-fetch')
+const Bottleneck = require('bottleneck/es5')
+const JsonRpcError = require('json-rpc-error')
+const createPayload = require('web3-provider-engine/util/create-payload')
+const SubProvider = require('web3-provider-engine/subproviders/subprovider')
 
 const MAX_RETRIES = 3
 const BUFFER_MS = 5
@@ -76,7 +76,7 @@ async function sendRequest(url, payload) {
   return data.result
 }
 
-export default class ThrottleRPCProvider extends SubProvider {
+class ThrottleRPCProvider extends SubProvider {
   constructor(options) {
     super()
 
@@ -129,3 +129,5 @@ export default class ThrottleRPCProvider extends SubProvider {
       })
   }
 }
+
+module.exports = ThrottleRPCProvider

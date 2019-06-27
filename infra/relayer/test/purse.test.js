@@ -226,14 +226,30 @@ describe('Purse', () => {
     const purseTwo = new Purse({ web3, mnemonic: MNEMONIC_ONE, children: 2 })
     await purseTwo.init()
 
+    // Third instance should not have Redis
+    const purseThree = new Purse({
+      web3,
+      mnemonic: MNEMONIC_ONE,
+      children: 2,
+      redisHost: 'redis://localhost:666/999'
+    })
+    await purseThree.init()
+
     const firstTXCount = await purseOne.txCount(sentFrom)
     const secondTXCount = await purseTwo.txCount(sentFrom)
+    const thirdTXCount = await purseThree.txCount(sentFrom)
 
+    assert(typeof firstTXCount === 'number', 'txCount() should return a number')
+    assert(typeof secondTXCount === 'number', 'txCount() should return a number')
+    assert(typeof thirdTXCount === 'number', 'txCount() should return a number')
     assert(firstTXCount === secondTXCount)
+    assert(secondTXCount === thirdTXCount)
     assert(purseOne.accounts[sentFrom].txCount === purseTwo.accounts[sentFrom].txCount)
+    assert(purseTwo.accounts[sentFrom].txCount === purseThree.accounts[sentFrom].txCount)
 
     await purseOne.teardown(true)
     await purseTwo.teardown(true)
+    await purseThree.teardown(true)
   })
 
   // This is best tested with Redis, but not required
@@ -254,6 +270,11 @@ describe('Purse', () => {
     // Make sure the txHash is in pending
     const pendingHashesOne = Object.keys(purseOne.pendingTransactions)
     assert(pendingHashesOne[0] === txHash)
+
+    // Make sure the unsigned tx object is also available
+    const txObj = await purseOne.getPendingTransaction(txHash)
+    assert(txObj !== null)
+    assert(txObj.to === Rando.toLowerCase(), `Expected ${Rando} but got ${txObj.to}`)
 
     // Second instance should come up with the right tx count
     const purseTwo = new Purse({ web3, mnemonic: MNEMONIC_ONE, children: 2 })

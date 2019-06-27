@@ -11,6 +11,7 @@ COPY ./lerna.json ./
 COPY ./package.json ./
 COPY ./yarn.lock ./
 COPY ./packages/contracts/package.json ./packages/contracts/
+COPY ./packages/web3-provider/package.json ./packages/web3-provider/
 COPY ./packages/graphql/package.json ./packages/graphql/
 COPY ./packages/ipfs/package.json ./packages/ipfs/
 COPY ./packages/validator/package.json ./packages/validator/

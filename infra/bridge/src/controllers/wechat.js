@@ -105,7 +105,7 @@ router.post('/verify', wechatVerify, async (req, res) => {
     site: {
       siteName: 'wechat.com',
       userId: {
-        verified: true
+        raw: String(userDataResponse.body.unionid)
       }
     }
   }
@@ -114,7 +114,9 @@ router.post('/verify', wechatVerify, async (req, res) => {
     const attestation = await generateAttestation(
       AttestationTypes.WECHAT,
       attestationBody,
-      userDataResponse.body.unionid,
+      {
+        uniqueId: userDataResponse.body.unionid
+      },
       req.body.identity,
       req.ip
     )

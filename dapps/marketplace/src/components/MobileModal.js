@@ -11,9 +11,12 @@ export default class MobileModal extends Component {
     super(props)
     this.portal = document.createElement('div')
     this.portal.classList.add('mobile-modal-light')
+    this.overlay = document.createElement('div')
+    this.overlay.classList.add('mobile-modal-light-overlay')
   }
 
   componentDidMount() {
+    document.body.appendChild(this.overlay)
     document.body.appendChild(this.portal)
     document.body.className += ' mobile-modal-light-open'
     document.body.addEventListener('touchmove', freezeVp, false)
@@ -28,19 +31,25 @@ export default class MobileModal extends Component {
       if (this.props.onOpen) {
         this.props.onOpen()
       }
+      this.overlay.classList.add('open')
       this.portal.classList.add('open')
     }, 10)
+
+    this.overlay.addEventListener('click', this.onClose)
   }
 
   componentWillUnmount() {
     this.portal.classList.remove('open')
+    this.overlay.classList.remove('open')
     document.body.className = document.body.className.replace(
       ' mobile-modal-light-open',
       ''
     )
     document.body.removeEventListener('touchmove', freezeVp, false)
     window.removeEventListener('keydown', this.onKeyDown)
+    this.overlay.removeEventListener('click', this.onClose)
     document.body.removeChild(this.portal)
+    document.body.removeChild(this.overlay)
     clearTimeout(this.timeout)
   }
 
@@ -77,10 +86,6 @@ export default class MobileModal extends Component {
 
     return (
       <>
-        <div
-          className="mobile-modal-light-overlay"
-          onClick={() => this.onClose()}
-        />
         <div className="modal-spacer" />
         <MobileModalHeader
           className={className}
@@ -148,6 +153,7 @@ export default class MobileModal extends Component {
 
   doClose() {
     this.portal.classList.remove('open')
+    this.overlay.classList.remove('open')
     if (this.props.onClose) {
       this.onCloseTimeout = setTimeout(() => this.props.onClose(), 300)
     }
@@ -167,9 +173,9 @@ export default class MobileModal extends Component {
 
 require('react-styl')(`
   .mobile-modal-light-open
-    overflow: hidden
     touch-action: none
     position: relative
+    overflow: scroll
     #app
       overflow: hidden !important
       max-height: 100% !important
@@ -183,6 +189,10 @@ require('react-styl')(`
     bottom: 0
     background-color: rgba(11, 24, 35, 0.3)
     cursor: pointer
+    opacity: 0
+    transition: opacity 0.3s ease
+    &.open
+      opacity: 1
   .mobile-modal-light
     touch-action: none
     position: fixed
@@ -212,7 +222,7 @@ require('react-styl')(`
     .modal-spacer
       visibility: hidden
       flex-grow: 1
-    > .modal-content > div 
+    > .modal-content > div
       .actions
         margin-top: auto !important
       .published-info-box
