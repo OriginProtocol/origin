@@ -6,7 +6,6 @@ import QueryError from 'components/QueryError'
 import nextPageFactory from 'utils/nextPageFactory'
 import ListingsGallery from 'pages/listings/ListingCards'
 import query from 'queries/UserListings'
-import useIsMobile from 'utils/useMobile'
 
 const nextPage = nextPageFactory('marketplace.user.listings')
 
@@ -23,8 +22,6 @@ const UserListings = ({
     sort: 'featured',
     hidden: true
   }
-
-  const isMobile = useIsMobile()
 
   return (
     <Query
