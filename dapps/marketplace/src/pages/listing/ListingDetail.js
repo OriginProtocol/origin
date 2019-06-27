@@ -16,6 +16,7 @@ import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
 import DocumentTitle from 'components/DocumentTitle'
 import Category from 'components/Category'
+import UserListings from 'pages/user/_UserListings'
 
 import Sold from './_ListingSold'
 import Pending from './_ListingPending'
@@ -57,7 +58,7 @@ class ListingDetail extends Component {
   }
 
   render() {
-    const { listing, isMobile } = this.props
+    const { listing } = this.props
 
     if (!listing || !listing.seller || !listing.seller.id) {
       console.error(
@@ -68,51 +69,90 @@ class ListingDetail extends Component {
     return (
       <div className="container listing-detail">
         <DocumentTitle pageTitle={listing.title} />
-        {isMobile ? (
-          <>
-            {this.renderHeading()}
-            {this.renderListing()}
-            {this.renderAction()}
-            <h5>
-              <fbt desc="listingDetail.about-the-seller">About the seller</fbt>
-            </h5>
-            <AboutParty id={listing.seller.id} />
-            <Reviews id={listing.seller.id} seller />
-          </>
-        ) : (
-          <div className="row">
-            <div className="col-md-8 pb-3">
-              {this.renderListing()}
-              <hr />
-              <Reviews id={listing.seller.id} seller />
-            </div>
-            <div className="col-md-4">
-              {this.renderHeading()}
-              {this.renderAction()}
-              <h5>
-                <fbt desc="listingDetail.about-the-seller">
-                  About the seller
-                </fbt>
-              </h5>
-              <AboutParty id={listing.seller.id} />
-            </div>
-          </div>
-        )}
+        {this.renderContent()}
       </div>
     )
   }
 
-  renderListing() {
-    const { listing } = this.props
+  renderContent() {
+    const { listing, isMobile } = this.props
+
+    const gallery =
+      listing.media && listing.media.length ? (
+        <div className="listing-media">
+          {this.props.isMobile ? (
+            <GalleryScroll pics={listing.media} />
+          ) : (
+            <Gallery pics={listing.media} />
+          )}
+        </div>
+      ) : null
+
+    const reviews = <Reviews id={listing.seller.id} seller hideWhenZero />
+    const userListings = (
+      <div className="seller-listings">
+        <UserListings user={listing.seller.id} hideLoadMore compact />
+      </div>
+    )
+
+    if (isMobile) {
+      return (
+        <>
+          <div className="listing-hero-section">
+            <div className="listing-info">
+              {this.renderHeading()}
+              {this.renderAction()}
+            </div>
+            {gallery}
+          </div>
+          <div className="listing-description">
+            {this.renderListingDetail()}
+          </div>
+          <div className="listing-hero-section">
+            <div className="about-seller">{this.renderSellerInfo()}</div>
+          </div>
+          <div className="seller-info">
+            {userListings}
+            {reviews}
+          </div>
+        </>
+      )
+    }
+
+    return (
+      <>
+        <div className="listing-hero-section">
+          {gallery}
+          <div className="listing-info">
+            {this.renderHeading()}
+            {this.renderAction()}
+            {this.renderSellerInfo()}
+          </div>
+        </div>
+        <div className="listing-description">{this.renderListingDetail()}</div>
+        <div className="seller-info">
+          {reviews}
+          {userListings}
+        </div>
+      </>
+    )
+  }
+
+  renderListingDetail() {
+    const { listing, isMobile } = this.props
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isOwnerViewing = listing.seller.id === this.props.walletProxy
 
-    const description = (
+    const description = !isMobile ? (
       <div className="description">
         <h3>
           <fbt desc="ListingDetail.productDescription">Product Description</fbt>
         </h3>
+        {String(listing.description).replace(/^\s+/, '')}
+      </div>
+    ) : (
+      <div className="description">
         {String(listing.description).replace(/^\s+/, '')}
       </div>
     )
@@ -143,25 +183,18 @@ class ListingDetail extends Component {
       )
     }
 
-    return (
-      <>
-        {this.props.isMobile ? (
-          <GalleryScroll pics={listing.media} />
-        ) : (
-          <Gallery pics={listing.media} />
-        )}
-        {detail}
-      </>
-    )
+    return detail
   }
 
   renderHeading() {
-    const { listing } = this.props
+    const { listing, isMobile } = this.props
     return (
       <div className="heading">
-        <div className="category">
-          <Category listing={listing} />
-        </div>
+        {!isMobile && (
+          <div className="category">
+            <Category listing={listing} />
+          </div>
+        )}
         <h2>{listing.title}</h2>
       </div>
     )
@@ -172,9 +205,11 @@ class ListingDetail extends Component {
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
+    const isSingleUnit = listing.__typename === 'UnitListing'
     const isPendingBuyer = listing.pendingBuyers.some(
       b => b.id === this.props.walletProxy
     )
+    const isListingCreator = listing.seller.id === this.props.walletProxy
 
     const props = { ...this.props }
     const growthReward = this.props.ognListingRewards[listing.id]
@@ -182,30 +217,41 @@ class ListingDetail extends Component {
       props.growthReward = growthReward
     }
 
-    if (listing.seller.id === this.props.walletProxy) {
+    const offers = !isPendingBuyer
+      ? null
+      : listing.events.filter(
+          event =>
+            event.event === 'OfferCreated' &&
+            event.returnValues.party === this.props.walletProxy
+        )
+
+    if (isListingCreator) {
       return (
         <EditOnly
           {...this.props}
           isAnnouncement={isAnnouncement}
           isFractional={isFractional}
           isFractionalHourly={isFractionalHourly}
+          isSingleUnit={isSingleUnit}
         />
       )
     } else if (isAnnouncement) {
       return null
     } else if (listing.status === 'sold') {
-      return <Sold />
+      return <Sold {...props} isSingleUnit={isSingleUnit} />
     } else if (isPendingBuyer && !listing.multiUnit) {
-      return <OfferMade />
+      return (
+        <OfferMade {...props} isSingleUnit={isSingleUnit} offers={offers} />
+      )
     } else if (isPendingBuyer && listing.multiUnit) {
       return (
         <>
           <MultiUnit {...props} />
-          <OfferMade />
+          <OfferMade {...props} isSingleUnit={isSingleUnit} offers={offers} />
         </>
       )
     } else if (listing.status === 'pending') {
-      return <Pending />
+      return <Pending {...props} />
     } else if (listing.status === 'withdrawn') {
       return <Withdrawn />
     } else if (isFractional) {
@@ -229,6 +275,18 @@ class ListingDetail extends Component {
     }
     return <SingleUnit {...props} />
   }
+
+  renderSellerInfo() {
+    const { listing } = this.props
+    return (
+      <>
+        <h5>
+          <fbt desc="listingDetail.about-the-seller">About the seller</fbt>
+        </h5>
+        <AboutParty id={listing.seller.id} />
+      </>
+    )
+  }
 }
 
 export default withGrowthCampaign(
@@ -243,6 +301,29 @@ export default withGrowthCampaign(
 require('react-styl')(`
   .listing-detail
     margin-top: 2.5rem
+
+    .listing-hero-section
+      display: flex
+      .listing-media
+        padding: 0 15px
+        flex: 50% 1 1
+        width: 50%
+      .listing-info
+        padding: 0 15px
+        flex: 50% 1 1
+        width: 50%
+
+    .seller-info
+      display: flex
+      border-top: 1px solid #dde6ea
+      padding-top: 2rem
+      margin-top: 2rem
+      .seller-listings
+        flex: auto
+      .reviews
+        padding-right: 2.2rem
+        flex: auto
+        min-width: 60%
 
     h2
       font-family: var(--heading-font)
@@ -276,10 +357,10 @@ require('react-styl')(`
     .gallery
       margin-bottom: 1rem
       .main-pic
-        padding-top: 56.6%
+        padding-top: 100%
         background-size: contain
         background-repeat: no-repeat
-        background-position: top center
+        background-position: center
         border: 1px solid var(--pale-grey-two)
         border-radius: 10px
       .thumbnails
@@ -318,9 +399,9 @@ require('react-styl')(`
       margin-right: .5rem;
 
     .listing-buy
-      padding-bottom: 2rem
+      padding-bottom: 1rem
       border-bottom: 1px solid #dde6ea
-      margin-bottom: 2rem
+      margin-bottom: 1.5rem
       .btn-primary
         border-radius: 2rem
         padding: 0.5rem 1rem
@@ -345,7 +426,7 @@ require('react-styl')(`
         color: var(--dark)
         font-weight: bold
         line-height: 1
-        margin-bottom: 1.5rem
+        margin-bottom: 0.5rem
         span.desc
           font-weight: normal
           margin-left: 0.25rem
@@ -403,4 +484,47 @@ require('react-styl')(`
         margin-bottom: 2rem
       .about-party
         margin-bottom: 2rem
+    
+      .listing-hero-section
+        flex-direction: column
+        .listing-media
+          padding: 15px
+          width: 100%
+        .listing-info
+          width: 100%
+          .heading h2
+            font-size: 26px
+            margin-bottom: 1rem
+        .about-seller
+          border-top: 1px solid #dde6ea
+          padding: 2rem 15px 0 15px
+  
+      .seller-info
+        border: 0
+        margin-top: 0
+        padding-top: 0
+        flex-direction: column
+        .reviews
+          border-top: 1px solid #dde6ea
+          padding: 2rem 15px 0 15px
+          margin-top: 2rem
+          min-width: 100%
+        .seller-listings
+          border-top: 1px solid #dde6ea
+          padding: 2rem 15px 0 15px
+
+      .description
+        border: 0
+        padding-top: 0
+      .listing-buy
+        border: 0
+        margin: 0
+        padding: 0
+        .price
+          margin-bottom: 0
+          font-size: 22px
+
+  @media (min-width: 1200px)
+    .listing-detail.container
+      max-width: 960px
 `)

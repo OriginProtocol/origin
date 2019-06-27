@@ -10,7 +10,13 @@ import useIsMobile from 'utils/useMobile'
 
 const nextPage = nextPageFactory('marketplace.user.listings')
 
-const UserListings = ({ user, hideHeader, hideLoadMore }) => {
+const UserListings = ({
+  user,
+  hideHeader,
+  hideLoadMore,
+  horizontal,
+  compact
+}) => {
   const vars = {
     first: 8,
     filter: 'active',
@@ -60,7 +66,8 @@ const UserListings = ({ user, hideHeader, hideLoadMore }) => {
               listings={nodes}
               hasNextPage={hasNextPage}
               hideCategory
-              horizontal={isMobile ? false : true}
+              horizontal={horizontal}
+              compact={compact}
             />
             {hideLoadMore || !hasNextPage ? null : (
               <button
