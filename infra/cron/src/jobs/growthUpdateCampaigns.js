@@ -3,9 +3,7 @@ const UpdateCampaigns = require('@origin/growth/src/scripts/updateCampaigns')
 
 async function GrowthUpdateCampaignJob(job) {
   logger.info(
-    `Starting job GrowthUpdateCampaignJob id=${job.id} data=${job.data} pid=${
-      process.pid
-    }`
+    `Starting job GrowthUpdateCampaignJob id=${job.id} data=${job.data} pid=${process.pid}`
   )
   job.progress(0)
 
