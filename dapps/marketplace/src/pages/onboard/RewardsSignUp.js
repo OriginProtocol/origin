@@ -5,7 +5,7 @@ import MobileModal from 'components/MobileModal'
 import WithEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import Redirect from 'components/Redirect'
 import { fbt } from 'fbt-runtime'
-import HelpOriginWallet from './_HelpOriginWallet'
+import HelpOriginWallet from 'components/DownloadApp'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
 

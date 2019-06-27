@@ -4,7 +4,7 @@ import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 
-const UserDenied = /denied transaction signature/
+const UserDenied = /denied (transaction|message) signature/
 const IncorrectNonce = /tx doesn't have the correct nonce/
 
 class CannotTransact extends Component {

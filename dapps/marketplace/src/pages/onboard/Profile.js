@@ -12,7 +12,7 @@ import EditProfile from 'pages/user/_EditProfile'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 
 import Redirect from 'components/Redirect'
-import HelpOriginWallet from './_HelpOriginWallet'
+import HelpOriginWallet from 'components/DownloadApp'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
 
