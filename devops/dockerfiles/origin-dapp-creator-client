@@ -15,6 +15,7 @@ RUN mv envkey-source /usr/local/bin
 COPY package.json ./
 COPY yarn.lock ./
 COPY lerna.json ./
+COPY ./packages/web3-provider ./packages/web3-provider
 COPY ./packages/graphql ./packages/graphql
 COPY ./packages/eventsource ./packages/eventsource
 COPY ./packages/event-cache ./packages/event-cache
