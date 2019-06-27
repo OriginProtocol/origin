@@ -47,11 +47,7 @@ class ListingImages extends Component {
                 <ImagePicker
                   images={this.state.media}
                   onChange={media => this.setState({ media })}
-                >
-                  <div className="add-photos">
-                    <fbt desc="create.select-photos">Select photos</fbt>
-                  </div>
-                </ImagePicker>
+                />
                 <ul className="help-text photo-help list-unstyled">
                   <fbt desc="create.listing.photos.help">
                     <li>
@@ -114,27 +110,4 @@ class ListingImages extends Component {
 export default ListingImages
 
 require('react-styl')(`
-  .create-listing .listing-step
-    .add-photos
-      border: 1px dashed var(--light)
-      font-size: 14px;
-      font-weight: normal;
-      color: var(--bluey-grey);
-      height: 100%
-      min-height: 9rem
-      display: flex
-      align-items: center
-      justify-content: center
-      flex-direction: column
-
-      &::before
-        content: ""
-        background: url(images/camera-icon-circle.svg) no-repeat
-        width: 5rem;
-        height: 3rem;
-        background-size: 100%;
-        background-position: center;
-        opacity: 0.4;
-      &:hover::before
-        opacity: 0.6
 `)

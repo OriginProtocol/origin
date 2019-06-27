@@ -61,7 +61,7 @@ const ChooseListingType = props => {
           </div>
         </div>
         <div className="col-md-4">
-          <div className="gray-box">
+          <div className="gray-box d-none d-md-block">
             <DownloadApp />
           </div>
         </div>
