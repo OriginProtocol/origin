@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
+import { withRouter } from 'react-router-dom'
 
 import withWallet from 'hoc/withWallet'
 import withIsMobile from 'hoc/withIsMobile'
@@ -64,7 +65,7 @@ class OnboardEmail extends Component {
       return (
         <MobileModal
           title={fbt('Create a profile', 'UserActivation.createProfile')}
-          onBack={() => this.onCompleted()}
+          onBack={() => this.props.history.goBack()}
           className="profile-email"
         >
           {content}
@@ -115,7 +116,7 @@ class OnboardEmail extends Component {
   }
 }
 
-export default withIsMobile(withWallet(OnboardEmail))
+export default withRouter(withIsMobile(withWallet(OnboardEmail)))
 
 require('react-styl')(`
   .onboard .onboard-box.profile-email
