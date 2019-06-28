@@ -14,7 +14,7 @@ ipfsProxyImageTag: '7428c36'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '25e5d9c'
+faucetImageTag: 'f78d380'
 
 # event-listener
 eventlistenerImage: event-listener
