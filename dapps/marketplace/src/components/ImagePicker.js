@@ -51,14 +51,18 @@ class ImagePicker extends Component {
               multiple={true}
               onChange={async e => {
                 const { files } = e.currentTarget
+                this.setState({ uploading: true })
                 const newImages = await uploadImages(ipfsRPC, files)
+                this.setState({ uploading: false })
                 this.onChange([...this.state.images, ...newImages].slice(0, 50))
                 this.uploadRef.value = ''
               }}
               style={{ display: 'none' }}
             />
           )}
-          {this.props.children}
+          <div
+            className={`add-photos${this.state.uploading ? ' uploading' : ''}`}
+          />
         </label>
 
         {this.state.crop === undefined ? null : (
@@ -163,19 +167,25 @@ export default withConfig(ImagePicker)
 require('react-styl')(`
   .image-picker
     margin-bottom: 1rem
-    display: grid
-    grid-column-gap: 1rem;
-    grid-row-gap: 1rem;
-    grid-template-columns: repeat(auto-fill,minmax(150px, 1fr));
-
+    display: flex
+    flex-wrap: wrap
+    justify-content: center
     > label
       cursor: pointer
       margin: 0
     .preview-row
+      display: flex
+      justofy-content: center
+      margin: 0.5rem
+      min-width: 9rem
+      min-height: 9rem
       position: relative
       background: var(--white)
       cursor: move
       border: 2px dashed transparent
+      border: 1px solid var(--light)
+      border-radius: 10px
+      overflow: hidden
       .info
         position: absolute
         top: 0
@@ -214,6 +224,33 @@ require('react-styl')(`
           visibility: hidden
         .img
           visibility: hidden
-        border-color: var(--light-dusk)
+        border: 1px dashed var(--light-dusk)
 
+    .add-photos
+      margin: 0.5rem
+      border: 1px solid var(--light)
+      border-radius: 10px
+      overflow: hidden
+      font-size: 14px
+      font-weight: normal
+      color: var(--bluey-grey)
+      min-height: 9rem
+      min-width: 9rem
+      display: flex
+      align-items: center
+      justify-content: center
+      flex-direction: column
+
+      &::before
+        content: ""
+        background: url(images/add-icon.svg) no-repeat
+        width: 2.5rem
+        height: 2.5rem
+        background-size: contain
+        background-position: center
+      &:hover::before
+        opacity: 0.75
+
+      &.uploading::before
+        background: url(images/spinner-animation-dark.svg) no-repeat
 `)

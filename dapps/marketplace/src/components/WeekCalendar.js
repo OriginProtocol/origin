@@ -97,7 +97,7 @@ class WeekCalendar extends Component {
           {/* Time label column */}
           {[...Array(24)].map((_, k) => (
             <div key={k} className="time-column-label">
-              <div>{weekStartDate.add(k, 'hour').format('ha')}</div>
+              {weekStartDate.add(k, 'hour').format('ha')}
             </div>
           ))}
           {/* All selectable hours */}
@@ -122,12 +122,7 @@ class WeekCalendar extends Component {
 
     // Hour in past
     if (dayjs(hour.hour).isBefore(dayjs())) {
-      return (
-        <div
-          key={idx}
-          className={`hour in-past${idx % 7 === 6 ? ' end-row' : ''}`}
-        />
-      )
+      return <div key={idx} className={`hour in-past`} />
     }
 
     let content = (
@@ -149,39 +144,40 @@ class WeekCalendar extends Component {
     let interactions = {}
     if (this.props.interactive !== false) {
       interactions = {
-        onMouseDown: () => {
-          this.setState({
-            dragging: true,
-            dragStart: idx,
-            startDate: hour.hour,
-            dragEnd: null,
-            endDate: null
-          })
-        },
-        onMouseUp: () => {
-          const endDate = hour.hour
-          this.setState({ dragEnd: idx, dragging: false, endDate: endDate })
-          if (this.props.onChange) {
-            let rangeStartDate = dayjs(this.state.startDate),
-              rangeEndDate = dayjs(endDate)
+        onClick: () => {
+          if (this.state.dragging) {
+            const endDate = hour.hour
+            this.setState({ dragEnd: idx, dragging: false, endDate: endDate })
+            if (this.props.onChange) {
+              let rangeStartDate = dayjs(this.state.startDate),
+                rangeEndDate = dayjs(endDate)
 
-            // Handle if enddate is actually *before* startdate
-            if (rangeEndDate.isBefore(rangeStartDate)) {
-              const temp = rangeStartDate
-              rangeStartDate = rangeEndDate
-              rangeEndDate = temp
+              // Handle if enddate is actually *before* startdate
+              if (rangeEndDate.isBefore(rangeStartDate)) {
+                const temp = rangeStartDate
+                rangeStartDate = rangeEndDate
+                rangeEndDate = temp
+              }
+              // We add an hour to end. If user drags to select the 4pm slot, that means thier booking
+              // *acutally* ends at 5pm.
+              rangeEndDate = rangeEndDate.add(1, 'hour')
+              // ISO 8601 Interval format
+              // e.g. "2019-03-01T01:00:00/2019-03-01T03:00:00"
+              const range =
+                rangeStartDate.format('YYYY-MM-DDTHH:mm:ss') +
+                '/' +
+                rangeEndDate.format('YYYY-MM-DDTHH:mm:ss')
+
+              this.props.onChange({ range })
             }
-            // We add an hour to end. If user drags to select the 4pm slot, that means thier booking
-            // *acutally* ends at 5pm.
-            rangeEndDate = rangeEndDate.add(1, 'hour')
-            // ISO 8601 Interval format
-            // e.g. "2019-03-01T01:00:00/2019-03-01T03:00:00"
-            const range =
-              rangeStartDate.format('YYYY-MM-DDTHH:mm:ss') +
-              '/' +
-              rangeEndDate.format('YYYY-MM-DDTHH:mm:ss')
-
-            this.props.onChange({ range })
+          } else {
+            this.setState({
+              dragging: true,
+              dragStart: idx,
+              startDate: hour.hour,
+              dragEnd: null,
+              endDate: null
+            })
           }
         },
         onMouseOver: () => this.setState({ dragOver: idx })
@@ -263,10 +259,9 @@ require('react-styl')(`
         border-style: solid
         border-color: #c2cbd3
         border-width: 0 1px 0 0
-        text-align: right
-        padding-right: 0.5rem
-        > div
-          margin-top: -1rem
+        display: flex
+        align-items: center
+        justify-content: center
       > .hour
         height: 50px
         min-height: 3.5rem
@@ -338,17 +333,20 @@ require('react-styl')(`
 
     .day-header
       display: flex
+      > div
+        display: flex
+        align-items: center
+        flex-direction: column
       border-width: 0 0 0 0
       border-style: solid
       border-color: #c2cbd3
       justify-content: space-between;
       text-align: left
-      padding-left: 1rem
       font-size: 14px
       font-weight: normal
       color: var(--bluey-grey)
-      margin-top: 1rem;
-      line-height: 2rem;
+      margin-top: 1rem
+      line-height: 2rem
       > div
         flex: 1
         .day-column-name

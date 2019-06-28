@@ -57,6 +57,7 @@
   "devDependencies": {
     "@babel/node": "^7.2.0",
     "eslint": "^5.15.3",
+    "prettier": "^1.16.4",
     "nodemon": "^1.18.7"
   },
   "prettier": {

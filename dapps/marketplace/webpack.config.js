@@ -87,7 +87,8 @@ const config = {
   },
   resolve: {
     extensions: ['.js', '.json'],
-    modules: [path.resolve(__dirname, 'src/constants'), './node_modules']
+    modules: [path.resolve(__dirname, 'src/constants'), './node_modules'],
+    symlinks: false
   },
   node: {
     fs: 'empty'

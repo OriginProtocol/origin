@@ -130,7 +130,10 @@ function Campaign(props) {
     )
   }
 
-  const mobileAction = find(actions, action => action.type === 'MobileApp')
+  const mobileAction = find(
+    actions,
+    action => action.type === 'MobileAccountCreated'
+  )
 
   // campaign rewards converted normalized to token value according to number of decimals
   const tokensEarned = web3.utils
