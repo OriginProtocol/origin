@@ -10,7 +10,7 @@ const { tokenToNaturalUnits } = require('../src/util/token')
 
 function checkExpectedState(state, expectedState) {
   expect(state.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-  expect(state.actions.length).to.equal(27) // TODO: Adjust when adding listings
+  expect(state.actions.length).to.equal(31) // TODO: Adjust when adding listings
 
   const actionByRuleId = {}
   for(const action of state.actions) {
@@ -82,7 +82,7 @@ describe('Apollo adapter - July campaign', () => {
     expect(this.crules.levels[1]).to.be.an('object')
     expect(this.crules.levels[1].rules.length).to.equal(11)
     expect(this.crules.levels[2]).to.be.an('object')
-    expect(this.crules.levels[2].rules.length).to.equal(15) // TODO: adjust when adding new listings
+    expect(this.crules.levels[2].rules.length).to.equal(19) // TODO: adjust when adding new listings
 
     // Mock the getEvents method to use events from this.events.
     // When writing a test, be aware that this.events is global and shared with other tests.
@@ -201,79 +201,103 @@ describe('Apollo adapter - July campaign', () => {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(10), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(150), currency: 'OGN' }
       },
       ListingPurchase2865: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(10), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(30), currency: 'OGN' }
       },
       ListingPurchase2866: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(20), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(150), currency: 'OGN' }
       },
-      ListingPurchase679: {
+      ListingPurchase2877: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(500), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(700), currency: 'OGN' }
       },
-      ListingPurchase2555: {
+      ListingPurchase2878: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(250), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(75), currency: 'OGN' }
       },
-      ListingPurchase1103: {
+      ListingPurchase2879: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(20), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(75), currency: 'OGN' }
       },
-      ListingPurchase2812: {
-        type: 'ListingIdPurchased',
-        status: 'Inactive',
-        rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(15), currency: 'OGN' }
-      },
-      ListingPurchase866: {
+      ListingPurchase2881: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenToNaturalUnits(15), currency: 'OGN' }
       },
-      ListingPurchase297: {
+      ListingPurchase2882: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(500), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(15), currency: 'OGN' }
       },
-      ListingPurchase289: {
+      ListingPurchase2883: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(500), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(15), currency: 'OGN' }
       },
-      ListingPurchase639: {
+      ListingPurchase2885: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(20), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(15), currency: 'OGN' }
       },
-      ListingPurchase471: {
+      ListingPurchase2886: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(20), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(30), currency: 'OGN' }
       },
-      ListingPurchase292: {
+      ListingPurchase2887: {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(500), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(15), currency: 'OGN' }
+      },
+      ListingPurchase2892: {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(150), currency: 'OGN' }
+      },
+      ListingPurchase2893: {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(75), currency: 'OGN' }
+      },
+      ListingPurchase2894: {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(300), currency: 'OGN' }
+      },
+      ListingPurchase2895: {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(1000), currency: 'OGN' }
+      },
+      ListingPurchase2896: {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(75), currency: 'OGN' }
       }
       // TODO: add more listings
     }
@@ -391,20 +415,13 @@ describe('Apollo adapter - July campaign', () => {
     // Level 2 should be unlocked.
     this.expectedState.Referral.status = 'Active'
     this.expectedState.MobileAccountCreated.status = 'Active'
-    this.expectedState.ListingPurchase2867.status = 'Active'
-    this.expectedState.ListingPurchase2865.status = 'Active'
-    this.expectedState.ListingPurchase2866.status = 'Active'
-    this.expectedState.ListingPurchase679.status = 'Active'
-    this.expectedState.ListingPurchase2555.status = 'Active'
-    this.expectedState.ListingPurchase1103.status = 'Active'
-    this.expectedState.ListingPurchase2812.status = 'Active'
-    this.expectedState.ListingPurchase866.status = 'Active'
-    this.expectedState.ListingPurchase297.status = 'Active'
-    this.expectedState.ListingPurchase289.status = 'Active'
-    this.expectedState.ListingPurchase639.status = 'Active'
-    this.expectedState.ListingPurchase471.status = 'Active'
-    this.expectedState.ListingPurchase292.status = 'Active'
-    // TODO: add more listings.
+
+    // Unlock all ListingPurchase listings
+    Object.keys(this.expectedState)
+      .filter(key => key.startsWith('ListingPurchase'))
+      .forEach(listingPurchaseKey => {
+        this.expectedState[listingPurchaseKey].status = 'Active'
+      })
 
     checkExpectedState(state, this.expectedState)
   })
@@ -445,11 +462,11 @@ describe('Apollo adapter - July campaign', () => {
       this.mockAdapter
     )
 
-    this.expectedState.rewardEarned = { amount: '70000000000000000000', currency: 'OGN' }
+    this.expectedState.rewardEarned = { amount: '90000000000000000000', currency: 'OGN' }
     this.expectedState.AirbnbAttestation.status = 'Completed'
     this.expectedState.AirbnbAttestation.rewardEarned = { amount: '10000000000000000000', currency: 'OGN' }
     // User should earn reward for the purchase. There is no limit so status should still be Active.
-    this.expectedState.ListingPurchase2865.rewardEarned = { amount: '10000000000000000000', currency: 'OGN' }
+    this.expectedState.ListingPurchase2865.rewardEarned = { amount: '30000000000000000000', currency: 'OGN' }
 
     checkExpectedState(state, this.expectedState)
   })
@@ -494,7 +511,7 @@ describe('Apollo adapter - July campaign', () => {
       this.mockAdapter
     )
 
-    this.expectedState.rewardEarned = { amount: '120000000000000000000', currency: 'OGN' }
+    this.expectedState.rewardEarned = { amount: '140000000000000000000', currency: 'OGN' }
     // User should earn a referral reward.
     this.expectedState.Referral.rewardEarned = { amount: '50000000000000000000', currency: 'OGN' }
 
@@ -566,7 +583,7 @@ describe('Apollo adapter - July campaign', () => {
       this.mockAdapter
     )
 
-    this.expectedState.rewardEarned = { amount: '270000000000000000000', currency: 'OGN' }
+    this.expectedState.rewardEarned = { amount: '290000000000000000000', currency: 'OGN' }
     this.expectedState.MobileAccountCreated.status = 'Completed'
     this.expectedState.MobileAccountCreated.rewardEarned = { amount: '150000000000000000000', currency: 'OGN' }
 
