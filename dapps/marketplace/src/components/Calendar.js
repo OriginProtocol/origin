@@ -137,24 +137,26 @@ class Calendar extends Component {
     if (this.props.interactive !== false) {
       interactions = {
         onClick: () => {
+          let startDate = day.date
           if (this.state.dragging) {
+            startDate = this.state.startDate
             this.setState({ dragEnd: idx, dragging: false, endDate: day.date })
-            if (this.props.onChange) {
-              const start = dayjs(this.state.startDate)
-              let range = `${this.state.startDate}/${day.date}`
-              if (start.isAfter(day.date)) {
-                range = `${day.date}/${this.state.startDate}`
-              }
-              this.props.onChange({ range })
-            }
           } else {
             this.setState({
               dragging: true,
               dragStart: idx,
-              startDate: day.date,
-              dragEnd: null,
-              endDate: null
+              startDate,
+              dragEnd: idx,
+              endDate: startDate
             })
+          }
+          if (this.props.onChange) {
+            const start = dayjs(startDate)
+            let range = `${startDate}/${day.date}`
+            if (start.isAfter(day.date)) {
+              range = `${day.date}/${startDate}`
+            }
+            this.props.onChange({ range })
           }
         },
         onMouseOver: () => this.setState({ dragOver: idx })
