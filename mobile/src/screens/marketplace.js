@@ -68,17 +68,16 @@ class MarketplaceScreen extends Component {
   }
 
   async componentDidMount() {
-    await clipboardInviteCodeCheck()
+    await this.clipboardInviteCodeCheck()
   }
 
   async clipboardInviteCodeCheck() {
     const content = await Clipboard.getString()
     const INVITE_CODE_PREFIX = 'origin:growth_invite_code:'
 
-    if (content && content.startsWith(INVITE_CODE_PREFIX))
-    {
+    if (content && content.startsWith(INVITE_CODE_PREFIX)) {
       const inviteCode = content.substr(INVITE_CODE_PREFIX.length)
-      Clipboard.setString("")
+      Clipboard.setString('')
       this.setState({ inviteCode })
     }
   }
@@ -271,7 +270,7 @@ class MarketplaceScreen extends Component {
     })
   }
 
-  injectInviteCode = (inviteCode) => {
+  injectInviteCode = inviteCode => {
     const injectedJavaScript = `
       (function() {
         if (window && window.localStorage) {
