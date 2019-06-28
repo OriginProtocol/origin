@@ -99,9 +99,7 @@ class GrowthInvite {
          *
          */
         logger.warn(
-          `Referee ${walletAddress} already referred by ${
-            referralLink.referrerEthAddress
-          }`
+          `Referee ${walletAddress} already referred by ${referralLink.referrerEthAddress}`
         )
         return
       }

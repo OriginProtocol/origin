@@ -53,12 +53,8 @@ function contractAddresses() {
     `localStorage.clear()\n` +
     `sessionStorage.clear()\n` +
     `localStorage.OGNContract = "${localStorage.OGNContract}"\n` +
-    `localStorage.marketplaceContract = "${
-      localStorage.marketplaceContract
-    }"\n` +
-    `localStorage.identityEventsContract = "${
-      localStorage.identityEventsContract
-    }"\n` +
+    `localStorage.marketplaceContract = "${localStorage.marketplaceContract}"\n` +
+    `localStorage.identityEventsContract = "${localStorage.identityEventsContract}"\n` +
     `localStorage.uniswapDaiExchange = "${localStorage.uniswapDaiExchange}"\n` +
     tokens +
     `location.reload()\n`

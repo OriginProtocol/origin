@@ -68,7 +68,7 @@ const config = {
             loader: 'css-loader',
             options: {
               url: url => {
-                return url.match(/(svg|png)/)
+                return url.match(/(svg|png)/) ? false : true
               }
             }
           }
