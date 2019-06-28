@@ -44,7 +44,16 @@ class OnboardEmail extends Component {
     if (finished) {
       return <Redirect to={`${linkPrefix}/onboard/profile`} />
     } else if (back) {
-      return <Redirect to={`${linkPrefix}/onboard/back`} />
+      return (
+        <Redirect
+          to={{
+            pathname: `${linkPrefix}/onboard/back`,
+            state: {
+              skipped: true
+            }
+          }}
+        />
+      )
     }
 
     return this.renderContent()

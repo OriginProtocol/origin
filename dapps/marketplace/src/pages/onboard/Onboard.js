@@ -2,6 +2,10 @@ import React, { Component } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
 
+import get from 'lodash/get'
+
+import { withRouter } from 'react-router-dom'
+
 import DocumentTitle from 'components/DocumentTitle'
 import store from 'utils/store'
 
@@ -16,7 +20,14 @@ const sessionStore = store('sessionStorage')
 
 class Onboard extends Component {
   render() {
-    const { listing, hideOriginWallet, linkprefix, redirectTo } = this.props
+    const {
+      listing,
+      hideOriginWallet,
+      linkprefix,
+      redirectTo,
+      location,
+      prevLocation
+    } = this.props
     const linkPathPrefix = linkprefix || (listing ? '/listing/:listingID' : '')
     const linkPrefix = linkprefix || (listing ? `/listing/${listing.id}` : '')
 
@@ -54,7 +65,13 @@ class Onboard extends Component {
           />
           <Redirect
             from={`${linkPathPrefix}/onboard/back`}
-            to={sessionStore.get('getStartedRedirect', '/')}
+            to={get(location, 'state.skipped') && prevLocation.pathname ? prevLocation : {
+              pathname: sessionStore.get('getStartedRedirect', '/'),
+              state: {
+                ...location.state,
+                skipped: false
+              }
+            }}
           />
           <Route
             render={() => (
@@ -72,7 +89,7 @@ class Onboard extends Component {
   }
 }
 
-export default Onboard
+export default withRouter(Onboard)
 
 require('react-styl')(`
   .onboard

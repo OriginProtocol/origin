@@ -116,8 +116,8 @@ class UserProfile extends Component {
     const walletChanged =
       get(this.props, 'identity.id') !== get(prevProps, 'identity.id')
 
-    const identityLoaded =
-      !this.props.identityLoading && prevProps.identityLoading
+    const identityLoaded = this.props.identityLoaded
+
     if (
       (walletChanged || identityLoaded) &&
       !identity &&
@@ -452,7 +452,10 @@ class UserProfile extends Component {
   render() {
     if (this.state.redirectToOnboarding) {
       return (
-        <UserActivationLink location={{ pathname: '/' }} forceRedirect={true} />
+        <UserActivationLink
+          location={{ pathname: '/profile' }}
+          forceRedirect={true}
+        />
       )
     }
 
