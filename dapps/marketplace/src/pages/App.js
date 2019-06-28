@@ -67,14 +67,19 @@ class App extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    // Store the last one route to redirect user 
+    // Store the last one route to redirect user
     // if he skips onboarding
 
     const nextLocation = get(nextProps, 'location.pathname', '')
 
-    const canRedirectAfterSkip = !/^\/(create|profile|onboard)/i.test(nextLocation)
+    const canRedirectAfterSkip = !/^\/(create|profile|onboard)/i.test(
+      nextLocation
+    )
 
-    if (canRedirectAfterSkip && nextLocation !== get(prevState, 'prevLocation.pathname')) {
+    if (
+      canRedirectAfterSkip &&
+      nextLocation !== get(prevState, 'prevLocation.pathname')
+    ) {
       return {
         prevLocation: {
           ...nextProps.location
@@ -137,9 +142,12 @@ class App extends Component {
         )}
         <main>
           <Switch>
-            <Route path="/onboard" component={props => (
-              <Onboard {...props} prevLocation={this.state.prevLocation} />
-            )} />
+            <Route
+              path="/onboard"
+              component={props => (
+                <Onboard {...props} prevLocation={this.state.prevLocation} />
+              )}
+            />
             <Route path="/listing/:listingID" component={Listing} />
             <Route path="/purchases/:offerId" component={Transaction} />
             <Route path="/my-purchases/:filter?" component={MyPurchases} />

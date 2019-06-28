@@ -65,13 +65,17 @@ class Onboard extends Component {
           />
           <Redirect
             from={`${linkPathPrefix}/onboard/back`}
-            to={get(location, 'state.skipped') && prevLocation.pathname ? prevLocation : {
-              pathname: sessionStore.get('getStartedRedirect', '/'),
-              state: {
-                ...location.state,
-                skipped: false
-              }
-            }}
+            to={
+              get(location, 'state.skipped') && prevLocation.pathname
+                ? prevLocation
+                : {
+                    pathname: sessionStore.get('getStartedRedirect', '/'),
+                    state: {
+                      ...location.state,
+                      skipped: false
+                    }
+                  }
+            }
           />
           <Route
             render={() => (
