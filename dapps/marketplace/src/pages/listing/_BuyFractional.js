@@ -138,6 +138,7 @@ const Fractional = ({
                     value={token}
                     onChange={setToken}
                     hasBalance={tokenStatus.hasBalance}
+                    hideCannotTransact={isMobile}
                   >
                     <Buy
                       refetch={refetch}
@@ -159,10 +160,14 @@ const Fractional = ({
                 </>
               )}
             </div>
-            {isMobile && totalPrice ? priceComp : null}
-            <div className="listing-buy fractional">
-              {isMobile && dateSelectionComp}
-            </div>
+            {isMobile ? (
+              <>
+                {totalPrice ? priceComp : null}
+                <div className="listing-buy fractional">
+                  {dateSelectionComp}
+                </div>
+              </>
+            ) : null}
           </>
         )
       }}

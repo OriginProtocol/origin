@@ -38,13 +38,14 @@ const PaymentOptions = ({
   hasBalance,
   hasEthBalance,
   children,
-  cannotTransact
+  cannotTransact,
+  hideCannotTransact
 }) => {
   if (cannotTransact && cannotTransact !== 'no-balance') {
-    return children
+    return children || null
   }
   if (!Object.keys(tokens).length) {
-    return children
+    return children || null
   }
 
   const daiActive = value === 'token-DAI' ? ' active' : ''
@@ -71,16 +72,17 @@ const PaymentOptions = ({
   }
 
   return (
-    <div className="payment-options">
-      {cannotPurchase ? (
+    <div
+      className={`payment-options${cannotPurchase ? ' not-enough-funds' : ''}`}
+    >
+      {hideCannotTransact || !cannotPurchase ? null : (
         <NotEnoughFunds
           ethPrice={ethPrice}
           daiPrice={daiPrice}
           noEthOrDai={noEthOrDai}
         />
-      ) : (
-        children
       )}
+      {cannotPurchase && !hideCannotTransact ? null : children}
     </div>
   )
 }

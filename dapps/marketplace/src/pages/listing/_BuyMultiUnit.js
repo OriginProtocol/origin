@@ -112,6 +112,7 @@ require('react-styl')(`
         .price
           line-height: 2
           padding: 0
+          white-space: nowrap
         .quantity
           padding: 0
           line-height: 2

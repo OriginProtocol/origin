@@ -19,7 +19,8 @@ const FractionalHourly = ({
   range,
   availability,
   refetch,
-  growthReward
+  growthReward,
+  isMobile
 }) => {
   const selectedCurrency = useContext(CurrencyContext)
   const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
@@ -55,6 +56,41 @@ const FractionalHourly = ({
     }
   }
 
+  const priceComp = (
+    <div className="total">
+      <span className="total-price-label">
+        <fbt desc="totalPrice">Total Price</fbt>
+      </span>
+      <span className="total-price-value">
+        <Price price={totalPrice} />
+      </span>
+    </div>
+  )
+
+  const dateSelectionComp = (
+    <div className="choose-dates form-control">
+      <Tooltip
+        tooltip={fbt(
+          'Scroll down for availability calendar',
+          'Scroll down for availability calendar'
+        )}
+        placement="top"
+      >
+        <div>{startDateDisplay}</div>
+      </Tooltip>
+      <div className="arr" />
+      <Tooltip
+        tooltip={fbt(
+          'Scroll down for availability calendar',
+          'Scroll down for availability calendar'
+        )}
+        placement="top"
+      >
+        <div>{endDateDisplay}</div>
+      </Tooltip>
+    </div>
+  )
+
   return (
     <WithPrices
       price={totalPrice}
@@ -63,93 +99,81 @@ const FractionalHourly = ({
     >
       {({ prices, tokenStatus }) => {
         return (
-          <div className="listing-buy fractional">
-            <div className="price">
-              <div className="d-flex justify-content-between align-items-center">
-                <div className="d-flex">
-                  <Price price={listing.price} />
-                  <div className="desc">/ hour</div>
+          <>
+            <div className="listing-buy fractional">
+              <div className="price">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div className="d-flex">
+                    <Price price={listing.price} />
+                    <div className="desc">/ hour</div>
+                  </div>
+                  {!isMobile && (
+                    <OgnBadge
+                      amount={growthReward}
+                      className="listing-detail-growth-reward"
+                    />
+                  )}
                 </div>
-                <OgnBadge
-                  amount={growthReward}
-                  className="listing-detail-growth-reward"
-                />
+                {listing.price.currency.id === selectedCurrency ? null : (
+                  <span className="orig">
+                    <Price
+                      price={listing.price}
+                      target={listing.price.currency.id}
+                    />
+                  </span>
+                )}
               </div>
-              {listing.price.currency.id === selectedCurrency ? null : (
-                <span className="orig">
-                  <Price
-                    price={listing.price}
-                    target={listing.price.currency.id}
-                  />
-                </span>
+              {!isMobile && dateSelectionComp}
+              {!showUnavailable || isMobile ? null : (
+                <div className="total">
+                  <fbt desc="Unavailable">Unavailable</fbt>
+                </div>
+              )}
+              {!totalPrice ? (
+                <button className="btn btn-primary disabled">
+                  {fbt('Book', 'Book')}
+                </button>
+              ) : (
+                <>
+                  {!isMobile && priceComp}
+                  <PaymentOptions
+                    tokens={prices}
+                    price={totalPrice}
+                    acceptedTokens={listing.acceptedTokens}
+                    value={token}
+                    onChange={setToken}
+                    hasBalance={tokenStatus.hasBalance}
+                    hideCannotTransact={isMobile}
+                  >
+                    <Buy
+                      refetch={refetch}
+                      listing={listing}
+                      from={from}
+                      value={get(prices, `['${token}'].amount`)}
+                      quantity={1}
+                      disabled={available ? false : true}
+                      startDate={startDate}
+                      endDate={endDate}
+                      currency={token}
+                      tokenStatus={tokenStatus}
+                      className={`btn btn-primary${
+                        available ? '' : ' disabled'
+                      }`}
+                      children={fbt('Book', 'Book')}
+                    />
+                  </PaymentOptions>
+                </>
               )}
             </div>
-            <div className="choose-dates form-control">
-              <Tooltip
-                tooltip={fbt(
-                  'Scroll down for availability calendar',
-                  'Scroll down for availability calendar'
-                )}
-                placement="top"
-              >
-                <div>{startDateDisplay}</div>
-              </Tooltip>
-              <div className="arr" />
-              <Tooltip
-                tooltip={fbt(
-                  'Scroll down for availability calendar',
-                  'Scroll down for availability calendar'
-                )}
-                placement="top"
-              >
-                <div>{endDateDisplay}</div>
-              </Tooltip>
-            </div>
-            {!showUnavailable ? null : (
-              <div className="total">
-                <fbt desc="Unavailable">Unavailable</fbt>
-              </div>
-            )}
-            {!totalPrice ? (
-              <button className="btn btn-primary disabled">
-                {fbt('Book', 'Book')}
-              </button>
-            ) : (
+            {isMobile ? (
               <>
-                <div className="total">
-                  <span>
-                    <fbt desc="totalPrice">Total Price</fbt>
-                  </span>
-                  <span>
-                    <Price price={totalPrice} />
-                  </span>
+                {totalPrice ? priceComp : null}
+                <div className="listing-buy fractional">
+                  {dateSelectionComp}
                 </div>
-                <PaymentOptions
-                  tokens={prices}
-                  price={totalPrice}
-                  acceptedTokens={listing.acceptedTokens}
-                  value={token}
-                  onChange={setToken}
-                  hasBalance={tokenStatus.hasBalance}
-                >
-                  <Buy
-                    refetch={refetch}
-                    listing={listing}
-                    from={from}
-                    value={get(prices, `['${token}'].amount`)}
-                    quantity={1}
-                    disabled={available ? false : true}
-                    startDate={startDate}
-                    endDate={endDate}
-                    currency={token}
-                    tokenStatus={tokenStatus}
-                    className={`btn btn-primary${available ? '' : ' disabled'}`}
-                    children={fbt('Book', 'Book')}
-                  />
-                </PaymentOptions>
               </>
-            )}
-          </div>
+            ) : null}
+          </>
         )
       }}
     </WithPrices>
