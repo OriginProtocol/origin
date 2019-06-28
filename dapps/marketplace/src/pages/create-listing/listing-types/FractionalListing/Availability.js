@@ -2,15 +2,14 @@ import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 import AvailabilityCalculator from '@origin/graphql/src/utils/AvailabilityCalculator'
 
-import Steps from 'components/Steps'
+import Redirect from 'components/Redirect'
+import Link from 'components/Link'
 import Calendar from 'components/Calendar'
 import CurrencySelect from 'components/CurrencySelect'
-import Link from 'components/Link'
-import Redirect from 'components/Redirect'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
-class Availability extends Component {
+class ListingAvailability extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -32,78 +31,65 @@ class Availability extends Component {
     if (this.state.valid) {
       return <Redirect to={this.props.next} push />
     }
+
     return (
-      <div className="row">
-        <div className="col-md-8">
-          <div className="create-listing-calendar">
-            <div className="wrap">
-              <div className="step">
-                <fbt desc="create.details.step">
-                  Step
-                  <fbt:param name="create.details.fractional.step">
-                    {this.props.step}
-                  </fbt:param>
-                </fbt>
-              </div>
-              <div className="step-description">
-                <fbt desc="create.edit-availability.description">
-                  Edit availability &amp; Pricing
-                </fbt>
-              </div>
-              <Steps steps={this.props.steps} step={this.props.step} />
-
-              <form
-                onSubmit={e => {
-                  e.preventDefault()
-                  this.setState({ valid: true })
-                }}
-              >
-                {this.state.valid !== false ? null : (
-                  <div className="alert alert-danger">
-                    <fbt desc="listing.create.errors">
-                      Please fix the errors below...
-                    </fbt>
-                  </div>
-                )}
-
-                <Calendar
-                  range={this.state.range}
-                  availability={this.state.calculator}
-                  onChange={state => this.setState(state)}
-                  showBooked={true}
-                  currency={this.props.listing.currency}
-                  originalCurrency
-                />
-
-                <div className="actions">
-                  <Link
-                    className="btn btn-outline-primary"
-                    to={this.props.prev}
-                  >
-                    <fbt desc="listing.create.back">Back</fbt>
-                  </Link>
-                  <button className="btn btn-primary" type="submit">
-                    <fbt desc="listing.create.review">Review</fbt>
-                  </button>
+      <>
+        <h1>
+          <Link to={this.props.prev} className="back d-md-none" />
+          <fbt desc="createListing.availability">Availability</fbt>
+        </h1>
+        <div className="row">
+          <div className="col-md-8">
+            <form
+              className="listing-step no-pad"
+              onSubmit={e => {
+                e.preventDefault()
+                this.setState({ valid: true })
+              }}
+            >
+              {this.state.valid !== false ? null : (
+                <div className="alert alert-danger">
+                  <fbt desc="fix errors">Please fix the errors below...</fbt>
                 </div>
-              </form>
-            </div>
+              )}
+
+              <Calendar
+                range={this.state.range}
+                availability={this.state.calculator}
+                onChange={state => this.setState(state)}
+                showBooked={true}
+                currency={this.props.listing.currency}
+                originalCurrency
+              />
+
+              <div className="actions">
+                <Link
+                  className="btn btn-outline-primary d-none d-md-inline-block"
+                  to={this.props.prev}
+                >
+                  <fbt desc="back">Back</fbt>
+                </Link>
+                <button type="submit" className="btn btn-primary">
+                  <fbt desc="continue">Continue</fbt>
+                </button>
+              </div>
+            </form>
+          </div>
+          <div className="col-md-4">
+            {this.state.range ? (
+              this.renderAvailabilty()
+            ) : (
+              <div className="gray-box">
+                <fbt desc="listing.create.fractional.calendar.help">
+                  Click the calendar to enter pricing and availability
+                  information. To select multiple time slots, click the starting
+                  time slot and drag to the ending one.
+                </fbt>
+              </div>
+            )}
           </div>
         </div>
-        <div className="col-md-4">
-          {this.state.range ? (
-            this.renderAvailabilty()
-          ) : (
-            <div className="gray-box">
-              <fbt desc="listing.create.fractional.calendar.help">
-                Click the calendar to enter pricing and availability
-                information. To select multiple time slots, click the starting
-                time slot and drag to the ending one.
-              </fbt>
-            </div>
-          )}
-        </div>
-      </div>
+      </>
     )
   }
 
@@ -244,4 +230,54 @@ class Availability extends Component {
   }
 }
 
-export default Availability
+export default ListingAvailability
+
+require('react-styl')(`
+  .create-listing
+    .listing-step
+      .calendar,.weekCalendar
+        align-self: stretch
+
+    .availability-editor
+      margin-top: 2rem
+      border: 1px solid var(--light)
+      border-radius: 5px
+      padding: 1rem
+      font-size: 18px
+      font-weight: normal
+      .action-buttons
+        display: flex
+        > .btn
+          flex: 1
+          &:first-child
+            margin-right: 1rem
+      label
+        font-weight: bold
+        color: #000
+        font-size: 18px
+      .sep
+        padding: 0 0.5rem;
+        align-self: center;
+        font-weight: bold;
+      .inline-label
+        display: flex;
+        align-items: center;
+        label
+          margin-bottom: 0
+          margin-right: 1rem
+        > div
+          margin-left: 1rem
+          display: flex
+          align-items: baseline
+          input
+            margin-right: 0.25rem
+
+
+  @media (min-width: 767.98px)
+    .create-listing
+      .listing-step
+        .calendar,.weekCalendar
+          margin-left: 1rem
+          margin-right: 1rem
+
+`)

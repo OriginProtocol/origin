@@ -1,17 +1,15 @@
 import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
-
 import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/AvailabilityCalculatorHourly'
 
-import Steps from 'components/Steps'
+import Redirect from 'components/Redirect'
+import Link from 'components/Link'
 import WeekCalendar from 'components/WeekCalendar'
 import CurrencySelect from 'components/CurrencySelect'
-import Link from 'components/Link'
-import Redirect from 'components/Redirect'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 
-class Availability extends Component {
+class ListingHourlyAvailability extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -33,79 +31,66 @@ class Availability extends Component {
     if (this.state.valid) {
       return <Redirect to={this.props.next} push />
     }
+
     return (
-      <div className="row">
-        <div className="col-md-8">
-          <div className="create-listing-calendar">
-            <div className="wrap">
-              <div className="step">
-                <fbt desc="create.details.step">
-                  Step
-                  <fbt:param name="create.details.hourly.step">
-                    {this.props.step}
-                  </fbt:param>
-                </fbt>
-              </div>
-              <div className="step-description">
-                <fbt desc="create.edit-availability.description">
-                  Edit availability &amp; Pricing
-                </fbt>
-              </div>
-              <Steps steps={this.props.steps} step={this.props.step} />
-
-              <form
-                onSubmit={e => {
-                  e.preventDefault()
-                  this.setState({ valid: true })
-                }}
-              >
-                {this.state.valid !== false ? null : (
-                  <div className="alert alert-danger">
-                    <fbt desc="listing.create.errors">
-                      Please fix the errors below...
-                    </fbt>
-                  </div>
-                )}
-
-                <WeekCalendar
-                  range={this.state.range}
-                  availability={this.state.calculator}
-                  workingHours={this.state.workingHours}
-                  onChange={state => this.setState(state)}
-                  showBooked={true}
-                  currency={this.props.listing.currency}
-                  originalCurrency
-                />
-
-                <div className="actions">
-                  <Link
-                    className="btn btn-outline-primary"
-                    to={this.props.prev}
-                  >
-                    <fbt desc="listing.create.back">Back</fbt>
-                  </Link>
-                  <button className="btn btn-primary" type="submit">
-                    <fbt desc="listing.create.review">Review</fbt>
-                  </button>
+      <>
+        <h1>
+          <Link to={this.props.prev} className="back d-md-none" />
+          <fbt desc="createListing.availability">Availability</fbt>
+        </h1>
+        <div className="row">
+          <div className="col-md-8">
+            <form
+              className="listing-step no-pad"
+              onSubmit={e => {
+                e.preventDefault()
+                this.setState({ valid: true })
+              }}
+            >
+              {this.state.valid !== false ? null : (
+                <div className="alert alert-danger">
+                  <fbt desc="fix errors">Please fix the errors below...</fbt>
                 </div>
-              </form>
-            </div>
+              )}
+
+              <WeekCalendar
+                range={this.state.range}
+                availability={this.state.calculator}
+                workingHours={this.state.workingHours}
+                onChange={state => this.setState(state)}
+                showBooked={true}
+                currency={this.props.listing.currency}
+                originalCurrency
+              />
+
+              <div className="actions">
+                <Link
+                  className="btn btn-outline-primary d-none d-md-inline-block"
+                  to={this.props.prev}
+                >
+                  <fbt desc="back">Back</fbt>
+                </Link>
+                <button type="submit" className="btn btn-primary">
+                  <fbt desc="continue">Continue</fbt>
+                </button>
+              </div>
+            </form>
+          </div>
+          <div className="col-md-4">
+            {this.state.range ? (
+              this.renderAvailabilty()
+            ) : (
+              <div className="gray-box">
+                <fbt desc="listing.create.fractional.calendar.help">
+                  Click the calendar to enter pricing and availability
+                  information. To select multiple time slots, click the starting
+                  time slot and drag to the ending one.
+                </fbt>
+              </div>
+            )}
           </div>
         </div>
-        <div className="col-md-4">
-          {this.state.range ? (
-            this.renderAvailabilty()
-          ) : (
-            <div className="gray-box">
-              <fbt desc="listing.create.fractional.calendar.help">
-                Click the calendar to enter pricing and availability
-                information. To select multiple time slots, click the starting
-                time slot and drag to the ending one.
-              </fbt>
-            </div>
-          )}
-        </div>
-      </div>
+      </>
     )
   }
 
@@ -113,48 +98,32 @@ class Availability extends Component {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
-    // ISO 8601 Intervals
-    // https://en.wikipedia.org/wiki/ISO_8601#Time_intervals
-    const [start, end] = this.state.range.split('/'),
-      [startDate, startTime] = start.split('T'),
-      [endDate, endTime] = end.split('T')
+    const [start, end] = this.state.range.split('/')
 
     return (
       <div className="availability-editor">
         <div className="form-group">
           <label>
-            <fbt desc="create.hourly.start-time">Start</fbt>
+            <fbt desc="create.fractional.start-date">Start Date</fbt>
           </label>
-          <input
-            className="form-control"
-            type="date"
-            value={startDate}
-            readOnly
-          />
-          <input
-            className="form-control"
-            type="time"
-            value={startTime}
-            readOnly
-          />
+          <input className="form-control" type="date" value={start} readOnly />
         </div>
         <div className="form-group">
           <label>
-            <fbt desc="create.hourly.end-time">End</fbt>
+            <fbt desc="create.fractional.end-date">End Date</fbt>
           </label>
-          <input
-            className="form-control"
-            type="date"
-            value={endDate}
-            readOnly
-          />
-          <input
-            className="form-control"
-            type="time"
-            value={endTime}
-            readOnly
-          />
+          <input className="form-control" type="date" value={end} readOnly />
         </div>
+        {/* <div className="form-group">
+          <label>Availability</label>
+          <div className="btn-group w-100">
+            <button className="btn btn-outline-secondary active">
+              Available
+            </button>
+            <button className="btn btn-outline-secondary">Booked</button>
+            <button className="btn btn-outline-secondary">Unavailable</button>
+          </div>
+        </div> */}
         <div className="form-group inline-label">
           <label>
             <fbt desc="create.fractional.available">Available</fbt>
@@ -245,7 +214,6 @@ class Availability extends Component {
                 available: true
               })
 
-              // Get updated ranges from calculator
               const { booked, customPricing, unavailable } = calculator.opts
 
               this.props.onChange({
@@ -263,47 +231,7 @@ class Availability extends Component {
   }
 }
 
-export default Availability
+export default ListingHourlyAvailability
 
 require('react-styl')(`
-  .create-listing
-    .create-listing-calendar
-      border: transparent
-      .step-description
-        font-size: 28px
-      .gray-box
-        margin-top: 10.5rem
-    .availability-editor
-      margin-top: 10.5rem
-      border: 1px solid var(--light)
-      border-radius: 5px
-      padding: 1rem
-      font-size: 18px
-      font-weight: normal
-      .action-buttons
-        display: flex
-        > .btn
-          flex: 1
-          &:first-child
-            margin-right: 1rem
-      label
-        font-weight: bold
-        color: #000
-        font-size: 18px
-      .sep
-        padding: 0 0.5rem;
-        align-self: center;
-        font-weight: bold;
-      .inline-label
-        display: flex;
-        align-items: center;
-        label
-          margin-bottom: 0
-          margin-right: 1rem
-        > div
-          margin-left: 1rem
-          display: flex
-          align-items: baseline
-          input
-            margin-right: 0.25rem
 `)

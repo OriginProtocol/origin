@@ -81,7 +81,7 @@ require('react-styl')(`
     display: flex
     flex-direction: row
     justify-content: center
-    margin-top: 1rem
+    margin: 1rem 0
     .tick
       width: 6px
       height: 6px

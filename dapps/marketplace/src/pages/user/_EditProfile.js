@@ -60,10 +60,18 @@ class EditProfile extends Component {
             if (this.validate()) {
               if (profileUpdated(this.state, this.props)) {
                 this.props.onChange(
-                  pick(this.state, ['firstName', 'lastName', 'description'])
+                  pick(this.state, [
+                    'firstName',
+                    'lastName',
+                    'description',
+                    'avatarUrl'
+                  ])
                 )
 
-                if (this.state.avatarUrl !== this.props.avatarUrl) {
+                if (
+                  this.state.avatarUrl !== this.props.avatarUrl &&
+                  this.props.onAvatarChange
+                ) {
                   this.props.onAvatarChange(this.state.avatarUrl)
                 }
               }
