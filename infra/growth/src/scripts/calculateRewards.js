@@ -110,9 +110,7 @@ class CalculateRewards {
       // Consistency checks.
       if (campaign.currency !== 'OGN') {
         throw new Error(
-          `Campaign ${campaign.id} - Currency ${
-            campaign.currency
-          } not supported.`
+          `Campaign ${campaign.id} - Currency ${campaign.currency} not supported.`
         )
       }
       if (campaign.endDate > now) {
@@ -122,9 +120,7 @@ class CalculateRewards {
       }
       if (campaign.distributionDate > now) {
         throw new Error(
-          `Campaign ${campaign.id} - Not ready for distribution before ${
-            campaign.distributionDate
-          }.`
+          `Campaign ${campaign.id} - Not ready for distribution before ${campaign.distributionDate}.`
         )
       }
       this.stats.numCampaigns++

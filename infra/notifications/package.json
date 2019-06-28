@@ -28,30 +28,30 @@
   "dependencies": {
     "@origin/growth": "^0.1.0",
     "@origin/identity": "^0.1.0",
-    "@sendgrid/mail": "^6.3.1",
+    "@sendgrid/mail": "^6.4.0",
     "apn": "^2.2.0",
-    "cross-fetch": "^3.0.1",
-    "dotenv": "^6.2.0",
-    "envkey": "^1.2.4",
-    "express": "^4.16.4",
+    "cross-fetch": "^3.0.4",
+    "dotenv": "^8.0.0",
+    "envkey": "^1.2.6",
+    "express": "^4.17.1",
     "firebase-admin": "^7.3.0",
     "lodash-es": "^4.17.11",
     "logplease": "^1.2.15",
     "per-env": "^1.0.2",
-    "pg": "^7.7.1",
-    "pg-hstore": "^2.3.2",
+    "pg": "^7.11.0",
+    "pg-hstore": "^2.3.3",
     "rate-limiter-flexible": "^0.19.4",
-    "sequelize": "^5.0.0-beta.14",
-    "sequelize-cli": "^5.4.0",
+    "sequelize": "^5.8.12",
+    "sequelize-cli": "^5.5.0",
     "supertest": "^4.0.2",
     "web3-utils": "1.0.0-beta.34",
-    "web-push": "^3.3.3"
+    "web-push": "^3.3.5"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "eslint": "^5.15.3",
-    "mocha": "^5.2.0",
-    "nodemon": "^1.18.7"
+    "eslint": "^6.0.1",
+    "mocha": "^6.1.4",
+    "nodemon": "^1.19.1"
   },
   "prettier": {
     "semi": false,

@@ -12,15 +12,15 @@
   },
   "dependencies": {
     "@origin/growth": "^0.1.0",
-    "bull": "^3.7.0",
-    "dotenv": "^6.2.0",
-    "envkey": "^1.2.4",
+    "bull": "^3.10.0",
+    "dotenv": "^8.0.0",
+    "envkey": "^1.2.6",
     "logplease": "^1.2.15",
     "per-env": "^1.0.2"
   },
   "devDependencies": {
-    "mocha": "^5.2.0",
-    "nodemon": "^1.18.7"
+    "mocha": "^6.1.4",
+    "nodemon": "^1.19.1"
   },
   "scripts": {
     "lint": "eslint . && npm run prettier:check",

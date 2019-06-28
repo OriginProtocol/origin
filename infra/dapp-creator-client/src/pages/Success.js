@@ -17,9 +17,7 @@ class Success extends React.Component {
 
   openMarketplace() {
     window.open(
-      `https://${this.props.config.subdomain}.${
-        process.env.DAPP_CREATOR_DOMAIN
-      }`,
+      `https://${this.props.config.subdomain}.${process.env.DAPP_CREATOR_DOMAIN}`,
       '_blank'
     )
   }
