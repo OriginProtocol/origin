@@ -88,12 +88,27 @@ class MarketplaceScreen extends Component {
   componentDidUpdate = (prevProps, prevState) => {
     if (prevProps.settings.language !== this.props.settings.language) {
       // Language has changed, need to reload the DApp
-      if (this.dappWebView) {
-        // Reinject the language
-        this.injectLanguage()
-      }
+      this.injectLanguage()
     }
 
+    // Check for active Ethereum address changing
+    if (
+      get(prevProps, 'wallet.activeAccount.address') !==
+      get(this.props, 'wallet.activeAccount.address')
+    ) {
+      // Active account changed, update messaging keys
+      this.injectMessagingKeys()
+    }
+
+    // Check for growth enrollment changing
+    if (
+      get(prevProps, 'onboarding.growth') !==
+      get(this.props, 'onboarding.growth')
+    ) {
+      this.injectGrowthAuthToken()
+    }
+
+    // Check for growth invite code changing
     if (!prevState.inviteCode && this.state.inviteCode) {
       // invite code in clipboard inject it to local storage
       if (this.dappWebView) {
@@ -102,13 +117,7 @@ class MarketplaceScreen extends Component {
       }
     }
 
-    if (
-      get(prevProps, 'wallet.activeAccount.address') !==
-      get(this.props, 'wallet.activeAccount.address')
-    ) {
-      // Active account changed, update messaging keys
-      this.injectMessagingKeys()
-    }
+
   }
 
   /* Enables left and right swiping to go forward/back in the WebView.
@@ -508,6 +517,25 @@ class MarketplaceScreen extends Component {
     }
   }
 
+  injectGrowthAuthToken = () => {
+    if (!this.props.onboarding.growth) {
+      return
+    }
+    const injectedJavaScript = `
+      (function() {
+        if (window && window.localStorage && window.webViewBridge) {
+          window.localStorage.growth_auth_token = '${
+            this.props.onboarding.growth
+          }';
+        }
+      })();
+    `
+    if (this.dappWebView) {
+      console.debug('Injecting growth auth token')
+      this.dappWebView.injectJavaScript(injectedJavaScript)
+    }
+  }
+
   /* Send a response back to the DApp using postMessage in the webview
    */
   handleBridgeResponse = (msgData, result) => {
@@ -526,6 +554,7 @@ class MarketplaceScreen extends Component {
   onWebViewLoad = async () => {
     // Enable proxy accounts
     this.injectEnableProxyAccounts()
+    this.injectGrowthAuthToken()
     // Set the language in the DApp to the same as the mobile app
     this.injectLanguage()
     // Set the currency in the DApp
@@ -562,8 +591,16 @@ class MarketplaceScreen extends Component {
   }
 
   updateIdentity = async () => {
-    const graphqlResponse = await this.props.getIdentity()
-    const identity = get(graphqlResponse, 'data.web3.account.identity')
+    let identity
+    try {
+      const graphqlResponse = await this.props.getIdentity()
+      identity = get(graphqlResponse, 'data.web3.account.identity')
+    } catch (error) {
+      // Handle GraphQL errors for things like invalid JSON RPC response or we
+      // could crash the app
+      console.warn('Could not retrieve identity using GraphQL: ', error)
+      return
+    }
     this.props.setIdentity({
       address: this.props.wallet.activeAccount.address,
       identity
