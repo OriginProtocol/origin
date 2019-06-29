@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import {
   ActivityIndicator,
   DeviceEventEmitter,
+  Clipboard,
   Modal,
   PanResponder,
   Platform,
@@ -48,7 +49,8 @@ class MarketplaceScreen extends Component {
     this.state = {
       enablePullToRefresh: true,
       modals: [],
-      fiatCurrency: CURRENCIES.find(c => c[0] === 'fiat-USD')
+      fiatCurrency: CURRENCIES.find(c => c[0] === 'fiat-USD'),
+      inviteCode: null
     }
     if (Platform.OS === 'android') {
       // Configure swipe handler for back forward navigation on Android because
@@ -65,7 +67,22 @@ class MarketplaceScreen extends Component {
     )
   }
 
-  componentDidUpdate = prevProps => {
+  async componentDidMount() {
+    await this.clipboardInviteCodeCheck()
+  }
+
+  async clipboardInviteCodeCheck() {
+    const content = await Clipboard.getString()
+    const INVITE_CODE_PREFIX = 'origin:growth_invite_code:'
+
+    if (content && content.startsWith(INVITE_CODE_PREFIX)) {
+      const inviteCode = content.substr(INVITE_CODE_PREFIX.length)
+      Clipboard.setString('')
+      this.setState({ inviteCode })
+    }
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
     if (prevProps.settings.language !== this.props.settings.language) {
       // Language has changed, need to reload the DApp
       this.injectLanguage()
@@ -87,6 +104,17 @@ class MarketplaceScreen extends Component {
     ) {
       this.injectGrowthAuthToken()
     }
+
+    // Check for growth invite code changing
+    if (!prevState.inviteCode && this.state.inviteCode) {
+      // invite code in clipboard inject it to local storage
+      if (this.dappWebView) {
+        // Inject invite code
+        this.injectInviteCode(this.state.inviteCode)
+      }
+    }
+
+
   }
 
   /* Enables left and right swiping to go forward/back in the WebView.
@@ -249,6 +277,20 @@ class MarketplaceScreen extends Component {
         modals: [...prevState.modals.filter(m => m !== modal)]
       }
     })
+  }
+
+  injectInviteCode = inviteCode => {
+    const injectedJavaScript = `
+      (function() {
+        if (window && window.localStorage) {
+          window.localStorage.setItem('growth_invite_code', '${inviteCode}');
+        }
+      })();
+    `
+    if (this.dappWebView) {
+      console.debug(`Injecting invite code: ${inviteCode}`)
+      this.dappWebView.injectJavaScript(injectedJavaScript)
+    }
   }
 
   /* Inject the cookies required for messaging to allow preenabling of messaging

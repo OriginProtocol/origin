@@ -89,25 +89,34 @@ function listingTests(autoSwap) {
     })
 
     it('should select Clothing', async function() {
-      await page.select('select', 'schema.clothingAccessories')
+      await clickByText(page, 'Clothing and Accessories')
       await pic(page, 'add-listing')
     })
 
-    it('should continue to details', async function() {
+    it('should allow title and description entry', async function() {
+      await page.type('input[name=title]', randomTitle())
+      await page.type('textarea[name=description]', 'T-Shirt in size large')
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
 
-    it('should allow detail entry', async function() {
-      await page.type('input[name=title]', randomTitle())
-      await page.type('textarea[name=description]', 'T-Shirt in size large')
+    it('should allow quantity entry', async function() {
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should allow price entry', async function() {
       await page.type('input[name=price]', '1')
-      await page.click('#eth-checkbox') // Select Eth
-      await page.click('#dai-checkbox') // De-select Dai
+      await clickByText(page, 'Ethereum') // Select Eth
+      await clickByText(page, 'Maker Dai') // De-select Dai
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should allow image entry', async function() {
       const input = await page.$('input[type="file"]')
       await input.uploadFile(__dirname + '/fixtures/image-1.jpg')
       await page.waitForSelector('.image-picker .preview-row')
-
       await pic(page, 'add-listing')
     })
 
@@ -117,7 +126,7 @@ function listingTests(autoSwap) {
     })
 
     it('should create listing', async function() {
-      await clickByText(page, 'Done', 'button')
+      await clickByText(page, 'Publish', 'button')
       await waitForText(page, 'View Listing')
       await pic(page, 'add-listing')
     })
@@ -156,33 +165,42 @@ function listingTests(autoSwap) {
     })
 
     it('should select Clothing', async function() {
-      await page.select('select', 'schema.clothingAccessories')
+      await clickByText(page, 'Clothing and Accessories')
       await pic(page, 'add-listing')
     })
 
-    it('should continue to details', async function() {
+    it('should allow title and description entry', async function() {
+      await page.type('input[name=title]', randomTitle())
+      await page.type('textarea[name=description]', 'T-Shirt in size large')
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
 
-    it('should allow detail entry', async function() {
-      await page.type('input[name=title]', randomTitle())
-      await page.type('textarea[name=description]', 'T-Shirt in size large')
+    it('should allow quantity entry', async function() {
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should allow price entry', async function() {
       await page.type('input[name=price]', '1')
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should allow image entry', async function() {
       const input = await page.$('input[type="file"]')
       await input.uploadFile(__dirname + '/fixtures/image-1.jpg')
       await page.waitForSelector('.image-picker .preview-row')
-
       await pic(page, 'add-listing')
     })
 
     it('should continue to review', async function() {
-      await clickByText(page, 'Continue', 'button')
+      await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
 
     it('should create listing', async function() {
-      await clickByText(page, 'Done', 'button')
+      await clickByText(page, 'Publish', 'button')
       await waitForText(page, 'View Listing', 'button')
       await pic(page, 'add-listing')
     })
@@ -247,39 +265,48 @@ function listingTests(autoSwap) {
     })
 
     it('should select Clothing', async function() {
-      await page.select('select', 'schema.clothingAccessories')
+      await clickByText(page, 'Clothing and Accessories')
       await pic(page, 'add-listing')
     })
 
-    it('should continue to details', async function() {
-      await clickByText(page, 'Continue', 'button')
+    it('should allow title and description entry', async function() {
+      await page.type('input[name=title]', randomTitle())
+      await page.type('textarea[name=description]', 'T-Shirt in size large')
+      await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
 
     it('should allow detail entry', async function() {
-      await page.type('input[name=title]', randomTitle())
-      await page.type('textarea[name=description]', 'T-Shirt in size large')
-      await page.type('input[name=price]', '1')
       await page.focus('input[name=quantity]')
       await page.keyboard.press('Backspace')
       await page.type('input[name=quantity]', '2')
-      await page.click('#eth-checkbox') // Select Eth
-      await page.click('#dai-checkbox') // De-select Dai
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should allow price entry', async function() {
+      await page.type('input[name=price]', '1')
+      await clickByText(page, 'Ethereum') // Select Eth
+      await clickByText(page, 'Maker Dai') // De-select Dai
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should allow image entry', async function() {
       const input = await page.$('input[type="file"]')
       await input.uploadFile(__dirname + '/fixtures/image-1.jpg')
       await page.waitForSelector('.image-picker .preview-row')
-
       await pic(page, 'add-listing')
     })
 
     it('should continue to review', async function() {
-      await clickByText(page, 'Continue', 'button')
+      await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
 
     it('should create listing', async function() {
-      await clickByText(page, 'Done', 'button')
-      await waitForText(page, 'View Listing', 'button')
+      await clickByText(page, 'Publish', 'button')
+      await waitForText(page, 'View Listing')
       await pic(page, 'add-listing')
     })
 
@@ -326,12 +353,15 @@ function listingTests(autoSwap) {
 
     it('should allow the listing to be edited', async function() {
       await clickByText(page, 'Edit Listing')
+      await clickByText(page, 'For Sale')
       await clickByText(page, 'Continue')
       await page.focus('input[name=quantity]')
       await page.keyboard.press('Backspace')
       await page.type('input[name=quantity]', '10')
       await clickByText(page, 'Continue')
-      await clickByText(page, 'Done')
+      await clickByText(page, 'Continue')
+      await clickByText(page, 'Continue')
+      await clickByText(page, 'Publish', 'button')
       await clickByText(page, 'View Listing', 'button')
     })
 

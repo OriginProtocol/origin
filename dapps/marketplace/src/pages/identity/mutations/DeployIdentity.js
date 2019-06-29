@@ -49,7 +49,11 @@ class DeployIdentity extends Component {
               <TransactionError
                 reason={this.state.error}
                 data={this.state.errorData}
-                onClose={() => this.setState({ error: false })}
+                onClose={() => {
+                  if (this.props.onCancel) {
+                    this.props.onCancel(this.state.errorData)
+                  }
+                }}
               />
             )}
           </>
@@ -125,6 +129,8 @@ class DeployIdentity extends Component {
           this.setState({ waitFor: false, error: false, shouldClose: false })
           if (this.props.onComplete && this.state.mutationCompleted) {
             this.props.onComplete()
+          } else if (this.props.onCancel && !this.state.mutationCompleted) {
+            this.props.onCancel()
           }
         }}
         hash={this.state.waitFor}

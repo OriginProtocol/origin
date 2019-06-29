@@ -5,11 +5,11 @@ import { fbt } from 'fbt-runtime'
 
 import Link from 'components/Link'
 import MetaMaskAnimation from 'components/MetaMaskAnimation'
+import HelpOriginWallet from 'components/DownloadApp'
 
 import WalletHeader from './_WalletHeader'
 import ListingPreview from './_ListingPreview'
 import HelpWallet from './_HelpWallet'
-import HelpOriginWallet from './_HelpOriginWallet'
 
 const MetaMaskURL = 'https://metamask.io'
 

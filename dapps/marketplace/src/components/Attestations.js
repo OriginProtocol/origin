@@ -85,6 +85,10 @@ require('react-styl')(`
       background-image: url(images/growth/linkedin-icon.svg)
       background-size: 100%
       border: 0
+    &.kakao
+      background-image: url(images/growth/kakao-icon.svg)
+      background-size: 100%
+      border: 0
   .attestations-small .attestation
     width: 1.5rem
     height: 1.5rem

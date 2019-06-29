@@ -1,3 +1,8 @@
+<%
+  if (typeof(messageHash) === 'undefined') {
+    messageHash = ''
+  }
+%>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -199,6 +204,8 @@
                 style="color: #666666;"
                 >Unsubscribe</a
               >
+              <br />
+              <span style="color: #f1f6f9"><%= messageHash %></span>
             </td>
           </tr>
         </table>
