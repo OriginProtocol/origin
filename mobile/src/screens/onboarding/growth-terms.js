@@ -1,7 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
@@ -32,7 +32,7 @@ class GrowthTermsScreen extends Component {
   async componentDidMount() {
     const eligibility = await this.props.getGrowthEligibility()
     const eligible =
-      get(eligibility, 'data.isEligible.eligibility', null) === 'Eligible'
+      get(eligibility, 'data.isEligible.eligibility', null) === 'Eligibled'
     const countryName = get(eligibility, 'data.isEligible.countryName')
     this.setState({ loading: false, eligible, countryName })
   }
@@ -59,31 +59,33 @@ class GrowthTermsScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        {this.state.loading
-          ? this.renderLoading()
-          : this.state.eligible
-          ? this.renderTerms()
-          : this.renderIneligible()}
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView style={styles.content}>
+          {this.state.loading
+            ? this.renderLoading()
+            : this.state.eligible
+            ? this.renderTerms()
+            : this.renderIneligible()}
+        </ScrollView>
       </SafeAreaView>
     )
   }
 
   renderLoading() {
     return (
-      <View style={styles.content}>
+      <>
         <Text style={styles.title}>
           <fbt desc="GrowthTermsScreen.loadingTitle">Checking eligibility</fbt>
         </Text>
         <ActivityIndicator size="large" />
-      </View>
+      </>
     )
   }
 
   renderIneligible() {
     return (
       <>
-        <View style={styles.content}>
+        <View style={styles.container}>
           <Image
             style={{ marginBottom: 40 }}
             source={require(IMAGES_PATH + 'not-eligible-graphic.png')}
@@ -95,7 +97,7 @@ class GrowthTermsScreen extends Component {
               is not eligible
             </fbt>
           </Text>
-          <Text style={styles.subtitle}>
+          <Text style={{ ...styles.subtitle, fontSize: 18 }}>
             <fbt desc="GrowthTermsScreen.ineligibleSubtitle">
               Unfortunately, it looks like you’re currently in a country where
               government regulations do not allow you to participate in Origin
@@ -106,7 +108,7 @@ class GrowthTermsScreen extends Component {
             style={{
               fontWeight: '600',
               marginTop: 20,
-              marginBottom: 10,
+              marginBottom: 20,
               fontSize: 16
             }}
           >
@@ -136,7 +138,7 @@ class GrowthTermsScreen extends Component {
             }
           />
         </View>
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, marginTop: 20 }}>
           <OriginButton
             size="large"
             type="primary"
@@ -165,7 +167,7 @@ class GrowthTermsScreen extends Component {
   renderTerms() {
     return (
       <>
-        <View style={styles.content}>
+        <View style={styles.container}>
           <Text style={styles.termsHeader}>
             <fbt desc="GrowthTermsScreen.termsHeader">
               Join Origin’s reward program to earn Origin tokens (OGN). Terms &
@@ -221,7 +223,7 @@ class GrowthTermsScreen extends Component {
             }
           />
         </View>
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
           <OriginButton
             size="large"
             type="primary"

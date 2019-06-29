@@ -27,7 +27,7 @@ class GrowthScreen extends Component {
           style={{ width: '100%' }}
           source={require(IMAGES_PATH + 'ogn-image.png')}
         />
-        <View style={styles.content}>
+        <View style={styles.container}>
           <Image
             style={{ marginBottom: 40 }}
             source={require(IMAGES_PATH + 'rewards-logo.png')}
@@ -37,7 +37,7 @@ class GrowthScreen extends Component {
             completing tasks in the Origin Marketplace.
           </Text>
         </View>
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
           <OriginButton
             size="large"
             type="primary"

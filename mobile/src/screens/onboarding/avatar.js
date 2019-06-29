@@ -119,20 +119,22 @@ class AvatarScreen extends Component {
 
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.content}>{content}</View>
-        <View style={[styles.visibilityWarningContainer, styles.isVisible]}>
-          <Text style={styles.visibilityWarningHeader}>
-            <fbt desc="AvatarScreen.visibilityWarningHeader">
-              What will be visible on the blockchain?
-            </fbt>
-          </Text>
-          <Text style={styles.visibilityWarningText}>
-            <fbt desc="AvatarScreen.visibilityWarningText">
-              Your photo will be visible on the blockchain
-            </fbt>
-          </Text>
+        <View style={{ ...styles.container }}>
+          {content}
         </View>
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, justifyContent: 'flex-end'}}>
+          <View style={[styles.visibilityWarningContainer, styles.isVisible]}>
+            <Text style={styles.visibilityWarningHeader}>
+              <fbt desc="AvatarScreen.visibilityWarningHeader">
+                What will be visible on the blockchain?
+              </fbt>
+            </Text>
+            <Text style={styles.visibilityWarningText}>
+              <fbt desc="AvatarScreen.visibilityWarningText">
+                Your photo will be visible on the blockchain
+              </fbt>
+            </Text>
+          </View>
           <OriginButton
             size="large"
             type="primary"
@@ -175,7 +177,7 @@ class AvatarScreen extends Component {
 
   renderImage() {
     return (
-      <TouchableOpacity onPress={this.handleImageClick} style={styles.content}>
+      <TouchableOpacity onPress={this.handleImageClick} style={styles.container}>
         <Avatar
           source={this.state.avatarSource}
           size={100}

@@ -40,17 +40,20 @@ export default StyleSheet.create({
   },
   title: {
     fontFamily: 'Lato',
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: '600',
     paddingTop: 20,
     paddingBottom: 20,
-    color: '#293f55'
+    color: '#293f55',
+    textAlign: 'center'
   },
   subtitle: {
     fontFamily: 'Lato',
-    fontSize: 18,
+    fontSize: 20,
     paddingBottom: 10,
-    fontWeight: '300'
+    fontWeight: '300',
+    textAlign: 'center',
+    paddingHorizontal: 20
   },
   invalid: {
     borderColor: '#ff0000',

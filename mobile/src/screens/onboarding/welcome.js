@@ -28,7 +28,7 @@ class WelcomeScreen extends Component {
 
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.content}>
+        <View style={[styles.content, styles.container]}>
           <Image
             resizeMethod={'scale'}
             resizeMode={'contain'}
