@@ -103,15 +103,16 @@ export default class Reviews extends Component {
                 <h3>
                   {this.props.seller && (
                     <fbt desc="reviews.headingSeller">
-                      Reviews of this seller
+                      Reviews of this Seller
                     </fbt>
                   )}
                   {!this.props.seller && (
-                    <fbt desc="reviews.headingUser">Reviews</fbt>
+                    <fbt desc="reviews.headingUser">Reviews of this user</fbt>
                   )}
                 </h3>
               )}
-              {reviews.map((review, idx) => {
+              {!reviews.length && <fbt desc="reviews.none">None</fbt>}
+              {!!reviews.length && reviews.map((review, idx) => {
                 const profile = get(review, 'reviewer.account.identity') || {}
                 return (
                   <div key={idx} className="review">
