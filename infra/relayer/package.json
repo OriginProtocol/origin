@@ -23,6 +23,7 @@
     "logplease": "^1.2.15",
     "per-env": "^1.0.2",
     "pg": "^7.11.0",
+    "prom-client": "^11.5.3",
     "redis": "^2.8.0",
     "sequelize": "^5.8.12",
     "sequelize-cli": "^5.5.0",
