@@ -50,7 +50,7 @@ class GrowthTermsScreen extends Component {
       // DeviceInfo.getUniqueId() can be carefully considered a persistent,
       // cross-install unique ID for mobile:
       // https://github.com/react-native-community/react-native-device-info#getuniqueid
-      fingerprintData: JSON.stringify({ uniqueId: DeviceInfo.getUniqueID() })
+      fingerprintData: JSON.stringify({ mobile_id: DeviceInfo.getUniqueID() })
     }
     const result = await this.props.growthEnroll(vars)
     await this.props.setGrowth(result.data.enroll.authToken)
