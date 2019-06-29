@@ -70,7 +70,6 @@ export default class Reviews extends Component {
         notifyOnNetworkStatusChange
       >
         {({ data, loading, error, fetchMore, networkStatus }) => {
-
           if (error) {
             return (
               <QueryError
@@ -112,52 +111,55 @@ export default class Reviews extends Component {
                 </h3>
               )}
               {!reviews.length && <fbt desc="reviews.none">None</fbt>}
-              {!!reviews.length && reviews.map((review, idx) => {
-                const profile = get(review, 'reviewer.account.identity') || {}
-                return (
-                  <div key={idx} className="review">
-                    <div className="user-info">
-                      <div className="avatar-wrap">
-                        <Link to={`/user/${review.reviewer.id}`}>
-                          <Avatar size="4rem" profile={profile} />
-                        </Link>
-                      </div>
-                      <div className="user">
-                        <div className="top">
-                          <div className="name">
-                            <Link to={`/user/${review.reviewer.id}`}>
-                              {profile.fullName || (
-                                <fbt desc="reviews.unamedUser">Unnamed User</fbt>
-                              )}
-                            </Link>
-                          </div>
+              {!!reviews.length &&
+                reviews.map((review, idx) => {
+                  const profile = get(review, 'reviewer.account.identity') || {}
+                  return (
+                    <div key={idx} className="review">
+                      <div className="user-info">
+                        <div className="avatar-wrap">
                           <Link to={`/user/${review.reviewer.id}`}>
-                            <EthAddress
-                              address={review.reviewer.id}
-                              short={true}
-                            />
+                            <Avatar size="4rem" profile={profile} />
                           </Link>
                         </div>
-                        <div className="info">
-                          <div className="purchase">
-                            {`Purchased `}
-                            <Link to={`/listing/${review.listing.id}`}>
-                              {review.listing.title}
+                        <div className="user">
+                          <div className="top">
+                            <div className="name">
+                              <Link to={`/user/${review.reviewer.id}`}>
+                                {profile.fullName || (
+                                  <fbt desc="reviews.unamedUser">
+                                    Unnamed User
+                                  </fbt>
+                                )}
+                              </Link>
+                            </div>
+                            <Link to={`/user/${review.reviewer.id}`}>
+                              <EthAddress
+                                address={review.reviewer.id}
+                                short={true}
+                              />
                             </Link>
+                          </div>
+                          <div className="info">
+                            <div className="purchase">
+                              {`Purchased `}
+                              <Link to={`/listing/${review.listing.id}`}>
+                                {review.listing.title}
+                              </Link>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="review-meta">
-                      <StarRating small={true} active={review.rating} />
-                      <div className="timestamp">
-                        {distanceToNow(review.event.timestamp)}
+                      <div className="review-meta">
+                        <StarRating small={true} active={review.rating} />
+                        <div className="timestamp">
+                          {distanceToNow(review.event.timestamp)}
+                        </div>
                       </div>
+                      <div className="text">{review.review}</div>
                     </div>
-                    <div className="text">{review.review}</div>
-                  </div>
-                )
-              })}
+                  )
+                })}
               {hasNextPage ? (
                 <a
                   href="#more-reviews"
