@@ -32,7 +32,7 @@ growthImageTag: 'eb01c6c'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: 'eb01c6c'
+messagingImageTag: '0a7bece'
 
 # origin-notifications
 notificationsImage: origin-notifications
