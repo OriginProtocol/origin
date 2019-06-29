@@ -50,10 +50,7 @@ function withEnrolmentModal(WrappedComponent) {
         notCitizenConfirmed: false,
         termsAccepted: false,
         userAlreadyEnrolled: false,
-        modalTitle: fbt(
-          'Sign Up for Origin Rewards',
-          'WithEnrolmentModal.SignUpForOrigin'
-        )
+        modalTitle: fbt('Origin Rewards', 'WithEnrolmentModal.OriginRewards')
       }
     }
 
@@ -63,10 +60,7 @@ function withEnrolmentModal(WrappedComponent) {
           this.props.onClose()
         }
       } else if (this.state.stage !== previousState.stage) {
-        let title = fbt(
-          'Sign Up for Origin Rewards',
-          'WithEnrolmentModal.SignUpForOrigin'
-        )
+        let title = fbt('Origin Rewards', 'WithEnrolmentModal.OriginRewards')
         switch (this.state.stage) {
           case 'JoinActiveCampaign':
             title = fbt('Join Campaign', 'WithEnrolmentModal.JoinCampaign')
@@ -75,7 +69,7 @@ function withEnrolmentModal(WrappedComponent) {
           case 'TermsModal':
             title = fbt(
               'Origin Rewards Terms',
-              'WithEnrolmentModal.SignUpForOrigin'
+              'WithEnrolmentModal.OriginRewardsTerms'
             )
             break
 
@@ -440,7 +434,7 @@ function withEnrolmentModal(WrappedComponent) {
             )}
             {isMobile && (
               <button
-                className="btn-no-outline-link"
+                className="btn btn-no-outline-link"
                 onClick={() => this.handleCloseModal()}
                 children={fbt('Back to home', 'Back to home')}
               />
@@ -490,8 +484,8 @@ function withEnrolmentModal(WrappedComponent) {
               )
             } else {
               return fbt(
-                'Error: can not detect country',
-                'GrowthEnrollment.canNotDetectCountryError'
+                'Error: cannot detect country',
+                'GrowthEnrollment.cannotDetectCountryError'
               )
             }
           }}

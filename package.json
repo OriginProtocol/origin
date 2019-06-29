@@ -2,7 +2,7 @@
   "name": "root",
   "private": true,
   "dependencies": {
-    "lerna": "^3.14.1"
+    "lerna": "^3.15.0"
   },
   "workspaces": {
     "packages": [
@@ -15,21 +15,21 @@
     ]
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.1",
+    "babel-eslint": "^10.0.2",
     "chai": "^4.2.0",
-    "eslint": "^5.15.3",
-    "eslint-config-react-app": "^3.0.5",
+    "eslint": "^6.0.1",
+    "eslint-config-react-app": "^4.0.1",
     "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-flowtype": "^3.2.0",
-    "eslint-plugin-import": "^2.9.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-node": "^8.0.0",
-    "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-react": "^7.12.4",
+    "eslint-plugin-flowtype": "^3.11.1",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.14.2",
     "eslint-plugin-standard": "^4.0.0",
-    "husky": "^1.3.1",
-    "mocha": "^5.2.0",
-    "prettier": "^1.16.4"
+    "husky": "^2.7.0",
+    "mocha": "^6.1.4",
+    "prettier": "^1.18.2"
   },
   "scripts": {
     "bootstrap": "lerna bootstrap --no-ci --progress",
@@ -39,7 +39,7 @@
     "lint": "lerna run lint",
     "format": "eslint **/**/*.js --quiet --fix",
     "test": "node scripts/test.js",
-    "package-diffs": "find . -maxdepth 3 -name package.json -type f | grep -v node_modules | node scripts/package-versions.js"
+    "package-diffs": "find . -maxdepth 3 -name package.json -type f | grep -v mobile | grep -v node_modules | node scripts/package-versions.js"
   },
   "husky": {
     "hooks": {

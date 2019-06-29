@@ -33,16 +33,12 @@ async function main(dryRun) {
 
       if (dryRun) {
         logger.info(
-          `Would update growth_participant row with id ${
-            participant.id
-          } with ip:${ip} country: ${countryCode}`
+          `Would update growth_participant row with id ${participant.id} with ip:${ip} country: ${countryCode}`
         )
       } else {
         participant.update({ ip, country: countryCode })
         logger.info(
-          `Updated growth_participant row with id ${
-            participant.id
-          } with ip:${ip} country: ${countryCode}`
+          `Updated growth_participant row with id ${participant.id} with ip:${ip} country: ${countryCode}`
         )
       }
     }

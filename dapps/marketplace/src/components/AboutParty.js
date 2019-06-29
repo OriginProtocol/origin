@@ -36,9 +36,11 @@ const AboutParty = ({ id, owner }) => {
               <div className="profile">
                 <Identicon size={50} address={owner} />
                 <div className="user-detail">
-                  <div>ETH Address:</div>
                   <div>
-                    <EthAddress address={owner} />
+                    <fbt desc="aboutParty.ethAddress">ETH Address</fbt>
+                  </div>
+                  <div>
+                    <EthAddress address={owner} short />
                   </div>
                 </div>
               </div>

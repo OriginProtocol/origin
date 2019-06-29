@@ -11,4 +11,5 @@ npx install-local -S ../packages/contracts \
 	../packages/messaging-client \
 	../packages/services \
 	../packages/validator \
-	../packages/mobile-bridge
+	../packages/mobile-bridge \
+	../packages/web3-provider

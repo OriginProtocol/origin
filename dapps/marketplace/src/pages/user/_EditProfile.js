@@ -60,10 +60,18 @@ class EditProfile extends Component {
             if (this.validate()) {
               if (profileUpdated(this.state, this.props)) {
                 this.props.onChange(
-                  pick(this.state, ['firstName', 'lastName', 'description'])
+                  pick(this.state, [
+                    'firstName',
+                    'lastName',
+                    'description',
+                    'avatarUrl'
+                  ])
                 )
 
-                if (this.state.avatarUrl !== this.props.avatarUrl) {
+                if (
+                  this.state.avatarUrl !== this.props.avatarUrl &&
+                  this.props.onAvatarChange
+                ) {
                   this.props.onAvatarChange(this.state.avatarUrl)
                 }
               }
@@ -108,7 +116,7 @@ class EditProfile extends Component {
                   {...input('firstName')}
                   ref={r => (this.input = r)}
                   placeholder={
-                    onboarding ? (
+                    onboarding && !isMobile ? (
                       <fbt desc="EditModal.firstName">First Name</fbt>
                     ) : null
                   }
@@ -126,7 +134,7 @@ class EditProfile extends Component {
                   maxLength="40"
                   {...input('lastName')}
                   placeholder={
-                    onboarding ? (
+                    onboarding && !isMobile ? (
                       <fbt desc="EditModal.lastName">Last Name</fbt>
                     ) : null
                   }
