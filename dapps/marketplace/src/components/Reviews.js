@@ -70,6 +70,7 @@ export default class Reviews extends Component {
         notifyOnNetworkStatusChange
       >
         {({ data, loading, error, fetchMore, networkStatus }) => {
+
           if (error) {
             return (
               <QueryError
@@ -116,19 +117,25 @@ export default class Reviews extends Component {
                   <div key={idx} className="review">
                     <div className="user-info">
                       <div className="avatar-wrap">
-                        <Avatar size="4rem" profile={profile} />
+                        <Link to={`/user/${review.reviewer.id}`}>
+                          <Avatar size="4rem" profile={profile} />
+                        </Link>
                       </div>
                       <div className="user">
                         <div className="top">
                           <div className="name">
-                            {profile.fullName || (
-                              <fbt desc="reviews.unamedUser">Unnamed User</fbt>
-                            )}
+                            <Link to={`/user/${review.reviewer.id}`}>
+                              {profile.fullName || (
+                                <fbt desc="reviews.unamedUser">Unnamed User</fbt>
+                              )}
+                            </Link>
                           </div>
-                          <EthAddress
-                            address={review.reviewer.id}
-                            short={true}
-                          />
+                          <Link to={`/user/${review.reviewer.id}`}>
+                            <EthAddress
+                              address={review.reviewer.id}
+                              short={true}
+                            />
+                          </Link>
                         </div>
                         <div className="info">
                           <div className="purchase">
@@ -216,11 +223,13 @@ require('react-styl')(`
               font-stretch: normal
               line-height: normal
               letter-spacing: normal
-              color: #000000
+              color: var(--dark)
               margin-right: 0.5rem
               overflow: hidden
               text-overflow: ellipsis
               white-space: nowrap
+              a
+                color: var(--dark)
             .eth-address
               color: var(--steel)
               font-size: 12px
