@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import pick from 'lodash/pick'
+import pickBy from 'lodash/pickBy'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
@@ -347,12 +348,13 @@ class UserProfile extends Component {
             this.setState(newState)
           }}
           onComplete={newAttestation => {
-            const attestations = get(this.state, 'attestations', [])
-            attestations.push(newAttestation)
+            const unpublishedAttestations = [...get(this.state, 'attestations')]
+            unpublishedAttestations.push(newAttestation)
 
             this.setState({
               deployIdentity: providerName,
-              attestations
+              unpublishedAttestations,
+              [providerName]: false
             })
           }}
         />
@@ -373,12 +375,20 @@ class UserProfile extends Component {
       return null
     }
 
-    const profile = pick(
-      this.state.deployIdentity === 'profile'
-        ? this.state.unpublishedProfile
-        : this.state,
-      ['firstName', 'lastName', 'description', 'avatarUrl']
+    const profile = pickBy(
+      pick(
+        this.state.deployIdentity === 'profile'
+          ? this.state.unpublishedProfile
+          : this.state,
+        ['firstName', 'lastName', 'description', 'avatarUrl']
+      ),
+      x => x
     )
+
+    const attestations =
+      this.state.deployIdentity === 'profile'
+        ? this.state.attestations
+        : this.state.unpublishedAttestations
 
     return (
       <DeployIdentity
@@ -391,11 +401,20 @@ class UserProfile extends Component {
           this.props.identityRefetch()
           this.setState({
             deployIdentity: null,
-            unpublishedProfile: null
+            unpublishedProfile: null,
+            unpublishedAttestations: null
+          })
+        }}
+        onCancel={() => {
+          // Discard unpublished profile changes on cancel/error
+          this.setState({
+            deployIdentity: null,
+            unpublishedProfile: null,
+            unpublishedAttestations: null
           })
         }}
         profile={profile}
-        attestations={this.state.attestations || []}
+        attestations={attestations || []}
       />
     )
   }
@@ -422,14 +441,6 @@ class UserProfile extends Component {
             unpublishedProfile: {
               ...this.state.unpublishedProfile,
               ...newState
-            }
-          })
-        }}
-        onAvatarChange={avatarUrl => {
-          this.setState({
-            unpublishedProfile: {
-              ...this.state.unpublishedProfile,
-              avatarUrl: avatarUrl
             }
           })
         }}

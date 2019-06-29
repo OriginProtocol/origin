@@ -363,9 +363,7 @@ class BaseRule {
   }
 
   str() {
-    return `Campaign ${this.campaignId} / Rule ${this.ruleId} / Level ${
-      this.levelId
-    }`
+    return `Campaign ${this.campaignId} / Rule ${this.ruleId} / Level ${this.levelId}`
   }
 
   /**

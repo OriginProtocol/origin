@@ -14,6 +14,10 @@ Origin Wallet is an "ejected" React Native application. Go [here](https://facebo
 
 This guide will help you to install a local build of Origin Wallet on a device or simulator so that you can modify the application itself. An alternative would be to connect the App Store or TestFlight version of the application to a local blockchain running on your machine, which would be a simpler way to test with Origin Wallet.
 
+- run `npm install` to install dependacies
+- run `node_modules/.bin/install_local` to install local dependacies
+- run `npm run start` to start the react native app
+
 #### iOS Development
 
 - [Xcode](https://developer.apple.com/xcode/)
