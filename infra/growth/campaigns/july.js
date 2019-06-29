@@ -282,7 +282,7 @@ const julyConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-000-2867',
             reward: {
-              amount: tokenToNaturalUnits(150),
+              amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
             visible: true,
@@ -320,7 +320,7 @@ const julyConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-000-2882',
             reward: {
-              amount: tokenToNaturalUnits(15),
+              amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
             visible: true,
@@ -339,7 +339,7 @@ const julyConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-000-2892',
             reward: {
-              amount: tokenToNaturalUnits(150),
+              amount: tokenToNaturalUnits(75),
               currency: 'OGN'
             },
             visible: true,
@@ -359,7 +359,7 @@ const julyConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-000-2865',
             reward: {
-              amount: tokenToNaturalUnits(30),
+              amount: tokenToNaturalUnits(20),
               currency: 'OGN'
             },
             visible: true,
@@ -378,7 +378,7 @@ const julyConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-000-2866',
             reward: {
-              amount: tokenToNaturalUnits(150),
+              amount: tokenToNaturalUnits(75),
               currency: 'OGN'
             },
             visible: true,
@@ -397,7 +397,7 @@ const julyConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-000-2887',
             reward: {
-              amount: tokenToNaturalUnits(15),
+              amount: tokenToNaturalUnits(5),
               currency: 'OGN'
             },
             visible: true,
@@ -416,7 +416,7 @@ const julyConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-000-2886',
             reward: {
-              amount: tokenToNaturalUnits(30),
+              amount: tokenToNaturalUnits(15),
               currency: 'OGN'
             },
             visible: true,
@@ -435,7 +435,7 @@ const julyConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-000-2885',
             reward: {
-              amount: tokenToNaturalUnits(15),
+              amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
             visible: true,
@@ -454,7 +454,7 @@ const julyConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-000-2883',
             reward: {
-              amount: tokenToNaturalUnits(15),
+              amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
             visible: true,
@@ -473,7 +473,7 @@ const julyConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-000-2881',
             reward: {
-              amount: tokenToNaturalUnits(15),
+              amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
             visible: true,
@@ -511,7 +511,7 @@ const julyConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-000-2896',
             reward: {
-              amount: tokenToNaturalUnits(75),
+              amount: tokenToNaturalUnits(50),
               currency: 'OGN'
             },
             visible: true,
@@ -531,7 +531,7 @@ const julyConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-000-2878',
             reward: {
-              amount: tokenToNaturalUnits(75),
+              amount: tokenToNaturalUnits(35),
               currency: 'OGN'
             },
             visible: true,
@@ -550,7 +550,7 @@ const julyConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-000-2879',
             reward: {
-              amount: tokenToNaturalUnits(75),
+              amount: tokenToNaturalUnits(45),
               currency: 'OGN'
             },
             visible: true,
@@ -569,7 +569,7 @@ const julyConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-000-2893',
             reward: {
-              amount: tokenToNaturalUnits(75),
+              amount: tokenToNaturalUnits(20),
               currency: 'OGN'
             },
             visible: true,
@@ -588,7 +588,7 @@ const julyConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-000-2894',
             reward: {
-              amount: tokenToNaturalUnits(300),
+              amount: tokenToNaturalUnits(150),
               currency: 'OGN'
             },
             visible: true,

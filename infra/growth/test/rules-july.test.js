@@ -293,7 +293,7 @@ describe('July campaign rules', () => {
       ruleId: 'ListingPurchase2867',
       value: {
         currency: 'OGN',
-        amount: tokenToNaturalUnits(150)
+        amount: tokenToNaturalUnits(10)
       }
     })
     expect(rewards).to.deep.equal(this.expectedRewards)
