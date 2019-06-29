@@ -74,7 +74,7 @@ class ListingDetail extends Component {
             {this.renderListing()}
             {this.renderAction()}
             <h5>
-              <fbt desc="listingDetail.about-the-seller">About the seller</fbt>
+              <fbt desc="listingDetail.about-the-seller">About the Seller</fbt>
             </h5>
             <AboutParty id={listing.seller.id} />
             <Reviews id={listing.seller.id} seller />
@@ -91,7 +91,7 @@ class ListingDetail extends Component {
               {this.renderAction()}
               <h5>
                 <fbt desc="listingDetail.about-the-seller">
-                  About the seller
+                  About the Seller
                 </fbt>
               </h5>
               <AboutParty id={listing.seller.id} />
