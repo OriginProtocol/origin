@@ -16,13 +16,9 @@ import Onboard from '../onboard/Onboard'
 
 const error404 = (
   <Error404>
-    <div className="row">
-      <div className="col-12">
-        <h1 className="d-md-block">
-          <fbt desc="listing.listing-not-found">Listing not found</fbt>
-        </h1>
-      </div>
-    </div>
+    <h1 className="d-md-block">
+      <fbt desc="listing.listing-not-found">Listing not found</fbt>
+    </h1>
   </Error404>
 )
 
