@@ -4,9 +4,7 @@ const Error404 = props => {
   return (
     <div className="error-404">
       <div className="container">
-        <div className="row">
-          <div className="col-12">{props.children}</div>
-        </div>
+        {props.children}
       </div>
       <div className="error-content-section">
         <div className="images-container">
@@ -28,6 +26,9 @@ require('react-styl')(`
     margin-bottom: -4rem
     height: 100vh  
     overflow: hidden
+    background-color: #f7f9fb
+    position: relative
+    z-index: -1 /* Solves footer overlapping */
   
     .container
       padding-top: 3rem
@@ -37,7 +38,6 @@ require('react-styl')(`
       position: relative
       margin-bottom: -40px
       top: -40px
-      z-index: -1
 
       .images-container
         position: relative
@@ -76,7 +76,7 @@ require('react-styl')(`
           top: 36%
           width: 8%
     
-  @media (max-width: 768px)
+  @media (max-width: 767.98px)
     .error-404
       .error-content-section
         margin-bottom: 40px
