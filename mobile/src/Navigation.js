@@ -59,24 +59,50 @@ const OnboardingStack = createStackNavigator(
         header: null
       })
     },
-    ImportAccount: ImportAccountScreen,
+    ImportAccount: {
+      screen: ImportAccountScreen,
+      navigationOptions: () => ({
+        header: null
+      })
+    },
     ImportMnemonic: {
       screen: ImportMnemonicScreen,
       params: {
         navigateOnSuccess: 'Imported'
-      }
+      },
+      navigationOptions: () => ({
+        header: null
+      })
     },
     ImportPrivateKey: {
       screen: ImportPrivateKeyScreen,
       params: {
         navigateOnSuccess: 'Imported'
-      }
+      },
+      navigationOptions: () => ({
+        header: null
+      })
     },
     Imported: ImportedScreen,
     ImportWarning: ImportWarningScreen,
-    Email: EmailScreen,
-    Phone: PhoneScreen,
-    Name: NameScreen,
+    Email: {
+      screen: EmailScreen,
+      navigationOptions: () => ({
+        header: null
+      })
+    },
+    Phone: {
+      screen: PhoneScreen,
+      navigationOptions: () => ({
+        header: null
+      })
+    },
+    Name: {
+      screen: NameScreen,
+      navigationOptions: () => ({
+        header: null
+      })
+    },
     Avatar: AvatarScreen,
     Authentication: Authentication,
     Pin: PinScreen,

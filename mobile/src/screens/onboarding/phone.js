@@ -1,7 +1,15 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
@@ -206,9 +214,16 @@ class PhoneScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        {!this.state.verify ? this.renderInput() : this.renderVerify()}
-      </SafeAreaView>
+      <KeyboardAvoidingView
+        style={styles.onboardingDarkOverlay}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+      >
+        <SafeAreaView style={{ flex: 1 }}>
+          <ScrollView style={styles.onboardingModal} contentContainerStyle={styles.content}>
+            {!this.state.verify ? this.renderInput() : this.renderVerify()}
+          </ScrollView>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     )
   }
 
@@ -217,14 +232,9 @@ class PhoneScreen extends Component {
   renderInput() {
     return (
       <>
-        <View style={styles.content}>
+        <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
           <Text style={styles.title}>
             <fbt desc="PhoneScreen.inputTitle">Enter phone number</fbt>
-          </Text>
-          <Text style={styles.subtitle}>
-            <fbt desc="PhoneScreen.inputSubtitle">
-              Enter a valid phone number
-            </fbt>
           </Text>
           <RNPickerSelect
             placeholder={{ label: 'Select a country', value: null }}
@@ -235,12 +245,14 @@ class PhoneScreen extends Component {
             style={pickerSelectStyles}
             value={this.state.countryValue}
           />
+        </View>
+        <View style={{ ...styles.container, justifyContent: 'center' }}>
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
             autoFocus={false}
             multiline={false}
-            returnKeyType="next"
+            keyboardType="phone-pad"
             onChangeText={value => this.handleChange('phone', value)}
             onSubmitEditing={this.handleSubmitPhone}
             value={this.state.phoneValue}
@@ -259,8 +271,8 @@ class PhoneScreen extends Component {
             </Text>
           </View>
         </View>
-        {this.renderVisibilityWarning()}
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
+          {this.renderVisibilityWarning()}
           <OriginButton
             size="large"
             type="primary"
@@ -286,13 +298,15 @@ class PhoneScreen extends Component {
   renderVerify() {
     return (
       <>
-        <View style={styles.content}>
+        <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
           <Text style={styles.title}>
-            <fbt desc="PhoneScreen.verifyTitle">Verify your phone</fbt>
+            <fbt desc="PhoneScreen.verifyTitle">Verify phone</fbt>
           </Text>
           <Text style={styles.subtitle}>
             <fbt desc="PhoneScreen.verifySubtitle">Enter code</fbt>
           </Text>
+        </View>
+        <View style={{ ...styles.container, justifyContent: 'center' }}>
           <PinInput
             value={this.state.verificationCode}
             pinLength={6}
@@ -318,8 +332,8 @@ class PhoneScreen extends Component {
             </Text>
           </View>
         </View>
-        {this.renderVisibilityWarning()}
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
+          {this.renderVisibilityWarning()}
           <OriginButton
             size="large"
             type="link"
@@ -396,7 +410,7 @@ const pickerSelectStyles = StyleSheet.create({
     paddingBottom: 10,
     marginBottom: 20,
     paddingHorizontal: 20,
-    width: 300,
+    width: '90%',
     textAlign: 'center'
   },
   inputAndroid: {
@@ -408,7 +422,7 @@ const pickerSelectStyles = StyleSheet.create({
     paddingBottom: 10,
     marginBottom: 20,
     paddingHorizontal: 20,
-    width: 300,
+    width: '90%',
     textAlign: 'center'
   }
 })

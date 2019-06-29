@@ -44,7 +44,7 @@ class WelcomeScreen extends Component {
             <fbt desc="WelcomeScreen.subtitle">Earn rewards.</fbt>
           </Text>
         </View>
-        <View style={styles.buttonsContainer}>
+        <View style={{ width: '100%' }}>
           {wallet.accounts.length === 0 && (
             <>
               <OriginButton

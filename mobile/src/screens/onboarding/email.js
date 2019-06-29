@@ -1,7 +1,15 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
@@ -151,9 +159,16 @@ class EmailScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        {!this.state.verify ? this.renderInput() : this.renderVerify()}
-      </SafeAreaView>
+      <KeyboardAvoidingView
+        style={styles.onboardingDarkOverlay}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+      >
+        <SafeAreaView style={{ flex: 1 }}>
+          <ScrollView style={styles.onboardingModal} contentContainerStyle={styles.content}>
+            {!this.state.verify ? this.renderInput() : this.renderVerify()}
+          </ScrollView>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     )
   }
 
@@ -162,7 +177,7 @@ class EmailScreen extends Component {
   renderInput() {
     return (
       <>
-        <View style={styles.content}>
+        <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
           <Text style={styles.title}>
             <fbt desc="EmailScreen.inputTitle">Let&apos;s get started</fbt>
           </Text>
@@ -171,6 +186,8 @@ class EmailScreen extends Component {
               What&apos;s your email address?
             </fbt>
           </Text>
+        </View>
+        <View style={{ ...styles.container, justifyContent: 'center' }}>
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
@@ -195,8 +212,8 @@ class EmailScreen extends Component {
             </Text>
           </View>
         </View>
-        {this.renderVisibilityWarning()}
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
+          {this.renderVisibilityWarning()}
           <OriginButton
             size="large"
             type="primary"
@@ -221,13 +238,15 @@ class EmailScreen extends Component {
   renderVerify() {
     return (
       <>
-        <View style={styles.content}>
+        <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
           <Text style={styles.title}>
             <fbt desc="EmailScreen.verifyTitle">Verify your email</fbt>
           </Text>
           <Text style={styles.subtitle}>
             <fbt desc="EmailScreen.verifySubtitle">Enter code</fbt>
           </Text>
+        </View>
+        <View style={{ ...styles.container, justifyContent: 'flex-center' }}>
           <PinInput
             value={this.state.verificationCode}
             pinLength={6}
@@ -254,8 +273,8 @@ class EmailScreen extends Component {
             </Text>
           </View>
         </View>
-        {this.renderVisibilityWarning()}
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
+          {this.renderVisibilityWarning()}
           <OriginButton
             size="large"
             type="primary"

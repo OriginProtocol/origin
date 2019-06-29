@@ -3,55 +3,60 @@
 import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
+  onboardingDarkOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)'
+  },
+  onboardingModal: {
+    flex: 1,
+    marginHorizontal: 5,
+    paddingBottom: 5,
+    borderRadius: 20,
+    backgroundColor: 'white'
+  },
   container: {
     alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
-    flexDirection: 'column',
-    paddingTop: 0
+    width: '100%'
   },
   content: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1
+    flexGrow: 1,
+    padding: 10,
   },
   legalContainer: {
-    paddingTop: 20,
-    paddingBottom: 30,
-    width: '80%'
+    fontSize: 14,
+    paddingTop: 10,
+    paddingBottom: 10,
+    width: '90%'
   },
   legal: {
     textAlign: 'center',
     color: '#98a7b4'
   },
-  buttonsContainer: {
-    width: '100%'
-  },
   button: {
     marginBottom: 20,
-    marginHorizontal: 50
+    marginHorizontal: 30
   },
   title: {
     fontFamily: 'Lato',
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: '600',
-    marginHorizontal: 50,
-    paddingBottom: 30,
-    textAlign: 'center',
+    paddingTop: 20,
+    paddingBottom: 20,
     color: '#293f55'
   },
   subtitle: {
     fontFamily: 'Lato',
-    fontSize: 20,
-    marginHorizontal: 50,
+    fontSize: 18,
     paddingBottom: 10,
-    textAlign: 'center'
   },
   invalid: {
     borderColor: '#ff0000',
     color: '#ff0000'
   },
   input: {
-    fontSize: 20,
+    fontSize: 18,
     borderColor: '#c0cbd4',
     borderBottomWidth: 1,
     paddingTop: 20,
@@ -59,16 +64,17 @@ export default StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 20,
     textAlign: 'center',
-    width: 300
+    width: '80%'
   },
   visibilityWarningContainer: {
     borderColor: '#98a7b4',
     backgroundColor: 'rgba(152, 167, 180, 0.1)',
     borderWidth: 1,
-    paddingVertical: 20,
-    paddingHorizontal: 30,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
     marginBottom: 20,
-    width: '90%'
+    width: '95%',
+    alignSelf: 'center'
   },
   visibilityWarningHeader: {
     fontWeight: '600',
