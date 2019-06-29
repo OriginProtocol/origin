@@ -116,7 +116,7 @@ class EditProfile extends Component {
                   {...input('firstName')}
                   ref={r => (this.input = r)}
                   placeholder={
-                    onboarding ? (
+                    (onboarding && !isMobile) ? (
                       <fbt desc="EditModal.firstName">First Name</fbt>
                     ) : null
                   }
@@ -134,7 +134,7 @@ class EditProfile extends Component {
                   maxLength="40"
                   {...input('lastName')}
                   placeholder={
-                    onboarding ? (
+                    (onboarding && !isMobile) ? (
                       <fbt desc="EditModal.lastName">Last Name</fbt>
                     ) : null
                   }
