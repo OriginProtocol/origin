@@ -3,9 +3,7 @@ import React from 'react'
 const Error404 = props => {
   return (
     <div className="error-404">
-      <div className="container">
-        {props.children}
-      </div>
+      <div className="container">{props.children}</div>
       <div className="error-content-section">
         <div className="images-container">
           <img src="images/error-404/mask.svg" className="mask" />
