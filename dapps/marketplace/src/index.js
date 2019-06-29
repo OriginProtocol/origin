@@ -18,10 +18,13 @@ import client from '@origin/graphql'
 import * as Sentry from '@sentry/browser'
 
 import setLocale from 'utils/setLocale'
+import Store from 'utils/store'
 
 import App from './pages/App'
 import Analytics from './components/Analytics'
 import './css/app.css'
+
+const store = Store('localStorage')
 
 if (process.env.NODE_ENV === 'production') {
   try {
@@ -45,7 +48,11 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 class AppWrapper extends Component {
-  state = { ready: false, client: null }
+  state = {
+    ready: false,
+    client: null,
+    currency: store.get('currency', 'fiat-USD')
+  }
 
   async componentDidMount() {
     try {
@@ -62,15 +69,25 @@ class AppWrapper extends Component {
     window.scrollTo(0, 0)
   }
 
+  onCurrency = async currency => {
+    await store.set('currency', currency)
+    this.setState({ currency })
+  }
+
   render() {
-    const { ready, locale } = this.state
+    const { ready, locale, currency } = this.state
 
     if (!ready) return null
     return (
       <ApolloProvider client={client}>
         <HashRouter>
           <Analytics>
-            <App locale={locale} onLocale={this.onLocale} />
+            <App
+              locale={locale}
+              onLocale={this.onLocale}
+              currency={currency}
+              onCurrency={this.onCurrency}
+            />
           </Analytics>
         </HashRouter>
       </ApolloProvider>
