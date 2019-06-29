@@ -65,6 +65,9 @@ require('react-styl')(`
     top: 12px
     font-weight: bold
     font-size: 14px
+    .dropdown-menu
+      left: unset
+      right: 0
     span
       padding: 4px 5px
       border-radius: 16px

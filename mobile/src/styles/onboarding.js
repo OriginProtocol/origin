@@ -41,10 +41,11 @@ export default StyleSheet.create({
   },
   subtitle: {
     fontFamily: 'Lato',
-    fontSize: 20,
-    marginHorizontal: 50,
+    fontSize: 18,
+    marginHorizontal: 30,
     paddingBottom: 10,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontWeight: '300'
   },
   invalid: {
     borderColor: '#ff0000',
@@ -77,6 +78,30 @@ export default StyleSheet.create({
   },
   visibilityWarningText: {
     textAlign: 'center'
+  },
+  termsHeader: {
+    fontWeight: '600',
+    fontSize: 18,
+    marginBottom: 20,
+    textAlign: 'center'
+  },
+  termsText: {
+    paddingHorizontal: 20,
+    marginBottom: 20,
+    color: '#111d28'
+  },
+  termsHighlightContainer: {
+    borderColor: '#98a7b4',
+    backgroundColor: 'rgba(152, 167, 180, 0.1)',
+    borderWidth: 1,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    marginVertical: 20,
+    width: '90%',
+    borderRadius: 5
+  },
+  termsHighlightText: {
+    color: '#6f8294'
   },
   isVisible: {
     borderColor: '#f4c110',
