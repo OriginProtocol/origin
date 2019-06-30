@@ -5,16 +5,17 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
+import CommonStyles from 'styles/common'
 
 const SignatureCard = ({ msgData, onConfirm, onRequestClose }) => {
   const decodedMessage = global.web3.utils.hexToAscii(msgData.data.data)
 
   return (
     <View style={styles.card}>
-      <Text style={styles.heading}>
+      <Text style={styles.cardHeading}>
         <fbt desc="SignatureCard.heading">Signature Request</fbt>
       </Text>
-      <Text style={styles.content}>{decodedMessage}</Text>
+      <Text style={styles.cardContent}>{decodedMessage}</Text>
       <View style={styles.buttonContainer}>
         <OriginButton
           size="large"
@@ -36,36 +37,8 @@ const SignatureCard = ({ msgData, onConfirm, onRequestClose }) => {
 export default SignatureCard
 
 const styles = StyleSheet.create({
+  ...CommonStyles,
   buttonContainer: {
     paddingBottom: 20
-  },
-  cancel: {
-    color: '#1a82ff',
-    fontFamily: 'Lato',
-    fontSize: 14,
-    fontWeight: '900',
-    textAlign: 'center'
-  },
-  card: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    marginTop: 'auto',
-    paddingHorizontal: 20,
-    paddingVertical: 30
-  },
-  content: {
-    fontFamily: 'Lato',
-    fontSize: 30,
-    fontStyle: 'italic',
-    fontWeight: 'bold',
-    marginBottom: 40,
-    textAlign: 'center'
-  },
-  heading: {
-    color: '#0b1823',
-    fontFamily: 'Lato',
-    fontSize: 18,
-    marginBottom: 20,
-    textAlign: 'center'
   }
 })

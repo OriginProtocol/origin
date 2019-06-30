@@ -5,6 +5,7 @@ import { DeviceEventEmitter, Text } from 'react-native'
 import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
+import CommonStyles from 'styles/common'
 
 class NoInternetError extends Component {
   state = { loading: false }
@@ -21,8 +22,7 @@ class NoInternetError extends Component {
         <OriginButton
           size="large"
           type="white"
-          style={styles.button}
-          textStyle={{ fontSize: 18, fontWeight: '900' }}
+          textStyle={styles.buttonText}
           title={fbt('Retry', 'NoInternetError.retryButton')}
           onPress={() => {
             this.setState({ loading: true })
@@ -40,10 +40,7 @@ class NoInternetError extends Component {
 }
 
 const styles = {
-  button: {
-    marginTop: 30,
-    marginHorizontal: 50
-  },
+  ...CommonStyles,
   errorText: {
     width: '80%',
     color: 'white',

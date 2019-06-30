@@ -1,15 +1,16 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 
+import { createAccount } from 'actions/Wallet'
 import OriginButton from 'components/origin-button'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
+import CommonStyles from 'styles/common'
 import OnboardingStyles from 'styles/onboarding'
-import { createAccount } from 'actions/Wallet'
 
 const IMAGES_PATH = '../../../assets/images/'
 
@@ -23,17 +24,15 @@ class WelcomeScreen extends Component {
 
   render() {
     const { wallet } = this.props
-    const { height } = Dimensions.get('window')
-    const smallScreen = height < 812
 
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={[styles.content, styles.container]}>
+      <SafeAreaView style={styles.content}>
+        <View style={{ ...styles.container, flexGrow: 2 }}>
           <Image
             resizeMethod={'scale'}
             resizeMode={'contain'}
             source={require(IMAGES_PATH + 'origin-dark-logo.png')}
-            style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+            style={styles.image}
           />
           <Text style={styles.title}>
             <fbt desc="WelcomeScreen.title">
@@ -44,14 +43,13 @@ class WelcomeScreen extends Component {
             <fbt desc="WelcomeScreen.subtitle">Earn rewards.</fbt>
           </Text>
         </View>
-        <View style={{ width: '100%' }}>
+        <View style={styles.container}>
           {wallet.accounts.length === 0 && (
             <>
               <OriginButton
                 size="large"
                 type="primary"
-                style={styles.button}
-                textStyle={{ fontSize: 18, fontWeight: '900' }}
+                textStyle={styles.buttonText}
                 title={fbt(
                   'Create a wallet',
                   'WelcomeScreen.createWalletButton'
@@ -72,8 +70,7 @@ class WelcomeScreen extends Component {
               <OriginButton
                 size="large"
                 type="link"
-                style={styles.button}
-                textStyle={{ fontSize: 18, fontWeight: '900' }}
+                textStyle={styles.buttonText}
                 title={fbt(
                   'I already have a wallet',
                   'WelcomeScreen.importWalletButton'
@@ -89,21 +86,20 @@ class WelcomeScreen extends Component {
             <OriginButton
               size="large"
               type="primary"
-              style={styles.button}
-              textStyle={{ fontSize: 18, fontWeight: '900' }}
+              textStyle={styles.buttonText}
               title={fbt('Continue', 'WelcomeScreen.continueButton')}
               onPress={() => {
                 this.props.navigation.navigate(this.props.nextOnboardingStep)
               }}
             />
           )}
-        </View>
-        <View style={styles.legalContainer}>
-          <Text style={styles.legal}>
-            <fbt desc="WelcomeScreen.disclaimer">
-              By signing up you agree to the Terms of Use and Privacy Policy
-            </fbt>
-          </Text>
+          <View style={styles.legalContainer}>
+            <Text style={styles.legal}>
+              <fbt desc="WelcomeScreen.disclaimer">
+                By signing up you agree to the Terms of Use and Privacy Policy
+              </fbt>
+            </Text>
+          </View>
         </View>
       </SafeAreaView>
     )
@@ -126,8 +122,6 @@ export default withOnboardingSteps(
 )
 
 const styles = StyleSheet.create({
-  ...OnboardingStyles,
-  image: {
-    marginBottom: 30
-  }
+  ...CommonStyles,
+  ...OnboardingStyles
 })

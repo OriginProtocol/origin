@@ -3,27 +3,12 @@
 import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
-  onboardingDarkOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)'
-  },
   onboardingModal: {
     flex: 1,
-    marginHorizontal: 5,
-    paddingBottom: 5,
-    borderRadius: 20,
+    marginHorizontal: 2,
+    padding: 10,
+    borderRadius: 10,
     backgroundColor: 'white'
-  },
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    width: '100%'
-  },
-  content: {
-    flexGrow: 1,
-    justifyContent: 'space-between',
-    padding: 10
   },
   legalContainer: {
     fontSize: 14,
@@ -35,27 +20,6 @@ export default StyleSheet.create({
     textAlign: 'center',
     color: '#98a7b4'
   },
-  button: {
-    marginBottom: 20,
-    marginHorizontal: 30
-  },
-  title: {
-    fontFamily: 'Lato',
-    fontSize: 30,
-    fontWeight: '600',
-    paddingTop: 20,
-    paddingBottom: 20,
-    color: '#293f55',
-    textAlign: 'center'
-  },
-  subtitle: {
-    fontFamily: 'Lato',
-    fontSize: 20,
-    paddingBottom: 10,
-    fontWeight: '300',
-    textAlign: 'center',
-    paddingHorizontal: 20
-  },
   invalid: {
     borderColor: '#ff0000',
     color: '#ff0000'
@@ -64,7 +28,6 @@ export default StyleSheet.create({
     fontSize: 18,
     borderColor: '#c0cbd4',
     borderBottomWidth: 1,
-    paddingTop: 20,
     paddingBottom: 10,
     marginBottom: 20,
     paddingHorizontal: 20,

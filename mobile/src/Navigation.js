@@ -55,69 +55,28 @@ const IMAGES_PATH = '../assets/images/'
 
 const OnboardingStack = createStackNavigator(
   {
-    Welcome: {
-      screen: WelcomeScreen,
-      navigationOptions: () => ({
-        header: null
-      })
-    },
-    ImportAccount: {
-      screen: ImportAccountScreen,
-      navigationOptions: () => ({
-        header: null
-      })
-    },
+    Welcome: WelcomeScreen,
+    ImportAccount: ImportAccountScreen,
     ImportMnemonic: {
       screen: ImportMnemonicScreen,
       params: {
         navigateOnSuccess: 'Imported'
-      },
-      navigationOptions: () => ({
-        header: null
-      })
+      }
     },
     ImportPrivateKey: {
       screen: ImportPrivateKeyScreen,
       params: {
         navigateOnSuccess: 'Imported'
-      },
-      navigationOptions: () => ({
-        header: null
-      })
+      }
     },
     Imported: ImportedScreen,
     ImportWarning: ImportWarningScreen,
-    Email: {
-      screen: EmailScreen,
-      navigationOptions: () => ({
-        header: null
-      })
-    },
-    Phone: {
-      screen: PhoneScreen,
-      navigationOptions: () => ({
-        header: null
-      })
-    },
-    Name: {
-      screen: NameScreen,
-      navigationOptions: () => ({
-        header: null
-      })
-    },
+    Email: EmailScreen,
+    Phone: PhoneScreen,
+    Name: NameScreen,
     Avatar: AvatarScreen,
-    Growth: {
-      screen: GrowthScreen,
-      navigationOptions: () => ({
-        header: null
-      })
-    },
-    GrowthTerms: {
-      screen: GrowthTermsScreen,
-      navigationOptions: () => ({
-        headerTitle: 'Origin Rewards Terms'
-      })
-    },
+    Growth: GrowthScreen,
+    GrowthTerms: GrowthTermsScreen,
     Authentication: Authentication,
     Pin: PinScreen,
     Ready: ReadyScreen
@@ -126,6 +85,8 @@ const OnboardingStack = createStackNavigator(
     defaultNavigationOptions: ({ navigation }) => {
       const { params = {} } = navigation.state
       return {
+        header: null
+        /*
         headerStyle: {
           borderBottomWidth: 0
         },
@@ -140,6 +101,7 @@ const OnboardingStack = createStackNavigator(
             }}
           />
         )
+        */
       }
     }
   }
@@ -189,6 +151,7 @@ const SettingsStack = createStackNavigator(
     ),
     Accounts: AccountsScreen,
     Language: LanguageScreen,
+    /*
     ImportAccount: ImportAccountScreen,
     ImportMnemonic: {
       screen: ImportMnemonicScreen,
@@ -202,6 +165,7 @@ const SettingsStack = createStackNavigator(
         navigateOnSuccess: 'Accounts'
       }
     },
+    */
     Settings: SettingsScreen
   },
   {

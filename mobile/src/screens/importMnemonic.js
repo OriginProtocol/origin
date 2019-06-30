@@ -17,6 +17,7 @@ import { fbt } from 'fbt-runtime'
 import { setBackupWarningStatus } from 'actions/Activation'
 import { importAccountFromMnemonic } from 'actions/Wallet'
 import OriginButton from 'components/origin-button'
+import CommonStyles from 'styles/common'
 import OnboardingStyles from 'styles/onboarding'
 
 class ImportAccountScreen extends Component {
@@ -84,14 +85,12 @@ class ImportAccountScreen extends Component {
   render() {
     return (
       <KeyboardAvoidingView
-        style={styles.onboardingDarkOverlay}
+        style={styles.darkOverlay}
         behavior={Platform.OS === 'ios' ? 'padding' : null}
+        keyboardVerticalOffset="10"
       >
-        <SafeAreaView style={{ flex: 1 }}>
-          <ScrollView
-            style={styles.onboardingModal}
-            contentContainerStyle={styles.content}
-          >
+        <SafeAreaView style={styles.container}>
+          <ScrollView contentContainerStyle={styles.onboardingModal}>
             <View style={styles.container}>
               <Text style={styles.title}>
                 <fbt desc="ImportMnemonicScreen.recoveryPhraseTitle">
@@ -118,7 +117,7 @@ class ImportAccountScreen extends Component {
                 size="large"
                 type="primary"
                 style={styles.button}
-                textStyle={{ fontSize: 18, fontWeight: '900' }}
+                textStyle={styles.buttonText}
                 title={fbt('Continue', 'ImportMnemonicScreen.continueButton')}
                 onPress={this.handleSubmit}
                 loading={this.state.loading}
@@ -148,6 +147,7 @@ export default connect(
 )(ImportAccountScreen)
 
 const styles = StyleSheet.create({
+  ...CommonStyles,
   ...OnboardingStyles,
   input: {
     backgroundColor: '#eaf0f3',
@@ -155,11 +155,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingTop: 20,
-    paddingBottom: 20,
-    marginBottom: 20,
-    paddingHorizontal: 20,
-    textAlign: 'center',
-    width: 300,
+    padding: 20,
+    width: '80%',
+    maxWidth: '80%',
     height: 100
   },
   invalid: {

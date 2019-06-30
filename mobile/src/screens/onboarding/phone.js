@@ -22,8 +22,9 @@ import OriginButton from 'components/origin-button'
 import PinInput from 'components/pin-input'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import withConfig from 'hoc/withConfig'
-import OnboardingStyles from 'styles/onboarding'
 import _countryCodes from 'utils/countryCodes'
+import CommonStyles from 'styles/common'
+import OnboardingStyles from 'styles/onboarding'
 
 const commonCountryCodes = [
   '1', // US/CA
@@ -215,13 +216,14 @@ class PhoneScreen extends Component {
   render() {
     return (
       <KeyboardAvoidingView
-        style={styles.onboardingDarkOverlay}
+        style={styles.darkOverlay}
         behavior={Platform.OS === 'ios' ? 'padding' : null}
       >
         <SafeAreaView style={{ flex: 1 }}>
           <ScrollView
             style={styles.onboardingModal}
             contentContainerStyle={styles.content}
+            keyboardShouldPersistTaps={'always'}
           >
             {!this.state.verify ? this.renderInput() : this.renderVerify()}
           </ScrollView>
@@ -239,6 +241,8 @@ class PhoneScreen extends Component {
           <Text style={styles.title}>
             <fbt desc="PhoneScreen.inputTitle">Enter phone number</fbt>
           </Text>
+        </View>
+        <View style={{ ...styles.container }}>
           <RNPickerSelect
             placeholder={{ label: 'Select a country', value: null }}
             items={countryOptions}
@@ -248,12 +252,10 @@ class PhoneScreen extends Component {
             style={pickerSelectStyles}
             value={this.state.countryValue}
           />
-        </View>
-        <View style={{ ...styles.container, justifyContent: 'center' }}>
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
-            autoFocus={false}
+            autoFocus={true}
             multiline={false}
             keyboardType="phone-pad"
             onChangeText={value => this.handleChange('phone', value)}
@@ -274,7 +276,7 @@ class PhoneScreen extends Component {
             </Text>
           </View>
         </View>
-        <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
           {this.renderVisibilityWarning()}
           <OriginButton
             size="large"
@@ -305,11 +307,11 @@ class PhoneScreen extends Component {
           <Text style={styles.title}>
             <fbt desc="PhoneScreen.verifyTitle">Verify phone</fbt>
           </Text>
+        </View>
+        <View style={{ ...styles.container }}>
           <Text style={styles.subtitle}>
             <fbt desc="PhoneScreen.verifySubtitle">Enter code</fbt>
           </Text>
-        </View>
-        <View style={{ ...styles.container, justifyContent: 'center' }}>
           <PinInput
             value={this.state.verificationCode}
             pinLength={6}
@@ -335,7 +337,7 @@ class PhoneScreen extends Component {
             </Text>
           </View>
         </View>
-        <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
           {this.renderVisibilityWarning()}
           <OriginButton
             size="large"
@@ -397,6 +399,7 @@ export default withConfig(
 )
 
 const styles = StyleSheet.create({
+  ...CommonStyles,
   ...OnboardingStyles
 })
 

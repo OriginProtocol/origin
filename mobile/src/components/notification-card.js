@@ -13,6 +13,7 @@ import AndroidOpenSettings from 'react-native-android-open-settings'
 import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
+import CommonStyles from 'styles/common'
 
 const NotificationCard = props => (
   <View style={styles.card}>
@@ -30,7 +31,7 @@ const NotificationCard = props => (
       <OriginButton
         size="large"
         type="primary"
-        textStyle={{ fontSize: 18, fontWeight: '900' }}
+        textStyle={styles.buttonTextt}
         title={fbt('Open Settings', 'NotificationCard.button')}
         onPress={() => {
           if (Platform.OS === 'ios') {
@@ -52,36 +53,8 @@ const NotificationCard = props => (
 export default NotificationCard
 
 const styles = StyleSheet.create({
+  ...CommonStyles,
   buttonContainer: {
     paddingBottom: 20
-  },
-  cancel: {
-    color: '#1a82ff',
-    fontFamily: 'Lato',
-    fontSize: 14,
-    fontWeight: '900',
-    textAlign: 'center'
-  },
-  card: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    marginTop: 'auto',
-    paddingHorizontal: 20,
-    paddingVertical: 30
-  },
-  content: {
-    fontFamily: 'Lato',
-    marginBottom: 20,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    maxWidth: 300,
-    textAlign: 'center'
-  },
-  heading: {
-    fontFamily: 'Lato',
-    fontSize: 30,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center'
   }
 })

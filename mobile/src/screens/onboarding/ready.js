@@ -1,14 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import {
-  ActivityIndicator,
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import { connect } from 'react-redux'
@@ -16,6 +9,8 @@ import { connect } from 'react-redux'
 import { setComplete } from 'actions/Onboarding'
 import withOriginGraphql from 'hoc/withOriginGraphql'
 import OriginButton from 'components/origin-button'
+import CommonStyles from 'styles/common'
+import OnboardingStyles from 'styles/onboarding'
 
 const IMAGES_PATH = '../../../assets/images/'
 
@@ -65,24 +60,21 @@ class ReadyScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.content}>
         {this.state.loading ? this.renderLoading() : this.renderReady()}
       </SafeAreaView>
     )
   }
 
   renderReady() {
-    const { height } = Dimensions.get('window')
-    const smallScreen = height < 812
-
     return (
       <>
-        <View style={styles.content}>
+        <View style={{ ...styles.container, flexGrow: 2 }}>
           <Image
             resizeMethod={'scale'}
             resizeMode={'contain'}
             source={require(IMAGES_PATH + 'green-checkmark.png')}
-            style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+            style={styles.image}
           />
           <Text style={styles.title}>
             <fbt desc="ReadyScreen.title">
@@ -90,12 +82,10 @@ class ReadyScreen extends Component {
             </fbt>
           </Text>
         </View>
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Start using Origin', 'ReadyScreen.button')}
             onPress={() => {
               // Navigate to subroute to skip authentication requirement
@@ -109,7 +99,7 @@ class ReadyScreen extends Component {
 
   renderLoading() {
     return (
-      <View style={styles.content}>
+      <View style={styles.container}>
         <Text style={styles.title}>
           <fbt desc="ReadyScreen.loadingTitle">Publishing your account</fbt>
         </Text>
@@ -135,34 +125,6 @@ export default withOriginGraphql(
 )
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex: 1,
-    flexDirection: 'column',
-    paddingTop: 0
-  },
-  content: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center'
-  },
-  image: {
-    marginBottom: '10%'
-  },
-  buttonsContainer: {
-    paddingTop: 10,
-    width: '100%'
-  },
-  button: {
-    marginBottom: 20,
-    marginHorizontal: 50
-  },
-  title: {
-    fontFamily: 'Lato',
-    fontSize: 36,
-    fontWeight: '600',
-    marginHorizontal: 50,
-    paddingBottom: 30,
-    textAlign: 'center'
-  }
+  ...CommonStyles,
+  ...OnboardingStyles
 })

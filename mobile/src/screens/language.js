@@ -16,6 +16,7 @@ import { fbt } from 'fbt-runtime'
 import { LANGUAGES } from '../constants'
 import { setLanguage } from 'actions/Settings'
 import setFbtLanguage, { findBestAvailableLanguage } from 'utils/language'
+import CommonStyles from 'styles/common'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -51,7 +52,7 @@ class LanguageScreen extends Component {
       this.props.settings.language || findBestAvailableLanguage()
 
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.listContainer}>
         <FlatList
           data={languages}
           renderItem={({ item }) => (
@@ -59,15 +60,15 @@ class LanguageScreen extends Component {
               onPress={() => this.handleSetLanguage(item.key)}
             >
               <View style={styles.listItem}>
-                <View style={styles.textContainer}>
+                <View style={styles.listItemTextContainer}>
                   <Text>{item.value}</Text>
                 </View>
                 {
-                  <View style={styles.iconContainer}>
+                  <View style={styles.listItemIconContainer}>
                     {selectedLanguage === item.key && (
                       <Image
                         source={require(`${IMAGES_PATH}selected.png`)}
-                        style={styles.selected}
+                        style={styles.listItemSelected}
                       />
                     )}
                   </View>
@@ -75,8 +76,8 @@ class LanguageScreen extends Component {
               </View>
             </TouchableHighlight>
           )}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          style={styles.list}
+          ItemSeparatorComponent={() => <View style={styles.listSeparator} />}
+          style={styles.listContainer}
         />
       </ScrollView>
     )
@@ -97,37 +98,5 @@ export default connect(
 )(LanguageScreen)
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  list: {
-    backgroundColor: '#f7f8f8'
-  },
-  separator: {
-    backgroundColor: 'white',
-    height: 1,
-    marginRight: 'auto',
-    width: '5%'
-  },
-  listItem: {
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    flex: 1,
-    height: 50,
-    justifyContent: 'space-between',
-    paddingHorizontal: '5%',
-    paddingVertical: 14
-  },
-  iconContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-  textContainer: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  selected: {
-    marginRight: 17
-  }
+  ...CommonStyles
 })

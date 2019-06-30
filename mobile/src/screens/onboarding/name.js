@@ -17,6 +17,7 @@ import { fbt } from 'fbt-runtime'
 import { setName } from 'actions/Onboarding'
 import OriginButton from 'components/origin-button'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
+import CommonStyles from 'styles/common'
 import OnboardingStyles from 'styles/onboarding'
 
 class NameScreen extends Component {
@@ -51,20 +52,21 @@ class NameScreen extends Component {
   render() {
     return (
       <KeyboardAvoidingView
-        style={styles.onboardingDarkOverlay}
+        style={styles.darkOverlay}
         behavior={Platform.OS === 'ios' ? 'padding' : null}
       >
         <SafeAreaView style={{ flex: 1 }}>
           <ScrollView
             style={styles.onboardingModal}
             contentContainerStyle={styles.content}
+            keyboardShouldPersistTaps={'always'}
           >
             <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
               <Text style={styles.title}>
                 <fbt desc="NameScreen.title">Create a profile</fbt>
               </Text>
             </View>
-            <View style={{ ...styles.container, justifyContent: 'center' }}>
+            <View style={{ ...styles.container }}>
               <Text style={styles.subtitle}>
                 <fbt desc="NameScreen.firstNameSubtitle">
                   Enter your first name
@@ -112,22 +114,11 @@ class NameScreen extends Component {
                 <Text style={styles.invalid}>{this.state.lastNameError}</Text>
               )}
             </View>
-            <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
-              <View
-                style={[styles.visibilityWarningContainer, styles.isVisible]}
-              >
-                <Text style={styles.visibilityWarningHeader}>
-                  What will be visible on the blockchain?
-                </Text>
-                <Text style={styles.visibilityWarningText}>
-                  Your name will be visible on the blockchain
-                </Text>
-              </View>
+            <View style={{ ...styles.container, ...styles.buttonContainer }}>
+              {this.renderVisibilityWarning()}
               <OriginButton
                 size="large"
                 type="primary"
-                style={styles.button}
-                textStyle={{ fontSize: 18, fontWeight: '900' }}
                 title={fbt('Continue', 'NameScreen.continueButton')}
                 disabled={
                   !this.state.firstNameValue || !this.state.lastNameValue
@@ -138,6 +129,23 @@ class NameScreen extends Component {
           </ScrollView>
         </SafeAreaView>
       </KeyboardAvoidingView>
+    )
+  }
+
+  renderVisibilityWarning() {
+    return (
+      <View style={[styles.visibilityWarningContainer, styles.isVisible]}>
+        <Text style={styles.visibilityWarningHeader}>
+          <fbt desc="NameScreen.visibilityWarningHeader">
+            What will be visible on the blockchain?
+          </fbt>
+        </Text>
+        <Text style={styles.visibilityWarningText}>
+          <fbt desc="NameScreen.visibilityWarningText">
+            Your name will be visible on the blockchain
+          </fbt>
+        </Text>
+      </View>
     )
   }
 }
@@ -158,5 +166,6 @@ export default withOnboardingSteps(
 )
 
 const styles = StyleSheet.create({
+  ...CommonStyles,
   ...OnboardingStyles
 })

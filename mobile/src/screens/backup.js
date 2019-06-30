@@ -4,7 +4,6 @@ import React, { Component } from 'react'
 import {
   Alert,
   Clipboard,
-  Dimensions,
   Image,
   ScrollView,
   StyleSheet,
@@ -20,6 +19,7 @@ import { fbt } from 'fbt-runtime'
 import { setBackupWarningStatus } from 'actions/Activation'
 import OriginButton from 'components/origin-button'
 import { shuffleArray } from 'utils'
+import CommonStyles from 'styles/common'
 
 const ONE_MINUTE = 1000 * 60
 const IMAGES_PATH = '../../assets/images/'
@@ -349,8 +349,6 @@ class BackupScreen extends Component {
 
   renderSuccess() {
     const { wallet } = this.props
-    const { height } = Dimensions.get('window')
-    const smallScreen = height < 812
 
     return (
       <SafeAreaView style={styles.container}>
@@ -359,7 +357,7 @@ class BackupScreen extends Component {
             resizeMethod={'scale'}
             resizeMode={'contain'}
             source={require(IMAGES_PATH + 'green-checkmark.png')}
-            style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+            style={styles.image}
           />
           <Text style={styles.title}>
             <fbt desc="BackupScreen.backupSuccess">
@@ -367,7 +365,7 @@ class BackupScreen extends Component {
             </fbt>
           </Text>
         </View>
-        <View style={styles.buttonsContainer}>
+        <View style={styles.container}>
           <OriginButton
             size="large"
             type="primary"
@@ -401,13 +399,7 @@ export default connect(
 )(BackupScreen)
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  content: {
-    flex: 1,
-    alignItems: 'center'
-  },
+  ...CommonStyles,
   successContent: {
     justifyContent: 'center'
   },
@@ -418,21 +410,6 @@ const styles = StyleSheet.create({
   button: {
     marginBottom: 20,
     marginHorizontal: 50
-  },
-  title: {
-    fontFamily: 'Lato',
-    fontSize: 30,
-    fontWeight: '600',
-    marginHorizontal: 50,
-    textAlign: 'center',
-    paddingTop: 20
-  },
-  subtitle: {
-    color: '#6a8296',
-    fontSize: 14,
-    marginHorizontal: 50,
-    paddingBottom: 30,
-    textAlign: 'center'
   },
   privateKeyContainer: {
     paddingTop: 40,

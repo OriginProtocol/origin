@@ -19,8 +19,9 @@ import DeviceInfo from 'react-native-device-info'
 import OriginButton from 'components/origin-button'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import withOriginGraphql from 'hoc/withOriginGraphql'
-import OnboardingStyles from 'styles/onboarding'
 import { setGrowth } from 'actions/Onboarding'
+import CommonStyles from 'styles/common'
+import OnboardingStyles from 'styles/onboarding'
 
 const IMAGES_PATH = '../../../assets/images/'
 
@@ -66,8 +67,8 @@ class GrowthTermsScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView style={styles.content}>
+      <SafeAreaView style={styles.container}>
+        <ScrollView contentContainerStyle={styles.content}>
           {this.state.loading
             ? this.renderLoading()
             : this.state.eligible
@@ -80,12 +81,12 @@ class GrowthTermsScreen extends Component {
 
   renderLoading() {
     return (
-      <>
+      <View style={styles.container}>
         <Text style={styles.title}>
           <fbt desc="GrowthTermsScreen.loadingTitle">Checking eligibility</fbt>
         </Text>
         <ActivityIndicator size="large" />
-      </>
+      </View>
     )
   }
 
@@ -94,7 +95,7 @@ class GrowthTermsScreen extends Component {
       <>
         <View style={styles.container}>
           <Image
-            style={{ marginBottom: 40 }}
+            style={styles.image}
             source={require(IMAGES_PATH + 'not-eligible-graphic.png')}
           />
           <Text style={styles.title}>
@@ -104,7 +105,7 @@ class GrowthTermsScreen extends Component {
               is not eligible
             </fbt>
           </Text>
-          <Text style={{ ...styles.subtitle, fontSize: 18 }}>
+          <Text style={styles.subtitle}>
             <fbt desc="GrowthTermsScreen.ineligibleSubtitle">
               Unfortunately, it looks like you’re currently in a country where
               government regulations do not allow you to participate in Origin
@@ -114,8 +115,8 @@ class GrowthTermsScreen extends Component {
           <Text
             style={{
               fontWeight: '600',
-              marginTop: 20,
-              marginBottom: 20,
+              marginTop: 10,
+              marginBottom: 10,
               fontSize: 16
             }}
           >
@@ -124,42 +125,42 @@ class GrowthTermsScreen extends Component {
             </fbt>
           </Text>
           <CheckBox
-            style={{ padding: 20 }}
+            style={{ flex: 1, padding: 10 }}
             onClick={() => {
               this.setState({
-                isChecked: !this.state.isCertifyChecked
+                isCertifyChecked: !this.state.isCertifyChecked
               })
             }}
             isChecked={this.state.isCertifyChecked}
             checkBoxColor="#455d75"
             uncheckedCheckBoxColor="#455d75"
             rightTextView={
-              <Text style={{ fontSize: 16, marginLeft: 5, fontWeight: '300' }}>
-                <fbt desc="GrowthTermsScreen.nonResidentCertification">
-                  I certify that I am not a citizen or resident of
-                  <fbt:param name="countryName">
-                    {this.state.countryName}
-                  </fbt:param>
-                </fbt>
-              </Text>
+              <View>
+                <Text
+                  style={{ fontSize: 16, marginLeft: 5, fontWeight: '300' }}
+                >
+                  <fbt desc="GrowthTermsScreen.nonResidentCertification">
+                    I certify that I am not a citizen or resident of
+                    <fbt:param name="countryName">
+                      {this.state.countryName}
+                    </fbt:param>
+                  </fbt>
+                </Text>
+              </View>
             }
           />
         </View>
-        <View style={{ ...styles.container, marginTop: 20 }}>
+        <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
             disabled={!this.state.isCertifyChecked}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Continue', 'GrowthTermsScreen.continueButton')}
             onPress={() => this.setState({ eligible: true })}
           />
           <OriginButton
             size="large"
             type="link"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Cancel', 'GrowthTermsScreen.skipButton')}
             onPress={() => {
               this.props.setGrowth(false)
@@ -212,7 +213,7 @@ class GrowthTermsScreen extends Component {
             </Text>
           </View>
           <CheckBox
-            style={{ padding: 20 }}
+            style={{ flex: 1, padding: 10 }}
             onClick={() => {
               this.setState({
                 isAcceptChecked: !this.state.isAcceptChecked
@@ -222,11 +223,15 @@ class GrowthTermsScreen extends Component {
             checkBoxColor="#455d75"
             uncheckedCheckBoxColor="#455d75"
             rightTextView={
-              <Text style={{ fontSize: 16, marginLeft: 5, fontWeight: '300' }}>
-                <fbt desc="GrowthTermsScreen.acceptCheckboxText">
-                  I accept the terms and conditions
-                </fbt>
-              </Text>
+              <View>
+                <Text
+                  style={{ fontSize: 16, marginLeft: 5, fontWeight: '300' }}
+                >
+                  <fbt desc="GrowthTermsScreen.acceptCheckboxText">
+                    I accept the terms and conditions
+                  </fbt>
+                </Text>
+              </View>
             }
           />
         </View>
@@ -234,8 +239,6 @@ class GrowthTermsScreen extends Component {
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Accept Terms', 'GrowthTermsScreen.acceptTermsButton')}
             disabled={!this.state.isAcceptChecked}
             onPress={() => this.handleAcceptTerms()}
@@ -243,8 +246,6 @@ class GrowthTermsScreen extends Component {
           <OriginButton
             size="large"
             type="link"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Cancel', 'GrowthTermsScreen.cancelButton')}
             onPress={() => this.props.navigation.goBack()}
           />
@@ -272,5 +273,6 @@ export default withOriginGraphql(
 )
 
 const styles = StyleSheet.create({
+  ...CommonStyles,
   ...OnboardingStyles
 })

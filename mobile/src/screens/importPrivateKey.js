@@ -86,6 +86,7 @@ class ImportAccountScreen extends Component {
       <KeyboardAvoidingView
         style={styles.onboardingDarkOverlay}
         behavior={Platform.OS === 'ios' ? 'padding' : null}
+        keyboardVerticalOffset="10"
       >
         <SafeAreaView style={{ flex: 1 }}>
           <ScrollView

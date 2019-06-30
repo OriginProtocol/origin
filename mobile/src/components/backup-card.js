@@ -5,16 +5,17 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
+import CommonStyles from 'styles/common'
 
 const BackupCard = ({ onRequestBackup, onRequestClose, wallet }) => {
   const isPrivateKey = wallet.activeAccount.mnemonic === undefined
 
   return (
     <View style={styles.card}>
-      <Text style={styles.heading}>
+      <Text style={styles.cardHeading}>
         <fbt desc="BackupCard.title">Back up account</fbt>
       </Text>
-      <Text style={styles.content}>
+      <Text style={styles.cardContent}>
         {isPrivateKey && (
           <fbt desc="BackupCard.backupPrivateKeyDesc">
             If you lose your account private key, you will not be able to access
@@ -32,7 +33,7 @@ const BackupCard = ({ onRequestBackup, onRequestClose, wallet }) => {
         <OriginButton
           size="large"
           type="primary"
-          textStyle={{ fontSize: 18, fontWeight: '900' }}
+          textStyle={styles.buttonText}
           title={
             isPrivateKey
               ? fbt('Back up private key', 'BackupCard.backupButton')
@@ -45,7 +46,7 @@ const BackupCard = ({ onRequestBackup, onRequestClose, wallet }) => {
         />
       </View>
       <TouchableOpacity onPress={onRequestClose}>
-        <Text style={styles.cancel}>
+        <Text style={styles.cardCancelText}>
           <fbt desc="BackupCard.cancel">Back up later</fbt>
         </Text>
       </TouchableOpacity>
@@ -56,34 +57,8 @@ const BackupCard = ({ onRequestBackup, onRequestClose, wallet }) => {
 export default BackupCard
 
 const styles = StyleSheet.create({
+  ...CommonStyles,
   buttonContainer: {
     paddingBottom: 20
-  },
-  cancel: {
-    color: '#1a82ff',
-    fontFamily: 'Lato',
-    fontSize: 14,
-    fontWeight: '900',
-    textAlign: 'center'
-  },
-  card: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    marginTop: 'auto',
-    paddingHorizontal: 20,
-    paddingVertical: 30
-  },
-  content: {
-    fontSize: 14,
-    marginBottom: 40,
-    textAlign: 'center'
-  },
-  heading: {
-    color: '#0b1823',
-    fontFamily: 'Lato',
-    fontWeight: '600',
-    fontSize: 35,
-    marginBottom: 20,
-    textAlign: 'center'
   }
 })

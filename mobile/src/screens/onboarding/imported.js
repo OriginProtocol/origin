@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   Image,
   Modal,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -21,13 +22,14 @@ import LearnCard from 'components/learn-card'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import withConfig from 'hoc/withConfig'
 import withOriginGraphql from 'hoc/withOriginGraphql'
-import OnboardingStyles from 'styles/onboarding'
 import {
   setVerifiedAttestations,
   setName,
   setAvatarUri
 } from 'actions/Onboarding'
 import { removeAccount, setIdentity } from 'actions/Wallet'
+import CommonStyles from 'styles/common'
+import OnboardingStyles from 'styles/onboarding'
 
 const IMAGES_PATH = '../../../assets/images/'
 
@@ -74,11 +76,14 @@ class ImportedScreen extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        {this.state.loading
-          ? this.renderLoading()
-          : this.state.identity
-          ? this.renderProfile()
-          : this.renderImported()}
+        <ScrollView contentContainerStyle={styles.content}>
+          {this.state.loading
+            ? this.renderLoading()
+            : this.state.identity
+            ? this.renderProfile()
+            : this.renderImported()}
+        </ScrollView>
+        {this.renderModal()}
       </SafeAreaView>
     )
   }
@@ -87,7 +92,7 @@ class ImportedScreen extends Component {
    */
   renderLoading() {
     return (
-      <View style={styles.content}>
+      <View style={styles.container}>
         <Text style={styles.title}>
           <fbt desc="ImportedScreen.loadingTitle">Looking for your account</fbt>
         </Text>
@@ -105,7 +110,7 @@ class ImportedScreen extends Component {
 
     return (
       <>
-        <View style={styles.content}>
+        <View style={styles.container}>
           {avatarUrl && (
             <>
               <Avatar
@@ -137,7 +142,7 @@ class ImportedScreen extends Component {
             </Text>
           )}
         </View>
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
           <OriginButton
             size="large"
             type="primary"
@@ -156,9 +161,9 @@ class ImportedScreen extends Component {
   renderImported() {
     return (
       <>
-        <View style={styles.content}>
+        <View style={{ ...styles.container, flexGrow: 2 }}>
           <Image
-            style={{ marginBottom: 30 }}
+            style={styles.image}
             source={require(IMAGES_PATH + 'wallet-icon-inactive.png')}
           />
           <Text style={styles.title}>
@@ -166,38 +171,32 @@ class ImportedScreen extends Component {
               You&apos;ve imported your wallet
             </fbt>
           </Text>
-          <View style={{ paddingHorizontal: 20 }}>
-            <Text style={styles.subtitle}>
-              <fbt desc="ImportedScreen.importedSubtitle">
-                Next, create an Origin profile that will be linked to this
-                wallet.
-              </fbt>
+          <Text style={styles.subtitle}>
+            <fbt desc="ImportedScreen.importedSubtitle">
+              Next, create an Origin profile that will be linked to this wallet.
+            </fbt>
+          </Text>
+          <Text
+            style={{
+              ...styles.subtitle,
+              fontWeight: '600',
+              fontStyle: 'italic'
+            }}
+          >
+            <fbt desc="ImportedScreen.anonymityWarning">
+              Please note, your wallet will no longer be anonymous
+            </fbt>
+          </Text>
+          <TouchableOpacity onPress={this.toggleModal}>
+            <Text style={{ textAlign: 'center', color: '#1a82ff' }}>
+              {fbt('Learn more', 'ImportedScreen.learnMoreLink')} &gt;
             </Text>
-            <Text
-              style={{
-                ...styles.subtitle,
-                fontWeight: '600',
-                fontStyle: 'italic'
-              }}
-            >
-              <fbt desc="ImportedScreen.anonymityWarning">
-                Please note, your wallet will no longer be anonymous
-              </fbt>
-            </Text>
-            <TouchableOpacity onPress={this.toggleModal}>
-              <Text style={{ textAlign: 'center', color: '#1a82ff' }}>
-                {fbt('Learn more', 'ImportedScreen.learnMoreLink')} &gt;
-              </Text>
-            </TouchableOpacity>
-          </View>
-          {this.renderModal()}
+          </TouchableOpacity>
         </View>
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt(
               'Create a profile',
               'ImportedScreen.createProfileButton'
@@ -209,8 +208,6 @@ class ImportedScreen extends Component {
           <OriginButton
             size="large"
             type="link"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt(
               `Oops, wait. Let's start over...`,
               'ImportedScreen.startOverButton'
@@ -233,7 +230,7 @@ class ImportedScreen extends Component {
         visible={this.state.displayModal}
         onRequestClose={() => this.toggleModal()}
       >
-        <SafeAreaView style={styles.modalSafeAreaView}>
+        <SafeAreaView style={styles.darkOverlay}>
           <LearnCard onRequestClose={() => this.toggleModal()} />
         </SafeAreaView>
       </Modal>
@@ -266,16 +263,8 @@ export default withOriginGraphql(
 )
 
 const styles = StyleSheet.create({
-  ...OnboardingStyles,
-  modalSafeAreaView: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)'
-  },
-  image: {
-    backgroundColor: '#2e3f53',
-    borderRadius: 60,
-    width: 120,
-    height: 120,
-    marginBottom: 30
-  }
+  ...CommonStyles,
+  ...OnboardingStyles
 })
+
+console.log(styles)

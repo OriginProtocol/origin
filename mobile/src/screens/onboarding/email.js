@@ -21,6 +21,7 @@ import PinInput from 'components/pin-input'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import withConfig from 'hoc/withConfig'
 import OnboardingStyles from 'styles/onboarding'
+import CommonStyles from 'styles/common'
 
 class EmailScreen extends Component {
   constructor(props) {
@@ -160,13 +161,14 @@ class EmailScreen extends Component {
   render() {
     return (
       <KeyboardAvoidingView
-        style={styles.onboardingDarkOverlay}
+        style={styles.darkOverlay}
         behavior={Platform.OS === 'ios' ? 'padding' : null}
       >
         <SafeAreaView style={{ flex: 1 }}>
           <ScrollView
             style={styles.onboardingModal}
             contentContainerStyle={styles.content}
+            keyboardShouldPersistTaps={'always'}
           >
             {!this.state.verify ? this.renderInput() : this.renderVerify()}
           </ScrollView>
@@ -184,13 +186,13 @@ class EmailScreen extends Component {
           <Text style={styles.title}>
             <fbt desc="EmailScreen.inputTitle">Let&apos;s get started</fbt>
           </Text>
+        </View>
+        <View style={{ ...styles.container }}>
           <Text style={styles.subtitle}>
             <fbt desc="EmailScreen.inputSubtitle">
               What&apos;s your email address?
             </fbt>
           </Text>
-        </View>
-        <View style={{ ...styles.container, justifyContent: 'center' }}>
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
@@ -215,13 +217,12 @@ class EmailScreen extends Component {
             </Text>
           </View>
         </View>
-        <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
           {this.renderVisibilityWarning()}
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
+            textStyle={styles.buttonText}
             title={fbt('Continue', 'EmailScreen.continueButton')}
             disabled={
               !this.state.emailValue.length ||
@@ -245,11 +246,11 @@ class EmailScreen extends Component {
           <Text style={styles.title}>
             <fbt desc="EmailScreen.verifyTitle">Verify your email</fbt>
           </Text>
+        </View>
+        <View style={{ ...styles.container }}>
           <Text style={styles.subtitle}>
             <fbt desc="EmailScreen.verifySubtitle">Enter code</fbt>
           </Text>
-        </View>
-        <View style={{ ...styles.container, justifyContent: 'flex-center' }}>
           <PinInput
             value={this.state.verificationCode}
             pinLength={6}
@@ -276,13 +277,11 @@ class EmailScreen extends Component {
             </Text>
           </View>
         </View>
-        <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
           {this.renderVisibilityWarning()}
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Verify', 'EmailScreen.verifyButton')}
             disabled={
               this.state.verificationCode.length < 6 ||
@@ -334,5 +333,6 @@ export default withConfig(
 )
 
 const styles = StyleSheet.create({
+  ...CommonStyles,
   ...OnboardingStyles
 })

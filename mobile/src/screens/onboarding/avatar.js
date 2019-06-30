@@ -20,6 +20,7 @@ import Avatar from 'components/avatar'
 import OriginButton from 'components/origin-button'
 import withConfig from 'hoc/withConfig'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
+import CommonStyles from 'styles/common'
 import OnboardingStyles from 'styles/onboarding'
 
 const imagePickerOptions = {
@@ -119,8 +120,8 @@ class AvatarScreen extends Component {
 
     return (
       <SafeAreaView style={styles.container}>
-        <View style={{ ...styles.container }}>{content}</View>
-        <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
+        <View style={{ ...styles.container, flexGrow: 2 }}>{content}</View>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
           <View style={[styles.visibilityWarningContainer, styles.isVisible]}>
             <Text style={styles.visibilityWarningHeader}>
               <fbt desc="AvatarScreen.visibilityWarningHeader">
@@ -136,8 +137,6 @@ class AvatarScreen extends Component {
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Continue', 'AvatarScreen.continueButton')}
             onPress={async () => {
               if (this.props.onboarding.avatarUri === null) {
@@ -214,6 +213,7 @@ export default withConfig(
 )
 
 const styles = StyleSheet.create({
+  ...CommonStyles,
   ...OnboardingStyles,
   loading: {
     flex: 1,
