@@ -6107,7 +6107,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.2:
+classnames@^2.2, classnames@^2.2.5:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
   integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
@@ -10489,6 +10489,14 @@ geoip-lite@^1.3.7:
     lazy "^1.0.11"
     rimraf "^2.5.2"
     yauzl "^2.9.2"
+
+gestalt@^0.99.0:
+  version "0.99.0"
+  resolved "https://registry.yarnpkg.com/gestalt/-/gestalt-0.99.0.tgz#5354c6fdf45ecbad6a7018e5b9fb52411de5ebe9"
+  integrity sha512-Bn0y9Z/xl8m4t9ysmzqonOcPqkZkJHWwfTp1DhBXKnrO31TQSEri8LwBmureoKfASlGJAFN0Rxqt6r7eUiAwdg==
+  dependencies:
+    classnames "^2.2.5"
+    prop-types "^15.6.0"
 
 get-browser-rtc@^1.0.0:
   version "1.0.2"
