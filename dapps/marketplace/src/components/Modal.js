@@ -110,6 +110,13 @@ export default class Modal extends Component {
   }
 
   doClose() {
+    if (this.props.skipAnimateOnExit) {
+      if (this.props.onClose) {
+        this.props.onClose()
+      }
+      return
+    }
+
     this.setState({ anim: 'is-leaving' })
     setTimeout(() => {
       this.setState({

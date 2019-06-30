@@ -200,8 +200,7 @@ class UserProfile extends Component {
                   fillToNearest={this.props.isMobile ? 4 : 5}
                   onClick={providerName => {
                     this.setState({
-                      [providerName]: true,
-                      showVerifyModalOnClose: false
+                      [providerName]: true
                     })
                   }}
                 />
@@ -280,7 +279,7 @@ class UserProfile extends Component {
     return (
       <ModalComp
         title={headerContent}
-        className="profile-verifications-modal"
+        className={`profile-verifications-modal${this.state.hideVerifyModal ? ' d-none' : ''}`}
         shouldClose={this.state.shouldCloseVerifyModal}
         onClose={() =>
           this.setState({ shouldCloseVerifyModal: false, verifyModal: false })
@@ -300,8 +299,7 @@ class UserProfile extends Component {
           onClick={providerName => {
             this.setState({
               [providerName]: true,
-              shouldCloseVerifyModal: true,
-              showVerifyModalOnClose: true
+              hideVerifyModal: true
             })
           }}
         />
@@ -340,8 +338,11 @@ class UserProfile extends Component {
             const newState = {
               [providerName]: false
             }
-            if (!completed && this.state.showVerifyModalOnClose) {
-              newState.verifyModal = true
+
+            if (!completed) {
+              // Show the verify modal only if the user closes 
+              // the attestation modal without making a change
+              newState.hideVerifyModal = false
             }
 
             this.setState(newState)
@@ -356,6 +357,9 @@ class UserProfile extends Component {
               [providerName]: false
             })
           }}
+          // Skip exit animation for attestation modals only if user 
+          // goes there from "Add Verifications" modal
+          skipAnimateOnExit={this.state.verifyModal}
         />
       )
     })
@@ -401,7 +405,9 @@ class UserProfile extends Component {
           this.setState({
             deployIdentity: null,
             unpublishedProfile: null,
-            unpublishedAttestations: null
+            unpublishedAttestations: null,
+            hideVerifyModal: false,
+            verifyModal: false
           })
         }}
         onCancel={() => {
@@ -409,7 +415,8 @@ class UserProfile extends Component {
           this.setState({
             deployIdentity: null,
             unpublishedProfile: null,
-            unpublishedAttestations: null
+            unpublishedAttestations: null,
+            hideVerifyModal: false
           })
         }}
         profile={profile}
