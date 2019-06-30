@@ -19,6 +19,8 @@ import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
 import UserActivationLink from 'components/UserActivationLink'
 
+import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
+
 const store = Store('sessionStorage')
 
 const ProfileNav = ({ identity, identityLoaded, open, onOpen, onClose }) => (
@@ -119,6 +121,8 @@ const Identity = ({
   }
   const strengthPct = `${identity.strength || '0'}%`
 
+  const EarnTokens = withEnrolmentModal('a')
+
   return (
     <div className="identity">
       <div className="info">
@@ -139,13 +143,14 @@ const Identity = ({
           <fbt:param name="percent">{strengthPct}</fbt:param>
         </fbt>
       </div>
-      <Link
-        onClick={() => onClose()}
-        to="/profile"
+      <EarnTokens
         className="btn btn-outline-primary earn-ogn"
+        onNavigation={() => onClose()}
+        onClose={() => onClose()}
+        href="#"
       >
         <fbt desc="nav.profile.earnOGN">Earn OGN</fbt>
-      </Link>
+      </EarnTokens>
       {!isMobileApp && (
         <Balances
           account={id}
