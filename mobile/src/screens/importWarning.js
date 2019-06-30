@@ -29,8 +29,10 @@ class ImportWarningScreen extends Component {
     const smallScreen = height < 812
 
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.content}>
+      <SafeAreaView style={styles.content}>
+        <View
+          style={{ ...styles.container, justifyContent: 'center', flexGrow: 2 }}
+        >
           <Image
             resizeMethod={'scale'}
             resizeMode={'contain'}
@@ -49,8 +51,7 @@ class ImportWarningScreen extends Component {
             </fbt>
           </Text>
         </View>
-        {this.renderModal()}
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
           <OriginButton
             size="large"
             type="primary"
@@ -76,6 +77,7 @@ class ImportWarningScreen extends Component {
             }}
           />
         </View>
+        {this.renderModal()}
       </SafeAreaView>
     )
   }

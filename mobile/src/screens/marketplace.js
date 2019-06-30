@@ -116,8 +116,6 @@ class MarketplaceScreen extends Component {
         this.injectInviteCode(this.state.inviteCode)
       }
     }
-
-
   }
 
   /* Enables left and right swiping to go forward/back in the WebView.

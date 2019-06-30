@@ -22,7 +22,8 @@ export default StyleSheet.create({
   },
   content: {
     flexGrow: 1,
-    padding: 10,
+    justifyContent: 'space-between',
+    padding: 10
   },
   legalContainer: {
     fontSize: 14,

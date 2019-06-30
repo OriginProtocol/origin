@@ -119,10 +119,8 @@ class AvatarScreen extends Component {
 
     return (
       <SafeAreaView style={styles.container}>
-        <View style={{ ...styles.container }}>
-          {content}
-        </View>
-        <View style={{ ...styles.container, justifyContent: 'flex-end'}}>
+        <View style={{ ...styles.container }}>{content}</View>
+        <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
           <View style={[styles.visibilityWarningContainer, styles.isVisible]}>
             <Text style={styles.visibilityWarningHeader}>
               <fbt desc="AvatarScreen.visibilityWarningHeader">
@@ -177,7 +175,10 @@ class AvatarScreen extends Component {
 
   renderImage() {
     return (
-      <TouchableOpacity onPress={this.handleImageClick} style={styles.container}>
+      <TouchableOpacity
+        onPress={this.handleImageClick}
+        style={styles.container}
+      >
         <Avatar
           source={this.state.avatarSource}
           size={100}

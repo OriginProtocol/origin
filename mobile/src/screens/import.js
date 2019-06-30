@@ -11,8 +11,10 @@ import OnboardingStyles from 'styles/onboarding'
 class ImportAccountScreen extends Component {
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.content}>
+      <SafeAreaView style={styles.content}>
+        <View
+          style={{ ...styles.container, justifyContent: 'center', flexGrow: 2 }}
+        >
           <Text style={styles.title}>
             <fbt desc="ImportScreen.title">Import your wallet</fbt>
           </Text>
@@ -22,7 +24,7 @@ class ImportAccountScreen extends Component {
             </fbt>
           </Text>
         </View>
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
           <OriginButton
             size="large"
             type="primary"
@@ -50,6 +52,4 @@ class ImportAccountScreen extends Component {
 
 export default ImportAccountScreen
 
-const styles = StyleSheet.create({
-  ...OnboardingStyles
-})
+const styles = OnboardingStyles

@@ -202,7 +202,6 @@ const SettingsStack = createStackNavigator(
         navigateOnSuccess: 'Accounts'
       }
     },
-
     Settings: SettingsScreen
   },
   {

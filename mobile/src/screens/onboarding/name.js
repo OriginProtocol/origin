@@ -1,7 +1,15 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
@@ -47,7 +55,10 @@ class NameScreen extends Component {
         behavior={Platform.OS === 'ios' ? 'padding' : null}
       >
         <SafeAreaView style={{ flex: 1 }}>
-          <ScrollView style={styles.onboardingModal} contentContainerStyle={styles.content}>
+          <ScrollView
+            style={styles.onboardingModal}
+            contentContainerStyle={styles.content}
+          >
             <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
               <Text style={styles.title}>
                 <fbt desc="NameScreen.title">Create a profile</fbt>
@@ -78,7 +89,9 @@ class NameScreen extends Component {
                 <Text style={styles.invalid}>{this.state.firstNameError}</Text>
               )}
               <Text style={styles.subtitle}>
-                <fbt desc="NameScreen.lastNameSubtitle">Enter your last name</fbt>
+                <fbt desc="NameScreen.lastNameSubtitle">
+                  Enter your last name
+                </fbt>
               </Text>
               <TextInput
                 ref={ref => (this.lastNameTextInput = ref)}
@@ -100,7 +113,9 @@ class NameScreen extends Component {
               )}
             </View>
             <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
-              <View style={[styles.visibilityWarningContainer, styles.isVisible]}>
+              <View
+                style={[styles.visibilityWarningContainer, styles.isVisible]}
+              >
                 <Text style={styles.visibilityWarningHeader}>
                   What will be visible on the blockchain?
                 </Text>
@@ -114,7 +129,9 @@ class NameScreen extends Component {
                 style={styles.button}
                 textStyle={{ fontSize: 18, fontWeight: '900' }}
                 title={fbt('Continue', 'NameScreen.continueButton')}
-                disabled={!this.state.firstNameValue || !this.state.lastNameValue}
+                disabled={
+                  !this.state.firstNameValue || !this.state.lastNameValue
+                }
                 onPress={this.handleSubmit}
               />
             </View>

@@ -164,7 +164,10 @@ class EmailScreen extends Component {
         behavior={Platform.OS === 'ios' ? 'padding' : null}
       >
         <SafeAreaView style={{ flex: 1 }}>
-          <ScrollView style={styles.onboardingModal} contentContainerStyle={styles.content}>
+          <ScrollView
+            style={styles.onboardingModal}
+            contentContainerStyle={styles.content}
+          >
             {!this.state.verify ? this.renderInput() : this.renderVerify()}
           </ScrollView>
         </SafeAreaView>
