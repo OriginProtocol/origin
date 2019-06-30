@@ -57,7 +57,11 @@ class MetricsProvider extends SubProvider {
   _echo() {
     if (this.totalRPC % this.echoEvery === 0) {
       console.log(
-        `JSON-RPC stats -- total calls: ${this.totalRPC}  methods used: ${this.methodCallTotals.size}  error count: ${this.totalErrors}  rate limited requests: ${this.totalRateLimitedRequests}`
+        `JSON-RPC stats -- total calls: ${this.totalRPC}  methods used: ${
+          this.methodCallTotals.size
+        }  error count: ${this.totalErrors}  rate limited requests: ${
+          this.totalRateLimitedRequests
+        }`
       )
     }
     if (this.totalRPC % this.breakdownEvery === 0) {
@@ -97,7 +101,9 @@ class MetricsProvider extends SubProvider {
           console.debug('Payload: ', JSON.stringify(this.lastPayload))
         } else {
           console.error(
-            `Unknown error occurred in a following subprovider on method ${this.lastRPCMethod}!`
+            `Unknown error occurred in a following subprovider on method ${
+              this.lastRPCMethod
+            }!`
           )
           console.debug('Payload: ', JSON.stringify(this.lastPayload))
           if (err.code) console.error(`JSON-RPC error code: ${err.code}`)

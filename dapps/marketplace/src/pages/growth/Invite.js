@@ -51,7 +51,9 @@ class GrowthInvite extends Component {
   }
 
   getInviteCode() {
-    return `${location.protocol}//${location.hostname}/#/welcome/${this.state.inviteCode}`
+    return `${location.protocol}//${location.hostname}/#/welcome/${
+      this.state.inviteCode
+    }`
   }
 
   handleCopyClick() {

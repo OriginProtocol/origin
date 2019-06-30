@@ -167,7 +167,9 @@ async function main() {
       })
 
       logger.debug(
-        `Got ${events.length} unfiltered events within interval for ${contractKey}`
+        `Got ${
+          events.length
+        } unfiltered events within interval for ${contractKey}`
       )
 
       // Filter out events outside of interval (processedToBlock, toBlock].

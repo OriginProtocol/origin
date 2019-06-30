@@ -28,7 +28,9 @@ class Resolver extends React.Component {
   }
 
   async checkDnsPropagation() {
-    const dappHostname = `${this.props.config.subdomain}.${process.env.DAPP_CREATOR_DOMAIN}`
+    const dappHostname = `${this.props.config.subdomain}.${
+      process.env.DAPP_CREATOR_DOMAIN
+    }`
     await superagent
       .get(`https://cloudflare-dns.com/dns-query`)
       .set({ Accept: 'application/dns-json' })

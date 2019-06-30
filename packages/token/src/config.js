@@ -97,7 +97,9 @@ function createProviders(networkIds) {
       providers[networkId] = web3
       if (process.env.NODE_ENV !== 'test') {
         console.log(
-          `Network=${networkId} URL=${providerUrl} Using private key for account ${account.address}`
+          `Network=${networkId} URL=${providerUrl} Using private key for account ${
+            account.address
+          }`
         )
       }
     } else {

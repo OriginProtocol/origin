@@ -59,7 +59,9 @@ async function vestGrant(grant) {
     }
     if (grant.vested > grant.amount) {
       throw new Error(
-        `vested ${grant.vested} > grant ${grant.amount} for ${grant.email} ${grantedAt}`
+        `vested ${grant.vested} > grant ${grant.amount} for ${
+          grant.email
+        } ${grantedAt}`
       )
     }
 

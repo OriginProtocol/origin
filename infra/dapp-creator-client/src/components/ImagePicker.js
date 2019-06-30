@@ -49,7 +49,9 @@ class ImagePicker extends React.Component {
           .post(`${process.env.IPFS_API_URL}/api/v0/add`)
           .send(body)
           .then(response => {
-            const imageUrl = `${process.env.IPFS_API_URL}/ipfs/${response.body.Hash}`
+            const imageUrl = `${process.env.IPFS_API_URL}/ipfs/${
+              response.body.Hash
+            }`
             this.setState({ imageUrl: imageUrl })
             if (this.props.onUpload) {
               this.props.onUpload(this.props.name, imageUrl)

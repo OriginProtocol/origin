@@ -48,7 +48,9 @@ const DappInfo = () => {
     <a
       target="_blank"
       rel="noopener noreferrer"
-      href={`https://github.com/OriginProtocol/origin/commit/${process.env.GIT_COMMIT_HASH}`}
+      href={`https://github.com/OriginProtocol/origin/commit/${
+        process.env.GIT_COMMIT_HASH
+      }`}
     >
       {process.env.GIT_COMMIT_HASH}
     </a>

@@ -47,9 +47,9 @@ const UserProfile = ({ profile }) => {
         <img src={profile.avatar} style={{ width: 100 }} />
       )}
       <div style={{ margin: '10px 0 0 15px' }}>
-        <div
-          style={{ fontWeight: 'bold', marginBottom: 10 }}
-        >{`${profile.firstName} ${profile.lastName} `}</div>
+        <div style={{ fontWeight: 'bold', marginBottom: 10 }}>{`${
+          profile.firstName
+        } ${profile.lastName} `}</div>
         {!profile.description ? null : (
           <div style={{ marginBottom: 10 }}>{profile.description}</div>
         )}

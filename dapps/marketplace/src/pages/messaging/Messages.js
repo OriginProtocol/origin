@@ -20,7 +20,9 @@ import { abbreviateName, truncateAddress } from 'utils/user'
 
 const MobileNavigation = props => (
   <div
-    className={`back ${props.displayBackNav} d-md-none flex-row justify-content-start`}
+    className={`back ${
+      props.displayBackNav
+    } d-md-none flex-row justify-content-start`}
   >
     <i
       className="icon-arrow-left align-self-start mr-auto"

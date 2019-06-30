@@ -37,7 +37,9 @@ function getOriginListingId(networkId, event) {
 }
 
 function getOriginOfferId(networkId, event) {
-  return `${networkId}-000-${event.returnValues.listingID}-${event.returnValues.offerID}`
+  return `${networkId}-000-${event.returnValues.listingID}-${
+    event.returnValues.offerID
+  }`
 }
 
 /* Removes the block number that is appended to listing IDs when they are
@@ -134,12 +136,16 @@ class MarketplaceEventHandler {
     const contractListingId = listing.id.split('-')[2]
     if (contractListingId !== event.returnValues.listingID) {
       throw new Error(
-        `ListingId mismatch: ${contractListingId} !== ${event.returnValues.listingID}`
+        `ListingId mismatch: ${contractListingId} !== ${
+          event.returnValues.listingID
+        }`
       )
     }
 
     logger.info(`Indexing listing in DB: \
-      id=${listing.id} blockNumber=${event.blockNumber} logIndex=${event.logIndex}`)
+      id=${listing.id} blockNumber=${event.blockNumber} logIndex=${
+      event.logIndex
+    }`)
 
     // Pull latest tags for listing from DB
     const latestTags = await db.DiscoveryTagAction.findOne({
