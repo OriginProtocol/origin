@@ -60,7 +60,9 @@ class VerifyEvents {
       }
     })
     logger.info(
-      `Loaded ${events.length} with status Logged and creation time prior to ${campaign.endDate}`
+      `Loaded ${events.length} with status Logged and creation time prior to ${
+        campaign.endDate
+      }`
     )
 
     // Walk thru each event and update their status based

@@ -110,7 +110,9 @@ class AdjustPayout {
     })
     if (payout) {
       throw new Error(
-        `Existing payout row id ${payout.id} with status ${payout.status} for account ${ethAddress}`
+        `Existing payout row id ${payout.id} with status ${
+          payout.status
+        } for account ${ethAddress}`
       )
     }
 
@@ -203,7 +205,9 @@ class AdjustPayout {
     }
     if (payout.status !== enums.GrowthPayoutStatuses.Paid) {
       throw new Error(
-        `Can't confirm payout id ${payout.id}, status is ${payout.status} rather than Paid`
+        `Can't confirm payout id ${payout.id}, status is ${
+          payout.status
+        } rather than Paid`
       )
     }
     if (!payout.txnHash) {
@@ -259,7 +263,9 @@ class AdjustPayout {
     // Process each adjustment.
     for (const adjustment of this.adjustments) {
       logger.info(
-        `Processing adjustment of ${adjustment.amount} to ${adjustment.ethAddress} with reason "${adjustment.reason}"`
+        `Processing adjustment of ${adjustment.amount} to ${
+          adjustment.ethAddress
+        } with reason "${adjustment.reason}"`
       )
       adjustment.payout = await this._adjust(
         campaign,

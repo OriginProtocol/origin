@@ -63,7 +63,9 @@ class GrowthEvent {
     const numToInsert = num - pastEvents.length
     if (numToInsert <= 0) {
       logger.info(
-        `Skipped insert: found ${pastEvents.length} past growth event ${eventType} for account ${ethAddress}`
+        `Skipped insert: found ${
+          pastEvents.length
+        } past growth event ${eventType} for account ${ethAddress}`
       )
       return
     }

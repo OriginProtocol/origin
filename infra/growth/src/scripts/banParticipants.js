@@ -108,7 +108,9 @@ class BanParticipants {
     }
     const match = this.sdnMatcher.match(identity.firstName, identity.lastName)
     if (match) {
-      const reason = `Name ${identity.firstName} ${identity.lastName} matches against SDN list`
+      const reason = `Name ${identity.firstName} ${
+        identity.lastName
+      } matches against SDN list`
       return { type: 'SdnMatch', reasons: [reason] }
     }
     return null
@@ -117,7 +119,9 @@ class BanParticipants {
   async _banParticipant(participant, banData) {
     if (this.config.persist) {
       logger.info(
-        `Banning account ${participant.ethAddress} - Ban type: ${banData.type} reasons: ${banData.reasons}`
+        `Banning account ${participant.ethAddress} - Ban type: ${
+          banData.type
+        } reasons: ${banData.reasons}`
       )
       // Change status to banned and add the ban data.
       await participant.update({
@@ -126,7 +130,9 @@ class BanParticipants {
       })
     } else {
       logger.info(
-        `Would ban account ${participant.ethAddress} - Ban type: ${banData.type} reasons: ${banData.reasons}`
+        `Would ban account ${participant.ethAddress} - Ban type: ${
+          banData.type
+        } reasons: ${banData.reasons}`
       )
     }
   }

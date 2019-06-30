@@ -63,7 +63,9 @@ class SendPayoutEmails {
         await sendPayoutEmail(payout.toAddress, amount, payout.txnHash)
       } else {
         logger.info(
-          `Would send email to account ${payout.toAddress}, amount ${amount}, txnHash ${payout.txnHash}`
+          `Would send email to account ${
+            payout.toAddress
+          }, amount ${amount}, txnHash ${payout.txnHash}`
         )
       }
       this.stats.numEmailsSent++

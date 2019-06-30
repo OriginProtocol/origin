@@ -93,12 +93,16 @@ class DistributeRewards {
       payout.status === enums.GrowthPayoutStatuses.Confirmed
     ) {
       logger.info(
-        `Skipping distribution. Found existing payout ${payout.id} with status ${payout.status}`
+        `Skipping distribution. Found existing payout ${
+          payout.id
+        } with status ${payout.status}`
       )
       return BigNumber(0)
     } else {
       throw new Error(
-        `Existing payout row id ${payout.id} with status ${payout.status} for account ${ethAddress}`
+        `Existing payout row id ${payout.id} with status ${
+          payout.status
+        } for account ${ethAddress}`
       )
     }
 
@@ -187,7 +191,9 @@ class DistributeRewards {
     }
     if (payout.status !== enums.GrowthPayoutStatuses.Paid) {
       throw new Error(
-        `Can't confirm payout id ${payout.id}, status is ${payout.status} rather than Paid`
+        `Can't confirm payout id ${payout.id}, status is ${
+          payout.status
+        } rather than Paid`
       )
     }
     if (!payout.txnHash) {
@@ -307,7 +313,9 @@ class DistributeRewards {
 
     for (const campaign of campaigns) {
       logger.info(
-        `Calculating rewards for campaign ${campaign.id} (${campaign.shortNameKey})`
+        `Calculating rewards for campaign ${campaign.id} (${
+          campaign.shortNameKey
+        })`
       )
       let campaignDistTotal = BigNumber(0)
 
@@ -337,7 +345,9 @@ class DistributeRewards {
         campaignDistTotal
       )
       logger.info(
-        `Finished distribution for campaign ${campaign.id} / ${campaign.shortNameKey}`
+        `Finished distribution for campaign ${campaign.id} / ${
+          campaign.shortNameKey
+        }`
       )
       logger.info(`Distributed a total of ${campaignDistTotal.toFixed()}`)
 
