@@ -13,6 +13,8 @@ import PaymentOptions from './_PaymentOptions'
 
 import Buy from './mutations/Buy'
 
+import displayDate from 'utils/displayDate'
+
 const Fractional = ({
   listing,
   from,
@@ -37,10 +39,8 @@ const Fractional = ({
     const split = range.split('/')
     startDate = split[0]
     endDate = split[1]
-    startDateDisplay = dayjs(startDate).format('ddd, MMM D') // Needs l10n
-    endDateDisplay = dayjs(endDate)
-      .add(1, 'day')
-      .format('ddd, MMM D') // Needs l10n
+    startDateDisplay = displayDate(dayjs(startDate))
+    endDateDisplay = displayDate(dayjs(endDate).add(1, 'day'))
     const priceEstimate = availability.estimateNightlyPrice(range)
     available = priceEstimate.available
     if (available) {

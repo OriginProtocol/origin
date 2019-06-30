@@ -31,7 +31,8 @@
     "fbt:translate": "node  -r @babel/register ../../node_modules/babel-plugin-fbt/bin/translate.js --translations translation/fbt/*.json --jenkins --pretty > .translated_fbts.json",
     "fbt:clean": "rm .enum_manifest.json .src_manifest.json .source_strings.json .translated_fbts.json translation/fbt/*.json 2&> /dev/null || exit 0",
     "translate": "npm run fbt:manifest && npm run fbt:collect && node scripts/fbtToCrowdin && node scripts/crowdinToFbt && npm run fbt:translate && node scripts/splitTranslations && cp .enum_manifest.json translation/fbt/.enum_manifest.json",
-    "translate:proof": "npm run fbt:manifest && npm run fbt:collect && node scripts/fbtToCrowdin && node scripts/crowdinToFbt proof && npm run fbt:translate && node scripts/splitTranslations && cp .enum_manifest.json translation/fbt/.enum_manifest.json"
+    "translate:proof": "npm run fbt:manifest && npm run fbt:collect && node scripts/fbtToCrowdin && node scripts/crowdinToFbt proof && npm run fbt:translate && node scripts/splitTranslations && cp .enum_manifest.json translation/fbt/.enum_manifest.json",
+    "locales:collect": "node scripts/collectLocales.js"
   },
   "dependencies": {
     "@babel/core": "^7.4.5",
@@ -59,6 +60,7 @@
     "fingerprintjs2": "^2.1.0",
     "graphql": "^14.4.0",
     "graphql-tag": "^2.10.1",
+    "intl": "=1.2.5",
     "ipfs-api": "^26.1.2",
     "jest-docblock": "^24.3.0",
     "myetherwallet-blockies": "^0.1.1",

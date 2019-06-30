@@ -1,5 +1,6 @@
 import { IntlViewerContext, init } from 'fbt-runtime'
 import Languages from '../constants/Languages'
+import 'intl'
 
 export default async function setLocale(newLocale) {
   let userLocale = newLocale || localStorage.locale
@@ -25,6 +26,13 @@ export default async function setLocale(newLocale) {
       if (res.ok) {
         const json = await res.json()
         init({ translations: { [locale]: json } })
+      }
+    }
+    if (window.IntlPolyfill) {
+      const res = await fetch(`locales/${locale}.json`)
+      if (res.ok) {
+        const json = await res.json()
+        window.IntlPolyfill.__addLocaleData(json)
       }
     }
   }
