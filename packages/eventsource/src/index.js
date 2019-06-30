@@ -274,7 +274,8 @@ class OriginEventSource {
       contract: this.contract,
       status,
       events,
-      multiUnit: MULTI_UNIT_TYPES.indexOf(__typename) > -1 && data.unitsTotal > 1,
+      multiUnit:
+        MULTI_UNIT_TYPES.indexOf(__typename) > -1 && data.unitsTotal > 1,
       commissionPerUnit,
       commission
     })
