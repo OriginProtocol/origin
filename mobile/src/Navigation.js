@@ -29,12 +29,14 @@ import ImportMnemonicScreen from 'screens/importMnemonic'
 import ImportPrivateKeyScreen from 'screens/importPrivateKey'
 import ImportWarningScreen from 'screens/importWarning'
 import ImportedScreen from 'screens/onboarding/imported'
-import Authentication from 'screens/onboarding/authentication'
-import PinScreen from 'screens/onboarding/pin'
 import EmailScreen from 'screens/onboarding/email'
 import PhoneScreen from 'screens/onboarding/phone'
 import NameScreen from 'screens/onboarding/name'
 import AvatarScreen from 'screens/onboarding/avatar'
+import GrowthScreen from 'screens/onboarding/growth'
+import GrowthTermsScreen from 'screens/onboarding/growth-terms'
+import Authentication from 'screens/onboarding/authentication'
+import PinScreen from 'screens/onboarding/pin'
 import ReadyScreen from 'screens/onboarding/ready'
 
 // Main screens
@@ -78,6 +80,18 @@ const OnboardingStack = createStackNavigator(
     Phone: PhoneScreen,
     Name: NameScreen,
     Avatar: AvatarScreen,
+    Growth: {
+      screen: GrowthScreen,
+      navigationOptions: () => ({
+        header: null
+      })
+    },
+    GrowthTerms: {
+      screen: GrowthTermsScreen,
+      navigationOptions: () => ({
+        headerTitle: 'Origin Rewards Terms'
+      })
+    },
     Authentication: Authentication,
     Pin: PinScreen,
     Ready: ReadyScreen

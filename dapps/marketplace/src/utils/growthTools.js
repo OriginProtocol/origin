@@ -101,7 +101,9 @@ export function calculatePendingAndAvailableActions(activeCampaign) {
     'Google',
     'Website',
     'Kakao',
-    'Wechat'
+    'WeChat',
+    'GitHub',
+    'LinkedIn'
   ]
 
   const purchaseActions = activeCampaign.actions.filter(action =>

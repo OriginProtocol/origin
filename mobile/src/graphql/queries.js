@@ -80,3 +80,13 @@ export const tokenBalance = gql`
     }
   }
 `
+
+export const growthEligible = gql`
+  query GrowthEligibility {
+    isEligible {
+      eligibility
+      countryName
+      countryCode
+    }
+  }
+`

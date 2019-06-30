@@ -55,7 +55,7 @@ describe('twitter attestations', async () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             oAuthToken: 'fake-oauth-token',
             oAuthTokenSecret: 'fake-oauth-token-secret'
@@ -119,7 +119,7 @@ describe('twitter attestations', async () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             redirect: 'hello',
             code: 'abcdefg',
@@ -184,7 +184,7 @@ describe('twitter attestations', async () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             oAuthToken: 'fake-oauth-token',
             oAuthTokenSecret: 'fake-oauth-token-secret',

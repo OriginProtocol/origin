@@ -62,9 +62,15 @@ function Action(props) {
   } else if (type === 'Kakao') {
     foregroundImgSrc = 'images/growth/kakao-icon.svg'
     title = fbt('Verify your Kakao Profile', 'RewardActions.kakaoTitle')
-  } else if (type === 'Wechat') {
+  } else if (type === 'WeChat') {
     foregroundImgSrc = 'images/growth/wechat-icon.svg'
     title = fbt('Verify your Wechat Profile', 'RewardActions.wechatTitle')
+  } else if (type === 'GitHub') {
+    foregroundImgSrc = 'images/growth/github-icon.svg'
+    title = fbt('Verify your GitHub Profile', 'RewardActions.githubTitle')
+  } else if (type === 'LinkedIn') {
+    foregroundImgSrc = 'images/growth/linkedin-icon.svg'
+    title = fbt('Verify your LinkedIn Profile', 'RewardActions.linkedInTitle')
   } else if (type === 'ListingCreated') {
     foregroundImgSrc = 'images/growth/purchase-icon.svg'
     title = fbt('Create a Listing', 'RewardActions.listingCreatedTitle')

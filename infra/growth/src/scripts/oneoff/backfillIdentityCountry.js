@@ -47,16 +47,12 @@ async function main(dryRun) {
 
       if (dryRun) {
         logger.info(
-          `Would update identity row with ethAddress ${
-            identity.ethAddress
-          } country: ${country}`
+          `Would update identity row with ethAddress ${identity.ethAddress} country: ${country}`
         )
       } else {
         identity.update({ country })
         logger.info(
-          `Updated identity row with ethAddress ${
-            identity.ethAddress
-          } country: ${country}`
+          `Updated identity row with ethAddress ${identity.ethAddress} country: ${country}`
         )
       }
     }

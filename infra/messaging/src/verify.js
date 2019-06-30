@@ -45,9 +45,7 @@ function verifyConversers(conversee, keysMap) {
       (converseeKey && verifyAddress == keysMap.get(conversee).address)
     ) {
       logger.debug(
-        `Verified conv init for ${conversee}, Signature: ${
-          contentObject.sign
-        }, Signed with: ${verifyAddress}`
+        `Verified conv init for ${conversee}, Signature: ${contentObject.sign}, Signed with: ${verifyAddress}`
       )
       return true
     }
@@ -134,9 +132,7 @@ function verifyRegistrySignature(signature, key, message) {
       const verifyPhAddress = web3.eth.accounts.recover(value.ph, value.phs)
       if (verifyPhAddress == value.address) {
         logger.debug(
-          `Key verified: ${
-            value.msg
-          }, Signature: ${signature}, Signed with, ${verifyAddress}`
+          `Key verified: ${value.msg}, Signature: ${signature}, Signed with, ${verifyAddress}`
         )
         return true
       }
