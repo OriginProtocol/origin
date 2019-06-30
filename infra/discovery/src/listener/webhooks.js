@@ -53,9 +53,7 @@ async function postToDiscordWebhook(url, data) {
             listing
           )}`,
           description: [
-            `https://dapp.originprotocol.com/#/purchases/${
-              data.related.offer.id
-            }`,
+            `https://dapp.originprotocol.com/#/purchases/${data.related.offer.id}`,
             `Seller: ${personDisp(listing.seller)}`,
             `Buyer: ${personDisp(data.related.offer.buyer)}`
           ].join('\n')
