@@ -21,7 +21,7 @@ import UserActivationLink from 'components/UserActivationLink'
 
 const store = Store('sessionStorage')
 
-const ProfileNav = ({ identity, identityLoading, open, onOpen, onClose }) => (
+const ProfileNav = ({ identity, identityLoaded, open, onOpen, onClose }) => (
   <Query query={ProfileQuery} pollInterval={window.transactionPoll || 1000}>
     {({ data, error }) => {
       if (error) {
@@ -41,7 +41,7 @@ const ProfileNav = ({ identity, identityLoading, open, onOpen, onClose }) => (
           content={
             <ProfileDropdown
               identity={identity}
-              identityLoading={identityLoading}
+              identityLoaded={identityLoaded}
               onClose={() => onClose()}
               data={data}
             />
@@ -100,11 +100,11 @@ const Identity = ({
   id,
   wallet,
   identity,
-  identityLoading,
+  identityLoaded,
   isMobileApp,
   onClose
 }) => {
-  if (identityLoading || !wallet) {
+  if (!identityLoaded || !wallet) {
     return (
       <div className="identity-loading">
         <fbt desc="nav.profile.identityLoading">
@@ -163,7 +163,7 @@ const ProfileDropdownRaw = ({
   wallet,
   data,
   identity,
-  identityLoading,
+  identityLoaded,
   onClose
 }) => {
   const { id } = data.web3.primaryAccount
@@ -189,7 +189,7 @@ const ProfileDropdownRaw = ({
             id={id}
             wallet={walletProxy}
             identity={identity}
-            identityLoading={identityLoading}
+            identityLoaded={identityLoaded}
             onClose={onClose}
           />
           <div className="eth-address">
