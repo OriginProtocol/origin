@@ -16,7 +16,7 @@ import { fbt } from 'fbt-runtime'
 import { LANGUAGES } from '../constants'
 import { setLanguage } from 'actions/Settings'
 import setFbtLanguage, { findBestAvailableLanguage } from 'utils/language'
-import CommonStyles from 'styles/common'
+import ListStyles from 'styles/list'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -98,5 +98,5 @@ export default connect(
 )(LanguageScreen)
 
 const styles = StyleSheet.create({
-  ...CommonStyles
+  ...ListStyles
 })

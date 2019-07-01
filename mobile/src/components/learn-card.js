@@ -23,7 +23,6 @@ const LearnCard = props => (
       <OriginButton
         size="large"
         type="primary"
-        textStyle={{ fontSize: 18, fontWeight: '900' }}
         title={fbt('Got it', 'LearnCard.continue')}
         onPress={props.onRequestClose}
       />
@@ -34,8 +33,5 @@ const LearnCard = props => (
 export default LearnCard
 
 const styles = StyleSheet.create({
-  ...CommonStyles,
-  buttonContainer: {
-    paddingBottom: 20
-  }
+  ...CommonStyles
 })

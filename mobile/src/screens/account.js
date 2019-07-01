@@ -15,8 +15,8 @@ import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
 
 import { setAccountActive, removeAccount } from 'actions/Wallet'
-import OriginButton from 'components/origin-button'
 import { truncateAddress } from 'utils/user'
+import OriginButton from 'components/origin-button'
 
 const ONE_MINUTE = 1000 * 60
 

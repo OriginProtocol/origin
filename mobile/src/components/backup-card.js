@@ -57,8 +57,5 @@ const BackupCard = ({ onRequestBackup, onRequestClose, wallet }) => {
 export default BackupCard
 
 const styles = StyleSheet.create({
-  ...CommonStyles,
-  buttonContainer: {
-    paddingBottom: 20
-  }
+  ...CommonStyles
 })

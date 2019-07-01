@@ -93,6 +93,7 @@ class ImportAccountScreen extends Component {
           <ScrollView
             style={styles.onboardingModal}
             contentContainerStyle={styles.content}
+            keyboardShouldPersistTaps={'always'}
           >
             <View style={styles.container}>
               <Text style={styles.title}>

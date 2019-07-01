@@ -26,7 +26,7 @@ const SignatureCard = ({ msgData, onConfirm, onRequestClose }) => {
         />
       </View>
       <TouchableOpacity onPress={onRequestClose}>
-        <Text style={styles.cancel}>
+        <Text style={styles.cardCancelText}>
           <fbt desc="SignatureCard.cancel">Cancel</fbt>
         </Text>
       </TouchableOpacity>
@@ -37,8 +37,5 @@ const SignatureCard = ({ msgData, onConfirm, onRequestClose }) => {
 export default SignatureCard
 
 const styles = StyleSheet.create({
-  ...CommonStyles,
-  buttonContainer: {
-    paddingBottom: 20
-  }
+  ...CommonStyles
 })

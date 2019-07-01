@@ -8,8 +8,7 @@ import {
   createAppContainer,
   createBottomTabNavigator,
   createStackNavigator,
-  createSwitchNavigator,
-  HeaderBackButton
+  createSwitchNavigator
 } from 'react-navigation'
 
 import PushNotifications from './PushNotifications'
@@ -82,26 +81,9 @@ const OnboardingStack = createStackNavigator(
     Ready: ReadyScreen
   },
   {
-    defaultNavigationOptions: ({ navigation }) => {
-      const { params = {} } = navigation.state
+    defaultNavigationOptions: () => {
       return {
         header: null
-        /*
-        headerStyle: {
-          borderBottomWidth: 0
-        },
-        headerBackTitle: null,
-        // Allow components to override the back button function by setting a
-        // handleBack function as a navigation param e.g:
-        // this.props.navigation.setParams({ handleBack: this.handleBack.bind(this) })
-        headerLeft: (
-          <HeaderBackButton
-            onPress={() => {
-              params.handleBack ? params.handleBack() : navigation.goBack(null)
-            }}
-          />
-        )
-        */
       }
     }
   }
@@ -151,21 +133,29 @@ const SettingsStack = createStackNavigator(
     ),
     Accounts: AccountsScreen,
     Language: LanguageScreen,
-    /*
     ImportAccount: ImportAccountScreen,
     ImportMnemonic: {
       screen: ImportMnemonicScreen,
       params: {
         navigateOnSuccess: 'Accounts'
+      },
+      navigationOptions: () => {
+        return {
+          header: null
+        }
       }
     },
     ImportPrivateKey: {
       screen: ImportPrivateKeyScreen,
       params: {
         navigateOnSuccess: 'Accounts'
+      },
+      navigationOptions: () => {
+        return {
+          header: null
+        }
       }
     },
-    */
     Settings: SettingsScreen
   },
   {

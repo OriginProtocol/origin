@@ -17,10 +17,10 @@ import CommonStyles from 'styles/common'
 
 const NotificationCard = props => (
   <View style={styles.card}>
-    <Text style={styles.heading}>
+    <Text style={styles.cardHeading}>
       <fbt desc="NotificationCard.heading">Enable Notifications</fbt>
     </Text>
-    <Text style={styles.content}>
+    <Text style={styles.cardContent}>
       <fbt desc="NotificationCard.message">
         Woops! It looks like you have notifications disabled. To get the latest
         updates about your transactions we recommend enabling them in the
@@ -31,7 +31,6 @@ const NotificationCard = props => (
       <OriginButton
         size="large"
         type="primary"
-        textStyle={styles.buttonTextt}
         title={fbt('Open Settings', 'NotificationCard.button')}
         onPress={() => {
           if (Platform.OS === 'ios') {
@@ -43,7 +42,7 @@ const NotificationCard = props => (
       />
     </View>
     <TouchableOpacity onPress={props.onRequestClose}>
-      <Text style={styles.cancel}>
+      <Text style={styles.cardCancelText}>
         <fbt desc="NotificationCard.cancel">Close</fbt>
       </Text>
     </TouchableOpacity>
@@ -53,8 +52,5 @@ const NotificationCard = props => (
 export default NotificationCard
 
 const styles = StyleSheet.create({
-  ...CommonStyles,
-  buttonContainer: {
-    paddingBottom: 20
-  }
+  ...CommonStyles
 })

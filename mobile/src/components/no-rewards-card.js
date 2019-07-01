@@ -36,16 +36,12 @@ const NoRewardsCard = props => (
         <OriginButton
           size="large"
           type="primary"
-          style={styles.button}
-          textStyle={styles.buttonText}
           title={fbt("I'm sure", 'NoRewardsCard.continue')}
           onPress={props.onConfirm}
         />
         <OriginButton
           size="large"
           type="primary"
-          style={styles.button}
-          textStyle={styles.buttonText}
           title={fbt('No, wait', 'NoRewardsCard.goBack')}
           onPress={props.onRequestClose}
           outline
@@ -59,9 +55,6 @@ export default NoRewardsCard
 
 const styles = StyleSheet.create({
   ...CommonStyles,
-  buttonContainer: {
-    paddingBottom: 20
-  },
   fullWidthImageContainer: {
     marginHorizontal: -20,
     marginTop: -30,

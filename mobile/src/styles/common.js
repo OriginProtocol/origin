@@ -81,36 +81,6 @@ export default StyleSheet.create({
     fontSize: 17,
     fontFamily: 'Lato'
   },
-  listContainer: {
-    backgroundColor: '#f7f8f8'
-  },
-  listItem: {
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    flex: 1,
-    height: 50,
-    justifyContent: 'space-between',
-    paddingHorizontal: '5%',
-    paddingVertical: 14
-  },
-  listSelectedItem: {
-    marginRight: 17
-  },
-  listItemIconContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-  listItemTextContainer: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  listSeparator: {
-    backgroundColor: 'white',
-    height: 1,
-    marginRight: 'auto',
-    width: '5%'
-  },
   card: {
     backgroundColor: 'white',
     borderRadius: 20,
