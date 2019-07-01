@@ -24,7 +24,7 @@
   "dependencies": {
     "@origin/contracts": "^0.8.6",
     "@origin/token": "^0.1.0",
-    "bignumber.js": "8.0.2",
+    "bignumber.js": "9.0.0",
     "body-parser": "^1.19.0",
     "chalk": "^2.4.2",
     "connect-sqlite3": "^0.9.11",
@@ -48,7 +48,7 @@
     "sequelize-cli": "^5.5.0",
     "sql-template-strings": "^2.2.2",
     "sqlite": "^3.0.3",
-    "web3": "1.0.0-beta.34"
+    "web3": "1.0.0-beta.55"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
@@ -61,7 +61,7 @@
     "chai-moment": "^0.1.0",
     "mocha": "^6.1.4",
     "nodemon": "^1.19.1",
-    "react-scripts": "^2.1.1"
+    "react-scripts": "^3.0.1"
   },
   "prettier": {
     "semi": false,
