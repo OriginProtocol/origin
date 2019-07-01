@@ -522,9 +522,7 @@ class MarketplaceScreen extends Component {
     const injectedJavaScript = `
       (function() {
         if (window && window.localStorage && window.webViewBridge) {
-          window.localStorage.growth_auth_token = '${
-            this.props.onboarding.growth
-          }';
+          window.localStorage.growth_auth_token = '${this.props.onboarding.growth}';
         }
       })();
     `

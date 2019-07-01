@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import {
   ActivityIndicator,
+  Alert,
   StyleSheet,
   TouchableOpacity,
   Text,
@@ -68,13 +69,20 @@ class AvatarScreen extends Component {
       const formData = new FormData()
       formData.append('file', outImage)
 
-      console.debug('Uploading to IPFS')
+      console.debug(`Uploading to IPFS: ${this.props.config.ipfsRPC}`)
 
-      const ipfsRPC = this.props.config.ipfsRPC
-      const ipfsResponse = await fetch(`${ipfsRPC}/api/v0/add`, {
-        method: 'POST',
-        body: formData
-      })
+      let ipfsResponse
+      try {
+        ipfsResponse = await fetch(`${this.props.config.ipfsRPC}/api/v0/add`, {
+          method: 'POST',
+          body: formData
+        })
+      } catch (error) {
+        Alert.alert('An error occurred storing your image in IPFS')
+        console.warn(error)
+        this.setState({ loading: false })
+        return
+      }
 
       if (!ipfsResponse.ok) {
         this.setState({

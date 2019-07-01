@@ -8,6 +8,7 @@ import Store from 'utils/store'
 import withIdentity from 'hoc/withIdentity'
 import withWallet from 'hoc/withWallet'
 import withConfig from 'hoc/withConfig'
+import withIsMobile from 'hoc/withIsMobile'
 
 import ProfileQuery from 'queries/Profile'
 
@@ -95,7 +96,14 @@ const CreateIdentity = ({ onClose }) => (
   </>
 )
 
-const Identity = ({ id, wallet, identity, identityLoading, onClose }) => {
+const Identity = ({
+  id,
+  wallet,
+  identity,
+  identityLoading,
+  isMobileApp,
+  onClose
+}) => {
   if (identityLoading || !wallet) {
     return (
       <div className="identity-loading">
@@ -138,12 +146,14 @@ const Identity = ({ id, wallet, identity, identityLoading, onClose }) => {
       >
         <fbt desc="nav.profile.earnOGN">Earn OGN</fbt>
       </Link>
-      <Balances
-        account={id}
-        onClose={onClose}
-        title={<fbt desc="nav.profile.walletBalance">Wallet Balances</fbt>}
-        className="pt-3 pb-3"
-      />
+      {!isMobileApp && (
+        <Balances
+          account={id}
+          onClose={onClose}
+          title={<fbt desc="nav.profile.walletBalance">Wallet Balances</fbt>}
+          className="pt-3 pb-3"
+        />
+      )}
     </div>
   )
 }
@@ -198,7 +208,7 @@ const ProfileDropdownRaw = ({
 
 const ProfileDropdown = withConfig(withWallet(ProfileDropdownRaw))
 
-export default withWallet(withIdentity(ProfileNav))
+export default withIsMobile(withWallet(withIdentity(ProfileNav)))
 
 require('react-styl')(`
   .dropdown .nav-link
