@@ -114,12 +114,12 @@ class ImportedScreen extends Component {
 
     return (
       <>
-        <View style={styles.container}>
-          {avatarUrl && (
+        <View style={{ ...styles.container, flexGrow: 2 }}>
+          {avatarUrl !== undefined && (
             <>
               <Avatar
                 source={avatarUrl}
-                size={120}
+                size={100}
                 style={{ marginBottom: 30 }}
               />
             </>
