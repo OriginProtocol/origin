@@ -1,21 +1,32 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
-import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
+import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
 import RNPickerSelect from 'react-native-picker-select'
 import * as RNLocalize from 'react-native-localize'
 
 import { setPhoneAttestation } from 'actions/Onboarding'
+import Disclaimer from 'components/disclaimer'
 import OriginButton from 'components/origin-button'
 import PinInput from 'components/pin-input'
+import VisibilityWarning from 'components/visibility-warning'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import withConfig from 'hoc/withConfig'
-import OnboardingStyles from 'styles/onboarding'
 import _countryCodes from 'utils/countryCodes'
+import CommonStyles from 'styles/common'
+import OnboardingStyles from 'styles/onboarding'
 
 const commonCountryCodes = [
   '1', // US/CA
@@ -87,24 +98,8 @@ class PhoneScreen extends Component {
     }
   }
 
-  componentDidMount() {
-    // Override the back button functionality in header
-    this.props.navigation.setParams({
-      handleBack: this.handleBack.bind(this)
-    })
-  }
-
   handleChange = async (field, value) => {
     await this.setState({ [`${field}Error`]: '', [`${field}Value`]: value })
-  }
-
-  /* Override the back function because of the verify step being present on this
-   * screen and not on a separate route.
-   */
-  handleBack = () => {
-    this.state.verify
-      ? this.setState({ verify: false })
-      : this.props.navigation.goBack(null)
   }
 
   /* Handle submission of phone number. Check if an identity with this phone
@@ -156,9 +151,7 @@ class PhoneScreen extends Component {
   /* Request a verification code from @origin/bridge.
    */
   generateVerificationCode = async () => {
-    const url = `${
-      this.props.config.bridge
-    }/api/attestations/phone/generate-code`
+    const url = `${this.props.config.bridge}/api/attestations/phone/generate-code`
     return await fetch(url, {
       headers: { 'content-type': 'application/json' },
       credentials: 'include',
@@ -206,9 +199,21 @@ class PhoneScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        {!this.state.verify ? this.renderInput() : this.renderVerify()}
-      </SafeAreaView>
+      <KeyboardAvoidingView
+        style={styles.darkOverlay}
+        behavior={'padding'}
+        keyboardVerticalOffset={Platform.OS === 'android' ? 40 : 0}
+      >
+        <SafeAreaView style={{ flex: 1 }}>
+          <ScrollView
+            style={styles.onboardingModal}
+            contentContainerStyle={styles.content}
+            keyboardShouldPersistTaps={'always'}
+          >
+            {!this.state.verify ? this.renderInput() : this.renderVerify()}
+          </ScrollView>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     )
   }
 
@@ -217,15 +222,12 @@ class PhoneScreen extends Component {
   renderInput() {
     return (
       <>
-        <View style={styles.content}>
+        <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
           <Text style={styles.title}>
             <fbt desc="PhoneScreen.inputTitle">Enter phone number</fbt>
           </Text>
-          <Text style={styles.subtitle}>
-            <fbt desc="PhoneScreen.inputSubtitle">
-              Enter a valid phone number
-            </fbt>
-          </Text>
+        </View>
+        <View style={{ ...styles.container }}>
           <RNPickerSelect
             placeholder={{ label: 'Select a country', value: null }}
             items={countryOptions}
@@ -238,9 +240,9 @@ class PhoneScreen extends Component {
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
-            autoFocus={false}
+            autoFocus={true}
             multiline={false}
-            returnKeyType="next"
+            keyboardType="phone-pad"
             onChangeText={value => this.handleChange('phone', value)}
             onSubmitEditing={this.handleSubmitPhone}
             value={this.state.phoneValue}
@@ -249,23 +251,19 @@ class PhoneScreen extends Component {
           {this.state.phoneError.length > 0 && (
             <Text style={styles.invalid}>{this.state.phoneError}</Text>
           )}
-          <View style={styles.legalContainer}>
-            <Text style={styles.legal}>
-              <fbt desc="PhoneScreen.inputHelpText">
-                By verifying your phone number, you give Origin permission to
-                send you occasional messages such as notifications about your
-                transactions.
-              </fbt>
-            </Text>
-          </View>
+          <Disclaimer>
+            <fbt desc="PhoneScreen.inputHelpText">
+              By verifying your phone number, you give Origin permission to send
+              you occasional messages such as notifications about your
+              transactions.
+            </fbt>
+          </Disclaimer>
         </View>
-        {this.renderVisibilityWarning()}
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
+          {this.renderVisibilityWarning()}
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Continue', 'PhoneScreen.continueButton')}
             disabled={
               !this.state.phoneValue.length ||
@@ -286,10 +284,12 @@ class PhoneScreen extends Component {
   renderVerify() {
     return (
       <>
-        <View style={styles.content}>
+        <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
           <Text style={styles.title}>
-            <fbt desc="PhoneScreen.verifyTitle">Verify your phone</fbt>
+            <fbt desc="PhoneScreen.verifyTitle">Verify phone</fbt>
           </Text>
+        </View>
+        <View style={{ ...styles.container }}>
           <Text style={styles.subtitle}>
             <fbt desc="PhoneScreen.verifySubtitle">Enter code</fbt>
           </Text>
@@ -309,30 +309,24 @@ class PhoneScreen extends Component {
           {this.state.verifyError.length > 0 && (
             <Text style={styles.invalid}>{this.state.verifyError}</Text>
           )}
-          <View style={styles.legalContainer}>
-            <Text style={styles.legal}>
-              <fbt desc="PhoneScreen.verifyHelpText">
-                We sent you a code to the phone address you provided. Please
-                enter it above.
-              </fbt>
-            </Text>
-          </View>
+          <Disclaimer>
+            <fbt desc="PhoneScreen.verifyHelpText">
+              We sent you a code to the phone address you provided. Please enter
+              it above.
+            </fbt>
+          </Disclaimer>
         </View>
-        {this.renderVisibilityWarning()}
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
+          {this.renderVisibilityWarning()}
           <OriginButton
             size="large"
             type="link"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Skip', 'PhoneScreen.skipButton')}
             onPress={this.handleSkip}
           />
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Verify', 'PhoneScreen.verifyButton')}
             disabled={
               this.state.verificationCode.length < 6 ||
@@ -349,14 +343,11 @@ class PhoneScreen extends Component {
 
   renderVisibilityWarning() {
     return (
-      <View style={styles.visibilityWarningContainer}>
-        <Text style={styles.visibilityWarningHeader}>
-          What will be visible on the blockchain?
-        </Text>
-        <Text style={styles.visibilityWarningText}>
+      <VisibilityWarning>
+        <fbt desc="PhoneScreen.visibilityWarning">
           That you have a verified phone, but NOT your actual phone number.
-        </Text>
-      </View>
+        </fbt>
+      </VisibilityWarning>
     )
   }
 }
@@ -380,6 +371,7 @@ export default withConfig(
 )
 
 const styles = StyleSheet.create({
+  ...CommonStyles,
   ...OnboardingStyles
 })
 
@@ -396,7 +388,7 @@ const pickerSelectStyles = StyleSheet.create({
     paddingBottom: 10,
     marginBottom: 20,
     paddingHorizontal: 20,
-    width: 300,
+    width: '90%',
     textAlign: 'center'
   },
   inputAndroid: {
@@ -408,7 +400,7 @@ const pickerSelectStyles = StyleSheet.create({
     paddingBottom: 10,
     marginBottom: 20,
     paddingHorizontal: 20,
-    width: 300,
+    width: '90%',
     textAlign: 'center'
   }
 })

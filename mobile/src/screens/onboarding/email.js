@@ -1,18 +1,29 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash.get'
 
 import { setEmailAttestation } from 'actions/Onboarding'
+import Disclaimer from 'components/disclaimer'
 import OriginButton from 'components/origin-button'
 import PinInput from 'components/pin-input'
+import VisibilityWarning from 'components/visibility-warning'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import withConfig from 'hoc/withConfig'
 import OnboardingStyles from 'styles/onboarding'
+import CommonStyles from 'styles/common'
 
 class EmailScreen extends Component {
   constructor(props) {
@@ -27,24 +38,8 @@ class EmailScreen extends Component {
     }
   }
 
-  componentDidMount() {
-    // Override the back button functionality in header
-    this.props.navigation.setParams({
-      handleBack: this.handleBack.bind(this)
-    })
-  }
-
   handleChange = async emailValue => {
     await this.setState({ emailError: '', emailValue })
-  }
-
-  /* Override the back function because of the verify step being present on this
-   * screen and not on a separate route.
-   */
-  handleBack = () => {
-    this.state.verify
-      ? this.setState({ verify: false })
-      : this.props.navigation.goBack(null)
   }
 
   /* Handle submission of email. Check if an identity with this phone
@@ -111,9 +106,7 @@ class EmailScreen extends Component {
   /* Request a verification code from @origin/bridge
    */
   generateVerificationCode = async () => {
-    const url = `${
-      this.props.config.bridge
-    }/api/attestations/email/generate-code`
+    const url = `${this.props.config.bridge}/api/attestations/email/generate-code`
     return await fetch(url, {
       headers: { 'content-type': 'application/json' },
       credentials: 'include',
@@ -151,9 +144,21 @@ class EmailScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        {!this.state.verify ? this.renderInput() : this.renderVerify()}
-      </SafeAreaView>
+      <KeyboardAvoidingView
+        style={styles.darkOverlay}
+        behavior={'padding'}
+        keyboardVerticalOffset={Platform.OS === 'android' ? 40 : 0}
+      >
+        <SafeAreaView style={{ flex: 1 }}>
+          <ScrollView
+            style={styles.onboardingModal}
+            contentContainerStyle={styles.content}
+            keyboardShouldPersistTaps={'always'}
+          >
+            {!this.state.verify ? this.renderInput() : this.renderVerify()}
+          </ScrollView>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     )
   }
 
@@ -162,10 +167,12 @@ class EmailScreen extends Component {
   renderInput() {
     return (
       <>
-        <View style={styles.content}>
+        <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
           <Text style={styles.title}>
             <fbt desc="EmailScreen.inputTitle">Let&apos;s get started</fbt>
           </Text>
+        </View>
+        <View style={{ ...styles.container }}>
           <Text style={styles.subtitle}>
             <fbt desc="EmailScreen.inputSubtitle">
               What&apos;s your email address?
@@ -186,22 +193,18 @@ class EmailScreen extends Component {
           {this.state.emailError.length > 0 && (
             <Text style={styles.invalid}>{this.state.emailError}</Text>
           )}
-          <View style={styles.legalContainer}>
-            <Text style={styles.legal}>
-              <fbt desc="EmailScreen.inputHelpText">
-                We will use your email to notify you of important notifications
-                when you buy or sell.
-              </fbt>
-            </Text>
-          </View>
+          <Disclaimer>
+            <fbt desc="EmailScreen.inputHelpText">
+              We will use your email to notify you of important notifications
+              when you buy or sell.
+            </fbt>
+          </Disclaimer>
         </View>
-        {this.renderVisibilityWarning()}
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
+          {this.renderVisibilityWarning()}
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Continue', 'EmailScreen.continueButton')}
             disabled={
               !this.state.emailValue.length ||
@@ -221,10 +224,12 @@ class EmailScreen extends Component {
   renderVerify() {
     return (
       <>
-        <View style={styles.content}>
+        <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
           <Text style={styles.title}>
             <fbt desc="EmailScreen.verifyTitle">Verify your email</fbt>
           </Text>
+        </View>
+        <View style={{ ...styles.container }}>
           <Text style={styles.subtitle}>
             <fbt desc="EmailScreen.verifySubtitle">Enter code</fbt>
           </Text>
@@ -245,22 +250,18 @@ class EmailScreen extends Component {
           {this.state.verifyError.length > 0 && (
             <Text style={styles.invalid}>{this.state.verifyError}</Text>
           )}
-          <View style={styles.legalContainer}>
-            <Text style={styles.legal}>
-              <fbt desc="EmailScreen.verifyHelpText">
-                We sent you a code to the email address you provided. Please
-                enter it above.
-              </fbt>
-            </Text>
-          </View>
+          <Disclaimer>
+            <fbt desc="EmailScreen.verifyHelpText">
+              We sent you a code to the email address you provided. Please enter
+              it above.
+            </fbt>
+          </Disclaimer>
         </View>
-        {this.renderVisibilityWarning()}
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
+          {this.renderVisibilityWarning()}
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Verify', 'EmailScreen.verifyButton')}
             disabled={
               this.state.verificationCode.length < 6 ||
@@ -277,18 +278,11 @@ class EmailScreen extends Component {
 
   renderVisibilityWarning() {
     return (
-      <View style={styles.visibilityWarningContainer}>
-        <Text style={styles.visibilityWarningHeader}>
-          <fbt desc="EmailScreen.visibilityWarningHeader">
-            What will be visible on the blockchain?
-          </fbt>
-        </Text>
-        <Text style={styles.visibilityWarningText}>
-          <fbt desc="AvatarScreen.visibilityWarningText">
-            That you have a verified email, but NOT your actual email address.
-          </fbt>
-        </Text>
-      </View>
+      <VisibilityWarning>
+        <fbt desc="EmailScreen.visibilityWarningText">
+          That you have a verified email, but NOT your actual email address.
+        </fbt>
+      </VisibilityWarning>
     )
   }
 }
@@ -312,5 +306,6 @@ export default withConfig(
 )
 
 const styles = StyleSheet.create({
+  ...CommonStyles,
   ...OnboardingStyles
 })
