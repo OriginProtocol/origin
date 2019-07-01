@@ -18,7 +18,7 @@
     "@origin/ip2geo": "^0.1.0",
     "@origin/token": "^0.1.0",
     "apollo-server-express": "^2.6.7",
-    "bignumber.js": "8.0.2",
+    "bignumber.js": "9.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "envkey": "^1.2.6",
@@ -36,7 +36,7 @@
     "sequelize-cli": "^5.5.0",
     "url": "^0.11.0",
     "validator": "^11.0.0",
-    "web3": "1.0.0-beta.34"
+    "web3": "1.0.0-beta.55"
   },
   "devDependencies": {
     "chai-things": "^0.2.0",
