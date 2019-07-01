@@ -53,7 +53,7 @@ class ImportWarningScreen extends Component {
               </fbt>
             </Text>
           </View>
-          <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
+          <View style={{ ...styles.container, ...styles.buttonContainer }}>
             <OriginButton
               size="large"
               type="primary"
