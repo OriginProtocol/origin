@@ -25,7 +25,7 @@
     "bs58": "^4.0.1",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
-    "elasticsearch": "^15.2.0",
+    "elasticsearch": "^16.1.1",
     "envkey": "^1.2.6",
     "esm": "3.2.25",
     "express": "^4.17.1",
@@ -43,7 +43,7 @@
     "sequelize": "^5.8.12",
     "sequelize-cli": "^5.5.0",
     "url": "^0.11.0",
-    "web3": "1.0.0-beta.34"
+    "web3": "1.0.0-beta.55"
   },
   "devDependencies": {
     "chai-things": "^0.2.0",
