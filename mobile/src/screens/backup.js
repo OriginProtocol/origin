@@ -208,9 +208,9 @@ class BackupScreen extends Component {
             <Text style={styles.legal}>
               {this.isPrivateKey && (
                 <fbt desc="BackupScreen.backupPrivateKeyNote">
-                  This private key is the key to your account. Write it down,
-                  or copy it to a password manager. We recommend NOT emailing
-                  it to yourself.
+                  This private key is the key to your account. Write it down, or
+                  copy it to a password manager. We recommend NOT emailing it to
+                  yourself.
                 </fbt>
               )}
               {!this.isPrivateKey && (

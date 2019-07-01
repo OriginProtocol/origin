@@ -111,7 +111,7 @@ class UpdatePrompt extends React.Component {
               </>
             )}
           </View>
-          <View style={[ styles.container, styles.buttonContainer ]}>
+          <View style={[styles.container, styles.buttonContainer]}>
             <OriginButton
               size="large"
               type="primary"

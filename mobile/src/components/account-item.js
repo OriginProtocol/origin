@@ -49,6 +49,7 @@ const AccountItem = ({ item, navigation, wallet }) => {
           <Address
             address={item.address}
             label={fbt('Address', 'AccountItem.address')}
+            styles={{ marginTop: 4 }}
           />
         </View>
         {

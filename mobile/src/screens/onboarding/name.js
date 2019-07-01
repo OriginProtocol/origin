@@ -11,8 +11,8 @@ import {
   View
 } from 'react-native'
 import { connect } from 'react-redux'
-import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
+import SafeAreaView from 'react-native-safe-area-view'
 
 import { setName } from 'actions/Onboarding'
 import OriginButton from 'components/origin-button'

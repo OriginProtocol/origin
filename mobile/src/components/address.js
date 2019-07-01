@@ -21,7 +21,7 @@ const Address = ({ address, chars, label, styles, onPress }) => {
         if (typeof onPress === 'function') {
           onPress()
         } else {
-          Alert.alert(evenlySplitAddress(address).join('\n'), [
+          Alert.alert(String(label), evenlySplitAddress(address).join('\n'), [
             {
               text: String(fbt('Copy', 'Address.alertCopyButton')),
               onPress: async () => {

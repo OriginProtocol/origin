@@ -13,10 +13,15 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
+import SafeAreaView from 'react-native-safe-area-view'
+import get from 'lodash.get'
 
 import { setAccountActive, removeAccount } from 'actions/Wallet'
 import { truncateAddress } from 'utils/user'
+import Address from 'components/address'
+import Avatar from 'components/avatar'
 import OriginButton from 'components/origin-button'
+import CommonStyles from 'styles/common'
 
 const ONE_MINUTE = 1000 * 60
 
@@ -114,26 +119,24 @@ class AccountScreen extends Component {
     const { address, privateKey, mnemonic } = account
     const multipleAccounts = wallet.accounts.length > 1
     const isActive = address === wallet.activeAccount.address
+    const identity = get(wallet.identities, address, {})
+    const avatarUrl = get(identity, 'avatarUrl')
+    const fullName = get(identity, 'fullName')
 
     return (
-      <KeyboardAvoidingView style={styles.keyboardWrapper} behavior="padding">
-        <ScrollView
-          contentContainerStyle={styles.content}
-          style={styles.container}
-        >
-          <View contentContainerStyle={styles.content} style={styles.container}>
-            <View style={styles.header}>
-              <Text style={styles.heading}>
-                <fbt desc="AccountScreen.ethAddress">Eth Address</fbt>
-              </Text>
-            </View>
-            <TextInput
-              editable={false}
-              value={truncateAddress(address, 14)}
-              style={styles.input}
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content}>
+          <View style={styles.container}>
+            <Avatar source={avatarUrl} size={100} />
+            {fullName && <Text style={styles.title}>{fullName}</Text>}
+            <Address
+              address={address}
+              label={fbt('Address', 'AccountItem.address')}
+              chars={10}
+              styles={{ fontSize: 16, marginVertical: 20 }}
             />
           </View>
-          <View style={styles.buttonsContainer}>
+          <View style={[styles.containner, styles.buttonContainer]}>
             {multipleAccounts && (
               <OriginButton
                 size="large"
@@ -220,7 +223,7 @@ class AccountScreen extends Component {
             )}
           </View>
         </ScrollView>
-      </KeyboardAvoidingView>
+      </SafeAreaView>
     )
   }
 }
@@ -240,58 +243,5 @@ export default connect(
 )(AccountScreen)
 
 const styles = StyleSheet.create({
-  keyboardWrapper: {
-    flex: 1
-  },
-  container: {
-    flex: 1
-  },
-  content: {
-    paddingBottom: 20
-  },
-  buttonsContainer: {
-    marginBottom: 10,
-    paddingTop: 20
-  },
-  header: {
-    paddingBottom: 5,
-    paddingHorizontal: 20,
-    paddingTop: 30
-  },
-  heading: {
-    fontFamily: 'Lato',
-    fontSize: 13,
-    opacity: 0.5,
-    textTransform: 'uppercase'
-  },
-  iconContainer: {
-    height: 17,
-    justifyContent: 'center'
-  },
-  image: {
-    height: 24,
-    width: 24
-  },
-  input: {
-    backgroundColor: 'white',
-    fontFamily: 'Lato',
-    fontSize: 17,
-    paddingHorizontal: 20,
-    paddingVertical: '5%'
-  },
-  item: {
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingVertical: '5%'
-  },
-  text: {
-    flex: 1,
-    fontSize: 17,
-    fontFamily: 'Lato'
-  },
-  wrapper: {
-    backgroundColor: '#f7f8f8',
-    flex: 1
-  }
+  ...CommonStyles
 })
