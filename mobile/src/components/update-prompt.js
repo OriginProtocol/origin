@@ -15,8 +15,9 @@ import SafeAreaView from 'react-native-safe-area-view'
 import compareVersions from 'compare-versions'
 import { fbt } from 'fbt-runtime'
 
-import OriginButton from 'components/origin-button'
 import { version } from '../../package.json'
+import OriginButton from 'components/origin-button'
+import CommonStyles from 'styles/common'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -68,18 +69,15 @@ class UpdatePrompt extends React.Component {
   }
 
   render() {
-    const { height } = Dimensions.get('window')
-    const smallScreen = height < 812
-
     return (
       <Modal animationType="slide" visible={this.state.upgrade !== null}>
-        <SafeAreaView style={styles.container}>
-          <View style={styles.body}>
+        <SafeAreaView style={styles.content}>
+          <View style={{ ...styles.container, flexGrow: 2 }}>
             <Image
               resizeMethod={'scale'}
               resizeMode={'contain'}
               source={require(IMAGES_PATH + 'update-graphic.png')}
-              style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+              style={styles.image}
             />
             {this.state.upgrade === 'force' && (
               <>
@@ -134,43 +132,5 @@ class UpdatePrompt extends React.Component {
 export default UpdatePrompt
 
 const styles = StyleSheet.create({
-  body: {
-    alignItems: 'center',
-    backgroundColor: '#293f55',
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 50
-  },
-  container: {
-    backgroundColor: '#293f55',
-    justifyContent: 'center',
-    flex: 1
-  },
-  buttonContainer: {
-    backgroundColor: '#293f55',
-    paddingTop: 10,
-    paddingBottom: 40
-  },
-  button: {
-    marginBottom: 10,
-    marginHorizontal: 20
-  },
-  image: {
-    marginBottom: '10%'
-  },
-  title: {
-    color: 'white',
-    fontFamily: 'Lato',
-    fontSize: 24,
-    fontWeight: '600',
-    paddingBottom: 15,
-    textAlign: 'center'
-  },
-  subtitle: {
-    color: 'white',
-    fontFamily: 'Lato',
-    fontSize: 18,
-    fontWeight: '300',
-    textAlign: 'center'
-  }
+  ...CommonStyles
 })
