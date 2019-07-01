@@ -199,7 +199,11 @@ const ProfileDropdownRaw = ({
   return (
     <>
       <div className="dropdown-menu-bg" onClick={onClose} />
-      <div className={`dropdown-menu dropdown-menu-right profile${open ? ' show' : ''}`}>
+      <div
+        className={`dropdown-menu dropdown-menu-right profile${
+          open ? ' show' : ''
+        }`}
+      >
         <a
           className="d-sm-none close-icon"
           href="#close"
