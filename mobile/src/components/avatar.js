@@ -33,6 +33,7 @@ const Avatar = ({ config, source, size = 30, style = {} }) => {
         style={{
           width: size,
           height: size,
+          borderRadius: size / 2
         }}
         source={source}
       />
