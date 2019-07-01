@@ -127,7 +127,7 @@ class AvatarScreen extends Component {
     }
 
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.content}>
         <View style={{ ...styles.container, flexGrow: 2 }}>{content}</View>
         <View style={{ ...styles.container, ...styles.buttonContainer }}>
           <View style={[styles.visibilityWarningContainer, styles.isVisible]}>

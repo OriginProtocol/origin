@@ -177,7 +177,7 @@ const TransactionCard = props => {
           </Text>
           <Address
             address={wallet.activeAccount.address}
-            style={styles.account}
+            styles={styles.account}
           />
         </View>
         <View style={styles.accountText}>
@@ -255,7 +255,8 @@ const styles = StyleSheet.create({
     color: '#94a7b5',
     fontFamily: 'Lato',
     fontSize: 11,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontWeight: '600'
   },
   accountSummary: {
     marginBottom: 20

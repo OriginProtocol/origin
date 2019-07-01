@@ -51,9 +51,10 @@ const styles = StyleSheet.create({
     width: '80%'
   },
   pinCodeText: {
-    fontSize: 40
+    fontSize: 36
   },
   input: {
-    right: -400
+    right: -1000,
+    height: 0
   }
 })

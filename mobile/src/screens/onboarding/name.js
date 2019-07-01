@@ -53,7 +53,8 @@ class NameScreen extends Component {
     return (
       <KeyboardAvoidingView
         style={styles.darkOverlay}
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        behavior={'padding'}
+        keyboardVerticalOffset={Platform.OS === 'android' ? 40 : 0}
       >
         <SafeAreaView style={{ flex: 1 }}>
           <ScrollView
