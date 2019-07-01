@@ -1,21 +1,93 @@
 import React, { Component, Fragment } from 'react'
 import Modal from 'components/Modal'
 import { fbt } from 'fbt-runtime'
+import dayjs from 'dayjs'
 
 import DisputeOffer from './mutations/DisputeOffer'
+import FinalizeOffer from './mutations/FinalizeOffer'
+
 import Stages from 'components/TransactionStages'
 import SendMessage from 'components/SendMessage'
 
+const CONFIRMED_OFFERS_KEY = 'confirmed_offers_key'
 class OfferAcceptedBuyer extends Component {
-  state = {}
+  state = {
+    offerConfirmed: false
+  }
+
+  componentDidMount() {
+    const offersConfirmedString = localStorage.getItem(CONFIRMED_OFFERS_KEY)
+    const offer = this.props.offer
+
+    if (offersConfirmedString) {
+      this.setState({
+        offerConfirmed: JSON.parse(offersConfirmedString).includes(this.props.offer.id)
+      })
+    }
+
+    // if fractional for rent listing and the endDate has passed automatically set offer as confirmed
+    if (offer.listing.category === 'schema.forRent' && offer.endDate && offer.listing.__typename === 'FractionalListing') {
+      if (dayjs(offer.endDate).add(1, 'day').isBefore(dayjs())) {
+        this.setState({ offerConfirmed: true })
+      }
+    }
+  }
+
+  confirmOffer(offerId) {
+    const offersConfirmed = JSON.parse(localStorage.getItem(CONFIRMED_OFFERS_KEY) || '[]')
+    offersConfirmed.push(offerId)
+    this.setState({
+      offerConfirmed: true
+    })
+    localStorage.setItem(CONFIRMED_OFFERS_KEY, JSON.stringify(offersConfirmed))
+  }
 
   render() {
     const { offer } = this.props
+    console.log("Offer:", offer)
+
+    const { offerConfirmed } = this.state
     const isForSale = offer.listing.category === 'schema.forSale'
     const isForRent = offer.listing.category === 'schema.forRent'
     const isServices = offer.listing.category === 'schema.services'
 
-    return (
+    const offerConfirmedView = () => (
+      <div className="transaction-progress">
+        <div className="top">
+          <h4>
+            <fbt desc="Progress.releaseFundsToSeller">Release the funds to the seller.</fbt>
+          </h4>
+          <Stages className="mt-4" mini="true" offer={offer} />
+          <div className="help mt-3 mb-0 ">
+            <fbt desc="OfferAcceptBuyer.releaseFundsConcern">
+              If you're concerned about releasing the funds, report a problem to Origin.
+            </fbt>
+          </div>
+          <div className="actions-offers d-flex mt-3">
+            <FinalizeOffer
+              disabled={false}
+              offer={offer}
+              refetch={this.props.refetch}
+              from={offer.buyer.id}
+              className="btn btn-primary"
+            >
+              <fbt desc="OfferAcceptBuyer.releaseFunds">
+                Release Funds
+              </fbt>
+            </FinalizeOffer>
+            <DisputeOffer
+              offer={offer}
+              party="seller"
+              className="btn btn-link withdraw mr-md-0 ml-md-5 mb-md-0 mt-3 mt-md-0 align-self-start align-self-md-center"
+            >
+              <fbt desc="OfferAcceptBuyer.reportProblme">Report a Problem</fbt>
+            </DisputeOffer>
+          </div>
+        </div>
+      </div>
+    )
+
+    const offerAcceptedView = () => (
       <div className="transaction-progress">
         <div className="top">
           <h4>
@@ -64,7 +136,9 @@ class OfferAcceptedBuyer extends Component {
           <div className="actions">
             <button
               className="btn btn-primary"
-              onClick={() => {console.log("What is up yo???")}}
+              onClick={() => {
+                this.confirmOffer(offer.id)
+              }}
             >
               <fbt desc="OfferAcceptBuyer.confirm">
                 Confirm
@@ -79,9 +153,9 @@ class OfferAcceptedBuyer extends Component {
               </fbt>
             </span>
             <DisputeOffer
-            offer={this.props.offer}
-            party="seller"
-            className="btn btn-link withdraw mr-auto"
+              offer={this.props.offer}
+              party="seller"
+              className="btn btn-link withdraw mr-auto"
             >
               <fbt desc="OfferAcceptBuyer.reportProblme">Report a Problem</fbt>
             </DisputeOffer>
@@ -89,6 +163,8 @@ class OfferAcceptedBuyer extends Component {
         </div>
       </div>
     )
+    
+    return offerConfirmed ? offerConfirmedView() : offerAcceptedView()
   }
 }
 
@@ -96,10 +172,18 @@ export default OfferAcceptedBuyer
 
 require('react-styl')(`
   .transaction-progress
+    .actions-offers
+      display: flex
+      button:last-of-type
+        margin-bottom: 10px
     span.issues
       font-size: 12px
     .help
       > .btn-link
         font-size: 14px
 
+  @media (max-width: 767.98px)
+    .transaction-progress
+      .actions-offers
+        flex-direction: column
 `)
