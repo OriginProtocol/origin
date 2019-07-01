@@ -2,7 +2,7 @@
 
 ![origin_npm_version](https://img.shields.io/npm/v/origin.svg?style=flat-square&colorA=111d28&colorB=1a82ff)
 [![origin_license](https://img.shields.io/badge/license-MIT-6e3bea.svg?style=flat-square&colorA=111d28)](https://github.com/OriginProtocol/origin/blob/master/LICENSE)
-[![origin_circleci_banner](https://img.shields.io/circleci/build/github/OriginProtocol/origin.svg?style=flat-square&colorA=111d28)](https://circleci.com/gh/OriginProtocol/origin)
+[![origin_circleci_banner](https://img.shields.io/circleci/build/github/OriginProtocol/origin.svg?style=flat-square&colorA=111d28)](https://circleci.com/gh/OriginProtocol/origin) [![Greenkeeper badge](https://badges.greenkeeper.io/OriginProtocol/origin.svg)](https://greenkeeper.io/)
 
 Origin is empowering developers to build decentralized marketplaces on the
 blockchain!
