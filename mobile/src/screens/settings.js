@@ -3,7 +3,6 @@
 import React, { Component, Fragment } from 'react'
 import {
   Image,
-  KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
   Text,
@@ -15,6 +14,8 @@ import { fbt } from 'fbt-runtime'
 
 import { setNetwork } from 'actions/Settings'
 import { NETWORKS } from '../constants'
+import CommonStyles from 'styles/common'
+import MenuStyles from 'styles/menu'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -36,72 +37,65 @@ class SettingsScreen extends Component {
 
   render() {
     return (
-      <KeyboardAvoidingView style={styles.keyboardWrapper} behavior="padding">
-        <ScrollView
-          contentContainerStyle={styles.content}
-          style={styles.container}
+      <ScrollView style={styles.menuContainer}>
+        <View style={styles.menuHeadingContainer}>
+          <Text style={styles.menuHeading}>
+            <fbt desc="SettingsScreen.generalHeading">General</fbt>
+          </Text>
+        </View>
+        <TouchableHighlight
+          onPress={() => this.props.navigation.navigate('Accounts')}
         >
-          <View style={styles.header}>
-            <Text style={styles.heading}>
-              <fbt desc="SettingsScreen.generalHeading">General</fbt>
+          <View style={styles.menuItem}>
+            <Text style={styles.menuText}>
+              <fbt desc="SettingsScreen.accountsItem">Accounts</fbt>
             </Text>
+            <View style={styles.menuItemIconContainer}>
+              <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
+            </View>
           </View>
-          <TouchableHighlight
-            onPress={() => this.props.navigation.navigate('Accounts')}
-          >
-            <View style={styles.item}>
-              <Text style={styles.text}>
-                <fbt desc="SettingsScreen.accountsItem">Accounts</fbt>
-              </Text>
-              <View style={styles.iconContainer}>
-                <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
-              </View>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight
-            onPress={() => this.props.navigation.navigate('Language')}
-          >
-            <View style={styles.item}>
-              <Text style={styles.text}>
-                <fbt desc="SettingsScreen.languageItem">Language</fbt>
-              </Text>
-              <View style={styles.iconContainer}>
-                <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
-              </View>
-            </View>
-          </TouchableHighlight>
-          <View style={styles.header}>
-            <Text style={styles.heading}>
-              <fbt desc="SettingsScreen.networkHeading">Network</fbt>
+        </TouchableHighlight>
+        <TouchableHighlight
+          onPress={() => this.props.navigation.navigate('Language')}
+        >
+          <View style={styles.menuItem}>
+            <Text style={styles.menuText}>
+              <fbt desc="SettingsScreen.languageItem">Language</fbt>
             </Text>
+            <View style={styles.menuItemIconContainer}>
+              <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
+            </View>
           </View>
-          {NETWORKS.map(network => (
-            <Fragment key={network.name}>
-              <TouchableHighlight
-                onPress={() => this.handleSetNetwork(network)}
-              >
-                <View style={styles.item}>
-                  <Text style={styles.text}>{network.name}</Text>
-                  <View style={styles.iconContainer}>
-                    {network.name === this.props.settings.network.name && (
-                      <Image
-                        source={require(`${IMAGES_PATH}selected.png`)}
-                        style={styles.image}
-                      />
-                    )}
-                    {network.name !== this.props.settings.network.name && (
-                      <Image
-                        source={require(`${IMAGES_PATH}deselected.png`)}
-                        style={styles.image}
-                      />
-                    )}
-                  </View>
+        </TouchableHighlight>
+        <View style={styles.menuHeadingContainer}>
+          <Text style={styles.menuHeading}>
+            <fbt desc="SettingsScreen.networkHeading">Network</fbt>
+          </Text>
+        </View>
+        {NETWORKS.map(network => (
+          <Fragment key={network.name}>
+            <TouchableHighlight onPress={() => this.handleSetNetwork(network)}>
+              <View style={styles.menuItem}>
+                <Text style={styles.menuText}>{network.name}</Text>
+                <View style={styles.menuItemIconContainer}>
+                  {network.name === this.props.settings.network.name && (
+                    <Image
+                      source={require(`${IMAGES_PATH}selected.png`)}
+                      style={styles.menuItemIcon}
+                    />
+                  )}
+                  {network.name !== this.props.settings.network.name && (
+                    <Image
+                      source={require(`${IMAGES_PATH}deselected.png`)}
+                      style={styles.menuItemIcon}
+                    />
+                  )}
                 </View>
-              </TouchableHighlight>
-            </Fragment>
-          ))}
-        </ScrollView>
-      </KeyboardAvoidingView>
+              </View>
+            </TouchableHighlight>
+          </Fragment>
+        ))}
+      </ScrollView>
     )
   }
 }
@@ -120,51 +114,6 @@ export default connect(
 )(SettingsScreen)
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#f7f8f8',
-    flex: 1
-  },
-  content: {
-    paddingBottom: 20
-  },
-  header: {
-    paddingBottom: 5,
-    paddingHorizontal: 20,
-    paddingTop: 30
-  },
-  heading: {
-    fontFamily: 'Lato',
-    fontSize: 13,
-    opacity: 0.5,
-    textTransform: 'uppercase'
-  },
-  iconContainer: {
-    height: 17,
-    justifyContent: 'center'
-  },
-  image: {
-    height: 24,
-    width: 24
-  },
-  input: {
-    backgroundColor: 'white',
-    fontFamily: 'Lato',
-    fontSize: 17,
-    paddingHorizontal: 20,
-    paddingVertical: '5%'
-  },
-  item: {
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingVertical: '5%'
-  },
-  keyboardWrapper: {
-    flex: 1
-  },
-  text: {
-    flex: 1,
-    fontSize: 17,
-    fontFamily: 'Lato'
-  }
+  ...CommonStyles,
+  ...MenuStyles
 })
