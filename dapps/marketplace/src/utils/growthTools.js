@@ -15,6 +15,14 @@ export function getAttestationReward({
     return ''
   }
 
+  const attestationNameMap = {
+    Linkedin: 'LinkedIn',
+    Github: 'GitHub',
+    Wechat: 'WeChat'
+  }
+
+  attestation = attestationNameMap[attestation] || attestation
+
   try {
     const reward = activeCampaign.actions
       .filter(action => action.type === attestation)

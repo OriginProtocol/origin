@@ -10,7 +10,6 @@ function Action(props) {
     type,
     status,
     reward,
-    rewardEarned,
     unlockConditions,
     listingId,
     titleKey,
@@ -238,16 +237,6 @@ function Action(props) {
           {!actionLocked && detailsLink}
         </div>
         <div className="pr-0 pr-md-3 pl-0 pl-md-3 col-3 col-md-3 d-flex align-items-center justify-content-end">
-          {actionCompleted &&
-            rewardEarned !== null &&
-            rewardEarned.amount !== '0' && (
-              <div className="d-flex flex-column flex-grow-1 align-items-center">
-                {renderReward(rewardEarned.amount)}
-                <div className="d-center sub-text ml-2">
-                  <fbt desc="RewardActions.earned">Earned</fbt>
-                </div>
-              </div>
-            )}
           {reward !== null &&
             renderReward(
               reward.amount,
