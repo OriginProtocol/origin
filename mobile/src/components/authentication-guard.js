@@ -15,6 +15,7 @@ import TouchID from 'react-native-touch-id'
 import { fbt } from 'fbt-runtime'
 
 import PinInput from 'components/pin-input'
+import CommonStyles from 'styles/common'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -155,6 +156,7 @@ const mapStateToProps = ({ settings }) => {
 export default connect(mapStateToProps)(AuthenticationGuard)
 
 const styles = StyleSheet.create({
+  ...CommonStyles,
   keyboardWrapper: {
     flex: 1
   },
@@ -165,17 +167,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center'
-  },
-  image: {
-    marginBottom: 20
-  },
-  title: {
-    fontFamily: 'Lato',
-    fontSize: 36,
-    fontWeight: '600',
-    marginHorizontal: 50,
-    paddingBottom: 10,
-    textAlign: 'center'
   },
   invalid: {
     borderColor: '#ff0000',

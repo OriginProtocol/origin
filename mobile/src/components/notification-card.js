@@ -13,13 +13,15 @@ import AndroidOpenSettings from 'react-native-android-open-settings'
 import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
+import CommonStyles from 'styles/common'
+import CardStyles from 'styles/card'
 
 const NotificationCard = props => (
   <View style={styles.card}>
-    <Text style={styles.heading}>
+    <Text style={styles.cardHeading}>
       <fbt desc="NotificationCard.heading">Enable Notifications</fbt>
     </Text>
-    <Text style={styles.content}>
+    <Text style={styles.cardContent}>
       <fbt desc="NotificationCard.message">
         Woops! It looks like you have notifications disabled. To get the latest
         updates about your transactions we recommend enabling them in the
@@ -30,7 +32,6 @@ const NotificationCard = props => (
       <OriginButton
         size="large"
         type="primary"
-        textStyle={{ fontSize: 18, fontWeight: '900' }}
         title={fbt('Open Settings', 'NotificationCard.button')}
         onPress={() => {
           if (Platform.OS === 'ios') {
@@ -42,7 +43,7 @@ const NotificationCard = props => (
       />
     </View>
     <TouchableOpacity onPress={props.onRequestClose}>
-      <Text style={styles.cancel}>
+      <Text style={styles.cardCancelText}>
         <fbt desc="NotificationCard.cancel">Close</fbt>
       </Text>
     </TouchableOpacity>
@@ -52,36 +53,6 @@ const NotificationCard = props => (
 export default NotificationCard
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    paddingBottom: 20
-  },
-  cancel: {
-    color: '#1a82ff',
-    fontFamily: 'Lato',
-    fontSize: 14,
-    fontWeight: '900',
-    textAlign: 'center'
-  },
-  card: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    marginTop: 'auto',
-    paddingHorizontal: 20,
-    paddingVertical: 30
-  },
-  content: {
-    fontFamily: 'Lato',
-    marginBottom: 20,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    maxWidth: 300,
-    textAlign: 'center'
-  },
-  heading: {
-    fontFamily: 'Lato',
-    fontSize: 30,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center'
-  }
+  ...CommonStyles,
+  ...CardStyles
 })

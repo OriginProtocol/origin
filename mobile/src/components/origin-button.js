@@ -3,11 +3,15 @@
 import React, { Component } from 'react'
 import {
   ActivityIndicator,
+  Dimensions,
   StyleSheet,
   Text,
   TouchableOpacity,
   View
 } from 'react-native'
+
+const { height } = Dimensions.get('window')
+const smallScreen = height < 812
 
 export default class OriginButton extends Component {
   constructor(props) {
@@ -116,12 +120,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     paddingLeft: 30,
-    paddingRight: 30
+    paddingRight: 30,
+    marginBottom: 10,
+    marginHorizontal: 20
   },
   buttonText: {
     fontFamily: 'Lato',
-    fontSize: 13,
-    fontWeight: '900',
+    fontSize: smallScreen ? 16 : 18,
+    fontWeight: smallScreen ? '600' : '900',
     textAlign: 'center'
   },
   image: {
@@ -129,10 +135,10 @@ const styles = StyleSheet.create({
   },
   large: {
     borderRadius: 25,
-    height: 50
+    height: smallScreen ? 40 : 50
   },
   small: {
     borderRadius: 15,
-    height: 30
+    height: smallScreen ? 20 : 30
   }
 })

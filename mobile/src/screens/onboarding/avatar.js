@@ -19,8 +19,10 @@ import { setAvatarUri } from 'actions/Onboarding'
 import { SettingsButton } from 'components/settings-button'
 import Avatar from 'components/avatar'
 import OriginButton from 'components/origin-button'
+import VisibilityWarning from 'components/visibility-warning'
 import withConfig from 'hoc/withConfig'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
+import CommonStyles from 'styles/common'
 import OnboardingStyles from 'styles/onboarding'
 
 const imagePickerOptions = {
@@ -126,26 +128,17 @@ class AvatarScreen extends Component {
     }
 
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.content}>{content}</View>
-        <View style={[styles.visibilityWarningContainer, styles.isVisible]}>
-          <Text style={styles.visibilityWarningHeader}>
-            <fbt desc="AvatarScreen.visibilityWarningHeader">
-              What will be visible on the blockchain?
-            </fbt>
-          </Text>
-          <Text style={styles.visibilityWarningText}>
+      <SafeAreaView style={styles.content}>
+        <View style={{ ...styles.container, flexGrow: 2 }}>{content}</View>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
+          <VisibilityWarning isVisible={true}>
             <fbt desc="AvatarScreen.visibilityWarningText">
               Your photo will be visible on the blockchain
             </fbt>
-          </Text>
-        </View>
-        <View style={styles.buttonsContainer}>
+          </VisibilityWarning>
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Continue', 'AvatarScreen.continueButton')}
             onPress={async () => {
               if (this.props.onboarding.avatarUri === null) {
@@ -183,7 +176,10 @@ class AvatarScreen extends Component {
 
   renderImage() {
     return (
-      <TouchableOpacity onPress={this.handleImageClick} style={styles.content}>
+      <TouchableOpacity
+        onPress={this.handleImageClick}
+        style={styles.container}
+      >
         <Avatar
           source={this.state.avatarSource}
           size={100}
@@ -219,6 +215,7 @@ export default withConfig(
 )
 
 const styles = StyleSheet.create({
+  ...CommonStyles,
   ...OnboardingStyles,
   loading: {
     flex: 1,
