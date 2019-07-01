@@ -86,7 +86,7 @@ const withOriginGraphql = WrappedComponent => {
       })
     }
 
-    getIdentity = async (id) => {
+    getIdentity = async id => {
       return this._sendGraphqlQuery(identity, { id })
     }
 
