@@ -587,7 +587,7 @@ class MarketplaceScreen extends Component {
       clearInterval(this.periodicUpdater)
     }
     periodicUpdates()
-    this.periodicUpdater = setInterval(periodicUpdates, 10000)
+    this.periodicUpdater = setInterval(periodicUpdates, 2000)
     // Set state to ready in redux
     await this.props.setMarketplaceReady(true)
     // Make sure any error state is cleared

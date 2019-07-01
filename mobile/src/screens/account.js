@@ -4,19 +4,21 @@ import React, { Component } from 'react'
 import {
   Alert,
   Clipboard,
-  KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View
 } from 'react-native'
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
+import SafeAreaView from 'react-native-safe-area-view'
+import get from 'lodash.get'
 
 import { setAccountActive, removeAccount } from 'actions/Wallet'
+import Address from 'components/address'
+import Avatar from 'components/avatar'
 import OriginButton from 'components/origin-button'
-import { truncateAddress } from 'utils/user'
+import CommonStyles from 'styles/common'
 
 const ONE_MINUTE = 1000 * 60
 
@@ -114,33 +116,29 @@ class AccountScreen extends Component {
     const { address, privateKey, mnemonic } = account
     const multipleAccounts = wallet.accounts.length > 1
     const isActive = address === wallet.activeAccount.address
+    const identity = get(wallet.identities, address, {})
+    const avatarUrl = get(identity, 'avatarUrl')
+    const fullName = get(identity, 'fullName')
 
     return (
-      <KeyboardAvoidingView style={styles.keyboardWrapper} behavior="padding">
-        <ScrollView
-          contentContainerStyle={styles.content}
-          style={styles.container}
-        >
-          <View contentContainerStyle={styles.content} style={styles.container}>
-            <View style={styles.header}>
-              <Text style={styles.heading}>
-                <fbt desc="AccountScreen.ethAddress">Eth Address</fbt>
-              </Text>
-            </View>
-            <TextInput
-              editable={false}
-              value={truncateAddress(address, 14)}
-              style={styles.input}
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content}>
+          <View style={styles.container}>
+            <Avatar source={avatarUrl} size={100} />
+            {fullName && <Text style={styles.title}>{fullName}</Text>}
+            <Address
+              address={address}
+              label={fbt('Address', 'AccountItem.address')}
+              chars={10}
+              styles={{ fontSize: 16, marginVertical: 20 }}
             />
           </View>
-          <View style={styles.buttonsContainer}>
+          <View style={[styles.containner, styles.buttonContainer]}>
             {multipleAccounts && (
               <OriginButton
                 size="large"
                 type="primary"
                 disabled={isActive}
-                style={styles.button}
-                textStyle={{ fontSize: 18, fontWeight: '900' }}
                 title={fbt(
                   'Make Active Account',
                   'AccountScreen.makeActiveAccountButton'
@@ -157,8 +155,6 @@ class AccountScreen extends Component {
                 <OriginButton
                   size="large"
                   type="primary"
-                  style={styles.button}
-                  textStyle={{ fontSize: 18, fontWeight: '900' }}
                   title={fbt(
                     'Show Recovery Phrase',
                     'AccountScreen.showRecoveryPhraseButton'
@@ -175,8 +171,6 @@ class AccountScreen extends Component {
                 <OriginButton
                   size="large"
                   type="primary"
-                  style={styles.button}
-                  textStyle={{ fontSize: 18, fontWeight: '900' }}
                   title={fbt(
                     'Copy Recovery Phrase',
                     'AccountScreen.copyRecoveryPhraseButton'
@@ -190,8 +184,6 @@ class AccountScreen extends Component {
                 <OriginButton
                   size="large"
                   type="primary"
-                  style={styles.button}
-                  textStyle={{ fontSize: 18, fontWeight: '900' }}
                   title={fbt(
                     'Show Private Key',
                     'AccountScreen.showPrivateKeyButton'
@@ -206,8 +198,6 @@ class AccountScreen extends Component {
                 <OriginButton
                   size="large"
                   type="primary"
-                  style={styles.button}
-                  textStyle={{ fontSize: 18, fontWeight: '900' }}
                   title={fbt(
                     'Copy Private Key',
                     'AccountScreen.copyPrivateKeyButton'
@@ -221,8 +211,6 @@ class AccountScreen extends Component {
                 size="large"
                 type="danger"
                 disabled={isActive}
-                style={styles.button}
-                textStyle={{ fontSize: 18, fontWeight: '900' }}
                 title={fbt(
                   'Delete Account',
                   'AccountScreen.deleteAccountButton'
@@ -232,7 +220,7 @@ class AccountScreen extends Component {
             )}
           </View>
         </ScrollView>
-      </KeyboardAvoidingView>
+      </SafeAreaView>
     )
   }
 }
@@ -252,62 +240,5 @@ export default connect(
 )(AccountScreen)
 
 const styles = StyleSheet.create({
-  keyboardWrapper: {
-    flex: 1
-  },
-  container: {
-    flex: 1
-  },
-  content: {
-    paddingBottom: 20
-  },
-  button: {
-    marginBottom: 10,
-    marginHorizontal: 20
-  },
-  buttonsContainer: {
-    marginBottom: 10,
-    paddingTop: 20
-  },
-  header: {
-    paddingBottom: 5,
-    paddingHorizontal: 20,
-    paddingTop: 30
-  },
-  heading: {
-    fontFamily: 'Lato',
-    fontSize: 13,
-    opacity: 0.5,
-    textTransform: 'uppercase'
-  },
-  iconContainer: {
-    height: 17,
-    justifyContent: 'center'
-  },
-  image: {
-    height: 24,
-    width: 24
-  },
-  input: {
-    backgroundColor: 'white',
-    fontFamily: 'Lato',
-    fontSize: 17,
-    paddingHorizontal: 20,
-    paddingVertical: '5%'
-  },
-  item: {
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingVertical: '5%'
-  },
-  text: {
-    flex: 1,
-    fontSize: 17,
-    fontFamily: 'Lato'
-  },
-  wrapper: {
-    backgroundColor: '#f7f8f8',
-    flex: 1
-  }
+  ...CommonStyles
 })
