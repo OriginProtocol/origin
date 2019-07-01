@@ -108,7 +108,8 @@ class ImportAccountScreen extends Component {
                 multiline={true}
                 returnKeyType="done"
                 blurOnSubmit={true}
-                onChangeText={value => this.setState({ value })}
+                onChangeText={value => this.setState({ value.trim() })}
+                value={this.state.value}
                 onSubmitEditing={this.handleSubmit}
                 style={[styles.input, this.state.error ? styles.invalid : {}]}
               />
