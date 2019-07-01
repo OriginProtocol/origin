@@ -499,8 +499,7 @@ class OriginEventSource {
 
   // Validates an offer, throwing an error if an issue is found.
   async validateOffer(offer, listing) {
-    // pending
-    if (offer.status !== 1) {
+    if (offer.status != 1 /* pending */) {
       return
     }
 
