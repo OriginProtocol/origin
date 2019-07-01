@@ -705,7 +705,7 @@ class MarketplaceScreen extends Component {
                       return
                     }
                     const { signature } = global.web3.eth.accounts.sign(
-                      modal.msgData.data,
+                      modal.msgData.data.data,
                       this.props.wallet.activeAccount.privateKey
                     )
                     this.toggleModal(modal, signature)
