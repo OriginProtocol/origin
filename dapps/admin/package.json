@@ -51,7 +51,7 @@
     "react-dom": "^16.8.6",
     "react-styl": "^0.0.3",
     "serve-static": "^1.14.1",
-    "web3": "1.0.0-beta.34"
+    "web3": "1.0.0-beta.55"
   },
   "prettier": {
     "semi": false,
@@ -108,7 +108,7 @@
     "apollo-server": "^2.6.7",
     "babel-eslint": "^10.0.2",
     "babel-loader": "^8.0.6",
-    "bip39": "^2.5.0",
+    "bip39": "^3.0.2",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.0.0",
     "eslint": "^6.0.1",
@@ -118,7 +118,7 @@
     "hdkey": "^1.1.1",
     "html-webpack-plugin": "^3.2.0",
     "ignore-loader": "^0.1.2",
-    "ipfs": "^0.34.4",
+    "ipfs": "^0.36.4",
     "mini-css-extract-plugin": "^0.7.0",
     "opener": "^1.5.1",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
