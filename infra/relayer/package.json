@@ -27,7 +27,7 @@
     "redis": "^2.8.0",
     "sequelize": "^5.8.12",
     "sequelize-cli": "^5.5.0",
-    "web3": "1.0.0-beta.34"
+    "web3": "1.0.0-beta.55"
   },
   "devDependencies": {
     "mocha": "^6.1.4",
