@@ -26,7 +26,9 @@ const Avatar = ({ config, source, size = 30, style = {} }) => {
   }
 
   return (
-    <View style={{ backgroundColor: '#233f53', borderRadius: size / 2, ...style }}>
+    <View
+      style={{ backgroundColor: '#233f53', borderRadius: size / 2, ...style }}
+    >
       <Image
         resizeMethod={'resize'}
         resizeMode={'contain'}
