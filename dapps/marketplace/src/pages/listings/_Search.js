@@ -27,6 +27,14 @@ class Search extends Component {
     document.body.removeEventListener('click', this.onOutsideClick)
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.location.search !== prevProps.location.search) {
+      this.setState({
+        ...getStateFromQuery(this.props)
+      })
+    }
+  }
+
   render() {
     return this.renderContent()
   }
