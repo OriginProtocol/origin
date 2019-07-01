@@ -15,6 +15,7 @@ import { fbt } from 'fbt-runtime'
 import { setNetwork } from 'actions/Settings'
 import { NETWORKS } from '../constants'
 import CommonStyles from 'styles/common'
+import MenuStyles from 'styles/menu'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -113,5 +114,6 @@ export default connect(
 )(SettingsScreen)
 
 const styles = StyleSheet.create({
-  ...CommonStyles
+  ...CommonStyles,
+  ...MenuStyles
 })

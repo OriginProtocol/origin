@@ -6,6 +6,7 @@ import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'
+import CardStyles from 'styles/card'
 
 const LearnCard = props => (
   <View style={styles.card}>
@@ -33,5 +34,6 @@ const LearnCard = props => (
 export default LearnCard
 
 const styles = StyleSheet.create({
-  ...CommonStyles
+  ...CommonStyles,
+  ...CardStyles
 })

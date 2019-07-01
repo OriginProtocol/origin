@@ -7,6 +7,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 
 import { createAccount } from 'actions/Wallet'
+import Disclaimer from 'components/disclaimer'
 import OriginButton from 'components/origin-button'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import CommonStyles from 'styles/common'
@@ -90,13 +91,11 @@ class WelcomeScreen extends Component {
               }}
             />
           )}
-          <View style={styles.legalContainer}>
-            <Text style={styles.legal}>
-              <fbt desc="WelcomeScreen.disclaimer">
-                By signing up you agree to the Terms of Use and Privacy Policy
-              </fbt>
-            </Text>
-          </View>
+          <Disclaimer>
+            <fbt desc="WelcomeScreen.disclaimer">
+              By signing up you agree to the Terms of Use and Privacy Policy
+            </fbt>
+          </Disclaimer>
         </View>
       </SafeAreaView>
     )

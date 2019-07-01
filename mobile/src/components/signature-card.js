@@ -6,6 +6,7 @@ import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'
+import CardStyles from 'styles/card'
 
 const SignatureCard = ({ msgData, onConfirm, onRequestClose }) => {
   const decodedMessage = global.web3.utils.hexToAscii(msgData.data.data)
@@ -37,5 +38,6 @@ const SignatureCard = ({ msgData, onConfirm, onRequestClose }) => {
 export default SignatureCard
 
 const styles = StyleSheet.create({
-  ...CommonStyles
+  ...CommonStyles,
+  ...CardStyles
 })

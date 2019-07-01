@@ -16,6 +16,7 @@ import { fbt } from 'fbt-runtime'
 import get from 'lodash.get'
 
 import { setEmailAttestation } from 'actions/Onboarding'
+import Disclaimer from 'components/disclaimer'
 import OriginButton from 'components/origin-button'
 import PinInput from 'components/pin-input'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
@@ -207,14 +208,12 @@ class EmailScreen extends Component {
           {this.state.emailError.length > 0 && (
             <Text style={styles.invalid}>{this.state.emailError}</Text>
           )}
-          <View style={styles.legalContainer}>
-            <Text style={styles.legal}>
-              <fbt desc="EmailScreen.inputHelpText">
-                We will use your email to notify you of important notifications
-                when you buy or sell.
-              </fbt>
-            </Text>
-          </View>
+          <Disclaimer>
+            <fbt desc="EmailScreen.inputHelpText">
+              We will use your email to notify you of important notifications
+              when you buy or sell.
+            </fbt>
+          </Disclaimer>
         </View>
         <View style={{ ...styles.container, ...styles.buttonContainer }}>
           {this.renderVisibilityWarning()}
@@ -266,14 +265,12 @@ class EmailScreen extends Component {
           {this.state.verifyError.length > 0 && (
             <Text style={styles.invalid}>{this.state.verifyError}</Text>
           )}
-          <View style={styles.legalContainer}>
-            <Text style={styles.legal}>
-              <fbt desc="EmailScreen.verifyHelpText">
-                We sent you a code to the email address you provided. Please
-                enter it above.
-              </fbt>
-            </Text>
-          </View>
+          <Disclaimer>
+            <fbt desc="EmailScreen.verifyHelpText">
+              We sent you a code to the email address you provided. Please enter
+              it above.
+            </fbt>
+          </Disclaimer>
         </View>
         <View style={{ ...styles.container, ...styles.buttonContainer }}>
           {this.renderVisibilityWarning()}

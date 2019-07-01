@@ -18,6 +18,7 @@ import RNPickerSelect from 'react-native-picker-select'
 import * as RNLocalize from 'react-native-localize'
 
 import { setPhoneAttestation } from 'actions/Onboarding'
+import Disclaimer from 'components/disclaimer'
 import OriginButton from 'components/origin-button'
 import PinInput from 'components/pin-input'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
@@ -265,15 +266,13 @@ class PhoneScreen extends Component {
           {this.state.phoneError.length > 0 && (
             <Text style={styles.invalid}>{this.state.phoneError}</Text>
           )}
-          <View style={styles.legalContainer}>
-            <Text style={styles.legal}>
-              <fbt desc="PhoneScreen.inputHelpText">
-                By verifying your phone number, you give Origin permission to
-                send you occasional messages such as notifications about your
-                transactions.
-              </fbt>
-            </Text>
-          </View>
+          <Disclaimer>
+            <fbt desc="PhoneScreen.inputHelpText">
+              By verifying your phone number, you give Origin permission to send
+              you occasional messages such as notifications about your
+              transactions.
+            </fbt>
+          </Disclaimer>
         </View>
         <View style={{ ...styles.container, ...styles.buttonContainer }}>
           {this.renderVisibilityWarning()}
@@ -325,14 +324,12 @@ class PhoneScreen extends Component {
           {this.state.verifyError.length > 0 && (
             <Text style={styles.invalid}>{this.state.verifyError}</Text>
           )}
-          <View style={styles.legalContainer}>
-            <Text style={styles.legal}>
-              <fbt desc="PhoneScreen.verifyHelpText">
-                We sent you a code to the phone address you provided. Please
-                enter it above.
-              </fbt>
-            </Text>
-          </View>
+          <Disclaimer>
+            <fbt desc="PhoneScreen.verifyHelpText">
+              We sent you a code to the phone address you provided. Please enter
+              it above.
+            </fbt>
+          </Disclaimer>
         </View>
         <View style={{ ...styles.container, ...styles.buttonContainer }}>
           {this.renderVisibilityWarning()}

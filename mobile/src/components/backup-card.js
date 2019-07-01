@@ -6,6 +6,7 @@ import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'
+import CardStyles from 'styles/card'
 
 const BackupCard = ({ onRequestBackup, onRequestClose, wallet }) => {
   const isPrivateKey = wallet.activeAccount.mnemonic === undefined
@@ -56,5 +57,6 @@ const BackupCard = ({ onRequestBackup, onRequestClose, wallet }) => {
 export default BackupCard
 
 const styles = StyleSheet.create({
-  ...CommonStyles
+  ...CommonStyles,
+  ...CardStyles
 })

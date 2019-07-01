@@ -19,8 +19,9 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 
 import { setBackupWarningStatus } from 'actions/Activation'
-import OriginButton from 'components/origin-button'
 import { shuffleArray } from 'utils'
+import Disclaimer from 'components/disclaimer'
+import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'
 
 const ONE_MINUTE = 1000 * 60
@@ -51,7 +52,7 @@ class BackupScreen extends Component {
     }
 
     this.state = {
-      step: 'success',
+      step: 'backup',
       verify: verify,
       shuffledMnemonic: shuffledMnemonic,
       shuffledMnemonicBackup: shuffledMnemonic
@@ -204,24 +205,22 @@ class BackupScreen extends Component {
               }
             />
           </View>
-          <View style={styles.legalContainer}>
-            <Text style={styles.legal}>
-              {this.isPrivateKey && (
-                <fbt desc="BackupScreen.backupPrivateKeyNote">
-                  This private key is the key to your account. Write it down, or
-                  copy it to a password manager. We recommend NOT emailing it to
-                  yourself.
-                </fbt>
-              )}
-              {!this.isPrivateKey && (
-                <fbt desc="BackupScreen.backupRecoveryPhraseNote">
-                  This recovery phrase is the key to your account. Write it
-                  down, or copy it to a password manager. We recommend NOT
-                  emailing it to yourself.
-                </fbt>
-              )}
-            </Text>
-          </View>
+          <Disclaimer>
+            {this.isPrivateKey && (
+              <fbt desc="BackupScreen.backupPrivateKeyNote">
+                This private key is the key to your account. Write it down, or
+                copy it to a password manager. We recommend NOT emailing it to
+                yourself.
+              </fbt>
+            )}
+            {!this.isPrivateKey && (
+              <fbt desc="BackupScreen.backupRecoveryPhraseNote">
+                This recovery phrase is the key to your account. Write it down,
+                or copy it to a password manager. We recommend NOT emailing it
+                to yourself.
+              </fbt>
+            )}
+          </Disclaimer>
           <View style={[styles.container, styles.buttonContainer]}>
             <OriginButton
               size="large"
@@ -400,17 +399,6 @@ const styles = StyleSheet.create({
   ...CommonStyles,
   successContent: {
     justifyContent: 'center'
-  },
-  // TODO: this is duplicate from Onboarding styles
-  legalContainer: {
-    fontSize: 14,
-    paddingTop: 10,
-    paddingBottom: 10,
-    width: '90%'
-  },
-  legal: {
-    textAlign: 'center',
-    color: '#98a7b4'
   },
   privateKeyContainer: {
     padding: 40

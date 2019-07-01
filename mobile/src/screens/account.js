@@ -4,11 +4,9 @@ import React, { Component } from 'react'
 import {
   Alert,
   Clipboard,
-  KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View
 } from 'react-native'
 import { connect } from 'react-redux'
@@ -17,7 +15,6 @@ import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
 
 import { setAccountActive, removeAccount } from 'actions/Wallet'
-import { truncateAddress } from 'utils/user'
 import Address from 'components/address'
 import Avatar from 'components/avatar'
 import OriginButton from 'components/origin-button'

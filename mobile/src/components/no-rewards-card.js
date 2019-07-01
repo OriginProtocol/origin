@@ -6,6 +6,7 @@ import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'
+import CardStyles from 'styles/card'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -55,6 +56,7 @@ export default NoRewardsCard
 
 const styles = StyleSheet.create({
   ...CommonStyles,
+  ...CardStyles,
   fullWidthImageContainer: {
     marginHorizontal: -20,
     marginTop: -30,
