@@ -18,7 +18,8 @@ class ReadyScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: true
+      loading: true,
+      error: false
     }
   }
 
@@ -51,6 +52,7 @@ class ReadyScreen extends Component {
       )
     } catch (error) {
       console.warn('Identity publication failed: ', error)
+      this.setState({ error: true })
     }
 
     this.props.setOnboardingComplete(true)
@@ -79,6 +81,11 @@ class ReadyScreen extends Component {
           <Text style={styles.title}>
             <fbt desc="ReadyScreen.title">
               You&apos;re ready to start buying and selling on Origin
+            </fbt>
+          </Text>
+          <Text style={styles.subtitle}>
+            <fbt desc="ReadyScreen.error">
+              Unfortunately we could not publish your identity on your behalf.
             </fbt>
           </Text>
         </View>
