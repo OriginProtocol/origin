@@ -1,5 +1,18 @@
 {
+  "ignore": [
+    "web3",
+    "ipfs",
+    "orbit-db",
+    "openzeppelin-solidity",
+    "truffle",
+    "truffle-hdwallet-provider",
+    "truffle-privatekey-provider",
+    "ganache-core"
+  ],
   "groups": {
+    "mobile": {
+      "packages": ["mobile/package.json"]
+    },
     "default": {
       "packages": [
         "dapps/admin/package.json",
@@ -21,16 +34,6 @@
         "infra/relayer/package.json",
         "infra/token-transfer-client/package.json",
         "infra/token-transfer-server/package.json",
-        "mobile/package.json",
-        "mobile/src/actions/package.json",
-        "mobile/src/components/package.json",
-        "mobile/src/graphql/package.json",
-        "mobile/src/hoc/package.json",
-        "mobile/src/locales/package.json",
-        "mobile/src/reducers/package.json",
-        "mobile/src/screens/package.json",
-        "mobile/src/styles/package.json",
-        "mobile/src/utils/package.json",
         "package.json",
         "packages/contracts/package.json",
         "packages/event-cache/package.json",
