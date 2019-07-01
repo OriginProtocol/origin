@@ -116,8 +116,6 @@ class MarketplaceScreen extends Component {
         this.injectInviteCode(this.state.inviteCode)
       }
     }
-
-
   }
 
   /* Enables left and right swiping to go forward/back in the WebView.
@@ -524,9 +522,7 @@ class MarketplaceScreen extends Component {
     const injectedJavaScript = `
       (function() {
         if (window && window.localStorage && window.webViewBridge) {
-          window.localStorage.growth_auth_token = '${
-            this.props.onboarding.growth
-          }';
+          window.localStorage.growth_auth_token = '${this.props.onboarding.growth}';
         }
       })();
     `
