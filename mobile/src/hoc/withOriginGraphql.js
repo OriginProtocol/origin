@@ -10,7 +10,6 @@ import uuid from 'uuid/v1'
 import React, { Component } from 'react'
 import { DeviceEventEmitter } from 'react-native'
 import { connect } from 'react-redux'
-import get from 'lodash.get'
 
 import {
   balance,
