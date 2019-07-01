@@ -52,7 +52,7 @@
     "sequelize-cli": "^5.5.0",
     "sinon": "^7.3.2",
     "superagent": "^5.1.0",
-    "web3": "1.0.0-beta.34"
+    "web3": "1.0.0-beta.55"
   },
   "devDependencies": {
     "chai": "^4.2.0",
