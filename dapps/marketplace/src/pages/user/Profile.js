@@ -279,7 +279,9 @@ class UserProfile extends Component {
     return (
       <ModalComp
         title={headerContent}
-        className={`profile-verifications-modal${this.state.hideVerifyModal ? ' d-none' : ''}`}
+        className={`profile-verifications-modal${
+          this.state.hideVerifyModal ? ' d-none' : ''
+        }`}
         shouldClose={this.state.shouldCloseVerifyModal}
         onClose={() =>
           this.setState({ shouldCloseVerifyModal: false, verifyModal: false })
@@ -340,7 +342,7 @@ class UserProfile extends Component {
             }
 
             if (!completed) {
-              // Show the verify modal only if the user closes 
+              // Show the verify modal only if the user closes
               // the attestation modal without making a change
               newState.hideVerifyModal = false
             }
@@ -357,7 +359,7 @@ class UserProfile extends Component {
               [providerName]: false
             })
           }}
-          // Skip exit animation for attestation modals only if user 
+          // Skip exit animation for attestation modals only if user
           // goes there from "Add Verifications" modal
           skipAnimateOnExit={this.state.verifyModal}
         />
