@@ -38,24 +38,8 @@ class EmailScreen extends Component {
     }
   }
 
-  componentDidMount() {
-    // Override the back button functionality in header
-    this.props.navigation.setParams({
-      handleBack: this.handleBack.bind(this)
-    })
-  }
-
   handleChange = async emailValue => {
     await this.setState({ emailError: '', emailValue })
-  }
-
-  /* Override the back function because of the verify step being present on this
-   * screen and not on a separate route.
-   */
-  handleBack = () => {
-    this.state.verify
-      ? this.setState({ verify: false })
-      : this.props.navigation.goBack(null)
   }
 
   /* Handle submission of email. Check if an identity with this phone

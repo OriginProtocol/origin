@@ -98,24 +98,8 @@ class PhoneScreen extends Component {
     }
   }
 
-  componentDidMount() {
-    // Override the back button functionality in header
-    this.props.navigation.setParams({
-      handleBack: this.handleBack.bind(this)
-    })
-  }
-
   handleChange = async (field, value) => {
     await this.setState({ [`${field}Error`]: '', [`${field}Value`]: value })
-  }
-
-  /* Override the back function because of the verify step being present on this
-   * screen and not on a separate route.
-   */
-  handleBack = () => {
-    this.state.verify
-      ? this.setState({ verify: false })
-      : this.props.navigation.goBack(null)
   }
 
   /* Handle submission of phone number. Check if an identity with this phone
