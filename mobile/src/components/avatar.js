@@ -1,7 +1,7 @@
 'use strict'
 
 import React from 'react'
-import { Image } from 'react-native'
+import { Image, View } from 'react-native'
 
 import withConfig from 'hoc/withConfig'
 
@@ -26,18 +26,20 @@ const Avatar = ({ config, source, size = 30, style = {} }) => {
   }
 
   return (
-    <Image
-      resizeMethod={'resize'}
-      resizeMode={'contain'}
-      style={{
-        width: size,
-        height: size,
-        borderRadius: size / 2,
-        backgroundColor: '#233f53',
-        ...style
-      }}
-      source={source}
-    />
+    <View
+      style={{ backgroundColor: '#233f53', borderRadius: size / 2, ...style }}
+    >
+      <Image
+        resizeMethod={'resize'}
+        resizeMode={'contain'}
+        style={{
+          width: size,
+          height: size,
+          borderRadius: size / 2
+        }}
+        source={source}
+      />
+    </View>
   )
 }
 
