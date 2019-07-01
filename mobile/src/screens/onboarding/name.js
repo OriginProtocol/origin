@@ -16,6 +16,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 
 import { setName } from 'actions/Onboarding'
 import OriginButton from 'components/origin-button'
+import VisibilityWarning from 'components/visibility-warning'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import CommonStyles from 'styles/common'
 import OnboardingStyles from 'styles/onboarding'
@@ -135,18 +136,11 @@ class NameScreen extends Component {
 
   renderVisibilityWarning() {
     return (
-      <View style={[styles.visibilityWarningContainer, styles.isVisible]}>
-        <Text style={styles.visibilityWarningHeader}>
-          <fbt desc="NameScreen.visibilityWarningHeader">
-            What will be visible on the blockchain?
-          </fbt>
-        </Text>
-        <Text style={styles.visibilityWarningText}>
-          <fbt desc="NameScreen.visibilityWarningText">
-            Your name will be visible on the blockchain
-          </fbt>
-        </Text>
-      </View>
+      <VisibilityWarning isVisible={true}>
+        <fbt desc="PhoneScreen.visibilityWarning">
+          Your name will be visible on the blockchain
+        </fbt>
+      </VisibilityWarning>
     )
   }
 }

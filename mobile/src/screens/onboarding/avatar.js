@@ -19,6 +19,7 @@ import { setAvatarUri } from 'actions/Onboarding'
 import { SettingsButton } from 'components/settings-button'
 import Avatar from 'components/avatar'
 import OriginButton from 'components/origin-button'
+import VisibilityWarning from 'components/visibility-warning'
 import withConfig from 'hoc/withConfig'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import CommonStyles from 'styles/common'
@@ -130,18 +131,11 @@ class AvatarScreen extends Component {
       <SafeAreaView style={styles.content}>
         <View style={{ ...styles.container, flexGrow: 2 }}>{content}</View>
         <View style={{ ...styles.container, ...styles.buttonContainer }}>
-          <View style={[styles.visibilityWarningContainer, styles.isVisible]}>
-            <Text style={styles.visibilityWarningHeader}>
-              <fbt desc="AvatarScreen.visibilityWarningHeader">
-                What will be visible on the blockchain?
-              </fbt>
-            </Text>
-            <Text style={styles.visibilityWarningText}>
-              <fbt desc="AvatarScreen.visibilityWarningText">
-                Your photo will be visible on the blockchain
-              </fbt>
-            </Text>
-          </View>
+          <VisibilityWarning isVisible={true}>
+            <fbt desc="AvatarScreen.visibilityWarningText">
+              Your photo will be visible on the blockchain
+            </fbt>
+          </VisibilityWarning>
           <OriginButton
             size="large"
             type="primary"

@@ -11,8 +11,8 @@ import {
   View
 } from 'react-native'
 import { connect } from 'react-redux'
-import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
+import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
 import RNPickerSelect from 'react-native-picker-select'
 import * as RNLocalize from 'react-native-localize'
@@ -21,6 +21,7 @@ import { setPhoneAttestation } from 'actions/Onboarding'
 import Disclaimer from 'components/disclaimer'
 import OriginButton from 'components/origin-button'
 import PinInput from 'components/pin-input'
+import VisibilityWarning from 'components/visibility-warning'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import withConfig from 'hoc/withConfig'
 import _countryCodes from 'utils/countryCodes'
@@ -358,14 +359,11 @@ class PhoneScreen extends Component {
 
   renderVisibilityWarning() {
     return (
-      <View style={styles.visibilityWarningContainer}>
-        <Text style={styles.visibilityWarningHeader}>
-          What will be visible on the blockchain?
-        </Text>
-        <Text style={styles.visibilityWarningText}>
+      <VisibilityWarning>
+        <fbt desc="PhoneScreen.visibilityWarning">
           That you have a verified phone, but NOT your actual phone number.
-        </Text>
-      </View>
+        </fbt>
+      </VisibilityWarning>
     )
   }
 }

@@ -19,6 +19,7 @@ import { setEmailAttestation } from 'actions/Onboarding'
 import Disclaimer from 'components/disclaimer'
 import OriginButton from 'components/origin-button'
 import PinInput from 'components/pin-input'
+import VisibilityWarning from 'components/visibility-warning'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import withConfig from 'hoc/withConfig'
 import OnboardingStyles from 'styles/onboarding'
@@ -293,18 +294,11 @@ class EmailScreen extends Component {
 
   renderVisibilityWarning() {
     return (
-      <View style={styles.visibilityWarningContainer}>
-        <Text style={styles.visibilityWarningHeader}>
-          <fbt desc="EmailScreen.visibilityWarningHeader">
-            What will be visible on the blockchain?
-          </fbt>
-        </Text>
-        <Text style={styles.visibilityWarningText}>
-          <fbt desc="AvatarScreen.visibilityWarningText">
-            That you have a verified email, but NOT your actual email address.
-          </fbt>
-        </Text>
-      </View>
+      <VisibilityWarning>
+        <fbt desc="EmailScreen.visibilityWarningText">
+          That you have a verified email, but NOT your actual email address.
+        </fbt>
+      </VisibilityWarning>
     )
   }
 }
