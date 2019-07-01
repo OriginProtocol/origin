@@ -89,8 +89,11 @@ class ImportAccountScreen extends Component {
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset="10"
       >
-        <SafeAreaView style={styles.container}>
-          <ScrollView contentContainerStyle={styles.onboardingModal}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <ScrollView
+            style={styles.onboardingModal}
+            contentContainerStyle={styles.content}
+          >
             <View style={styles.container}>
               <Text style={styles.title}>
                 <fbt desc="ImportMnemonicScreen.recoveryPhraseTitle">

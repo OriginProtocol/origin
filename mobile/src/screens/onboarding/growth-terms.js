@@ -67,7 +67,7 @@ class GrowthTermsScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.content}>
           {this.state.loading
             ? this.renderLoading()
@@ -112,6 +112,8 @@ class GrowthTermsScreen extends Component {
               Rewards.
             </fbt>
           </Text>
+        </View>
+        <View style={styles.container}>
           <Text
             style={{
               fontWeight: '600',
@@ -150,7 +152,7 @@ class GrowthTermsScreen extends Component {
             }
           />
         </View>
-        <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
           <OriginButton
             size="large"
             type="primary"
@@ -175,7 +177,7 @@ class GrowthTermsScreen extends Component {
   renderTerms() {
     return (
       <>
-        <View style={styles.container}>
+        <View style={{ ...styles.container, paddingTop: 20 }}>
           <Text style={styles.termsHeader}>
             <fbt desc="GrowthTermsScreen.termsHeader">
               Join Origin’s reward program to earn Origin tokens (OGN). Terms &

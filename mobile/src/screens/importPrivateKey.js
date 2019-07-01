@@ -17,6 +17,7 @@ import { fbt } from 'fbt-runtime'
 import { setBackupWarningStatus } from 'actions/Activation'
 import { importAccountFromPrivateKey } from 'actions/Wallet'
 import OriginButton from 'components/origin-button'
+import CommonStyles from 'styles/common'
 import OnboardingStyles from 'styles/onboarding'
 
 class ImportAccountScreen extends Component {
@@ -84,7 +85,7 @@ class ImportAccountScreen extends Component {
   render() {
     return (
       <KeyboardAvoidingView
-        style={styles.onboardingDarkOverlay}
+        style={styles.darkOverlay}
         behavior={Platform.OS === 'ios' ? 'padding' : null}
         keyboardVerticalOffset="10"
       >
@@ -149,6 +150,7 @@ export default connect(
 )(ImportAccountScreen)
 
 const styles = StyleSheet.create({
+  ...CommonStyles,
   ...OnboardingStyles,
   input: {
     backgroundColor: '#eaf0f3',

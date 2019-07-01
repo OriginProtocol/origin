@@ -52,7 +52,7 @@ class GrowthScreen extends Component {
         <Image
           resizeMethod={'scale'}
           resizeMode={'cover'}
-          style={styles.image}
+          style={{ ...styles.image, width: '100%' }}
           source={require(IMAGES_PATH + 'ogn-image.png')}
         />
         <View style={{ ...styles.container, marginTop: 10 }}>
