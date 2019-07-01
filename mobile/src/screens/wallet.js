@@ -5,11 +5,11 @@ import { Alert, Clipboard, ScrollView, StyleSheet, View } from 'react-native'
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
 
+import { evenlySplitAddress } from 'utils/user'
 import Address from 'components/address'
 import Currency from 'components/currency'
-
 import currencies from 'utils/currencies'
-import { evenlySplitAddress } from 'utils/user'
+import ListStyles from 'styles/list'
 
 class WalletScreen extends Component {
   static navigationOptions = () => {
@@ -85,16 +85,16 @@ class WalletScreen extends Component {
 
     return (
       <>
-        <View style={styles.addressContainer}>
+        <View style={styles.listHeaderContainer}>
           <Address
             address={wallet.activeAccount.address}
             label={fbt('Wallet Address', 'WalletScreen.addressLabel')}
-            style={styles.address}
+            styles={{ textAlign: 'center' }}
           />
         </View>
         <ScrollView
-          style={styles.svContainer}
-          contentContainerStyle={styles.walletSVContainer}
+          style={{ flex: 1 }}
+          contentContainerStyle={{ paddingHorizontal: 20 }}
         >
           <Currency
             abbreviation={'ETH'}
@@ -135,27 +135,5 @@ const mapStateToProps = ({ activation, wallet }) => {
 export default connect(mapStateToProps)(WalletScreen)
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#f7f8f8',
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20
-  },
-  svContainer: {
-    flex: 1
-  },
-  walletSVContainer: {
-    paddingHorizontal: 10
-  },
-  address: {
-    color: '#6a8296',
-    fontFamily: 'Lato',
-    fontSize: 13,
-    fontWeight: '300',
-    textAlign: 'center'
-  },
-  addressContainer: {
-    paddingHorizontal: 18 * 3,
-    paddingVertical: 22
-  }
+  ...ListStyles
 })

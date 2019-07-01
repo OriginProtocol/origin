@@ -31,7 +31,7 @@ const Avatar = ({ config, source, size = 30, style = {} }) => {
     >
       <Image
         resizeMethod={'resize'}
-        resizeMode={'contain'}
+        resizeMode={'cover'}
         style={{
           width: size,
           height: size,
