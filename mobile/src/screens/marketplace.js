@@ -597,7 +597,9 @@ class MarketplaceScreen extends Component {
   updateIdentity = async () => {
     let identity
     try {
-      const graphqlResponse = await this.props.getIdentity()
+      const graphqlResponse = await this.props.getIdentity(
+        this.props.wallet.activeAccount.address
+      )
       identity = get(graphqlResponse, 'data.web3.account.identity')
     } catch (error) {
       // Handle GraphQL errors for things like invalid JSON RPC response or we
