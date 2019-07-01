@@ -252,7 +252,10 @@ export default connect(mapStateToProps)(TransactionCard)
 
 const styles = StyleSheet.create({
   ...CommonStyles,
+<<<<<<< HEAD
   ...CardStyles,
+=======
+>>>>>>> origin
   account: {
     color: '#94a7b5',
     fontFamily: 'Lato',
