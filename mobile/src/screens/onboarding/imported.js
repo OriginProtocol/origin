@@ -214,8 +214,8 @@ class ImportedScreen extends Component {
               `Oops, wait. Let's start over...`,
               'ImportedScreen.startOverButton'
             )}
-            onPress={() => {
-              this.props.removeAccount(this.props.wallet.activeAccount.address)
+            onPress={async () => {
+              await this.props.removeAccount(this.props.wallet.activeAccount)
               this.props.navigation.navigate('Welcome')
             }}
           />
