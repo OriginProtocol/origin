@@ -48,6 +48,7 @@ const ProfileNav = ({ identity, identityLoaded, open, onOpen, onClose }) => {
               onClose={() => onClose()}
               content={
                 <ProfileDropdown
+                  open={open}
                   identity={identity}
                   identityLoaded={identityLoaded}
                   onClose={() => onClose()}
@@ -182,6 +183,7 @@ const Identity = ({
 }
 
 const ProfileDropdownRaw = ({
+  open,
   walletProxy,
   wallet,
   data,
@@ -197,7 +199,7 @@ const ProfileDropdownRaw = ({
   return (
     <>
       <div className="dropdown-menu-bg" onClick={onClose} />
-      <div className="dropdown-menu dropdown-menu-right show profile">
+      <div className={`dropdown-menu dropdown-menu-right profile${open ? ' show' : ''}`}>
         <a
           className="d-sm-none close-icon"
           href="#close"
