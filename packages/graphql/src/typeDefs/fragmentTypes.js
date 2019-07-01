@@ -26,6 +26,9 @@ const introspectionQueryResultData = {
           },
           {
             name: 'AnnouncementListing'
+          },
+          {
+            name: 'ServiceListing'
           }
         ]
       },
@@ -50,6 +53,9 @@ const introspectionQueryResultData = {
           },
           {
             name: 'AnnouncementListing'
+          },
+          {
+            name: 'ServiceListing'
           }
         ]
       },

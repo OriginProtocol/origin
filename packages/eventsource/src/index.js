@@ -231,6 +231,8 @@ class OriginEventSource {
         __typename = 'FractionalListing'
       } else if (data.category === 'schema.announcements') {
         __typename = 'AnnouncementListing'
+      } else if (data.category === 'schema.services') {
+        __typename = 'ServiceListing'
       } else {
         __typename = 'UnitListing'
       }
@@ -241,7 +243,8 @@ class OriginEventSource {
         'FractionalListing',
         'FractionalHourlyListing',
         'AnnouncementListing',
-        'GiftCardListing'
+        'GiftCardListing',
+        'ServiceListing'
       ].indexOf(__typename) < 0
     ) {
       __typename = 'UnitListing'
@@ -310,6 +313,9 @@ class OriginEventSource {
     const booked = [],
       pendingBuyers = []
 
+    if (listing.__typename === 'ServiceListing') {
+      unitsAvailable = 20
+    }
     if (listing.__typename === 'FractionalListing') {
       allOffers.forEach(offer => {
         if (!offer.valid || offer.status === 0) {
@@ -329,7 +335,9 @@ class OriginEventSource {
           offer.validationError = 'units purchased exceeds available'
         } else {
           try {
-            unitsAvailable -= offer.quantity
+            if (listing.__typename !== 'ServiceListing') {
+              unitsAvailable -= offer.quantity
+            }
             if (status === 1 || status === 2 || status === 3) {
               // Created, Accepted or Disputed
               unitsPending += offer.quantity
@@ -491,7 +499,8 @@ class OriginEventSource {
 
   // Validates an offer, throwing an error if an issue is found.
   async validateOffer(offer, listing) {
-    if (offer.status != 1 /* pending */) {
+    // pending
+    if (offer.status !== 1) {
       return
     }
 
