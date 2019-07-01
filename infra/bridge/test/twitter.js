@@ -47,7 +47,7 @@ describe('twitter attestations', async () => {
 
     nock('https://api.twitter.com')
       .get('/1.1/account/verify_credentials.json')
-      .reply(200, { screen_name: 'Origin Protocol' })
+      .reply(200, { id: '12345', screen_name: 'OriginProtocol' })
 
     // Fake a session
     const parentApp = express()
@@ -55,7 +55,7 @@ describe('twitter attestations', async () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             oAuthToken: 'fake-oauth-token',
             oAuthTokenSecret: 'fake-oauth-token-secret'
@@ -86,8 +86,12 @@ describe('twitter attestations', async () => {
       true
     )
     expect(response.body.data.attestation.site.siteName).to.equal('twitter.com')
-    expect(response.body.data.attestation.site.userId.raw).to.equal(
-      'Origin Protocol'
+    expect(response.body.data.attestation.site.userId.raw).to.equal('12345')
+    expect(response.body.data.attestation.site.username.raw).to.equal(
+      'OriginProtocol'
+    )
+    expect(response.body.data.attestation.site.profileUrl.raw).to.equal(
+      'https://twitter.com/OriginProtocol'
     )
 
     // Verify attestation was recorded in the database
@@ -95,7 +99,9 @@ describe('twitter attestations', async () => {
     expect(results.length).to.equal(1)
     expect(results[0].ethAddress).to.equal(ethAddress)
     expect(results[0].method).to.equal(AttestationTypes.TWITTER)
-    expect(results[0].value).to.equal('Origin Protocol')
+    expect(results[0].value).to.equal('12345')
+    expect(results[0].username).to.equal('OriginProtocol')
+    expect(results[0].profileUrl).to.equal('https://twitter.com/OriginProtocol')
   })
 
   it('should generate attestation on valid verification code (from session)', async () => {
@@ -105,7 +111,7 @@ describe('twitter attestations', async () => {
 
     nock('https://api.twitter.com')
       .get('/1.1/account/verify_credentials.json')
-      .reply(200, { screen_name: 'Origin Protocol' })
+      .reply(200, { id: '12345', screen_name: 'OriginProtocol' })
 
     // Fake a session
     const parentApp = express()
@@ -113,7 +119,7 @@ describe('twitter attestations', async () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             redirect: 'hello',
             code: 'abcdefg',
@@ -130,7 +136,7 @@ describe('twitter attestations', async () => {
       .post('/api/attestations/twitter/verify')
       .send({
         identity: ethAddress,
-        sid: 123
+        sid: '123'
       })
       .expect(200)
 
@@ -145,8 +151,12 @@ describe('twitter attestations', async () => {
       true
     )
     expect(response.body.data.attestation.site.siteName).to.equal('twitter.com')
-    expect(response.body.data.attestation.site.userId.raw).to.equal(
-      'Origin Protocol'
+    expect(response.body.data.attestation.site.userId.raw).to.equal('12345')
+    expect(response.body.data.attestation.site.username.raw).to.equal(
+      'OriginProtocol'
+    )
+    expect(response.body.data.attestation.site.profileUrl.raw).to.equal(
+      'https://twitter.com/OriginProtocol'
     )
 
     // Verify attestation was recorded in the database
@@ -154,7 +164,9 @@ describe('twitter attestations', async () => {
     expect(results.length).to.equal(1)
     expect(results[0].ethAddress).to.equal(ethAddress)
     expect(results[0].method).to.equal(AttestationTypes.TWITTER)
-    expect(results[0].value).to.equal('Origin Protocol')
+    expect(results[0].value).to.equal('12345')
+    expect(results[0].username).to.equal('OriginProtocol')
+    expect(results[0].profileUrl).to.equal('https://twitter.com/OriginProtocol')
   })
 
   it('should error on incorrect verifier', async () => {
@@ -172,7 +184,7 @@ describe('twitter attestations', async () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             oAuthToken: 'fake-oauth-token',
             oAuthTokenSecret: 'fake-oauth-token-secret',
@@ -188,7 +200,7 @@ describe('twitter attestations', async () => {
       .post('/api/attestations/twitter/verify')
       .send({
         identity: ethAddress,
-        sid: 123
+        sid: '123'
       })
       .expect(401)
 
@@ -226,7 +238,7 @@ describe('twitter attestations', async () => {
       .post('/api/attestations/twitter/verify')
       .send({
         identity: ethAddress,
-        sid: 1234432
+        sid: '1234432'
       })
       .expect(400)
 
@@ -251,7 +263,7 @@ describe('twitter attestations', async () => {
       .post('/api/attestations/twitter/verify')
       .send({
         identity: ethAddress,
-        sid: 1234432
+        sid: '1234432'
       })
       .expect(400)
 

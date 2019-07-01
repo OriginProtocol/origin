@@ -1,46 +1,36 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import Web3 from 'web3'
 import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 
-const web3 = new Web3()
+const SignatureCard = ({ msgData, onConfirm, onRequestClose }) => {
+  const decodedMessage = global.web3.utils.hexToAscii(msgData.data.data)
 
-class SignatureCard extends Component {
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
-    const { msgData } = this.props
-    const decodedMessage = web3.utils.hexToAscii(msgData.data.data)
-
-    return (
-      <View style={styles.card}>
-        <Text style={styles.heading}>
-          <fbt desc="SignatureCard.heading">Signature Request</fbt>
-        </Text>
-        <Text style={styles.content}>{decodedMessage}</Text>
-        <View style={styles.buttonContainer}>
-          <OriginButton
-            size="large"
-            type="primary"
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={fbt('Sign', 'SignatureCard.button')}
-            onPress={this.props.onConfirm}
-          />
-        </View>
-        <TouchableOpacity onPress={this.props.onRequestClose}>
-          <Text style={styles.cancel}>
-            <fbt desc="SignatureCard.cancel">Cancel</fbt>
-          </Text>
-        </TouchableOpacity>
+  return (
+    <View style={styles.card}>
+      <Text style={styles.heading}>
+        <fbt desc="SignatureCard.heading">Signature Request</fbt>
+      </Text>
+      <Text style={styles.content}>{decodedMessage}</Text>
+      <View style={styles.buttonContainer}>
+        <OriginButton
+          size="large"
+          type="primary"
+          textStyle={{ fontSize: 18, fontWeight: '900' }}
+          title={fbt('Sign', 'SignatureCard.button')}
+          onPress={onConfirm}
+        />
       </View>
-    )
-  }
+      <TouchableOpacity onPress={onRequestClose}>
+        <Text style={styles.cancel}>
+          <fbt desc="SignatureCard.cancel">Cancel</fbt>
+        </Text>
+      </TouchableOpacity>
+    </View>
+  )
 }
 
 export default SignatureCard

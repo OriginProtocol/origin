@@ -33,12 +33,14 @@ const AboutParty = ({ id, owner }) => {
           const profile = get(data, 'web3.account.identity')
           if (!profile) {
             return (
-              <div className="eth-address">
-                <Identicon size={40} address={owner} />
-                <div>
-                  <div>ETH Address:</div>
+              <div className="profile">
+                <Identicon size={50} address={owner} />
+                <div className="user-detail">
                   <div>
-                    <EthAddress address={owner} />
+                    <fbt desc="aboutParty.ethAddress">ETH Address</fbt>
+                  </div>
+                  <div>
+                    <EthAddress address={owner} short />
                   </div>
                 </div>
               </div>
@@ -77,7 +79,7 @@ require('react-styl')(`
       cursor: pointer
       .user-detail
         min-width: 0
-      .avatar
+      .avatar,.identicon
         margin-right: 1rem
       .name
         font-size: 18px
@@ -88,7 +90,7 @@ require('react-styl')(`
         overflow: hidden
         text-overflow: ellipsis
     .actions
-      margin: 1rem -0.25rem 0 -0.25rem
+      margin: 1rem 0 0 0
       display: flex
       align-items: center
       flex-wrap: wrap

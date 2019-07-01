@@ -15,6 +15,10 @@ Watch the [video tutorial](https://drive.google.com/a/originprotocol.com/file/d/
 
 ## Troubleshooting
 
+### How do I test moderation localy?
+
+Go to `packages/graphql/src/configs/localhost.js` and uncomment the discovery server.
+
 ### How do I reset my local blockchain?
 
 From the top level of your local repo:

@@ -17,6 +17,7 @@ const redis = require('redis')
 const BN = require('bn.js')
 const bip39 = require('bip39')
 const hdkey = require('ethereumjs-wallet/hdkey')
+const { createEngine } = require('@origin/web3-provider')
 const {
   stringToBN,
   numberToBN,
@@ -34,10 +35,13 @@ const DEFAULT_MAX_PENDING_PER_ACCOUNT = 3
 const ZERO = new BN('0', 10)
 const BASE_FUND_VALUE = new BN('500000000000000000', 10) // 0.5 Ether
 const MIN_CHILD_BALANCE = new BN('10000000000000000', 10) // 0.1 Ether
-const MAX_GAS_PRICE = new BN('20000000000', 10) // 20 gwei
+const MAX_GAS_PRICE = new BN('25000000000', 10) // 25 gwei
 const REDIS_TX_COUNT_PREFIX = 'txcount_'
 const REDIS_PENDING_KEY = `pending_txs`
 const REDIS_PENDING_PREFIX = `pending_tx_`
+const REDIS_PENDING_TX_PREFIX = `pending_txobj_`
+const JSONRPC_QPS = 100
+const JSONRPC_MAX_CONCURRENT = 25
 
 async function tick(wait = 1000) {
   return new Promise(resolve => setTimeout(() => resolve(true), wait))
@@ -49,6 +53,7 @@ class Account {
     this.pendingCount = pendingCount // needed?
     this.wallet = wallet
     this.locked = null
+    this.hasPendingFundingTx = false
   }
 }
 
@@ -77,6 +82,18 @@ class Purse {
       throw new Error('missing required parameters')
     }
 
+    // If it's not already a web3-provider-engine provider...
+    if (
+      web3.currentProvider &&
+      typeof web3.currentProvider._providers !== 'undefined'
+    ) {
+      // init the custom provider
+      createEngine(web3, {
+        qps: JSONRPC_QPS,
+        maxConcurrent: JSONRPC_MAX_CONCURRENT
+      })
+    }
+
     this.web3 = web3
     this.mnemonic = mnemonic
     this._childrenToCreate = children
@@ -89,6 +106,8 @@ class Purse {
 
     this.children = []
     this.accounts = {}
+    // Complete unsigned transaction objects stored by hash
+    this.transactionObjects = {}
     // Keep track of transactions that are waiting to be mined
     this.pendingTransactions = {}
     // Counter for tx rebroadcasts
@@ -157,7 +176,7 @@ class Purse {
    * @param clearRedis {boolean} - Remove all keys from redis
    */
   async teardown(clearRedis = false) {
-    if (this.rclient) {
+    if (this.rclient && this.rclient.connected) {
       if (clearRedis) {
         await this._resetRedis()
       }
@@ -206,9 +225,13 @@ class Purse {
      * without a tx history.
      */
     do {
+      let totalPending = 0
       let lowestPending = this.maxPendingPerAccount
       for (const child of this.children) {
         const childBal = stringToBN(await this.web3.eth.getBalance(child))
+        totalPending += this.accounts[child].pendingCount
+          ? this.accounts[child].pendingCount
+          : 0
         if (
           this.accounts[child].locked === null &&
           this.accounts[child].pendingCount < lowestPending &&
@@ -225,6 +248,7 @@ class Purse {
         break
       } else {
         logger.debug('waiting for an account to become available...')
+        logger.debug(`there are ${totalPending} total pending transactions`)
       }
     } while (await tick())
 
@@ -287,15 +311,20 @@ class Purse {
       this.receiptCallbacks[txHash] = onReceipt
     }
 
-    // In case it needs to be rebroadcast
-    await this.addPending(txHash, rawTx)
+    try {
+      // blast it
+      await sendRawTransaction(this.web3, rawTx)
 
-    // blast it
-    await sendRawTransaction(this.web3, rawTx)
+      // In case it needs to be rebroadcast
+      await this.addPending(txHash, tx, rawTx)
 
-    await this.incrementTxCount(address)
+      await this.incrementTxCount(address)
 
-    logger.info(`Sent ${txHash}`)
+      logger.info(`Sent ${txHash}`)
+    } catch (err) {
+      logger.error(`Error sending transaction ${txHash}`)
+      throw err
+    }
 
     return txHash
   }
@@ -317,7 +346,12 @@ class Purse {
       )
       // null defense
       if (countFromRedis) {
-        txCount = countFromRedis
+        try {
+          txCount = parseInt(countFromRedis)
+        } catch (err) {
+          logger.warn(err)
+          txCount = 0
+        }
       }
     } else {
       logger.warn('Redis unavailable')
@@ -340,11 +374,21 @@ class Purse {
      * breaker, but maybe some thought should be put into that in the future as volume goes up. The
      * bigger the load, the likelier this becomes.
      */
-    const w3txCount = parseInt(await this.web3.eth.getTransactionCount(address))
+    const w3txCount = parseInt(
+      await this.web3.eth.getTransactionCount(address, 'pending')
+    )
     if (txCount < w3txCount) {
       if (txCount > 0)
         logger.warn('Transaction counts appear lower than on the chain!')
+      // Return the one from the network
       txCount = w3txCount
+      // ...and make sure redis is up to date for future instances
+      if (this.rclient && this.rclient.connected) {
+        await this.rclient.setAsync(
+          `${REDIS_TX_COUNT_PREFIX}${address}`,
+          txCount
+        )
+      }
     }
 
     return txCount
@@ -372,12 +416,19 @@ class Purse {
    * @param txHash {string} - The transaction hash
    * @param rawTx {string} - The raw transaction
    */
-  async addPending(txHash, rawTx) {
+  async addPending(txHash, txObj, rawTx) {
     this.pendingTransactions[txHash] = rawTx
+
+    // Store the tx object for debugging and in case we need to re-sign later
+    this.transactionObjects[txHash] = txObj
 
     if (this.rclient && this.rclient.connected) {
       await this.rclient.saddAsync(`${REDIS_PENDING_KEY}`, txHash)
       await this.rclient.setAsync(`${REDIS_PENDING_PREFIX}${txHash}`, rawTx)
+      await this.rclient.setAsync(
+        `${REDIS_PENDING_TX_PREFIX}${txHash}`,
+        JSON.stringify(txObj)
+      )
     } else {
       logger.warn('Redis unavailable')
     }
@@ -385,16 +436,37 @@ class Purse {
 
   /**
    * Remove a pending transaction from tracking
-   * @param address {string} - The account address to increment
+   * @param txHash {string} - The transaction hash
    */
   async removePending(txHash) {
     delete this.pendingTransactions[txHash]
+    delete this.transactionObjects[txHash]
 
     if (this.rclient && this.rclient.connected) {
       await this.rclient.sremAsync(`${REDIS_PENDING_KEY}`, txHash)
       await this.rclient.delAsync(`${REDIS_PENDING_PREFIX}${txHash}`)
+      await this.rclient.delAsync(`${REDIS_PENDING_TX_PREFIX}${txHash}`)
     } else {
       logger.warn('Redis unavailable')
+    }
+  }
+
+  /**
+   * Get a pending transaction object
+   * @param txHash {string} - The transaction hash
+   * @returns {object} representation of the transaction
+   */
+  async getPendingTransaction(txHash) {
+    if (this.transactionObjects[txHash]) {
+      return this.transactionObjects[txHash]
+    } else {
+      const txObjStr = await this.rclient.getAsync(
+        `${REDIS_PENDING_TX_PREFIX}${txHash}`
+      )
+      if (!txObjStr) {
+        return null
+      }
+      return JSON.parse(txObjStr)
     }
   }
 
@@ -454,15 +526,16 @@ class Purse {
 
       // Drain account only if it has more than the cost of the tx in it
       if (childBalance.gt(valueTxFee)) {
-        const signed = await this.signTx(child, {
+        const txObj = {
           to: masterAddress,
           gas,
           gasPrice,
           value
-        })
+        }
+        const signed = await this.signTx(child, txObj)
         const rawTx = signed.rawTransaction
         const txHash = this.web3.utils.sha3(rawTx)
-        await this.addPending(txHash, rawTx)
+        await this.addPending(txHash, txObj, rawTx)
         await sendRawTransaction(this.web3, rawTx)
         await this.incrementTxCount(child)
       }
@@ -473,11 +546,20 @@ class Purse {
    * Get all pending transactions and populate this.pendintTransactions
    */
   async _populatePending() {
+    logger.debug('Re-populating pending transactions from redis...')
+
     if (this.rclient && this.rclient.connected) {
       const pendingHashes = await this.rclient.smembersAsync(REDIS_PENDING_KEY)
 
+      logger.debug(
+        `Loaded ${
+          pendingHashes ? pendingHashes.length : 0
+        } pending transaction hashes from redis`
+      )
+
       for (const txHash of pendingHashes) {
         const tx = await this.web3.eth.getTransaction(txHash)
+        if (!tx) continue
         if (tx && this.accounts[tx.from]) {
           this.accounts[tx.from].pendingCount += 1
         }
@@ -486,6 +568,12 @@ class Purse {
         )
         if (rawTx) {
           this.pendingTransactions[txHash] = rawTx
+        } else {
+          logger.error(`Unable to retrieve pending transaction for ${txHash}`)
+          // TODO: Pretending this never existed has its own potential issues
+          if (tx && this.accounts[tx.from]) {
+            this.accounts[tx.from].pendingCount -= 1
+          }
         }
       }
     } else {
@@ -579,6 +667,13 @@ class Purse {
       throw new Error('provided value must be a BN.js instance')
     }
 
+    if (this.accounts[address] && this.accounts[address].hasPendingFundingTx) {
+      logger.info(
+        `Child ${address} already has a pending funding transaction. Skipping...`
+      )
+      return
+    }
+
     const fundingValue = value ? value : BASE_FUND_VALUE
     const gasPrice = await this.gasPrice()
     const txCost = fundingValue.add(gasPrice.mul(new BN(21000)))
@@ -623,10 +718,17 @@ class Purse {
     // So we hash it ourself...
     const txHash = this.web3.utils.sha3(rawTx)
 
-    await sendRawTransaction(this.web3, rawTx)
-    await this.incrementTxCount(masterAddress)
+    try {
+      await sendRawTransaction(this.web3, rawTx)
+      await this.addPending(txHash, unsigned, rawTx)
+      await this.incrementTxCount(masterAddress)
+      this.accounts[address].hasPendingFundingTx = true
 
-    logger.info(`Funded ${address} with ${txHash}`)
+      logger.info(`Funded ${address} with ${txHash}`)
+    } catch (err) {
+      logger.error(`Error sending transaction to fund child ${address}.`)
+      logger.errro(err)
+    }
 
     return txHash
   }
@@ -652,6 +754,9 @@ class Purse {
         const masterBalance = numberToBN(
           await this.web3.eth.getBalance(masterAddress)
         )
+        const masterBalanceLow = masterBalance.lt(
+          BASE_FUND_VALUE.mul(new BN(this.children.length))
+        )
         const balanceEther = this.web3.utils.fromWei(
           masterBalance.toString(),
           'ether'
@@ -660,15 +765,15 @@ class Purse {
           logger.error(
             `Master account needs funding! Send funds to ${masterAddress}`
           )
-        } else if (
-          masterBalance.lt(BASE_FUND_VALUE.mul(new BN(this.children.length)))
-        ) {
+        } else if (masterBalanceLow) {
           logger.warn(
             `Master account is low @ ${balanceEther} Ether. Add funds soon!`
           )
         } else {
           logger.info(`Master account balance: ${balanceEther} Ether`)
         }
+
+        const childrenToFund = []
 
         // Check for child balances dropping below set minimum and fund if necessary
         if (this.ready && this.autofundChildren) {
@@ -677,9 +782,37 @@ class Purse {
             const childBalance = numberToBN(
               await this.web3.eth.getBalance(child)
             )
-            if (childBalance.lte(MIN_CHILD_BALANCE)) {
-              await this._fundChild(child)
+            // Fund the child if there's already not a tx out
+            if (
+              childBalance.lte(MIN_CHILD_BALANCE) &&
+              !this.accounts[child].hasPendingFundingTx
+            ) {
+              childrenToFund.push(child)
+            } else if (this.accounts[child].hasPendingFundingTx) {
+              // Reset the flag
+              this.accounts[child].hasPendingFundingTx = false
             }
+          }
+
+          let valueToSend = BASE_FUND_VALUE
+          const maxFee = MAX_GAS_PRICE.mul(numberToBN(21000)).mul(
+            new BN(childrenToFund.length)
+          )
+          if (
+            masterBalance.lt(
+              valueToSend.mul(numberToBN(childrenToFund.length)).add(maxFee)
+            )
+          ) {
+            valueToSend = masterBalance
+              .sub(maxFee)
+              .div(numberToBN(childrenToFund.length))
+          }
+          if (valueToSend.gte(MIN_CHILD_BALANCE)) {
+            for (const child of childrenToFund) {
+              await this._fundChild(child, valueToSend)
+            }
+          } else {
+            logger.warn('Unable to fund children.  Balance too low.')
           }
         }
       }
@@ -717,7 +850,9 @@ class Purse {
 
         // Adjust the pendingCount for the account
         const checksummedFrom = this.web3.utils.toChecksumAddress(receipt.from)
-        if (this.accounts.hasOwnProperty(checksummedFrom)) {
+        if (
+          Object.prototype.hasOwnProperty.call(this.accounts, checksummedFrom)
+        ) {
           if (this.accounts[checksummedFrom].pendingCount > 0) {
             this.accounts[checksummedFrom].pendingCount -= 1
           } else {
@@ -746,7 +881,21 @@ class Purse {
         if (!tx) {
           logger.warn(`Transaction ${txHash} was dropped!  Re-broadcasting...`)
 
-          await sendRawTransaction(this.web3, this.pendingTransactions[txHash])
+          try {
+            await sendRawTransaction(
+              this.web3,
+              this.pendingTransactions[txHash]
+            )
+          } catch (err) {
+            logger.error(`error attempting to broadcast transaction ${txHash}`)
+            logger.error(err)
+            const txObj = await this.getPendingTransaction(txHash)
+            if (txObj) {
+              logger.debug(`Transaction object: ${JSON.stringify(txObj)}`)
+            } else {
+              logger.debug('no tx object stored')
+            }
+          }
 
           // Increment our internal counter.  No functional use yet, but good for testing.
           if (this.rebroadcastCounters[txHash]) {

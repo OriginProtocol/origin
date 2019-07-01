@@ -3,13 +3,16 @@ package com.origincatcher;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.bitgo.randombytes.RandomBytesPackage;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
+import com.imagepicker.ImagePickerPackage;
 import com.reactcommunity.rnlocalize.RNLocalizePackage;
 import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
 import com.rnfingerprint.FingerprintAuthPackage;
 import com.bebnev.RNUserAgentPackage;
 import io.sentry.RNSentryPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.bitgo.randombytes.RandomBytesPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.facebook.react.ReactNativeHost;
@@ -32,13 +35,16 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNDeviceInfo(),
+            new RandomBytesPackage(),
+            new ImageResizerPackage(),
+            new ImagePickerPackage(),
             new RNLocalizePackage(),
             new AndroidOpenSettingsPackage(),
             new FingerprintAuthPackage(),
             new RNUserAgentPackage(),
             new RNSentryPackage(),
             new RNGestureHandlerPackage(),
-            new RandomBytesPackage(),
             new ReactNativePushNotificationPackage(),
             new RNCWebViewPackage()
       );

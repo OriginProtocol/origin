@@ -167,9 +167,7 @@ async function main() {
       })
 
       logger.debug(
-        `Got ${
-          events.length
-        } unfiltered events within interval for ${contractKey}`
+        `Got ${events.length} unfiltered events within interval for ${contractKey}`
       )
 
       // Filter out events outside of interval (processedToBlock, toBlock].
@@ -240,7 +238,10 @@ logger.info(
   )}`
 )
 
-setNetwork(config.network, { performanceMode: false })
+setNetwork(config.network, {
+  performanceMode: false,
+  proxyAccountsEnabled: process.env.PROXY_ACCOUNTS_ENABLED === 'true'
+})
 main().catch(err => {
   logger.error('Error occurred in listener main() process:', err)
   logger.error('Exiting')

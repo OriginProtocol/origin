@@ -3,10 +3,12 @@ import { Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
 import formatHash from 'utils/formatHash'
+import Store from 'utils/store'
 
 import withIdentity from 'hoc/withIdentity'
 import withWallet from 'hoc/withWallet'
 import withConfig from 'hoc/withConfig'
+import withIsMobile from 'hoc/withIsMobile'
 
 import ProfileQuery from 'queries/Profile'
 
@@ -16,6 +18,8 @@ import Balances from 'components/Balances'
 import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
 import UserActivationLink from 'components/UserActivationLink'
+
+const store = Store('sessionStorage')
 
 const ProfileNav = ({ identity, identityLoading, open, onOpen, onClose }) => (
   <Query query={ProfileQuery} pollInterval={window.transactionPoll || 1000}>
@@ -92,7 +96,14 @@ const CreateIdentity = ({ onClose }) => (
   </>
 )
 
-const Identity = ({ id, wallet, identity, identityLoading, onClose }) => {
+const Identity = ({
+  id,
+  wallet,
+  identity,
+  identityLoading,
+  isMobileApp,
+  onClose
+}) => {
   if (identityLoading || !wallet) {
     return (
       <div className="identity-loading">
@@ -135,12 +146,14 @@ const Identity = ({ id, wallet, identity, identityLoading, onClose }) => {
       >
         <fbt desc="nav.profile.earnOGN">Earn OGN</fbt>
       </Link>
-      <Balances
-        account={id}
-        onClose={onClose}
-        title={<fbt desc="nav.profile.walletBalance">Wallet Balances</fbt>}
-        className="pt-3 pb-3"
-      />
+      {!isMobileApp && (
+        <Balances
+          account={id}
+          onClose={onClose}
+          title={<fbt desc="nav.profile.walletBalance">Wallet Balances</fbt>}
+          className="pt-3 pb-3"
+        />
+      )}
     </div>
   )
 }
@@ -155,6 +168,7 @@ const ProfileDropdownRaw = ({
 }) => {
   const { id } = data.web3.primaryAccount
   const address = `ETH Address: ${formatHash(wallet)}`
+  const devMode = store.get('developerMode')
 
   return (
     <>
@@ -178,7 +192,14 @@ const ProfileDropdownRaw = ({
             identityLoading={identityLoading}
             onClose={onClose}
           />
-          <div className="eth-address">{address}</div>
+          <div className="eth-address">
+            {address}
+            {!devMode ? null : (
+              <div className="mt-1">
+                {walletProxy === wallet ? 'No Proxy' : `Proxy: ${walletProxy}`}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>
@@ -187,7 +208,7 @@ const ProfileDropdownRaw = ({
 
 const ProfileDropdown = withConfig(withWallet(ProfileDropdownRaw))
 
-export default withWallet(withIdentity(ProfileNav))
+export default withIsMobile(withWallet(withIdentity(ProfileNav)))
 
 require('react-styl')(`
   .dropdown .nav-link
@@ -256,8 +277,8 @@ require('react-styl')(`
         text-align: center
         flex: 1
         .info
-          margin-bottom: 1rem
           margin-top: 0.75rem
+          margin-bottom: 0.75rem
           display: flex
           flex-direction: column
           align-items: center
@@ -270,6 +291,10 @@ require('react-styl')(`
            overflow: hidden
            width: 100%
            text-overflow: ellipsis
+          .attestations
+            flex-wrap: wrap
+            .attestation
+              margin-bottom: 0.5rem
         .earn-ogn
           border-radius: 3rem
           margin: 1.5rem 0 1.25rem 0

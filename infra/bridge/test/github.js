@@ -50,6 +50,7 @@ describe('github attestations', () => {
 
   it('should generate attestation on valid verification code', async () => {
     nock('https://github.com')
+      .matchHeader('User-Agent', 'OriginProtocol')
       .post('/login/oauth/access_token')
       .query({
         client_id: process.env.GITHUB_CLIENT_ID,
@@ -61,8 +62,13 @@ describe('github attestations', () => {
 
     nock('https://api.github.com')
       .matchHeader('Authorization', 'token 12345')
+      .matchHeader('User-Agent', 'OriginProtocol')
       .get('/user')
-      .reply(200, { id: 'Origin Protocol' })
+      .reply(200, {
+        id: '67890',
+        login: 'OriginProtocol',
+        html_url: 'https://github.com/OriginProtocol'
+      })
 
     const response = await request(app)
       .post('/api/attestations/github/verify')
@@ -83,32 +89,46 @@ describe('github attestations', () => {
       true
     )
     expect(response.body.data.attestation.site.siteName).to.equal('github.com')
-    expect(response.body.data.attestation.site.userId.verified).to.equal(true)
+    expect(response.body.data.attestation.site.userId.raw).to.equal('67890')
+    expect(response.body.data.attestation.site.username.raw).to.equal(
+      'OriginProtocol'
+    )
+    expect(response.body.data.attestation.site.profileUrl.raw).to.equal(
+      'https://github.com/OriginProtocol'
+    )
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
     expect(results.length).to.equal(1)
     expect(results[0].ethAddress).to.equal(ethAddress)
     expect(results[0].method).to.equal(AttestationTypes.GITHUB)
-    expect(results[0].value).to.equal('Origin Protocol')
+    expect(results[0].value).to.equal('67890')
+    expect(results[0].username).to.equal('OriginProtocol')
+    expect(results[0].profileUrl).to.equal('https://github.com/OriginProtocol')
   })
 
   it('should generate attestation on valid session', async () => {
     nock('https://github.com')
+      .matchHeader('User-Agent', 'OriginProtocol')
       .post('/login/oauth/access_token')
       .query({
         client_id: process.env.GITHUB_CLIENT_ID,
         client_secret: process.env.GITHUB_CLIENT_SECRET,
         redirect_uri: getAbsoluteUrl('/redirects/github/'),
         code: 'abcdefg',
-        state: 123
+        state: '123'
       })
       .reply(200, { access_token: '12345' })
 
     nock('https://api.github.com')
       .matchHeader('Authorization', 'token 12345')
+      .matchHeader('User-Agent', 'OriginProtocol')
       .get('/user')
-      .reply(200, { id: 'Origin Protocol' })
+      .reply(200, {
+        id: '67890',
+        login: 'OriginProtocol',
+        html_url: 'https://github.com/OriginProtocol'
+      })
 
     // Fake session
     const parentApp = express()
@@ -116,7 +136,7 @@ describe('github attestations', () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             code: 'abcdefg'
           }
@@ -130,7 +150,7 @@ describe('github attestations', () => {
       .post('/api/attestations/github/verify')
       .send({
         identity: ethAddress,
-        sid: 123
+        sid: '123'
       })
       .expect(200)
 
@@ -145,14 +165,22 @@ describe('github attestations', () => {
       true
     )
     expect(response.body.data.attestation.site.siteName).to.equal('github.com')
-    expect(response.body.data.attestation.site.userId.verified).to.equal(true)
+    expect(response.body.data.attestation.site.userId.raw).to.equal('67890')
+    expect(response.body.data.attestation.site.username.raw).to.equal(
+      'OriginProtocol'
+    )
+    expect(response.body.data.attestation.site.profileUrl.raw).to.equal(
+      'https://github.com/OriginProtocol'
+    )
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
     expect(results.length).to.equal(1)
     expect(results[0].ethAddress).to.equal(ethAddress)
     expect(results[0].method).to.equal(AttestationTypes.GITHUB)
-    expect(results[0].value).to.equal('Origin Protocol')
+    expect(results[0].value).to.equal('67890')
+    expect(results[0].username).to.equal('OriginProtocol')
+    expect(results[0].profileUrl).to.equal('https://github.com/OriginProtocol')
   })
 
   it('should error on invalid session', async () => {
@@ -162,7 +190,7 @@ describe('github attestations', () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             code: 'abcdefg'
           }
@@ -176,7 +204,7 @@ describe('github attestations', () => {
       .post('/api/attestations/github/verify')
       .send({
         identity: ethAddress,
-        sid: 12345
+        sid: '12345'
       })
       .expect(400)
 

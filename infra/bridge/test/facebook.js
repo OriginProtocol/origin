@@ -67,9 +67,9 @@ describe('facebook attestations', () => {
       .get('/me')
       .query({
         appsecret_proof: appSecretProof,
-        access_token: 12345
+        access_token: '12345'
       })
-      .reply(200, { name: 'Origin Protocol' })
+      .reply(200, { id: '67890', name: 'Origin Protocol' })
 
     const response = await request(app)
       .post('/api/attestations/facebook/verify')
@@ -92,14 +92,14 @@ describe('facebook attestations', () => {
     expect(response.body.data.attestation.site.siteName).to.equal(
       'facebook.com'
     )
-    expect(response.body.data.attestation.site.userId.verified).to.equal(true)
+    expect(response.body.data.attestation.site.userId.raw).to.equal('67890')
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
     expect(results.length).to.equal(1)
     expect(results[0].ethAddress).to.equal(ethAddress)
     expect(results[0].method).to.equal(AttestationTypes.FACEBOOK)
-    expect(results[0].value).to.equal('Origin Protocol')
+    expect(results[0].value).to.equal('67890')
   })
 
   it('should generate attestation on valid session', async () => {
@@ -110,7 +110,7 @@ describe('facebook attestations', () => {
         client_secret: process.env.FACEBOOK_CLIENT_SECRET,
         redirect_uri: getAbsoluteUrl('/redirects/facebook/'),
         code: 'abcdefg',
-        state: 123
+        state: '123'
       })
       .reply(200, { access_token: '12345' })
 
@@ -123,9 +123,9 @@ describe('facebook attestations', () => {
       .get('/me')
       .query({
         appsecret_proof: appSecretProof,
-        access_token: 12345
+        access_token: '12345'
       })
-      .reply(200, { name: 'Origin Protocol' })
+      .reply(200, { id: '67890', name: 'Origin Protocol' })
 
     // Fake session
     const parentApp = express()
@@ -133,7 +133,7 @@ describe('facebook attestations', () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             code: 'abcdefg'
           }
@@ -147,7 +147,7 @@ describe('facebook attestations', () => {
       .post('/api/attestations/facebook/verify')
       .send({
         identity: ethAddress,
-        sid: 123
+        sid: '123'
       })
       .expect(200)
 
@@ -164,14 +164,14 @@ describe('facebook attestations', () => {
     expect(response.body.data.attestation.site.siteName).to.equal(
       'facebook.com'
     )
-    expect(response.body.data.attestation.site.userId.verified).to.equal(true)
+    expect(response.body.data.attestation.site.userId.raw).to.equal('67890')
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
     expect(results.length).to.equal(1)
     expect(results[0].ethAddress).to.equal(ethAddress)
     expect(results[0].method).to.equal(AttestationTypes.FACEBOOK)
-    expect(results[0].value).to.equal('Origin Protocol')
+    expect(results[0].value).to.equal('67890')
   })
 
   it('should error on invalid session', async () => {
@@ -181,7 +181,7 @@ describe('facebook attestations', () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             code: 'abcdefg'
           }
@@ -195,7 +195,7 @@ describe('facebook attestations', () => {
       .post('/api/attestations/facebook/verify')
       .send({
         identity: ethAddress,
-        sid: 12345
+        sid: '12345'
       })
       .expect(400)
 

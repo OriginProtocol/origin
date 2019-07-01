@@ -45,6 +45,10 @@ const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
       title = <fbt desc="Purchases.title">Purchases</fbt>
     } else if (pathname.startsWith('/my-sales')) {
       title = <fbt desc="Sales.title">Sales</fbt>
+    } else if (pathname.match(/^\/create\/[a-z]+/)) {
+      return null
+    } else if (pathname.startsWith('/create')) {
+      title = <fbt desc="CreateListing.title">Create Listing</fbt>
     }
 
     // Make the hamburger menu absolute and hide branding and profile icon.
@@ -174,8 +178,9 @@ require('react-styl')(`
           background-color: initial
           padding: 0 0.25rem
           span
-            padding: 0.25rem 0.75rem;
-            border-radius: 1rem;
+            color: var(--dusk)
+            padding: 0.25rem 0.75rem
+            border-radius: 1rem
             &:hover,&.active
               background-color: rgba(0,0,0,0.1)
           &.active span

@@ -85,6 +85,59 @@ class Listing {
   }
 
   /**
+   * Gets a listing
+   * @param {string} id
+   */
+  static async get(id) {
+    return client.get({
+      index: LISTINGS_INDEX,
+      type: LISTINGS_TYPE,
+      id: id
+    })
+  }
+
+  /**
+   * Updates the score tags and score for a listing.
+   * Uses a small painless script that runs on the server to update the values.
+   * This reduces the race condition window when two systems could be updating
+   * the same listing at the same time. It also scales better.
+   *
+   * @param {string} id
+   * @param {string[]} scoreTags
+   */
+  static async updateScoreTags(id, scoreTags) {
+    const result = await client.get({
+      index: LISTINGS_INDEX,
+      type: LISTINGS_TYPE,
+      id: id
+    })
+    const listing = result._source
+    listing.scoreTags = scoreTags
+    const { scoreMultiplier } = await scoring.scoreListing(result._source)
+    listing.scoreMultiplier = scoreMultiplier
+    const body = {
+      script: {
+        lang: 'painless',
+        source: `
+          ctx._source.scoreTags = params.scoreTags;
+          ctx._source.scoreMultiplier = params.scoreMultiplier;
+        `,
+        params: {
+          scoreTags: scoreTags,
+          scoreMultiplier: scoreMultiplier
+        }
+      }
+    }
+    client.update({
+      index: LISTINGS_INDEX,
+      type: LISTINGS_TYPE,
+      id: id,
+      body
+    })
+    return listing
+  }
+
+  /**
    * Searches for listings.
    * @param {string} query - The search query.
    * @param {array} filters - Array of filter objects
@@ -105,6 +158,9 @@ class Listing {
     hiddenIds = [],
     featuredIds = []
   ) {
+    if (filters === undefined) {
+      filters = []
+    }
     const esQuery = {
       bool: {
         must: [],
@@ -123,6 +179,13 @@ class Listing {
     // Never return any invalid listings
     esQuery.bool.must_not.push({
       term: { valid: false }
+    })
+
+    // Never return any listings moderated as hidden
+    esQuery.bool.must_not.push({
+      terms: {
+        scoreTags: ['Hide', 'Delete']
+      }
     })
 
     if (hiddenIds.length > 0) {
@@ -241,7 +304,7 @@ class Listing {
             },
             source: `double score = _score;
 
-            if(doc['scoreMultiplier'] != null){
+            if(doc.containsKey('scoreMultiplier') && doc['scoreMultiplier'] != null){
               score *= doc['scoreMultiplier'].value
             }
 
@@ -276,7 +339,14 @@ class Listing {
         from: offset,
         size: numberOfItems,
         query: scoreQuery,
-        _source: ['title', 'description', 'price', 'commissionPerUnit']
+        _source: [
+          'title',
+          'description',
+          'price',
+          'commissionPerUnit',
+          'scoreMultiplier',
+          'scoreTags'
+        ]
       }
     })
 

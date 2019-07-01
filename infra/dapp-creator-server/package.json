@@ -27,16 +27,16 @@
   "author": "Tom Linton <tom@originprotocol.com>",
   "license": "MIT",
   "dependencies": {
-    "@babel/cli": "^7.2.0",
-    "@babel/core": "^7.3.4",
-    "@babel/node": "^7.2.0",
-    "@babel/preset-env": "^7.3.4",
-    "@google-cloud/dns": "^0.9.1",
-    "body-parser": "^1.18.3",
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/node": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@google-cloud/dns": "^1.1.2",
+    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
-    "dotenv": "^6.2.0",
-    "envkey": "^1.2.4",
-    "express": "^4.16.4",
+    "dotenv": "^8.0.0",
+    "envkey": "^1.2.6",
+    "express": "^4.17.1",
     "ipfs-http-client": "^29.1.0",
     "logplease": "^1.2.15",
     "per-env": "^1.0.2",
@@ -45,9 +45,9 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^5.2.0",
-    "nodemon": "^1.18.7",
-    "supertest": "^3.4.1"
+    "mocha": "^6.1.4",
+    "nodemon": "^1.19.1",
+    "supertest": "^4.0.2"
   },
   "babel": {
     "presets": [

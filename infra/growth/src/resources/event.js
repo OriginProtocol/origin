@@ -8,7 +8,12 @@ const AttestationServiceToEventType = {
   facebook: GrowthEventTypes.FacebookAttestationPublished,
   phone: GrowthEventTypes.PhoneAttestationPublished,
   twitter: GrowthEventTypes.TwitterAttestationPublished,
-  google: GrowthEventTypes.GoogleAttestationPublished
+  google: GrowthEventTypes.GoogleAttestationPublished,
+  github: GrowthEventTypes.GitHubAttestationPublished,
+  linkedin: GrowthEventTypes.LinkedInAttestationPublished,
+  kakao: GrowthEventTypes.KakaoAttestationPublished,
+  wechat: GrowthEventTypes.WeChatAttestationPublished,
+  website: GrowthEventTypes.WebsiteAttestationPublished
 }
 
 class GrowthEvent {
@@ -58,9 +63,7 @@ class GrowthEvent {
     const numToInsert = num - pastEvents.length
     if (numToInsert <= 0) {
       logger.info(
-        `Skipped insert: found ${
-          pastEvents.length
-        } past growth event ${eventType} for account ${ethAddress}`
+        `Skipped insert: found ${pastEvents.length} past growth event ${eventType} for account ${ethAddress}`
       )
       return
     }

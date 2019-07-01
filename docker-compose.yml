@@ -48,6 +48,7 @@ services:
       - ./packages/services/:/app/packages/services/
       - ./packages/services/data/localhost.key:/app/packages/services/data/localhost.key
       - ./packages/services/data/localhost.cert:/app/packages/services/data/localhost.cert
+      - ./packages/web3-provider/:/app/packages/web3-provider/
       - ./packages/graphql/:/app/packages/graphql/
       - ./packages/eventsource/:/app/packages/eventsource/
       - ./packages/event-cache/:/app/packages/event-cache/
@@ -172,6 +173,7 @@ services:
       - ELASTICSEARCH_HOST=elasticsearch:9200
       - ELASTICSEARCH=true
       - NETWORK=docker
+      - MODERATOR_ADDRESSES=0x627306090abaB3A6e1400e9345bC60c78a8BEf57,0xf17f52151EbEF6C7334FAD080c5704D77216b732
       - ENVKEY=
     depends_on:
       - postgres

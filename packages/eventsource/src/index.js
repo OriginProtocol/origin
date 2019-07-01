@@ -6,7 +6,9 @@ const startCase = require('lodash/startCase')
 const pick = require('lodash/pick')
 const _get = require('lodash/get')
 const memoize = require('lodash/memoize')
+
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+const MULTI_UNIT_TYPES = ['UnitListing', 'GiftCardListing']
 
 const getListingDirect = async (contract, listingId) =>
   await contract.methods.listings(listingId).call()
@@ -272,7 +274,8 @@ class OriginEventSource {
       contract: this.contract,
       status,
       events,
-      multiUnit: __typename === 'UnitListing' && data.unitsTotal > 1,
+      multiUnit:
+        MULTI_UNIT_TYPES.indexOf(__typename) > -1 && data.unitsTotal > 1,
       commissionPerUnit,
       commission
     })

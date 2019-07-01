@@ -1,6 +1,7 @@
 'use strict'
 
 import Web3 from 'web3'
+import get from 'lodash.get'
 
 const web3 = new Web3()
 const MAX_ADDRESS_LENGTH = 10
@@ -47,4 +48,36 @@ export function truncateAddress(address = '', chars = 5) {
 export function truncate(data, chars = 5) {
   if (chars && data.length <= chars) return data
   return data.substr(0, chars) + '...'
+}
+
+/* Determine the next onboarding step from the state of the onboarding store.
+ *
+ * This logic is abstracted here to avoid duplicating it. It is used by a HOC
+ * (withOnboardingSteps) but it is also needed in Navigation.js to extend
+ * a react-navigation navigator. The HOC is not compatible.
+ */
+export function getNextOnboardingStep(onboardingStore, settingsStore) {
+  if (
+    !onboardingStore.emailAttestation &&
+    !get(onboardingStore, 'verifiedAttestations', []).includes('email')
+  ) {
+    return 'Email'
+  } else if (
+    onboardingStore.phoneAttestation === null &&
+    !get(onboardingStore, 'verifiedAttestations', []).includes('phone')
+  ) {
+    return 'Phone'
+  } else if (!onboardingStore.firstName || !onboardingStore.lastName) {
+    return 'Name'
+  } else if (onboardingStore.avatarUri === null) {
+    return 'Avatar'
+  } else if (
+    onboardingStore.growth === null &&
+    !onboardingStore.noRewardsDismissed
+  ) {
+    return 'Growth'
+  } else if (!settingsStore.pin && !settingsStore.biometryType) {
+    return 'Authentication'
+  }
+  return 'Ready'
 }

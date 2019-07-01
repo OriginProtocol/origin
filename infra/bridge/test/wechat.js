@@ -64,7 +64,7 @@ describe('wechat attestations', () => {
     nock('https://api.weixin.qq.com')
       .get('/sns/userinfo')
       .query({
-        access_token: 12345,
+        access_token: '12345',
         openid: 67890
       })
       .reply(200, { unionid: 'Origin Protocol' })
@@ -88,7 +88,9 @@ describe('wechat attestations', () => {
       true
     )
     expect(response.body.data.attestation.site.siteName).to.equal('wechat.com')
-    expect(response.body.data.attestation.site.userId.verified).to.equal(true)
+    expect(response.body.data.attestation.site.userId.raw).to.equal(
+      'Origin Protocol'
+    )
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
@@ -106,14 +108,14 @@ describe('wechat attestations', () => {
         secret: process.env.WECHAT_CLIENT_SECRET,
         code: 'abcdefg',
         grant_type: 'authorization_code',
-        state: 123
+        state: '123'
       })
       .reply(200, { access_token: '12345', openid: 67890 })
 
     nock('https://api.weixin.qq.com')
       .get('/sns/userinfo')
       .query({
-        access_token: 12345,
+        access_token: '12345',
         openid: 67890
       })
       .reply(200, { unionid: 'Origin Protocol' })
@@ -123,7 +125,7 @@ describe('wechat attestations', () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             code: 'abcdefg'
           }
@@ -137,7 +139,7 @@ describe('wechat attestations', () => {
       .post('/api/attestations/wechat/verify')
       .send({
         identity: ethAddress,
-        sid: 123
+        sid: '123'
       })
       .expect(200)
 
@@ -152,7 +154,9 @@ describe('wechat attestations', () => {
       true
     )
     expect(response.body.data.attestation.site.siteName).to.equal('wechat.com')
-    expect(response.body.data.attestation.site.userId.verified).to.equal(true)
+    expect(response.body.data.attestation.site.userId.raw).to.equal(
+      'Origin Protocol'
+    )
 
     // Verify attestation was recorded in the database
     const results = await Attestation.findAll()
@@ -169,7 +173,7 @@ describe('wechat attestations', () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             code: 'abcdefg'
           }
@@ -183,7 +187,7 @@ describe('wechat attestations', () => {
       .post('/api/attestations/wechat/verify')
       .send({
         identity: ethAddress,
-        sid: 12345
+        sid: '12345'
       })
       .expect(400)
 

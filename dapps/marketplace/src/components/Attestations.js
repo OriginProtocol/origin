@@ -77,7 +77,18 @@ require('react-styl')(`
       border-color: #6331dd
       background-color: rgba(#6331dd, 75%)
       background-image: url(images/identity/website-icon-light.svg)
-
+    &.github
+      background-image: url(images/growth/github-icon.svg)
+      background-size: 100%
+      border: 0
+    &.linkedin
+      background-image: url(images/growth/linkedin-icon.svg)
+      background-size: 100%
+      border: 0
+    &.kakao
+      background-image: url(images/growth/kakao-icon.svg)
+      background-size: 100%
+      border: 0
   .attestations-small .attestation
     width: 1.5rem
     height: 1.5rem

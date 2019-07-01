@@ -363,9 +363,7 @@ class BaseRule {
   }
 
   str() {
-    return `Campaign ${this.campaignId} / Rule ${this.ruleId} / Level ${
-      this.levelId
-    }`
+    return `Campaign ${this.campaignId} / Rule ${this.ruleId} / Level ${this.levelId}`
   }
 
   /**
@@ -482,7 +480,7 @@ class BaseRule {
       // For some rules, there are 2 scopes defined:
       //  1. config.scope should be used for computing earned rewards.
       //  2. config.statusScope should be used for computing the status.
-      // This is for the case where if he rule was completed in a prior campaign,
+      // This is for the case where if the rule was completed in a prior campaign,
       // then we want to show it as Complete.
       // For example Attestation rules can only be completed once during a campaign and
       // later campaigns should show them as Completed. We can achieve this behavior

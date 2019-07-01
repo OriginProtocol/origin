@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import get from 'lodash/get'
-import Store from 'utils/store'
 import { fbt } from 'fbt-runtime'
 
 import withWeb3 from 'hoc/withWeb3'
@@ -36,14 +35,11 @@ import AboutCrypto from './about/AboutCrypto'
 import { applyConfiguration } from 'utils/marketplaceCreator'
 import CurrencyContext from 'constants/CurrencyContext'
 
-const store = Store('localStorage')
-
 class App extends Component {
   state = {
     hasError: false,
     displayMobileModal: false,
-    mobileModalDismissed: false,
-    currency: store.get('currency', 'fiat-USD')
+    mobileModalDismissed: false
   }
 
   componentDidMount() {
@@ -108,10 +104,10 @@ class App extends Component {
         this.props.location.pathname.match(/^\/campaigns\/invitations$/g)) ||
       (isMobile &&
         this.props.location.pathname.match(/^\/campaigns\/verifications$/g)) ||
-      (isMobile && this.props.location.pathname.match(/^\/user.*/g))
+      (isMobile && this.props.location.pathname.match(/\/onboard\/finished/g))
 
     return (
-      <CurrencyContext.Provider value={this.state.currency}>
+      <CurrencyContext.Provider value={this.props.currency}>
         {!hideNavbar && (
           <Nav
             onGetStarted={() => this.setState({ mobileModalDismissed: false })}
@@ -137,8 +133,8 @@ class App extends Component {
                   {...props}
                   locale={this.props.locale}
                   onLocale={this.props.onLocale}
-                  currency={this.state.currency}
-                  onCurrency={currency => this.setCurrency(currency)}
+                  currency={this.props.currency}
+                  onCurrency={this.props.onCurrency}
                 />
               )}
             />
@@ -172,15 +168,11 @@ class App extends Component {
           locale={this.props.locale}
           onLocale={this.props.onLocale}
           creatorConfig={creatorConfig}
-          currency={this.state.currency}
+          currency={this.props.currency}
           onCurrency={this.props.onCurrency}
         />
       </CurrencyContext.Provider>
     )
-  }
-
-  setCurrency(currency) {
-    this.setState({ currency }, () => store.set('currency', currency))
   }
 }
 

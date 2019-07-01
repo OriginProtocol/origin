@@ -123,9 +123,13 @@ router.post('/verify', phoneVerifyCode, async (req, res) => {
     })
   }
 
+  const method = req.session.phoneVerificationMethod
+    ? req.session.phoneVerificationMethod
+    : 'sms'
+
   const attestationBody = {
     verificationMethod: {
-      [req.session.phoneVerificationMethod]: true
+      [method]: true
     },
     phone: {
       verified: true
@@ -145,7 +149,9 @@ router.post('/verify', phoneVerifyCode, async (req, res) => {
   const attestation = await generateAttestation(
     AttestationTypes.PHONE,
     attestationBody,
-    attestationValue,
+    {
+      uniqueId: attestationValue
+    },
     req.body.identity,
     req.ip
   )

@@ -69,7 +69,8 @@ router.post('/verify', githubVerify, async (req, res) => {
       .post(`${constants.GITHUB_BASE_AUTH_URL}/access_token`)
       .query(params)
       .set({
-        Accept: 'application/json'
+        Accept: 'application/json',
+        'User-Agent': 'OriginProtocol'
       })
     accessToken = response.body.access_token
   } catch (error) {
@@ -84,7 +85,8 @@ router.post('/verify', githubVerify, async (req, res) => {
   let userDataResponse
   try {
     userDataResponse = await request.get(constants.GITHUB_PROFILE_URL).set({
-      Authorization: `token ${accessToken}`
+      Authorization: `token ${accessToken}`,
+      'User-Agent': 'OriginProtocol'
     })
   } catch (error) {
     logger.error(error)
@@ -100,7 +102,13 @@ router.post('/verify', githubVerify, async (req, res) => {
     site: {
       siteName: 'github.com',
       userId: {
-        verified: true
+        raw: String(userDataResponse.body.id)
+      },
+      username: {
+        raw: userDataResponse.body.login
+      },
+      profileUrl: {
+        raw: userDataResponse.body.html_url
       }
     }
   }
@@ -109,7 +117,11 @@ router.post('/verify', githubVerify, async (req, res) => {
     const attestation = await generateAttestation(
       AttestationTypes.GITHUB,
       attestationBody,
-      userDataResponse.body.id,
+      {
+        uniqueId: userDataResponse.body.id,
+        username: userDataResponse.body.login,
+        profileUrl: userDataResponse.body.html_url
+      },
       req.body.identity,
       req.ip
     )

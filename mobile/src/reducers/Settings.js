@@ -3,13 +3,19 @@
 import { SettingsConstants } from 'actions/Settings'
 import { NETWORKS } from '../constants'
 
+let defaultNetwork
+if (__DEV__) {
+  defaultNetwork = NETWORKS.find(n => n.name === 'Rinkeby')
+} else {
+  defaultNetwork = NETWORKS.find(n => n.name === 'Mainnet')
+}
+
 const initialState = {
-  network: NETWORKS.find(n => n.name === 'Mainnet'),
+  network: defaultNetwork,
   deviceToken: null,
-  email: null,
+  language: null,
   pin: null,
-  biometryType: null,
-  language: null
+  biometryType: null
 }
 
 export default function Settings(state = initialState, action = {}) {
@@ -22,9 +28,6 @@ export default function Settings(state = initialState, action = {}) {
 
     case SettingsConstants.SET_DEVICE_TOKEN:
       return { ...state, deviceToken: action.deviceToken }
-
-    case SettingsConstants.SET_EMAIL:
-      return { ...state, email: action.email }
 
     case SettingsConstants.SET_PIN:
       return { ...state, pin: action.pin }

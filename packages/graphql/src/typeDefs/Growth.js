@@ -34,9 +34,11 @@ module.exports = `
     Facebook
     Google
     Website
-    MobileApp
+    MobileAccountCreated
     Kakao
-    Wechat
+    WeChat
+    GitHub
+    LinkedIn
     Referral
     Profile
     ListingCreated
