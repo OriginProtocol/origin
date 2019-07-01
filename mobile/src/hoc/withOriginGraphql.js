@@ -87,19 +87,8 @@ const withOriginGraphql = WrappedComponent => {
       })
     }
 
-    getIdentity = async () => {
-      // Get the wallet in case the identity was deployed via proxy
-      const walletResponse = await this.getWallet()
-      const primaryAccount = get(walletResponse, 'data.web3.primaryAccount')
-      if (!primaryAccount) {
-        return
-      }
-      // Request the identity through proxy if necessary
-      const identityAddress = primaryAccount.proxy.id
-        ? primaryAccount.proxy.id
-        : primaryAccount.id
-
-      return this._sendGraphqlQuery(identity, { id: identityAddress })
+    getIdentity = async (id) => {
+      return this._sendGraphqlQuery(identity, { id })
     }
 
     getWallet = () => {
