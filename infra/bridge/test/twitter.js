@@ -136,7 +136,7 @@ describe('twitter attestations', async () => {
       .post('/api/attestations/twitter/verify')
       .send({
         identity: ethAddress,
-        sid: 123
+        sid: '123'
       })
       .expect(200)
 
@@ -200,7 +200,7 @@ describe('twitter attestations', async () => {
       .post('/api/attestations/twitter/verify')
       .send({
         identity: ethAddress,
-        sid: 123
+        sid: '123'
       })
       .expect(401)
 
@@ -238,7 +238,7 @@ describe('twitter attestations', async () => {
       .post('/api/attestations/twitter/verify')
       .send({
         identity: ethAddress,
-        sid: 1234432
+        sid: '1234432'
       })
       .expect(400)
 
@@ -263,7 +263,7 @@ describe('twitter attestations', async () => {
       .post('/api/attestations/twitter/verify')
       .send({
         identity: ethAddress,
-        sid: 1234432
+        sid: '1234432'
       })
       .expect(400)
 

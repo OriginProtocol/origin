@@ -65,7 +65,7 @@ describe('google attestations', () => {
     nock(process.env.GOOGLE_BASE_API_URL)
       .get('/oauth2/v2/userinfo')
       .query({
-        access_token: 12345
+        access_token: '12345'
       })
       .reply(200, { id: '67890', email: 'origin@originprotocol.com' })
 
@@ -108,14 +108,14 @@ describe('google attestations', () => {
         redirect_uri: getAbsoluteUrl('/redirects/google/'),
         code: 'abcdefg',
         grant_type: 'authorization_code',
-        state: 123
+        state: '123'
       })
       .reply(200, { access_token: '12345' })
 
     nock(process.env.GOOGLE_BASE_API_URL)
       .get('/oauth2/v2/userinfo')
       .query({
-        access_token: 12345
+        access_token: '12345'
       })
       .reply(200, { id: '67890', email: 'origin@originprotocol.com' })
 
@@ -125,7 +125,7 @@ describe('google attestations', () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             code: 'abcdefg'
           }
@@ -139,7 +139,7 @@ describe('google attestations', () => {
       .post('/api/attestations/google/verify')
       .send({
         identity: ethAddress,
-        sid: 123
+        sid: '123'
       })
       .expect(200)
 
@@ -172,7 +172,7 @@ describe('google attestations', () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             code: 'abcdefg'
           }
@@ -186,7 +186,7 @@ describe('google attestations', () => {
       .post('/api/attestations/google/verify')
       .send({
         identity: ethAddress,
-        sid: 12345
+        sid: '12345'
       })
       .expect(400)
 
