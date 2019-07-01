@@ -266,5 +266,3 @@ const styles = StyleSheet.create({
   ...CommonStyles,
   ...OnboardingStyles
 })
-
-console.log(styles)
