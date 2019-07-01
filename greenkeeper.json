@@ -1,0 +1,50 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "dapps/admin/package.json",
+        "dapps/marketplace/package.json",
+        "devops/cloud-functions/gcb-discord-notifications/package.json",
+        "devops/cloud-functions/gcf-pin-ipfs-hash/package.json",
+        "devops/packages/logformatter/package.json",
+        "infra/bridge/package.json",
+        "infra/cron/package.json",
+        "infra/dapp-creator-client/package.json",
+        "infra/dapp-creator-server/package.json",
+        "infra/discovery/package.json",
+        "infra/faucet/package.json",
+        "infra/growth/package.json",
+        "infra/identity/package.json",
+        "infra/ipfs-proxy/package.json",
+        "infra/messaging/package.json",
+        "infra/notifications/package.json",
+        "infra/relayer/package.json",
+        "infra/token-transfer-client/package.json",
+        "infra/token-transfer-server/package.json",
+        "mobile/package.json",
+        "mobile/src/actions/package.json",
+        "mobile/src/components/package.json",
+        "mobile/src/graphql/package.json",
+        "mobile/src/hoc/package.json",
+        "mobile/src/locales/package.json",
+        "mobile/src/reducers/package.json",
+        "mobile/src/screens/package.json",
+        "mobile/src/styles/package.json",
+        "mobile/src/utils/package.json",
+        "package.json",
+        "packages/contracts/package.json",
+        "packages/event-cache/package.json",
+        "packages/eventsource/package.json",
+        "packages/graphql/package.json",
+        "packages/ip2geo/package.json",
+        "packages/ipfs/package.json",
+        "packages/messaging-client/package.json",
+        "packages/mobile-bridge/package.json",
+        "packages/services/package.json",
+        "packages/token/package.json",
+        "packages/validator/package.json",
+        "packages/web3-provider/package.json"
+      ]
+    }
+  }
+}
