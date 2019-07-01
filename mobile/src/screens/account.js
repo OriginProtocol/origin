@@ -139,8 +139,6 @@ class AccountScreen extends Component {
                 size="large"
                 type="primary"
                 disabled={isActive}
-                style={styles.button}
-                textStyle={{ fontSize: 18, fontWeight: '900' }}
                 title={fbt(
                   'Make Active Account',
                   'AccountScreen.makeActiveAccountButton'
@@ -157,8 +155,6 @@ class AccountScreen extends Component {
                 <OriginButton
                   size="large"
                   type="primary"
-                  style={styles.button}
-                  textStyle={{ fontSize: 18, fontWeight: '900' }}
                   title={fbt(
                     'Show Recovery Phrase',
                     'AccountScreen.showRecoveryPhraseButton'
@@ -175,8 +171,6 @@ class AccountScreen extends Component {
                 <OriginButton
                   size="large"
                   type="primary"
-                  style={styles.button}
-                  textStyle={{ fontSize: 18, fontWeight: '900' }}
                   title={fbt(
                     'Copy Recovery Phrase',
                     'AccountScreen.copyRecoveryPhraseButton'
@@ -190,8 +184,6 @@ class AccountScreen extends Component {
                 <OriginButton
                   size="large"
                   type="primary"
-                  style={styles.button}
-                  textStyle={{ fontSize: 18, fontWeight: '900' }}
                   title={fbt(
                     'Show Private Key',
                     'AccountScreen.showPrivateKeyButton'
@@ -206,8 +198,6 @@ class AccountScreen extends Component {
                 <OriginButton
                   size="large"
                   type="primary"
-                  style={styles.button}
-                  textStyle={{ fontSize: 18, fontWeight: '900' }}
                   title={fbt(
                     'Copy Private Key',
                     'AccountScreen.copyPrivateKeyButton'
@@ -221,8 +211,6 @@ class AccountScreen extends Component {
                 size="large"
                 type="danger"
                 disabled={isActive}
-                style={styles.button}
-                textStyle={{ fontSize: 18, fontWeight: '900' }}
                 title={fbt(
                   'Delete Account',
                   'AccountScreen.deleteAccountButton'
@@ -260,10 +248,6 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingBottom: 20
-  },
-  button: {
-    marginBottom: 10,
-    marginHorizontal: 20
   },
   buttonsContainer: {
     marginBottom: 10,

@@ -146,8 +146,6 @@ class ImportedScreen extends Component {
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Continue', 'ImportedScreen.continueButton')}
             onPress={() =>
               this.props.navigation.navigate(this.props.nextOnboardingStep)

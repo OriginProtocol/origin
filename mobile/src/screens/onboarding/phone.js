@@ -280,8 +280,6 @@ class PhoneScreen extends Component {
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Continue', 'PhoneScreen.continueButton')}
             disabled={
               !this.state.phoneValue.length ||
@@ -341,16 +339,12 @@ class PhoneScreen extends Component {
           <OriginButton
             size="large"
             type="link"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Skip', 'PhoneScreen.skipButton')}
             onPress={this.handleSkip}
           />
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Verify', 'PhoneScreen.verifyButton')}
             disabled={
               this.state.verificationCode.length < 6 ||

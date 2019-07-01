@@ -49,7 +49,6 @@ class WelcomeScreen extends Component {
               <OriginButton
                 size="large"
                 type="primary"
-                textStyle={styles.buttonText}
                 title={fbt(
                   'Create a wallet',
                   'WelcomeScreen.createWalletButton'
@@ -70,7 +69,6 @@ class WelcomeScreen extends Component {
               <OriginButton
                 size="large"
                 type="link"
-                textStyle={styles.buttonText}
                 title={fbt(
                   'I already have a wallet',
                   'WelcomeScreen.importWalletButton'
@@ -86,7 +84,6 @@ class WelcomeScreen extends Component {
             <OriginButton
               size="large"
               type="primary"
-              textStyle={styles.buttonText}
               title={fbt('Continue', 'WelcomeScreen.continueButton')}
               onPress={() => {
                 this.props.navigation.navigate(this.props.nextOnboardingStep)

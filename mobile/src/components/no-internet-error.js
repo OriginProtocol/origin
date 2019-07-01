@@ -22,7 +22,6 @@ class NoInternetError extends Component {
         <OriginButton
           size="large"
           type="white"
-          textStyle={styles.buttonText}
           title={fbt('Retry', 'NoInternetError.retryButton')}
           onPress={() => {
             this.setState({ loading: true })

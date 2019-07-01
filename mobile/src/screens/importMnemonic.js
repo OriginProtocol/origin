@@ -120,8 +120,6 @@ class ImportAccountScreen extends Component {
               <OriginButton
                 size="large"
                 type="primary"
-                style={styles.button}
-                textStyle={styles.buttonText}
                 title={fbt('Continue', 'ImportMnemonicScreen.continueButton')}
                 onPress={this.handleSubmit}
                 loading={this.state.loading}

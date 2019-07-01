@@ -221,7 +221,6 @@ class EmailScreen extends Component {
           <OriginButton
             size="large"
             type="primary"
-            textStyle={styles.buttonText}
             title={fbt('Continue', 'EmailScreen.continueButton')}
             disabled={
               !this.state.emailValue.length ||

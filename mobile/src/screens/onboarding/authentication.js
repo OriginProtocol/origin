@@ -122,8 +122,6 @@ class AuthenticationScreen extends Component {
             <OriginButton
               size="large"
               type="primary"
-              style={styles.button}
-              textStyle={{ fontSize: 18, fontWeight: '900' }}
               title={biometryButtonTitle}
               onPress={() => {
                 TouchID.authenticate('Enable access to Origin Marketplace App')
@@ -141,8 +139,6 @@ class AuthenticationScreen extends Component {
           <OriginButton
             size="large"
             type="link"
-            style={styles.button}
-            textStyle={{ fontSize: 16, fontWeight: '900' }}
             title={fbt(
               'Create a Pin Code',
               'AuthenticationScreen.createPinCode'

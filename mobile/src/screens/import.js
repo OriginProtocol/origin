@@ -26,8 +26,6 @@ class ImportAccountScreen extends Component {
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={styles.buttonText}
             title={fbt(
               'Use Recovery Phrase',
               'ImportScreen.useRecoveryPhraseButton'
@@ -37,8 +35,6 @@ class ImportAccountScreen extends Component {
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={styles.buttonText}
             title={fbt('Use Private Key', 'ImportScreen.usePrivateKeyButton')}
             onPress={() => this.props.navigation.navigate('ImportPrivateKey')}
           />

@@ -111,20 +111,16 @@ class UpdatePrompt extends React.Component {
               </>
             )}
           </View>
-          <View style={styles.buttonContainer}>
+          <View style={[ styles.container, styles.buttonContainer ]}>
             <OriginButton
               size="large"
               type="primary"
-              style={styles.button}
-              textStyle={{ fontSize: 18, fontWeight: '900' }}
               title={fbt('Update', 'UpdateScreen.updateButton')}
               onPress={this.openStore}
             />
             <OriginButton
               size="large"
               type="link"
-              style={styles.button}
-              textStyle={{ fontSize: 18, color: 'white' }}
               title={fbt('Not now', 'UpdateScreen.cancelButton')}
               onPress={() => this.setState({ upgrade: null })}
             />

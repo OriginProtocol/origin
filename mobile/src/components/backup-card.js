@@ -33,7 +33,6 @@ const BackupCard = ({ onRequestBackup, onRequestClose, wallet }) => {
         <OriginButton
           size="large"
           type="primary"
-          textStyle={styles.buttonText}
           title={
             isPrivateKey
               ? fbt('Back up private key', 'BackupCard.backupButton')

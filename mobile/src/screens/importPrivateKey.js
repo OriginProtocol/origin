@@ -120,8 +120,6 @@ class ImportAccountScreen extends Component {
               <OriginButton
                 size="large"
                 type="primary"
-                style={styles.button}
-                textStyle={{ fontSize: 18, fontWeight: '900' }}
                 title={fbt('Continue', 'ImportPrivateKeyScreen.continueButton')}
                 onPress={this.handleSubmit}
                 loading={this.state.loading}
