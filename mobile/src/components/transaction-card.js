@@ -10,6 +10,7 @@ import Address from 'components/address'
 import OriginButton from 'components/origin-button'
 import currencies from 'utils/currencies'
 import CommonStyles from 'styles/common'
+import CardStyles from 'styles/card'
 
 const TransactionCard = props => {
   const { msgData, fiatCurrency, wallet } = props
@@ -251,6 +252,7 @@ export default connect(mapStateToProps)(TransactionCard)
 
 const styles = StyleSheet.create({
   ...CommonStyles,
+  ...CardStyles,
   account: {
     color: '#94a7b5',
     fontFamily: 'Lato',
