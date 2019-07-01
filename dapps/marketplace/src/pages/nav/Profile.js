@@ -25,7 +25,7 @@ const store = Store('sessionStorage')
 
 const ProfileNav = ({ identity, identityLoaded, open, onOpen, onClose }) => {
   const EarnTokens = withEnrolmentModal('a')
- 
+
   const [rewardsModal, setRewardsModal] = useState(false)
 
   return (
@@ -70,12 +70,14 @@ const ProfileNav = ({ identity, identityLoaded, open, onOpen, onClose }) => {
                 <Avatar profile={identity} />
               </a>
             </Dropdown>
-            {rewardsModal && <EarnTokens
-              className="d-none"
-              startopen="true"
-              onNavigation={() => setRewardsModal(false)}
-              onClose={() => setRewardsModal(false)}
-            />}
+            {rewardsModal && (
+              <EarnTokens
+                className="d-none"
+                startopen="true"
+                onNavigation={() => setRewardsModal(false)}
+                onClose={() => setRewardsModal(false)}
+              />
+            )}
           </>
         )
       }}
