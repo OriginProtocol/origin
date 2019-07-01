@@ -36,7 +36,8 @@ const TransactionProgress = ({
     if (offer.status === 4) {
       return <Finalized party="seller" {...props} />
     } else if (offer.status === 2) {
-      if (offer.finalizes < +new Date() / 1000) {
+      //if (offer.finalizes < +new Date() / 1000) {
+      if (true) {
         return <SellerFinalize {...props} refetch={refetch} />
       } else {
         return <OfferAcceptedSeller {...props} />
@@ -56,7 +57,6 @@ const TransactionProgress = ({
 
   if (offer.status === 2) {
     if (isBuyer || isSeller) {
-      //return <ReviewAndFinalize {...props} refetch={refetch} />
       return <OfferAcceptedBuyer {...props} refetch={refetch} />
     }
     return <TransactionStages {...props} />
@@ -173,12 +173,12 @@ class ReviewAndFinalize extends Component {
 const SellerFinalize = ({ offer, refetch, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
-      <h4>Next Step:</h4>
-      <div className="next-step">
-        <fbt desc="Progress.completeAndCollect">
-          Complete the sale to collect your funds
+      <h4>
+        <fbt desc="Progress.completeSaleAndCollect">
+          Collect your funds.
         </fbt>
-      </div>
+      </h4>
+      <Stages mini="true" offer={offer} />
       <div className="help">
         <fbt desc="Progress.fundsHeld">
           Funds are being held in escrow until the sale is completed. Click
@@ -196,7 +196,6 @@ const SellerFinalize = ({ offer, refetch, loading }) => (
         </FinalizeOffer>
       </div>
     </div>
-    <Stages mini="true" offer={offer} />
   </div>
 )
 
@@ -399,7 +398,7 @@ require('react-styl')(`
       margin-bottom: 0.25rem
       text-align: center
     .help
-      font-size: 14px
+      font-size: 18px
       margin-bottom: 1.5rem
     .review
       font-size: 18px
@@ -429,7 +428,7 @@ require('react-styl')(`
       &::after
         content: " \\203A"
       &.withdraw
-        font-size: 12px
+        font-size: 18px
         padding-top: 0
         font-weight: normal
     .stages
@@ -460,10 +459,9 @@ require('react-styl')(`
         content: ""
         background-color: #f3f7f9
         position: absolute
-        margin-right: 50%
-        transform: translateX(50%)
+        left: 50%
         z-index: -1
-        width: 100vw
+        width: 50vw
         height: 100%
       .top
         padding: 30px 0px
