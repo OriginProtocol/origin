@@ -59,6 +59,13 @@ export default Dropdown
 
 require('react-styl')(`
   .dropdown:not(.show)
+    .dropdown-menu
+      display: none
     .dropdown-menu-bg
       display: none !important
+    
+  @media (max-width: 767.98px)
+    .dropdown:not(.show)
+      .dropdown-menu
+        display: block
 `)
