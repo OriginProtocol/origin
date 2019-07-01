@@ -10,7 +10,7 @@ const { tokenToNaturalUnits } = require('../src/util/token')
 
 function checkExpectedState(state, expectedState) {
   expect(state.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-  expect(state.actions.length).to.equal(30)
+  expect(state.actions.length).to.equal(31)
 
   const actionByRuleId = {}
   for(const action of state.actions) {
@@ -82,7 +82,7 @@ describe('Apollo adapter - July campaign', () => {
     expect(this.crules.levels[1]).to.be.an('object')
     expect(this.crules.levels[1].rules.length).to.equal(10)
     expect(this.crules.levels[2]).to.be.an('object')
-    expect(this.crules.levels[2].rules.length).to.equal(19) // TODO: adjust when adding new listings
+    expect(this.crules.levels[2].rules.length).to.equal(20) // TODO: adjust when adding new listings
 
     // Mock the getEvents method to use events from this.events.
     // When writing a test, be aware that this.events is global and shared with other tests.
@@ -292,8 +292,13 @@ describe('Apollo adapter - July campaign', () => {
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenToNaturalUnits(50), currency: 'OGN' }
+      },
+      ListingPurchase2912: {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(75), currency: 'OGN' }
       }
-      // TODO: add more listings
     }
 
     this.expectedNonSignedInState = {}

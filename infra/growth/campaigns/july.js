@@ -337,6 +337,25 @@ const julyConfig = {
         },
         // KOREA - Listings
         {
+          id: 'ListingPurchase2912',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-2912',
+            reward: {
+              amount: tokenToNaturalUnits(75),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing2912-icon.png',
+            titleKey: 'growth.purchase.listing2912.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
           id: 'ListingPurchase2865',
           class: 'ListingIdPurchase',
           config: {
