@@ -49,7 +49,7 @@ class Dropdown extends Component {
         onMouseOut={() => (this.mouseOver = false)}
       >
         {this.props.children}
-        {this.props.content}
+        {this.props.content && this.state.open ? this.props.content : null}
       </El>
     )
   }

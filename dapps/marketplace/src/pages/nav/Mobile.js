@@ -49,7 +49,7 @@ const MobileNav = ({ open, onClose, onOpen }) => {
       content={
         <>
           <div className="dropdown-menu-bg" onClick={() => onClose()} />
-          <div className={`dropdown-menu ${open ? ' show' : ''}`}>
+          <div className={`dropdown-menu${open ? ' show' : ''}`}>
             <a
               href="#close"
               onClick={e => {
