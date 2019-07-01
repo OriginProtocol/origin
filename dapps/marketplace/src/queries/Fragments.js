@@ -74,6 +74,11 @@ export default {
           unitsPending
           multiUnit
         }
+        ... on ServiceListing {
+          unitsSold
+          unitsPending
+          unitsAvailable
+        }
         ... on FractionalListing {
           weekendPrice {
             amount
