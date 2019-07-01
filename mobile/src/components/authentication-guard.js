@@ -91,10 +91,7 @@ class AuthenticationGuard extends Component {
 
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <ScrollView
-          style={{ flex: 1 }}
-          contentContainerStyle={styles.content}
-        >
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content}>
           <View style={styles.container}>
             <Image
               resizeMethod={'scale'}
