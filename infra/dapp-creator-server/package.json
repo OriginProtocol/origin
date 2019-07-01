@@ -37,11 +37,11 @@
     "dotenv": "^8.0.0",
     "envkey": "^1.2.6",
     "express": "^4.17.1",
-    "ipfs-http-client": "^29.1.0",
+    "ipfs-http-client": "^32.0.1",
     "logplease": "^1.2.15",
     "per-env": "^1.0.2",
     "raven": "^2.6.4",
-    "web3": "1.0.0-beta.34"
+    "web3": "1.0.0-beta.55"
   },
   "devDependencies": {
     "chai": "^4.2.0",
