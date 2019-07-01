@@ -80,7 +80,7 @@
     "rn-nodeify": "^10.0.1",
     "uuid": "^3.3.2",
     "vm-browserify": "^1.1.0",
-    "web3": "1.0.0-beta.34",
+    "web3": "1.0.0-beta.55",
     "whatwg-url": "^7.0.0"
   },
   "localDependencies": {
