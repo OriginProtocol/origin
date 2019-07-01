@@ -643,12 +643,16 @@ class MarketplaceScreen extends Component {
                 enabled={this.state.enablePullToRefresh}
                 refreshing={this.state.refreshing}
                 onRefresh={() => {
-                  this.dappWebView.injectJavaScript(`document.location.reload()`)
+                  this.dappWebView.injectJavaScript(
+                    `document.location.reload()`
+                  )
                   setTimeout(() => this.setState({ refreshing: false }), 1000)
                 }}
               />
             }
-            {...(Platform.OS === 'android' ? this._panResponder.panHandlers : [])}
+            {...(Platform.OS === 'android'
+              ? this._panResponder.panHandlers
+              : [])}
           >
             <WebView
               ref={webview => {
