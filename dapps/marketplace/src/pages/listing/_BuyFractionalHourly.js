@@ -7,7 +7,6 @@ import CurrencyContext from 'constants/CurrencyContext'
 
 import Price from 'components/Price'
 import OgnBadge from 'components/OgnBadge'
-import Tooltip from 'components/Tooltip'
 import WithPrices from 'components/WithPrices'
 import PaymentOptions from './_PaymentOptions'
 
