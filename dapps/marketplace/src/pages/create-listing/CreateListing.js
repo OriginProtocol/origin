@@ -68,7 +68,7 @@ const CreateListing = props => {
   if (
     props.creatorConfigLoading ||
     props.walletLoading ||
-    props.identityLoading
+    !props.identityLoaded
   ) {
     return (
       <div className="app-spinner">

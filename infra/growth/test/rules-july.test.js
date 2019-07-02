@@ -30,9 +30,9 @@ describe('July campaign rules', () => {
     expect(this.crules.levels[0]).to.be.an('object')
     expect(this.crules.levels[0].rules.length).to.equal(3)
     expect(this.crules.levels[1]).to.be.an('object')
-    expect(this.crules.levels[1].rules.length).to.equal(11)
+    expect(this.crules.levels[1].rules.length).to.equal(10)
     expect(this.crules.levels[2]).to.be.an('object')
-    expect(this.crules.levels[2].rules.length).to.equal(19) // TODO: adjust as more listings get added to the rule.
+    expect(this.crules.levels[2].rules.length).to.equal(20) // TODO: adjust as more listings get added to the rule.
 
     this.userA = '0x123'
     this.userB = '0x456' // User A is the referrer for user B.
@@ -144,7 +144,7 @@ describe('July campaign rules', () => {
       },
       {
         id: 4,
-        type: GrowthEventTypes.WeChatAttestationPublished,
+        type: GrowthEventTypes.WebsiteAttestationPublished,
         status: GrowthEventStatuses.Logged,
         ethAddress: this.userA,
         createdAt: this.duringCampaign
@@ -165,7 +165,7 @@ describe('July campaign rules', () => {
       {
         campaignId: 1,
         levelId: 1,
-        ruleId: 'WeChatAttestation',
+        ruleId: 'WebsiteAttestation',
         value: {
           currency: 'OGN',
           amount: tokenToNaturalUnits(25)

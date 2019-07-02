@@ -13,9 +13,10 @@ import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash.get'
 
+import { truncate } from 'utils/user'
 import Address from 'components/address'
 import Avatar from 'components/avatar'
-import { truncate } from 'utils/user'
+import ListStyles from 'styles/list'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -38,8 +39,8 @@ const AccountItem = ({ item, navigation, wallet }) => {
       }
     >
       <View style={styles.listItem}>
-        <View style={styles.textContainer}>
-          <View style={[styles.iconContainer, styles.identiconContainer]}>
+        <View style={styles.listItemTextContainer}>
+          <View style={{ ...styles.listItemIconContainer, marginRight: 10 }}>
             <Avatar source={avatarUrl} />
           </View>
           {name && (
@@ -48,15 +49,15 @@ const AccountItem = ({ item, navigation, wallet }) => {
           <Address
             address={item.address}
             label={fbt('Address', 'AccountItem.address')}
-            style={styles.address}
+            styles={{ marginTop: 4 }}
           />
         </View>
         {
-          <View style={styles.iconContainer}>
+          <View style={styles.listItemIconContainer}>
             {wallet.activeAccount.address === item.address && (
               <Image
                 source={require(`${IMAGES_PATH}selected.png`)}
-                style={styles.selected}
+                style={styles.listSelectedItem}
               />
             )}
             <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
@@ -74,42 +75,10 @@ const mapStateToProps = ({ wallet }) => {
 export default connect(mapStateToProps)(AccountItem)
 
 const styles = StyleSheet.create({
-  address: {
-    fontFamily: 'Lato',
-    fontSize: 13,
-    fontWeight: '300',
-    marginTop: 4
-  },
-  iconContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-  identiconContainer: {
-    marginRight: 10
-  },
-  listItem: {
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    flex: 1,
-    height: 50,
-    justifyContent: 'space-between',
-    paddingHorizontal: '5%',
-    paddingVertical: 14
-  },
+  ...ListStyles,
   name: {
     fontFamily: 'Lato',
     fontSize: 17,
-    marginRight: '5%'
-  },
-  unnamed: {
-    color: '#98a7b4'
-  },
-  selected: {
-    marginRight: 17
-  },
-  textContainer: {
-    flex: 1,
-    flexDirection: 'row'
+    marginHorizontal: 5
   }
 })

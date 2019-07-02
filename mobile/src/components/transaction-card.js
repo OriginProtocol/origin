@@ -5,10 +5,11 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
 
+import { decodeTransaction } from '../utils/contractDecoder'
 import Address from 'components/address'
 import OriginButton from 'components/origin-button'
 import currencies from 'utils/currencies'
-import { decodeTransaction } from '../utils/contractDecoder'
+import CommonStyles from 'styles/common'
 
 const TransactionCard = props => {
   const { msgData, fiatCurrency, wallet } = props
@@ -104,7 +105,7 @@ const TransactionCard = props => {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.heading}>{heading}</Text>
+      <Text style={styles.cardHeading}>{heading}</Text>
       {calculableTotal ? (
         <>
           <View style={styles.primaryContainer}>
@@ -176,7 +177,7 @@ const TransactionCard = props => {
           </Text>
           <Address
             address={wallet.activeAccount.address}
-            style={styles.account}
+            styles={styles.account}
           />
         </View>
         <View style={styles.accountText}>
@@ -228,14 +229,13 @@ const TransactionCard = props => {
         <OriginButton
           size="large"
           type="primary"
-          textStyle={{ fontSize: 18, fontWeight: '900' }}
           title={fbt('Confirm', 'TransactionCard.button')}
           disabled={!hasSufficientDai || !hasSufficientEth}
           onPress={props.onConfirm}
         />
       </View>
       <TouchableOpacity onPress={props.onRequestClose}>
-        <Text style={styles.cancel}>
+        <Text style={styles.cardCancelText}>
           <fbt desc="TransactionCard.cancel">Cancel</fbt>
         </Text>
       </TouchableOpacity>
@@ -250,11 +250,13 @@ const mapStateToProps = ({ exchangeRates, wallet }) => {
 export default connect(mapStateToProps)(TransactionCard)
 
 const styles = StyleSheet.create({
+  ...CommonStyles,
   account: {
     color: '#94a7b5',
     fontFamily: 'Lato',
     fontSize: 11,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontWeight: '600'
   },
   accountSummary: {
     marginBottom: 20
@@ -269,23 +271,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato',
     fontSize: 11,
     textAlign: 'right'
-  },
-  buttonContainer: {
-    paddingBottom: 20
-  },
-  cancel: {
-    color: '#1a82ff',
-    fontFamily: 'Lato',
-    fontSize: 14,
-    fontWeight: '900',
-    textAlign: 'center'
-  },
-  card: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    marginTop: 'auto',
-    paddingHorizontal: 20,
-    paddingVertical: 30
   },
   danger: {
     color: 'red',

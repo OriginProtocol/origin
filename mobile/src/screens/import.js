@@ -6,13 +6,13 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
-import OnboardingStyles from 'styles/onboarding'
+import CommonStyles from 'styles/common'
 
 class ImportAccountScreen extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.content}>
+        <View style={{ ...styles.container, flexGrow: 2 }}>
           <Text style={styles.title}>
             <fbt desc="ImportScreen.title">Import your wallet</fbt>
           </Text>
@@ -22,12 +22,10 @@ class ImportAccountScreen extends Component {
             </fbt>
           </Text>
         </View>
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt(
               'Use Recovery Phrase',
               'ImportScreen.useRecoveryPhraseButton'
@@ -37,8 +35,6 @@ class ImportAccountScreen extends Component {
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Use Private Key', 'ImportScreen.usePrivateKeyButton')}
             onPress={() => this.props.navigation.navigate('ImportPrivateKey')}
           />
@@ -51,5 +47,5 @@ class ImportAccountScreen extends Component {
 export default ImportAccountScreen
 
 const styles = StyleSheet.create({
-  ...OnboardingStyles
+  ...CommonStyles
 })

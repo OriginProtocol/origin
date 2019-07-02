@@ -1,7 +1,14 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
@@ -9,11 +16,13 @@ import get from 'lodash.get'
 import CheckBox from 'react-native-check-box'
 import DeviceInfo from 'react-native-device-info'
 
+import BackArrow from 'components/back-arrow'
 import OriginButton from 'components/origin-button'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import withOriginGraphql from 'hoc/withOriginGraphql'
-import OnboardingStyles from 'styles/onboarding'
 import { setGrowth } from 'actions/Onboarding'
+import CommonStyles from 'styles/common'
+import OnboardingStyles from 'styles/onboarding'
 
 const IMAGES_PATH = '../../../assets/images/'
 
@@ -32,7 +41,7 @@ class GrowthTermsScreen extends Component {
   async componentDidMount() {
     const eligibility = await this.props.getGrowthEligibility()
     const eligible =
-      get(eligibility, 'data.isEligible.eligibility', null) === 'Eligible'
+      get(eligibility, 'data.isEligible.eligibility', null) === 'Eligibled'
     const countryName = get(eligibility, 'data.isEligible.countryName')
     this.setState({ loading: false, eligible, countryName })
   }
@@ -59,19 +68,21 @@ class GrowthTermsScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        {this.state.loading
-          ? this.renderLoading()
-          : this.state.eligible
-          ? this.renderTerms()
-          : this.renderIneligible()}
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView contentContainerStyle={styles.content}>
+          {this.state.loading
+            ? this.renderLoading()
+            : this.state.eligible
+            ? this.renderTerms()
+            : this.renderIneligible()}
+        </ScrollView>
       </SafeAreaView>
     )
   }
 
   renderLoading() {
     return (
-      <View style={styles.content}>
+      <View style={styles.container}>
         <Text style={styles.title}>
           <fbt desc="GrowthTermsScreen.loadingTitle">Checking eligibility</fbt>
         </Text>
@@ -83,9 +94,9 @@ class GrowthTermsScreen extends Component {
   renderIneligible() {
     return (
       <>
-        <View style={styles.content}>
+        <View style={styles.container}>
           <Image
-            style={{ marginBottom: 40 }}
+            style={styles.image}
             source={require(IMAGES_PATH + 'not-eligible-graphic.png')}
           />
           <Text style={styles.title}>
@@ -102,10 +113,12 @@ class GrowthTermsScreen extends Component {
               Rewards.
             </fbt>
           </Text>
+        </View>
+        <View style={styles.container}>
           <Text
             style={{
               fontWeight: '600',
-              marginTop: 20,
+              marginTop: 10,
               marginBottom: 10,
               fontSize: 16
             }}
@@ -115,42 +128,42 @@ class GrowthTermsScreen extends Component {
             </fbt>
           </Text>
           <CheckBox
-            style={{ padding: 20 }}
+            style={{ flex: 1, padding: 10 }}
             onClick={() => {
               this.setState({
-                isChecked: !this.state.isCertifyChecked
+                isCertifyChecked: !this.state.isCertifyChecked
               })
             }}
             isChecked={this.state.isCertifyChecked}
             checkBoxColor="#455d75"
             uncheckedCheckBoxColor="#455d75"
             rightTextView={
-              <Text style={{ fontSize: 16, marginLeft: 5, fontWeight: '300' }}>
-                <fbt desc="GrowthTermsScreen.nonResidentCertification">
-                  I certify that I am not a citizen or resident of
-                  <fbt:param name="countryName">
-                    {this.state.countryName}
-                  </fbt:param>
-                </fbt>
-              </Text>
+              <View>
+                <Text
+                  style={{ fontSize: 16, marginLeft: 5, fontWeight: '300' }}
+                >
+                  <fbt desc="GrowthTermsScreen.nonResidentCertification">
+                    I certify that I am not a citizen or resident of
+                    <fbt:param name="countryName">
+                      {this.state.countryName}
+                    </fbt:param>
+                  </fbt>
+                </Text>
+              </View>
             }
           />
         </View>
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
             disabled={!this.state.isCertifyChecked}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Continue', 'GrowthTermsScreen.continueButton')}
             onPress={() => this.setState({ eligible: true })}
           />
           <OriginButton
             size="large"
             type="link"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Cancel', 'GrowthTermsScreen.skipButton')}
             onPress={() => {
               this.props.setGrowth(false)
@@ -165,7 +178,11 @@ class GrowthTermsScreen extends Component {
   renderTerms() {
     return (
       <>
-        <View style={styles.content}>
+        <View style={{ ...styles.container, paddingTop: 20 }}>
+          <BackArrow
+            onClick={() => this.props.navigation.goBack(null)}
+            style={styles.backArrow}
+          />
           <Text style={styles.termsHeader}>
             <fbt desc="GrowthTermsScreen.termsHeader">
               Join Origin’s reward program to earn Origin tokens (OGN). Terms &
@@ -203,7 +220,7 @@ class GrowthTermsScreen extends Component {
             </Text>
           </View>
           <CheckBox
-            style={{ padding: 20 }}
+            style={{ flex: 1, padding: 10 }}
             onClick={() => {
               this.setState({
                 isAcceptChecked: !this.state.isAcceptChecked
@@ -213,20 +230,22 @@ class GrowthTermsScreen extends Component {
             checkBoxColor="#455d75"
             uncheckedCheckBoxColor="#455d75"
             rightTextView={
-              <Text style={{ fontSize: 16, marginLeft: 5, fontWeight: '300' }}>
-                <fbt desc="GrowthTermsScreen.acceptCheckboxText">
-                  I accept the terms and conditions
-                </fbt>
-              </Text>
+              <View>
+                <Text
+                  style={{ fontSize: 16, marginLeft: 5, fontWeight: '300' }}
+                >
+                  <fbt desc="GrowthTermsScreen.acceptCheckboxText">
+                    I accept the terms and conditions
+                  </fbt>
+                </Text>
+              </View>
             }
           />
         </View>
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Accept Terms', 'GrowthTermsScreen.acceptTermsButton')}
             disabled={!this.state.isAcceptChecked}
             onPress={() => this.handleAcceptTerms()}
@@ -234,8 +253,6 @@ class GrowthTermsScreen extends Component {
           <OriginButton
             size="large"
             type="link"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Cancel', 'GrowthTermsScreen.cancelButton')}
             onPress={() => this.props.navigation.goBack()}
           />
@@ -263,5 +280,31 @@ export default withOriginGraphql(
 )
 
 const styles = StyleSheet.create({
-  ...OnboardingStyles
+  ...CommonStyles,
+  ...OnboardingStyles,
+  termsHeader: {
+    fontWeight: '600',
+    fontSize: 18,
+    marginBottom: 20,
+    marginHorizontal: 20,
+    textAlign: 'center'
+  },
+  termsText: {
+    paddingHorizontal: 20,
+    marginBottom: 20,
+    color: '#111d28'
+  },
+  termsHighlightContainer: {
+    borderColor: '#98a7b4',
+    backgroundColor: 'rgba(152, 167, 180, 0.1)',
+    borderWidth: 1,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    marginVertical: 20,
+    width: '90%',
+    borderRadius: 5
+  },
+  termsHighlightText: {
+    color: '#6f8294'
+  }
 })

@@ -96,6 +96,7 @@ class WaitForTransaction extends Component {
                 this.props.onClose ? this.props.onClose() : null
               })
             }}
+            disableDismiss={true}
           >
             {content}
           </Modal>

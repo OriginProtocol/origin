@@ -113,6 +113,7 @@ const Growth$FbtEnum = {
   'growth.purchase.listing471.title': 'iPhone Case (All Models)',
   'growth.purchase.listing866.title': '$25 Uber Gift Card',
   'growth.purchase.listing2812.title': '$50 AirBnB Gift Card',
+  'growth.purchase.listing2912.title': 'Pitch your project to Ryan (Hashed)',
 
   // Where are these listings from?
 

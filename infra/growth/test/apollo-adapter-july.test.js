@@ -10,7 +10,7 @@ const { tokenToNaturalUnits } = require('../src/util/token')
 
 function checkExpectedState(state, expectedState) {
   expect(state.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-  expect(state.actions.length).to.equal(31) // TODO: Adjust when adding listings
+  expect(state.actions.length).to.equal(31)
 
   const actionByRuleId = {}
   for(const action of state.actions) {
@@ -80,9 +80,9 @@ describe('Apollo adapter - July campaign', () => {
     expect(this.crules.levels[0]).to.be.an('object')
     expect(this.crules.levels[0].rules.length).to.equal(3)
     expect(this.crules.levels[1]).to.be.an('object')
-    expect(this.crules.levels[1].rules.length).to.equal(11)
+    expect(this.crules.levels[1].rules.length).to.equal(10)
     expect(this.crules.levels[2]).to.be.an('object')
-    expect(this.crules.levels[2].rules.length).to.equal(19) // TODO: adjust when adding new listings
+    expect(this.crules.levels[2].rules.length).to.equal(20) // TODO: adjust when adding new listings
 
     // Mock the getEvents method to use events from this.events.
     // When writing a test, be aware that this.events is global and shared with other tests.
@@ -169,12 +169,6 @@ describe('Apollo adapter - July campaign', () => {
       },
       KakaoAttestation: {
         type: 'Kakao',
-        status: 'Inactive',
-        rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
-      },
-      WeChatAttestation: {
-        type: 'WeChat',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
@@ -298,8 +292,13 @@ describe('Apollo adapter - July campaign', () => {
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenToNaturalUnits(50), currency: 'OGN' }
+      },
+      ListingPurchase2912: {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(75), currency: 'OGN' }
       }
-      // TODO: add more listings
     }
 
     this.expectedNonSignedInState = {}
@@ -372,7 +371,6 @@ describe('Apollo adapter - July campaign', () => {
     this.expectedState.GitHubAttestation.status = 'Active'
     this.expectedState.LinkedInAttestation.status = 'Active'
     this.expectedState.KakaoAttestation.status = 'Active'
-    this.expectedState.WeChatAttestation.status = 'Active'
     this.expectedState.WebsiteAttestation.status = 'Active'
 
     checkExpectedState(state, this.expectedState)
@@ -382,7 +380,7 @@ describe('Apollo adapter - July campaign', () => {
     this.events.push(...[
       {
         id: 3,
-        type: GrowthEventTypes.WeChatAttestationPublished,
+        type: GrowthEventTypes.LinkedInAttestationPublished,
         status: GrowthEventStatuses.Logged,
         ethAddress: this.userA,
         createdAt: this.duringCampaign
@@ -406,8 +404,8 @@ describe('Apollo adapter - July campaign', () => {
     this.expectedState.rewardEarned = { amount: '50000000000000000000', currency: 'OGN' }
 
     // Attestation should be completed.
-    this.expectedState.WeChatAttestation.status = 'Completed'
-    this.expectedState.WeChatAttestation.rewardEarned = { amount: '25000000000000000000', currency: 'OGN' }
+    this.expectedState.LinkedInAttestation.status = 'Completed'
+    this.expectedState.LinkedInAttestation.rewardEarned = { amount: '25000000000000000000', currency: 'OGN' }
 
     this.expectedState.KakaoAttestation.status = 'Completed'
     this.expectedState.KakaoAttestation.rewardEarned = { amount: '25000000000000000000', currency: 'OGN' }
