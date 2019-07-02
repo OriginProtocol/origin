@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import get from 'lodash/get'
 import isNil from 'lodash/isNil'
 import dayjs from 'dayjs'
+import displayDateTime from 'utils/displayDateTime'
 import Linkify from 'react-linkify'
 
 import withIdentity from 'hoc/withIdentity'
@@ -109,7 +110,12 @@ const Message = props => {
     <>
       {showTime && (
         <div className="timestamp">
-          {dayjs.unix(message.timestamp).format('MMM Do h:mmA')}
+          {displayDateTime(dayjs.unix(message.timestamp), {
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit'
+          })}
         </div>
       )}
       <div

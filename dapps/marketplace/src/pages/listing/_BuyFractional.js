@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react'
 import dayjs from 'dayjs'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
+import displayDateTime from 'utils/displayDateTime'
 
 import CurrencyContext from 'constants/CurrencyContext'
 
@@ -12,8 +13,6 @@ import WithPrices from 'components/WithPrices'
 import PaymentOptions from './_PaymentOptions'
 
 import Buy from './mutations/Buy'
-
-import displayDate from 'utils/displayDate'
 
 const Fractional = ({
   listing,
@@ -39,8 +38,13 @@ const Fractional = ({
     const split = range.split('/')
     startDate = split[0]
     endDate = split[1]
-    startDateDisplay = displayDate(dayjs(startDate))
-    endDateDisplay = displayDate(dayjs(endDate).add(1, 'day'))
+    const dateOpts = {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'long'
+    }
+    startDateDisplay = displayDateTime(dayjs(startDate), dateOpts)
+    endDateDisplay = displayDateTime(dayjs(endDate).add(1, 'day'), dateOpts)
     const priceEstimate = availability.estimateNightlyPrice(range)
     available = priceEstimate.available
     if (available) {

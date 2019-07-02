@@ -3,12 +3,21 @@ import { Query } from 'react-apollo'
 import get from 'lodash/get'
 import dayjs from 'dayjs'
 import { fbt } from 'fbt-runtime'
+import displayDateTime from 'utils/displayDateTime'
 
 import query from 'queries/OfferEvents'
 import QueryError from 'components/QueryError'
 import TxHash from './_TxHash'
 
-const date = timestamp => dayjs.unix(timestamp).format('MMM. D, YYYY h:mmA')
+const displayTxDate = timestamp =>
+  displayDateTime(dayjs.unix(timestamp), {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit'
+  })
+
 const eventName = name => {
   if (name === 'OfferCreated') return 'Offer Made'
   const [, , target] = name.split(/(Offer|Listing)/)
@@ -64,7 +73,7 @@ class TxHistory extends Component {
                           {eventName(item.event.event)}
                         </div>
                       </td>
-                      <td>{date(item.event.block.timestamp)}</td>
+                      <td>{displayTxDate(item.event.block.timestamp)}</td>
                       <td>
                         <i className="caret" />
                       </td>

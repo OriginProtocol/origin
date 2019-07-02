@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import dayjs from 'dayjs'
 import { fbt } from 'fbt-runtime'
+import displayDateTime from 'utils/displayDateTime'
 
 import Price from 'components/Price'
 
@@ -8,6 +9,29 @@ const resetDrag = {
   dragEnd: null,
   dragStart: null,
   dragging: false
+}
+
+const displayMonth = function(date) {
+  const result = displayDateTime(date, { month: 'short' }).replace(/\.$/, '')
+  return result.charAt(0).toUpperCase() + result.slice(1)
+}
+
+function displayYear(date) {
+  return displayDateTime(date, { year: 'numeric' }).replace(/\.$/, '')
+}
+
+function displayWeekDay(date) {
+  return displayDateTime(date, { weekday: 'short' }).replace(/\.$/, '')
+}
+
+function displayDay(date) {
+  return date.format('D')
+}
+
+function displayTime(date) {
+  return displayDateTime(date, {
+    hour: 'numeric'
+  })
 }
 
 class WeekCalendar extends Component {
@@ -59,11 +83,11 @@ class WeekCalendar extends Component {
               })
             }}
           />
-          {weekStartDate.format('MMM ')}
+          {`${displayMonth(weekStartDate)} `}
           {lastDay.month() != weekStartDate.month()
-            ? lastDay.format('- MMM ')
+            ? `– ${displayMonth(lastDay)} `
             : ''}
-          {weekStartDate.format('YYYY')}
+          {displayYear(weekStartDate)}
           <button
             type="button"
             className="btn btn-outline-secondary next"
@@ -81,10 +105,10 @@ class WeekCalendar extends Component {
           {[...Array(7)].map((_, k) => (
             <div key={k}>
               <div className="day-column-name">
-                {weekStartDate.add(k, 'day').format('ddd')}
+                {displayWeekDay(weekStartDate.add(k, 'day'))}
               </div>
               <div className="day-column-number">
-                {weekStartDate.add(k, 'day').format('D')}
+                {displayDay(weekStartDate.add(k, 'day'))}
               </div>
             </div>
           ))}
@@ -97,7 +121,7 @@ class WeekCalendar extends Component {
           {/* Time label column */}
           {[...Array(24)].map((_, k) => (
             <div key={k} className="time-column-label">
-              {weekStartDate.add(k, 'hour').format('ha')}
+              {displayTime(weekStartDate.add(k, 'hour'))}
             </div>
           ))}
           {/* All selectable hours */}
@@ -262,6 +286,8 @@ require('react-styl')(`
         display: flex
         align-items: center
         justify-content: center
+        white-space: nowrap
+        font-size: 16px
       > .hour
         height: 50px
         min-height: 3.5rem

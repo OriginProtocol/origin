@@ -5,6 +5,7 @@ import contractsQuery from 'queries/AllContracts'
 import DocumentTitle from 'components/DocumentTitle'
 import growthEligibilityQuery from 'queries/GrowthEligibility'
 import dayjs from 'dayjs'
+import displayDateTime from 'utils/displayDateTime'
 import distanceToNow from 'utils/distanceToNow'
 
 const DAPP_VERSION = require('../../../package.json').version
@@ -56,7 +57,13 @@ const DappInfo = () => {
   const buildTimestamp = process.env.BUILD_TIMESTAMP
   let buildTime
   if (buildTimestamp) {
-    buildTime = dayjs(buildTimestamp).format('YYYY-MM-DD H:mma')
+    buildTime = displayDateTime(dayjs(buildTimestamp), {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit'
+    })
     buildTime += ` (${distanceToNow(buildTimestamp / 1000)} ago)`
   }
 

@@ -2,6 +2,23 @@ import React from 'react'
 import Price from 'components/Price'
 import dayjs from 'dayjs'
 import { fbt } from 'fbt-runtime'
+import displayDateTime from 'utils/displayDateTime'
+
+const displayOfferDate = date =>
+  displayDateTime(date, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  })
+
+const displayHourlyOfferDate = date =>
+  displayDateTime(date, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit'
+  })
 
 const OfferDetails = ({ offer }) => (
   <ul className="offer-details list-unstyled">
@@ -30,7 +47,7 @@ const OfferDetails = ({ offer }) => (
         <span>
           <fbt desc="OfferDetails.checkIn">Check in</fbt>
         </span>
-        <span>{dayjs(offer.startDate).format('MMM. D, YYYY ')}</span>
+        <span>{displayOfferDate(dayjs(offer.startDate))}</span>
       </li>
     )}
     {offer.endDate && offer.listing.__typename === 'FractionalListing' && (
@@ -38,11 +55,7 @@ const OfferDetails = ({ offer }) => (
         <span>
           <fbt desc="OfferDetails.checkOut">Check out</fbt>
         </span>
-        <span>
-          {dayjs(offer.endDate)
-            .add(1, 'day')
-            .format('MMM. D, YYYY')}
-        </span>
+        <span>{displayOfferDate(dayjs(offer.endDate).add(1, 'day'))}</span>
       </li>
     )}
     {offer.startDate && offer.listing.__typename === 'FractionalHourlyListing' && (
@@ -50,7 +63,7 @@ const OfferDetails = ({ offer }) => (
         <span>
           <fbt desc="OfferDetails.rentalBegin">Rental begin</fbt>
         </span>
-        <span>{dayjs(offer.startDate).format('MMM. D, YYYY h:00a')}</span>
+        <span>{displayHourlyOfferDate(dayjs(offer.startDate))}</span>
       </li>
     )}
     {offer.endDate && offer.listing.__typename === 'FractionalHourlyListing' && (
@@ -58,7 +71,7 @@ const OfferDetails = ({ offer }) => (
         <span>
           <fbt desc="OfferDetails.rentalEnd">Rental end</fbt>
         </span>
-        <span>{dayjs(offer.endDate).format('MMM. D, YYYY h:00a')}</span>
+        <span>{displayHourlyOfferDate(dayjs(offer.endDate))}</span>
       </li>
     )}
     <li className="total-price">
@@ -84,7 +97,7 @@ const OfferDetails = ({ offer }) => (
       </span>
       <span>
         {offer.createdEvent
-          ? dayjs.unix(offer.createdEvent.timestamp).format('MMM. D, YYYY')
+          ? displayOfferDate(dayjs.unix(offer.createdEvent.timestamp))
           : ''}
       </span>
     </li>

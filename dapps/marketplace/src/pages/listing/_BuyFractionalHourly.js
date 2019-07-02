@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react'
 import dayjs from 'dayjs'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
+import displayDateTime from 'utils/displayDateTime'
 
 import CurrencyContext from 'constants/CurrencyContext'
 
@@ -37,8 +38,14 @@ const FractionalHourly = ({
     const split = range.split('/')
     startDate = split[0]
     endDate = split[1]
-    startDateDisplay = dayjs(startDate).format('MMM D h:00a') // Needs l10n
-    endDateDisplay = dayjs(endDate).format('MMM D h:00a') // Needs l10n
+    const dateOpts = {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
+    }
+    startDateDisplay = displayDateTime(dayjs(startDate), dateOpts)
+    endDateDisplay = displayDateTime(dayjs(endDate), dateOpts)
     const priceEstimate = availability.estimatePrice(
       `${startDate}/${dayjs(endDate)
         .add(-1, 'hour')

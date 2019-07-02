@@ -61,6 +61,7 @@
     "graphql": "^14.4.0",
     "graphql-tag": "^2.10.1",
     "intl": "=1.2.5",
+    "intl-format-cache": "^3.2.1",
     "ipfs-api": "^26.1.2",
     "jest-docblock": "^24.3.0",
     "myetherwallet-blockies": "^0.1.1",

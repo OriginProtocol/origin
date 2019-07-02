@@ -3,6 +3,7 @@ import { Query } from 'react-apollo'
 import dayjs from 'dayjs'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
+import displayDateTime from 'utils/displayDateTime'
 
 import withWallet from 'hoc/withWallet'
 
@@ -125,6 +126,13 @@ const NoPurchases = () => (
   </div>
 )
 
+const displaySaleDate = date =>
+  displayDateTime(date, {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  })
+
 const Sale = ({ listing, offer }) => (
   <div className="sale">
     <Pic listing={listing} />
@@ -143,9 +151,7 @@ const Sale = ({ listing, offer }) => (
       <div className="date">
         {listing.createdEvent &&
           fbt('Offer made on', 'Purchases.offerMadeOn') +
-            ` ${dayjs
-              .unix(offer.createdEvent.timestamp)
-              .format('MMMM D, YYYY')}`}
+            ` ${displaySaleDate(dayjs.unix(offer.createdEvent.timestamp))}`}
       </div>
       <div className="price">
         <div className="d-flex">

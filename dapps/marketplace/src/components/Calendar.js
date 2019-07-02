@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import dayjs from 'dayjs'
+import displayDateTime from 'utils/displayDateTime'
 
 import Price from 'components/Price'
 
@@ -7,6 +8,14 @@ const resetDrag = {
   dragEnd: null,
   dragStart: null,
   dragging: false
+}
+
+function displayMonth(date) {
+  const result = displayDateTime(date, {
+    month: 'long',
+    year: 'numeric'
+  }).replace(/\.$/, '')
+  return result.charAt(0).toUpperCase() + result.slice(1)
 }
 
 class Calendar extends Component {
@@ -66,7 +75,7 @@ class Calendar extends Component {
               }
             }}
           />
-          {date.format('MMMM YYYY')}
+          {displayMonth(date)}
           <button
             type="button"
             className="btn btn-outline-secondary next"

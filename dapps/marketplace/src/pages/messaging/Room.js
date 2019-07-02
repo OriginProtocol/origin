@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import get from 'lodash/get'
 import sortBy from 'lodash/sortBy'
 import { fbt } from 'fbt-runtime'
+import displayDateTime from 'utils/displayDateTime'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
@@ -31,6 +32,13 @@ function eventName(name) {
   }
 }
 
+const displayOfferDate = date =>
+  displayDateTime(date, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  })
+
 const OfferEvent = ({ event, wallet, identity }) => (
   <>
     <div className="offer-event">
@@ -41,7 +49,7 @@ const OfferEvent = ({ event, wallet, identity }) => (
       <Link to={`/purchases/${event.offer.id}`}>
         {event.offer.listing.title}
       </Link>
-      {` on ${dayjs.unix(event.event.timestamp).format('MMM Do, YYYY')}`}
+      {` on ${displayOfferDate(dayjs.unix(event.event.timestamp))}`}
     </div>
     {event.event.event !== 'OfferCreated' ? null : (
       <Stages offer={event.offer} />

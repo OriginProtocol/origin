@@ -1,9 +1,15 @@
 import dayjs from 'dayjs'
+import displayDateTime from 'utils/displayDateTime'
 import React from 'react'
 
 import Tooltip from 'components/Tooltip'
 
-const dateFormat = timestamp => dayjs.unix(timestamp).format('MMM. D, YYYY')
+const displayEventDate = timestamp =>
+  displayDateTime(dayjs.unix(timestamp), {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  })
 const sentenceCase = str =>
   str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 
@@ -17,7 +23,7 @@ const EventTick = ({ className, children, event }) => {
     <div>
       <div>{sentenceCase(stageName)} on</div>
       <div>
-        <strong>{dateFormat(event.timestamp)}</strong>
+        <strong>{displayEventDate(event.timestamp)}</strong>
       </div>
     </div>
   )
