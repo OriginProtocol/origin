@@ -3,13 +3,13 @@ gethMinerReplicas: 2
 gethMinerCpuLimit: 0.5
 
 bootnodeImage: ethereum/client-go
-bootnodeImageTag: alltools-v1.8.23
+bootnodeImageTag: alltools-v1.8.27
 
 ethstatsImage: ethereumex/eth-stats-dashboard
 ethstatsImageTag: latest
 
 gethImage: ethereum/client-go
-gethImageTag: v1.8.23
+gethImageTag: v1.8.27
 
 gethGenesisNetworkId: 2222
 gethGenesisDifficulty: '0x400'
