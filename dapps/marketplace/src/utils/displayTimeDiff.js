@@ -1,4 +1,4 @@
-import { IntlViewerContext } from 'fbt-runtime'
+import { fbt, IntlViewerContext } from 'fbt-runtime'
 import memoizeFormatConstructor from 'intl-format-cache'
 import { toBCP47 } from 'constants/Languages'
 
@@ -29,6 +29,15 @@ export default function displayTimeDiff(diff, options = defaultOpts) {
   if (!unit) {
     if (absDiff < MINUTE_MS) {
       const seconds = asInt(diff / SECOND_MS)
+      if (diff < 0) {
+        if (opts.style === 'long') {
+          return fbt('less than 1 minute ago', 'locale.lessThanMinute.long')
+        } else if (opts.style === 'short') {
+          return fbt('<1 minute ago', 'locale.lessThanMinute.short')
+        } else if (opts.style === 'narrow') {
+          return fbt('<1 min. ago', 'locale.lessThanMinute.narrow')
+        }
+      }
       return fmt.format(seconds, 'second')
     } else if (absDiff < HOUR_MS) {
       const minutes = asInt(diff / MINUTE_MS)
