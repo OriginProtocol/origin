@@ -206,6 +206,7 @@ class ListingDetail extends Component {
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
     const isSingleUnit = listing.__typename === 'UnitListing'
+    const isService = listing.__typename === 'ServiceListing'
     const isPendingBuyer = listing.pendingBuyers.some(
       b => b.id === this.props.walletProxy
     )
@@ -233,24 +234,25 @@ class ListingDetail extends Component {
           isFractional={isFractional}
           isFractionalHourly={isFractionalHourly}
           isSingleUnit={isSingleUnit}
+          isService={isService}
         />
       )
     } else if (isAnnouncement) {
       return null
     } else if (listing.status === 'sold') {
       return <Sold {...props} isSingleUnit={isSingleUnit} />
-    } else if (isPendingBuyer && !listing.multiUnit) {
+    } else if (isPendingBuyer && !listing.multiUnit && !isService) {
       return (
         <OfferMade {...props} isSingleUnit={isSingleUnit} offers={offers} />
       )
-    } else if (isPendingBuyer && listing.multiUnit) {
+    } else if (isPendingBuyer && (listing.multiUnit || isService)) {
       return (
         <>
           <MultiUnit {...props} />
           <OfferMade {...props} isSingleUnit={isSingleUnit} offers={offers} />
         </>
       )
-    } else if (listing.status === 'pending') {
+    } else if (listing.status === 'pending' && !isService) {
       return <Pending {...props} />
     } else if (listing.status === 'withdrawn') {
       return <Withdrawn />
@@ -270,7 +272,7 @@ class ListingDetail extends Component {
           availability={this.state.availabilityHourly}
         />
       )
-    } else if (listing.multiUnit) {
+    } else if (listing.multiUnit || isService) {
       return <MultiUnit {...props} isPendingBuyer={isPendingBuyer} />
     }
     return <SingleUnit {...props} />

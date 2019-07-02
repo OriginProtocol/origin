@@ -8,8 +8,7 @@ import {
   createAppContainer,
   createBottomTabNavigator,
   createStackNavigator,
-  createSwitchNavigator,
-  HeaderBackButton
+  createSwitchNavigator
 } from 'react-navigation'
 
 import PushNotifications from './PushNotifications'
@@ -29,12 +28,14 @@ import ImportMnemonicScreen from 'screens/importMnemonic'
 import ImportPrivateKeyScreen from 'screens/importPrivateKey'
 import ImportWarningScreen from 'screens/importWarning'
 import ImportedScreen from 'screens/onboarding/imported'
-import Authentication from 'screens/onboarding/authentication'
-import PinScreen from 'screens/onboarding/pin'
 import EmailScreen from 'screens/onboarding/email'
 import PhoneScreen from 'screens/onboarding/phone'
 import NameScreen from 'screens/onboarding/name'
 import AvatarScreen from 'screens/onboarding/avatar'
+import GrowthScreen from 'screens/onboarding/growth'
+import GrowthTermsScreen from 'screens/onboarding/growth-terms'
+import Authentication from 'screens/onboarding/authentication'
+import PinScreen from 'screens/onboarding/pin'
 import ReadyScreen from 'screens/onboarding/ready'
 
 // Main screens
@@ -53,12 +54,7 @@ const IMAGES_PATH = '../assets/images/'
 
 const OnboardingStack = createStackNavigator(
   {
-    Welcome: {
-      screen: WelcomeScreen,
-      navigationOptions: () => ({
-        header: null
-      })
-    },
+    Welcome: WelcomeScreen,
     ImportAccount: ImportAccountScreen,
     ImportMnemonic: {
       screen: ImportMnemonicScreen,
@@ -78,28 +74,16 @@ const OnboardingStack = createStackNavigator(
     Phone: PhoneScreen,
     Name: NameScreen,
     Avatar: AvatarScreen,
+    Growth: GrowthScreen,
+    GrowthTerms: GrowthTermsScreen,
     Authentication: Authentication,
     Pin: PinScreen,
     Ready: ReadyScreen
   },
   {
-    defaultNavigationOptions: ({ navigation }) => {
-      const { params = {} } = navigation.state
+    defaultNavigationOptions: () => {
       return {
-        headerStyle: {
-          borderBottomWidth: 0
-        },
-        headerBackTitle: null,
-        // Allow components to override the back button function by setting a
-        // handleBack function as a navigation param e.g:
-        // this.props.navigation.setParams({ handleBack: this.handleBack.bind(this) })
-        headerLeft: (
-          <HeaderBackButton
-            onPress={() => {
-              params.handleBack ? params.handleBack() : navigation.goBack(null)
-            }}
-          />
-        )
+        header: null
       }
     }
   }
@@ -154,15 +138,24 @@ const SettingsStack = createStackNavigator(
       screen: ImportMnemonicScreen,
       params: {
         navigateOnSuccess: 'Accounts'
+      },
+      navigationOptions: () => {
+        return {
+          header: null
+        }
       }
     },
     ImportPrivateKey: {
       screen: ImportPrivateKeyScreen,
       params: {
         navigateOnSuccess: 'Accounts'
+      },
+      navigationOptions: () => {
+        return {
+          header: null
+        }
       }
     },
-
     Settings: SettingsScreen
   },
   {

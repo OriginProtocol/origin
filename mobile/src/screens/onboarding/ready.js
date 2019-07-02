@@ -1,21 +1,17 @@
 'use strict'
 
 import React, { Component } from 'react'
-import {
-  ActivityIndicator,
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
-import SafeAreaView from 'react-native-safe-area-view'
+import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
 import { fbt } from 'fbt-runtime'
 import { connect } from 'react-redux'
+import SafeAreaView from 'react-native-safe-area-view'
+import get from 'lodash.get'
 
 import { setComplete } from 'actions/Onboarding'
 import withOriginGraphql from 'hoc/withOriginGraphql'
 import OriginButton from 'components/origin-button'
+import CommonStyles from 'styles/common'
+import OnboardingStyles from 'styles/onboarding'
 
 const IMAGES_PATH = '../../../assets/images/'
 
@@ -23,7 +19,9 @@ class ReadyScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      loading: true
+      loading: true,
+      transactionId: null,
+      error: false
     }
   }
 
@@ -48,54 +46,85 @@ class ReadyScreen extends Component {
 
     console.debug('Publishing identity')
 
+    let identityPublication
     try {
-      await this.props.publishIdentity(
+      identityPublication = await this.props.publishIdentity(
         this.props.wallet.activeAccount.address,
         profile,
         attestations
       )
     } catch (error) {
       console.warn('Identity publication failed: ', error)
+      this.setState({ error: true })
     }
 
+    const transactionId = get(identityPublication, 'data.deployIdentity.id')
+    await this.setState({ transactionId })
+    // Wait for identity deployment transaction receipt
+    this.waitForTransaction()
+    // Flag onboarding as complete
     this.props.setOnboardingComplete(true)
+  }
 
-    this.setState({ loading: false })
+  waitForTransaction = async () => {
+    let result
+    try {
+      result = await this.props.getTransactionReceipt(this.state.transactionId)
+    } catch (error) {
+      this.setState({ loading: false, error: true })
+      return
+    }
+
+    const receipt = get(result, 'data.web3.transactionReceipt')
+    const currentBlock = get(result, 'data.web3.blockNumber')
+    const confirmedBlock = get(
+      result,
+      'data.web3.transactionReceipt.blockNumber'
+    )
+
+    if (!receipt || currentBlock <= confirmedBlock) {
+      // Wait for confirmation
+      setTimeout(this.waitForTransaction, 1000)
+    } else {
+      this.setState({ loading: false, transactionId: null })
+    }
   }
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.content}>
         {this.state.loading ? this.renderLoading() : this.renderReady()}
       </SafeAreaView>
     )
   }
 
   renderReady() {
-    const { height } = Dimensions.get('window')
-    const smallScreen = height < 812
-
     return (
       <>
-        <View style={styles.content}>
+        <View style={{ ...styles.container, flexGrow: 2 }}>
           <Image
             resizeMethod={'scale'}
             resizeMode={'contain'}
             source={require(IMAGES_PATH + 'green-checkmark.png')}
-            style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+            style={styles.image}
           />
           <Text style={styles.title}>
             <fbt desc="ReadyScreen.title">
               You&apos;re ready to start buying and selling on Origin
             </fbt>
           </Text>
+          {this.props.error === true && (
+            <Text style={styles.subtitle}>
+              <fbt desc="ReadyScreen.error">
+                Unfortunately we could not publish your identity on your behalf.
+              </fbt>
+            </Text>
+          )}
         </View>
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
           <OriginButton
             size="large"
             type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
             title={fbt('Start using Origin', 'ReadyScreen.button')}
             onPress={() => {
               // Navigate to subroute to skip authentication requirement
@@ -109,10 +138,25 @@ class ReadyScreen extends Component {
 
   renderLoading() {
     return (
-      <View style={styles.content}>
-        <Text style={styles.title}>
-          <fbt desc="ReadyScreen.loadingTitle">Publishing your account</fbt>
-        </Text>
+      <View style={styles.container}>
+        {this.state.transactionId === null ? (
+          <Text style={styles.title}>
+            <fbt desc="ReadyScreen.loadingTitle">Publishing your account</fbt>
+          </Text>
+        ) : (
+          <>
+            <Text style={styles.title}>
+              <fbt desc="ReadyScreen.transactionWaitTitle">
+                Waiting for confirmation.
+              </fbt>
+            </Text>
+            <Text style={{ ...styles.subtitle, marginBottom: 20 }}>
+              <fbt desc="ReadyScreen.transactionWaitSubtitle">
+                This might take a minute.
+              </fbt>
+            </Text>
+          </>
+        )}
         <ActivityIndicator size="large" />
       </View>
     )
@@ -135,34 +179,6 @@ export default withOriginGraphql(
 )
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex: 1,
-    flexDirection: 'column',
-    paddingTop: 0
-  },
-  content: {
-    alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center'
-  },
-  image: {
-    marginBottom: '10%'
-  },
-  buttonsContainer: {
-    paddingTop: 10,
-    width: '100%'
-  },
-  button: {
-    marginBottom: 20,
-    marginHorizontal: 50
-  },
-  title: {
-    fontFamily: 'Lato',
-    fontSize: 36,
-    fontWeight: '600',
-    marginHorizontal: 50,
-    paddingBottom: 30,
-    textAlign: 'center'
-  }
+  ...CommonStyles,
+  ...OnboardingStyles
 })

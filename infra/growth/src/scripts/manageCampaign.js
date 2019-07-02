@@ -158,5 +158,5 @@ if (!fn) {
 
 fn().then(() => {
   console.log('Done')
+  process.exit()
 })
-process.exit()

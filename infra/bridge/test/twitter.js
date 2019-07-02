@@ -55,7 +55,7 @@ describe('twitter attestations', async () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             oAuthToken: 'fake-oauth-token',
             oAuthTokenSecret: 'fake-oauth-token-secret'
@@ -119,7 +119,7 @@ describe('twitter attestations', async () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             redirect: 'hello',
             code: 'abcdefg',
@@ -136,7 +136,7 @@ describe('twitter attestations', async () => {
       .post('/api/attestations/twitter/verify')
       .send({
         identity: ethAddress,
-        sid: 123
+        sid: '123'
       })
       .expect(200)
 
@@ -184,7 +184,7 @@ describe('twitter attestations', async () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             oAuthToken: 'fake-oauth-token',
             oAuthTokenSecret: 'fake-oauth-token-secret',
@@ -200,7 +200,7 @@ describe('twitter attestations', async () => {
       .post('/api/attestations/twitter/verify')
       .send({
         identity: ethAddress,
-        sid: 123
+        sid: '123'
       })
       .expect(401)
 
@@ -238,7 +238,7 @@ describe('twitter attestations', async () => {
       .post('/api/attestations/twitter/verify')
       .send({
         identity: ethAddress,
-        sid: 1234432
+        sid: '1234432'
       })
       .expect(400)
 
@@ -263,7 +263,7 @@ describe('twitter attestations', async () => {
       .post('/api/attestations/twitter/verify')
       .send({
         identity: ethAddress,
-        sid: 1234432
+        sid: '1234432'
       })
       .expect(400)
 

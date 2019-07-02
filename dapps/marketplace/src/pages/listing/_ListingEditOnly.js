@@ -9,7 +9,8 @@ const EditOnly = ({
   isAnnouncement,
   isFractional,
   isFractionalHourly,
-  isSingleUnit
+  isSingleUnit,
+  isService
 }) => (
   <div className="listing-buy">
     {isAnnouncement ? null : (
@@ -36,12 +37,14 @@ const EditOnly = ({
           </div>
           <div>{listing.unitsPending}</div>
         </div>
-        <div className="row">
-          <div>
-            <fbt desc="number of units available">Available</fbt>
+        {isService ? null : (
+          <div className="row">
+            <div>
+              <fbt desc="number of units available">Available</fbt>
+            </div>
+            <div>{listing.unitsAvailable}</div>
           </div>
-          <div>{listing.unitsAvailable}</div>
-        </div>
+        )}
       </div>
     )}
     <Link

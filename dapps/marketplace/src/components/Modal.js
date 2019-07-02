@@ -66,7 +66,7 @@ export default class Modal extends Component {
           className={`${this.props.classNameOuter || ''} pl-modal${
             this.props.lightMode ? ' light-theme' : ''
           }`}
-          onMouseDown={e => this.onClose(e)}
+          onMouseDown={e => !this.props.disableDismiss && this.onClose(e)}
         >
           <div className="pl-modal-table">
             <div
@@ -110,6 +110,13 @@ export default class Modal extends Component {
   }
 
   doClose() {
+    if (this.props.skipAnimateOnExit) {
+      if (this.props.onClose) {
+        this.props.onClose()
+      }
+      return
+    }
+
     this.setState({ anim: 'is-leaving' })
     setTimeout(() => {
       this.setState({
@@ -120,7 +127,7 @@ export default class Modal extends Component {
   }
 
   onKeyDown(e) {
-    if (e.keyCode === 27) {
+    if (e.keyCode === 27 && !this.props.disableDismiss) {
       // Esc
       this.doClose()
     }

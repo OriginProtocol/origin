@@ -45,16 +45,16 @@ const styles = StyleSheet.create({
     flex: -1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: 20,
-    paddingBottom: 20,
-    marginBottom: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
     paddingHorizontal: 20,
-    width: 250
+    width: '80%'
   },
   pinCodeText: {
-    fontSize: 40
+    fontSize: 36
   },
   input: {
-    right: -400
+    right: -1000,
+    height: 0
   }
 })

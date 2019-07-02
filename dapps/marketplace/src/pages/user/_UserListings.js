@@ -54,9 +54,7 @@ const UserListings = ({
           <div className="user-listings">
             {hideHeader ? null : (
               <h5 className="listings-header">
-                <fbt desc="UserListing.sellerListings">
-                  Listings by this seller
-                </fbt>
+                <fbt desc="UserListing.listings">Listings</fbt>
               </h5>
             )}
             <ListingsGallery

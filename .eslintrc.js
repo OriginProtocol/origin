@@ -55,6 +55,9 @@ module.exports = {
     'semi': [
       'error',
       'never'
-    ]
+    ],
+    'require-atomic-updates': 'warn',
+    'no-async-promise-executor': 'warn',
+    'no-prototype-builtins': 'warn'
   }
 }
