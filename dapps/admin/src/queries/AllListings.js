@@ -6,7 +6,6 @@ export default gql`
     $first: Int
     $after: String
     $sort: String
-    $hidden: Boolean
     $search: String
   ) {
     marketplace {
@@ -14,7 +13,6 @@ export default gql`
         first: $first
         after: $after
         sort: $sort
-        hidden: $hidden
         search: $search
       ) {
         totalCount
