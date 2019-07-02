@@ -14,6 +14,7 @@ export default gql`
       provider
       providerWS
       proxyAccountsEnabled
+      relayerEnabled
       originGraphQLVersion
       relayer
       performanceMode

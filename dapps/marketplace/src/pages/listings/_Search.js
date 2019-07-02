@@ -27,6 +27,14 @@ class Search extends Component {
     document.body.removeEventListener('click', this.onOutsideClick)
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.location.search !== prevProps.location.search) {
+      this.setState({
+        ...getStateFromQuery(this.props)
+      })
+    }
+  }
+
   render() {
     return this.renderContent()
   }
@@ -107,38 +115,42 @@ class Search extends Component {
             <fbt desc="Search.Categories">Categories</fbt>
           </div>
         )}
-        <div className="featured-categories">
-          <div
-            className="category-icon apparel"
-            onClick={() =>
-              this.onCategoryClick({ subCategory: 'clothingAccessories' })
-            }
-          >
-            <fbt desc="Search.Apparel">Apparel</fbt>
-          </div>
-          <div
-            className="category-icon gift-cards"
-            onClick={() => this.onCategoryClick({ subCategory: 'giftCards' })}
-          >
-            <fbt desc="Search.GiftCards">Gift Cards</fbt>
-          </div>
-          <div
-            className="category-icon housing"
-            onClick={() => this.onCategoryClick({ subCategory: 'housing' })}
-          >
-            <fbt desc="Search.Housing">Housing</fbt>
-          </div>
-          <div
-            className="category-icon services"
-            onClick={() => this.onCategoryClick({ category: 'services' })}
-          >
-            <fbt desc="Search.Services">Services</fbt>
-          </div>
-          <div
-            className="category-icon art"
-            onClick={() => this.onCategoryClick({ subCategory: 'artsCrafts' })}
-          >
-            <fbt desc="Search.Art">Art</fbt>
+        <div className="featured-categories-wrapper">
+          <div className="featured-categories">
+            <div
+              className="category-icon apparel"
+              onClick={() =>
+                this.onCategoryClick({ subCategory: 'clothingAccessories' })
+              }
+            >
+              <fbt desc="Search.Apparel">Apparel</fbt>
+            </div>
+            <div
+              className="category-icon gift-cards"
+              onClick={() => this.onCategoryClick({ subCategory: 'giftCards' })}
+            >
+              <fbt desc="Search.GiftCards">Gift Cards</fbt>
+            </div>
+            <div
+              className="category-icon housing"
+              onClick={() => this.onCategoryClick({ subCategory: 'housing' })}
+            >
+              <fbt desc="Search.Housing">Housing</fbt>
+            </div>
+            <div
+              className="category-icon services"
+              onClick={() => this.onCategoryClick({ category: 'services' })}
+            >
+              <fbt desc="Search.Services">Services</fbt>
+            </div>
+            <div
+              className="category-icon art"
+              onClick={() =>
+                this.onCategoryClick({ subCategory: 'artsCrafts' })
+              }
+            >
+              <fbt desc="Search.Art">Art</fbt>
+            </div>
           </div>
         </div>
       </div>
@@ -230,11 +242,15 @@ require('react-styl')(`
           text-transform: uppercase
           margin-bottom: 1rem
         
+        .featured-categories-wrapper
+          margin: 0 -2rem
+          overflow-x: scroll
+
         .featured-categories
           display: inline-flex
           overflow-x: scroll
-          width: 100%
           flex-wrap: nowrap
+          padding: 0 2rem
           .category-icon
             width: 60px
             flex: auto 0 0
@@ -290,7 +306,6 @@ require('react-styl')(`
         .search-dropdown
           padding: 1.5rem 0
 
-
   .navbar
     .listing-search-wrapper
       max-width: 350px
@@ -300,8 +315,12 @@ require('react-styl')(`
         background: url(images/magnifying-glass.svg) no-repeat right 10px center
         border-color: #c2cbd3
         width: 100%
-  .listings-container
+
+  @media (max-width: 767.98px)
     .listing-search-wrapper
+      .search-input-wrapper
+        margin-bottom: 1.5rem
+
       .form-control
         font-size: 22px
         border: 0
@@ -317,8 +336,4 @@ require('react-styl')(`
           color: #94a7b5
         &:focus
           box-shadow: none
-
-  @media (max-width: 767.98px)
-    .listing-search-wrapper .search-input-wrapper
-          margin-bottom: 1.5rem
 `)

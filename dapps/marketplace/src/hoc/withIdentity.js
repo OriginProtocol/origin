@@ -16,6 +16,7 @@ function withIdentity(WrappedComponent, walletProp = 'walletProxy') {
               {...props}
               identity={identity}
               identityLoading={networkStatus === 1}
+              identityLoaded={networkStatus >= 7}
               identityRefetch={refetch}
             />
           )

@@ -36,6 +36,7 @@ class EmailAttestationModal extends Component {
           }
         }}
         lightMode={true}
+        skipAnimateOnExit={this.props.skipAnimateOnExit}
       >
         <EmailAttestation
           wallet={this.props.wallet}

@@ -8,7 +8,9 @@ const EditOnly = ({
   listing,
   isAnnouncement,
   isFractional,
-  isFractionalHourly
+  isFractionalHourly,
+  isSingleUnit,
+  isService
 }) => (
   <div className="listing-buy">
     {isAnnouncement ? null : (
@@ -16,7 +18,10 @@ const EditOnly = ({
         <Price listing={listing} descriptor />
       </div>
     )}
-    {isFractional || isFractionalHourly || isAnnouncement ? null : (
+    {isFractional ||
+    isFractionalHourly ||
+    isAnnouncement ||
+    isSingleUnit ? null : (
       <div className="listing-buy-editonly">
         <div className="row">
           <div>
@@ -32,18 +37,20 @@ const EditOnly = ({
           </div>
           <div>{listing.unitsPending}</div>
         </div>
-        <div className="row">
-          <div>
-            <fbt desc="number of units available">Available</fbt>
+        {isService ? null : (
+          <div className="row">
+            <div>
+              <fbt desc="number of units available">Available</fbt>
+            </div>
+            <div>{listing.unitsAvailable}</div>
           </div>
-          <div>{listing.unitsAvailable}</div>
-        </div>
+        )}
       </div>
     )}
     <Link
-      className="btn btn-primary mt-2"
+      className="listing-action-link"
       to={`/listing/${listing.id}/edit`}
-      children={'Edit Listing'}
+      children={fbt('Edit listing', 'EditListing')}
     />
   </div>
 )
@@ -53,16 +60,19 @@ export default EditOnly
 require('react-styl')(`
   .listing-buy
     .listing-buy-editonly
-      border-top: 1px solid var(--light)
-      border-bottom: 1px solid var(--light)
-      padding: 1rem
-      margin-bottom: 1rem
+      padding: 1rem 0 0 0
+      border-top: 1px solid #dde6ea
       .row
-        div:nth-child(1)
+        margin-bottom: 1rem
+        font-size: 16px
+        &:last-child
+          margin-bottom: 0
+        > div:nth-child(1)
           flex: 1
           padding-left: 1rem
-        div:nth-child(2)
+        > div:nth-child(2)
           flex: 1
           text-align: right
           padding-right: 1rem
+          font-weight: bold
 `)

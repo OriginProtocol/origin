@@ -352,7 +352,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow the listing to be edited', async function() {
-      await clickByText(page, 'Edit Listing')
+      await clickBySelector(page, '.listing-buy-editonly + a.listing-action-link')
       await clickByText(page, 'For Sale')
       await clickByText(page, 'Continue')
       await page.focus('input[name=quantity]')
@@ -431,7 +431,7 @@ describe('Marketplace Dapp', function() {
     await page.evaluate(() => {
       delete window.localStorage.performanceMode
       delete window.localStorage.proxyAccountsEnabled
-      delete window.localStorage.enableRelayer
+      delete window.localStorage.relayerEnabled
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
@@ -445,7 +445,7 @@ describe('Marketplace Dapp with proxies enabled', function() {
     await page.evaluate(() => {
       window.localStorage.proxyAccountsEnabled = true
       delete window.localStorage.performanceMode
-      delete window.localStorage.enableRelayer
+      delete window.localStorage.relayerEnabled
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
@@ -465,7 +465,7 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
     await page.evaluate(() => {
       window.localStorage.performanceMode = true
       window.localStorage.proxyAccountsEnabled = true
-      window.localStorage.enableRelayer = true
+      window.localStorage.relayerEnabled = true
       window.localStorage.debug = 'origin:*'
       window.transactionPoll = 100
     })
