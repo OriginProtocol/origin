@@ -14,12 +14,15 @@ const Pending = ({ listing, isMobile }) => (
         <fbt desc="Pending">Pending</fbt>
       </div>
       <div className="status-text">
-        {!isMobile
-          ? (
-            <fbt desc="UnitListing.anotherOfferMade">Another buyer has made an offer on this listing.</fbt>
-          ) : (
-            <fbt desc="UnitListing.offerMadeOnListing">An offer has been made on this listing</fbt>
-          )}
+        {!isMobile ? (
+          <fbt desc="UnitListing.anotherOfferMade">
+            Another buyer has made an offer on this listing.
+          </fbt>
+        ) : (
+          <fbt desc="UnitListing.offerMadeOnListing">
+            An offer has been made on this listing
+          </fbt>
+        )}
       </div>
       <Link className="listing-action-link" to="/listings">
         <fbt desc="viewAllListings">View all listings</fbt>
