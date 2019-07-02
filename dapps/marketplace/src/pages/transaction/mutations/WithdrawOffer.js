@@ -35,7 +35,7 @@ class WithdrawOffer extends Component {
             <button
               className={`btn btn-link withdraw ${className ? className : ''}`}
               onClick={() => this.setState({ sure: true })}
-              children={fbt('Withdraw Offer', 'Withdraw Offer')}
+              children={fbt('Cancel Purchase', 'Cancel Purchase')}
             />
             {!this.state.sure ? null : (
               <Modal
@@ -45,22 +45,22 @@ class WithdrawOffer extends Component {
                 shouldClose={this.state.sureShouldClose}
               >
                 <h2>
-                  <fbt desc="WithdrawOffer.withdraw">Withdraw Offer</fbt>
+                  <fbt desc="WithdrawOffer.cancelPurchase">Cancel Purchase</fbt>
                 </h2>
-                <fbt desc="WithdrawOffer.areYouSure">
-                  Are you sure you want to withdraw your offer? Your escrowed
+                <fbt desc="WithdrawOffer.areYouSureToCancel">
+                  Are you sure you want to cancel your purchase? Your escrowed
                   payment wil be returned to your wallet.
                 </fbt>
                 <div className="actions">
                   <button
                     className="btn btn-outline-light"
                     onClick={() => this.setState({ sureShouldClose: true })}
-                    children={fbt('Cancel', 'Cancel')}
+                    children={fbt('No', 'No')}
                   />
                   <button
                     className="btn btn-outline-light"
                     onClick={() => this.onClick(withdrawOffer)}
-                    children={fbt('Withdraw', 'Withdraw')}
+                    children={fbt('Yes', 'Yes')}
                   />
                 </div>
               </Modal>

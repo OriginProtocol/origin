@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Modal from 'components/Modal'
 import { fbt } from 'fbt-runtime'
 
 import DisputeOffer from './mutations/DisputeOffer'
@@ -25,15 +24,6 @@ class OfferAcceptedSeller extends Component {
               there is any information that you need.
             </fbt>
           </div>
-          <button
-            className="btn btn-link mt-2 mr-auto"
-            onClick={() => this.setState({ open: true })}
-            children=""
-          >
-            <fbt desc="WaitForFinalize.viewFullfillment">
-              View Fulfillment Checklist
-            </fbt>{' '}
-          </button>
 
           <DisputeOffer
             offer={this.props.offer}
@@ -43,79 +33,6 @@ class OfferAcceptedSeller extends Component {
             <fbt desc="WaitForFinalize.reportProblme">Report a Problem</fbt>
           </DisputeOffer>
         </div>
-
-        {!this.state.open ? null : (
-          <Modal
-            className="offer-accepted-seller"
-            onClose={() => this.setState({ open: false, shouldClose: false })}
-            shouldClose={this.state.shouldClose}
-          >
-            <div className="d-flex flex-column content">
-              <div className="checklist">
-                <h2>
-                  <fbt desc="WaitForFinalize.fuulfillmentChecklist">
-                    Fulfillment Checklist
-                  </fbt>
-                </h2>
-                <div>
-                  <span className="table-cell">
-                    <span className="step">1</span>
-                  </span>
-                  <span className="text">
-                    <fbt desc="WaitForFinalize.verifyVariants">
-                      Verify the variants with the seller
-                    </fbt>
-                  </span>
-                </div>
-                <div>
-                  <span className="table-cell">
-                    <span className="step">2</span>
-                  </span>
-                  <span className="text">
-                    <fbt desc="WaitForFinalize.packageProduct">
-                      Package the product and send it out
-                    </fbt>
-                  </span>
-                </div>
-                <div>
-                  <span className="table-cell">
-                    <span className="step">3</span>
-                  </span>
-                  <span className="text">
-                    <fbt desc="WaitForFinalize.notifyBuyer">
-                      Notify buyer and provide tracking number
-                    </fbt>
-                  </span>
-                </div>
-                <div>
-                  <span className="table-cell">
-                    <span className="step">4</span>
-                  </span>
-                  <span className="text">
-                    <fbt desc="WaitForFinalize.waitForBuyer">
-                      Wait for buyer to receive product
-                    </fbt>
-                  </span>
-                </div>
-                <div>
-                  <span className="table-cell">
-                    <span className="step">5</span>
-                  </span>
-                  <span className="text">
-                    <fbt desc="WaitForFinalize.withdrawYourFuns">
-                      Withdraw your funds
-                    </fbt>
-                  </span>
-                </div>
-              </div>
-              <button
-                className="btn btn-outline-light"
-                onClick={() => this.setState({ shouldClose: true })}
-                children={fbt('OK', 'OK')}
-              />
-            </div>
-          </Modal>
-        )}
       </div>
     )
   }

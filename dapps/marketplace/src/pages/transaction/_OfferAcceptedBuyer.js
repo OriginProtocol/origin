@@ -116,7 +116,7 @@ class OfferAcceptedBuyer extends Component {
                     to={offer.listing.seller.id}
                     className="btn btn-link"
                   >
-                    Contact Seller
+                    Contact the Seller
                   </SendMessage>
                   with your shipping address or any questions.
                 </fbt>
@@ -177,7 +177,7 @@ class OfferAcceptedBuyer extends Component {
             <DisputeOffer
               offer={this.props.offer}
               party="seller"
-              className="btn btn-link withdraw mr-auto"
+              className="btn btn-link withdraw small mr-auto"
             >
               <fbt desc="OfferAcceptBuyer.reportProblme">Report a Problem</fbt>
             </DisputeOffer>

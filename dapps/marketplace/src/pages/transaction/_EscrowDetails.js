@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { Component, Fragment } from 'react'
 import { fbt } from 'fbt-runtime'
 
 import CoinPrice from 'components/CoinPrice'
 import Price from 'components/Price'
 import Tooltip from 'components/Tooltip'
+import Modal from 'components/Modal'
 
 import numberFormat from 'utils/numberFormat'
 
@@ -35,57 +36,95 @@ function escrowStatus(status) {
     : fbt('Released', 'EscrowDetails.released')
 }
 
-const EscrowDetails = ({ offer }) => (
-  <ul className="escrow-details list-unstyled">
-    <li className="escrow-amount">
-      <span>
-        <fbt desc="EscrowDetails.amount">Amount</fbt>
-      </span>
-      <span>
-        {offer.totalPrice.currency.id.match('DAI') && (
-          <>
-            <CoinPrice iconOnly smaller coin="dai" />
-            {numberFormat(offer.totalPrice.amount, 2)}
-            &nbsp;
-            {'DAI'}
-          </>
+class EscrowDetails extends Component {
+  state = {
+    open: false
+  }
+
+  render() {
+    const { offer } = this.props
+    return (
+      <Fragment>
+        <ul className="escrow-details list-unstyled">
+          <li className="escrow-amount">
+            <span>
+              <fbt desc="EscrowDetails.amount">Amount</fbt>
+            </span>
+            <span>
+              {offer.totalPrice.currency.id.match('DAI') && (
+                <>
+                  <CoinPrice iconOnly smaller coin="dai" />
+                  {numberFormat(offer.totalPrice.amount, 2)}
+                  &nbsp;
+                  {'DAI'}
+                </>
+              )}
+              {offer.totalPrice.currency.id.match('ETH') && (
+                <>
+                  <CoinPrice iconOnly smaller coin="eth" />
+                  {numberFormat(offer.totalPrice.amount, 5)}
+                  &nbsp;
+                  {'ETH'}
+                </>
+              )}
+            </span>
+          </li>
+          <li className="escrow-value">
+            <span>
+              <fbt desc="EscrowDetails.value">Current Value</fbt>
+              {offer.totalPrice.currency.id.match('ETH') && (
+                <WarningIcon
+                  tooltip={fbt(
+                    'Ether is highly volatile and it’s value can change significantly in a short period of time.',
+                    'EscrowDetails.volatility'
+                  )}
+                />
+              )}
+            </span>
+            <span>
+              <Price price={offer.totalPrice} />
+            </span>
+          </li>
+          <li className="escrow-status">
+            <span>
+              <fbt desc="EscrowDetails.status">Status</fbt>
+            </span>
+            <span
+              className={escrowIsHeld(offer.statusStr) ? 'held' : 'released'}
+            >
+              {escrowStatus(offer.statusStr)}
+            </span>
+          </li>
+          <li>
+            <button
+              className="btn btn-link p-0"
+              onClick={() => this.setState({ open: true })}
+            >
+              <fbt desc="EscrowDetails.learnMore">Learn More</fbt>
+            </button>
+          </li>
+        </ul>
+        {this.state.open && (
+          <Modal onClose={() => this.setState({ open: false })}>
+            <div>
+              <fbt desc="Transaction.escrowInfo">
+                Cryptocurrency is held in a smart contract until the offer is
+                withdrawn, rejected, or the transaction is completed.
+              </fbt>
+              <div className="actions">
+                <button
+                  className="btn btn-outline-light"
+                  onClick={() => this.setState({ open: false })}
+                  children={fbt('Close', 'Close')}
+                />
+              </div>
+            </div>
+          </Modal>
         )}
-        {offer.totalPrice.currency.id.match('ETH') && (
-          <>
-            <CoinPrice iconOnly smaller coin="eth" />
-            {numberFormat(offer.totalPrice.amount, 5)}
-            &nbsp;
-            {'ETH'}
-          </>
-        )}
-      </span>
-    </li>
-    <li className="escrow-value">
-      <span>
-        <fbt desc="EscrowDetails.value">Current Value</fbt>
-        {offer.totalPrice.currency.id.match('ETH') && (
-          <WarningIcon
-            tooltip={fbt(
-              'Ether is highly volatile and it’s value can change significantly in a short period of time.',
-              'EscrowDetails.volatility'
-            )}
-          />
-        )}
-      </span>
-      <span>
-        <Price price={offer.totalPrice} />
-      </span>
-    </li>
-    <li className="escrow-status">
-      <span>
-        <fbt desc="EscrowDetails.status">Status</fbt>
-      </span>
-      <span className={escrowIsHeld(offer.statusStr) ? 'held' : 'released'}>
-        {escrowStatus(offer.statusStr)}
-      </span>
-    </li>
-  </ul>
-)
+      </Fragment>
+    )
+  }
+}
 
 export default EscrowDetails
 
@@ -93,6 +132,11 @@ require('react-styl')(`
   .escrow-details
     font-size: 14px
     font-weight: normal
+    .btn-link
+      &::after
+        content: " \\203A"
+      font-size: 14px
+      font-weight: bold
     li
       display: flex;
       justify-content: space-between;

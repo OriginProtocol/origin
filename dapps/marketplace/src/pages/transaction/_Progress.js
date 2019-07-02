@@ -6,7 +6,6 @@ import RejectOffer from './mutations/RejectOffer'
 import WithdrawOffer from './mutations/WithdrawOffer'
 import FinalizeOffer from './mutations/FinalizeOffer'
 
-import SendMessage from 'components/SendMessage'
 import Stages from 'components/TransactionStages'
 
 import OfferAcceptedSeller from './_OfferAcceptedSeller'
@@ -95,21 +94,21 @@ const AcceptOrReject = ({ offer, refetch, loading }) => (
           or reject this offer.
         </fbt>
       </div>
-      <div className="actions">
-        <RejectOffer
-          offer={offer}
-          className="btn btn-outline-danger"
-          refetch={refetch}
-        >
-          <fbt desc="Progress.declineOffer">Decline Offer</fbt>
-        </RejectOffer>
+      <div className="accept-actions">
         <AcceptOffer
           offer={offer}
-          className="btn btn-primary"
+          className="btn btn-primary mr-md-auto"
           refetch={refetch}
         >
           <fbt desc="Progress.acceptOffer">Accept Offer</fbt>
         </AcceptOffer>
+        <RejectOffer
+          offer={offer}
+          className="btn btn-link mr-auto danger small mt-3"
+          refetch={refetch}
+        >
+          <fbt desc="Progress.declineOffer">Decline Offer</fbt>
+        </RejectOffer>
       </div>
     </div>
   </div>
@@ -146,20 +145,19 @@ const MessageSeller = ({ offer, refetch, loading, party }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
       <h4>
-        <fbt desc="Progress.giveShipping">
-          Give your shipping address to seller
-        </fbt>
+        {fbt(
+          `You've made an offer. Wait for the seller to accept it.`,
+          'Progress.youVeMadeOffer'
+        )}
       </h4>
       <Stages className="mt-4" mini="true" offer={offer} />
       <div className="mt-4">
-        <fbt desc="Progress.giveShippingAddress">
-          Make sure the seller knows where to send your item.
+        <fbt desc="Progress.weWillNotifyYou">
+          We will notify you once your offer is accepted. Your funds will be
+          released 14 days later.
         </fbt>
-        <SendMessage to={offer.listing.seller.id} className="btn btn-link ml-2">
-          <fbt desc="Progress.messageSeller">Message Seller</fbt>
-        </SendMessage>
       </div>
-      <div className="mr-auto">
+      <div className="mr-auto mt-3">
         <WithdrawOffer offer={offer} refetch={refetch} from={party} />
       </div>
     </div>
@@ -347,6 +345,12 @@ require('react-styl')(`
       padding-top: 1rem
       .btn
         margin-right: 1rem
+    .accept-actions
+      display: flex
+      flex-direction: column
+      padding-top: 1rem
+      .btn
+        margin-right: 1rem
     .btn
       padding: 0.75rem 3rem
       border-radius: 2rem
@@ -357,12 +361,16 @@ require('react-styl')(`
       font-weight: bold
       &.danger
         color: #dc3545
+        &.small
+          font-size: 16px
       &::after
         content: " \\203A"
       &.withdraw
         font-size: 18px
         padding-top: 0
         font-weight: normal
+        &.small
+          font-size: 14px
     .stages
       background-color: var(--pale-grey-eight)
       border-radius: 0 0 5px 5px
@@ -400,6 +408,9 @@ require('react-styl')(`
         width: 100%
       .actions
         flex-direction: column-reverse
+        button:last-of-type
+          margin-bottom: 10px
+      .accept-actions
         button:last-of-type
           margin-bottom: 10px
 `)
