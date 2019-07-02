@@ -35,7 +35,6 @@ const Balances = ({ currencies, title, className, onClose }) => {
               ) : (
                 <EnrollButton
                   className="more-ogn"
-                  skipjoincampaign="false"
                   onClose={onClose}
                   onNavigation={onClose}
                 >

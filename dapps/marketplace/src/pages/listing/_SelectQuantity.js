@@ -1,13 +1,15 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
 
-const SelectQuantity = ({ quantity, onChange, available }) => {
+const SelectQuantity = ({ quantity, onChange, available, hideLabel }) => {
   available = available > 20 ? 20 : available
   return (
     <div className="quantity">
-      <span>
-        <fbt desc="quantity">Quantity</fbt>
-      </span>
+      {!hideLabel && (
+        <span>
+          <fbt desc="quantity">Quantity</fbt>
+        </span>
+      )}
       <span>
         <select value={quantity} onChange={e => onChange(e.target.value)}>
           {Array(available)

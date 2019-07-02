@@ -4,9 +4,9 @@
   "IdentityEvents": "0xe760d066bd8bbe22d7e9d8107be878102bd8d57d",
   "IdentityEventsEpoch": 0,
   "UniswapDaiExchange": "0xD4fbAF1dFe100d07f8Ef73d8c92e93d0Bcf7b45D",
-  "ProxyFactory": "0x66078a97Def9d40B2cA7abb44733dD897Ec6231D",
+  "ProxyFactory": "0xa43bD34038Ca13e7115e16770D722E62ea706212",
   "ProxyFactoryEpoch": 0,
-  "IdentityProxyImplementation": "0x35b338b4ADE005F25a8982A597638827B8617Ad4",
+  "IdentityProxyImplementation": "0x1cff61b8259f05F4BBF7aA4F769321e5Fa70B22d",
   "OGN": "0xc341384f6fe00179b33ef7ae638ed2937a9e4501",
   "DAI": "0xB9B7e0cb2EDF5Ea031C8B297A5A1Fa20379b6A0a"
 }

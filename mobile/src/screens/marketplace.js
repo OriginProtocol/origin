@@ -406,12 +406,18 @@ class MarketplaceScreen extends Component {
     this.setState({ enablePullToRefresh: scrollTop === 0 })
   }
 
-  injectGraphqlQuery = (id, query, variables = {}) => {
+  injectGraphqlQuery = (
+    id,
+    query,
+    variables = {},
+    fetchPolicy = 'cache-first'
+  ) => {
     const injectedJavaScript = `
       (function() {
         window.gql.query({
           query: ${JSON.stringify(query)},
-          variables: ${JSON.stringify(variables)}
+          variables: ${JSON.stringify(variables)},
+          fetchPolicy: '${fetchPolicy}'
         }).then((response) => {
           window.webViewBridge.send('handleGraphqlResult', {
             id: '${id}',
