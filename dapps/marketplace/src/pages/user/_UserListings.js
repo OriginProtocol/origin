@@ -14,7 +14,8 @@ const UserListings = ({
   hideHeader,
   hideLoadMore,
   horizontal,
-  compact
+  compact,
+  title
 }) => {
   const vars = {
     first: 8,
@@ -54,7 +55,7 @@ const UserListings = ({
           <div className="user-listings">
             {hideHeader ? null : (
               <h5 className="listings-header">
-                <fbt desc="UserListing.listings">Listings</fbt>
+                {title || fbt('Listings', 'UserListing.listings')}
               </h5>
             )}
             <ListingsGallery

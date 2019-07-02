@@ -95,7 +95,7 @@ class ListingDetail extends Component {
     const reviews = <Reviews id={listing.seller.id} seller hideWhenZero />
     const userListings = (
       <div className="seller-listings">
-        <UserListings user={listing.seller.id} hideLoadMore compact />
+        <UserListings user={listing.seller.id} hideLoadMore compact title={fbt('Other listings by this seller', 'ListingDetail.othersFromSeller')} />
       </div>
     )
 
@@ -546,6 +546,10 @@ require('react-styl')(`
           padding: 2rem 15px 0 15px
           margin-top: 2rem
           min-width: 100%
+          h3
+            font-family: var(--heading-font)
+            font-size: 18px
+            margin-bottom: 1.25rem
         .seller-listings
           border-top: 1px solid #dde6ea
           padding: 2rem 15px 0 15px
