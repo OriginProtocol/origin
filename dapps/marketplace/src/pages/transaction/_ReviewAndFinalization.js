@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react'
-import Modal from 'components/Modal'
 import { fbt } from 'fbt-runtime'
 
 import StarRating from 'components/StarRating'
@@ -27,40 +26,56 @@ class ReviewAndFinalization extends Component {
   }
 
   renderFinalization({ loading, offer, isSeller, isBuyer }) {
-    return (<div className={`transaction-progress${loading ? ' loading' : ''}`}>
-      <div className="top">
-        <h4>
-          {isSeller && <fbt desc="Progress.yourSaleComplete">Your sale is complete.</fbt>}
-          {isBuyer && <fbt desc="Progress.yourPurchaseComplete">Your purchase is complete.</fbt>}
-        </h4>
-        <Stages className="mt-4" mini="true" offer={offer} />
-        {isBuyer && <Fragment>
-          <div className="help mb-0 mt-4">
-            <fbt desc="Progress.seeOtherListings">
-              See what other listings are available on Origin.
-            </fbt>
-          </div>
-          <div className="actions">
-            <div className="btn btn-link">
-              <Link to="/">
-                <fbt desc="Progress.viewListings">View Listings</fbt>
-              </Link>
+    return (
+      <div className={`transaction-progress${loading ? ' loading' : ''}`}>
+        <div className="top">
+          <h4>
+            {isSeller && (
+              <fbt desc="Progress.yourSaleComplete">Your sale is complete.</fbt>
+            )}
+            {isBuyer && (
+              <fbt desc="Progress.yourPurchaseComplete">
+                Your purchase is complete.
+              </fbt>
+            )}
+          </h4>
+          <Stages className="mt-4" mini="true" offer={offer} />
+          {isBuyer && (
+            <Fragment>
+              <div className="help mb-0 mt-4">
+                <fbt desc="Progress.seeOtherListings">
+                  See what other listings are available on Origin.
+                </fbt>
+              </div>
+              <div className="actions">
+                <div className="btn btn-link">
+                  <Link to="/">
+                    <fbt desc="Progress.viewListings">View Listings</fbt>
+                  </Link>
+                </div>
+              </div>
+            </Fragment>
+          )}
+          {isSeller && (
+            <div className="actions">
+              <div className="btn btn-link">
+                <Link to="/create">
+                  <fbt desc="Progress.createAnotherListing">
+                    Create Another Listing
+                  </fbt>
+                </Link>
+              </div>
             </div>
-          </div>
-        </Fragment>}
-        {isSeller && <div className="actions">
-          <div className="btn btn-link">
-            <Link to="/create">
-              <fbt desc="Progress.createAnotherListing">Create Another Listing</fbt>
-            </Link>
-          </div>
-        </div>}
+          )}
+        </div>
       </div>
-    </div>)
+    )
   }
 
   rateOffer(offerId) {
-    const offersRated = JSON.parse(localStorage.getItem(RATED_OFFERS_KEY) || '[]')
+    const offersRated = JSON.parse(
+      localStorage.getItem(RATED_OFFERS_KEY) || '[]'
+    )
     offersRated.push(offerId)
     this.setState({
       offerRated: true
@@ -68,7 +83,7 @@ class ReviewAndFinalization extends Component {
     localStorage.setItem(RATED_OFFERS_KEY, JSON.stringify(offersRated))
   }
 
-  renderRating({ offer, loading, party, isSeller, isBuyer }) {
+  renderRating({ offer, loading, isSeller, isBuyer }) {
     const { rating, review } = this.state
 
     const reviewData = {
@@ -81,17 +96,35 @@ class ReviewAndFinalization extends Component {
     if (review !== '') {
       reviewData.text = review
     }
-  
+
     return (
       <div className={`transaction-progress${loading ? ' loading' : ''}`}>
         <div className="top">
           <h4>
-            {isSeller && <fbt desc="Progress.leaveBuyerReview">Leave a review of the buyer.</fbt>}
-            {isBuyer && <fbt desc="Progress.leaveSellerReview">Leave a review of the seller.</fbt>}
+            {isSeller && (
+              <fbt desc="Progress.leaveBuyerReview">
+                Leave a review of the buyer.
+              </fbt>
+            )}
+            {isBuyer && (
+              <fbt desc="Progress.leaveSellerReview">
+                Leave a review of the seller.
+              </fbt>
+            )}
           </h4>
           <div className="help">
-            {isBuyer && <fbt desc="Progress.letOtherBuyersKnow">Let other buyers know about your experience transacting with this seller.</fbt>}
-            {isSeller && <fbt desc="Progress.letOtherSellersKnow">Let other sellers know about your experience transacting with this buyer.</fbt>}
+            {isBuyer && (
+              <fbt desc="Progress.letOtherBuyersKnow">
+                Let other buyers know about your experience transacting with
+                this seller.
+              </fbt>
+            )}
+            {isSeller && (
+              <fbt desc="Progress.letOtherSellersKnow">
+                Let other sellers know about your experience transacting with
+                this buyer.
+              </fbt>
+            )}
           </div>
           <div className="review">
             <div>
@@ -104,8 +137,16 @@ class ReviewAndFinalization extends Component {
               onChange={rating => this.setState({ rating })}
             />
             <div>
-              {isBuyer && <fbt desc="Progress.reviewYourExperience">Describe your experience transacting with this seller.</fbt>}
-              {isSeller && <fbt desc="Progress.reviewYourExperience">Describe your experience transacting with this buyer.</fbt>}
+              {isBuyer && (
+                <fbt desc="Progress.reviewYourExperience">
+                  Describe your experience transacting with this seller.
+                </fbt>
+              )}
+              {isSeller && (
+                <fbt desc="Progress.reviewYourExperience">
+                  Describe your experience transacting with this buyer.
+                </fbt>
+              )}
             </div>
             <textarea
               className="form-control"
@@ -137,7 +178,9 @@ class ReviewAndFinalization extends Component {
     const isSeller = this.props.viewedBy === 'seller'
     const isBuyer = this.props.viewedBy === 'buyer'
 
-    return this.state.offerRated ? this.renderFinalization({ ...this.props, isSeller, isBuyer }) : this.renderRating({ ...this.props, isSeller, isBuyer })
+    return this.state.offerRated
+      ? this.renderFinalization({ ...this.props, isSeller, isBuyer })
+      : this.renderRating({ ...this.props, isSeller, isBuyer })
   }
 }
 

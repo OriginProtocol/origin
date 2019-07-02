@@ -15,13 +15,14 @@ class OfferAcceptedSeller extends Component {
         <div className="top">
           <h4>
             <fbt desc="WaitForFinalize.youVeAcceptedOffer">
-              You've accepted this offer.
+              You&apos;ve accepted this offer.
             </fbt>
           </h4>
           <Stages className="mt-4" mini="true" offer={offer} />
           <div className="help mt-3 mb-0">
             <fbt desc="WaitForFinalize.makeSureYouFullfillOrder">
-              Make sure to fulfill the order promptly. Message the buyer if there is any information that you need.
+              Make sure to fulfill the order promptly. Message the buyer if
+              there is any information that you need.
             </fbt>
           </div>
           <button

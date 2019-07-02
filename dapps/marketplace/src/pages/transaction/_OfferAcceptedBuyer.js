@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react'
-import Modal from 'components/Modal'
 import { fbt } from 'fbt-runtime'
 import dayjs from 'dayjs'
 
@@ -26,15 +25,25 @@ class OfferAcceptedBuyer extends Component {
     }
 
     // if fractional for rent listing and the endDate has passed automatically set offer as confirmed
-    if (offer.listing.category === 'schema.forRent' && offer.endDate && offer.listing.__typename === 'FractionalListing') {
-      if (dayjs(offer.endDate).add(1, 'day').isBefore(dayjs())) {
+    if (
+      offer.listing.category === 'schema.forRent' &&
+      offer.endDate &&
+      offer.listing.__typename === 'FractionalListing'
+    ) {
+      if (
+        dayjs(offer.endDate)
+          .add(1, 'day')
+          .isBefore(dayjs())
+      ) {
         this.setState({ offerConfirmed: true })
       }
     }
   }
 
   confirmOffer(offerId) {
-    const offersConfirmed = JSON.parse(localStorage.getItem(CONFIRMED_OFFERS_KEY) || '[]')
+    const offersConfirmed = JSON.parse(
+      localStorage.getItem(CONFIRMED_OFFERS_KEY) || '[]'
+    )
     offersConfirmed.push(offerId)
     this.setState({
       offerConfirmed: true
@@ -54,12 +63,15 @@ class OfferAcceptedBuyer extends Component {
       <div className="transaction-progress">
         <div className="top">
           <h4>
-            <fbt desc="Progress.releaseFundsToSeller">Release the funds to the seller.</fbt>
+            <fbt desc="Progress.releaseFundsToSeller">
+              Release the funds to the seller.
+            </fbt>
           </h4>
           <Stages className="mt-4" mini="true" offer={offer} />
           <div className="help mt-3 mb-0 ">
             <fbt desc="OfferAcceptBuyer.releaseFundsConcern">
-              If you're concerned about releasing the funds, report a problem to Origin.
+              If you&apos;re concerned about releasing the funds, report a
+              problem to Origin.
             </fbt>
           </div>
           <div className="actions-offers d-flex mt-3">
@@ -70,9 +82,7 @@ class OfferAcceptedBuyer extends Component {
               from={offer.buyer.id}
               className="btn btn-primary"
             >
-              <fbt desc="OfferAcceptBuyer.releaseFunds">
-                Release Funds
-              </fbt>
+              <fbt desc="OfferAcceptBuyer.releaseFunds">Release Funds</fbt>
             </FinalizeOffer>
             <DisputeOffer
               offer={offer}
@@ -93,45 +103,62 @@ class OfferAcceptedBuyer extends Component {
             <span className="positive-emphasis">
               <fbt desc="Progress.congratulations">Congratulations!</fbt>{' '}
             </span>
-            <fbt desc="Progress.offerAcceptedByTheSeller">Your offer has been accepted by the seller.</fbt>
+            <fbt desc="Progress.offerAcceptedByTheSeller">
+              Your offer has been accepted by the seller.
+            </fbt>
           </h4>
           <Stages className="mt-4" mini="true" offer={offer} />
-          {isForSale && <Fragment>
-            <div className="help mt-3 mb-0 d-flex">
-              <fbt desc="OfferAcceptBuyer.contactSellerShipping">
-                <SendMessage to={offer.listing.seller.id} className="btn btn-link">
-                  Contact Seller
-                </SendMessage>
-                with your shipping address or any questions.
-              </fbt>
-            </div>
+          {isForSale && (
+            <Fragment>
+              <div className="help mt-3 mb-0 d-flex">
+                <fbt desc="OfferAcceptBuyer.contactSellerShipping">
+                  <SendMessage
+                    to={offer.listing.seller.id}
+                    className="btn btn-link"
+                  >
+                    Contact Seller
+                  </SendMessage>
+                  with your shipping address or any questions.
+                </fbt>
+              </div>
+              <div className="help mt-3 mb-0 ">
+                <fbt desc="OfferAcceptBuyer.clickToConfirmReceipt">
+                  Click below to confirm your receipt of{' '}
+                  <fbt:param name="listingTitle">
+                    <b>{offer.listing.title}</b>
+                  </fbt:param>{' '}
+                  when you get it.
+                </fbt>
+              </div>
+            </Fragment>
+          )}
+          {isForRent && (
+            <Fragment>
+              <div className="help mt-3 mb-0 d-flex">
+                <fbt desc="OfferAcceptBuyer.contactSellerRental">
+                  <SendMessage
+                    to={offer.listing.seller.id}
+                    className="btn btn-link"
+                  >
+                    Contact Seller
+                  </SendMessage>
+                  with any questions about your rental.
+                </fbt>
+              </div>
+              <div className="help mt-3 mb-0 ">
+                <fbt desc="OfferAcceptBuyer.confirmRentalCompleted">
+                  Click below to confirm that your rental has been completed.
+                </fbt>
+              </div>
+            </Fragment>
+          )}
+          {isServices && (
             <div className="help mt-3 mb-0 ">
-              <fbt desc="OfferAcceptBuyer.clickToConfirmReceipt">
-                Click below to confirm your receipt of <fbt:param name="listingTitle"><b>{offer.listing.title}</b></fbt:param> when you get it.
-              </fbt>
-            </div>
-          </Fragment>}
-          {isForRent && <Fragment>
-            <div className="help mt-3 mb-0 d-flex">
-              <fbt desc="OfferAcceptBuyer.contactSellerRental">
-                <SendMessage to={offer.listing.seller.id} className="btn btn-link">
-                  Contact Seller
-                </SendMessage>
-                with any questions about your rental.
-              </fbt>
-            </div>
-            <div className="help mt-3 mb-0 ">
-              <fbt desc="OfferAcceptBuyer.confirmRentalCompleted">
-                Click below to confirm that your rental has been completed.
-              </fbt>
-            </div>
-          </Fragment>}
-          {isServices && <div className="help mt-3 mb-0 ">
               <fbt desc="OfferAcceptBuyer.confirmServiceCompleted">
                 Click below to confirm that this service has been completed.
               </fbt>
             </div>
-          }
+          )}
           <div className="actions">
             <button
               className="btn btn-primary"
@@ -139,17 +166,13 @@ class OfferAcceptedBuyer extends Component {
                 this.confirmOffer(offer.id)
               }}
             >
-              <fbt desc="OfferAcceptBuyer.confirm">
-                Confirm
-              </fbt>
+              <fbt desc="OfferAcceptBuyer.confirm">Confirm</fbt>
             </button>
           </div>
 
           <div className="mt-3">
             <span className="issues mr-1">
-              <fbt desc="OfferAcceptBuyer.havingIssues">
-                Having issues?
-              </fbt>
+              <fbt desc="OfferAcceptBuyer.havingIssues">Having issues?</fbt>
             </span>
             <DisputeOffer
               offer={this.props.offer}
@@ -162,7 +185,7 @@ class OfferAcceptedBuyer extends Component {
         </div>
       </div>
     )
-    
+
     return offerConfirmed ? offerConfirmedView() : offerAcceptedView()
   }
 }

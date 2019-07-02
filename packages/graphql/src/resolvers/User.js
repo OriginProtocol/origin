@@ -106,8 +106,7 @@ async function sales(seller, { first = 10, after, filter }, _, info) {
   return await resultsFromIds({ after, allIds, first, fields })
 }
 
-/* Currently this only 
- */
+//TODO: Currently this only returns sellers reviews.
 async function reviews(user, { first = 10, after }, context, info) {
   let party = user.id
   const owner = await proxyOwner(party)
@@ -134,7 +133,7 @@ async function reviews(user, { first = 10, after }, context, info) {
     )
     /* Group all OfferFinalized and OfferData events together. This doesn't
      * break pagination because we extract at most 1 review per group of
-     * events. 
+     * events.
      */
     idEvents[id] = idEvents[id] ? [event, ...idEvents[id]] : [event]
   }
@@ -147,8 +146,8 @@ async function reviews(user, { first = 10, after }, context, info) {
     const events = idEvents[id]
 
     // fetch all events that may contain a review
-    const reviews = (
-      await Promise.all(events.map(event => {
+    const reviews = (await Promise.all(
+      events.map(event => {
         return contracts.eventSource.getReview(
           event.returnValues.listingID,
           event.returnValues.offerID,
@@ -156,13 +155,12 @@ async function reviews(user, { first = 10, after }, context, info) {
           event.returnValues.ipfsHash,
           event
         )
-      }))
-    )
-    // Offer objects contain reviews of both parties, filter the other ones out. 
+      })
+    ))
+      // Offer objects contain reviews of both parties, filter the other ones out.
       .filter(review => review.rating > 0 && review.reviewer.id !== user.id)
 
-    if (reviews.length === 0)
-      continue
+    if (reviews.length === 0) continue
 
     const review = reviews[0]
 

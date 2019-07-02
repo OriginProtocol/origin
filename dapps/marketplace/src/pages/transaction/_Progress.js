@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { fbt } from 'fbt-runtime'
 
 import AcceptOffer from './mutations/AcceptOffer'
@@ -33,7 +33,9 @@ const TransactionProgress = ({
   }
   if (isSeller) {
     if (offer.status === 4) {
-      return <ReviewAndFinalization refetch={refetch} viewedBy="seller" {...props} />
+      return (
+        <ReviewAndFinalization refetch={refetch} viewedBy="seller" {...props} />
+      )
     } else if (offer.status === 2) {
       if (offer.finalizes < +new Date() / 1000) {
         return <SellerFinalize {...props} refetch={refetch} />
@@ -50,7 +52,9 @@ const TransactionProgress = ({
       return <AcceptOrReject {...props} refetch={refetch} />
     }
   } else if (offer.status === 4) {
-    return <ReviewAndFinalization refetch={refetch} viewedBy="buyer" {...props} />
+    return (
+      <ReviewAndFinalization refetch={refetch} viewedBy="buyer" {...props} />
+    )
   }
 
   if (offer.status === 2) {
@@ -80,11 +84,16 @@ const AcceptOrReject = ({ offer, refetch, loading }) => (
         <span className="positive-emphasis">
           <fbt desc="Progress.congratulations">Congratulations!</fbt>{' '}
         </span>
-        <fbt desc="Progress.offerHasBeenMade">An offer has been made on this listing.</fbt>
+        <fbt desc="Progress.offerHasBeenMade">
+          An offer has been made on this listing.
+        </fbt>
       </h4>
       <Stages className="mt-4" mini="true" offer={offer} />
       <div className="mt-4">
-        <fbt desc="Progress.fundsInEscrow">The buyer's funds are being held in escrow. Click below to accept or reject this offer.</fbt>
+        <fbt desc="Progress.fundsInEscrow">
+          The buyer&apos;s funds are being held in escrow. Click below to accept
+          or reject this offer.
+        </fbt>
       </div>
       <div className="actions">
         <RejectOffer
@@ -110,14 +119,13 @@ const SellerFinalize = ({ offer, refetch, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
       <h4>
-        <fbt desc="Progress.completeSaleAndCollect">
-          Collect your funds.
-        </fbt>
+        <fbt desc="Progress.completeSaleAndCollect">Collect your funds.</fbt>
       </h4>
       <Stages className="mt-4" mini="true" offer={offer} />
       <div className="help mt-4">
         <fbt desc="Progress.completeSaleTransferFunds">
-          Complete this sale by transferring the buyer's funds out of escrow.
+          Complete this sale by transferring the buyer&apos;s funds out of
+          escrow.
         </fbt>
       </div>
       <div className="d-flex flex-column mr-md-auto">
@@ -170,7 +178,12 @@ const WaitForSeller = ({ offer, refetch, loading, party }) => (
           The seller will review your booking
         </fbt>
       </div>
-      <WithdrawOffer className="mr-auto" offer={offer} refetch={refetch} from={party} />
+      <WithdrawOffer
+        className="mr-auto"
+        offer={offer}
+        refetch={refetch}
+        from={party}
+      />
     </div>
   </div>
 )
@@ -180,16 +193,26 @@ const OfferWithdrawn = ({ offer, viewedBy, loading }) => (
     <div className="top">
       <h4>
         {viewedBy === 'seller'
-          ? fbt('This offer has been canceled.', 'Progress.offerHasBeenCanceled')
-          : fbt(`You've canceled this purchase.`, 'Progress.youCanceledThisPurchase')
-        }        
+          ? fbt(
+              'This offer has been canceled.',
+              'Progress.offerHasBeenCanceled'
+            )
+          : fbt(
+              `You've canceled this purchase.`,
+              'Progress.youCanceledThisPurchase'
+            )}
       </h4>
       <Stages className="my-4" mini="true" offer={offer} />
       <div className="help mb-0">
         {viewedBy === 'seller'
-          ? fbt(`The buyer's funds have been refunded.`, 'Progress.buyerFundsHaveBeendRefunded')
-          : fbt('Your funds have been refunded.', 'Progress.yourFundsHaveBeenRefunded')
-        }
+          ? fbt(
+              `The buyer's funds have been refunded.`,
+              'Progress.buyerFundsHaveBeendRefunded'
+            )
+          : fbt(
+              'Your funds have been refunded.',
+              'Progress.yourFundsHaveBeenRefunded'
+            )}
       </div>
     </div>
   </div>
@@ -201,18 +224,19 @@ const OfferRejected = ({ offer, viewedBy, loading }) => (
       <h4>
         {viewedBy === 'seller'
           ? fbt(`You've declined this offer.`, 'Progress.youDeclinedOffer')
-          : fbt(`Your offer has been declined by the seller.`, 'Progress.sellerDeclinedOffer')
-        }
+          : fbt(
+              `Your offer has been declined by the seller.`,
+              'Progress.sellerDeclinedOffer'
+            )}
       </h4>
       <Stages className="mt-4" mini="true" offer={offer} />
       <div className="help mb-0 mt-3">
         {viewedBy === 'seller'
-          ? fbt(`The buyer's funds have been refunded.`, 'Progress.buyerFundsRefunded')
-          : fbt(
-              'Your funds have been refunded.',
-              'Progress.yourFundsRefunded'
+          ? fbt(
+              `The buyer's funds have been refunded.`,
+              'Progress.buyerFundsRefunded'
             )
-        }
+          : fbt('Your funds have been refunded.', 'Progress.yourFundsRefunded')}
       </div>
     </div>
   </div>
