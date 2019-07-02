@@ -18,6 +18,7 @@ import RNPickerSelect from 'react-native-picker-select'
 import * as RNLocalize from 'react-native-localize'
 
 import { setPhoneAttestation } from 'actions/Onboarding'
+import BackArrow from 'components/back-arrow'
 import Disclaimer from 'components/disclaimer'
 import OriginButton from 'components/origin-button'
 import PinInput from 'components/pin-input'
@@ -223,6 +224,10 @@ class PhoneScreen extends Component {
     return (
       <>
         <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
+          <BackArrow
+            onClick={() => this.props.navigation.goBack(null)}
+            style={styles.backArrow}
+          />
           <Text style={styles.title}>
             <fbt desc="PhoneScreen.inputTitle">Enter phone number</fbt>
           </Text>
@@ -285,6 +290,10 @@ class PhoneScreen extends Component {
     return (
       <>
         <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
+          <BackArrow
+            onClick={() => this.props.navigation.goBack(null)}
+            style={styles.backArrow}
+          />
           <Text style={styles.title}>
             <fbt desc="PhoneScreen.verifyTitle">Verify phone</fbt>
           </Text>

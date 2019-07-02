@@ -15,6 +15,7 @@ import { fbt } from 'fbt-runtime'
 import SafeAreaView from 'react-native-safe-area-view'
 
 import { setName } from 'actions/Onboarding'
+import BackArrow from 'components/back-arrow'
 import OriginButton from 'components/origin-button'
 import VisibilityWarning from 'components/visibility-warning'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
@@ -64,6 +65,10 @@ class NameScreen extends Component {
             keyboardShouldPersistTaps={'always'}
           >
             <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
+              <BackArrow
+                onClick={() => this.props.navigation.goBack(null)}
+                style={styles.backArrow}
+              />
               <Text style={styles.title}>
                 <fbt desc="NameScreen.title">Create a profile</fbt>
               </Text>

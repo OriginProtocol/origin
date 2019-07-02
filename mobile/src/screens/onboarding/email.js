@@ -16,6 +16,7 @@ import { fbt } from 'fbt-runtime'
 import get from 'lodash.get'
 
 import { setEmailAttestation } from 'actions/Onboarding'
+import BackArrow from 'components/back-arrow'
 import Disclaimer from 'components/disclaimer'
 import OriginButton from 'components/origin-button'
 import PinInput from 'components/pin-input'
@@ -168,6 +169,10 @@ class EmailScreen extends Component {
     return (
       <>
         <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
+          <BackArrow
+            onClick={() => this.props.navigation.goBack(null)}
+            style={styles.backArrow}
+          />
           <Text style={styles.title}>
             <fbt desc="EmailScreen.inputTitle">Let&apos;s get started</fbt>
           </Text>
@@ -225,6 +230,10 @@ class EmailScreen extends Component {
     return (
       <>
         <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
+          <BackArrow
+            onClick={() => this.props.navigation.goBack(null)}
+            style={styles.backArrow}
+          />
           <Text style={styles.title}>
             <fbt desc="EmailScreen.verifyTitle">Verify your email</fbt>
           </Text>
