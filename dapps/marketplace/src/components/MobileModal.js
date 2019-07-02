@@ -155,6 +155,13 @@ export default class MobileModal extends Component {
   }
 
   doClose() {
+    if (this.props.skipAnimateOnExit) {
+      if (this.props.onClose) {
+        this.props.onClose()
+      }
+      return
+    }
+
     this.portal.classList.remove('open')
     this.overlay.classList.remove('open')
     if (this.props.onClose) {

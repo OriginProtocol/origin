@@ -14,6 +14,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 
 import { setPin } from 'actions/Settings'
+import BackArrow from 'components/back-arrow'
 import PinInput from 'components/pin-input'
 import CommonStyles from 'styles/common'
 import OnboardingStyles from 'styles/onboarding'
@@ -78,6 +79,10 @@ class PinScreen extends Component {
             keyboardShouldPersistTaps={'always'}
           >
             <View style={styles.container}>
+              <BackArrow
+                onClick={() => this.props.navigation.goBack(null)}
+                style={styles.backArrow}
+              />
               <Text style={styles.title}>{title}</Text>
               {this.state.isRetry === true && (
                 <Text style={styles.invalid}>
