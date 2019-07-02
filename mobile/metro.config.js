@@ -16,17 +16,12 @@ const extraNodeModules = {
   ...require('node-libs-react-native'),
   ...externalPackages
 }
-
-console.log(extraNodeModules)
-
 extraNodeModules.vm = require.resolve('vm-browserify')
 
 const watchFolders = [
   path.resolve(__dirname + '/../node_modules/'),
   ...Object.values(externalPackages)
 ]
-
-console.log(watchFolders)
 
 module.exports = {
   transformer: {

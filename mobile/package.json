@@ -9,7 +9,6 @@
     "clean": "git clean -fdX .",
     "ios": "react-native run-ios",
     "lint": "eslint . && npm run prettier:check",
-    "watch-modules": "rn-link ../packages/graphql/ ../packages/contracts",
     "prettier": "prettier --write *.js \"**/*.js\"",
     "prettier:check": "prettier -c *.js \"**/*.js\"",
     "start": "react-native start",
