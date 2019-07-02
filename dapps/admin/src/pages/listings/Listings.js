@@ -40,7 +40,7 @@ class Listings extends Component {
     const vars = pick(this.state, 'first', 'sort', 'search')
 
     return (
-      <Query query={query} variables={vars} notifyOnNetworkStatusChange={true} fetchPolicy='network-only'>
+      <Query query={query} variables={vars} notifyOnNetworkStatusChange={true}>
         {({ error, data, fetchMore, networkStatus, refetch }) => {
           if (networkStatus === 1) {
             return <LoadingSpinner />

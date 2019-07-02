@@ -6,8 +6,6 @@ const expect = chai.expect
 chai.should()
 chai.use(require('chai-things'))
 
-const hiddenIds = ['999-000-1', '999-000-2']
-const featuredIds = ['999-000-4', '999-000-2', '999-000-3']
 let lastQuery
 
 describe('Search', () => {
@@ -45,7 +43,7 @@ describe('Search', () => {
   })
 
   it(`Should generate a query for all listings`, async () => {
-    search.Listing.search('', [], 5, 0, false, hiddenIds, featuredIds)
+    search.Listing.search('', [], 5, 0, false)
     expect(lastQuery.body.from).to.equal(0)
     expect(lastQuery.body.size).to.equal(5)
     lastQuery.body.query.function_score.query.bool.must.should.include.something.that.deep.equals(
@@ -53,38 +51,8 @@ describe('Search', () => {
     )
   })
 
-  it(`Should include hidden ids`, async () => {
-    search.Listing.search('', [], 5, 0, false, hiddenIds, featuredIds)
-
-    lastQuery.body.query.function_score.query.bool.must_not.should.include.something.that.deep.equals(
-      { ids: { values: ['999-000-1', '999-000-2'] } }
-    )
-  })
-
-  it(`Should include featured ids`, async () => {
-    search.Listing.search('', [], 5, 0, false, hiddenIds, featuredIds)
-
-    lastQuery.body.query.function_score.query.bool.should.should.include.something.that.deep.equals(
-      { ids: { boost: 10000, values: ['999-000-4'] } }
-    )
-    lastQuery.body.query.function_score.query.bool.should.should.include.something.that.deep.equals(
-      { ids: { boost: 9900, values: ['999-000-2'] } }
-    )
-    lastQuery.body.query.function_score.query.bool.should.should.include.something.that.deep.equals(
-      { ids: { boost: 9800, values: ['999-000-3'] } }
-    )
-  })
-
   it(`Should include queried text with fuzzy query`, async () => {
-    search.Listing.search(
-      'Taylor Swift',
-      [],
-      5,
-      0,
-      false,
-      hiddenIds,
-      featuredIds
-    )
+    search.Listing.search('Taylor Swift', [], 5, 0, false)
 
     lastQuery.body.query.function_score.query.bool.must.should.include.something.that.deep.equals(
       {
@@ -100,15 +68,7 @@ describe('Search', () => {
   })
 
   it(`Should include boost for match in the title`, async () => {
-    search.Listing.search(
-      'Taylor Swift',
-      [],
-      5,
-      0,
-      false,
-      hiddenIds,
-      featuredIds
-    )
+    search.Listing.search('Taylor Swift', [], 5, 0, false)
 
     lastQuery.body.query.function_score.query.bool.should.should.include.something.that.deep.equals(
       {
@@ -118,15 +78,7 @@ describe('Search', () => {
   })
 
   it(`Should include boost for match in the title`, async () => {
-    search.Listing.search(
-      'Taylor Swift',
-      [],
-      5,
-      0,
-      false,
-      hiddenIds,
-      featuredIds
-    )
+    search.Listing.search('Taylor Swift', [], 5, 0, false)
 
     lastQuery.body.query.function_score.query.bool.should.should.include.something.that.deep.equals(
       {
@@ -143,15 +95,7 @@ describe('Search', () => {
         value: 20
       }
     ]
-    search.Listing.search(
-      'Taylor Swift',
-      filters,
-      5,
-      0,
-      false,
-      hiddenIds,
-      featuredIds
-    )
+    search.Listing.search('Taylor Swift', filters, 5, 0, false)
 
     lastQuery.body.query.function_score.query.bool.filter.should.include.something.that.deep.equals(
       { range: { price: { gte: 20 } } }
@@ -166,15 +110,7 @@ describe('Search', () => {
         value: 20
       }
     ]
-    search.Listing.search(
-      'Taylor Swift',
-      filters,
-      5,
-      0,
-      false,
-      hiddenIds,
-      featuredIds
-    )
+    search.Listing.search('Taylor Swift', filters, 5, 0, false)
 
     lastQuery.body.query.function_score.query.bool.filter.should.include.something.that.deep.equals(
       { range: { price: { lte: 20 } } }
@@ -189,15 +125,7 @@ describe('Search', () => {
         value: 'cars'
       }
     ]
-    search.Listing.search(
-      'Taylor Swift',
-      filters,
-      5,
-      0,
-      false,
-      hiddenIds,
-      featuredIds
-    )
+    search.Listing.search('Taylor Swift', filters, 5, 0, false)
 
     lastQuery.body.query.function_score.query.bool.filter.should.include.something.that.deep.equals(
       { term: { category: 'cars' } }
@@ -213,15 +141,7 @@ describe('Search', () => {
         valueType: 'ARRAY_STRING'
       }
     ]
-    search.Listing.search(
-      'Taylor Swift',
-      filters,
-      5,
-      0,
-      false,
-      hiddenIds,
-      featuredIds
-    )
+    search.Listing.search('Taylor Swift', filters, 5, 0, false)
 
     lastQuery.body.query.function_score.query.bool.filter.should.include.something.that.deep.equals(
       {
