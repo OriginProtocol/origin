@@ -9,7 +9,7 @@ import FinalizeOffer from './mutations/FinalizeOffer'
 import Stages from 'components/TransactionStages'
 import SendMessage from 'components/SendMessage'
 
-const CONFIRMED_OFFERS_KEY = 'confirmed_offers_key'
+const CONFIRMED_OFFERS_KEY = 'confirmed_offers'
 class OfferAcceptedBuyer extends Component {
   state = {
     offerConfirmed: false
@@ -21,7 +21,7 @@ class OfferAcceptedBuyer extends Component {
 
     if (offersConfirmedString) {
       this.setState({
-        offerConfirmed: JSON.parse(offersConfirmedString).includes(this.props.offer.id)
+        offerConfirmed: JSON.parse(offersConfirmedString).includes(offer.id)
       })
     }
 
@@ -44,7 +44,6 @@ class OfferAcceptedBuyer extends Component {
 
   render() {
     const { offer } = this.props
-    console.log("Offer:", offer)
 
     const { offerConfirmed } = this.state
     const isForSale = offer.listing.category === 'schema.forSale'

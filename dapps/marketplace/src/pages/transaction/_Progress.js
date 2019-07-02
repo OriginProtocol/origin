@@ -5,14 +5,13 @@ import AcceptOffer from './mutations/AcceptOffer'
 import RejectOffer from './mutations/RejectOffer'
 import WithdrawOffer from './mutations/WithdrawOffer'
 import FinalizeOffer from './mutations/FinalizeOffer'
-import DisputeOffer from './mutations/DisputeOffer'
 
-import StarRating from 'components/StarRating'
 import SendMessage from 'components/SendMessage'
 import Stages from 'components/TransactionStages'
 
 import OfferAcceptedSeller from './_OfferAcceptedSeller'
 import OfferAcceptedBuyer from './_OfferAcceptedBuyer'
+import ReviewAndFinalization from './_ReviewAndFinalization'
 
 const TransactionProgress = ({
   offer,
@@ -34,10 +33,9 @@ const TransactionProgress = ({
   }
   if (isSeller) {
     if (offer.status === 4) {
-      return <Finalized party="seller" {...props} />
+      return <ReviewAndFinalization refetch={refetch} viewedBy="seller" {...props} />
     } else if (offer.status === 2) {
-      //if (offer.finalizes < +new Date() / 1000) {
-      if (true) {
+      if (offer.finalizes < +new Date() / 1000) {
         return <SellerFinalize {...props} refetch={refetch} />
       } else {
         return <OfferAcceptedSeller {...props} />
@@ -52,7 +50,7 @@ const TransactionProgress = ({
       return <AcceptOrReject {...props} refetch={refetch} />
     }
   } else if (offer.status === 4) {
-    return <Finalized party="buyer" {...props} />
+    return <ReviewAndFinalization refetch={refetch} viewedBy="buyer" {...props} />
   }
 
   if (offer.status === 2) {
@@ -108,68 +106,6 @@ const AcceptOrReject = ({ offer, refetch, loading }) => (
   </div>
 )
 
-class ReviewAndFinalize extends Component {
-  state = { rating: 0, review: '' }
-  render() {
-    const { offer, loading, party } = this.props
-    return (
-      <div className={`transaction-progress${loading ? ' loading' : ''}`}>
-        <div className="top">
-          <h4>Next Step:</h4>
-          <div className="next-step">
-            <fbt desc="Progress.leaveREview">
-              Leave a review and finalize the transaction
-            </fbt>
-          </div>
-          <div className="help">Click the appropriate button</div>
-          <div className="review">
-            <div>
-              <fbt desc="Progress.rateYourExperience">
-                How would you rate your experience?
-              </fbt>
-            </div>
-            <StarRating
-              active={this.state.rating}
-              onChange={rating => this.setState({ rating })}
-            />
-            <div>
-              <fbt desc="Progress.reviewYourExperience">
-                Describe your experience transacting with this seller.
-              </fbt>
-            </div>
-            <textarea
-              className="form-control"
-              value={this.state.review}
-              onChange={e => this.setState({ review: e.target.value })}
-            />
-          </div>
-          <div className="d-flex flex-column">
-            <FinalizeOffer
-              disabled={this.state.rating === 0}
-              rating={this.state.rating}
-              review={this.state.review}
-              offer={this.props.offer}
-              refetch={this.props.refetch}
-              from={offer.buyer.id}
-              className="btn btn-primary"
-            >
-              <fbt desc="Progress.finalize">Finalize</fbt>
-            </FinalizeOffer>
-            <DisputeOffer
-              from={party}
-              offer={this.props.offer}
-              className="btn btn-link withdraw mt-3"
-            >
-              <fbt desc="Progress.reportProblem">Report a Problem</fbt>
-            </DisputeOffer>
-          </div>
-        </div>
-        <Stages mini="true" offer={offer} />
-      </div>
-    )
-  }
-}
-
 const SellerFinalize = ({ offer, refetch, loading }) => (
   <div className={`transaction-progress${loading ? ' loading' : ''}`}>
     <div className="top">
@@ -178,21 +114,20 @@ const SellerFinalize = ({ offer, refetch, loading }) => (
           Collect your funds.
         </fbt>
       </h4>
-      <Stages mini="true" offer={offer} />
-      <div className="help">
-        <fbt desc="Progress.fundsHeld">
-          Funds are being held in escrow until the sale is completed. Click
-          below to collect your funds
+      <Stages className="mt-4" mini="true" offer={offer} />
+      <div className="help mt-4">
+        <fbt desc="Progress.completeSaleTransferFunds">
+          Complete this sale by transferring the buyer's funds out of escrow.
         </fbt>
       </div>
-      <div className="d-flex flex-column">
+      <div className="d-flex flex-column mr-md-auto">
         <FinalizeOffer
           offer={offer}
           refetch={refetch}
           from={offer.listing.seller.id}
           className="btn btn-primary"
         >
-          <fbt desc="Progress.completeSale">Complete Sale</fbt>
+          <fbt desc="Progress.collectFunds">Collect Funds</fbt>
         </FinalizeOffer>
       </div>
     </div>
@@ -315,23 +250,6 @@ const DisputeResolved = ({ offer, loading }) => (
   </div>
 )
 
-const Finalized = ({ offer, loading }) => (
-  <div className={`transaction-progress${loading ? ' loading' : ''}`}>
-    <div className="top">
-      <h4>
-        <fbt desc="Progress.transactionFinalized">Transaction Finalized</fbt>
-      </h4>
-      <div className="help mb-0">
-        <fbt desc="Progress.transactionSuccess">
-          This transaction has been successfully finalized and funds have been
-          released to the seller.
-        </fbt>
-      </div>
-    </div>
-    <Stages mini="true" offer={offer} />
-  </div>
-)
-
 const TransactionStages = ({ offer, loading }) => (
   <div className={`transaction-progress view-only${loading ? ' loading' : ''}`}>
     <Stages mini="true" offer={offer} />
@@ -400,16 +318,6 @@ require('react-styl')(`
     .help
       font-size: 18px
       margin-bottom: 1.5rem
-    .review
-      font-size: 18px
-      color: var(--dusk)
-      font-weight: normal
-      margin-bottom: 2rem
-      text-align: center;
-      .star-rating
-        margin: 0.5rem 0 2rem 0
-      textarea
-        margin-top: 0.5rem
     .actions
       display: flex
       padding-top: 1rem
