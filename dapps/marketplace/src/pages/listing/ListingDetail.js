@@ -4,6 +4,8 @@ import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/Availability
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
+import { withRouter } from 'react-router-dom'
+
 import withWallet from 'hoc/withWallet'
 import withIsMobile from 'hoc/withIsMobile'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
@@ -31,6 +33,8 @@ import FractionalHourly from './_BuyFractionalHourly'
 import GiftCardDetail from './listing-types/GiftCard'
 import FractionalNightlyDetail from './listing-types/FractionalNightly'
 import FractionalHourlyDetail from './listing-types/FractionalHourly'
+
+import Search from '../listings/_Search'
 
 class ListingDetail extends Component {
   constructor(props) {
@@ -98,6 +102,7 @@ class ListingDetail extends Component {
     if (isMobile) {
       return (
         <>
+          {this.renderNavBar()}
           <div className="listing-hero-section">
             <div className="listing-info">
               {this.renderHeading()}
@@ -134,6 +139,22 @@ class ListingDetail extends Component {
           {reviews}
           {userListings}
         </div>
+      </>
+    )
+  }
+
+  renderNavBar() {
+    const search = get(this.props, 'location.search')
+    const history = get(this.props, 'history')
+
+    return (
+      <>
+        {search && <Search className="search" placeholder />}
+        {history && history.length > 1 && (
+          <button className="btn btn-link btn-back-link" onClick={() => history.goBack()}>
+            <fbt desc="Back">Back</fbt>
+          </button>
+        )}
       </>
     )
   }
@@ -300,18 +321,27 @@ class ListingDetail extends Component {
   }
 }
 
-export default withGrowthCampaign(
+export default withRouter(withGrowthCampaign(
   withWallet(withTokenBalance(withGrowthRewards(withIsMobile(ListingDetail)))),
   {
     fetchPolicy: 'cache-first',
     queryEvenIfNotEnrolled: true,
     suppressErrors: true // still show listing detail in case growth can not be reached
   }
-)
+))
 
 require('react-styl')(`
   .listing-detail
     margin-top: 2.5rem
+
+    .btn-back-link
+      color: var(--dark)
+      font-size: 12px
+      text-decoration: none
+      &:before
+        content: '<'
+        display: inline-block
+        margin-right: 5px
 
     .listing-hero-section
       display: flex
