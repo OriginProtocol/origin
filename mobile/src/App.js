@@ -6,13 +6,13 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import Web3 from 'web3'
 
-import { NETWORKS } from './constants'
-import { setNetwork } from 'actions/Settings'
-import { setAccountActive } from 'actions/Wallet'
 import Store, { persistor } from './Store'
 import AppContainer from './Navigation'
 import NavigationService from './NavigationService'
 import setLanguage from 'utils/language'
+import { NETWORKS } from './constants'
+import { setNetwork } from 'actions/Settings'
+import { setAccountActive } from 'actions/Wallet'
 
 YellowBox.ignoreWarnings([
   // https://github.com/facebook/react-native/issues/18868
