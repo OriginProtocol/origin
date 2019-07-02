@@ -131,7 +131,7 @@ class ReadyScreen extends Component {
           <OriginButton
             size="large"
             type="primary"
-            title={fbt('Start using Origin', 'ReadyScreen.button')}
+            title={fbt('Start Using Origin', 'ReadyScreen.button')}
             onPress={() => {
               // Navigate to subroute to skip authentication requirement
               this.props.navigation.navigate('App')
