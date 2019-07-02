@@ -51,6 +51,8 @@ function propsForType(category, subCategory) {
     subCategory === 'schema.giftCards'
   ) {
     __typename = 'GiftCardListing'
+  } else if (category === 'schema.services') {
+    __typename = 'ServiceListing'
   } else if (
     category === 'schema.forRent' &&
     nightlyFractional.includes(subCategory)
