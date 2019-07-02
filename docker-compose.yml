@@ -252,6 +252,7 @@ services:
     volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - REDIS_URL=redis://redis-master:6379
       - FACEBOOK_CLIENT_ID=
       - FACEBOOK_CLIENT_SECRET=
       # Sendgrid settings for email attestations
@@ -266,6 +267,7 @@ services:
       - ENVKEY=
     depends_on:
       - postgres
+      - redis-master
     ports:
       - "5000:5000"
     command:
