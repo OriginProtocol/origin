@@ -10,6 +10,7 @@ import SendMessage from 'components/SendMessage'
 import EthAddress from 'components/EthAddress'
 import QueryError from 'components/QueryError'
 import Attestations from 'components/Attestations'
+import Link from 'components/Link'
 
 import query from 'queries/Identity'
 import withOwner from 'hoc/withOwner'
@@ -60,8 +61,11 @@ const AboutParty = ({ id, owner }) => {
       </Query>
       <div className="actions">
         <SendMessage to={id} className="btn btn-link">
-          <fbt desc="AboutParty.contactSeller">Contact seller</fbt> &rsaquo;
+          <fbt desc="AboutParty.contactSeller">Contact seller</fbt>
         </SendMessage>
+        <Link to={`/user/${id}/reviews`} className="btn btn-link">
+          <fbt desc="Reviews">Reviews</fbt>
+        </Link>
       </div>
     </div>
   )
@@ -98,4 +102,9 @@ require('react-styl')(`
       .btn-link
         padding: 0
         font-weight: normal
+        width: 100%
+        text-align: left
+        &:after
+          content: '>'
+          margin-left: 5px
 `)

@@ -352,7 +352,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow the listing to be edited', async function() {
-      await clickByText(page, 'Edit Listing')
+      await clickBySelector(page, '.listing-buy-editonly + a.listing-action-link')
       await clickByText(page, 'For Sale')
       await clickByText(page, 'Continue')
       await page.focus('input[name=quantity]')
