@@ -47,5 +47,10 @@ export default StyleSheet.create({
   },
   termsHighlightText: {
     color: '#6f8294'
+  },
+  backArrow: {
+    position: 'absolute',
+    left: -10,
+    top: 18
   }
 })
