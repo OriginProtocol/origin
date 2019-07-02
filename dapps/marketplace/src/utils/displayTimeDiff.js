@@ -16,7 +16,7 @@ const DAY_MS = 24 * HOUR_MS
 
 const asInt = x => (x > 0 ? Math.floor(x) : Math.ceil(x))
 
-export default function displayTimeDiff(diff, options) {
+export default function displayTimeDiff(diff, options = {}) {
   const unit = options.unit
 
   const opts = { ...defaultOpts, ...options }
