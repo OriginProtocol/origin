@@ -2,9 +2,10 @@
 
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
-import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import { connect } from 'react-redux'
+import SafeAreaView from 'react-native-safe-area-view'
+import get from 'lodash.get'
 
 import { setComplete } from 'actions/Onboarding'
 import withOriginGraphql from 'hoc/withOriginGraphql'
@@ -19,6 +20,7 @@ class ReadyScreen extends Component {
     super(props)
     this.state = {
       loading: true,
+      transactionId: null,
       error: false
     }
   }
@@ -44,8 +46,9 @@ class ReadyScreen extends Component {
 
     console.debug('Publishing identity')
 
+    let identityPublication
     try {
-      await this.props.publishIdentity(
+      identityPublication = await this.props.publishIdentity(
         this.props.wallet.activeAccount.address,
         profile,
         attestations
@@ -55,9 +58,36 @@ class ReadyScreen extends Component {
       this.setState({ error: true })
     }
 
+    const transactionId = get(identityPublication, 'data.deployIdentity.id')
+    await this.setState({ transactionId })
+    // Wait for identity deployment transaction receipt
+    this.waitForTransaction()
+    // Flag onboarding as complete
     this.props.setOnboardingComplete(true)
+  }
 
-    this.setState({ loading: false })
+  waitForTransaction = async () => {
+    let result
+    try {
+      result = await this.props.getTransactionReceipt(this.state.transactionId)
+    } catch (error) {
+      this.setState({ loading: false, error: true })
+      return
+    }
+
+    const receipt = get(result, 'data.web3.transactionReceipt')
+    const currentBlock = get(result, 'data.web3.blockNumber')
+    const confirmedBlock = get(
+      result,
+      'data.web3.transactionReceipt.blockNumber'
+    )
+
+    if (!receipt || currentBlock <= confirmedBlock) {
+      // Wait for confirmation
+      setTimeout(this.waitForTransaction, 1000)
+    } else {
+      this.setState({ loading: false, transactionId: null })
+    }
   }
 
   render() {
@@ -83,11 +113,13 @@ class ReadyScreen extends Component {
               You&apos;re ready to start buying and selling on Origin
             </fbt>
           </Text>
-          <Text style={styles.subtitle}>
-            <fbt desc="ReadyScreen.error">
-              Unfortunately we could not publish your identity on your behalf.
-            </fbt>
-          </Text>
+          {this.props.error === true && (
+            <Text style={styles.subtitle}>
+              <fbt desc="ReadyScreen.error">
+                Unfortunately we could not publish your identity on your behalf.
+              </fbt>
+            </Text>
+          )}
         </View>
         <View style={{ ...styles.container, ...styles.buttonContainer }}>
           <OriginButton
@@ -107,9 +139,24 @@ class ReadyScreen extends Component {
   renderLoading() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>
-          <fbt desc="ReadyScreen.loadingTitle">Publishing your account</fbt>
-        </Text>
+        {this.state.transactionId === null ? (
+          <Text style={styles.title}>
+            <fbt desc="ReadyScreen.loadingTitle">Publishing your account</fbt>
+          </Text>
+        ) : (
+          <>
+            <Text style={styles.title}>
+              <fbt desc="ReadyScreen.transactionWaitTitle">
+                Waiting for confirmation.
+              </fbt>
+            </Text>
+            <Text style={{ ...styles.subtitle, marginBottom: 20 }}>
+              <fbt desc="ReadyScreen.transactionWaitSubtitle">
+                This might take a minute.
+              </fbt>
+            </Text>
+          </>
+        )}
         <ActivityIndicator size="large" />
       </View>
     )
