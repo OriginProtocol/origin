@@ -597,7 +597,7 @@ class MarketplaceScreen extends Component {
       clearInterval(this.uiUpdater)
     }
     uiUpdates()
-    this.uiUpdater = setInterval(uiUpdates, 2000)
+    this.uiUpdater = setInterval(uiUpdates, 5000)
 
     // Set state to ready in redux
     await this.props.setMarketplaceReady(true)
