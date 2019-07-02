@@ -72,8 +72,8 @@ module.exports = `
   }
 
   type ForceType {
-        category: String
-        subCategory: String
-        typename: String
+    category: String
+    subCategory: String
+    typename: String
   }
 `

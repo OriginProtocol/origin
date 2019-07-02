@@ -14,7 +14,7 @@ const config = {
   ipfsGateway: `http://${HOST}:8080`,
   ipfsRPC: `http://${HOST}:5002`,
   bridge: 'https://bridge.dev.originprotocol.com',
-  performanceMode: localStorageHas('performanceMode'),
+  performanceMode: localStorageHas('performanceMode', 'true'),
   graphql: `http://${HOST}:4007`,
   relayer: `http://${HOST}:5100`,
   automine: 500,
@@ -28,7 +28,8 @@ const config = {
   DaiExchange: addresses.UniswapDaiExchange,
   ProxyFactory: addresses.ProxyFactory,
   IdentityProxyImplementation: addresses.IdentityProxyImplementation,
-  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled'),
+  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled', 'true'),
+  relayerEnabled: localStorageHas('relayerEnabled', 'true'),
 
   tokens: []
 }
