@@ -53,8 +53,7 @@ class MarketplaceScreen extends Component {
     this.state = {
       enablePullToRefresh: true,
       modals: [],
-      fiatCurrency: CURRENCIES.find(c => c[0] === 'fiat-USD'),
-      inviteCode: null
+      fiatCurrency: CURRENCIES.find(c => c[0] === 'fiat-USD')
     }
     if (Platform.OS === 'android') {
       // Configure swipe handler for back forward navigation on Android because
@@ -71,10 +70,6 @@ class MarketplaceScreen extends Component {
     )
   }
 
-  async componentDidMount() {
-    await this.clipboardInviteCodeCheck()
-  }
-
   /* Handle back button presses on Android devices so that they work on the
    * WebView */
   onBackButtonPressAndroid = () => {
@@ -88,8 +83,11 @@ class MarketplaceScreen extends Component {
 
     if (content && content.startsWith(INVITE_CODE_PREFIX)) {
       const inviteCode = content.substr(INVITE_CODE_PREFIX.length)
-      Clipboard.setString('')
-      this.setState({ inviteCode })
+      if (this.dappWebView) {
+        // Inject invite code
+        this.injectInviteCode(inviteCode)
+        // Clipboard.setString('')
+      }
     }
   }
 
@@ -119,15 +117,6 @@ class MarketplaceScreen extends Component {
     if (prevState.fiatCurrency !== this.state.fiatCurrency) {
       // Currency changed, update exchange rates
       this.updateExchangeRates()
-    }
-
-    // Check for growth invite code changing
-    if (!prevState.inviteCode && this.state.inviteCode) {
-      // invite code in clipboard inject it to local storage
-      if (this.dappWebView) {
-        // Inject invite code
-        this.injectInviteCode(this.state.inviteCode)
-      }
     }
   }
 
@@ -297,10 +286,11 @@ class MarketplaceScreen extends Component {
     const injectedJavaScript = `
       (function() {
         if (window && window.localStorage) {
-          window.localStorage.setItem('growth_invite_code', '${inviteCode}');
+          window.localStorage.growth_invite_code = '${inviteCode}';
         }
       })();
     `
+    console.log(injectedJavaScript)
     if (this.dappWebView) {
       console.debug(`Injecting invite code: ${inviteCode}`)
       this.dappWebView.injectJavaScript(injectedJavaScript)
@@ -419,21 +409,23 @@ class MarketplaceScreen extends Component {
   ) => {
     const injectedJavaScript = `
       (function() {
-        window.gql.query({
-          query: ${JSON.stringify(query)},
-          variables: ${JSON.stringify(variables)},
-          fetchPolicy: '${fetchPolicy}'
-        }).then((response) => {
-          window.webViewBridge.send('handleGraphqlResult', {
-            id: '${id}',
-            response: response
+        if (window && window.gql) {
+          window.gql.query({
+            query: ${JSON.stringify(query)},
+            variables: ${JSON.stringify(variables)},
+            fetchPolicy: '${fetchPolicy}'
+          }).then((response) => {
+            window.webViewBridge.send('handleGraphqlResult', {
+              id: '${id}',
+              response: response
+            });
+          }).catch((error) => {
+            window.webViewBridge.send('handleGraphqlError', {
+              id: '${id}',
+              error: error
+            });
           });
-        }).catch((error) => {
-          window.webViewBridge.send('handleGraphqlError', {
-            id: '${id}',
-            error: error
-          });
-        });
+        }
       })();
     `
     if (this.dappWebView) {
@@ -445,20 +437,22 @@ class MarketplaceScreen extends Component {
   injectGraphqlMutation = (id, mutation, variables = {}) => {
     const injectedJavaScript = `
       (function() {
-        window.gql.mutate({
-          mutation: ${JSON.stringify(mutation)},
-          variables: ${JSON.stringify(variables)}
-        }).then((response) => {
-          window.webViewBridge.send('handleGraphqlResult', {
-            id: '${id}',
-            response: response
+        if (window && window.gql) {
+          window.gql.mutate({
+            mutation: ${JSON.stringify(mutation)},
+            variables: ${JSON.stringify(variables)}
+          }).then((response) => {
+            window.webViewBridge.send('handleGraphqlResult', {
+              id: '${id}',
+              response: response
+            });
+          }).catch((error) => {
+            window.webViewBridge.send('handleGraphqlError', {
+              id: '${id}',
+              error: error
+            });
           });
-        }).catch((error) => {
-          window.webViewBridge.send('handleGraphqlError', {
-            id: '${id}',
-            error: error
-          });
-        });
+        }
       })();
     `
     if (this.dappWebView) {
@@ -566,6 +560,8 @@ class MarketplaceScreen extends Component {
   }
 
   onWebViewLoad = async () => {
+    // Check if a growth invie code needs to be set
+    this.clipboardInviteCodeCheck()
     // Enable proxy accounts
     this.injectEnableProxyAccounts()
     this.injectGrowthAuthToken()
