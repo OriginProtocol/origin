@@ -116,6 +116,11 @@ class MarketplaceScreen extends Component {
       this.injectGrowthAuthToken()
     }
 
+    if (prevState.fiatCurrency !== this.state.fiatCurrency) {
+      // Currency changed, update exchange rates
+      this.updateExchangeRates()
+    }
+
     // Check for growth invite code changing
     if (!prevState.inviteCode && this.state.inviteCode) {
       // invite code in clipboard inject it to local storage
@@ -500,7 +505,6 @@ class MarketplaceScreen extends Component {
             c => c[0] === uiState['currency']
           )
           await this.setState({ fiatCurrency })
-          this.updateExchangeRates()
         }
       } catch (error) {
         // Skip
@@ -569,25 +573,30 @@ class MarketplaceScreen extends Component {
     }
     // Preload messaging keys so user doesn't have to enable messaging
     this.injectMessagingKeys()
-    // Fetch exchange rates for the default currency
+
+    // Periodic exchange rate updating
+    if (this.exUpdater) {
+      clearInterval(this.exUpdater)
+    }
     this.updateExchangeRates()
-    const periodicUpdates = () => {
-      // Periodically grab the uiState from local storage to detect currency
-      // changes
+    this.exUpdater = setInterval(this.updateExchangeRates, 60000)
+
+    // Periodic ui updates
+    const uiUpdates = () => {
       this.injectUiStateRequest()
-      // Update account identity
       if (this.props.wallet.activeAccount) {
+        // Update account identity and balances
         this.updateIdentity()
-        // Update balance
         this.updateBalance()
       }
     }
     // Clear existing updater if exists
-    if (this.periodicUpdater) {
-      clearInterval(this.periodicUpdater)
+    if (this.uiUpdater) {
+      clearInterval(this.uiUpdater)
     }
-    periodicUpdates()
-    this.periodicUpdater = setInterval(periodicUpdates, 2000)
+    uiUpdates()
+    this.uiUpdater = setInterval(uiUpdates, 2000)
+
     // Set state to ready in redux
     await this.props.setMarketplaceReady(true)
     // Make sure any error state is cleared
