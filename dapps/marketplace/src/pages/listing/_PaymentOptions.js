@@ -28,7 +28,9 @@ const NotEnoughFunds = ({ noEthOrDai, daiPrice, ethPrice }) => (
         How do I get cryptocurrency?
       </fbt>
     </Link>
-    <button className="btn btn-primary mt-4" disabled><fbt desc="Purchase">Purchase</fbt></button>
+    <button className="btn btn-primary mt-4" disabled>
+      <fbt desc="Purchase">Purchase</fbt>
+    </button>
   </div>
 )
 
@@ -136,14 +138,16 @@ const PaymentOptions = ({
         />
       ) : (
         <>
-          {hasIdentity && (<div className="payment-total">
-            <span>
-              <fbt desc="paymentOptions.payment">Payment</fbt>
-            </span>
-            <span className={cannotPurchase ? 'danger' : ''}>
-              {needsSwap || ethActive ? ethPrice : daiPrice}
-            </span>
-          </div>)}
+          {hasIdentity && (
+            <div className="payment-total">
+              <span>
+                <fbt desc="paymentOptions.payment">Payment</fbt>
+              </span>
+              <span className={cannotPurchase ? 'danger' : ''}>
+                {needsSwap || ethActive ? ethPrice : daiPrice}
+              </span>
+            </div>
+          )}
           {!hasIdentity || ethActive || hasBalance || needsSwap ? null : (
             <div className="exchanged">{ethPrice}</div>
           )}
@@ -155,7 +159,9 @@ const PaymentOptions = ({
   )
 }
 
-export default withWeb3(withWallet(withIdentity(withCanTransact(PaymentOptions))))
+export default withWeb3(
+  withWallet(withIdentity(withCanTransact(PaymentOptions)))
+)
 
 require('react-styl')(`
   .payment-options

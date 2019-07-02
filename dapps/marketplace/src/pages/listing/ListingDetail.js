@@ -95,7 +95,15 @@ class ListingDetail extends Component {
     const reviews = <Reviews id={listing.seller.id} seller hideWhenZero />
     const userListings = (
       <div className="seller-listings">
-        <UserListings user={listing.seller.id} hideLoadMore compact title={fbt('Other listings by this seller', 'ListingDetail.othersFromSeller')} />
+        <UserListings
+          user={listing.seller.id}
+          hideLoadMore
+          compact
+          title={fbt(
+            'Other listings by this seller',
+            'ListingDetail.othersFromSeller'
+          )}
+        />
       </div>
     )
 
@@ -151,7 +159,10 @@ class ListingDetail extends Component {
       <>
         {search && <Search className="search" placeholder />}
         {history && history.length > 1 && (
-          <button className="btn btn-link btn-back-link" onClick={() => history.goBack()}>
+          <button
+            className="btn btn-link btn-back-link"
+            onClick={() => history.goBack()}
+          >
             <fbt desc="Back">Back</fbt>
           </button>
         )}
@@ -230,7 +241,8 @@ class ListingDetail extends Component {
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
-    const isSingleUnit = listing.__typename === 'UnitListing' && listing.unitsTotal === 1
+    const isSingleUnit =
+      listing.__typename === 'UnitListing' && listing.unitsTotal === 1
     const isService = listing.__typename === 'ServiceListing'
     const isPendingBuyer = listing.pendingBuyers.some(
       b => b.id === this.props.walletProxy
@@ -321,14 +333,18 @@ class ListingDetail extends Component {
   }
 }
 
-export default withRouter(withGrowthCampaign(
-  withWallet(withTokenBalance(withGrowthRewards(withIsMobile(ListingDetail)))),
-  {
-    fetchPolicy: 'cache-first',
-    queryEvenIfNotEnrolled: true,
-    suppressErrors: true // still show listing detail in case growth can not be reached
-  }
-))
+export default withRouter(
+  withGrowthCampaign(
+    withWallet(
+      withTokenBalance(withGrowthRewards(withIsMobile(ListingDetail)))
+    ),
+    {
+      fetchPolicy: 'cache-first',
+      queryEvenIfNotEnrolled: true,
+      suppressErrors: true // still show listing detail in case growth can not be reached
+    }
+  )
+)
 
 require('react-styl')(`
   .listing-detail

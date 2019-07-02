@@ -17,7 +17,7 @@ import { withRouter } from 'react-router-dom'
 
 import UserListings from './_UserListings'
 
-const goBack = (history) => {
+const goBack = history => {
   if (history.length <= 1) {
     history.push('/')
   } else {
@@ -26,15 +26,12 @@ const goBack = (history) => {
 }
 
 const User = ({ match, isMobile, history }) => {
-  const { id, content} = match.params
+  const { id, content } = match.params
   const vars = { id: match.params.id }
 
   return (
     <div className="container user-public-profile">
-      <a
-        className="back-icon"
-        onClick={() => goBack(history)}
-      />
+      <a className="back-icon" onClick={() => goBack(history)} />
       <Query query={query} variables={vars}>
         {({ data, loading, error }) => {
           if (error) {
@@ -52,9 +49,10 @@ const User = ({ match, isMobile, history }) => {
             return (
               <>
                 <DocumentTitle
-                  pageTitle={
-                    fbt(fbt.param('user', profile.fullName) + ' Reviews', 'User.reviews.title')
-                  }
+                  pageTitle={fbt(
+                    fbt.param('user', profile.fullName) + ' Reviews',
+                    'User.reviews.title'
+                  )}
                 />
                 <div className="row reviews-only">
                   <div className="col-md-8">
@@ -66,7 +64,9 @@ const User = ({ match, isMobile, history }) => {
                       >
                         {reviewsComp}
                       </MobileModal>
-                    ) : reviewsComp}
+                    ) : (
+                      reviewsComp
+                    )}
                   </div>
                 </div>
               </>

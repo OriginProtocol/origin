@@ -13,7 +13,7 @@ const DateRangeComponent = ({ startDate, endDate, hideIfEmpty, onClick }) => {
 
   let startDateUnset = true
   let endDateUnset = true
-  
+
   if (startDate) {
     startDateDisplay = dayjs(startDate).format('ddd, MMM D') // Needs l10n
     startDateUnset = false
@@ -21,16 +21,20 @@ const DateRangeComponent = ({ startDate, endDate, hideIfEmpty, onClick }) => {
 
   if (endDate) {
     endDateDisplay = dayjs(endDate)
-        .add(1, 'day')
-        .format('ddd, MMM D') // Needs l10n
+      .add(1, 'day')
+      .format('ddd, MMM D') // Needs l10n
     endDateUnset = false
   }
 
   return (
     <div className="choose-dates form-control">
-      <div className={`${startDateUnset ? '' : 'active'}`} onClick={onClick}>{startDateDisplay}</div>
+      <div className={`${startDateUnset ? '' : 'active'}`} onClick={onClick}>
+        {startDateDisplay}
+      </div>
       <div className="arr" />
-      <div className={`${endDateUnset ? '' : 'active'}`} onClick={onClick}>{endDateDisplay}</div>
+      <div className={`${endDateUnset ? '' : 'active'}`} onClick={onClick}>
+        {endDateDisplay}
+      </div>
     </div>
   )
 }

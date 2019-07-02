@@ -35,23 +35,25 @@ const MultiUnit = ({
         if (!prices) return null
         return (
           <div className="listing-buy multi">
-            {!isPendingBuyer && (<div className="price">
-              <div className="d-flex justify-content-between align-items-center">
-                <Price listing={listing} descriptor />
-                <OgnBadge
-                  amount={growthReward}
-                  className="listing-detail-growth-reward"
-                />
-              </div>
-              {listing.price.currency.id === selectedCurrency ? null : (
-                <span className="orig">
-                  <Price
-                    price={listing.price}
-                    target={listing.price.currency.id}
+            {!isPendingBuyer && (
+              <div className="price">
+                <div className="d-flex justify-content-between align-items-center">
+                  <Price listing={listing} descriptor />
+                  <OgnBadge
+                    amount={growthReward}
+                    className="listing-detail-growth-reward"
                   />
-                </span>
-              )}
-            </div>)}
+                </div>
+                {listing.price.currency.id === selectedCurrency ? null : (
+                  <span className="orig">
+                    <Price
+                      price={listing.price}
+                      target={listing.price.currency.id}
+                    />
+                  </span>
+                )}
+              </div>
+            )}
             <SelectQuantity
               quantity={quantity}
               onChange={val => updateQuantity(val)}

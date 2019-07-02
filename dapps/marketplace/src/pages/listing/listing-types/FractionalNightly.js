@@ -6,7 +6,7 @@ import Modal from 'components/Modal'
 import MobileModal from 'components/MobileModal'
 
 import useIsMobile from 'utils/useMobile'
-import DateRange from '../_DateRange';
+import DateRange from '../_DateRange'
 
 const FractionalNightlyDetail = ({
   availability,
@@ -22,59 +22,59 @@ const FractionalNightlyDetail = ({
   const [selectedRange, setSelectedRange] = useState(null)
   const [closeModal, setCloseModal] = useState(false)
 
-  const [startDate, endDate] = (selectedRange ? selectedRange.range : '').split('/')
+  const [startDate, endDate] = (selectedRange ? selectedRange.range : '').split(
+    '/'
+  )
 
   const ModalComp = isMobile ? MobileModal : Modal
 
   return (
     <>
       {description}
-      {
-        openCalendar && (
-          <ModalComp
-            title={fbt('Availability', 'Availability')}
-            className={`availability-modal`}
-            shouldClose={closeModal}
-            lightMode={true}
-            onClose={() => {
-              setCloseModal(false)
-              onClose()
-            }}
-          >
-            <>
-              <DateRange startDate={startDate} endDate={endDate} />
-              <Calendar
-                interactive={!isOwnerViewing}
-                small={true}
-                onChange={state => setSelectedRange(state)}
-                availability={availability}
-                currency={listing.price.currency}
-              />
-              <div className="actions mt-auto">
+      {openCalendar && (
+        <ModalComp
+          title={fbt('Availability', 'Availability')}
+          className={`availability-modal`}
+          shouldClose={closeModal}
+          lightMode={true}
+          onClose={() => {
+            setCloseModal(false)
+            onClose()
+          }}
+        >
+          <>
+            <DateRange startDate={startDate} endDate={endDate} />
+            <Calendar
+              interactive={!isOwnerViewing}
+              small={true}
+              onChange={state => setSelectedRange(state)}
+              availability={availability}
+              currency={listing.price.currency}
+            />
+            <div className="actions mt-auto">
+              <button
+                className="btn btn-primary btn-rounded mt-4"
+                onClick={() => {
+                  onChange(selectedRange)
+                  setCloseModal(true)
+                }}
+              >
+                <fbt desc="Save">Save</fbt>
+              </button>
+              {!isMobile && (
                 <button
-                  className="btn btn-primary btn-rounded mt-4"
+                  className="btn btn-outline"
                   onClick={() => {
-                    onChange(selectedRange)
                     setCloseModal(true)
                   }}
                 >
-                  <fbt desc="Save">Save</fbt>
+                  <fbt desc="Cancel">Cancel</fbt>
                 </button>
-                {!isMobile && (
-                  <button
-                    className="btn btn-outline"
-                    onClick={() => {
-                      setCloseModal(true)
-                    }}
-                  >
-                    <fbt desc="Cancel">Cancel</fbt>
-                  </button>
-                )}
-              </div>
-            </>
-          </ModalComp>
-        )
-      }
+              )}
+            </div>
+          </>
+        </ModalComp>
+      )}
     </>
   )
 }

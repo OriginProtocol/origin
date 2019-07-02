@@ -74,7 +74,12 @@ const Fractional = ({
                 </span>
               )}
             </div>
-            <DateRange startDate={startDate} endDate={endDate} onClick={onShowAvailability} hideIfEmpty />
+            <DateRange
+              startDate={startDate}
+              endDate={endDate}
+              onClick={onShowAvailability}
+              hideIfEmpty
+            />
             {!showUnavailable ? null : (
               <div className="total">
                 <fbt desc="Unavailable">Unavailable</fbt>
