@@ -16,8 +16,8 @@
   },
   "scripts": {
     "lint": "eslint . && npm run prettier:check",
-    "prettier": "prettier --write *.js \"src/**/*.js\"",
-    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
+    "prettier": "./node_modules/.bin/prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "./node_modules/.bin/prettier -c *.js \"src/**/*.js\"",
     "test": "mocha --timeout 10000 --exit test"
   },
   "dependencies": {
@@ -31,6 +31,7 @@
     "ganache-core": "2.4.0",
     "mocha": "^6.1.4",
     "openzeppelin-solidity": "^1.10.0",
+    "prettier": "^1.18.2",
     "solc": "^0.4.25"
   },
   "prettier": {

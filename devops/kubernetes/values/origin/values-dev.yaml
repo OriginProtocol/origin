@@ -18,7 +18,7 @@ faucetImageTag: 'f78d380'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '7428c36'
+eventlistenerImageTag: '94b435a'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -63,4 +63,4 @@ relayerImageTag: 'a4b27b7'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: 'fccfb75'
+graphqlImageTag: '94b435a'
