@@ -49,7 +49,7 @@ const MobileNav = ({ open, onClose, onOpen }) => {
       content={
         <>
           <div className="dropdown-menu-bg" onClick={() => onClose()} />
-          <div className={`dropdown-menu${open ? ' show' : ''}`}>
+          <div className="dropdown-menu show">
             <a
               href="#close"
               onClick={e => {
@@ -147,7 +147,6 @@ require('react-styl')(`
       position:relative
 
     .dropdown-menu
-      display: none
       background-color: var(--white)
       padding: 11px 0 1rem 0
       top: 0
@@ -204,8 +203,4 @@ require('react-styl')(`
           background-image: url(images/nav/alerts-icon.svg)
         &.settings::before
           background-image: url(images/nav/gear-icon.svg)
-    
-  @media (max-width: 767.98px)
-    .navbar .nav-item.mobile .dropdown-menu
-      display: block
 `)

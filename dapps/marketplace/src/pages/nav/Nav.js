@@ -253,19 +253,13 @@ require('react-styl')(`
           box-shadow: none
           margin-top: 0
           border-radius: 0
-          left: -100%
+          left: 0
           right: auto
           bottom: 0
           top: 0
-          transition: left 0.3s ease
-          &.show
-            left: 0
           &.dropdown-menu-right
             left: auto
-            right: -100%
-            transition: right 0.3s ease
-            &.show
-              right: 0
+            right: 0
         .dropdown-menu-bg
           position: fixed
           left: 0
@@ -277,6 +271,5 @@ require('react-styl')(`
           width: auto
           height: auto
           z-index: 1
-          transition: opacity 0.3s ease
 
 `)

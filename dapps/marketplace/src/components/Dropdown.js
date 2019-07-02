@@ -49,23 +49,10 @@ class Dropdown extends Component {
         onMouseOut={() => (this.mouseOver = false)}
       >
         {this.props.children}
-        {this.props.content && this.state.open ? this.props.content : null}
+        {this.props.content && this.props.open ? this.props.content : null}
       </El>
     )
   }
 }
 
 export default Dropdown
-
-require('react-styl')(`
-  .dropdown:not(.show)
-    .dropdown-menu
-      display: none
-    .dropdown-menu-bg
-      display: none !important
-    
-  @media (max-width: 767.98px)
-    .dropdown:not(.show)
-      .dropdown-menu
-        display: block
-`)
