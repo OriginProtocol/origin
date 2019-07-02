@@ -16,6 +16,7 @@ import {
   growthEligible,
   identity,
   tokenBalance,
+  transactionReceipt,
   wallet
 } from 'graphql/queries'
 import { growthEnroll, deployIdentity } from 'graphql/mutations'
@@ -31,9 +32,15 @@ const withOriginGraphql = WrappedComponent => {
       DeviceEventEmitter.addListener('graphqlError', this._handleGraphqlError)
     }
 
-    _sendGraphqlQuery = (query, variables) => {
+    _sendGraphqlQuery = (query, variables, fetchPolicy) => {
       const { promiseId, promise } = this._generatePromise()
-      DeviceEventEmitter.emit('graphqlQuery', promiseId, query, variables)
+      DeviceEventEmitter.emit(
+        'graphqlQuery',
+        promiseId,
+        query,
+        variables,
+        fetchPolicy
+      )
       return promise
     }
 
@@ -90,6 +97,10 @@ const withOriginGraphql = WrappedComponent => {
       return this._sendGraphqlQuery(identity, { id })
     }
 
+    getTransactionReceipt = async id => {
+      return this._sendGraphqlQuery(transactionReceipt, { id }, 'no-cache')
+    }
+
     getWallet = () => {
       return this._sendGraphqlQuery(wallet)
     }
@@ -117,6 +128,7 @@ const withOriginGraphql = WrappedComponent => {
           getGrowthEligibility={this.getGrowthEligibility}
           getIdentity={this.getIdentity}
           getTokenBalance={this.getTokenBalance}
+          getTransactionReceipt={this.getTransactionReceipt}
           getWallet={this.getWallet}
           publishIdentity={this.publishIdentity}
           growthEnroll={this.growthEnroll}
