@@ -118,9 +118,7 @@ const Transaction = props => {
 
           const VerticalSeparator = <div className="vertical-separator my-3" />
           const HorizontalSeparator = (
-            <div className="horizontal-separator px-3 d-flex justify-content-center">
-              <div />
-            </div>
+            <div className="horizontal-separator px-3 d-flex justify-content-center" />
           )
 
           return (
@@ -214,7 +212,8 @@ require('react-styl')(`
     .horizontal-separator
       flex: 0 0 13%
       max-width: 13%
-      > div
+      &::after
+        content: ""
         width: 1px
         height: 100%
         background-color: #dde6ea

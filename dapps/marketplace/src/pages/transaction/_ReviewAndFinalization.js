@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import { fbt } from 'fbt-runtime'
 
 import StarRating from 'components/StarRating'
@@ -7,25 +7,23 @@ import AddData from 'pages/transaction/mutations/AddData'
 import Link from 'components/Link'
 
 const RATED_OFFERS_KEY = 'rated_offers'
-class ReviewAndFinalization extends Component {
-  state = {
-    rating: 0,
-    review: '',
-    offerRated: false
-  }
+const ReviewAndFinalization = props => {
+  const [rating, setRating] = useState(0)
+  const [review, setReview] = useState('')
+  const [offerRated, setOfferRated] = useState(false)
+  const isSeller = props.viewedBy === 'seller'
+  const isBuyer = props.viewedBy === 'buyer'
 
-  componentDidMount() {
+  useEffect(() => {
     const offersRatedString = localStorage.getItem(RATED_OFFERS_KEY)
-    const offer = this.props.offer
+    const offer = props.offer
 
     if (offersRatedString) {
-      this.setState({
-        offerRated: JSON.parse(offersRatedString).includes(offer.id)
-      })
+      setOfferRated(JSON.parse(offersRatedString).includes(offer.id))
     }
-  }
+  }, [])
 
-  renderFinalization({ loading, offer, isSeller, isBuyer }) {
+  const renderFinalization = ({ loading, offer, isSeller, isBuyer }) => {
     return (
       <div className={`transaction-progress${loading ? ' loading' : ''}`}>
         <div className="top">
@@ -72,20 +70,17 @@ class ReviewAndFinalization extends Component {
     )
   }
 
-  rateOffer(offerId) {
+  const rateOffer = offerId => {
     const offersRated = JSON.parse(
       localStorage.getItem(RATED_OFFERS_KEY) || '[]'
     )
     offersRated.push(offerId)
-    this.setState({
-      offerRated: true
-    })
+
+    setOfferRated(true)
     localStorage.setItem(RATED_OFFERS_KEY, JSON.stringify(offersRated))
   }
 
-  renderRating({ offer, loading, isSeller, isBuyer }) {
-    const { rating, review } = this.state
-
+  const renderRating = ({ offer, loading, isSeller, isBuyer }) => {
     const reviewData = {
       schemaId: 'https://schema.originprotocol.com/review_1.0.0.json'
     }
@@ -134,7 +129,7 @@ class ReviewAndFinalization extends Component {
             </div>
             <StarRating
               active={rating}
-              onChange={rating => this.setState({ rating })}
+              onChange={rating => setRating(rating)}
             />
             <div>
               {isBuyer && (
@@ -152,7 +147,7 @@ class ReviewAndFinalization extends Component {
               className="form-control"
               value={review}
               placeholder={fbt('Write a review here', 'writeReviewHere')}
-              onChange={e => this.setState({ review: e.target.value })}
+              onChange={e => setReview(e.target.value)}
             />
           </div>
           <div className="d-flex flex-column">
@@ -160,9 +155,9 @@ class ReviewAndFinalization extends Component {
               disabled={rating === 0}
               data={JSON.stringify(reviewData)}
               offer={offer}
-              refetch={this.props.refetch}
-              onSuccess={() => this.rateOffer(offer.id)}
-              onClick={() => this.rateOffer(offer.id)}
+              refetch={props.refetch}
+              onSuccess={() => rateOffer(offer.id)}
+              onClick={() => rateOffer(offer.id)}
               wallet={isBuyer ? offer.buyer.id : offer.listing.seller.id}
               className="btn btn-primary mr-md-auto"
             >
@@ -174,14 +169,9 @@ class ReviewAndFinalization extends Component {
     )
   }
 
-  render() {
-    const isSeller = this.props.viewedBy === 'seller'
-    const isBuyer = this.props.viewedBy === 'buyer'
-
-    return this.state.offerRated
-      ? this.renderFinalization({ ...this.props, isSeller, isBuyer })
-      : this.renderRating({ ...this.props, isSeller, isBuyer })
-  }
+  return offerRated
+    ? renderFinalization({ ...props, isSeller, isBuyer })
+    : renderRating({ ...props, isSeller, isBuyer })
 }
 
 export default ReviewAndFinalization
