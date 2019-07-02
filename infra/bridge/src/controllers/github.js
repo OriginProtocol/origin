@@ -69,7 +69,8 @@ router.post('/verify', githubVerify, async (req, res) => {
       .post(`${constants.GITHUB_BASE_AUTH_URL}/access_token`)
       .query(params)
       .set({
-        Accept: 'application/json'
+        Accept: 'application/json',
+        'User-Agent': 'OriginProtocol'
       })
     accessToken = response.body.access_token
   } catch (error) {
@@ -84,7 +85,8 @@ router.post('/verify', githubVerify, async (req, res) => {
   let userDataResponse
   try {
     userDataResponse = await request.get(constants.GITHUB_PROFILE_URL).set({
-      Authorization: `token ${accessToken}`
+      Authorization: `token ${accessToken}`,
+      'User-Agent': 'OriginProtocol'
     })
   } catch (error) {
     logger.error(error)

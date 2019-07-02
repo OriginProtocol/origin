@@ -15,3 +15,24 @@ export const deployIdentity = gql`
     }
   }
 `
+
+export const growthEnroll = gql`
+  mutation Enroll(
+    $accountId: ID!
+    $agreementMessage: String!
+    $signature: String!
+    $inviteCode: String
+    $fingerprintData: JSON
+  ) {
+    enroll(
+      accountId: $accountId
+      agreementMessage: $agreementMessage
+      signature: $signature
+      inviteCode: $inviteCode
+      fingerprintData: $fingerprintData
+    ) {
+      authToken
+      isBanned
+    }
+  }
+`

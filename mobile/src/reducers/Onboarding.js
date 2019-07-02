@@ -10,6 +10,7 @@ const initialState = {
   avatarUri: null,
   noRewardsDismissed: false,
   verifiedAttestations: [],
+  growth: null,
   complete: false
 }
 
@@ -39,6 +40,9 @@ export default function Onboarding(state = initialState, action = {}) {
 
     case OnboardingConstants.SET_NO_REWARDS_DISMISSED:
       return { ...state, noRewardsDismissed: action.dismissed }
+
+    case OnboardingConstants.SET_GROWTH:
+      return { ...state, growth: action.value }
 
     case OnboardingConstants.RESET:
       return initialState

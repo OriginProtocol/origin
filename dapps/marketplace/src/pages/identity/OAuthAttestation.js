@@ -150,6 +150,7 @@ class OAuthAttestation extends Component {
           this.props.history.replace('/profile')
         }}
         lightMode={true}
+        skipAnimateOnExit={this.props.skipAnimateOnExit}
       >
         <Query
           query={query}
