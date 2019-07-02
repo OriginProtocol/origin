@@ -336,12 +336,25 @@ require('react-styl')(`
 
     .btn-back-link
       color: var(--dark)
-      font-size: 12px
+      font-size: 14px
       text-decoration: none
+      position: relative
+      padding-left: 1.2rem
+      line-height: 1rem
+      margin-bottom: 0.5rem
       &:before
-        content: '<'
+        content: ''
+        position: absolute
         display: inline-block
         margin-right: 5px
+        background-image: url(images/caret-grey.svg)
+        background-size: 0.8rem
+        background-position: center
+        background-repeat: no-repeat
+        transform: rotateZ(270deg)
+        height: 1rem
+        width: 1rem
+        left: 0
 
     .listing-hero-section
       display: flex

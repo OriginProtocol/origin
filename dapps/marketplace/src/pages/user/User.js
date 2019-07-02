@@ -10,28 +10,30 @@ import QueryError from 'components/QueryError'
 import LoadingSpinner from 'components/LoadingSpinner'
 import UserProfileCard from 'components/UserProfileCard'
 import TabView from 'components/TabView'
+import MobileModal from 'components/MobileModal'
 
 import withIsMobile from 'hoc/withIsMobile'
 import { withRouter } from 'react-router-dom'
 
 import UserListings from './_UserListings'
 
+const goBack = (history) => {
+  if (history.length <= 1) {
+    history.push('/')
+  } else {
+    history.goBack()
+  }
+}
+
 const User = ({ match, isMobile, history }) => {
-  const id = match.params.id
+  const { id, content} = match.params
   const vars = { id: match.params.id }
 
   return (
     <div className="container user-public-profile">
       <a
         className="back-icon"
-        onClick={() => {
-          // TBD: is history.length safe to use?
-          if (history.length <= 1) {
-            history.push('/')
-          } else {
-            history.goBack()
-          }
-        }}
+        onClick={() => goBack(history)}
       />
       <Query query={query} variables={vars}>
         {({ data, loading, error }) => {
@@ -45,6 +47,32 @@ const User = ({ match, isMobile, history }) => {
           const reviewsComp = (
             <Reviews id={id} hideWhenZero hideHeader={isMobile} />
           )
+
+          if (content === 'reviews') {
+            return (
+              <>
+                <DocumentTitle
+                  pageTitle={
+                    fbt(fbt.param('user', profile.fullName) + ' Reviews', 'User.reviews.title')
+                  }
+                />
+                <div className="row reviews-only">
+                  <div className="col-md-8">
+                    {isMobile ? (
+                      <MobileModal
+                        className="reviews-modal"
+                        title={fbt('Reviews', 'Reviews')}
+                        onBack={() => goBack(history)}
+                      >
+                        {reviewsComp}
+                      </MobileModal>
+                    ) : reviewsComp}
+                  </div>
+                </div>
+              </>
+            )
+          }
+
           const listingsComp = (
             <UserListings
               user={id}
@@ -126,6 +154,11 @@ require('react-styl')(`
       transform: rotateZ(270deg)
       background-repeat: no-repeat
       z-index: 10
+    > .reviews-only.row > .col-md-8
+      padding: 1rem
+      > .reviews
+        margin-top: 1.5rem
+        border: 0
 
   @media (max-width: 767.98px)
     .user-public-profile
@@ -134,4 +167,6 @@ require('react-styl')(`
         padding: 0
       .back-icon
         display: inline-block
+    .reviews-modal
+      padding: 1rem
 `)
