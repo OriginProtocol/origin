@@ -306,5 +306,5 @@ const styles = StyleSheet.create({
   },
   termsHighlightText: {
     color: '#6f8294'
-  },
+  }
 })
