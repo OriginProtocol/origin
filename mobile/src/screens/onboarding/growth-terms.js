@@ -41,7 +41,7 @@ class GrowthTermsScreen extends Component {
   async componentDidMount() {
     const eligibility = await this.props.getGrowthEligibility()
     const eligible =
-      get(eligibility, 'data.isEligible.eligibility', null) === 'Eligibled'
+      get(eligibility, 'data.isEligible.eligibility', null) === 'Eligible'
     const countryName = get(eligibility, 'data.isEligible.countryName')
     this.setState({ loading: false, eligible, countryName })
   }
