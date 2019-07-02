@@ -16,6 +16,7 @@ import get from 'lodash.get'
 import CheckBox from 'react-native-check-box'
 import DeviceInfo from 'react-native-device-info'
 
+import BackArrow from 'components/back-arrow'
 import OriginButton from 'components/origin-button'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import withOriginGraphql from 'hoc/withOriginGraphql'
@@ -178,6 +179,10 @@ class GrowthTermsScreen extends Component {
     return (
       <>
         <View style={{ ...styles.container, paddingTop: 20 }}>
+          <BackArrow
+            onClick={() => this.props.navigation.goBack(null)}
+            style={styles.backArrow}
+          />
           <Text style={styles.termsHeader}>
             <fbt desc="GrowthTermsScreen.termsHeader">
               Join Origin’s reward program to earn Origin tokens (OGN). Terms &
@@ -276,5 +281,30 @@ export default withOriginGraphql(
 
 const styles = StyleSheet.create({
   ...CommonStyles,
-  ...OnboardingStyles
+  ...OnboardingStyles,
+  termsHeader: {
+    fontWeight: '600',
+    fontSize: 18,
+    marginBottom: 20,
+    marginHorizontal: 20,
+    textAlign: 'center'
+  },
+  termsText: {
+    paddingHorizontal: 20,
+    marginBottom: 20,
+    color: '#111d28'
+  },
+  termsHighlightContainer: {
+    borderColor: '#98a7b4',
+    backgroundColor: 'rgba(152, 167, 180, 0.1)',
+    borderWidth: 1,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    marginVertical: 20,
+    width: '90%',
+    borderRadius: 5
+  },
+  termsHighlightText: {
+    color: '#6f8294'
+  }
 })
