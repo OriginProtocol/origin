@@ -63,7 +63,7 @@ const FractionalNightlyDetail = ({
               </button>
               {!isMobile && (
                 <button
-                  className="btn btn-outline"
+                  className="btn btn-outline mb-0"
                   onClick={() => {
                     setCloseModal(true)
                   }}
@@ -82,11 +82,20 @@ const FractionalNightlyDetail = ({
 export default FractionalNightlyDetail
 
 require('react-styl')(`
+  .availability-modal
+    .actions
+      display: flex
+      flex-direction: column
+      .btn
+        width: 250px
+        margin-left: auto
+        margin-right: auto
   @media (max-width: 767.98px)
     .availability-modal
       padding: 1rem
       .actions
         border-top: 1px solid #dde6ea
         .btn
+          max-width: auto
           width: 100%
 `)
