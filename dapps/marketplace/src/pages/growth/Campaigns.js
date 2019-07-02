@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react'
 import { withApollo, Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
-import { get, find } from 'lodash'
+import get from 'lodash/get'
+import find from 'lodash/find'
 
 import formatTimeDifference from 'utils/formatTimeDifference'
 import QueryError from 'components/QueryError'
