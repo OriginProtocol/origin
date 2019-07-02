@@ -24,10 +24,10 @@ const Pending = ({ listing, isMobile }) => (
               'UnitListing.offerMadeOnListing'
             )}
       </div>
+      <Link className="listing-action-link" to="/listings">
+        <fbt desc="viewAllListings">View all listings</fbt>
+      </Link>
     </div>
-    <Link className="listing-action-link" to="/listings">
-      <fbt desc="viewAllListings">View all listings</fbt>
-    </Link>
   </div>
 )
 

@@ -10,7 +10,7 @@ const Sold = ({ listing, isSingleUnit }) => (
       <Price listing={listing} descriptor />
     </div>
     <div className="status">
-      <div className={`status-title${isSingleUnit ? '' : ' red'}`}>
+      <div className="status-title sold-out">
         {isSingleUnit ? fbt('Sold', 'Sold') : fbt('Sold Out', 'SoldOut')}
       </div>
       <div className="status-text">
@@ -24,10 +24,10 @@ const Sold = ({ listing, isSingleUnit }) => (
               'UnitListing.soldOut'
             )}
       </div>
+      <Link className="listing-action-link" to="/listings">
+        <fbt desc="viewAllListings">View all listings</fbt>
+      </Link>
     </div>
-    <Link className="listing-action-link" to="/listings">
-      <fbt desc="viewAllListings">View all listings</fbt>
-    </Link>
   </div>
 )
 
@@ -36,12 +36,31 @@ export default Sold
 require('react-styl')(`
   .listing-buy
     .status
-      margin-top: 1rem
+      text-align: center
+      padding: 1.25rem
+      background-color: #f3f7f9
+      border: solid 1px #eaf0f3
+      border-radius: 10px
+      margin-bottom: 0.5rem
       .status-title
         font-weight: 900
         font-size: 18px
-        &.red
+        &.sold-out
           color: red
       .status-text
         font-size: 16px
+    .listing-action-link
+      font-size: 16px
+      margin-top: 0.75rem
+      display: inline-block
+      &:after
+        content: '>'
+        margin-left: 0.5rem
+        display: inline-block
+  @media (max-width: 767.98px)
+    .listing-buy .status
+      margin-left: -30px
+      margin-right: -30px
+      border-radius: 0
+      
 `)

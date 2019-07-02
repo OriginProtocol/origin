@@ -18,10 +18,10 @@ const Withdrawn = ({ listing }) => (
           This listing is unavailable at the moment
         </fbt>
       </div>
+      <Link className="listing-action-link" to="/listings">
+        <fbt desc="viewAllListings">View all listings</fbt>
+      </Link>
     </div>
-    <Link className="listing-action-link" to="/listings">
-      <fbt desc="viewAllListings">View all listings</fbt>
-    </Link>
   </div>
 )
 

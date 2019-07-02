@@ -205,7 +205,7 @@ class ListingDetail extends Component {
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
-    const isSingleUnit = listing.__typename === 'UnitListing'
+    const isSingleUnit = listing.__typename === 'UnitListing' && listing.unitsTotal === 1
     const isService = listing.__typename === 'ServiceListing'
     const isPendingBuyer = listing.pendingBuyers.some(
       b => b.id === this.props.walletProxy
@@ -248,8 +248,8 @@ class ListingDetail extends Component {
     } else if (isPendingBuyer && (listing.multiUnit || isService)) {
       return (
         <>
-          <MultiUnit {...props} />
           <OfferMade {...props} isSingleUnit={isSingleUnit} offers={offers} />
+          <MultiUnit {...props} isPendingBuyer={isPendingBuyer} />
         </>
       )
     } else if (listing.status === 'pending' && !isService) {
@@ -409,6 +409,13 @@ require('react-styl')(`
         padding: 0.5rem 1rem
         width: 100%
         font-size: 20px
+      .quantity
+        margin-top: 1rem
+        padding-top: 1rem
+        border-top: 1px solid #dde6ea
+        &:first-child
+          border: 0
+          margin-top: 0
       .quantity,.total
         font-family: var(--default-font)
         font-size: 18px
@@ -428,7 +435,7 @@ require('react-styl')(`
         color: var(--dark)
         font-weight: bold
         line-height: 1
-        margin-bottom: 0.5rem
+        padding-bottom: 1.5rem
         span.desc
           font-weight: normal
           margin-left: 0.25rem
@@ -481,7 +488,7 @@ require('react-styl')(`
       h2
         font-size: 32px
       .description
-        margin-top: 1rem
+        margin-top: 0
         margin-bottom: 2rem
       .about-party
         margin-bottom: 2rem
@@ -513,6 +520,10 @@ require('react-styl')(`
         .seller-listings
           border-top: 1px solid #dde6ea
           padding: 2rem 15px 0 15px
+          .user-listings .listings-header
+            font-family: var(--heading-font)
+            font-size: 18px
+            margin-bottom: 1.25rem
 
       .description
         border: 0
@@ -524,15 +535,6 @@ require('react-styl')(`
         .price
           margin-bottom: 0
           font-size: 22px
-        &.fractional, &.multi, &.single
-          margin-bottom: 0.5rem
-          .price
-            padding-bottom: 0
-          .payment-options
-            margin: 0
-            .btn
-              font-size: 14px
-              padding: 0.5rem 0.9rem
         &.multi
           .price
             padding-bottom: 0.5rem

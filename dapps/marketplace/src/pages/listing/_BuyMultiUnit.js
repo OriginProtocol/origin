@@ -16,7 +16,8 @@ const MultiUnit = ({
   quantity,
   updateQuantity,
   refetch,
-  growthReward
+  growthReward,
+  isPendingBuyer
 }) => {
   const selectedCurrency = useContext(CurrencyContext)
   const amount = String(Number(listing.price.amount) * Number(quantity))
@@ -34,7 +35,7 @@ const MultiUnit = ({
         if (!prices) return null
         return (
           <div className="listing-buy multi">
-            <div className="price">
+            {!isPendingBuyer && (<div className="price">
               <div className="d-flex justify-content-between align-items-center">
                 <Price listing={listing} descriptor />
                 <OgnBadge
@@ -50,7 +51,7 @@ const MultiUnit = ({
                   />
                 </span>
               )}
-            </div>
+            </div>)}
             <SelectQuantity
               quantity={quantity}
               onChange={val => updateQuantity(val)}

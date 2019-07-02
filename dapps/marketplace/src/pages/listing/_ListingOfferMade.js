@@ -18,17 +18,17 @@ const OfferMade = ({ listing, offers }) => (
           You have made an offer on this listing
         </fbt>
       </div>
+      {offers.length > 1 && (
+        <Link className="listing-action-link" to="/my-purchases">
+          <fbt desc="viewAllOffers">View all my offers</fbt>
+        </Link>
+      )}
+      {offers.length === 1 && (
+        <Link className="listing-action-link" to="/my-purchases">
+          <fbt desc="viewMyOffer">View offer</fbt>
+        </Link>
+      )}
     </div>
-    {offers.length > 1 && (
-      <Link className="listing-action-link" to="/my-purchases">
-        <fbt desc="viewAllOffers">View all my offers</fbt>
-      </Link>
-    )}
-    {offers.length === 1 && (
-      <Link className="listing-action-link" to="/my-purchases">
-        <fbt desc="viewMyOffer">View my offer</fbt>
-      </Link>
-    )}
   </div>
 )
 

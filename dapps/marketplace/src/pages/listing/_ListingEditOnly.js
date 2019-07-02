@@ -61,8 +61,10 @@ require('react-styl')(`
   .listing-buy
     .listing-buy-editonly
       padding: 1rem 0 0 0
+      border-top: 1px solid #dde6ea
       .row
         margin-bottom: 1rem
+        font-size: 16px
         &:last-child
           margin-bottom: 0
         > div:nth-child(1)
@@ -73,12 +75,4 @@ require('react-styl')(`
           text-align: right
           padding-right: 1rem
           font-weight: bold
-    .listing-action-link
-      font-size: 16px
-      margin-top: 1rem
-      display: inline-block
-      &:after
-        content: '>'
-        margin-left: 0.5rem
-        display: inline-block
 `)
