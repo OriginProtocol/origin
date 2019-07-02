@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 import displayDateTime from 'utils/displayDateTime'
+import displayTimeDiff from 'utils/displayTimeDiff'
 
 import withWallet from 'hoc/withWallet'
 
@@ -20,7 +21,6 @@ import { Filter, FilterItem } from './_Filter'
 import OfferStatus from './_OfferStatus'
 
 import nextPageFactory from 'utils/nextPageFactory'
-import distanceToNow from 'utils/distanceToNow'
 import query from 'queries/Sales'
 
 const nextPage = nextPageFactory('marketplace.user.sales')
@@ -133,6 +133,12 @@ const displaySaleDate = date =>
     year: 'numeric'
   })
 
+const displaySaleElapsedTime = timestamp =>
+  displayTimeDiff(Number(timestamp) - Date.now(), {
+    numeric: 'always',
+    style: 'long'
+  })
+
 const Sale = ({ listing, offer }) => (
   <div className="sale">
     <Pic listing={listing} />
@@ -143,7 +149,7 @@ const Sale = ({ listing, offer }) => (
         </Link>
         <div className="right">
           <span className="time-estimate">
-            {distanceToNow(offer.createdEvent.timestamp, true) + ' ago'}
+            {displaySaleElapsedTime(offer.createdEvent.timestamp)}
           </span>
           <OfferStatus offer={offer} />
         </div>

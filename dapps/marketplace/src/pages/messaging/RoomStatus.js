@@ -1,7 +1,7 @@
 import React from 'react'
 import get from 'lodash/get'
 
-import distanceToNow from 'utils/distanceToNow'
+import displayTimeDiff from 'utils/displayTimeDiff'
 import withIdentity from 'hoc/withIdentity'
 
 import Avatar from 'components/Avatar'
@@ -23,7 +23,9 @@ const RoomStatus = ({ conversation, identity, onClick, active }) => {
       <div className="right">
         <div className="top">
           <div className="name">{name}</div>
-          <div className="time">{distanceToNow(timestamp)}</div>
+          <div className="time">
+            {displayTimeDiff(Number(timestamp) - Date.now())}
+          </div>
         </div>
         <div className="bottom">
           <div className="last-message">

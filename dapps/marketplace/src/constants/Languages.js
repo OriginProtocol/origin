@@ -1,3 +1,10 @@
+export function toBCP47(locale) {
+  if (locale === 'zh_CN') return 'zh-Hans-CN'
+  if (locale === 'zh_TW') return 'zh-Hant-TW'
+  if (locale === 'pt_PT') return 'pt' // With shortened weekdays
+  return locale.replace('_', '-')
+}
+
 export default [
   ['de_DE', 'Deutsch'],
   ['el_GR', 'ελληνικά'],

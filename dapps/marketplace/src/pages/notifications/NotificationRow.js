@@ -1,13 +1,12 @@
 import React from 'react'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
+import displayTimeDiff from 'utils/displayTimeDiff'
 
 import withIdentity from 'hoc/withIdentity'
 
 import Link from 'components/Link'
 import Avatar from 'components/Avatar'
-
-import distanceToNow from 'utils/distanceToNow'
 
 const Row = ({ node, identity, onClick }) => {
   const name = get(identity, 'fullName', get(node, 'party.id').substr(0, 6))
@@ -99,7 +98,9 @@ const Row = ({ node, identity, onClick }) => {
         <div>{description}</div>
         <div>{get(node, 'event.transactionHash')}</div>
       </div>
-      <div>{distanceToNow(get(node, 'event.timestamp'))}</div>
+      <div>
+        {displayTimeDiff(Number(get(node, 'event.timestamp')) - Date.now())}
+      </div>
       <div className="caret" />
     </div>
   )

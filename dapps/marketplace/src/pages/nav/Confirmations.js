@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { Query } from 'react-apollo'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
+import displayTimeDiff from 'utils/displayTimeDiff'
 
 import query from 'queries/UserTransactions'
-import distanceToNow from 'utils/distanceToNow'
 
 import withWallet from 'hoc/withWallet'
 
@@ -89,7 +89,9 @@ const TransactionsContent = ({ pending, nodes, blockNumber }) => {
                 <div className="title">
                   <TransactionDescription receipt={node.receipt} />
                 </div>
-                <div className="time">{distanceToNow(node.submittedAt)}</div>
+                <div className="time">
+                  {displayTimeDiff(Number(node.submittedAt) - Date.now())}
+                </div>
               </div>
               <div>
                 <div className="parties">{`Tx: ${node.id}`}</div>

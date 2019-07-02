@@ -3,7 +3,7 @@ import { Query } from 'react-apollo'
 import get from 'lodash/get'
 import set from 'lodash/set'
 import { fbt } from 'fbt-runtime'
-import distanceToNow from 'utils/distanceToNow'
+import displayTimeDiff from 'utils/displayTimeDiff'
 
 import StarRating from 'components/StarRating'
 import Avatar from 'components/Avatar'
@@ -153,7 +153,9 @@ export default class Reviews extends Component {
                       <div className="review-meta">
                         <StarRating small={true} active={review.rating} />
                         <div className="timestamp">
-                          {distanceToNow(review.event.timestamp)}
+                          {displayTimeDiff(
+                            Number(review.event.timestamp) - Date.now()
+                          )}
                         </div>
                       </div>
                       <div className="text">{review.review}</div>

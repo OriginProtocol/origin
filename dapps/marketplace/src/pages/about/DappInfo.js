@@ -6,7 +6,7 @@ import DocumentTitle from 'components/DocumentTitle'
 import growthEligibilityQuery from 'queries/GrowthEligibility'
 import dayjs from 'dayjs'
 import displayDateTime from 'utils/displayDateTime'
-import distanceToNow from 'utils/distanceToNow'
+import displayTimeDiff from 'utils/displayTimeDiff'
 
 const DAPP_VERSION = require('../../../package.json').version
 
@@ -64,7 +64,10 @@ const DappInfo = () => {
       hour: 'numeric',
       minute: '2-digit'
     })
-    buildTime += ` (${distanceToNow(buildTimestamp / 1000)} ago)`
+    buildTime += ` (${displayTimeDiff(buildTimestamp - Date.now(), {
+      numeric: 'always',
+      style: 'long'
+    })})`
   }
 
   return (
