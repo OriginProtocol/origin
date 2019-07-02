@@ -18,8 +18,6 @@ const ListingInterface = `
 
   # Computed
   status: String
-  hidden: Boolean
-  featured: Boolean
   depositAvailable: String
   type: String
   valid: Boolean

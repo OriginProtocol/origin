@@ -29,8 +29,6 @@ const Listings = ({ listings, history, hasNextPage }) => {
           className="listing-card"
         >
           <h5 className="bp3-heading ellip" style={{ maxWidth: 'none' }}>
-            {a.hidden ? <Icon icon="eye-off" className="mr-2" /> : null}
-            {a.featured ? <Icon icon="clean" className="mr-2" /> : null}
             {a.title}
           </h5>
           {status(a)}

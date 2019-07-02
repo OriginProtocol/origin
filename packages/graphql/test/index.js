@@ -119,8 +119,6 @@ describe('Marketplace', function() {
       assert.strictEqual(listing.unitsSold, 0)
       assert.strictEqual(listing.commission, '0')
       assert.strictEqual(listing.commissionPerUnit, '0')
-      assert.strictEqual(listing.featured, false)
-      assert.strictEqual(listing.hidden, false)
     })
 
     it('should retrieve the listing as of a specfic block', async function() {
@@ -293,8 +291,6 @@ describe('Marketplace', function() {
       assert.strictEqual(listing.unitsSold, 0)
       assert.strictEqual(listing.commission, '0')
       assert.strictEqual(listing.commissionPerUnit, '1500000000000000000')
-      assert.strictEqual(listing.featured, false)
-      assert.strictEqual(listing.hidden, false)
     })
 
     it('should retrieve the listing', async function() {

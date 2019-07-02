@@ -17,7 +17,6 @@ const promBundle = require('express-prom-bundle')
 
 const resolvers = require('./resolvers')
 const typeDefs = require('./schema')
-const listingMetadata = require('./listing-metadata')
 
 const app = express()
 app.use(cors())
@@ -41,8 +40,6 @@ const server = new ApolloServer({
     if (headers['x-discovery-auth-token']) {
       context.discoveryAuthToken = headers['x-discovery-auth-token']
     }
-    // Update listing Metadata in a non blocking way
-    listingMetadata.updateHiddenFeaturedListings()
     return context
   },
   // Always enable GraphQL playground and schema introspection, regardless of NODE_ENV value.
@@ -53,7 +50,6 @@ const server = new ApolloServer({
 server.applyMiddleware({ app })
 
 // Initial fetch of ids at the time of starting the server.
-listingMetadata.updateHiddenFeaturedListings()
 
 const port = process.env.PORT || 4000
 

@@ -33,15 +33,14 @@ class Listings extends Component {
     first: 15,
     mode: localStore.get('listingsPage.mode', 'gallery'),
     searchInput: memStore.get('listingsPage.search', ''),
-    search: memStore.get('listingsPage.search'),
-    hidden: false
+    search: memStore.get('listingsPage.search')
   }
 
   render() {
-    const vars = pick(this.state, 'first', 'sort', 'hidden', 'search')
+    const vars = pick(this.state, 'first', 'sort', 'search')
 
     return (
-      <Query query={query} variables={vars} notifyOnNetworkStatusChange={true}>
+      <Query query={query} variables={vars} notifyOnNetworkStatusChange={true} fetchPolicy='network-only'>
         {({ error, data, fetchMore, networkStatus, refetch }) => {
           if (networkStatus === 1) {
             return <LoadingSpinner />
@@ -163,28 +162,6 @@ class Listings extends Component {
               onClick={() => refetch()}
             />
           </Tooltip>
-          {!discovery ? null : (
-            <>
-              <Switch
-                checked={this.state.hidden ? true : false}
-                onChange={e =>
-                  this.setState({ hidden: e.target.checked ? true : false })
-                }
-                inline={true}
-                className="ml-3 mb-0"
-                label="Hide Hidden"
-              />
-              <Switch
-                inline={true}
-                className="mb-0"
-                label="Sort Featured"
-                checked={this.state.sort === 'featured' ? true : false}
-                onChange={e =>
-                  this.setState({ sort: e.target.checked ? 'featured' : '' })
-                }
-              />
-            </>
-          )}
         </div>
       </div>
     )

@@ -14,8 +14,7 @@ const UserListings = ({ user, hideHeader, hideLoadMore }) => {
   const vars = {
     first: 8,
     filter: 'active',
-    sort: 'featured',
-    hidden: true
+    sort: 'featured'
   }
 
   const isMobile = useIsMobile()

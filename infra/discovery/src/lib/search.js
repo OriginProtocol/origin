@@ -144,8 +144,6 @@ class Listing {
    * @param {integer} numberOfItems - number of items to display per page
    * @param {integer} offset - what page to return results from
    * @param {boolean} idsOnly - only returns listing Ids vs listing object.
-   * @param {array} hiddenIds - list of all hidden ids
-   * @param {array} featuredIds - list of all featured ids
    * @throws Throws an error if the search operation failed.
    * @returns A list of listings (can be empty).
    */
@@ -154,9 +152,7 @@ class Listing {
     filters,
     numberOfItems,
     offset,
-    idsOnly,
-    hiddenIds = [],
-    featuredIds = []
+    idsOnly
   ) {
     if (filters === undefined) {
       filters = []
@@ -188,13 +184,6 @@ class Listing {
       }
     })
 
-    if (hiddenIds.length > 0) {
-      esQuery.bool.must_not.push({
-        ids: {
-          values: hiddenIds
-        }
-      })
-    }
 
     if (query !== undefined && query !== '') {
       // all_text is a field where all searchable fields get copied to
@@ -234,22 +223,6 @@ class Listing {
      * https://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-deep-clone-an-object-in-javascript/5344074#5344074
      */
     const esAggregationQuery = JSON.parse(JSON.stringify(esQuery))
-    /* Also query for featured listings and give them such boost that they shall always be presented on top.
-     * Filters and query string still applies to these listings, but if they match, they shall be on top.
-     */
-    if (featuredIds.length > 0) {
-      let boostAmount = 10000
-      featuredIds.forEach(featuredId => {
-        esQuery.bool.should.push({
-          ids: {
-            values: [featuredId],
-            boost: boostAmount
-          }
-        })
-        // to preserve the order of featured listings degrade the boost of each consequent listing
-        boostAmount -= 100
-      })
-    }
 
     filters.forEach(filter => {
       let innerFilter = {}

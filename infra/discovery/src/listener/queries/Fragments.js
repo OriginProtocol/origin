@@ -38,8 +38,6 @@ module.exports = {
         title
         description
         currencyId
-        featured
-        hidden
         price {
           amount
           currency {
