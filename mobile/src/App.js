@@ -6,6 +6,8 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import Web3 from 'web3'
 
+import Configs from '@origin/graphql/src/configs'
+
 import Store, { persistor } from './Store'
 import AppContainer from './Navigation'
 import NavigationService from './NavigationService'
@@ -64,6 +66,11 @@ class App extends Component {
         : wallet.accounts[0]
       Store.dispatch(setAccountActive(activeAccount))
     }
+
+    // Set the web3 provider from the configured network
+    const provider = Configs[settings.network.name.toLowerCase()].provider
+    global.web3.setProvider(new Web3.providers.HttpProvider(provider, 20000))
+    console.debug(`Set web3 provider to ${provider}`)/
 
     console.debug(`Found ${wallet.accounts.length} accounts`)
     // Add all the stored accounts to the global web3 object
