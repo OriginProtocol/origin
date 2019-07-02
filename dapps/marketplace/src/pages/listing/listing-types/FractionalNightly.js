@@ -1,31 +1,92 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { fbt } from 'fbt-runtime'
 
 import Calendar from 'components/Calendar'
+import Modal from 'components/Modal'
+import MobileModal from 'components/MobileModal'
+
+import useIsMobile from 'utils/useMobile'
+import DateRange from '../_DateRange';
 
 const FractionalNightlyDetail = ({
   availability,
   onChange,
+  onClose,
   listing,
   description,
-  isOwnerViewing
-}) => (
-  <>
-    {description}
-    <hr />
-    <Calendar
-      interactive={!isOwnerViewing}
-      small={true}
-      onChange={state => onChange(state)}
-      availability={availability}
-      currency={listing.price.currency}
-    />
-    <div className="availability-help">
-      <fbt desc="listingDetail.calendarDateRange">
-        * Click to select start date and again to select end date.
-      </fbt>
-    </div>
-  </>
-)
+  isOwnerViewing,
+  openCalendar
+}) => {
+  const isMobile = useIsMobile()
+
+  const [selectedRange, setSelectedRange] = useState(null)
+  const [closeModal, setCloseModal] = useState(false)
+
+  const [startDate, endDate] = (selectedRange ? selectedRange.range : '').split('/')
+
+  const ModalComp = isMobile ? MobileModal : Modal
+
+  return (
+    <>
+      {description}
+      {
+        openCalendar && (
+          <ModalComp
+            title={fbt('Availability', 'Availability')}
+            className={`availability-modal`}
+            shouldClose={closeModal}
+            lightMode={true}
+            onClose={() => {
+              setCloseModal(false)
+              onClose()
+            }}
+          >
+            <>
+              <DateRange startDate={startDate} endDate={endDate} />
+              <Calendar
+                interactive={!isOwnerViewing}
+                small={true}
+                onChange={state => setSelectedRange(state)}
+                availability={availability}
+                currency={listing.price.currency}
+              />
+              <div className="actions mt-auto">
+                <button
+                  className="btn btn-primary btn-rounded mt-4"
+                  onClick={() => {
+                    onChange(selectedRange)
+                    setCloseModal(true)
+                  }}
+                >
+                  <fbt desc="Save">Save</fbt>
+                </button>
+                {!isMobile && (
+                  <button
+                    className="btn btn-outline"
+                    onClick={() => {
+                      setCloseModal(true)
+                    }}
+                  >
+                    <fbt desc="Cancel">Cancel</fbt>
+                  </button>
+                )}
+              </div>
+            </>
+          </ModalComp>
+        )
+      }
+    </>
+  )
+}
 
 export default FractionalNightlyDetail
+
+require('react-styl')(`
+  @media (max-width: 767.98px)
+    .availability-modal
+      padding: 1rem
+      .actions
+        border-top: 1px solid #dde6ea
+        .btn
+          width: 100%
+`)

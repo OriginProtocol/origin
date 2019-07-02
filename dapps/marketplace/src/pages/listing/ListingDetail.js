@@ -169,6 +169,8 @@ class ListingDetail extends Component {
           availability={this.state.availability}
           isOwnerViewing={isOwnerViewing}
           onChange={state => this.setState(state)}
+          openCalendar={this.state.openCalendar}
+          onClose={() => this.setState({ openCalendar: false })}
         />
       )
     } else if (isFractionalHourly) {
@@ -179,6 +181,8 @@ class ListingDetail extends Component {
           availability={this.state.availabilityHourly}
           isOwnerViewing={isOwnerViewing}
           onChange={state => this.setState(state)}
+          openCalendar={this.state.openCalendar}
+          onClose={() => this.setState({ openCalendar: false })}
         />
       )
     }
@@ -262,6 +266,11 @@ class ListingDetail extends Component {
           {...props}
           range={this.state.range}
           availability={this.state.availability}
+          onShowAvailability={() => {
+            this.setState({
+              openCalendar: true
+            })
+          }}
         />
       )
     } else if (isFractionalHourly) {
@@ -450,29 +459,6 @@ require('react-styl')(`
       &.multi,&.fractional
         .price
           padding-bottom: 1.5rem
-      &.fractional
-        .choose-dates
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 1rem
-
-          div:nth-child(1),div:nth-child(3)
-            border-radius: var(--default-radius);
-            padding: 0 5px;
-            cursor: pointer
-            &:hover
-              background: var(--pale-grey-seven);
-          div:nth-child(1)
-            margin-left: -5px;
-          div:nth-child(3)
-            margin-right: -5px;
-
-          div:nth-child(2)
-            flex: 1
-            background: url(images/arrow-right.svg) no-repeat center
-            background-size: 1.25rem
-          div:nth-child(3)
-            text-align: right
       &.pending
         text-align: center
         font-weight: normal
