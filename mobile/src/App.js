@@ -70,7 +70,7 @@ class App extends Component {
     // Set the web3 provider from the configured network
     const provider = Configs[settings.network.name.toLowerCase()].provider
     global.web3.setProvider(new Web3.providers.HttpProvider(provider, 20000))
-    console.debug(`Set web3 provider to ${provider}`)/
+    console.debug(`Set web3 provider to ${provider}`)
 
     console.debug(`Found ${wallet.accounts.length} accounts`)
     // Add all the stored accounts to the global web3 object
