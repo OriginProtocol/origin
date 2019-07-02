@@ -193,12 +193,43 @@ npm run test:contracts-coverage
 
 To compile the 0.4.x solidity contracts, run:
 
-```js
+```bash
 npm run build:development
 ```
 
 To compile the 0.5.x solidity contracts, run:
 
-```js
+```bash
 npm run build:solc
+```
+
+## Deploying Contracts
+
+To deploy the Identity Proxy implementation contract, run this GraphQL mutation
+from the Admin page:
+
+```graphql
+mutation {
+  deployIdentityProxy(from: "META_MASK_ACCOUNT_ID") {
+    id
+  }
+}
+```
+
+This will give you a tx hash ID. You can fetch teh deployed contract address
+with:
+
+```js
+const receipt = await web3.eth.getTransactionReceipt("TX_HASH");
+console.log(receipt.contractAddress);
+```
+
+then deploy the ProxyFactory via GraphQL mutation:
+
+```graphql
+mutation {
+  deployProxyFactory(from: "META_MASK_ACCOUNT_ID") {
+    id
+  }
+}
 ```

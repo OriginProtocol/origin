@@ -431,7 +431,7 @@ describe('Marketplace Dapp', function() {
     await page.evaluate(() => {
       delete window.localStorage.performanceMode
       delete window.localStorage.proxyAccountsEnabled
-      delete window.localStorage.enableRelayer
+      delete window.localStorage.relayerEnabled
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
@@ -445,7 +445,7 @@ describe('Marketplace Dapp with proxies enabled', function() {
     await page.evaluate(() => {
       window.localStorage.proxyAccountsEnabled = true
       delete window.localStorage.performanceMode
-      delete window.localStorage.enableRelayer
+      delete window.localStorage.relayerEnabled
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
@@ -465,7 +465,7 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
     await page.evaluate(() => {
       window.localStorage.performanceMode = true
       window.localStorage.proxyAccountsEnabled = true
-      window.localStorage.enableRelayer = true
+      window.localStorage.relayerEnabled = true
       window.localStorage.debug = 'origin:*'
       window.transactionPoll = 100
     })
