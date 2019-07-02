@@ -200,7 +200,8 @@ const Listing = ({ listing, refetch }) => (
             </fbt>
           </div>
         )}
-        {listing.unitsAvailable === undefined ? null : (
+        {listing.unitsAvailable === undefined ||
+        listing.__typename === 'ServiceListing' ? null : (
           <div>
             <fbt desc="Listings.unitsAvailable">
               Available:

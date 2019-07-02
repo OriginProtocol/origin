@@ -21,6 +21,10 @@ export default function applyListingData(props, data) {
   }
 
   switch (listing.__typename) {
+    case 'ServiceListing': {
+      break
+    }
+
     case 'UnitListing': {
       const unitsTotal = Number(listing.quantity)
       variables.unitData = { unitsTotal }

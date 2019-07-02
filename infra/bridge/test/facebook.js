@@ -67,7 +67,7 @@ describe('facebook attestations', () => {
       .get('/me')
       .query({
         appsecret_proof: appSecretProof,
-        access_token: 12345
+        access_token: '12345'
       })
       .reply(200, { id: '67890', name: 'Origin Protocol' })
 
@@ -110,7 +110,7 @@ describe('facebook attestations', () => {
         client_secret: process.env.FACEBOOK_CLIENT_SECRET,
         redirect_uri: getAbsoluteUrl('/redirects/facebook/'),
         code: 'abcdefg',
-        state: 123
+        state: '123'
       })
       .reply(200, { access_token: '12345' })
 
@@ -123,7 +123,7 @@ describe('facebook attestations', () => {
       .get('/me')
       .query({
         appsecret_proof: appSecretProof,
-        access_token: 12345
+        access_token: '12345'
       })
       .reply(200, { id: '67890', name: 'Origin Protocol' })
 
@@ -133,7 +133,7 @@ describe('facebook attestations', () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             code: 'abcdefg'
           }
@@ -147,7 +147,7 @@ describe('facebook attestations', () => {
       .post('/api/attestations/facebook/verify')
       .send({
         identity: ethAddress,
-        sid: 123
+        sid: '123'
       })
       .expect(200)
 
@@ -181,7 +181,7 @@ describe('facebook attestations', () => {
       req.session = {}
       req.sessionStore = {
         get(sid) {
-          expect(sid).to.equal(123)
+          expect(sid).to.equal('123')
           return {
             code: 'abcdefg'
           }
@@ -195,7 +195,7 @@ describe('facebook attestations', () => {
       .post('/api/attestations/facebook/verify')
       .send({
         identity: ethAddress,
-        sid: 12345
+        sid: '12345'
       })
       .expect(400)
 

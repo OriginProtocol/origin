@@ -150,9 +150,9 @@ class OnboardProfile extends Component {
               skipSuccessScreen={true}
               onComplete={() => {
                 clearVerifiedAccounts()
-                this.setState({ finished: true })
+                this.setState({ finished: true, shouldCloseSignTxModal: true })
               }}
-              onClose={() => this.setState({ shouldCloseSignTxModal: true })}
+              onCancel={() => this.setState({ shouldCloseSignTxModal: true })}
             />
           </div>
         </div>

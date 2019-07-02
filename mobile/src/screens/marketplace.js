@@ -13,9 +13,10 @@ import {
   ScrollView,
   RefreshControl
 } from 'react-native'
-import PushNotification from 'react-native-push-notification'
-import { WebView } from 'react-native-webview'
+import { AndroidBackHandler } from 'react-navigation-backhandler'
 import { connect } from 'react-redux'
+import { WebView } from 'react-native-webview'
+import PushNotification from 'react-native-push-notification'
 import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
 
@@ -74,6 +75,13 @@ class MarketplaceScreen extends Component {
     await this.clipboardInviteCodeCheck()
   }
 
+  /* Handle back button presses on Android devices so that they work on the
+   * WebView */
+  onBackButtonPressAndroid = () => {
+    this.dappWebView.goBack()
+    return true
+  }
+
   async clipboardInviteCodeCheck() {
     const content = await Clipboard.getString()
     const INVITE_CODE_PREFIX = 'origin:growth_invite_code:'
@@ -116,8 +124,6 @@ class MarketplaceScreen extends Component {
         this.injectInviteCode(this.state.inviteCode)
       }
     }
-
-
   }
 
   /* Enables left and right swiping to go forward/back in the WebView.
@@ -400,12 +406,18 @@ class MarketplaceScreen extends Component {
     this.setState({ enablePullToRefresh: scrollTop === 0 })
   }
 
-  injectGraphqlQuery = (id, query, variables = {}) => {
+  injectGraphqlQuery = (
+    id,
+    query,
+    variables = {},
+    fetchPolicy = 'cache-first'
+  ) => {
     const injectedJavaScript = `
       (function() {
         window.gql.query({
           query: ${JSON.stringify(query)},
-          variables: ${JSON.stringify(variables)}
+          variables: ${JSON.stringify(variables)},
+          fetchPolicy: '${fetchPolicy}'
         }).then((response) => {
           window.webViewBridge.send('handleGraphqlResult', {
             id: '${id}',
@@ -524,9 +536,7 @@ class MarketplaceScreen extends Component {
     const injectedJavaScript = `
       (function() {
         if (window && window.localStorage && window.webViewBridge) {
-          window.localStorage.growth_auth_token = '${
-            this.props.onboarding.growth
-          }';
+          window.localStorage.growth_auth_token = '${this.props.onboarding.growth}';
         }
       })();
     `
@@ -583,7 +593,7 @@ class MarketplaceScreen extends Component {
       clearInterval(this.periodicUpdater)
     }
     periodicUpdates()
-    this.periodicUpdater = setInterval(periodicUpdates, 10000)
+    this.periodicUpdater = setInterval(periodicUpdates, 2000)
     // Set state to ready in redux
     await this.props.setMarketplaceReady(true)
     // Make sure any error state is cleared
@@ -630,117 +640,123 @@ class MarketplaceScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.safeAreaView}>
-        <ScrollView
-          contentContainerStyle={{ flex: 1 }}
-          refreshControl={
-            <RefreshControl
-              enabled={this.state.enablePullToRefresh}
-              refreshing={this.state.refreshing}
-              onRefresh={() => {
-                this.dappWebView.injectJavaScript(`document.location.reload()`)
-                setTimeout(() => this.setState({ refreshing: false }), 1000)
-              }}
-            />
-          }
-          {...(Platform.OS === 'android' ? this._panResponder.panHandlers : [])}
-        >
-          <WebView
-            ref={webview => {
-              this.dappWebView = webview
-            }}
-            allowsBackForwardNavigationGestures={Platform.OS === 'ios'}
-            useWebKit={Platform.OS === 'ios'}
-            source={{ uri: this.props.settings.network.dappUrl }}
-            onMessage={this.onWebViewMessage}
-            onLoad={this.onWebViewLoad}
-            onError={syntheticEvent => {
-              const { nativeEvent } = syntheticEvent
-              this.props.setMarketplaceWebViewError(nativeEvent.description)
-            }}
-            renderLoading={() => {
-              return (
-                <View style={styles.loading}>
-                  <ActivityIndicator size="large" color="black" />
-                </View>
-              )
-            }}
-            decelerationRate="normal"
-            userAgent={webViewToBrowserUserAgent()}
-            startInLoadingState={true}
-          />
-          {this.state.modals.map((modal, index) => {
-            let card
-            if (modal.type === 'enableNotifications') {
-              card = (
-                <NotificationCard
-                  onRequestClose={() => this.toggleModal(modal)}
-                />
-              )
-            } else if (modal.type === 'processTransaction') {
-              card = (
-                <TransactionCard
-                  msgData={modal.msgData}
-                  fiatCurrency={this.state.fiatCurrency}
-                  onConfirm={() => {
-                    global.web3.eth
-                      .sendTransaction(modal.msgData.data)
-                      .on('transactionHash', hash => {
-                        this.toggleModal(modal, hash)
-                      })
-                  }}
-                  onRequestClose={() =>
-                    this.toggleModal(modal, {
-                      message: 'User denied transaction signature'
-                    })
-                  }
-                />
-              )
-            } else if (modal.type === 'signMessage') {
-              card = (
-                <SignatureCard
-                  msgData={modal.msgData}
-                  onConfirm={() => {
-                    if (
-                      modal.msgData.data.from.toLowerCase() !==
-                      this.props.wallet.activeAccount.address.toLowerCase()
-                    ) {
-                      console.error('Account mismatch')
-                      return
-                    }
-                    const { signature } = global.web3.eth.accounts.sign(
-                      modal.msgData.data,
-                      this.props.wallet.activeAccount.privateKey
-                    )
-                    this.toggleModal(modal, signature)
-                  }}
-                  onRequestClose={() =>
-                    this.toggleModal(modal, {
-                      message: 'User denied transaction signature'
-                    })
-                  }
-                />
-              )
-            }
-
-            return (
-              <Modal
-                key={index}
-                animationType="fade"
-                transparent={true}
-                visible={true}
-                onRequestClose={() => {
-                  this.toggleModal(modal)
+      <AndroidBackHandler onBackPress={this.onBackButtonPressAndroid}>
+        <SafeAreaView style={styles.safeAreaView}>
+          <ScrollView
+            contentContainerStyle={{ flex: 1 }}
+            refreshControl={
+              <RefreshControl
+                enabled={this.state.enablePullToRefresh}
+                refreshing={this.state.refreshing}
+                onRefresh={() => {
+                  this.dappWebView.injectJavaScript(
+                    `document.location.reload()`
+                  )
+                  setTimeout(() => this.setState({ refreshing: false }), 1000)
                 }}
-              >
-                <SafeAreaView style={styles.modalSafeAreaView}>
-                  {card}
-                </SafeAreaView>
-              </Modal>
-            )
-          })}
-        </ScrollView>
-      </SafeAreaView>
+              />
+            }
+            {...(Platform.OS === 'android'
+              ? this._panResponder.panHandlers
+              : [])}
+          >
+            <WebView
+              ref={webview => {
+                this.dappWebView = webview
+              }}
+              allowsBackForwardNavigationGestures={Platform.OS === 'ios'}
+              useWebKit={Platform.OS === 'ios'}
+              source={{ uri: this.props.settings.network.dappUrl }}
+              onMessage={this.onWebViewMessage}
+              onLoad={this.onWebViewLoad}
+              onError={syntheticEvent => {
+                const { nativeEvent } = syntheticEvent
+                this.props.setMarketplaceWebViewError(nativeEvent.description)
+              }}
+              renderLoading={() => {
+                return (
+                  <View style={styles.loading}>
+                    <ActivityIndicator size="large" color="black" />
+                  </View>
+                )
+              }}
+              decelerationRate="normal"
+              userAgent={webViewToBrowserUserAgent()}
+              startInLoadingState={true}
+            />
+            {this.state.modals.map((modal, index) => {
+              let card
+              if (modal.type === 'enableNotifications') {
+                card = (
+                  <NotificationCard
+                    onRequestClose={() => this.toggleModal(modal)}
+                  />
+                )
+              } else if (modal.type === 'processTransaction') {
+                card = (
+                  <TransactionCard
+                    msgData={modal.msgData}
+                    fiatCurrency={this.state.fiatCurrency}
+                    onConfirm={() => {
+                      global.web3.eth
+                        .sendTransaction(modal.msgData.data)
+                        .on('transactionHash', hash => {
+                          this.toggleModal(modal, hash)
+                        })
+                    }}
+                    onRequestClose={() =>
+                      this.toggleModal(modal, {
+                        message: 'User denied transaction signature'
+                      })
+                    }
+                  />
+                )
+              } else if (modal.type === 'signMessage') {
+                card = (
+                  <SignatureCard
+                    msgData={modal.msgData}
+                    onConfirm={() => {
+                      if (
+                        modal.msgData.data.from.toLowerCase() !==
+                        this.props.wallet.activeAccount.address.toLowerCase()
+                      ) {
+                        console.error('Account mismatch')
+                        return
+                      }
+                      const { signature } = global.web3.eth.accounts.sign(
+                        modal.msgData.data.data,
+                        this.props.wallet.activeAccount.privateKey
+                      )
+                      this.toggleModal(modal, signature)
+                    }}
+                    onRequestClose={() =>
+                      this.toggleModal(modal, {
+                        message: 'User denied transaction signature'
+                      })
+                    }
+                  />
+                )
+              }
+
+              return (
+                <Modal
+                  key={index}
+                  animationType="fade"
+                  transparent={true}
+                  visible={true}
+                  onRequestClose={() => {
+                    this.toggleModal(modal)
+                  }}
+                >
+                  <SafeAreaView style={styles.modalSafeAreaView}>
+                    {card}
+                  </SafeAreaView>
+                </Modal>
+              )
+            })}
+          </ScrollView>
+        </SafeAreaView>
+      </AndroidBackHandler>
     )
   }
 }
