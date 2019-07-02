@@ -15,9 +15,6 @@ const initialState = {
 
 export default function Wallet(state = initialState, action = {}) {
   switch (action.type) {
-    case WalletConstants.INIT_SUCCESS:
-      return { ...state, address: action.address }
-
     case WalletConstants.ADD_ACCOUNT:
       const exists = state.accounts.find(
         a => a.address === action.account.address
