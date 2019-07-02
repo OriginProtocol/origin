@@ -21,7 +21,7 @@ const SingleUnit = ({ listing, from, refetch, growthReward }) => {
       {({ prices, tokenStatus }) => {
         if (!prices) return null
         return (
-          <div className="listing-buy single">
+          <div className="listing-buy">
             <div className="price d-flex justify-content-between align-items-center">
               <Price listing={listing} descriptor />
               <OgnBadge
