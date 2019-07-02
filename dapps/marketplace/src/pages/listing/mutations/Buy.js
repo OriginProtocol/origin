@@ -79,7 +79,9 @@ class Buy extends Component {
         action = this.renderMakeOfferMutation(null, true)
       } else if (!this.hasBalance()) {
         action = this.renderSwapTokenMutation(
-          this.props.cannotTransact ? fbt('Purchase', 'Purchase') : fbt('Swap Now', 'Swap Now')
+          this.props.cannotTransact
+            ? fbt('Purchase', 'Purchase')
+            : fbt('Swap Now', 'Swap Now')
         )
         content = this.renderSwapTokenModal()
       } else if (!this.hasAllowance()) {
