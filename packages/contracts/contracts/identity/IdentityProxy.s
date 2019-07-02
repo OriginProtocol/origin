@@ -12,8 +12,8 @@ interface ERC725 {
 }
 
 interface ERC20 {
-    function approve(address _spender, uint256 _value) external;
-    function transferFrom(address from, address to, uint tokens) external;
+    function approve(address _spender, uint256 _value) external returns(bool);
+    function transferFrom(address from, address to, uint tokens) external returns(bool);
     function transfer(address to, uint tokens) external returns (bool);
 }
 
