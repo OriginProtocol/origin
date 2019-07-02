@@ -36,7 +36,7 @@ const FractionalHourlyDetail = ({
       {openCalendar && (
         <ModalComp
           title={fbt('Availability', 'Availability')}
-          className={`availability-modal`}
+          className="availability-modal"
           shouldClose={closeModal}
           lightMode={true}
           onClose={() => {
