@@ -512,21 +512,6 @@ class MarketplaceScreen extends Component {
     }
   }
 
-  injectEnableProxyAccounts = () => {
-    const injectedJavaScript = `
-      (function() {
-        if (window && window.localStorage && window.webViewBridge) {
-          window.localStorage.proxyAccountsEnabled = true;
-          window.localStorage.enableRelayer = true;
-        }
-      })();
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting enable relayer')
-      this.dappWebView.injectJavaScript(injectedJavaScript)
-    }
-  }
-
   injectGrowthAuthToken = () => {
     if (!this.props.onboarding.growth) {
       return
@@ -562,8 +547,6 @@ class MarketplaceScreen extends Component {
   onWebViewLoad = async () => {
     // Check if a growth invie code needs to be set
     this.clipboardInviteCodeCheck()
-    // Enable proxy accounts
-    this.injectEnableProxyAccounts()
     this.injectGrowthAuthToken()
     // Set the language in the DApp to the same as the mobile app
     this.injectLanguage()
