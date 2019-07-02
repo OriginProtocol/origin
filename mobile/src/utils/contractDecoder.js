@@ -5,6 +5,7 @@ import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken'
 import IdentityEventsContract from '@origin/contracts/build/contracts/IdentityEvents'
 import ProxyFactoryContract from '@origin/contracts/build/contracts/ProxyFactory_solc'
 import IdentityProxyContract from '@origin/contracts/build/contracts/IdentityProxy_solc'
+
 import { exchangeAbi } from '@origin/graphql/src/contracts/UniswapExchange'
 
 export function decodeTransaction(data) {
