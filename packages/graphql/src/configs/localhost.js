@@ -21,7 +21,7 @@ const config = {
   performanceMode: localStorageHas('performanceMode'),
   graphql: `http://${HOST}:4007`,
   automine: 2000,
-  attestationIssuer: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
+  attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
   affiliate: addresses.Affiliate,
   arbitrator: addresses.Arbitrator,
   OriginToken: addresses.OGN,
