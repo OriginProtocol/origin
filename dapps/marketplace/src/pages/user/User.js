@@ -44,7 +44,11 @@ const User = ({ match, isMobile, history }) => {
           const showingReviews = content === 'reviews'
 
           const reviewsComp = (
-            <Reviews id={id} hideWhenZero={!showingReviews} hideHeader={isMobile} />
+            <Reviews
+              id={id}
+              hideWhenZero={!showingReviews}
+              hideHeader={isMobile}
+            />
           )
 
           if (showingReviews) {

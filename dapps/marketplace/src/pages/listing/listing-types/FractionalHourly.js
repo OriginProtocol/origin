@@ -48,7 +48,8 @@ const FractionalHourlyDetail = ({
             <DateRange startDate={startDate} endDate={endDate} timeRange />
             <div className="timeZone">
               <div>
-                <fbt desc="listingDetail.timeZone">Time Zone:</fbt> {listing.timeZone}
+                <fbt desc="listingDetail.timeZone">Time Zone:</fbt>{' '}
+                {listing.timeZone}
                 {isDifferentTimeZone && (
                   <div>
                     <fbt desc="listingDetail.timeZoneWarning">

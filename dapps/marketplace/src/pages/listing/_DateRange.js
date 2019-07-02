@@ -3,13 +3,23 @@ import React from 'react'
 import dayjs from 'dayjs'
 import { fbt } from 'fbt-runtime'
 
-const DateRangeComponent = ({ startDate, endDate, hideIfEmpty, onClick, timeRange }) => {
+const DateRangeComponent = ({
+  startDate,
+  endDate,
+  hideIfEmpty,
+  onClick,
+  timeRange
+}) => {
   if (hideIfEmpty && !startDate && !endDate) {
     return null
   }
 
-  let startDateDisplay = timeRange ? fbt('Start', 'Start') : fbt('Check in', 'Check in')
-  let endDateDisplay = timeRange ? fbt('End', 'End') : fbt('Check out', 'Check out')
+  let startDateDisplay = timeRange
+    ? fbt('Start', 'Start')
+    : fbt('Check in', 'Check in')
+  let endDateDisplay = timeRange
+    ? fbt('End', 'End')
+    : fbt('Check out', 'Check out')
 
   let startDateUnset = true
   let endDateUnset = true
