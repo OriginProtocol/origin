@@ -5,8 +5,28 @@
  * @format
  */
 
-const extraNodeModules = require('node-libs-react-native')
+const path = require('path');
+
+const externalPackages = {
+  '@origin/graphql': path.resolve(__dirname + '/../packages/graphql/'),
+  '@origin/contracts': path.resolve(__dirname + '/../packages/contracts/')
+}
+
+const extraNodeModules = {
+  ...require('node-libs-react-native'),
+  ...externalPackages
+}
+
+console.log(extraNodeModules)
+
 extraNodeModules.vm = require.resolve('vm-browserify')
+
+const watchFolders = [
+  path.resolve(__dirname + '/../node_modules/'),
+  ...Object.values(externalPackages)
+]
+
+console.log(watchFolders)
 
 module.exports = {
   transformer: {
@@ -19,5 +39,6 @@ module.exports = {
   },
   resolver: {
     extraNodeModules
-  }
+  },
+  watchFolders
 }
