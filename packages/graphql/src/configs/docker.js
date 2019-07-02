@@ -36,6 +36,8 @@ const config = {
   V00_Marketplace: addresses.Marketplace,
   IdentityEvents: addresses.IdentityEvents,
   DaiExchange: addresses.UniswapDaiExchange,
+  ProxyFactory: addresses.ProxyFactory,
+  ProxyFactory_Epoch: addresses.ProxyFactoryEpoch,
   tokens: []
 }
 
