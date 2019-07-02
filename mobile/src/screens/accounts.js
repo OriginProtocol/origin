@@ -14,6 +14,7 @@ import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
 
 import AccountItem from 'components/account-item'
+import ListStyles from 'styles/list'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -47,7 +48,7 @@ class AccountsScreen extends Component {
 
   render() {
     return (
-      <ScrollView style={styles.container}>{this.renderLists()}</ScrollView>
+      <ScrollView style={styles.listContainer}>{this.renderLists()}</ScrollView>
     )
   }
 
@@ -99,7 +100,7 @@ class AccountsScreen extends Component {
         renderItem={({ item }) => (
           <AccountItem item={item} navigation={navigation} />
         )}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ItemSeparatorComponent={() => <View style={styles.listSeparator} />}
         ListHeaderComponent={() => listHeaderComponent}
         keyExtractor={item => item.address}
         key={key ? key : 0}
@@ -116,28 +117,5 @@ const mapStateToProps = ({ wallet }) => {
 export default connect(mapStateToProps)(AccountsScreen)
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f7f8f8'
-  },
-  listHeaderContainer: {
-    paddingHorizontal: 18 * 3,
-    paddingVertical: 22
-  },
-  listHeader: {
-    color: '#6a8296',
-    fontFamily: 'Lato',
-    fontSize: 13,
-    fontWeight: '300',
-    textAlign: 'center'
-  },
-  list: {
-    backgroundColor: '#f7f8f8'
-  },
-  separator: {
-    backgroundColor: 'white',
-    height: 1,
-    marginRight: 'auto',
-    width: '5%'
-  }
+  ...ListStyles
 })
