@@ -41,11 +41,13 @@ const User = ({ match, isMobile, history }) => {
 
           const profile = get(data, 'web3.account.identity') || {}
 
+          const showingReviews = content === 'reviews'
+
           const reviewsComp = (
-            <Reviews id={id} hideWhenZero hideHeader={isMobile} />
+            <Reviews id={id} hideWhenZero={!showingReviews} hideHeader={isMobile} />
           )
 
-          if (content === 'reviews') {
+          if (showingReviews) {
             return (
               <>
                 <DocumentTitle

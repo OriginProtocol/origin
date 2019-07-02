@@ -312,6 +312,11 @@ class ListingDetail extends Component {
           {...props}
           range={this.state.range}
           availability={this.state.availabilityHourly}
+          onShowAvailability={() => {
+            this.setState({
+              openCalendar: true
+            })
+          }}
         />
       )
     } else if (listing.multiUnit || isService) {
@@ -446,10 +451,6 @@ require('react-styl')(`
         font-family: Poppins
         font-size: 24px
         font-weight: 500
-
-    .timeZone
-      font-size: 1rem
-      margin-bottom: 1rem
 
     .availability-help
       font-size: 14px
