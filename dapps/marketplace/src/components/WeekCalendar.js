@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import dayjs from 'dayjs'
 import { fbt } from 'fbt-runtime'
 import displayDateTime from 'utils/displayDateTime'
+import weekStart from 'utils/weekStart'
 
 import Price from 'components/Price'
 
@@ -38,7 +39,7 @@ class WeekCalendar extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      weekStartDate: dayjs().startOf('week') // Default to current week
+      weekStartDate: dayjs(weekStart()) // Default to current week
     }
     this.scrollComponentRef = React.createRef()
   }

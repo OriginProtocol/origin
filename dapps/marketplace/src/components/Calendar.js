@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import dayjs from 'dayjs'
 import displayDateTime from 'utils/displayDateTime'
+import weekStart, { weekStartDay } from '../utils/weekStart'
 
 import Price from 'components/Price'
 
@@ -16,6 +17,26 @@ function displayMonth(date) {
     year: 'numeric'
   }).replace(/\.$/, '')
   return result.charAt(0).toUpperCase() + result.slice(1)
+}
+
+function getFirstDay(date) {
+  const start = date.day()
+  const offset = start - weekStartDay()
+  return ((offset % 7) + 7) % 7
+}
+
+function renderWeekTitles() {
+  const wStart = dayjs(weekStart())
+  const result = []
+  for (let idx = 0; idx < 7; idx++) {
+    const weekday = displayDateTime(wStart.add(idx, 'days'), {
+      weekday: 'short'
+    })
+      .replace(/\.$/, '')
+      .toUpperCase()
+    result.push(<div key={idx}>{weekday}</div>)
+  }
+  return result
 }
 
 class Calendar extends Component {
@@ -38,7 +59,7 @@ class Calendar extends Component {
       startOfMonth = new Date(year, month),
       date = dayjs(startOfMonth),
       isBeginning = date.isBefore(dayjs()),
-      firstDay = date.day(),
+      firstDay = getFirstDay(date),
       lastDay = date.endOf('month').date() + firstDay,
       max = lastDay <= 35 ? 35 : 42,
       days = [],
@@ -48,7 +69,7 @@ class Calendar extends Component {
       )
 
     let currentDay = 0
-    for (let i = 0; i <= max; i++) {
+    for (let i = 0; i < max; i++) {
       if (i < lastDay && firstDay <= i) {
         days.push(dayAvailability[currentDay++])
       } else {
@@ -89,11 +110,7 @@ class Calendar extends Component {
           />
         </div>
 
-        <div className="day-header">
-          {'SMTWTFS'.split('').map((day, k) => (
-            <div key={k}>{day}</div>
-          ))}
-        </div>
+        <div className="day-header">{renderWeekTitles()}</div>
 
         <div className={`days${this.state.dragging ? '' : ' inactive'}`}>
           {Array(max)
