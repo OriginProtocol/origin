@@ -5,7 +5,7 @@
  * @format
  */
 
-const path = require('path');
+const path = require('path')
 
 const externalPackages = {
   '@origin/graphql': path.resolve(__dirname + '/../packages/graphql/'),
