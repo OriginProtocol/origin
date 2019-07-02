@@ -47,8 +47,13 @@ class ReadyScreen extends Component {
 
     let identityPublication
     try {
+      const wallet = await this.props.getWallet()
+      const primaryAccount = get(wallet, 'data.web3.primaryAccount')
+      const identityId = primaryAccount.proxy.id
+        ? primaryAccount.proxy.id
+        : primaryAccount.id
       identityPublication = await this.props.publishIdentity(
-        this.props.wallet.activeAccount.address,
+        identityId,
         profile,
         attestations
       )
