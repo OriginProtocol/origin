@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
 import { fbt } from 'fbt-runtime'
 import { connect } from 'react-redux'
+import { Sentry } from 'react-native-sentry'
 import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
 
@@ -44,8 +45,6 @@ class ReadyScreen extends Component {
       attestations.push(JSON.stringify(this.props.onboarding.phoneAttestation))
     }
 
-    console.debug('Publishing identity')
-
     let identityPublication
     try {
       identityPublication = await this.props.publishIdentity(
@@ -54,6 +53,7 @@ class ReadyScreen extends Component {
         attestations
       )
     } catch (error) {
+      Sentry.captureException(error)
       console.warn('Identity publication failed: ', error)
       this.setState({ error: true })
     }
@@ -71,6 +71,7 @@ class ReadyScreen extends Component {
     try {
       result = await this.props.getTransactionReceipt(this.state.transactionId)
     } catch (error) {
+      Sentry.captureException(error)
       this.setState({ loading: false, error: true })
       return
     }
