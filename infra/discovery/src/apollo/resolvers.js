@@ -17,7 +17,7 @@ const resolvers = {
         args.filters,
         args.page.numberOfItems,
         args.page.offset,
-        true, // idsOnly
+        true // idsOnly
       )
       logger.info(
         `Query: "${args.searchQuery}" returned ${listingIds.length} results.`

@@ -6,7 +6,6 @@ import {
   Button,
   ButtonGroup,
   Tooltip,
-  Switch,
   InputGroup,
   ControlGroup
 } from '@blueprintjs/core'

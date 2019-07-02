@@ -147,13 +147,7 @@ class Listing {
    * @throws Throws an error if the search operation failed.
    * @returns A list of listings (can be empty).
    */
-  static async search(
-    query,
-    filters,
-    numberOfItems,
-    offset,
-    idsOnly
-  ) {
+  static async search(query, filters, numberOfItems, offset, idsOnly) {
     if (filters === undefined) {
       filters = []
     }
@@ -183,7 +177,6 @@ class Listing {
         scoreTags: ['Hide', 'Delete']
       }
     })
-
 
     if (query !== undefined && query !== '') {
       // all_text is a field where all searchable fields get copied to

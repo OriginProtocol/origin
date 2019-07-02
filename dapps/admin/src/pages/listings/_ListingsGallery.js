@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import formatDate from 'utils/formatDate'
 import { getIpfsGateway } from 'utils/config'
 
-import { Icon, Card, Spinner } from '@blueprintjs/core'
+import { Card, Spinner } from '@blueprintjs/core'
 
 import Price from 'components/Price'
 import Identity from 'components/Identity'

@@ -54,7 +54,7 @@ const ListingCards = ({
               <div className="category">
                 <Category listing={a} showPrimary={false} />
               </div>
-              <ListingBadge status={a.status}/>
+              <ListingBadge status={a.status} />
             </div>
           )}
           <h5>

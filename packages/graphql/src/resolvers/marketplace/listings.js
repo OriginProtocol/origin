@@ -49,10 +49,12 @@ async function searchIds(search, filters) {
   return { totalCount: searchResult.numberOfItems, ids }
 }
 
-async function allIds({ contract, sort }) {
+async function allIds({ contract }) {
   const totalListings = Number(await contract.methods.totalListings().call())
-  let ids = Array.from({ length: Number(totalListings) }, (v, i) => i)
-    .reverse()
+  const ids = Array.from(
+    { length: Number(totalListings) },
+    (v, i) => i
+  ).reverse()
   return { totalCount: ids.length, ids }
 }
 
