@@ -105,13 +105,20 @@ describe('PostgreSQL', function() {
     const secondReceipt = await IdentityEvents.methods.emitIdentityUpdated(secondObjectHash).send(tx)
     assert(secondReceipt.status == 1, 'emitIdentityUpdated() transaction failed')
 
-    const thirdObjectHash = await ipfs.addObject({ two: 2 })
+    const thirdObjectHash = await ipfs.addObject({ three: 3 })
     const thirdReceipt = await IdentityEvents.methods.emitIdentityUpdated(thirdObjectHash).send(
       Object.assign({}, tx, {
         from: bob
       })
     )
     assert(thirdReceipt.status == 1, 'emitIdentityUpdated() transaction failed')
+    // Query against event params
+    const paramEvents = await pgCache.getPastEvents('IdentityUpdated', {
+      filter: {
+        ipfsHash: thirdObjectHash
+      }
+    })
+    assert(paramEvents.length == 1, `Should have one event with a matching ipfsHash. Found ${paramEvents.length}`)
 
     // Now we should see 2 from alice and one from bob
     const charlieEvents = await pgCache.getPastEvents('IdentityUpdated', {

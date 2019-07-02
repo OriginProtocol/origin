@@ -3,6 +3,35 @@ const { AbstractBackend } = require('./AbstractBackend')
 const { debug } = require('../utils')
 
 /**
+ * Convert an undorscored_string to camelCase.
+ * @note This converts doubles (listingID) to underscored (listing_id)
+ * @param v The string to operate on
+ * @returns {string} camelCase string
+ */
+function toCamelCase(v) {
+  return v
+    .split(/(?=_[a-z])/)
+    .map(part => {
+      return part.startsWith('_')
+        ? part.charAt(1).toUpperCase() + part.slice(2)
+        : part
+    })
+    .join('')
+}
+
+/**
+ * Convert a camelCaseString to an undorscored_string
+ * @param v The camelCase string string
+ * @returns {string} The undersocred string
+ */
+function toUnderscored(v) {
+  return v
+    .split(/(?=(?<![A-Z])[A-Z])/)
+    .join('_')
+    .toLowerCase()
+}
+
+/**
  * Convert an event object to an object compatible with sequelize
  *
  * @param eventObject {object} to match the event against
@@ -13,12 +42,7 @@ function eventToDB(eventObject) {
 
   Object.keys(eventObject).map(key => {
     // Convert camel to underscore
-    dbObject[
-      key
-        .split(/(?=[A-Z])/)
-        .join('_')
-        .toLowerCase()
-    ] = eventObject[key]
+    dbObject[toUnderscored(key)] = eventObject[key]
   })
 
   // Rework the topic structure to match the DB structure
@@ -46,14 +70,7 @@ function DBToEvent(dbObject) {
   const evObj = {}
   Object.keys(dbObject).map(key => {
     // Convert underscore to camel
-    const camelKey = key
-      .split(/(?=_[a-z])/)
-      .map(part => {
-        return part.startsWith('_')
-          ? part.charAt(1).toUpperCase() + part.slice(2)
-          : part
-      })
-      .join('')
+    const camelKey = toCamelCase(key)
     evObj[camelKey] = dbObject[key]
   })
 
@@ -142,8 +159,13 @@ class PostgreSQLBackend extends AbstractBackend {
     const newObj = eventToDB(obj)
     Object.keys(newObj).map(key => {
       if (!this._eventTableColumns.includes(key)) {
+        // Handle array "or"
         const op = newObj[key] instanceof Array ? Op.or : Op.eq
-        newObj['return_values.' + key] = {
+
+        // Back to camelCase! oi!
+        const camelKey = toCamelCase(key)
+
+        newObj['return_values.' + camelKey] = {
           [op]: newObj[key]
         }
         delete newObj[key]
