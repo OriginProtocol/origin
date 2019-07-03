@@ -273,5 +273,6 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
+      wait-for.sh -t 0 -q redis-master:6379 --
       npm run migrate --prefix infra/bridge &&
       npm run start --prefix infra/bridge"
