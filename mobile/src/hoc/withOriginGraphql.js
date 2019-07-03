@@ -83,18 +83,22 @@ const withOriginGraphql = WrappedComponent => {
     }
 
     getBalance = ethAddress => {
-      return this._sendGraphqlQuery(balance, { id: ethAddress })
+      return this._sendGraphqlQuery(balance, { id: ethAddress }, 'no-cache')
     }
 
     getTokenBalance = (ethAddress, token) => {
-      return this._sendGraphqlQuery(tokenBalance, {
-        id: ethAddress,
-        token: token
-      })
+      return this._sendGraphqlQuery(
+        tokenBalance,
+        {
+          id: ethAddress,
+          token: token
+        },
+        'no-cache'
+      )
     }
 
     getIdentity = async id => {
-      return this._sendGraphqlQuery(identity, { id })
+      return this._sendGraphqlQuery(identity, { id }, 'no-cache')
     }
 
     getTransactionReceipt = async id => {
