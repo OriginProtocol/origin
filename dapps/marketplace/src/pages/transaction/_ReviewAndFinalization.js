@@ -147,7 +147,7 @@ const ReviewAndFinalization = props => {
                     refetch={refetch}
                     onClick={onClick}
                   >
-                    <fbt desc="Ok">Ok</fbt>
+                    <fbt desc="Ok">OK</fbt>
                   </AddLocalDataLabel>
                 )
               }}
