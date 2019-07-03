@@ -158,16 +158,16 @@ const Transaction = props => {
                   {History}
                 </>
               ) : (
-                <div className="row">
-                  <div className="col-12">{Progress}</div>
-                  <div className="col-12 d-flex">
+                <div className="mx-3">
+                  {Progress}
+                  <div className="d-flex">
                     <div className="col-3 p-0">{Offer}</div>
                     {HorizontalSeparator}
                     <div className="col-3 p-0">{Escrow}</div>
                     {HorizontalSeparator}
                     <div className="col-3 p-0">{About}</div>
                   </div>
-                  <div className="col-12">{History}</div>
+                  {History}
                 </div>
               )}
             </>

@@ -1,6 +1,7 @@
 import contracts from '../contracts'
 import parseId from '../utils/parseId'
 import currencies from '../utils/currencies'
+import getLocalDataLabels from '../utils/getLocalDataLabels'
 import get from 'lodash/get'
 
 import { getIpfsHashFromBytes32 } from '@origin/ipfs'
@@ -21,6 +22,9 @@ export default {
     return contracts.eventSource.getListing(listingId, offer.createdBlock)
   },
 
+  labels: async offer => { 
+    return getLocalDataLabels(offer.id)
+  },
   events: async offer => {
     const { listingId, offerId } = parseId(offer.id)
     return await offer.contract.eventCache.getEvents({

@@ -23,6 +23,7 @@ import updateListing from './marketplace/updateListing'
 import updateRefund from './marketplace/updateRefund'
 import withdrawListing from './marketplace/withdrawListing'
 import withdrawOffer from './marketplace/withdrawOffer'
+import addLocalDataLabel from './marketplace/addLocalDataLabel'
 
 import enableMessaging from './messaging/enableMessaging'
 import sendMessage from './messaging/sendMessage'
@@ -108,5 +109,6 @@ export default {
   verifyWebsite,
   withdrawListing,
   withdrawOffer,
+  addLocalDataLabel,
   refetch: () => true
 }

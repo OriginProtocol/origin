@@ -80,19 +80,26 @@ class AddData extends Component {
             <div>
               <fbt desc="success">Success!</fbt>
             </div>
-            <button
-              href="#"
-              className="btn btn-outline-light"
-              onClick={async () => {
-                if (this.props.onSuccess) {
-                  this.props.onSuccess()
-                }
-
+            {this.props.successButton ? (
+              this.props.successButton(async () => {
                 await client.resetStore()
                 this.setState({ waitFor: false })
-              }}
-              children={fbt('OK', 'OK')}
-            />
+              })
+            ) : (
+              <button
+                href="#"
+                className="btn btn-outline-light"
+                onClick={async () => {
+                  if (this.props.onSuccess) {
+                    this.props.onSuccess()
+                  }
+
+                  await client.resetStore()
+                  this.setState({ waitFor: false })
+                }}
+                children={fbt('OK', 'OK')}
+              />
+            )}
           </div>
         )}
       </WaitForTransaction>

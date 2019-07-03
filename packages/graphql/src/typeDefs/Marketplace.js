@@ -110,6 +110,7 @@ export const mutations = `
     ): Transaction
 
     addData(data: String!, listingID: ID, offerID: ID, from: String!): Transaction
+    addLocalDataLabel(objectID: ID!, label: String!): Boolean
     addAffiliate(affiliate: String!, from: String): Transaction
 
     acceptOffer(offerID: ID!, from: String): Transaction
@@ -378,6 +379,9 @@ export const types = `
     totalPrice: Price
     startDate: String
     endDate: String
+
+    # local storage
+    labels: [String]
   }
 
   type OfferHistory {

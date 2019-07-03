@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 
 import DisputeOffer from './mutations/DisputeOffer'
 import FinalizeOffer from './mutations/FinalizeOffer'
+import AddLocalDataLabel from './mutations/AddLocalDataLabel'
 
 import Stages from 'components/TransactionStages'
 import SendMessage from 'components/SendMessage'
@@ -40,21 +41,12 @@ class OfferAcceptedBuyer extends Component {
     }
   }
 
-  confirmOffer(offerId) {
-    const offersConfirmed = JSON.parse(
-      localStorage.getItem(CONFIRMED_OFFERS_KEY) || '[]'
-    )
-    offersConfirmed.push(offerId)
-    this.setState({
-      offerConfirmed: true
-    })
-    localStorage.setItem(CONFIRMED_OFFERS_KEY, JSON.stringify(offersConfirmed))
-  }
-
   render() {
     const { offer } = this.props
 
-    const { offerConfirmed } = this.state
+    let { offerConfirmed } = this.state
+    offerConfirmed = offerConfirmed || offer.labels.includes('offerConfirmed')
+
     const isForSale = offer.listing.category === 'schema.forSale'
     const isForRent = offer.listing.category === 'schema.forRent'
     const isServices = offer.listing.category === 'schema.services'
@@ -160,14 +152,14 @@ class OfferAcceptedBuyer extends Component {
             </div>
           )}
           <div className="actions">
-            <button
+            <AddLocalDataLabel
+              objectId={offer.id}
+              lebelText="offerConfirmed"
               className="btn btn-primary"
-              onClick={() => {
-                this.confirmOffer(offer.id)
-              }}
+              refetch={this.props.refetch}
             >
               <fbt desc="OfferAcceptBuyer.confirm">Confirm</fbt>
-            </button>
+            </AddLocalDataLabel>
           </div>
 
           <div className="mt-3">

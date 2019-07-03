@@ -5,23 +5,14 @@ import StarRating from 'components/StarRating'
 import Stages from 'components/TransactionStages'
 import AddData from 'pages/transaction/mutations/AddData'
 import Link from 'components/Link'
+import AddLocalDataLabel from './mutations/AddLocalDataLabel'
 
 const RATED_OFFERS_KEY = 'rated_offers'
 const ReviewAndFinalization = props => {
   const [rating, setRating] = useState(0)
   const [review, setReview] = useState('')
-  const [offerRated, setOfferRated] = useState(false)
   const isSeller = props.viewedBy === 'seller'
   const isBuyer = props.viewedBy === 'buyer'
-
-  useEffect(() => {
-    const offersRatedString = localStorage.getItem(RATED_OFFERS_KEY)
-    const offer = props.offer
-
-    if (offersRatedString) {
-      setOfferRated(JSON.parse(offersRatedString).includes(offer.id))
-    }
-  }, [])
 
   const renderFinalization = ({ loading, offer, isSeller, isBuyer }) => {
     return (
@@ -70,17 +61,7 @@ const ReviewAndFinalization = props => {
     )
   }
 
-  const rateOffer = offerId => {
-    const offersRated = JSON.parse(
-      localStorage.getItem(RATED_OFFERS_KEY) || '[]'
-    )
-    offersRated.push(offerId)
-
-    setOfferRated(true)
-    localStorage.setItem(RATED_OFFERS_KEY, JSON.stringify(offersRated))
-  }
-
-  const renderRating = ({ offer, loading, isSeller, isBuyer }) => {
+  const renderRating = ({ offer, loading, isSeller, isBuyer, refetch }) => {
     const reviewData = {
       schemaId: 'https://schema.originprotocol.com/review_1.0.0.json'
     }
@@ -157,9 +138,21 @@ const ReviewAndFinalization = props => {
               offer={offer}
               refetch={props.refetch}
               onSuccess={() => rateOffer(offer.id)}
-              onClick={() => rateOffer(offer.id)}
               wallet={isBuyer ? offer.buyer.id : offer.listing.seller.id}
               className="btn btn-primary mr-md-auto"
+              successButton={onClick => {
+                return (
+                  <AddLocalDataLabel
+                    objectId={offer.id}
+                    lebelText="offerRated"
+                    className="btn btn-outline-light"
+                    refetch={refetch}
+                    onClick={onClick}
+                  >
+                    <fbt desc="Ok">Ok</fbt>
+                  </AddLocalDataLabel>
+                )
+              }}
             >
               <fbt desc="Progress.submit">Submit</fbt>
             </AddData>
@@ -169,6 +162,7 @@ const ReviewAndFinalization = props => {
     )
   }
 
+  const offerRated = props.offer.labels.includes('offerRated')
   return offerRated
     ? renderFinalization({ ...props, isSeller, isBuyer })
     : renderRating({ ...props, isSeller, isBuyer })

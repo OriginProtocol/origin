@@ -128,6 +128,7 @@ export default {
         commission
         status
         finalizes
+        labels
         arbitrator {
           id
         }
