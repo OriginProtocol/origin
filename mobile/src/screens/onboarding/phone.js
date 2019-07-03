@@ -129,7 +129,7 @@ class PhoneScreen extends Component {
     } else {
       this.setState({
         loading: false,
-        phoneError: get(response.json(), 'errors[0]', '')
+        phoneError: get(await response.json(), 'errors[0]', '')
       })
     }
   }
