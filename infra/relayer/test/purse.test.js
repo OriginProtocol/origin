@@ -374,7 +374,7 @@ describe('Purse', () => {
   })
 
   it('should be able to handle a large volume of transactions', async function () {
-    this.timeout(60000)
+    this.timeout(80000)
 
     const transactionCount = 500
     const childCount = 25
