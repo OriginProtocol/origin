@@ -185,6 +185,11 @@ require('react-styl')(`
   .transaction-detail
     padding-top: 2.5rem
     position: relative
+    .about-party
+      .actions
+        .btn-link
+          font-size: 14px
+          font-weight: 700
     > a
       color: var(--dusk)
       text-transform: uppercase
@@ -222,6 +227,10 @@ require('react-styl')(`
   @media (max-width: 767.98px)
     .transaction-detail
       padding-top: 1rem
+      .about-party
+        .actions
+          .btn-link
+            font-size: 18px
       > h2
         font-size: 32px
 `)

@@ -37,7 +37,7 @@ const ReviewAndFinalization = props => {
                 </fbt>
               </div>
               <div className="actions">
-                <div className="btn btn-link">
+                <div className="btn btn-link mr-auto">
                   <Link to="/">
                     <fbt desc="Progress.viewListings">View Listings</fbt>
                   </Link>
@@ -47,7 +47,7 @@ const ReviewAndFinalization = props => {
           )}
           {isSeller && (
             <div className="actions">
-              <div className="btn btn-link">
+              <div className="btn btn-link mr-auto">
                 <Link to="/create">
                   <fbt desc="Progress.createAnotherListing">
                     Create Another Listing
