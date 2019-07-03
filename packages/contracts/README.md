@@ -1,4 +1,4 @@
-![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
+# ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
 
 ## Origin Contracts
 
@@ -20,9 +20,6 @@ Truffle for compilation of 0.4 contracts, we have had to use `.s` instead of
 `.sol` for contracts using Solidity 0.5 so Truffle does not try to compile them.
 Instead, we use Solc for compilation of 0.5 contracts and appent \_solc to the
 build output JSON files.
-
-**Note**
-Since we have a mix of Solidity 0.4 and 0.5 and are currently using Truffle for compilation of 0.4 contracts, we have had to use `.s` instead of `.sol` for contracts using Solidity 0.5 so Truffle does not try to compile them. Instead, we use Solc for compilation of 0.5 contracts and appent _solc to the build output JSON files.
 
 ### Marketplace in depth
 
@@ -149,7 +146,7 @@ same signature:
 
 Here are some example events:
 
-```
+```solidity
 event ListingCreated (address indexed party, uint indexed listingID, bytes32 ipfsHash);
 event ListingUpdated (address indexed party, uint indexed listingID, bytes32 ipfsHash);
 event OfferCreated   (address indexed party, uint indexed listingID, uint indexed offerID, bytes32 ipfsHash);
@@ -173,7 +170,7 @@ Our Solidity tests (which use
 [Truffle](http://truffleframework.com/docs/getting_started/javascript-tests))
 are located at `contracts/test`.
 
-```
+```js
 npm run test:contracts
 ```
 
@@ -182,12 +179,57 @@ start their own local blockchain instance.
 
 To run contract tests and automatically re-run when files change:
 
-```
+```js
 npm run test:watch
 ```
 
 To run contract tests and measure test coverage of Solidity code:
 
-```
+```js
 npm run test:contracts-coverage
+```
+
+## Compiling Contracts
+
+To compile the 0.4.x solidity contracts, run:
+
+```bash
+npm run build:development
+```
+
+To compile the 0.5.x solidity contracts, run:
+
+```bash
+npm run build:solc
+```
+
+## Deploying Contracts
+
+To deploy the Identity Proxy implementation contract, run this GraphQL mutation
+from the Admin page:
+
+```graphql
+mutation {
+  deployIdentityProxy(from: "META_MASK_ACCOUNT_ID") {
+    id
+  }
+}
+```
+
+This will give you a tx hash ID. You can fetch teh deployed contract address
+with:
+
+```js
+const receipt = await web3.eth.getTransactionReceipt("TX_HASH");
+console.log(receipt.contractAddress);
+```
+
+then deploy the ProxyFactory via GraphQL mutation:
+
+```graphql
+mutation {
+  deployProxyFactory(from: "META_MASK_ACCOUNT_ID") {
+    id
+  }
+}
 ```

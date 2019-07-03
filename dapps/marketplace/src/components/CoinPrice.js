@@ -1,7 +1,11 @@
 import React from 'react'
 
-const CoinPrice = ({ price, coin, iconOnly, className }) => (
-  <div className={`coin-price ${coin}${className ? ` ${className}` : ''}`}>
+const CoinPrice = ({ price, smaller, coin, iconOnly, className }) => (
+  <div
+    className={`coin-price ${smaller ? 'smaller' : ''} ${coin}${
+      className ? ` ${className}` : ''
+    }`}
+  >
     {iconOnly ? (
       <>&nbsp;</>
     ) : (
@@ -23,6 +27,10 @@ require('react-styl')(`
     background-repeat: no-repeat
     background-position: 0px 3px
     font-weight: bold
+    &.smaller
+      padding-left: 1.225rem
+      background-size: 1rem
+      background-position: 0px 2px
     span
       margin-left: 0.25rem
       font-size: 14px

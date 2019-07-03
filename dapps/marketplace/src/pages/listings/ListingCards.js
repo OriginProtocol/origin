@@ -15,7 +15,8 @@ const ListingCards = ({
   listings,
   ognListingRewards,
   hideCategory,
-  horizontal
+  horizontal,
+  compact
 }) => {
   const [redirect, setRedirect] = useState()
   if (!listings) return null
@@ -24,7 +25,7 @@ const ListingCards = ({
     <div
       className={`listing-cards${
         horizontal ? ' listing-horizontal-cards' : ''
-      }`}
+      }${compact ? ' listing-compact-cards' : ''}`}
     >
       {redirect && <Redirect to={redirect} push />}
       {listings.map(a => (
@@ -97,6 +98,29 @@ require('react-styl')(`
         flex: auto 0 0
         .main-pic
           height: 170px
+
+    &.listing-compact-cards
+      display: flex
+      flex-direction: column
+      .listing-card
+        position: relative
+        padding-left: 7rem
+        min-height: 6rem
+        margin-bottom: 0.75rem
+        margin-top: 0
+        h5
+          margin-bottom: 5px
+          font-weight: normal
+          font-size: 16px
+        .main-pic
+          height: 6rem
+          width: 6rem
+          padding: 0
+          left: 0
+          position: absolute
+        .price
+          font-size: 15px
+          font-weight: normal
 
   .listing-card
     position: relative
