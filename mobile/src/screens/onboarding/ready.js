@@ -60,7 +60,7 @@ class ReadyScreen extends Component {
     } catch (error) {
       Sentry.captureException(error)
       console.warn('Identity publication failed: ', error)
-      this.setState({ error: true })
+      this.setState({ loading: false, error: true })
     }
 
     const transactionId = get(identityPublication, 'data.deployIdentity.id')
