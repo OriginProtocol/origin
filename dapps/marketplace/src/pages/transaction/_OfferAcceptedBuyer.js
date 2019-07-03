@@ -154,7 +154,7 @@ class OfferAcceptedBuyer extends Component {
           <div className="actions">
             <AddLocalDataLabel
               objectId={offer.id}
-              lebelText="offerConfirmed"
+              dataLabelText="offerConfirmed"
               className="btn btn-primary"
               refetch={this.props.refetch}
             >

@@ -142,7 +142,7 @@ const ReviewAndFinalization = props => {
                 return (
                   <AddLocalDataLabel
                     objectId={offer.id}
-                    lebelText="offerRated"
+                    dataLabelText="offerRated"
                     className="btn btn-outline-light"
                     refetch={refetch}
                     onClick={onClick}

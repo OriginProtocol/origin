@@ -34,7 +34,7 @@ class AddLocalDataLabel extends Component {
     return {
       variables: {
         objectID: String(this.props.objectId),
-        label: String(this.props.lebelText)
+        label: String(this.props.dataLabelText)
       }
     }
   }
