@@ -39,7 +39,7 @@ class EditProfile extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (profileUpdated(this.state, prevState || {})) {
+    if (this.props.onChange && profileUpdated(this.state, prevState || {})) {
       this.props.onChange(
         pick(this.state, ['firstName', 'lastName', 'description', 'avatarUrl'])
       )

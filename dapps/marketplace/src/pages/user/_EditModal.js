@@ -47,7 +47,8 @@ class EditProfileModal extends Component {
             'lastName',
             'description',
             'avatarUrl',
-            'onChange'
+            'onChange',
+            'onSave'
           ])}
         />
       </ModalComp>
