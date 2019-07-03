@@ -163,4 +163,6 @@ require('react-styl')(`
   @media (max-width: 767.98px)
     .escrow-details
       font-size: 18px
+      .btn-link
+        font-size: 18px
 `)
