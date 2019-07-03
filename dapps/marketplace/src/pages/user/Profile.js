@@ -403,8 +403,11 @@ class UserProfile extends Component {
       ...attestations
     }
 
+    const unpublishedProfile = pickBy(profile, f => f)
+
     // Store before publishing
     this.storeData({
+      profile: unpublishedProfile,
       attestations: unpublishedAttestations
     })
 
