@@ -152,7 +152,9 @@ class PhoneScreen extends Component {
   /* Request a verification code from @origin/bridge.
    */
   generateVerificationCode = async () => {
-    const url = `${this.props.config.bridge}/api/attestations/phone/generate-code`
+    const url = `${
+      this.props.config.bridge
+    }/api/attestations/phone/generate-code`
     return await fetch(url, {
       headers: { 'content-type': 'application/json' },
       credentials: 'include',
