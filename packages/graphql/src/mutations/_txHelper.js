@@ -45,7 +45,9 @@ function useRelayer({ mutation, value }) {
   if (!contracts.config.relayer) reason = 'relayer not configured'
   if (!mutation) reason = 'no mutation specified'
 
-  if (mutation === 'makeOffer' && value) reason = 'makeOffer has a value'
+  if (mutation === 'makeOffer' && value && value !== '0') {
+    reason = 'makeOffer has a value'
+  }
   if (mutation === 'transferToken') reason = 'transferToken is disabled'
   if (mutation === 'swapToToken') reason = 'swapToToken is disabled'
   if (reason) {
