@@ -521,8 +521,6 @@ class UserProfile extends Component {
     const key = `${this.props.walletProxy}-profile-data`
     const data = localStore.get(key)
 
-    console.log(profile, attestations)
-
     if (hasDataExpired(data)) {
       return localStore.set(key, {
         timestamp: Date.now(),
