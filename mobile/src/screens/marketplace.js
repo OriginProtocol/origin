@@ -256,12 +256,14 @@ class MarketplaceScreen extends Component {
 
   isValidMetaTransaction = data => {
     const validFunctions = [
-      'createProxyWithSenderNonce',
-      'swapAndMakeOffer',
+      'addData',
       'createListing',
-      'updateListing',
+      'createProxyWithSenderNonce',
       'emitIdentityUpdated',
-      'marketplaceFinalizeAndPay'
+      'swapAndMakeOffer',
+      'makeOffer',
+      'marketplaceFinalizeAndPay',
+      'updateListing'
     ]
     return validFunctions.includes(data.functionName)
   }
