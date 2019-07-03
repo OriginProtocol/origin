@@ -6,10 +6,9 @@ const { GrowthEvent } = require('@origin/growth/src/resources/event')
 const { GrowthEventTypes } = require('@origin/growth/src/enums')
 const listingQuery = require('./queries/Listing')
 const offerQuery = require('./queries/Offer')
-const {
-  getOriginListingId,
-  getOriginOfferId
-} = esmImport('@origin/graphql/src/utils/getId')
+const { getOriginListingId, getOriginOfferId } = esmImport(
+  '@origin/graphql/src/utils/getId'
+)
 
 const LISTING_EVENTS = [
   'ListingCreated',
