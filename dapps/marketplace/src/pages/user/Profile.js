@@ -403,7 +403,20 @@ class UserProfile extends Component {
       ...attestations
     }
 
-    const unpublishedProfile = pickBy(profile, f => f)
+    const publishedProfile = pick(this.state, [
+      'firstName',
+      'lastName',
+      'description',
+      'avatarUrl'
+    ])
+
+    const unpublishedProfile = pickBy(
+      {
+        ...publishedProfile,
+        ...profile
+      },
+      f => f
+    )
 
     // Store before publishing
     this.storeData({
@@ -433,7 +446,7 @@ class UserProfile extends Component {
             hideVerifyModal: false
           })
         }}
-        profile={profile}
+        profile={unpublishedProfile}
         attestations={Object.values(unpublishedAttestations)}
       />
     )
@@ -498,20 +511,24 @@ class UserProfile extends Component {
     )
   }
 
-  getData(defaultValue) {
+  getData() {
     const key = `${this.props.walletProxy}-profile-data`
     const data = localStore.get(key)
 
-    const profile =
-      defaultValue ||
-      pick(this.state, ['firstName', 'lastName', 'description', 'avatarUrl'])
+    const profile = pick(this.state, [
+      'firstName',
+      'lastName',
+      'description',
+      'avatarUrl'
+    ])
 
     if (hasDataExpired(data)) {
-      localStore.set(key, profile)
-      return {
+      const newData = {
         profile,
-        attestations: this.state.attestations
+        attestations: this.state.attestation
       }
+      localStore.set(key, newData)
+      return newData
     }
 
     return pick(data, ['attestations', 'profile'])
@@ -534,20 +551,16 @@ class UserProfile extends Component {
       timestamp: Date.now()
     }
 
-    if (profile) {
-      // Overwrite if there is a change
-      newData.profile = {
-        ...data.profile,
-        ...profile
-      }
+    // Overwrite if there is a change
+    newData.profile = {
+      ...data.profile,
+      ...profile
     }
 
-    if (attestations) {
-      // Merge attestations if there is a change
-      newData.attestations = {
-        ...data.attestations,
-        ...attestations
-      }
+    // Merge attestations if there is a change
+    newData.attestations = {
+      ...data.attestations,
+      ...attestations
     }
 
     localStore.set(key, newData)
