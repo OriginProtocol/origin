@@ -53,7 +53,8 @@ class MarketplaceScreen extends Component {
     this.state = {
       enablePullToRefresh: true,
       modals: [],
-      fiatCurrency: CURRENCIES.find(c => c[0] === 'fiat-USD')
+      fiatCurrency: CURRENCIES.find(c => c[0] === 'fiat-USD'),
+      transactionCardLoading: false
     }
     if (Platform.OS === 'android') {
       // Configure swipe handler for back forward navigation on Android because
@@ -259,7 +260,8 @@ class MarketplaceScreen extends Component {
       'swapAndMakeOffer',
       'createListing',
       'updateListing',
-      'emitIdentityUpdated'
+      'emitIdentityUpdated',
+      'marketplaceFinalizeAndPay'
     ]
     return validFunctions.includes(data.functionName)
   }
@@ -290,7 +292,6 @@ class MarketplaceScreen extends Component {
         }
       })();
     `
-    console.log(injectedJavaScript)
     if (this.dappWebView) {
       console.debug(`Injecting invite code: ${inviteCode}`)
       this.dappWebView.injectJavaScript(injectedJavaScript)
@@ -688,12 +689,15 @@ class MarketplaceScreen extends Component {
                     msgData={modal.msgData}
                     fiatCurrency={this.state.fiatCurrency}
                     onConfirm={() => {
+                      this.setState({ transactionCardLoading: true })
                       global.web3.eth
                         .sendTransaction(modal.msgData.data)
                         .on('transactionHash', hash => {
+                          this.setState({ transactionCardLoading: false })
                           this.toggleModal(modal, hash)
                         })
                     }}
+                    loading={this.state.transactionCardLoading}
                     onRequestClose={() =>
                       this.toggleModal(modal, {
                         message: 'User denied transaction signature'
