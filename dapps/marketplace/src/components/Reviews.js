@@ -102,11 +102,13 @@ export default class Reviews extends Component {
                 <h3>
                   {this.props.seller && (
                     <fbt desc="reviews.headingSeller">
-                      Reviews of this Seller
+                      Reviews about this seller
                     </fbt>
                   )}
                   {!this.props.seller && (
-                    <fbt desc="reviews.headingUser">Reviews of this user</fbt>
+                    <fbt desc="reviews.headingUser">
+                      Reviews about this user
+                    </fbt>
                   )}
                 </h3>
               )}
