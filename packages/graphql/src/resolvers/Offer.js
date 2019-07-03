@@ -22,7 +22,7 @@ export default {
     return contracts.eventSource.getListing(listingId, offer.createdBlock)
   },
 
-  labels: async offer => { 
+  labels: async offer => {
     return getLocalDataLabels(offer.id)
   },
   events: async offer => {

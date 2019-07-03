@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, Fragment } from 'react'
 import { fbt } from 'fbt-runtime'
 
 import StarRating from 'components/StarRating'
@@ -7,7 +7,6 @@ import AddData from 'pages/transaction/mutations/AddData'
 import Link from 'components/Link'
 import AddLocalDataLabel from './mutations/AddLocalDataLabel'
 
-const RATED_OFFERS_KEY = 'rated_offers'
 const ReviewAndFinalization = props => {
   const [rating, setRating] = useState(0)
   const [review, setReview] = useState('')
@@ -137,7 +136,6 @@ const ReviewAndFinalization = props => {
               data={JSON.stringify(reviewData)}
               offer={offer}
               refetch={props.refetch}
-              onSuccess={() => rateOffer(offer.id)}
               wallet={isBuyer ? offer.buyer.id : offer.listing.seller.id}
               className="btn btn-primary mr-md-auto"
               successButton={onClick => {

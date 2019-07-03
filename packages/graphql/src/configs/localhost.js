@@ -17,7 +17,9 @@ const config = {
   bridge: 'https://bridge.dev.originprotocol.com',
   // discovery: `http://${HOST}:4000/graphql`,
   notifications: `http://${HOST}:3456`,
-  growth: localStorageHas('localGrowthServer', 'true') ? 'http://localhost:4001' : null,
+  growth: localStorageHas('localGrowthServer', 'true')
+    ? 'http://localhost:4001'
+    : null,
   performanceMode: localStorageHas('performanceMode', 'true'),
   graphql: `http://${HOST}:4007`,
   automine: 2000,

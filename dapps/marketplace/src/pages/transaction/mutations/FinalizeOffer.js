@@ -139,7 +139,10 @@ class FinalizeOffer extends Component {
                 />
                 <button
                   className={this.props.className}
-                  onClick={() => this.onClick(finalizeOffer)}
+                  onClick={() => {
+                    this.setState({ confirmationModal: false })
+                    this.onClick(finalizeOffer)
+                  }}
                   children={
                     <fbt desc="finalizeOffer.yesPlease">Yes, please</fbt>
                   }
