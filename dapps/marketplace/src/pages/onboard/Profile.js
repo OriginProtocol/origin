@@ -29,13 +29,17 @@ class OnboardProfile extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.identity) {
+    if (this.state.finished || this.state.back) {
+      return
+    }
+
+    if (this.props.identityLoaded && this.props.identity) {
       this.setState({
         finished: true
       })
-    } else if (this.props.walletProxy !== prevProps.walletProxy) {
+    } else if (this.props.wallet !== prevProps.wallet) {
       const storedAccounts = getVerifiedAccounts({
-        wallet: this.props.walletProxy
+        wallet: this.props.wallet
       })
       if (storedAccounts && storedAccounts.emailAttestation) {
         this.setState({
@@ -68,14 +72,34 @@ class OnboardProfile extends Component {
   }
 
   renderContent() {
-    const { isMobile, listing, hideOriginWallet } = this.props
+    const { isMobile, listing, hideOriginWallet, wallet } = this.props
+    const { deployIdentity, attestations } = this.state
+
     const content = (
-      <EditProfile
-        onChange={data => this.onChange(data)}
-        onAvatarChange={data => this.onAvatarChange(data)}
-        onClose={() => this.onCompleted()}
-        onboarding={true}
-      />
+      <>
+        <EditProfile
+          onChange={data => this.onChange(data)}
+          onAvatarChange={data => this.onAvatarChange(data)}
+          onClose={() => this.onCompleted()}
+          onboarding={true}
+        />
+        {deployIdentity && (
+          <DeployIdentity
+            autoDeploy={true}
+            identity={wallet}
+            profile={pick(this.state, ['firstName', 'lastName', 'avatarUrl'])}
+            attestations={attestations}
+            skipSuccessScreen={true}
+            onComplete={() => {
+              clearVerifiedAccounts()
+              this.setState({ finished: true, deployIdentity: false })
+            }}
+            onCancel={() => {
+              this.setState({ deployIdentity: false })
+            }}
+          />
+        )}
+      </>
     )
 
     if (isMobile) {
@@ -119,7 +143,7 @@ class OnboardProfile extends Component {
 
   renderSignTxModal() {
     const { walletType } = this.props
-    const { shouldCloseSignTxModal, attestations } = this.state
+    const { shouldCloseSignTxModal } = this.state
 
     return (
       <MobileModal
@@ -141,19 +165,18 @@ class OnboardProfile extends Component {
             </fbt>
           </p>
           <div className="actions">
-            <DeployIdentity
+            <button
+              type="button"
               className="btn btn-primary btn-rounded mt-3 mb-3"
-              identity={this.props.wallet}
-              profile={pick(this.state, ['firstName', 'lastName', 'avatarUrl'])}
-              attestations={attestations}
-              children={fbt('Got it', 'Got it')}
-              skipSuccessScreen={true}
-              onComplete={() => {
-                clearVerifiedAccounts()
-                this.setState({ finished: true, shouldCloseSignTxModal: true })
-              }}
-              onCancel={() => this.setState({ shouldCloseSignTxModal: true })}
-            />
+              onClick={() =>
+                this.setState({
+                  shouldCloseSignTxModal: true,
+                  deployIdentity: true
+                })
+              }
+            >
+              <fbt desc="Got it">Got it</fbt>
+            </button>
           </div>
         </div>
       </MobileModal>
