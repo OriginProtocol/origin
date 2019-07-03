@@ -260,6 +260,7 @@ class MarketplaceScreen extends Component {
       'createListing',
       'createProxyWithSenderNonce',
       'emitIdentityUpdated',
+      'finalize',
       'swapAndMakeOffer',
       'makeOffer',
       'marketplaceFinalizeAndPay',

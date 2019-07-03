@@ -78,7 +78,9 @@ export function importAccountFromPrivateKey(privateKey) {
 }
 
 export function removeAccount(account) {
-  global.web3.eth.accounts.wallet.remove(account.address)
+  if (account && account.address) {
+    global.web3.eth.accounts.wallet.remove(account.address)
+  }
   // Emit removeAccount, used by PushNotification component to unregister the
   // account from the notifications server
   DeviceEventEmitter.emit('removeAccount', account)
