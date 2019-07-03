@@ -61,6 +61,10 @@ class Settings extends Component {
       })
     } else {
       delete window.localStorage.devModeSettings
+      const { config } = this.props
+      const { proxyAccountsEnabled, relayerEnabled } = config
+      window.localStorage.proxyAccountsEnabled = proxyAccountsEnabled
+      window.localStorage.relayerEnabled = relayerEnabled
     }
 
     setNetwork({
@@ -107,14 +111,18 @@ class Settings extends Component {
     const input = formInput(this.state, state => this.setState(state))
     const { locale, onLocale, currency, onCurrency, config } = this.props
 
-    const proxyAccountsEnabled = devModeSettings.get(
-      'proxyAccountsEnabled',
-      config.proxyAccountsEnabled ? true : false
-    )
-    const relayerEnabled = devModeSettings.get(
-      'relayerEnabled',
-      config.relayerEnabled ? true : false
-    )
+    let proxyAccountsEnabled = config.proxyAccountsEnabled ? true : false
+    if (localStorage.proxyAccountsEnabled === 'true') {
+      proxyAccountsEnabled = true
+    } else if (localStorage.proxyAccountsEnabled === 'false') {
+      proxyAccountsEnabled = false
+    }
+    let relayerEnabled = config.relayerEnabled ? true : false
+    if (localStorage.relayerEnabled === 'true') {
+      relayerEnabled = true
+    } else if (localStorage.relayerEnabled === 'false') {
+      relayerEnabled = false
+    }
 
     return (
       <Mutation
@@ -352,7 +360,11 @@ class Settings extends Component {
                             value={proxyAccountsEnabled}
                             className="mt-0"
                             onChange={on => {
-                              devModeSettings.set('proxyAccountsEnabled', on)
+                              if (on) {
+                                localStorage.proxyAccountsEnabled = 'true'
+                              } else {
+                                localStorage.proxyAccountsEnabled = 'false'
+                              }
                               window.location.reload()
                             }}
                           />
@@ -371,7 +383,11 @@ class Settings extends Component {
                             className="mt-0"
                             value={relayerEnabled}
                             onChange={on => {
-                              devModeSettings.set('relayerEnabled', on)
+                              if (on) {
+                                localStorage.relayerEnabled = 'true'
+                              } else {
+                                localStorage.relayerEnabled = 'false'
+                              }
                               window.location.reload()
                             }}
                           />
