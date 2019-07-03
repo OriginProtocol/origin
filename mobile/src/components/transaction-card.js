@@ -13,7 +13,7 @@ import CommonStyles from 'styles/common'
 import CardStyles from 'styles/card'
 
 const TransactionCard = props => {
-  const { msgData, fiatCurrency, wallet } = props
+  const { msgData, fiatCurrency, wallet, loading } = props
   let { functionName, contractName, parameters } = decodeTransaction(
     msgData.data.data
   )
@@ -83,6 +83,12 @@ const TransactionCard = props => {
       heading = fbt(
         'Approve Currency Conversion',
         'TransactionCard.headingApprove'
+      )
+      break
+    case 'createProxyWithSenderNonce':
+      heading = fbt(
+        'Enable Meta Transactions',
+        'TransactionCard.createProxyHeading'
       )
       break
     default:
@@ -233,6 +239,8 @@ const TransactionCard = props => {
           title={fbt('Confirm', 'TransactionCard.button')}
           disabled={!hasSufficientDai || !hasSufficientEth}
           onPress={props.onConfirm}
+          disabled={loading}
+          loading={loading}
         />
       </View>
       <TouchableOpacity onPress={props.onRequestClose}>
