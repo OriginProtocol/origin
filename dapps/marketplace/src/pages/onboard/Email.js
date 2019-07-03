@@ -28,9 +28,9 @@ class OnboardEmail extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.walletProxy !== prevProps.walletProxy) {
+    if (this.props.wallet !== prevProps.wallet) {
       const storedAccounts = getVerifiedAccounts({
-        wallet: this.props.walletProxy
+        wallet: this.props.wallet
       })
       if (storedAccounts && storedAccounts.emailAttestation) {
         this.setState({ finished: true })
@@ -40,22 +40,20 @@ class OnboardEmail extends Component {
 
   render() {
     const { linkPrefix } = this.props
-    const { finished, back } = this.state
+    const { finished } = this.state
 
     if (finished) {
       return <Redirect to={`${linkPrefix}/onboard/profile`} />
-    } else if (back) {
-      return <Redirect to={`${linkPrefix}/onboard/back`} />
     }
 
     return this.renderContent()
   }
 
   renderContent() {
-    const { isMobile, listing, hideOriginWallet, walletProxy } = this.props
+    const { isMobile, listing, hideOriginWallet, wallet } = this.props
     const content = (
       <EmailAttestation
-        wallet={walletProxy}
+        wallet={wallet}
         onboarding={true}
         onCompleted={data => this.onCompleted(data)}
       />
@@ -103,7 +101,7 @@ class OnboardEmail extends Component {
   onCompleted(data) {
     if (data) {
       updateVerifiedAccounts({
-        wallet: this.props.walletProxy,
+        wallet: this.props.wallet,
         data: {
           emailAttestation: data
         }
@@ -111,7 +109,6 @@ class OnboardEmail extends Component {
       this.setState({ finished: true })
     } else {
       clearVerifiedAccounts()
-      this.setState({ back: true })
     }
   }
 }
