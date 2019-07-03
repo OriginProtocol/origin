@@ -408,7 +408,12 @@ export function setMarketplace(address, epoch) {
       typeof address === 'undefined'
         ? 'Marketplace_'
         : `${address.slice(2, 8)}_`,
-    platform: typeof window === 'undefined' ? 'nodejs' : 'browser',
+    platform:
+      typeof window === 'undefined'
+        ? context.config.eventCacheUseDB
+          ? 'postgresql'
+          : 'memory'
+        : 'browser',
     ...context.config
   })
 
@@ -448,7 +453,12 @@ export function setIdentityEvents(address, epoch) {
       typeof address === 'undefined'
         ? 'IdentityEvents_'
         : `${address.slice(2, 8)}_`,
-    platform: typeof window === 'undefined' ? 'nodejs' : 'browser',
+    platform:
+      typeof window === 'undefined'
+        ? context.config.eventCacheUseDB
+          ? 'postgresql'
+          : 'memory'
+        : 'browser',
     batchSize: 2500,
     ...context.config
   })
@@ -484,7 +494,12 @@ export function setProxyContracts(config) {
       typeof config.ProxyFactory === 'undefined'
         ? 'ProxyFactory_'
         : `${config.ProxyFactory.slice(2, 8)}_`,
-    platform: typeof window === 'undefined' ? 'nodejs' : 'browser',
+    platform:
+      typeof window === 'undefined'
+        ? context.config.eventCacheUseDB
+          ? 'postgresql'
+          : 'memory'
+        : 'browser',
     batchSize: 2500
   })
 }

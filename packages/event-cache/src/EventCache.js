@@ -151,6 +151,7 @@ class EventCache {
 
     switch (platform) {
       case 'nodejs':
+      case 'postgresql':
         return new PostgreSQLBackend({ prefix: this.prefix })
 
       case 'browser':
