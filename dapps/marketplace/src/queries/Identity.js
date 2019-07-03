@@ -21,6 +21,7 @@ export default gql`
 
           verifiedAttestations {
             id
+            rawData
             properties {
               type
               value
