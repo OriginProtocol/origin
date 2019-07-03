@@ -47,7 +47,7 @@ class RejectOffer extends Component {
                 shouldClose={this.state.sureShouldClose}
               >
                 <h2>
-                  <fbt desc="RejectOffer.reject">Reject Offer</fbt>
+                  <fbt desc="RejectOffer.decline">Decline Offer</fbt>
                 </h2>
                 <fbt desc="RejectOffer.areYouSure">
                   Are you sure you want to reject this offer? The buyers funds

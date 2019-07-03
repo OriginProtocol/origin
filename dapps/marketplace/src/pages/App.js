@@ -97,6 +97,7 @@ class App extends Component {
     const hideNavbar =
       (!this.props.location.pathname.match(/^\/welcome\/onboard.*$/g) &&
         this.props.location.pathname.match(/^\/welcome.*$/g)) ||
+      (isMobile && this.props.location.pathname.match(/^\/purchases\/.*$/g)) ||
       (isMobile &&
         this.props.location.pathname.match(/^\/campaigns\/purchases$/g)) ||
       (isMobile &&
