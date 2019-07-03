@@ -22,7 +22,7 @@ function displayYear(date) {
 }
 
 function displayWeekDay(date) {
-  return displayDateTime(date, { weekday: 'short' }).replace(/\.$/, '')
+  return displayDateTime(date, { weekday: 'narrow' }).replace(/\.$/, '')
 }
 
 function displayDay(date) {
@@ -288,7 +288,7 @@ require('react-styl')(`
         align-items: center
         justify-content: center
         white-space: nowrap
-        font-size: 16px
+        font-size: 14px
       > .hour
         height: 50px
         min-height: 3.5rem

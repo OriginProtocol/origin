@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
-import displayDateTime from 'utils/displayDateTime'
 
 import CurrencyContext from 'constants/CurrencyContext'
 

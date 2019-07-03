@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import dayjs from 'dayjs'
 import displayDateTime from 'utils/displayDateTime'
-import weekStart, { weekStartDay } from '../utils/weekStart'
+import { weekStartDay } from '../utils/weekStart'
 
 import Price from 'components/Price'
 
@@ -23,20 +23,6 @@ function getFirstDay(date) {
   const start = date.day()
   const offset = start - weekStartDay()
   return ((offset % 7) + 7) % 7
-}
-
-function renderWeekTitles() {
-  const wStart = dayjs(weekStart())
-  const result = []
-  for (let idx = 0; idx < 7; idx++) {
-    const weekday = displayDateTime(wStart.add(idx, 'days'), {
-      weekday: 'short'
-    })
-      .replace(/\.$/, '')
-      .toUpperCase()
-    result.push(<div key={idx}>{weekday}</div>)
-  }
-  return result
 }
 
 class Calendar extends Component {

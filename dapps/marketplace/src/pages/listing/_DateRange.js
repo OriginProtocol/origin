@@ -2,6 +2,7 @@ import React from 'react'
 
 import dayjs from 'dayjs'
 import { fbt } from 'fbt-runtime'
+import displayDateTime from 'utils/displayDateTime'
 
 const DateRangeComponent = ({
   startDate,
@@ -24,10 +25,21 @@ const DateRangeComponent = ({
   let startDateUnset = true
   let endDateUnset = true
 
-  const format = timeRange ? 'MMM D h:00a' : 'ddd, MMM D' // Needs l10n
+  const displayOpts = timeRange
+    ? {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+      }
+    : {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'long'
+      }
 
   if (startDate) {
-    startDateDisplay = dayjs(startDate).format(format)
+    startDateDisplay = displayDateTime(dayjs(startDate), displayOpts)
     startDateUnset = false
   }
 
@@ -36,7 +48,7 @@ const DateRangeComponent = ({
     if (!timeRange) {
       endDateDisplay = endDateDisplay.add(1, 'day')
     }
-    endDateDisplay = endDateDisplay.format(format)
+    endDateDisplay = displayDateTime(endDateDisplay, displayOpts)
     endDateUnset = false
   }
 
@@ -74,6 +86,7 @@ require('react-styl')(`
       line-height: 1
       flex: auto 0 0
       white-space: nowrap
+      text-transform: capitalize
       &.active
         color: #007fff
 
