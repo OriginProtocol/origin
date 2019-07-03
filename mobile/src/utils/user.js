@@ -57,13 +57,9 @@ export function truncate(data, chars = 5) {
  * a react-navigation navigator. The HOC is not compatible.
  */
 export function getNextOnboardingStep(onboardingStore, settingsStore) {
-  if (
-    !onboardingStore.emailAttestation &&
-    !get(onboardingStore, 'verifiedAttestations', []).includes('email')
-  ) {
+  if (!get(onboardingStore, 'verifiedAttestations', []).includes('email')) {
     return 'Email'
   } else if (
-    onboardingStore.phoneAttestation === null &&
     !get(onboardingStore, 'verifiedAttestations', []).includes('phone')
   ) {
     return 'Phone'

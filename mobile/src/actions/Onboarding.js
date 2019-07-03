@@ -4,8 +4,7 @@ import keyMirror from 'utils/keyMirror'
 
 export const OnboardingConstants = keyMirror(
   {
-    SET_EMAIL_ATTESTATION: null,
-    SET_PHONE_ATTESTATION: null,
+    ADD_ATTESTATTION: null,
     SET_VERIFIED_ATTESTATIONS: null,
     SET_NAME: null,
     SET_AVATAR_URI: null,
@@ -17,17 +16,10 @@ export const OnboardingConstants = keyMirror(
   'ONBOARDING'
 )
 
-export function setEmailAttestation(emailAttestation) {
+export function addAttestation(attestation) {
   return {
-    type: OnboardingConstants.SET_EMAIL_ATTESTATION,
-    emailAttestation
-  }
-}
-
-export function setPhoneAttestation(phoneAttestation) {
-  return {
-    type: OnboardingConstants.SET_PHONE_ATTESTATION,
-    phoneAttestation
+    type: OnboardingConstants.ADD_ATTESTATION,
+    attestation
   }
 }
 
