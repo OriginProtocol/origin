@@ -263,6 +263,19 @@ export const types = `
     multiUnit: Boolean
   }
 
+  type ServiceListing implements Listing {
+    ${ListingInterface}
+
+    # Number of Units Created, Accepted or Disputed (computed)
+    unitsPending: Int
+
+    # Number of units Finalized or Ruling (computed)
+    unitsSold: Int
+
+    # Max units that can be ordered at once
+    unitsAvailable: Int
+  }
+
   type FractionalListing implements Listing {
     ${ListingInterface}
 
@@ -317,7 +330,7 @@ export const types = `
     ${ListingInterface}
   }
 
-  union ListingResult = UnitListing | FractionalListing | FractionalHourlyListing | AnnouncementListing | GiftCardListing
+  union ListingResult = UnitListing | FractionalListing | FractionalHourlyListing | AnnouncementListing | GiftCardListing | ServiceListing
 
   type Media {
     url: String

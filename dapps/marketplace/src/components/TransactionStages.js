@@ -54,7 +54,7 @@ const CanceledStages = [
   }
 ]
 
-const TransactionStages = ({ offer, mini }) => {
+const TransactionStages = ({ offer, mini, className }) => {
   let stages = SaleStages
   if (offer.status === 3 || offer.status === 5) {
     stages = DisputeStages
@@ -104,13 +104,16 @@ const TransactionStages = ({ offer, mini }) => {
     const completedStages = stages.filter(s => offer[s.event]).length - 1
     const pct = (completedStages / numStages) * 100
     return (
-      <div className="stages-mini" style={{ '--pct': `${pct}%` }}>
+      <div
+        className={`stages-mini ${className ? className : ''}`}
+        style={{ '--pct': `${pct}%` }}
+      >
         {events}
       </div>
     )
   }
 
-  return <div className="stages">{events}</div>
+  return <div className={`stages ${className ? className : ''}`}>{events}</div>
 }
 
 export default TransactionStages
