@@ -100,10 +100,12 @@ function DBToEvent(dbObject) {
  * @classdesc PostgreSQLBackend to handle event storage in PostgreSQL
  */
 class PostgreSQLBackend extends AbstractBackend {
-  constructor() {
+  constructor(args) {
+    const { prefix = '' } = args || {}
     super()
 
     this.type = 'postgresql'
+    this.prefix = prefix
     /**
      * This import needs to be done here, because sequelize is a PoS and
      * requires a connection to be initialized to build the models.  And to
@@ -131,6 +133,9 @@ class PostgreSQLBackend extends AbstractBackend {
    */
   async _loadLatestBlock() {
     const result = await this._models.Event.findOne({
+      where: {
+        prefix: this.prefix
+      },
       attributes: [
         [
           this._sequelize.fn('MAX', this._sequelize.col('block_number')),
@@ -139,7 +144,7 @@ class PostgreSQLBackend extends AbstractBackend {
       ]
     })
     if (result) {
-      const maxBlock = result.dataValues.max_block
+      const maxBlock = result.dataValues.max_block || 0
       this.setLatestBlock(maxBlock)
       debug(`Cache is current up to block #${maxBlock}`)
       return maxBlock
@@ -181,6 +186,9 @@ class PostgreSQLBackend extends AbstractBackend {
    */
   async serialize() {
     const res = await this._models.Event.findAll({
+      where: {
+        prefix: this.prefix
+      },
       order: [['block_number'], ['transaction_index'], ['log_index']]
     })
     if (res.length < 1) {
@@ -209,6 +217,7 @@ class PostgreSQLBackend extends AbstractBackend {
    */
   async get(argMatchObject) {
     const where = this._argMatchToWhere(argMatchObject)
+    where.prefix = this.prefix
     const results = await this._models.Event.findAll({ where })
     return results.map(row => {
       return DBToEvent(row.dataValues)
@@ -221,7 +230,11 @@ class PostgreSQLBackend extends AbstractBackend {
    * @returns {Array} An array of event objects
    */
   async all() {
-    const results = await this._models.Event.findAll()
+    const results = await this._models.Event.findAll({
+      where: {
+        prefix: this.prefix
+      }
+    })
     return results.map(row => {
       return DBToEvent(row.dataValues)
     })
@@ -236,6 +249,8 @@ class PostgreSQLBackend extends AbstractBackend {
    */
   async addEvent(eventObject) {
     const dbObject = eventToDB(eventObject)
+    // Add the prefix to the object
+    dbObject.prefix = this.prefix
     await this._models.Event.upsert(dbObject)
     this.setLatestBlock(eventObject.blockNumber)
   }
