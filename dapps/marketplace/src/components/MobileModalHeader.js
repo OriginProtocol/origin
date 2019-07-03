@@ -88,7 +88,7 @@ require('react-styl')(`
       &.back-button
         background-image: url('images/caret-grey.svg')
         background-size: 1.5rem
-        background-position: center
+        background-position: top center
         transform: rotateZ(270deg)
         background-repeat: no-repeat
     .modal-title
