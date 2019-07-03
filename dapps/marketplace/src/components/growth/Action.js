@@ -10,7 +10,6 @@ function Action(props) {
     type,
     status,
     reward,
-    rewardEarned,
     unlockConditions,
     listingId,
     titleKey,
@@ -62,9 +61,15 @@ function Action(props) {
   } else if (type === 'Kakao') {
     foregroundImgSrc = 'images/growth/kakao-icon.svg'
     title = fbt('Verify your Kakao Profile', 'RewardActions.kakaoTitle')
-  } else if (type === 'Wechat') {
+  } else if (type === 'WeChat') {
     foregroundImgSrc = 'images/growth/wechat-icon.svg'
     title = fbt('Verify your Wechat Profile', 'RewardActions.wechatTitle')
+  } else if (type === 'GitHub') {
+    foregroundImgSrc = 'images/growth/github-icon.svg'
+    title = fbt('Verify your GitHub Profile', 'RewardActions.githubTitle')
+  } else if (type === 'LinkedIn') {
+    foregroundImgSrc = 'images/growth/linkedin-icon.svg'
+    title = fbt('Verify your LinkedIn Profile', 'RewardActions.linkedInTitle')
   } else if (type === 'ListingCreated') {
     foregroundImgSrc = 'images/growth/purchase-icon.svg'
     title = fbt('Create a Listing', 'RewardActions.listingCreatedTitle')
@@ -232,16 +237,6 @@ function Action(props) {
           {!actionLocked && detailsLink}
         </div>
         <div className="pr-0 pr-md-3 pl-0 pl-md-3 col-3 col-md-3 d-flex align-items-center justify-content-end">
-          {actionCompleted &&
-            rewardEarned !== null &&
-            rewardEarned.amount !== '0' && (
-              <div className="d-flex flex-column flex-grow-1 align-items-center">
-                {renderReward(rewardEarned.amount)}
-                <div className="d-center sub-text ml-2">
-                  <fbt desc="RewardActions.earned">Earned</fbt>
-                </div>
-              </div>
-            )}
           {reward !== null &&
             renderReward(
               reward.amount,

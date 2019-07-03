@@ -116,8 +116,7 @@ class UserProfile extends Component {
     const walletChanged =
       get(this.props, 'identity.id') !== get(prevProps, 'identity.id')
 
-    const identityLoaded =
-      !this.props.identityLoading && prevProps.identityLoading
+    const identityLoaded = this.props.identityLoaded
     if (
       (walletChanged || identityLoaded) &&
       !identity &&
@@ -201,8 +200,7 @@ class UserProfile extends Component {
                   fillToNearest={this.props.isMobile ? 4 : 5}
                   onClick={providerName => {
                     this.setState({
-                      [providerName]: true,
-                      showVerifyModalOnClose: false
+                      [providerName]: true
                     })
                   }}
                 />
@@ -281,7 +279,9 @@ class UserProfile extends Component {
     return (
       <ModalComp
         title={headerContent}
-        className="profile-verifications-modal"
+        className={`profile-verifications-modal${
+          this.state.hideVerifyModal ? ' d-none' : ''
+        }`}
         shouldClose={this.state.shouldCloseVerifyModal}
         onClose={() =>
           this.setState({ shouldCloseVerifyModal: false, verifyModal: false })
@@ -301,8 +301,7 @@ class UserProfile extends Component {
           onClick={providerName => {
             this.setState({
               [providerName]: true,
-              shouldCloseVerifyModal: true,
-              showVerifyModalOnClose: true
+              hideVerifyModal: true
             })
           }}
         />
@@ -341,21 +340,28 @@ class UserProfile extends Component {
             const newState = {
               [providerName]: false
             }
-            if (!completed && this.state.showVerifyModalOnClose) {
-              newState.verifyModal = true
+
+            if (!completed) {
+              // Show the verify modal only if the user closes
+              // the attestation modal without making a change
+              newState.hideVerifyModal = false
             }
 
             this.setState(newState)
           }}
           onComplete={newAttestation => {
-            const attestations = get(this.state, 'attestations', [])
-            attestations.push(newAttestation)
+            const unpublishedAttestations = [...get(this.state, 'attestations')]
+            unpublishedAttestations.push(newAttestation)
 
             this.setState({
               deployIdentity: providerName,
-              attestations
+              unpublishedAttestations,
+              [providerName]: false
             })
           }}
+          // Skip exit animation for attestation modals only if user
+          // goes there from "Add Verifications" modal
+          skipAnimateOnExit={this.state.verifyModal}
         />
       )
     })
@@ -384,6 +390,11 @@ class UserProfile extends Component {
       x => x
     )
 
+    const attestations =
+      this.state.deployIdentity === 'profile'
+        ? this.state.attestations
+        : this.state.unpublishedAttestations
+
     return (
       <DeployIdentity
         identity={get(this.props, 'identity.id')}
@@ -395,11 +406,23 @@ class UserProfile extends Component {
           this.props.identityRefetch()
           this.setState({
             deployIdentity: null,
-            unpublishedProfile: null
+            unpublishedProfile: null,
+            unpublishedAttestations: null,
+            hideVerifyModal: false,
+            verifyModal: false
+          })
+        }}
+        onCancel={() => {
+          // Discard unpublished profile changes on cancel/error
+          this.setState({
+            deployIdentity: null,
+            unpublishedProfile: null,
+            unpublishedAttestations: null,
+            hideVerifyModal: false
           })
         }}
         profile={profile}
-        attestations={this.state.attestations || []}
+        attestations={attestations || []}
       />
     )
   }
@@ -426,14 +449,6 @@ class UserProfile extends Component {
             unpublishedProfile: {
               ...this.state.unpublishedProfile,
               ...newState
-            }
-          })
-        }}
-        onAvatarChange={avatarUrl => {
-          this.setState({
-            unpublishedProfile: {
-              ...this.state.unpublishedProfile,
-              avatarUrl: avatarUrl
             }
           })
         }}

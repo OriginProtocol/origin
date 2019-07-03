@@ -6,7 +6,9 @@ const startCase = require('lodash/startCase')
 const pick = require('lodash/pick')
 const _get = require('lodash/get')
 const memoize = require('lodash/memoize')
+
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+const MULTI_UNIT_TYPES = ['UnitListing', 'GiftCardListing']
 
 const getListingDirect = async (contract, listingId) =>
   await contract.methods.listings(listingId).call()
@@ -229,6 +231,8 @@ class OriginEventSource {
         __typename = 'FractionalListing'
       } else if (data.category === 'schema.announcements') {
         __typename = 'AnnouncementListing'
+      } else if (data.category === 'schema.services') {
+        __typename = 'ServiceListing'
       } else {
         __typename = 'UnitListing'
       }
@@ -239,7 +243,8 @@ class OriginEventSource {
         'FractionalListing',
         'FractionalHourlyListing',
         'AnnouncementListing',
-        'GiftCardListing'
+        'GiftCardListing',
+        'ServiceListing'
       ].indexOf(__typename) < 0
     ) {
       __typename = 'UnitListing'
@@ -272,7 +277,8 @@ class OriginEventSource {
       contract: this.contract,
       status,
       events,
-      multiUnit: __typename === 'UnitListing' && data.unitsTotal > 1,
+      multiUnit:
+        MULTI_UNIT_TYPES.indexOf(__typename) > -1 && data.unitsTotal > 1,
       commissionPerUnit,
       commission
     })
@@ -307,6 +313,9 @@ class OriginEventSource {
     const booked = [],
       pendingBuyers = []
 
+    if (listing.__typename === 'ServiceListing') {
+      unitsAvailable = 20
+    }
     if (listing.__typename === 'FractionalListing') {
       allOffers.forEach(offer => {
         if (!offer.valid || offer.status === 0) {
@@ -326,7 +335,9 @@ class OriginEventSource {
           offer.validationError = 'units purchased exceeds available'
         } else {
           try {
-            unitsAvailable -= offer.quantity
+            if (listing.__typename !== 'ServiceListing') {
+              unitsAvailable -= offer.quantity
+            }
             if (status === 1 || status === 2 || status === 3) {
               // Created, Accepted or Disputed
               unitsPending += offer.quantity
@@ -541,7 +552,9 @@ class OriginEventSource {
   }
 
   async getReview(listingId, offerId, party, ipfsHash, event) {
-    const data = await get(this.ipfsGateway, ipfsHash)
+    let data = await get(this.ipfsGateway, ipfsHash)
+    // review info in OfferData events is a JSON stringified string data propety
+    data = data.data ? JSON.parse(data.data) : data
     const offerIdExp = await this.getOfferIdExp(listingId, offerId)
     const listing = await this.getListing(listingId, event.blockNumber)
     return {

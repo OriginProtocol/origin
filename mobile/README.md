@@ -14,6 +14,9 @@ Origin Wallet is an "ejected" React Native application. Go [here](https://facebo
 
 This guide will help you to install a local build of Origin Wallet on a device or simulator so that you can modify the application itself. An alternative would be to connect the App Store or TestFlight version of the application to a local blockchain running on your machine, which would be a simpler way to test with Origin Wallet.
 
+- run `npm install` to install dependacies
+- run `npm run start` to start the react native app
+
 #### iOS Development
 
 - [Xcode](https://developer.apple.com/xcode/)
@@ -41,7 +44,7 @@ If you intend to develop using a physical device rather than a VM, make sure you
 - Turn on "USB Debugging" in "Developer options"
 - Start the adb server `adb start-server`
 - Verify your device is recognized with `adb devices`
-- Setup TCP tunnels to your device by running `./setup_android_tunnels.sh`. This allows the mobile app to access backend services at `localhost`
+- Setup TCP tunnels to your device by running `./android/setup_tunnels.sh`. This allows the mobile app to access backend services at `localhost`
 
 ### Running Development
 
@@ -50,9 +53,7 @@ To run the mobile app on your phone, you need to both start the Metro builder se
 - Run Metro builder with `npm run start`
 - Compile and build your app with `react-native run-android` or `react-native run-ios`
 
-Be aware that the mobile install process uses `install-local` to copy certain packages into the `node_modules` directory. If you modify any dependencies (e.g. `@origin/graphql`) you will need to run the install process again. It may be helpful to directly modify the package in the `node_modules` (e.g. `mobile/node_modules/@origin/graphql`) directory first to avoid this.
-
-If you want to use a physical device in combination with the marketplace DApp running on your local machine (i.e. `Localhost` setting in network selection) make sure you set the `HOST` environment variable to your internal network IP address (e.g. 10.10.10.1). You will also need to run the marketplace DApp first and then use the `copy_contract_config.sh` and reload the mobile app if you've already started it.
+If you want to use a physical device in combination with the marketplace DApp running on your local machine (i.e. `Localhost` setting in network selection) make sure you set the `HOST` environment variable to your internal network IP address (e.g. 10.10.10.1).
 
 ### Tips
 

@@ -38,7 +38,7 @@ const purchaseListing = async ({ buyer }) => {
   await pic(page, 'purchase-listing')
 
   await clickByText(page, 'View Purchase', 'button')
-  await waitForText(page, 'Transaction Progress')
+  await waitForText(page, 'Transaction History')
   await pic(page, 'transaction-wait-for-seller')
 }
 
@@ -49,22 +49,30 @@ const acceptOffer = async ({ seller }) => {
 
   await clickByText(page, 'Accept Offer', 'button')
   await clickByText(page, 'OK', 'button')
-  await waitForText(page, 'Wait for buyer')
+  await waitForText(page, `You've accepted this offer`)
   await pic(page, 'transaction-accepted')
 }
 
-const finalizeOffer = async ({ buyer }) => {
+const confirmReleaseFundsAndRate = async ({ buyer }) => {
   await changeAccount(page, buyer)
-  await waitForText(page, 'Finalize', 'button')
-  await pic(page, 'transaction-finalize')
-  await giveRating(page, 3)
-  await pic(page, 'transaction-finalize-rated')
-  await clickByText(page, 'Finalize', 'button')
-  await pic(page, 'transaction-finalize-confirmation')
+  await waitForText(page, 'Your offer has been accepted by the seller')
+  await pic(page, 'transaction-confirm')
+  await clickByText(page, 'Confirm', 'button')
+  await waitForText(page, 'Release the funds to the seller.')
+  await pic(page, 'transaction-release-funds')
+  await clickByText(page, 'Release Funds', 'button')
+  await pic(page, 'transaction-release-funds-confirmation')
   await clickByText(page, 'Yes, please', 'button')
+  await waitForText(page, 'Success!')
   await clickByText(page, 'OK', 'button')
-  await waitForText(page, 'Transaction Finalized')
-  await pic(page, 'transaction-finalized')
+  await waitForText(page, 'Leave a review of the seller')
+  await giveRating(page, 3)
+  await pic(page, 'transaction-release-funds-rated')
+  await clickByText(page, 'Submit', 'button')
+  await waitForText(page, 'Success!')
+  await clickByText(page, 'OK', 'button')
+  await waitForText(page, 'Your purchase is complete.')
+  await pic(page, 'transaction-release-funds-finalized')
 }
 
 function randomTitle() {
@@ -89,25 +97,34 @@ function listingTests(autoSwap) {
     })
 
     it('should select Clothing', async function() {
-      await page.select('select', 'schema.clothingAccessories')
+      await clickByText(page, 'Clothing and Accessories')
       await pic(page, 'add-listing')
     })
 
-    it('should continue to details', async function() {
+    it('should allow title and description entry', async function() {
+      await page.type('input[name=title]', randomTitle())
+      await page.type('textarea[name=description]', 'T-Shirt in size large')
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
 
-    it('should allow detail entry', async function() {
-      await page.type('input[name=title]', randomTitle())
-      await page.type('textarea[name=description]', 'T-Shirt in size large')
+    it('should allow quantity entry', async function() {
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should allow price entry', async function() {
       await page.type('input[name=price]', '1')
-      await page.click('#eth-checkbox') // Select Eth
-      await page.click('#dai-checkbox') // De-select Dai
+      await clickByText(page, 'Ethereum') // Select Eth
+      await clickByText(page, 'Maker Dai') // De-select Dai
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should allow image entry', async function() {
       const input = await page.$('input[type="file"]')
       await input.uploadFile(__dirname + '/fixtures/image-1.jpg')
       await page.waitForSelector('.image-picker .preview-row')
-
       await pic(page, 'add-listing')
     })
 
@@ -117,7 +134,7 @@ function listingTests(autoSwap) {
     })
 
     it('should create listing', async function() {
-      await clickByText(page, 'Done', 'button')
+      await clickByText(page, 'Publish', 'button')
       await waitForText(page, 'View Listing')
       await pic(page, 'add-listing')
     })
@@ -135,7 +152,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow a new listing to be finalized', async function() {
-      await finalizeOffer({ buyer })
+      await confirmReleaseFundsAndRate({ buyer })
     })
   })
 
@@ -156,33 +173,42 @@ function listingTests(autoSwap) {
     })
 
     it('should select Clothing', async function() {
-      await page.select('select', 'schema.clothingAccessories')
+      await clickByText(page, 'Clothing and Accessories')
       await pic(page, 'add-listing')
     })
 
-    it('should continue to details', async function() {
+    it('should allow title and description entry', async function() {
+      await page.type('input[name=title]', randomTitle())
+      await page.type('textarea[name=description]', 'T-Shirt in size large')
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
 
-    it('should allow detail entry', async function() {
-      await page.type('input[name=title]', randomTitle())
-      await page.type('textarea[name=description]', 'T-Shirt in size large')
+    it('should allow quantity entry', async function() {
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should allow price entry', async function() {
       await page.type('input[name=price]', '1')
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should allow image entry', async function() {
       const input = await page.$('input[type="file"]')
       await input.uploadFile(__dirname + '/fixtures/image-1.jpg')
       await page.waitForSelector('.image-picker .preview-row')
-
       await pic(page, 'add-listing')
     })
 
     it('should continue to review', async function() {
-      await clickByText(page, 'Continue', 'button')
+      await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
 
     it('should create listing', async function() {
-      await clickByText(page, 'Done', 'button')
+      await clickByText(page, 'Publish', 'button')
       await waitForText(page, 'View Listing', 'button')
       await pic(page, 'add-listing')
     })
@@ -217,7 +243,7 @@ function listingTests(autoSwap) {
 
     it('should view the purchase', async function() {
       await clickByText(page, 'View Purchase', 'button')
-      await waitForText(page, 'Transaction Progress')
+      await waitForText(page, `You've made an offer. Wait for the seller to accept it.`)
       await pic(page, 'transaction-wait-for-seller')
     })
 
@@ -226,7 +252,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow a new listing to be finalized', async function() {
-      await finalizeOffer({ buyer })
+      await confirmReleaseFundsAndRate({ buyer })
     })
   })
 
@@ -247,39 +273,48 @@ function listingTests(autoSwap) {
     })
 
     it('should select Clothing', async function() {
-      await page.select('select', 'schema.clothingAccessories')
+      await clickByText(page, 'Clothing and Accessories')
       await pic(page, 'add-listing')
     })
 
-    it('should continue to details', async function() {
-      await clickByText(page, 'Continue', 'button')
+    it('should allow title and description entry', async function() {
+      await page.type('input[name=title]', randomTitle())
+      await page.type('textarea[name=description]', 'T-Shirt in size large')
+      await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
 
     it('should allow detail entry', async function() {
-      await page.type('input[name=title]', randomTitle())
-      await page.type('textarea[name=description]', 'T-Shirt in size large')
-      await page.type('input[name=price]', '1')
       await page.focus('input[name=quantity]')
       await page.keyboard.press('Backspace')
       await page.type('input[name=quantity]', '2')
-      await page.click('#eth-checkbox') // Select Eth
-      await page.click('#dai-checkbox') // De-select Dai
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should allow price entry', async function() {
+      await page.type('input[name=price]', '1')
+      await clickByText(page, 'Ethereum') // Select Eth
+      await clickByText(page, 'Maker Dai') // De-select Dai
+      await clickByText(page, 'Continue')
+      await pic(page, 'add-listing')
+    })
+
+    it('should allow image entry', async function() {
       const input = await page.$('input[type="file"]')
       await input.uploadFile(__dirname + '/fixtures/image-1.jpg')
       await page.waitForSelector('.image-picker .preview-row')
-
       await pic(page, 'add-listing')
     })
 
     it('should continue to review', async function() {
-      await clickByText(page, 'Continue', 'button')
+      await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
 
     it('should create listing', async function() {
-      await clickByText(page, 'Done', 'button')
-      await waitForText(page, 'View Listing', 'button')
+      await clickByText(page, 'Publish', 'button')
+      await waitForText(page, 'View Listing')
       await pic(page, 'add-listing')
     })
 
@@ -305,7 +340,7 @@ function listingTests(autoSwap) {
       await pic(page, 'purchase-listing')
 
       await clickByText(page, 'View Purchase', 'button')
-      await waitForText(page, 'Transaction Progress')
+      await waitForText(page, `You've made an offer. Wait for the seller to accept it.`)
       await pic(page, 'transaction-wait-for-seller')
     })
 
@@ -314,7 +349,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow a new listing to be finalized', async function() {
-      await finalizeOffer({ buyer })
+      await confirmReleaseFundsAndRate({ buyer })
     })
 
     it('should navigate back to the listing', async function() {
@@ -325,13 +360,16 @@ function listingTests(autoSwap) {
     })
 
     it('should allow the listing to be edited', async function() {
-      await clickByText(page, 'Edit Listing')
+      await clickBySelector(page, '.listing-buy-editonly + a.listing-action-link')
+      await clickByText(page, 'For Sale')
       await clickByText(page, 'Continue')
       await page.focus('input[name=quantity]')
       await page.keyboard.press('Backspace')
       await page.type('input[name=quantity]', '10')
       await clickByText(page, 'Continue')
-      await clickByText(page, 'Done')
+      await clickByText(page, 'Continue')
+      await clickByText(page, 'Continue')
+      await clickByText(page, 'Publish', 'button')
       await clickByText(page, 'View Listing', 'button')
     })
 
@@ -351,7 +389,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow a new listing to be finalized', async function() {
-      await finalizeOffer({ buyer })
+      await confirmReleaseFundsAndRate({ buyer })
     })
   })
 
@@ -401,7 +439,7 @@ describe('Marketplace Dapp', function() {
     await page.evaluate(() => {
       delete window.localStorage.performanceMode
       delete window.localStorage.proxyAccountsEnabled
-      delete window.localStorage.enableRelayer
+      delete window.localStorage.relayerEnabled
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
@@ -415,7 +453,7 @@ describe('Marketplace Dapp with proxies enabled', function() {
     await page.evaluate(() => {
       window.localStorage.proxyAccountsEnabled = true
       delete window.localStorage.performanceMode
-      delete window.localStorage.enableRelayer
+      delete window.localStorage.relayerEnabled
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
@@ -435,7 +473,7 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
     await page.evaluate(() => {
       window.localStorage.performanceMode = true
       window.localStorage.proxyAccountsEnabled = true
-      window.localStorage.enableRelayer = true
+      window.localStorage.relayerEnabled = true
       window.localStorage.debug = 'origin:*'
       window.transactionPoll = 100
     })

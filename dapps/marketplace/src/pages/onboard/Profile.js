@@ -12,7 +12,7 @@ import EditProfile from 'pages/user/_EditProfile'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 
 import Redirect from 'components/Redirect'
-import HelpOriginWallet from './_HelpOriginWallet'
+import HelpOriginWallet from 'components/DownloadApp'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
 
@@ -150,9 +150,9 @@ class OnboardProfile extends Component {
               skipSuccessScreen={true}
               onComplete={() => {
                 clearVerifiedAccounts()
-                this.setState({ finished: true })
+                this.setState({ finished: true, shouldCloseSignTxModal: true })
               }}
-              onClose={() => this.setState({ shouldCloseSignTxModal: true })}
+              onCancel={() => this.setState({ shouldCloseSignTxModal: true })}
             />
           </div>
         </div>

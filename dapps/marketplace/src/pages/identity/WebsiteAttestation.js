@@ -62,6 +62,7 @@ class WebsiteAttestation extends Component {
           this.props.onClose(completed)
         }}
         lightMode={true}
+        skipAnimateOnExit={this.props.skipAnimateOnExit}
       >
         <div>{this[`render${this.state.stage}`]()}</div>
       </ModalComponent>

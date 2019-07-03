@@ -23,11 +23,11 @@
     "http-proxy": "1.17.0",
     "ipfs-api": "^26.1.2",
     "ipfs": "^0.34.4",
-    "memdown": "^3.0.0"
+    "memdown": "^4.0.0"
   },
   "devDependencies": {
-    "eslint": "^5.15.3",
-    "prettier": "^1.16.4"
+    "eslint": "^6.0.1",
+    "prettier": "^1.18.2"
   },
   "prettier": {
     "semi": false,

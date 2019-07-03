@@ -1,7 +1,15 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
@@ -9,6 +17,7 @@ import { fbt } from 'fbt-runtime'
 import { setBackupWarningStatus } from 'actions/Activation'
 import { importAccountFromMnemonic } from 'actions/Wallet'
 import OriginButton from 'components/origin-button'
+import CommonStyles from 'styles/common'
 import OnboardingStyles from 'styles/onboarding'
 
 class ImportAccountScreen extends Component {
@@ -75,41 +84,51 @@ class ImportAccountScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.content}>
-          <Text style={styles.title}>
-            <fbt desc="ImportMnemonicScreen.recoveryPhraseTitle">
-              Enter Recovery Phrase
-            </fbt>
-          </Text>
-          <TextInput
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoFocus={true}
-            multiline={true}
-            returnKeyType="done"
-            blurOnSubmit={true}
-            onChangeText={value => this.setState({ value })}
-            onSubmitEditing={this.handleSubmit}
-            style={[styles.input, this.state.error ? styles.invalid : {}]}
-          />
-          {this.state.error.length > 0 && (
-            <Text style={styles.invalid}>{this.state.error}</Text>
-          )}
-        </View>
-        <View style={styles.buttonsContainer}>
-          <OriginButton
-            size="large"
-            type="primary"
-            style={styles.button}
-            textStyle={{ fontSize: 18, fontWeight: '900' }}
-            title={fbt('Continue', 'ImportMnemonicScreen.continueButton')}
-            onPress={this.handleSubmit}
-            loading={this.state.loading}
-            disabled={this.state.loading}
-          />
-        </View>
-      </SafeAreaView>
+      <KeyboardAvoidingView
+        style={styles.darkOverlay}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        keyboardVerticalOffset="10"
+      >
+        <SafeAreaView style={{ flex: 1 }}>
+          <ScrollView
+            style={styles.onboardingModal}
+            contentContainerStyle={styles.content}
+            keyboardShouldPersistTaps={'always'}
+          >
+            <View style={styles.container}>
+              <Text style={styles.title}>
+                <fbt desc="ImportMnemonicScreen.recoveryPhraseTitle">
+                  Enter Recovery Phrase
+                </fbt>
+              </Text>
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                autoFocus={true}
+                multiline={true}
+                returnKeyType="done"
+                blurOnSubmit={true}
+                onChangeText={value => this.setState({ value })}
+                onSubmitEditing={this.handleSubmit}
+                style={[styles.input, this.state.error ? styles.invalid : {}]}
+              />
+              {this.state.error.length > 0 && (
+                <Text style={styles.invalid}>{this.state.error}</Text>
+              )}
+            </View>
+            <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
+              <OriginButton
+                size="large"
+                type="primary"
+                title={fbt('Continue', 'ImportMnemonicScreen.continueButton')}
+                onPress={this.handleSubmit}
+                loading={this.state.loading}
+                disabled={this.state.loading}
+              />
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     )
   }
 }
@@ -130,6 +149,7 @@ export default connect(
 )(ImportAccountScreen)
 
 const styles = StyleSheet.create({
+  ...CommonStyles,
   ...OnboardingStyles,
   input: {
     backgroundColor: '#eaf0f3',
@@ -137,11 +157,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingTop: 20,
-    paddingBottom: 20,
-    marginBottom: 20,
-    paddingHorizontal: 20,
-    textAlign: 'center',
-    width: 300,
+    padding: 20,
+    width: '80%',
+    maxWidth: '80%',
     height: 100
   },
   invalid: {

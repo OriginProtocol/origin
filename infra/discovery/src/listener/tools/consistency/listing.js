@@ -47,15 +47,11 @@ async function verifyListingDBRecord(netId, event) {
   // TODO: Fill out?
   assert(
     firstListing.blockNumber === event.blockNumber,
-    `Listing mismatch for blockNumber: ${firstListing.blockNumber} != ${
-      event.blockNumber
-    }`
+    `Listing mismatch for blockNumber: ${firstListing.blockNumber} != ${event.blockNumber}`
   )
   assert(
     firstListing.logIndex === event.logIndex,
-    `Listing mismatch for logIndex: ${firstListing.logIndex} != ${
-      event.logIndex
-    }`
+    `Listing mismatch for logIndex: ${firstListing.logIndex} != ${event.logIndex}`
   )
   assert(
     firstListing.sellerAddress === event.returnValues.party.toLowerCase(),
@@ -98,9 +94,7 @@ async function validateListings({ contractsContext, fromBlock }) {
     } catch (err) {
       if (err.name === 'AssertionError') {
         log.error(
-          `Unable to validate ${ev.event} event for listing #${netId}-000-${
-            ev.returnValues.listingID
-          },  transaction ${ev.transactionHash}`
+          `Unable to validate ${ev.event} event for listing #${netId}-000-${ev.returnValues.listingID},  transaction ${ev.transactionHash}`
         )
         log.error(err.toString())
       } else {

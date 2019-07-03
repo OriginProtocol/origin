@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import get from 'lodash/get'
-import Store from 'utils/store'
 import { fbt } from 'fbt-runtime'
 
 import withWeb3 from 'hoc/withWeb3'
@@ -36,14 +35,11 @@ import AboutCrypto from './about/AboutCrypto'
 import { applyConfiguration } from 'utils/marketplaceCreator'
 import CurrencyContext from 'constants/CurrencyContext'
 
-const store = Store('localStorage')
-
 class App extends Component {
   state = {
     hasError: false,
     displayMobileModal: false,
-    mobileModalDismissed: false,
-    currency: store.get('currency', 'fiat-USD')
+    mobileModalDismissed: false
   }
 
   componentDidMount() {
@@ -101,16 +97,22 @@ class App extends Component {
     const hideNavbar =
       (!this.props.location.pathname.match(/^\/welcome\/onboard.*$/g) &&
         this.props.location.pathname.match(/^\/welcome.*$/g)) ||
+      (isMobile && this.props.location.pathname.match(/^\/purchases\/.*$/g)) ||
       (isMobile &&
         this.props.location.pathname.match(/^\/campaigns\/purchases$/g)) ||
       (isMobile &&
         this.props.location.pathname.match(/^\/campaigns\/invitations$/g)) ||
       (isMobile &&
         this.props.location.pathname.match(/^\/campaigns\/verifications$/g)) ||
-      (isMobile && this.props.location.pathname.match(/\/onboard\/finished/g))
+      (isMobile &&
+        this.props.location.pathname.match(/\/onboard\/finished/g)) ||
+      (isMobile && this.props.location.pathname.match(/\/user\/.+/)) ||
+      (isMobile &&
+        (this.props.history.length > 1 || this.props.location.search) &&
+        this.props.location.pathname.match(/\/listing\/.+/))
 
     return (
-      <CurrencyContext.Provider value={this.state.currency}>
+      <CurrencyContext.Provider value={this.props.currency}>
         {!hideNavbar && (
           <Nav
             onGetStarted={() => this.setState({ mobileModalDismissed: false })}
@@ -125,7 +127,7 @@ class App extends Component {
             <Route path="/my-sales/:filter?" component={MySales} />
             <Route path="/my-listings/:filter?" component={MyListings} />
             <Route path="/create" component={CreateListing} />
-            <Route path="/user/:id" component={User} />
+            <Route path="/user/:id/:content?" component={User} />
             <Route path="/profile/:attestation?" component={Profile} />
             <Route path="/messages/:room?" component={Messages} />
             <Route path="/notifications" component={Notifications} />
@@ -136,8 +138,8 @@ class App extends Component {
                   {...props}
                   locale={this.props.locale}
                   onLocale={this.props.onLocale}
-                  currency={this.state.currency}
-                  onCurrency={currency => this.setCurrency(currency)}
+                  currency={this.props.currency}
+                  onCurrency={this.props.onCurrency}
                 />
               )}
             />
@@ -171,15 +173,11 @@ class App extends Component {
           locale={this.props.locale}
           onLocale={this.props.onLocale}
           creatorConfig={creatorConfig}
-          currency={this.state.currency}
+          currency={this.props.currency}
           onCurrency={this.props.onCurrency}
         />
       </CurrencyContext.Provider>
     )
-  }
-
-  setCurrency(currency) {
-    this.setState({ currency }, () => store.set('currency', currency))
   }
 }
 

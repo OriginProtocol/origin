@@ -3,9 +3,7 @@ const VerifyEvents = require('@origin/growth/src/scripts/verifyEvents')
 
 async function GrowthVerifyEventsJob(job) {
   logger.info(
-    `Starting job GrowthVerifyEventsJob id=${job.id} data=${job.data} pid=${
-      process.pid
-    }`
+    `Starting job GrowthVerifyEventsJob id=${job.id} data=${job.data} pid=${process.pid}`
   )
   job.progress(0)
 

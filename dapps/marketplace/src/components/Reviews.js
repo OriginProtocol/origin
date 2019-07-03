@@ -102,54 +102,66 @@ export default class Reviews extends Component {
                 <h3>
                   {this.props.seller && (
                     <fbt desc="reviews.headingSeller">
-                      Reviews of this seller
+                      Reviews about this seller
                     </fbt>
                   )}
                   {!this.props.seller && (
-                    <fbt desc="reviews.headingUser">Reviews</fbt>
+                    <fbt desc="reviews.headingUser">
+                      Reviews about this user
+                    </fbt>
                   )}
                 </h3>
               )}
-              {reviews.map((review, idx) => {
-                const profile = get(review, 'reviewer.account.identity') || {}
-                return (
-                  <div key={idx} className="review">
-                    <div className="user-info">
-                      <div className="avatar-wrap">
-                        <Avatar size="4rem" profile={profile} />
-                      </div>
-                      <div className="user">
-                        <div className="top">
-                          <div className="name">
-                            {profile.fullName || (
-                              <fbt desc="reviews.unamedUser">Unnamed User</fbt>
-                            )}
-                          </div>
-                          <EthAddress
-                            address={review.reviewer.id}
-                            short={true}
-                          />
+              {!reviews.length && <fbt desc="reviews.none">None</fbt>}
+              {!!reviews.length &&
+                reviews.map((review, idx) => {
+                  const profile = get(review, 'reviewer.account.identity') || {}
+                  return (
+                    <div key={idx} className="review">
+                      <div className="user-info">
+                        <div className="avatar-wrap">
+                          <Link to={`/user/${review.reviewer.id}`}>
+                            <Avatar size="4rem" profile={profile} />
+                          </Link>
                         </div>
-                        <div className="info">
-                          <div className="purchase">
-                            {`Purchased `}
-                            <Link to={`/listing/${review.listing.id}`}>
-                              {review.listing.title}
+                        <div className="user">
+                          <div className="top">
+                            <div className="name">
+                              <Link to={`/user/${review.reviewer.id}`}>
+                                {profile.fullName || (
+                                  <fbt desc="reviews.unamedUser">
+                                    Unnamed User
+                                  </fbt>
+                                )}
+                              </Link>
+                            </div>
+                            <Link to={`/user/${review.reviewer.id}`}>
+                              <EthAddress
+                                address={review.reviewer.id}
+                                short={true}
+                              />
                             </Link>
                           </div>
+                          <div className="info">
+                            <div className="purchase">
+                              {`Purchased `}
+                              <Link to={`/listing/${review.listing.id}`}>
+                                {review.listing.title}
+                              </Link>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="review-meta">
-                      <StarRating small={true} active={review.rating} />
-                      <div className="timestamp">
-                        {distanceToNow(review.event.timestamp)}
+                      <div className="review-meta">
+                        <StarRating small={true} active={review.rating} />
+                        <div className="timestamp">
+                          {distanceToNow(review.event.timestamp)}
+                        </div>
                       </div>
+                      <div className="text">{review.review}</div>
                     </div>
-                    <div className="text">{review.review}</div>
-                  </div>
-                )
-              })}
+                  )
+                })}
               {hasNextPage ? (
                 <a
                   href="#more-reviews"
@@ -216,11 +228,13 @@ require('react-styl')(`
               font-stretch: normal
               line-height: normal
               letter-spacing: normal
-              color: #000000
+              color: var(--dark)
               margin-right: 0.5rem
               overflow: hidden
               text-overflow: ellipsis
               white-space: nowrap
+              a
+                color: var(--dark)
             .eth-address
               color: var(--steel)
               font-size: 12px

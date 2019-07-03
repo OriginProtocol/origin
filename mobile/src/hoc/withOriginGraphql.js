@@ -12,8 +12,15 @@ import { DeviceEventEmitter } from 'react-native'
 import { connect } from 'react-redux'
 import get from 'lodash.get'
 
-import { balance, identity, tokenBalance, wallet } from 'graphql/queries'
-import { deployIdentity } from 'graphql/mutations'
+import {
+  balance,
+  growthEligible,
+  identity,
+  tokenBalance,
+  transactionReceipt,
+  wallet
+} from 'graphql/queries'
+import { growthEnroll, deployIdentity } from 'graphql/mutations'
 
 const withOriginGraphql = WrappedComponent => {
   class WithOriginGraphql extends Component {
@@ -26,9 +33,15 @@ const withOriginGraphql = WrappedComponent => {
       DeviceEventEmitter.addListener('graphqlError', this._handleGraphqlError)
     }
 
-    _sendGraphqlQuery = (query, variables) => {
+    _sendGraphqlQuery = (query, variables, fetchPolicy) => {
       const { promiseId, promise } = this._generatePromise()
-      DeviceEventEmitter.emit('graphqlQuery', promiseId, query, variables)
+      DeviceEventEmitter.emit(
+        'graphqlQuery',
+        promiseId,
+        query,
+        variables,
+        fetchPolicy
+      )
       return promise
     }
 
@@ -96,8 +109,16 @@ const withOriginGraphql = WrappedComponent => {
       return this._sendGraphqlQuery(identity, { id: identityAddress })
     }
 
+    getTransactionReceipt = async id => {
+      return this._sendGraphqlQuery(transactionReceipt, { id }, 'no-cache')
+    }
+
     getWallet = () => {
       return this._sendGraphqlQuery(wallet)
+    }
+
+    getGrowthEligibility = () => {
+      return this._sendGraphqlQuery(growthEligible)
     }
 
     publishIdentity = (from, profile, attestations) => {
@@ -108,14 +129,21 @@ const withOriginGraphql = WrappedComponent => {
       })
     }
 
+    growthEnroll = vars => {
+      return this._sendGraphqlMutation(growthEnroll, vars)
+    }
+
     render() {
       return (
         <WrappedComponent
-          getIdentity={this.getIdentity}
           getBalance={this.getBalance}
+          getGrowthEligibility={this.getGrowthEligibility}
+          getIdentity={this.getIdentity}
           getTokenBalance={this.getTokenBalance}
+          getTransactionReceipt={this.getTransactionReceipt}
           getWallet={this.getWallet}
           publishIdentity={this.publishIdentity}
+          growthEnroll={this.growthEnroll}
           {...this.props}
         />
       )

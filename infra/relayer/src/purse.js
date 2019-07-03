@@ -17,6 +17,7 @@ const redis = require('redis')
 const BN = require('bn.js')
 const bip39 = require('bip39')
 const hdkey = require('ethereumjs-wallet/hdkey')
+const { createEngine } = require('@origin/web3-provider')
 const {
   stringToBN,
   numberToBN,
@@ -39,6 +40,8 @@ const REDIS_TX_COUNT_PREFIX = 'txcount_'
 const REDIS_PENDING_KEY = `pending_txs`
 const REDIS_PENDING_PREFIX = `pending_tx_`
 const REDIS_PENDING_TX_PREFIX = `pending_txobj_`
+const JSONRPC_QPS = 100
+const JSONRPC_MAX_CONCURRENT = 25
 
 async function tick(wait = 1000) {
   return new Promise(resolve => setTimeout(() => resolve(true), wait))
@@ -77,6 +80,18 @@ class Purse {
   }) {
     if (!web3 || !mnemonic) {
       throw new Error('missing required parameters')
+    }
+
+    // If it's not already a web3-provider-engine provider...
+    if (
+      web3.currentProvider &&
+      typeof web3.currentProvider._providers !== 'undefined'
+    ) {
+      // init the custom provider
+      createEngine(web3, {
+        qps: JSONRPC_QPS,
+        maxConcurrent: JSONRPC_MAX_CONCURRENT
+      })
     }
 
     this.web3 = web3
@@ -365,7 +380,15 @@ class Purse {
     if (txCount < w3txCount) {
       if (txCount > 0)
         logger.warn('Transaction counts appear lower than on the chain!')
+      // Return the one from the network
       txCount = w3txCount
+      // ...and make sure redis is up to date for future instances
+      if (this.rclient && this.rclient.connected) {
+        await this.rclient.setAsync(
+          `${REDIS_TX_COUNT_PREFIX}${address}`,
+          txCount
+        )
+      }
     }
 
     return txCount
@@ -536,6 +559,7 @@ class Purse {
 
       for (const txHash of pendingHashes) {
         const tx = await this.web3.eth.getTransaction(txHash)
+        if (!tx) continue
         if (tx && this.accounts[tx.from]) {
           this.accounts[tx.from].pendingCount += 1
         }
@@ -826,7 +850,9 @@ class Purse {
 
         // Adjust the pendingCount for the account
         const checksummedFrom = this.web3.utils.toChecksumAddress(receipt.from)
-        if (this.accounts.hasOwnProperty(checksummedFrom)) {
+        if (
+          Object.prototype.hasOwnProperty.call(this.accounts, checksummedFrom)
+        ) {
           if (this.accounts[checksummedFrom].pendingCount > 0) {
             this.accounts[checksummedFrom].pendingCount -= 1
           } else {

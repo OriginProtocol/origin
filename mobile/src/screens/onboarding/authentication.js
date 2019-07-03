@@ -18,6 +18,7 @@ import { fbt } from 'fbt-runtime'
 
 import { setBiometryType } from 'actions/Settings'
 import OriginButton from 'components/origin-button'
+import CommonStyles from 'styles/common'
 
 const IMAGES_PATH = '../../../assets/images/'
 
@@ -58,8 +59,8 @@ class AuthenticationScreen extends Component {
     ].includes(this.state.biometryError.name)
 
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.content}>
+      <SafeAreaView style={styles.content}>
+        <View style={{ ...styles.container, flexGrow: 2 }}>
           {biometryPermissionDenied ? (
             <>
               <Text style={styles.title}>
@@ -116,13 +117,11 @@ class AuthenticationScreen extends Component {
             </>
           )}
         </View>
-        <View style={styles.buttonsContainer}>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
           {biometryButtonTitle && (
             <OriginButton
               size="large"
               type="primary"
-              style={styles.button}
-              textStyle={{ fontSize: 18, fontWeight: '900' }}
               title={biometryButtonTitle}
               onPress={() => {
                 TouchID.authenticate('Enable access to Origin Marketplace App')
@@ -140,8 +139,6 @@ class AuthenticationScreen extends Component {
           <OriginButton
             size="large"
             type="link"
-            style={styles.button}
-            textStyle={{ fontSize: 16, fontWeight: '900' }}
             title={fbt(
               'Create a Pin Code',
               'AuthenticationScreen.createPinCode'
@@ -170,42 +167,5 @@ export default connect(
 )(AuthenticationScreen)
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex: 1,
-    flexDirection: 'column',
-    paddingTop: 0
-  },
-  content: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1
-  },
-  image: {
-    marginBottom: '10%'
-  },
-  button: {
-    marginBottom: 20,
-    marginHorizontal: 50
-  },
-  buttonsContainer: {
-    paddingTop: 10,
-    width: '100%'
-  },
-  title: {
-    fontFamily: 'Lato',
-    fontSize: 36,
-    fontWeight: '600',
-    marginHorizontal: 50,
-    paddingBottom: 30,
-    textAlign: 'center'
-  },
-  subtitle: {
-    fontFamily: 'Lato',
-    fontSize: 20,
-    fontWeight: '600',
-    marginHorizontal: 50,
-    paddingBottom: 30,
-    textAlign: 'center'
-  }
+  ...CommonStyles
 })

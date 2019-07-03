@@ -13,6 +13,7 @@ const enums = require('../enums')
 const aprilConfig = require('../../campaigns/april.js')
 const mayConfig = require('../../campaigns/may.js')
 const juneConfig = require('../../campaigns/june.js')
+const julyConfig = require('../../campaigns/july.js')
 
 async function createTestData() {
   //
@@ -113,6 +114,19 @@ async function createTestData() {
     rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
   })
 
+  await db.GrowthCampaign.upsert({
+    id: 7,
+    nameKey: 'growth.july2019.name',
+    shortNameKey: 'growth.july2019.short_name',
+    rules: JSON.stringify(julyConfig),
+    startDate: Date.parse('June 30, 2019'),
+    endDate: Date.parse('August 1, 2019'),
+    distributionDate: Date.parse('August 1, 2019'),
+    cap: 10000 * Math.pow(10, 18),
+    capUsed: 0,
+    currency: 'OGN',
+    rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
+  })
   //
   // Participants
   //

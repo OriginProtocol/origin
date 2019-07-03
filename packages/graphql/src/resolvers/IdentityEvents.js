@@ -8,9 +8,6 @@ import { getIdsForPage, getConnection } from './_pagination'
 import validateAttestation from '../utils/validateAttestation'
 import { proxyOwner, hasProxy } from '../utils/proxy'
 
-const websiteAttestationEnabled =
-  process.env.ENABLE_WEBSITE_ATTESTATION === 'true'
-
 const progressPct = {
   firstName: 10,
   lastName: 10,
@@ -24,12 +21,12 @@ const attestationProgressPct = {
   facebook: 10,
   twitter: 10,
   google: 10,
-  airbnb: websiteAttestationEnabled ? 5 : 10,
-  website: websiteAttestationEnabled ? 5 : 0,
-  kakao: 0,
-  github: 0,
-  linkedin: 0,
-  wechat: 0
+  airbnb: 10,
+  website: 10,
+  kakao: 10,
+  github: 10,
+  linkedin: 10,
+  wechat: 10
 }
 
 function getAttestations(account, attestations) {
@@ -283,6 +280,9 @@ export function identity({ id, ipfsHash }) {
     Array.from(identity.verifiedAttestations || []).map(attestation => {
       identity.strength += attestationProgressPct[attestation.id] || 0
     })
+    if (identity.strength > 100) {
+      identity.strength = 100
+    }
 
     resolve(identity)
   })
@@ -374,24 +374,12 @@ function getAttestationProviders() {
     'facebook',
     'twitter',
     'airbnb',
-    'google'
+    'google',
+    'website',
+    'kakao',
+    'github',
+    'linkedin'
   ]
-
-  if (process.env.ENABLE_WEBSITE_ATTESTATION === 'true') {
-    ATTESTATION_PROVIDERS.push('website')
-  }
-
-  if (process.env.ENABLE_KAKAO_ATTESTATION === 'true') {
-    ATTESTATION_PROVIDERS.push('kakao')
-  }
-
-  if (process.env.ENABLE_GITHUB_ATTESTATION === 'true') {
-    ATTESTATION_PROVIDERS.push('github')
-  }
-
-  if (process.env.ENABLE_LINKEDIN_ATTESTATION === 'true') {
-    ATTESTATION_PROVIDERS.push('linkedin')
-  }
 
   if (process.env.ENABLE_WECHAT_ATTESTATION === 'true') {
     ATTESTATION_PROVIDERS.push('wechat')

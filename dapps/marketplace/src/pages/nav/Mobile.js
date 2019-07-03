@@ -203,5 +203,4 @@ require('react-styl')(`
           background-image: url(images/nav/alerts-icon.svg)
         &.settings::before
           background-image: url(images/nav/gear-icon.svg)
-
 `)

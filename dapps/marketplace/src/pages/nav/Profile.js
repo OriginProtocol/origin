@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
@@ -8,6 +8,7 @@ import Store from 'utils/store'
 import withIdentity from 'hoc/withIdentity'
 import withWallet from 'hoc/withWallet'
 import withConfig from 'hoc/withConfig'
+import withIsMobile from 'hoc/withIsMobile'
 
 import ProfileQuery from 'queries/Profile'
 
@@ -18,49 +19,71 @@ import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
 import UserActivationLink from 'components/UserActivationLink'
 
+import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
+
 const store = Store('sessionStorage')
 
-const ProfileNav = ({ identity, identityLoading, open, onOpen, onClose }) => (
-  <Query query={ProfileQuery} pollInterval={window.transactionPoll || 1000}>
-    {({ data, error }) => {
-      if (error) {
-        console.error(error)
-        return null
-      }
-      if (!get(data, 'web3.primaryAccount')) {
-        return null
-      }
+const ProfileNav = ({ identity, identityLoaded, open, onOpen, onClose }) => {
+  const EarnTokens = withEnrolmentModal('a')
 
-      return (
-        <Dropdown
-          el="li"
-          className="nav-item profile"
-          open={open}
-          onClose={() => onClose()}
-          content={
-            <ProfileDropdown
-              identity={identity}
-              identityLoading={identityLoading}
+  const [rewardsModal, setRewardsModal] = useState(false)
+
+  return (
+    <Query query={ProfileQuery} pollInterval={window.transactionPoll || 1000}>
+      {({ data, error }) => {
+        if (error) {
+          console.error(error)
+          return null
+        }
+        if (!get(data, 'web3.primaryAccount')) {
+          return null
+        }
+
+        return (
+          <>
+            <Dropdown
+              el="li"
+              className="nav-item profile"
+              open={open}
               onClose={() => onClose()}
-              data={data}
-            />
-          }
-        >
-          <a
-            className="nav-link"
-            href="#"
-            onClick={e => {
-              e.preventDefault()
-              open ? onClose() : onOpen()
-            }}
-          >
-            <Avatar profile={identity} />
-          </a>
-        </Dropdown>
-      )
-    }}
-  </Query>
-)
+              content={
+                <ProfileDropdown
+                  identity={identity}
+                  identityLoaded={identityLoaded}
+                  onClose={() => onClose()}
+                  onRewardsClick={() => {
+                    setRewardsModal(true)
+                    onClose()
+                  }}
+                  data={data}
+                />
+              }
+            >
+              <a
+                className="nav-link"
+                href="#"
+                onClick={e => {
+                  e.preventDefault()
+                  open ? onClose() : onOpen()
+                }}
+              >
+                <Avatar profile={identity} />
+              </a>
+            </Dropdown>
+            {rewardsModal && (
+              <EarnTokens
+                className="d-none"
+                startopen="true"
+                onNavigation={() => setRewardsModal(false)}
+                onClose={() => setRewardsModal(false)}
+              />
+            )}
+          </>
+        )
+      }}
+    </Query>
+  )
+}
 
 const CreateIdentity = ({ onClose }) => (
   <>
@@ -95,8 +118,16 @@ const CreateIdentity = ({ onClose }) => (
   </>
 )
 
-const Identity = ({ id, wallet, identity, identityLoading, onClose }) => {
-  if (identityLoading || !wallet) {
+const Identity = ({
+  id,
+  wallet,
+  identity,
+  identityLoaded,
+  isMobileApp,
+  onClose,
+  onRewardsClick
+}) => {
+  if (!identityLoaded || !wallet) {
     return (
       <div className="identity-loading">
         <fbt desc="nav.profile.identityLoading">
@@ -131,19 +162,21 @@ const Identity = ({ id, wallet, identity, identityLoading, onClose }) => {
           <fbt:param name="percent">{strengthPct}</fbt:param>
         </fbt>
       </div>
-      <Link
-        onClick={() => onClose()}
-        to="/profile"
+      <a
         className="btn btn-outline-primary earn-ogn"
+        onClick={onRewardsClick}
+        href="#"
       >
         <fbt desc="nav.profile.earnOGN">Earn OGN</fbt>
-      </Link>
-      <Balances
-        account={id}
-        onClose={onClose}
-        title={<fbt desc="nav.profile.walletBalance">Wallet Balances</fbt>}
-        className="pt-3 pb-3"
-      />
+      </a>
+      {!isMobileApp && (
+        <Balances
+          account={id}
+          onClose={onClose}
+          title={<fbt desc="nav.profile.walletBalance">Wallet Balances</fbt>}
+          className="pt-3 pb-3"
+        />
+      )}
     </div>
   )
 }
@@ -153,8 +186,9 @@ const ProfileDropdownRaw = ({
   wallet,
   data,
   identity,
-  identityLoading,
-  onClose
+  identityLoaded,
+  onClose,
+  onRewardsClick
 }) => {
   const { id } = data.web3.primaryAccount
   const address = `ETH Address: ${formatHash(wallet)}`
@@ -179,8 +213,9 @@ const ProfileDropdownRaw = ({
             id={id}
             wallet={walletProxy}
             identity={identity}
-            identityLoading={identityLoading}
+            identityLoaded={identityLoaded}
             onClose={onClose}
+            onRewardsClick={onRewardsClick}
           />
           <div className="eth-address">
             {address}
@@ -198,7 +233,7 @@ const ProfileDropdownRaw = ({
 
 const ProfileDropdown = withConfig(withWallet(ProfileDropdownRaw))
 
-export default withWallet(withIdentity(ProfileNav))
+export default withIsMobile(withWallet(withIdentity(ProfileNav)))
 
 require('react-styl')(`
   .dropdown .nav-link
