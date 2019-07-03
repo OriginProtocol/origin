@@ -126,6 +126,7 @@ const Transaction = props => {
               <DocumentTitle>{offer.listing.title}</DocumentTitle>
               {isMobile ? (
                 <MobileModalHeader
+                  className="px-0"
                   onBack={() => {
                     props.history.push(isSeller ? '/my-sales' : '/my-purchases')
                     window.scrollTo(0, 0)
