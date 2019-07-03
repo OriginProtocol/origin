@@ -125,7 +125,7 @@ require('react-styl')(`
     .btn-link
       > div
         &::after
-          content: " \\203A"
+          content: " ›"
         font-size: 14px
         font-weight: bold
     li

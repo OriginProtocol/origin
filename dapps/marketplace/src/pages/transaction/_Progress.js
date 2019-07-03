@@ -364,7 +364,7 @@ require('react-styl')(`
         &.small
           font-size: 16px
       &::after
-        content: " \\203A"
+        content: " ›"
       &.withdraw
         font-size: 18px
         padding-top: 0
