@@ -26,6 +26,9 @@ const TransactionCard = props => {
     ))
   }
 
+  console.debug(`Contract: ${contractName}, Function: ${functionName}`)
+  console.debug(parameters)
+
   // Calculate gas in wei
   const gasWei = global.web3.utils
     .toBN(msgData.data.gasPrice)
@@ -237,9 +240,8 @@ const TransactionCard = props => {
           size="large"
           type="primary"
           title={fbt('Confirm', 'TransactionCard.button')}
-          disabled={!hasSufficientDai || !hasSufficientEth}
+          disabled={!hasSufficientDai || !hasSufficientEth || loading}
           onPress={props.onConfirm}
-          disabled={loading}
           loading={loading}
         />
       </View>
