@@ -390,7 +390,9 @@ class UserProfile extends Component {
 
     const { profile, attestations } = this.getData()
 
-    const publishedAttestations = this.state.verifiedAttestations.reduce(
+    const publishedAttestations = (
+      this.state.verifiedAttestations || []
+    ).reduce(
       (object, att) => ({
         ...object,
         [att.id]: att.rawData
