@@ -1,5 +1,4 @@
 const addresses = require('@origin/contracts/build/contracts_rinkeby.json')
-const localStorageHas = require('./_localStorageHas')
 
 export default {
   // Web3 provider
@@ -55,5 +54,6 @@ export default {
 
   // Configs
   performanceMode: true,
-  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled')
+  proxyAccountsEnabled: true,
+  relayerEnabled: true
 }
