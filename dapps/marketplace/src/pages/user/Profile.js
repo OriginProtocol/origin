@@ -441,16 +441,17 @@ class UserProfile extends Component {
           'avatarUrl'
         ])}
         avatarUrl={this.state.avatarUrl}
-        onClose={() =>
-          this.setState({ editProfile: false, deployIdentity: 'profile' })
-        }
-        onChange={newState => {
-          this.setState({
-            unpublishedProfile: {
-              ...this.state.unpublishedProfile,
-              ...newState
-            }
-          })
+        onClose={() => this.setState({ editProfile: false })}
+        onSave={(newState, hasChanged) => {
+          if (hasChanged) {
+            this.setState({
+              unpublishedProfile: {
+                ...this.state.unpublishedProfile,
+                ...newState
+              },
+              deployIdentity: 'profile'
+            })
+          }
         }}
         lightMode={true}
       />

@@ -40,12 +40,10 @@ class OnboardEmail extends Component {
 
   render() {
     const { linkPrefix } = this.props
-    const { finished, back } = this.state
+    const { finished } = this.state
 
     if (finished) {
       return <Redirect to={`${linkPrefix}/onboard/profile`} />
-    } else if (back) {
-      return <Redirect to={`${linkPrefix}/onboard/back`} />
     }
 
     return this.renderContent()
@@ -111,7 +109,6 @@ class OnboardEmail extends Component {
       this.setState({ finished: true })
     } else {
       clearVerifiedAccounts()
-      this.setState({ back: true })
     }
   }
 }

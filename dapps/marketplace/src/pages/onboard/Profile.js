@@ -18,13 +18,20 @@ import HelpProfile from './_HelpProfile'
 
 import { getVerifiedAccounts, clearVerifiedAccounts } from 'utils/profileTools'
 
+import Store from 'utils/store'
+
+const localStore = Store('localStorage')
+
 class OnboardProfile extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
       finished: false,
-      back: false
+      back: false,
+      firstName: '',
+      lastName: '',
+      loading: true
     }
   }
 
@@ -41,15 +48,26 @@ class OnboardProfile extends Component {
       const storedAccounts = getVerifiedAccounts({
         wallet: this.props.wallet
       })
-      if (storedAccounts && storedAccounts.emailAttestation) {
-        this.setState({
-          attestations: [storedAccounts.emailAttestation]
-        })
-      } else {
+
+      if (!storedAccounts || !storedAccounts.emailAttestation) {
         this.setState({
           back: true
         })
+        return
       }
+
+      const profileData = {
+        firstName: '',
+        lastName: '',
+        avatarUrl: '',
+        ...this.getData()
+      }
+
+      this.setState({
+        ...profileData,
+        attestations: [storedAccounts.emailAttestation],
+        loading: false
+      })
     }
   }
 
@@ -73,21 +91,25 @@ class OnboardProfile extends Component {
 
   renderContent() {
     const { isMobile, listing, hideOriginWallet, wallet } = this.props
-    const { deployIdentity, attestations } = this.state
+    const { deployIdentity, attestations, loading } = this.state
 
-    const content = (
+    const profile = pick(this.state, ['firstName', 'lastName', 'avatarUrl'])
+
+    const content = loading ? (
+      <fbt desc="Loading...">Loading...</fbt>
+    ) : (
       <>
         <EditProfile
           onChange={data => this.onChange(data)}
-          onAvatarChange={data => this.onAvatarChange(data)}
-          onClose={() => this.onCompleted()}
+          onSave={() => this.setState({ signTxModal: true })}
           onboarding={true}
+          {...profile}
         />
         {deployIdentity && (
           <DeployIdentity
             autoDeploy={true}
             identity={wallet}
-            profile={pick(this.state, ['firstName', 'lastName', 'avatarUrl'])}
+            profile={profile}
             attestations={attestations}
             skipSuccessScreen={true}
             onComplete={() => {
@@ -184,25 +206,29 @@ class OnboardProfile extends Component {
   }
 
   onChange(data) {
-    if (data) {
-      this.setState({
-        firstName: data.firstName,
-        lastName: data.lastName
-      })
+    const profileData = {
+      ...this.getData(),
+      firstName: data.firstName,
+      lastName: data.lastName,
+      avatarUrl: data.avatarUrl
     }
-  }
 
-  onAvatarChange(avatarUrl) {
-    this.setState({ avatarUrl })
+    this.storeData(profileData)
+    this.setState(profileData)
   }
 
   onBack() {
     clearVerifiedAccounts()
+
     this.setState({ back: true })
   }
 
-  onCompleted() {
-    this.setState({ signTxModal: true })
+  getData() {
+    return localStore.get(`${this.props.wallet}-onboarding-data`)
+  }
+
+  storeData(profileData) {
+    localStore.set(`${this.props.wallet}-onboarding-data`, profileData)
   }
 }
 
