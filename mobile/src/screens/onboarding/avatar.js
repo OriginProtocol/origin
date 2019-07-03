@@ -64,6 +64,8 @@ class AvatarScreen extends Component {
         90,
         response.originalRotation
       )
+      // Required for Android or the network request will fail
+      outImage.type = 'image/jpeg'
 
       // Create form data, origin-ipfs-proxy uses Busboy which only parses multiple
       // multipart/form-data and application/x-www-form-urlencoded requests
