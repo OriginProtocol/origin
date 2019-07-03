@@ -189,7 +189,7 @@ const ProfileDropdownRaw = ({
 }) => {
   const { id } = data.web3.primaryAccount
   const address = `ETH Address: ${formatHash(wallet)}`
-  const devMode = window.localStorage.devModeEnabled
+  const devMode = window.localStorage.devModeEnabled === 'true'
 
   return (
     <>
