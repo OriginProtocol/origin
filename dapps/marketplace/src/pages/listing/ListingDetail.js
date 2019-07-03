@@ -262,8 +262,6 @@ class ListingDetail extends Component {
             event.returnValues.party === this.props.walletProxy
         )
 
-    console.log(offers)
-
     if (isListingCreator) {
       return (
         <EditOnly
