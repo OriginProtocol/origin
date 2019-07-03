@@ -386,6 +386,7 @@ require('react-styl')(`
         padding: 0 15px
         flex: 50% 1 1
         width: 50%
+        max-width: 50%
 
     .seller-info
       display: flex
@@ -548,6 +549,7 @@ require('react-styl')(`
             box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3)
         .listing-info
           width: 100%
+          max-width: 100%
           .heading h2
             font-size: 26px
             margin-bottom: 1rem
