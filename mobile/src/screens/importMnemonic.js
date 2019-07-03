@@ -119,9 +119,7 @@ class ImportAccountScreen extends Component {
                 onSubmitEditing={this.handleSubmit}
                 style={[styles.input, this.state.error ? styles.invalid : {}]}
               />
-              <Text style={styles.invalid}>
-                {this.state.error}
-              </Text>
+              <Text style={styles.invalid}>{this.state.error}</Text>
             </View>
             <View style={{ ...styles.container, ...styles.buttonContainer }}>
               <OriginButton
@@ -130,7 +128,11 @@ class ImportAccountScreen extends Component {
                 title={fbt('Continue', 'ImportMnemonicScreen.continueButton')}
                 onPress={this.handleSubmit}
                 loading={this.state.loading}
-                disabled={this.state.loading || this.state.value.length ===  0 || this.state.error}
+                disabled={
+                  this.state.loading ||
+                  this.state.value.length === 0 ||
+                  this.state.error
+                }
               />
             </View>
           </ScrollView>

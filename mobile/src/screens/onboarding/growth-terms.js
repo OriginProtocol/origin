@@ -182,9 +182,7 @@ class GrowthTermsScreen extends Component {
             style={styles.backArrow}
           />
           <Text style={styles.title}>
-            <fbt desc="GrowthTermsScreen.termsTitle">
-             Origin Rewards Terms
-            </fbt>
+            <fbt desc="GrowthTermsScreen.termsTitle">Origin Rewards Terms</fbt>
           </Text>
         </View>
         <View style={{ ...styles.container }}>
@@ -199,10 +197,10 @@ class GrowthTermsScreen extends Component {
               Earned OGN will be distributed at the end of each campaign. OGN is
               currently locked for usage on the Origin platform and cannot be
               transferred. It is expected that OGN will be unlocked and
-              transferrable in the future.
-              By joining the Origin rewards program, you agree that you will not
-              transfer or sell future earned Origin tokens to other for at least
-              1 year from the date of earning your tokens.
+              transferrable in the future. By joining the Origin rewards
+              program, you agree that you will not transfer or sell future
+              earned Origin tokens to other for at least 1 year from the date of
+              earning your tokens.
             </fbt>
           </Text>
           <View style={styles.termsHighlightContainer}>
