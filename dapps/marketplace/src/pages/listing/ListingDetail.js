@@ -152,12 +152,11 @@ class ListingDetail extends Component {
   }
 
   renderNavBar() {
-    const search = get(this.props, 'location.search')
     const history = get(this.props, 'history')
 
     return (
       <>
-        {search && <Search className="search" placeholder />}
+        {<Search className="search" placeholder />}
         {history && history.length > 1 && (
           <button
             className="btn btn-link btn-back-link"
@@ -262,6 +261,8 @@ class ListingDetail extends Component {
             event.event === 'OfferCreated' &&
             event.returnValues.party === this.props.walletProxy
         )
+
+    console.log(offers)
 
     if (isListingCreator) {
       return (
@@ -544,6 +545,9 @@ require('react-styl')(`
         .listing-media
           padding: 15px
           width: 100%
+          .gallery-scroll-wrap
+            border-radius: 10px
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3)
         .listing-info
           width: 100%
           .heading h2
