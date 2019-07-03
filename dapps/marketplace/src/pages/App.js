@@ -97,13 +97,19 @@ class App extends Component {
     const hideNavbar =
       (!this.props.location.pathname.match(/^\/welcome\/onboard.*$/g) &&
         this.props.location.pathname.match(/^\/welcome.*$/g)) ||
+      (isMobile && this.props.location.pathname.match(/^\/purchases\/.*$/g)) ||
       (isMobile &&
         this.props.location.pathname.match(/^\/campaigns\/purchases$/g)) ||
       (isMobile &&
         this.props.location.pathname.match(/^\/campaigns\/invitations$/g)) ||
       (isMobile &&
         this.props.location.pathname.match(/^\/campaigns\/verifications$/g)) ||
-      (isMobile && this.props.location.pathname.match(/\/onboard\/finished/g))
+      (isMobile &&
+        this.props.location.pathname.match(/\/onboard\/finished/g)) ||
+      (isMobile && this.props.location.pathname.match(/\/user\/.+/)) ||
+      (isMobile &&
+        (this.props.history.length > 1 || this.props.location.search) &&
+        this.props.location.pathname.match(/\/listing\/.+/))
 
     return (
       <CurrencyContext.Provider value={this.props.currency}>
@@ -121,7 +127,7 @@ class App extends Component {
             <Route path="/my-sales/:filter?" component={MySales} />
             <Route path="/my-listings/:filter?" component={MyListings} />
             <Route path="/create" component={CreateListing} />
-            <Route path="/user/:id" component={User} />
+            <Route path="/user/:id/:content?" component={User} />
             <Route path="/profile/:attestation?" component={Profile} />
             <Route path="/messages/:room?" component={Messages} />
             <Route path="/notifications" component={Notifications} />

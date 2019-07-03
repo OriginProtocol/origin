@@ -33,7 +33,8 @@ class Settings extends Component {
     this.state = {
       ...Object.assign(...configurableFields.map(key => ({ [key]: '' }))),
       ...pick(this.props.config, configurableFields),
-      devModeEnabled: window.localStorage.devModeEnabled ? true : false
+      devModeEnabled:
+        window.localStorage.devModeEnabled === 'true' ? true : false
     }
 
     this.saveConfig = this.saveConfig.bind(this)
@@ -104,7 +105,16 @@ class Settings extends Component {
 
   render() {
     const input = formInput(this.state, state => this.setState(state))
-    const { locale, onLocale, currency, onCurrency } = this.props
+    const { locale, onLocale, currency, onCurrency, config } = this.props
+
+    const proxyAccountsEnabled = devModeSettings.get(
+      'proxyAccountsEnabled',
+      config.proxyAccountsEnabled ? true : false
+    )
+    const relayerEnabled = devModeSettings.get(
+      'relayerEnabled',
+      config.relayerEnabled ? true : false
+    )
 
     return (
       <Mutation
@@ -223,10 +233,9 @@ class Settings extends Component {
                       </div>
                       <div className="col">
                         <Toggle
-                          toggled={true}
-                          initialToggleState={this.state.devModeEnabled}
+                          value={this.state.devModeEnabled}
                           className="float-right"
-                          onClickHandler={on =>
+                          onChange={on =>
                             this.toggleDeveloperMode(setNetwork, on)
                           }
                         />
@@ -340,13 +349,9 @@ class Settings extends Component {
                         </div>
                         <div className="col-sm d-flex align-items-center">
                           <Toggle
-                            toggled={true}
-                            initialToggleState={devModeSettings.get(
-                              'proxyAccountsEnabled',
-                              false
-                            )}
+                            value={proxyAccountsEnabled}
                             className="mt-0"
-                            onClickHandler={on => {
+                            onChange={on => {
                               devModeSettings.set('proxyAccountsEnabled', on)
                               window.location.reload()
                             }}
@@ -357,27 +362,16 @@ class Settings extends Component {
                         <div className="col-sm">
                           <label htmlFor="indexing">
                             <fbt desc="settings.relayerToggleLabel">
-                              Enable Relayer
+                              Relayer Enabled
                             </fbt>
                           </label>
-                          <div className="form-text form-text-muted pt-1">
-                            <small className="mt-1">
-                              <fbt desc="settings.enableRisk">
-                                Warning: enable at your own risk!
-                              </fbt>
-                            </small>
-                          </div>
                         </div>
                         <div className="col-sm d-flex align-items-center">
                           <Toggle
-                            toggled={true}
-                            initialToggleState={devModeSettings.get(
-                              'enableRelayer',
-                              false
-                            )}
                             className="mt-0"
-                            onClickHandler={on => {
-                              devModeSettings.set('enableRelayer', on)
+                            value={relayerEnabled}
+                            onChange={on => {
+                              devModeSettings.set('relayerEnabled', on)
                               window.location.reload()
                             }}
                           />
