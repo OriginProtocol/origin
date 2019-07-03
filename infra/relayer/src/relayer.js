@@ -44,6 +44,10 @@ if (isTestEnv) {
   ContractAddresses['999'] = '@origin/contracts/build/tests.json'
 }
 
+const normalizeAddress = addr => {
+  return addr.toLowerCase()
+}
+
 const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
   const signedData = web3.utils.soliditySha3(
     { t: 'address', v: from },
@@ -70,7 +74,7 @@ const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
     const pub = utils.ecrecover(prefixedMsg, v, r, s)
     const address = '0x' + utils.pubToAddress(pub).toString('hex')
 
-    return address.toLowerCase() === from.toLowerCase()
+    return normalizeAddress(address) === normalizeAddress(from)
   } catch (e) {
     logger.error('error recovering', e)
     return false
@@ -228,7 +232,9 @@ class Relayer {
     try {
       // If no proxy was specified assume the request is to deploy a proxy...
       if (!proxy) {
-        if (to !== this.addresses.ProxyFactory) {
+        if (
+          normalizeAddress(to) !== normalizeAddress(this.addresses.ProxyFactory)
+        ) {
           throw new Error('Incorrect ProxyFactory address provided')
         } else if (method.name !== 'createProxyWithSenderNonce') {
           throw new Error('Incorrect ProxyFactory method provided')
