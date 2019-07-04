@@ -87,7 +87,7 @@ class Dropdown extends Component {
       this.props.onClose()
     }
 
-    this.setState({ open: false})
+    this.setState({ open: false })
   }
 
   onTouchStart(e) {
@@ -95,7 +95,9 @@ class Dropdown extends Component {
       return
     }
 
-    const { targetTouches: [event] } = e
+    const {
+      targetTouches: [event]
+    } = e
     this.setState({
       firstClientX: event.clientX
     })
@@ -106,7 +108,9 @@ class Dropdown extends Component {
       return
     }
 
-    const { targetTouches: [event] } = e
+    const {
+      targetTouches: [event]
+    } = e
 
     const { firstClientX } = this.state
     const lastClientX = event.clientX
@@ -120,7 +124,10 @@ class Dropdown extends Component {
 
     if (this.props.onSwipeMove) {
       this.props.onSwipeMove({
-        progress: (canSwipeRight && rightSwipe || canSwipeLeft && leftSwipe) ? Math.abs(progress) : null
+        progress:
+          (canSwipeRight && rightSwipe) || (canSwipeLeft && leftSwipe)
+            ? Math.abs(progress)
+            : null
       })
     }
 
@@ -149,7 +156,10 @@ class Dropdown extends Component {
       this.props.onSwipeEnd(absProgress)
     }
 
-    if ((canSwipeRight && rightSwipe || canSwipeLeft && leftSwipe) && absProgress > 35) {
+    if (
+      ((canSwipeRight && rightSwipe) || (canSwipeLeft && leftSwipe)) &&
+      absProgress > 35
+    ) {
       // Close if swiped for > 35% of screen's width
       this.doClose()
     }
