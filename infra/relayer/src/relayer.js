@@ -1,5 +1,6 @@
 'use strict'
 
+const memoize = require('lodash/memoize')
 const Web3 = require('web3')
 const utils = require('ethereumjs-util')
 const ProxyFactoryContract = require('@origin/contracts/build/contracts/ProxyFactory_solc')
@@ -81,6 +82,25 @@ const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
   }
 }
 
+const proxyCreationCode = memoize(async (web3, ProxyFactory, ProxyImp) => {
+  let code = await ProxyFactory.methods.proxyCreationCode().call()
+  code += web3.eth.abi.encodeParameter('uint256', ProxyImp._address).slice(2)
+  return code
+})
+
+async function predictedProxy(web3, ProxyFactory, ProxyImp, address) {
+  const salt = web3.utils.soliditySha3(address, 0)
+  const creationCode = await proxyCreationCode(web3, ProxyFactory, ProxyImp)
+  const creationHash = web3.utils.sha3(creationCode)
+
+  // Expected proxy address can be worked out thus:
+  const create2hash = web3.utils
+    .soliditySha3('0xff', ProxyFactory._address, salt, creationHash)
+    .slice(-40)
+
+  return web3.utils.toChecksumAddress(`0x${create2hash}`)
+}
+
 class Relayer {
   /**
    *
@@ -111,10 +131,16 @@ class Relayer {
       redisHost: env.REDIS_URL
     })
 
-    this.ProxyFactory = new this.web3.eth.Contract(ProxyFactoryContract.abi)
+    this.ProxyFactory = new this.web3.eth.Contract(
+      ProxyFactoryContract.abi,
+      this.addresses.ProxyFactory
+    )
     this.Marketplace = new this.web3.eth.Contract(MarketplaceContract.abi)
     this.IdentityEvents = new this.web3.eth.Contract(IdentityEventsContract.abi)
-    this.IdentityProxy = new this.web3.eth.Contract(IdentityProxyContract.abi)
+    this.IdentityProxy = new this.web3.eth.Contract(
+      IdentityProxyContract.abi,
+      this.addresses.IdentityProxyImplementation
+    )
 
     this.methods = {}
     this.Marketplace._jsonInterface
@@ -206,12 +232,37 @@ class Relayer {
       return res.send({ success: accept })
     }
 
-    const IdentityProxy = this.IdentityProxy.clone()
-    IdentityProxy.options.address = proxy
+    const UserProxy = this.IdentityProxy.clone()
+    UserProxy.options.address = proxy
+
+    // For proxy verification
+    const predictedAddress = await predictedProxy(
+      web3,
+      this.ProxyFactory,
+      this.IdentityProxy,
+      from
+    )
+    const code = await web3.eth.getCode(predictedAddress)
 
     let nonce = 0
     if (proxy) {
-      nonce = await IdentityProxy.methods.nonce(from).call()
+      // Verify a proxy exists
+      if (code === '0x') {
+        logger.error(
+          `Proxy does not exist at ${predictedAddress} for user ${from}`
+        )
+        return res.status(400).send({ errors: ['Proxy exists'] })
+      }
+
+      nonce = await UserProxy.methods.nonce(from).call()
+    } else {
+      // Verify a proxy doesn't already exist
+      if (code !== '0x') {
+        logger.error(
+          `Proxy already exists at ${predictedAddress} for user ${from}`
+        )
+        return res.status(400).send({ errors: ['Proxy exists'] })
+      }
     }
 
     const args = { to, from, signature, txData, web3, nonce }
@@ -253,7 +304,7 @@ class Relayer {
       } else {
         logger.debug('Forwarding transaction to ' + to)
 
-        const data = IdentityProxy.methods
+        const data = UserProxy.methods
           .forward(to, signature, from, txData)
           .encodeABI()
         // const gas = await rawTx.estimateGas({ from: Forwarder })

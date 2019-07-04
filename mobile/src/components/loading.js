@@ -46,9 +46,10 @@ const styles = {
     justifyContent: 'center'
   },
   indicatorText: {
+    fontFamily: 'Lato',
     marginLeft: 10,
     color: 'white',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600'
   }
 }
