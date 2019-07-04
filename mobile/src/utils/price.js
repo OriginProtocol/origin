@@ -21,8 +21,8 @@ const EXCHANGE_RATE_CACHE_TTL = 2 * 60 * 1000 // 2 minutes
  */
 
 export const fetchRate = async (fiatCurrencyCode, cryptoCurrencyCode) => {
-  const cryptoParam = cryptoCurrencyCode.toLowerCase()
-  const fiatParam = fiatCurrencyCode.toLowerCase()
+  const cryptoParam = cryptoCurrencyCode.toUpperCase()
+  const fiatParam = fiatCurrencyCode.toUpperCase()
 
   const settings = store.getState().settings
   const config = Configs[settings.network.name.toLowerCase()]
