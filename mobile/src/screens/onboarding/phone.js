@@ -366,8 +366,10 @@ const mapStateToProps = ({ onboarding, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  addAttestation: phoneAttestation => dispatch(addAttestation(phoneAttestation)),
-  addSkippedAttestation: attestationName => dispatch(addSkippedAttestation(attestationName))
+  addAttestation: phoneAttestation =>
+    dispatch(addAttestation(phoneAttestation)),
+  addSkippedAttestation: attestationName =>
+    dispatch(addSkippedAttestation(attestationName))
 })
 
 export default withConfig(
