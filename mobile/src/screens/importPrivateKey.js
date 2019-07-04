@@ -16,6 +16,7 @@ import { fbt } from 'fbt-runtime'
 
 import { setBackupWarningStatus } from 'actions/Activation'
 import { importAccountFromPrivateKey } from 'actions/Wallet'
+import BackArrow from 'components/back-arrow'
 import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'
 import OnboardingStyles from 'styles/onboarding'
@@ -25,15 +26,14 @@ class ImportAccountScreen extends Component {
     super(props)
     this.state = {
       value: '',
-      error: ''
+      error: null
     }
   }
 
-  componentDidUpdate() {
-    const { value, error } = this.state
-    // Remove the error if no value
-    if (error && !value) {
-      this.setState({ error: '' })
+  componentDidUpdate(prevProps, prevState) {
+    // Remove the error if value has changed
+    if (prevState.value !== this.state.value) {
+      this.setState({ error: null })
     }
   }
 
@@ -72,7 +72,7 @@ class ImportAccountScreen extends Component {
     // Reset state of component
     this.setState({
       value: '',
-      error: '',
+      error: null,
       loading: false
     })
 
@@ -95,12 +95,18 @@ class ImportAccountScreen extends Component {
             contentContainerStyle={styles.content}
             keyboardShouldPersistTaps={'always'}
           >
-            <View style={styles.container}>
+            <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
+              <BackArrow
+                onClick={() => this.props.navigation.goBack(null)}
+                style={styles.backArrow}
+              />
               <Text style={styles.title}>
                 <fbt desc="ImportPrivateKeyScreen.privateKeyTitle">
                   Enter Private Key
                 </fbt>
               </Text>
+            </View>
+            <View style={styles.container}>
               <TextInput
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -108,22 +114,25 @@ class ImportAccountScreen extends Component {
                 multiline={true}
                 returnKeyType="done"
                 blurOnSubmit={true}
-                onChangeText={value => this.setState({ value })}
+                onChangeText={value => this.setState({ value: value.trim() })}
+                value={this.state.value}
                 onSubmitEditing={this.handleSubmit}
                 style={[styles.input, this.state.error ? styles.invalid : {}]}
               />
-              {this.state.error.length > 0 && (
-                <Text style={styles.invalid}>{this.state.error}</Text>
-              )}
+              <Text style={styles.invalid}>{this.state.error}</Text>
             </View>
-            <View style={{ ...styles.container, justifyContent: 'flex-end' }}>
+            <View style={{ ...styles.container, ...styles.buttonContainer }}>
               <OriginButton
                 size="large"
                 type="primary"
                 title={fbt('Continue', 'ImportPrivateKeyScreen.continueButton')}
                 onPress={this.handleSubmit}
                 loading={this.state.loading}
-                disabled={this.state.loading}
+                disabled={
+                  this.state.loading ||
+                  this.state.value.length === 0 ||
+                  this.state.error
+                }
               />
             </View>
           </ScrollView>
