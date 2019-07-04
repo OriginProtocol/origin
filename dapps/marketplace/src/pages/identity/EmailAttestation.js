@@ -201,7 +201,9 @@ class EmailAttestation extends Component {
     }
 
     const placeholder = onboarding ? (
-      <fbt desc="EmailAttestation.onboarding.enterCode">Enter code</fbt>
+      <fbt desc="EmailAttestation.onboarding.enterCode">
+        Enter verification code
+      </fbt>
     ) : (
       <fbt desc="EmailAttestation.verifyCode">Verification code</fbt>
     )
@@ -299,7 +301,7 @@ class EmailAttestation extends Component {
                     type="tel"
                     maxLength="6"
                     ref={ref => (this.inputRef = ref)}
-                    className="form-control form-control-lg"
+                    className="form-control form-control-lg text-center"
                     placeholder={placeholder}
                     value={this.state.code}
                     onChange={e => this.setState({ code: e.target.value })}

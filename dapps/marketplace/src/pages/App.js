@@ -106,10 +106,7 @@ class App extends Component {
         this.props.location.pathname.match(/^\/campaigns\/verifications$/g)) ||
       (isMobile &&
         this.props.location.pathname.match(/\/onboard\/finished/g)) ||
-      (isMobile && this.props.location.pathname.match(/\/user\/.+/)) ||
-      (isMobile &&
-        (this.props.history.length > 1 || this.props.location.search) &&
-        this.props.location.pathname.match(/\/listing\/.+/))
+      (isMobile && this.props.location.pathname.match(/\/user\/.+/))
 
     return (
       <CurrencyContext.Provider value={this.props.currency}>

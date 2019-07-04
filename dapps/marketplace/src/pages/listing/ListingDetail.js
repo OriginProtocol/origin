@@ -152,12 +152,11 @@ class ListingDetail extends Component {
   }
 
   renderNavBar() {
-    const search = get(this.props, 'location.search')
     const history = get(this.props, 'history')
 
     return (
       <>
-        {search && <Search className="search" placeholder />}
+        {<Search className="search" placeholder />}
         {history && history.length > 1 && (
           <button
             className="btn btn-link btn-back-link"
@@ -387,6 +386,7 @@ require('react-styl')(`
         padding: 0 15px
         flex: 50% 1 1
         width: 50%
+        max-width: 50%
 
     .seller-info
       display: flex
@@ -544,8 +544,12 @@ require('react-styl')(`
         .listing-media
           padding: 15px
           width: 100%
+          .gallery-scroll-wrap
+            border-radius: 10px
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3)
         .listing-info
           width: 100%
+          max-width: 100%
           .heading h2
             font-size: 26px
             margin-bottom: 1rem

@@ -43,10 +43,16 @@ class ImportedScreen extends Component {
     }
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.loadIdentity()
+  }
+
+  loadIdentity = async () => {
     let response
     try {
-      response = await this.props.getIdentity()
+      response = await this.props.getIdentity(
+        this.props.wallet.activeAccount.address
+      )
     } catch (error) {
       // Skip, identity couldn't be loaded
       console.warn(error)
@@ -110,12 +116,12 @@ class ImportedScreen extends Component {
 
     return (
       <>
-        <View style={styles.container}>
-          {avatarUrl && (
+        <View style={{ ...styles.container, flexGrow: 2 }}>
+          {avatarUrl !== undefined && (
             <>
               <Avatar
                 source={avatarUrl}
-                size={120}
+                size={100}
                 style={{ marginBottom: 30 }}
               />
             </>
@@ -210,8 +216,8 @@ class ImportedScreen extends Component {
               `Oops, wait. Let's start over...`,
               'ImportedScreen.startOverButton'
             )}
-            onPress={() => {
-              this.props.removeAccount(this.props.wallet.activeAccount.address)
+            onPress={async () => {
+              await this.props.removeAccount(this.props.wallet.activeAccount)
               this.props.navigation.navigate('Welcome')
             }}
           />
