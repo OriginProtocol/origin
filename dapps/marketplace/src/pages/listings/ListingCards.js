@@ -7,6 +7,9 @@ import ListingBadge from 'components/ListingBadge'
 import Category from 'components/Category'
 import withGrowthRewards from 'hoc/withGrowthRewards'
 
+import EarnTokensListing from './_EarnTokensCard'
+import CreateListingCard from './_CreateListingCard'
+
 function altClick(e) {
   return e.button === 0 && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey
 }
@@ -21,6 +24,14 @@ const ListingCards = ({
   const [redirect, setRedirect] = useState()
   if (!listings) return null
 
+  const listingToRender = [
+    ...listings.slice(0, 2),
+    { id: 'earn-tokens-card' },
+    ...listings.slice(2, 4),
+    { id: 'create-listing-card' },
+    ...listings.slice(4)
+  ]
+
   return (
     <div
       className={`listing-cards${
@@ -28,52 +39,60 @@ const ListingCards = ({
       }${compact ? ' listing-compact-cards' : ''}`}
     >
       {redirect && <Redirect to={redirect} push />}
-      {listings.map(a => (
-        <div
-          key={a.id}
-          onClick={e => {
-            if (altClick(e)) {
-              setRedirect(`/listing/${a.id}`)
-            } else if (e.target.tagName !== 'A') {
-              window.open(`#/listing/${a.id}`, '_blank')
-            }
-          }}
-          className="listing-card"
-        >
-          {a.media && a.media.length ? (
-            <div
-              className="main-pic"
-              style={{
-                backgroundImage: `url(${a.media[0].urlExpanded})`
-              }}
-            />
-          ) : (
-            <div className="main-pic empty" />
-          )}
-          {hideCategory ? null : (
-            <div className="header">
-              <div className="category">
-                <Category listing={a} showPrimary={false} />
+      {listingToRender.map(a => {
+        if (a.id === 'create-listing-card') {
+          return <CreateListingCard key={a.id} />
+        } else if (a.id === 'earn-tokens-card') {
+          return <EarnTokensListing key={a.id} />
+        }
+
+        return (
+          <div
+            key={a.id}
+            onClick={e => {
+              if (altClick(e)) {
+                setRedirect(`/listing/${a.id}`)
+              } else if (e.target.tagName !== 'A') {
+                window.open(`#/listing/${a.id}`, '_blank')
+              }
+            }}
+            className="listing-card"
+          >
+            {a.media && a.media.length ? (
+              <div
+                className="main-pic"
+                style={{
+                  backgroundImage: `url(${a.media[0].urlExpanded})`
+                }}
+              />
+            ) : (
+              <div className="main-pic empty" />
+            )}
+            {hideCategory ? null : (
+              <div className="header">
+                <div className="category">
+                  <Category listing={a} showPrimary={false} />
+                </div>
+                <ListingBadge status={a.status} featured={a.featured} />
               </div>
-              <ListingBadge status={a.status} featured={a.featured} />
-            </div>
-          )}
-          <h5>
-            <a href={`#/listing/${a.id}`}>{a.title}</a>
-          </h5>
-          {a.__typename === 'AnnouncementListing' ? null : (
-            <div className="price d-flex align-items-center">
-              <Price listing={a} descriptor />
-              {ognListingRewards[a.id] && (
-                <OgnBadge
-                  amount={ognListingRewards[a.id]}
-                  className="listing-card-growth-reward"
-                />
-              )}
-            </div>
-          )}
-        </div>
-      ))}
+            )}
+            <h5>
+              <a href={`#/listing/${a.id}`}>{a.title}</a>
+            </h5>
+            {a.__typename === 'AnnouncementListing' ? null : (
+              <div className="price d-flex align-items-center">
+                <Price listing={a} descriptor />
+                {ognListingRewards[a.id] && (
+                  <OgnBadge
+                    amount={ognListingRewards[a.id]}
+                    className="listing-card-growth-reward"
+                  />
+                )}
+              </div>
+            )}
+          </div>
+        )
+      })}
     </div>
   )
 }
