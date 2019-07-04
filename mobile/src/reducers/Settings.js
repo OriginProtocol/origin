@@ -3,8 +3,8 @@
 import { SettingsConstants } from 'actions/Settings'
 import { NETWORKS } from '../constants'
 
-defaultNetwork = NETWORKS.find(n => n.name === 'Mainnet')
-// defaultNetwork = NETWORKS.find(n => n.name === 'Rinkeby')
+const defaultNetwork = NETWORKS.find(n => n.name === 'Mainnet')
+// const defaultNetwork = NETWORKS.find(n => n.name === 'Rinkeby')
 
 const initialState = {
   network: defaultNetwork,
