@@ -44,12 +44,14 @@ function getAttestations(account, attestations) {
       if (get(attestation, 'data.attestation.email.verified', false)) {
         return {
           id: 'email',
+          rawData: JSON.stringify(attestation),
           properties: [issuedDate]
         }
       }
       if (get(attestation, 'data.attestation.phone.verified', false)) {
         return {
           id: 'phone',
+          rawData: JSON.stringify(attestation),
           properties: [issuedDate]
         }
       }
@@ -69,6 +71,7 @@ function getAttestations(account, attestations) {
         }
         return {
           id: 'website',
+          rawData: JSON.stringify(attestation),
           properties: [{ type: 'domainName', value: domainName }, issuedDate]
         }
       }
@@ -77,16 +80,19 @@ function getAttestations(account, attestations) {
 
       const userId = {
         type: 'userId',
+        rawData: JSON.stringify(attestation),
         value: get(attestation, 'data.attestation.site.userId.raw')
       }
 
       const username = {
         type: 'username',
+        rawData: JSON.stringify(attestation),
         value: get(attestation, 'data.attestation.site.username.raw')
       }
 
       const profileUrl = {
         type: 'profileUrl',
+        rawData: JSON.stringify(attestation),
         value: get(attestation, 'data.attestation.site.profileUrl.raw')
       }
 
@@ -94,41 +100,49 @@ function getAttestations(account, attestations) {
         case 'facebook.com':
           return {
             id: 'facebook',
+            rawData: JSON.stringify(attestation),
             properties: [issuedDate]
           }
         case 'airbnb.com':
           return {
             id: 'airbnb',
+            rawData: JSON.stringify(attestation),
             properties: [issuedDate, userId]
           }
         case 'twitter.com':
           return {
             id: 'twitter',
+            rawData: JSON.stringify(attestation),
             properties: [issuedDate, userId, username, profileUrl]
           }
         case 'google.com':
           return {
             id: 'google',
+            rawData: JSON.stringify(attestation),
             properties: [issuedDate, userId, username]
           }
         case 'kakao.com':
           return {
             id: 'kakao',
+            rawData: JSON.stringify(attestation),
             properties: [issuedDate, userId]
           }
         case 'github.com':
           return {
             id: 'github',
+            rawData: JSON.stringify(attestation),
             properties: [issuedDate, userId, username, profileUrl]
           }
         case 'linkedin.com':
           return {
             id: 'linkedin',
+            rawData: JSON.stringify(attestation),
             properties: [issuedDate, userId]
           }
         case 'wechat.com':
           return {
             id: 'wechat',
+            rawData: JSON.stringify(attestation),
             properties: [issuedDate, userId]
           }
       }

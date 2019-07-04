@@ -29,7 +29,7 @@ export default StyleSheet.create({
   // General title styling
   title: {
     fontFamily: 'Lato',
-    fontSize: smallScreen ? 28 : 36,
+    fontSize: smallScreen ? 28 : 34,
     fontWeight: '600',
     paddingTop: 20,
     paddingBottom: 20,

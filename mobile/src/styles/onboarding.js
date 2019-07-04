@@ -27,6 +27,6 @@ export default StyleSheet.create({
   backArrow: {
     position: 'absolute',
     left: -10,
-    top: 18
+    top: 16
   }
 })
