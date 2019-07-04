@@ -4,6 +4,9 @@ class Dropdown extends Component {
   constructor(props) {
     super(props)
     this.onBlur = this.onBlur.bind(this)
+    this.onTouchStart = this.onTouchStart.bind(this)
+    this.onTouchMove = this.onTouchMove.bind(this)
+    this.onTouchEnd = this.onTouchEnd.bind(this)
     this.state = {
       open: false
     }
@@ -47,6 +50,11 @@ class Dropdown extends Component {
     }
 
     document.addEventListener('click', this.onBlur)
+    if (this.props.canSwipeLeft || this.props.canSwipeRight) {
+      document.body.addEventListener('touchstart', this.onTouchStart)
+      document.body.addEventListener('touchend', this.onTouchEnd)
+      document.body.addEventListener('touchmove', this.onTouchMove)
+    }
 
     this.setState({ open: true })
     setTimeout(() => this.dropdownEl.classList.add('show'), 10)
@@ -58,6 +66,11 @@ class Dropdown extends Component {
     }
 
     document.removeEventListener('click', this.onBlur)
+    if (this.props.canSwipeLeft || this.props.canSwipeRight) {
+      document.body.removeEventListener('touchstart', this.onTouchStart)
+      document.body.removeEventListener('touchend', this.onTouchEnd)
+      document.body.removeEventListener('touchmove', this.onTouchMove)
+    }
 
     this.dropdownEl.classList.remove('show')
     if (this.props.onClose) {
@@ -75,6 +88,80 @@ class Dropdown extends Component {
     }
 
     this.setState({ open: false})
+  }
+
+  onTouchStart(e) {
+    if (this.state.closing || !this.state.open) {
+      return
+    }
+
+    const { targetTouches: [event] } = e
+    this.setState({
+      firstClientX: event.clientX
+    })
+  }
+
+  onTouchMove(e) {
+    if (this.state.closing || !this.state.open) {
+      return
+    }
+
+    const { targetTouches: [event] } = e
+
+    const { firstClientX } = this.state
+    const lastClientX = event.clientX
+
+    const progress = 100 * ((lastClientX - firstClientX) / window.screen.width)
+
+    const { canSwipeRight, canSwipeLeft } = this.props
+
+    const rightSwipe = progress >= 0
+    const leftSwipe = progress < 0
+
+    if (this.props.onSwipeMove) {
+      this.props.onSwipeMove({
+        progress: (canSwipeRight && rightSwipe || canSwipeLeft && leftSwipe) ? Math.abs(progress) : null
+      })
+    }
+
+    this.setState({
+      lastClientX: event.clientX
+    })
+  }
+
+  onTouchEnd() {
+    if (this.state.closing || !this.state.open) {
+      return
+    }
+
+    const { lastClientX, firstClientX } = this.state
+
+    const progress = 100 * ((lastClientX - firstClientX) / window.screen.width)
+
+    const { canSwipeRight, canSwipeLeft } = this.props
+
+    const rightSwipe = progress >= 0
+    const leftSwipe = progress < 0
+
+    const absProgress = Math.abs(progress)
+
+    if (this.props.onSwipeEnd) {
+      this.props.onSwipeEnd(absProgress)
+    }
+
+    if ((canSwipeRight && rightSwipe || canSwipeLeft && leftSwipe) && absProgress > 35) {
+      // Close if swiped for > 35% of screen's width
+      this.doClose()
+    }
+
+    if (this.props.onSwipeEnd) {
+      this.props.onSwipeEnd()
+    }
+
+    this.setState({
+      lastClientX: null,
+      firstClientX: null
+    })
   }
 
   render() {

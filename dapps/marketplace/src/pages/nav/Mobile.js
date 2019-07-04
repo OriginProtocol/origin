@@ -10,6 +10,7 @@ const MobileNav = ({ open, onClose, onOpen }) => {
   // the user clicks or swipes back.
   const [redirect, setRedirect] = useState()
   const [doRedirect, setDoRedirect] = useState()
+  const [swipeProgress, setSwipeProgress] = useState(null)
 
   useEffect(() => {
     if (redirect) {
@@ -41,16 +42,25 @@ const MobileNav = ({ open, onClose, onOpen }) => {
    */
   const EarnTokens = withEnrolmentModal('a')
 
+  let style = {}
+
+  if (Number.isFinite(swipeProgress)) {
+    style.left = `-${swipeProgress}%`
+  }
+
   return (
     <Dropdown
       className="nav-item mobile"
       open={open}
       onClose={() => onClose()}
       animateOnExit={true}
+      canSwipeLeft={true}
+      onSwipeEnd={() => setSwipeProgress(null)}
+      onSwipeMove={({ progress }) => setSwipeProgress(progress)}
       content={
         <>
           <div className="dropdown-menu-bg" onClick={() => onClose()} />
-          <div className="dropdown-menu show">
+          <div className="dropdown-menu show" style={style}>
             <a
               href="#close"
               onClick={e => {

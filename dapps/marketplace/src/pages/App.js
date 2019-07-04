@@ -181,6 +181,10 @@ class App extends Component {
 export default withIsMobile(withWeb3(withCreatorConfig(withRouter(App))))
 
 require('react-styl')(`
+  html, body
+    -webkit-overflow-scrolling: touch
+    overflow: auto
+    height: 100%
   .app-spinner
     position: fixed
     top: 50%
