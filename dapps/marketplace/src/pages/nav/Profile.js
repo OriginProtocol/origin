@@ -141,6 +141,7 @@ const Identity = ({
     return <CreateIdentity onClose={onClose} />
   }
   const strengthPct = `${identity.strength || '0'}%`
+  const EarnTokens = withEnrolmentModal('a')
 
   return (
     <div className="identity">
@@ -162,13 +163,12 @@ const Identity = ({
           <fbt:param name="percent">{strengthPct}</fbt:param>
         </fbt>
       </div>
-      <a
+      <EarnTokens
         className="btn btn-outline-primary earn-ogn"
         onClick={onRewardsClick}
-        href="#"
       >
         <fbt desc="nav.profile.earnOGN">Earn OGN</fbt>
-      </a>
+      </EarnTokens>
       {!isMobileApp && (
         <Balances
           account={id}
