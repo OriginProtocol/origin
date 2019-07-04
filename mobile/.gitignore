@@ -64,3 +64,6 @@ android/app/release/
 /.src_manifest.json
 /.source_strings.json
 /.translated_fbts.json
+
+# Yarn lock file
+yarn.lock
