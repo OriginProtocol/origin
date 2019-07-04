@@ -1,0 +1,48 @@
+{
+    "event": {
+      "logIndex": 0,
+      "transactionIndex": 0,
+      "transactionHash": "0xfa322f26a1673821211a4a956066094e6dbf7141239f04a3f2379243d9887a2b",
+      "blockHash": "0x18b3d681eba9d275e3ba4e7dae9148f5842f79ce5035ff6389c6e4e8afb4a6bf",
+      "blockNumber": 33,
+      "address": "0x0d8cc4b8d15D4c3eF1d70af0071376fb26B5669b",
+      "type": "mined",
+      "id": "log_95453a94",
+      "returnValues": {
+        "0": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+        "1": "0xe3528b94d86bc248c58b04fd9d0862cf8c41a4f852609f0c85472c1054a018ce",
+        "account": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+        "ipfsHash": "0xe3528b94d86bc248c58b04fd9d0862cf8c41a4f852609f0c85472c1054a018ce"
+      },
+      "event": "IdentityUpdated",
+      "signature": "0x8a49a94a170e0377e29de8e4b741993bed3dc902443fdc59d79e455137ecab18",
+      "raw": {
+        "data": "0xe3528b94d86bc248c58b04fd9d0862cf8c41a4f852609f0c85472c1054a018ce",
+        "topics": [
+          "0x8a49a94a170e0377e29de8e4b741993bed3dc902443fdc59d79e455137ecab18",
+          "0x000000000000000000000000f17f52151ebef6c7334fad080c5704d77216b732"
+        ]
+      }
+    },
+    "related": {
+      "identity": {
+        "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+        "firstName": "Stan",
+        "lastName": "James",
+        "fullName": "Stan James",
+        "description": "Hi from Stan",
+        "avatarUrl": "ipfs://QmfPuEBRpy97JrgbKdS842TeYb11UzJjASVoNp9HiwrDoB",
+        "strength": 30,
+        "attestations": [],
+        "verifiedAttestations": [],
+        "ipfsHash": "Qmde2G46g9NtKtA3bmqdwgGJc4PGdRqw3LfM1tqq6B2UTw",
+        "owner": {
+          "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+          "__typename": "Account"
+        },
+        "__typename": "Identity",
+        "country": null
+      }
+    }
+  }
+  
