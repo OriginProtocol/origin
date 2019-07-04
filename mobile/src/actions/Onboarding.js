@@ -4,8 +4,8 @@ import keyMirror from 'utils/keyMirror'
 
 export const OnboardingConstants = keyMirror(
   {
-    ADD_ATTESTATTION: null,
-    SET_VERIFIED_ATTESTATIONS: null,
+    ADD_ATTESTATION: null,
+    ADD_SKIPPED_ATTESTATION: null,
     SET_NAME: null,
     SET_AVATAR_URI: null,
     SET_COMPLETE: null,
@@ -23,10 +23,10 @@ export function addAttestation(attestation) {
   }
 }
 
-export function setVerifiedAttestations(verifiedAttestations) {
+export function addSkippedAttestation(attestationName) {
   return {
-    type: OnboardingConstants.SET_VERIFIED_ATTESTATIONS,
-    verifiedAttestations
+    type: OnboardingConstants.ADD_SKIPPED_ATTESTATIONS,
+    attestationName
   }
 }
 

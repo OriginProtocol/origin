@@ -8,7 +8,7 @@ const initialState = {
   lastName: null,
   avatarUri: null,
   noRewardsDismissed: false,
-  verifiedAttestations: [],
+  skippedAttestations: [],
   growth: null,
   complete: false
 }
@@ -21,8 +21,14 @@ export default function Onboarding(state = initialState, action = {}) {
         attestations: [...state.attestations, action.attestation]
       }
 
-    case OnboardingConstants.SET_VERIFIED_ATTESTATIONS:
-      return { ...state, verifiedAttestations: action.verifiedAttestations }
+    case OnboardingConstants.ADD_SKIPPED_ATTESTATION:
+      return {
+        ...state,
+        skippedAttestations: [
+          ...state.skippedAttestations,
+          action.attestationName
+        ]
+      }
 
     case OnboardingConstants.SET_NAME:
       return {
