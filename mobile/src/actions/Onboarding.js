@@ -25,7 +25,7 @@ export function addAttestation(attestation) {
 
 export function addSkippedAttestation(attestationName) {
   return {
-    type: OnboardingConstants.ADD_SKIPPED_ATTESTATIONS,
+    type: OnboardingConstants.ADD_SKIPPED_ATTESTATION,
     attestationName
   }
 }

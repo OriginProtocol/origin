@@ -188,13 +188,13 @@ class PhoneScreen extends Component {
     if (!response.ok) {
       this.setState({ verifyError: get(data, 'errors[0]', '') })
     } else {
-      await this.props.addAttestation(data)
+      await this.props.addAttestation(JSON.stringify(data))
       this.props.navigation.navigate(this.props.nextOnboardingStep)
     }
   }
 
   handleSkip = async () => {
-    this.props.addSkippedAttestation('phone')
+    await this.props.addSkippedAttestation('phone')
     this.props.navigation.navigate(this.props.nextOnboardingStep)
   }
 
