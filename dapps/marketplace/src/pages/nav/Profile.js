@@ -208,7 +208,7 @@ const ProfileDropdownRaw = ({
   const address = `ETH Address: ${formatHash(wallet)}`
   const devMode = store.get('developerMode')
 
-  let style = {}
+  const style = {}
 
   if (Number.isFinite(swipeProgress)) {
     style.right = `-${swipeProgress}%`

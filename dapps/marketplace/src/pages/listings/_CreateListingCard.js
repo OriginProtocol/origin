@@ -62,5 +62,4 @@ require('react-styl')(`
         width: 28%
         height: 10px
         background-color: #eaf0f3
-
 `)

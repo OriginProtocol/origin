@@ -42,7 +42,7 @@ const MobileNav = ({ open, onClose, onOpen }) => {
    */
   const EarnTokens = withEnrolmentModal('a')
 
-  let style = {}
+  const style = {}
 
   if (Number.isFinite(swipeProgress)) {
     style.left = `-${swipeProgress}%`

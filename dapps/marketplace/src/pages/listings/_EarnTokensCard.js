@@ -13,30 +13,30 @@ const EarnTokensCard = ({ wallet }) => {
     <Query
       query={enrollmentStatusQuery}
       variables={{
-        walletAddress: wallet ? wallet : '0xdummyAddress'
+        walletAddress: wallet || '0xdummyAddress'
       }}
       // enrollment info can change, do not cache it
       fetchPolicy="network-only"
     >
-      {({ error, data: { enrollmentStatus } }) => {
+      {({ error, data }) => {
         if (error) {
           console.error(error)
-          return null
         }
-
-        console.log(enrollmentStatus)
 
         return (
           <div className="earn-tokens-card">
             <Link
-              to={enrollmentStatus === 'Enrolled' ? '/campaigns' : '/welcome'}
+              to={
+                data && data.enrollmentStatus === 'Enrolled'
+                  ? '/campaigns'
+                  : '/welcome'
+              }
             >
               <div className="header">
                 <h5>
                   <fbt desc="listingCard.earnTokens">
                     Earn
-                    <br />
-                    ORIGIN TOKENS
+                    <span>ORIGIN TOKENS</span>
                   </fbt>
                 </h5>
               </div>
