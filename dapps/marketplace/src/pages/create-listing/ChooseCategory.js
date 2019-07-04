@@ -127,7 +127,7 @@ const ChooseListingCategory = ({ isMobileApp, listing, prev, next, onChange }) =
             </div>
           </div>
         </div>
-        {isMobileApp &&
+        {!isMobileApp &&
           <div className="col-md-4">
             <div className="gray-box">
               <DownloadApp />

@@ -61,7 +61,7 @@ const ChooseListingType = props => {
             ))}
           </div>
         </div>
-        {props.isMobileApp &&
+        {!props.isMobileApp &&
           <div className="col-md-4">
             <div className="gray-box d-none d-md-block">
               <DownloadApp />
