@@ -6,6 +6,7 @@ import Categories from '@origin/graphql/src/constants/Categories'
 import Link from 'components/Link'
 import Redirect from 'components/Redirect'
 import DownloadApp from 'components/DownloadApp'
+import withIsMobile from 'hoc/withIsMobile'
 
 const CategoriesEnum = require('Categories$FbtEnum') // Localized category names
 
@@ -68,7 +69,7 @@ function propsForType(category, subCategory) {
   return { __typename, category, subCategory }
 }
 
-const ChooseListingCategory = ({ listing, prev, next, onChange }) => {
+const ChooseListingCategory = ({ isMobileApp, listing, prev, next, onChange }) => {
   const [valid, setValid] = useState(false)
   const categoryId = get(listing, 'category')
   const categoryShortId = categoryId.split('.')[1]
@@ -125,17 +126,19 @@ const ChooseListingCategory = ({ listing, prev, next, onChange }) => {
             </div>
           </div>
         </div>
-        <div className="col-md-4">
-          <div className="gray-box">
-            <DownloadApp />
+        {isMobileApp &&
+          <div className="col-md-4">
+            <div className="gray-box">
+              <DownloadApp />
+            </div>
           </div>
-        </div>
+        }
       </div>
     </>
   )
 }
 
-export default ChooseListingCategory
+export default withIsMobile(ChooseListingCategory)
 
 require('react-styl')(`
   .create-listing
