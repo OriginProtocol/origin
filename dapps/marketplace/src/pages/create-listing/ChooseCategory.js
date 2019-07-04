@@ -70,7 +70,13 @@ function propsForType(category, subCategory) {
   return { __typename, category, subCategory }
 }
 
-const ChooseListingCategory = ({ isMobileApp, listing, prev, next, onChange }) => {
+const ChooseListingCategory = ({
+  isMobileApp,
+  listing,
+  prev,
+  next,
+  onChange
+}) => {
   const [valid, setValid] = useState(false)
   const categoryId = get(listing, 'category')
   const categoryShortId = categoryId.split('.')[1]
@@ -127,13 +133,13 @@ const ChooseListingCategory = ({ isMobileApp, listing, prev, next, onChange }) =
             </div>
           </div>
         </div>
-        {!isMobileApp &&
+        {!isMobileApp && (
           <div className="col-md-4">
             <div className="gray-box">
               <DownloadApp />
             </div>
           </div>
-        }
+        )}
       </div>
     </>
   )

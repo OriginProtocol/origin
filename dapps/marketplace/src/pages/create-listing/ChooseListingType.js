@@ -61,21 +61,19 @@ const ChooseListingType = props => {
             ))}
           </div>
         </div>
-        {!props.isMobileApp &&
+        {!props.isMobileApp && (
           <div className="col-md-4">
             <div className="gray-box d-none d-md-block">
               <DownloadApp />
             </div>
           </div>
-        }
+        )}
       </div>
     </>
   )
 }
 
-export default withCreatorConfig(
-  withIsMobile(ChooseListingType)
-)
+export default withCreatorConfig(withIsMobile(ChooseListingType))
 
 require('react-styl')(`
   .category-ico

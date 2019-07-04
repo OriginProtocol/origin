@@ -384,11 +384,13 @@ class Settings extends Component {
                     </div>
                   </div>
                 </div>
-                {this.state.developerMode &&
+                {this.state.developerMode && (
                   <div className="text-center test-builds">
-                    <a href="https://originprotocol.github.io/test-builds/">Test Builds</a>
+                    <a href="https://originprotocol.github.io/test-builds/">
+                      Test Builds
+                    </a>
                   </div>
-                }
+                )}
               </div>
             </div>
             {/* TODO: See #2320
