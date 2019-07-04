@@ -24,6 +24,7 @@ const hourlyFractional = [
   'schema.tools'
 ]
 const nightlyFractional = [
+  'schema.appliances',
   'schema.babyKidStuff',
   'schema.cellPhones',
   'schema.clothingAccessories',
