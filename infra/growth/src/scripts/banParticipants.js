@@ -64,7 +64,7 @@ class TrustedAccounts {
     const data = fs.readFileSync(filename).toString()
     const lines = data.split('\n')
     for (const line of lines) {
-      if (line.match(/\s+#.+/g)) {
+      if (line.startsWith('#')) {
         continue
       }
       const address = line.trim().toLowerCase()
@@ -85,7 +85,9 @@ class BanParticipants {
       numProcessed: 0,
       numEmployeesTagged: 0,
       numTrustedTagged: 0,
-      numBanned: 0
+      numBanned: 0,
+      numBannedReferrer: 0,
+      numBannedDupe: 0
     }
     this.employees = new OriginEmployees(employeesFilename)
     this.trusted = new TrustedAccounts(trustedFilename)
@@ -136,7 +138,7 @@ class BanParticipants {
 
     // Get list of all growth engine participants that are active and not whitelisted,
     // in account creation date asc order.
-    const participants = await db.GrowthParticipant.findAll({
+    let participants = await db.GrowthParticipant.findAll({
       where: {
         status: enums.GrowthParticipantStatuses.Active,
         employee: false,
@@ -147,6 +149,7 @@ class BanParticipants {
 
     for (const participant of participants) {
       const address = participant.ethAddress
+
       this.stats.numProcessed++
 
       let isEmployee, isTrusted
@@ -189,14 +192,41 @@ class BanParticipants {
         continue
       }
 
-      // Check if the participant should be banned according to our fraud model.
-      const fraud = await this.fraudEngine.isFraudAccount(address)
+      // Check if the participant is a duplicate account
+      const fraud = await this.fraudEngine.isDupeAccount(address)
       if (fraud) {
         await this._banParticipant(participant, fraud)
         this.stats.numBanned++
+        this.stats.numBannedDupe++
         continue
       }
-      logger.info(`Account ${address} passed fraud checks.`)
+      logger.info(`Account ${address} passed dupe fraud checks.`)
+    }
+
+    //
+    // Do a second pass focusing on detecting fraudulent referrers.
+    //
+    participants = await db.GrowthParticipant.findAll({
+      where: {
+        status: enums.GrowthParticipantStatuses.Active,
+        employee: false,
+        trusted: false
+      },
+      order: [['created_at', 'ASC']]
+    })
+    for (const participant of participants) {
+      const address = participant.ethAddress
+
+      // Check if the participant is a fraudulent referrer account
+      const fraud = await this.fraudEngine.isFraudReferrerAccount(address)
+      if (fraud) {
+        // TODO: also consider banning all referees of fraudulent referrer.
+        await this._banParticipant(participant, fraud)
+        this.stats.numBanned++
+        this.stats.numBannedReferrer++
+        continue
+      }
+      logger.info(`Account ${address} passed fraud referrer checks.`)
     }
   }
 }
@@ -234,7 +264,18 @@ if (require.main === module) {
         '  Number of participants tagged as trusted:',
         job.stats.numTrustedTagged
       )
-      logger.info('  Number of participants banned:     ', job.stats.numBanned)
+      logger.info(
+        '  Total number of participants banned:       ',
+        job.stats.numBanned
+      )
+      logger.info(
+        '  Number of participants banned as dupe:     ',
+        job.stats.numBannedDupe
+      )
+      logger.info(
+        '  Number of participants banned as referrer: ',
+        job.stats.numBannedReferrer
+      )
       logger.info('Finished')
       process.exit()
     })
