@@ -96,6 +96,7 @@ class ListingDetail extends Component {
     const userListings = (
       <div className="seller-listings">
         <UserListings
+          excludeListing={listing.id}
           user={listing.seller.id}
           hideLoadMore
           compact

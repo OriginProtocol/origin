@@ -15,7 +15,8 @@ const UserListings = ({
   hideLoadMore,
   horizontal,
   compact,
-  title
+  title,
+  excludeListing
 }) => {
   const vars = {
     first: 8,
@@ -49,6 +50,7 @@ const UserListings = ({
         }
 
         const { nodes, pageInfo } = data.marketplace.user.listings
+
         const { hasNextPage, endCursor: after } = pageInfo
 
         return (
@@ -59,7 +61,9 @@ const UserListings = ({
               </h5>
             )}
             <ListingsGallery
-              listings={nodes}
+              listings={
+                nodes ? nodes.filter(l => l.id !== excludeListing) : null
+              }
               hasNextPage={hasNextPage}
               hideCategory
               horizontal={horizontal}
