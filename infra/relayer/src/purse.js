@@ -34,7 +34,7 @@ const DEFAULT_CHILDREN = 5
 const DEFAULT_MAX_PENDING_PER_ACCOUNT = 3
 const ZERO = new BN('0', 10)
 const BASE_FUND_VALUE = new BN('500000000000000000', 10) // 0.5 Ether
-const MIN_CHILD_BALANCE = new BN('10000000000000000', 10) // 0.1 Ether
+const MIN_CHILD_BALANCE = new BN('100000000000000000', 10) // 0.1 Ether
 const MAX_GAS_PRICE = new BN('25000000000', 10) // 25 gwei
 const REDIS_TX_COUNT_PREFIX = 'txcount_'
 const REDIS_PENDING_KEY = `pending_txs`
@@ -674,6 +674,8 @@ class Purse {
       return
     }
 
+    this.accounts[address].hasPendingFundingTx = true
+
     const fundingValue = value ? value : BASE_FUND_VALUE
     const gasPrice = await this.gasPrice()
     const txCost = fundingValue.add(gasPrice.mul(new BN(21000)))
@@ -722,12 +724,12 @@ class Purse {
       await sendRawTransaction(this.web3, rawTx)
       await this.addPending(txHash, unsigned, rawTx)
       await this.incrementTxCount(masterAddress)
-      this.accounts[address].hasPendingFundingTx = true
 
       logger.info(`Funded ${address} with ${txHash}`)
     } catch (err) {
       logger.error(`Error sending transaction to fund child ${address}.`)
       logger.errro(err)
+      this.accounts[address].hasPendingFundingTx = false
     }
 
     return txHash
@@ -788,32 +790,52 @@ class Purse {
               !this.accounts[child].hasPendingFundingTx
             ) {
               childrenToFund.push(child)
-            } else if (this.accounts[child].hasPendingFundingTx) {
+            } else if (
+              childBalance.gt(MIN_CHILD_BALANCE) &&
+              this.accounts[child].hasPendingFundingTx
+            ) {
               // Reset the flag
+              // TODO: Why not use onReceipt callbacks for this?
               this.accounts[child].hasPendingFundingTx = false
             }
           }
 
-          let valueToSend = BASE_FUND_VALUE
-          const maxFee = MAX_GAS_PRICE.mul(numberToBN(21000)).mul(
-            new BN(childrenToFund.length)
+          logger.debug(
+            `Planning to fund ${childrenToFund.length} child accounts`
           )
-          if (
-            masterBalance.lt(
-              valueToSend.mul(numberToBN(childrenToFund.length)).add(maxFee)
+
+          if (childrenToFund.length > 0) {
+            let valueToSend = BASE_FUND_VALUE
+            const maxFee = MAX_GAS_PRICE.mul(numberToBN(21000)).mul(
+              new BN(childrenToFund.length)
             )
-          ) {
-            valueToSend = masterBalance
-              .sub(maxFee)
-              .div(numberToBN(childrenToFund.length))
-          }
-          if (valueToSend.gte(MIN_CHILD_BALANCE)) {
-            for (const child of childrenToFund) {
-              await this._fundChild(child, valueToSend)
+            if (
+              masterBalance.lt(
+                valueToSend.mul(numberToBN(childrenToFund.length)).add(maxFee)
+              )
+            ) {
+              valueToSend = masterBalance
+                .sub(maxFee)
+                .div(numberToBN(childrenToFund.length))
             }
-          } else {
-            logger.warn('Unable to fund children.  Balance too low.')
+
+            logger.info(
+              `Will fund children with ${this.web3.utils.fromWei(
+                valueToSend,
+                'ether'
+              )} ether`
+            )
+
+            if (valueToSend.gte(MIN_CHILD_BALANCE)) {
+              for (const child of childrenToFund) {
+                await this._fundChild(child, valueToSend)
+              }
+            } else {
+              logger.warn('Unable to fund children.  Balance too low.')
+            }
           }
+        } else {
+          logger.debug('Not ready or autofund disabled')
         }
       }
 
