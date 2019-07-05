@@ -291,7 +291,7 @@ class Relayer {
           throw new Error('Incorrect ProxyFactory method provided')
         }
         logger.debug('Deploying proxy')
-        const gas = 2000000 //await web3.eth.estimateGas(args)
+        const gas = 500000 // 500k gas. Value set based on observing Mainnet transactions.
         tx = { to, data: txData, gas }
         dbTx = await this._createDbTx(
           req,
@@ -307,10 +307,7 @@ class Relayer {
         const data = UserProxy.methods
           .forward(to, signature, from, txData)
           .encodeABI()
-        // const gas = await rawTx.estimateGas({ from: Forwarder })
-        // logger.debug('Estimated gas ' + gas)
-        // TODO: Not sure why we need extra gas here
-        const gas = 1000000
+        const gas = 250000 // 250k gas. Value set based on observing Mainnet transactions.
         tx = { to: proxy, data, gas }
         dbTx = await this._createDbTx(
           req,
