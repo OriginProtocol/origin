@@ -59,7 +59,7 @@ require('react-styl')(`
       text-align: center
       border-radius: 10px
       margin: 1rem 0
-      padding-top: 66.6%
+      padding-top: 75%
       position: relative
       background-color: var(--clear-blue)
       h5

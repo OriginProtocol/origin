@@ -28,7 +28,7 @@ require('react-styl')(`
       border-radius: 10px
       border: dashed 1px #c0cbd4
       margin: 1rem 0
-      padding-top: 66.6%
+      padding-top: 75%
       position: relative
       h5
         position: absolute
