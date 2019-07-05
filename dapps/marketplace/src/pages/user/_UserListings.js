@@ -49,6 +49,7 @@ const UserListings = ({
         }
 
         const { nodes, pageInfo } = data.marketplace.user.listings
+
         const { hasNextPage, endCursor: after } = pageInfo
 
         return (

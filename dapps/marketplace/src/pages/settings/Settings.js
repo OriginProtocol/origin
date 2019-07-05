@@ -384,6 +384,13 @@ class Settings extends Component {
                     </div>
                   </div>
                 </div>
+                {this.state.developerMode && (
+                  <div className="text-center test-builds">
+                    <a href="https://originprotocol.github.io/test-builds/">
+                      Test Builds
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
             {/* TODO: See #2320
@@ -517,6 +524,8 @@ require('react-styl')(`
 
     .restore
       color: var(--clear-blue)
+  .test-builds
+    font-size: 0.875rem
 
   @media (max-width: 767.98px)
     .settings
