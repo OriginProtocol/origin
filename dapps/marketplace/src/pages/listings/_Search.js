@@ -193,7 +193,8 @@ class Search extends Component {
       })
     })
     this.setState({
-      active: false
+      active: false,
+      searchInput: ''
     })
     this.inputRef.blur()
   }
