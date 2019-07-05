@@ -58,7 +58,7 @@ class Footer extends Component {
         type="button"
         onClick={() => this.onToggle()}
       >
-        {isMobile && !open && <fbt desc="footer.More">More</fbt>}
+        {isMobile && !open && <fbt desc="footer.Help">Help</fbt>}
         {!isMobile && !open && (
           <fbt desc="footer.supportSettingsAndMore">
             Support, settings, &amp; more
@@ -224,6 +224,11 @@ require('react-styl')(`
       border-style: none
       outline: none
       padding: 0.5rem 0.75rem
+      &:before
+        content: '•••'
+        margin-right: 5px
+        color: #6f8294
+        font-size: 10px
     footer
       position: fixed
       bottom: -100%
