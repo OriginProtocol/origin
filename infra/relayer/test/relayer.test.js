@@ -70,7 +70,6 @@ describe('Relayer', async () => {
   })
 
   it('creates a proxy', async () => {
-    console
     const relayer = new Relayer(netId)
     
     // Init the keys now so we can fund them for the test
@@ -121,12 +120,13 @@ describe('Relayer', async () => {
     const txToSendSignature = await web3.eth.sign(txDatahash, Rando)
 
     const request = mockRequest({
+      headers: { 'x-real-ip': '98.210.130.145' },
       body: {
         ...txToSend,
         signature: txToSendSignature,
         proxy: null,
         preflight: false
-      }
+      },
     })
     const response = mockResponse()
 
@@ -170,6 +170,7 @@ describe('Relayer', async () => {
     const txToSendSignature = await web3.eth.sign(txDatahash, Rando)
 
     const request = mockRequest({
+      headers: { 'x-real-ip': '98.210.130.145' },
       body: {
         ...txToSend,
         signature: txToSendSignature,

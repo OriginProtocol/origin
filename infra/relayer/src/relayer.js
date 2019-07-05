@@ -209,7 +209,7 @@ class Relayer {
 
     // Get the IP from the request header and resolve it into a country code.
     const ip = req.header('x-real-ip')
-    const geo = isTestEnv ? '' : await ip2geo(ip)
+    const geo = await ip2geo(ip)
 
     // Check if the relayer is willing to process the transaction.
     const accept = await this.riskEngine.acceptTx(from, to, txData, ip, geo)
@@ -299,7 +299,9 @@ class Relayer {
           from,
           to,
           method.name,
-          ZeroAddress
+          ZeroAddress,
+          ip,
+          geo
         )
       } else {
         logger.debug('Forwarding transaction to ' + to)
@@ -315,7 +317,9 @@ class Relayer {
           from,
           to,
           method.name,
-          ZeroAddress
+          ZeroAddress,
+          ip,
+          geo
         )
       }
 
