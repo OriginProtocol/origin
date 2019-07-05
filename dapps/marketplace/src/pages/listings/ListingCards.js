@@ -155,7 +155,7 @@ require('react-styl')(`
     cursor: pointer
 
     .main-pic
-      padding-top: 66.6%
+      padding-top: 75%
       background-size: cover
       background-repeat: no-repeat
       background-position: center

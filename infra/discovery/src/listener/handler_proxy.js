@@ -4,6 +4,8 @@ const contracts = esmImport('@origin/graphql/src/contracts').default
 
 const logger = require('./logger')
 
+const ZeroAddress = '0x00000000000000000000000000000000000000'
+
 class ProxyEventHandler {
   constructor(config) {
     this.config = config
@@ -37,6 +39,12 @@ class ProxyEventHandler {
 
     // Get the address of the newly created proxy from the event.
     const proxyAddress = event.returnValues.proxy
+    if (proxyAddress === ZeroAddress) {
+      // We had a bug causing some transactions to have a zero proxy address.
+      // Skip those...
+      logger.warn('ProxyEventHandler: skipping event with zero proxy address.')
+      return null
+    }
     if (!proxyAddress || !parseInt(proxyAddress, 16)) {
       throw new Error(
         `Invalid proxy address in ProxyCreation event: ${proxyAddress}`

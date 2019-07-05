@@ -434,7 +434,7 @@ require('react-styl')(`
     .gallery
       margin-bottom: 1rem
       .main-pic
-        padding-top: 100%
+        padding-top: 75%
         background-size: contain
         background-repeat: no-repeat
         background-position: center

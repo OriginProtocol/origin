@@ -209,7 +209,7 @@ class Relayer {
 
     // Get the IP from the request header and resolve it into a country code.
     const ip = req.header('x-real-ip')
-    const geo = isTestEnv ? '' : await ip2geo(ip)
+    const geo = await ip2geo(ip)
 
     // Check if the relayer is willing to process the transaction.
     const accept = await this.riskEngine.acceptTx(from, to, txData, ip, geo)
@@ -291,7 +291,7 @@ class Relayer {
           throw new Error('Incorrect ProxyFactory method provided')
         }
         logger.debug('Deploying proxy')
-        const gas = 2000000 //await web3.eth.estimateGas(args)
+        const gas = 500000 // 500k gas. Value set based on observing Mainnet transactions.
         tx = { to, data: txData, gas }
         dbTx = await this._createDbTx(
           req,
@@ -299,7 +299,9 @@ class Relayer {
           from,
           to,
           method.name,
-          ZeroAddress
+          ZeroAddress,
+          ip,
+          geo
         )
       } else {
         logger.debug('Forwarding transaction to ' + to)
@@ -307,10 +309,7 @@ class Relayer {
         const data = UserProxy.methods
           .forward(to, signature, from, txData)
           .encodeABI()
-        // const gas = await rawTx.estimateGas({ from: Forwarder })
-        // logger.debug('Estimated gas ' + gas)
-        // TODO: Not sure why we need extra gas here
-        const gas = 1000000
+        const gas = 250000 // 250k gas. Value set based on observing Mainnet transactions.
         tx = { to: proxy, data, gas }
         dbTx = await this._createDbTx(
           req,
@@ -318,7 +317,9 @@ class Relayer {
           from,
           to,
           method.name,
-          ZeroAddress
+          ZeroAddress,
+          ip,
+          geo
         )
       }
 
