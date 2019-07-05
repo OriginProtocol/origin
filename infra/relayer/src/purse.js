@@ -674,6 +674,8 @@ class Purse {
       return
     }
 
+    this.accounts[address].hasPendingFundingTx = true
+
     const fundingValue = value ? value : BASE_FUND_VALUE
     const gasPrice = await this.gasPrice()
     const txCost = fundingValue.add(gasPrice.mul(new BN(21000)))
@@ -722,12 +724,12 @@ class Purse {
       await sendRawTransaction(this.web3, rawTx)
       await this.addPending(txHash, unsigned, rawTx)
       await this.incrementTxCount(masterAddress)
-      this.accounts[address].hasPendingFundingTx = true
 
       logger.info(`Funded ${address} with ${txHash}`)
     } catch (err) {
       logger.error(`Error sending transaction to fund child ${address}.`)
       logger.errro(err)
+      this.accounts[address].hasPendingFundingTx = false
     }
 
     return txHash
@@ -788,8 +790,12 @@ class Purse {
               !this.accounts[child].hasPendingFundingTx
             ) {
               childrenToFund.push(child)
-            } else if (this.accounts[child].hasPendingFundingTx) {
+            } else if (
+              childBalance.gt(MIN_CHILD_BALANCE) &&
+              this.accounts[child].hasPendingFundingTx
+            ) {
               // Reset the flag
+              // TODO: Why not use onReceipt callbacks for this?
               this.accounts[child].hasPendingFundingTx = false
             }
           }
