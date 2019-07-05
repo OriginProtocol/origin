@@ -794,6 +794,10 @@ class Purse {
             }
           }
 
+          logger.debug(
+            `Planning to fund ${childrenToFund.length} child accounts`
+          )
+
           let valueToSend = BASE_FUND_VALUE
           const maxFee = MAX_GAS_PRICE.mul(numberToBN(21000)).mul(
             new BN(childrenToFund.length)
@@ -807,6 +811,14 @@ class Purse {
               .sub(maxFee)
               .div(numberToBN(childrenToFund.length))
           }
+
+          logger.info(
+            `Will fund children with ${this.web3.utils.fromWei(
+              valueToSend,
+              'ether'
+            )} ether`
+          )
+
           if (valueToSend.gte(MIN_CHILD_BALANCE)) {
             for (const child of childrenToFund) {
               await this._fundChild(child, valueToSend)
@@ -814,6 +826,8 @@ class Purse {
           } else {
             logger.warn('Unable to fund children.  Balance too low.')
           }
+        } else {
+          logger.debug('Not ready or autofund disabled')
         }
       }
 
