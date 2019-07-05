@@ -26,7 +26,7 @@ discoveryImageTag: '7428c36'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '6e9ec10'
+growthImageTag: 'e8e8a9d'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -59,7 +59,7 @@ adminImageTag: 'f78d380'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: '56c9acf'
+relayerImageTag: 'b6212e7'
 
 # origin-graphql
 graphqlImage: origin-graphql
