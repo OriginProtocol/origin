@@ -149,7 +149,6 @@ class BanParticipants {
 
     for (const participant of participants) {
       const address = participant.ethAddress
-      // if (address !== '0x21ae46ba2e14c70bf4cf135931020bea69f1c3ec') continue
 
       this.stats.numProcessed++
 
@@ -217,7 +216,6 @@ class BanParticipants {
     })
     for (const participant of participants) {
       const address = participant.ethAddress
-      // if (address !== '0x21ae46ba2e14c70bf4cf135931020bea69f1c3ec') continue
 
       // Check if the participant is a fraudulent referrer account
       const fraud = await this.fraudEngine.isFraudReferrerAccount(address)
@@ -231,8 +229,6 @@ class BanParticipants {
       logger.info(`Account ${address} passed fraud referrer checks.`)
     }
   }
-
-
 }
 
 /**
@@ -268,9 +264,18 @@ if (require.main === module) {
         '  Number of participants tagged as trusted:',
         job.stats.numTrustedTagged
       )
-      logger.info('  Total number of participants banned:       ', job.stats.numBanned)
-      logger.info('  Number of participants banned as dupe:     ', job.stats.numBannedDupe)
-      logger.info('  Number of participants banned as referrer: ', job.stats.numBannedReferrer)
+      logger.info(
+        '  Total number of participants banned:       ',
+        job.stats.numBanned
+      )
+      logger.info(
+        '  Number of participants banned as dupe:     ',
+        job.stats.numBannedDupe
+      )
+      logger.info(
+        '  Number of participants banned as referrer: ',
+        job.stats.numBannedReferrer
+      )
       logger.info('Finished')
       process.exit()
     })
