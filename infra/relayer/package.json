@@ -32,7 +32,8 @@
   "devDependencies": {
     "mocha": "^6.1.4",
     "nodemon": "^1.19.1",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "chalk": "^2.4.2"
   },
   "scripts": {
     "lint": "eslint . && npm run prettier:check",
