@@ -306,7 +306,6 @@ require('react-styl')(`
         .search-dropdown
           padding: 1.5rem 0
 
-
   .navbar
     .listing-search-wrapper
       max-width: 350px
@@ -316,8 +315,12 @@ require('react-styl')(`
         background: url(images/magnifying-glass.svg) no-repeat right 10px center
         border-color: #c2cbd3
         width: 100%
-  .listings-container
+
+  @media (max-width: 767.98px)
     .listing-search-wrapper
+      .search-input-wrapper
+        margin-bottom: 1.5rem
+
       .form-control
         font-size: 22px
         border: 0
@@ -333,8 +336,4 @@ require('react-styl')(`
           color: #94a7b5
         &:focus
           box-shadow: none
-
-  @media (max-width: 767.98px)
-    .listing-search-wrapper .search-input-wrapper
-          margin-bottom: 1.5rem
 `)

@@ -90,12 +90,9 @@ class AuthenticationGuard extends Component {
       : this.renderPinGuard()
 
     return (
-      <KeyboardAvoidingView style={styles.keyboardWrapper} behavior="padding">
-        <ScrollView
-          contentContainerStyle={styles.content}
-          style={styles.container}
-        >
-          <View style={styles.content}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content}>
+          <View style={styles.container}>
             <Image
               resizeMethod={'scale'}
               resizeMode={'contain'}
@@ -156,20 +153,5 @@ const mapStateToProps = ({ settings }) => {
 export default connect(mapStateToProps)(AuthenticationGuard)
 
 const styles = StyleSheet.create({
-  ...CommonStyles,
-  keyboardWrapper: {
-    flex: 1
-  },
-  container: {
-    flex: 1
-  },
-  content: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  invalid: {
-    borderColor: '#ff0000',
-    color: '#ff0000'
-  }
+  ...CommonStyles
 })

@@ -3,6 +3,8 @@ import Price from 'components/Price'
 import dayjs from 'dayjs'
 import { fbt } from 'fbt-runtime'
 
+import Link from 'components/Link'
+
 const OfferDetails = ({ offer }) => (
   <ul className="offer-details list-unstyled">
     {offer.listing.__typename === 'FractionalListing' ||
@@ -94,6 +96,13 @@ const OfferDetails = ({ offer }) => (
       </span>
       <span>{offer.id}</span>
     </li>
+    <li className="btn btn-link">
+      <div>
+        <Link to={`/listing/${offer.listing.id}`}>
+          <fbt desc="OfferDetails.viewListing">View Listing</fbt>
+        </Link>
+      </div>
+    </li>
     {/*
     <li className="security-deposit">
       <span>Security Deposit</span>
@@ -111,41 +120,34 @@ export default OfferDetails
 
 require('react-styl')(`
   .offer-details
-    background: var(--pale-grey-eight)
-    border-radius: var(--default-radius)
-    font-size: 18px
+    font-size: 14px
     font-weight: normal
-    padding: 1rem 1.5rem
+    .btn-link
+      > div
+        &::after
+          content: " ›"
+        font-size: 14px
+        font-weight: bold
     li
       display: flex;
       justify-content: space-between;
-      padding: 0.375rem 0 0.375rem 1.25rem
-      span:nth-child(1)
-        color: var(--dusk)
-      span:nth-child(2)
+      padding: 0.375rem 0 0.375rem 0
+      > span
         color: #000
+      > span:nth-child(1)
+        color: var(--dusk)
+      > span:nth-child(2)
+        font-weight: bold
         span
           color: #000
       background-position: left center
       background-repeat: no-repeat
       background-size: 0.75rem
-      &.price-unit
-        background-image: url(images/order/price-unit-icon.svg)
-      &.quantity
-        background-image: url(images/order/quantity-icon.svg)
-      &.total-price
-        background-image: url(images/order/total-price-icon.svg)
-      &.offer-date
-        background-image: url(images/order/offer-date-icon.svg)
-      &.offer-number
-        background-image: url(images/order/offer-number-icon.svg)
-      &.start-date
-        background-image: url(images/order/start-date-icon.svg)
-      &.end-date
-        background-image: url(images/order/end-date-icon.svg)
-      &.security-deposit
-        background-image: url(images/order/security-deposit-icon.svg)
-      &.damages
-        background-image: url(images/order/damages-icon.svg)
 
+  @media (max-width: 767.98px)
+    .offer-details
+      font-size: 18px
+      .btn-link
+        > div
+          font-size: 18px
 `)

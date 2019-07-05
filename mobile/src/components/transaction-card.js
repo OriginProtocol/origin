@@ -10,9 +10,10 @@ import Address from 'components/address'
 import OriginButton from 'components/origin-button'
 import currencies from 'utils/currencies'
 import CommonStyles from 'styles/common'
+import CardStyles from 'styles/card'
 
 const TransactionCard = props => {
-  const { msgData, fiatCurrency, wallet } = props
+  const { msgData, fiatCurrency, wallet, loading } = props
   let { functionName, contractName, parameters } = decodeTransaction(
     msgData.data.data
   )
@@ -24,6 +25,9 @@ const TransactionCard = props => {
       parameters._data
     ))
   }
+
+  console.debug(`Contract: ${contractName}, Function: ${functionName}`)
+  console.debug(parameters)
 
   // Calculate gas in wei
   const gasWei = global.web3.utils
@@ -82,6 +86,12 @@ const TransactionCard = props => {
       heading = fbt(
         'Approve Currency Conversion',
         'TransactionCard.headingApprove'
+      )
+      break
+    case 'createProxyWithSenderNonce':
+      heading = fbt(
+        'Enable Meta Transactions',
+        'TransactionCard.createProxyHeading'
       )
       break
     default:
@@ -230,8 +240,9 @@ const TransactionCard = props => {
           size="large"
           type="primary"
           title={fbt('Confirm', 'TransactionCard.button')}
-          disabled={!hasSufficientDai || !hasSufficientEth}
+          disabled={!hasSufficientDai || !hasSufficientEth || loading}
           onPress={props.onConfirm}
+          loading={loading}
         />
       </View>
       <TouchableOpacity onPress={props.onRequestClose}>
@@ -251,6 +262,7 @@ export default connect(mapStateToProps)(TransactionCard)
 
 const styles = StyleSheet.create({
   ...CommonStyles,
+  ...CardStyles,
   account: {
     color: '#94a7b5',
     fontFamily: 'Lato',

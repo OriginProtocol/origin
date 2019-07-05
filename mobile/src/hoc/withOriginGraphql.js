@@ -10,7 +10,6 @@ import uuid from 'uuid/v1'
 import React, { Component } from 'react'
 import { DeviceEventEmitter } from 'react-native'
 import { connect } from 'react-redux'
-import get from 'lodash.get'
 
 import {
   balance,
@@ -84,29 +83,22 @@ const withOriginGraphql = WrappedComponent => {
     }
 
     getBalance = ethAddress => {
-      return this._sendGraphqlQuery(balance, { id: ethAddress })
+      return this._sendGraphqlQuery(balance, { id: ethAddress }, 'no-cache')
     }
 
     getTokenBalance = (ethAddress, token) => {
-      return this._sendGraphqlQuery(tokenBalance, {
-        id: ethAddress,
-        token: token
-      })
+      return this._sendGraphqlQuery(
+        tokenBalance,
+        {
+          id: ethAddress,
+          token: token
+        },
+        'no-cache'
+      )
     }
 
-    getIdentity = async () => {
-      // Get the wallet in case the identity was deployed via proxy
-      const walletResponse = await this.getWallet()
-      const primaryAccount = get(walletResponse, 'data.web3.primaryAccount')
-      if (!primaryAccount) {
-        return
-      }
-      // Request the identity through proxy if necessary
-      const identityAddress = primaryAccount.proxy.id
-        ? primaryAccount.proxy.id
-        : primaryAccount.id
-
-      return this._sendGraphqlQuery(identity, { id: identityAddress })
+    getIdentity = async id => {
+      return this._sendGraphqlQuery(identity, { id }, 'no-cache')
     }
 
     getTransactionReceipt = async id => {

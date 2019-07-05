@@ -214,7 +214,7 @@ class OnboardMetaMask extends Component {
                 }
 
                 const backLink = `${linkPrefix}/onboard`
-                const nextLink = `${linkPrefix}/onboard/profile`
+                const nextLink = `${linkPrefix}/onboard/email`
 
                 const { web3 } = data
 

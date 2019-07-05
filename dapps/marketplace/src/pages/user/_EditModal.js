@@ -48,7 +48,7 @@ class EditProfileModal extends Component {
             'description',
             'avatarUrl',
             'onChange',
-            'onAvatarChange'
+            'onSave'
           ])}
         />
       </ModalComp>
@@ -57,59 +57,3 @@ class EditProfileModal extends Component {
 }
 
 export default withIsMobile(withConfig(EditProfileModal))
-
-require('react-styl')(`
-  .edit-profile-modal
-    width: 100%
-    text-align: left
-    flex: auto
-    display: flex
-    flex-direction: column
-    h2
-      text-align: center
-    .avatar
-      border-radius: 50%
-    .actions
-      display: flex
-      flex-direction: column
-      flex: auto 0 0
-      padding: 20px
-      text-align: center
-      .btn
-        width: 50%
-        margin: 0 auto
-        &.btn-link
-          margin-top: 1rem
-    
-    .profile-fields-container
-      display: flex
-      flex-direction: column
-      flex: auto
-      .avatar
-        max-width: 110px
-        max-height: 110px
-        padding-top: 110px
-        margin: 0 auto
-      .profile-name-fields
-        display: flex
-        flex-direction: row
-        > div
-          margin-right: 10px
-          &:last-child
-            margin-left: 10px
-            margin-right: 0
-
-  @media (max-width: 767.98px)
-    .edit-profile-modal
-      padding: 0 20px
-      .profile-fields-container
-        .avatar
-          max-width: 100px
-          max-height: 100px
-          padding-top: 100px
-          margin: 0 auto
-      .actions
-        margin-top: auto
-        .btn
-          width: 100%
-`)
