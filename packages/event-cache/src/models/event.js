@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define(
     'Event',
     {
+      id: DataTypes.STRING,
       // Block number at which the event was recorded.
       block_number: {
         type: DataTypes.INTEGER,
