@@ -154,15 +154,17 @@ const Identity = ({
         </Link>
         <Attestations profile={identity} />
       </div>
-      <div className="strength">
-        <div className="progress">
-          <div className="progress-bar" style={{ width: strengthPct }} />
+      <Link onClick={() => onClose()} to="/profile">
+        <div className="strength">
+          <div className="progress">
+            <div className="progress-bar" style={{ width: strengthPct }} />
+          </div>
+          <fbt desc="nav.profile.ProfileStrength">
+            {'Profile Strength - '}
+            <fbt:param name="percent">{strengthPct}</fbt:param>
+          </fbt>
         </div>
-        <fbt desc="nav.profile.ProfileStrength">
-          {'Profile Strength - '}
-          <fbt:param name="percent">{strengthPct}</fbt:param>
-        </fbt>
-      </div>
+      </Link>
       <EarnTokens
         className="btn btn-outline-primary earn-ogn"
         onClick={onRewardsClick}
@@ -322,9 +324,13 @@ require('react-styl')(`
               margin-bottom: 0.5rem
         .earn-ogn
           border-radius: 3rem
+          color: var(--clear-blue)
+          cursor: pointer
           margin: 1.5rem 0 1.25rem 0
           padding-left: 3rem
           padding-right: 3rem
+          &:hover
+            color: white
         .balances
           border-top: 1px solid #dde6ea
           h5
