@@ -6,7 +6,7 @@ import Categories from '@origin/graphql/src/constants/Categories'
 import Link from 'components/Link'
 import Redirect from 'components/Redirect'
 import DownloadApp from 'components/DownloadApp'
-import withIsMobile from 'hoc/withIsMobile'
+import withWallet from 'hoc/withWallet'
 
 const CategoriesEnum = require('Categories$FbtEnum') // Localized category names
 
@@ -71,10 +71,10 @@ function propsForType(category, subCategory) {
 }
 
 const ChooseListingCategory = ({
-  isMobileApp,
   listing,
   prev,
   next,
+  walletType,
   onChange
 }) => {
   const [valid, setValid] = useState(false)
@@ -133,7 +133,7 @@ const ChooseListingCategory = ({
             </div>
           </div>
         </div>
-        {!isMobileApp && (
+        {walletType !== 'Mobile' && walletType !== 'Origin Wallet' && (
           <div className="col-md-4">
             <div className="gray-box">
               <DownloadApp />
@@ -145,7 +145,7 @@ const ChooseListingCategory = ({
   )
 }
 
-export default withIsMobile(ChooseListingCategory)
+export default withWallet(ChooseListingCategory)
 
 require('react-styl')(`
   .create-listing
