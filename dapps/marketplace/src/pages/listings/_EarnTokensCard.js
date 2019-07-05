@@ -36,7 +36,7 @@ const EarnTokensCard = ({ wallet }) => {
                 <h5>
                   <fbt desc="listingCard.earnTokens">
                     Earn
-                    <span>ORIGIN TOKENS</span>
+                    <span>Origin Tokens</span>
                   </fbt>
                 </h5>
               </div>
@@ -75,6 +75,8 @@ require('react-styl')(`
         display: flex
         flex-direction: column
         font-weight: bold
+        span
+          text-transform: uppercase
         &:before
           content: ''
           display: block
