@@ -1,8 +1,6 @@
 import numberFormat from 'utils/numberFormat'
 
-export function getPromotedListingIds({
-  growthCampaigns
-}) {
+export function getPromotedListingRewards({ growthCampaigns }) {
   if (!growthCampaigns) return []
 
   const activeCampaign = growthCampaigns.find(
@@ -13,8 +11,7 @@ export function getPromotedListingIds({
     return []
   }
 
-  return activeCampaign
-    .actions
+  return activeCampaign.actions
     .filter(action => action.type === 'ListingIdPurchased')
     .map(action => action.listingId)
 }

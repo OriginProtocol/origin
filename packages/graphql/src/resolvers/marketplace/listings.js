@@ -135,7 +135,15 @@ export async function listingsBySeller(
 
 export default async function listings(
   contract,
-  { first = 10, after, sort, hidden = true, search, filters = [], listingIds = [] }
+  {
+    first = 10,
+    after,
+    sort,
+    hidden = true,
+    search,
+    filters = [],
+    listingIds = []
+  }
 ) {
   if (!contract) {
     return null
@@ -160,7 +168,7 @@ export default async function listings(
     ids = decentralizedResults.ids
     totalCount = decentralizedResults.totalCount
   }
-  
+
   if (listingIds.length > 0) {
     ids = listingIds.map(listingId => listingId.split('-')[2])
     totalCount = listingIds.length

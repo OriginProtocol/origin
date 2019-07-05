@@ -19,7 +19,7 @@ import Link from 'components/Link'
 
 import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
-import { getPromotedListingIds } from 'utils/growthTools'
+import { getPromotedListingRewards } from 'utils/growthTools'
 
 import ListingCards from './ListingCards'
 import Search from './_Search'
@@ -132,11 +132,14 @@ class Listings extends Component {
       // when OGN listings are selected clear other search parameters
       vars.search = ''
       vars.filers = []
-      vars.listingIds = getPromotedListingIds({ growthCampaigns: this.props.growthCampaigns })
+      vars.listingIds = getPromotedListingRewards({
+        growthCampaigns: this.props.growthCampaigns
+      })
     }
 
     const showCategory = get(this.state, 'search.category.type') ? false : true
-    const showCount = vars.search || vars.filters.length || this.state.search.ognListings
+    const showCount =
+      vars.search || vars.filters.length || this.state.search.ognListings
 
     const isSearch =
       get(this.state.search, 'searchInput', '') !== '' ||
@@ -243,7 +246,6 @@ class Listings extends Component {
                           listings={nodes}
                           hasNextPage={hasNextPage}
                           showCategory={showCategory}
-                          growthCampaigns={this.props.growthCampaigns}
                           tokenDecimals={this.props.tokenDecimals}
                         />
                         {!hasNextPage ? null : (

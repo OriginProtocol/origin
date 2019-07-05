@@ -119,9 +119,7 @@ class Search extends Component {
           <div className="featured-categories">
             <div
               className="category-icon rewards"
-              onClick={() =>
-                this.onRewardsClick()
-              }
+              onClick={() => this.onRewardsClick()}
             >
               <fbt desc="Search.Rewards">Rewards</fbt>
             </div>
