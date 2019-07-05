@@ -25,13 +25,15 @@ const ListingCards = ({
   const [redirect, setRedirect] = useState()
   if (!listings) return null
 
-  const listingToRender = injectCTAs ? [
-    ...listings.slice(0, 2),
-    { id: 'earn-tokens-card' },
-    ...listings.slice(2, 4),
-    { id: 'create-listing-card' },
-    ...listings.slice(4)
-  ] : listings
+  const listingToRender = injectCTAs
+    ? [
+        ...listings.slice(0, 2),
+        { id: 'earn-tokens-card' },
+        ...listings.slice(2, 4),
+        { id: 'create-listing-card' },
+        ...listings.slice(4)
+      ]
+    : listings
 
   return (
     <div
