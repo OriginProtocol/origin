@@ -11,7 +11,9 @@ function withTokenBalance(WrappedComponent) {
       variables={{ account: wallet, token }}
       skip={!wallet}
     >
-      {({ data }) => <WrappedComponent {...props} {...tokenInfo(data)} />}
+      {({ data }) => (
+        <WrappedComponent wallet={wallet} {...props} {...tokenInfo(data)} />
+      )}
     </Query>
   )
   return WithTokenBalance

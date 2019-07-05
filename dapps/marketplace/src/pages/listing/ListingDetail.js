@@ -236,7 +236,7 @@ class ListingDetail extends Component {
   }
 
   renderAction() {
-    const { listing } = this.props
+    const { listing, wallet, walletProxy, ognListingRewards } = this.props
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
@@ -244,12 +244,13 @@ class ListingDetail extends Component {
       listing.__typename === 'UnitListing' && listing.unitsTotal === 1
     const isService = listing.__typename === 'ServiceListing'
     const isPendingBuyer = listing.pendingBuyers.some(
-      b => b.id === this.props.walletProxy
+      b => b.id === walletProxy || b.id === wallet
     )
-    const isListingCreator = listing.seller.id === this.props.walletProxy
+    const isListingCreator =
+      listing.seller.id === walletProxy || listing.seller.id === wallet
 
     const props = { ...this.props }
-    const growthReward = this.props.ognListingRewards[listing.id]
+    const growthReward = ognListingRewards[listing.id]
     if (growthReward) {
       props.growthReward = growthReward
     }
@@ -259,7 +260,8 @@ class ListingDetail extends Component {
       : listing.events.filter(
           event =>
             event.event === 'OfferCreated' &&
-            event.returnValues.party === this.props.walletProxy
+            (event.returnValues.party === walletProxy ||
+              event.returnValues.party === wallet)
         )
 
     if (isListingCreator) {
