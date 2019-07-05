@@ -34,7 +34,6 @@ const ProfileNav = ({
   const EarnTokens = withEnrolmentModal('a')
 
   const [rewardsModal, setRewardsModal] = useState(false)
-  const [swipeProgress, setSwipeProgress] = useState(null)
 
   return (
     <Query query={ProfileQuery} pollInterval={window.transactionPoll || 1000}>
@@ -55,9 +54,6 @@ const ProfileNav = ({
               open={open}
               onClose={() => onClose()}
               animateOnExit={isMobile}
-              canSwipeRight={isMobile}
-              onSwipeEnd={() => setSwipeProgress(null)}
-              onSwipeMove={({ progress }) => setSwipeProgress(progress)}
               content={
                 <ProfileDropdown
                   identity={identity}
@@ -68,7 +64,6 @@ const ProfileNav = ({
                     onClose()
                   }}
                   data={data}
-                  swipeProgress={swipeProgress}
                 />
               }
             >
@@ -201,26 +196,16 @@ const ProfileDropdownRaw = ({
   identity,
   identityLoaded,
   onClose,
-  onRewardsClick,
-  swipeProgress
+  onRewardsClick
 }) => {
   const { id } = data.web3.primaryAccount
   const address = `ETH Address: ${formatHash(wallet)}`
   const devMode = store.get('developerMode')
 
-  const style = {}
-
-  if (Number.isFinite(swipeProgress)) {
-    style.right = `-${swipeProgress}%`
-  }
-
   return (
     <>
       <div className="dropdown-menu-bg" onClick={onClose} />
-      <div
-        className="dropdown-menu dropdown-menu-right show profile"
-        style={style}
-      >
+      <div className="dropdown-menu dropdown-menu-right show profile">
         <a
           className="d-sm-none close-icon"
           href="#close"
