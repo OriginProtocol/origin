@@ -19,8 +19,9 @@ import Link from 'components/Link'
 
 import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
+import { getPromotedListingIds } from 'utils/growthTools'
 
-import ListingsGallery from './ListingCards'
+import ListingCards from './ListingCards'
 import Search from './_Search'
 
 import query from 'queries/Listings'
@@ -90,6 +91,16 @@ class Listings extends Component {
             </fbt:plural>
           </fbt>
         )
+      } else if (this.state.search.ognListings) {
+        content = (
+          <fbt desc="NumOgnRewardsResult">
+            <fbt:param name="count">{totalCount}</fbt:param>{' '}
+            <fbt:plural count={totalCount} showCount="no">
+              Listing
+            </fbt:plural>
+            with Origin Rewards
+          </fbt>
+        )
       } else {
         content = (
           <fbt desc="NumResults">
@@ -117,13 +128,21 @@ class Listings extends Component {
       filters: filters.map(filter => omit(filter, '__typename'))
     }
 
+    if (this.state.search.ognListings) {
+      // when OGN listings are selected clear other search parameters
+      vars.search = ''
+      vars.filers = []
+      vars.listingIds = getPromotedListingIds({ growthCampaigns: this.props.growthCampaigns })
+    }
+
     const showCategory = get(this.state, 'search.category.type') ? false : true
-    const showCount = vars.search || vars.filters.length
+    const showCount = vars.search || vars.filters.length || this.state.search.ognListings
 
     const isSearch =
       get(this.state.search, 'searchInput', '') !== '' ||
       !isEmpty(get(this.state.search, 'category', {})) ||
-      !isEmpty(get(this.state.search, 'subCategory', {}))
+      !isEmpty(get(this.state.search, 'subCategory', {})) ||
+      this.state.search.ognListings
 
     return (
       <>
@@ -220,7 +239,7 @@ class Listings extends Component {
                         {showCount
                           ? this.getHeader(totalCount, isSearch)
                           : null}
-                        <ListingsGallery
+                        <ListingCards
                           listings={nodes}
                           hasNextPage={hasNextPage}
                           showCategory={showCategory}

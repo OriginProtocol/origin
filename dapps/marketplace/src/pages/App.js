@@ -152,6 +152,7 @@ class App extends Component {
             />
             <Route exact path="/rewards/banned" component={GrowthBanned} />
             <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />
+            <Route path="/search" component={Listings} />
             <Route component={Listings} />
           </Switch>
         </main>

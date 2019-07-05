@@ -1,5 +1,24 @@
 import numberFormat from 'utils/numberFormat'
 
+export function getPromotedListingIds({
+  growthCampaigns
+}) {
+  if (!growthCampaigns) return []
+
+  const activeCampaign = growthCampaigns.find(
+    campaign => campaign.status === 'Active'
+  )
+
+  if (!activeCampaign) {
+    return []
+  }
+
+  return activeCampaign
+    .actions
+    .filter(action => action.type === 'ListingIdPurchased')
+    .map(action => action.listingId)
+}
+
 export function getAttestationReward({
   growthCampaigns,
   attestation,
