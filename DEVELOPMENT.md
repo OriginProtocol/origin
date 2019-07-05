@@ -226,6 +226,12 @@ $docker system prune --volumes --all
 When doing a hard delete of Docker data Origin, images need to be rebuilt
 `docker-compose build`
 
+#### Complete Docker Wipe
+
+If you just want to completely start over with your docker environment:
+
+    docker rm $(docker ps -aq) && docker image prune -a && docker-compose build && docker-compose up -d
+
 #### Elasticsearch fails to start with virtual memory error
 
 The development stack includes an Elasticsearch container that may require an
