@@ -795,6 +795,7 @@ class Purse {
               this.accounts[child].hasPendingFundingTx
             ) {
               // Reset the flag
+              // TODO: Why not use onReceipt callbacks for this?
               this.accounts[child].hasPendingFundingTx = false
             }
           }
