@@ -42,7 +42,7 @@ class ProxyEventHandler {
     if (proxyAddress === ZeroAddress) {
       // We had a bug causing some transactions to have a zero proxy address.
       // Skip those...
-      logger.info('ProxyEventHandler: skipping event with zero proxy address.')
+      logger.warn('ProxyEventHandler: skipping event with zero proxy address.')
       return null
     }
     if (!proxyAddress || !parseInt(proxyAddress, 16)) {
