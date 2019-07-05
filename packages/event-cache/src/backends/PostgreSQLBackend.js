@@ -9,7 +9,7 @@ const { debug } = require('../utils')
  * @returns {string} camelCase string
  */
 function toCamelCase(v) {
-  return v
+  let ret = v
     .split(/(?=_[a-z])/)
     .map(part => {
       return part.startsWith('_')
@@ -17,6 +17,11 @@ function toCamelCase(v) {
         : part
     })
     .join('')
+  // In the case of contract events, anything that ends with ID needs to be capitalized
+  if (ret.endsWith('Id')) {
+    ret = ret.replace(/Id$/, 'ID')
+  }
+  return ret
 }
 
 /**
