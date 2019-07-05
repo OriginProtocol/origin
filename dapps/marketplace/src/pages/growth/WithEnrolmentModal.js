@@ -322,7 +322,7 @@ function withEnrolmentModal(WrappedComponent) {
                 laws and regulations.
               </fbt>
             </div>
-            <div className="mt-1 d-flex country-check-label justify-content-center">
+            <div className="mt-1 d-flex country-check-label justify-content-center pb-3">
               <label className="checkbox-holder">
                 <input
                   type="checkbox"

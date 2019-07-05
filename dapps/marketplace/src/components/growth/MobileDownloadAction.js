@@ -150,6 +150,7 @@ require('react-styl')(`
       margin-right: 3px
     .download-icon
       width: 135px
+      height: 42px
     &.mobile
       .phones
         height: 117px
@@ -174,4 +175,5 @@ require('react-styl')(`
         margin-bottom: 0px
       .download-icon
         width: 96px
+        height: 30px
 `)
