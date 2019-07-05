@@ -15,8 +15,7 @@ const UserListings = ({
   hideLoadMore,
   horizontal,
   compact,
-  title,
-  excludeListing
+  title
 }) => {
   const vars = {
     first: 8,
@@ -61,9 +60,7 @@ const UserListings = ({
               </h5>
             )}
             <ListingsGallery
-              listings={
-                nodes ? nodes.filter(l => l.id !== excludeListing) : null
-              }
+              listings={nodes}
               hasNextPage={hasNextPage}
               hideCategory
               horizontal={horizontal}
