@@ -8,6 +8,7 @@ import { fbt } from 'fbt-runtime'
 
 import withCreatorConfig from 'hoc/withCreatorConfig'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
+import withGrowthRewards from 'hoc/withGrowthRewards'
 import withWallet from 'hoc/withWallet'
 import withTokenBalance from 'hoc/withTokenBalance'
 import withIsMobile from 'hoc/withIsMobile'
@@ -19,7 +20,6 @@ import Link from 'components/Link'
 
 import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
-import { getPromotedListingRewards } from 'utils/growthTools'
 
 import ListingCards from './ListingCards'
 import Search from './_Search'
@@ -132,9 +132,7 @@ class Listings extends Component {
       // when OGN listings are selected clear other search parameters
       vars.search = ''
       vars.filers = []
-      vars.listingIds = getPromotedListingRewards({
-        growthCampaigns: this.props.growthCampaigns
-      })
+      vars.listingIds = Object.keys(this.props.ognListingRewards)
     }
 
     const showCategory = get(this.state, 'search.category.type') ? false : true
@@ -280,13 +278,15 @@ class Listings extends Component {
   }
 }
 
-export default withGrowthCampaign(
-  withWallet(withTokenBalance(withCreatorConfig(withIsMobile(Listings)))),
-  {
-    fetchPolicy: 'cache-first',
-    queryEvenIfNotEnrolled: true,
-    suppressErrors: true // still show listings in case growth can not be reached
-  }
+export default withGrowthRewards(
+  withGrowthCampaign(
+    withWallet(withTokenBalance(withCreatorConfig(withIsMobile(Listings)))),
+    {
+      fetchPolicy: 'cache-first',
+      queryEvenIfNotEnrolled: true,
+      suppressErrors: true // still show listings in case growth can not be reached
+    }
+  )
 )
 
 require('react-styl')(`
