@@ -9,6 +9,7 @@ export default gql`
     $hidden: Boolean
     $search: String
     $filters: [ListingFilterInput!]
+    $listingIds: [String]
   ) {
     marketplace {
       listings(
@@ -18,6 +19,7 @@ export default gql`
         hidden: $hidden
         search: $search
         filters: $filters
+        listingIds: $listingIds
       ) {
         totalCount
         pageInfo {
