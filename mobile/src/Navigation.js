@@ -100,7 +100,7 @@ const BackupStack = createSwitchNavigator(
     Backup: BackupScreen
   },
   {
-    initialRouteName: !__DEV__ ? 'BackupAuth' : 'Backup'
+    initialRouteName: 'BackupAuth'
   }
 )
 
@@ -128,7 +128,7 @@ const SettingsStack = createStackNavigator(
         Account: AccountScreen
       },
       {
-        initialRouteName: !__DEV__ ? 'AccountAuth' : 'Account'
+        initialRouteName: 'AccountAuth'
       }
     ),
     Accounts: AccountsScreen,
@@ -235,9 +235,8 @@ class MarketplaceApp extends React.Component {
       ) {
         this.props.navigation.navigate('Welcome')
       } else if (
-        ((this.props.settings.pin && this.props.settings.pin.length > 0) ||
-          this.props.settings.biometryType) &&
-        !__DEV__
+        (this.props.settings.pin && this.props.settings.pin.length > 0) ||
+        this.props.settings.biometryType
       ) {
         this.props.setOnboardingComplete(true)
         this.props.navigation.navigate('Auth')
