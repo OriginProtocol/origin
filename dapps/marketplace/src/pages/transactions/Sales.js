@@ -119,7 +119,10 @@ const NoPurchases = () => (
       <img src="images/empty-icon.svg" />
     </div>
     <h3>You haven’t sold anything yet.</h3>
-    <Link to="/my-listings" className="btn btn-lg btn-outline-primary btn-rounded">
+    <Link
+      to="/my-listings"
+      className="btn btn-lg btn-outline-primary btn-rounded"
+    >
       View Listings
     </Link>
   </div>
