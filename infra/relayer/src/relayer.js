@@ -326,17 +326,21 @@ class Relayer {
       try {
         txHash = await this.purse.sendTx(tx, async receipt => {
           /**
-           * Once block is mined, record the amount of gas, the forwarding account,  and update the
-           * status of the transaction in the DB.
+           * Once block is mined, record the amount of gas, the forwarding account,
+           * and the status of the transaction in the DB.
            */
           const gas = receipt.gasUsed
           const hash = receipt.transactionHash
           const forwarder = receipt.from
           if (dbTx) {
-            const status = enums.RelayerTxnStatuses.Confirmed
+            const status = receipt.status
+              ? enums.RelayerTxnStatuses.Confirmed
+              : enums.RelayerTxnStatuses.Reverted
             await dbTx.update({ status, gas, forwarder })
           }
-          logger.info(`Confirmed tx with hash ${hash}. Paid ${gas} gas`)
+          logger.info(
+            `Tx with hash ${hash} mined. Status: ${status}. Gas used: ${gas}.`
+          )
         })
       } catch (reason) {
         let status = enums.RelayerTxnStatuses.Failed
