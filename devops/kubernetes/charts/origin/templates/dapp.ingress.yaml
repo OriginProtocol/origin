@@ -22,8 +22,18 @@ spec:
     - secretName: {{ template "dapp.host" . }}
       hosts:
         - {{ template "dapp.host" . }}
+    - secretName: shoporigin.co
+      hosts:
+        - shoporigin.co
   rules:
   - host: {{ template "dapp.host" . }}
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: {{ template "dapp.fullname" . }}
+            servicePort: 80
+  - host: shoporigin.co
     http:
       paths:
         - path: /
