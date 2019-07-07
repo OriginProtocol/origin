@@ -25,6 +25,7 @@ spec:
     - secretName: shoporigin.co
       hosts:
         - shoporigin.co
+        - www.shoporigin.co
   rules:
   - host: {{ template "dapp.host" . }}
     http:
