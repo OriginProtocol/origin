@@ -64,9 +64,11 @@ export function getStateFromQuery(props) {
   const search = memStore.get('listingsPage.search', {})
   const getParams = queryString.parse(props.location.search)
   search.category = categories.find(c => c.type === getParams.category) || {}
+
   search.subCategory =
     subCategories.find(c => c.type === getParams.subCategory) || {}
   search.searchInput = getParams.q || ''
+  search.ognListings = getParams.ognListings === 'true' || false
   if (getParams.priceMin) {
     search.priceMin = getParams.priceMin
   }

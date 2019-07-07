@@ -146,6 +146,7 @@ export const types = `
       filters: [ListingFilterInput!]
       sort: String
       hidden: Boolean
+      listingIds: [String]
     ): ListingConnection!
 
     offer(id: ID!): Offer

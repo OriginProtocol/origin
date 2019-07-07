@@ -23,6 +23,7 @@ import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import withConfig from 'hoc/withConfig'
 import withOriginGraphql from 'hoc/withOriginGraphql'
 import {
+  addAttestation,
   setVerifiedAttestations,
   setName,
   setAvatarUri
@@ -60,10 +61,8 @@ class ImportedScreen extends Component {
 
     const identity = get(response, 'data.web3.account.identity')
     if (identity) {
-      // Update the onboarding store so we know withOnboardingSteps can correctly
-      // calculate the next onboardinig step based on what the user has completed
-      const verifiedAttestations = identity.verifiedAttestations.map(x => x.id)
-      this.props.setVerifiedAttestations(verifiedAttestations)
+      const attestations = get(identity, 'attestations', [])
+      attestations.map(this.props.addAttestation)
       this.props.setName({
         firstName: identity.firstName,
         lastName: identity.lastName
@@ -247,6 +246,7 @@ const mapStateToProps = ({ marketplace, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
+  addAttestation: attestation => dispatch(addAttestation(attestation)),
   removeAccount: account => dispatch(removeAccount(account)),
   setVerifiedAttestations: attestations =>
     dispatch(setVerifiedAttestations(attestations)),

@@ -37,14 +37,6 @@ class ReadyScreen extends Component {
       avatarUrl: this.props.onboarding.avatarUri || ''
     }
 
-    const attestations = []
-    if (this.props.onboarding.emailAttestation) {
-      attestations.push(JSON.stringify(this.props.onboarding.emailAttestation))
-    }
-    if (this.props.onboarding.phoneAttestation) {
-      attestations.push(JSON.stringify(this.props.onboarding.phoneAttestation))
-    }
-
     let identityPublication
     try {
       const wallet = await this.props.getWallet()
@@ -55,12 +47,12 @@ class ReadyScreen extends Component {
       identityPublication = await this.props.publishIdentity(
         identityId,
         profile,
-        attestations
+        this.props.onboarding.attestations
       )
     } catch (error) {
       Sentry.captureException(error)
       console.warn('Identity publication failed: ', error)
-      this.setState({ error: true })
+      this.setState({ loading: false, error: true })
     }
 
     const transactionId = get(identityPublication, 'data.deployIdentity.id')
