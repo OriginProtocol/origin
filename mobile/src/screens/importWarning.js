@@ -90,7 +90,7 @@ class ImportWarningScreen extends Component {
         animationType="fade"
         transparent={true}
         visible={this.state.displayModal}
-        onRequestClose={() => this.toggleModal()}
+        onRequestClose={() => this.setState({ displayModal: false })}
       >
         <SafeAreaView style={styles.darkOverlay}>
           <NoRewardsCard

@@ -46,5 +46,9 @@ export default StyleSheet.create({
   },
   image: {
     marginBottom: 20
+  },
+  invalid: {
+    borderColor: '#ff0000',
+    color: '#ff0000'
   }
 })
