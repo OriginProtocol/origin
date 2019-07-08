@@ -333,10 +333,10 @@ class Relayer {
           const gas = receipt.gasUsed
           const hash = receipt.transactionHash
           const forwarder = receipt.from
+          const status = receipt.status
+            ? enums.RelayerTxnStatuses.Confirmed
+            : enums.RelayerTxnStatuses.Reverted
           if (dbTx) {
-            const status = receipt.status
-              ? enums.RelayerTxnStatuses.Confirmed
-              : enums.RelayerTxnStatuses.Reverted
             await dbTx.update({ status, gas, forwarder })
           }
           logger.info(
