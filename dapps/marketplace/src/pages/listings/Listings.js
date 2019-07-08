@@ -226,7 +226,7 @@ class Listings extends Component {
                           showCategory={showCategory}
                           growthCampaigns={this.props.growthCampaigns}
                           tokenDecimals={this.props.tokenDecimals}
-                          injectCTAs={this.props.isMobile}
+                          injectCTAs={true}
                         />
                         {!hasNextPage ? null : (
                           <button
