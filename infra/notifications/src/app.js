@@ -296,8 +296,9 @@ app.post('/events', async (req, res) => {
   const eventName = event.event
   const { listing, offer } = related
   const { seller = {} } = listing
-  const buyer = offer ? offer.buyer : null // Not all events have offers
+  const buyer = offer ? offer.buyer : {} // Not all events have offers
   const eventDetailsSummary = `eventName=${eventName} blockNumber=${event.blockNumber} logIndex=${event.logIndex}`
+  logger.info(`Info: Processing event ${eventDetailsSummary}`)
 
   // Return 200 to the event-listener without waiting for processing of the event.
   res.status(200).send({ status: 'ok' })
@@ -346,8 +347,6 @@ app.post('/events', async (req, res) => {
   const sellerAddress = seller.identity.owner.id
     ? seller.identity.owner.id.toLowerCase()
     : null
-
-  logger.info(`Info: Processing event ${eventDetailsSummary}`)
 
   logger.info(`>eventName: ${eventName}`)
   logger.info(`>party: ${party}`)
