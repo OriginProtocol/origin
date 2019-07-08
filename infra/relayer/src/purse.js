@@ -476,7 +476,7 @@ class Purse {
    */
   async hasPendingTo(proxy) {
     proxy = this.web3.utils.toChecksumAddress(proxy)
-    for (const txHash of this.transactionObjects) {
+    for (const txHash of Object.keys(this.transactionObjects)) {
       if (this.transactionObjects[txHash].to === proxy) {
         return true
       }
