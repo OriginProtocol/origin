@@ -147,12 +147,10 @@ export default class Reviews extends Component {
                                 )}
                               </Link>
                             </div>
-                            <Link to={`/user/${review.reviewer.id}`}>
-                              <EthAddress
-                                address={review.reviewer.id}
-                                short={true}
-                              />
-                            </Link>
+                            <EthAddress
+                              address={review.reviewer.id}
+                              short={true}
+                            />
                           </div>
                           <div className="info">
                             <div className="purchase">
@@ -316,7 +314,7 @@ require('react-styl')(`
       transform: rotate(180deg)
       background: url(images/caret-blue.svg) no-repeat right
       background-size: 12px
-    
+
     .no-reviews
       text-align: center
       padding-top: 7rem
