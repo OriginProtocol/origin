@@ -7,6 +7,7 @@ import Modal from 'components/Modal'
 import MetaMaskAnimation from 'components/MetaMaskAnimation'
 import query from 'queries/TransactionReceipt'
 import withWallet from 'hoc/withWallet'
+import withConfig from 'hoc/withConfig'
 
 const WaitForFirstBlock = () => (
   <div className="make-offer-modal">
@@ -72,15 +73,22 @@ class WaitForTransaction extends Component {
       const walletType = this.props.walletType
       const provider =
         walletType && walletType === 'Mobile' ? 'mobile wallet' : walletType
+      const metaTxEnabled = get(this.props, 'config.relayerEnabled') === true
 
       const content = (
         <div className="make-offer-modal">
           {provider === 'MetaMask' ? <MetaMaskAnimation /> : <Confirm />}
           <div>
-            <fbt desc="WaitForTransaction.confirmInProvider">
-              Please confirm this transaction in{' '}
-              <fbt:param name="provider">{provider}</fbt:param>
-            </fbt>
+            {metaTxEnabled && walletType === 'Mobile' ? (
+              <fbt desc="WaitForTransaction.confirmInProvider.metaTx">
+                Waiting for confirmation...
+              </fbt>
+            ) : (
+              <fbt desc="WaitForTransaction.confirmInProvider">
+                Please confirm this transaction in{' '}
+                <fbt:param name="provider">{provider}</fbt:param>
+              </fbt>
+            )}
           </div>
         </div>
       )
@@ -154,4 +162,4 @@ class WaitForTransaction extends Component {
   }
 }
 
-export default withWallet(WaitForTransaction)
+export default withConfig(withWallet(WaitForTransaction))
