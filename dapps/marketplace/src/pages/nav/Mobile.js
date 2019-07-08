@@ -46,6 +46,7 @@ const MobileNav = ({ open, onClose, onOpen }) => {
       className="nav-item mobile"
       open={open}
       onClose={() => onClose()}
+      animateOnExit={true}
       content={
         <>
           <div className="dropdown-menu-bg" onClick={() => onClose()} />

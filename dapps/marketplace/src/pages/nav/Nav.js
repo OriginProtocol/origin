@@ -33,7 +33,7 @@ const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
   const [open, setOpen] = useState()
   const navProps = nav => ({
     onOpen: () => setOpen(nav),
-    onClose: () => setOpen(false),
+    onClose: () => open === nav && setOpen(false),
     open: open === nav
   })
 
@@ -253,13 +253,15 @@ require('react-styl')(`
           box-shadow: none
           margin-top: 0
           border-radius: 0
-          left: 0
+          left: -100%
           right: auto
           bottom: 0
           top: 0
+          transition: left 0.3s ease
           &.dropdown-menu-right
             left: auto
-            right: 0
+            right: -100%
+            transition: right 0.3s ease
         .dropdown-menu-bg
           position: fixed
           left: 0
@@ -271,5 +273,15 @@ require('react-styl')(`
           width: auto
           height: auto
           z-index: 1
+          opacity: 0
+          transition: opacity 0.3s ease
+        &.show
+          .dropdown-menu
+            left: 0
+            &.dropdown-menu-right
+              left: auto
+              right: 0
+          .dropdown-menu-bg
+            opacity: 1
 
 `)

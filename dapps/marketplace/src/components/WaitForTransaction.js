@@ -88,19 +88,17 @@ class WaitForTransaction extends Component {
         return content
       }
       return (
-        <>
-          <Modal
-            shouldClose={this.state.shouldClose}
-            onClose={() => {
-              this.setState({ shouldClose: false }, () => {
-                this.props.onClose ? this.props.onClose() : null
-              })
-            }}
-            disableDismiss={true}
-          >
-            {content}
-          </Modal>
-        </>
+        <Modal
+          shouldClose={this.state.shouldClose}
+          onClose={() => {
+            this.setState({ shouldClose: false }, () => {
+              this.props.onClose ? this.props.onClose() : null
+            })
+          }}
+          disableDismiss={true}
+        >
+          {content}
+        </Modal>
       )
     }
 
@@ -146,6 +144,7 @@ class WaitForTransaction extends Component {
                   this.props.onClose()
                 }
               }}
+              disableDismiss={true}
               children={content}
             />
           )

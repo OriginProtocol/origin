@@ -116,7 +116,9 @@ const Listings = ({ match, wallet, walletProxy }) => {
 
 const NoListings = ({ filter }) => (
   <div className="no-transactions text-center">
-    <img src="images/empty-listings-graphic.svg" />
+    <div className="image-container">
+      <img src="images/empty-icon.svg" />
+    </div>
     {filter === 'all' && (
       <>
         <h3>
@@ -222,8 +224,10 @@ require('react-styl')(`
     padding-top: 3rem
     max-width: 760px
     .no-transactions
-      img
-        max-width: 75%
+      .image-container
+        padding-right: 90px
+        img
+          max-width: 75%
     .listings,.purchases,.sales
       .listing,.purchase,.sale
         display: flex

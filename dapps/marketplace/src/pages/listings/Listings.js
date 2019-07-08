@@ -245,6 +245,7 @@ class Listings extends Component {
                           hasNextPage={hasNextPage}
                           showCategory={showCategory}
                           tokenDecimals={this.props.tokenDecimals}
+                          injectCTAs={true}
                         />
                         {!hasNextPage ? null : (
                           <button

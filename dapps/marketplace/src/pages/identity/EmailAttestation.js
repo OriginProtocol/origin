@@ -101,7 +101,7 @@ class EmailAttestation extends Component {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
 
-              const emailRegex = /^[a-z0-9-._+]+@[a-z0-9-]+\.([a-z]{2,4})(\.[a-z]{2,4})?$/i
+              const emailRegex = /^[a-z0-9-._+]+@[a-z0-9-]+(\.[a-z]+)*(\.[a-z]{2,})$/i
               if (!emailRegex.test(this.state.email)) {
                 this.setState({
                   error: fbt(

@@ -115,12 +115,15 @@ const Sales = ({ match, wallet, walletProxy }) => {
 
 const NoPurchases = () => (
   <div className="no-transactions text-center">
-    <img src="images/empty-listings-graphic.svg" />
+    <div className="image-container">
+      <img src="images/empty-icon.svg" />
+    </div>
     <h3>You haven’t sold anything yet.</h3>
-    <p>Click below to view all listings.</p>
-    <br />
-    <Link to="/" className="btn btn-lg btn-outline-primary btn-rounded">
-      Browse Listings
+    <Link
+      to="/my-listings"
+      className="btn btn-lg btn-outline-primary btn-rounded"
+    >
+      View Listings
     </Link>
   </div>
 )
@@ -168,4 +171,9 @@ const Sale = ({ listing, offer }) => (
 export default withWallet(Sales)
 
 require('react-styl')(`
+  .no-transactions
+    .image-container
+      padding-right: 90px
+      img
+        max-width: 75%
 `)
