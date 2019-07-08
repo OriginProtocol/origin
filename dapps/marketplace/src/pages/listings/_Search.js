@@ -118,6 +118,12 @@ class Search extends Component {
         <div className="featured-categories-wrapper">
           <div className="featured-categories">
             <div
+              className="category-icon rewards"
+              onClick={() => this.onRewardsClick()}
+            >
+              <fbt desc="Search.Rewards">Rewards</fbt>
+            </div>
+            <div
               className="category-icon apparel"
               onClick={() =>
                 this.onCategoryClick({ subCategory: 'clothingAccessories' })
@@ -177,6 +183,20 @@ class Search extends Component {
         active: false
       })
     }
+  }
+
+  onRewardsClick() {
+    this.props.history.push({
+      pathname: '/search',
+      search: queryString.stringify({
+        ognListings: true
+      })
+    })
+    this.setState({
+      active: false,
+      searchInput: ''
+    })
+    this.inputRef.blur()
   }
 
   doSearch() {
@@ -261,6 +281,9 @@ require('react-styl')(`
             text-overflow: ellipsis
             cursor: pointer
 
+            &.rewards
+              &:before
+                background-color: #007fff
             &:before
               content: ''
               display: inline-block
@@ -273,6 +296,9 @@ require('react-styl')(`
 
             &.apparel:before
               background-image: url('images/categories/apparel-icon.svg')
+            &.rewards:before
+              background-image: url('images/origin-icon-white.svg')
+              background-size: 30px 34px
             &.gift-cards:before
               background-image: url('images/categories/gift-card-icon.svg')
             &.housing:before

@@ -17,7 +17,7 @@ import get from 'lodash.get'
 import RNPickerSelect from 'react-native-picker-select'
 import * as RNLocalize from 'react-native-localize'
 
-import { setPhoneAttestation } from 'actions/Onboarding'
+import { addAttestation, addSkippedAttestation } from 'actions/Onboarding'
 import BackArrow from 'components/back-arrow'
 import Disclaimer from 'components/disclaimer'
 import OriginButton from 'components/origin-button'
@@ -129,7 +129,7 @@ class PhoneScreen extends Component {
     } else {
       this.setState({
         loading: false,
-        phoneError: get(response.json(), 'errors[0]', '')
+        phoneError: get(await response.json(), 'errors[0]', '')
       })
     }
   }
@@ -188,13 +188,13 @@ class PhoneScreen extends Component {
     if (!response.ok) {
       this.setState({ verifyError: get(data, 'errors[0]', '') })
     } else {
-      this.props.setPhoneAttestation(data)
+      await this.props.addAttestation(JSON.stringify(data))
       this.props.navigation.navigate(this.props.nextOnboardingStep)
     }
   }
 
   handleSkip = async () => {
-    await this.props.setPhoneAttestation(false)
+    await this.props.addSkippedAttestation('phone')
     this.props.navigation.navigate(this.props.nextOnboardingStep)
   }
 
@@ -366,8 +366,10 @@ const mapStateToProps = ({ onboarding, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  setPhoneAttestation: phoneAttestation =>
-    dispatch(setPhoneAttestation(phoneAttestation))
+  addAttestation: phoneAttestation =>
+    dispatch(addAttestation(phoneAttestation)),
+  addSkippedAttestation: attestationName =>
+    dispatch(addSkippedAttestation(attestationName))
 })
 
 export default withConfig(

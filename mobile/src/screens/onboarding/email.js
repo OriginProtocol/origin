@@ -15,7 +15,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash.get'
 
-import { setEmailAttestation } from 'actions/Onboarding'
+import { addAttestation } from 'actions/Onboarding'
 import BackArrow from 'components/back-arrow'
 import Disclaimer from 'components/disclaimer'
 import OriginButton from 'components/origin-button'
@@ -138,7 +138,7 @@ class EmailScreen extends Component {
     if (!response.ok) {
       this.setState({ verifyError: get(data, 'errors[0]', '') })
     } else {
-      this.props.setEmailAttestation(data)
+      await this.props.addAttestation(JSON.stringify(data))
       this.props.navigation.navigate(this.props.nextOnboardingStep)
     }
   }
@@ -301,8 +301,7 @@ const mapStateToProps = ({ onboarding, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  setEmailAttestation: emailAttestation =>
-    dispatch(setEmailAttestation(emailAttestation))
+  addAttestation: emailAttestation => dispatch(addAttestation(emailAttestation))
 })
 
 export default withConfig(

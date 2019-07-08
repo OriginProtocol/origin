@@ -209,14 +209,16 @@ class MarketplaceScreen extends Component {
         )
         // Send the response back to the webview
         this.handleBridgeResponse(msgData, signature)
+        console.debug('Got meta transaction: ', decodedTransaction)
       } else {
-        console.debug('Invalid meta transaction: ', decodedTransaction)
+        console.warn('Invalid meta transaction: ', decodedTransaction)
       }
     } else if (currentRoute === 'Ready') {
       // Relayer failure fallback, if we are on the onboarding step where identity
       // gets published reject the transaction because we don't want to display a
       // modal, the user most likely can't proceed because the account is new and
       // has no balance
+      console.warn('Could not process WebView message: ', msgData)
       this.handleBridgeResponse(msgData, {
         message: 'User denied transaction signature'
       })
@@ -260,6 +262,7 @@ class MarketplaceScreen extends Component {
       'createListing',
       'createProxyWithSenderNonce',
       'emitIdentityUpdated',
+      'finalize',
       'swapAndMakeOffer',
       'makeOffer',
       'marketplaceFinalizeAndPay',

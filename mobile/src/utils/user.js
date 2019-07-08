@@ -50,6 +50,38 @@ export function truncate(data, chars = 5) {
   return data.substr(0, chars) + '...'
 }
 
+/* Get a list of attestations the user no longer has to complete in the
+ * onboarding process by parsing the attestations from the identity and
+ * any skipped attestations.
+ */
+export function getCompletedAttestations(onboardingStore) {
+  const attestationTypes = ['email', 'phone']
+
+  const existingAttestations = []
+  // Parse attestation types loaded from the identity
+  get(onboardingStore, 'attestations', []).forEach(a => {
+    try {
+      const attestation = get(JSON.parse(a), 'data.attestation')
+      attestationTypes.forEach(attestationType => {
+        if (get(attestation, `${attestationType}.verified`)) {
+          existingAttestations.push(attestationType)
+        }
+      })
+    } catch (error) {
+      console.warn('Could not parse attestation')
+    }
+  })
+
+  // Concat with skipped attestations filtering for unique
+  const completedAttestations = existingAttestations.concat(
+    get(onboardingStore, 'skippedAttestations', []).filter(
+      a => existingAttestations.indexOf(a) < 0
+    )
+  )
+
+  return completedAttestations
+}
+
 /* Determine the next onboarding step from the state of the onboarding store.
  *
  * This logic is abstracted here to avoid duplicating it. It is used by a HOC
@@ -57,15 +89,10 @@ export function truncate(data, chars = 5) {
  * a react-navigation navigator. The HOC is not compatible.
  */
 export function getNextOnboardingStep(onboardingStore, settingsStore) {
-  if (
-    !onboardingStore.emailAttestation &&
-    !get(onboardingStore, 'verifiedAttestations', []).includes('email')
-  ) {
+  const completedAttestations = getCompletedAttestations(onboardingStore)
+  if (!completedAttestations.includes('email')) {
     return 'Email'
-  } else if (
-    onboardingStore.phoneAttestation === null &&
-    !get(onboardingStore, 'verifiedAttestations', []).includes('phone')
-  ) {
+  } else if (!completedAttestations.includes('phone')) {
     return 'Phone'
   } else if (!onboardingStore.firstName || !onboardingStore.lastName) {
     return 'Name'
