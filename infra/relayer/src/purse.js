@@ -85,7 +85,7 @@ class Purse {
     // If it's not already a web3-provider-engine provider...
     if (
       web3.currentProvider &&
-      typeof web3.currentProvider._providers !== 'undefined'
+      typeof web3.currentProvider._providers === 'undefined'
     ) {
       // init the custom provider
       createEngine(web3, {
