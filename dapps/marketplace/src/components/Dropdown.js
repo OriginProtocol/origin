@@ -4,52 +4,93 @@ class Dropdown extends Component {
   constructor(props) {
     super(props)
     this.onBlur = this.onBlur.bind(this)
-    this.state = {}
+    this.state = {
+      open: false
+    }
   }
 
   componentDidMount() {
     if (this.props.open) {
-      document.addEventListener('click', this.onBlur)
+      this.doOpen()
     }
   }
 
   componentWillUnmount() {
-    if (this.props.open) {
-      document.removeEventListener('click', this.onBlur)
+    if (this.state.open) {
+      this.doClose()
     }
   }
 
   componentDidUpdate(prevProps) {
+    if (prevProps.open === this.props.open) {
+      return
+    }
+
     if (prevProps.open && !this.props.open) {
-      document.removeEventListener('click', this.onBlur)
+      // Should close
+      this.doClose()
     } else if (!prevProps.open && this.props.open) {
-      document.addEventListener('click', this.onBlur)
+      // Should open
+      this.doOpen()
     }
   }
 
   onBlur() {
-    if (document.body.classList.contains('mobile-modal-open')) {
-      return
-    }
-
-    if (!this.mouseOver && this.props.onClose) {
-      this.props.onClose()
+    if (!this.mouseOver) {
+      this.doClose()
     }
   }
 
+  doOpen() {
+    if (this.state.open) {
+      return
+    }
+
+    document.addEventListener('click', this.onBlur)
+
+    this.setState({ open: true })
+    setTimeout(() => this.dropdownEl.classList.add('show'), 10)
+  }
+
+  doClose() {
+    if (!this.state.open || this.state.closing) {
+      return
+    }
+
+    document.removeEventListener('click', this.onBlur)
+
+    this.dropdownEl.classList.remove('show')
+    if (this.props.onClose) {
+      if (this.props.animateOnExit) {
+        this.setState({ closing: true })
+
+        this.onCloseTimeout = setTimeout(() => {
+          this.setState({ open: false, closing: false })
+          this.props.onClose()
+        }, 300)
+        return
+      }
+
+      this.props.onClose()
+    }
+
+    this.setState({ open: false })
+  }
+
   render() {
-    let className = `dropdown${this.props.open ? ' show' : ''}`
+    let className = 'dropdown'
     if (this.props.className) className += ` ${this.props.className}`
     const El = this.props.el || 'div'
 
     return (
       <El
+        ref={ref => (this.dropdownEl = ref)}
         className={className}
         onMouseOver={() => (this.mouseOver = true)}
         onMouseOut={() => (this.mouseOver = false)}
       >
         {this.props.children}
-        {this.props.content && this.props.open ? this.props.content : null}
+        {this.props.content && this.state.open ? this.props.content : null}
       </El>
     )
   }

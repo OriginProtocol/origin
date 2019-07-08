@@ -4,8 +4,6 @@ import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/Availability
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
-import { withRouter } from 'react-router-dom'
-
 import withWallet from 'hoc/withWallet'
 import withIsMobile from 'hoc/withIsMobile'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
@@ -33,8 +31,6 @@ import FractionalHourly from './_BuyFractionalHourly'
 import GiftCardDetail from './listing-types/GiftCard'
 import FractionalNightlyDetail from './listing-types/FractionalNightly'
 import FractionalHourlyDetail from './listing-types/FractionalHourly'
-
-import Search from '../listings/_Search'
 
 class ListingDetail extends Component {
   constructor(props) {
@@ -110,7 +106,6 @@ class ListingDetail extends Component {
     if (isMobile) {
       return (
         <>
-          {this.renderNavBar()}
           <div className="listing-hero-section">
             <div className="listing-info">
               {this.renderHeading()}
@@ -147,24 +142,6 @@ class ListingDetail extends Component {
           {reviews}
           {userListings}
         </div>
-      </>
-    )
-  }
-
-  renderNavBar() {
-    const history = get(this.props, 'history')
-
-    return (
-      <>
-        {<Search className="search" placeholder />}
-        {history && history.length > 1 && (
-          <button
-            className="btn btn-link btn-back-link"
-            onClick={() => history.goBack()}
-          >
-            <fbt desc="Back">Back</fbt>
-          </button>
-        )}
       </>
     )
   }
@@ -236,7 +213,7 @@ class ListingDetail extends Component {
   }
 
   renderAction() {
-    const { listing } = this.props
+    const { listing, wallet, walletProxy, ognListingRewards } = this.props
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
@@ -244,12 +221,13 @@ class ListingDetail extends Component {
       listing.__typename === 'UnitListing' && listing.unitsTotal === 1
     const isService = listing.__typename === 'ServiceListing'
     const isPendingBuyer = listing.pendingBuyers.some(
-      b => b.id === this.props.walletProxy
+      b => b.id === walletProxy || b.id === wallet
     )
-    const isListingCreator = listing.seller.id === this.props.walletProxy
+    const isListingCreator =
+      listing.seller.id === walletProxy || listing.seller.id === wallet
 
     const props = { ...this.props }
-    const growthReward = this.props.ognListingRewards[listing.id]
+    const growthReward = ognListingRewards[listing.id]
     if (growthReward) {
       props.growthReward = growthReward
     }
@@ -259,7 +237,8 @@ class ListingDetail extends Component {
       : listing.events.filter(
           event =>
             event.event === 'OfferCreated' &&
-            event.returnValues.party === this.props.walletProxy
+            (event.returnValues.party === walletProxy ||
+              event.returnValues.party === wallet)
         )
 
     if (isListingCreator) {
@@ -337,44 +316,18 @@ class ListingDetail extends Component {
   }
 }
 
-export default withRouter(
-  withGrowthCampaign(
-    withWallet(
-      withTokenBalance(withGrowthRewards(withIsMobile(ListingDetail)))
-    ),
-    {
-      fetchPolicy: 'cache-first',
-      queryEvenIfNotEnrolled: true,
-      suppressErrors: true // still show listing detail in case growth can not be reached
-    }
-  )
+export default withGrowthCampaign(
+  withWallet(withTokenBalance(withGrowthRewards(withIsMobile(ListingDetail)))),
+  {
+    fetchPolicy: 'cache-first',
+    queryEvenIfNotEnrolled: true,
+    suppressErrors: true // still show listing detail in case growth can not be reached
+  }
 )
 
 require('react-styl')(`
   .listing-detail
     margin-top: 2.5rem
-
-    .btn-back-link
-      color: var(--dark)
-      font-size: 14px
-      text-decoration: none
-      position: relative
-      padding-left: 1.2rem
-      line-height: 1rem
-      margin-bottom: 0.5rem
-      &:before
-        content: ''
-        position: absolute
-        display: inline-block
-        margin-right: 5px
-        background-image: url(images/caret-grey.svg)
-        background-size: 0.8rem
-        background-position: center
-        background-repeat: no-repeat
-        transform: rotateZ(270deg)
-        height: 1rem
-        width: 1rem
-        left: 0
 
     .listing-hero-section
       display: flex

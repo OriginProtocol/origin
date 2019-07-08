@@ -90,7 +90,7 @@ class PhoneScreen extends Component {
     this.state = {
       countryValue: countryValue,
       phoneValue: '',
-      phoneError: '',
+      phoneError: null,
       loading: false,
       verify: false,
       verifyError: '',
@@ -100,7 +100,7 @@ class PhoneScreen extends Component {
   }
 
   handleChange = async (field, value) => {
-    await this.setState({ [`${field}Error`]: '', [`${field}Value`]: value })
+    await this.setState({ [`${field}Error`]: null, [`${field}Value`]: value })
   }
 
   /* Handle submission of phone number. Check if an identity with this phone
@@ -253,7 +253,7 @@ class PhoneScreen extends Component {
             value={this.state.phoneValue}
             style={[styles.input, this.state.phoneError ? styles.invalid : {}]}
           />
-          {this.state.phoneError.length > 0 && (
+          {this.state.phoneError !== null && (
             <Text style={styles.invalid}>{this.state.phoneError}</Text>
           )}
           <Disclaimer>
