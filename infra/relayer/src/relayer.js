@@ -323,8 +323,9 @@ class Relayer {
         )
       }
 
+      let txOut
       try {
-        txHash = await this.purse.sendTx(tx, async receipt => {
+        txOut = await this.purse.sendTx(tx, async receipt => {
           /**
            * Once block is mined, record the amount of gas, the forwarding account,
            * and the status of the transaction in the DB.
@@ -359,10 +360,12 @@ class Relayer {
         return res.status(400).send({ errors: [errMsg] })
       }
 
-      // Record the transaction hash in the DB.
-      logger.info(`Submitted tx with hash ${txHash}`)
+      // Record the transaction hash and gas price in the DB.
+      txHash = txOut.txHash
+      const gasPrice = txOut.gasPrice.toNumber()
+      logger.info(`Submitted tx with hash ${txHash} at gas price ${gasPrice}`)
       if (dbTx) {
-        await dbTx.update({ txHash })
+        await dbTx.update({ txHash, gasPrice })
       }
     } catch (err) {
       logger.error(err)
