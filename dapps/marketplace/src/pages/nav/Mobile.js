@@ -5,7 +5,7 @@ import Dropdown from 'components/Dropdown'
 import Redirect from 'components/Redirect'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
-const MobileNav = ({ open, onClose, onOpen }) => {
+const MobileNav = ({ open, onClose, onOpen, onShowFooter }) => {
   // Allow the menu to close before redirecting so it doesn't show when
   // the user clicks or swipes back.
   const [redirect, setRedirect] = useState()
@@ -118,6 +118,22 @@ const MobileNav = ({ open, onClose, onOpen }) => {
               className="dropdown-item settings"
               children={fbt('Settings', 'navigation.settings')}
             />
+            <a
+              href="mailto:support@originprotocol.com"
+              onClick={() => onClose()}
+              className="dropdown-item feedback"
+              children={fbt('Feedback', 'navigation.feedback')}
+            />
+            <a
+              href="#"
+              onClick={e => {
+                e.preventDefault()
+                onShowFooter()
+                onClose()
+              }}
+              className="dropdown-item more"
+              children={fbt('More', 'navigation.more')}
+            />
           </div>
         </>
       }
@@ -204,4 +220,8 @@ require('react-styl')(`
           background-image: url(images/nav/alerts-icon.svg)
         &.settings::before
           background-image: url(images/nav/gear-icon.svg)
+        &.feedback::before
+          background-image: url(images/nav/feedback-icon.svg)
+        &.more::before
+          background-image: url(images/nav/more-icon.svg)
 `)
