@@ -10,6 +10,7 @@ const initialState = {
   noRewardsDismissed: false,
   skippedAttestations: [],
   growth: null,
+  requiresPublish: true,
   complete: false
 }
 
@@ -48,6 +49,9 @@ export default function Onboarding(state = initialState, action = {}) {
 
     case OnboardingConstants.SET_GROWTH:
       return { ...state, growth: action.value }
+
+    case OnboardingConstants.SET_REQUIRES_PUBLISH:
+      return { ...state, requiresPublish: action.value }
 
     case OnboardingConstants.RESET:
       return initialState

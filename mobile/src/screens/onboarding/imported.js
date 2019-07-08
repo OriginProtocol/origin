@@ -62,12 +62,22 @@ class ImportedScreen extends Component {
     const identity = get(response, 'data.web3.account.identity')
     if (identity) {
       const attestations = get(identity, 'attestations', [])
-      attestations.map(this.props.addAttestation)
-      this.props.setName({
+      await Promise.all(attestations.map(this.props.addAttestation))
+      await this.props.setName({
         firstName: identity.firstName,
         lastName: identity.lastName
       })
-      this.props.setAvatarUri(identity.avatarUrl)
+      await this.props.setAvatarUri(identity.avatarUrl)
+      // Check and see if we are going to be modifying the identity during the
+      // remaining onboarding steps so we can skip publishing of the identity
+      // if nothing will change
+      if (
+        ['Growth', 'Authentication', 'Ready'].includes(
+          this.props.nextOnboardingStep
+        )
+      ) {
+        this.props.setRequiresPublish(false)
+      }
       // Save the whole identity in the wallet store
       this.props.setIdentity(identity)
     }
