@@ -34,7 +34,7 @@ messagingImageTag: '72b91f2'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '7428c36'
+notificationsImageTag: '89de464'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
@@ -59,7 +59,7 @@ adminImageTag: 'f78d380'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: 'b6212e7'
+relayerImageTag: '36c2885'
 
 # origin-graphql
 graphqlImage: origin-graphql

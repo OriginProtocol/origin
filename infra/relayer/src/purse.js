@@ -59,7 +59,7 @@ class Account {
 
 /**
  * Purse is an account abstraction that allows relayer to feed it arbitrary transactions to send
- * with whatever account it has avilable.  It does not block and wait for transactions to be mined.
+ * with whatever account it has available.  It does not block and wait for transactions to be mined.
  * You can not choose which account to send from.  No transactions, except those to fund the
  * derived children will be sent from the master account (of the mnemonic provided).
  *
@@ -179,7 +179,7 @@ class Purse {
   }
 
   /**
-   * Tear it all down!  Probalby only used in testing.
+   * Tear it all down!  Probably only used in testing.
    * @param clearRedis {boolean} - Remove all keys from redis
    */
   async teardown(clearRedis = false) {
@@ -193,10 +193,10 @@ class Purse {
 
   /**
    * Get the gas price to use for a transaction
-   * @returns {BN} The gas price in gwei
+   * @returns {BN} The gas price in wei
    */
   async gasPrice() {
-    let gp = new BN('3000000000', 10) // 3gwei
+    let gp = new BN('3000000000', 10) // 3 gwei
     try {
       const netGp = stringToBN(await this.web3.eth.getGasPrice())
       if (netGp) {
@@ -226,7 +226,7 @@ class Purse {
      * Select the account with the lowest pending that's under the max allowed
      * pending transactions.  If none vailable, twiddle our thumbs until one
      * becomes available...  The order is also important here.  According to the
-     * HD wallet "standards" the lowest index/path should be uesd first.  That
+     * HD wallet "standards" the lowest index/path should be used first.  That
      * way, any wallets using the mnemonic in the future will discover all the
      * children and their funds.  It is supposed to stop at the first one
      * without a tx history.
@@ -286,7 +286,7 @@ class Purse {
    *
    * @param tx {object} - The transaction object, sans `from` and `nonce`
    * @param onReceipt {function} - An optional callback to call when a receipt is found
-   * @returns {string} The transaction hash of the sent transaction
+   * @returns {{txHash: string, gasPrice: BN}} The transaction hash and gas price of the sent transaction
    */
   async sendTx(tx, onReceipt) {
     const address = await this.getAvailableAccount()
@@ -301,6 +301,7 @@ class Purse {
     if (!tx.gasPrice) {
       tx.gasPrice = await this.gasPrice()
     }
+    const gasPrice = new BN(tx.gasPrice)
 
     logger.debug('Sending tx: ', tx)
 
@@ -333,7 +334,7 @@ class Purse {
       throw err
     }
 
-    return txHash
+    return { txHash, gasPrice }
   }
 
   /**
@@ -735,7 +736,7 @@ class Purse {
       logger.info(`Funded ${address} with ${txHash}`)
     } catch (err) {
       logger.error(`Error sending transaction to fund child ${address}.`)
-      logger.errro(err)
+      logger.error(err)
       this.accounts[address].hasPendingFundingTx = false
     }
 
