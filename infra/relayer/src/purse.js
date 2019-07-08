@@ -294,6 +294,7 @@ class Purse {
     // Set the from and nonce for the account
     tx = {
       ...tx,
+      to: this.web3.utils.toChecksumAddress(tx.to),
       from: address,
       nonce: await this.txCount(address)
     }
@@ -476,6 +477,19 @@ class Purse {
       }
       return JSON.parse(txObjStr)
     }
+  }
+
+  /**
+   * Check if there are any pending transactions to an account.
+   */
+  async hasPendingTo(proxy) {
+    proxy = this.web3.utils.toChecksumAddress(proxy)
+    for (const txHash of Object.keys(this.transactionObjects)) {
+      if (this.transactionObjects[txHash].to === proxy) {
+        return true
+      }
+    }
+    return false
   }
 
   /**

@@ -254,6 +254,19 @@ class Relayer {
         return res.status(400).send({ errors: ['Proxy exists'] })
       }
 
+      // Check if it already has pending
+      /**
+       * TODO: This is a temporary solution to prevent users from submitting a
+       * tx with a bad proxy nonce.  A more permanent solution will be required.
+       * See: https://github.com/OriginProtocol/origin/issues/2631
+       */
+      if (await this.purse.hasPendingTo(proxy)) {
+        logger.error(`Proxy ${proxy} already has a pending transaction`)
+        return res
+          .status(429)
+          .send({ errors: ['Proxy has pending transaction'] })
+      }
+
       nonce = await UserProxy.methods.nonce(from).call()
     } else {
       // Verify a proxy doesn't already exist
