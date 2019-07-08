@@ -62,7 +62,11 @@ class ContractHelper {
     return await withRetries(retryOpts, async () => {
       if (transactionHash) {
         const receipt = await web3.eth.getTransactionReceipt(transactionHash)
-        if (receipt) {
+        // Note: we check on presence of both receipt and receipt.blockNumber
+        // to account for difference between Geth and Parity:
+        //  - Geth does not return a receipt until transaction mined
+        //  - Parity returns a receipt with no blockNumber until transaction mined.
+        if (receipt && receipt.blockNumber) {
           this.vlog('got transaction receipt', receipt)
           if (!receipt.status) {
             throw new Error('transaction failed')

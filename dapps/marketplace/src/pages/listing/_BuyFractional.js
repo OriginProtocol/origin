@@ -105,6 +105,7 @@ const Fractional = ({
                   value={token}
                   onChange={setToken}
                   hasBalance={tokenStatus.hasBalance}
+                  hasEthBalance={tokenStatus.hasEthBalance}
                 >
                   <Buy
                     refetch={refetch}

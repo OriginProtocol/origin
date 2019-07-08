@@ -28,23 +28,23 @@ const ListingCards = ({
       }${compact ? ' listing-compact-cards' : ''}`}
     >
       {redirect && <Redirect to={redirect} push />}
-      {listings.map(a => (
+      {listings.map(listing => (
         <div
-          key={a.id}
+          key={listing.id}
           onClick={e => {
             if (altClick(e)) {
-              setRedirect(`/listing/${a.id}`)
+              setRedirect(`/listing/${listing.id}`)
             } else if (e.target.tagName !== 'A') {
-              window.open(`#/listing/${a.id}`, '_blank')
+              window.open(`#/listing/${listing.id}`, '_blank')
             }
           }}
           className="listing-card"
         >
-          {a.media && a.media.length ? (
+          {listing.media && listing.media.length ? (
             <div
               className="main-pic"
               style={{
-                backgroundImage: `url(${a.media[0].urlExpanded})`
+                backgroundImage: `url(${listing.media[0].urlExpanded})`
               }}
             />
           ) : (
@@ -53,20 +53,23 @@ const ListingCards = ({
           {hideCategory ? null : (
             <div className="header">
               <div className="category">
-                <Category listing={a} showPrimary={false} />
+                <Category listing={listing} showPrimary={false} />
               </div>
-              <ListingBadge status={a.status} featured={a.featured} />
+              <ListingBadge
+                status={listing.status}
+                featured={listing.featured}
+              />
             </div>
           )}
           <h5>
-            <a href={`#/listing/${a.id}`}>{a.title}</a>
+            <a href={`#/listing/${listing.id}`}>{listing.title}</a>
           </h5>
-          {a.__typename === 'AnnouncementListing' ? null : (
+          {listing.__typename === 'AnnouncementListing' ? null : (
             <div className="price d-flex align-items-center">
-              <Price listing={a} descriptor />
-              {ognListingRewards[a.id] && (
+              <Price listing={listing} descriptor />
+              {ognListingRewards[listing.id] && (
                 <OgnBadge
-                  amount={ognListingRewards[a.id]}
+                  amount={ognListingRewards[listing.id]}
                   className="listing-card-growth-reward"
                 />
               )}
