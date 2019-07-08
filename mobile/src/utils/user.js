@@ -59,7 +59,7 @@ export function getCompletedAttestations(onboardingStore) {
 
   const existingAttestations = []
   // Parse attestation types loaded from the identity
-  onboardingStore.attestations.forEach(a => {
+  get(onboardingStore, 'attestations', []).forEach(a => {
     try {
       const attestation = get(JSON.parse(a), 'data.attestation')
       attestationTypes.forEach(attestationType => {
@@ -74,7 +74,7 @@ export function getCompletedAttestations(onboardingStore) {
 
   // Concat with skipped attestations filtering for unique
   const completedAttestations = existingAttestations.concat(
-    onboardingStore.skippedAttestations.filter(
+    get(onboardingStore, 'skippedAttestations', []).filter(
       a => existingAttestations.indexOf(a) < 0
     )
   )
