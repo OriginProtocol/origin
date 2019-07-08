@@ -58,8 +58,10 @@ const Nav = ({
       title = <fbt desc="CreateListing.title">Create Listing</fbt>
     }
 
+    const canGoBack = history && history.length > 1
+
     // Make the hamburger menu absolute and hide branding and profile icon.
-    const isProfilePage = pathname.startsWith('/profile')
+    const isProfilePage = /^\/(profile|user)/gi.test(pathname)
 
     const titleAndWallet = (
       <>
@@ -73,18 +75,23 @@ const Nav = ({
     )
 
     const canShowBack =
-      history &&
-      history.length > 1 &&
+      canGoBack &&
       /^\/(listing|my-listings|my-sales|my-purchases|messages|notifications|create)(\/|$)/gi.test(
         pathname
       )
     const canShowSearch = /^\/(listing)?(\/|$)/gi.test(pathname)
     return (
       <>
-        <nav className={`navbar no-border${isProfilePage ? ' fixed-nav' : ''}`}>
-          <Mobile {...navProps('mobile')} onShowFooter={onShowFooter} />
-          {isProfilePage ? null : titleAndWallet}
-        </nav>
+        {isProfilePage && canGoBack ? (
+          <a className="nav-back-icon" onClick={() => history.goBack()} />
+        ) : (
+          <nav
+            className={`navbar no-border${isProfilePage ? ' fixed-nav' : ''}`}
+          >
+            <Mobile {...navProps('mobile')} onShowFooter={onShowFooter} />
+            {isProfilePage ? null : titleAndWallet}
+          </nav>
+        )}
         {canShowSearch && <Search className="search" placeholder />}
         {canShowBack && (
           <button
@@ -260,6 +267,20 @@ require('react-styl')(`
       width: 1rem
       left: 0
 
+  .nav-back-icon
+    display: none
+    height: 2rem
+    width: 2rem
+    top: 1rem
+    left: 0.5rem
+    position: absolute
+    background-image: url('images/caret-grey.svg')
+    background-size: 1.5rem
+    background-position: center
+    transform: rotateZ(270deg)
+    background-repeat: no-repeat
+    z-index: 10
+
   @media (pointer: fine)
     .navbar .nav-item
       &.show .nav-link:hover
@@ -332,5 +353,8 @@ require('react-styl')(`
               right: 0
           .dropdown-menu-bg
             opacity: 1
+  
+    .nav-back-icon
+      display: inline-block
 
 `)

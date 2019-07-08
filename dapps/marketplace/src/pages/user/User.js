@@ -31,7 +31,6 @@ const User = ({ match, isMobile, history }) => {
 
   return (
     <div className="container user-public-profile">
-      <a className="back-icon" onClick={() => goBack(history)} />
       <Query query={query} variables={vars}>
         {({ data, loading, error }) => {
           if (error) {
@@ -147,19 +146,6 @@ require('react-styl')(`
         padding: 1.5rem 0
         border-top: 1px solid #dde6ea
         margin-top: 0.5rem
-    .back-icon
-      display: none
-      height: 2rem
-      width: 2rem
-      top: 1rem
-      left: 0.5rem
-      position: absolute
-      background-image: url('images/caret-grey.svg')
-      background-size: 1.5rem
-      background-position: center
-      transform: rotateZ(270deg)
-      background-repeat: no-repeat
-      z-index: 10
     > .reviews-only.row > .col-md-8
       padding: 1rem
       > .reviews
@@ -171,8 +157,6 @@ require('react-styl')(`
       padding-top: 0
       > .row > .col-md-8
         padding: 0
-      .back-icon
-        display: inline-block
     .reviews-modal
       padding: 1rem
 `)
