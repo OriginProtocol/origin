@@ -52,11 +52,11 @@ class AddData extends Component {
       return
     }
 
-    const { offer, data } = this.props
+    const { offer, data, from } = this.props
     const variables = {
       offerID: offer.id,
       listingID: offer.listing.id,
-      from: this.props.wallet,
+      from,
       data
     }
 

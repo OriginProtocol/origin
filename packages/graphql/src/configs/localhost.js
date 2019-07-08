@@ -36,7 +36,7 @@ const config = {
   ProxyFactory_Epoch: addresses.ProxyFactoryEpoch,
   IdentityProxyImplementation: addresses.IdentityProxyImplementation,
   proxyAccountsEnabled: true,
-  relayerEnabled: false,
+  relayerEnabled: localStorageHas('relayerEnabled', 'true'),
   tokens: [],
 
   messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
