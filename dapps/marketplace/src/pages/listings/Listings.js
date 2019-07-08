@@ -11,7 +11,6 @@ import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withGrowthRewards from 'hoc/withGrowthRewards'
 import withWallet from 'hoc/withWallet'
 import withTokenBalance from 'hoc/withTokenBalance'
-import withIsMobile from 'hoc/withIsMobile'
 
 import BottomScrollListener from 'components/BottomScrollListener'
 import QueryError from 'components/QueryError'
@@ -22,7 +21,6 @@ import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
 
 import ListingCards from './ListingCards'
-import Search from './_Search'
 
 import query from 'queries/Listings'
 
@@ -149,9 +147,6 @@ class Listings extends Component {
       <>
         <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
         <div className="container listings-container">
-          {this.props.isMobile ? (
-            <Search className="search" placeholder />
-          ) : null}
           <Query
             query={query}
             variables={vars}
@@ -245,6 +240,7 @@ class Listings extends Component {
                           hasNextPage={hasNextPage}
                           showCategory={showCategory}
                           tokenDecimals={this.props.tokenDecimals}
+                          injectCTAs={true}
                         />
                         {!hasNextPage ? null : (
                           <button
@@ -280,7 +276,7 @@ class Listings extends Component {
 
 export default withGrowthRewards(
   withGrowthCampaign(
-    withWallet(withTokenBalance(withCreatorConfig(withIsMobile(Listings)))),
+    withWallet(withTokenBalance(withCreatorConfig(Listings))),
     {
       fetchPolicy: 'cache-first',
       queryEvenIfNotEnrolled: true,
@@ -304,6 +300,8 @@ require('react-styl')(`
       padding-top: 0
       .search
         margin-bottom: 1.5rem
+        &.active
+          margin-bottom: 0
     .listings-count
       margin: 0
       font-size: 32px

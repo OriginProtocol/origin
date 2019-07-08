@@ -4,8 +4,31 @@ import Dropdown from 'components/Dropdown'
 
 import { Currencies, CurrenciesByKey } from 'constants/Currencies'
 
-const CurrencyDropdown = ({ className, value, dropup, onChange }) => {
+const CurrencyDropdown = ({
+  className,
+  value,
+  dropup,
+  onChange,
+  useNativeSelectbox
+}) => {
   const [open, setOpen] = useState(false)
+
+  if (useNativeSelectbox) {
+    return (
+      <select
+        className={className}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+      >
+        {Currencies.map(([val, label]) => (
+          <option key={val} value={val}>
+            {label}
+          </option>
+        ))}
+      </select>
+    )
+  }
+
   if (!CurrenciesByKey[value]) {
     value = Currencies[0][0]
   }
