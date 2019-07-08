@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       method: DataTypes.STRING, // Contract method called.
       forwarder: DataTypes.STRING, // Address of the hot wallet used to forward the transaction.
       gas: DataTypes.INTEGER, // Units of gas used.
-      gasPrice: DataTypes.INTEGER, // Gas price, in wei.
+      gasPrice: DataTypes.BIGINT, // Gas price, in wei.
       txHash: DataTypes.STRING, // Blockchain transaction hash.
       data: DataTypes.JSONB // Stores various metadata.
     },
