@@ -38,5 +38,5 @@ export default function withGrowthRewards(WrappedComponent) {
     return <WrappedComponent {...props} ognListingRewards={ognListingRewards} />
   }
 
-  return withGrowthCampaign(WithGrowthRewards)
+  return withGrowthCampaign(WithGrowthRewards, { queryEvenIfNotEnrolled: true })
 }
