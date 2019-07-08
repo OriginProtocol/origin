@@ -45,7 +45,7 @@ const User = ({ match, isMobile, history }) => {
           const reviewsComp = (
             <Reviews
               id={id}
-              hideWhenZero={!showingReviews}
+              hideWhenZero={!showingReviews && !isMobile}
               hideHeader={isMobile}
             />
           )
