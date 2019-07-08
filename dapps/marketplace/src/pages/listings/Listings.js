@@ -21,7 +21,6 @@ import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
 
 import ListingCards from './ListingCards'
-import Search from './_Search'
 
 import query from 'queries/Listings'
 
