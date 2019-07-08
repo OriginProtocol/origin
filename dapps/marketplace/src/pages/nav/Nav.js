@@ -34,7 +34,8 @@ const Nav = ({
   isMobile,
   wallet,
   onGetStarted,
-  onShowFooter
+  onShowFooter,
+  history
 }) => {
   const [open, setOpen] = useState()
   const navProps = nav => ({
@@ -71,11 +72,29 @@ const Nav = ({
       </>
     )
 
+    const canShowBack =
+      history &&
+      history.length > 1 &&
+      /^\/(listing|my-listings|my-sales|my-purchases|messages|notifications|create)(\/|$)/gi.test(
+        pathname
+      )
+    const canShowSearch = /^\/(listing)?(\/|$)/gi.test(pathname)
     return (
-      <nav className={`navbar no-border${isProfilePage ? ' fixed-nav' : ''}`}>
-        <Mobile {...navProps('mobile')} onShowFooter={onShowFooter} />
-        {isProfilePage ? null : titleAndWallet}
-      </nav>
+      <>
+        <nav className={`navbar no-border${isProfilePage ? ' fixed-nav' : ''}`}>
+          <Mobile {...navProps('mobile')} onShowFooter={onShowFooter} />
+          {isProfilePage ? null : titleAndWallet}
+        </nav>
+        {canShowSearch && <Search className="search" placeholder />}
+        {canShowBack && (
+          <button
+            className="btn btn-link btn-back-link"
+            onClick={() => history.goBack()}
+          >
+            <fbt desc="Back">Back</fbt>
+          </button>
+        )}
+      </>
     )
   }
 
@@ -216,6 +235,30 @@ require('react-styl')(`
     align-items: center
     img
       max-height: 32px
+
+
+  .btn-back-link
+    color: var(--dark)
+    font-size: 14px
+    text-decoration: none
+    position: relative
+    padding-left: 1.2rem
+    line-height: 1rem
+    margin-bottom: 0.5rem
+    margin-left: 1rem
+    &:before
+      content: ''
+      position: absolute
+      display: inline-block
+      margin-right: 5px
+      background-image: url(images/caret-grey.svg)
+      background-size: 0.8rem
+      background-position: center
+      background-repeat: no-repeat
+      transform: rotateZ(270deg)
+      height: 1rem
+      width: 1rem
+      left: 0
 
   @media (pointer: fine)
     .navbar .nav-item

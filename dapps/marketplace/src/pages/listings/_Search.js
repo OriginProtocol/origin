@@ -344,6 +344,7 @@ require('react-styl')(`
 
   @media (max-width: 767.98px)
     .listing-search-wrapper
+      padding: 0 1rem
       .search-input-wrapper
         margin-bottom: 1.5rem
 
