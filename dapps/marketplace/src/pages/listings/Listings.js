@@ -284,6 +284,8 @@ require('react-styl')(`
       padding-top: 0
       .search
         margin-bottom: 1.5rem
+        &.active
+          margin-bottom: 0
     .listings-count
       margin: 0
       font-size: 32px
