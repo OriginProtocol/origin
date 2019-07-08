@@ -29,7 +29,13 @@ const Brand = withCreatorConfig(({ creatorConfig }) => {
   )
 })
 
-const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
+const Nav = ({
+  location: { pathname },
+  isMobile,
+  wallet,
+  onGetStarted,
+  onShowFooter
+}) => {
   const [open, setOpen] = useState()
   const navProps = nav => ({
     onOpen: () => setOpen(nav),
@@ -67,7 +73,7 @@ const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
 
     return (
       <nav className={`navbar no-border${isProfilePage ? ' fixed-nav' : ''}`}>
-        <Mobile {...navProps('mobile')} />
+        <Mobile {...navProps('mobile')} onShowFooter={onShowFooter} />
         {isProfilePage ? null : titleAndWallet}
       </nav>
     )
