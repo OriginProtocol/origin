@@ -63,4 +63,4 @@ relayerImageTag: '693f2b1'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: '2be6f7f'
+graphqlImageTag: '693f2b1'
