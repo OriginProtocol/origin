@@ -79,7 +79,7 @@ const MobileNav = ({ open, onClose, onOpen, onShowFooter }) => {
               className="dropdown-item earn"
               onClose={() => onClose()}
               onNavigation={() => onClose()}
-              gotowelcomewhennotenrolled="true"
+              goToWelcomeWhenNotEnrolled="true"
             >
               <fbt desc="navbar.earnTokens">Earn Origin Tokens</fbt>
             </EarnTokens>

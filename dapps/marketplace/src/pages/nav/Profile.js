@@ -175,7 +175,7 @@ const Identity = ({
       <EarnTokens
         className="btn btn-outline-primary earn-ogn"
         onClick={onRewardsClick}
-        gotowelcomewhennotenrolled="true"
+        goToWelcomeWhenNotEnrolled="true"
       >
         <fbt desc="nav.profile.earnOGN">Earn OGN</fbt>
       </EarnTokens>

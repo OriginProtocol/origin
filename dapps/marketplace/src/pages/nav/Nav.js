@@ -163,7 +163,7 @@ const Nav = ({
             <EarnTokens
               className="nav-link text"
               href="#"
-              gotowelcomewhennotenrolled="true"
+              goToWelcomeWhenNotEnrolled="true"
             >
               <span className="d-md-none d-xl-flex">
                 <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
