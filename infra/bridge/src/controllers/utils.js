@@ -9,6 +9,13 @@ const Identity = require('@origin/identity/src/models').Identity
 
 const { getExchangeRate } = require('../utils/exchange-rate')
 
+/* This method is used for determining if an email or phone has previously
+ * been used to create an identity, and so is likely to be excluded from Origin
+ * Rewards during fraud/duplicate detection.
+ *
+ * Returns 204 if the email or phone is fine, or 200 if it exists on another
+ * account.
+ */
 router.post('/exists', async (req, res) => {
   const or = []
   if (req.body.email) {
@@ -25,10 +32,22 @@ router.post('/exists', async (req, res) => {
   const results = await Identity.findAll({
     where: {
       [Op.or]: or
-    }
+    },
+    order: [['createdAt', 'ASC']]
   })
 
-  if (results.length === 0) {
+  if (results.length > 0 && req.body.ethAddress) {
+    // If eth address is given and the first identity found ordered by created_at
+    // is the given eth address then return 204
+    const firstResult = results[0]
+    if (
+      firstResult.ethAddress.toLowerCase() === req.body.ethAddress.toLowerCase()
+    ) {
+      res.sendStatus(204)
+    } else {
+      res.sendStatus(200)
+    }
+  } else if (results.length === 0) {
     res.sendStatus(204)
   } else {
     res.sendStatus(200)

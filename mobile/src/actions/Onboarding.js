@@ -10,6 +10,7 @@ export const OnboardingConstants = keyMirror(
     SET_AVATAR_URI: null,
     SET_COMPLETE: null,
     SET_NO_REWARDS_DISMISSED: null,
+    SET_REQUIRES_PUBLISH: null,
     SET_GROWTH: null,
     RESET: null
   },
@@ -55,6 +56,13 @@ export function setNoRewardsDismissed(dismissed) {
   return {
     type: OnboardingConstants.SET_NO_REWARDS_DISMISSED,
     dismissed
+  }
+}
+
+export function setRequiresPublish(value) {
+  return {
+    type: OnboardingConstants.SET_REQUIRES_PUBLISH,
+    value
   }
 }
 
