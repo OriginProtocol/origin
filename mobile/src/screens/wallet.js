@@ -1,15 +1,24 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Alert, Clipboard, ScrollView, StyleSheet, View } from 'react-native'
+import {
+  Alert,
+  Clipboard,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
+import get from 'lodash.get'
 
 import { evenlySplitAddress } from 'utils/user'
 import Address from 'components/address'
 import Currency from 'components/currency'
 import currencies from 'utils/currencies'
 import ListStyles from 'styles/list'
+import OriginButton from 'components/origin-button'
 
 class WalletScreen extends Component {
   static navigationOptions = () => {
@@ -81,6 +90,33 @@ class WalletScreen extends Component {
   }
 
   render() {
+    const hasActiveAccount = get(this.props.wallet, 'activeAccount.address')
+    return hasActiveAccount
+      ? this.renderBalances()
+      : this.renderNoActiveAddress()
+  }
+
+  renderNoActiveAddress() {
+    return (
+      <>
+        <Text
+          style={{ ...styles.listHeader, fontSize: 16, marginVertical: 50 }}
+        >
+          No accounts found.
+        </Text>
+        <OriginButton
+          size="large"
+          type="primary"
+          title={fbt('Add Account', 'WalletScreen.addAccountButton')}
+          onPress={() => {
+            this.props.navigation.navigate('ImportAccount')
+          }}
+        />
+      </>
+    )
+  }
+
+  renderBalances() {
     const { wallet } = this.props
 
     return (

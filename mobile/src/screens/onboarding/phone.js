@@ -142,7 +142,8 @@ class PhoneScreen extends Component {
       headers: { 'content-type': 'application/json' },
       method: 'POST',
       body: JSON.stringify({
-        phone: `${this.state.countryValue.prefix} ${this.state.phoneValue}`
+        phone: `${this.state.countryValue.prefix} ${this.state.phoneValue}`,
+        ethAddress: this.props.wallet.activeAccount.address
       })
     })
     // 200 status code indicates account was found
