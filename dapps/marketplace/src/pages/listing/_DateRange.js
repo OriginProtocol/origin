@@ -33,9 +33,6 @@ const DateRangeComponent = ({
 
   if (endDate) {
     endDateDisplay = dayjs(endDate)
-    if (!timeRange) {
-      endDateDisplay = endDateDisplay.add(1, 'day')
-    }
     endDateDisplay = endDateDisplay.format(format)
     endDateUnset = false
   }

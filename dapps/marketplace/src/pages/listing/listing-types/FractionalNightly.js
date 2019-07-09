@@ -50,6 +50,8 @@ const FractionalNightlyDetail = ({
               onChange={state => setSelectedRange(state)}
               availability={availability}
               currency={listing.price.currency}
+              startDate={startDate}
+              endDate={endDate}
             />
             <div className="actions mt-auto">
               <button
