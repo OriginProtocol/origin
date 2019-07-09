@@ -251,8 +251,8 @@ require('react-styl')(`
     border-left: 1px solid transparent
     border-right: 1px solid transparent
   .dropdown.show .nav-link
-    border-left: 1px solid var(--light)
-    border-right: 1px solid var(--light)
+    border-left-color: var(--light)
+    border-right-color: var(--light)
     &::after
       content: ""
       position: absolute
@@ -368,6 +368,8 @@ require('react-styl')(`
 
   @media (max-width: 767.98px)
     .dropdown.show .nav-link
+      border-left-color: transparent
+      border-right-color: transparent
       &::after
         content: unset
 
