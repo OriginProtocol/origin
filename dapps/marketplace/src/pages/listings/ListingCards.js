@@ -220,6 +220,8 @@ require('react-styl')(`
       grid-column-gap: 1rem
       grid-row-gap: 1rem
     .listing-card
+      margin: 0 0 0.5rem 0
+      padding: 0
       .category
         display: none
       h5

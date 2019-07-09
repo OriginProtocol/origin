@@ -578,6 +578,7 @@ export default withIsMobile(
 require('react-styl')(`
   .profile-page
     background-color: var(--pale-grey-four)
+    position: relative
     > .container
       padding-top: 2rem
       margin-bottom: -4rem

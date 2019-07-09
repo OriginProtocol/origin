@@ -261,7 +261,7 @@ require('react-styl')(`
           margin-bottom: 0.5rem
           text-transform: uppercase
           margin-bottom: 1rem
-        
+
         .featured-categories-wrapper
           margin: 0 -2rem
           overflow-x: scroll
@@ -307,6 +307,9 @@ require('react-styl')(`
               background-image: url('images/categories/services-icon.svg')
             &.art:before
               background-image: url('images/categories/art-icon.svg')
+
+            &:last-of-type
+              margin-right: 0
     
     &:focus-within
       .form-control
@@ -344,22 +347,22 @@ require('react-styl')(`
 
   @media (max-width: 767.98px)
     .listing-search-wrapper
+      padding: 0 1rem
       .search-input-wrapper
         margin-bottom: 1.5rem
+        .form-control
+          font-size: 22px
+          border: 0
+          border-bottom: 1px solid #dde6ea
+          background-image: url(images/magnifying-glass.svg)
+          background-repeat: no-repeat
+          background-position: right 0 center
+          background-size: 20px
+          border-radius: 0
+          padding-left: 0
 
-      .form-control
-        font-size: 22px
-        border: 0
-        border-bottom: 1px solid #dde6ea
-        background-image: url(images/magnifying-glass.svg)
-        background-repeat: no-repeat
-        background-position: right 0 center
-        background-size: 20px
-        border-radius: 0
-        padding-left: 0
-
-        &::-webkit-input-placeholder
-          color: #94a7b5
-        &:focus
-          box-shadow: none
+          &::-webkit-input-placeholder
+            color: #94a7b5
+          &:focus
+            box-shadow: none
 `)

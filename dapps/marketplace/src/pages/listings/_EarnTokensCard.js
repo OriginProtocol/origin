@@ -1,68 +1,38 @@
 import React from 'react'
 
 import { fbt } from 'fbt-runtime'
-import { Query } from 'react-apollo'
 
-import enrollmentStatusQuery from 'queries/EnrollmentStatus'
-
-import withWallet from 'hoc/withWallet'
 import Link from 'components/Link'
 
-const EarnTokensCard = ({ wallet }) => {
+const EarnTokensCard = () => {
   return (
-    <Query
-      query={enrollmentStatusQuery}
-      variables={{
-        walletAddress: wallet || '0xdummyAddress'
-      }}
-      // enrollment info can change, do not cache it
-      fetchPolicy="network-only"
-    >
-      {({ error, data }) => {
-        if (error) {
-          console.error(error)
-        }
-
-        return (
-          <div className="earn-tokens-card">
-            <Link
-              to={
-                data && data.enrollmentStatus === 'Enrolled'
-                  ? '/campaigns'
-                  : '/welcome'
-              }
-            >
-              <div className="header">
-                <h5>
-                  <fbt desc="listingCard.earnTokens">
-                    Earn
-                    <span>Origin Tokens</span>
-                  </fbt>
-                </h5>
-              </div>
-            </Link>
-            <div className="title">
-              <fbt desc="listingCard.earnTokens.from">From the Origin Team</fbt>
-            </div>
+    <div className="listing-card earn-tokens-card">
+      <Link to="/campaigns">
+        <div className="main-pic">
+          <div>
+            <fbt desc="listingCard.earnTokens">
+              Earn
+              <span>Origin Tokens</span>
+            </fbt>
           </div>
-        )
-      }}
-    </Query>
+        </div>
+      </Link>
+      <h5>
+        <fbt desc="listingCard.earnTokens.from">From the Origin Team</fbt>
+      </h5>
+    </div>
   )
 }
 
-export default withWallet(EarnTokensCard)
+export default EarnTokensCard
 
 require('react-styl')(`
-  .earn-tokens-card
-    .header
+  .listing-card.earn-tokens-card
+    .main-pic
       text-align: center
-      border-radius: 10px
-      margin: 1rem 0
-      padding-top: 75%
       position: relative
       background-color: var(--clear-blue)
-      h5
+      > div
         position: absolute
         bottom: 0
         left: 0
@@ -86,8 +56,7 @@ require('react-styl')(`
           background-repeat: no-repeat
           margin-bottom: 0.6rem
           flex: 1
-    .title
+    h5
       color: #94a7b5
-      font-size: 14px
 
 `)
