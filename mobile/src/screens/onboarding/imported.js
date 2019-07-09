@@ -26,7 +26,8 @@ import {
   addAttestation,
   setVerifiedAttestations,
   setName,
-  setAvatarUri
+  setAvatarUri,
+  setRequiresPublish
 } from 'actions/Onboarding'
 import { removeAccount, setIdentity } from 'actions/Wallet'
 import CommonStyles from 'styles/common'
@@ -262,7 +263,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(setVerifiedAttestations(attestations)),
   setName: payload => dispatch(setName(payload)),
   setAvatarUri: avatarUri => dispatch(setAvatarUri(avatarUri)),
-  setIdentity: identity => dispatch(setIdentity(identity))
+  setIdentity: identity => dispatch(setIdentity(identity)),
+  setRequiresPublish: value => dispatch(setRequiresPublish(value))
 })
 
 export default withOriginGraphql(
