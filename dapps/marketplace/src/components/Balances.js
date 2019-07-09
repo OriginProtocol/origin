@@ -37,6 +37,7 @@ const Balances = ({ currencies, title, className, onClose }) => {
                   className="more-ogn"
                   onClose={onClose}
                   onNavigation={onClose}
+                  goToWelcomeWhenNotEnrolled="true"
                 >
                   <fbt desc="Balances.getMoreOGN">Get more</fbt>
                 </EnrollButton>
