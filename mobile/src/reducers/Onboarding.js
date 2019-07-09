@@ -1,6 +1,7 @@
 'use strict'
 
 import { OnboardingConstants } from 'actions/Onboarding'
+import get from 'lodash.get'
 
 const initialState = {
   attestations: [],
@@ -19,14 +20,16 @@ export default function Onboarding(state = initialState, action = {}) {
     case OnboardingConstants.ADD_ATTESTATION:
       return {
         ...state,
-        attestations: [...state.attestations, action.attestation]
+        // Safely get to handle old persisted states that did not include
+        attestations: [...get(state, 'attestations', []), action.attestation]
       }
 
     case OnboardingConstants.ADD_SKIPPED_ATTESTATION:
       return {
         ...state,
         skippedAttestations: [
-          ...state.skippedAttestations,
+          // Safely get to handle old persisted states that did not include
+          ...get(state, 'skippedAttestations', []),
           action.attestationName
         ]
       }
