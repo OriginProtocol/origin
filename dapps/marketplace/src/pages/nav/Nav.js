@@ -160,7 +160,11 @@ const Nav = ({
             </NavLink>
           </li>
           <li className="nav-item d-none d-lg-flex">
-            <EarnTokens className="nav-link text" href="#">
+            <EarnTokens
+              className="nav-link text"
+              href="#"
+              gotowelcomewhennotenrolled="true"
+            >
               <span className="d-md-none d-xl-flex">
                 <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
               </span>
