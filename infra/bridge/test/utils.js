@@ -10,7 +10,7 @@ const Identity = require('@origin/identity/src/models').Identity
 const app = require('../src/app')
 
 const baseIdentity = {
-  ethAddress: '0x000'
+  ethAddress: '0x000a'
 }
 
 const client = redis.createClient()
@@ -55,7 +55,39 @@ describe('identity exists', () => {
     expect(response.status).to.equal(204)
   })
 
-  it('should return 204 for non-existent phonen', async () => {
+  it('should return 204 for existing email that exists on first created identity', async () => {
+    const obj = { email: 'foobar@originprotocol.com' }
+
+    await Identity.create({ ...obj, ...baseIdentity })
+    await Identity.create({ ...obj, ethAddress: '0xabcd1234' })
+
+    const response = await request(app)
+      .post('/utils/exists')
+      .send({
+        email: 'foobar@originprotocol.com',
+        ethAddress: baseIdentity.ethAddress
+      })
+
+    expect(response.status).to.equal(204)
+  })
+
+  it('should return 200 for existing email that exists on second created identity', async () => {
+    const obj = { email: 'foobar@originprotocol.com' }
+
+    await Identity.create({ ...obj, ethAddress: '0xabcd1234' })
+    await Identity.create({ ...obj, ...baseIdentity })
+
+    const response = await request(app)
+      .post('/utils/exists')
+      .send({
+        email: 'foobar@originprotocol.com',
+        ethAddress: baseIdentity.ethAddress
+      })
+
+    expect(response.status).to.equal(200)
+  })
+
+  it('should return 204 for non-existent phone', async () => {
     const response = await request(app)
       .post('/utils/exists')
       .send({ phone: '1234567' })
