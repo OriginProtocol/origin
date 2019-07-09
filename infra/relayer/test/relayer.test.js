@@ -252,18 +252,13 @@ describe('Relayer', async () => {
 
     await relayer.relay(request2, response2)
 
-    assert(response2.statusCode === 200, `response2 code is ${response.statusCode}`)
-    assert(!response2.body.errors, 'errors in response2')
-    assert(response2.body.id, 'missing txhash2')
+    assert(response2.statusCode === 429, `response2 code should be 429, is ${response.statusCode}`)
 
     // Continue again
     await startMining(web3)
 
     const proxyReceipt = await web3.eth.getTransactionReceipt(response.body.id)
     assert(proxyReceipt.status)
-
-    const proxyReceipt2 = await web3.eth.getTransactionReceipt(response2.body.id)
-    assert(!proxyReceipt2.status)
 
     await relayer.purse.teardown(true) // Testing cleanup only
   })

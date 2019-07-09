@@ -434,8 +434,13 @@ class Purse {
   async addPending(txHash, txObj, rawTx) {
     this.pendingTransactions[txHash] = rawTx
 
+    const to = txObj.to ? this.web3.utils.toChecksumAddress(txObj.to) : txObj.to
+
     // Store the tx object for debugging and in case we need to re-sign later
-    this.transactionObjects[txHash] = txObj
+    this.transactionObjects[txHash] = {
+      ...txObj,
+      to
+    }
 
     if (this.rclient && this.rclient.connected) {
       await this.rclient.saddAsync(`${REDIS_PENDING_KEY}`, txHash)
