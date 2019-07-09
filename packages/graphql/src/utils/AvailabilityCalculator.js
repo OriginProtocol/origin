@@ -33,7 +33,7 @@ class AvailabilityCalculator {
     const slots = this.getAvailability(dayjs(), slotRangeMax)
     const [startStr, endStr] = range.split('/')
     const start = dayjs(startStr).subtract(1, 'day'),
-      end = dayjs(endStr)
+      end = dayjs(endStr).add(1, 'day')
 
     /**
      * dayjs('2019-05-15') will return date object with value 2019-05-15 00:00:00
@@ -136,7 +136,7 @@ class AvailabilityCalculator {
     this.opts.unavailable.forEach(range => {
       const [startStr, endStr] = range.split('/')
       let start = dayjs(startStr)
-      const end = dayjs(endStr)
+      const end = dayjs(endStr).add(1, 'day')
 
       while (start.isBefore(end)) {
         unavailable[start.format('YYYY-MM-DD')] = true
@@ -148,7 +148,7 @@ class AvailabilityCalculator {
     this.opts.booked.forEach(range => {
       const [startStr, endStr] = range.split('/')
       let start = dayjs(startStr)
-      const end = dayjs(endStr)
+      const end = dayjs(endStr).add(1, 'day')
 
       while (start.isBefore(end)) {
         booked[start.format('YYYY-MM-DD')] = true
@@ -163,7 +163,7 @@ class AvailabilityCalculator {
       const [range, price] = customStr.split(':')
       const [startStr, endStr] = range.split('/')
       let start = dayjs(startStr)
-      const end = dayjs(endStr)
+      const end = dayjs(endStr).add(1, 'day')
 
       while (start.isBefore(end)) {
         customPricing[start.format('YYYY-MM-DD')] = price
