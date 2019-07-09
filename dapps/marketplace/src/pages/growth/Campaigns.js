@@ -337,7 +337,7 @@ class GrowthCampaigns extends Component {
       this.props.growthEnrollmentStatus === 'NotEnrolled' ||
       this.props.growthEnrollmentStatus === 'Banned'
     ) {
-      this.props.history.push('/welcome')
+      this.props.history.replace('/welcome')
     }
   }
 
