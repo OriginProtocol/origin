@@ -1,6 +1,7 @@
 'use strict'
 
 import { WalletConstants } from 'actions/Wallet'
+import get from 'lodash.get'
 
 const initialState = {
   accounts: [],
@@ -33,7 +34,7 @@ export default function Wallet(state = initialState, action = {}) {
       return {
         ...state,
         activeAccount:
-          state.activeAccount.address === action.account.address
+          get(state, 'activeAccount.address') === action.account.address
             ? null
             : state.activeAccount,
         accounts: state.accounts.filter(
