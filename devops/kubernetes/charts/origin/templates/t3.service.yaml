@@ -1,18 +1,23 @@
-{{- if ne .Release.Namespace "prod" -}}
 apiVersion: v1
-kind: Secret
+kind: Service
 metadata:
-  name: {{ template "t3server.fullname" . }}
+  name: {{ template "t3.fullname" . }}
   labels:
-    app: {{ template "t3server.fullname" . }}
+    app: {{ template "t3.fullname" . }}
     app.kubernetes.io/name: origin
     helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/version: {{ .Chart.AppVersion }}
     app.kubernetes.io/component: backend
-    app.kubernetes.io/part-of: origin-t3server
-type: Opaque
-data:
-  ENVKEY: {{ required "Set a .Values.t3serverEnvKey" .Values.t3serverEnvKey | b64enc | quote}}
-{{- end }}
+    app.kubernetes.io/part-of: origin-t3
+spec:
+  type: NodePort
+  selector:
+    app: {{ template "t3.fullname" . }}
+  ports:
+  - name: nginx
+    port: 80
+  - name: express
+    port: 5000
+
