@@ -67,8 +67,8 @@ graphqlImageTag: 'latest'
 
 # origin-token-transfer-client
 t3ClientImage: origin-token-transfer-client
-t3ClientTag: 'latest'
+t3ClientImageTag: 'latest'
 
 # origin-token-transfer-server
 t3ServerImage: origin-token-transfer-server
-t3ServerTag: 'latest'
+t3ServerImageTag: 'latest'
