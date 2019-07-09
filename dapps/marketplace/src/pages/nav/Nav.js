@@ -29,6 +29,9 @@ const Brand = withCreatorConfig(({ creatorConfig }) => {
   )
 })
 
+const BackRegex = /^\/(listing|my-listings|my-sales|my-purchases|messages|notifications|create)(\/|$)/gi
+const ShowSearchRegex = /^\/(listing)?(\/|$)/gi
+
 const Nav = ({
   location: { pathname },
   isMobile,
@@ -74,12 +77,9 @@ const Nav = ({
       </>
     )
 
-    const canShowBack =
-      canGoBack &&
-      /^\/(listing|my-listings|my-sales|my-purchases|messages|notifications|create)(\/|$)/gi.test(
-        pathname
-      )
-    const canShowSearch = /^\/(listing)?(\/|$)/gi.test(pathname)
+    const canShowBack = canGoBack && pathname.match(BackRegex) ? true : false
+    const canShowSearch = pathname.match(ShowSearchRegex) ? true : false
+
     return (
       <>
         {isProfilePage && canGoBack ? (
@@ -94,12 +94,14 @@ const Nav = ({
         )}
         {canShowSearch && <Search className="search" placeholder />}
         {canShowBack && (
-          <button
-            className="btn btn-link btn-back-link"
-            onClick={() => history.goBack()}
-          >
-            <fbt desc="Back">Back</fbt>
-          </button>
+          <div className="container">
+            <button
+              className="btn btn-link btn-back-link"
+              onClick={() => history.goBack()}
+            >
+              <fbt desc="Back">Back</fbt>
+            </button>
+          </div>
         )}
       </>
     )
@@ -158,7 +160,11 @@ const Nav = ({
             </NavLink>
           </li>
           <li className="nav-item d-none d-lg-flex">
-            <EarnTokens className="nav-link text" href="#">
+            <EarnTokens
+              className="nav-link text"
+              href="#"
+              goToWelcomeWhenNotEnrolled="true"
+            >
               <span className="d-md-none d-xl-flex">
                 <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
               </span>
@@ -243,24 +249,22 @@ require('react-styl')(`
     img
       max-height: 32px
 
-
   .btn-back-link
     color: var(--dark)
     font-size: 14px
     text-decoration: none
+    font-weight: normal
     position: relative
-    padding-left: 1.2rem
+    padding: 0 0 0 1rem
     line-height: 1rem
     margin-bottom: 0.5rem
-    margin-left: 1rem
     &:before
       content: ''
       position: absolute
       display: inline-block
-      margin-right: 5px
       background-image: url(images/caret-grey.svg)
       background-size: 0.8rem
-      background-position: center
+      background-position: top
       background-repeat: no-repeat
       transform: rotateZ(270deg)
       height: 1rem
@@ -312,6 +316,10 @@ require('react-styl')(`
         position: absolute
         left: 50%
         transform: translateX(-50%)
+        white-space: nowrap
+        max-width: calc(100% - 7rem)
+        overflow: hidden
+        text-overflow: ellipsis
       .nav-item
         position: initial
         .dropdown-menu
@@ -353,7 +361,7 @@ require('react-styl')(`
               right: 0
           .dropdown-menu-bg
             opacity: 1
-  
+
     .nav-back-icon
       display: inline-block
 

@@ -31,6 +31,7 @@ const MAX_LOCK_TIME = 15000
 const REDIS_RETRY_TIMEOUT = 30000
 const REDIS_RETRY_DELAY = 500
 const DEFAULT_CHILDREN = 5
+const DEFAULT_MNEMONIC = 'one two three four five six'
 const DEFAULT_MAX_PENDING_PER_ACCOUNT = 3
 const ZERO = new BN('0', 10)
 const BASE_FUND_VALUE = new BN('500000000000000000', 10) // 0.5 Ether
@@ -72,11 +73,12 @@ class Account {
 class Purse {
   constructor({
     web3,
-    mnemonic,
+    mnemonic = DEFAULT_MNEMONIC,
     children = DEFAULT_CHILDREN,
     autofundChildren = false,
     redisHost = 'redis://localhost:6379/0',
-    maxPendingPerAccount = DEFAULT_MAX_PENDING_PER_ACCOUNT
+    maxPendingPerAccount = DEFAULT_MAX_PENDING_PER_ACCOUNT,
+    jsonrpcQPS = JSONRPC_QPS
   }) {
     if (!web3 || !mnemonic) {
       throw new Error('missing required parameters')
@@ -85,11 +87,11 @@ class Purse {
     // If it's not already a web3-provider-engine provider...
     if (
       web3.currentProvider &&
-      typeof web3.currentProvider._providers !== 'undefined'
+      typeof web3.currentProvider._providers === 'undefined'
     ) {
       // init the custom provider
       createEngine(web3, {
-        qps: JSONRPC_QPS,
+        qps: jsonrpcQPS,
         maxConcurrent: JSONRPC_MAX_CONCURRENT
       })
     }
@@ -183,6 +185,10 @@ class Purse {
    * @param clearRedis {boolean} - Remove all keys from redis
    */
   async teardown(clearRedis = false) {
+    this.transactionObjects = {}
+    this.pendingTransactions = {}
+    this.rebroadcastCounters = {}
+    this.receiptCallbacks = {}
     if (this.rclient && this.rclient.connected) {
       if (clearRedis) {
         await this._resetRedis()
@@ -428,8 +434,13 @@ class Purse {
   async addPending(txHash, txObj, rawTx) {
     this.pendingTransactions[txHash] = rawTx
 
+    const to = txObj.to ? this.web3.utils.toChecksumAddress(txObj.to) : txObj.to
+
     // Store the tx object for debugging and in case we need to re-sign later
-    this.transactionObjects[txHash] = txObj
+    this.transactionObjects[txHash] = {
+      ...txObj,
+      to
+    }
 
     if (this.rclient && this.rclient.connected) {
       await this.rclient.saddAsync(`${REDIS_PENDING_KEY}`, txHash)

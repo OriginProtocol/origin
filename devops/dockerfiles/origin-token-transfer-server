@@ -4,6 +4,12 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
+# Install envkey-source to make environment available for sequelize migration
+RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.5/envkey-source_1.2.5_linux_amd64.tar.gz
+RUN tar -zxf envkey-source.tar.gz 2> /dev/null
+RUN rm envkey-source.tar.gz
+RUN mv envkey-source /usr/local/bin
+
 COPY package.json ./
 COPY yarn.lock ./
 COPY lerna.json ./
@@ -13,7 +19,6 @@ COPY ./infra/token-transfer-server ./infra/token-transfer-server
 
 RUN yarn install
 
-COPY ./contracts/releases/0.8.6/build/ ./contracts/build/
-
-CMD npm run migrate --prefix token-transfer-server && \
-	npm run start --prefix token-transfer-server
+CMD eval $(envkey-source) && \
+	npm run migrate --prefix infra/token-transfer-server && \
+	npm run start --prefix infra/token-transfer-server

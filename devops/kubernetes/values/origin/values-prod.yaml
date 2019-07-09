@@ -66,3 +66,11 @@ graphqlImage: origin-graphql
 graphqlImageTag: '42ad470'
 
 ipfsLoadBalancerIP: 35.233.189.126
+
+# origin-token-transfer-client
+t3ClientImage: origin-token-transfer-client
+t3ClientImageTag: 'latest'
+
+# origin-token-transfer-server
+t3ServerImage: origin-token-transfer-server
+t3ServerImageTag: 'latest'
