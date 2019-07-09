@@ -8,7 +8,7 @@ import withIsMobile from 'hoc/withIsMobile'
 import LocaleDropdown from 'components/LocaleDropdown'
 import CurrencyDropdown from 'components/CurrencyDropdown'
 
-const SupportEmail = 'support@originprotocol.com'
+const SupportLink = 'https://goo.gl/forms/86tKQXZdmux3KNFJ2'
 
 class Footer extends Component {
   constructor(props) {
@@ -22,11 +22,26 @@ class Footer extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (!prevProps.open && this.props.open) {
+      return this.setState({
+        open: true
+      })
+    } else if (prevProps.open && !this.props.open) {
+      return this.setState({
+        closing: true
+      })
+    }
+
     if (this.state.open && !prevState.open) {
+      // will open
       setTimeout(() => this.wrapperRef.classList.add('open'), 10)
     } else if (this.state.closing && !prevState.closing) {
+      // will close
       this.wrapperRef.classList.remove('open')
       setTimeout(() => this.setState({ open: false, closing: false }), 300)
+    } else if (!this.state.closing && prevState.closing && this.props.onClose) {
+      // has been closed
+      this.props.onClose()
     }
   }
 
@@ -48,7 +63,7 @@ class Footer extends Component {
     const { open } = this.state
     const { isMobile } = this.props
 
-    if (isMobile && open) {
+    if (isMobile) {
       return null
     }
 
@@ -157,12 +172,16 @@ class Footer extends Component {
               >
                 <fbt desc="footer.creatorLink">Create a Marketplace</fbt>
               </a>
-              <Link to="/settings">
-                <fbt desc="footer.settings">Settings</fbt>
-              </Link>
-              <a href={`mailto:${SupportEmail}`}>
-                <fbt desc="footer.giveFeedback">Give Feedback</fbt>
-              </a>
+              <span className="d-none d-md-inline">
+                <Link to="/settings">
+                  <fbt desc="footer.settings">Settings</fbt>
+                </Link>
+              </span>
+              <span className="d-none d-md-inline">
+                <a href={SupportLink}>
+                  <fbt desc="footer.giveFeedback">Give Feedback</fbt>
+                </a>
+              </span>
             </div>
             <div className="footer-settings">
               <div className="footer-dropdown-wrapper">
@@ -229,6 +248,7 @@ require('react-styl')(`
         margin-right: 5px
         color: #6f8294
         font-size: 10px
+    
     footer
       position: fixed
       bottom: -100%
@@ -292,6 +312,7 @@ require('react-styl')(`
               right: 12px
               transform: rotateZ(90deg)
           .footer-dropdown
+            cursor: pointer
             margin-left: 12px
             border-radius: 30px
             border: solid 1px #c2cbd3
@@ -301,8 +322,18 @@ require('react-styl')(`
             -webkit-appearance: none
             padding: 0.25rem 1rem
 
-    &.open footer
-      bottom: 0
+    &.open 
+      .footer-action-button:before
+        content: ''
+        width: 10px
+        height: 10px
+        background-image: url('images/nav/close-material.svg')
+        background-position: center
+        background-size: 10px
+        background-repeat: no-repat
+        display: inline-block
+      footer
+        bottom: 0
     .footer-wrapper-overlay
       position: fixed
       z-index: 500

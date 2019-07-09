@@ -139,7 +139,7 @@ describe('Purse', () => {
       gasPrice: TWO_GWEI.toString()
     }
 
-    const txHash = await purse.sendTx(txObj)
+    const { txHash, gasPrice } = await purse.sendTx(txObj)
     const receipt = await waitForTransactionReceipt(web3, txHash)
 
     assert(receipt.status, 'tx failed')
@@ -148,6 +148,7 @@ describe('Purse', () => {
       'sent from master'
     )
     assert(insensitiveInArray(receipt.from, purse.children), 'not a recognized child')
+    assert(gasPrice.gt(0))
 
     await purse.teardown(true)
   })
@@ -164,7 +165,7 @@ describe('Purse', () => {
       gasPrice: TWO_GWEI.toString()
     }
 
-    const txHash = await purse.sendTx(txObj)
+    const { txHash } = await purse.sendTx(txObj)
     const receipt = await waitForTransactionReceipt(web3, txHash)
 
     assert(receipt.status, 'tx failed')
@@ -193,7 +194,7 @@ describe('Purse', () => {
     // Stop mining
     await stopMining(web3)
 
-    const txHash = await purse.sendTx(txObj)
+    const { txHash } = await purse.sendTx(txObj)
 
     try {
       await waitForTransactionReceipt(web3, txHash, 2000)
@@ -211,7 +212,7 @@ describe('Purse', () => {
   it('keeps persistent and accurate count of nonce', async () => {
     const purseOne = new Purse({ web3, mnemonic: MNEMONIC_ONE, children: 2 })
     await purseOne.init()
-    const txHash = await purseOne.sendTx( {
+    const { txHash } = await purseOne.sendTx( {
       to: Rando,
       value: '1',
       gas: 22000,
@@ -260,7 +261,7 @@ describe('Purse', () => {
     // We want to keep transactions in a pending state
     await stopMining(web3)
 
-    const txHash = await purseOne.sendTx({
+    const { txHash } = await purseOne.sendTx({
       to: Rando,
       value: '1',
       gas: 22000,

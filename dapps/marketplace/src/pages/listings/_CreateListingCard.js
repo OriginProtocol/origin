@@ -4,41 +4,35 @@ import { fbt } from 'fbt-runtime'
 
 import Link from 'components/Link'
 
-const CreateListingCard = () => {
-  return (
-    <div className="create-listing-card">
-      <Link to="/create">
-        <div className="header">
-          <h5>
-            <fbt desc="listingCard.yourListing">Your listing here</fbt>
-          </h5>
+const CreateListingCard = () => (
+  <div className="listing-card create-listing-card">
+    <Link to="/create">
+      <div className="main-pic">
+        <div>
+          <fbt desc="listingCard.yourListing">Your listing here</fbt>
         </div>
-      </Link>
-      <div className="placeholder" />
-    </div>
-  )
-}
+      </div>
+    </Link>
+    <div className="placeholder" />
+  </div>
+)
 
 export default CreateListingCard
 
 require('react-styl')(`
-  .create-listing-card
-    .header
+  .listing-card.create-listing-card
+    .main-pic
       text-align: center
-      border-radius: 10px
       border: dashed 1px #c0cbd4
-      margin: 1rem 0
-      padding-top: 75%
       position: relative
-      h5
+      font-size: 14px
+      color: #0d1d29
+      > div
         position: absolute
+        left: 50%
         top: 50%
-        left: 0
-        right: 0
-        transform: translateY(-50%)
-        font-size: 14px
-        margin: auto 0
-        color: #0d1d29
+        transform: translate(-50%, -50%)
+        white-space: nowrap
         &:before
           content: ''
           display: block
@@ -49,6 +43,7 @@ require('react-styl')(`
           height: 2.25rem
           margin-bottom: 0.6rem
     .placeholder
+      margin-top: 0.5rem
       line-height: 1
       &:before
         content: ''
