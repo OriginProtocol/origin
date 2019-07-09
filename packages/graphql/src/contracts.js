@@ -212,13 +212,19 @@ export function setNetwork(net, customConfig) {
   if (config.providerWS) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
     context.web3WS = web3WS
-    wsSub = web3WS.eth
-      .subscribe('newBlockHeaders')
-      .on('data', newBlock)
-      .on('error', () => {
-        console.log('WS connection error. Polling for new blocks...')
-        pollForBlocks()
-      })
+    try {
+      wsSub = web3WS.eth
+        .subscribe('newBlockHeaders')
+        .on('data', newBlock)
+        .on('error', () => {
+          console.log('WS connection error. Polling for new blocks...')
+          pollForBlocks()
+        })
+    } catch (err) {
+      console.log('Websocket error. Polling for new blocks...')
+      console.error(err)
+      pollForBlocks()
+    }
   } else {
     pollForBlocks()
   }
