@@ -146,9 +146,7 @@ class GrowthTermsScreen extends Component {
             uncheckedCheckBoxColor="#455d75"
             rightTextView={
               <View>
-                <Text
-                  style={styles.checkboxText}
-                >
+                <Text style={styles.checkboxText}>
                   <fbt desc="GrowthTermsScreen.nonResidentCertification">
                     I certify that I am not a citizen or resident of
                     <fbt:param name="countryName">
@@ -239,9 +237,7 @@ class GrowthTermsScreen extends Component {
             uncheckedCheckBoxColor="#455d75"
             rightTextView={
               <View>
-                <Text
-                  style={styles.checkboxText}
-                >
+                <Text style={styles.checkboxText}>
                   <fbt desc="GrowthTermsScreen.acceptCheckboxText">
                     I accept the terms and conditions
                   </fbt>

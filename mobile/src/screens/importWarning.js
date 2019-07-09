@@ -49,13 +49,15 @@ class ImportWarningScreen extends Component {
               style={styles.image}
             />
             <Text style={styles.title}>
-              <fbt desc="ImportWarningScreen.title">
-                Other Wallet Detected
-              </fbt>
+              <fbt desc="ImportWarningScreen.title">Other Wallet Detected</fbt>
             </Text>
-            <Text style={{ ...styles.subtitle, fontSize: 14, fontWeight: 'normal' }}>
+            <Text
+              style={{ ...styles.subtitle, fontSize: 14, fontWeight: 'normal' }}
+            >
               <fbt desc="ImportWarningScreen.subtitle">
-                We've noticed that you previously signed up for Origin Rewards using this email with a different wallet. Please import your other wallet to continue earning Origin Rewards.
+                We&apos;ve noticed that you previously signed up for Origin Rewards
+                using this email with a different wallet. Please import your
+                other wallet to continue earning Origin Rewards.
               </fbt>
             </Text>
           </View>
