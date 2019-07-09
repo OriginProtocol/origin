@@ -261,13 +261,15 @@ class Relayer {
        * See: https://github.com/OriginProtocol/origin/issues/2631
        */
       if (await this.purse.hasPendingTo(proxy)) {
-        logger.error(`Proxy ${proxy} already has a pending transaction`)
+        logger.warn(`Proxy ${proxy} already has a pending transaction`)
         return res
           .status(429)
           .send({ errors: ['Proxy has pending transaction'] })
       }
 
       nonce = await UserProxy.methods.nonce(from).call()
+
+      logger.debug(`Using nonce ${nonce} for user ${from} via proxy ${proxy}`)
     } else {
       // Verify a proxy doesn't already exist
       if (code !== '0x') {

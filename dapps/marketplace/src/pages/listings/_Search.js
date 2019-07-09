@@ -308,6 +308,9 @@ require('react-styl')(`
             &.art:before
               background-image: url('images/categories/art-icon.svg')
 
+            &:last-of-type
+              margin-right: 0
+    
     &:focus-within
       .form-control
         border-bottom-left-radius: 0

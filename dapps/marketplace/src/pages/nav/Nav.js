@@ -160,7 +160,11 @@ const Nav = ({
             </NavLink>
           </li>
           <li className="nav-item d-none d-lg-flex">
-            <EarnTokens className="nav-link text" href="#">
+            <EarnTokens
+              className="nav-link text"
+              href="#"
+              goToWelcomeWhenNotEnrolled="true"
+            >
               <span className="d-md-none d-xl-flex">
                 <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
               </span>
@@ -312,6 +316,10 @@ require('react-styl')(`
         position: absolute
         left: 50%
         transform: translateX(-50%)
+        white-space: nowrap
+        max-width: calc(100% - 7rem)
+        overflow: hidden
+        text-overflow: ellipsis
       .nav-item
         position: initial
         .dropdown-menu

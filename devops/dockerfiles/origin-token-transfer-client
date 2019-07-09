@@ -14,6 +14,6 @@ RUN yarn run build
 
 # Copy built static files to nginx for serving
 FROM nginx:1.15.2-alpine
-COPY --from=build /app/token-transfer-client/build /usr/share/nginx/html
+COPY --from=build /app/infra/token-transfer-client/build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

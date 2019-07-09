@@ -70,3 +70,11 @@ relayerImageTag: '209e6db'
 # origin-graphql
 graphqlImage: origin-graphql
 graphqlImageTag: '209e6db'
+
+# origin-token-transfer-client
+t3ClientImage: origin-token-transfer-client
+t3ClientImageTag: 'latest'
+
+# origin-token-transfer-server
+t3ServerImage: origin-token-transfer-server
+t3ServerImageTag: 'latest'
