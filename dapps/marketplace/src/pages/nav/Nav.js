@@ -316,6 +316,10 @@ require('react-styl')(`
         position: absolute
         left: 50%
         transform: translateX(-50%)
+        white-space: nowrap
+        max-width: calc(100% - 7rem)
+        overflow: hidden
+        text-overflow: ellipsis
       .nav-item
         position: initial
         .dropdown-menu
