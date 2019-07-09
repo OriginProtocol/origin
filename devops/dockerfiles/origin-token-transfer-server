@@ -13,7 +13,5 @@ COPY ./infra/token-transfer-server ./infra/token-transfer-server
 
 RUN yarn install
 
-COPY ./contracts/releases/0.8.6/build/ ./contracts/build/
-
-CMD npm run migrate --prefix token-transfer-server && \
-	npm run start --prefix token-transfer-server
+CMD npm run migrate --prefix infra/token-transfer-server && \
+	npm run start --prefix infra/token-transfer-server
