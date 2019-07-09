@@ -60,7 +60,6 @@ const ProfileNav = ({
                   identityLoaded={identityLoaded}
                   onClose={() => onClose()}
                   onRewardsClick={() => {
-                    setRewardsModal(true)
                     onClose()
                   }}
                   data={data}
@@ -176,6 +175,7 @@ const Identity = ({
       <EarnTokens
         className="btn btn-outline-primary earn-ogn"
         onClick={onRewardsClick}
+        goToWelcomeWhenNotEnrolled="true"
       >
         <fbt desc="nav.profile.earnOGN">Earn OGN</fbt>
       </EarnTokens>
