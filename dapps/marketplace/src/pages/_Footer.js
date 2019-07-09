@@ -8,7 +8,7 @@ import withIsMobile from 'hoc/withIsMobile'
 import LocaleDropdown from 'components/LocaleDropdown'
 import CurrencyDropdown from 'components/CurrencyDropdown'
 
-const SupportEmail = 'support@originprotocol.com'
+const SupportLink = 'https://goo.gl/forms/86tKQXZdmux3KNFJ2'
 
 class Footer extends Component {
   constructor(props) {
@@ -172,12 +172,16 @@ class Footer extends Component {
               >
                 <fbt desc="footer.creatorLink">Create a Marketplace</fbt>
               </a>
-              <Link to="/settings">
-                <fbt desc="footer.settings">Settings</fbt>
-              </Link>
-              <a href={`mailto:${SupportEmail}`}>
-                <fbt desc="footer.giveFeedback">Give Feedback</fbt>
-              </a>
+              <span className="d-none d-md-inline">
+                <Link to="/settings">
+                  <fbt desc="footer.settings">Settings</fbt>
+                </Link>
+              </span>
+              <span className="d-none d-md-inline">
+                <a href={SupportLink}>
+                  <fbt desc="footer.giveFeedback">Give Feedback</fbt>
+                </a>
+              </span>
             </div>
             <div className="footer-settings">
               <div className="footer-dropdown-wrapper">
@@ -308,6 +312,7 @@ require('react-styl')(`
               right: 12px
               transform: rotateZ(90deg)
           .footer-dropdown
+            cursor: pointer
             margin-left: 12px
             border-radius: 30px
             border: solid 1px #c2cbd3
@@ -320,11 +325,11 @@ require('react-styl')(`
     &.open 
       .footer-action-button:before
         content: ''
-        width: 0.75rem
-        height: 0.75rem
+        width: 10px
+        height: 10px
         background-image: url('images/nav/close-material.svg')
         background-position: center
-        background-size: 0.75rem
+        background-size: 10px
         background-repeat: no-repat
         display: inline-block
       footer

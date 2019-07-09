@@ -5,7 +5,7 @@ module.exports = {
   up: (queryInterface) => {
     return queryInterface.bulkInsert('Grant', [
       {
-        email: 'cuong@originprotocol.com',
+        email: 'foo@originprotocol.com',
         granted_at: '2010-01-31 00:00:00',
         amount: 120000,
         total_months: 48,
@@ -16,7 +16,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        email: 'cuong@originprotocol.com',
+        email: 'foo@originprotocol.com',
         granted_at: '2017-01-31 00:00:00',
         amount: 480,
         total_months: 48,
@@ -27,7 +27,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        email: 'cuong@originprotocol.com',
+        email: 'foo@originprotocol.com',
         granted_at: '2017-08-01 00:00:00',
         amount: 112,
         total_months: 48,
@@ -38,7 +38,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        email: 'cuong@originprotocol.com',
+        email: 'foo@originprotocol.com',
         granted_at: '2018-08-01 00:00:00',
         amount: 120,
         total_months: 48,
