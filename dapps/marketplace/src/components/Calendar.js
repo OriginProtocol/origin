@@ -38,6 +38,18 @@ class Calendar extends Component {
         range
       })
     }
+
+    if (
+      prevProps.startDate !== this.props.startDate ||
+      prevProps.endDate !== this.props.endDate
+    ) {
+      this.setState({
+        dragStartDate: this.props.startDate
+          ? dayjs(this.props.startDate)
+          : null,
+        dragEndDate: this.props.endDate ? dayjs(this.props.endDate) : null
+      })
+    }
   }
 
   getAvailability(availableFrom, availableUntil) {
@@ -266,6 +278,8 @@ export default Calendar
 
 require('react-styl')(`
   .availability-calendar
+    flex: 1
+    overflow: scroll
     .calendar
       margin-bottom: 2rem
       .days
