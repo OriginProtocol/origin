@@ -32,6 +32,7 @@ const MAX_LOCK_TIME = 15000
 const REDIS_RETRY_TIMEOUT = 30000
 const REDIS_RETRY_DELAY = 500
 const DEFAULT_CHILDREN = 5
+const DEFAULT_MNEMONIC = 'one two three four five six'
 const DEFAULT_MAX_PENDING_PER_ACCOUNT = 3
 const ZERO = new BN('0', 10)
 const BASE_FUND_VALUE = new BN('500000000000000000', 10) // 0.5 Ether
@@ -77,7 +78,7 @@ class Account {
 class Purse {
   constructor({
     web3,
-    mnemonic,
+    mnemonic = DEFAULT_MNEMONIC,
     children = DEFAULT_CHILDREN,
     autofundChildren = false,
     redisHost = 'redis://localhost:6379/0',
