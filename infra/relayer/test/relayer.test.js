@@ -13,7 +13,9 @@ const {
   getProxyAddress,
   mockRequest,
   mockResponse,
-  hashTxdata
+  hashTxdata,
+  startMining,
+  stopMining
 } = require('./utils')
 
 const {
@@ -192,6 +194,76 @@ describe('Relayer', async () => {
     // Verify the expected events are in the receipt
     assert(eventSigInReceipt(proxyReceipt, EVENT_SIG_IDENTITYUPDATED), 'missing IdentityUpdated event')
     assert(!eventSigInReceipt(proxyReceipt, EVENT_SIG_PROXYCREATION), 'ProxyCreation event found')
+
+    await relayer.purse.teardown(true) // Testing cleanup only
+  })
+
+  // TODO: This is perhaps temporary behavior
+  it('prevents multiple transactions to the same proxy', async () => {
+    const relayer = new Relayer(netId)
+
+    assert(IdentityProxyAddress, 'IdentityProxy address missing')
+
+    // Don't want the tx to leave pending too quick
+    await stopMining(web3)
+
+    // Using IdentityEvents for testing because of its simplicity
+    const txData = IdentityEvents.methods.emitIdentityUpdated(JUNK_HASH).encodeABI()
+
+    const Proxy = new web3.eth.Contract(IdentityProxyBuild.abi, IdentityProxyAddress)
+    const proxyNonce = await Proxy.methods.nonce(Rando).call()
+
+    const txToSend = {
+      from: Rando,
+      to: IdentityEventsAddress,
+      txData: txData,
+      nonce: proxyNonce
+    }
+    const txDatahash = hashTxdata(web3, txToSend)
+    const txToSendSignature = await web3.eth.sign(txDatahash, Rando)
+
+    const request = mockRequest({
+      headers: { 'x-real-ip': '98.210.130.145' },
+      body: {
+        ...txToSend,
+        signature: txToSendSignature,
+        proxy: IdentityProxyAddress,
+        preflight: false
+      }
+    })
+    const response = mockResponse()
+
+    await relayer.relay(request, response)
+
+    assert(response.statusCode === 200, `response code is ${response.statusCode}`)
+    assert(!response.body.errors, 'errors in response')
+    assert(response.body.id, 'missing txhash')
+
+    const request2 = mockRequest({
+      headers: { 'x-real-ip': '98.210.130.145' },
+      body: {
+        ...txToSend,
+        signature: txToSendSignature,
+        proxy: IdentityProxyAddress,
+        preflight: false
+      }
+    })
+    const response2 = mockResponse()
+
+    await relayer.relay(request2, response2)
+
+    assert(response2.statusCode === 200, `response2 code is ${response.statusCode}`)
+    assert(!response2.body.errors, 'errors in response2')
+    assert(response2.body.id, 'missing txhash2')
+
+    // Continue again
+    await startMining(web3)
+
+    const proxyReceipt = await web3.eth.getTransactionReceipt(response.body.id)
+    assert(proxyReceipt.status)
+
+    const proxyReceipt2 = await web3.eth.getTransactionReceipt(response2.body.id)
+    assert(!proxyReceipt2.status)
 
     await relayer.purse.teardown(true) // Testing cleanup only
   })

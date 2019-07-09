@@ -69,7 +69,7 @@ async function sendRequest(url, payload) {
     throw new JsonRpcError.InternalError(err)
   }
   if (data.error) {
-    console.log('data.error')
+    console.error(data.error)
     throw new JsonRpcError.InternalError(data.error)
   }
 

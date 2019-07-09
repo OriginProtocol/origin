@@ -17,6 +17,7 @@ const redis = require('redis')
 const BN = require('bn.js')
 const bip39 = require('bip39')
 const hdkey = require('ethereumjs-wallet/hdkey')
+const Web3 = require('web3')
 const { createEngine } = require('@origin/web3-provider')
 const {
   stringToBN,
@@ -45,6 +46,10 @@ const JSONRPC_MAX_CONCURRENT = 25
 
 async function tick(wait = 1000) {
   return new Promise(resolve => setTimeout(() => resolve(true), wait))
+}
+
+function normalizeAddress(address) {
+  return Web3.utils.toChecksumAddress(address)
 }
 
 class Account {
@@ -76,7 +81,8 @@ class Purse {
     children = DEFAULT_CHILDREN,
     autofundChildren = false,
     redisHost = 'redis://localhost:6379/0',
-    maxPendingPerAccount = DEFAULT_MAX_PENDING_PER_ACCOUNT
+    maxPendingPerAccount = DEFAULT_MAX_PENDING_PER_ACCOUNT,
+    jsonrpcQPS = JSONRPC_QPS
   }) {
     if (!web3 || !mnemonic) {
       throw new Error('missing required parameters')
@@ -89,7 +95,7 @@ class Purse {
     ) {
       // init the custom provider
       createEngine(web3, {
-        qps: JSONRPC_QPS,
+        qps: jsonrpcQPS,
         maxConcurrent: JSONRPC_MAX_CONCURRENT
       })
     }
@@ -183,6 +189,10 @@ class Purse {
    * @param clearRedis {boolean} - Remove all keys from redis
    */
   async teardown(clearRedis = false) {
+    this.transactionObjects = {}
+    this.pendingTransactions = {}
+    this.rebroadcastCounters = {}
+    this.receiptCallbacks = {}
     if (this.rclient && this.rclient.connected) {
       if (clearRedis) {
         await this._resetRedis()
