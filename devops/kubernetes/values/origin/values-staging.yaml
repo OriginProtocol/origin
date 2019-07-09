@@ -3,12 +3,10 @@ databaseInstance: origin-214503:us-west1:staging
 # origin-bridge
 bridgeImage: origin-bridge
 bridgeImageTag: 'ecbb9ac'
-bridgeReplicas: 2
 
 # origin-dapp
 dappImage: origin-dapp
 dappImageTag: '209e6db'
-dappReplicas: 2
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
