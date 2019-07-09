@@ -29,11 +29,21 @@ const Brand = withCreatorConfig(({ creatorConfig }) => {
   )
 })
 
-const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
+const BackRegex = /^\/(listing|my-listings|my-sales|my-purchases|messages|notifications|create)(\/|$)/gi
+const ShowSearchRegex = /^\/(listing)?(\/|$)/gi
+
+const Nav = ({
+  location: { pathname },
+  isMobile,
+  wallet,
+  onGetStarted,
+  onShowFooter,
+  history
+}) => {
   const [open, setOpen] = useState()
   const navProps = nav => ({
     onOpen: () => setOpen(nav),
-    onClose: () => setOpen(false),
+    onClose: () => open === nav && setOpen(false),
     open: open === nav
   })
 
@@ -51,8 +61,10 @@ const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
       title = <fbt desc="CreateListing.title">Create Listing</fbt>
     }
 
+    const canGoBack = history && history.length > 1
+
     // Make the hamburger menu absolute and hide branding and profile icon.
-    const isProfilePage = pathname.startsWith('/profile')
+    const isProfilePage = /^\/(profile|user)/gi.test(pathname)
 
     const titleAndWallet = (
       <>
@@ -65,11 +77,33 @@ const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
       </>
     )
 
+    const canShowBack = canGoBack && pathname.match(BackRegex) ? true : false
+    const canShowSearch = pathname.match(ShowSearchRegex) ? true : false
+
     return (
-      <nav className={`navbar no-border${isProfilePage ? ' fixed-nav' : ''}`}>
-        <Mobile {...navProps('mobile')} />
-        {isProfilePage ? null : titleAndWallet}
-      </nav>
+      <>
+        {isProfilePage && canGoBack ? (
+          <a className="nav-back-icon" onClick={() => history.goBack()} />
+        ) : (
+          <nav
+            className={`navbar no-border${isProfilePage ? ' fixed-nav' : ''}`}
+          >
+            <Mobile {...navProps('mobile')} onShowFooter={onShowFooter} />
+            {isProfilePage ? null : titleAndWallet}
+          </nav>
+        )}
+        {canShowSearch && <Search className="search" placeholder />}
+        {canShowBack && (
+          <div className="container">
+            <button
+              className="btn btn-link btn-back-link"
+              onClick={() => history.goBack()}
+            >
+              <fbt desc="Back">Back</fbt>
+            </button>
+          </div>
+        )}
+      </>
     )
   }
 
@@ -211,6 +245,42 @@ require('react-styl')(`
     img
       max-height: 32px
 
+  .btn-back-link
+    color: var(--dark)
+    font-size: 14px
+    text-decoration: none
+    font-weight: normal
+    position: relative
+    padding: 0 0 0 1rem
+    line-height: 1rem
+    margin-bottom: 0.5rem
+    &:before
+      content: ''
+      position: absolute
+      display: inline-block
+      background-image: url(images/caret-grey.svg)
+      background-size: 0.8rem
+      background-position: top
+      background-repeat: no-repeat
+      transform: rotateZ(270deg)
+      height: 1rem
+      width: 1rem
+      left: 0
+
+  .nav-back-icon
+    display: none
+    height: 2rem
+    width: 2rem
+    top: 1rem
+    left: 0.5rem
+    position: absolute
+    background-image: url('images/caret-grey.svg')
+    background-size: 1.5rem
+    background-position: center
+    transform: rotateZ(270deg)
+    background-repeat: no-repeat
+    z-index: 10
+
   @media (pointer: fine)
     .navbar .nav-item
       &.show .nav-link:hover
@@ -253,13 +323,15 @@ require('react-styl')(`
           box-shadow: none
           margin-top: 0
           border-radius: 0
-          left: 0
+          left: -100%
           right: auto
           bottom: 0
           top: 0
+          transition: left 0.3s ease
           &.dropdown-menu-right
             left: auto
-            right: 0
+            right: -100%
+            transition: right 0.3s ease
         .dropdown-menu-bg
           position: fixed
           left: 0
@@ -271,5 +343,18 @@ require('react-styl')(`
           width: auto
           height: auto
           z-index: 1
+          opacity: 0
+          transition: opacity 0.3s ease
+        &.show
+          .dropdown-menu
+            left: 0
+            &.dropdown-menu-right
+              left: auto
+              right: 0
+          .dropdown-menu-bg
+            opacity: 1
+
+    .nav-back-icon
+      display: inline-block
 
 `)

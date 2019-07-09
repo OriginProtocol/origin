@@ -59,8 +59,8 @@ require('react-styl')(`
         display: inline-block
   @media (max-width: 767.98px)
     .listing-buy .status
-      margin-left: -30px
-      margin-right: -30px
+      margin-left: -15px
+      margin-right: -15px
       border-radius: 0
-      
+
 `)

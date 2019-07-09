@@ -23,7 +23,14 @@ import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
 const store = Store('sessionStorage')
 
-const ProfileNav = ({ identity, identityLoaded, open, onOpen, onClose }) => {
+const ProfileNav = ({
+  identity,
+  identityLoaded,
+  open,
+  onOpen,
+  onClose,
+  isMobile
+}) => {
   const EarnTokens = withEnrolmentModal('a')
 
   const [rewardsModal, setRewardsModal] = useState(false)
@@ -46,6 +53,7 @@ const ProfileNav = ({ identity, identityLoaded, open, onOpen, onClose }) => {
               className="nav-item profile"
               open={open}
               onClose={() => onClose()}
+              animateOnExit={isMobile}
               content={
                 <ProfileDropdown
                   identity={identity}

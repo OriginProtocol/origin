@@ -47,8 +47,7 @@ require('react-styl')(`
     cursor: pointer
     font-size: 16px
     &.active
-      background: var(--dusk)
-      color: var(--white)
+      background: rgba(0, 0, 0, 0.1)
       .time
         color: var(--white)
     .avatar

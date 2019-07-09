@@ -1,171 +1,221 @@
 import React, { Component } from 'react'
-import { Query } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
-import get from 'lodash/get'
 
-import NetworkQuery from 'queries/Network'
-import BetaModal from './_BetaModal'
 import ExternalAnchor from 'components/ExternalAnchor'
+import Link from 'components/Link'
 import withIsMobile from 'hoc/withIsMobile'
 
-const GitHubLink = 'https://github.com/OriginProtocol/origin/issues/new'
+import LocaleDropdown from 'components/LocaleDropdown'
+import CurrencyDropdown from 'components/CurrencyDropdown'
+
 const SupportEmail = 'support@originprotocol.com'
 
 class Footer extends Component {
-  state = {
-    reminders: false
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      reminders: false,
+      open: false,
+      closing: false
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevProps.open && this.props.open) {
+      return this.setState({
+        open: true
+      })
+    } else if (prevProps.open && !this.props.open) {
+      return this.setState({
+        closing: true
+      })
+    }
+
+    if (this.state.open && !prevState.open) {
+      // will open
+      setTimeout(() => this.wrapperRef.classList.add('open'), 10)
+    } else if (this.state.closing && !prevState.closing) {
+      // will close
+      this.wrapperRef.classList.remove('open')
+      setTimeout(() => this.setState({ open: false, closing: false }), 300)
+    } else if (!this.state.closing && prevState.closing && this.props.onClose) {
+      // has been closed
+      this.props.onClose()
+    }
+  }
+
+  onToggle() {
+    const { open, closing } = this.state
+
+    if (closing) {
+      return
+    }
+
+    if (open) {
+      this.setState({ closing: true })
+    } else {
+      this.setState({ open: true })
+    }
+  }
+
+  renderFooterActionButton() {
+    const { open } = this.state
+    const { isMobile } = this.props
+
+    if (isMobile) {
+      return null
+    }
+
+    return (
+      <button
+        className="footer-action-button"
+        type="button"
+        onClick={() => this.onToggle()}
+      >
+        {isMobile && !open && <fbt desc="footer.Help">Help</fbt>}
+        {!isMobile && !open && (
+          <fbt desc="footer.supportSettingsAndMore">
+            Support, settings, &amp; more
+          </fbt>
+        )}
+        {!isMobile && open && <fbt desc="footer.Close">Close</fbt>}
+      </button>
+    )
+  }
+
+  renderFooter() {
+    const { open } = this.state
+
+    if (!open) {
+      return null
+    }
+
+    const {
+      creatorConfig,
+      isMobile,
+      locale,
+      onLocale,
+      currency,
+      onCurrency
+    } = this.props
+
+    return (
+      <footer>
+        <div className="container">
+          {!isMobile && (
+            <ExternalAnchor
+              href="https://www.originprotocol.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="logo-link"
+            >
+              <div className="logo-box">
+                {creatorConfig.isCreatedMarketplace && (
+                  <span className="font-weight-bold">Powered by</span>
+                )}
+                <div className="logo" />
+              </div>
+            </ExternalAnchor>
+          )}
+          <div className="footer-content">
+            <div className="desc">
+              <fbt desc="footer.desc">
+                Origin enables true peer-to-peer commerce.
+              </fbt>
+            </div>
+            <div>
+              <fbt desc="footer.copyright">
+                &copy; 2019 Origin Protocol, Inc.
+              </fbt>
+            </div>
+            <div className="external-links">
+              <a
+                href="https://www.originprotocol.com/tos"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <fbt desc="footer.acceptableUsePolicy">Terms</fbt>
+              </a>
+              <a
+                href="https://www.originprotocol.com/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <fbt desc="footer.privacy">Privacy</fbt>
+              </a>
+              <a
+                href="https://www.originprotocol.com/aup"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <fbt desc="footer.acceptableUsePolicy">
+                  Acceptable Use Policy
+                </fbt>
+              </a>
+            </div>
+          </div>
+          <div className="footer-content">
+            <div className="links">
+              <a
+                href="https://www.originprotocol.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <fbt desc="footer.websiteLink">About Origin</fbt>
+              </a>
+
+              <a
+                href="https://www.originprotocol.com/creator"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <fbt desc="footer.creatorLink">Create a Marketplace</fbt>
+              </a>
+              <Link to="/settings">
+                <fbt desc="footer.settings">Settings</fbt>
+              </Link>
+              <a href={`mailto:${SupportEmail}`}>
+                <fbt desc="footer.giveFeedback">Give Feedback</fbt>
+              </a>
+            </div>
+            <div className="footer-settings">
+              <div className="footer-dropdown-wrapper">
+                <CurrencyDropdown
+                  value={currency}
+                  onChange={onCurrency}
+                  className="footer-dropdown"
+                  useNativeSelectbox={true}
+                />
+              </div>
+              <div className="footer-dropdown-wrapper">
+                <LocaleDropdown
+                  locale={locale}
+                  onLocale={onLocale}
+                  className="footer-dropdown"
+                  useNativeSelectbox={true}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    )
   }
 
   render() {
-    const { creatorConfig, isMobileApp } = this.props
-
+    const { open } = this.state
     return (
-      <Query query={NetworkQuery}>
-        {({ data }) => {
-          const networkName = get(data, 'web3.networkName', '')
-          return (
-            <footer>
-              <div className="container">
-                <ExternalAnchor
-                  href="https://www.originprotocol.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <div className="logo-box">
-                    {creatorConfig.isCreatedMarketplace && (
-                      <span className="font-weight-bold">Powered by</span>
-                    )}
-                    <div className="logo" />
-                  </div>
-                </ExternalAnchor>
-                <div className="separator" />
-                <div className="about">
-                  {creatorConfig.isCreatedMarketplace ? (
-                    creatorConfig.about
-                  ) : (
-                    <>
-                      <fbt desc="footer.description">
-                        Origin allows buyers and sellers to transact without
-                        rent-seeking middlemen using the Ethereum blockchain and
-                        IPFS.
-                      </fbt>
-                      <br />
-                      <br />
-                      <div>
-                        <fbt desc="footer.usingOriginBetaOn">
-                          You are currently using the Origin Beta on:
-                          <fbt:param name="networkName">
-                            {networkName}
-                          </fbt:param>.
-                        </fbt>{' '}
-                        <a
-                          href="#"
-                          onClick={e => {
-                            e.preventDefault()
-                            this.setState({ reminders: true })
-                          }}
-                          children={fbt(
-                            'Important Reminders',
-                            'Important Reminders'
-                          )}
-                        />
-                        {!this.state.reminders ? null : (
-                          <BetaModal
-                            onClose={() => this.setState({ reminders: false })}
-                          />
-                        )}
-                      </div>
-                      <br />
-                      <div>
-                        <fbt desc="footer.foundABug">
-                          Found a bug or have feedback? Send an email to
-                          <a href={`mailto:${SupportEmail}`}>
-                            <fbt:param name="SupportEmail">
-                              {SupportEmail}
-                            </fbt:param>
-                          </a>, open an issue on
-                          <ExternalAnchor
-                            href={GitHubLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            GitHub
-                          </ExternalAnchor>
-                          or post in our #bug-reports channel on
-                          <ExternalAnchor
-                            href="https://discord.gg/jyxpUSe"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Discord
-                          </ExternalAnchor>.
-                        </fbt>
-                      </div>
-                      <br />
-                      <div className="copyright">
-                        © {new Date().getFullYear()} Origin Protocol, Inc.
-                        {!isMobileApp && (
-                          <>
-                            <span>&bull;</span>
-                            <a
-                              href="https://www.originprotocol.com/tos"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <fbt desc="footer.acceptableUsePolicy">Terms</fbt>
-                            </a>
-                            <span>&bull;</span>
-                            <a
-                              href="https://www.originprotocol.com/privacy"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <fbt desc="footer.privacy">Privacy</fbt>
-                            </a>
-                            <span>&bull;</span>
-                            <a
-                              href="https://www.originprotocol.com/aup"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <fbt desc="footer.acceptableUsePolicy">
-                                Acceptable Use Policy
-                              </fbt>
-                            </a>
-                          </>
-                        )}
-                      </div>
-                    </>
-                  )}
-                </div>
-                {!isMobileApp && (
-                  <div className="links">
-                    <a
-                      href="https://www.originprotocol.com/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <fbt desc="footer.websiteLink">
-                        Learn More About Origin
-                      </fbt>
-                    </a>
-
-                    <a
-                      href="https://www.originprotocol.com/creator"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <fbt desc="footer.creatorLink">
-                        Create Your Own Marketplace
-                      </fbt>
-                    </a>
-                  </div>
-                )}
-              </div>
-            </footer>
-          )
-        }}
-      </Query>
+      <div className="footer-wrapper" ref={ref => (this.wrapperRef = ref)}>
+        {open && (
+          <div
+            className="footer-wrapper-overlay"
+            onClick={() => this.onToggle()}
+          />
+        )}
+        {this.renderFooter()}
+        {this.renderFooterActionButton()}
+      </div>
     )
   }
 }
@@ -173,76 +223,150 @@ class Footer extends Component {
 export default withIsMobile(Footer)
 
 require('react-styl')(`
-  footer
-    border-top: 1px solid var(--pale-grey-two)
-    background-color: #f4f6f7
-    margin-top: 4rem
-    padding-top: 4rem
-    padding-bottom: 4rem
-    min-height: 15rem
-    font-size: 14px
-    color: var(--dark-grey-blue)
-    .container
-      display: flex
-      justify-content: space-between
-    a
-      color: var(--dark-grey-blue)
-    .about
-      max-width: 320px
-      flex: 1
-      margin-right: 35px
-    .logo-box
-      text-align: center
-    .logo
-      background: url(images/origin-beta-logo-dark.svg) no-repeat
-      height: 25px
-      width: 120px
-    .separator
-      width: 1px
-      background-color: #c5cfd5
-      margin: 0 35px
-    .links
-      font-weight: normal
-      flex: 1
-      flex-wrap: wrap
-      display: flex
-      align-items: flex-start
-      a
-        margin-left: auto
-    .about
+  .footer-wrapper
+    z-index: 500
+    .footer-action-button
+      position: fixed
+      z-index: 500
+      bottom: 1.25rem
+      right: 1.5rem
+      border-radius: 30px
+      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.15)
+      background-color: var(--white)
       font-size: 12px
-      a
-        color: var(--clear-blue)
-    .copyright
-      margin-top: 1rem
-      font-size: 10px
-      span
-        color: var(--pale-grey-two-darker)
-        padding: 0 0.125rem
-
-  @media (max-width: 1200px)
+      font-weight: bold
+      color: var(--steel)
+      border-style: none
+      outline: none
+      padding: 0.5rem 0.75rem
+      &:before
+        content: '•••'
+        margin-right: 5px
+        color: #6f8294
+        font-size: 10px
+    
     footer
+      position: fixed
+      bottom: -100%
+      right: 0
+      left: 0
+      transition: bottom 0.3s ease
+      z-index: 500
+      box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, 0.1)
+      background-color: var(--white)
+      padding: 2.5rem 2rem
+      font-size: 12px
+      color: var(--dark-grey-blue)
+      min-height: 22rem
       .container
-        .links
-          flex-direction: column
-          align-items: left
+        display: flex
+        justify-content: space-between
+        > .logo-link, > .logo-box
+          text-align: center
+          flex: auto 0 0
+          padding-right: 2.5rem
+          border-right: 1px solid #dde6ea
+          margin-right: 2.5rem
+          .logo
+            background: url(images/origin-logo-black.svg) no-repeat
+            height: 25px
+            width: 100px
+            margin: 0 auto
+        .footer-content
+          flex: 1
+          color: var(--dark-grey-blue)
+          font-weight: 300
+          > div
+            margin-bottom: 0.25rem
           a
-            margin: 0 0 1rem
+            margin-right: 10px
+            color: var(--dark-grey-blue)
+          .links
+            font-weight: 400
+            display: flex
+            justify-content: space-between
+            color: var(--dark-grey-blue)
+            margin-bottom: 3rem
+          .desc
+            margin-bottom: 3rem
+        .footer-settings
+          text-align: right
+          .footer-dropdown-wrapper
+            position: relative
+            display: inline-block
+            &:after
+              content: ''
+              position: absolute
+              display: inline-block
+              width: 5px
+              background-image: url('images/caret-dark.svg')
+              background-repeat: no-repeat
+              background-position: right center
+              background-size: 5px
+              top: 0
+              bottom: 0
+              right: 12px
+              transform: rotateZ(90deg)
+          .footer-dropdown
+            margin-left: 12px
+            border-radius: 30px
+            border: solid 1px #c2cbd3
+            box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, 0.1)
+            background-color: var(--white)
+            min-width: 6.25rem
+            -webkit-appearance: none
+            padding: 0.25rem 1rem
+
+    &.open 
+      .footer-action-button:before
+        content: ''
+        width: 0.75rem
+        height: 0.75rem
+        background-image: url('images/nav/close-material.svg')
+        background-position: center
+        background-size: 0.75rem
+        background-repeat: no-repat
+        display: inline-block
+      footer
+        bottom: 0
+    .footer-wrapper-overlay
+      position: fixed
+      z-index: 500
+      top: 0
+      bottom: 0
+      left: 0
+      right: 0
 
   @media (max-width: 767.98px)
-    footer
-      margin-top: 2rem
-      padding-top: 2rem
-      padding-bottom: 2rem
-      .container
-        flex-direction: column
-        align-items: center
-        text-align: center
-        .about
-          margin-right: 0
-        .logo
-          margin-bottom: 1rem
-        .links
-          align-items: center
-          margin-top: 1rem
+    .footer-wrapper
+      .footer-action-button
+        bottom: 10px
+        right: 10px
+      footer
+        min-height: auto
+        .container
+          flex-direction: column
+          .footer-content
+            .links
+              display: block
+              margin-bottom: 1.5rem
+              a
+                width: 50%
+                display: inline-block
+                margin: 0.5rem 0
+            .desc, .external-links
+              margin-bottom: 1.5rem
+          .footer-settings
+            text-align: auto
+            display: flex
+            .footer-dropdown-wrapper
+              flex: 1
+              margin: 0 0.75rem
+              &:first-child
+                margin-left: 0
+              &:last-child
+                margin-right: 0
+              .footer-dropdown
+                width: 100%
+                margin-left: 0
 `)

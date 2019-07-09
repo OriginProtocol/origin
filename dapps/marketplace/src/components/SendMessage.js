@@ -10,6 +10,7 @@ import query from 'queries/CanConverseWith'
 import EnableMessagingModal from 'components/EnableMessagingModal'
 import Modal from 'components/Modal'
 import QueryError from 'components/QueryError'
+import Redirect from 'components/Redirect'
 
 class SendMessage extends Component {
   state = { message: '' }
@@ -131,18 +132,7 @@ class SendMessage extends Component {
   }
 
   renderSent() {
-    return (
-      <>
-        <h5>Message Sent!</h5>
-        <div className="actions">
-          <button
-            className="btn btn-outline-light btn-rounded"
-            children={fbt('OK', 'OK')}
-            onClick={() => this.setState({ shouldClose: true })}
-          />
-        </div>
-      </>
-    )
+    return <Redirect to={`/messages/${this.props.to}`} />
   }
 }
 

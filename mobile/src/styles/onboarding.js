@@ -22,7 +22,8 @@ export default StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 20,
     textAlign: 'center',
-    width: '80%'
+    width: '80%',
+    color: '#98a7b4'
   },
   backArrow: {
     position: 'absolute',
