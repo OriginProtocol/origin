@@ -17,7 +17,6 @@ const redis = require('redis')
 const BN = require('bn.js')
 const bip39 = require('bip39')
 const hdkey = require('ethereumjs-wallet/hdkey')
-const Web3 = require('web3')
 const { createEngine } = require('@origin/web3-provider')
 const {
   stringToBN,
@@ -46,10 +45,6 @@ const JSONRPC_MAX_CONCURRENT = 25
 
 async function tick(wait = 1000) {
   return new Promise(resolve => setTimeout(() => resolve(true), wait))
-}
-
-function normalizeAddress(address) {
-  return Web3.utils.toChecksumAddress(address)
 }
 
 class Account {
