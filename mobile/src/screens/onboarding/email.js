@@ -97,7 +97,8 @@ class EmailScreen extends Component {
       headers: { 'content-type': 'application/json' },
       method: 'POST',
       body: JSON.stringify({
-        email: this.state.emailValue
+        email: this.state.emailValue,
+        ethAddress: this.props.wallet.activeAccount.address
       })
     })
     // 200 status code indicates account was found

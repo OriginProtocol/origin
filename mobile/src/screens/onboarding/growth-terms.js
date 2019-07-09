@@ -94,7 +94,16 @@ class GrowthTermsScreen extends Component {
   renderIneligible() {
     return (
       <>
-        <View style={{ ...styles.container, marginTop: 50 }}>
+        <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
+          <BackArrow
+            onClick={() => this.props.navigation.goBack(null)}
+            style={styles.backArrow}
+          />
+          <Text style={styles.title}>
+            <fbt desc="GrowthTermsScreen.ineligibleTitle">Origin Rewards</fbt>
+          </Text>
+        </View>
+        <View style={styles.container}>
           <Image
             style={styles.image}
             source={require(IMAGES_PATH + 'not-eligible-graphic.png')}
