@@ -158,7 +158,7 @@ const ReviewAndFinalization = props => {
               refetch={props.refetch}
               onSuccess={() => rateOffer(offer.id)}
               onClick={() => rateOffer(offer.id)}
-              wallet={isBuyer ? offer.buyer.id : offer.listing.seller.id}
+              from={isBuyer ? offer.buyer.id : offer.listing.seller.id}
               className="btn btn-primary mr-md-auto"
             >
               <fbt desc="Progress.submit">Submit</fbt>

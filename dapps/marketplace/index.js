@@ -29,6 +29,7 @@ async function start() {
     populate: true,
     graphqlServer: process.env.PERFORMANCE ? true : false,
     skipContractsIfExists: process.env.CLEAN ? false : true,
+    relayer: process.env.RELAYER ? true : false,
     sslProxy
   })
 

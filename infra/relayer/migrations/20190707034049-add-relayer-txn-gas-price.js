@@ -7,7 +7,7 @@ module.exports = {
     return queryInterface.addColumn(
       tableName,
       'gas_price',
-      { type: Sequelize.Sequelize.INTEGER }
+      { type: Sequelize.Sequelize.BIGINT }
     )
   },
   down: (queryInterface) => {

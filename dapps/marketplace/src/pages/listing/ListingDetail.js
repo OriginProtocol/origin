@@ -342,16 +342,15 @@ require('react-styl')(`
         max-width: 50%
 
     .seller-info
-      display: flex
+      display: grid
+      grid-column-gap: 2rem
+      grid-template-columns: 50% 50%
+
       border-top: 1px solid #dde6ea
       padding-top: 2rem
       margin-top: 2rem
-      .seller-listings
-        flex: auto
       .reviews
         padding-right: 2.2rem
-        flex: auto
-        min-width: 60%
 
     h2
       font-family: var(--heading-font)
@@ -488,14 +487,14 @@ require('react-styl')(`
         font-size: 32px
       .description
         margin-top: 0
-        margin-bottom: 2rem
+        margin-bottom: 1.5rem
       .about-party
-        margin-bottom: 2rem
-    
+        margin-bottom: 1.5rem
+
       .listing-hero-section
         flex-direction: column
         .listing-media
-          padding: 15px
+          padding: 15px 0
           width: 100%
           .gallery-scroll-wrap
             border-radius: 10px
@@ -503,21 +502,22 @@ require('react-styl')(`
         .listing-info
           width: 100%
           max-width: 100%
+          padding: 0
           .heading h2
-            font-size: 26px
+            font-size: 28px
             margin-bottom: 1rem
         .about-seller
           border-top: 1px solid #dde6ea
-          padding: 2rem 15px 0 15px
-  
+          padding: 1.5rem 0 0 0
+
       .seller-info
         border: 0
         margin-top: 0
         padding-top: 0
-        flex-direction: column
+        grid-template-columns: 100%
         .reviews
           border-top: 1px solid #dde6ea
-          padding: 2rem 15px 0 15px
+          padding: 1.5rem 0 0 0
           margin-top: 2rem
           min-width: 100%
           h3
@@ -526,7 +526,7 @@ require('react-styl')(`
             margin-bottom: 1.25rem
         .seller-listings
           border-top: 1px solid #dde6ea
-          padding: 2rem 15px 0 15px
+          padding: 1.5rem 0 0 0
           .user-listings .listings-header
             font-family: var(--heading-font)
             font-size: 18px
@@ -534,14 +534,18 @@ require('react-styl')(`
 
       .description
         border: 0
-        padding-top: 0
+        padding-top: 0.5rem
+        font-size: 14px
+        margin-bottom: 1.5rem
       .listing-buy
         border: 0
-        margin: 0
+        margin: 0 0 0.5rem 0
         padding: 0
         .price
           margin-bottom: 0
           font-size: 22px
+        .quantity
+          margin-bottom: 0.5rem
         &.multi
           .price
             padding-bottom: 0.5rem
