@@ -159,7 +159,7 @@ const Transaction = props => {
                   {History}
                 </>
               ) : (
-                <div className="mx-3">
+                <>
                   {Progress}
                   <div className="d-flex">
                     <div className="col-3 p-0">{Offer}</div>
@@ -169,7 +169,7 @@ const Transaction = props => {
                     <div className="col-3 p-0">{About}</div>
                   </div>
                   {History}
-                </div>
+                </>
               )}
             </>
           )
@@ -185,6 +185,7 @@ require('react-styl')(`
   .transaction-detail
     padding-top: 2.5rem
     position: relative
+    max-width: 960px
     .about-party
       .actions
         .btn-link

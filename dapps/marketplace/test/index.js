@@ -243,7 +243,10 @@ function listingTests(autoSwap) {
 
     it('should view the purchase', async function() {
       await clickByText(page, 'View Purchase', 'button')
-      await waitForText(page, `You've made an offer. Wait for the seller to accept it.`)
+      await waitForText(
+        page,
+        `You've made an offer. Wait for the seller to accept it.`
+      )
       await pic(page, 'transaction-wait-for-seller')
     })
 
@@ -340,7 +343,10 @@ function listingTests(autoSwap) {
       await pic(page, 'purchase-listing')
 
       await clickByText(page, 'View Purchase', 'button')
-      await waitForText(page, `You've made an offer. Wait for the seller to accept it.`)
+      await waitForText(
+        page,
+        `You've made an offer. Wait for the seller to accept it.`
+      )
       await pic(page, 'transaction-wait-for-seller')
     })
 
@@ -360,7 +366,10 @@ function listingTests(autoSwap) {
     })
 
     it('should allow the listing to be edited', async function() {
-      await clickBySelector(page, '.listing-buy-editonly + a.listing-action-link')
+      await clickBySelector(
+        page,
+        '.listing-buy-editonly + a.listing-action-link'
+      )
       await clickByText(page, 'For Sale')
       await clickByText(page, 'Continue')
       await page.focus('input[name=quantity]')
@@ -471,6 +480,7 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
 
   before(async function() {
     await page.evaluate(() => {
+      window.localStorage.noIdentity = true
       window.localStorage.performanceMode = true
       window.localStorage.proxyAccountsEnabled = true
       window.localStorage.relayerEnabled = true
