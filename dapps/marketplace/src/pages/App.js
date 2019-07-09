@@ -15,6 +15,7 @@ import Footer from './_Footer'
 import Onboard from './onboard/Onboard'
 import Listings from './listings/Listings'
 import Listing from './listing/Listing'
+import PromoteListing from './promote-listing/PromoteListing'
 import Transaction from './transaction/Transaction'
 import MyPurchases from './transactions/Purchases'
 import MySales from './transactions/Sales'
@@ -119,6 +120,7 @@ class App extends Component {
           <Switch>
             <Route path="/onboard" component={Onboard} />
             <Route path="/listing/:listingID" component={Listing} />
+            <Route path="/promote/:listingID" component={PromoteListing} />
             <Route path="/purchases/:offerId" component={Transaction} />
             <Route path="/my-purchases/:filter?" component={MyPurchases} />
             <Route path="/my-sales/:filter?" component={MySales} />

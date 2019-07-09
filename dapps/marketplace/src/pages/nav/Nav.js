@@ -29,7 +29,7 @@ const Brand = withCreatorConfig(({ creatorConfig }) => {
   )
 })
 
-const BackRegex = /^\/(listing|my-listings|my-sales|my-purchases|messages|notifications|create)(\/|$)/gi
+const BackRegex = /^\/(listing|my-listings|my-sales|my-purchases|messages|notifications|create|promote)(\/|$)/gi
 const ShowSearchRegex = /^\/(listing)?(\/|$)/gi
 
 const Nav = ({
@@ -59,6 +59,8 @@ const Nav = ({
       return null
     } else if (pathname.startsWith('/create')) {
       title = <fbt desc="CreateListing.title">Create Listing</fbt>
+    } else if (pathname.startsWith('/promote')) {
+      title = <fbt desc="PromoteListing.title">Promote Listing</fbt>
     }
 
     const canGoBack = history && history.length > 1
