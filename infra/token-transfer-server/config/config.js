@@ -2,8 +2,7 @@ require('dotenv').config()
 
 module.exports = {
   development: {
-    dialect: 'sqlite',
-    storage: './data/token-grants.sqlite3',
+    use_env_variable: 'DATABASE_URL',
     define: {
       // Add the timestamp attributes (updatedAt, createdAt).
       timestamps: true,
@@ -15,9 +14,8 @@ module.exports = {
     // Disable logging of SQL statements.
     logging: false
   },
-  'test': {
-    dialect: 'sqlite',
-    storage: './data/test-token-grants.sqlite3',
+  test: {
+    use_env_variable: 'DATABASE_URL',
     define: {
       // Add the timestamp attributes (updatedAt, createdAt).
       timestamps: true,
@@ -29,7 +27,7 @@ module.exports = {
     // Disable logging of SQL statements.
     logging: false
   },
-  'production': {
+  production: {
     use_env_variable: 'DATABASE_URL',
     define: {
       // Add the timestamp attributes (updatedAt, createdAt).

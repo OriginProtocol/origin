@@ -1,4 +1,5 @@
 require('envkey')
+
 const express = require('express')
 const app = express()
 const { check, validationResult } = require('express-validator/check')
@@ -82,7 +83,7 @@ function withSession(req, res, next) {
  * Returns grants for the authenticated user.
  */
 app.get(
-  '/api/grants',
+  '/grants',
   withSession,
   asyncMiddleware(async (req, res) => {
     const grants = await Grant.findAll({ where: { email: req.session.email } })
@@ -105,7 +106,7 @@ const isEthereumAddress = value => {
  * Transfers tokens from hot wallet to address of user's choosing.
  */
 app.post(
-  '/api/transfer',
+  '/transfer',
   [
     check('grantId').isInt(),
     check('amount').isDecimal(),
@@ -149,7 +150,7 @@ app.post(
 
 // TODO: review this for security
 app.post(
-  '/api/auth_google',
+  '/auth_google',
   passport.authenticate('google-token', { session: false }),
   (req, res) => {
     if (!req.user) {
@@ -188,7 +189,7 @@ app.post(
  * Return the events pertaining to the user.
  */
 app.get(
-  '/api/events',
+  '/events',
   withSession,
   asyncMiddleware(async (req, res) => {
     // Perform an LEFT OUTER JOIN between Events and Grants. Neither SQLite nor
@@ -218,7 +219,7 @@ app.get(
 )
 
 // Destroys the user's session cookie.
-app.post('/api/logout', withSession, (req, res) => {
+app.post('/logout', withSession, (req, res) => {
   if (req.session) {
     req.session.destroy(err => {
       if (err) {
