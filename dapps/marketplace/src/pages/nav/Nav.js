@@ -60,7 +60,7 @@ const Nav = ({
     } else if (pathname.startsWith('/create')) {
       title = <fbt desc="CreateListing.title">Create Listing</fbt>
     } else if (pathname.startsWith('/promote')) {
-      title = <fbt desc="PromoteListing.title">Promote Listing</fbt>
+      return null
     }
 
     const canGoBack = history && history.length > 1
