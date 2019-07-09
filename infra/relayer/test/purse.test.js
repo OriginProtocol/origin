@@ -275,7 +275,7 @@ describe('Purse', () => {
     // Make sure the unsigned tx object is also available
     const txObj = await purseOne.getPendingTransaction(txHash)
     assert(txObj !== null)
-    assert(txObj.to === Rando.toLowerCase(), `Expected ${Rando} but got ${txObj.to}`)
+    assert(txObj.to === web3.utils.toChecksumAddress(Rando), `Expected ${web3.utils.toChecksumAddress(Rando)} but got ${txObj.to}`)
 
     // Second instance should come up with the right tx count
     const purseTwo = new Purse({ web3, mnemonic: MNEMONIC_ONE, children: 2 })
