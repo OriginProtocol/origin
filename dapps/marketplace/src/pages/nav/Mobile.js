@@ -5,6 +5,8 @@ import Dropdown from 'components/Dropdown'
 import Redirect from 'components/Redirect'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
+const SupportLink = 'https://goo.gl/forms/86tKQXZdmux3KNFJ2'
+
 const MobileNav = ({ open, onClose, onOpen, onShowFooter }) => {
   // Allow the menu to close before redirecting so it doesn't show when
   // the user clicks or swipes back.
@@ -119,7 +121,7 @@ const MobileNav = ({ open, onClose, onOpen, onShowFooter }) => {
               children={fbt('Settings', 'navigation.settings')}
             />
             <a
-              href="mailto:support@originprotocol.com"
+              href={SupportLink}
               onClick={() => onClose()}
               className="dropdown-item feedback"
               children={fbt('Feedback', 'navigation.feedback')}
