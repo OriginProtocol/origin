@@ -1,3 +1,4 @@
+const esmImport = require('esm')(module)
 const logger = require('./logger')
 const search = require('../lib/search')
 const db = require('../models')
@@ -5,6 +6,9 @@ const { GrowthEvent } = require('@origin/growth/src/resources/event')
 const { GrowthEventTypes } = require('@origin/growth/src/enums')
 const listingQuery = require('./queries/Listing')
 const offerQuery = require('./queries/Offer')
+const { getOriginListingId, getOriginOfferId } = esmImport(
+  '@origin/graphql/src/utils/getId'
+)
 
 const LISTING_EVENTS = [
   'ListingCreated',
@@ -30,14 +34,6 @@ function isListingEvent(eventName) {
 
 function isOfferEvent(eventName) {
   return OFFER_EVENTS.includes(eventName)
-}
-
-function getOriginListingId(networkId, event) {
-  return `${networkId}-000-${event.returnValues.listingID}-${event.blockNumber}`
-}
-
-function getOriginOfferId(networkId, event) {
-  return `${networkId}-000-${event.returnValues.listingID}-${event.returnValues.offerID}`
 }
 
 /* Removes the block number that is appended to listing IDs when they are

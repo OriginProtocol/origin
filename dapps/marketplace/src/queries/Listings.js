@@ -8,6 +8,7 @@ export default gql`
     $sort: String
     $search: String
     $filters: [ListingFilterInput!]
+    $listingIds: [String]
   ) {
     marketplace {
       listings(
@@ -16,6 +17,7 @@ export default gql`
         sort: $sort
         search: $search
         filters: $filters
+        listingIds: $listingIds
       ) {
         totalCount
         pageInfo {

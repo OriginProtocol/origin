@@ -51,7 +51,7 @@ export default StarRating
 require('react-styl')(`
   .star-rating
     display: flex
-    justify-content: center
+    justify-content: start
     &.interactive
       cursor: pointer
     > div

@@ -6,13 +6,26 @@ class FraudEngine {
   }
 
   /**
-   * Returns fraud data if account is deemed fraudulent. null otherwise.
+   * Check if account is a duplicate.
+   * If yes returns type and reasons, null otherwise.
    *
    * @param {string} ethAddress
    * @returns {Promise<{type: string, reasons: Array<string>} || null>}
    */
-  async isFraudAccount(ethAddress) {
-    logger.debug(`FraudEngine: analyzing account ${ethAddress}`)
+  async isDupeAccount(ethAddress) {
+    logger.debug(`FraudEngine: dupe analysis for account ${ethAddress}`)
+    return null
+  }
+
+  /**
+   * Check if account is a fraudulent referrer.
+   * If yes returns type and reasons, null otherwise.
+   *
+   * @param {string} ethAddress
+   * @returns {Promise<{type: string, reasons: Array<string>} || null>}
+   */
+  async isFraudReferrerAccount(ethAddress) {
+    logger.debug(`FraudEngine: referrer analysis for account ${ethAddress}`)
     return null
   }
 

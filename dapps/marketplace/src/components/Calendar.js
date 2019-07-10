@@ -80,12 +80,6 @@ class Calendar extends Component {
           />
         </div>
 
-        <div className="day-header">
-          {'SMTWTFS'.split('').map((day, k) => (
-            <div key={k}>{day}</div>
-          ))}
-        </div>
-
         <div className={`days${this.state.dragging ? '' : ' inactive'}`}>
           {Array(max)
             .fill(0)
@@ -128,33 +122,35 @@ class Calendar extends Component {
     if (day.booked && this.props.showBooked) {
       content = 'Booked'
     } else if (day.unavailable) {
-      content = 'Unavailable'
+      content = null
     } else if (day.customPrice) {
-      content = <span style={{ color: 'green' }}>{content}</span>
+      content = <span className="custom-price">{content}</span>
     }
 
     let interactions = {}
     if (this.props.interactive !== false) {
       interactions = {
         onClick: () => {
+          let startDate = day.date
           if (this.state.dragging) {
+            startDate = this.state.startDate
             this.setState({ dragEnd: idx, dragging: false, endDate: day.date })
-            if (this.props.onChange) {
-              const start = dayjs(this.state.startDate)
-              let range = `${this.state.startDate}/${day.date}`
-              if (start.isAfter(day.date)) {
-                range = `${day.date}/${this.state.startDate}`
-              }
-              this.props.onChange({ range })
-            }
           } else {
             this.setState({
               dragging: true,
               dragStart: idx,
-              startDate: day.date,
-              dragEnd: null,
-              endDate: null
+              startDate,
+              dragEnd: idx,
+              endDate: startDate
             })
+          }
+          if (this.props.onChange) {
+            const start = dayjs(startDate)
+            let range = `${startDate}/${day.date}`
+            if (start.isAfter(day.date)) {
+              range = `${day.date}/${startDate}`
+            }
+            this.props.onChange({ range })
           }
         },
         onMouseOver: () => this.setState({ dragOver: idx })
@@ -168,7 +164,7 @@ class Calendar extends Component {
         {...interactions}
       >
         <div>{date.date()}</div>
-        <div>{content}</div>
+        <div className="day-meta">{content}</div>
       </div>
     )
   }
@@ -216,35 +212,39 @@ export default Calendar
 require('react-styl')(`
   .calendar
     margin-bottom: 2rem
-    &.calendar-sm .days > .day
-      height: auto
     .days
       display: grid
-      grid-template-columns: repeat(7, 1fr);
+      grid-template-columns: repeat(7, 1fr)
       user-select: none
-      > .empty.first-row
-        border-bottom: 1px solid #c2cbd3
+      max-width: 17.5rem
+      margin-left: auto
+      margin-right: auto
+      grid-row-gap: 5px
       > .day
-        height: 6vw
-        min-height: 3.5rem
-        color: #455d75
+        height: 2.5rem
+        width: 2.5rem
+        color: #6a8296
         font-size: 14px
         font-weight: normal
         padding: 0.25rem 0.5rem
         display: flex
         flex-direction: column
         justify-content: space-between
-        min-width: 0
 
-        border-style: solid
-        border-color: #c2cbd3
-        border-width: 0 0 1px 1px
         position: relative
+        text-align: center
+
+        .day-meta
+          font-size: 8px
+          .custom-price
+            color: green
+
         &.end-row
           border-right-width: 1px
 
         &.in-past,&.unavailable
-          background-color: var(--pale-grey)
+          text-decoration: line-through
+          color: var(--light)
         &.unavailable
           div:nth-child(2)
             color: var(--light)
@@ -267,31 +267,21 @@ require('react-styl')(`
         &.active.unselected:hover
           &::after
             border: 3px solid black
-        &.mid
-          background-color: var(--pale-clear-blue)
-        &.start,&.end
-          background-color: #d6ecf5
-        &.start::after
-          border-width: 3px 0 3px 3px
-          border-color: black
-        &.mid::after
-          border-width: 3px 0 3px 0
-          border-color: black
-        &.end::after
-          border-width: 3px 3px 3px 0
-          border-color: black
-        &.single::after
-          border-width: 3px
-          border-color: black
-        &.nbb::after
-          border-bottom-color: transparent
-        &.nbt::after
-          border-top-color: transparent
-      &.inactive > div:hover
-        &.start::after, &.end::after, &.mid::after
-          border-color: blue
-          border-width: 3px
-          z-index: 3
+        &.start, &.mid, &.end
+          background-color: #007fff
+          color: var(--white)
+          .day-meta .custom-price
+            color: var(--white)
+        &.start
+          border-top-left-radius: 10px
+          border-bottom-left-radius: 10px
+        &.end
+          border-top-right-radius: 10px
+          border-bottom-right-radius: 10px
+        &.single
+          border-radius: 10px
+          background-color: #007fff
+          color: var(--white)
 
     .day-header
       display: flex
@@ -314,8 +304,10 @@ require('react-styl')(`
       font-family: var(--heading-font)
       font-size: 24px
       font-weight: 300
+      margin-bottom: 1rem
       .btn
         border-color: #c2cbd3
+        min-width: auto
         &::before
           content: ""
           width: 0.75rem

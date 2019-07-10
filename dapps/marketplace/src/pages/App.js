@@ -39,7 +39,8 @@ class App extends Component {
   state = {
     hasError: false,
     displayMobileModal: false,
-    mobileModalDismissed: false
+    mobileModalDismissed: false,
+    footer: false
   }
 
   componentDidMount() {
@@ -90,26 +91,29 @@ class App extends Component {
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
 
-    const isMobile = this.props.ismobile === 'true'
+    const isMobile = this.props.isMobile
     // hide navigation bar on growth welcome screen and show it
     // in onboarding variation of that screen
 
+    // TODO: Too many regex here, probably it's better to optimize this sooner or later
     const hideNavbar =
-      (!this.props.location.pathname.match(/^\/welcome\/onboard.*$/g) &&
-        this.props.location.pathname.match(/^\/welcome.*$/g)) ||
+      (!this.props.location.pathname.match(/^\/welcome\/onboard.*$/gi) &&
+        this.props.location.pathname.match(/^\/welcome.*$/gi)) ||
       (isMobile &&
-        this.props.location.pathname.match(/^\/campaigns\/purchases$/g)) ||
-      (isMobile &&
-        this.props.location.pathname.match(/^\/campaigns\/invitations$/g)) ||
-      (isMobile &&
-        this.props.location.pathname.match(/^\/campaigns\/verifications$/g)) ||
-      (isMobile && this.props.location.pathname.match(/\/onboard\/finished/g))
+        (this.props.location.pathname.match(/^\/purchases\/.*$/gi) ||
+          this.props.location.pathname.match(/^\/campaigns\/purchases$/gi) ||
+          this.props.location.pathname.match(/^\/campaigns\/invitations$/gi) ||
+          this.props.location.pathname.match(/\/onboard\/finished/gi) ||
+          this.props.location.pathname.match(
+            /^\/(create\/.+|listing\/[-0-9]+\/edit\/.+)/gi
+          )))
 
     return (
       <CurrencyContext.Provider value={this.props.currency}>
         {!hideNavbar && (
           <Nav
             onGetStarted={() => this.setState({ mobileModalDismissed: false })}
+            onShowFooter={() => this.setState({ footer: true })}
           />
         )}
         <main>
@@ -121,7 +125,7 @@ class App extends Component {
             <Route path="/my-sales/:filter?" component={MySales} />
             <Route path="/my-listings/:filter?" component={MyListings} />
             <Route path="/create" component={CreateListing} />
-            <Route path="/user/:id" component={User} />
+            <Route path="/user/:id/:content?" component={User} />
             <Route path="/profile/:attestation?" component={Profile} />
             <Route path="/messages/:room?" component={Messages} />
             <Route path="/notifications" component={Notifications} />
@@ -149,6 +153,7 @@ class App extends Component {
             />
             <Route exact path="/rewards/banned" component={GrowthBanned} />
             <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />
+            <Route path="/search" component={Listings} />
             <Route component={Listings} />
           </Switch>
         </main>
@@ -164,6 +169,8 @@ class App extends Component {
           />
         )}
         <Footer
+          open={this.state.footer}
+          onClose={() => this.setState({ footer: false })}
           locale={this.props.locale}
           onLocale={this.props.onLocale}
           creatorConfig={creatorConfig}

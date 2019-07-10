@@ -552,7 +552,9 @@ class OriginEventSource {
   }
 
   async getReview(listingId, offerId, party, ipfsHash, event) {
-    const data = await get(this.ipfsGateway, ipfsHash)
+    let data = await get(this.ipfsGateway, ipfsHash)
+    // review info in OfferData events is a JSON stringified string data propety
+    data = data.data ? JSON.parse(data.data) : data
     const offerIdExp = await this.getOfferIdExp(listingId, offerId)
     const listing = await this.getListing(listingId, event.blockNumber)
     return {

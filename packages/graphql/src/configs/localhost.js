@@ -17,8 +17,10 @@ const config = {
   bridge: 'https://bridge.dev.originprotocol.com',
   // discovery: `http://${HOST}:4000/graphql`,
   notifications: `http://${HOST}:3456`,
-  //growth: 'http://localhost:4001',
-  performanceMode: localStorageHas('performanceMode'),
+  growth: localStorageHas('localGrowthServer', 'true')
+    ? 'http://localhost:4001'
+    : null,
+  performanceMode: localStorageHas('performanceMode', 'true'),
   graphql: `http://${HOST}:4007`,
   automine: 2000,
   attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
@@ -33,7 +35,8 @@ const config = {
   ProxyFactory: addresses.ProxyFactory,
   ProxyFactory_Epoch: addresses.ProxyFactoryEpoch,
   IdentityProxyImplementation: addresses.IdentityProxyImplementation,
-  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled'),
+  proxyAccountsEnabled: true,
+  relayerEnabled: localStorageHas('relayerEnabled', 'true'),
   tokens: [],
 
   messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',

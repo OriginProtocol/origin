@@ -3,6 +3,7 @@ import { fbt } from 'fbt-runtime'
 
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
+import withIdentity from 'hoc/withIdentity'
 import withWeb3 from 'hoc/withWeb3'
 
 import Price from 'components/Price'
@@ -27,6 +28,9 @@ const NotEnoughFunds = ({ noEthOrDai, daiPrice, ethPrice }) => (
         How do I get cryptocurrency?
       </fbt>
     </Link>
+    <button className="btn btn-primary mt-4" disabled>
+      <fbt desc="Purchase">Purchase</fbt>
+    </button>
   </div>
 )
 
@@ -52,6 +56,7 @@ const SwapEthToDai = () => (
 )
 
 const PaymentOptions = ({
+  identity,
   acceptedTokens,
   value,
   price,
@@ -77,45 +82,49 @@ const PaymentOptions = ({
   const ethPrice = <Price price={price} target="token-ETH" className="bold" />
   const daiPrice = <Price price={price} target="token-DAI" className="bold" />
 
+  const hasIdentity = localStorage.noIdentity || identity
+
   let cannotPurchase = false,
     content,
     needsSwap = false,
     noEthOrDai = false
 
-  if (acceptsDai && acceptsEth && daiActive) {
-    if (hasBalance) {
-      content = <PayWithDai />
-    } else if (!hasBalance && !hasEthBalance) {
-      cannotPurchase = true
-      noEthOrDai = true
-      content = <NotEnoughFunds noEthOrDai />
-    } else {
-      needsSwap = true
-      content = <SwapEthToDai ethPrice={ethPrice} />
-    }
-  } else if (acceptsDai && acceptsEth && ethActive) {
-    if (hasBalance) {
-      content = <PayWithEth />
-    } else {
-      cannotPurchase = true
-      content = <NotEnoughFunds />
-    }
-  } else if (acceptsDai) {
-    if (hasBalance) {
-      content = <PayWithDai />
-    } else if (hasEthBalance) {
-      needsSwap = true
-      content = <SwapEthToDai ethPrice={ethPrice} />
-    } else {
-      cannotPurchase = true
-      content = <NotEnoughFunds />
-    }
-  } else if (acceptsEth) {
-    if (hasBalance) {
-      content = <PayWithEth />
-    } else {
-      cannotPurchase = true
-      content = <NotEnoughFunds />
+  if (hasIdentity) {
+    if (acceptsDai && acceptsEth && daiActive) {
+      if (hasBalance) {
+        content = <PayWithDai />
+      } else if (!hasBalance && !hasEthBalance) {
+        cannotPurchase = true
+        noEthOrDai = true
+        content = <NotEnoughFunds noEthOrDai />
+      } else {
+        needsSwap = true
+        content = <SwapEthToDai ethPrice={ethPrice} />
+      }
+    } else if (acceptsDai && acceptsEth && ethActive) {
+      if (hasBalance) {
+        content = <PayWithEth />
+      } else {
+        cannotPurchase = true
+        content = <NotEnoughFunds />
+      }
+    } else if (acceptsDai) {
+      if (hasBalance) {
+        content = <PayWithDai />
+      } else if (hasEthBalance) {
+        needsSwap = true
+        content = <SwapEthToDai ethPrice={ethPrice} />
+      } else {
+        cannotPurchase = true
+        content = <NotEnoughFunds />
+      }
+    } else if (acceptsEth) {
+      if (hasBalance) {
+        content = <PayWithEth />
+      } else {
+        cannotPurchase = true
+        content = <NotEnoughFunds />
+      }
     }
   }
 
@@ -129,44 +138,49 @@ const PaymentOptions = ({
         />
       ) : (
         <>
-          <div className="payment-total">
-            <span>
-              <fbt desc="paymentOptions.payment">Payment</fbt>
-            </span>
-            <span className={cannotPurchase ? 'danger' : ''}>
-              {needsSwap || ethActive ? ethPrice : daiPrice}
-            </span>
-          </div>
-          {ethActive || hasBalance || needsSwap ? null : (
+          {hasIdentity && (
+            <div className="payment-total">
+              <span>
+                <fbt desc="paymentOptions.payment">Payment</fbt>
+              </span>
+              <span className={cannotPurchase ? 'danger' : ''}>
+                {needsSwap || ethActive ? ethPrice : daiPrice}
+              </span>
+            </div>
+          )}
+          {!hasIdentity || ethActive || hasBalance || needsSwap ? null : (
             <div className="exchanged">{ethPrice}</div>
           )}
-          <div className="help">{content}</div>
           {children}
+          <div className="help">{content}</div>
         </>
       )}
     </div>
   )
 }
 
-export default withWeb3(withWallet(withCanTransact(PaymentOptions)))
+export default withWeb3(
+  withWallet(withIdentity(withCanTransact(PaymentOptions)))
+)
 
 require('react-styl')(`
   .payment-options
     border-top: 1px solid var(--light)
-    padding-top: 1.5rem
     margin-top: 1.5rem
+    padding-top: 1.5rem
     .bold
       font-weight: bold
     .payment-total
       display: flex
       justify-content: space-between
-      font-size: 24px
       font-weight: normal
       line-height: 1
       span:last-child
         font-weight: bold
+        font-size: 24px
       span.danger
         color: var(--orange-red)
+      margin-bottom: 1.5rem
     .exchanged
       font-size: 14px
       color: var(--steel)
@@ -179,13 +193,12 @@ require('react-styl')(`
       color: var(--steel)
       font-weight: normal
       line-height: normal
-      margin-bottom: 1.5rem
       &.danger
         color: var(--orange-red)
     .cannot-purchase
       line-height: normal
       a
         display: block
-        font-size: 14px
-        margin-top: 0.5rem
+        font-size: 16px
+        margin-top: 1rem
 `)

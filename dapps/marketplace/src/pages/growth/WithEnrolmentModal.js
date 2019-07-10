@@ -41,8 +41,6 @@ function withEnrolmentModal(WrappedComponent) {
         props.skipjoincampaign === 'false'
           ? 'JoinActiveCampaign'
           : 'TermsAndEligibilityCheck'
-      this.goToWelcomeWhenNotEnrolled =
-        props.gotowelcomewhennotenrolled === 'true'
       this.state = {
         open: props.startopen === 'true',
         stage: this.initialStage,
@@ -106,7 +104,7 @@ function withEnrolmentModal(WrappedComponent) {
       } else if (enrollmentStatus === 'Enrolled') {
         this.historyNavigate('/campaigns')
       } else if (enrollmentStatus === 'NotEnrolled') {
-        if (this.goToWelcomeWhenNotEnrolled) {
+        if (this.props.goToWelcomeWhenNotEnrolled === 'true') {
           this.historyNavigate('/welcome')
         } else {
           this.setState({
@@ -322,7 +320,7 @@ function withEnrolmentModal(WrappedComponent) {
                 laws and regulations.
               </fbt>
             </div>
-            <div className="mt-1 d-flex country-check-label justify-content-center">
+            <div className="mt-1 d-flex country-check-label justify-content-center pb-3">
               <label className="checkbox-holder">
                 <input
                   type="checkbox"
@@ -587,7 +585,8 @@ function withEnrolmentModal(WrappedComponent) {
                           'onCompleted',
                           'isMobile',
                           'isMobileApp',
-                          'onAccountBlocked'
+                          'onAccountBlocked',
+                          'goToWelcomeWhenNotEnrolled'
                         ])}
                         onClick={e =>
                           this.handleClick(

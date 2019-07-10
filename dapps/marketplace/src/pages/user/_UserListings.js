@@ -6,18 +6,22 @@ import QueryError from 'components/QueryError'
 import nextPageFactory from 'utils/nextPageFactory'
 import ListingsGallery from 'pages/listings/ListingCards'
 import query from 'queries/UserListings'
-import useIsMobile from 'utils/useMobile'
 
 const nextPage = nextPageFactory('marketplace.user.listings')
 
-const UserListings = ({ user, hideHeader, hideLoadMore }) => {
+const UserListings = ({
+  user,
+  hideHeader,
+  hideLoadMore,
+  horizontal,
+  compact,
+  title
+}) => {
   const vars = {
     first: 8,
     filter: 'active',
     sort: 'featured'
   }
-
-  const isMobile = useIsMobile()
 
   return (
     <Query
@@ -44,20 +48,22 @@ const UserListings = ({ user, hideHeader, hideLoadMore }) => {
         }
 
         const { nodes, pageInfo } = data.marketplace.user.listings
+
         const { hasNextPage, endCursor: after } = pageInfo
 
         return (
           <div className="user-listings">
             {hideHeader ? null : (
               <h5 className="listings-header">
-                <fbt desc="UserListing.listings">Listings</fbt>
+                {title || fbt('Listings', 'UserListing.listings')}
               </h5>
             )}
             <ListingsGallery
               listings={nodes}
               hasNextPage={hasNextPage}
               hideCategory
-              horizontal={isMobile ? false : true}
+              horizontal={horizontal}
+              compact={compact}
             />
             {hideLoadMore || !hasNextPage ? null : (
               <button

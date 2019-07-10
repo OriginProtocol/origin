@@ -5,7 +5,9 @@ import Dropdown from 'components/Dropdown'
 import Redirect from 'components/Redirect'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
-const MobileNav = ({ open, onClose, onOpen }) => {
+const SupportLink = 'https://goo.gl/forms/86tKQXZdmux3KNFJ2'
+
+const MobileNav = ({ open, onClose, onOpen, onShowFooter }) => {
   // Allow the menu to close before redirecting so it doesn't show when
   // the user clicks or swipes back.
   const [redirect, setRedirect] = useState()
@@ -46,6 +48,7 @@ const MobileNav = ({ open, onClose, onOpen }) => {
       className="nav-item mobile"
       open={open}
       onClose={() => onClose()}
+      animateOnExit={true}
       content={
         <>
           <div className="dropdown-menu-bg" onClick={() => onClose()} />
@@ -76,6 +79,7 @@ const MobileNav = ({ open, onClose, onOpen }) => {
               className="dropdown-item earn"
               onClose={() => onClose()}
               onNavigation={() => onClose()}
+              goToWelcomeWhenNotEnrolled="true"
             >
               <fbt desc="navbar.earnTokens">Earn Origin Tokens</fbt>
             </EarnTokens>
@@ -116,6 +120,22 @@ const MobileNav = ({ open, onClose, onOpen }) => {
               onClick={e => click(e, '/settings')}
               className="dropdown-item settings"
               children={fbt('Settings', 'navigation.settings')}
+            />
+            <a
+              href={SupportLink}
+              onClick={() => onClose()}
+              className="dropdown-item feedback"
+              children={fbt('Feedback', 'navigation.feedback')}
+            />
+            <a
+              href="#"
+              onClick={e => {
+                e.preventDefault()
+                onShowFooter()
+                onClose()
+              }}
+              className="dropdown-item more"
+              children={fbt('More', 'navigation.more')}
             />
           </div>
         </>
@@ -165,6 +185,8 @@ require('react-styl')(`
         padding: 0.75rem 1.5rem 0.75rem 4rem
         overflow: hidden
         text-overflow: ellipsis
+        &:active,&.active
+          background-color: var(--pale-grey)
         &::before
           position: absolute
           left: 1.25rem
@@ -203,4 +225,8 @@ require('react-styl')(`
           background-image: url(images/nav/alerts-icon.svg)
         &.settings::before
           background-image: url(images/nav/gear-icon.svg)
+        &.feedback::before
+          background-image: url(images/nav/feedback-icon.svg)
+        &.more::before
+          background-image: url(images/nav/more-icon.svg)
 `)

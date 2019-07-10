@@ -363,6 +363,7 @@ require('react-styl')(`
       font-weight: 300
       .btn
         border-color: #c2cbd3
+        min-width: auto
         &::before
           content: "";
           width: 0.75rem;

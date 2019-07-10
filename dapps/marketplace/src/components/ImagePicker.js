@@ -215,7 +215,7 @@ require('react-styl')(`
       .img
         background-position: center
         width: 100%
-        padding-top: 66%
+        padding-top: 75%
         background-size: contain
         background-repeat: no-repeat
 

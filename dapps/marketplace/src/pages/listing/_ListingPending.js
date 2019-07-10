@@ -2,20 +2,32 @@ import React from 'react'
 import { fbt } from 'fbt-runtime'
 
 import Link from 'components/Link'
+import Price from 'components/Price'
 
-const Pending = () => (
-  <div className="listing-buy pending">
-    <fbt desc="listingPending.text">
-      <div>This listing is</div>
-      <div>Pending</div>
-      <div>
-        Another buyer has already made an offer on this listing. Try visiting
-        the listings page and searching for something similar.
+const Pending = ({ listing, isMobile }) => (
+  <div className="listing-buy">
+    <div className="price">
+      <Price listing={listing} descriptor />
+    </div>
+    <div className="status">
+      <div className="status-title">
+        <fbt desc="Pending">Pending</fbt>
       </div>
-    </fbt>
-    <Link to="/listings">
-      <fbt desc="viewListings">View Listings</fbt>
-    </Link>
+      <div className="status-text">
+        {!isMobile ? (
+          <fbt desc="UnitListing.anotherOfferMade">
+            Another buyer has made an offer on this listing.
+          </fbt>
+        ) : (
+          <fbt desc="UnitListing.offerMadeOnListing">
+            An offer has been made on this listing
+          </fbt>
+        )}
+      </div>
+      <Link className="listing-action-link" to="/listings">
+        <fbt desc="viewAllListings">View all listings</fbt>
+      </Link>
+    </div>
   </div>
 )
 

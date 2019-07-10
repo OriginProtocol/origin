@@ -132,7 +132,7 @@ class ListingPricing extends Component {
         'Price must be a number',
         'Price must be a number'
       )
-    } else if (Number(this.state.price) <= 0) {
+    } else if (Number(this.state.price) < 0) {
       newState.priceError = fbt(
         'Price must be greater than zero',
         'Price must be greater than zero'

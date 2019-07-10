@@ -5,6 +5,7 @@ import { fbt } from 'fbt-runtime'
 
 import { formInput } from 'utils/formHelpers'
 import withConfig from 'hoc/withConfig'
+import withIsMobile from 'hoc/withIsMobile'
 import SetNetwork from 'mutations/SetNetwork'
 import ConfigQuery from 'queries/Config'
 import LocaleDropdown from 'components/LocaleDropdown'
@@ -37,7 +38,6 @@ class Settings extends Component {
     }
 
     this.saveConfig = this.saveConfig.bind(this)
-    this.toggleDeveloperMode = this.toggleDeveloperMode.bind(this)
   }
 
   componentDidUpdate(prevProps) {
@@ -83,14 +83,29 @@ class Settings extends Component {
     )
   }
 
-  toggleDeveloperMode(on) {
-    store.set('developerMode', on)
-    this.setState({ developerMode: on })
-  }
-
   render() {
     const input = formInput(this.state, state => this.setState(state))
-    const { locale, onLocale, currency, onCurrency } = this.props
+    const {
+      locale,
+      onLocale,
+      currency,
+      onCurrency,
+      config,
+      isMobile
+    } = this.props
+
+    let proxyAccountsEnabled = config.proxyAccountsEnabled ? true : false
+    if (localStorage.proxyAccountsEnabled === 'true') {
+      proxyAccountsEnabled = true
+    } else if (localStorage.proxyAccountsEnabled === 'false') {
+      proxyAccountsEnabled = false
+    }
+    let relayerEnabled = config.relayerEnabled ? true : false
+    if (localStorage.relayerEnabled === 'true') {
+      relayerEnabled = true
+    } else if (localStorage.relayerEnabled === 'false') {
+      relayerEnabled = false
+    }
 
     return (
       <Mutation
@@ -110,9 +125,11 @@ class Settings extends Component {
             />
             <div className="row">
               <div className="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
-                <h1>
-                  <fbt desc="settings.heading">Settings</fbt>
-                </h1>
+                {!isMobile && (
+                  <h1>
+                    <fbt desc="settings.heading">Settings</fbt>
+                  </h1>
+                )}
                 <div className="settings-group">
                   <div className="settings-box">
                     <div className="form-group row">
@@ -209,10 +226,12 @@ class Settings extends Component {
                       </div>
                       <div className="col">
                         <Toggle
-                          toggled={true}
-                          initialToggleState={this.state.developerMode}
+                          value={this.state.developerMode}
                           className="float-right"
-                          onClickHandler={this.toggleDeveloperMode}
+                          onChange={on => {
+                            store.set('developerMode', on)
+                            this.setState({ developerMode: on })
+                          }}
                         />
                       </div>
                     </div>
@@ -324,16 +343,13 @@ class Settings extends Component {
                         </div>
                         <div className="col-sm d-flex align-items-center">
                           <Toggle
-                            toggled={true}
-                            initialToggleState={
-                              localStorage.proxyAccountsEnabled ? true : false
-                            }
+                            value={proxyAccountsEnabled}
                             className="mt-0"
-                            onClickHandler={on => {
+                            onChange={on => {
                               if (on) {
-                                localStorage.proxyAccountsEnabled = true
+                                localStorage.proxyAccountsEnabled = 'true'
                               } else {
-                                delete localStorage.proxyAccountsEnabled
+                                localStorage.proxyAccountsEnabled = 'false'
                               }
                               window.location.reload()
                             }}
@@ -344,29 +360,19 @@ class Settings extends Component {
                         <div className="col-sm">
                           <label htmlFor="indexing">
                             <fbt desc="settings.relayerToggleLabel">
-                              Enable Relayer
+                              Relayer Enabled
                             </fbt>
                           </label>
-                          <div className="form-text form-text-muted pt-1">
-                            <small className="mt-1">
-                              <fbt desc="settings.enableRisk">
-                                Warning: enable at your own risk!
-                              </fbt>
-                            </small>
-                          </div>
                         </div>
                         <div className="col-sm d-flex align-items-center">
                           <Toggle
-                            toggled={true}
-                            initialToggleState={
-                              localStorage.enableRelayer ? true : false
-                            }
                             className="mt-0"
-                            onClickHandler={on => {
+                            value={relayerEnabled}
+                            onChange={on => {
                               if (on) {
-                                localStorage.enableRelayer = true
+                                localStorage.relayerEnabled = 'true'
                               } else {
-                                delete localStorage.enableRelayer
+                                localStorage.relayerEnabled = 'false'
                               }
                               window.location.reload()
                             }}
@@ -388,6 +394,13 @@ class Settings extends Component {
                     </div>
                   </div>
                 </div>
+                {this.state.developerMode && (
+                  <div className="text-center test-builds">
+                    <a href="https://originprotocol.github.io/test-builds/">
+                      Test Builds
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
             {/* TODO: See #2320
@@ -424,7 +437,7 @@ class Settings extends Component {
   }
 }
 
-export default withConfig(Settings)
+export default withIsMobile(withConfig(Settings))
 
 require('react-styl')(`
   .settings
@@ -521,6 +534,8 @@ require('react-styl')(`
 
     .restore
       color: var(--clear-blue)
+  .test-builds
+    font-size: 0.875rem
 
   @media (max-width: 767.98px)
     .settings

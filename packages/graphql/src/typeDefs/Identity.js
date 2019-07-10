@@ -57,6 +57,7 @@ export const types = `
 
   type VerifiedAttestation {
     id: String!
+    rawData: String!
     properties: [VerifiedAttestationProperty]
   }
 

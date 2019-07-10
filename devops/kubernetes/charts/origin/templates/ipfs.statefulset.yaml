@@ -39,6 +39,8 @@ spec:
         image: "{{ .Values.ipfsImage }}:{{ .Values.ipfsImageTag }}"
         command: ["/usr/local/bin/start_ipfs", "daemon"]
         ports:
+        - containerPort: 4001
+          name: swarm
         - containerPort: 5001
           name: api
         - containerPort: 8080

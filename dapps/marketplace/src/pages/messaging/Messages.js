@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import { Query, Mutation } from 'react-apollo'
+import { Mutation } from 'react-apollo'
 import { Link } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
-import queryString from 'query-string'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
+import withIsMobile from 'hoc/withIsMobile'
+import withMessaging from 'hoc/withMessaging'
 import query from 'queries/Conversations'
 import MarkConversationRead from 'mutations/MarkConversationRead'
 
@@ -16,160 +17,164 @@ import QueryError from 'components/QueryError'
 import Avatar from 'components/Avatar'
 import DocumentTitle from 'components/DocumentTitle'
 
+import MobileModal from 'components/MobileModal'
+
 import { abbreviateName, truncateAddress } from 'utils/user'
-
-const MobileNavigation = props => (
-  <div
-    className={`back ${props.displayBackNav} d-md-none flex-row justify-content-start`}
-  >
-    <i
-      className="icon-arrow-left align-self-start mr-auto"
-      onClick={() => props.history.push('/messages?back=true')}
-    />
-    <Link to={`/user/${props.wallet}`} className="mr-auto">
-      <Avatar profile={props.identity} size={30} />
-      <span className="counterparty">
-        {abbreviateName(props.identity) || truncateAddress(props.wallet)}
-      </span>
-    </Link>
-  </div>
-)
-
-const MobileNavigationWithIdentity = withIdentity(MobileNavigation)
 
 class Messages extends Component {
   constructor(props) {
     super(props)
-    const isSmallScreen = window.innerWidth <= 991
 
-    this.checkForSmallScreen = this.checkForSmallScreen.bind(this)
-    this.state = { smallScreen: isSmallScreen, conversationId: '' }
+    this.state = { defaultRoomSet: false, back: false }
   }
 
-  componentDidMount() {
-    window.addEventListener('resize', this.checkForSmallScreen)
+  componentDidUpdate() {
+    const room = get(this.props, 'match.params.room')
+
+    if (
+      this.state.defaultRoomSet ||
+      this.state.back ||
+      !this.props.messaging ||
+      room ||
+      this.props.isMobile
+    ) {
+      return
+    }
+
+    const conversations = get(this.props, 'messaging.conversations', []).sort(
+      (a, b) => {
+        const alm = a.lastMessage || { timestamp: Date.now() }
+        const blm = b.lastMessage || { timestamp: Date.now() }
+
+        return alm.timestamp > blm.timestamp ? -1 : 1
+      }
+    )
+
+    const defaultRoom = get(conversations, '0.id')
+
+    if (defaultRoom) {
+      this.props.history.push(`/messages/${defaultRoom}`)
+      this.setState({
+        defaultRoomSet: true
+      })
+    }
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.checkForSmallScreen)
+  goBack() {
+    this.setState({
+      back: true
+    })
+    this.props.history.goBack()
   }
 
-  checkForSmallScreen() {
-    const { smallScreen, conversationId } = this.state
-    const query = get(this.props, 'location.search', {})
-    const backButtonPressed = queryString.parse(query).back
-    const isSmallScreen = window.innerWidth <= 991
-
-    if (smallScreen !== isSmallScreen) {
-      this.setState({ smallScreen: isSmallScreen })
+  renderRoom({ room, enabled }) {
+    if (!room) {
+      return null
     }
 
-    if (!isSmallScreen && backButtonPressed) {
-      this.props.history.replace('/messages')
+    return (
+      <Mutation mutation={MarkConversationRead}>
+        {markConversationRead => (
+          <Room id={room} markRead={markConversationRead} enabled={enabled} />
+        )}
+      </Mutation>
+    )
+  }
+
+  renderContent() {
+    const {
+      isMobile,
+      wallet,
+      identity,
+      messagingError,
+      messaging,
+      messagingLoading
+    } = this.props
+
+    if (messagingError) {
+      return <QueryError query={query} error={messagingError} />
+    } else if (messagingLoading) {
+      return (
+        <div>
+          <fbt desc="Messages.loading">Loading conversations...</fbt>
+        </div>
+      )
+    } else if (!messaging) {
+      return (
+        <p className="p-3">
+          <fbt desc="Messages.cannotQuery">Cannot query messages</fbt>
+        </p>
+      )
     }
 
-    if (isSmallScreen && !backButtonPressed && conversationId) {
-      this.props.history.replace(`/messages/${conversationId}`)
+    const conversations = get(messaging, 'conversations', []).sort((a, b) => {
+      const alm = a.lastMessage || { timestamp: Date.now() }
+      const blm = b.lastMessage || { timestamp: Date.now() }
+
+      return alm.timestamp > blm.timestamp ? -1 : 1
+    })
+
+    const room = get(this.props, 'match.params.room')
+
+    let content = this.renderRoom({ room, enabled: messaging.enabled })
+
+    if (content && isMobile) {
+      content = (
+        <MobileModal
+          className="messages-modal"
+          title={
+            <Link to={`/user/${wallet}`} className="user-profile-link">
+              <Avatar profile={identity} size={30} />
+              <span className="counterparty">
+                {abbreviateName(identity) || truncateAddress(wallet)}
+              </span>
+            </Link>
+          }
+          onBack={() => this.goBack()}
+        >
+          {content}
+        </MobileModal>
+      )
+    } else if (!isMobile) {
+      content = <div className="col-md-9">{content}</div>
     }
 
-    return isSmallScreen
+    return (
+      <div className="row">
+        <div className={`col-md-3 d-md-block`}>
+          {conversations.length ? null : (
+            <div>
+              <fbt desc="Messages.none">No conversations!</fbt>
+            </div>
+          )}
+          {conversations.map((conv, idx) => (
+            <RoomStatus
+              key={idx}
+              active={room === conv.id}
+              conversation={conv}
+              wallet={conv.id}
+              onClick={() => {
+                this.props.history.push(`/messages/${conv.id}`)
+              }}
+            />
+          ))}
+        </div>
+        <div className="col-md-9">{content}</div>
+      </div>
+    )
   }
 
   render() {
     return (
       <div className="container messages-page">
         <DocumentTitle pageTitle={<fbt desc="Messages.title">Messages</fbt>} />
-        <Mutation mutation={MarkConversationRead}>
-          {markConversationRead => (
-            <Query query={query} pollInterval={500}>
-              {({ error, data, loading }) => {
-                if (error) {
-                  return <QueryError query={query} error={error} />
-                } else if (loading) {
-                  return (
-                    <div>
-                      <fbt desc="Messages.loading">
-                        Loading conversations...
-                      </fbt>
-                    </div>
-                  )
-                } else if (!data || !data.messaging) {
-                  return (
-                    <p className="p-3">
-                      <fbt desc="Messages.cannotQuery">
-                        Cannot query messages
-                      </fbt>
-                    </p>
-                  )
-                }
-
-                const conversations = get(
-                  data,
-                  'messaging.conversations',
-                  []
-                ).sort((a, b) => {
-                  const alm = a.lastMessage || { timestamp: Date.now() }
-                  const blm = b.lastMessage || { timestamp: Date.now() }
-
-                  return alm.timestamp > blm.timestamp ? -1 : 1
-                })
-                const room = get(this.props, 'match.params.room')
-                const defaultRoom = this.state.smallScreen
-                  ? ''
-                  : get(conversations, '0.id')
-                const active = room || defaultRoom
-                const displayConversations = room ? 'd-none' : 'd-block'
-                const displayBackNav = room ? 'd-block d-flex' : 'd-none'
-
-                return (
-                  <div className="row">
-                    <MobileNavigationWithIdentity
-                      history={this.props.history}
-                      wallet={this.state.conversationId || active}
-                      displayBackNav={displayBackNav}
-                    />
-                    <div
-                      className={`col-md-3 ${displayConversations} d-md-block`}
-                    >
-                      {conversations.length ? null : (
-                        <div>
-                          <fbt desc="Messages.none">No conversations!</fbt>
-                        </div>
-                      )}
-                      {conversations.map((conv, idx) => (
-                        <RoomStatus
-                          key={idx}
-                          active={active === conv.id}
-                          conversation={conv}
-                          wallet={conv.id}
-                          onClick={() => {
-                            this.setState({ conversationId: conv.id })
-                            this.props.history.push(`/messages/${conv.id}`)
-                          }}
-                        />
-                      ))}
-                    </div>
-                    <div className="col-md-9">
-                      {active ? (
-                        <Room
-                          id={active}
-                          markRead={markConversationRead}
-                          enabled={data.messaging.enabled}
-                        />
-                      ) : null}
-                    </div>
-                  </div>
-                )
-              }}
-            </Query>
-          )}
-        </Mutation>
+        {this.renderContent()}
       </div>
     )
   }
 }
 
-export default withWallet(Messages)
+export default withIsMobile(withWallet(withIdentity(withMessaging(Messages))))
 
 require('react-styl')(`
   .messages-page
@@ -220,4 +225,17 @@ require('react-styl')(`
 
       &:hover
         color: white
+
+  .mobile-modal-light
+    .messages-modal
+      &.modal-content
+        .send-message
+          margin-bottom: 1rem
+      &.modal-header
+        .user-profile-link
+          display: inline-block
+          .avatar
+            display: inline-block
+            vertical-align: middle
+            margin-right: 0.5rem
 `)

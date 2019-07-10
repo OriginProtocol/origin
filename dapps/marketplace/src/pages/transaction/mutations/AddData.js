@@ -27,6 +27,7 @@ class AddData extends Component {
               className={this.props.className}
               onClick={() => this.onClick(addData)}
               children={this.props.children}
+              disabled={this.props.disabled}
             />
             {this.renderWaitModal()}
             {this.state.error && (
@@ -51,12 +52,12 @@ class AddData extends Component {
       return
     }
 
-    const { offer } = this.props
+    const { offer, data, from } = this.props
     const variables = {
       offerID: offer.id,
       listingID: offer.listing.id,
-      from: this.props.wallet,
-      data: 'test'
+      from,
+      data
     }
 
     this.setState({ waitFor: 'pending' })
@@ -83,6 +84,10 @@ class AddData extends Component {
               href="#"
               className="btn btn-outline-light"
               onClick={async () => {
+                if (this.props.onSuccess) {
+                  this.props.onSuccess()
+                }
+
                 await client.resetStore()
                 this.setState({ waitFor: false })
               }}

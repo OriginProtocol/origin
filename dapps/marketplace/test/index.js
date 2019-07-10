@@ -38,7 +38,7 @@ const purchaseListing = async ({ buyer }) => {
   await pic(page, 'purchase-listing')
 
   await clickByText(page, 'View Purchase', 'button')
-  await waitForText(page, 'Transaction Progress')
+  await waitForText(page, 'Transaction History')
   await pic(page, 'transaction-wait-for-seller')
 }
 
@@ -49,22 +49,30 @@ const acceptOffer = async ({ seller }) => {
 
   await clickByText(page, 'Accept Offer', 'button')
   await clickByText(page, 'OK', 'button')
-  await waitForText(page, 'Wait for buyer')
+  await waitForText(page, `You've accepted this offer`)
   await pic(page, 'transaction-accepted')
 }
 
-const finalizeOffer = async ({ buyer }) => {
+const confirmReleaseFundsAndRate = async ({ buyer }) => {
   await changeAccount(page, buyer)
-  await waitForText(page, 'Finalize', 'button')
-  await pic(page, 'transaction-finalize')
-  await giveRating(page, 3)
-  await pic(page, 'transaction-finalize-rated')
-  await clickByText(page, 'Finalize', 'button')
-  await pic(page, 'transaction-finalize-confirmation')
+  await waitForText(page, 'Your offer has been accepted by the seller')
+  await pic(page, 'transaction-confirm')
+  await clickByText(page, 'Confirm', 'button')
+  await waitForText(page, 'Release the funds to the seller.')
+  await pic(page, 'transaction-release-funds')
+  await clickByText(page, 'Release Funds', 'button')
+  await pic(page, 'transaction-release-funds-confirmation')
   await clickByText(page, 'Yes, please', 'button')
+  await waitForText(page, 'Success!')
   await clickByText(page, 'OK', 'button')
-  await waitForText(page, 'Transaction Finalized')
-  await pic(page, 'transaction-finalized')
+  await waitForText(page, 'Leave a review of the seller')
+  await giveRating(page, 3)
+  await pic(page, 'transaction-release-funds-rated')
+  await clickByText(page, 'Submit', 'button')
+  await waitForText(page, 'Success!')
+  await clickByText(page, 'OK', 'button')
+  await waitForText(page, 'Your purchase is complete.')
+  await pic(page, 'transaction-release-funds-finalized')
 }
 
 function randomTitle() {
@@ -144,7 +152,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow a new listing to be finalized', async function() {
-      await finalizeOffer({ buyer })
+      await confirmReleaseFundsAndRate({ buyer })
     })
   })
 
@@ -235,7 +243,10 @@ function listingTests(autoSwap) {
 
     it('should view the purchase', async function() {
       await clickByText(page, 'View Purchase', 'button')
-      await waitForText(page, 'Transaction Progress')
+      await waitForText(
+        page,
+        `You've made an offer. Wait for the seller to accept it.`
+      )
       await pic(page, 'transaction-wait-for-seller')
     })
 
@@ -244,7 +255,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow a new listing to be finalized', async function() {
-      await finalizeOffer({ buyer })
+      await confirmReleaseFundsAndRate({ buyer })
     })
   })
 
@@ -332,7 +343,10 @@ function listingTests(autoSwap) {
       await pic(page, 'purchase-listing')
 
       await clickByText(page, 'View Purchase', 'button')
-      await waitForText(page, 'Transaction Progress')
+      await waitForText(
+        page,
+        `You've made an offer. Wait for the seller to accept it.`
+      )
       await pic(page, 'transaction-wait-for-seller')
     })
 
@@ -341,7 +355,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow a new listing to be finalized', async function() {
-      await finalizeOffer({ buyer })
+      await confirmReleaseFundsAndRate({ buyer })
     })
 
     it('should navigate back to the listing', async function() {
@@ -352,7 +366,10 @@ function listingTests(autoSwap) {
     })
 
     it('should allow the listing to be edited', async function() {
-      await clickByText(page, 'Edit Listing')
+      await clickBySelector(
+        page,
+        '.listing-buy-editonly + a.listing-action-link'
+      )
       await clickByText(page, 'For Sale')
       await clickByText(page, 'Continue')
       await page.focus('input[name=quantity]')
@@ -381,7 +398,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow a new listing to be finalized', async function() {
-      await finalizeOffer({ buyer })
+      await confirmReleaseFundsAndRate({ buyer })
     })
   })
 
@@ -431,7 +448,7 @@ describe('Marketplace Dapp', function() {
     await page.evaluate(() => {
       delete window.localStorage.performanceMode
       delete window.localStorage.proxyAccountsEnabled
-      delete window.localStorage.enableRelayer
+      delete window.localStorage.relayerEnabled
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
@@ -445,7 +462,7 @@ describe('Marketplace Dapp with proxies enabled', function() {
     await page.evaluate(() => {
       window.localStorage.proxyAccountsEnabled = true
       delete window.localStorage.performanceMode
-      delete window.localStorage.enableRelayer
+      delete window.localStorage.relayerEnabled
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
@@ -463,9 +480,10 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
 
   before(async function() {
     await page.evaluate(() => {
+      window.localStorage.noIdentity = true
       window.localStorage.performanceMode = true
       window.localStorage.proxyAccountsEnabled = true
-      window.localStorage.enableRelayer = true
+      window.localStorage.relayerEnabled = true
       window.localStorage.debug = 'origin:*'
       window.transactionPoll = 100
     })

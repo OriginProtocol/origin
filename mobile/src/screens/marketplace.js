@@ -54,7 +54,7 @@ class MarketplaceScreen extends Component {
       enablePullToRefresh: true,
       modals: [],
       fiatCurrency: CURRENCIES.find(c => c[0] === 'fiat-USD'),
-      inviteCode: null
+      transactionCardLoading: false
     }
     if (Platform.OS === 'android') {
       // Configure swipe handler for back forward navigation on Android because
@@ -71,10 +71,6 @@ class MarketplaceScreen extends Component {
     )
   }
 
-  async componentDidMount() {
-    await this.clipboardInviteCodeCheck()
-  }
-
   /* Handle back button presses on Android devices so that they work on the
    * WebView */
   onBackButtonPressAndroid = () => {
@@ -88,8 +84,11 @@ class MarketplaceScreen extends Component {
 
     if (content && content.startsWith(INVITE_CODE_PREFIX)) {
       const inviteCode = content.substr(INVITE_CODE_PREFIX.length)
-      Clipboard.setString('')
-      this.setState({ inviteCode })
+      if (this.dappWebView) {
+        // Inject invite code
+        this.injectInviteCode(inviteCode)
+        // Clipboard.setString('')
+      }
     }
   }
 
@@ -116,13 +115,9 @@ class MarketplaceScreen extends Component {
       this.injectGrowthAuthToken()
     }
 
-    // Check for growth invite code changing
-    if (!prevState.inviteCode && this.state.inviteCode) {
-      // invite code in clipboard inject it to local storage
-      if (this.dappWebView) {
-        // Inject invite code
-        this.injectInviteCode(this.state.inviteCode)
-      }
+    if (prevState.fiatCurrency !== this.state.fiatCurrency) {
+      // Currency changed, update exchange rates
+      this.updateExchangeRates()
     }
   }
 
@@ -214,14 +209,16 @@ class MarketplaceScreen extends Component {
         )
         // Send the response back to the webview
         this.handleBridgeResponse(msgData, signature)
+        console.debug('Got meta transaction: ', decodedTransaction)
       } else {
-        console.debug('Invalid meta transaction: ', decodedTransaction)
+        console.warn('Invalid meta transaction: ', decodedTransaction)
       }
     } else if (currentRoute === 'Ready') {
       // Relayer failure fallback, if we are on the onboarding step where identity
       // gets published reject the transaction because we don't want to display a
       // modal, the user most likely can't proceed because the account is new and
       // has no balance
+      console.warn('Could not process WebView message: ', msgData)
       this.handleBridgeResponse(msgData, {
         message: 'User denied transaction signature'
       })
@@ -261,11 +258,15 @@ class MarketplaceScreen extends Component {
 
   isValidMetaTransaction = data => {
     const validFunctions = [
-      'createProxyWithSenderNonce',
-      'swapAndMakeOffer',
+      'addData',
       'createListing',
-      'updateListing',
-      'emitIdentityUpdated'
+      'createProxyWithSenderNonce',
+      'emitIdentityUpdated',
+      'finalize',
+      'swapAndMakeOffer',
+      'makeOffer',
+      'marketplaceFinalizeAndPay',
+      'updateListing'
     ]
     return validFunctions.includes(data.functionName)
   }
@@ -292,7 +293,7 @@ class MarketplaceScreen extends Component {
     const injectedJavaScript = `
       (function() {
         if (window && window.localStorage) {
-          window.localStorage.setItem('growth_invite_code', '${inviteCode}');
+          window.localStorage.growth_invite_code = '${inviteCode}';
         }
       })();
     `
@@ -414,21 +415,23 @@ class MarketplaceScreen extends Component {
   ) => {
     const injectedJavaScript = `
       (function() {
-        window.gql.query({
-          query: ${JSON.stringify(query)},
-          variables: ${JSON.stringify(variables)},
-          fetchPolicy: '${fetchPolicy}'
-        }).then((response) => {
-          window.webViewBridge.send('handleGraphqlResult', {
-            id: '${id}',
-            response: response
+        if (window && window.gql) {
+          window.gql.query({
+            query: ${JSON.stringify(query)},
+            variables: ${JSON.stringify(variables)},
+            fetchPolicy: '${fetchPolicy}'
+          }).then((response) => {
+            window.webViewBridge.send('handleGraphqlResult', {
+              id: '${id}',
+              response: response
+            });
+          }).catch((error) => {
+            window.webViewBridge.send('handleGraphqlError', {
+              id: '${id}',
+              error: error
+            });
           });
-        }).catch((error) => {
-          window.webViewBridge.send('handleGraphqlError', {
-            id: '${id}',
-            error: error
-          });
-        });
+        }
       })();
     `
     if (this.dappWebView) {
@@ -440,20 +443,22 @@ class MarketplaceScreen extends Component {
   injectGraphqlMutation = (id, mutation, variables = {}) => {
     const injectedJavaScript = `
       (function() {
-        window.gql.mutate({
-          mutation: ${JSON.stringify(mutation)},
-          variables: ${JSON.stringify(variables)}
-        }).then((response) => {
-          window.webViewBridge.send('handleGraphqlResult', {
-            id: '${id}',
-            response: response
+        if (window && window.gql) {
+          window.gql.mutate({
+            mutation: ${JSON.stringify(mutation)},
+            variables: ${JSON.stringify(variables)}
+          }).then((response) => {
+            window.webViewBridge.send('handleGraphqlResult', {
+              id: '${id}',
+              response: response
+            });
+          }).catch((error) => {
+            window.webViewBridge.send('handleGraphqlError', {
+              id: '${id}',
+              error: error
+            });
           });
-        }).catch((error) => {
-          window.webViewBridge.send('handleGraphqlError', {
-            id: '${id}',
-            error: error
-          });
-        });
+        }
       })();
     `
     if (this.dappWebView) {
@@ -506,26 +511,10 @@ class MarketplaceScreen extends Component {
             c => c[0] === uiState['currency']
           )
           await this.setState({ fiatCurrency })
-          this.updateExchangeRates()
         }
       } catch (error) {
         // Skip
       }
-    }
-  }
-
-  injectEnableProxyAccounts = () => {
-    const injectedJavaScript = `
-      (function() {
-        if (window && window.localStorage && window.webViewBridge) {
-          window.localStorage.proxyAccountsEnabled = true;
-          window.localStorage.enableRelayer = true;
-        }
-      })();
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting enable relayer')
-      this.dappWebView.injectJavaScript(injectedJavaScript)
     }
   }
 
@@ -562,8 +551,8 @@ class MarketplaceScreen extends Component {
   }
 
   onWebViewLoad = async () => {
-    // Enable proxy accounts
-    this.injectEnableProxyAccounts()
+    // Check if a growth invie code needs to be set
+    this.clipboardInviteCodeCheck()
     this.injectGrowthAuthToken()
     // Set the language in the DApp to the same as the mobile app
     this.injectLanguage()
@@ -575,25 +564,30 @@ class MarketplaceScreen extends Component {
     }
     // Preload messaging keys so user doesn't have to enable messaging
     this.injectMessagingKeys()
-    // Fetch exchange rates for the default currency
+
+    // Periodic exchange rate updating
+    if (this.exUpdater) {
+      clearInterval(this.exUpdater)
+    }
     this.updateExchangeRates()
-    const periodicUpdates = () => {
-      // Periodically grab the uiState from local storage to detect currency
-      // changes
+    this.exUpdater = setInterval(this.updateExchangeRates, 60000)
+
+    // Periodic ui updates
+    const uiUpdates = () => {
       this.injectUiStateRequest()
-      // Update account identity
       if (this.props.wallet.activeAccount) {
+        // Update account identity and balances
         this.updateIdentity()
-        // Update balance
         this.updateBalance()
       }
     }
     // Clear existing updater if exists
-    if (this.periodicUpdater) {
-      clearInterval(this.periodicUpdater)
+    if (this.uiUpdater) {
+      clearInterval(this.uiUpdater)
     }
-    periodicUpdates()
-    this.periodicUpdater = setInterval(periodicUpdates, 2000)
+    uiUpdates()
+    this.uiUpdater = setInterval(uiUpdates, 5000)
+
     // Set state to ready in redux
     await this.props.setMarketplaceReady(true)
     // Make sure any error state is cleared
@@ -603,7 +597,9 @@ class MarketplaceScreen extends Component {
   updateIdentity = async () => {
     let identity
     try {
-      const graphqlResponse = await this.props.getIdentity()
+      const graphqlResponse = await this.props.getIdentity(
+        this.props.wallet.activeAccount.address
+      )
       identity = get(graphqlResponse, 'data.web3.account.identity')
     } catch (error) {
       // Handle GraphQL errors for things like invalid JSON RPC response or we
@@ -698,12 +694,15 @@ class MarketplaceScreen extends Component {
                     msgData={modal.msgData}
                     fiatCurrency={this.state.fiatCurrency}
                     onConfirm={() => {
+                      this.setState({ transactionCardLoading: true })
                       global.web3.eth
                         .sendTransaction(modal.msgData.data)
                         .on('transactionHash', hash => {
+                          this.setState({ transactionCardLoading: false })
                           this.toggleModal(modal, hash)
                         })
                     }}
+                    loading={this.state.transactionCardLoading}
                     onRequestClose={() =>
                       this.toggleModal(modal, {
                         message: 'User denied transaction signature'

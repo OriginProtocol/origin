@@ -12,8 +12,8 @@ interface ERC725 {
 }
 
 interface ERC20 {
-    function approve(address _spender, uint256 _value) external;
-    function transferFrom(address from, address to, uint tokens) external;
+    function approve(address _spender, uint256 _value) external returns(bool);
+    function transferFrom(address from, address to, uint tokens) external returns(bool);
     function transfer(address to, uint tokens) external returns (bool);
 }
 
@@ -197,9 +197,9 @@ contract IdentityProxy is ERC725 {
         payable
     {
         changeOwner(_owner);
-        executeCall(_exchange, msg.value, _swap);
-        ERC20(_token).approve(_marketplace, _value);
-        executeCall(_marketplace, 0, _offer);
+        require(executeCall(_exchange, msg.value, _swap), 'exchange-exec-fail');
+        require(ERC20(_token).approve(_marketplace, _value), 'erc20-approve-fail');
+        require(executeCall(_marketplace, 0, _offer), 'marketplace-exec-fail');
     }
 
     function transferTokenMarketplaceExecute(
@@ -213,8 +213,8 @@ contract IdentityProxy is ERC725 {
         payable
     {
         changeOwner(_owner);
-        ERC20(_token).transferFrom(_owner, this, _value);
-        ERC20(_token).approve(_marketplace, _value);
+        require(ERC20(_token).transferFrom(_owner, this, _value), 'erc20-transfer-fail');
+        require(ERC20(_token).approve(_marketplace, _value), 'erc20-approve-fail');
         require(executeCall(_marketplace, 0, _offer), 'marketplace-token-failed');
     }
 
@@ -229,7 +229,7 @@ contract IdentityProxy is ERC725 {
         payable
     {
         changeOwner(_owner);
-        ERC20(_token).approve(_marketplace, _value);
+        require(ERC20(_token).approve(_marketplace, _value), 'erc20-approve-fail');
         require(executeCall(_marketplace, 0, _offer), 'marketplace-exec-failed');
     }
 

@@ -143,6 +143,7 @@ export const types = `
       search: String
       filters: [ListingFilterInput!]
       sort: String
+      listingIds: [String]
     ): ListingConnection!
 
     offer(id: ID!): Offer

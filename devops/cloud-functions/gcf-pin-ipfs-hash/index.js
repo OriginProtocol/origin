@@ -1,3 +1,4 @@
+const base58 = require('./util_base58')
 const IpfsClusterAPI = require('./ipfs-cluster-api-service.js')
 const ipfsClusterApiService = new IpfsClusterAPI(
   process.env.IPFS_CLUSTER_URL,
@@ -12,7 +13,9 @@ const pinService = async event => {
     : null
 
   const eventName = data.log.eventName
-  if (!['ListingCreated', 'ListingUpdated'].includes(eventName)) {
+  if (
+    !['ListingCreated', 'ListingUpdated', 'IdentityUpdated'].includes(eventName)
+  ) {
     // Not an event we are interested in pinning anything for
     return
   }
@@ -74,14 +77,13 @@ const promiseSetTimeout = async (hashToPin, interval) => {
 
 const parseIncomingData = data => {
   let hashesToPin = []
-  const eventName = data.log.eventName
-
+  const eventName = data.event.event
   if (eventName === 'ListingCreated' || eventName === 'ListingUpdated') {
     console.log(`Processing event ${eventName}`)
-    const ipfsData = data.listing.ipfs
-    hashesToPin.push(ipfsData.hash)
-    if ('media' in ipfsData.data && ipfsData.data.media.length > 0) {
-      const mediaData = ipfsData.data.media
+    hashesToPin.push(getIpfsHashFromBytes32(data.event.returnValues.ipfsHash))
+    const listing = data.related.listing
+    if ('media' in listing && listing.media.length > 0) {
+      const mediaData = listing.media
       mediaData.forEach(media => {
         hashesToPin.push(extractIpfsHashFromUrl(media.url))
       })
@@ -90,8 +92,11 @@ const parseIncomingData = data => {
     }
   } else if (eventName === 'IdentityUpdated') {
     console.log(`Processing event ${eventName}`)
-    const ipfsData = data.user
-    hashesToPin.push(ipfsData.hash)
+    hashesToPin.push(getIpfsHashFromBytes32(data.event.returnValues.ipfsHash))
+    const identity = data.related.identity
+    if (identity.avatarUrl) {
+      hashesToPin.push(extractIpfsHashFromUrl(identity.avatarUrl))
+    }
   }
 
   return hashesToPin
@@ -100,6 +105,16 @@ const parseIncomingData = data => {
 const extractIpfsHashFromUrl = url => {
   const pattern = /(?:\:\/\/(?:.*)\/ipfs\/|ipfs:\/\/)(.*)/
   return url.match(pattern)[1]
+}
+
+function getIpfsHashFromBytes32(bytes32Hex) {
+  // Add our default ipfs values for first 2 bytes:
+  // function:0x12=sha2, size:0x20=256 bits
+  // and cut off leading "0x"
+  const hashHex = '1220' + bytes32Hex.slice(2)
+  const hashBytes = Buffer.from(hashHex, 'hex')
+  const hashStr = base58.encode(hashBytes)
+  return hashStr
 }
 
 module.exports = { extractIpfsHashFromUrl, parseIncomingData, pinService }

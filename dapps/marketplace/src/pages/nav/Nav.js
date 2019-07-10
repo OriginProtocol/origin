@@ -29,47 +29,90 @@ const Brand = withCreatorConfig(({ creatorConfig }) => {
   )
 })
 
-const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
+const ShowBackRegex = /^\/(listing)(\/[-0-9]*\/?)?$/gi
+const ShowSearchRegex = /^\/(listings?|search)?(\/|$)/gi
+const ProfilePageRegex = /^\/(profile|user)/gi
+
+const getTitle = pathname => {
+  let title
+  if (pathname.startsWith('/my-listings')) {
+    title = <fbt desc="Listings.title">Listings</fbt>
+  } else if (pathname.startsWith('/my-purchases')) {
+    title = <fbt desc="Purchases.title">Purchases</fbt>
+  } else if (pathname.startsWith('/my-sales')) {
+    title = <fbt desc="Sales.title">Sales</fbt>
+  } else if (pathname.startsWith('/messages')) {
+    title = <fbt desc="Messages.title">Messages</fbt>
+  } else if (pathname.startsWith('/notifications')) {
+    title = <fbt desc="Notifications.title">Notifications</fbt>
+  } else if (pathname.startsWith('/create')) {
+    title = <fbt desc="CreateListing.title">Create a Listing</fbt>
+  } else if (pathname.startsWith('/settings')) {
+    title = <fbt desc="Settings.title">Settings</fbt>
+  } else if (pathname.endsWith('/edit')) {
+    title = <fbt desc="EditListing.title">Edit Listing</fbt>
+  }
+
+  return title ? <h1>{title}</h1> : <Brand />
+}
+
+const Nav = ({
+  location: { pathname, state: locationState },
+  isMobile,
+  wallet,
+  onGetStarted,
+  onShowFooter,
+  history
+}) => {
   const [open, setOpen] = useState()
   const navProps = nav => ({
     onOpen: () => setOpen(nav),
-    onClose: () => setOpen(false),
+    onClose: () => open === nav && setOpen(false),
     open: open === nav
   })
 
   if (isMobile) {
-    let title
-    if (pathname.startsWith('/my-listings')) {
-      title = <fbt desc="Listings.title">Listings</fbt>
-    } else if (pathname.startsWith('/my-purchases')) {
-      title = <fbt desc="Purchases.title">Purchases</fbt>
-    } else if (pathname.startsWith('/my-sales')) {
-      title = <fbt desc="Sales.title">Sales</fbt>
-    } else if (pathname.match(/^\/create\/[a-z]+/)) {
-      return null
-    } else if (pathname.startsWith('/create')) {
-      title = <fbt desc="CreateListing.title">Create Listing</fbt>
-    }
+    const canGoBack = history && history.length > 1
 
     // Make the hamburger menu absolute and hide branding and profile icon.
-    const isProfilePage = pathname.startsWith('/profile')
+    const isProfilePage = ProfilePageRegex.test(pathname)
 
-    const titleAndWallet = (
-      <>
-        {title ? <h1>{title}</h1> : <Brand />}
-        {wallet ? (
-          <Profile {...navProps('profile')} />
-        ) : (
-          <GetStarted onClick={() => onGetStarted()} />
-        )}
-      </>
+    const walletEl = wallet ? (
+      <Profile {...navProps('profile')} />
+    ) : (
+      <GetStarted onClick={() => onGetStarted()} />
     )
 
+    const isStacked =
+      (locationState && locationState.canGoBack) || (isProfilePage && canGoBack)
+    const canShowBack =
+      canGoBack && pathname.match(ShowBackRegex) ? true : false
+    const canShowSearch = pathname.match(ShowSearchRegex) ? true : false
+
     return (
-      <nav className={`navbar no-border${isProfilePage ? ' fixed-nav' : ''}`}>
-        <Mobile {...navProps('mobile')} />
-        {isProfilePage ? null : titleAndWallet}
-      </nav>
+      <>
+        <nav className={`navbar no-border${isProfilePage ? ' fixed-nav' : ''}`}>
+          {isStacked && (
+            <a className="nav-back-icon" onClick={() => history.goBack()} />
+          )}
+          {!isStacked && (
+            <Mobile {...navProps('mobile')} onShowFooter={onShowFooter} />
+          )}
+          {!isProfilePage && getTitle(pathname)}
+          {!isStacked && walletEl}
+        </nav>
+        {canShowSearch && <Search className="search" placeholder />}
+        {!isStacked && canShowBack && (
+          <div className="container">
+            <button
+              className="btn btn-link btn-back-link"
+              onClick={() => history.goBack()}
+            >
+              <fbt desc="Back">Back</fbt>
+            </button>
+          </div>
+        )}
+      </>
     )
   }
 
@@ -126,7 +169,11 @@ const Nav = ({ location: { pathname }, isMobile, wallet, onGetStarted }) => {
             </NavLink>
           </li>
           <li className="nav-item d-none d-lg-flex">
-            <EarnTokens className="nav-link text" href="#">
+            <EarnTokens
+              className="nav-link text"
+              href="#"
+              goToWelcomeWhenNotEnrolled="true"
+            >
               <span className="d-md-none d-xl-flex">
                 <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
               </span>
@@ -211,6 +258,42 @@ require('react-styl')(`
     img
       max-height: 32px
 
+  .btn-back-link
+    color: var(--dark)
+    font-size: 14px
+    text-decoration: none
+    font-weight: normal
+    position: relative
+    padding: 0 0 0 1rem
+    line-height: 1rem
+    margin-bottom: 0.5rem
+    &:before
+      content: ''
+      position: absolute
+      display: inline-block
+      background-image: url(images/caret-grey.svg)
+      background-size: 0.8rem
+      background-position: top
+      background-repeat: no-repeat
+      transform: rotateZ(270deg)
+      height: 1rem
+      width: 1rem
+      left: 0
+
+  .nav-back-icon
+    display: none
+    height: 2rem
+    width: 2rem
+    top: 1rem
+    left: 0.5rem
+    position: absolute
+    background-image: url('images/caret-grey.svg')
+    background-size: 1.5rem
+    background-position: center
+    transform: rotateZ(270deg)
+    background-repeat: no-repeat
+    z-index: 10
+
   @media (pointer: fine)
     .navbar .nav-item
       &.show .nav-link:hover
@@ -234,6 +317,7 @@ require('react-styl')(`
       margin-right: 0
     .navbar
       padding: 0
+      min-height: 3.75rem
       &.fixed-nav
         position: absolute
         z-index: 100
@@ -242,6 +326,10 @@ require('react-styl')(`
         position: absolute
         left: 50%
         transform: translateX(-50%)
+        white-space: nowrap
+        max-width: calc(100% - 7rem)
+        overflow: hidden
+        text-overflow: ellipsis
       .nav-item
         position: initial
         .dropdown-menu
@@ -253,13 +341,15 @@ require('react-styl')(`
           box-shadow: none
           margin-top: 0
           border-radius: 0
-          left: 0
+          left: -100%
           right: auto
           bottom: 0
           top: 0
+          transition: left 0.3s ease
           &.dropdown-menu-right
             left: auto
-            right: 0
+            right: -100%
+            transition: right 0.3s ease
         .dropdown-menu-bg
           position: fixed
           left: 0
@@ -271,5 +361,18 @@ require('react-styl')(`
           width: auto
           height: auto
           z-index: 1
+          opacity: 0
+          transition: opacity 0.3s ease
+        &.show
+          .dropdown-menu
+            left: 0
+            &.dropdown-menu-right
+              left: auto
+              right: 0
+          .dropdown-menu-bg
+            opacity: 1
+
+    .nav-back-icon
+      display: inline-block
 
 `)

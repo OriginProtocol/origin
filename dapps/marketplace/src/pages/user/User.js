@@ -10,29 +10,27 @@ import QueryError from 'components/QueryError'
 import LoadingSpinner from 'components/LoadingSpinner'
 import UserProfileCard from 'components/UserProfileCard'
 import TabView from 'components/TabView'
+import MobileModal from 'components/MobileModal'
 
 import withIsMobile from 'hoc/withIsMobile'
 import { withRouter } from 'react-router-dom'
 
 import UserListings from './_UserListings'
 
+const goBack = history => {
+  if (history.length <= 1) {
+    history.push('/')
+  } else {
+    history.goBack()
+  }
+}
+
 const User = ({ match, isMobile, history }) => {
-  const id = match.params.id
+  const { id, content } = match.params
   const vars = { id: match.params.id }
 
   return (
     <div className="container user-public-profile">
-      <a
-        className="back-icon"
-        onClick={() => {
-          // TBD: is history.length safe to use?
-          if (history.length <= 1) {
-            history.push('/')
-          } else {
-            history.goBack()
-          }
-        }}
-      />
       <Query query={query} variables={vars}>
         {({ data, loading, error }) => {
           if (error) {
@@ -42,11 +40,51 @@ const User = ({ match, isMobile, history }) => {
 
           const profile = get(data, 'web3.account.identity') || {}
 
+          const showingReviews = content === 'reviews'
+
           const reviewsComp = (
-            <Reviews id={id} hideWhenZero hideHeader={isMobile} />
+            <Reviews
+              id={id}
+              hideWhenZero={!showingReviews && !isMobile}
+              hideHeader={isMobile}
+            />
           )
+
+          if (showingReviews) {
+            return (
+              <>
+                <DocumentTitle
+                  pageTitle={fbt(
+                    fbt.param('user', profile.fullName) + ' Reviews',
+                    'User.reviews.title'
+                  )}
+                />
+                <div className="row reviews-only">
+                  <div className="col-md-8">
+                    {isMobile ? (
+                      <MobileModal
+                        className="reviews-modal"
+                        title={fbt('Reviews', 'Reviews')}
+                        onBack={() => goBack(history)}
+                      >
+                        {reviewsComp}
+                      </MobileModal>
+                    ) : (
+                      reviewsComp
+                    )}
+                  </div>
+                </div>
+              </>
+            )
+          }
+
           const listingsComp = (
-            <UserListings user={id} hideHeader={isMobile} hideLoadMore />
+            <UserListings
+              user={id}
+              hideHeader={isMobile}
+              hideLoadMore
+              horizontal={isMobile ? false : true}
+            />
           )
           return (
             <>
@@ -108,25 +146,17 @@ require('react-styl')(`
         padding: 1.5rem 0
         border-top: 1px solid #dde6ea
         margin-top: 0.5rem
-    .back-icon
-      display: none
-      height: 2rem
-      width: 2rem
-      top: 1rem
-      left: 0.5rem
-      position: absolute
-      background-image: url('images/caret-grey.svg')
-      background-size: 1.5rem
-      background-position: center
-      transform: rotateZ(270deg)
-      background-repeat: no-repeat
-      z-index: 10
+    > .reviews-only.row > .col-md-8
+      padding: 1rem
+      > .reviews
+        margin-top: 1.5rem
+        border: 0
 
   @media (max-width: 767.98px)
     .user-public-profile
       padding-top: 0
       > .row > .col-md-8
         padding: 0
-      .back-icon
-        display: inline-block
+    .reviews-modal
+      padding: 1rem
 `)

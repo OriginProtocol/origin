@@ -1,10 +1,11 @@
 const addresses = require('@origin/contracts/build/contracts_rinkeby.json')
-const localStorageHas = require('./_localStorageHas')
 
 export default {
   // Web3 provider
   provider:
     'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI',
+  providerWS:
+    'wss://eth-rinkeby.ws.alchemyapi.io/ws/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI',
 
   // Services
   ipfsGateway: 'https://ipfs.staging.originprotocol.com',
@@ -55,5 +56,6 @@ export default {
 
   // Configs
   performanceMode: true,
-  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled')
+  proxyAccountsEnabled: true,
+  relayerEnabled: true
 }

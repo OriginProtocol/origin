@@ -73,7 +73,7 @@ const Step1 = ({ listing, hideOriginWallet, linkPrefix }) => {
                 get(data, 'web3.metaMaskAccount.id') ||
                 get(data, 'web3.mobileWalletAccount.id')
               ) {
-                return <Redirect to={`${linkPrefix}/onboard/profile`} />
+                return <Redirect to={`${linkPrefix}/onboard/email`} />
               }
 
               return (

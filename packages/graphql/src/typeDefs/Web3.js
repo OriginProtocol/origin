@@ -52,6 +52,7 @@ module.exports = `
     provider: String
     providerWS: String
     proxyAccountsEnabled: Boolean
+    relayerEnabled: Boolean
     relayer: String
     performanceMode: Boolean
   }
