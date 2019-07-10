@@ -2,22 +2,32 @@ import React from 'react'
 
 import { fbt } from 'fbt-runtime'
 
+import withWallet from 'hoc/withWallet'
+import withIdentity from 'hoc/withIdentity'
+
 import Link from 'components/Link'
+import UserActivationLink from 'components/UserActivationLink'
 
-const CreateListingCard = () => (
-  <div className="listing-card create-listing-card">
-    <Link to="/create">
-      <div className="main-pic">
-        <div>
-          <fbt desc="listingCard.yourListing">Your listing here</fbt>
+const CreateListingCard = ({ identity }) => {
+  const LinkComponent = identity ? Link : UserActivationLink
+
+  const destination = { pathname: '/create' }
+
+  return (
+    <div className="listing-card create-listing-card">
+      <LinkComponent to={destination} location={destination}>
+        <div className="main-pic">
+          <div>
+            <fbt desc="listingCard.yourListing">Your listing here</fbt>
+          </div>
         </div>
-      </div>
-    </Link>
-    <div className="placeholder" />
-  </div>
-)
+      </LinkComponent>
+      <div className="placeholder" />
+    </div>
+  )
+}
 
-export default CreateListingCard
+export default withWallet(withIdentity(CreateListingCard))
 
 require('react-styl')(`
   .listing-card.create-listing-card
