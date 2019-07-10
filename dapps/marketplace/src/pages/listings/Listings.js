@@ -143,13 +143,19 @@ class Listings extends Component {
       !isEmpty(get(this.state.search, 'subCategory', {})) ||
       this.state.search.ognListings
 
+    const injectCTAs = !isSearch
+
     return (
       <>
         <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
         <div className="container listings-container">
           <Query
             query={query}
-            variables={vars}
+            variables={{
+              ...vars,
+              // Fetch two less cards (just for the first request) since we are probably injecting CTAs
+              first: injectCTAs ? vars.first - 2 : vars.first
+            }}
             notifyOnNetworkStatusChange={true}
             fetchPolicy="cache-and-network"
           >
@@ -240,7 +246,7 @@ class Listings extends Component {
                           hasNextPage={hasNextPage}
                           showCategory={showCategory}
                           tokenDecimals={this.props.tokenDecimals}
-                          injectCTAs={!isSearch}
+                          injectCTAs={injectCTAs}
                         />
                         {!hasNextPage ? null : (
                           <button
