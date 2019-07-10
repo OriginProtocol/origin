@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize')
 
 const db = require('../models')
-const listingMetadata = require('./listing-metadata')
 
 /**
  * Helper function. Returns a listing object compatible with the GraphQL Listing schema.
@@ -27,7 +26,6 @@ function _makeListing(row) {
     price: row.data.price,
     commission: row.data.commission,
     commissionPerUnit: row.data.commissionPerUnit,
-    display: listingMetadata.getDisplay(row.id),
     marketplacePublisher: row.data.marketplacePublisher,
     updatedAt: row.updatedAt,
     updateVersion: row.data.updateVersion,
