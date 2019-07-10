@@ -47,8 +47,6 @@ export default {
         title
         description
         currencyId
-        featured
-        hidden
         price {
           amount
           currency {
