@@ -297,13 +297,29 @@ class DistributeRewards {
   async process() {
     const now = new Date()
 
-    // Look for campaigns with rewards_status Calculated and distribution date past now.
-    const campaigns = await db.GrowthCampaign.findAll({
-      where: {
-        distributionDate: { [Sequelize.Op.lt]: now },
-        rewardStatus: enums.GrowthCampaignRewardStatuses.Calculated
+    let campaigns
+    if (this.config.campaignId) {
+      // A specific campaign ID was provided. Load it up.
+      const campaign = await db.GrowthCampaign.findOne({
+        where: {
+          id: this.config.campaignId
+        }
+      })
+      if (!campaign) {
+        throw new Error(`Campaign ${campaign.id} does not exist`)
       }
-    })
+      logger.debug('Loaded campaign', campaign.id, campaign.nameKey)
+      campaigns = [campaign]
+    } else {
+      // No campaign ID provided.
+      // Look for campaigns with rewards_status Calculated and distribution date past now.
+      campaigns = await db.GrowthCampaign.findAll({
+        where: {
+          distributionDate: { [Sequelize.Op.lt]: now },
+          rewardStatus: enums.GrowthCampaignRewardStatuses.Calculated
+        }
+      })
+    }
 
     for (const campaign of campaigns) {
       logger.info(
@@ -311,10 +327,14 @@ class DistributeRewards {
       )
       let campaignDistTotal = BigNumber(0)
 
-      // Load all rewards rows for this campaign.
-      const rewardRows = await db.GrowthReward.findAll({
-        where: { campaignId: campaign.id }
-      })
+      // Load rewards rows to process.
+      const where = { campaignId: campaign.id }
+      if (this.config.ethAddress) {
+        // A specific account was specified. Only load rewards associated with it.
+        where.ethAddress = this.config.ethAddress.toLowerCase()
+        logger.info(`Loading rewards for account ${this.config.ethAddress}`)
+      }
+      const rewardRows = await db.GrowthReward.findAll({ where })
 
       // TODO: If this data set becomes too large to hold in memory,
       // handle the grouping in the SQL query above and process in chunks.
@@ -358,17 +378,21 @@ class DistributeRewards {
 
       if (allConfirmed && allUsersPaid) {
         // All checks passed. Flip campaign reward status to Distributed.
-        if (this.config.doIt) {
-          await campaign.update({
-            rewardStatus: enums.GrowthCampaignRewardStatuses.Distributed
-          })
-          logger.info(
-            `Updated campaign ${campaign.id} reward status to Distributed.`
-          )
-        } else {
-          logger.info(
-            `Would update campaign ${campaign.id} reward status to Distributed.`
-          )
+        // Except if a specific eth address was specified which is typically
+        // used for doing post campaign payout adjustments.
+        if (!this.config.ethAddress) {
+          if (this.config.doIt) {
+            await campaign.update({
+              rewardStatus: enums.GrowthCampaignRewardStatuses.Distributed
+            })
+            logger.info(
+              `Updated campaign ${campaign.id} reward status to Distributed.`
+            )
+          } else {
+            logger.info(
+              `Would update campaign ${campaign.id} reward status to Distributed.`
+            )
+          }
         }
       } else {
         logger.error('Campaign reward status NOT updated to Distributed.')
@@ -393,7 +417,11 @@ const config = {
   // By default run in dry-run mode unless explicitly specified using doIt.
   doIt: args['--doIt'] === 'true' || false,
   // Gas price multiplier to use for sending transactions. Optional.
-  gasPriceMultiplier: args['--gasPriceMultiplier'] || null
+  gasPriceMultiplier: args['--gasPriceMultiplier'] || null,
+  // Specific campaign to process.
+  campaignId: parseInt(args['--campaignId'] || 0),
+  // Specific account to process.
+  ethAddress: args['--ethAddress'] || null
 }
 logger.info('Config:')
 logger.info(config)

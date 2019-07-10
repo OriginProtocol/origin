@@ -118,6 +118,12 @@ class Search extends Component {
         <div className="featured-categories-wrapper">
           <div className="featured-categories">
             <div
+              className="category-icon rewards"
+              onClick={() => this.onRewardsClick()}
+            >
+              <fbt desc="Search.Rewards">Rewards</fbt>
+            </div>
+            <div
               className="category-icon apparel"
               onClick={() =>
                 this.onCategoryClick({ subCategory: 'clothingAccessories' })
@@ -177,6 +183,20 @@ class Search extends Component {
         active: false
       })
     }
+  }
+
+  onRewardsClick() {
+    this.props.history.push({
+      pathname: '/search',
+      search: queryString.stringify({
+        ognListings: true
+      })
+    })
+    this.setState({
+      active: false,
+      searchInput: ''
+    })
+    this.inputRef.blur()
   }
 
   doSearch() {
@@ -241,7 +261,7 @@ require('react-styl')(`
           margin-bottom: 0.5rem
           text-transform: uppercase
           margin-bottom: 1rem
-        
+
         .featured-categories-wrapper
           margin: 0 -2rem
           overflow-x: scroll
@@ -261,6 +281,9 @@ require('react-styl')(`
             text-overflow: ellipsis
             cursor: pointer
 
+            &.rewards
+              &:before
+                background-color: #007fff
             &:before
               content: ''
               display: inline-block
@@ -273,6 +296,9 @@ require('react-styl')(`
 
             &.apparel:before
               background-image: url('images/categories/apparel-icon.svg')
+            &.rewards:before
+              background-image: url('images/origin-icon-white.svg')
+              background-size: 30px 34px
             &.gift-cards:before
               background-image: url('images/categories/gift-card-icon.svg')
             &.housing:before
@@ -281,6 +307,9 @@ require('react-styl')(`
               background-image: url('images/categories/services-icon.svg')
             &.art:before
               background-image: url('images/categories/art-icon.svg')
+
+            &:last-of-type
+              margin-right: 0
     
     &:focus-within
       .form-control
@@ -318,22 +347,22 @@ require('react-styl')(`
 
   @media (max-width: 767.98px)
     .listing-search-wrapper
+      padding: 0 1rem
       .search-input-wrapper
         margin-bottom: 1.5rem
+        .form-control
+          font-size: 22px
+          border: 0
+          border-bottom: 1px solid #dde6ea
+          background-image: url(images/magnifying-glass.svg)
+          background-repeat: no-repeat
+          background-position: right 0 center
+          background-size: 20px
+          border-radius: 0
+          padding-left: 0
 
-      .form-control
-        font-size: 22px
-        border: 0
-        border-bottom: 1px solid #dde6ea
-        background-image: url(images/magnifying-glass.svg)
-        background-repeat: no-repeat
-        background-position: right 0 center
-        background-size: 20px
-        border-radius: 0
-        padding-left: 0
-
-        &::-webkit-input-placeholder
-          color: #94a7b5
-        &:focus
-          box-shadow: none
+          &::-webkit-input-placeholder
+            color: #94a7b5
+          &:focus
+            box-shadow: none
 `)

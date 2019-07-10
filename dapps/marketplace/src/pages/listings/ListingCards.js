@@ -7,6 +7,9 @@ import ListingBadge from 'components/ListingBadge'
 import Category from 'components/Category'
 import withGrowthRewards from 'hoc/withGrowthRewards'
 
+import EarnTokensListing from './_EarnTokensCard'
+import CreateListingCard from './_CreateListingCard'
+
 function altClick(e) {
   return e.button === 0 && !e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey
 }
@@ -16,10 +19,21 @@ const ListingCards = ({
   ognListingRewards,
   hideCategory,
   horizontal,
-  compact
+  compact,
+  injectCTAs
 }) => {
   const [redirect, setRedirect] = useState()
   if (!listings) return null
+
+  const listingToRender = injectCTAs
+    ? [
+        ...listings.slice(0, 2),
+        { id: 'earn-tokens-card' },
+        ...listings.slice(2, 4),
+        { id: 'create-listing-card' },
+        ...listings.slice(4)
+      ]
+    : listings
 
   return (
     <div
@@ -28,52 +42,63 @@ const ListingCards = ({
       }${compact ? ' listing-compact-cards' : ''}`}
     >
       {redirect && <Redirect to={redirect} push />}
-      {listings.map(a => (
-        <div
-          key={a.id}
-          onClick={e => {
-            if (altClick(e)) {
-              setRedirect(`/listing/${a.id}`)
-            } else if (e.target.tagName !== 'A') {
-              window.open(`#/listing/${a.id}`, '_blank')
-            }
-          }}
-          className="listing-card"
-        >
-          {a.media && a.media.length ? (
-            <div
-              className="main-pic"
-              style={{
-                backgroundImage: `url(${a.media[0].urlExpanded})`
-              }}
-            />
-          ) : (
-            <div className="main-pic empty" />
-          )}
-          {hideCategory ? null : (
-            <div className="header">
-              <div className="category">
-                <Category listing={a} showPrimary={false} />
-              </div>
-              <ListingBadge status={a.status} featured={a.featured} />
-            </div>
-          )}
-          <h5>
-            <a href={`#/listing/${a.id}`}>{a.title}</a>
-          </h5>
-          {a.__typename === 'AnnouncementListing' ? null : (
-            <div className="price d-flex align-items-center">
-              <Price listing={a} descriptor />
-              {ognListingRewards[a.id] && (
-                <OgnBadge
-                  amount={ognListingRewards[a.id]}
-                  className="listing-card-growth-reward"
+      {listingToRender.map(listing => {
+        if (listing.id === 'create-listing-card') {
+          return <CreateListingCard key={listing.id} />
+        } else if (listing.id === 'earn-tokens-card') {
+          return <EarnTokensListing key={listing.id} />
+        }
+
+        return (
+          <div
+            key={listing.id}
+            onClick={e => {
+              if (altClick(e)) {
+                setRedirect(`/listing/${listing.id}`)
+              } else if (e.target.tagName !== 'A') {
+                window.open(`#/listing/${listing.id}`, '_blank')
+              }
+            }}
+            className="listing-card"
+          >
+            {listing.media && listing.media.length ? (
+              <div
+                className="main-pic"
+                style={{
+                  backgroundImage: `url(${listing.media[0].urlExpanded})`
+                }}
+              />
+            ) : (
+              <div className="main-pic empty" />
+            )}
+            {hideCategory ? null : (
+              <div className="header">
+                <div className="category">
+                  <Category listing={listing} showPrimary={false} />
+                </div>
+                <ListingBadge
+                  status={listing.status}
+                  featured={listing.featured}
                 />
-              )}
-            </div>
-          )}
-        </div>
-      ))}
+              </div>
+            )}
+            <h5>
+              <a href={`#/listing/${listing.id}`}>{listing.title}</a>
+            </h5>
+            {listing.__typename === 'AnnouncementListing' ? null : (
+              <div className="price d-flex align-items-center">
+                <Price listing={listing} descriptor />
+                {ognListingRewards[listing.id] && (
+                  <OgnBadge
+                    amount={ognListingRewards[listing.id]}
+                    className="listing-card-growth-reward"
+                  />
+                )}
+              </div>
+            )}
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -195,6 +220,8 @@ require('react-styl')(`
       grid-column-gap: 1rem
       grid-row-gap: 1rem
     .listing-card
+      margin: 0 0 0.5rem 0
+      padding: 0
       .category
         display: none
       h5

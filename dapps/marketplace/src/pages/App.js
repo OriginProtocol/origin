@@ -39,7 +39,8 @@ class App extends Component {
   state = {
     hasError: false,
     displayMobileModal: false,
-    mobileModalDismissed: false
+    mobileModalDismissed: false,
+    footer: false
   }
 
   componentDidMount() {
@@ -104,15 +105,14 @@ class App extends Component {
         this.props.location.pathname.match(/^\/campaigns\/invitations$/g)) ||
       (isMobile &&
         this.props.location.pathname.match(/^\/campaigns\/verifications$/g)) ||
-      (isMobile &&
-        this.props.location.pathname.match(/\/onboard\/finished/g)) ||
-      (isMobile && this.props.location.pathname.match(/\/user\/.+/))
+      (isMobile && this.props.location.pathname.match(/\/onboard\/finished/g))
 
     return (
       <CurrencyContext.Provider value={this.props.currency}>
         {!hideNavbar && (
           <Nav
             onGetStarted={() => this.setState({ mobileModalDismissed: false })}
+            onShowFooter={() => this.setState({ footer: true })}
           />
         )}
         <main>
@@ -152,6 +152,7 @@ class App extends Component {
             />
             <Route exact path="/rewards/banned" component={GrowthBanned} />
             <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />
+            <Route path="/search" component={Listings} />
             <Route component={Listings} />
           </Switch>
         </main>
@@ -167,6 +168,8 @@ class App extends Component {
           />
         )}
         <Footer
+          open={this.state.footer}
+          onClose={() => this.setState({ footer: false })}
           locale={this.props.locale}
           onLocale={this.props.onLocale}
           creatorConfig={creatorConfig}

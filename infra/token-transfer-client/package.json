@@ -3,15 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@blueprintjs/core": "^3.16.2",
+    "@blueprintjs/core": "^3.17.1",
     "moment": "^2.24.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-google-login": "^4.0.0",
+    "react-google-login": "^5.0.4",
     "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "^2.1.1",
-    "redux": "^4.0.1"
+    "react-scripts": "^3.0.1",
+    "redux": "^4.0.2"
   },
   "scripts": {
     "build": "react-scripts build",

@@ -1,29 +1,38 @@
 'use strict'
 
 import { OnboardingConstants } from 'actions/Onboarding'
+import get from 'lodash.get'
 
 const initialState = {
-  emailAttestation: null,
-  phoneAttestation: null,
+  attestations: [],
   firstName: null,
   lastName: null,
   avatarUri: null,
   noRewardsDismissed: false,
-  verifiedAttestations: [],
+  skippedAttestations: [],
   growth: null,
+  requiresPublish: true,
   complete: false
 }
 
 export default function Onboarding(state = initialState, action = {}) {
   switch (action.type) {
-    case OnboardingConstants.SET_EMAIL_ATTESTATION:
-      return { ...state, emailAttestation: action.emailAttestation }
+    case OnboardingConstants.ADD_ATTESTATION:
+      return {
+        ...state,
+        // Safely get to handle old persisted states that did not include
+        attestations: [...get(state, 'attestations', []), action.attestation]
+      }
 
-    case OnboardingConstants.SET_PHONE_ATTESTATION:
-      return { ...state, phoneAttestation: action.phoneAttestation }
-
-    case OnboardingConstants.SET_VERIFIED_ATTESTATIONS:
-      return { ...state, verifiedAttestations: action.verifiedAttestations }
+    case OnboardingConstants.ADD_SKIPPED_ATTESTATION:
+      return {
+        ...state,
+        skippedAttestations: [
+          // Safely get to handle old persisted states that did not include
+          ...get(state, 'skippedAttestations', []),
+          action.attestationName
+        ]
+      }
 
     case OnboardingConstants.SET_NAME:
       return {
@@ -43,6 +52,9 @@ export default function Onboarding(state = initialState, action = {}) {
 
     case OnboardingConstants.SET_GROWTH:
       return { ...state, growth: action.value }
+
+    case OnboardingConstants.SET_REQUIRES_PUBLISH:
+      return { ...state, requiresPublish: action.value }
 
     case OnboardingConstants.RESET:
       return initialState

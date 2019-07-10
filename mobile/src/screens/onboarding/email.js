@@ -15,7 +15,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash.get'
 
-import { setEmailAttestation } from 'actions/Onboarding'
+import { addAttestation } from 'actions/Onboarding'
 import BackArrow from 'components/back-arrow'
 import Disclaimer from 'components/disclaimer'
 import OriginButton from 'components/origin-button'
@@ -31,7 +31,7 @@ class EmailScreen extends Component {
     super(props)
     this.state = {
       emailValue: '',
-      emailError: '',
+      emailError: null,
       loading: false,
       verify: false,
       verifyError: '',
@@ -40,7 +40,7 @@ class EmailScreen extends Component {
   }
 
   handleChange = async emailValue => {
-    await this.setState({ emailError: '', emailValue })
+    await this.setState({ emailError: null, emailValue })
   }
 
   /* Handle submission of email. Check if an identity with this phone
@@ -97,7 +97,8 @@ class EmailScreen extends Component {
       headers: { 'content-type': 'application/json' },
       method: 'POST',
       body: JSON.stringify({
-        email: this.state.emailValue
+        email: this.state.emailValue,
+        ethAddress: this.props.wallet.activeAccount.address
       })
     })
     // 200 status code indicates account was found
@@ -138,7 +139,7 @@ class EmailScreen extends Component {
     if (!response.ok) {
       this.setState({ verifyError: get(data, 'errors[0]', '') })
     } else {
-      this.props.setEmailAttestation(data)
+      await this.props.addAttestation(JSON.stringify(data))
       this.props.navigation.navigate(this.props.nextOnboardingStep)
     }
   }
@@ -195,7 +196,7 @@ class EmailScreen extends Component {
             value={this.state.emailValue}
             style={[styles.input, this.state.emailError ? styles.invalid : {}]}
           />
-          {this.state.emailError.length > 0 && (
+          {this.state.emailError !== null && (
             <Text style={styles.invalid}>{this.state.emailError}</Text>
           )}
           <Disclaimer>
@@ -301,8 +302,7 @@ const mapStateToProps = ({ onboarding, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  setEmailAttestation: emailAttestation =>
-    dispatch(setEmailAttestation(emailAttestation))
+  addAttestation: emailAttestation => dispatch(addAttestation(emailAttestation))
 })
 
 export default withConfig(

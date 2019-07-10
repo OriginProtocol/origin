@@ -254,7 +254,22 @@ class Relayer {
         return res.status(400).send({ errors: ['Proxy exists'] })
       }
 
+      // Check if it already has pending
+      /**
+       * TODO: This is a temporary solution to prevent users from submitting a
+       * tx with a bad proxy nonce.  A more permanent solution will be required.
+       * See: https://github.com/OriginProtocol/origin/issues/2631
+       */
+      if (await this.purse.hasPendingTo(proxy)) {
+        logger.warn(`Proxy ${proxy} already has a pending transaction`)
+        return res
+          .status(429)
+          .send({ errors: ['Proxy has pending transaction'] })
+      }
+
       nonce = await UserProxy.methods.nonce(from).call()
+
+      logger.debug(`Using nonce ${nonce} for user ${from} via proxy ${proxy}`)
     } else {
       // Verify a proxy doesn't already exist
       if (code !== '0x') {
@@ -323,20 +338,25 @@ class Relayer {
         )
       }
 
+      let txOut
       try {
-        txHash = await this.purse.sendTx(tx, async receipt => {
+        txOut = await this.purse.sendTx(tx, async receipt => {
           /**
-           * Once block is mined, record the amount of gas, the forwarding account,  and update the
-           * status of the transaction in the DB.
+           * Once block is mined, record the amount of gas, the forwarding account,
+           * and the status of the transaction in the DB.
            */
           const gas = receipt.gasUsed
           const hash = receipt.transactionHash
           const forwarder = receipt.from
+          const status = receipt.status
+            ? enums.RelayerTxnStatuses.Confirmed
+            : enums.RelayerTxnStatuses.Reverted
           if (dbTx) {
-            const status = enums.RelayerTxnStatuses.Confirmed
             await dbTx.update({ status, gas, forwarder })
           }
-          logger.info(`Confirmed tx with hash ${hash}. Paid ${gas} gas`)
+          logger.info(
+            `Tx with hash ${hash} mined. Status: ${status}. Gas used: ${gas}.`
+          )
         })
       } catch (reason) {
         let status = enums.RelayerTxnStatuses.Failed
@@ -355,10 +375,12 @@ class Relayer {
         return res.status(400).send({ errors: [errMsg] })
       }
 
-      // Record the transaction hash in the DB.
-      logger.info(`Submitted tx with hash ${txHash}`)
+      // Record the transaction hash and gas price in the DB.
+      txHash = txOut.txHash
+      const gasPrice = txOut.gasPrice.toNumber()
+      logger.info(`Submitted tx with hash ${txHash} at gas price ${gasPrice}`)
       if (dbTx) {
-        await dbTx.update({ txHash })
+        await dbTx.update({ txHash, gasPrice })
       }
     } catch (err) {
       logger.error(err)

@@ -3,12 +3,8 @@
 import { SettingsConstants } from 'actions/Settings'
 import { NETWORKS } from '../constants'
 
-let defaultNetwork
-if (__DEV__) {
-  defaultNetwork = NETWORKS.find(n => n.name === 'Rinkeby')
-} else {
-  defaultNetwork = NETWORKS.find(n => n.name === 'Mainnet')
-}
+const defaultNetwork = NETWORKS.find(n => n.name === 'Mainnet')
+// const defaultNetwork = NETWORKS.find(n => n.name === 'Rinkeby')
 
 const initialState = {
   network: defaultNetwork,
