@@ -125,14 +125,7 @@ export async function listingsBySeller(
 
 export default async function listings(
   contract,
-  {
-    first = 10,
-    after,
-    sort,
-    search,
-    filters = [],
-    listingIds = []
-  }
+  { first = 10, after, sort, search, filters = [], listingIds = [] }
 ) {
   if (!contract) {
     return null
