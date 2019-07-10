@@ -2,68 +2,72 @@ databaseInstance: origin-214503:us-west1:staging
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: '0a36fe4'
+bridgeImageTag: 'ecbb9ac'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '0a36fe4'
+dappImageTag: '209e6db'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: 'e0e12cd'
+ipfsProxyImageTag: 'eb01c6c'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '13d0e21'
+faucetImageTag: 'eb01c6c'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '7dfaa5d'
+eventlistenerImageTag: '209e6db'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '4aa5387'
+discoveryImageTag: '8645866'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: 'latest'
+growthImageTag: 'dc9228c'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: '4aa5387'
+messagingImageTag: '0a7bece'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: 'latest'
+notificationsImageTag: 'f282e3c'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
-creatorClientImageTag: 'latest'
+creatorClientImageTag: 'eb01c6c'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
-creatorServerImageTag: 'latest'
-creatorIssuerIp: '35.233.135.239'
+creatorServerImageTag: 'eb01c6c'
 
 # origin-dapp-creator-issuer
 creatorIssuerImage: origin-dapp-creator-issuer
 creatorIssuerImageTag: 'latest'
+creatorIssuerIp: '35.233.135.239'
+
+# origin-linking
+linkingImage: origin-linking
+linkingImageTag: 'bce3090'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: 'latest'
+cronImageTag: 'eb01c6c'
 
 # origin-admin
 adminImage: origin-admin
-adminImageTag: 'latest'
+adminImageTag: '8645866'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: 'latest'
+relayerImageTag: '209e6db'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: 'latest'
+graphqlImageTag: '209e6db'
 
 # origin-token-transfer-client
 t3ClientImage: origin-token-transfer-client
