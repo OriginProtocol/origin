@@ -69,13 +69,13 @@ require('react-styl')(`
       cursor: pointer
       font-size: 22px
       line-height: 1
-      flex: auto 0 0
+      flex: 1
       white-space: nowrap
       &.active
         color: #007fff
 
     div:nth-child(2)
-      flex: 1
+      flex: 1.25rem 0 0
       background: url(images/arrow-right.svg) no-repeat center
       background-size: 1.25rem
     div:nth-child(3)

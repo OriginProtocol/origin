@@ -146,6 +146,7 @@ require('react-styl')(`
       .actions
         border-top: 1px solid #dde6ea
         .btn
-          max-width: auto
+          max-width: 100%
           width: 100%
+          padding: 0.75rem 1rem
 `)

@@ -113,40 +113,54 @@ class Calendar extends Component {
     const { today, dragStartDate, dragEndDate, canBookUpto } = this.state
 
     const className = ['day']
+    let unavailable = slot.unavailable || slot.booked || !slot.price
+    const inPast = slot.date.isBefore(today)
+    const isToday = slot.date.isSame(today)
+
+    const notInSelection = !dragStartDate || (dragStartDate && dragEndDate)
+
+    if (
+      notInSelection &&
+      unavailable
+    ) {
+      className.push('unavailable')
+    }
+
+    if (inPast) {
+      unavailable = true
+      className.push('in-past')
+    } else if (isToday) {
+      className.push('today')
+    }
 
     if (dragStartDate) {
-      if (dragStartDate.isSame(slot.date)) {
+      const isStartDate = dragStartDate.isSame(slot.date)
+      const isBeforeStartDate = slot.date.isBefore(dragStartDate)
+
+      if (isStartDate) {
         className.push(
-          dragEndDate && !dragStartDate.isSame(dragEndDate) ? 'start' : 'single'
+          dragEndDate ? 'start' : 'single'
         )
       } else if (dragEndDate && dragEndDate.isSame(slot.date)) {
         className.push('end')
       } else if (
         dragEndDate &&
-        slot.date.isAfter(dragStartDate) &&
-        slot.date.isBefore(dragEndDate)
+        slot.date.isBetween(dragStartDate, dragEndDate)
       ) {
         className.push('mid')
       } else if (
         canBookUpto &&
-        (slot.date.isBefore(dragStartDate) || slot.date.isAfter(canBookUpto))
+        slot.date.isAfter(canBookUpto)
       ) {
         // Cannot be included in the range
         className.push('disabled')
+      } else if (!dragEndDate && !isBeforeStartDate && !isStartDate) {
+        className.push('can-check-out')
       }
-    }
 
-    if (
-      (!dragStartDate || (dragStartDate && dragEndDate)) &&
-      (slot.unavailable || slot.booked || !slot.price)
-    ) {
-      className.push('unavailable')
-    }
-
-    if (slot.date.isBefore(today)) {
-      className.push('in-past')
-    } else if (slot.date.isSame(today)) {
-      className.push('today')
+      if (unavailable && isBeforeStartDate) {
+        className.push('disabled', 'unavailable')
+      }
     }
 
     return className.join(' ')
@@ -231,8 +245,10 @@ class Calendar extends Component {
   }
 
   renderMonth(monthAvailability, key) {
-    const monthName = monthAvailability[0].date.format('MMMM YYYY')
-    const firstDay = monthAvailability[0].date.day()
+    const { year } = this.state
+    const firstDate = monthAvailability[0].date
+    const monthName = firstDate.format(`MMMM${firstDate.year() === year ? '' : ' YYYY' }`)
+    const firstDay = firstDate.day()
     const lastDay = monthAvailability[monthAvailability.length - 1].date.day()
 
     const slots = [
@@ -279,20 +295,20 @@ export default Calendar
 require('react-styl')(`
   .availability-calendar
     flex: 1
-    overflow: scroll
+    overflow-y: scroll
+    overflow-x: hidden
     .calendar
       margin-bottom: 2rem
       .days
         display: grid
         grid-template-columns: repeat(7, 1fr)
         user-select: none
-        max-width: 17.5rem
         margin-left: auto
         margin-right: auto
         grid-row-gap: 5px
+        grid-column-gap: 0
         > .day
           height: 2.5rem
-          width: 2.5rem
           color: #6a8296
           font-size: 14px
           font-weight: normal
@@ -338,6 +354,10 @@ require('react-styl')(`
           &.active.unselected:hover
             &::after
               border: 3px solid black
+          &.today
+            &:not(.start)
+              border: 1px solid #007fff
+              border-radius: 10px
           &.start, &.mid, &.end
             background-color: #007fff
             color: var(--white)
@@ -349,10 +369,14 @@ require('react-styl')(`
           &.end
             border-top-right-radius: 10px
             border-bottom-right-radius: 10px
+            &.unavailable
+              text-decoration: none
           &.single
             border-radius: 10px
             background-color: #007fff
             color: var(--white)
+          &.can-check-out
+            font-weight: 900
 
       .day-header
         display: flex
