@@ -1,4 +1,50 @@
 import pick from 'lodash/pick'
+import get from 'lodash/get'
+
+// Translate listing from schema representation to form
+// representation.
+export function getStateFromListing(props) {
+  const tokens = get(props, 'listing.acceptedTokens', []).map(t => t.id)
+  return {
+    // FractionalListing fields:
+    weekendPrice: get(props, 'listing.weekendPrice.amount', ''),
+    booked: get(props, 'listing.booked', []),
+    customPricing: get(props, 'listing.customPricing', []),
+    unavailable: get(props, 'listing.unavailable', []),
+
+    // HourlyFractionalListing fields:
+    timeZone: get(props, 'listing.timeZone', ''),
+    workingHours: get(props, 'listing.workingHours', []),
+
+    // GiftCardListing fields:
+    retailer: get(props, 'listing.retailer', ''),
+    cardAmount: get(props, 'listing.cardAmount', ''),
+    issuingCountry: get(props, 'listing.issuingCountry', 'US'),
+    isDigital: get(props, 'listing.isDigital', false),
+    isCashPurchase: get(props, 'listing.isCashPurchase', false),
+    receiptAvailable: get(props, 'listing.receiptAvailable', false),
+
+    // Marketplace creator fields:
+    marketplacePublisher: get(props, 'listing.marketplacePublisher'),
+
+    ...pick(props.listing, [
+      'id',
+      '__typename',
+      'title',
+      'description',
+      'category',
+      'subCategory',
+      'seller'
+    ]),
+    acceptedTokens: tokens.length ? tokens : ['token-ETH'],
+    quantity: String(props.listing.unitsTotal),
+    currency: get(props, 'listing.price.currency.id', ''),
+    price: String(props.listing.price.amount),
+    commission: '0',
+    commissionPerUnit: '0',
+    media: props.listing.media
+  }
+}
 
 export default function applyListingData(props, data) {
   const { listing } = props

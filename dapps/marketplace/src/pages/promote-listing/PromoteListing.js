@@ -1,14 +1,38 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Switch, Route } from 'react-router-dom'
+
+import LoadingSpinner from 'components/LoadingSpinner'
+
+import withWallet from 'hoc/withWallet'
+import withListing from 'hoc/withListing'
+import withTokenBalance from 'hoc/withTokenBalance'
+
+import { getStateFromListing } from 'pages/create-listing/mutations/_listingData'
 
 import HowWorks from './HowWorks'
 import Amount from './Amount'
 import Budget from './Budget'
 import Success from './Success'
 
-const PromoteListing = () => {
-  const [listing, setListing] = useState({ budget: 0, amount: 0 })
-  const listingProps = { listing, onChange: listing => setListing(listing) }
+const PromoteListing = props => {
+  const [listing, setListing] = useState()
+
+  useEffect(() => {
+    if (props.listing) {
+      setListing(getStateFromListing(props))
+    }
+  }, [props.listing])
+
+  if (!listing) {
+    return <LoadingSpinner />
+  }
+
+  const listingProps = {
+    listing,
+    tokenBalance: props.tokenBalance,
+    onChange: listing => setListing(listing)
+  }
+
   return (
     <div className="container create-listing promote-listing">
       <Switch>
@@ -30,7 +54,7 @@ const PromoteListing = () => {
   )
 }
 
-export default PromoteListing
+export default withWallet(withTokenBalance(withListing(PromoteListing)))
 
 require('react-styl')(`
 `)

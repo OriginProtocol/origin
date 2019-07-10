@@ -2,8 +2,9 @@ import React from 'react'
 import { fbt } from 'fbt-runtime'
 
 import Link from 'components/Link'
+import UpdateListing from 'pages/create-listing/mutations/UpdateListing'
 
-const HowWorks = ({ match, listing, onChange }) => {
+const PromoteListingBudget = ({ match, listing, tokenBalance, onChange }) => {
   return (
     <>
       <h1>
@@ -14,7 +15,7 @@ const HowWorks = ({ match, listing, onChange }) => {
         <fbt desc="PromoteListing.title">Promote Listing</fbt>
       </h1>
       <div className="amount">
-        <div className="balance">OGN Balance:</div>
+        <div className="balance">{`OGN Balance: ${tokenBalance} OGN`}</div>
         <h4>Total Budget</h4>
         <div className="help">
           Amount you’re willing to spend for all combined sales
@@ -22,17 +23,17 @@ const HowWorks = ({ match, listing, onChange }) => {
         <div>
           <input
             className="form-control"
-            value={listing.budget}
+            value={listing.commission}
             onChange={e => {
               const val = e.target.value
               if (val.match(/^[0-9]+$/)) {
-                onChange({ ...listing, budget: Number(val) })
+                onChange({ ...listing, commission: Number(val) })
               }
             }}
           />
         </div>
         <div>
-          {`Total commission required to sell 3 units: ${listing.amount *
+          {`Total commission required to sell 3 units: ${listing.commissionPerUnit *
             3} OGN`}
         </div>
 
@@ -43,19 +44,26 @@ const HowWorks = ({ match, listing, onChange }) => {
           >
             Back
           </Link>
-          <Link
+
+          <UpdateListing
+            listing={listing}
+            className="btn btn-primary"
+            children={fbt('Continue', 'promoteListing.Continue')}
+          />
+
+          {/* <Link
             to={`/promote/${match.params.listingId}/success`}
             className="btn btn-primary btn-rounded btn-lg"
           >
             Continue
-          </Link>
+          </Link> */}
         </div>
       </div>
     </>
   )
 }
 
-export default HowWorks
+export default PromoteListingBudget
 
 require('react-styl')(`
   .input-range

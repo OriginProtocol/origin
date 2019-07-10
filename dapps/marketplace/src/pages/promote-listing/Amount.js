@@ -5,7 +5,7 @@ import Link from 'components/Link'
 
 import Exposure from './_Exposure'
 
-const HowWorks = ({ match, listing, onChange }) => (
+const HowWorks = ({ match, listing, tokenBalance, onChange }) => (
   <>
     <h1>
       <Link
@@ -15,28 +15,32 @@ const HowWorks = ({ match, listing, onChange }) => (
       <fbt desc="PromoteListing.title">Promote Listing</fbt>
     </h1>
     <div className="amount">
-      <div className="balance">OGN Balance:</div>
+      <div className="balance">{`OGN Balance: ${tokenBalance} OGN`}</div>
       <h4>Commission Amount per Sale</h4>
       <div className="help">Paid out each time a sale is made.</div>
       <div>
-        <input className="form-control" value={listing.amount} />
+        <input className="form-control" value={listing.commissionPerUnit} />
       </div>
       <div>
         {`3 potential sales x `}
-        <b>{`${listing.amount} OGN`}</b> = {`${listing.amount * 3} OGN`}
+        <b>{`${listing.commissionPerUnit} OGN`}</b> ={' '}
+        {`${listing.commissionPerUnit * 3} OGN`}
       </div>
       <div>
         {`Listing exposure: `}
         <Exposure listing={listing} />
       </div>
-      <div className="input-range" style={{ '--val': `${listing.amount}%` }}>
+      <div
+        className="input-range"
+        style={{ '--val': `${listing.commissionPerUnit}%` }}
+      >
         <input
           type="range"
           min="0"
           max="100"
-          value={listing.amount}
+          value={listing.commissionPerUnit}
           onChange={e =>
-            onChange({ ...listing, amount: Number(e.target.value) })
+            onChange({ ...listing, commissionPerUnit: Number(e.target.value) })
           }
         />
       </div>
