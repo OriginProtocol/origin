@@ -212,7 +212,9 @@ since the initial Docker build will be lost. Instead use `docker-compose stop`.
   Lock file is already being hold", clean up the IPFS local data:
   `rm -rf ~/.jsipfs/`
 
-#### Docker Desktop Mac
+#### Docker
+
+##### Disk Space
 
 Running `docker down/up` and rebuilding image `docker-compose build` will
 consume disk space that docker might have problems releasing. One indication of
@@ -225,6 +227,12 @@ $docker system prune --volumes --all
 
 When doing a hard delete of Docker data Origin, images need to be rebuilt
 `docker-compose build`
+
+##### Complete Docker Wipe
+
+If you just want to completely start over with your docker environment:
+
+    docker rm $(docker ps -aq) && docker image prune -a && docker-compose build && docker-compose up -d
 
 #### Elasticsearch fails to start with virtual memory error
 
