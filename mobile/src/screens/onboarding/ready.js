@@ -27,7 +27,13 @@ class ReadyScreen extends Component {
   }
 
   async componentDidMount() {
-    this.publishIdentity()
+    // Only publish identity if something has changed
+    if (get(this.props.onboarding, 'requiresPublish', true)) {
+      this.publishIdentity()
+    } else {
+      // No need to publish, display ready message
+      this.setState({ loading: false, transactionId: null })
+    }
   }
 
   publishIdentity = async () => {

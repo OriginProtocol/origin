@@ -79,6 +79,7 @@ const MobileNav = ({ open, onClose, onOpen, onShowFooter }) => {
               className="dropdown-item earn"
               onClose={() => onClose()}
               onNavigation={() => onClose()}
+              goToWelcomeWhenNotEnrolled="true"
             >
               <fbt desc="navbar.earnTokens">Earn Origin Tokens</fbt>
             </EarnTokens>
@@ -184,6 +185,8 @@ require('react-styl')(`
         padding: 0.75rem 1.5rem 0.75rem 4rem
         overflow: hidden
         text-overflow: ellipsis
+        &:active,&.active
+          background-color: var(--pale-grey)
         &::before
           position: absolute
           left: 1.25rem
