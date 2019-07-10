@@ -16,7 +16,6 @@ class Calendar extends Component {
       availableFrom,
       availableUntil,
       year: today.year(),
-      month: today.month(),
       availability: this.getAvailability(availableFrom, availableUntil),
 
       dragStartDate: props.startDate ? dayjs(props.startDate) : null,
