@@ -35,7 +35,8 @@ class Messages extends Component {
       this.state.defaultRoomSet ||
       this.state.back ||
       !this.props.messaging ||
-      room
+      room ||
+      this.props.isMobile
     ) {
       return
     }
