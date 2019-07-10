@@ -240,7 +240,7 @@ class Listings extends Component {
                           hasNextPage={hasNextPage}
                           showCategory={showCategory}
                           tokenDecimals={this.props.tokenDecimals}
-                          injectCTAs={true}
+                          injectCTAs={!isSearch}
                         />
                         {!hasNextPage ? null : (
                           <button
