@@ -23,7 +23,12 @@ const OfferMade = ({ listing, offers, networkId }) => (
         </fbt>
       </div>
       {offers.length > 1 && (
-        <Link className="listing-action-link" to="/my-purchases">
+        <Link className="listing-action-link" to={{
+          pathname: '/my-purchases',
+          state: {
+            canGoBack: true
+          }
+        }}>
           <fbt desc="viewAllOffers">View all my offers</fbt>
         </Link>
       )}
