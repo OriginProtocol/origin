@@ -93,17 +93,33 @@ class CalculateRewards {
   async process() {
     const now = new Date()
 
-    // Look for finished campaigns with rewards_status ready for calculation.
-    const campaigns = await db.GrowthCampaign.findAll({
-      where: {
-        endDate: { [Sequelize.Op.lt]: now },
-        rewardStatus: enums.GrowthCampaignRewardStatuses.ReadyForCalculation
+    let campaigns
+    if (this.config.campaignId) {
+      // A specific campaign ID was provided. Load it up.
+      const campaign = await db.GrowthCampaign.findOne({
+        where: {
+          id: this.config.campaignId
+        }
+      })
+      if (!campaign) {
+        throw new Error(`Campaign ${campaign.id} does not exist`)
       }
-    })
+      logger.debug('Loaded campaign', campaign.id, campaign.nameKey)
+      campaigns = [campaign]
+    } else {
+      // No campaign ID provided.
+      // Look for finished campaigns with rewards_status ready for calculation.
+      campaigns = await db.GrowthCampaign.findAll({
+        where: {
+          endDate: { [Sequelize.Op.lt]: now },
+          rewardStatus: enums.GrowthCampaignRewardStatuses.ReadyForCalculation
+        }
+      })
+    }
 
     for (const campaign of campaigns) {
       logger.info(
-        `Calculating rewards for campaign ${campaign.id} (${campaign.name})`
+        `Calculating rewards for campaign ${campaign.id} (${campaign.nameKey})`
       )
       const rules = new CampaignRules(campaign, JSON.parse(campaign.rules))
 
@@ -126,7 +142,26 @@ class CalculateRewards {
       this.stats.numCampaigns++
 
       let campaignTotal = BigNumber(0)
-      const participants = await this._getPayableParticipants(campaign)
+      let participants
+      if (this.config.ethAddress) {
+        // A specific participant was provided. Load it up.
+        const participant = await db.GrowthParticipant.findOne({
+          where: {
+            ethAddress: this.config.ethAddress.toLowerCase(),
+            status: enums.GrowthParticipantStatuses.Active,
+            createdAt: { [Sequelize.Op.lt]: campaign.endDate },
+            employee: { [Sequelize.Op.ne]: true }
+          }
+        })
+        if (!participant) {
+          throw new Error(
+            `Failed loading active and non employee participant ${this.config.ethAddress}`
+          )
+        }
+        participants = [participant]
+      } else {
+        participants = await this._getPayableParticipants(campaign)
+      }
       for (const participant of participants) {
         const ethAddress = participant.ethAddress
         logger.info(`Calculating reward for account ${ethAddress}`)
@@ -177,12 +212,18 @@ class CalculateRewards {
       }
 
       // Update the campaign's rewardStatus to 'Calculated'.
-      if (this.config.persist) {
-        await campaign.update({
-          rewardStatus: enums.GrowthCampaignRewardStatuses.Calculated
-        })
-      } else {
-        logger.info(`Would update campaign ${campaign.id} to status Calculated`)
+      // Except if this is a one-off calculation for a specific eth address
+      // which is typically used post campaign payout for adjustment.
+      if (!this.config.ethAddress) {
+        if (this.config.persist) {
+          await campaign.update({
+            rewardStatus: enums.GrowthCampaignRewardStatuses.Calculated
+          })
+        } else {
+          logger.info(
+            `Would update campaign ${campaign.id} to status Calculated`
+          )
+        }
       }
 
       this.stats.calcGrandTotal = this.stats.calcGrandTotal.plus(campaignTotal)
@@ -198,7 +239,9 @@ logger.info('Starting rewards calculation job.')
 const args = parseArgv()
 const config = {
   // By default run in dry-run mode unless explicitly specified using persist.
-  persist: args['--persist'] === 'true' || false
+  persist: args['--persist'] === 'true' || false,
+  campaignId: parseInt(args['--campaignId'] || 0),
+  ethAddress: args['--ethAddress'] || null
 }
 logger.info('Config:')
 logger.info(config)
