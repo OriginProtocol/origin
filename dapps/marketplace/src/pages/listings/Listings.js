@@ -8,6 +8,7 @@ import { fbt } from 'fbt-runtime'
 
 import withCreatorConfig from 'hoc/withCreatorConfig'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
+import withGrowthRewards from 'hoc/withGrowthRewards'
 import withWallet from 'hoc/withWallet'
 import withTokenBalance from 'hoc/withTokenBalance'
 import withIsMobile from 'hoc/withIsMobile'
@@ -20,7 +21,7 @@ import Link from 'components/Link'
 import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
 
-import ListingsGallery from './ListingCards'
+import ListingCards from './ListingCards'
 import Search from './_Search'
 
 import query from 'queries/Listings'
@@ -90,6 +91,16 @@ class Listings extends Component {
             </fbt:plural>
           </fbt>
         )
+      } else if (this.state.search.ognListings) {
+        content = (
+          <fbt desc="NumOgnRewardsResult">
+            <fbt:param name="count">{totalCount}</fbt:param>{' '}
+            <fbt:plural count={totalCount} showCount="no">
+              Listing
+            </fbt:plural>
+            with Origin Rewards
+          </fbt>
+        )
       } else {
         content = (
           <fbt desc="NumResults">
@@ -117,13 +128,22 @@ class Listings extends Component {
       filters: filters.map(filter => omit(filter, '__typename'))
     }
 
+    if (this.state.search.ognListings) {
+      // when OGN listings are selected clear other search parameters
+      vars.search = ''
+      vars.filers = []
+      vars.listingIds = Object.keys(this.props.ognListingRewards)
+    }
+
     const showCategory = get(this.state, 'search.category.type') ? false : true
-    const showCount = vars.search || vars.filters.length
+    const showCount =
+      vars.search || vars.filters.length || this.state.search.ognListings
 
     const isSearch =
       get(this.state.search, 'searchInput', '') !== '' ||
       !isEmpty(get(this.state.search, 'category', {})) ||
-      !isEmpty(get(this.state.search, 'subCategory', {}))
+      !isEmpty(get(this.state.search, 'subCategory', {})) ||
+      this.state.search.ognListings
 
     return (
       <>
@@ -220,11 +240,10 @@ class Listings extends Component {
                         {showCount
                           ? this.getHeader(totalCount, isSearch)
                           : null}
-                        <ListingsGallery
+                        <ListingCards
                           listings={nodes}
                           hasNextPage={hasNextPage}
                           showCategory={showCategory}
-                          growthCampaigns={this.props.growthCampaigns}
                           tokenDecimals={this.props.tokenDecimals}
                         />
                         {!hasNextPage ? null : (
@@ -259,13 +278,15 @@ class Listings extends Component {
   }
 }
 
-export default withGrowthCampaign(
-  withWallet(withTokenBalance(withCreatorConfig(withIsMobile(Listings)))),
-  {
-    fetchPolicy: 'cache-first',
-    queryEvenIfNotEnrolled: true,
-    suppressErrors: true // still show listings in case growth can not be reached
-  }
+export default withGrowthRewards(
+  withGrowthCampaign(
+    withWallet(withTokenBalance(withCreatorConfig(withIsMobile(Listings)))),
+    {
+      fetchPolicy: 'cache-first',
+      queryEvenIfNotEnrolled: true,
+      suppressErrors: true // still show listings in case growth can not be reached
+    }
+  )
 )
 
 require('react-styl')(`

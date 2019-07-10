@@ -122,6 +122,7 @@ const writeTruffle = () =>
     } catch (e) {
       console.log(e)
     }
+    console.log('contracts.json written OK')
     resolve()
   })
 
