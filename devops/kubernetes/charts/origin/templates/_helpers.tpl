@@ -208,3 +208,14 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 {{- end -}}
 
+{{- define "t3.fullname" -}}
+{{- printf "%s-%s" .Release.Name "t3" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "t3.host" -}}
+{{- if eq .Release.Namespace "prod" -}}
+{{- printf "t3.originprotocol.com" }}
+{{- else -}}
+{{- printf "t3.%s.originprotocol.com" .Release.Namespace -}}
+{{- end -}}
+{{- end -}}
