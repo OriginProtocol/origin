@@ -29,8 +29,32 @@ const Brand = withCreatorConfig(({ creatorConfig }) => {
   )
 })
 
-const BackRegex = /^\/(listing)(\/|$)/gi
-const ShowSearchRegex = /^\/(listing)?(\/|$)/gi
+const ShowBackRegex = /^\/(listing)(\/[-0-9]*\/?)?$/gi
+const ShowSearchRegex = /^\/(listings?|search)?(\/|$)/gi
+const ProfilePageRegex = /^\/(profile|user)/gi
+
+const getTitle = pathname => {
+  let title
+  if (pathname.startsWith('/my-listings')) {
+    title = <fbt desc="Listings.title">Listings</fbt>
+  } else if (pathname.startsWith('/my-purchases')) {
+    title = <fbt desc="Purchases.title">Purchases</fbt>
+  } else if (pathname.startsWith('/my-sales')) {
+    title = <fbt desc="Sales.title">Sales</fbt>
+  } else if (pathname.startsWith('/messages')) {
+    title = <fbt desc="Messages.title">Messages</fbt>
+  } else if (pathname.startsWith('/notifications')) {
+    title = <fbt desc="Notifications.title">Notifications</fbt>
+  } else if (pathname.startsWith('/create')) {
+    title = <fbt desc="CreateListing.title">Create a Listing</fbt>
+  } else if (pathname.startsWith('/settings')) {
+    title = <fbt desc="Settings.title">Settings</fbt>
+  } else if (pathname.endsWith('/edit')) {
+    title = <fbt desc="EditListing.title">Edit Listing</fbt>
+  }
+
+  return title ? <h1>{title}</h1> : <Brand />
+}
 
 const Nav = ({
   location: { pathname, state: locationState },
@@ -48,25 +72,11 @@ const Nav = ({
   })
 
   if (isMobile) {
-    let title
-    if (pathname.startsWith('/my-listings')) {
-      title = <fbt desc="Listings.title">Listings</fbt>
-    } else if (pathname.startsWith('/my-purchases')) {
-      title = <fbt desc="Purchases.title">Purchases</fbt>
-    } else if (pathname.startsWith('/my-sales')) {
-      title = <fbt desc="Sales.title">Sales</fbt>
-    } else if (pathname.match(/^\/create\/[a-z]+/)) {
-      return null
-    } else if (pathname.startsWith('/create')) {
-      title = <fbt desc="CreateListing.title">Create Listing</fbt>
-    }
-
     const canGoBack = history && history.length > 1
 
     // Make the hamburger menu absolute and hide branding and profile icon.
-    const isProfilePage = /^\/(profile|user)/gi.test(pathname)
+    const isProfilePage = ProfilePageRegex.test(pathname)
 
-    const titleEl = title ? <h1>{title}</h1> : <Brand />
     const walletEl = wallet ? (
       <Profile {...navProps('profile')} />
     ) : (
@@ -75,7 +85,8 @@ const Nav = ({
 
     const isStacked =
       (locationState && locationState.canGoBack) || (isProfilePage && canGoBack)
-    const canShowBack = canGoBack && pathname.match(BackRegex) ? true : false
+    const canShowBack =
+      canGoBack && pathname.match(ShowBackRegex) ? true : false
     const canShowSearch = pathname.match(ShowSearchRegex) ? true : false
 
     return (
@@ -87,7 +98,7 @@ const Nav = ({
           {!isStacked && (
             <Mobile {...navProps('mobile')} onShowFooter={onShowFooter} />
           )}
-          {!isProfilePage && titleEl}
+          {!isProfilePage && getTitle(pathname)}
           {!isStacked && walletEl}
         </nav>
         {canShowSearch && <Search className="search" placeholder />}
