@@ -6,6 +6,7 @@ import withIdentity from 'hoc/withIdentity'
 import Pic from 'components/ListingPic'
 import Link from 'components/Link'
 
+import formatHash from 'utils/formatHash'
 import distanceToNow from 'utils/distanceToNow'
 
 const Row = ({ node, identity, onClick }) => {
@@ -22,13 +23,6 @@ const Row = ({ node, identity, onClick }) => {
       ? fbt('Buyer:', 'notifications.buyer')
       : fbt('Seller:', 'notifications.seller')
 
-  const shortenWallet = wallet => {
-    if (!wallet) {
-      return ''
-    }
-
-    return `${wallet.substr(0, 4)}...${wallet.substr(wallet.length - 4)}`
-  }
   if (event === 'OfferWithdrawn') {
     description = (
       <>
@@ -112,9 +106,7 @@ const Row = ({ node, identity, onClick }) => {
         <div>{description}</div>
         <div>
           {partyRole} {nameLink}{' '}
-          <span className="pl-3 wallet">
-            {shortenWallet(get(identity, 'id'))}
-          </span>
+          <span className="pl-3 wallet">{formatHash(get(identity, 'id'))}</span>
         </div>
       </div>
       <div>
