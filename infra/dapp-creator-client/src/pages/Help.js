@@ -8,7 +8,7 @@ class Help extends React.Component {
         <h2>Configuring Custom Domains</h2>
         <p>To configure a custom domain you will need to add two DNS entries:</p>
         <ul>
-          <li>CNAME for yourdomain.com to dapp.originprotocol.com></li>
+          <li>CNAME for yourdomain.com to shoporigin.com></li>
           <li>TXT for config.yourdomain.com to "dnslink=/ipfs/{"<ipfs_hash>"}"</li>
         </ul>
         <p>You should have received an IPFS hash for your configuration during creation process.</p>
