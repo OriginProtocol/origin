@@ -73,19 +73,20 @@ const Nav = ({
       <GetStarted onClick={() => onGetStarted()} />
     )
 
-    const isStacked = locationState && locationState.canGoBack || (isProfilePage && canGoBack)
+    const isStacked =
+      (locationState && locationState.canGoBack) || (isProfilePage && canGoBack)
     const canShowBack = canGoBack && pathname.match(BackRegex) ? true : false
     const canShowSearch = pathname.match(ShowSearchRegex) ? true : false
 
     return (
       <>
-        <nav
-          className={`navbar no-border${isProfilePage ? ' fixed-nav' : ''}`}
-        >
+        <nav className={`navbar no-border${isProfilePage ? ' fixed-nav' : ''}`}>
           {isStacked && (
             <a className="nav-back-icon" onClick={() => history.goBack()} />
           )}
-          {!isStacked && (<Mobile {...navProps('mobile')} onShowFooter={onShowFooter} />)}
+          {!isStacked && (
+            <Mobile {...navProps('mobile')} onShowFooter={onShowFooter} />
+          )}
           {!isProfilePage && titleEl}
           {!isStacked && walletEl}
         </nav>
