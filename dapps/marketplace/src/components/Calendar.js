@@ -119,10 +119,7 @@ class Calendar extends Component {
 
     const notInSelection = !dragStartDate || (dragStartDate && dragEndDate)
 
-    if (
-      notInSelection &&
-      unavailable
-    ) {
+    if (notInSelection && unavailable) {
       className.push('unavailable')
     }
 
@@ -138,9 +135,7 @@ class Calendar extends Component {
       const isBeforeStartDate = slot.date.isBefore(dragStartDate)
 
       if (isStartDate) {
-        className.push(
-          dragEndDate ? 'start' : 'single'
-        )
+        className.push(dragEndDate ? 'start' : 'single')
       } else if (dragEndDate && dragEndDate.isSame(slot.date)) {
         className.push('end')
       } else if (
@@ -148,10 +143,7 @@ class Calendar extends Component {
         slot.date.isBetween(dragStartDate, dragEndDate)
       ) {
         className.push('mid')
-      } else if (
-        canBookUpto &&
-        slot.date.isAfter(canBookUpto)
-      ) {
+      } else if (canBookUpto && slot.date.isAfter(canBookUpto)) {
         // Cannot be included in the range
         className.push('disabled')
       } else if (!dragEndDate && !isBeforeStartDate && !isStartDate) {
@@ -247,7 +239,9 @@ class Calendar extends Component {
   renderMonth(monthAvailability, key) {
     const { year } = this.state
     const firstDate = monthAvailability[0].date
-    const monthName = firstDate.format(`MMMM${firstDate.year() === year ? '' : ' YYYY' }`)
+    const monthName = firstDate.format(
+      `MMMM${firstDate.year() === year ? '' : ' YYYY'}`
+    )
     const firstDay = firstDate.day()
     const lastDay = monthAvailability[monthAvailability.length - 1].date.day()
 
