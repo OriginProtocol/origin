@@ -135,7 +135,7 @@ function listingTests(autoSwap) {
 
     it('should create listing', async function() {
       await clickByText(page, 'Publish', 'button')
-      await waitForText(page, 'View Listing')
+      await waitForText(page, 'View Listing', 'button')
       await pic(page, 'add-listing')
     })
 

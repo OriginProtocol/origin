@@ -17,7 +17,8 @@ describe('Availability Calculator', function() {
   })
 
   it('should allow a range of dates to be queried', function() {
-    const dates = instance.getAvailability(`${year}-02-16`, `${year}-02-18`)
+    const dates = instance.getAvailability(`${year}-02-16`, `${year}-02-19`)
+
     assert.deepEqual(dates, [
       {
         date: `${year}-02-16`,
@@ -195,7 +196,7 @@ describe('Availability Calculator', function() {
       }
     ])
 
-    const dates = instance.getAvailability(`${year}-02-01`, `${year}-02-05`)
+    const dates = instance.getAvailability(`${year}-02-01`, `${year}-02-06`)
     assert.deepEqual(dates, [
       {
         date: `${year}-02-01`,

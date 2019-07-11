@@ -100,7 +100,7 @@ class PhoneScreen extends Component {
   }
 
   handleChange = async (field, value) => {
-    await this.setState({ [`${field}Error`]: null, [`${field}Value`]: value })
+    await this.setState({ phoneError: null, [`${field}Value`]: value })
   }
 
   /* Handle submission of phone number. Check if an identity with this phone
@@ -230,7 +230,7 @@ class PhoneScreen extends Component {
             style={styles.backArrow}
           />
           <Text style={styles.title}>
-            <fbt desc="PhoneScreen.inputTitle">Enter phone number</fbt>
+            <fbt desc="PhoneScreen.inputTitle">Enter phone</fbt>
           </Text>
         </View>
         <View style={{ ...styles.container }}>
@@ -392,8 +392,8 @@ const pickerSelectStyles = StyleSheet.create({
     alignItems: 'center'
   },
   inputIOS: {
-    color: 'black',
-    fontSize: 20,
+    color: '#98a7b4',
+    fontSize: 18,
     borderColor: '#c0cbd4',
     borderBottomWidth: 1,
     paddingTop: 20,
@@ -401,11 +401,12 @@ const pickerSelectStyles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 20,
     width: '90%',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'Lato'
   },
   inputAndroid: {
-    color: 'black',
-    fontSize: 20,
+    color: '#98a7b4',
+    fontSize: 18,
     borderColor: '#c0cbd4',
     borderBottomWidth: 1,
     paddingTop: 20,
@@ -413,6 +414,7 @@ const pickerSelectStyles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 20,
     width: '90%',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'Lato'
   }
 })

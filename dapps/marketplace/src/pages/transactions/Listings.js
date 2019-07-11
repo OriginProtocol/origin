@@ -13,7 +13,7 @@ import LoadingSpinner from 'components/LoadingSpinner'
 import BottomScrollListener from 'components/BottomScrollListener'
 
 import DocumentTitle from 'components/DocumentTitle'
-import Pic from './_Pic'
+import Pic from 'components/ListingPic'
 import { Filter, FilterItem } from './_Filter'
 
 import WithdrawListing from './mutations/WithdrawListing'

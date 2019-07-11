@@ -53,7 +53,7 @@ process.argv.forEach(arg => {
 })
 
 const networkDappDomains = {
-  1: 'https://dapp.originprotocol.com',
+  1: 'https://shoporigin.com',
   4: 'https://dapp.staging.originprotocol.com',
   2222: 'https://dapp.dev.originprotocol.com',
   999: 'http://localhost:3000'

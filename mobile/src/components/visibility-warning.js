@@ -31,10 +31,12 @@ const styles = StyleSheet.create({
   header: {
     fontWeight: '600',
     paddingBottom: 5,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'Lato'
   },
   text: {
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'Lato'
   },
   isVisible: {
     borderColor: '#f4c110',
