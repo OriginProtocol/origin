@@ -2,7 +2,7 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import currency from 'utils/currency'
 import formatDate from 'utils/formatDate'
-import { Tag, Icon } from '@blueprintjs/core'
+import { Tag } from '@blueprintjs/core'
 
 import Price from 'components/Price'
 import Identity from 'components/Identity'
@@ -51,15 +51,7 @@ const Listings = ({ listings, history }) => {
             <td>{status(a)}</td>
             <td>{a.categoryStr}</td>
             <td>
-              <div className="ellip">
-                {a.featured ? (
-                  <Icon icon="clean" className="mr-1 bp3-text-muted" />
-                ) : null}
-                {a.hidden ? (
-                  <Icon icon="eye-off" className="mr-1 bp3-text-muted" />
-                ) : null}
-                {a.title}
-              </div>
+              <div className="ellip">{a.title}</div>
             </td>
             <td>
               <Price target="fiat-USD" price={a.price} />

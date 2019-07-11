@@ -20,8 +20,7 @@ const UserListings = ({
   const vars = {
     first: 8,
     filter: 'active',
-    sort: 'featured',
-    hidden: true
+    sort: 'featured'
   }
 
   return (

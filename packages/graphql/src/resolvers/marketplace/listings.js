@@ -1,6 +1,5 @@
 import graphqlFields from 'graphql-fields'
 import contracts from '../../contracts'
-import { getFeatured, getHidden } from './_featuredAndHidden'
 import { proxyOwner } from '../../utils/proxy'
 
 function bota(input) {
@@ -50,21 +49,12 @@ async function searchIds(search, filters) {
   return { totalCount: searchResult.numberOfItems, ids }
 }
 
-async function allIds({ contract, sort, hidden }) {
-  const featuredIds =
-    sort === 'featured' ? await getFeatured(contracts.net) : []
-  const hiddenIds = hidden ? await getHidden(contracts.net) : []
-
+async function allIds({ contract }) {
   const totalListings = Number(await contract.methods.totalListings().call())
-
-  let ids = Array.from({ length: Number(totalListings) }, (v, i) => i)
-    .filter(id => hiddenIds.indexOf(id) < 0)
-    .reverse()
-
-  if (featuredIds.length) {
-    ids = [...featuredIds, ...ids.filter(i => featuredIds.indexOf(i) < 0)]
-  }
-
+  const ids = Array.from(
+    { length: Number(totalListings) },
+    (v, i) => i
+  ).reverse()
   return { totalCount: ids.length, ids }
 }
 
@@ -135,15 +125,7 @@ export async function listingsBySeller(
 
 export default async function listings(
   contract,
-  {
-    first = 10,
-    after,
-    sort,
-    hidden = true,
-    search,
-    filters = [],
-    listingIds = []
-  }
+  { first = 10, after, sort, search, filters = [], listingIds = [] }
 ) {
   if (!contract) {
     return null
@@ -164,7 +146,7 @@ export default async function listings(
     }
   }
   if (!contracts.discovery || discoveryError) {
-    const decentralizedResults = await allIds({ contract, sort, hidden })
+    const decentralizedResults = await allIds({ contract, sort })
     ids = decentralizedResults.ids
     totalCount = decentralizedResults.totalCount
   }
