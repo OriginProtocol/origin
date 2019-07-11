@@ -584,10 +584,10 @@
   "2klVRF": "Kökeni şifreleme para birimi belirteçleri (OGN), platformda birçok şekilde kullanılabilen ERC-20 belirteçleridir.",
   "3FISrv": "Kazanılan Origin belirteçleri (OGN), Origin uygulaması ve platformunda kullanım için şu anda kilitli. Şu anda diğer kullanıcılara aktarılamazlar. Gelecekte, OGN'nin kilidinin açılması ve aktarılabilir olması beklenmektedir.",
   "3cl6l0": "Daha fazla bilgi edin",
-  "4nNko9": "Arttırılması",
-  "nJEiR": "Satıcılar, piyasadaki listelerini artırmak için OGN'yi kullanır. Bu, listelerine daha yüksek görünürlük ve yerleştirme sağlar. OGN olan ilanların hızlı bir şekilde satılma olasılığı daha yüksektir.",
   "2CCXRK": "Ödüller",
   "3yDMxS": "OGN, Origin kullanıcıları tarafından kazanılan bir cryptocurrency ödülüdür. Hesabınızı doğruladığınızda veya arkadaşlarınızı Origin'e katılmaya davet ettiğinizde ödüller kazanın. Satın alırken ve satarken OGN'yi bile geri alabilirsiniz.",
+  "3x8LcU": "Promoting",
+  "nQxkV": "Sellers use OGN to promote their listings on the marketplace. This gives their listings higher visibility and placement. Listings with OGN have a higher chance of being sold quickly.",
   "3IdS1u": "Birkaç dakika içinde Origin belirteçleri kazanmaya başlayın",
   "3x5LAR": "Cryptocurrency cüzdanını Origin'e bağla",
   "1rYphf": "Kaydolun ve hesabınızı ve uygunluğunuzu doğrulayın",
@@ -718,6 +718,7 @@
   "IlnwX": "miktar",
   "1usuUr": "Saat dilimi:",
   "4xvjOX": "NOT: Bu, {userTimeZone}saat diliminizden farklıdır.",
+  "NF15": "Clear",
   "dyal9": "Liste bulunamadı",
   "ZOcTF": "İlan {id}",
   "1ucotJ": "Liste geçersiz",
@@ -835,6 +836,8 @@
   "1IuKjr": "Adsız Kullanıcı",
   "36t26D": "Earn OGN",
   "tHJmL": "Wallet Balances",
+  "2NvVVm": "Buyer:",
+  "s1yRf": "Seller:",
   "4xWP3l": "{nameLink} , teklifinizi reddetti {title}",
   "2nsNrC": "{nameLink} teklifinizi {title}kabul etti",
   "3VLvv1": "{nameLink} ile işlem {title}için sonuçlandı",
@@ -1089,6 +1092,20 @@
   "4iHoD8": "{user} Reviews",
   "2jblSi": "Adsız Kullanıcı",
   "1hgTen": "Listings",
+  "2m1LcJ": "Just now",
+  "34gk2n": "minute",
+  "11DZUN": {
+    "*": "minutes",
+    "_1": "minute"
+  },
+  "xDZlv": {
+    "*": "hours",
+    "_1": "hour"
+  },
+  "4wB1jY": {
+    "*": "days",
+    "_1": "day"
+  },
   "3nTqCo": "Email",
   "3FexNK": "Phone",
   "4cKoYh": "Airbnb",
