@@ -12,6 +12,7 @@ const Purse = require('./purse')
 const logger = require('./logger')
 const db = require('./models')
 const enums = require('./enums')
+const Sentry = require('./sentry')
 
 let RiskEngine
 if (process.env.NODE_ENV === 'production' || process.env.USE_PROD_RISK) {
@@ -78,6 +79,7 @@ const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
     return normalizeAddress(address) === normalizeAddress(from)
   } catch (e) {
     logger.error('error recovering', e)
+    Sentry.captureException(e)
     return false
   }
 }
@@ -198,6 +200,10 @@ class Relayer {
       to,
       proxy,
       preflight
+    })
+
+    Sentry.configureScope(scope => {
+      scope.setUser({ id: from })
     })
 
     // Make sure keys are generated and ready
@@ -372,6 +378,7 @@ class Relayer {
         }
 
         logger.error('Transaction failure:', reason)
+        Sentry.captureException(reason)
         return res.status(400).send({ errors: [errMsg] })
       }
 
@@ -384,6 +391,7 @@ class Relayer {
       }
     } catch (err) {
       logger.error(err)
+      Sentry.captureException(err)
       const errors = ['Error forwarding']
       if (isTestEnv) errors.push(err.toString())
       return res.status(400).send({ errors })

@@ -11,7 +11,7 @@ Visit our [Developer's page](https://www.originprotocol.com/developers) to learn
 more about what we're building and how to get involved.
 
 You can see the Origin ecosystem in action
-[here](https://dapp.originprotocol.com).
+[here](https://www.shoporigin.com).
 
 ## Development
 

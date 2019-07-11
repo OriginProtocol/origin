@@ -2,12 +2,20 @@ import React from 'react'
 
 import { fbt } from 'fbt-runtime'
 
-import Link from 'components/Link'
+import withWallet from 'hoc/withWallet'
+import withIdentity from 'hoc/withIdentity'
 
-const EarnTokensCard = () => {
+import Link from 'components/Link'
+import UserActivationLink from 'components/UserActivationLink'
+
+const EarnTokensCard = ({ identity }) => {
+  const LinkComponent = identity ? Link : UserActivationLink
+
+  const destination = { pathname: '/campaigns' }
+
   return (
     <div className="listing-card earn-tokens-card">
-      <Link to="/campaigns">
+      <LinkComponent to={destination} location={destination}>
         <div className="main-pic">
           <div>
             <fbt desc="listingCard.earnTokens">
@@ -16,7 +24,7 @@ const EarnTokensCard = () => {
             </fbt>
           </div>
         </div>
-      </Link>
+      </LinkComponent>
       <h5>
         <fbt desc="listingCard.earnTokens.from">From the Origin Team</fbt>
       </h5>
@@ -24,7 +32,7 @@ const EarnTokensCard = () => {
   )
 }
 
-export default EarnTokensCard
+export default withWallet(withIdentity(EarnTokensCard))
 
 require('react-styl')(`
   .listing-card.earn-tokens-card
