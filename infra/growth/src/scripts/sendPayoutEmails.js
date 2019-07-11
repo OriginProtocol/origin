@@ -43,12 +43,17 @@ class SendPayoutEmails {
       )
     }
 
-    // Load all the payout for that campaign.
+    // Load payout rows.
+    const where = {
+      campaignId,
+      status: enums.GrowthPayoutStatuses.Confirmed
+    }
+    if (this.config.ethAddress) {
+      // A specific eth address was specified.
+      where.toAddress = this.config.ethAddress.toLowerCase()
+    }
     const payouts = await db.GrowthPayout.findAll({
-      where: {
-        campaignId,
-        status: enums.GrowthPayoutStatuses.Confirmed
-      },
+      where,
       order: [['id', 'ASC']]
     })
     logger.info(`Sending payout email to ${payouts.length} lucky recipients`)
@@ -80,7 +85,9 @@ const args = parseArgv()
 const config = {
   // By default run in dry-run mode unless explicitly specified.
   doIt: args['--doIt'] === 'true' || false,
-  campaignId: args['--campaignId']
+  campaignId: args['--campaignId'],
+  // Specific account to process.
+  ethAddress: args['--ethAddress'] || null
 }
 logger.info('Config:')
 logger.info(config)
