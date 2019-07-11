@@ -174,12 +174,14 @@ class GrowthWelcome extends Component {
             startopen={arrivedFromOnboarding.toString()}
           />
         </div>
-        {!isMobile && <div
-          className={`spaceman col-9 top-padding ${
-            !personalised ? 'center' : ''
-          }
+        {!isMobile && (
+          <div
+            className={`spaceman col-9 top-padding ${
+              !personalised ? 'center' : ''
+            }
           `}
-        />}
+          />
+        )}
       </div>
     )
   }
@@ -237,7 +239,7 @@ class GrowthWelcome extends Component {
               )}
             </div>
           </div>
-          {!isMobile && <div className="origin-showcase col-8"/>}
+          {!isMobile && <div className="origin-showcase col-8" />}
         </div>
       </div>
     )

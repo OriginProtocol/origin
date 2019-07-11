@@ -93,15 +93,13 @@ class App extends Component {
 
     const isMobile = this.props.isMobile
 
-    const navbarDarkMode =
-      !this.props.location.pathname.match(/^\/welcome\/onboard.*$/g) &&
-      this.props.location.pathname.match(/^\/welcome.*$/g)
+    const isOnWelcomeAndNotOboard = this.props.location.pathname.match(
+      /^\/welcome\/?(?!(onboard\/)).*/gi
+    )
 
     // TODO: Too many regex here, probably it's better to optimize this sooner or later
     const hideNavbar =
-      (!this.props.location.pathname.match(/^\/welcome\/onboard.*$/gi) &&
-        this.props.location.pathname.match(/^\/welcome.*$/gi) &&
-        !isMobile) ||
+      (isOnWelcomeAndNotOboard && !isMobile) ||
       (isMobile &&
         (this.props.location.pathname.match(/^\/purchases\/.*$/gi) ||
           this.props.location.pathname.match(/^\/campaigns\/purchases$/gi) ||
@@ -117,7 +115,7 @@ class App extends Component {
           <Nav
             onGetStarted={() => this.setState({ mobileModalDismissed: false })}
             onShowFooter={() => this.setState({ footer: true })}
-            navbarDarkMode={navbarDarkMode}
+            navbarDarkMode={isOnWelcomeAndNotOboard}
           />
         )}
         <main>
