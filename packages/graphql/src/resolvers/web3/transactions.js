@@ -6,7 +6,9 @@ import contracts from '../../contracts'
 export async function getTransactionReceipt(id) {
   const rawReceipt = await contracts.web3.eth.getTransactionReceipt(id)
 
-  if (!rawReceipt) {
+  // Note: Check on the both receipt and receipt.blockNumber since Parity returns
+  // a receipt with no blockNumber if transaction is not yet mined (Geth does not).
+  if (!rawReceipt || !rawReceipt.blockNumber) {
     return null
   }
 
@@ -26,6 +28,10 @@ export async function getTransactionReceipt(id) {
       raw: log,
       returnValues: null,
       event: null
+    }
+    // This should never happen - all events should have an id.
+    if (!logObj.id) {
+      throw new Error(`Found event with no id in receipt ${id}`)
     }
     if (eventDef) {
       const decoded = contracts.web3.eth.abi.decodeLog(
