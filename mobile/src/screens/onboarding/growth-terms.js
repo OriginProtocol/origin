@@ -146,9 +146,7 @@ class GrowthTermsScreen extends Component {
             uncheckedCheckBoxColor="#455d75"
             rightTextView={
               <View>
-                <Text
-                  style={{ fontSize: 14, marginLeft: 5, fontWeight: '300' }}
-                >
+                <Text style={styles.checkboxText}>
                   <fbt desc="GrowthTermsScreen.nonResidentCertification">
                     I certify that I am not a citizen or resident of
                     <fbt:param name="countryName">
@@ -194,7 +192,7 @@ class GrowthTermsScreen extends Component {
             <fbt desc="GrowthTermsScreen.termsTitle">Origin Rewards Terms</fbt>
           </Text>
         </View>
-        <View style={{ ...styles.container }}>
+        <View style={styles.container}>
           <Text style={styles.termsHeader}>
             <fbt desc="GrowthTermsScreen.termsHeader">
               Join Origin’s reward program to earn Origin tokens (OGN). Terms &
@@ -239,9 +237,7 @@ class GrowthTermsScreen extends Component {
             uncheckedCheckBoxColor="#455d75"
             rightTextView={
               <View>
-                <Text
-                  style={{ fontSize: 16, marginLeft: 5, fontWeight: '300' }}
-                >
+                <Text style={styles.checkboxText}>
                   <fbt desc="GrowthTermsScreen.acceptCheckboxText">
                     I accept the terms and conditions
                   </fbt>
@@ -294,12 +290,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
     marginBottom: 10,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'Lato'
   },
   termsText: {
     fontSize: 14,
     marginBottom: 20,
-    color: '#111d28'
+    color: '#111d28',
+    fontFamily: 'Lato'
   },
   termsHighlightContainer: {
     borderColor: '#98a7b4',
@@ -313,6 +311,13 @@ const styles = StyleSheet.create({
   },
   termsHighlightText: {
     fontSize: 12,
-    color: '#6f8294'
+    color: '#6f8294',
+    fontFamily: 'Lato'
+  },
+  checkboxText: {
+    fontFamily: 'Lato',
+    fontSize: 14,
+    marginLeft: 5,
+    fontWeight: '300'
   }
 })

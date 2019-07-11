@@ -8,6 +8,7 @@ import { fbt } from 'fbt-runtime'
 
 import { setNoRewardsDismissed } from 'actions/Onboarding'
 import { removeAccount } from 'actions/Wallet'
+import BackArrow from 'components/back-arrow'
 import OriginButton from 'components/origin-button'
 import NoRewardsCard from 'components/no-rewards-card'
 import withOnboardingSteps from 'hoc/withOnboardingSteps'
@@ -29,6 +30,12 @@ class ImportWarningScreen extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView contentContainerStyle={styles.content}>
+          <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
+            <BackArrow
+              onClick={() => this.props.navigation.goBack(null)}
+              style={styles.backArrow}
+            />
+          </View>
           <View
             style={{
               ...styles.container,
@@ -38,18 +45,19 @@ class ImportWarningScreen extends Component {
             <Image
               resizeMethod={'scale'}
               resizeMode={'contain'}
-              source={require(IMAGES_PATH + 'earn-more-graphic.png')}
+              source={require(IMAGES_PATH + 'other-wallet-graphic.png')}
               style={styles.image}
             />
             <Text style={styles.title}>
-              <fbt desc="ImportWarningScreen.title">
-                Import your wallet to earn more OGN
-              </fbt>
+              <fbt desc="ImportWarningScreen.title">Other Wallet Detected</fbt>
             </Text>
-            <Text style={styles.subtitle}>
+            <Text
+              style={{ ...styles.subtitle, fontSize: 14, fontWeight: 'normal' }}
+            >
               <fbt desc="ImportWarningScreen.subtitle">
-                We’ve detected an existing wallet associated with this email.
-                Please import it to continue earning rewards.
+                We&apos;ve noticed that you previously signed up for Origin
+                Rewards using this email with a different wallet. Please import
+                your other wallet to continue earning Origin Rewards.
               </fbt>
             </Text>
           </View>
@@ -58,7 +66,7 @@ class ImportWarningScreen extends Component {
               size="large"
               type="primary"
               title={fbt(
-                'Import a wallet',
+                'Import other wallet',
                 'ImportWarningScreen.continueButton'
               )}
               onPress={() => {

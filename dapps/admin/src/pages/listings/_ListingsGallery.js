@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import formatDate from 'utils/formatDate'
 import { getIpfsGateway } from 'utils/config'
 
-import { Icon, Card, Spinner } from '@blueprintjs/core'
+import { Card, Spinner } from '@blueprintjs/core'
 
 import Price from 'components/Price'
 import Identity from 'components/Identity'
@@ -29,8 +29,6 @@ const Listings = ({ listings, history, hasNextPage }) => {
           className="listing-card"
         >
           <h5 className="bp3-heading ellip" style={{ maxWidth: 'none' }}>
-            {a.hidden ? <Icon icon="eye-off" className="mr-2" /> : null}
-            {a.featured ? <Icon icon="clean" className="mr-2" /> : null}
             {a.title}
           </h5>
           {status(a)}

@@ -1,16 +1,12 @@
 import React from 'react'
 
-const ListingBadge = ({ status, featured }) => {
+const ListingBadge = ({ status }) => {
   if (status === 'sold' || status === 'unavailable' || status === 'pending') {
     return <div className={`badge badge-${status}`}>{status}</div>
   }
   if (status === 'soldout') {
     return <div className="badge badge-soldout">sold out</div>
   }
-  if (featured) {
-    return <div className="badge badge-featured">featured</div>
-  }
-
   return null
 }
 
