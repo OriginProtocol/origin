@@ -3,7 +3,7 @@ import { fbt } from 'fbt-runtime'
 
 import Link from 'components/Link'
 import Price from 'components/Price'
-import { tokenBalance } from 'components/TokenBalance'
+import tokenPrice from 'utils/tokenPrice'
 import CoinLogo from 'components/CoinLogo'
 
 const EditOnly = ({
@@ -18,28 +18,6 @@ const EditOnly = ({
     {isAnnouncement ? null : (
       <div className="price">
         <Price listing={listing} descriptor />
-      </div>
-    )}
-    {!listing.commission ? null : (
-      <div className="listing-buy-editonly">
-        <div className="row">
-          <div>
-            <fbt desc="Commission">Commission Available</fbt>
-          </div>
-          <div>
-            <CoinLogo coin="ogn" />
-            {tokenBalance(listing.depositAvailable, 18)}
-          </div>
-        </div>
-        <div className="row mb-3">
-          <div>
-            <fbt desc="Commission">Commission Per Unit Sold</fbt>
-          </div>
-          <div>
-            <CoinLogo coin="ogn" />
-            {tokenBalance(listing.commissionPerUnit, 18)}
-          </div>
-        </div>
       </div>
     )}
     {isFractional ||
@@ -76,6 +54,54 @@ const EditOnly = ({
       to={`/listing/${listing.id}/edit`}
       children={fbt('Edit listing', 'EditListing')}
     />
+
+    {!listing.commission ? null : (
+      <>
+        <div className="listing-buy-editonly mt-3">
+          <div className="row">
+            <div>
+              <fbt desc="listing.commissionPerUnit">Commission per Unit</fbt>
+            </div>
+            <div>
+              <CoinLogo coin="ogn" />
+              {tokenPrice(listing.commissionPerUnit)}
+            </div>
+          </div>
+          <div className="row">
+            <div>
+              <fbt desc="listing.totalCommissionBudget">Total Budget</fbt>
+            </div>
+            <div>
+              <CoinLogo coin="ogn" />
+              {tokenPrice(listing.deposit)}
+            </div>
+          </div>
+          <div className="row">
+            <div>
+              <fbt desc="listing.totalCommissionBudgetRemaining">
+                Total Budget Remaining
+              </fbt>
+            </div>
+            <div>
+              <CoinLogo coin="ogn" />
+              {tokenPrice(listing.depositAvailable)}
+            </div>
+          </div>
+          <div className="row">
+            <div>
+              <fbt desc="listing.exposure">Listing Exposure</fbt>
+            </div>
+            <div></div>
+          </div>
+        </div>
+
+        <Link
+          className="listing-action-link"
+          to={`/promote/${listing.id}`}
+          children={fbt('Edit Commisison', 'listing.editCommission')}
+        />
+      </>
+    )}
   </div>
 )
 

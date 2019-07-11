@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CoinLogo = ({ coin, className }) => (
+const CoinLogo = ({ coin = 'ogn', className }) => (
   <div className={`coin-logo ${coin}${className ? ` ${className}` : ''}`} />
 )
 

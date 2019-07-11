@@ -47,8 +47,8 @@ require('react-styl')(`
         content: ""
         width: 6rem
         height: 6rem
-        border-radius: 50%
-        background: var(--dark)
+        background: url(images/rockets-graphic.png) no-repeat
+        background-size: contain
       h4
         margin: 0
         font-size: 20px

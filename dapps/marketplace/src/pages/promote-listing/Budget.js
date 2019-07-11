@@ -1,46 +1,78 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { fbt } from 'fbt-runtime'
 
+import numberFormat from 'utils/numberFormat'
+
 import Link from 'components/Link'
+import CoinLogo from 'components/CoinLogo'
+
 import UpdateListing from 'pages/create-listing/mutations/UpdateListing'
 
 const PromoteListingBudget = ({ match, listing, tokenBalance, onChange }) => {
+  const [value, setValue] = useState(String(listing.commission))
+  const inputRef = useRef()
+  useEffect(() => inputRef.current.focus(), [inputRef])
+  useEffect(() => {
+    if (listing.commission) {
+      setValue(String(listing.commission))
+    }
+  }, [listing.commission])
+
+  const unitsAvailable = listing.unitsAvailable
+
   return (
     <>
       <h1>
         <Link
-          to={`/promote/${match.params.listingId}`}
+          to={`/promote/${match.params.listingId}/amount`}
           className="back d-md-none"
         />
         <fbt desc="PromoteListing.title">Promote Listing</fbt>
       </h1>
-      <div className="amount">
-        <div className="balance">{`OGN Balance: ${tokenBalance} OGN`}</div>
+      <div className="budget">
+        <div className="balance">
+          {`OGN Balance: `} <CoinLogo />
+          {tokenBalance}
+          <div>{`Units Available: ${unitsAvailable}`}</div>
+        </div>
         <h4>Total Budget</h4>
         <div className="help">
-          Amount you’re willing to spend for all combined sales
+          Amount you’re willing to spend for all units sold
         </div>
-        <div>
+        <div className="input-wrap">
           <input
             className="form-control"
-            value={listing.commission}
+            type="tel"
+            ref={inputRef}
+            value={value}
+            maxLength={String(tokenBalance).length}
             onChange={e => {
-              const val = e.target.value
-              if (val.match(/^[0-9]+$/)) {
-                onChange({ ...listing, commission: Number(val) })
+              const amount = e.target.value
+              setValue(amount)
+              if (!amount) {
+                onChange({ ...listing, commission: 0 })
+              } else if (amount.match(/^[0-9]+$/)) {
+                onChange({
+                  ...listing,
+                  commission: Number(e.target.value || 0)
+                })
               }
             }}
           />
+          <div className="ogn">
+            <CoinLogo /> OGN
+          </div>
         </div>
-        <div>
-          {`Total commission required to sell 3 units: ${listing.commissionPerUnit *
-            3} OGN`}
+        <div className="calc">
+          {`Total commission required to sell ${unitsAvailable} units: ${numberFormat(
+            listing.commissionPerUnit * unitsAvailable
+          )} OGN`}
         </div>
 
         <div className="actions">
           <Link
             to={`/promote/${match.params.listingId}/amount`}
-            className="btn btn-outline-primary btn-rounded btn-lg mr-3"
+            className="btn btn-outline-primary btn-rounded btn-lg mr-3 d-none d-sm-inline-block"
           >
             Back
           </Link>
@@ -48,16 +80,9 @@ const PromoteListingBudget = ({ match, listing, tokenBalance, onChange }) => {
           <UpdateListing
             listing={listing}
             tokenBalance={tokenBalance}
-            className="btn btn-primary"
-            children={fbt('Continue', 'promoteListing.Continue')}
-          />
-
-          {/* <Link
-            to={`/promote/${match.params.listingId}/success`}
             className="btn btn-primary btn-rounded btn-lg"
-          >
-            Continue
-          </Link> */}
+            children={fbt('Promote Now', 'promoteListing.promoteNow')}
+          />
         </div>
       </div>
     </>
@@ -67,26 +92,16 @@ const PromoteListingBudget = ({ match, listing, tokenBalance, onChange }) => {
 export default PromoteListingBudget
 
 require('react-styl')(`
-  .input-range
-    padding: 0
-    margin: 0
-    display: inline-block
-    vertical-align: top
-    width: 100%
-    > input
-      -webkit-appearance: none
-      --track-background: linear-gradient(to right, #fec100 0, #fec100 calc(var(--val) - 3px), #c0cbd4 0) no-repeat 0 45% / 100% 40%;
-      outline: 0
-      &::-webkit-slider-runnable-track
-        background: var(--track-background)
-        height: 5px
-      &::-webkit-slider-thumb
-        -webkit-appearance: none
-        border: 2px solid black
-        background: white
-        margin-top: -6px
-        width: 16px
-        height: 16px
-        border-radius: 50%
-        cursor: pointer;
+  .promote-listing
+    .budget
+      .form-control
+        border-width: 0 0 1px 0
+        height: 1.5em
+        margin-bottom: 0.5rem
+        border-radius: 0
+      .input-wrap
+        margin-top: 0.5rem
+      .actions
+        margin-top: 1.5rem
+
 `)

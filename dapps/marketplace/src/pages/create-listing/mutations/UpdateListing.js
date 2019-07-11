@@ -72,7 +72,9 @@ class UpdateListing extends Component {
       variables: applyListingData(this.props, {
         listingID: this.props.listing.id,
         additionalDeposit:
-          tokenBalance >= Number(listing.commission) ? listing.commission : '0',
+          tokenBalance >= Number(listing.commission)
+            ? String(listing.commission)
+            : '0',
         from: this.props.listing.seller.id
       })
     })

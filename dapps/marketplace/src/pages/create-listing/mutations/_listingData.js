@@ -1,6 +1,8 @@
 import pick from 'lodash/pick'
 import get from 'lodash/get'
 
+import tokenBalance from 'utils/tokenPrice'
+
 // Translate listing from schema representation to form
 // representation.
 export function getStateFromListing(props) {
@@ -34,14 +36,17 @@ export function getStateFromListing(props) {
       'description',
       'category',
       'subCategory',
-      'seller'
+      'seller',
+      'unitsAvailable'
     ]),
     acceptedTokens: tokens.length ? tokens : ['token-ETH'],
     quantity: String(props.listing.unitsTotal),
     currency: get(props, 'listing.price.currency.id', ''),
     price: String(props.listing.price.amount),
-    commission: get(props, 'listing.commission', '0'),
-    commissionPerUnit: get(props, 'listing.commissionPerUnit', '0'),
+    commission: tokenBalance(get(props, 'listing.commission', '0')),
+    commissionPerUnit: tokenBalance(
+      get(props, 'listing.commissionPerUnit', '0')
+    ),
     media: props.listing.media
   }
 }
@@ -61,8 +66,8 @@ export default function applyListingData(props, data) {
       category: listing.category,
       subCategory: listing.subCategory,
       media: listing.media.map(m => pick(m, 'contentType', 'url')),
-      commission: listing.commission,
-      commissionPerUnit: listing.commissionPerUnit,
+      commission: String(listing.commission),
+      commissionPerUnit: String(listing.commissionPerUnit),
       marketplacePublisher: listing.marketplacePublisher
     }
   }

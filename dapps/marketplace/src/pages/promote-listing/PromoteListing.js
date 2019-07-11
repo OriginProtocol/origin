@@ -28,7 +28,7 @@ const PromoteListing = props => {
   }
 
   const listingProps = {
-    listing: { ...listing, commissionPerUnit: '10', commission: '10' },
+    listing,
     tokenBalance: props.tokenBalance,
     onChange: listing => setListing(listing)
   }
@@ -57,4 +57,6 @@ const PromoteListing = props => {
 export default withWallet(withTokenBalance(withListing(PromoteListing)))
 
 require('react-styl')(`
+  .promote-listing
+    max-width: 550px
 `)

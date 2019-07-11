@@ -107,7 +107,7 @@ class App extends Component {
           this.props.location.pathname.match(/^\/campaigns\/invitations$/gi) ||
           this.props.location.pathname.match(/\/onboard\/finished/gi) ||
           this.props.location.pathname.match(
-            /^\/(create\/.+|listing\/[-0-9]+\/edit\/.+)/gi
+            /^\/(promote\/.+|create\/.+|listing\/[-0-9]+\/edit\/.+)/gi
           )))
 
     return (
