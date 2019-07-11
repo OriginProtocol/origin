@@ -27,6 +27,10 @@ export async function getTransactionReceipt(id) {
       returnValues: null,
       event: null
     }
+    // This should never happen - all events should have an id.
+    if (!logObj.id) {
+      throw new Error(`Found event with no id in receipt ${id}`)
+    }
     if (eventDef) {
       const decoded = contracts.web3.eth.abi.decodeLog(
         eventDef.inputs,
