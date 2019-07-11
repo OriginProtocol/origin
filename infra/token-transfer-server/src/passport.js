@@ -2,17 +2,18 @@
 
 const passport = require('passport')
 const GoogleTokenStrategy = require('passport-google-token').Strategy
+const logger = require('./logger')
 
 // TODO: extract this into a config module
 const clientSecret = process.env['GOOGLE_CLIENT_SECRET']
 if (!clientSecret) {
-  console.error('Please set GOOGLE_CLIENT_SECRET to the OAuth secret')
+  logger.error('Please set GOOGLE_CLIENT_SECRET to the OAuth secret')
   process.exit(1)
 }
 
 const clientId = process.env['GOOGLE_CLIENT_ID']
 if (!clientId) {
-  console.error('Please set GOOGLE_CLIENT_ID to the OAuth client ID')
+  logger.error('Please set GOOGLE_CLIENT_ID to the OAuth client ID')
   process.exit(1)
 }
 
