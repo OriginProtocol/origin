@@ -4,7 +4,7 @@ import get from 'lodash/get'
 
 import AccountTokenBalance from 'queries/TokenBalance'
 
-function tokenBalance(amount, decimals, places = 0) {
+export function tokenBalance(amount, decimals, places = 0) {
   try {
     const supplyBN = web3.utils.toBN(amount)
     const decimalsBN = web3.utils.toBN(

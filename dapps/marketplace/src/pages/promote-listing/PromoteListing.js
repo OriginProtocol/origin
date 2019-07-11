@@ -28,7 +28,7 @@ const PromoteListing = props => {
   }
 
   const listingProps = {
-    listing,
+    listing: { ...listing, commissionPerUnit: '10', commission: '10' },
     tokenBalance: props.tokenBalance,
     onChange: listing => setListing(listing)
   }

@@ -3,6 +3,8 @@ import { fbt } from 'fbt-runtime'
 
 import Link from 'components/Link'
 import Price from 'components/Price'
+import { tokenBalance } from 'components/TokenBalance'
+import CoinLogo from 'components/CoinLogo'
 
 const EditOnly = ({
   listing,
@@ -16,6 +18,28 @@ const EditOnly = ({
     {isAnnouncement ? null : (
       <div className="price">
         <Price listing={listing} descriptor />
+      </div>
+    )}
+    {!listing.commission ? null : (
+      <div className="listing-buy-editonly">
+        <div className="row">
+          <div>
+            <fbt desc="Commission">Commission Available</fbt>
+          </div>
+          <div>
+            <CoinLogo coin="ogn" />
+            {tokenBalance(listing.depositAvailable, 18)}
+          </div>
+        </div>
+        <div className="row mb-3">
+          <div>
+            <fbt desc="Commission">Commission Per Unit Sold</fbt>
+          </div>
+          <div>
+            <CoinLogo coin="ogn" />
+            {tokenBalance(listing.commissionPerUnit, 18)}
+          </div>
+        </div>
       </div>
     )}
     {isFractional ||

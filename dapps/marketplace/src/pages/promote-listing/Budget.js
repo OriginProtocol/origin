@@ -47,6 +47,7 @@ const PromoteListingBudget = ({ match, listing, tokenBalance, onChange }) => {
 
           <UpdateListing
             listing={listing}
+            tokenBalance={tokenBalance}
             className="btn btn-primary"
             children={fbt('Continue', 'promoteListing.Continue')}
           />

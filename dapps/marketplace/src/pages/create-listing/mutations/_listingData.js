@@ -40,8 +40,8 @@ export function getStateFromListing(props) {
     quantity: String(props.listing.unitsTotal),
     currency: get(props, 'listing.price.currency.id', ''),
     price: String(props.listing.price.amount),
-    commission: '0',
-    commissionPerUnit: '0',
+    commission: get(props, 'listing.commission', '0'),
+    commissionPerUnit: get(props, 'listing.commissionPerUnit', '0'),
     media: props.listing.media
   }
 }
@@ -61,7 +61,8 @@ export default function applyListingData(props, data) {
       category: listing.category,
       subCategory: listing.subCategory,
       media: listing.media.map(m => pick(m, 'contentType', 'url')),
-      commissionPerUnit: listing.boost,
+      commission: listing.commission,
+      commissionPerUnit: listing.commissionPerUnit,
       marketplacePublisher: listing.marketplacePublisher
     }
   }
@@ -74,7 +75,6 @@ export default function applyListingData(props, data) {
     case 'UnitListing': {
       const unitsTotal = Number(listing.quantity)
       variables.unitData = { unitsTotal }
-      variables.commission = unitsTotal > 1 ? listing.boostLimit : listing.boost
       break
     }
 
@@ -91,7 +91,6 @@ export default function applyListingData(props, data) {
         customPricing: listing.customPricing,
         unavailable: listing.unavailable
       }
-      variables.commission = listing.boostLimit
       break
 
     case 'GiftCardListing':
@@ -105,7 +104,6 @@ export default function applyListingData(props, data) {
         isCashPurchase: listing.isCashPurchase,
         receiptAvailable: listing.receiptAvailable
       }
-      variables.commission = unitsTotal > 1 ? listing.boostLimit : listing.boost
       break
 
     case 'AnnouncementListing':
