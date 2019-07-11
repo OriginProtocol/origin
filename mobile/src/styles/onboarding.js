@@ -23,7 +23,8 @@ export default StyleSheet.create({
     paddingHorizontal: 20,
     textAlign: 'center',
     width: '80%',
-    color: '#98a7b4'
+    color: '#98a7b4',
+    fontFamily: 'Lato'
   },
   backArrow: {
     position: 'absolute',

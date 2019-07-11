@@ -60,7 +60,8 @@ const styles = StyleSheet.create({
     width: '80%'
   },
   pinCodeText: {
-    fontSize: 36
+    fontSize: 36,
+    fontFamily: 'Lato'
   },
   input: {
     right: -1000,
