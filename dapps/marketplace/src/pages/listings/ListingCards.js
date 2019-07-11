@@ -76,10 +76,7 @@ const ListingCards = ({
                 <div className="category">
                   <Category listing={listing} showPrimary={false} />
                 </div>
-                <ListingBadge
-                  status={listing.status}
-                  featured={listing.featured}
-                />
+                <ListingBadge status={listing.status} />
               </div>
             )}
             <h5>

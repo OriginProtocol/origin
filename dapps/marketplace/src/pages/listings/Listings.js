@@ -38,8 +38,7 @@ class Listings extends Component {
     this.state = {
       first: 12,
       search: getStateFromQuery(props),
-      sort: 'featured',
-      hidden: true
+      sort: 'featured'
     }
   }
 
@@ -121,7 +120,7 @@ class Listings extends Component {
     const filters = [...getFilters(this.state.search), ...creatorFilters]
 
     const vars = {
-      ...pick(this.state, 'first', 'sort', 'hidden'),
+      ...pick(this.state, 'first', 'sort'),
       search: this.state.search.searchInput,
       filters: filters.map(filter => omit(filter, '__typename'))
     }

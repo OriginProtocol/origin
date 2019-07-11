@@ -6,17 +6,10 @@ export default gql`
     $first: Int
     $after: String
     $sort: String
-    $hidden: Boolean
     $search: String
   ) {
     marketplace {
-      listings(
-        first: $first
-        after: $after
-        sort: $sort
-        hidden: $hidden
-        search: $search
-      ) {
+      listings(first: $first, after: $after, sort: $sort, search: $search) {
         totalCount
         pageInfo {
           hasNextPage

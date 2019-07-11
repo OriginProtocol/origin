@@ -1,5 +1,4 @@
 const GraphQLJSON = require('graphql-type-json')
-const listingMetadata = require('./listing-metadata')
 const logger = require('./logger')
 const search = require('../lib/search')
 const db = require('../models')
@@ -18,9 +17,7 @@ const resolvers = {
         args.filters,
         args.page.numberOfItems,
         args.page.offset,
-        true, // idsOnly
-        listingMetadata.hiddenIds,
-        listingMetadata.featuredIds
+        true // idsOnly
       )
       logger.info(
         `Query: "${args.searchQuery}" returned ${listingIds.length} results.`
