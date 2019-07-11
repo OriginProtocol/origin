@@ -6,7 +6,6 @@ export default gql`
     $first: Int
     $after: String
     $sort: String
-    $hidden: Boolean
     $search: String
     $filters: [ListingFilterInput!]
     $listingIds: [String]
@@ -16,7 +15,6 @@ export default gql`
         first: $first
         after: $after
         sort: $sort
-        hidden: $hidden
         search: $search
         filters: $filters
         listingIds: $listingIds

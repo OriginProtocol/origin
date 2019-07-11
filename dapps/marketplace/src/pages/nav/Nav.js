@@ -29,11 +29,35 @@ const Brand = withCreatorConfig(({ creatorConfig }) => {
   )
 })
 
-const BackRegex = /^\/(listing|my-listings|my-sales|my-purchases|messages|notifications|create)(\/|$)/gi
-const ShowSearchRegex = /^\/(listing)?(\/|$)/gi
+const ShowBackRegex = /^\/(listing)(\/[-0-9]*\/?)?$/gi
+const ShowSearchRegex = /^\/(listings?|search)?(\/|$)/gi
+const ProfilePageRegex = /^\/(profile|user)/gi
+
+const getTitle = pathname => {
+  let title
+  if (pathname.startsWith('/my-listings')) {
+    title = <fbt desc="Listings.title">Listings</fbt>
+  } else if (pathname.startsWith('/my-purchases')) {
+    title = <fbt desc="Purchases.title">Purchases</fbt>
+  } else if (pathname.startsWith('/my-sales')) {
+    title = <fbt desc="Sales.title">Sales</fbt>
+  } else if (pathname.startsWith('/messages')) {
+    title = <fbt desc="Messages.title">Messages</fbt>
+  } else if (pathname.startsWith('/notifications')) {
+    title = <fbt desc="Notifications.title">Notifications</fbt>
+  } else if (pathname.startsWith('/create')) {
+    title = <fbt desc="CreateListing.title">Create a Listing</fbt>
+  } else if (pathname.startsWith('/settings')) {
+    title = <fbt desc="Settings.title">Settings</fbt>
+  } else if (pathname.endsWith('/edit')) {
+    title = <fbt desc="EditListing.title">Edit Listing</fbt>
+  }
+
+  return title ? <h1>{title}</h1> : <Brand />
+}
 
 const Nav = ({
-  location: { pathname },
+  location: { pathname, state: locationState },
   isMobile,
   wallet,
   onGetStarted,
@@ -49,54 +73,41 @@ const Nav = ({
   })
 
   if (isMobile) {
-    let title
-    if (pathname.startsWith('/my-listings')) {
-      title = <fbt desc="Listings.title">Listings</fbt>
-    } else if (pathname.startsWith('/my-purchases')) {
-      title = <fbt desc="Purchases.title">Purchases</fbt>
-    } else if (pathname.startsWith('/my-sales')) {
-      title = <fbt desc="Sales.title">Sales</fbt>
-    } else if (pathname.match(/^\/create\/[a-z]+/)) {
-      return null
-    } else if (pathname.startsWith('/create')) {
-      title = <fbt desc="CreateListing.title">Create Listing</fbt>
-    }
-
     const canGoBack = history && history.length > 1
 
     // Make the hamburger menu absolute and hide branding and profile icon.
-    const isProfilePage = /^\/(profile|user)/gi.test(pathname)
+    const isProfilePage = ProfilePageRegex.test(pathname)
 
-    const titleAndWallet = (
-      <>
-        {title ? <h1>{title}</h1> : <Brand />}
-        {wallet ? (
-          <Profile {...navProps('profile')} />
-        ) : (
-          <GetStarted onClick={() => onGetStarted()} />
-        )}
-      </>
+    const walletEl = wallet ? (
+      <Profile {...navProps('profile')} />
+    ) : (
+      <GetStarted onClick={() => onGetStarted()} />
     )
 
-    const canShowBack = canGoBack && pathname.match(BackRegex) ? true : false
+    const isStacked =
+      (locationState && locationState.canGoBack) || (isProfilePage && canGoBack)
+    const canShowBack =
+      canGoBack && pathname.match(ShowBackRegex) ? true : false
     const canShowSearch = pathname.match(ShowSearchRegex) ? true : false
 
     return (
       <>
-        {isProfilePage && canGoBack ? (
-          <a className="nav-back-icon" onClick={() => history.goBack()} />
-        ) : (
-          <nav
-            className={`navbar no-border ${navbarDarkMode ? 'dark' : ''} ${
-              isProfilePage ? 'fixed-nav' : ''
-            }`}
-          >
+        <nav
+          className={`navbar no-border ${navbarDarkMode ? 'dark' : ''} ${
+            isProfilePage ? 'fixed-nav' : ''
+          }`}
+        >
+          {isStacked && (
+            <a className="nav-back-icon" onClick={() => history.goBack()} />
+          )}
+          {!isStacked && (
             <Mobile {...navProps('mobile')} onShowFooter={onShowFooter} />
-            {isProfilePage ? null : titleAndWallet}
-          </nav>
-        )}
+          )}
+          {!isProfilePage && getTitle(pathname)}
+          {!isStacked && walletEl}
+        </nav>
         {canShowSearch && <Search className="search" placeholder />}
-        {canShowBack && (
+        {!isStacked && canShowBack && (
           <div className="container">
             <button
               className="btn btn-link btn-back-link"
@@ -315,6 +326,7 @@ require('react-styl')(`
       margin-right: 0
     .navbar
       padding: 0
+      min-height: 3.75rem
       &.fixed-nav
         position: absolute
         z-index: 100

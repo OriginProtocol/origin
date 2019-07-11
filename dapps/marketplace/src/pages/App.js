@@ -91,24 +91,25 @@ class App extends Component {
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
 
-    const isMobile = this.props.ismobile === 'true'
+    const isMobile = this.props.isMobile
 
     const navbarDarkMode =
       !this.props.location.pathname.match(/^\/welcome\/onboard.*$/g) &&
       this.props.location.pathname.match(/^\/welcome.*$/g)
 
+    // TODO: Too many regex here, probably it's better to optimize this sooner or later
     const hideNavbar =
-      (!this.props.location.pathname.match(/^\/welcome\/onboard.*$/g) &&
-        this.props.location.pathname.match(/^\/welcome.*$/g) &&
+      (!this.props.location.pathname.match(/^\/welcome\/onboard.*$/gi) &&
+        this.props.location.pathname.match(/^\/welcome.*$/gi) &&
         !isMobile) ||
-      (isMobile && this.props.location.pathname.match(/^\/purchases\/.*$/g)) ||
       (isMobile &&
-        this.props.location.pathname.match(/^\/campaigns\/purchases$/g)) ||
-      (isMobile &&
-        this.props.location.pathname.match(/^\/campaigns\/invitations$/g)) ||
-      (isMobile &&
-        this.props.location.pathname.match(/^\/campaigns\/verifications$/g)) ||
-      (isMobile && this.props.location.pathname.match(/\/onboard\/finished/g))
+        (this.props.location.pathname.match(/^\/purchases\/.*$/gi) ||
+          this.props.location.pathname.match(/^\/campaigns\/purchases$/gi) ||
+          this.props.location.pathname.match(/^\/campaigns\/invitations$/gi) ||
+          this.props.location.pathname.match(/\/onboard\/finished/gi) ||
+          this.props.location.pathname.match(
+            /^\/(create\/.+|listing\/[-0-9]+\/edit\/.+)/gi
+          )))
 
     return (
       <CurrencyContext.Provider value={this.props.currency}>

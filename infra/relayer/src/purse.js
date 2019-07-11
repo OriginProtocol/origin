@@ -26,6 +26,7 @@ const {
   sendRawTransaction
 } = require('./util')
 const logger = require('./logger')
+const Sentry = require('./sentry')
 
 const MAX_LOCK_TIME = 15000
 const REDIS_RETRY_TIMEOUT = 30000
@@ -129,12 +130,15 @@ class Purse {
       }
     })
       .then(() => {
-        logger.error(new Error('Fake thread promise should not have resolved!'))
+        const err = new Error('Fake thread promise should not have resolved!')
+        logger.error(err)
+        Sentry.captureException(err)
         process.exit(2)
       })
       .catch(err => {
         logger.error('Error occurred in _process()')
         logger.error(err)
+        Sentry.captureException(err)
         process.exit(2)
       })
   }
@@ -211,6 +215,7 @@ class Purse {
     } catch (err) {
       logger.warn('Failed getting network gas price')
       logger.debug(err)
+      Sentry.captureException(err)
     }
 
     if (gp.gt(MAX_GAS_PRICE)) {
@@ -338,6 +343,7 @@ class Purse {
       logger.info(`Sent ${txHash}`)
     } catch (err) {
       logger.error(`Error sending transaction ${txHash}`)
+      Sentry.captureException(err)
       throw err
     }
 
@@ -365,6 +371,7 @@ class Purse {
           txCount = parseInt(countFromRedis)
         } catch (err) {
           logger.warn(err)
+          Sentry.captureException(err)
           txCount = 0
         }
       }
@@ -762,6 +769,7 @@ class Purse {
     } catch (err) {
       logger.error(`Error sending transaction to fund child ${address}.`)
       logger.error(err)
+      Sentry.captureException(err)
       this.accounts[address].hasPendingFundingTx = false
     }
 
@@ -876,6 +884,7 @@ class Purse {
             'Error occurred in the balance checks and funding block of _process()'
           )
           logger.error(err)
+          Sentry.captureException(err)
         }
       }
 
@@ -936,6 +945,7 @@ class Purse {
           'Error occurred in the pending transaction processing block of _process()'
         )
         logger.error(err)
+        Sentry.captureException(err)
       }
 
       /**
@@ -965,6 +975,7 @@ class Purse {
                 `error attempting to broadcast transaction ${txHash}`
               )
               logger.error(err)
+              Sentry.captureException(err)
               const txObj = await this.getPendingTransaction(txHash)
               if (txObj) {
                 logger.debug(`Transaction object: ${JSON.stringify(txObj)}`)
@@ -986,6 +997,7 @@ class Purse {
           'Error occurred in the dropped transaction handling block of _process()'
         )
         logger.error(err)
+        Sentry.captureException(err)
       }
 
       /**
