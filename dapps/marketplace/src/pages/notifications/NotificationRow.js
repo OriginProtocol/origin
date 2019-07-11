@@ -147,7 +147,7 @@ require('react-styl')(`
         overflow: hidden
         text-overflow: ellipsis
         font-size: 14px
-        color: color: dark
+        color: dark
         a
           font-weight: 500
         .wallet

@@ -92,13 +92,14 @@ class App extends Component {
     applyConfiguration(creatorConfig)
 
     const isMobile = this.props.isMobile
-    // hide navigation bar on growth welcome screen and show it
-    // in onboarding variation of that screen
+
+    const isOnWelcomeAndNotOboard = this.props.location.pathname.match(
+      /^\/welcome\/?(?!(onboard\/)).*/gi
+    )
 
     // TODO: Too many regex here, probably it's better to optimize this sooner or later
     const hideNavbar =
-      (!this.props.location.pathname.match(/^\/welcome\/onboard.*$/gi) &&
-        this.props.location.pathname.match(/^\/welcome.*$/gi)) ||
+      (isOnWelcomeAndNotOboard && !isMobile) ||
       (isMobile &&
         (this.props.location.pathname.match(/^\/purchases\/.*$/gi) ||
           this.props.location.pathname.match(/^\/campaigns\/purchases$/gi) ||
@@ -114,6 +115,7 @@ class App extends Component {
           <Nav
             onGetStarted={() => this.setState({ mobileModalDismissed: false })}
             onShowFooter={() => this.setState({ footer: true })}
+            navbarDarkMode={isOnWelcomeAndNotOboard}
           />
         )}
         <main>
