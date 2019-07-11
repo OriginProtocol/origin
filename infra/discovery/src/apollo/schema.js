@@ -75,11 +75,6 @@ const typeDefs = gql`
   # LISTING
   #
   # TODO: Add a status indicating if Listing is sold out.
-  enum DisplayType {
-    normal
-    featured
-    hidden
-  }
   type Listing {
     id: ID!
     blockInfo: BlockInfo!
@@ -94,7 +89,6 @@ const typeDefs = gql`
     commission: Price!
     commissionPerUnit: Price
     offers(page: Page): OfferConnection
-    display: DisplayType!
     marketplacePublisher: String
     createDate: String
     updateVersion: Int
