@@ -45,7 +45,12 @@ function withGrowthCampaign(
                     {...props}
                     growthEnrollmentStatus={enrollmentStatus}
                     growthCampaigns={get(data, 'campaigns.nodes') || []}
-                    growthCampaignsLoading={!networkStatus || loading || networkStatus === 1 || walletLoading}
+                    growthCampaignsLoading={
+                      !networkStatus ||
+                      loading ||
+                      networkStatus === 1 ||
+                      walletLoading
+                    }
                   />
                 )
               }}

@@ -38,6 +38,7 @@ const Nav = ({
   wallet,
   onGetStarted,
   onShowFooter,
+  navbarDarkMode,
   history
 }) => {
   const [open, setOpen] = useState()
@@ -86,7 +87,9 @@ const Nav = ({
           <a className="nav-back-icon" onClick={() => history.goBack()} />
         ) : (
           <nav
-            className={`navbar no-border${isProfilePage ? ' fixed-nav' : ''}`}
+            className={`navbar no-border ${navbarDarkMode ? 'dark' : ''} ${
+              isProfilePage ? 'fixed-nav' : ''
+            }`}
           >
             <Mobile {...navProps('mobile')} onShowFooter={onShowFooter} />
             {isProfilePage ? null : titleAndWallet}
@@ -126,7 +129,7 @@ const Nav = ({
   const EarnTokens = withEnrolmentModal('a')
 
   return (
-    <nav className="navbar navbar-expand-md">
+    <nav className={`navbar navbar-expand-md ${navbarDarkMode ? 'dark' : ''}`}>
       <div className="container">
         <Brand />
         <Search className="form-inline mr-auto" />
@@ -187,6 +190,10 @@ export default withRouter(withWallet(withIsMobile(Nav)))
 require('react-styl')(`
   .navbar
     padding: 0 1rem
+    &.dark
+      background-color: #131d27
+      .navbar-brand
+        background: url(images/origin-logo.svg) no-repeat center
     &:not(.no-border)
       border-bottom: 1px solid rgba(0, 0, 0, 0.1)
     > .container

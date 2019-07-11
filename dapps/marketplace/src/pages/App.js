@@ -92,12 +92,15 @@ class App extends Component {
     applyConfiguration(creatorConfig)
 
     const isMobile = this.props.ismobile === 'true'
-    // hide navigation bar on growth welcome screen and show it
-    // in onboarding variation of that screen
+
+    const navbarDarkMode =
+      !this.props.location.pathname.match(/^\/welcome\/onboard.*$/g) &&
+      this.props.location.pathname.match(/^\/welcome.*$/g)
 
     const hideNavbar =
       (!this.props.location.pathname.match(/^\/welcome\/onboard.*$/g) &&
-        this.props.location.pathname.match(/^\/welcome.*$/g)) ||
+        this.props.location.pathname.match(/^\/welcome.*$/g) &&
+        !isMobile) ||
       (isMobile && this.props.location.pathname.match(/^\/purchases\/.*$/g)) ||
       (isMobile &&
         this.props.location.pathname.match(/^\/campaigns\/purchases$/g)) ||
@@ -113,6 +116,7 @@ class App extends Component {
           <Nav
             onGetStarted={() => this.setState({ mobileModalDismissed: false })}
             onShowFooter={() => this.setState({ footer: true })}
+            navbarDarkMode={navbarDarkMode}
           />
         )}
         <main>

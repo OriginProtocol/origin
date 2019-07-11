@@ -175,7 +175,7 @@ class GrowthWelcome extends Component {
           />
         </div>
         <div
-          className={`spaceman col-10 top-padding ${
+          className={`spaceman col-9 top-padding ${
             !personalised ? 'center' : ''
           }
           ${isMobile ? 'd-none' : ''}
@@ -239,7 +239,7 @@ class GrowthWelcome extends Component {
             </div>
           </div>
           <div
-            className={`${isMobile ? 'd-none' : ''} origin-showcase col-10`}
+            className={`${isMobile ? 'd-none' : ''} origin-showcase col-8`}
           />
         </div>
       </div>
@@ -485,6 +485,7 @@ require('react-styl')(`
       background-repeat: no-repeat
       margin-left: -100px
       padding-left: 100px
+      max-width: 600px
     .btn
       margin-top: 40px
       width: 336px
@@ -653,5 +654,6 @@ require('react-styl')(`
       background-image: url(images/growth/marketplace-screenshots-graphic.png)
       background-position: bottom left
       background-repeat: no-repeat
+      max-width: 600px
 
 `)
