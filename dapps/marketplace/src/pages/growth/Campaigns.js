@@ -365,7 +365,10 @@ class GrowthCampaigns extends Component {
 
             const accountId = data.web3.primaryAccount.id
 
-            if (!this.props.growthCampaigns) {
+            if (
+              !this.props.growthCampaigns ||
+              this.props.growthCampaignsLoading
+            ) {
               return (
                 <h5 className="p-2">
                   <fbt desc="Loading...">Loading...</fbt>

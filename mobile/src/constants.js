@@ -24,7 +24,7 @@ export const ETH_NOTIFICATION_TYPES = new Enum('APN', 'FCM')
 export const BALANCE_POLL_INTERVAL = 5000
 
 export const NETWORKS = [
-  { id: 1, name: 'Mainnet', dappUrl: 'https://dapp.originprotocol.com' },
+  { id: 1, name: 'Mainnet', dappUrl: 'https://shoporigin.com' },
   {
     id: 4,
     name: 'Rinkeby',

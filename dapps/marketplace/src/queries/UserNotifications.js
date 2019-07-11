@@ -26,10 +26,18 @@ export default gql`
             offer {
               id
               createdBlock
+              buyer {
+                id
+              }
               listing {
                 ... on Listing {
                   id
                   title
+                  media {
+                    url
+                    urlExpanded
+                    contentType
+                  }
                 }
               }
             }

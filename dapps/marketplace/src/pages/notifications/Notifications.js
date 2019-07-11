@@ -117,9 +117,3 @@ const NoNotifications = () => (
 )
 
 export default withWallet(Notifications)
-
-require('react-styl')(`
-  .notifications-list
-    border: 1px solid var(--light)
-    border-radius: var(--default-radius)
-`)

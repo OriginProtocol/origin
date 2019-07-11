@@ -12,6 +12,7 @@ const Purse = require('./purse')
 const logger = require('./logger')
 const db = require('./models')
 const enums = require('./enums')
+const Sentry = require('./sentry')
 
 let RiskEngine
 if (process.env.NODE_ENV === 'production' || process.env.USE_PROD_RISK) {
@@ -78,6 +79,7 @@ const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
     return normalizeAddress(address) === normalizeAddress(from)
   } catch (e) {
     logger.error('error recovering', e)
+    Sentry.captureException(e)
     return false
   }
 }
@@ -200,6 +202,10 @@ class Relayer {
       preflight
     })
 
+    Sentry.configureScope(scope => {
+      scope.setUser({ id: from })
+    })
+
     // Make sure keys are generated and ready
     await this.purse.init()
 
@@ -261,13 +267,15 @@ class Relayer {
        * See: https://github.com/OriginProtocol/origin/issues/2631
        */
       if (await this.purse.hasPendingTo(proxy)) {
-        logger.error(`Proxy ${proxy} already has a pending transaction`)
+        logger.warn(`Proxy ${proxy} already has a pending transaction`)
         return res
           .status(429)
           .send({ errors: ['Proxy has pending transaction'] })
       }
 
       nonce = await UserProxy.methods.nonce(from).call()
+
+      logger.debug(`Using nonce ${nonce} for user ${from} via proxy ${proxy}`)
     } else {
       // Verify a proxy doesn't already exist
       if (code !== '0x') {
@@ -370,6 +378,7 @@ class Relayer {
         }
 
         logger.error('Transaction failure:', reason)
+        Sentry.captureException(reason)
         return res.status(400).send({ errors: [errMsg] })
       }
 
@@ -382,6 +391,7 @@ class Relayer {
       }
     } catch (err) {
       logger.error(err)
+      Sentry.captureException(err)
       const errors = ['Error forwarding']
       if (isTestEnv) errors.push(err.toString())
       return res.status(400).send({ errors })
