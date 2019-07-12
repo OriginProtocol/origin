@@ -943,7 +943,7 @@ class SocialShareRule extends BaseRule {
    * @returns {number}
    * @private
    */
-  async _numRewards(ethAddress, events) {
+  async _numRewards() {
     // TODO
     return 0
   }
@@ -954,7 +954,7 @@ class SocialShareRule extends BaseRule {
    * @param {Array<models.GrowthEvent>} events
    * @returns {boolean}
    */
-  async _evaluate(ethAddress, events) {
+  async _evaluate() {
     // TODO
     return true
   }
