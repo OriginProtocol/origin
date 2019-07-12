@@ -35,6 +35,7 @@
     "express-session": "^1.16.2",
     "express-validator": "^6.1.1",
     "ip": "^1.1.5",
+    "logplease": "^1.2.15",
     "moment": "^2.24.0",
     "passport": "^0.4.0",
     "passport-google-token": "^0.1.2",
