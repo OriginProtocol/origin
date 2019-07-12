@@ -10,7 +10,7 @@ try {
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
-const promBundle = require('./prom')
+const { bundle } = require('./prom')
 const logger = require('./logger')
 const Relayer = require('./relayer')
 
@@ -19,7 +19,7 @@ app.use(express.json())
 app.use(cors({ origin: true, credentials: true }))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(promBundle)
+app.use(bundle)
 
 // networkId: 1=Mainnet, 4=Rinkeby, etc...
 const networkId = parseInt(process.env.NETWORK_ID)
