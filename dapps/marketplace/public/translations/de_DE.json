@@ -584,10 +584,10 @@
   "2klVRF": "Origin Cryptocurrency-Token (OGN) sind ERC-20-Token, die auf vielfältige Weise auf der Plattform verwendet werden können.",
   "3FISrv": "Verdiente Origin-Token (OGN) sind derzeit für die Verwendung in der Origin-App und -Plattform gesperrt. Sie können derzeit nicht auf andere Benutzer übertragen werden. In Zukunft wird erwartet, dass OGN freigeschaltet und übertragbar ist.",
   "3cl6l0": "Lernen Sie mehr",
-  "4nNko9": "Boosting",
-  "nJEiR": "Verkäufer nutzen OGN, um ihre Einträge auf dem Marktplatz zu steigern. Dies verleiht ihren Angeboten eine bessere Sichtbarkeit und Platzierung. Angebote mit OGN haben eine höhere Chance, schnell verkauft zu werden.",
   "2CCXRK": "Belohnt",
   "3yDMxS": "OGN ist eine von Origin-Benutzern erworbene Belohnungskryptowährung. Erhalten Sie Belohnungen, wenn Sie Ihr Konto bestätigen oder Ihre Freunde zu Origin einladen. Sie erhalten sogar OGN als Cash Back, wenn Sie kaufen und verkaufen.",
+  "3x8LcU": "Promoting",
+  "nQxkV": "Sellers use OGN to promote their listings on the marketplace. This gives their listings higher visibility and placement. Listings with OGN have a higher chance of being sold quickly.",
   "3IdS1u": "Beginnen Sie innerhalb weniger Minuten mit Origin-Tokens",
   "3x5LAR": "Verbinden Sie Ihre Kryptowährungsgeldbörse mit Origin",
   "1rYphf": "Melden Sie sich an und überprüfen Sie Ihr Konto und Ihre Berechtigung",
@@ -718,6 +718,7 @@
   "IlnwX": "Menge",
   "1usuUr": "Zeitzone:",
   "4xvjOX": "HINWEIS: Dies unterscheidet sich von Ihrer Zeitzone {userTimeZone}",
+  "NF15": "Clear",
   "dyal9": "Listing nicht gefunden",
   "ZOcTF": "Listing {id}",
   "1ucotJ": "Eintrag ungültig",
@@ -835,6 +836,8 @@
   "1IuKjr": "Unbenannter Benutzer",
   "36t26D": "Earn OGN",
   "tHJmL": "Wallet Balances",
+  "2NvVVm": "Buyer:",
+  "s1yRf": "Seller:",
   "4xWP3l": "{nameLink} Ihr Angebot wurde am {title}abgelehnt",
   "2nsNrC": "{nameLink} Ihr Angebot wurde am {title}",
   "3VLvv1": "Transaktion mit {nameLink} für {title}",
@@ -1089,6 +1092,20 @@
   "4iHoD8": "{user} Reviews",
   "2jblSi": "Unbenannter Benutzer",
   "1hgTen": "Listings",
+  "2m1LcJ": "Just now",
+  "34gk2n": "minute",
+  "11DZUN": {
+    "*": "minutes",
+    "_1": "minute"
+  },
+  "xDZlv": {
+    "*": "hours",
+    "_1": "hour"
+  },
+  "4wB1jY": {
+    "*": "days",
+    "_1": "day"
+  },
   "3nTqCo": "Email",
   "3FexNK": "Phone",
   "4cKoYh": "Airbnb",

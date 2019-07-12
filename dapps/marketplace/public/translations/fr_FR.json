@@ -584,10 +584,10 @@
   "2klVRF": "Les jetons de crypto-monnaie Origin (OGN) sont des jetons ERC-20 pouvant être utilisés sur la plate-forme de nombreuses manières.",
   "3FISrv": "Les jetons Origin (OGN) gagnés sont actuellement verrouillés pour une utilisation sur l'application et la plateforme Origin. Ils ne peuvent pas être transférés à d'autres utilisateurs pour le moment. À l'avenir, il est prévu que les jetons seront débloqués et transférables.",
   "3cl6l0": "En savoir plus",
-  "4nNko9": "Boost",
-  "nJEiR": "Les vendeurs utilisent OGN pour promouvoir leurs annonces sur le marché. Cela donne à leurs annonces une visibilité et un placement plus importants. Les annonces avec OGN ont plus de chance d'être vendues rapidement.",
   "2CCXRK": "Récompenses",
   "3yDMxS": "OGN est un crypto-monnaie de récompenses gagné par les utilisateurs d’Origin. Obtenez des récompenses lorsque vous vérifiez votre compte, invitez vos amis à rejoindre Origin ou quand vous achetez et vendez.",
+  "3x8LcU": "Promoting",
+  "nQxkV": "Sellers use OGN to promote their listings on the marketplace. This gives their listings higher visibility and placement. Listings with OGN have a higher chance of being sold quickly.",
   "3IdS1u": "Commencez à gagner des jetons Origin en quelques minutes",
   "3x5LAR": "Connectez votre portefeuille de crypto-monnaie à Origin",
   "1rYphf": "Inscrivez-vous et vérifiez votre compte et votre éligibilité",
@@ -718,6 +718,7 @@
   "IlnwX": "Quantité",
   "1usuUr": "Fuseau horaire:",
   "4xvjOX": "Remarque: cela est différent de votre fuseau horaire de {userTimeZone}",
+  "NF15": "Clear",
   "dyal9": "Annonce non trouvée",
   "ZOcTF": "Annonce {id}",
   "1ucotJ": "Annonce non valide",
@@ -835,6 +836,8 @@
   "1IuKjr": "Utilisateur sans nom",
   "36t26D": "Earn OGN",
   "tHJmL": "Wallet Balances",
+  "2NvVVm": "Buyer:",
+  "s1yRf": "Seller:",
   "4xWP3l": "{nameLink} refusé votre offre sur {title}",
   "2nsNrC": "{nameLink} accepté votre offre sur {title}",
   "3VLvv1": "Transaction avec {nameLink} finalisé pour {title}",
@@ -1089,6 +1092,20 @@
   "4iHoD8": "{user} Reviews",
   "2jblSi": "Utilisateur Inconnu",
   "1hgTen": "Listings",
+  "2m1LcJ": "Just now",
+  "34gk2n": "minute",
+  "11DZUN": {
+    "*": "minutes",
+    "_1": "minute"
+  },
+  "xDZlv": {
+    "*": "hours",
+    "_1": "hour"
+  },
+  "4wB1jY": {
+    "*": "days",
+    "_1": "day"
+  },
   "3nTqCo": "Email",
   "3FexNK": "Phone",
   "4cKoYh": "Airbnb",
