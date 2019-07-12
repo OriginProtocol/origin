@@ -154,6 +154,7 @@ require('react-styl')(`
     margin: 10px 0 20px 0
     flex: 1 0 auto
     width: 100%
+    max-height: max-content
     .message-container
       max-width: 70%
     .avatar-container

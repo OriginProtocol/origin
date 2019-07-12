@@ -41,14 +41,7 @@ class Messages extends Component {
       return
     }
 
-    const conversations = get(this.props, 'messaging.conversations', []).sort(
-      (a, b) => {
-        const alm = a.lastMessage || { timestamp: Date.now() }
-        const blm = b.lastMessage || { timestamp: Date.now() }
-
-        return alm.timestamp > blm.timestamp ? -1 : 1
-      }
-    )
+    const conversations = this.getSortedConversations()
 
     const defaultRoom = get(conversations, '0.id')
 
@@ -58,6 +51,20 @@ class Messages extends Component {
         defaultRoomSet: true
       })
     }
+  }
+
+  getSortedConversations() {
+    return get(this.props, 'messaging.conversations', [])
+      .sort((a, b) => {
+        const alm = a.lastMessage || { timestamp: Date.now() }
+        const blm = b.lastMessage || { timestamp: Date.now() }
+
+        return alm.timestamp > blm.timestamp ? -1 : 1
+      })
+      .filter(
+        conv =>
+          conv.id !== this.props.wallet && conv.id !== this.props.walletProxy
+      )
   }
 
   goBack() {
@@ -107,12 +114,7 @@ class Messages extends Component {
       )
     }
 
-    const conversations = get(messaging, 'conversations', []).sort((a, b) => {
-      const alm = a.lastMessage || { timestamp: Date.now() }
-      const blm = b.lastMessage || { timestamp: Date.now() }
-
-      return alm.timestamp > blm.timestamp ? -1 : 1
-    })
+    const conversations = this.getSortedConversations()
 
     const room = get(this.props, 'match.params.room')
 
@@ -121,7 +123,7 @@ class Messages extends Component {
     if (content && isMobile) {
       content = (
         <MobileModal
-          className="messages-modal"
+          className="messages-page messages-modal"
           title={
             <Link to={`/user/${wallet}`} className="user-profile-link">
               <Avatar profile={identity} size={30} />
@@ -136,7 +138,11 @@ class Messages extends Component {
         </MobileModal>
       )
     } else if (!isMobile) {
-      content = <div className="col-md-9">{content}</div>
+      content = (
+        <div className="container">
+          <div className="col-md-9">{content}</div>
+        </div>
+      )
     }
 
     return (
@@ -228,9 +234,15 @@ require('react-styl')(`
 
   .mobile-modal-light
     .messages-modal
+      margin: 0
       &.modal-content
+        min-height: auto
+        .messages
+          padding: 0 1rem
         .send-message
           margin-bottom: 1rem
+          padding: 1rem 1rem 0rem 1rem
+          margin-top: auto
       &.modal-header
         .user-profile-link
           display: inline-block
@@ -238,4 +250,5 @@ require('react-styl')(`
             display: inline-block
             vertical-align: middle
             margin-right: 0.5rem
+
 `)
