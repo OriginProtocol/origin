@@ -233,12 +233,17 @@ class CampaignRules {
       ? await this._calculateLevel(ethAddress, events)
       : undefined
 
-
     const allRules = flatMap(level => level.rules, Object.values(this.levels))
     const data = []
     for (let i = 0; i < this.numLevels; i++) {
       data.push(
-        ...(await this.levels[i].export(adapter, ethAddress, events, level, allRules))
+        ...(await this.levels[i].export(
+          adapter,
+          ethAddress,
+          events,
+          level,
+          allRules
+        ))
       )
     }
     return data
@@ -289,8 +294,9 @@ class Level {
    */
   async export(adapter, ethAddress, events, level, allRules) {
     return (await Promise.all(
-      this.rules
-        .map(rule => rule.export(adapter, ethAddress, events, level, allRules))
+      this.rules.map(rule =>
+        rule.export(adapter, ethAddress, events, level, allRules)
+      )
     )).filter(data => data)
   }
 }
@@ -344,8 +350,13 @@ class BaseRule {
     ) {
       throw new Error('Missing unlock condition configuration.')
     }
-    if (this.config.additionalLockConditions && !Array.isArray(this.config.additionalLockConditions)) {
-      throw new Error('Additional lock conditions should be an array of Rule ids') 
+    if (
+      this.config.additionalLockConditions &&
+      !Array.isArray(this.config.additionalLockConditions)
+    ) {
+      throw new Error(
+        'Additional lock conditions should be an array of Rule ids'
+      )
     }
     this.limit = this.config.limit
     if (this.limit > maxNumRewardsPerRule) {
@@ -461,16 +472,22 @@ class BaseRule {
   /**
    * To prevent mistakes we verify that all lockConditions specified in the rule
    * are present in the rules list. This way we prevent lock condition typos
-   * 
+   *
    * @param {Array<object>} allRules - All other rules of the campaign
    * @param {Array<string>} lockConditions - Rules that need to be Completed for the
    * current rule to be unlocked
    */
   _validateLockConditions(rules, lockConditions) {
     const ruleIds = rules.map(rule => rule.id)
-    const falseConditions = lockConditions.filter(condition => !ruleIds.includes(condition))
+    const falseConditions = lockConditions.filter(
+      condition => !ruleIds.includes(condition)
+    )
     if (falseConditions.length > 0) {
-      throw new Error(`The following conditions can not be found among the rules: ${falseConditions.join(', ')}`)
+      throw new Error(
+        `The following conditions can not be found among the rules: ${falseConditions.join(
+          ', '
+        )}`
+      )
     }
   }
   /**
@@ -502,13 +519,16 @@ class BaseRule {
       // all the precondition rules need to have completed state
       const hasNonCompletedPreconditionRule = (await Promise.all(
         rules
-          .filter(rule => this.config.additionalLockConditions.includes(rule.id))
-          .map(rule => rule.getStatus(ethAddress, events, currentUserLevel, rules))
-      ))
-        .some(status => status !== 'Completed')
+          .filter(rule =>
+            this.config.additionalLockConditions.includes(rule.id)
+          )
+          .map(rule =>
+            rule.getStatus(ethAddress, events, currentUserLevel, rules)
+          )
+      )).some(status => status !== 'Completed')
 
       if (hasNonCompletedPreconditionRule) {
-        return GrowthActionStatus.Inactive   
+        return GrowthActionStatus.Inactive
       }
     }
 

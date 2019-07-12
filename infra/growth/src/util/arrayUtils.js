@@ -1,8 +1,8 @@
-function concat (x,y) {
+function concat(x, y) {
   return x.concat(y)
-}   
+}
 
-function flatMap (f,xs) {
+function flatMap(f, xs) {
   return xs.map(f).reduce(concat, [])
 }
 
