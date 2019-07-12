@@ -584,10 +584,10 @@
   "2klVRF": "Token cryptocurrency asal (OGN) adalah token ERC-20 yang dapat digunakan pada platform dalam banyak cara.",
   "3FISrv": "Token Asal yang Diperoleh (OGN) saat ini dikunci untuk digunakan pada aplikasi dan platform Asal. Mereka tidak dapat ditransfer ke pengguna lain saat ini. Di masa depan, diharapkan OGN akan dibuka dan ditransfer.",
   "3cl6l0": "Pelajari lebih lanjut",
-  "4nNko9": "Meningkatkan",
-  "nJEiR": "Penjual menggunakan OGN untuk meningkatkan listing mereka di pasar. Ini memberikan listing mereka visibilitas dan penempatan yang lebih tinggi. Daftar dengan OGN memiliki peluang lebih tinggi untuk dijual dengan cepat.",
   "2CCXRK": "Hadiah",
   "3yDMxS": "OGN adalah cryptocurrency penghargaan yang diterima oleh pengguna Asal. Dapatkan imbalan saat Anda memverifikasi akun Anda atau mengundang teman Anda untuk bergabung dengan Origin. Bahkan dapatkan OGN sebagai uang kembali saat Anda membeli dan menjual.",
+  "3x8LcU": "Promoting",
+  "nQxkV": "Sellers use OGN to promote their listings on the marketplace. This gives their listings higher visibility and placement. Listings with OGN have a higher chance of being sold quickly.",
   "3IdS1u": "Mulai dapatkan token Asal dalam beberapa menit",
   "3x5LAR": "Hubungkan dompet cryptocurrency Anda ke Origin",
   "1rYphf": "Daftar dan verifikasi akun dan kelayakan Anda",
@@ -718,6 +718,7 @@
   "IlnwX": "Kuantitas",
   "1usuUr": "Zona waktu:",
   "4xvjOX": "CATATAN: Ini berbeda dari zona waktu Anda {userTimeZone}",
+  "NF15": "Clear",
   "dyal9": "Daftar tidak ditemukan",
   "ZOcTF": "Daftar {id}",
   "1ucotJ": "Cantuman tidak valid",
@@ -835,6 +836,8 @@
   "1IuKjr": "Pengguna Tanpa Nama",
   "36t26D": "Earn OGN",
   "tHJmL": "Wallet Balances",
+  "2NvVVm": "Buyer:",
+  "s1yRf": "Seller:",
   "4xWP3l": "{nameLink} menolak tawaran Anda pada {title}",
   "2nsNrC": "{nameLink} menerima tawaran Anda pada {title}",
   "3VLvv1": "Transaksi dengan {nameLink} diselesaikan untuk {title}",
@@ -1089,6 +1092,20 @@
   "4iHoD8": "{user} Reviews",
   "2jblSi": "Pengguna tanpa nama",
   "1hgTen": "Listings",
+  "2m1LcJ": "Just now",
+  "34gk2n": "minute",
+  "11DZUN": {
+    "*": "minutes",
+    "_1": "minute"
+  },
+  "xDZlv": {
+    "*": "hours",
+    "_1": "hour"
+  },
+  "4wB1jY": {
+    "*": "days",
+    "_1": "day"
+  },
   "3nTqCo": "Email",
   "3FexNK": "Phone",
   "4cKoYh": "Airbnb",
