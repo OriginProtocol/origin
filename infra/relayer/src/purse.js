@@ -6,6 +6,16 @@
  * BIP44 - HD Wallet paths - https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
  * Ethereum and BIP44 discussion - https://github.com/ethereum/EIPs/issues/84
  *
+ * transactionMeta Format
+ * ----------------------
+ * {
+ *   sender: '0xdeadbeef....',
+ *   txObj: {
+ *     from: '0x1dead...'
+ *     ...
+ *   }
+ * }
+ *
  * TODO
  * ----
  * - Non-memory locks and support for mmultiple instances?
@@ -69,7 +79,7 @@ class Account {
  * -----
  * a = Accounts({ web3, mnemonic: 'one two three' })
  * await a.init()
- * await a.sendTx({ from: you, to: me, data: '0xdeadbeef' })
+ * await a.sendTx({ from: you, to: me, data: '0xdeadbeef' }, sender, receipt => console.log)
  */
 class Purse {
   constructor({
@@ -109,8 +119,9 @@ class Purse {
 
     this.children = []
     this.accounts = {}
-    // Complete unsigned transaction objects stored by hash
-    this.transactionObjects = {}
+    // Transaction data, including the complete unsigned transaction objects
+    // stored by hash.  See header for format
+    this.transactionMeta = {}
     // Keep track of transactions that are waiting to be mined
     this.pendingTransactions = {}
     // Counter for tx rebroadcasts
@@ -189,7 +200,7 @@ class Purse {
    * @param clearRedis {boolean} - Remove all keys from redis
    */
   async teardown(clearRedis = false) {
-    this.transactionObjects = {}
+    this.transactionMeta = {}
     this.pendingTransactions = {}
     this.rebroadcastCounters = {}
     this.receiptCallbacks = {}
@@ -296,10 +307,11 @@ class Purse {
    * NOTE: This does not wait for the transaction to be mined!
    *
    * @param tx {object} - The transaction object, sans `from` and `nonce`
+   * @param sender {string} - The address of the original sending account
    * @param onReceipt {function} - An optional callback to call when a receipt is found
    * @returns {{txHash: string, gasPrice: BN}} The transaction hash and gas price of the sent transaction
    */
-  async sendTx(tx, onReceipt) {
+  async sendTx(tx, sender, onReceipt) {
     const address = await this.getAvailableAccount()
 
     // Set the from and nonce for the account
@@ -336,7 +348,7 @@ class Purse {
       await sendRawTransaction(this.web3, rawTx)
 
       // In case it needs to be rebroadcast
-      await this.addPending(txHash, tx, rawTx)
+      await this.addPending(txHash, tx, rawTx, sender)
 
       await this.incrementTxCount(address)
 
@@ -438,15 +450,19 @@ class Purse {
    * @param txHash {string} - The transaction hash
    * @param rawTx {string} - The raw transaction
    */
-  async addPending(txHash, txObj, rawTx) {
+  async addPending(txHash, txObj, rawTx, sender = null) {
     this.pendingTransactions[txHash] = rawTx
 
+    sender = sender ? this.web3.utils.toChecksumAddress(sender) : null
     const to = txObj.to ? this.web3.utils.toChecksumAddress(txObj.to) : txObj.to
 
     // Store the tx object for debugging and in case we need to re-sign later
-    this.transactionObjects[txHash] = {
-      ...txObj,
-      to
+    this.transactionMeta[txHash] = {
+      originalSender: sender,
+      txObj: {
+        ...txObj,
+        to
+      }
     }
 
     if (this.rclient && this.rclient.connected) {
@@ -454,7 +470,7 @@ class Purse {
       await this.rclient.setAsync(`${REDIS_PENDING_PREFIX}${txHash}`, rawTx)
       await this.rclient.setAsync(
         `${REDIS_PENDING_TX_PREFIX}${txHash}`,
-        JSON.stringify(txObj)
+        JSON.stringify(this.transactionMeta[txHash])
       )
     } else {
       logger.warn('Redis unavailable')
@@ -467,7 +483,7 @@ class Purse {
    */
   async removePending(txHash) {
     delete this.pendingTransactions[txHash]
-    delete this.transactionObjects[txHash]
+    delete this.transactionMeta[txHash]
 
     if (this.rclient && this.rclient.connected) {
       await this.rclient.sremAsync(`${REDIS_PENDING_KEY}`, txHash)
@@ -483,9 +499,9 @@ class Purse {
    * @param txHash {string} - The transaction hash
    * @returns {object} representation of the transaction
    */
-  async getPendingTransaction(txHash) {
-    if (this.transactionObjects[txHash]) {
-      return this.transactionObjects[txHash]
+  async getPendingTransactionMeta(txHash) {
+    if (this.transactionMeta[txHash]) {
+      return this.transactionMeta[txHash]
     } else {
       const txObjStr = await this.rclient.getAsync(
         `${REDIS_PENDING_TX_PREFIX}${txHash}`
@@ -493,17 +509,47 @@ class Purse {
       if (!txObjStr) {
         return null
       }
-      return JSON.parse(txObjStr)
+
+      let txObj = JSON.parse(txObjStr)
+
+      /**
+       * Support the DEPRECIATED storage method to allow for clean migration.
+       * This can be removed in the near future
+       */
+      if (txObjStr.to) {
+        txObj = {
+          originalSender: null,
+          txObj: {
+            ...txObj
+          }
+        }
+      }
+      return txObj
     }
+  }
+
+  /**
+   * Check if a sender has a pending transaction
+   * @param sender {string} address of the sender to check for
+   * @returns {bool} whether or not the account has a pending transaction
+   */
+  hasPending(sender) {
+    sender = this.web3.utils.toChecksumAddress(sender)
+    for (const txHash of Object.keys(this.transactionMeta)) {
+      if (this.transactionMeta[txHash].originalSender === sender) {
+        return true
+      }
+    }
+    return false
   }
 
   /**
    * Check if there are any pending transactions to an account.
    */
-  async hasPendingTo(proxy) {
+  hasPendingTo(proxy) {
     proxy = this.web3.utils.toChecksumAddress(proxy)
-    for (const txHash of Object.keys(this.transactionObjects)) {
-      if (this.transactionObjects[txHash].to === proxy) {
+    for (const txHash of Object.keys(this.transactionMeta)) {
+      if (this.transactionMeta[txHash].txObj.to === proxy) {
         return true
       }
     }
@@ -568,6 +614,7 @@ class Purse {
       if (childBalance.gt(valueTxFee)) {
         const txObj = {
           to: masterAddress,
+          from: child,
           gas,
           gasPrice,
           value
@@ -575,7 +622,7 @@ class Purse {
         const signed = await this.signTx(child, txObj)
         const rawTx = signed.rawTransaction
         const txHash = this.web3.utils.sha3(rawTx)
-        await this.addPending(txHash, txObj, rawTx)
+        await this.addPending(txHash, txObj, rawTx, child)
         await sendRawTransaction(this.web3, rawTx)
         await this.incrementTxCount(child)
       }
@@ -762,7 +809,7 @@ class Purse {
 
     try {
       await sendRawTransaction(this.web3, rawTx)
-      await this.addPending(txHash, unsigned, rawTx)
+      await this.addPending(txHash, unsigned, rawTx, masterAddress)
       await this.incrementTxCount(masterAddress)
 
       logger.info(`Funded ${address} with ${txHash}`)
@@ -957,47 +1004,51 @@ class Purse {
        * an updated gas price.  Hopefully we'll find this rare, at least until CryptoKitties v57
        * comes out.
        */
-      try {
-        for (const txHash of Object.keys(this.pendingTransactions)) {
-          const tx = await this.web3.eth.getTransaction(txHash)
-          if (!tx) {
-            logger.warn(
-              `Transaction ${txHash} was dropped!  Re-broadcasting...`
-            )
+      if (interval % 3 === 0) {
+        try {
+          for (const txHash of Object.keys(this.pendingTransactions)) {
+            const tx = await this.web3.eth.getTransaction(txHash)
+            if (!tx) {
+              logger.warn(
+                `Transaction ${txHash} was dropped!  Re-broadcasting...`
+              )
 
-            try {
-              await sendRawTransaction(
-                this.web3,
-                this.pendingTransactions[txHash]
-              )
-            } catch (err) {
-              logger.error(
-                `error attempting to broadcast transaction ${txHash}`
-              )
-              logger.error(err)
-              Sentry.captureException(err)
-              const txObj = await this.getPendingTransaction(txHash)
-              if (txObj) {
-                logger.debug(`Transaction object: ${JSON.stringify(txObj)}`)
+              try {
+                await sendRawTransaction(
+                  this.web3,
+                  this.pendingTransactions[txHash]
+                )
+              } catch (err) {
+                logger.error(
+                  `error attempting to broadcast transaction ${txHash}`
+                )
+                logger.error(err)
+                Sentry.captureException(err)
+                const txMeta = await this.getPendingTransactionMeta(txHash)
+                if (txMeta && txMeta.txObj) {
+                  logger.debug(
+                    `Transaction object: ${JSON.stringify(txMeta.txObj)}`
+                  )
+                } else {
+                  logger.debug('no tx object stored')
+                }
+              }
+
+              // Increment our internal counter.  No functional use yet, but good for testing.
+              if (this.rebroadcastCounters[txHash]) {
+                this.rebroadcastCounters[txHash] += 1
               } else {
-                logger.debug('no tx object stored')
+                this.rebroadcastCounters[txHash] = 1
               }
             }
-
-            // Increment our internal counter.  No functional use yet, but good for testing.
-            if (this.rebroadcastCounters[txHash]) {
-              this.rebroadcastCounters[txHash] += 1
-            } else {
-              this.rebroadcastCounters[txHash] = 1
-            }
           }
+        } catch (err) {
+          logger.error(
+            'Error occurred in the dropped transaction handling block of _process()'
+          )
+          logger.error(err)
+          Sentry.captureException(err)
         }
-      } catch (err) {
-        logger.error(
-          'Error occurred in the dropped transaction handling block of _process()'
-        )
-        logger.error(err)
-        Sentry.captureException(err)
       }
 
       /**
