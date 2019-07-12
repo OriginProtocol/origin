@@ -82,7 +82,9 @@ class Messages extends Component {
     return (
       <Mutation mutation={MarkConversationRead}>
         {markConversationRead => (
-          <Room id={room} markRead={markConversationRead} enabled={enabled} />
+          <div className="conversation-view">
+            <Room id={room} markRead={markConversationRead} enabled={enabled} />
+          </div>
         )}
       </Mutation>
     )
@@ -134,20 +136,14 @@ class Messages extends Component {
           }
           onBack={() => this.goBack()}
         >
-          {content}
+          <div className="conversations-wrapper">{content}</div>
         </MobileModal>
-      )
-    } else if (!isMobile) {
-      content = (
-        <div className="container">
-          <div className="col-md-9">{content}</div>
-        </div>
       )
     }
 
     return (
-      <div className="row">
-        <div className={`col-md-3 d-md-block`}>
+      <div className="conversations-wrapper">
+        <div className={`conversations-list`}>
           {conversations.length ? null : (
             <div>
               <fbt desc="Messages.none">No conversations!</fbt>
@@ -165,7 +161,7 @@ class Messages extends Component {
             />
           ))}
         </div>
-        <div className="col-md-9">{content}</div>
+        {content}
       </div>
     )
   }
@@ -232,6 +228,22 @@ require('react-styl')(`
       &:hover
         color: white
 
+    .conversations-wrapper
+      display: flex
+      flex-direction: row
+      height: calc(100vh - 6rem)
+      .conversations-list
+        flex: 1
+        overflow-y: scroll
+        overflow-x: hidden
+      .conversation-view
+        flex: 3
+        overflow-y: scroll
+        overflow-x: hidden
+        padding: 0 2rem
+        display: flex
+        flex-direction: column
+
   .mobile-modal-light
     .messages-modal
       margin: 0
@@ -243,6 +255,12 @@ require('react-styl')(`
           margin-bottom: 1rem
           padding: 1rem 1rem 0rem 1rem
           margin-top: auto
+      
+        .conversations-wrapper
+          height: 100%
+          flex: 1
+        .conversation-view
+          padding: 0
       &.modal-header
         .user-profile-link
           display: inline-block
