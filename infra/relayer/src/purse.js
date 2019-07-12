@@ -519,7 +519,9 @@ class Purse {
       if (txObjStr.to) {
         txObj = {
           originalSender: null,
-          ...txObj
+          txObj: {
+            ...txObj
+          }
         }
       }
       return txObj
