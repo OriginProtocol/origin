@@ -584,10 +584,10 @@
   "2klVRF": "오리진 암호화폐 토큰(OGN) 은 오리진 플랫폼 안에서 다양한 방법으로 사용할 수 있는 ERC-20 토큰입니다.",
   "3FISrv": "획득한 오리진 토큰(OGN) 은 현재 오리진 앱 그리고 플랫폼에 잠겨(locked) 있습니다. 현재로서는 다른 사용자에게 전송이 불가능합니다. 향후, OGN이 잠금 해제(Unlocked) 되는 시점에 타인에게 전송이 가능할 것으로 예상됩니다.",
   "3cl6l0": "더 알아보기",
-  "4nNko9": "부스팅",
-  "nJEiR": "판매자는 OGN을 사용하여 마켓플레이스 상의 그들의 상품 목록을 부스팅합니다. 부스팅은 그들의 상품 목록의 노출 효과를 더하며, 검색 결과 상에서 우선 수위로 보여집니다. OGN을 사용한 상품 목록은 성공적인 판매로 이루어질 확률이 높습니다.",
   "2CCXRK": "보상",
   "3yDMxS": "OGN은 오리진 사용자에게 주어지는 암호화폐 보상입니다. 본인 인증을 완료하거나, 친구들을 오리진으로 초대하고 보상을 획득하세요. 뿐만 아니라, 오리진 플랫폼 상에서 물건을 판매하고 구매하며 캐쉬백으로 OGN을 받으세요.",
+  "3x8LcU": "Promoting",
+  "nQxkV": "Sellers use OGN to promote their listings on the marketplace. This gives their listings higher visibility and placement. Listings with OGN have a higher chance of being sold quickly.",
   "3IdS1u": "단, 몇 분 안에 오리진 토큰(Origin Tokens) 을 획득할 수 있습니다. 지금 시작하세요.",
   "3x5LAR": "귀하의 암호화폐 지갑을 오리진(Origin) 에 연동하세요",
   "1rYphf": "오리진에 가입 하신 후, 당신의 계정 및 본인 인증 절차를 완료하세요.",
@@ -718,6 +718,7 @@
   "IlnwX": "수량",
   "1usuUr": "시간대:",
   "4xvjOX": "참고: 이것은 당신의 시간대 {userTimeZone} 와 다릅니다.",
+  "NF15": "Clear",
   "dyal9": "해당 상품 목록을 찾을 수 없습니다.",
   "ZOcTF": "상품 목록 {id}",
   "1ucotJ": "잘못된 상품 목록입니다",
@@ -835,6 +836,8 @@
   "1IuKjr": "익명 사용자",
   "36t26D": "Earn OGN",
   "tHJmL": "Wallet Balances",
+  "2NvVVm": "Buyer:",
+  "s1yRf": "Seller:",
   "4xWP3l": "{nameLink} 가 당신의 제안을 거절 {title} 했습니다.",
   "2nsNrC": "{nameLink} 가 당신의 제안을 받아 {title} 들였습니다.",
   "3VLvv1": "{nameLink} 와의 최종 거래가 {title} 건으로 처리되었습니다.",
@@ -1089,6 +1092,20 @@
   "4iHoD8": "{user} Reviews",
   "2jblSi": "익명 사용자",
   "1hgTen": "Listings",
+  "2m1LcJ": "Just now",
+  "34gk2n": "minute",
+  "11DZUN": {
+    "*": "minutes",
+    "_1": "minute"
+  },
+  "xDZlv": {
+    "*": "hours",
+    "_1": "hour"
+  },
+  "4wB1jY": {
+    "*": "days",
+    "_1": "day"
+  },
   "3nTqCo": "Email",
   "3FexNK": "Phone",
   "4cKoYh": "Airbnb",

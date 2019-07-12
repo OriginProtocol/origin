@@ -40,8 +40,8 @@ function MobileModalHeader({
   if (showCloseButton || showBackButton) {
     closeButton = (
       <a
-        className={`modal-action-button ${
-          showCloseButton ? 'close-button' : 'back-button'
+        className={`modal-action-button${
+          showCloseButton ? ' close-button' : ' back-button'
         }`}
         onClick={onBack}
       />
@@ -52,7 +52,7 @@ function MobileModalHeader({
     <div className={`${headerClassList.join(' ')}`} style={headerStyle}>
       {closeButton}
       <h3 className="modal-title">{children}</h3>
-      {closeButton === null ? null : <span className="modal-action-button" />}
+      {closeButton ? <span className="modal-action-button" /> : null}
     </div>
   )
 }

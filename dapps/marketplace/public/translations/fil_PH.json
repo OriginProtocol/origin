@@ -584,10 +584,10 @@
   "2klVRF": "Ang mga pinagmulang cryptocurrency token (OGN) ay ERC-20 na mga token na magagamit sa platform sa maraming paraan.",
   "3FISrv": "Ang Mga Kinitang Token sa Pinagmulan (OGN) ay kasalukuyang naka-lock para sa paggamit sa Pinagmulan ng app at platform. Hindi sila maililipat sa iba pang mga gumagamit sa oras na ito. Sa hinaharap, inaasahan na ang OGN ay mai-unlock at maililipat.",
   "3cl6l0": "Matuto pa",
-  "4nNko9": "Pagpapalakas",
-  "nJEiR": "Gumagamit ang Sellers ng OGN upang mapalakas ang kanilang mga listahan sa marketplace. Nagbibigay ito ng mas mataas na visibility at placement sa kanilang mga listahan. Ang mga listahan na may OGN ay may mas mataas na pagkakataon na maibenta nang mabilis.",
   "2CCXRK": "Gantimpala",
   "3yDMxS": "Ang OGN ay isang reward cryptocurrency na kinita ng mga gumagamit ng Pinagmulan. Kumita ng mga gantimpala kapag na-verify mo ang iyong account o anyayahan ang iyong mga kaibigan na sumali sa Pinagmulan. Kahit na makakuha ng OGN bilang cash back kapag bumili ka at nagbebenta.",
+  "3x8LcU": "Promoting",
+  "nQxkV": "Sellers use OGN to promote their listings on the marketplace. This gives their listings higher visibility and placement. Listings with OGN have a higher chance of being sold quickly.",
   "3IdS1u": "Simulan ang pagkamit ng mga token ng Pinagmulan sa loob ng ilang minuto",
   "3x5LAR": "Ikonekta ang iyong cryptocurrency wallet sa Pinanggalingan",
   "1rYphf": "Mag-sign up at i-verify ang iyong account at pagiging karapat-dapat",
@@ -718,6 +718,7 @@
   "IlnwX": "Dami",
   "1usuUr": "Time Zone:",
   "4xvjOX": "TANDAAN: Ito ay naiiba mula sa iyong time zone ng {userTimeZone}",
+  "NF15": "Clear",
   "dyal9": "Hindi nakita ang listahan",
   "ZOcTF": "Listahan ng {id}",
   "1ucotJ": "Ang listahan ay hindi wasto",
@@ -835,6 +836,8 @@
   "1IuKjr": "Walang Pangalan",
   "36t26D": "Earn OGN",
   "tHJmL": "Wallet Balances",
+  "2NvVVm": "Buyer:",
+  "s1yRf": "Seller:",
   "4xWP3l": "{nameLink} tinanggihan ang iyong alok sa {title}",
   "2nsNrC": "{nameLink} tinanggap iyong alok sa {title}",
   "3VLvv1": "Transaksyon na may {nameLink} tinatapos para sa {title}",
@@ -1089,6 +1092,20 @@
   "4iHoD8": "{user} Reviews",
   "2jblSi": "Walang pangalang user",
   "1hgTen": "Listings",
+  "2m1LcJ": "Just now",
+  "34gk2n": "minute",
+  "11DZUN": {
+    "*": "minutes",
+    "_1": "minute"
+  },
+  "xDZlv": {
+    "*": "hours",
+    "_1": "hour"
+  },
+  "4wB1jY": {
+    "*": "days",
+    "_1": "day"
+  },
   "3nTqCo": "Email",
   "3FexNK": "Phone",
   "4cKoYh": "Airbnb",
