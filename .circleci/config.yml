@@ -159,7 +159,7 @@ jobs:
       DATABASE_URL: sqlite:///home/circleci/origin/infra/token-transfer-server/data/t3.db
 
   Web3Provider:
-    <<: *db
+    <<: *defaults
     steps:
       - attach_workspace:
           at: .
@@ -200,6 +200,9 @@ workflows:
           requires:
             - Setup
       - Relayer:
+          requires:
+            - Setup
+      - T3:
           requires:
             - Setup
       - Web3Provider:
