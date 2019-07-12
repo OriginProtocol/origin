@@ -31,7 +31,8 @@ const ruleIdToActionType = {
   ListingPurchaseHousing: 'ListingIdPurchased',
   ListingPurchaseInfluencer: 'ListingIdPurchased',
   ListingPurchaseArt: 'ListingIdPurchased',
-  MobileAccountCreated: 'MobileAccountCreated'
+  MobileAccountCreated: 'MobileAccountCreated',
+  'TwitterShare': 'TwitterShare'
 }
 
 /**

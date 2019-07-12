@@ -3,6 +3,7 @@ const Sequelize = require('sequelize')
 const _growthModels = require('../models')
 const _discoveryModels = require('@origin/discovery/src/models')
 const db = { ..._growthModels, ..._discoveryModels }
+const { flatMap } = require('../util/arrayUtils')
 
 const {
   GrowthEventTypes,
@@ -231,10 +232,13 @@ class CampaignRules {
     const level = ethAddress
       ? await this._calculateLevel(ethAddress, events)
       : undefined
+
+
+    const allRules = flatMap(level => level.rules, Object.values(this.levels))
     const data = []
     for (let i = 0; i < this.numLevels; i++) {
       data.push(
-        ...(await this.levels[i].export(adapter, ethAddress, events, level))
+        ...(await this.levels[i].export(adapter, ethAddress, events, level, allRules))
       )
     }
     return data
@@ -280,17 +284,14 @@ class Level {
    * @param {string} ethAddress
    * @param {Array<models.GrowthEvent>}
    * @param {number} level
+   * @param {Array<object>} allRules
    * @returns {Promise<Array<Object>>} List representing state of each rule.
    */
-  async export(adapter, ethAddress, events, level) {
-    const allData = []
-    for (const rule of this.rules) {
-      const data = await rule.export(adapter, ethAddress, events, level)
-      if (data) {
-        allData.push(data)
-      }
-    }
-    return allData
+  async export(adapter, ethAddress, events, level, allRules) {
+    return (await Promise.all(
+      this.rules
+        .map(rule => rule.export(adapter, ethAddress, events, level, allRules))
+    )).filter(data => data)
   }
 }
 
@@ -308,6 +309,9 @@ function ruleFactory(crules, levelId, config) {
       break
     case 'ListingIdPurchase':
       rule = new ListingIdPurchaseRule(crules, levelId, config)
+      break
+    case 'SocialShare':
+      rule = new SocialShareRule(crules, levelId, config)
       break
     default:
       throw new Error(`Unexpected or missing rule class ${config.class}`)
@@ -339,6 +343,9 @@ class BaseRule {
         this.config.unlockConditionMsg.length === 0)
     ) {
       throw new Error('Missing unlock condition configuration.')
+    }
+    if (this.config.additionalLockConditions && !Array.isArray(this.config.additionalLockConditions)) {
+      throw new Error('Additional lock conditions should be an array of Rule ids') 
     }
     this.limit = this.config.limit
     if (this.limit > maxNumRewardsPerRule) {
@@ -452,6 +459,21 @@ class BaseRule {
   }
 
   /**
+   * To prevent mistakes we verify that all lockConditions specified in the rule
+   * are present in the rules list. This way we prevent lock condition typos
+   * 
+   * @param {Array<object>} allRules - All other rules of the campaign
+   * @param {Array<string>} lockConditions - Rules that need to be Completed for the
+   * current rule to be unlocked
+   */
+  _validateLockConditions(rules, lockConditions) {
+    const ruleIds = rules.map(rule => rule.id)
+    const falseConditions = lockConditions.filter(condition => !ruleIds.includes(condition))
+    if (falseConditions.length > 0) {
+      throw new Error(`The following conditions can not be found among the rules: ${falseConditions.join(', ')}`)
+    }
+  }
+  /**
    * Return the rule's status. One of: Inactive, Active, Completed.
    * This is for use by the front-end to display the status of the rule to the user.
    *  - Inactive: rule is locked
@@ -465,12 +487,29 @@ class BaseRule {
    * @param {string} ethAddress - User's eth address
    * @param {Array<models.GrowthEvent>} events - All events for user since sign up.
    * @param {number} currentUserLevel - Current level the user is at in the campaign.
+   * @param {Arry<object>} rules - All other rules of the campaign
    * @returns {Promise<enums.GrowthActionStatus>}
    */
-  async getStatus(ethAddress, events, currentUserLevel) {
+  async getStatus(ethAddress, events, currentUserLevel, rules) {
     // If the user hasn't reached the level the rule is in, status is Inactive.
     if (currentUserLevel < this.levelId) {
       return GrowthActionStatus.Inactive
+    }
+    // If the rule has additional unlock conditions
+    else if (this.config.additionalLockConditions) {
+      this._validateLockConditions(rules, this.config.additionalLockConditions)
+
+      // all the precondition rules need to have completed state
+      const hasNonCompletedPreconditionRule = (await Promise.all(
+        rules
+          .filter(rule => this.config.additionalLockConditions.includes(rule.id))
+          .map(rule => rule.getStatus(ethAddress, events, currentUserLevel, rules))
+      ))
+        .some(status => status !== 'Completed')
+
+      if (hasNonCompletedPreconditionRule) {
+        return GrowthActionStatus.Inactive   
+      }
     }
 
     // Note:
@@ -527,9 +566,10 @@ class BaseRule {
    * @param {string} ethAddress
    * @param {Array<models.GrowthEvent>}
    * @param {number} level
+   * @param {Array<object>} rules
    * @returns {Promise<Array<Object>>}
    */
-  async export(adapter, ethAddress, events, level) {
+  async export(adapter, ethAddress, events, level, rules) {
     const omitUserData = !ethAddress && !events && !level
     const data = {
       ruleId: this.id,
@@ -539,7 +579,7 @@ class BaseRule {
       limit: this.limit,
       status: omitUserData
         ? null
-        : await this.getStatus(ethAddress, events, level),
+        : await this.getStatus(ethAddress, events, level, rules),
       reward: this.reward,
       rewards: omitUserData ? [] : await this.getRewards(ethAddress, events),
       unlockConditions: this.conditionsToUnlock(),
@@ -865,6 +905,38 @@ class ReferralRule extends BaseRule {
 
   async _numRewards(ethAddress) {
     return (await this.getRewards(ethAddress)).length
+  }
+}
+
+/**
+ * A rule that requires the purchase of a specific listing.
+ */
+class SocialShareRule extends BaseRule {
+  constructor(crules, levelId, config) {
+    super(crules, levelId, config)
+  }
+
+  /**
+   * Returns number of rewards the user qualifies for, taking into account the rule's limit.
+   * @param {string} ethAddress - User's account.
+   * @param {Array<models.GrowthEvent>} events
+   * @returns {number}
+   * @private
+   */
+  async _numRewards(ethAddress, events) {
+    // TODO
+    return 0
+  }
+
+  /**
+   * Returns true if the rule passes, false otherwise.
+   * @param {string} ethAddress - User's account.
+   * @param {Array<models.GrowthEvent>} events
+   * @returns {boolean}
+   */
+  async _evaluate(ethAddress, events) {
+    // TODO
+    return true
   }
 }
 
