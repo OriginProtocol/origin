@@ -313,7 +313,6 @@ class Purse {
    */
   async sendTx(tx, sender, onReceipt) {
     const address = await this.getAvailableAccount()
-    sender = sender ? this.web3.utils.toChecksumAddress(sender) : null
 
     // Set the from and nonce for the account
     tx = {
@@ -454,6 +453,7 @@ class Purse {
   async addPending(txHash, txObj, rawTx, sender = null) {
     this.pendingTransactions[txHash] = rawTx
 
+    sender = sender ? this.web3.utils.toChecksumAddress(sender) : null
     const to = txObj.to ? this.web3.utils.toChecksumAddress(txObj.to) : txObj.to
 
     // Store the tx object for debugging and in case we need to re-sign later
@@ -509,7 +509,20 @@ class Purse {
       if (!txObjStr) {
         return null
       }
-      return JSON.parse(txObjStr)
+
+      let txObj = JSON.parse(txObjStr)
+
+      /**
+       * Support the DEPRECIATED storage method to allow for clean migration.
+       * This can be removed in the near future
+       */
+      if (txObjStr.to) {
+        txObj = {
+          originalSender: null,
+          ...txObj
+        }
+      }
+      return txObj
     }
   }
 
