@@ -584,10 +584,10 @@
   "2klVRF": "Origin加密貨幣令牌（OGN）是ERC-20令牌，可以通過多種方式在平台上使用。",
   "3FISrv": "獲得的原始令牌（OGN）目前已鎖定在Origin應用和平台上使用。它們目前無法轉移給其他用戶。在未來，預計OGN將被解鎖和可轉移。",
   "3cl6l0": "學到更多",
-  "4nNko9": "推進",
-  "nJEiR": "賣家使用OGN來增加他們在市場上的列表。這使他們的列表具有更高的可見性和位置擁有OGN的房源有更快的銷售機會。",
   "2CCXRK": "獎勵",
   "3yDMxS": "OGN是Origin用戶獲得的獎勵加密貨幣。驗證帳戶或邀請朋友加入Origin時獲得獎勵。當你買賣時，甚至可以將OGN作為現金返還。",
+  "3x8LcU": "Promoting",
+  "nQxkV": "Sellers use OGN to promote their listings on the marketplace. This gives their listings higher visibility and placement. Listings with OGN have a higher chance of being sold quickly.",
   "3IdS1u": "幾分鐘內開始賺取原始令牌",
   "3x5LAR": "將您的加密貨幣錢包連接到Origin",
   "1rYphf": "註冊並驗證您的帳戶和資格",
@@ -718,6 +718,7 @@
   "IlnwX": "數量",
   "1usuUr": "時區：",
   "4xvjOX": "注意：這與您的 {userTimeZone}區時區不同",
+  "NF15": "Clear",
   "dyal9": "未找到列表",
   "ZOcTF": "清單 {id}",
   "1ucotJ": "列表無效",
@@ -835,6 +836,8 @@
   "1IuKjr": "未命名的用戶",
   "36t26D": "Earn OGN",
   "tHJmL": "Wallet Balances",
+  "2NvVVm": "Buyer:",
+  "s1yRf": "Seller:",
   "4xWP3l": "{nameLink} 拒絕了您的報價 {title}",
   "2nsNrC": "{nameLink} 接受了你的報價 {title}",
   "3VLvv1": "交易 {nameLink} 結束為 {title}",
@@ -1089,6 +1092,20 @@
   "4iHoD8": "{user} Reviews",
   "2jblSi": "未命名用戶",
   "1hgTen": "Listings",
+  "2m1LcJ": "Just now",
+  "34gk2n": "minute",
+  "11DZUN": {
+    "*": "minutes",
+    "_1": "minute"
+  },
+  "xDZlv": {
+    "*": "hours",
+    "_1": "hour"
+  },
+  "4wB1jY": {
+    "*": "days",
+    "_1": "day"
+  },
   "3nTqCo": "Email",
   "3FexNK": "Phone",
   "4cKoYh": "Airbnb",

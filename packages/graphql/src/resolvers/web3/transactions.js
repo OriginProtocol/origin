@@ -6,7 +6,9 @@ import contracts from '../../contracts'
 export async function getTransactionReceipt(id) {
   const rawReceipt = await contracts.web3.eth.getTransactionReceipt(id)
 
-  if (!rawReceipt) {
+  // Note: Check on the both receipt and receipt.blockNumber since Parity returns
+  // a receipt with no blockNumber if transaction is not yet mined (Geth does not).
+  if (!rawReceipt || !rawReceipt.blockNumber) {
     return null
   }
 
