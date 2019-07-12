@@ -151,6 +151,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - run: cd infra/token-transfer-server && yarn migrate
       - run:
           name: Run T3 Tests
           command: cd infra/token-transfer-server && yarn test
