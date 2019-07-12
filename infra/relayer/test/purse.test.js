@@ -212,7 +212,7 @@ describe('Purse', () => {
   it('keeps persistent and accurate count of nonce', async () => {
     const purseOne = new Purse({ web3, mnemonic: MNEMONIC_ONE, children: 2 })
     await purseOne.init()
-    const { txHash } = await purseOne.sendTx( {
+    const { txHash } = await purseOne.sendTx({
       to: Rando,
       value: '1',
       gas: 22000,
@@ -273,7 +273,8 @@ describe('Purse', () => {
     assert(pendingHashesOne[0] === txHash)
 
     // Make sure the unsigned tx object is also available
-    const txObj = await purseOne.getPendingTransaction(txHash)
+    const txMeta = await purseOne.getPendingTransactionMeta(txHash)
+    const txObj = txMeta.txObj
     assert(txObj !== null)
     assert(txObj.to === web3.utils.toChecksumAddress(Rando), `Expected ${web3.utils.toChecksumAddress(Rando)} but got ${txObj.to}`)
 
@@ -453,14 +454,15 @@ describe('Purse', () => {
         gas: 22000,
         gasPrice: TWO_GWEI,
         data: `0x01`
-      }, async () => {
+      }, Funder, async () => {
         await purse.teardown(true)
         resolve()
       })
     })
   })
 
-  it('can drain child accounts', async () => {
+  it('can drain child accounts', async function () {
+    this.timeout(20000)
     const childCount = 5
     const purse = new Purse({
       web3,
@@ -494,13 +496,65 @@ describe('Purse', () => {
     await purse.drainChildren()
 
     // Give it a bit to process
-    wait(5000)
+    await wait(5000)
 
     // Verify they'r eempty
     for (let i = 0; i < childCount; i++) {
       const chidlBal = await getBalance(web3, purse.children[i])
       assert(chidlBal.eq(ZERO), 'non-zero balance on child')
     }
+
+    await purse.teardown(true)
+  })
+
+  it('stores sender and knows they have a pending', async function () {
+    this.timeout(20000)
+    const childCount = 2
+    const purse = new Purse({
+      web3,
+      mnemonic: MNEMONIC_ONE,
+      children: childCount,
+      autofundChildren: true
+    })
+    await purse.init()
+
+    // Fund the master account
+    const masterAddress = purse.masterWallet.getChecksumAddressString()
+    const receipt = await web3.eth.sendTransaction({
+      from: Funder,
+      to: masterAddress,
+      value: FIVE_ETHER,
+      gas: 22000,
+      gasPrice: TWO_GWEI
+    })
+    assert(receipt.status, 'funding tx failed')
+
+    // Give it a few seconds to fund the children...
+    await wait(5000)
+
+    // we want to keep the tx in pending while we test
+    await stopMining(web3)
+
+    // Send a transaction
+    const { txHash } = await purse.sendTx({
+      to: Rando,
+      value: 1,
+      gas: 22000,
+      gasPrice: TWO_GWEI,
+      data: `0x01`
+    }, Funder)
+
+    assert(purse.hasPending(Funder))
+
+    // Start the miner again
+    await startMining(web3)
+
+    // Give it a bit to process
+    await wait(3000)
+
+    // should have mined
+    assert(await purse.getPendingTransactionMeta(txHash) === null)
+    assert(purse.hasPending(Funder) === false)
 
     await purse.teardown(true)
   })
