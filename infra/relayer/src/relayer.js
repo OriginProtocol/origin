@@ -253,7 +253,7 @@ class Relayer {
     let nonce = 0
     if (proxy) {
       // Verify a proxy exists
-      if (code === '0x') {
+      if (!code || code.length <= 4) {
         logger.error(
           `Proxy does not exist at ${predictedAddress} for user ${from}`
         )
@@ -266,7 +266,7 @@ class Relayer {
        * tx with a bad proxy nonce.  A more permanent solution will be required.
        * See: https://github.com/OriginProtocol/origin/issues/2631
        */
-      if (await this.purse.hasPendingTo(proxy)) {
+      if (this.purse.hasPendingTo(proxy)) {
         logger.warn(`Proxy ${proxy} already has a pending transaction`)
         return res
           .status(429)
@@ -278,11 +278,19 @@ class Relayer {
       logger.debug(`Using nonce ${nonce} for user ${from} via proxy ${proxy}`)
     } else {
       // Verify a proxy doesn't already exist
-      if (code !== '0x') {
+      if (code && code.length > 4) {
         logger.error(
           `Proxy already exists at ${predictedAddress} for user ${from}`
         )
         return res.status(400).send({ errors: ['Proxy exists'] })
+      }
+      if (this.purse.hasPending(from)) {
+        logger.warn(
+          `User ${from} already has a pending ProxyCreation transaction!`
+        )
+        return res
+          .status(429)
+          .send({ errors: ['User has pending transaction'] })
       }
     }
 
@@ -346,7 +354,7 @@ class Relayer {
 
       let txOut
       try {
-        txOut = await this.purse.sendTx(tx, async receipt => {
+        txOut = await this.purse.sendTx(tx, from, async receipt => {
           /**
            * Once block is mined, record the amount of gas, the forwarding account,
            * and the status of the transaction in the DB.
