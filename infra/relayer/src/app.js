@@ -10,18 +10,9 @@ try {
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
-const promBundle = require('express-prom-bundle')
+const { bundle } = require('./prom')
 const logger = require('./logger')
 const Relayer = require('./relayer')
-
-// For Prometheus metrics collection.
-const bundle = promBundle({
-  promClient: {
-    collectDefaultMetrics: {
-      timeout: 1000
-    }
-  }
-})
 
 const app = express()
 app.use(express.json())
