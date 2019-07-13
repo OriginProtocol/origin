@@ -146,8 +146,20 @@ jobs:
           name: Run Relayer Tests
           command: cd infra/relayer && yarn test
 
+  T3:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - run: cd infra/token-transfer-server && yarn migrate
+      - run:
+          name: Run T3 Tests
+          command: cd infra/token-transfer-server && yarn test
+    environment:
+      DATABASE_URL: sqlite:///home/circleci/origin/infra/token-transfer-server/data/t3.db
+
   Web3Provider:
-    <<: *db
+    <<: *defaults
     steps:
       - attach_workspace:
           at: .
@@ -188,6 +200,9 @@ workflows:
           requires:
             - Setup
       - Relayer:
+          requires:
+            - Setup
+      - T3:
           requires:
             - Setup
       - Web3Provider:
