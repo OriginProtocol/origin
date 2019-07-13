@@ -3,6 +3,7 @@ const Sequelize = require('sequelize')
 const _growthModels = require('../models')
 const _discoveryModels = require('@origin/discovery/src/models')
 const db = { ..._growthModels, ..._discoveryModels }
+const { flatMap } = require('../util/arrayUtils')
 
 const {
   GrowthEventTypes,
@@ -53,6 +54,9 @@ class CampaignRules {
         throw new Error(`Campaign ${this.campaign.id}: missing level ${i}`)
       }
       this.levels[i] = new Level(this, i, this.config.levels[i])
+      // we need to call this inside the loop, so the current level has access
+      // to the rules of the previous levels at constructor time
+      this.allRules = flatMap(level => level.rules, Object.values(this.levels))
     }
   }
 
@@ -231,6 +235,7 @@ class CampaignRules {
     const level = ethAddress
       ? await this._calculateLevel(ethAddress, events)
       : undefined
+
     const data = []
     for (let i = 0; i < this.numLevels; i++) {
       data.push(
@@ -283,14 +288,9 @@ class Level {
    * @returns {Promise<Array<Object>>} List representing state of each rule.
    */
   async export(adapter, ethAddress, events, level) {
-    const allData = []
-    for (const rule of this.rules) {
-      const data = await rule.export(adapter, ethAddress, events, level)
-      if (data) {
-        allData.push(data)
-      }
-    }
-    return allData
+    return (await Promise.all(
+      this.rules.map(rule => rule.export(adapter, ethAddress, events, level))
+    )).filter(data => data)
   }
 }
 
@@ -308,6 +308,9 @@ function ruleFactory(crules, levelId, config) {
       break
     case 'ListingIdPurchase':
       rule = new ListingIdPurchaseRule(crules, levelId, config)
+      break
+    case 'SocialShare':
+      rule = new SocialShareRule(crules, levelId, config)
       break
     default:
       throw new Error(`Unexpected or missing rule class ${config.class}`)
@@ -340,6 +343,14 @@ class BaseRule {
     ) {
       throw new Error('Missing unlock condition configuration.')
     }
+    if (
+      this.config.additionalLockConditions &&
+      !Array.isArray(this.config.additionalLockConditions)
+    ) {
+      throw new Error(
+        'Additional lock conditions should be an array of Rule ids'
+      )
+    }
     this.limit = this.config.limit
     if (this.limit > maxNumRewardsPerRule) {
       throw new Error(`Rule limit of ${this.config.limit} exceeds max allowed.`)
@@ -359,6 +370,24 @@ class BaseRule {
     } else {
       this.rewardValue = null
       this.reward = null
+    }
+
+    /**
+     * To prevent mistakes we verify that all lockConditions specified in the rule
+     * are present in the rules list. This way we prevent lock condition typos
+     */
+    if (this.config.additionalLockConditions) {
+      const ruleIds = this.crules.allRules.map(rule => rule.id)
+      const falseConditions = this.config.additionalLockConditions.filter(
+        condition => !ruleIds.includes(condition)
+      )
+      if (falseConditions.length > 0) {
+        throw new Error(
+          `The following conditions can not be found among the rules: ${falseConditions.join(
+            ', '
+          )}`
+        )
+      }
     }
   }
 
@@ -471,6 +500,21 @@ class BaseRule {
     // If the user hasn't reached the level the rule is in, status is Inactive.
     if (currentUserLevel < this.levelId) {
       return GrowthActionStatus.Inactive
+    }
+    // If the rule has additional unlock conditions
+    else if (this.config.additionalLockConditions) {
+      // all the precondition rules need to have completed state
+      const hasNonCompletedPreconditionRule = (await Promise.all(
+        this.crules.allRules
+          .filter(rule =>
+            this.config.additionalLockConditions.includes(rule.id)
+          )
+          .map(rule => rule.getStatus(ethAddress, events, currentUserLevel))
+      )).some(status => status !== 'Completed')
+
+      if (hasNonCompletedPreconditionRule) {
+        return GrowthActionStatus.Inactive
+      }
     }
 
     // Note:
@@ -865,6 +909,38 @@ class ReferralRule extends BaseRule {
 
   async _numRewards(ethAddress) {
     return (await this.getRewards(ethAddress)).length
+  }
+}
+
+/**
+ * A rule that measures the rewards for sharing on social networks
+ */
+class SocialShareRule extends BaseRule {
+  constructor(crules, levelId, config) {
+    super(crules, levelId, config)
+  }
+
+  /**
+   * Returns number of rewards the user qualifies for, taking into account the rule's limit.
+   * @param {string} ethAddress - User's account.
+   * @param {Array<models.GrowthEvent>} events
+   * @returns {number}
+   * @private
+   */
+  async _numRewards() {
+    // TODO
+    return 0
+  }
+
+  /**
+   * Returns true if the rule passes, false otherwise.
+   * @param {string} ethAddress - User's account.
+   * @param {Array<models.GrowthEvent>} events
+   * @returns {boolean}
+   */
+  async _evaluate() {
+    // TODO
+    return true
   }
 }
 

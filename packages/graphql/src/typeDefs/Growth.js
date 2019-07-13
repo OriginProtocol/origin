@@ -45,6 +45,7 @@ module.exports = `
     ListingPurchased
     ListingIdPurchased
     ListingSold
+    TwitterShare
   }
 
   enum GrowthInviteStatus {
