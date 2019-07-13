@@ -54,6 +54,9 @@ class CampaignRules {
         throw new Error(`Campaign ${this.campaign.id}: missing level ${i}`)
       }
       this.levels[i] = new Level(this, i, this.config.levels[i])
+      // we need to call this inside the loop, so the current level has access
+      // to the rules of the previous levels at constructor time
+      this.allRules = flatMap(level => level.rules, Object.values(this.levels))
     }
   }
 
@@ -233,17 +236,10 @@ class CampaignRules {
       ? await this._calculateLevel(ethAddress, events)
       : undefined
 
-    const allRules = flatMap(level => level.rules, Object.values(this.levels))
     const data = []
     for (let i = 0; i < this.numLevels; i++) {
       data.push(
-        ...(await this.levels[i].export(
-          adapter,
-          ethAddress,
-          events,
-          level,
-          allRules
-        ))
+        ...(await this.levels[i].export(adapter, ethAddress, events, level))
       )
     }
     return data
@@ -289,14 +285,11 @@ class Level {
    * @param {string} ethAddress
    * @param {Array<models.GrowthEvent>}
    * @param {number} level
-   * @param {Array<object>} allRules
    * @returns {Promise<Array<Object>>} List representing state of each rule.
    */
-  async export(adapter, ethAddress, events, level, allRules) {
+  async export(adapter, ethAddress, events, level) {
     return (await Promise.all(
-      this.rules.map(rule =>
-        rule.export(adapter, ethAddress, events, level, allRules)
-      )
+      this.rules.map(rule => rule.export(adapter, ethAddress, events, level))
     )).filter(data => data)
   }
 }
@@ -377,6 +370,24 @@ class BaseRule {
     } else {
       this.rewardValue = null
       this.reward = null
+    }
+
+    /**
+     * To prevent mistakes we verify that all lockConditions specified in the rule
+     * are present in the rules list. This way we prevent lock condition typos
+     */
+    if (this.config.additionalLockConditions) {
+      const ruleIds = this.crules.allRules.map(rule => rule.id)
+      const falseConditions = this.config.additionalLockConditions.filter(
+        condition => !ruleIds.includes(condition)
+      )
+      if (falseConditions.length > 0) {
+        throw new Error(
+          `The following conditions can not be found among the rules: ${falseConditions.join(
+            ', '
+          )}`
+        )
+      }
     }
   }
 
@@ -470,27 +481,6 @@ class BaseRule {
   }
 
   /**
-   * To prevent mistakes we verify that all lockConditions specified in the rule
-   * are present in the rules list. This way we prevent lock condition typos
-   *
-   * @param {Array<object>} allRules - All other rules of the campaign
-   * @param {Array<string>} lockConditions - Rules that need to be Completed for the
-   * current rule to be unlocked
-   */
-  _validateLockConditions(rules, lockConditions) {
-    const ruleIds = rules.map(rule => rule.id)
-    const falseConditions = lockConditions.filter(
-      condition => !ruleIds.includes(condition)
-    )
-    if (falseConditions.length > 0) {
-      throw new Error(
-        `The following conditions can not be found among the rules: ${falseConditions.join(
-          ', '
-        )}`
-      )
-    }
-  }
-  /**
    * Return the rule's status. One of: Inactive, Active, Completed.
    * This is for use by the front-end to display the status of the rule to the user.
    *  - Inactive: rule is locked
@@ -504,27 +494,22 @@ class BaseRule {
    * @param {string} ethAddress - User's eth address
    * @param {Array<models.GrowthEvent>} events - All events for user since sign up.
    * @param {number} currentUserLevel - Current level the user is at in the campaign.
-   * @param {Arry<object>} rules - All other rules of the campaign
    * @returns {Promise<enums.GrowthActionStatus>}
    */
-  async getStatus(ethAddress, events, currentUserLevel, rules) {
+  async getStatus(ethAddress, events, currentUserLevel) {
     // If the user hasn't reached the level the rule is in, status is Inactive.
     if (currentUserLevel < this.levelId) {
       return GrowthActionStatus.Inactive
     }
     // If the rule has additional unlock conditions
     else if (this.config.additionalLockConditions) {
-      this._validateLockConditions(rules, this.config.additionalLockConditions)
-
       // all the precondition rules need to have completed state
       const hasNonCompletedPreconditionRule = (await Promise.all(
-        rules
+        this.crules.allRules
           .filter(rule =>
             this.config.additionalLockConditions.includes(rule.id)
           )
-          .map(rule =>
-            rule.getStatus(ethAddress, events, currentUserLevel, rules)
-          )
+          .map(rule => rule.getStatus(ethAddress, events, currentUserLevel))
       )).some(status => status !== 'Completed')
 
       if (hasNonCompletedPreconditionRule) {
@@ -586,10 +571,9 @@ class BaseRule {
    * @param {string} ethAddress
    * @param {Array<models.GrowthEvent>}
    * @param {number} level
-   * @param {Array<object>} rules
    * @returns {Promise<Array<Object>>}
    */
-  async export(adapter, ethAddress, events, level, rules) {
+  async export(adapter, ethAddress, events, level) {
     const omitUserData = !ethAddress && !events && !level
     const data = {
       ruleId: this.id,
@@ -599,7 +583,7 @@ class BaseRule {
       limit: this.limit,
       status: omitUserData
         ? null
-        : await this.getStatus(ethAddress, events, level, rules),
+        : await this.getStatus(ethAddress, events, level),
       reward: this.reward,
       rewards: omitUserData ? [] : await this.getRewards(ethAddress, events),
       unlockConditions: this.conditionsToUnlock(),
@@ -929,7 +913,7 @@ class ReferralRule extends BaseRule {
 }
 
 /**
- * A rule that requires the purchase of a specific listing.
+ * A rule that measures the rewards for sharing on social networks
  */
 class SocialShareRule extends BaseRule {
   constructor(crules, levelId, config) {

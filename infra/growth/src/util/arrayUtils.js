@@ -1,9 +1,5 @@
-function concat(x, y) {
-  return x.concat(y)
-}
-
 function flatMap(f, xs) {
-  return xs.map(f).reduce(concat, [])
+  return xs.map(f).reduce((a, b) => [...a, ...b], [])
 }
 
-module.exports = { concat, flatMap }
+module.exports = { flatMap }

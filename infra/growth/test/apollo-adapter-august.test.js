@@ -513,20 +513,20 @@ describe('Apollo adapter - August campaign', () => {
       rule.config.additionalLockConditions = ['InvalidRuleId']
     })
 
-    createCampaignRules(augustConfig, this.campaignStart, this.campaignEnd)
-
     try {
-      await campaignToApolloObject(
-        this.crules,
-        enums.GrowthParticipantAuthenticationStatus.Enrolled,
-        this.userA,
-        this.mockAdapter
-      )
+      createCampaignRules(augustConfig, this.campaignStart, this.campaignEnd)
       assert(false, 'An exception for an invalid lock condition has not been thrown')
     } catch (e) {
       expect(e.message, 'EXCEPTION The following conditions can not be found among the rules: InvalidRuleId')
     }
 
+    await campaignToApolloObject(
+      this.crules,
+      enums.GrowthParticipantAuthenticationStatus.Enrolled,
+      this.userA,
+      this.mockAdapter
+    )
+    
     // revert change to the original state
     modifyTwitterShareRule(rule => {
       rule.config.additionalLockConditions = originalAdditionalLock
