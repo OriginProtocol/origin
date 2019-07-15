@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "creator.fullname" . }}
+  name: {{ template "creator-server.fullname" . }}
   labels:
     app: {{ template "creator.fullname" . }}
     app.kubernetes.io/name: origin
@@ -16,6 +16,7 @@ metadata:
     certmanager.k8s.io/cluster-issuer: {{ .Values.clusterIssuer }}
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/limit-rps: "10"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   tls:
     - secretName: {{ template "creator.host" . }}
@@ -25,7 +26,8 @@ spec:
   - host: {{ template "creator.host" . }}
     http:
       paths:
-        - path: /
+        - path: /api(/|$)(.*)
           backend:
             serviceName: {{ template "creator.fullname" . }}
-            servicePort: 80
+            servicePort: 4321
+
