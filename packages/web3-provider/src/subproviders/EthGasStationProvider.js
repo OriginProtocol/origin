@@ -1,5 +1,4 @@
 const fetch = require('cross-fetch')
-const BN = require('bn.js')
 const SubProvider = require('web3-provider-engine/subproviders/subprovider')
 
 const CACHE_TIME = 15000
