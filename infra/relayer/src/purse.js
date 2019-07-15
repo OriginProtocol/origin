@@ -37,6 +37,7 @@ const {
 } = require('./util')
 const logger = require('./logger')
 const Sentry = require('./sentry')
+const { metrics } = require('./prom')
 
 const MAX_LOCK_TIME = 15000
 const REDIS_RETRY_TIMEOUT = 30000
@@ -57,6 +58,24 @@ const JSONRPC_MAX_CONCURRENT = 25
 
 async function tick(wait = 1000) {
   return new Promise(resolve => setTimeout(() => resolve(true), wait))
+}
+
+function handleError(error, logFunc = logger.error) {
+  logFunc(error)
+  Sentry.captureException(error)
+  metrics.errorCounter.inc()
+}
+
+function isArrayOfFunctions(arr) {
+  if (!(arr instanceof Array)) {
+    return false
+  }
+  for (let i = 0; i < arr.length; i++) {
+    if (typeof arr[i] !== 'function') {
+      return false
+    }
+  }
+  return true
 }
 
 class Account {
@@ -142,14 +161,12 @@ class Purse {
     })
       .then(() => {
         const err = new Error('Fake thread promise should not have resolved!')
-        logger.error(err)
-        Sentry.captureException(err)
+        handleError(err)
         process.exit(2)
       })
       .catch(err => {
         logger.error('Error occurred in _process()')
-        logger.error(err)
-        Sentry.captureException(err)
+        handleError(err)
         process.exit(2)
       })
   }
@@ -200,6 +217,8 @@ class Purse {
    * @param clearRedis {boolean} - Remove all keys from redis
    */
   async teardown(clearRedis = false) {
+    logger.debug('Tearing down state...')
+    this.ready = false
     this.transactionMeta = {}
     this.pendingTransactions = {}
     this.rebroadcastCounters = {}
@@ -210,6 +229,7 @@ class Purse {
       }
       this.rclient.quit()
     }
+    this.ready = true
   }
 
   /**
@@ -225,14 +245,15 @@ class Purse {
       }
     } catch (err) {
       logger.warn('Failed getting network gas price')
-      logger.debug(err)
-      Sentry.captureException(err)
+      handleError(err, logger.debug)
     }
 
     if (gp.gt(MAX_GAS_PRICE)) {
       // TODO: best way to handle this?
       throw new Error('Current gas prices are too high!')
     }
+
+    metrics.gasPriceGauge.set(gp.toNumber())
 
     return gp
   }
@@ -337,11 +358,22 @@ class Purse {
 
     // If there's an onReceipt cb, store it for later
     if (onReceipt) {
-      if (typeof onReceipt !== 'function') {
-        throw new Error('onReceipt is not a function')
+      if (typeof onReceipt === 'function') {
+        onReceipt = [onReceipt]
+      } else if (!isArrayOfFunctions(onReceipt)) {
+        logger.warn('Provided onReceipt is invalid and will not be run')
+        onReceipt = []
       }
       this.receiptCallbacks[txHash] = onReceipt
+    } else {
+      this.receiptCallbacks[txHash] = []
     }
+
+    // startTime creates a callback function that will record the time-to-mine
+    const timerCb = metrics.txConfirmHisto.startTimer()
+    this.receiptCallbacks[txHash].push(() => {
+      timerCb()
+    })
 
     try {
       // blast it
@@ -355,7 +387,7 @@ class Purse {
       logger.info(`Sent ${txHash}`)
     } catch (err) {
       logger.error(`Error sending transaction ${txHash}`)
-      Sentry.captureException(err)
+      handleError(err)
       throw err
     }
 
@@ -382,8 +414,7 @@ class Purse {
         try {
           txCount = parseInt(countFromRedis)
         } catch (err) {
-          logger.warn(err)
-          Sentry.captureException(err)
+          handleError(err, logger.warn)
           txCount = 0
         }
       }
@@ -815,8 +846,7 @@ class Purse {
       logger.info(`Funded ${address} with ${txHash}`)
     } catch (err) {
       logger.error(`Error sending transaction to fund child ${address}.`)
-      logger.error(err)
-      Sentry.captureException(err)
+      handleError(err)
       this.accounts[address].hasPendingFundingTx = false
     }
 
@@ -863,6 +893,11 @@ class Purse {
           } else {
             logger.info(`Master account balance: ${balanceEther} Ether`)
           }
+
+          // Need to convert to Ether because it needs to be a JS Number
+          metrics.masterBalanceGauge.set(
+            Number(this.web3.utils.fromWei(masterBalance, 'ether'))
+          )
 
           const childrenToFund = []
 
@@ -930,8 +965,7 @@ class Purse {
           logger.error(
             'Error occurred in the balance checks and funding block of _process()'
           )
-          logger.error(err)
-          Sentry.captureException(err)
+          handleError(err)
         }
       }
 
@@ -941,6 +975,7 @@ class Purse {
        */
       try {
         const pendingHashes = Object.keys(this.pendingTransactions)
+        metrics.pendingTxGauge.set(pendingHashes.length)
         for (const txHash of pendingHashes) {
           const receipt = await this.web3.eth.getTransactionReceipt(txHash)
 
@@ -954,14 +989,20 @@ class Purse {
           }
 
           // Call the onReceipt callback if provided
-          if (typeof this.receiptCallbacks[txHash] === 'function') {
-            const cbRet = this.receiptCallbacks[txHash](receipt)
-            if (cbRet instanceof Promise) {
-              await cbRet
+          if (
+            typeof this.receiptCallbacks[txHash] !== 'undefined' &&
+            this.receiptCallbacks[txHash].length > 0
+          ) {
+            for (let i = 0; i < this.receiptCallbacks[txHash].length; i++) {
+              const cb = this.receiptCallbacks[txHash][i]
+              const cbRet = cb(receipt)
+              if (cbRet instanceof Promise) {
+                await cbRet
+              }
             }
-            // remove it from memory after execution
-            delete this.receiptCallbacks[txHash]
           }
+          // remove it from memory
+          delete this.receiptCallbacks[txHash]
 
           await this.removePending(txHash)
 
@@ -991,8 +1032,7 @@ class Purse {
         logger.error(
           'Error occurred in the pending transaction processing block of _process()'
         )
-        logger.error(err)
-        Sentry.captureException(err)
+        handleError(err)
       }
 
       /**
@@ -1046,8 +1086,7 @@ class Purse {
           logger.error(
             'Error occurred in the dropped transaction handling block of _process()'
           )
-          logger.error(err)
-          Sentry.captureException(err)
+          handleError(err)
         }
       }
 
