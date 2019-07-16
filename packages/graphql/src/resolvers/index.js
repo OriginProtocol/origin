@@ -15,6 +15,7 @@ import IdentityEvents from './IdentityEvents'
 import Config from './Config'
 import Mutation from '../mutations/index'
 import CreatorConfig from './CreatorConfig'
+import PromotionVerifications from './PromotionVerifications'
 
 export default {
   Query,
@@ -53,5 +54,6 @@ export default {
   Messaging,
   IdentityEvents,
   Config,
-  CreatorConfig
+  CreatorConfig,
+  PromotionVerifications
 }

@@ -5,6 +5,7 @@ import { types as Identity } from './Identity'
 import { types as Attestations } from './Attestations'
 import Notifications from './Notifications'
 import Currency from './Currency'
+import { types as PromotionVerifications } from './PromotionVerifications'
 
 export default [
   Web3Common,
@@ -13,5 +14,6 @@ export default [
   Marketplace,
   Notifications,
   Attestations,
-  Currency
+  Currency,
+  PromotionVerifications
 ]

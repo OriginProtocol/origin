@@ -30,6 +30,7 @@ function Action(props) {
   let title
   let isVerificationAction = true
   let buttonLink = '/profile'
+  let externalLink
   const buttonOnClick = () => {
     window.scrollTo(0, 0)
   }
@@ -96,6 +97,11 @@ function Action(props) {
     title = fbt('Sell a Listing', 'RewardActions.listingSoldTitle')
     buttonLink = '/create'
     isVerificationAction = false
+  } else if (type === 'TwitterShare') {
+    buttonLink = undefined
+    foregroundImgSrc = 'images/growth/twitter-icon.svg'
+    title = fbt('Tweet', 'RewardActions.tweetThis')
+    externalLink = `https://twitter.com/intent/tweet?status=${JSON.stringify('Let me have my reward @OriginProtocol')}`
   }
 
   const renderReward = (amount, style = 'normal') => {
@@ -152,7 +158,17 @@ function Action(props) {
                 {actionComponent}
               </Link>
             )}
-            {!buttonLink && (
+            {externalLink && (
+              <a
+                href={externalLink}
+                target="_blank"
+                className="mt-auto mb-auto"
+                onClick={() => props.onActionClick && props.onActionClick(props.action)}
+              >
+                {actionComponent}
+              </a>
+            )}
+            {!buttonLink && !externalLink && (
               <div className="mt-auto mb-auto" onClick={() => buttonOnClick()}>
                 {actionComponent}
               </div>
