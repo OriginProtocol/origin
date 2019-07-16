@@ -51,7 +51,8 @@ describe('web3-provider', function() {
 
   it('gets gas price from ethgasstation', async () => {
     initStandardSubproviders(web3b, {
-      rpcUrl: TEST_PROVIDER_URL
+      rpcUrl: TEST_PROVIDER_URL,
+      ethGasStation: true
     })
     assert(typeof web3.currentProvider.sendAsync !== 'undefined')
 

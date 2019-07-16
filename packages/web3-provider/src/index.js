@@ -132,7 +132,9 @@ function initStandardSubproviders(web3Inst, options) {
   }
 
   addSubprovider(web3Inst, new MetricsProvider(options))
-  addSubprovider(web3Inst, new EthGasStationProvider(options))
+  if (options.ethGasStation) {
+    addSubprovider(web3Inst, new EthGasStationProvider(options))
+  }
   return web3Inst
 }
 
