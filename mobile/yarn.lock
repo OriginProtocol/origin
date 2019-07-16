@@ -6658,11 +6658,6 @@ react-native-tab-view@^1.2.0, react-native-tab-view@^1.4.1:
   dependencies:
     prop-types "^15.6.1"
 
-react-native-test-flight@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-test-flight/-/react-native-test-flight-1.0.1.tgz#3c7e0da0409da1c2e82aac0fa74ae81d440e76e4"
-  integrity sha512-5XgJMpnDtCLnbsEWn79Sr6IwuW38XXKYy4WOc7MEMZ3HLLr+dRxpSnIYSHMmN4jBSehgueklZjPJ1FvLHcIM2Q==
-
 react-native-touch-id@^4.4.1:
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/react-native-touch-id/-/react-native-touch-id-4.4.1.tgz#8b1bb2d04c30bac36bb9696d2d723e719c4a8b08"
