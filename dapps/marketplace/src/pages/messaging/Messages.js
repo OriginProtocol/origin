@@ -21,6 +21,15 @@ import MobileModal from 'components/MobileModal'
 
 import { abbreviateName, truncateAddress } from 'utils/user'
 
+const RoomTitle = withIdentity(({ identity, walletProxy }) => (
+  <Link to={`/user/${walletProxy}`} className="user-profile-link">
+    <Avatar profile={identity} size={30} />
+    <span className="counterparty">
+      {abbreviateName(identity) || truncateAddress(walletProxy)}
+    </span>
+  </Link>
+))
+
 class Messages extends Component {
   constructor(props) {
     super(props)
@@ -91,14 +100,7 @@ class Messages extends Component {
   }
 
   renderContent() {
-    const {
-      isMobile,
-      wallet,
-      identity,
-      messagingError,
-      messaging,
-      messagingLoading
-    } = this.props
+    const { isMobile, messagingError, messaging, messagingLoading } = this.props
 
     if (messagingError) {
       return <QueryError query={query} error={messagingError} />
@@ -126,14 +128,7 @@ class Messages extends Component {
       content = (
         <MobileModal
           className="messages-page messages-modal"
-          title={
-            <Link to={`/user/${wallet}`} className="user-profile-link">
-              <Avatar profile={identity} size={30} />
-              <span className="counterparty">
-                {abbreviateName(identity) || truncateAddress(wallet)}
-              </span>
-            </Link>
-          }
+          title={<RoomTitle walletProxy={room} wallet={room} />}
           onBack={() => this.goBack()}
         >
           <div className="conversations-wrapper">{content}</div>
@@ -176,7 +171,7 @@ class Messages extends Component {
   }
 }
 
-export default withIsMobile(withWallet(withIdentity(withMessaging(Messages))))
+export default withIsMobile(withWallet(withMessaging(Messages)))
 
 require('react-styl')(`
   .messages-page
@@ -268,5 +263,7 @@ require('react-styl')(`
             display: inline-block
             vertical-align: middle
             margin-right: 0.5rem
+          .counterparty
+            color: var(--dark-blue-grey)
 
 `)
