@@ -17,6 +17,8 @@ spec:
     app: {{ template "ipfs.fullname" . }}
   ports:
     # Most external usage is through ipfs-proxy, but ipns uses 8080
+    - name: swarm
+      port: 4001
     - name: api
       port: 5001
     - name: gateway
