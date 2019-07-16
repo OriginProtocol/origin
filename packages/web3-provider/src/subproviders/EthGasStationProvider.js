@@ -50,6 +50,7 @@ class EthGasStationProvider extends SubProvider {
         .catch(err => {
           console.error('Error fetching results from ethgastation.info')
           console.error(err)
+          // Send to next subprovider
           return next()
         })
     }
