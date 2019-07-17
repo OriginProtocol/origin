@@ -524,17 +524,17 @@ class UserProfile extends Component {
         'avatarUrl'
       ])
 
+      const attestations = (this.state.verifiedAttestations || []).reduce(
+        (object, att) => ({
+          ...object,
+          [att.id]: att.rawData
+        }),
+        {}
+      )
+
       const newData = {
         profile,
-        attestations: (
-          this.state.verifiedAttestations || []
-        ).reduce(
-          (object, att) => ({
-            ...object,
-            [att.id]: att.rawData
-          }),
-          {}
-        )
+        attestations
       }
 
       this.storeData(newData)
