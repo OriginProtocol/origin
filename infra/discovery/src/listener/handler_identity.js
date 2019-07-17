@@ -1,3 +1,4 @@
+const Sequelize = require('sequelize')
 const Web3 = require('web3')
 const logger = require('./logger')
 
@@ -80,24 +81,36 @@ class IdentityEventHandler {
   }
 
   /**
+   * Loads the most recent attestation.
+   * @param {Array<string>} addresses: Lower cased eth addresses
+   * @param {string || null} method: Optional attestation method
+   * @returns {Promise<Model<Attestation> || null>}
+   * @private
+   */
+  async _loadMostRecentAttestation(addresses, method) {
+    const where = { ethAddress: { [Sequelize.Op.in]: addresses } }
+    if (method) {
+      where.method = method
+    }
+    return await db.Attestation.findOne({
+      where,
+      order: [['id', 'DESC']],
+      limit: 1
+    })
+  }
+
+  /**
    * Loads attestation data such as email, phone, etc... from the attestation table.
-   * @param {string} ethAddress
+   * @param {Array<string>} addresses
    * @param {string} method - 'EMAIL', 'PHONE', etc...
    * @returns {Promise<string|null>}
    * @private
    */
-  async _loadValueFromAttestation(ethAddress, method) {
+  async _loadValueFromAttestation(addresses, method) {
     // Loads the most recent value.
-    const attestation = await db.Attestation.findOne({
-      where: {
-        ethAddress: ethAddress.toLowerCase(),
-        method
-      },
-      order: [['id', 'DESC']],
-      limit: 1
-    })
+    const attestation = await this._loadMostRecentAttestation(addresses, method)
     if (!attestation) {
-      logger.warn(`Could not find ${method} attestation for ${ethAddress}`)
+      logger.warn(`Could not find ${method} attestation for ${addresses}`)
       return null
     }
     return attestation.value
@@ -105,16 +118,13 @@ class IdentityEventHandler {
 
   /**
    * Returns the country of the identity based on IP from the most recent attestation.
-   * @param {string} ethAddress
+   * @param {Array<string>} addresses
    * @returns {Promise<string> || null} 2 letters country code or null if lookup failed.
    * @private
    */
-  async _countryLookup(ethAddress) {
+  async _countryLookup(addresses) {
     // Load the most recent attestation.
-    const attestation = await db.Attestation.findOne({
-      where: { ethAddress: ethAddress.toLowerCase() },
-      order: [['createdAt', 'DESC']]
-    })
+    const attestation = await this._loadMostRecentAttestation(addresses, null)
     if (!attestation) {
       return null
     }
@@ -130,16 +140,21 @@ class IdentityEventHandler {
   /**
    * Decorates an identity object with attestation data.
    * @param {{}} identity - result of identityQuery
-   * @returns {Promise<void>}
+   * @returns {Promise<Object>}
    * @private
    */
   async _decorateIdentity(identity) {
     const decoratedIdentity = Object.assign({}, identity)
 
-    // Even if a proxy is used, attestation data is recorded
-    // under the user's wallet address (aka "owner"). Get it so that
-    // we can lookup attestation data.
-    const owner = decoratedIdentity.owner.id
+    // Collect owner and proxy addresses for the identity.
+    const owner = decoratedIdentity.owner.id.toLowerCase()
+    const proxy = decoratedIdentity.owner.proxy
+      ? decoratedIdentity.owner.proxy.id.toLowerCase()
+      : null
+    const addresses = [owner]
+    if (proxy && proxy !== owner) {
+      addresses.push(proxy)
+    }
 
     // Load attestation data.
     await Promise.all(
@@ -149,69 +164,69 @@ class IdentityEventHandler {
         switch (attestationService) {
           case 'email':
             decoratedIdentity.email = await this._loadValueFromAttestation(
-              owner,
+              addresses,
               'EMAIL'
             )
             break
           case 'phone':
             decoratedIdentity.phone = await this._loadValueFromAttestation(
-              owner,
+              addresses,
               'PHONE'
             )
             break
           case 'twitter':
             decoratedIdentity.twitter = await this._loadValueFromAttestation(
-              owner,
+              addresses,
               'TWITTER'
             )
             break
           case 'airbnb':
             decoratedIdentity.airbnb = await this._loadValueFromAttestation(
-              owner,
+              addresses,
               'AIRBNB'
             )
             break
           case 'facebook':
             decoratedIdentity.facebookVerified = true
             decoratedIdentity.facebook = await this._loadValueFromAttestation(
-              decoratedIdentity.id,
+              addresses,
               'FACEBOOK'
             )
             break
           case 'google':
             decoratedIdentity.googleVerified = true
             decoratedIdentity.google = await this._loadValueFromAttestation(
-              decoratedIdentity.id,
+              addresses,
               'GOOGLE'
             )
             break
           case 'linkedin':
             decoratedIdentity.linkedin = await this._loadValueFromAttestation(
-              decoratedIdentity.id,
+              addresses,
               'LINKEDIN'
             )
             break
           case 'github':
             decoratedIdentity.github = await this._loadValueFromAttestation(
-              decoratedIdentity.id,
+              addresses,
               'GITHUB'
             )
             break
           case 'kakao':
             decoratedIdentity.kakao = await this._loadValueFromAttestation(
-              decoratedIdentity.id,
+              addresses,
               'KAKAO'
             )
             break
           case 'wechat':
             decoratedIdentity.wechat = await this._loadValueFromAttestation(
-              decoratedIdentity.id,
+              addresses,
               'WECHAT'
             )
             break
           case 'website':
             decoratedIdentity.website = await this._loadValueFromAttestation(
-              owner,
+              addresses,
               'WEBSITE'
             )
             break
@@ -221,7 +236,7 @@ class IdentityEventHandler {
     )
 
     // Add country of origin information based on IP.
-    decoratedIdentity.country = await this._countryLookup(owner)
+    decoratedIdentity.country = await this._countryLookup(addresses)
 
     return decoratedIdentity
   }
