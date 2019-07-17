@@ -132,6 +132,7 @@ class Relayer {
       autofundChildren: true,
       redisHost: env.REDIS_URL
     })
+    this.knownProxyNonces = {}
 
     this.ProxyFactory = new this.web3.eth.Contract(
       ProxyFactoryContract.abi,
@@ -275,6 +276,16 @@ class Relayer {
 
       nonce = await UserProxy.methods.nonce(from).call()
 
+      if (
+        typeof this.knownProxyNonces[proxy] === 'number' &&
+        nonce <= this.knownProxyNonces[proxy]
+      ) {
+        logger.warn(
+          `User ${from}'s proxy nonce appears to have been seen before!`
+        )
+        return res.status(400).send({ errors: ['Incorrect nonce!'] })
+      }
+
       logger.debug(`Using nonce ${nonce} for user ${from} via proxy ${proxy}`)
     } else {
       // Verify a proxy doesn't already exist
@@ -350,6 +361,8 @@ class Relayer {
           ip,
           geo
         )
+
+        this.knownProxyNonces[proxy] = nonce
       }
 
       let txOut
@@ -380,6 +393,9 @@ class Relayer {
           status = enums.RelayerTxnStatuses.GasLimit
           errMsg = 'Network is too congested right now.  Try again later.'
         }
+
+        // Revert the failed nonce
+        this.knownProxyNonces[proxy] -= 1
 
         if (dbTx) {
           await dbTx.update({ status })
