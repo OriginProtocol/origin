@@ -149,7 +149,7 @@ class IdentityEventHandler {
     // Collect owner and proxy addresses for the identity.
     const owner = decoratedIdentity.owner.id.toLowerCase()
     const proxy = decoratedIdentity.owner.proxy
-      ? decoratedIdentity.owner.proxy.toLowerCase()
+      ? decoratedIdentity.owner.proxy.id.toLowerCase()
       : null
     const addresses = [owner]
     if (proxy && proxy !== owner) {
