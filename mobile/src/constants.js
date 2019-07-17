@@ -97,7 +97,7 @@ export const TRANSLATIONS = {
   // tr_TR,
   // uk_UA,
   // vi_VN,
-  zh_CN,
+  zh_CN
   // zh_TW
 }
 /* eslint-enable camelcase */
