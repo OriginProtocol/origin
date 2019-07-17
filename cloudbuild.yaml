@@ -7,7 +7,7 @@ steps:
     args:
       - kms
       - decrypt
-      - --ciphertext-file=./deployment/github.enc
+      - --ciphertext-file=./devops/github.enc
       - --plaintext-file=/root/.ssh/id_rsa
       - --location=global
       - --keyring=origin
@@ -55,6 +55,7 @@ steps:
         cd origin-docs
         bundle install
         bundle exec jekyll build
+        cp CNAME _site/CNAME
 
   - id: 'Push to GitHub'
     name: 'gcr.io/cloud-builders/git'

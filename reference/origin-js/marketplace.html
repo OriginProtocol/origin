@@ -107,7 +107,7 @@
             <p>The marketplace manages listings from creation to sale as well as disputes between users.</p>
 
 <h2 id="getlistings">
-<a id="getlistings" class="anchor" href="#getlistings" aria-hidden="true"><span class="octicon octicon-link"></span></a>.getListings</h2>
+<a class="anchor" href="#getlistings" aria-hidden="true"><span class="octicon octicon-link"></span></a>.getListings</h2>
 
 <p>This will return information about the listings for a given user, combining information from IPFS and the blockchain. In the future, fields returned may differ based on the listing’s schema.</p>
 
@@ -185,7 +185,7 @@ It is active until there are no more units available or its expiration date is r
 </table>
 
 <h2 id="createlisting">
-<a id="createlisting" class="anchor" href="#createlisting" aria-hidden="true"><span class="octicon octicon-link"></span></a>.createListing</h2>
+<a class="anchor" href="#createlisting" aria-hidden="true"><span class="octicon octicon-link"></span></a>.createListing</h2>
 
 <p>When you create a listing, the API will create both the IPFS data and the Listing contract on the blockchain.
 When a listing is successfully created, the <code class="highlighter-rouge">createListing</code> method takes a callback with two arguments:</p>
@@ -249,7 +249,7 @@ When a listing is successfully created, the <code class="highlighter-rouge">crea
 </table>
 
 <h2 id="withdrawlisting">
-<a id="withdrawlisting" class="anchor" href="#withdrawlisting" aria-hidden="true"><span class="octicon octicon-link"></span></a>.withdrawListing</h2>
+<a class="anchor" href="#withdrawlisting" aria-hidden="true"><span class="octicon octicon-link"></span></a>.withdrawListing</h2>
 
 <p>Withdrawing a transaction will set the <code class="highlighter-rouge">unitsAvailable</code> to zero. This will stop any further offers for that Listing.
 When a listing is successfully withdrawn, the <code class="highlighter-rouge">withdrawListing</code> method takes a callback with two arguments:</p>
@@ -307,7 +307,7 @@ When a listing is successfully withdrawn, the <code class="highlighter-rouge">wi
 </table>
 
 <h2 id="getlistingreviews">
-<a id="getlistingreviews" class="anchor" href="#getlistingreviews" aria-hidden="true"><span class="octicon octicon-link"></span></a>.getListingReviews</h2>
+<a class="anchor" href="#getlistingreviews" aria-hidden="true"><span class="octicon octicon-link"></span></a>.getListingReviews</h2>
 
 <p>Reviews are created by the buyer in the receipt stage and by the seller in the payout stage of the offer process. A review consists of a required 1-5 rating and an optional reviewText text field.</p>
 
@@ -352,7 +352,7 @@ When a listing is successfully withdrawn, the <code class="highlighter-rouge">wi
 </table>
 
 <h2 id="getnotifications">
-<a id="getnotifications" class="anchor" href="#getnotifications" aria-hidden="true"><span class="octicon octicon-link"></span></a>.getNotifications</h2>
+<a class="anchor" href="#getnotifications" aria-hidden="true"><span class="octicon octicon-link"></span></a>.getNotifications</h2>
 
 <p>Each Notification corresponds to the status of an Offer. Notifications are currently generated for each of the following Offer statuses:</p>
 
@@ -392,7 +392,7 @@ When a listing is successfully withdrawn, the <code class="highlighter-rouge">wi
 </code></pre></div></div>
 
 <h2 id="setnotification">
-<a id="setnotification" class="anchor" href="#setnotification" aria-hidden="true"><span class="octicon octicon-link"></span></a>.setNotification</h2>
+<a class="anchor" href="#setnotification" aria-hidden="true"><span class="octicon octicon-link"></span></a>.setNotification</h2>
 
 <p>Since notification objects do not live on the blockchain or in a database, this method only records an update to the client’s local storage. It accepts a single parameter, which should be an object containing the id of the notification and a status value of either read or unread. Any other properties included in this object will be ignored.</p>
 
@@ -438,7 +438,7 @@ When a listing is successfully withdrawn, the <code class="highlighter-rouge">wi
 </table>
 
 <h2 id="getoffer">
-<a id="getoffer" class="anchor" href="#getoffer" aria-hidden="true"><span class="octicon octicon-link"></span></a>.getOffer</h2>
+<a class="anchor" href="#getoffer" aria-hidden="true"><span class="octicon octicon-link"></span></a>.getOffer</h2>
 
 <p>This will return a specific offer sent by a buyer for a Listing.</p>
 
@@ -495,7 +495,7 @@ When a listing is successfully withdrawn, the <code class="highlighter-rouge">wi
 </table>
 
 <h2 id="getoffers">
-<a id="getoffers" class="anchor" href="#getoffers" aria-hidden="true"><span class="octicon octicon-link"></span></a>.getOffers</h2>
+<a class="anchor" href="#getoffers" aria-hidden="true"><span class="octicon octicon-link"></span></a>.getOffers</h2>
 
 <p>This will return all offers related to a specific Listing.</p>
 
@@ -564,7 +564,7 @@ When a listing is successfully withdrawn, the <code class="highlighter-rouge">wi
 </table>
 
 <h2 id="makeoffer">
-<a id="makeoffer" class="anchor" href="#makeoffer" aria-hidden="true"><span class="octicon octicon-link"></span></a>.makeOffer</h2>
+<a class="anchor" href="#makeoffer" aria-hidden="true"><span class="octicon octicon-link"></span></a>.makeOffer</h2>
 
 <p>The <code class="highlighter-rouge">makeOffer</code> method takes a callback with two arguments:</p>
 
@@ -628,7 +628,7 @@ When a listing is successfully withdrawn, the <code class="highlighter-rouge">wi
 </table>
 
 <h2 id="acceptoffer">
-<a id="acceptoffer" class="anchor" href="#acceptoffer" aria-hidden="true"><span class="octicon octicon-link"></span></a>.acceptOffer</h2>
+<a class="anchor" href="#acceptoffer" aria-hidden="true"><span class="octicon octicon-link"></span></a>.acceptOffer</h2>
 
 <p>The <code class="highlighter-rouge">acceptOffer</code> method takes a callback with two arguments:</p>
 
@@ -686,7 +686,7 @@ When a listing is successfully withdrawn, the <code class="highlighter-rouge">wi
 </table>
 
 <h2 id="finalizeoffer">
-<a id="finalizeoffer" class="anchor" href="#finalizeoffer" aria-hidden="true"><span class="octicon octicon-link"></span></a>.finalizeOffer</h2>
+<a class="anchor" href="#finalizeoffer" aria-hidden="true"><span class="octicon octicon-link"></span></a>.finalizeOffer</h2>
 
 <p>The <code class="highlighter-rouge">finalizeOffer</code> method takes a callback with two arguments:</p>
 
@@ -749,7 +749,7 @@ When a listing is successfully withdrawn, the <code class="highlighter-rouge">wi
 </table>
 
 <h2 id="withdrawoffer">
-<a id="withdrawoffer" class="anchor" href="#withdrawoffer" aria-hidden="true"><span class="octicon octicon-link"></span></a>.withdrawOffer</h2>
+<a class="anchor" href="#withdrawoffer" aria-hidden="true"><span class="octicon octicon-link"></span></a>.withdrawOffer</h2>
 
 <p>The <code class="highlighter-rouge">withdrawOffer</code> method takes a callback with two arguments:</p>
 
@@ -814,7 +814,7 @@ When a listing is successfully withdrawn, the <code class="highlighter-rouge">wi
 </table>
 
 <h2 id="adddata">
-<a id="adddata" class="anchor" href="#adddata" aria-hidden="true"><span class="octicon octicon-link"></span></a>.addData</h2>
+<a class="anchor" href="#adddata" aria-hidden="true"><span class="octicon octicon-link"></span></a>.addData</h2>
 
 <p>The <code class="highlighter-rouge">addData</code> method takes a callback with two arguments:</p>
 
@@ -892,7 +892,7 @@ When a listing is successfully withdrawn, the <code class="highlighter-rouge">wi
 </table>
 
 <h2 id="initiatedispute">
-<a id="initiatedispute" class="anchor" href="#initiatedispute" aria-hidden="true"><span class="octicon octicon-link"></span></a>.initiateDispute</h2>
+<a class="anchor" href="#initiatedispute" aria-hidden="true"><span class="octicon octicon-link"></span></a>.initiateDispute</h2>
 
 <p>The <code class="highlighter-rouge">initiateDispute</code> method takes a callback with two arguments:</p>
 
@@ -958,7 +958,7 @@ When a listing is successfully withdrawn, the <code class="highlighter-rouge">wi
 </table>
 
 <h2 id="resolvedispute">
-<a id="resolvedispute" class="anchor" href="#resolvedispute" aria-hidden="true"><span class="octicon octicon-link"></span></a>.resolveDispute</h2>
+<a class="anchor" href="#resolvedispute" aria-hidden="true"><span class="octicon octicon-link"></span></a>.resolveDispute</h2>
 
 <p>The <code class="highlighter-rouge">resolveDispute</code> method takes a callback with two arguments:</p>
 

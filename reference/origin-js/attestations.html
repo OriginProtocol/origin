@@ -123,7 +123,7 @@ The email address itself remains private.</p>
 Once an attestation object has been created, it needs to be added to a user object for it to take effect.</p>
 
 <h2 id="phonegeneratecode">
-<a id="phonegeneratecode" class="anchor" href="#phonegeneratecode" aria-hidden="true"><span class="octicon octicon-link"></span></a>.phoneGenerateCode</h2>
+<a class="anchor" href="#phonegeneratecode" aria-hidden="true"><span class="octicon octicon-link"></span></a>.phoneGenerateCode</h2>
 
 <blockquote>
   <p>To send an SMS verification code</p>
@@ -146,7 +146,7 @@ Once an attestation object has been created, it needs to be added to a user obje
 <p>The <code class="highlighter-rouge">locale</code> parameter is optional and it defines the language of the call or the SMS. If not provided a sensible default is used based on the country of the phone number. Supported languages are af, ar, ca, cs, da, de, el, en, es, fi, fr, he, hi, hr, hu, id, it, ja, ko, ms, nb, nl, pl, pt, pt-BR, ro, ru, sv, tl, th, tr, vi, zh, zh-CN, zh-HK.</p>
 
 <h2 id="phoneverify">
-<a id="phoneverify" class="anchor" href="#phoneverify" aria-hidden="true"><span class="octicon octicon-link"></span></a>.phoneVerify</h2>
+<a class="anchor" href="#phoneverify" aria-hidden="true"><span class="octicon octicon-link"></span></a>.phoneVerify</h2>
 
 <blockquote>
   <p>To verify a ownership of a phone number</p>
@@ -172,7 +172,7 @@ Once an attestation object has been created, it needs to be added to a user obje
 <p>Note that the <code class="highlighter-rouge">countryCallingCode</code> and <code class="highlighter-rouge">phone</code> must have the same values as the values used in the <code class="highlighter-rouge">phoneGenerateCode</code> call.</p>
 
 <h2 id="emailgeneratecode">
-<a id="emailgeneratecode" class="anchor" href="#emailgeneratecode" aria-hidden="true"><span class="octicon octicon-link"></span></a>.emailGenerateCode</h2>
+<a class="anchor" href="#emailgeneratecode" aria-hidden="true"><span class="octicon octicon-link"></span></a>.emailGenerateCode</h2>
 
 <blockquote>
   <p>To send an email verification code</p>
@@ -186,7 +186,7 @@ Once an attestation object has been created, it needs to be added to a user obje
 <p>This will send an email to the given email address containing a verification code.</p>
 
 <h2 id="emailverify">
-<a id="emailverify" class="anchor" href="#emailverify" aria-hidden="true"><span class="octicon octicon-link"></span></a>.emailVerify</h2>
+<a class="anchor" href="#emailverify" aria-hidden="true"><span class="octicon octicon-link"></span></a>.emailVerify</h2>
 
 <blockquote>
   <p>To verify ownership of an email address</p>
@@ -209,7 +209,7 @@ Once an attestation object has been created, it needs to be added to a user obje
 <p>This will verify that the <code class="highlighter-rouge">code</code> submitted in the request is the one that was sent to the email address in the <code class="highlighter-rouge">emailGenerateCode</code> call. If it is valid, an attestation object will be returned.</p>
 
 <h2 id="facebookauthurl">
-<a id="facebookauthurl" class="anchor" href="#facebookauthurl" aria-hidden="true"><span class="octicon octicon-link"></span></a>.facebookAuthUrl</h2>
+<a class="anchor" href="#facebookauthurl" aria-hidden="true"><span class="octicon octicon-link"></span></a>.facebookAuthUrl</h2>
 
 <blockquote>
   <p>To get Facebook authentication url</p>
@@ -233,7 +233,7 @@ The page will ask the user to grant permissions to the Origin app, which will be
 Once permissions have been granted, the popup window will <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">post a message</a> back to the dapp. You should listen for this message, which will contain the <code class="highlighter-rouge">code</code> needed for the <code class="highlighter-rouge">facebookVerify</code> call.</p>
 
 <h2 id="facebookverify">
-<a id="facebookverify" class="anchor" href="#facebookverify" aria-hidden="true"><span class="octicon octicon-link"></span></a>.facebookVerify</h2>
+<a class="anchor" href="#facebookverify" aria-hidden="true"><span class="octicon octicon-link"></span></a>.facebookVerify</h2>
 
 <blockquote>
   <p>To verify ownership of a Facebook account</p>
@@ -256,7 +256,7 @@ Once permissions have been granted, the popup window will <a href="https://devel
 <p>Note that <code class="highlighter-rouge">code</code> is the oauth code generated in <code class="highlighter-rouge">facebookAuthUrl</code>.</p>
 
 <h2 id="twitterauthurl">
-<a id="twitterauthurl" class="anchor" href="#twitterauthurl" aria-hidden="true"><span class="octicon octicon-link"></span></a>.twitterAuthUrl</h2>
+<a class="anchor" href="#twitterauthurl" aria-hidden="true"><span class="octicon octicon-link"></span></a>.twitterAuthUrl</h2>
 
 <blockquote>
   <p>To get Twitter authentication url</p>
@@ -280,7 +280,7 @@ The page will ask the user to grant permissions to the Origin app, which will be
 Once permissions have been granted, the popup window will <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">post a message</a> back to the dapp. You should listen for this message, which will contain the <code class="highlighter-rouge">code</code> needed for the <code class="highlighter-rouge">twitterVerify</code> call.</p>
 
 <h2 id="twitterverify">
-<a id="twitterverify" class="anchor" href="#twitterverify" aria-hidden="true"><span class="octicon octicon-link"></span></a>.twitterVerify</h2>
+<a class="anchor" href="#twitterverify" aria-hidden="true"><span class="octicon octicon-link"></span></a>.twitterVerify</h2>
 
 <blockquote>
   <p>To verify ownership of a Twitter account</p>
@@ -303,7 +303,7 @@ Once permissions have been granted, the popup window will <a href="https://devel
 <p>Note that <code class="highlighter-rouge">code</code> is the code generated in <code class="highlighter-rouge">twitterAuthUrl</code></p>
 
 <h2 id="airbnbgeneratecode">
-<a id="airbnbgeneratecode" class="anchor" href="#airbnbgeneratecode" aria-hidden="true"><span class="octicon octicon-link"></span></a>.airbnbGenerateCode</h2>
+<a class="anchor" href="#airbnbgeneratecode" aria-hidden="true"><span class="octicon octicon-link"></span></a>.airbnbGenerateCode</h2>
 
 <blockquote>
   <p>To generate verification code</p>
@@ -322,7 +322,7 @@ Once permissions have been granted, the popup window will <a href="https://devel
 <p>This will generate a unique code that should be inserted into user’s Airbnb profile description.</p>
 
 <h2 id="airbnbverify">
-<a id="airbnbverify" class="anchor" href="#airbnbverify" aria-hidden="true"><span class="octicon octicon-link"></span></a>.airbnbVerify</h2>
+<a class="anchor" href="#airbnbverify" aria-hidden="true"><span class="octicon octicon-link"></span></a>.airbnbVerify</h2>
 
 <blockquote>
   <p>To verify ownership of Airbnb profile</p>

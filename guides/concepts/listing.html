@@ -88,12 +88,12 @@
                 </li>
                 
                 <li class="normal"> 
-                    <a href="/guides/concepts/messaging.html">Messaging</a> <!-- 1-->
+                    <a href="/guides/concepts/identity.html">Identity</a> <!-- 1-->
                     
                 </li>
                 
                 <li class="normal"> 
-                    <a href="/guides/concepts/identity.html">Identity</a> <!-- 1-->
+                    <a href="/guides/concepts/messaging.html">Messaging</a> <!-- 1-->
                     
                 </li>
                 
@@ -109,7 +109,7 @@
             <p>A Listing is an offer from a seller to sell, rent, announce, or exchange something. Active listings can be searched and browsed in Origin DApps.</p>
 
 <h2 id="event-sourcing">
-<a id="event-sourcing" class="anchor" href="#event-sourcing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Event Sourcing</h2>
+<a class="anchor" href="#event-sourcing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Event Sourcing</h2>
 
 <p>The current state of a particular listing is built up from the actions that have modified it. For example:</p>
 
@@ -129,12 +129,12 @@
 </ul>
 
 <h2 id="creating-a-listing">
-<a id="creating-a-listing" class="anchor" href="#creating-a-listing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating a Listing</h2>
+<a class="anchor" href="#creating-a-listing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating a Listing</h2>
 
 <p>A listing’s initial data is posted to IPFS as JSON (<a href="/reference/protocol/schemas.html#listing-schema">listing schema</a>). A blockchain transaction <a href="../../reference/origin-js/marketplace.html#createlisting">createListing</a> is then sent to the marketplace contract to announce the listing to the world.</p>
 
 <h2 id="withdrawing-a-listing">
-<a id="withdrawing-a-listing" class="anchor" href="#withdrawing-a-listing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Withdrawing a Listing</h2>
+<a class="anchor" href="#withdrawing-a-listing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Withdrawing a Listing</h2>
 
 <p>Sending the blockchain transaction <a href="../../reference/origin-js/marketplace.html#withdrawlisting">withdrawListing</a> marks a listing as no longer able to be purchased.</p>
 

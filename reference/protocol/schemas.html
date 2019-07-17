@@ -101,7 +101,7 @@
             <h1 id="protocol-schemas">Protocol Schemas</h1>
 
 <h2 id="listing-schema">
-<a id="listing-schema" class="anchor" href="#listing-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Listing Schema</h2>
+<a class="anchor" href="#listing-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Listing Schema</h2>
 
 <p>This describes a listing for purchase on the Origin marketplace.</p>
 
@@ -208,7 +208,7 @@
 </table>
 
 <h2 id="offer-schema">
-<a id="offer-schema" class="anchor" href="#offer-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Offer Schema</h2>
+<a class="anchor" href="#offer-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Offer Schema</h2>
 
 <p>An Offer is sent by a buyer to make a purchase from a listing.</p>
 
@@ -258,7 +258,7 @@
 </table>
 
 <h2 id="dispute-schema">
-<a id="dispute-schema" class="anchor" href="#dispute-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dispute Schema</h2>
+<a class="anchor" href="#dispute-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dispute Schema</h2>
 
 <p>A dispute can be started by either party. In v1.0.0, this schema contains no useful required fields, and is a placeholder for future expansion. It is intended that the parties and the arbitrator will communicate over Origin Messenger after the dispute process is started.</p>
 
@@ -286,7 +286,7 @@
 </table>
 
 <h2 id="listing-withdraw-schema">
-<a id="listing-withdraw-schema" class="anchor" href="#listing-withdraw-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Listing-Withdraw Schema</h2>
+<a class="anchor" href="#listing-withdraw-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Listing-Withdraw Schema</h2>
 
 <p>In v1.0.0, this schema contains no useful required fields, and is a placeholder for future expansion.</p>
 
@@ -314,7 +314,7 @@
 </table>
 
 <h2 id="offer-accept-schema">
-<a id="offer-accept-schema" class="anchor" href="#offer-accept-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Offer-Accept Schema</h2>
+<a class="anchor" href="#offer-accept-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Offer-Accept Schema</h2>
 
 <p>In v1.0.0, this schema contains no useful required fields, and is a placeholder for future expansion.</p>
 
@@ -342,7 +342,7 @@
 </table>
 
 <h2 id="offer-withdraw-schema">
-<a id="offer-withdraw-schema" class="anchor" href="#offer-withdraw-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Offer-Withdraw Schema</h2>
+<a class="anchor" href="#offer-withdraw-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Offer-Withdraw Schema</h2>
 
 <p>In v1.0.0, this schema contains no useful required fields, and is a placeholder for future expansion.</p>
 
@@ -370,7 +370,7 @@
 </table>
 
 <h2 id="profile-schema">
-<a id="profile-schema" class="anchor" href="#profile-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Profile Schema</h2>
+<a class="anchor" href="#profile-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Profile Schema</h2>
 
 <p>A profile allows a user to let the world know a little more about them.</p>
 
@@ -378,7 +378,7 @@
     <span class="nl">schemaId</span><span class="p">:</span> <span class="s2">"https://schema.originprotocol.com/profile_1.0.0.json"</span><span class="p">,</span>
     <span class="nx">firstName</span><span class="p">:</span> <span class="s2">"Jake"</span><span class="p">,</span>
     <span class="nx">lastName</span><span class="p">:</span> <span class="s2">"Lewis"</span><span class="p">,</span>
-    <span class="nx">avatar</span><span class="p">:</span> <span class="s2">"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="</span><span class="p">,</span>
+    <span class="nx">avatarUrl</span><span class="p">:</span> <span class="s2">"ipfs://QmekiXtSBWzthAu2uhbT2oST4h9CJuxvpYKCZEayVYc1LQ"</span><span class="p">,</span>
     <span class="nx">description</span><span class="p">:</span> <span class="s2">"Marketing Executive in Belfast."</span>
 <span class="p">}</span>
 </code></pre></div></div>
@@ -420,8 +420,8 @@
   </thead>
   <tbody>
     <tr>
-      <td><strong>avatar</strong></td>
-      <td>A <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs">data url</a> image for the user’s profile image.</td>
+      <td><strong>avatarUrl</strong></td>
+      <td>An IPFS link to the avatar image for the user’s profile.</td>
     </tr>
     <tr>
       <td><strong>description</strong></td>
@@ -431,7 +431,7 @@
 </table>
 
 <h2 id="resolution-schema">
-<a id="resolution-schema" class="anchor" href="#resolution-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Resolution Schema</h2>
+<a class="anchor" href="#resolution-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Resolution Schema</h2>
 
 <p>In v1.0.0, this schema contains no useful required fields, and is a placeholder for future expansion.</p>
 
@@ -459,7 +459,7 @@
 </table>
 
 <h2 id="review-schema">
-<a id="review-schema" class="anchor" href="#review-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Review Schema</h2>
+<a class="anchor" href="#review-schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Review Schema</h2>
 
 <p>A review of a single purchase by either a seller or a buyer.</p>
 
