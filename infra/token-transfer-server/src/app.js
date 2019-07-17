@@ -19,12 +19,14 @@ const session = require('express-session')
 require('./passport')()
 const SQLiteStore = require('connect-sqlite3')(session)
 const { Op } = require('sequelize')
+const base32 = require('thirty-two')
 
 const { createProviders } = require('@origin/token/src/config')
 
-const { LOGIN } = require('./constants/events')
+const { LOGIN, TOTP } = require('./constants/events')
 const { transferTokens } = require('./lib/transfer')
-const { Event, Grant } = require('./models')
+const { Event, Grant, User } = require('./models')
+const { encrypt } = require('./lib/crypto')
 
 const Web3 = require('web3')
 
@@ -77,10 +79,19 @@ const logDate = () => moment().toString()
  * with the authenticated email for the session.
  */
 function withSession(req, res, next) {
+  logger.debug('Calling withSession')
   if (!req.session.email) {
+    logger.debug('Authentication failed. No email in session')
     res.status(401)
     return res.send('This action requires Google login.')
   }
+  if (!req.session.totp) {
+    logger.debug('Authentication failed. No totp in session')
+    res.status(401)
+    return res.send('This action requires TOTP.')
+  }
+  // User is authenticated and passed TOTP verification.
+  logger.debug('Authentication success')
   res.setHeader('X-Authenticated-Email', req.session.email)
   next()
 }
@@ -155,6 +166,41 @@ app.post(
   })
 )
 
+/**
+ * Return the events pertaining to the user.
+ */
+app.get(
+  '/api/events',
+  withSession,
+  asyncMiddleware(async (req, res) => {
+    logger.debug('/api/events', req.session.email)
+    // Perform an LEFT OUTER JOIN between Events and Grants. Neither SQLite nor
+    // Sequelize supports this natively.
+    const events = await Event.findAll({
+      where: { email: req.session.email },
+      order: [['id', 'DESC']]
+    })
+    const grantIds = Array.from(new Set(events.map(e => e.grantId)))
+    const grants = await Grant.findAll({
+      where: {
+        id: { [Op.in]: grantIds },
+        email: req.session.email // extra safeguard
+      }
+    })
+    const grantsById = grants.reduce((map, grant) => {
+      map[grant.id] = grant.get({ plain: true })
+      return map
+    }, {})
+    // Populate each returned event with the corresponding grant.
+    const returnedEvents = events.map(e => ({
+      ...e.get({ plain: true }),
+      grant: e.grantId ? grantsById[e.grantId] : null
+    }))
+    logger.debug(`Returned ${returnedEvents.length} events`)
+    res.json(returnedEvents)
+  })
+)
+
 // TODO: review this for security
 app.post(
   '/api/auth_google',
@@ -192,39 +238,135 @@ app.post(
   }
 )
 
-/**
- * Return the events pertaining to the user.
- */
-app.get(
-  '/api/events',
-  withSession,
-  asyncMiddleware(async (req, res) => {
-    logger.debug('/api/events', req.session.email)
-    // Perform an LEFT OUTER JOIN between Events and Grants. Neither SQLite nor
-    // Sequelize supports this natively.
-    const events = await Event.findAll({
-      where: { email: req.session.email },
-      order: [['id', 'DESC']]
+app.post(
+  '/api/send_email_code',
+  (req, res) => {
+
+    // TODO: send email code here
+
+    // Log the email code sending.
+    Event.create({
+      email: req.email,
+      ip: req.connection.remoteAddress,
+      grantId: null,
+      action: LOGIN,
+      data: JSON.stringify({ details: 'Sent email code' })
     })
-    const grantIds = Array.from(new Set(events.map(e => e.grantId)))
-    const grants = await Grant.findAll({
-      where: {
-        id: { [Op.in]: grantIds },
-        email: req.session.email // extra safeguard
+
+    logger.info(`${logDate()} Sent email code to ${req.email}`)
+
+    res.setHeader('Content-Type', 'application/json')
+    res.send(JSON.stringify(req.user))
+  }
+)
+
+app.post(
+  '/api/verify_email_code',
+  passport.authenticate('local', { failureRedirect: '/login', session: false }),
+  (req, res) => {
+    if (!req.user) {
+      res.status(401)
+      return res.send('User not authorized')
+    }
+
+    // Save the authenticated user in the session cookie.
+    // FRANCK: WHAT IS THIS FOR ??????
+    req.auth = {
+      id: req.user.id
+    }
+
+    req.session.email = req.user.email
+    req.session.save(err => {
+      if (err) {
+        logger.error('ERROR saving session:', err)
       }
     })
-    const grantsById = grants.reduce((map, grant) => {
-      map[grant.id] = grant.get({ plain: true })
-      return map
-    }, {})
-    // Populate each returned event with the corresponding grant.
-    const returnedEvents = events.map(e => ({
-      ...e.get({ plain: true }),
-      grant: e.grantId ? grantsById[e.grantId] : null
-    }))
-    logger.debug(`Returned ${returnedEvents.length} events`)
-    res.json(returnedEvents)
+
+    // Log the login.
+    Event.create({
+      email: req.user.email,
+      ip: req.connection.remoteAddress,
+      grantId: null,
+      action: LOGIN,
+      data: JSON.stringify({})
+    })
+
+    logger.info(`${logDate()} ${req.user.email} logged in`)
+
+    res.setHeader('Content-Type', 'application/json')
+    res.send(JSON.stringify(req.user))
+  }
+)
+
+/**
+  Returns data for setting up TOTP.
+ */
+// IMPORTANT: add middleware to ensure user is logged in.
+app.get(
+  '/api/totp_setup',
+  asyncMiddleware(async (req, res) => {
+    // Load the user
+    const email = req.session.email || 'foo@originprotocol.com'
+    const user = await User.findOne({ where: { email } })
+    if (!user) {
+      // Something is wrong. The user should exist since
+      // TOTP is verified only after email verification.
+      res.status(500)
+      return res.send('Failed loading user.')
+    }
+
+    if (user.otpKey) {
+      // Two-factor auth has already been setup. Do not allow to reset it.
+      res.status(403)
+      return res.send('TOTP already setup.')
+    }
+
+    // TOTP  not setup yet. Generate a key and save it in the DB.
+    const otpKey = Web3.utils.randomHex(10).slice(2)
+    const encodedKey = base32.encode(otpKey).toString()
+    const encryptedKey = encrypt(otpKey)
+    await user.update({ otpKey: encryptedKey })
+
+    // Generate QR code for scanning into Google Authenticator
+    // Reference: https://code.google.com/p/google-authenticator/wiki/KeyUriFormat
+    const otpUrl = `otpauth://totp/${email}?secret=${encodedKey}&period=30&issuer=OriginProtocol`
+    const qrUrl = 'https://chart.googleapis.com/chart?chs=166x166&chld=L|0&cht=qr&chl=' + encodeURIComponent(otpUrl)
+
+    res.setHeader('Content-Type', 'application/json')
+    res.send(JSON.stringify({ key: encodedKey, qrUrl }))
   })
+)
+
+/**
+ * Verifies a TOTP code.
+ */
+app.post(
+  '/api/verify_totp',
+  // TODO(franck): figure what those options are
+  passport.authenticate('totp', { failureRedirect: '/login-otp', failureFlash: true }),
+  (req, res) => {
+
+    // Log the successfull totp authentication.
+    Event.create({
+      email: req.user.email,
+      ip: req.connection.remoteAddress,
+      grantId: null,
+      action: TOTP,
+      data: JSON.stringify({})
+    })
+
+    // Save in the session that the user successfully authed with TOTP.
+    req.session.secondFactor = 'totp'
+    req.session.save(err => {
+      if (err) {
+        logger.error('ERROR saving session:', err)
+      }
+    })
+
+    // TODO: is that the right thing to return ?
+    res.setHeader('Content-Type', 'application/json')
+    res.send(JSON.stringify(req.user))
+  }
 )
 
 // Destroys the user's session cookie.
