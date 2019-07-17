@@ -23,7 +23,7 @@ router.post('/verify', async (req, res) => {
   })
 
   if (verificationStatus && verificationStatus.type === PromotionTypes.FOLLOW && verificationStatus.status === VerificationStatus.SHARED) {
-    // User has already shared/followed, so skip verification process
+    // User has already followed, so skip verification process
     // TODO: What happens with a different content for sharing?
     return res.status(200)
       .send({

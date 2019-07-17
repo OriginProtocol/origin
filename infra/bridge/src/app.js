@@ -7,6 +7,8 @@ const session = require('express-session')
 const bodyParser = require('body-parser')
 
 const { startExchangeRatePolling } = require('./utils/exchange-rate')
+const { subscribeToHooks } = require('./hooks/index')
+const logger = require('./logger')
 
 const db = require('./models')
 // Initalize sequelize with session store
@@ -43,10 +45,16 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(require('./controllers'))
 
-app.listen(5000, () => {
+app.listen(5000, async () => {
   console.log('Origin-bridge listening on port 5000...')
 
   startExchangeRatePolling()
+
+  try {
+    subscribeToHooks()
+  } catch (e) {
+    logger.error('Failed to subscribe to hooks', e.message)
+  }
 })
 
 module.exports = app
