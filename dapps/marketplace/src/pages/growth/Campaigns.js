@@ -343,7 +343,7 @@ class GrowthCampaigns extends Component {
 
   render() {
     const navigation = get(this.props, 'match.params.navigation') || 'Campaigns'
-    const isMobile = this.props.ismobile === 'true'
+    const isMobile = this.props.isMobile
 
     return (
       <div className={`container growth-campaigns ${isMobile ? 'mobile' : ''}`}>
