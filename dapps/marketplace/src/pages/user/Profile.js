@@ -102,12 +102,11 @@ function attestationsUpdated(state, prevState) {
 }
 
 function hasDataExpired(data) {
-  if (!data) {
+  if (!data || !data.timestamp) {
     return true
   }
 
   // Local data is valid only for an hour
-
   return Date.now() - data.timestamp > 3600000
 }
 
@@ -517,19 +516,29 @@ class UserProfile extends Component {
     const key = `${this.props.walletProxy}-profile-data`
     const data = localStore.get(key)
 
-    const profile = pick(this.state, [
-      'firstName',
-      'lastName',
-      'description',
-      'avatarUrl'
-    ])
-
     if (hasDataExpired(data)) {
+      const profile = pick(this.state, [
+        'firstName',
+        'lastName',
+        'description',
+        'avatarUrl'
+      ])
+
+      const attestations = (this.state.verifiedAttestations || []).reduce(
+        (object, att) => ({
+          ...object,
+          [att.id]: att.rawData
+        }),
+        {}
+      )
+
       const newData = {
         profile,
-        attestations: this.state.attestation
+        attestations
       }
-      localStore.set(key, newData)
+
+      this.storeData(newData)
+
       return newData
     }
 

@@ -43,7 +43,7 @@ const AccountItem = ({ item, navigation, wallet }) => {
           <View style={{ ...styles.listItemIconContainer, marginRight: 10 }}>
             <Avatar source={avatarUrl} />
           </View>
-          {name && (
+          {!!name && (
             <Text style={styles.name}>{truncate(name, truncateLength)}</Text>
           )}
           <Address
