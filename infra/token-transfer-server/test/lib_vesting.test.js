@@ -110,9 +110,7 @@ describe('vestingGrants', () => {
       grant.now = grant.cliff
       const vestedAmount = grant.calculateVested()
       expect(vestedAmount).to.be.bignumber.equal(
-        BigNumber(365)
-          .div(1461)
-          .times(grant.amount)
+        Math.round(BigNumber(grant.amount).div(1461).times(365))
       )
     })
 
@@ -120,9 +118,7 @@ describe('vestingGrants', () => {
       grant.now = moment(grant.cliff).add(1, 's')
       const vestedAmount = grant.calculateVested()
       expect(vestedAmount).to.be.bignumber.equal(
-        BigNumber(365)
-          .div(1461)
-          .times(grant.amount)
+        Math.round(BigNumber(grant.amount).div(1461).times(365))
       )
     })
 
@@ -132,16 +128,22 @@ describe('vestingGrants', () => {
       expect(vestedAmount).to.be.bignumber.equal(4800)
     })
 
-    it('should vest the correct amount each day', () => {
+    it('should vest the correct amount for a day', () => {
+      grant.now = grant.end
+      const vestingEvents = grant.vestingSchedule()
+      // Remove the first element of the array, which is the cliff vest
+      vestingEvents.shift()
+      expect(vestingEvents[0]).to.be.bignumber.equal(BigNumber(grant.amount).div(1461))
+    })
+
+    it('should vest the correct amount each day for non cliff vests', () => {
       grant.now = grant.end
       const vestingEvents = grant.vestingSchedule()
       // Remove the first element of the array, which is the cliff vest
       vestingEvents.shift()
       // All subsequent vesting events should vest the correct proportion
       expect(
-        vestingEvents.every(e => {
-          return e.amount === BigNumber(grant.amount).div(1461)
-        })
+        vestingEvents.every(e => e.eq(BigNumber(grant.amount).div(1461)))
       ).to.equal(true)
     })
   })

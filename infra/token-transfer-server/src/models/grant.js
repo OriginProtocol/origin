@@ -59,8 +59,7 @@ module.exports = (sequelize, DataTypes) => {
     // Buld array of already vested amounts
     const vested = this.vestingSchedule().slice(0, threshold + 1)
 
-    // Sum
-    return vested.reduce((total, amount) => total.plus(amount), BigNumber(0))
+    return vested.length ? Math.round(BigNumber.sum(...vested)) : 0
   }
 
   return Grant
