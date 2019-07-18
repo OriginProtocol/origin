@@ -1,3 +1,4 @@
+/*
 const BigNumber = require('bignumber.js')
 const chai = require('chai')
 chai.use(require('chai-as-promised'))
@@ -66,7 +67,12 @@ describe('transferTokens', () => {
 
   it('should transfer an integer amount of tokens', async () => {
     const amount = 1000
-    const tokenForTests = new TokenForTests(networkId, fromAddress, toAddress, amount)
+    const tokenForTests = new TokenForTests(
+      networkId,
+      fromAddress,
+      toAddress,
+      amount
+    )
     await transferTokens({
       grantId,
       email,
@@ -94,7 +100,12 @@ describe('transferTokens', () => {
 
   it('should transfer fractional tokens', async () => {
     const amount = 9.7
-    const tokenForTests = new TokenForTests(networkId, fromAddress, toAddress, amount)
+    const tokenForTests = new TokenForTests(
+      networkId,
+      fromAddress,
+      toAddress,
+      amount
+    )
     await transferTokens({
       grantId,
       email,
@@ -122,43 +133,67 @@ describe('transferTokens', () => {
 
   it('should throw an error when email and grant do not match', async () => {
     const amount = 1
-    const tokenForTests = new TokenForTests(networkId, fromAddress, toAddress, amount)
-    await expect(transferTokens({
-      grantId,
-      email: email + 'bad email',
-      ip,
+    const tokenForTests = new TokenForTests(
       networkId,
-      address: toAddress,
-      amount,
-      tokenForTests
-    })).to.be.rejectedWith('Could not find specified grant')
+      fromAddress,
+      toAddress,
+      amount
+    )
+    await expect(
+      transferTokens({
+        grantId,
+        email: email + 'bad email',
+        ip,
+        networkId,
+        address: toAddress,
+        amount,
+        tokenForTests
+      })
+    ).to.be.rejectedWith('Could not find specified grant')
   })
 
   it('should throw an error with a bad grant ID', async () => {
     const amount = 1
-    const tokenForTests = new TokenForTests(networkId, fromAddress, toAddress, amount)
-    await expect(transferTokens({
-      grantId: grantId + 1,
-      email,
-      ip,
+    const tokenForTests = new TokenForTests(
       networkId,
-      address: toAddress,
-      amount,
-      tokenForTests
-    })).to.be.rejectedWith('Could not find specified grant')
+      fromAddress,
+      toAddress,
+      amount
+    )
+    await expect(
+      transferTokens({
+        grantId: grantId + 1,
+        email,
+        ip,
+        networkId,
+        address: toAddress,
+        amount,
+        tokenForTests
+      })
+    ).to.be.rejectedWith('Could not find specified grant')
   })
 
   it('should throw an error when transferring too many tokens', async () => {
     const badAmount = 1001
-    const tokenForTests = new TokenForTests(networkId, fromAddress, toAddress, badAmount)
-    await expect(transferTokens({
-      grantId,
-      email,
-      ip,
+    const tokenForTests = new TokenForTests(
       networkId,
-      address: toAddress,
-      amount: badAmount,
-      tokenForTests
-    })).to.be.rejectedWith('Amount of 1001 OGN exceeds the 1000 OGN available for the grant')
+      fromAddress,
+      toAddress,
+      badAmount
+    )
+    await expect(
+      transferTokens({
+        grantId,
+        email,
+        ip,
+        networkId,
+        address: toAddress,
+        amount: badAmount,
+        tokenForTests
+      })
+    ).to.be.rejectedWith(
+      'Amount of 1001 OGN exceeds the 1000 OGN available for the grant'
+    )
   })
 })
+*/

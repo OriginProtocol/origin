@@ -1,5 +1,7 @@
+const BigNumber = require('bignumber.js')
 const chai = require('chai')
 chai.use(require('chai-moment'))
+chai.use(require('chai-bignumber')(BigNumber))
 const expect = chai.expect
 const moment = require('moment')
 
@@ -19,161 +21,118 @@ async function setupDatabase() {
   expect(events.length).to.equal(0)
 }
 
-describe('vestGrant', () => {
-  describe('4 year grant with 1 year cliff', () => {
+describe('vestingGrants', () => {
+  describe('4 year grant with 1 year cliff and monthly vesting', () => {
     let grant
 
     beforeEach(async () => {
       await setupDatabase()
-
       grant = new Grant({
-        email: testEmail,
-        grantedAt: '2014-01-01 00:00:00',
+        userId: 1,
+        start: '2014-01-01 00:00:00',
+        end: '2018-01-01 00:00:00',
+        cliff: '2015-01-01 00:00:00',
         amount: 4800,
-        totalMonths: 48,
-        cliffMonths: 12,
-        vested: 0,
-        transferred: 0
+        interval: 'months'
       })
       await grant.save()
-
-      const grants = await Grant.findAll()
-      expect(grants.length).to.equal(1)
     })
 
-    it('should not vest before cliff', async () => {
-      grant.now = moment(grant.grantedAt).add(grant.cliffMonths, 'M').subtract(1, 's')
-      await vestGrant(grant)
-
-      grant = await Grant.findByPk(grant.id)
-      expect(grant).to.not.be.undefined
-      expect(grant.vested).to.equal(0)
-      const events = await Event.findAll()
-      expect(events.length).to.equal(0)
+    it('should have the correct amount of vesting events', () => {
+      const vestingEvents = grant.vestingSchedule()
+      expect(vestingEvents.length).to.equal(48 - 12 + 1)
     })
 
-    it('should vest 1/4 at the cliff', async () => {
-      grant.now = moment(grant.grantedAt).add(grant.cliffMonths, 'M')
-      await vestGrant(grant)
-
-      const expectedVested = grant.amount / 4
-      grant = await Grant.findByPk(grant.id)
-      expect(grant).to.not.be.undefined
-      expect(grant.vested).to.equal(expectedVested)
-
-      grant = await Grant.findByPk(grant.id)
-      expect(grant).to.not.be.undefined
-      expect(grant.vested).to.bignumber.equal(expectedVested)
-
-      const events = await Event.findAll()
-      expect(events.length).to.equal(1)
-      expect(events[0].id).to.equal(1)
-      expect(events[0].email).to.equal(testEmail)
-      expect(events[0].ip).to.be.ok
-      expect(events[0].action).to.equal(GRANT_VEST)
-      const data = JSON.parse(events[0].data)
-      expect(data.amount).to.equal(expectedVested)
-      expect(data.vestDate).to.equal('2015-01-01')
+    it('should not vest before cliff', () => {
+      grant.now = moment(grant.cliff).subtract(1, 's')
+      const vestedAmount = grant.calculateVested()
+      expect(vestedAmount).to.be.bignumber.equal(0)
     })
 
-    it('should perform catch-up vesting', async () => {
-      grant.now = moment(grant.grantedAt).add(grant.cliffMonths + 2, 'M')
-      await vestGrant(grant)
+    it('should vest 12/48 at the cliff', () => {
+      grant.now = grant.cliff
+      const vestedAmount = grant.calculateVested()
+      expect(vestedAmount).to.be.bignumber.equal(1200)
+    })
 
-      const monthlyAmount = grant.amount / 48
-      const cliffAmount = grant.amount / 4
-      const expectedVested = cliffAmount + monthlyAmount * 2
+    it('should vest 12/48 after the cliff', () => {
+      grant.now = moment(grant.cliff).add(1, 's')
+      const vestedAmount = grant.calculateVested()
+      expect(vestedAmount).to.be.bignumber.equal(1200)
+    })
 
-      grant = await Grant.findByPk(grant.id)
-      expect(grant).to.not.be.undefined
-      expect(grant.vested).to.equal(expectedVested)
+    it('should have the correct amount vested total', () => {
+      grant.now = grant.end
+      const vestedAmount = grant.calculateVested()
+      expect(vestedAmount).to.be.bignumber.equal(4800)
+    })
 
-      const events = await Event.findAll()
-      expect(events.length).to.equal(3)
-      let data
-
-      expect(events[0].id).to.equal(1)
-      expect(events[0].email).to.equal(testEmail)
-      expect(events[0].ip).to.be.ok
-      expect(events[0].action).to.equal(GRANT_VEST)
-      data = JSON.parse(events[0].data)
-      expect(data.amount).to.equal(cliffAmount)
-      expect(data.vestDate).to.equal('2015-01-01')
-
-      expect(events[1].id).to.equal(2)
-      expect(events[1].email).to.equal(testEmail)
-      expect(events[1].ip).to.be.ok
-      expect(events[1].action).to.equal(GRANT_VEST)
-      data = JSON.parse(events[1].data)
-      expect(data.amount).to.equal(monthlyAmount)
-      expect(data.vestDate).to.equal('2015-02-01')
-
-      expect(events[2].id).to.equal(3)
-      expect(events[2].email).to.equal(testEmail)
-      expect(events[2].ip).to.be.ok
-      expect(events[2].action).to.equal(GRANT_VEST)
-      data = JSON.parse(events[2].data)
-      expect(data.amount).to.equal(monthlyAmount)
-      expect(data.vestDate).to.equal('2015-03-01')
+    it('should vest the correct amount each month', () => {
+      grant.now = grant.end
+      const vestingEvents = grant.vestingSchedule()
+      // Remove the first element of the array, which is the cliff vest
+      vestingEvents.shift()
+      // All subsequent vesting events should vest the correct proportion
+      expect(vestingEvents.every(e => e.amount.isEqualTo(100))).to.equal(true)
     })
   })
-})
 
-describe('vestGrants', () => {
-  let vestedGrant, grant
+  describe('4 year grant with 1 year cliff and daily vesting', () => {
+    let grant
 
-  beforeEach(async () => {
-    await setupDatabase()
-
-    vestedGrant = new Grant({
-      email: 'throwaway@originprotocol.com',
-      grantedAt: '2014-01-01 00:00:00',
-      amount: 1000,
-      totalMonths: 0,
-      cliffMonths: 0,
-      vested: 1000,
-      transferred: 0
+    beforeEach(async () => {
+      await setupDatabase()
+      grant = new Grant({
+        userId: 1,
+        start: '2014-01-01 00:00:00',
+        end: '2018-01-01 00:00:00',
+        cliff: '2015-01-01 00:00:00',
+        amount: 4800,
+        interval: 'days'
+      })
+      await grant.save()
     })
-    await vestedGrant.save()
 
-    grant = new Grant({
-      email: testEmail,
-      grantedAt: '2014-01-01 00:00:00',
-      amount: 4800,
-      totalMonths: 48,
-      cliffMonths: 12,
-      vested: 0,
-      transferred: 0
+    it('should have the correct amount of vesting events', () => {
+      const vestingEvents = grant.vestingSchedule()
+      // 2016 is a leap year, so there is 2 * 365 days for standard years,
+      // 1 * 366 for the leap year, and + 1 for the cliff vesting event
+      expect(vestingEvents.length).to.equal(2 * 365 + 366 + 1)
     })
-    await grant.save()
-  })
 
-  it('should only vest grants that need vesting', async () => {
-    // Perform vesting 1 year after 'grant' was granted.
-    const now = moment(grant.grantedAt).add(grant.cliffMonths, 'M')
-    await vestGrants(now)
+    it('should not vest before cliff', () => {
+      grant.now = moment(grant.cliff).subtract(1, 's')
+      const vestedAmount = grant.calculateVested()
+      expect(vestedAmount).to.be.bignumber.equal(0)
+    })
 
-    await vestedGrant.reload()
-    expect(vestedGrant.vested).to.equal(1000)
-    await grant.reload()
-    expect(grant.vested).to.equal(1200)
+    it('should vest 365/1461 at the cliff', () => {
+      grant.now = grant.cliff
+      const vestedAmount = grant.calculateVested()
+      expect(vestedAmount).to.be.bignumber.equal(BigNumber(365).div(1461).times(grant.amount))
+    })
 
-    const events = await Event.findAll()
-    expect(events.length).to.equal(1)
+    it('should vest 365/1461 after the cliff', () => {
+      grant.now = moment(grant.cliff).add(1, 's')
+      const vestedAmount = grant.calculateVested()
+      expect(vestedAmount).to.be.bignumber.equal(BigNumber(365).div(1461).times(grant.amount))
+    })
 
-    expect(events[0].id).to.equal(1)
-    expect(events[0].email).to.equal(testEmail)
-    expect(events[0].ip).to.be.ok
-    expect(events[0].action).to.equal(GRANT_VEST)
-    const data = JSON.parse(events[0].data)
-    expect(data.amount).to.equal(1200)
-    expect(data.vestDate).to.equal('2015-01-01')
+    it('should have the correct amount vested total', () => {
+      grant.now = grant.end
+      const vestedAmount = grant.calculateVested()
+      expect(vestedAmount).to.be.bignumber.equal(4800)
+    })
 
-    // Ensure that quick rerun doesn't vest more tokens.
-    await vestGrants(now.add(1, 's'))
-    await vestedGrant.reload()
-    expect(vestedGrant.vested).to.equal(1000)
-    await grant.reload()
-    expect(grant.vested).to.equal(1200)
+    it('should vest the correct amount each day', () => {
+      grant.now = grant.end
+      const vestingEvents = grant.vestingSchedule()
+      // Remove the first element of the array, which is the cliff vest
+      vestingEvents.shift()
+      // All subsequent vesting events should vest the correct proportion
+      expect(vestingEvents.every(e => {
+        return e.amount === BigNumber(grant.amount).div(1461)
+      })).to.equal(true)
+    })
   })
 })
