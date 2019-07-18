@@ -106,7 +106,7 @@ class GrowthWelcome extends Component {
     urlForOnboarding,
     arrivedFromOnboarding
   ) {
-    const isMobile = this.props.ismobile === 'true'
+    const { isMobile } = this.props
 
     return (
       <div className="container d-flex">
@@ -198,7 +198,7 @@ class GrowthWelcome extends Component {
   }
 
   renderWhatIsOriginFold() {
-    const isMobile = this.props.ismobile === 'true'
+    const { isMobile } = this.props
 
     return (
       <div className="second-fold-holder">
@@ -281,7 +281,7 @@ class GrowthWelcome extends Component {
   }
 
   renderPromotingAndRewardsFold() {
-    const isMobile = this.props.ismobile === 'true'
+    const { isMobile } = this.props
 
     return (
       <div className="d-md-flex fourth-fold-holder">

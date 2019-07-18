@@ -33,16 +33,12 @@ class PhoneAttestation extends Component {
     }
   }
 
-  isMobile() {
-    return this.props.ismobile === 'true'
-  }
-
   render() {
     if (!this.props.open) {
       return null
     }
 
-    const ModalComponent = this.isMobile() ? MobileModal : Modal
+    const ModalComponent = this.props.isMobile ? MobileModal : Modal
 
     return (
       <ModalComponent
@@ -75,7 +71,7 @@ class PhoneAttestation extends Component {
   }
 
   renderGenerateCode() {
-    const isMobile = this.isMobile()
+    const { isMobile } = this.props
 
     const header = isMobile ? null : (
       <fbt desc="PhoneAttestation.title">Verify your Phone Number</fbt>
@@ -193,7 +189,7 @@ class PhoneAttestation extends Component {
   }
 
   renderVerifyCode() {
-    const isMobile = this.isMobile()
+    const { isMobile } = this.props
 
     const header = isMobile ? null : (
       <fbt desc="PhoneAttestation.title">Verify your Phone Number</fbt>
