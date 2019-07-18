@@ -4,196 +4,273 @@
     "Ri5Gg2SNwcgIl8+233d8Ag==": {
       "translations": [
         {
-          "translation": "Address"
+          "translation": "Indirizzo"
         }
       ]
     },
     "xcXF5fEWXTaRWnAPnImIEA==": {
       "translations": [
         {
-          "translation": "Copy"
+          "translation": "Copia"
         }
       ]
     },
     "FZRVHsdXqI51WS0/rgsmvQ==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Copiato negli appunti!"
         }
       ]
     },
     "Z97eNnRtwWFrWlkTjsP9Dw==": {
       "translations": [
         {
-          "translation": "OK"
+          "translation": "Ok"
         }
       ]
     },
     "vpHbx0KGwimfUDMM2yWJiw==": {
       "translations": [
         {
-          "translation": "Authentication failed"
+          "translation": "Autenticazione fallita"
         }
       ]
     },
     "RDq5ZjyJ3If5xODxIb74hg==": {
       "translations": [
         {
-          "translation": "Incorrect pin code"
+          "translation": "Codice pin errato"
         }
       ]
     },
     "LnwecOVmQ25DVugF+RemxQ==": {
       "translations": [
         {
-          "translation": "Authentication required"
+          "translation": "Autenticazione richiesta"
         }
       ]
     },
     "J/SHV34/Q6NzSn+T7V8i2w==": {
       "translations": [
         {
-          "translation": "Pin required"
+          "translation": "Pin richiesto"
         }
       ]
     },
     "jakn3qdMee3dY1QQSnxPBw==": {
       "translations": [
         {
-          "translation": "Back up account"
+          "translation": "Esegui il backup dell'account"
         }
       ]
     },
     "zq6BJdlScS7RmSd1QYOx/w==": {
       "translations": [
         {
-          "translation": "If you lose your account private key, you will not be able to access your funds."
+          "translation": "Se perdi la chiave privata del tuo account, non sarai più in grado di accedere ai tuoi fondi."
         }
       ]
     },
     "4usqugeX/QJAVYFd20+Juw==": {
       "translations": [
         {
-          "translation": "If you lose your account recovery phrase, you will not be able to access your funds."
+          "translation": "Se perdi la frase di recupero dell'account, non sarai più in grado di accedere ai tuoi fondi."
         }
       ]
     },
     "tnjbZFYtRWMI0Cvx7tUoLw==": {
       "translations": [
         {
-          "translation": "Back up private key"
+          "translation": "Esegui il backup della chiave privata"
         }
       ]
     },
     "NtSYu4dP1gx3Q867CPSNqA==": {
       "translations": [
         {
-          "translation": "Back up recovery phrase"
+          "translation": "Esegui il backup della frase di recupero"
         }
       ]
     },
     "gS5uLfzsGn8W+iy1wGPcFA==": {
       "translations": [
         {
-          "translation": "Back up later"
+          "translation": "Esegui il backup più tardi"
+        }
+      ]
+    },
+    "leoyo7yPyqCZYLzdYarxVg==": {
+      "translations": [
+        {
+          "translation": "Blockchain e i tuoi dati personali"
+        }
+      ]
+    },
+    "TsWyCTUsQI/nO9f3+35sXw==": {
+      "translations": [
+        {
+          "translation": "Creando un profilo, stai associando il tuo nome e foto al tuo account Ethereum. Ciò significa che altri saranno in grado di collegare le tue transazioni blockchain al tuo nome e foto."
+        }
+      ]
+    },
+    "293hkFZBDThJ9B1cWDqFeA==": {
+      "translations": [
+        {
+          "translation": "Fatto"
+        }
+      ]
+    },
+    "53OPnmUdKU2hcrljQxQZLA==": {
+      "translations": [
+        {
+          "translation": "Si è verificato un errore durante il caricamento del Marketplace di Origin. Per favore controlla la tua connessione Internet."
+        }
+      ]
+    },
+    "y5hrsKtem9k4a3YYBARQUQ==": {
+      "translations": [
+        {
+          "translation": "Riprova"
+        }
+      ]
+    },
+    "KU9ATM6FUSyE4otzmBVDgA==": {
+      "translations": [
+        {
+          "translation": "Sei sicuro di non volere Origin Rewards?"
+        }
+      ]
+    },
+    "09diYnabOsFOs1TD+djfhw==": {
+      "translations": [
+        {
+          "translation": "Il tuo nuovo portafoglio non sarà idoneo per guadagnare OGN."
+        }
+      ]
+    },
+    "irOaYRzzICZEzzJSVHZuPw==": {
+      "translations": [
+        {
+          "translation": "Sono sicuro"
+        }
+      ]
+    },
+    "ElbsZ92b2NSuDKUhrEhInA==": {
+      "translations": [
+        {
+          "translation": "No, aspetta"
         }
       ]
     },
     "FCBgGtybLVdEFPoBHMNwRw==": {
       "translations": [
         {
-          "translation": "Enable Notifications"
+          "translation": "Abilita le notifiche"
         }
       ]
     },
     "2UTQi1Ij4joTFsZVJtd81g==": {
       "translations": [
         {
-          "translation": "Woops! It looks like you have notifications disabled. To get the latest updates about your transactions we recommend enabling them in the settings for the Origin Marketplace application."
+          "translation": "Woops! Sembra che tu abbia le notifiche disabilitate. Per ottenere gli ultimi aggiornamenti sulle tue transazioni, ti consigliamo di abilitarli nelle impostazioni per l'applicazione Origin Marketplace."
         }
       ]
     },
     "lOwKCA3REqk0Tz8uOBf3Pw==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "Apri Impostazioni"
         }
       ]
     },
     "Ka8PTaoYl8PmXeWLQ8Qrzw==": {
       "translations": [
         {
-          "translation": "Close"
+          "translation": "Chiudi"
+        }
+      ]
+    },
+    "Hd7GnyffrmsytOC81wf1og==": {
+      "translations": [
+        {
+          "translation": "Apri Impostazioni"
         }
       ]
     },
     "2Ys/u9LEtc69RMwvBUge9g==": {
       "translations": [
         {
-          "translation": "Signature Request"
+          "translation": "Firma richiesta"
         }
       ]
     },
     "/EqSe0JWGoaELSz+mVvOhw==": {
       "translations": [
         {
-          "translation": "Sign"
+          "translation": "Firma"
         }
       ]
     },
     "aHPwi7q8WIdH6tItKZGWpQ==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "Annulla"
         }
       ]
     },
     "BSXd24qMR/v2kkJGZSzAkA==": {
       "translations": [
         {
-          "translation": "Create Listing"
+          "translation": "Crea un annuncio"
         }
       ]
     },
     "kht+lHwylljzghuxx6U44Q==": {
       "translations": [
         {
-          "translation": "Purchase"
+          "translation": "Acquisto"
         }
       ]
     },
     "I2HWbFKlgUggmCCeJAAi6w==": {
       "translations": [
         {
-          "translation": "Publish Identity"
+          "translation": "Pubblica identità"
         }
       ]
     },
     "HcQ+0ssTVx9JP0dbueE6EA==": {
       "translations": [
         {
-          "translation": "Approve Currency Conversion"
+          "translation": "Approva la conversione valuta"
+        }
+      ]
+    },
+    "6i7qqM7tIY6QrQPlZk0sgA==": {
+      "translations": [
+        {
+          "translation": "Abilita Meta Transactions"
         }
       ]
     },
     "UptEXt/80yEZlV42llBLzQ==": {
       "translations": [
         {
-          "translation": "Blockchain Transaction"
+          "translation": "Transazione Blockchain"
         }
       ]
     },
     "0Hcb7EEcgWvM/wgaryT03g==": {
       "translations": [
         {
-          "translation": "Payment"
+          "translation": "Pagamento"
         }
       ]
     },
     "2immGCBCROovRIdEMKqUlw==": {
       "translations": [
         {
-          "translation": "Gas Cost"
+          "translation": "Costo del gas"
         }
       ]
     },
@@ -207,231 +284,217 @@
     "ATXUAJSbJ1McXJqB89l9lQ==": {
       "translations": [
         {
-          "translation": "Your Account"
+          "translation": "Il tuo account"
         }
       ]
     },
     "8vFUXSEVa7KZBhBbxn2FHw==": {
       "translations": [
         {
-          "translation": "Your Balances"
+          "translation": "I tuoi saldi"
         }
       ]
     },
     "VjPzFy1pA4SOMEquZR4l8w==": {
       "translations": [
         {
-          "translation": "Your Balance"
+          "translation": "Il tuo saldo"
         }
       ]
     },
     "WGap/aXIb4uxFVQuBIhjuw==": {
       "translations": [
         {
-          "translation": "You don't have enough ETH to submit this transaction."
+          "translation": "Non hai abbastanza ETH per inviare questa transazione."
         }
       ]
     },
     "bpJjuZr6/qPESAQkORoCMg==": {
       "translations": [
         {
-          "translation": "You don't have enough ETH to publish your identity."
+          "translation": "Non hai abbastanza ETH per pubblicare la tua identità."
         }
       ]
     },
     "4/6+bbpzXA+zeU20pC0xdQ==": {
       "translations": [
         {
-          "translation": "Confirm"
+          "translation": "Conferma"
         }
       ]
     },
     "nxwmAvEdE7w9cM6fSB+fHw==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "Annulla"
         }
       ]
     },
     "Yzqk2XJTQiSxv2t8cdh3nw==": {
       "translations": [
         {
-          "translation": "Update required"
+          "translation": "Aggiornamento richiesto"
         }
       ]
     },
     "VgnIScPQ4MxmjP3MHHSlpA==": {
       "translations": [
         {
-          "translation": "Woops! It looks like you are using an old version of the Origin Marketplace App. Please update to proceed."
+          "translation": "Woops! Sembra che tu stia utilizzando una vecchia versione dell'app Origin Marketplace. Si prega di aggiornare per procedere."
         }
       ]
     },
     "HSJ4lSFH52qxe5hmSMBLaQ==": {
       "translations": [
         {
-          "translation": "Update available"
+          "translation": "Aggiornamento disponibile"
         }
       ]
     },
     "6QOETx2H8d657NCFME14fQ==": {
       "translations": [
         {
-          "translation": "It looks like you are using an old version of the Origin Marketplace App. For the best experience, we recommend you update."
+          "translation": "Sembra che tu stia utilizzando una vecchia versione dell'app Origin Marketplace. Per una migliore esperienza, ti consigliamo di aggiornare."
         }
       ]
     },
     "QpVi6Q8bytL6nnct+8vJDg==": {
       "translations": [
         {
-          "translation": "Update"
+          "translation": "Aggiorna"
         }
       ]
     },
     "BY1VaMBt7Cf6hcIW3G+xTw==": {
       "translations": [
         {
-          "translation": "Not now"
+          "translation": "Non adesso"
+        }
+      ]
+    },
+    "XsJI4lHivUR4kWUoxiX2XA==": {
+      "translations": [
+        {
+          "translation": "Cosa sarà visibile sulla blockchain?"
         }
       ]
     },
     "rfyOc2A6KqTaGmyE0aHtuA==": {
       "translations": [
         {
-          "translation": "Account Details"
+          "translation": "Dettagli account"
         }
       ]
     },
     "63n7ZrjXs/xul67zZMRH6Q==": {
       "translations": [
         {
-          "translation": "Important!"
+          "translation": "Importante!"
         }
       ]
     },
     "fbdJ5PgCtMiZoKwpqFSHFw==": {
       "translations": [
         {
-          "translation": "As a security precaution, the clipboard will be cleared after one minute."
+          "translation": "Come precauzione di sicurezza, la clipboard verrà cancellata dopo un minuto."
         }
       ]
     },
     "fr/gqa6K0WToleM5Z+fKjQ==": {
       "translations": [
         {
-          "translation": "Got it"
+          "translation": "Fatto"
         }
       ]
     },
     "rVHYls86LiL2qXmPeABLyg==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Copiato nella clipboard!"
         }
       ]
     },
     "ARxpkvUPK0jFYXwVrYuIMw==": {
       "translations": [
         {
-          "translation": "Important!"
+          "translation": "Importante!"
         }
       ]
     },
     "Fj7mSGlzBW8WmXnCJpygjA==": {
       "translations": [
         {
-          "translation": "Have you backed up your private key or recovery phrase for this account? The account will be permanently deleted and you must have the private key or recovery phrase to recover it. Are you sure that you want to delete this account?"
+          "translation": "Hai eseguito il backup della tua chiave privata o della frase di recupero per questo account? L'account verrà eliminato in modo permanente e sarà necessario disporre della chiave privata o della frase di recupero per ripristinarlo. Sei sicuro di voler eliminare questo account?"
         }
       ]
     },
     "0bq6YbxhOXa2A6WJpEaL+g==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "Annulla"
         }
       ]
     },
     "lpp3lYIsSATmD+bTHnp7fA==": {
       "translations": [
         {
-          "translation": "Delete"
-        }
-      ]
-    },
-    "dP4XrQh0mF/tMLgpd3YQcw==": {
-      "translations": [
-        {
-          "translation": "Name"
-        }
-      ]
-    },
-    "GGc6NEGIsOKjZY7PerWXKQ==": {
-      "translations": [
-        {
-          "translation": "Account name"
-        }
-      ]
-    },
-    "Z5Ad8XT7iUBuDtpMwgC5Ug==": {
-      "translations": [
-        {
-          "translation": "Eth Address"
+          "translation": "Elimina"
         }
       ]
     },
     "KaZkh00tsKdzL4PMvmqOWw==": {
       "translations": [
         {
-          "translation": "Make Active Account"
+          "translation": "Crea un account attivo"
         }
       ]
     },
     "p3W1jjM1O7xwySSBNKVkeQ==": {
       "translations": [
         {
-          "translation": "Show Recovery Phrase"
+          "translation": "Mostra la frase di recupero"
         }
       ]
     },
     "vHA/IbKFZOLZEIvk17fbOQ==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Frase di recupero"
         }
       ]
     },
     "3T0ncUvbWQQYHxwCYIWCzQ==": {
       "translations": [
         {
-          "translation": "Copy Recovery Phrase"
+          "translation": "Copia la frase di recupero"
         }
       ]
     },
     "2Ql766BBWhadduhv1A8mCg==": {
       "translations": [
         {
-          "translation": "Show Private Key"
+          "translation": "Mostra la chiave privata"
         }
       ]
     },
     "qgFPa2G/IoAt9CIVn6ey1A==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "Chiave privata"
         }
       ]
     },
     "YL1+Pt1Th3TvLZQaVxak9w==": {
       "translations": [
         {
-          "translation": "Copy Private Key"
+          "translation": "Copia la chiave privata"
         }
       ]
     },
     "sL6k42V4vn/2x26sVAldkw==": {
       "translations": [
         {
-          "translation": "Delete Account"
+          "translation": "Eliminare l'account"
         }
       ]
     },
@@ -442,367 +505,878 @@
         }
       ]
     },
+    "dcugbzsCXlIcz+MDEjVWhw==": {
+      "translations": [
+        {
+          "translation": "Frase di recupero"
+        }
+      ]
+    },
+    "/qUSB40G8z1yEmSpGgnhpw==": {
+      "translations": [
+        {
+          "translation": "Importato da chiave privata"
+        }
+      ]
+    },
     "0j7TBsobep8YH0Qkvtrqcg==": {
       "translations": [
         {
-          "translation": "Important!"
+          "translation": "Importante!"
         }
       ]
     },
     "PwgVT2B+QoumKmdtky/t5Q==": {
       "translations": [
         {
-          "translation": "As a security precaution, the clipboard will be cleared after one minute."
+          "translation": "Come precauzione di sicurezza, la clipboard verrà cancellata dopo un minuto."
         }
       ]
     },
     "BM9rEF51uzQdLEjljSVj0A==": {
       "translations": [
         {
-          "translation": "Got it"
+          "translation": "Fatto"
         }
       ]
     },
     "2s+9bYBUsRvylceP3dEVLA==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Copiato negli appunti!"
         }
       ]
     },
     "5e+ltpuxscfACFNaS2dcOw==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "Chiave privata"
         }
       ]
     },
     "XyxrGJkJ5zgb6isZ0BdDlg==": {
       "translations": [
         {
-          "translation": "Write down your private key"
+          "translation": "Scrivi la tua chiave privata"
         }
       ]
     },
     "KmMOc82inx1QRhhp/fyMyQ==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Frase di recupero"
         }
       ]
     },
     "DIhU+yQs2asm5wXqej7dfg==": {
       "translations": [
         {
-          "translation": "Write down your recovery phrase"
+          "translation": "Scrivi la frase di recupero"
         }
       ]
     },
     "qS83Klnh433/5rED9+ibOg==": {
       "translations": [
         {
-          "translation": "Copy to clipboard"
+          "translation": "Copia negli appunti"
         }
       ]
     },
     "zLMFuSkl3GBjE3tx50sIhw==": {
       "translations": [
         {
-          "translation": "This private key is the key to your account. Write it down, or copy it to a password manager. We recommend NOT emailing it to yourself."
+          "translation": "Questa chiave privata è la chiave del tuo account. Annotarla o copiarla su un gestore di password. Si consiglia di NON inviarlo via email a te stesso."
         }
       ]
     },
     "MAOXf1kKWz/7TYu8RqMmFQ==": {
       "translations": [
         {
-          "translation": "This recovery phrase is the key to your account. Write it down, or copy it to a password manager. We recommend NOT emailing it to yourself."
+          "translation": "Questa frase di recupero è la chiave del tuo account. Annotarla o copiarla su un gestore di password. Si consiglia di NON inviarlo via email a te stesso."
         }
       ]
     },
     "XMtHJ6TJ3X8ym6yKQ0KKVQ==": {
       "translations": [
         {
-          "translation": "Next"
+          "translation": "Successivo"
         }
       ]
     },
     "zTv/d3wo3BWrq3lxTDiPvA==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "Annulla"
         }
       ]
     },
     "KOevTAZaVtyeDehBuvlCrA==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "Chiave privata"
         }
       ]
     },
     "EhJiSCEWoUvWM8XEDOzT/g==": {
       "translations": [
         {
-          "translation": "Enter your private key"
+          "translation": "Inserisci la tua chiave privata"
         }
       ]
     },
     "yzRqhh/Qk+7ZfmQcdOrjUw==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Frase di recupero"
         }
       ]
     },
     "myq3OtUs+Fi+a0kMs+wbIg==": {
       "translations": [
         {
-          "translation": "Select the words in the correct order"
+          "translation": "Seleziona le parole nell'ordine corretto"
         }
       ]
     },
-    "ixF8i66Ks5t3yd5SpDK8ew==": {
+    "EDxEE4K6bae2M7ydCHp6Zw==": {
       "translations": [
         {
-          "translation": "Go back"
+          "translation": "Torna indietro"
         }
       ]
     },
     "GkFF5s8F0GpJycWhOhK/iA==": {
       "translations": [
         {
-          "translation": "You have successfully backed up your recovery phrase"
+          "translation": "Hai eseguito correttamente il backup della frase di recupero"
         }
       ]
     },
     "ODOQveQR0RNc0DEs0MLAxg==": {
       "translations": [
         {
-          "translation": "Done"
+          "translation": "Fatto"
         }
       ]
     },
-    "m3dPHHocM1w8rhRhujSxZg==": {
+    "P19QeS8TSjISSt0doVlLyA==": {
       "translations": [
         {
-          "translation": "Enter Recovery Phrase"
+          "translation": "Importa il tuo wallet"
         }
       ]
     },
-    "xOhcFdw/dnLWGQ+TIH084g==": {
+    "31RyFwYE/GDQQsrh3Ulvtw==": {
       "translations": [
         {
-          "translation": "Enter Private Key"
+          "translation": "Puoi importare un wallet utilizzando uno dei metodi seguenti."
         }
       ]
     },
-    "eqopieZaNplUI1ve03VWlA==": {
+    "2eAz/IqchpMLxH7uzquWIg==": {
       "translations": [
         {
-          "translation": "Enter the 12 words in the correct order"
+          "translation": "Usa la frase di recupero"
         }
       ]
     },
-    "VbwfAL7WOBiqbvGplElwyg==": {
+    "FvAa7D4zZNCqy+i4K2/9PQ==": {
       "translations": [
         {
-          "translation": "Use a recovery phrase instead"
+          "translation": "Usa la chiave privata"
         }
       ]
     },
-    "WuTx0z/GQJL6HXV6XCfCIQ==": {
+    "EAvFlbnkWZvKJZAe/pfhsA==": {
       "translations": [
         {
-          "translation": "Use a private key instead"
+          "translation": "Non sembra una frase di recupero valida."
         }
       ]
     },
-    "ps3W/65hRXTRvnuN9ref5w==": {
+    "HSUBJXtSYEYyVbjVfwQmtg==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "Inserisci la frase di recupero"
         }
       ]
     },
-    "1VdcGq+jYIs6J3wXA2Xyiw==": {
+    "peoX+3Gbnsy8TqdLquCI1g==": {
       "translations": [
         {
-          "translation": "Done"
+          "translation": "Continua"
+        }
+      ]
+    },
+    "5/XzkOw7jsXF3hNFdAOfVw==": {
+      "translations": [
+        {
+          "translation": "Questa non è una chiave privata valida."
+        }
+      ]
+    },
+    "6kOIRuFPg13nKeGrxENaaw==": {
+      "translations": [
+        {
+          "translation": "Inserisci la chiave privata"
+        }
+      ]
+    },
+    "Aw26GuAppbsDwcsIGOynqA==": {
+      "translations": [
+        {
+          "translation": "Continua"
+        }
+      ]
+    },
+    "bJwnJVo5lwuFi394jn741w==": {
+      "translations": [
+        {
+          "translation": "Importa il tuo wallet per guadagnare più OGN"
+        }
+      ]
+    },
+    "nWjFXBqXG9oCHoaLwTYfXw==": {
+      "translations": [
+        {
+          "translation": "Abbiamo rilevato un wallet esistente associato a questa email. Si prega di importarlo per continuare a guadagnare premi."
+        }
+      ]
+    },
+    "MNlD7ug4Qb5knKTv38TSRA==": {
+      "translations": [
+        {
+          "translation": "Importa un wallet"
+        }
+      ]
+    },
+    "QxzO198tsuRhwRSgbXnSSA==": {
+      "translations": [
+        {
+          "translation": "Continua senza rewards"
         }
       ]
     },
     "59TOqnoYcFhWfpYdUrJdiw==": {
       "translations": [
         {
-          "translation": "Language"
+          "translation": "Lingua"
         }
       ]
     },
     "eeZwTjiz+eTRGp9qpIdbUg==": {
       "translations": [
         {
-          "translation": "{biometryType} Unavailable"
+          "translation": "{biometryType} Non disponibile"
         }
       ]
     },
     "IaE+AHV4HvjUVM7WH5QGEQ==": {
       "translations": [
         {
-          "translation": "It looks like you have {biometryType} disabled. You will need to enable it in the settings for the Origin Marketplace App."
+          "translation": "Sembra che tu abbia disabilitato {biometryType}. Dovrai abilitarlo nelle impostazioni dell'app Origin Marketplace."
         }
       ]
     },
     "+2JgKmxomPm6EphuMZAFIg==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "Apri Impostazioni"
         }
       ]
     },
     "33H9wgLoaZ0e06VAnLqWDQ==": {
       "translations": [
         {
-          "translation": "Protect your wallet"
+          "translation": "Proteggi il tuo wallet"
         }
       ]
     },
     "LeVyToxA5TxqpAsWD4H61w==": {
       "translations": [
         {
-          "translation": "Add an extra layer of security to keep your crypto safe."
+          "translation": "Aggiungi un ulteriore livello di sicurezza per mantenere le tue crypto sicure."
         }
       ]
     },
     "Rs0apd73mOXN6yDQ2xy9/w==": {
       "translations": [
         {
-          "translation": "Create a Pin Code"
+          "translation": "Crea un codice Pin"
+        }
+      ]
+    },
+    "JzJZ+OTpb9hzNw77rQa8nw==": {
+      "translations": [
+        {
+          "translation": "Caricamento foto fallito"
+        }
+      ]
+    },
+    "mVZ3B6uerQ4HZmCph0E5tQ==": {
+      "translations": [
+        {
+          "translation": "Autorizzazioni per librerie fotografiche non concesse"
+        }
+      ]
+    },
+    "8ZM8FmUk6ZfijCtumgXusw==": {
+      "translations": [
+        {
+          "translation": "La tua foto sarà visibile sulla blockchain"
+        }
+      ]
+    },
+    "qMaDEzxqr8Ix4ron05p/oQ==": {
+      "translations": [
+        {
+          "translation": "Continua"
+        }
+      ]
+    },
+    "XEjWdGrZ6rODE6mbkHNr8A==": {
+      "translations": [
+        {
+          "translation": "Accesso alla galleria negato"
+        }
+      ]
+    },
+    "AtumglY5rafPmxS5bIbDRQ==": {
+      "translations": [
+        {
+          "translation": "Sembra che non possiamo accedere alla tua galleria fotografica. Dovrai consentire l'accesso all'app Origin Marketplace."
+        }
+      ]
+    },
+    "1BsZZVEF1PmW8lwWzkHYmg==": {
+      "translations": [
+        {
+          "translation": "Carica una foto"
+        }
+      ]
+    },
+    "Sgdsg46ONGdu6O6X2qxfcg==": {
+      "translations": [
+        {
+          "translation": "Tutto bene"
         }
       ]
     },
     "HIo5dv7pY9YsS7Fqm3bXfg==": {
       "translations": [
         {
-          "translation": "That does not look like a valid email."
+          "translation": "Non sembra un'e-mail valida."
         }
       ]
     },
-    "cEX4shoBQHJThCDCs4nBjw==": {
+    "Peq94zFjleGar7Rv3g1lgg==": {
       "translations": [
         {
-          "translation": "Let's Get Started"
+          "translation": "Iniziamo"
         }
       ]
     },
-    "4OtuDyYTbZa6pV7fubbTHQ==": {
+    "RNEgkK4iv5gSEf8ZLkbgjg==": {
       "translations": [
         {
-          "translation": "What's your email address?"
+          "translation": "Qual è il tuo indirizzo e-mail?"
         }
       ]
     },
-    "0Opx8JZmCxKrrWhh6jSckw==": {
+    "En1GXA0gOCZoss4o/D8dNg==": {
       "translations": [
         {
-          "translation": "We will use your email to notify you of important notifications when you buy or sell."
+          "translation": "Utilizzeremo la tua email per comunicare importanti notifiche quando acquisti o vendi."
+        }
+      ]
+    },
+    "gneL+SMREOKfFfW2Ust3kg==": {
+      "translations": [
+        {
+          "translation": "Continua"
+        }
+      ]
+    },
+    "6bERcxQ2fGSwj490/D7Vuw==": {
+      "translations": [
+        {
+          "translation": "Verifica il tuo indirizzo Email"
+        }
+      ]
+    },
+    "MKqWd/5PlnVqEJThDppnRw==": {
+      "translations": [
+        {
+          "translation": "Inserisci il codice"
+        }
+      ]
+    },
+    "2gZws9N5PqCKOwXVtEAC4Q==": {
+      "translations": [
+        {
+          "translation": "Abbiamo inviato un codice all'indirizzo email che hai fornito. Si prega di inserirlo sopra."
+        }
+      ]
+    },
+    "5Ytz1SpM8+qqFM6zuiP0yw==": {
+      "translations": [
+        {
+          "translation": "Verifica"
+        }
+      ]
+    },
+    "yA8uydHyuptDK//yqS34XA==": {
+      "translations": [
+        {
+          "translation": "Hai una e-mail verificata, ma NON il tuo vero indirizzo email."
+        }
+      ]
+    },
+    "yCoiTqACk89DXAWoi3BMoA==": {
+      "translations": [
+        {
+          "translation": "Verifica dell'ammissibilità"
+        }
+      ]
+    },
+    "TF+HFktY9AXDNH8LNJQhUQ==": {
+      "translations": [
+        {
+          "translation": "Origin Rewards"
+        }
+      ]
+    },
+    "CJ0/lS8MDCaa37qmXjKQFg==": {
+      "translations": [
+        {
+          "translation": "Oops, {countryName} non è ammesso"
+        }
+      ]
+    },
+    "Riq5Tdahtx7XxXBl7aX1Ug==": {
+      "translations": [
+        {
+          "translation": "Sfortunatamente, sembra che tu sia attualmente in un paese in cui i regolamenti governativi non ti consentono di partecipare alle campagne di Origin Rewards."
+        }
+      ]
+    },
+    "4YNELtqVCN8E2G3QYp1Cqg==": {
+      "translations": [
+        {
+          "translation": "Abbiamo rilevato il tuo paese in modo errato?"
+        }
+      ]
+    },
+    "3SE1zCnFKOuvd6Jp635bRQ==": {
+      "translations": [
+        {
+          "translation": "Dichiaro di non essere un cittadino o residente di {countryName}"
+        }
+      ]
+    },
+    "lLkgrumZR50TcaB65im+QA==": {
+      "translations": [
+        {
+          "translation": "Continua"
+        }
+      ]
+    },
+    "e2u4nhuK5gTY0CktzGnp9g==": {
+      "translations": [
+        {
+          "translation": "Annulla"
+        }
+      ]
+    },
+    "/UBlfxY244oqVerZ50a4kA==": {
+      "translations": [
+        {
+          "translation": "Origin Rewards termini"
+        }
+      ]
+    },
+    "M0aW3hsME0GRN2erlboMPQ==": {
+      "translations": [
+        {
+          "translation": "Unisciti al programma di Origin Rewards per guadagnare token di Origin (OGN). Si applicano i termini e condizioni."
+        }
+      ]
+    },
+    "qkndnSlpAK84Dm13IY+AbA==": {
+      "translations": [
+        {
+          "translation": "I token OGN guadagnati verranno distribuiti alla fine di ogni campagna. OGN è attualmente bloccato per l'utilizzo sulla piattaforma Origin e non può essere trasferito. Si prevede che OGN sarà sbloccato e trasferibile in futuro. Partecipando al programma di Origin Rewards, l'utente accetta che non trasferirà o venderà i futuri token Origin guadagnati ad altri per almeno 1 anno dalla data di conseguimento dei token."
+        }
+      ]
+    },
+    "9Wy3RxCzhQrxJlnXfTVo7g==": {
+      "translations": [
+        {
+          "translation": "I token OGN sono stati emessi in una transazione originariamente esentata dalla registrazione ai sensi del Securities Act statunitense del 1933, come modificato (il \"Securities Act\"), e non può essere trasferita negli Stati Uniti a, o per conto o beneficio di, qualsiasi persona US esclusa in virtù di un'esenzione disponibile dai requisiti di registrazione della Legge sui valori mobiliari e tutte le leggi applicabili sui titoli di Stato. I termini usati in precedenza hanno il significato loro attribuito nella Regulation S ai sensi della Securities Act e tutte le leggi e i regolamenti applicabili."
+        }
+      ]
+    },
+    "mV7gMrH1PUulSFXaNYOdvg==": {
+      "translations": [
+        {
+          "translation": "Accetto i termini e le condizioni"
+        }
+      ]
+    },
+    "H+BZVjVjM4+IejWLGWVyhA==": {
+      "translations": [
+        {
+          "translation": "Accetta i termini"
+        }
+      ]
+    },
+    "wnFr35kFZ4iM1Ku4hZwUmA==": {
+      "translations": [
+        {
+          "translation": "Annulla"
+        }
+      ]
+    },
+    "YNkCMDVkWdODeqZBgGdakw==": {
+      "translations": [
+        {
+          "translation": "Sei sicuro di non volere Origin Rewards?"
+        }
+      ]
+    },
+    "ZybZxwhEQLQFw3K7TlMb5Q==": {
+      "translations": [
+        {
+          "translation": "Non sarai in grado di guadagnare token OGN su Origin, ma puoi comunque verificare il tuo profilo."
+        }
+      ]
+    },
+    "0q0HZMWU7Zaxkf21fXF7bw==": {
+      "translations": [
+        {
+          "translation": "No, aspetta"
+        }
+      ]
+    },
+    "caWiQ9MV++tRiOpjfzGXbg==": {
+      "translations": [
+        {
+          "translation": "Sono sicuro"
+        }
+      ]
+    },
+    "8kzZqWiXkbW+TAsfJ2wF2w==": {
+      "translations": [
+        {
+          "translation": "Sì! Iscrivimi"
+        }
+      ]
+    },
+    "vvayvkUbDXMztNsDHtqVxg==": {
+      "translations": [
+        {
+          "translation": "No grazie"
+        }
+      ]
+    },
+    "cKNz7tWusaI7mgYnY6GJjg==": {
+      "translations": [
+        {
+          "translation": "Cerchi il tuo account"
+        }
+      ]
+    },
+    "KeWVNCqIuy/5jj5oxSE76A==": {
+      "translations": [
+        {
+          "translation": "Ciao {name}!"
+        }
+      ]
+    },
+    "b2pa9zJ/zom712iIyfwpAw==": {
+      "translations": [
+        {
+          "translation": "Sono necessari alcuni passaggi aggiuntivi per completare il tuo account Origin."
+        }
+      ]
+    },
+    "jxC2CYxK7d6CUoJX8yjOjw==": {
+      "translations": [
+        {
+          "translation": "Sembra che tu sia pronto per partire!"
+        }
+      ]
+    },
+    "c0kC64N++nnO7YdUXpPkJA==": {
+      "translations": [
+        {
+          "translation": "Continua"
+        }
+      ]
+    },
+    "nT671l79mnT9TUemKKeA8g==": {
+      "translations": [
+        {
+          "translation": "Hai importato il tuo wallet"
+        }
+      ]
+    },
+    "492X/a02RgI2kX1CY4OWfA==": {
+      "translations": [
+        {
+          "translation": "Successivamente, crea un profilo di Origin che sarà collegato a questo wallet."
+        }
+      ]
+    },
+    "weAsFjgd4z8GxgH80OrGeg==": {
+      "translations": [
+        {
+          "translation": "Si prega di notare che il tuo wallet non sarà più anonimo"
+        }
+      ]
+    },
+    "3ZoiRX1L5tYXGwsTNPAyYA==": {
+      "translations": [
+        {
+          "translation": "Ulteriori informazioni"
+        }
+      ]
+    },
+    "t3fzdBVeOZ+86XM456+6OQ==": {
+      "translations": [
+        {
+          "translation": "Crea un profilo"
+        }
+      ]
+    },
+    "NMOn9OVOm+Q83MCggA+Qhw==": {
+      "translations": [
+        {
+          "translation": "Oops, aspetta. Ricominciamo..."
+        }
+      ]
+    },
+    "lCIO39XYueDt+SlnJ14ozA==": {
+      "translations": [
+        {
+          "translation": "Crea un profilo"
+        }
+      ]
+    },
+    "6YgdpUZBYWeBELyMTnFapw==": {
+      "translations": [
+        {
+          "translation": "Inserisci il tuo nome"
+        }
+      ]
+    },
+    "jQ/kAfe+VaXifrBypObqtQ==": {
+      "translations": [
+        {
+          "translation": "Inserisci il tuo cognome"
+        }
+      ]
+    },
+    "Jl+otuv0Lja5dPoHRGgnPQ==": {
+      "translations": [
+        {
+          "translation": "Continua"
+        }
+      ]
+    },
+    "3pU9dBapWm3w0SdYNr/Zkw==": {
+      "translations": [
+        {
+          "translation": "Il tuo nome sarà visibile sulla blockchain"
+        }
+      ]
+    },
+    "Lp93xb08b3XQgFxrkhcWaw==": {
+      "translations": [
+        {
+          "translation": "Inserisci il numero di telefono"
+        }
+      ]
+    },
+    "uqaHngk+36/IrdZ9m9dU1Q==": {
+      "translations": [
+        {
+          "translation": "Verificando il tuo numero di telefono, autorizzi Origin ad inviarti messaggi occasionali come notifiche sulle tue transazioni."
+        }
+      ]
+    },
+    "3g9qvEu1GiNMNh6JBijqHg==": {
+      "translations": [
+        {
+          "translation": "Continua"
+        }
+      ]
+    },
+    "XwrNYmVJlDBLt6bAM+2xFg==": {
+      "translations": [
+        {
+          "translation": "Verifica il telefono"
+        }
+      ]
+    },
+    "XAWHUFhdiQP6HPqgZSD9Ow==": {
+      "translations": [
+        {
+          "translation": "Inserisci il codice"
+        }
+      ]
+    },
+    "0afMb8DymUzAeiwd1ZoCOA==": {
+      "translations": [
+        {
+          "translation": "Abbiamo inviato un codice all'indirizzo email che hai fornito. Si prega di inserirlo sopra."
+        }
+      ]
+    },
+    "cVQ5WUbAd0AwThKrYa0XUg==": {
+      "translations": [
+        {
+          "translation": "Salta"
+        }
+      ]
+    },
+    "hSS4TyNhyW0XIRPWLPTNkQ==": {
+      "translations": [
+        {
+          "translation": "Verifica"
+        }
+      ]
+    },
+    "PyFVYexIJiaH2u8MLa9guA==": {
+      "translations": [
+        {
+          "translation": "Che hai un numero di telefono verificato, ma NON il tuo numero di telefono effettivo."
         }
       ]
     },
     "/aGURKePsq3sTnkUrus4+g==": {
       "translations": [
         {
-          "translation": "Re-enter Pin Code"
+          "translation": "Reinserire il codice Pin"
         }
       ]
     },
     "6TNQrsvPH7Jg+9BxOuTPQw==": {
       "translations": [
         {
-          "translation": "Create a Pin Code"
+          "translation": "Crea un codice Pin"
         }
       ]
     },
     "K/aDJpTjmvmNt/MSEGDQUQ==": {
       "translations": [
         {
-          "translation": "Pins did not match, try again"
+          "translation": "I pin non corrispondono, riprova"
         }
       ]
     },
     "N/BpKgn5giDbaBNOo6O9HQ==": {
       "translations": [
         {
-          "translation": "Your Pin Code will be used to login to the app."
+          "translation": "Il tuo codice Pin verrà utilizzato per accedere all'app."
         }
       ]
     },
     "Ip7Mr7tIHRRsNQPeJcaJFA==": {
       "translations": [
         {
-          "translation": "You're ready to start buying and selling on Origin"
+          "translation": "Sei pronto per iniziare a comprare e vendere su Origin"
         }
       ]
     },
-    "rpz022i7DE+gX6mCsBAw7g==": {
+    "SbM4isH7VRSRb3Kzhb2Xdw==": {
       "translations": [
         {
-          "translation": "Start using Origin"
+          "translation": "Purtroppo non siamo riusciti a pubblicare la tua identità."
+        }
+      ]
+    },
+    "OEbNUu60r5gTdbiIFyusag==": {
+      "translations": [
+        {
+          "translation": "Inizia a usare Origin"
+        }
+      ]
+    },
+    "MB0ie95S2AA9xAwYRkPG2Q==": {
+      "translations": [
+        {
+          "translation": "Pubblicando il tuo account"
+        }
+      ]
+    },
+    "/ZRamsgXYO6P2TSz5J9w9Q==": {
+      "translations": [
+        {
+          "translation": "In attesa di conferma."
+        }
+      ]
+    },
+    "oIOKtoc/Vu54ytVuwI0Tmw==": {
+      "translations": [
+        {
+          "translation": "Questa operazione potrebbe richiedere un minuto."
         }
       ]
     },
     "RQqR7szL1Z0RUueooggK8w==": {
       "translations": [
         {
-          "translation": "Buy and sell stuff with crypto."
+          "translation": "Compra e vendi cose usando cripto."
         }
       ]
     },
     "NS4tuPyGpGvlopEQ9CgpaQ==": {
       "translations": [
         {
-          "translation": "Earn rewards."
+          "translation": "Guadagna rewards."
         }
       ]
     },
     "4ngVhZSzyusgelFj2N7DSA==": {
       "translations": [
         {
-          "translation": "Create a wallet"
+          "translation": "Crea un wallet"
         }
       ]
     },
     "DqUT7JADQFjo22wU9bvsmg==": {
       "translations": [
         {
-          "translation": "I already have a wallet"
+          "translation": "Ho già un wallet"
         }
       ]
     },
-    "YPHJ6Z2YnAi0XGrq+e7nKw==": {
+    "XSqsabas04tq+ha/t4s+cQ==": {
       "translations": [
         {
-          "translation": "Next"
+          "translation": "Continua"
         }
       ]
     },
     "qrLh9UBi6Dk+4Sjgbqwhmg==": {
       "translations": [
         {
-          "translation": "By signing up you agree to the Terms of Use and Privacy Policy"
+          "translation": "Iscrivendoti accetti i Termini d'uso e l'Informativa sulla privacy"
         }
       ]
     },
     "O1VMdGobKc4WbUg9gMwhBQ==": {
       "translations": [
         {
-          "translation": "Settings"
+          "translation": "Impostazioni"
         }
       ]
     },
     "LcZb2FnXOZvXBJaKB/sXTw==": {
       "translations": [
         {
-          "translation": "General"
+          "translation": "Generale"
         }
       ]
     },
@@ -816,14 +1390,14 @@
     "5RkbvYJ6la3jlOnXZ5KIoQ==": {
       "translations": [
         {
-          "translation": "Language"
+          "translation": "Lingua"
         }
       ]
     },
     "ob6dsrEPfJxAbOpd4plQGA==": {
       "translations": [
         {
-          "translation": "Network"
+          "translation": "Rete"
         }
       ]
     },
@@ -837,49 +1411,56 @@
     "qwt5DPbEmQbgHhDgriLciA==": {
       "translations": [
         {
-          "translation": "Funding"
+          "translation": "Fondi"
         }
       ]
     },
     "yEmOPvByK+VpH6+CO13qdw==": {
       "translations": [
         {
-          "translation": "For now, you will need to transfer {currency} into your Origin Wallet from another source."
+          "translation": "Per ora, dovrai trasferire {currency} nel tuo Portafoglio Origin da un'altra fonte."
         }
       ]
     },
     "yHd/aoBlbe3kUXfROlRz4Q==": {
       "translations": [
         {
-          "translation": "Show Address"
+          "translation": "Mostra indirizzo"
         }
       ]
     },
     "ba+qT6IM6x1p9Zq2KM/sOA==": {
       "translations": [
         {
-          "translation": "Wallet Address"
+          "translation": "Indirizzo del Wallet"
         }
       ]
     },
     "kaZsDMAAk9n+m4vDL24hhg==": {
       "translations": [
         {
-          "translation": "Copy Address"
+          "translation": "Copia l'indirizzo"
         }
       ]
     },
     "cev6fBNlultWVlLlmimovA==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Copiato nella clipboard!"
+        }
+      ]
+    },
+    "MqIZn3Tps2BNhT8GpKl49Q==": {
+      "translations": [
+        {
+          "translation": "Aggiungi account"
         }
       ]
     },
     "k9ik7lp8zzY9UDgOal86Tg==": {
       "translations": [
         {
-          "translation": "Wallet Address"
+          "translation": "Indirizzo del Wallet"
         }
       ]
     }
