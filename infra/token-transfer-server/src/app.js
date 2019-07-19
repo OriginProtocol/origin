@@ -23,7 +23,7 @@ const base32 = require('thirty-two')
 
 const { createProviders } = require('@origin/token/src/config')
 
-const { LOGIN, TOTP } = require('./constants/events')
+const { LOGIN } = require('./constants/events')
 const { transferTokens } = require('./lib/transfer')
 const { Event, Grant, User } = require('./models')
 const { encrypt } = require('./lib/crypto')
@@ -31,7 +31,7 @@ const { encrypt } = require('./lib/crypto')
 const Web3 = require('web3')
 
 // Read secrets from EnvKey.
-const sessionSecret = process.env['SESSION_SECRET']
+const sessionSecret = process.env.SESSION_SECRET
 if (!sessionSecret) {
   logger.error('SESSION_SECRET must be set through EnvKey or manually')
   process.exit(1)
@@ -42,7 +42,7 @@ const networkId = Number.parseInt(process.env.NETWORK_ID) || 999
 // Setup sessions.
 app.use(
   session({
-    cookie: { maxAge: 60 * 60 * 1000 },
+    cookie: { maxAge: 60 * 60 * 1000 }, // 1 hour TTL
     resave: false,
     secure: false,
     saveUninitialized: true,
@@ -65,6 +65,11 @@ app.use(
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
+// Passport specific.
+app.use(passport.initialize())
+app.use(passport.session())
+
+
 /**
  * Allows use of async functions for an Express route.
  */
@@ -75,24 +80,42 @@ const asyncMiddleware = fn => (req, res, next) => {
 const logDate = () => moment().toString()
 
 /**
- * Middleware for requiring a session. Injects the X-Authenticated-Email header
- * with the authenticated email for the session.
+ * Ensures a user is logged in.
+ * Must be called by all routes.
  */
-function withSession(req, res, next) {
-  logger.debug('Calling withSession')
+function ensureLoggedIn(req, res, next) {
+  logger.debug('Calling ensureLoggedIn')
   if (!req.session.email) {
     logger.debug('Authentication failed. No email in session')
     res.status(401)
-    return res.send('This action requires Google login.')
+    return res.send('This action requires to verify your email.')
   }
-  if (!req.session.totp) {
-    logger.debug('Authentication failed. No totp in session')
+  if (!req.session.twoFA) {
+    logger.debug('Authentication failed. No 2FA in session')
     res.status(401)
-    return res.send('This action requires TOTP.')
+    return res.send('This action requires 2FA.')
   }
-  // User is authenticated and passed TOTP verification.
+  // User is authenticated and passed 2FA.
   logger.debug('Authentication success')
   res.setHeader('X-Authenticated-Email', req.session.email)
+  next()
+}
+
+/**
+ * Ensures a user verified their email.
+ *
+ * @param req
+ * @param res
+ * @param next
+ * @returns {*}
+ */
+function ensureEmailVerified(req, res, next) {
+  logger.debug('Calling ensureEmailVerified')
+  if (!req.session.email) {
+    logger.debug('Authentication failed. No email in session')
+    res.status(401)
+    return res.send('This action requires to verify your email first.')
+  }
   next()
 }
 
@@ -101,7 +124,7 @@ function withSession(req, res, next) {
  */
 app.get(
   '/api/grants',
-  withSession,
+  ensureLoggedIn,
   asyncMiddleware(async (req, res) => {
     logger.debug('/api/grants', req.session.email)
     const grants = await Grant.findAll({ where: { email: req.session.email } })
@@ -129,7 +152,7 @@ app.post(
     check('grantId').isInt(),
     check('amount').isDecimal(),
     check('address').custom(isEthereumAddress),
-    withSession
+    ensureLoggedIn
   ],
   asyncMiddleware(async (req, res) => {
     const errors = validationResult(req)
@@ -171,7 +194,7 @@ app.post(
  */
 app.get(
   '/api/events',
-  withSession,
+  ensureLoggedIn,
   asyncMiddleware(async (req, res) => {
     logger.debug('/api/events', req.session.email)
     // Perform an LEFT OUTER JOIN between Events and Grants. Neither SQLite nor
@@ -201,139 +224,80 @@ app.get(
   })
 )
 
-// TODO: review this for security
-app.post(
-  '/api/auth_google',
-  passport.authenticate('google-token', { session: false }),
-  (req, res) => {
-    if (!req.user) {
-      res.status(401)
-      return res.send('User not authorized')
-    }
-
-    // Save the authenticated user in the session cookie.
-    req.auth = {
-      id: req.user.id
-    }
-    req.session.email = req.user.email
-    req.session.save(err => {
-      if (err) {
-        logger.error('ERROR saving session:', err)
-      }
-    })
-
-    // Log the login.
-    Event.create({
-      email: req.user.email,
-      ip: req.connection.remoteAddress,
-      grantId: null,
-      action: LOGIN,
-      data: JSON.stringify({})
-    })
-
-    logger.info(`${logDate()} ${req.user.email} logged in`)
-
-    res.setHeader('Content-Type', 'application/json')
-    res.send(JSON.stringify(req.user))
-  }
-)
-
 app.post(
   '/api/send_email_code',
-  (req, res) => {
+  asyncMiddleware(async (req, res) => {
+    logger.debug('/api/send_email_code called, body=', req.body)
+    const email = req.body.email
 
-    // TODO: send email code here
+    // Check the user exists before sending an email code.
+    const user = await User.findOne({ where: { email } })
+    if (user) {
+      // TODO: send email code here
 
-    // Log the email code sending.
-    Event.create({
-      email: req.email,
-      ip: req.connection.remoteAddress,
-      grantId: null,
-      action: LOGIN,
-      data: JSON.stringify({ details: 'Sent email code' })
-    })
-
-    logger.info(`${logDate()} Sent email code to ${req.email}`)
+      logger.info(`${logDate()} Sent email code to ${email}`)
+    }
 
     res.setHeader('Content-Type', 'application/json')
-    res.send(JSON.stringify(req.user))
-  }
+    res.send(JSON.stringify(email))
+  })
 )
 
 app.post(
   '/api/verify_email_code',
-  passport.authenticate('local', { failureRedirect: '/login', session: false }),
+  passport.authenticate('local'),
   (req, res) => {
+    logger.debug('/api/verify_email_code called')
     if (!req.user) {
       res.status(401)
       return res.send('User not authorized')
     }
 
     // Save the authenticated user in the session cookie.
-    // FRANCK: WHAT IS THIS FOR ??????
-    req.auth = {
-      id: req.user.id
-    }
-
+    // FRANCK: DO WE REALLY NEED THIS OR COULD WE RELY ON PASSPORT req.user ????
     req.session.email = req.user.email
     req.session.save(err => {
       if (err) {
         logger.error('ERROR saving session:', err)
       }
     })
-
-    // Log the login.
-    Event.create({
-      email: req.user.email,
-      ip: req.connection.remoteAddress,
-      grantId: null,
-      action: LOGIN,
-      data: JSON.stringify({})
-    })
-
-    logger.info(`${logDate()} ${req.user.email} logged in`)
+    
+    logger.info(`${logDate()} ${req.user.email} verified email`)
 
     res.setHeader('Content-Type', 'application/json')
-    res.send(JSON.stringify(req.user))
+    res.send(JSON.stringify({ email: req.user.email, otpReady: Boolean(req.user.otpKey) }))
   }
 )
 
 /**
   Returns data for setting up TOTP.
  */
-// IMPORTANT: add middleware to ensure user is logged in.
-app.get(
+app.post(
   '/api/totp_setup',
+  ensureEmailVerified, // User must have verified their email first.
   asyncMiddleware(async (req, res) => {
-    // Load the user
-    const email = req.session.email || 'foo@originprotocol.com'
-    const user = await User.findOne({ where: { email } })
-    if (!user) {
-      // Something is wrong. The user should exist since
-      // TOTP is verified only after email verification.
-      res.status(500)
-      return res.send('Failed loading user.')
-    }
-
-    if (user.otpKey) {
+    logger.debug('/api/totp_setup called')
+    if (req.user.otpKey) {
       // Two-factor auth has already been setup. Do not allow to reset it.
       res.status(403)
       return res.send('TOTP already setup.')
     }
 
     // TOTP  not setup yet. Generate a key and save it in the DB.
-    const otpKey = Web3.utils.randomHex(10).slice(2)
-    const encodedKey = base32.encode(otpKey).toString()
-    const encryptedKey = encrypt(otpKey)
-    await user.update({ otpKey: encryptedKey })
+    const key = Web3.utils.randomHex(10).slice(2)
+    const encodedKey = base32.encode(key).toString()
+    logger.debug('OTP KEY=', key)
+    const encryptedKey = encrypt(key)
+    logger.debug('Encrypted OTP KEY=', encryptedKey)
+    await req.user.update({ otpKey: encryptedKey })
 
     // Generate QR code for scanning into Google Authenticator
     // Reference: https://code.google.com/p/google-authenticator/wiki/KeyUriFormat
-    const otpUrl = `otpauth://totp/${email}?secret=${encodedKey}&period=30&issuer=OriginProtocol`
-    const qrUrl = 'https://chart.googleapis.com/chart?chs=166x166&chld=L|0&cht=qr&chl=' + encodeURIComponent(otpUrl)
+    const otpUrl = `otpauth://totp/${req.user.email}?secret=${encodedKey}&period=30&issuer=OriginProtocol`
+    const otpQrUrl = 'https://chart.googleapis.com/chart?chs=166x166&chld=L|0&cht=qr&chl=' + encodeURIComponent(otpUrl)
 
     res.setHeader('Content-Type', 'application/json')
-    res.send(JSON.stringify({ key: encodedKey, qrUrl }))
+    res.send(JSON.stringify({ email: req.user.email, otpKey: encodedKey, otpQrUrl }))
   })
 )
 
@@ -342,21 +306,22 @@ app.get(
  */
 app.post(
   '/api/verify_totp',
-  // TODO(franck): figure what those options are
-  passport.authenticate('totp', { failureRedirect: '/login-otp', failureFlash: true }),
+  ensureEmailVerified, // User must have verified their email first.
+  passport.authenticate('totp'),
   (req, res) => {
+    logger.debug('/api/verify_totp called')
 
-    // Log the successfull totp authentication.
+    // Log the successfull login.
     Event.create({
       email: req.user.email,
       ip: req.connection.remoteAddress,
       grantId: null,
-      action: TOTP,
+      action: LOGIN,
       data: JSON.stringify({})
     })
 
     // Save in the session that the user successfully authed with TOTP.
-    req.session.secondFactor = 'totp'
+    req.session.twoFA = 'totp'
     req.session.save(err => {
       if (err) {
         logger.error('ERROR saving session:', err)
@@ -365,12 +330,12 @@ app.post(
 
     // TODO: is that the right thing to return ?
     res.setHeader('Content-Type', 'application/json')
-    res.send(JSON.stringify(req.user))
+    res.send(JSON.stringify({ email: req.user.email }))
   }
 )
 
 // Destroys the user's session cookie.
-app.post('/api/logout', withSession, (req, res) => {
+app.post('/api/logout', ensureLoggedIn, (req, res) => {
   if (req.session) {
     req.session.destroy(err => {
       if (err) {

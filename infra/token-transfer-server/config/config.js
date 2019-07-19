@@ -12,7 +12,7 @@ module.exports = {
       underscored: true
     },
     // Disable logging of SQL statements.
-    logging: true
+    logging: false
   },
   test: {
     use_env_variable: 'DATABASE_URL',

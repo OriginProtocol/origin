@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         allowNull: false
       },
-      // Key used for TOTP authentication.
+      // Key used for OTP authentication.
       otp_key: {
         type: Sequelize.STRING
       },
