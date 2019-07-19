@@ -34,7 +34,6 @@ class Login extends Component {
     const serverResponse = await fetch('/api/send_email_code', opts)
     if (serverResponse.ok) {
       this.setState({ loginStep: 'enterEmailCode' })
-      // TODO:change state to render a form that shows box to input code.
     } else {
       this.handleError('Failure to send email code. Try again in a moment.')
     }
