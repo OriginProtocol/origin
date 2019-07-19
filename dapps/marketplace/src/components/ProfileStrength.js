@@ -1,11 +1,9 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
 
-import useIsMobile from 'utils/useMobile'
+import withIsMobile from 'hoc/withIsMobile'
 
-const ProfileStrength = ({ published = 0, unpublished = 0, large }) => {
-  const isMobile = useIsMobile()
-
+const ProfileStrength = ({ published = 0, unpublished = 0, large, isMobile }) => {
   const title = isMobile
     ? fbt('Strength', 'ProfileStrength.Strength')
     : fbt('Profile Strength', 'ProfileStrength.ProfileStrength')
@@ -30,7 +28,7 @@ const ProfileStrength = ({ published = 0, unpublished = 0, large }) => {
   )
 }
 
-export default ProfileStrength
+export default withIsMobile(ProfileStrength)
 
 require('react-styl')(`
   .profile-strength

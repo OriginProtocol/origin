@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 import copy from 'copy-to-clipboard'
+import withIsMobile from 'hoc/withIsMobile' 
 
 import Modal from 'components/Modal'
 
 class MobileModal extends Component {
   render() {
-    const isMobile = window.innerWidth < 767
+    const isMobile = this.props.isMobile
     if (localStorage.ognNetwork === 'test') {
       return null
     }
@@ -69,7 +70,7 @@ class MobileModal extends Component {
   }
 }
 
-export default MobileModal
+export default withIsMobile(MobileModal)
 
 require('react-styl')(`
   .mobile-modal
