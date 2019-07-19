@@ -97,9 +97,7 @@ async function setupTotp(req, res) {
   // TOTP  not setup yet. Generate a key and save it encrypted in the DB.
   const key = crypto.randomBytes(10).toString('hex')
   const encodedKey = base32.encode(key).toString()
-  logger.debug('OTP KEY=', key)
   const encryptedKey = encrypt(key)
-  logger.debug('Encrypted OTP KEY=', encryptedKey)
   await req.user.update({ otpKey: encryptedKey })
 
   // Generate QR code for scanning into Google Authenticator
