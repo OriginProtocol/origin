@@ -78,7 +78,7 @@ class Login extends Component {
     const opts = {
       method: 'POST',
     }
-    const serverReponse = await fetch('/api/totp_setup', opts)
+    const serverReponse = await fetch('/api/setup_totp', opts)
     if (!serverReponse.ok) {
       console.log('TOTP setup failed')
       this.handleError('OTP setup failure.')
@@ -86,7 +86,7 @@ class Login extends Component {
     }
 
     const response = await serverReponse.json()
-    console.log('Successfull called totp_setup, Json response=', response)
+    console.log('Successfull called setup_totp, Json response=', response)
 
     if (!response || !response.otpQrUrl || !response.otpKey) {
       this.handleError('OTP setup failure.')

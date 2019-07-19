@@ -48,6 +48,7 @@
     "react-thunk": "^1.0.0",
     "react-validation": "^3.0.7",
     "redux": "^4.0.2",
+    "@sendgrid/mail": "^6.4.0",
     "sequelize": "^5.9.4",
     "sequelize-cli": "^5.5.0",
     "sql-template-strings": "^2.2.2",
