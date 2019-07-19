@@ -8,7 +8,7 @@ class GrowthBanned extends Component {
   }
 
   render() {
-    const isMobile = this.props.ismobile === 'true'
+    const { isMobile } = this.props
 
     return (
       <div
