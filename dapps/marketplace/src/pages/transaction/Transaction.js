@@ -126,6 +126,7 @@ const Transaction = props => {
               <DocumentTitle>{offer.listing.title}</DocumentTitle>
               {isMobile ? (
                 <MobileModalHeader
+                  className="px-0"
                   onBack={() => {
                     props.history.push(isSeller ? '/my-sales' : '/my-purchases')
                     window.scrollTo(0, 0)
@@ -158,17 +159,17 @@ const Transaction = props => {
                   {History}
                 </>
               ) : (
-                <div className="row">
-                  <div className="col-12">{Progress}</div>
-                  <div className="col-12 d-flex">
+                <>
+                  {Progress}
+                  <div className="d-flex">
                     <div className="col-3 p-0">{Offer}</div>
                     {HorizontalSeparator}
                     <div className="col-3 p-0">{Escrow}</div>
                     {HorizontalSeparator}
                     <div className="col-3 p-0">{About}</div>
                   </div>
-                  <div className="col-12">{History}</div>
-                </div>
+                  {History}
+                </>
               )}
             </>
           )
@@ -184,6 +185,12 @@ require('react-styl')(`
   .transaction-detail
     padding-top: 2.5rem
     position: relative
+    max-width: 960px
+    .about-party
+      .actions
+        .btn-link
+          font-size: 14px
+          font-weight: 700
     > a
       color: var(--dusk)
       text-transform: uppercase
@@ -221,6 +228,10 @@ require('react-styl')(`
   @media (max-width: 767.98px)
     .transaction-detail
       padding-top: 1rem
+      .about-party
+        .actions
+          .btn-link
+            font-size: 18px
       > h2
         font-size: 32px
 `)

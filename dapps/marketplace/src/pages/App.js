@@ -39,7 +39,8 @@ class App extends Component {
   state = {
     hasError: false,
     displayMobileModal: false,
-    mobileModalDismissed: false
+    mobileModalDismissed: false,
+    footer: false
   }
 
   componentDidMount() {
@@ -90,32 +91,31 @@ class App extends Component {
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
 
-    const isMobile = this.props.ismobile === 'true'
-    // hide navigation bar on growth welcome screen and show it
-    // in onboarding variation of that screen
+    const isMobile = this.props.isMobile
 
+    const isOnWelcomeAndNotOboard = this.props.location.pathname.match(
+      /^\/welcome\/?(?!(onboard\/)).*/gi
+    )
+
+    // TODO: Too many regex here, probably it's better to optimize this sooner or later
     const hideNavbar =
-      (!this.props.location.pathname.match(/^\/welcome\/onboard.*$/g) &&
-        this.props.location.pathname.match(/^\/welcome.*$/g)) ||
-      (isMobile && this.props.location.pathname.match(/^\/purchases\/.*$/g)) ||
+      (isOnWelcomeAndNotOboard && !isMobile) ||
       (isMobile &&
-        this.props.location.pathname.match(/^\/campaigns\/purchases$/g)) ||
-      (isMobile &&
-        this.props.location.pathname.match(/^\/campaigns\/invitations$/g)) ||
-      (isMobile &&
-        this.props.location.pathname.match(/^\/campaigns\/verifications$/g)) ||
-      (isMobile &&
-        this.props.location.pathname.match(/\/onboard\/finished/g)) ||
-      (isMobile && this.props.location.pathname.match(/\/user\/.+/)) ||
-      (isMobile &&
-        (this.props.history.length > 1 || this.props.location.search) &&
-        this.props.location.pathname.match(/\/listing\/.+/))
+        (this.props.location.pathname.match(/^\/purchases\/.*$/gi) ||
+          this.props.location.pathname.match(/^\/campaigns\/purchases$/gi) ||
+          this.props.location.pathname.match(/^\/campaigns\/invitations$/gi) ||
+          this.props.location.pathname.match(/\/onboard\/finished/gi) ||
+          this.props.location.pathname.match(
+            /^\/(create\/.+|listing\/[-0-9]+\/edit\/.+)/gi
+          )))
 
     return (
       <CurrencyContext.Provider value={this.props.currency}>
         {!hideNavbar && (
           <Nav
             onGetStarted={() => this.setState({ mobileModalDismissed: false })}
+            onShowFooter={() => this.setState({ footer: true })}
+            navbarDarkMode={isOnWelcomeAndNotOboard}
           />
         )}
         <main>
@@ -155,10 +155,13 @@ class App extends Component {
             />
             <Route exact path="/rewards/banned" component={GrowthBanned} />
             <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />
+            <Route path="/search" component={Listings} />
             <Route component={Listings} />
           </Switch>
         </main>
-        <TranslationModal locale={this.props.locale} />
+        {!this.props.isMobileApp && (
+          <TranslationModal locale={this.props.locale} />
+        )}
         {this.state.displayMobileModal && (
           <MobileModal
             onClose={() =>
@@ -170,6 +173,8 @@ class App extends Component {
           />
         )}
         <Footer
+          open={this.state.footer}
+          onClose={() => this.setState({ footer: false })}
           locale={this.props.locale}
           onLocale={this.props.onLocale}
           creatorConfig={creatorConfig}

@@ -29,7 +29,7 @@ export default StyleSheet.create({
   // General title styling
   title: {
     fontFamily: 'Lato',
-    fontSize: smallScreen ? 28 : 36,
+    fontSize: smallScreen ? 28 : 34,
     fontWeight: '600',
     paddingTop: 20,
     paddingBottom: 20,
@@ -46,5 +46,9 @@ export default StyleSheet.create({
   },
   image: {
     marginBottom: 20
+  },
+  invalid: {
+    borderColor: '#ff0000',
+    color: '#ff0000'
   }
 })

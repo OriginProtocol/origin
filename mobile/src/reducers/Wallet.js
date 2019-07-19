@@ -1,6 +1,7 @@
 'use strict'
 
 import { WalletConstants } from 'actions/Wallet'
+import get from 'lodash.get'
 
 const initialState = {
   accounts: [],
@@ -32,6 +33,10 @@ export default function Wallet(state = initialState, action = {}) {
     case WalletConstants.REMOVE_ACCOUNT:
       return {
         ...state,
+        activeAccount:
+          get(state, 'activeAccount.address') === action.account.address
+            ? null
+            : state.activeAccount,
         accounts: state.accounts.filter(
           a => a.address !== action.account.address
         )

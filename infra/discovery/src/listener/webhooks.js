@@ -53,7 +53,7 @@ async function postToDiscordWebhook(url, data) {
             listing
           )}`,
           description: [
-            `https://dapp.originprotocol.com/#/purchases/${data.related.offer.id}`,
+            `https://shoporigin.com/#/purchases/${data.related.offer.id}`,
             `Seller: ${personDisp(listing.seller)}`,
             `Buyer: ${personDisp(data.related.offer.buyer)}`
           ].join('\n')
@@ -70,7 +70,7 @@ async function postToDiscordWebhook(url, data) {
           )}`,
           description: [
             `${listing.description.split('\n')[0].slice(0, 60)}...`,
-            `https://dapp.originprotocol.com/#/listing/${listing.id}`,
+            `https://shoporigin.com/#/listing/${listing.id}`,
             `Seller: ${personDisp(listing.seller)}`
           ].join('\n')
         }

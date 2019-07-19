@@ -134,7 +134,7 @@ require('react-styl')(`
     font-weight: normal
     .btn-link
       &::after
-        content: " \\203A"
+        content: " ›"
       font-size: 14px
       font-weight: bold
     li
@@ -163,4 +163,6 @@ require('react-styl')(`
   @media (max-width: 767.98px)
     .escrow-details
       font-size: 18px
+      .btn-link
+        font-size: 18px
 `)

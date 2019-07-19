@@ -168,7 +168,7 @@ class TxnManager {
     for (let retries = 0; retries < 60; retries++) {
       try {
         const receipt = await this.web3.eth.getTransactionReceipt(this.txnHash)
-        if (receipt) {
+        if (receipt && receipt.blockNumber) {
           if (receipt.status) {
             return receipt
           } else {

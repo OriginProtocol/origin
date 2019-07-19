@@ -42,13 +42,15 @@ export default withIdentity(RoomStatus, 'wallet')
 
 require('react-styl')(`
   .room-status
-    padding: 0.75rem
+    padding: 1.1rem 0.75rem
     display: flex
     cursor: pointer
     font-size: 16px
+    border-bottom: 1px solid #dde6ea
+    &:last-child
+      border: 0
     &.active
-      background: var(--dusk)
-      color: var(--white)
+      background: rgba(0, 0, 0, 0.1)
       .time
         color: var(--white)
     .avatar

@@ -337,13 +337,13 @@ class GrowthCampaigns extends Component {
       this.props.growthEnrollmentStatus === 'NotEnrolled' ||
       this.props.growthEnrollmentStatus === 'Banned'
     ) {
-      this.props.history.push('/welcome')
+      this.props.history.replace('/welcome')
     }
   }
 
   render() {
     const navigation = get(this.props, 'match.params.navigation') || 'Campaigns'
-    const isMobile = this.props.ismobile === 'true'
+    const isMobile = this.props.isMobile
 
     return (
       <div className={`container growth-campaigns ${isMobile ? 'mobile' : ''}`}>
@@ -365,7 +365,10 @@ class GrowthCampaigns extends Component {
 
             const accountId = data.web3.primaryAccount.id
 
-            if (!this.props.growthCampaigns) {
+            if (
+              !this.props.growthCampaigns ||
+              this.props.growthCampaignsLoading
+            ) {
               return (
                 <h5 className="p-2">
                   <fbt desc="Loading...">Loading...</fbt>

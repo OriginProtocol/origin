@@ -22,11 +22,13 @@ export default StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 20,
     textAlign: 'center',
-    width: '80%'
+    width: '80%',
+    color: '#98a7b4',
+    fontFamily: 'Lato'
   },
   backArrow: {
     position: 'absolute',
     left: -10,
-    top: 18
+    top: 16
   }
 })

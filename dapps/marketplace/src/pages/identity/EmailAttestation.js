@@ -101,7 +101,7 @@ class EmailAttestation extends Component {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
 
-              const emailRegex = /^[a-z0-9-._+]+@[a-z0-9-]+\.([a-z]{2,4})(\.[a-z]{2,4})?$/i
+              const emailRegex = /^[a-z0-9-._+]+@[a-z0-9-]+(\.[a-z]+)*(\.[a-z]{2,})$/i
               if (!emailRegex.test(this.state.email)) {
                 this.setState({
                   error: fbt(
@@ -201,7 +201,9 @@ class EmailAttestation extends Component {
     }
 
     const placeholder = onboarding ? (
-      <fbt desc="EmailAttestation.onboarding.enterCode">Enter code</fbt>
+      <fbt desc="EmailAttestation.onboarding.enterCode">
+        Enter verification code
+      </fbt>
     ) : (
       <fbt desc="EmailAttestation.verifyCode">Verification code</fbt>
     )
@@ -299,7 +301,7 @@ class EmailAttestation extends Component {
                     type="tel"
                     maxLength="6"
                     ref={ref => (this.inputRef = ref)}
-                    className="form-control form-control-lg"
+                    className="form-control form-control-lg text-center"
                     placeholder={placeholder}
                     value={this.state.code}
                     onChange={e => this.setState({ code: e.target.value })}

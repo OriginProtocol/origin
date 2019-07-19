@@ -3,7 +3,7 @@
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "repository": "https://github.com/OriginProtocol/origin/mobile",
-  "version": "0.13.3",
+  "version": "0.16.0",
   "scripts": {
     "android": "react-native run-android",
     "clean": "git clean -fdX .",
@@ -65,7 +65,6 @@
     "react-native-randombytes": "^3.5.3",
     "react-native-safe-area-view": "^0.14.5",
     "react-native-sentry": "^0.43.2",
-    "react-native-test-flight": "^1.0.1",
     "react-native-touch-id": "^4.4.1",
     "react-native-user-agent": "^1.0.4",
     "react-native-webview": "^5.12.0",

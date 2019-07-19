@@ -41,7 +41,7 @@ class GrowthTermsScreen extends Component {
   async componentDidMount() {
     const eligibility = await this.props.getGrowthEligibility()
     const eligible =
-      get(eligibility, 'data.isEligible.eligibility', null) === 'Eligibled'
+      get(eligibility, 'data.isEligible.eligibility', null) === 'Eligible'
     const countryName = get(eligibility, 'data.isEligible.countryName')
     this.setState({ loading: false, eligible, countryName })
   }
@@ -94,31 +94,38 @@ class GrowthTermsScreen extends Component {
   renderIneligible() {
     return (
       <>
+        <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
+          <BackArrow
+            onClick={() => this.props.navigation.goBack(null)}
+            style={styles.backArrow}
+          />
+          <Text style={styles.title}>
+            <fbt desc="GrowthTermsScreen.ineligibleTitle">Origin Rewards</fbt>
+          </Text>
+        </View>
         <View style={styles.container}>
           <Image
             style={styles.image}
             source={require(IMAGES_PATH + 'not-eligible-graphic.png')}
           />
-          <Text style={styles.title}>
+          <Text style={{ ...styles.title, fontSize: 26 }}>
             <fbt desc="GrowthTermsScreen.ineligibleTitle">
               Oops,{' '}
               <fbt:param name="countryName">{this.state.countryName}</fbt:param>{' '}
               is not eligible
             </fbt>
           </Text>
-          <Text style={styles.subtitle}>
-            <fbt desc="GrowthTermsScreen.ineligibleSubtitle">
+          <Text style={{ textAlign: 'center' }}>
+            <fbt desc="GrowthTermsScreen.ineligibleDescription">
               Unfortunately, it looks like you’re currently in a country where
               government regulations do not allow you to participate in Origin
               Rewards.
             </fbt>
           </Text>
-        </View>
-        <View style={styles.container}>
           <Text
             style={{
-              fontWeight: '600',
-              marginTop: 10,
+              fontWeight: '500',
+              marginTop: 20,
               marginBottom: 10,
               fontSize: 16
             }}
@@ -139,9 +146,7 @@ class GrowthTermsScreen extends Component {
             uncheckedCheckBoxColor="#455d75"
             rightTextView={
               <View>
-                <Text
-                  style={{ fontSize: 16, marginLeft: 5, fontWeight: '300' }}
-                >
+                <Text style={styles.checkboxText}>
                   <fbt desc="GrowthTermsScreen.nonResidentCertification">
                     I certify that I am not a citizen or resident of
                     <fbt:param name="countryName">
@@ -178,11 +183,16 @@ class GrowthTermsScreen extends Component {
   renderTerms() {
     return (
       <>
-        <View style={{ ...styles.container, paddingTop: 20 }}>
+        <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
           <BackArrow
             onClick={() => this.props.navigation.goBack(null)}
             style={styles.backArrow}
           />
+          <Text style={styles.title}>
+            <fbt desc="GrowthTermsScreen.termsTitle">Origin Rewards Terms</fbt>
+          </Text>
+        </View>
+        <View style={styles.container}>
           <Text style={styles.termsHeader}>
             <fbt desc="GrowthTermsScreen.termsHeader">
               Join Origin’s reward program to earn Origin tokens (OGN). Terms &
@@ -190,18 +200,14 @@ class GrowthTermsScreen extends Component {
             </fbt>
           </Text>
           <Text style={styles.termsText}>
-            <fbt desc="GrowthTermsScreen.termsTextOne">
+            <fbt desc="GrowthTermsScreen.termsText">
               Earned OGN will be distributed at the end of each campaign. OGN is
               currently locked for usage on the Origin platform and cannot be
               transferred. It is expected that OGN will be unlocked and
-              transferrable in the future.
-            </fbt>
-          </Text>
-          <Text style={styles.termsText}>
-            <fbt desc="GrowthTermsScreen.termsTextTwo">
-              By joining the Origin rewards program, you agree that you will not
-              transfer or sell future earned Origin tokens to other for at least
-              1 year from the date of earning your tokens.
+              transferrable in the future. By joining the Origin rewards
+              program, you agree that you will not transfer or sell future
+              earned Origin tokens to other for at least 1 year from the date of
+              earning your tokens.
             </fbt>
           </Text>
           <View style={styles.termsHighlightContainer}>
@@ -231,9 +237,7 @@ class GrowthTermsScreen extends Component {
             uncheckedCheckBoxColor="#455d75"
             rightTextView={
               <View>
-                <Text
-                  style={{ fontSize: 16, marginLeft: 5, fontWeight: '300' }}
-                >
+                <Text style={styles.checkboxText}>
                   <fbt desc="GrowthTermsScreen.acceptCheckboxText">
                     I accept the terms and conditions
                   </fbt>
@@ -284,15 +288,16 @@ const styles = StyleSheet.create({
   ...OnboardingStyles,
   termsHeader: {
     fontWeight: '600',
-    fontSize: 18,
-    marginBottom: 20,
-    marginHorizontal: 20,
-    textAlign: 'center'
+    fontSize: 16,
+    marginBottom: 10,
+    textAlign: 'center',
+    fontFamily: 'Lato'
   },
   termsText: {
-    paddingHorizontal: 20,
+    fontSize: 14,
     marginBottom: 20,
-    color: '#111d28'
+    color: '#111d28',
+    fontFamily: 'Lato'
   },
   termsHighlightContainer: {
     borderColor: '#98a7b4',
@@ -300,11 +305,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingVertical: 20,
     paddingHorizontal: 20,
-    marginVertical: 20,
-    width: '90%',
+    marginBottom: 10,
+    width: '100%',
     borderRadius: 5
   },
   termsHighlightText: {
-    color: '#6f8294'
+    fontSize: 12,
+    color: '#6f8294',
+    fontFamily: 'Lato'
+  },
+  checkboxText: {
+    fontFamily: 'Lato',
+    fontSize: 14,
+    marginLeft: 5,
+    fontWeight: '300'
   }
 })

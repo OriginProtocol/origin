@@ -8,8 +8,7 @@ import Linkify from 'react-linkify'
 import withIdentity from 'hoc/withIdentity'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 
-import Avatar from 'components/Avatar'
-import { abbreviateName, truncateAddress } from 'utils/user'
+import { abbreviateName } from 'utils/user'
 
 dayjs.extend(advancedFormat)
 
@@ -50,7 +49,7 @@ function renderContent(message) {
 }
 
 function showItems(props) {
-  const { message, lastMessage, nextMessage, wallet } = props
+  const { message, lastMessage, nextMessage, wallet, walletProxy } = props
 
   let showTime = true
   let showTailAndAvatar = true
@@ -66,7 +65,8 @@ function showItems(props) {
   }
   if (nextMessage) {
     const futureTimeDiff = nextMessage.timestamp - message.timestamp
-    const sameSender = nextMessage.address === wallet
+    const sameSender =
+      nextMessage.address === wallet || nextMessage.address === walletProxy
 
     if (futureTimeDiff / 60 < MAX_MINUTES && sameSender) {
       showTailAndAvatar = false
@@ -86,11 +86,8 @@ function getCssClasses(isUser, showTailAndAvatar) {
   return { justifyContent, contentOnly, userType }
 }
 
-const UserInfo = ({ userName, userAddress }) => (
-  <>
-    <div className="name text-truncate align-self-center">{userName}</div>
-    <span className="account">{userAddress}</span>
-  </>
+const UserInfo = ({ userName }) => (
+  <div className="name text-truncate align-self-center">{userName}</div>
 )
 
 const Message = props => {
@@ -98,7 +95,6 @@ const Message = props => {
   const identity = isNil(props.identity) ? {} : props.identity
   const messageContent = renderContent(message)
   const userName = abbreviateName(identity, 'Unnamed User')
-  const userAddress = truncateAddress(props.wallet)
   const { showTime, showTailAndAvatar } = showItems(props)
   const { justifyContent, contentOnly, userType } = getCssClasses(
     props.isUser,
@@ -116,31 +112,21 @@ const Message = props => {
         className={`d-flex flex-row ${justifyContent} message${userType}${contentOnly}`}
       >
         <div className={`d-flex message-container ${justifyContent}`}>
-          {!props.isUser && showTailAndAvatar && (
-            <div className="align-self-end avatar-container">
-              <Avatar profile={props.identity} size={60} />
-            </div>
-          )}
-          <div className={`bubble ${showTailAndAvatar ? 'tail' : ''}`}>
+          <div className={'bubble tail'}>
             <div className="top">
               {props.isUser ? (
-                <UserInfo userName={userName} userAddress={userAddress} />
+                <UserInfo userName={userName} />
               ) : (
                 <Link
                   to={`/user/${props.wallet}`}
                   className="d-flex flex-row justify-content-start"
                 >
-                  <UserInfo userName={userName} userAddress={userAddress} />
+                  <UserInfo userName={userName} />
                 </Link>
               )}
             </div>
             <div className="content">{messageContent}</div>
           </div>
-          {props.isUser && showTailAndAvatar && (
-            <div className="align-self-end avatar-container">
-              <Avatar profile={props.identity} size={60} />
-            </div>
-          )}
         </div>
       </div>
     </>
@@ -154,8 +140,9 @@ require('react-styl')(`
     margin: 10px 0 20px 0
     flex: 1 0 auto
     width: 100%
+    max-height: max-content
     .message-container
-      max-width: 70%
+      max-width: 90%
     .avatar-container
       display: inline
       .avatar
@@ -166,13 +153,9 @@ require('react-styl')(`
     &.content-only
       margin-bottom: 0
     &.counterparty
-      &.content-only
-        padding-left: 60px
       .account, .name
         color: var(--dark-blue-grey)
     &.user
-      &.content-only
-        padding-right: 60px
       .account, .name
         color: white
     .bubble
@@ -187,7 +170,7 @@ require('react-styl')(`
         font-size: 14px
         display: flex
         .name
-          font-weight: normal
+          font-weight: bold
           margin-right: 0.5rem
         .account
           max-width: 6rem

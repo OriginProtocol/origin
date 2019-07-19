@@ -7,7 +7,7 @@ describe('Emails', () => {
   it(`Should generate invite and reminder emails based on template`, () => {
     const vars = {
       referrerName: 'George Lucas',
-      targetUrl: 'https://dapp.originprotocol.com/starwars'
+      targetUrl: 'https://shoporigin.com/starwars'
     }
 
     for (const type of ['invite', 'reminder']) {

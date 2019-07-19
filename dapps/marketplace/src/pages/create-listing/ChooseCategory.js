@@ -6,6 +6,7 @@ import Categories from '@origin/graphql/src/constants/Categories'
 import Link from 'components/Link'
 import Redirect from 'components/Redirect'
 import DownloadApp from 'components/DownloadApp'
+import withWallet from 'hoc/withWallet'
 
 const CategoriesEnum = require('Categories$FbtEnum') // Localized category names
 
@@ -23,6 +24,7 @@ const hourlyFractional = [
   'schema.tools'
 ]
 const nightlyFractional = [
+  'schema.appliances',
   'schema.babyKidStuff',
   'schema.cellPhones',
   'schema.clothingAccessories',
@@ -68,7 +70,13 @@ function propsForType(category, subCategory) {
   return { __typename, category, subCategory }
 }
 
-const ChooseListingCategory = ({ listing, prev, next, onChange }) => {
+const ChooseListingCategory = ({
+  listing,
+  prev,
+  next,
+  walletType,
+  onChange
+}) => {
   const [valid, setValid] = useState(false)
   const categoryId = get(listing, 'category')
   const categoryShortId = categoryId.split('.')[1]
@@ -125,17 +133,19 @@ const ChooseListingCategory = ({ listing, prev, next, onChange }) => {
             </div>
           </div>
         </div>
-        <div className="col-md-4">
-          <div className="gray-box">
-            <DownloadApp />
+        {walletType !== 'Mobile' && walletType !== 'Origin Wallet' && (
+          <div className="col-md-4">
+            <div className="gray-box">
+              <DownloadApp />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   )
 }
 
-export default ChooseListingCategory
+export default withWallet(ChooseListingCategory)
 
 require('react-styl')(`
   .create-listing

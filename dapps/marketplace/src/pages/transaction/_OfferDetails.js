@@ -40,11 +40,7 @@ const OfferDetails = ({ offer }) => (
         <span>
           <fbt desc="OfferDetails.checkOut">Check out</fbt>
         </span>
-        <span>
-          {dayjs(offer.endDate)
-            .add(1, 'day')
-            .format('MMM. D, YYYY')}
-        </span>
+        <span>{dayjs(offer.endDate).format('MMM. D, YYYY')}</span>
       </li>
     )}
     {offer.startDate && offer.listing.__typename === 'FractionalHourlyListing' && (
@@ -125,7 +121,7 @@ require('react-styl')(`
     .btn-link
       > div
         &::after
-          content: " \\203A"
+          content: " ›"
         font-size: 14px
         font-weight: bold
     li

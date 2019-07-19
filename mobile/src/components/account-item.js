@@ -43,7 +43,7 @@ const AccountItem = ({ item, navigation, wallet }) => {
           <View style={{ ...styles.listItemIconContainer, marginRight: 10 }}>
             <Avatar source={avatarUrl} />
           </View>
-          {name && (
+          {!!name && (
             <Text style={styles.name}>{truncate(name, truncateLength)}</Text>
           )}
           <Address
@@ -54,7 +54,7 @@ const AccountItem = ({ item, navigation, wallet }) => {
         </View>
         {
           <View style={styles.listItemIconContainer}>
-            {wallet.activeAccount.address === item.address && (
+            {get(wallet, 'activeAccount.address') === item.address && (
               <Image
                 source={require(`${IMAGES_PATH}selected.png`)}
                 style={styles.listSelectedItem}

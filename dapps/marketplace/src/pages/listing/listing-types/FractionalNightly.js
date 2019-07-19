@@ -33,10 +33,28 @@ const FractionalNightlyDetail = ({
       {description}
       {openCalendar && (
         <ModalComp
-          title={fbt('Availability', 'Availability')}
+          title={
+            <>
+              <button
+                className="clear-button btn btn-link"
+                disabled={!startDate && !endDate}
+                onClick={() => setSelectedRange(null)}
+              >
+                <fbt desc="Clear">Clear</fbt>
+              </button>
+              <div>
+                <fbt desc="Availability">Availability</fbt>
+              </div>
+              <div
+                className="close-button"
+                onClick={() => setCloseModal(true)}
+              />
+            </>
+          }
           className="availability-modal"
           shouldClose={closeModal}
           lightMode={true}
+          showBackButton={false}
           onClose={() => {
             setCloseModal(false)
             onClose()
@@ -50,6 +68,8 @@ const FractionalNightlyDetail = ({
               onChange={state => setSelectedRange(state)}
               availability={availability}
               currency={listing.price.currency}
+              startDate={startDate}
+              endDate={endDate}
             />
             <div className="actions mt-auto">
               <button
@@ -58,6 +78,7 @@ const FractionalNightlyDetail = ({
                   onChange(selectedRange)
                   setCloseModal(true)
                 }}
+                disabled={!startDate && !endDate}
               >
                 <fbt desc="Save">Save</fbt>
               </button>
@@ -83,19 +104,49 @@ export default FractionalNightlyDetail
 
 require('react-styl')(`
   .availability-modal
+    .choose-dates
+      flex: auto 0 0
     .actions
+      flex: auto 0 0
       display: flex
       flex-direction: column
       .btn
         width: 250px
         margin-left: auto
         margin-right: auto
+    &.modal-content
+      min-height: auto
+    &.modal-header
+      .modal-title
+        display: flex
+        div
+          flex: 1
+        .clear-button, .close-button
+          font-size: 12px
+          flex: auto 0 0
+          cursor: pointer
+          font-weight: 300
+        .close-button
+          content: ''
+          display: inline-block
+          background-image: url('images/close-icon.svg')
+          background-position: center
+          background-repeat: no-repeat
+          background-size: 1rem
+          height: 2rem
+          width: 2rem
+        .clear-button
+          text-decoration: none
+          color: var(--bright-blue)
+          &:hover
+            color: var(--bright-blue)
   @media (max-width: 767.98px)
     .availability-modal
       padding: 1rem
       .actions
         border-top: 1px solid #dde6ea
         .btn
-          max-width: auto
+          max-width: 100%
           width: 100%
+          padding: 0.75rem 1rem
 `)

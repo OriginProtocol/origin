@@ -35,7 +35,7 @@
     "bootstrap": "lerna bootstrap --no-ci --progress",
     "build": "lerna run build",
     "clean": "git clean -fdX .",
-    "start": "lerna run start --prefix dapps/marketplace",
+    "start": "lerna run start --scope @origin/marketplace",
     "lint": "lerna run lint",
     "format": "eslint **/**/*.js --quiet --fix",
     "test": "node scripts/test.js",

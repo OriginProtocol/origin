@@ -1,9 +1,8 @@
 import React from 'react'
-
-import NavLink from 'components/NavLink'
+import { NavLink } from 'react-router-dom'
 
 export const FilterItem = ({ to, exact, children }) => (
-  <NavLink className="nav-link" to={to} exact={exact}>
+  <NavLink className="nav-link" to={to} exact={exact} replace={true}>
     {children}
   </NavLink>
 )

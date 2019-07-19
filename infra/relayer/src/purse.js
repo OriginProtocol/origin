@@ -6,6 +6,16 @@
  * BIP44 - HD Wallet paths - https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
  * Ethereum and BIP44 discussion - https://github.com/ethereum/EIPs/issues/84
  *
+ * transactionMeta Format
+ * ----------------------
+ * {
+ *   sender: '0xdeadbeef....',
+ *   txObj: {
+ *     from: '0x1dead...'
+ *     ...
+ *   }
+ * }
+ *
  * TODO
  * ----
  * - Non-memory locks and support for mmultiple instances?
@@ -26,15 +36,18 @@ const {
   sendRawTransaction
 } = require('./util')
 const logger = require('./logger')
+const Sentry = require('./sentry')
+const { metrics } = require('./prom')
 
 const MAX_LOCK_TIME = 15000
 const REDIS_RETRY_TIMEOUT = 30000
 const REDIS_RETRY_DELAY = 500
 const DEFAULT_CHILDREN = 5
+const DEFAULT_MNEMONIC = 'one two three four five six'
 const DEFAULT_MAX_PENDING_PER_ACCOUNT = 3
 const ZERO = new BN('0', 10)
 const BASE_FUND_VALUE = new BN('500000000000000000', 10) // 0.5 Ether
-const MIN_CHILD_BALANCE = new BN('10000000000000000', 10) // 0.1 Ether
+const MIN_CHILD_BALANCE = new BN('100000000000000000', 10) // 0.1 Ether
 const MAX_GAS_PRICE = new BN('25000000000', 10) // 25 gwei
 const REDIS_TX_COUNT_PREFIX = 'txcount_'
 const REDIS_PENDING_KEY = `pending_txs`
@@ -45,6 +58,24 @@ const JSONRPC_MAX_CONCURRENT = 25
 
 async function tick(wait = 1000) {
   return new Promise(resolve => setTimeout(() => resolve(true), wait))
+}
+
+function handleError(error, logFunc = logger.error) {
+  logFunc(error)
+  Sentry.captureException(error)
+  metrics.errorCounter.inc()
+}
+
+function isArrayOfFunctions(arr) {
+  if (!(arr instanceof Array)) {
+    return false
+  }
+  for (let i = 0; i < arr.length; i++) {
+    if (typeof arr[i] !== 'function') {
+      return false
+    }
+  }
+  return true
 }
 
 class Account {
@@ -59,7 +90,7 @@ class Account {
 
 /**
  * Purse is an account abstraction that allows relayer to feed it arbitrary transactions to send
- * with whatever account it has avilable.  It does not block and wait for transactions to be mined.
+ * with whatever account it has available.  It does not block and wait for transactions to be mined.
  * You can not choose which account to send from.  No transactions, except those to fund the
  * derived children will be sent from the master account (of the mnemonic provided).
  *
@@ -67,16 +98,17 @@ class Account {
  * -----
  * a = Accounts({ web3, mnemonic: 'one two three' })
  * await a.init()
- * await a.sendTx({ from: you, to: me, data: '0xdeadbeef' })
+ * await a.sendTx({ from: you, to: me, data: '0xdeadbeef' }, sender, receipt => console.log)
  */
 class Purse {
   constructor({
     web3,
-    mnemonic,
+    mnemonic = DEFAULT_MNEMONIC,
     children = DEFAULT_CHILDREN,
     autofundChildren = false,
     redisHost = 'redis://localhost:6379/0',
-    maxPendingPerAccount = DEFAULT_MAX_PENDING_PER_ACCOUNT
+    maxPendingPerAccount = DEFAULT_MAX_PENDING_PER_ACCOUNT,
+    jsonrpcQPS = JSONRPC_QPS
   }) {
     if (!web3 || !mnemonic) {
       throw new Error('missing required parameters')
@@ -85,11 +117,11 @@ class Purse {
     // If it's not already a web3-provider-engine provider...
     if (
       web3.currentProvider &&
-      typeof web3.currentProvider._providers !== 'undefined'
+      typeof web3.currentProvider._providers === 'undefined'
     ) {
       // init the custom provider
       createEngine(web3, {
-        qps: JSONRPC_QPS,
+        qps: jsonrpcQPS,
         maxConcurrent: JSONRPC_MAX_CONCURRENT
       })
     }
@@ -106,8 +138,9 @@ class Purse {
 
     this.children = []
     this.accounts = {}
-    // Complete unsigned transaction objects stored by hash
-    this.transactionObjects = {}
+    // Transaction data, including the complete unsigned transaction objects
+    // stored by hash.  See header for format
+    this.transactionMeta = {}
     // Keep track of transactions that are waiting to be mined
     this.pendingTransactions = {}
     // Counter for tx rebroadcasts
@@ -125,9 +158,17 @@ class Purse {
       } catch (err) {
         reject(err)
       }
-    }).then(() => {
-      throw new Error('Fake thread promise should not have resolved!')
     })
+      .then(() => {
+        const err = new Error('Fake thread promise should not have resolved!')
+        handleError(err)
+        process.exit(2)
+      })
+      .catch(err => {
+        logger.error('Error occurred in _process()')
+        handleError(err)
+        process.exit(2)
+      })
   }
 
   /**
@@ -172,24 +213,31 @@ class Purse {
   }
 
   /**
-   * Tear it all down!  Probalby only used in testing.
+   * Tear it all down!  Probably only used in testing.
    * @param clearRedis {boolean} - Remove all keys from redis
    */
   async teardown(clearRedis = false) {
+    logger.debug('Tearing down state...')
+    this.ready = false
+    this.transactionMeta = {}
+    this.pendingTransactions = {}
+    this.rebroadcastCounters = {}
+    this.receiptCallbacks = {}
     if (this.rclient && this.rclient.connected) {
       if (clearRedis) {
         await this._resetRedis()
       }
       this.rclient.quit()
     }
+    this.ready = true
   }
 
   /**
    * Get the gas price to use for a transaction
-   * @returns {BN} The gas price in gwei
+   * @returns {BN} The gas price in wei
    */
   async gasPrice() {
-    let gp = new BN('3000000000', 10) // 3gwei
+    let gp = new BN('3000000000', 10) // 3 gwei
     try {
       const netGp = stringToBN(await this.web3.eth.getGasPrice())
       if (netGp) {
@@ -197,13 +245,15 @@ class Purse {
       }
     } catch (err) {
       logger.warn('Failed getting network gas price')
-      logger.debug(err)
+      handleError(err, logger.debug)
     }
 
     if (gp.gt(MAX_GAS_PRICE)) {
       // TODO: best way to handle this?
       throw new Error('Current gas prices are too high!')
     }
+
+    metrics.gasPriceGauge.set(gp.toNumber())
 
     return gp
   }
@@ -219,7 +269,7 @@ class Purse {
      * Select the account with the lowest pending that's under the max allowed
      * pending transactions.  If none vailable, twiddle our thumbs until one
      * becomes available...  The order is also important here.  According to the
-     * HD wallet "standards" the lowest index/path should be uesd first.  That
+     * HD wallet "standards" the lowest index/path should be used first.  That
      * way, any wallets using the mnemonic in the future will discover all the
      * children and their funds.  It is supposed to stop at the first one
      * without a tx history.
@@ -278,15 +328,17 @@ class Purse {
    * NOTE: This does not wait for the transaction to be mined!
    *
    * @param tx {object} - The transaction object, sans `from` and `nonce`
+   * @param sender {string} - The address of the original sending account
    * @param onReceipt {function} - An optional callback to call when a receipt is found
-   * @returns {string} The transaction hash of the sent transaction
+   * @returns {{txHash: string, gasPrice: BN}} The transaction hash and gas price of the sent transaction
    */
-  async sendTx(tx, onReceipt) {
+  async sendTx(tx, sender, onReceipt) {
     const address = await this.getAvailableAccount()
 
     // Set the from and nonce for the account
     tx = {
       ...tx,
+      to: this.web3.utils.toChecksumAddress(tx.to),
       from: address,
       nonce: await this.txCount(address)
     }
@@ -294,6 +346,7 @@ class Purse {
     if (!tx.gasPrice) {
       tx.gasPrice = await this.gasPrice()
     }
+    const gasPrice = new BN(tx.gasPrice)
 
     logger.debug('Sending tx: ', tx)
 
@@ -305,28 +358,40 @@ class Purse {
 
     // If there's an onReceipt cb, store it for later
     if (onReceipt) {
-      if (typeof onReceipt !== 'function') {
-        throw new Error('onReceipt is not a function')
+      if (typeof onReceipt === 'function') {
+        onReceipt = [onReceipt]
+      } else if (!isArrayOfFunctions(onReceipt)) {
+        logger.warn('Provided onReceipt is invalid and will not be run')
+        onReceipt = []
       }
       this.receiptCallbacks[txHash] = onReceipt
+    } else {
+      this.receiptCallbacks[txHash] = []
     }
+
+    // startTime creates a callback function that will record the time-to-mine
+    const timerCb = metrics.txConfirmHisto.startTimer()
+    this.receiptCallbacks[txHash].push(() => {
+      timerCb()
+    })
 
     try {
       // blast it
       await sendRawTransaction(this.web3, rawTx)
 
       // In case it needs to be rebroadcast
-      await this.addPending(txHash, tx, rawTx)
+      await this.addPending(txHash, tx, rawTx, sender)
 
       await this.incrementTxCount(address)
 
       logger.info(`Sent ${txHash}`)
     } catch (err) {
       logger.error(`Error sending transaction ${txHash}`)
+      handleError(err)
       throw err
     }
 
-    return txHash
+    return { txHash, gasPrice }
   }
 
   /**
@@ -349,7 +414,7 @@ class Purse {
         try {
           txCount = parseInt(countFromRedis)
         } catch (err) {
-          logger.warn(err)
+          handleError(err, logger.warn)
           txCount = 0
         }
       }
@@ -416,18 +481,27 @@ class Purse {
    * @param txHash {string} - The transaction hash
    * @param rawTx {string} - The raw transaction
    */
-  async addPending(txHash, txObj, rawTx) {
+  async addPending(txHash, txObj, rawTx, sender = null) {
     this.pendingTransactions[txHash] = rawTx
 
+    sender = sender ? this.web3.utils.toChecksumAddress(sender) : null
+    const to = txObj.to ? this.web3.utils.toChecksumAddress(txObj.to) : txObj.to
+
     // Store the tx object for debugging and in case we need to re-sign later
-    this.transactionObjects[txHash] = txObj
+    this.transactionMeta[txHash] = {
+      originalSender: sender,
+      txObj: {
+        ...txObj,
+        to
+      }
+    }
 
     if (this.rclient && this.rclient.connected) {
       await this.rclient.saddAsync(`${REDIS_PENDING_KEY}`, txHash)
       await this.rclient.setAsync(`${REDIS_PENDING_PREFIX}${txHash}`, rawTx)
       await this.rclient.setAsync(
         `${REDIS_PENDING_TX_PREFIX}${txHash}`,
-        JSON.stringify(txObj)
+        JSON.stringify(this.transactionMeta[txHash])
       )
     } else {
       logger.warn('Redis unavailable')
@@ -440,7 +514,7 @@ class Purse {
    */
   async removePending(txHash) {
     delete this.pendingTransactions[txHash]
-    delete this.transactionObjects[txHash]
+    delete this.transactionMeta[txHash]
 
     if (this.rclient && this.rclient.connected) {
       await this.rclient.sremAsync(`${REDIS_PENDING_KEY}`, txHash)
@@ -456,9 +530,9 @@ class Purse {
    * @param txHash {string} - The transaction hash
    * @returns {object} representation of the transaction
    */
-  async getPendingTransaction(txHash) {
-    if (this.transactionObjects[txHash]) {
-      return this.transactionObjects[txHash]
+  async getPendingTransactionMeta(txHash) {
+    if (this.transactionMeta[txHash]) {
+      return this.transactionMeta[txHash]
     } else {
       const txObjStr = await this.rclient.getAsync(
         `${REDIS_PENDING_TX_PREFIX}${txHash}`
@@ -466,8 +540,51 @@ class Purse {
       if (!txObjStr) {
         return null
       }
-      return JSON.parse(txObjStr)
+
+      let txObj = JSON.parse(txObjStr)
+
+      /**
+       * Support the DEPRECIATED storage method to allow for clean migration.
+       * This can be removed in the near future
+       */
+      if (txObjStr.to) {
+        txObj = {
+          originalSender: null,
+          txObj: {
+            ...txObj
+          }
+        }
+      }
+      return txObj
     }
+  }
+
+  /**
+   * Check if a sender has a pending transaction
+   * @param sender {string} address of the sender to check for
+   * @returns {bool} whether or not the account has a pending transaction
+   */
+  hasPending(sender) {
+    sender = this.web3.utils.toChecksumAddress(sender)
+    for (const txHash of Object.keys(this.transactionMeta)) {
+      if (this.transactionMeta[txHash].originalSender === sender) {
+        return true
+      }
+    }
+    return false
+  }
+
+  /**
+   * Check if there are any pending transactions to an account.
+   */
+  hasPendingTo(proxy) {
+    proxy = this.web3.utils.toChecksumAddress(proxy)
+    for (const txHash of Object.keys(this.transactionMeta)) {
+      if (this.transactionMeta[txHash].txObj.to === proxy) {
+        return true
+      }
+    }
+    return false
   }
 
   /**
@@ -528,6 +645,7 @@ class Purse {
       if (childBalance.gt(valueTxFee)) {
         const txObj = {
           to: masterAddress,
+          from: child,
           gas,
           gasPrice,
           value
@@ -535,7 +653,7 @@ class Purse {
         const signed = await this.signTx(child, txObj)
         const rawTx = signed.rawTransaction
         const txHash = this.web3.utils.sha3(rawTx)
-        await this.addPending(txHash, txObj, rawTx)
+        await this.addPending(txHash, txObj, rawTx, child)
         await sendRawTransaction(this.web3, rawTx)
         await this.incrementTxCount(child)
       }
@@ -674,6 +792,8 @@ class Purse {
       return
     }
 
+    this.accounts[address].hasPendingFundingTx = true
+
     const fundingValue = value ? value : BASE_FUND_VALUE
     const gasPrice = await this.gasPrice()
     const txCost = fundingValue.add(gasPrice.mul(new BN(21000)))
@@ -720,14 +840,14 @@ class Purse {
 
     try {
       await sendRawTransaction(this.web3, rawTx)
-      await this.addPending(txHash, unsigned, rawTx)
+      await this.addPending(txHash, unsigned, rawTx, masterAddress)
       await this.incrementTxCount(masterAddress)
-      this.accounts[address].hasPendingFundingTx = true
 
       logger.info(`Funded ${address} with ${txHash}`)
     } catch (err) {
       logger.error(`Error sending transaction to fund child ${address}.`)
-      logger.errro(err)
+      handleError(err)
+      this.accounts[address].hasPendingFundingTx = false
     }
 
     return txHash
@@ -749,71 +869,103 @@ class Purse {
       if (!this.ready) continue
 
       if (interval % 10 === 0) {
-        // Prompt for funding of the master account
-        const masterAddress = this.masterWallet.getChecksumAddressString()
-        const masterBalance = numberToBN(
-          await this.web3.eth.getBalance(masterAddress)
-        )
-        const masterBalanceLow = masterBalance.lt(
-          BASE_FUND_VALUE.mul(new BN(this.children.length))
-        )
-        const balanceEther = this.web3.utils.fromWei(
-          masterBalance.toString(),
-          'ether'
-        )
-        if (masterBalance.eq(ZERO)) {
-          logger.error(
-            `Master account needs funding! Send funds to ${masterAddress}`
+        try {
+          // Prompt for funding of the master account
+          const masterAddress = this.masterWallet.getChecksumAddressString()
+          const masterBalance = numberToBN(
+            await this.web3.eth.getBalance(masterAddress)
           )
-        } else if (masterBalanceLow) {
-          logger.warn(
-            `Master account is low @ ${balanceEther} Ether. Add funds soon!`
+          const masterBalanceLow = masterBalance.lt(
+            BASE_FUND_VALUE.mul(new BN(this.children.length))
           )
-        } else {
-          logger.info(`Master account balance: ${balanceEther} Ether`)
-        }
-
-        const childrenToFund = []
-
-        // Check for child balances dropping below set minimum and fund if necessary
-        if (this.ready && this.autofundChildren) {
-          for (let i = 0; i < this.children.length; i++) {
-            const child = this.children[i]
-            const childBalance = numberToBN(
-              await this.web3.eth.getBalance(child)
+          const balanceEther = this.web3.utils.fromWei(
+            masterBalance.toString(),
+            'ether'
+          )
+          if (masterBalance.eq(ZERO)) {
+            logger.error(
+              `Master account needs funding! Send funds to ${masterAddress}`
             )
-            // Fund the child if there's already not a tx out
-            if (
-              childBalance.lte(MIN_CHILD_BALANCE) &&
-              !this.accounts[child].hasPendingFundingTx
-            ) {
-              childrenToFund.push(child)
-            } else if (this.accounts[child].hasPendingFundingTx) {
-              // Reset the flag
-              this.accounts[child].hasPendingFundingTx = false
+          } else if (masterBalanceLow) {
+            logger.warn(
+              `Master account is low @ ${balanceEther} Ether. Add funds soon!`
+            )
+          } else {
+            logger.info(`Master account balance: ${balanceEther} Ether`)
+          }
+
+          // Need to convert to Ether because it needs to be a JS Number
+          metrics.masterBalanceGauge.set(
+            Number(this.web3.utils.fromWei(masterBalance, 'ether'))
+          )
+
+          const childrenToFund = []
+
+          // Check for child balances dropping below set minimum and fund if necessary
+          if (this.ready && this.autofundChildren) {
+            for (let i = 0; i < this.children.length; i++) {
+              const child = this.children[i]
+              const childBalance = numberToBN(
+                await this.web3.eth.getBalance(child)
+              )
+              // Fund the child if there's already not a tx out
+              if (
+                childBalance.lte(MIN_CHILD_BALANCE) &&
+                !this.accounts[child].hasPendingFundingTx
+              ) {
+                childrenToFund.push(child)
+              } else if (
+                childBalance.gt(MIN_CHILD_BALANCE) &&
+                this.accounts[child].hasPendingFundingTx
+              ) {
+                // Reset the flag
+                // TODO: Why not use onReceipt callbacks for this?
+                this.accounts[child].hasPendingFundingTx = false
+              }
             }
-          }
 
-          let valueToSend = BASE_FUND_VALUE
-          const maxFee = MAX_GAS_PRICE.mul(numberToBN(21000)).mul(
-            new BN(childrenToFund.length)
-          )
-          if (
-            masterBalance.lt(
-              valueToSend.mul(numberToBN(childrenToFund.length)).add(maxFee)
+            logger.debug(
+              `Planning to fund ${childrenToFund.length} child accounts`
             )
-          ) {
-            valueToSend = masterBalance
-              .sub(maxFee)
-              .div(numberToBN(childrenToFund.length))
-          }
-          if (valueToSend.gte(MIN_CHILD_BALANCE)) {
-            for (const child of childrenToFund) {
-              await this._fundChild(child, valueToSend)
+
+            if (childrenToFund.length > 0) {
+              let valueToSend = BASE_FUND_VALUE
+              const maxFee = MAX_GAS_PRICE.mul(numberToBN(21000)).mul(
+                new BN(childrenToFund.length)
+              )
+              if (
+                masterBalance.lt(
+                  valueToSend.mul(numberToBN(childrenToFund.length)).add(maxFee)
+                )
+              ) {
+                valueToSend = masterBalance
+                  .sub(maxFee)
+                  .div(numberToBN(childrenToFund.length))
+              }
+
+              logger.info(
+                `Will fund children with ${this.web3.utils.fromWei(
+                  valueToSend,
+                  'ether'
+                )} ether`
+              )
+
+              if (valueToSend.gte(MIN_CHILD_BALANCE)) {
+                for (const child of childrenToFund) {
+                  await this._fundChild(child, valueToSend)
+                }
+              } else {
+                logger.warn('Unable to fund children.  Balance too low.')
+              }
             }
           } else {
-            logger.warn('Unable to fund children.  Balance too low.')
+            logger.debug('Not ready or autofund disabled')
           }
+        } catch (err) {
+          logger.error(
+            'Error occurred in the balance checks and funding block of _process()'
+          )
+          handleError(err)
         }
       }
 
@@ -821,50 +973,66 @@ class Purse {
        * Handle incoming receipts and remove pending transactions and adjust pending counts.
        * TODO: refactor to create a Promise for each of these?
        */
-      const pendingHashes = Object.keys(this.pendingTransactions)
-      for (const txHash of pendingHashes) {
-        const receipt = await this.web3.eth.getTransactionReceipt(txHash)
+      try {
+        const pendingHashes = Object.keys(this.pendingTransactions)
+        metrics.pendingTxGauge.set(pendingHashes.length)
+        for (const txHash of pendingHashes) {
+          const receipt = await this.web3.eth.getTransactionReceipt(txHash)
 
-        if (!receipt || !receipt.blockNumber) continue
+          if (!receipt || !receipt.blockNumber) continue
 
-        logger.debug(`Transaction ${txHash} has been mined.`)
+          logger.debug(`Transaction ${txHash} has been mined.`)
 
-        // Remove from pending if it exists(it should)
-        if (!receipt.status) {
-          logger.warn(`Transaction ${txHash} has failed!`)
-        }
-
-        // Call the onReceipt callback if provided
-        if (typeof this.receiptCallbacks[txHash] === 'function') {
-          const cbRet = this.receiptCallbacks[txHash](receipt)
-          if (cbRet instanceof Promise) {
-            await cbRet
+          // Remove from pending if it exists(it should)
+          if (!receipt.status) {
+            logger.warn(`Transaction ${txHash} has failed!`)
           }
-          // remove it from memory after execution
+
+          // Call the onReceipt callback if provided
+          if (
+            typeof this.receiptCallbacks[txHash] !== 'undefined' &&
+            this.receiptCallbacks[txHash].length > 0
+          ) {
+            for (let i = 0; i < this.receiptCallbacks[txHash].length; i++) {
+              const cb = this.receiptCallbacks[txHash][i]
+              const cbRet = cb(receipt)
+              if (cbRet instanceof Promise) {
+                await cbRet
+              }
+            }
+          }
+          // remove it from memory
           delete this.receiptCallbacks[txHash]
-        }
 
-        await this.removePending(txHash)
+          await this.removePending(txHash)
 
-        logger.debug(`Removed ${txHash} from pending`)
+          logger.debug(`Removed ${txHash} from pending`)
 
-        // Adjust the pendingCount for the account
-        const checksummedFrom = this.web3.utils.toChecksumAddress(receipt.from)
-        if (
-          Object.prototype.hasOwnProperty.call(this.accounts, checksummedFrom)
-        ) {
-          if (this.accounts[checksummedFrom].pendingCount > 0) {
-            this.accounts[checksummedFrom].pendingCount -= 1
+          // Adjust the pendingCount for the account
+          const checksummedFrom = this.web3.utils.toChecksumAddress(
+            receipt.from
+          )
+          if (
+            Object.prototype.hasOwnProperty.call(this.accounts, checksummedFrom)
+          ) {
+            if (this.accounts[checksummedFrom].pendingCount > 0) {
+              this.accounts[checksummedFrom].pendingCount -= 1
+            } else {
+              logger.error(
+                `Account ${checksummedFrom}'s pendingCount appears to be inaccurate`
+              )
+            }
           } else {
             logger.error(
-              `Account ${checksummedFrom}'s pendingCount appears to be inaccurate`
+              `Account ${checksummedFrom} isn't one of ours.  This should be impossible!`
             )
           }
-        } else {
-          logger.error(
-            `Account ${checksummedFrom} isn't one of ours.  This should be impossible!`
-          )
         }
+      } catch (err) {
+        logger.error(
+          'Error occurred in the pending transaction processing block of _process()'
+        )
+        handleError(err)
       }
 
       /**
@@ -876,33 +1044,49 @@ class Purse {
        * an updated gas price.  Hopefully we'll find this rare, at least until CryptoKitties v57
        * comes out.
        */
-      for (const txHash of Object.keys(this.pendingTransactions)) {
-        const tx = await this.web3.eth.getTransaction(txHash)
-        if (!tx) {
-          logger.warn(`Transaction ${txHash} was dropped!  Re-broadcasting...`)
+      if (interval % 3 === 0) {
+        try {
+          for (const txHash of Object.keys(this.pendingTransactions)) {
+            const tx = await this.web3.eth.getTransaction(txHash)
+            if (!tx) {
+              logger.warn(
+                `Transaction ${txHash} was dropped!  Re-broadcasting...`
+              )
 
-          try {
-            await sendRawTransaction(
-              this.web3,
-              this.pendingTransactions[txHash]
-            )
-          } catch (err) {
-            logger.error(`error attempting to broadcast transaction ${txHash}`)
-            logger.error(err)
-            const txObj = await this.getPendingTransaction(txHash)
-            if (txObj) {
-              logger.debug(`Transaction object: ${JSON.stringify(txObj)}`)
-            } else {
-              logger.debug('no tx object stored')
+              try {
+                await sendRawTransaction(
+                  this.web3,
+                  this.pendingTransactions[txHash]
+                )
+              } catch (err) {
+                logger.error(
+                  `error attempting to broadcast transaction ${txHash}`
+                )
+                logger.error(err)
+                Sentry.captureException(err)
+                const txMeta = await this.getPendingTransactionMeta(txHash)
+                if (txMeta && txMeta.txObj) {
+                  logger.debug(
+                    `Transaction object: ${JSON.stringify(txMeta.txObj)}`
+                  )
+                } else {
+                  logger.debug('no tx object stored')
+                }
+              }
+
+              // Increment our internal counter.  No functional use yet, but good for testing.
+              if (this.rebroadcastCounters[txHash]) {
+                this.rebroadcastCounters[txHash] += 1
+              } else {
+                this.rebroadcastCounters[txHash] = 1
+              }
             }
           }
-
-          // Increment our internal counter.  No functional use yet, but good for testing.
-          if (this.rebroadcastCounters[txHash]) {
-            this.rebroadcastCounters[txHash] += 1
-          } else {
-            this.rebroadcastCounters[txHash] = 1
-          }
+        } catch (err) {
+          logger.error(
+            'Error occurred in the dropped transaction handling block of _process()'
+          )
+          handleError(err)
         }
       }
 

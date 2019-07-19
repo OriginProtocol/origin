@@ -1,7 +1,14 @@
-require('envkey')
+const logger = require('./logger')
+
+try {
+  require('envkey')
+} catch (error) {
+  logger.warn('EnvKey not configured')
+}
+
 const express = require('express')
 const app = express()
-const { check, validationResult } = require('express-validator/check')
+const { check, validationResult } = require('express-validator')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const moment = require('moment')
@@ -24,7 +31,7 @@ const Web3 = require('web3')
 // Read secrets from EnvKey.
 const sessionSecret = process.env['SESSION_SECRET']
 if (!sessionSecret) {
-  console.error('SESSION_SECRET must be set through EnvKey or manually')
+  logger.error('SESSION_SECRET must be set through EnvKey or manually')
   process.exit(1)
 }
 
@@ -85,6 +92,7 @@ app.get(
   '/api/grants',
   withSession,
   asyncMiddleware(async (req, res) => {
+    logger.debug('/api/grants', req.session.email)
     const grants = await Grant.findAll({ where: { email: req.session.email } })
     const augmentedGrants = grants.map(grant => ({
       ...grant.get({ plain: true }),
@@ -132,7 +140,7 @@ app.post(
       res.send(grant.get({ plain: true }))
 
       const grantedAt = moment(grant.grantedAt).format('YYYY-MM-DD')
-      console.log(
+      logger.info(
         `${logDate()} ${
           grant.email
         } grant ${grantedAt} transferred ${amount} OGN to ${address}`
@@ -164,7 +172,7 @@ app.post(
     req.session.email = req.user.email
     req.session.save(err => {
       if (err) {
-        console.error('ERROR saving session:', err)
+        logger.error('ERROR saving session:', err)
       }
     })
 
@@ -177,7 +185,7 @@ app.post(
       data: JSON.stringify({})
     })
 
-    console.log(`${logDate()} ${req.user.email} logged in`)
+    logger.info(`${logDate()} ${req.user.email} logged in`)
 
     res.setHeader('Content-Type', 'application/json')
     res.send(JSON.stringify(req.user))
@@ -191,6 +199,7 @@ app.get(
   '/api/events',
   withSession,
   asyncMiddleware(async (req, res) => {
+    logger.debug('/api/events', req.session.email)
     // Perform an LEFT OUTER JOIN between Events and Grants. Neither SQLite nor
     // Sequelize supports this natively.
     const events = await Event.findAll({
@@ -213,6 +222,7 @@ app.get(
       ...e.get({ plain: true }),
       grant: e.grantId ? grantsById[e.grantId] : null
     }))
+    logger.debug(`Returned ${returnedEvents.length} events`)
     res.json(returnedEvents)
   })
 )
@@ -222,7 +232,7 @@ app.post('/api/logout', withSession, (req, res) => {
   if (req.session) {
     req.session.destroy(err => {
       if (err) {
-        console.error('ERROR destroying session:', err)
+        logger.error('ERROR destroying session:', err)
       }
     })
   }
@@ -231,5 +241,5 @@ app.post('/api/logout', withSession, (req, res) => {
 
 createProviders([networkId]) // Ensure web3 credentials are set up
 app.listen(port, () => {
-  console.log(`Listening on port ${port}`)
+  logger.info(`Listening on port ${port}`)
 })

@@ -14,7 +14,7 @@ import BottomScrollListener from 'components/BottomScrollListener'
 import Stages from 'components/TransactionStages'
 
 import DocumentTitle from 'components/DocumentTitle'
-import Pic from './_Pic'
+import Pic from 'components/ListingPic'
 import { Filter, FilterItem } from './_Filter'
 import OfferStatus from './_OfferStatus'
 
@@ -115,10 +115,10 @@ const Listings = ({ match, wallet, walletProxy }) => {
 
 const NoPurchases = () => (
   <div className="no-transactions text-center">
-    <img src="images/empty-listings-graphic.svg" />
+    <div className="image-container">
+      <img src="images/empty-icon.svg" />
+    </div>
     <h3>You haven’t bought anything yet.</h3>
-    <p>Click below to view all listings.</p>
-    <br />
     <Link to="/" className="btn btn-lg btn-outline-primary btn-rounded">
       Browse Listings
     </Link>
@@ -165,6 +165,11 @@ const Purchase = ({ listing, offer }) => (
 export default withWallet(Listings)
 
 require('react-styl')(`
+  .no-transactions
+    .image-container
+      padding-right: 90px
+      img
+        max-width: 75%
   .container.transactions
     padding-top: 3rem
     max-width: 760px

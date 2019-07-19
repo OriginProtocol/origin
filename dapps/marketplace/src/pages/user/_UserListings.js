@@ -20,8 +20,7 @@ const UserListings = ({
   const vars = {
     first: 8,
     filter: 'active',
-    sort: 'featured',
-    hidden: true
+    sort: 'featured'
   }
 
   return (
@@ -49,6 +48,7 @@ const UserListings = ({
         }
 
         const { nodes, pageInfo } = data.marketplace.user.listings
+
         const { hasNextPage, endCursor: after } = pageInfo
 
         return (

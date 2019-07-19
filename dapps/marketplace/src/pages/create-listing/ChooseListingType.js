@@ -6,6 +6,7 @@ import Categories from '@origin/graphql/src/constants/Categories'
 import Redirect from 'components/Redirect'
 import DownloadApp from 'components/DownloadApp'
 import withCreatorConfig from 'hoc/withCreatorConfig'
+import withWallet from 'hoc/withWallet'
 
 const CategoriesEnum = require('Categories$FbtEnum') // Localized category names
 
@@ -60,17 +61,19 @@ const ChooseListingType = props => {
             ))}
           </div>
         </div>
-        <div className="col-md-4">
-          <div className="gray-box d-none d-md-block">
-            <DownloadApp />
+        {props.walletType !== 'Mobile' && props.walletType !== 'Origin Wallet' && (
+          <div className="col-md-4">
+            <div className="gray-box d-none d-md-block">
+              <DownloadApp />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   )
 }
 
-export default withCreatorConfig(ChooseListingType)
+export default withCreatorConfig(withWallet(ChooseListingType))
 
 require('react-styl')(`
   .category-ico

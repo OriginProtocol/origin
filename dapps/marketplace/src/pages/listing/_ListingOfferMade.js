@@ -4,7 +4,11 @@ import { fbt } from 'fbt-runtime'
 import Link from 'components/Link'
 import Price from 'components/Price'
 
-const OfferMade = ({ listing, offers }) => (
+import withNetwork from 'hoc/withNetwork'
+
+import { getOriginOfferId } from '@origin/graphql/src/utils/getId'
+
+const OfferMade = ({ listing, offers, networkId }) => (
   <div className="listing-buy">
     <div className="price">
       <Price listing={listing} descriptor />
@@ -19,12 +23,23 @@ const OfferMade = ({ listing, offers }) => (
         </fbt>
       </div>
       {offers.length > 1 && (
-        <Link className="listing-action-link" to="/my-purchases">
+        <Link
+          className="listing-action-link"
+          to={{
+            pathname: '/my-purchases',
+            state: {
+              canGoBack: true
+            }
+          }}
+        >
           <fbt desc="viewAllOffers">View all my offers</fbt>
         </Link>
       )}
       {offers.length === 1 && (
-        <Link className="listing-action-link" to="/my-purchases">
+        <Link
+          className="listing-action-link"
+          to={`/purchases/${getOriginOfferId(networkId, offers[0])}`}
+        >
           <fbt desc="viewMyOffer">View offer</fbt>
         </Link>
       )}
@@ -32,4 +47,4 @@ const OfferMade = ({ listing, offers }) => (
   </div>
 )
 
-export default OfferMade
+export default withNetwork(OfferMade)

@@ -23,9 +23,11 @@ import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import withConfig from 'hoc/withConfig'
 import withOriginGraphql from 'hoc/withOriginGraphql'
 import {
+  addAttestation,
   setVerifiedAttestations,
   setName,
-  setAvatarUri
+  setAvatarUri,
+  setRequiresPublish
 } from 'actions/Onboarding'
 import { removeAccount, setIdentity } from 'actions/Wallet'
 import CommonStyles from 'styles/common'
@@ -43,10 +45,16 @@ class ImportedScreen extends Component {
     }
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.loadIdentity()
+  }
+
+  loadIdentity = async () => {
     let response
     try {
-      response = await this.props.getIdentity()
+      response = await this.props.getIdentity(
+        this.props.wallet.activeAccount.address
+      )
     } catch (error) {
       // Skip, identity couldn't be loaded
       console.warn(error)
@@ -54,15 +62,23 @@ class ImportedScreen extends Component {
 
     const identity = get(response, 'data.web3.account.identity')
     if (identity) {
-      // Update the onboarding store so we know withOnboardingSteps can correctly
-      // calculate the next onboardinig step based on what the user has completed
-      const verifiedAttestations = identity.verifiedAttestations.map(x => x.id)
-      this.props.setVerifiedAttestations(verifiedAttestations)
-      this.props.setName({
+      const attestations = get(identity, 'attestations', [])
+      await Promise.all(attestations.map(this.props.addAttestation))
+      await this.props.setName({
         firstName: identity.firstName,
         lastName: identity.lastName
       })
-      this.props.setAvatarUri(identity.avatarUrl)
+      await this.props.setAvatarUri(identity.avatarUrl)
+      // Check and see if we are going to be modifying the identity during the
+      // remaining onboarding steps so we can skip publishing of the identity
+      // if nothing will change
+      if (
+        ['Growth', 'Authentication', 'Ready'].includes(
+          this.props.nextOnboardingStep
+        )
+      ) {
+        this.props.setRequiresPublish(false)
+      }
       // Save the whole identity in the wallet store
       this.props.setIdentity(identity)
     }
@@ -110,12 +126,12 @@ class ImportedScreen extends Component {
 
     return (
       <>
-        <View style={styles.container}>
-          {avatarUrl && (
+        <View style={{ ...styles.container, flexGrow: 2 }}>
+          {avatarUrl !== undefined && (
             <>
               <Avatar
                 source={avatarUrl}
-                size={120}
+                size={100}
                 style={{ marginBottom: 30 }}
               />
             </>
@@ -210,8 +226,8 @@ class ImportedScreen extends Component {
               `Oops, wait. Let's start over...`,
               'ImportedScreen.startOverButton'
             )}
-            onPress={() => {
-              this.props.removeAccount(this.props.wallet.activeAccount.address)
+            onPress={async () => {
+              await this.props.removeAccount(this.props.wallet.activeAccount)
               this.props.navigation.navigate('Welcome')
             }}
           />
@@ -241,12 +257,14 @@ const mapStateToProps = ({ marketplace, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
+  addAttestation: attestation => dispatch(addAttestation(attestation)),
   removeAccount: account => dispatch(removeAccount(account)),
   setVerifiedAttestations: attestations =>
     dispatch(setVerifiedAttestations(attestations)),
   setName: payload => dispatch(setName(payload)),
   setAvatarUri: avatarUri => dispatch(setAvatarUri(avatarUri)),
-  setIdentity: identity => dispatch(setIdentity(identity))
+  setIdentity: identity => dispatch(setIdentity(identity)),
+  setRequiresPublish: value => dispatch(setRequiresPublish(value))
 })
 
 export default withOriginGraphql(

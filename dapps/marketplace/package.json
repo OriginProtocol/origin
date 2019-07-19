@@ -10,9 +10,9 @@
     "url": "https://github.com/OriginProtocol/origin"
   },
   "scripts": {
-    "test": "NODE_ENV=test FORWARDER_MNEMONIC=\"one two three four five six\" mocha -r @babel/register test -t 30000",
-    "test:browser": "NODE_ENV=test HEADLESS=false FORWARDER_MNEMONIC=\"one two three four five six\" mocha -r @babel/register --file test/setup test",
-    "test:watch": "NODE_ENV=test HEADLESS=false FORWARDER_MNEMONIC=\"one two three four five six\" mocha -r @babel/register --file test/setup test -w -b",
+    "test": "NODE_ENV=test mocha -r @babel/register test -t 30000",
+    "test:browser": "NODE_ENV=test HEADLESS=false mocha -r @babel/register --file test/setup test",
+    "test:watch": "NODE_ENV=test HEADLESS=false mocha -r @babel/register --file test/setup test -w -b",
     "start": "node -r @babel/register index",
     "start:performance": "PERFORMANCE=true NETWORK=localhost node -r @babel/register index",
     "start:clean": "CLEAN=true node -r @babel/register index",

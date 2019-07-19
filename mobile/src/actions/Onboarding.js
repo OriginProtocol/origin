@@ -4,37 +4,30 @@ import keyMirror from 'utils/keyMirror'
 
 export const OnboardingConstants = keyMirror(
   {
-    SET_EMAIL_ATTESTATION: null,
-    SET_PHONE_ATTESTATION: null,
-    SET_VERIFIED_ATTESTATIONS: null,
+    ADD_ATTESTATION: null,
+    ADD_SKIPPED_ATTESTATION: null,
     SET_NAME: null,
     SET_AVATAR_URI: null,
     SET_COMPLETE: null,
     SET_NO_REWARDS_DISMISSED: null,
+    SET_REQUIRES_PUBLISH: null,
     SET_GROWTH: null,
     RESET: null
   },
   'ONBOARDING'
 )
 
-export function setEmailAttestation(emailAttestation) {
+export function addAttestation(attestation) {
   return {
-    type: OnboardingConstants.SET_EMAIL_ATTESTATION,
-    emailAttestation
+    type: OnboardingConstants.ADD_ATTESTATION,
+    attestation
   }
 }
 
-export function setPhoneAttestation(phoneAttestation) {
+export function addSkippedAttestation(attestationName) {
   return {
-    type: OnboardingConstants.SET_PHONE_ATTESTATION,
-    phoneAttestation
-  }
-}
-
-export function setVerifiedAttestations(verifiedAttestations) {
-  return {
-    type: OnboardingConstants.SET_VERIFIED_ATTESTATIONS,
-    verifiedAttestations
+    type: OnboardingConstants.ADD_SKIPPED_ATTESTATION,
+    attestationName
   }
 }
 
@@ -63,6 +56,13 @@ export function setNoRewardsDismissed(dismissed) {
   return {
     type: OnboardingConstants.SET_NO_REWARDS_DISMISSED,
     dismissed
+  }
+}
+
+export function setRequiresPublish(value) {
+  return {
+    type: OnboardingConstants.SET_REQUIRES_PUBLISH,
+    value
   }
 }
 

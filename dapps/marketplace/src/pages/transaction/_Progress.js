@@ -274,7 +274,9 @@ const DisputeResolved = ({ offer, loading }) => (
 
 const TransactionStages = ({ offer, loading }) => (
   <div className={`transaction-progress view-only${loading ? ' loading' : ''}`}>
-    <Stages mini="true" offer={offer} />
+    <div className="top">
+      <Stages mini="true" offer={offer} />
+    </div>
   </div>
 )
 
@@ -295,7 +297,6 @@ require('react-styl')(`
     margin-bottom: 2.5rem
     position: relative
     &.view-only
-      padding-top: 0
       .stages
         margin-top: 0
         border-radius: 5px
@@ -364,7 +365,7 @@ require('react-styl')(`
         &.small
           font-size: 16px
       &::after
-        content: " \\203A"
+        content: " ›"
       &.withdraw
         font-size: 18px
         padding-top: 0
@@ -381,7 +382,6 @@ require('react-styl')(`
   @media (max-width: 767.98px)
     .transaction-progress
       border: 0px
-      padding: 0rem
       padding: 0rem
       position: relative
       &::after

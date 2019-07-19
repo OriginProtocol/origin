@@ -1,171 +1,146 @@
 {
-  "log": {
-    "logIndex": 0,
+  "event": {
+    "logIndex": 2,
     "transactionIndex": 0,
-    "transactionHash": "0xb483e7b699397c37c41fa9731a9d86a1cee611cfda2df3d37f8ba42015ce3dd8",
-    "blockHash": "0xe28f9a860209b4531e22bf11f17641c7b282a5f007e07eb725a035bb109c0ef9",
-    "blockNumber": 913,
-    "address": "0x73814E414B7744232Cc6C686E5d6E908D2C4e580",
-    "data": "0x0984026f8ff653673a90028f434d5aa99def303087b7219c8c603462b64e6e86",
-    "topics": [
-      "0xec3d306143145322b45d2788d826e3b7b9ad062f16e1ec59a5eaba214f96ee3c",
-      "0x000000000000000000000000f17f52151ebef6c7334fad080c5704d77216b732",
-      "0x0000000000000000000000000000000000000000000000000000000000000003"
-    ],
+    "transactionHash": "0xe6b0bd5f9518d01c551a1c5417aaa6afa9cff40aa1156e5c464ca3e18990e72b",
+    "blockHash": "0xed15af1234a63cbdfc286e38438865edf74584840d0163c14dddba365a69f3cc",
+    "blockNumber": 57,
+    "address": "0xf25186B5081Ff5cE73482AD761DB0eB0d25abfBF",
     "type": "mined",
-    "id": "log_d3a957cd",
-    "decoded": {
+    "id": "log_92909768",
+    "returnValues": {
       "0": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
-      "1": "3",
-      "2": "0x0984026f8ff653673a90028f434d5aa99def303087b7219c8c603462b64e6e86",
-      "__length__": 3,
+      "1": "5",
+      "2": "0x173bee2a2c82356e57282bc0377091a62e9ee3222ba4d5ff0786637af32304e6",
       "party": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
-      "listingID": "3",
-      "ipfsHash": "0x0984026f8ff653673a90028f434d5aa99def303087b7219c8c603462b64e6e86"
+      "listingID": "5",
+      "ipfsHash": "0x173bee2a2c82356e57282bc0377091a62e9ee3222ba4d5ff0786637af32304e6"
     },
-    "contractName": "V00_Marketplace",
-    "eventName": "ListingCreated",
-    "contractVersionKey": "000",
-    "networkId": 999,
-    "timestamp": 1551229332,
-    "date": "2019-02-27T01:02:12.000Z"
+    "event": "ListingCreated",
+    "signature": "0xec3d306143145322b45d2788d826e3b7b9ad062f16e1ec59a5eaba214f96ee3c",
+    "raw": {
+      "data": "0x173bee2a2c82356e57282bc0377091a62e9ee3222ba4d5ff0786637af32304e6",
+      "topics": [
+        "0xec3d306143145322b45d2788d826e3b7b9ad062f16e1ec59a5eaba214f96ee3c",
+        "0x000000000000000000000000f17f52151ebef6c7334fad080c5704d77216b732",
+        "0x0000000000000000000000000000000000000000000000000000000000000005"
+      ]
+    }
   },
   "related": {
     "listing": {
-      "id": "999-000-3",
+      "id": "999-000-5-57",
+      "valid": true,
+      "validationError": null,
+      "status": "active",
+      "totalEvents": 1,
+      "seller": {
+        "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+        "identity": {
+          "firstName": "Stan",
+          "lastName": "James",
+          "fullName": "Stan James",
+          "owner": {
+            "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+            "proxy": {
+              "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+              "__typename": "Account"
+            },
+            "__typename": "Account"
+          },
+          "__typename": "Identity"
+        },
+        "__typename": "Account"
+      },
+      "arbitrator": {
+        "id": "0x821aEa9a577a9b44299B9c15c88cf3087F3b5544",
+        "__typename": "Account"
+      },
+      "deposit": "5000000000000000000",
+      "depositAvailable": "5000000000000000000",
+      "createdEvent": {
+        "timestamp": 1562089659,
+        "__typename": "Event"
+      },
+      "category": "schema.forSale",
+      "categoryStr": "For Sale",
+      "subCategory": "schema.tickets",
       "title": "Taylor Swift's Reputation Tour",
       "description": "Taylor Swift's Reputation Stadium Tour is the fifth world concert tour by American singer-songwriter Taylor Swift, in support of her sixth studio album, Reputation.",
-      "category": "schema.forSale",
-      "subCategory": "schema.tickets",
-      "status": "active",
-      "type": "unit",
-      "unitsTotal": 5,
-      "offers": [],
-      "events": [
+      "currencyId": null,
+      "price": {
+        "amount": "95",
+        "currency": {
+          "id": "fiat-USD",
+          "__typename": "FiatCurrency"
+        },
+        "__typename": "Price"
+      },
+      "acceptedTokens": [
         {
-          "logIndex": 0,
-          "transactionIndex": 0,
-          "transactionHash": "0xb483e7b699397c37c41fa9731a9d86a1cee611cfda2df3d37f8ba42015ce3dd8",
-          "blockHash": "0xe28f9a860209b4531e22bf11f17641c7b282a5f007e07eb725a035bb109c0ef9",
-          "blockNumber": 913,
-          "address": "0x73814E414B7744232Cc6C686E5d6E908D2C4e580",
-          "type": "mined",
-          "id": "log_d3a957cd",
-          "returnValues": {
-            "0": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
-            "1": "3",
-            "2": "0x0984026f8ff653673a90028f434d5aa99def303087b7219c8c603462b64e6e86",
-            "party": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
-            "listingID": "3",
-            "ipfsHash": "0x0984026f8ff653673a90028f434d5aa99def303087b7219c8c603462b64e6e86"
-          },
-          "event": "ListingCreated",
-          "signature": "0xec3d306143145322b45d2788d826e3b7b9ad062f16e1ec59a5eaba214f96ee3c",
-          "raw": {
-            "data": "0x0984026f8ff653673a90028f434d5aa99def303087b7219c8c603462b64e6e86",
-            "topics": [
-              "0xec3d306143145322b45d2788d826e3b7b9ad062f16e1ec59a5eaba214f96ee3c",
-              "0x000000000000000000000000f17f52151ebef6c7334fad080c5704d77216b732",
-              "0x0000000000000000000000000000000000000000000000000000000000000003"
-            ]
-          }
+          "id": "token-ETH",
+          "__typename": "Token"
         }
       ],
-      "ipfs": {
-        "hash": "QmNyo8RCuhqDCgyQkVuihjTB1KJ3EXxkiTHmkzukFiw9Nd",
-        "data": {
-          "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
-          "dappSchemaId": "https://dapp.originprotocol.com/schemas/forSale-tickets_1.0.0.json",
-          "listingType": "unit",
-          "category": "schema.forSale",
-          "subCategory": "schema.tickets",
-          "language": "en-US",
-          "title": "Taylor Swift's Reputation Tour",
-          "description": "Taylor Swift's Reputation Stadium Tour is the fifth world concert tour by American singer-songwriter Taylor Swift, in support of her sixth studio album, Reputation.",
-          "unitsTotal": 5,
-          "price": {
-            "currency": "ETH",
-            "amount": "0.3"
-          },
-          "commission": {
-            "currency": "OGN",
-            "amount": "28"
-          },
-          "commissionPerUnit": {
-            "currency": "OGN",
-            "amount": "10"
-          },
-          "media": [
-            {
-              "url": "http://origin-ipfs-proxy:9999/ipfs/QmU2NeZjiJZ7TyFCwqHp2bd7MH1bSyZbSAgGxNSR2iUQ3M",
-              "contentType": "image/jpeg"
-            },
-            {
-              "url": "http://origin-ipfs-proxy:9999/ipfs/QmSXucmB6BHgFUW6wZyXknD3HrAtXvAy2t7JHMgXXNU79n",
-              "contentType": "image/jpeg"
-            },
-            {
-              "url": "http://origin-ipfs-proxy:9999/ipfs/QmZLxmJBPY3ae9PNqKZhWZX6oF764sxXAQw3y3fJu2xgw1",
-              "contentType": "image/jpeg"
-            },
-            {
-              "url": "http://origin-ipfs-proxy:9999/ipfs/QmQJymkfuCCPFnRDvi6jJALhBTqBRToJ5gGay2sPBEHFtY",
-              "contentType": "image/jpeg"
-            },
-            {
-              "url": "http://origin-ipfs-proxy:9999/ipfs/QmRPJzi5wDVkrwqGVDqVoYsJr6AonysisjszuMbEbJAD8w",
-              "contentType": "image/jpeg"
-            }
-          ]
-        }
-      },
-      "ipfsHash": "0x0984026f8ff653673a90028f434d5aa99def303087b7219c8c603462b64e6e86",
-      "language": "en-US",
-      "price": {
-        "currency": "ETH",
-        "amount": "0.3"
-      },
-      "seller": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
-      "display": "normal",
       "media": [
         {
-          "url": "http://origin-ipfs-proxy:9999/ipfs/QmU2NeZjiJZ7TyFCwqHp2bd7MH1bSyZbSAgGxNSR2iUQ3M",
-          "contentType": "image/jpeg"
+          "url": "ipfs://QmU2NeZjiJZ7TyFCwqHp2bd7MH1bSyZbSAgGxNSR2iUQ3M",
+          "urlExpanded": "http://ipfs-proxy:9999/ipfs/QmU2NeZjiJZ7TyFCwqHp2bd7MH1bSyZbSAgGxNSR2iUQ3M",
+          "contentType": "image/jpeg",
+          "__typename": "Media"
         },
         {
-          "url": "http://origin-ipfs-proxy:9999/ipfs/QmSXucmB6BHgFUW6wZyXknD3HrAtXvAy2t7JHMgXXNU79n",
-          "contentType": "image/jpeg"
+          "url": "ipfs://QmSXucmB6BHgFUW6wZyXknD3HrAtXvAy2t7JHMgXXNU79n",
+          "urlExpanded": "http://ipfs-proxy:9999/ipfs/QmSXucmB6BHgFUW6wZyXknD3HrAtXvAy2t7JHMgXXNU79n",
+          "contentType": "image/jpeg",
+          "__typename": "Media"
         },
         {
-          "url": "http://origin-ipfs-proxy:9999/ipfs/QmZLxmJBPY3ae9PNqKZhWZX6oF764sxXAQw3y3fJu2xgw1",
-          "contentType": "image/jpeg"
+          "url": "ipfs://QmZLxmJBPY3ae9PNqKZhWZX6oF764sxXAQw3y3fJu2xgw1",
+          "urlExpanded": "http://ipfs-proxy:9999/ipfs/QmZLxmJBPY3ae9PNqKZhWZX6oF764sxXAQw3y3fJu2xgw1",
+          "contentType": "image/jpeg",
+          "__typename": "Media"
         },
         {
-          "url": "http://origin-ipfs-proxy:9999/ipfs/QmQJymkfuCCPFnRDvi6jJALhBTqBRToJ5gGay2sPBEHFtY",
-          "contentType": "image/jpeg"
+          "url": "ipfs://QmQJymkfuCCPFnRDvi6jJALhBTqBRToJ5gGay2sPBEHFtY",
+          "urlExpanded": "http://ipfs-proxy:9999/ipfs/QmQJymkfuCCPFnRDvi6jJALhBTqBRToJ5gGay2sPBEHFtY",
+          "contentType": "image/jpeg",
+          "__typename": "Media"
         },
         {
-          "url": "http://origin-ipfs-proxy:9999/ipfs/QmRPJzi5wDVkrwqGVDqVoYsJr6AonysisjszuMbEbJAD8w",
-          "contentType": "image/jpeg"
+          "url": "ipfs://QmRPJzi5wDVkrwqGVDqVoYsJr6AonysisjszuMbEbJAD8w",
+          "urlExpanded": "http://ipfs-proxy:9999/ipfs/QmRPJzi5wDVkrwqGVDqVoYsJr6AonysisjszuMbEbJAD8w",
+          "contentType": "image/jpeg",
+          "__typename": "Media"
         }
       ],
-      "commission": {
-        "currency": "OGN",
-        "amount": "28"
-      },
-      "schemaId": "https://schema.originprotocol.com/listing_1.0.0.json",
-      "dappSchemaId": "https://dapp.originprotocol.com/schemas/forSale-tickets_1.0.0.json",
-      "deposit": "0",
-      "depositManager": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
-      "commissionPerUnit": {
-        "currency": "OGN",
-        "amount": "10"
-      }
+      "commission": "10000000000000000000",
+      "commissionPerUnit": "2000000000000000000",
+      "marketplacePublisher": null,
+      "unitsTotal": 10,
+      "unitsAvailable": 10,
+      "unitsSold": 0,
+      "unitsPending": 0,
+      "multiUnit": true,
+      "__typename": "UnitListing",
+      "events": [
+        {
+          "id": "log_92909768",
+          "event": "ListingCreated",
+          "blockNumber": 57,
+          "logIndex": 2,
+          "returnValues": {
+            "ipfsHash": "0x173bee2a2c82356e57282bc0377091a62e9ee3222ba4d5ff0786637af32304e6",
+            "party": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+            "offerID": null,
+            "listingID": "5",
+            "__typename": "EventReturnValues"
+          },
+          "__typename": "Event"
+        }
+      ],
+      "scoreTags": []
     },
-    "seller": {
-      "address": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
-      "version": null
-    }
+    "__typename": "Marketplace"
   }
 }
-
