@@ -167,6 +167,7 @@ function withEnrolmentModal(WrappedComponent) {
 
     renderJoinActiveCampaign() {
       const vars = { first: 10 }
+      const { isMobile } = this.props
 
       return (
         <Query
@@ -224,9 +225,7 @@ function withEnrolmentModal(WrappedComponent) {
                   <div className="d-flex align-items-center flex-column">
                     <button
                       className={`btn ${
-                        this.props.ismobile === 'true'
-                          ? 'btn-primary'
-                          : 'btn-outline-light'
+                        isMobile ? 'btn-primary' : 'btn-outline-light'
                       }`}
                       onClick={() => this.handleJoinCampaignContinue()}
                       children={fbt('Get Started', 'Get Started')}
@@ -247,7 +246,7 @@ function withEnrolmentModal(WrappedComponent) {
 
     renderTermsModal() {
       const { termsAccepted } = this.state
-      const isMobile = this.props.ismobile === 'true'
+      const { isMobile } = this.props
 
       const cancelButton = (
         <button
@@ -360,7 +359,7 @@ function withEnrolmentModal(WrappedComponent) {
 
     renderRestrictedModal(country, eligibility, notCitizenChecked) {
       const isRestricted = eligibility === 'Restricted'
-      const isMobile = this.props.ismobile === 'true'
+      const { isMobile } = this.props
 
       return (
         <div className="container d-flex flex-column align-items-center">
@@ -501,7 +500,8 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderMetamaskSignature() {
-      const isMobile = this.props.ismobile === 'true'
+      const { isMobile } = this.props
+
       return (
         <Enroll
           isMobile={isMobile}

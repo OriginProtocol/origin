@@ -159,7 +159,9 @@ class App extends Component {
             <Route component={Listings} />
           </Switch>
         </main>
-        <TranslationModal locale={this.props.locale} />
+        {!this.props.isMobileApp && (
+          <TranslationModal locale={this.props.locale} />
+        )}
         {this.state.displayMobileModal && (
           <MobileModal
             onClose={() =>
