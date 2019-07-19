@@ -26,16 +26,12 @@ class WebsiteAttestation extends Component {
     }
   }
 
-  isMobile() {
-    return this.props.ismobile === 'true'
-  }
-
   render() {
     if (!this.props.open) {
       return null
     }
 
-    const ModalComponent = this.isMobile() ? MobileModal : Modal
+    const ModalComponent = this.props.isMobile ? MobileModal : Modal
 
     return (
       <ModalComponent
@@ -70,7 +66,7 @@ class WebsiteAttestation extends Component {
   }
 
   renderGenerateCode() {
-    const isMobile = this.isMobile()
+    const { isMobile } = this.props
 
     const header = isMobile ? null : (
       <fbt desc="VerifyWebsite.verifyYourWebsite">Verify your website</fbt>
@@ -124,7 +120,8 @@ class WebsiteAttestation extends Component {
   }
 
   renderDownloadCode() {
-    const isMobile = this.isMobile()
+    const { isMobile } = this.props
+
     return (
       <>
         <h2>
@@ -153,7 +150,7 @@ class WebsiteAttestation extends Component {
   }
 
   renderVerifyCode() {
-    const isMobile = this.isMobile()
+    const { isMobile } = this.props
 
     const header = isMobile ? null : (
       <fbt desc="VerifyWebsite.verifyYourWebsite">Verify your website</fbt>
