@@ -8,8 +8,6 @@ const marketplaceExists = {}
 
 import { identity } from './IdentityEvents'
 
-import { getVerificationStatus } from './PromotionVerifications'
-
 export default {
   config: () => contracts.net,
   configObj: () => contracts.config,
