@@ -24,7 +24,7 @@ router.get('/auth-url', async (req, res) => {
 
   let oAuthToken, oAuthTokenSecret
   try {
-    const twitterResponse = await getTwitterOAuthRequestToken(req.sessionID)
+    const twitterResponse = await getTwitterOAuthRequestToken({ sid: req.sessionID })
 
     oAuthToken = twitterResponse.oAuthToken
     oAuthTokenSecret = twitterResponse.oAuthTokenSecret
