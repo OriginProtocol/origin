@@ -645,9 +645,17 @@ class MarketplaceScreen extends Component {
                 enabled={this.state.enablePullToRefresh}
                 refreshing={this.state.refreshing}
                 onRefresh={() => {
-                  this.dappWebView.injectJavaScript(
-                    `document.location.reload()`
-                  )
+                  if (Platform.OS === 'android') {
+                    // Workaround for broken refreshing in Android, insert a
+                    // time string alongside the # to force a reload
+                    this.dappWebView.injectJavaScript(
+                      'location.href = `/?${+ new Date()}${location.hash}`'
+                    )
+                  } else {
+                    this.dappWebView.injectJavaScript(
+                      `document.location.reload()`
+                    )
+                  }
                   setTimeout(() => this.setState({ refreshing: false }), 1000)
                 }}
               />
