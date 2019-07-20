@@ -4,7 +4,8 @@ const Sequelize = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
   const Verification = sequelize.define(
-    'Verification', {
+    'Verification',
+    {
       id: {
         allowNull: false,
         autoIncrement: true,

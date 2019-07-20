@@ -36,13 +36,13 @@ router.get('/twitter/__init', async (req, res) => {
       errors: ['Failed to get Twitter OAuth request token.']
     })
   }
-  
+
   req.session.oAuthToken = oAuthToken
   req.session.oAuthTokenSecret = oAuthTokenSecret
 
   const url =
-  constants.TWITTER_BASE_AUTH_URL +
-  querystring.stringify({ oauth_token: oAuthToken })
+    constants.TWITTER_BASE_AUTH_URL +
+    querystring.stringify({ oauth_token: oAuthToken })
 
   return res.redirect(url)
 })
@@ -94,38 +94,38 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
     })
   }
 
-  if (userProfileData.username.toLowerCase() !== process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLocaleLowerCase()) {
-    return res.status(400)
-      .send({
-        errors: ['Invalid account']
-      })
+  if (
+    userProfileData.username.toLowerCase() !==
+    process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLocaleLowerCase()
+  ) {
+    return res.status(400).send({
+      errors: ['Invalid account']
+    })
   }
 
   try {
     await subscribeToHooks(oAuthAccessToken, oAuthAccessTokenSecret)
-
   } catch (err) {
     logger.error(err)
-    return res.status(400)
-      .send({
-        success: false,
-        errors: [`Failed to subscribe: ${err.message}`]
-      })
+    return res.status(400).send({
+      success: false,
+      errors: [`Failed to subscribe: ${err.message}`]
+    })
   }
 
-  return res.status(200)
-    .send({
-      success: true
-    })
+  return res.status(200).send({
+    success: true
+  })
 })
 
 /**
  * Webhook Authorization
  */
 router.get('/twitter', (req, res) => {
-  const { crc_token } = req.query
-
-  const hmac = crypto.createHmac('sha256', process.env.TWITTER_ORIGIN_CONSUMER_SECRET).update(crc_token).digest('base64')
+  const hmac = crypto
+    .createHmac('sha256', process.env.TWITTER_ORIGIN_CONSUMER_SECRET)
+    .update(req.query.crc_token)
+    .digest('base64')
 
   res.status(200).send({
     response_token: `sha256=${hmac}`
@@ -141,9 +141,17 @@ router.post('/twitter', (req, res) => {
     // Follow event(s)
     const events = req.body.follow_events
     events.forEach(event => {
-      if (event.target.screen_name === process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLocaleLowerCase()) {
+      if (
+        event.target.screen_name ===
+        process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLocaleLowerCase()
+      ) {
         // Store the follower in redis for 60 minutes
-        redisClient.set(`twitter/follow/${event.source.id}`, JSON.stringify(event), 'EX', 60 * 60 * 30)
+        redisClient.set(
+          `twitter/follow/${event.source.id}`,
+          JSON.stringify(event),
+          'EX',
+          60 * 60 * 30
+        )
       }
     })
   }
@@ -151,14 +159,23 @@ router.post('/twitter', (req, res) => {
   if (req.body.tweet_create_events) {
     const events = req.body.tweet_create_events
     events
-    .filter(event => {
-      // Ignore own tweets, retweets and favorites
-      return !event.retweeted && !event.favorited && event.user.screen_name !== process.env.TWITTER_ORIGINPROTOCOL_USERNAME
-    })
-    .forEach(event => {
-      // Note: Only the latest tweet will be in redis for 60 minutes
-      redisClient.set(`twitter/share/${event.user.id}`, JSON.stringify(event), 'EX', 60 * 60 * 30)
-    })
+      .filter(event => {
+        // Ignore own tweets, retweets and favorites
+        return (
+          !event.retweeted &&
+          !event.favorited &&
+          event.user.screen_name !== process.env.TWITTER_ORIGINPROTOCOL_USERNAME
+        )
+      })
+      .forEach(event => {
+        // Note: Only the latest tweet will be in redis for 60 minutes
+        redisClient.set(
+          `twitter/share/${event.user.id}`,
+          JSON.stringify(event),
+          'EX',
+          60 * 60 * 30
+        )
+      })
   }
 
   res.status(200).end()

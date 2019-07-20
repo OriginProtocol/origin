@@ -2,31 +2,29 @@
 
 const express = require('express')
 const router = express.Router()
-const { redisClient, getAsync } = require('../utils/redis')
+const { getAsync } = require('../utils/redis')
 
-const Verification = require('./../models/verfication')
 const Attestation = require('./../models/attestation')
-const { PromotionTypes, SupportedNetworks, VerificationStatus } = Verification
-const { AttestationTypes } = Attestation
 
 // TODO: Add request body validation
 router.post('/verify', async (req, res) => {
-  const { type, socialNetwork, content, identity } = req.body
-  
+  const { type, socialNetwork, identity } = req.body
+
   const attestation = await Attestation.findOne({
     ethAddress: identity,
     method: socialNetwork
   })
 
   if (!attestation) {
-    return res.status(400)
-      .send({
-        success: false,
-        errors: [`Attestation missing`]
-      })
+    return res.status(400).send({
+      success: false,
+      errors: [`Attestation missing`]
+    })
   }
 
-  const redisKey = `${socialNetwork.toLowerCase()}/${type.toLowerCase()}/${attestation.value}`
+  const redisKey = `${socialNetwork.toLowerCase()}/${type.toLowerCase()}/${
+    attestation.value
+  }`
   let tries = 0
   const interval = setInterval(async () => {
     const event = await getAsync(redisKey)
@@ -44,11 +42,10 @@ router.post('/verify', async (req, res) => {
     if (tries >= 300) {
       // Request will timeout after 1000ms * 300 === 300s or 5mins
       clearInterval(interval)
-      return res.status(200)
-        .status({
-          success: false,
-          errors: [`Couldn't verify`]
-        })
+      return res.status(200).status({
+        success: false,
+        errors: [`Couldn't verify`]
+      })
     }
   }, 1000)
 })

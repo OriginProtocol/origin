@@ -2,7 +2,6 @@
 
 const { OAuth } = require('oauth')
 const request = require('superagent')
-const { redisClient } = require('../utils/redis')
 
 const logger = require('./../logger')
 
@@ -16,21 +15,27 @@ const oauth = new OAuth(
   'HMAC-SHA1'
 )
 
-const HOST = process.env.NODE_ENV === 'development' ? process.env.WEBHOOK_TUNNEL_HOST : process.env.HOST
+const HOST =
+  process.env.NODE_ENV === 'development'
+    ? process.env.WEBHOOK_TUNNEL_HOST
+    : process.env.HOST
 
 const HOOK_ENV = process.env.TWITTER_WEBHOOK_ENV || 'dev'
 
 /**
  * List all registered webhooks
- * @param {String} oAuthToken 
- * @param {String} oAuthAccessTokenSecret 
+ * @param {String} oAuthToken
+ * @param {String} oAuthAccessTokenSecret
  */
 function getWebhooks(oAuthToken, oAuthAccessTokenSecret) {
   return new Promise((resolve, reject) => {
-    oauth.get(`https://api.twitter.com/1.1/account_activity/all/webhooks.json?url=${encodeURIComponent(`https://${HOST}/hooks/twitter`)}`,
+    oauth.get(
+      `https://api.twitter.com/1.1/account_activity/all/webhooks.json?url=${encodeURIComponent(
+        `https://${HOST}/hooks/twitter`
+      )}`,
       oAuthToken,
       oAuthAccessTokenSecret,
-      function (err, response) {
+      function(err, response) {
         if (err) {
           return reject(err)
         } else {
@@ -43,17 +48,20 @@ function getWebhooks(oAuthToken, oAuthAccessTokenSecret) {
 
 /**
  * Add a new webhook
- * @param {String} oAuthToken 
- * @param {String} oAuthAccessTokenSecret 
+ * @param {String} oAuthToken
+ * @param {String} oAuthAccessTokenSecret
  */
 function createWebhook(oAuthToken, oAuthAccessTokenSecret) {
   return new Promise((resolve, reject) => {
-    oauth.post(`https://api.twitter.com/1.1/account_activity/all/${HOOK_ENV}/webhooks.json?url=${encodeURIComponent(`https://${HOST}/hooks/twitter`)}`,
+    oauth.post(
+      `https://api.twitter.com/1.1/account_activity/all/${HOOK_ENV}/webhooks.json?url=${encodeURIComponent(
+        `https://${HOST}/hooks/twitter`
+      )}`,
       oAuthToken,
       oAuthAccessTokenSecret,
       null,
       null,
-      function (err, response) {
+      function(err, response) {
         if (err) {
           return reject(err)
         } else {
@@ -71,7 +79,11 @@ async function getBearerToken() {
   const response = await request
     .post('https://api.twitter.com/oauth2/token')
     .set({
-      authorization: 'Basic ' + Buffer.from(`${process.env.TWITTER_CONSUMER_KEY}:${process.env.TWITTER_CONSUMER_SECRET}`).toString('base64'),
+      authorization:
+        'Basic ' +
+        Buffer.from(
+          `${process.env.TWITTER_CONSUMER_KEY}:${process.env.TWITTER_CONSUMER_SECRET}`
+        ).toString('base64'),
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
     })
     .send('grant_type=client_credentials')
@@ -86,7 +98,9 @@ async function getBearerToken() {
  */
 async function deleteWebhook(webhookId, bearerToken) {
   return await request
-    .delete(`https://api.twitter.com/1.1/account_activity/all/${HOOK_ENV}/webhooks/${webhookId}.json`)
+    .delete(
+      `https://api.twitter.com/1.1/account_activity/all/${HOOK_ENV}/webhooks/${webhookId}.json`
+    )
     .set({
       authorization: `Bearer ${bearerToken}`
     })
@@ -99,12 +113,13 @@ async function deleteWebhook(webhookId, bearerToken) {
  */
 async function addSubscription(oAuthToken, oAuthAccessTokenSecret) {
   return new Promise((resolve, reject) => {
-    oauth.post(`https://api.twitter.com/1.1/account_activity/all/${HOOK_ENV}/subscriptions.json`,
+    oauth.post(
+      `https://api.twitter.com/1.1/account_activity/all/${HOOK_ENV}/subscriptions.json`,
       oAuthToken,
       oAuthAccessTokenSecret,
       null,
       null,
-      function (err, response) {
+      function(err, response) {
         if (err) {
           return reject(err)
         } else {
@@ -122,7 +137,9 @@ async function addSubscription(oAuthToken, oAuthAccessTokenSecret) {
  */
 async function subscribeToHooks(oAuthToken, oAuthAccessTokenSecret) {
   const resp = await getWebhooks(oAuthToken, oAuthAccessTokenSecret)
-  const environment = resp.environments.find(e => e.environment_name === HOOK_ENV)
+  const environment = resp.environments.find(
+    e => e.environment_name === HOOK_ENV
+  )
 
   if (!environment) {
     throw new Error('Webhook environment not found')
