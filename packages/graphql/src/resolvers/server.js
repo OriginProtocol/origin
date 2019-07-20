@@ -12,7 +12,6 @@ import Token from './Token'
 import IdentityEvents from './IdentityEvents'
 import Conversation from './messaging/Conversation'
 import Mutation from '../mutations/index'
-import PromotionVerifications from './PromotionVerifications'
 
 export default {
   Query,
@@ -43,6 +42,5 @@ export default {
     __resolveType(obj) {
       return obj.id.indexOf('fiat-') === 0 ? 'FiatCurrency' : 'Token'
     }
-  },
-  PromotionVerifications
+  }
 }

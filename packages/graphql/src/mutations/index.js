@@ -56,8 +56,6 @@ import uniswapInitializeFactory from './uniswap/uniswapInitializeFactory'
 import uniswapCreateExchange from './uniswap/uniswapCreateExchange'
 import uniswapAddLiquidity from './uniswap/uniswapAddLiquidity'
 
-import verifyPromotion from './promotionVerifications/verifyPromotion'
-
 export default {
   acceptOffer,
   addAffiliate,
@@ -105,9 +103,8 @@ export default {
   useFaucet,
   verifyAirbnbCode,
   verifyEmailCode,
-  verifyOAuthAttestation,
   verifyPhoneCode,
-  verifyPromotion,
+  verifyOAuthAttestation,
   verifyWebsite,
   withdrawListing,
   withdrawOffer,

@@ -11,7 +11,6 @@ import ActionGroupList from 'components/growth/ActionGroupList'
 import GrowthInvite from 'pages/growth/Invite'
 import Purchases from 'pages/growth/Purchases'
 import Verifications from 'pages/growth/Verifications'
-import Promotions from 'pages/growth/Promotions'
 import MobileDownloadAction from 'components/growth/MobileDownloadAction'
 import ProgressBar from 'components/ProgressBar'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
@@ -344,7 +343,7 @@ class GrowthCampaigns extends Component {
 
   render() {
     const navigation = get(this.props, 'match.params.navigation') || 'Campaigns'
-    const isMobile = this.props.ismobile === 'true'
+    const isMobile = this.props.isMobile
 
     return (
       <div className={`container growth-campaigns ${isMobile ? 'mobile' : ''}`}>
@@ -396,9 +395,7 @@ class GrowthCampaigns extends Component {
               completedPurchaseActions,
               notCompletedPurchaseActions,
               completedVerificationActions,
-              notCompletedVerificationActions,
-              completedPromotionActions,
-              notCompletedPromotionActions
+              notCompletedVerificationActions
             } = calculatePendingAndAvailableActions(activeCampaign)
 
             return (
@@ -466,18 +463,6 @@ class GrowthCampaigns extends Component {
                           completedPurchaseActions={completedPurchaseActions}
                           notCompletedPurchaseActions={
                             notCompletedPurchaseActions
-                          }
-                        />
-                      )}
-                      {navigation === 'promotions' && (
-                        <Promotions
-                          decimalDivision={decimalDivision}
-                          isMobile={isMobile}
-                          completedPromotionActions={
-                            completedPromotionActions
-                          }
-                          notCompletedPromotionActions={
-                            notCompletedPromotionActions
                           }
                         />
                       )}
