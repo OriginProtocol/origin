@@ -2,7 +2,7 @@ const crypto = require('crypto')
 
 const secret = process.env.ENCRYPTION_SECRET
 if (!secret) {
-  console.log('ENCRYPTION_PASSWORD must be set through EnvKey or manually')
+  console.log('ENCRYPTION_SECRET must be set through EnvKey or manually')
   process.exit(1)
 }
 /**

@@ -157,6 +157,7 @@ jobs:
           command: cd infra/token-transfer-server && yarn test
     environment:
       DATABASE_URL: sqlite:///home/circleci/origin/infra/token-transfer-server/data/t3.db
+      ENCRYPTION_SECRET: thisisasecret
 
   Web3Provider:
     <<: *defaults
