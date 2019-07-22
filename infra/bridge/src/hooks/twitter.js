@@ -96,8 +96,8 @@ async function getBearerToken() {
  * @param {String} webhookId Id of the webhook to be deleted
  * @param {String} bearerToken Application-only token
  */
-async function deleteWebhook(webhookId, bearerToken) {
-  return await request
+function deleteWebhook(webhookId, bearerToken) {
+  return request
     .delete(
       `https://api.twitter.com/1.1/account_activity/all/${HOOK_ENV}/webhooks/${webhookId}.json`
     )
@@ -111,7 +111,7 @@ async function deleteWebhook(webhookId, bearerToken) {
  * @param {String} oAuthToken OAuth token of the user account to be subscribed
  * @param {Strign} oAuthAccessTokenSecret OAuth token secret of the user account to be subscribed
  */
-async function addSubscription(oAuthToken, oAuthAccessTokenSecret) {
+function addSubscription(oAuthToken, oAuthAccessTokenSecret) {
   return new Promise((resolve, reject) => {
     oauth.post(
       `https://api.twitter.com/1.1/account_activity/all/${HOOK_ENV}/subscriptions.json`,

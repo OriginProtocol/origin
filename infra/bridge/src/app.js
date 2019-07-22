@@ -43,7 +43,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(require('./controllers'))
 
-app.listen(5000, async () => {
+app.listen(5000, () => {
   console.log('Origin-bridge listening on port 5000...')
 
   startExchangeRatePolling()

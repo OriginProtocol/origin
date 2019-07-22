@@ -96,7 +96,7 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
 
   if (
     userProfileData.username.toLowerCase() !==
-    process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLocaleLowerCase()
+    process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
   ) {
     return res.status(400).send({
       errors: ['Invalid account']
@@ -137,15 +137,19 @@ router.get('/twitter', (req, res) => {
  * Should always return 200 with no response
  */
 router.post('/twitter', (req, res) => {
+  let followCount = 0
+
   if (req.body.follow_events) {
     // Follow event(s)
     const events = req.body.follow_events
     events.forEach(event => {
       if (
-        event.target.screen_name ===
-        process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLocaleLowerCase()
+        event.target.screen_name.toLowerCase() ===
+        process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
       ) {
-        // Store the follower in redis for 60 minutes
+        // TODO: Parallelize requests to redis
+        // Store the follower in redis for 30 minutes
+        followCount++
         redisClient.set(
           `twitter/follow/${event.source.id}`,
           JSON.stringify(event),
@@ -156,6 +160,7 @@ router.post('/twitter', (req, res) => {
     })
   }
 
+  let mentionCount = 0
   if (req.body.tweet_create_events) {
     const events = req.body.tweet_create_events
     events
@@ -164,11 +169,14 @@ router.post('/twitter', (req, res) => {
         return (
           !event.retweeted &&
           !event.favorited &&
-          event.user.screen_name !== process.env.TWITTER_ORIGINPROTOCOL_USERNAME
+          event.user.screen_name.toLowerCase() !==
+            process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
         )
       })
       .forEach(event => {
-        // Note: Only the latest tweet will be in redis for 60 minutes
+        // TODO: Parallelize requests to redis
+        // Note: Only the latest tweet will be in redis for 30 minutes
+        mentionCount++
         redisClient.set(
           `twitter/share/${event.user.id}`,
           JSON.stringify(event),
@@ -177,6 +185,10 @@ router.post('/twitter', (req, res) => {
         )
       })
   }
+
+  logger.info(
+    `Pushed ${followCount} follow events and ${mentionCount} mention events to redis`
+  )
 
   res.status(200).end()
 })

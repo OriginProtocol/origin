@@ -3,15 +3,19 @@
 const express = require('express')
 const router = express.Router()
 const { getAsync } = require('../utils/redis')
+const logger = require('./../logger')
 
 const Attestation = require('./../models/attestation')
+
+const waitFor = timeInMs =>
+  new Promise(resolve => setTimeout(resolve, timeInMs))
 
 // TODO: Add request body validation
 router.post('/verify', async (req, res) => {
   const { type, socialNetwork, identity } = req.body
 
   const attestation = await Attestation.findOne({
-    ethAddress: identity,
+    ethAddress: identity.toLowerCase(),
     method: socialNetwork
   })
 
@@ -26,31 +30,36 @@ router.post('/verify', async (req, res) => {
     attestation.value
   }`
   let tries = 0
-  const interval = setInterval(async () => {
+  do {
     const event = await getAsync(redisKey)
 
     if (event) {
-      clearInterval(interval)
       // TODO: Process event and Push to growth events
+      logger.info(`${type} event verified for ${identity} on ${socialNetwork}`)
       return res.status(200).send({
         success: true
       })
     } else {
       tries++
     }
+  } while (tries < 60 && (await waitFor(1000)))
 
-    if (tries >= 300) {
-      // Request will timeout after 1000ms * 300 === 300s or 5mins
-      clearInterval(interval)
-      return res.status(200).status({
-        success: false,
-        errors: [`Couldn't verify`]
-      })
-    }
-  }, 1000)
+  // Request will timeout after 1000ms * 60 === 60s
+  logger.error(
+    `${type} event verification for ${identity} on ${socialNetwork} timed out`
+  )
+
+  return res.status(200).status({
+    success: false,
+    errors: [`Couldn't verify`]
+  })
 })
 
-// // TODO: Add request body validation
+/***
+ * The following commented code is not in use right now
+ * But we might use some of this, if we run into a social network
+ * that doesn't support webhooks
+ */
 // router.post('/verify', async (req, res) => {
 //   const { type, socialNetwork, content, identity } = req.body
 
@@ -115,5 +124,119 @@ router.post('/verify', async (req, res) => {
 //       success: true
 //     })
 // })
+
+/**
+ * Table schema for the commented code above
+ */
+// return queryInterface.createTable('verification', {
+//   id: {
+//     allowNull: false,
+//     autoIncrement: true,
+//     primaryKey: true,
+//     type: Sequelize.INTEGER
+//   },
+//   eth_address: {
+//     type: Sequelize.STRING
+//   },
+//   social_network: {
+//     type: Sequelize.ENUM('TWITTER')
+//   },
+//   type: {
+//     type: Sequelize.ENUM('FOLLOW', 'SHARE')
+//   },
+//   // Content to be shared for "SHARE" type
+//   content: {
+//     type: Sequelize.STRING
+//   },
+//   status: {
+//     // VERIFYING = Pushed to the queue and polling is in progress to verify
+//     // VERIFIED = Public account and everything is OK.
+//     // FAILED = Account is protected/private, failed to verify
+//     type: Sequelize.ENUM('VERIFYING', 'VERIFIED', 'FAILED'),
+//     defaultValue: 'VERIFYING'
+//   },
+//   // Reason for failure, if status === FAILED
+//   reason: {
+//     type: Sequelize.STRING
+//   },
+//   created_at: {
+//     type: Sequelize.DATE,
+//     allowNull: false,
+//     defaultValue: Sequelize.fn('now')
+//   },
+//   updated_at: {
+//     type: Sequelize.DATE,
+//     allowNull: false,
+//     defaultValue: Sequelize.fn('now')
+//   },
+//   last_verified: {
+//     type: Sequelize.DATE,
+//     allowNull: false,
+//     defaultValue: Sequelize.fn('now')
+//   }
+// })
+
+/**
+ * Model for the above migration
+ */
+// module.exports = (sequelize, DataTypes) => {
+//   const Verification = sequelize.define(
+//     'Verification',
+//     {
+//       id: {
+//         allowNull: false,
+//         autoIncrement: true,
+//         primaryKey: true,
+//         type: DataTypes.INTEGER
+//       },
+//       ethAddress: {
+//         type: DataTypes.STRING
+//       },
+//       socialNetwork: {
+//         type: DataTypes.ENUM('TWITTER')
+//       },
+//       type: {
+//         type: DataTypes.ENUM('FOLLOW', 'SHARE')
+//       },
+//       // Content to be shared for "SHARE" type
+//       content: {
+//         type: DataTypes.STRING
+//       },
+//       status: {
+//         // VERIFYING = Pushed to the queue and polling is in progress to verify
+//         // VERIFIED = Public account and everything is OK.
+//         // FAILED = Account is protected/private, failed to verify
+//         type: Sequelize.ENUM('VERIFYING', 'VERIFIED', 'FAILED'),
+//         defaultValue: 'VERIFYING'
+//       },
+//       // Reason for failure, if status === FAILED
+//       reason: {
+//         type: Sequelize.STRING
+//       },
+//       last_verified: {
+//         type: DataTypes.DATE,
+//         allowNull: false,
+//         defaultValue: Sequelize.fn('now')
+//       }
+//     },
+//     {
+//       tableName: 'verification',
+//       timestamps: true
+//     }
+//   )
+//   Verification.PromotionTypes = {
+//     FOLLOW: 'FOLLOW',
+//     SHARE: 'SHARE'
+//   }
+//   Verification.SupportedNetworks = {
+//     TWITTER: 'TWITTER'
+//   }
+//   Verification.VerificationStatus = {
+//     VERIFYING: 'VERIFYING',
+//     VERIFIED: 'VERIFIED',
+//     FAILED: 'FAILED'
+//   }
+//   return Verification
+// }
 
 module.exports = router
