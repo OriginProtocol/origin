@@ -5,16 +5,25 @@ const router = express.Router()
 const { getAsync } = require('../utils/redis')
 const logger = require('./../logger')
 
+const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
+const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
+
 const { verifyPromotions } = require('../utils/validation')
 
 const { Attestation } = require('./../models/index')
 
+const PromotionEventToGrowthEvent = {
+  TWITTER: {
+    FOLLOW: GrowthEventTypes.FollowedOnTwitter,
+    SHARE: GrowthEventTypes.SharedOnTwitter
+  }
+}
+
 const waitFor = timeInMs =>
   new Promise(resolve => setTimeout(resolve, timeInMs))
 
-// TODO: Add request body validation
 router.post('/verify', verifyPromotions, async (req, res) => {
-  const { type, socialNetwork, identity } = req.body
+  const { type, socialNetwork, identity, content } = req.body
 
   const attestation = await Attestation.findOne({
     where: {
@@ -41,11 +50,22 @@ router.post('/verify', verifyPromotions, async (req, res) => {
     logger.warn(redisKey, event)
 
     if (event) {
-      // TODO: Process event and Push to growth events
-      logger.info(`${type} event verified for ${identity} on ${socialNetwork}`)
-      return res.status(200).send({
-        success: true
-      })
+      if (type === 'FOLLOW' || (type === 'SHARE' && event.text === content)) {
+        await GrowthEvent.insert(
+          logger,
+          1,
+          identity,
+          PromotionEventToGrowthEvent[socialNetwork][type],
+          null,
+          event,
+          Date.now()
+        )
+  
+        logger.info(`${type} event verified for ${identity} on ${socialNetwork}`)
+        return res.status(200).send({
+          success: true
+        })
+      }
     }
 
     tries++

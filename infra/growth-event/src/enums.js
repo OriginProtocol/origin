@@ -31,7 +31,9 @@ const GrowthEventTypes = new Enum(
   'ListingCreated',
   'ListingPurchased', // Buyer side event.
   'ListingSold', // Seller side event.
-  'MobileAccountCreated' // User installed Origin mobile app and registered an account.
+  'MobileAccountCreated', // User installed Origin mobile app and registered an account.
+  'SharedOnTwitter',
+  'FollowedOnTwitter'
 )
 
 module.exports = {
