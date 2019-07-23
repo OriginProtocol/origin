@@ -50,7 +50,10 @@ async function _checkTransferRequest(userId, grantId, amount, transfer = null) {
 
   // TODO(franck/tom): Replace with a call to the logic for calculating tokens available.
   //   Note: If transfer arg is not null, make sure to not double count that amount.
-  const available = 0
+  const placeholderAvailable = () => {
+    return grant.amount
+  }
+  const available = placeholderAvailable(userId, grantId, transfer)
   if (amount > available) {
     throw new RangeError(
       `Amount of ${amount} OGN exceeds the ${available} available for grant ${grantId}`
