@@ -60,8 +60,10 @@ router.post('/verify', verifyPromotions, async (req, res) => {
           event,
           Date.now()
         )
-  
-        logger.info(`${type} event verified for ${identity} on ${socialNetwork}`)
+
+        logger.info(
+          `${type} event verified for ${identity} on ${socialNetwork}`
+        )
         return res.status(200).send({
           success: true
         })
