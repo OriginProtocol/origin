@@ -133,6 +133,8 @@ class Relayer {
       redisHost: env.REDIS_URL
     })
     this.knownProxyNonces = {}
+    // keys are signatures, values are Dates
+    this.seenSignatures = {}
 
     this.ProxyFactory = new this.web3.eth.Contract(
       ProxyFactoryContract.abi,
@@ -202,6 +204,14 @@ class Relayer {
       proxy,
       preflight
     })
+
+    // Check to prevent rapid-fire duplicate reqeusts
+    if (typeof this.seenSignatures[signature] !== 'undefined') {
+      return res.status(400).send({ errors: ['Duplicate'] })
+    } else {
+      // Update seen signatures
+      this.seenSignatures[signature] = new Date()
+    }
 
     Sentry.configureScope(scope => {
       scope.setUser({ id: from })
@@ -429,6 +439,14 @@ class Relayer {
 
     // Return the transaction hash to the caller.
     res.send({ id: txHash })
+
+    // GC of signature tracking
+    const now = new Date()
+    for (const key of Object.keys(this.seenSignatures)) {
+      if (now - this.seenSignatures[key] > 30000) {
+        delete this.seenSignatures[key]
+      }
+    }
   }
 }
 
