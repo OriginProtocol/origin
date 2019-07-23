@@ -48,7 +48,7 @@ router.post('/verify', verifyPromotions, async (req, res) => {
     const event = await getAsync(redisKey)
 
     if (event) {
-      if (type === 'FOLLOW' || (type === 'SHARE' && event.text === content)) {
+      if (type === 'FOLLOW' || (type === 'SHARE' && JSON.parse(event).text === content)) {
         await GrowthEvent.insert(
           logger,
           1,
