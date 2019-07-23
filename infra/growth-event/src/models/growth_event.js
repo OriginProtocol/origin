@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
       customId: DataTypes.STRING,
-      type: DataTypes.ENUM(enums.GrowthEventTypes),
-      status: DataTypes.ENUM(enums.GrowthEventStatuses),
+      type: DataTypes.ENUM(...enums.GrowthEventTypes),
+      status: DataTypes.ENUM(...enums.GrowthEventStatuses),
       ethAddress: DataTypes.STRING,
       data: DataTypes.JSONB,
       createdAt: DataTypes.DATE,

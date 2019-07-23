@@ -2,6 +2,7 @@
  * IMPORTANT: If you add an entry to an enum below, do not forget to add
  *  a migration script to add the enum to the DB.
  */
+const GrowthEventEnums = require('@origin/growth-event/src/enums')
 
 class Enum extends Array {
   constructor(...args) {
@@ -47,26 +48,9 @@ const GrowthActionType = new Enum(
   'ListingPurchased'
 )
 
-const GrowthEventStatuses = new Enum('Logged', 'Verified', 'Fraud')
+const GrowthEventStatuses = new Enum(...GrowthEventEnums.GrowthEventStatuses)
 
-const GrowthEventTypes = new Enum(
-  'ProfilePublished',
-  'EmailAttestationPublished',
-  'FacebookAttestationPublished',
-  'AirbnbAttestationPublished',
-  'TwitterAttestationPublished',
-  'PhoneAttestationPublished',
-  'GoogleAttestationPublished',
-  'LinkedInAttestationPublished',
-  'GitHubAttestationPublished',
-  'KakaoAttestationPublished',
-  'WeChatAttestationPublished',
-  'WebsiteAttestationPublished',
-  'ListingCreated',
-  'ListingPurchased', // Buyer side event.
-  'ListingSold', // Seller side event.
-  'MobileAccountCreated' // User installed Origin mobile app and registered an account.
-)
+const GrowthEventTypes = new Enum(...GrowthEventEnums.GrowthEventTypes)
 
 const GrowthParticipantStatuses = new Enum('Active', 'Banned')
 

@@ -18,7 +18,7 @@ const { transactionMobilePush, messageMobilePush } = require('./mobilePush')
 const MobileRegistry = require('./models').MobileRegistry
 
 const { GrowthEventTypes } = require('@origin/growth/src/enums')
-const { GrowthEvent } = require('@origin/growth/src/resources/event')
+const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
 
 const app = express()
 const port = 3456

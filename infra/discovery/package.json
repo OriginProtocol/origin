@@ -18,6 +18,7 @@
     "@google-cloud/pubsub": "^0.30.1",
     "@origin/bridge": "^0.1.0",
     "@origin/graphql": "^0.1.1",
+    "@origin/growth-event": "^0.1.0",
     "@origin/growth": "^0.1.0",
     "@origin/identity": "^0.1.0",
     "@origin/ip2geo": "^0.1.0",
@@ -31,8 +32,8 @@
     "express": "^4.17.1",
     "express-prom-bundle": "^5.1.5",
     "graphql": "^14.4.0",
-    "graphql-tag": "^2.10.1",
     "graphql-iso-date": "3.6.1",
+    "graphql-tag": "^2.10.1",
     "graphql-type-json": "^0.3.0",
     "http": "0.0.0",
     "logplease": "^1.2.15",
@@ -46,14 +47,14 @@
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
-    "chai-things": "^0.2.0",
     "chai": "^4.2.0",
+    "chai-things": "^0.2.0",
     "chalk": "^2.4.2",
     "mocha": "^6.1.4",
     "nodemon": "^1.19.1",
+    "prettier": "^1.18.2",
     "rewire": "^4.0.1",
-    "sinon": "^7.3.2",
-    "prettier": "^1.18.2"
+    "sinon": "^7.3.2"
   },
   "scripts": {
     "lint": "eslint '**/*.js' && npm run prettier:check",
