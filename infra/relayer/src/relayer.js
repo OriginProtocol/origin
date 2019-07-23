@@ -133,6 +133,8 @@ class Relayer {
       redisHost: env.REDIS_URL
     })
     this.knownProxyNonces = {}
+    // keys are signatures, values are Dates
+    this.seenSignatures = {}
 
     this.ProxyFactory = new this.web3.eth.Contract(
       ProxyFactoryContract.abi,
@@ -203,6 +205,14 @@ class Relayer {
       preflight
     })
 
+    // Check to prevent rapid-fire duplicate requests
+    if (typeof this.seenSignatures[signature] !== 'undefined') {
+      return res.status(429).send({ errors: ['Duplicate'] })
+    } else {
+      // Update seen signatures
+      this.seenSignatures[signature] = new Date()
+    }
+
     Sentry.configureScope(scope => {
       scope.setUser({ id: from })
     })
@@ -255,9 +265,9 @@ class Relayer {
     if (proxy) {
       // Verify a proxy exists
       if (!code || code.length <= 4) {
-        logger.error(
-          `Proxy does not exist at ${predictedAddress} for user ${from}`
-        )
+        const msg = `Proxy does not exist at ${predictedAddress} for user ${from}`
+        logger.error(msg)
+        Sentry.captureException(new Error(msg))
         return res.status(400).send({ errors: ['Proxy exists'] })
       }
 
@@ -268,7 +278,9 @@ class Relayer {
        * See: https://github.com/OriginProtocol/origin/issues/2631
        */
       if (this.purse.hasPendingTo(proxy)) {
-        logger.warn(`Proxy ${proxy} already has a pending transaction`)
+        const msg = `Proxy ${proxy} already has a pending transaction`
+        logger.warn(msg)
+        Sentry.captureException(new Error(msg))
         return res
           .status(429)
           .send({ errors: ['Proxy has pending transaction'] })
@@ -280,9 +292,9 @@ class Relayer {
         typeof this.knownProxyNonces[proxy] === 'number' &&
         nonce <= this.knownProxyNonces[proxy]
       ) {
-        logger.warn(
-          `User ${from}'s proxy nonce appears to have been seen before!`
-        )
+        const msg = `User ${from}'s proxy nonce appears to have been seen before!`
+        logger.warn(msg)
+        Sentry.captureException(new Error(msg))
         return res.status(400).send({ errors: ['Incorrect nonce!'] })
       }
 
@@ -290,15 +302,15 @@ class Relayer {
     } else {
       // Verify a proxy doesn't already exist
       if (code && code.length > 4) {
-        logger.error(
-          `Proxy already exists at ${predictedAddress} for user ${from}`
-        )
+        const msg = `Proxy already exists at ${predictedAddress} for user ${from}`
+        logger.error(msg)
+        Sentry.captureException(new Error(msg))
         return res.status(400).send({ errors: ['Proxy exists'] })
       }
       if (this.purse.hasPending(from)) {
-        logger.warn(
-          `User ${from} already has a pending ProxyCreation transaction!`
-        )
+        const msg = `User ${from} already has a pending ProxyCreation transaction!`
+        logger.warn(msg)
+        Sentry.captureException(new Error(msg))
         return res
           .status(429)
           .send({ errors: ['User has pending transaction'] })
@@ -308,13 +320,17 @@ class Relayer {
     const args = { to, from, signature, txData, web3, nonce }
     const sigValid = await verifySig(args)
     if (!sigValid) {
-      logger.debug('Invalid signature.')
+      const msg = 'Invalid signature.'
+      logger.debug(msg)
+      Sentry.captureMessage(msg)
       return res.status(400).send({ errors: ['Cannot verify your signature'] })
     }
 
     // 2. Verify txData and check function signature
     if (!method) {
-      logger.debug('Invalid method')
+      const msg = 'Invalid method'
+      logger.debug(msg)
+      Sentry.captureMessage(msg)
       return res.status(400).send({ errors: ['Invalid function signature'] })
     }
 
@@ -423,6 +439,14 @@ class Relayer {
 
     // Return the transaction hash to the caller.
     res.send({ id: txHash })
+
+    // GC of signature tracking
+    const now = new Date()
+    for (const key of Object.keys(this.seenSignatures)) {
+      if (now - this.seenSignatures[key] > 30000) {
+        delete this.seenSignatures[key]
+      }
+    }
   }
 }
 

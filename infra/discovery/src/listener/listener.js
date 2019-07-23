@@ -91,11 +91,6 @@ const config = {
   proxy: args['--proxy'] || process.env.INDEX_PROXY === 'true',
   // File to use for picking which block number to restart from
   continueFile: args['--continue-file'] || process.env.CONTINUE_FILE,
-  // Trail X number of blocks behind
-  // DEPRECIATED
-  trailBlocks: parseInt(
-    args['--trail-behind-blocks'] || process.env.TRAIL_BEHIND_BLOCKS || 0
-  ),
   // Warning: only use concurrency > 1 for backfills. Not under normal operation.
   concurrency: parseInt(args['--concurrency'] || process.env.CONCURRENCY || 1),
   // Possible values: origin, rinkeby, mainnet, ...
