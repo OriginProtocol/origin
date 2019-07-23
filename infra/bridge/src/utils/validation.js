@@ -151,6 +151,17 @@ const wechatVerify = oauth2CallbackVerify
 
 const websiteVerify = websiteGenerateCode
 
+const verifyPromotions = [
+  identityValidation,
+  check('socialNetwork')
+    .isIn(['TWITTER'])
+    .withMessage('Unsupported social network'),
+  check('type')
+    .isIn(['FOLLOW', 'SHARE'])
+    .withMessage('Unknown event type'),
+  handleValidationError
+]
+
 module.exports = {
   airbnbGenerateCode,
   airbnbVerifyCode,
@@ -166,5 +177,6 @@ module.exports = {
   kakaoVerify,
   githubVerify,
   linkedinVerify,
-  wechatVerify
+  wechatVerify,
+  verifyPromotions
 }

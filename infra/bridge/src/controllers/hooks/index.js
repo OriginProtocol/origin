@@ -123,7 +123,7 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
  */
 router.get('/twitter', (req, res) => {
   const hmac = crypto
-    .createHmac('sha256', process.env.TWITTER_ORIGIN_CONSUMER_SECRET)
+    .createHmac('sha256', process.env.TWITTER_CONSUMER_SECRET)
     .update(req.query.crc_token)
     .digest('base64')
 
@@ -154,7 +154,7 @@ router.post('/twitter', (req, res) => {
           `twitter/follow/${event.source.id}`,
           JSON.stringify(event),
           'EX',
-          60 * 60 * 30
+          60 * 30
         )
       }
     })
@@ -181,7 +181,7 @@ router.post('/twitter', (req, res) => {
           `twitter/share/${event.user.id}`,
           JSON.stringify(event),
           'EX',
-          60 * 60 * 30
+          60 * 30
         )
       })
   }

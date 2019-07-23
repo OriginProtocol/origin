@@ -5,18 +5,22 @@ const router = express.Router()
 const { getAsync } = require('../utils/redis')
 const logger = require('./../logger')
 
-const Attestation = require('./../models/attestation')
+const { verifyPromotions } = require('../utils/validation')
+
+const { Attestation }= require('./../models/index')
 
 const waitFor = timeInMs =>
   new Promise(resolve => setTimeout(resolve, timeInMs))
 
 // TODO: Add request body validation
-router.post('/verify', async (req, res) => {
+router.post('/verify', verifyPromotions, async (req, res) => {
   const { type, socialNetwork, identity } = req.body
 
   const attestation = await Attestation.findOne({
-    ethAddress: identity.toLowerCase(),
-    method: socialNetwork
+    where: {
+      ethAddress: identity.toLowerCase(),
+      method: socialNetwork
+    }
   })
 
   if (!attestation) {
@@ -29,9 +33,12 @@ router.post('/verify', async (req, res) => {
   const redisKey = `${socialNetwork.toLowerCase()}/${type.toLowerCase()}/${
     attestation.value
   }`
+  const maxTries = process.env.VERIFICATION_MAX_TRIES || 60
   let tries = 0
   do {
     const event = await getAsync(redisKey)
+
+    logger.warn(redisKey, event)
 
     if (event) {
       // TODO: Process event and Push to growth events
@@ -39,19 +46,19 @@ router.post('/verify', async (req, res) => {
       return res.status(200).send({
         success: true
       })
-    } else {
-      tries++
     }
-  } while (tries < 60 && (await waitFor(1000)))
+
+    tries++
+  } while (tries < maxTries && (await waitFor(process.env.VERIFICATION_POLL_INTERVAL || 1000)))
 
   // Request will timeout after 1000ms * 60 === 60s
   logger.error(
     `${type} event verification for ${identity} on ${socialNetwork} timed out`
   )
 
-  return res.status(200).status({
+  return res.status(200).send({
     success: false,
-    errors: [`Couldn't verify`]
+    errors: [`Verification timed out`]
   })
 })
 
