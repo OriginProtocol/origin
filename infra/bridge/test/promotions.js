@@ -68,16 +68,17 @@ describe('promotion verifications', () => {
     })
 
     // Push a fake event to redis
-    client.set(`twitter/share/12345`, '{}', 'EX', 60)
+    client.set(`twitter/share/12345`, '{ text: "Hello World" }', 'EX', 60)
 
     const response = await request(app)
       .post('/api/promotions/verify')
       .send({
         type: 'SHARE',
         socialNetwork: 'TWITTER',
-        identity: ethAddress
+        identity: ethAddress,
+        content: 'Hello World'
       })
-    // .expect(200)
+    .expect(200)
 
     expect(response.body.success).to.equal(true)
   })

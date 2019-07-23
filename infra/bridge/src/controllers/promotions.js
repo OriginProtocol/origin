@@ -47,8 +47,6 @@ router.post('/verify', verifyPromotions, async (req, res) => {
   do {
     const event = await getAsync(redisKey)
 
-    logger.warn(redisKey, event)
-
     if (event) {
       if (type === 'FOLLOW' || (type === 'SHARE' && event.text === content)) {
         await GrowthEvent.insert(
@@ -71,9 +69,10 @@ router.post('/verify', verifyPromotions, async (req, res) => {
     }
 
     tries++
+
+    await waitFor(process.env.VERIFICATION_POLL_INTERVAL || 1000)
   } while (
-    tries < maxTries &&
-    (await waitFor(process.env.VERIFICATION_POLL_INTERVAL || 1000))
+    tries < maxTries
   )
 
   // Request will timeout after 1000ms * 60 === 60s
