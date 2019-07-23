@@ -207,7 +207,7 @@ class Relayer {
 
     // Check to prevent rapid-fire duplicate reqeusts
     if (typeof this.seenSignatures[signature] !== 'undefined') {
-      return res.status(400).send({ errors: ['Duplicate'] })
+      return res.status(429).send({ errors: ['Duplicate'] })
     } else {
       // Update seen signatures
       this.seenSignatures[signature] = new Date()
