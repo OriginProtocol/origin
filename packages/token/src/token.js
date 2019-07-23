@@ -2,7 +2,6 @@ const BigNumber = require('bignumber.js')
 
 const TokenContract = require('@origin/contracts/releases/latest/build/contracts/OriginToken.json')
 
-const { withRetries } = require('./util')
 const ContractHelper = require('./contractHelper')
 const logger = require('./logger')
 
@@ -87,9 +86,9 @@ class Token extends ContractHelper {
    * @params {int} value - Value to credit, in natural unit.
    * @params {Object} opts - Options. For example gasPrice.
    * @throws Throws an error if the operation failed.
-   * @returns {Object} - Transaction receipt
+   * @returns {string} - Transaction hash
    */
-  async sentTx(networkId, address, value, opts = {}) {
+  async credit(networkId, address, value, opts = {}) {
     const contract = this.contract(networkId)
 
     // At token contract deployment, the entire initial supply of tokens is assigned to
@@ -108,7 +107,7 @@ class Token extends ContractHelper {
       throw new Error('token transfers are paused')
     }
     const transaction = contract.methods.transfer(address, value)
-    return await this.sendTransaction(networkId, transaction, {
+    return await this.sendTx(networkId, transaction, {
       from: tokenSupplier,
       ...opts
     })
@@ -143,16 +142,12 @@ class Token extends ContractHelper {
     await this.ensureContractOwner(contract, sender)
 
     const transaction = contract.methods.pause()
-    await this.sendTransaction(networkId, transaction, { from: sender })
-
-    await withRetries({ verbose: this.config.verbose }, async () => {
-      if (
-        !this.config.multisig &&
-        (await contract.methods.paused().call()) !== true
-      ) {
-        throw new Error('Still waiting for token to be paused')
-      }
-    })
+    const txHash = await this.sendTx(networkId, transaction, { from: sender })
+    logger.info(`Sent pause tx to network, hash=${txHash}`)
+    const { txStatus } = await this.waitForTxConfirmation(networkId, txHash)
+    if (txStatus != 'confirmed') {
+      throw new Error(`Failed getting confirmation. txHash=${txHash} txStatus=${txStatus}`)
+    }
   }
 
   /**
@@ -171,15 +166,12 @@ class Token extends ContractHelper {
     await this.ensureContractOwner(contract, sender)
 
     const transaction = contract.methods.unpause()
-    await this.sendTransaction(networkId, transaction, { from: sender })
-    await withRetries({ verbose: this.config.verbose }, async () => {
-      if (
-        !this.config.multisig &&
-        (await contract.methods.paused().call()) !== false
-      ) {
-        throw new Error('Still waiting for token to be unpaused')
-      }
-    })
+    const txHash = await this.sendTransaction(networkId, transaction, { from: sender })
+    logger.info(`Sent unpause tx to network, hash=${txHash}`)
+    const { txStatus } = await this.waitForTxConfirmation(networkId, txHash)
+    if (txStatus != 'confirmed') {
+      throw new Error(`Failed getting confirmation. txHash=${txHash} txStatus=${txStatus}`)
+    }
   }
 
   /**

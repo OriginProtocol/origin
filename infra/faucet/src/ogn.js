@@ -6,6 +6,11 @@ const logger = require('./logger')
 // Credit 100 tokens per request.
 const NUM_TOKENS = 100
 
+// Number of block confirmations required for a transfer to be consider completed.
+const NumBlockConfirmation = 1
+// Wait up to 2min for a transaction to get confirmed
+const ConfirmationTimeout = 120
+
 class OgnDistributor {
   constructor(config) {
     this.token = new Token(config)
@@ -28,8 +33,15 @@ class OgnDistributor {
       // Transfer NUM_TOKENS to the specified wallet.
       const value = this.token.toNaturalUnit(NUM_TOKENS)
       const contractAddress = this.token.contractAddress(networkId)
-      const receipt = await this.token.credit(networkId, wallet, value)
-      const txHash = receipt.transactionHash
+      const txHash = await this.token.credit(networkId, wallet, value)
+      const { txStatus } = await this.token.waitForTxConfirmation(
+        networkId,
+        txHash,
+        { numBlocks: NumBlockConfirmation, timeoutSec: ConfirmationTimeout }
+      )
+      if (txStatus !== 'confirmed') {
+        throw new Error(`Failure. txStatus=${txStatus} txHash=${txHash}`)
+      }
       logger.info(`${NUM_TOKENS} OGN -> ${wallet} TxHash=${txHash}`)
 
       // Send response back to client.

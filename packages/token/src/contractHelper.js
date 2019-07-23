@@ -1,4 +1,3 @@
-const { withRetries } = require('./util')
 const logger = require('./logger')
 
 
@@ -63,12 +62,13 @@ class ContractHelper {
    * @param {number} txHash: the transaction hash.
    * @param {number} numBlocks: the number of block confirmation to wait for
    * @param {number} timeoutSec: timeout in seconds
-   * @returns {Promise<string>}
-   *  'confirmed': the transaction was confirmed.
-   *  'failed': the transaction was reverted by the EVM.
-   *  'timeout': timed out before being able to confirm the transaction.
+   * @returns {Promise<{status:string, receipt:Object}>}
+   * Possible values for status:
+   *  'confirmed': the transaction was confirmed. A receipt is returned.
+   *  'failed': the transaction was reverted by the EVM. A receipt is returned.
+   *  'timeout': timed out before being able to confirm the transaction. No receipt.
    */
-  async waitForTxConfirmation(networkId, txHash, { numBlocks=3, timeoutSec=300 }) {
+  async waitForTxConfirmation(networkId, txHash, { numBlocks=8, timeoutSec=600 }) {
     const web3 = this.web3(networkId)
     const start = Date.now()
     let elapsed = 0, receipt = null
@@ -86,7 +86,7 @@ class ContractHelper {
       if (receipt && receipt.blockNumber) {
         if (!receipt.status) {
           // Transaction was reverted by the EVM.
-          return 'failed'
+          return { status: 'failed', receipt }
         } else {
           // Calculate the number of block confirmations.
           try {
@@ -94,7 +94,7 @@ class ContractHelper {
             const numConfirmations = blockNumber - receipt.blockNumber
             if (numConfirmations >= numBlocks) {
               // Transaction confirmed.
-              return 'confirmed'
+              return { status: 'confirmed', receipt }
             }
           } catch (e) {
             logger.error('getBlockNumber failure', e)
@@ -105,7 +105,7 @@ class ContractHelper {
       elapsed = (Date.now() - start) / 1000
     } while (elapsed < timeoutSec && await _nextTick(5000))
 
-    return 'timeout'
+    return { status: 'timeout', receipt: null }
   }
 
   /**

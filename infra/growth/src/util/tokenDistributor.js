@@ -10,6 +10,14 @@ const { createProviders } = require('@origin/token/src/config')
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('tokenDistributor')
 
+
+// Number of block confirmations required for a transfer to be consider completed.
+const NumBlockConfirmation = 3
+
+// Wait up to 10min for a transaction to get confirmed
+const ConfirmationTimeout = 600
+
+
 class TokenDistributor {
   // Note: we can't use a constructor due to the async call to defaultAccount.
   async init(networkId, gasPriceMultiplier) {
@@ -59,7 +67,7 @@ class TokenDistributor {
   }
 
   /**
-   * Sends OGN to a user
+   * Sends OGN to a user. Throws an exception in case of error.
    *
    * @param {string} ethAddress
    * @param {string} amount in natural units.
@@ -67,13 +75,23 @@ class TokenDistributor {
    */
   async credit(ethAddress, amount) {
     const gasPrice = await this._calcGasPrice()
-    const txnReceipt = await this.token.credit(
+    const txHash = await this.token.credit(
       this.networkId,
       ethAddress,
       amount,
       { gasPrice }
     )
-    logger.info('Blockchain transaction')
+    logger.info(`Sent tx to network. txHash=${txHash}`)
+
+    const { txStatus, receipt } = await this.token.waitForTxConfirmation(
+      this.networkId,
+      txHash,
+      { numBlocks: NumBlockConfirmation, timeoutSec: ConfirmationTimeout }
+    )
+    if (txStatus !== 'confirmed') {
+      throw new Error(`Failure. txStatus=${txStatus} txHash=${txHash}`)
+    }
+    logger.info('Blockchain transaction confirmed')
     logger.info('  NetworkId:        ', this.networkId)
     logger.info('  GasMultiplier:    ', this.gasPriceMultiplier)
     logger.info('  GasPrice:         ', gasPrice.toFixed())
@@ -81,9 +99,9 @@ class TokenDistributor {
     logger.info('  Amount (tokens):  ', this.token.toTokenUnit(amount))
     logger.info('  From:             ', this.supplier)
     logger.info('  To:               ', ethAddress)
-    logger.info('  TxnHash:          ', txnReceipt.transactionHash)
-    logger.info('  BlockNumber:      ', txnReceipt.blockNumber)
-    return txnReceipt
+    logger.info('  TxHash:           ', receipt.transactionHash)
+    logger.info('  BlockNumber:      ', receipt.blockNumber)
+    return receipt
   }
 }
 

@@ -2,14 +2,15 @@ const Token = require('@origin/token/src/token')
 const { createProviders } = require('@origin/token/src/config')
 
 const { GRANT_TRANSFER_DONE, GRANT_TRANSFER_FAILED, GRANT_TRANSFER_REQUEST } = require('../constants/events')
-const { Event, Grant, Transfer, User } = require('../models')
+const { Event, Grant, Transfer, User, Sequelize } = require('../models')
 const enums = require('../enums')
 const logger = require('../logger')
 
 // Number of block confirmations required for a transfer to be consider completed.
-const NumBlockConfirmation = 3
-// Wait up to 10min for a transaction to get confirmed
-const ConfirmationTimeout = 600
+const NumBlockConfirmation = 8
+
+// Wait up to 20min for a transaction to get confirmed
+const ConfirmationTimeout = 1200
 
 
 /**
@@ -68,7 +69,7 @@ async function enqueueTransfer(userId, grantId, networkId, address, amount, ip) 
   // It will get picked up asynchronously by the offline job that processes transfers.
   // Record new state in the database.
   let transfer
-  const txn = await sequelize.transaction()
+  const txn = await Sequelize.transaction()
   try {
     transfer = await Transfer.create({
       grantId,
@@ -126,7 +127,7 @@ async function executeTransfer(transfer, opts) {
   })
 
   // Wait for the transaction to get confirmed.
-  const txStatus = await token.waitForTxConfirmation(
+  const { txStatus } = await token.waitForTxConfirmation(
     networkId,
     txHash,
     { numBlocks: NumBlockConfirmation, timeoutSec: ConfirmationTimeout }
@@ -155,7 +156,7 @@ async function executeTransfer(transfer, opts) {
   // table is used as an activity log presented to the user and we don't want
   // them to get alarmed if a transaction happened to fail. Our team will investigate,
   // fix the issue and resubmit the transaction if necessary.
-  const txn = await sequelize.transaction()
+  const txn = await Sequelize.transaction()
   try {
     await transfer.update({ status: transferStatus })
     const event = {

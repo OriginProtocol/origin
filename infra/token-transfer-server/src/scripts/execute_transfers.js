@@ -1,10 +1,15 @@
 /*
-  Script that submits transactions to the blockchain for transfer requests
-  enqueued in the transfer DB table.
+  Script that loads transfer requests enqueued in the DB and submits them to the blockchain.
 
-  Transactions are executed serially: for each transaction, the script waits
-  for its confirmation before processing the next one.
+  Transactions are executed serially. For each transaction, the script waits
+  for blockchain confirmation before processing the next one.
+
+  Since we are dealing with large amount of tokens, we err on the safe side and
+  any single failure is considered fatal. It stops any further processing as part
+  of the current job or subsequent runs of the job until an operator gets a
+  chance to manually review the issue.
  */
+
 const fs = require('fs')
 const Logger = require('logplease')
 

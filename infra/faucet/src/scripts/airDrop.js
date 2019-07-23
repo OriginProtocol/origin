@@ -24,6 +24,12 @@ const logger = Logger.create('airdrop')
 // 20% over default gas price to make transaction go faster.
 const gasPriceMultiplier = 1.2
 
+// Number of block confirmations required for a transfer to be consider completed.
+const NumBlockConfirmation = 3
+
+// Wait up to 10min for a transaction to get confirmed
+const ConfirmationTimeout = 600
+
 /**
  * Parse command line arguments into a dict.
  * @returns {Object} - Parsed arguments.
@@ -92,12 +98,19 @@ class AirDrop {
    */
   async _send(networkId, toAddress, amount) {
     const gasPrice = await this._calcGasPrice()
-    const receipt = await this.token.credit(networkId, toAddress, amount, {
+    const txHash = await this.token.credit(networkId, toAddress, amount, {
       gasPrice
     })
-    const txnHash = receipt.transactionHash
-    logger.info(`${amount} OGN -> ${toAddress} TxHash=${txnHash}`)
-    return txnHash
+    const { txStatus } = await this.token.waitForTxConfirmation(
+      networkId,
+      txHash,
+      { numBlocks: NumBlockConfirmation, timeoutSec: ConfirmationTimeout }
+    )
+    if (txStatus !== 'confirmed') {
+      throw new Error(`Failure. txStatus=${txStatus} txHash=${txHash}`)
+    }
+    logger.info(`${amount} OGN -> ${toAddress} TxHash=${txHash}`)
+    return txHash
   }
 
   /**
