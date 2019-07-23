@@ -205,7 +205,7 @@ class Relayer {
       preflight
     })
 
-    // Check to prevent rapid-fire duplicate reqeusts
+    // Check to prevent rapid-fire duplicate requests
     if (typeof this.seenSignatures[signature] !== 'undefined') {
       return res.status(429).send({ errors: ['Duplicate'] })
     } else {
