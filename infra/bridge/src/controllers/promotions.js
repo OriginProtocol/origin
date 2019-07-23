@@ -7,7 +7,7 @@ const logger = require('./../logger')
 
 const { verifyPromotions } = require('../utils/validation')
 
-const { Attestation }= require('./../models/index')
+const { Attestation } = require('./../models/index')
 
 const waitFor = timeInMs =>
   new Promise(resolve => setTimeout(resolve, timeInMs))
@@ -49,7 +49,10 @@ router.post('/verify', verifyPromotions, async (req, res) => {
     }
 
     tries++
-  } while (tries < maxTries && (await waitFor(process.env.VERIFICATION_POLL_INTERVAL || 1000)))
+  } while (
+    tries < maxTries &&
+    (await waitFor(process.env.VERIFICATION_POLL_INTERVAL || 1000))
+  )
 
   // Request will timeout after 1000ms * 60 === 60s
   logger.error(

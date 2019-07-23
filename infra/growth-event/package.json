@@ -25,5 +25,9 @@
   "prettier": {
     "semi": false,
     "singleQuote": true
+  },
+  "devDependencies": {
+    "eslint": "^6.1.0",
+    "prettier": "^1.18.2"
   }
 }

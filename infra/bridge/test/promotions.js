@@ -30,16 +30,15 @@ describe('promotion verifications', () => {
 
   it('should resolve on valid verification for `follow` event on twitter', async () => {
     // Create a dummy attestation
-    await Attestation
-      .create({
-        method: AttestationTypes.TWITTER,
-        ethAddress,
-        value: '12345',
-        signature: '0x0',
-        remoteUpAddress: '192.168.1.1',
-        profileUrl: '/',
-        username: 'OriginProtocol'
-      })
+    await Attestation.create({
+      method: AttestationTypes.TWITTER,
+      ethAddress,
+      value: '12345',
+      signature: '0x0',
+      remoteUpAddress: '192.168.1.1',
+      profileUrl: '/',
+      username: 'OriginProtocol'
+    })
 
     // Push a fake event to redis
     client.set(`twitter/follow/12345`, '{}', 'EX', 60)
@@ -54,20 +53,19 @@ describe('promotion verifications', () => {
       .expect(200)
 
     expect(response.body.success).to.equal(true)
-  }) 
+  })
 
   it('should resolve on valid verification for `share` event on twitter', async () => {
     // Create a dummy attestation
-    await Attestation
-      .create({
-        method: AttestationTypes.TWITTER,
-        ethAddress,
-        value: '12345',
-        signature: '0x0',
-        remoteUpAddress: '192.168.1.1',
-        profileUrl: '/',
-        username: 'OriginProtocol'
-      })
+    await Attestation.create({
+      method: AttestationTypes.TWITTER,
+      ethAddress,
+      value: '12345',
+      signature: '0x0',
+      remoteUpAddress: '192.168.1.1',
+      profileUrl: '/',
+      username: 'OriginProtocol'
+    })
 
     // Push a fake event to redis
     client.set(`twitter/share/12345`, '{}', 'EX', 60)
@@ -79,10 +77,10 @@ describe('promotion verifications', () => {
         socialNetwork: 'TWITTER',
         identity: ethAddress
       })
-      // .expect(200)
+    // .expect(200)
 
     expect(response.body.success).to.equal(true)
-  }) 
+  })
 
   it('should fail on missing attestation', async () => {
     const response = await request(app)
@@ -100,16 +98,15 @@ describe('promotion verifications', () => {
 
   it('should fail on poll timeout', async () => {
     // Create a dummy attestation
-    await Attestation
-      .create({
-        method: AttestationTypes.TWITTER,
-        ethAddress: ethAddress,
-        value: '123456',
-        signature: '0x0',
-        remoteUpAddress: '192.168.1.1',
-        profileUrl: '/',
-        username: 'OriginProtocol'
-      })
+    await Attestation.create({
+      method: AttestationTypes.TWITTER,
+      ethAddress: ethAddress,
+      value: '123456',
+      signature: '0x0',
+      remoteUpAddress: '192.168.1.1',
+      profileUrl: '/',
+      username: 'OriginProtocol'
+    })
 
     const response = await request(app)
       .post('/api/promotions/verify')
@@ -134,7 +131,9 @@ describe('promotion verifications', () => {
       })
       .expect(400)
 
-    expect(response.body.errors[0]).to.equal('Field identity must not be empty.')
+    expect(response.body.errors[0]).to.equal(
+      'Field identity must not be empty.'
+    )
   })
 
   it('should fail on unknown social network', async () => {
