@@ -78,7 +78,7 @@ describe('promotion verifications', () => {
         identity: ethAddress,
         content: 'Hello World'
       })
-    .expect(200)
+      .expect(200)
 
     expect(response.body.success).to.equal(true)
   })
