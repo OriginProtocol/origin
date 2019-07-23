@@ -1,4 +1,10 @@
 const { withRetries } = require('./util')
+const logger = require('./logger')
+
+
+async function _nextTick(wait = 1000) {
+  return new Promise(resolve => setTimeout(() => resolve(true), wait))
+}
 
 class ContractHelper {
   constructor(config) {
@@ -16,86 +22,90 @@ class ContractHelper {
 
   /**
    * Sends an Ethereum transaction.
-   * @param {string} networkId - Ethereum network ID.
+   * @param {number} networkId - Ethereum network ID.
    * @param {transaction} transaction - These are returned by contract.methods.MyMethod()
    * @param {Object} opts - Options to be sent along with the transaction.
-   * @returns {Object} - Transaction receipt.
+   * @returns {string} - Transaction hash.
    */
-  async sendTransaction(networkId, transaction, opts = {}) {
-    const web3 = this.web3(networkId)
-
+  async sendTx(networkId, transaction, opts = {}) {
     if (!opts.from) {
       opts.from = await this.defaultAccount(networkId)
     }
 
     if (!opts.gas) {
       opts.gas = await transaction.estimateGas({ from: opts.from })
-      this.vlog('estimated gas:', opts.gas)
+      logger.info('Estimated gas:', opts.gas)
     }
 
     if (opts.gasPrice) {
-      this.vlog('gas price:', opts.gasPrice)
+      logger.info('Gas price:', opts.gasPrice)
     }
 
     // Send the transaction and grab the transaction hash when it's available.
-    this.vlog('sending transaction')
-    let transactionHash
-    transaction.send(opts).once('transactionHash', hash => {
-      transactionHash = hash
-      this.vlog('transaction hash:', transactionHash)
-    })
-    this.vlog('waiting for transaction receipt')
-
-    // Poll for the transaction receipt, with an exponential backoff. This works
-    // around some strange interactions between web3.js and some web3 providers.
-    // For example, this issue sometimes prevents transaction receipts from
-    // being returned when simply calling
-    // `await contract.methods.MyMethod(...).send(...)`:
-    //
-    // https://github.com/INFURA/infura/issues/95
-    //
-    // Note: allowing plenty of retries since a transaction on Mainnet
-    // may take tens of minutes to get confirmed (depending among other
-    // things on gas price and network congestion).
-    //
-    const retryOpts = { maxRetries: 30, verbose: this.config.verbose }
-    return await withRetries(retryOpts, async () => {
-      if (transactionHash) {
-        const receipt = await web3.eth.getTransactionReceipt(transactionHash)
-        // Note: we check on presence of both receipt and receipt.blockNumber
-        // to account for difference between Geth and Parity:
-        //  - Geth does not return a receipt until transaction mined
-        //  - Parity returns a receipt with no blockNumber until transaction mined.
-        if (receipt && receipt.blockNumber) {
-          this.vlog('got transaction receipt', receipt)
-          if (!receipt.status) {
-            throw new Error('transaction failed')
-          }
-          if (this.config.multisig) {
-            this.vlog(
-              'multi-sig transaction submitted: it may require more signatures'
-            )
-          } else {
-            this.vlog('transaction successful')
-          }
-          return receipt
-        } else {
-          throw new Error('still waiting for transaction receipt')
-        }
-      } else {
-        throw new Error('still waiting for transaction hash')
+    logger.info('Sending transaction')
+    const txHash = await new Promise((resolve, reject) => {
+      try {
+        transaction.send(opts).once('transactionHash', hash => {
+          resolve(hash)
+        })
+      } catch(e) {
+        logger.error(`Failed sending transaction: ${e}`)
+        reject(e)
       }
     })
+    logger.info(`Sent transaction with hash: ${txHash}`)
+    return txHash
   }
 
   /**
-   * Logs provided arguments with a timestamp if this.verbose is true.
+   * Waits for a transaction to be confirmed.
+   * @param {number} networkId: 1=mainnet, 4=rinkeby, etc...
+   * @param {number} txHash: the transaction hash.
+   * @param {number} numBlocks: the number of block confirmation to wait for
+   * @param {number} timeoutSec: timeout in seconds
+   * @returns {Promise<string>}
+   *  'confirmed': the transaction was confirmed.
+   *  'failed': the transaction was reverted by the EVM.
+   *  'timeout': timed out before being able to confirm the transaction.
    */
-  // TODO: refactor into separate base class
-  vlog(/* all arguments are passed to console.log */) {
-    if (this.config.verbose) {
-      console.log(new Date().toString(), ...arguments)
-    }
+  async waitForTxConfirmation(networkId, txHash, { numBlocks=3, timeoutSec=300 }) {
+    const web3 = this.web3(networkId)
+    const start = Date.now()
+    let elapsed = 0, receipt = null
+
+    do {
+      try {
+        receipt = await web3.eth.getTransactionReceipt(txHash)
+      } catch (e) {
+        logger.error(`getTransactionReceipt failure for txHash ${txHash}`, e)
+      }
+      // Note: we check on presence of both receipt and receipt.blockNumber
+      // to account for difference between Geth and Parity:
+      //  - Geth does not return a receipt until transaction mined
+      //  - Parity returns a receipt with no blockNumber until transaction mined.
+      if (receipt && receipt.blockNumber) {
+        if (!receipt.status) {
+          // Transaction was reverted by the EVM.
+          return 'failed'
+        } else {
+          // Calculate the number of block confirmations.
+          try {
+            const blockNumber = await web3.eth.getBlockNumber()
+            const numConfirmations = blockNumber - receipt.blockNumber
+            if (numConfirmations >= numBlocks) {
+              // Transaction confirmed.
+              return 'confirmed'
+            }
+          } catch (e) {
+            logger.error('getBlockNumber failure', e)
+          }
+        }
+      }
+      logger.debug(`Still waiting for txHash ${txHash} to get confirmed after ${elapsed} sec`)
+      elapsed = (Date.now() - start) / 1000
+    } while (elapsed < timeoutSec && await _nextTick(5000))
+
+    return 'timeout'
   }
 
   /**

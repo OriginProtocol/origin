@@ -4,6 +4,8 @@ const TokenContract = require('@origin/contracts/releases/latest/build/contracts
 
 const { withRetries } = require('./util')
 const ContractHelper = require('./contractHelper')
+const logger = require('./logger')
+
 
 // Token helper class.
 class Token extends ContractHelper {
@@ -87,7 +89,7 @@ class Token extends ContractHelper {
    * @throws Throws an error if the operation failed.
    * @returns {Object} - Transaction receipt
    */
-  async credit(networkId, address, value, opts = {}) {
+  async sentTx(networkId, address, value, opts = {}) {
     const contract = this.contract(networkId)
 
     // At token contract deployment, the entire initial supply of tokens is assigned to
@@ -223,16 +225,16 @@ class Token extends ContractHelper {
       whitelistStatus = 'not active'
     }
 
-    console.log(`Token status for network ${networkId}:`)
-    console.log(`contract address:        ${address}`)
-    console.log(`name:                    ${name}`)
-    console.log(`decimals:                ${decimals}`)
-    console.log(`symbol:                  ${symbol}`)
-    console.log(`total supply (natural):  ${totalSupply.toFixed(0)}`)
-    console.log(`total supply (tokens):   ${totalSupplyTokens}`)
-    console.log(`contract owner:          ${owner}`)
-    console.log(`transfers paused:        ${paused ? 'YES' : 'no'}`)
-    console.log(`transactor whitelist:    ${whitelistStatus}`)
+    logger.info(`Token status for network ${networkId}:`)
+    logger.info(`contract address:        ${address}`)
+    logger.info(`name:                    ${name}`)
+    logger.info(`decimals:                ${decimals}`)
+    logger.info(`symbol:                  ${symbol}`)
+    logger.info(`total supply (natural):  ${totalSupply.toFixed(0)}`)
+    logger.info(`total supply (tokens):   ${totalSupplyTokens}`)
+    logger.info(`contract owner:          ${owner}`)
+    logger.info(`transfers paused:        ${paused ? 'YES' : 'no'}`)
+    logger.info(`transactor whitelist:    ${whitelistStatus}`)
   }
 }
 
