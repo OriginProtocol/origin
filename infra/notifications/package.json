@@ -26,7 +26,6 @@
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "dependencies": {
-    "@origin/growth": "^0.1.0",
     "@origin/growth-event": "^0.1.0",
     "@origin/identity": "^0.1.0",
     "@sendgrid/mail": "^6.4.0",

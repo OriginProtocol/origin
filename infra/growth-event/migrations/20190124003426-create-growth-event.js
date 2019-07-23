@@ -30,7 +30,7 @@ module.exports = {
         )
       },
       status: {
-        type: Sequelize.ENUM(...GrowthEventStatuses)
+        type: Sequelize.ENUM(GrowthEventStatuses)
       },
       eth_address: {
         type: Sequelize.STRING

@@ -2,17 +2,12 @@
  * IMPORTANT: If you add an entry to an enum below, do not forget to add
  *  a migration script to add the enum to the DB.
  */
-const GrowthEventEnums = require('@origin/growth-event/src/enums')
 
-class Enum extends Array {
-  constructor(...args) {
-    super(...args)
-
-    for (const k of args) {
-      this[k] = k
-    }
-  }
-}
+const {
+  Enum,
+  GrowthEventStatuses,
+  GrowthEventTypes
+} = require('@origin/growth-event/src/enums')
 
 const GrowthCampaignRewardStatuses = new Enum(
   'NotReady',
@@ -47,10 +42,6 @@ const GrowthActionType = new Enum(
   'ListingCreated',
   'ListingPurchased'
 )
-
-const GrowthEventStatuses = new Enum(...GrowthEventEnums.GrowthEventStatuses)
-
-const GrowthEventTypes = new Enum(...GrowthEventEnums.GrowthEventTypes)
 
 const GrowthParticipantStatuses = new Enum('Active', 'Banned')
 

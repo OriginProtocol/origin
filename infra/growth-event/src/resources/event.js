@@ -1,15 +1,6 @@
 const Web3 = require('web3')
 const db = require('../models')
-const GrowthEnums = require('../enums')
-
-const GrowthEventStatuses = GrowthEnums.GrowthEventStatuses.reduce(
-  (enums, entry) => ({ ...enums, [entry]: entry }),
-  {}
-)
-const GrowthEventTypes = GrowthEnums.GrowthEventTypes.reduce(
-  (enums, entry) => ({ ...enums, [entry]: entry }),
-  {}
-)
+const { GrowthEventStatuses, GrowthEventTypes } = require('../enums')
 
 const AttestationServiceToEventType = {
   airbnb: GrowthEventTypes.AirbnbAttestationPublished,

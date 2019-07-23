@@ -10,7 +10,7 @@ const db = {
 }
 const identityQuery = require('./queries/Identity')
 
-const { GrowthEventTypes } = require('@origin/growth/src/enums')
+const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
 const {
   AttestationServiceToEventType,
   GrowthEvent

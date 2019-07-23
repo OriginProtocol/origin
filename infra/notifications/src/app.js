@@ -17,7 +17,7 @@ const { transactionEmailSend, messageEmailSend } = require('./emailSend')
 const { transactionMobilePush, messageMobilePush } = require('./mobilePush')
 const MobileRegistry = require('./models').MobileRegistry
 
-const { GrowthEventTypes } = require('@origin/growth/src/enums')
+const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
 const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
 
 const app = express()

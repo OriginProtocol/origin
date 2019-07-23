@@ -3,9 +3,19 @@
  *  a migration script to add the enum to the DB.
  */
 
-const GrowthEventStatuses = ['Logged', 'Verified', 'Fraud']
+class Enum extends Array {
+  constructor(...args) {
+    super(...args)
 
-const GrowthEventTypes = [
+    for (const k of args) {
+      this[k] = k
+    }
+  }
+}
+
+const GrowthEventStatuses = new Enum('Logged', 'Verified', 'Fraud')
+
+const GrowthEventTypes = new Enum(
   'ProfilePublished',
   'EmailAttestationPublished',
   'FacebookAttestationPublished',
@@ -22,9 +32,10 @@ const GrowthEventTypes = [
   'ListingPurchased', // Buyer side event.
   'ListingSold', // Seller side event.
   'MobileAccountCreated' // User installed Origin mobile app and registered an account.
-]
+)
 
 module.exports = {
+  Enum,
   GrowthEventStatuses,
   GrowthEventTypes
 }
