@@ -68,7 +68,12 @@ describe('promotion verifications', () => {
     })
 
     // Push a fake event to redis
-    client.set(`twitter/share/12345`, '{ text: "Hello World" }', 'EX', 60)
+    client.set(
+      `twitter/share/12345`,
+      JSON.stringify({ text: 'Hello World' }),
+      'EX',
+      60
+    )
 
     const response = await request(app)
       .post('/api/promotions/verify')
