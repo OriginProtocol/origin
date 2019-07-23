@@ -10,13 +10,11 @@ const { createProviders } = require('@origin/token/src/config')
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('tokenDistributor')
 
-
 // Number of block confirmations required for a transfer to be consider completed.
 const NumBlockConfirmation = 3
 
 // Wait up to 10min for a transaction to get confirmed
 const ConfirmationTimeout = 600
-
 
 class TokenDistributor {
   // Note: we can't use a constructor due to the async call to defaultAccount.
@@ -75,12 +73,9 @@ class TokenDistributor {
    */
   async credit(ethAddress, amount) {
     const gasPrice = await this._calcGasPrice()
-    const txHash = await this.token.credit(
-      this.networkId,
-      ethAddress,
-      amount,
-      { gasPrice }
-    )
+    const txHash = await this.token.credit(this.networkId, ethAddress, amount, {
+      gasPrice
+    })
     logger.info(`Sent tx to network. txHash=${txHash}`)
 
     const { txStatus, receipt } = await this.token.waitForTxConfirmation(

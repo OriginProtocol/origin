@@ -36,7 +36,9 @@ class TransferProcessor {
   _preflight() {
     // Check on an already existing watchdog.
     if (fs.existsSync(this.config.watchdog)) {
-      throw new Error(`Watchdog detected at ${this.config.watchdog}. Processing aborted.`)
+      throw new Error(
+        `Watchdog detected at ${this.config.watchdog}. Processing aborted.`
+      )
     }
     // Create a watchdog for this run.
     fs.writeFileSync(this.config.watchdog, `Pid ${process.pid}`)
@@ -56,8 +58,12 @@ class TransferProcessor {
     // Process transfers serially.
     for (const transfer of transfers) {
       logger.info(`Processing transfer ${transfer.id}`)
-      const result = executeTransfer(transfer, { networkId: this.config.networkId })
-      logger.info(`Processed transfer ${transfer.id}. Status: ${result.txStatus} TxHash: ${result.txHash}`)
+      const result = executeTransfer(transfer, {
+        networkId: this.config.networkId
+      })
+      logger.info(
+        `Processed transfer ${transfer.id}. Status: ${result.txStatus} TxHash: ${result.txHash}`
+      )
     }
   }
 
@@ -89,7 +95,7 @@ const config = {
   networkId: parseInt(args['--networkId'] || process.env.NETWORK_ID || 0),
   // By default run in dry-run mode unless explicitly specified using doIt.
   watchdog: args['--watchdog'],
-  doIt: args['--doIt'] === 'true' || false,
+  doIt: args['--doIt'] === 'true' || false
 }
 logger.info('Config:')
 logger.info(config)
@@ -101,14 +107,17 @@ if (!config.watchdog) {
   throw new Error('watchdog is a mandatory config')
 }
 
-
 // Initialize the job and start it.
 const processor = new TransferProcessor(config)
-processor.run()
+processor
+  .run()
   .then(() => {
     logger.info('TransferProcessor stats:')
     logger.info('  Num transfer processed:', processor.stats.numTransfers)
-    logger.info('  Num transfer success:  ', processor.stats.numTransfersSuccess)
+    logger.info(
+      '  Num transfer success:  ',
+      processor.stats.numTransfersSuccess
+    )
     logger.info('  Num transfer failed:   ', processor.stats.numTransfersFailed)
     logger.info('  Total OGN distributed: ', processor.stats.totalAmount)
 
@@ -117,12 +126,9 @@ processor.run()
       process.exit()
     })
   })
-  .catch((e) => {
+  .catch(e => {
     logger.error('TransferProcessor failure:', e)
     // Note: we exit without removing the processor watchdog to force an operator to
     // manually look at the failure before the processor runs again.
     process.exit(-1)
   })
-
-
-

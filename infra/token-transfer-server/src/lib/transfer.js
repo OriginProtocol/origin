@@ -1,7 +1,11 @@
 const Token = require('@origin/token/src/token')
 const { createProviders } = require('@origin/token/src/config')
 
-const { GRANT_TRANSFER_DONE, GRANT_TRANSFER_FAILED, GRANT_TRANSFER_REQUEST } = require('../constants/events')
+const {
+  GRANT_TRANSFER_DONE,
+  GRANT_TRANSFER_FAILED,
+  GRANT_TRANSFER_REQUEST
+} = require('../constants/events')
 const { Event, Grant, Transfer, User, Sequelize } = require('../models')
 const enums = require('../enums')
 const logger = require('../logger')
@@ -11,7 +15,6 @@ const NumBlockConfirmation = 8
 
 // Wait up to 20min for a transaction to get confirmed
 const ConfirmationTimeout = 1200
-
 
 /**
  * Helper method to check the validity of a transfer request.
@@ -23,7 +26,7 @@ const ConfirmationTimeout = 1200
  * @returns {Promise<void>}
  * @private
  */
-async function _checkTransferRequest(userId, grantId, amount, transfer=null) {
+async function _checkTransferRequest(userId, grantId, amount, transfer = null) {
   // Check the user exists.
   const user = await User.findOne({
     where: { id: userId }
@@ -40,7 +43,9 @@ async function _checkTransferRequest(userId, grantId, amount, transfer=null) {
     }
   })
   if (!grant) {
-    throw new ReferenceError(`Could not find specified grant id ${grantId} for user ${user.email}`)
+    throw new ReferenceError(
+      `Could not find specified grant id ${grantId} for user ${user.email}`
+    )
   }
 
   // TODO(franck/tom): Replace with a call to the logic for calculating tokens available.
@@ -62,7 +67,14 @@ async function _checkTransferRequest(userId, grantId, amount, transfer=null) {
  * @param amount
  * @returns {Promise<integer>} Id of the transfer request.
  */
-async function enqueueTransfer(userId, grantId, networkId, address, amount, ip) {
+async function enqueueTransfer(
+  userId,
+  grantId,
+  networkId,
+  address,
+  amount,
+  ip
+) {
   _checkTransferRequest(userId, grantId, amount)
 
   // Enqueue the request by inserting a row in the transfer table.
@@ -76,7 +88,7 @@ async function enqueueTransfer(userId, grantId, networkId, address, amount, ip) 
       status: enums.TransferStatuses.Enqueued,
       toAddress: address.toLowerCase(),
       amount,
-      currency: 'OGN', // For now we only support OGN.
+      currency: 'OGN' // For now we only support OGN.
     })
     await Event.create({
       userId,
@@ -85,9 +97,9 @@ async function enqueueTransfer(userId, grantId, networkId, address, amount, ip) 
       data: JSON.stringify({
         transferId: transfer.id,
         amount: transfer.amount,
-        to: transfer.toAddress,
+        to: transfer.toAddress
       }),
-      ip,
+      ip
     })
     await txn.commit()
   } catch (e) {
@@ -95,7 +107,9 @@ async function enqueueTransfer(userId, grantId, networkId, address, amount, ip) 
     logger.error(`Failed to enqueue transfer for address ${address}: ${e}`)
     throw e
   }
-  logger.info(`Enqueued transfer. id: {transfer.id} address: ${address} amount: ${amount}`)
+  logger.info(
+    `Enqueued transfer. id: {transfer.id} address: ${address} amount: ${amount}`
+  )
   return transfer.id
 }
 
@@ -108,7 +122,12 @@ async function enqueueTransfer(userId, grantId, networkId, address, amount, ip) 
 async function executeTransfer(transfer, opts) {
   const { tokenForTests, networkId } = opts
 
-  _checkTransferRequest(transfer.userId, transfer.grantId, transfer.amount, transfer)
+  _checkTransferRequest(
+    transfer.userId,
+    transfer.grantId,
+    transfer.amount,
+    transfer
+  )
 
   // Setup token library
   const config = {
@@ -127,11 +146,10 @@ async function executeTransfer(transfer, opts) {
   })
 
   // Wait for the transaction to get confirmed.
-  const { txStatus } = await token.waitForTxConfirmation(
-    networkId,
-    txHash,
-    { numBlocks: NumBlockConfirmation, timeoutSec: ConfirmationTimeout }
-  )
+  const { txStatus } = await token.waitForTxConfirmation(networkId, txHash, {
+    numBlocks: NumBlockConfirmation,
+    timeoutSec: ConfirmationTimeout
+  })
   let transferStatus, eventAction, failureReason
   switch (txStatus) {
     case 'confirmed':
@@ -168,23 +186,22 @@ async function executeTransfer(transfer, opts) {
         amount: transfer.amount,
         from: supplier,
         to: transfer.toAddress,
-        txHash,
+        txHash
       })
     }
     if (failureReason) {
       event.failureReason = failureReason
     }
-    await Event.create(event),
-    await txn.commit()
+    await Event.create(event), await txn.commit()
   } catch (e) {
     await txn.rollback()
-    logger.error(`Failed writing confirmation data for transfer ${transfer.id}: ${e}`)
+    logger.error(
+      `Failed writing confirmation data for transfer ${transfer.id}: ${e}`
+    )
     throw e
   }
 
   return { txHash, txStatus }
 }
-
-
 
 module.exports = { enqueueTransfer, executeTransfer }

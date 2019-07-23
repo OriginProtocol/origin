@@ -5,7 +5,6 @@ const TokenContract = require('@origin/contracts/releases/latest/build/contracts
 const ContractHelper = require('./contractHelper')
 const logger = require('./logger')
 
-
 // Token helper class.
 class Token extends ContractHelper {
   /*
@@ -146,7 +145,9 @@ class Token extends ContractHelper {
     logger.info(`Sent pause tx to network, hash=${txHash}`)
     const { txStatus } = await this.waitForTxConfirmation(networkId, txHash)
     if (txStatus != 'confirmed') {
-      throw new Error(`Failed getting confirmation. txHash=${txHash} txStatus=${txStatus}`)
+      throw new Error(
+        `Failed getting confirmation. txHash=${txHash} txStatus=${txStatus}`
+      )
     }
   }
 
@@ -166,11 +167,15 @@ class Token extends ContractHelper {
     await this.ensureContractOwner(contract, sender)
 
     const transaction = contract.methods.unpause()
-    const txHash = await this.sendTransaction(networkId, transaction, { from: sender })
+    const txHash = await this.sendTransaction(networkId, transaction, {
+      from: sender
+    })
     logger.info(`Sent unpause tx to network, hash=${txHash}`)
     const { txStatus } = await this.waitForTxConfirmation(networkId, txHash)
     if (txStatus != 'confirmed') {
-      throw new Error(`Failed getting confirmation. txHash=${txHash} txStatus=${txStatus}`)
+      throw new Error(
+        `Failed getting confirmation. txHash=${txHash} txStatus=${txStatus}`
+      )
     }
   }
 

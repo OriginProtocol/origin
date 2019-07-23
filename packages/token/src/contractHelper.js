@@ -1,6 +1,5 @@
 const logger = require('./logger')
 
-
 async function _nextTick(wait = 1000) {
   return new Promise(resolve => setTimeout(() => resolve(true), wait))
 }
@@ -47,7 +46,7 @@ class ContractHelper {
         transaction.send(opts).once('transactionHash', hash => {
           resolve(hash)
         })
-      } catch(e) {
+      } catch (e) {
         logger.error(`Failed sending transaction: ${e}`)
         reject(e)
       }
@@ -68,10 +67,15 @@ class ContractHelper {
    *  'failed': the transaction was reverted by the EVM. A receipt is returned.
    *  'timeout': timed out before being able to confirm the transaction. No receipt.
    */
-  async waitForTxConfirmation(networkId, txHash, { numBlocks=8, timeoutSec=600 }) {
+  async waitForTxConfirmation(
+    networkId,
+    txHash,
+    { numBlocks = 8, timeoutSec = 600 }
+  ) {
     const web3 = this.web3(networkId)
     const start = Date.now()
-    let elapsed = 0, receipt = null
+    let elapsed = 0,
+      receipt = null
 
     do {
       try {
@@ -101,9 +105,11 @@ class ContractHelper {
           }
         }
       }
-      logger.debug(`Still waiting for txHash ${txHash} to get confirmed after ${elapsed} sec`)
+      logger.debug(
+        `Still waiting for txHash ${txHash} to get confirmed after ${elapsed} sec`
+      )
       elapsed = (Date.now() - start) / 1000
-    } while (elapsed < timeoutSec && await _nextTick(5000))
+    } while (elapsed < timeoutSec && (await _nextTick(5000)))
 
     return { status: 'timeout', receipt: null }
   }
