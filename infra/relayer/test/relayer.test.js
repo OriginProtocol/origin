@@ -253,7 +253,7 @@ describe('Relayer', async () => {
 
     await relayer.relay(request2, response2)
 
-    assert(response2.statusCode === 429, `response2 code should be 429, is ${response.statusCode}`)
+    assert(response2.statusCode === 429, `response2 code should be 429, is ${response2.statusCode}`)
 
     // Continue again
     await startMining(web3)

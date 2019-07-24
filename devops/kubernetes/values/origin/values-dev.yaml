@@ -6,7 +6,7 @@ bridgeImageTag: 'b84968f'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'a7bf6f9'
+dappImageTag: 'f1f06ba'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
@@ -59,7 +59,7 @@ adminImageTag: 'a14145b'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: '222e6b9'
+relayerImageTag: '5d1c84f'
 
 # origin-graphql
 graphqlImage: origin-graphql
