@@ -43,12 +43,12 @@ class TransferProcessor {
     }
 
     // Check there is no dangling transfers.
-    const WaitingConfirmation = await Transfer.findAll({
+    const waitingTransfer = await Transfer.findAll({
       where: {
         status: enums.TransferStatuses.WaitingConfirmation
       }
     })
-    if (WaitingConfirmation.length > 0) {
+    if (waitingTransfer.length > 0) {
       throw new Error(
         `Found unconfirmed transfers. Fix them before running this script.`
       )
