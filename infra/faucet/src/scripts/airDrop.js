@@ -177,7 +177,7 @@ class AirDrop {
     }
 
     // Create a token object for handling the distribution.
-    this.token = new Token(this, networkId, createProvider(networkId))
+    this.token = new Token(this.networkId, createProvider(this.networkId))
 
     this.amount = BigNumber(campaign.amount)
     this.campaignId = campaign.id
