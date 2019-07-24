@@ -103,9 +103,7 @@ function createProvider(networkId) {
         `Network=${networkId} Url=${providerUrl} Mnemonic=${displayMnemonic}`
       )
     }
-    provider = new Web3(
-      new HDWalletProvider(mnemonic, providerUrl)
-    )
+    provider = new Web3(new HDWalletProvider(mnemonic, providerUrl))
   }
   return provider
 }

@@ -15,7 +15,6 @@ if (isTestEnv) {
   ContractAddresses['999'] = '@origin/contracts/build/tests.json'
 }
 
-
 async function _nextTick(wait = 1000) {
   return new Promise(resolve => setTimeout(() => resolve(true), wait))
 }
@@ -39,10 +38,15 @@ class Token {
     // Load the json file that stores the various contracts addresses.
     const addresses = require(ContractAddresses[networkId])
     if (!addresses.OGN) {
-      throw new Error(`OGN contract address for network ${networkId} not found.`)
+      throw new Error(
+        `OGN contract address for network ${networkId} not found.`
+      )
     }
     this.contractAddress = addresses.OGN
-    this.contract = new this.web3.eth.Contract(TokenContract.abi, this.contractAddress)
+    this.contract = new this.web3.eth.Contract(
+      TokenContract.abi,
+      this.contractAddress
+    )
   }
 
   /**
@@ -86,9 +90,7 @@ class Token {
     const supplier = await this.defaultAccount()
 
     // Transfer numTokens from the supplier to the target address.
-    const balance = await this.contract.methods
-      .balanceOf(supplier)
-      .call()
+    const balance = await this.contract.methods.balanceOf(supplier).call()
     if (BigNumber(value).gt(balance)) {
       throw new Error(`Supplier ${supplier} balance is too low: ${balance}`)
     }
@@ -150,10 +152,7 @@ class Token {
    *  'failed': the transaction was reverted by the EVM. A receipt is returned.
    *  'timeout': timed out before being able to confirm the transaction. No receipt.
    */
-  async waitForTxConfirmation(
-    txHash,
-    { numBlocks = 8, timeoutSec = 600 }
-  ) {
+  async waitForTxConfirmation(txHash, { numBlocks = 8, timeoutSec = 600 }) {
     const start = Date.now()
     let elapsed = 0,
       receipt = null
@@ -281,14 +280,18 @@ class Token {
     const name = await this.contract.methods.name().call()
     const decimals = await this.contract.methods.decimals().call()
     const symbol = await this.contract.methods.symbol().call()
-    const totalSupply = BigNumber(await this.contract.methods.totalSupply().call())
+    const totalSupply = BigNumber(
+      await this.contract.methods.totalSupply().call()
+    )
     const totalSupplyTokens = this.toTokenUnit(totalSupply)
     const paused = await this.contract.methods.paused().call()
     const address = await this.contractAddress()
     const owner = await this.owner()
     let whitelistStatus
     if (await this.contract.methods.whitelistActive().call()) {
-      const expiration = await this.contract.methods.whitelistExpiration().call()
+      const expiration = await this.contract.methods
+        .whitelistExpiration()
+        .call()
       const expirationDate = new Date(expiration * 1000)
       whitelistStatus = `active until ${expirationDate}`
     } else {

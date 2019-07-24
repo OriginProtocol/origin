@@ -101,10 +101,10 @@ class AirDrop {
     const txHash = await this.token.credit(toAddress, amount, {
       gasPrice
     })
-    const { status } = await this.token.waitForTxConfirmation(
-      txHash,
-      { numBlocks: NumBlockConfirmation, timeoutSec: ConfirmationTimeout }
-    )
+    const { status } = await this.token.waitForTxConfirmation(txHash, {
+      numBlocks: NumBlockConfirmation,
+      timeoutSec: ConfirmationTimeout
+    })
     if (status !== 'confirmed') {
       throw new Error(`Failure. status=${status} txHash=${txHash}`)
     }
@@ -177,7 +177,7 @@ class AirDrop {
     }
 
     // Create a token object for handling the distribution.
-    this.token = new Token(this,networkId, createProvider(networkId))
+    this.token = new Token(this, networkId, createProvider(networkId))
 
     this.amount = BigNumber(campaign.amount)
     this.campaignId = campaign.id

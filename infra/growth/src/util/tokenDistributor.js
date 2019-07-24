@@ -77,10 +77,10 @@ class TokenDistributor {
     })
     logger.info(`Sent tx to network. txHash=${txHash}`)
 
-    const { status, receipt } = await this.token.waitForTxConfirmation(
-      txHash,
-      { numBlocks: NumBlockConfirmation, timeoutSec: ConfirmationTimeout }
-    )
+    const { status, receipt } = await this.token.waitForTxConfirmation(txHash, {
+      numBlocks: NumBlockConfirmation,
+      timeoutSec: ConfirmationTimeout
+    })
     if (status !== 'confirmed') {
       throw new Error(`Failure. txStatus=${status} txHash=${txHash}`)
     }

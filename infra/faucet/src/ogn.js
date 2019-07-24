@@ -34,10 +34,10 @@ class OgnDistributor {
       const value = this.token.toNaturalUnit(NUM_TOKENS)
       const contractAddress = this.token.contractAddress(networkId)
       const txHash = await this.token.credit(wallet, value)
-      const { status } = await this.token.waitForTxConfirmation(
-        txHash,
-        { numBlocks: NumBlockConfirmation, timeoutSec: ConfirmationTimeout }
-      )
+      const { status } = await this.token.waitForTxConfirmation(txHash, {
+        numBlocks: NumBlockConfirmation,
+        timeoutSec: ConfirmationTimeout
+      })
       if (status !== 'confirmed') {
         throw new Error(`Failure. status=${status} txHash=${txHash}`)
       }
