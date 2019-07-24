@@ -16,6 +16,7 @@ COPY lerna.json ./
 COPY ./packages/contracts ./packages/contracts
 COPY ./infra/bridge ./infra/bridge
 COPY ./infra/identity ./infra/identity
+COPY ./infra/growth-event ./infra/growth-event
 
 RUN yarn install
 
