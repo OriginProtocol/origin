@@ -5,7 +5,7 @@ const BigNumber = require('bignumber.js')
 const Logger = require('logplease')
 
 const Token = require('@origin/token/src/token')
-const { createProviders } = require('@origin/token/src/config')
+const { createProvider } = require('@origin/token/src/config')
 
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('tokenDistributor')
@@ -21,9 +21,8 @@ class TokenDistributor {
   async init(networkId, gasPriceMultiplier) {
     this.networkId = networkId
     this.gasPriceMultiplier = gasPriceMultiplier
-    this.token = new Token({ providers: createProviders([networkId]) })
+    this.token = new Token(networkId, createProvider(networkId))
     this.supplier = await this.token.defaultAccount(networkId)
-    this.web3 = this.token.web3(networkId)
 
     await this.info()
   }
@@ -33,11 +32,11 @@ class TokenDistributor {
    * @returns {Promise<void>}
    */
   async info() {
-    const balance = await this.token.balance(this.networkId, this.supplier)
+    const balance = await this.token.balance(this.supplier)
 
     logger.info('TokenDistributor:')
     logger.info(`  Network id: ${this.networkId}`)
-    logger.info(`  Provider URL: ${this.web3.currentProvider.host}`)
+    logger.info(`  Provider URL: ${this.token.web3.currentProvider.host}`)
     logger.info(`  Address: ${this.supplier}`)
     logger.info(`  Balance: ${this.token.toTokenUnit(balance)} OGN`)
     logger.info(`  Gas price multiplier: ${this.gasPriceMultiplier}`)
@@ -73,13 +72,12 @@ class TokenDistributor {
    */
   async credit(ethAddress, amount) {
     const gasPrice = await this._calcGasPrice()
-    const txHash = await this.token.credit(this.networkId, ethAddress, amount, {
+    const txHash = await this.token.credit(ethAddress, amount, {
       gasPrice
     })
     logger.info(`Sent tx to network. txHash=${txHash}`)
 
     const { txStatus, receipt } = await this.token.waitForTxConfirmation(
-      this.networkId,
       txHash,
       { numBlocks: NumBlockConfirmation, timeoutSec: ConfirmationTimeout }
     )

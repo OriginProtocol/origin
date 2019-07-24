@@ -13,7 +13,7 @@ const Logger = require('logplease')
 const Web3 = require('web3')
 
 const Token = require('@origin/token/src/token')
-const { createProviders } = require('@origin/token/src/config')
+const { createProvider } = require('@origin/token/src/config')
 
 const enums = require('../enums')
 const db = require('../models')
@@ -98,11 +98,10 @@ class AirDrop {
    */
   async _send(networkId, toAddress, amount) {
     const gasPrice = await this._calcGasPrice()
-    const txHash = await this.token.credit(networkId, toAddress, amount, {
+    const txHash = await this.token.credit(toAddress, amount, {
       gasPrice
     })
     const { txStatus } = await this.token.waitForTxConfirmation(
-      networkId,
       txHash,
       { numBlocks: NumBlockConfirmation, timeoutSec: ConfirmationTimeout }
     )
@@ -178,7 +177,7 @@ class AirDrop {
     }
 
     // Create a token object for handling the distribution.
-    this.token = new Token({ providers: createProviders([this.networkId]) })
+    this.token = new Token(this,networkId, createProvider(networkId))
 
     this.amount = BigNumber(campaign.amount)
     this.campaignId = campaign.id
@@ -206,7 +205,7 @@ class AirDrop {
 
   async _checkSenderBalances() {
     const web3 = this.token.web3(this.networkId)
-    const ognBalance = await this.token.balance(this.networkId, this.sender)
+    const ognBalance = await this.token.balance(this.sender)
     const ethBalance = await web3.eth.getBalance(this.sender)
 
     // Check the sender account has enough OGN.

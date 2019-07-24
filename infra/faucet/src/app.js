@@ -75,11 +75,10 @@ const args = Config.parseArgv()
 const config = {
   // Port server listens on.
   port: parseInt(args['--port'] || process.env.PORT || DEFAULT_SERVER_PORT),
-  // Network ids, comma separated.
-  // If no network ids specified, defaults to using local blockchain.
+  // If no network id specified, defaults to using local blockchain.
   networkIds: (
-    args['--network_ids'] ||
-    process.env.NETWORK_IDS ||
+    args['--network_id'] ||
+    process.env.NETWORK_ID ||
     DEFAULT_NETWORK_ID
   )
     .split(',')
@@ -98,7 +97,7 @@ if (!process.env.DATABASE_URL) {
 }
 
 try {
-  config.providers = Config.createProviders(config.networkIds)
+  config.provider = Config.createProvider(config.networkId)
 } catch (err) {
   logger.error('Config error:', err)
   process.exit(-1)

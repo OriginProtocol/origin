@@ -1,5 +1,5 @@
 const Token = require('@origin/token/src/token')
-const { createProviders } = require('@origin/token/src/config')
+const { createProvider } = require('@origin/token/src/config')
 
 const {
   GRANT_TRANSFER_DONE,
@@ -133,15 +133,12 @@ async function executeTransfer(transfer, opts) {
   )
 
   // Setup token library
-  const config = {
-    providers: createProviders([networkId])
-  }
-  const token = tokenForTests || new Token(config)
+  const token = tokenForTests || new Token(networkId, createProvider(networkId))
 
   // Send transaction to transfer the tokens and record txHash in the DB.
   const naturalAmount = token.toNaturalUnit(transfer.amount)
-  const supplier = await token.defaultAccount(networkId)
-  const txHash = token.sendTx(networkId, transfer.toAddress, naturalAmount)
+  const supplier = await token.defaultAccount()
+  const txHash = token.sendTx(transfer.toAddress, naturalAmount)
   await transfer.update({
     status: enums.TransferStatuses.WaitingConfirmation,
     fromAddress: supplier.toLowerCase(),
@@ -149,7 +146,7 @@ async function executeTransfer(transfer, opts) {
   })
 
   // Wait for the transaction to get confirmed.
-  const { txStatus } = await token.waitForTxConfirmation(networkId, txHash, {
+  const { txStatus } = await token.waitForTxConfirmation(txHash, {
     numBlocks: NumBlockConfirmation,
     timeoutSec: ConfirmationTimeout
   })
