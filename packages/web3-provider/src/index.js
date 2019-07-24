@@ -2,8 +2,11 @@
  * Web3 Provider Engine Subproviders
  */
 const ProviderEngine = require('web3-provider-engine')
-const MetricsProvider = require('./subproviders/MetricsProvider')
-const ThrottleRPCProvider = require('./subproviders/ThrottleRPCProvider')
+const {
+  MetricsProvider,
+  ThrottleRPCProvider,
+  EthGasStationProvider
+} = require('./subproviders')
 
 /**
  * Convert a standard provider to a web3-provider-engine subprovider
@@ -129,6 +132,9 @@ function initStandardSubproviders(web3Inst, options) {
   }
 
   addSubprovider(web3Inst, new MetricsProvider(options))
+  if (options.ethGasStation) {
+    addSubprovider(web3Inst, new EthGasStationProvider(options))
+  }
   return web3Inst
 }
 
