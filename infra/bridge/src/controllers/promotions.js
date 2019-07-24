@@ -2,6 +2,9 @@
 
 const express = require('express')
 const router = express.Router()
+
+const crypto = require('crypto')
+
 const { getAsync } = require('../utils/redis')
 const logger = require('./../logger')
 
@@ -48,16 +51,26 @@ router.post('/verify', verifyPromotions, async (req, res) => {
     const event = await getAsync(redisKey)
 
     if (event) {
-      if (
-        type === 'FOLLOW' ||
-        (type === 'SHARE' && JSON.parse(event).text === content)
-      ) {
+      const tweetContent = type === 'SHARE' ? JSON.parse(event).text : null
+      // Invalid if tweet content is same as expected
+      const isValidEvent = type === 'FOLLOW' || tweetContent === content
+
+      if (isValidEvent) {
+        let contentHash = null
+
+        if (tweetContent) {
+          contentHash = crypto
+            .createHash('md5')
+            .update(tweetContent)
+            .digest('hex')
+        }
+
         await GrowthEvent.insert(
           logger,
           1,
           identity,
           PromotionEventToGrowthEvent[socialNetwork][type],
-          null,
+          contentHash,
           event,
           Date.now()
         )

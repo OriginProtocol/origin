@@ -107,19 +107,28 @@ describe('promotion verifications', () => {
     await Attestation.create({
       method: AttestationTypes.TWITTER,
       ethAddress: ethAddress,
-      value: '123456',
+      value: '45678',
       signature: '0x0',
       remoteUpAddress: '192.168.1.1',
       profileUrl: '/',
       username: 'OriginProtocol'
     })
 
+    // Push a fake event to redis with different content that expected
+    client.set(
+      `twitter/share/45678`,
+      JSON.stringify({ text: 'Not My Content' }),
+      'EX',
+      60
+    )
+
     const response = await request(app)
       .post('/api/promotions/verify')
       .send({
-        type: 'FOLLOW',
+        type: 'SHARE',
         socialNetwork: 'TWITTER',
-        identity: ethAddress
+        identity: ethAddress,
+        content: 'My Content'
       })
       .expect(200)
 
