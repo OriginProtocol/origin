@@ -25,6 +25,9 @@ function ActionGroup(props) {
   } else if (type === 'purchases') {
     iconSource = 'images/growth/purchases-icon.svg'
     title = fbt('Purchases', 'growth.actionGroup.purchases')
+  } else if (type === 'promotions') {
+    iconSource = 'images/growth/promotions-icon.svg'
+    title = fbt('Promotions', 'growth.actionGroup.promotions')
   } else if (type === 'invitations') {
     const invitationAction = completedActions[0]
     locked = invitationAction.status === 'Inactive'

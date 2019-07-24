@@ -79,7 +79,7 @@ class ActionList extends Component {
   }
 
   render() {
-    const { title, decimalDivision, isMobile } = this.props
+    const { title, decimalDivision, isMobile, onActionClick } = this.props
 
     const { actionsToDisplay, modalOpen, modalText } = this.state
 
@@ -129,6 +129,7 @@ class ActionList extends Component {
                     modalText: requirementText
                   })
                 }}
+                onActionClick={onActionClick}
               />
             )
           })}

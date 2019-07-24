@@ -111,11 +111,19 @@ export function calculatePendingAndAvailableActions(activeCampaign) {
     'LinkedIn'
   ]
 
+  const promotionRewardTypes = [
+    'TwitterShare',
+    'TwitterFollow'
+  ]
+
   const purchaseActions = activeCampaign.actions.filter(action =>
     purchaseRewardTypes.includes(action.type)
   )
   const verificationActions = activeCampaign.actions.filter(action =>
     verificationRewardTypes.includes(action.type)
+  )
+  const promotionActions = activeCampaign.actions.filter(action => 
+    promotionRewardTypes.includes(action.type)
   )
 
   const completedPurchaseActions = purchaseActions.filter(action =>
@@ -130,12 +138,20 @@ export function calculatePendingAndAvailableActions(activeCampaign) {
   const notCompletedVerificationActions = verificationActions.filter(
     action => !actionCompleted(action)
   )
+  const completedPromotionActions = promotionActions.filter(action =>
+    actionCompleted(action)
+  )
+  const notCompletedPromotionActions = promotionActions.filter(
+    action => !actionCompleted(action)
+  )
 
   return {
     completedPurchaseActions,
     notCompletedPurchaseActions,
     completedVerificationActions,
-    notCompletedVerificationActions
+    notCompletedVerificationActions,
+    completedPromotionActions,
+    notCompletedPromotionActions
   }
 }
 
