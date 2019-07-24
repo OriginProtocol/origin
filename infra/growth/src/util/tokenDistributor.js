@@ -13,8 +13,8 @@ const logger = Logger.create('tokenDistributor')
 // Number of block confirmations required for a transfer to be consider completed.
 const NumBlockConfirmation = 3
 
-// Wait up to 10min for a transaction to get confirmed
-const ConfirmationTimeout = 600
+// Wait up to 10 min for a transaction to get confirmed
+const ConfirmationTimeoutSec = 10 * 60
 
 class TokenDistributor {
   // Note: we can't use a constructor due to the async call to defaultAccount.
@@ -79,7 +79,7 @@ class TokenDistributor {
 
     const { status, receipt } = await this.token.waitForTxConfirmation(txHash, {
       numBlocks: NumBlockConfirmation,
-      timeoutSec: ConfirmationTimeout
+      timeoutSec: ConfirmationTimeoutSec
     })
     if (status !== 'confirmed') {
       throw new Error(`Failure. txStatus=${status} txHash=${txHash}`)

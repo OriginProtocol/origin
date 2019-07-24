@@ -27,8 +27,8 @@ const gasPriceMultiplier = 1.2
 // Number of block confirmations required for a transfer to be consider completed.
 const NumBlockConfirmation = 3
 
-// Wait up to 10min for a transaction to get confirmed
-const ConfirmationTimeout = 600
+// Wait up to 10 min for a transaction to get confirmed
+const ConfirmationTimeoutSec = 10 * 60
 
 /**
  * Parse command line arguments into a dict.
@@ -103,7 +103,7 @@ class AirDrop {
     })
     const { status } = await this.token.waitForTxConfirmation(txHash, {
       numBlocks: NumBlockConfirmation,
-      timeoutSec: ConfirmationTimeout
+      timeoutSec: ConfirmationTimeoutSec
     })
     if (status !== 'confirmed') {
       throw new Error(`Failure. status=${status} txHash=${txHash}`)

@@ -6,15 +6,15 @@ const {
   GRANT_TRANSFER_FAILED,
   GRANT_TRANSFER_REQUEST
 } = require('../constants/events')
-const { Event, Grant, Transfer, User, Sequelize } = require('../models')
+const { Event, Grant, Transfer, User, sequelize } = require('../models')
 const enums = require('../enums')
 const logger = require('../logger')
 
 // Number of block confirmations required for a transfer to be consider completed.
 const NumBlockConfirmation = 8
 
-// Wait up to 20min for a transaction to get confirmed
-const ConfirmationTimeout = 1200
+// Wait up to 20 min for a transaction to get confirmed
+const ConfirmationTimeoutSec = 20 * 60 * 60
 
 /**
  * Helper method to check the validity of a transfer request.
@@ -39,7 +39,8 @@ async function _checkTransferRequest(userId, grantId, amount, transfer = null) {
   const grant = await Grant.findOne({
     where: {
       id: grantId,
-      userId
+      // FIXME(franck): add this condition after changing grant table to have userId
+      //userId
     }
   })
   if (!grant) {
@@ -65,7 +66,6 @@ async function _checkTransferRequest(userId, grantId, amount, transfer = null) {
  * Enqueues a request to transfer tokens.
  * @param userId
  * @param grantId
- * @param networkId
  * @param address
  * @param amount
  * @returns {Promise<integer>} Id of the transfer request.
@@ -73,7 +73,6 @@ async function _checkTransferRequest(userId, grantId, amount, transfer = null) {
 async function enqueueTransfer(
   userId,
   grantId,
-  networkId,
   address,
   amount,
   ip
@@ -84,10 +83,11 @@ async function enqueueTransfer(
   // It will get picked up asynchronously by the offline job that processes transfers.
   // Record new state in the database.
   let transfer
-  const txn = await Sequelize.transaction()
+  const txn = await sequelize.transaction()
   try {
     transfer = await Transfer.create({
       grantId,
+      userId,
       status: enums.TransferStatuses.Enqueued,
       toAddress: address.toLowerCase(),
       amount,
@@ -148,7 +148,7 @@ async function executeTransfer(transfer, opts) {
   // Wait for the transaction to get confirmed.
   const { status } = await token.waitForTxConfirmation(txHash, {
     numBlocks: NumBlockConfirmation,
-    timeoutSec: ConfirmationTimeout
+    timeoutSec: ConfirmationTimeoutSec
   })
   let transferStatus, eventAction, failureReason
   switch (status) {
@@ -174,7 +174,7 @@ async function executeTransfer(transfer, opts) {
   // table is used as an activity log presented to the user and we don't want
   // them to get alarmed if a transaction happened to fail. Our team will investigate,
   // fix the issue and resubmit the transaction if necessary.
-  const txn = await Sequelize.transaction()
+  const txn = await sequelize.transaction()
   try {
     await transfer.update({ status: transferStatus })
     const event = {

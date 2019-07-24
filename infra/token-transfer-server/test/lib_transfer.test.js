@@ -8,38 +8,37 @@ const expect = chai.expect
 const Token = require('@origin/token/src/token')
 
 const { GRANT_TRANSFER } = require('../src/constants/events')
-const { transferTokens } = require('../src/lib/transfer')
-const { Event, Grant, sequelize } = require('../src/models')
+const { enqueueTransfer, executeTransfer } = require('../src/lib/transfer')
+const { Event, Grant, Transfer, User, sequelize } = require('../src/models')
 
 class TokenForTests extends Token {
   constructor(networkId, fromAddress, toAddress, valueTokenUnit) {
-    super(null)
+    super(networkId, null)
     this.networkId = networkId
     this.fromAddress = fromAddress
     this.toAddress = toAddress
     this.valueNaturalUnit = this.toNaturalUnit(valueTokenUnit)
   }
 
-  async defaultAccount(networkId) {
-    expect(networkId).to.equal(this.networkId)
+  async defaultAccount() {
     return this.fromAddress
   }
 
-  async credit(networkId, address, value) {
-    expect(networkId).to.equal(this.networkId)
+  async credit(address, value) {
     expect(address).to.equal(this.toAddress)
     expect(value).to.bignumber.equal(this.valueNaturalUnit)
   }
 }
 
-describe('transferTokens', () => {
+describe('Transfer token lib', () => {
   const email = 'cryptopup@originprotocol.com'
   const grantId = 1
+  const userId = 1
   const ip = '127.0.0.1'
   const networkId = 999
   const fromAddress = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
   const toAddress = '0xf17f52151EbEF6C7334FAD080c5704D77216b732'
-  let grant
+  let grant, user
 
   beforeEach(async () => {
     // Wipe database before each test.
@@ -62,8 +61,35 @@ describe('transferTokens', () => {
     await grant.save()
     await grant.reload()
     expect(grant.id).to.equal(grantId)
+    
+    user = new User({
+      id: userId,
+      email: 'foo@bar.com'
+    })
+    await user.save()
+    await user.reload()
+    expect(user.id).to.equal(userId)
   })
 
+  it('Should enqueue a request', async () => {
+    const amount = 1000
+    const transferId =  await enqueueTransfer(user.id, grant.id, toAddress, amount, ip)
+
+    // Check a transfer row was created and populated as expected.
+    const transfer = await Transfer.findOne({ where: { id: transferId }})
+    expect(transfer).to.be.an('object')
+    expect(transfer.userId).to.equal(user.id)
+    expect(transfer.grantId).to.equal(grant.id)
+    expect(transfer.toAddress).to.equal(toAddress.toLowerCase())
+    expect(transfer.fromAddress).to.be.null
+    expect(transfer.amount).to.equal(amount.toString())
+    expect(transfer.currency).to.equal('OGN')
+    expect(transfer.txHash).to.be.null
+    expect(transfer.data).to.be.null
+  })
+
+
+  /*
   it('should transfer an integer amount of tokens', async () => {
     const amount = 1000
     const tokenForTests = new TokenForTests(networkId, fromAddress, toAddress, amount)
@@ -161,4 +187,6 @@ describe('transferTokens', () => {
       tokenForTests
     })).to.be.rejectedWith('Amount of 1001 OGN exceeds the 1000 OGN available for the grant')
   })
+
+   */
 })

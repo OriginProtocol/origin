@@ -9,7 +9,7 @@ const NUM_TOKENS = 100
 // Number of block confirmations required for a transfer to be consider completed.
 const NumBlockConfirmation = 1
 // Wait up to 2min for a transaction to get confirmed
-const ConfirmationTimeout = 120
+const ConfirmationTimeoutSec = 20 * 60
 
 class OgnDistributor {
   constructor(config) {
@@ -36,7 +36,7 @@ class OgnDistributor {
       const txHash = await this.token.credit(wallet, value)
       const { status } = await this.token.waitForTxConfirmation(txHash, {
         numBlocks: NumBlockConfirmation,
-        timeoutSec: ConfirmationTimeout
+        timeoutSec: ConfirmationTimeoutSec
       })
       if (status !== 'confirmed') {
         throw new Error(`Failure. status=${status} txHash=${txHash}`)

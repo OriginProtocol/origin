@@ -43,10 +43,10 @@ class Token {
       )
     }
     this.contractAddress = addresses.OGN
-    this.contract = new this.web3.eth.Contract(
+    this.contract = this.web3 ? new this.web3.eth.Contract(
       TokenContract.abi,
       this.contractAddress
-    )
+    ) : null
   }
 
   /**
