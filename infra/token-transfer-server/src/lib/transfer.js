@@ -201,7 +201,7 @@ async function executeTransfer(transfer, opts) {
     throw e
   }
 
-  return { txHash, txStatus }
+  return { txHash, txStatus: status }
 }
 
 module.exports = { enqueueTransfer, executeTransfer }
