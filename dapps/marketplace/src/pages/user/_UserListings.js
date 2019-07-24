@@ -6,6 +6,7 @@ import QueryError from 'components/QueryError'
 import nextPageFactory from 'utils/nextPageFactory'
 import ListingsGallery from 'pages/listings/ListingCards'
 import query from 'queries/UserListings'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 const nextPage = nextPageFactory('marketplace.user.listings')
 
@@ -32,11 +33,7 @@ const UserListings = ({
     >
       {({ error, data, fetchMore, networkStatus, loading }) => {
         if (networkStatus === 1) {
-          return (
-            <h5 className="listings-count">
-              <fbt desc="UserListing.loading">Loading...</fbt>
-            </h5>
-          )
+          return <LoadingSpinner/>
         } else if (error) {
           return <QueryError error={error} query={query} vars={vars} />
         } else if (!data || !data.marketplace) {

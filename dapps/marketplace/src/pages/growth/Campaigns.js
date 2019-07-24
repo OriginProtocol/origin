@@ -16,6 +16,7 @@ import ProgressBar from 'components/ProgressBar'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withIsMobile from 'hoc/withIsMobile'
 import { calculatePendingAndAvailableActions } from 'utils/growthTools'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 const GrowthEnum = require('Growth$FbtEnum')
 const maxProgressBarTokens = 1000
@@ -350,11 +351,7 @@ class GrowthCampaigns extends Component {
         <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
           {({ error, data, networkStatus, loading }) => {
             if (networkStatus === 1 || loading) {
-              return (
-                <h5 className="p-2">
-                  <fbt desc="Loading...">Loading...</fbt>
-                </h5>
-              )
+              return <LoadingSpinner/>
             } else if (error) {
               return <QueryError error={error} query={profileQuery} />
             }
@@ -369,11 +366,7 @@ class GrowthCampaigns extends Component {
               !this.props.growthCampaigns ||
               this.props.growthCampaignsLoading
             ) {
-              return (
-                <h5 className="p-2">
-                  <fbt desc="Loading...">Loading...</fbt>
-                </h5>
-              )
+              return <LoadingSpinner/>
             }
 
             const campaigns = this.props.growthCampaigns

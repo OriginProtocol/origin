@@ -10,6 +10,7 @@ import { formInput, formFeedback } from 'utils/formHelpers'
 import InviteFriends from 'mutations/InviteFriends'
 import InviteRemind from 'mutations/InviteRemind'
 import MobileModalHeader from 'components/MobileModalHeader'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 function NavigationItem(props) {
   const { selected, onClick, title, isMobile } = props
@@ -130,11 +131,7 @@ class GrowthInvite extends Component {
       >
         {({ loading, error, networkStatus }) => {
           if (networkStatus === 1 || loading) {
-            return (
-              <h5 className="p-2">
-                <fbt desc="Loading...">Loading...</fbt>
-              </h5>
-            )
+            return <LoadingSpinner/>
           } else if (error) {
             return <QueryError error={error} query={inviteCodeQuery} />
           }

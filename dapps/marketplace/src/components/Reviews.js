@@ -13,6 +13,8 @@ import QueryError from 'components/QueryError'
 import query from 'queries/Reviews'
 import EthAddress from './EthAddress'
 
+import LoadingSpinner from 'components/LoadingSpinner'
+
 export default class Reviews extends Component {
   readMore(fetchMore, after) {
     fetchMore({
@@ -184,7 +186,7 @@ export default class Reviews extends Component {
                   }}
                 >
                   {loading ? (
-                    <fbt desc="reviews.loadingMore">Loading More...</fbt>
+                    <LoadingSpinner/>
                   ) : (
                     <>
                       <fbt desc="reviews.readMore">Read More</fbt>

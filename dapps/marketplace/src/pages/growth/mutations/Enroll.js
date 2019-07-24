@@ -8,6 +8,7 @@ import QueryError from 'components/QueryError'
 import profileQuery from 'queries/Profile'
 import SignMessageMutation from 'mutations/SignMessage'
 import GrowthEnroll from 'mutations/GrowthEnroll'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 const Error = props => (
   <div className="error-holder p-3 d-flex align-items-center justify-content-center flex-column">
@@ -49,7 +50,7 @@ class Enroll extends Component {
       <Query query={profileQuery}>
         {({ networkStatus, error, loading, data }) => {
           if (networkStatus === 1 || loading)
-            return fbt('Loading...', 'Loading...')
+            return <LoadingSpinner/>
           else if (error) {
             return <QueryError error={error} query={profileQuery} />
           }

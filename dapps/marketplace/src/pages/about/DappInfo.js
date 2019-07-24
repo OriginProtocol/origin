@@ -6,6 +6,7 @@ import DocumentTitle from 'components/DocumentTitle'
 import growthEligibilityQuery from 'queries/GrowthEligibility'
 import dayjs from 'dayjs'
 import distanceToNow from 'utils/distanceToNow'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 const DAPP_VERSION = require('../../../package.json').version
 
@@ -120,7 +121,7 @@ const DappInfo = () => {
           <Query query={configQuery} notifyOnNetworkStatusChange={true}>
             {({ error, data, networkStatus }) => {
               if (networkStatus === 1) {
-                return <p>Loading...</p>
+                return <LoadingSpinner/>
               } else if (error) {
                 return <p>Error :(</p>
               }
@@ -152,9 +153,9 @@ const DappInfo = () => {
             const marketplaces = data.marketplaces || []
             const tokens = data.tokens || []
             if (networkStatus === 1) {
-              return <p>Loading...</p>
+              return <LoadingSpinner/>
             } else if (error) {
-              return <p>Loading...</p>
+              return <LoadingSpinner/>
             }
             return (
               <section className="col-lg-6">

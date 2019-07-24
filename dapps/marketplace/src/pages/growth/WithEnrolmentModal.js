@@ -16,6 +16,7 @@ import MobileModal from 'components/MobileModal'
 import Enroll from 'pages/growth/mutations/Enroll'
 import { mobileDevice } from 'utils/mobile'
 import withIsMobile from 'hoc/withIsMobile'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 const GrowthEnum = require('Growth$FbtEnum')
 
@@ -177,7 +178,7 @@ function withEnrolmentModal(WrappedComponent) {
         >
           {({ error, data, networkStatus, loading }) => {
             if (networkStatus === 1 || loading) {
-              return <h5 className="p-2">Loading...</h5>
+              return <LoadingSpinner/>
             } else if (error) {
               return (
                 <QueryError
@@ -447,7 +448,7 @@ function withEnrolmentModal(WrappedComponent) {
       return (
         <Query query={growthEligibilityQuery}>
           {({ networkStatus, error, loading, data }) => {
-            if (networkStatus === 1 || loading) return 'Loading...'
+            if (networkStatus === 1 || loading) return <LoadingSpinner/>
             else if (error) {
               return <QueryError error={error} query={growthEligibilityQuery} />
             }

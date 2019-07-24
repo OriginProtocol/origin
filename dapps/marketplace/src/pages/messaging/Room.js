@@ -16,6 +16,7 @@ import Link from 'components/Link'
 import QueryError from 'components/QueryError'
 import EnableMessaging from 'components/EnableMessaging'
 import Stages from 'components/TransactionStages'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 function eventName(name) {
   if (name === 'OfferCreated') {
@@ -153,7 +154,7 @@ class Room extends Component {
       >
         {({ error, data, networkStatus }) => {
           if (networkStatus === 1) {
-            return <div>Loading...</div>
+            return <LoadingSpinner/>
           } else if (error) {
             return <QueryError query={query} error={error} />
           } else if (!data || !data.messaging) {

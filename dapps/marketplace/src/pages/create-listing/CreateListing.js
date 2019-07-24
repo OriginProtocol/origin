@@ -9,6 +9,7 @@ import withIdentity from 'hoc/withIdentity'
 
 import DocumentTitle from 'components/DocumentTitle'
 import UserActivationLink from 'components/UserActivationLink'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 import listingTypes from './listing-types'
 import ChooseListingType from './ChooseListingType'
@@ -70,14 +71,7 @@ const CreateListing = props => {
     props.walletLoading ||
     !props.identityLoaded
   ) {
-    return (
-      <div className="app-spinner">
-        <fbt desc="App.loadingPleaseWait">
-          <h5>Loading</h5>
-          <div>Please wait</div>
-        </fbt>
-      </div>
-    )
+    return <LoadingSpinner/>
   }
 
   if (!props.identity) {
