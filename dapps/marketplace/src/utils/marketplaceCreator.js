@@ -8,6 +8,7 @@ function isWhiteLabelHostname() {
   const { hostname } = window.location
   const exceptionNeedles = [
     /dapp?\.((staging|dev)\.)?originprotocol\.com/,
+    /shoporigin.com/,
     /localhost/,
     /^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/ // IP addresses
   ]
