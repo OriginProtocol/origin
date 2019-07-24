@@ -9,11 +9,10 @@ import StarRating from 'components/StarRating'
 import Avatar from 'components/Avatar'
 import Link from 'components/Link'
 import QueryError from 'components/QueryError'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 import query from 'queries/Reviews'
 import EthAddress from './EthAddress'
-
-import LoadingSpinner from 'components/LoadingSpinner'
 
 export default class Reviews extends Component {
   readMore(fetchMore, after) {
