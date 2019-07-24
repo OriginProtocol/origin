@@ -131,7 +131,7 @@ class GrowthInvite extends Component {
       >
         {({ loading, error, networkStatus }) => {
           if (networkStatus === 1 || loading) {
-            return <LoadingSpinner/>
+            return <LoadingSpinner />
           } else if (error) {
             return <QueryError error={error} query={inviteCodeQuery} />
           }

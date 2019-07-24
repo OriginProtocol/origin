@@ -106,7 +106,7 @@ class Messages extends Component {
     if (messagingError) {
       return <QueryError query={query} error={messagingError} />
     } else if (messagingLoading) {
-      return <LoadingSpinner/>
+      return <LoadingSpinner />
     } else if (!messaging) {
       return (
         <p className="p-3">

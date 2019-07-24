@@ -208,7 +208,7 @@ class OnboardMetaMask extends Component {
             <Query query={query} notifyOnNetworkStatusChange>
               {({ error, data, networkStatus }) => {
                 if (networkStatus === 1) {
-                  return <LoadingSpinner/>
+                  return <LoadingSpinner />
                 } else if (error) {
                   return <p className="p-3">Error :(</p>
                 } else if (!data || !data.web3) {

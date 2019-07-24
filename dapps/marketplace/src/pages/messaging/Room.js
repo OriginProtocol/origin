@@ -154,7 +154,7 @@ class Room extends Component {
       >
         {({ error, data, networkStatus }) => {
           if (networkStatus === 1) {
-            return <LoadingSpinner/>
+            return <LoadingSpinner />
           } else if (error) {
             return <QueryError query={query} error={error} />
           } else if (!data || !data.messaging) {

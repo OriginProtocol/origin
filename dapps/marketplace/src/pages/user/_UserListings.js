@@ -33,7 +33,7 @@ const UserListings = ({
     >
       {({ error, data, fetchMore, networkStatus, loading }) => {
         if (networkStatus === 1) {
-          return <LoadingSpinner/>
+          return <LoadingSpinner />
         } else if (error) {
           return <QueryError error={error} query={query} vars={vars} />
         } else if (!data || !data.marketplace) {

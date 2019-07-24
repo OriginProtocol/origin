@@ -97,7 +97,7 @@ class OnboardProfile extends Component {
     const profile = pick(this.state, ['firstName', 'lastName', 'avatarUrl'])
 
     const content = loading ? (
-      <LoadingSpinner/>
+      <LoadingSpinner />
     ) : (
       <>
         <EditProfile

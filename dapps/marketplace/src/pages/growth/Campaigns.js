@@ -351,7 +351,7 @@ class GrowthCampaigns extends Component {
         <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
           {({ error, data, networkStatus, loading }) => {
             if (networkStatus === 1 || loading) {
-              return <LoadingSpinner/>
+              return <LoadingSpinner />
             } else if (error) {
               return <QueryError error={error} query={profileQuery} />
             }
@@ -366,7 +366,7 @@ class GrowthCampaigns extends Component {
               !this.props.growthCampaigns ||
               this.props.growthCampaignsLoading
             ) {
-              return <LoadingSpinner/>
+              return <LoadingSpinner />
             }
 
             const campaigns = this.props.growthCampaigns

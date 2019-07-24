@@ -186,7 +186,7 @@ export default class Reviews extends Component {
                   }}
                 >
                   {loading ? (
-                    <LoadingSpinner/>
+                    <LoadingSpinner />
                   ) : (
                     <>
                       <fbt desc="reviews.readMore">Read More</fbt>

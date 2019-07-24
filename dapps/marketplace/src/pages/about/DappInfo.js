@@ -121,7 +121,7 @@ const DappInfo = () => {
           <Query query={configQuery} notifyOnNetworkStatusChange={true}>
             {({ error, data, networkStatus }) => {
               if (networkStatus === 1) {
-                return <LoadingSpinner/>
+                return <LoadingSpinner />
               } else if (error) {
                 return <p>Error :(</p>
               }
@@ -153,9 +153,9 @@ const DappInfo = () => {
             const marketplaces = data.marketplaces || []
             const tokens = data.tokens || []
             if (networkStatus === 1) {
-              return <LoadingSpinner/>
+              return <LoadingSpinner />
             } else if (error) {
-              return <LoadingSpinner/>
+              return <LoadingSpinner />
             }
             return (
               <section className="col-lg-6">

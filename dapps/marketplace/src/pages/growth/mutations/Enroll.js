@@ -49,8 +49,7 @@ class Enroll extends Component {
     return (
       <Query query={profileQuery}>
         {({ networkStatus, error, loading, data }) => {
-          if (networkStatus === 1 || loading)
-            return <LoadingSpinner/>
+          if (networkStatus === 1 || loading) return <LoadingSpinner />
           else if (error) {
             return <QueryError error={error} query={profileQuery} />
           }

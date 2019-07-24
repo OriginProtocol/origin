@@ -80,7 +80,7 @@ class App extends Component {
         </div>
       )
     } else if (this.props.creatorConfigLoading) {
-      return <LoadingSpinner/>
+      return <LoadingSpinner />
     }
 
     const { creatorConfig } = this.props

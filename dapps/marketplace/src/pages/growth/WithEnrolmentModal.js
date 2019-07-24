@@ -178,7 +178,7 @@ function withEnrolmentModal(WrappedComponent) {
         >
           {({ error, data, networkStatus, loading }) => {
             if (networkStatus === 1 || loading) {
-              return <LoadingSpinner/>
+              return <LoadingSpinner />
             } else if (error) {
               return (
                 <QueryError
@@ -448,7 +448,7 @@ function withEnrolmentModal(WrappedComponent) {
       return (
         <Query query={growthEligibilityQuery}>
           {({ networkStatus, error, loading, data }) => {
-            if (networkStatus === 1 || loading) return <LoadingSpinner/>
+            if (networkStatus === 1 || loading) return <LoadingSpinner />
             else if (error) {
               return <QueryError error={error} query={growthEligibilityQuery} />
             }

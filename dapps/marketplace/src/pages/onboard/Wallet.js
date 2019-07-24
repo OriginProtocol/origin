@@ -61,7 +61,7 @@ const Step1 = ({ listing, hideOriginWallet, linkPrefix }) => {
           <Query query={query} notifyOnNetworkStatusChange={true}>
             {({ error, data, networkStatus }) => {
               if (networkStatus === 1) {
-                return <LoadingSpinner/>
+                return <LoadingSpinner />
               } else if (error) {
                 return <QueryError query={query} />
               }
