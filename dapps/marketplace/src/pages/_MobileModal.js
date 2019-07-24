@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
 import copy from 'copy-to-clipboard'
-import withIsMobile from 'hoc/withIsMobile' 
+import withIsMobile from 'hoc/withIsMobile'
 
 import Modal from 'components/Modal'
 

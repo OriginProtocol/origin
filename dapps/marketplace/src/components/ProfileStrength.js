@@ -3,7 +3,12 @@ import { fbt } from 'fbt-runtime'
 
 import withIsMobile from 'hoc/withIsMobile'
 
-const ProfileStrength = ({ published = 0, unpublished = 0, large, isMobile }) => {
+const ProfileStrength = ({
+  published = 0,
+  unpublished = 0,
+  large,
+  isMobile
+}) => {
   const title = isMobile
     ? fbt('Strength', 'ProfileStrength.Strength')
     : fbt('Profile Strength', 'ProfileStrength.ProfileStrength')
