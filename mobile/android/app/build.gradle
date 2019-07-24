@@ -98,7 +98,6 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    //buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.origincatcher"
@@ -107,15 +106,7 @@ android {
         versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         ndk {
-            abiFilters "armeabi-v7a", "x86"
-        }
-
-        // Might be able to remove this after React Native 0.59 is released
-        // See: https://github.com/facebook/react-native/issues/2814
-        packagingOptions {
-            exclude "lib/mips64/**"
-            exclude "lib/arm64-v8a/**"
-            exclude "lib/x86_64/**"
+            abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
         }
     }
     signingConfigs {

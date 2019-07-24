@@ -125,9 +125,9 @@
     "growth.may2019.name": "2019年5月活动",
     "growth.may2019.short_name": "2019年5月",
     "growth.june2019.name": "June 2019 Campaign",
-    "growth.june2019.short_name": "June 2019",
+    "growth.june2019.short_name": "2019年6月",
     "growth.july2019.name": "July 2019 Campaign",
-    "growth.july2019.short_name": "July 2019",
+    "growth.july2019.short_name": "2019年7月",
     "growth.profile.and.email.requirement": "已验证电子邮件和 Origin 个人资料",
     "growth.two.attestations.requirement": "两项身份认证",
     "growth.profile.requirement": "照片和姓名",
@@ -285,7 +285,7 @@
   "3RWPjE": "如果您有任何疑问或需要对交易提出异议， {=let us know}。",
   "1cDNp2": "请通知我们",
   "2aLpDM": "知道了。",
-  "23c0Qy": "Help",
+  "23c0Qy": "帮助",
   "1nLPNA": "Support, settings, & more",
   "37CWGX": "Close",
   "24XkI": "Origin enables true peer-to-peer commerce.",
@@ -485,7 +485,7 @@
   "1lOiT1": "一旦接受出价，你必须履行订单。",
   "1ZL8Bw": "一旦买方确认订单已经履行，您将收到付款。",
   "4iVrWM": "加载中",
-  "D0geX": "Price",
+  "D0geX": "价格",
   "4lguwU": "Price Per Unit",
   "3ZmGA3": "Enter amount",
   "4veauv": "显示的价格是你将收到的近似值。",
@@ -1093,14 +1093,14 @@
   "2jblSi": "未命名用户",
   "1hgTen": "Listings",
   "2m1LcJ": "Just now",
-  "34gk2n": "minute",
+  "34gk2n": "分钟",
   "11DZUN": {
-    "*": "minutes",
-    "_1": "minute"
+    "*": "分钟",
+    "_1": "分钟"
   },
   "xDZlv": {
-    "*": "hours",
-    "_1": "hour"
+    "*": "小时",
+    "_1": "小时"
   },
   "4wB1jY": {
     "*": "days",
@@ -1116,7 +1116,7 @@
   "12fLzY": "Google",
   "1b1f95": "Kakao",
   "bUMPh": "LinkedIn",
-  "klJjd": "WeChat",
+  "klJjd": "微信",
   "2PiJ4G": "Phone Number Verified",
   "3nyg0B": "{provider} Account Verified",
   "1aJrGY": "{provider} Verified"
