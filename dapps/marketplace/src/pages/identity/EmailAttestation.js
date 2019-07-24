@@ -282,7 +282,6 @@ class EmailAttestation extends Component {
                     })
                     return
                   }
-
                   verifyCode({
                     variables: { identity: this.props.wallet, email, code }
                   })
