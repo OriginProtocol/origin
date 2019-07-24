@@ -16,11 +16,12 @@ const Logger = require('logplease')
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('execTransfer')
 
-const { Transfer } = require('../models')
+const { Transfer, Sequelize } = require('../models')
 const { executeTransfer } = require('../lib/transfer')
 const enums = require('../enums')
 
-logger.info('Starting rewards distribution job.')
+// Number of hours to wait after a request was created before executing it.
+const ProcessingDelayHours = 12
 
 class TransferProcessor {
   constructor(config) {
@@ -33,27 +34,45 @@ class TransferProcessor {
     }
   }
 
-  _preflight() {
-    // Check on an already existing watchdog.
+  async _preflight() {
+    // Check there is no existing watchdog.
     if (fs.existsSync(this.config.watchdog)) {
       throw new Error(
         `Watchdog detected at ${this.config.watchdog}. Processing aborted.`
       )
     }
+
+    // Check there is no dangling transfers.
+    const WaitingConfirmation = await Transfer.findAll({
+      where: {
+        status: enums.TransferStatuses.WaitingConfirmation
+      }
+    })
+    if (WaitingConfirmation.length > 0) {
+      throw new Error(
+        `Found unconfirmed transfers. Fix them before running this script.`
+      )
+    }
+
     // Create a watchdog for this run.
     fs.writeFileSync(this.config.watchdog, `Pid ${process.pid}`)
+
+    // TODO: check no rows in transfer table with status WaitingConfirmation
   }
 
   async run() {
-    this._preflight()
+    await this._preflight()
 
-    // Load all the pending transfers.
+    // Load all the pending transfers that were requested
+    // more than ProcessingDelayHours ago.
+    const cutoffTime = Date.now() - ProcessingDelayHours * 60 * 1000
     const transfers = await Transfer.findAll({
       where: {
-        status: enums.TransferStatuses.Enqueued
+        status: enums.TransferStatuses.Enqueued,
+        createdAt: { [Sequelize.Op.lt]: cutoffTime }
       }
     })
-    logger.info(`Loaded ${transfers.length} pending transfers.`)
+    logger.info(`Loaded ${transfers.length} executable transfers.`)
 
     // Process transfers serially.
     for (const transfer of transfers) {
