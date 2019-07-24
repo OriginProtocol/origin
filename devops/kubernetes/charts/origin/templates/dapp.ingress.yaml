@@ -22,12 +22,9 @@ spec:
     - secretName: {{ template "dapp.host" . }}
       hosts:
         - {{ template "dapp.host" . }}
-    {{- if eq .Release.Namespace "prod" }}
-    - secretName: shoporigin.com
-      hosts:
-        - shoporigin.com
-        - www.shoporigin.com
-    {{- end }}
+        {{- if eq .Release.Namespace "prod" }}
+        - www.{{ template "dapp.host". }}
+        {{- end }}
   rules:
   - host: {{ template "dapp.host" . }}
     http:
@@ -37,14 +34,7 @@ spec:
             serviceName: {{ template "dapp.fullname" . }}
             servicePort: 80
   {{- if eq .Release.Namespace "prod" }}
-  - host: shoporigin.com
-    http:
-      paths:
-        - path: /
-          backend:
-            serviceName: {{ template "dapp.fullname" . }}
-            servicePort: 80
-  - host: www.shoporigin.com
+  - host: www.{{ template "dapp.host" . }}
     http:
       paths:
         - path: /
