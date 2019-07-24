@@ -19,7 +19,7 @@ router.post('/generate-code', emailGenerateCode, async (req, res) => {
   const code = generateSixDigitCode()
 
   // Set the code in redis with a 30 minute expiry
-  redisClient.set(req.body.email, code, 'EX', 60 * 60 * 30)
+  redisClient.set(req.body.email, code, 'EX', 60 * 30)
 
   const email = {
     to: req.body.email,

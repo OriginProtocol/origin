@@ -3,15 +3,11 @@
  *  a migration script to add the enum to the DB.
  */
 
-class Enum extends Array {
-  constructor(...args) {
-    super(...args)
-
-    for (const k of args) {
-      this[k] = k
-    }
-  }
-}
+const {
+  Enum,
+  GrowthEventStatuses,
+  GrowthEventTypes
+} = require('@origin/growth-event/src/enums')
 
 const GrowthCampaignRewardStatuses = new Enum(
   'NotReady',
@@ -45,27 +41,6 @@ const GrowthActionType = new Enum(
   'Referral',
   'ListingCreated',
   'ListingPurchased'
-)
-
-const GrowthEventStatuses = new Enum('Logged', 'Verified', 'Fraud')
-
-const GrowthEventTypes = new Enum(
-  'ProfilePublished',
-  'EmailAttestationPublished',
-  'FacebookAttestationPublished',
-  'AirbnbAttestationPublished',
-  'TwitterAttestationPublished',
-  'PhoneAttestationPublished',
-  'GoogleAttestationPublished',
-  'LinkedInAttestationPublished',
-  'GitHubAttestationPublished',
-  'KakaoAttestationPublished',
-  'WeChatAttestationPublished',
-  'WebsiteAttestationPublished',
-  'ListingCreated',
-  'ListingPurchased', // Buyer side event.
-  'ListingSold', // Seller side event.
-  'MobileAccountCreated' // User installed Origin mobile app and registered an account.
 )
 
 const GrowthParticipantStatuses = new Enum('Active', 'Banned')
