@@ -101,12 +101,12 @@ class AirDrop {
     const txHash = await this.token.credit(toAddress, amount, {
       gasPrice
     })
-    const { txStatus } = await this.token.waitForTxConfirmation(
+    const { status } = await this.token.waitForTxConfirmation(
       txHash,
       { numBlocks: NumBlockConfirmation, timeoutSec: ConfirmationTimeout }
     )
-    if (txStatus !== 'confirmed') {
-      throw new Error(`Failure. txStatus=${txStatus} txHash=${txHash}`)
+    if (status !== 'confirmed') {
+      throw new Error(`Failure. status=${status} txHash=${txHash}`)
     }
     logger.info(`${amount} OGN -> ${toAddress} TxHash=${txHash}`)
     return txHash

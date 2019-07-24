@@ -146,12 +146,12 @@ async function executeTransfer(transfer, opts) {
   })
 
   // Wait for the transaction to get confirmed.
-  const { txStatus } = await token.waitForTxConfirmation(txHash, {
+  const { status } = await token.waitForTxConfirmation(txHash, {
     numBlocks: NumBlockConfirmation,
     timeoutSec: ConfirmationTimeout
   })
   let transferStatus, eventAction, failureReason
-  switch (txStatus) {
+  switch (status) {
     case 'confirmed':
       transferStatus = GRANT_TRANSFER_DONE
       eventAction = GRANT_TRANSFER_DONE
@@ -165,9 +165,9 @@ async function executeTransfer(transfer, opts) {
       failureReason = 'Confirmation timeout'
       break
     default:
-      throw new Error(`Unexpected tx status ${txStatus} for txHash ${txHash}`)
+      throw new Error(`Unexpected status ${status} for txHash ${txHash}`)
   }
-  logger.info(`Received status ${txStatus} for txHash ${txHash}`)
+  logger.info(`Received status ${status} for txHash ${txHash}`)
 
   // Update the status in the transfer table.
   // Note: only create an event in case the transaction is successful. The event

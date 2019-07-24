@@ -1,5 +1,4 @@
 const BigNumber = require('bignumber.js')
-const Web3 = require('web3')
 
 const TokenContract = require('@origin/contracts/releases/latest/build/contracts/OriginToken.json')
 const logger = require('./logger')
@@ -142,7 +141,7 @@ class Token {
 
   /**
    * Waits for a transaction to be confirmed.
-   * @param {number} txHash: the transaction hash.
+   * @param {string} txHash: the transaction hash.
    * @param {number} numBlocks: the number of block confirmation to wait for
    * @param {number} timeoutSec: timeout in seconds
    * @returns {Promise<{status:string, receipt:Object}>}
@@ -187,10 +186,10 @@ class Token {
           }
         }
       }
+      elapsed = (Date.now() - start) / 1000
       logger.debug(
         `Still waiting for txHash ${txHash} to get confirmed after ${elapsed} sec`
       )
-      elapsed = (Date.now() - start) / 1000
     } while (elapsed < timeoutSec && (await _nextTick(5000)))
 
     return { status: 'timeout', receipt: null }
@@ -198,10 +197,10 @@ class Token {
 
   /**
    * Returns the default Ethereum account.
-   * @returns {string} - Address of default of first unlocked account.
+   * @returns {string} - Address of first account.
    */
   async defaultAccount() {
-    return this.web3.eth.defaultAccount
+    return this.web3.eth.currentProvider.getAddresses()[0]
   }
 
   /*
@@ -232,10 +231,10 @@ class Token {
     const transaction = this.contract.methods.pause()
     const txHash = await this.sendTx(transaction, { from: sender })
     logger.info(`Sent pause tx to network, hash=${txHash}`)
-    const { txStatus } = await this.waitForTxConfirmation(txHash)
-    if (txStatus !== 'confirmed') {
+    const { status } = await this.waitForTxConfirmation(txHash)
+    if (status !== 'confirmed') {
       throw new Error(
-        `Failed getting confirmation. txHash=${txHash} txStatus=${txStatus}`
+        `Failed getting confirmation. txHash=${txHash} status=${status}`
       )
     }
   }
@@ -259,10 +258,10 @@ class Token {
       from: sender
     })
     logger.info(`Sent unpause tx to network, hash=${txHash}`)
-    const { txStatus } = await this.waitForTxConfirmation(txHash)
-    if (txStatus != 'confirmed') {
+    const { status } = await this.waitForTxConfirmation(txHash)
+    if (status != 'confirmed') {
       throw new Error(
-        `Failed getting confirmation. txHash=${txHash} txStatus=${txStatus}`
+        `Failed getting confirmation. txHash=${txHash} status=${status}`
       )
     }
   }

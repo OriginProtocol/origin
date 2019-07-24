@@ -22,7 +22,7 @@ class TokenDistributor {
     this.networkId = networkId
     this.gasPriceMultiplier = gasPriceMultiplier
     this.token = new Token(networkId, createProvider(networkId))
-    this.supplier = await this.token.defaultAccount(networkId)
+    this.supplier = await this.token.defaultAccount()
 
     await this.info()
   }
@@ -77,12 +77,12 @@ class TokenDistributor {
     })
     logger.info(`Sent tx to network. txHash=${txHash}`)
 
-    const { txStatus, receipt } = await this.token.waitForTxConfirmation(
+    const { status, receipt } = await this.token.waitForTxConfirmation(
       txHash,
       { numBlocks: NumBlockConfirmation, timeoutSec: ConfirmationTimeout }
     )
-    if (txStatus !== 'confirmed') {
-      throw new Error(`Failure. txStatus=${txStatus} txHash=${txHash}`)
+    if (status !== 'confirmed') {
+      throw new Error(`Failure. txStatus=${status} txHash=${txHash}`)
     }
     logger.info('Blockchain transaction confirmed')
     logger.info('  NetworkId:        ', this.networkId)

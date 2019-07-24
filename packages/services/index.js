@@ -260,7 +260,6 @@ module.exports = async function start(opts = {}) {
     if (await portInUse(4007)) {
       console.log('GraphQL Server already started')
     } else {
-      console.log("STARTING GRAPHQL")
       started.graphql = await startGraphql()
     }
   }
