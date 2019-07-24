@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom'
 
 import withWallet from 'hoc/withWallet'
 import query from 'queries/Offer'
-import useIsMobile from 'utils/useMobile'
+import withIsMobile from 'hoc/withIsMobile'
 
 import AboutParty from 'components/AboutParty'
 import QueryError from 'components/QueryError'
@@ -27,7 +27,7 @@ function isOwner(account, props) {
 const Transaction = props => {
   const offerId = props.match.params.offerId
   const vars = { offerId }
-  const isMobile = useIsMobile()
+  const isMobile = props.isMobile
 
   return (
     <div className="container transaction-detail">
@@ -179,7 +179,7 @@ const Transaction = props => {
   )
 }
 
-export default withRouter(withWallet(Transaction))
+export default withIsMobile(withRouter(withWallet(Transaction)))
 
 require('react-styl')(`
   .transaction-detail

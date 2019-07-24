@@ -26,7 +26,7 @@ module.exports = {
           'PhoneAttestationPublished',
           'ListingCreated',
           'ListingPurchased',
-          'ListingSold',
+          'ListingSold'
         )
       },
       status: {
