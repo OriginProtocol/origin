@@ -3,9 +3,15 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('t3_user', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
       email: {
         type: Sequelize.STRING,
-        primaryKey: true,
+        unique: true,
         allowNull: false
       },
       // Key used for OTP authentication.
