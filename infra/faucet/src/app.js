@@ -8,7 +8,7 @@ try {
 const express = require('express')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 
-const { createProvider } = require('@origin/token/src/config')
+const { createProvider, parseArgv } = require('@origin/token/src/config')
 
 const logger = require('./logger')
 
@@ -71,7 +71,7 @@ async function runApp(config) {
 //
 // Main
 //
-const args = Config.parseArgv()
+const args = parseArgv()
 const config = {
   // Port server listens on.
   port: parseInt(args['--port'] || process.env.PORT || DEFAULT_SERVER_PORT),
