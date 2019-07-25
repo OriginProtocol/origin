@@ -10,6 +10,7 @@ import BottomScrollListener from 'components/BottomScrollListener'
 import QueryError from 'components/QueryError'
 import Redirect from 'components/Redirect'
 import DocumentTitle from 'components/DocumentTitle'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 import NotificationRow from './NotificationRow'
 
@@ -39,11 +40,7 @@ class Notifications extends Component {
         >
           {({ error, data, fetchMore, networkStatus }) => {
             if (networkStatus === 1) {
-              return (
-                <h1>
-                  <fbt desc="notifications.loading">Loading...</fbt>
-                </h1>
-              )
+              return <LoadingSpinner/>
             } else if (error) {
               return <QueryError error={error} query={query} vars={vars} />
             } else if (!data || !data.marketplace) {
