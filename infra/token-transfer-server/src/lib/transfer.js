@@ -117,12 +117,12 @@ async function enqueueTransfer(
 
 /**
  * Sends a blockchain transaction to transfer tokens and waits for the transaction to get confirmed.
- * @param {models.Transfer} transfer: DB model Transfer object
- * @param {{tokenForTests:Object, networkId:number }} opts: options
+ * @param {Transfer} transfer: DB model Transfer object
+ * @param {{tokenMock:Object, networkId:number }} opts: options
  * @returns {Promise<{txHash: string, txStatus: string}>}
  */
 async function executeTransfer(transfer, opts) {
-  const { tokenForTests, networkId } = opts
+  const { networkId, tokenMock } = opts
 
   _checkTransferRequest(
     transfer.userId,
@@ -131,8 +131,8 @@ async function executeTransfer(transfer, opts) {
     transfer
   )
 
-  // Setup token library
-  const token = tokenForTests || new Token(networkId)
+  // Setup token library. tokenMock is used for testing.
+  const token = tokenMock || new Token(networkId)
 
   // Send transaction to transfer the tokens and record txHash in the DB.
   const naturalAmount = token.toNaturalUnit(transfer.amount)

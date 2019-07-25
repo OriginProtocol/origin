@@ -11,7 +11,7 @@ const { GRANT_TRANSFER } = require('../src/constants/events')
 const { enqueueTransfer, executeTransfer } = require('../src/lib/transfer')
 const { Event, Grant, Transfer, User, sequelize } = require('../src/models')
 
-class TokenForTests extends Token {
+class TokenMock extends Token {
   constructor(networkId, fromAddress, toAddress, valueTokenUnit) {
     super(networkId, null)
     this.networkId = networkId
@@ -38,6 +38,7 @@ describe('Transfer token lib', () => {
   const networkId = 999
   const fromAddress = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
   const toAddress = '0xf17f52151EbEF6C7334FAD080c5704D77216b732'
+  const tokenMock = new TokenMock(networkId, fromAddress, toAddress, 1000)
   let grant, user
 
   beforeEach(async () => {
@@ -88,6 +89,15 @@ describe('Transfer token lib', () => {
     expect(transfer.data).to.be.null
   })
 
+  it('Should execute a request', async () => {
+    const amount = 1000
+    const transferId =  await enqueueTransfer(user.id, grant.id, toAddress, amount, ip)
+    const transfer = await Transfer.findOne({ where: { id: transferId }})
+    const { status, receipt } = executeTransfer(transfer, { networkId, tokenMock })
+
+    expect(status).to.equal('confirmed')
+    expect(receipt).to.be.an('object')
+  })
 
   /*
   it('should transfer an integer amount of tokens', async () => {
