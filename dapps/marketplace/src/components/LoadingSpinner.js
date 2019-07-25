@@ -13,14 +13,12 @@ export default LoadingSpinner
 require('react-styl')(`
   .loading-spinner-container
     background-color: white
-    background-size: cover
-    width: 4.5em
-    height: 4.5em
+    width: 4em
+    height: 4em
     position: fixed
-    top: calc(50% - 1.5rem)
-    left: calc(50% - 1.5rem)
+    top: calc(50% - 2em)
+    left: calc(50% - 2em)
     border-radius: 8px
-    box-shadow: 0px 8px 12px 0px lightGray
 
   .loading-spinner
     background: url(images/spinner-animation-dark.svg) no-repeat center
@@ -28,6 +26,6 @@ require('react-styl')(`
     width: 3em
     height: 3em
     position: relative
-    top: 0.75em
-    left: 0.75em
+    top: 0.5em
+    left: 0.5em
 `)
