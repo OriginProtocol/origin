@@ -31,7 +31,7 @@ async function _checkTransferRequest(userId, grantId, amount, transfer = null) {
     where: { id: userId }
   })
   if (!user) {
-    throw new ReferenceError(`No user found with id ${userId}`)
+    throw new Error(`No user found with id ${userId}`)
   }
 
   // Load the grant and check there are enough tokens available to fullfill the transfer request.
@@ -43,7 +43,7 @@ async function _checkTransferRequest(userId, grantId, amount, transfer = null) {
     }
   })
   if (!grant) {
-    throw new ReferenceError(
+    throw new Error(
       `Could not find specified grant id ${grantId} for user ${user.email}`
     )
   }
@@ -92,8 +92,8 @@ async function enqueueTransfer(userId, grantId, address, amount, ip) {
       action: GRANT_TRANSFER_REQUEST,
       data: JSON.stringify({
         transferId: transfer.id,
-        amount: transfer.amount,
-        to: transfer.toAddress
+        amount: amount,
+        to: address
       }),
       ip
     })

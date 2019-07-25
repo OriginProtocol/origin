@@ -5,21 +5,19 @@ chai.use(require('chai-bignumber')(BigNumber))
 chai.use(require('chai-moment'))
 const expect = chai.expect
 
-const Token = require('@origin/token/src/token')
-
 const { enqueueTransfer, executeTransfer } = require('../src/lib/transfer')
 const { Event, Grant, Transfer, User, sequelize } = require('../src/models')
 const enums = require('../src/enums')
 
 
-// Mock for the Token class.
-class TokenMock extends Token {
-  constructor(networkId, fromAddress, toAddress, valueTokenUnit) {
-    super(networkId, null)
+// Mock for the Token class in the @origin/token package.
+class TokenMock {
+  constructor(networkId, fromAddress, toAddress) {
     this.networkId = networkId
     this.fromAddress = fromAddress
     this.toAddress = toAddress
-    this.valueNaturalUnit = this.toNaturalUnit(valueTokenUnit)
+    this.decimals = 18
+    this.scaling = BigNumber(10).exponentiatedBy(this.decimals)
   }
 
   async defaultAccount() {
@@ -28,12 +26,16 @@ class TokenMock extends Token {
 
   async credit(address, value) {
     expect(address).to.equal(this.toAddress)
-    expect(value).to.bignumber.equal(this.valueNaturalUnit)
+    expect(value.toNumber()).to.be.an('number')
     return 'testTxHash'
   }
 
   async waitForTxConfirmation(txHash) {
     return { status: 'confirmed', receipt: { txHash, blockNumber: 123, status: true } }
+  }
+
+  toNaturalUnit(value) {
+    return BigNumber(value).multipliedBy(this.scaling)
   }
 }
 
@@ -45,7 +47,7 @@ describe('Transfer token lib', () => {
   const networkId = 999
   const fromAddress = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
   const toAddress = '0xf17f52151ebef6c7334fad080c5704d77216b732'
-  const tokenMock = new TokenMock(networkId, fromAddress, toAddress, 1000)
+  const tokenMock = new TokenMock(networkId, fromAddress, toAddress)
   let grant, user
 
   beforeEach(async () => {

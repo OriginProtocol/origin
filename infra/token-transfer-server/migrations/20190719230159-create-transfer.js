@@ -50,7 +50,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    }).then(() => queryInterface.addIndex(tableName, ['to_address']))
+    })
+      .then(() => queryInterface.addIndex(tableName, ['user_id']))
+      .then(() => queryInterface.addIndex(tableName, ['grant_id']))
+      .then(() => queryInterface.addIndex(tableName, ['to_address']))
   },
   down: (queryInterface) => {
     return queryInterface.dropTable(tableName)

@@ -77,7 +77,7 @@ class TransferProcessor {
     // Process transfers serially.
     for (const transfer of transfers) {
       logger.info(`Processing transfer ${transfer.id}`)
-      const result = executeTransfer(transfer, {
+      const result = await executeTransfer(transfer, {
         networkId: this.config.networkId
       })
       logger.info(
