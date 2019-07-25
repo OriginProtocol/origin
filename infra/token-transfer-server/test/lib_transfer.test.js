@@ -92,7 +92,7 @@ describe('Transfer token lib', () => {
     expect(transfer.grantId).to.equal(grant.id)
     expect(transfer.toAddress).to.equal(toAddress.toLowerCase())
     expect(transfer.fromAddress).to.be.null
-    expect(transfer.amount).to.equal(amount.toString())
+    expect(parseInt(transfer.amount)).to.equal(amount)
     expect(transfer.currency).to.equal('OGN')
     expect(transfer.txHash).to.be.null
     expect(transfer.data).to.be.null
