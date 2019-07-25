@@ -31,13 +31,13 @@ async function _checkTransferRequest(userId, grantId, amount, transfer = null) {
     where: { id: userId }
   })
   if (!user) {
-    throw new ReferenceError(`No user found iwth id ${userId}`)
+    throw new ReferenceError(`No user found with id ${userId}`)
   }
 
   // Load the grant and check there are enough tokens available to fullfill the transfer request.
   const grant = await Grant.findOne({
     where: {
-      id: grantId,
+      id: grantId
       // FIXME(franck): add this condition after changing grant table to have userId
       //userId
     }
@@ -69,14 +69,8 @@ async function _checkTransferRequest(userId, grantId, amount, transfer = null) {
  * @param amount
  * @returns {Promise<integer>} Id of the transfer request.
  */
-async function enqueueTransfer(
-  userId,
-  grantId,
-  address,
-  amount,
-  ip
-) {
-  _checkTransferRequest(userId, grantId, amount)
+async function enqueueTransfer(userId, grantId, address, amount, ip) {
+  await _checkTransferRequest(userId, grantId, amount)
 
   // Enqueue the request by inserting a row in the transfer table.
   // It will get picked up asynchronously by the offline job that processes transfers.
@@ -124,7 +118,7 @@ async function enqueueTransfer(
 async function executeTransfer(transfer, opts) {
   const { networkId, tokenMock } = opts
 
-  _checkTransferRequest(
+  await _checkTransferRequest(
     transfer.userId,
     transfer.grantId,
     transfer.amount,
@@ -137,7 +131,7 @@ async function executeTransfer(transfer, opts) {
   // Send transaction to transfer the tokens and record txHash in the DB.
   const naturalAmount = token.toNaturalUnit(transfer.amount)
   const supplier = await token.defaultAccount()
-  const txHash = token.sendTx(transfer.toAddress, naturalAmount)
+  const txHash = await token.credit(transfer.toAddress, naturalAmount)
   await transfer.update({
     status: enums.TransferStatuses.WaitingConfirmation,
     fromAddress: supplier.toLowerCase(),
@@ -152,15 +146,17 @@ async function executeTransfer(transfer, opts) {
   let transferStatus, eventAction, failureReason
   switch (status) {
     case 'confirmed':
-      transferStatus = GRANT_TRANSFER_DONE
+      transferStatus = enums.TransferStatuses.Success
       eventAction = GRANT_TRANSFER_DONE
       break
     case 'failed':
-      transferStatus = GRANT_TRANSFER_FAILED
+      transferStatus = enums.TransferStatuses.Failed
+      eventAction = GRANT_TRANSFER_FAILED
       failureReason = 'Tx failed'
       break
     case 'timeout':
-      transferStatus = GRANT_TRANSFER_FAILED
+      transferStatus = enums.TransferStatuses.Failed
+      eventAction = GRANT_TRANSFER_FAILED
       failureReason = 'Confirmation timeout'
       break
     default:
@@ -191,7 +187,8 @@ async function executeTransfer(transfer, opts) {
     if (failureReason) {
       event.failureReason = failureReason
     }
-    await Event.create(event), await txn.commit()
+    await Event.create(event)
+    await txn.commit()
   } catch (e) {
     await txn.rollback()
     logger.error(
