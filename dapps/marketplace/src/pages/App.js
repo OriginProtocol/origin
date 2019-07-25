@@ -12,6 +12,8 @@ import TranslationModal from './_TranslationModal'
 import MobileModal from './_MobileModal'
 import Footer from './_Footer'
 
+import LoadingSpinner from 'components/LoadingSpinner'
+
 import Onboard from './onboard/Onboard'
 import Listings from './listings/Listings'
 import Listing from './listing/Listing'
@@ -78,14 +80,7 @@ class App extends Component {
         </div>
       )
     } else if (this.props.creatorConfigLoading) {
-      return (
-        <div className="app-spinner">
-          <fbt desc="App.loadingPleaseWait">
-            <h5>Loading</h5>
-            <div>Please wait</div>
-          </fbt>
-        </div>
-      )
+      return <LoadingSpinner />
     }
 
     const { creatorConfig } = this.props
@@ -159,7 +154,9 @@ class App extends Component {
             <Route component={Listings} />
           </Switch>
         </main>
-        <TranslationModal locale={this.props.locale} />
+        {!this.props.isMobileApp && (
+          <TranslationModal locale={this.props.locale} />
+        )}
         {this.state.displayMobileModal && (
           <MobileModal
             onClose={() =>

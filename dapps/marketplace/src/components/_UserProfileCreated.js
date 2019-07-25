@@ -1,11 +1,9 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
-import useIsMobile from 'utils/useMobile'
+import withIsMobile from 'hoc/withIsMobile'
 import MobileModal from 'components/MobileModal'
 
-const UserProfileCreated = ({ onCompleted }) => {
-  const isMobile = useIsMobile()
-
+const UserProfileCreated = ({ onCompleted, isMobile }) => {
   const content = (
     <div className="profile-created">
       <img src="images/identity/rocket.svg" />
@@ -41,7 +39,7 @@ const UserProfileCreated = ({ onCompleted }) => {
   return content
 }
 
-export default UserProfileCreated
+export default withIsMobile(UserProfileCreated)
 
 require('react-styl')(`
   .profile-created

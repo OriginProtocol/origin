@@ -3,6 +3,12 @@
 // TODO: create seeder that reads in a CSV file
 module.exports = {
   up: (queryInterface) => {
+    queryInterface.bulkInsert('t3_user', [
+      {
+        email: 'foo@originprotocol.com',
+        created_at: new Date(),
+        updated_at: new Date()
+      }], {})
     return queryInterface.bulkInsert('Grant', [
       {
         email: 'foo@originprotocol.com',
@@ -52,6 +58,7 @@ module.exports = {
   },
 
   down: (queryInterface) => {
+    queryInterface.bulkDelete('t3_user', null, {})
     return queryInterface.bulkDelete('Grants', null, {})
   }
 }

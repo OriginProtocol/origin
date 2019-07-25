@@ -8,6 +8,11 @@ const bundle = promBundle({
   }
 })
 
+const txCounter = new bundle.promClient.Counter({
+  name: 'relayer_transactions_sent',
+  help: 'Number of transactions sent by the relayer'
+})
+
 const errorCounter = new bundle.promClient.Counter({
   name: 'relayer_handler_error',
   help: 'Number of errors from the relayer'
@@ -42,6 +47,7 @@ const txConfirmHisto = new bundle.promClient.Histogram({
 module.exports = {
   bundle,
   metrics: {
+    txCounter,
     errorCounter,
     pendingTxGauge,
     rebroadcastCounter,
