@@ -124,7 +124,7 @@ function listingTests(autoSwap) {
     it('should allow image entry', async function() {
       const input = await page.$('input[type="file"]')
       await input.uploadFile(__dirname + '/fixtures/image-1.jpg')
-      await page.waitForSelector('.image-picker .preview-row')
+      await page.waitForSelector('.image-picker .preview-row .info')
       await pic(page, 'add-listing')
     })
 
@@ -198,7 +198,7 @@ function listingTests(autoSwap) {
     it('should allow image entry', async function() {
       const input = await page.$('input[type="file"]')
       await input.uploadFile(__dirname + '/fixtures/image-1.jpg')
-      await page.waitForSelector('.image-picker .preview-row')
+      await page.waitForSelector('.image-picker .preview-row .info')
       await pic(page, 'add-listing')
     })
 
@@ -306,7 +306,7 @@ function listingTests(autoSwap) {
     it('should allow image entry', async function() {
       const input = await page.$('input[type="file"]')
       await input.uploadFile(__dirname + '/fixtures/image-1.jpg')
-      await page.waitForSelector('.image-picker .preview-row')
+      await page.waitForSelector('.image-picker .preview-row .info')
       await pic(page, 'add-listing')
     })
 
@@ -317,7 +317,7 @@ function listingTests(autoSwap) {
 
     it('should create listing', async function() {
       await clickByText(page, 'Publish', 'button')
-      await waitForText(page, 'View Listing')
+      await waitForText(page, 'View Listing', 'button')
       await pic(page, 'add-listing')
     })
 
