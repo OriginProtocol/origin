@@ -41,14 +41,12 @@ function accountTransactionURL(address) {
 async function getAccountStats(address) {
   address = Web3.utils.toChecksumAddress(address)
   const url = accountTransactionURL(address)
-  //console.log(`Requesting url: ${url}`)
   const res = await fetch(url)
   if (res.status !== 200) {
     console.debug(res)
     throw new Error('Invalid response')
   }
   const jason = await res.json()
-  //console.log('res', jason)
 
   let cumulativeGasUsed = new BN('0')
   let totalFees = new BN('0')
