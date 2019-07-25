@@ -1,5 +1,4 @@
 const Token = require('@origin/token/src/token')
-const { createProvider } = require('@origin/token/src/config')
 
 const {
   GRANT_TRANSFER_DONE,
@@ -133,7 +132,7 @@ async function executeTransfer(transfer, opts) {
   )
 
   // Setup token library
-  const token = tokenForTests || new Token(networkId, createProvider(networkId))
+  const token = tokenForTests || new Token(networkId)
 
   // Send transaction to transfer the tokens and record txHash in the DB.
   const naturalAmount = token.toNaturalUnit(transfer.amount)

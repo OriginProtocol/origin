@@ -5,7 +5,6 @@ const BigNumber = require('bignumber.js')
 const Logger = require('logplease')
 
 const Token = require('@origin/token/src/token')
-const { createProvider } = require('@origin/token/src/config')
 
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('tokenDistributor')
@@ -21,7 +20,7 @@ class TokenDistributor {
   async init(networkId, gasPriceMultiplier) {
     this.networkId = networkId
     this.gasPriceMultiplier = gasPriceMultiplier
-    this.token = new Token(networkId, createProvider(networkId))
+    this.token = new Token(networkId)
     this.supplier = await this.token.defaultAccount()
 
     await this.info()

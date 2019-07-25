@@ -1,6 +1,7 @@
 const BigNumber = require('bignumber.js')
 
 const TokenContract = require('@origin/contracts/releases/latest/build/contracts/OriginToken.json')
+const { createProvider } = require('./config')
 const logger = require('./logger')
 
 const isTestEnv = process.env.NODE_ENV === 'test'
@@ -23,11 +24,10 @@ async function _nextTick(wait = 1000) {
 class Token {
   /**
    * @params {number} networkId: 1=Mainnet, 4=Rinkeby, etc...
-   * @params {Object} provider: web3 provider
    */
-  constructor(networkId, provider) {
+  constructor(networkId) {
     this.networkId = networkId
-    this.web3 = provider
+    this.web3 = createProvider(networkId)
     // TODO(franck): Get this from the token contract ABI.
     this.decimals = 18
     this.scaling = BigNumber(10).exponentiatedBy(this.decimals)

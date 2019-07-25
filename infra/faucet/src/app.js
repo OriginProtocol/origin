@@ -8,7 +8,7 @@ try {
 const express = require('express')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 
-const Config = require('@origin/token/src/config')
+const { createProvider } = require('@origin/token/src/config')
 
 const logger = require('./logger')
 
@@ -96,8 +96,9 @@ if (!process.env.DATABASE_URL) {
   process.exit(-1)
 }
 
+// Test provider configuration.
 try {
-  config.provider = Config.createProvider(config.networkId)
+  createProvider(config.networkId)
 } catch (err) {
   logger.error('Config error:', err)
   process.exit(-1)

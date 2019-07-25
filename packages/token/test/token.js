@@ -1,5 +1,4 @@
 const assert = require('assert')
-const { createProvider } = require('@origin/token/src/config')
 const Token = require('../src/token')
 
 
@@ -10,7 +9,7 @@ describe('Token Library', async function() {
   let supplier, TokenLib
 
   before(async function() {
-    TokenLib = new Token(networkId, createProvider(networkId))
+    TokenLib = new Token(networkId)
     supplier = await TokenLib.defaultAccount()
   })
 

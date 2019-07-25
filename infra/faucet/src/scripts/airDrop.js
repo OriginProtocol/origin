@@ -13,7 +13,6 @@ const Logger = require('logplease')
 const Web3 = require('web3')
 
 const Token = require('@origin/token/src/token')
-const { createProvider } = require('@origin/token/src/config')
 
 const enums = require('../enums')
 const db = require('../models')
@@ -177,7 +176,7 @@ class AirDrop {
     }
 
     // Create a token object for handling the distribution.
-    this.token = new Token(this.networkId, createProvider(this.networkId))
+    this.token = new Token(this.networkId)
 
     this.amount = BigNumber(campaign.amount)
     this.campaignId = campaign.id
