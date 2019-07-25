@@ -236,7 +236,7 @@ describe('Availability Calculator', function() {
     ])
   })
 
-  it('should estimate prices correctly for a given range', function () {
+  it('should estimate prices correctly for a given range', function() {
     instance = new AvailabilityCalculator({
       weekdayPrice: '0.5',
       weekendPrice: '0.5',
@@ -244,7 +244,8 @@ describe('Availability Calculator', function() {
       bookingWindow: 180 // Book up to this many days in the future
     })
 
-    let price = instance.estimateNightlyPrice(`${year}-01-10/${year}-01-15`).price
+    let price = instance.estimateNightlyPrice(`${year}-01-10/${year}-01-15`)
+      .price
 
     assert.equal(price, 2.5)
 
