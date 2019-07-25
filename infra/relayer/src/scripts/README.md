@@ -33,4 +33,4 @@ Shows transaction statistics for relayer accounts.
 
 ### Usage
 
-  API_KEY=[etherscan_api_key] node infra/relayer/src/scripts/relayer-stats.js [child_account1] [child_account2...]
+    API_KEY=[etherscan_api_key] node infra/relayer/src/scripts/relayer-stats.js [child_account1] [child_account2...]
