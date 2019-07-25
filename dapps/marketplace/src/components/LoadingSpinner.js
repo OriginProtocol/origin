@@ -5,7 +5,7 @@ import React from 'react'
 // export default LoadingSpinner
 
 // require('react-styl')(`
-//   .loading-spinner 
+//   .loading-spinner
 //     background: url(images/spinner-animation-dark.svg) no-repeat center
 //     background-size: cover
 //     width: 3rem
@@ -15,14 +15,12 @@ import React from 'react'
 //     left: calc(50% - 1.5rem)
 // `)
 
-
-
 const LoadingSpinner = () => {
-	return (
-		<div className="loading-spinner-container">
-			<div className="loading-spinner" />
-		</div>
-	)
+  return (
+    <div className="loading-spinner-container">
+      <div className="loading-spinner" />
+    </div>
+  )
 }
 
 export default LoadingSpinner
