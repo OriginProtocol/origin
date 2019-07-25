@@ -69,7 +69,7 @@ ipfsLoadBalancerIP: 35.233.189.126
 
 # origin-token-transfer-client
 t3ClientImage: origin-token-transfer-client
-t3ClientImageTag: 'latest'
+t3ClientImageTag: 'e31fb8e'
 
 # origin-token-transfer-server
 t3ServerImage: origin-token-transfer-server
