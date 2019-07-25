@@ -43,7 +43,10 @@ class Token {
       )
     }
     this.contractAddress = addresses.OGN
-    this.contract = new this.web3.eth.Contract(TokenContract.abi, this.contractAddress)
+    this.contract = new this.web3.eth.Contract(
+      TokenContract.abi,
+      this.contractAddress
+    )
   }
 
   /**
