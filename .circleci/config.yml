@@ -183,33 +183,33 @@ workflows:
       - Marketplace:
           requires:
             - Setup
-      - GraphQL:
-          requires:
-            - Setup
-      - EventCache:
-          requires:
-            - Setup
-      - Bridge:
-          requires:
-            - Setup
-      - Contracts:
-          requires:
-            - Setup
-      - Discovery:
-          requires:
-            - Setup
-      - Growth:
-          requires:
-            - Setup
-      - Notifications:
-          requires:
-            - Setup
-      - Relayer:
-          requires:
-            - Setup
-      - T3:
-          requires:
-            - Setup
-      - Web3Provider:
-          requires:
-            - Setup
+      # - GraphQL:
+      #     requires:
+      #       - Setup
+      # - EventCache:
+      #     requires:
+      #       - Setup
+      # - Bridge:
+      #     requires:
+      #       - Setup
+      # - Contracts:
+      #     requires:
+      #       - Setup
+      # - Discovery:
+      #     requires:
+      #       - Setup
+      # - Growth:
+      #     requires:
+      #       - Setup
+      # - Notifications:
+      #     requires:
+      #       - Setup
+      # - Relayer:
+      #     requires:
+      #       - Setup
+      # - T3:
+      #     requires:
+      #       - Setup
+      # - Web3Provider:
+      #     requires:
+      #       - Setup
