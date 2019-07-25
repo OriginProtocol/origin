@@ -334,6 +334,7 @@ require('react-styl')(`
       .listing-media
         padding: 0 15px
         flex: 50% 1 1
+        max-width: 50%
         width: 50%
       .listing-info
         padding: 0 15px
@@ -495,6 +496,7 @@ require('react-styl')(`
         flex-direction: column
         .listing-media
           padding: 15px 0
+          max-width: 100%
           width: 100%
           .gallery-scroll-wrap
             border-radius: 10px

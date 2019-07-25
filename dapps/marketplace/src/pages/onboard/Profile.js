@@ -15,6 +15,7 @@ import Redirect from 'components/Redirect'
 import HelpOriginWallet from 'components/DownloadApp'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 import { getVerifiedAccounts, clearVerifiedAccounts } from 'utils/profileTools'
 
@@ -96,7 +97,7 @@ class OnboardProfile extends Component {
     const profile = pick(this.state, ['firstName', 'lastName', 'avatarUrl'])
 
     const content = loading ? (
-      <fbt desc="Loading...">Loading...</fbt>
+      <LoadingSpinner />
     ) : (
       <>
         <EditProfile

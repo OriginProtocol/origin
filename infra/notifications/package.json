@@ -26,7 +26,7 @@
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "dependencies": {
-    "@origin/growth": "^0.1.0",
+    "@origin/growth-event": "^0.1.0",
     "@origin/identity": "^0.1.0",
     "@sendgrid/mail": "^6.4.0",
     "apn": "^2.2.0",
@@ -44,8 +44,8 @@
     "sequelize": "^5.8.12",
     "sequelize-cli": "^5.5.0",
     "supertest": "^4.0.2",
-    "web3-utils": "1.0.0-beta.34",
-    "web-push": "^3.3.5"
+    "web-push": "^3.3.5",
+    "web3-utils": "1.0.0-beta.34"
   },
   "devDependencies": {
     "chai": "^4.2.0",

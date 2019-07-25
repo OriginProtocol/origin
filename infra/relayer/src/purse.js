@@ -369,6 +369,7 @@ class Purse {
       this.receiptCallbacks[txHash] = []
     }
 
+    metrics.txCounter.inc()
     // startTime creates a callback function that will record the time-to-mine
     const timerCb = metrics.txConfirmHisto.startTimer()
     this.receiptCallbacks[txHash].push(() => {

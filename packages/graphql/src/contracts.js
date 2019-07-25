@@ -167,7 +167,8 @@ export function setNetwork(net, customConfig) {
       echoEvery,
       breakdownEvery,
       maxConcurrent,
-      qps
+      qps,
+      ethGasStation: net === 'mainnet' ? true : false
     })
   } else if (!isBrowser) {
     // TODO: Allow for browser?

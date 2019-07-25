@@ -5,7 +5,7 @@ import Calendar from 'components/Calendar'
 import Modal from 'components/Modal'
 import MobileModal from 'components/MobileModal'
 
-import useIsMobile from 'utils/useMobile'
+import withIsMobile from 'hoc/withIsMobile'
 import DateRange from '../_DateRange'
 
 const FractionalNightlyDetail = ({
@@ -15,10 +15,9 @@ const FractionalNightlyDetail = ({
   listing,
   description,
   isOwnerViewing,
-  openCalendar
+  openCalendar,
+  isMobile
 }) => {
-  const isMobile = useIsMobile()
-
   const [selectedRange, setSelectedRange] = useState(null)
   const [closeModal, setCloseModal] = useState(false)
 
@@ -100,7 +99,7 @@ const FractionalNightlyDetail = ({
   )
 }
 
-export default FractionalNightlyDetail
+export default withIsMobile(FractionalNightlyDetail)
 
 require('react-styl')(`
   .availability-modal
