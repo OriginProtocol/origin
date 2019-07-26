@@ -126,6 +126,8 @@ class ApolloAdapter {
         }
         action = { ...action, ...listingInfo }
         break
+      case 'TwitterShare':
+        action.contents = data.contents
     }
 
     return action

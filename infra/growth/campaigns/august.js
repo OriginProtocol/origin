@@ -210,10 +210,10 @@ const augustConfig = {
                 post: {
                   text: {
                     default: '<insert english content>',
-                    translations: {
-                      'fr_FR': '<insert french content>',
-                      'zh_CN': '<insert mandarin content>'
-                    }
+                    translations: [
+                      { locale: 'fr_FR', text: '<insert french content>' },
+                      { locale: 'zh_CN', text: '<insert mandarin content>' }
+                    ]
                   }
                 }
               }
