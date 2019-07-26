@@ -18,7 +18,7 @@ faucetImageTag: '75ec001'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'e31fb8e'
+eventlistenerImageTag: '75ec001'
 
 # origin-discovery
 discoveryImage: origin-discovery
