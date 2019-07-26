@@ -133,6 +133,7 @@ class Purse {
     this.maxPendingPerAccount = maxPendingPerAccount
 
     this.ready = false
+    this.accountLookupInProgress = false
     this.masterKey = null
     this.masterWallet = null
 
@@ -274,33 +275,49 @@ class Purse {
      * children and their funds.  It is supposed to stop at the first one
      * without a tx history.
      */
-    do {
-      let totalPending = 0
-      let lowestPending = this.maxPendingPerAccount
-      for (const child of this.children) {
-        const childBal = stringToBN(await this.web3.eth.getBalance(child))
-        totalPending += this.accounts[child].pendingCount
-          ? this.accounts[child].pendingCount
-          : 0
-        if (
-          this.accounts[child].locked === null &&
-          this.accounts[child].pendingCount < lowestPending &&
-          childBal.gt(MIN_CHILD_BALANCE)
-        ) {
-          lowestPending = this.accounts[child].pendingCount
-          resolvedAccount = child
-          logger.debug(`selecting account ${child}`)
+    try {
+      do {
+        // We only want to be doing one lookup at a time
+        if (this.accountLookupInProgress) {
+          logger.debug('Waiting for lookup in progress to finish...')
+          continue
         }
-      }
+        this.accountLookupInProgress = true
 
-      if (resolvedAccount) {
-        this.accounts[resolvedAccount].locked = new Date()
-        break
-      } else {
-        logger.debug('waiting for an account to become available...')
-        logger.debug(`there are ${totalPending} total pending transactions`)
-      }
-    } while (await tick())
+        let totalPending = 0
+        let lowestPending = this.maxPendingPerAccount
+        for (const child of this.children) {
+          const childBal = stringToBN(await this.web3.eth.getBalance(child))
+          totalPending += this.accounts[child].pendingCount
+            ? this.accounts[child].pendingCount
+            : 0
+          if (
+            this.accounts[child].locked === null &&
+            this.accounts[child].pendingCount < lowestPending &&
+            childBal.gt(MIN_CHILD_BALANCE)
+          ) {
+            lowestPending = this.accounts[child].pendingCount
+            this.accounts[child].locked = new Date()
+            resolvedAccount = child
+            logger.debug(`selecting account ${child}`)
+          }
+        }
+
+        if (resolvedAccount) {
+          this.accounts[resolvedAccount].locked = new Date()
+          break
+        } else {
+          logger.debug('waiting for an account to become available...')
+          logger.debug(`there are ${totalPending} total pending transactions`)
+        }
+      } while (await tick())
+    } catch (err) {
+      logger.error('Unhandled error in getAvailableAccount()')
+      handleError(err)
+    }
+
+    // Unlock the lookup process
+    this.accountLookupInProgress = false
 
     return resolvedAccount
   }
