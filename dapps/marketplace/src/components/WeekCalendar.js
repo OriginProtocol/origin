@@ -190,8 +190,8 @@ class WeekCalendar extends Component {
             })
           }
 
-          let rangeStartDate = dayjs(startDate)
-          let selectedDate = dayjs(hour.hour)
+          const rangeStartDate = dayjs(startDate)
+          const selectedDate = dayjs(hour.hour)
 
           if (!endDate && selectedDate.isAfter(rangeStartDate)) {
             // Range and not a prior date
