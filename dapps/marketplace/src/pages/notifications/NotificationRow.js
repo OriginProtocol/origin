@@ -147,12 +147,11 @@ require('react-styl')(`
         overflow: hidden
         text-overflow: ellipsis
         font-size: 14px
-        color: dark
         a
           font-weight: 500
         .wallet
           font-size: 13px
-          color: #6f8294
+          color: dark
     > div:nth-child(3)
       color: var(--bluey-grey)
       font-size: 14px
