@@ -1,9 +1,9 @@
+const crypto = require('crypto')
 const Sequelize = require('sequelize')
 
 const _growthModels = require('../models')
 const _discoveryModels = require('@origin/discovery/src/models')
 const db = { ..._growthModels, ..._discoveryModels }
-const { flatMap } = require('../util/arrayUtils')
 
 const {
   GrowthEventTypes,
@@ -48,15 +48,13 @@ class CampaignRules {
     }
     this.numLevels = this.config.numLevels
 
+    this.allRules = [] // Flat list of rules.
     this.levels = {}
     for (let i = 0; i < this.config.numLevels; i++) {
       if (!this.config.levels[i]) {
         throw new Error(`Campaign ${this.campaign.id}: missing level ${i}`)
       }
       this.levels[i] = new Level(this, i, this.config.levels[i])
-      // we need to call this inside the loop, so the current level has access
-      // to the rules of the previous levels at constructor time
-      this.allRules = flatMap(level => level.rules, Object.values(this.levels))
     }
   }
 
@@ -253,9 +251,12 @@ class Level {
     this.id = levelId
     this.config = config
 
-    this.rules = config.rules.map(ruleConfig =>
-      ruleFactory(crules, levelId, ruleConfig)
-    )
+    this.rules = config.rules.map(ruleConfig => {
+      const rule = ruleFactory(crules, levelId, ruleConfig)
+      // Add the rule to the global list of rules.
+      this.crules.allRules.push(rule)
+      return rule
+    })
   }
 
   async qualifyForNextLevel(ethAddress, events) {
@@ -396,6 +397,23 @@ class BaseRule {
   }
 
   /**
+   * Helper function to add an event type to the eventTypes field of a rule.
+   * @param eventType
+   */
+  addEventType(eventType) {
+    // Check the eventType is valid.
+    if (!GrowthEventTypes.includes(eventType)) {
+      throw new Error(`${this.str()}: unknown eventType ${eventType}`)
+    }
+    // Add it to eventTypes.
+    if (!this.eventTypes) {
+      this.eventTypes = [eventType]
+    } else {
+      this.eventTypes.push(eventType)
+    }
+  }
+
+  /**
    * Returns the set of events to consider when evaluating the rule.
    *
    * @param {Array<models.GrowthEvent>} events - All events related to the user.
@@ -450,7 +468,10 @@ class BaseRule {
         )
       })
       .forEach(event => {
-        tally[event.type] = tally.hasOwnProperty(event.type)
+        tally[event.type] = Object.prototype.hasOwnProperty.call(
+          tally,
+          event.type
+        )
           ? tally[event.type] + 1
           : 1
       })
@@ -517,7 +538,6 @@ class BaseRule {
       }
     }
 
-    // Note:
     if (this.reward) {
       // Reward rule. Determine if the rule is Completed by calculating
       // if all rewards have been earned.
@@ -591,40 +611,41 @@ class BaseRule {
       listingId: this.listingId,
       iconSrc: this.iconSrc,
       titleKey: this.titleKey,
-      detailsKey: this.detailsKey
+      detailsKey: this.detailsKey,
+      // Fields specific to the SocialShare rule
+      contents: this.contents
     }
     return adapter.process(data)
   }
 }
 
 /**
- * A rule that requires 1 event.
+ * A rule that checks on a single event type.
  */
 class SingleEventRule extends BaseRule {
   constructor(crules, levelId, config) {
     super(crules, levelId, config)
-
-    const eventType = this.config.eventType
-    if (!eventType) {
-      throw new Error(`${this.str()}: missing eventType field`)
-    } else if (!GrowthEventTypes.includes(eventType)) {
-      throw new Error(`${this.str()}: unknown eventType ${eventType}`)
+    if (this.config.eventType) {
+      this.addEventType(this.config.eventType)
     }
-    this.eventTypes = [eventType]
   }
 
   /**
-   * Returns number of rewards user qualifies for, taking into account the rule's limit.
+   * Returns number of rewards the user qualifies for, taking into account the rule's limit.
    * @param {string} ethAddress - User's account.
    * @param {Array<models.GrowthEvent>} events
    * @returns {number}
    * @private
    */
   async _numRewards(ethAddress, events) {
-    const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
-
-    // SingleEventRule has at most 1 event in tally count.
-    return Object.keys(tally).length === 1
+    const tally = this._tallyEvents(
+      ethAddress,
+      this.eventTypes,
+      events,
+      // Filter using the customIDFilter function if it is defined.
+      this.customIdFilter ? customId => this.customIdFilter(customId) : null
+    )
+    return Object.keys(tally).length > 0
       ? Math.min(Object.values(tally)[0], this.limit)
       : 0
   }
@@ -636,15 +657,21 @@ class SingleEventRule extends BaseRule {
    * @returns {boolean}
    */
   async _evaluate(ethAddress, events) {
-    const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
-    return Object.keys(tally).length === 1 && Object.values(tally)[0] > 0
+    const tally = this._tallyEvents(
+      ethAddress,
+      this.eventTypes,
+      events,
+      // Filter using the customIDFilter function if it is defined.
+      this.customIdFilter ? customId => this.customIdFilter(customId) : null
+    )
+    return Object.keys(tally).length > 0 && Object.values(tally)[0] > 0
   }
 }
 
 /**
  * A rule that requires the purchase of a specific listing.
  */
-class ListingIdPurchaseRule extends BaseRule {
+class ListingIdPurchaseRule extends SingleEventRule {
   constructor(crules, levelId, config) {
     super(crules, levelId, config)
     if (!this.config.listingId) {
@@ -663,12 +690,7 @@ class ListingIdPurchaseRule extends BaseRule {
       throw new Error(`${this.str()}: missing detailsKey field`)
     }
     this.detailsKey = this.config.detailsKey
-
-    const eventType = 'ListingPurchased'
-    if (!GrowthEventTypes.includes(eventType)) {
-      throw new Error(`${this.str()}: unknown eventType ${eventType}`)
-    }
-    this.eventTypes = [eventType]
+    this.addEventType('ListingPurchased')
   }
 
   /**
@@ -689,43 +711,54 @@ class ListingIdPurchaseRule extends BaseRule {
         .join('-')
     )
   }
+}
 
-  /**
-   * Returns number of rewards the user qualifies for, taking into account the rule's limit.
-   * @param {string} ethAddress - User's account.
-   * @param {Array<models.GrowthEvent>} events
-   * @returns {number}
-   * @private
-   */
-  async _numRewards(ethAddress, events) {
-    // Note: we pass a custom function to filter based on listingId to _tallyEvents.
-    const tally = this._tallyEvents(
-      ethAddress,
-      this.eventTypes,
-      events,
-      customId => this.customIdFilter(customId)
-    )
-    return Object.keys(tally).length > 0
-      ? Math.min(Object.values(tally)[0], this.limit)
-      : 0
+/**
+ * A rule that rewards for sharing content on social networks
+ */
+class SocialShareRule extends SingleEventRule {
+  constructor(crules, levelId, config) {
+    super(crules, levelId, config)
+    if (!this.config.contents || !Array.isArray(this.config.contents)) {
+      throw new Error(`${this.str()}: missing or non-array contents field`)
+    }
+    this.contents = this.config.contents
+    // Compute the hashes for the post content, in all the configured languages.
+    this.contentHashes = []
+    for (const content of this.contents) {
+      this.contentHashes.push(this._hashContent(content.post.text.default))
+      for (const translation of Object.values(content.post.text.translations)) {
+        this.contentHashes.push(this._hashContent(translation.text))
+      }
+    }
   }
 
   /**
-   * Returns true if the rule passes, false otherwise.
-   * @param {string} ethAddress - User's account.
-   * @param {Array<models.GrowthEvent>} events
+   * Hashes content for verification of the user's post purposes.
+   *
+   * Important: Make sure to keep this hash function in sync with
+   * the one used in the bridge server.
+   * See infra/bridge/src/promotions.js
+   *
+   * @param text
+   * @returns {string} Hash of the text, hexadecimal encoded.
+   * @private
+   */
+  _hashContent(text) {
+    return crypto
+      .createHash('md5')
+      .update(text)
+      .digest('hex')
+  }
+  /**
+   * Returns true if the event's content hash (stored in customId) belongs to the
+   * set of hashes configured in the rule.
+   * @param {string} customId: hashed content of the post.
    * @returns {boolean}
    */
-  async _evaluate(ethAddress, events) {
-    // Note: we pass a custom function to filter based on listingId to _tallyEvents.
-    const tally = this._tallyEvents(
-      ethAddress,
-      this.eventTypes,
-      events,
-      customId => this.customIdFilter(customId)
-    )
-
-    return Object.keys(tally).length > 0 && Object.values(tally)[0] > 0
+  customIdFilter(customId) {
+    // Check the customId belongs to set of hashes configured in the rule.
+    return this.contentHashes.includes(customId)
   }
 }
 
@@ -740,12 +773,7 @@ class MultiEventsRule extends BaseRule {
     if (!this.config.eventTypes) {
       throw new Error(`${this.str()}: missing eventTypes field`)
     }
-    this.config.eventTypes.forEach(eventType => {
-      if (!GrowthEventTypes.includes(eventType)) {
-        throw new Error(`${this.str()}: unknown eventType ${eventType}`)
-      }
-    })
-    this.eventTypes = this.config.eventTypes
+    this.config.eventTypes.forEach(eventType => this.addEventType(eventType))
 
     if (
       !this.config.numEventsRequired ||
@@ -909,38 +937,6 @@ class ReferralRule extends BaseRule {
 
   async _numRewards(ethAddress) {
     return (await this.getRewards(ethAddress)).length
-  }
-}
-
-/**
- * A rule that measures the rewards for sharing on social networks
- */
-class SocialShareRule extends BaseRule {
-  constructor(crules, levelId, config) {
-    super(crules, levelId, config)
-  }
-
-  /**
-   * Returns number of rewards the user qualifies for, taking into account the rule's limit.
-   * @param {string} ethAddress - User's account.
-   * @param {Array<models.GrowthEvent>} events
-   * @returns {number}
-   * @private
-   */
-  async _numRewards() {
-    // TODO
-    return 0
-  }
-
-  /**
-   * Returns true if the rule passes, false otherwise.
-   * @param {string} ethAddress - User's account.
-   * @param {Array<models.GrowthEvent>} events
-   * @returns {boolean}
-   */
-  async _evaluate() {
-    // TODO
-    return true
   }
 }
 

@@ -11,7 +11,7 @@ const { tokenToNaturalUnits } = require('../src/util/token')
 
 function checkExpectedState(state, expectedState) {
   expect(state.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-  expect(state.actions.length).to.equal(14)
+  expect(state.actions.length).to.equal(15)
 
   const actionByRuleId = {}
   for(const action of state.actions) {
@@ -97,9 +97,9 @@ describe('Apollo adapter - August campaign', () => {
     expect(this.crules.levels[0]).to.be.an('object')
     expect(this.crules.levels[0].rules.length).to.equal(3)
     expect(this.crules.levels[1]).to.be.an('object')
-    expect(this.crules.levels[1].rules.length).to.equal(10)
+    expect(this.crules.levels[1].rules.length).to.equal(12)
     expect(this.crules.levels[2]).to.be.an('object')
-    expect(this.crules.levels[2].rules.length).to.equal(3) // TODO: adjust when adding new listings
+    expect(this.crules.levels[2].rules.length).to.equal(2) // TODO: adjust when adding new listings
 
     this.userA = '0xA123'
     this.userB = '0xB456'
@@ -166,25 +166,25 @@ describe('Apollo adapter - August campaign', () => {
         type: 'LinkedIn',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(10), currency: 'OGN' }
       },
       GitHubAttestation: {
         type: 'GitHub',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(10), currency: 'OGN' }
       },
       KakaoAttestation: {
         type: 'Kakao',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(10), currency: 'OGN' }
       },
       WebsiteAttestation: {
         type: 'Website',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(25), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(10), currency: 'OGN' }
       },
       Referral: {
         type: 'Referral',
@@ -200,6 +200,12 @@ describe('Apollo adapter - August campaign', () => {
       },
       TwitterShare: {
         type: 'TwitterShare',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(1), currency: 'OGN' }
+      },
+      TwitterFollow: {
+        type: 'TwitterFollow',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenToNaturalUnits(1), currency: 'OGN' }
@@ -306,14 +312,14 @@ describe('Apollo adapter - August campaign', () => {
       this.mockAdapter
     )
 
-    this.expectedState.rewardEarned = { amount: '50000000000000000000', currency: 'OGN' }
+    this.expectedState.rewardEarned = { amount: '20000000000000000000', currency: 'OGN' }
 
     // Attestation should be completed.
     this.expectedState.LinkedInAttestation.status = 'Completed'
-    this.expectedState.LinkedInAttestation.rewardEarned = { amount: '25000000000000000000', currency: 'OGN' }
+    this.expectedState.LinkedInAttestation.rewardEarned = { amount: '10000000000000000000', currency: 'OGN' }
 
     this.expectedState.KakaoAttestation.status = 'Completed'
-    this.expectedState.KakaoAttestation.rewardEarned = { amount: '25000000000000000000', currency: 'OGN' }
+    this.expectedState.KakaoAttestation.rewardEarned = { amount: '10000000000000000000', currency: 'OGN' }
 
     // Level 2 should be unlocked.
     this.expectedState.Referral.status = 'Active'
@@ -366,7 +372,7 @@ describe('Apollo adapter - August campaign', () => {
       this.mockAdapter
     )
 
-    this.expectedState.rewardEarned = { amount: '60000000000000000000', currency: 'OGN' }
+    this.expectedState.rewardEarned = { amount: '30000000000000000000', currency: 'OGN' }
     this.expectedState.AirbnbAttestation.status = 'Completed'
     this.expectedState.AirbnbAttestation.rewardEarned = { amount: '10000000000000000000', currency: 'OGN' }
 
@@ -413,7 +419,7 @@ describe('Apollo adapter - August campaign', () => {
       this.mockAdapter
     )
 
-    this.expectedState.rewardEarned = { amount: '110000000000000000000', currency: 'OGN' }
+    this.expectedState.rewardEarned = { amount: '80000000000000000000', currency: 'OGN' }
     // User should earn a referral reward.
     this.expectedState.Referral.rewardEarned = { amount: '50000000000000000000', currency: 'OGN' }
 
@@ -485,7 +491,7 @@ describe('Apollo adapter - August campaign', () => {
       this.mockAdapter
     )
 
-    this.expectedState.rewardEarned = { amount: '260000000000000000000', currency: 'OGN' }
+    this.expectedState.rewardEarned = { amount: '230000000000000000000', currency: 'OGN' }
     this.expectedState.MobileAccountCreated.status = 'Completed'
     this.expectedState.MobileAccountCreated.rewardEarned = { amount: '150000000000000000000', currency: 'OGN' }
 
@@ -533,7 +539,7 @@ describe('Apollo adapter - August campaign', () => {
     })
   })
 
-  it(`It should unlock TwitterShare if Twitter attestation is present`, async () => {
+  it(`It should unlock TwitterShare and TwitterFollow if Twitter attestation is present`, async () => {
     this.events.push(...[
       // twitter attestation published
       {
@@ -552,10 +558,36 @@ describe('Apollo adapter - August campaign', () => {
       this.mockAdapter
     )
 
-    this.expectedState.rewardEarned = { amount: '270000000000000000000', currency: 'OGN' }
+    // Check the user got rewarded for completing the Twitter attestation.
+    this.expectedState.rewardEarned = { amount: '240000000000000000000', currency: 'OGN' }
     this.expectedState.TwitterAttestation.status = 'Completed'
     this.expectedState.TwitterAttestation.rewardEarned = { amount: tokenToNaturalUnits(10), currency: 'OGN' }
+
+    // Check Twitter Share/Follow got unlocked.
     this.expectedState.TwitterShare.status = 'Active'
+    this.expectedState.TwitterFollow.status = 'Active'
+
+    // Find the TwitterShare action and check it includes expected fields.
+    let twitterShareAction
+    for (const action of state.actions) {
+      if (action.type === 'TwitterShare') {
+        twitterShareAction = action
+        break
+      }
+    }
+    expect(twitterShareAction).to.be.an('object')
+    expect(twitterShareAction.contents).to.be.an('array')
+    expect(twitterShareAction.contents.length).to.equal(1) // Update if adding more content items.
+    for (const content of twitterShareAction.contents) {
+      expect(content.titleKey).to.be.a('string')
+      expect(content.link).to.be.a('string')
+      expect(content.linkKey).to.be.a('string')
+      expect(content.titleKey).to.be.a('string')
+      expect(content.post).to.be.an('object')
+      expect(content.post.text).to.be.an('object')
+      expect(content.post.text.default).to.be.a('string')
+      expect(content.post.text.translations).to.be.an('array')
+    }
 
     checkExpectedState(state, this.expectedState)
   })
