@@ -136,7 +136,7 @@ const augustConfig = {
           config: {
             eventType: 'GitHubAttestationPublished',
             reward: {
-              amount: tokenToNaturalUnits(25),
+              amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
             limit: 1,
@@ -152,7 +152,7 @@ const augustConfig = {
           config: {
             eventType: 'LinkedInAttestationPublished',
             reward: {
-              amount: tokenToNaturalUnits(25),
+              amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
             limit: 1,
@@ -168,7 +168,7 @@ const augustConfig = {
           config: {
             eventType: 'KakaoAttestationPublished',
             reward: {
-              amount: tokenToNaturalUnits(25),
+              amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
             limit: 1,
@@ -183,6 +183,39 @@ const augustConfig = {
           class: 'SingleEvent',
           config: {
             eventType: 'WebsiteAttestationPublished',
+            reward: {
+              amount: tokenToNaturalUnits(10),
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterShare',
+          class: 'SocialShare',
+          config: {
+            additionalLockConditions: ['TwitterAttestation'],
+            contentHashes: ['Hash1', 'Hash2', 'Hash3', 'Hash4', 'Hash5'],
+            reward: {
+              amount: tokenToNaturalUnits(1),
+              currency: 'OGN'
+            },
+            limit: 5,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterFollow',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'FollowedOnTwitter',
             reward: {
               amount: tokenToNaturalUnits(25),
               currency: 'OGN'
@@ -252,22 +285,6 @@ const augustConfig = {
               currency: 'OGN'
             },
             limit: 1,
-            visible: true,
-            nextLevelCondition: false,
-            scope: 'campaign',
-            statusScope: 'user'
-          }
-        },
-        {
-          id: 'TwitterShare',
-          class: 'SocialShare',
-          config: {
-            additionalLockConditions: ['TwitterAttestation'],
-            reward: {
-              amount: tokenToNaturalUnits(1),
-              currency: 'OGN'
-            },
-            limit: 100,
             visible: true,
             nextLevelCondition: false,
             scope: 'campaign',
