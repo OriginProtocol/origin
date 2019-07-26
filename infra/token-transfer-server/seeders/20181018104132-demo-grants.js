@@ -5,6 +5,7 @@ module.exports = {
   up: (queryInterface) => {
     queryInterface.bulkInsert('t3_user', [
       {
+        id: 1,
         email: 'foo@originprotocol.com',
         created_at: new Date(),
         updated_at: new Date()
@@ -59,6 +60,6 @@ module.exports = {
 
   down: (queryInterface) => {
     queryInterface.bulkDelete('t3_user', null, {})
-    return queryInterface.bulkDelete('Grants', null, {})
+    return queryInterface.bulkDelete('Grant', null, {})
   }
 }
