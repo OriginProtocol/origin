@@ -32,7 +32,8 @@ const ruleIdToActionType = {
   ListingPurchaseInfluencer: 'ListingIdPurchased',
   ListingPurchaseArt: 'ListingIdPurchased',
   MobileAccountCreated: 'MobileAccountCreated',
-  TwitterShare: 'TwitterShare'
+  TwitterShare: 'TwitterShare',
+  TwitterFollow: 'TwitterFollow'
 }
 
 /**
@@ -124,6 +125,9 @@ class ApolloAdapter {
           detailsKey: data.detailsKey
         }
         action = { ...action, ...listingInfo }
+        break
+      case 'TwitterShare':
+        action.contents = data.contents
         break
     }
 
