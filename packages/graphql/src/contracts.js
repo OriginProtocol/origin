@@ -168,7 +168,7 @@ export function setNetwork(net, customConfig) {
       breakdownEvery,
       maxConcurrent,
       qps,
-      ethGasStation: net === 'mainnet' ? true : false
+      ethGasStation: ['mainnet', 'rinkeby'].indexOf(net) > -1 ? true : false
     })
   } else if (!isBrowser) {
     // TODO: Allow for browser?
