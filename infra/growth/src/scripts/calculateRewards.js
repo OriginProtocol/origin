@@ -246,7 +246,7 @@ const config = {
 logger.info('Config:')
 logger.info(config)
 
-const token = new Token({})
+const token = new Token(1, null)
 const job = new CalculateRewards(config, token)
 
 job
