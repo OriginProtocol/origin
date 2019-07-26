@@ -159,7 +159,7 @@ describe('August campaign rules', () => {
         ruleId: 'KakaoAttestation',
         value: {
           currency: 'OGN',
-          amount: tokenToNaturalUnits(25)
+          amount: tokenToNaturalUnits(10)
         }
       },
       {
@@ -168,7 +168,7 @@ describe('August campaign rules', () => {
         ruleId: 'WebsiteAttestation',
         value: {
           currency: 'OGN',
-          amount: tokenToNaturalUnits(25)
+          amount: tokenToNaturalUnits(10)
         }
       }
     ])
