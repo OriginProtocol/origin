@@ -266,6 +266,17 @@ class Purse {
   async getAvailableAccount() {
     let resolvedAccount = null
 
+    do {
+      // We only want to be doing one lookup at a time
+      if (this.accountLookupInProgress) {
+        logger.debug('Waiting for lookup in progress to finish...')
+        continue
+      } else {
+        this.accountLookupInProgress = true
+        break
+      }
+    } while (await tick())
+
     /**
      * Select the account with the lowest pending that's under the max allowed
      * pending transactions.  If none vailable, twiddle our thumbs until one
@@ -277,13 +288,6 @@ class Purse {
      */
     try {
       do {
-        // We only want to be doing one lookup at a time
-        if (this.accountLookupInProgress) {
-          logger.debug('Waiting for lookup in progress to finish...')
-          continue
-        }
-        this.accountLookupInProgress = true
-
         let totalPending = 0
         let lowestPending = this.maxPendingPerAccount
         for (const child of this.children) {
