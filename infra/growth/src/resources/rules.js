@@ -3,7 +3,6 @@ const Sequelize = require('sequelize')
 const _growthModels = require('../models')
 const _discoveryModels = require('@origin/discovery/src/models')
 const db = { ..._growthModels, ..._discoveryModels }
-const { flatMap } = require('../util/arrayUtils')
 
 const {
   GrowthEventTypes,
@@ -252,12 +251,11 @@ class Level {
     this.config = config
 
     this.rules = config.rules.map(ruleConfig => {
-        const rule = ruleFactory(crules, levelId, ruleConfig)
-        // Add the rule to the global list of rules.
-        this.crules.allRules.push(rule)
-        return rule
-      }
-    )
+      const rule = ruleFactory(crules, levelId, ruleConfig)
+      // Add the rule to the global list of rules.
+      this.crules.allRules.push(rule)
+      return rule
+    })
   }
 
   async qualifyForNextLevel(ethAddress, events) {
@@ -469,7 +467,10 @@ class BaseRule {
         )
       })
       .forEach(event => {
-        tally[event.type] = tally.hasOwnProperty(event.type)
+        tally[event.type] = Object.prototype.hasOwnProperty.call(
+          tally,
+          event.type
+        )
           ? tally[event.type] + 1
           : 1
       })
@@ -715,8 +716,10 @@ class ListingIdPurchaseRule extends SingleEventRule {
 class SocialShareRule extends SingleEventRule {
   constructor(crules, levelId, config) {
     super(crules, levelId, config)
-    this.addEventType('SharedOnTwitter')
-    if (!this.config.contentHashes || !Array.isArray(this.config.contentHashes)) {
+    if (
+      !this.config.contentHashes ||
+      !Array.isArray(this.config.contentHashes)
+    ) {
       throw new Error(`${this.str()}: missing or non-array contentHashes field`)
     }
     this.contentHashes = this.config.contentHashes

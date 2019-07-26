@@ -539,7 +539,7 @@ describe('Apollo adapter - August campaign', () => {
     })
   })
 
-  it(`It should unlock TwitterShare if Twitter attestation is present`, async () => {
+  it(`It should unlock TwitterShare and TwitterFollow if Twitter attestation is present`, async () => {
     this.events.push(...[
       // twitter attestation published
       {
@@ -561,7 +561,9 @@ describe('Apollo adapter - August campaign', () => {
     this.expectedState.rewardEarned = { amount: '240000000000000000000', currency: 'OGN' }
     this.expectedState.TwitterAttestation.status = 'Completed'
     this.expectedState.TwitterAttestation.rewardEarned = { amount: tokenToNaturalUnits(10), currency: 'OGN' }
+
     this.expectedState.TwitterShare.status = 'Active'
+    this.expectedState.TwitterFollow.status = 'Active'
 
     checkExpectedState(state, this.expectedState)
   })

@@ -198,6 +198,7 @@ const augustConfig = {
           id: 'TwitterShare',
           class: 'SocialShare',
           config: {
+            eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
             contentHashes: ['Hash1', 'Hash2', 'Hash3', 'Hash4', 'Hash5'],
             reward: {
@@ -216,8 +217,9 @@ const augustConfig = {
           class: 'SingleEvent',
           config: {
             eventType: 'FollowedOnTwitter',
+            additionalLockConditions: ['TwitterAttestation'],
             reward: {
-              amount: tokenToNaturalUnits(25),
+              amount: tokenToNaturalUnits(1),
               currency: 'OGN'
             },
             limit: 1,
