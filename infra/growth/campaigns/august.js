@@ -200,7 +200,24 @@ const augustConfig = {
           config: {
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
-            contentHashes: ['Hash1', 'Hash2', 'Hash3', 'Hash4', 'Hash5'],
+            contents: [
+              {
+                titleKey: 'growth.twitterShare.content1.title',
+                detailsKey: 'growth.twitterShare.content1.details',
+                image: 'images/growth/twitter-share-content1.png',
+                link: 'https://www.youtube.com/watch?v=VzLkShX9-VE',
+                linkKey: 'growth.twitterShare.content1.link',
+                post: {
+                  text: {
+                    default: '<insert english content>',
+                    translations: {
+                      'fr_FR': '<insert french content>',
+                      'zh_CN': '<insert mandarin content>'
+                    }
+                  }
+                }
+              }
+            ],
             reward: {
               amount: tokenToNaturalUnits(1),
               currency: 'OGN'

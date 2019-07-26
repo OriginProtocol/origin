@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 const Sequelize = require('sequelize')
 
 const _growthModels = require('../models')
@@ -716,15 +717,36 @@ class ListingIdPurchaseRule extends SingleEventRule {
 class SocialShareRule extends SingleEventRule {
   constructor(crules, levelId, config) {
     super(crules, levelId, config)
-    if (
-      !this.config.contentHashes ||
-      !Array.isArray(this.config.contentHashes)
-    ) {
-      throw new Error(`${this.str()}: missing or non-array contentHashes field`)
+    if (!this.config.contents || !Array.isArray(this.config.contents)) {
+      throw new Error(`${this.str()}: missing or non-array contents field`)
     }
-    this.contentHashes = this.config.contentHashes
+    // Compute the hashes for the post content, in all the configured languages.
+    this.contentHashes = []
+    for (const content of this.config.contents) {
+      this.contentHashes.push(this._hashContent(content.post.text.default))
+      for (const translation of Object.values(content.post.text.translations)) {
+        this.contentHashes.push(this._hashContent(translation))
+      }
+    }
   }
 
+  /**
+   * Hashes content for verification of the user's post purposes.
+   *
+   * Important: Make sure to keep this hash function in sync with
+   * the one used in the bridge server.
+   * See infra/bridge/src/promotions.js
+   *
+   * @param text
+   * @returns {string} Hash of the text, hexadecimal encoded.
+   * @private
+   */
+  _hashContent(text) {
+    return crypto
+      .createHash('md5')
+      .update(text)
+      .digest('hex')
+  }
   /**
    * Returns true if the event's content hash (stored in customId) belongs to the
    * set of hashes configured in the rule.
