@@ -128,6 +128,7 @@ class ApolloAdapter {
         break
       case 'TwitterShare':
         action.contents = data.contents
+        break
     }
 
     return action

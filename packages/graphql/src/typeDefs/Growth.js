@@ -145,16 +145,16 @@ module.exports = `
     text: String!
   }
 
-  type TextTranslation {
+  type TranslatedText {
     default: String! # Default translation. Typically in english.
     translations: [ LocaleTextPair ]
   }
 
   type Post {
-    text: Translation!
+    text: TranslatedText!
   }
 
-  type ShareableContent {
+  type SocialContent {
     titleKey: String!,
     detailsKey: String!,
     image: String!
@@ -163,13 +163,13 @@ module.exports = `
     post: Post!
   }
 
-  type SocialShare implements GrowthBaseAction {
+  type SocialShareAction implements GrowthBaseAction {
     type: GrowthActionType!
     status: GrowthActionStatus
     rewardEarned: GrowthPrice
     reward: GrowthPrice
     unlockConditions: [UnlockCondition]
-    contents: [ShareableContent]
+    contents: [SocialContent]
   }
 
   type GrowthCampaign {
