@@ -558,12 +558,36 @@ describe('Apollo adapter - August campaign', () => {
       this.mockAdapter
     )
 
+    // Check the user got rewarded for completing the Twitter attestation.
     this.expectedState.rewardEarned = { amount: '240000000000000000000', currency: 'OGN' }
     this.expectedState.TwitterAttestation.status = 'Completed'
     this.expectedState.TwitterAttestation.rewardEarned = { amount: tokenToNaturalUnits(10), currency: 'OGN' }
 
+    // Check Twitter Share/Follow got unlocked.
     this.expectedState.TwitterShare.status = 'Active'
     this.expectedState.TwitterFollow.status = 'Active'
+
+    // Find the TwitterShare action and check it includes expected fields.
+    let twitterShareAction
+    for (const action of state.actions) {
+      if (action.type === 'TwitterShare') {
+        twitterShareAction = action
+        break
+      }
+    }
+    expect(twitterShareAction).to.be.an('object')
+    expect(twitterShareAction.contents).to.be.an('array')
+    expect(twitterShareAction.contents.length).to.equal(1) // Update if adding more content items.
+    for (const content of twitterShareAction.contents) {
+      expect(content.titleKey).to.be.a('string')
+      expect(content.link).to.be.a('string')
+      expect(content.linkKey).to.be.a('string')
+      expect(content.titleKey).to.be.a('string')
+      expect(content.post).to.be.an('object')
+      expect(content.post.text).to.be.an('object')
+      expect(content.post.text.default).to.be.a('string')
+      expect(content.post.text.translations).to.be.an('array')
+    }
 
     checkExpectedState(state, this.expectedState)
   })
