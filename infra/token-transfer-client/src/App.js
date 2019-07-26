@@ -1,37 +1,53 @@
 import React from 'react'
-import './App.css'
-
-// Blueprint CSS imports
-import 'normalize.css/normalize.css'
-import '@blueprintjs/icons/lib/css/blueprint-icons.css'
-import '@blueprintjs/core/lib/css/blueprint.css'
+import './css/app.css'
 
 import { Provider } from 'react-redux'
 import store from './store'
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-import Events from './components/Events'
-import Grants from './components/Grants'
-import Login from './components/Login'
-
-function redirectToGrants() {
-  return <Redirect to="/grants" />
-}
+import AccountActions from './components/AccountActions'
+import Navigation from './components/Navigation'
+import Dashboard from './components/pages/Dashboard'
+import News from './components/pages/News'
+import History from './components/pages/History'
+import Security from './components/pages/Security'
 
 function App() {
-  // TODO: use SSL
   return (
     <Provider store={store}>
       <Router>
-        <div>
-          <Route path="/login" component={Login} />
-          <Route path="/grants" component={Grants} />
-          <Route path="/events" component={Events} />
-          <Route path="/" exact={true} component={redirectToGrants} />
-        </div>
+        <>
+          <div className="container-fluid">
+            <div className="row">
+              <div className="sidebar">
+                <Navigation />
+              </div>
+              <div className="col body">
+                <AccountActions />
+                <Route path="/" exact={true} component={Dashboard} />
+                <Route path="/news" component={News} />
+                <Route path="/history" component={History} />
+                <Route path="/security" component={Security} />
+              </div>
+            </div>
+          </div>
+        </>
       </Router>
     </Provider>
   )
 }
 
 export default App
+
+require('react-styl')(`
+  #root
+    background-color: #f7fbfd
+  .container-fluid
+    height: 100%
+  .row
+    height: 100%
+  .sidebar
+    width: 260px
+  .body
+    padding: 70px
+`)

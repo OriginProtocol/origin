@@ -1,0 +1,38 @@
+@import '~bootstrap/dist/css/bootstrap.css';
+@import '~typeface-lato';
+@import '~typeface-poppins';
+@import 'bootstrap.css';
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+}
+
+body {
+  color: var(--dark);
+  font-family: var(--default-font);
+  font-size: 1.125rem;
+  height: 100%;
+  line-height: 1.5;
+  background-color: white;
+  height: 100%;
+  font-family: 'Lato'
+}
+
+#root {
+  height: 100%;
+}
+
+h1 {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.btn.btn-lg {
+  border-radius: 2rem;
+  padding: 0.75rem 2rem;
+  min-width: 10rem;
+  font-size: 18px;
+}
