@@ -53,6 +53,8 @@ class EthGasStationProvider extends SubProvider {
           // Send to next subprovider
           return next()
         })
+    } else {
+      return next()
     }
   }
 }
