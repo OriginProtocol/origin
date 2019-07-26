@@ -203,6 +203,12 @@ describe('Apollo adapter - August campaign', () => {
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenToNaturalUnits(1), currency: 'OGN' }
+      },
+      TwitterFollow: {
+        type: 'TwitterFollow',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(1), currency: 'OGN' }
       }
     }
 
