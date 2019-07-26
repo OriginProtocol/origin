@@ -16,6 +16,8 @@ class Enum extends Array {
 const TransferStatuses = new Enum(
   // Transfer requested by user.
   'Enqueued',
+  // Request paused. For example for Origin staff to review the transfer before its exection.
+  'Paused',
   // Transfer transaction sent to the network. Waiting for confirmation.
   'WaitingConfirmation',
   // Transfer successfully executed by the network.

@@ -54,7 +54,7 @@ async function runApp(config) {
   app.use(express.static(__dirname + '/../public'))
 
   // Register the /tokens route for distributing tokens.
-  const ognDistributor = new OgnDistributor(config)
+  const ognDistributor = new OgnDistributor(config.networkId)
   app.get('/tokens', ognDistributor.process)
 
   // Register the /eth route for distributing Eth.

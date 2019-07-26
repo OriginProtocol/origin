@@ -8,12 +8,18 @@ const NUM_TOKENS = 100
 
 // Number of block confirmations required for a transfer to be consider completed.
 const NumBlockConfirmation = 1
-// Wait up to 2min for a transaction to get confirmed
-const ConfirmationTimeoutSec = 20 * 60
+// Wait up to 2 min for a transaction to get confirmed
+const ConfirmationTimeoutSec = 2 * 60
 
+// Basic class for distributing OGN.
+// TODO:
+//  - Add support for concurrent requests. As is, if N requests are issued,
+//  the same nonce would get used for all of them and only a single transaction
+//  would succeed, the other N-1 transactions would get rejected due to using duplicate nonce.
+//  - Hardening: handle case where token.waitForTxConfirmation returns an error o times out.
 class OgnDistributor {
-  constructor(config) {
-    this.token = new Token(config)
+  constructor(networkId) {
+    this.token = new Token(networkId)
 
     // Needed to use the process method as a route in Express.
     this.process = this.process.bind(this)
