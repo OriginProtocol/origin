@@ -11,7 +11,7 @@ const { tokenToNaturalUnits } = require('../src/util/token')
 
 function checkExpectedState(state, expectedState) {
   expect(state.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-  expect(state.actions.length).to.equal(15)
+  expect(state.actions.length).to.equal(31)
 
   const actionByRuleId = {}
   for(const action of state.actions) {
@@ -99,7 +99,7 @@ describe('Apollo adapter - August campaign', () => {
     expect(this.crules.levels[1]).to.be.an('object')
     expect(this.crules.levels[1].rules.length).to.equal(12)
     expect(this.crules.levels[2]).to.be.an('object')
-    expect(this.crules.levels[2].rules.length).to.equal(2) // TODO: adjust when adding new listings
+    expect(this.crules.levels[2].rules.length).to.equal(18) // TODO: adjust when adding new listings
 
     this.userA = '0xA123'
     this.userB = '0xB456'
@@ -209,6 +209,102 @@ describe('Apollo adapter - August campaign', () => {
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenToNaturalUnits(1), currency: 'OGN' }
+      },
+      'ListingPurchase1-000-2991': {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(80), currency: 'OGN' }
+      },
+      'ListingPurchase1-000-2959': {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(80), currency: 'OGN' }
+      },
+      'ListingPurchase1-000-2871': {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(80), currency: 'OGN' }
+      },
+      'ListingPurchase1-000-2854': {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(130), currency: 'OGN' }
+      },
+      'ListingPurchase1-000-2783': {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(200), currency: 'OGN' }
+      },
+      'ListingPurchase1-000-2782': {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(500), currency: 'OGN' }
+      },
+      'ListingPurchase1-000-2769': {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(50), currency: 'OGN' }
+      },
+      'ListingPurchase1-000-2760': {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(90), currency: 'OGN' }
+      },
+      'ListingPurchase1-000-2781': {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(200), currency: 'OGN' }
+      },
+      'ListingPurchase1-000-2699': {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(350), currency: 'OGN' }
+      },
+      'ListingPurchase1-000-2912': {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(75), currency: 'OGN' }
+      },
+      'ListingPurchase1-000-2892': {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(75), currency: 'OGN' }
+      },
+      'ListingPurchase1-000-292': {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(700), currency: 'OGN' }
+      },
+      'ListingPurchase1-000-60': {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(600), currency: 'OGN' }
+      },
+      'ListingPurchase1-000-2877': {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(700), currency: 'OGN' }
+      },
+      'ListingPurchase1-000-2999': {
+        type: 'ListingIdPurchased',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(40), currency: 'OGN' }
       }
     }
 

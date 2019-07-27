@@ -51,7 +51,7 @@ class ApolloAdapter {
     let actionType
     // Test if it matches format "ListingPurchase<listingId>"
     // otherwise use the ruleIdToActionType dictionary.
-    if (ruleId.match(/^ListingPurchase\d+$/)) {
+    if (ruleId.match(/^ListingPurchase[\d-]+$/)) {
       actionType = 'ListingIdPurchased'
     } else {
       actionType = ruleIdToActionType[ruleId]

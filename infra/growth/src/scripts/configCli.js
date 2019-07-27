@@ -14,17 +14,16 @@ const contentTypeToExtension = {
   'image/png': 'png'
 }
 
-
 class ConfigCli {
   constructor(config) {
     this.config = config
     this.listingIds = this.config.listingIds.trim().split(',')
     this.stats = {
-      numListings: 0,
+      numListings: 0
     }
   }
 
-  async _fetchListingImage(listingId) {
+  async _downloadImage(listingId) {
     // Query graphql server to get the URLs for the listing images.
     logger.info(`Querying graphql server for listing ${listingId}`)
     const query = `
@@ -67,14 +66,47 @@ class ConfigCli {
       throw new Error(`Unexpected content type ${contentType}`)
     }
     const imageBinary = await response.buffer()
-    const destPath = this.config.imagesPath + `/img-${listingId}.${extension}`
+    const destPath =
+      this.config.imagesPath + `/listing-${listingId}.${extension}`
     logger.info(`Saving image to ${destPath}`)
     fs.writeFileSync(destPath, imageBinary)
   }
 
-  async fetchListingsImage() {
+  async downloadImages() {
+    logger.info(
+      `Going to fetch images for a total of ${this.listingIds.length} listings...`
+    )
     for (const listingId of this.listingIds) {
       await this._fetchListingImage(listingId)
+    }
+  }
+
+  _generateRule(listingId) {
+    const rule = `        {
+          id: 'ListingPurchase${listingId}',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '${listingId}',
+            reward: {
+              amount: tokenToNaturalUnits(75),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-${listingId}-icon.png',
+            titleKey: 'growth.purchase.listing-${listingId}.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },`
+    console.log(rule)
+  }
+
+  generateRules() {
+    for (const listingId of this.listingIds) {
+      this._generateRule(listingId)
     }
   }
 }
@@ -89,24 +121,33 @@ const args = parseArgv()
 const config = {
   // Listing ids, comma separated.
   listingIds: args['--listingIds'],
+  // Action: downloadImages, generateRules
+  action: args['--action'],
   // Path to store listings images.
   imagesPath: args['--imagesPath']
 }
 logger.info('Config:')
 logger.info(config)
 
-
-
 // Initialize the job and start it.
 const cli = new ConfigCli(config)
-cli.fetchListingsImage()
-  .then(() => {
-    logger.info('Finished')
-    process.exit()
-  })
-  .catch(err => {
-    logger.error('Error: ', err)
-    logger.error('Exiting')
-    process.exit(-1)
-  })
-
+switch (config.action) {
+  case 'downloadImages':
+    cli
+      .downloadImages()
+      .then(() => {
+        logger.info('Finished')
+        process.exit()
+      })
+      .catch(err => {
+        logger.error('Error: ', err)
+        logger.error('Exiting')
+        process.exit(-1)
+      })
+    break
+  case 'generateRules':
+    cli.generateRules()
+    break
+  default:
+    logger.error('Unexpected action', config.action)
+}
