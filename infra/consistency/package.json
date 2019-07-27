@@ -1,0 +1,20 @@
+{
+  "name": "consistency",
+  "version": "0.1.0",
+  "description": "Database consistency checker",
+  "private": true,
+  "main": "src/index.js",
+  "bin": {
+    "origin-check": "src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@origin/discovery": "^0.1.0",
+    "@origin/graphql": "^0.1.0",
+    "@origin/identity": "^0.1.0",
+    "logplease": "^1.2.15"
+  }
+}

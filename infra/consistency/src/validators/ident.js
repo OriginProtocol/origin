@@ -5,7 +5,7 @@ const db = {
   ...require('@origin/identity/src/models')
 }
 
-const log = require('../../logger')
+const { log } = require('../logger')
 
 const { assert, getListenerBlock, getPastEvents } = require('./utils')
 
