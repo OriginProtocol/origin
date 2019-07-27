@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react'
 import { fbt } from 'fbt-runtime'
 import { Link } from 'react-router-dom'
 import { formatTokens } from 'utils/growthTools'
+import get from 'lodash/get'
 
 const GrowthEnum = require('Growth$FbtEnum')
 
@@ -101,8 +102,9 @@ function Action(props) {
     buttonLink = undefined
     foregroundImgSrc = 'images/growth/twitter-icon.svg'
     title = fbt('Tweet', 'RewardActions.tweetThis')
+    // TODO: Handle translation
     externalLink = `https://twitter.com/intent/tweet?status=${encodeURIComponent(
-      'Let me have my reward @OriginProtocol'
+      get(props.action, 'contents[0].post.text.default')
     )}`
   } else if (type === 'TwitterFollow') {
     buttonLink = undefined

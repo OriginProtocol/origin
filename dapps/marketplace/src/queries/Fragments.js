@@ -249,6 +249,24 @@ export default {
               }
             }
           }
+          ... on SocialShareAction {
+            contents {
+              titleKey
+              detailsKey
+              image
+              link
+              linkKey
+              post {
+                text {
+                  default
+                  translations {
+                    locale
+                    text
+                  }
+                }
+              }
+            }
+          }
         }
         rewardEarned {
           amount

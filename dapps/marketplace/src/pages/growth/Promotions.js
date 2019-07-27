@@ -11,109 +11,227 @@ import { Mutation } from 'react-apollo'
 import VerifyPromotionMutation from 'mutations/VerifyPromotion'
 import AutoMutate from 'components/AutoMutate'
 
-function Promotions(props) {
-  const [mutationProps, setMutationProps] = useState(false)
+import ToastNotification from 'pages/user/ToastNotification'
+import { formatTokens } from 'utils/growthTools'
 
-  const {
-    decimalDivision,
-    isMobile,
-    completedPromotionActions,
-    notCompletedPromotionActions
-  } = props
-
-  return (
-    <Mutation
-      mutation={VerifyPromotionMutation}
-      onCompleted={() => setMutationProps(false)}
-    >
-      {verifyPromotion => (
-        <Fragment>
-          {mutationProps ? (
-            <AutoMutate
-              mutation={() => {
-                verifyPromotion(mutationProps)
-              }}
-            />
-          ) : null}
-          {isMobile && (
-            <MobileModalHeader
-              showBackButton={true}
-              className="px-0"
-              onBack={() => {
-                props.history.push('/campaigns')
-              }}
-            >
-              <fbt desc="GrowthPromotions.promotions">Promotions</fbt>
-            </MobileModalHeader>
-          )}
-          <div className={`growth-promotions ${isMobile ? 'mobile' : ''}`}>
-            <div>
-              {!isMobile && (
-                <Fragment>
-                  <Link className="back d-flex mr-auto" to="/campaigns">
-                    <img src="images/caret-blue.svg" />
-                    <div>
-                      <fbt desc="GrowthPromotions.backToCampaign">
-                        Back to Campaign
-                      </fbt>
-                    </div>
-                  </Link>
-                  <h1 className={`mb-2 pt-md-3 mt-3`}>
-                    <fbt desc="GrowthPromotions.promotions">Promotions</fbt>
-                  </h1>
-                </Fragment>
-              )}
-              <div
-                className={`promotions-subtitle ${
-                  isMobile ? 'text-center' : ''
-                }`}
-              >
-                <fbt desc="GrowthPromotions.strenghtenToEarnTokens">
-                  Strengthen your profile and earn Origin Tokens by completing
-                  promotions.
-                </fbt>
-              </div>
-            </div>
-
-            <ActionList
-              decimalDivision={decimalDivision}
-              isMobile={isMobile}
-              actions={notCompletedPromotionActions}
-              onActionClick={action => {
-                setMutationProps({
-                  variables: {
-                    type: 'SHARE',
-                    identity: props.wallet,
-                    identityProxy: props.walletProxy,
-                    socialNetwork: 'TWITTER',
-                    content: 'Let me have my reward @OriginProtocol'
-                  }
-                })
-              }}
-            />
-            {completedPromotionActions.length > 0 && (
-              <ActionList
-                title={fbt('Completed', 'growth.promotions.completed')}
-                decimalDivision={decimalDivision}
-                isMobile={isMobile}
-                actions={completedPromotionActions}
-              />
-            )}
-          </div>
-        </Fragment>
-      )}
-    </Mutation>
+const getToastMessage = (action, decimalDivision) => {
+  const tokensEarned = formatTokens(action.reward.amount, decimalDivision)
+  return fbt(
+    `You earned ` + fbt.param('amount', tokensEarned) + ' OGN',
+    'GrowthPromotions.tokensEarned'
   )
+}
+
+const actionTypeToNetwork = actionType => {
+  switch (actionType) {
+    case 'TwitterShare':
+      return 'TWITTER'
+  }
+
+  return null
+}
+
+class Promotions extends React.Component {
+  constructor() {
+    super()
+
+    this.state = {
+      stage: 'Contents',
+      selectedAction: null,
+      runVerifyMutation: false
+    }
+  }
+
+  render() {
+    return (
+      <>
+        <ToastNotification
+          setShowHandler={handler => (this.handleShowNotification = handler)}
+        />
+        {this.renderVerifyMutation()}
+        <div className={`growth-promote-origin${this.props.isMobile ? ' mobile' : ''}`}>
+          {this.renderHeader()}
+          {this[`render${this.state.stage}`]()}
+        </div>
+      </>
+    )
+  }
+
+  renderContents() {
+    // TODO: actions => contents => action/contentIndex
+    return (
+      <>
+        {this.props.notCompletedPromotionActions.map((action, index) => (
+          <div key={index} onClick={() => {
+            this.setState({
+              selectedAction: action,
+              stage: 'Channels'
+            })
+          }}>
+            {action.contents[0].post.text.default}
+          </div>
+        ))}
+      </>
+    )
+  }
+
+  renderChannels() {
+    const {
+      decimalDivision,
+      isMobile,
+      completedPromotionActions,
+      notCompletedPromotionActions
+    } = this.props
+  
+    return (
+      <>
+        <ActionList
+          decimalDivision={decimalDivision}
+          isMobile={isMobile}
+          actions={notCompletedPromotionActions}
+          onActionClick={() => {
+            this.setState({
+              runVerifyMutation: true
+            })
+          }}
+        />
+        {completedPromotionActions.length > 0 && (
+          <ActionList
+            title={fbt('Completed', 'growth.promoteOrigin.completed')}
+            decimalDivision={decimalDivision}
+            isMobile={isMobile}
+            actions={completedPromotionActions}
+          />
+        )}
+      </>
+    )
+  }
+
+  renderVerifyMutation() {
+    const { selectedAction, runVerifyMutation } = this.state
+
+    if (!runVerifyMutation) {
+      return null
+    }
+  
+    const {
+      decimalDivision
+    } = this.props
+
+    return (
+      <Mutation
+        mutation={VerifyPromotionMutation}
+        onCompleted={({ verifyPromotion }) => {
+          if (verifyPromotion.success) {
+            const message = getToastMessage(selectedAction, decimalDivision)
+            this.handleShowNotification(message, 'green')
+            // TODO: Should a query refetch be done here?
+          }
+          this.setState({ runVerifyMutation: false })
+        }}
+      >
+        {verifyPromotion => (
+          <AutoMutate
+            mutation={() => {
+              verifyPromotion({
+                variables: {
+                  type: 'SHARE',
+                  identity: this.props.wallet,
+                  identityProxy: this.props.walletProxy,
+                  socialNetwork: actionTypeToNetwork(selectedAction.type),
+                  // TODO: Handle translations
+                  content: selectedAction.contents[0].post.text.default
+                }
+              })
+            }}
+          />
+        )}
+      </Mutation>
+    )
+  }
+
+  renderHeader() {
+    const { isMobile } = this.props
+    const { stage } = this.state
+
+    const stageTitle = (
+      <>
+        {stage === 'Contents' ? <fbt desc="GrowthPromotions.promoteOrigin">Promote Origin</fbt> : null}
+        {stage === 'Channels' ? <fbt desc="GrowthPromotions.selectChannels">Select Social Channels</fbt> : null}
+      </>
+    )
+
+    const stageDesc = (
+      <>
+        {stage === 'Contents' ? (
+          <fbt desc="GrowthPromotions.earnBySharing">
+            Select an article or video about Origin and share it on your social channels.
+          </fbt>
+        ) : null}
+        {stage === 'Channels' ? (
+          <fbt desc="GrowthPromotions.selectChannelToShare">
+            Where would you like to share this video? Select more channels for more rewards!
+          </fbt>
+        ) : null}
+      </>
+    )
+
+    const header = isMobile ? (
+      <MobileModalHeader
+        showBackButton={true}
+        className="px-0"
+        onBack={() => {
+          if (stage === 'Channels') {
+            return this.setState({
+              stage: 'Contents'
+            })
+          }
+
+          this.props.history.push('/campaigns')
+        }}
+      >
+        {stageTitle}
+      </MobileModalHeader>
+    ) : (
+      <>
+        <Link className="back d-flex mr-auto" to="/campaigns">
+          <img src="images/caret-blue.svg" />
+          <div>
+            <fbt desc="GrowthPromotions.backToCampaign">
+              Back to Campaign
+            </fbt>
+          </div>
+        </Link>
+        <h1 className={`mb-2 pt-md-3 mt-3`}>
+          {stageTitle}
+        </h1>
+      </>
+    )
+
+    return (
+      <div>
+        {header}
+        <div
+          className={`promote-origin-subtitle${
+            isMobile ? ' text-center' : ''
+          }`}
+        >
+          {stageDesc}
+        </div>
+      </div>
+    )
+  }
+
 }
 
 export default withWallet(withRouter(Promotions))
 
 require('react-styl')(`
-  .growth-promotions.mobile
-    .promotions-subtitle
+  .growth-promote-origin.mobile
+    .promote-origin-subtitle
       font-size: 16px
-  .growth-promotions
-    .promotions-subtitle
+  .growth-promote-origin
+    .promote-origin-subtitle
       font-weight: 300
       line-height: 1.25
       color: var(--dark)
