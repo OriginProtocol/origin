@@ -8,7 +8,10 @@
     "origin-check": "src/index.js"
   },
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\""
   },
   "license": "MIT",
   "dependencies": {
@@ -16,5 +19,12 @@
     "@origin/graphql": "^0.1.0",
     "@origin/identity": "^0.1.0",
     "logplease": "^1.2.15"
+  },
+  "devDependencies": {
+    "prettier": "^1.18.2"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

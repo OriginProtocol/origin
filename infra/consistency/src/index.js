@@ -62,7 +62,9 @@ if (require.main === module) {
   if (args['--help'] || args['help']) {
     console.log('Usage')
     console.log('-----')
-    console.log('origin-check --network=[network] [--identity] [--listings] [--offers] [--ipfs-gateway=[gateway_url]] [--from-block=[block_number]]')
+    console.log(
+      'origin-check --network=[network] [--identity] [--listings] [--offers] [--ipfs-gateway=[gateway_url]] [--from-block=[block_number]]'
+    )
     console.log('')
     process.exit(0)
   }
@@ -80,11 +82,13 @@ if (require.main === module) {
   log.debug('config: ', config)
 
   setNetwork(config.network, { useCustomProvider: true })
-  main(config).then(res => {
-    log.info(`Fin. ${res} checks run.`)
-    process.exit()
-  }).catch(err => {
-    log.error('Unhandled error in main()')
-    log.critical(err)
-  })
+  main(config)
+    .then(res => {
+      log.info(`Fin. ${res} checks run.`)
+      process.exit()
+    })
+    .catch(err => {
+      log.error('Unhandled error in main()')
+      log.critical(err)
+    })
 }
