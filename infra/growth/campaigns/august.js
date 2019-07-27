@@ -136,7 +136,7 @@ const augustConfig = {
           config: {
             eventType: 'GitHubAttestationPublished',
             reward: {
-              amount: tokenToNaturalUnits(25),
+              amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
             limit: 1,
@@ -152,7 +152,7 @@ const augustConfig = {
           config: {
             eventType: 'LinkedInAttestationPublished',
             reward: {
-              amount: tokenToNaturalUnits(25),
+              amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
             limit: 1,
@@ -168,7 +168,7 @@ const augustConfig = {
           config: {
             eventType: 'KakaoAttestationPublished',
             reward: {
-              amount: tokenToNaturalUnits(25),
+              amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
             limit: 1,
@@ -184,7 +184,59 @@ const augustConfig = {
           config: {
             eventType: 'WebsiteAttestationPublished',
             reward: {
-              amount: tokenToNaturalUnits(25),
+              amount: tokenToNaturalUnits(10),
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterShare',
+          class: 'SocialShare',
+          config: {
+            eventType: 'SharedOnTwitter',
+            additionalLockConditions: ['TwitterAttestation'],
+            contents: [
+              {
+                titleKey: 'growth.twitterShare.content1.title',
+                detailsKey: 'growth.twitterShare.content1.details',
+                image: 'images/growth/twitter-share-content1.png',
+                link: 'https://www.youtube.com/watch?v=VzLkShX9-VE',
+                linkKey: 'growth.twitterShare.content1.link',
+                post: {
+                  text: {
+                    default: '<insert english content>',
+                    translations: [
+                      { locale: 'fr_FR', text: '<insert french content>' },
+                      { locale: 'zh_CN', text: '<insert mandarin content>' }
+                    ]
+                  }
+                }
+              }
+            ],
+            reward: {
+              amount: tokenToNaturalUnits(1),
+              currency: 'OGN'
+            },
+            limit: 5,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterFollow',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'FollowedOnTwitter',
+            additionalLockConditions: ['TwitterAttestation'],
+            reward: {
+              amount: tokenToNaturalUnits(1),
               currency: 'OGN'
             },
             limit: 1,
@@ -252,22 +304,6 @@ const augustConfig = {
               currency: 'OGN'
             },
             limit: 1,
-            visible: true,
-            nextLevelCondition: false,
-            scope: 'campaign',
-            statusScope: 'user'
-          }
-        },
-        {
-          id: 'TwitterShare',
-          class: 'SocialShare',
-          config: {
-            additionalLockConditions: ['TwitterAttestation'],
-            reward: {
-              amount: tokenToNaturalUnits(1),
-              currency: 'OGN'
-            },
-            limit: 100,
             visible: true,
             nextLevelCondition: false,
             scope: 'campaign',

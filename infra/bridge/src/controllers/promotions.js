@@ -59,6 +59,9 @@ router.post('/verify', verifyPromotions, async (req, res) => {
         let contentHash = null
 
         if (tweetContent) {
+          // Important: Make sure to keep this hash function in sync with
+          // the one used in the growth engine rules.
+          // See infra/grwowth/resources/rules.js
           contentHash = crypto
             .createHash('md5')
             .update(tweetContent)

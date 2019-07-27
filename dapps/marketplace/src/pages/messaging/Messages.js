@@ -20,6 +20,7 @@ import DocumentTitle from 'components/DocumentTitle'
 import MobileModal from 'components/MobileModal'
 
 import { abbreviateName, truncateAddress } from 'utils/user'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 const RoomTitle = withIdentity(({ identity, walletProxy }) => (
   <Link to={`/user/${walletProxy}`} className="user-profile-link">
@@ -105,11 +106,7 @@ class Messages extends Component {
     if (messagingError) {
       return <QueryError query={query} error={messagingError} />
     } else if (messagingLoading) {
-      return (
-        <div>
-          <fbt desc="Messages.loading">Loading conversations...</fbt>
-        </div>
-      )
+      return <LoadingSpinner />
     } else if (!messaging) {
       return (
         <p className="p-3">

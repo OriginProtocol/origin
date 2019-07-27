@@ -8,7 +8,7 @@ try {
 const express = require('express')
 const { RateLimiterMemory } = require('rate-limiter-flexible')
 
-const Config = require('@origin/token/src/config')
+const { createProvider, parseArgv } = require('@origin/token/src/config')
 
 const logger = require('./logger')
 
@@ -54,7 +54,7 @@ async function runApp(config) {
   app.use(express.static(__dirname + '/../public'))
 
   // Register the /tokens route for distributing tokens.
-  const ognDistributor = new OgnDistributor(config)
+  const ognDistributor = new OgnDistributor(config.networkId)
   app.get('/tokens', ognDistributor.process)
 
   // Register the /eth route for distributing Eth.
@@ -71,15 +71,14 @@ async function runApp(config) {
 //
 // Main
 //
-const args = Config.parseArgv()
+const args = parseArgv()
 const config = {
   // Port server listens on.
   port: parseInt(args['--port'] || process.env.PORT || DEFAULT_SERVER_PORT),
-  // Network ids, comma separated.
-  // If no network ids specified, defaults to using local blockchain.
+  // If no network id specified, defaults to using local blockchain.
   networkIds: (
-    args['--network_ids'] ||
-    process.env.NETWORK_IDS ||
+    args['--network_id'] ||
+    process.env.NETWORK_ID ||
     DEFAULT_NETWORK_ID
   )
     .split(',')
@@ -97,8 +96,9 @@ if (!process.env.DATABASE_URL) {
   process.exit(-1)
 }
 
+// Test provider configuration.
 try {
-  config.providers = Config.createProviders(config.networkIds)
+  createProvider(config.networkId)
 } catch (err) {
   logger.error('Config error:', err)
   process.exit(-1)

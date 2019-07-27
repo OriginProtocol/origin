@@ -36,12 +36,15 @@ const resolvers = {
   DateTime: GraphQLDateTime,
   GrowthBaseAction: {
     __resolveType(action) {
-      if (action.type === 'Referral') {
-        return 'ReferralAction'
-      } else if (action.type === 'ListingIdPurchased') {
-        return 'ListingIdPurchasedAction'
-      } else {
-        return 'GrowthAction'
+      switch (action.type) {
+        case 'Referral':
+          return 'ReferralAction'
+        case 'ListingIdPurchased':
+          return 'ListingIdPurchasedAction'
+        case 'TwitterShare':
+          return 'SocialShareAction'
+        default:
+          return 'GrowthAction'
       }
     }
   },

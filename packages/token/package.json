@@ -18,7 +18,7 @@
     "lint": "eslint . && npm run prettier:check",
     "prettier": "./node_modules/.bin/prettier --write *.js \"src/**/*.js\"",
     "prettier:check": "./node_modules/.bin/prettier -c *.js \"src/**/*.js\"",
-    "test": "mocha --timeout 10000 --exit test"
+    "test": "NODE_ENV=test mocha --timeout 10000 --exit --file test/setup test"
   },
   "dependencies": {
     "@origin/contracts": "^0.8.6",
