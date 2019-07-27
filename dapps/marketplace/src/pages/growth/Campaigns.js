@@ -12,6 +12,7 @@ import GrowthInvite from 'pages/growth/Invite'
 import Purchases from 'pages/growth/Purchases'
 import Verifications from 'pages/growth/Verifications'
 import Promotions from 'pages/growth/Promotions'
+import FollowOrigin from 'pages/growth/FollowOrigin'
 import MobileDownloadAction from 'components/growth/MobileDownloadAction'
 import ProgressBar from 'components/ProgressBar'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
@@ -391,7 +392,9 @@ class GrowthCampaigns extends Component {
               completedVerificationActions,
               notCompletedVerificationActions,
               completedPromotionActions,
-              notCompletedPromotionActions
+              notCompletedPromotionActions,
+              completedFollowActions,
+              notCompletedFollowActions
             } = calculatePendingAndAvailableActions(activeCampaign)
 
             return (
@@ -466,12 +469,18 @@ class GrowthCampaigns extends Component {
                         <Promotions
                           decimalDivision={decimalDivision}
                           isMobile={isMobile}
-                          completedPromotionActions={
-                            completedPromotionActions
-                          }
+                          completedPromotionActions={completedPromotionActions}
                           notCompletedPromotionActions={
                             notCompletedPromotionActions
                           }
+                        />
+                      )}
+                      {navigation === 'follows' && (
+                        <FollowOrigin
+                          decimalDivision={decimalDivision}
+                          isMobile={isMobile}
+                          completedFollowActions={completedFollowActions}
+                          notCompletedFollowActions={notCompletedFollowActions}
                         />
                       )}
                     </Fragment>

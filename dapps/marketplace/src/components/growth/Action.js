@@ -101,7 +101,16 @@ function Action(props) {
     buttonLink = undefined
     foregroundImgSrc = 'images/growth/twitter-icon.svg'
     title = fbt('Tweet', 'RewardActions.tweetThis')
-    externalLink = `https://twitter.com/intent/tweet?status=${JSON.stringify('Let me have my reward @OriginProtocol')}`
+    externalLink = `https://twitter.com/intent/tweet?status=${encodeURIComponent(
+      'Let me have my reward @OriginProtocol'
+    )}`
+  } else if (type === 'TwitterFollow') {
+    buttonLink = undefined
+    foregroundImgSrc = 'images/growth/twitter-icon.svg'
+    title = fbt('Follow us on Twitter', 'RewardActions.followOnTwitter')
+    // TODO: Move screen name to Enviroment variable
+    externalLink =
+      'https://twitter.com/intent/follow?screen_name=OriginProtocol'
   }
 
   const renderReward = (amount, style = 'normal') => {
@@ -163,7 +172,9 @@ function Action(props) {
                 href={externalLink}
                 target="_blank"
                 className="mt-auto mb-auto"
-                onClick={() => props.onActionClick && props.onActionClick(props.action)}
+                onClick={() =>
+                  props.onActionClick && props.onActionClick(props.action)
+                }
               >
                 {actionComponent}
               </a>

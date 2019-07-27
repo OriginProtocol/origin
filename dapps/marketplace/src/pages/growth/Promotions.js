@@ -22,83 +22,87 @@ function Promotions(props) {
   } = props
 
   return (
-    <Mutation mutation={VerifyPromotionMutation}
+    <Mutation
+      mutation={VerifyPromotionMutation}
       onCompleted={() => setMutationProps(false)}
-    >{verifyPromotion => (
-      <Fragment>
-        {mutationProps ? (
-          <AutoMutate mutation={() => {
-            verifyPromotion(mutationProps)
-          }} />
-        ) : null}
-        {isMobile && (
-          <MobileModalHeader
-            showBackButton={true}
-            className="px-0"
-            onBack={() => {
-              props.history.push('/campaigns')
-            }}
-          >
-            <fbt desc="GrowthPromotions.promotions">Promotions</fbt>
-          </MobileModalHeader>
-        )}
-        <div className={`growth-promotions ${isMobile ? 'mobile' : ''}`}>
-          <div>
-            {!isMobile && (
-              <Fragment>
-                <Link className="back d-flex mr-auto" to="/campaigns">
-                  <img src="images/caret-blue.svg" />
-                  <div>
-                    <fbt desc="GrowthPromotions.backToCampaign">
-                      Back to Campaign
-                    </fbt>
-                  </div>
-                </Link>
-                <h1 className={`mb-2 pt-md-3 mt-3`}>
-                  <fbt desc="GrowthPromotions.promotions">
-                    Promotions
-                  </fbt>
-                </h1>
-              </Fragment>
-            )}
-            <div
-              className={`promotions-subtitle ${
-                isMobile ? 'text-center' : ''
-              }`}
+    >
+      {verifyPromotion => (
+        <Fragment>
+          {mutationProps ? (
+            <AutoMutate
+              mutation={() => {
+                verifyPromotion(mutationProps)
+              }}
+            />
+          ) : null}
+          {isMobile && (
+            <MobileModalHeader
+              showBackButton={true}
+              className="px-0"
+              onBack={() => {
+                props.history.push('/campaigns')
+              }}
             >
-              <fbt desc="GrowthPromotions.strenghtenToEarnTokens">
-                Strengthen your profile and earn Origin Tokens by completing
-                promotions.
-              </fbt>
+              <fbt desc="GrowthPromotions.promotions">Promotions</fbt>
+            </MobileModalHeader>
+          )}
+          <div className={`growth-promotions ${isMobile ? 'mobile' : ''}`}>
+            <div>
+              {!isMobile && (
+                <Fragment>
+                  <Link className="back d-flex mr-auto" to="/campaigns">
+                    <img src="images/caret-blue.svg" />
+                    <div>
+                      <fbt desc="GrowthPromotions.backToCampaign">
+                        Back to Campaign
+                      </fbt>
+                    </div>
+                  </Link>
+                  <h1 className={`mb-2 pt-md-3 mt-3`}>
+                    <fbt desc="GrowthPromotions.promotions">Promotions</fbt>
+                  </h1>
+                </Fragment>
+              )}
+              <div
+                className={`promotions-subtitle ${
+                  isMobile ? 'text-center' : ''
+                }`}
+              >
+                <fbt desc="GrowthPromotions.strenghtenToEarnTokens">
+                  Strengthen your profile and earn Origin Tokens by completing
+                  promotions.
+                </fbt>
+              </div>
             </div>
-          </div>
 
-          <ActionList
-            decimalDivision={decimalDivision}
-            isMobile={isMobile}
-            actions={notCompletedPromotionActions}
-            onActionClick={action => {
-              setMutationProps({
-                variables: {
-                  type: 'SHARE',
-                  identity: props.wallet,
-                  socialNetwork: 'TWITTER',
-                  content: 'Let me have my reward @OriginProtocol'
-                }
-              })
-            }}
-          />
-          {completedPromotionActions.length > 0 && (
             <ActionList
-              title={fbt('Completed', 'growth.promotions.completed')}
               decimalDivision={decimalDivision}
               isMobile={isMobile}
-              actions={completedPromotionActions}
+              actions={notCompletedPromotionActions}
+              onActionClick={action => {
+                setMutationProps({
+                  variables: {
+                    type: 'SHARE',
+                    identity: props.wallet,
+                    identityProxy: props.walletProxy,
+                    socialNetwork: 'TWITTER',
+                    content: 'Let me have my reward @OriginProtocol'
+                  }
+                })
+              }}
             />
-          )}
-        </div>
-      </Fragment>
-    )}</Mutation>
+            {completedPromotionActions.length > 0 && (
+              <ActionList
+                title={fbt('Completed', 'growth.promotions.completed')}
+                decimalDivision={decimalDivision}
+                isMobile={isMobile}
+                actions={completedPromotionActions}
+              />
+            )}
+          </div>
+        </Fragment>
+      )}
+    </Mutation>
   )
 }
 

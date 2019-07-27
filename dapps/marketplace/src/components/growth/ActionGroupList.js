@@ -13,7 +13,9 @@ function ActionGroupList(props) {
     completedVerificationActions,
     notCompletedVerificationActions,
     completedPromotionActions,
-    notCompletedPromotionActions
+    notCompletedPromotionActions,
+    completedFollowActions,
+    notCompletedFollowActions
   } = calculatePendingAndAvailableActions(campaign)
   const referralAction = find(
     campaign.actions,
@@ -44,6 +46,13 @@ function ActionGroupList(props) {
         type="promotions"
         completedActions={completedPromotionActions}
         notCompletedActions={notCompletedPromotionActions}
+        hasBorder={true}
+        {...props}
+      />
+      <ActionGroup
+        type="follows"
+        completedActions={completedFollowActions}
+        notCompletedActions={notCompletedFollowActions}
         hasBorder={true}
         {...props}
       />

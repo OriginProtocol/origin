@@ -4,6 +4,7 @@ const express = require('express')
 const router = express.Router()
 
 const crypto = require('crypto')
+const Sequelize = require('sequelize')
 
 const { getAsync } = require('../utils/redis')
 const logger = require('./../logger')
@@ -26,13 +27,21 @@ const waitFor = timeInMs =>
   new Promise(resolve => setTimeout(resolve, timeInMs))
 
 router.post('/verify', verifyPromotions, async (req, res) => {
-  const { type, socialNetwork, identity, content } = req.body
+  const { type, socialNetwork, identity, identityProxy, content } = req.body
 
   const attestation = await Attestation.findOne({
     where: {
-      ethAddress: identity.toLowerCase(),
+      [Sequelize.Op.or]: [
+        {
+          ethAddress: identity.toLowerCase()
+        },
+        {
+          ethAddress: identityProxy.toLowerCase()
+        }
+      ],
       method: socialNetwork
-    }
+    },
+    order: [['createdAt', 'DESC']]
   })
 
   if (!attestation) {

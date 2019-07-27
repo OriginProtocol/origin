@@ -2,7 +2,10 @@ import get from 'lodash/get'
 
 import contracts from '../../contracts'
 
-async function verifyPromotion(_, { identity, socialNetwork, type, content }) {
+async function verifyPromotion(
+  _,
+  { identity, identityProxy, socialNetwork, type, content }
+) {
   const bridgeServer = contracts.config.bridge
   if (!bridgeServer) {
     return { success: false, reason: 'No bridge server configured' }
@@ -14,7 +17,13 @@ async function verifyPromotion(_, { identity, socialNetwork, type, content }) {
     headers: { 'content-type': 'application/json' },
     credentials: 'include',
     method: 'POST',
-    body: JSON.stringify({ identity, socialNetwork, type, content })
+    body: JSON.stringify({
+      identity,
+      identityProxy,
+      socialNetwork,
+      type,
+      content
+    })
   })
 
   const data = await response.json()

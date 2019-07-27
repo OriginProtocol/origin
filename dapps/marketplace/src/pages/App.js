@@ -97,8 +97,9 @@ class App extends Component {
       (isOnWelcomeAndNotOboard && !isMobile) ||
       (isMobile &&
         (this.props.location.pathname.match(/^\/purchases\/.*$/gi) ||
-          this.props.location.pathname.match(/^\/campaigns\/purchases$/gi) ||
-          this.props.location.pathname.match(/^\/campaigns\/invitations$/gi) ||
+          this.props.location.pathname.match(
+            /^\/campaigns\/(verifications|purchases|invitations|follows|promotions)$/gi
+          ) ||
           this.props.location.pathname.match(/\/onboard\/finished/gi) ||
           this.props.location.pathname.match(
             /^\/(create\/.+|listing\/[-0-9]+\/edit\/.+)/gi
