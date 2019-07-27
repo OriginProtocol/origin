@@ -116,22 +116,37 @@ const Growth$FbtEnum = {
   'growth.purchase.listing2912.title': 'Pitch your project to Ryan (Hashed)',
 
   // August campaign
-  'growth.purchase.listing-1-000-2991.title': 'PONTE VECCHIO - POSIZIONE TOP! Free unlimited WiFi, Florence, Italy',
-  'growth.purchase.listing-1-000-2959.title': 'Suite Sol y Luna w/ independent entrance in villa, Playa Blanca, Spain',
-  'growth.purchase.listing-1-000-2871.title': 'Cipressi Apartment Volterra, Tuscany',
-  'growth.purchase.listing-1-000-2854.title': 'Vetra 21 - Colonne di San Lorenzo, Milan, Italy',
-  'growth.purchase.listing-1-000-2873.title': 'Historic 14th century Luxury Apartment',
-  'growth.purchase.listing-1-000-2782.title': 'Villa Amalia, Cava deʼ Tirreni, Italy',
+  'growth.purchase.listing-1-000-2991.title':
+    'PONTE VECCHIO - POSIZIONE TOP! Free unlimited WiFi, Florence, Italy',
+  'growth.purchase.listing-1-000-2959.title':
+    'Suite Sol y Luna w/ independent entrance in villa, Playa Blanca, Spain',
+  'growth.purchase.listing-1-000-2871.title':
+    'Cipressi Apartment Volterra, Tuscany',
+  'growth.purchase.listing-1-000-2854.title':
+    'Vetra 21 - Colonne di San Lorenzo, Milan, Italy',
+  'growth.purchase.listing-1-000-2873.title':
+    'Historic 14th century Luxury Apartment',
+  'growth.purchase.listing-1-000-2782.title':
+    'Villa Amalia, Cava deʼ Tirreni, Italy',
   'growth.purchase.listing-1-000-2769.title': 'Holiday Apartment Aci Castello',
-  'growth.purchase.listing-1-000-2760.title': 'Airy romantic Blue studio in Milano city, quiet neighborhood',
-  'growth.purchase.listing-1-000-2781.title': 'Sweet del Moro - Trastevere, Rome, Italy',
-  'growth.purchase.listing-1-000-2699.title': 'All Access 3LAU tickets for 1 year',
-  'growth.purchase.listing-1-000-2912.title': 'Pitch your project to Ryan (Hashed)',
-  'growth.purchase.listing-1-000-2892.title': 'Post Jobs on GrabJobs (3 months subscription)',
-  'growth.purchase.listing-1-000-292.title': 'Venezuela 2: Trevor Jones Original Oil Painting',
-  'growth.purchase.listing-1-000-60.title': 'Blockchain Project Meetup in Singapore, curated by Spartan Group',
-  'growth.purchase.listing-1-000-2877.title': 'Cozy 1 BR Apartment in Singapore',
-  'growth.purchase.listing-1-000-2999.title': 'Piano lessons (All Ages & Levels)',
+  'growth.purchase.listing-1-000-2760.title':
+    'Airy romantic Blue studio in Milano city, quiet neighborhood',
+  'growth.purchase.listing-1-000-2781.title':
+    'Sweet del Moro - Trastevere, Rome, Italy',
+  'growth.purchase.listing-1-000-2699.title':
+    'All Access 3LAU tickets for 1 year',
+  'growth.purchase.listing-1-000-2912.title':
+    'Pitch your project to Ryan (Hashed)',
+  'growth.purchase.listing-1-000-2892.title':
+    'Post Jobs on GrabJobs (3 months subscription)',
+  'growth.purchase.listing-1-000-292.title':
+    'Venezuela 2: Trevor Jones Original Oil Painting',
+  'growth.purchase.listing-1-000-60.title':
+    'Blockchain Project Meetup in Singapore, curated by Spartan Group',
+  'growth.purchase.listing-1-000-2877.title':
+    'Cozy 1 BR Apartment in Singapore',
+  'growth.purchase.listing-1-000-2999.title':
+    'Piano lessons (All Ages & Levels)',
 
   'growth.purchase.empty.details': ''
 }
