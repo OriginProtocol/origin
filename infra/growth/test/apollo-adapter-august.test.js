@@ -11,7 +11,7 @@ const { tokenToNaturalUnits } = require('../src/util/token')
 
 function checkExpectedState(state, expectedState) {
   expect(state.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-  expect(state.actions.length).to.equal(31)
+  expect(state.actions.length).to.equal(32)
 
   const actionByRuleId = {}
   for(const action of state.actions) {
@@ -95,11 +95,11 @@ describe('Apollo adapter - August campaign', () => {
     expect(this.crules).to.be.an('object')
     expect(this.crules.numLevels).to.equal(3)
     expect(this.crules.levels[0]).to.be.an('object')
-    expect(this.crules.levels[0].rules.length).to.equal(3)
+    expect(this.crules.levels[0].rules.length).to.equal(3) // Note: adjust based on number of rules.
     expect(this.crules.levels[1]).to.be.an('object')
-    expect(this.crules.levels[1].rules.length).to.equal(12)
+    expect(this.crules.levels[1].rules.length).to.equal(13) // Note: adjust based on number of rules.
     expect(this.crules.levels[2]).to.be.an('object')
-    expect(this.crules.levels[2].rules.length).to.equal(18) // TODO: adjust when adding new listings
+    expect(this.crules.levels[2].rules.length).to.equal(18) // Note: adjust based on number of rules.
 
     this.userA = '0xA123'
     this.userB = '0xB456'
@@ -198,7 +198,7 @@ describe('Apollo adapter - August campaign', () => {
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenToNaturalUnits(150), currency: 'OGN' }
       },
-      TwitterShare: {
+      TwitterShare1: {
         type: 'TwitterShare',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
@@ -419,7 +419,7 @@ describe('Apollo adapter - August campaign', () => {
 
     // Level 2 should be unlocked.
     this.expectedState.Referral.status = 'Active'
-    this.expectedState.TwitterShare.status = 'Inactive'
+    this.expectedState.TwitterShare1.status = 'Inactive'
     this.expectedState.MobileAccountCreated.status = 'Active'
 
     // Unlock all ListingPurchase listings
@@ -603,7 +603,7 @@ describe('Apollo adapter - August campaign', () => {
         .levels['2']
         .rules
         .map(rule => {
-          if (rule.id === 'TwitterShare') {
+          if (rule.id === 'TwitterShare1') {
             modificationCallback(rule)
           }
           return rule
@@ -660,29 +660,24 @@ describe('Apollo adapter - August campaign', () => {
     this.expectedState.TwitterAttestation.rewardEarned = { amount: tokenToNaturalUnits(10), currency: 'OGN' }
 
     // Check Twitter Share/Follow got unlocked.
-    this.expectedState.TwitterShare.status = 'Active'
+    this.expectedState.TwitterShare1.status = 'Active'
     this.expectedState.TwitterFollow.status = 'Active'
 
-    // Find the TwitterShare action and check it includes expected fields.
-    let twitterShareAction
+    // Find the TwitterShare actions and check they include all expected fields.
     for (const action of state.actions) {
       if (action.type === 'TwitterShare') {
-        twitterShareAction = action
-        break
+        const twitterShareAction = action
+        expect(twitterShareAction).to.be.an('object')
+        expect(twitterShareAction.content).to.be.an('object')
+        expect(twitterShareAction.content.titleKey).to.be.a('string')
+        expect(twitterShareAction.content.link).to.be.a('string')
+        expect(twitterShareAction.content.linkKey).to.be.a('string')
+        expect(twitterShareAction.content.titleKey).to.be.a('string')
+        expect(twitterShareAction.content.post).to.be.an('object')
+        expect(twitterShareAction.content.post.text).to.be.an('object')
+        expect(twitterShareAction.content.post.text.default).to.be.a('string')
+        expect(twitterShareAction.content.post.text.translations).to.be.an('array')
       }
-    }
-    expect(twitterShareAction).to.be.an('object')
-    expect(twitterShareAction.contents).to.be.an('array')
-    expect(twitterShareAction.contents.length).to.equal(1) // Update if adding more content items.
-    for (const content of twitterShareAction.contents) {
-      expect(content.titleKey).to.be.a('string')
-      expect(content.link).to.be.a('string')
-      expect(content.linkKey).to.be.a('string')
-      expect(content.titleKey).to.be.a('string')
-      expect(content.post).to.be.an('object')
-      expect(content.post.text).to.be.an('object')
-      expect(content.post.text.default).to.be.a('string')
-      expect(content.post.text.translations).to.be.an('array')
     }
 
     checkExpectedState(state, this.expectedState)
