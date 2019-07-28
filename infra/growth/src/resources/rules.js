@@ -613,7 +613,7 @@ class BaseRule {
       titleKey: this.titleKey,
       detailsKey: this.detailsKey,
       // Fields specific to the SocialShare rule
-      contents: this.contents
+      content: this.content
     }
     return adapter.process(data)
   }
@@ -719,17 +719,15 @@ class ListingIdPurchaseRule extends SingleEventRule {
 class SocialShareRule extends SingleEventRule {
   constructor(crules, levelId, config) {
     super(crules, levelId, config)
-    if (!this.config.contents || !Array.isArray(this.config.contents)) {
-      throw new Error(`${this.str()}: missing or non-array contents field`)
+    if (!this.config.content) {
+      throw new Error(`${this.str()}: missing content field`)
     }
-    this.contents = this.config.contents
+    this.content = this.config.content
     // Compute the hashes for the post content, in all the configured languages.
     this.contentHashes = []
-    for (const content of this.contents) {
-      this.contentHashes.push(this._hashContent(content.post.text.default))
-      for (const translation of Object.values(content.post.text.translations)) {
-        this.contentHashes.push(this._hashContent(translation.text))
-      }
+    this.contentHashes.push(this._hashContent(this.content.post.text.default))
+    for (const translation of Object.values(this.content.post.text.translations)) {
+      this.contentHashes.push(this._hashContent(translation.text))
     }
   }
 

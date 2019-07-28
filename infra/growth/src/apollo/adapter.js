@@ -53,7 +53,10 @@ class ApolloAdapter {
     // otherwise use the ruleIdToActionType dictionary.
     if (ruleId.match(/^ListingPurchase[\d-]+$/)) {
       actionType = 'ListingIdPurchased'
-    } else {
+    } else if (ruleId.match(/^TwitterShare[\d-]+$/)) {
+      actionType = 'TwitterShare'
+    }
+    else {
       actionType = ruleIdToActionType[ruleId]
     }
     if (!actionType) {
@@ -127,7 +130,7 @@ class ApolloAdapter {
         action = { ...action, ...listingInfo }
         break
       case 'TwitterShare':
-        action.contents = data.contents
+        action.content = data.content
         break
     }
 

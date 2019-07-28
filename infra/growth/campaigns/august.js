@@ -195,34 +195,65 @@ const augustConfig = {
           }
         },
         {
-          id: 'TwitterShare',
+          id: 'TwitterShare1',
           class: 'SocialShare',
           config: {
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
-            contents: [
-              {
-                titleKey: 'growth.twitterShare.content1.title',
-                detailsKey: 'growth.twitterShare.content1.details',
-                image: 'images/growth/twitter-share-content1.png',
-                link: 'https://www.youtube.com/watch?v=VzLkShX9-VE',
-                linkKey: 'growth.twitterShare.content1.link',
-                post: {
-                  text: {
-                    default: '<insert english content>',
-                    translations: [
-                      { locale: 'fr_FR', text: '<insert french content>' },
-                      { locale: 'zh_CN', text: '<insert mandarin content>' }
-                    ]
-                  }
+            content: {
+              titleKey: 'growth.twitterShare.content1.title',
+              detailsKey: 'growth.twitterShare.content1.details',
+              image: 'images/growth/twitter-share-content1.png',
+              link: 'https://www.youtube.com/watch?v=VzLkShX9-VE',
+              linkKey: 'growth.twitterShare.content1.link',
+              post: {
+                text: {
+                  default: '<insert english content>',
+                  translations: [
+                    { locale: 'fr_FR', text: '<insert french content>' },
+                    { locale: 'zh_CN', text: '<insert mandarin content>' }
+                  ]
                 }
               }
-            ],
+            },
             reward: {
               amount: tokenToNaturalUnits(1),
               currency: 'OGN'
             },
-            limit: 5,
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterShare2',
+          class: 'SocialShare',
+          config: {
+            eventType: 'SharedOnTwitter',
+            additionalLockConditions: ['TwitterAttestation'],
+            content: {
+              titleKey: 'growth.twitterShare.content2.title',
+              detailsKey: 'growth.twitterShare.content2.details',
+              image: 'images/growth/twitter-share-content2.png',
+              link: 'https://www.youtube.com/watch?v=VzLkShX9-VE',
+              linkKey: 'growth.twitterShare.content2.link',
+              post: {
+                text: {
+                  default: '<insert english content>',
+                  translations: [
+                    { locale: 'fr_FR', text: '<insert french content>' },
+                    { locale: 'zh_CN', text: '<insert mandarin content>' }
+                  ]
+                }
+              }
+            },
+            reward: {
+              amount: tokenToNaturalUnits(1),
+              currency: 'OGN'
+            },
+            limit: 1,
             visible: true,
             nextLevelCondition: false,
             scope: 'campaign',
