@@ -55,8 +55,7 @@ class ApolloAdapter {
       actionType = 'ListingIdPurchased'
     } else if (ruleId.match(/^TwitterShare[\d-]+$/)) {
       actionType = 'TwitterShare'
-    }
-    else {
+    } else {
       actionType = ruleIdToActionType[ruleId]
     }
     if (!actionType) {

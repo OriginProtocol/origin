@@ -724,9 +724,8 @@ class SocialShareRule extends SingleEventRule {
     }
     this.content = this.config.content
     // Compute the hashes for the post content, in all the configured languages.
-    this.contentHashes = []
-    this.contentHashes.push(this._hashContent(this.content.post.text.default))
-    for (const translation of Object.values(this.content.post.text.translations)) {
+    this.contentHashes = [this._hashContent(this.content.post.text.default)]
+    for (const translation of this.content.post.text.translations) {
       this.contentHashes.push(this._hashContent(translation.text))
     }
   }
