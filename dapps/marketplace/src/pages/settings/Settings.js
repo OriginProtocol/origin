@@ -312,9 +312,7 @@ class Settings extends Component {
                       <div className="form-group row">
                         <div className="col-sm">
                           <label htmlFor="indexing">
-                            <fbt desc="settings.growthLabel">
-                              Growth Server
-                            </fbt>
+                            <fbt desc="settings.growthLabel">Growth Server</fbt>
                           </label>
                         </div>
                         <div className="col-sm">
