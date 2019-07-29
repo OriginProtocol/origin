@@ -250,7 +250,7 @@ export default {
             }
           }
           ... on SocialShareAction {
-            contents {
+            content {
               titleKey
               detailsKey
               image

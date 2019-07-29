@@ -68,7 +68,7 @@ class Promotions extends React.Component {
               stage: 'Channels'
             })
           }}>
-            {action.contents[0].post.text.default}
+            {action.content.post.text.default}
           </div>
         ))}
       </>
@@ -140,7 +140,7 @@ class Promotions extends React.Component {
                   identityProxy: this.props.walletProxy,
                   socialNetwork: actionTypeToNetwork(selectedAction.type),
                   // TODO: Handle translations
-                  content: selectedAction.contents[0].post.text.default
+                  content: selectedAction.contents.post.text.default
                 }
               })
             }}
