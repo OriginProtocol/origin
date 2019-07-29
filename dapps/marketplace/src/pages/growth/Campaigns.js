@@ -20,6 +20,8 @@ import withIsMobile from 'hoc/withIsMobile'
 import { calculatePendingAndAvailableActions } from 'utils/growthTools'
 import LoadingSpinner from 'components/LoadingSpinner'
 
+import ToastNotification from 'pages/user/ToastNotification'
+
 const GrowthEnum = require('Growth$FbtEnum')
 const maxProgressBarTokens = 1000
 
@@ -349,151 +351,158 @@ class GrowthCampaigns extends Component {
     const { isMobile, growthCampaignsRefetch } = this.props
 
     return (
-      <div className={`container growth-campaigns ${isMobile ? 'mobile' : ''}`}>
-        <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
-          {({ error, data, networkStatus, loading }) => {
-            if (networkStatus === 1 || loading) {
-              return <LoadingSpinner />
-            } else if (error) {
-              return <QueryError error={error} query={profileQuery} />
-            }
+      <>
+        <ToastNotification
+          setShowHandler={handler => (this.handleShowNotification = handler)}
+        />
+        <div className={`container growth-campaigns ${isMobile ? 'mobile' : ''}`}>
+          <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
+            {({ error, data, networkStatus, loading }) => {
+              if (networkStatus === 1 || loading) {
+                return <LoadingSpinner />
+              } else if (error) {
+                return <QueryError error={error} query={profileQuery} />
+              }
 
-            if (!data.web3.primaryAccount) {
-              return ''
-            }
+              if (!data.web3.primaryAccount) {
+                return ''
+              }
 
-            const accountId = data.web3.primaryAccount.id
+              const accountId = data.web3.primaryAccount.id
 
-            if (
-              !this.props.growthCampaigns ||
-              this.props.growthCampaignsLoading
-            ) {
-              return <LoadingSpinner />
-            }
+              if (
+                !this.props.growthCampaigns ||
+                this.props.growthCampaignsLoading
+              ) {
+                return <LoadingSpinner />
+              }
 
-            const campaigns = this.props.growthCampaigns
-            if (campaigns.length == 0) {
-              return (
-                <h5 className="p-2">
-                  <fbt desc="growth.campaigns.noCampaignsDetected">
-                    No campaigns detected
-                  </fbt>
-                </h5>
+              const campaigns = this.props.growthCampaigns
+              if (campaigns.length == 0) {
+                return (
+                  <h5 className="p-2">
+                    <fbt desc="growth.campaigns.noCampaignsDetected">
+                      No campaigns detected
+                    </fbt>
+                  </h5>
+                )
+              }
+
+              const activeCampaign = campaigns.find(
+                campaign => campaign.status === 'Active'
               )
-            }
 
-            const activeCampaign = campaigns.find(
-              campaign => campaign.status === 'Active'
-            )
+              const {
+                completedPurchaseActions,
+                notCompletedPurchaseActions,
+                completedVerificationActions,
+                notCompletedVerificationActions,
+                completedPromotionActions,
+                notCompletedPromotionActions,
+                completedFollowActions,
+                notCompletedFollowActions
+              } = calculatePendingAndAvailableActions(activeCampaign)
 
-            const {
-              completedPurchaseActions,
-              notCompletedPurchaseActions,
-              completedVerificationActions,
-              notCompletedVerificationActions,
-              completedPromotionActions,
-              notCompletedPromotionActions,
-              completedFollowActions,
-              notCompletedFollowActions
-            } = calculatePendingAndAvailableActions(activeCampaign)
+              return (
+                <Query
+                  query={AccountTokenBalance}
+                  variables={{ account: accountId, token: 'OGN' }}
+                >
+                  {({ loading, error, data }) => {
+                    let decimalDivision = web3.utils
+                      .toBN(10)
+                      .pow(web3.utils.toBN(18))
 
-            return (
-              <Query
-                query={AccountTokenBalance}
-                variables={{ account: accountId, token: 'OGN' }}
-              >
-                {({ loading, error, data }) => {
-                  let decimalDivision = web3.utils
-                    .toBN(10)
-                    .pow(web3.utils.toBN(18))
-
-                  if (!loading && !error) {
-                    const tokenHolder = data.web3.account.token
-                    if (tokenHolder && tokenHolder.token) {
-                      decimalDivision = web3.utils
-                        .toBN(10)
-                        .pow(web3.utils.toBN(tokenHolder.token.decimals))
+                    if (!loading && !error) {
+                      const tokenHolder = data.web3.account.token
+                      if (tokenHolder && tokenHolder.token) {
+                        decimalDivision = web3.utils
+                          .toBN(10)
+                          .pow(web3.utils.toBN(tokenHolder.token.decimals))
+                      }
                     }
-                  }
 
-                  return (
-                    <Fragment>
-                      {navigation === 'Campaigns' && (
-                        <GrowthCampaign
-                          campaigns={campaigns}
-                          accountId={accountId}
-                          decimalDivision={decimalDivision}
-                          isMobile={isMobile}
-                          completedVerificationActions={
-                            completedVerificationActions
-                          }
-                          notCompletedVerificationActions={
-                            notCompletedVerificationActions
-                          }
-                          completedPurchaseActions={completedPurchaseActions}
-                          notCompletedPurchaseActions={
-                            notCompletedPurchaseActions
-                          }
-                        />
-                      )}
-                      {navigation === 'invitations' && (
-                        <GrowthInvite
-                          activeCampaign={activeCampaign}
-                          decimalDivision={decimalDivision}
-                          isMobile={isMobile}
-                        />
-                      )}
-                      {navigation === 'verifications' && (
-                        <Verifications
-                          decimalDivision={decimalDivision}
-                          isMobile={isMobile}
-                          completedVerificationActions={
-                            completedVerificationActions
-                          }
-                          notCompletedVerificationActions={
-                            notCompletedVerificationActions
-                          }
-                        />
-                      )}
-                      {navigation === 'purchases' && (
-                        <Purchases
-                          decimalDivision={decimalDivision}
-                          isMobile={isMobile}
-                          completedPurchaseActions={completedPurchaseActions}
-                          notCompletedPurchaseActions={
-                            notCompletedPurchaseActions
-                          }
-                        />
-                      )}
-                      {navigation.startsWith('promotions') && (
-                        <Promotions
-                          decimalDivision={decimalDivision}
-                          isMobile={isMobile}
-                          completedPromotionActions={completedPromotionActions}
-                          notCompletedPromotionActions={
-                            notCompletedPromotionActions
-                          }
-                          locale={this.props.locale}
-                          growthCampaignsRefetch={growthCampaignsRefetch}
-                        />
-                      )}
-                      {navigation === 'follows' && (
-                        <FollowOrigin
-                          decimalDivision={decimalDivision}
-                          isMobile={isMobile}
-                          completedFollowActions={completedFollowActions}
-                          notCompletedFollowActions={notCompletedFollowActions}
-                          growthCampaignsRefetch={growthCampaignsRefetch}
-                        />
-                      )}
-                    </Fragment>
-                  )
-                }}
-              </Query>
-            )
-          }}
-        </Query>
-      </div>
+                    return (
+                      <Fragment>
+                        {navigation === 'Campaigns' && (
+                          <GrowthCampaign
+                            campaigns={campaigns}
+                            accountId={accountId}
+                            decimalDivision={decimalDivision}
+                            isMobile={isMobile}
+                            completedVerificationActions={
+                              completedVerificationActions
+                            }
+                            notCompletedVerificationActions={
+                              notCompletedVerificationActions
+                            }
+                            completedPurchaseActions={completedPurchaseActions}
+                            notCompletedPurchaseActions={
+                              notCompletedPurchaseActions
+                            }
+                          />
+                        )}
+                        {navigation === 'invitations' && (
+                          <GrowthInvite
+                            activeCampaign={activeCampaign}
+                            decimalDivision={decimalDivision}
+                            isMobile={isMobile}
+                          />
+                        )}
+                        {navigation === 'verifications' && (
+                          <Verifications
+                            decimalDivision={decimalDivision}
+                            isMobile={isMobile}
+                            completedVerificationActions={
+                              completedVerificationActions
+                            }
+                            notCompletedVerificationActions={
+                              notCompletedVerificationActions
+                            }
+                          />
+                        )}
+                        {navigation === 'purchases' && (
+                          <Purchases
+                            decimalDivision={decimalDivision}
+                            isMobile={isMobile}
+                            completedPurchaseActions={completedPurchaseActions}
+                            notCompletedPurchaseActions={
+                              notCompletedPurchaseActions
+                            }
+                          />
+                        )}
+                        {navigation.startsWith('promotions') && (
+                          <Promotions
+                            decimalDivision={decimalDivision}
+                            isMobile={isMobile}
+                            completedPromotionActions={completedPromotionActions}
+                            notCompletedPromotionActions={
+                              notCompletedPromotionActions
+                            }
+                            locale={this.props.locale}
+                            growthCampaignsRefetch={growthCampaignsRefetch}
+                            showNotification={(...props) => this.handleShowNotification(...props)}
+                          />
+                        )}
+                        {navigation === 'follows' && (
+                          <FollowOrigin
+                            decimalDivision={decimalDivision}
+                            isMobile={isMobile}
+                            completedFollowActions={completedFollowActions}
+                            notCompletedFollowActions={notCompletedFollowActions}
+                            growthCampaignsRefetch={growthCampaignsRefetch}
+                            showNotification={(...props) => this.handleShowNotification(...props)}
+                          />
+                        )}
+                      </Fragment>
+                    )
+                  }}
+                </Query>
+              )
+            }}
+          </Query>
+        </div>
+      </>
     )
   }
 }

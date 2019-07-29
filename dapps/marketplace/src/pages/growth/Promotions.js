@@ -12,7 +12,6 @@ import { Mutation } from 'react-apollo'
 import VerifyPromotionMutation from 'mutations/VerifyPromotion'
 import AutoMutate from 'components/AutoMutate'
 
-import ToastNotification from 'pages/user/ToastNotification'
 import { formatTokens, getContentToShare } from 'utils/growthTools'
 
 import get from 'lodash/get'
@@ -57,29 +56,11 @@ class Promotions extends React.Component {
     return selectedAction
   }
 
-  componentDidUpdate(prevProps) {
-    const status = get(this.props, 'match.params.status')
-    const contentId = get(this.props, 'match.params.contentId')
-
-    if (status === 'verified') {
-      // const currentAction = this.getCurrentAction()
-      // if (currentAction) {
-      //   const message = getToastMessage(currentAction, this.props.decimalDivision)
-      //   this.handleShowNotification(message, 'green')
-      // }
-
-      this.props.history.replace(`/campaigns/promotions/${contentId}`)
-    }
-  }
-
   render() {
     const contentId = get(this.props, 'match.params.contentId')
 
     return (
       <>
-        <ToastNotification
-          setShowHandler={handler => (this.handleShowNotification = handler)}
-        />
         {this.renderVerifyMutation()}
         <div
           className={`growth-promote-origin${
@@ -168,7 +149,11 @@ class Promotions extends React.Component {
         mutation={VerifyPromotionMutation}
         onCompleted={({ verifyPromotion }) => {
           if (verifyPromotion.success) {
-            this.props.history.replace(`/campaigns/promotions/${contentId}/verified`)
+            if (this.props.showNotification) {
+              const message = getToastMessage(selectedAction, this.props.decimalDivision)
+              this.props.showNotification(message, 'green')
+            }
+      
             if (this.props.growthCampaignsRefetch) {
               this.props.growthCampaignsRefetch()
             }

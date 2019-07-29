@@ -145,7 +145,7 @@ class App extends Component {
             <Route path="/about/tokens" component={AboutToken} />
             <Route
               exact
-              path="/campaigns/:navigation?/:contentId?/:status?"
+              path="/campaigns/:navigation?/:contentId?"
               component={props => (
                 <GrowthCampaigns {...props} locale={this.props.locale} />
               )}
