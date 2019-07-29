@@ -346,7 +346,7 @@ class GrowthCampaigns extends Component {
 
   render() {
     const navigation = get(this.props, 'match.params.navigation') || 'Campaigns'
-    const isMobile = this.props.isMobile
+    const { isMobile, growthCampaignsRefetch } = this.props
 
     return (
       <div className={`container growth-campaigns ${isMobile ? 'mobile' : ''}`}>
@@ -465,7 +465,7 @@ class GrowthCampaigns extends Component {
                           }
                         />
                       )}
-                      {navigation === 'promotions' && (
+                      {navigation.startsWith('promotions') && (
                         <Promotions
                           decimalDivision={decimalDivision}
                           isMobile={isMobile}
@@ -474,6 +474,7 @@ class GrowthCampaigns extends Component {
                             notCompletedPromotionActions
                           }
                           locale={this.props.locale}
+                          growthCampaignsRefetch={growthCampaignsRefetch}
                         />
                       )}
                       {navigation === 'follows' && (
@@ -482,6 +483,7 @@ class GrowthCampaigns extends Component {
                           isMobile={isMobile}
                           completedFollowActions={completedFollowActions}
                           notCompletedFollowActions={notCompletedFollowActions}
+                          growthCampaignsRefetch={growthCampaignsRefetch}
                         />
                       )}
                     </Fragment>

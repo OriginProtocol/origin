@@ -98,7 +98,7 @@ class App extends Component {
       (isMobile &&
         (this.props.location.pathname.match(/^\/purchases\/.*$/gi) ||
           this.props.location.pathname.match(
-            /^\/campaigns\/(verifications|purchases|invitations|follows|promotions)$/gi
+            /^\/campaigns\/(verifications|purchases|invitations|follows|promotions)(\/|$)/gi
           ) ||
           this.props.location.pathname.match(/\/onboard\/finished/gi) ||
           this.props.location.pathname.match(
@@ -145,14 +145,7 @@ class App extends Component {
             <Route path="/about/tokens" component={AboutToken} />
             <Route
               exact
-              path="/campaigns"
-              component={props => (
-                <GrowthCampaigns {...props} locale={this.props.locale} />
-              )}
-            />
-            <Route
-              exact
-              path="/campaigns/:navigation"
+              path="/campaigns/:navigation?/:contentId?/:status?"
               component={props => (
                 <GrowthCampaigns {...props} locale={this.props.locale} />
               )}

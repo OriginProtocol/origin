@@ -15,6 +15,8 @@ import AutoMutate from 'components/AutoMutate'
 import ToastNotification from 'pages/user/ToastNotification'
 import { formatTokens, getContentToShare } from 'utils/growthTools'
 
+import get from 'lodash/get'
+
 const getToastMessage = (action, decimalDivision) => {
   const tokensEarned = formatTokens(action.reward.amount, decimalDivision)
   return fbt(
@@ -32,18 +34,47 @@ const actionTypeToNetwork = actionType => {
   return null
 }
 
+const getActionHash = action => web3.utils.sha3(`${action.type}/${action.content.post.text.default}`)
+
 class Promotions extends React.Component {
   constructor() {
     super()
 
     this.state = {
-      stage: 'Contents',
-      selectedAction: null,
       runVerifyMutation: false
     }
   }
 
+  getCurrentAction() {
+    const { notCompletedPromotionActions, completedPromotionActions } = this.props
+    const contentId = get(this.props, 'match.params.contentId')
+
+    const selectedAction = [
+      ...notCompletedPromotionActions,
+      ...completedPromotionActions
+    ].find(action => getActionHash(action) === contentId)
+
+    return selectedAction
+  }
+
+  componentDidUpdate(prevProps) {
+    const status = get(this.props, 'match.params.status')
+    const contentId = get(this.props, 'match.params.contentId')
+
+    if (status === 'verified') {
+      // const currentAction = this.getCurrentAction()
+      // if (currentAction) {
+      //   const message = getToastMessage(currentAction, this.props.decimalDivision)
+      //   this.handleShowNotification(message, 'green')
+      // }
+
+      this.props.history.replace(`/campaigns/promotions/${contentId}`)
+    }
+  }
+
   render() {
+    const contentId = get(this.props, 'match.params.contentId')
+
     return (
       <>
         <ToastNotification
@@ -56,7 +87,7 @@ class Promotions extends React.Component {
           }`}
         >
           {this.renderHeader()}
-          {this[`render${this.state.stage}`]()}
+          {contentId ? this.renderChannels() : this.renderContents()}
         </div>
       </>
     )
@@ -65,14 +96,14 @@ class Promotions extends React.Component {
   renderContents() {
     return (
       <>
-        {this.props.notCompletedPromotionActions.map((action, index) => (
+        {[...this.props.notCompletedPromotionActions, ...this.props.completedPromotionActions].map((action, index) => (
           <ShareableContent
             key={index}
             onShare={() => {
-              this.setState({
-                selectedAction: action,
-                stage: 'Channels'
-              })
+              // Note: Taking SHA3 hash just to push it to router
+              // This hash has nothing to do with Growth Event contentHash
+              const contentHash = getActionHash(action)
+              this.props.history.push(`/campaigns/promotions/${contentHash}`)
             }}
             action={action}
           />
@@ -84,7 +115,11 @@ class Promotions extends React.Component {
   renderChannels() {
     const { decimalDivision, isMobile, locale } = this.props
 
-    const { selectedAction } = this.state
+    const selectedAction = this.getCurrentAction()
+
+    if (!selectedAction) {
+      return this.props.history.push(`/campaigns/promotions`)
+    }
 
     // TODO: As of now, there is only one growth rule per content AND social network.
     // This has to be updated once support for multiple channels for the same content is available
@@ -116,23 +151,32 @@ class Promotions extends React.Component {
   }
 
   renderVerifyMutation() {
-    const { selectedAction, runVerifyMutation } = this.state
+    const { runVerifyMutation } = this.state
 
     if (!runVerifyMutation) {
       return null
     }
 
-    const { decimalDivision, locale } = this.props
+    const contentId = get(this.props, 'match.params.contentId')
+
+    const selectedAction = this.getCurrentAction()
+
+    const { locale } = this.props
 
     return (
       <Mutation
         mutation={VerifyPromotionMutation}
         onCompleted={({ verifyPromotion }) => {
           if (verifyPromotion.success) {
-            const message = getToastMessage(selectedAction, decimalDivision)
-            this.handleShowNotification(message, 'green')
-            // TODO: Should a query refetch be done here?
+            this.props.history.replace(`/campaigns/promotions/${contentId}/verified`)
+            if (this.props.growthCampaignsRefetch) {
+              this.props.growthCampaignsRefetch()
+            }
           }
+          this.setState({ runVerifyMutation: false })
+        }}
+        onError={errorData => {
+          console.error(`Failed to verify shared content`, errorData)
           this.setState({ runVerifyMutation: false })
         }}
       >
@@ -157,14 +201,15 @@ class Promotions extends React.Component {
 
   renderHeader() {
     const { isMobile } = this.props
-    const { stage } = this.state
 
+    const hasSelectedContent = get(this.props, 'match.params.contentId') ? true : false
+    
     const stageTitle = (
       <>
-        {stage === 'Contents' ? (
+        {!hasSelectedContent ? (
           <fbt desc="GrowthPromotions.promoteOrigin">Promote Origin</fbt>
         ) : null}
-        {stage === 'Channels' ? (
+        {hasSelectedContent ? (
           <fbt desc="GrowthPromotions.selectChannels">
             Select Social Channels
           </fbt>
@@ -174,13 +219,13 @@ class Promotions extends React.Component {
 
     const stageDesc = (
       <>
-        {stage === 'Contents' ? (
+        {!hasSelectedContent ? (
           <fbt desc="GrowthPromotions.earnBySharing">
             Select an article or video about Origin and share it on your social
             channels.
           </fbt>
         ) : null}
-        {stage === 'Channels' ? (
+        {hasSelectedContent ? (
           <fbt desc="GrowthPromotions.selectChannelToShare">
             Where would you like to share this video? Select more channels for
             more rewards!
@@ -194,13 +239,7 @@ class Promotions extends React.Component {
         showBackButton={true}
         className="px-0"
         onBack={() => {
-          if (stage === 'Channels') {
-            return this.setState({
-              stage: 'Contents'
-            })
-          }
-
-          this.props.history.push('/campaigns')
+          this.props.history.goBack()
         }}
       >
         {stageTitle}

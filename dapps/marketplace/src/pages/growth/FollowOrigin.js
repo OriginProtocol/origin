@@ -40,7 +40,8 @@ function FollowOrigin(props) {
     decimalDivision,
     isMobile,
     completedFollowActions,
-    notCompletedFollowActions
+    notCompletedFollowActions,
+    growthCampaignsRefetch
   } = props
 
   return (
@@ -54,7 +55,14 @@ function FollowOrigin(props) {
           if (verifyPromotion.success) {
             const message = getToastMessage(currentAction, decimalDivision)
             handleShowNotification(message, 'green')
+            if (growthCampaignsRefetch) {
+              growthCampaignsRefetch()
+            }
           }
+          setCurrentAction(null)
+        }}
+        onError={errorData => {
+          console.error(`Failed to verify follower`, errorData)
           setCurrentAction(null)
         }}
       >
