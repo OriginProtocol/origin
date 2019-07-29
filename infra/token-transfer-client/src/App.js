@@ -44,7 +44,7 @@ require('react-styl')(`
     background-color: #f7fbfd
   .container-fluid
     height: 100%
-  .row
+  .container-fluid > .row
     height: 100%
   .sidebar
     width: 260px

@@ -4,3 +4,12 @@
   border-color: #345d7a;
   background-color: #345d7a;
 }
+
+.progress {
+  height: 14px;
+  border-radius: 10px;
+}
+
+.bg-success {
+  background-color: #00db8d !important;
+}
