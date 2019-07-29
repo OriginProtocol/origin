@@ -145,8 +145,6 @@ class Promotions extends React.Component {
       return null
     }
 
-    const contentId = get(this.props, 'match.params.contentId')
-
     const selectedAction = this.getCurrentAction()
 
     const { locale } = this.props
@@ -224,8 +222,8 @@ class Promotions extends React.Component {
         ) : null}
         {hasSelectedContent ? (
           <fbt desc="GrowthPromotions.selectChannelToShare">
-            Where would you like to share this? Select more channels for
-            more rewards!
+            Where would you like to share this? Select more channels for more
+            rewards!
           </fbt>
         ) : null}
       </>

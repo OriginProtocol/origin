@@ -30,8 +30,6 @@ const actionTypeToNetwork = actionType => {
   return null
 }
 
-let handleShowNotification
-
 function FollowOrigin(props) {
   const [currentAction, setCurrentAction] = useState(null)
 
