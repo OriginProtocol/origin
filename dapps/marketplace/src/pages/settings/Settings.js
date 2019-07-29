@@ -19,6 +19,7 @@ const store = Store('sessionStorage')
 const configurableFields = [
   'bridge',
   'discovery',
+  'growth',
   'ipfsGateway',
   'ipfsRPC',
   'provider',
@@ -304,6 +305,24 @@ class Settings extends Component {
                             type="text"
                             name="discovery"
                             {...input('discovery')}
+                            onBlur={() => this.saveConfig(setNetwork)}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <div className="col-sm">
+                          <label htmlFor="indexing">
+                            <fbt desc="settings.growthLabel">
+                              Growth Server
+                            </fbt>
+                          </label>
+                        </div>
+                        <div className="col-sm">
+                          <input
+                            className="form-control form-control-lg"
+                            type="text"
+                            name="growth"
+                            {...input('growth')}
                             onBlur={() => this.saveConfig(setNetwork)}
                           />
                         </div>
