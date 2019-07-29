@@ -1,11 +1,11 @@
 import React from 'react'
 
 import NavLink from './NavLink'
-import Logo from '../assets/0-rigin-logo@3x.png'
-import Dashboard from '../assets/dashboard-icon@3x.png'
-import History from '../assets/history-icon@3x.png'
-import News from '../assets/news-icon@3x.png'
-import Security from '../assets/security-icon@3x.png'
+import Logo from '../assets/origin-logo.svg'
+import Dashboard from '-!react-svg-loader!../assets/dashboard-icon.svg'
+import History from '-!react-svg-loader!../assets/history-icon.svg'
+import News from '-!react-svg-loader!../assets/news-icon.svg'
+import Security from '-!react-svg-loader!../assets/security-icon.svg'
 
 const Navigation = () => (
   <nav className="navbar navbar-expand-xs">
@@ -13,26 +13,26 @@ const Navigation = () => (
     <div className="container">
       <ul className="navbar-nav ml-3">
         <li className="nav-item">
-          <NavLink to="/" className="nav-link text">
-            <img src={Dashboard} className="icon" />
+          <NavLink to="/" exact className="nav-link text">
+            <Dashboard className="icon" />
             Dashboard
           </NavLink>
         </li>
         <li className="nav-item">
           <NavLink to="/news" className="nav-link text">
-            <img src={News} className="icon" />
+            <News className="icon" />
             News
           </NavLink>
         </li>
         <li className="nav-item">
           <NavLink to="/history" className="nav-link text">
-            <img src={History} className="icon" />
+            <History className="icon" />
             History
           </NavLink>
         </li>
         <li className="nav-item">
           <NavLink to="/security" className="nav-link text">
-            <img src={Security} className="icon" />
+            <Security className="icon" />
             Security
           </NavLink>
         </li>
@@ -52,14 +52,19 @@ require('react-styl')(`
     background-color: #007cff
     font-family: lato
     .brand
-      margin: 30px auto
+      margin: 30px auto 50px auto
       width: 100px
     .nav-item
       font-size: 16px
       margin-bottom: 20px
-      a
-        color: white
+      a.nav-link
+        color: rgba(255, 255, 255, 0.5)
         .icon
           width: 28px
           margin-right: 15px
+          fill-opacity: 0.5
+      a.nav-link.active
+        color: rgba(255, 255, 255, 1)
+        .icon
+          fill-opacity: 1
 `)

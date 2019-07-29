@@ -33,9 +33,8 @@ require('react-styl')(`
       height: 300px;
     .feature
       font-size: 40px
-      padding-bottom: 20px
     .title
-      padding: 20px 20px 0 20px
+      padding: 20px
       font-weight: bold;
     .description
       font-size: 18px

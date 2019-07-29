@@ -11,8 +11,6 @@ html {
 }
 
 body {
-  color: var(--dark);
-  font-family: var(--default-font);
   font-size: 1.125rem;
   height: 100%;
   line-height: 1.5;
@@ -30,9 +28,32 @@ h1 {
   font-weight: bold;
 }
 
+h2 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+small {
+  font-size: 14px;
+  color: #8fa7b7
+}
+
+.card-wrapper {
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 2px 14px 0 rgba(0, 0, 0, 0.1);
+}
+
+.card-wrapper .header .link {
+  font-size: 14px;
+  text-align: right;
+}
+
 .btn.btn-lg {
+  font-weight: bold;
   border-radius: 2rem;
-  padding: 0.75rem 2rem;
+  padding: 0.5rem 6rem;
   min-width: 10rem;
   font-size: 18px;
 }

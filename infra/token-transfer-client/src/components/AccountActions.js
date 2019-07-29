@@ -6,7 +6,7 @@ export default AccountActions
 
 require('react-styl')(`
   .actions
-    margin-bottom: 20px
+    margin-bottom: 50px
     font-size: 14px
     text-align: right
     color: #638298
