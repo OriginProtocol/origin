@@ -33,7 +33,8 @@ const actionTypeToNetwork = actionType => {
   return null
 }
 
-const getActionHash = action => web3.utils.sha3(`${action.type}/${action.content.post.text.default}`)
+const getActionHash = action =>
+  web3.utils.sha3(`${action.type}/${action.content.post.text.default}`)
 
 class Promotions extends React.Component {
   constructor() {
@@ -45,7 +46,10 @@ class Promotions extends React.Component {
   }
 
   getCurrentAction() {
-    const { notCompletedPromotionActions, completedPromotionActions } = this.props
+    const {
+      notCompletedPromotionActions,
+      completedPromotionActions
+    } = this.props
     const contentId = get(this.props, 'match.params.contentId')
 
     const selectedAction = [
@@ -77,7 +81,10 @@ class Promotions extends React.Component {
   renderContents() {
     return (
       <>
-        {[...this.props.notCompletedPromotionActions, ...this.props.completedPromotionActions].map((action, index) => (
+        {[
+          ...this.props.notCompletedPromotionActions,
+          ...this.props.completedPromotionActions
+        ].map((action, index) => (
           <ShareableContent
             key={index}
             onShare={() => {
@@ -150,10 +157,13 @@ class Promotions extends React.Component {
         onCompleted={({ verifyPromotion }) => {
           if (verifyPromotion.success) {
             if (this.props.showNotification) {
-              const message = getToastMessage(selectedAction, this.props.decimalDivision)
+              const message = getToastMessage(
+                selectedAction,
+                this.props.decimalDivision
+              )
               this.props.showNotification(message, 'green')
             }
-      
+
             if (this.props.growthCampaignsRefetch) {
               this.props.growthCampaignsRefetch()
             }
@@ -187,8 +197,10 @@ class Promotions extends React.Component {
   renderHeader() {
     const { isMobile } = this.props
 
-    const hasSelectedContent = get(this.props, 'match.params.contentId') ? true : false
-    
+    const hasSelectedContent = get(this.props, 'match.params.contentId')
+      ? true
+      : false
+
     const stageTitle = (
       <>
         {!hasSelectedContent ? (
@@ -212,7 +224,7 @@ class Promotions extends React.Component {
         ) : null}
         {hasSelectedContent ? (
           <fbt desc="GrowthPromotions.selectChannelToShare">
-            Where would you like to share this video? Select more channels for
+            Where would you like to share this? Select more channels for
             more rewards!
           </fbt>
         ) : null}

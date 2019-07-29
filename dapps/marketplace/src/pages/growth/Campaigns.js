@@ -355,7 +355,9 @@ class GrowthCampaigns extends Component {
         <ToastNotification
           setShowHandler={handler => (this.handleShowNotification = handler)}
         />
-        <div className={`container growth-campaigns ${isMobile ? 'mobile' : ''}`}>
+        <div
+          className={`container growth-campaigns ${isMobile ? 'mobile' : ''}`}
+        >
           <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
             {({ error, data, networkStatus, loading }) => {
               if (networkStatus === 1 || loading) {
@@ -475,13 +477,17 @@ class GrowthCampaigns extends Component {
                           <Promotions
                             decimalDivision={decimalDivision}
                             isMobile={isMobile}
-                            completedPromotionActions={completedPromotionActions}
+                            completedPromotionActions={
+                              completedPromotionActions
+                            }
                             notCompletedPromotionActions={
                               notCompletedPromotionActions
                             }
                             locale={this.props.locale}
                             growthCampaignsRefetch={growthCampaignsRefetch}
-                            showNotification={(...props) => this.handleShowNotification(...props)}
+                            showNotification={(...props) =>
+                              this.handleShowNotification(...props)
+                            }
                           />
                         )}
                         {navigation === 'follows' && (
@@ -489,9 +495,13 @@ class GrowthCampaigns extends Component {
                             decimalDivision={decimalDivision}
                             isMobile={isMobile}
                             completedFollowActions={completedFollowActions}
-                            notCompletedFollowActions={notCompletedFollowActions}
+                            notCompletedFollowActions={
+                              notCompletedFollowActions
+                            }
                             growthCampaignsRefetch={growthCampaignsRefetch}
-                            showNotification={(...props) => this.handleShowNotification(...props)}
+                            showNotification={(...props) =>
+                              this.handleShowNotification(...props)
+                            }
                           />
                         )}
                       </Fragment>
