@@ -79,7 +79,7 @@ class ActionList extends Component {
   }
 
   render() {
-    const { title, decimalDivision, isMobile, onActionClick } = this.props
+    const { title, decimalDivision, isMobile, onActionClick, locale } = this.props
 
     const { actionsToDisplay, modalOpen, modalText } = this.state
 
@@ -117,6 +117,7 @@ class ActionList extends Component {
           {actionsToDisplay.map(action => {
             return (
               <Action
+                locale={locale}
                 action={action}
                 decimalDivision={decimalDivision}
                 key={`${action.type}:${action.status}:${

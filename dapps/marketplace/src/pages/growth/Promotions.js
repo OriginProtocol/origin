@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React from 'react'
 import { fbt } from 'fbt-runtime'
 import Link from 'components/Link'
 import { withRouter } from 'react-router-dom'
@@ -6,13 +6,14 @@ import withWallet from 'hoc/withWallet'
 
 import ActionList from 'components/growth/ActionList'
 import MobileModalHeader from 'components/MobileModalHeader'
+import ShareableContent from 'components/growth/ShareableContent'
 
 import { Mutation } from 'react-apollo'
 import VerifyPromotionMutation from 'mutations/VerifyPromotion'
 import AutoMutate from 'components/AutoMutate'
 
 import ToastNotification from 'pages/user/ToastNotification'
-import { formatTokens } from 'utils/growthTools'
+import { formatTokens, getContentToShare } from 'utils/growthTools'
 
 const getToastMessage = (action, decimalDivision) => {
   const tokensEarned = formatTokens(action.reward.amount, decimalDivision)
@@ -58,18 +59,19 @@ class Promotions extends React.Component {
   }
 
   renderContents() {
-    // TODO: actions => contents => action/contentIndex
     return (
       <>
         {this.props.notCompletedPromotionActions.map((action, index) => (
-          <div key={index} onClick={() => {
-            this.setState({
-              selectedAction: action,
-              stage: 'Channels'
-            })
-          }}>
-            {action.content.post.text.default}
-          </div>
+          <ShareableContent
+            key={index}
+            onShare={() => {
+              this.setState({
+                selectedAction: action,
+                stage: 'Channels'
+              })
+            }}
+            action={action}
+          />
         ))}
       </>
     )
@@ -79,28 +81,36 @@ class Promotions extends React.Component {
     const {
       decimalDivision,
       isMobile,
-      completedPromotionActions,
-      notCompletedPromotionActions
+      locale
     } = this.props
-  
+
+    const {
+      selectedAction
+    } = this.state
+
+    // TODO: As of now, there is only one growth rule per content AND social network.
+    // This has to be updated once support for multiple channels for the same content is available
+
     return (
       <>
-        <ActionList
-          decimalDivision={decimalDivision}
-          isMobile={isMobile}
-          actions={notCompletedPromotionActions}
-          onActionClick={() => {
-            this.setState({
-              runVerifyMutation: true
-            })
-          }}
-        />
-        {completedPromotionActions.length > 0 && (
+        {selectedAction.status === 'Completed' ? (
           <ActionList
             title={fbt('Completed', 'growth.promoteOrigin.completed')}
             decimalDivision={decimalDivision}
             isMobile={isMobile}
-            actions={completedPromotionActions}
+            actions={[selectedAction]}
+          />
+        ) : (
+          <ActionList
+            decimalDivision={decimalDivision}
+            isMobile={isMobile}
+            actions={[selectedAction]}
+            locale={locale}
+            onActionClick={() => {
+              this.setState({
+                runVerifyMutation: true
+              })
+            }}
           />
         )}
       </>
@@ -115,7 +125,8 @@ class Promotions extends React.Component {
     }
   
     const {
-      decimalDivision
+      decimalDivision,
+      locale
     } = this.props
 
     return (
@@ -139,8 +150,7 @@ class Promotions extends React.Component {
                   identity: this.props.wallet,
                   identityProxy: this.props.walletProxy,
                   socialNetwork: actionTypeToNetwork(selectedAction.type),
-                  // TODO: Handle translations
-                  content: selectedAction.contents.post.text.default
+                  content: getContentToShare(selectedAction, locale)
                 }
               })
             }}

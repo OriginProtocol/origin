@@ -473,6 +473,7 @@ class GrowthCampaigns extends Component {
                           notCompletedPromotionActions={
                             notCompletedPromotionActions
                           }
+                          locale={this.props.locale}
                         />
                       )}
                       {navigation === 'follows' && (

@@ -44,10 +44,32 @@ function getAbsoluteUrl(relativeUrl, params = {}) {
   return url.toString()
 }
 
+const htmlEntities = {
+  'amp': '&',
+  'apos': '\'',
+  'lt': '<',
+  'gt': '>',
+  'quot': '"',
+  'nbsp': '\xa0'
+}
+
+const htmlEntityPattern = /&([a-z]+);/ig
+
+function decodeHTML(content) {
+  return content.replace(htmlEntityPattern, (match, entity) => {
+    entity = entity.toLowerCase()
+    if (htmlEntities.hasOwnProperty(entity)) {
+      return htmlEntities[entity]
+    }
+    return match
+  })
+}
+
 module.exports = {
   generateAirbnbCode,
   generateSignature,
   generateSixDigitCode,
   generateWebsiteCode,
-  getAbsoluteUrl
+  getAbsoluteUrl,
+  decodeHTML
 }

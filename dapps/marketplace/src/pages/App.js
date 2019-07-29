@@ -143,11 +143,14 @@ class App extends Component {
             <Route path="/about/crypto" component={AboutCrypto} />
             <Route path="/about/payments" component={AboutPayments} />
             <Route path="/about/tokens" component={AboutToken} />
-            <Route exact path="/campaigns" component={GrowthCampaigns} />
+            <Route exact
+              path="/campaigns"
+              component={props => <GrowthCampaigns {...props} locale={this.props.locale} />}
+            />
             <Route
               exact
               path="/campaigns/:navigation"
-              component={GrowthCampaigns}
+              component={props => <GrowthCampaigns {...props} locale={this.props.locale} />}
             />
             <Route exact path="/rewards/banned" component={GrowthBanned} />
             <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />

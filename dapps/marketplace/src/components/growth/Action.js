@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react'
 import { fbt } from 'fbt-runtime'
 import { Link } from 'react-router-dom'
-import { formatTokens } from 'utils/growthTools'
+import { formatTokens, getContentToShare } from 'utils/growthTools'
 import get from 'lodash/get'
 
 const GrowthEnum = require('Growth$FbtEnum')
@@ -101,10 +101,9 @@ function Action(props) {
   } else if (type === 'TwitterShare') {
     buttonLink = undefined
     foregroundImgSrc = 'images/growth/twitter-icon.svg'
-    title = fbt('Tweet', 'RewardActions.tweetThis')
-    // TODO: Handle translation
-    externalLink = `https://twitter.com/intent/tweet?status=${encodeURIComponent(
-      get(props.action, 'contents[0].post.text.default')
+    title = fbt('Share this on Twitter', 'RewardActions.tweetThis')
+    externalLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      getContentToShare(props.action, props.locale)
     )}`
   } else if (type === 'TwitterFollow') {
     buttonLink = undefined

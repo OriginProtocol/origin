@@ -16,6 +16,8 @@ const { verifyPromotions } = require('../utils/validation')
 
 const { Attestation } = require('./../models/index')
 
+const { decodeHTML } = require('../utils/index')
+
 const PromotionEventToGrowthEvent = {
   TWITTER: {
     FOLLOW: GrowthEventTypes.FollowedOnTwitter,
@@ -62,7 +64,8 @@ router.post('/verify', verifyPromotions, async (req, res) => {
     if (event) {
       const tweetContent = type === 'SHARE' ? JSON.parse(event).text : null
       // Invalid if tweet content is same as expected
-      const isValidEvent = type === 'FOLLOW' || tweetContent === content
+      // Note: Twitter sends HTML encoded contents
+      const isValidEvent = type === 'FOLLOW' || decodeHTML(tweetContent) === content
 
       if (isValidEvent) {
         let contentHash = null
@@ -73,7 +76,7 @@ router.post('/verify', verifyPromotions, async (req, res) => {
           // See infra/grwowth/resources/rules.js
           contentHash = crypto
             .createHash('md5')
-            .update(tweetContent)
+            .update(content)
             .digest('hex')
         }
 

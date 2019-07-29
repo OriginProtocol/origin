@@ -200,3 +200,10 @@ export function getTokensEarned({
     return 0
   }
 }
+
+export function getContentToShare(action, locale) {
+  const translation = action.content.post.text.translations
+    .find(content => content.locale === locale)
+
+  return translation ? translation.text : action.content.post.text.default
+}
