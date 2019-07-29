@@ -35,10 +35,6 @@ module.exports = (sequelize, DataTypes) => {
   Grant.prototype.vestingSchedule = function() {
     const now = this.now || moment()
 
-    if (now < this.cliff) {
-      return []
-    }
-
     const vestingEventCount = moment(this.end).diff(this.start, this.interval)
     const vestedPerEvent = BigNumber(this.amount).div(vestingEventCount)
     const cliffVestingCount = moment(this.cliff).diff(this.start, this.interval)
@@ -52,14 +48,18 @@ module.exports = (sequelize, DataTypes) => {
   // Returns current number of vested tokens for this grant
   Grant.prototype.calculateVested = function() {
     const now = this.now || moment()
-
-    // Number of vesting events that have occurred since the cliff determines
-    // the index of the array for calculating events that have already vested
-    const threshold = moment(now).diff(this.cliff, this.interval)
-    // Buld array of already vested amounts
-    const vested = this.vestingSchedule().slice(0, threshold + 1)
-
-    return vested.length ? Math.round(BigNumber.sum(...vested)) : 0
+    if (now < this.cliff) {
+      return 0
+    } else if (now > this.end) {
+      return this.amount
+    } else {
+      // Number of vesting events that have occurred since the cliff determines
+      // the index of the array for calculating events that have already vested
+      const threshold = moment(now).diff(this.cliff, this.interval)
+      // Buld array of already vested amounts
+      const vested = this.vestingSchedule().slice(0, threshold + 1)
+      return vested.length ? Math.round(BigNumber.sum(...vested)) : 0
+    }
   }
 
   return Grant
