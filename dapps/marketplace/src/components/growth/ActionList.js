@@ -79,7 +79,13 @@ class ActionList extends Component {
   }
 
   render() {
-    const { title, decimalDivision, isMobile, onActionClick, locale } = this.props
+    const {
+      title,
+      decimalDivision,
+      isMobile,
+      onActionClick,
+      locale
+    } = this.props
 
     const { actionsToDisplay, modalOpen, modalText } = this.state
 

@@ -50,7 +50,11 @@ class Promotions extends React.Component {
           setShowHandler={handler => (this.handleShowNotification = handler)}
         />
         {this.renderVerifyMutation()}
-        <div className={`growth-promote-origin${this.props.isMobile ? ' mobile' : ''}`}>
+        <div
+          className={`growth-promote-origin${
+            this.props.isMobile ? ' mobile' : ''
+          }`}
+        >
           {this.renderHeader()}
           {this[`render${this.state.stage}`]()}
         </div>
@@ -78,15 +82,9 @@ class Promotions extends React.Component {
   }
 
   renderChannels() {
-    const {
-      decimalDivision,
-      isMobile,
-      locale
-    } = this.props
+    const { decimalDivision, isMobile, locale } = this.props
 
-    const {
-      selectedAction
-    } = this.state
+    const { selectedAction } = this.state
 
     // TODO: As of now, there is only one growth rule per content AND social network.
     // This has to be updated once support for multiple channels for the same content is available
@@ -123,11 +121,8 @@ class Promotions extends React.Component {
     if (!runVerifyMutation) {
       return null
     }
-  
-    const {
-      decimalDivision,
-      locale
-    } = this.props
+
+    const { decimalDivision, locale } = this.props
 
     return (
       <Mutation
@@ -166,8 +161,14 @@ class Promotions extends React.Component {
 
     const stageTitle = (
       <>
-        {stage === 'Contents' ? <fbt desc="GrowthPromotions.promoteOrigin">Promote Origin</fbt> : null}
-        {stage === 'Channels' ? <fbt desc="GrowthPromotions.selectChannels">Select Social Channels</fbt> : null}
+        {stage === 'Contents' ? (
+          <fbt desc="GrowthPromotions.promoteOrigin">Promote Origin</fbt>
+        ) : null}
+        {stage === 'Channels' ? (
+          <fbt desc="GrowthPromotions.selectChannels">
+            Select Social Channels
+          </fbt>
+        ) : null}
       </>
     )
 
@@ -175,12 +176,14 @@ class Promotions extends React.Component {
       <>
         {stage === 'Contents' ? (
           <fbt desc="GrowthPromotions.earnBySharing">
-            Select an article or video about Origin and share it on your social channels.
+            Select an article or video about Origin and share it on your social
+            channels.
           </fbt>
         ) : null}
         {stage === 'Channels' ? (
           <fbt desc="GrowthPromotions.selectChannelToShare">
-            Where would you like to share this video? Select more channels for more rewards!
+            Where would you like to share this video? Select more channels for
+            more rewards!
           </fbt>
         ) : null}
       </>
@@ -207,14 +210,10 @@ class Promotions extends React.Component {
         <Link className="back d-flex mr-auto" to="/campaigns">
           <img src="images/caret-blue.svg" />
           <div>
-            <fbt desc="GrowthPromotions.backToCampaign">
-              Back to Campaign
-            </fbt>
+            <fbt desc="GrowthPromotions.backToCampaign">Back to Campaign</fbt>
           </div>
         </Link>
-        <h1 className={`mb-2 pt-md-3 mt-3`}>
-          {stageTitle}
-        </h1>
+        <h1 className={`mb-2 pt-md-3 mt-3`}>{stageTitle}</h1>
       </>
     )
 
@@ -222,16 +221,13 @@ class Promotions extends React.Component {
       <div>
         {header}
         <div
-          className={`promote-origin-subtitle${
-            isMobile ? ' text-center' : ''
-          }`}
+          className={`promote-origin-subtitle${isMobile ? ' text-center' : ''}`}
         >
           {stageDesc}
         </div>
       </div>
     )
   }
-
 }
 
 export default withWallet(withRouter(Promotions))

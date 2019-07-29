@@ -65,7 +65,8 @@ router.post('/verify', verifyPromotions, async (req, res) => {
       const tweetContent = type === 'SHARE' ? JSON.parse(event).text : null
       // Invalid if tweet content is same as expected
       // Note: Twitter sends HTML encoded contents
-      const isValidEvent = type === 'FOLLOW' || decodeHTML(tweetContent) === content
+      const isValidEvent =
+        type === 'FOLLOW' || decodeHTML(tweetContent) === content
 
       if (isValidEvent) {
         let contentHash = null

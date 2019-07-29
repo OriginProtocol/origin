@@ -14,15 +14,20 @@ const ShareableContent = ({ action, onShare }) => {
       <img src={image} className="promotion-image" />
       <h2>{title}</h2>
       <div className="promotion-desc">{details}</div>
-      {link && <a href={link} className="promotion-link">
-        {linkText}
-      </a>}
+      {link && (
+        <a href={link} className="promotion-link">
+          {linkText}
+        </a>
+      )}
       <div className="actions">
-        <button className="btn btn-primary" onClick={() => {
-          if (onShare) {
-            onShare(action)
-          }
-        }}>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            if (onShare) {
+              onShare(action)
+            }
+          }}
+        >
           <fbt desc="ShareThis">Share This</fbt>
         </button>
       </div>

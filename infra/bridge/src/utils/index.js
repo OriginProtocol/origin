@@ -45,15 +45,15 @@ function getAbsoluteUrl(relativeUrl, params = {}) {
 }
 
 const htmlEntities = {
-  'amp': '&',
-  'apos': '\'',
-  'lt': '<',
-  'gt': '>',
-  'quot': '"',
-  'nbsp': '\xa0'
+  amp: '&',
+  apos: "'",
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  nbsp: '\xa0'
 }
 
-const htmlEntityPattern = /&([a-z]+);/ig
+const htmlEntityPattern = /&([a-z]+);/gi
 
 function decodeHTML(content) {
   return content.replace(htmlEntityPattern, (match, entity) => {

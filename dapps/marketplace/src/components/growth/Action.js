@@ -2,7 +2,6 @@ import React, { Fragment, useState } from 'react'
 import { fbt } from 'fbt-runtime'
 import { Link } from 'react-router-dom'
 import { formatTokens, getContentToShare } from 'utils/growthTools'
-import get from 'lodash/get'
 
 const GrowthEnum = require('Growth$FbtEnum')
 
@@ -173,6 +172,7 @@ function Action(props) {
                 href={externalLink}
                 target="_blank"
                 className="mt-auto mb-auto"
+                rel="noopener noreferrer"
                 onClick={() =>
                   props.onActionClick && props.onActionClick(props.action)
                 }
