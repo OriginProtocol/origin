@@ -1,64 +1,31 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
-import { connect } from 'react-redux'
-
-import Logo from './assets/origin-logo.svg'
 
 import PrivateRoute from './components/PrivateRoute'
+import PublicRoute from './components/PublicRoute'
+
 // Public routes
 import Login from './components/pages/Login'
+import HandleLogin from './components/pages/HandleLogin'
+import Register from './components/pages/Register'
 // Private routes
-import AccountActions from './components/AccountActions'
-import Navigation from './components/Navigation'
 import Dashboard from './components/pages/Dashboard'
 import News from './components/pages/News'
 import History from './components/pages/History'
 import Security from './components/pages/Security'
 
-const App = props => (
+const App = () => (
   <>
-    <PrivateRoute authed={props.sessionEmail}>
-      <div className="logged-in">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="sidebar">
-              <Navigation />
-            </div>
-            <div className="col body">
-              <AccountActions />
-              <Route path="/dashboard" component={Dashboard} />
-              <Route path="/news" component={News} />
-              <Route path="/history" component={History} />
-              <Route path="/security" component={Security} />
-            </div>
-          </div>
-        </div>
-      </div>
-    </PrivateRoute>
-    <div className="not-logged-in">
-      <div className="logo-wrapper">
-        <img src={Logo} className="logo" />
-      </div>
-      <Route exact path="/" component={Login} />
-      {/* <Route exact path="/" component={Register} /> */}
-    </div>
+    <PublicRoute exact path="/" component={Login} />
+    <PublicRoute path="/login_handler/:code" component={HandleLogin} />
+    <PublicRoute path="/register" component={Register} />
+    <PrivateRoute path="/dashboard" component={Dashboard} />
+    <PrivateRoute path="/news" component={News} />
+    <PrivateRoute path="/history" component={History} />
+    <PrivateRoute path="/security" component={Security} />
   </>
 )
 
-const mapStateToProps = state => {
-  return {
-    sessionEmail: state.sessionEmail
-  }
-}
-
-const mapDispatchToProps = () => {
-  return {}
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App)
+export default App
 
 require('react-styl')(`
   .body

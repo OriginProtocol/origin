@@ -47,6 +47,10 @@ small {
   margin: 0 auto;
 }
 
+.action-card h1 {
+  font-size: 40px;
+}
+
 .action-card label {
   margin-top: 40px;
   font-weight: bold;
