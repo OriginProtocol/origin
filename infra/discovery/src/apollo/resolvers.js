@@ -12,19 +12,25 @@ const resolvers = {
   Query: {
     async listings(root, args) {
       // Get listing Ids from Elastic.
-      const { listingIds, stats } = await search.Listing.search(
+      const { listings, listingIds, stats } = await search.Listing.search(
         args.searchQuery,
         args.sortOptions,
         args.filters,
         args.page.numberOfItems,
         args.page.offset,
-        true // idsOnly
+        args.idsOnly
       )
       logger.info(
         `Query: "${args.searchQuery}" returned ${listingIds.length} results.`
       )
+      // logger.info(
+      //   `TEST ${JSON.stringify(listingIds.map(x => Object.assign({}, { id: x })))}`
+      // )
+      // logger.info(
+      //   `TEST listings - ${JSON.stringify(listings)}`
+      // )
       return {
-        nodes: listingIds.map(x => Object.assign({}, { id: x })),
+        nodes: listings,
         offset: args.page.offset,
         numberOfItems: listingIds.length,
         totalNumberOfItems: stats.totalNumberOfListings,

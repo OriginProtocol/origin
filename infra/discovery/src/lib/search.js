@@ -417,7 +417,13 @@ class Listing {
         subCategory: hit._source.subCategory,
         description: hit._source.description,
         priceAmount: (hit._source.price || {}).amount,
-        priceCurrency: (hit._source.price || {}).currency
+        priceCurrency: (hit._source.price || {}).currency,
+        // added redundant fields below to match schema, maybe that
+        // should change to the above two fields
+        price: {
+          amount: (hit._source.price || {}).amount,
+          currency: (hit._source.price || {}).currency.id
+        }
       })
     })
 
@@ -429,11 +435,11 @@ class Listing {
       totalNumberOfListings: searchResponse.hits.total
     }
 
+    const listingIds = listings.map(listing => listing.id)
     if (idsOnly) {
-      const listingIds = listings.map(listing => listing.id)
       return { listingIds, stats }
     } else {
-      return { listings, stats }
+      return { listingIds, listings, stats }
     }
   }
 }
