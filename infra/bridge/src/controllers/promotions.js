@@ -4,6 +4,7 @@ const express = require('express')
 const router = express.Router()
 
 const crypto = require('crypto')
+const Sequelize = require('sequelize')
 
 const { getAsync } = require('../utils/redis')
 const logger = require('./../logger')
@@ -13,7 +14,9 @@ const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
 
 const { verifyPromotions } = require('../utils/validation')
 
-const { Attestation } = require('./../models/index')
+const db = require('../models/index')
+
+const { decodeHTML } = require('../utils/index')
 
 const PromotionEventToGrowthEvent = {
   TWITTER: {
@@ -25,14 +28,160 @@ const PromotionEventToGrowthEvent = {
 const waitFor = timeInMs =>
   new Promise(resolve => setTimeout(resolve, timeInMs))
 
-router.post('/verify', verifyPromotions, async (req, res) => {
-  const { type, socialNetwork, identity, content } = req.body
+/**
+ * Returns user profile data from the event
+ */
+const getUserProfileFromEvent = ({ event, socialNetwork, type }) => {
+  if (socialNetwork !== 'TWITTER') {
+    // TODO: As of now, only twitter is supported
+    logger.error(`Trying to parse event of unknown network: ${socialNetwork}`)
+    return null
+  }
 
-  const attestation = await Attestation.findOne({
-    where: {
-      ethAddress: identity.toLowerCase(),
-      method: socialNetwork
+  if (type === 'FOLLOW') {
+    return event.target
+  }
+
+  return event.source
+}
+
+/**
+ * Creates a growth event and updates user profile in DB
+ */
+const persistEvent = async ({
+  content,
+  identity,
+  identityProxy,
+  event,
+  socialNetwork,
+  type
+}) => {
+  let contentHash = null
+
+  if (content && type === 'SHARE') {
+    // Important: Make sure to keep this hash function in sync with
+    // the one used in the growth engine rules.
+    // See infra/growth/resources/rules.js
+    contentHash = crypto
+      .createHash('md5')
+      .update(content)
+      .digest('hex')
+  }
+
+  const txn = await db.sequelize.transaction()
+
+  try {
+    await GrowthEvent.insert(
+      logger,
+      1,
+      identity,
+      PromotionEventToGrowthEvent[socialNetwork][type],
+      contentHash,
+      event,
+      Date.now()
+    )
+
+    const profileData = getUserProfileFromEvent({ event, socialNetwork, type })
+    if (profileData) {
+      const addresses = []
+      if (identity) {
+        addresses.push(identity.toLowerCase())
+      }
+      if (identityProxy) {
+        addresses.push(identityProxy.toLowerCase())
+      }
+
+      await db.Attestation.update(
+        {
+          profileData
+        },
+        {
+          where: {
+            ethAddress: {
+              [Sequelize.Op.in]: addresses
+            },
+            // TODO: This may need a mapping
+            method: socialNetwork
+          }
+        }
+      )
     }
+
+    await txn.commit()
+  } catch (e) {
+    logger.error(
+      `Failed to store ${type} event for ${identity} on ${socialNetwork}`,
+      e
+    )
+
+    await txn.rollback()
+
+    return false
+  }
+
+  return true
+}
+
+/**
+ * Fetches and returns attestation from db, if exists
+ */
+const getAttestation = async ({ identity, identityProxy, socialNetwork }) => {
+  const addresses = []
+  if (identity) {
+    addresses.push(identity.toLowerCase())
+  }
+  if (identityProxy) {
+    addresses.push(identityProxy.toLowerCase())
+  }
+
+  return await db.Attestation.findOne({
+    where: {
+      ethAddress: {
+        [Sequelize.Op.in]: addresses
+      },
+      // TODO: This may need a mapping
+      method: socialNetwork
+    },
+    order: [['createdAt', 'DESC']]
+  })
+}
+
+/**
+ * Returns decodedContent (for SHARE) or true (for FOLLOW) if event is what you are looking for, false otherwise
+ */
+const isEventValid = ({ socialNetwork, type, event, content }) => {
+  if (socialNetwork !== 'TWITTER') {
+    logger.error(`Trying to parse event of unknown network: ${socialNetwork}`)
+    // TODO: As of now, only twitter is supported
+    return false
+  }
+
+  if (type === 'FOLLOW') {
+    return true
+  }
+
+  let encodedContent = JSON.parse(JSON.stringify(event.text)) // Clone to avoid mutation
+
+  // Important: Twitter shortens and replaces URLs
+  // we have revert that back to get the original content and to get the hash
+  event.entities.urls.forEach(entity => {
+    encodedContent = encodedContent.replace(entity.url, entity.expanded_url)
+  })
+
+  // Invalid if tweet content is not same as expected
+  // Note: Twitter sends HTML encoded contents
+  const decodedContent = decodeHTML(encodedContent)
+
+  return decodedContent === content ? decodedContent : false
+}
+
+router.post('/verify', verifyPromotions, async (req, res) => {
+  const { type, socialNetwork, identity, identityProxy, content } = req.body
+
+  const attestation = await getAttestation({
+    identity,
+    identityProxy,
+    socialNetwork
   })
 
   if (!attestation) {
@@ -48,35 +197,33 @@ router.post('/verify', verifyPromotions, async (req, res) => {
   const maxTries = process.env.VERIFICATION_MAX_TRIES || 60
   let tries = 0
   do {
-    const event = await getAsync(redisKey)
+    const eventString = await getAsync(redisKey)
 
-    if (event) {
-      const tweetContent = type === 'SHARE' ? JSON.parse(event).text : null
-      // Invalid if tweet content is same as expected
-      const isValidEvent = type === 'FOLLOW' || tweetContent === content
+    if (eventString) {
+      const event = JSON.parse(eventString)
 
-      if (isValidEvent) {
-        let contentHash = null
+      const decodedContent = isEventValid({
+        socialNetwork,
+        type,
+        event,
+        content
+      })
 
-        if (tweetContent) {
-          // Important: Make sure to keep this hash function in sync with
-          // the one used in the growth engine rules.
-          // See infra/grwowth/resources/rules.js
-          contentHash = crypto
-            .createHash('md5')
-            .update(tweetContent)
-            .digest('hex')
-        }
-
-        await GrowthEvent.insert(
-          logger,
-          1,
+      if (decodedContent) {
+        const stored = await persistEvent({
+          content: typeof decodedContent === 'string' ? decodedContent : null,
           identity,
-          PromotionEventToGrowthEvent[socialNetwork][type],
-          contentHash,
           event,
-          Date.now()
-        )
+          socialNetwork,
+          type
+        })
+
+        if (!stored) {
+          return res.status(200).send({
+            success: false,
+            errors: ['Internal error']
+          })
+        }
 
         logger.info(
           `${type} event verified for ${identity} on ${socialNetwork}`

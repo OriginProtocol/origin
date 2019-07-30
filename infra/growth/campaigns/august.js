@@ -198,6 +198,7 @@ const augustConfig = {
           id: 'TwitterShare1',
           class: 'SocialShare',
           config: {
+            socialNetwork: 'twitter',
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
             content: {
@@ -217,7 +218,7 @@ const augustConfig = {
               }
             },
             reward: {
-              amount: tokenToNaturalUnits(1),
+              amount: '0',
               currency: 'OGN'
             },
             limit: 1,
@@ -231,6 +232,7 @@ const augustConfig = {
           id: 'TwitterShare2',
           class: 'SocialShare',
           config: {
+            socialNetwork: 'twitter',
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
             content: {
@@ -250,7 +252,7 @@ const augustConfig = {
               }
             },
             reward: {
-              amount: tokenToNaturalUnits(1),
+              amount: '0',
               currency: 'OGN'
             },
             limit: 1,
@@ -267,7 +269,7 @@ const augustConfig = {
             eventType: 'FollowedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
             reward: {
-              amount: tokenToNaturalUnits(1),
+              amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
             limit: 1,
