@@ -202,13 +202,13 @@ describe('Apollo adapter - August campaign', () => {
         type: 'TwitterShare',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(1), currency: 'OGN' }
+        reward: { amount: '0', currency: 'OGN' }
       },
       TwitterFollow: {
         type: 'TwitterFollow',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(1), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(10), currency: 'OGN' }
       },
       'ListingPurchase1-000-2991': {
         type: 'ListingIdPurchased',

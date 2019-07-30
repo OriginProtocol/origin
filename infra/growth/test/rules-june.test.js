@@ -70,7 +70,7 @@ describe('June campaign rules', () => {
       }
     ]
 
-    const rewards = await this.crules.getRewards(this.userC)
+    const rewards = await this.crules.getEarnedRewards(this.userC)
     expect(rewards).to.deep.equal([])
 
     const level = await this.crules.getCurrentLevel(this.userC)
@@ -96,7 +96,7 @@ describe('June campaign rules', () => {
     )
 
     // User should not be rewarded for those legacy attestations.
-    const rewards = await this.crules.getRewards(this.userC)
+    const rewards = await this.crules.getEarnedRewards(this.userC)
     expect(rewards).to.deep.equal([])
 
     const level = await this.crules.getCurrentLevel(this.userC)
@@ -121,7 +121,7 @@ describe('June campaign rules', () => {
       }
     )
 
-    const rewards = await this.crules.getRewards(this.userC)
+    const rewards = await this.crules.getEarnedRewards(this.userC)
     expect(rewards).to.deep.equal([])
 
     const level = await this.crules.getCurrentLevel(this.userC)
@@ -151,7 +151,7 @@ describe('June campaign rules', () => {
       }
     )
 
-    const rewards = await this.crules.getRewards(this.userA)
+    const rewards = await this.crules.getEarnedRewards(this.userA)
     expect(rewards).to.deep.equal([])
 
     const level = await this.crules.getCurrentLevel(this.userA)
@@ -176,7 +176,7 @@ describe('June campaign rules', () => {
       }
     )
 
-    const rewards = await this.crules.getRewards(this.userA)
+    const rewards = await this.crules.getEarnedRewards(this.userA)
     expect(rewards).to.deep.equal([])
 
     const level = await this.crules.getCurrentLevel(this.userA)
@@ -217,7 +217,7 @@ describe('June campaign rules', () => {
       }
     )
 
-    const rewards = await this.crules.getRewards(this.userA)
+    const rewards = await this.crules.getEarnedRewards(this.userA)
     this.expectedRewards.push({
       campaignId: 1,
       levelId: 2,
@@ -246,7 +246,7 @@ describe('June campaign rules', () => {
       }
     )
 
-    const rewards = await this.crules.getRewards(this.userA)
+    const rewards = await this.crules.getEarnedRewards(this.userA)
     expect(rewards).to.deep.equal(this.expectedRewards)
 
     const level = await this.crules.getCurrentLevel(this.userA)
@@ -265,7 +265,7 @@ describe('June campaign rules', () => {
       }
     )
 
-    const rewards = await this.crules.getRewards(this.userA)
+    const rewards = await this.crules.getEarnedRewards(this.userA)
     this.expectedRewards.push({
       campaignId: 1,
       levelId: 2,
