@@ -34,12 +34,17 @@ class EmailAttestationModal extends Component {
           } else if (this.props.onClose) {
             this.props.onClose()
           }
+
+          this.setState({
+            shouldClose: false
+          })
         }}
         lightMode={true}
         skipAnimateOnExit={this.props.skipAnimateOnExit}
       >
         <EmailAttestation
           wallet={this.props.wallet}
+          close={() => this.setState({ shouldClose: true })}
           onCompleted={data => {
             this.setState({
               shouldClose: true,
