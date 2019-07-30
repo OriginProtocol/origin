@@ -608,7 +608,7 @@ class BaseRule {
       status: omitUserData
         ? null
         : await this.getStatus(ethAddress, events, level),
-      // Reward associated with the rule Call the rule's custom reward function if it exists
+      // Reward associated with the rule. Call the rule's custom reward function if it exists.
       reward: this.getReward
         ? await this.getReward(omitUserData ? null : ethAddress)
         : this.reward,
@@ -770,8 +770,14 @@ class SocialShareRule extends SingleEventRule {
     return Math.floor(stats.numFollowers / tierIncrement) + 1
   }
 
-  async getReward(ethAddress) {
-    // Create a reward object with amount sto to zero.
+  /**
+   * Calculate personalized amount the user should get if they complete the sharing action.
+   * @param {string} ethAddress
+   * @param {Object} identityForTest - For testing only.
+   * @returns {Promise<Reward>}
+   */
+  async getReward(ethAddress, identityForTest = null) {
+    // Create a reward object with amount set to zero.
     const reward = new Reward(this.campaignId, this.levelId, this.id, {
       amount: '0',
       currency: this.config.reward.currency
@@ -781,7 +787,8 @@ class SocialShareRule extends SingleEventRule {
       return reward
     }
     // Return a personalized amount calculated based on social network stats stored in the user's identity.
-    const identity = db.Identity.findOne({ where: { ethAddress } })
+    const identity =
+      (await db.Identity.findOne({ where: { ethAddress } })) || identityForTest
     if (!identity) {
       logger.error(`No identity found for ${ethAddress}`)
       return reward
@@ -798,7 +805,9 @@ class SocialShareRule extends SingleEventRule {
       return reward
     }
     // TODO: handle other social networks.
-    reward.value.amount = this._calcTwitterReward(identity.data.twitterStats)
+    reward.value.amount = this._calcTwitterReward(
+      identity.data.twitterStats
+    ).toString()
     return reward
   }
 
@@ -815,15 +824,16 @@ class SocialShareRule extends SingleEventRule {
     const rewards = []
     for (const event of events) {
       if (
-        !event.data.twitter ||
-        !event.data.twitter.numFollowers ||
-        !event.data.twitter.accountAge
+        !event.data ||
+        !event.data.twitterStats ||
+        typeof event.data.twitterStats.numFollowers !== 'number' ||
+        typeof event.data.twitterStats.accountAge !== 'number'
       ) {
-        throw new Error('GrowthEvent ${event.id} is missing data.twitter stats')
+        throw new Error(
+          `GrowthEvent ${event.id}: missing or invalid twitter stats`
+        )
       }
-      const numFollowers = event.data.twitter.numFollowers
-      const accountAge = event.data.twitter.accountAge
-      const amount = this._calcTwitterReward(numFollowers, accountAge)
+      const amount = this._calcTwitterReward(event.data.twitterStats).toString()
       const reward = new Reward(this.campaignId, this.levelId, this.id, {
         amount,
         currency: this.config.reward.currency

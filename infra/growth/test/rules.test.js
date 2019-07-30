@@ -521,53 +521,94 @@ describe('Growth Engine rules', () => {
   })
 
   describe('Social rules reward calculation', () => {
-    it(`Twitter reward calculation`, () => {
-      const crules = { campaign: { id: 1 } }
-      const config = {
-        config: {
-          socialNetwork: 'twitter',
-          reward: {
-            amount: '0',
-            currency: 'OGN'
-          },
-          content: {
-            post: {
-              text: {
-                default: 'tweet tweet',
-                translations: []
+
+    describe('Twitter', () => {
+      before( () => {
+        const crules = { campaign: { id: 1 } }
+        const config = {
+          config: {
+            eventType: 'SharedOnTwitter',
+            socialNetwork: 'twitter',
+            reward: {
+              amount: '0',
+              currency: 'OGN'
+            },
+            content: {
+              post: {
+                text: {
+                  default: 'tweet tweet',
+                  translations: []
+                }
               }
-            }
-          },
-          limit: 1,
-          visible: true,
-          scope: 'campaign',
-          statusScope: 'user'
+            },
+            limit: 1,
+            visible: true,
+            scope: 'user',
+            statusScope: 'user'
+          }
         }
-      }
-      const rule = new SocialShareRule(crules, 0, config)
-      const stats = {
-        numFollowers: 0,
-        accountAge: 0.5
-      }
-      // Account younger than 1 year. No reward.
-      let amount = rule._calcTwitterReward(stats)
+        this.rule = new SocialShareRule(crules, 0, config)
+      })
 
-      // Account 1 year but no followers. No reward
-      stats.accountAge = 1
-      amount = rule._calcTwitterReward(stats)
-      expect(amount).to.equal(0)
+      it(`should calculate reward properly based on social stats`, () => {
+        const stats = {
+          numFollowers: 0,
+          accountAge: 0.5
+        }
+        // Account younger than 1 year. No reward.
+        let amount = this.rule._calcTwitterReward(stats)
 
-      // Account with < 100 numFollowers. 1 OGN.
-      stats.numFollowers = 99
-      amount = rule._calcTwitterReward(stats)
-      expect(amount).to.equal(1)
+        // Account 1 year but no followers. No reward
+        stats.accountAge = 1
+        amount = this.rule._calcTwitterReward(stats)
+        expect(amount).to.equal(0)
 
-      // Should get some rewards.
-      stats.numFollowers = 3550
-      amount = rule._calcTwitterReward(stats)
-      expect(amount).to.equal(18)
+        // Account with < 100 numFollowers. 1 OGN.
+        stats.numFollowers = 99
+        amount = this.rule._calcTwitterReward(stats)
+        expect(amount).to.equal(1)
 
-      stats.numFollowers = 20000
+        // Should get some rewards.
+        stats.numFollowers = 3550
+        amount = this.rule._calcTwitterReward(stats)
+        expect(amount).to.equal(18)
+
+        stats.numFollowers = 20000
+      })
+
+      it(`should use stats from the user's identity to calculate the projected reward`, async () => {
+        const identity = {
+          data: {
+            twitterStats: {
+              numFollowers: 542,
+              accountAge: 3
+            }
+          }
+        }
+        const reward = await this.rule.getReward('0x123', identity)
+        expect(reward.value.amount).to.equal('3')
+        expect(reward.value.currency).to.equal('OGN')
+      })
+
+      it(`should use stats from events to calculate earned reward`, async () => {
+        const events = [
+          {
+            status: GrowthEventStatuses.Logged,
+            type: 'SharedOnTwitter',
+            data: {
+              twitterStats: {
+                numFollowers: 26300,
+                accountAge: 5
+              }
+            },
+            customId: this.rule._hashContent('tweet tweet')
+          }
+        ]
+        const rewards = await this.rule.getEarnedRewards('0x123', events)
+        expect(rewards.length).to.equal(1)
+        expect(rewards[0].value.amount).to.equal('132')
+        expect(rewards[0].value.currency).to.equal('OGN')
+      })
 
     })
   })
