@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
-import { Button, Dialog, InputGroup, Intent, Toaster } from '@blueprintjs/core'
-import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import { setSessionEmail } from '../actions'
+import { setSessionEmail } from '../../actions'
 
 class Login extends Component {
   state = {
@@ -16,10 +14,7 @@ class Login extends Component {
   }
 
   handleError = err => {
-    const toaster = Toaster.create({
-      intent: Intent.DANGER
-    })
-    toaster.show({ message: err })
+    console.error(err)
   }
 
   handleSendEmailCode = async () => {
@@ -33,7 +28,7 @@ class Login extends Component {
     }
     const serverResponse = await fetch('/api/send_email_code', opts)
     if (serverResponse.ok) {
-      this.setState({ loginStep: 'enterEmailCode' })
+      this.setState({ loginStep: 'checkEmail' })
     } else {
       this.handleError('Failure to send email code. Try again in a moment.')
     }
@@ -87,7 +82,7 @@ class Login extends Component {
       return
     }
     this.setState({
-      loginStep: 'setupOTP',
+      loginStep: 'setupOtp',
       otpQrUrl: response.otpQrUrl,
       otpKey: response.otpKey
     })
@@ -122,104 +117,97 @@ class Login extends Component {
   }
 
   render() {
+    let card
+    if (this.state.loginStep === 'enterEmail') {
+      card = this.renderEnterEmail()
+    } else if (this.state.loginStep === 'checkEmail') {
+      card = this.renderCheckEmail()
+    } else if (this.state.loginStep === 'setupOtp') {
+      card = this.renderSetupOtp()
+    } else if (this.state.loginStep === 'enterOtpCode') {
+      card = this.renderEnterOtpCode()
+    }
+    return <div>{card}</div>
+  }
+
+  renderEnterEmail() {
     return (
-      <div>
-        {this.props.sessionEmail &&
-          this.props.sessionEmail !== '(need to login)' && (
-            <Redirect to="/grants" />
-          )}
-        {this.state.loginStep === 'enterEmail' && (
-          <Dialog id="emailDialog" isOpen={true}>
-            <div className="bp3-dialog-header">
-              <span className="bp3-icon-large bp3-icon-arrow-right" />
-              <h4 className="bp3-heading">Origin T3</h4>
-            </div>
+      <>
+        <div className="action-card">
+          <h1>Sign In</h1>
+          <p>We will send you a magic link to your email to confirm access</p>
+          <div className="form-group">
+            <label htmlFor="email">Email address</label>
+            <input
+              type="email"
+              className="form-control form-control-lg"
+              id="email"
+            />
+          </div>
+          <button
+            className="btn btn-primary btn-lg"
+            style={{ marginTop: '40px' }}
+            onClick={this.handleSendEmailCode}
+          >
+            Continue
+          </button>
+        </div>
+        <div style={{ textAlign: 'center', margin: '20px auto' }}>
+          <a href="/register" style={{ color: 'white' }}>
+            Don&apos;t have an account?
+          </a>
+        </div>
+      </>
+    )
+  }
 
-            <div className="bp3-dialog-body">
-              <p>Please enter your email address to login.</p>
-            </div>
+  renderCheckEmail() {
+    return (
+      <>
+        <div className="action-card">
+          <h1>Check your email</h1>
+          <p>
+            We just sent an email to {this.state.email}. Please click the link
+            in the email to proceed.
+          </p>
+        </div>
+      </>
+    )
+  }
 
-            <div className="bp3-dialog-footer" id="loginEmailFooter">
-              <InputGroup
-                type="text"
-                placeholder="foo@bar.com"
-                value={this.state.email}
-                onChange={e => this.setState({ email: e.target.value })}
-              />
-              <Button text="Send code" onClick={this.handleSendEmailCode} />
-            </div>
-          </Dialog>
-        )}
-        {this.state.loginStep === 'enterEmailCode' && (
-          <Dialog id="emailCodeDialog" isOpen={true}>
-            <div className="bp3-dialog-header">
-              <span className="bp3-icon-large bp3-icon-arrow-right" />
-              <h4 className="bp3-heading">Origin T3</h4>
-            </div>
+  renderSetupOtp() {
+    return (
+      <>
+        <h1>Scan QR code</h1>
+        <p>Open Google Authenticator and scan the barcode or enter the key</p>
+        <p>
+          <strong>Secret Key:</strong>
+        </p>
+        <p>{this.state.otpCode}</p>
+        <div className="alert">
+          Store this secret key somewhere safe and don&apos;t share it with
+          anyone else.
+        </div>
+      </>
+    )
+  }
 
-            <div className="bp3-dialog-body">
-              <p>Please check your email and enter the code we sent you.</p>
-            </div>
-
-            <div className="bp3-dialog-footer" id="loginCodeFooter">
-              <InputGroup
-                type="text"
-                placeholder="123456"
-                value={this.state.emailCode}
-                onChange={e => this.setState({ emailCode: e.target.value })}
-              />
-              <Button text="Verify code" onClick={this.handleVerifyEmailCode} />
-            </div>
-          </Dialog>
-        )}
-        {this.state.loginStep === 'setupOTP' && (
-          <Dialog id="otpSetupDialog" isOpen={true}>
-            <div className="bp3-dialog-header">
-              <span className="bp3-icon-large bp3-icon-arrow-right" />
-              <h4 className="bp3-heading">Origin T3</h4>
-            </div>
-
-            <div className="bp3-dialog-body">
-              <p>
-                Open Google Authenticator and scan the barcode or enter the key.
-              </p>
-            </div>
-
-            <div className="bp3-dialog-footer" id="loginCodeFooter">
-              <div>
-                <img
-                  src={this.state.otpQrUrl}
-                  alt="Google Authenticator QR code"
-                />
-              </div>
-              <div>Key: {this.state.otpKey}</div>
-              <Button text="Done" onClick={this.handleOtpSetupDone} />
-            </div>
-          </Dialog>
-        )}
-        {this.state.loginStep === 'enterOtpCode' && (
-          <Dialog id="otpCodeDialog" isOpen={true}>
-            <div className="bp3-dialog-header">
-              <span className="bp3-icon-large bp3-icon-arrow-right" />
-              <h4 className="bp3-heading">Origin T3</h4>
-            </div>
-
-            <div className="bp3-dialog-body">
-              <p>Open Google Authenticator and enter OriginProtocol code.</p>
-            </div>
-
-            <div className="bp3-dialog-footer" id="loginCodeFooter">
-              <InputGroup
-                type="text"
-                placeholder="123456"
-                value={this.state.otpCode}
-                onChange={e => this.setState({ otpCode: e.target.value })}
-              />
-              <Button text="Verify code" onClick={this.handleVerifyOtpCode} />
-            </div>
-          </Dialog>
-        )}
-      </div>
+  renderEnterOtpCode() {
+    return (
+      <>
+        <div className="action-card">
+          <h1>2-Step Verification</h1>
+          <p>Enter the code generated by your authenticator app</p>
+          <div className="form-group">
+            <label htmlFor="verification-code">Verification Code</label>
+            <input
+              type="email"
+              className="form-control"
+              id="verification-code"
+            />
+          </div>
+        </div>
+      </>
     )
   }
 }

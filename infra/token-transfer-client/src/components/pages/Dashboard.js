@@ -11,13 +11,14 @@ import GrantDetails from '../GrantDetail'
 class Dashboard extends Component {
   constructor(props) {
     super(props)
-    const history = [...Array(moment('2019-10-10').diff(moment('2018-10-10'), 'months'))].map((v, i) => {
+    const history = [
+      ...Array(moment('2019-10-10').diff(moment('2018-10-10'), 'months'))
+    ].map((v, i) => {
       return {
         amount: 1000,
         date: moment('2018-10-10').add(i, 'months')
       }
     })
-    console.log(history)
     this.state = {
       grants: [
         {
@@ -62,7 +63,7 @@ class Dashboard extends Component {
         </div>
         <div className="row">
           <div className="col">
-            <VestingBars grants={this.state.grants } />
+            <VestingBars grants={this.state.grants} />
           </div>
         </div>
         <div className="row">

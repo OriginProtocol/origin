@@ -13,9 +13,7 @@ const VestingHistory = props => (
           <div className="col-1">
             <div className="status-circle"></div>
           </div>
-          <div className="col">
-            {h.amount.toLocaleString()} OGN
-          </div>
+          <div className="col">{h.amount.toLocaleString()} OGN</div>
           <div className="col">
             <small>vested</small>
           </div>

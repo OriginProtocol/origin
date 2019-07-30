@@ -10,13 +10,14 @@ const BalanceCard = props => (
         <a href="#">View details</a>
       </div>
     </div>
-    <div className="balance">{Number(props.balance).toLocaleString()} <span className="ogn">OGN</span></div>
+    <div className="balance">
+      {Number(props.balance).toLocaleString()} <span className="ogn">OGN</span>
+    </div>
     <div>
       <button className="btn btn-primary btn-lg">Withdraw</button>
     </div>
     <small>You will need an Ethereum wallet to withdraw OGN</small>
   </div>
-
 )
 
 export default BalanceCard
@@ -28,7 +29,4 @@ require('react-styl')(`
   .ogn
     font-size: 20px
     color: #007cff
-  .btn
-    margin-top: 20px;
-    margin-bottom: 10px;
 `)

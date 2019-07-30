@@ -10,7 +10,10 @@ const VestingBars = props => {
 
   const interim = firstStartDate.clone()
   const intermediateMonths = []
-  while (lastEndDate > interim || interim.format('M') === lastEndDate.format('M')) {
+  while (
+    lastEndDate > interim ||
+    interim.format('M') === lastEndDate.format('M')
+  ) {
     intermediateMonths.push(interim.format('YYYY-MM'))
     interim.add(1, 'month')
   }
@@ -27,15 +30,19 @@ const VestingBars = props => {
       <h2>Vesting Progress</h2>
       <div style={{ position: 'relative' }}>
         {props.grants.map(grant => {
-          const complete = (now - grant.start) / (grant.end - grant.start) * 100
-          const width = (grant.end - grant.start) / totalDuration * 100
-          const left = (grant.start - firstStartDate) / totalDuration * 100
+          const complete =
+            ((now - grant.start) / (grant.end - grant.start)) * 100
+          const width = ((grant.end - grant.start) / totalDuration) * 100
+          const left = ((grant.start - firstStartDate) / totalDuration) * 100
 
           return (
-            <div className="progress"
-                key={grant.id}
-                style={{ width: `${width}%`, marginLeft: `${left}%` }}>
-              <div className="progress-bar bg-success"
+            <div
+              className="progress"
+              key={grant.id}
+              style={{ width: `${width}%`, marginLeft: `${left}%` }}
+            >
+              <div
+                className="progress-bar bg-success"
                 role="progressbar"
                 style={{ width: `${complete}%` }}
               />
@@ -43,7 +50,7 @@ const VestingBars = props => {
           )
         })}
         {displayMonths.map(month => {
-          const left = (moment(month) - firstStartDate) / totalDuration * 100
+          const left = ((moment(month) - firstStartDate) / totalDuration) * 100
           const style = {
             position: 'absolute',
             left: `${left}%`,
@@ -52,7 +59,9 @@ const VestingBars = props => {
           }
           return (
             <div key={month} style={style}>
-              <div style={{ borderLeft: '1px solid #dbe6eb', height: '100%' }}></div>
+              <div
+                style={{ borderLeft: '1px solid #dbe6eb', height: '100%' }}
+              ></div>
               <div style={{ marginLeft: '-50%' }}>
                 <small>{moment(month).format('MMM YYYY')}</small>
               </div>

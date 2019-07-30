@@ -19,7 +19,7 @@ body {
   font-family: 'Lato'
 }
 
-#root {
+#app {
   height: 100%;
 }
 
@@ -38,6 +38,28 @@ small {
   color: #8fa7b7
 }
 
+.action-card {
+  background-color: white;
+  padding: 40px 80px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.action-card label {
+  margin-top: 40px;
+  font-weight: bold;
+}
+
+.action-card input {
+  background-color: #e9f0f3;
+  border-radius: 10px;
+  border: none;
+  width: 80%;
+  margin: 0 auto;
+}
+
 .card-wrapper {
   background-color: white;
   padding: 40px;
@@ -51,10 +73,15 @@ small {
   text-align: right;
 }
 
+.btn {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
 .btn.btn-lg {
   font-weight: bold;
   border-radius: 2rem;
-  padding: 0.5rem 6rem;
+  padding: 0.5rem 4rem;
   min-width: 10rem;
   font-size: 18px;
 }

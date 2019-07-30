@@ -38,12 +38,7 @@ function withNews(WrappedComponent) {
     }
 
     render() {
-      return (
-        <WrappedComponent
-          {...this.props}
-          news={this.state.news}
-        />
-      )
+      return <WrappedComponent {...this.props} news={this.state.news} />
     }
   }
 

@@ -32,7 +32,8 @@ const NewsHeadlinesCard = ({ news = [] }) => {
               <div className="item" key={item.title}>
                 <div className="title">{item.title}</div>
                 <p>
-                  {item.description.substr(0, 120) + '...'} <a href={item.link}>[Read more]</a>
+                  {item.description.substr(0, 120) + '...'}{' '}
+                  <a href={item.link}>[Read more]</a>
                 </p>
               </div>
             ))}
