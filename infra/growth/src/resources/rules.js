@@ -755,19 +755,44 @@ class SocialShareRule extends SingleEventRule {
    * Calculates the personalized reward amount based on number of followers
    * and age of the user's twitter account.
    *
-   * @param {numFollowers:number, accountAge:number}
-   * @returns {<number>}
+   * @param {Object} twitterProfile: see list of fields here:
+   *        https://developer.twitter.com/en/docs/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials
+   * @returns {<number>} Calculated amount. Returns 0 if the profile is invalid.
    * @private
    */
-  _calcTwitterReward(stats) {
-    const minThreshold = 10
-    const tierThreshold = 100
-    const tierIncrement = 200
+  _calcTwitterReward(twitterProfile) {
+    // Validate the profile.
+    if (twitterProfile.verified === undefined ||
+      twitterProfile.created_at === undefined ||
+      twitterProfile.followers_count === undefined) {
+      return 0
+    }
 
-    if (stats.accountAge < 1) return 0
-    if (stats.numFollowers < minThreshold) return 0
-    if (stats.numFollowers < tierThreshold) return 1
-    return Math.floor(stats.numFollowers / tierIncrement) + 1
+    // Constants for the formula
+    const minAccountAgeDays = 365
+    const minAgeLastTweetDays = 365
+    const minFollowersThreshold = 10
+    const tierFollowersThreshold = 100
+    const tierFollowersIncrement = 200
+    const verifiedMultiplier = 2
+
+    // Extract stats of interest from the profile data.
+    const verified = twitterProfile.verified
+    const createdAt = new Date(twitterProfile.created_at)
+    const numFollowers = twitterProfile.followers_count
+    const lastTweetDate = twitterProfile.status ? new Date(twitterProfile.status.created_at) : new Date()
+
+    // Calculate age of the account and of the last tweet in days.
+    const now = new Date()
+    const accountAgeDays = Math.ceil(Math.abs(now.getTime() - createdAt.getTime()) / (1000 * 3600 * 24))
+    const lastTweetAgeDate = Math.ceil(Math.abs(now.getTime() - lastTweetDate.getTime()) / (1000 * 3600 * 24))
+
+    // Compute the reward.
+    if (accountAgeDays < minAccountAgeDays || lastTweetAgeDate < minAgeLastTweetDays) return 0
+    if (numFollowers < minFollowersThreshold) return 0
+    if (numFollowers < tierFollowersThreshold) return 1
+    const amount = Math.floor(numFollowers / tierFollowersIncrement) + 1
+    return verified ? amount * verifiedMultiplier : amount
   }
 
   /**
@@ -793,14 +818,9 @@ class SocialShareRule extends SingleEventRule {
       logger.error(`No identity found for ${ethAddress}`)
       return reward
     }
-    if (
-      !identity.data ||
-      !identity.data.twitterStats ||
-      typeof identity.data.twitterStats.numFollowers !== 'number' ||
-      typeof identity.data.twitterStats.accountAge !== 'number'
-    ) {
+    if (!identity.data || !identity.data.twitterProfile) {
       logger.error(
-        `Missing or invalid twitterStats in identity of user ${ethAddress}`
+        `Missing twitterProfile in identity of user ${ethAddress}`
       )
       return reward
     }
