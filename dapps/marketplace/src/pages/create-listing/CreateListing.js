@@ -69,7 +69,7 @@ const CreateListing = props => {
   if (
     props.creatorConfigLoading ||
     props.walletLoading ||
-    !props.identityLoaded
+    props.identityLoading
   ) {
     return <LoadingSpinner />
   }
