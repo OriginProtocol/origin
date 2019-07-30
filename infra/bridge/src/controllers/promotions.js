@@ -46,12 +46,18 @@ const getUserProfileFromEvent = ({ event, socialNetwork, type }) => {
 }
 
 /**
- * Creates a growth event and updates user profile in DB
+ * Creates a growth event for the verified social action.
+ *
+ * @param {string} content: content that was shared. null for a 'FOLLOW' action.
+ * @param {string} identity: eth address of the user
+ * @param {Object} event: event sent by social network describing the user action
+ * @param {string} socialNetwork:
+ * @param {string} type: type of action: 'SHARE' || 'FOLLOW'
+ * @returns {Promise<boolean>} Returns true in case of success, false otherwise
  */
-const persistEvent = async ({
+const insertGrowthEvent = async ({
   content,
   identity,
-  identityProxy,
   event,
   socialNetwork,
   type
@@ -68,57 +74,26 @@ const persistEvent = async ({
       .digest('hex')
   }
 
-  const txn = await db.sequelize.transaction()
-
   try {
+    const profileData = getUserProfileFromEvent({ event, socialNetwork, type })
     await GrowthEvent.insert(
       logger,
-      1,
+      1, // insert a single entry
       identity,
       PromotionEventToGrowthEvent[socialNetwork][type],
-      contentHash,
-      event,
+      contentHash, // set customId to the content hash.
+      profileData, // store the profile data that contains the user's social stats in the GrowthEvent.data column.
       Date.now()
     )
-
-    const profileData = getUserProfileFromEvent({ event, socialNetwork, type })
-    if (profileData) {
-      const addresses = []
-      if (identity) {
-        addresses.push(identity.toLowerCase())
-      }
-      if (identityProxy) {
-        addresses.push(identityProxy.toLowerCase())
-      }
-
-      await db.Attestation.update(
-        {
-          profileData
-        },
-        {
-          where: {
-            ethAddress: {
-              [Sequelize.Op.in]: addresses
-            },
-            // TODO: This may need a mapping
-            method: socialNetwork
-          }
-        }
-      )
-    }
-
-    await txn.commit()
   } catch (e) {
     logger.error(
       `Failed to store ${type} event for ${identity} on ${socialNetwork}`,
       e
     )
-
-    await txn.rollback()
-
     return false
   }
 
+  logger.info(`Logged GrowthEvent. User ${identity} socialNetwork ${socialNetwork} event ${type}`)
   return true
 }
 
@@ -210,7 +185,7 @@ router.post('/verify', verifyPromotions, async (req, res) => {
       })
 
       if (decodedContent) {
-        const stored = await persistEvent({
+        const stored = await insertGrowthEvent({
           content: typeof decodedContent === 'string' ? decodedContent : null,
           identity,
           event,
