@@ -107,7 +107,8 @@ router.post('/verify', kakaoVerify, async (req, res) => {
       AttestationTypes.KAKAO,
       attestationBody,
       {
-        uniqueId: userDataResponse.body.id
+        uniqueId: userDataResponse.body.id,
+        profileData: userDataResponse
       },
       req.body.identity,
       req.ip

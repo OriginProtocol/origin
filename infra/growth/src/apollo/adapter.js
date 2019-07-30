@@ -51,8 +51,10 @@ class ApolloAdapter {
     let actionType
     // Test if it matches format "ListingPurchase<listingId>"
     // otherwise use the ruleIdToActionType dictionary.
-    if (ruleId.match(/^ListingPurchase\d+$/)) {
+    if (ruleId.match(/^ListingPurchase[\d-]+$/)) {
       actionType = 'ListingIdPurchased'
+    } else if (ruleId.match(/^TwitterShare[\d-]+$/)) {
+      actionType = 'TwitterShare'
     } else {
       actionType = ruleIdToActionType[ruleId]
     }
@@ -127,7 +129,7 @@ class ApolloAdapter {
         action = { ...action, ...listingInfo }
         break
       case 'TwitterShare':
-        action.contents = data.contents
+        action.content = data.content
         break
     }
 
@@ -197,7 +199,7 @@ const campaignToApolloObject = async (
   out.actions = await crules.export(adapter, ethAddress)
 
   // Calculate total rewards earned so far.
-  const rewards = await crules.getRewards(ethAddress)
+  const rewards = await crules.getEarnedRewards(ethAddress)
   out.rewardEarned = Money.sum(rewards.map(r => r.value), campaign.currency)
 
   return out
