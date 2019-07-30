@@ -31,6 +31,7 @@ module.exports = `
 
   input ConfigInput {
     discovery: String
+    growth: String
     relayer: String
     bridge: String
     ipfsRPC: String
@@ -44,6 +45,7 @@ module.exports = `
     affiliate: String
     arbitrator: String
     discovery: String
+    growth: String
     bridge: String
     ipfsRPC: String
     ipfsGateway: String
