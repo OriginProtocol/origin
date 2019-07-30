@@ -35,7 +35,7 @@ function withGrowthCampaign(
               }
               fetchPolicy={fetchPolicy}
             >
-              {({ data, error, loading, networkStatus }) => {
+              {({ data, error, loading, networkStatus, refetch }) => {
                 if (error && !suppressErrors) {
                   return <QueryError error={error} query={allCampaignsQuery} />
                 }
@@ -51,6 +51,7 @@ function withGrowthCampaign(
                       networkStatus === 1 ||
                       walletLoading
                     }
+                    growthCampaignsRefetch={refetch}
                   />
                 )
               }}

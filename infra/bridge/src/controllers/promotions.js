@@ -4,6 +4,7 @@ const express = require('express')
 const router = express.Router()
 
 const crypto = require('crypto')
+const Sequelize = require('sequelize')
 
 const { getAsync } = require('../utils/redis')
 const logger = require('./../logger')
@@ -14,6 +15,8 @@ const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
 const { verifyPromotions } = require('../utils/validation')
 
 const { Attestation } = require('./../models/index')
+
+const { decodeHTML } = require('../utils/index')
 
 const PromotionEventToGrowthEvent = {
   TWITTER: {
@@ -26,13 +29,21 @@ const waitFor = timeInMs =>
   new Promise(resolve => setTimeout(resolve, timeInMs))
 
 router.post('/verify', verifyPromotions, async (req, res) => {
-  const { type, socialNetwork, identity, content } = req.body
+  const { type, socialNetwork, identity, identityProxy, content } = req.body
 
   const attestation = await Attestation.findOne({
     where: {
-      ethAddress: identity.toLowerCase(),
+      [Sequelize.Op.or]: [
+        {
+          ethAddress: identity.toLowerCase()
+        },
+        {
+          ethAddress: identityProxy.toLowerCase()
+        }
+      ],
       method: socialNetwork
-    }
+    },
+    order: [['createdAt', 'DESC']]
   })
 
   if (!attestation) {
@@ -53,7 +64,9 @@ router.post('/verify', verifyPromotions, async (req, res) => {
     if (event) {
       const tweetContent = type === 'SHARE' ? JSON.parse(event).text : null
       // Invalid if tweet content is same as expected
-      const isValidEvent = type === 'FOLLOW' || tweetContent === content
+      // Note: Twitter sends HTML encoded contents
+      const isValidEvent =
+        type === 'FOLLOW' || decodeHTML(tweetContent) === content
 
       if (isValidEvent) {
         let contentHash = null
@@ -64,7 +77,7 @@ router.post('/verify', verifyPromotions, async (req, res) => {
           // See infra/grwowth/resources/rules.js
           contentHash = crypto
             .createHash('md5')
-            .update(tweetContent)
+            .update(content)
             .digest('hex')
         }
 

@@ -34,6 +34,10 @@ class EmailAttestationModal extends Component {
           } else if (this.props.onClose) {
             this.props.onClose()
           }
+
+          this.setState({
+            shouldClose: false
+          })
         }}
         lightMode={true}
         skipAnimateOnExit={this.props.skipAnimateOnExit}
