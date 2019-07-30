@@ -43,7 +43,7 @@ class EmailAttestationModal extends Component {
         skipAnimateOnExit={this.props.skipAnimateOnExit}
       >
         <EmailAttestation
-          wallet={this.props.wallet}s
+          wallet={this.props.wallet}
           onCompleted={data => {
             this.setState({
               shouldClose: true,
