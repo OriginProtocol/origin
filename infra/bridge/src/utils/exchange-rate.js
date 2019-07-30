@@ -9,6 +9,12 @@ function startExchangeRatePolling() {
   // TODO: Store the markets to be polled somewhere or in ENV and start poll with that.
   pollExchangeRate('ETH-USD')
   pollExchangeRate('DAI-USD')
+  pollExchangeRate('GBP-USD')
+  pollExchangeRate('EUR-USD')
+  pollExchangeRate('KRW-USD')
+  pollExchangeRate('JPY-USD')
+  pollExchangeRate('CNY-USD') // pair not found
+  pollExchangeRate('SGD-USD') // pair not found
 }
 
 /**
@@ -41,7 +47,8 @@ async function fetchExchangeRate(market) {
   })
     .then(price => {
       if (price) {
-        redisClient.set(`${market}_price`, price, 'NX')
+        // redisClient.set(`${market}_price`, price, 'NX')
+        redisClient.set(`${market}_price`, price)
         logger.info(`Exchange rate for ${market} set to ${price}`)
       }
 

@@ -14,6 +14,7 @@ const resolvers = {
       // Get listing Ids from Elastic.
       const { listingIds, stats } = await search.Listing.search(
         args.searchQuery,
+        args.sortOptions,
         args.filters,
         args.page.numberOfItems,
         args.page.offset,

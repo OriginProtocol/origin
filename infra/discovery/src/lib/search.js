@@ -1,5 +1,6 @@
 const elasticsearch = require('elasticsearch')
 const scoring = require('../lib/scoring')
+const { getAsync, redisClient } = require('../lib/redis')
 
 /*
   Module to interface with ElasticSearch.
@@ -14,6 +15,29 @@ const client = new elasticsearch.Client({
 // (and forbids it unless you enable a special flag)
 const LISTINGS_INDEX = 'listings'
 const LISTINGS_TYPE = 'listing'
+
+const getExchangeRates = async (currencies) =>{
+  try {
+    let exchangeRates = {}
+    const promises = currencies.map(currency => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          let rate = await getAsync(`${currency}-USD_price`)
+          resolve({ market: currency, rate: rate })
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+    let result = await Promise.all(promises)
+    result.forEach(r => {
+      exchangeRates[r.market] = r.rate
+    })
+    return exchangeRates
+  } catch (e) {
+    return e
+  }
+}
 
 class Cluster {
   /**
@@ -140,6 +164,7 @@ class Listing {
   /**
    * Searches for listings.
    * @param {string} query - The search query.
+   * @param {object} sortOptions - {target: String, direction: String}
    * @param {array} filters - Array of filter objects
    * @param {integer} numberOfItems - number of items to display per page
    * @param {integer} offset - what page to return results from
@@ -147,7 +172,17 @@ class Listing {
    * @throws Throws an error if the search operation failed.
    * @returns A list of listings (can be empty).
    */
-  static async search(query, filters, numberOfItems, offset, idsOnly) {
+  static async search(
+    query,
+    sortOptions,
+    filters,
+    numberOfItems,
+    offset,
+    idsOnly
+  ) {
+    const currencies = ['ETH', 'DAI', 'JPY', 'EUR', 'KRW', 'GBP']
+    let exchangeRates = await getExchangeRates(currencies)
+
     if (filters === undefined) {
       filters = []
     }
@@ -298,6 +333,45 @@ class Listing {
       numberOfItems = 1000
     }
 
+    // sorting
+    // possibly needs nested mapping + field update to below for price.amount
+    const resolveSort = () => {
+      console.log('resolveSort - sortOptions', sortOptions)
+      console.log('resolveSort - exchangeRates', exchangeRates)
+      const { target, direction } = sortOptions
+      if (target && direction) {
+        if (target === 'price.amount') {
+          return {
+            sort: {
+              _script: {
+                type: 'number',
+                script: {
+                  lang: 'painless',
+                  source: `parseFloat(rates[price.currency.id]) * parseFloat([${target}])`,
+                  params: {
+                    rates: exchangeRates
+                  }
+                },
+                order: direction
+              }
+            }
+          }
+        } else if (target === 'createdDate') {
+          return {
+            sort: [
+              {
+                [target]: {
+                  order: direction
+                }
+              }
+            ]
+          }
+        }
+      } else {
+        return {}
+      }
+    }
+
     const searchRequest = client.search({
       index: LISTINGS_INDEX,
       type: LISTINGS_TYPE,
@@ -305,6 +379,7 @@ class Listing {
         from: offset,
         size: numberOfItems,
         query: scoreQuery,
+        sort: resolveSort(),
         _source: [
           'title',
           'description',
