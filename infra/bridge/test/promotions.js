@@ -71,7 +71,12 @@ describe('promotion verifications', () => {
     // Push a fake event to redis
     client.set(
       `twitter/share/12345`,
-      JSON.stringify({ text: 'Hello World' }),
+      JSON.stringify({
+        text: 'Hello World',
+        entities: {
+          urls: []
+        }
+      }),
       'EX',
       60
     )
@@ -120,7 +125,12 @@ describe('promotion verifications', () => {
     // Push a fake event to redis with different content that expected
     client.set(
       `twitter/share/45678`,
-      JSON.stringify({ text: 'Not My Content' }),
+      JSON.stringify({
+        text: 'Not My Content',
+        entities: {
+          urls: []
+        }
+      }),
       'EX',
       60
     )

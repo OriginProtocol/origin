@@ -18,8 +18,6 @@ const db = require('./../models/index')
 
 const { decodeHTML } = require('../utils/index')
 
-const { decodeHTML } = require('../utils/index')
-
 const PromotionEventToGrowthEvent = {
   TWITTER: {
     FOLLOW: GrowthEventTypes.FollowedOnTwitter,
