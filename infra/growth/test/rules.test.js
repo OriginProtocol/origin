@@ -83,7 +83,7 @@ describe('Growth Engine rules', () => {
       const level = await this.crules.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(0)
 
-      const rewards = await this.crules.getRewards(this.ethAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ethAddress)
       const expectedRewards = [{
           campaignId: 1,
           levelId: 0,
@@ -118,7 +118,7 @@ describe('Growth Engine rules', () => {
         }
       ]
 
-      const rewards = await this.crules.getRewards(this.ethAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ethAddress)
       const expectedRewards = []
       expect(rewards).to.deep.equal(expectedRewards)
     })
@@ -132,7 +132,7 @@ describe('Growth Engine rules', () => {
         ethAddress: this.ethAddress
       })
 
-      const rewards = await this.crules.getRewards(this.ethAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ethAddress)
       const expectedRewards = [
         {
           campaignId: 1,
@@ -235,7 +235,7 @@ describe('Growth Engine rules', () => {
         }
       ]
 
-      const rewards = await this.crules.getRewards(this.ethAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ethAddress)
       const expectedRewards = [{
         campaignId: 1,
         levelId: 0,
@@ -258,7 +258,7 @@ describe('Growth Engine rules', () => {
         }
       ]
 
-      const rewards = await this.crules.getRewards(this.ethAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ethAddress)
       const expectedRewards = []
       expect(rewards).to.deep.equal(expectedRewards)
     })
@@ -285,7 +285,7 @@ describe('Growth Engine rules', () => {
         }
       ]
 
-      const rewards = await this.crules.getRewards(this.ethAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ethAddress)
       const expectedRewards = []
       expect(rewards).to.deep.equal(expectedRewards)
     })
@@ -319,7 +319,7 @@ describe('Growth Engine rules', () => {
         },
       ]
 
-      const rewards = await this.crules.getRewards(this.ethAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ethAddress)
       const expectedRewards = [{
         campaignId: 1,
         levelId: 0,
@@ -436,7 +436,7 @@ describe('Growth Engine rules', () => {
     })
 
     it(`Should only use events from campaign period to calculate rewards`, async () => {
-      const rewards = await this.crules.getRewards(this.ethAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ethAddress)
       const expectedRewards = [{
         campaignId: 1,
         levelId: 1,
@@ -506,7 +506,7 @@ describe('Growth Engine rules', () => {
       const level = await this.crules.getCurrentLevel(this.ownerAddress)
       expect(level).to.equal(0)
 
-      const rewards = await this.crules.getRewards(this.ownerAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ownerAddress)
       const expectedRewards = [{
         campaignId: 1,
         levelId: 0,
