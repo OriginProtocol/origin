@@ -44,7 +44,9 @@ module.exports = (sequelize, DataTypes) => {
       // Username/user handle for OAuth Attestations
       username: DataTypes.STRING,
       // Link to public profile, if available
-      profileUrl: DataTypes.STRING
+      profileUrl: DataTypes.STRING,
+      // Raw response
+      profileData: DataTypes.JSONB
     },
     {
       tableName: 'attestation'
