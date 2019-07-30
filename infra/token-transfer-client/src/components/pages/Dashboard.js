@@ -5,10 +5,19 @@ import moment from 'moment'
 import BalanceCard from '../BalanceCard'
 import NewsHeadlinesCard from '../NewsHeadlinesCard'
 import VestingBars from '../VestingBars'
+import VestingHistory from '../VestingHistory'
+import GrantDetails from '../GrantDetail'
 
 class Dashboard extends Component {
   constructor(props) {
     super(props)
+    const history = [...Array(moment('2019-10-10').diff(moment('2018-10-10'), 'months'))].map((v, i) => {
+      return {
+        amount: 1000,
+        date: moment('2018-10-10').add(i, 'months')
+      }
+    })
+    console.log(history)
     this.state = {
       grants: [
         {
@@ -29,7 +38,8 @@ class Dashboard extends Component {
           amount: 10000000,
           interval: 'days'
         }
-      ]
+      ],
+      history
     }
   }
 
@@ -44,7 +54,7 @@ class Dashboard extends Component {
       <>
         <div className="row">
           <div className="col">
-            <BalanceCard balance={1112500} />
+            <BalanceCard balance={11112500} />
           </div>
           <div className="col">
             <NewsHeadlinesCard />
@@ -53,6 +63,14 @@ class Dashboard extends Component {
         <div className="row">
           <div className="col">
             <VestingBars grants={this.state.grants } />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
+            <VestingHistory history={this.state.history} />
+          </div>
+          <div className="col">
+            <GrantDetails grants={this.state.grants} />
           </div>
         </div>
       </>

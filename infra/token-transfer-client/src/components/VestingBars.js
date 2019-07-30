@@ -23,7 +23,7 @@ const VestingBars = props => {
   })
 
   return (
-    <div>
+    <div className="vesting-bars-wrapper">
       <h2>Vesting Progress</h2>
       <div style={{ position: 'relative' }}>
         {props.grants.map(grant => {
@@ -69,4 +69,6 @@ export default VestingBars
 require('react-styl')(`
   .progress
     margin-top: 20px
+  .vesting-bars-wrapper
+    margin-bottom: 150px
 `)

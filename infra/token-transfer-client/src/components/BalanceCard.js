@@ -10,7 +10,7 @@ const BalanceCard = props => (
         <a href="#">View details</a>
       </div>
     </div>
-    <div className="balance">{props.balance} <span className="ogn">OGN</span></div>
+    <div className="balance">{Number(props.balance).toLocaleString()} <span className="ogn">OGN</span></div>
     <div>
       <button className="btn btn-primary btn-lg">Withdraw</button>
     </div>
