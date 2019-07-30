@@ -572,15 +572,3 @@ describe('Growth Engine rules', () => {
     })
   })
 })
-/*
-_calcTwitterReward(stats) {
-  const minThreshold = 10
-  const tierThreshold = 100
-  const tierIncrement = 200
-
-  if (stats.accountAge < 1) return 0
-  if (stats.numFollowers < minThreshold) return 0
-  if (stats.numFollowers < tierThreshold) return 1
-  return Math.floor(stats.numFollowers / tierIncrement) + 1
-}
-*/
