@@ -5,8 +5,6 @@ const logger = require('./../logger')
 
 const { OAuth } = require('oauth')
 
-const { verifyTwitterCredentials } = require('../utils/twitter')
-
 // Note: Twitter rate-limits `users/lookup` endpoint at 300 requests per 15 minutes (for app tokens)
 // Ref: https://developer.twitter.com/en/docs/accounts-and-users/follow-search-get-users/api-reference/get-users-lookup
 const API_INTERVAL = process.env.API_INTERVAL || 3000
@@ -26,7 +24,8 @@ const client = new OAuth(
   'HMAC-SHA1'
 )
 
-const waitFor = async (timeInMs) => new Promise(resolve => setTimeout(() => resolve(true), timeInMs))
+const waitFor = async timeInMs =>
+  new Promise(resolve => setTimeout(() => resolve(true), timeInMs))
 
 // Fetches all attestation that don't have a profile info filled in
 const getAttestationsWithoutProfile = async () => {
@@ -39,12 +38,18 @@ const getAttestationsWithoutProfile = async () => {
 }
 
 // Returns the seconds in HH:mm format
-const getFormattedTime = (seconds) => `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${Math.floor(seconds % 60).toString().padStart(2, '0')}`
+const getFormattedTime = seconds =>
+  `${Math.floor(seconds / 60)
+    .toString()
+    .padStart(2, '0')}:${Math.floor(seconds % 60)
+    .toString()
+    .padStart(2, '0')}`
 
 const lookupUsers = screenNames => {
   return new Promise((resolve, reject) => {
     client.get(
-      'https://api.twitter.com/1.1/users/lookup.json?screen_name=' + encodeURIComponent(screenNames.join(',')),
+      'https://api.twitter.com/1.1/users/lookup.json?screen_name=' +
+        encodeURIComponent(screenNames.join(',')),
       oAuthToken,
       oAuthTokenSecret,
       (error, response) => {
@@ -60,7 +65,7 @@ const lookupUsers = screenNames => {
 
 ;(async () => {
   logger.info('Starting backfill script...')
-  
+
   const startTime = Date.now()
 
   const attestations = await getAttestationsWithoutProfile()
@@ -71,7 +76,9 @@ const lookupUsers = screenNames => {
   let successCounter = 0
 
   do {
-    logger.info(`Estimated time to complete: ${getFormattedTime(3 * (iterations - i))}`)
+    logger.info(
+      `Estimated time to complete: ${getFormattedTime(3 * (iterations - i))}`
+    )
 
     const startIndex = i * USERS_PER_REQUEST
     const screenNames = attestations
@@ -91,18 +98,20 @@ const lookupUsers = screenNames => {
       break
     }
 
-    try {
-      await db.sequelize.transaction(async transaction => {
-      
-        const response = await lookupUsers(screenNames)
+    const txn = await db.sequelize.transaction()
 
-        response.forEach(async user => {
-          await db.Attestation.update({
+    try {
+      const response = await lookupUsers(screenNames)
+
+      response.forEach(async user => {
+        await db.Attestation.update(
+          {
             value: user.id,
             username: user.screen_name,
             profileUrl: `https://twitter.com/${user.screen_name}`,
             profileData: user
-          }, {
+          },
+          {
             where: {
               [db.Sequelize.Op.or]: [
                 {
@@ -113,61 +122,31 @@ const lookupUsers = screenNames => {
                   username: user.screen_name
                 }
               ]
-            },
-            transaction: transaction
-          })
-        })
-
-        logger.info(`Fetched profile info for ${screenNames.length} users`)
-
-        successCounter = successCounter + screenNames.length
+            }
+          }
+        )
       })
+
+      logger.info(`Fetched profile info for ${screenNames.length} users`)
+
+      await txn.commit()
+      logger.info(`Committed to DB`)
+
+      successCounter = successCounter + screenNames.length
     } catch (error) {
+      await txn.rollback()
       logger.error(`Error while fetching user data`, error)
     }
 
-    // try {
-    //   const response = await lookupUsers(screenNames)
-
-    //   response.forEach(async user => {
-    //     await db.Attestation.update({
-    //       value: user.id,
-    //       username: user.screen_name,
-    //       profileUrl: `https://twitter.com/${user.screen_name}`,
-    //       profileData: user
-    //     }, {
-    //       where: {
-    //         [db.Sequelize.Op.or]: [
-    //           {
-    //             value: user.screen_name,
-    //             username: null
-    //           },
-    //           {
-    //             username: user.screen_name
-    //           }
-    //         ]
-    //       }
-    //     })
-    //   })
-
-    //   logger.info(`Fetched profile info for ${screenNames.length} users`)
-
-    //   await txn.commit()
-    //   logger.info(`Committed to DB`)
-      
-    //   successCounter = successCounter + screenNames.length
-    // } catch (error) {
-    //   await txn.rollback()
-    //   logger.error(`Error while fetching user data`, error)
-    // }
-
     i++
-  } while (i < iterations && await waitFor(API_INTERVAL))
+  } while (i < iterations && (await waitFor(API_INTERVAL)))
 
   const endTime = Date.now()
 
   logger.info()
-  logger.info(`Total time taken: ${getFormattedTime((endTime - startTime) / 1000)}`)
+  logger.info(
+    `Total time taken: ${getFormattedTime((endTime - startTime) / 1000)}`
+  )
   logger.info(`Fetched ${successCounter} profiles from Twitter`)
 
   process.exit(0)
