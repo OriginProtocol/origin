@@ -25,6 +25,12 @@ function ActionGroup(props) {
   } else if (type === 'purchases') {
     iconSource = 'images/growth/purchases-icon.svg'
     title = fbt('Purchases', 'growth.actionGroup.purchases')
+  } else if (type === 'promotions') {
+    iconSource = 'images/growth/social-media-icon.svg'
+    title = fbt('Promote Origin', 'growth.actionGroup.promotions')
+  } else if (type === 'follows') {
+    iconSource = 'images/growth/social-media-follow-icon.svg'
+    title = fbt('Follow Origin', 'growth.actionGroup.follow')
   } else if (type === 'invitations') {
     const invitationAction = completedActions[0]
     locked = invitationAction.status === 'Inactive'
