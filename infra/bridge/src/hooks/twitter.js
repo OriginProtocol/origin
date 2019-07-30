@@ -142,6 +142,7 @@ async function subscribeToHooks(oAuthToken, oAuthAccessTokenSecret) {
   )
 
   if (!environment) {
+    logger.error(`Webhook environment ${HOOK_ENV} not found in response`, resp)
     throw new Error('Webhook environment not found')
   }
 
