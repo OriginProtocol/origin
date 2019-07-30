@@ -16,7 +16,7 @@ const client = new elasticsearch.Client({
 const LISTINGS_INDEX = 'listings'
 const LISTINGS_TYPE = 'listing'
 
-const getExchangeRates = async (currencies) =>{
+const getExchangeRates = async currencies => {
   try {
     let exchangeRates = {}
     const promises = currencies.map(currency => {
