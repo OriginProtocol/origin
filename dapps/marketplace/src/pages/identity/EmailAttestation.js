@@ -41,7 +41,7 @@ class EmailAttestation extends Component {
   }
 
   renderGenerateCode() {
-    const { isMobile, onboarding, close } = this.props
+    const { isMobile, onboarding } = this.props
 
     let header
     if (isMobile && onboarding) {
@@ -167,7 +167,7 @@ class EmailAttestation extends Component {
                 <button
                   className="btn btn-link"
                   type="button"
-                  onClick={close}
+                  onClick={() => this.onCompleted()}
                   children={fbt('Cancel', 'Cancel')}
                 />
               )}
