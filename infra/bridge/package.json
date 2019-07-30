@@ -15,7 +15,8 @@
     "start": "per-env",
     "start:development": "nodemon -r ./src/env.js src/app.js",
     "start:production": "node -r ./src/env.js src/app.js",
-    "test": "mocha --exit"
+    "test": "mocha --exit",
+    "backfill:profile": "node -r ./src/env.js ./src/scripts/20190730-backfill-twitter-profile-data.js"
   },
   "repository": {
     "type": "git",
