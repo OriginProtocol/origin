@@ -18,7 +18,7 @@ const LISTINGS_TYPE = 'listing'
 
 const getExchangeRates = async currencies => {
   try {
-    let exchangeRates = {}
+    const exchangeRates = {}
     const promises = currencies.map(currency => {
       return new Promise(async (resolve, reject) => {
         try {
