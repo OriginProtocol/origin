@@ -149,5 +149,6 @@ const lookupUsers = screenNames => {
   )
   logger.info(`Fetched ${successCounter} profiles from Twitter`)
 
-  process.exit(0)
+  // Wait for DB commits to complete
+  logger.info(`Wrapping things up...`)
 })()
