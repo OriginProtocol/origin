@@ -28,11 +28,11 @@ describe('August campaign rules', () => {
     expect(this.crules).to.be.an('object')
     expect(this.crules.numLevels).to.equal(3)
     expect(this.crules.levels[0]).to.be.an('object')
-    expect(this.crules.levels[0].rules.length).to.equal(3)
+    expect(this.crules.levels[0].rules.length).to.equal(3) // Note: adjust based on number of rules.
     expect(this.crules.levels[1]).to.be.an('object')
-    expect(this.crules.levels[1].rules.length).to.equal(10)
+    expect(this.crules.levels[1].rules.length).to.equal(13) // Note: adjust based on number of rules.
     expect(this.crules.levels[2]).to.be.an('object')
-    expect(this.crules.levels[2].rules.length).to.equal(3) // TODO: adjust as more listings get added to the rule.
+    expect(this.crules.levels[2].rules.length).to.equal(18) // Note: adjust based on number of rules.
 
     this.userA = '0x123'
     this.userB = '0x456' // User A is the referrer for user B.
@@ -159,7 +159,7 @@ describe('August campaign rules', () => {
         ruleId: 'KakaoAttestation',
         value: {
           currency: 'OGN',
-          amount: tokenToNaturalUnits(25)
+          amount: tokenToNaturalUnits(10)
         }
       },
       {
@@ -168,7 +168,7 @@ describe('August campaign rules', () => {
         ruleId: 'WebsiteAttestation',
         value: {
           currency: 'OGN',
-          amount: tokenToNaturalUnits(25)
+          amount: tokenToNaturalUnits(10)
         }
       }
     ])

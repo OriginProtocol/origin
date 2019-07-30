@@ -32,7 +32,8 @@ const ruleIdToActionType = {
   ListingPurchaseInfluencer: 'ListingIdPurchased',
   ListingPurchaseArt: 'ListingIdPurchased',
   MobileAccountCreated: 'MobileAccountCreated',
-  TwitterShare: 'TwitterShare'
+  TwitterShare: 'TwitterShare',
+  TwitterFollow: 'TwitterFollow'
 }
 
 /**
@@ -50,8 +51,10 @@ class ApolloAdapter {
     let actionType
     // Test if it matches format "ListingPurchase<listingId>"
     // otherwise use the ruleIdToActionType dictionary.
-    if (ruleId.match(/^ListingPurchase\d+$/)) {
+    if (ruleId.match(/^ListingPurchase[\d-]+$/)) {
       actionType = 'ListingIdPurchased'
+    } else if (ruleId.match(/^TwitterShare[\d-]+$/)) {
+      actionType = 'TwitterShare'
     } else {
       actionType = ruleIdToActionType[ruleId]
     }
@@ -124,6 +127,9 @@ class ApolloAdapter {
           detailsKey: data.detailsKey
         }
         action = { ...action, ...listingInfo }
+        break
+      case 'TwitterShare':
+        action.content = data.content
         break
     }
 

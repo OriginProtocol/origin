@@ -7,7 +7,7 @@ describe('Availability Calculator', function() {
   const year = dayjs().year() + 1
   let instance
 
-  it('should allow a new instance', function() {
+  beforeEach(() => {
     instance = new AvailabilityCalculator({
       weekdayPrice: '0.5',
       weekendPrice: '0.75',
@@ -234,5 +234,23 @@ describe('Availability Calculator', function() {
         customPrice: true
       }
     ])
+  })
+
+  it('should estimate prices correctly for a given range', function() {
+    instance = new AvailabilityCalculator({
+      weekdayPrice: '0.5',
+      weekendPrice: '0.5',
+      advanceNotice: 0, // Number of days of advanced notice
+      bookingWindow: 180 // Book up to this many days in the future
+    })
+
+    let price = instance.estimateNightlyPrice(`${year}-01-10/${year}-01-15`)
+      .price
+
+    assert.equal(price, 2.5)
+
+    price = instance.estimateNightlyPrice(`${year}-01-10/${year}-01-11`).price
+
+    assert.equal(price, 0.5)
   })
 })
