@@ -2,7 +2,7 @@ const chai = require('chai')
 const expect = chai.expect
 
 const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
-const { CampaignRules } = require('../src/resources/rules')
+const { CampaignRules, SocialShareRule } = require('../src/resources/rules')
 
 
 describe('Growth Engine rules', () => {
@@ -519,4 +519,68 @@ describe('Growth Engine rules', () => {
       expect(rewards).to.deep.equal(expectedRewards)
     })
   })
+
+  describe('Social rules reward calculation', () => {
+    it(`Twitter reward calculation`, () => {
+      const crules = { campaign: { id: 1 } }
+      const config = {
+        config: {
+          socialNetwork: 'twitter',
+          reward: {
+            amount: '0',
+            currency: 'OGN'
+          },
+          content: {
+            post: {
+              text: {
+                default: 'tweet tweet',
+                translations: []
+              }
+            }
+          },
+          limit: 1,
+          visible: true,
+          scope: 'campaign',
+          statusScope: 'user'
+        }
+      }
+      const rule = new SocialShareRule(crules, 0, config)
+      const stats = {
+        numFollowers: 0,
+        accountAge: 0.5
+      }
+      // Account younger than 1 year. No reward.
+      let amount = rule._calcTwitterReward(stats)
+
+      // Account 1 year but no followers. No reward
+      stats.accountAge = 1
+      amount = rule._calcTwitterReward(stats)
+      expect(amount).to.equal(0)
+
+      // Account with < 100 numFollowers. 1 OGN.
+      stats.numFollowers = 99
+      amount = rule._calcTwitterReward(stats)
+      expect(amount).to.equal(1)
+
+      // Should get some rewards.
+      stats.numFollowers = 3550
+      amount = rule._calcTwitterReward(stats)
+      expect(amount).to.equal(18)
+
+      stats.numFollowers = 20000
+
+    })
+  })
 })
+/*
+_calcTwitterReward(stats) {
+  const minThreshold = 10
+  const tierThreshold = 100
+  const tierIncrement = 200
+
+  if (stats.accountAge < 1) return 0
+  if (stats.numFollowers < minThreshold) return 0
+  if (stats.numFollowers < tierThreshold) return 1
+  return Math.floor(stats.numFollowers / tierIncrement) + 1
+}
+*/

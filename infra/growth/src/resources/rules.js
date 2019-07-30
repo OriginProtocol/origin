@@ -1058,4 +1058,4 @@ class ReferralRule extends BaseRule {
   }
 }
 
-module.exports = { CampaignRules }
+module.exports = { CampaignRules, SocialShareRule }
