@@ -187,7 +187,9 @@ router.post('/twitter', (req, res) => {
 
   redisBatch.exec(err => {
     if (err) {
-      logger.error(`Faile to push ${followCount} follow events and ${mentionCount} mention events to redis`)
+      logger.error(
+        `Faile to push ${followCount} follow events and ${mentionCount} mention events to redis`
+      )
     } else {
       logger.info(
         `Pushed ${followCount} follow events and ${mentionCount} mention events to redis`
