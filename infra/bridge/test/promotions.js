@@ -48,8 +48,7 @@ describe('promotion verifications', () => {
       .send({
         type: 'FOLLOW',
         socialNetwork: 'TWITTER',
-        identity: ethAddress,
-        identityProxy: ethAddress
+        identity: ethAddress
       })
       .expect(200)
 
@@ -82,7 +81,6 @@ describe('promotion verifications', () => {
         type: 'SHARE',
         socialNetwork: 'TWITTER',
         identity: ethAddress,
-        identityProxy: ethAddress,
         content: 'Hello World'
       })
       .expect(200)
@@ -96,7 +94,6 @@ describe('promotion verifications', () => {
       .send({
         type: 'SHARE',
         socialNetwork: 'TWITTER',
-        identityProxy: ethAddress,
         identity: ethAddress
       })
       .expect(400)
@@ -131,7 +128,6 @@ describe('promotion verifications', () => {
         type: 'SHARE',
         socialNetwork: 'TWITTER',
         identity: ethAddress,
-        identityProxy: ethAddress,
         content: 'My Content'
       })
       .expect(200)
@@ -146,8 +142,7 @@ describe('promotion verifications', () => {
       .send({
         type: 'FOLLOW',
         socialNetwork: 'TWITTER',
-        identity: '',
-        identityProxy: ''
+        identity: ''
       })
       .expect(400)
 
@@ -162,8 +157,7 @@ describe('promotion verifications', () => {
       .send({
         type: 'FOLLOW',
         socialNetwork: 'NOT_A_SOCIAL_NETWORK',
-        identity: ethAddress,
-        identityProxy: ethAddress
+        identity: ethAddress
       })
       .expect(400)
 
@@ -176,8 +170,7 @@ describe('promotion verifications', () => {
       .send({
         type: 'UNFOLLOW',
         socialNetwork: 'TWITTER',
-        identity: ethAddress,
-        identityProxy: ethAddress
+        identity: ethAddress
       })
       .expect(400)
 
