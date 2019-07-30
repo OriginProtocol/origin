@@ -1,6 +1,6 @@
 const elasticsearch = require('elasticsearch')
 const scoring = require('../lib/scoring')
-const { getAsync, redisClient } = require('../lib/redis')
+const { getAsync } = require('../lib/redis')
 
 /*
   Module to interface with ElasticSearch.
@@ -22,14 +22,14 @@ const getExchangeRates = async currencies => {
     const promises = currencies.map(currency => {
       return new Promise(async (resolve, reject) => {
         try {
-          let rate = await getAsync(`${currency}-USD_price`)
+          const rate = await getAsync(`${currency}-USD_price`)
           resolve({ market: currency, rate: rate })
         } catch (e) {
           reject(e)
         }
       })
     })
-    let result = await Promise.all(promises)
+    const result = await Promise.all(promises)
     result.forEach(r => {
       exchangeRates[r.market] = r.rate
     })
@@ -181,7 +181,7 @@ class Listing {
     idsOnly
   ) {
     const currencies = ['ETH', 'DAI', 'JPY', 'EUR', 'KRW', 'GBP']
-    let exchangeRates = await getExchangeRates(currencies)
+    const exchangeRates = await getExchangeRates(currencies)
 
     if (filters === undefined) {
       filters = []
