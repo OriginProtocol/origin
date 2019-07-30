@@ -117,8 +117,6 @@ const dryRun = !!args['--dry-run']
       break
     }
 
-    const txn = await db.sequelize.transaction()
-
     try {
       const response = await lookupUsers(screenNames)
 
@@ -153,12 +151,10 @@ const dryRun = !!args['--dry-run']
 
       logger.info(`Fetched profile info for ${screenNames.length} users`)
 
-      await txn.commit()
       logger.info(`Committed to DB`)
 
       successCounter = successCounter + screenNames.length
     } catch (error) {
-      await txn.rollback()
       logger.error(`Error while fetching user data`, error)
     }
 
