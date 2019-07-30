@@ -765,6 +765,7 @@ class SocialShareRule extends SingleEventRule {
     if (twitterProfile.verified === undefined ||
       twitterProfile.created_at === undefined ||
       twitterProfile.followers_count === undefined) {
+      logger.error('Invalid twitterProfile. Returning zero reward.')
       return 0
     }
 
