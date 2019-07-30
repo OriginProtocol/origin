@@ -14,7 +14,7 @@ const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
 
 const { verifyPromotions } = require('../utils/validation')
 
-const db = require('./../models/index')
+const db = require('../models/index')
 
 const { decodeHTML } = require('../utils/index')
 
@@ -34,6 +34,7 @@ const waitFor = timeInMs =>
 const getUserProfileFromEvent = ({ event, socialNetwork, type }) => {
   if (socialNetwork !== 'TWITTER') {
     // TODO: As of now, only twitter is supported
+    logger.error(`Trying to parse event of unknown network: ${socialNetwork}`)
     return null
   }
 
@@ -60,7 +61,7 @@ const persistEvent = async ({
   if (content && type === 'SHARE') {
     // Important: Make sure to keep this hash function in sync with
     // the one used in the growth engine rules.
-    // See infra/grwowth/resources/rules.js
+    // See infra/growth/resources/rules.js
     contentHash = crypto
       .createHash('md5')
       .update(content)
@@ -150,6 +151,7 @@ const getAttestation = async ({ identity, identityProxy, socialNetwork }) => {
  */
 const isEventValid = ({ socialNetwork, type, event, content }) => {
   if (socialNetwork !== 'TWITTER') {
+    logger.error(`Trying to parse event of unknown network: ${socialNetwork}`)
     // TODO: As of now, only twitter is supported
     return false
   }

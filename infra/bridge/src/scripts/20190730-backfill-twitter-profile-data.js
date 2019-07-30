@@ -63,6 +63,25 @@ const lookupUsers = screenNames => {
   })
 }
 
+/*
+ * Parse command line arguments into a dict.
+ * @returns {Object} - Parsed arguments.
+ */
+// Copied from `infra/growth/src/util/args.js`
+function parseArgv() {
+  const args = {}
+  for (const arg of process.argv) {
+    const elems = arg.split('=')
+    const key = elems[0]
+    const val = elems.length > 1 ? elems[1] : true
+    args[key] = val
+  }
+  return args
+}
+
+const args = parseArgv()
+const dryRun = !!args['--dry-run']
+
 ;(async () => {
   logger.info('Starting backfill script...')
 
@@ -104,6 +123,10 @@ const lookupUsers = screenNames => {
       const response = await lookupUsers(screenNames)
 
       response.forEach(async user => {
+        if (dryRun) {
+          return
+        }
+
         await db.Attestation.update(
           {
             value: user.id,
@@ -121,7 +144,8 @@ const lookupUsers = screenNames => {
                 {
                   username: user.screen_name
                 }
-              ]
+              ],
+              method: db.Attestation.AttestationTypes.TWITTER
             }
           }
         )
