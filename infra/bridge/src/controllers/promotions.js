@@ -93,7 +93,9 @@ const insertGrowthEvent = async ({
     return false
   }
 
-  logger.info(`Logged GrowthEvent. User ${identity} socialNetwork ${socialNetwork} event ${type}`)
+  logger.info(
+    `Logged GrowthEvent. User ${identity} socialNetwork ${socialNetwork} event ${type}`
+  )
   return true
 }
 
