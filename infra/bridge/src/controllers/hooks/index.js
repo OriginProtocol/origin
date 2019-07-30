@@ -95,7 +95,7 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
   }
 
   if (
-    userProfileData.username.toLowerCase() !==
+    userProfileData.screen_name.toLowerCase() !==
     process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
   ) {
     return res.status(400).send({
