@@ -169,6 +169,13 @@ const dryRun = !!args['--dry-run']
   )
   logger.info(`Fetched ${successCounter} profiles from Twitter`)
 
-  // Wait for DB commits to complete
   logger.info(`Wrapping things up...`)
 })()
+  .then(() => {
+    logger.info(`All done`)
+    process.exit()
+  })
+  .catch(err => {
+    logger.error(`Something went wrong :`, err)
+    process.exit(1)
+  })
