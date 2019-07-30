@@ -47,7 +47,13 @@ const getUserProfileFromEvent = ({ event, socialNetwork, type }) => {
 /**
  * Creates a growth event and updates user profile in DB
  */
-const persistEvent = async ({ content, identity, event, socialNetwork, type }) => {
+const persistEvent = async ({
+  content,
+  identity,
+  event,
+  socialNetwork,
+  type
+}) => {
   let contentHash = null
 
   if (content && type === 'SHARE') {
@@ -100,8 +106,12 @@ const persistEvent = async ({ content, identity, event, socialNetwork, type }) =
  */
 const getAttestation = async ({ identity, identityProxy, socialNetwork }) => {
   const addresses = []
-  if (identity) { addresses.push(identity.toLowerCase()) }
-  if (identityProxy) { addresses.push(identityProxy.toLowerCase()) }
+  if (identity) {
+    addresses.push(identity.toLowerCase())
+  }
+  if (identityProxy) {
+    addresses.push(identityProxy.toLowerCase())
+  }
 
   return await db.Attestation.findOne({
     where: {
@@ -139,7 +149,11 @@ const isEventValid = ({ socialNetwork, type, event, content }) => {
 router.post('/verify', verifyPromotions, async (req, res) => {
   const { type, socialNetwork, identity, identityProxy, content } = req.body
 
-  const attestation = await getAttestation({ identity, identityProxy, socialNetwork })
+  const attestation = await getAttestation({
+    identity,
+    identityProxy,
+    socialNetwork
+  })
 
   if (!attestation) {
     return res.status(400).send({
@@ -169,7 +183,7 @@ router.post('/verify', verifyPromotions, async (req, res) => {
           socialNetwork,
           type
         })
-        
+
         if (!stored) {
           return res.status(200).send({
             success: false,
