@@ -762,9 +762,11 @@ class SocialShareRule extends SingleEventRule {
    */
   _calcTwitterReward(twitterProfile) {
     // Validate the profile.
-    if (twitterProfile.verified === undefined ||
+    if (
+      twitterProfile.verified === undefined ||
       twitterProfile.created_at === undefined ||
-      twitterProfile.followers_count === undefined) {
+      twitterProfile.followers_count === undefined
+    ) {
       logger.error('Invalid twitterProfile. Returning zero reward.')
       return 0
     }
@@ -781,15 +783,25 @@ class SocialShareRule extends SingleEventRule {
     const verified = twitterProfile.verified
     const createdAt = new Date(twitterProfile.created_at)
     const numFollowers = twitterProfile.followers_count
-    const lastTweetDate = twitterProfile.status ? new Date(twitterProfile.status.created_at) : new Date()
+    const lastTweetDate = twitterProfile.status
+      ? new Date(twitterProfile.status.created_at)
+      : new Date()
 
     // Calculate age of the account and of the last tweet in days.
     const now = new Date()
-    const accountAgeDays = Math.ceil(Math.abs(now.getTime() - createdAt.getTime()) / (1000 * 3600 * 24))
-    const lastTweetAgeDate = Math.ceil(Math.abs(now.getTime() - lastTweetDate.getTime()) / (1000 * 3600 * 24))
+    const accountAgeDays = Math.ceil(
+      Math.abs(now.getTime() - createdAt.getTime()) / (1000 * 3600 * 24)
+    )
+    const lastTweetAgeDate = Math.ceil(
+      Math.abs(now.getTime() - lastTweetDate.getTime()) / (1000 * 3600 * 24)
+    )
 
     // Compute the reward.
-    if (accountAgeDays < minAccountAgeDays || lastTweetAgeDate < minAgeLastTweetDays) return 0
+    if (
+      accountAgeDays < minAccountAgeDays ||
+      lastTweetAgeDate < minAgeLastTweetDays
+    )
+      return 0
     if (numFollowers < minFollowersThreshold) return 0
     if (numFollowers < tierFollowersThreshold) return 1
     const amount = Math.floor(numFollowers / tierFollowersIncrement) + 1
@@ -820,9 +832,7 @@ class SocialShareRule extends SingleEventRule {
       return reward
     }
     if (!identity.data || !identity.data.twitterProfile) {
-      logger.error(
-        `Missing twitterProfile in identity of user ${ethAddress}`
-      )
+      logger.error(`Missing twitterProfile in identity of user ${ethAddress}`)
       return reward
     }
     // TODO: handle other social networks.
