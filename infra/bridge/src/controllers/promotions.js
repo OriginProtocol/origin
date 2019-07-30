@@ -50,6 +50,7 @@ const getUserProfileFromEvent = ({ event, socialNetwork, type }) => {
 const persistEvent = async ({
   content,
   identity,
+  identityProxy,
   event,
   socialNetwork,
   type
@@ -81,9 +82,28 @@ const persistEvent = async ({
 
     const profileData = getUserProfileFromEvent({ event, socialNetwork, type })
     if (profileData) {
-      await db.Attestation.update({
-        profileData
-      })
+      const addresses = []
+      if (identity) {
+        addresses.push(identity.toLowerCase())
+      }
+      if (identityProxy) {
+        addresses.push(identityProxy.toLowerCase())
+      }
+
+      await db.Attestation.update(
+        {
+          profileData
+        },
+        {
+          where: {
+            ethAddress: {
+              [Sequelize.Op.in]: addresses
+            },
+            // TODO: This may need a mapping
+            method: socialNetwork
+          }
+        }
+      )
     }
 
     await txn.commit()
@@ -118,6 +138,7 @@ const getAttestation = async ({ identity, identityProxy, socialNetwork }) => {
       ethAddress: {
         [Sequelize.Op.in]: addresses
       },
+      // TODO: This may need a mapping
       method: socialNetwork
     },
     order: [['createdAt', 'DESC']]
@@ -125,25 +146,31 @@ const getAttestation = async ({ identity, identityProxy, socialNetwork }) => {
 }
 
 /**
- * Returns true if event is what you are looking for, false otherwise
+ * Returns decodedContent (for SHARE) or true (for FOLLOW) if event is what you are looking for, false otherwise
  */
 const isEventValid = ({ socialNetwork, type, event, content }) => {
   if (socialNetwork !== 'TWITTER') {
     // TODO: As of now, only twitter is supported
-    return null
+    return false
   }
 
   if (type === 'FOLLOW') {
     return true
   }
 
-  const tweetContent = decodeHTML(event.text)
+  let encodedContent = JSON.parse(JSON.stringify(event.text)) // Clone to avoid mutation
+
+  // Important: Twitter shortens and replaces URLs
+  // we have revert that back to get the original content and to get the hash
+  event.entities.urls.forEach(entity => {
+    encodedContent = encodedContent.replace(entity.url, entity.expanded_url)
+  })
 
   // Invalid if tweet content is not same as expected
   // Note: Twitter sends HTML encoded contents
-  const isValidEvent = tweetContent === content
+  const decodedContent = decodeHTML(encodedContent)
 
-  return isValidEvent
+  return decodedContent === content ? decodedContent : false
 }
 
 router.post('/verify', verifyPromotions, async (req, res) => {
@@ -173,11 +200,16 @@ router.post('/verify', verifyPromotions, async (req, res) => {
     if (eventString) {
       const event = JSON.parse(eventString)
 
-      const isValidEvent = isEventValid({ socialNetwork, type, event, content })
+      const decodedContent = isEventValid({
+        socialNetwork,
+        type,
+        event,
+        content
+      })
 
-      if (isValidEvent) {
+      if (decodedContent) {
         const stored = await persistEvent({
-          content: type === 'SHARE' ? event.text : null,
+          content: typeof decodedContent === 'string' ? decodedContent : null,
           identity,
           event,
           socialNetwork,
