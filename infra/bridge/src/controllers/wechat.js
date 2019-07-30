@@ -115,7 +115,8 @@ router.post('/verify', wechatVerify, async (req, res) => {
       AttestationTypes.WECHAT,
       attestationBody,
       {
-        uniqueId: userDataResponse.body.unionid
+        uniqueId: userDataResponse.body.unionid,
+        profileData: userDataResponse
       },
       req.body.identity,
       req.ip

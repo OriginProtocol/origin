@@ -109,7 +109,8 @@ router.post('/verify', googleVerify, async (req, res) => {
       attestationBody,
       {
         uniqueId: userDataResponse.body.id,
-        username: userDataResponse.body.email
+        username: userDataResponse.body.email,
+        profileData: userDataResponse
       },
       req.body.identity,
       req.ip

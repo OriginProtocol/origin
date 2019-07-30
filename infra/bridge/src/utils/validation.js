@@ -19,12 +19,6 @@ const identityValidation = check('identity')
   .withMessage('Field identity must not be empty.')
   .trim()
 
-const identityProxyValidation = check('identityProxy')
-  .not()
-  .isEmpty()
-  .withMessage('Field identityProxy must not be empty.')
-  .trim()
-
 const codeValidation = (_, { req }) => {
   if (!req.body.code && !req.body.sid) {
     throw new Error('Field `code` or `sid` must be specified.')
@@ -159,7 +153,6 @@ const websiteVerify = websiteGenerateCode
 
 const verifyPromotions = [
   identityValidation,
-  identityProxyValidation,
   check('socialNetwork')
     .isIn(['TWITTER'])
     .withMessage('Unsupported social network'),

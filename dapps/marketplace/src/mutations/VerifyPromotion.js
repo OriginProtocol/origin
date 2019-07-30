@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 export default gql`
   mutation VerifyPromotion(
     $identity: String!
-    $identityProxy: String!
+    $identityProxy: String
     $type: String
     $socialNetwork: String
     $content: String

@@ -75,6 +75,9 @@ describe('promotion verifications', () => {
             user: {
               id: '123456',
               screen_name: 'someuser'
+            },
+            entities: {
+              urls: []
             }
           }
         ]
@@ -96,6 +99,9 @@ describe('promotion verifications', () => {
             user: {
               id: '9876',
               screen_name: 'someuser'
+            },
+            entities: {
+              urls: []
             }
           },
           {
@@ -104,6 +110,9 @@ describe('promotion verifications', () => {
             user: {
               id: '9876',
               screen_name: 'someuser'
+            },
+            entities: {
+              urls: []
             }
           },
           {
@@ -111,6 +120,9 @@ describe('promotion verifications', () => {
             user: {
               id: '9876',
               screen_name: 'originprotocol'
+            },
+            entities: {
+              urls: []
             }
           }
         ]
