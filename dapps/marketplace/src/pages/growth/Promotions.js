@@ -251,7 +251,7 @@ const Promotions = ({
   })
 
   return (
-    <>
+    <div className={`growth-promote-origin${isMobile ? ' mobile' : ''}`}>
       {runMutation && (
         <RunVerifyPromotion
           locale={locale}
@@ -297,7 +297,7 @@ const Promotions = ({
           }}
         />
       )}
-    </>
+    </div>
   )
 }
 
