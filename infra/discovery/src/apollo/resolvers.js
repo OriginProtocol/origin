@@ -30,6 +30,9 @@ const resolvers = {
       //   `TEST listings - ${JSON.stringify(listings)}`
       // )
       return {
+        // need to return listings and the original 
+        // listingIds.map(x => Object.assign({}, { id: x })
+        // modify what receives this, the call to the decentralised graphql
         nodes: listings,
         offset: args.page.offset,
         numberOfItems: listingIds.length,

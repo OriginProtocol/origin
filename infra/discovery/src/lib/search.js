@@ -22,8 +22,10 @@ const getExchangeRates = async currencies => {
     const promises = currencies.map(currency => {
       return new Promise(async (resolve, reject) => {
         try {
-          const rate = await getAsync(`${currency}-USD_price`)
-          resolve({ market: currency, rate: rate })
+          const splitCurrency = currency.split('-')
+          const resolvedCurrency = splitCurrency[1]
+          const rate = await getAsync(`${resolvedCurrency}-USD_price`)
+          resolve({ currency: currency, rate: rate })
         } catch (e) {
           reject(e)
         }
@@ -31,7 +33,7 @@ const getExchangeRates = async currencies => {
     })
     const result = await Promise.all(promises)
     result.forEach(r => {
-      exchangeRates[r.market] = r.rate
+      exchangeRates[r.currency] = r.rate
     })
     return exchangeRates
   } catch (e) {
@@ -180,7 +182,7 @@ class Listing {
     offset,
     idsOnly
   ) {
-    const currencies = ['ETH', 'DAI', 'JPY', 'EUR', 'KRW', 'GBP']
+    const currencies = ['token-ETH', 'token-DAI', 'fiat-JPY', 'fiat-EUR', 'fiat-KRW', 'fiat-GBP']
     const exchangeRates = await getExchangeRates(currencies)
 
     if (filters === undefined) {
@@ -347,7 +349,7 @@ class Listing {
                 type: 'number',
                 script: {
                   lang: 'painless',
-                  source: `parseFloat(rates[price.currency.id]) * parseFloat([${target}])`,
+                  source: `Float.parseFloat(params._source.${target}) * params.exchangeRates[params._source.price.currency.id]`,
                   params: {
                     rates: exchangeRates
                   }
@@ -368,7 +370,7 @@ class Listing {
           }
         }
       } else {
-        return {}
+        return []
       }
     }
 

@@ -136,6 +136,7 @@ services:
     volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - REDIS_URL=redis://redis-master:6379
       - DISCORD_WEBHOOK=
       - ELASTICSEARCH=true
       - ELASTICSEARCH_HOST=elasticsearch:9200
