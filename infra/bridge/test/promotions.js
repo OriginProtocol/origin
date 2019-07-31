@@ -93,6 +93,50 @@ describe('promotion verifications', () => {
     expect(response.body.success).to.equal(true)
   })
 
+  it('should resolve on extended_tweet for `share` event on twitter', async () => {
+    // Create a dummy attestation
+    await Attestation.create({
+      method: AttestationTypes.TWITTER,
+      ethAddress,
+      value: '12345',
+      signature: '0x0',
+      remoteUpAddress: '192.168.1.1',
+      profileUrl: '/',
+      username: 'OriginProtocol'
+    })
+
+    // Push a fake event to redis
+    client.set(
+      `twitter/share/12345`,
+      JSON.stringify({
+        text: 'Hello...',
+        entities: {
+          urls: []
+        },
+        extended_tweet: {
+          full_text: 'Hello World',
+          entities: {
+            urls: []
+          }
+        }
+      }),
+      'EX',
+      60
+    )
+
+    const response = await request(app)
+      .post('/api/promotions/verify')
+      .send({
+        type: 'SHARE',
+        socialNetwork: 'TWITTER',
+        identity: ethAddress,
+        content: 'Hello World'
+      })
+      .expect(200)
+
+    expect(response.body.success).to.equal(true)
+  })
+
   it('should fail on missing attestation', async () => {
     const response = await request(app)
       .post('/api/promotions/verify')
