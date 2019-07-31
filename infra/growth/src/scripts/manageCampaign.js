@@ -7,6 +7,7 @@ const aprilConfig = require('../../campaigns/april')
 const mayConfig = require('../../campaigns/may')
 const juneConfig = require('../../campaigns/june')
 const julyConfig = require('../../campaigns/july')
+const augustConfig = require('../../campaigns/august')
 
 async function createAprilProdCampaign() {
   console.log('Creating April campaign data in prod...')
@@ -103,10 +104,37 @@ async function createJulyProdCampaign() {
 }
 
 async function updateJulyProdRules() {
-  console.log('Updating July campaign rules in prod...')
+  console.log('Updating August campaign rules in prod...')
 
   const campaign = await db.GrowthCampaign.findOne({ where: { id: 5 } })
   await campaign.update({ rules: JSON.stringify(julyConfig) })
+}
+
+async function createAugProdCampaign() {
+  console.log('Creating August campaign data in prod...')
+
+  /* IMPORTANT when adding new translatable fields update the enums document:
+   * origin-dapp/src/constants/Growth$FbtEnum.js
+   */
+  await db.GrowthCampaign.create({
+    nameKey: 'growth.aug2019.name',
+    shortNameKey: 'growth.aug2019.short_name',
+    rules: JSON.stringify(augustConfig),
+    startDate: Date.parse('August 1, 2019, 00:00 UTC'),
+    endDate: Date.parse('September 1, 2019, 00:00 UTC'),
+    distributionDate: Date.parse('September 1, 2019, 00:00 UTC'),
+    cap: tokenToNaturalUnits(1000000), // Set cap to 1M tokens
+    capUsed: 0,
+    currency: 'OGN',
+    rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
+  })
+}
+
+async function updateAugProdRules() {
+  console.log('Updating June campaign rules in prod...')
+
+  const campaign = await db.GrowthCampaign.findOne({ where: { id: 6 } })
+  await campaign.update({ rules: JSON.stringify(augustConfig) })
 }
 
 const args = {}
@@ -120,13 +148,15 @@ const createByMonth = {
   april: createAprilProdCampaign,
   may: createMayProdCampaign,
   june: createJuneProdCampaign,
-  july: createJulyProdCampaign
+  july: createJulyProdCampaign,
+  august: createAugProdCampaign
 }
 
 const updateByMonth = {
   may: updateMayProdRules,
   june: updateJuneProdRules,
-  july: updateJulyProdRules
+  july: updateJulyProdRules,
+  august: updateAugProdRules
 }
 
 const action = args['--action']

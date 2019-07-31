@@ -12,6 +12,8 @@ import TranslationModal from './_TranslationModal'
 import MobileModal from './_MobileModal'
 import Footer from './_Footer'
 
+import LoadingSpinner from 'components/LoadingSpinner'
+
 import Onboard from './onboard/Onboard'
 import Listings from './listings/Listings'
 import Listing from './listing/Listing'
@@ -78,14 +80,7 @@ class App extends Component {
         </div>
       )
     } else if (this.props.creatorConfigLoading) {
-      return (
-        <div className="app-spinner">
-          <fbt desc="App.loadingPleaseWait">
-            <h5>Loading</h5>
-            <div>Please wait</div>
-          </fbt>
-        </div>
-      )
+      return <LoadingSpinner />
     }
 
     const { creatorConfig } = this.props
@@ -102,8 +97,9 @@ class App extends Component {
       (isOnWelcomeAndNotOboard && !isMobile) ||
       (isMobile &&
         (this.props.location.pathname.match(/^\/purchases\/.*$/gi) ||
-          this.props.location.pathname.match(/^\/campaigns\/purchases$/gi) ||
-          this.props.location.pathname.match(/^\/campaigns\/invitations$/gi) ||
+          this.props.location.pathname.match(
+            /^\/campaigns\/(verifications|purchases|invitations|follows|promotions)(\/|$)/gi
+          ) ||
           this.props.location.pathname.match(/\/onboard\/finished/gi) ||
           this.props.location.pathname.match(
             /^\/(create\/.+|listing\/[-0-9]+\/edit\/.+)/gi
@@ -147,11 +143,12 @@ class App extends Component {
             <Route path="/about/crypto" component={AboutCrypto} />
             <Route path="/about/payments" component={AboutPayments} />
             <Route path="/about/tokens" component={AboutToken} />
-            <Route exact path="/campaigns" component={GrowthCampaigns} />
             <Route
               exact
-              path="/campaigns/:navigation"
-              component={GrowthCampaigns}
+              path="/campaigns/:navigation?/:contentId?"
+              component={props => (
+                <GrowthCampaigns {...props} locale={this.props.locale} />
+              )}
             />
             <Route exact path="/rewards/banned" component={GrowthBanned} />
             <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />

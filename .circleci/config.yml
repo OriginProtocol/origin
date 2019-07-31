@@ -90,6 +90,7 @@ jobs:
       - attach_workspace:
           at: .
       - run: cd infra/identity && yarn migrate
+      - run: cd infra/growth-event && yarn migrate
       - run:
           name: Run Bridge Tests
           command: cd infra/bridge && yarn migrate && yarn test
@@ -111,6 +112,7 @@ jobs:
       - run: cd infra/bridge && yarn migrate
       - run: cd infra/discovery && yarn migrate
       - run: cd infra/growth && yarn migrate
+      - run: cd infra/growth-event && yarn migrate
       - run: cd infra/identity && yarn migrate
       - run:
           name: Run Discovery Tests
@@ -122,6 +124,7 @@ jobs:
       - attach_workspace:
           at: .
       - run: cd infra/growth && yarn migrate
+      - run: cd infra/growth-event && yarn migrate
       - run: cd infra/identity && yarn migrate
       - run:
           name: Run Growth Tests
@@ -133,6 +136,7 @@ jobs:
       - attach_workspace:
           at: .
       - run: cd infra/growth && yarn migrate
+      - run: cd infra/growth-event && yarn migrate
       - run:
           name: Run Notification Tests
           command: cd infra/notifications && yarn migrate && yarn test
@@ -157,6 +161,7 @@ jobs:
           command: cd infra/token-transfer-server && yarn test
     environment:
       DATABASE_URL: sqlite:///home/circleci/origin/infra/token-transfer-server/data/t3.db
+      ENCRYPTION_SECRET: thisisasecret
 
   Web3Provider:
     <<: *defaults

@@ -12,45 +12,51 @@ const { check, validationResult } = require('express-validator')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const moment = require('moment')
-const port = process.env.PORT || 5000
 const passport = require('passport')
 const path = require('path')
 const session = require('express-session')
 require('./passport')()
 const SQLiteStore = require('connect-sqlite3')(session)
 const { Op } = require('sequelize')
+const Web3 = require('web3')
 
-const { createProviders } = require('@origin/token/src/config')
-
-const { LOGIN } = require('./constants/events')
+const { createProvider } = require('@origin/token/src/config')
 const { transferTokens } = require('./lib/transfer')
 const { Event, Grant } = require('./models')
 
-const Web3 = require('web3')
+const {
+  sendEmailCode,
+  verifyEmailCode,
+  setupTotp,
+  verifyTotp,
+  logout
+} = require('./login')
 
-// Read secrets from EnvKey.
-const sessionSecret = process.env['SESSION_SECRET']
+// Configuration
+const sessionSecret = process.env.SESSION_SECRET
 if (!sessionSecret) {
   logger.error('SESSION_SECRET must be set through EnvKey or manually')
   process.exit(1)
 }
-
+const port = process.env.PORT || 5000
 const networkId = Number.parseInt(process.env.NETWORK_ID) || 999
 
-// Setup sessions.
-app.use(
-  session({
-    cookie: { maxAge: 60 * 60 * 1000 },
-    resave: false,
-    secure: false,
-    saveUninitialized: true,
-    secret: sessionSecret,
-    store: new SQLiteStore({
-      dir: path.resolve(__dirname + '/../data'),
-      db: 'sessions.sqlite3'
-    })
+// Session setup.
+const sessionConfig = {
+  cookie: { maxAge: 30 * 60 * 1000 }, // 30 min TTL
+  resave: false, // Do not force session to get saved if it was not modified by the request.
+  saveUninitialized: true,
+  secret: sessionSecret,
+  store: new SQLiteStore({
+    dir: path.resolve(__dirname + '/../data'),
+    db: 'sessions.sqlite3'
   })
-)
+}
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1) // trust first proxy
+  sessionConfig.cookie.secure = true // serve secure cookies
+}
+app.use(session(sessionConfig))
 
 // Expose extra headers.
 app.use(
@@ -63,6 +69,10 @@ app.use(
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
+// Passport specific.
+app.use(passport.initialize())
+app.use(passport.session())
+
 /**
  * Allows use of async functions for an Express route.
  */
@@ -70,18 +80,36 @@ const asyncMiddleware = fn => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next)
 }
 
-const logDate = () => moment().toString()
+/**
+ * Middleware to ensure a user is logged in.
+ * MUST be called by all routes.
+ */
+function ensureLoggedIn(req, res, next) {
+  if (!req.session.email) {
+    logger.debug('Authentication failed. No email in session')
+    res.status(401)
+    return res.send('This action requires to verify your email.')
+  }
+  if (!req.session.twoFA) {
+    logger.debug('Authentication failed. No 2FA in session')
+    res.status(401)
+    return res.send('This action requires 2FA.')
+  }
+  // User email is verified and user passed 2FA.
+  logger.debug('Authentication success')
+  res.setHeader('X-Authenticated-Email', req.session.email)
+  next()
+}
 
 /**
- * Middleware for requiring a session. Injects the X-Authenticated-Email header
- * with the authenticated email for the session.
+ * MIddleware to ensures a user verified their email.
  */
-function withSession(req, res, next) {
+function ensureEmailVerified(req, res, next) {
   if (!req.session.email) {
+    logger.debug('Authentication failed. No email in session')
     res.status(401)
-    return res.send('This action requires Google login.')
+    return res.send('This action requires to verify your email first.')
   }
-  res.setHeader('X-Authenticated-Email', req.session.email)
   next()
 }
 
@@ -90,7 +118,7 @@ function withSession(req, res, next) {
  */
 app.get(
   '/api/grants',
-  withSession,
+  ensureLoggedIn,
   asyncMiddleware(async (req, res) => {
     logger.debug('/api/grants', req.session.email)
     const grants = await Grant.findAll({ where: { email: req.session.email } })
@@ -118,7 +146,7 @@ app.post(
     check('grantId').isInt(),
     check('amount').isDecimal(),
     check('address').custom(isEthereumAddress),
-    withSession
+    ensureLoggedIn
   ],
   asyncMiddleware(async (req, res) => {
     const errors = validationResult(req)
@@ -141,9 +169,7 @@ app.post(
 
       const grantedAt = moment(grant.grantedAt).format('YYYY-MM-DD')
       logger.info(
-        `${logDate()} ${
-          grant.email
-        } grant ${grantedAt} transferred ${amount} OGN to ${address}`
+        `${grant.email} grant ${grantedAt} transferred ${amount} OGN to ${address}`
       )
     } catch (e) {
       if (e instanceof ReferenceError || e instanceof RangeError) {
@@ -155,49 +181,12 @@ app.post(
   })
 )
 
-// TODO: review this for security
-app.post(
-  '/api/auth_google',
-  passport.authenticate('google-token', { session: false }),
-  (req, res) => {
-    if (!req.user) {
-      res.status(401)
-      return res.send('User not authorized')
-    }
-
-    // Save the authenticated user in the session cookie.
-    req.auth = {
-      id: req.user.id
-    }
-    req.session.email = req.user.email
-    req.session.save(err => {
-      if (err) {
-        logger.error('ERROR saving session:', err)
-      }
-    })
-
-    // Log the login.
-    Event.create({
-      email: req.user.email,
-      ip: req.connection.remoteAddress,
-      grantId: null,
-      action: LOGIN,
-      data: JSON.stringify({})
-    })
-
-    logger.info(`${logDate()} ${req.user.email} logged in`)
-
-    res.setHeader('Content-Type', 'application/json')
-    res.send(JSON.stringify(req.user))
-  }
-)
-
 /**
  * Return the events pertaining to the user.
  */
 app.get(
   '/api/events',
-  withSession,
+  ensureLoggedIn,
   asyncMiddleware(async (req, res) => {
     logger.debug('/api/events', req.session.email)
     // Perform an LEFT OUTER JOIN between Events and Grants. Neither SQLite nor
@@ -227,19 +216,45 @@ app.get(
   })
 )
 
-// Destroys the user's session cookie.
-app.post('/api/logout', withSession, (req, res) => {
-  if (req.session) {
-    req.session.destroy(err => {
-      if (err) {
-        logger.error('ERROR destroying session:', err)
-      }
-    })
-  }
-  res.send('logged out')
-})
+/**
+ * Sends a login code by email.
+ */
+app.post('/api/send_email_code', asyncMiddleware(sendEmailCode))
 
-createProviders([networkId]) // Ensure web3 credentials are set up
+/**
+ * Verifies a login code sent by email.
+ */
+app.post(
+  '/api/verify_email_code',
+  passport.authenticate('local'),
+  verifyEmailCode
+)
+
+/**
+  Returns data for setting up TOTP.
+ */
+app.post(
+  '/api/setup_totp',
+  ensureEmailVerified, // User must have verified their email first.
+  asyncMiddleware(setupTotp)
+)
+
+/**
+ * Verifies a TOTP code.
+ */
+app.post(
+  '/api/verify_totp',
+  ensureEmailVerified, // User must have verified their email first.
+  passport.authenticate('totp'),
+  asyncMiddleware(verifyTotp)
+)
+
+/**
+ * Log out user by destroying their session cookie
+ */
+app.post('/api/logout', ensureLoggedIn, logout)
+
+createProvider(networkId) // Ensure web3 credentials are set up
 app.listen(port, () => {
   logger.info(`Listening on port ${port}`)
 })

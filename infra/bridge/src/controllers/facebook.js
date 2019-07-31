@@ -113,7 +113,8 @@ router.post('/verify', facebookVerify, async (req, res) => {
       AttestationTypes.FACEBOOK,
       attestationBody,
       {
-        uniqueId: userDataResponse.id
+        uniqueId: userDataResponse.id,
+        profileData: userDataResponse
       },
       req.body.identity,
       req.ip

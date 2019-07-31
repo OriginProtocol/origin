@@ -1,9 +1,10 @@
+const crypto = require('crypto')
 const Sequelize = require('sequelize')
 
 const _growthModels = require('../models')
 const _discoveryModels = require('@origin/discovery/src/models')
-const db = { ..._growthModels, ..._discoveryModels }
-const { flatMap } = require('../util/arrayUtils')
+const _identityModels = require('@origin/identity/src/models')
+const db = { ..._growthModels, ..._discoveryModels, ..._identityModels }
 
 const {
   GrowthEventTypes,
@@ -48,15 +49,13 @@ class CampaignRules {
     }
     this.numLevels = this.config.numLevels
 
+    this.allRules = [] // Flat list of rules.
     this.levels = {}
     for (let i = 0; i < this.config.numLevels; i++) {
       if (!this.config.levels[i]) {
         throw new Error(`Campaign ${this.campaign.id}: missing level ${i}`)
       }
       this.levels[i] = new Level(this, i, this.config.levels[i])
-      // we need to call this inside the loop, so the current level has access
-      // to the rules of the previous levels at constructor time
-      this.allRules = flatMap(level => level.rules, Object.values(this.levels))
     }
   }
 
@@ -189,7 +188,7 @@ class CampaignRules {
    *   for the calculation. By default uses events with status Verified or Logged.
    * @returns {Promise<Array<Reward>>} - List of rewards, in no specific order.
    */
-  async getRewards(ethAddress, onlyVerifiedEvents = false) {
+  async getEarnedRewards(ethAddress, onlyVerifiedEvents = false) {
     const rewards = []
     const events = await this.getEvents(ethAddress, { onlyVerifiedEvents })
     const currentLevel = await this.getCurrentLevel(
@@ -197,7 +196,10 @@ class CampaignRules {
       onlyVerifiedEvents
     )
     for (let i = 0; i <= currentLevel; i++) {
-      const levelRewards = await this.levels[i].getRewards(ethAddress, events)
+      const levelRewards = await this.levels[i].getEarnedRewards(
+        ethAddress,
+        events
+      )
       rewards.push(...levelRewards)
     }
     return rewards
@@ -253,9 +255,12 @@ class Level {
     this.id = levelId
     this.config = config
 
-    this.rules = config.rules.map(ruleConfig =>
-      ruleFactory(crules, levelId, ruleConfig)
-    )
+    this.rules = config.rules.map(ruleConfig => {
+      const rule = ruleFactory(crules, levelId, ruleConfig)
+      // Add the rule to the global list of rules.
+      this.crules.allRules.push(rule)
+      return rule
+    })
   }
 
   async qualifyForNextLevel(ethAddress, events) {
@@ -268,10 +273,10 @@ class Level {
     return true
   }
 
-  async getRewards(ethAddress, events) {
+  async getEarnedRewards(ethAddress, events) {
     const rewards = []
     for (const rule of this.rules) {
-      const ruleRewards = await rule.getRewards(ethAddress, events)
+      const ruleRewards = await rule.getEarnedRewards(ethAddress, events)
       rewards.push(...ruleRewards)
     }
 
@@ -396,6 +401,23 @@ class BaseRule {
   }
 
   /**
+   * Helper function to add an event type to the eventTypes field of a rule.
+   * @param eventType
+   */
+  addEventType(eventType) {
+    // Check the eventType is valid.
+    if (!GrowthEventTypes.includes(eventType)) {
+      throw new Error(`${this.str()}: unknown eventType ${eventType}`)
+    }
+    // Add it to eventTypes.
+    if (!this.eventTypes) {
+      this.eventTypes = [eventType]
+    } else {
+      this.eventTypes.push(eventType)
+    }
+  }
+
+  /**
    * Returns the set of events to consider when evaluating the rule.
    *
    * @param {Array<models.GrowthEvent>} events - All events related to the user.
@@ -450,7 +472,10 @@ class BaseRule {
         )
       })
       .forEach(event => {
-        tally[event.type] = tally.hasOwnProperty(event.type)
+        tally[event.type] = Object.prototype.hasOwnProperty.call(
+          tally,
+          event.type
+        )
           ? tally[event.type] + 1
           : 1
       })
@@ -458,7 +483,7 @@ class BaseRule {
     return tally
   }
 
-  async getRewards(ethAddress, events) {
+  async getEarnedRewards(ethAddress, events) {
     // If this rule does not give out reward, return right away.
     if (!this.reward) {
       return []
@@ -517,7 +542,6 @@ class BaseRule {
       }
     }
 
-    // Note:
     if (this.reward) {
       // Reward rule. Determine if the rule is Completed by calculating
       // if all rewards have been earned.
@@ -584,47 +608,54 @@ class BaseRule {
       status: omitUserData
         ? null
         : await this.getStatus(ethAddress, events, level),
-      reward: this.reward,
-      rewards: omitUserData ? [] : await this.getRewards(ethAddress, events),
+      // Reward associated with the rule. Call the rule's custom reward function if it exists.
+      reward: this.getReward
+        ? await this.getReward(omitUserData ? null : ethAddress)
+        : this.reward,
+      // Rewards earned by the user.
+      rewards: omitUserData
+        ? []
+        : await this.getEarnedRewards(ethAddress, events),
       unlockConditions: this.conditionsToUnlock(),
       // Fields specific to the ListingIdPurchased rule.
       listingId: this.listingId,
       iconSrc: this.iconSrc,
       titleKey: this.titleKey,
-      detailsKey: this.detailsKey
+      detailsKey: this.detailsKey,
+      // Fields specific to the SocialShare rule
+      content: this.content
     }
     return adapter.process(data)
   }
 }
 
 /**
- * A rule that requires 1 event.
+ * A rule that checks on a single event type.
  */
 class SingleEventRule extends BaseRule {
   constructor(crules, levelId, config) {
     super(crules, levelId, config)
-
-    const eventType = this.config.eventType
-    if (!eventType) {
-      throw new Error(`${this.str()}: missing eventType field`)
-    } else if (!GrowthEventTypes.includes(eventType)) {
-      throw new Error(`${this.str()}: unknown eventType ${eventType}`)
+    if (this.config.eventType) {
+      this.addEventType(this.config.eventType)
     }
-    this.eventTypes = [eventType]
   }
 
   /**
-   * Returns number of rewards user qualifies for, taking into account the rule's limit.
+   * Returns number of rewards the user qualifies for, taking into account the rule's limit.
    * @param {string} ethAddress - User's account.
    * @param {Array<models.GrowthEvent>} events
    * @returns {number}
    * @private
    */
   async _numRewards(ethAddress, events) {
-    const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
-
-    // SingleEventRule has at most 1 event in tally count.
-    return Object.keys(tally).length === 1
+    const tally = this._tallyEvents(
+      ethAddress,
+      this.eventTypes,
+      events,
+      // Filter using the customIDFilter function if it is defined.
+      this.customIdFilter ? customId => this.customIdFilter(customId) : null
+    )
+    return Object.keys(tally).length > 0
       ? Math.min(Object.values(tally)[0], this.limit)
       : 0
   }
@@ -636,15 +667,21 @@ class SingleEventRule extends BaseRule {
    * @returns {boolean}
    */
   async _evaluate(ethAddress, events) {
-    const tally = this._tallyEvents(ethAddress, this.eventTypes, events)
-    return Object.keys(tally).length === 1 && Object.values(tally)[0] > 0
+    const tally = this._tallyEvents(
+      ethAddress,
+      this.eventTypes,
+      events,
+      // Filter using the customIDFilter function if it is defined.
+      this.customIdFilter ? customId => this.customIdFilter(customId) : null
+    )
+    return Object.keys(tally).length > 0 && Object.values(tally)[0] > 0
   }
 }
 
 /**
  * A rule that requires the purchase of a specific listing.
  */
-class ListingIdPurchaseRule extends BaseRule {
+class ListingIdPurchaseRule extends SingleEventRule {
   constructor(crules, levelId, config) {
     super(crules, levelId, config)
     if (!this.config.listingId) {
@@ -663,12 +700,7 @@ class ListingIdPurchaseRule extends BaseRule {
       throw new Error(`${this.str()}: missing detailsKey field`)
     }
     this.detailsKey = this.config.detailsKey
-
-    const eventType = 'ListingPurchased'
-    if (!GrowthEventTypes.includes(eventType)) {
-      throw new Error(`${this.str()}: unknown eventType ${eventType}`)
-    }
-    this.eventTypes = [eventType]
+    this.addEventType('ListingPurchased')
   }
 
   /**
@@ -689,43 +721,172 @@ class ListingIdPurchaseRule extends BaseRule {
         .join('-')
     )
   }
+}
 
-  /**
-   * Returns number of rewards the user qualifies for, taking into account the rule's limit.
-   * @param {string} ethAddress - User's account.
-   * @param {Array<models.GrowthEvent>} events
-   * @returns {number}
-   * @private
-   */
-  async _numRewards(ethAddress, events) {
-    // Note: we pass a custom function to filter based on listingId to _tallyEvents.
-    const tally = this._tallyEvents(
-      ethAddress,
-      this.eventTypes,
-      events,
-      customId => this.customIdFilter(customId)
-    )
-    return Object.keys(tally).length > 0
-      ? Math.min(Object.values(tally)[0], this.limit)
-      : 0
+/**
+ * A rule that rewards for sharing content on social networks
+ */
+class SocialShareRule extends SingleEventRule {
+  constructor(crules, levelId, config) {
+    super(crules, levelId, config)
+    if (!this.config.socialNetwork) {
+      throw new Error(`${this.str()}: missing socialNetwork field`)
+    }
+    if (!['twitter'].includes(this.config.socialNetwork)) {
+      throw new Error(
+        `${this.str()}: unexpected value ${
+          this.config.socialNetwork
+        } for socialNetwork field`
+      )
+    }
+    this.socialNetwork = this.config.socialNetwork
+    if (!this.config.content) {
+      throw new Error(`${this.str()}: missing content field`)
+    }
+    this.content = this.config.content
+    // Compute the hashes for the post content, in all the configured languages.
+    this.contentHashes = [this._hashContent(this.content.post.text.default)]
+    for (const translation of this.content.post.text.translations) {
+      this.contentHashes.push(this._hashContent(translation.text))
+    }
   }
 
   /**
-   * Returns true if the rule passes, false otherwise.
-   * @param {string} ethAddress - User's account.
-   * @param {Array<models.GrowthEvent>} events
+   * Calculates the personalized reward amount based on number of followers
+   * and age of the user's twitter account.
+   *
+   * @param {numFollowers:number, accountAge:number}
+   * @returns {<number>}
+   * @private
+   */
+  _calcTwitterReward(stats) {
+    const minThreshold = 10
+    const tierThreshold = 100
+    const tierIncrement = 200
+
+    if (stats.accountAge < 1) return 0
+    if (stats.numFollowers < minThreshold) return 0
+    if (stats.numFollowers < tierThreshold) return 1
+    return Math.floor(stats.numFollowers / tierIncrement) + 1
+  }
+
+  /**
+   * Calculate personalized amount the user should get if they complete the sharing action.
+   * @param {string} ethAddress
+   * @param {Object} identityForTest - For testing only.
+   * @returns {Promise<Reward>}
+   */
+  async getReward(ethAddress, identityForTest = null) {
+    // Create a reward object with amount set to zero.
+    const reward = new Reward(this.campaignId, this.levelId, this.id, {
+      amount: '0',
+      currency: this.config.reward.currency
+    })
+    if (!ethAddress) {
+      // No user passed. Return zero.
+      return reward
+    }
+    // Return a personalized amount calculated based on social network stats stored in the user's identity.
+    const identity =
+      (await db.Identity.findOne({ where: { ethAddress } })) || identityForTest
+    if (!identity) {
+      logger.error(`No identity found for ${ethAddress}`)
+      return reward
+    }
+    if (
+      !identity.data ||
+      !identity.data.twitterStats ||
+      typeof identity.data.twitterStats.numFollowers !== 'number' ||
+      typeof identity.data.twitterStats.accountAge !== 'number'
+    ) {
+      logger.error(
+        `Missing or invalid twitterStats in identity of user ${ethAddress}`
+      )
+      return reward
+    }
+    // TODO: handle other social networks.
+    reward.value.amount = this._calcTwitterReward(
+      identity.data.twitterStats
+    ).toString()
+    return reward
+  }
+
+  /**
+   * Calculate the personalized Twitter reward amount for each SocialShare event.
+   * @param {string} ethAddress
+   * @param {Array<db.GrowthEvent>} events
+   * @returns {Array<Reward>}
+   * @private
+   */
+  _getTwitterRewardsEarned(ethAddress, events) {
+    // For each event, get the user's Twitter stats from the GrowthEvent row
+    // then calculate the amount.
+    const rewards = []
+    for (const event of events) {
+      if (
+        !event.data ||
+        !event.data.twitterStats ||
+        typeof event.data.twitterStats.numFollowers !== 'number' ||
+        typeof event.data.twitterStats.accountAge !== 'number'
+      ) {
+        throw new Error(
+          `GrowthEvent ${event.id}: missing or invalid twitter stats`
+        )
+      }
+      const amount = this._calcTwitterReward(event.data.twitterStats).toString()
+      const reward = new Reward(this.campaignId, this.levelId, this.id, {
+        amount,
+        currency: this.config.reward.currency
+      })
+      rewards.push(reward)
+    }
+    return rewards
+  }
+
+  /**
+   * Compute a personalized reward amount earned based on the user's social stats.
+   *
+   * @param ethAddress
+   * @param events
+   * @returns {Promise<Array<Reward>>}
+   */
+  async getEarnedRewards(ethAddress, events) {
+    const inScopeEvents = this._inScope(events)
+    const numRewards = await this._numRewards(ethAddress, inScopeEvents)
+    const eventsForCalculation = events.slice(0, numRewards)
+    // TODO: handle other social networks.
+    const rewards = this._getTwitterRewardsEarned(
+      ethAddress,
+      eventsForCalculation
+    )
+    return rewards
+  }
+
+  /**
+   * Hashes content for verification of the user's post.
+   *
+   * Important: Make sure to keep this hash function in sync with
+   * the one used in the bridge server.
+   * See infra/bridge/src/promotions.js
+   *
+   * @param text
+   * @returns {string} Hash of the text, hexadecimal encoded.
+   * @private
+   */
+  _hashContent(text) {
+    return crypto
+      .createHash('md5')
+      .update(text)
+      .digest('hex')
+  }
+  /**
+   * Returns true if the event's content hash (stored in customId) belongs to the
+   * set of hashes configured in the rule.
+   * @param {string} customId: hashed content of the post.
    * @returns {boolean}
    */
-  async _evaluate(ethAddress, events) {
-    // Note: we pass a custom function to filter based on listingId to _tallyEvents.
-    const tally = this._tallyEvents(
-      ethAddress,
-      this.eventTypes,
-      events,
-      customId => this.customIdFilter(customId)
-    )
-
-    return Object.keys(tally).length > 0 && Object.values(tally)[0] > 0
+  customIdFilter(customId) {
+    return this.contentHashes.includes(customId)
   }
 }
 
@@ -740,12 +901,7 @@ class MultiEventsRule extends BaseRule {
     if (!this.config.eventTypes) {
       throw new Error(`${this.str()}: missing eventTypes field`)
     }
-    this.config.eventTypes.forEach(eventType => {
-      if (!GrowthEventTypes.includes(eventType)) {
-        throw new Error(`${this.str()}: unknown eventType ${eventType}`)
-      }
-    })
-    this.eventTypes = this.config.eventTypes
+    this.config.eventTypes.forEach(eventType => this.addEventType(eventType))
 
     if (
       !this.config.numEventsRequired ||
@@ -827,7 +983,7 @@ class ReferralRule extends BaseRule {
    * @returns {boolean}
    */
   async _evaluate(ethAddress) {
-    return (await this.getRewards(ethAddress).length) > 0
+    return (await this.getEarnedRewards(ethAddress).length) > 0
   }
 
   /**
@@ -854,7 +1010,7 @@ class ReferralRule extends BaseRule {
    * @param {string} ethAddress - Referrer's account.
    * @returns {Array<ReferralReward>}
    */
-  async getRewards(ethAddress) {
+  async getEarnedRewards(ethAddress) {
     // If this rule does not give out reward, return right away.
     if (!this.reward) {
       return []
@@ -908,40 +1064,8 @@ class ReferralRule extends BaseRule {
   }
 
   async _numRewards(ethAddress) {
-    return (await this.getRewards(ethAddress)).length
+    return (await this.getEarnedRewards(ethAddress)).length
   }
 }
 
-/**
- * A rule that measures the rewards for sharing on social networks
- */
-class SocialShareRule extends BaseRule {
-  constructor(crules, levelId, config) {
-    super(crules, levelId, config)
-  }
-
-  /**
-   * Returns number of rewards the user qualifies for, taking into account the rule's limit.
-   * @param {string} ethAddress - User's account.
-   * @param {Array<models.GrowthEvent>} events
-   * @returns {number}
-   * @private
-   */
-  async _numRewards() {
-    // TODO
-    return 0
-  }
-
-  /**
-   * Returns true if the rule passes, false otherwise.
-   * @param {string} ethAddress - User's account.
-   * @param {Array<models.GrowthEvent>} events
-   * @returns {boolean}
-   */
-  async _evaluate() {
-    // TODO
-    return true
-  }
-}
-
-module.exports = { CampaignRules }
+module.exports = { CampaignRules, SocialShareRule }

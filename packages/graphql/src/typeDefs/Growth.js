@@ -46,6 +46,7 @@ module.exports = `
     ListingIdPurchased
     ListingSold
     TwitterShare
+    TwitterFollow
   }
 
   enum GrowthInviteStatus {
@@ -137,6 +138,38 @@ module.exports = `
     titleKey: String!
     detailsKey: String!
     iconSrc: String!
+  }
+
+  type LocaleTextPair {
+    locale: String!
+    text: String!
+  }
+
+  type TranslatedText {
+    default: String! # Default translation. Typically in english.
+    translations: [ LocaleTextPair ]
+  }
+
+  type Post {
+    text: TranslatedText!
+  }
+
+  type SocialContent {
+    titleKey: String!,
+    detailsKey: String!,
+    image: String!
+    link: String!,
+    linkKey: String!,
+    post: Post!
+  }
+
+  type SocialShareAction implements GrowthBaseAction {
+    type: GrowthActionType!
+    status: GrowthActionStatus
+    rewardEarned: GrowthPrice
+    reward: GrowthPrice
+    unlockConditions: [UnlockCondition]
+    content: SocialContent
   }
 
   type GrowthCampaign {
