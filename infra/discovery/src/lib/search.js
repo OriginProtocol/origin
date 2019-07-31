@@ -182,7 +182,14 @@ class Listing {
     offset,
     idsOnly
   ) {
-    const currencies = ['token-ETH', 'token-DAI', 'fiat-JPY', 'fiat-EUR', 'fiat-KRW', 'fiat-GBP']
+    const currencies = [
+      'token-ETH',
+      'token-DAI',
+      'fiat-JPY',
+      'fiat-EUR',
+      'fiat-KRW',
+      'fiat-GBP'
+    ]
     const exchangeRates = await getExchangeRates(currencies)
 
     if (filters === undefined) {
