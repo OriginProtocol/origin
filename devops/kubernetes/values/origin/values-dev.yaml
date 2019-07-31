@@ -26,7 +26,7 @@ discoveryImageTag: 'a14145b'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: 'ad4706f'
+growthImageTag: 'a280ce8'
 
 # origin-messaging
 messagingImage: origin-messaging
