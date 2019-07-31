@@ -42,7 +42,7 @@ const getUserProfileFromEvent = ({ event, socialNetwork, type }) => {
     return event.target
   }
 
-  return event.source
+  return event.user
 }
 
 /**
