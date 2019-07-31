@@ -113,7 +113,7 @@
   "22ykGg": "Verify your LinkedIn Profile",
   "2peucP": "Buat Daftar",
   "2QerxF": "Beli Daftar",
-  "gTRDy": {
+  "3HSE85": {
     "growth.jan2019.name": "Kampanye Januari 2019",
     "growth.jan2019.short_name": "Jan 2019",
     "growth.feb2019.name": "Kampanye Februari 2019",
@@ -214,6 +214,12 @@
     "growth.purchase.listing-1-000-60.title": "Blockchain Project Meetup in Singapore, curated by Spartan Group",
     "growth.purchase.listing-1-000-2877.title": "Cozy 1 BR Apartment in Singapore",
     "growth.purchase.listing-1-000-2999.title": "Piano lessons (All Ages & Levels)",
+    "growth.twitterShare.content1.title": "Origin Launches a Fresh New App",
+    "growth.twitterShare.content1.details": "A complete redesign of our mobile app delivers a new and improved experience to our global users",
+    "growth.twitterShare.content1.link": "Read the article",
+    "growth.twitterShare.content2.title": "New Ways to Earn OGN in August",
+    "growth.twitterShare.content2.details": "Join Origin Rewards and become a token holder alongside thousands of users all around the world",
+    "growth.twitterShare.content2.link": "Read the article",
     "growth.purchase.empty.details": ""
   },
   "2hr27C": "Jual Daftar",
@@ -586,7 +592,7 @@
   "NZJzc": "Promote Origin",
   "3yrS0x": "Select Social Channels",
   "22t1HQ": "Select an article or video about Origin and share it on your social channels.",
-  "3B4O7Y": "Where would you like to share this video? Select more channels for more rewards!",
+  "pmAgP": "Where would you like to share this? Select more channels for more rewards!",
   "4ELZvV": "Back to Campaign",
   "zn8Mj": "Purchases",
   "2TQEGi": "Back to Campaign",
@@ -950,6 +956,7 @@
   "1UUFlW": "Ethereum Node",
   "38WM0A": "Bridge Server",
   "23S1SF": "Server Penemuan",
+  "1gSlTw": "Growth Server",
   "nqaAu": "Relayer Server",
   "2OjTbq": "Enable Proxy Accounts",
   "1KAkeW": "Warning: enable at your own risk!",
