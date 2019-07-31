@@ -142,20 +142,23 @@ router.post('/twitter', (req, res) => {
   // Use redis batch for parallelization (without atomicity)
   const redisBatch = redisClient.batch()
 
+  let totalFollowEvents = 0
+  let totalMentionEvents = 0
+
   if (req.body.follow_events) {
     // Follow event(s)
     const events = req.body.follow_events
+    totalFollowEvents = events.length
     events.forEach(event => {
       if (
         event.target.screen_name.toLowerCase() ===
         process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
       ) {
         followCount++
-        redisBatch.set(
-          `twitter/follow/${event.source.id}`,
-          JSON.stringify(event),
-          'EX',
-          60 * 30
+        const key = `twitter/follow/${event.source.id}`
+        redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
+        logger.info(
+          `Pushing twitter follow event for ${event.source.screen_name} at ${key}...`
         )
       }
     })
@@ -164,6 +167,7 @@ router.post('/twitter', (req, res) => {
   let mentionCount = 0
   if (req.body.tweet_create_events) {
     const events = req.body.tweet_create_events
+    totalMentionEvents = events.length
     events
       .filter(event => {
         // Ignore own tweets, retweets and favorites
@@ -176,11 +180,10 @@ router.post('/twitter', (req, res) => {
       })
       .forEach(event => {
         mentionCount++
-        redisBatch.set(
-          `twitter/share/${event.user.id}`,
-          JSON.stringify(event),
-          'EX',
-          60 * 30
+        const key = `twitter/share/${event.user.id}`
+        redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
+        logger.info(
+          `Pushing twitter mention event for ${event.user.screen_name} at ${key}...`
         )
       })
   }
@@ -188,11 +191,11 @@ router.post('/twitter', (req, res) => {
   redisBatch.exec(err => {
     if (err) {
       logger.error(
-        `Faile to push ${followCount} follow events and ${mentionCount} mention events to redis`
+        `Faile to push ${followCount}/${totalFollowEvents} follow events and ${mentionCount}/${totalMentionEvents} mention events to redis`
       )
     } else {
       logger.info(
-        `Pushed ${followCount} follow events and ${mentionCount} mention events to redis`
+        `Pushed ${followCount}/${totalFollowEvents} follow events and ${mentionCount}/${totalMentionEvents} mention events to redis`
       )
     }
   })

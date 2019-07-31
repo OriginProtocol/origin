@@ -42,16 +42,22 @@ const getUserProfileFromEvent = ({ event, socialNetwork, type }) => {
     return event.target
   }
 
-  return event.source
+  return event.user
 }
 
 /**
- * Creates a growth event and updates user profile in DB
+ * Creates a growth event for the verified social action.
+ *
+ * @param {string} content: content that was shared. null for a 'FOLLOW' action.
+ * @param {string} identity: eth address of the user
+ * @param {Object} event: event sent by social network describing the user action
+ * @param {string} socialNetwork:
+ * @param {string} type: type of action: 'SHARE' || 'FOLLOW'
+ * @returns {Promise<boolean>} Returns true in case of success, false otherwise
  */
-const persistEvent = async ({
+const insertGrowthEvent = async ({
   content,
   identity,
-  identityProxy,
   event,
   socialNetwork,
   type
@@ -68,57 +74,39 @@ const persistEvent = async ({
       .digest('hex')
   }
 
-  const txn = await db.sequelize.transaction()
+  logger.debug(`content hash: ${contentHash}`)
 
   try {
+    const twitterProfile = getUserProfileFromEvent({
+      event,
+      socialNetwork,
+      type
+    })
+
+    logger.debug(`twitterProfile: ${JSON.stringify(twitterProfile)}`)
     await GrowthEvent.insert(
       logger,
-      1,
+      1, // insert a single entry
       identity,
       PromotionEventToGrowthEvent[socialNetwork][type],
-      contentHash,
-      event,
+      contentHash, // set customId to the content hash.
+      // Store the raw event and the profile data that contains the user's social stats in the GrowthEvent.data column.
+      // Note: the raw event is mostly for debugging purposes. If it starts taking too much storage
+      // we could stop storing it in the DB.
+      { event, twitterProfile },
       Date.now()
     )
-
-    const profileData = getUserProfileFromEvent({ event, socialNetwork, type })
-    if (profileData) {
-      const addresses = []
-      if (identity) {
-        addresses.push(identity.toLowerCase())
-      }
-      if (identityProxy) {
-        addresses.push(identityProxy.toLowerCase())
-      }
-
-      await db.Attestation.update(
-        {
-          profileData
-        },
-        {
-          where: {
-            ethAddress: {
-              [Sequelize.Op.in]: addresses
-            },
-            // TODO: This may need a mapping
-            method: socialNetwork
-          }
-        }
-      )
-    }
-
-    await txn.commit()
   } catch (e) {
     logger.error(
       `Failed to store ${type} event for ${identity} on ${socialNetwork}`,
       e
     )
-
-    await txn.rollback()
-
     return false
   }
 
+  logger.info(
+    `Logged GrowthEvent. User ${identity} socialNetwork ${socialNetwork} event ${type}`
+  )
   return true
 }
 
@@ -160,11 +148,21 @@ const isEventValid = ({ socialNetwork, type, event, content }) => {
     return true
   }
 
-  let encodedContent = JSON.parse(JSON.stringify(event.text)) // Clone to avoid mutation
+  // Note: `event.text` is truncated to 140chars, use `event.extended_tweet.full_text`, if it exists, to get whole tweet content
+  // Clone to avoid mutation
+  let encodedContent = JSON.parse(
+    JSON.stringify(
+      event.extended_tweet ? event.extended_tweet.full_text : event.text
+    )
+  )
 
-  // Important: Twitter shortens and replaces URLs
+  // IMPORTANT: Twitter shortens and replaces URLs
   // we have revert that back to get the original content and to get the hash
-  event.entities.urls.forEach(entity => {
+  // IMPORTANT: Twitter prepends 'http://' if it idenitifies a text as URL
+  // It may result in a different content than expected, So always prepend URLs with `http://` in rule configs.
+
+  const entities = (event.extended_tweet || event).entities
+  entities.urls.forEach(entity => {
     encodedContent = encodedContent.replace(entity.url, entity.expanded_url)
   })
 
@@ -172,11 +170,19 @@ const isEventValid = ({ socialNetwork, type, event, content }) => {
   // Note: Twitter sends HTML encoded contents
   const decodedContent = decodeHTML(encodedContent)
 
+  logger.debug('encoded content:', encodedContent)
+  logger.debug('decoded content:', decodedContent)
+  logger.debug('expected content:', content)
+
   return decodedContent === content ? decodedContent : false
 }
 
 router.post('/verify', verifyPromotions, async (req, res) => {
   const { type, socialNetwork, identity, identityProxy, content } = req.body
+
+  logger.debug(
+    `Will be polling ${type} event for ${identity} with "${content}"`
+  )
 
   const attestation = await getAttestation({
     identity,
@@ -199,6 +205,10 @@ router.post('/verify', verifyPromotions, async (req, res) => {
   do {
     const eventString = await getAsync(redisKey)
 
+    logger.debug(`Try ${tries} for ${identity}, ${socialNetwork}, ${type}`)
+
+    logger.debug(`GET ${redisKey} ==> ${eventString}`)
+
     if (eventString) {
       const event = JSON.parse(eventString)
 
@@ -209,8 +219,10 @@ router.post('/verify', verifyPromotions, async (req, res) => {
         content
       })
 
+      logger.debug(`Decoded Content ==> ${decodedContent}`)
+
       if (decodedContent) {
-        const stored = await persistEvent({
+        const stored = await insertGrowthEvent({
           content: typeof decodedContent === 'string' ? decodedContent : null,
           identity,
           event,
