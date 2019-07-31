@@ -239,7 +239,7 @@ const augustConfig = {
               titleKey: 'growth.twitterShare.content2.title',
               detailsKey: 'growth.twitterShare.content2.details',
               image: 'images/growth/twitter-share-content2.png',
-              link: 'https://medium.com/p/e36a349e5cf1/edit',
+              link: '',
               linkKey: 'growth.twitterShare.content2.link',
               post: {
                 text: {
