@@ -74,12 +74,16 @@ const insertGrowthEvent = async ({
       .digest('hex')
   }
 
+  logger.debug(`content hash: ${contentHash}`)
+
   try {
     const twitterProfile = getUserProfileFromEvent({
       event,
       socialNetwork,
       type
     })
+
+    logger.debug(`twitterProfile: ${JSON.stringify(twitterProfile)}`)
     await GrowthEvent.insert(
       logger,
       1, // insert a single entry
@@ -166,11 +170,19 @@ const isEventValid = ({ socialNetwork, type, event, content }) => {
   // Note: Twitter sends HTML encoded contents
   const decodedContent = decodeHTML(encodedContent)
 
+  logger.debug('encoded content:', encodedContent)
+  logger.debug('decoded content:', decodedContent)
+  logger.debug('expected content:', content)
+
   return decodedContent === content ? decodedContent : false
 }
 
 router.post('/verify', verifyPromotions, async (req, res) => {
   const { type, socialNetwork, identity, identityProxy, content } = req.body
+
+  logger.debug(
+    `Will be polling ${type} event for ${identity} with "${content}"`
+  )
 
   const attestation = await getAttestation({
     identity,
@@ -193,6 +205,10 @@ router.post('/verify', verifyPromotions, async (req, res) => {
   do {
     const eventString = await getAsync(redisKey)
 
+    logger.debug(`Try ${tries} for ${identity}, ${socialNetwork}, ${type}`)
+
+    logger.debug(`GET ${redisKey} ==> ${eventString}`)
+
     if (eventString) {
       const event = JSON.parse(eventString)
 
@@ -202,6 +218,8 @@ router.post('/verify', verifyPromotions, async (req, res) => {
         event,
         content
       })
+
+      logger.debug(`Decoded Content ==> ${decodedContent}`)
 
       if (decodedContent) {
         const stored = await insertGrowthEvent({
