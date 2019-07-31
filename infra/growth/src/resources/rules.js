@@ -790,18 +790,21 @@ class SocialShareRule extends SingleEventRule {
     // Calculate age of the account and of the last tweet in days.
     const now = new Date()
     const accountAgeDays = Math.ceil(
-      Math.abs(now.getTime() - createdAt.getTime()) / (1000 * 3600 * 24)
+      Math.abs(now.getTime() - createdAt.getTime()) / (24 * 60 * 60 * 1000)
     )
     const lastTweetAgeDate = Math.ceil(
-      Math.abs(now.getTime() - lastTweetDate.getTime()) / (1000 * 3600 * 24)
+      Math.abs(now.getTime() - lastTweetDate.getTime()) / (24 * 60 * 60 * 1000)
     )
 
-    // Compute the reward.
+    // Check account and last tweet minimum age requirements.
     if (
       accountAgeDays < minAccountAgeDays ||
-      lastTweetAgeDate < minAgeLastTweetDays
-    )
+      lastTweetAgeDate > minAgeLastTweetDays
+    ) {
       return 0
+    }
+
+    // Apply formula to compute reward.
     if (numFollowers < minFollowersThreshold) return 0
     if (numFollowers < tierFollowersThreshold) return 1
     const amount = Math.floor(numFollowers / tierFollowersIncrement) + 1
@@ -837,7 +840,7 @@ class SocialShareRule extends SingleEventRule {
     }
     // TODO: handle other social networks.
     reward.value.amount = this._calcTwitterReward(
-      identity.data.twitterStats
+      identity.data.twitterProfile
     ).toString()
     return reward
   }
@@ -854,17 +857,14 @@ class SocialShareRule extends SingleEventRule {
     // then calculate the amount.
     const rewards = []
     for (const event of events) {
-      if (
-        !event.data ||
-        !event.data.twitterStats ||
-        typeof event.data.twitterStats.numFollowers !== 'number' ||
-        typeof event.data.twitterStats.accountAge !== 'number'
-      ) {
+      if (!event.data || !event.data.twitterProfile) {
         throw new Error(
-          `GrowthEvent ${event.id}: missing or invalid twitter stats`
+          `GrowthEvent ${event.id}: missing or invalid twitter profile`
         )
       }
-      const amount = this._calcTwitterReward(event.data.twitterStats).toString()
+      const amount = this._calcTwitterReward(
+        event.data.twitterProfile
+      ).toString()
       const reward = new Reward(this.campaignId, this.levelId, this.id, {
         amount,
         currency: this.config.reward.currency
