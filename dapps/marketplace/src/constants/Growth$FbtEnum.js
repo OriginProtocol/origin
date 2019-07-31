@@ -158,7 +158,8 @@ const Growth$FbtEnum = {
   'growth.twitterShare.content2.details':
     'Join Origin Rewards and become a token holder alongside thousands of users all around the world.',
   'growth.twitterShare.content2.link': 'Read the article',
-  'growth.twitterShare.content3.title': 'Building Decentralized Ubers and Airbnbs',
+  'growth.twitterShare.content3.title':
+    'Building Decentralized Ubers and Airbnbs',
   'growth.twitterShare.content3.details':
     'Origin has built a decentralized marketplace protocol on the ethereum mainnet that replaces middlemen & connects buyers and sellers with a smart contract.',
   'growth.twitterShare.content3.link': 'Read the article',
