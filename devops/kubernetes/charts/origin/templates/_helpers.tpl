@@ -37,7 +37,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- if ne .Release.Namespace "prod" -}}
 {{- printf "dapp.%s.originprotocol.com" .Release.Namespace -}}
 {{- else -}}
-{{- printf "dapp.originprotocol.com" -}}
+{{- printf "shoporigin.com" -}}
 {{- end -}}
 {{- end -}}
 
@@ -142,6 +142,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- printf "%s-%s" .Release.Name "creator" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "creator-server.fullname" -}}
+{{- printf "%s-%s" .Release.Name "creator-server" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
 {{- define "creator.host" -}}
 {{- $prefix := "creator" -}}
 {{- if ne .Release.Namespace "prod" -}}
@@ -208,3 +212,14 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 {{- end -}}
 
+{{- define "t3.fullname" -}}
+{{- printf "%s-%s" .Release.Name "t3" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "t3.host" -}}
+{{- if eq .Release.Namespace "prod" -}}
+{{- printf "t3.originprotocol.com" }}
+{{- else -}}
+{{- printf "t3.%s.originprotocol.com" .Release.Namespace -}}
+{{- end -}}
+{{- end -}}

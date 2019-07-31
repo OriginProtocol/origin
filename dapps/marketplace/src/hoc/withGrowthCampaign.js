@@ -19,12 +19,13 @@ function withGrowthCampaign(
         skip={!props.wallet}
         fetchPolicy={fetchPolicy}
       >
-        {({ data, error }) => {
+        {({ data, error, loading, networkStatus }) => {
           if (error && !suppressErrors) {
             return <QueryError error={error} query={enrollmentStatusQuery} />
           }
 
           const enrollmentStatus = get(data, 'enrollmentStatus')
+          const walletLoading = !networkStatus || loading || networkStatus === 1
           return (
             <Query
               query={allCampaignsQuery}
@@ -34,7 +35,7 @@ function withGrowthCampaign(
               }
               fetchPolicy={fetchPolicy}
             >
-              {({ data, error }) => {
+              {({ data, error, loading, networkStatus, refetch }) => {
                 if (error && !suppressErrors) {
                   return <QueryError error={error} query={allCampaignsQuery} />
                 }
@@ -44,6 +45,13 @@ function withGrowthCampaign(
                     {...props}
                     growthEnrollmentStatus={enrollmentStatus}
                     growthCampaigns={get(data, 'campaigns.nodes') || []}
+                    growthCampaignsLoading={
+                      !networkStatus ||
+                      loading ||
+                      networkStatus === 1 ||
+                      walletLoading
+                    }
+                    growthCampaignsRefetch={refetch}
                   />
                 )
               }}

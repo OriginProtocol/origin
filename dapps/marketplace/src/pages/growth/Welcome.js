@@ -106,16 +106,16 @@ class GrowthWelcome extends Component {
     urlForOnboarding,
     arrivedFromOnboarding
   ) {
-    const isMobile = this.props.ismobile === 'true'
+    const { isMobile } = this.props
 
     return (
       <div className="container d-flex">
         <div
           className={`${
-            isMobile ? 'col-12' : 'col-6'
-          } d-flex flex-column top-padding`}
+            isMobile ? 'col-12' : 'col-6 top-padding'
+          } d-flex flex-column`}
         >
-          <Link to="/" className="mr-auto">
+          <Link to="/" className="mr-auto d-none d-md-block">
             <img className="logo" src="images/origin-logo.svg" />
           </Link>
           {personalised && (
@@ -167,20 +167,23 @@ class GrowthWelcome extends Component {
             </fbt>
           </div>
           <this.EnrollButton
-            className="btn btn-primary btn-rounded enroll-button"
+            className={`btn btn-primary btn-rounded enroll-button${
+              isMobile ? ' mobile' : ''
+            }`}
             type="submit"
             children={fbt('Sign Up Now', 'Sign Up Now')}
             urlforonboarding={urlForOnboarding}
             startopen={arrivedFromOnboarding.toString()}
           />
         </div>
-        <div
-          className={`spaceman col-10 top-padding ${
-            !personalised ? 'center' : ''
-          }
-          ${isMobile ? 'd-none' : ''}
+        {!isMobile && (
+          <div
+            className={`spaceman col-9 top-padding ${
+              !personalised ? 'center' : ''
+            }
           `}
-        />
+          />
+        )}
       </div>
     )
   }
@@ -195,7 +198,7 @@ class GrowthWelcome extends Component {
   }
 
   renderWhatIsOriginFold() {
-    const isMobile = this.props.ismobile === 'true'
+    const { isMobile } = this.props
 
     return (
       <div className="second-fold-holder">
@@ -238,9 +241,7 @@ class GrowthWelcome extends Component {
               )}
             </div>
           </div>
-          <div
-            className={`${isMobile ? 'd-none' : ''} origin-showcase col-10`}
-          />
+          {!isMobile && <div className="origin-showcase col-8" />}
         </div>
       </div>
     )
@@ -279,34 +280,13 @@ class GrowthWelcome extends Component {
     )
   }
 
-  renderBoostingAndRewardsFold() {
-    const isMobile = this.props.ismobile === 'true'
+  renderPromotingAndRewardsFold() {
+    const { isMobile } = this.props
 
     return (
-      <div className="d-flex fourth-fold-holder">
-        <div className="col-6 pl-0 pr-0">
-          <div className="coin-section" />
-          <div
-            className={`boosting-section d-flex flex-column ${
-              isMobile ? 'mobile' : ''
-            }`}
-          >
-            <div className="text-holder ml-auto">
-              <div className="title">
-                <fbt desc="GrowthWelcome.boosting">Boosting</fbt>
-              </div>
-              <div className="text mt-3">
-                <fbt desc="GrowthWelcome.boostingExplanation">
-                  Sellers use OGN to boost their listings on the marketplace.
-                  This gives their listings higher visibility and placement.
-                  Listings with OGN have a higher chance of being sold quickly.
-                </fbt>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-6 pl-0 pr-0">
+      <div className="d-md-flex fourth-fold-holder">
+        <div className="col col-md-6 pl-0 pr-0 order-md-2">
+          {isMobile && <div className="coins-section" />}
           <div
             className={`rewards-section d-flex flex-column ${
               isMobile ? 'mobile' : ''
@@ -325,7 +305,33 @@ class GrowthWelcome extends Component {
               </div>
             </div>
           </div>
-          <div className="arrows-section" />
+          {!isMobile && <div className="arrows-section" />}
+        </div>
+
+        <div className="col col-md-6 pl-0 pr-0 order-md-1">
+          {isMobile ? (
+            <div className="arrows-section" />
+          ) : (
+            <div className="coins-section" />
+          )}
+          <div
+            className={`promoting-section d-flex flex-column ${
+              isMobile ? 'mobile' : ''
+            }`}
+          >
+            <div className="text-holder ml-md-auto">
+              <div className="title">
+                <fbt desc="GrowthWelcome.promoting">Promoting</fbt>
+              </div>
+              <div className="text mt-3">
+                <fbt desc="GrowthWelcome.promotingExplanation">
+                  Sellers use OGN to promote their listings on the marketplace.
+                  This gives their listings higher visibility and placement.
+                  Listings with OGN have a higher chance of being sold quickly.
+                </fbt>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -393,7 +399,7 @@ class GrowthWelcome extends Component {
         )}
         {this.renderWhatIsOriginFold()}
         {this.renderWhatAreOriginTokensFold()}
-        {this.renderBoostingAndRewardsFold()}
+        {this.renderPromotingAndRewardsFold()}
         {this.renderStartEarningFold(urlForOnboarding, arrivedFromOnboarding)}
       </div>
     )
@@ -460,6 +466,9 @@ require('react-styl')(`
       width: 118px
     .enroll-button
       margin-bottom: 134px
+      max-width: 100%
+      &.mobile
+        margin-bottom: 40px
     .title-text
       margin-top: 40px
       margin-bottom: 16px
@@ -485,6 +494,7 @@ require('react-styl')(`
       background-repeat: no-repeat
       margin-left: -100px
       padding-left: 100px
+      max-width: 600px
     .btn
       margin-top: 40px
       width: 336px
@@ -552,18 +562,19 @@ require('react-styl')(`
         width: 200px
         height: 50px
     .fourth-fold-holder
-      .coin-section
+      .coins-section
         background-color: var(--clear-blue)
         height: 340px
         width: 100%
         background-image: url(images/growth/reward-ogn-coins.svg)
         background-position: bottom right
         background-repeat: no-repeat
-      .boosting-section
+      .promoting-section
         background-color: var(--pale-grey-eight)
         height: 500px
         padding-top: 150px
         padding-right: 135px
+        padding-left: 35px
         .text-holder
           max-width: 350px
         .title
@@ -578,7 +589,7 @@ require('react-styl')(`
           font-weight: normal
           line-height: 1.44
           color: var(--dark)
-      .boosting-section.mobile
+      .promoting-section.mobile
         padding-top: 50px
         padding-right: 35px
       .arrows-section
@@ -593,6 +604,7 @@ require('react-styl')(`
         height: 500px
         padding-top: 150px
         padding-left: 135px
+        padding-right: 35px
         .text-holder
           max-width: 350px
         .title
@@ -653,5 +665,6 @@ require('react-styl')(`
       background-image: url(images/growth/marketplace-screenshots-graphic.png)
       background-position: bottom left
       background-repeat: no-repeat
+      max-width: 600px
 
 `)

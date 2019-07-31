@@ -104,9 +104,6 @@ export function calculatePendingAndAvailableActions(activeCampaign) {
     'Airbnb',
     'Facebook',
     'Google',
-    'Airbnb',
-    'Facebook',
-    'Google',
     'Website',
     'Kakao',
     'WeChat',
@@ -114,11 +111,21 @@ export function calculatePendingAndAvailableActions(activeCampaign) {
     'LinkedIn'
   ]
 
+  const promotionRewardTypes = ['TwitterShare']
+
+  const followRewardTypes = ['TwitterFollow']
+
   const purchaseActions = activeCampaign.actions.filter(action =>
     purchaseRewardTypes.includes(action.type)
   )
   const verificationActions = activeCampaign.actions.filter(action =>
     verificationRewardTypes.includes(action.type)
+  )
+  const promotionActions = activeCampaign.actions.filter(action =>
+    promotionRewardTypes.includes(action.type)
+  )
+  const followActions = activeCampaign.actions.filter(action =>
+    followRewardTypes.includes(action.type)
   )
 
   const completedPurchaseActions = purchaseActions.filter(action =>
@@ -133,12 +140,28 @@ export function calculatePendingAndAvailableActions(activeCampaign) {
   const notCompletedVerificationActions = verificationActions.filter(
     action => !actionCompleted(action)
   )
+  const completedPromotionActions = promotionActions.filter(action =>
+    actionCompleted(action)
+  )
+  const notCompletedPromotionActions = promotionActions.filter(
+    action => !actionCompleted(action)
+  )
+  const completedFollowActions = followActions.filter(action =>
+    actionCompleted(action)
+  )
+  const notCompletedFollowActions = followActions.filter(
+    action => !actionCompleted(action)
+  )
 
   return {
     completedPurchaseActions,
     notCompletedPurchaseActions,
     completedVerificationActions,
-    notCompletedVerificationActions
+    notCompletedVerificationActions,
+    completedPromotionActions,
+    notCompletedPromotionActions,
+    completedFollowActions,
+    notCompletedFollowActions
   }
 }
 
@@ -176,4 +199,12 @@ export function getTokensEarned({
   } catch (e) {
     return 0
   }
+}
+
+export function getContentToShare(action, locale) {
+  const translation = action.content.post.text.translations.find(
+    content => content.locale === locale
+  )
+
+  return translation ? translation.text : action.content.post.text.default
 }

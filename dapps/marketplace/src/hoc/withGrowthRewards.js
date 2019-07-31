@@ -1,4 +1,5 @@
 import React from 'react'
+import withGrowthCampaign from 'hoc/withGrowthCampaign'
 
 export default function withGrowthRewards(WrappedComponent) {
   const WithGrowthRewards = props => {
@@ -37,5 +38,5 @@ export default function withGrowthRewards(WrappedComponent) {
     return <WrappedComponent {...props} ognListingRewards={ognListingRewards} />
   }
 
-  return WithGrowthRewards
+  return withGrowthCampaign(WithGrowthRewards, { queryEvenIfNotEnrolled: true })
 }

@@ -8,8 +8,31 @@ const LanguagesByKey = Languages.reduce((m, o) => {
   return m
 }, {})
 
-const LocaleDropdown = ({ className, locale, dropup, onLocale }) => {
+const LocaleDropdown = ({
+  className,
+  locale,
+  dropup,
+  onLocale,
+  useNativeSelectbox
+}) => {
   const [open, setOpen] = useState(false)
+
+  if (useNativeSelectbox) {
+    return (
+      <select
+        className={className}
+        value={locale}
+        onChange={e => onLocale(e.target.value)}
+      >
+        {Languages.map(([value, label]) => (
+          <option key={value} value={value}>
+            {label}
+          </option>
+        ))}
+      </select>
+    )
+  }
+
   const selected = (
     <div className="dropdown-selected">
       {LanguagesByKey[locale]}

@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
 import { fbt } from 'fbt-runtime'
 import { connect } from 'react-redux'
+import { Sentry } from 'react-native-sentry'
 import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
 
@@ -26,7 +27,13 @@ class ReadyScreen extends Component {
   }
 
   async componentDidMount() {
-    this.publishIdentity()
+    // Only publish identity if something has changed
+    if (get(this.props.onboarding, 'requiresPublish', true)) {
+      this.publishIdentity()
+    } else {
+      // No need to publish, display ready message
+      this.setState({ loading: false, transactionId: null })
+    }
   }
 
   publishIdentity = async () => {
@@ -36,26 +43,22 @@ class ReadyScreen extends Component {
       avatarUrl: this.props.onboarding.avatarUri || ''
     }
 
-    const attestations = []
-    if (this.props.onboarding.emailAttestation) {
-      attestations.push(JSON.stringify(this.props.onboarding.emailAttestation))
-    }
-    if (this.props.onboarding.phoneAttestation) {
-      attestations.push(JSON.stringify(this.props.onboarding.phoneAttestation))
-    }
-
-    console.debug('Publishing identity')
-
     let identityPublication
     try {
+      const wallet = await this.props.getWallet()
+      const primaryAccount = get(wallet, 'data.web3.primaryAccount')
+      const identityId = primaryAccount.proxy.id
+        ? primaryAccount.proxy.id
+        : primaryAccount.id
       identityPublication = await this.props.publishIdentity(
-        this.props.wallet.activeAccount.address,
+        identityId,
         profile,
-        attestations
+        this.props.onboarding.attestations
       )
     } catch (error) {
+      Sentry.captureException(error)
       console.warn('Identity publication failed: ', error)
-      this.setState({ error: true })
+      this.setState({ loading: false, error: true })
     }
 
     const transactionId = get(identityPublication, 'data.deployIdentity.id')
@@ -71,6 +74,7 @@ class ReadyScreen extends Component {
     try {
       result = await this.props.getTransactionReceipt(this.state.transactionId)
     } catch (error) {
+      Sentry.captureException(error)
       this.setState({ loading: false, error: true })
       return
     }
@@ -125,7 +129,7 @@ class ReadyScreen extends Component {
           <OriginButton
             size="large"
             type="primary"
-            title={fbt('Start using Origin', 'ReadyScreen.button')}
+            title={fbt('Start Using Origin', 'ReadyScreen.button')}
             onPress={() => {
               // Navigate to subroute to skip authentication requirement
               this.props.navigation.navigate('App')

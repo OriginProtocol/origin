@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react'
 import {
-  Dimensions,
   Image,
   KeyboardAvoidingView,
   ScrollView,
@@ -27,9 +26,10 @@ class AuthenticationGuard extends Component {
       error: null
     }
     if (!this.props.settings.biometryType && !this.props.settings.pin) {
-      // User has an authentication method set, proceed
+      // User has no authentication method set, proceed
       this.onSuccess()
     }
+
     this.handleChange = this.handleChange.bind(this)
   }
 
@@ -83,24 +83,22 @@ class AuthenticationGuard extends Component {
 
   render() {
     const { settings } = this.props
-    const { height } = Dimensions.get('window')
-    const smallScreen = height < 812
+
     const guard = settings.biometryType
       ? this.renderBiometryGuard()
-      : this.renderPinGuard()
+      : settings.pin
+      ? this.renderPinGuard()
+      : null
 
     return (
-      <KeyboardAvoidingView style={styles.keyboardWrapper} behavior="padding">
-        <ScrollView
-          contentContainerStyle={styles.content}
-          style={styles.container}
-        >
-          <View style={styles.content}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content}>
+          <View style={styles.container}>
             <Image
               resizeMethod={'scale'}
               resizeMode={'contain'}
               source={require(IMAGES_PATH + 'lock-icon.png')}
-              style={[styles.image, smallScreen ? { height: '33%' } : {}]}
+              style={styles.image}
             />
             {guard}
           </View>
@@ -156,20 +154,5 @@ const mapStateToProps = ({ settings }) => {
 export default connect(mapStateToProps)(AuthenticationGuard)
 
 const styles = StyleSheet.create({
-  ...CommonStyles,
-  keyboardWrapper: {
-    flex: 1
-  },
-  container: {
-    flex: 1
-  },
-  content: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  invalid: {
-    borderColor: '#ff0000',
-    color: '#ff0000'
-  }
+  ...CommonStyles
 })

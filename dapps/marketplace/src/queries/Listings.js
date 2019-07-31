@@ -6,18 +6,18 @@ export default gql`
     $first: Int
     $after: String
     $sort: String
-    $hidden: Boolean
     $search: String
     $filters: [ListingFilterInput!]
+    $listingIds: [String]
   ) {
     marketplace {
       listings(
         first: $first
         after: $after
         sort: $sort
-        hidden: $hidden
         search: $search
         filters: $filters
+        listingIds: $listingIds
       ) {
         totalCount
         pageInfo {

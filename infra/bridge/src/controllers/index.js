@@ -16,5 +16,7 @@ router.use('/api/attestations/linkedin', require('./linkedin'))
 router.use('/api/attestations/wechat', require('./wechat'))
 router.use('/redirects', require('./redirects'))
 router.use('/utils', require('./utils'))
+router.use('/api/promotions', require('./promotions'))
+router.use('/hooks', require('./hooks/index'))
 
 module.exports = router

@@ -16,6 +16,7 @@ import MobileModal from 'components/MobileModal'
 import Enroll from 'pages/growth/mutations/Enroll'
 import { mobileDevice } from 'utils/mobile'
 import withIsMobile from 'hoc/withIsMobile'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 const GrowthEnum = require('Growth$FbtEnum')
 
@@ -41,8 +42,6 @@ function withEnrolmentModal(WrappedComponent) {
         props.skipjoincampaign === 'false'
           ? 'JoinActiveCampaign'
           : 'TermsAndEligibilityCheck'
-      this.goToWelcomeWhenNotEnrolled =
-        props.gotowelcomewhennotenrolled === 'true'
       this.state = {
         open: props.startopen === 'true',
         stage: this.initialStage,
@@ -106,7 +105,7 @@ function withEnrolmentModal(WrappedComponent) {
       } else if (enrollmentStatus === 'Enrolled') {
         this.historyNavigate('/campaigns')
       } else if (enrollmentStatus === 'NotEnrolled') {
-        if (this.goToWelcomeWhenNotEnrolled) {
+        if (this.props.goToWelcomeWhenNotEnrolled === 'true') {
           this.historyNavigate('/welcome')
         } else {
           this.setState({
@@ -169,6 +168,7 @@ function withEnrolmentModal(WrappedComponent) {
 
     renderJoinActiveCampaign() {
       const vars = { first: 10 }
+      const { isMobile } = this.props
 
       return (
         <Query
@@ -178,7 +178,7 @@ function withEnrolmentModal(WrappedComponent) {
         >
           {({ error, data, networkStatus, loading }) => {
             if (networkStatus === 1 || loading) {
-              return <h5 className="p-2">Loading...</h5>
+              return <LoadingSpinner />
             } else if (error) {
               return (
                 <QueryError
@@ -226,9 +226,7 @@ function withEnrolmentModal(WrappedComponent) {
                   <div className="d-flex align-items-center flex-column">
                     <button
                       className={`btn ${
-                        this.props.ismobile === 'true'
-                          ? 'btn-primary'
-                          : 'btn-outline-light'
+                        isMobile ? 'btn-primary' : 'btn-outline-light'
                       }`}
                       onClick={() => this.handleJoinCampaignContinue()}
                       children={fbt('Get Started', 'Get Started')}
@@ -249,7 +247,7 @@ function withEnrolmentModal(WrappedComponent) {
 
     renderTermsModal() {
       const { termsAccepted } = this.state
-      const isMobile = this.props.ismobile === 'true'
+      const { isMobile } = this.props
 
       const cancelButton = (
         <button
@@ -322,7 +320,7 @@ function withEnrolmentModal(WrappedComponent) {
                 laws and regulations.
               </fbt>
             </div>
-            <div className="mt-1 d-flex country-check-label justify-content-center">
+            <div className="mt-1 d-flex country-check-label justify-content-center pb-3">
               <label className="checkbox-holder">
                 <input
                   type="checkbox"
@@ -362,7 +360,7 @@ function withEnrolmentModal(WrappedComponent) {
 
     renderRestrictedModal(country, eligibility, notCitizenChecked) {
       const isRestricted = eligibility === 'Restricted'
-      const isMobile = this.props.ismobile === 'true'
+      const { isMobile } = this.props
 
       return (
         <div className="container d-flex flex-column align-items-center">
@@ -450,7 +448,7 @@ function withEnrolmentModal(WrappedComponent) {
       return (
         <Query query={growthEligibilityQuery}>
           {({ networkStatus, error, loading, data }) => {
-            if (networkStatus === 1 || loading) return 'Loading...'
+            if (networkStatus === 1 || loading) return <LoadingSpinner />
             else if (error) {
               return <QueryError error={error} query={growthEligibilityQuery} />
             }
@@ -503,7 +501,8 @@ function withEnrolmentModal(WrappedComponent) {
     }
 
     renderMetamaskSignature() {
-      const isMobile = this.props.ismobile === 'true'
+      const { isMobile } = this.props
+
       return (
         <Enroll
           isMobile={isMobile}
@@ -587,7 +586,8 @@ function withEnrolmentModal(WrappedComponent) {
                           'onCompleted',
                           'isMobile',
                           'isMobileApp',
-                          'onAccountBlocked'
+                          'onAccountBlocked',
+                          'goToWelcomeWhenNotEnrolled'
                         ])}
                         onClick={e =>
                           this.handleClick(

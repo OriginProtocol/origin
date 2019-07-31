@@ -4,8 +4,6 @@ import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/Availability
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
-import { withRouter } from 'react-router-dom'
-
 import withWallet from 'hoc/withWallet'
 import withIsMobile from 'hoc/withIsMobile'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
@@ -33,8 +31,6 @@ import FractionalHourly from './_BuyFractionalHourly'
 import GiftCardDetail from './listing-types/GiftCard'
 import FractionalNightlyDetail from './listing-types/FractionalNightly'
 import FractionalHourlyDetail from './listing-types/FractionalHourly'
-
-import Search from '../listings/_Search'
 
 class ListingDetail extends Component {
   constructor(props) {
@@ -110,7 +106,6 @@ class ListingDetail extends Component {
     if (isMobile) {
       return (
         <>
-          {this.renderNavBar()}
           <div className="listing-hero-section">
             <div className="listing-info">
               {this.renderHeading()}
@@ -147,25 +142,6 @@ class ListingDetail extends Component {
           {reviews}
           {userListings}
         </div>
-      </>
-    )
-  }
-
-  renderNavBar() {
-    const search = get(this.props, 'location.search')
-    const history = get(this.props, 'history')
-
-    return (
-      <>
-        {search && <Search className="search" placeholder />}
-        {history && history.length > 1 && (
-          <button
-            className="btn btn-link btn-back-link"
-            onClick={() => history.goBack()}
-          >
-            <fbt desc="Back">Back</fbt>
-          </button>
-        )}
       </>
     )
   }
@@ -237,7 +213,7 @@ class ListingDetail extends Component {
   }
 
   renderAction() {
-    const { listing } = this.props
+    const { listing, wallet, walletProxy, ognListingRewards } = this.props
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
@@ -245,12 +221,13 @@ class ListingDetail extends Component {
       listing.__typename === 'UnitListing' && listing.unitsTotal === 1
     const isService = listing.__typename === 'ServiceListing'
     const isPendingBuyer = listing.pendingBuyers.some(
-      b => b.id === this.props.walletProxy
+      b => b.id === walletProxy || b.id === wallet
     )
-    const isListingCreator = listing.seller.id === this.props.walletProxy
+    const isListingCreator =
+      listing.seller.id === walletProxy || listing.seller.id === wallet
 
     const props = { ...this.props }
-    const growthReward = this.props.ognListingRewards[listing.id]
+    const growthReward = ognListingRewards[listing.id]
     if (growthReward) {
       props.growthReward = growthReward
     }
@@ -260,7 +237,8 @@ class ListingDetail extends Component {
       : listing.events.filter(
           event =>
             event.event === 'OfferCreated' &&
-            event.returnValues.party === this.props.walletProxy
+            (event.returnValues.party === walletProxy ||
+              event.returnValues.party === wallet)
         )
 
     if (isListingCreator) {
@@ -338,67 +316,42 @@ class ListingDetail extends Component {
   }
 }
 
-export default withRouter(
-  withGrowthCampaign(
-    withWallet(
-      withTokenBalance(withGrowthRewards(withIsMobile(ListingDetail)))
-    ),
-    {
-      fetchPolicy: 'cache-first',
-      queryEvenIfNotEnrolled: true,
-      suppressErrors: true // still show listing detail in case growth can not be reached
-    }
-  )
+export default withGrowthCampaign(
+  withWallet(withTokenBalance(withGrowthRewards(withIsMobile(ListingDetail)))),
+  {
+    fetchPolicy: 'cache-first',
+    queryEvenIfNotEnrolled: true,
+    suppressErrors: true // still show listing detail in case growth can not be reached
+  }
 )
 
 require('react-styl')(`
   .listing-detail
     margin-top: 2.5rem
 
-    .btn-back-link
-      color: var(--dark)
-      font-size: 14px
-      text-decoration: none
-      position: relative
-      padding-left: 1.2rem
-      line-height: 1rem
-      margin-bottom: 0.5rem
-      &:before
-        content: ''
-        position: absolute
-        display: inline-block
-        margin-right: 5px
-        background-image: url(images/caret-grey.svg)
-        background-size: 0.8rem
-        background-position: center
-        background-repeat: no-repeat
-        transform: rotateZ(270deg)
-        height: 1rem
-        width: 1rem
-        left: 0
-
     .listing-hero-section
       display: flex
       .listing-media
         padding: 0 15px
         flex: 50% 1 1
+        max-width: 50%
         width: 50%
       .listing-info
         padding: 0 15px
         flex: 50% 1 1
         width: 50%
+        max-width: 50%
 
     .seller-info
-      display: flex
+      display: grid
+      grid-column-gap: 2rem
+      grid-template-columns: 50% 50%
+
       border-top: 1px solid #dde6ea
       padding-top: 2rem
       margin-top: 2rem
-      .seller-listings
-        flex: auto
       .reviews
         padding-right: 2.2rem
-        flex: auto
-        min-width: 60%
 
     h2
       font-family: var(--heading-font)
@@ -432,7 +385,7 @@ require('react-styl')(`
     .gallery
       margin-bottom: 1rem
       .main-pic
-        padding-top: 100%
+        padding-top: 75%
         background-size: contain
         background-repeat: no-repeat
         background-position: center
@@ -535,32 +488,38 @@ require('react-styl')(`
         font-size: 32px
       .description
         margin-top: 0
-        margin-bottom: 2rem
+        margin-bottom: 1.5rem
       .about-party
-        margin-bottom: 2rem
-    
+        margin-bottom: 1.5rem
+
       .listing-hero-section
         flex-direction: column
         .listing-media
-          padding: 15px
+          padding: 15px 0
+          max-width: 100%
           width: 100%
+          .gallery-scroll-wrap
+            border-radius: 10px
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3)
         .listing-info
           width: 100%
+          max-width: 100%
+          padding: 0
           .heading h2
-            font-size: 26px
+            font-size: 28px
             margin-bottom: 1rem
         .about-seller
           border-top: 1px solid #dde6ea
-          padding: 2rem 15px 0 15px
-  
+          padding: 1.5rem 0 0 0
+
       .seller-info
         border: 0
         margin-top: 0
         padding-top: 0
-        flex-direction: column
+        grid-template-columns: 100%
         .reviews
           border-top: 1px solid #dde6ea
-          padding: 2rem 15px 0 15px
+          padding: 1.5rem 0 0 0
           margin-top: 2rem
           min-width: 100%
           h3
@@ -569,7 +528,7 @@ require('react-styl')(`
             margin-bottom: 1.25rem
         .seller-listings
           border-top: 1px solid #dde6ea
-          padding: 2rem 15px 0 15px
+          padding: 1.5rem 0 0 0
           .user-listings .listings-header
             font-family: var(--heading-font)
             font-size: 18px
@@ -577,14 +536,18 @@ require('react-styl')(`
 
       .description
         border: 0
-        padding-top: 0
+        padding-top: 0.5rem
+        font-size: 14px
+        margin-bottom: 1.5rem
       .listing-buy
         border: 0
-        margin: 0
+        margin: 0 0 0.5rem 0
         padding: 0
         .price
           margin-bottom: 0
           font-size: 22px
+        .quantity
+          margin-bottom: 0.5rem
         &.multi
           .price
             padding-bottom: 0.5rem

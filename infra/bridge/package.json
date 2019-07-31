@@ -15,7 +15,9 @@
     "start": "per-env",
     "start:development": "nodemon -r ./src/env.js src/app.js",
     "start:production": "node -r ./src/env.js src/app.js",
-    "test": "mocha --exit"
+    "test": "mocha --exit",
+    "backfill:profile": "node -r ./src/env.js ./src/scripts/20190730-backfill-twitter-profile-data.js",
+    "backfill:profile:dryrun": "node -r ./src/env.js ./src/scripts/20190730-backfill-twitter-profile-data.js --dry-run"
   },
   "repository": {
     "type": "git",
@@ -27,6 +29,7 @@
     "DApp"
   ],
   "dependencies": {
+    "@origin/growth-event": "^0.1.0",
     "@origin/identity": "^0.1.0",
     "@sendgrid/mail": "^6.4.0",
     "body-parser": "^1.19.0",

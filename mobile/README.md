@@ -12,10 +12,10 @@ Origin Wallet is an "ejected" React Native application. Go [here](https://facebo
 
 ## Local Development
 
-This guide will help you to install a local build of Origin Wallet on a device or simulator so that you can modify the application itself. An alternative would be to connect the App Store or TestFlight version of the application to a local blockchain running on your machine, which would be a simpler way to test with Origin Wallet.
+This guide will help you to install a local build of Origin Wallet on a device or simulator so that you can modify the application itself.
 
-- run `npm install` to install dependacies
-- run `npm run start` to start the react native app
+- run `yarn install` to install dependencies
+- run `yarn run start`
 
 #### iOS Development
 
@@ -50,7 +50,7 @@ If you intend to develop using a physical device rather than a VM, make sure you
 
 To run the mobile app on your phone, you need to both start the Metro builder service, and launch the app on your device.
 
-- Run Metro builder with `npm run start`
+- Run Metro builder with `yarn run start`
 - Compile and build your app with `react-native run-android` or `react-native run-ios`
 
 If you want to use a physical device in combination with the marketplace DApp running on your local machine (i.e. `Localhost` setting in network selection) make sure you set the `HOST` environment variable to your internal network IP address (e.g. 10.10.10.1).
@@ -77,7 +77,7 @@ On Android you can run developer tools for the page running in the WebView using
 
 > Linker command failed with exit code…
 
-- origin/origin-mobile $ `npm run ios`
+- origin/mobile $ `yarn run ios`
 - Close simulator
 - In Xcode, Project > Clean Build Folder
 - Try again
@@ -101,7 +101,7 @@ This is likely a network error because your tunnels are not setup.  See [Android
 
 Add the `NODE_OPTIONS` env var to your Metro builder startup command to add the `--max_old_space_size` option like this:
 
-    NODE_OPTIONS="--max_old_space_size=8196" npm run start
+    NODE_OPTIONS="--max_old_space_size=8196" yarn run start
 
 -----------
 

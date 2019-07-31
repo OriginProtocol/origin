@@ -1,5 +1,6 @@
 'use strict'
 
+const memoize = require('lodash/memoize')
 const Web3 = require('web3')
 const utils = require('ethereumjs-util')
 const ProxyFactoryContract = require('@origin/contracts/build/contracts/ProxyFactory_solc')
@@ -11,6 +12,7 @@ const Purse = require('./purse')
 const logger = require('./logger')
 const db = require('./models')
 const enums = require('./enums')
+const Sentry = require('./sentry')
 
 let RiskEngine
 if (process.env.NODE_ENV === 'production' || process.env.USE_PROD_RISK) {
@@ -44,6 +46,10 @@ if (isTestEnv) {
   ContractAddresses['999'] = '@origin/contracts/build/tests.json'
 }
 
+const normalizeAddress = addr => {
+  return addr.toLowerCase()
+}
+
 const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
   const signedData = web3.utils.soliditySha3(
     { t: 'address', v: from },
@@ -70,11 +76,31 @@ const verifySig = async ({ web3, to, from, signature, txData, nonce = 0 }) => {
     const pub = utils.ecrecover(prefixedMsg, v, r, s)
     const address = '0x' + utils.pubToAddress(pub).toString('hex')
 
-    return address.toLowerCase() === from.toLowerCase()
+    return normalizeAddress(address) === normalizeAddress(from)
   } catch (e) {
     logger.error('error recovering', e)
+    Sentry.captureException(e)
     return false
   }
+}
+
+const proxyCreationCode = memoize(async (web3, ProxyFactory, ProxyImp) => {
+  let code = await ProxyFactory.methods.proxyCreationCode().call()
+  code += web3.eth.abi.encodeParameter('uint256', ProxyImp._address).slice(2)
+  return code
+})
+
+async function predictedProxy(web3, ProxyFactory, ProxyImp, address) {
+  const salt = web3.utils.soliditySha3(address, 0)
+  const creationCode = await proxyCreationCode(web3, ProxyFactory, ProxyImp)
+  const creationHash = web3.utils.sha3(creationCode)
+
+  // Expected proxy address can be worked out thus:
+  const create2hash = web3.utils
+    .soliditySha3('0xff', ProxyFactory._address, salt, creationHash)
+    .slice(-40)
+
+  return web3.utils.toChecksumAddress(`0x${create2hash}`)
 }
 
 class Relayer {
@@ -106,11 +132,20 @@ class Relayer {
       autofundChildren: true,
       redisHost: env.REDIS_URL
     })
+    this.knownProxyNonces = {}
+    // keys are signatures, values are Dates
+    this.seenSignatures = {}
 
-    this.ProxyFactory = new this.web3.eth.Contract(ProxyFactoryContract.abi)
+    this.ProxyFactory = new this.web3.eth.Contract(
+      ProxyFactoryContract.abi,
+      this.addresses.ProxyFactory
+    )
     this.Marketplace = new this.web3.eth.Contract(MarketplaceContract.abi)
     this.IdentityEvents = new this.web3.eth.Contract(IdentityEventsContract.abi)
-    this.IdentityProxy = new this.web3.eth.Contract(IdentityProxyContract.abi)
+    this.IdentityProxy = new this.web3.eth.Contract(
+      IdentityProxyContract.abi,
+      this.addresses.IdentityProxyImplementation
+    )
 
     this.methods = {}
     this.Marketplace._jsonInterface
@@ -170,6 +205,18 @@ class Relayer {
       preflight
     })
 
+    // Check to prevent rapid-fire duplicate requests
+    if (typeof this.seenSignatures[signature] !== 'undefined') {
+      return res.status(429).send({ errors: ['Duplicate'] })
+    } else if (!preflight) {
+      // Update seen signatures
+      this.seenSignatures[signature] = new Date()
+    }
+
+    Sentry.configureScope(scope => {
+      scope.setUser({ id: from })
+    })
+
     // Make sure keys are generated and ready
     await this.purse.init()
 
@@ -179,7 +226,7 @@ class Relayer {
 
     // Get the IP from the request header and resolve it into a country code.
     const ip = req.header('x-real-ip')
-    const geo = isTestEnv ? '' : await ip2geo(ip)
+    const geo = await ip2geo(ip)
 
     // Check if the relayer is willing to process the transaction.
     const accept = await this.riskEngine.acceptTx(from, to, txData, ip, geo)
@@ -202,24 +249,88 @@ class Relayer {
       return res.send({ success: accept })
     }
 
-    const IdentityProxy = this.IdentityProxy.clone()
-    IdentityProxy.options.address = proxy
+    const UserProxy = this.IdentityProxy.clone()
+    UserProxy.options.address = proxy
+
+    // For proxy verification
+    const predictedAddress = await predictedProxy(
+      web3,
+      this.ProxyFactory,
+      this.IdentityProxy,
+      from
+    )
+    const code = await web3.eth.getCode(predictedAddress)
 
     let nonce = 0
     if (proxy) {
-      nonce = await IdentityProxy.methods.nonce(from).call()
+      // Verify a proxy exists
+      if (!code || code.length <= 4) {
+        const msg = `Proxy does not exist at ${predictedAddress} for user ${from}`
+        logger.error(msg)
+        Sentry.captureException(new Error(msg))
+        return res.status(400).send({ errors: ['Proxy exists'] })
+      }
+
+      // Check if it already has pending
+      /**
+       * TODO: This is a temporary solution to prevent users from submitting a
+       * tx with a bad proxy nonce.  A more permanent solution will be required.
+       * See: https://github.com/OriginProtocol/origin/issues/2631
+       */
+      if (this.purse.hasPendingTo(proxy)) {
+        const msg = `Proxy ${proxy} already has a pending transaction`
+        logger.warn(msg)
+        Sentry.captureException(new Error(msg))
+        return res
+          .status(429)
+          .send({ errors: ['Proxy has pending transaction'] })
+      }
+
+      nonce = await UserProxy.methods.nonce(from).call()
+
+      if (
+        typeof this.knownProxyNonces[proxy] === 'number' &&
+        nonce <= this.knownProxyNonces[proxy]
+      ) {
+        const msg = `User ${from}'s proxy nonce appears to have been seen before!`
+        logger.warn(msg)
+        Sentry.captureException(new Error(msg))
+        return res.status(400).send({ errors: ['Incorrect nonce!'] })
+      }
+
+      logger.debug(`Using nonce ${nonce} for user ${from} via proxy ${proxy}`)
+    } else {
+      // Verify a proxy doesn't already exist
+      if (code && code.length > 4) {
+        const msg = `Proxy already exists at ${predictedAddress} for user ${from}`
+        logger.error(msg)
+        Sentry.captureException(new Error(msg))
+        return res.status(400).send({ errors: ['Proxy exists'] })
+      }
+      if (this.purse.hasPending(from)) {
+        const msg = `User ${from} already has a pending ProxyCreation transaction!`
+        logger.warn(msg)
+        Sentry.captureException(new Error(msg))
+        return res
+          .status(429)
+          .send({ errors: ['User has pending transaction'] })
+      }
     }
 
     const args = { to, from, signature, txData, web3, nonce }
     const sigValid = await verifySig(args)
     if (!sigValid) {
-      logger.debug('Invalid signature.')
+      const msg = 'Invalid signature.'
+      logger.debug(msg)
+      Sentry.captureMessage(msg)
       return res.status(400).send({ errors: ['Cannot verify your signature'] })
     }
 
     // 2. Verify txData and check function signature
     if (!method) {
-      logger.debug('Invalid method')
+      const msg = 'Invalid method'
+      logger.debug(msg)
+      Sentry.captureMessage(msg)
       return res.status(400).send({ errors: ['Invalid function signature'] })
     }
 
@@ -228,13 +339,15 @@ class Relayer {
     try {
       // If no proxy was specified assume the request is to deploy a proxy...
       if (!proxy) {
-        if (to !== this.addresses.ProxyFactory) {
+        if (
+          normalizeAddress(to) !== normalizeAddress(this.addresses.ProxyFactory)
+        ) {
           throw new Error('Incorrect ProxyFactory address provided')
         } else if (method.name !== 'createProxyWithSenderNonce') {
           throw new Error('Incorrect ProxyFactory method provided')
         }
         logger.debug('Deploying proxy')
-        const gas = 2000000 //await web3.eth.estimateGas(args)
+        const gas = 500000 // 500k gas. Value set based on observing Mainnet transactions.
         tx = { to, data: txData, gas }
         dbTx = await this._createDbTx(
           req,
@@ -242,18 +355,17 @@ class Relayer {
           from,
           to,
           method.name,
-          ZeroAddress
+          ZeroAddress,
+          ip,
+          geo
         )
       } else {
         logger.debug('Forwarding transaction to ' + to)
 
-        const data = IdentityProxy.methods
+        const data = UserProxy.methods
           .forward(to, signature, from, txData)
           .encodeABI()
-        // const gas = await rawTx.estimateGas({ from: Forwarder })
-        // logger.debug('Estimated gas ' + gas)
-        // TODO: Not sure why we need extra gas here
-        const gas = 1000000
+        const gas = 250000 // 250k gas. Value set based on observing Mainnet transactions.
         tx = { to: proxy, data, gas }
         dbTx = await this._createDbTx(
           req,
@@ -261,24 +373,33 @@ class Relayer {
           from,
           to,
           method.name,
-          ZeroAddress
+          ZeroAddress,
+          ip,
+          geo
         )
+
+        this.knownProxyNonces[proxy] = nonce
       }
 
+      let txOut
       try {
-        txHash = await this.purse.sendTx(tx, async receipt => {
+        txOut = await this.purse.sendTx(tx, from, async receipt => {
           /**
-           * Once block is mined, record the amount of gas, the forwarding account,  and update the
-           * status of the transaction in the DB.
+           * Once block is mined, record the amount of gas, the forwarding account,
+           * and the status of the transaction in the DB.
            */
           const gas = receipt.gasUsed
           const hash = receipt.transactionHash
           const forwarder = receipt.from
+          const status = receipt.status
+            ? enums.RelayerTxnStatuses.Confirmed
+            : enums.RelayerTxnStatuses.Reverted
           if (dbTx) {
-            const status = enums.RelayerTxnStatuses.Confirmed
             await dbTx.update({ status, gas, forwarder })
           }
-          logger.info(`Confirmed tx with hash ${hash}. Paid ${gas} gas`)
+          logger.info(
+            `Tx with hash ${hash} mined. Status: ${status}. Gas used: ${gas}.`
+          )
         })
       } catch (reason) {
         let status = enums.RelayerTxnStatuses.Failed
@@ -289,21 +410,28 @@ class Relayer {
           errMsg = 'Network is too congested right now.  Try again later.'
         }
 
+        // Revert the failed nonce
+        this.knownProxyNonces[proxy] -= 1
+
         if (dbTx) {
           await dbTx.update({ status })
         }
 
         logger.error('Transaction failure:', reason)
+        Sentry.captureException(reason)
         return res.status(400).send({ errors: [errMsg] })
       }
 
-      // Record the transaction hash in the DB.
-      logger.info(`Submitted tx with hash ${txHash}`)
+      // Record the transaction hash and gas price in the DB.
+      txHash = txOut.txHash
+      const gasPrice = txOut.gasPrice.toNumber()
+      logger.info(`Submitted tx with hash ${txHash} at gas price ${gasPrice}`)
       if (dbTx) {
-        await dbTx.update({ txHash })
+        await dbTx.update({ txHash, gasPrice })
       }
     } catch (err) {
       logger.error(err)
+      Sentry.captureException(err)
       const errors = ['Error forwarding']
       if (isTestEnv) errors.push(err.toString())
       return res.status(400).send({ errors })
@@ -311,6 +439,14 @@ class Relayer {
 
     // Return the transaction hash to the caller.
     res.send({ id: txHash })
+
+    // GC of signature tracking
+    const now = new Date()
+    for (const key of Object.keys(this.seenSignatures)) {
+      if (now - this.seenSignatures[key] > 30000) {
+        delete this.seenSignatures[key]
+      }
+    }
   }
 }
 

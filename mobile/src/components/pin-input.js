@@ -4,6 +4,15 @@ import React from 'react'
 import { StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native'
 
 class PinInput extends React.Component {
+  // Workaround for Android bug of focus not popping the keyboard
+  // https://github.com/facebook/react-native/issues/19366
+  androidFocus() {
+    this.textInput.blur()
+    setTimeout(() => {
+      this.textInput.focus()
+    }, 100)
+  }
+
   render() {
     const placeholder = []
     for (let i = 0; i < this.props.pinLength; i++) {
@@ -19,7 +28,7 @@ class PinInput extends React.Component {
       <>
         <TouchableOpacity
           style={styles.pinCode}
-          onPress={() => this.textInput.focus()}
+          onPress={() => this.androidFocus()}
         >
           {placeholder}
         </TouchableOpacity>
@@ -51,7 +60,8 @@ const styles = StyleSheet.create({
     width: '80%'
   },
   pinCodeText: {
-    fontSize: 36
+    fontSize: 36,
+    fontFamily: 'Lato'
   },
   input: {
     right: -1000,

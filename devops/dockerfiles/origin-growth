@@ -28,6 +28,7 @@ COPY ./packages/token ./packages/token
 COPY ./infra/bridge ./infra/bridge
 COPY ./infra/discovery ./infra/discovery
 COPY ./infra/growth ./infra/growth
+COPY ./infra/growth-event ./infra/growth-event
 COPY ./infra/identity ./infra/identity
 
 RUN yarn install
@@ -35,4 +36,5 @@ RUN yarn install
 # Run migrations then start the growth server.
 CMD eval $(envkey-source) && \
 	npm run migrate --prefix infra/growth && \
+	npm run migrate --prefix infra/growth-event && \
 	npm run start --prefix infra/growth

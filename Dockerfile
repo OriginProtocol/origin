@@ -29,5 +29,6 @@ COPY ./infra/notifications/package.json ./infra/notifications/
 COPY ./infra/growth/package.json ./infra/growth/
 COPY ./infra/identity/package.json ./infra/identity/
 COPY ./infra/bridge/package.json ./infra/bridge/
+COPY ./infra/growth-event/package.json ./infra/growth-event/
 
 RUN yarn install

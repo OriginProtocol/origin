@@ -11,6 +11,8 @@ import WalletHeader from './_WalletHeader'
 import ListingPreview from './_ListingPreview'
 import HelpWallet from './_HelpWallet'
 
+import LoadingSpinner from 'components/LoadingSpinner'
+
 const MetaMaskURL = 'https://metamask.io'
 
 const query = gql`
@@ -206,7 +208,7 @@ class OnboardMetaMask extends Component {
             <Query query={query} notifyOnNetworkStatusChange>
               {({ error, data, networkStatus }) => {
                 if (networkStatus === 1) {
-                  return <div>Loading...</div>
+                  return <LoadingSpinner />
                 } else if (error) {
                   return <p className="p-3">Error :(</p>
                 } else if (!data || !data.web3) {
@@ -214,7 +216,7 @@ class OnboardMetaMask extends Component {
                 }
 
                 const backLink = `${linkPrefix}/onboard`
-                const nextLink = `${linkPrefix}/onboard/profile`
+                const nextLink = `${linkPrefix}/onboard/email`
 
                 const { web3 } = data
 

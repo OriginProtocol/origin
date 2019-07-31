@@ -38,6 +38,14 @@ class EditProfile extends Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.onChange && profileUpdated(this.state, prevState || {})) {
+      this.props.onChange(
+        pick(this.state, ['firstName', 'lastName', 'description', 'avatarUrl'])
+      )
+    }
+  }
+
   render() {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
@@ -58,24 +66,7 @@ class EditProfile extends Component {
           onSubmit={e => {
             e.preventDefault()
             if (this.validate()) {
-              if (profileUpdated(this.state, this.props)) {
-                this.props.onChange(
-                  pick(this.state, [
-                    'firstName',
-                    'lastName',
-                    'description',
-                    'avatarUrl'
-                  ])
-                )
-
-                if (
-                  this.state.avatarUrl !== this.props.avatarUrl &&
-                  this.props.onAvatarChange
-                ) {
-                  this.props.onAvatarChange(this.state.avatarUrl)
-                }
-              }
-
+              this.onSave()
               this.onClose()
             }
           }}
@@ -191,7 +182,13 @@ class EditProfile extends Component {
           <div className="actions d-flex">
             <button
               className="btn btn-primary btn-rounded"
-              children={fbt('Save', 'Save')}
+              children={
+                onboarding ? (
+                  <fbt desc="Publish">Publish</fbt>
+                ) : (
+                  <fbt desc="Save">Save</fbt>
+                )
+              }
               type="submit"
             />
             {!isMobile && !onboarding && (
@@ -228,6 +225,19 @@ class EditProfile extends Component {
 
     this.setState(newState)
     return newState.valid
+  }
+
+  onSave() {
+    if (this.props.onSave) {
+      const profile = pick(this.state, [
+        'firstName',
+        'lastName',
+        'description',
+        'avatarUrl'
+      ])
+
+      this.props.onSave(profile, profileUpdated(profile, this.props))
+    }
   }
 
   onClose() {
@@ -268,7 +278,7 @@ class EditProfile extends Component {
         </p>
         <div className="actions">
           <button
-            className="btn btn-primary"
+            className="btn btn-primary btn-rounded"
             onClick={() =>
               this.setState({ shouldClosePersonalDataModal: true })
             }
@@ -349,4 +359,7 @@ require('react-styl')(`
         margin-top: auto
         .btn
           width: 100%
+          margin-top: 3rem
+      &.onboarding .actions
+          padding: 0
 `)

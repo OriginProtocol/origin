@@ -108,6 +108,29 @@ npm run start
 
 This starts a development server on `localhost:5000` by default.
 
+### Setup tunnel for webhooks (Optional)
+You need to setup a tunnel to localhost:5000 to work with Twitter Activity API and its webhooks.
+
+1. To spin up a tunnel with `ngrok`:
+    ```bash
+    ngrok http 5000
+    ```
+
+2. Copy the tunnel host that `ngrok` prints and set that to `WEBHOOK_TUNNEL_HOST` environment variable.
+
+3. Kill and restart the bridge server (to pick up the environment vairable change)
+
+4. To destroy and recreate webhooks and subscriptions with the new tunnel host, go to the following URL in a browser and authorize your twitter account
+    ```
+    http://localhost:5000/hooks/twitter/__init
+    ```
+    If everything is successful, you will see the following JSON printed in your browser window
+    ```
+    { "success": true }
+    ````
+
+    Note: The twitter account you authorize should be same as `TWITTER_ORIGINPROTOCOL_USERNAME`
+
 ### Run the Tests
 
 Throughout the development process and before committing or deploying, run:

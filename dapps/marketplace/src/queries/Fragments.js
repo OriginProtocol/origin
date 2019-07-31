@@ -47,8 +47,6 @@ export default {
         title
         description
         currencyId
-        featured
-        hidden
         price {
           amount
           currency {
@@ -247,6 +245,24 @@ export default {
                 reward {
                   amount
                   currency
+                }
+              }
+            }
+          }
+          ... on SocialShareAction {
+            content {
+              titleKey
+              detailsKey
+              image
+              link
+              linkKey
+              post {
+                text {
+                  default
+                  translations {
+                    locale
+                    text
+                  }
                 }
               }
             }

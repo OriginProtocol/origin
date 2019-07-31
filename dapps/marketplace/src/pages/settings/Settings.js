@@ -5,6 +5,7 @@ import { fbt } from 'fbt-runtime'
 
 import { formInput } from 'utils/formHelpers'
 import withConfig from 'hoc/withConfig'
+import withIsMobile from 'hoc/withIsMobile'
 import SetNetwork from 'mutations/SetNetwork'
 import ConfigQuery from 'queries/Config'
 import LocaleDropdown from 'components/LocaleDropdown'
@@ -18,6 +19,7 @@ const store = Store('sessionStorage')
 const configurableFields = [
   'bridge',
   'discovery',
+  'growth',
   'ipfsGateway',
   'ipfsRPC',
   'provider',
@@ -84,7 +86,14 @@ class Settings extends Component {
 
   render() {
     const input = formInput(this.state, state => this.setState(state))
-    const { locale, onLocale, currency, onCurrency, config } = this.props
+    const {
+      locale,
+      onLocale,
+      currency,
+      onCurrency,
+      config,
+      isMobile
+    } = this.props
 
     let proxyAccountsEnabled = config.proxyAccountsEnabled ? true : false
     if (localStorage.proxyAccountsEnabled === 'true') {
@@ -117,9 +126,11 @@ class Settings extends Component {
             />
             <div className="row">
               <div className="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
-                <h1>
-                  <fbt desc="settings.heading">Settings</fbt>
-                </h1>
+                {!isMobile && (
+                  <h1>
+                    <fbt desc="settings.heading">Settings</fbt>
+                  </h1>
+                )}
                 <div className="settings-group">
                   <div className="settings-box">
                     <div className="form-group row">
@@ -298,6 +309,22 @@ class Settings extends Component {
                           />
                         </div>
                       </div>
+                      <div className="form-group row">
+                        <div className="col-sm">
+                          <label htmlFor="indexing">
+                            <fbt desc="settings.growthLabel">Growth Server</fbt>
+                          </label>
+                        </div>
+                        <div className="col-sm">
+                          <input
+                            className="form-control form-control-lg"
+                            type="text"
+                            name="growth"
+                            {...input('growth')}
+                            onBlur={() => this.saveConfig(setNetwork)}
+                          />
+                        </div>
+                      </div>
                       <div className="form-group row less-margin-bottom">
                         <div className="col-sm">
                           <label htmlFor="indexing">
@@ -384,6 +411,13 @@ class Settings extends Component {
                     </div>
                   </div>
                 </div>
+                {this.state.developerMode && (
+                  <div className="text-center test-builds">
+                    <a href="https://originprotocol.github.io/test-builds/">
+                      Test Builds
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
             {/* TODO: See #2320
@@ -420,7 +454,7 @@ class Settings extends Component {
   }
 }
 
-export default withConfig(Settings)
+export default withIsMobile(withConfig(Settings))
 
 require('react-styl')(`
   .settings
@@ -517,6 +551,8 @@ require('react-styl')(`
 
     .restore
       color: var(--clear-blue)
+  .test-builds
+    font-size: 0.875rem
 
   @media (max-width: 767.98px)
     .settings

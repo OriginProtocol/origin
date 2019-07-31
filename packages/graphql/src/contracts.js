@@ -56,6 +56,7 @@ export function newBlock(blockHeaders) {
   lastBlock = blockHeaders.number
   context.marketplace.eventCache.setLatestBlock(lastBlock)
   context.identityEvents.eventCache.setLatestBlock(lastBlock)
+  context.ProxyFactory.eventCache.setLatestBlock(lastBlock)
   context.eventSource.resetCache()
   pubsub.publish('NEW_BLOCK', {
     newBlock: { ...blockHeaders, id: blockHeaders.hash }
@@ -166,7 +167,8 @@ export function setNetwork(net, customConfig) {
       echoEvery,
       breakdownEvery,
       maxConcurrent,
-      qps
+      qps,
+      ethGasStation: ['mainnet', 'rinkeby'].includes(net)
     })
   } else if (!isBrowser) {
     // TODO: Allow for browser?
@@ -211,13 +213,19 @@ export function setNetwork(net, customConfig) {
   if (config.providerWS) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
     context.web3WS = web3WS
-    wsSub = web3WS.eth
-      .subscribe('newBlockHeaders')
-      .on('data', newBlock)
-      .on('error', () => {
-        console.log('WS connection error. Polling for new blocks...')
-        pollForBlocks()
-      })
+    try {
+      wsSub = web3WS.eth
+        .subscribe('newBlockHeaders')
+        .on('data', newBlock)
+        .on('error', () => {
+          console.log('WS connection error. Polling for new blocks...')
+          pollForBlocks()
+        })
+    } catch (err) {
+      console.log('Websocket error. Polling for new blocks...')
+      console.error(err)
+      pollForBlocks()
+    }
   } else {
     pollForBlocks()
   }

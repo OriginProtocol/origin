@@ -1,13 +1,7 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
 
-import withWallet from 'hoc/withWallet'
-
-const DownloadApp = ({ walletType }) => {
-  if (walletType === 'Origin Wallet') {
-    return null
-  }
-
+const DownloadApp = () => {
   return (
     <div className="onboard-help origin-wallet">
       <div className="app-image mb-3">
@@ -35,7 +29,7 @@ const DownloadApp = ({ walletType }) => {
   )
 }
 
-export default withWallet(DownloadApp)
+export default DownloadApp
 
 require('react-styl')(`
   .onboard-help.origin-wallet

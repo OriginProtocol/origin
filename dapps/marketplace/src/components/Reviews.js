@@ -9,6 +9,7 @@ import StarRating from 'components/StarRating'
 import Avatar from 'components/Avatar'
 import Link from 'components/Link'
 import QueryError from 'components/QueryError'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 import query from 'queries/Reviews'
 import EthAddress from './EthAddress'
@@ -112,7 +113,19 @@ export default class Reviews extends Component {
                   )}
                 </h3>
               )}
-              {!reviews.length && <fbt desc="reviews.none">None</fbt>}
+              {!reviews.length && (
+                <div className="no-reviews">
+                  {this.props.seller ? (
+                    <fbt desc="reviews.none.seller">
+                      No reviews available for this seller
+                    </fbt>
+                  ) : (
+                    <fbt desc="reviews.none.user">
+                      No reviews available for this user
+                    </fbt>
+                  )}
+                </div>
+              )}
               {!!reviews.length &&
                 reviews.map((review, idx) => {
                   const profile = get(review, 'reviewer.account.identity') || {}
@@ -135,12 +148,10 @@ export default class Reviews extends Component {
                                 )}
                               </Link>
                             </div>
-                            <Link to={`/user/${review.reviewer.id}`}>
-                              <EthAddress
-                                address={review.reviewer.id}
-                                short={true}
-                              />
-                            </Link>
+                            <EthAddress
+                              address={review.reviewer.id}
+                              short={true}
+                            />
                           </div>
                           <div className="info">
                             <div className="purchase">
@@ -174,7 +185,7 @@ export default class Reviews extends Component {
                   }}
                 >
                   {loading ? (
-                    <fbt desc="reviews.loadingMore">Loading More...</fbt>
+                    <LoadingSpinner />
                   ) : (
                     <>
                       <fbt desc="reviews.readMore">Read More</fbt>
@@ -304,5 +315,25 @@ require('react-styl')(`
       transform: rotate(180deg)
       background: url(images/caret-blue.svg) no-repeat right
       background-size: 12px
+
+    .no-reviews
+      text-align: center
+      padding-top: 7rem
+      min-width: 5rem
+      position: relative
+      color: #6a8296
+      &:before
+        content: ''
+        display: inline-block
+        height: 5rem
+        width: 100%
+        position: absolute
+        top: 1rem
+        left: 0
+        right: 0
+        background-image: url('images/no-reviews-icon.svg')
+        background-repeat: no-repeat
+        background-size: contain
+        background-position: center
 
 `)

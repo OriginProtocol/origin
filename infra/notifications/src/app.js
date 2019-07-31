@@ -17,8 +17,8 @@ const { transactionEmailSend, messageEmailSend } = require('./emailSend')
 const { transactionMobilePush, messageMobilePush } = require('./mobilePush')
 const MobileRegistry = require('./models').MobileRegistry
 
-const { GrowthEventTypes } = require('@origin/growth/src/enums')
-const { GrowthEvent } = require('@origin/growth/src/resources/event')
+const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
+const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
 
 const app = express()
 const port = 3456
@@ -53,7 +53,7 @@ process.argv.forEach(arg => {
 })
 
 const networkDappDomains = {
-  1: 'https://dapp.originprotocol.com',
+  1: 'https://shoporigin.com',
   4: 'https://dapp.staging.originprotocol.com',
   2222: 'https://dapp.dev.originprotocol.com',
   999: 'http://localhost:3000'
@@ -296,8 +296,9 @@ app.post('/events', async (req, res) => {
   const eventName = event.event
   const { listing, offer } = related
   const { seller = {} } = listing
-  const buyer = offer ? offer.buyer : null // Not all events have offers
+  const buyer = offer ? offer.buyer : {} // Not all events have offers
   const eventDetailsSummary = `eventName=${eventName} blockNumber=${event.blockNumber} logIndex=${event.logIndex}`
+  logger.info(`Info: Processing event ${eventDetailsSummary}`)
 
   // Return 200 to the event-listener without waiting for processing of the event.
   res.status(200).send({ status: 'ok' })
@@ -346,8 +347,6 @@ app.post('/events', async (req, res) => {
   const sellerAddress = seller.identity.owner.id
     ? seller.identity.owner.id.toLowerCase()
     : null
-
-  logger.info(`Info: Processing event ${eventDetailsSummary}`)
 
   logger.info(`>eventName: ${eventName}`)
   logger.info(`>party: ${party}`)

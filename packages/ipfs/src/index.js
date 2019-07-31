@@ -137,6 +137,7 @@ async function getTextFn(gateway, hashAsBytes) {
           reject()
         }
       })
+    if (didTimeOut) console.log(`Timeout when fetching ${hash}`)
   })
   if (!response) {
     return '{}'

@@ -8,9 +8,9 @@ import { fbt } from 'fbt-runtime'
 
 import withCreatorConfig from 'hoc/withCreatorConfig'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
+import withGrowthRewards from 'hoc/withGrowthRewards'
 import withWallet from 'hoc/withWallet'
 import withTokenBalance from 'hoc/withTokenBalance'
-import withIsMobile from 'hoc/withIsMobile'
 
 import BottomScrollListener from 'components/BottomScrollListener'
 import QueryError from 'components/QueryError'
@@ -20,12 +20,13 @@ import Link from 'components/Link'
 import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
 
-import ListingsGallery from './ListingCards'
-import Search from './_Search'
+import ListingCards from './ListingCards'
 
 import query from 'queries/Listings'
 
 import { getFilters, getStateFromQuery } from './_filters'
+
+import LoadingSpinner from 'components/LoadingSpinner'
 
 const CategoriesEnum = require('Categories$FbtEnum')
 
@@ -39,8 +40,7 @@ class Listings extends Component {
     this.state = {
       first: 12,
       search: getStateFromQuery(props),
-      sort: 'featured',
-      hidden: true
+      sort: 'featured'
     }
   }
 
@@ -90,6 +90,16 @@ class Listings extends Component {
             </fbt:plural>
           </fbt>
         )
+      } else if (this.state.search.ognListings) {
+        content = (
+          <fbt desc="NumOgnRewardsResult">
+            <fbt:param name="count">{totalCount}</fbt:param>{' '}
+            <fbt:plural count={totalCount} showCount="no">
+              Listing
+            </fbt:plural>
+            with Origin Rewards
+          </fbt>
+        )
       } else {
         content = (
           <fbt desc="NumResults">
@@ -112,35 +122,47 @@ class Listings extends Component {
     const filters = [...getFilters(this.state.search), ...creatorFilters]
 
     const vars = {
-      ...pick(this.state, 'first', 'sort', 'hidden'),
+      ...pick(this.state, 'first', 'sort'),
       search: this.state.search.searchInput,
       filters: filters.map(filter => omit(filter, '__typename'))
     }
 
+    if (this.state.search.ognListings) {
+      // when OGN listings are selected clear other search parameters
+      vars.search = ''
+      vars.filters = []
+      vars.listingIds = Object.keys(this.props.ognListingRewards)
+    }
+
     const showCategory = get(this.state, 'search.category.type') ? false : true
-    const showCount = vars.search || vars.filters.length
+    const showCount =
+      vars.search || vars.filters.length || this.state.search.ognListings
 
     const isSearch =
       get(this.state.search, 'searchInput', '') !== '' ||
       !isEmpty(get(this.state.search, 'category', {})) ||
-      !isEmpty(get(this.state.search, 'subCategory', {}))
+      !isEmpty(get(this.state.search, 'subCategory', {})) ||
+      this.state.search.ognListings
+
+    const injectCTAs = !isSearch
 
     return (
       <>
         <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
         <div className="container listings-container">
-          {this.props.isMobile ? (
-            <Search className="search" placeholder />
-          ) : null}
           <Query
             query={query}
-            variables={vars}
+            variables={{
+              ...vars,
+              // Fetch two less cards (just for the first request) since we are probably injecting CTAs
+              first: injectCTAs ? vars.first - 2 : vars.first
+            }}
             notifyOnNetworkStatusChange={true}
             fetchPolicy="cache-and-network"
           >
             {({ error, data, fetchMore, networkStatus, loading }) => {
               if (networkStatus <= 2) {
-                return <h5 className="listings-count">Loading...</h5>
+                return <LoadingSpinner />
               } else if (error) {
                 return <QueryError error={error} query={query} vars={vars} />
               } else if (!data || !data.marketplace) {
@@ -220,12 +242,12 @@ class Listings extends Component {
                         {showCount
                           ? this.getHeader(totalCount, isSearch)
                           : null}
-                        <ListingsGallery
+                        <ListingCards
                           listings={nodes}
                           hasNextPage={hasNextPage}
                           showCategory={showCategory}
-                          growthCampaigns={this.props.growthCampaigns}
                           tokenDecimals={this.props.tokenDecimals}
+                          injectCTAs={injectCTAs}
                         />
                         {!hasNextPage ? null : (
                           <button
@@ -259,13 +281,15 @@ class Listings extends Component {
   }
 }
 
-export default withGrowthCampaign(
-  withWallet(withTokenBalance(withCreatorConfig(withIsMobile(Listings)))),
-  {
-    fetchPolicy: 'cache-first',
-    queryEvenIfNotEnrolled: true,
-    suppressErrors: true // still show listings in case growth can not be reached
-  }
+export default withGrowthRewards(
+  withGrowthCampaign(
+    withWallet(withTokenBalance(withCreatorConfig(Listings))),
+    {
+      fetchPolicy: 'cache-first',
+      queryEvenIfNotEnrolled: true,
+      suppressErrors: true // still show listings in case growth can not be reached
+    }
+  )
 )
 
 require('react-styl')(`
@@ -283,6 +307,8 @@ require('react-styl')(`
       padding-top: 0
       .search
         margin-bottom: 1.5rem
+        &.active
+          margin-bottom: 0
     .listings-count
       margin: 0
       font-size: 32px

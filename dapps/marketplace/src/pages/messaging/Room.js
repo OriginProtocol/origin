@@ -16,6 +16,7 @@ import Link from 'components/Link'
 import QueryError from 'components/QueryError'
 import EnableMessaging from 'components/EnableMessaging'
 import Stages from 'components/TransactionStages'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 function eventName(name) {
   if (name === 'OfferCreated') {
@@ -56,24 +57,44 @@ const OfferEventWithIdentity = withIdentity(
 
 class AllMessages extends Component {
   componentDidMount() {
-    if (this.el) {
-      this.el.scrollTop = this.el.scrollHeight
-    }
+    this.shouldScrollToBottom()
     if (this.props.markRead) {
       this.props.markRead()
     }
   }
 
+  componentWillUnmount() {
+    if (this.scrollTimeout) {
+      clearTimeout(this.scrollTimeout)
+    }
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.messages.length !== prevProps.messages.length) {
-      this.el.scrollTop = this.el.scrollHeight
+      this.shouldScrollToBottom()
       if (this.props.markRead) {
         this.props.markRead()
       }
     }
     if (this.props.markRead && this.props.convId !== prevProps.convId) {
+      this.shouldScrollToBottom()
       this.props.markRead()
     }
+  }
+
+  shouldScrollToBottom() {
+    if (this.scrollTimeout) {
+      clearTimeout(this.scrollTimeout)
+    }
+
+    this.scrollTimeout = setTimeout(() => this.scrollToBottom(), 100)
+  }
+
+  scrollToBottom() {
+    if (!this.el) {
+      return
+    }
+    this.el.scrollTop = this.el.scrollHeight
   }
 
   render() {
@@ -124,50 +145,48 @@ class Room extends Component {
   render() {
     const { id, wallet, markRead, enabled, counterpartyEvents } = this.props
     return (
-      <div className="container">
-        <Query
-          query={query}
-          pollInterval={500}
-          variables={{ id }}
-          skip={!id}
-          notifyOnNetworkStatusChange={true}
-        >
-          {({ error, data, networkStatus }) => {
-            if (networkStatus === 1) {
-              return <div>Loading...</div>
-            } else if (error) {
-              return <QueryError query={query} error={error} />
-            } else if (!data || !data.messaging) {
-              return (
-                <p className="p-3">
-                  <fbt desc="Room.cannotQuery">Cannot query messages</fbt>
-                </p>
-              )
-            }
-
-            const messages = get(data, 'messaging.conversation.messages', [])
+      <Query
+        query={query}
+        pollInterval={500}
+        variables={{ id }}
+        skip={!id}
+        notifyOnNetworkStatusChange={true}
+      >
+        {({ error, data, networkStatus }) => {
+          if (networkStatus === 1) {
+            return <LoadingSpinner />
+          } else if (error) {
+            return <QueryError query={query} error={error} />
+          } else if (!data || !data.messaging) {
             return (
-              <>
-                <AllMessages
-                  events={counterpartyEvents}
-                  eventsLoading={this.props.counterpartyEventsLoading}
-                  messages={messages}
-                  wallet={wallet}
-                  convId={id}
-                  markRead={() => markRead({ variables: { id } })}
-                />
-                {enabled ? (
-                  <SendMessage to={this.props.id} />
-                ) : (
-                  <div className="col-12">
-                    <EnableMessaging />
-                  </div>
-                )}
-              </>
+              <p className="p-3">
+                <fbt desc="Room.cannotQuery">Cannot query messages</fbt>
+              </p>
             )
-          }}
-        </Query>
-      </div>
+          }
+
+          const messages = get(data, 'messaging.conversation.messages', [])
+          return (
+            <>
+              <AllMessages
+                events={counterpartyEvents}
+                eventsLoading={this.props.counterpartyEventsLoading}
+                messages={messages}
+                wallet={wallet}
+                convId={id}
+                markRead={() => markRead({ variables: { id } })}
+              />
+              {enabled ? (
+                <SendMessage to={this.props.id} />
+              ) : (
+                <div className="col-12">
+                  <EnableMessaging />
+                </div>
+              )}
+            </>
+          )
+        }}
+      </Query>
     )
   }
 }
@@ -176,8 +195,9 @@ export default withWallet(withCounterpartyEvents(Room))
 
 require('react-styl')(`
   .messages-page .messages
-    max-height: calc(100vh - 10.25rem)
-    overflow: auto
+    flex: 1
+    overflow-y: scroll
+    overflow-x: hidden
     display: flex
     flex-direction: column
     align-items: start
@@ -187,9 +207,10 @@ require('react-styl')(`
         max-width: 165px
     .timestamp
       color: var(--bluey-grey)
-      font-size: 12px;
+      font-size: 10px
+      text-align: center
       align-self: center
-      margin-bottom: 1rem
+      margin-top: 1rem
     .offer-event
       color: var(--bluey-grey)
       font-size: 18px

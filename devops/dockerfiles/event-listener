@@ -29,7 +29,7 @@ COPY ./packages/validator ./packages/validator
 COPY ./packages/token ./packages/token
 COPY ./infra/bridge ./infra/bridge
 COPY ./infra/discovery ./infra/discovery
-COPY ./infra/growth ./infra/growth
+COPY ./infra/growth-event ./infra/growth-event
 COPY ./infra/identity ./infra/identity
 
 RUN yarn install

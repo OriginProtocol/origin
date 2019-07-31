@@ -22,6 +22,9 @@ spec:
     - secretName: {{ template "dapp.host" . }}
       hosts:
         - {{ template "dapp.host" . }}
+        {{- if eq .Release.Namespace "prod" }}
+        - www.{{ template "dapp.host". }}
+        {{- end }}
   rules:
   - host: {{ template "dapp.host" . }}
     http:
@@ -30,3 +33,12 @@ spec:
           backend:
             serviceName: {{ template "dapp.fullname" . }}
             servicePort: 80
+  {{- if eq .Release.Namespace "prod" }}
+  - host: www.{{ template "dapp.host" . }}
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: {{ template "dapp.fullname" . }}
+            servicePort: 80
+  {{- end }}

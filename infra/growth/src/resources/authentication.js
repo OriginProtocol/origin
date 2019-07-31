@@ -67,12 +67,19 @@ async function authenticateEnrollment(
          */
         participant.authToken
 
+  // Workaround bug causing the mobile app to send fingerprint data
+  // as a string rather then an object. See #
+  const data =
+    typeof fingerprintData === 'string'
+      ? JSON.parse(fingerprintData)
+      : fingerprintData
+
   const participantData = {
     ethAddress: accountId.toLowerCase(),
     status: enums.GrowthParticipantStatuses.Active,
     agreementId: agreementMessage,
     authToken: authToken,
-    data: fingerprintData,
+    data,
     ip,
     country
   }

@@ -1,5 +1,4 @@
 const addresses = require('@origin/contracts/build/contracts_mainnet.json')
-const localStorageHas = require('./_localStorageHas')
 
 export default {
   // Web3 provider
@@ -80,6 +79,6 @@ export default {
 
   // Configs
   performanceMode: true,
-  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled', 'true'),
-  relayerEnabled: localStorageHas('relayerEnabled', 'true')
+  proxyAccountsEnabled: true,
+  relayerEnabled: true
 }

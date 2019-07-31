@@ -38,6 +38,10 @@ import ToastNotification from './ToastNotification'
 import VerifyProfileHelp from './_VerifyProfileHelp'
 import DeployIdentity from 'pages/identity/mutations/DeployIdentity'
 
+import Store from 'utils/store'
+
+const localStore = Store('localStorage')
+
 const withOAuthAttestationProvider = provider => {
   const WithOAuthAttestationProvider = props => {
     return <OAuthAttestation provider={provider} {...props} />
@@ -95,6 +99,15 @@ function attestationsUpdated(state, prevState) {
     get(state, 'verifiedAttestations.length') !==
     get(prevState, 'verifiedAttestations.length')
   )
+}
+
+function hasDataExpired(data) {
+  if (!data || !data.timestamp) {
+    return true
+  }
+
+  // Local data is valid only for an hour
+  return Date.now() - data.timestamp > 3600000
 }
 
 class UserProfile extends Component {
@@ -350,12 +363,14 @@ class UserProfile extends Component {
             this.setState(newState)
           }}
           onComplete={newAttestation => {
-            const unpublishedAttestations = [...get(this.state, 'attestations')]
-            unpublishedAttestations.push(newAttestation)
+            this.storeData({
+              attestations: {
+                [providerName]: newAttestation
+              }
+            })
 
             this.setState({
               deployIdentity: providerName,
-              unpublishedAttestations,
               [providerName]: false
             })
           }}
@@ -372,28 +387,43 @@ class UserProfile extends Component {
       return null
     }
 
-    if (
-      this.state.deployIdentity === 'profile' &&
-      !this.state.unpublishedProfile
-    ) {
-      // Skip deploy if no change
-      return null
-    }
+    const { profile, attestations } = this.getData()
 
-    const profile = pickBy(
-      pick(
-        this.state.deployIdentity === 'profile'
-          ? this.state.unpublishedProfile
-          : this.state,
-        ['firstName', 'lastName', 'description', 'avatarUrl']
-      ),
-      x => x
+    const publishedAttestations = (
+      this.state.verifiedAttestations || []
+    ).reduce(
+      (object, att) => ({
+        ...object,
+        [att.id]: att.rawData
+      }),
+      {}
     )
 
-    const attestations =
-      this.state.deployIdentity === 'profile'
-        ? this.state.attestations
-        : this.state.unpublishedAttestations
+    const unpublishedAttestations = {
+      ...publishedAttestations,
+      ...attestations
+    }
+
+    const publishedProfile = pick(this.state, [
+      'firstName',
+      'lastName',
+      'description',
+      'avatarUrl'
+    ])
+
+    const unpublishedProfile = pickBy(
+      {
+        ...publishedProfile,
+        ...profile
+      },
+      f => f
+    )
+
+    // Store before publishing
+    this.storeData({
+      profile: unpublishedProfile,
+      attestations: unpublishedAttestations
+    })
 
     return (
       <DeployIdentity
@@ -406,8 +436,6 @@ class UserProfile extends Component {
           this.props.identityRefetch()
           this.setState({
             deployIdentity: null,
-            unpublishedProfile: null,
-            unpublishedAttestations: null,
             hideVerifyModal: false,
             verifyModal: false
           })
@@ -416,13 +444,11 @@ class UserProfile extends Component {
           // Discard unpublished profile changes on cancel/error
           this.setState({
             deployIdentity: null,
-            unpublishedProfile: null,
-            unpublishedAttestations: null,
             hideVerifyModal: false
           })
         }}
-        profile={profile}
-        attestations={attestations || []}
+        profile={unpublishedProfile}
+        attestations={Object.values(unpublishedAttestations)}
       />
     )
   }
@@ -441,16 +467,21 @@ class UserProfile extends Component {
           'avatarUrl'
         ])}
         avatarUrl={this.state.avatarUrl}
-        onClose={() =>
-          this.setState({ editProfile: false, deployIdentity: 'profile' })
-        }
-        onChange={newState => {
-          this.setState({
-            unpublishedProfile: {
-              ...this.state.unpublishedProfile,
+        onClose={() => this.setState({ editProfile: false })}
+        onSave={(newState, hasChanged) => {
+          if (hasChanged) {
+            const profile = {
+              ...this.state.profile,
               ...newState
             }
-          })
+
+            this.storeData({
+              profile
+            })
+            this.setState({
+              deployIdentity: 'profile'
+            })
+          }
         }}
         lightMode={true}
       />
@@ -480,6 +511,71 @@ class UserProfile extends Component {
       </Fragment>
     )
   }
+
+  getData() {
+    const key = `${this.props.walletProxy}-profile-data`
+    const data = localStore.get(key)
+
+    if (hasDataExpired(data)) {
+      const profile = pick(this.state, [
+        'firstName',
+        'lastName',
+        'description',
+        'avatarUrl'
+      ])
+
+      const attestations = (this.state.verifiedAttestations || []).reduce(
+        (object, att) => ({
+          ...object,
+          [att.id]: att.rawData
+        }),
+        {}
+      )
+
+      const newData = {
+        profile,
+        attestations
+      }
+
+      this.storeData(newData)
+
+      return newData
+    }
+
+    return pick(data, ['attestations', 'profile'])
+  }
+
+  storeData({ profile, attestations }) {
+    const key = `${this.props.walletProxy}-profile-data`
+    const data = localStore.get(key)
+
+    if (hasDataExpired(data)) {
+      return localStore.set(key, {
+        timestamp: Date.now(),
+        profile,
+        attestations
+      })
+    }
+
+    const newData = {
+      ...data,
+      timestamp: Date.now()
+    }
+
+    // Overwrite if there is a change
+    newData.profile = {
+      ...data.profile,
+      ...profile
+    }
+
+    // Merge attestations if there is a change
+    newData.attestations = {
+      ...data.attestations,
+      ...attestations
+    }
+
+    localStore.set(key, newData)
+  }
 }
 
 export default withIsMobile(
@@ -491,6 +587,7 @@ export default withIsMobile(
 require('react-styl')(`
   .profile-page
     background-color: var(--pale-grey-four)
+    position: relative
     > .container
       padding-top: 2rem
       margin-bottom: -4rem

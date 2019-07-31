@@ -17,7 +17,7 @@ import get from 'lodash.get'
 import RNPickerSelect from 'react-native-picker-select'
 import * as RNLocalize from 'react-native-localize'
 
-import { setPhoneAttestation } from 'actions/Onboarding'
+import { addAttestation, addSkippedAttestation } from 'actions/Onboarding'
 import BackArrow from 'components/back-arrow'
 import Disclaimer from 'components/disclaimer'
 import OriginButton from 'components/origin-button'
@@ -90,7 +90,7 @@ class PhoneScreen extends Component {
     this.state = {
       countryValue: countryValue,
       phoneValue: '',
-      phoneError: '',
+      phoneError: null,
       loading: false,
       verify: false,
       verifyError: '',
@@ -100,7 +100,7 @@ class PhoneScreen extends Component {
   }
 
   handleChange = async (field, value) => {
-    await this.setState({ [`${field}Error`]: '', [`${field}Value`]: value })
+    await this.setState({ phoneError: null, [`${field}Value`]: value })
   }
 
   /* Handle submission of phone number. Check if an identity with this phone
@@ -129,7 +129,7 @@ class PhoneScreen extends Component {
     } else {
       this.setState({
         loading: false,
-        phoneError: get(response.json(), 'errors[0]', '')
+        phoneError: get(await response.json(), 'errors[0]', '')
       })
     }
   }
@@ -142,7 +142,8 @@ class PhoneScreen extends Component {
       headers: { 'content-type': 'application/json' },
       method: 'POST',
       body: JSON.stringify({
-        phone: `${this.state.countryValue.prefix} ${this.state.phoneValue}`
+        phone: `${this.state.countryValue.prefix} ${this.state.phoneValue}`,
+        ethAddress: this.props.wallet.activeAccount.address
       })
     })
     // 200 status code indicates account was found
@@ -188,13 +189,13 @@ class PhoneScreen extends Component {
     if (!response.ok) {
       this.setState({ verifyError: get(data, 'errors[0]', '') })
     } else {
-      this.props.setPhoneAttestation(data)
+      await this.props.addAttestation(JSON.stringify(data))
       this.props.navigation.navigate(this.props.nextOnboardingStep)
     }
   }
 
   handleSkip = async () => {
-    await this.props.setPhoneAttestation(false)
+    await this.props.addSkippedAttestation('phone')
     this.props.navigation.navigate(this.props.nextOnboardingStep)
   }
 
@@ -229,7 +230,7 @@ class PhoneScreen extends Component {
             style={styles.backArrow}
           />
           <Text style={styles.title}>
-            <fbt desc="PhoneScreen.inputTitle">Enter phone number</fbt>
+            <fbt desc="PhoneScreen.inputTitle">Enter phone</fbt>
           </Text>
         </View>
         <View style={{ ...styles.container }}>
@@ -253,7 +254,7 @@ class PhoneScreen extends Component {
             value={this.state.phoneValue}
             style={[styles.input, this.state.phoneError ? styles.invalid : {}]}
           />
-          {this.state.phoneError.length > 0 && (
+          {this.state.phoneError !== null && (
             <Text style={styles.invalid}>{this.state.phoneError}</Text>
           )}
           <Disclaimer>
@@ -366,8 +367,10 @@ const mapStateToProps = ({ onboarding, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  setPhoneAttestation: phoneAttestation =>
-    dispatch(setPhoneAttestation(phoneAttestation))
+  addAttestation: phoneAttestation =>
+    dispatch(addAttestation(phoneAttestation)),
+  addSkippedAttestation: attestationName =>
+    dispatch(addSkippedAttestation(attestationName))
 })
 
 export default withConfig(
@@ -389,8 +392,8 @@ const pickerSelectStyles = StyleSheet.create({
     alignItems: 'center'
   },
   inputIOS: {
-    color: 'black',
-    fontSize: 20,
+    color: '#98a7b4',
+    fontSize: 18,
     borderColor: '#c0cbd4',
     borderBottomWidth: 1,
     paddingTop: 20,
@@ -398,11 +401,12 @@ const pickerSelectStyles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 20,
     width: '90%',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'Lato'
   },
   inputAndroid: {
-    color: 'black',
-    fontSize: 20,
+    color: '#98a7b4',
+    fontSize: 18,
     borderColor: '#c0cbd4',
     borderBottomWidth: 1,
     paddingTop: 20,
@@ -410,6 +414,7 @@ const pickerSelectStyles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 20,
     width: '90%',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'Lato'
   }
 })
