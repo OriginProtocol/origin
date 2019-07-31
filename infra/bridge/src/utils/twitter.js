@@ -63,13 +63,7 @@ function verifyTwitterCredentials(oAuthAccessToken, oAuthAccessTokenSecret) {
           reject(error)
         } else {
           /* eslint-disable-next-line */
-          const { id, screen_name } = JSON.parse(response)
-          resolve({
-            uniqueId: id,
-            username: screen_name,
-            /* eslint-disable-next-line */
-            profileUrl: `https://twitter.com/${screen_name}`
-          })
+          resolve(JSON.parse(response))
         }
       }
     )

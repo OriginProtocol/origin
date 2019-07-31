@@ -169,7 +169,7 @@ module.exports = `
     rewardEarned: GrowthPrice
     reward: GrowthPrice
     unlockConditions: [UnlockCondition]
-    contents: [SocialContent]
+    content: SocialContent
   }
 
   type GrowthCampaign {

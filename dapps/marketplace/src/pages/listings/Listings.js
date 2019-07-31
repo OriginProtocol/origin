@@ -130,7 +130,7 @@ class Listings extends Component {
     if (this.state.search.ognListings) {
       // when OGN listings are selected clear other search parameters
       vars.search = ''
-      vars.filers = []
+      vars.filters = []
       vars.listingIds = Object.keys(this.props.ognListingRewards)
     }
 

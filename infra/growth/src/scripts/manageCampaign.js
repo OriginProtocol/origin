@@ -102,11 +102,12 @@ async function createJulyProdCampaign() {
     rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
   })
 }
-async function updateAugProdRules() {
-  console.log('Updating June campaign rules in prod...')
+
+async function updateJulyProdRules() {
+  console.log('Updating August campaign rules in prod...')
 
   const campaign = await db.GrowthCampaign.findOne({ where: { id: 5 } })
-  await campaign.update({ rules: JSON.stringify(augustConfig) })
+  await campaign.update({ rules: JSON.stringify(julyConfig) })
 }
 
 async function createAugProdCampaign() {
@@ -129,11 +130,11 @@ async function createAugProdCampaign() {
   })
 }
 
-async function updateJulyProdRules() {
-  console.log('Updating August campaign rules in prod...')
+async function updateAugProdRules() {
+  console.log('Updating June campaign rules in prod...')
 
   const campaign = await db.GrowthCampaign.findOne({ where: { id: 6 } })
-  await campaign.update({ rules: JSON.stringify(julyConfig) })
+  await campaign.update({ rules: JSON.stringify(augustConfig) })
 }
 
 const args = {}
