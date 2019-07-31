@@ -210,10 +210,7 @@ const augustConfig = {
               post: {
                 text: {
                   default: `Experience the decentralized global #marketplace of the future with @OriginProtocol's fresh new app. Secure transactions. Zero fees. Try it now: https://ogn.dev/mobile`,
-                  translations: [
-                    { locale: 'fr_FR', text: `Experience la decentralization avec l'appli de @OriginProtocol` },
-                    { locale: 'zh_CN', text: `我不知道我在说什么 @OriginProtocol` }
-                  ]
+                  translations: [ ]
                 }
               }
             },
@@ -244,10 +241,7 @@ const augustConfig = {
               post: {
                 text: {
                   default: `Join @OriginProtocol's #rewards program and earn free Origin tokens! 250,000 OGN already distributed to thousands all around the world and Origin is still welcoming more to become token holders`,
-                  translations: [
-                    { locale: 'fr_FR', text: `Venez gagner pleins de tokens avec @OriginProtocol!` },
-                    { locale: 'zh_CN', text: `我不知道我在说什么 @OriginProtocol` }
-                  ]
+                  translations: [ ]
                 }
               }
             },
