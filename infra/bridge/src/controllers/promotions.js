@@ -144,11 +144,21 @@ const isEventValid = ({ socialNetwork, type, event, content }) => {
     return true
   }
 
-  let encodedContent = JSON.parse(JSON.stringify(event.text)) // Clone to avoid mutation
+  // Note: `event.text` is truncated to 140chars, use `event.extended_tweet.full_text`, if it exists, to get whole tweet content
+  // Clone to avoid mutation
+  let encodedContent = JSON.parse(
+    JSON.stringify(
+      event.extended_tweet ? event.extended_tweet.full_text : event.text
+    )
+  )
 
-  // Important: Twitter shortens and replaces URLs
+  // IMPORTANT: Twitter shortens and replaces URLs
   // we have revert that back to get the original content and to get the hash
-  event.entities.urls.forEach(entity => {
+  // IMPORTANT: Twitter prepends 'http://' if it idenitifies a text as URL
+  // It may result in a different content than expected, So always prepend URLs with `http://` in rule configs.
+
+  const entities = (event.extended_tweet || event).entities
+  entities.urls.forEach(entity => {
     encodedContent = encodedContent.replace(entity.url, entity.expanded_url)
   })
 
