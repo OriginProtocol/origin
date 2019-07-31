@@ -245,7 +245,7 @@ const augustConfig = {
                 text: {
                   default: `Join @OriginProtocol's #rewards program and earn free Origin tokens! 250,000 OGN already distributed to thousands all around the world and we're still welcoming more to become token holders`,
                   translations: [
-                    { locale: 'fr_FR', text: `Venez gagner pleins de tokens avec @OriginProtocol!`},
+                    { locale: 'fr_FR', text: `Venez gagner pleins de tokens avec @OriginProtocol!` },
                     { locale: 'zh_CN', text: `我不知道我在说什么 @OriginProtocol` }
                   ]
                 }
