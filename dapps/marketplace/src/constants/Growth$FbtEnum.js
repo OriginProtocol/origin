@@ -133,6 +133,8 @@ const Growth$FbtEnum = {
     'Airy romantic Blue studio in Milano city, quiet neighborhood',
   'growth.purchase.listing-1-000-2781.title':
     'Sweet del Moro - Trastevere, Rome, Italy',
+  'growth.purchase.listing-1-000-2783.title':
+    'Historic 14th century Luxury Apartment, Venice, Italy',
   'growth.purchase.listing-1-000-2699.title':
     'All Access 3LAU tickets for 1 year',
   'growth.purchase.listing-1-000-2912.title':
