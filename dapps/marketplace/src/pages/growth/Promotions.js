@@ -358,6 +358,7 @@ require('react-styl')(`
       flex: 5rem 0 0
       max-width: 5rem
       height: auto
+      max-height: 4rem
       object-fit: contain
     h3
       margin: 0
