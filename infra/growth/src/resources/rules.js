@@ -827,10 +827,12 @@ class SocialShareRule extends SingleEventRule {
     const whereClause = { ethAddress: { [Sequelize.Op.in]: addresses } }
 
     // Return a personalized amount calculated based on social network stats stored in the user's identity.
-    return (await db.Identity.findOne({
+    return (
+      (await db.Identity.findOne({
         where: whereClause,
         order: [['createdAt', 'DESC']]
       })) || identityForTest
+    )
   }
 
   /**
@@ -886,7 +888,6 @@ class SocialShareRule extends SingleEventRule {
     // For each event, get the user's Twitter stats from the GrowthEvent row
     // then calculate the amount.
     const rewards = []
-    logger.info("DEBUG:", events)
     for (const event of events) {
       const identity = await this.loadIdentity(ethAddress)
       if (!identity) {
