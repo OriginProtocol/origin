@@ -96,7 +96,7 @@ function pollForBlocks() {
 }
 
 export function setNetwork(net, customConfig) {
-  if (net !== 'mainnet') console.debug(`Connectiong to network ${net}`)
+  if (net !== 'mainnet') console.debug(`Connecting to network ${net}`)
   if (process.env.DOCKER && net !== 'test') {
     net = 'docker'
   }
