@@ -74,12 +74,16 @@ const insertGrowthEvent = async ({
       .digest('hex')
   }
 
+  logger.info(`content hash: ${contentHash}`)
+
   try {
     const twitterProfile = getUserProfileFromEvent({
       event,
       socialNetwork,
       type
     })
+
+    logger.info(`twitterProfile: ${JSON.stringify(twitterProfile)}`)
     await GrowthEvent.insert(
       logger,
       1, // insert a single entry
@@ -193,6 +197,10 @@ router.post('/verify', verifyPromotions, async (req, res) => {
   do {
     const eventString = await getAsync(redisKey)
 
+    logger.info(`Try ${tries} for ${identity}, ${socialNetwork}, ${type}`)
+
+    logger.info(`GET ${redisKey} ==> ${eventString}`)
+
     if (eventString) {
       const event = JSON.parse(eventString)
 
@@ -202,6 +210,8 @@ router.post('/verify', verifyPromotions, async (req, res) => {
         event,
         content
       })
+
+      logger.info(`Decoded Content ==> ${decodedContent}`)
 
       if (decodedContent) {
         const stored = await insertGrowthEvent({
