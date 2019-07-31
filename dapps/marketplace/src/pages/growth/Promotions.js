@@ -16,6 +16,8 @@ import { formatTokens, getContentToShare } from 'utils/growthTools'
 
 import get from 'lodash/get'
 
+const GrowthEnum = require('Growth$FbtEnum')
+
 const getToastMessage = (action, decimalDivision) => {
   const tokensEarned = formatTokens(action.reward.amount, decimalDivision)
   return fbt(
@@ -164,7 +166,28 @@ const RunVerifyPromotion = ({
   )
 }
 
-const PromotionsHeader = ({ isMobile, hasSelectedContent, history }) => {
+const ActionLinkPreview = ({ action }) => {
+  if (!action || !action.content || !action.content.link) {
+    return null
+  }
+
+  const { titleKey, image } = action.content
+  const title = GrowthEnum[titleKey] || titleKey
+
+  return (
+    <div className="action-link-preview">
+      <img src={image} />
+      <h3>{title}</h3>
+    </div>
+  )
+}
+
+const PromotionsHeader = ({
+  isMobile,
+  hasSelectedContent,
+  history,
+  action
+}) => {
   const stageTitle = (
     <>
       {!hasSelectedContent ? (
@@ -222,6 +245,7 @@ const PromotionsHeader = ({ isMobile, hasSelectedContent, history }) => {
         className={`promote-origin-subtitle${isMobile ? ' text-center' : ''}`}
       >
         {stageDesc}
+        <ActionLinkPreview action={action} />
       </div>
     </div>
   )
@@ -275,6 +299,7 @@ const Promotions = ({
         isMobile={isMobile}
         hasSelectedContent={hasSelectedContent}
         history={history}
+        action={action}
       />
       {hasSelectedContent ? (
         <PromotionChannels
@@ -323,4 +348,23 @@ require('react-styl')(`
       width: 15px
       margin-right: 6px
       transform: rotate(270deg)
+  .action-link-preview
+    display: flex
+    background-color: #f3f7f9
+    padding: 0.75rem
+    border-radius: 10px
+    margin: 1rem 0
+    img
+      flex: 5rem 0 0
+      max-width: 5rem
+      height: auto
+      max-height: 4rem
+      object-fit: contain
+    h3
+      margin: 0
+      padding-left: 0.75rem
+      text-align: left
+      font-weight: bold
+      color: #0d1d29
+
 `)
