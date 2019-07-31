@@ -94,7 +94,7 @@ async function createJulyProdCampaign() {
     shortNameKey: 'growth.july2019.short_name',
     rules: JSON.stringify(julyConfig),
     startDate: Date.parse('July 1, 2019, 00:00 UTC'),
-    endDate: Date.parse('August 1, 2019, 00:00 UTC'),
+    endDate: Date.parse('July 20, 2019, 00:00 UTC'),
     distributionDate: Date.parse('August 1, 2019, 00:00 UTC'),
     cap: tokenToNaturalUnits(1000000), // Set cap to 1M tokens
     capUsed: 0,
@@ -120,7 +120,7 @@ async function createAugProdCampaign() {
     nameKey: 'growth.aug2019.name',
     shortNameKey: 'growth.aug2019.short_name',
     rules: JSON.stringify(augustConfig),
-    startDate: Date.parse('August 1, 2019, 00:00 UTC'),
+    startDate: Date.parse('July 20, 2019, 00:00 UTC'),
     endDate: Date.parse('September 1, 2019, 00:00 UTC'),
     distributionDate: Date.parse('September 1, 2019, 00:00 UTC'),
     cap: tokenToNaturalUnits(1000000), // Set cap to 1M tokens
