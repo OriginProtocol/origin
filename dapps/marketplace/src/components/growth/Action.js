@@ -171,7 +171,7 @@ function Action(props) {
               <a
                 href={externalLink}
                 target="_blank"
-                className="mt-auto mb-auto"
+                className="mt-auto mb-auto external-link"
                 rel="noopener noreferrer"
                 onClick={() =>
                   props.onActionClick && props.onActionClick(props.action)
@@ -404,6 +404,20 @@ require('react-styl')(`
         font-weight: normal
         white-space: nowrap
         color: var(--clear-blue)
+    .external-link
+      .action .title
+        position: relative
+        &:after
+          content: ' '
+          display: inline-block
+          height: 100%
+          width: 1rem
+          background-image: url('images/growth/link-icon.svg')
+          background-size: 1rem
+          background-position: center
+          background-repeat: no-repeat
+          position: absolute
+          margin-left: 10px
   .growth-campaigns.container.mobile
     .action
       min-height: 80px

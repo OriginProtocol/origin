@@ -61,6 +61,18 @@ require('react-styl')(`
     .promotion-link
       display: block
       margin-top: 1.25rem
+      position: relative
+      &:after
+        content: ' '
+        display: inline-block
+        height: 100%
+        width: 1rem
+        background-image: url('images/growth/link-icon.svg')
+        background-size: 1rem
+        background-position: center
+        background-repeat: no-repeat
+        position: absolute
+        margin-left: 10px
     .actions
       margin-top: 1.25rem
       .btn
