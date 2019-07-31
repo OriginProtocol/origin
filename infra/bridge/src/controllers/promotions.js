@@ -158,7 +158,7 @@ const isEventValid = ({ socialNetwork, type, event, content }) => {
   // It may result in a different content than expected, So always prepend URLs with `http://` in rule configs.
 
   const entities = (event.extended_tweet || event).entities
-  entities.entities.urls.forEach(entity => {
+  entities.urls.forEach(entity => {
     encodedContent = encodedContent.replace(entity.url, entity.expanded_url)
   })
 
