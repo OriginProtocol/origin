@@ -182,7 +182,12 @@ const ActionLinkPreview = ({ action }) => {
   )
 }
 
-const PromotionsHeader = ({ isMobile, hasSelectedContent, history, action }) => {
+const PromotionsHeader = ({
+  isMobile,
+  hasSelectedContent,
+  history,
+  action
+}) => {
   const stageTitle = (
     <>
       {!hasSelectedContent ? (

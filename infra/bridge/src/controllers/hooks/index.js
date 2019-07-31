@@ -156,14 +156,11 @@ router.post('/twitter', (req, res) => {
       ) {
         followCount++
         const key = `twitter/follow/${event.source.id}`
-        redisBatch.set(
-          key,
-          JSON.stringify(event),
-          'EX',
-          60 * 30
-        )
+        redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
 
-        logger.info(`Pushing twitter follow event for ${event.source.screen_name} at ${key}...`)
+        logger.info(
+          `Pushing twitter follow event for ${event.source.screen_name} at ${key}...`
+        )
       }
     })
   }
@@ -185,13 +182,10 @@ router.post('/twitter', (req, res) => {
       .forEach(event => {
         mentionCount++
         const key = `twitter/share/${event.user.id}`
-        redisBatch.set(
-          key,
-          JSON.stringify(event),
-          'EX',
-          60 * 30
+        redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
+        logger.info(
+          `Pushing twitter follow event for ${event.user.screen_name} at ${key}...`
         )
-        logger.info(`Pushing twitter follow event for ${event.user.screen_name} at ${key}...`)
       })
   }
 
