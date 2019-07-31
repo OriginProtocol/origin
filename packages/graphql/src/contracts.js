@@ -410,7 +410,7 @@ export function setMarketplace(address, epoch) {
         : `${address.slice(2, 8)}_`,
     platform:
       typeof window === 'undefined'
-        ? context.config.eventCacheUseDB
+        ? process.env.ENABLE_EVENTCACHE_DB
           ? 'postgresql'
           : 'memory'
         : 'browser',
@@ -455,7 +455,7 @@ export function setIdentityEvents(address, epoch) {
         : `${address.slice(2, 8)}_`,
     platform:
       typeof window === 'undefined'
-        ? context.config.eventCacheUseDB
+        ? process.env.ENABLE_EVENTCACHE_DB
           ? 'postgresql'
           : 'memory'
         : 'browser',
@@ -496,7 +496,7 @@ export function setProxyContracts(config) {
         : `${config.ProxyFactory.slice(2, 8)}_`,
     platform:
       typeof window === 'undefined'
-        ? context.config.eventCacheUseDB
+        ? process.env.ENABLE_EVENTCACHE_DB
           ? 'postgresql'
           : 'memory'
         : 'browser',

@@ -240,8 +240,7 @@ logger.info(
 
 setNetwork(config.network, {
   performanceMode: false,
-  proxyAccountsEnabled: process.env.PROXY_ACCOUNTS_ENABLED === 'true',
-  eventCacheUseDB: true
+  proxyAccountsEnabled: process.env.PROXY_ACCOUNTS_ENABLED === 'true'
 })
 main().catch(err => {
   logger.error('Error occurred in listener main() process:', err)
