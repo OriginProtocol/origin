@@ -894,9 +894,12 @@ class SocialShareRule extends SingleEventRule {
    * @returns {Promise<Array<Reward>>}
    */
   async getEarnedRewards(ethAddress, events) {
+    const allowedTypes = ['SharedOnTwitter']
     const inScopeEvents = this._inScope(events)
     const numRewards = await this._numRewards(ethAddress, inScopeEvents)
-    const eventsForCalculation = events.slice(0, numRewards)
+    const eventsForCalculation = events
+      .filter(event => allowedTypes.includes(event.type))
+      .slice(0, numRewards)
     // TODO: handle other social networks.
     const rewards = this._getTwitterRewardsEarned(
       ethAddress,
