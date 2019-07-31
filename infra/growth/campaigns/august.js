@@ -209,7 +209,7 @@ const augustConfig = {
               linkKey: 'growth.twitterShare.content1.link',
               post: {
                 text: {
-                  default: `Experience the decentralized global #marketplace of the future with @OriginProtocol's fresh new app. Secure transactions. Zero fees. Try it now: ogn.dev/mobile`,
+                  default: `Experience the decentralized global #marketplace of the future with @OriginProtocol's fresh new app. Secure transactions. Zero fees. Try it now: https://ogn.dev/mobile`,
                   translations: [
                     { locale: 'fr_FR', text: `Experience la decentralization avec l'appli de @OriginProtocol` },
                     { locale: 'zh_CN', text: `我不知道我在说什么 @OriginProtocol` }
