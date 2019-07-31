@@ -75,14 +75,21 @@ const insertGrowthEvent = async ({
   }
 
   try {
-    const profileData = getUserProfileFromEvent({ event, socialNetwork, type })
+    const twitterProfile = getUserProfileFromEvent({
+      event,
+      socialNetwork,
+      type
+    })
     await GrowthEvent.insert(
       logger,
       1, // insert a single entry
       identity,
       PromotionEventToGrowthEvent[socialNetwork][type],
       contentHash, // set customId to the content hash.
-      profileData, // store the profile data that contains the user's social stats in the GrowthEvent.data column.
+      // Store the raw event and the profile data that contains the user's social stats in the GrowthEvent.data column.
+      // Note: the raw event is mostly for debugging purposes. If it starts taking too much storage
+      // we could stop storing it in the DB.
+      { event, twitterProfile },
       Date.now()
     )
   } catch (e) {
