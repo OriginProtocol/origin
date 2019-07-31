@@ -176,6 +176,8 @@ const isEventValid = ({ socialNetwork, type, event, content }) => {
 router.post('/verify', verifyPromotions, async (req, res) => {
   const { type, socialNetwork, identity, identityProxy, content } = req.body
 
+  logger.info(`Will be polling ${type} event for ${identity} with "${content}"`)
+
   const attestation = await getAttestation({
     identity,
     identityProxy,
