@@ -6,20 +6,17 @@ import Link from 'components/Link'
 const GrowthEnum = require('Growth$FbtEnum')
 
 function ActionGroup(props) {
-  const {
-    isMobile,
-    type,
-    completedActions,
-    notCompletedActions
-  } = props
+  const { isMobile, type, completedActions, notCompletedActions } = props
 
   let iconSource,
     title,
     locked = false,
     unlockConditionText
 
-  const allActionsInactive = ![...completedActions, ...notCompletedActions]
-      .some(action => action.status !== 'Inactive')
+  const allActionsInactive = ![
+    ...completedActions,
+    ...notCompletedActions
+  ].some(action => action.status !== 'Inactive')
 
   if (type === 'verifications') {
     iconSource = 'images/growth/verifications-icon.svg'
