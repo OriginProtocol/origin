@@ -83,7 +83,7 @@ const args = parseArgv()
 const dryRun = !!args['--dry-run']
 
 ;(async () => {
-  logger.info('Starting backfill script...')
+  logger.info(`Starting backfill script. DryRun mode=${dryRun}`)
 
   const startTime = Date.now()
 
@@ -124,7 +124,7 @@ const dryRun = !!args['--dry-run']
         if (dryRun) {
           return
         }
-
+        logger.info(`Updating attestion for user ${user.id} / ${user.screen_name}`)
         await db.Attestation.update(
           {
             value: user.id,
