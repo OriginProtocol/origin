@@ -74,8 +74,6 @@ const insertGrowthEvent = async ({
       .digest('hex')
   }
 
-  logger.info(`content hash: ${contentHash}`)
-
   try {
     const twitterProfile = getUserProfileFromEvent({
       event,
@@ -83,7 +81,6 @@ const insertGrowthEvent = async ({
       type
     })
 
-    logger.info(`twitterProfile: ${JSON.stringify(twitterProfile)}`)
     await GrowthEvent.insert(
       logger,
       1, // insert a single entry
@@ -176,8 +173,6 @@ const isEventValid = ({ socialNetwork, type, event, content }) => {
 router.post('/verify', verifyPromotions, async (req, res) => {
   const { type, socialNetwork, identity, identityProxy, content } = req.body
 
-  logger.info(`Will be polling ${type} event for ${identity} with "${content}"`)
-
   const attestation = await getAttestation({
     identity,
     identityProxy,
@@ -199,10 +194,6 @@ router.post('/verify', verifyPromotions, async (req, res) => {
   do {
     const eventString = await getAsync(redisKey)
 
-    logger.info(`Try ${tries} for ${identity}, ${socialNetwork}, ${type}`)
-
-    logger.info(`GET ${redisKey} ==> ${eventString}`)
-
     if (eventString) {
       const event = JSON.parse(eventString)
 
@@ -212,8 +203,6 @@ router.post('/verify', verifyPromotions, async (req, res) => {
         event,
         content
       })
-
-      logger.info(`Decoded Content ==> ${decodedContent}`)
 
       if (decodedContent) {
         const stored = await insertGrowthEvent({
