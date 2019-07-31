@@ -205,14 +205,14 @@ const augustConfig = {
               titleKey: 'growth.twitterShare.content1.title',
               detailsKey: 'growth.twitterShare.content1.details',
               image: 'images/growth/twitter-share-content1.png',
-              link: 'https://www.youtube.com/watch?v=VzLkShX9-VE',
+              link: 'https://medium.com/originprotocol/now-optimized-for-mobile-origin-launches-a-fresh-new-app-and-sponsored-gas-80dc2407bd8d',
               linkKey: 'growth.twitterShare.content1.link',
               post: {
                 text: {
-                  default: '<insert english content>',
+                  default: `Experience the decentralised global #marketplace of the future with @OriginProtocol's fresh new app. Secure transactions. Zero fees. Try it now: http://ogn.dev/mobile`,
                   translations: [
-                    { locale: 'fr_FR', text: '<insert french content>' },
-                    { locale: 'zh_CN', text: '<insert mandarin content>' }
+                    { locale: 'fr_FR', text: `Experience la decentralization avec l'appli de @OriginProtocol` },
+                    { locale: 'zh_CN', text: `我不知道我在说什么 @OriginProtocol` }
                   ]
                 }
               }
@@ -239,14 +239,14 @@ const augustConfig = {
               titleKey: 'growth.twitterShare.content2.title',
               detailsKey: 'growth.twitterShare.content2.details',
               image: 'images/growth/twitter-share-content2.png',
-              link: 'https://www.youtube.com/watch?v=VzLkShX9-VE',
+              link: 'https://medium.com/p/e36a349e5cf1/edit',
               linkKey: 'growth.twitterShare.content2.link',
               post: {
                 text: {
-                  default: '<insert english content>',
+                  default: `Join @OriginProtocol's #rewards program and earn free Origin tokens! 250,000 OGN already distributed to thousands all around the world and we're still welcoming more to become token holders`,
                   translations: [
-                    { locale: 'fr_FR', text: '<insert french content>' },
-                    { locale: 'zh_CN', text: '<insert mandarin content>' }
+                    { locale: 'fr_FR', text: `Venez gagner pleins de tokens avec @OriginProtocol!` },
+                    { locale: 'zh_CN', text: `我不知道我在说什么 @OriginProtocol` }
                   ]
                 }
               }

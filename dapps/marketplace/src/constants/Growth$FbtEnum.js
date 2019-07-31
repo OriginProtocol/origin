@@ -133,6 +133,8 @@ const Growth$FbtEnum = {
     'Airy romantic Blue studio in Milano city, quiet neighborhood',
   'growth.purchase.listing-1-000-2781.title':
     'Sweet del Moro - Trastevere, Rome, Italy',
+  'growth.purchase.listing-1-000-2783.title':
+    'Historic 14th century Luxury Apartment, Venice, Italy',
   'growth.purchase.listing-1-000-2699.title':
     'All Access 3LAU tickets for 1 year',
   'growth.purchase.listing-1-000-2912.title':
@@ -148,6 +150,14 @@ const Growth$FbtEnum = {
   'growth.purchase.listing-1-000-2999.title':
     'Piano lessons (All Ages & Levels)',
 
+  'growth.twitterShare.content1.title': 'Origin Launches a Fresh New App',
+  'growth.twitterShare.content1.details':
+    'A complete redesign of our mobile app delivers a new and improved experience to our global users',
+  'growth.twitterShare.content1.link': 'Read the article',
+  'growth.twitterShare.content2.title': 'New Ways to Earn OGN in August',
+  'growth.twitterShare.content2.details':
+    'Join Origin Rewards and become a token holder alongside thousands of users all around the world',
+  'growth.twitterShare.content2.link': 'Read the article',
   'growth.purchase.empty.details': ''
 }
 

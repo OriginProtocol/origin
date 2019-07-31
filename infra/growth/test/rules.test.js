@@ -551,54 +551,82 @@ describe('Growth Engine rules', () => {
       })
 
       it(`should calculate reward properly based on social stats`, () => {
-        const stats = {
-          numFollowers: 0,
-          accountAge: 0.5
+        const now = new Date()
+        const oneMonthAgo = new Date(now.getTime() - 30*24*60*60*1000)
+        const twoYearsAgo = new Date(now.getTime() - 2*365*24*60*60*1000)
+        const twitterProfile = {
+          created_at: oneMonthAgo.toString(),
+          verified: false,
+          followers_count: 0,
+          status: {
+            created_at: twoYearsAgo.toString()
+          }
         }
-        // Account younger than 1 year. No reward.
-        let amount = this.rule._calcTwitterReward(stats)
 
-        // Account 1 year but no followers. No reward
-        stats.accountAge = 1
-        amount = this.rule._calcTwitterReward(stats)
+        // Account younger than 1 year. No reward.
+        let amount = this.rule._calcTwitterReward(twitterProfile)
+        expect(amount).to.equal(0)
+
+        // Account 2 years old but last tweet older than 1 year ago.
+        twitterProfile.created_at = twoYearsAgo
+        amount = this.rule._calcTwitterReward(twitterProfile)
+        expect(amount).to.equal(0)
+
+        // Account 2 years old and last tweet 1 month ago, but no followers.
+        twitterProfile.status.created_at = oneMonthAgo
+        amount = this.rule._calcTwitterReward(twitterProfile)
         expect(amount).to.equal(0)
 
         // Account with < 100 numFollowers. 1 OGN.
-        stats.numFollowers = 99
-        amount = this.rule._calcTwitterReward(stats)
+        twitterProfile.followers_count = 99
+        amount = this.rule._calcTwitterReward(twitterProfile)
         expect(amount).to.equal(1)
 
-        // Should get some rewards.
-        stats.numFollowers = 3550
-        amount = this.rule._calcTwitterReward(stats)
+        // Lot of followers.
+        twitterProfile.followers_count = 3550
+        amount = this.rule._calcTwitterReward(twitterProfile)
         expect(amount).to.equal(18)
 
-        stats.numFollowers = 20000
+        // Verified = x2
+        twitterProfile.verified = true
+        amount = this.rule._calcTwitterReward(twitterProfile)
+        expect(amount).to.equal(36)
       })
 
       it(`should use stats from the user's identity to calculate the projected reward`, async () => {
-        const identity = {
-          data: {
-            twitterStats: {
-              numFollowers: 542,
-              accountAge: 3
-            }
+        const now = new Date()
+        const oneMonthAgo = new Date(now.getTime() - 30*24*60*60*1000)
+        const twoYearsAgo = new Date(now.getTime() - 2*365*24*60*60*1000)
+        const twitterProfile = {
+          created_at: twoYearsAgo.toString(),
+          verified: false,
+          followers_count: 200,
+          status: {
+            created_at: oneMonthAgo.toString()
           }
         }
+        const identity = { data: { twitterProfile } }
         const reward = await this.rule.getReward('0x123', identity)
-        expect(reward.value.amount).to.equal('3')
+        expect(reward.value.amount).to.equal('2')
         expect(reward.value.currency).to.equal('OGN')
       })
 
       it(`should use stats from events to calculate earned reward`, async () => {
+        const now = new Date()
+        const oneMonthAgo = new Date(now.getTime() - 30*24*60*60*1000)
+        const twoYearsAgo = new Date(now.getTime() - 2*365*24*60*60*1000)
         const events = [
           {
             status: GrowthEventStatuses.Logged,
             type: 'SharedOnTwitter',
             data: {
-              twitterStats: {
-                numFollowers: 26300,
-                accountAge: 5
+              twitterProfile: {
+                created_at: twoYearsAgo.toString(),
+                verified: false,
+                followers_count: 26300,
+                status: {
+                  created_at: oneMonthAgo.toString()
+                }
               }
             },
             customId: this.rule._hashContent('tweet tweet')

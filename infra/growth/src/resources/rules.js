@@ -755,19 +755,60 @@ class SocialShareRule extends SingleEventRule {
    * Calculates the personalized reward amount based on number of followers
    * and age of the user's twitter account.
    *
-   * @param {numFollowers:number, accountAge:number}
-   * @returns {<number>}
+   * @param {Object} twitterProfile: see list of fields here:
+   *        https://developer.twitter.com/en/docs/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials
+   * @returns {<number>} Calculated amount. Returns 0 if the profile is invalid.
    * @private
    */
-  _calcTwitterReward(stats) {
-    const minThreshold = 10
-    const tierThreshold = 100
-    const tierIncrement = 200
+  _calcTwitterReward(twitterProfile) {
+    // Validate the profile.
+    if (
+      twitterProfile.verified === undefined ||
+      twitterProfile.created_at === undefined ||
+      twitterProfile.followers_count === undefined
+    ) {
+      logger.error('Invalid twitterProfile. Returning zero reward.')
+      return 0
+    }
 
-    if (stats.accountAge < 1) return 0
-    if (stats.numFollowers < minThreshold) return 0
-    if (stats.numFollowers < tierThreshold) return 1
-    return Math.floor(stats.numFollowers / tierIncrement) + 1
+    // Constants for the formula
+    const minAccountAgeDays = 365
+    const minAgeLastTweetDays = 365
+    const minFollowersThreshold = 10
+    const tierFollowersThreshold = 100
+    const tierFollowersIncrement = 200
+    const verifiedMultiplier = 2
+
+    // Extract stats of interest from the profile data.
+    const verified = twitterProfile.verified
+    const createdAt = new Date(twitterProfile.created_at)
+    const numFollowers = twitterProfile.followers_count
+    const lastTweetDate = twitterProfile.status
+      ? new Date(twitterProfile.status.created_at)
+      : new Date()
+
+    // Calculate age of the account and of the last tweet in days.
+    const now = new Date()
+    const accountAgeDays = Math.ceil(
+      Math.abs(now.getTime() - createdAt.getTime()) / (24 * 60 * 60 * 1000)
+    )
+    const lastTweetAgeDate = Math.ceil(
+      Math.abs(now.getTime() - lastTweetDate.getTime()) / (24 * 60 * 60 * 1000)
+    )
+
+    // Check account and last tweet minimum age requirements.
+    if (
+      accountAgeDays < minAccountAgeDays ||
+      lastTweetAgeDate > minAgeLastTweetDays
+    ) {
+      return 0
+    }
+
+    // Apply formula to compute reward.
+    if (numFollowers < minFollowersThreshold) return 0
+    if (numFollowers < tierFollowersThreshold) return 1
+    const amount = Math.floor(numFollowers / tierFollowersIncrement) + 1
+    return verified ? amount * verifiedMultiplier : amount
   }
 
   /**
@@ -786,27 +827,32 @@ class SocialShareRule extends SingleEventRule {
       // No user passed. Return zero.
       return reward
     }
+
+    // Load any proxy associated with the wallet address.
+    const ownerAddress = ethAddress.toLowerCase()
+    const proxies = await db.Proxy.findAll({ where: { ownerAddress } })
+
+    // Query events from wallet and proxy(ies).
+    const addresses = [ownerAddress, ...proxies.map(proxy => proxy.address)]
+    const whereClause = { ethAddress: { [Sequelize.Op.in]: addresses } }
+
     // Return a personalized amount calculated based on social network stats stored in the user's identity.
     const identity =
-      (await db.Identity.findOne({ where: { ethAddress } })) || identityForTest
+      (await db.Identity.findOne({
+        where: whereClause,
+        order: [['createdAt', 'DESC']]
+      })) || identityForTest
     if (!identity) {
       logger.error(`No identity found for ${ethAddress}`)
       return reward
     }
-    if (
-      !identity.data ||
-      !identity.data.twitterStats ||
-      typeof identity.data.twitterStats.numFollowers !== 'number' ||
-      typeof identity.data.twitterStats.accountAge !== 'number'
-    ) {
-      logger.error(
-        `Missing or invalid twitterStats in identity of user ${ethAddress}`
-      )
+    if (!identity.data || !identity.data.twitterProfile) {
+      logger.error(`Missing twitterProfile in identity of user ${ethAddress}`)
       return reward
     }
     // TODO: handle other social networks.
     reward.value.amount = this._calcTwitterReward(
-      identity.data.twitterStats
+      identity.data.twitterProfile
     ).toString()
     return reward
   }
@@ -823,17 +869,14 @@ class SocialShareRule extends SingleEventRule {
     // then calculate the amount.
     const rewards = []
     for (const event of events) {
-      if (
-        !event.data ||
-        !event.data.twitterStats ||
-        typeof event.data.twitterStats.numFollowers !== 'number' ||
-        typeof event.data.twitterStats.accountAge !== 'number'
-      ) {
+      if (!event.data || !event.data.twitterProfile) {
         throw new Error(
-          `GrowthEvent ${event.id}: missing or invalid twitter stats`
+          `GrowthEvent ${event.id}: missing or invalid twitter profile`
         )
       }
-      const amount = this._calcTwitterReward(event.data.twitterStats).toString()
+      const amount = this._calcTwitterReward(
+        event.data.twitterProfile
+      ).toString()
       const reward = new Reward(this.campaignId, this.levelId, this.id, {
         amount,
         currency: this.config.reward.currency
@@ -851,9 +894,12 @@ class SocialShareRule extends SingleEventRule {
    * @returns {Promise<Array<Reward>>}
    */
   async getEarnedRewards(ethAddress, events) {
+    const allowedTypes = ['SharedOnTwitter']
     const inScopeEvents = this._inScope(events)
     const numRewards = await this._numRewards(ethAddress, inScopeEvents)
-    const eventsForCalculation = events.slice(0, numRewards)
+    const eventsForCalculation = events
+      .filter(event => allowedTypes.includes(event.type))
+      .slice(0, numRewards)
     // TODO: handle other social networks.
     const rewards = this._getTwitterRewardsEarned(
       ethAddress,
