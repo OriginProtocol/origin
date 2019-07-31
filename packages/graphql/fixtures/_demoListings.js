@@ -37,7 +37,7 @@ const HawaiiHouse = {
     ],
     price: {
       amount: '80',
-      currency: 'fiat-USD'
+      currency: 'fiat-GBP'
     },
     commissionPerUnit: '50',
     marketplacePublisher: ''
@@ -45,7 +45,7 @@ const HawaiiHouse = {
   fractionalData: {
     weekendPrice: {
       amount: '95',
-      currency: 'fiat-USD'
+      currency: 'fiat-GBP'
     },
     workingHours: [],
     timeZone: '',
@@ -162,7 +162,7 @@ const Car = {
     ],
     price: {
       amount: '15',
-      currency: 'fiat-USD'
+      currency: 'fiat-EUR'
     },
     commission: '0',
     commissionPerUnit: '0',
@@ -221,7 +221,7 @@ const TaylorSwiftTickets = {
     ],
     price: {
       amount: '95',
-      currency: 'fiat-USD'
+      currency: 'token-DAI'
     },
     commission: '10',
     commissionPerUnit: '2'
@@ -260,7 +260,7 @@ const LakeHouse = {
     ],
     price: {
       amount: '300',
-      currency: 'fiat-USD'
+      currency: 'fiat-KRW'
     },
     commissionPerUnit: '50',
     marketplacePublisher: ''
@@ -268,7 +268,7 @@ const LakeHouse = {
   fractionalData: {
     weekendPrice: {
       amount: '400',
-      currency: 'fiat-USD'
+      currency: 'fiat-KRW'
     },
     workingHours: [],
     timeZone: '',
@@ -331,7 +331,7 @@ const ZincHouse = {
     ],
     price: {
       amount: '500',
-      currency: 'fiat-USD'
+      currency: 'fiat-JPY'
     },
     commissionPerUnit: '50',
     marketplacePublisher: ''
@@ -339,7 +339,7 @@ const ZincHouse = {
   fractionalData: {
     weekendPrice: {
       amount: '600',
-      currency: 'fiat-USD'
+      currency: 'fiat-JPY'
     },
     workingHours: [],
     timeZone: '',
@@ -369,7 +369,7 @@ const Spaceman = {
     ],
     price: {
       amount: '15',
-      currency: 'fiat-USD'
+      currency: 'token-ETH'
     },
     acceptedTokens: ['token-ETH', 'token-DAI'],
     commission: '10',
