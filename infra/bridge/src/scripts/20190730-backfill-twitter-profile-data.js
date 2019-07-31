@@ -124,7 +124,9 @@ const dryRun = !!args['--dry-run']
         if (dryRun) {
           return
         }
-        logger.info(`Updating attestion for user ${user.id} / ${user.screen_name}`)
+        logger.info(
+          `Updating attestion for user ${user.id} / ${user.screen_name}`
+        )
         await db.Attestation.update(
           {
             value: user.id,
