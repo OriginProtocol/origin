@@ -2,7 +2,7 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: 'e266ace'
+bridgeImageTag: '1118018'
 
 # origin-dapp
 dappImage: origin-dapp
@@ -18,7 +18,7 @@ faucetImageTag: 'e338058'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '7e999bb'
+eventlistenerImageTag: '1118018'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -26,7 +26,7 @@ discoveryImageTag: 'a14145b'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '0dc9684'
+growthImageTag: '1118018'
 
 # origin-messaging
 messagingImage: origin-messaging
