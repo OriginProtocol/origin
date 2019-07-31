@@ -1,101 +1,39 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import request from 'superagent'
 
-import EmailIcon from '../../assets/email-icon.svg'
 import { formInput, formFeedback } from '../../utils/formHelpers'
 import { setSessionEmail } from '../../actions'
 
 class Login extends Component {
   state = {
-    email: '',
-    emailError: null,
-    otpQrUrl: '',
-    otpKey: '',
+    otpQrUrl: null,
+    otpKey: null,
     otpCode: '',
-    loginStep: 'checkEmail'
+    otpCodeError: null
   }
 
-  handleError = error => {
-    this.setState({ error })
-  }
-
-  handleSendEmailCode = async () => {
-    const emailPattern = /.+@.+\..+/
-    if (!emailPattern.test(this.state.email)) {
-      this.setState({ emailError: 'That does not look like a valid email.' })
-      return
-    }
-
-    // Generate the request
-    const body = new Blob(
-      [JSON.stringify({ email: this.state.email }, null, 2)],
-      { type: 'application/json' }
-    )
-    const opts = {
-      method: 'POST',
-      body
-    }
-    const serverResponse = await fetch('/api/send_email_code', opts)
-
-    // Handle response
-    if (serverResponse.ok) {
-      this.setState({ loginStep: 'checkEmail' })
-    } else {
-      this.setState({
-        emailError: 'Failed to send email code. Try again shortly.'
-      })
-    }
-  }
-
-  handleVerifyEmailCode = async () => {
-    const body = new Blob(
-      [
-        JSON.stringify(
-          { email: this.state.email, code: this.state.emailCode },
-          null,
-          2
-        )
-      ],
-      { type: 'application/json' }
-    )
-    const opts = {
-      method: 'POST',
-      body
-    }
-    const serverResponse = await fetch('/api/verify_email_code', opts)
-    if (!serverResponse.ok) {
-      this.handleError('Invalid email code.')
-      return
-    }
-
-    const response = await serverResponse.json()
-    if (response.otpReady) {
-      // User already setup OTP. Ask them to enter their code.
-      this.setState({ loginStep: 'enterOtpCode' })
-    } else {
-      // User has not setup OTP yet. Call the server to get the OTP setup key.
-      return this.handleOtpSetup()
-    }
+  componentDidMount() {
+    this.handleOtpSetup()
   }
 
   handleOtpSetup = async () => {
-    const opts = {
-      method: 'POST'
-    }
-    const serverReponse = await fetch('/api/setup_totp', opts)
-    if (!serverReponse.ok) {
-      this.handleError('OTP setup failure.')
+    let response
+    try {
+      const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
+      response = await request.post(`${apiUrl}/api/setup_totp`)
+    } catch (error) {
+      this.setState({ otpError: 'An error occurred configuring OTP.' })
       return
     }
 
-    const response = await serverReponse.json()
-
-    if (!response || !response.otpQrUrl || !response.otpKey) {
-      this.handleError('OTP setup failure.')
+    const json = response.json()
+    if (!json.otpQrUrl || !json.otpKey) {
+      this.setState({ otpError: 'An error occurred configuring OTP.' })
       return
     }
+
     this.setState({
-      loginStep: 'setupOtp',
       otpQrUrl: response.otpQrUrl,
       otpKey: response.otpKey
     })
@@ -106,97 +44,31 @@ class Login extends Component {
   }
 
   handleVerifyOtpCode = async () => {
-    const body = new Blob(
-      [
-        JSON.stringify(
-          { email: this.state.email, code: this.state.otpCode },
-          null,
-          2
-        )
-      ],
-      { type: 'application/json' }
-    )
-    const opts = {
-      method: 'POST',
-      body
+    try {
+      const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
+      await request.post(`${apiUrl}/api/verify_totp`)
+    } catch (error) {
+      this.setState({ otpCodeError: 'Invalid OTP code.' })
+      return
     }
-    fetch('/api/verify_totp', opts).then(response => {
-      if (response.ok) {
-        this.props.setSessionEmail(this.state.email)
-      } else {
-        this.handleError('Invalid OTP code.')
-      }
-    })
+
+    this.props.setSessionEmail(this.state.email)
   }
 
   render() {
-    let card
-    if (this.state.loginStep === 'enterEmail') {
-      card = this.renderEnterEmail()
-    } else if (this.state.loginStep === 'checkEmail') {
-      card = this.renderEmailIcon()
-    } else if (this.state.loginStep === 'setupOtp') {
-      card = this.renderSetupOtp()
-    } else if (this.state.loginStep === 'enterOtpCode') {
-      card = this.renderEnterOtpCode()
+    if (!this.state.otpKey) {
+      return this.renderSetupOtp()
+    } else {
+      return this.renderEnterOtpCode()
     }
-    return (
-      <>
-        <div>{card}</div>
-      </>
-    )
-  }
-
-  renderEnterEmail() {
-    const input = formInput(this.state, state => this.setState(state))
-    const Feedback = formFeedback(this.state)
-    return (
-      <>
-        <div className="action-card">
-          <h1>Sign In</h1>
-          <p>We will send you a magic link to your email to confirm access</p>
-          <div className="form-group">
-            <label htmlFor="email">Email address</label>
-            <input {...input('email')} />
-            {Feedback('email')}
-          </div>
-          <button
-            className="btn btn-primary btn-lg"
-            style={{ marginTop: '40px' }}
-            onClick={this.handleSendEmailCode}
-          >
-            Continue
-          </button>
-        </div>
-        <div style={{ textAlign: 'center', margin: '20px auto' }}>
-          <a href="/register" style={{ color: 'white' }}>
-            Don&apos;t have an account?
-          </a>
-        </div>
-      </>
-    )
-  }
-
-  renderEmailIcon() {
-    return (
-      <>
-        <div className="action-card">
-          <h1>Check your email</h1>
-          <img src={EmailIcon} style={{ margin: '40px 0' }} />
-          <p>
-            We just sent an email to {this.state.email}.<br />
-            Please click the link in the email to proceed.
-          </p>
-        </div>
-      </>
-    )
   }
 
   renderSetupOtp() {
     return (
-      <>
+      <div className="action-card">
         <h1>Scan QR code</h1>
         <p>Open Google Authenticator and scan the barcode or enter the key</p>
+        <img src={this.state.otpQrUrl} />
         <p>
           <strong>Secret Key:</strong>
         </p>
@@ -205,26 +77,30 @@ class Login extends Component {
           Store this secret key somewhere safe and don&apos;t share it with
           anyone else.
         </div>
-      </>
+      </div>
     )
   }
 
   renderEnterOtpCode() {
+    const input = formInput(this.state, state => this.setState(state))
+    const Feedback = formFeedback(this.state)
     return (
-      <>
-        <div className="action-card">
-          <h1>2-Step Verification</h1>
-          <p>Enter the code generated by your authenticator app</p>
-          <div className="form-group">
-            <label htmlFor="verification-code">Verification Code</label>
-            <input
-              type="email"
-              className="form-control"
-              id="verification-code"
-            />
-          </div>
+      <div className="action-card">
+        <h1>2-Step Verification</h1>
+        <p>Enter the code generated by your authenticator app</p>
+        <div className="form-group">
+          <label htmlFor="email">QR Code</label>
+          <input {...input('otpCode')} />
+          {Feedback('otpCode')}
         </div>
-      </>
+        <button
+          className="btn btn-primary btn-lg"
+          style={{ marginTop: '40px' }}
+          onClick={this.handleVerifyOtpCode}
+        >
+          Continue
+        </button>
+      </div>
     )
   }
 }

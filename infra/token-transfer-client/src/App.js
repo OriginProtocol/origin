@@ -5,8 +5,10 @@ import PublicRoute from './components/PublicRoute'
 
 // Public routes
 import Login from './components/pages/Login'
+import CheckEmail from './components/pages/CheckEmail'
 import HandleLogin from './components/pages/HandleLogin'
 import Register from './components/pages/Register'
+import Otp from './components/pages/Otp'
 // Private routes
 import Dashboard from './components/pages/Dashboard'
 import News from './components/pages/News'
@@ -16,8 +18,10 @@ import Security from './components/pages/Security'
 const App = () => (
   <>
     <PublicRoute exact path="/" component={Login} />
-    <PublicRoute path="/login_handler/:code" component={HandleLogin} />
+    <PublicRoute path="/check_email" component={CheckEmail} />
+    <PublicRoute path="/login_handler/:token" component={HandleLogin} />
     <PublicRoute path="/register" component={Register} />
+    <PublicRoute path="/otp" component={Otp} />
     <PrivateRoute path="/dashboard" component={Dashboard} />
     <PrivateRoute path="/news" component={News} />
     <PrivateRoute path="/history" component={History} />

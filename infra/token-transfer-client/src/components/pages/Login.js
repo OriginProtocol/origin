@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
 import request from 'superagent'
 
-import EmailIcon from '../../assets/email-icon.svg'
 import { formInput, formFeedback } from '../../utils/formHelpers'
 
 class Login extends Component {
@@ -34,14 +33,13 @@ class Login extends Component {
   }
 
   render() {
-    return this.state.emailSent
-      ? this.renderCheckEmail()
-      : this.renderEnterEmail()
-  }
-
-  renderEnterEmail() {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
+
+    if (this.state.emailSent) {
+      return <Redirect to="/check_email" />
+    }
+
     return (
       <>
         <div className="action-card">
@@ -64,21 +62,6 @@ class Login extends Component {
           <Link to="/register" style={{ color: 'white' }}>
             Don&apos;t have an account?
           </Link>
-        </div>
-      </>
-    )
-  }
-
-  renderCheckEmail() {
-    return (
-      <>
-        <div className="action-card">
-          <h1>Check your email</h1>
-          <img src={EmailIcon} style={{ margin: '40px 0' }} />
-          <p>
-            We just sent an email to {this.state.email}.<br />
-            Please click the link in the email to proceed.
-          </p>
         </div>
       </>
     )

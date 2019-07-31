@@ -13,18 +13,27 @@ class HandleLogin extends Component {
   }
 
   componentDidMount() {
-    this.handleVerifyEmailCode(this.props.match.params.code)
+    this.handleVerifyEmailToken(this.props.match.params.token)
   }
 
-  handleVerifyEmailCode = async code => {
+  handleVerifyEmailToken = async token => {
+    let response
+
     try {
       const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
-      await request.post(`${apiUrl}/api/verify_email_code`).send({ code })
+      response = await request
+        .post(`${apiUrl}/api/verify_email_token`)
+        .set('Authorization', `Bearer ${token}`)
     } catch (error) {
-      this.setState({ loading: false, error: 'Invalid login code' })
+      this.setState({ loading: false, error: 'Invalid login token' })
+      return
     }
 
-    this.setState({ redirectTo: '/otp' })
+    let redirectTo = '/otp'
+    if (!response.body.otpReady) {
+      redirectTo += '/setup'
+    }
+    this.setState({ loading: false, redirectTo })
   }
 
   render() {
