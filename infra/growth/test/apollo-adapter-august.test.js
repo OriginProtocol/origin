@@ -11,7 +11,7 @@ const { tokenToNaturalUnits } = require('../src/util/token')
 
 function checkExpectedState(state, expectedState) {
   expect(state.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-  expect(state.actions.length).to.equal(32)
+  expect(state.actions.length).to.equal(35) // Note: adjust based on number of rules.
 
   const actionByRuleId = {}
   for(const action of state.actions) {
@@ -97,7 +97,7 @@ describe('Apollo adapter - August campaign', () => {
     expect(this.crules.levels[0]).to.be.an('object')
     expect(this.crules.levels[0].rules.length).to.equal(3) // Note: adjust based on number of rules.
     expect(this.crules.levels[1]).to.be.an('object')
-    expect(this.crules.levels[1].rules.length).to.equal(13) // Note: adjust based on number of rules.
+    expect(this.crules.levels[1].rules.length).to.equal(16) // Note: adjust based on number of rules.
     expect(this.crules.levels[2]).to.be.an('object')
     expect(this.crules.levels[2].rules.length).to.equal(18) // Note: adjust based on number of rules.
 
