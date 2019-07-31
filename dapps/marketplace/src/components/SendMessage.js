@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
+import Web3 from 'web3'
 
 import mutation from 'mutations/SendMessage'
+import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 import query from 'queries/CanConverseWith'
 
@@ -28,6 +30,20 @@ class SendMessage extends Component {
 
   render() {
     const account = this.props.to
+    const sender = get(this.props, 'wallet')
+    const proxy = get(this.props, 'walletProxy')
+
+    // Do not allow the user to send a message to themselves
+    if (
+      Web3.utils.toChecksumAddress(account) ===
+        Web3.utils.toChecksumAddress(sender) ||
+      (proxy &&
+        Web3.utils.toChecksumAddress(account) ===
+          Web3.utils.toChecksumAddress(proxy))
+    ) {
+      return null
+    }
+
     return (
       <>
         <button
@@ -136,7 +152,7 @@ class SendMessage extends Component {
   }
 }
 
-export default withIdentity(SendMessage, 'to')
+export default withWallet(withIdentity(SendMessage, 'to'))
 
 require('react-styl')(`
   .message-modal
