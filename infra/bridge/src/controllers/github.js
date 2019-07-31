@@ -120,7 +120,8 @@ router.post('/verify', githubVerify, async (req, res) => {
       {
         uniqueId: userDataResponse.body.id,
         username: userDataResponse.body.login,
-        profileUrl: userDataResponse.body.html_url
+        profileUrl: userDataResponse.body.html_url,
+        profileData: userDataResponse
       },
       req.body.identity,
       req.ip

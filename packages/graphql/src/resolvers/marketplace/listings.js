@@ -152,7 +152,7 @@ export default async function listings(
   }
 
   if (listingIds.length > 0) {
-    ids = listingIds.map(listingId => listingId.split('-')[2])
+    ids = listingIds.map(listingId => parseInt(listingId.split('-')[2]))
     totalCount = listingIds.length
   }
 

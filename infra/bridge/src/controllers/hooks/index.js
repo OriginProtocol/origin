@@ -95,7 +95,7 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
   }
 
   if (
-    userProfileData.username.toLowerCase() !==
+    userProfileData.screen_name.toLowerCase() !==
     process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
   ) {
     return res.status(400).send({
@@ -139,6 +139,9 @@ router.get('/twitter', (req, res) => {
 router.post('/twitter', (req, res) => {
   let followCount = 0
 
+  // Use redis batch for parallelization (without atomicity)
+  const redisBatch = redisClient.batch()
+
   if (req.body.follow_events) {
     // Follow event(s)
     const events = req.body.follow_events
@@ -147,10 +150,8 @@ router.post('/twitter', (req, res) => {
         event.target.screen_name.toLowerCase() ===
         process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
       ) {
-        // TODO: Parallelize requests to redis
-        // Store the follower in redis for 30 minutes
         followCount++
-        redisClient.set(
+        redisBatch.set(
           `twitter/follow/${event.source.id}`,
           JSON.stringify(event),
           'EX',
@@ -174,10 +175,8 @@ router.post('/twitter', (req, res) => {
         )
       })
       .forEach(event => {
-        // TODO: Parallelize requests to redis
-        // Note: Only the latest tweet will be in redis for 30 minutes
         mentionCount++
-        redisClient.set(
+        redisBatch.set(
           `twitter/share/${event.user.id}`,
           JSON.stringify(event),
           'EX',
@@ -186,9 +185,17 @@ router.post('/twitter', (req, res) => {
       })
   }
 
-  logger.info(
-    `Pushed ${followCount} follow events and ${mentionCount} mention events to redis`
-  )
+  redisBatch.exec(err => {
+    if (err) {
+      logger.error(
+        `Faile to push ${followCount} follow events and ${mentionCount} mention events to redis`
+      )
+    } else {
+      logger.info(
+        `Pushed ${followCount} follow events and ${mentionCount} mention events to redis`
+      )
+    }
+  })
 
   res.status(200).end()
 })

@@ -9,6 +9,7 @@ import Notifications from './Notifications'
 import CreatorConfig from './CreatorConfig'
 import Currency from './Currency'
 import Uniswap from './Uniswap'
+import Promotions from './Promotions'
 
 export default [
   Common,
@@ -21,5 +22,6 @@ export default [
   Attestations,
   CreatorConfig,
   Currency,
-  Uniswap
+  Uniswap,
+  Promotions
 ]
