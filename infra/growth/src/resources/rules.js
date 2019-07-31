@@ -827,9 +827,21 @@ class SocialShareRule extends SingleEventRule {
       // No user passed. Return zero.
       return reward
     }
+
+    // Load any proxy associated with the wallet address.
+    const ownerAddress = ethAddress.toLowerCase()
+    const proxies = await db.Proxy.findAll({ where: { ownerAddress } })
+
+    // Query events from wallet and proxy(ies).
+    const addresses = [ownerAddress, ...proxies.map(proxy => proxy.address)]
+    const whereClause = { ethAddress: { [Sequelize.Op.in]: addresses } }
+
     // Return a personalized amount calculated based on social network stats stored in the user's identity.
     const identity =
-      (await db.Identity.findOne({ where: { ethAddress } })) || identityForTest
+      (await db.Identity.findOne({
+        where: whereClause,
+        order: [['createdAt', 'DESC']]
+      })) || identityForTest
     if (!identity) {
       logger.error(`No identity found for ${ethAddress}`)
       return reward

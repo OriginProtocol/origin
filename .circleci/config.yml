@@ -126,6 +126,7 @@ jobs:
       - run: cd infra/growth && yarn migrate
       - run: cd infra/growth-event && yarn migrate
       - run: cd infra/identity && yarn migrate
+      - run: cd infra/discovery && yarn migrate
       - run:
           name: Run Growth Tests
           command: cd infra/growth && yarn test
