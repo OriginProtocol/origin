@@ -179,7 +179,7 @@ class IdentityEventHandler {
               addresses,
               'TWITTER'
             )
-            if (!attestation) {
+            if (attestation) {
               decoratedIdentity.twitter = attestation.value
               decoratedIdentity.twitterProfile = attestation.profileData
             } else {
