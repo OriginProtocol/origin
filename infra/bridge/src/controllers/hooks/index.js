@@ -184,7 +184,7 @@ router.post('/twitter', (req, res) => {
         const key = `twitter/share/${event.user.id}`
         redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
         logger.info(
-          `Pushing twitter follow event for ${event.user.screen_name} at ${key}...`
+          `Pushing twitter mention event for ${event.user.screen_name} at ${key}...`
         )
       })
   }
