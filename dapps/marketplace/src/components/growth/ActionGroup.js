@@ -9,7 +9,6 @@ function ActionGroup(props) {
   const {
     isMobile,
     type,
-    hasBorder,
     completedActions,
     notCompletedActions
   } = props
@@ -19,6 +18,9 @@ function ActionGroup(props) {
     locked = false,
     unlockConditionText
 
+  const allActionsInactive = ![...completedActions, ...notCompletedActions]
+      .some(action => action.status !== 'Inactive')
+
   if (type === 'verifications') {
     iconSource = 'images/growth/verifications-icon.svg'
     title = fbt('Verifications', 'growth.actionGroup.verifications')
@@ -26,11 +28,28 @@ function ActionGroup(props) {
     iconSource = 'images/growth/purchases-icon.svg'
     title = fbt('Purchases', 'growth.actionGroup.purchases')
   } else if (type === 'promotions') {
-    iconSource = 'images/growth/social-media-icon.svg'
+    locked = allActionsInactive
     title = fbt('Promote Origin', 'growth.actionGroup.promotions')
+    iconSource = locked
+      ? 'images/growth/social-media-icon-locked.svg'
+      : 'images/growth/social-media-icon.svg'
+
+    if (locked) {
+      unlockConditionText = (
+        <fbt desc="Rewards.promotionsLock">Requires: Twitter attestation</fbt>
+      )
+    }
   } else if (type === 'follows') {
-    iconSource = 'images/growth/social-media-follow-icon.svg'
+    locked = allActionsInactive
     title = fbt('Follow Origin', 'growth.actionGroup.follow')
+    iconSource = locked
+      ? 'images/growth/social-media-follow-icon-locked.svg'
+      : 'images/growth/social-media-follow-icon.svg'
+    if (locked) {
+      unlockConditionText = (
+        <fbt desc="Rewards.followsLock">Requires: Twitter attestation</fbt>
+      )
+    }
   } else if (type === 'invitations') {
     const invitationAction = completedActions[0]
     locked = invitationAction.status === 'Inactive'
@@ -121,7 +140,7 @@ function ActionGroup(props) {
     <Link
       className={`growth-action-group d-flex align-items-center ${
         isMobile ? 'mobile' : ''
-      } ${hasBorder ? 'with-border' : ''}`}
+      }`}
       to={locked ? '' : `campaigns/${type}`}
     >
       <div className="icon-holder">
@@ -169,8 +188,6 @@ function ActionGroup(props) {
 export default ActionGroup
 
 require('react-styl')(`
-  .growth-action-group.with-border
-    border-bottom: 1px solid #c0cbd4
   .growth-action-group.mobile
     padding-top: 20px
     padding-bottom: 20px
@@ -194,6 +211,8 @@ require('react-styl')(`
     padding-top: 30px
     padding-bottom: 30px
     cursor: pointer
+    &:not(:last-child)
+      border-bottom: 1px solid #c0cbd4
     .requirement
       font-size: 14px
       color: #455d75
