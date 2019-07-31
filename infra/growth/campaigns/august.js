@@ -209,7 +209,7 @@ const augustConfig = {
               linkKey: 'growth.twitterShare.content1.link',
               post: {
                 text: {
-                  default: `Experience the decentralised global #marketplace of the future with @OriginProtocol's fresh new app. Secure transactions. Zero fees. Try it now: http://ogn.dev/mobile`,
+                  default: `Experience the decentralized global #marketplace of the future with @OriginProtocol's fresh new app. Secure transactions. Zero fees. Try it now: https://ogn.dev/mobile`,
                   translations: [
                     { locale: 'fr_FR', text: `Experience la decentralization avec l'appli de @OriginProtocol` },
                     { locale: 'zh_CN', text: `我不知道我在说什么 @OriginProtocol` }
@@ -239,14 +239,110 @@ const augustConfig = {
               titleKey: 'growth.twitterShare.content2.title',
               detailsKey: 'growth.twitterShare.content2.details',
               image: 'images/growth/twitter-share-content2.png',
-              link: 'https://medium.com/p/e36a349e5cf1/edit',
+              link: '',
               linkKey: 'growth.twitterShare.content2.link',
               post: {
                 text: {
-                  default: `Join @OriginProtocol's #rewards program and earn free Origin tokens! 250,000 OGN already distributed to thousands all around the world and we're still welcoming more to become token holders`,
+                  default: `Join @OriginProtocol's #rewards program and earn free Origin tokens! 250,000 OGN already distributed to thousands all around the world and Origin is still welcoming more to become token holders`,
                   translations: [
                     { locale: 'fr_FR', text: `Venez gagner pleins de tokens avec @OriginProtocol!` },
                     { locale: 'zh_CN', text: `我不知道我在说什么 @OriginProtocol` }
+                  ]
+                }
+              }
+            },
+            reward: {
+              amount: '0',
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterShare3',
+          class: 'SocialShare',
+          config: {
+            socialNetwork: 'twitter',
+            eventType: 'SharedOnTwitter',
+            additionalLockConditions: ['TwitterAttestation'],
+            content: {
+              titleKey: 'growth.twitterShare.content3.title',
+              detailsKey: 'growth.twitterShare.content3.details',
+              image: 'images/growth/twitter-share-content3.png',
+              link: 'https://techcrunch.com/2018/10/10/origin-protocol/',
+              linkKey: 'growth.twitterShare.content3.link',
+              post: {
+                text: {
+                  default: `@OriginProtocol is building one of the most promising blockchain platforms for the new sharing economy`,
+                  translations: [
+                  ]
+                }
+              }
+            },
+            reward: {
+              amount: '0',
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterShare4',
+          class: 'SocialShare',
+          config: {
+            socialNetwork: 'twitter',
+            eventType: 'SharedOnTwitter',
+            additionalLockConditions: ['TwitterAttestation'],
+            content: {
+              titleKey: 'growth.twitterShare.content4.title',
+              detailsKey: 'growth.twitterShare.content4.details',
+              image: 'images/growth/twitter-share-content4.png',
+              link: 'https://www.coindesk.com/another-paypal-co-founder-is-embracing-blockchains-seismic-shift',
+              linkKey: 'growth.twitterShare.content4.link',
+              post: {
+                text: {
+                  default: `@OriginProtocol has one of the best teams in the crypto ecosystem today`,
+                  translations: [
+                  ]
+                }
+              }
+            },
+            reward: {
+              amount: '0',
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterShare5',
+          class: 'SocialShare',
+          config: {
+            socialNetwork: 'twitter',
+            eventType: 'SharedOnTwitter',
+            additionalLockConditions: ['TwitterAttestation'],
+            content: {
+              titleKey: 'growth.twitterShare.content5.title',
+              detailsKey: 'growth.twitterShare.content5.details',
+              image: 'images/growth/twitter-share-content5.png',
+              link: 'https://t.me/originprotocol',
+              linkKey: 'growth.twitterShare.content5.link',
+              post: {
+                text: {
+                  default: `Join @OriginProtocol on #Telegram!`,
+                  translations: [
                   ]
                 }
               }
