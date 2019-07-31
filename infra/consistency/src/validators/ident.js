@@ -1,6 +1,14 @@
 const esmImport = require('esm')(module)
 const { find, get } = esmImport('lodash')
+const Web3 = require('web3')
 const ipfs = esmImport('@origin/ipfs')
+const ProxyFactoryContract = esmImport(
+  '@origin/contracts/build/contracts/ProxyFactory_solc'
+)
+const IdentityProxyContract = esmImport(
+  '@origin/contracts/build/contracts/IdentityProxy_solc'
+)
+const addresses = esmImport('@origin/contracts/build/contracts_mainnet.json')
 const db = {
   ...require('@origin/identity/src/models')
 }
@@ -38,6 +46,49 @@ const ATTESTATION_TYPE_MAP_DB = {
 }
 
 /**
+ * Normalize addresses to a unified format
+ * @param {string} address to normalize
+ * @return {string} normalized address
+ */
+function normalizeAddress(addr) {
+  return addr.toLowerCase()
+}
+
+/**
+ * Get the bytecode for an IdentityProxy instance from ProxyFactory
+ * @param {web3} instance of Web3
+ * @param {ProxyFactory} instance of ProxyFactory Web3 Contract
+ * @param {ProxyImp} the IdentityProxy implementation
+ * @returns {string} bytecode
+ */
+const proxyCreationCode = async (web3, ProxyFactory, ProxyImp) => {
+  let code = await ProxyFactory.methods.proxyCreationCode().call()
+  code += web3.eth.abi.encodeParameter('uint256', ProxyImp._address).slice(2)
+  return code
+}
+
+/**
+ * Get the bytecode for an IdentityProxy instance from ProxyFactory
+ * @param {web3} instance of Web3
+ * @param {ProxyFactory} instance of ProxyFactory Web3 Contract
+ * @param {ProxyImp} the IdentityProxy implementation
+ * @param {address} the address of the user creating a proxy
+ * @returns {string} the predicted address of the deployed user proxy
+ */
+async function predictedProxy(web3, ProxyFactory, ProxyImp, address) {
+  const salt = web3.utils.soliditySha3(address, 0)
+  const creationCode = await proxyCreationCode(web3, ProxyFactory, ProxyImp)
+  const creationHash = web3.utils.sha3(creationCode)
+
+  // Expected proxy address can be worked out thus:
+  const create2hash = web3.utils
+    .soliditySha3('0xff', ProxyFactory._address, salt, creationHash)
+    .slice(-40)
+
+  return web3.utils.toChecksumAddress(`0x${create2hash}`)
+}
+
+/**
  * Get the attestation object from the JSON object
  */
 function getAttestation(attestationArray, name) {
@@ -66,8 +117,9 @@ function getAttestationDBRepr(attestationDBRecord, name) {
 /**
  * Compare the provided JSON to the provided database record
  */
-function validateIPFSToDB(ipfsJson, dbRecord) {
+function validateIPFSToDB(ipfsJson, ownerRecord, validAddresses) {
   // TODO: IPFS hash column should be added to table and verified here
+  const owner = ownerRecord[0].dataValues
 
   assert(ipfsJson.profile, 'Profile missing in JSON')
   assert(ipfsJson.attestations, 'Attestations missing in JSON')
@@ -76,16 +128,18 @@ function validateIPFSToDB(ipfsJson, dbRecord) {
 
   // Check profile details
   assert(
-    profile.firstName == dbRecord.firstName,
-    `Unexpected firstName ${profile.firstName} != ${dbRecord.firstName}`
+    profile.firstName == owner.firstName,
+    `Unexpected firstName ${profile.firstName} != ${owner.firstName}`
   )
   assert(
-    profile.lastName == dbRecord.lastName,
-    `Unexpected lastName  ${profile.lastName} != ${dbRecord.lastName}`
+    profile.lastName == owner.lastName,
+    `Unexpected lastName  ${profile.lastName} != ${owner.lastName}`
   )
   assert(
-    profile.ethAddress.toLowerCase() == dbRecord.ethAddress,
-    `Unexpected ethAddress. ${profile.ethAddress} != ${dbRecord.ethAddress}`
+    validAddresses.includes(normalizeAddress(profile.ethAddress)),
+    `Unexpected ethAddress. ${profile.ethAddress} not in [${validAddresses.join(
+      ', '
+    )}]`
   )
 
   // Check attestations
@@ -95,7 +149,7 @@ function validateIPFSToDB(ipfsJson, dbRecord) {
       attObj,
       `data.attestation.${attName}.verified`
     )
-    const attestationValueDB = getAttestationDBRepr(dbRecord, attName)
+    const attestationValueDB = getAttestationDBRepr(owner, attName)
 
     if (typeof attestationValueJSON === 'undefined') {
       /**
@@ -145,23 +199,50 @@ function validateIPFSToDB(ipfsJson, dbRecord) {
 /**
  * Verify an identity is what's expected between the IPFS record and database
  */
-async function verifyIdent(address, ipfsGateway, ipfsHash) {
-  address = address.toLowerCase()
+async function verifyIdent(web3, address, ipfsGateway, ipfsHash, contracts) {
+  address = normalizeAddress(address)
+  let proxyAddress
+  const validAddresses = [address]
 
-  const records = await db.Identity.findAll({
+  // If this is not already a proxy, figure out the proxy address
+  if ((await web3.eth.getCode(address)) === '0x') {
+    proxyAddress = await predictedProxy(
+      web3,
+      contracts.ProxyFactory,
+      contracts.IdentityProxy,
+      address
+    )
+    proxyAddress = normalizeAddress(proxyAddress)
+    validAddresses.push(proxyAddress)
+  } else {
+    // Is proxy
+    // Get the owner from the contract and add it to the array of valid addresses
+    const UserProxy = await contracts.IdentityProxy.clone()
+    UserProxy.options.address = address
+    const owner = await UserProxy.methods.owner().call()
+    proxyAddress = address
+    address = normalizeAddress(owner)
+    validAddresses.unshift(address)
+  }
+
+  const owner = await db.Identity.findAll({
     where: {
       eth_address: address
     }
   })
 
   // Make sure we have the expected amount of records
-  if (records.length < 1) {
-    log.error(`Did not find a matching record for address ${address}`)
+  if (owner.length < 1) {
+    log.error(
+      `Did not find a matching record for address ${address}(or proxy ${proxyAddress})`
+    )
     return false
-  } else if (records.length > 1) {
-    log.warn(`Found too many records for address ${address}`)
+  } else if (owner.length > 1) {
+    log.error(`Too many reords found(${owner.length})!`)
     return false
   }
+
+  log.debug(`Found ${owner.length} matching records`)
 
   // Fetch the IPFS data
   let qmHash, ipfsJson
@@ -173,7 +254,9 @@ async function verifyIdent(address, ipfsGateway, ipfsHash) {
     log.error(err)
   }
 
-  log.debug(`Comparing IPFS Identity ${address} - ${qmHash}`)
+  log.debug(
+    `Comparing IPFS Identity ${address}(proxy: ${proxyAddress}) - ${qmHash}`
+  )
 
   if (!ipfsJson) {
     log.error(`IPFS Data missing at ${ipfsGateway}/${qmHash}`)
@@ -182,11 +265,13 @@ async function verifyIdent(address, ipfsGateway, ipfsHash) {
 
   // Make sure the record is sane
   try {
-    validateIPFSToDB(ipfsJson, records[0])
+    validateIPFSToDB(ipfsJson, owner, validAddresses)
   } catch (err) {
     // Handle Assertion errors
     if (err.name === 'AssertionError') {
-      log.error(`Identity validation failed  for ${address}: ${err.toString()}`)
+      log.error(
+        `Identity validation failed  for ${address}(proxy: ${proxyAddress}): ${err.toString()}`
+      )
       return false
     } else {
       throw err
@@ -206,6 +291,21 @@ async function validateIdentities({
 }) {
   const identityEvents = contractsContext.identityEvents
   const identities = {}
+  const latestEvents = {}
+
+  const web3 = new Web3(
+    'https://eth-mainnet.alchemyapi.io/jsonrpc/FCA-3myPH5VFN8naOWyxDU6VkxelafK6'
+  )
+
+  const ProxyFactory = new web3.eth.Contract(
+    ProxyFactoryContract.abi,
+    addresses.ProxyFactory
+  )
+
+  const IdentityProxy = new web3.eth.Contract(
+    IdentityProxyContract.abi,
+    addresses.IdentityProxyImplementation
+  )
 
   // Only fetch up to where the listener is reported to be at, don't get ahead
   // of it
@@ -227,6 +327,7 @@ async function validateIdentities({
 
     if (event.event == 'IdentityUpdated') {
       identities[event.returnValues.account] = event.returnValues.ipfsHash
+      latestEvents[event.returnValues.account] = event
     } else if (event.event == 'IdentityDeleted') {
       delete identities[event.returnValues.account]
     }
@@ -236,14 +337,25 @@ async function validateIdentities({
 
   // Verify the IPFS data against the IPFS table
   for (const address of Object.keys(identities)) {
-    const verified = await verifyIdent(
-      address,
-      ipfsGateway,
-      identities[address]
-    )
+    let verified = false
+    try {
+      verified = await verifyIdent(
+        web3,
+        address,
+        ipfsGateway,
+        identities[address],
+        {
+          ProxyFactory,
+          IdentityProxy
+        }
+      )
+    } catch (err) {
+      log.error(err)
+    }
 
     if (!verified) {
       log.info(`Identity verification for account ${address} failed.`)
+      log.debug('Event: ', latestEvents[address])
     }
   }
 }
