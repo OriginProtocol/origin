@@ -812,6 +812,28 @@ class SocialShareRule extends SingleEventRule {
   }
 
   /**
+   * Loads the identity from the database either from main or proxy account
+   * @param {string} ethAddress
+   * @param {Object} identityForTest - For testing only.
+   * @returns {Promise<Object>}
+   */
+  async loadIdentity(ethAddress, identityForTest = null) {
+    // Load any proxy associated with the wallet address.
+    const ownerAddress = ethAddress.toLowerCase()
+    const proxies = await db.Proxy.findAll({ where: { ownerAddress } })
+
+    // Query events from wallet and proxy(ies).
+    const addresses = [ownerAddress, ...proxies.map(proxy => proxy.address)]
+    const whereClause = { ethAddress: { [Sequelize.Op.in]: addresses } }
+
+    // Return a personalized amount calculated based on social network stats stored in the user's identity.
+    return (await db.Identity.findOne({
+        where: whereClause,
+        order: [['createdAt', 'DESC']]
+      })) || identityForTest
+  }
+
+  /**
    * Calculate personalized amount the user should get if they complete the sharing action.
    * @param {string} ethAddress
    * @param {Object} identityForTest - For testing only.
@@ -837,11 +859,7 @@ class SocialShareRule extends SingleEventRule {
     const whereClause = { ethAddress: { [Sequelize.Op.in]: addresses } }
 
     // Return a personalized amount calculated based on social network stats stored in the user's identity.
-    const identity =
-      (await db.Identity.findOne({
-        where: whereClause,
-        order: [['createdAt', 'DESC']]
-      })) || identityForTest
+    const identity = await this.loadIdentity(ethAddress, identityForTest)
     if (!identity) {
       logger.error(`No identity found for ${ethAddress}`)
       return reward
@@ -864,18 +882,24 @@ class SocialShareRule extends SingleEventRule {
    * @returns {Array<Reward>}
    * @private
    */
-  _getTwitterRewardsEarned(ethAddress, events) {
+  async _getTwitterRewardsEarned(ethAddress, events) {
     // For each event, get the user's Twitter stats from the GrowthEvent row
     // then calculate the amount.
     const rewards = []
+    logger.info("DEBUG:", events)
     for (const event of events) {
-      if (!event.data || !event.data.twitterProfile) {
-        throw new Error(
-          `GrowthEvent ${event.id}: missing or invalid twitter profile`
-        )
+      const identity = await this.loadIdentity(ethAddress)
+      if (!identity) {
+        logger.error(`No identity found for ${ethAddress}`)
+        return reward
       }
+      if (!identity.data || !identity.data.twitterProfile) {
+        logger.error(`Missing twitterProfile in identity of user ${ethAddress}`)
+        return reward
+      }
+
       const amount = this._calcTwitterReward(
-        event.data.twitterProfile
+        identity.data.twitterProfile
       ).toString()
       const reward = new Reward(this.campaignId, this.levelId, this.id, {
         amount,
@@ -898,7 +922,7 @@ class SocialShareRule extends SingleEventRule {
     const numRewards = await this._numRewards(ethAddress, inScopeEvents)
     const eventsForCalculation = events.slice(0, numRewards)
     // TODO: handle other social networks.
-    const rewards = this._getTwitterRewardsEarned(
+    const rewards = await this._getTwitterRewardsEarned(
       ethAddress,
       eventsForCalculation
     )
