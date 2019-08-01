@@ -364,9 +364,7 @@ class UserProfile extends Component {
           }}
           onComplete={newAttestation => {
             this.storeData({
-              attestations: {
-                [providerName]: newAttestation
-              }
+              attestations: [newAttestation]
             })
 
             this.setState({
@@ -389,41 +387,7 @@ class UserProfile extends Component {
 
     const { profile, attestations } = this.getData()
 
-    const publishedAttestations = (
-      this.state.verifiedAttestations || []
-    ).reduce(
-      (object, att) => ({
-        ...object,
-        [att.id]: att.rawData
-      }),
-      {}
-    )
-
-    const unpublishedAttestations = {
-      ...publishedAttestations,
-      ...attestations
-    }
-
-    const publishedProfile = pick(this.state, [
-      'firstName',
-      'lastName',
-      'description',
-      'avatarUrl'
-    ])
-
-    const unpublishedProfile = pickBy(
-      {
-        ...publishedProfile,
-        ...profile
-      },
-      f => f
-    )
-
-    // Store before publishing
-    this.storeData({
-      profile: unpublishedProfile,
-      attestations: unpublishedAttestations
-    })
+    const unpublishedProfile = pickBy(profile, f => typeof f === 'string')
 
     return (
       <DeployIdentity
@@ -448,7 +412,7 @@ class UserProfile extends Component {
           })
         }}
         profile={unpublishedProfile}
-        attestations={Object.values(unpublishedAttestations)}
+        attestations={attestations}
       />
     )
   }
@@ -512,11 +476,17 @@ class UserProfile extends Component {
     )
   }
 
+  /**
+   * Read unpublished data from localStorage
+   */
   getData() {
     const key = `${this.props.walletProxy}-profile-data`
     const data = localStore.get(key)
 
     if (hasDataExpired(data)) {
+      // Clearing out old data
+      localStore.set(key, undefined)
+
       const profile = pick(this.state, [
         'firstName',
         'lastName',
@@ -524,27 +494,22 @@ class UserProfile extends Component {
         'avatarUrl'
       ])
 
-      const attestations = (this.state.verifiedAttestations || []).reduce(
-        (object, att) => ({
-          ...object,
-          [att.id]: att.rawData
-        }),
-        {}
+      const attestations = (this.state.verifiedAttestations || []).map(
+        attestation => attestation.rawData
       )
 
-      const newData = {
+      return {
         profile,
         attestations
       }
-
-      this.storeData(newData)
-
-      return newData
     }
 
     return pick(data, ['attestations', 'profile'])
   }
 
+  /**
+   * Store/Append unpublished data to localStorage
+   */
   storeData({ profile, attestations }) {
     const key = `${this.props.walletProxy}-profile-data`
     const data = localStore.get(key)
@@ -557,21 +522,24 @@ class UserProfile extends Component {
       })
     }
 
+    // Merge with old data and a new timestamp
     const newData = {
       ...data,
       timestamp: Date.now()
     }
 
-    // Overwrite if there is a change
-    newData.profile = {
-      ...data.profile,
-      ...profile
+    if (profile) {
+      newData.profile = {
+        ...data.profile,
+        ...profile
+      }
     }
 
-    // Merge attestations if there is a change
-    newData.attestations = {
-      ...data.attestations,
-      ...attestations
+    if (attestations) {
+      newData.attestations = [
+        ...(data.attestations || []),
+        ...(attestations || [])
+      ]
     }
 
     localStore.set(key, newData)
