@@ -54,7 +54,7 @@ describe('promotion verifications', () => {
               screen_name: 'originprotocol'
             },
             source: {
-              id: '12345'
+              id_str: '12345'
             }
           }
         ]
@@ -73,7 +73,7 @@ describe('promotion verifications', () => {
           {
             id: 'abcd',
             user: {
-              id: '123456',
+              id_str: '123456',
               screen_name: 'someuser'
             },
             entities: {
@@ -97,7 +97,7 @@ describe('promotion verifications', () => {
             id: 'abcd',
             retweeted: true,
             user: {
-              id: '9876',
+              id_str: '9876',
               screen_name: 'someuser'
             },
             entities: {
@@ -108,7 +108,7 @@ describe('promotion verifications', () => {
             id: 'abcd',
             favorited: true,
             user: {
-              id: '9876',
+              id_str: '9876',
               screen_name: 'someuser'
             },
             entities: {
@@ -118,7 +118,7 @@ describe('promotion verifications', () => {
           {
             id: 'abcd',
             user: {
-              id: '9876',
+              id_str: '9876',
               screen_name: 'originprotocol'
             },
             entities: {
