@@ -238,7 +238,7 @@ async function verifyIdent(web3, address, ipfsGateway, ipfsHash, contracts) {
     )
     return false
   } else if (owner.length > 1) {
-    log.error(`Too many reords found(${owner.length})!`)
+    log.error(`Too many records found(${owner.length})!`)
     return false
   }
 
@@ -287,15 +287,14 @@ async function validateIdentities({
   contractsContext,
   fromBlock = 0,
   toBlock = 'latest',
-  ipfsGateway = 'https://ipfs.originprotocol.com'
+  ipfsGateway = 'https://ipfs.originprotocol.com',
+  jsonRPCURL = 'https://eth-mainnet.alchemyapi.io/jsonrpc/'
 }) {
   const identityEvents = contractsContext.identityEvents
   const identities = {}
   const latestEvents = {}
 
-  const web3 = new Web3(
-    'https://eth-mainnet.alchemyapi.io/jsonrpc/FCA-3myPH5VFN8naOWyxDU6VkxelafK6'
-  )
+  const web3 = new Web3(jsonRPCURL)
 
   const ProxyFactory = new web3.eth.Contract(
     ProxyFactoryContract.abi,

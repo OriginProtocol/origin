@@ -1,5 +1,5 @@
 {
-  "name": "consistency",
+  "name": "@origin/consistency",
   "version": "0.1.0",
   "description": "Database consistency checker",
   "private": true,

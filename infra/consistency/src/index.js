@@ -75,6 +75,9 @@ if (require.main === module) {
     identity: args['--identity'] || false,
     listings: args['--listings'] || false,
     offers: args['--offers'] || false,
+    jsonRPCURL:
+      args['--json-rpc'] ||
+      'https://eth-mainnet.alchemyapi.io/jsonrpc/FCA-3myPH5VFN8naOWyxDU6VkxelafK6',
     ipfsGateway: args['--ipfs-gateway'] || 'https://ipfs.originprotocol.com',
     fromBlock: args['--from-block'] || 0
   }
