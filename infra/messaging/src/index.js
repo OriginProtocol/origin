@@ -179,8 +179,18 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
   const conversationIndex = Number(req.params.conversationIndex)
   const { signature, content } = req.body
   const { address } = content
+  let conv_addresses = conversationId ? conversationId.split('-') : null
 
   const entry = await db.Registry.findOne({ where: { ethAddress: address } })
+
+  // Don't allow a user to message themselves.  It's weird.
+  if (
+    conv_addresses &&
+    conv_addresses.length === 2 &&
+    conv_addresses[0].toLowerCase() === conv_addresses[1].toLowerCase()
+  ) {
+    return res.status(401).send('Unable to message self.')
+  }
 
   if (
     !verifyNewMessageSignature(
@@ -201,9 +211,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
   const contentHash = Web3.utils.sha3(JSON.stringify(content))
 
   let message
-  let conv_addresses
   if (!conv) {
-    conv_addresses = conversationId.split('-')
     //let's create a conversation...
     if (!conv_addresses.includes(address)) {
       return res

@@ -97,8 +97,9 @@ class App extends Component {
       (isOnWelcomeAndNotOboard && !isMobile) ||
       (isMobile &&
         (this.props.location.pathname.match(/^\/purchases\/.*$/gi) ||
-          this.props.location.pathname.match(/^\/campaigns\/purchases$/gi) ||
-          this.props.location.pathname.match(/^\/campaigns\/invitations$/gi) ||
+          this.props.location.pathname.match(
+            /^\/campaigns\/(verifications|purchases|invitations|follows|promotions)(\/|$)/gi
+          ) ||
           this.props.location.pathname.match(/\/onboard\/finished/gi) ||
           this.props.location.pathname.match(
             /^\/(create\/.+|listing\/[-0-9]+\/edit\/.+)/gi
@@ -142,11 +143,12 @@ class App extends Component {
             <Route path="/about/crypto" component={AboutCrypto} />
             <Route path="/about/payments" component={AboutPayments} />
             <Route path="/about/tokens" component={AboutToken} />
-            <Route exact path="/campaigns" component={GrowthCampaigns} />
             <Route
               exact
-              path="/campaigns/:navigation"
-              component={GrowthCampaigns}
+              path="/campaigns/:navigation?/:contentId?"
+              component={props => (
+                <GrowthCampaigns {...props} locale={this.props.locale} />
+              )}
             />
             <Route exact path="/rewards/banned" component={GrowthBanned} />
             <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />

@@ -20,7 +20,7 @@ const SQLiteStore = require('connect-sqlite3')(session)
 const { Op } = require('sequelize')
 const Web3 = require('web3')
 
-const { createProviders } = require('@origin/token/src/config')
+const { createProvider } = require('@origin/token/src/config')
 const { transferTokens } = require('./lib/transfer')
 const { Event, Grant } = require('./models')
 
@@ -258,7 +258,7 @@ app.post(
  */
 app.post('/api/logout', ensureLoggedIn, logout)
 
-createProviders([networkId]) // Ensure web3 credentials are set up
+createProvider(networkId) // Ensure web3 credentials are set up
 app.listen(port, () => {
   logger.info(`Listening on port ${port}`)
 })

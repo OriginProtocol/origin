@@ -136,7 +136,7 @@ const augustConfig = {
           config: {
             eventType: 'GitHubAttestationPublished',
             reward: {
-              amount: tokenToNaturalUnits(25),
+              amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
             limit: 1,
@@ -152,7 +152,7 @@ const augustConfig = {
           config: {
             eventType: 'LinkedInAttestationPublished',
             reward: {
-              amount: tokenToNaturalUnits(25),
+              amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
             limit: 1,
@@ -168,7 +168,7 @@ const augustConfig = {
           config: {
             eventType: 'KakaoAttestationPublished',
             reward: {
-              amount: tokenToNaturalUnits(25),
+              amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
             limit: 1,
@@ -184,7 +184,182 @@ const augustConfig = {
           config: {
             eventType: 'WebsiteAttestationPublished',
             reward: {
-              amount: tokenToNaturalUnits(25),
+              amount: tokenToNaturalUnits(10),
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterShare1',
+          class: 'SocialShare',
+          config: {
+            socialNetwork: 'twitter',
+            eventType: 'SharedOnTwitter',
+            additionalLockConditions: ['TwitterAttestation'],
+            content: {
+              titleKey: 'growth.twitterShare.content1.title',
+              detailsKey: 'growth.twitterShare.content1.details',
+              image: 'images/growth/twitter-share-content1.png',
+              link: 'https://medium.com/originprotocol/now-optimized-for-mobile-origin-launches-a-fresh-new-app-and-sponsored-gas-80dc2407bd8d',
+              linkKey: 'growth.twitterShare.content1.link',
+              post: {
+                text: {
+                  default: `Experience the decentralized global #marketplace of the future with @OriginProtocol's fresh new app. Secure transactions. Zero fees. Try it now: https://ogn.dev/mobile`,
+                  translations: [ ]
+                }
+              }
+            },
+            reward: {
+              amount: '0',
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterShare2',
+          class: 'SocialShare',
+          config: {
+            socialNetwork: 'twitter',
+            eventType: 'SharedOnTwitter',
+            additionalLockConditions: ['TwitterAttestation'],
+            content: {
+              titleKey: 'growth.twitterShare.content2.title',
+              detailsKey: 'growth.twitterShare.content2.details',
+              image: 'images/growth/twitter-share-content2.png',
+              link: '',
+              linkKey: 'growth.twitterShare.content2.link',
+              post: {
+                text: {
+                  default: `Join @OriginProtocol's #rewards program and earn free Origin tokens! 250,000 OGN already distributed to thousands all around the world and Origin is still welcoming more to become token holders`,
+                  translations: [ ]
+                }
+              }
+            },
+            reward: {
+              amount: '0',
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterShare3',
+          class: 'SocialShare',
+          config: {
+            socialNetwork: 'twitter',
+            eventType: 'SharedOnTwitter',
+            additionalLockConditions: ['TwitterAttestation'],
+            content: {
+              titleKey: 'growth.twitterShare.content3.title',
+              detailsKey: 'growth.twitterShare.content3.details',
+              image: 'images/growth/twitter-share-content3.png',
+              link: 'https://techcrunch.com/2018/10/10/origin-protocol/',
+              linkKey: 'growth.twitterShare.content3.link',
+              post: {
+                text: {
+                  default: `@OriginProtocol is building one of the most promising blockchain platforms for the new sharing economy`,
+                  translations: [
+                  ]
+                }
+              }
+            },
+            reward: {
+              amount: '0',
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterShare4',
+          class: 'SocialShare',
+          config: {
+            socialNetwork: 'twitter',
+            eventType: 'SharedOnTwitter',
+            additionalLockConditions: ['TwitterAttestation'],
+            content: {
+              titleKey: 'growth.twitterShare.content4.title',
+              detailsKey: 'growth.twitterShare.content4.details',
+              image: 'images/growth/twitter-share-content4.png',
+              link: 'https://www.coindesk.com/another-paypal-co-founder-is-embracing-blockchains-seismic-shift',
+              linkKey: 'growth.twitterShare.content4.link',
+              post: {
+                text: {
+                  default: `@OriginProtocol has one of the best teams in the crypto ecosystem today`,
+                  translations: [
+                  ]
+                }
+              }
+            },
+            reward: {
+              amount: '0',
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterShare5',
+          class: 'SocialShare',
+          config: {
+            socialNetwork: 'twitter',
+            eventType: 'SharedOnTwitter',
+            additionalLockConditions: ['TwitterAttestation'],
+            content: {
+              titleKey: 'growth.twitterShare.content5.title',
+              detailsKey: 'growth.twitterShare.content5.details',
+              image: 'images/growth/twitter-share-content5.png',
+              link: 'https://t.me/originprotocol',
+              linkKey: 'growth.twitterShare.content5.link',
+              post: {
+                text: {
+                  default: `Join @OriginProtocol on #Telegram!`,
+                  translations: [
+                  ]
+                }
+              }
+            },
+            reward: {
+              amount: '0',
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TwitterFollow',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'FollowedOnTwitter',
+            additionalLockConditions: ['TwitterAttestation'],
+            reward: {
+              amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
             limit: 1,
@@ -259,19 +434,307 @@ const augustConfig = {
           }
         },
         {
-          id: 'TwitterShare',
-          class: 'SocialShare',
+          id: 'ListingPurchase1-000-2991',
+          class: 'ListingIdPurchase',
           config: {
-            additionalLockConditions: ['TwitterAttestation'],
+            eventType: 'ListingPurchased',
+            listingId: '1-000-2991',
             reward: {
-              amount: tokenToNaturalUnits(1),
+              amount: tokenToNaturalUnits(80),
               currency: 'OGN'
             },
-            limit: 100,
             visible: true,
+            limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            statusScope: 'user'
+            iconSrc: 'images/growth/listing-1-000-2991-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-2991.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-2959',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-2959',
+            reward: {
+              amount: tokenToNaturalUnits(80),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-2959-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-2959.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-2871',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-2871',
+            reward: {
+              amount: tokenToNaturalUnits(80),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-2871-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-2871.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-2854',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-2854',
+            reward: {
+              amount: tokenToNaturalUnits(130),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-2854-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-2854.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-2783',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-2783',
+            reward: {
+              amount: tokenToNaturalUnits(200),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-2783-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-2783.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-2782',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-2782',
+            reward: {
+              amount: tokenToNaturalUnits(500),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-2782-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-2782.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-2769',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-2769',
+            reward: {
+              amount: tokenToNaturalUnits(50),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-2769-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-2769.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-2760',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-2760',
+            reward: {
+              amount: tokenToNaturalUnits(90),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-2760-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-2760.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-2781',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-2781',
+            reward: {
+              amount: tokenToNaturalUnits(200),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-2781-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-2781.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-2699',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-2699',
+            reward: {
+              amount: tokenToNaturalUnits(350),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-2699-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-2699.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-2912',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-2912',
+            reward: {
+              amount: tokenToNaturalUnits(75),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-2912-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-2912.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-2892',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-2892',
+            reward: {
+              amount: tokenToNaturalUnits(75),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-2892-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-2892.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-292',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-292',
+            reward: {
+              amount: tokenToNaturalUnits(700),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-292-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-292.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-60',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-60',
+            reward: {
+              amount: tokenToNaturalUnits(600),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-60-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-60.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-2877',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-2877',
+            reward: {
+              amount: tokenToNaturalUnits(700),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-2877-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-2877.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-2999',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-2999',
+            reward: {
+              amount: tokenToNaturalUnits(40),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-2999-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-2999.title',
+            detailsKey: 'growth.purchase.empty.details'
           }
         }
       ]
