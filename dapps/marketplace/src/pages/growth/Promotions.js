@@ -275,7 +275,11 @@ const Promotions = ({
   })
 
   return (
-    <div className={`growth-promote-origin d-flex flex-wrap ${isMobile ? ' mobile' : ''}`}>
+    <div
+      className={`growth-promote-origin d-flex flex-wrap ${
+        isMobile ? ' mobile' : ''
+      }`}
+    >
       {runMutation && (
         <RunVerifyPromotion
           locale={locale}
