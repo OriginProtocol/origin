@@ -109,7 +109,9 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
     logger.error(err)
     return res.status(400).send({
       success: false,
-      errors: [`Failed to subscribe: ${err.message}`]
+      errors: [
+        `Failed to subscribe: ${err.message ? err.message : 'Check logs'}`
+      ]
     })
   }
 
