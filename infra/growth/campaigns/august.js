@@ -236,11 +236,11 @@ const augustConfig = {
               titleKey: 'growth.twitterShare.content2.title',
               detailsKey: 'growth.twitterShare.content2.details',
               image: 'images/growth/twitter-share-content2.png',
-              link: '',
+              link: 'https://www.originrewards.com',
               linkKey: 'growth.twitterShare.content2.link',
               post: {
                 text: {
-                  default: `Join @OriginProtocol's #rewards program and earn free Origin tokens! 250,000 OGN already distributed. Sign up and claim your free OGN at https://www.originrewards.com`,
+                  default: `Join @OriginProtocol's #rewards program and earn free Origin tokens! 250,000 OGN already distributed. Sign up and claim your free OGN! https://www.originrewards.com`,
                   translations: [ ]
                 }
               }
