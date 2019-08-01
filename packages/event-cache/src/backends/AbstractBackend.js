@@ -1,5 +1,3 @@
-const { debug } = require('../utils')
-
 /**
  * @class
  * @classdesc AbstractBackend to define the interface for EventCache backends
@@ -26,7 +24,6 @@ class AbstractBackend {
    * Sets the latest block number known by the backend
    */
   setLatestBlock(blockNumber) {
-    debug(`setLatestBlock(${blockNumber})`)
     if (!blockNumber || blockNumber < this.latestBlock) return
     this.latestBlock = blockNumber
   }

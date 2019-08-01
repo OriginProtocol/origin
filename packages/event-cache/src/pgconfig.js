@@ -11,10 +11,7 @@ module.exports = {
       underscored: true
     },
     // Disable logging of SQL statements.
-    logging:
-      process.env.DEBUG && process.env.DEBUG.includes('sequelize')
-        ? console.log
-        : false
+    logging: false
   },
   test: {
     dialect: 'postgres',

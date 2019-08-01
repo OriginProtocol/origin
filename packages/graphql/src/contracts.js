@@ -446,6 +446,7 @@ export function toggleMetaMask(enabled) {
 export function setMarketplace(address, epoch) {
   context.marketplace = new web3.eth.Contract(MarketplaceContract.abi, address)
   patchWeb3Contract(context.marketplace, epoch, {
+    ...context.config,
     useLatestFromChain: false,
     ipfsEventCache: context.config.V00_Marketplace_EventCache,
     cacheMaxBlock: context.config.V00_Marketplace_EventCacheMaxBlock,
@@ -453,13 +454,7 @@ export function setMarketplace(address, epoch) {
       typeof address === 'undefined'
         ? 'Marketplace_'
         : `${address.slice(2, 8)}_`,
-    platform:
-      typeof window === 'undefined'
-        ? process.env.ENABLE_EVENTCACHE_DB
-          ? 'postgresql'
-          : 'memory'
-        : 'browser',
-    ...context.config
+    platform: typeof window === 'undefined' ? 'memory' : 'browser'
   })
 
   if (address) {
@@ -491,6 +486,7 @@ export function setIdentityEvents(address, epoch) {
     address
   )
   patchWeb3Contract(context.identityEvents, epoch, {
+    ...context.config,
     ipfsEventCache: context.config.IdentityEvents_EventCache,
     cacheMaxBlock: context.config.IdentityEvents_EventCacheMaxBlock,
     useLatestFromChain: false,
@@ -498,14 +494,8 @@ export function setIdentityEvents(address, epoch) {
       typeof address === 'undefined'
         ? 'IdentityEvents_'
         : `${address.slice(2, 8)}_`,
-    platform:
-      typeof window === 'undefined'
-        ? process.env.ENABLE_EVENTCACHE_DB
-          ? 'postgresql'
-          : 'memory'
-        : 'browser',
-    batchSize: 2500,
-    ...context.config
+    platform: typeof window === 'undefined' ? 'memory' : 'browser',
+    batchSize: 2500
   })
   context.identityEventsExec = context.identityEvents
 
@@ -539,12 +529,7 @@ export function setProxyContracts(config) {
       typeof config.ProxyFactory === 'undefined'
         ? 'ProxyFactory_'
         : `${config.ProxyFactory.slice(2, 8)}_`,
-    platform:
-      typeof window === 'undefined'
-        ? process.env.ENABLE_EVENTCACHE_DB
-          ? 'postgresql'
-          : 'memory'
-        : 'browser',
+    platform: typeof window === 'undefined' ? 'memory' : 'browser',
     batchSize: 2500
   })
 }

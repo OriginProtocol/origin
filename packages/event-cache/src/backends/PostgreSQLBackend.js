@@ -3,40 +3,6 @@ const { AbstractBackend } = require('./AbstractBackend')
 const { debug } = require('../utils')
 
 /**
- * Convert an undorscored_string to camelCase.
- * @note This converts doubles (listingID) to underscored (listing_id)
- * @param v The string to operate on
- * @returns {string} camelCase string
- */
-function toCamelCase(v) {
-  let ret = v
-    .split(/(?=_[a-z])/)
-    .map(part => {
-      return part.startsWith('_')
-        ? part.charAt(1).toUpperCase() + part.slice(2)
-        : part
-    })
-    .join('')
-  // In the case of contract events, anything that ends with ID needs to be capitalized
-  if (ret.endsWith('Id')) {
-    ret = ret.replace(/Id$/, 'ID')
-  }
-  return ret
-}
-
-/**
- * Convert a camelCaseString to an undorscored_string
- * @param v The camelCase string string
- * @returns {string} The undersocred string
- */
-function toUnderscored(v) {
-  return v
-    .split(/(?=(?<![A-Z])[A-Z])/)
-    .join('_')
-    .toLowerCase()
-}
-
-/**
  * Convert an event object to an object compatible with sequelize
  *
  * @param eventObject {object} to match the event against
@@ -47,7 +13,12 @@ function eventToDB(eventObject) {
 
   Object.keys(eventObject).map(key => {
     // Convert camel to underscore
-    dbObject[toUnderscored(key)] = eventObject[key]
+    dbObject[
+      key
+        .split(/(?=[A-Z])/)
+        .join('_')
+        .toLowerCase()
+    ] = eventObject[key]
   })
 
   // Rework the topic structure to match the DB structure
@@ -75,7 +46,14 @@ function DBToEvent(dbObject) {
   const evObj = {}
   Object.keys(dbObject).map(key => {
     // Convert underscore to camel
-    const camelKey = toCamelCase(key)
+    const camelKey = key
+      .split(/(?=_[a-z])/)
+      .map(part => {
+        return part.startsWith('_')
+          ? part.charAt(1).toUpperCase() + part.slice(2)
+          : part
+      })
+      .join('')
     evObj[camelKey] = dbObject[key]
   })
 
@@ -105,12 +83,10 @@ function DBToEvent(dbObject) {
  * @classdesc PostgreSQLBackend to handle event storage in PostgreSQL
  */
 class PostgreSQLBackend extends AbstractBackend {
-  constructor(args) {
-    const { prefix = '' } = args || {}
+  constructor() {
     super()
 
     this.type = 'postgresql'
-    this.prefix = prefix
     /**
      * This import needs to be done here, because sequelize is a PoS and
      * requires a connection to be initialized to build the models.  And to
@@ -138,9 +114,6 @@ class PostgreSQLBackend extends AbstractBackend {
    */
   async _loadLatestBlock() {
     const result = await this._models.Event.findOne({
-      where: {
-        prefix: this.prefix
-      },
       attributes: [
         [
           this._sequelize.fn('MAX', this._sequelize.col('block_number')),
@@ -149,7 +122,7 @@ class PostgreSQLBackend extends AbstractBackend {
       ]
     })
     if (result) {
-      const maxBlock = result.dataValues.max_block || 0
+      const maxBlock = result.dataValues.max_block
       this.setLatestBlock(maxBlock)
       debug(`Cache is current up to block #${maxBlock}`)
       return maxBlock
@@ -169,13 +142,8 @@ class PostgreSQLBackend extends AbstractBackend {
     const newObj = eventToDB(obj)
     Object.keys(newObj).map(key => {
       if (!this._eventTableColumns.includes(key)) {
-        // Handle array "or"
         const op = newObj[key] instanceof Array ? Op.or : Op.eq
-
-        // Back to camelCase! oi!
-        const camelKey = toCamelCase(key)
-
-        newObj['return_values.' + camelKey] = {
+        newObj['return_values.' + key] = {
           [op]: newObj[key]
         }
         delete newObj[key]
@@ -191,9 +159,6 @@ class PostgreSQLBackend extends AbstractBackend {
    */
   async serialize() {
     const res = await this._models.Event.findAll({
-      where: {
-        prefix: this.prefix
-      },
       order: [['block_number'], ['transaction_index'], ['log_index']]
     })
     if (res.length < 1) {
@@ -222,7 +187,6 @@ class PostgreSQLBackend extends AbstractBackend {
    */
   async get(argMatchObject) {
     const where = this._argMatchToWhere(argMatchObject)
-    where.prefix = this.prefix
     const results = await this._models.Event.findAll({ where })
     return results.map(row => {
       return DBToEvent(row.dataValues)
@@ -235,11 +199,7 @@ class PostgreSQLBackend extends AbstractBackend {
    * @returns {Array} An array of event objects
    */
   async all() {
-    const results = await this._models.Event.findAll({
-      where: {
-        prefix: this.prefix
-      }
-    })
+    const results = await this._models.Event.findAll()
     return results.map(row => {
       return DBToEvent(row.dataValues)
     })
@@ -254,8 +214,6 @@ class PostgreSQLBackend extends AbstractBackend {
    */
   async addEvent(eventObject) {
     const dbObject = eventToDB(eventObject)
-    // Add the prefix to the object
-    dbObject.prefix = this.prefix
     await this._models.Event.upsert(dbObject)
     this.setLatestBlock(eventObject.blockNumber)
   }
