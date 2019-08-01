@@ -13,7 +13,6 @@ const Logger = require('logplease')
 const Web3 = require('web3')
 
 const Token = require('@origin/token/src/token')
-const { createProviders } = require('@origin/token/src/config')
 
 const enums = require('../enums')
 const db = require('../models')
@@ -23,6 +22,12 @@ const logger = Logger.create('airdrop')
 
 // 20% over default gas price to make transaction go faster.
 const gasPriceMultiplier = 1.2
+
+// Number of block confirmations required for a transfer to be consider completed.
+const NumBlockConfirmation = 3
+
+// Wait up to 10 min for a transaction to get confirmed
+const ConfirmationTimeoutSec = 10 * 60
 
 /**
  * Parse command line arguments into a dict.
@@ -92,12 +97,18 @@ class AirDrop {
    */
   async _send(networkId, toAddress, amount) {
     const gasPrice = await this._calcGasPrice()
-    const receipt = await this.token.credit(networkId, toAddress, amount, {
+    const txHash = await this.token.credit(toAddress, amount, {
       gasPrice
     })
-    const txnHash = receipt.transactionHash
-    logger.info(`${amount} OGN -> ${toAddress} TxHash=${txnHash}`)
-    return txnHash
+    const { status } = await this.token.waitForTxConfirmation(txHash, {
+      numBlocks: NumBlockConfirmation,
+      timeoutSec: ConfirmationTimeoutSec
+    })
+    if (status !== 'confirmed') {
+      throw new Error(`Failure. status=${status} txHash=${txHash}`)
+    }
+    logger.info(`${amount} OGN -> ${toAddress} TxHash=${txHash}`)
+    return txHash
   }
 
   /**
@@ -165,7 +176,7 @@ class AirDrop {
     }
 
     // Create a token object for handling the distribution.
-    this.token = new Token({ providers: createProviders([this.networkId]) })
+    this.token = new Token(this.networkId)
 
     this.amount = BigNumber(campaign.amount)
     this.campaignId = campaign.id
@@ -193,7 +204,7 @@ class AirDrop {
 
   async _checkSenderBalances() {
     const web3 = this.token.web3(this.networkId)
-    const ognBalance = await this.token.balance(this.networkId, this.sender)
+    const ognBalance = await this.token.balance(this.sender)
     const ethBalance = await web3.eth.getBalance(this.sender)
 
     // Check the sender account has enough OGN.

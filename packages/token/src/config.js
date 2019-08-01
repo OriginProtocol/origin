@@ -27,93 +27,85 @@ function parseArgv() {
 
 /*
  * Helper function. Creates a config object based on command line arguments.
+ * @param {number} networkId: 1=Mainnet, 4=Rinkeby, etc...
  * @returns {dict} - Config.
  */
-function createProviders(networkIds) {
-  const providers = {}
+function createProvider(networkId) {
+  let provider, providerUrl, mnemonic, privateKey
 
-  // Create a provider for each of the network id.
-  for (const networkId of networkIds) {
-    let mnemonic
-    let providerUrl
-    let privateKey
-
-    switch (networkId) {
-      case MAINNET_NETWORK_ID:
-        privateKey = process.env.MAINNET_PRIVATE_KEY
-        mnemonic = process.env.MAINNET_MNEMONIC
-        if (!privateKey && !mnemonic) {
-          throw 'Must have either MAINNET_PRIVATE_KEY or MAINNET_MNEMONIC env var'
-        }
-        if (!process.env.MAINNET_PROVIDER_URL) {
-          throw 'Missing MAINNET_PROVIDER_URL env var'
-        }
-        providerUrl = process.env.MAINNET_PROVIDER_URL
-        break
-      case ROPSTEN_NETWORK_ID:
-        privateKey = process.env.ROPSTEN_PRIVATE_KEY
-        mnemonic = process.env.ROPSTEN_MNEMONIC
-        if (!privateKey && !mnemonic) {
-          throw 'Must have either ROPSTEN_PRIVATE_KEY or ROPSTEN_MNEMONIC env var'
-        }
-        if (!process.env.ROPSTEN_PROVIDER_URL) {
-          throw 'Missing RPOSTEN_PROVIDER_URL env var'
-        }
-        providerUrl = process.env.ROPSTEN_PROVIDER_URL
-        break
-      case RINKEBY_NETWORK_ID:
-        privateKey = process.env.RINKEBY_PRIVATE_KEY
-        mnemonic = process.env.RINKEBY_MNEMONIC
-        if (!privateKey && !mnemonic) {
-          throw 'Must have either RINKEBY_PRIVATE_KEY or RINKEBY_MNEMONIC env var'
-        }
-        if (!process.env.RINKEBY_PROVIDER_URL) {
-          throw 'Missing RINKEBY_PROVIDER_URL env var'
-        }
-        providerUrl = process.env.RINKEBY_PROVIDER_URL
-        break
-      case LOCAL_NETWORK_ID:
-        privateKey = process.env.LOCAL_PRIVATE_KEY
-        mnemonic = process.env.LOCAL_MNEMONIC || DEFAULT_MNEMONIC
-        providerUrl = 'http://localhost:8545'
-        break
-      case ORIGIN_NETWORK_ID:
-        privateKey = process.env.ORIGIN_PRIVATE_KEY
-        mnemonic = process.env.ORIGIN_MNEMONIC
-        if (!privateKey && !mnemonic) {
-          throw 'Must have either ORIGIN_PRIVATE_KEY or ORIGIN_MNEMONIC env var'
-        }
-        providerUrl = 'https://eth.dev.originprotocol.com/rpc'
-        break
-      default:
-        throw `Unsupported network id ${networkId}`
-    }
-    // Private key takes precedence
-    if (privateKey) {
-      const web3 = new Web3(providerUrl)
-      const account = web3.eth.accounts.privateKeyToAccount('0x' + privateKey)
-      web3.eth.accounts.wallet.add(account)
-      web3.eth.defaultAccount = account.address
-      providers[networkId] = web3
-      if (process.env.NODE_ENV !== 'test') {
-        console.log(
-          `Network=${networkId} URL=${providerUrl} Using private key for account ${account.address}`
-        )
+  switch (networkId) {
+    case MAINNET_NETWORK_ID:
+      privateKey = process.env.MAINNET_PRIVATE_KEY
+      mnemonic = process.env.MAINNET_MNEMONIC
+      if (!privateKey && !mnemonic) {
+        throw 'Must have either MAINNET_PRIVATE_KEY or MAINNET_MNEMONIC env var'
       }
-    } else {
-      if (process.env.NODE_ENV !== 'test') {
-        const displayMnemonic =
-          networkId === LOCAL_NETWORK_ID ? mnemonic : '[redacted]'
-        console.log(
-          `Network=${networkId} Url=${providerUrl} Mnemonic=${displayMnemonic}`
-        )
+      if (!process.env.MAINNET_PROVIDER_URL) {
+        throw 'Missing MAINNET_PROVIDER_URL env var'
       }
-      providers[networkId] = new Web3(
-        new HDWalletProvider(mnemonic, providerUrl)
+      providerUrl = process.env.MAINNET_PROVIDER_URL
+      break
+    case ROPSTEN_NETWORK_ID:
+      privateKey = process.env.ROPSTEN_PRIVATE_KEY
+      mnemonic = process.env.ROPSTEN_MNEMONIC
+      if (!privateKey && !mnemonic) {
+        throw 'Must have either ROPSTEN_PRIVATE_KEY or ROPSTEN_MNEMONIC env var'
+      }
+      if (!process.env.ROPSTEN_PROVIDER_URL) {
+        throw 'Missing RPOSTEN_PROVIDER_URL env var'
+      }
+      providerUrl = process.env.ROPSTEN_PROVIDER_URL
+      break
+    case RINKEBY_NETWORK_ID:
+      privateKey = process.env.RINKEBY_PRIVATE_KEY
+      mnemonic = process.env.RINKEBY_MNEMONIC
+      if (!privateKey && !mnemonic) {
+        throw 'Must have either RINKEBY_PRIVATE_KEY or RINKEBY_MNEMONIC env var'
+      }
+      if (!process.env.RINKEBY_PROVIDER_URL) {
+        throw 'Missing RINKEBY_PROVIDER_URL env var'
+      }
+      providerUrl = process.env.RINKEBY_PROVIDER_URL
+      break
+    case LOCAL_NETWORK_ID:
+      privateKey = process.env.LOCAL_PRIVATE_KEY
+      mnemonic = process.env.LOCAL_MNEMONIC || DEFAULT_MNEMONIC
+      providerUrl = 'http://localhost:8545'
+      break
+    case ORIGIN_NETWORK_ID:
+      privateKey = process.env.ORIGIN_PRIVATE_KEY
+      mnemonic = process.env.ORIGIN_MNEMONIC
+      if (!privateKey && !mnemonic) {
+        throw 'Must have either ORIGIN_PRIVATE_KEY or ORIGIN_MNEMONIC env var'
+      }
+      providerUrl = 'https://eth.dev.originprotocol.com/rpc'
+      break
+    default:
+      throw `Unsupported network id ${networkId}`
+  }
+  // Private key takes precedence
+  if (privateKey) {
+    const web3 = new Web3(providerUrl)
+    const account = web3.eth.accounts.privateKeyToAccount('0x' + privateKey)
+    web3.eth.accounts.wallet.add(account)
+    web3.eth.defaultAccount = account.address
+    provider = web3
+    if (process.env.NODE_ENV !== 'test') {
+      console.log(
+        `Network=${networkId} URL=${providerUrl} Using private key for account ${account.address}`
       )
     }
+  } else {
+    if (process.env.NODE_ENV !== 'test') {
+      const displayMnemonic =
+        networkId === LOCAL_NETWORK_ID ? mnemonic : '[redacted]'
+      console.log(
+        `Network=${networkId} Url=${providerUrl} Mnemonic=${displayMnemonic}`
+      )
+    }
+    provider = new Web3(new HDWalletProvider(mnemonic, providerUrl))
   }
-  return providers
+  return provider
 }
 
-module.exports = { parseArgv, createProviders }
+module.exports = { parseArgv, createProvider }

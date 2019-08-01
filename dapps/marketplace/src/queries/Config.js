@@ -7,6 +7,7 @@ export default gql`
       affiliate
       arbitrator
       discovery
+      growth
       bridge
       ipfsRPC
       ipfsGateway
