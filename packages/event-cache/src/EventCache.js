@@ -8,11 +8,11 @@ const Bottleneck = require('bottleneck')
 const { get, post } = require('@origin/ipfs')
 
 const { debug, validateParams } = require('./utils')
-const {
-  InMemoryBackend,
-  IndexedDBBackend,
-  PostgreSQLBackend
-} = require('./backends/browser')
+const { InMemoryBackend, IndexedDBBackend } = require('./backends/browser')
+let PostgreSQLBackend
+if (typeof window === 'undefined') {
+  PostgreSQLBackend = require('./backends').PostgreSQLBackend
+}
 
 const limiter = new Bottleneck({ maxConcurrent: 25 })
 limiter.on('error', err => {
@@ -125,6 +125,7 @@ class EventCache {
     this.latestIndexedBlock = 0
 
     const addr = (this.contract._address || 'no-contract').substr(0, 10)
+    debug(`EventCache using backend ${this.backend.type}`)
     debug(`Initialized ${addr} with originBlock ${this.originBlock}`)
   }
 
@@ -150,7 +151,8 @@ class EventCache {
 
     switch (platform) {
       case 'nodejs':
-        return new PostgreSQLBackend()
+      case 'postgresql':
+        return new PostgreSQLBackend({ prefix: this.prefix })
 
       case 'browser':
         return new IndexedDBBackend({ prefix: this.prefix })

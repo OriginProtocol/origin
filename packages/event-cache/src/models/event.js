@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define(
     'Event',
     {
+      id: DataTypes.STRING,
       // Block number at which the event was recorded.
       block_number: {
         type: DataTypes.INTEGER,
@@ -13,6 +14,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         primaryKey: true
       },
+      // A prefix, usually to ID the contract the event is for
+      prefix: DataTypes.STRING,
       // Index of the transaction within the block.
       transaction_index: DataTypes.INTEGER,
       // Hash of the block that contains the event,

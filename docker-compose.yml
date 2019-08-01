@@ -165,6 +165,7 @@ services:
       npm run migrate --prefix infra/growth &&
       npm run migrate --prefix infra/growth-event &&
       npm run migrate --prefix infra/identity &&
+      npm run migrate --prefix packages/event-cache &&
       npm run start:listener --prefix infra/discovery"
 
   discovery:
