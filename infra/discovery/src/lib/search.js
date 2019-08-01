@@ -167,7 +167,7 @@ class Listing {
   /**
    * Searches for listings.
    * @param {string} query - The search query.
-   * @param {object} sortOptions - {target: String, direction: String}
+   * @param {object} sort - {target: String, direction: String}
    * @param {array} filters - Array of filter objects
    * @param {integer} numberOfItems - number of items to display per page
    * @param {integer} offset - what page to return results from
@@ -175,14 +175,7 @@ class Listing {
    * @throws Throws an error if the search operation failed.
    * @returns A list of listings (can be empty).
    */
-  static async search(
-    query,
-    sortOptions,
-    filters,
-    numberOfItems,
-    offset,
-    idsOnly
-  ) {
+  static async search(query, sort, filters, numberOfItems, offset, idsOnly) {
     const currencies = [
       'token-ETH',
       'token-DAI',
@@ -345,13 +338,13 @@ class Listing {
 
     // sorting
     // possibly needs nested mapping + field update to below for price.amount
-    const resolveSort = () => {
-      // sortOptions  returns as [Object null prototype] {target:, direction: } not sure why
+    const getSortQuery = () => {
+      // sort  returns as [Object null prototype] {target:, direction: } not sure why
       // the following code converts it to a regular object
-      const resolvedSortOptions = JSON.parse(JSON.stringify(sortOptions))[0]
-      // console.log('resolveSort - resolvedSortOptions', resolvedSortOptions)
+      const resolvedSort = JSON.parse(JSON.stringify(sort))[0]
+      // console.log('resolveSort - resolvedSort', resolvedSort)
       // console.log('resolveSort - exchangeRates', exchangeRates)
-      const { target, direction } = resolvedSortOptions
+      const { target, direction } = resolvedSort
       // if target and direction are set, return a sort
       // otherwise return empty sort to skip
       if (target.length > 0 && direction.length > 0) {
@@ -385,7 +378,7 @@ class Listing {
       }
     }
 
-    console.log('sort - ', resolveSort())
+    console.log('sort - ', getSortQuery())
 
     const searchRequest = client.search({
       index: LISTINGS_INDEX,
@@ -394,7 +387,7 @@ class Listing {
         from: offset,
         size: numberOfItems,
         query: scoreQuery,
-        sort: resolveSort(),
+        sort: getSortQuery(),
         _source: [
           'title',
           'description',

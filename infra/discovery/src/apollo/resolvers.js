@@ -14,7 +14,7 @@ const resolvers = {
       // Get listing Ids from Elastic.
       const { listings, listingIds, stats } = await search.Listing.search(
         args.searchQuery,
-        args.sortOptions,
+        args.sort,
         args.filters,
         args.page.numberOfItems,
         args.page.offset,
@@ -23,12 +23,6 @@ const resolvers = {
       logger.info(
         `Query: "${args.searchQuery}" returned ${listingIds.length} results.`
       )
-      // logger.info(
-      //   `TEST ${JSON.stringify(listingIds.map(x => Object.assign({}, { id: x })))}`
-      // )
-      // logger.info(
-      //   `TEST listings - ${JSON.stringify(listings)}`
-      // )
       return {
         // need to return listings and the original
         // listingIds.map(x => Object.assign({}, { id: x })

@@ -216,7 +216,7 @@ const typeDefs = gql`
   # Sorting
   #
 
-  input ListingSortOptions {
+  input ListingSort {
     target: String!
     direction: String!
   }
@@ -237,7 +237,7 @@ const typeDefs = gql`
   type Query {
     listings(
       searchQuery: String
-      sortOptions: [ListingSortOptions]
+      sort: [ListingSort]
       filters: [ListingFilter!]
       page: Page!
       idsOnly: Boolean!

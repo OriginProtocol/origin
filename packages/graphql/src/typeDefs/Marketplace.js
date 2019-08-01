@@ -142,7 +142,7 @@ export const types = `
       after: String
       search: String
       filters: [ListingFilterInput!]
-      sort: String
+      sort: [ListingSortInput]
       listingIds: [String]
     ): ListingConnection!
 
@@ -407,6 +407,11 @@ export const types = `
     value: String!
     valueType: ValueType!
     operator: FilterOperator!
+  }
+
+  input ListingSortInput {
+    target: String!
+    direction: String!
   }
 
   input ListingInput {
