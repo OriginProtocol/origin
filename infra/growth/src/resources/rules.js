@@ -807,7 +807,7 @@ class SocialShareRule extends SingleEventRule {
 
     // Apply formula to compute reward.
     if (numFollowers < minFollowersThreshold) return 0
-    if (numFollowers < tierFollowersThreshold) return 1
+    if (numFollowers < tierFollowersThreshold) return tokenToNaturalUnits(1)
     const amount = Math.floor(numFollowers / tierFollowersIncrement) + 1
 
     return tokenToNaturalUnits(verified ? amount * verifiedMultiplier : amount)
