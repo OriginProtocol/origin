@@ -35,6 +35,7 @@ const getExchangeRates = async currencies => {
     result.forEach(r => {
       exchangeRates[r.currency] = r.rate
     })
+    exchangeRates[`fiat-USD`] = '1.0'
     return exchangeRates
   } catch (e) {
     return e
@@ -345,41 +346,46 @@ class Listing {
     // sorting
     // possibly needs nested mapping + field update to below for price.amount
     const resolveSort = () => {
-      console.log('resolveSort - sortOptions', sortOptions)
-      console.log('resolveSort - exchangeRates', exchangeRates)
-      const { target, direction } = sortOptions
-      if (target && direction) {
-        if (target === 'price.amount') {
-          return {
-            sort: {
+      // sortOptions  returns as [Object null prototype] {target:, direction: } not sure why
+      // the following code converts it to a regular object
+      const resolvedSortOptions = JSON.parse(JSON.stringify(sortOptions))[0]
+      // console.log('resolveSort - resolvedSortOptions', resolvedSortOptions)
+      // console.log('resolveSort - exchangeRates', exchangeRates)
+      const { target, direction } = resolvedSortOptions
+      // if target and direction are set, return a sort
+      // otherwise return empty sort to skip
+      if (target.length > 0 && direction.length > 0) {
+        switch (target) {
+          case 'price.amount':
+            return {
               _script: {
                 type: 'number',
                 script: {
                   lang: 'painless',
-                  source: `Float.parseFloat(params._source.${target}) * params.exchangeRates[params._source.price.currency.id]`,
+                  source: `Float.parseFloat(params._source.${target}) * Float.parseFloat(params.exchangeRates[params._source.price.currency.id])`,
                   params: {
-                    rates: exchangeRates
+                    exchangeRates: exchangeRates
                   }
                 },
                 order: direction
               }
             }
-          }
-        } else if (target === 'createdDate') {
-          return {
-            sort: [
+          default:
+            // this default is for non script sorting, should satisfy most cases
+            return [
               {
                 [target]: {
                   order: direction
                 }
               }
             ]
-          }
         }
       } else {
         return []
       }
     }
+
+    console.log('sort - ', resolveSort())
 
     const searchRequest = client.search({
       index: LISTINGS_INDEX,
@@ -445,9 +451,28 @@ class Listing {
     }
 
     const listingIds = listings.map(listing => listing.id)
+    console.log('Query Listings ids - ', listingIds)
+
     if (idsOnly) {
       return { listingIds, stats }
     } else {
+      let convertedAmounts = listings.map(l => {
+        return {
+          amount: l.price.amount,
+          convertedAmount: l.price.amount * exchangeRates[l.price.currency],
+          rate: exchangeRates[l.price.currency],
+          currency: l.price.currency.id
+        }
+      })
+      // console.log('listings - ', JSON.stringify(convertedAmounts))
+      convertedAmounts.forEach(o =>
+        console.log(
+          'Query listings - convertedAmount',
+          o.convertedAmount,
+          ' - amount - ',
+          o.amount
+        )
+      )
       return { listingIds, listings, stats }
     }
   }
