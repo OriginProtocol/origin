@@ -190,15 +190,23 @@ router.post('/verify', verifyPromotions, async (req, res) => {
     socialNetwork
   })
 
-  if (!attestation) {
+  if (!attestation || !attestation.profileData) {
+    logger.error(`No attestation or profile data found for ${identity}`)
     return res.status(400).send({
       success: false,
       errors: [`Attestation missing`]
     })
   }
+  if (!attestation.profileData.id_str) {
+    logger.error(`Missing id_str field in profile data for ${identity}`)
+    return res.status(400).send({
+      success: false,
+      errors: [`Profile data missing`]
+    })
+  }
 
   const redisKey = `${socialNetwork.toLowerCase()}/${type.toLowerCase()}/${
-    attestation.value
+    attestation.profileData.id_str
   }`
   const maxTries = process.env.VERIFICATION_MAX_TRIES || 60
   let tries = 0
