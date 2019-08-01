@@ -456,7 +456,7 @@ class Listing {
     if (idsOnly) {
       return { listingIds, stats }
     } else {
-      let convertedAmounts = listings.map(l => {
+      const convertedAmounts = listings.map(l => {
         return {
           amount: l.price.amount,
           convertedAmount: l.price.amount * exchangeRates[l.price.currency],
