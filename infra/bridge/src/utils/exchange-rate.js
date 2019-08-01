@@ -84,7 +84,7 @@ async function fetchBulkFiatExchangeRates() {
       if (rates) {
         Object.entries(rates).forEach(r => {
           const market = `${r[0]}-USD`
-          const price = r[1].toString()
+          const price = (1 / r[1]).toString()
           redisClient.set(`${market}_price`, price)
           logger.debug(`Exchange rate for ${market} set to ${price}`)
         })

@@ -40,7 +40,7 @@ class Listings extends Component {
     this.state = {
       first: 12,
       search: getStateFromQuery(props),
-      sort: { target: 'price.amount', direction: 'desc' }
+      sort: { target: 'price.amount', direction: 'asc' }
     }
   }
 

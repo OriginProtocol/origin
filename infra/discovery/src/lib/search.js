@@ -453,7 +453,7 @@ class Listing {
           amount: l.price.amount,
           convertedAmount: l.price.amount * exchangeRates[l.price.currency],
           rate: exchangeRates[l.price.currency],
-          currency: l.price.currency.id
+          currency: l.price.currency
         }
       })
       // console.log('listings - ', JSON.stringify(convertedAmounts))
@@ -461,8 +461,12 @@ class Listing {
         console.log(
           'Query listings - convertedAmount',
           o.convertedAmount,
+          ' - rate - ',
+          o.rate,
           ' - amount - ',
-          o.amount
+          o.amount,
+          ' - currency - ',
+          o.currency
         )
       )
       return { listingIds, listings, stats }
