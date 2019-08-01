@@ -24,7 +24,7 @@ async function pollExchangeRate(market) {
 /**
  * Recursively polls bulk fiat exchange rates in fixed intervals
  */
-async function pollBulkFiatExchangeRates(market) {
+async function pollBulkFiatExchangeRates() {
   setTimeout(() => {
     fetchBulkFiatExchangeRates().then(() => pollBulkFiatExchangeRates())
   }, process.env.EXCHANGE_RATE_POLL_INTERVAL || 30000)
@@ -53,7 +53,7 @@ async function fetchExchangeRate(market) {
       if (price) {
         // redisClient.set(`${market}_price`, price, 'NX')
         redisClient.set(`${market}_price`, price)
-        logger.info(`Exchange rate for ${market} set to ${price}`)
+        logger.debug(`Exchange rate for ${market} set to ${price}`)
       }
 
       return price
@@ -86,7 +86,7 @@ async function fetchBulkFiatExchangeRates() {
           const market = `${r[0]}-USD`
           const price = r[1].toString()
           redisClient.set(`${market}_price`, price)
-          logger.info(`Exchange rate for ${market} set to ${price}`)
+          logger.debug(`Exchange rate for ${market} set to ${price}`)
         })
         // logger.info(`Exchange rates set: `, resolvedRates)
       }
