@@ -57,7 +57,7 @@ if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
   sessionConfig.cookie.secure = true // serve secure cookies
 } else {
-  // CORS setup for dev
+  // CORS setup for dev. This is handled by nginx in production.
   app.use(
     cors({
       origin: 'http://localhost:3000',

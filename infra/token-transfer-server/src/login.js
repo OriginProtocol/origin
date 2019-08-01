@@ -94,12 +94,15 @@ function verifyEmailCode(req, res) {
 async function setupTotp(req, res) {
   logger.debug('/api/setup_totp called')
   if (req.user.otpKey && req.user.otpVerified) {
-    // Two-factor auth has already been setup. Do not allow to reset it.
+    // Two-factor auth has already been setup. Do not allow reset.
     res.status(403)
     return res.send('TOTP already setup.')
   }
 
-  // TOTP  not setup yet. Generate a key and save it encrypted in the DB.
+  // TOTP not setup yet. Generate a key and save it encrypted in the DB.
+  // TOTP setup is not complete until it has been verified and the otpVerified
+  // flag on the user model has been set to true. Until that time the user
+  // can regenerate this key.
   const key = crypto.randomBytes(10).toString('hex')
   const encodedKey = base32.encode(key).toString()
   const encryptedKey = encrypt(key)
@@ -125,6 +128,8 @@ async function setupTotp(req, res) {
 async function verifyTotp(req, res) {
   logger.debug('/api/verify_totp called')
 
+  // Set otpVerified to true if it is not already to signify TOTP setup is
+  // complete.
   await req.user.update({ otpVerified: true })
   //
   // Log the successfull login in the Event table.
