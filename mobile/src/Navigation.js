@@ -221,6 +221,7 @@ class MarketplaceApp extends React.Component {
   static router = _MarketplaceApp.router
 
   componentDidUpdate(prevProps) {
+    // Wait for marketplace to become available
     if (!prevProps.marketplace.ready && this.props.marketplace.ready) {
       // We can't use the withOnboardingSteps HOC here because it isn't
       // compatible with react-navigation navigators
@@ -239,7 +240,7 @@ class MarketplaceApp extends React.Component {
         this.props.settings.biometryType
       ) {
         this.props.setOnboardingComplete(true)
-        this.props.navigation.navigate('Auth')
+        this.props.navigation.navigate('GuardedApp')
       }
     }
   }
@@ -249,6 +250,7 @@ class MarketplaceApp extends React.Component {
     let loadingText = 'Loading marketplace...'
     let activityIndicator = true
     let errorComponent = false
+
     if (this.props.marketplace.error) {
       errorComponent = <NoInternetError />
       loadingText = false
@@ -280,24 +282,36 @@ const mapDispatchToProps = dispatch => ({
   setOnboardingComplete: complete => dispatch(setComplete(complete))
 })
 
+const AppStack = createSwitchNavigator(
+  {
+    Auth: {
+      screen: AuthenticationGuard,
+      params: {
+        navigateOnSuccess: 'App'
+      }
+    },
+    App: connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(MarketplaceApp)
+  },
+  {
+    // First route should always be Auth. If Auth is not yet enabled (i.e.
+    // onboarding has not been complete) the AuthenticationGuard component
+    // automatically calls the onSuccess method and navigations to the App.
+    initialRouteName: 'Auth'
+  }
+)
+
 export default createAppContainer(
   createStackNavigator(
     {
-      Auth: {
-        screen: AuthenticationGuard,
-        params: {
-          navigateOnSuccess: 'App'
-        }
-      },
-      App: connect(
-        mapStateToProps,
-        mapDispatchToProps
-      )(MarketplaceApp),
+      GuardedApp: AppStack,
       GuardedBackup: BackupStack,
       Onboarding: OnboardingStack
     },
     {
-      initialRouteName: 'App',
+      initialRouteName: 'GuardedApp',
       defaultNavigationOptions: {
         header: null
       },
