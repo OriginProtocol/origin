@@ -9,7 +9,7 @@ const { generateSignature } = require('./index.js')
 async function generateAttestation(
   attestationType,
   attestationBody,
-  { uniqueId, profileUrl, username },
+  { uniqueId, profileUrl, username, profileData },
   ethAddress,
   remoteAddress
 ) {
@@ -34,12 +34,13 @@ async function generateAttestation(
   // Save the attestation in the database
   await Attestation.create({
     method: attestationType,
-    ethAddress: ethAddress,
+    ethAddress,
     value: uniqueId,
     signature: signature['bytes'],
     remoteIpAddress: remoteAddress,
-    profileUrl: profileUrl,
-    username: username
+    profileUrl,
+    username,
+    profileData
   })
 
   return {

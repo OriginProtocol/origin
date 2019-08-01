@@ -199,7 +199,7 @@ const campaignToApolloObject = async (
   out.actions = await crules.export(adapter, ethAddress)
 
   // Calculate total rewards earned so far.
-  const rewards = await crules.getRewards(ethAddress)
+  const rewards = await crules.getEarnedRewards(ethAddress)
   out.rewardEarned = Money.sum(rewards.map(r => r.value), campaign.currency)
 
   return out

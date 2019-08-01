@@ -112,7 +112,8 @@ router.post('/verify', linkedinVerify, async (req, res) => {
       AttestationTypes.LINKEDIN,
       attestationBody,
       {
-        uniqueId: userDataResponse.body.id
+        uniqueId: userDataResponse.body.id,
+        profileData: userDataResponse
       },
       req.body.identity,
       req.ip

@@ -175,10 +175,18 @@ class IdentityEventHandler {
             )
             break
           case 'twitter':
-            decoratedIdentity.twitter = await this._loadValueFromAttestation(
+            const attestation = await this._loadMostRecentAttestation(
               addresses,
               'TWITTER'
             )
+            if (attestation) {
+              decoratedIdentity.twitter = attestation.value
+              decoratedIdentity.twitterProfile = attestation.profileData
+            } else {
+              logger.warn(`Could not find TWITTER attestation for ${addresses}`)
+              decoratedIdentity.twitter = null
+              decoratedIdentity.twitterProfile = null
+            }
             break
           case 'airbnb':
             decoratedIdentity.airbnb = await this._loadValueFromAttestation(
@@ -243,9 +251,9 @@ class IdentityEventHandler {
 
   /**
    * Indexes an identity in the DB.
-   * @param {{}} result of identityQuery
+   * @param {Object} identity: result of identityQuery
    * @param {{blockNumber: number, logIndex: number}} blockInfo
-   * @returns {Promise<void>}
+   * @returns {Promise<Object>}
    * @private
    */
   async _indexIdentity(identity, blockInfo) {
@@ -271,7 +279,7 @@ class IdentityEventHandler {
       twitter: decoratedIdentity.twitter,
       facebookVerified: decoratedIdentity.facebookVerified || false,
       googleVerified: decoratedIdentity.googleVerified || false,
-      data: { blockInfo },
+      data: { blockInfo, twitterProfile: decoratedIdentity.twitterProfile },
       country: decoratedIdentity.country,
       avatarUrl: decoratedIdentity.avatarUrl,
       website: decoratedIdentity.website,
