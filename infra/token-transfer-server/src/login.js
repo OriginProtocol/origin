@@ -1,6 +1,7 @@
 const base32 = require('thirty-two')
 const sendgridMail = require('@sendgrid/mail')
 const crypto = require('crypto')
+const jwt = require('jsonwebtoken')
 
 const { LOGIN } = require('./constants/events')
 const { encrypt } = require('./lib/crypto')
@@ -13,16 +14,14 @@ if (!emailFrom) {
   logger.error('SENDGRID_FROM_EMAIL must be set through EnvKey or manually')
   process.exit(1)
 }
+
 const apiKey = process.env.SENDGRID_API_KEY
 if (!emailFrom) {
   logger.error('SENDGRID_API_KEY must be set through EnvKey or manually')
   process.exit(1)
 }
-sendgridMail.setApiKey(apiKey)
 
-function _generateSixDigitCode() {
-  return Math.floor(100000 + Math.random() * 900000).toString()
-}
+sendgridMail.setApiKey(apiKey)
 
 /**
  * Sends an email verification code.
@@ -34,18 +33,24 @@ async function sendEmailCode(req, res) {
   // Check the user exists before sending an email code.
   const user = await User.findOne({ where: { email } })
   if (user) {
-    // Generate a random code and save it in the user's session.
-    const code = _generateSixDigitCode()
-    req.session.emailVerification = {
-      code,
-      ttl: Date.now() + 30 * 60 * 1000 // 30 min
-    }
+    const token = jwt.sign(
+      {
+        email
+      },
+      process.env.ENCRYPTION_SECRET,
+      { expiresIn: '5m' }
+    )
 
     const data = {
       to: email,
       from: emailFrom,
       subject: 'Your T3 verification code',
-      text: `Your T3 verification code is ${code}. It will expire in 30 minutes.`
+      text: `Welcome to the Origin Investor Portal. Here is your single-use sign in link.
+
+        ${process.env.PORTAL_URL ||
+          'http://localhost:3000'}/login_handler/${token}.
+
+        It will expire in 5 minutes. You can reply directly to this email with any questions.`
     }
     await sendgridMail.send(data)
     logger.info(`Sent email code to ${email}`)
@@ -78,7 +83,7 @@ function verifyEmailCode(req, res) {
   res.send(
     JSON.stringify({
       email: req.user.email,
-      otpReady: Boolean(req.user.otpKey)
+      otpReady: Boolean(req.user.otpKey && req.user.otpVerified)
     })
   )
 }
@@ -88,7 +93,7 @@ function verifyEmailCode(req, res) {
  */
 async function setupTotp(req, res) {
   logger.debug('/api/setup_totp called')
-  if (req.user.otpKey) {
+  if (req.user.otpKey && req.user.otpVerified) {
     // Two-factor auth has already been setup. Do not allow to reset it.
     res.status(403)
     return res.send('TOTP already setup.')
@@ -120,6 +125,8 @@ async function setupTotp(req, res) {
 async function verifyTotp(req, res) {
   logger.debug('/api/verify_totp called')
 
+  await req.user.update({ otpVerified: true })
+  //
   // Log the successfull login in the Event table.
   await Event.create({
     email: req.user.email,
