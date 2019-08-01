@@ -35,10 +35,9 @@ const getExchangeRates = async currencies => {
     result.forEach(r => {
       exchangeRates[r.currency] = r.rate
     })
-    exchangeRates[`fiat-USD`] = '1.0'
     return exchangeRates
   } catch (e) {
-    return e
+    console.error('Error retrieving exchange rates from redis', e)
   }
 }
 

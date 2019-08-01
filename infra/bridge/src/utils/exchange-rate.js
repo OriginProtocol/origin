@@ -9,12 +9,7 @@ function startExchangeRatePolling() {
   // TODO: Store the markets to be polled somewhere or in ENV and start poll with that.
   pollExchangeRate('ETH-USD')
   pollExchangeRate('DAI-USD')
-  pollExchangeRate('GBP-USD')
-  pollExchangeRate('EUR-USD')
-  pollExchangeRate('KRW-USD')
-  pollExchangeRate('JPY-USD')
-  pollExchangeRate('CNY-USD') // pair not found
-  pollExchangeRate('SGD-USD') // pair not found
+  pollBulkFiatExchangeRates()
 }
 
 /**
@@ -23,6 +18,15 @@ function startExchangeRatePolling() {
 async function pollExchangeRate(market) {
   setTimeout(() => {
     fetchExchangeRate(market).then(() => pollExchangeRate(market))
+  }, process.env.EXCHANGE_RATE_POLL_INTERVAL || 30000)
+}
+
+/**
+ * Recursively polls bulk fiat exchange rates in fixed intervals
+ */
+async function pollBulkFiatExchangeRates(market) {
+  setTimeout(() => {
+    fetchBulkFiatExchangeRates().then(() => pollBulkFiatExchangeRates())
   }, process.env.EXCHANGE_RATE_POLL_INTERVAL || 30000)
 }
 
@@ -55,6 +59,39 @@ async function fetchExchangeRate(market) {
       return price
     })
     .catch(e => logger.error(`Error getting ${market} exchange rate:`, e))
+}
+
+/**
+ * Fetch bulk fiat excahnge rates from remote URL
+ */
+async function fetchBulkFiatExchangeRates() {
+  const exchangeURL = `https://api.exchangeratesapi.io/latest?base=USD`
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await request.get(exchangeURL)
+      if (!response.ok) {
+        reject(response.error)
+        return
+      }
+
+      resolve(response.body.rates)
+    } catch (error) {
+      reject(error)
+    }
+  })
+    .then(rates => {
+      if (rates) {
+        Object.entries(rates).forEach(r => {
+          const market = `${r[0]}-USD`
+          const price = r[1].toString()
+          redisClient.set(`${market}_price`, price)
+          logger.info(`Exchange rate for ${market} set to ${price}`)
+        })
+        // logger.info(`Exchange rates set: `, resolvedRates)
+      }
+    })
+    .catch(e => logger.error(`Error getting bulk fiat exchange rates:`, e))
 }
 
 /**
