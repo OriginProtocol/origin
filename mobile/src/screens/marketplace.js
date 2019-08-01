@@ -61,14 +61,22 @@ class MarketplaceScreen extends Component {
       // it does not support allowsBackForwardNavigationGestures
       this.setSwipeHandler()
     }
-    DeviceEventEmitter.addListener('graphqlQuery', this.injectGraphqlQuery)
-    DeviceEventEmitter.addListener(
-      'graphqlMutation',
-      this.injectGraphqlMutation
-    )
-    DeviceEventEmitter.addListener('reloadMarketplace', () =>
-      this.dappWebView.reload()
-    )
+    this.subscriptions = [
+      DeviceEventEmitter.addListener('graphqlQuery', this.injectGraphqlQuery),
+      DeviceEventEmitter.addListener(
+        'graphqlMutation',
+        this.injectGraphqlMutation
+      ),
+      DeviceEventEmitter.addListener('reloadMarketplace', () =>
+        this.dappWebView.reload()
+      )
+    ]
+  }
+
+  componentWillUnmount() {
+    if (this.subscriptions) {
+      this.subscriptions.map(s => s.remove())
+    }
   }
 
   /* Handle back button presses on Android devices so that they work on the

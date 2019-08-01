@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import {
+  AppState,
   Image,
   KeyboardAvoidingView,
   ScrollView,
@@ -23,6 +24,7 @@ class AuthenticationGuard extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      appState: AppState.currentState,
       pin: '',
       error: null
     }
@@ -35,9 +37,30 @@ class AuthenticationGuard extends Component {
   }
 
   componentDidMount() {
-    if (this.props.settings.biometryType) {
+    AppState.addEventListener('change', this._handleAppStateChange)
+
+    // Only pop the touch authentication if biometryType is set and the app is
+    // in the active state. Sometimes this component can be mounted when the app
+    // is backgrounded by authentication redirect on backgrounding. See
+    // the MarketplaceApp component in src/Navigation.js.
+    if (this.props.settings.biometryType && this.state.appState === 'active') {
       this.touchAuthenticate()
     }
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange)
+  }
+
+  _handleAppStateChange = nextAppState => {
+    // If we are coming from a backgrounded state pop the touch authentication
+    if (
+      this.state.appState === 'background' &&
+      nextAppState === 'active'
+    ) {
+      this.touchAuthenticate()
+    }
+    this.setState({ appState: nextAppState })
   }
 
   touchAuthenticate() {

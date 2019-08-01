@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import { Image, Modal } from 'react-native'
+import { AppState, Image, Modal } from 'react-native'
 
 import {
   createAppContainer,
@@ -220,6 +220,21 @@ const _MarketplaceApp = createBottomTabNavigator(
 class MarketplaceApp extends React.Component {
   static router = _MarketplaceApp.router
 
+  componentDidMount() {
+    AppState.addEventListener('change', this._handleAppStateChange)
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange)
+  }
+
+  _handleAppStateChange = nextAppState => {
+    // Detect app being foregrounded from background and redirect to auth
+    if (nextAppState === 'background') {
+      this.props.navigation.navigate('Auth')
+    }
+  }
+
   componentDidUpdate(prevProps) {
     // Wait for marketplace to become available
     if (!prevProps.marketplace.ready && this.props.marketplace.ready) {
@@ -256,6 +271,7 @@ class MarketplaceApp extends React.Component {
       loadingText = false
       activityIndicator = false
     }
+
     return (
       <>
         <PushNotifications />
