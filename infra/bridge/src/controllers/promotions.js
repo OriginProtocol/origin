@@ -190,24 +190,32 @@ router.post('/verify', verifyPromotions, async (req, res) => {
     socialNetwork
   })
 
-  if (!attestation || !attestation.profileData) {
-    logger.error(`No attestation or profile data found for ${identity}`)
+  if (!attestation) {
+    logger.error(`No attestation found for ${identity}`)
     return res.status(400).send({
       success: false,
       errors: [`Attestation missing`]
     })
   }
-  if (!attestation.profileData.id_str) {
-    logger.error(`Missing id_str field in profile data for ${identity}`)
-    return res.status(400).send({
-      success: false,
-      errors: [`Profile data missing`]
-    })
+  // Get the user's twitter id.
+  // We favor using profileData.id_str but for some legacy attestations
+  // it is not populated. In that case we fallback to attestation.value.
+  // Caveat: attestation.value for some rows stores an incorrect value
+  // because we had a bug caused by JS incorrect handling of large integers.
+  // See for reference https://developer.twitter.com/en/docs/basics/twitter-ids.html
+  // For those unlucky users attestation verification will fail :(
+  let userId
+  if (attestation.profileData) {
+    userId = attestation.profileData.id_str
+  } else {
+    logger.warn(
+      `Attestation profileData missing, falling back to value for ${identity}`
+    )
+    userId = attestation.value
   }
 
-  const redisKey = `${socialNetwork.toLowerCase()}/${type.toLowerCase()}/${
-    attestation.profileData.id_str
-  }`
+  const redisKey = `${socialNetwork.toLowerCase()}/${type.toLowerCase()}/${userId}`
+
   const maxTries = process.env.VERIFICATION_MAX_TRIES || 60
   let tries = 0
   do {
