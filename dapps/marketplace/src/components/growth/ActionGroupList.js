@@ -35,15 +35,9 @@ function ActionGroupList(props) {
         {...props}
       />
       <ActionGroup
-        type="purchases"
-        completedActions={completedPurchaseActions}
-        notCompletedActions={notCompletedPurchaseActions}
-        {...props}
-      />
-      <ActionGroup
-        type="invitations"
-        completedActions={[referralAction]}
-        notCompletedActions={[]}
+        type="follows"
+        completedActions={completedFollowActions}
+        notCompletedActions={notCompletedFollowActions}
         {...props}
       />
       <ActionGroup
@@ -53,9 +47,15 @@ function ActionGroupList(props) {
         {...props}
       />
       <ActionGroup
-        type="follows"
-        completedActions={completedFollowActions}
-        notCompletedActions={notCompletedFollowActions}
+        type="invitations"
+        completedActions={[referralAction]}
+        notCompletedActions={[]}
+        {...props}
+      />
+      <ActionGroup
+        type="purchases"
+        completedActions={completedPurchaseActions}
+        notCompletedActions={notCompletedPurchaseActions}
         {...props}
       />
     </div>
