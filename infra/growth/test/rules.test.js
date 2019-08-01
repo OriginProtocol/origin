@@ -3,6 +3,7 @@ const expect = chai.expect
 
 const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
 const { CampaignRules, SocialShareRule } = require('../src/resources/rules')
+const { tokenToNaturalUnits } = require('../src/util/token')
 
 
 describe('Growth Engine rules', () => {
@@ -580,17 +581,17 @@ describe('Growth Engine rules', () => {
         // Account with < 100 numFollowers. 1 OGN.
         twitterProfile.followers_count = 99
         amount = this.rule._calcTwitterReward(twitterProfile)
-        expect(amount).to.equal(1)
+        expect(amount).to.equal(tokenToNaturalUnits(1))
 
         // Lot of followers.
         twitterProfile.followers_count = 3550
         amount = this.rule._calcTwitterReward(twitterProfile)
-        expect(amount).to.equal(18)
+        expect(amount).to.equal(tokenToNaturalUnits(18))
 
         // Verified = x2
         twitterProfile.verified = true
         amount = this.rule._calcTwitterReward(twitterProfile)
-        expect(amount).to.equal(36)
+        expect(amount).to.equal(tokenToNaturalUnits(36))
       })
 
       it(`should use stats from the user's identity to calculate the projected reward`, async () => {
@@ -607,7 +608,7 @@ describe('Growth Engine rules', () => {
         }
         const identity = { data: { twitterProfile } }
         const reward = await this.rule.getReward('0x123', identity)
-        expect(reward.value.amount).to.equal('2')
+        expect(reward.value.amount).to.equal(tokenToNaturalUnits(2))
         expect(reward.value.currency).to.equal('OGN')
       })
 
@@ -634,7 +635,7 @@ describe('Growth Engine rules', () => {
         ]
         const rewards = await this.rule.getEarnedRewards('0x123', events)
         expect(rewards.length).to.equal(1)
-        expect(rewards[0].value.amount).to.equal('132')
+        expect(rewards[0].value.amount).to.equal(tokenToNaturalUnits(132))
         expect(rewards[0].value.currency).to.equal('OGN')
       })
 
