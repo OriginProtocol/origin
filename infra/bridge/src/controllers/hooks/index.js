@@ -152,12 +152,13 @@ router.post('/twitter', (req, res) => {
     const events = req.body.follow_events
     totalFollowEvents = events.length
     events.forEach(event => {
+      logger.debug('Received follow event:', event)
       if (
         event.target.screen_name.toLowerCase() ===
         process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
       ) {
         followCount++
-        const key = `twitter/follow/${event.source.id_str}`
+        const key = `twitter/follow/${event.source.id}`
         redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
         logger.info(
           `Pushing twitter follow event for ${event.source.screen_name} at ${key}...`
