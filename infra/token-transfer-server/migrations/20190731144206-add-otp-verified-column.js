@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface) => {
+  up: (queryInterface, Sequelize) => {
     return queryInterface.addColumn('t3_user', 'otp_verified', {
       type: Sequelize.BOOLEAN
     })
