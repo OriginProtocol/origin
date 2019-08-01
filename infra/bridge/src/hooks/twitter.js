@@ -110,13 +110,11 @@ function deleteWebhook(webhookId, bearerToken) {
  * Subscribe to events of the user identified by oAuth token
  * @param {String} oAuthToken OAuth token of the user account to be subscribed
  * @param {Strign} oAuthAccessTokenSecret OAuth token secret of the user account to be subscribed
- * @param {Strign} webhookId Webhook Id to subscribe to
  */
-function addSubscription(oAuthToken, oAuthAccessTokenSecret, webhookId) {
+function addSubscription(oAuthToken, oAuthAccessTokenSecret) {
   return new Promise((resolve, reject) => {
     oauth.post(
-      `https://api.twitter.com/1.1/account_activity/webhooks/${webhookId}/subscriptions/all.json`,
-      // `https://api.twitter.com/1.1/account_activity/all/${HOOK_ENV}/subscriptions.json`,
+      `https://api.twitter.com/1.1/account_activity/all/${HOOK_ENV}/subscriptions.json`,
       oAuthToken,
       oAuthAccessTokenSecret,
       null,
@@ -170,7 +168,7 @@ async function subscribeToHooks(oAuthToken, oAuthAccessTokenSecret) {
 
   logger.info(`Using twitter webhook: ${webhookId}`)
 
-  await addSubscription(oAuthToken, oAuthAccessTokenSecret, webhookId)
+  await addSubscription(oAuthToken, oAuthAccessTokenSecret)
 }
 
 module.exports = {
