@@ -18,10 +18,6 @@ body {
   font-family: 'Lato'
 }
 
-.body {
-  padding: 70px;
-}
-
 #app {
   height: 100vh;
 }
@@ -42,6 +38,28 @@ small {
   color: #8fa7b7
 }
 
+label {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.form-control, .form-control:focus {
+  background-color: #e9f0f3;
+  border: none;
+  box-shadow: none;
+  width: 80%;
+}
+
+input {
+  border-radius: 10px;
+  border: none;
+  margin: 0 auto;
+}
+
+input:focus {
+  border-radius: 10px;
+}
+
 .alert-warning {
   background-color: rgba(255, 192, 0, 0.1);
   border: 1px solid #ffcc00;
@@ -59,26 +77,6 @@ small {
 .action-card h1 {
   font-size: 40px;
   margin-bottom: 0.5rem;
-}
-
-.action-card label {
-  margin-top: 20px;
-  font-weight: bold;
-}
-
-.action-card input {
-  background-color: #e9f0f3;
-  border-radius: 10px;
-  border: none;
-  width: 80%;
-  margin: 0 auto;
-}
-
-.action-card input:focus {
-  background-color: #e9f0f3;
-  border-radius: 10px;
-  border: none;
-  box-shadow: none;
 }
 
 .card-wrapper .header .link {

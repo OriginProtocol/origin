@@ -148,7 +148,7 @@ require('react-styl')(`
     touch-action: none
 
   .pl-modal
-    position: relative
+    position: absolute
     z-index: 2000
     top: 0
     right: 0
@@ -289,6 +289,14 @@ require('react-styl')(`
       margin-top: 2rem
       .btn
         margin: 0 0.5rem 1rem 0.5rem
+
+  .close
+    width: 36px
+    height: 36px
+    background-color: #dbe6eb
+    border-radius: 50%
+    text-shadow: none
+    line-height: 35px
 
   @media (max-width: 767.98px)
     .pl-modal

@@ -3,45 +3,30 @@ import { connect } from 'react-redux'
 
 import BorderedCard from '../BorderedCard'
 import GoogleAuthenticatorIcon from '../../assets/google-authenticator-icon@3x.jpg'
-import Modal from '../Modal'
+import WalletTable from '../WalletTable'
 
 class Security extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      displayChangeEmailModal: false
-    }
+    this.state = {}
   }
 
   handleChangeEmail = () => {}
 
-  renderEmailModal() {
-    return (
-      <Modal
-        onClose={() => this.setState({ displayChangeEmailModal: false })}
-        appendToId="body"
-        closeBtn={true}
-      >
-        <>
-          <h1>Change Email</h1>
-          <h2>New Email</h2>
-        </>
-      </Modal>
-    )
-  }
-
   render() {
     return (
       <>
-        {this.state.displayChangeEmailModal && this.renderEmailModal()}
         <h1>Security</h1>
         <div className="row">
-          <div className="col">
+          <div className="col-xs-12 col-lg-6">
             <BorderedCard>
               <div className="row">
-                <div className="col">{this.props.sessionEmail}</div>
-                <div className="col text-right">
-                  <a href="" onClick={this.handleChangeEmail}>
+                <div className="col-md-6">{this.props.sessionEmail}</div>
+                <div className="col-md-6 text-md-right">
+                  <a href="mailto:support@originprotocol.com?subject=Change Investor Email"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Change email
                   </a>
                 </div>
@@ -49,11 +34,11 @@ class Security extends Component {
             </BorderedCard>
           </div>
 
-          <div className="col">
+          <div className="col-xs-12 col-lg-6">
             <BorderedCard>
               <div className="row">
                 <div
-                  className="col-2"
+                  className="d-none d-md-block col-md-2"
                   style={{
                     backgroundImage: `url(${GoogleAuthenticatorIcon})`,
                     backgroundRepeat: 'no-repeat',
@@ -61,26 +46,20 @@ class Security extends Component {
                     margin: '-20px -10px -20px 0'
                   }}
                 ></div>
-                <div className="col">Google Authenticator</div>
-                <div className="col-4 text-right">
-                  <a href="">Help</a>
+                <div className="col-md-8">Google Authenticator</div>
+                <div className="col-md-2 text-md-right">
+                  <a href="mailto:support@originprotocol.com?subject=Help with Google Authenticator">
+                    Help
+                  </a>
                 </div>
               </div>
             </BorderedCard>
           </div>
         </div>
 
-        <div className="row">
-          <div className="col">
-            <h2>Ethereum Accounts</h2>
-          </div>
-        </div>
+        <WalletTable />
 
-        <div className="row">
-          <div className="col">
-            <h2>Session History</h2>
-          </div>
-        </div>
+        <h2>Session History</h2>
       </>
     )
   }

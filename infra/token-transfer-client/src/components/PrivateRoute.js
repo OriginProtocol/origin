@@ -17,7 +17,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
                 <div className="sidebar">
                   <Navigation />
                 </div>
-                <div className="col body">
+                <div id="main" className="col">
                   <AccountActions />
                   <Component {...props} />
                 </div>
@@ -46,11 +46,13 @@ export default connect(
 require('react-styl')(`
   .logged-in
     background-color: #f7fbfd
-    min-height: 100vh;
+    min-height: 100vh
     .container-fluid
-      min-height: 100vh;
+      min-height: 100vh
       > .row
-        min-height: 100vh;
+        min-height: 100vh
         .sidebar
           width: 260px
+    #main
+      padding: 70px
 `)

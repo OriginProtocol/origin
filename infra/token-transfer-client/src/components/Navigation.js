@@ -11,7 +11,7 @@ const Navigation = () => (
   <nav className="navbar navbar-expand-xs">
     <img src={Logo} className="brand" />
     <div className="container">
-      <ul className="navbar-nav ml-3">
+      <ul className="navbar-nav">
         <li className="nav-item">
           <NavLink to="/dashboard" exact className="nav-link text">
             <Dashboard className="icon" />
