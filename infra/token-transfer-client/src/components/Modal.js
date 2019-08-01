@@ -15,7 +15,10 @@ export default class Modal extends Component {
   }
 
   componentDidMount() {
-    document.body.appendChild(this.portal)
+    const el = this.props.appendToId
+      ? document.getElementById(this.props.appendToId)
+      : document.body
+    el.appendChild(this.portal)
     document.body.className += ' pl-modal-open'
     document.body.addEventListener('touchmove', freezeVp, false)
     this.renderContent(this.props)
@@ -40,7 +43,10 @@ export default class Modal extends Component {
     )
     document.body.removeEventListener('touchmove', freezeVp, false)
     window.removeEventListener('keydown', this.onKeyDown)
-    document.body.removeChild(this.portal)
+    const el = this.props.appendToId
+      ? document.getElementById(this.props.appendToId)
+      : document.body
+    el.removeChild(this.portal)
     clearTimeout(this.timeout)
   }
 
@@ -63,9 +69,7 @@ export default class Modal extends Component {
           }`}
         />
         <div
-          className={`${this.props.classNameOuter || ''} pl-modal${
-            this.props.lightMode ? ' light-theme' : ''
-          }`}
+          className={`${this.props.classNameOuter || ''} pl-modal`}
           onMouseDown={e => !this.props.disableDismiss && this.onClose(e)}
         >
           <div className="pl-modal-table">
@@ -142,8 +146,9 @@ require('react-styl')(`
   .pl-modal-open
     overflow: hidden
     touch-action: none
+
   .pl-modal
-    position: fixed
+    position: relative
     z-index: 2000
     top: 0
     right: 0
@@ -163,9 +168,15 @@ require('react-styl')(`
 
     .btn-link
       font-size: 14px
-      font-weight: normal
-      text-decoration: underline
-      color: var(--white)
+      color: var(--clear-blue)
+      font-family: Lato
+      font-size: 0.9rem
+      font-weight: 900
+      font-style: normal
+      font-stretch: normal
+      line-height: normal
+      letter-spacing: normal
+      text-decoration: none
 
     .pl-modal-table
       display: table;
@@ -188,12 +199,11 @@ require('react-styl')(`
           border-radius: 10px;
           font-size: 18px
           font-weight: normal
-          background-color: var(--dark-grey-blue);
+          background-color: white;
           -webkit-backface-visibility: hidden;
           backface-visibility: hidden
-
           align-items: center;
-          color: white;
+          color: black;
           padding: 3rem;
 
   .pl-modal-cell
@@ -279,21 +289,6 @@ require('react-styl')(`
       margin-top: 2rem
       .btn
         margin: 0 0.5rem 1rem 0.5rem
-
-  .pl-modal.light-theme
-    .pl-modal-table .pl-modal-cell .pl-modal-content
-      background-color: #fff
-      color: #000000
-    .btn-link
-      color: var(--clear-blue)
-      font-family: Lato
-      font-size: 0.9rem
-      font-weight: 900
-      font-style: normal
-      font-stretch: normal
-      line-height: normal
-      letter-spacing: normal
-      text-decoration: none
 
   @media (max-width: 767.98px)
     .pl-modal

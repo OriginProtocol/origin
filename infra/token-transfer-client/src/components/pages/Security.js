@@ -18,10 +18,14 @@ class Security extends Component {
   renderEmailModal() {
     return (
       <Modal
-        title="Change Email"
         onClose={() => this.setState({ displayChangeEmailModal: false })}
+        appendToId="body"
+        closeBtn={true}
       >
-        <h2>New Email</h2>
+        <>
+          <h1>Change Email</h1>
+          <h2>New Email</h2>
+        </>
       </Modal>
     )
   }
@@ -29,6 +33,7 @@ class Security extends Component {
   render() {
     return (
       <>
+        {this.state.displayChangeEmailModal && this.renderEmailModal()}
         <h1>Security</h1>
         <div className="row">
           <div className="col">
