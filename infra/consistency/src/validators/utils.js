@@ -1,12 +1,13 @@
+const esmImport = require('esm')(module)
 const Bottleneck = require('bottleneck')
 const flattenDeep = require('lodash/flattenDeep')
 const range = require('lodash/range')
 
 const db = {
-  ...require('../../../models')
+  ...esmImport('@origin/discovery/src/models')
 }
 
-const log = require('../../logger')
+const { log } = require('../logger')
 
 // 10000 was too much.  web3.js-beta.34 dies if it returns more than 1k
 const JSONRPC_REQUEST_BATCH_SIZE =
