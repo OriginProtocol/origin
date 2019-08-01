@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import request from 'superagent'
 
 import { setSessionEmail } from '../../actions'
+import agent from '../../utils/agent'
 
 class HandleLogin extends Component {
   state = {
@@ -18,10 +18,9 @@ class HandleLogin extends Component {
 
   handleVerifyEmailToken = async token => {
     let response
-
     try {
       const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
-      response = await request
+      response = await agent
         .post(`${apiUrl}/api/verify_email_token`)
         .set('Authorization', `Bearer ${token}`)
     } catch (error) {
@@ -29,10 +28,7 @@ class HandleLogin extends Component {
       return
     }
 
-    let redirectTo = '/otp'
-    if (!response.body.otpReady) {
-      redirectTo += '/setup'
-    }
+    const redirectTo = response.body.otpReady ? '/otp' : '/otp/setup'
     this.setState({ loading: false, redirectTo })
   }
 

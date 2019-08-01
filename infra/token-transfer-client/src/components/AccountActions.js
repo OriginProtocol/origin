@@ -1,16 +1,48 @@
 import React from 'react'
+import { Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
 
-const AccountActions = () => (
-  <div className="account-actions">
-    Aure Gimon
-    <div className="separator">|</div>
-    <a href="mailto:support@originprotocol.com">Contact Support</a>
-    <div className="separator"></div>
-    <a href="">Logout</a>
-  </div>
-)
+import agent from '../utils/agent'
+import { setSessionEmail } from '../actions'
 
-export default AccountActions
+const AccountActions = props => {
+  const handleLogout = async () => {
+    const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
+    agent.post(`${apiUrl}/api/logout`)
+    await props.setSessionEmail(false)
+  }
+
+  if (!props.sessionEmail) {
+    return <Redirect to="/" />
+  }
+
+  return (
+    <div className="account-actions">
+      {props.sessionEmail}
+      <div className="separator">|</div>
+      <a href="mailto:support@originprotocol.com">Contact Support</a>
+      <div className="separator"></div>
+      <a onClick={handleLogout}>Logout</a>
+    </div>
+  )
+}
+
+const mapStateToProps = state => {
+  return {
+    sessionEmail: state.sessionEmail
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    setSessionEmail: email => dispatch(setSessionEmail(email))
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AccountActions)
 
 require('react-styl')(`
   .account-actions

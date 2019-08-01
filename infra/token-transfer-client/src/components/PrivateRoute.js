@@ -9,8 +9,8 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={props =>
-        props.sessionEmail ? (
+      render={props => {
+        return rest.sessionEmail ? (
           <div className="logged-in">
             <div className="container-fluid">
               <div className="row">
@@ -27,7 +27,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         ) : (
           <Redirect to="/" />
         )
-      }
+      }}
     />
   )
 }
@@ -42,3 +42,15 @@ export default connect(
   mapStateToProps,
   null
 )(PrivateRoute)
+
+require('react-styl')(`
+  .logged-in
+    background-color: #f7fbfd
+    min-height: 100vh;
+    .container-fluid
+      min-height: 100vh;
+      > .row
+        min-height: 100vh;
+        .sidebar
+          width: 260px
+`)

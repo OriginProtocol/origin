@@ -1,89 +1,42 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import request from 'superagent'
 
 import { formInput, formFeedback } from '../../utils/formHelpers'
 import { setSessionEmail } from '../../actions'
+import agent from '../../utils/agent'
 
-class Login extends Component {
+class Otp extends Component {
   state = {
-    otpQrUrl: null,
-    otpKey: null,
     otpCode: '',
-    otpCodeError: null
-  }
-
-  componentDidMount() {
-    this.handleOtpSetup()
-  }
-
-  handleOtpSetup = async () => {
-    let response
-    try {
-      const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
-      response = await request.post(`${apiUrl}/api/setup_totp`)
-    } catch (error) {
-      this.setState({ otpError: 'An error occurred configuring OTP.' })
-      return
-    }
-
-    const json = response.json()
-    if (!json.otpQrUrl || !json.otpKey) {
-      this.setState({ otpError: 'An error occurred configuring OTP.' })
-      return
-    }
-
-    this.setState({
-      otpQrUrl: response.otpQrUrl,
-      otpKey: response.otpKey
-    })
-  }
-
-  handleOtpSetupDone = async () => {
-    this.setState({ loginStep: 'enterOtpCode' })
+    otpCodeError: null,
+    redirectToDashboard: false
   }
 
   handleVerifyOtpCode = async () => {
+    let response
     try {
       const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
-      await request.post(`${apiUrl}/api/verify_totp`)
+      response = await agent
+        .post(`${apiUrl}/api/verify_totp`)
+        .send({ code: this.state.otpCode })
     } catch (error) {
       this.setState({ otpCodeError: 'Invalid OTP code.' })
       return
     }
 
-    this.props.setSessionEmail(this.state.email)
+    this.props.setSessionEmail(response.body.email)
+    this.setState({ redirectToDashboard: true })
   }
 
   render() {
-    if (!this.state.otpKey) {
-      return this.renderSetupOtp()
-    } else {
-      return this.renderEnterOtpCode()
+    if (this.state.redirectToDashboard) {
+      return <Redirect to="/dashboard" />
     }
-  }
 
-  renderSetupOtp() {
-    return (
-      <div className="action-card">
-        <h1>Scan QR code</h1>
-        <p>Open Google Authenticator and scan the barcode or enter the key</p>
-        <img src={this.state.otpQrUrl} />
-        <p>
-          <strong>Secret Key:</strong>
-        </p>
-        <p>{this.state.otpCode}</p>
-        <div className="alert">
-          Store this secret key somewhere safe and don&apos;t share it with
-          anyone else.
-        </div>
-      </div>
-    )
-  }
-
-  renderEnterOtpCode() {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
+
     return (
       <div className="action-card">
         <h1>2-Step Verification</h1>
@@ -120,4 +73,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Login)
+)(Otp)

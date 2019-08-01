@@ -13,7 +13,7 @@ const Navigation = () => (
     <div className="container">
       <ul className="navbar-nav ml-3">
         <li className="nav-item">
-          <NavLink to="/" exact className="nav-link text">
+          <NavLink to="/dashboard" exact className="nav-link text">
             <Dashboard className="icon" />
             Dashboard
           </NavLink>
@@ -27,7 +27,7 @@ const Navigation = () => (
         <li className="nav-item">
           <NavLink to="/history" className="nav-link text">
             <History className="icon" />
-            History
+            Withdrawal History
           </NavLink>
         </li>
         <li className="nav-item">

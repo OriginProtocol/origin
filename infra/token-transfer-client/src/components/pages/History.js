@@ -14,7 +14,11 @@ class History extends Component {
   refreshHistory = () => {}
 
   render() {
-    return <div>History</div>
+    return (
+      <div>
+        <h1>Withdrawal History</h1>
+      </div>
+    )
   }
 }
 

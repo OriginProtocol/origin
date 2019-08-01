@@ -11,6 +11,7 @@ import GrantDetails from '../GrantDetail'
 class Dashboard extends Component {
   constructor(props) {
     super(props)
+
     const history = [
       ...Array(moment('2019-10-10').diff(moment('2018-10-10'), 'months'))
     ].map((v, i) => {
@@ -19,6 +20,7 @@ class Dashboard extends Component {
         date: moment('2018-10-10').add(i, 'months')
       }
     })
+
     this.state = {
       grants: [
         {

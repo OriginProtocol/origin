@@ -25,7 +25,7 @@ export default NewsCard
 
 require('react-styl')(`
   .wrapper
-    margin: 50px 0 0 0
+    margin: 0 0 50px 0
     border: 1px solid #dbe6eb
     background-color: white
     border-radius: 10px

@@ -1,7 +1,9 @@
 import React from 'react'
 
+import BorderedCard from './BorderedCard'
+
 const BalanceCard = props => (
-  <div className="card-wrapper">
+  <BorderedCard shadowed={true}>
     <div className="row header">
       <div className="col-8">
         <h2>Available Balance</h2>
@@ -17,7 +19,7 @@ const BalanceCard = props => (
       <button className="btn btn-primary btn-lg">Withdraw</button>
     </div>
     <small>You will need an Ethereum wallet to withdraw OGN</small>
-  </div>
+  </BorderedCard>
 )
 
 export default BalanceCard

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Redirect, Link } from 'react-router-dom'
-import request from 'superagent'
 
 import { formInput, formFeedback } from '../../utils/formHelpers'
+import agent from '../../utils/agent'
 
 class Login extends Component {
   state = {
@@ -20,7 +20,7 @@ class Login extends Component {
 
     try {
       const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
-      await request
+      await agent
         .post(`${apiUrl}/api/send_email_code`)
         .send({ email: this.state.email })
     } catch (error) {

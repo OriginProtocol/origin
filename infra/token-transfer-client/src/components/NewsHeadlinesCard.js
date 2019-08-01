@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 
 import withNews from '../hoc/withNews'
+import BorderedCard from './BorderedCard'
 
 const NewsHeadlinesCard = ({ news = [] }) => {
   if (!news.length) return null
@@ -19,7 +20,7 @@ const NewsHeadlinesCard = ({ news = [] }) => {
   }, [scrollEl.current])
 
   return (
-    <div className="card-wrapper">
+    <BorderedCard shadowed={true}>
       <div className="row">
         <div className="col">
           <h2>News</h2>
@@ -58,7 +59,7 @@ const NewsHeadlinesCard = ({ news = [] }) => {
           </div>
         )}
       </div>
-    </div>
+    </BorderedCard>
   )
 }
 
@@ -69,7 +70,7 @@ require('react-styl')(`
     position: relative
     .headline-swiper
       overflow-behaviour-x: contain
-      height: 10vh
+      height: 20vh
       scroll-snap-type: x mandatory
       -webkit-overflow-scrolling: touch
       overflow-x: scroll
@@ -86,7 +87,7 @@ require('react-styl')(`
     .item
       display: inline-block
       width: 100%
-      height: 10vh
+      height: 20vh
       .title
         font-size: 28px
         font-weight: bold
