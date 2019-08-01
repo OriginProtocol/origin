@@ -5,6 +5,7 @@ const _growthModels = require('../models')
 const _discoveryModels = require('@origin/discovery/src/models')
 const _identityModels = require('@origin/identity/src/models')
 const db = { ..._growthModels, ..._discoveryModels, ..._identityModels }
+const { tokenToNaturalUnits } = require('../util/token')
 
 const {
   GrowthEventTypes,
@@ -808,7 +809,8 @@ class SocialShareRule extends SingleEventRule {
     if (numFollowers < minFollowersThreshold) return 0
     if (numFollowers < tierFollowersThreshold) return 1
     const amount = Math.floor(numFollowers / tierFollowersIncrement) + 1
-    return verified ? amount * verifiedMultiplier : amount
+
+    return tokenToNaturalUnits(verified ? amount * verifiedMultiplier : amount)
   }
 
   /**
