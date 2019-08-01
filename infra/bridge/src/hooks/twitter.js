@@ -137,19 +137,23 @@ function addSubscription(oAuthToken, oAuthAccessTokenSecret) {
  */
 async function subscribeToHooks(oAuthToken, oAuthAccessTokenSecret) {
   const resp = await getWebhooks(oAuthToken, oAuthAccessTokenSecret)
+  logger.info('getWebhooks response:', resp)
   const environment = resp.environments.find(
     e => e.environment_name === HOOK_ENV
   )
 
   if (!environment) {
+    logger.error(`Webhook environment ${HOOK_ENV} not found in response`, resp)
     throw new Error('Webhook environment not found')
   }
+  logger.info('Using environment', environment)
 
   let webhookId
   if (!environment.webhooks || environment.webhooks.length === 0) {
     // Create a webhook, if none exists
     const response = await createWebhook(oAuthToken, oAuthAccessTokenSecret)
     webhookId = response.id
+    logger.info(`Created new webhook with id ${webhookId}`)
   } else if (process.env.NODE_ENV === 'development') {
     // Webhook URLs cannot be updated
     // So, delete and recreate webhook on development
@@ -168,5 +172,7 @@ async function subscribeToHooks(oAuthToken, oAuthAccessTokenSecret) {
 }
 
 module.exports = {
-  subscribeToHooks
+  subscribeToHooks,
+  deleteWebhook,
+  getBearerToken
 }

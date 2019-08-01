@@ -115,7 +115,6 @@ class AvailabilityCalculator {
     const availability = this.getAvailability(startStr, endStr)
 
     const available = availability.every(slot => slot.unavailable === false)
-    availability.pop() // exclude checkout slot
     const price = availability.reduce((m, slot) => m + Number(slot.price), 0)
 
     return { available, price: Math.round(price * 100000) / 100000 }

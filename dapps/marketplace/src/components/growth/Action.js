@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react'
 import { fbt } from 'fbt-runtime'
 import { Link } from 'react-router-dom'
-import { formatTokens } from 'utils/growthTools'
+import { formatTokens, getContentToShare } from 'utils/growthTools'
 
 const GrowthEnum = require('Growth$FbtEnum')
 
@@ -30,6 +30,7 @@ function Action(props) {
   let title
   let isVerificationAction = true
   let buttonLink = '/profile'
+  let externalLink
   const buttonOnClick = () => {
     window.scrollTo(0, 0)
   }
@@ -96,6 +97,20 @@ function Action(props) {
     title = fbt('Sell a Listing', 'RewardActions.listingSoldTitle')
     buttonLink = '/create'
     isVerificationAction = false
+  } else if (type === 'TwitterShare') {
+    buttonLink = undefined
+    foregroundImgSrc = 'images/growth/twitter-icon.svg'
+    title = fbt('Share this on Twitter', 'RewardActions.tweetThis')
+    externalLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      getContentToShare(props.action, props.locale)
+    )}`
+  } else if (type === 'TwitterFollow') {
+    buttonLink = undefined
+    foregroundImgSrc = 'images/growth/twitter-icon.svg'
+    title = fbt('Follow us on Twitter', 'RewardActions.followOnTwitter')
+    // TODO: Move screen name to Enviroment variable
+    externalLink =
+      'https://twitter.com/intent/follow?screen_name=OriginProtocol'
   }
 
   const renderReward = (amount, style = 'normal') => {
@@ -152,7 +167,20 @@ function Action(props) {
                 {actionComponent}
               </Link>
             )}
-            {!buttonLink && (
+            {externalLink && (
+              <a
+                href={externalLink}
+                target="_blank"
+                className="mt-auto mb-auto external-link"
+                rel="noopener noreferrer"
+                onClick={() =>
+                  props.onActionClick && props.onActionClick(props.action)
+                }
+              >
+                {actionComponent}
+              </a>
+            )}
+            {!buttonLink && !externalLink && (
               <div className="mt-auto mb-auto" onClick={() => buttonOnClick()}>
                 {actionComponent}
               </div>
@@ -376,6 +404,20 @@ require('react-styl')(`
         font-weight: normal
         white-space: nowrap
         color: var(--clear-blue)
+    .external-link
+      .action .title
+        position: relative
+        &:after
+          content: ' '
+          display: inline-block
+          height: 100%
+          width: 1rem
+          background-image: url('images/growth/link-icon.svg')
+          background-size: 1rem
+          background-position: center
+          background-repeat: no-repeat
+          position: absolute
+          margin-left: 10px
   .growth-campaigns.container.mobile
     .action
       min-height: 80px

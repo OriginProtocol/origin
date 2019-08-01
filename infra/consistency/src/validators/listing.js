@@ -4,11 +4,12 @@
  *
  * TODO: Add support for ListingUpdated events
  */
+const esmImport = require('esm')(module)
 const db = {
-  ...require('../../../models')
+  ...esmImport('@origin/discovery/src/models')
 }
 
-const log = require('../../logger')
+const { log } = require('../logger')
 const { assert, getListenerBlock, getPastEvents } = require('./utils')
 
 async function listingCreatedEvents(contract, fromBlock, toBlock) {
