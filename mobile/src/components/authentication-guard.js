@@ -54,10 +54,7 @@ class AuthenticationGuard extends Component {
 
   _handleAppStateChange = nextAppState => {
     // If we are coming from a backgrounded state pop the touch authentication
-    if (
-      this.state.appState === 'background' &&
-      nextAppState === 'active'
-    ) {
+    if (this.state.appState === 'background' && nextAppState === 'active') {
       this.touchAuthenticate()
     }
     this.setState({ appState: nextAppState })

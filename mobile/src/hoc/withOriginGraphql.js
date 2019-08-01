@@ -31,7 +31,10 @@ const withOriginGraphql = WrappedComponent => {
       }
 
       this.subscriptions = [
-        DeviceEventEmitter.addListener('graphqlResult', this._handleGraphqlResult),
+        DeviceEventEmitter.addListener(
+          'graphqlResult',
+          this._handleGraphqlResult
+        ),
         DeviceEventEmitter.addListener('graphqlError', this._handleGraphqlError)
       ]
     }
