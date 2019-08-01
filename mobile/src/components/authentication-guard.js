@@ -118,20 +118,15 @@ class AuthenticationGuard extends Component {
         </Text>
         {this.state.error && (
           <>
-            <Text
-              style={styles.invalid}
-            >
-              {this.state.error}
-            </Text>
+            <Text style={styles.invalid}>{this.state.error}</Text>
             <OriginButton
               size="large"
               type="primary"
               style={{ marginTop: 40 }}
-              title={fbt(
-                'Retry',
-                'AuthenticationGuard.retryButton'
-              )}
-              onPress={() => {this.touchAuthenticate()}}
+              title={fbt('Retry', 'AuthenticationGuard.retryButton')}
+              onPress={() => {
+                this.touchAuthenticate()
+              }}
             />
           </>
         )}
