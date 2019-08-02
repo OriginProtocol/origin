@@ -551,8 +551,8 @@ class MarketplaceScreen extends Component {
     updateExchangeRate(this.state.fiatCurrency[1], 'DAI')
   }
 
-  onWebViewNavigationStateChange = (state) => {
-    const urlMatch = state.url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)
+  onWebViewNavigationStateChange = state => {
+    const urlMatch = state.url.match(/^https?:\/\/([^/?#]+)(?:[/?#]|$)/i)
     if (urlMatch && urlMatch[1]) {
       this.setState({ currentDomain: urlMatch[1] })
     }
@@ -694,7 +694,9 @@ class MarketplaceScreen extends Component {
                 )
               }}
               decelerationRate="normal"
-              userAgent={webViewToBrowserUserAgent(this.state.currentDomain === 'twitter.com')}
+              userAgent={webViewToBrowserUserAgent(
+                this.state.currentDomain === 'twitter.com'
+              )}
               startInLoadingState={true}
             />
             {this.state.modals.map((modal, index) => {
