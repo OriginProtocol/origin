@@ -54,7 +54,8 @@ class MarketplaceScreen extends Component {
       enablePullToRefresh: true,
       modals: [],
       fiatCurrency: CURRENCIES.find(c => c[0] === 'fiat-USD'),
-      transactionCardLoading: false
+      transactionCardLoading: false,
+      currentDomain: ''
     }
     if (Platform.OS === 'android') {
       // Configure swipe handler for back forward navigation on Android because
@@ -558,6 +559,14 @@ class MarketplaceScreen extends Component {
     updateExchangeRate(this.state.fiatCurrency[1], 'DAI')
   }
 
+  onWebViewNavigationStateChange = state => {
+    try {
+      this.setState({ currentDomain: new URL(state.url).hostname })
+    } catch (error) {
+      console.warn(`Browser reporting malformed url: ${state.url}`)
+    }
+  }
+
   onWebViewLoad = async () => {
     // Check if a growth invie code needs to be set
     this.clipboardInviteCodeCheck()
@@ -685,6 +694,7 @@ class MarketplaceScreen extends Component {
                 const { nativeEvent } = syntheticEvent
                 this.props.setMarketplaceWebViewError(nativeEvent.description)
               }}
+              onNavigationStateChange={this.onWebViewNavigationStateChange}
               renderLoading={() => {
                 return (
                   <View style={styles.loading}>
@@ -693,7 +703,12 @@ class MarketplaceScreen extends Component {
                 )
               }}
               decelerationRate="normal"
-              userAgent={webViewToBrowserUserAgent()}
+              // On Android twitter share dialog will not appear with all user agents. For that reason
+              // we hardcode one that does work
+              userAgent={webViewToBrowserUserAgent(
+                this.state.currentDomain === 'twitter.com' &&
+                  Platform.OS === 'android'
+              )}
               startInLoadingState={true}
             />
             {this.state.modals.map((modal, index) => {
