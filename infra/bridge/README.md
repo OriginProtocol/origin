@@ -88,6 +88,9 @@ functionality.
   - WECHAT_CLIENT_ID
   - WECHAT_CLIENT_SECRET
 
+If you plan on using different OAuth client for webhooks, you should set the following environment variables
+- TWITTER_WEBHOOKS_CONSUMER_KEY
+- TWITTER_WEBHOOKS_CONSUMER_SECRET
 
 ### Set Up Your Database
 

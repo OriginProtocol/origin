@@ -25,7 +25,8 @@ router.get('/twitter/__init', async (req, res) => {
   try {
     const twitterResponse = await getTwitterOAuthRequestToken({
       sid: req.sessionID,
-      redirectUrl: '/hooks/twitter/__auth-redirect'
+      redirectUrl: '/hooks/twitter/__auth-redirect',
+      useWebhookCredentials: true
     })
 
     oAuthToken = twitterResponse.oAuthToken
@@ -65,7 +66,8 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
     const accessToken = await getTwitterOAuthAccessToken(
       session.oAuthToken,
       session.oAuthTokenSecret,
-      req.query.oauth_verifier
+      req.query.oauth_verifier,
+      true
     )
     oAuthAccessToken = accessToken.oAuthAccessToken
     oAuthAccessTokenSecret = accessToken.oAuthAccessTokenSecret
@@ -85,7 +87,8 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
   try {
     userProfileData = await verifyTwitterCredentials(
       oAuthAccessToken,
-      oAuthAccessTokenSecret
+      oAuthAccessTokenSecret,
+      true
     )
   } catch (error) {
     logger.error(error)
@@ -125,7 +128,11 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
  */
 router.get('/twitter', (req, res) => {
   const hmac = crypto
-    .createHmac('sha256', process.env.TWITTER_CONSUMER_SECRET)
+    .createHmac(
+      'sha256',
+      process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET ||
+        process.env.TWITTER_CONSUMER_SECRET
+    )
     .update(req.query.crc_token)
     .digest('base64')
 
