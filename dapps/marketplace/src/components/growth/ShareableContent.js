@@ -10,10 +10,10 @@ const ShareableContent = ({ action, onShare }) => {
   const details = GrowthEnum[detailsKey] || detailsKey
   const linkText = GrowthEnum[linkKey] || linkKey
   return (
-    <div className="shareable-content">
+    <div className="shareable-content col-12 col-md-6 d-flex flex-column">
       <img src={image} className="promotion-image" />
       <h2>{title}</h2>
-      <div className="promotion-desc">{details}</div>
+      <div className="promotion-desc mb-auto">{details}</div>
       {link && (
         <a href={link} className="promotion-link">
           {linkText}
@@ -47,6 +47,7 @@ require('react-styl')(`
       padding-bottom: 0
     .promotion-image
       width: 100%
+      border-radius: 10px
     h2
       margin-top: 1.25rem
       margin-bottom: 0
