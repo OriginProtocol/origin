@@ -694,8 +694,11 @@ class MarketplaceScreen extends Component {
                 )
               }}
               decelerationRate="normal"
+              // On Android twitter share dialog will not appear with all user agents. For that reason
+              // we hardcode one that does work
               userAgent={webViewToBrowserUserAgent(
-                this.state.currentDomain === 'twitter.com'
+                this.state.currentDomain === 'twitter.com' &&
+                  Platform.OS === 'android'
               )}
               startInLoadingState={true}
             />
