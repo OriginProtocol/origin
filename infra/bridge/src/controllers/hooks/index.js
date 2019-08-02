@@ -157,6 +157,9 @@ router.post('/twitter', (req, res) => {
         process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
       ) {
         followCount++
+        // Note: for follow events, source.id is a string and therefore
+        // does not have the same issue with JS large integer mishandling
+        // as the share event user.id has.
         const key = `twitter/follow/${event.source.id}`
         redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
         logger.info(
@@ -182,7 +185,7 @@ router.post('/twitter', (req, res) => {
       })
       .forEach(event => {
         mentionCount++
-        const key = `twitter/share/${event.user.id}`
+        const key = `twitter/share/${event.user.id_str}`
         redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
         logger.info(
           `Pushing twitter mention event for ${event.user.screen_name} at ${key}...`
