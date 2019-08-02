@@ -152,12 +152,14 @@ router.post('/twitter', (req, res) => {
     const events = req.body.follow_events
     totalFollowEvents = events.length
     events.forEach(event => {
-      logger.debug('Received follow event:', event)
       if (
         event.target.screen_name.toLowerCase() ===
         process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
       ) {
         followCount++
+        // Note: for follow events, source.id is a string and therefore
+        // does not have the same issue with JS large integer mishandling
+        // as the share event user.id has.
         const key = `twitter/follow/${event.source.id}`
         redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
         logger.info(
