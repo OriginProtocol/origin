@@ -552,10 +552,7 @@ class MarketplaceScreen extends Component {
   }
 
   onWebViewNavigationStateChange = state => {
-    const urlMatch = state.url.match(/^https?:\/\/([^/?#]+)(?:[/?#]|$)/i)
-    if (urlMatch && urlMatch[1]) {
-      this.setState({ currentDomain: urlMatch[1] })
-    }
+    this.setState({ currentDomain: new URL(state.url).hostname })
   }
 
   onWebViewLoad = async () => {
