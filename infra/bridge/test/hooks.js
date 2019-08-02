@@ -23,7 +23,7 @@ const getAsync = key =>
 
 describe('promotion verifications', () => {
   beforeEach(async () => {
-    process.env.TWITTER_CONSUMER_SECRET = 'abcdef'
+    process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET = 'abcdef'
     process.env.TWITTER_ORIGINPROTOCOL_USERNAME = 'OriginProtocol'
 
     // Clear out redis-mock
@@ -54,7 +54,8 @@ describe('promotion verifications', () => {
               screen_name: 'originprotocol'
             },
             source: {
-              id_str: '12345'
+              id: '12345',
+              screen_name: 'some random account'
             }
           }
         ]
