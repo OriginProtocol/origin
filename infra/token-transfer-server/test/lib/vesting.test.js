@@ -3,9 +3,9 @@ chai.use(require('chai-moment'))
 const expect = chai.expect
 const moment = require('moment')
 
-const { vestGrant, vestGrants } = require('../src/lib/vesting')
-const { Event, Grant, sequelize } = require('../src/models')
-const { GRANT_VEST } = require('../src/constants/events')
+const { vestGrant, vestGrants } = require('../../src/lib/vesting')
+const { Event, Grant, sequelize } = require('../../src/models')
+const { GRANT_VEST } = require('../../src/constants/events')
 
 const testEmail = 'cryptopup@originprotocol.com'
 

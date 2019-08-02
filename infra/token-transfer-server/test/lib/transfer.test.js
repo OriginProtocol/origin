@@ -5,9 +5,9 @@ chai.use(require('chai-bignumber')(BigNumber))
 chai.use(require('chai-moment'))
 const expect = chai.expect
 
-const { enqueueTransfer, executeTransfer } = require('../src/lib/transfer')
-const { Event, Grant, Transfer, User, sequelize } = require('../src/models')
-const enums = require('../src/enums')
+const { enqueueTransfer, executeTransfer } = require('../../src/lib/transfer')
+const { Event, Grant, Transfer, User, sequelize } = require('../../src/models')
+const enums = require('../../src/enums')
 
 
 // Mock for the Token class in the @origin/token package.
