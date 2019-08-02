@@ -54,7 +54,8 @@ class MarketplaceScreen extends Component {
       enablePullToRefresh: true,
       modals: [],
       fiatCurrency: CURRENCIES.find(c => c[0] === 'fiat-USD'),
-      transactionCardLoading: false
+      transactionCardLoading: false,
+      currentDomain: ''
     }
     if (Platform.OS === 'android') {
       // Configure swipe handler for back forward navigation on Android because
@@ -550,6 +551,13 @@ class MarketplaceScreen extends Component {
     updateExchangeRate(this.state.fiatCurrency[1], 'DAI')
   }
 
+  onWebViewNavigationStateChange = (state) => {
+    const urlMatch = state.url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)
+    if (urlMatch && urlMatch[1]) {
+      this.setState({ currentDomain: urlMatch[1] })
+    }
+  }
+
   onWebViewLoad = async () => {
     // Check if a growth invie code needs to be set
     this.clipboardInviteCodeCheck()
@@ -677,6 +685,7 @@ class MarketplaceScreen extends Component {
                 const { nativeEvent } = syntheticEvent
                 this.props.setMarketplaceWebViewError(nativeEvent.description)
               }}
+              onNavigationStateChange={this.onWebViewNavigationStateChange}
               renderLoading={() => {
                 return (
                   <View style={styles.loading}>
@@ -685,7 +694,7 @@ class MarketplaceScreen extends Component {
                 )
               }}
               decelerationRate="normal"
-              userAgent={webViewToBrowserUserAgent()}
+              userAgent={webViewToBrowserUserAgent(this.state.currentDomain === 'twitter.com')}
               startInLoadingState={true}
             />
             {this.state.modals.map((modal, index) => {
