@@ -54,7 +54,8 @@ describe('promotion verifications', () => {
               screen_name: 'originprotocol'
             },
             source: {
-              id_str: '12345'
+              id: '12345',
+              screen_name: 'some random account'
             }
           }
         ]
