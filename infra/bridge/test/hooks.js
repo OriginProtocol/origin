@@ -23,7 +23,7 @@ const getAsync = key =>
 
 describe('twitter webhooks', () => {
   beforeEach(async () => {
-    process.env.TWITTER_CONSUMER_SECRET = 'abcdef'
+    process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET = 'abcdef'
     process.env.TWITTER_ORIGINPROTOCOL_USERNAME = 'OriginProtocol'
 
     // Clear out redis-mock
