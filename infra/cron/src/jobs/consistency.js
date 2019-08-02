@@ -2,13 +2,16 @@ const checker = require('@origin/consistency')
 const fs = require('fs')
 const tmp = require('tmp')
 const sendgridMail = require('@sendgrid/mail')
+const esmImport = require('esm')(module)
+const contractsContext = esmImport('@origin/graphql/src/contracts').default
+const { setNetwork } = esmImport('@origin/graphql/src/contracts')
 const logger = require('../logger')
 
 function todaysDateString() {
   const now = new Date()
   const year = now.getUTCFullYear()
-  const month = now.getUTCMonth().padStart(2, '0')
-  const day = now.getUTCDate().padStart(2, '0')
+  const month = String(now.getUTCMonth()).padStart(2, '0')
+  const day = String(now.getUTCDate()).padStart(2, '0')
   return `${year}-${month}-${day}`
 }
 
@@ -37,8 +40,14 @@ async function ConsistencyCheckJob(job) {
   const logFile = tmp.fileSync()
   const network = process.env.NETWORK || 'mainnet'
 
+  setNetwork(network)
+  if (!contractsContext.web3) {
+    throw new Error('web3 not initialized')
+  }
+  console.log(`Logging to file ${logFile.name}`)
   const checkCount = await checker.main({
     network,
+    web3: contractsContext.web3,
     jsonRPCURL: process.env.PROVIDER_URL,
     ipfsGateway: process.env.IPFS_GATEWAY || 'https://ips.originprotocol.com',
     fromBlock: 6425000,

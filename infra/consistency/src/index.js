@@ -15,10 +15,8 @@ const { validateOffers } = require('./validators/offer')
 
 async function main(config) {
   let commands = 0
-  if (!config.log) {
-    config.log = createLogger()
-  }
-  const log = config.log
+  const log = createLogger({ filename: config.logFile ? config.logFile : null })
+  config.log = log
 
   log.info(`Performing consistency check on network ${config.network}`)
   if (config.identity) {
@@ -93,4 +91,6 @@ if (require.main === module) {
       console.error('Unhandled error in main()')
       console.error(err)
     })
+} else {
+  module.exports = { main }
 }
