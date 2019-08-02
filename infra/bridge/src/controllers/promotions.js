@@ -204,7 +204,7 @@ router.post('/verify', verifyPromotions, async (req, res) => {
   // See for reference https://developer.twitter.com/en/docs/basics/twitter-ids.html
 
   const userId = attestation.username
-  
+
   const redisKey = `${socialNetwork.toLowerCase()}/${type.toLowerCase()}/${userId}`
 
   const maxTries = process.env.VERIFICATION_MAX_TRIES || 60

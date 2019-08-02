@@ -159,9 +159,7 @@ router.post('/twitter', (req, res) => {
         followCount++
         const key = `twitter/follow/${event.source.screen_name}`
         redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
-        logger.info(
-          `Pushing twitter follow event to ${key}...`
-        )
+        logger.info(`Pushing twitter follow event to ${key}...`)
       }
     })
   }
@@ -184,9 +182,7 @@ router.post('/twitter', (req, res) => {
         mentionCount++
         const key = `twitter/share/${event.user.screen_name}`
         redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
-        logger.info(
-          `Pushing twitter mention event to ${key}...`
-        )
+        logger.info(`Pushing twitter mention event to ${key}...`)
       })
   }
 
