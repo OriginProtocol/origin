@@ -197,23 +197,14 @@ router.post('/verify', verifyPromotions, async (req, res) => {
       errors: [`Attestation missing`]
     })
   }
-  // Get the user's twitter id.
-  // We favor using profileData.id_str but for some legacy attestations
-  // it is not populated. In that case we fallback to attestation.value.
+  // We are using `screen_name` instead of `id` or `id_str` since they are
+  // not deterministic with all events
   // Caveat: attestation.value for some rows stores an incorrect value
   // because we had a bug caused by JS incorrect handling of large integers.
   // See for reference https://developer.twitter.com/en/docs/basics/twitter-ids.html
-  // For those unlucky users attestation verification will fail :(
-  let userId
-  if (attestation.profileData) {
-    userId = attestation.profileData.id_str
-  } else {
-    logger.warn(
-      `Attestation profileData missing, falling back to value for ${identity}`
-    )
-    userId = attestation.value
-  }
 
+  const userId = attestation.username
+  
   const redisKey = `${socialNetwork.toLowerCase()}/${type.toLowerCase()}/${userId}`
 
   const maxTries = process.env.VERIFICATION_MAX_TRIES || 60
