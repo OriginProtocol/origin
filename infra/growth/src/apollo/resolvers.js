@@ -109,10 +109,7 @@ const resolvers = {
       return eligibility
     },
     async enrollmentStatus(_, args, context) {
-      return await getUserAuthenticationStatus(
-        context.authToken,
-        args.walletAddress
-      )
+      return context.authentication
     }
   },
   Mutation: {
