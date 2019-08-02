@@ -552,7 +552,11 @@ class MarketplaceScreen extends Component {
   }
 
   onWebViewNavigationStateChange = state => {
-    this.setState({ currentDomain: new URL(state.url).hostname })
+    try {
+      this.setState({ currentDomain: new URL(state.url).hostname })
+    } catch (error) {
+      console.warn(`Browser reporting malformed url: ${state.url}`)
+    }
   }
 
   onWebViewLoad = async () => {
