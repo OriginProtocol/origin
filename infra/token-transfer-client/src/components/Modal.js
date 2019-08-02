@@ -195,7 +195,7 @@ require('react-styl')(`
           overflow: hidden;
           margin-left: auto;
           margin-right: auto;
-          max-width: 500px;
+          max-width: 600px;
           border-radius: 10px;
           font-size: 18px
           font-weight: normal
@@ -261,7 +261,7 @@ require('react-styl')(`
     left: 0
     touch-action: none
     z-index: 1999
-    background: rgba(235, 240, 243, .6);
+    background: rgba(0, 0, 0, .4);
 
   .pl-modal-bg.is-entering
     opacity: 0;

@@ -1,6 +1,6 @@
 /* This should probably use scss to properly override Bootstrap variables */
 
-.btn-primary {
+.btn-secondary {
   border-color: #345d7a;
   background-color: #345d7a;
 }
