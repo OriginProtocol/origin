@@ -171,10 +171,10 @@ router.post('/twitter', (req, res) => {
     events
       .filter(event => {
         // Ignore own tweets, retweets and favorites
-        return (
-          !event.retweeted &&
-          !event.favorited &&
-          event.user.screen_name.toLowerCase() !==
+        return !(
+          event.retweeted ||
+          event.favorited ||
+          event.user.screen_name.toLowerCase() ===
             process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
         )
       })
