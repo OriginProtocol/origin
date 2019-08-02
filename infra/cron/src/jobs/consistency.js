@@ -49,7 +49,7 @@ async function ConsistencyCheckJob(job) {
     network,
     web3: contractsContext.web3,
     jsonRPCURL: process.env.PROVIDER_URL,
-    ipfsGateway: process.env.IPFS_GATEWAY || 'https://ips.originprotocol.com',
+    ipfsGateway: process.env.IPFS_GATEWAY || 'https://ipfs.originprotocol.com',
     fromBlock: 6425000,
     identity: true,
     listings: true,

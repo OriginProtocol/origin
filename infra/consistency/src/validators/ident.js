@@ -263,7 +263,7 @@ async function verifyIdent({
   )
 
   if (!ipfsJson) {
-    log.error(`IPFS Data missing at ${ipfsGateway}/${qmHash}`)
+    log.error(`IPFS Data missing at ${ipfsGateway}/ipfs/${qmHash}`)
     return false
   }
 
