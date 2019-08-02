@@ -217,6 +217,65 @@ app.get(
 )
 
 /**
+ * Return users accounts.
+ */
+app.get(
+  '/api/accounts',
+  ensureLoggedIn,
+  asyncMiddleware(async (req, res) => {
+    const accounts = await Account.findAll({
+      where: { userId: req.user.id },
+    })
+    res.json(accounts.map(a => a.get({ plain: true })))
+  })
+)
+
+/**
+ * Add an account.
+ */
+app.post(
+  '/api/accounts',
+  [
+    check('nickname').isString(),
+    check('address').custom(isEthereumAddress),
+    ensureLoggedIn
+  ],
+  asyncMiddleware(async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() })
+    }
+
+    const account = await Account.create({
+      userId: req.user.id,
+      nickname: req.body.nickname,
+      address: req.body.address
+    })
+
+    res.json(account.get({ plain: true }))
+  })
+)
+
+/**
+ * Delete an account
+ */
+app.delete(
+  '/api/accounts/:accountId(\d+)',
+  ensureLoggedIn,
+  asyncMiddleware(async (req, res) => {
+    const account = await Account.findAll({
+      where: { id: req.params.accountId, userId: req.user.id },
+    })
+    if (!account) {
+      res.status(404)
+    } else {
+      await account.destroy()
+      res.status(204)
+    }
+  })
+)
+
+/**
  * Sends a login code by email.
  */
 app.post('/api/send_email_code', asyncMiddleware(sendEmailCode))
@@ -255,6 +314,9 @@ app.post(
 app.post('/api/logout', ensureLoggedIn, logout)
 
 createProvider(networkId) // Ensure web3 credentials are set up
+
 app.listen(port, () => {
   logger.info(`Listening on port ${port}`)
 })
+
+module.exports = app

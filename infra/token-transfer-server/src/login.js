@@ -13,6 +13,7 @@ if (!emailFrom) {
   logger.error('SENDGRID_FROM_EMAIL must be set through EnvKey or manually')
   process.exit(1)
 }
+
 const apiKey = process.env.SENDGRID_API_KEY
 if (!emailFrom) {
   logger.error('SENDGRID_API_KEY must be set through EnvKey or manually')
