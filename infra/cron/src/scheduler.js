@@ -82,6 +82,7 @@ const jobsPath = path.dirname(__filename) + '/jobs/'
 
 const growthVerifyEventsQueue = new Queue('growthVerifyEvents', redisUrl)
 const growthUpdateCampaignsQueue = new Queue('growthUpdateCampaigns', redisUrl)
+const consistencyQueue = new Queue('consistencyChecker', redisUrl)
 
 // Growth verifier job. Runs daily at 20:00UTC (~noon PST).
 watch(growthVerifyEventsQueue)
@@ -100,3 +101,13 @@ growthUpdateCampaignsQueue.add(
   { repeat: { cron: '30 20 * * *' } }
 )
 logger.info('Scheduled growthUpdateCampaigns job.')
+
+// Growth campaign update job. Runs daily at 20:30UTC (~12:30 PST).
+watch(consistencyQueue)
+consistencyQueue.process(jobsPath + 'consistency.js')
+consistencyQueue.add(
+  { persist: false },
+  // 11:30PM
+  { repeat: { cron: '30 23 * * *' } }
+)
+logger.info('Scheduled consistencyChecker job.')

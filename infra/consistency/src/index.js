@@ -6,15 +6,19 @@
  */
 const esmImport = require('esm')(module)
 const contractsContext = esmImport('@origin/graphql/src/contracts').default
-const { setNetwork } = esmImport('@origin/graphql/src/contracts')
+const { setNetwork, web3 } = esmImport('@origin/graphql/src/contracts')
 
-const { log } = require('./logger')
+const { createLogger } = require('./logger')
 const { validateIdentities } = require('./validators/ident')
 const { validateListings } = require('./validators/listing')
 const { validateOffers } = require('./validators/offer')
 
 async function main(config) {
   let commands = 0
+  if (!config.log) {
+    config.log = createLogger()
+  }
+  const log = config.log
 
   log.info(`Performing consistency check on network ${config.network}`)
   if (config.identity) {
@@ -75,23 +79,18 @@ if (require.main === module) {
     identity: args['--identity'] || false,
     listings: args['--listings'] || false,
     offers: args['--offers'] || false,
-    jsonRPCURL:
-      args['--json-rpc'] ||
-      'https://eth-mainnet.alchemyapi.io/jsonrpc/FCA-3myPH5VFN8naOWyxDU6VkxelafK6',
     ipfsGateway: args['--ipfs-gateway'] || 'https://ipfs.originprotocol.com',
     fromBlock: args['--from-block'] || 0
   }
 
-  log.debug('config: ', config)
-
-  setNetwork(config.network, { useCustomProvider: true })
+  setNetwork(config.network)
+  config.web3 = web3
   main(config)
-    .then(res => {
-      log.info(`Fin. ${res} checks run.`)
+    .then(() => {
       process.exit()
     })
     .catch(err => {
-      log.error('Unhandled error in main()')
-      log.critical(err)
+      console.error('Unhandled error in main()')
+      console.error(err)
     })
 }
