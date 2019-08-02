@@ -8,8 +8,9 @@ const logger = require('./../logger')
 const oauth = new OAuth(
   'https://api.twitter.com/oauth/request_token',
   'https://api.twitter.com/oauth/access_token',
-  process.env.TWITTER_CONSUMER_KEY,
-  process.env.TWITTER_CONSUMER_SECRET,
+  process.env.TWITTER_WEBHOOKS_CONSUMER_KEY || process.env.TWITTER_CONSUMER_KEY,
+  process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET ||
+    process.env.TWITTER_CONSUMER_SECRET,
   '1.0',
   null,
   'HMAC-SHA1'
@@ -82,7 +83,7 @@ async function getBearerToken() {
       authorization:
         'Basic ' +
         Buffer.from(
-          `${process.env.TWITTER_CONSUMER_KEY}:${process.env.TWITTER_CONSUMER_SECRET}`
+          `${process.env.TWITTER_WEBHOOKS_CONSUMER_KEY}:${process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET}`
         ).toString('base64'),
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
     })

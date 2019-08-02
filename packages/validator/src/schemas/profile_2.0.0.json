@@ -14,7 +14,7 @@
           "type": "string"
         }
       },
-      "required": ["firstName", "lastName"]
+      "required": ["firstName"]
     },
     "organization": {
       "type": "object",
