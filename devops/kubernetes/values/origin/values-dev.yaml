@@ -18,7 +18,7 @@ faucetImageTag: 'e338058'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '6080900'
+eventlistenerImageTag: 'b1e0532'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -26,7 +26,7 @@ discoveryImageTag: 'a14145b'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: 'b7ab606'
+growthImageTag: 'b1e0532'
 
 # origin-messaging
 messagingImage: origin-messaging
