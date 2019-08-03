@@ -22,6 +22,8 @@ const growthSchema = makeExecutableSchema({
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('growth_auth_token')
+  const growthSecret = localStorage.getItem('growth_admin_secret')
+  const growthWallet = localStorage.getItem('growth_wallet_override')
   const returnObject = {
     headers: {
       ...headers
@@ -30,6 +32,11 @@ const authLink = setContext((_, { headers }) => {
 
   if (token) {
     returnObject.headers['authentication'] = `{"growth_auth_token": "${token}"}`
+  }
+
+  if (growthSecret && growthWallet) {
+    returnObject.headers['x-growth-secret'] = growthSecret
+    returnObject.headers['x-growth-wallet'] = growthWallet
   }
 
   return returnObject
