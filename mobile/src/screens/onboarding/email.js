@@ -14,6 +14,7 @@ import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash.get'
+import { withNavigation } from 'react-navigation'
 
 import { addAttestation } from 'actions/Onboarding'
 import BackArrow from 'components/back-arrow'
@@ -37,6 +38,20 @@ class EmailScreen extends Component {
       verifyError: '',
       verificationCode: ''
     }
+  }
+
+  componentDidMount() {
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      if (!this.props.wallet.activeAccount) {
+        // Active account removed by import warning and back swipe?
+        this.props.navigation.navigate('Welcome')
+      }
+    })
+  }
+
+  componentWillUnmount() {
+    // Remove the event listener
+    this.focusListener.remove()
   }
 
   handleChange = async emailValue => {

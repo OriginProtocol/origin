@@ -15,6 +15,7 @@ import { fbt } from 'fbt-runtime'
 import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
 import RNPickerSelect from 'react-native-picker-select'
+import { withNavigation } from 'react-navigation'
 import * as RNLocalize from 'react-native-localize'
 
 import { addAttestation, addSkippedAttestation } from 'actions/Onboarding'
@@ -97,6 +98,20 @@ class PhoneScreen extends Component {
       verificationCode: '',
       verificationMethod: 'sms'
     }
+  }
+
+  componentDidMount() {
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      if (!this.props.wallet.activeAccount) {
+        // Active account removed by import warning and back swipe?
+        this.props.navigation.navigate('Welcome')
+      }
+    })
+  }
+
+  componentWillUnmount() {
+    // Remove the event listener
+    this.focusListener.remove()
   }
 
   handleChange = async (field, value) => {
@@ -196,7 +211,9 @@ class PhoneScreen extends Component {
 
   handleSkip = async () => {
     await this.props.addSkippedAttestation('phone')
-    this.props.navigation.navigate(this.props.nextOnboardingStep)
+    setTimeout(() => {
+      this.props.navigation.navigate(this.props.nextOnboardingStep)
+    })
   }
 
   render() {
@@ -373,14 +390,14 @@ const mapDispatchToProps = dispatch => ({
     dispatch(addSkippedAttestation(attestationName))
 })
 
-export default withConfig(
+export default withNavigation(withConfig(
   withOnboardingSteps(
     connect(
       mapStateToProps,
       mapDispatchToProps
     )(PhoneScreen)
   )
-)
+))
 
 const styles = StyleSheet.create({
   ...CommonStyles,
