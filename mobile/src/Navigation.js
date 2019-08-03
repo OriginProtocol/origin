@@ -171,7 +171,9 @@ const _MarketplaceApp = createStackNavigator(
               return focused ? (
                 <Image source={require(IMAGES_PATH + 'settings-active.png')} />
               ) : (
-                <Image source={require(IMAGES_PATH + 'settings-inactive.png')} />
+                <Image
+                  source={require(IMAGES_PATH + 'settings-inactive.png')}
+                />
               )
             }
           }
@@ -240,15 +242,12 @@ class MarketplaceApp extends React.Component {
         this.props.settings
       )
 
-      console.debug('Next onboarding step: ', nextOnboardingStep)
-
       // Onboarding complete, nothing to do here
       if (this.props.onboarding.complete || nextOnboardingStep === 'Ready') {
         this.props.setOnboardingComplete(true)
         return
       } else {
         // Some onboarding still to do, start with onboarding welcome
-        console.log('Navigating to onboarding')
         this.props.navigation.navigate('Onboarding')
       }
     }
@@ -261,7 +260,12 @@ class MarketplaceApp extends React.Component {
     let errorComponent = false
 
     if (this.props.marketplace.error) {
-      errorComponent = <NoInternetError />
+      errorComponent = (
+        <NoInternetError
+          errorTextStyle={{ color: 'white' }}
+          buttonType="white"
+        />
+      )
       loadingText = false
       activityIndicator = false
     }
@@ -315,6 +319,4 @@ const AppStack = createSwitchNavigator(
   }
 )
 
-export default createAppContainer(
-  AppStack
-)
+export default createAppContainer(AppStack)
