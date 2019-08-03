@@ -103,9 +103,7 @@ class SettingsScreen extends Component {
         </View>
         <TouchableHighlight>
           <View style={[styles.menuItem, styles.menuItemInactionable]}>
-            <Text style={styles.menuText}>
-              {Package.version}
-            </Text>
+            <Text style={styles.menuText}>{Package.version}</Text>
           </View>
         </TouchableHighlight>
       </ScrollView>
