@@ -228,7 +228,11 @@ class MarketplaceApp extends React.Component {
   _handleAppStateChange = nextAppState => {
     // Detect app being foregrounded from background and redirect to auth
     if (nextAppState === 'background') {
-      this.props.navigation.navigate('Auth')
+      const hasAuthentication =
+        this.props.settings.biometryType || this.props.settings.pin
+      if (hasAuthentication) {
+        this.props.navigation.navigate('Auth')
+      }
     }
   }
 
