@@ -54,8 +54,10 @@ class AuthenticationGuard extends Component {
 
   _handleAppStateChange = nextAppState => {
     // If we are coming from a backgrounded state pop the touch authentication
-    if (this.state.appState === 'background' && nextAppState === 'active') {
-      this.touchAuthenticate()
+    if (this.props.settings.biometryType) {
+      if (this.state.appState === 'background' && nextAppState === 'active') {
+        this.touchAuthenticate()
+      }
     }
     this.setState({ appState: nextAppState })
   }
@@ -133,7 +135,7 @@ class AuthenticationGuard extends Component {
       <>
         <Text style={styles.title}>
           <fbt desc="AuthenticationGuard.biometryTitle">
-            Authentication required
+            Authentication Required
           </fbt>
         </Text>
         {this.state.error && (
@@ -159,7 +161,7 @@ class AuthenticationGuard extends Component {
     return (
       <>
         <Text style={styles.title}>
-          <fbt desc="AuthenticationGuard.pinTitle">Pin required</fbt>
+          <fbt desc="AuthenticationGuard.pinTitle">Pin Required</fbt>
         </Text>
         {this.state.error && (
           <Text style={styles.invalid}>{this.state.error}</Text>
