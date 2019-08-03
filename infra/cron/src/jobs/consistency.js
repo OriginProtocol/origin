@@ -24,9 +24,6 @@ async function ConsistencyCheckJob(job) {
   logger.info(`Processing ConsistencyCheckJob id=${job.id} data= ${job.data}`)
   job.progress(0)
 
-  if (typeof process.env.PROVIDER_URL === 'undefined') {
-    throw new Error('Env var PROVIDER_URL must be set')
-  }
   if (typeof process.env.EMAILS_TO === 'undefined') {
     throw new Error('Warning: EMAILS_TO env var is not set')
   }
@@ -50,7 +47,6 @@ async function ConsistencyCheckJob(job) {
   const checkCount = await checker.main({
     network,
     web3: contractsContext.web3,
-    jsonRPCURL: process.env.PROVIDER_URL,
     ipfsGateway: process.env.IPFS_GATEWAY || 'https://ipfs.originprotocol.com',
     fromBlock: 6425000,
     identity: true,
