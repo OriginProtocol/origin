@@ -48,7 +48,6 @@ import WalletScreen from 'screens/wallet'
 
 // Backup screen
 import BackupScreen from 'screens/backup'
-import { getNextOnboardingStep } from 'utils/user'
 
 const IMAGES_PATH = '../assets/images/'
 
@@ -238,18 +237,8 @@ class MarketplaceApp extends React.Component {
   componentDidUpdate(prevProps) {
     // Wait for marketplace to become available
     if (!prevProps.marketplace.ready && this.props.marketplace.ready) {
-      // We can't use the withOnboardingSteps HOC here because it isn't
-      // compatible with react-navigation navigators
-      const nextOnboardingStep = getNextOnboardingStep(
-        this.props.onboarding,
-        this.props.settings
-      )
-
       // Onboarding complete, nothing to do here
-      if (this.props.onboarding.complete || nextOnboardingStep === 'Ready') {
-        this.props.setOnboardingComplete(true)
-        return
-      } else {
+      if (!this.props.onboarding.complete) {
         // Some onboarding still to do, start with onboarding welcome
         this.props.navigation.navigate('Onboarding')
       }
