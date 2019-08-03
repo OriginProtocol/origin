@@ -9,7 +9,6 @@ const db = {
   ...esmImport('@origin/discovery/src/models')
 }
 
-const { log } = require('../logger')
 const { assert, getListenerBlock, getPastEvents } = require('./utils')
 
 async function offerCreatedEvents(contract, fromBlock, toBlock) {
@@ -69,7 +68,7 @@ async function verifyOfferDBRecord(netId, event) {
  *
  * @param args {object} map of function arguments
  */
-async function validateOffers({ contractsContext, fromBlock }) {
+async function validateOffers({ log, contractsContext, fromBlock }) {
   const events = await offerCreatedEvents(
     contractsContext.marketplace,
     fromBlock
