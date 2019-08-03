@@ -8,6 +8,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View
 } from 'react-native'
 import { connect } from 'react-redux'
@@ -133,11 +134,13 @@ class AuthenticationGuard extends Component {
   renderBiometryGuard() {
     return (
       <>
-        <Text style={styles.title}>
-          <fbt desc="AuthenticationGuard.biometryTitle">
-            Authentication Required
-          </fbt>
-        </Text>
+        <TouchableOpacity onPress={this.touchAuthenticate}>
+          <Text style={styles.title}>
+            <fbt desc="AuthenticationGuard.biometryTitle">
+              Authentication Required
+            </fbt>
+          </Text>
+        </TouchableOpacity>
         {this.state.error && (
           <>
             <Text style={styles.invalid}>{this.state.error}</Text>
