@@ -16,6 +16,7 @@ import { setNetwork } from 'actions/Settings'
 import { NETWORKS } from '../constants'
 import CommonStyles from 'styles/common'
 import MenuStyles from 'styles/menu'
+const Package = require('../../package.json')
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -95,6 +96,18 @@ class SettingsScreen extends Component {
             </TouchableHighlight>
           </Fragment>
         ))}
+        <View style={styles.menuHeadingContainer}>
+          <Text style={styles.menuHeading}>
+            <fbt desc="SettingsScreen.versionHeading">Version</fbt>
+          </Text>
+        </View>
+        <TouchableHighlight>
+          <View style={[styles.menuItem, styles.menuItemInactionable]}>
+            <Text style={styles.menuText}>
+              {Package.version}
+            </Text>
+          </View>
+        </TouchableHighlight>
       </ScrollView>
     )
   }
