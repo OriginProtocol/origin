@@ -1,7 +1,6 @@
 'use strict'
 
-import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
-import thunkMiddleware from 'redux-thunk'
+import { createStore, combineReducers, compose } from 'redux'
 import { createTransform } from 'redux-persist'
 
 import activation from 'reducers/Activation'
@@ -52,7 +51,6 @@ const persistConfig = {
   transforms: [ValidateAccountTransform, encryptor]
 }
 
-const middlewares = [thunkMiddleware]
 // eslint-disable-next-line no-underscore-dangle
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
@@ -69,7 +67,7 @@ const store = createStore(
       wallet
     })
   ),
-  composeEnhancers(applyMiddleware(...middlewares))
+  composeEnhancers()
 )
 
 const persistor = persistStore(store)

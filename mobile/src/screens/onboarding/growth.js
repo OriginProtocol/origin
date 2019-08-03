@@ -39,7 +39,9 @@ class GrowthScreen extends Component {
           text: String(fbt("I'm, sure", 'GrowthScreen.alertConfirm')),
           onPress: () => {
             this.props.setGrowth(false)
+            console.log(this.props.nextOnboardingStep)
             this.props.navigation.navigate(this.props.nextOnboardingStep)
+            this.props.setGrowth(null)
           }
         }
       ]
