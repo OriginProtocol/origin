@@ -8,8 +8,7 @@ import {
   createAppContainer,
   createBottomTabNavigator,
   createStackNavigator,
-  createSwitchNavigator,
-  NavigationActions
+  createSwitchNavigator
 } from 'react-navigation'
 
 import PushNotifications from './PushNotifications'

@@ -11,7 +11,6 @@ import {
   StyleSheet,
   View,
   ScrollView,
-  TouchableOpacity,
   Text,
   RefreshControl
 } from 'react-native'
@@ -716,7 +715,7 @@ class MarketplaceScreen extends Component {
                   Platform.OS === 'android'
               )}
               startInLoadingState={true}
-              renderError={errorName => (
+              renderError={() => (
                 <Modal animationType="fade" transparent={true} visible={true}>
                   <SafeAreaView style={styles.modalSafeAreaView}>
                     <View style={styles.card}>

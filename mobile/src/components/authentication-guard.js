@@ -63,7 +63,7 @@ class AuthenticationGuard extends Component {
     this.setState({ appState: nextAppState })
   }
 
-  touchAuthenticate() {
+  touchAuthenticate = () => {
     TouchID.authenticate('Access Origin Marketplace App')
       .then(() => {
         this.onSuccess()
@@ -80,14 +80,14 @@ class AuthenticationGuard extends Component {
       })
   }
 
-  onSuccess() {
+  onSuccess = () => {
     const onSuccess = this.props.navigation.getParam('navigateOnSuccess')
     if (onSuccess) {
       this.props.navigation.navigate(onSuccess)
     }
   }
 
-  async handleChange(pin) {
+  handleChange = async (pin) => {
     await this.setState({ pin })
     if (this.state.pin === this.props.settings.pin) {
       this.onSuccess()
