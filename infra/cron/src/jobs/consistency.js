@@ -44,7 +44,9 @@ async function ConsistencyCheckJob(job) {
   if (!contractsContext.web3) {
     throw new Error('web3 not initialized')
   }
-  console.log(`Logging to file ${logFile.name}`)
+
+  logger.info(`Logging to file ${logFile.name}`)
+
   const checkCount = await checker.main({
     network,
     web3: contractsContext.web3,

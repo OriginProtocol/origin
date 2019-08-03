@@ -102,12 +102,8 @@ growthUpdateCampaignsQueue.add(
 )
 logger.info('Scheduled growthUpdateCampaigns job.')
 
-// Growth campaign update job. Runs daily at 20:30UTC (~12:30 PST).
+// Consistency checker job job. Runs daily at 23:30UTC
 watch(consistencyQueue)
 consistencyQueue.process(jobsPath + 'consistency.js')
-consistencyQueue.add(
-  { persist: false },
-  // 11:30PM
-  { repeat: { cron: '30 23 * * *' } }
-)
+consistencyQueue.add({ persist: false }, { repeat: { cron: '30 23 * * *' } })
 logger.info('Scheduled consistencyChecker job.')
