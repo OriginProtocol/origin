@@ -39,9 +39,6 @@ async function searchIds(search, sort, filters) {
   if (sort) {
     variables.sort = sort
   }
-
-  console.log('searchIds - variables', variables)
-  console.log('searchIds - discoveryQuery', discoveryQuery)
   const searchResult = await new Promise(resolve => {
     fetch(contracts.discovery, {
       headers: { 'content-type': 'application/json' },
@@ -50,11 +47,9 @@ async function searchIds(search, sort, filters) {
     })
       .then(response => response.json())
       .then(response => {
-        console.log('searchResult - response', response)
         resolve(response.data.listings)
       })
   })
-  console.log('searchIds - searchResult', searchResult)
   const ids = searchResult.nodes
     .map(n => Number(n.id.split('-')[2]))
     .filter(id => id >= 0)
@@ -71,7 +66,6 @@ async function allIds({ contract }) {
 }
 
 async function resultsFromIds({ after, ids, first, totalCount, fields }) {
-  console.log('resultsFromIds - ids', ids)
   let start = 0,
     nodes = []
   if (after) {
@@ -140,13 +134,6 @@ export default async function listings(
   contract,
   { first = 10, after, sort = [], search, filters = [], listingIds = [] }
 ) {
-  console.log('Listings - contract', contract)
-  console.log('Listings - listingIds', listingIds)
-  console.log('Listings - sort', sort)
-  console.log('Listings - first', first)
-  console.log('Listings - after', after)
-  console.log('Listings - search', search)
-  console.log('Listings - filters', filters)
   if (!contract) {
     return null
   }
@@ -159,7 +146,6 @@ export default async function listings(
     try {
       const discoveryResult = await searchIds(search, sort, filters)
       ids = discoveryResult.ids
-      console.log('contracts.discovery - discoveryResult', discoveryResult)
       totalCount = ids.length
     } catch (err) {
       console.log('Failed to retrieve results from discovery server', err)

@@ -335,17 +335,14 @@ class Listing {
     }
 
     // sorting
-    // possibly needs nested mapping + field update to below for price.amount
     const getSortQuery = () => {
       // sort  returns as [Object null prototype] {target:, direction: } not sure why
       // the following code converts it to a regular object
       const resolvedSort = JSON.parse(JSON.stringify(sort))[0]
-      // console.log('resolveSort - resolvedSort', resolvedSort)
-      // console.log('resolveSort - exchangeRates', exchangeRates)
       const { target, direction } = resolvedSort
       // if target and direction are set, return a sort
       // otherwise return empty sort to skip
-      if (target.length > 0 && direction.length > 0) {
+      if (target && direction) {
         switch (target) {
           case 'price.amount':
             return {
@@ -362,7 +359,7 @@ class Listing {
               }
             }
           default:
-            // this default is for non script sorting, should satisfy most cases
+            // this default is for non script based sorting, should satisfy most cases
             return [
               {
                 [target]: {
@@ -375,8 +372,6 @@ class Listing {
         return []
       }
     }
-
-    console.log('sort - ', getSortQuery())
 
     const searchRequest = client.search({
       index: LISTINGS_INDEX,
@@ -442,29 +437,6 @@ class Listing {
     }
 
     const listingIds = listings.map(listing => listing.id)
-    console.log('Query Listings ids - ', listingIds)
-
-    const convertedAmounts = listings.map(l => {
-      return {
-        amount: l.price.amount,
-        convertedAmount: l.price.amount * exchangeRates[l.price.currency],
-        rate: exchangeRates[l.price.currency],
-        currency: l.price.currency
-      }
-    })
-    // console.log('listings - ', JSON.stringify(convertedAmounts))
-    convertedAmounts.forEach(o =>
-      console.log(
-        'Query listings - convertedAmount',
-        o.convertedAmount,
-        ' - rate - ',
-        o.rate,
-        ' - amount - ',
-        o.amount,
-        ' - currency - ',
-        o.currency
-      )
-    )
     return { listingIds, listings, stats }
   }
 }

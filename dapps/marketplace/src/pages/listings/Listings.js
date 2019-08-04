@@ -41,11 +41,12 @@ class Listings extends Component {
       first: 12,
       search: getStateFromQuery(props),
       // currently sort is activated through hardcoding the sort state
-      // sort: { target: 'price.amount', direction: 'asc' }
-      // direction can be set to 'asc' or 'desc'
+      // direction = 'asc' or 'desc'
       // I have made it possible to sort by other values but its not tested
       // target: 'price.amount' is the current goal
       // this will be updated to be user set when the front end is completed
+      // graphql is expecting string values so to disable use empty strings
+      // sort: { target: '', direction: ''}
       sort: { target: 'price.amount', direction: 'asc' }
     }
   }
