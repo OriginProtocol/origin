@@ -2,13 +2,12 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import { AppState, Image, Modal } from 'react-native'
+import { Image, Modal } from 'react-native'
 
 import {
   createAppContainer,
   createBottomTabNavigator,
   createStackNavigator,
-  createSwitchNavigator
 } from 'react-navigation'
 
 import PushNotifications from './PushNotifications'
@@ -215,25 +214,6 @@ const _MarketplaceApp = createStackNavigator(
 class MarketplaceApp extends React.Component {
   static router = _MarketplaceApp.router
 
-  componentDidMount() {
-    AppState.addEventListener('change', this._handleAppStateChange)
-  }
-
-  componentWillUnmount() {
-    AppState.removeEventListener('change', this._handleAppStateChange)
-  }
-
-  _handleAppStateChange = nextAppState => {
-    // Detect app being foregrounded from background and redirect to auth
-    if (nextAppState === 'background') {
-      const hasAuthentication =
-        this.props.settings.biometryType || this.props.settings.pin
-      if (hasAuthentication) {
-        this.props.navigation.navigate('Auth')
-      }
-    }
-  }
-
   componentDidUpdate(prevProps) {
     // Wait for marketplace to become available
     if (!prevProps.marketplace.ready && this.props.marketplace.ready) {
@@ -264,6 +244,7 @@ class MarketplaceApp extends React.Component {
 
     return (
       <>
+        <AuthenticationGuard />
         <PushNotifications />
         <UpdatePrompt />
         <BackupPrompt />
@@ -290,25 +271,9 @@ const mapDispatchToProps = dispatch => ({
   setOnboardingComplete: complete => dispatch(setComplete(complete))
 })
 
-const AppStack = createSwitchNavigator(
-  {
-    Auth: {
-      screen: AuthenticationGuard,
-      params: {
-        navigateOnSuccess: 'App'
-      }
-    },
-    App: connect(
-      mapStateToProps,
-      mapDispatchToProps
-    )(MarketplaceApp)
-  },
-  {
-    // First route should always be Auth. If Auth is not yet enabled (i.e.
-    // onboarding has not been complete) the AuthenticationGuard component
-    // automatically calls the onSuccess method and navigations to the App.
-    initialRouteName: 'Auth'
-  }
-)
+const App = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MarketplaceApp)
 
-export default createAppContainer(AppStack)
+export default createAppContainer(App)

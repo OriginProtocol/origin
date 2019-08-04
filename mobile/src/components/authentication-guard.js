@@ -5,7 +5,7 @@ import {
   AppState,
   Image,
   KeyboardAvoidingView,
-  ScrollView,
+  Modal,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -27,14 +27,10 @@ class AuthenticationGuard extends Component {
     this.state = {
       appState: AppState.currentState,
       pin: '',
-      error: null
+      error: null,
+      // If authentication is set displayModal on init
+      displayModal: this.props.settings.biometryType || this.props.settings.pin
     }
-    if (!this.props.settings.biometryType && !this.props.settings.pin) {
-      // User has no authentication method set, proceed
-      this.onSuccess()
-    }
-
-    this.handleChange = this.handleChange.bind(this)
   }
 
   componentDidMount() {
@@ -54,6 +50,9 @@ class AuthenticationGuard extends Component {
   }
 
   _handleAppStateChange = nextAppState => {
+    if (nextAppState === 'background') {
+      this.setState({ displayModal: true })
+    }
     // If we are coming from a backgrounded state pop the touch authentication
     if (this.props.settings.biometryType) {
       if (this.state.appState === 'background' && nextAppState === 'active') {
@@ -66,9 +65,11 @@ class AuthenticationGuard extends Component {
   touchAuthenticate = () => {
     TouchID.authenticate('Access Origin Marketplace App')
       .then(() => {
+        this.setState({ error: null })
         this.onSuccess()
       })
-      .catch(() => {
+      .catch(e => {
+        console.log(e)
         this.setState({
           error: String(
             fbt(
@@ -81,15 +82,17 @@ class AuthenticationGuard extends Component {
   }
 
   onSuccess = () => {
-    const onSuccess = this.props.navigation.getParam('navigateOnSuccess')
-    if (onSuccess) {
-      this.props.navigation.navigate(onSuccess)
-    }
+    this.setState({ displayModal: false })
   }
 
   handleChange = async pin => {
     await this.setState({ pin })
     if (this.state.pin === this.props.settings.pin) {
+      // Reset the state of component
+      this.setState({
+        pin: '',
+        error: null
+      })
       this.onSuccess()
     } else if (this.state.pin.length === this.props.settings.pin.length) {
       this.setState({
@@ -99,6 +102,7 @@ class AuthenticationGuard extends Component {
         pin: ''
       })
     } else {
+      // On any other input remove the error
       this.setState({
         error: null
       })
@@ -106,6 +110,10 @@ class AuthenticationGuard extends Component {
   }
 
   render() {
+    return this.state.displayModal ? this.renderModal() : null
+  }
+
+  renderModal() {
     const { settings } = this.props
 
     const guard = settings.biometryType
@@ -115,9 +123,9 @@ class AuthenticationGuard extends Component {
       : null
 
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content}>
-          <View style={styles.container}>
+      <Modal animationType="fade" transparent={true} visible={true}>
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
+          <View style={{ ...styles.container, backgroundColor: 'white' }}>
             <Image
               resizeMethod={'scale'}
               resizeMode={'contain'}
@@ -126,8 +134,8 @@ class AuthenticationGuard extends Component {
             />
             {guard}
           </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </Modal>
     )
   }
 

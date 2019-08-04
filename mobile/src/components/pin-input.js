@@ -2,11 +2,24 @@
 
 import React from 'react'
 import { StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native'
+import { withNavigation } from 'react-navigation'
 
 class PinInput extends React.Component {
+  componentDidMount() {
+    this.focusListener = this.props.navigation.addListener(
+      'didFocus',
+      this.focus
+    )
+  }
+
+  componentWillUnmount() {
+    // Remove the event listener
+    this.focusListener.remove()
+  }
+
   // Workaround for Android bug of focus not popping the keyboard
   // https://github.com/facebook/react-native/issues/19366
-  androidFocus() {
+  focus = () => {
     this.textInput.blur()
     setTimeout(() => {
       this.textInput.focus()
@@ -26,10 +39,7 @@ class PinInput extends React.Component {
 
     return (
       <>
-        <TouchableOpacity
-          style={styles.pinCode}
-          onPress={() => this.androidFocus()}
-        >
+        <TouchableOpacity style={styles.pinCode} onPress={() => this.focus()}>
           {placeholder}
         </TouchableOpacity>
         <TextInput
@@ -47,7 +57,7 @@ class PinInput extends React.Component {
   }
 }
 
-export default PinInput
+export default withNavigation(PinInput)
 
 const styles = StyleSheet.create({
   pinCode: {
