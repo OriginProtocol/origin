@@ -17,16 +17,12 @@ const resolvers = {
         args.sort,
         args.filters,
         args.page.numberOfItems,
-        args.page.offset,
-        args.idsOnly
+        args.page.offset
       )
       logger.info(
         `Query: "${args.searchQuery}" returned ${listingIds.length} results.`
       )
       return {
-        // need to return listings and the original
-        // listingIds.map(x => Object.assign({}, { id: x })
-        // modify what receives this, the call to the decentralised graphql
         nodes: listings,
         offset: args.page.offset,
         numberOfItems: listingIds.length,

@@ -240,7 +240,6 @@ const typeDefs = gql`
       sort: [ListingSort]
       filters: [ListingFilter!]
       page: Page!
-      idsOnly: Boolean!
     ): ListingPage
     listing(id: ID!, blockInfo: inBlockInfo): Listing
 

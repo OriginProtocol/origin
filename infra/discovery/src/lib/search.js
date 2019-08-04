@@ -170,11 +170,10 @@ class Listing {
    * @param {array} filters - Array of filter objects
    * @param {integer} numberOfItems - number of items to display per page
    * @param {integer} offset - what page to return results from
-   * @param {boolean} idsOnly - only returns listing Ids vs listing object.
    * @throws Throws an error if the search operation failed.
    * @returns A list of listings (can be empty).
    */
-  static async search(query, sort, filters, numberOfItems, offset, idsOnly) {
+  static async search(query, sort, filters, numberOfItems, offset) {
     const currencies = [
       'token-ETH',
       'token-DAI',
@@ -445,32 +444,28 @@ class Listing {
     const listingIds = listings.map(listing => listing.id)
     console.log('Query Listings ids - ', listingIds)
 
-    if (idsOnly) {
-      return { listingIds, stats }
-    } else {
-      const convertedAmounts = listings.map(l => {
-        return {
-          amount: l.price.amount,
-          convertedAmount: l.price.amount * exchangeRates[l.price.currency],
-          rate: exchangeRates[l.price.currency],
-          currency: l.price.currency
-        }
-      })
-      // console.log('listings - ', JSON.stringify(convertedAmounts))
-      convertedAmounts.forEach(o =>
-        console.log(
-          'Query listings - convertedAmount',
-          o.convertedAmount,
-          ' - rate - ',
-          o.rate,
-          ' - amount - ',
-          o.amount,
-          ' - currency - ',
-          o.currency
-        )
+    const convertedAmounts = listings.map(l => {
+      return {
+        amount: l.price.amount,
+        convertedAmount: l.price.amount * exchangeRates[l.price.currency],
+        rate: exchangeRates[l.price.currency],
+        currency: l.price.currency
+      }
+    })
+    // console.log('listings - ', JSON.stringify(convertedAmounts))
+    convertedAmounts.forEach(o =>
+      console.log(
+        'Query listings - convertedAmount',
+        o.convertedAmount,
+        ' - rate - ',
+        o.rate,
+        ' - amount - ',
+        o.amount,
+        ' - currency - ',
+        o.currency
       )
-      return { listingIds, listings, stats }
-    }
+    )
+    return { listingIds, listings, stats }
   }
 }
 

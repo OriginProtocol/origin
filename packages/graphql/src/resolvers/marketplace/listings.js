@@ -15,12 +15,11 @@ function atob(input) {
 }
 
 const discoveryQuery = `
-query Search($search: String, $filters: [ListingFilter!], $idsOnly: Boolean!, $sort: [ListingSort]) {
+query Search($search: String, $filters: [ListingFilter!], $sort: [ListingSort]) {
   listings(
     searchQuery: $search
     filters: $filters,
     sort: $sort,
-    idsOnly: $idsOnly,
     page: { offset: 0, numberOfItems: 1000 }
   ) {
     numberOfItems
@@ -30,7 +29,6 @@ query Search($search: String, $filters: [ListingFilter!], $idsOnly: Boolean!, $s
 
 async function searchIds(search, sort, filters) {
   const variables = {}
-  variables.idsOnly = false
   if (search) {
     variables.search = search
   }
@@ -41,9 +39,7 @@ async function searchIds(search, sort, filters) {
   if (sort) {
     variables.sort = sort
   }
-  // if(idsOnly){
-  //   variables.idsOnly = idsOnly
-  // }
+
   console.log('searchIds - variables', variables)
   console.log('searchIds - discoveryQuery', discoveryQuery)
   const searchResult = await new Promise(resolve => {
@@ -144,12 +140,13 @@ export default async function listings(
   contract,
   { first = 10, after, sort = [], search, filters = [], listingIds = [] }
 ) {
+  console.log('Listings - contract', contract)
   console.log('Listings - listingIds', listingIds)
   console.log('Listings - sort', sort)
   console.log('Listings - first', first)
   console.log('Listings - after', after)
   console.log('Listings - search', search)
-  console.log('Listings - search', filters)
+  console.log('Listings - filters', filters)
   if (!contract) {
     return null
   }
@@ -174,7 +171,8 @@ export default async function listings(
     ids = decentralizedResults.ids
     totalCount = decentralizedResults.totalCount
   }
-
+  // Need to determine if this is ever used, it seems to be the only use case
+  // for passing ids from centralised graphql. I changed that to pass the full listing
   if (listingIds.length > 0) {
     ids = listingIds.map(listingId => parseInt(listingId.split('-')[2]))
     totalCount = listingIds.length
