@@ -6,6 +6,7 @@ import { withNavigation } from 'react-navigation'
 
 class PinInput extends React.Component {
   componentDidMount() {
+    this.focus()
     this.focusListener = this.props.navigation.addListener(
       'didFocus',
       this.focus
@@ -44,7 +45,6 @@ class PinInput extends React.Component {
         </TouchableOpacity>
         <TextInput
           ref={ref => (this.textInput = ref)}
-          autoFocus={true}
           value={this.props.value}
           keyboardType="numeric"
           pinLength={this.props.pinLength || 6}
