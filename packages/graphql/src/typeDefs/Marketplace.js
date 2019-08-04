@@ -411,7 +411,7 @@ export const types = `
 
   input ListingSortInput {
     target: String!
-    direction: String!
+    order: String!
   }
 
   input ListingInput {

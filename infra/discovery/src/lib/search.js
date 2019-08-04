@@ -166,7 +166,7 @@ class Listing {
   /**
    * Searches for listings.
    * @param {string} query - The search query.
-   * @param {object} sort - {target: String, direction: String}
+   * @param {object} sort - {target: String, order: String}
    * @param {array} filters - Array of filter objects
    * @param {integer} numberOfItems - number of items to display per page
    * @param {integer} offset - what page to return results from
@@ -336,13 +336,13 @@ class Listing {
 
     // sorting
     const getSortQuery = () => {
-      // sort  returns as [Object null prototype] {target:, direction: } not sure why
+      // sort  returns as [Object null prototype] {target:, order: } not sure why
       // the following code converts it to a regular object
       const resolvedSort = JSON.parse(JSON.stringify(sort))[0]
-      const { target, direction } = resolvedSort
-      // if target and direction are set, return a sort
+      const { target, order } = resolvedSort
+      // if target and order are set, return a sort
       // otherwise return empty sort to skip
-      if (target && direction) {
+      if (target && order) {
         switch (target) {
           case 'price.amount':
             return {
@@ -355,7 +355,7 @@ class Listing {
                     exchangeRates: exchangeRates
                   }
                 },
-                order: direction
+                order: order
               }
             }
           default:
@@ -363,7 +363,7 @@ class Listing {
             return [
               {
                 [target]: {
-                  order: direction
+                  order: order
                 }
               }
             ]

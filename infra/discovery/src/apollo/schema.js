@@ -218,7 +218,7 @@ const typeDefs = gql`
 
   input ListingSort {
     target: String!
-    direction: String!
+    order: String!
   }
 
   #
