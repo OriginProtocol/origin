@@ -7,7 +7,7 @@ import { Image, Modal } from 'react-native'
 import {
   createAppContainer,
   createBottomTabNavigator,
-  createStackNavigator,
+  createStackNavigator
 } from 'react-navigation'
 
 import PushNotifications from './PushNotifications'
