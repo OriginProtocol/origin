@@ -69,7 +69,7 @@ function parseAndSetRateData(market, rates) {
   if (rates[symbol].value) {
     // rates are against btc value, here that value is converted to usd
     // and then used to get the exchange rate
-    let rate = 1 / ((rates.btc.value / rates.usd.value) * rates[symbol].value)
+    const rate = 1 / ((rates.btc.value / rates.usd.value) * rates[symbol].value)
     redisClient.set(`${market}_price`, rate)
     logger.debug(`Exchange rate for ${market} set to ${rate}`)
     return rate
