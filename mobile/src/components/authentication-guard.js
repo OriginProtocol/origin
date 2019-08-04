@@ -29,7 +29,7 @@ class AuthenticationGuard extends Component {
       pin: '',
       error: null,
       // If authentication is set displayModal on init
-      displayModal: this.props.settings.biometryType || this.props.settings.pin
+      displayModal: this._hasAuthentication()
     }
   }
 
@@ -49,9 +49,13 @@ class AuthenticationGuard extends Component {
     AppState.removeEventListener('change', this._handleAppStateChange)
   }
 
+  _hasAuthentication = () => {
+    return this.props.settings.biometryType || this.props.settings.pin
+  }
+
   _handleAppStateChange = nextAppState => {
     if (nextAppState === 'background') {
-      this.setState({ displayModal: true })
+      this.setState({ displayModal: this._hasAuthentication() })
     }
     // If we are coming from a backgrounded state pop the touch authentication
     if (this.props.settings.biometryType) {

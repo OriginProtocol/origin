@@ -3,7 +3,7 @@
   "author": "Origin Protocol Inc",
   "license": "MIT",
   "repository": "https://github.com/OriginProtocol/origin/mobile",
-  "version": "0.17.2",
+  "version": "0.17.3",
   "scripts": {
     "android": "react-native run-android",
     "clean": "git clean -fdX .",
