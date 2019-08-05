@@ -1,7 +1,13 @@
 'use strict'
 
 import React from 'react'
-import { Platform, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native'
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity
+} from 'react-native'
 
 class PinInput extends React.Component {
   componentDidMount() {
@@ -11,7 +17,7 @@ class PinInput extends React.Component {
         this.workaroundFocus()
       }, 100)
     }
-   }
+  }
 
   // Workaround for Android bug of focus not popping the keyboard
   // https://github.com/facebook/react-native/issues/19366
@@ -36,7 +42,10 @@ class PinInput extends React.Component {
 
     return (
       <>
-        <TouchableOpacity style={styles.pinCode} onPress={() => this.workaroundFocus()}>
+        <TouchableOpacity
+          style={styles.pinCode}
+          onPress={() => this.workaroundFocus()}
+        >
           {placeholder}
         </TouchableOpacity>
         <TextInput

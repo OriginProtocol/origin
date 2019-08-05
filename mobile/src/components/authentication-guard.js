@@ -7,12 +7,11 @@ import {
   KeyboardAvoidingView,
   Modal,
   Platform,
-  SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  TouchableOpacity
 } from 'react-native'
+import SafeAreaView from 'react-native-safe-area-view'
 import { connect } from 'react-redux'
 import TouchID from 'react-native-touch-id'
 import { fbt } from 'fbt-runtime'
@@ -30,8 +29,8 @@ class AuthenticationGuard extends Component {
       appState: AppState.currentState,
       pin: '',
       error: null,
-      // If authentication is set displayModal on init
-      displayModal: this._hasAuthentication()
+      // If authentication is set display on init
+      display: this._hasAuthentication()
     }
   }
 
@@ -57,13 +56,13 @@ class AuthenticationGuard extends Component {
 
   _handleAppStateChange = nextAppState => {
     if (nextAppState === 'background') {
-      this.setState({ displayModal: this._hasAuthentication() })
+      this.setState({ display: this._hasAuthentication() })
     }
 
     if (this.state.appState === 'background' && nextAppState === 'active') {
       // If we are coming from a backgrounded state pop the touch authentication
       if (this.props.settings.biometryType) {
-          this.touchAuthenticate()
+        this.touchAuthenticate()
       } else if (this.props.settings.pin && this.pinInput) {
         this.pinInput.refocus()
       }
@@ -91,7 +90,7 @@ class AuthenticationGuard extends Component {
   }
 
   onSuccess = () => {
-    this.setState({ displayModal: false })
+    this.setState({ display: false })
   }
 
   handleChange = async pin => {
@@ -119,7 +118,7 @@ class AuthenticationGuard extends Component {
   }
 
   render() {
-    return this.state.displayModal ? this.renderModal() : null
+    return this.state.display ? this.renderModal() : null
   }
 
   renderModal() {
@@ -132,21 +131,16 @@ class AuthenticationGuard extends Component {
       : null
 
     return (
-      <Modal animationType="fade" transparent={true} visible={true}>
-        <SafeAreaView style={{ flex: 1 }}>
-          <ScrollView
-            contentContainerStyle={{ ...styles.container, backgroundColor: 'white' }}
-            keyboardShouldPersistTaps={'always'}
-          >
-            <Image
-              resizeMethod={'scale'}
-              resizeMode={'contain'}
-              source={require(IMAGES_PATH + 'lock-icon.png')}
-              style={styles.image}
-            />
-            {guard}
-          </ScrollView>
-        </SafeAreaView>
+      <Modal visible={true}>
+        <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : null}>
+          <Image
+            resizeMethod={'scale'}
+            resizeMode={'contain'}
+            source={require(IMAGES_PATH + 'lock-icon.png')}
+            style={styles.image}
+          />
+          {guard}
+        </KeyboardAvoidingView>
       </Modal>
     )
   }
