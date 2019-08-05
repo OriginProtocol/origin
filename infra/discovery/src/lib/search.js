@@ -36,7 +36,7 @@ const getExchangeRates = async currencies => {
     result.forEach(r => {
       exchangeRates[r.currency] = r.rate
     })
-    console.log('exchangeRates - ', exchangeRates)
+    // console.log('exchangeRates - ', exchangeRates)
     return exchangeRates
   } catch (e) {
     console.error('Error retrieving exchange rates from redis', e)
@@ -437,7 +437,8 @@ class Listing {
       minPrice: minPrice || 0,
       totalNumberOfListings: searchResponse.hits.total
     }
-
+    // debug
+    // console.log('listings - ', listings)
     const listingIds = listings.map(listing => listing.id)
     return { listingIds, listings, stats }
   }

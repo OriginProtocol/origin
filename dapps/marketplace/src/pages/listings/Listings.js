@@ -46,8 +46,8 @@ class Listings extends Component {
       // target: 'price.amount' is the current goal
       // this will be updated to be user set when the front end is completed
       // graphql is expecting string values so to disable use empty strings
-      // sort: { target: '', order: ''}
-      sort: { target: 'price.amount', order: 'desc' }
+      sort: { target: '', order: ''}
+      // sort: { target: 'price.amount', order: 'asc' }
     }
   }
 

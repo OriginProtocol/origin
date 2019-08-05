@@ -221,7 +221,7 @@ const TaylorSwiftTickets = {
     ],
     price: {
       amount: '95',
-      currency: 'token-DAI'
+      currency: 'token-ETH'
     },
     commission: '10',
     commissionPerUnit: '2'

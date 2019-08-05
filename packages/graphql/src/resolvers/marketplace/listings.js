@@ -81,6 +81,8 @@ async function resultsFromIds({ after, ids, first, totalCount, fields }) {
   }
   const firstNodeId = ids[0] || 0
   const lastNodeId = ids[ids.length - 1] || 0
+  // debug
+  // console.log('nodes',nodes)
 
   return {
     totalCount,

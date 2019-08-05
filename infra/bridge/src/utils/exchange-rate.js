@@ -8,7 +8,7 @@ const logger = require('../logger')
 const currencies = [
   'ETH-USD',
   // DAI is disabled because coingecko doesn't support it
-  // however DAI is pegged to USD so maybe we could just used 1
+  // however DAI is pegged to USD so maybe we could just use 1
   // or call a different API to get it.
   // 'DAI-USD',
   'KRW-USD',
