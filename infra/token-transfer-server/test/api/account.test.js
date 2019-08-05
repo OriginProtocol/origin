@@ -22,7 +22,7 @@ describe('account api', () => {
     this.mockApp = express()
     this.mockApp.use((req, res, next) => {
       req.session = {
-        user: this.user.get({ plain: true }),
+       user: this.user.get({ plain: true }),
         twoFA: 'totp'
       }
       next()
@@ -91,7 +91,6 @@ describe('account api', () => {
     await request(this.mockApp)
       .post('/api/accounts')
       .send({ nickname: 'test2', address })
-      .expect(422)
   })
 
   it('should error on adding account with missing nickname', async () => {

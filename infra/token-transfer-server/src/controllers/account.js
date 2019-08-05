@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { check, validationResult } = require('express-validator')
 
-const { ensureLoggedIn } = require('../login')
+const { ensureLoggedIn } = require('../lib/login')
 const { asyncMiddleware, isEthereumAddress } = require('../utils')
 const { Account } = require('../models')
 
@@ -11,7 +11,7 @@ const { Account } = require('../models')
  */
 router.get(
   '/accounts',
-  ensureLoggedIn,
+  asyncMiddleware(ensureLoggedIn),
   asyncMiddleware(async (req, res) => {
     const accounts = await Account.findAll({
       where: { userId: req.session.user.id }
@@ -28,7 +28,7 @@ router.post(
   [
     check('nickname').isString(),
     check('address').custom(isEthereumAddress),
-    ensureLoggedIn
+    asyncMiddleware(ensureLoggedIn)
   ],
   asyncMiddleware(async (req, res) => {
     const errors = validationResult(req)
@@ -78,7 +78,7 @@ router.post(
  */
 router.delete(
   '/accounts/:accountId',
-  ensureLoggedIn,
+  asyncMiddleware(ensureLoggedIn),
   asyncMiddleware(async (req, res) => {
     const account = await Account.findOne({
       where: { id: req.params.accountId, userId: req.session.user.id }

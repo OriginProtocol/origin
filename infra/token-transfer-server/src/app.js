@@ -24,15 +24,7 @@ const { transferTokens } = require('./lib/transfer')
 const { Event, Grant } = require('./models')
 const { asyncMiddleware, isEthereumAddress } = require('./utils')
 
-const {
-  ensureLoggedIn,
-  ensureEmailVerified,
-  sendEmailToken,
-  verifyEmailToken,
-  setupTotp,
-  verifyTotp,
-  logout
-} = require('./login')
+const { ensureLoggedIn } = require('./lib/login')
 
 // Configuration
 const sessionSecret = process.env.SESSION_SECRET
@@ -175,44 +167,6 @@ app.get(
     res.json(returnedEvents)
   })
 )
-
-/**
- * Sends a login code by email.
- */
-app.post('/api/send_email_token', asyncMiddleware(sendEmailToken))
-
-/**
- * Verifies a login code sent by email.
- */
-app.post(
-  '/api/verify_email_token',
-  passport.authenticate('bearer'),
-  verifyEmailToken
-)
-
-/**
-  Returns data for setting up TOTP.
- */
-app.post(
-  '/api/setup_totp',
-  ensureEmailVerified, // User must have verified their email first.
-  asyncMiddleware(setupTotp)
-)
-
-/**
- * Verifies a TOTP code.
- */
-app.post(
-  '/api/verify_totp',
-  ensureEmailVerified, // User must have verified their email first.
-  passport.authenticate('totp'),
-  asyncMiddleware(verifyTotp)
-)
-
-/**
- * Log out user by destroying their session cookie
- */
-app.post('/api/logout', ensureLoggedIn, logout)
 
 createProvider(networkId) // Ensure web3 credentials are set up
 
