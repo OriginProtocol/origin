@@ -26,7 +26,7 @@ sendgridMail.setApiKey(apiKey)
 /**
  * Sends an email verification code.
  */
-async function sendEmailCode(req, res) {
+async function sendEmailToken(req, res) {
   const email = req.body.email
   logger.debug('/api/send_email_code called for', email)
 
@@ -53,12 +53,12 @@ async function sendEmailCode(req, res) {
         It will expire in 5 minutes. You can reply directly to this email with any questions.`
     }
     await sendgridMail.send(data)
-    logger.info(`Sent email code to ${email}`)
+    logger.info(`Sent email token to ${email}`)
   } else {
     // Do nothing in case email not found in our DB.
     // But do not let the caller know by returning anything different,
     // to avoid tipping them on whether or not the email exists.
-    logger.info(`Email ${email} not found in DB. No code sent.`)
+    logger.info(`Email ${email} not found in DB. No token sent.`)
   }
 
   res.setHeader('Content-Type', 'application/json')
@@ -67,9 +67,9 @@ async function sendEmailCode(req, res) {
 
 /**
  * Verifies an email code.
- * Note: see passport.js for the passport callback that performs the actual code verification.
+ * Note: see passport.js for the passport callback that performs the actual token verification.
  */
-function verifyEmailCode(req, res) {
+function verifyEmailToken(req, res) {
   logger.debug('/api/verify_email_code called')
   if (!req.user) {
     res.status(401)
@@ -108,7 +108,7 @@ async function setupTotp(req, res) {
   const encryptedKey = encrypt(key)
   await req.user.update({ otpKey: encryptedKey })
 
-  // Generate QR code for scanning into Google Authenticator
+  // Generate QR token for scanning into Google Authenticator
   // Reference: https://code.google.com/p/google-authenticator/wiki/KeyUriFormat
   const otpUrl = `otpauth://totp/${req.user.email}?secret=${encodedKey}&period=30&issuer=OriginProtocol`
   const otpQrUrl =
@@ -123,7 +123,7 @@ async function setupTotp(req, res) {
 
 /**
  * Verifies a TOTP code.
- * Note: see passport.js for the passport callback that performs the actual TOTP code verification.
+ * Note: see passport.js for the passport callback that performs the actual TOTP token verification.
  */
 async function verifyTotp(req, res) {
   logger.debug('/api/verify_totp called')
@@ -163,8 +163,8 @@ function logout(req, res) {
 }
 
 module.exports = {
-  sendEmailCode,
-  verifyEmailCode,
+  sendEmailToken,
+  verifyEmailToken,
   setupTotp,
   verifyTotp,
   logout

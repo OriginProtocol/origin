@@ -25,8 +25,8 @@ const { transferTokens } = require('./lib/transfer')
 const { Account, Event, Grant } = require('./models')
 
 const {
-  sendEmailCode,
-  verifyEmailCode,
+  sendEmailToken,
+  verifyEmailToken,
   setupTotp,
   verifyTotp,
   logout
@@ -89,19 +89,21 @@ const asyncMiddleware = fn => (req, res, next) => {
  * MUST be called by all routes.
  */
 function ensureLoggedIn(req, res, next) {
-  if (!req.session.email) {
-    logger.debug('Authentication failed. No email in session')
+  if (!req.session.user.id) {
+    logger.debug('Authentication failed. No user in session.')
     res.status(401)
-    return res.send('This action requires to verify your email.')
+    return res.send('This action requires you to login.')
   }
+
   if (!req.session.twoFA) {
     logger.debug('Authentication failed. No 2FA in session')
     res.status(401)
     return res.send('This action requires 2FA.')
   }
+  //
   // User email is verified and user passed 2FA.
   logger.debug('Authentication success')
-  res.setHeader('X-Authenticated-Email', req.session.email)
+  res.setHeader('X-Authenticated-Email', req.session.user.email)
   next()
 }
 
@@ -228,7 +230,7 @@ app.get(
   ensureLoggedIn,
   asyncMiddleware(async (req, res) => {
     const accounts = await Account.findAll({
-      where: { userId: req.user.id },
+      where: { userId: req.session.user.id },
     })
     res.json(accounts.map(a => a.get({ plain: true })))
   })
@@ -245,18 +247,46 @@ app.post(
     ensureLoggedIn
   ],
   asyncMiddleware(async (req, res) => {
+
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() })
     }
 
+    const nicknameExists = await Account.findOne({
+      where: {
+        userId: req.session.user.id,
+        nickname: req.body.nickname
+      }
+    })
+
+    if (nicknameExists) {
+      res.status(422).json({
+        errors: ['You already have an account with that nickname']
+      })
+      return
+    }
+
+    const addressExists = await Account.findOne({
+      where: {
+        userId: req.session.user.id,
+        address: req.body.address
+      }
+    })
+    if (addressExists) {
+      res.status(422).json({
+        errors: ['You already have an account with that address']
+      })
+      return
+    }
+
     const account = await Account.create({
-      userId: req.user.id,
+      userId: req.session.user.id,
       nickname: req.body.nickname,
       address: req.body.address
     })
 
-    res.json(account.get({ plain: true }))
+    res.status(201).json(account.get({ plain: true }))
   })
 )
 
@@ -264,17 +294,17 @@ app.post(
  * Delete an account
  */
 app.delete(
-  '/api/accounts/:accountId(\d+)',
+  '/api/accounts/:accountId',
   ensureLoggedIn,
   asyncMiddleware(async (req, res) => {
-    const account = await Account.findAll({
-      where: { id: req.params.accountId, userId: req.user.id },
+    const account = await Account.findOne({
+      where: { id: req.params.accountId, userId: req.session.user.id },
     })
     if (!account) {
-      res.status(404)
+      res.status(404).end()
     } else {
       await account.destroy()
-      res.status(204)
+      res.status(204).end()
     }
   })
 )
@@ -282,7 +312,7 @@ app.delete(
 /**
  * Sends a login code by email.
  */
-app.post('/api/send_email_code', asyncMiddleware(sendEmailCode))
+app.post('/api/send_email_token', asyncMiddleware(sendEmailToken))
 
 /**
  * Verifies a login code sent by email.
@@ -290,7 +320,7 @@ app.post('/api/send_email_code', asyncMiddleware(sendEmailCode))
 app.post(
   '/api/verify_email_token',
   passport.authenticate('bearer'),
-  verifyEmailCode
+  verifyEmailToken
 )
 
 /**

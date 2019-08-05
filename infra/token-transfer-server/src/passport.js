@@ -11,14 +11,13 @@ const { User } = require('./models')
 
 module.exports = function() {
   passport.serializeUser(function(user, done) {
-    logger.debug('Serializing user with email', user.email)
-    done(null, user.email)
+    done(null, user.id)
   })
 
   passport.deserializeUser(async function(id, done) {
-    logger.debug('Deserializing user with id', id)
+    logger.debug('Deserializing user with ID', id)
     try {
-      const user = await User.findOne({ where: { email: id } })
+      const user = await User.findOne({ where: { id } })
       if (!user) {
         return done(null, false)
       }

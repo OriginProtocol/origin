@@ -71,7 +71,7 @@ describe('Transfer token lib', () => {
     await grant.save()
     await grant.reload()
     expect(grant.id).to.equal(grantId)
-    
+
     user = new User({
       id: userId,
       email: 'foo@bar.com'
