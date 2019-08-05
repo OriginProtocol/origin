@@ -8,15 +8,20 @@ const ShareableContent = ({ action, onShare }) => {
   const { titleKey, detailsKey, image, link, linkKey } = action.content
   const title = GrowthEnum[titleKey] || titleKey
   const details = GrowthEnum[detailsKey] || detailsKey
-  const linkText = GrowthEnum[linkKey] || linkKey
   return (
     <div className="shareable-content col-12 col-md-6 d-flex flex-column">
       {link ? (
         <a href={link}>
-          <div style={{ backgroundImage: `url(${image})` }} className="promotion-image"></div>
+          <div
+            style={{ backgroundImage: `url(${image})` }}
+            className="promotion-image"
+          ></div>
         </a>
       ) : (
-        <div style={{ backgroundImage: `url(${image})` }} className="promotion-image"></div>
+        <div
+          style={{ backgroundImage: `url(${image})` }}
+          className="promotion-image"
+        ></div>
       )}
       <h2>{title}</h2>
       <div className="promotion-desc mb-auto">{details}</div>
