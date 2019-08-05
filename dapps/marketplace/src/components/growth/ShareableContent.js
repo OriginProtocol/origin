@@ -5,7 +5,7 @@ import { fbt } from 'fbt-runtime'
 const GrowthEnum = require('Growth$FbtEnum')
 
 const ShareableContent = ({ action, onShare }) => {
-  const { titleKey, detailsKey, image, link, linkKey } = action.content
+  const { titleKey, detailsKey, image, link } = action.content
   const title = GrowthEnum[titleKey] || titleKey
   const details = GrowthEnum[detailsKey] || detailsKey
   return (
