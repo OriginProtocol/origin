@@ -8,7 +8,7 @@ import withWallet from './withWallet'
 
 function withEnrolmentStatus(
   WrappedComponent,
-  { fetchPolicy = 'network-only', suppressErrors } = {}
+  { fetchPolicy = 'network-only', suppressErrors, pollInterval } = {}
 ) {
   const WithEnrolmentStatus = props => {
     return (
@@ -17,6 +17,7 @@ function withEnrolmentStatus(
         variables={{ walletAddress: props.wallet }}
         skip={!props.wallet}
         fetchPolicy={fetchPolicy}
+        pollInterval={pollInterval}
       >
         {({ data, error, loading, networkStatus }) => {
           if (error && !suppressErrors) {
