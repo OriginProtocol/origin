@@ -113,7 +113,7 @@ router.post('/verify', twitterVerifyCode, async (req, res) => {
     site: {
       siteName: 'twitter.com',
       userId: {
-        raw: String(userProfileData.id)
+        raw: String(userProfileData.id_str)
       },
       username: {
         raw: userProfileData.screen_name
@@ -129,7 +129,7 @@ router.post('/verify', twitterVerifyCode, async (req, res) => {
       AttestationTypes.TWITTER,
       attestationBody,
       {
-        uniqueId: userProfileData.id,
+        uniqueId: userProfileData.id_str,
         username: userProfileData.screen_name,
         profileUrl,
         profileData: userProfileData

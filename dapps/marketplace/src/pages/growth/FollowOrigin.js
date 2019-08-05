@@ -103,7 +103,7 @@ function FollowOrigin(props) {
                   </Link>
                   <h1 className={`mb-2 pt-md-3 mt-3`}>
                     <fbt desc="GrowthFollowOrigin.followOrigin">
-                      FollowOrigin
+                      Follow Origin
                     </fbt>
                   </h1>
                 </Fragment>

@@ -5,6 +5,7 @@ const _growthModels = require('../models')
 const _discoveryModels = require('@origin/discovery/src/models')
 const _identityModels = require('@origin/identity/src/models')
 const db = { ..._growthModels, ..._discoveryModels, ..._identityModels }
+const { tokenToNaturalUnits } = require('../util/token')
 
 const {
   GrowthEventTypes,
@@ -806,9 +807,9 @@ class SocialShareRule extends SingleEventRule {
 
     // Apply formula to compute reward.
     if (numFollowers < minFollowersThreshold) return 0
-    if (numFollowers < tierFollowersThreshold) return 1
+    if (numFollowers < tierFollowersThreshold) return tokenToNaturalUnits(1)
     const amount = Math.floor(numFollowers / tierFollowersIncrement) + 1
-    return verified ? amount * verifiedMultiplier : amount
+    return tokenToNaturalUnits(verified ? amount * verifiedMultiplier : amount)
   }
 
   /**
@@ -894,12 +895,12 @@ class SocialShareRule extends SingleEventRule {
    * @returns {Promise<Array<Reward>>}
    */
   async getEarnedRewards(ethAddress, events) {
-    const allowedTypes = ['SharedOnTwitter']
     const inScopeEvents = this._inScope(events)
     const numRewards = await this._numRewards(ethAddress, inScopeEvents)
     const eventsForCalculation = events
-      .filter(event => allowedTypes.includes(event.type))
+      .filter(event => event.type === this.config.eventType)
       .slice(0, numRewards)
+
     // TODO: handle other social networks.
     const rewards = this._getTwitterRewardsEarned(
       ethAddress,
