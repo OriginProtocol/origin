@@ -25,6 +25,7 @@ import ListingCards from './ListingCards'
 import query from 'queries/Listings'
 
 import { getFilters, getStateFromQuery } from './_filters'
+import Sort from './Sort'
 
 import LoadingSpinner from 'components/LoadingSpinner'
 
@@ -40,7 +41,8 @@ class Listings extends Component {
     this.state = {
       first: 12,
       search: getStateFromQuery(props),
-      sort: 'featured'
+      sort: 'featured',
+      sortModalVisible: false
     }
   }
 
@@ -150,6 +152,22 @@ class Listings extends Component {
       <>
         <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
         <div className="container listings-container">
+          <button
+            className="btn btn-outline-primary btn-rounded mt-3"
+            onClick={() => {
+              this.setState({
+                sortModalVisible: true
+              })
+            }}
+          >
+            <fbt desc="listings.sort">Sort</fbt>
+          </button>
+          <Sort
+            {...this.props}
+            title={fbt('Availability', 'Availability')}
+            className="availability-modal"
+            openSort={this.state.sortModalVisible}
+          />
           <Query
             query={query}
             variables={{
