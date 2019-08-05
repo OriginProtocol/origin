@@ -13,8 +13,9 @@ import { connect } from 'react-redux'
 import TouchID from 'react-native-touch-id'
 import { fbt } from 'fbt-runtime'
 
-import PinInput from 'components/pin-input'
 import CommonStyles from 'styles/common'
+import PinInput from 'components/pin-input'
+import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -116,12 +117,18 @@ class AuthenticationGuard extends Component {
           </fbt>
         </Text>
         {this.state.error && (
-          <Text
-            style={styles.invalid}
-            onPress={() => this.state.error && this.touchAuthenticate()}
-          >
-            {this.state.error}
-          </Text>
+          <>
+            <Text style={styles.invalid}>{this.state.error}</Text>
+            <OriginButton
+              size="large"
+              type="primary"
+              style={{ marginTop: 40 }}
+              title={fbt('Retry', 'AuthenticationGuard.retryButton')}
+              onPress={() => {
+                this.touchAuthenticate()
+              }}
+            />
+          </>
         )}
       </>
     )

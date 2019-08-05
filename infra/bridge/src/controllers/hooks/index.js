@@ -25,7 +25,8 @@ router.get('/twitter/__init', async (req, res) => {
   try {
     const twitterResponse = await getTwitterOAuthRequestToken({
       sid: req.sessionID,
-      redirectUrl: '/hooks/twitter/__auth-redirect'
+      redirectUrl: '/hooks/twitter/__auth-redirect',
+      useWebhookCredentials: true
     })
 
     oAuthToken = twitterResponse.oAuthToken
@@ -65,7 +66,8 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
     const accessToken = await getTwitterOAuthAccessToken(
       session.oAuthToken,
       session.oAuthTokenSecret,
-      req.query.oauth_verifier
+      req.query.oauth_verifier,
+      true
     )
     oAuthAccessToken = accessToken.oAuthAccessToken
     oAuthAccessTokenSecret = accessToken.oAuthAccessTokenSecret
@@ -85,7 +87,8 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
   try {
     userProfileData = await verifyTwitterCredentials(
       oAuthAccessToken,
-      oAuthAccessTokenSecret
+      oAuthAccessTokenSecret,
+      true
     )
   } catch (error) {
     logger.error(error)
@@ -95,7 +98,7 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
   }
 
   if (
-    userProfileData.username.toLowerCase() !==
+    userProfileData.screen_name.toLowerCase() !==
     process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
   ) {
     return res.status(400).send({
@@ -109,7 +112,9 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
     logger.error(err)
     return res.status(400).send({
       success: false,
-      errors: [`Failed to subscribe: ${err.message}`]
+      errors: [
+        `Failed to subscribe: ${err.message ? err.message : 'Check logs'}`
+      ]
     })
   }
 
@@ -123,7 +128,11 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
  */
 router.get('/twitter', (req, res) => {
   const hmac = crypto
-    .createHmac('sha256', process.env.TWITTER_CONSUMER_SECRET)
+    .createHmac(
+      'sha256',
+      process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET ||
+        process.env.TWITTER_CONSUMER_SECRET
+    )
     .update(req.query.crc_token)
     .digest('base64')
 
@@ -139,23 +148,25 @@ router.get('/twitter', (req, res) => {
 router.post('/twitter', (req, res) => {
   let followCount = 0
 
+  // Use redis batch for parallelization (without atomicity)
+  const redisBatch = redisClient.batch()
+
+  let totalFollowEvents = 0
+  let totalMentionEvents = 0
+
   if (req.body.follow_events) {
     // Follow event(s)
     const events = req.body.follow_events
+    totalFollowEvents = events.length
     events.forEach(event => {
       if (
         event.target.screen_name.toLowerCase() ===
         process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
       ) {
-        // TODO: Parallelize requests to redis
-        // Store the follower in redis for 30 minutes
         followCount++
-        redisClient.set(
-          `twitter/follow/${event.source.id}`,
-          JSON.stringify(event),
-          'EX',
-          60 * 30
-        )
+        const key = `twitter/follow/${event.source.screen_name}`
+        redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
+        logger.info(`Pushing twitter follow event to ${key}...`)
       }
     })
   }
@@ -163,32 +174,36 @@ router.post('/twitter', (req, res) => {
   let mentionCount = 0
   if (req.body.tweet_create_events) {
     const events = req.body.tweet_create_events
+    totalMentionEvents = events.length
     events
       .filter(event => {
         // Ignore own tweets, retweets and favorites
-        return (
-          !event.retweeted &&
-          !event.favorited &&
-          event.user.screen_name.toLowerCase() !==
+        return !(
+          event.retweeted ||
+          event.favorited ||
+          event.user.screen_name.toLowerCase() ===
             process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
         )
       })
       .forEach(event => {
-        // TODO: Parallelize requests to redis
-        // Note: Only the latest tweet will be in redis for 30 minutes
         mentionCount++
-        redisClient.set(
-          `twitter/share/${event.user.id}`,
-          JSON.stringify(event),
-          'EX',
-          60 * 30
-        )
+        const key = `twitter/share/${event.user.screen_name}`
+        redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
+        logger.info(`Pushing twitter mention event to ${key}...`)
       })
   }
 
-  logger.info(
-    `Pushed ${followCount} follow events and ${mentionCount} mention events to redis`
-  )
+  redisBatch.exec(err => {
+    if (err) {
+      logger.error(
+        `Faile to push ${followCount}/${totalFollowEvents} follow events and ${mentionCount}/${totalMentionEvents} mention events to redis`
+      )
+    } else {
+      logger.info(
+        `Pushed ${followCount}/${totalFollowEvents} follow events and ${mentionCount}/${totalMentionEvents} mention events to redis`
+      )
+    }
+  })
 
   res.status(200).end()
 })

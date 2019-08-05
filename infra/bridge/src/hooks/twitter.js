@@ -8,8 +8,9 @@ const logger = require('./../logger')
 const oauth = new OAuth(
   'https://api.twitter.com/oauth/request_token',
   'https://api.twitter.com/oauth/access_token',
-  process.env.TWITTER_CONSUMER_KEY,
-  process.env.TWITTER_CONSUMER_SECRET,
+  process.env.TWITTER_WEBHOOKS_CONSUMER_KEY || process.env.TWITTER_CONSUMER_KEY,
+  process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET ||
+    process.env.TWITTER_CONSUMER_SECRET,
   '1.0',
   null,
   'HMAC-SHA1'
@@ -82,7 +83,7 @@ async function getBearerToken() {
       authorization:
         'Basic ' +
         Buffer.from(
-          `${process.env.TWITTER_CONSUMER_KEY}:${process.env.TWITTER_CONSUMER_SECRET}`
+          `${process.env.TWITTER_WEBHOOKS_CONSUMER_KEY}:${process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET}`
         ).toString('base64'),
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
     })
@@ -137,19 +138,23 @@ function addSubscription(oAuthToken, oAuthAccessTokenSecret) {
  */
 async function subscribeToHooks(oAuthToken, oAuthAccessTokenSecret) {
   const resp = await getWebhooks(oAuthToken, oAuthAccessTokenSecret)
+  logger.info('getWebhooks response:', resp)
   const environment = resp.environments.find(
     e => e.environment_name === HOOK_ENV
   )
 
   if (!environment) {
+    logger.error(`Webhook environment ${HOOK_ENV} not found in response`, resp)
     throw new Error('Webhook environment not found')
   }
+  logger.info('Using environment', environment)
 
   let webhookId
   if (!environment.webhooks || environment.webhooks.length === 0) {
     // Create a webhook, if none exists
     const response = await createWebhook(oAuthToken, oAuthAccessTokenSecret)
     webhookId = response.id
+    logger.info(`Created new webhook with id ${webhookId}`)
   } else if (process.env.NODE_ENV === 'development') {
     // Webhook URLs cannot be updated
     // So, delete and recreate webhook on development
@@ -168,5 +173,7 @@ async function subscribeToHooks(oAuthToken, oAuthAccessTokenSecret) {
 }
 
 module.exports = {
-  subscribeToHooks
+  subscribeToHooks,
+  deleteWebhook,
+  getBearerToken
 }

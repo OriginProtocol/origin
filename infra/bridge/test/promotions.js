@@ -41,7 +41,7 @@ describe('promotion verifications', () => {
     })
 
     // Push a fake event to redis
-    client.set(`twitter/follow/12345`, '{}', 'EX', 60)
+    client.set(`twitter/follow/OriginProtocol`, '{}', 'EX', 60)
 
     const response = await request(app)
       .post('/api/promotions/verify')
@@ -69,8 +69,57 @@ describe('promotion verifications', () => {
 
     // Push a fake event to redis
     client.set(
-      `twitter/share/12345`,
-      JSON.stringify({ text: 'Hello World' }),
+      `twitter/share/OriginProtocol`,
+      JSON.stringify({
+        text: 'Hello World',
+        entities: {
+          urls: []
+        }
+      }),
+      'EX',
+      60
+    )
+
+    const response = await request(app)
+      .post('/api/promotions/verify')
+      .send({
+        type: 'SHARE',
+        socialNetwork: 'TWITTER',
+        identity: ethAddress,
+        content: 'Hello World'
+      })
+      .expect(200)
+
+    expect(response.body.success).to.equal(true)
+  })
+
+  it('should resolve on extended_tweet for `share` event on twitter', async () => {
+    // Create a dummy attestation
+    await Attestation.create({
+      method: AttestationTypes.TWITTER,
+      ethAddress,
+      value: '12345',
+      signature: '0x0',
+      remoteUpAddress: '192.168.1.1',
+      profileUrl: '/',
+      username: 'OriginProtocol'
+    })
+
+    // Push a fake event to redis
+    client.set(
+      `twitter/share/OriginProtocol`,
+      JSON.stringify({
+        text: 'Hello...',
+        entities: {
+          urls: []
+        },
+        extended_tweet: {
+          full_text: 'Hello World',
+          entities: {
+            urls: []
+          }
+        }
+      }),
       'EX',
       60
     )
@@ -117,7 +166,12 @@ describe('promotion verifications', () => {
     // Push a fake event to redis with different content that expected
     client.set(
       `twitter/share/45678`,
-      JSON.stringify({ text: 'Not My Content' }),
+      JSON.stringify({
+        text: 'Not My Content',
+        entities: {
+          urls: []
+        }
+      }),
       'EX',
       60
     )

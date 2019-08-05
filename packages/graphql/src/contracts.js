@@ -49,6 +49,11 @@ function applyWeb3Hack(web3Instance) {
   return web3Instance
 }
 
+async function isValidContract(web3, address) {
+  const code = await web3.eth.getCode(address)
+  return code && typeof code === 'string' && code.length > 2
+}
+
 let lastBlock
 export function newBlock(blockHeaders) {
   if (!blockHeaders) return
@@ -91,6 +96,7 @@ function pollForBlocks() {
 }
 
 export function setNetwork(net, customConfig) {
+  if (net !== 'mainnet') console.debug(`Connecting to network ${net}`)
   if (process.env.DOCKER && net !== 'test') {
     net = 'docker'
   }
@@ -170,7 +176,7 @@ export function setNetwork(net, customConfig) {
       qps,
       ethGasStation: ['mainnet', 'rinkeby'].includes(net)
     })
-  } else if (!isBrowser) {
+  } else if (!isBrowser && !isWebView) {
     // TODO: Allow for browser?
     createEngine(web3, { qps, maxConcurrent })
   }
@@ -315,6 +321,37 @@ export function setNetwork(net, customConfig) {
 
   if (isWebView) {
     setMobileBridge()
+  }
+
+  // Do a little contract validation
+  if (net !== 'mainnet') {
+    if (context.marketplace)
+      isValidContract(web3, context.marketplace.options.address)
+        .then(valid => {
+          if (!valid)
+            console.error('Marketplace contract appears to be invalid!')
+        })
+        .catch(err => console.debug(err))
+    if (context.identityEvents)
+      isValidContract(web3, context.identityEvents.options.address)
+        .then(valid => {
+          if (!valid)
+            console.error('IdentityEvents contract appears to be invalid!')
+        })
+        .catch(err => console.debug(err))
+    if (context.ProxyFactory)
+      isValidContract(web3, context.ProxyFactory.options.address)
+        .then(valid => {
+          if (!valid)
+            console.error('ProxyFactory contract appears to be invalid!')
+        })
+        .catch(err => console.debug(err))
+    if (context.ProxyImp)
+      isValidContract(web3, context.ProxyImp.options.address)
+        .then(valid => {
+          if (!valid) console.error('ProxyImp contract appears to be invalid!')
+        })
+        .catch(err => console.debug(err))
   }
 }
 

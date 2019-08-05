@@ -12,6 +12,8 @@ const app = require('../src/app')
 
 const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
 
+const MOCK_PROFILE_DATA = { id_str: '12345', screen_name: 'OriginProtocol' }
+
 describe('twitter attestations', async () => {
   beforeEach(() => {
     // Configure environment variables required for tests
@@ -47,7 +49,7 @@ describe('twitter attestations', async () => {
 
     nock('https://api.twitter.com')
       .get('/1.1/account/verify_credentials.json')
-      .reply(200, { id: '12345', screen_name: 'OriginProtocol' })
+      .reply(200, MOCK_PROFILE_DATA)
 
     // Fake a session
     const parentApp = express()
@@ -102,6 +104,7 @@ describe('twitter attestations', async () => {
     expect(results[0].value).to.equal('12345')
     expect(results[0].username).to.equal('OriginProtocol')
     expect(results[0].profileUrl).to.equal('https://twitter.com/OriginProtocol')
+    expect(results[0].profileData).to.eql(MOCK_PROFILE_DATA)
   })
 
   it('should generate attestation on valid verification code (from session)', async () => {
@@ -111,7 +114,7 @@ describe('twitter attestations', async () => {
 
     nock('https://api.twitter.com')
       .get('/1.1/account/verify_credentials.json')
-      .reply(200, { id: '12345', screen_name: 'OriginProtocol' })
+      .reply(200, MOCK_PROFILE_DATA)
 
     // Fake a session
     const parentApp = express()
@@ -167,6 +170,7 @@ describe('twitter attestations', async () => {
     expect(results[0].value).to.equal('12345')
     expect(results[0].username).to.equal('OriginProtocol')
     expect(results[0].profileUrl).to.equal('https://twitter.com/OriginProtocol')
+    expect(results[0].profileData).to.eql(MOCK_PROFILE_DATA)
   })
 
   it('should error on incorrect verifier', async () => {
