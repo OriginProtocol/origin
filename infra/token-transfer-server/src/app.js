@@ -22,7 +22,7 @@ const Web3 = require('web3')
 
 const { createProvider } = require('@origin/token/src/config')
 const { transferTokens } = require('./lib/transfer')
-const { Event, Grant } = require('./models')
+const { Account, Event, Grant } = require('./models')
 
 const {
   sendEmailCode,
