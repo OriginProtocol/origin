@@ -1,7 +1,5 @@
 const elasticsearch = require('elasticsearch')
 const scoring = require('../lib/scoring')
-const { getAsync } = require('../lib/redis')
-
 /*
   Module to interface with ElasticSearch.
  */
@@ -18,6 +16,9 @@ const LISTINGS_TYPE = 'listing'
 
 const getExchangeRates = async currencies => {
   try {
+    // lazy import to avoid event-listener depending on redis
+    // this is only used in discovery
+    const { getAsync } = require('../lib/redis')
     const exchangeRates = {}
     const promises = currencies.map(currency => {
       return new Promise(async (resolve, reject) => {
@@ -35,6 +36,7 @@ const getExchangeRates = async currencies => {
     result.forEach(r => {
       exchangeRates[r.currency] = r.rate
     })
+    console.log('exchangeRates - ', exchangeRates)
     return exchangeRates
   } catch (e) {
     console.error('Error retrieving exchange rates from redis', e)
