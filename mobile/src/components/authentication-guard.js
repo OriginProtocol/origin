@@ -11,7 +11,6 @@ import {
   Text,
   TouchableOpacity
 } from 'react-native'
-import SafeAreaView from 'react-native-safe-area-view'
 import { connect } from 'react-redux'
 import TouchID from 'react-native-touch-id'
 import { fbt } from 'fbt-runtime'
@@ -132,7 +131,10 @@ class AuthenticationGuard extends Component {
 
     return (
       <Modal visible={true}>
-        <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : null}>
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS === 'ios' ? 'padding' : null}
+        >
           <Image
             resizeMethod={'scale'}
             resizeMode={'contain'}
