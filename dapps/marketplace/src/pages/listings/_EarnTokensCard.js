@@ -62,7 +62,7 @@ const EarnTokensCard = ({ growthEnrollmentStatus, ...props }) => {
   return <SignUpForRewards {...props} />
 }
 
-export default withEnrolmentStatus(EarnTokensCard, { pollInterval: 2000 })
+export default withEnrolmentStatus(EarnTokensCard)
 
 require('react-styl')(`
   .listing-card

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Query } from 'react-apollo'
 import QueryError from 'components/QueryError'
 import get from 'lodash/get'
@@ -8,23 +8,31 @@ import withWallet from './withWallet'
 
 function withEnrolmentStatus(
   WrappedComponent,
-  { fetchPolicy = 'network-only', suppressErrors, pollInterval } = {}
+  { fetchPolicy = 'network-only', suppressErrors } = {}
 ) {
+  let refetchStatus
+
   const WithEnrolmentStatus = props => {
+    useEffect(() => {
+      if (refetchStatus) { refetchStatus() }
+    }, [props.wallet])
+
     return (
       <Query
         query={enrollmentStatusQuery}
         variables={{ walletAddress: props.wallet }}
         skip={!props.wallet}
         fetchPolicy={fetchPolicy}
-        pollInterval={pollInterval}
       >
-        {({ data, error, loading, networkStatus }) => {
+        {({ data, error, loading, networkStatus, refetch }) => {
+
+          refetchStatus = refetch
+
           if (error && !suppressErrors) {
             return <QueryError error={error} query={enrollmentStatusQuery} />
           }
 
-          const walletLoading = !networkStatus || loading || networkStatus === 1
+          const growthEnrolmentStatusLoading = !networkStatus || loading || networkStatus === 1
 
           const enrollmentStatus = get(data, 'enrollmentStatus')
 
@@ -32,7 +40,7 @@ function withEnrolmentStatus(
             <WrappedComponent
               {...props}
               growthEnrollmentStatus={enrollmentStatus}
-              growthEnrollmentStatusLoading={walletLoading}
+              growthEnrollmentStatusLoading={growthEnrolmentStatusLoading}
             />
           )
         }}
