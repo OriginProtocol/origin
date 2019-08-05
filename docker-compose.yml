@@ -218,6 +218,8 @@ services:
     volumes: *volumes
     depends_on:
       - postgres
+      # This is a migration dependency:
+      - event-listener
     environment:
       - APNS_BUNDLE_ID=com.originprotocol.catcher
       - APNS_KEY_FILE=
@@ -271,6 +273,8 @@ services:
     depends_on:
       - postgres
       - redis-master
+      # This is a migration dependency:
+      - event-listener
     ports:
       - "5000:5000"
     command:
