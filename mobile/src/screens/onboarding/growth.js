@@ -39,7 +39,6 @@ class GrowthScreen extends Component {
           text: String(fbt("I'm, sure", 'GrowthScreen.alertConfirm')),
           onPress: () => {
             this.props.setGrowth(false)
-            console.log(this.props.nextOnboardingStep)
             this.props.navigation.navigate(this.props.nextOnboardingStep)
             this.props.setGrowth(null)
           }
@@ -72,7 +71,10 @@ class GrowthScreen extends Component {
             size="large"
             type="primary"
             title={fbt('Yes! Sign me up', 'GrowthScreen.signUpButton')}
-            onPress={() => this.props.navigation.navigate('GrowthTerms')}
+            onPress={() => {
+              this.props.setGrowth(true)
+              this.props.navigation.navigate('GrowthTerms')
+            }}
           />
           <OriginButton
             size="large"
