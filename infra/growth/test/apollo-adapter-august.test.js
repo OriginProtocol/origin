@@ -198,7 +198,7 @@ describe('Apollo adapter - August campaign', () => {
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenToNaturalUnits(150), currency: 'OGN' }
       },
-      TwitterShare1: {
+      TwitterShare5: {
         type: 'TwitterShare',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
@@ -419,7 +419,7 @@ describe('Apollo adapter - August campaign', () => {
 
     // Level 2 should be unlocked.
     this.expectedState.Referral.status = 'Active'
-    this.expectedState.TwitterShare1.status = 'Inactive'
+    this.expectedState.TwitterShare5.status = 'Inactive'
     this.expectedState.MobileAccountCreated.status = 'Active'
 
     // Unlock all ListingPurchase listings
@@ -603,7 +603,7 @@ describe('Apollo adapter - August campaign', () => {
         .levels['2']
         .rules
         .map(rule => {
-          if (rule.id === 'TwitterShare1') {
+          if (rule.id === 'TwitterShare5') {
             modificationCallback(rule)
           }
           return rule
@@ -660,7 +660,7 @@ describe('Apollo adapter - August campaign', () => {
     this.expectedState.TwitterAttestation.rewardEarned = { amount: tokenToNaturalUnits(10), currency: 'OGN' }
 
     // Check Twitter Share/Follow got unlocked.
-    this.expectedState.TwitterShare1.status = 'Active'
+    this.expectedState.TwitterShare5.status = 'Active'
     this.expectedState.TwitterFollow.status = 'Active'
 
     // Find the TwitterShare actions and check they include all expected fields.
@@ -679,6 +679,42 @@ describe('Apollo adapter - August campaign', () => {
         expect(twitterShareAction.content.post.text.translations).to.be.an('array')
       }
     }
+
+    checkExpectedState(state, this.expectedState)
+  })
+
+  it(`It should reward OGN for content shared on twitter`, async () => {
+    this.events.push(...[
+      {
+        id: 17,
+        type: GrowthEventTypes.SharedOnTwitter,
+        customId: '8e6ab35b03176537f66217b54d840545',
+        data: {
+          twitterProfile: {
+            verified: false,
+            created_at: '2010-01-01',
+            followers_count: 26300,
+            status: {
+              created_at: new Date().toISOString()
+            }
+          }
+        },
+        status: GrowthEventStatuses.Logged,
+        ethAddress: this.userA,
+        createdAt: this.duringCampaign
+      }
+    ])
+
+    const state = await campaignToApolloObject(
+      this.crules,
+      enums.GrowthParticipantAuthenticationStatus.Enrolled,
+      this.userA,
+      this.mockAdapter
+    )
+
+    this.expectedState.rewardEarned = { amount: '372000000000000000000', currency: 'OGN' }
+    this.expectedState.TwitterShare5.status = 'Completed'
+    this.expectedState.TwitterShare5.rewardEarned = { amount: tokenToNaturalUnits(132), currency: 'OGN' }
 
     checkExpectedState(state, this.expectedState)
   })

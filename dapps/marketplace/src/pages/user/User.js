@@ -102,6 +102,7 @@ const User = ({ match, isMobile, history }) => {
                     lastName={profile.lastName}
                     description={profile.description}
                     verifiedAttestations={profile.verifiedAttestations}
+                    showMessageLink={true}
                   />
                   {isMobile ? (
                     <TabView
