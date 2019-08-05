@@ -14,7 +14,9 @@ function withEnrolmentStatus(
 
   const WithEnrolmentStatus = props => {
     useEffect(() => {
-      if (refetchStatus) { refetchStatus() }
+      if (refetchStatus) {
+        refetchStatus()
+      }
     }, [props.wallet])
 
     return (
@@ -25,14 +27,14 @@ function withEnrolmentStatus(
         fetchPolicy={fetchPolicy}
       >
         {({ data, error, loading, networkStatus, refetch }) => {
-
           refetchStatus = refetch
 
           if (error && !suppressErrors) {
             return <QueryError error={error} query={enrollmentStatusQuery} />
           }
 
-          const growthEnrolmentStatusLoading = !networkStatus || loading || networkStatus === 1
+          const growthEnrolmentStatusLoading =
+            !networkStatus || loading || networkStatus === 1
 
           const enrollmentStatus = get(data, 'enrollmentStatus')
 
