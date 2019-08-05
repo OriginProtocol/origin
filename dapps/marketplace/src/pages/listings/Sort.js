@@ -6,10 +6,12 @@ import MobileModal from 'components/MobileModal'
 
 import withIsMobile from 'hoc/withIsMobile'
 
-const Sort = ({ onClose, openSort, isMobile }) => {
+const Sort = ({ onClose, openSort, isMobile, onChange, sort }) => {
   const [closeModal, setCloseModal] = useState(false)
 
   const ModalComp = isMobile ? MobileModal : Modal
+  console.log('sort - ', sort)
+
   return (
     <>
       {openSort && (
@@ -29,22 +31,32 @@ const Sort = ({ onClose, openSort, isMobile }) => {
                 <label>
                   <input
                     type="radio"
-                    name="sort"
                     value="default"
-                    checked={true}
+                    checked={sort === 'default'}
+                    onChange={onChange}
                   />
                   Default
                 </label>
               </div>
               <div className="radio">
                 <label>
-                  <input type="radio" name="sort" value="price:asc" />
+                  <input
+                    type="radio"
+                    value="price:asc"
+                    checked={sort === 'price:asc'}
+                    onChange={onChange}
+                  />
                   Price: Low to High
                 </label>
               </div>
               <div className="radio">
                 <label>
-                  <input type="radio" name="sort" value="price:desc" />
+                  <input
+                    type="radio"
+                    value="price:desc"
+                    onChange={onChange}
+                    checked={sort === 'price:desc'}
+                  />
                   Price: High to Low
                 </label>
               </div>

@@ -41,7 +41,7 @@ class Listings extends Component {
     this.state = {
       first: 12,
       search: getStateFromQuery(props),
-      sort: 'featured',
+      sort: 'default',
       sortModalVisible: false
     }
   }
@@ -115,6 +115,12 @@ class Listings extends Component {
     return <h5 className={className}>{content}</h5>
   }
 
+  handleOptionChange = e => {
+    this.setState({
+      sort: e.target.value
+    })
+  }
+
   render() {
     const isCreatedMarketplace = get(
       this.props,
@@ -167,6 +173,11 @@ class Listings extends Component {
             title={fbt('Availability', 'Availability')}
             className="availability-modal"
             openSort={this.state.sortModalVisible}
+            onChange={this.handleOptionChange}
+            onClose={() => {
+              this.setState({ sortModalVisible: false })
+            }}
+            sort={this.state.sort}
           />
           <Query
             query={query}
