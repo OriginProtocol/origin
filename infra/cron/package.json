@@ -11,16 +11,20 @@
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
+    "@origin/consistency": "^0.1.0",
     "@origin/growth": "^0.1.0",
+    "@sendgrid/mail": "^6.4.0",
     "bull": "^3.10.0",
     "dotenv": "^8.0.0",
     "envkey": "^1.2.6",
     "logplease": "^1.2.15",
-    "per-env": "^1.0.2"
+    "per-env": "^1.0.2",
+    "tmp": "^0.1.0"
   },
   "devDependencies": {
     "mocha": "^6.1.4",
-    "nodemon": "^1.19.1"
+    "nodemon": "^1.19.1",
+    "prettier": "^1.18.2"
   },
   "scripts": {
     "lint": "eslint . && npm run prettier:check",

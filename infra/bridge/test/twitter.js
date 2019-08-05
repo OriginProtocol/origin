@@ -12,7 +12,7 @@ const app = require('../src/app')
 
 const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
 
-const MOCK_PROFILE_DATA = { id: '12345', screen_name: 'OriginProtocol' }
+const MOCK_PROFILE_DATA = { id_str: '12345', screen_name: 'OriginProtocol' }
 
 describe('twitter attestations', async () => {
   beforeEach(() => {
