@@ -41,9 +41,9 @@ if (!sessionSecret) {
 const port = process.env.PORT || 5000
 const networkId = Number.parseInt(process.env.NETWORK_ID) || 999
 
-// Session setup.
+// Session setup
 const sessionConfig = {
-  cookie: { maxAge: 30 * 60 * 1000 }, // 30 min TTL
+  cookie: { secure: false, maxAge: 30 * 60 * 1000 }, // 30 min TTL
   resave: false, // Do not force session to get saved if it was not modified by the request.
   saveUninitialized: true,
   secret: sessionSecret,
@@ -52,18 +52,22 @@ const sessionConfig = {
     db: 'sessions.sqlite3'
   })
 }
+
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
   sessionConfig.cookie.secure = true // serve secure cookies
+} else {
+  // CORS setup for dev. This is handled by nginx in production.
+  app.use(
+    cors({
+      origin: 'http://localhost:3000',
+      credentials: true,
+      exposedHeaders: ['X-Authenticated-Email']
+    })
+  )
 }
-app.use(session(sessionConfig))
 
-// Expose extra headers.
-app.use(
-  cors({
-    exposedHeaders: ['X-Authenticated-Email']
-  })
-)
+app.use(session(sessionConfig))
 
 // Parse request bodies.
 app.use(bodyParser.json())
@@ -284,8 +288,8 @@ app.post('/api/send_email_code', asyncMiddleware(sendEmailCode))
  * Verifies a login code sent by email.
  */
 app.post(
-  '/api/verify_email_code',
-  passport.authenticate('local'),
+  '/api/verify_email_token',
+  passport.authenticate('bearer'),
   verifyEmailCode
 )
 
