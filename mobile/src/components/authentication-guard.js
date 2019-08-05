@@ -6,10 +6,12 @@ import {
   Image,
   KeyboardAvoidingView,
   Modal,
+  Platform,
+  SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
 } from 'react-native'
 import { connect } from 'react-redux'
 import TouchID from 'react-native-touch-id'
@@ -57,10 +59,13 @@ class AuthenticationGuard extends Component {
     if (nextAppState === 'background') {
       this.setState({ displayModal: this._hasAuthentication() })
     }
-    // If we are coming from a backgrounded state pop the touch authentication
-    if (this.props.settings.biometryType) {
-      if (this.state.appState === 'background' && nextAppState === 'active') {
-        this.touchAuthenticate()
+
+    if (this.state.appState === 'background' && nextAppState === 'active') {
+      // If we are coming from a backgrounded state pop the touch authentication
+      if (this.props.settings.biometryType) {
+          this.touchAuthenticate()
+      } else if (this.props.settings.pin && this.pinInput) {
+        this.pinInput.refocus()
       }
     }
     this.setState({ appState: nextAppState })
@@ -128,8 +133,11 @@ class AuthenticationGuard extends Component {
 
     return (
       <Modal animationType="fade" transparent={true} visible={true}>
-        <KeyboardAvoidingView style={styles.container} behavior="padding">
-          <View style={{ ...styles.container, backgroundColor: 'white' }}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <ScrollView
+            contentContainerStyle={{ ...styles.container, backgroundColor: 'white' }}
+            keyboardShouldPersistTaps={'always'}
+          >
             <Image
               resizeMethod={'scale'}
               resizeMode={'contain'}
@@ -137,8 +145,8 @@ class AuthenticationGuard extends Component {
               style={styles.image}
             />
             {guard}
-          </View>
-        </KeyboardAvoidingView>
+          </ScrollView>
+        </SafeAreaView>
       </Modal>
     )
   }

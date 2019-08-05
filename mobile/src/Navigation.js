@@ -244,10 +244,14 @@ class MarketplaceApp extends React.Component {
 
     return (
       <>
-        <AuthenticationGuard />
-        <PushNotifications />
-        <UpdatePrompt />
-        <BackupPrompt />
+        {this.props.marketplace.ready && (
+          <>
+            <AuthenticationGuard />
+            <PushNotifications />
+            <UpdatePrompt />
+            <BackupPrompt />
+          </>
+        )}
 
         <_MarketplaceApp navigation={navigation} />
 
