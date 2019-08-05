@@ -88,7 +88,7 @@ describe('account api', () => {
       address: address
     })
 
-    response = await request(this.mockApp)
+    await request(this.mockApp)
       .post('/api/accounts')
       .send({ nickname: 'test2', address })
       .expect(422)
