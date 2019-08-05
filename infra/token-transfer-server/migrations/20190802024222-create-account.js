@@ -29,7 +29,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     })
-      .then(() => queryInterface.addIndex(tableName, ['user_id']))
+    .then(() => queryInterface.addIndex('t3_account', ['user_id']))
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('t3_account');
