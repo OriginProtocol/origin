@@ -48,7 +48,7 @@ async function ConsistencyCheckJob(job) {
     network,
     web3: contractsContext.web3,
     ipfsGateway: process.env.IPFS_GATEWAY || 'https://ipfs.originprotocol.com',
-    fromBlock: 6425000,
+    fromBlock: network === 'mainnet' ? 6425000 : 0,
     identity: true,
     listings: true,
     offers: true,
