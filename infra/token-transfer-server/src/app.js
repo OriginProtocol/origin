@@ -18,13 +18,15 @@ const session = require('express-session')
 require('./passport')()
 const SQLiteStore = require('connect-sqlite3')(session)
 const { Op } = require('sequelize')
-const Web3 = require('web3')
 
 const { createProvider } = require('@origin/token/src/config')
 const { transferTokens } = require('./lib/transfer')
-const { Account, Event, Grant } = require('./models')
+const { Event, Grant } = require('./models')
+const { asyncMiddleware, isEthereumAddress } = require('./utils')
 
 const {
+  ensureLoggedIn,
+  ensureEmailVerified,
   sendEmailToken,
   verifyEmailToken,
   setupTotp,
@@ -72,52 +74,11 @@ app.use(session(sessionConfig))
 // Parse request bodies.
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-
 // Passport specific.
 app.use(passport.initialize())
 app.use(passport.session())
 
-/**
- * Allows use of async functions for an Express route.
- */
-const asyncMiddleware = fn => (req, res, next) => {
-  Promise.resolve(fn(req, res, next)).catch(next)
-}
-
-/**
- * Middleware to ensure a user is logged in.
- * MUST be called by all routes.
- */
-function ensureLoggedIn(req, res, next) {
-  if (!req.session.user.id) {
-    logger.debug('Authentication failed. No user in session.')
-    res.status(401)
-    return res.send('This action requires you to login.')
-  }
-
-  if (!req.session.twoFA) {
-    logger.debug('Authentication failed. No 2FA in session')
-    res.status(401)
-    return res.send('This action requires 2FA.')
-  }
-  //
-  // User email is verified and user passed 2FA.
-  logger.debug('Authentication success')
-  res.setHeader('X-Authenticated-Email', req.session.user.email)
-  next()
-}
-
-/**
- * MIddleware to ensures a user verified their email.
- */
-function ensureEmailVerified(req, res, next) {
-  if (!req.session.email) {
-    logger.debug('Authentication failed. No email in session')
-    res.status(401)
-    return res.send('This action requires to verify your email first.')
-  }
-  next()
-}
+app.use(require('./controllers'))
 
 /**
  * Returns grants for the authenticated user.
@@ -135,13 +96,6 @@ app.get(
     res.json(augmentedGrants)
   })
 )
-
-const isEthereumAddress = value => {
-  if (!Web3.utils.isAddress(value)) {
-    throw new Error('Address is not a valid Ethereum address')
-  }
-  return true
-}
 
 /**
  * Transfers tokens from hot wallet to address of user's choosing.
@@ -219,93 +173,6 @@ app.get(
     }))
     logger.debug(`Returned ${returnedEvents.length} events`)
     res.json(returnedEvents)
-  })
-)
-
-/**
- * Return users accounts.
- */
-app.get(
-  '/api/accounts',
-  ensureLoggedIn,
-  asyncMiddleware(async (req, res) => {
-    const accounts = await Account.findAll({
-      where: { userId: req.session.user.id },
-    })
-    res.json(accounts.map(a => a.get({ plain: true })))
-  })
-)
-
-/**
- * Add an account.
- */
-app.post(
-  '/api/accounts',
-  [
-    check('nickname').isString(),
-    check('address').custom(isEthereumAddress),
-    ensureLoggedIn
-  ],
-  asyncMiddleware(async (req, res) => {
-
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() })
-    }
-
-    const nicknameExists = await Account.findOne({
-      where: {
-        userId: req.session.user.id,
-        nickname: req.body.nickname
-      }
-    })
-
-    if (nicknameExists) {
-      res.status(422).json({
-        errors: ['You already have an account with that nickname']
-      })
-      return
-    }
-
-    const addressExists = await Account.findOne({
-      where: {
-        userId: req.session.user.id,
-        address: req.body.address
-      }
-    })
-    if (addressExists) {
-      res.status(422).json({
-        errors: ['You already have an account with that address']
-      })
-      return
-    }
-
-    const account = await Account.create({
-      userId: req.session.user.id,
-      nickname: req.body.nickname,
-      address: req.body.address
-    })
-
-    res.status(201).json(account.get({ plain: true }))
-  })
-)
-
-/**
- * Delete an account
- */
-app.delete(
-  '/api/accounts/:accountId',
-  ensureLoggedIn,
-  asyncMiddleware(async (req, res) => {
-    const account = await Account.findOne({
-      where: { id: req.params.accountId, userId: req.session.user.id },
-    })
-    if (!account) {
-      res.status(404).end()
-    } else {
-      await account.destroy()
-      res.status(204).end()
-    }
   })
 )
 

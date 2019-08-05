@@ -88,7 +88,7 @@ describe('account api', () => {
       address: address
     })
 
-    await request(this.mockApp)
+    response = await request(this.mockApp)
       .post('/api/accounts')
       .send({ nickname: 'test2', address })
       .expect(422)
@@ -177,7 +177,7 @@ describe('account api', () => {
       address: address
     })
 
-    const response = await request(this.mockApp)
+    await request(this.mockApp)
       .delete(`/api/accounts/${account.id}`)
       .expect(204)
 
@@ -198,7 +198,7 @@ describe('account api', () => {
       address: address
     })
 
-    const response = await request(this.mockApp)
+    await request(this.mockApp)
       .delete(`/api/accounts/${account.id}`)
       .expect(404)
 

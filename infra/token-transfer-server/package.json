@@ -30,6 +30,7 @@
     "console.table": "^0.10.0",
     "cors": "^2.8.5",
     "envkey": "^1.2.6",
+    "eslint": "^6.1.0",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "express-validator": "^6.1.1",

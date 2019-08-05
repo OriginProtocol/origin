@@ -1,4 +1,5 @@
-'use strict';
+'use strict'
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('t3_account', {
@@ -31,7 +32,7 @@ module.exports = {
     })
     .then(() => queryInterface.addIndex('t3_account', ['user_id']))
   },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('t3_account');
+  down: (queryInterface ) => {
+    return queryInterface.dropTable('t3_account')
   }
-};
+}
