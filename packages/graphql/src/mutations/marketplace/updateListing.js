@@ -36,15 +36,9 @@ async function updateListing(_, args) {
     throw new Error('New unitsTotal is lower than units pending sale')
   }
 
-  console.log({
-    ipfsData,
-    autoApprove,
-    additionalDeposit,
-    additionalArg: args.additionalDeposit
-  })
-
   if (autoApprove && additionalDeposit > 0) {
-    let owner = from, isProxy
+    let owner = from,
+      isProxy
     if (contracts.config.proxyAccountsEnabled) {
       owner = await proxyOwner(from)
       isProxy = owner ? true : false
