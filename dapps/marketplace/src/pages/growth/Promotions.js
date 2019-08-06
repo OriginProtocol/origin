@@ -44,10 +44,9 @@ const getApplicableActions = ({
     return []
   }
 
-  return [
-    ...notCompletedPromotionActions,
-    ...completedPromotionActions
-  ].filter(action => action.content.id === contentId)
+  return [...notCompletedPromotionActions, ...completedPromotionActions].filter(
+    action => action.content.id === contentId
+  )
 }
 
 const PromotionContents = ({
@@ -86,14 +85,18 @@ const PromotionChannels = ({
     return history.push(`/campaigns/promotions`)
   }
 
-  const completedActions = applicableActions.filter(action => action.status === 'Completed')
-  const notCompletedActions = applicableActions.filter(action => action.status !== 'Completed')
+  const completedActions = applicableActions.filter(
+    action => action.status === 'Completed'
+  )
+  const notCompletedActions = applicableActions.filter(
+    action => action.status !== 'Completed'
+  )
   // TODO: As of now, there is only one growth rule per content AND social network.
   // This has to be updated once support for multiple channels for the same content is available
 
   return (
     <>
-      {notCompletedActions.length > 0 &&
+      {notCompletedActions.length > 0 && (
         <ActionList
           decimalDivision={decimalDivision}
           isMobile={isMobile}
@@ -105,15 +108,15 @@ const PromotionChannels = ({
             }
           }}
         />
-      }
-      {completedActions.length > 0 &&
+      )}
+      {completedActions.length > 0 && (
         <ActionList
           title={fbt('Completed', 'growth.promoteOrigin.completed')}
           decimalDivision={decimalDivision}
           isMobile={isMobile}
           actions={completedActions}
         />
-      }
+      )}
     </>
   )
 }
@@ -226,11 +229,20 @@ const PromotionsHeader = ({
     </MobileModalHeader>
   ) : (
     <>
-      <Link className="back d-flex mr-auto" to={hasSelectedContent ? '/campaigns/promotions' : '/campaigns'}>
+      <Link
+        className="back d-flex mr-auto"
+        to={hasSelectedContent ? '/campaigns/promotions' : '/campaigns'}
+      >
         <img src="images/caret-blue.svg" />
         <div>
-          {hasSelectedContent && <fbt desc="GrowthPromotions.backToPromotions">Back to Promotions</fbt>}
-          {!hasSelectedContent && <fbt desc="GrowthPromotions.backToCampaign">Back to Campaign</fbt>}
+          {hasSelectedContent && (
+            <fbt desc="GrowthPromotions.backToPromotions">
+              Back to Promotions
+            </fbt>
+          )}
+          {!hasSelectedContent && (
+            <fbt desc="GrowthPromotions.backToCampaign">Back to Campaign</fbt>
+          )}
         </div>
       </Link>
       <h1 className={`mb-2 pt-md-3 mt-3`}>{stageTitle}</h1>
@@ -301,7 +313,7 @@ const Promotions = ({
         isMobile={isMobile}
         hasSelectedContent={hasSelectedContent}
         history={history}
-        action={applicableActions.length > 0 ? applicableActions[0] : null }
+        action={applicableActions.length > 0 ? applicableActions[0] : null}
       />
       {hasSelectedContent ? (
         <PromotionChannels

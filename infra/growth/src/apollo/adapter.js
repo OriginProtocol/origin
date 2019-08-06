@@ -2,7 +2,6 @@ const db = require('../models')
 const { GrowthInvite } = require('../resources/invite')
 const enums = require('../enums')
 const { Money } = require('../util/money')
-const logger = require('../logger')
 // Maps rule Id -> Apollo action type.
 const ruleIdToActionType = {
   ProfilePublished: 'Profile',

@@ -671,12 +671,22 @@ describe('Apollo adapter - August campaign', () => {
         expect(twitterShareAction.content).to.be.an('object')
         expect(twitterShareAction.content.titleKey).to.be.a('string')
         expect(twitterShareAction.content.link).to.be.a('string')
+        expect(twitterShareAction.content.id).to.be.a('string')
         expect(twitterShareAction.content.linkKey).to.be.a('string')
         expect(twitterShareAction.content.titleKey).to.be.a('string')
         expect(twitterShareAction.content.post).to.be.an('object')
         expect(twitterShareAction.content.post.text).to.be.an('object')
         expect(twitterShareAction.content.post.text.default).to.be.a('string')
         expect(twitterShareAction.content.post.text.translations).to.be.an('array')
+      } else if (action.type === 'FacebookShare') {
+        const facebookShareAction = action
+        expect(facebookShareAction).to.be.an('object')
+        expect(facebookShareAction.content).to.be.an('object')
+        expect(facebookShareAction.content.titleKey).to.be.a('string')
+        expect(facebookShareAction.content.link).to.be.a('string')
+        expect(facebookShareAction.content.id).to.be.a('string')
+        expect(facebookShareAction.content.linkKey).to.be.a('string')
+        expect(facebookShareAction.content.titleKey).to.be.a('string')
       }
     }
 

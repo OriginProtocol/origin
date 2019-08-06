@@ -125,8 +125,7 @@ function Action(props) {
     buttonLink = undefined
     foregroundImgSrc = 'images/growth/facebook-icon.svg'
     title = fbt('Like our Facebook Page', 'RewardActions.likePageOnFacebook')
-    externalLink =
-      'https://www.facebook.com/originprotocol/'
+    externalLink = 'https://www.facebook.com/originprotocol/'
   }
 
   const renderReward = (amount, style = 'normal') => {
