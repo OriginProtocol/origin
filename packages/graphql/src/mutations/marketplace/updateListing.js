@@ -8,7 +8,7 @@ import { listingInputToIPFS } from './createListing'
 
 import { proxyOwner } from '../../utils/proxy'
 import createDebug from 'debug'
-const debug = createDebug('origin:makeOffer:')
+const debug = createDebug('origin:updateListing:')
 
 async function updateListing(_, args) {
   const { data, unitData, fractionalData, autoApprove } = args
@@ -44,7 +44,7 @@ async function updateListing(_, args) {
   })
 
   if (autoApprove && additionalDeposit > 0) {
-    let owner, isProxy
+    let owner = from, isProxy
     if (contracts.config.proxyAccountsEnabled) {
       owner = await proxyOwner(from)
       isProxy = owner ? true : false
@@ -85,7 +85,7 @@ async function updateListing(_, args) {
         fnSig,
         params
       )
-      gas += 50000
+      gas += 100000
     }
   } else {
     tx = contracts.marketplaceExec.methods.updateListing(

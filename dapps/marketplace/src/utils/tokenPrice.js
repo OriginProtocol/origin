@@ -1,4 +1,5 @@
 export default function tokenPrice(amount, decimals = 18, places = 0) {
+  if (!amount) return '0'
   try {
     const supplyBN = web3.utils.toBN(amount)
     const decimalsBN = web3.utils.toBN(

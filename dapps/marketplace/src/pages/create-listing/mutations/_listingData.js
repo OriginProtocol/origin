@@ -66,8 +66,8 @@ export default function applyListingData(props, data) {
       category: listing.category,
       subCategory: listing.subCategory,
       media: listing.media.map(m => pick(m, 'contentType', 'url')),
-      commission: String(listing.commission),
-      commissionPerUnit: String(listing.commissionPerUnit),
+      commission: listing.commission ? String(listing.commission) : '0',
+      commissionPerUnit: listing.commissionPerUnit ? String(listing.commissionPerUnit) : '0',
       marketplacePublisher: listing.marketplacePublisher
     }
   }

@@ -342,28 +342,28 @@ class OriginEventSource {
               // Created, Accepted or Disputed
               unitsPending += offer.quantity
               pendingBuyers.push({ id: offer.buyer.id })
+
+              // Validate offer commission.
+              const normalCommission = commissionPerUnit.mul(
+                this.web3.utils.toBN(offer.quantity)
+              )
+              const expCommission = normalCommission.lte(commissionAvailable)
+                ? normalCommission
+                : commissionAvailable
+              const offerCommission =
+                (offer.commission && this.web3.utils.toBN(offer.commission)) ||
+                this.web3.utils.toBN(0)
+              if (!offerCommission.eq(expCommission)) {
+                offer.valid = false
+                offer.validationError = `offer commission: ${offerCommission.toString()} != exp ${expCommission.toString()}`
+                return
+              }
+              if (!offerCommission.isZero()) {
+                commissionAvailable = commissionAvailable.sub(offerCommission)
+              }
             } else if (status === 4 || status === 5) {
               // Finalized or Ruling
               unitsSold += offer.quantity
-            }
-
-            // Validate offer commission.
-            const normalCommission = commissionPerUnit.mul(
-              this.web3.utils.toBN(offer.quantity)
-            )
-            const expCommission = normalCommission.lte(commissionAvailable)
-              ? normalCommission
-              : commissionAvailable
-            const offerCommission =
-              (offer.commission && this.web3.utils.toBN(offer.commission)) ||
-              this.web3.utils.toBN(0)
-            if (!offerCommission.eq(expCommission)) {
-              offer.valid = false
-              offer.validationError = `offer commission: ${offerCommission.toString()} != exp ${expCommission.toString()}`
-              return
-            }
-            if (!offerCommission.isZero()) {
-              commissionAvailable = commissionAvailable.sub(offerCommission)
             }
           } catch (e) {
             offer.valid = false

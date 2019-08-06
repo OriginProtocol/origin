@@ -13,9 +13,7 @@ const PromoteListingBudget = ({ match, listing, tokenBalance, onChange }) => {
   const inputRef = useRef()
   useEffect(() => inputRef.current.focus(), [inputRef])
   useEffect(() => {
-    if (listing.commission) {
-      setValue(String(listing.commission))
-    }
+    setValue(String(listing.commission))
   }, [listing.commission])
 
   const unitsAvailable = listing.unitsAvailable
