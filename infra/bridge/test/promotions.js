@@ -41,7 +41,7 @@ describe('promotion verifications', () => {
     })
 
     // Push a fake event to redis
-    client.set(`twitter/follow/12345`, '{}', 'EX', 60)
+    client.set(`twitter/follow/OriginProtocol`, '{}', 'EX', 60)
 
     const response = await request(app)
       .post('/api/promotions/verify')
@@ -69,7 +69,7 @@ describe('promotion verifications', () => {
 
     // Push a fake event to redis
     client.set(
-      `twitter/share/12345`,
+      `twitter/share/OriginProtocol`,
       JSON.stringify({
         text: 'Hello World',
         entities: {
@@ -107,7 +107,7 @@ describe('promotion verifications', () => {
 
     // Push a fake event to redis
     client.set(
-      `twitter/share/12345`,
+      `twitter/share/OriginProtocol`,
       JSON.stringify({
         text: 'Hello...',
         entities: {

@@ -127,25 +127,55 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
  * Webhook Authorization
  */
 router.get('/twitter', (req, res) => {
+  res.status(200).send({
+    response_token: `sha256=${getCRCToken(req.query.crc_token)}`
+  })
+})
+
+/**
+ * Returns the hash signature to be used for authorization
+ */
+function getCRCToken(payload) {
   const hmac = crypto
     .createHmac(
       'sha256',
       process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET ||
         process.env.TWITTER_CONSUMER_SECRET
     )
-    .update(req.query.crc_token)
+    .update(payload)
     .digest('base64')
 
-  res.status(200).send({
-    response_token: `sha256=${hmac}`
-  })
-})
+  return hmac
+}
+
+/**
+ * Validates the request signature and confirms that
+ * it is from Twitter
+ * @param {Request} req
+ */
+function verifyRequestSignature(req) {
+  const sign = req.headers['x-twitter-webhooks-signature']
+  const token = getCRCToken(JSON.stringify(req.body))
+
+  // Using `.timingSafeEqual` for comparison to avoid timing attacks
+  const valid = crypto.timingSafeEqual(
+    Buffer.from(sign, 'utf-8'),
+    Buffer.from(token, 'utf-8')
+  )
+
+  return valid
+}
 
 /**
  * Twitter posts events to this endpoint
  * Should always return 200 with no response
  */
 router.post('/twitter', (req, res) => {
+  if (!verifyRequestSignature(req)) {
+    return res.status(403).send({
+      errors: ['Unauthorized']
+    })
+  }
   let followCount = 0
 
   // Use redis batch for parallelization (without atomicity)
@@ -164,14 +194,9 @@ router.post('/twitter', (req, res) => {
         process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
       ) {
         followCount++
-        // Note: for follow events, source.id is a string and therefore
-        // does not have the same issue with JS large integer mishandling
-        // as the share event user.id has.
-        const key = `twitter/follow/${event.source.id}`
+        const key = `twitter/follow/${event.source.screen_name}`
         redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
-        logger.info(
-          `Pushing twitter follow event for ${event.source.screen_name} at ${key}...`
-        )
+        logger.info(`Pushing twitter follow event to ${key}...`)
       }
     })
   }
@@ -183,20 +208,18 @@ router.post('/twitter', (req, res) => {
     events
       .filter(event => {
         // Ignore own tweets, retweets and favorites
-        return (
-          !event.retweeted &&
-          !event.favorited &&
-          event.user.screen_name.toLowerCase() !==
+        return !(
+          event.retweeted ||
+          event.favorited ||
+          event.user.screen_name.toLowerCase() ===
             process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
         )
       })
       .forEach(event => {
         mentionCount++
-        const key = `twitter/share/${event.user.id_str}`
+        const key = `twitter/share/${event.user.screen_name}`
         redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
-        logger.info(
-          `Pushing twitter mention event for ${event.user.screen_name} at ${key}...`
-        )
+        logger.info(`Pushing twitter mention event to ${key}...`)
       })
   }
 

@@ -13,7 +13,7 @@ class NoInternetError extends Component {
   render() {
     return (
       <>
-        <Text style={styles.errorText}>
+        <Text style={[styles.errorText, this.props.errorTextStyle]}>
           <fbt desc="NoInternetError.errorText">
             An error occurred loading the Origin Marketplace. Please check your
             internet connection.
@@ -21,7 +21,7 @@ class NoInternetError extends Component {
         </Text>
         <OriginButton
           size="large"
-          type="white"
+          type={this.props.buttonType}
           title={fbt('Retry', 'NoInternetError.retryButton')}
           onPress={() => {
             this.setState({ loading: true })
@@ -42,11 +42,10 @@ const styles = {
   ...CommonStyles,
   errorText: {
     width: '80%',
-    color: 'white',
     fontSize: 16,
-    fontWeight: '600',
     textAlign: 'center',
-    marginTop: 30
+    marginTop: 20,
+    marginBottom: 20
   }
 }
 

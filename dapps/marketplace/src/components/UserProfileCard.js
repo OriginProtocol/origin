@@ -2,10 +2,13 @@ import React, { Component } from 'react'
 
 import withIsMobile from 'hoc/withIsMobile'
 
+import { fbt } from 'fbt-runtime'
+
 import Avatar from './Avatar'
 import ProfileStrength from './ProfileStrength'
 import Earnings from './Earning'
 import Attestations from './Attestations'
+import SendMessage from './SendMessage'
 
 class UserProfileCard extends Component {
   render() {
@@ -21,6 +24,7 @@ class UserProfileCard extends Component {
       tokensEarned,
       maxEarnable,
       verifiedAttestations,
+      showMessageLink,
       isMobile
     } = this.props
 
@@ -55,6 +59,11 @@ class UserProfileCard extends Component {
               profile={{ verifiedAttestations }}
               small
             />
+            {showMessageLink && (
+              <SendMessage to={wallet} className="btn btn-link">
+                <fbt desc="contactUser">Contact user</fbt>
+              </SendMessage>
+            )}
           </div>
         </div>
         {(hasProfileStrength || shouldShowEarnings) && (
@@ -133,6 +142,10 @@ require('react-styl')(`
           > div
             width: 1.7rem
             height: 1.7rem
+        .btn-link
+          font-weight: normal
+          padding: 0
+          margin-top: 1rem
     .user-progress-container
       margin-top: 1rem
       display: flex
@@ -164,6 +177,11 @@ require('react-styl')(`
             display: flex
             flex-direction: row
             justify-content: center
+          .btn-link
+            display: block
+            text-align: center
+            width: 100%
+            margin-top: 0
         .avatar-container
           display: inline-block
           margin: 0 auto
