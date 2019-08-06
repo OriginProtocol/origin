@@ -1,14 +1,30 @@
 'use strict'
 
 import React from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native'
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity
+} from 'react-native'
 
 class PinInput extends React.Component {
+  componentDidMount() {
+    if (Platform.OS === 'android') {
+      setTimeout(() => {
+        console.log('Calling focus')
+        this.workaroundFocus()
+      }, 100)
+    }
+  }
+
   // Workaround for Android bug of focus not popping the keyboard
   // https://github.com/facebook/react-native/issues/19366
-  androidFocus() {
+  workaroundFocus = () => {
     this.textInput.blur()
     setTimeout(() => {
+      console.log('Focusing')
       this.textInput.focus()
     }, 100)
   }
@@ -28,13 +44,13 @@ class PinInput extends React.Component {
       <>
         <TouchableOpacity
           style={styles.pinCode}
-          onPress={() => this.androidFocus()}
+          onPress={() => this.workaroundFocus()}
         >
           {placeholder}
         </TouchableOpacity>
         <TextInput
           ref={ref => (this.textInput = ref)}
-          autoFocus={true}
+          autoFocus={Platform.OS === 'ios' ? true : false}
           value={this.props.value}
           keyboardType="numeric"
           pinLength={this.props.pinLength || 6}

@@ -21,7 +21,6 @@ const SignatureCard = ({ msgData, onConfirm, onRequestClose }) => {
         <OriginButton
           size="large"
           type="primary"
-          textStyle={{ fontSize: 18, fontWeight: '900' }}
           title={fbt('Sign', 'SignatureCard.button')}
           onPress={onConfirm}
         />
