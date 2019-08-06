@@ -6,10 +6,7 @@ const _identityModels = require('@origin/identity/src/models')
 const db = { ..._growthModels, ..._discoveryModels, ..._identityModels }
 const { Level } = require('./level')
 
-const {
-  GrowthEventStatuses,
-  GrowthCampaignStatuses
-} = require('../../enums')
+const { GrowthEventStatuses, GrowthCampaignStatuses } = require('../../enums')
 
 class CampaignRules {
   constructor(campaign, config) {
