@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { addAccount } from '../actions/account'
 import { formInput, formFeedback } from '../utils/formHelpers'
 import Modal from './Modal'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 class AccountTable extends Component {
   constructor(props) {
@@ -74,8 +75,7 @@ class AccountTable extends Component {
                       <td>{account.address}</td>
                       <td>{account.createdAt}</td>
                       <td>
-                        <a href="#">e</a>
-                        <a href="#">x</a>
+                        <DeleteIcon style={{ fill: '#8fa7b7' }} />
                       </td>
                     </tr>
                   ))
