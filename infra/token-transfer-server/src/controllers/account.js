@@ -14,7 +14,7 @@ router.get(
   asyncMiddleware(ensureLoggedIn),
   asyncMiddleware(async (req, res) => {
     const accounts = await Account.findAll({
-      where: { userId: req.session.user.id }
+      where: { userId: req.user.id }
     })
     res.json(accounts.map(a => a.get({ plain: true })))
   })
@@ -38,7 +38,7 @@ router.post(
 
     const nicknameExists = await Account.findOne({
       where: {
-        userId: req.session.user.id,
+        userId: req.user.id,
         nickname: req.body.nickname
       }
     })
@@ -52,7 +52,7 @@ router.post(
 
     const addressExists = await Account.findOne({
       where: {
-        userId: req.session.user.id,
+        userId: req.user.id,
         address: req.body.address
       }
     })
@@ -64,7 +64,7 @@ router.post(
     }
 
     const account = await Account.create({
-      userId: req.session.user.id,
+      userId: req.user.id,
       nickname: req.body.nickname,
       address: req.body.address
     })
@@ -81,7 +81,7 @@ router.delete(
   asyncMiddleware(ensureLoggedIn),
   asyncMiddleware(async (req, res) => {
     const account = await Account.findOne({
-      where: { id: req.params.accountId, userId: req.session.user.id }
+      where: { id: req.params.accountId, userId: req.user.id }
     })
     if (!account) {
       res.status(404).end()

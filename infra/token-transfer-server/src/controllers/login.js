@@ -12,7 +12,7 @@ const { LOGIN } = require('../constants/events')
 const { encrypt } = require('../lib/crypto')
 const { Event, User } = require('../models')
 const logger = require('../logger')
-const { ensureLoggedIn, ensureEmailVerified } = require('../lib/login')
+const { ensureLoggedIn, ensureUserInSession } = require('../lib/login')
 
 // Sendgrid configuration.
 const emailFrom = process.env.SENDGRID_FROM_EMAIL
@@ -81,24 +81,14 @@ router.post(
   '/verify_email_token',
   passport.authenticate('bearer'),
   (req, res) => {
+    console.log(req.user)
     logger.debug('/verify_email_token called')
-    if (!req.session.user) {
-      res.status(401)
-      return res.send('User not authorized')
-    }
-
-    // Save in the session that the user successfully verified their email.
-    req.session.email = req.session.user.email
-
-    res.setHeader('Content-Type', 'application/json')
-    res.send(
-      JSON.stringify({
-        email: req.session.user.email,
-        otpReady: Boolean(
-          req.session.user.otpKey && req.session.user.otpVerified
-        )
-      })
-    )
+    res.json({
+      email: req.user.email,
+      otpReady: Boolean(
+        req.user.otpKey && req.user.otpVerified
+      )
+    })
   }
 )
 
@@ -107,9 +97,9 @@ router.post(
  */
 router.post(
   '/setup_totp',
-  ensureEmailVerified, // User must have verified their email first.
+  ensureUserInSession, // User must have verified their email first.
   asyncMiddleware(async (req, res) => {
-    if (req.session.user.otpKey && req.session.user.otpVerified) {
+    if (req.user.otpKey && req.user.otpVerified) {
       // Two-factor auth has already been setup. Do not allow reset.
       res.status(403)
       return res.send('TOTP already setup')
@@ -122,11 +112,11 @@ router.post(
     const key = crypto.randomBytes(10).toString('hex')
     const encodedKey = base32.encode(key).toString()
     const encryptedKey = encrypt(key)
-    await req.session.user.update({ otpKey: encryptedKey })
+    await req.user.update({ otpKey: encryptedKey })
 
     // Generate QR token for scanning into Google Authenticator
     // Reference: https://code.google.com/p/google-authenticator/wiki/KeyUriFormat
-    const otpUrl = `otpauth://totp/${req.session.user.email}?secret=${encodedKey}&period=30&issuer=OriginProtocol`
+    const otpUrl = `otpauth://totp/${req.user.email}?secret=${encodedKey}&period=30&issuer=OriginProtocol`
     const otpQrUrl =
       'https://chart.googleapis.com/chart?chs=166x166&chld=L|0&cht=qr&chl=' +
       encodeURIComponent(otpUrl)
@@ -134,7 +124,7 @@ router.post(
     res.setHeader('Content-Type', 'application/json')
     res.send(
       JSON.stringify({
-        email: req.session.user.email,
+        email: req.user.email,
         otpKey: encodedKey,
         otpQrUrl
       })
@@ -147,16 +137,16 @@ router.post(
  */
 router.post(
   '/verify_totp',
-  ensureEmailVerified, // User must have verified their email first.
+  ensureUserInSession, // User must have verified their email first.
   passport.authenticate('totp'),
   asyncMiddleware(async (req, res) => {
     // Set otpVerified to true if it is not already to signify TOTP setup is
     // complete.
-    await req.session.user.update({ otpVerified: true })
+    await req.user.update({ otpVerified: true })
     //
     // Log the successfull login in the Event table.
     await Event.create({
-      email: req.session.user.email,
+      email: req.user.email,
       ip: req.connection.remoteAddress,
       grantId: null,
       action: LOGIN,
@@ -167,7 +157,7 @@ router.post(
     req.session.twoFA = 'totp'
 
     res.setHeader('Content-Type', 'application/json')
-    res.send(JSON.stringify({ email: req.session.user.email }))
+    res.send(JSON.stringify({ email: req.user.email }))
   })
 )
 
