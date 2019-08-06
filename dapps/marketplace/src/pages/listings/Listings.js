@@ -42,7 +42,7 @@ class Listings extends Component {
       first: 12,
       search: getStateFromQuery(props),
       sort: 'default',
-      sortModalVisible: false
+      sortVisible: false
     }
   }
 
@@ -121,6 +121,12 @@ class Listings extends Component {
     })
   }
 
+  handleSortVisible = bool => {
+    this.setState({
+      sortVisible: bool
+    })
+  }
+
   render() {
     const isCreatedMarketplace = get(
       this.props,
@@ -158,25 +164,14 @@ class Listings extends Component {
       <>
         <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
         <div className="container listings-container">
-          <button
-            className="btn btn-outline-primary btn-rounded mt-3"
-            onClick={() => {
-              this.setState({
-                sortModalVisible: true
-              })
-            }}
-          >
-            <fbt desc="listings.sort">Sort</fbt>
-          </button>
           <Sort
             {...this.props}
             title={fbt('Availability', 'Availability')}
             className="availability-modal"
-            openSort={this.state.sortModalVisible}
+            handleSortVisible={this.handleSortVisible}
+            sortVisible={this.state.sortVisible}
             onChange={this.handleOptionChange}
-            onClose={() => {
-              this.setState({ sortModalVisible: false })
-            }}
+            onClose={() => this.handleSortVisible(false)}
             sort={this.state.sort}
           />
           <Query
