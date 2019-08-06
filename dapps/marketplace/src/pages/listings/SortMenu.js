@@ -7,16 +7,19 @@ import MobileModal from 'components/MobileModal'
 
 import withIsMobile from 'hoc/withIsMobile'
 
-const Sort = ({
+const SortMenu = ({
   onClose,
   sortVisible,
   isMobile,
   onChange,
   sort,
+  order,
   handleSortVisible
 }) => {
   const [closeModal, setCloseModal] = useState(false)
-  console.log('sort - ', sort)
+  // console.log(`sort -${sort}- order -${order}-`)
+  const selectedOption = `${sort}:${order}`
+  console.log(`selectedOption -${selectedOption}-`)
 
   const RenderMobileSort = () => {
     if (sortVisible) {
@@ -31,7 +34,11 @@ const Sort = ({
             onClose()
           }}
         >
-          <SortContent onChange={onChange} sort={sort} isMobile={isMobile} />
+          <SortContent
+            onChange={onChange}
+            selectedOption={selectedOption}
+            isMobile={isMobile}
+          />
         </MobileModal>
       )
     }
@@ -56,7 +63,7 @@ const Sort = ({
       ) : (
         <SortDropdown
           onChange={onChange}
-          sort={sort}
+          selectedOption={selectedOption}
           sortVisible={sortVisible}
           handleSortVisible={handleSortVisible}
           isMobile={isMobile}
@@ -85,13 +92,17 @@ class SortDropdown extends React.Component {
     const {
       sortVisible,
       onChange,
-      sort,
+      selectedOption,
       handleSortVisible,
       isMobile
     } = this.props
 
     const content = (
-      <SortContent sort={sort} onChange={onChange} isMobile={isMobile} />
+      <SortContent
+        selectedOption={selectedOption}
+        onChange={onChange}
+        isMobile={isMobile}
+      />
     )
 
     return (
@@ -102,7 +113,6 @@ class SortDropdown extends React.Component {
         onClose={() => handleSortVisible(false)}
         onChange={onChange}
         content={content}
-        sort={sort}
         title={'TEST'}
       >
         <a
@@ -123,10 +133,9 @@ class SortDropdown extends React.Component {
   }
 }
 
-const SortContent = ({ sort, onChange, isMobile }) => {
+const SortContent = ({ selectedOption, onChange, isMobile }) => {
   const title = fbt('listings.sort', 'Sort by')
   const containerClass = isMobile ? '' : 'dropdown-menu dropdown-menu-left show'
-
   return (
     <div className={containerClass}>
       <div className="title">{title}</div>
@@ -135,8 +144,8 @@ const SortContent = ({ sort, onChange, isMobile }) => {
           <label>
             <input
               type="radio"
-              value="default"
-              checked={sort === 'default'}
+              value=":"
+              checked={selectedOption === ':'}
               onChange={onChange}
             />
             Default
@@ -146,8 +155,8 @@ const SortContent = ({ sort, onChange, isMobile }) => {
           <label>
             <input
               type="radio"
-              value="price:asc"
-              checked={sort === 'price:asc'}
+              value="price.amount:asc"
+              checked={selectedOption === 'price.amount:asc'}
               onChange={onChange}
             />
             Price: Low to High
@@ -157,9 +166,9 @@ const SortContent = ({ sort, onChange, isMobile }) => {
           <label>
             <input
               type="radio"
-              value="price:desc"
+              value="price.amount:desc"
               onChange={onChange}
-              checked={sort === 'price:desc'}
+              checked={selectedOption === 'price.amount:desc'}
             />
             Price: High to Low
           </label>
@@ -169,7 +178,7 @@ const SortContent = ({ sort, onChange, isMobile }) => {
   )
 }
 
-export default withIsMobile(Sort)
+export default withIsMobile(SortMenu)
 
 require('react-styl')(`
   .timeZone

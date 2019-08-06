@@ -25,7 +25,7 @@ import ListingCards from './ListingCards'
 import query from 'queries/Listings'
 
 import { getFilters, getStateFromQuery } from './_filters'
-import Sort from './Sort'
+import SortMenu from './SortMenu'
 
 import LoadingSpinner from 'components/LoadingSpinner'
 
@@ -41,7 +41,8 @@ class Listings extends Component {
     this.state = {
       first: 12,
       search: getStateFromQuery(props),
-      sort: 'default',
+      sort: '',
+      order: '',
       sortVisible: false
     }
   }
@@ -116,8 +117,10 @@ class Listings extends Component {
   }
 
   handleOptionChange = e => {
+    const selectedOptions = e.target.value.split(':')
     this.setState({
-      sort: e.target.value
+      sort: selectedOptions[0],
+      order: selectedOptions[1]
     })
   }
 
@@ -164,7 +167,7 @@ class Listings extends Component {
       <>
         <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
         <div className="container listings-container">
-          <Sort
+          <SortMenu
             {...this.props}
             title={fbt('Availability', 'Availability')}
             className="availability-modal"
@@ -173,6 +176,7 @@ class Listings extends Component {
             onChange={this.handleOptionChange}
             onClose={() => this.handleSortVisible(false)}
             sort={this.state.sort}
+            order={this.state.order}
           />
           <Query
             query={query}
