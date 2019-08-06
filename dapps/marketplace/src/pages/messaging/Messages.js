@@ -20,6 +20,16 @@ import DocumentTitle from 'components/DocumentTitle'
 import MobileModal from 'components/MobileModal'
 
 import { abbreviateName, truncateAddress } from 'utils/user'
+import LoadingSpinner from 'components/LoadingSpinner'
+
+const RoomTitle = withIdentity(({ identity, walletProxy }) => (
+  <Link to={`/user/${walletProxy}`} className="user-profile-link">
+    <Avatar profile={identity} size={30} />
+    <span className="counterparty">
+      {abbreviateName(identity) || truncateAddress(walletProxy)}
+    </span>
+  </Link>
+))
 
 class Messages extends Component {
   constructor(props) {
@@ -41,14 +51,7 @@ class Messages extends Component {
       return
     }
 
-    const conversations = get(this.props, 'messaging.conversations', []).sort(
-      (a, b) => {
-        const alm = a.lastMessage || { timestamp: Date.now() }
-        const blm = b.lastMessage || { timestamp: Date.now() }
-
-        return alm.timestamp > blm.timestamp ? -1 : 1
-      }
-    )
+    const conversations = this.getSortedConversations()
 
     const defaultRoom = get(conversations, '0.id')
 
@@ -58,6 +61,20 @@ class Messages extends Component {
         defaultRoomSet: true
       })
     }
+  }
+
+  getSortedConversations() {
+    return get(this.props, 'messaging.conversations', [])
+      .sort((a, b) => {
+        const alm = a.lastMessage || { timestamp: Date.now() }
+        const blm = b.lastMessage || { timestamp: Date.now() }
+
+        return alm.timestamp > blm.timestamp ? -1 : 1
+      })
+      .filter(
+        conv =>
+          conv.id !== this.props.wallet && conv.id !== this.props.walletProxy
+      )
   }
 
   goBack() {
@@ -75,30 +92,21 @@ class Messages extends Component {
     return (
       <Mutation mutation={MarkConversationRead}>
         {markConversationRead => (
-          <Room id={room} markRead={markConversationRead} enabled={enabled} />
+          <div className="conversation-view">
+            <Room id={room} markRead={markConversationRead} enabled={enabled} />
+          </div>
         )}
       </Mutation>
     )
   }
 
   renderContent() {
-    const {
-      isMobile,
-      wallet,
-      identity,
-      messagingError,
-      messaging,
-      messagingLoading
-    } = this.props
+    const { isMobile, messagingError, messaging, messagingLoading } = this.props
 
     if (messagingError) {
       return <QueryError query={query} error={messagingError} />
     } else if (messagingLoading) {
-      return (
-        <div>
-          <fbt desc="Messages.loading">Loading conversations...</fbt>
-        </div>
-      )
+      return <LoadingSpinner />
     } else if (!messaging) {
       return (
         <p className="p-3">
@@ -107,12 +115,7 @@ class Messages extends Component {
       )
     }
 
-    const conversations = get(messaging, 'conversations', []).sort((a, b) => {
-      const alm = a.lastMessage || { timestamp: Date.now() }
-      const blm = b.lastMessage || { timestamp: Date.now() }
-
-      return alm.timestamp > blm.timestamp ? -1 : 1
-    })
+    const conversations = this.getSortedConversations()
 
     const room = get(this.props, 'match.params.room')
 
@@ -121,27 +124,18 @@ class Messages extends Component {
     if (content && isMobile) {
       content = (
         <MobileModal
-          className="messages-modal"
-          title={
-            <Link to={`/user/${wallet}`} className="user-profile-link">
-              <Avatar profile={identity} size={30} />
-              <span className="counterparty">
-                {abbreviateName(identity) || truncateAddress(wallet)}
-              </span>
-            </Link>
-          }
+          className="messages-page messages-modal"
+          title={<RoomTitle walletProxy={room} wallet={room} />}
           onBack={() => this.goBack()}
         >
-          {content}
+          <div className="conversations-wrapper">{content}</div>
         </MobileModal>
       )
-    } else if (!isMobile) {
-      content = <div className="col-md-9">{content}</div>
     }
 
     return (
-      <div className="row">
-        <div className={`col-md-3 d-md-block`}>
+      <div className="conversations-wrapper">
+        <div className={`conversations-list`}>
           {conversations.length ? null : (
             <div>
               <fbt desc="Messages.none">No conversations!</fbt>
@@ -159,7 +153,7 @@ class Messages extends Component {
             />
           ))}
         </div>
-        <div className="col-md-9">{content}</div>
+        {content}
       </div>
     )
   }
@@ -174,7 +168,7 @@ class Messages extends Component {
   }
 }
 
-export default withIsMobile(withWallet(withIdentity(withMessaging(Messages))))
+export default withIsMobile(withWallet(withMessaging(Messages)))
 
 require('react-styl')(`
   .messages-page
@@ -226,11 +220,39 @@ require('react-styl')(`
       &:hover
         color: white
 
+    .conversations-wrapper
+      display: flex
+      flex-direction: row
+      height: calc(100vh - 6rem)
+      .conversations-list
+        flex: 1
+        overflow-y: scroll
+        overflow-x: hidden
+      .conversation-view
+        flex: 3
+        overflow-y: scroll
+        overflow-x: hidden
+        padding: 0 2rem
+        display: flex
+        flex-direction: column
+
   .mobile-modal-light
     .messages-modal
+      margin: 0
       &.modal-content
+        min-height: auto
+        .messages
+          padding: 0 1rem
         .send-message
           margin-bottom: 1rem
+          padding: 1rem 1rem 0rem 1rem
+          margin-top: auto
+      
+        .conversations-wrapper
+          height: 100%
+          flex: 1
+        .conversation-view
+          padding: 0
       &.modal-header
         .user-profile-link
           display: inline-block
@@ -238,4 +260,7 @@ require('react-styl')(`
             display: inline-block
             vertical-align: middle
             margin-right: 0.5rem
+          .counterparty
+            color: var(--dark-blue-grey)
+
 `)

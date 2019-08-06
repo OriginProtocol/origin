@@ -1,4 +1,4 @@
-sqlite3 ../data/token-grants.sqlite3 <<EOF
+sqlite3 ${DATABASE_URL#sqlite:\/\/} <<EOF
 .headers on
 .mode column
-SELECT * FROM Grants;
+SELECT * FROM Grant;

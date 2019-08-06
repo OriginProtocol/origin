@@ -29,7 +29,7 @@ COPY ./packages/contracts ./packages/contracts
 COPY ./packages/token ./packages/token
 COPY ./infra/bridge ./infra/bridge
 COPY ./infra/discovery ./infra/discovery
-COPY ./infra/growth ./infra/growth
+COPY ./infra/growth-event ./infra/growth-event
 # @origin/identity required for the db model
 COPY ./infra/identity ./infra/identity
 

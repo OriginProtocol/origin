@@ -3,21 +3,25 @@
 const OAuth = require('oauth').OAuth
 const { getAbsoluteUrl } = require('./index.js')
 
-function twitterOAuth(sid) {
+function twitterOAuth({ sid, redirectUrl, useWebhookCredentials } = {}) {
   return new OAuth(
     'https://api.twitter.com/oauth/request_token',
     'https://api.twitter.com/oauth/access_token',
-    process.env.TWITTER_CONSUMER_KEY,
-    process.env.TWITTER_CONSUMER_SECRET,
+    useWebhookCredentials && process.env.TWITTER_WEBHOOKS_CONSUMER_KEY
+      ? process.env.TWITTER_WEBHOOKS_CONSUMER_KEY
+      : process.env.TWITTER_CONSUMER_KEY,
+    useWebhookCredentials && process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET
+      ? process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET
+      : process.env.TWITTER_CONSUMER_SECRET,
     '1.0',
-    getAbsoluteUrl('/redirects/twitter/', { sid }),
+    getAbsoluteUrl(redirectUrl ? redirectUrl : '/redirects/twitter/', { sid }),
     'HMAC-SHA1'
   )
 }
 
-function getTwitterOAuthRequestToken(dappRedirectUrl) {
+function getTwitterOAuthRequestToken(params = {}) {
   return new Promise((resolve, reject) => {
-    twitterOAuth(dappRedirectUrl).getOAuthRequestToken(function(
+    twitterOAuth(params).getOAuthRequestToken(function(
       error,
       oAuthToken,
       oAuthTokenSecret
@@ -34,10 +38,11 @@ function getTwitterOAuthRequestToken(dappRedirectUrl) {
 function getTwitterOAuthAccessToken(
   oAuthToken,
   oAuthTokenSecret,
-  oAuthVerifier
+  oAuthVerifier,
+  useWebhookCredentials
 ) {
   return new Promise((resolve, reject) => {
-    twitterOAuth().getOAuthAccessToken(
+    twitterOAuth({ useWebhookCredentials }).getOAuthAccessToken(
       oAuthToken,
       oAuthTokenSecret,
       oAuthVerifier,
@@ -52,9 +57,13 @@ function getTwitterOAuthAccessToken(
   })
 }
 
-function verifyTwitterCredentials(oAuthAccessToken, oAuthAccessTokenSecret) {
+function verifyTwitterCredentials(
+  oAuthAccessToken,
+  oAuthAccessTokenSecret,
+  useWebhookCredentials
+) {
   return new Promise((resolve, reject) => {
-    twitterOAuth().get(
+    twitterOAuth({ useWebhookCredentials }).get(
       'https://api.twitter.com/1.1/account/verify_credentials.json',
       oAuthAccessToken,
       oAuthAccessTokenSecret,
@@ -63,13 +72,7 @@ function verifyTwitterCredentials(oAuthAccessToken, oAuthAccessTokenSecret) {
           reject(error)
         } else {
           /* eslint-disable-next-line */
-          const { id, screen_name } = JSON.parse(response)
-          resolve({
-            uniqueId: id,
-            username: screen_name,
-            /* eslint-disable-next-line */
-            profileUrl: `https://twitter.com/${screen_name}`
-          })
+          resolve(JSON.parse(response))
         }
       }
     )

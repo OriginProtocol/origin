@@ -2,147 +2,37 @@
 
 const chai = require('chai')
 const expect = chai.expect
-const request = require('supertest')
-const redis = require('redis')
-const nock = require('nock')
 
-const Identity = require('@origin/identity/src/models').Identity
-const app = require('../src/app')
+const { decodeHTML } = require('../src/utils/index')
 
-const baseIdentity = {
-  ethAddress: '0x000a'
-}
+describe('helper functions', () => {
+  it('should decode html content', async () => {
+    let decoded = `Discounted Amazon gift cards with savings of up to 30%. Just one of the many cool things you can find on @OriginProtocol's #marketplace.`
+    let encoded = `Discounted Amazon gift cards with savings of up to 30%. Just one of the many cool things you can find on @OriginProtocol&#x27;s #marketplace.`
+    expect(decodeHTML(encoded)).to.equal(decoded)
 
-const client = redis.createClient()
+    decoded = `Experience the decentralised global #marketplace of the future with @OriginProtocol's fresh new app. Secure transactions & Zero fees. Try it now: https://www.ogn.dev/mobile (shorten link)`
+    encoded = `Experience the decentralised global #marketplace of the future with @OriginProtocol&#x27;s fresh new app. Secure transactions &amp; Zero fees. Try it now: https://www.ogn.dev/mobile (shorten link)`
+    expect(decodeHTML(encoded)).to.equal(decoded)
 
-describe('identity exists', () => {
-  beforeEach(() => {
-    Identity.destroy({
-      where: {},
-      truncate: true
-    })
-  })
+    decoded = `Join @OriginProtocol's #rewards program and earn free Origin tokens! [x] OGN already distributed to thousands all around the world and we're still welcoming more to become token holders.`
+    encoded = `Join @OriginProtocol&#x27;s #rewards program and earn free Origin tokens! [x] OGN already distributed to thousands all around the world and we&#x27;re still welcoming more to become token holders.`
+    expect(decodeHTML(encoded)).to.equal(decoded)
 
-  it('should return 200 for existing email', async () => {
-    const obj = { email: 'foobar@originprotocol.com' }
+    decoded = `Our meetup in #Venezuela was a significant step towards serving regions where crypto can provide improved financial access and freedom. Experience the power of decentralized commerce with @OriginProtocol's Marketplace app.`
+    encoded = `Our meetup in #Venezuela was a significant step towards serving regions where crypto can provide improved financial access and freedom. Experience the power of decentralized commerce with @OriginProtocol&#x27;s Marketplace app.`
+    expect(decodeHTML(encoded)).to.equal(decoded)
 
-    await Identity.create({ ...obj, ...baseIdentity })
+    decoded = `Batman >>>> Superman`
+    encoded = `Batman &#x3E;&gt;&gt;&#x3E; Superman`
+    expect(decodeHTML(encoded)).to.equal(decoded)
 
-    const response = await request(app)
-      .post('/utils/exists')
-      .send(obj)
+    decoded = `Superman <<<< Batman`
+    encoded = `Superman &#x3C;&lt;&lt;&#x3C; Batman`
+    expect(decodeHTML(encoded)).to.equal(decoded)
 
-    expect(response.status).to.equal(200)
-  })
-
-  it('should return 200 for existing phone', async () => {
-    const obj = { phone: '1234567' }
-
-    await Identity.create({ ...obj, ...baseIdentity })
-
-    const response = await request(app)
-      .post('/utils/exists')
-      .send(obj)
-
-    expect(response.status).to.equal(200)
-  })
-
-  it('should return 204 for non-existent email', async () => {
-    const response = await request(app)
-      .post('/utils/exists')
-      .send({ email: 'foobar@originprotocol.com' })
-
-    expect(response.status).to.equal(204)
-  })
-
-  it('should return 204 for existing email that exists on first created identity', async () => {
-    const obj = { email: 'foobar@originprotocol.com' }
-
-    await Identity.create({ ...obj, ...baseIdentity })
-    await Identity.create({ ...obj, ethAddress: '0xabcd1234' })
-
-    const response = await request(app)
-      .post('/utils/exists')
-      .send({
-        email: 'foobar@originprotocol.com',
-        ethAddress: baseIdentity.ethAddress
-      })
-
-    expect(response.status).to.equal(204)
-  })
-
-  it('should return 200 for existing email that exists on second created identity', async () => {
-    const obj = { email: 'foobar@originprotocol.com' }
-
-    await Identity.create({ ...obj, ethAddress: '0xabcd1234' })
-    await Identity.create({ ...obj, ...baseIdentity })
-
-    const response = await request(app)
-      .post('/utils/exists')
-      .send({
-        email: 'foobar@originprotocol.com',
-        ethAddress: baseIdentity.ethAddress
-      })
-
-    expect(response.status).to.equal(200)
-  })
-
-  it('should return 204 for non-existent phone', async () => {
-    const response = await request(app)
-      .post('/utils/exists')
-      .send({ phone: '1234567' })
-
-    expect(response.status).to.equal(204)
-  })
-
-  it('should return 400 for bad request', async () => {
-    const response = await request(app)
-      .post('/utils/exists')
-      .send({ foo: 'bar' })
-
-    expect(response.status).to.equal(400)
-  })
-})
-
-describe('exchange rate poller', () => {
-  beforeEach(() => {
-    client.del('ETH-USD_price')
-    process.env.FALLBACK_EXCHANGE_RATE_XXX_USD = '12345.6789'
-  })
-
-  it('should return exchange rate from redis', async () => {
-    await client.set('ETH-USD_price', '234')
-    const response = await request(app)
-      .get('/utils/exchange-rate?market=ETH-USD')
-      .expect(200)
-
-    expect(response.status).to.equal(200)
-    expect(response.body.price).to.equal('234')
-  })
-
-  it('should fetch exchange rate from API if not cached', async () => {
-    nock('https://api.cryptonator.com')
-      .get('/api/ticker/YYY-USD')
-      .reply(200, { success: true, ticker: { price: '678.9' } })
-
-    const response = await request(app)
-      .get('/utils/exchange-rate?market=YYY-USD')
-      .expect(200)
-
-    expect(response.status).to.equal(200)
-    expect(response.body.price).to.equal('678.9')
-  })
-
-  it('should return default exchange rate if not cached and API is down', async () => {
-    nock('https://api.cryptonator.com')
-      .get('/api/ticker/XXX-USD')
-      .reply(200, { success: false, error: `Invalid pair` })
-
-    const response = await request(app)
-      .get('/utils/exchange-rate?market=XXX-USD')
-      .expect(200)
-
-    expect(response.status).to.equal(200)
-    expect(response.body.price).to.equal('12345.6789')
+    decoded = `'This' 'is 'gonna "have 'a"" 'lot "of unwanted" 'single' and "double" quotes"`
+    encoded = `&apos;This&apos; &apos;is &#x27;gonna &#x22;have &#x27;a&#x22;&#x22; &#x27;lot &quot;of unwanted&quot; &#x27;single&#x27; and &quot;double&#x22; quotes&#x22;`
+    expect(decodeHTML(encoded)).to.equal(decoded)
   })
 })

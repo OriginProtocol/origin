@@ -19,9 +19,28 @@ class WeekCalendar extends Component {
     this.scrollComponentRef = React.createRef()
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (prevProps.range && !this.props.range) {
       this.setState({ ...resetDrag })
+    }
+
+    if (
+      this.props.onChange &&
+      (this.state.startDate !== prevState.startDate ||
+        this.state.endDate !== prevState.endDate)
+    ) {
+      // ISO 8601 Interval format
+      // e.g. "2019-03-01T01:00:00/2019-03-01T03:00:00"
+      const rangeStartDate = this.state.startDate
+        ? dayjs(this.state.startDate).format('YYYY-MM-DDTHH:mm:ss')
+        : ''
+      const rangeEndDate = this.state.endDate
+        ? dayjs(this.state.endDate).format('YYYY-MM-DDTHH:mm:ss')
+        : ''
+
+      const range = `${rangeStartDate}/${rangeEndDate}`
+
+      this.props.onChange({ range })
     }
   }
 
@@ -141,44 +160,53 @@ class WeekCalendar extends Component {
       content = ''
     }
 
+    const notInSelection =
+      !this.state.startDate || (this.state.startDate && this.state.endDate)
+    const nonSelectable =
+      !notInSelection &&
+      idx > this.state.dragStart &&
+      hours
+        .slice(this.state.dragStart, idx)
+        .some(
+          s =>
+            s.booked ||
+            s.unavailable ||
+            !s.price ||
+            (s.nonWorkingHour && !s.customPrice)
+        )
+
     let interactions = {}
     if (this.props.interactive !== false) {
       interactions = {
         onClick: () => {
-          if (this.state.dragging) {
-            const endDate = hour.hour
-            this.setState({ dragEnd: idx, dragging: false, endDate: endDate })
-            if (this.props.onChange) {
-              let rangeStartDate = dayjs(this.state.startDate),
-                rangeEndDate = dayjs(endDate)
-
-              // Handle if enddate is actually *before* startdate
-              if (rangeEndDate.isBefore(rangeStartDate)) {
-                const temp = rangeStartDate
-                rangeStartDate = rangeEndDate
-                rangeEndDate = temp
-              }
-              // We add an hour to end. If user drags to select the 4pm slot, that means thier booking
-              // *acutally* ends at 5pm.
-              rangeEndDate = rangeEndDate.add(1, 'hour')
-              // ISO 8601 Interval format
-              // e.g. "2019-03-01T01:00:00/2019-03-01T03:00:00"
-              const range =
-                rangeStartDate.format('YYYY-MM-DDTHH:mm:ss') +
-                '/' +
-                rangeEndDate.format('YYYY-MM-DDTHH:mm:ss')
-
-              this.props.onChange({ range })
-            }
-          } else {
-            this.setState({
-              dragging: true,
+          const { startDate, endDate } = this.state
+          if (!startDate || nonSelectable) {
+            // Start date
+            return this.setState({
               dragStart: idx,
               startDate: hour.hour,
               dragEnd: null,
               endDate: null
             })
           }
+
+          const rangeStartDate = dayjs(startDate)
+          const selectedDate = dayjs(hour.hour)
+
+          if (!endDate && selectedDate.isAfter(rangeStartDate)) {
+            // Range and not a prior date
+            return this.setState({
+              dragEnd: idx,
+              endDate: hour.hour
+            })
+          }
+
+          return this.setState({
+            dragStart: idx,
+            startDate: hour.hour,
+            dragEnd: null,
+            endDate: null
+          })
         },
         onMouseOver: () => this.setState({ dragOver: idx })
       }
@@ -187,7 +215,7 @@ class WeekCalendar extends Component {
     return (
       <div
         key={idx}
-        className={`hour ${this.getClass(idx, hour)}`}
+        className={`hour ${this.getClass(idx, hour, nonSelectable)}`}
         {...interactions}
       >
         <div>{content}</div>
@@ -196,41 +224,52 @@ class WeekCalendar extends Component {
   }
 
   // Get class for this hour, determining if e.g. it is selected
-  getClass(idx, hour) {
-    const initStart = this.state.dragStart,
-      initEnd = this.state.dragging ? this.state.dragOver : this.state.dragEnd,
-      start = initStart < initEnd ? initStart : initEnd,
-      end = initStart < initEnd ? initEnd : initStart
+  getClass(idx, hour, nonSelectable) {
+    const { startDate, endDate } = this.state
 
-    let cls = this.props.interactive === false ? '' : 'active',
-      unselected = false
+    let unavailable =
+      nonSelectable ||
+      hour.unavailable ||
+      hour.booked ||
+      !hour.price ||
+      (hour.nonWorkingHour && !hour.customPrice)
 
-    if (idx === start && idx === end) {
-      cls += ' single' // Single cell selected
-    } else if (idx === start) {
-      cls += ' start' // Start of selection
-    } else if (idx === end) {
-      cls += ' end' // End of selection
-    } else if (idx > start && idx < end) {
-      cls += ' mid' // Mid part of selection
-    } else {
-      cls += ' unselected'
-      unselected = true
+    const notInSelection = !startDate || (startDate && endDate)
+
+    const className = []
+    if (this.props.interactive !== false && !unavailable) {
+      className.push('active')
+    } else if (unavailable) {
+      className.push('unavailable')
     }
 
-    if (!unselected && idx + 7 >= start && idx + 7 <= end) {
-      cls += ' nbb'
-    }
-    if (!unselected && idx - 7 >= start && idx - 7 <= end) {
-      cls += ' nbt'
-    }
-    if (hour.unavailable || hour.booked) {
-      cls += ' unavailable'
-    } else if (hour.nonWorkingHour && !hour.customPrice) {
-      cls += ' nonWorkingHour'
+    if (hour.nonWorkingHour && !hour.customPrice) {
+      unavailable = true
+      className.push('nonWorkingHour')
     }
 
-    return cls
+    if (startDate) {
+      const slotHour = dayjs(hour.hour)
+      const rangeStart = startDate ? dayjs(startDate) : null
+      const rangeEnd = endDate ? dayjs(endDate) : null
+
+      if (rangeStart.isSame(slotHour)) {
+        className.push(endDate ? 'start' : 'single')
+      } else if (endDate && rangeEnd.isSame(slotHour)) {
+        className.push('end')
+      } else if (endDate && slotHour.isBetween(rangeStart, rangeEnd)) {
+        className.push('mid')
+      } else if (
+        !notInSelection &&
+        (unavailable || slotHour.isBefore(rangeStart))
+      ) {
+        className.push('unavailable')
+      } else {
+        className.push('unselected')
+      }
+    }
+
+    return className.join(' ')
   }
 }
 
@@ -307,30 +346,17 @@ require('react-styl')(`
         &.active.unselected:hover
           &::after
             border: 3px solid black
-        &.start,&.mid,&.end
-          background-color: var(--pale-clear-blue)
-        &.start::after
-          border-width: 3px 3px 0 3px
-          border-color: black
-        &.mid::after
-          border-width: 0 3px 0px 3px
-          border-color: black
-        &.end::after
-          border-width: 0 3px 3px 3px
-          border-color: black
-        &.single::after
-          border-width: 3px
-          border-color: black
-        &.nbb::after
-          border-bottom-color: transparent
-        &.nbt::after
-          border-top-color: transparent
-      &.inactive > div:hover
-        &.start::after, &.end::after, &.mid::after
-          border-color: blue
-          border-width: 3px
-          z-index: 3
-
+        &.start,&.mid,&.end,&.single
+          background-color: #007fff
+          color: var(--white)
+        &.start
+          border-top-left-radius: 10px
+          border-top-right-radius: 10px
+        &.end
+          border-bottom-left-radius: 10px
+          border-bottom-right-radius: 10px
+        &.single
+          border-radius: 10px
     .day-header
       display: flex
       > div

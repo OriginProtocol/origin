@@ -72,7 +72,7 @@ describe('April campaign rules', () => {
       }
     ]
 
-    const rewards = await this.crules.getRewards(this.ethAddress)
+    const rewards = await this.crules.getEarnedRewards(this.ethAddress)
     expect(rewards).to.deep.equal([])
 
     const level = await this.crules.getCurrentLevel(this.ethAddress)
@@ -97,7 +97,7 @@ describe('April campaign rules', () => {
       }
     )
 
-    const rewards = await this.crules.getRewards(this.ethAddress)
+    const rewards = await this.crules.getEarnedRewards(this.ethAddress)
     this.expectedRewards = [
       {
         campaignId: 1,
@@ -158,7 +158,7 @@ describe('April campaign rules', () => {
       }
     )
 
-    const rewards = await this.crules.getRewards(this.ethAddress)
+    const rewards = await this.crules.getEarnedRewards(this.ethAddress)
     this.expectedRewards.push({
       campaignId: 1,
       levelId: 2,
@@ -186,7 +186,7 @@ describe('April campaign rules', () => {
       }
     )
 
-    const rewards = await this.crules.getRewards(this.ethAddress)
+    const rewards = await this.crules.getEarnedRewards(this.ethAddress)
     this.expectedRewards.push({
       campaignId: 1,
       levelId: 2,
@@ -213,7 +213,7 @@ describe('April campaign rules', () => {
       }
     )
 
-    const rewards = await this.crules.getRewards(this.ethAddress)
+    const rewards = await this.crules.getEarnedRewards(this.ethAddress)
     this.expectedRewards.push({
       campaignId: 1,
       levelId: 2,
@@ -247,7 +247,7 @@ describe('April campaign rules', () => {
       })
     )
 
-    const rewards = await this.crules.getRewards(this.ethAddress)
+    const rewards = await this.crules.getEarnedRewards(this.ethAddress)
     this.expectedRewards = [
       {
         campaignId: 1,

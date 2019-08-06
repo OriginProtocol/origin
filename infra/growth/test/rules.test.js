@@ -2,7 +2,8 @@ const chai = require('chai')
 const expect = chai.expect
 
 const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
-const { CampaignRules } = require('../src/resources/rules')
+const { CampaignRules, SocialShareRule } = require('../src/resources/rules')
+const { tokenToNaturalUnits } = require('../src/util/token')
 
 
 describe('Growth Engine rules', () => {
@@ -83,7 +84,7 @@ describe('Growth Engine rules', () => {
       const level = await this.crules.getCurrentLevel(this.ethAddress)
       expect(level).to.equal(0)
 
-      const rewards = await this.crules.getRewards(this.ethAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ethAddress)
       const expectedRewards = [{
           campaignId: 1,
           levelId: 0,
@@ -118,7 +119,7 @@ describe('Growth Engine rules', () => {
         }
       ]
 
-      const rewards = await this.crules.getRewards(this.ethAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ethAddress)
       const expectedRewards = []
       expect(rewards).to.deep.equal(expectedRewards)
     })
@@ -132,7 +133,7 @@ describe('Growth Engine rules', () => {
         ethAddress: this.ethAddress
       })
 
-      const rewards = await this.crules.getRewards(this.ethAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ethAddress)
       const expectedRewards = [
         {
           campaignId: 1,
@@ -235,7 +236,7 @@ describe('Growth Engine rules', () => {
         }
       ]
 
-      const rewards = await this.crules.getRewards(this.ethAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ethAddress)
       const expectedRewards = [{
         campaignId: 1,
         levelId: 0,
@@ -258,7 +259,7 @@ describe('Growth Engine rules', () => {
         }
       ]
 
-      const rewards = await this.crules.getRewards(this.ethAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ethAddress)
       const expectedRewards = []
       expect(rewards).to.deep.equal(expectedRewards)
     })
@@ -285,7 +286,7 @@ describe('Growth Engine rules', () => {
         }
       ]
 
-      const rewards = await this.crules.getRewards(this.ethAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ethAddress)
       const expectedRewards = []
       expect(rewards).to.deep.equal(expectedRewards)
     })
@@ -319,7 +320,7 @@ describe('Growth Engine rules', () => {
         },
       ]
 
-      const rewards = await this.crules.getRewards(this.ethAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ethAddress)
       const expectedRewards = [{
         campaignId: 1,
         levelId: 0,
@@ -436,7 +437,7 @@ describe('Growth Engine rules', () => {
     })
 
     it(`Should only use events from campaign period to calculate rewards`, async () => {
-      const rewards = await this.crules.getRewards(this.ethAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ethAddress)
       const expectedRewards = [{
         campaignId: 1,
         levelId: 1,
@@ -506,7 +507,7 @@ describe('Growth Engine rules', () => {
       const level = await this.crules.getCurrentLevel(this.ownerAddress)
       expect(level).to.equal(0)
 
-      const rewards = await this.crules.getRewards(this.ownerAddress)
+      const rewards = await this.crules.getEarnedRewards(this.ownerAddress)
       const expectedRewards = [{
         campaignId: 1,
         levelId: 0,
@@ -517,6 +518,127 @@ describe('Growth Engine rules', () => {
         }
       }]
       expect(rewards).to.deep.equal(expectedRewards)
+    })
+  })
+
+  describe('Social rules reward calculation', () => {
+
+    describe('Twitter', () => {
+      before( () => {
+        const crules = { campaign: { id: 1 } }
+        const config = {
+          config: {
+            eventType: 'SharedOnTwitter',
+            socialNetwork: 'twitter',
+            reward: {
+              amount: '0',
+              currency: 'OGN'
+            },
+            content: {
+              post: {
+                text: {
+                  default: 'tweet tweet',
+                  translations: []
+                }
+              }
+            },
+            limit: 1,
+            visible: true,
+            scope: 'user',
+            statusScope: 'user'
+          }
+        }
+        this.rule = new SocialShareRule(crules, 0, config)
+      })
+
+      it(`should calculate reward properly based on social stats`, () => {
+        const now = new Date()
+        const oneMonthAgo = new Date(now.getTime() - 30*24*60*60*1000)
+        const twoYearsAgo = new Date(now.getTime() - 2*365*24*60*60*1000)
+        const twitterProfile = {
+          created_at: oneMonthAgo.toString(),
+          verified: false,
+          followers_count: 0,
+          status: {
+            created_at: twoYearsAgo.toString()
+          }
+        }
+
+        // Account younger than 1 year. No reward.
+        let amount = this.rule._calcTwitterReward(twitterProfile)
+        expect(amount).to.equal(0)
+
+        // Account 2 years old but last tweet older than 1 year ago.
+        twitterProfile.created_at = twoYearsAgo
+        amount = this.rule._calcTwitterReward(twitterProfile)
+        expect(amount).to.equal(0)
+
+        // Account 2 years old and last tweet 1 month ago, but no followers.
+        twitterProfile.status.created_at = oneMonthAgo
+        amount = this.rule._calcTwitterReward(twitterProfile)
+        expect(amount).to.equal(0)
+
+        // Account with < 100 numFollowers. 1 OGN.
+        twitterProfile.followers_count = 99
+        amount = this.rule._calcTwitterReward(twitterProfile)
+        expect(amount).to.equal(tokenToNaturalUnits(1))
+
+        // Lot of followers.
+        twitterProfile.followers_count = 3550
+        amount = this.rule._calcTwitterReward(twitterProfile)
+        expect(amount).to.equal(tokenToNaturalUnits(18))
+
+        // Verified = x2
+        twitterProfile.verified = true
+        amount = this.rule._calcTwitterReward(twitterProfile)
+        expect(amount).to.equal(tokenToNaturalUnits(36))
+      })
+
+      it(`should use stats from the user's identity to calculate the projected reward`, async () => {
+        const now = new Date()
+        const oneMonthAgo = new Date(now.getTime() - 30*24*60*60*1000)
+        const twoYearsAgo = new Date(now.getTime() - 2*365*24*60*60*1000)
+        const twitterProfile = {
+          created_at: twoYearsAgo.toString(),
+          verified: false,
+          followers_count: 200,
+          status: {
+            created_at: oneMonthAgo.toString()
+          }
+        }
+        const identity = { data: { twitterProfile } }
+        const reward = await this.rule.getReward('0x123', identity)
+        expect(reward.value.amount).to.equal(tokenToNaturalUnits(2))
+        expect(reward.value.currency).to.equal('OGN')
+      })
+
+      it(`should use stats from events to calculate earned reward`, async () => {
+        const now = new Date()
+        const oneMonthAgo = new Date(now.getTime() - 30*24*60*60*1000)
+        const twoYearsAgo = new Date(now.getTime() - 2*365*24*60*60*1000)
+        const events = [
+          {
+            status: GrowthEventStatuses.Logged,
+            type: 'SharedOnTwitter',
+            data: {
+              twitterProfile: {
+                created_at: twoYearsAgo.toString(),
+                verified: false,
+                followers_count: 26300,
+                status: {
+                  created_at: oneMonthAgo.toString()
+                }
+              }
+            },
+            customId: this.rule._hashContent('tweet tweet')
+          }
+        ]
+        const rewards = await this.rule.getEarnedRewards('0x123', events)
+        expect(rewards.length).to.equal(1)
+        expect(rewards[0].value.amount).to.equal(tokenToNaturalUnits(132))
+        expect(rewards[0].value.currency).to.equal('OGN')
+      })
+
     })
   })
 })

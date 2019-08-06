@@ -6,7 +6,7 @@ import { getVerifiedTooltip } from 'utils/profileTools'
 const Attestations = ({ profile = {}, small, className }) => {
   const verifiedAttestations = profile.verifiedAttestations
 
-  if (!verifiedAttestations) {
+  if (!verifiedAttestations || verifiedAttestations.length === 0) {
     return null
   }
 

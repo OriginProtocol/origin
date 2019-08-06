@@ -26,6 +26,8 @@ import query from 'queries/Listings'
 
 import { getFilters, getStateFromQuery } from './_filters'
 
+import LoadingSpinner from 'components/LoadingSpinner'
+
 const CategoriesEnum = require('Categories$FbtEnum')
 
 const memStore = store('memory')
@@ -128,7 +130,7 @@ class Listings extends Component {
     if (this.state.search.ognListings) {
       // when OGN listings are selected clear other search parameters
       vars.search = ''
-      vars.filers = []
+      vars.filters = []
       vars.listingIds = Object.keys(this.props.ognListingRewards)
     }
 
@@ -160,7 +162,7 @@ class Listings extends Component {
           >
             {({ error, data, fetchMore, networkStatus, loading }) => {
               if (networkStatus <= 2) {
-                return <h5 className="listings-count">Loading...</h5>
+                return <LoadingSpinner />
               } else if (error) {
                 return <QueryError error={error} query={query} vars={vars} />
               } else if (!data || !data.marketplace) {

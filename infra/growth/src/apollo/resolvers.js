@@ -6,10 +6,7 @@ const {
 const { GraphQLDateTime } = require('graphql-iso-date')
 
 const { GrowthCampaign } = require('../resources/campaign')
-const {
-  authenticateEnrollment,
-  getUserAuthenticationStatus
-} = require('../resources/authentication')
+const { authenticateEnrollment } = require('../resources/authentication')
 const { getLocationInfo } = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
 const { GrowthInvite } = require('../resources/invite')
@@ -36,12 +33,15 @@ const resolvers = {
   DateTime: GraphQLDateTime,
   GrowthBaseAction: {
     __resolveType(action) {
-      if (action.type === 'Referral') {
-        return 'ReferralAction'
-      } else if (action.type === 'ListingIdPurchased') {
-        return 'ListingIdPurchasedAction'
-      } else {
-        return 'GrowthAction'
+      switch (action.type) {
+        case 'Referral':
+          return 'ReferralAction'
+        case 'ListingIdPurchased':
+          return 'ListingIdPurchasedAction'
+        case 'TwitterShare':
+          return 'SocialShareAction'
+        default:
+          return 'GrowthAction'
       }
     }
   },
@@ -106,10 +106,7 @@ const resolvers = {
       return eligibility
     },
     async enrollmentStatus(_, args, context) {
-      return await getUserAuthenticationStatus(
-        context.authToken,
-        args.walletAddress
-      )
+      return context.authentication
     }
   },
   Mutation: {

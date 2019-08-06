@@ -99,17 +99,12 @@ class OAuthAttestation extends Component {
     }
   }
 
-  isMobile() {
-    return this.props.ismobile === 'true'
-  }
-
   render() {
     if (!this.props.open) {
       return null
     }
 
-    const isMobile = this.isMobile()
-
+    const { isMobile } = this.props
     const { origin, pathname } = window.location
     const { provider } = this.props
     const redirect = isMobile
@@ -175,8 +170,7 @@ class OAuthAttestation extends Component {
   }
 
   renderGenerateCode({ authUrl, redirect }) {
-    const isMobile = this.isMobile()
-
+    const { isMobile } = this.props
     const providerName = getProviderDisplayName(this.props.provider)
 
     const header = isMobile ? (
@@ -212,7 +206,7 @@ class OAuthAttestation extends Component {
   renderVerifyButton({ authUrl, redirect }) {
     const matchSid = window.location.href.match(/sid=([a-zA-Z0-9_-]+)/i)
     const sid = matchSid && matchSid[1] ? matchSid[1] : null
-    const isMobile = this.isMobile()
+    const { isMobile } = this.props
 
     return (
       <Mutation

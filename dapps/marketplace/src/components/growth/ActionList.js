@@ -79,7 +79,13 @@ class ActionList extends Component {
   }
 
   render() {
-    const { title, decimalDivision, isMobile } = this.props
+    const {
+      title,
+      decimalDivision,
+      isMobile,
+      onActionClick,
+      locale
+    } = this.props
 
     const { actionsToDisplay, modalOpen, modalText } = this.state
 
@@ -117,6 +123,7 @@ class ActionList extends Component {
           {actionsToDisplay.map(action => {
             return (
               <Action
+                locale={locale}
                 action={action}
                 decimalDivision={decimalDivision}
                 key={`${action.type}:${action.status}:${
@@ -129,6 +136,7 @@ class ActionList extends Component {
                     modalText: requirementText
                   })
                 }}
+                onActionClick={onActionClick}
               />
             )
           })}
@@ -144,6 +152,7 @@ require('react-styl')(`
   .action-list-modal.pl-modal .pl-modal-table .pl-modal-cell .action-list-modal
     max-width: 25rem
   .action-list
+    width: 100%
     .with-border
       &:not(:last-of-type)
         border-bottom: 1px solid #c0cbd4

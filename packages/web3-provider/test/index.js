@@ -1,19 +1,29 @@
 const Web3 = require('web3')
-const { createEngine } = require('@origin/web3-provider')
+const fetch = require('cross-fetch')
+const { createEngine, initStandardSubproviders } = require('@origin/web3-provider')
 const assert = require('assert')
 
 const TEST_PROVIDER_URL = 'http://localhost:8545'
+
+async function getGasPrice(key) {
+  const res = await fetch('https://ethgasstation.info/json/ethgasAPI.json')
+  assert(res.status === 200, 'Wrong response code')
+  const jason = await res.json()
+  // values come from EGS as tenths of gwei
+  return String(jason[key] * 1e8)
+}
 
 /**
  * TODO: Basically all testing
  */
 
 describe('web3-provider', function() {
-  let web3
+  let web3, web3b
   let admin, bob
 
   before(async () => {
     web3 = new Web3(TEST_PROVIDER_URL)
+    web3b = new Web3(TEST_PROVIDER_URL)
     ;[admin, bob] = await web3.eth.getAccounts()
   })
 
@@ -37,5 +47,24 @@ describe('web3-provider', function() {
     })
 
     assert(receipt.status, 'Transaction failed')
+  })
+
+  /**
+   * Too often EGS updates the gas price between the test grabbing data and
+   * the subprovider grabbing data, so this test has a fairly high chance of 
+   * faiure, especially during high volume times...
+   */
+  it.skip('gets gas price from ethgasstation', async () => {
+    initStandardSubproviders(web3b, {
+      rpcUrl: TEST_PROVIDER_URL,
+      ethGasStation: true
+    })
+    assert(typeof web3.currentProvider.sendAsync !== 'undefined')
+
+    const egsPrice = await getGasPrice('safeLow')
+    const price = await web3b.eth.getGasPrice()
+
+    assert(typeof price === 'string', `Price is not a string`)
+    assert(egsPrice === price, `${egsPrice} !== ${price}`)
   })
 })

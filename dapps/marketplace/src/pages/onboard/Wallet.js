@@ -6,6 +6,7 @@ import { fbt } from 'fbt-runtime'
 import Link from 'components/Link'
 import Redirect from 'components/Redirect'
 import QueryError from 'components/QueryError'
+import LoadingSpinner from 'components/LoadingSpinner'
 
 import ListingPreview from './_ListingPreview'
 import HelpWallet from './_HelpWallet'
@@ -60,11 +61,7 @@ const Step1 = ({ listing, hideOriginWallet, linkPrefix }) => {
           <Query query={query} notifyOnNetworkStatusChange={true}>
             {({ error, data, networkStatus }) => {
               if (networkStatus === 1) {
-                return (
-                  <div>
-                    <fbt desc="onboard.Wallet.loading">Loading...</fbt>
-                  </div>
-                )
+                return <LoadingSpinner />
               } else if (error) {
                 return <QueryError query={query} />
               }

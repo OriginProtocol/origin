@@ -24,6 +24,7 @@
   "dependencies": {
     "@origin/contracts": "^0.8.6",
     "@origin/token": "^0.1.0",
+    "@sendgrid/mail": "^6.4.0",
     "bignumber.js": "9.0.0",
     "body-parser": "^1.19.0",
     "chalk": "^2.4.2",
@@ -35,10 +36,13 @@
     "express-session": "^1.16.2",
     "express-validator": "^6.1.1",
     "ip": "^1.1.5",
+    "jsonwebtoken": "^8.5.1",
     "logplease": "^1.2.15",
     "moment": "^2.24.0",
     "passport": "^0.4.0",
     "passport-google-token": "^0.1.2",
+    "passport-http-bearer": "^1.0.1",
+    "passport-totp": "^0.0.2",
     "per-env": "^1.0.2",
     "pg": "^7.11.0",
     "react-redux": "^7.1.0",
@@ -50,6 +54,7 @@
     "sequelize-cli": "^5.5.0",
     "sql-template-strings": "^2.2.2",
     "sqlite": "^3.0.3",
+    "thirty-two": "^1.0.2",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {

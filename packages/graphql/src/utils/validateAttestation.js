@@ -27,11 +27,10 @@ export default function validateAttestation(accounts, attestation) {
       web3.utils.toChecksumAddress(account),
       web3.utils.sha3(attestationJson)
     )
-    const messageHash = web3.eth.accounts.hashMessage(message)
+
     const signerAddress = web3.eth.accounts.recover(
-      messageHash,
-      attestation.signature.bytes,
-      true
+      message,
+      attestation.signature.bytes
     )
     if (signerAddress.toLowerCase() !== issuer) {
       errors.push(
