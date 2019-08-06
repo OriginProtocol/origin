@@ -68,14 +68,14 @@ const Sort = ({
 
 class SortDropdown extends React.Component {
   state = {}
-  componentDidUpdate(prevProps) {
-    // if (unread > prevUnread && !prevProps.open) {
-    //   this.props.onOpen()
-    // }
-    // if (this.state.redirect) {
-    //   this.setState({ redirect: false })
-    // }
-  }
+  // componentDidUpdate(prevProps) {
+  //   // if (unread > prevUnread && !prevProps.open) {
+  //   //   this.props.onOpen()
+  //   // }
+  //   // if (this.state.redirect) {
+  //   //   this.setState({ redirect: false })
+  //   // }
+  // }
 
   render() {
     // if (this.state.redirect) {
