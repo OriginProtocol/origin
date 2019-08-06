@@ -8,10 +8,8 @@ const { Level } = require('./level')
 
 const {
   GrowthEventStatuses,
-  GrowthCampaignStatuses,
-  GrowthActionStatus
+  GrowthCampaignStatuses
 } = require('../../enums')
-const logger = require('../../logger')
 
 class CampaignRules {
   constructor(campaign, config) {
