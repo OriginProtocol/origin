@@ -2,19 +2,17 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import fetchAccounts from '../../actions/account'
-import { getAccounts, getAccountsPending, getAccountsError } from '../../reducers/account'
+import { fetchAccounts } from '../../actions/account'
 import BorderedCard from '../BorderedCard'
 import GoogleAuthenticatorIcon from '../../assets/google-authenticator-icon@3x.jpg'
-import WalletTable from '../WalletTable'
+import AccountTable from '../AccountTable'
 
 class Security extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
   }
 
-  componentWillMount () {
+  componentDidMount () {
     this.props.fetchAccounts()
   }
 
@@ -26,7 +24,7 @@ class Security extends Component {
           <div className="col-xs-12 col-lg-6">
             <BorderedCard>
               <div className="row">
-                <div className="col-md-6">{this.props.email}</div>
+                <div className="col-md-6">{this.props.session.email}</div>
                 <div className="col-md-6 text-md-right">
                   <a href="mailto:support@originprotocol.com?subject=Change Investor Email"
                     target="_blank"
@@ -62,7 +60,7 @@ class Security extends Component {
           </div>
         </div>
 
-        <WalletTable />
+        <AccountTable />
 
         <h2>Session History</h2>
       </>
@@ -70,13 +68,8 @@ class Security extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    email: state.sessionEmail,
-    error: getAccountsError(state),
-    accounts: getAccounts(state),
-    pending: getAccountsPending(state)
-  }
+const mapStateToProps = ({ session, account }) => {
+  return { session, account }
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({

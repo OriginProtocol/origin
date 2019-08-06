@@ -10,7 +10,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={props => {
-        return rest.sessionEmail ? (
+        return rest.email ? (
           <div className="logged-in">
             <div className="container-fluid">
               <div className="row">
@@ -32,9 +32,9 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   )
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ session }) => {
   return {
-    sessionEmail: state.sessionEmail
+    email: session.email
   }
 }
 

@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import agent from '../utils/agent'
-import { setSessionEmail } from '../actions'
+import { setSessionEmail } from '../actions/session'
 
 const AccountActions = props => {
   const handleLogout = async () => {
@@ -12,13 +12,13 @@ const AccountActions = props => {
     await props.setSessionEmail(false)
   }
 
-  if (!props.sessionEmail) {
+  if (!props.session.email) {
     return <Redirect to="/" />
   }
 
   return (
     <div className="account-actions">
-      {props.sessionEmail}
+      {props.session.email}
       <div className="separator">|</div>
       <a href="mailto:support@originprotocol.com">Contact Support</a>
       <div className="separator"></div>
@@ -27,10 +27,8 @@ const AccountActions = props => {
   )
 }
 
-const mapStateToProps = state => {
-  return {
-    sessionEmail: state.sessionEmail
-  }
+const mapStateToProps = ({ session }) => {
+  return { session }
 }
 
 const mapDispatchToProps = dispatch => {

@@ -1,10 +1,9 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
-import { connect } from 'react-redux'
 
 import Logo from '../assets/origin-logo.svg'
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
+const PublicRoute = ({ component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
@@ -20,16 +19,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   )
 }
 
-const mapStateToProps = state => {
-  return {
-    sessionEmail: state.sessionEmail
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  null
-)(PrivateRoute)
+export default PublicRoute
 
 require('react-styl')(`
   .not-logged-in

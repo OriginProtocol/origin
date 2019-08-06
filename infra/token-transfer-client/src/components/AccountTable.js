@@ -1,42 +1,33 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
+import { addAccount } from '../actions/account'
 import { formInput, formFeedback } from '../utils/formHelpers'
-import agent from '../utils/agent'
 import Modal from './Modal'
 
-export default class WalletTable extends Component {
+class AccountTable extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      accounts: [],
-      nickName: '',
-      ethAddress: '',
+      nickname: '',
+      nicknameError: '',
+      address: '',
+      addressError: '',
       displayModal: false
     }
   }
 
-  componentDidMount() {}
-
-  handleAddAccount = async () => {
-    this.setState({ loadingAddAccount: true })
-    let response
-    try {
-      const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
-      response = await agent.post(`${apiUrl}/accounts`).send({
-        nickName: this.state.nickName,
-        ethAddress: this.state.ethAddress
-      })
-    } catch (error) {
-      this.setState({ addAccountError: error })
-      return
+  componentDidUpdate(prevProps) {
+    if (prevProps.error !== this.props.error) {
+      if (this.props.error && this.props.error.status === 422) {
+        // Parse validation errors from API
+        this.props.error.response.body.errors.forEach(e => {
+          this.setState({ [`${e.param}Error`]: e.msg })
+        })
+      }
     }
-    this.setState({ accounts: [...this.state.accounts, response.body] })
-    this.setState({ loadingAddAccount: false })
   }
-
-  handleEditAccount() {}
-
-  handleDeleteAccount() {}
 
   render() {
     return (
@@ -70,24 +61,25 @@ export default class WalletTable extends Component {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  {this.state.accounts.length === 0 ? (
+                {this.props.accounts.length === 0 ? (
+                  <tr>
                     <td className="table-empty-cell" colSpan="4">
                       You don&apos;t have any accounts
                     </td>
-                  ) : (
-                    this.state.accounts.map(account => (
-                      <>
-                        <td>{account.nickname}</td>
-                        <td>{account.ethAddress}</td>
-                        <td>{account.createdAt}</td>
-                        <td>
-                          <a href="#">e</a> <a href="#">x</a>
-                        </td>
-                      </>
-                    ))
-                  )}
-                </tr>
+                  </tr>
+                ) : (
+                  this.props.accounts.map(account => (
+                    <tr key={account.address}>
+                      <td>{account.nickname}</td>
+                      <td>{account.address}</td>
+                      <td>{account.createdAt}</td>
+                      <td>
+                        <a href="#">e</a>
+                        <a href="#">x</a>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -115,12 +107,18 @@ export default class WalletTable extends Component {
         </div>
         <div className="form-group">
           <label htmlFor="email">ETH Address</label>
-          <input {...input('ethAddress')} />
-          {Feedback('ethAddress')}
+          <input {...input('address')} />
+          {Feedback('address')}
         </div>
         <button
           className="btn btn-primary btn-lg mt-5"
-          onClick={this.handleAddAccount}
+          onClick={() =>
+            this.props.addAccount({
+              nickname: this.state.nickname,
+              address: this.state.address
+            })
+          }
+          disabled={this.props.isAdding}
         >
           Add
         </button>
@@ -128,6 +126,26 @@ export default class WalletTable extends Component {
     )
   }
 }
+
+const mapStateToProps = ({ account }) => {
+  return {
+    accounts: account.accounts,
+    error: account.error
+  }
+}
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      addAccount: addAccount
+    },
+    dispatch
+  )
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AccountTable)
 
 require('react-styl')(`
   .table

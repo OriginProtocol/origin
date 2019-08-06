@@ -1,15 +1,24 @@
-import { compose, createStore, applyMiddleware } from 'redux'
+import { combineReducers, compose, createStore, applyMiddleware } from 'redux'
 import { persistStore, persistReducer } from 'redux-persist'
 import thunk from 'redux-thunk'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 
-import rootReducer from '../reducers/index'
+import account from '../reducers/account'
+import session from '../reducers/session'
 
 const persistConfig = {
   key: 'root',
-  storage
+  storage,
+  whitelist: ['session']
 }
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+const persistedReducer = persistReducer(
+  persistConfig,
+  combineReducers({
+    account,
+    session
+  })
+)
+
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const store = createStore(

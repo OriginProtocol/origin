@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import { setSessionEmail } from '../../actions'
+import { setSessionEmail } from '../../actions/session'
 import agent from '../../utils/agent'
 
 class HandleLogin extends Component {
@@ -51,12 +51,6 @@ class HandleLogin extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    sessionEmail: state.sessionEmail
-  }
-}
-
 const mapDispatchToProps = dispatch => {
   return {
     setSessionEmail: email => dispatch(setSessionEmail(email))
@@ -64,6 +58,6 @@ const mapDispatchToProps = dispatch => {
 }
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(HandleLogin)

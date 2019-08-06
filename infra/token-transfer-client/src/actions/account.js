@@ -3,7 +3,9 @@ import agent from '../utils/agent'
 export const FETCH_ACCOUNTS_PENDING = 'FETCH_ACCOUNTS_PENDING'
 export const FETCH_ACCOUNTS_SUCCESS = 'FETCH_ACCOUNTS_SUCCESS'
 export const FETCH_ACCOUNTS_ERROR = 'FETCH_ACCOUNTS_ERROR'
-export const ADD_ACCOUNT = 'ADD_ACCOUNT'
+export const ADD_ACCOUNT_PENDING = 'ADD_ACCOUNT_PENDING'
+export const ADD_ACCOUNT_SUCCESS = 'ADD_ACCOUNT_SUCCESS'
+export const ADD_ACCOUNT_ERROR = 'ADD_ACCOUNT_ERROR'
 export const DELETE_ACCOUNT = 'DELETE_ACCOUNT'
 
 function fetchAccountsPending() {
@@ -12,10 +14,10 @@ function fetchAccountsPending() {
   }
 }
 
-function fetchAccountsSuccess(accounts) {
+function fetchAccountsSuccess(payload) {
   return {
     type: FETCH_ACCOUNTS_SUCCESS,
-    accounts
+    payload
   }
 }
 
@@ -26,30 +28,53 @@ function fetchAccountsError(error) {
   }
 }
 
-/*
-function addAccount(account) {
+function addAccountPending() {
   return {
-    type: ADD_ACCOUNT,
-    account
+    type: ADD_ACCOUNT_PENDING
   }
 }
 
-function deleteAccount(id) {
+function addAccountSuccess(payload) {
   return {
-    type: DELETE_ACCOUNT,
-    id
+    type: ADD_ACCOUNT_SUCCESS,
+    payload
   }
 }
-*/
 
-export default function fetchAccounts() {
+function addAccountError(error) {
+  return {
+    type: ADD_ACCOUNT_ERROR,
+    error
+  }
+}
+
+export function addAccount(account) {
+  return dispatch => {
+    dispatch(addAccountPending())
+
+    const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
+    agent
+      .post(`${apiUrl}/api/accounts`)
+      .send(account)
+      .then(response => dispatch(addAccountSuccess(response.body)))
+      .catch(error => {
+        dispatch(addAccountError(error))
+        throw error
+      })
+  }
+}
+
+export function fetchAccounts() {
   return dispatch => {
     dispatch(fetchAccountsPending())
 
     const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
     agent
       .get(`${apiUrl}/api/accounts`)
-      .then(response => dispatch(fetchAccountsSuccess(response.json)))
-      .catch(error => dispatch(fetchAccountsError(error)))
+      .then(response => dispatch(fetchAccountsSuccess(response.body)))
+      .catch(error => {
+        dispatch(fetchAccountsError(error))
+        throw error
+      })
   }
 }
