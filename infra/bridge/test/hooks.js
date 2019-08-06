@@ -21,9 +21,9 @@ const getAsync = key =>
     })
   })
 
-describe('promotion verifications', () => {
+describe('twitter webhooks', () => {
   beforeEach(async () => {
-    process.env.TWITTER_CONSUMER_SECRET = 'abcdef'
+    process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET = 'abcdef'
     process.env.TWITTER_ORIGINPROTOCOL_USERNAME = 'OriginProtocol'
 
     // Clear out redis-mock
@@ -54,14 +54,15 @@ describe('promotion verifications', () => {
               screen_name: 'originprotocol'
             },
             source: {
-              id_str: '12345'
+              id: '12345',
+              screen_name: 'testaccount'
             }
           }
         ]
       })
       .expect(200)
 
-    const event = JSON.parse(await getAsync('twitter/follow/12345'))
+    const event = JSON.parse(await getAsync('twitter/follow/testaccount'))
     expect(event.id).to.equal('abc')
   })
 
@@ -84,7 +85,7 @@ describe('promotion verifications', () => {
       })
       .expect(200)
 
-    const event = JSON.parse(await getAsync('twitter/share/123456'))
+    const event = JSON.parse(await getAsync('twitter/share/someuser'))
     expect(event.id).to.equal('abcd')
   })
 
@@ -98,7 +99,7 @@ describe('promotion verifications', () => {
             retweeted: true,
             user: {
               id_str: '9876',
-              screen_name: 'someuser'
+              screen_name: 'unknownuser'
             },
             entities: {
               urls: []
@@ -109,7 +110,7 @@ describe('promotion verifications', () => {
             favorited: true,
             user: {
               id_str: '9876',
-              screen_name: 'someuser'
+              screen_name: 'unknownuser'
             },
             entities: {
               urls: []
@@ -129,7 +130,9 @@ describe('promotion verifications', () => {
       })
       .expect(200)
 
-    const event = await getAsync('twitter/share/9876')
+    let event = await getAsync('twitter/share/unknownuser')
+    expect(event).to.equal(null)
+    event = await getAsync('twitter/share/originprotocol')
     expect(event).to.equal(null)
   })
 })
