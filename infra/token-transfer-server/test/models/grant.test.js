@@ -6,7 +6,7 @@ chai.use(require('chai-moment'))
 chai.use(require('chai-bignumber')(BigNumber))
 const moment = require('moment')
 
-const { Grant } = require('../src/models')
+const { Grant } = require('../../src/models')
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss'
 

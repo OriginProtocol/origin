@@ -239,7 +239,7 @@ const PromotionsHeader = ({
   )
 
   return (
-    <div>
+    <div className="header-holder">
       {header}
       <div
         className={`promote-origin-subtitle${isMobile ? ' text-center' : ''}`}
@@ -275,7 +275,11 @@ const Promotions = ({
   })
 
   return (
-    <div className={`growth-promote-origin${isMobile ? ' mobile' : ''}`}>
+    <div
+      className={`growth-promote-origin d-flex flex-wrap ${
+        isMobile ? ' mobile' : ''
+      }`}
+    >
       {runMutation && (
         <RunVerifyPromotion
           locale={locale}
@@ -333,6 +337,10 @@ require('react-styl')(`
     .promote-origin-subtitle
       font-size: 16px
   .growth-promote-origin
+    margin: 0 -1.25rem
+    .header-holder
+      margin: 0 1.25rem
+      width: 100%
     .promote-origin-subtitle
       font-weight: 300
       line-height: 1.25
@@ -367,4 +375,9 @@ require('react-styl')(`
       font-weight: bold
       color: #0d1d29
 
+  @media (max-width: 767.98px)
+    .growth-promote-origin
+      margin: 0
+      .header-holder
+        margin: 0
 `)

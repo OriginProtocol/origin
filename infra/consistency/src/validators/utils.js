@@ -7,25 +7,29 @@ const db = {
   ...esmImport('@origin/discovery/src/models')
 }
 
-const { log } = require('../logger')
-
 // 10000 was too much.  web3.js-beta.34 dies if it returns more than 1k
 const JSONRPC_REQUEST_BATCH_SIZE =
   process.env.JSONRPC_REQUEST_BATCH_SIZE || 1000
 
-const limiter = new Bottleneck({ maxConcurrent: 25 })
-limiter.on('error', err => {
-  log.error('Error occurred within rate limiter', err)
-})
-limiter.on('failed', async (err, jobInfo) => {
-  log.warn(`Job ${jobInfo.options.id} failed`, err)
-  // Retry 3 times
-  if (jobInfo.retryCount < 4) {
-    // 250ms wait for retry
-    log.info('Retrying job...')
-    return 250
-  }
-})
+let limiter
+
+function loadLimiter() {
+  if (limiter) return limiter
+  limiter = new Bottleneck({ maxConcurrent: 25 })
+  limiter.on('error', err => {
+    console.error('Error occurred within rate limiter', err)
+  })
+  limiter.on('failed', async (err, jobInfo) => {
+    console.warn(`Job ${jobInfo.options.id} failed`, err)
+    // Retry 3 times
+    if (jobInfo.retryCount < 4) {
+      // 250ms wait for retry
+      console.info('Retrying job...')
+      return 250
+    }
+  })
+  return limiter
+}
 
 class AssertionError extends Error {
   constructor(msg) {
@@ -84,9 +88,7 @@ async function getListenerBlock(id, prefix) {
 async function getPastEvents(contract, event, { fromBlock = 0, toBlock = 0 }) {
   event = event ? event : 'allEvents'
 
-  log.debug(
-    `getPastEvents(${contract}, ${event}) fromBlock: ${fromBlock} toBlock: ${toBlock}`
-  )
+  loadLimiter()
 
   const requests = range(fromBlock, toBlock, JSONRPC_REQUEST_BATCH_SIZE).map(
     start =>
@@ -95,8 +97,6 @@ async function getPastEvents(contract, event, { fromBlock = 0, toBlock = 0 }) {
         toBlock: Math.min(start + JSONRPC_REQUEST_BATCH_SIZE - 1, toBlock)
       })
   )
-
-  log.debug(`Request batch count: ${requests.length}`)
 
   return flattenDeep(await Promise.all(requests))
 }

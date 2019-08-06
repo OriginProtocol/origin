@@ -18,19 +18,13 @@ const session = require('express-session')
 require('./passport')()
 const SQLiteStore = require('connect-sqlite3')(session)
 const { Op } = require('sequelize')
-const Web3 = require('web3')
 
 const { createProvider } = require('@origin/token/src/config')
 const { transferTokens } = require('./lib/transfer')
 const { Event, Grant } = require('./models')
+const { asyncMiddleware, isEthereumAddress } = require('./utils')
 
-const {
-  sendEmailCode,
-  verifyEmailCode,
-  setupTotp,
-  verifyTotp,
-  logout
-} = require('./login')
+const { ensureLoggedIn } = require('./lib/login')
 
 // Configuration
 const sessionSecret = process.env.SESSION_SECRET
@@ -72,50 +66,11 @@ app.use(session(sessionConfig))
 // Parse request bodies.
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-
 // Passport specific.
 app.use(passport.initialize())
 app.use(passport.session())
 
-/**
- * Allows use of async functions for an Express route.
- */
-const asyncMiddleware = fn => (req, res, next) => {
-  Promise.resolve(fn(req, res, next)).catch(next)
-}
-
-/**
- * Middleware to ensure a user is logged in.
- * MUST be called by all routes.
- */
-function ensureLoggedIn(req, res, next) {
-  if (!req.session.email) {
-    logger.debug('Authentication failed. No email in session')
-    res.status(401)
-    return res.send('This action requires to verify your email.')
-  }
-  if (!req.session.twoFA) {
-    logger.debug('Authentication failed. No 2FA in session')
-    res.status(401)
-    return res.send('This action requires 2FA.')
-  }
-  // User email is verified and user passed 2FA.
-  logger.debug('Authentication success')
-  res.setHeader('X-Authenticated-Email', req.session.email)
-  next()
-}
-
-/**
- * MIddleware to ensures a user verified their email.
- */
-function ensureEmailVerified(req, res, next) {
-  if (!req.session.email) {
-    logger.debug('Authentication failed. No email in session')
-    res.status(401)
-    return res.send('This action requires to verify your email first.')
-  }
-  next()
-}
+app.use(require('./controllers'))
 
 /**
  * Returns grants for the authenticated user.
@@ -133,13 +88,6 @@ app.get(
     res.json(augmentedGrants)
   })
 )
-
-const isEthereumAddress = value => {
-  if (!Web3.utils.isAddress(value)) {
-    throw new Error('Address is not a valid Ethereum address')
-  }
-  return true
-}
 
 /**
  * Transfers tokens from hot wallet to address of user's choosing.
@@ -220,45 +168,10 @@ app.get(
   })
 )
 
-/**
- * Sends a login code by email.
- */
-app.post('/api/send_email_code', asyncMiddleware(sendEmailCode))
-
-/**
- * Verifies a login code sent by email.
- */
-app.post(
-  '/api/verify_email_token',
-  passport.authenticate('bearer'),
-  verifyEmailCode
-)
-
-/**
-  Returns data for setting up TOTP.
- */
-app.post(
-  '/api/setup_totp',
-  ensureEmailVerified, // User must have verified their email first.
-  asyncMiddleware(setupTotp)
-)
-
-/**
- * Verifies a TOTP code.
- */
-app.post(
-  '/api/verify_totp',
-  ensureEmailVerified, // User must have verified their email first.
-  passport.authenticate('totp'),
-  asyncMiddleware(verifyTotp)
-)
-
-/**
- * Log out user by destroying their session cookie
- */
-app.post('/api/logout', ensureLoggedIn, logout)
-
 createProvider(networkId) // Ensure web3 credentials are set up
+
 app.listen(port, () => {
   logger.info(`Listening on port ${port}`)
 })
+
+module.exports = app

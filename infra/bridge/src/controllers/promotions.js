@@ -191,15 +191,22 @@ router.post('/verify', verifyPromotions, async (req, res) => {
   })
 
   if (!attestation) {
+    logger.error(`No attestation found for ${identity}`)
     return res.status(400).send({
       success: false,
       errors: [`Attestation missing`]
     })
   }
+  // We are using `screen_name` instead of `id` or `id_str` since they are
+  // not deterministic with all events
+  // Caveat: attestation.value for some rows stores an incorrect value
+  // because we had a bug caused by JS incorrect handling of large integers.
+  // See for reference https://developer.twitter.com/en/docs/basics/twitter-ids.html
 
-  const redisKey = `${socialNetwork.toLowerCase()}/${type.toLowerCase()}/${
-    attestation.value
-  }`
+  const userId = attestation.username
+
+  const redisKey = `${socialNetwork.toLowerCase()}/${type.toLowerCase()}/${userId}`
+
   const maxTries = process.env.VERIFICATION_MAX_TRIES || 60
   let tries = 0
   do {

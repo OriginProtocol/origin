@@ -236,11 +236,11 @@ const augustConfig = {
               titleKey: 'growth.twitterShare.content2.title',
               detailsKey: 'growth.twitterShare.content2.details',
               image: 'images/growth/twitter-share-content2.png',
-              link: '',
+              link: 'https://www.originrewards.com',
               linkKey: 'growth.twitterShare.content2.link',
               post: {
                 text: {
-                  default: `Join @OriginProtocol's #rewards program and earn free Origin tokens! 250,000 OGN already distributed to thousands all around the world and Origin is still welcoming more to become token holders`,
+                  default: `Join @OriginProtocol's #rewards program and earn free Origin tokens! 250,000 OGN already distributed. Sign up and claim your free OGN! https://www.originrewards.com`,
                   translations: [ ]
                 }
               }
@@ -271,7 +271,7 @@ const augustConfig = {
               linkKey: 'growth.twitterShare.content3.link',
               post: {
                 text: {
-                  default: `@OriginProtocol is building one of the most promising blockchain platforms for the new sharing economy`,
+                  default: `Great @TechCrunch article on how @OriginProtocol is building one of the most promising blockchain platforms for the new sharing economy. https://techcrunch.com/2018/10/10/origin-protocol/`,
                   translations: [
                   ]
                 }
@@ -303,7 +303,7 @@ const augustConfig = {
               linkKey: 'growth.twitterShare.content4.link',
               post: {
                 text: {
-                  default: `@OriginProtocol has one of the best teams in the crypto ecosystem today`,
+                  default: `One of the best teams in crypto today! @OriginProtocol's team includes a cofounder from PayPal & the 1st engineer at YouTube! https://www.coindesk.com/another-paypal-co-founder-is-embracing-blockchains-seismic-shift`,
                   translations: [
                   ]
                 }
@@ -335,7 +335,7 @@ const augustConfig = {
               linkKey: 'growth.twitterShare.content5.link',
               post: {
                 text: {
-                  default: `Join @OriginProtocol on #Telegram!`,
+                  default: `Join me in following @OriginProtocol on #Telegram! https://t.me/originprotocol`,
                   translations: [
                   ]
                 }
