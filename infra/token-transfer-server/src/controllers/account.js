@@ -3,7 +3,7 @@ const router = express.Router()
 const { check, validationResult } = require('express-validator')
 
 const { ensureLoggedIn } = require('../lib/login')
-const { asyncMiddleware, isEthereumAddress } = require('../utils')
+const { asyncMiddleware, isEthereumAddress, isExistingAddress, isExistingNickname } = require('../utils')
 const { Account } = require('../models')
 
 /**
@@ -26,41 +26,14 @@ router.get(
 router.post(
   '/accounts',
   [
-    check('nickname').isString(),
-    check('address').custom(isEthereumAddress),
+    check('nickname').isString().custom(isExistingNickname),
+    check('address').custom(isEthereumAddress).custom(isExistingAddress),
     asyncMiddleware(ensureLoggedIn)
   ],
   asyncMiddleware(async (req, res) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() })
-    }
-
-    const nicknameExists = await Account.findOne({
-      where: {
-        userId: req.user.id,
-        nickname: req.body.nickname
-      }
-    })
-
-    if (nicknameExists) {
-      res.status(422).json({
-        errors: ['You already have an account with that nickname']
-      })
-      return
-    }
-
-    const addressExists = await Account.findOne({
-      where: {
-        userId: req.user.id,
-        address: req.body.address
-      }
-    })
-    if (addressExists) {
-      res.status(422).json({
-        errors: ['You already have an account with that address']
-      })
-      return
+      return res.status(422).json({ errors: errors.array({ onlyFirstError: true }) })
     }
 
     const account = await Account.create({
