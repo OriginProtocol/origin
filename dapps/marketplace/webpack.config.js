@@ -30,28 +30,31 @@ const config = {
     filename: '[name].js',
     path: path.resolve(__dirname, 'public')
   },
-  externals: {
-    Web3: 'web3'
-  },
   module: {
     noParse: [/^react$/],
     rules: [
       { test: /\.flow$/, loader: 'ignore-loader' },
       {
         test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader',
-        query: {
-          plugins: [
-            [
-              'babel-plugin-fbt',
-              {
-                fbtEnumManifest: require('./translation/fbt/.enum_manifest.json')
-              }
-            ],
-            'babel-plugin-fbt-runtime'
-          ]
-        }
+        include: [
+          path.resolve(__dirname, 'src'),
+        ],
+        use: [{
+          loader: 'echo-loader',
+        }, {
+          loader: 'babel-loader',
+          query: {
+            plugins: [
+              [
+                'babel-plugin-fbt',
+                {
+                  fbtEnumManifest: require('./translation/fbt/.enum_manifest.json')
+                }
+              ],
+              'babel-plugin-fbt-runtime'
+            ]
+          }
+        }],
       },
       {
         test: /\.mjs$/,
@@ -133,25 +136,12 @@ const config = {
   ],
 
   optimization: {
-    // splitChunks: {
-    //   cacheGroups: {
-    //     app: {
-    //       chunks: 'all',
-    //       name: 'app',
-    //       enforce: true,
-    //       reuseExistingChunk: true,
-    //     }
-    //   }
-    // },
+    minimize: false
   }
 }
 
 if (isProduction) {
   config.output.filename = '[name].[hash:8].js'
-  config.optimization.minimizer = [
-    new TerserPlugin({ cache: true, parallel: true, sourceMap: true }),
-    new OptimizeCSSAssetsPlugin({})
-  ]
   config.plugins.push(
     new CleanWebpackPlugin({
       cleanOnceBeforeBuildPatterns: ['app.*.css', 'app.*.js', 'app.*.js.map']
@@ -191,19 +181,6 @@ if (isProduction) {
     'react-styl': 'react-styl/prod.js'
   }
   config.module.noParse = [/^(react-styl)$/]
-  // config.resolve.alias = {
-  //   react: 'react/umd/react.production.min.js',
-  //   'react-dom': 'react-dom/umd/react-dom.production.min.js',
-  //   'react-styl': 'react-styl/prod.js',
-  //   web3: path.resolve(__dirname, 'public/web3.min'),
-  //   redux: 'redux/dist/redux.min.js',
-  //   'react-redux': 'react-redux/dist/react-redux.min.js',
-  //   'react-router-dom': 'react-router-dom/umd/react-router-dom.min.js'
-  // }
-  // config.module.noParse = [
-  //   /^(react|react-dom|react-styl|redux|react-redux|react-router-dom)$/,
-  //   /web3/
-  // ]
 }
 
 module.exports = config
