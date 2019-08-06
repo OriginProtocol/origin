@@ -104,6 +104,16 @@ function Action(props) {
     externalLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       getContentToShare(props.action, props.locale)
     )}`
+  } else if (type === 'FacebookShare') {
+    buttonLink = undefined
+    foregroundImgSrc = 'images/growth/facebook-icon.svg'
+    title = fbt('Share this on Facebook', 'RewardActions.postThisOnFacebook')
+    externalLink = [
+      'https://www.facebook.com/dialog/share?',
+      `app_id=${process.env.FACEBOOK_CLIENT_ID}`,
+      `&href=${encodeURIComponent(props.action.content.link)}`,
+      '&display=popup'
+    ].join('')
   } else if (type === 'TwitterFollow') {
     buttonLink = undefined
     foregroundImgSrc = 'images/growth/twitter-icon.svg'
@@ -111,6 +121,12 @@ function Action(props) {
     // TODO: Move screen name to Enviroment variable
     externalLink =
       'https://twitter.com/intent/follow?screen_name=OriginProtocol'
+  } else if (type === 'FacebookLike') {
+    buttonLink = undefined
+    foregroundImgSrc = 'images/growth/facebook-icon.svg'
+    title = fbt('Like our Facebook Page', 'RewardActions.likePageOnFacebook')
+    externalLink =
+      'https://www.facebook.com/originprotocol/'
   }
 
   const renderReward = (amount, style = 'normal') => {

@@ -25,6 +25,8 @@ const actionTypeToNetwork = actionType => {
   switch (actionType) {
     case 'TwitterFollow':
       return 'TWITTER'
+    case 'FacebookLike':
+      return 'FACEBOOK'
   }
 
   return null
@@ -41,7 +43,6 @@ function FollowOrigin(props) {
     growthCampaignsRefetch,
     showNotification
   } = props
-
   return (
     <Mutation
       mutation={VerifyPromotionMutation}

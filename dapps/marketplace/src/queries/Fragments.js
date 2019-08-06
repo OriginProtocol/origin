@@ -251,6 +251,7 @@ export default {
           }
           ... on SocialShareAction {
             content {
+              id
               titleKey
               detailsKey
               image

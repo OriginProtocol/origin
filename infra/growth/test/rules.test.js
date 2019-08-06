@@ -3,7 +3,7 @@ const expect = chai.expect
 
 const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
 const { CampaignRules } = require('../src/resources/rules')
-const { SocialShareRule } = require('../src/resources/rules/socialShareRule')
+const { VerifiableSocialShareRule } = require('../src/resources/rules/verifiableSocialShareRule')
 const { tokenToNaturalUnits } = require('../src/util/token')
 
 
@@ -549,7 +549,7 @@ describe('Growth Engine rules', () => {
             statusScope: 'user'
           }
         }
-        this.rule = new SocialShareRule(crules, 0, config)
+        this.rule = new VerifiableSocialShareRule(crules, 0, config)
       })
 
       it(`should calculate reward properly based on social stats`, () => {

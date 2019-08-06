@@ -40,6 +40,8 @@ const resolvers = {
           return 'ListingIdPurchasedAction'
         case 'TwitterShare':
           return 'SocialShareAction'
+        case 'FacebookShare':
+          return 'SocialShareAction'
         default:
           return 'GrowthAction'
       }

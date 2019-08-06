@@ -35,24 +35,19 @@ const actionTypeToNetwork = actionType => {
   return null
 }
 
-const getActionHash = action =>
-  web3.utils.sha3(`${action.type}/${action.content.post.text.default}`)
-
-const getActionFromHash = ({
+const getApplicableActions = ({
   notCompletedPromotionActions,
   completedPromotionActions,
   contentId
 }) => {
   if (!contentId) {
-    return null
+    return []
   }
 
-  const selectedAction = [
+  return [
     ...notCompletedPromotionActions,
     ...completedPromotionActions
-  ].find(action => getActionHash(action) === contentId)
-
-  return selectedAction
+  ].filter(action => action.content.id === contentId)
 }
 
 const PromotionContents = ({
@@ -83,31 +78,26 @@ const PromotionChannels = ({
   isMobile,
   decimalDivision,
   locale,
-  action,
+  applicableActions,
   history,
   onRunMutation
 }) => {
-  if (!action) {
+  if (applicableActions.length === 0) {
     return history.push(`/campaigns/promotions`)
   }
 
+  const completedActions = applicableActions.filter(action => action.status === 'Completed')
+  const notCompletedActions = applicableActions.filter(action => action.status !== 'Completed')
   // TODO: As of now, there is only one growth rule per content AND social network.
   // This has to be updated once support for multiple channels for the same content is available
 
   return (
     <>
-      {action.status === 'Completed' ? (
-        <ActionList
-          title={fbt('Completed', 'growth.promoteOrigin.completed')}
-          decimalDivision={decimalDivision}
-          isMobile={isMobile}
-          actions={[action]}
-        />
-      ) : (
+      {notCompletedActions.length > 0 &&
         <ActionList
           decimalDivision={decimalDivision}
           isMobile={isMobile}
-          actions={[action]}
+          actions={notCompletedActions}
           locale={locale}
           onActionClick={() => {
             if (onRunMutation) {
@@ -115,7 +105,15 @@ const PromotionChannels = ({
             }
           }}
         />
-      )}
+      }
+      {completedActions.length > 0 &&
+        <ActionList
+          title={fbt('Completed', 'growth.promoteOrigin.completed')}
+          decimalDivision={decimalDivision}
+          isMobile={isMobile}
+          actions={completedActions}
+        />
+      }
     </>
   )
 }
@@ -228,10 +226,11 @@ const PromotionsHeader = ({
     </MobileModalHeader>
   ) : (
     <>
-      <Link className="back d-flex mr-auto" to="/campaigns">
+      <Link className="back d-flex mr-auto" to={hasSelectedContent ? '/campaigns/promotions' : '/campaigns'}>
         <img src="images/caret-blue.svg" />
         <div>
-          <fbt desc="GrowthPromotions.backToCampaign">Back to Campaign</fbt>
+          {hasSelectedContent && <fbt desc="GrowthPromotions.backToPromotions">Back to Promotions</fbt>}
+          {!hasSelectedContent && <fbt desc="GrowthPromotions.backToCampaign">Back to Campaign</fbt>}
         </div>
       </Link>
       <h1 className={`mb-2 pt-md-3 mt-3`}>{stageTitle}</h1>
@@ -268,12 +267,11 @@ const Promotions = ({
 
   const contentId = get(props, 'match.params.contentId')
   const hasSelectedContent = contentId ? true : false
-  const action = getActionFromHash({
+  const applicableActions = getApplicableActions({
     notCompletedPromotionActions,
     completedPromotionActions,
     contentId
   })
-
   return (
     <div
       className={`growth-promote-origin d-flex flex-wrap ${
@@ -303,14 +301,14 @@ const Promotions = ({
         isMobile={isMobile}
         hasSelectedContent={hasSelectedContent}
         history={history}
-        action={action}
+        action={applicableActions.length > 0 ? applicableActions[0] : null }
       />
       {hasSelectedContent ? (
         <PromotionChannels
           isMobile={isMobile}
           decimalDivision={decimalDivision}
           locale={locale}
-          action={action}
+          applicableActions={applicableActions}
           history={history}
           onRunMutation={() => setRunMutation(true)}
         />
@@ -319,10 +317,7 @@ const Promotions = ({
           completedPromotionActions={completedPromotionActions}
           notCompletedPromotionActions={notCompletedPromotionActions}
           onShare={action => {
-            // Note: Taking SHA3 hash just to push it to router
-            // This hash has nothing to do with Growth Event contentHash
-            const contentHash = getActionHash(action)
-            history.push(`/campaigns/promotions/${contentHash}`)
+            history.push(`/campaigns/promotions/${action.content.id}`)
           }}
         />
       )}

@@ -202,6 +202,8 @@ const augustConfig = {
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
             content: {
+              // different social network shares sharing same content should have the same id
+              id: 'origin_app',
               titleKey: 'growth.twitterShare.content1.title',
               detailsKey: 'growth.twitterShare.content1.details',
               image: 'images/growth/twitter-share-content1.png',
@@ -233,6 +235,8 @@ const augustConfig = {
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
             content: {
+              // different social network shares sharing same content should have the same id
+              id: 'join_rewards',
               titleKey: 'growth.twitterShare.content2.title',
               detailsKey: 'growth.twitterShare.content2.details',
               image: 'images/growth/twitter-share-content2.png',
@@ -264,6 +268,8 @@ const augustConfig = {
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
             content: {
+              // different social network shares sharing same content should have the same id
+              id: 'origin_promising_platform',
               titleKey: 'growth.twitterShare.content3.title',
               detailsKey: 'growth.twitterShare.content3.details',
               image: 'images/growth/twitter-share-content3.png',
@@ -296,6 +302,8 @@ const augustConfig = {
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
             content: {
+              // different social network shares sharing same content should have the same id
+              id: 'origin_best_team',
               titleKey: 'growth.twitterShare.content4.title',
               detailsKey: 'growth.twitterShare.content4.details',
               image: 'images/growth/twitter-share-content4.png',
@@ -328,6 +336,8 @@ const augustConfig = {
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
             content: {
+              // different social network shares sharing same content should have the same id
+              id: 'follow_on_telegram',
               titleKey: 'growth.twitterShare.content5.title',
               detailsKey: 'growth.twitterShare.content5.details',
               image: 'images/growth/twitter-share-content5.png',
@@ -343,6 +353,152 @@ const augustConfig = {
             },
             reward: {
               amount: '0',
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'FacebookShare1',
+          class: 'SimpleSocialShare',
+          config: {
+            socialNetwork: 'facebook',
+            eventType: 'SharedOnFacebook',
+            content: {
+              // different social network shares sharing same content should have the same id
+              id: 'origin_app',
+              titleKey: 'growth.twitterShare.content1.title',
+              detailsKey: 'growth.twitterShare.content1.details',
+              image: 'images/growth/twitter-share-content1.png',
+              link: 'https://medium.com/originprotocol/now-optimized-for-mobile-origin-launches-a-fresh-new-app-and-sponsored-gas-80dc2407bd8d',
+              linkKey: 'growth.twitterShare.content1.link',
+            },
+            reward: {
+              amount: '1',
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'FacebookShare2',
+          class: 'SimpleSocialShare',
+          config: {
+            socialNetwork: 'facebook',
+            eventType: 'SharedOnFacebook',
+            content: {
+              // different social network shares sharing same content should have the same id
+              id: 'join_rewards',
+              titleKey: 'growth.twitterShare.content2.title',
+              detailsKey: 'growth.twitterShare.content2.details',
+              image: 'images/growth/twitter-share-content2.png',
+              link: 'https://www.originrewards.com',
+              linkKey: 'growth.twitterShare.content2.link',
+            },
+            reward: {
+              amount: '1',
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'FacebookShare3',
+          class: 'SimpleSocialShare',
+          config: {
+            socialNetwork: 'facebook',
+            eventType: 'SharedOnFacebook',
+            content: {
+              // different social network shares sharing same content should have the same id
+              id: 'origin_promising_platform',
+              titleKey: 'growth.twitterShare.content3.title',
+              detailsKey: 'growth.twitterShare.content3.details',
+              image: 'images/growth/twitter-share-content3.png',
+              link: 'https://techcrunch.com/2018/10/10/origin-protocol/',
+              linkKey: 'growth.twitterShare.content3.link',
+            },
+            reward: {
+              amount: '1',
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'FacebookShare4',
+          class: 'SimpleSocialShare',
+          config: {
+            socialNetwork: 'facebook',
+            eventType: 'SharedOnFacebook',
+            content: {
+              // different social network shares sharing same content should have the same id
+              id: 'origin_best_team',
+              titleKey: 'growth.twitterShare.content4.title',
+              detailsKey: 'growth.twitterShare.content4.details',
+              image: 'images/growth/twitter-share-content4.png',
+              link: 'https://www.coindesk.com/another-paypal-co-founder-is-embracing-blockchains-seismic-shift',
+              linkKey: 'growth.twitterShare.content4.link',
+            },
+            reward: {
+              amount: '1',
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'FacebookShare5',
+          class: 'SimpleSocialShare',
+          config: {
+            socialNetwork: 'facebook',
+            eventType: 'SharedOnFacebook',
+            content: {
+              // different social network shares sharing same content should have the same id
+              id: 'follow_on_telegram',
+              titleKey: 'growth.twitterShare.content5.title',
+              detailsKey: 'growth.twitterShare.content5.details',
+              image: 'images/growth/twitter-share-content5.png',
+              link: 'https://t.me/originprotocol',
+              linkKey: 'growth.twitterShare.content5.link',
+            },
+            reward: {
+              amount: '1',
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'FacebookLike',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'LikedOnFacebook',
+            reward: {
+              amount: tokenToNaturalUnits(1),
               currency: 'OGN'
             },
             limit: 1,

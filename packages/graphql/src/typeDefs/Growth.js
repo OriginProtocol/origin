@@ -47,6 +47,8 @@ module.exports = `
     ListingSold
     TwitterShare
     TwitterFollow
+    FacebookShare
+    FacebookLike
   }
 
   enum GrowthInviteStatus {
@@ -155,12 +157,13 @@ module.exports = `
   }
 
   type SocialContent {
+    id: String!,
     titleKey: String!,
     detailsKey: String!,
     image: String!
     link: String!,
     linkKey: String!,
-    post: Post!
+    post: Post
   }
 
   type SocialShareAction implements GrowthBaseAction {
