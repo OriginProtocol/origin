@@ -48,7 +48,15 @@ const BuyListingsForRewards = withRouter(({ history }) => {
             })
           })
         }}
-      />
+      >
+        <div>
+          <h3>
+            <fbt desc="listingCard.buyAndEarn">
+              Buy stuffs &amp; earn tokens!
+            </fbt>
+          </h3>
+        </div>
+      </div>
     </div>
   )
 })
@@ -66,7 +74,7 @@ export default withEnrolmentStatus(EarnTokensCard)
 
 require('react-styl')(`
   .listing-card
-    &.rewards-signup-card
+    &.rewards-signup-card, &.earn-tokens-card
       .main-pic
         text-align: center
         position: relative
@@ -99,5 +107,17 @@ require('react-styl')(`
         color: #94a7b5
     &.earn-tokens-card
       .main-pic
-        background-image: url('images/growth/buy-promo.svg')
+        background-color: #283f55
+        > div
+          padding: 0
+          border-radius: 10px
+          overflow: hidden
+          &:before
+            background-image: url('images/growth/buy-promo-graphic.svg')
+            background-position: bottom
+            background-size: cover
+          h3
+            font-family: var(--heading-font)
+            font-weight: bold
+            font-size: 18px
 `)

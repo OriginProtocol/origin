@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="160" height="160" viewBox="0 0 160 160">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="160" height="102" viewBox="0 0 160 102">
     <defs>
         <path id="a" d="M10 0h140c5.523 0 10 4.477 10 10v140c0 5.523-4.477 10-10 10H10c-5.523 0-10-4.477-10-10V10C0 4.477 4.477 0 10 0z"/>
         <path id="c" d="M0 .853h174v79H0z"/>
@@ -64,9 +64,7 @@
         <mask id="b" fill="#fff">
             <use xlink:href="#a"/>
         </mask>
-        <use fill="#FFF" xlink:href="#a"/>
         <g mask="url(#b)">
-            <path fill="#293F55" d="M-11 175h182V-7H-11z"/>
             <g transform="translate(-7 -5.853)">
                 <mask id="d" fill="#fff">
                     <use xlink:href="#c"/>
@@ -444,9 +442,6 @@
                     </g>
                 </g>
             </g>
-            <text font-family="Poppins-Bold, Poppins" font-size="16" font-weight="bold" transform="translate(-11 -7)">
-                <tspan x="47.544" y="131" fill="#FFF">Buy stuff &amp;</tspan> <tspan x="39" y="148" fill="#FFF">earn tokens!</tspan>
-            </text>
         </g>
     </g>
 </svg>
