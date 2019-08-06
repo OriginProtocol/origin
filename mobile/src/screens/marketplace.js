@@ -11,6 +11,7 @@ import {
   StyleSheet,
   View,
   ScrollView,
+  Text,
   RefreshControl
 } from 'react-native'
 import { AndroidBackHandler } from 'react-navigation-backhandler'
@@ -19,7 +20,9 @@ import { WebView } from 'react-native-webview'
 import PushNotification from 'react-native-push-notification'
 import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
+import { fbt } from 'fbt-runtime'
 
+import OriginButton from 'components/origin-button'
 import NotificationCard from 'components/notification-card'
 import SignatureCard from 'components/signature-card'
 import TransactionCard from 'components/transaction-card'
@@ -40,6 +43,7 @@ import { setAccountBalances, setIdentity } from 'actions/Wallet'
 import withOriginGraphql from 'hoc/withOriginGraphql'
 import { getCurrentRoute } from '../NavigationService'
 import { PROMPT_MESSAGE, PROMPT_PUB_KEY } from '../constants'
+import CardStyles from 'styles/card'
 
 class MarketplaceScreen extends Component {
   static navigationOptions = () => {
@@ -54,21 +58,30 @@ class MarketplaceScreen extends Component {
       enablePullToRefresh: true,
       modals: [],
       fiatCurrency: CURRENCIES.find(c => c[0] === 'fiat-USD'),
-      transactionCardLoading: false
+      transactionCardLoading: false,
+      currentDomain: ''
     }
     if (Platform.OS === 'android') {
       // Configure swipe handler for back forward navigation on Android because
       // it does not support allowsBackForwardNavigationGestures
       this.setSwipeHandler()
     }
-    DeviceEventEmitter.addListener('graphqlQuery', this.injectGraphqlQuery)
-    DeviceEventEmitter.addListener(
-      'graphqlMutation',
-      this.injectGraphqlMutation
-    )
-    DeviceEventEmitter.addListener('reloadMarketplace', () =>
-      this.dappWebView.reload()
-    )
+    this.subscriptions = [
+      DeviceEventEmitter.addListener('graphqlQuery', this.injectGraphqlQuery),
+      DeviceEventEmitter.addListener(
+        'graphqlMutation',
+        this.injectGraphqlMutation
+      ),
+      DeviceEventEmitter.addListener('reloadMarketplace', () =>
+        this.dappWebView.reload()
+      )
+    ]
+  }
+
+  componentWillUnmount() {
+    if (this.subscriptions) {
+      this.subscriptions.map(s => s.remove())
+    }
   }
 
   /* Handle back button presses on Android devices so that they work on the
@@ -87,7 +100,8 @@ class MarketplaceScreen extends Component {
       if (this.dappWebView) {
         // Inject invite code
         this.injectInviteCode(inviteCode)
-        // Clipboard.setString('')
+        // Clear clipboard
+        Clipboard.setString('')
       }
     }
   }
@@ -550,6 +564,14 @@ class MarketplaceScreen extends Component {
     updateExchangeRate(this.state.fiatCurrency[1], 'DAI')
   }
 
+  onWebViewNavigationStateChange = state => {
+    try {
+      this.setState({ currentDomain: new URL(state.url).hostname })
+    } catch (error) {
+      console.warn(`Browser reporting malformed url: ${state.url}`)
+    }
+  }
+
   onWebViewLoad = async () => {
     // Check if a growth invie code needs to be set
     this.clipboardInviteCodeCheck()
@@ -677,6 +699,7 @@ class MarketplaceScreen extends Component {
                 const { nativeEvent } = syntheticEvent
                 this.props.setMarketplaceWebViewError(nativeEvent.description)
               }}
+              onNavigationStateChange={this.onWebViewNavigationStateChange}
               renderLoading={() => {
                 return (
                   <View style={styles.loading}>
@@ -685,9 +708,44 @@ class MarketplaceScreen extends Component {
                 )
               }}
               decelerationRate="normal"
-              userAgent={webViewToBrowserUserAgent()}
+              // On Android twitter share dialog will not appear with all
+              // user agents. For that reason we hardcode one that does work
+              userAgent={webViewToBrowserUserAgent(
+                this.state.currentDomain === 'twitter.com' &&
+                  Platform.OS === 'android'
+              )}
               startInLoadingState={true}
+              renderError={() => (
+                <Modal animationType="fade" transparent={true} visible={true}>
+                  <SafeAreaView style={styles.modalSafeAreaView}>
+                    <View style={styles.card}>
+                      <Text style={styles.cardHeading}>
+                        <fbt desc="MarketplaceScreen.heading">
+                          Connection Error
+                        </fbt>
+                      </Text>
+                      <Text style={styles.cardContent}>
+                        <fbt desc="NoInternetError.errorText">
+                          An error occurred loading the Origin Marketplace.
+                          Please check your internet connection.
+                        </fbt>
+                      </Text>
+                      <View style={styles.buttonContainer}>
+                        <OriginButton
+                          size="large"
+                          type="primary"
+                          title={fbt('Retry', 'MarketplaceScreen.retryButton')}
+                          onPress={() => {
+                            DeviceEventEmitter.emit('reloadMarketplace')
+                          }}
+                        />
+                      </View>
+                    </View>
+                  </SafeAreaView>
+                </Modal>
+              )}
             />
+
             {this.state.modals.map((modal, index) => {
               let card
               if (modal.type === 'enableNotifications') {
@@ -805,5 +863,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     backgroundColor: 'white'
-  }
+  },
+  ...CardStyles
 })

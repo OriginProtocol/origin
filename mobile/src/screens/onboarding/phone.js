@@ -99,6 +99,20 @@ class PhoneScreen extends Component {
     }
   }
 
+  componentDidMount() {
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      if (!this.props.wallet.activeAccount) {
+        // Active account removed by import warning and back swipe?
+        this.props.navigation.navigate('Welcome')
+      }
+    })
+  }
+
+  componentWillUnmount() {
+    // Remove the event listener
+    this.focusListener.remove()
+  }
+
   handleChange = async (field, value) => {
     await this.setState({ phoneError: null, [`${field}Value`]: value })
   }
@@ -196,7 +210,9 @@ class PhoneScreen extends Component {
 
   handleSkip = async () => {
     await this.props.addSkippedAttestation('phone')
-    this.props.navigation.navigate(this.props.nextOnboardingStep)
+    setTimeout(() => {
+      this.props.navigation.navigate(this.props.nextOnboardingStep)
+    })
   }
 
   render() {

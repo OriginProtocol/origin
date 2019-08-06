@@ -1,10 +1,12 @@
 'use strict'
 
 const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy
+const BearerStrategy = require('passport-http-bearer').Strategy
 const TotpStrategy = require('passport-totp').Strategy
 const logger = require('./logger')
 const { decrypt } = require('./lib/crypto')
+const jwt = require('jsonwebtoken')
+
 const { User } = require('./models')
 
 module.exports = function() {
@@ -27,36 +29,30 @@ module.exports = function() {
   })
 
   passport.use(
-    new LocalStrategy(
-      {
-        usernameField: 'email',
-        passwordField: 'code',
-        session: false,
-        passReqToCallback: true
-      },
-      async function(req, email, code, done) {
-        logger.debug('Passport local strategy called.', email, code)
-        try {
-          const user = await User.findOne({ where: { email } })
-          if (!user) {
-            // No user with that email found.
-            return done(null, false)
-          }
-          if (
-            code !== req.session.emailVerification.code ||
-            Date.now() > req.session.emailVerification.ttl
-          ) {
-            // Code does not match or is expired.
-            return done(null, false)
-          }
-          // Email and code match. All good !
-          return done(null, user)
-        } catch (e) {
-          // Something went wrong. Return an error.
-          return done(e)
-        }
+    new BearerStrategy(async (token, done) => {
+      logger.debug('Passport bearer strategy called')
+      let decodedToken
+      try {
+        decodedToken = jwt.verify(token, process.env.ENCRYPTION_SECRET)
+      } catch (error) {
+        return done(null, false)
       }
-    )
+
+      try {
+        const user = await User.findOne({
+          where: { email: decodedToken.email }
+        })
+        if (!user) {
+          // No user with that email found.
+          return done(null, false)
+        }
+        // All good
+        return done(null, user)
+      } catch (e) {
+        // Something went wrong. Return an error.
+        return done(e)
+      }
+    })
   )
 
   passport.use(

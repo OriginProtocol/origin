@@ -8,7 +8,8 @@ module.exports = (sequelize, DataTypes) => {
       // Email address of the user.
       email: DataTypes.STRING,
       // OTP secret key, stored encrypted.
-      otpKey: DataTypes.STRING
+      otpKey: DataTypes.STRING,
+      otpVerified: DataTypes.BOOLEAN
     },
     {
       tableName: 't3_user'
