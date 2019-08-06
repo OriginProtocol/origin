@@ -127,7 +127,11 @@ export default class Modal extends Component {
         anim: `is-leaving is-${this.props.submitted ? 'submitted' : 'closed'}`
       })
     }, 10)
-    this.onCloseTimeout = setTimeout(() => this.props.onClose(), 500)
+
+    this.onCloseTimeout = setTimeout(
+      () => this.props.onClose && this.props.onClose(),
+      500
+    )
   }
 
   onKeyDown(e) {

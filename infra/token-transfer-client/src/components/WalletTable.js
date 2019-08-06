@@ -11,23 +11,21 @@ export default class WalletTable extends Component {
       accounts: [],
       nickName: '',
       ethAddress: '',
-      displayAddWalletModal: false
+      displayModal: false
     }
   }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
   handleAddAccount = async () => {
     this.setState({ loadingAddAccount: true })
     let response
     try {
       const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
-      response = await agent.post(`${apiUrl}/accounts`)
-        .send({
-          nickName: this.state.nickName,
-          ethAddress: this.state.ethAddress
-        })
+      response = await agent.post(`${apiUrl}/accounts`).send({
+        nickName: this.state.nickName,
+        ethAddress: this.state.ethAddress
+      })
     } catch (error) {
       this.setState({ addAccountError: error })
       return
@@ -36,16 +34,14 @@ export default class WalletTable extends Component {
     this.setState({ loadingAddAccount: false })
   }
 
-  handleEditAccount() {
-  }
+  handleEditAccount() {}
 
-  handleDeleteAccount() {
-  }
+  handleDeleteAccount() {}
 
   render() {
     return (
       <>
-        {this.state.displayAddWalletModal && this.renderAddWalletModal()}
+        {this.state.displayModal && this.renderModal()}
         <div className="row">
           <div className="col">
             <h2>Ethereum Accounts</h2>
@@ -55,7 +51,7 @@ export default class WalletTable extends Component {
               href="#"
               onClick={e => {
                 e.preventDefault()
-                this.setState({ displayAddWalletModal: true })
+                this.setState({ displayModal: true })
               }}
             >
               + Add an Account
@@ -85,7 +81,9 @@ export default class WalletTable extends Component {
                         <td>{account.nickname}</td>
                         <td>{account.ethAddress}</td>
                         <td>{account.createdAt}</td>
-                        <td><a href="#">e</a> <a href="#">x</a></td>
+                        <td>
+                          <a href="#">e</a> <a href="#">x</a>
+                        </td>
                       </>
                     ))
                   )}
@@ -98,12 +96,16 @@ export default class WalletTable extends Component {
     )
   }
 
-  renderAddWalletModal() {
+  renderModal() {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
     return (
-      <Modal appendToId="main">
+      <Modal
+        appendToId="main"
+        onClose={() => this.setState({ displayModal: false })}
+        closeBtn={true}
+      >
         <h1 className="mb-2">Add An Account</h1>
         <p>Enter a nickname and an ETH address</p>
         <div className="form-group">

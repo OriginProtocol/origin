@@ -11,7 +11,7 @@ class Login extends Component {
     emailSent: false
   }
 
-  handleSendEmailCode = async () => {
+  handleSendEmailToken = async () => {
     const emailPattern = /.+@.+\..+/
     if (!emailPattern.test(this.state.email)) {
       this.setState({ emailError: 'That does not look like a valid email.' })
@@ -21,12 +21,13 @@ class Login extends Component {
     try {
       const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
       await agent
-        .post(`${apiUrl}/api/send_email_code`)
+        .post(`${apiUrl}/api/send_email_token`)
         .send({ email: this.state.email })
     } catch (error) {
       this.setState({
-        emailError: 'Failed to send email code. Try again shortly.'
+        emailError: 'Failed to send email token. Try again shortly.'
       })
+      return
     }
 
     this.setState({ emailSent: true })
@@ -53,7 +54,7 @@ class Login extends Component {
           <button
             className="btn btn-primary btn-lg"
             style={{ marginTop: '40px' }}
-            onClick={this.handleSendEmailCode}
+            onClick={this.handleSendEmailToken}
           >
             Continue
           </button>
