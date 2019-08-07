@@ -16,6 +16,7 @@ export default gql`
         first: $first
         after: $after
         sort: $sort
+        order: $order
         search: $search
         filters: $filters
         listingIds: $listingIds
