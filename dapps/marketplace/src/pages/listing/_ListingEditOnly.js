@@ -5,6 +5,55 @@ import Link from 'components/Link'
 import Price from 'components/Price'
 import tokenPrice from 'utils/tokenPrice'
 import CoinLogo from 'components/CoinLogo'
+import Exposure from 'components/ListingExposure'
+
+const SingleUnitCommission = ({ listing }) => (
+  <>
+    <div className="row">
+      <div>
+        <fbt desc="listing.commissionPerUnit">Commission</fbt>
+      </div>
+      <div>
+        <CoinLogo coin="ogn" />
+        {tokenPrice(listing.commissionPerUnit)}
+      </div>
+    </div>
+  </>
+)
+
+const MultiUnitCommission = ({ listing }) => (
+  <>
+    <div className="row">
+      <div>
+        <fbt desc="listing.commissionPerUnit">Commission per Unit</fbt>
+      </div>
+      <div>
+        <CoinLogo coin="ogn" />
+        {tokenPrice(listing.commissionPerUnit)}
+      </div>
+    </div>
+    <div className="row">
+      <div>
+        <fbt desc="listing.totalCommissionBudget">Total Budget</fbt>
+      </div>
+      <div>
+        <CoinLogo coin="ogn" />
+        {tokenPrice(listing.commission)}
+      </div>
+    </div>
+    <div className="row">
+      <div>
+        <fbt desc="listing.totalCommissionBudgetRemaining">
+          Total Budget Remaining
+        </fbt>
+      </div>
+      <div>
+        <CoinLogo coin="ogn" />
+        {tokenPrice(listing.depositAvailable)}
+      </div>
+    </div>
+  </>
+)
 
 const EditOnly = ({
   listing,
@@ -58,40 +107,18 @@ const EditOnly = ({
     {!listing.commission ? null : (
       <>
         <div className="listing-buy-editonly mt-3">
-          <div className="row">
-            <div>
-              <fbt desc="listing.commissionPerUnit">Commission per Unit</fbt>
-            </div>
-            <div>
-              <CoinLogo coin="ogn" />
-              {tokenPrice(listing.commissionPerUnit)}
-            </div>
-          </div>
-          <div className="row">
-            <div>
-              <fbt desc="listing.totalCommissionBudget">Total Budget</fbt>
-            </div>
-            <div>
-              <CoinLogo coin="ogn" />
-              {tokenPrice(listing.deposit)}
-            </div>
-          </div>
-          <div className="row">
-            <div>
-              <fbt desc="listing.totalCommissionBudgetRemaining">
-                Total Budget Remaining
-              </fbt>
-            </div>
-            <div>
-              <CoinLogo coin="ogn" />
-              {tokenPrice(listing.depositAvailable)}
-            </div>
-          </div>
+          {listing.multiUnit ? (
+            <MultiUnitCommission listing={listing} />
+          ) : (
+            <SingleUnitCommission listing={listing} />
+          )}
           <div className="row">
             <div>
               <fbt desc="listing.exposure">Listing Exposure</fbt>
             </div>
-            <div></div>
+            <div>
+              <Exposure listing={listing} />
+            </div>
           </div>
         </div>
 

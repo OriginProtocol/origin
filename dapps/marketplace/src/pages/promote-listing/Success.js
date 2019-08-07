@@ -3,7 +3,7 @@ import { fbt } from 'fbt-runtime'
 
 import Link from 'components/Link'
 
-import Exposure from './_Exposure'
+import Exposure from 'components/ListingExposure'
 
 const Success = ({ match, listing }) => (
   <>

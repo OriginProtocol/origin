@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Switch, Route } from 'react-router-dom'
 
+import tokenPrice from 'utils/tokenPrice'
 import LoadingSpinner from 'components/LoadingSpinner'
 
 import withWallet from 'hoc/withWallet'
@@ -19,9 +20,16 @@ const PromoteListing = props => {
 
   useEffect(() => {
     if (props.listing) {
-      setListing(getStateFromListing(props))
+      const listing = getStateFromListing(props)
+      setListing({
+        ...listing,
+        commission: Math.min(
+          props.tokenBalance,
+          listing.commissionPerUnit * listing.unitsAvailable
+        )
+      })
     }
-  }, [props.listing])
+  }, [props.listing, props.tokenBalance])
 
   if (!listing) {
     return <LoadingSpinner />
@@ -29,6 +37,8 @@ const PromoteListing = props => {
 
   const listingProps = {
     listing,
+    listingTokens: tokenPrice(props.listing.deposit),
+    multiUnit: props.listing.multiUnit,
     tokenBalance: props.tokenBalance,
     onChange: listing => setListing(listing)
   }
@@ -37,18 +47,18 @@ const PromoteListing = props => {
     <div className="container create-listing promote-listing">
       <Switch>
         <Route
-          path={`/promote/:listingId/amount`}
+          path="/promote/:listingId/amount"
           render={route => <Amount {...route} {...listingProps} />}
         />
         <Route
-          path={`/promote/:listingId/budget`}
+          path="/promote/:listingId/budget"
           render={route => <Budget {...route} {...listingProps} />}
         />
         <Route
-          path={`/promote/:listingId/success`}
+          path="/promote/:listingId/success"
           render={route => <Success {...route} {...listingProps} />}
         />
-        <Route path={`/promote/:listingId`} component={HowWorks} />
+        <Route path="/promote/:listingId" component={HowWorks} />
       </Switch>
     </div>
   )

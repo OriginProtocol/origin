@@ -66,16 +66,21 @@ class UpdateListing extends Component {
 
     this.setState({ waitFor: 'pending' })
 
-    const { listing, tokenBalance } = this.props
+    const { listing, tokenBalance, listingTokens } = this.props
+    const commission = Number(listing.commission)
+    const existingCommission = Number(listingTokens)
+    let additionalDeposit =
+      tokenBalance >= commission ? commission : tokenBalance
+
+    if (existingCommission > 0) {
+      additionalDeposit = Math.max(0, additionalDeposit - existingCommission)
+    }
 
     updateListing({
       variables: applyListingData(this.props, {
-        listingID: this.props.listing.id,
-        additionalDeposit:
-          tokenBalance >= Number(listing.commission)
-            ? String(listing.commission)
-            : '0',
-        from: this.props.listing.seller.id
+        listingID: listing.id,
+        additionalDeposit: String(additionalDeposit),
+        from: listing.seller.id
       })
     })
   }

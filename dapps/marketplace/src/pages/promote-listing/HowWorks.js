@@ -6,7 +6,10 @@ import Link from 'components/Link'
 const HowWorks = ({ match }) => (
   <>
     <h1>
-      <Link to={'/'} className="back d-md-none" />
+      <Link
+        to={`/listing/${match.params.listingId}`}
+        className="back d-md-none"
+      />
       <fbt desc="PromoteListing.title">Promote Listing</fbt>
     </h1>
     <div className="how-works">

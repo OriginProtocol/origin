@@ -5,18 +5,30 @@ import numberFormat from 'utils/numberFormat'
 
 import Link from 'components/Link'
 import CoinLogo from 'components/CoinLogo'
+import Exposure from 'components/ListingExposure'
 
-import Exposure from './_Exposure'
+import UpdateListing from 'pages/create-listing/mutations/UpdateListing'
 
-const PromoteListingAmount = ({ match, listing, tokenBalance, onChange }) => {
-  const [value, setValue] = useState(String(listing.commissionPerUnit))
+const PromoteListingAmount = ({
+  match,
+  listing,
+  tokenBalance,
+  onChange,
+  multiUnit,
+  listingTokens
+}) => {
+  const { unitsAvailable, commissionPerUnit } = listing
+  const [value, setValue] = useState(String(commissionPerUnit))
   const inputRef = useRef()
   useEffect(() => inputRef.current.focus(), [inputRef])
-  useEffect(() => {
-    setValue(String(listing.commissionPerUnit))
-  }, [listing.commissionPerUnit])
+  useEffect(() => setValue(String(commissionPerUnit)), [commissionPerUnit])
 
-  const unitsAvailable = listing.unitsAvailable
+  const calcCommission = commissionPerUnit => {
+    return {
+      commissionPerUnit,
+      commission: Math.min(tokenBalance, commissionPerUnit * unitsAvailable)
+    }
+  }
 
   return (
     <>
@@ -31,9 +43,11 @@ const PromoteListingAmount = ({ match, listing, tokenBalance, onChange }) => {
         <div className="balance">
           {`OGN Balance: `} <CoinLogo />
           {tokenBalance}
-          <div>{`Units Available: ${unitsAvailable}`}</div>
+          {!multiUnit ? null : (
+            <div>{`Units Available: ${unitsAvailable}`}</div>
+          )}
         </div>
-        <h4>Commission per Unit Sold</h4>
+        <h4>{`Commission${multiUnit ? ' per Unit Sold' : ''}`}</h4>
 
         <div className="input-wrap">
           <input
@@ -46,11 +60,11 @@ const PromoteListingAmount = ({ match, listing, tokenBalance, onChange }) => {
               const amount = e.target.value
               setValue(amount)
               if (!amount) {
-                onChange({ ...listing, commissionPerUnit: 0 })
+                onChange({ ...listing, ...calcCommission(0) })
               } else if (amount.match(/^[0-9]+$/)) {
                 onChange({
                   ...listing,
-                  commissionPerUnit: Number(e.target.value || 0)
+                  ...calcCommission(Number(e.target.value || 0))
                 })
               }
             }}
@@ -62,27 +76,28 @@ const PromoteListingAmount = ({ match, listing, tokenBalance, onChange }) => {
 
         <div
           className="input-range"
-          style={{ '--val': `${listing.commissionPerUnit}%` }}
+          style={{ '--val': `${commissionPerUnit}%` }}
         >
           <input
             type="range"
             min="0"
             max="100"
-            value={listing.commissionPerUnit}
-            onChange={e =>
+            value={commissionPerUnit}
+            onChange={e => {
               onChange({
                 ...listing,
-                commissionPerUnit: Number(e.target.value)
+                ...calcCommission(Number(e.target.value || 0))
               })
-            }
+            }}
           />
         </div>
-
-        <div className="calc">
-          {`${unitsAvailable} units `}&times;{' '}
-          <b>{`${listing.commissionPerUnit} OGN`}</b> ={' '}
-          {`${numberFormat(listing.commissionPerUnit * unitsAvailable)} OGN`}
-        </div>
+        {!multiUnit ? null : (
+          <div className="calc">
+            {`${unitsAvailable} units `}&times;{' '}
+            <b>{`${commissionPerUnit} OGN`}</b> ={' '}
+            {`${numberFormat(commissionPerUnit * unitsAvailable)} OGN`}
+          </div>
+        )}
 
         <div className="exposure">
           {`Listing exposure: `}
@@ -95,12 +110,22 @@ const PromoteListingAmount = ({ match, listing, tokenBalance, onChange }) => {
           >
             Back
           </Link>
-          <Link
-            to={`/promote/${match.params.listingId}/budget`}
-            className="btn btn-primary btn-rounded btn-lg"
-          >
-            Continue
-          </Link>
+          {multiUnit ? (
+            <Link
+              to={`/promote/${match.params.listingId}/budget`}
+              className="btn btn-primary btn-rounded btn-lg"
+            >
+              Continue
+            </Link>
+          ) : (
+            <UpdateListing
+              listing={listing}
+              listingTokens={listingTokens}
+              tokenBalance={tokenBalance}
+              className="btn btn-primary btn-rounded btn-lg"
+              children={fbt('Promote Now', 'promoteListing.promoteNow')}
+            />
+          )}
         </div>
       </div>
     </>
@@ -139,8 +164,11 @@ require('react-styl')(`
         font-size: 14px
         font-weight: 300
       .exposure
+        font-weight: bold
         font-size: 14px
         margin: 1.5rem 0
+        .badge
+          margin-left: 0.375rem
       .input-wrap
         position: relative
         > .ogn
@@ -179,4 +207,5 @@ require('react-styl')(`
           width: 16px
           height: 16px
           border-radius: 50%
+          cursor: pointer
 `)

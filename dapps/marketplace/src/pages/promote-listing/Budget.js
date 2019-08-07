@@ -8,15 +8,18 @@ import CoinLogo from 'components/CoinLogo'
 
 import UpdateListing from 'pages/create-listing/mutations/UpdateListing'
 
-const PromoteListingBudget = ({ match, listing, tokenBalance, onChange }) => {
-  const [value, setValue] = useState(String(listing.commission))
+const PromoteListingBudget = ({
+  match,
+  listing,
+  tokenBalance,
+  onChange,
+  listingTokens
+}) => {
+  const { commission, commissionPerUnit, unitsAvailable } = listing
+  const [value, setValue] = useState(String(commission))
   const inputRef = useRef()
   useEffect(() => inputRef.current.focus(), [inputRef])
-  useEffect(() => {
-    setValue(String(listing.commission))
-  }, [listing.commission])
-
-  const unitsAvailable = listing.unitsAvailable
+  useEffect(() => setValue(String(commission)), [commission])
 
   return (
     <>
@@ -63,7 +66,7 @@ const PromoteListingBudget = ({ match, listing, tokenBalance, onChange }) => {
         </div>
         <div className="calc">
           {`Total commission required to sell ${unitsAvailable} units: ${numberFormat(
-            listing.commissionPerUnit * unitsAvailable
+            commissionPerUnit * unitsAvailable
           )} OGN`}
         </div>
 
@@ -77,6 +80,7 @@ const PromoteListingBudget = ({ match, listing, tokenBalance, onChange }) => {
 
           <UpdateListing
             listing={listing}
+            listingTokens={listingTokens}
             tokenBalance={tokenBalance}
             className="btn btn-primary btn-rounded btn-lg"
             children={fbt('Promote Now', 'promoteListing.promoteNow')}

@@ -379,9 +379,6 @@ require('react-styl')(`
       text-transform: uppercase
       margin-top: 0.75rem
 
-    .badge
-      margin-top: 0.75rem
-
     .gallery
       margin-bottom: 1rem
       .main-pic
