@@ -458,8 +458,7 @@ class Listing {
       totalNumberOfListings: searchResponse.hits.total
     }
     logger.debug('search listings - ', listings)
-    const listingIds = listings.map(listing => listing.id)
-    return { listingIds, listings, stats }
+    return { listings, stats }
   }
 }
 
