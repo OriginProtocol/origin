@@ -157,6 +157,7 @@ services:
       - INDEX_MARKETPLACE=true
       - INDEX_IDENTITY=true
       - INDEX_GROWTH=true
+      - INDEX_PROXY=true
       - TRAIL_BEHIND_BLOCKS=
       - NETWORK=docker
       - NOTIFICATIONS_WEBHOOK=
