@@ -9,7 +9,10 @@ module.exports = {
         email: 'foo@originprotocol.com',
         created_at: new Date(),
         updated_at: new Date()
-      }], {})
+      }],
+      {}
+    )
+
     return queryInterface.bulkInsert('Grant', [
       {
         email: 'foo@originprotocol.com',

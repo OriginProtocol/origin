@@ -10,8 +10,8 @@
   "main": "app/app.js",
   "scripts": {
     "lint": "eslint '**/*.js' && npm run prettier:check",
-    "prettier": "prettier --write *.js \"src/**/*.js\"",
-    "prettier:check": "prettier -c *.js \"src/**/*.js\"",
+    "prettier": "prettier --write *.js \"**/*.js\"",
+    "prettier:check": "prettier -c *.js \"**/*.js\"",
     "migrate": "sequelize db:migrate",
     "seed": "sequelize db:seed:all",
     "start": "per-env",
