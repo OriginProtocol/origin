@@ -32,17 +32,22 @@ const waitFor = timeInMs =>
  * Returns user profile data from the event
  */
 const getUserProfileFromEvent = ({ event, socialNetwork, type }) => {
-  if (socialNetwork !== 'TWITTER') {
-    // TODO: As of now, only twitter is supported
-    logger.error(`Trying to parse event of unknown network: ${socialNetwork}`)
-    return null
+  switch (socialNetwork) {
+    case 'TWITTER': {
+      if (type === 'FOLLOW') {
+        return event.target
+      }
+
+      return event.user
+    }
+
+    case 'TELEGRAM':
+      return event
   }
 
-  if (type === 'FOLLOW') {
-    return event.target
-  }
-
-  return event.user
+  // TODO: As of now, only twitter and telegram are supported
+  logger.error(`Trying to parse event of unknown network: ${socialNetwork}`)
+  return null
 }
 
 /**
@@ -138,7 +143,7 @@ const getAttestation = async ({ identity, identityProxy, socialNetwork }) => {
  * Returns decodedContent (for SHARE) or true (for FOLLOW) if event is what you are looking for, false otherwise
  */
 const isEventValid = ({ socialNetwork, ...args }) => {
-  const validator = EventValidators[args.type.toUpperCase()]
+  const validator = EventValidators[socialNetwork.toUpperCase()]
 
   if (!validator) {
     logger.error(`Trying to parse event of unknown network: ${socialNetwork}`)
