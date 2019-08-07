@@ -15,7 +15,10 @@ const app = require('../../src/app')
 describe('Account HTTP API', () => {
   beforeEach(async () => {
     this.user = await User.create({
-      id: 1,
+      email: 'user@originprotocol.com'
+    })
+
+    this.user2 = await User.create({
       email: 'user@originprotocol.com'
     })
 
@@ -23,7 +26,7 @@ describe('Account HTTP API', () => {
     this.mockApp.use((req, res, next) => {
       req.session = {
         passport: {
-          user: 1
+          user: this.user.id
         },
         twoFA: 'totp'
       }
@@ -33,12 +36,12 @@ describe('Account HTTP API', () => {
   })
 
   afterEach(async () => {
-    await User.destroy({
-      where: {},
+    await Account.destroy({
+      where: {}
     })
 
-    await Account.destroy({
-      where: {},
+    await User.destroy({
+      where: {}
     })
   })
 
@@ -149,7 +152,7 @@ describe('Account HTTP API', () => {
       address = '0x0000000000000000000000000000000000000000'
 
     await Account.create({
-      userId: 2,
+      userId: this.user2.id,
       nickname: nickname,
       address: address
     })
@@ -191,7 +194,7 @@ describe('Account HTTP API', () => {
       address = '0x0000000000000000000000000000000000000000'
 
     const account = await Account.create({
-      userId: 2,
+      userId: this.user2.id,
       nickname: nickname,
       address: address
     })

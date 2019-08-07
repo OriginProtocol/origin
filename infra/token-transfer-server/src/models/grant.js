@@ -27,15 +27,15 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       }
     },
-    {}
+    {
+      tableName: 't3_grant'
+    }
   )
 
   /**
    * Returns the vesting schedule for this grant
    */
   Grant.prototype.vestingSchedule = function() {
-    const now = this.now || moment()
-
     const vestingEventCount = moment(this.end).diff(this.start, this.interval)
     const vestedPerEvent = BigNumber(this.amount).div(vestingEventCount)
     const cliffVestingCount = moment(this.cliff).diff(this.start, this.interval)

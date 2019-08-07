@@ -16,19 +16,19 @@ module.exports = {
         references: { model: 't3_user', key: 'id' }
       },
       start: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: false
       },
       end: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: false
       },
       cliff: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: false
       },
       cancelled: {
-        type: Sequelize.DATE
+        type: Sequelize.DATEONLY
       },
       amount: {
         type: Sequelize.INTEGER,

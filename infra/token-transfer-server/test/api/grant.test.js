@@ -15,19 +15,35 @@ const app = require('../../src/app')
 describe('Grant HTTP API', () => {
   beforeEach(async () => {
     this.user = await User.create({
-      id: 1,
       email: 'user@originprotocol.com',
       otpKey: '123',
       otpVerified: true
     })
 
-    this.grants = [await Grant.create({})]
+    this.grants = [
+      await Grant.create({
+        userId: this.user.id,
+        start: new Date('2018-10-10'),
+        end: new Date('2021-10-10'),
+        cliff: new Date('2019-10-10'),
+        amount: 11125000,
+        interval: 'days'
+      }),
+      await Grant.create({
+        userId: this.user.id,
+        start: new Date('2020-05-05'),
+        end: new Date('2024-05-05'),
+        cliff: new Date('2021-05-05'),
+        amount: 10000000,
+        interval: 'days'
+      })
+    ]
 
     this.mockApp = express()
     this.mockApp.use((req, res, next) => {
       req.session = {
         passport: {
-          user: 1
+          user: this.user.id
         },
         twoFA: 'totp'
       }
@@ -47,7 +63,11 @@ describe('Grant HTTP API', () => {
     })
   })
 
-  it('should return the grants', async () => {})
+  it('should return the grants', async () => {
+    const response = await request(this.mockApp).get('/api/grants').expect(200)
+
+    expect(response.body.length).to.equal(2)
+  })
 
   it('should not return grants for other users', async () => {})
 })

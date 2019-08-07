@@ -9,15 +9,9 @@ module.exports = {
     return queryInterface
       .createTable(tableName, {
         id: {
-          allowNull: false,
           autoIncrement: true,
           primaryKey: true,
           type: Sequelize.INTEGER
-        },
-        user_id: {
-          allowNull: false,
-          type: Sequelize.INTEGER,
-          references: { model: 't3_user', key: 'id' }
         },
         grant_id: {
           allowNull: false,

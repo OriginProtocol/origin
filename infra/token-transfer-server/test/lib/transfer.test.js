@@ -42,15 +42,11 @@ class TokenMock {
 }
 
 describe('Transfer token lib', () => {
-  const email = 'cryptopup@originprotocol.com'
-  const grantId = 1
-  const userId = 1
   const ip = '127.0.0.1'
   const networkId = 999
   const fromAddress = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
   const toAddress = '0xf17f52151ebef6c7334fad080c5704d77216b732'
   const tokenMock = new TokenMock(networkId, fromAddress, toAddress)
-  let grant, user
 
   beforeEach(async () => {
     // Wipe database before each test.
@@ -61,33 +57,25 @@ describe('Transfer token lib', () => {
     const events = await Event.findAll()
     expect(events.length).to.equal(0)
 
-    grant = new Grant({
-      email: email,
-      grantedAt: '2014-01-01 00:00:00',
-      amount: 1000,
-      totalMonths: 48,
-      cliffMonths: 12,
-      vested: 1000,
-      transferred: 0
+    this.user = await User.create({
+      email: 'user@originprotocol.com',
+      otpKey: '123',
+      otpVerified: true
     })
-    await grant.save()
-    await grant.reload()
-    expect(grant.id).to.equal(grantId)
-
-    user = new User({
-      id: userId,
-      email: 'foo@bar.com'
+    this.grant = await Grant.create({
+      userId: this.user.id,
+      start: new Date('2018-10-10'),
+      end: new Date('2021-10-10'),
+      cliff: new Date('2019-10-10'),
+      amount: 11125000,
+      interval: 'days'
     })
-    await user.save()
-    await user.reload()
-    expect(user.id).to.equal(userId)
   })
 
-  it('Should enqueue a transfer', async () => {
+  it('should enqueue a transfer', async () => {
     const amount = 1000
     const transferId = await enqueueTransfer(
-      user.id,
-      grant.id,
+      this.grant.id,
       toAddress,
       amount,
       ip
@@ -95,9 +83,9 @@ describe('Transfer token lib', () => {
 
     // Check a transfer row was created and populated as expected.
     const transfer = await Transfer.findOne({ where: { id: transferId } })
+
     expect(transfer).to.be.an('object')
-    expect(transfer.userId).to.equal(user.id)
-    expect(transfer.grantId).to.equal(grant.id)
+    expect(transfer.grantId).to.equal(this.grant.id)
     expect(transfer.toAddress).to.equal(toAddress.toLowerCase())
     expect(transfer.fromAddress).to.be.null
     expect(parseInt(transfer.amount)).to.equal(amount)
@@ -106,12 +94,11 @@ describe('Transfer token lib', () => {
     expect(transfer.data).to.be.null
   })
 
-  it('Should execute a transfer', async () => {
+  it('should execute a transfer', async () => {
     // Enqueue and execute a transfer.
     const amount = 1000
     const transferId = await enqueueTransfer(
-      user.id,
-      grant.id,
+      this.grant.id,
       toAddress,
       amount,
       ip
@@ -127,17 +114,5 @@ describe('Transfer token lib', () => {
     // Check the transfer row was updated as expected.
     transfer.reload()
     expect(transfer.status).to.equal(enums.TransferStatuses.Success)
-  })
-
-  it('should reject a request with a bad grant ID', async () => {
-    await expect(
-      enqueueTransfer(userId, grantId + 1, toAddress, 1, ip)
-    ).to.be.rejectedWith('Could not find specified grant id')
-  })
-
-  it('should reject a request with a bad user ID', async () => {
-    await expect(
-      enqueueTransfer(userId + 1, grantId, toAddress, 1, ip)
-    ).to.be.rejectedWith('No user found with id')
   })
 })

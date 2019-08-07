@@ -15,14 +15,12 @@ const app = require('../../src/app')
 describe('Login HTTP API', () => {
   beforeEach(async () => {
     this.user = await User.create({
-      id: 1,
       email: 'user@originprotocol.com',
       otpKey: '123',
       otpVerified: true
     })
 
     this.user2 = await User.create({
-      id: 2,
       email: 'user2@originprotocol.com',
       otpKey: '123'
     })
@@ -31,7 +29,7 @@ describe('Login HTTP API', () => {
     this.mockApp.use((req, res, next) => {
       req.session = {
         passport: {
-          user: 1
+          user: this.user.id
         },
         twoFA: 'totp'
       }
@@ -43,7 +41,7 @@ describe('Login HTTP API', () => {
   afterEach(() => {
     // Cleanup
     User.destroy({
-      where: {},
+      where: {}
     })
   })
 
