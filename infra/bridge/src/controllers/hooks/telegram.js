@@ -48,8 +48,8 @@ router.post('/', (req, res) => {
 
       followCount++
 
-      // Note: Username is optional in Telegram. 
-      // ID is returned as number, We don't want to run into the big number issues 
+      // Note: Username is optional in Telegram.
+      // ID is returned as number, We don't want to run into the big number issues
       // So use id only if username is not set
       const key = `telegram/follow/${member.username || member.id}`
       redisBatch.set(key, JSON.stringify(member), 'EX', 60 * 30)

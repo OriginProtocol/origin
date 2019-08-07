@@ -106,7 +106,7 @@ class TelegramAttestation extends Component {
               this.setState({ error: false, loading: true })
               generateCode({
                 variables: {
-                  phone: `${this.state.prefix}${this.state.phone}`
+                  phone: `+${this.state.prefix}${this.state.phone}`
                 }
               })
             }}
@@ -226,7 +226,7 @@ class TelegramAttestation extends Component {
                 return
               }
 
-              if (trimmedCode.length !== 6 || isNaN(trimmedCode)) {
+              if (isNaN(trimmedCode)) {
                 this.setState({
                   error: 'Verification code should be a 6 digit number',
                   loading: false
@@ -237,7 +237,7 @@ class TelegramAttestation extends Component {
               verifyCode({
                 variables: {
                   identity: this.props.wallet,
-                  phone: `${this.state.prefix}${this.state.phone}`,
+                  phone: `+${this.state.prefix}${this.state.phone}`,
                   code: this.state.code
                 }
               })
