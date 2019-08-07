@@ -128,7 +128,7 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
  */
 router.get('/twitter', (req, res) => {
   res.status(200).send({
-    response_token: `sha256=${getCRCToken(req.query.crc_token)}`
+    response_token: getCRCToken(req.query.crc_token)
   })
 })
 
@@ -145,7 +145,7 @@ function getCRCToken(payload) {
     .update(payload)
     .digest('base64')
 
-  return hmac
+  return `sha256=${hmac}`
 }
 
 /**
