@@ -1,5 +1,6 @@
 const elasticsearch = require('elasticsearch')
 const scoring = require('../lib/scoring')
+const logger = require('../listener/logger')
 /*
   Module to interface with ElasticSearch.
  */
@@ -14,32 +15,37 @@ const client = new elasticsearch.Client({
 const LISTINGS_INDEX = 'listings'
 const LISTINGS_TYPE = 'listing'
 
+
+/**
+ * Pulls exchange rates from redis
+ * @param {Array<string>} currencies - Currency values, token-XYZ/fiat-XYZ
+ * @returns {Object} - Requested exchange rates, curency as key and rate as value
+ */
 const getExchangeRates = async currencies => {
   try {
     // lazy import to avoid event-listener depending on redis
     // this is only used in discovery
     const { getAsync } = require('../lib/redis')
     const exchangeRates = {}
+    // TODO use redis batch features instead of promise.All
     const promises = currencies.map(currency => {
-      return new Promise(async (resolve, reject) => {
-        try {
-          const splitCurrency = currency.split('-')
-          const resolvedCurrency = splitCurrency[1]
-          const rate = await getAsync(`${resolvedCurrency}-USD_price`)
-          resolve({ currency: currency, rate: rate })
-        } catch (e) {
-          reject(e)
-        }
-      })
+      // setting these two currencies to 1, to avoid redundant calls.
+      if(currency === 'fiat-USD' || currency === 'token-DAI'){
+        return '1'
+      } else {
+        const splitCurrency = currency.split('-')
+        const resolvedCurrency = splitCurrency[1]
+        return getAsync(`${resolvedCurrency}-USD_price`)
+      }
     })
     const result = await Promise.all(promises)
-    result.forEach(r => {
-      exchangeRates[r.currency] = r.rate
+    result.forEach((r, i) => {
+      exchangeRates[currencies[i]] = r
     })
-    // console.log('exchangeRates - ', exchangeRates)
+    logger.debug('Exchange Rates - ', exchangeRates)
     return exchangeRates
   } catch (e) {
-    console.error('Error retrieving exchange rates from redis', e)
+    logger.error('Error retrieving exchange rates from redis', e)
   }
 }
 
@@ -168,14 +174,15 @@ class Listing {
   /**
    * Searches for listings.
    * @param {string} query - The search query.
-   * @param {object} sort - {target: String, order: String}
+   * @param {string} sort - The target value to sort on (can be object notation)
+   * @param {string} order - The order of the sort
    * @param {array} filters - Array of filter objects
    * @param {integer} numberOfItems - number of items to display per page
    * @param {integer} offset - what page to return results from
    * @throws Throws an error if the search operation failed.
    * @returns A list of listings (can be empty).
    */
-  static async search(query, sort, filters, numberOfItems, offset) {
+  static async search(query, sort, order, filters, numberOfItems, offset) {
     const currencies = [
       'token-ETH',
       'token-DAI',
@@ -337,38 +344,50 @@ class Listing {
     }
 
     // sorting
+    /**
+     * Creates sort query
+     * @returns {Object} - Sort query for elastic search
+     */
     const getSortQuery = () => {
-      // sort  returns as [Object null prototype] {target:, order: } not sure why
-      // the following code converts it to a regular object
-      const resolvedSort = JSON.parse(JSON.stringify(sort))[0]
-      const { target, order } = resolvedSort
-      // if target and order are set, return a sort
+      const sortWhiteList = ['price.amount']
+      const orderWhiteList = ['asc', 'desc']
+      // if sort and order are set, BS  return a sort
       // otherwise return empty sort to skip
-      if (target && order) {
-        switch (target) {
-          case 'price.amount':
-            return {
-              _script: {
-                type: 'number',
-                script: {
-                  lang: 'painless',
-                  source: `Float.parseFloat(params._source.${target}) * Float.parseFloat(params.exchangeRates[params._source.price.currency.id])`,
-                  params: {
-                    exchangeRates: exchangeRates
+      if (sort.length > 0 && order.length > 0) {
+        try {
+          // check that sort and order are approved values
+          if(sortWhiteList.includes(sort) && orderWhiteList.includes(order)){
+            switch (sort) {
+              // script based sorting specifically for calculating price based on exchange rate
+              case 'price.amount':
+                return {
+                  _script: {
+                    type: 'number',
+                    script: {
+                      lang: 'painless',
+                      source: `Float.parseFloat(params._source.${sort}) * Float.parseFloat(params.exchangeRates[params._source.price.currency.id])`,
+                      params: {
+                        exchangeRates: exchangeRates
+                      }
+                    },
+                    order: order
                   }
-                },
-                order: order
-              }
-            }
-          default:
-            // this default is for non script based sorting, should satisfy most cases
-            return [
-              {
-                [target]: {
-                  order: order
                 }
-              }
-            ]
+              default:
+                // this default is for non script based sorting, should satisfy most cases
+                return [
+                  {
+                    [sort]: {
+                      order: order
+                    }
+                  }
+                ]
+            }
+          } else {
+            throw new Error(`Sort variables are not whitelisted - sort = ${sort}, order = ${order}`)            
+          }
+        } catch(e){
+          logger.error(e)
         }
       } else {
         return []
@@ -437,8 +456,7 @@ class Listing {
       minPrice: minPrice || 0,
       totalNumberOfListings: searchResponse.hits.total
     }
-    // debug
-    // console.log('listings - ', listings)
+    logger.debug('search listings - ', listings)
     const listingIds = listings.map(listing => listing.id)
     return { listingIds, listings, stats }
   }

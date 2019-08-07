@@ -15,6 +15,7 @@ const resolvers = {
       const { listings, listingIds, stats } = await search.Listing.search(
         args.searchQuery,
         args.sort,
+        args.order,
         args.filters,
         args.page.numberOfItems,
         args.page.offset

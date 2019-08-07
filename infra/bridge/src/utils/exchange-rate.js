@@ -9,7 +9,8 @@ const currencies = [
   'ETH-USD',
   // DAI is disabled because coingecko doesn't support it
   // however DAI is pegged to USD so maybe we could just use 1
-  // or call a different API to get it.
+  // or call a different API to get it. Currently pegged to 1 in 
+  // search.js
   // 'DAI-USD',
   'KRW-USD',
   'SGD-USD',
@@ -17,12 +18,10 @@ const currencies = [
   'EUR-USD',
   'JPY-USD',
   'CNY-USD',
-  'USD-USD'
 ]
 
 function startExchangeRatePolling() {
   // TODO: Store the markets to be polled somewhere or in ENV and start poll with that.
-  // pollExchangeRate('ETH-USD')
   pollExchangeRate(currencies)
 }
 
@@ -36,12 +35,14 @@ async function pollExchangeRate(markets) {
 }
 
 /**
- * Fetch exchange rate from remote URL
- * @ param markets - Array | String - Can be single or multiple markets
+ * Fetch exchange rate from coingecko
+ * Alternatively https://api.cryptonator.com/api/ticker/${market}
+ * can be used but the data payload is different and this function would need
+ * updating
+ * @param {string|Array<string>} markets - Can be single or multiple markets
  */
 async function fetchExchangeRate(markets) {
   try {
-    // const exchangeURL = `https://api.cryptonator.com/api/ticker/${market}`
     const exchangeURL = `https://api.coingecko.com/api/v3/exchange_rates`
     const response = await request.get(exchangeURL)
     if (!response.ok) {
@@ -51,12 +52,11 @@ async function fetchExchangeRate(markets) {
     const rates = response.body.rates
     if (rates) {
       if (Array.isArray(markets)) {
-        const result = markets.map(market => {
-          return parseAndSetRateData(market, rates)
-        })
-        return result
+        return markets.map(market => parseAndSetRateData(market, rates))
       } else if (typeof markets === 'string') {
         return parseAndSetRateData(markets, rates)
+      } else {
+        throw new Error('Unexpected type for markets')
       }
     }
   } catch (e) {

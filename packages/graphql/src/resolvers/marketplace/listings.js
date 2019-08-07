@@ -15,11 +15,12 @@ function atob(input) {
 }
 
 const discoveryQuery = `
-query Search($search: String, $filters: [ListingFilter!], $sort: [ListingSort]) {
+query Search($search: String, $filters: [ListingFilter!], $sort: String, $order: String) {
   listings(
     searchQuery: $search
     filters: $filters,
     sort: $sort,
+    order: $order,
     page: { offset: 0, numberOfItems: 1000 }
   ) {
     numberOfItems
@@ -27,7 +28,7 @@ query Search($search: String, $filters: [ListingFilter!], $sort: [ListingSort]) 
   }
 }`
 
-async function searchIds(search, sort, filters) {
+async function searchIds(search, sort, order, filters) {
   const variables = {}
   if (search) {
     variables.search = search
@@ -35,9 +36,11 @@ async function searchIds(search, sort, filters) {
   if (filters) {
     variables.filters = filters
   }
-
   if (sort) {
     variables.sort = sort
+  }
+  if (order) {
+    variables.order = order
   }
   const searchResult = await new Promise(resolve => {
     fetch(contracts.discovery, {
@@ -81,8 +84,6 @@ async function resultsFromIds({ after, ids, first, totalCount, fields }) {
   }
   const firstNodeId = ids[0] || 0
   const lastNodeId = ids[ids.length - 1] || 0
-  // debug
-  // console.log('nodes',nodes)
 
   return {
     totalCount,
@@ -134,7 +135,7 @@ export async function listingsBySeller(
 
 export default async function listings(
   contract,
-  { first = 10, after, sort = [], search, filters = [], listingIds = [] }
+  { first = 10, after, sort, order, search, filters = [], listingIds = [] }
 ) {
   if (!contract) {
     return null
@@ -146,7 +147,7 @@ export default async function listings(
 
   if (contracts.discovery) {
     try {
-      const discoveryResult = await searchIds(search, sort, filters)
+      const discoveryResult = await searchIds(search, sort, order, filters)
       ids = discoveryResult.ids
       totalCount = ids.length
     } catch (err) {
@@ -155,7 +156,7 @@ export default async function listings(
     }
   }
   if (!contracts.discovery || discoveryError) {
-    const decentralizedResults = await allIds({ contract, sort })
+    const decentralizedResults = await allIds({ contract})
     ids = decentralizedResults.ids
     totalCount = decentralizedResults.totalCount
   }

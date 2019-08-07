@@ -213,15 +213,6 @@ const typeDefs = gql`
   }
 
   #
-  # Sorting
-  #
-
-  input ListingSort {
-    target: String!
-    order: String!
-  }
-
-  #
   # Moderation
   #
 
@@ -237,7 +228,8 @@ const typeDefs = gql`
   type Query {
     listings(
       searchQuery: String
-      sort: [ListingSort]
+      sort: String
+      order: String
       filters: [ListingFilter!]
       page: Page!
     ): ListingPage

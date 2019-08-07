@@ -5,7 +5,8 @@ export default gql`
   query AllListings(
     $first: Int
     $after: String
-    $sort: [ListingSortInput]
+    $sort: String
+    $order: String
     $search: String
     $filters: [ListingFilterInput!]
     $listingIds: [String]

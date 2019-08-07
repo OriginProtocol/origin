@@ -40,14 +40,8 @@ class Listings extends Component {
     this.state = {
       first: 12,
       search: getStateFromQuery(props),
-      // currently sort is activated through hardcoding the sort state
-      // order = 'asc' or 'desc'
-      // I have made it possible to sort by other values but its not tested
-      // target: 'price.amount' is the current goal
-      // this will be updated to be user set when the front end is completed
-      // graphql is expecting string values so to disable use empty strings
-      sort: { target: '', order: '' }
-      // sort: { target: 'price.amount', order: 'asc' }
+      sort: 'price.amount', 
+      order: 'asc'
     }
   }
 
@@ -129,7 +123,7 @@ class Listings extends Component {
     const filters = [...getFilters(this.state.search), ...creatorFilters]
 
     const vars = {
-      ...pick(this.state, 'first', 'sort'),
+      ...pick(this.state, 'first', 'sort', 'order'),
       search: this.state.search.searchInput,
       filters: filters.map(filter => omit(filter, '__typename'))
     }
