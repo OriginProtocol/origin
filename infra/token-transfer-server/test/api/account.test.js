@@ -12,7 +12,7 @@ process.env.SESSION_SECRET = 'test'
 
 const app = require('../../src/app')
 
-describe('account api', () => {
+describe('account http api', () => {
   beforeEach(async () => {
     this.user = await User.create({
       id: 1,
@@ -22,20 +22,24 @@ describe('account api', () => {
     this.mockApp = express()
     this.mockApp.use((req, res, next) => {
       req.session = {
-       user: this.user.get({ plain: true }),
+        passport: {
+          user: 1
+        },
         twoFA: 'totp'
       }
       next()
     })
     this.mockApp.use(app)
+  })
 
+  afterEach(async () => {
     // Cleanup
-    User.destroy({
+    await User.destroy({
       where: {},
       truncate: true
     })
 
-    Account.destroy({
+    await Account.destroy({
       where: {},
       truncate: true
     })

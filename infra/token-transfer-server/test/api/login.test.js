@@ -21,17 +21,26 @@ describe('account api', () => {
       otpVerified: true
     })
 
+    this.user2 = await User.create({
+      id: 2,
+      email: 'user2@originprotocol.com',
+      otpKey: '123'
+    })
+
     this.mockApp = express()
     this.mockApp.use((req, res, next) => {
       req.session = {
-        user: this.user.get({ plain: true }),
-        email: 'user@originprotocol.com',
+        passport: {
+          user: 1
+        },
         twoFA: 'totp'
       }
       next()
     })
     this.mockApp.use(app)
+  })
 
+  afterEach(() => {
     // Cleanup
     User.destroy({
       where: {},
