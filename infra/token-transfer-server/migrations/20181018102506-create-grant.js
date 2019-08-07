@@ -1,15 +1,19 @@
 'use strict'
 
+const tableName = 't3_grant'
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Grant', {
+    await queryInterface.createTable(tableName, {
       id: {
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
       user_id: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: { model: 't3_user', key: 'id' }
       },
       start: {
         type: Sequelize.DATE,
@@ -52,9 +56,8 @@ module.exports = {
         type: Sequelize.DATE
       }
     })
-    return queryInterface.addIndex('Grant', { fields: ['user_id'] })
   },
   down: queryInterface => {
-    return queryInterface.dropTable('Grant')
+    return queryInterface.dropTable(tableName)
   }
 }
