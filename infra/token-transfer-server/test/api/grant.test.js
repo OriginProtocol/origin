@@ -64,7 +64,9 @@ describe('Grant HTTP API', () => {
   })
 
   it('should return the grants', async () => {
-    const response = await request(this.mockApp).get('/api/grants').expect(200)
+    const response = await request(this.mockApp)
+      .get('/api/grants')
+      .expect(200)
 
     expect(response.body.length).to.equal(2)
   })
