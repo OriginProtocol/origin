@@ -19,7 +19,7 @@ describe('Account HTTP API', () => {
     })
 
     this.user2 = await User.create({
-      email: 'user@originprotocol.com'
+      email: 'user2@originprotocol.com'
     })
 
     this.mockApp = express()
