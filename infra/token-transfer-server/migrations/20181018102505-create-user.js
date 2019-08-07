@@ -4,7 +4,6 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('t3_user', {
       id: {
-        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
@@ -18,6 +17,9 @@ module.exports = {
       otp_key: {
         type: Sequelize.STRING
       },
+      otp_verified: {
+        type: Sequelize.BOOLEAN
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
@@ -28,7 +30,7 @@ module.exports = {
       }
     })
   },
-  down: (queryInterface) => {
+  down: queryInterface => {
     return queryInterface.dropTable('t3_user')
   }
 }

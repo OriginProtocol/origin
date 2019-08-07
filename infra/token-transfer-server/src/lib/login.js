@@ -6,7 +6,7 @@ const logger = require('../logger')
  */
 function ensureLoggedIn(req, res, next) {
   if (!req.user) {
-    logger.debug('Authentication failed. No user in session.')
+    logger.debug('Authentication failed.')
     res.status(401)
     return res.send('This action requires you to login.')
   }

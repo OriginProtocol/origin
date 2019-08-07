@@ -5,7 +5,7 @@ const {
   GRANT_TRANSFER_FAILED,
   GRANT_TRANSFER_REQUEST
 } = require('../constants/events')
-const { Event, Grant, Transfer, User, sequelize } = require('../models')
+const { Event, Grant, Transfer, sequelize } = require('../models')
 const enums = require('../enums')
 const logger = require('../logger')
 
@@ -25,27 +25,15 @@ const ConfirmationTimeoutSec = 20 * 60 * 60
  * @returns {Promise<void>}
  * @private
  */
-async function _checkTransferRequest(userId, grantId, amount, transfer = null) {
-  // Check the user exists.
-  const user = await User.findOne({
-    where: { id: userId }
-  })
-  if (!user) {
-    throw new Error(`No user found with id ${userId}`)
-  }
-
+async function _checkTransferRequest(grantId, amount, transfer = null) {
   // Load the grant and check there are enough tokens available to fullfill the transfer request.
   const grant = await Grant.findOne({
     where: {
       id: grantId
-      // FIXME(franck): add this condition after changing grant table to have userId
-      //userId
     }
   })
   if (!grant) {
-    throw new Error(
-      `Could not find specified grant id ${grantId} for user ${user.email}`
-    )
+    throw new Error(`Could not find specified grant id ${grantId}`)
   }
 
   // TODO(franck/tom): Replace with a call to the logic for calculating tokens available.
@@ -53,12 +41,14 @@ async function _checkTransferRequest(userId, grantId, amount, transfer = null) {
   const placeholderAvailable = () => {
     return grant.amount
   }
-  const available = placeholderAvailable(userId, grantId, transfer)
+  const available = placeholderAvailable(grantId, transfer)
   if (amount > available) {
     throw new RangeError(
       `Amount of ${amount} OGN exceeds the ${available} available for grant ${grantId}`
     )
   }
+
+  return grant
 }
 
 /**
@@ -69,8 +59,8 @@ async function _checkTransferRequest(userId, grantId, amount, transfer = null) {
  * @param amount
  * @returns {Promise<integer>} Id of the transfer request.
  */
-async function enqueueTransfer(userId, grantId, address, amount, ip) {
-  await _checkTransferRequest(userId, grantId, amount)
+async function enqueueTransfer(grantId, address, amount, ip) {
+  const grant = await _checkTransferRequest(grantId, amount)
 
   // Enqueue the request by inserting a row in the transfer table.
   // It will get picked up asynchronously by the offline job that processes transfers.
@@ -79,16 +69,15 @@ async function enqueueTransfer(userId, grantId, address, amount, ip) {
   const txn = await sequelize.transaction()
   try {
     transfer = await Transfer.create({
-      grantId,
-      userId,
+      grantId: grant.id,
       status: enums.TransferStatuses.Enqueued,
       toAddress: address.toLowerCase(),
       amount,
       currency: 'OGN' // For now we only support OGN.
     })
     await Event.create({
-      userId,
-      grantId,
+      userId: grant.userId,
+      grantId: grant.id,
       action: GRANT_TRANSFER_REQUEST,
       data: JSON.stringify({
         transferId: transfer.id,
@@ -118,8 +107,7 @@ async function enqueueTransfer(userId, grantId, address, amount, ip) {
 async function executeTransfer(transfer, opts) {
   const { networkId, tokenMock } = opts
 
-  await _checkTransferRequest(
-    transfer.userId,
+  const grant = await _checkTransferRequest(
     transfer.grantId,
     transfer.amount,
     transfer
@@ -173,8 +161,8 @@ async function executeTransfer(transfer, opts) {
   try {
     await transfer.update({ status: transferStatus })
     const event = {
-      userId: transfer.userId,
-      grantId: transfer.grantId,
+      userId: grant.userId,
+      grantId: grant.id,
       action: eventAction,
       data: JSON.stringify({
         transferId: transfer.id,

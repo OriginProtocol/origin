@@ -12,30 +12,36 @@ process.env.SESSION_SECRET = 'test'
 
 const app = require('../../src/app')
 
-describe('account api', () => {
+describe('Login HTTP API', () => {
   beforeEach(async () => {
     this.user = await User.create({
-      id: 1,
       email: 'user@originprotocol.com',
       otpKey: '123',
       otpVerified: true
     })
 
+    this.user2 = await User.create({
+      email: 'user2@originprotocol.com',
+      otpKey: '123'
+    })
+
     this.mockApp = express()
     this.mockApp.use((req, res, next) => {
       req.session = {
-        user: this.user.get({ plain: true }),
-        email: 'user@originprotocol.com',
+        passport: {
+          user: this.user.id
+        },
         twoFA: 'totp'
       }
       next()
     })
     this.mockApp.use(app)
+  })
 
+  afterEach(() => {
     // Cleanup
     User.destroy({
-      where: {},
-      truncate: true
+      where: {}
     })
   })
 

@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     'User',
     {
-      id: { type: DataTypes.INTEGER, primaryKey: true },
+      id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
       // Email address of the user.
       email: DataTypes.STRING,
       // OTP secret key, stored encrypted.

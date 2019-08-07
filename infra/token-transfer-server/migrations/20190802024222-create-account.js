@@ -1,17 +1,19 @@
 'use strict'
 
+const tableName = 't3_account'
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('t3_account', {
+    return queryInterface.createTable(tableName, {
       id: {
-        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
       user_id: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: { model: 't3_user', key: 'id' }
       },
       nickname: {
         allowNull: false,
@@ -30,9 +32,8 @@ module.exports = {
         type: Sequelize.DATE
       }
     })
-    .then(() => queryInterface.addIndex('t3_account', ['user_id']))
   },
-  down: (queryInterface ) => {
-    return queryInterface.dropTable('t3_account')
+  down: queryInterface => {
+    return queryInterface.dropTable(tableName)
   }
 }

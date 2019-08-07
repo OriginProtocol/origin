@@ -12,32 +12,36 @@ process.env.SESSION_SECRET = 'test'
 
 const app = require('../../src/app')
 
-describe('account api', () => {
+describe('Account HTTP API', () => {
   beforeEach(async () => {
     this.user = await User.create({
-      id: 1,
       email: 'user@originprotocol.com'
+    })
+
+    this.user2 = await User.create({
+      email: 'user2@originprotocol.com'
     })
 
     this.mockApp = express()
     this.mockApp.use((req, res, next) => {
       req.session = {
-       user: this.user.get({ plain: true }),
+        passport: {
+          user: this.user.id
+        },
         twoFA: 'totp'
       }
       next()
     })
     this.mockApp.use(app)
+  })
 
-    // Cleanup
-    User.destroy({
-      where: {},
-      truncate: true
+  afterEach(async () => {
+    await Account.destroy({
+      where: {}
     })
 
-    Account.destroy({
-      where: {},
-      truncate: true
+    await User.destroy({
+      where: {}
     })
   })
 
@@ -148,7 +152,7 @@ describe('account api', () => {
       address = '0x0000000000000000000000000000000000000000'
 
     await Account.create({
-      userId: 2,
+      userId: this.user2.id,
       nickname: nickname,
       address: address
     })
@@ -160,11 +164,9 @@ describe('account api', () => {
     expect(response.body.length).to.equal(0)
   })
 
-  it('should edit an account', async () => {
-  })
+  it('should edit an account', async () => {})
 
-  it('should not edit other users account', async () => {
-  })
+  it('should not edit other users account', async () => {})
 
   it('should delete an account', async () => {
     const nickname = 'test',
@@ -192,7 +194,7 @@ describe('account api', () => {
       address = '0x0000000000000000000000000000000000000000'
 
     const account = await Account.create({
-      userId: 2,
+      userId: this.user2.id,
       nickname: nickname,
       address: address
     })
