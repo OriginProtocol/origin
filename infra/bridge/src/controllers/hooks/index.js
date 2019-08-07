@@ -127,25 +127,59 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
  * Webhook Authorization
  */
 router.get('/twitter', (req, res) => {
+  res.status(200).send({
+    response_token: getCRCToken(req.query.crc_token)
+  })
+})
+
+/**
+ * Returns the hash signature to be used for authorization
+ */
+function getCRCToken(payload) {
   const hmac = crypto
     .createHmac(
       'sha256',
       process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET ||
         process.env.TWITTER_CONSUMER_SECRET
     )
-    .update(req.query.crc_token)
+    .update(payload)
     .digest('base64')
 
-  res.status(200).send({
-    response_token: `sha256=${hmac}`
-  })
-})
+  return `sha256=${hmac}`
+}
+
+/**
+ * Validates the request signature and confirms that
+ * it is from Twitter
+ * @param {Request} req
+ */
+function verifyRequestSignature(req) {
+  const sign = req.headers['x-twitter-webhooks-signature']
+  const token = getCRCToken(JSON.stringify(req.body))
+  logger.debug(`sign:${sign} token:${token}`)
+
+  // Disabling this temporarily for #2883
+  // // Using `.timingSafeEqual` for comparison to avoid timing attacks
+  // const valid = crypto.timingSafeEqual(
+  //  Buffer.from(sign, 'utf-8'),
+  //  Buffer.from(token, 'utf-8')
+  // )
+
+  // return valid
+
+  return true
+}
 
 /**
  * Twitter posts events to this endpoint
  * Should always return 200 with no response
  */
 router.post('/twitter', (req, res) => {
+  if (!verifyRequestSignature(req)) {
+    return res.status(403).send({
+      errors: ['Unauthorized']
+    })
+  }
   let followCount = 0
 
   // Use redis batch for parallelization (without atomicity)

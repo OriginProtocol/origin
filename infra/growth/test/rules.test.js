@@ -2,7 +2,8 @@ const chai = require('chai')
 const expect = chai.expect
 
 const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
-const { CampaignRules, SocialShareRule } = require('../src/resources/rules')
+const { CampaignRules } = require('../src/resources/rules')
+const { SocialShareRule } = require('../src/resources/rules/socialShareRule')
 const { tokenToNaturalUnits } = require('../src/util/token')
 
 
