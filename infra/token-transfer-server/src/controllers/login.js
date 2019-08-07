@@ -85,9 +85,7 @@ router.post(
     logger.debug('/verify_email_token called')
     res.json({
       email: req.user.email,
-      otpReady: Boolean(
-        req.user.otpKey && req.user.otpVerified
-      )
+      otpReady: Boolean(req.user.otpKey && req.user.otpVerified)
     })
   }
 )

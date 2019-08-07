@@ -12,7 +12,7 @@ process.env.SESSION_SECRET = 'test'
 
 const app = require('../../src/app')
 
-describe('account api', () => {
+describe('Login HTTP API', () => {
   beforeEach(async () => {
     this.user = await User.create({
       id: 1,
@@ -44,7 +44,6 @@ describe('account api', () => {
     // Cleanup
     User.destroy({
       where: {},
-      truncate: true
     })
   })
 

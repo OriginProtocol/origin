@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   const Grant = sequelize.define(
     'Grant',
     {
+      id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
       userId: { type: DataTypes.INTEGER, allowNull: false },
       start: { type: DataTypes.DATE, allowNull: false },
       end: { type: DataTypes.DATE, allowNull: false },
@@ -40,7 +41,9 @@ module.exports = (sequelize, DataTypes) => {
     const cliffVestingCount = moment(this.cliff).diff(this.start, this.interval)
     const cliffVestAmount = vestedPerEvent.times(cliffVestingCount)
     const remainingVestingCount = vestingEventCount - cliffVestingCount
-    const remainingVestingAmounts = Array(remainingVestingCount).fill(vestedPerEvent)
+    const remainingVestingAmounts = Array(remainingVestingCount).fill(
+      vestedPerEvent
+    )
 
     return [cliffVestAmount, ...remainingVestingAmounts]
   }

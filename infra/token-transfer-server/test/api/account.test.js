@@ -12,7 +12,7 @@ process.env.SESSION_SECRET = 'test'
 
 const app = require('../../src/app')
 
-describe('account http api', () => {
+describe('Account HTTP API', () => {
   beforeEach(async () => {
     this.user = await User.create({
       id: 1,
@@ -33,15 +33,12 @@ describe('account http api', () => {
   })
 
   afterEach(async () => {
-    // Cleanup
     await User.destroy({
       where: {},
-      truncate: true
     })
 
     await Account.destroy({
       where: {},
-      truncate: true
     })
   })
 
@@ -164,11 +161,9 @@ describe('account http api', () => {
     expect(response.body.length).to.equal(0)
   })
 
-  it('should edit an account', async () => {
-  })
+  it('should edit an account', async () => {})
 
-  it('should not edit other users account', async () => {
-  })
+  it('should not edit other users account', async () => {})
 
   it('should delete an account', async () => {
     const nickname = 'test',

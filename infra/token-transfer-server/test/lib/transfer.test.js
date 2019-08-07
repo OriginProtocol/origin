@@ -9,7 +9,6 @@ const { enqueueTransfer, executeTransfer } = require('../../src/lib/transfer')
 const { Event, Grant, Transfer, User, sequelize } = require('../../src/models')
 const enums = require('../../src/enums')
 
-
 // Mock for the Token class in the @origin/token package.
 class TokenMock {
   constructor(networkId, fromAddress, toAddress) {
@@ -31,7 +30,10 @@ class TokenMock {
   }
 
   async waitForTxConfirmation(txHash) {
-    return { status: 'confirmed', receipt: { txHash, blockNumber: 123, status: true } }
+    return {
+      status: 'confirmed',
+      receipt: { txHash, blockNumber: 123, status: true }
+    }
   }
 
   toNaturalUnit(value) {
@@ -83,7 +85,13 @@ describe('Transfer token lib', () => {
 
   it('Should enqueue a transfer', async () => {
     const amount = 1000
-    const transferId =  await enqueueTransfer(user.id, grant.id, toAddress, amount, ip)
+    const transferId = await enqueueTransfer(
+      user.id,
+      grant.id,
+      toAddress,
+      amount,
+      ip
+    )
 
     // Check a transfer row was created and populated as expected.
     const transfer = await Transfer.findOne({ where: { id: transferId } })
@@ -101,9 +109,18 @@ describe('Transfer token lib', () => {
   it('Should execute a transfer', async () => {
     // Enqueue and execute a transfer.
     const amount = 1000
-    const transferId =  await enqueueTransfer(user.id, grant.id, toAddress, amount, ip)
+    const transferId = await enqueueTransfer(
+      user.id,
+      grant.id,
+      toAddress,
+      amount,
+      ip
+    )
     const transfer = await Transfer.findOne({ where: { id: transferId } })
-    const { txHash, txStatus } = await executeTransfer(transfer, { networkId, tokenMock })
+    const { txHash, txStatus } = await executeTransfer(transfer, {
+      networkId,
+      tokenMock
+    })
     expect(txStatus).to.equal('confirmed')
     expect(txHash).to.equal('testTxHash')
 
@@ -113,10 +130,14 @@ describe('Transfer token lib', () => {
   })
 
   it('should reject a request with a bad grant ID', async () => {
-    await expect(enqueueTransfer(userId, grantId+1, toAddress, 1, ip)).to.be.rejectedWith('Could not find specified grant id')
+    await expect(
+      enqueueTransfer(userId, grantId + 1, toAddress, 1, ip)
+    ).to.be.rejectedWith('Could not find specified grant id')
   })
 
   it('should reject a request with a bad user ID', async () => {
-    await expect(enqueueTransfer(userId+1, grantId, toAddress, 1, ip)).to.be.rejectedWith('No user found with id')
+    await expect(
+      enqueueTransfer(userId + 1, grantId, toAddress, 1, ip)
+    ).to.be.rejectedWith('No user found with id')
   })
 })

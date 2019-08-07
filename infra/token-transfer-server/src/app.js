@@ -73,23 +73,6 @@ app.use(passport.session())
 app.use(require('./controllers'))
 
 /**
- * Returns grants for the authenticated user.
- */
-app.get(
-  '/api/grants',
-  ensureLoggedIn,
-  asyncMiddleware(async (req, res) => {
-    logger.debug('/api/grants', req.session.email)
-    const grants = await Grant.findAll({ where: { email: req.session.email } })
-    const augmentedGrants = grants.map(grant => ({
-      ...grant.get({ plain: true }),
-      nextVest: grant.nextVesting()
-    }))
-    res.json(augmentedGrants)
-  })
-)
-
-/**
  * Transfers tokens from hot wallet to address of user's choosing.
  */
 app.post(
