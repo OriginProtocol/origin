@@ -25,11 +25,24 @@ const withOriginGraphql = WrappedComponent => {
   class WithOriginGraphql extends Component {
     constructor(props) {
       super(props)
+
       this.state = {
         deferredPromises: []
       }
-      DeviceEventEmitter.addListener('graphqlResult', this._handleGraphqlResult)
-      DeviceEventEmitter.addListener('graphqlError', this._handleGraphqlError)
+
+      this.subscriptions = [
+        DeviceEventEmitter.addListener(
+          'graphqlResult',
+          this._handleGraphqlResult
+        ),
+        DeviceEventEmitter.addListener('graphqlError', this._handleGraphqlError)
+      ]
+    }
+
+    componentWillUnmount() {
+      if (this.subscriptions) {
+        this.subscriptions.map(s => s.remove())
+      }
     }
 
     _sendGraphqlQuery = (query, variables, fetchPolicy) => {

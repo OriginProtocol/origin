@@ -39,6 +39,20 @@ class EmailScreen extends Component {
     }
   }
 
+  componentDidMount() {
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      if (!this.props.wallet.activeAccount) {
+        // Active account removed by import warning and back swipe?
+        this.props.navigation.navigate('Welcome')
+      }
+    })
+  }
+
+  componentWillUnmount() {
+    // Remove the event listener
+    this.focusListener.remove()
+  }
+
   handleChange = async emailValue => {
     await this.setState({ emailError: null, emailValue })
   }

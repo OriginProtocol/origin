@@ -45,5 +45,22 @@
     "hooks": {
       "pre-push": "lerna run lint && npm run lint --prefix mobile"
     }
+  },
+  "renovate": {
+    "extends": [
+      "config:base"
+    ],
+    "groupName": "all",
+    "ignoreDeps": [
+      "ganache-core",
+      "web3",
+      "openzeppelin-solidity",
+      "truffle",
+      "truffle-hdwallet-provider",
+      "truffle-privatekey-provider"
+    ],
+    "ignorePaths": [
+      "mobile"
+    ]
   }
 }

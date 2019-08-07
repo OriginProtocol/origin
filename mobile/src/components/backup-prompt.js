@@ -56,7 +56,7 @@ class BackupPrompt extends React.Component {
             wallet={this.props.wallet}
             onRequestBackup={async () => {
               await this.setState({ displayBackupModal: false })
-              NavigationService.navigate('GuardedBackup')
+              NavigationService.navigate('Backup')
             }}
             onRequestClose={async () => {
               await this.props.setBackupWarningStatus(

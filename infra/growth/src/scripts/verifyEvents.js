@@ -7,7 +7,10 @@ const Sequelize = require('sequelize')
 const Logger = require('logplease')
 
 const enums = require('../enums')
-const db = require('../models')
+const _growthModels = require('../models')
+const _discoveryModels = require('@origin/discovery/src/models')
+const db = { ..._growthModels, ..._discoveryModels }
+
 const parseArgv = require('../util/args')
 
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
@@ -32,6 +35,24 @@ class VerifyEvents {
       numFraud: 0
     }
     this.fraudEngine = new FraudEngine()
+  }
+
+  /**
+   * Resolves the address of the wallet that owns the address (aka owner).
+   *
+   * @param {string} address
+   * @returns {Promise<string>}
+   * @private
+   */
+  async _getOwnerAddress(address) {
+    // Check if it is a proxy address
+    const row = await db.Proxy.findOne({ where: { address } })
+    if (row) {
+      // It is a proxy address, return the owner's address.
+      return row.ownerAddress
+    }
+    // It is not a proxy address therefore it must be a wallet address.
+    return address
   }
 
   async process() {
@@ -60,21 +81,24 @@ class VerifyEvents {
       }
     })
     logger.info(
-      `Loaded ${events.length} with status Logged and creation time prior to ${campaign.endDate}`
+      `Loaded ${events.length} events with status Logged and creation time prior to ${campaign.endDate}`
     )
 
     // Walk thru each event and update their status based
     // on fraud engine output.
     logger.info('Verifying events... This may take some time.')
     for (const event of events) {
+      const ownerAddress = await this._getOwnerAddress(event.ethAddress)
       // Check if event was logged for a user enrolled in Origin Reward.
       // TODO: would be more efficient to load all participants upfront.
       const participant = await db.GrowthParticipant.findOne({
-        where: { ethAddress: event.ethAddress }
+        where: { ethAddress: ownerAddress }
       })
       if (!participant) {
-        // This is normal since the listener logs events even for all users and
-        // not only users enrolled in Origin Rewards. Leave the event as Logged.
+        // This is normal since the listener logs events for all users and
+        // not only users enrolled in Origin Rewards.
+        // Leave the event as Logged, it may get verified in the future
+        // if the user enrolls in Origin Rewards.
         this.stats.numSkipped++
         continue
       }

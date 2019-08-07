@@ -50,6 +50,7 @@ function applyWeb3Hack(web3Instance) {
 }
 
 async function isValidContract(web3, address) {
+  if (!address) return false
   const code = await web3.eth.getCode(address)
   return code && typeof code === 'string' && code.length > 2
 }
