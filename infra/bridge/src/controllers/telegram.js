@@ -47,7 +47,7 @@ router.post('/verify', async (req, res) => {
   try {
     let response = await airgram.api.setAuthenticationPhoneNumber({
       phoneNumber: req.body.phone
-    })
+    }, 'authorizationStateWaitCode')
     if (response.code && response.code > 200) {
       return res.status(500).send({
         errors: [response.message]

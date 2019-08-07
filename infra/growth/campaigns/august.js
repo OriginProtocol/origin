@@ -370,6 +370,23 @@ const augustConfig = {
           }
         },
         {
+          id: 'TelegramFollow',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'FollowedOnTelegram',
+            additionalLockConditions: ['TelegramAttestation'],
+            reward: {
+              amount: tokenToNaturalUnits(10),
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
           id: 'TwoAttestations',
           class: 'MultiEvents',
           config: {
