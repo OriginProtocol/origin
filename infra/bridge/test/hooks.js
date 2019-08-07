@@ -50,7 +50,7 @@ describe('twitter webhooks', () => {
         // Note: These signs have been hard-coded in the test
         // Don't forget to update it, if you make any change to the body
         'x-twitter-webhooks-signature':
-          'rOlK2y3cO0EnsVh2JrVqglj75zStF4mcN5HmyWvqMlQ='
+          'sha256=rOlK2y3cO0EnsVh2JrVqglj75zStF4mcN5HmyWvqMlQ='
       })
       .send({
         follow_events: [
@@ -79,7 +79,7 @@ describe('twitter webhooks', () => {
         // Note: These signs have been hard-coded in the test
         // Don't forget to update it, if you make any change to the body
         'x-twitter-webhooks-signature':
-          'aMPAoi2EHMNU6/rL0TtAtbBx0R1ZoNbYL72Gbin3X0o='
+          'sha256=aMPAoi2EHMNU6/rL0TtAtbBx0R1ZoNbYL72Gbin3X0o='
       })
       .send({
         tweet_create_events: [
@@ -108,7 +108,7 @@ describe('twitter webhooks', () => {
         // Note: These signs have been hard-coded in the test
         // Don't forget to update it, if you make any change to the body
         'x-twitter-webhooks-signature':
-          'ht8B0jY6QyEl1t2qbPs0jul3lRexDD5TCQN/L9MfykA='
+          'sha256=ht8B0jY6QyEl1t2qbPs0jul3lRexDD5TCQN/L9MfykA='
       })
       .send({
         tweet_create_events: [
@@ -161,7 +161,7 @@ describe('twitter webhooks', () => {
         // Note: These signs have been hard-coded in the test
         // Don't forget to update it, if you make any change to the body
         'x-twitter-webhooks-signature':
-          'aMPAoi2EHMNU6/rL0TtAtbBx0R1ZoNbYL72Gbin3X0o='
+          'sha256=aMPAoi2EHMNU6/rL0TtAtbBx0R1ZoNbYL72Gbin3X0o='
       })
       .send({
         tweet_create_events: [
