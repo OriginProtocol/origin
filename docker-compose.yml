@@ -219,7 +219,10 @@ services:
       - discovery
     ports:
       - "4002:4002"
-    command: npm run start --prefix packages/graphql
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q services:1111 --
+      npm run start --prefix packages/graphql"
 
   notifications:
     container_name: notifications
