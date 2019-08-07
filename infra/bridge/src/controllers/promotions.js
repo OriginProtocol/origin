@@ -16,7 +16,7 @@ const { verifyPromotions } = require('../utils/validation')
 
 const db = require('../models/index')
 
-const { decodeHTML } = require('../utils/index')
+const EventValidators = require('../utils/event-validators')
 
 const PromotionEventToGrowthEvent = {
   TWITTER: {
@@ -137,44 +137,16 @@ const getAttestation = async ({ identity, identityProxy, socialNetwork }) => {
 /**
  * Returns decodedContent (for SHARE) or true (for FOLLOW) if event is what you are looking for, false otherwise
  */
-const isEventValid = ({ socialNetwork, type, event, content }) => {
-  if (socialNetwork !== 'TWITTER') {
+const isEventValid = ({ socialNetwork, ...args }) => {
+  const validator = EventValidators[args.type.toUpperCase()]
+
+  if (!validator) {
     logger.error(`Trying to parse event of unknown network: ${socialNetwork}`)
     // TODO: As of now, only twitter is supported
     return false
   }
 
-  if (type === 'FOLLOW') {
-    return true
-  }
-
-  // Note: `event.text` is truncated to 140chars, use `event.extended_tweet.full_text`, if it exists, to get whole tweet content
-  // Clone to avoid mutation
-  let encodedContent = JSON.parse(
-    JSON.stringify(
-      event.extended_tweet ? event.extended_tweet.full_text : event.text
-    )
-  )
-
-  // IMPORTANT: Twitter shortens and replaces URLs
-  // we have revert that back to get the original content and to get the hash
-  // IMPORTANT: Twitter prepends 'http://' if it idenitifies a text as URL
-  // It may result in a different content than expected, So always prepend URLs with `http://` in rule configs.
-
-  const entities = (event.extended_tweet || event).entities
-  entities.urls.forEach(entity => {
-    encodedContent = encodedContent.replace(entity.url, entity.expanded_url)
-  })
-
-  // Invalid if tweet content is not same as expected
-  // Note: Twitter sends HTML encoded contents
-  const decodedContent = decodeHTML(encodedContent)
-
-  logger.debug('encoded content:', encodedContent)
-  logger.debug('decoded content:', decodedContent)
-  logger.debug('expected content:', content)
-
-  return decodedContent === content ? decodedContent : false
+  return validator(args)
 }
 
 router.post('/verify', verifyPromotions, async (req, res) => {

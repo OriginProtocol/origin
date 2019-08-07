@@ -154,7 +154,7 @@ const websiteVerify = websiteGenerateCode
 const verifyPromotions = [
   identityValidation,
   check('socialNetwork')
-    .isIn(['TWITTER'])
+    .isIn(['TWITTER', 'TELEGRAM'])
     .withMessage('Unsupported social network'),
   check('type')
     .isIn(['FOLLOW', 'SHARE'])
