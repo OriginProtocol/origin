@@ -174,6 +174,8 @@ router.post('/verify', verifyPromotions, async (req, res) => {
       errors: [`Attestation missing`]
     })
   }
+
+  // Info regarding Twitter:
   // We are using `screen_name` instead of `id` or `id_str` since they are
   // not deterministic with all events
   // Caveat: attestation.value for some rows stores an incorrect value
