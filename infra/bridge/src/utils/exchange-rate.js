@@ -9,7 +9,7 @@ const currencies = [
   'ETH-USD',
   // DAI is disabled because coingecko doesn't support it
   // however DAI is pegged to USD so maybe we could just use 1
-  // or call a different API to get it. Currently pegged to 1 in 
+  // or call a different API to get it. Currently pegged to 1 in
   // search.js
   // 'DAI-USD',
   'KRW-USD',
@@ -17,7 +17,7 @@ const currencies = [
   'GBP-USD',
   'EUR-USD',
   'JPY-USD',
-  'CNY-USD',
+  'CNY-USD'
 ]
 
 function startExchangeRatePolling() {

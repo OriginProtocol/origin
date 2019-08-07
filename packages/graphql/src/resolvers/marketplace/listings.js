@@ -156,7 +156,7 @@ export default async function listings(
     }
   }
   if (!contracts.discovery || discoveryError) {
-    const decentralizedResults = await allIds({ contract})
+    const decentralizedResults = await allIds({ contract })
     ids = decentralizedResults.ids
     totalCount = decentralizedResults.totalCount
   }

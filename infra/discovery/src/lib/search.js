@@ -15,7 +15,6 @@ const client = new elasticsearch.Client({
 const LISTINGS_INDEX = 'listings'
 const LISTINGS_TYPE = 'listing'
 
-
 /**
  * Pulls exchange rates from redis
  * @param {Array<string>} currencies - Currency values, token-XYZ/fiat-XYZ
@@ -30,7 +29,7 @@ const getExchangeRates = async currencies => {
     // TODO use redis batch features instead of promise.All
     const promises = currencies.map(currency => {
       // setting these two currencies to 1, to avoid redundant calls.
-      if(currency === 'fiat-USD' || currency === 'token-DAI'){
+      if (currency === 'fiat-USD' || currency === 'token-DAI') {
         return '1'
       } else {
         const splitCurrency = currency.split('-')
@@ -356,7 +355,7 @@ class Listing {
       if (sort.length > 0 && order.length > 0) {
         try {
           // check that sort and order are approved values
-          if(sortWhiteList.includes(sort) && orderWhiteList.includes(order)){
+          if (sortWhiteList.includes(sort) && orderWhiteList.includes(order)) {
             switch (sort) {
               // script based sorting specifically for calculating price based on exchange rate
               case 'price.amount':
@@ -384,9 +383,11 @@ class Listing {
                 ]
             }
           } else {
-            throw new Error(`Sort variables are not whitelisted - sort = ${sort}, order = ${order}`)            
+            throw new Error(
+              `Sort variables are not whitelisted - sort = ${sort}, order = ${order}`
+            )
           }
-        } catch(e){
+        } catch (e) {
           logger.error(e)
         }
       } else {
