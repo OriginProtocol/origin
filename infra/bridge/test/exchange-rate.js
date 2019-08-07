@@ -35,7 +35,7 @@ describe('exchange rate poller', () => {
       })
 
     const response = await request(app)
-      .get('/api/v3/exchange_rates')
+      .get('/utils/exchange-rate?market=YYY-USD')
       .expect(200)
 
     expect(response.status).to.equal(200)
