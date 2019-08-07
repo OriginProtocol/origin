@@ -30,20 +30,21 @@ const GrowthActionStatus = new Enum(
   'Completed'
 )
 
-const GrowthActionType = new Enum(
-  'Profile',
-  'Email',
-  'Phone',
-  'Twitter',
-  'Airbnb',
-  'Facebook',
-  'Google',
-  'Referral',
-  'ListingCreated',
-  'ListingPurchased',
-  'TwitterFollow',
-  'TwitterShare'
-)
+// Legacy code??
+// const GrowthActionType = new Enum(
+//   'Profile',
+//   'Email',
+//   'Phone',
+//   'Twitter',
+//   'Airbnb',
+//   'Facebook',
+//   'Google',
+//   'Referral',
+//   'ListingCreated',
+//   'ListingPurchased',
+//   'TwitterFollow',
+//   'TwitterShare'
+// )
 
 const GrowthParticipantStatuses = new Enum('Active', 'Banned')
 
@@ -93,6 +94,5 @@ module.exports = {
   GrowthInviteContactTypes,
   GrowthInviteStatuses,
   GrowthCampaignStatuses,
-  GrowthActionStatus,
-  GrowthActionType
+  GrowthActionStatus
 }

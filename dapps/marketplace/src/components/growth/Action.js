@@ -71,6 +71,9 @@ function Action(props) {
   } else if (type === 'LinkedIn') {
     foregroundImgSrc = 'images/growth/linkedin-icon.svg'
     title = fbt('Verify your LinkedIn Profile', 'RewardActions.linkedInTitle')
+  } else if (type === 'Telegram') {
+    foregroundImgSrc = 'images/growth/website-icon.svg'
+    title = fbt('Verify your Telegram Profile', 'RewardActions.telegramTitle')
   } else if (type === 'ListingCreated') {
     foregroundImgSrc = 'images/growth/purchase-icon.svg'
     title = fbt('Create a Listing', 'RewardActions.listingCreatedTitle')
@@ -111,6 +114,12 @@ function Action(props) {
     // TODO: Move screen name to Enviroment variable
     externalLink =
       'https://twitter.com/intent/follow?screen_name=OriginProtocol'
+  } else if (type === 'TelegramFollow') {
+    buttonLink = undefined
+    foregroundImgSrc = 'images/growth/twitter-icon.svg'
+    title = fbt('Join us on Telegram', 'RewardActions.followOnTelegram')
+    // TODO: Move screen name to Enviroment variable
+    externalLink = 'https://web.telegram.org/#/im?p=@originptestgroup'
   }
 
   const renderReward = (amount, style = 'normal') => {

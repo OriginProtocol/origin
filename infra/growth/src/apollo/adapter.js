@@ -33,7 +33,8 @@ const ruleIdToActionType = {
   ListingPurchaseArt: 'ListingIdPurchased',
   MobileAccountCreated: 'MobileAccountCreated',
   TwitterShare: 'TwitterShare',
-  TwitterFollow: 'TwitterFollow'
+  TwitterFollow: 'TwitterFollow',
+  TelegramFollow: 'TelegramFollow'
 }
 
 /**

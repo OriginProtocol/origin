@@ -25,7 +25,8 @@ const siteNameToService = {
   'kakao.com': 'kakao',
   'linkedin.com': 'linkedin',
   'twitter.com': 'twitter',
-  'wechat.com': 'wechat'
+  'wechat.com': 'wechat',
+  'telegram.com': 'telegram'
 }
 
 class IdentityEventHandler {
@@ -238,7 +239,12 @@ class IdentityEventHandler {
               'WEBSITE'
             )
             break
-          // TODO: handle github, linkedin, kakao, wechat
+          case 'telegram':
+            decoratedIdentity.telegram = await this._loadValueFromAttestation(
+              addresses,
+              'TELEGRAM'
+            )
+            break
         }
       })
     )
@@ -288,7 +294,8 @@ class IdentityEventHandler {
       kakao: decoratedIdentity.kakao,
       linkedin: decoratedIdentity.linkedin,
       github: decoratedIdentity.github,
-      wechat: decoratedIdentity.wechat
+      wechat: decoratedIdentity.wechat,
+      telegram: decoratedIdentity.telegram
     }
 
     logger.debug('Identity=', identityRow)

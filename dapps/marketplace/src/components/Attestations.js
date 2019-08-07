@@ -89,6 +89,10 @@ require('react-styl')(`
       background-image: url(images/growth/kakao-icon.svg)
       background-size: 100%
       border: 0
+    &.telegram
+      border-color: #6331dd
+      background-color: rgba(#6331dd, 75%)
+      background-image: url(images/identity/website-icon-light.svg)
   .attestations-small .attestation
     width: 1.5rem
     height: 1.5rem

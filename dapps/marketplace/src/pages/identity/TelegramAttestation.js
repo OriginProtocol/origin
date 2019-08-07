@@ -11,18 +11,17 @@ import MobileModal from 'components/MobileModal'
 import PublishedInfoBox from 'components/_PublishedInfoBox'
 import CountryDropdown from './_CountryDropdown'
 
-import GeneratePhoneCodeMutation from 'mutations/GeneratePhoneCode'
-import VerifyPhoneCodeMutation from 'mutations/VerifyPhoneCode'
+import GenerateTelegramCodeMutation from 'mutations/GenerateTelegramCode'
+import VerifyTelegramCodeMutation from 'mutations/VerifyTelegramCode'
 
-class PhoneAttestation extends Component {
+class TelegramAttestation extends Component {
   state = {
     active: 'us',
     dropdown: true,
     stage: 'GenerateCode',
     phone: '',
     code: '',
-    prefix: '1',
-    method: 'sms'
+    prefix: '1'
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -42,8 +41,11 @@ class PhoneAttestation extends Component {
 
     return (
       <ModalComponent
-        title={fbt('Verify Phone Number', 'PhoneAttestation.verifyPhoneNumber')}
-        className="attestation-modal phone"
+        title={fbt(
+          'Verify Telegram Account',
+          'TelegramAttestation.verifyTelegramNumber'
+        )}
+        className="attestation-modal telegram"
         shouldClose={this.state.shouldClose}
         onClose={() => {
           const completed = this.state.completed
@@ -74,34 +76,17 @@ class PhoneAttestation extends Component {
     const { isMobile } = this.props
 
     const header = isMobile ? null : (
-      <fbt desc="PhoneAttestation.title">Verify your Phone Number</fbt>
+      <fbt desc="TelegramAttestation.title">Verify your Telegram Account</fbt>
     )
 
-    const descEl = isMobile ? (
-      <fbt desc="PhoneAttestation.mobile.description">
-        Enter a valid 10-digit phone number
-      </fbt>
-    ) : (
-      <fbt desc="PhoneAttestation.description">
-        Enter your 10-digit phone number below
-      </fbt>
-    )
-
-    const helpText = isMobile
-      ? fbt(
-          'By continuing, you give Origin permission to send you occasional messages such as notifications about your transactions.',
-          'Attestatio.mobile.phonePublishClarification'
-        )
-      : fbt(
-          'By verifying your phone number, you give Origin permission to send you occasional text messages such as notifications about your transactions.',
-          'Attestation.phonePublishClarification'
-        )
+    // TODO: Update this
+    const helpText = null
 
     return (
       <Mutation
-        mutation={GeneratePhoneCodeMutation}
+        mutation={GenerateTelegramCodeMutation}
         onCompleted={res => {
-          const result = res.generatePhoneCode
+          const result = res.generateTelegramCode
           if (result.success) {
             this.setState({ stage: 'VerifyCode', loading: false })
           } else {
@@ -120,12 +105,18 @@ class PhoneAttestation extends Component {
               if (this.state.loading) return
               this.setState({ error: false, loading: true })
               generateCode({
-                variables: pick(this.state, ['prefix', 'method', 'phone'])
+                variables: {
+                  phone: `${this.state.prefix}${this.state.phone}`
+                }
               })
             }}
           >
             <h2>{header}</h2>
-            <div className="instructions mb-3">{descEl}</div>
+            <div className="instructions mb-3">
+              <fbt desc="TelegramAttestation.description">
+                Enter your 10-digit phone number below
+              </fbt>
+            </div>
             <div className="d-flex my-3">
               <CountryDropdown
                 onChange={({ code, prefix }) =>
@@ -151,14 +142,14 @@ class PhoneAttestation extends Component {
             <PublishedInfoBox
               className="mt-3 mb-0"
               title={
-                <fbt desc="PhoneAttestation.visibleOnBlockchain">
+                <fbt desc="TelegramAttestation.visibleOnBlockchain">
                   What will be visible on the blockchain?
                 </fbt>
               }
               children={
-                <fbt desc="PhoneAttestation.verifiedButNotNumber">
-                  That you have a verified phone number, but NOT your actual
-                  phone number
+                <fbt desc="TelegramAttestation.verifiedButNotNumber">
+                  That you have a verified telegram account, but NOT your actual
+                  phone number or username
                 </fbt>
               }
             />
@@ -192,24 +183,14 @@ class PhoneAttestation extends Component {
     const { isMobile } = this.props
 
     const header = isMobile ? null : (
-      <fbt desc="PhoneAttestation.title">Verify your Phone Number</fbt>
-    )
-
-    const instructions = isMobile ? (
-      <fbt desc="PhoneAttestation.mobile.enterCode">
-        Enter the code we sent you below
-      </fbt>
-    ) : (
-      <fbt desc="PhoneAttestation.enterCode">
-        We’ve sent you a verification code via SMS. Please enter it below
-      </fbt>
+      <fbt desc="TelegramAttestation.title">Verify your Telegram Account</fbt>
     )
 
     return (
       <Mutation
-        mutation={VerifyPhoneCodeMutation}
+        mutation={VerifyTelegramCodeMutation}
         onCompleted={res => {
-          const result = res.verifyPhoneCode
+          const result = res.verifyTelegramCode
 
           if (!result.success) {
             this.setState({ error: result.reason, loading: false, data: null })
@@ -256,15 +237,18 @@ class PhoneAttestation extends Component {
               verifyCode({
                 variables: {
                   identity: this.props.wallet,
-                  prefix: this.state.prefix,
-                  phone: this.state.phone,
+                  phone: `${this.state.prefix}${this.state.phone}`,
                   code: this.state.code
                 }
               })
             }}
           >
             <h2>{header}</h2>
-            <div className="instructions">{instructions}</div>
+            <div className="instructions">
+              <fbt desc="TelegramAttestation.mobile.enterCode">
+                Enter the code from your Telegram App
+              </fbt>
+            </div>
             <div className="my-3 verification-code">
               <input
                 type="tel"
@@ -282,14 +266,14 @@ class PhoneAttestation extends Component {
             <PublishedInfoBox
               className="mt-3 mb-0"
               title={
-                <fbt desc="PhoneAttestation.visibleOnBlockchain">
+                <fbt desc="TelegramAttestation.visibleOnBlockchain">
                   What will be visible on the blockchain?
                 </fbt>
               }
               children={
-                <fbt desc="PhoneAttestation.verifiedButNotNumber">
-                  That you have a verified phone number, but NOT your actual
-                  phone number
+                <fbt desc="TelegramAttestation.verifiedButNotNumber">
+                  That you have a verified Telegram account, but NOT your actual
+                  Telegram username or phone number
                 </fbt>
               }
             />
@@ -320,137 +304,4 @@ class PhoneAttestation extends Component {
   }
 }
 
-export default withWallet(withIsMobile(PhoneAttestation))
-
-require('react-styl')(`
-  .attestation-modal
-    padding-bottom: 1.5rem !important
-    > div
-      h2
-        background: url(images/growth/profile-icon.svg) no-repeat center
-        background-size: 7rem
-        padding-top: 9rem
-        background-position: center top
-        position: relative
-        font-family: Poppins
-        font-size: 1.5rem
-        font-weight: 500
-        font-style: normal
-        font-stretch: normal
-        line-height: 1.67
-        letter-spacing: normal
-        color: #000000
-        margin-bottom: 0.75rem
-      font-size: 18px
-      .form-control-wrap
-        flex: 1
-      .form-control
-        border: 0
-        border-bottom: solid 1px #c2cbd3
-        border-radius: 0
-        background-color: var(--white)
-        color: black
-        &:focus
-          border-color: #80bdff
-          box-shadow: unset
-        &::-webkit-input-placeholder
-          color: var(--light)
-      .help
-        margin-top: 1rem
-        font-family: Lato
-        font-size: 0.9rem
-        font-weight: normal
-        font-style: normal
-        font-stretch: normal
-        line-height: normal
-        letter-spacing: normal
-        text-align: center
-        color: #6f8294
-      .verification-code
-        display: flex
-        flex-direction: column
-        border: 0
-        align-items: center
-        width: 80%
-        .form-control
-          text-align: center
-      .actions
-        display: flex
-        flex-direction: column !important
-        align-items: center
-        margin-top: 1.5rem
-        .btn-link
-          text-decoration: none
-      form
-        display: flex
-        flex: auto
-        flex-direction: column
-    &.phone > div h2
-      background-image: url(images/growth/phone-icon.svg)
-    &.email > div h2
-      background-image: url(images/growth/email-icon.svg)
-    &.facebook > div h2
-      background-image: url(images/growth/facebook-icon.svg)
-    &.twitter > div h2
-      background-image: url(images/growth/twitter-icon.svg)
-    &.airbnb > div h2
-      background-image: url(images/growth/airbnb-icon.svg)
-    &.google > div h2
-      background-image: url(images/growth/google-icon.svg)
-    &.website > div h2
-      background-image: url(images/growth/website-icon.svg)
-    &.kakao > div h2
-      background-image: url(images/growth/kakao-icon.svg)
-    &.github > div h2
-      background-image: url(images/growth/github-icon.svg)
-    &.linkedin > div h2
-      background-image: url(images/growth/linkedin-icon.svg)
-    &.wechat > div h2
-      background-image: url(images/growth/wechat-icon.svg)
-    &.telegram > div h2
-      background-image: url(images/growth/website-icon.svg)
-
-  .mobile-modal-light .attestation-modal
-    padding: 20px
-    text-align: center
-    h2
-      padding-top: 7.5rem
-    .btn
-      width: 100%
-      border-radius: 2rem
-      padding: 0.75rem
-    .verification-code .form-control
-      display: inline-block
-    &.phone > div h2::before
-      background-image: url(images/identity/phone-icon-light.svg)
-    &.email > div h2::before
-      background-image: url(images/identity/email-icon-light.svg)
-    &.facebook > div h2::before
-      background-image: url(images/identity/facebook-icon-light.svg)
-    &.twitter > div h2::before
-      background-image: url(images/identity/twitter-icon-light.svg)
-    &.airbnb > div h2::before
-      background-image: url(images/identity/airbnb-icon-light.svg)
-    &.google > div h2::before
-      background-image: url(images/identity/google-icon.svg)
-    &.website > div h2::before
-      background-image: url(images/identity/website-icon-light.svg)
-    &.kakao > div h2::before
-      background-image: url(images/identity/kakao-icon-large.svg)
-    &.github > div h2::before
-      background-image: url(images/identity/github-icon-large.svg)
-    &.linkedin > div h2::before
-      background-image: url(images/identity/linkedin-icon-large.svg)
-    &.wechat > div h2::before
-      background-image: url(images/identity/wechat-icon-large.svg)
-    &.telegram > div h2::before
-      background-image: url(images/identity/website-icon-light.svg)
-
-    > div
-      flex: auto
-      display: flex
-      flex-direction: column
-
-    &.success > div h2::before
-      background-image: none
-`)
+export default withWallet(withIsMobile(TelegramAttestation))
