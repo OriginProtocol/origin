@@ -352,7 +352,7 @@ class Listing {
       const orderWhiteList = ['asc', 'desc']
       // if sort and order are set, BS  return a sort
       // otherwise return empty sort to skip
-      if (sort.length > 0 && order.length > 0) {
+      if ((sort && sort.length > 0) && (order && order.length > 0)) {
         try {
           // check that sort and order are approved values
           if (sortWhiteList.includes(sort) && orderWhiteList.includes(order)) {
