@@ -210,7 +210,9 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
 
   const contentHash = Web3.utils.sha3(JSON.stringify(content))
 
-  let message
+  let message,
+    isKeys = false
+
   if (!conv) {
     //let's create a conversation...
     if (!conv_addresses.includes(address)) {
@@ -225,6 +227,8 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
         .status(400)
         .send('Conversations must be initiated by a keys exchange')
     }
+
+    isKeys = true
 
     await db.sequelize.transaction(async t => {
       const conversation = await db.Conversation.create(
@@ -307,7 +311,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
 
     // Send to notifications server
     // e.g. http://localhost:3456/messages
-    if (config.NOTIFICATIONS_ENDPOINT_URL) {
+    if (config.NOTIFICATIONS_ENDPOINT_URL && !isKeys) {
       const sender = address
 
       // Filter out the sender
