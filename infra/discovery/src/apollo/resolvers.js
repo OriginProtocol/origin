@@ -12,7 +12,7 @@ const resolvers = {
   Query: {
     async listings(root, args) {
       // Get listing Ids from Elastic.
-      const { listings, stats} = await search.Listing.search(
+      const { listings, stats } = await search.Listing.search(
         args.search,
         args.sort,
         args.order,
