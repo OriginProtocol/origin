@@ -157,6 +157,7 @@ services:
       - INDEX_MARKETPLACE=true
       - INDEX_IDENTITY=true
       - INDEX_GROWTH=true
+      - INDEX_PROXY=true
       - TRAIL_BEHIND_BLOCKS=
       - NETWORK=docker
       - NOTIFICATIONS_WEBHOOK=
@@ -219,7 +220,10 @@ services:
       - discovery
     ports:
       - "4002:4002"
-    command: npm run start --prefix packages/graphql
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q services:1111 --
+      npm run start --prefix packages/graphql"
 
   notifications:
     container_name: notifications
