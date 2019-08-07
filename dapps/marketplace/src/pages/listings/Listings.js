@@ -166,11 +166,11 @@ class Listings extends Component {
     return (
       <>
         <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
-        <div className="container listings-container">
+        <div className="listingsMenuBar">
           <SortMenu
             {...this.props}
-            title={fbt('Availability', 'Availability')}
-            className="availability-modal"
+            title={fbt('Sort By', 'Sort By')}
+            className="sortMenu"
             handleSortVisible={this.handleSortVisible}
             sortVisible={this.state.sortVisible}
             onChange={this.handleOptionChange}
@@ -178,6 +178,8 @@ class Listings extends Component {
             sort={this.state.sort}
             order={this.state.order}
           />
+        </div>
+        <div className="container listings-container">
           <Query
             query={query}
             variables={{
@@ -321,6 +323,19 @@ export default withGrowthRewards(
 )
 
 require('react-styl')(`
+  .listingsMenuBar 
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0 1rem;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  @media (max-width: 767.98px)
+    .listingsMenuBar 
+      padding: 0;
+      min-height: 3.75rem;
+      border: none
   .listings-container
     padding-top: 3rem
   .listings-count

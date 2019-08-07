@@ -349,7 +349,6 @@ require('react-styl')(`
     .listing-search-wrapper
       padding: 0 1rem
       .search-input-wrapper
-        margin-bottom: 1.5rem
         .form-control
           font-size: 22px
           border: 0

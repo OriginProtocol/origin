@@ -17,9 +17,7 @@ const SortMenu = ({
   handleSortVisible
 }) => {
   const [closeModal, setCloseModal] = useState(false)
-  // console.log(`sort -${sort}- order -${order}-`)
   const selectedOption = `${sort}:${order}`
-  console.log(`selectedOption -${selectedOption}-`)
 
   const RenderMobileSort = () => {
     if (sortVisible) {
@@ -49,14 +47,14 @@ const SortMenu = ({
       {isMobile ? (
         <React.Fragment>
           <a
-            className="nav-link"
+            className="sortButtonBar"
             href="#"
             onClick={e => {
               e.preventDefault()
               handleSortVisible(true)
             }}
           >
-            Sort
+            Sort by
           </a>
           {RenderMobileSort()}
         </React.Fragment>
@@ -74,21 +72,7 @@ const SortMenu = ({
 }
 
 class SortDropdown extends React.Component {
-  state = {}
-  // componentDidUpdate(prevProps) {
-  //   // if (unread > prevUnread && !prevProps.open) {
-  //   //   this.props.onOpen()
-  //   // }
-  //   // if (this.state.redirect) {
-  //   //   this.setState({ redirect: false })
-  //   // }
-  // }
-
   render() {
-    // if (this.state.redirect) {
-    //   return <Redirect to={`/purchases/${this.state.redirect.offer.id}`} push />
-    // }
-
     const {
       sortVisible,
       onChange,
@@ -108,15 +92,14 @@ class SortDropdown extends React.Component {
     return (
       <Dropdown
         el="li"
-        className="nav-item notifications d-none d-md-flex"
+        className="d-md-flex"
         open={sortVisible}
         onClose={() => handleSortVisible(false)}
         onChange={onChange}
         content={content}
-        title={'TEST'}
       >
         <a
-          className="nav-link"
+          className="nav-link sortButton"
           href="#"
           onClick={e => {
             e.preventDefault()
@@ -126,7 +109,7 @@ class SortDropdown extends React.Component {
           aria-haspopup="true"
           aria-expanded="false"
         >
-          Sort
+          Sort by
         </a>
       </Dropdown>
     )
@@ -134,16 +117,17 @@ class SortDropdown extends React.Component {
 }
 
 const SortContent = ({ selectedOption, onChange, isMobile }) => {
-  const title = fbt('listings.sort', 'Sort by')
-  const containerClass = isMobile ? '' : 'dropdown-menu dropdown-menu-left show'
+  const containerClass = isMobile
+    ? ''
+    : 'dropdown-menu dropdown-menu-left show sortDropDown'
   return (
     <div className={containerClass}>
-      <div className="title">{title}</div>
-      <form>
-        <div className="radio">
-          <label>
+      <form className="sortForm">
+        <div>
+          <label className="sortRadioLabel">
             <input
               type="radio"
+              className="sortRadioButton"
               value=":"
               checked={selectedOption === ':'}
               onChange={onChange}
@@ -151,10 +135,11 @@ const SortContent = ({ selectedOption, onChange, isMobile }) => {
             Default
           </label>
         </div>
-        <div className="radio">
-          <label>
+        <div>
+          <label className="sortRadioLabel">
             <input
               type="radio"
+              className="sortRadioButton"
               value="price.amount:asc"
               checked={selectedOption === 'price.amount:asc'}
               onChange={onChange}
@@ -162,10 +147,11 @@ const SortContent = ({ selectedOption, onChange, isMobile }) => {
             Price: Low to High
           </label>
         </div>
-        <div className="radio">
-          <label>
+        <div>
+          <label className="sortRadioLabel">
             <input
               type="radio"
+              className="sortRadioButton"
               value="price.amount:desc"
               onChange={onChange}
               checked={selectedOption === 'price.amount:desc'}
@@ -181,7 +167,39 @@ const SortContent = ({ selectedOption, onChange, isMobile }) => {
 export default withIsMobile(SortMenu)
 
 require('react-styl')(`
-  .timeZone
-    font-size: 14px
-    margin-bottom: 1rem
+  .sortButtonBar
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+    font-size: medium
+    width: 100%
+  .sortButton
+    color: var(--dusk)
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+  .sortButton:hover
+    color: var(--dusk)
+  .sortDropDown
+    padding: 0;
+    position: absolute !important;
+    margin-top: 0;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 5px 5px;
+    border: 1px solid var(--light);
+    font-weight: normal;
+    min-width: 12rem
+  .sortForm
+    padding: 0.625rem;
+  .sortRadioLabel
+    padding: 0.1rem 0rem;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem
+  .sortRadioButton
+    margin-right: 0.5rem
+    padding: 0;
+    height: 1.1rem;
+    width: 1.1rem;
+    box-sizing: border-box;
 `)
