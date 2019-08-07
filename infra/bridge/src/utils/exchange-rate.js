@@ -95,14 +95,20 @@ async function getExchangeRate(market) {
 
     price = await fetchExchangeRate(market)
 
-    // Disabled Fallback values until we decide on a strategy
-    // if (Number.isNaN(Number(price))) {
-    //   // API is also down, send back the fallback values
-    //   // FALLBACK_EXCHANGE_RATE_ETH_USD and FALLBACK_EXCHANGE_RATE_DAI_USD
-    //   return (
-    //     process.env[`FALLBACK_EXCHANGE_RATE_${market.replace('-', '_')}`] || 310
-    //   )
-    // }
+    if (Number.isNaN(Number(price))) {
+      // API is also down, send back the fallback values from google 07/08/19
+      const FALLBACK_EXCHANGE_RATES = {
+        ETH_USD: '222.91',
+        DAI_USD: '1',
+        JPY_USD: '0.0094',
+        KRW_USD: '0.00082',
+        CNY_USD: '0.14',
+        GBP_USD: '1.22',
+        EUR_USD: '1.12',
+        SGD_USD: '0.72'
+      }
+      return FALLBACK_EXCHANGE_RATES[`${market.replace('-', '_')}`]
+    }
   }
 
   return price
