@@ -39,6 +39,7 @@ const config = {
   DaiExchange: addresses.UniswapDaiExchange,
   ProxyFactory: addresses.ProxyFactory,
   ProxyFactory_Epoch: addresses.ProxyFactoryEpoch,
+  IdentityProxyImplementation: addresses.IdentityProxyImplementation,
   tokens: []
 }
 
