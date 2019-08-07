@@ -2,14 +2,10 @@
 
 const express = require('express')
 const router = express.Router()
-const request = require('superagent')
-const get = require('lodash/get')
-const { parsePhoneNumberFromString } = require('libphonenumber-js')
 
 const Attestation = require('../models/index').Attestation
 const AttestationTypes = Attestation.AttestationTypes
 const { generateAttestation } = require('../utils/attestation')
-const { phoneGenerateCode, phoneVerifyCode } = require('../utils/validation')
 const logger = require('../logger')
 
 // TODO: Add validation
@@ -28,25 +24,25 @@ router.post('/verify', async (req, res) => {
     site: {
       siteName: 'telegram.com',
       userId: {
-        raw: String('1234')
+        raw: String('908534709')
       },
       username: {
-        raw: 'shahthepro'
+        raw: 'shahulhameid'
       },
       profileUrl: {
-        raw: 'https://t.me/shahthepro'
+        raw: 'https://t.me/shahulhameid'
       }
     }
   }
 
   try {
     const attestation = await generateAttestation(
-      AttestationTypes.GITHUB,
+      AttestationTypes.TELEGRAM,
       attestationBody,
       {
-        uniqueId: 1234,
-        username: 'shahthepro',
-        profileUrl: 'https://t.me/shahthepro',
+        uniqueId: 908534709,
+        username: 'shahulhameid',
+        profileUrl: 'https://t.me/shahulhameid',
         profileData: {}
       },
       req.body.identity,

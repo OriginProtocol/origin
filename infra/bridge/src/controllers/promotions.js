@@ -22,6 +22,9 @@ const PromotionEventToGrowthEvent = {
   TWITTER: {
     FOLLOW: GrowthEventTypes.FollowedOnTwitter,
     SHARE: GrowthEventTypes.SharedOnTwitter
+  },
+  TELEGRAM: {
+    FOLLOW: GrowthEventTypes.FollowedOnTelegram
   }
 }
 
@@ -182,7 +185,13 @@ router.post('/verify', verifyPromotions, async (req, res) => {
   // because we had a bug caused by JS incorrect handling of large integers.
   // See for reference https://developer.twitter.com/en/docs/basics/twitter-ids.html
 
-  const userId = attestation.username
+  let userId = attestation.username
+
+  if (!userId) {
+    // For Telegram, username is optional
+    // So fallback to id only if username is not available
+    userId = attestation.value
+  }
 
   const redisKey = `${socialNetwork.toLowerCase()}/${type.toLowerCase()}/${userId}`
 
