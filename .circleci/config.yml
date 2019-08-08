@@ -105,7 +105,16 @@ jobs:
           command: cd packages/contracts && yarn test
 
   Discovery:
-    <<: *db
+    docker:
+      - image: circleci/node:10-browsers
+      - image: circleci/postgres:9.6-alpine-ram
+      - image: circleci/redis:5
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: circle_ci_test
+    working_directory: ~/origin
+    environment:
+      DATABASE_URL: postgres://postgres@localhost/circle_ci_test
     steps:
       - attach_workspace:
           at: .
@@ -113,6 +122,7 @@ jobs:
       - run: cd infra/discovery && yarn migrate
       - run: cd infra/growth && yarn migrate
       - run: cd infra/growth-event && yarn migrate
+      - run: cd infra/identity && yarn migrate
       - run: cd infra/identity && yarn migrate
       - run:
           name: Run Discovery Tests
