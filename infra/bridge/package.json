@@ -58,11 +58,11 @@
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "eslint": "^6.0.1",
-    "mocha": "^6.1.4",
-    "nodemon": "^1.19.1",
-    "supertest": "^4.0.2"
+    "chai": "4.2.0",
+    "eslint": "6.1.0",
+    "mocha": "6.2.0",
+    "nodemon": "1.19.1",
+    "supertest": "4.0.2"
   },
   "prettier": {
     "semi": false,
