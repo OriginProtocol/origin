@@ -186,23 +186,21 @@ class SocialShareRule extends SingleEventRule {
       .filter(event => event.type === this.config.eventType)
       .slice(0, numRewards)
 
-    if (this.config.socialNetwork === "facebook") {
-      eventsForCalculation = eventsForCalculation
-        .filter(event => event.customId === this.content.id)
+    if (this.config.socialNetwork === 'facebook') {
+      eventsForCalculation = eventsForCalculation.filter(
+        event => event.customId === this.content.id
+      )
     }
 
     let rewards = super.getEarnedRewards(ethAddress, eventsForCalculation)
-    if (this.config.socialNetwork === "twitter") {
-      rewards = this._getTwitterRewardsEarned(
-        ethAddress,
-        eventsForCalculation
-      )
+    if (this.config.socialNetwork === 'twitter') {
+      rewards = this._getTwitterRewardsEarned(ethAddress, eventsForCalculation)
     }
     return rewards
   }
 
   customIdFilter(customId) {
-    if (this.config.socialNetwork === "facebook") {
+    if (this.config.socialNetwork === 'facebook') {
       return customId === this.content.id
     }
     return true

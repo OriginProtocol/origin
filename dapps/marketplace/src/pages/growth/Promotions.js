@@ -60,22 +60,20 @@ const PromotionContents = ({
 }) => {
   return (
     <>
-      {
-        uniqBy([...notCompletedPromotionActions, ...completedPromotionActions], 'content.id')
-          .map(
-            (action, index) => (
-              <ShareableContent
-                key={index}
-                onShare={() => {
-                  if (onShare) {
-                    onShare(action)
-                  }
-                }}
-                action={action}
-              />
-            )
-          )
-        }
+      {uniqBy(
+        [...notCompletedPromotionActions, ...completedPromotionActions],
+        'content.id'
+      ).map((action, index) => (
+        <ShareableContent
+          key={index}
+          onShare={() => {
+            if (onShare) {
+              onShare(action)
+            }
+          }}
+          action={action}
+        />
+      ))}
     </>
   )
 }
@@ -109,7 +107,7 @@ const PromotionChannels = ({
           isMobile={isMobile}
           actions={notCompletedActions}
           locale={locale}
-          onActionClick={(action) => {
+          onActionClick={action => {
             if (setActionToVerify) {
               setActionToVerify(action)
             }
@@ -142,72 +140,75 @@ const RunVerifyPromotion = ({
   const socialNetwork = actionTypeToNetwork(action.type)
   return (
     <>
-      {socialNetwork === 'TWITTER' && <Mutation
-        mutation={VerifyPromotionMutation}
-        onCompleted={({ verifyPromotion }) => {
-          const complete = verifyPromotion.success
-          if (complete && onVerificationCompleted) {
-            onVerificationCompleted(action)
-          } else if (!complete && onError) {
-            console.error('Verification timed out: ', verifyPromotion.reason)
-            onError(verifyPromotion.reason)
-          }
-        }}
-        onError={errorData => {
-          console.error(`Failed to verify shared content`, errorData)
-          if (onVerificationError) {
-            onVerificationError(errorData)
-          }
-        }}
-      >
-        {verifyPromotion => (
-          <AutoMutate
-            mutation={() => {
-              verifyPromotion({
-                variables: {
-                  type: 'SHARE',
-                  identity: wallet,
-                  identityProxy: walletProxy,
-                  socialNetwork: socialNetwork,
-                  content: getContentToShare(action, locale)
-                }
-              })
-            }}
-          />
-        )}
-      </Mutation>}
-      {!actionConfirmed && socialNetwork === 'FACEBOOK' && <Mutation
-        mutation={ConfirmSocialShare}
-        onCompleted={({ confirmSocialShare }) => {
-          // if successful
-          if (confirmSocialShare) {
-            if (onConfirmationCompleted) {
-              onConfirmationCompleted()
+      {socialNetwork === 'TWITTER' && (
+        <Mutation
+          mutation={VerifyPromotionMutation}
+          onCompleted={({ verifyPromotion }) => {
+            const complete = verifyPromotion.success
+            if (complete && onVerificationCompleted) {
+              onVerificationCompleted(action)
+            } else if (!complete && onError) {
+              console.error('Verification timed out: ', verifyPromotion.reason)
+              onError(verifyPromotion.reason)
             }
-          } else {
-            if (onConfirmationError) {
-              onConfirmationError('unknown')
+          }}
+          onError={errorData => {
+            console.error(`Failed to verify shared content`, errorData)
+            if (onVerificationError) {
+              onVerificationError(errorData)
             }
-          }        
-        }}
-        onError={errorData => {
-          if (onConfirmationError)
-            onConfirmationError(errorData)          
-        }}
-      >
-        {confirmSocialShare => (
-          <AutoMutate
-            mutation={() => {
-              confirmSocialShare({
-                variables: {
-                  contentId: action.content.id,
-                  actionType: action.type,
-                }
-              })
-            }}
-          />
-        )}
-      </Mutation>}
+          }}
+        >
+          {verifyPromotion => (
+            <AutoMutate
+              mutation={() => {
+                verifyPromotion({
+                  variables: {
+                    type: 'SHARE',
+                    identity: wallet,
+                    identityProxy: walletProxy,
+                    socialNetwork: socialNetwork,
+                    content: getContentToShare(action, locale)
+                  }
+                })
+              }}
+            />
+          )}
+        </Mutation>
+      )}
+      {!actionConfirmed && socialNetwork === 'FACEBOOK' && (
+        <Mutation
+          mutation={ConfirmSocialShare}
+          onCompleted={({ confirmSocialShare }) => {
+            // if successful
+            if (confirmSocialShare) {
+              if (onConfirmationCompleted) {
+                onConfirmationCompleted()
+              }
+            } else {
+              if (onConfirmationError) {
+                onConfirmationError('unknown')
+              }
+            }
+          }}
+          onError={errorData => {
+            if (onConfirmationError) onConfirmationError(errorData)
+          }}
+        >
+          {confirmSocialShare => (
+            <AutoMutate
+              mutation={() => {
+                confirmSocialShare({
+                  variables: {
+                    contentId: action.content.id,
+                    actionType: action.type
+                  }
+                })
+              }}
+            />
+          )}
+        </Mutation>
+      )}
     </>
   )
 }
@@ -359,7 +360,7 @@ const Promotions = ({
               growthCampaignsRefetch()
             }
           }}
-          onConfirmationError={(error) => {
+          onConfirmationError={error => {
             console.error(`Failed to confirm shared content`, error)
           }}
           wallet={wallet}
@@ -379,7 +380,7 @@ const Promotions = ({
           locale={locale}
           applicableActions={applicableActions}
           history={history}
-          setActionToVerify={(action) => {
+          setActionToVerify={action => {
             setActionConfirmed(false)
             setActionToVerify(action)
           }}

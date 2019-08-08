@@ -5,9 +5,6 @@ export default gql`
     $contentId: String!
     $actionType: GrowthActionType!
   ) {
-    confirmSocialShare(
-      contentId: $contentId
-      actionType: $actionType
-    )
+    confirmSocialShare(contentId: $contentId, actionType: $actionType)
   }
 `

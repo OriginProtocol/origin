@@ -44,78 +44,85 @@ const VerifyOrConfirmFollow = ({
   wallet,
   walletProxy
 }) => {
-  if (!currentAction)
-    return null
+  if (!currentAction) return null
 
   const socialNetwork = actionTypeToNetwork(currentAction.type)
 
   return (
     <>
-      {socialNetwork === 'TWITTER' && <Mutation
-        mutation={VerifyPromotionMutation}
-        onCompleted={({ verifyPromotion }) => {
-          if (verifyPromotion.success) {
-            if (showNotification) {
-              const message = getToastMessage(currentAction, decimalDivision)
-              showNotification(message, 'green')
+      {socialNetwork === 'TWITTER' && (
+        <Mutation
+          mutation={VerifyPromotionMutation}
+          onCompleted={({ verifyPromotion }) => {
+            if (verifyPromotion.success) {
+              if (showNotification) {
+                const message = getToastMessage(currentAction, decimalDivision)
+                showNotification(message, 'green')
+              }
+              if (growthCampaignsRefetch) {
+                growthCampaignsRefetch()
+              }
             }
-            if (growthCampaignsRefetch) {
-              growthCampaignsRefetch()
+            setCurrentAction(null)
+          }}
+          onError={errorData => {
+            console.error(`Failed to verify follower`, errorData)
+            setCurrentAction(null)
+          }}
+        >
+          {verifyPromotion => (
+            <>
+              <AutoMutate
+                mutation={() => {
+                  verifyPromotion({
+                    variables: {
+                      type: 'FOLLOW',
+                      identity: wallet,
+                      identityProxy: walletProxy,
+                      socialNetwork: socialNetwork
+                    }
+                  })
+                }}
+              />
+            </>
+          )}
+        </Mutation>
+      )}
+      {!actionConfirmed && socialNetwork === 'FACEBOOK' && (
+        <Mutation
+          mutation={ConfirmFollowMutation}
+          onCompleted={({ confirmSocialFollow }) => {
+            // if successful
+            if (confirmSocialFollow) {
+              setActionConfirmed(true)
+              if (growthCampaignsRefetch) {
+                growthCampaignsRefetch()
+              }
+            } else {
+              console.error(
+                `Can not confirm action with type ${currentAction.type}`
+              )
             }
-          }
-          setCurrentAction(null)
-        }}
-        onError={errorData => {
-          console.error(`Failed to verify follower`, errorData)
-          setCurrentAction(null)
-        }}
-      >
-        {verifyPromotion => (
-          <>
+          }}
+          onError={errorData => {
+            console.error(
+              `Can not confirm action with type ${currentAction.type}`
+            )
+          }}
+        >
+          {confirmSocialFollow => (
             <AutoMutate
               mutation={() => {
-                verifyPromotion({
+                confirmSocialFollow({
                   variables: {
-                    type: 'FOLLOW',
-                    identity: wallet,
-                    identityProxy: walletProxy,
-                    socialNetwork: socialNetwork
+                    actionType: currentAction.type
                   }
                 })
               }}
             />
-          </>
           )}
-      </Mutation>}
-      {!actionConfirmed && socialNetwork === 'FACEBOOK' && <Mutation
-        mutation={ConfirmFollowMutation}
-        onCompleted={({ confirmSocialFollow }) => {
-          // if successful
-          if (confirmSocialFollow) {
-            setActionConfirmed(true)
-            if (growthCampaignsRefetch) {
-              growthCampaignsRefetch()
-            }
-          } else {
-            console.error(`Can not confirm action with type ${currentAction.type}`)
-          }        
-        }}
-        onError={errorData => {
-          console.error(`Can not confirm action with type ${currentAction.type}`)
-        }}
-      >
-        {confirmSocialFollow => (
-          <AutoMutate
-            mutation={() => {
-              confirmSocialFollow({
-                variables: {
-                  actionType: currentAction.type,
-                }
-              })
-            }}
-          />
-        )}
-      </Mutation>}
+        </Mutation>
+      )}
     </>
   )
 }
@@ -170,9 +177,7 @@ function FollowOrigin(props) {
                 </div>
               </Link>
               <h1 className={`mb-2 pt-md-3 mt-3`}>
-                <fbt desc="GrowthFollowOrigin.followOrigin">
-                  Follow Origin
-                </fbt>
+                <fbt desc="GrowthFollowOrigin.followOrigin">Follow Origin</fbt>
               </h1>
             </Fragment>
           )}
