@@ -240,5 +240,4 @@ describe('telegram webhooks', () => {
     const event = JSON.parse(await getAsync('telegram/follow/abc'))
     expect(event.id).to.equal('abc')
   })
-
 })
