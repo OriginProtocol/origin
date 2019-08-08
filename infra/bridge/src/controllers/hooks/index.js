@@ -128,7 +128,7 @@ router.get('/twitter/__auth-redirect', async (req, res) => {
  */
 router.get('/twitter', (req, res) => {
   res.status(200).send({
-    response_token: `sha256=${getCRCToken(req.query.crc_token)}`
+    response_token: getCRCToken(req.query.crc_token)
   })
 })
 
@@ -145,7 +145,7 @@ function getCRCToken(payload) {
     .update(payload)
     .digest('base64')
 
-  return hmac
+  return `sha256=${hmac}`
 }
 
 /**
@@ -158,13 +158,15 @@ function verifyRequestSignature(req) {
   const token = getCRCToken(JSON.stringify(req.body))
   logger.debug(`sign:${sign} token:${token}`)
 
-  // Franck: temporarily disabling this code due to crash reported in bug #2883
-  // Using `.timingSafeEqual` for comparison to avoid timing attacks
+  // Disabling this temporarily for #2883
+  // // Using `.timingSafeEqual` for comparison to avoid timing attacks
   // const valid = crypto.timingSafeEqual(
   //  Buffer.from(sign, 'utf-8'),
   //  Buffer.from(token, 'utf-8')
-  //)
-  //return valid
+  // )
+
+  // return valid
+
   return true
 }
 
