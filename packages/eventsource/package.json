@@ -15,9 +15,9 @@
     "@origin/ipfs": "^0.1.0"
   },
   "devDependencies": {
-    "lodash-es": "^4.17.11",
-    "prettier": "^1.18.2",
-    "eslint": "^6.0.1"
+    "lodash-es": "4.17.15",
+    "prettier": "1.18.2",
+    "eslint": "6.0.1"
   },
   "prettier": {
     "semi": false,
