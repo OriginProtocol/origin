@@ -200,6 +200,7 @@ function FollowOrigin(props) {
           actions={notCompletedFollowActions}
           onActionClick={action => {
             setCurrentAction(action)
+            setActionConfirmed(false)
           }}
         />
         {completedFollowActions.length > 0 && (
