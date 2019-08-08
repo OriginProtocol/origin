@@ -224,7 +224,10 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
   }
 
   // If it's a proxy, make sure we're checking with the owner account address
-  if (await isContract(conv_addresses[0]) || await isContract(conv_addresses[1])) {
+  if (
+    (await isContract(conv_addresses[0])) ||
+    (await isContract(conv_addresses[1]))
+  ) {
     return res.status(400).send('Invalid account (contract)')
   } else {
     console.log(`participant is not a proxy!`)

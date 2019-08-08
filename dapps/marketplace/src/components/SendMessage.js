@@ -70,7 +70,10 @@ class SendMessage extends Component {
                   return <div>Checking if messaging enabled...</div>
                 } else if (!get(data, 'messaging.enabled')) {
                   return <EnableMessagingModal />
-                } else if (!data.messaging.canConverseWith && !data.messaging.forwardTo) {
+                } else if (
+                  !data.messaging.canConverseWith &&
+                  !data.messaging.forwardTo
+                ) {
                   return this.renderCannotConverse()
                 } else if (this.state.sent) {
                   return this.renderSent()
