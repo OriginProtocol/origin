@@ -105,7 +105,7 @@
     "@babel/preset-env": "7.5.5",
     "@babel/runtime": "7.5.5",
     "apollo-client": "2.6.3",
-    "apollo-server": "2.7.0",
+    "apollo-server": "2.8.1",
     "babel-eslint": "10.0.2",
     "babel-loader": "8.0.6",
     "bip39": "2.6.0",

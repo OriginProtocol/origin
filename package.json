@@ -2,7 +2,7 @@
   "name": "root",
   "private": true,
   "dependencies": {
-    "lerna": "3.16.1"
+    "lerna": "3.16.4"
   },
   "workspaces": {
     "packages": [
@@ -54,6 +54,8 @@
     "ignoreDeps": [
       "ganache-core",
       "web3",
+      "web3-utils",
+      "ipfs",
       "openzeppelin-solidity",
       "truffle",
       "truffle-hdwallet-provider",
@@ -61,6 +63,16 @@
     ],
     "ignorePaths": [
       "mobile"
+    ],
+    "packageRules": [
+      {
+        "packageNames": [
+          "@origin/token"
+        ],
+        "ignoreDeps": [
+          "solc"
+        ]
+      }
     ]
   }
 }
