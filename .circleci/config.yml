@@ -20,18 +20,6 @@ redis: &redis
     - image: circleci/redis:5
   working_directory: ~/origin
 
-dbAndRedis: &dbAndRedis
-  docker:
-    - image: circleci/node:10-browsers
-    - image: circleci/postgres:9.6-alpine-ram
-    - image: circleci/redis:5
-      environment:
-        POSTGRES_USER: postgres
-        POSTGRES_DB: circle_ci_test
-  working_directory: ~/origin
-  environment:
-    DATABASE_URL: postgres://postgres@localhost/circle_ci_test 
-
 version: 2
 jobs:
   Setup:
@@ -117,7 +105,16 @@ jobs:
           command: cd packages/contracts && yarn test
 
   Discovery:
-    <<: *dbAndRedis
+    docker:
+      - image: circleci/redis:5
+      - image: circleci/node:10-browsers
+      - image: circleci/postgres:9.6-alpine-ram
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: circle_ci_test
+    working_directory: ~/origin
+    environment:
+      DATABASE_URL: postgres://postgres@localhost/circle_ci_test
     steps:
       - attach_workspace:
           at: .
