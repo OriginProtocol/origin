@@ -84,7 +84,7 @@ class AuthenticationScreen extends Component {
               <OriginButton
                 size="large"
                 type="primary"
-                textStyle={{ fontSize: 18, fontWeight: '900' }}
+                style={{ marginTop: 40 }}
                 title={fbt(
                   'Open Settings',
                   'AuthenticationScreen.openSettingsButton'

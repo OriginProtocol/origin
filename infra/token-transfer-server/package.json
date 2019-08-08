@@ -57,17 +57,17 @@
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.0",
-    "@babel/polyfill": "^7.4.4",
-    "@babel/preset-env": "^7.5.2",
-    "@babel/register": "^7.4.4",
-    "chai": "^4.2.0",
-    "chai-as-promised": "^7.1.1",
-    "chai-bignumber": "^3.0.0",
-    "chai-moment": "^0.1.0",
-    "mocha": "^6.1.4",
-    "nodemon": "^1.19.1",
-    "react-scripts": "^3.0.1"
+    "@babel/core": "7.5.5",
+    "@babel/polyfill": "7.4.4",
+    "@babel/preset-env": "7.5.5",
+    "@babel/register": "7.5.5",
+    "chai": "4.2.0",
+    "chai-as-promised": "7.1.1",
+    "chai-bignumber": "3.0.0",
+    "chai-moment": "0.1.0",
+    "mocha": "6.2.0",
+    "nodemon": "1.19.1",
+    "react-scripts": "3.0.1"
   },
   "prettier": {
     "semi": false,

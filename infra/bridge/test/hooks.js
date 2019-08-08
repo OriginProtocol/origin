@@ -46,6 +46,12 @@ describe('twitter webhooks', () => {
   it('should push follow events to redis', async () => {
     await request(app)
       .post('/hooks/twitter')
+      .set({
+        // Note: These signs have been hard-coded in the test
+        // Don't forget to update it, if you make any change to the body
+        'x-twitter-webhooks-signature':
+          'sha256=rOlK2y3cO0EnsVh2JrVqglj75zStF4mcN5HmyWvqMlQ='
+      })
       .send({
         follow_events: [
           {
@@ -69,6 +75,12 @@ describe('twitter webhooks', () => {
   it('should push mention events to redis', async () => {
     await request(app)
       .post('/hooks/twitter')
+      .set({
+        // Note: These signs have been hard-coded in the test
+        // Don't forget to update it, if you make any change to the body
+        'x-twitter-webhooks-signature':
+          'sha256=aMPAoi2EHMNU6/rL0TtAtbBx0R1ZoNbYL72Gbin3X0o='
+      })
       .send({
         tweet_create_events: [
           {
@@ -92,6 +104,12 @@ describe('twitter webhooks', () => {
   it('should not push retweets/favorites/own tweet events to redis', async () => {
     await request(app)
       .post('/hooks/twitter')
+      .set({
+        // Note: These signs have been hard-coded in the test
+        // Don't forget to update it, if you make any change to the body
+        'x-twitter-webhooks-signature':
+          'sha256=ht8B0jY6QyEl1t2qbPs0jul3lRexDD5TCQN/L9MfykA='
+      })
       .send({
         tweet_create_events: [
           {
@@ -135,4 +153,28 @@ describe('twitter webhooks', () => {
     event = await getAsync('twitter/share/originprotocol')
     expect(event).to.equal(null)
   })
+
+  // Disabling it temporarily for #2883
+  // it('should fail on invalid signature', async () => {
+  //   await request(app)
+  //     .post('/hooks/twitter')
+  //     .set({
+  //       // Note: These signs have been hard-coded in the test
+  //       // Don't forget to update it, if you make any change to the body
+  //       'x-twitter-webhooks-signature':
+  //         'sha256=aMPAoi2EHMNU6/rL0TtAtbBx0R1ZoNbYL72Gbin3X0o='
+  //     })
+  //     .send({
+  //       tweet_create_events: [
+  //         {
+  //           id: 'abcd',
+  //           user: {
+  //             id_str: '123456',
+  //             screen_name: 'someuser'
+  //           }
+  //         }
+  //       ]
+  //     })
+  //     .expect(403)
+  // })
 })

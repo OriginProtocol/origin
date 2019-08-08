@@ -60,6 +60,7 @@ class WelcomeScreen extends Component {
                   this.setState({ loading: true }, () => {
                     setTimeout(() => {
                       this.props.createAccount()
+                      this.setState({ loading: false })
                       this.props.navigation.navigate(
                         this.props.nextOnboardingStep
                       )
@@ -76,6 +77,7 @@ class WelcomeScreen extends Component {
                 )}
                 disabled={this.state.loading}
                 onPress={() => {
+                  this.setState({ loading: false })
                   this.props.navigation.navigate('ImportAccount')
                 }}
               />

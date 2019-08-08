@@ -5,7 +5,7 @@ services:
   postgres:
     container_name: postgres
     restart: always
-    image: postgres:10.0
+    image: postgres:10.9
     environment:
       - POSTGRES_USER=origin
       - POSTGRES_PASSWORD=origin
@@ -15,7 +15,7 @@ services:
 
   elasticsearch:
     container_name: elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.2
     ports:
       - "9200:9200"
     environment:
@@ -97,7 +97,19 @@ services:
     environment:
       - DOCKER=true
       - DEPLOY_CONTRACTS=true
-    command: npm run start --prefix packages/services -- -g -i -p -f -t
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+    depends_on:
+      - postgres
+    command:
+      >
+      /bin/bash -c "npm run migrate --prefix infra/discovery &&
+      npm run migrate --prefix infra/growth &&
+      npm run migrate --prefix infra/growth-event &&
+      npm run migrate --prefix infra/identity &&
+      npm run migrate --prefix infra/notifications &&
+      npm run migrate --prefix infra/bridge &&
+      npm run migrate --prefix infra/messaging &&
+      npm run start --prefix packages/services -- -g -i -p -f -t"
 
   messaging:
     container_name: messaging
@@ -116,7 +128,7 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
-      npm run migrate --prefix infra/messaging &&
+      wait-for.sh -t 0 -q services:1111 --
       npm run start --prefix infra/messaging"
 
   ipfs-proxy:
@@ -145,6 +157,7 @@ services:
       - INDEX_MARKETPLACE=true
       - INDEX_IDENTITY=true
       - INDEX_GROWTH=true
+      - INDEX_PROXY=true
       - TRAIL_BEHIND_BLOCKS=
       - NETWORK=docker
       - NOTIFICATIONS_WEBHOOK=
@@ -161,10 +174,6 @@ services:
       >
       /bin/bash -c "wait-for.sh -t 0 -q elasticsearch:9200 --
       wait-for.sh -t 0 -q services:1111 --
-      npm run migrate --prefix infra/discovery &&
-      npm run migrate --prefix infra/growth &&
-      npm run migrate --prefix infra/growth-event &&
-      npm run migrate --prefix infra/identity &&
       npm run start:listener --prefix infra/discovery"
 
   discovery:
@@ -188,6 +197,7 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q elasticsearch:9200 --
+      wait-for.sh -t 0 -q services:1111 --
       node infra/discovery/devops/es-cli.js createIndex listings &&
       npm run start:discovery --prefix infra/discovery"
 
@@ -210,7 +220,10 @@ services:
       - discovery
     ports:
       - "4002:4002"
-    command: npm run start --prefix packages/graphql
+    command:
+      >
+      /bin/bash -c "wait-for.sh -t 0 -q services:1111 --
+      npm run start --prefix packages/graphql"
 
   notifications:
     container_name: notifications
@@ -233,7 +246,7 @@ services:
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
-      npm run migrate --prefix infra/notifications &&
+      wait-for.sh -t 0 -q services:1111 --
       npm run start --prefix infra/notifications"
 
   growth:
@@ -277,5 +290,5 @@ services:
       >
       /bin/bash -c "wait-for.sh -t 0 -q postgres:5432 --
       wait-for.sh -t 0 -q redis-master:6379 --
-      npm run migrate --prefix infra/bridge &&
+      wait-for.sh -t 0 -q services:1111 --
       npm run start --prefix infra/bridge"
