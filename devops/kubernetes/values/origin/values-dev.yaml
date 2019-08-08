@@ -59,7 +59,7 @@ adminImageTag: '6e974e9'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: 'bc563c5'
+relayerImageTag: '99b0384'
 
 # origin-graphql
 graphqlImage: origin-graphql
