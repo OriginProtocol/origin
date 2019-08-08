@@ -70,12 +70,18 @@ class SendMessage extends Component {
                   return <div>Checking if messaging enabled...</div>
                 } else if (!get(data, 'messaging.enabled')) {
                   return <EnableMessagingModal />
-                } else if (!data.messaging.canConverseWith) {
+                } else if (!data.messaging.canConverseWith && !data.messaging.forwardTo) {
                   return this.renderCannotConverse()
                 } else if (this.state.sent) {
                   return this.renderSent()
                 } else {
-                  return this.renderSend()
+                  let to = get(data, 'messaging.id')
+
+                  // If it's a proxy, we'll see a forwarding address
+                  const forwardTo = get(data, 'messaging.forwardTo')
+                  if (forwardTo) to = forwardTo
+
+                  return this.renderSend(to)
                 }
               }}
             </Query>
@@ -103,8 +109,8 @@ class SendMessage extends Component {
     )
   }
 
-  renderSend() {
-    const { to } = this.props
+  renderSend(to) {
+    to = to ? to : this.props.to
     const recipient = get(this.props, 'identity.fullName')
 
     return (
