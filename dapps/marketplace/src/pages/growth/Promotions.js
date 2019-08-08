@@ -147,9 +147,9 @@ const RunVerifyPromotion = ({
             const complete = verifyPromotion.success
             if (complete && onVerificationCompleted) {
               onVerificationCompleted(action)
-            } else if (!complete && onError) {
+            } else if (!complete && onVerificationError) {
               console.error('Verification timed out: ', verifyPromotion.reason)
-              onError(verifyPromotion.reason)
+              onVerificationError(verifyPromotion.reason)
             }
           }}
           onError={errorData => {

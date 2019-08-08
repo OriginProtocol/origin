@@ -106,7 +106,8 @@ const VerifyOrConfirmFollow = ({
           }}
           onError={errorData => {
             console.error(
-              `Can not confirm action with type ${currentAction.type}`
+              `Can not confirm action with type ${currentAction.type}`,
+              errorData
             )
           }}
         >
