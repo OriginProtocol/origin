@@ -152,7 +152,7 @@
     "react-router-dom": "5.0.1",
     "style-loader": "0.23.1",
     "terser-webpack-plugin": "1.4.1",
-    "typeface-lato": "0.0.54",
+    "typeface-lato": "0.0.75",
     "typeface-poppins": "0.0.72",
     "url-loader": "2.1.0",
     "webpack": "4.39.1",
