@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
 
-import Logo from '../assets/origin-logo.svg'
+import Logo from '@/assets/origin-logo.svg'
 
 const PublicRoute = ({ component: Component, ...rest }) => {
   return (

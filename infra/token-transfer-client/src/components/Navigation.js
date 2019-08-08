@@ -1,11 +1,11 @@
 import React from 'react'
 
-import NavLink from './NavLink'
-import Logo from '../assets/origin-logo.svg'
-import Dashboard from '-!react-svg-loader!../assets/dashboard-icon.svg'
-import History from '-!react-svg-loader!../assets/history-icon.svg'
-import News from '-!react-svg-loader!../assets/news-icon.svg'
-import Security from '-!react-svg-loader!../assets/security-icon.svg'
+import NavLink from '@/components/NavLink'
+import Logo from '@/assets/origin-logo.svg'
+import Dashboard from '-!react-svg-loader!@/assets/dashboard-icon.svg'
+import History from '-!react-svg-loader!@/assets/history-icon.svg'
+import News from '-!react-svg-loader!@/assets/news-icon.svg'
+import Security from '-!react-svg-loader!@/assets/security-icon.svg'
 
 const Navigation = () => (
   <nav className="navbar navbar-expand-xs">

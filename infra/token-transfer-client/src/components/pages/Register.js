@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-// import request from 'superagent'
 
-import { formInput, formFeedback } from '../../utils/formHelpers'
+import { formInput, formFeedback } from '@/utils/formHelpers'
 
 class Register extends Component {
   state = {

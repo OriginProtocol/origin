@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import { setSessionEmail } from '../../actions/session'
-import agent from '../../utils/agent'
+import { setSessionEmail } from '@/actions/session'
+import { apiUrl } from '@/constants'
+import agent from '@/utils/agent'
 
 class HandleLogin extends Component {
   state = {
@@ -19,7 +20,6 @@ class HandleLogin extends Component {
   handleVerifyEmailToken = async token => {
     let response
     try {
-      const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
       response = await agent
         .post(`${apiUrl}/api/verify_email_token`)
         .set('Authorization', `Bearer ${token}`)

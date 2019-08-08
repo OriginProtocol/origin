@@ -1,6 +1,6 @@
 import React from 'react'
 
-import BorderedCard from './BorderedCard'
+import BorderedCard from '@/components/BorderedCard'
 
 const BalanceCard = props => (
   <BorderedCard shadowed={true}>

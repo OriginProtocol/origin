@@ -2,8 +2,8 @@ import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import AccountActions from './AccountActions'
-import Navigation from './Navigation'
+import AccountActions from '@/components/AccountActions'
+import Navigation from '@/components/Navigation'
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   return (

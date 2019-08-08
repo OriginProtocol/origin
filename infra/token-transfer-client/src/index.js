@@ -5,8 +5,8 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
 import './css/app.css'
-import { store, persistor } from './store'
-import App from './app'
+import { store, persistor } from '@/store'
+import App from '@/app'
 
 ReactDOM.render(
   <Provider store={store}>

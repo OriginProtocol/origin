@@ -4,12 +4,12 @@ import { bindActionCreators } from 'redux'
 
 import { momentizeGrant } from '@origin/token-transfer-server/src/lib/vesting'
 
-import { fetchGrants } from '../../actions/grant'
-import BalanceCard from '../BalanceCard'
-import NewsHeadlinesCard from '../NewsHeadlinesCard'
-import VestingBars from '../VestingBars'
-import VestingHistory from '../VestingHistory'
-import GrantDetails from '../GrantDetail'
+import { fetchGrants } from '@/actions/grant'
+import BalanceCard from '@/components/BalanceCard'
+import NewsHeadlinesCard from '@/components/NewsHeadlinesCard'
+import VestingBars from '@/components/VestingBars'
+import VestingHistory from '@/components/VestingHistory'
+import GrantDetails from '@/components/GrantDetail'
 
 class Dashboard extends Component {
   constructor(props) {

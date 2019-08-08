@@ -1,6 +1,6 @@
 import React from 'react'
 
-import EmailIcon from '../../assets/email-icon.svg'
+import EmailIcon from '@/assets/email-icon.svg'
 
 const CheckEmail = () => (
   <div className="action-card">

@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { fetchAccounts } from '../../actions/account'
-import BorderedCard from '../BorderedCard'
-import GoogleAuthenticatorIcon from '../../assets/google-authenticator-icon@3x.jpg'
-import AccountTable from '../AccountTable'
+import { fetchAccounts } from '@/actions/account'
+import BorderedCard from '@/components/BorderedCard'
+import GoogleAuthenticatorIcon from '@/assets/google-authenticator-icon@3x.jpg'
+import AccountTable from '@/components/AccountTable'
 
 class Security extends Component {
   constructor(props) {

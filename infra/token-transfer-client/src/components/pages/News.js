@@ -1,7 +1,7 @@
 import React from 'react'
 
-import withNews from '../../hoc/withNews'
-import NewsCard from '../NewsCard'
+import withNews from '@/hoc/withNews'
+import NewsCard from '@/components/NewsCard'
 
 const News = props => (
   <div>

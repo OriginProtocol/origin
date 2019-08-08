@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { addAccount } from '../actions/account'
-import { formInput, formFeedback } from '../utils/formHelpers'
-import Modal from './Modal'
+import { addAccount } from '@/actions/account'
+import { formInput, formFeedback } from '@/utils/formHelpers'
+import Modal from '@/components/Modal'
 import DeleteIcon from '@material-ui/icons/Delete'
 
 class AccountTable extends Component {

@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import { formInput, formFeedback } from '../../utils/formHelpers'
-import { setSessionEmail } from '../../actions/session'
-import agent from '../../utils/agent'
+import { formInput, formFeedback } from '@/utils/formHelpers'
+import { setSessionEmail } from '@/actions/session'
+import { apiUrl } from '@/constants'
+import agent from '@/utils/agent'
 
 class Otp extends Component {
   state = {
@@ -16,7 +17,6 @@ class Otp extends Component {
   handleVerifyOtpCode = async () => {
     let response
     try {
-      const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
       response = await agent
         .post(`${apiUrl}/api/verify_totp`)
         .send({ code: this.state.otpCode })

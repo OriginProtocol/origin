@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 
-import withNews from '../hoc/withNews'
-import BorderedCard from './BorderedCard'
+import withNews from '@/hoc/withNews'
+import BorderedCard from '@/components/BorderedCard'
 
 const NewsHeadlinesCard = ({ news = [] }) => {
   if (!news.length) return null

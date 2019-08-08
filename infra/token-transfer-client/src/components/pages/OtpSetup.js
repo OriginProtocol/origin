@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 
-import agent from '../../utils/agent'
+import agent from '@/utils/agent'
+import { apiUrl } from '@/constants'
 
 class OtpVerify extends Component {
   state = {
@@ -18,7 +19,6 @@ class OtpVerify extends Component {
   handleOtpSetup = async () => {
     let response
     try {
-      const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
       response = await agent.post(`${apiUrl}/api/setup_totp`)
     } catch (error) {
       this.setState({ error: 'An error occurred configuring OTP.' })

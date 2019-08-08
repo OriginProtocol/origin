@@ -1,4 +1,5 @@
-import agent from '../utils/agent'
+import agent from '@/utils/agent'
+import { apiUrl } from '@/constants'
 
 export const FETCH_GRANTS_PENDING = 'FETCH_GRANTS_PENDING'
 export const FETCH_GRANTS_SUCCESS = 'FETCH_GRANTS_SUCCESS'
@@ -28,7 +29,6 @@ export function fetchGrants() {
   return dispatch => {
     dispatch(fetchGrantsPending())
 
-    const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
     agent
       .get(`${apiUrl}/api/grants`)
       .then(response => dispatch(fetchGrantsSuccess(response.body)))

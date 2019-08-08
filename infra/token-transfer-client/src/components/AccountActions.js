@@ -2,12 +2,12 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import agent from '../utils/agent'
-import { setSessionEmail } from '../actions/session'
+import { apiUrl } from '@/constants'
+import { setSessionEmail } from '@/actions/session'
+import agent from '@/utils/agent'
 
 const AccountActions = props => {
   const handleLogout = async () => {
-    const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
     agent.post(`${apiUrl}/api/logout`)
     await props.setSessionEmail(false)
   }

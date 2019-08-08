@@ -1,4 +1,5 @@
-import agent from '../utils/agent'
+import agent from '@/utils/agent'
+import { apiUrl } from '@/constants'
 
 export const FETCH_ACCOUNTS_PENDING = 'FETCH_ACCOUNTS_PENDING'
 export const FETCH_ACCOUNTS_SUCCESS = 'FETCH_ACCOUNTS_SUCCESS'
@@ -52,7 +53,6 @@ export function addAccount(account) {
   return dispatch => {
     dispatch(addAccountPending())
 
-    const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
     agent
       .post(`${apiUrl}/api/accounts`)
       .send(account)
@@ -68,7 +68,6 @@ export function fetchAccounts() {
   return dispatch => {
     dispatch(fetchAccountsPending())
 
-    const apiUrl = process.env.PORTAL_API_URL || 'http://localhost:5000'
     agent
       .get(`${apiUrl}/api/accounts`)
       .then(response => dispatch(fetchAccountsSuccess(response.body)))
