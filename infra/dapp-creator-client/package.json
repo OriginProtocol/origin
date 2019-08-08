@@ -64,7 +64,7 @@
     "webpack-cli": "3.3.5"
   },
   "devDependencies": {
-    "bootstrap": "^4.3.1",
+    "bootstrap": "4.3.1",
     "typeface-lato": "0.0.54",
     "typeface-poppins": "0.0.72",
     "webpack-dev-server": "3.7.2"

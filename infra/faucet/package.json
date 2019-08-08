@@ -26,21 +26,21 @@
   "dependencies": {
     "@origin/bridge": "^0.1.0",
     "@origin/token": "^0.1.0",
-    "dotenv": "^8.0.0",
-    "envkey": "^1.2.6",
-    "express": "^4.17.1",
-    "logplease": "^1.2.15",
-    "per-env": "^1.0.2",
-    "pg": "^7.11.0",
-    "rate-limiter-flexible": "^0.19.4",
-    "sequelize": "^5.8.12",
-    "sequelize-cli": "^5.5.0",
+    "dotenv": "8.0.0",
+    "envkey": "1.2.6",
+    "express": "4.17.1",
+    "logplease": "1.2.15",
+    "per-env": "1.0.2",
+    "pg": "7.11.0",
+    "rate-limiter-flexible": "0.19.6",
+    "sequelize": "5.10.1",
+    "sequelize-cli": "5.5.0",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^6.1.4",
-    "nodemon": "^1.19.1"
+    "chai": "4.2.0",
+    "mocha": "6.2.0",
+    "nodemon": "1.19.1"
   },
   "prettier": {
     "semi": false,
