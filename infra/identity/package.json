@@ -11,11 +11,11 @@
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
-    "dotenv": "^8.0.0",
-    "envkey": "^1.2.6",
-    "pg": "^7.11.0",
-    "sequelize": "^5.8.12",
-    "sequelize-cli": "^5.5.0"
+    "dotenv": "8.0.0",
+    "envkey": "1.2.6",
+    "pg": "7.11.0",
+    "sequelize": "5.10.1",
+    "sequelize-cli": "5.5.0"
   },
   "devDependencies": {
   },
