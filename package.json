@@ -52,6 +52,7 @@
     ],
     "groupName": "all",
     "ignoreDeps": [
+      "bip39",
       "ganache-core",
       "web3",
       "web3-utils",
