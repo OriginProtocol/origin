@@ -15,7 +15,8 @@ const PromoteListingAmount = ({
   tokenBalance,
   onChange,
   multiUnit,
-  listingTokens
+  listingTokens,
+  refetch
 }) => {
   const { unitsAvailable, commissionPerUnit } = listing
   const [value, setValue] = useState(String(commissionPerUnit))
@@ -24,9 +25,13 @@ const PromoteListingAmount = ({
   useEffect(() => setValue(String(commissionPerUnit)), [commissionPerUnit])
 
   const calcCommission = commissionPerUnit => {
+    let commission = tokenBalance
+    if (listing.__typename === 'UnitListing') {
+      commission = commissionPerUnit * unitsAvailable
+    }
     return {
       commissionPerUnit,
-      commission: Math.min(tokenBalance, commissionPerUnit * unitsAvailable)
+      commission: Math.min(tokenBalance, commission)
     }
   }
 
@@ -43,7 +48,7 @@ const PromoteListingAmount = ({
         <div className="balance">
           {`OGN Balance: `} <CoinLogo />
           {tokenBalance}
-          {!multiUnit ? null : (
+          {listing.__typename !== 'UnitListing' || !multiUnit ? null : (
             <div>{`Units Available: ${unitsAvailable}`}</div>
           )}
         </div>
@@ -110,7 +115,7 @@ const PromoteListingAmount = ({
           >
             Back
           </Link>
-          {multiUnit ? (
+          {multiUnit || listing.__typename !== 'UnitListing' ? (
             <Link
               to={`/promote/${match.params.listingId}/budget`}
               className="btn btn-primary btn-rounded btn-lg"
@@ -121,6 +126,7 @@ const PromoteListingAmount = ({
             <UpdateListing
               listing={listing}
               listingTokens={listingTokens}
+              refetch={refetch}
               tokenBalance={tokenBalance}
               className="btn btn-primary btn-rounded btn-lg"
               children={fbt('Promote Now', 'promoteListing.promoteNow')}

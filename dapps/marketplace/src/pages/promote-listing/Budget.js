@@ -13,7 +13,8 @@ const PromoteListingBudget = ({
   listing,
   tokenBalance,
   onChange,
-  listingTokens
+  listingTokens,
+  refetch
 }) => {
   const { commission, commissionPerUnit, unitsAvailable } = listing
   const [value, setValue] = useState(String(commission))
@@ -34,7 +35,9 @@ const PromoteListingBudget = ({
         <div className="balance">
           {`OGN Balance: `} <CoinLogo />
           {tokenBalance}
-          <div>{`Units Available: ${unitsAvailable}`}</div>
+          {listing.__typename !== 'UnitListing' ? null : (
+            <div>{`Units Available: ${unitsAvailable}`}</div>
+          )}
         </div>
         <h4>Total Budget</h4>
         <div className="help">
@@ -79,6 +82,7 @@ const PromoteListingBudget = ({
           </Link>
 
           <UpdateListing
+            refetch={refetch}
             listing={listing}
             listingTokens={listingTokens}
             tokenBalance={tokenBalance}

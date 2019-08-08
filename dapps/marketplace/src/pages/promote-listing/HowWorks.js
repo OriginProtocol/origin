@@ -22,6 +22,12 @@ const HowWorks = ({ match }) => (
       </div>
       <div className="actions">
         <Link
+          to={`/listing/${match.params.listingId}`}
+          className="btn btn-outline-primary btn-rounded btn-lg mr-3 d-none d-sm-inline-block"
+        >
+          Back
+        </Link>
+        <Link
           to={`/promote/${match.params.listingId}/amount`}
           className="btn btn-primary btn-rounded btn-lg"
         >

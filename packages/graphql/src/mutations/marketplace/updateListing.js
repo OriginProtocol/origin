@@ -93,7 +93,10 @@ async function updateListing(_, args) {
     tx,
     from,
     mutation,
-    gas
+    gas,
+    onConfirmation: () => {
+      context.eventSource.resetMemos()
+    }
   })
 }
 

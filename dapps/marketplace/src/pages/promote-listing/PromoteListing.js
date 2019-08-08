@@ -21,13 +21,14 @@ const PromoteListing = props => {
   useEffect(() => {
     if (props.listing) {
       const listing = getStateFromListing(props)
-      setListing({
-        ...listing,
-        commission: Math.min(
-          props.tokenBalance,
+      let commission = props.tokenBalance
+      if (listing.__typename === 'UnitListing') {
+        commission = Math.min(
+          commission,
           listing.commissionPerUnit * listing.unitsAvailable
         )
-      })
+      }
+      setListing({ ...listing, commission })
     }
   }, [props.listing, props.tokenBalance])
 
@@ -37,6 +38,7 @@ const PromoteListing = props => {
 
   const listingProps = {
     listing,
+    refetch: props.refetchListing,
     listingTokens: tokenPrice(props.listing.deposit),
     multiUnit: props.listing.multiUnit,
     tokenBalance: props.tokenBalance,

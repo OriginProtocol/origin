@@ -581,6 +581,10 @@ class OriginEventSource {
     this.offerCache = {}
     this.listingCache = {}
   }
+
+  resetMemos() {
+    getListing.cache.clear()
+  }
 }
 
 module.exports = OriginEventSource

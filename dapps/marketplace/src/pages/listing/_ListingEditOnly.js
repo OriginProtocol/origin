@@ -69,6 +69,18 @@ const EditOnly = ({
         <Price listing={listing} descriptor />
       </div>
     )}
+    {isSingleUnit && listing.status === 'pending' ? (
+      <div className="status">
+        <div className="status-title">
+          <fbt desc="Pending">Pending</fbt>
+        </div>
+        <div className="status-text">
+          <fbt desc="UnitListing.offerMadeOnListing">
+            An offer has been made on this listing
+          </fbt>
+        </div>
+      </div>
+    ) : null}
     {isFractional ||
     isFractionalHourly ||
     isAnnouncement ||
@@ -104,10 +116,18 @@ const EditOnly = ({
       children={fbt('Edit listing', 'EditListing')}
     />
 
-    {!listing.commission ? null : (
+    {listing.commissionPerUnit === '0' ? (
+      <div>
+        <Link
+          className="listing-action-link"
+          to={`/promote/${listing.id}`}
+          children={fbt('Promote listing', 'listing.editCommission')}
+        />
+      </div>
+    ) : (
       <>
         <div className="listing-buy-editonly mt-3">
-          {listing.multiUnit ? (
+          {listing.__typename !== 'UnitListing' || listing.multiUnit ? (
             <MultiUnitCommission listing={listing} />
           ) : (
             <SingleUnitCommission listing={listing} />
@@ -124,7 +144,7 @@ const EditOnly = ({
 
         <Link
           className="listing-action-link"
-          to={`/promote/${listing.id}`}
+          to={`/promote/${listing.id}/amount`}
           children={fbt('Edit Commisison', 'listing.editCommission')}
         />
       </>
