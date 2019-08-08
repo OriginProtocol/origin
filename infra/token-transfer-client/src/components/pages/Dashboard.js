@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import moment from 'moment'
 import { bindActionCreators } from 'redux'
+
+import { momentizeGrant } from '@origin/token-transfer-server/src/lib/vesting'
 
 import { fetchGrants } from '../../actions/grant'
 import BalanceCard from '../BalanceCard'
@@ -13,33 +14,34 @@ import GrantDetails from '../GrantDetail'
 class Dashboard extends Component {
   constructor(props) {
     super(props)
-
-    const history = [
-      ...Array(moment('2019-10-10').diff(moment('2018-10-10'), 'months'))
-    ].map((v, i) => {
-      return {
-        amount: 1000,
-        date: moment('2018-10-10').add(i, 'months')
-      }
-    })
-
-    this.state = {
-      history
-    }
   }
 
   componentDidMount() {
     this.props.fetchGrants()
   }
 
-  refreshDashboard = () => {}
-
   render() {
+    return this.props.isFetching ? this.renderLoading() : this.renderDashboard()
+  }
+
+  renderLoading() {
+    return 'Loading'
+  }
+
+  renderDashboard() {
+    const grants = this.props.grants.map(momentizeGrant)
+
+    const vestedTotal = grants.reduce((total, currentGrant)  => {
+      return total + currentGrant.vestedAmount
+    }, 0)
+
+    console.log(vestedTotal)
+
     return (
       <>
         <div className="row">
           <div className="col">
-            <BalanceCard balance={11112500} />
+            <BalanceCard balance={vestedTotal} />
           </div>
           <div className="col">
             <NewsHeadlinesCard />
@@ -47,17 +49,15 @@ class Dashboard extends Component {
         </div>
         <div className="row">
           <div className="col">
-            {!this.props.isFetching && (
-              <VestingBars grants={this.props.grants} />
-            )}
+            <VestingBars grants={grants} />
           </div>
         </div>
         <div className="row">
           <div className="col">
-            <VestingHistory history={this.state.history} />
+            <VestingHistory grants={grants} />
           </div>
           <div className="col">
-            <GrantDetails grants={this.props.grants} />
+            <GrantDetails grants={grants} />
           </div>
         </div>
       </>

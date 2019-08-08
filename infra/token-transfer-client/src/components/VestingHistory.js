@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { vestingSchedule } from '@origin/token-transfer-server/src/lib/vesting'
+
 const VestingHistory = props => (
   <div className="table-card-wrapper">
     <div className="row header">
@@ -7,22 +9,24 @@ const VestingHistory = props => (
         <h2>Vesting History</h2>
       </div>
     </div>
-    <div className="table">
-      {props.history.map(h => (
-        <div className="row table-row" key={h.date}>
-          <div className="col-1">
-            <div className="status-circle"></div>
+    {props.grants.length > 0 && (
+      <div className="table">
+        {vestingSchedule(props.grants[0]).map(currentVest => (
+          <div className="row table-row" key={currentVest.date}>
+            <div className="col-1">
+              <div className="status-circle"></div>
+            </div>
+            <div className="col">{currentVest.amount.toLocaleString()} OGN</div>
+            <div className="col">
+              <small>{currentVest.vested ? 'vested' : 'unvested'}</small>
+            </div>
+            <div className="col" style={{ textAlign: 'right' }}>
+              {currentVest.date.format('MM/DD/YYYY')}
+            </div>
           </div>
-          <div className="col">{h.amount.toLocaleString()} OGN</div>
-          <div className="col">
-            <small>vested</small>
-          </div>
-          <div className="col" style={{ textAlign: 'right' }}>
-            {h.date.format('MM/DD/YYYY')}
-          </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    )}
   </div>
 )
 
