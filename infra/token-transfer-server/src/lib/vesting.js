@@ -1,98 +1,91 @@
-const chalk = require('chalk')
-const ip = require('ip')
+'use strict'
+
 const moment = require('moment')
 const BigNumber = require('bignumber.js')
-require('console.table')
 
-const { Grant, Event, sequelize } = require('../models')
-const { GRANT_VEST } = require('../constants/events')
+function toMoment(date) {
+  if (!date) return date
+  if (!moment.isMoment()) return moment(date)
+  return date
+}
 
-async function vestGrant(grant) {
-  const now = grant.now || moment()
-
-  let totalVested = BigNumber(0)
-  const txn = await sequelize.transaction()
-  try {
-    const grantedAt = moment(grant.grantedAt).format('YYYY-MM-DD')
-    let newlyVested = BigNumber(0)
-    // Log an event for each vesting event. This is important in case this is a
-    // catch-up run for this tool. We want a separate log entry for each vesting
-    // event for reporting purposes.
-    for (const vestingEvent of grant.vestingSchedule()) {
-      if (vestingEvent.date.isAfter(now)) {
-        break
-      }
-      totalVested = totalVested.plus(vestingEvent.amount)
-      if (totalVested.isLessThanOrEqualTo(grant.vested)) {
-        continue
-      }
-
-      // Log event and increment vested counter for the grant.
-      const vestingDateStr = vestingEvent.date.format('YYYY-MM-DD')
-      await Event.create({
-        email: grant.email,
-        ip: ip.address(),
-        grantId: grant.id,
-        action: GRANT_VEST,
-        data: JSON.stringify({
-          amount: vestingEvent.amount.toNumber(),
-          vestDate: vestingDateStr
-        })
-      })
-      newlyVested = newlyVested.plus(vestingEvent.amount)
-      if (process.env.NODE_ENV !== 'test') {
-        console.log(
-          chalk`{bold.hex('#26d198') ⬢}  Vested ${vestingEvent.amount.toNumber()} OGN for grant ${grantedAt} to ${
-            grant.email
-          } (effective ${vestingDateStr})`
-        )
-      }
-    }
-
-    // Sanity checks.
-    grant.vested += newlyVested.toNumber()
-    const calculatedVested = grant.calculateVested()
-    if (grant.vested != calculatedVested) {
-      throw new Error(
-        `vested amount ${grant.vested} != calculated amount ${calculatedVested}`
-      )
-    }
-    if (grant.vested > grant.amount) {
-      throw new Error(
-        `vested ${grant.vested} > grant ${grant.amount} for ${grant.email} ${grantedAt}`
-      )
-    }
-
-    await grant.save()
-    await txn.commit()
-    return grant.id
-  } catch (e) {
-    await txn.rollback()
-    throw e
+/* Convert the dates of a grant object to moments.
+ *
+ */
+function momentizeGrant(grant) {
+  return {
+    ...grant,
+    start: toMoment(grant.start),
+    end: toMoment(grant.end),
+    cliff: toMoment(grant.cliff),
+    cancelled: toMoment(grant.cancelled)
   }
 }
 
-async function vestGrants(now = null) {
-  let grantCount = 0
-  let vestedCount = 0
-  const grants = await Grant.findAll()
-  for (const grant of grants) {
-    if (now) {
-      grant.now = now
-    }
+/**
+ * Returns the vesting schedule for the grant. The vesting schedule is just an
+ * array of integers representing a vested amount. The date/time associated with
+ * each vesting event is not calculated.
+ */
+function vestingEvents(grantObj) {
+  const grant = momentizeGrant(grantObj)
 
-    grantCount++
-    const tokensVested = grant.calculateVested()
-    if (tokensVested.isGreaterThan(grant.vested)) {
-      await vestGrant(grant)
-      vestedCount++
-    }
-  }
+  const vestingEventCount = grant.end.diff(grant.start, grant.interval)
+  const vestedPerEvent = BigNumber(grant.amount).div(vestingEventCount)
+  const cliffVestingCount = grant.cliff.diff(grant.start, grant.interval)
 
-  if (process.env.NODE_ENV !== 'test') {
-    console.log(`\n✅ Vested ${vestedCount} of ${grantCount} grants.`)
-  }
-  return vestedCount
+  const cliffVestAmount = Math.floor(vestedPerEvent.times(cliffVestingCount))
+  const remainingVestingCount = vestingEventCount - cliffVestingCount
+  const remainingVestingAmounts = Array(remainingVestingCount).fill(
+    Math.floor(vestedPerEvent)
+  )
+
+  const vestingEvents = [cliffVestAmount, ...remainingVestingAmounts]
+  const roundingError = grant.amount - vestingEvents.reduce((a, b) => a + b, 0)
+  vestingEvents[vestingEvents.length - 1] += roundingError
+
+  return vestingEvents
 }
 
-module.exports = { vestGrant, vestGrants }
+/* Returns an array of vesting objects that include a datetime and status
+ * associated with each vesting event.
+ */
+function vestingSchedule(grantObj, start = null, end = null) {
+  const now = grantObj.now || moment()
+  const grant = momentizeGrant(grantObj)
+
+  return vestingEvents(grant).map((currentVestingEvent, index) => {
+    const vestingEventDate = grant.cliff.clone()
+    if (index > 0) {
+      vestingEventDate.add(index, grant.interval)
+    }
+    return {
+      amount: currentVestingEvent,
+      date: vestingEventDate,
+      vested: vestingEventDate < now
+    }
+  })
+}
+
+/* Returns the number of tokens vested by a grant.
+ *
+ */
+function vestedAmount(grantObj) {
+  const now = grantObj.now || moment()
+  const grant = momentizeGrant(grantObj)
+
+  if (now < grant.cliff) {
+    return 0
+  } else if (now > grant.end) {
+    return grant.amount
+  } else {
+    // Number of vesting events that have occurred since the cliff determines
+    // the index of the array for calculating events that have already vested
+    const threshold = now.diff(grant.cliff, grant.interval)
+    // Buld array of already vested amounts
+    const vested = vestingEvents(grant).slice(0, threshold + 1)
+    return vested.length ? Math.round(BigNumber.sum(...vested)) : 0
+  }
+}
+
+module.exports = { momentizeGrant, vestingEvents, vestingSchedule, vestedAmount }
