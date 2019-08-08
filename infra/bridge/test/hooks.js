@@ -177,3 +177,68 @@ describe('twitter webhooks', () => {
   //     .expect(403)
   // })
 })
+
+describe('telegram webhooks', () => {
+  beforeEach(async () => {
+    // Clear out redis-mock
+    await new Promise(resolve => client.del('*', resolve))
+  })
+
+  it('should push follow events to redis', async () => {
+    await request(app)
+      .post('/hooks/telegram')
+      .send({
+        message: {
+          new_chat_members: [
+            {
+              id: 'abc',
+              username: 'testaccount'
+            }
+          ]
+        }
+      })
+      .expect(200)
+
+    const event = JSON.parse(await getAsync('telegram/follow/testaccount'))
+    expect(event.id).to.equal('abc')
+  })
+
+  it('should ignore follow events of bots', async () => {
+    await request(app)
+      .post('/hooks/telegram')
+      .send({
+        message: {
+          new_chat_members: [
+            {
+              id: 'abc',
+              username: 'test_bot',
+              is_bot: true
+            }
+          ]
+        }
+      })
+      .expect(200)
+
+    const event = JSON.parse(await getAsync('telegram/follow/test_bot'))
+    expect(event).to.null
+  })
+
+  it('should use `id` if `username` is not available', async () => {
+    await request(app)
+      .post('/hooks/telegram')
+      .send({
+        message: {
+          new_chat_members: [
+            {
+              id: 'abc'
+            }
+          ]
+        }
+      })
+      .expect(200)
+
+    const event = JSON.parse(await getAsync('telegram/follow/abc'))
+    expect(event.id).to.equal('abc')
+  })
+
+})
