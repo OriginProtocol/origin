@@ -11,6 +11,14 @@ function withNews(WrappedComponent) {
       this.setState({ news: await this.fetchNews() })
     }
 
+    /* Convert HTML entities to text.
+     */
+    convertHtmlEntities = (html) => {
+      const textarea = document.createElement('textarea')
+      textarea.innerHTML = html
+      return textarea.value
+    }
+
     fetchNews = async () => {
       const mediumUrl = 'https://medium.com/feed/originprotocol'
       const response = await fetch(
@@ -30,7 +38,7 @@ function withNews(WrappedComponent) {
 
         return {
           title: item.title,
-          description: description,
+          description: this.convertHtmlEntities(description),
           image: imgSrc,
           link: item.link
         }
