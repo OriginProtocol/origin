@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
+import { bindActionCreators } from 'redux'
 
+import { fetchGrants } from '../../actions/grant'
 import BalanceCard from '../BalanceCard'
 import NewsHeadlinesCard from '../NewsHeadlinesCard'
 import VestingBars from '../VestingBars'
@@ -22,32 +24,12 @@ class Dashboard extends Component {
     })
 
     this.state = {
-      grants: [
-        {
-          id: 1,
-          start: moment('2018-10-10'),
-          end: moment('2021-10-10'),
-          cliff: moment('2019-10-10'),
-          cancelled: false,
-          amount: 11125000,
-          interval: 'days'
-        },
-        {
-          id: 2,
-          start: moment('2020-05-05'),
-          end: moment('2024-05-05'),
-          cliff: moment('2021-05-05'),
-          cancelled: false,
-          amount: 10000000,
-          interval: 'days'
-        }
-      ],
       history
     }
   }
 
   componentDidMount() {
-    this.refreshDashboard()
+    this.props.fetchGrants()
   }
 
   refreshDashboard = () => {}
@@ -65,7 +47,9 @@ class Dashboard extends Component {
         </div>
         <div className="row">
           <div className="col">
-            <VestingBars grants={this.state.grants} />
+            {!this.props.isFetching && (
+              <VestingBars grants={this.props.grants} />
+            )}
           </div>
         </div>
         <div className="row">
@@ -73,7 +57,7 @@ class Dashboard extends Component {
             <VestingHistory history={this.state.history} />
           </div>
           <div className="col">
-            <GrantDetails grants={this.state.grants} />
+            <GrantDetails grants={this.props.grants} />
           </div>
         </div>
       </>
@@ -81,13 +65,17 @@ class Dashboard extends Component {
   }
 }
 
-const mapStateToProps = () => {
-  return {}
+const mapStateToProps = ({ grant }) => {
+  return {
+    isFetching: grant.isFetching,
+    grants: grant.grants,
+    error: grant.error
+  }
 }
 
-const mapDispatchToProps = () => {
-  return {}
-}
+const mapDispatchToProps = dispatch => bindActionCreators({
+  fetchGrants: fetchGrants
+}, dispatch)
 
 export default connect(
   mapStateToProps,

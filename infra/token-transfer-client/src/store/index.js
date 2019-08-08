@@ -4,6 +4,7 @@ import thunk from 'redux-thunk'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 
 import account from '../reducers/account'
+import grant from '../reducers/grant'
 import session from '../reducers/session'
 
 const persistConfig = {
@@ -15,6 +16,7 @@ const persistedReducer = persistReducer(
   persistConfig,
   combineReducers({
     account,
+    grant,
     session
   })
 )

@@ -2,10 +2,16 @@ import React from 'react'
 import moment from 'moment'
 
 const VestingBars = props => {
+  if (!props.grants || props.grants.length === 0) {
+    return null
+  }
+
   const now = moment()
 
-  const firstStartDate = moment(Math.min(...props.grants.map(g => g.start)))
-  const lastEndDate = moment(Math.max(...props.grants.map(g => g.end)))
+  const firstStartDate = moment(
+    Math.min(...props.grants.map(g => moment(g.start)))
+  )
+  const lastEndDate = moment(Math.max(...props.grants.map(g => moment(g.end))))
   const totalDuration = lastEndDate - firstStartDate
 
   const interim = firstStartDate.clone()
