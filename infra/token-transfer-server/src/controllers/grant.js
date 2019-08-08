@@ -5,9 +5,7 @@ const { ensureLoggedIn } = require('../lib/login')
 const { asyncMiddleware } = require('../utils')
 const { Grant } = require('../models')
 
-const {
-  vestedAmount
-} = require('../lib/vesting')
+const { vestedAmount } = require('../lib/vesting')
 
 /**
  * Returns grants for the authenticated user.

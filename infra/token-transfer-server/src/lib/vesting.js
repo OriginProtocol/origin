@@ -54,6 +54,12 @@ function vestingSchedule(grantObj, start = null, end = null) {
   const now = grantObj.now || moment()
   const grant = momentizeGrant(grantObj)
 
+  const bottomThreshold = start.diff(grant.cliff, grant.interval)
+  const topThreshold = end.diff(grant.cliff, grant.interval)
+
+  console.log(bottomThreshold)
+  console.log(topThreshold)
+
   return vestingEvents(grant).map((currentVestingEvent, index) => {
     const vestingEventDate = grant.cliff.clone()
     if (index > 0) {
@@ -88,4 +94,9 @@ function vestedAmount(grantObj) {
   }
 }
 
-module.exports = { momentizeGrant, vestingEvents, vestingSchedule, vestedAmount }
+module.exports = {
+  momentizeGrant,
+  vestingEvents,
+  vestingSchedule,
+  vestedAmount
+}

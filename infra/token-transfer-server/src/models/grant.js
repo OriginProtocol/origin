@@ -1,8 +1,5 @@
 'use strict'
 
-const BigNumber = require('bignumber.js')
-const moment = require('moment')
-
 module.exports = (sequelize, DataTypes) => {
   const Grant = sequelize.define(
     'Grant',
