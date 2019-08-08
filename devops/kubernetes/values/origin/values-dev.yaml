@@ -6,7 +6,7 @@ bridgeImageTag: '231dd7b'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '1fa6218'
+dappImageTag: '54634c6'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
@@ -18,7 +18,7 @@ faucetImageTag: 'e338058'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '334d443'
+eventlistenerImageTag: '54634c6'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -51,7 +51,7 @@ creatorIssuerIp: '35.233.181.44'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: 'a0c9dc8'
+cronImageTag: '6e6dd2b'
 
 # origin-admin
 adminImage: origin-admin
@@ -63,7 +63,7 @@ relayerImageTag: '47a6a50'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: '334d443'
+graphqlImageTag: '54634c6'
 
 # origin-token-transfer-client
 t3ClientImage: origin-token-transfer-client
