@@ -5,6 +5,7 @@ import numberFormat from 'utils/numberFormat'
 
 import Link from 'components/Link'
 import CoinLogo from 'components/CoinLogo'
+import WithPrices from 'components/WithPrices'
 
 import UpdateListing from 'pages/create-listing/mutations/UpdateListing'
 
@@ -81,14 +82,23 @@ const PromoteListingBudget = ({
             Back
           </Link>
 
-          <UpdateListing
-            refetch={refetch}
-            listing={listing}
-            listingTokens={listingTokens}
-            tokenBalance={tokenBalance}
-            className="btn btn-primary btn-rounded btn-lg"
-            children={fbt('Promote Now', 'promoteListing.promoteNow')}
-          />
+          <WithPrices
+            price={{ amount: commission, currency: { id: 'token-OGN' } }}
+            target={'token-OGN'}
+            targets={['token-OGN']}
+          >
+            {({ tokenStatus }) => (
+              <UpdateListing
+                refetch={refetch}
+                listing={listing}
+                listingTokens={listingTokens}
+                tokenBalance={tokenBalance}
+                tokenStatus={tokenStatus}
+                className="btn btn-primary btn-rounded btn-lg"
+                children={fbt('Promote Now', 'promoteListing.promoteNow')}
+              />
+            )}
+          </WithPrices>
         </div>
       </div>
     </>
