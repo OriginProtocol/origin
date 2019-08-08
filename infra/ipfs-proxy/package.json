@@ -23,11 +23,11 @@
   },
   "homepage": "https://github.com/OriginProtocol/origin#readme",
   "dependencies": {
-    "busboy": "0.2.14",
+    "busboy": "0.3.1",
     "file-type": "10.11.0",
     "http-proxy": "1.17.0",
     "ipfs": "0.34.4",
-    "ipfsd-ctl": "0.40.3",
+    "ipfsd-ctl": "0.44.1",
     "is-json": "2.0.1",
     "logplease": "1.2.15",
     "per-env": "1.0.2",
