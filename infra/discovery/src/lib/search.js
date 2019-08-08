@@ -384,11 +384,12 @@ class Listing {
             }
           } else {
             throw new Error(
-              `Sort variables are not whitelisted - sort = ${sort}, order = ${order}`
+              `Sort variables are not whitelisted - sort = ${sort}, order = ${order}, disabling sorting`
             )
           }
         } catch (e) {
           logger.error(e)
+          return []
         }
       } else {
         return []
