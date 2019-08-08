@@ -13,8 +13,8 @@
   "dependencies": {
     "dotenv": "8.0.0",
     "envkey": "1.2.6",
-    "pg": "7.11.0",
-    "sequelize": "5.10.1",
+    "pg": "7.12.0",
+    "sequelize": "5.12.3",
     "sequelize-cli": "5.5.0"
   },
   "devDependencies": {
