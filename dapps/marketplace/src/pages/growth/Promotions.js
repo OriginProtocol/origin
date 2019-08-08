@@ -356,6 +356,10 @@ const Promotions = ({
           onVerificationError={() => setActionToVerify(null)}
           onConfirmationCompleted={() => {
             setActionConfirmed(true)
+            if (showNotification) {
+              const message = getToastMessage(actionToVerify, decimalDivision)
+              showNotification(message, 'green')
+            }
             if (growthCampaignsRefetch) {
               growthCampaignsRefetch()
             }
