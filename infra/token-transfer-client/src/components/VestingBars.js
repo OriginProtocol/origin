@@ -33,9 +33,9 @@ const VestingBars = props => {
 
   // Extract x points (months) across the duration to display between first
   // start date and last end date to display
-  const maxPoints = 8
+  const maxPoints = 9
   const displayMonths = intermediateMonths.filter((e, i, arr) => {
-    return i !== 0 && i % Math.floor(arr.length / maxPoints) === 0
+    return i !== 0 && i !== arr.length - 1 && i % Math.floor(arr.length / maxPoints) === 0
   })
 
   return (

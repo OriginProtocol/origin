@@ -35,8 +35,6 @@ class Dashboard extends Component {
       return total + currentGrant.vestedAmount
     }, 0)
 
-    console.log(vestedTotal)
-
     return (
       <>
         <div className="row">
