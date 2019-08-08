@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@origin/contracts": "^0.8.6",
+    "@origin/ip2geo": "^0.1.0",
     "@origin/token": "^0.1.0",
     "@sendgrid/mail": "^6.4.0",
     "bignumber.js": "9.0.0",
@@ -33,6 +34,7 @@
     "eslint": "^6.1.0",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
+    "express-useragent": "^1.0.13",
     "express-validator": "^6.1.1",
     "ip": "^1.1.5",
     "jsonwebtoken": "^8.5.1",
