@@ -31,7 +31,7 @@ describe('exchange rate poller', () => {
       .reply(200, {
         rates: {
           btc: { name: 'Bitcoin', unit: 'BTC', value: 1.0, type: 'crypto' },
-          usd: { name: 'US Dollar', unit: '$', value: '11874.946', type: 'fiat' }
+          usd: { name: 'US Dollar', unit: '$', value: 11874.946, type: 'fiat' }
         }
       })
 
