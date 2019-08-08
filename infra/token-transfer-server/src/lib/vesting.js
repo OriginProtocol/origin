@@ -54,8 +54,13 @@ function vestingSchedule(grantObj, start = null, end = null) {
   const now = grantObj.now || moment()
   const grant = momentizeGrant(grantObj)
 
-  const bottomThreshold = start.diff(grant.cliff, grant.interval)
-  const topThreshold = end.diff(grant.cliff, grant.interval)
+  let bottomThreshold, topThreshold
+  if (start) {
+    bottomThreshold = start.diff(grant.cliff, grant.interval)
+  }
+  if (end) {
+    topThreshold = end.diff(grant.cliff, grant.interval)
+  }
 
   console.log(bottomThreshold)
   console.log(topThreshold)
