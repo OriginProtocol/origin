@@ -378,7 +378,7 @@ const augustConfig = {
               linkKey: 'growth.twitterShare.content1.link',
             },
             reward: {
-              amount: '1',
+              amount: '0',
               currency: 'OGN'
             },
             limit: 1,
@@ -404,7 +404,7 @@ const augustConfig = {
               linkKey: 'growth.twitterShare.content2.link',
             },
             reward: {
-              amount: '1',
+              amount: '0',
               currency: 'OGN'
             },
             limit: 1,
@@ -430,7 +430,7 @@ const augustConfig = {
               linkKey: 'growth.twitterShare.content3.link',
             },
             reward: {
-              amount: '1',
+              amount: '0',
               currency: 'OGN'
             },
             limit: 1,
@@ -456,7 +456,7 @@ const augustConfig = {
               linkKey: 'growth.twitterShare.content4.link',
             },
             reward: {
-              amount: '1',
+              amount: '0',
               currency: 'OGN'
             },
             limit: 1,
@@ -482,7 +482,7 @@ const augustConfig = {
               linkKey: 'growth.twitterShare.content5.link',
             },
             reward: {
-              amount: '1',
+              amount: '0',
               currency: 'OGN'
             },
             limit: 1,
@@ -498,7 +498,7 @@ const augustConfig = {
           config: {
             eventType: 'LikedOnFacebook',
             reward: {
-              amount: tokenToNaturalUnits(1),
+              amount: '0',
               currency: 'OGN'
             },
             limit: 1,

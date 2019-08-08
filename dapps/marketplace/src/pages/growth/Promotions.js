@@ -3,6 +3,7 @@ import { fbt } from 'fbt-runtime'
 import Link from 'components/Link'
 import { withRouter } from 'react-router-dom'
 import withWallet from 'hoc/withWallet'
+import uniqBy from 'lodash/uniqBy'
 
 import ActionList from 'components/growth/ActionList'
 import MobileModalHeader from 'components/MobileModalHeader'
@@ -10,6 +11,7 @@ import ShareableContent from 'components/growth/ShareableContent'
 
 import { Mutation } from 'react-apollo'
 import VerifyPromotionMutation from 'mutations/VerifyPromotion'
+import ConfirmSocialShare from 'mutations/ConfirmSocialShare'
 import AutoMutate from 'components/AutoMutate'
 
 import { formatTokens, getContentToShare } from 'utils/growthTools'
@@ -30,6 +32,8 @@ const actionTypeToNetwork = actionType => {
   switch (actionType) {
     case 'TwitterShare':
       return 'TWITTER'
+    case 'FacebookShare':
+      return 'FACEBOOK'
   }
 
   return null
@@ -56,19 +60,22 @@ const PromotionContents = ({
 }) => {
   return (
     <>
-      {[...notCompletedPromotionActions, ...completedPromotionActions].map(
-        (action, index) => (
-          <ShareableContent
-            key={index}
-            onShare={() => {
-              if (onShare) {
-                onShare(action)
-              }
-            }}
-            action={action}
-          />
-        )
-      )}
+      {
+        uniqBy([...notCompletedPromotionActions, ...completedPromotionActions], 'content.id')
+          .map(
+            (action, index) => (
+              <ShareableContent
+                key={index}
+                onShare={() => {
+                  if (onShare) {
+                    onShare(action)
+                  }
+                }}
+                action={action}
+              />
+            )
+          )
+        }
     </>
   )
 }
@@ -79,7 +86,7 @@ const PromotionChannels = ({
   locale,
   applicableActions,
   history,
-  onRunMutation
+  setActionToVerify
 }) => {
   if (applicableActions.length === 0) {
     return history.push(`/campaigns/promotions`)
@@ -102,9 +109,9 @@ const PromotionChannels = ({
           isMobile={isMobile}
           actions={notCompletedActions}
           locale={locale}
-          onActionClick={() => {
-            if (onRunMutation) {
-              onRunMutation(action)
+          onActionClick={(action) => {
+            if (setActionToVerify) {
+              setActionToVerify(action)
             }
           }}
         />
@@ -123,47 +130,85 @@ const PromotionChannels = ({
 
 const RunVerifyPromotion = ({
   action,
+  actionConfirmed,
   locale,
-  onCompleted,
-  onError,
+  onVerificationCompleted,
+  onConfirmationCompleted,
+  onVerificationError,
+  onConfirmationError,
   wallet,
   walletProxy
 }) => {
+  const socialNetwork = actionTypeToNetwork(action.type)
   return (
-    <Mutation
-      mutation={VerifyPromotionMutation}
-      onCompleted={({ verifyPromotion }) => {
-        const complete = verifyPromotion.success
-        if (complete && onCompleted) {
-          onCompleted(action)
-        } else if (!complete && onError) {
-          console.error('Verification timed out: ', verifyPromotion.reason)
-          onError(verifyPromotion.reason)
-        }
-      }}
-      onError={errorData => {
-        console.error(`Failed to verify shared content`, errorData)
-        if (onError) {
-          onError(errorData)
-        }
-      }}
-    >
-      {verifyPromotion => (
-        <AutoMutate
-          mutation={() => {
-            verifyPromotion({
-              variables: {
-                type: 'SHARE',
-                identity: wallet,
-                identityProxy: walletProxy,
-                socialNetwork: actionTypeToNetwork(action.type),
-                content: getContentToShare(action, locale)
-              }
-            })
-          }}
-        />
-      )}
-    </Mutation>
+    <>
+      {socialNetwork === 'TWITTER' && <Mutation
+        mutation={VerifyPromotionMutation}
+        onCompleted={({ verifyPromotion }) => {
+          const complete = verifyPromotion.success
+          if (complete && onVerificationCompleted) {
+            onVerificationCompleted(action)
+          } else if (!complete && onError) {
+            console.error('Verification timed out: ', verifyPromotion.reason)
+            onError(verifyPromotion.reason)
+          }
+        }}
+        onError={errorData => {
+          console.error(`Failed to verify shared content`, errorData)
+          if (onVerificationError) {
+            onVerificationError(errorData)
+          }
+        }}
+      >
+        {verifyPromotion => (
+          <AutoMutate
+            mutation={() => {
+              verifyPromotion({
+                variables: {
+                  type: 'SHARE',
+                  identity: wallet,
+                  identityProxy: walletProxy,
+                  socialNetwork: socialNetwork,
+                  content: getContentToShare(action, locale)
+                }
+              })
+            }}
+          />
+        )}
+      </Mutation>}
+      {!actionConfirmed && socialNetwork === 'FACEBOOK' && <Mutation
+        mutation={ConfirmSocialShare}
+        onCompleted={({ confirmSocialShare }) => {
+          // if successful
+          if (confirmSocialShare) {
+            if (onConfirmationCompleted) {
+              onConfirmationCompleted()
+            }
+          } else {
+            if (onConfirmationError) {
+              onConfirmationError('unknown')
+            }
+          }        
+        }}
+        onError={errorData => {
+          if (onConfirmationError)
+            onConfirmationError(errorData)          
+        }}
+      >
+        {confirmSocialShare => (
+          <AutoMutate
+            mutation={() => {
+              confirmSocialShare({
+                variables: {
+                  contentId: action.content.id,
+                  actionType: action.type,
+                }
+              })
+            }}
+          />
+        )}
+      </Mutation>}
+    </>
   )
 }
 
@@ -275,7 +320,8 @@ const Promotions = ({
   showNotification,
   ...props
 }) => {
-  const [runMutation, setRunMutation] = useState(false)
+  const [actionToVerify, setActionToVerify] = useState(null)
+  const [actionConfirmed, setActionConfirmed] = useState(false)
 
   const contentId = get(props, 'match.params.contentId')
   const hasSelectedContent = contentId ? true : false
@@ -284,27 +330,38 @@ const Promotions = ({
     completedPromotionActions,
     contentId
   })
+
   return (
     <div
       className={`growth-promote-origin d-flex flex-wrap ${
         isMobile ? ' mobile' : ''
       }`}
     >
-      {runMutation && (
+      {actionToVerify && (
         <RunVerifyPromotion
           locale={locale}
-          action={action}
-          onCompleted={() => {
+          action={actionToVerify}
+          actionConfirmed={actionConfirmed}
+          onVerificationCompleted={() => {
             if (showNotification) {
-              const message = getToastMessage(action, decimalDivision)
+              const message = getToastMessage(actionToVerify, decimalDivision)
               showNotification(message, 'green')
             }
             if (growthCampaignsRefetch) {
               growthCampaignsRefetch()
             }
-            setRunMutation(false)
+            setActionToVerify(null)
           }}
-          onError={() => setRunMutation(false)}
+          onVerificationError={() => setActionToVerify(null)}
+          onConfirmationCompleted={() => {
+            setActionConfirmed(true)
+            if (growthCampaignsRefetch) {
+              growthCampaignsRefetch()
+            }
+          }}
+          onConfirmationError={(error) => {
+            console.error(`Failed to confirm shared content`, error)
+          }}
           wallet={wallet}
           walletProxy={walletProxy}
         />
@@ -322,7 +379,10 @@ const Promotions = ({
           locale={locale}
           applicableActions={applicableActions}
           history={history}
-          onRunMutation={() => setRunMutation(true)}
+          setActionToVerify={(action) => {
+            setActionConfirmed(false)
+            setActionToVerify(action)
+          }}
         />
       ) : (
         <PromotionContents

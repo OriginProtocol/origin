@@ -14,6 +14,7 @@ const { sendInvites, sendInviteReminder } = require('../resources/email')
 const enums = require('../enums')
 const logger = require('../logger')
 const { BannedUserError } = require('../util/bannedUserError')
+const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
 
 const requireEnrolledUser = context => {
   if (
@@ -190,6 +191,45 @@ const resolvers = {
 
       sendInviteReminder(context.walletAddress, args.invitationId)
       return true
+    },
+    async confirmSocialShare (_, args, context) {
+      requireEnrolledUser(context)
+      if (args.actionType === enums.GrowthActionType.FacebookShare) {
+        await GrowthEvent.insert(
+          logger,
+          1,
+          context.walletAddress.toLowerCase(), //ethAddress
+          enums.GrowthEventTypes.SharedOnFacebook,
+          args.contentId, //customId
+          null,
+          new Date()
+        )
+        return true
+      } 
+
+      // track growth events only for supported platforms
+      logger.warn(`Not supported actionType: ${args.actionType} for social share`)
+      return false
+    },
+    async confirmSocialFollow (_, args, context) {
+      requireEnrolledUser(context)
+      console.log("RECEIVED THE FOLLOWING", args)
+      if (args.actionType === enums.GrowthActionType.FacebookLike ) {
+        await GrowthEvent.insert(
+          logger,
+          1,
+          context.walletAddress.toLowerCase(), //ethAddress
+          enums.GrowthEventTypes.LikedOnFacebook,
+          null,
+          null,
+          new Date()
+        )
+        return true
+      }
+
+      // track growth events only for supported platforms
+      logger.warn(`Not supported actionType: ${args.actionType} for social follow`)
+      return false      
     },
     log() {
       // TODO: implement
