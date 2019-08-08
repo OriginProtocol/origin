@@ -75,4 +75,4 @@ t3ClientImageTag: '62545fd'
 
 # origin-token-transfer-server
 t3ServerImage: origin-token-transfer-server
-t3ServerImageTag: 'ae0d382'
+t3ServerImageTag: '62545fd'
