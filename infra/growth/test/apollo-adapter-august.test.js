@@ -210,6 +210,18 @@ describe('Apollo adapter - August campaign', () => {
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenToNaturalUnits(10), currency: 'OGN' }
       },
+      FacebookShare1: {
+        type: 'FacebookShare',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: '0', currency: 'OGN' }
+      },
+      FacebookLike: {
+        type: 'FacebookLike',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: '0', currency: 'OGN' }
+      },
       'ListingPurchase1-000-2991': {
         type: 'ListingIdPurchased',
         status: 'Inactive',
@@ -379,6 +391,8 @@ describe('Apollo adapter - August campaign', () => {
     this.expectedState.LinkedInAttestation.status = 'Active'
     this.expectedState.KakaoAttestation.status = 'Active'
     this.expectedState.WebsiteAttestation.status = 'Active'
+    this.expectedState.FacebookShare1.status = 'Active'
+    this.expectedState.FacebookLike.status = 'Active'
 
     checkExpectedState(state, this.expectedState)
   })
@@ -725,6 +739,58 @@ describe('Apollo adapter - August campaign', () => {
     this.expectedState.rewardEarned = { amount: '372000000000000000000', currency: 'OGN' }
     this.expectedState.TwitterShare5.status = 'Completed'
     this.expectedState.TwitterShare5.rewardEarned = { amount: tokenToNaturalUnits(132), currency: 'OGN' }
+
+    checkExpectedState(state, this.expectedState)
+  })
+
+  it(`It should show facebook share completed `, async () => {
+    this.events.push(...[
+      {
+        id: 18,
+        type: GrowthEventTypes.SharedOnFacebook,
+        customId: 'origin_app',
+        data: null,
+        status: GrowthEventStatuses.Logged,
+        ethAddress: this.userA,
+        createdAt: this.duringCampaign
+      }
+    ])
+
+    const state = await campaignToApolloObject(
+      this.crules,
+      enums.GrowthParticipantAuthenticationStatus.Enrolled,
+      this.userA,
+      this.mockAdapter
+    )
+
+    this.expectedState.FacebookShare1.status = 'Completed'
+    this.expectedState.FacebookShare1.rewardEarned = { amount: '0', currency: 'OGN' }
+
+    checkExpectedState(state, this.expectedState)
+  })
+
+  it(`It should show facebook like completed `, async () => {
+    this.events.push(...[
+      {
+        id: 19,
+        type: GrowthEventTypes.LikedOnFacebook,
+        customId: null,
+        data: null,
+        status: GrowthEventStatuses.Logged,
+        ethAddress: this.userA,
+        createdAt: this.duringCampaign
+      }
+    ])
+
+    const state = await campaignToApolloObject(
+      this.crules,
+      enums.GrowthParticipantAuthenticationStatus.Enrolled,
+      this.userA,
+      this.mockAdapter
+    )
+
+    this.expectedState.FacebookLike.status = 'Completed'
+    this.expectedState.FacebookLike.rewardEarned = { amount: '0', currency: 'OGN' }
 
     checkExpectedState(state, this.expectedState)
   })
