@@ -30,8 +30,10 @@ export default memo(TelegramLoginButton)
 require('react-styl')(`
   .telegram-login-button
     position: relative
+    width: 100%
     max-width: 226px
     max-height: 40px
+    margin-bottom: 1rem
     button.btn
       max-width: 226px
       max-height: 40px
@@ -44,4 +46,5 @@ require('react-styl')(`
         bottom: 0
         top: 0
         opacity: 0
+  
 `)

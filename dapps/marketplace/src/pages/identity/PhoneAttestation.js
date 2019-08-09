@@ -419,6 +419,9 @@ require('react-styl')(`
       width: 100%
       border-radius: 2rem
       padding: 0.75rem
+    .telegram-login-button
+      button.btn
+        padding: 0.375rem 2rem
     .verification-code .form-control
       display: inline-block
     &.phone > div h2::before
