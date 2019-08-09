@@ -6,7 +6,10 @@ const {
 const { GraphQLDateTime } = require('graphql-iso-date')
 
 const { GrowthCampaign } = require('../resources/campaign')
-const { authenticateEnrollment } = require('../resources/authentication')
+const {
+  authenticateEnrollment,
+  getUserAuthenticationStatus
+} = require('../resources/authentication')
 const { getLocationInfo } = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
 const { GrowthInvite } = require('../resources/invite')
@@ -109,7 +112,20 @@ const resolvers = {
       return eligibility
     },
     async enrollmentStatus(_, args, context) {
-      return context.authentication
+      // if identity overriden with admin_secret always show as enrolled
+      if (context.identityOverriden) {
+        return enums.GrowthParticipantAuthenticationStatus.Enrolled
+      }
+      /* otherwise we need to query the enrolment status again to match the current
+       * walletAddress and authentication token. In case user switches the wallet account
+       * an otherwise valid authentication token needs to be invalidated.
+       */
+      else {
+        return await getUserAuthenticationStatus(
+          context.authToken,
+          args.walletAddress
+        )
+      }
     }
   },
   Mutation: {
