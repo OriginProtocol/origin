@@ -281,7 +281,6 @@ function Action(props) {
         </div>
         <div className="pr-0 pr-md-3 pl-0 pl-md-3 col-3 col-md-3 d-flex align-items-center justify-content-end">
           {reward !== null &&
-            reward.amount !== '0' &&
             renderReward(
               reward.amount,
               actionCompleted ? 'grayed-out' : 'normal'
