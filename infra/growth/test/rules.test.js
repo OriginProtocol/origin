@@ -526,7 +526,21 @@ describe('Growth Engine rules', () => {
 
     describe('Twitter', () => {
       before( () => {
-        const crules = { campaign: { id: 1 } }
+        const crules = {
+          campaign: {
+            id: 1,
+          },
+          content: {
+            tweet_tweet: {
+              post: {
+                text: {
+                  default: 'tweet tweet',
+                  translations: []
+                }
+              }
+            }
+          }
+        }
         const config = {
           config: {
             eventType: 'SharedOnTwitter',
@@ -535,14 +549,7 @@ describe('Growth Engine rules', () => {
               amount: '0',
               currency: 'OGN'
             },
-            content: {
-              post: {
-                text: {
-                  default: 'tweet tweet',
-                  translations: []
-                }
-              }
-            },
+            contentId: 'tweet_tweet',
             limit: 1,
             visible: true,
             scope: 'user',

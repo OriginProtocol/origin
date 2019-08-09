@@ -201,21 +201,7 @@ const augustConfig = {
             socialNetwork: 'twitter',
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
-            content: {
-              // different social network shares sharing same content should have the same id
-              id: 'origin_app',
-              titleKey: 'growth.twitterShare.content1.title',
-              detailsKey: 'growth.twitterShare.content1.details',
-              image: 'images/growth/twitter-share-content1.png',
-              link: 'https://medium.com/originprotocol/now-optimized-for-mobile-origin-launches-a-fresh-new-app-and-sponsored-gas-80dc2407bd8d',
-              linkKey: 'growth.twitterShare.content1.link',
-              post: {
-                text: {
-                  default: `Experience the decentralized global #marketplace of the future with @OriginProtocol's fresh new app. Secure transactions. Zero fees. Try it now: https://ogn.dev/mobile`,
-                  translations: [ ]
-                }
-              }
-            },
+            contentId: 'origin_app',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -234,21 +220,7 @@ const augustConfig = {
             socialNetwork: 'twitter',
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
-            content: {
-              // different social network shares sharing same content should have the same id
-              id: 'join_rewards',
-              titleKey: 'growth.twitterShare.content2.title',
-              detailsKey: 'growth.twitterShare.content2.details',
-              image: 'images/growth/twitter-share-content2.png',
-              link: 'https://www.originrewards.com',
-              linkKey: 'growth.twitterShare.content2.link',
-              post: {
-                text: {
-                  default: `Join @OriginProtocol's #rewards program and earn free Origin tokens! 250,000 OGN already distributed. Sign up and claim your free OGN! https://www.originrewards.com`,
-                  translations: [ ]
-                }
-              }
-            },
+            contentId: 'join_rewards',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -267,22 +239,7 @@ const augustConfig = {
             socialNetwork: 'twitter',
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
-            content: {
-              // different social network shares sharing same content should have the same id
-              id: 'origin_promising_platform',
-              titleKey: 'growth.twitterShare.content3.title',
-              detailsKey: 'growth.twitterShare.content3.details',
-              image: 'images/growth/twitter-share-content3.png',
-              link: 'https://techcrunch.com/2018/10/10/origin-protocol/',
-              linkKey: 'growth.twitterShare.content3.link',
-              post: {
-                text: {
-                  default: `Great @TechCrunch article on how @OriginProtocol is building one of the most promising blockchain platforms for the new sharing economy. https://techcrunch.com/2018/10/10/origin-protocol/`,
-                  translations: [
-                  ]
-                }
-              }
-            },
+            contentId: 'origin_promising_platform',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -301,22 +258,7 @@ const augustConfig = {
             socialNetwork: 'twitter',
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
-            content: {
-              // different social network shares sharing same content should have the same id
-              id: 'origin_best_team',
-              titleKey: 'growth.twitterShare.content4.title',
-              detailsKey: 'growth.twitterShare.content4.details',
-              image: 'images/growth/twitter-share-content4.png',
-              link: 'https://www.coindesk.com/another-paypal-co-founder-is-embracing-blockchains-seismic-shift',
-              linkKey: 'growth.twitterShare.content4.link',
-              post: {
-                text: {
-                  default: `One of the best teams in crypto today! @OriginProtocol's team includes a cofounder from PayPal & the 1st engineer at YouTube! https://www.coindesk.com/another-paypal-co-founder-is-embracing-blockchains-seismic-shift`,
-                  translations: [
-                  ]
-                }
-              }
-            },
+            contentId: 'origin_best_team',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -335,22 +277,7 @@ const augustConfig = {
             socialNetwork: 'twitter',
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
-            content: {
-              // different social network shares sharing same content should have the same id
-              id: 'follow_on_telegram',
-              titleKey: 'growth.twitterShare.content5.title',
-              detailsKey: 'growth.twitterShare.content5.details',
-              image: 'images/growth/twitter-share-content5.png',
-              link: 'https://t.me/originprotocol',
-              linkKey: 'growth.twitterShare.content5.link',
-              post: {
-                text: {
-                  default: `Join me in following @OriginProtocol on #Telegram! https://t.me/originprotocol`,
-                  translations: [
-                  ]
-                }
-              }
-            },
+            contentId: 'follow_on_telegram',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -368,15 +295,7 @@ const augustConfig = {
           config: {
             socialNetwork: 'facebook',
             eventType: 'SharedOnFacebook',
-            content: {
-              // different social network shares sharing same content should have the same id
-              id: 'origin_app',
-              titleKey: 'growth.twitterShare.content1.title',
-              detailsKey: 'growth.twitterShare.content1.details',
-              image: 'images/growth/twitter-share-content1.png',
-              link: 'https://medium.com/originprotocol/now-optimized-for-mobile-origin-launches-a-fresh-new-app-and-sponsored-gas-80dc2407bd8d',
-              linkKey: 'growth.twitterShare.content1.link',
-            },
+            contentId: 'origin_app',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -394,15 +313,7 @@ const augustConfig = {
           config: {
             socialNetwork: 'facebook',
             eventType: 'SharedOnFacebook',
-            content: {
-              // different social network shares sharing same content should have the same id
-              id: 'join_rewards',
-              titleKey: 'growth.twitterShare.content2.title',
-              detailsKey: 'growth.twitterShare.content2.details',
-              image: 'images/growth/twitter-share-content2.png',
-              link: 'https://www.originrewards.com',
-              linkKey: 'growth.twitterShare.content2.link',
-            },
+            contentId: 'join_rewards',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -420,15 +331,7 @@ const augustConfig = {
           config: {
             socialNetwork: 'facebook',
             eventType: 'SharedOnFacebook',
-            content: {
-              // different social network shares sharing same content should have the same id
-              id: 'origin_promising_platform',
-              titleKey: 'growth.twitterShare.content3.title',
-              detailsKey: 'growth.twitterShare.content3.details',
-              image: 'images/growth/twitter-share-content3.png',
-              link: 'https://techcrunch.com/2018/10/10/origin-protocol/',
-              linkKey: 'growth.twitterShare.content3.link',
-            },
+            contentId: 'origin_promising_platform',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -446,15 +349,7 @@ const augustConfig = {
           config: {
             socialNetwork: 'facebook',
             eventType: 'SharedOnFacebook',
-            content: {
-              // different social network shares sharing same content should have the same id
-              id: 'origin_best_team',
-              titleKey: 'growth.twitterShare.content4.title',
-              detailsKey: 'growth.twitterShare.content4.details',
-              image: 'images/growth/twitter-share-content4.png',
-              link: 'https://www.coindesk.com/another-paypal-co-founder-is-embracing-blockchains-seismic-shift',
-              linkKey: 'growth.twitterShare.content4.link',
-            },
+            contentId: 'origin_best_team',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -472,15 +367,7 @@ const augustConfig = {
           config: {
             socialNetwork: 'facebook',
             eventType: 'SharedOnFacebook',
-            content: {
-              // different social network shares sharing same content should have the same id
-              id: 'follow_on_telegram',
-              titleKey: 'growth.twitterShare.content5.title',
-              detailsKey: 'growth.twitterShare.content5.details',
-              image: 'images/growth/twitter-share-content5.png',
-              link: 'https://t.me/originprotocol',
-              linkKey: 'growth.twitterShare.content5.link',
-            },
+            contentId: 'follow_on_telegram',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -894,6 +781,76 @@ const augustConfig = {
           }
         }
       ]
+    }
+  },
+  content: {
+    origin_app: {
+      titleKey: 'growth.twitterShare.content1.title',
+      detailsKey: 'growth.twitterShare.content1.details',
+      image: 'images/growth/twitter-share-content1.png',
+      link: 'https://medium.com/originprotocol/now-optimized-for-mobile-origin-launches-a-fresh-new-app-and-sponsored-gas-80dc2407bd8d',
+      linkKey: 'growth.twitterShare.content1.link',
+      post: {
+        text: {
+          default: `Experience the decentralized global #marketplace of the future with @OriginProtocol's fresh new app. Secure transactions. Zero fees. Try it now: https://ogn.dev/mobile`,
+          translations: [ ]
+        }
+      }
+    },
+    join_rewards: {
+      titleKey: 'growth.twitterShare.content2.title',
+      detailsKey: 'growth.twitterShare.content2.details',
+      image: 'images/growth/twitter-share-content2.png',
+      link: 'https://www.originrewards.com',
+      linkKey: 'growth.twitterShare.content2.link',
+      post: {
+        text: {
+          default: `Join @OriginProtocol's #rewards program and earn free Origin tokens! 250,000 OGN already distributed. Sign up and claim your free OGN! https://www.originrewards.com`,
+          translations: [ ]
+        }
+      }
+    },
+    origin_promising_platform: {
+      titleKey: 'growth.twitterShare.content3.title',
+      detailsKey: 'growth.twitterShare.content3.details',
+      image: 'images/growth/twitter-share-content3.png',
+      link: 'https://techcrunch.com/2018/10/10/origin-protocol/',
+      linkKey: 'growth.twitterShare.content3.link',
+      post: {
+        text: {
+          default: `Great @TechCrunch article on how @OriginProtocol is building one of the most promising blockchain platforms for the new sharing economy. https://techcrunch.com/2018/10/10/origin-protocol/`,
+          translations: [
+          ]
+        }
+      }
+    },
+    origin_best_team: {
+      titleKey: 'growth.twitterShare.content4.title',
+      detailsKey: 'growth.twitterShare.content4.details',
+      image: 'images/growth/twitter-share-content4.png',
+      link: 'https://www.coindesk.com/another-paypal-co-founder-is-embracing-blockchains-seismic-shift',
+      linkKey: 'growth.twitterShare.content4.link',
+      post: {
+        text: {
+          default: `One of the best teams in crypto today! @OriginProtocol's team includes a cofounder from PayPal & the 1st engineer at YouTube! https://www.coindesk.com/another-paypal-co-founder-is-embracing-blockchains-seismic-shift`,
+          translations: [
+          ]
+        }
+      }
+    },
+    follow_on_telegram: {
+      titleKey: 'growth.twitterShare.content5.title',
+      detailsKey: 'growth.twitterShare.content5.details',
+      image: 'images/growth/twitter-share-content5.png',
+      link: 'https://t.me/originprotocol',
+      linkKey: 'growth.twitterShare.content5.link',
+      post: {
+        text: {
+          default: `Join me in following @OriginProtocol on #Telegram! https://t.me/originprotocol`,
+          translations: [
+          ]
+        }
+      }
     }
   }
 }

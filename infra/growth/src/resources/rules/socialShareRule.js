@@ -24,12 +24,25 @@ class SocialShareRule extends SingleEventRule {
         } for socialNetwork field`
       )
     }
-    this.socialNetwork = this.config.socialNetwork
 
-    if (!this.config.content) {
-      throw new Error(`${this.str()}: missing content field`)
+    this.socialNetwork = this.config.socialNetwork
+    if (!this.config.contentId) {
+      throw new Error('Missing contentId field')
     }
-    this.content = this.config.content
+
+    if (!crules.content || !(this.config.contentId in crules.content)) {
+      throw new Error(
+        `${this.str()}: missing content for content id: ${
+          this.config.contentId
+        }`
+      )
+    }
+
+    // make a hard copy
+    this.content = JSON.parse(
+      JSON.stringify(crules.content[this.config.contentId])
+    )
+    this.content.id = this.config.contentId
   }
 
   /**
@@ -192,10 +205,11 @@ class SocialShareRule extends SingleEventRule {
       )
     }
 
-    let rewards = super.getEarnedRewards(ethAddress, eventsForCalculation)
+    let rewards = await super.getEarnedRewards(ethAddress, eventsForCalculation)
     if (this.config.socialNetwork === 'twitter') {
       rewards = this._getTwitterRewardsEarned(ethAddress, eventsForCalculation)
     }
+
     return rewards
   }
 
