@@ -61,19 +61,27 @@ async function fetchExchangeRate(markets) {
 }
 
 function parseAndSetRateData(market, rates) {
-  const symbol = market.split('-')[0].toLowerCase()
+  const symbols = market.toLowerCase().split('-')
+  let exchangeFromSymbol = symbols[0]
+  let exchangeToSymbol = symbols[1]
   let rate = ''
-  if (symbol === 'dai') {
-    // setting DAI to value of 1 because coingecko doesn't support it
-    // and this is a stable coin pegged to USD value. Variation should
-    // be so small its irrelevant.
-    rate = '1'
-  } else if (rates[symbol] && rates[symbol].value) {
+  // setting DAI to value of USD because coingecko doesn't support it
+  // and this is a stable coin pegged to USD value. Variation should
+  // be so small its irrelevant.
+  exchangeFromSymbol === 'dai' ? (exchangeFromSymbol = 'usd') : null
+  exchangeToSymbol === 'dai' ? (exchangeToSymbol = 'usd') : null
+  if (
+    rates[exchangeFromSymbol] &&
+    rates[exchangeFromSymbol].value &&
+    rates[exchangeToSymbol] &&
+    rates[exchangeToSymbol].value
+  ) {
     // rates returned by coingecko are against btc value, here that value is
     // converted to usd and then used to get the exchange rate
     rate = (
       1 /
-      ((rates.btc.value / rates.usd.value) * rates[symbol].value)
+      ((rates.btc.value / rates[exchangeToSymbol].value) *
+        rates[exchangeFromSymbol].value)
     ).toString()
   } else {
     throw new Error(`${market} not found`)
