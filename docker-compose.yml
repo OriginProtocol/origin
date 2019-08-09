@@ -5,7 +5,7 @@ services:
   postgres:
     container_name: postgres
     restart: always
-    image: postgres:10.9
+    image: postgres:10.10
     environment:
       - POSTGRES_USER=origin
       - POSTGRES_PASSWORD=origin
