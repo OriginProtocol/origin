@@ -6,6 +6,8 @@ const sendgridMail = require('@sendgrid/mail')
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 
+const { ip2geo } = require('@origin/ip2geo')
+
 require('../passport')()
 const { asyncMiddleware } = require('../utils')
 const { LOGIN } = require('../constants/events')
@@ -81,7 +83,6 @@ router.post(
   '/verify_email_token',
   passport.authenticate('bearer'),
   (req, res) => {
-    console.log(req.user)
     logger.debug('/verify_email_token called')
     res.json({
       email: req.user.email,
@@ -141,14 +142,27 @@ router.post(
     // Set otpVerified to true if it is not already to signify TOTP setup is
     // complete.
     await req.user.update({ otpVerified: true })
-    //
+
+    // Parsed user agent
+    const device = req.useragent
     // Log the successfull login in the Event table.
     await Event.create({
-      email: req.user.email,
       ip: req.connection.remoteAddress,
       grantId: null,
+      userId: req.user.id,
       action: LOGIN,
-      data: JSON.stringify({})
+      data: {
+        device: {
+          source: device.source,
+          browser: device.browser,
+          isMobile: device.isMobile,
+          isDesktop: device.isDesktop,
+          platform: device.platform,
+          version: device.version,
+          os: device.os
+        },
+        location: await ip2geo(req.connection.remoteAddress)
+      }
     })
 
     // Save in the session that the user successfully authed with TOTP.

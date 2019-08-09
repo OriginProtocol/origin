@@ -28,7 +28,7 @@ module.exports = {
         allowNull: false
       },
       data: {
-        type: Sequelize.STRING
+        type: Sequelize.JSONB
       },
       created_at: {
         allowNull: false,

@@ -57,12 +57,12 @@ describe('Grant HTTP API', () => {
   })
 
   afterEach(() => {
-    // Cleanup
-    User.destroy({
+    Grant.destroy({
       where: {}
     })
 
-    Grant.destroy({
+    // Cleanup
+    User.destroy({
       where: {}
     })
   })

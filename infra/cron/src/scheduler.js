@@ -80,29 +80,30 @@ logger.info('Starting cron scheduler loop.')
 
 const jobsPath = path.dirname(__filename) + '/jobs/'
 
-const growthVerifyEventsQueue = new Queue('growthVerifyEvents', redisUrl)
-const growthUpdateCampaignsQueue = new Queue('growthUpdateCampaigns', redisUrl)
-const consistencyQueue = new Queue('consistencyChecker', redisUrl)
-
+// Franck 08/07/2019 Deactivating this job since not currently used.
 // Growth verifier job. Runs daily at 20:00UTC (~noon PST).
-watch(growthVerifyEventsQueue)
-growthVerifyEventsQueue.process(jobsPath + 'growthVerifyEvents.js')
-growthVerifyEventsQueue.add(
-  { persist: false },
-  { repeat: { cron: '* 20 * * *' } }
-)
-logger.info('Scheduled growthVerifyEvents job.')
+// const growthVerifyEventsQueue = new Queue('growthVerifyEvents', redisUrl)
+// watch(growthVerifyEventsQueue)
+// growthVerifyEventsQueue.process(jobsPath + 'growthVerifyEvents.js')
+// growthVerifyEventsQueue.add(
+//  { persist: false },
+//  { repeat: { cron: '* 20 * * *' } }
+// )
+// logger.info('Scheduled growthVerifyEvents job.')
 
+// Franck 08/07/2019 Deactivating this job since not currently used.
 // Growth campaign update job. Runs daily at 20:30UTC (~12:30 PST).
-watch(growthUpdateCampaignsQueue)
-growthUpdateCampaignsQueue.process(jobsPath + 'growthUpdateCampaigns.js')
-growthUpdateCampaignsQueue.add(
-  { persist: false },
-  { repeat: { cron: '30 20 * * *' } }
-)
-logger.info('Scheduled growthUpdateCampaigns job.')
+// const growthUpdateCampaignsQueue = new Queue('growthUpdateCampaigns', redisUrl)
+// watch(growthUpdateCampaignsQueue)
+// growthUpdateCampaignsQueue.process(jobsPath + 'growthUpdateCampaigns.js')
+// growthUpdateCampaignsQueue.add(
+//  { persist: false },
+//  { repeat: { cron: '30 20 * * *' } }
+// )
+// logger.info('Scheduled growthUpdateCampaigns job.')
 
 // Consistency checker job job. Runs daily at 23:30UTC
+const consistencyQueue = new Queue('consistencyChecker', redisUrl)
 watch(consistencyQueue)
 consistencyQueue.process(jobsPath + 'consistency.js')
 consistencyQueue.add({ persist: false }, { repeat: { cron: '30 23 * * *' } })
