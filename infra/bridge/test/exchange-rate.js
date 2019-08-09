@@ -95,11 +95,10 @@ describe('exchange rate poller', () => {
       .get('/api/v3/exchange_rates')
       .reply(200, { rates })
 
-    let response
     const exchangeFrom = ['ETH', 'DAI']
     const exchangeTo = ['CNY', 'JPY', 'GBP', 'USD', 'EUR', 'KRW', 'SGD']
-    let promises = []
-    let markets = []
+    const promises = []
+    const markets = []
 
     exchangeTo.forEach(t =>
       exchangeFrom.forEach(f => {
