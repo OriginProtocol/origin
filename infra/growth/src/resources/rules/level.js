@@ -3,6 +3,7 @@ const { MultiEventsRule } = require('./multiEventsRule')
 const { ReferralRule } = require('./referralRule')
 const { ListingIdPurchaseRule } = require('./listingIdPurchaseRule')
 const { SocialShareRule } = require('./socialShareRule')
+const { VerifiableSocialShareRule } = require('./verifiableSocialShareRule')
 
 class Level {
   constructor(crules, levelId, config) {
@@ -70,8 +71,11 @@ function ruleFactory(crules, levelId, config) {
     case 'ListingIdPurchase':
       rule = new ListingIdPurchaseRule(crules, levelId, config)
       break
-    case 'SocialShare':
+    case 'SimpleSocialShare':
       rule = new SocialShareRule(crules, levelId, config)
+      break
+    case 'SocialShare':
+      rule = new VerifiableSocialShareRule(crules, levelId, config)
       break
     default:
       throw new Error(`Unexpected or missing rule class ${config.class}`)
