@@ -1,9 +1,10 @@
 import validator from '@origin/validator'
 import get from 'lodash/get'
+import pick from 'lodash/pick'
 
 import contracts from '../../contracts'
 
-async function verifyTelegramCode(_, { identity, phone, code }) {
+async function verifyTelegramAuth(_, args) {
   const bridgeServer = contracts.config.bridge
   if (!bridgeServer) {
     return { success: false, reason: 'No bridge server configured' }
@@ -15,9 +16,16 @@ async function verifyTelegramCode(_, { identity, phone, code }) {
     credentials: 'include',
     method: 'POST',
     body: JSON.stringify({
-      code,
-      identity,
-      phone
+      ...pick(args, [
+        'identity',
+        'hash',
+        'firstName',
+        'lastName',
+        'authDate',
+        'username',
+        'id',
+        'photoUrl'
+      ])
     })
   })
 
@@ -43,4 +51,4 @@ async function verifyTelegramCode(_, { identity, phone, code }) {
   }
 }
 
-export default verifyTelegramCode
+export default verifyTelegramAuth

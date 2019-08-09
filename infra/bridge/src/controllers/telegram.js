@@ -3,86 +3,69 @@
 const express = require('express')
 const router = express.Router()
 
+const crypto = require('crypto')
+const pick = require('lodash/pick')
+
 const Attestation = require('../models/index').Attestation
 const AttestationTypes = Attestation.AttestationTypes
 const { generateAttestation } = require('../utils/attestation')
 const logger = require('../logger')
 
-const { Airgram } = require('airgram')
-
-const airgramInstances = new Map()
-
-function getAirgramInstance(phone) {
-  let instance = airgramInstances.get(phone)
-
-  let airgram
-
-  if (!instance) {
-    airgram = new Airgram({
-      apiId: Number(process.env.TELEGRAM_API_ID),
-      apiHash: process.env.TELEGRAM_API_HASH,
-      logVerbosityLevel: 0
-    })
-  } else {
-    clearTimeout(instance.timeout)
-    airgram = instance.airgram
-  }
-
-  airgramInstances.set(phone, {
-    airgram,
-    timeout: setTimeout(() => {
-      airgramInstances.delete(phone)
-    }, 30000)
-  })
-
-  return airgram
+const paramToTelegramKeyMapping = {
+  'authDate': 'auth_date',
+  'firstName': 'first_name',
+  'id': 'id',
+  'lastName': 'last_name',
+  'photoUrl': 'photo_url',
+  'username': 'username'
 }
 
-// TODO: Add validation
-router.post('/generate-code', async (req, res) => {
-  const airgram = getAirgramInstance(req.body.phone)
+function validateHash({ hash, ...body }) {
+  // Note: These keys should be sorted in alphabetical order
+  // Ref: https://core.telegram.org/widgets/login#checking-authorization
+  const keys = [
+    'authDate',
+    'firstName',
+    'id',
+    'lastName',
+    'photoUrl',
+    'username'
+  ]
 
-  try {
-    const response = await airgram.api.setAuthenticationPhoneNumber({
-      phoneNumber: req.body.phone
+  const data = keys
+    .filter(key => typeof body[key] === 'string' && body[key].length)
+    .map(key => {
+      return `${paramToTelegramKeyMapping[key]}=${body[key]}`
     })
-    if (response.code && response.code > 200) {
-      return res.status(500).send({
-        errors: [response.message]
-      })
-    }
-  } catch (err) {
-    logger.error(err)
-    return res.status(500).send({
-      errors: ['Something went wrong :(']
-    })
-  }
+    .join('\n')
 
-  return res.status(200).end()
-})
+  const secret = crypto.createHash('sha256')
+    .update(process.env.TELEGRAM_BOT_TOKEN)
+    .digest()
+
+  const generatedHash = crypto.createHmac('sha256', secret)
+    .update(data)
+    .digest('hex')
+  
+  return hash === generatedHash
+}
 
 router.post('/verify', async (req, res) => {
-  const airgram = getAirgramInstance(req.body.phone)
-
-  let userProfileData
-
-  try {
-    let response = await airgram.api.checkAuthenticationCode({
-      code: req.body.code
-    })
-    if (response.code && response.code > 200) {
-      return res.status(500).send({
-        errors: [response.message]
+  if (!validateHash(req.body)) {
+    return res.status(400)
+      .send({
+        errors: ['Failed to create an attestation']
       })
-    }
-
-    userProfileData = await airgram.api.getMe()
-  } catch (err) {
-    logger.error(err)
-    return res.status(500).send({
-      errors: ['Something went wrong :(']
-    })
   }
+
+  let userProfileData = pick(req.body, [
+    'authDate',
+    'firstName',
+    'id',
+    'lastName',
+    'photoUrl',
+    'username'
+  ])
 
   const attestationBody = {
     verificationMethod: {
@@ -97,7 +80,7 @@ router.post('/verify', async (req, res) => {
         raw: userProfileData.username
       },
       profileUrl: {
-        raw: `https://t.me/@${userProfileData.username}`
+        raw: `https://t.me/${userProfileData.username}`
       }
     }
   }
@@ -109,7 +92,7 @@ router.post('/verify', async (req, res) => {
       {
         uniqueId: userProfileData.id,
         username: userProfileData.username,
-        profileUrl: `https://t.me/@${userProfileData.username}`,
+        profileUrl: `https://t.me/${userProfileData.username}`,
         profileData: userProfileData
       },
       req.body.identity,

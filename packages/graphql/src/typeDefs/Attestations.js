@@ -14,8 +14,7 @@ export const mutations = `
     generateWebsiteCode(identity: String!, website: String!): AttestationCodeResult!
     verifyWebsite(identity: String!, website: String!): AttestationVerifyResult!
 
-    generateTelegramCode(phone: String!): AttestationCodeResult!
-    verifyTelegramCode(identity: String!, phone: String!, code: String!): AttestationVerifyResult!
+    verifyTelegramAuth(identity: String!, hash: String!, authDate: String!, username: String, lastName: String, firstName: String, id: String!, photoUrl: String): AttestationVerifyResult!
   }
 `
 export const types = `
