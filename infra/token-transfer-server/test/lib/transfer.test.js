@@ -94,6 +94,9 @@ describe('Transfer token lib', () => {
     expect(transfer.data).to.be.null
   })
 
+  it('should not enqueue a transfer if not sufficient tokens vested', async () => {
+  })
+
   it('should execute a transfer', async () => {
     // Enqueue and execute a transfer.
     const amount = 1000
@@ -114,5 +117,8 @@ describe('Transfer token lib', () => {
     // Check the transfer row was updated as expected.
     transfer.reload()
     expect(transfer.status).to.equal(enums.TransferStatuses.Success)
+  })
+
+  it('should not execute a transfer if not sufficient tokens vested', async () => {
   })
 })
