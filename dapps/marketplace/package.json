@@ -68,7 +68,7 @@
     "qrcode.react": "^0.9.3",
     "query-string": "^6.8.1",
     "react": "^16.8.6",
-    "react-apollo": "^2.5.8",
+    "react-apollo": "^3.0.0",
     "react-autosize-textarea": "^6.0.0",
     "react-dom": "^16.8.6",
     "react-image-crop": "^6.0.18",
