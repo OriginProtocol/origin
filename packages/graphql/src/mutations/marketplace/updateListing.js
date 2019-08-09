@@ -86,6 +86,7 @@ async function updateListing(_, args) {
     from,
     mutation,
     gas,
+    onReceipt: () => context.eventSource.resetMemos(),
     onConfirmation: () => context.eventSource.resetMemos()
   })
 }

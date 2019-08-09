@@ -38,7 +38,11 @@ class UpdateListing extends Component {
     )
 
     const needsAllowance = get(this.props, 'tokenStatus.needsAllowance', false)
-    const walletIsSeller = this.props.wallet !== this.props.listing.seller.id
+    const walletIsNotSeller = this.props.wallet !== this.props.listing.seller.id
+
+    if (JSON.stringify(this.props.tokenStatus) === '{}') {
+      return <button className={this.props.className}>Loading...</button>
+    }
 
     if (this.state.error) {
       content = (
@@ -51,8 +55,15 @@ class UpdateListing extends Component {
     } else if (this.state.waitFor) {
       content = this.renderWaitModal()
     } else if (this.state.waitForAllow) {
+      action = (
+        <button
+          className={this.props.className}
+          onClick={() => this.setState({ modal: true })}
+          children={'Wait...'}
+        />
+      )
       content = this.renderWaitAllowModal()
-    } else if (walletIsSeller && needsAllowance) {
+    } else if (walletIsNotSeller && needsAllowance) {
       action = this.renderAllowTokenMutation()
     } else {
       action = this.renderUpdateListingMutation()

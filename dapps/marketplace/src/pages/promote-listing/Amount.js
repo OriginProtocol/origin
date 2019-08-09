@@ -6,6 +6,7 @@ import numberFormat from 'utils/numberFormat'
 import Link from 'components/Link'
 import CoinLogo from 'components/CoinLogo'
 import Exposure from 'components/ListingExposure'
+import WithPrices from 'components/WithPrices'
 
 import UpdateListing from 'pages/create-listing/mutations/UpdateListing'
 
@@ -57,6 +58,7 @@ const PromoteListingAmount = ({
         <div className="input-wrap">
           <input
             className="form-control"
+            name="commissionPerUnit"
             type="tel"
             ref={inputRef}
             value={value}
@@ -123,14 +125,23 @@ const PromoteListingAmount = ({
               Continue
             </Link>
           ) : (
-            <UpdateListing
-              listing={listing}
-              listingTokens={listingTokens}
-              refetch={refetch}
-              tokenBalance={tokenBalance}
-              className="btn btn-primary btn-rounded btn-lg"
-              children={fbt('Promote Now', 'promoteListing.promoteNow')}
-            />
+            <WithPrices
+              price={{ amount: value, currency: { id: 'token-OGN' } }}
+              target={'token-OGN'}
+              targets={['token-OGN']}
+            >
+              {({ tokenStatus }) => (
+                <UpdateListing
+                  refetch={refetch}
+                  listing={listing}
+                  listingTokens={listingTokens}
+                  tokenBalance={tokenBalance}
+                  tokenStatus={tokenStatus}
+                  className="btn btn-primary btn-rounded btn-lg"
+                  children={fbt('Promote Now', 'promoteListing.promoteNow')}
+                />
+              )}
+            </WithPrices>
           )}
         </div>
       </div>

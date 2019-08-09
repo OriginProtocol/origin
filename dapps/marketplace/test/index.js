@@ -17,8 +17,8 @@ before(async function() {
   page = (await services()).extrasResult.page
 })
 
-const reset = async () => {
-  const seller = await createAccount(page)
+const reset = async sellerOgn => {
+  const seller = await createAccount(page, sellerOgn)
   const buyer = await createAccount(page)
 
   await page.evaluate(() => {
@@ -83,7 +83,7 @@ function listingTests(autoSwap) {
   describe('Single Unit Listing for Eth', function() {
     let seller, buyer
     before(async function() {
-      ({ seller, buyer } = await reset())
+      ({ seller, buyer } = await reset('100'))
     })
 
     it('should navigate to the Add Listing page', async function() {
@@ -140,6 +140,32 @@ function listingTests(autoSwap) {
     })
 
     it('should continue to listing', async function() {
+      await clickByText(page, 'View Listing', 'button')
+    })
+
+    it('should continue to listing promotion', async function() {
+      await clickByText(page, 'Promote listing', 'a')
+    })
+
+    it('should continue to OGN entry', async function() {
+      await clickByText(page, 'Continue', 'a')
+    })
+
+    it('should enter 10 OGN', async function() {
+      await page.type('input[name=commissionPerUnit]', '10')
+    })
+
+    it('should allow promotion tx', async function() {
+      await clickByText(page, 'Promote Now', 'button')
+    })
+
+    if (autoSwap) {
+      it('should prompt the user to approve their OGN', async function() {
+        await clickByText(page, 'Promote Now', 'button')
+      })
+    }
+
+    it('should allow listing to be viewed', async function() {
       await clickByText(page, 'View Listing', 'button')
     })
 
