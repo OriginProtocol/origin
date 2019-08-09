@@ -116,10 +116,10 @@ const resolvers = {
       if (context.identityOverriden) {
         return enums.GrowthParticipantAuthenticationStatus.Enrolled
       } else {
-      /* otherwise we need to query the enrolment status again to match the current
-       * walletAddress and authentication token. In case user switches the wallet account
-       * an otherwise valid authentication token needs to be invalidated.
-       */
+        /* otherwise we need to query the enrolment status again to match the current
+         * walletAddress and authentication token. In case user switches the wallet account
+         * an otherwise valid authentication token needs to be invalidated.
+         */
         return await getUserAuthenticationStatus(
           context.authToken,
           args.walletAddress
