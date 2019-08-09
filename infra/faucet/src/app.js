@@ -76,13 +76,9 @@ const config = {
   // Port server listens on.
   port: parseInt(args['--port'] || process.env.PORT || DEFAULT_SERVER_PORT),
   // If no network id specified, defaults to using local blockchain.
-  networkId: (
-    args['--network_id'] ||
-    process.env.NETWORK_ID ||
-    DEFAULT_NETWORK_ID
+  networkId: parseInt(
+    args['--network_id'] || process.env.NETWORK_ID || DEFAULT_NETWORK_ID
   )
-    .split(',')
-    .map(parseInt)
 }
 
 logger.info('Config: ', config)
