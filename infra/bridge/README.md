@@ -87,6 +87,8 @@ functionality.
 - [WeChat](https://docs.microsoft.com/en-us/linkedin/shared/authentication/authentication)
   - WECHAT_CLIENT_ID
   - WECHAT_CLIENT_SECRET
+- [Telegram](https://web.telegram.org/#/im?p=@BotFather)
+  - TELEGRAM_BOT_TOKEN
 
 If you plan on using different OAuth client for webhooks, you should set the following environment variables
 - TWITTER_WEBHOOKS_CONSUMER_KEY

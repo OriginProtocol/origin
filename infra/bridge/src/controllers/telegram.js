@@ -11,6 +11,8 @@ const AttestationTypes = Attestation.AttestationTypes
 const { generateAttestation } = require('../utils/attestation')
 const logger = require('../logger')
 
+const { telegramVerify } = require('../utils/validation')
+
 const paramToTelegramKeyMapping = {
   'authDate': 'auth_date',
   'firstName': 'first_name',
@@ -47,11 +49,13 @@ function validateHash({ hash, ...body }) {
     .update(data)
     .digest('hex')
   
+  logger.debug('Comparing hashses...', hash, generatedHash)
   return hash === generatedHash
 }
 
-router.post('/verify', async (req, res) => {
+router.post('/verify', telegramVerify, async (req, res) => {
   if (!validateHash(req.body)) {
+    logger.error(`Failed to validate hash`, req.body)
     return res.status(400)
       .send({
         errors: ['Failed to create an attestation']
@@ -67,6 +71,8 @@ router.post('/verify', async (req, res) => {
     'username'
   ])
 
+  const profileUrl = userProfileData.username ? `https://t.me/${userProfileData.username}` : null
+
   const attestationBody = {
     verificationMethod: {
       oAuth: true
@@ -80,7 +86,7 @@ router.post('/verify', async (req, res) => {
         raw: userProfileData.username
       },
       profileUrl: {
-        raw: `https://t.me/${userProfileData.username}`
+        raw: profileUrl
       }
     }
   }
@@ -92,7 +98,7 @@ router.post('/verify', async (req, res) => {
       {
         uniqueId: userProfileData.id,
         username: userProfileData.username,
-        profileUrl: `https://t.me/${userProfileData.username}`,
+        profileUrl: profileUrl,
         profileData: userProfileData
       },
       req.body.identity,
