@@ -62,7 +62,7 @@ router.post('/verify', telegramVerify, async (req, res) => {
       })
   }
 
-  let userProfileData = pick(req.body, [
+  const userProfileData = pick(req.body, [
     'authDate',
     'firstName',
     'id',
