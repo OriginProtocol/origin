@@ -153,7 +153,7 @@ module.exports = `
   }
 
   type Post {
-    text: TranslatedText!
+    tweet: TranslatedText!
   }
 
   type SocialContent {
