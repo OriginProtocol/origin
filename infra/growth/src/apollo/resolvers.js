@@ -192,7 +192,7 @@ const resolvers = {
       sendInviteReminder(context.walletAddress, args.invitationId)
       return true
     },
-    async confirmSocialShare(_, args, context) {
+    async logSocialShare(_, args, context) {
       requireEnrolledUser(context)
       if (args.actionType === enums.GrowthActionType.FacebookShare) {
         await GrowthEvent.insert(
@@ -213,9 +213,8 @@ const resolvers = {
       )
       return false
     },
-    async confirmSocialFollow(_, args, context) {
+    async logSocialFollow(_, args, context) {
       requireEnrolledUser(context)
-      console.log('RECEIVED THE FOLLOWING', args)
       if (args.actionType === enums.GrowthActionType.FacebookLike) {
         await GrowthEvent.insert(
           logger,

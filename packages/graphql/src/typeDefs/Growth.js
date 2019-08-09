@@ -224,9 +224,9 @@ module.exports = `
     log(event: JSON!): Boolean
     # Remind a user that his invitation is still pending
     inviteRemind(invitationId: Int!): Boolean
-    # Confirm executing social share
-    confirmSocialShare(contentId: String!, actionType: GrowthActionType!): Boolean
-    # Confirm executing social follow
-    confirmSocialFollow(actionType: GrowthActionType!): Boolean
+    # Log executing social share
+    logSocialShare(contentId: String!, actionType: GrowthActionType!): Boolean
+    # Log executing social follow
+    logSocialFollow(actionType: GrowthActionType!): Boolean
   }
 `

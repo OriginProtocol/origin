@@ -9,7 +9,7 @@ import MobileModalHeader from 'components/MobileModalHeader'
 
 import { Mutation } from 'react-apollo'
 import VerifyPromotionMutation from 'mutations/VerifyPromotion'
-import ConfirmFollowMutation from 'mutations/ConfirmSocialFollow'
+import LogFollowMutation from 'mutations/LogSocialFollow'
 import AutoMutate from 'components/AutoMutate'
 
 import { formatTokens } from 'utils/growthTools'
@@ -90,10 +90,10 @@ const VerifyOrConfirmFollow = ({
       )}
       {!actionConfirmed && socialNetwork === 'FACEBOOK' && (
         <Mutation
-          mutation={ConfirmFollowMutation}
-          onCompleted={({ confirmSocialFollow }) => {
+          mutation={LogFollowMutation}
+          onCompleted={({ logSocialFollow }) => {
             // if successful
-            if (confirmSocialFollow) {
+            if (logSocialFollow) {
               setActionConfirmed(true)
               
               if (showNotification) {
@@ -117,10 +117,10 @@ const VerifyOrConfirmFollow = ({
             )
           }}
         >
-          {confirmSocialFollow => (
+          {logSocialFollow => (
             <AutoMutate
               mutation={() => {
-                confirmSocialFollow({
+                logSocialFollow({
                   variables: {
                     actionType: currentAction.type
                   }

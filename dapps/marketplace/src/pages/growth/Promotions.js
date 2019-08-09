@@ -11,7 +11,7 @@ import ShareableContent from 'components/growth/ShareableContent'
 
 import { Mutation } from 'react-apollo'
 import VerifyPromotionMutation from 'mutations/VerifyPromotion'
-import ConfirmSocialShare from 'mutations/ConfirmSocialShare'
+import LogSocialShare from 'mutations/LogSocialShare'
 import AutoMutate from 'components/AutoMutate'
 
 import { formatTokens, getContentToShare } from 'utils/growthTools'
@@ -178,10 +178,10 @@ const RunVerifyPromotion = ({
       )}
       {!actionConfirmed && socialNetwork === 'FACEBOOK' && (
         <Mutation
-          mutation={ConfirmSocialShare}
-          onCompleted={({ confirmSocialShare }) => {
+          mutation={LogSocialShare}
+          onCompleted={({ logSocialShare }) => {
             // if successful
-            if (confirmSocialShare) {
+            if (logSocialShare) {
               if (onConfirmationCompleted) {
                 onConfirmationCompleted()
               }
@@ -195,10 +195,10 @@ const RunVerifyPromotion = ({
             if (onConfirmationError) onConfirmationError(errorData)
           }}
         >
-          {confirmSocialShare => (
+          {logSocialShare => (
             <AutoMutate
               mutation={() => {
-                confirmSocialShare({
+                logSocialShare({
                   variables: {
                     contentId: action.content.id,
                     actionType: action.type

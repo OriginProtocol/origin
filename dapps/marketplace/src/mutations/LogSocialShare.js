@@ -1,10 +1,10 @@
 import gql from 'graphql-tag'
 
 export default gql`
-  mutation ConfirmSocialShare(
+  mutation LogSocialShare(
     $contentId: String!
     $actionType: GrowthActionType!
   ) {
-    confirmSocialShare(contentId: $contentId, actionType: $actionType)
+    logSocialShare(contentId: $contentId, actionType: $actionType)
   }
 `
