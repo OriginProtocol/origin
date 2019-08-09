@@ -32,7 +32,7 @@ describe('exchange rate poller', () => {
         rates: {
           btc: { name: 'Bitcoin', unit: 'BTC', value: 1.0, type: 'crypto' },
           usd: { name: 'US Dollar', unit: '$', value: 11874.946, type: 'fiat' },
-          eth: { name: "Ether", unit: "ETH", value: 56.755, type: "crypto"}
+          eth: { name: 'Ether', unit: 'ETH', value: 56.755, type: 'crypto' }
         }
       })
 
@@ -40,7 +40,7 @@ describe('exchange rate poller', () => {
       .get('/utils/exchange-rate?market=ETH-USD')
       .expect(200)
     expect(response.status).to.equal(200)
-    // formula for the rate is 
+    // formula for the rate is
     // 1 / ((btc.value / usd.value) * symbol.value)
     expect(response.body.price).to.equal('209.2317152673773')
 

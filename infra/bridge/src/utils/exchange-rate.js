@@ -63,13 +63,13 @@ async function fetchExchangeRate(markets) {
 function parseAndSetRateData(market, rates) {
   const symbol = market.split('-')[0].toLowerCase()
   let rate = ''
-  if(symbol === 'dai'){
+  if (symbol === 'dai') {
     // setting DAI to value of 1 because coingecko doesn't support it
     // and this is a stable coin pegged to USD value. Variation should
     // be so small its irrelevant.
     rate = '1'
   } else if (rates[symbol] && rates[symbol].value) {
-    // rates returned by coingecko are against btc value, here that value is 
+    // rates returned by coingecko are against btc value, here that value is
     // converted to usd and then used to get the exchange rate
     rate = (
       1 /
