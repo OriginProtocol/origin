@@ -13,6 +13,7 @@ const bodyParser = require('body-parser')
 const passport = require('passport')
 const path = require('path')
 const session = require('express-session')
+const useragent = require('express-useragent')
 require('./passport')()
 const SQLiteStore = require('connect-sqlite3')(session)
 
@@ -52,12 +53,15 @@ if (app.get('env') === 'production') {
 
 app.use(session(sessionConfig))
 
-// Parse request bodies.
+// Parse request bodies
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-// Passport specific.
+// Passport specific
 app.use(passport.initialize())
 app.use(passport.session())
+
+// User agent parsing
+app.use(useragent.express())
 
 app.use(require('./controllers'))
 

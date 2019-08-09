@@ -6,7 +6,11 @@ const expect = chai.expect
 const moment = require('moment')
 
 const { Event, Grant, sequelize } = require('../../src/models')
-const { momentizeGrant, vestedAmount, vestingEvents } = require('../../src/lib/vesting')
+const {
+  momentizeGrant,
+  vestedAmount,
+  vestingEvents
+} = require('../../src/lib/vesting')
 
 // Sets up clean database
 async function setupDatabase() {
@@ -24,7 +28,7 @@ describe('vestingGrants', () => {
 
     beforeEach(async () => {
       await setupDatabase()
-      grantObj = new Grant({
+      const grantObj = new Grant({
         userId: 1,
         start: '2014-01-01 00:00:00',
         end: '2018-01-01 00:00:00',
@@ -80,7 +84,7 @@ describe('vestingGrants', () => {
 
     beforeEach(async () => {
       await setupDatabase()
-      grantObj = new Grant({
+      const grantObj = new Grant({
         userId: 1,
         start: '2014-01-01 00:00:00',
         end: '2018-01-01 00:00:00',
@@ -145,8 +149,7 @@ describe('vestingGrants', () => {
       )
     })
 
-    it('should vest the correct remainder on the last day', () => {
-    })
+    it('should vest the correct remainder on the last day', () => {})
 
     it('should vest the correct amount each day for non cliff vests', () => {
       grant.now = grant.end

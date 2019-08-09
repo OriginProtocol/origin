@@ -5,12 +5,11 @@ module.exports = (sequelize, DataTypes) => {
     'Event',
     {
       id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-      email: DataTypes.STRING,
       ip: DataTypes.STRING,
       userId: DataTypes.INTEGER,
       grantId: DataTypes.INTEGER,
       action: DataTypes.STRING,
-      data: DataTypes.STRING
+      data: DataTypes.JSONB
     },
     {
       tableName: 't3_event'

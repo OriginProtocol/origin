@@ -142,17 +142,27 @@ router.post(
     // Set otpVerified to true if it is not already to signify TOTP setup is
     // complete.
     await req.user.update({ otpVerified: true })
-    //
+
+    // Parsed user agent
+    const device = req.useragent
     // Log the successfull login in the Event table.
     await Event.create({
-      email: req.user.email,
       ip: req.connection.remoteAddress,
       grantId: null,
+      userId: req.user.id,
       action: LOGIN,
-      data: JSON.stringify({
-        device: req.useragent,
+      data: {
+        device: {
+          source: device.source,
+          browser: device.browser,
+          isMobile: device.isMobile,
+          isDesktop: device.isDesktop,
+          platform: device.platform,
+          version: device.version,
+          os: device.os
+        },
         location: await ip2geo(req.connection.remoteAddress)
-      })
+      }
     })
 
     // Save in the session that the user successfully authed with TOTP.
