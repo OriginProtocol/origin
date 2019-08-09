@@ -36,6 +36,8 @@ const GrowthEventTypes = new Enum(
   'FollowedOnTwitter',
   'FollowedOnTelegram',
   'TelegramAttestationPublished'
+  'SharedOnFacebook',
+  'LikedOnFacebook'
 )
 
 module.exports = {

@@ -251,13 +251,14 @@ export default {
           }
           ... on SocialShareAction {
             content {
+              id
               titleKey
               detailsKey
               image
               link
               linkKey
               post {
-                text {
+                tweet {
                   default
                   translations {
                     locale

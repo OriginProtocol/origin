@@ -9,6 +9,7 @@ import MobileModalHeader from 'components/MobileModalHeader'
 
 import { Mutation } from 'react-apollo'
 import VerifyPromotionMutation from 'mutations/VerifyPromotion'
+import LogFollowMutation from 'mutations/LogSocialFollow'
 import AutoMutate from 'components/AutoMutate'
 
 import { formatTokens } from 'utils/growthTools'
@@ -27,13 +28,116 @@ const actionTypeToNetwork = actionType => {
       return 'TWITTER'
     case 'TelegramFollow':
       return 'TELEGRAM'
+    case 'FacebookLike':
+      return 'FACEBOOK'
   }
 
   return null
 }
 
+const VerifyOrConfirmFollow = ({
+  showNotification,
+  currentAction,
+  setCurrentAction,
+  actionConfirmed,
+  setActionConfirmed,
+  decimalDivision,
+  growthCampaignsRefetch,
+  wallet,
+  walletProxy
+}) => {
+  if (!currentAction) return null
+
+  const socialNetwork = actionTypeToNetwork(currentAction.type)
+
+  return (
+    <>
+      {socialNetwork === 'TWITTER' && (
+        <Mutation
+          mutation={VerifyPromotionMutation}
+          onCompleted={({ verifyPromotion }) => {
+            if (verifyPromotion.success) {
+              if (showNotification) {
+                const message = getToastMessage(currentAction, decimalDivision)
+                showNotification(message, 'green')
+              }
+              if (growthCampaignsRefetch) {
+                growthCampaignsRefetch()
+              }
+            }
+            setCurrentAction(null)
+          }}
+          onError={errorData => {
+            console.error(`Failed to verify follower`, errorData)
+            setCurrentAction(null)
+          }}
+        >
+          {verifyPromotion => (
+            <>
+              <AutoMutate
+                mutation={() => {
+                  verifyPromotion({
+                    variables: {
+                      type: 'FOLLOW',
+                      identity: wallet,
+                      identityProxy: walletProxy,
+                      socialNetwork: socialNetwork
+                    }
+                  })
+                }}
+              />
+            </>
+          )}
+        </Mutation>
+      )}
+      {!actionConfirmed && socialNetwork === 'FACEBOOK' && (
+        <Mutation
+          mutation={LogFollowMutation}
+          onCompleted={({ logSocialFollow }) => {
+            // if successful
+            if (logSocialFollow) {
+              setActionConfirmed(true)
+
+              if (showNotification) {
+                const message = getToastMessage(currentAction, decimalDivision)
+                showNotification(message, 'green')
+              }
+
+              if (growthCampaignsRefetch) {
+                growthCampaignsRefetch()
+              }
+            } else {
+              console.error(
+                `Can not confirm action with type ${currentAction.type}`
+              )
+            }
+          }}
+          onError={errorData => {
+            console.error(
+              `Can not confirm action with type ${currentAction.type}`,
+              errorData
+            )
+          }}
+        >
+          {logSocialFollow => (
+            <AutoMutate
+              mutation={() => {
+                logSocialFollow({
+                  variables: {
+                    actionType: currentAction.type
+                  }
+                })
+              }}
+            />
+          )}
+        </Mutation>
+      )}
+    </>
+  )
+}
 function FollowOrigin(props) {
   const [currentAction, setCurrentAction] = useState(null)
+  const [actionConfirmed, setActionConfirmed] = useState(false)
 
   const {
     decimalDivision,
@@ -41,107 +145,82 @@ function FollowOrigin(props) {
     completedFollowActions,
     notCompletedFollowActions,
     growthCampaignsRefetch,
-    showNotification
+    showNotification,
+    wallet,
+    walletProxy
   } = props
-
   return (
-    <Mutation
-      mutation={VerifyPromotionMutation}
-      onCompleted={({ verifyPromotion }) => {
-        if (verifyPromotion.success) {
-          if (showNotification) {
-            const message = getToastMessage(currentAction, decimalDivision)
-            showNotification(message, 'green')
-          }
-          if (growthCampaignsRefetch) {
-            growthCampaignsRefetch()
-          }
-        }
-        setCurrentAction(null)
-      }}
-      onError={errorData => {
-        console.error(`Failed to verify follower`, errorData)
-        setCurrentAction(null)
-      }}
-    >
-      {verifyPromotion => (
-        <Fragment>
-          {currentAction ? (
-            <AutoMutate
-              mutation={() => {
-                verifyPromotion({
-                  variables: {
-                    type: 'FOLLOW',
-                    identity: props.wallet,
-                    identityProxy: props.walletProxy,
-                    socialNetwork: actionTypeToNetwork(currentAction.type)
-                  }
-                })
-              }}
-            />
-          ) : null}
-          {isMobile && (
-            <MobileModalHeader
-              showBackButton={true}
-              className="px-0"
-              onBack={() => {
-                props.history.push('/campaigns')
-              }}
-            >
-              <fbt desc="GrowthFollowOrigin.followOrigin">Follow Origin</fbt>
-            </MobileModalHeader>
-          )}
-          <div className={`growth-follow-origin ${isMobile ? 'mobile' : ''}`}>
-            <div>
-              {!isMobile && (
-                <Fragment>
-                  <Link className="back d-flex mr-auto" to="/campaigns">
-                    <img src="images/caret-blue.svg" />
-                    <div>
-                      <fbt desc="GrowthFollowOrigin.backToCampaign">
-                        Back to Campaign
-                      </fbt>
-                    </div>
-                  </Link>
-                  <h1 className={`mb-2 pt-md-3 mt-3`}>
-                    <fbt desc="GrowthFollowOrigin.followOrigin">
-                      Follow Origin
-                    </fbt>
-                  </h1>
-                </Fragment>
-              )}
-              <div
-                className={`follow-origin-subtitle ${
-                  isMobile ? 'text-center' : ''
-                }`}
-              >
-                <fbt desc="GrowthFollowOrigin.earnByFollowing">
-                  Earn Origin Tokens (OGN) by following us on social media and
-                  sharing Origin content.
-                </fbt>
-              </div>
-            </div>
-
-            <ActionList
-              decimalDivision={decimalDivision}
-              isMobile={isMobile}
-              actions={notCompletedFollowActions}
-              onActionClick={action => {
-                setCurrentAction(action)
-              }}
-            />
-            {completedFollowActions.length > 0 && (
-              <ActionList
-                title={fbt('Completed', 'growth.followOrigin.completed')}
-                decimalDivision={decimalDivision}
-                isMobile={isMobile}
-                actions={completedFollowActions}
-              />
-            )}
-          </div>
-        </Fragment>
+    <>
+      <VerifyOrConfirmFollow
+        showNotification={showNotification}
+        currentAction={currentAction}
+        setCurrentAction={setCurrentAction}
+        actionConfirmed={actionConfirmed}
+        setActionConfirmed={setActionConfirmed}
+        decimalDivision={decimalDivision}
+        growthCampaignsRefetch={growthCampaignsRefetch}
+        wallet={wallet}
+        walletProxy={walletProxy}
+      />
+      {isMobile && (
+        <MobileModalHeader
+          showBackButton={true}
+          className="px-0"
+          onBack={() => {
+            props.history.push('/campaigns')
+          }}
+        >
+          <fbt desc="GrowthFollowOrigin.followOrigin">Follow Origin</fbt>
+        </MobileModalHeader>
       )}
-    </Mutation>
+      <div className={`growth-follow-origin ${isMobile ? 'mobile' : ''}`}>
+        <div>
+          {!isMobile && (
+            <Fragment>
+              <Link className="back d-flex mr-auto" to="/campaigns">
+                <img src="images/caret-blue.svg" />
+                <div>
+                  <fbt desc="GrowthFollowOrigin.backToCampaign">
+                    Back to Campaign
+                  </fbt>
+                </div>
+              </Link>
+              <h1 className={`mb-2 pt-md-3 mt-3`}>
+                <fbt desc="GrowthFollowOrigin.followOrigin">Follow Origin</fbt>
+              </h1>
+            </Fragment>
+          )}
+          <div
+            className={`follow-origin-subtitle ${
+              isMobile ? 'text-center' : ''
+            }`}
+          >
+            <fbt desc="GrowthFollowOrigin.earnByFollowing">
+              Earn Origin Tokens (OGN) by following us on social media and
+              sharing Origin content.
+            </fbt>
+          </div>
+        </div>
+
+        <ActionList
+          decimalDivision={decimalDivision}
+          isMobile={isMobile}
+          actions={notCompletedFollowActions}
+          onActionClick={action => {
+            setCurrentAction(action)
+            setActionConfirmed(false)
+          }}
+        />
+        {completedFollowActions.length > 0 && (
+          <ActionList
+            title={fbt('Completed', 'growth.followOrigin.completed')}
+            decimalDivision={decimalDivision}
+            isMobile={isMobile}
+            actions={completedFollowActions}
+          />
+        )}
+      </div>
+    </>
   )
 }
 

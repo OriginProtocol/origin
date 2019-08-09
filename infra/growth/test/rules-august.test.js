@@ -30,7 +30,7 @@ describe('August campaign rules', () => {
     expect(this.crules.levels[0]).to.be.an('object')
     expect(this.crules.levels[0].rules.length).to.equal(3) // Note: adjust based on number of rules.
     expect(this.crules.levels[1]).to.be.an('object')
-    expect(this.crules.levels[1].rules.length).to.equal(16) // Note: adjust based on number of rules.
+    expect(this.crules.levels[1].rules.length).to.equal(22) // Note: adjust based on number of rules.
     expect(this.crules.levels[2]).to.be.an('object')
     expect(this.crules.levels[2].rules.length).to.equal(18) // Note: adjust based on number of rules.
 
