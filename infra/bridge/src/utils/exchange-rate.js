@@ -7,11 +7,7 @@ const logger = require('../logger')
 
 const currencies = [
   'ETH-USD',
-  // DAI is disabled because coingecko doesn't support it
-  // however DAI is pegged to USD so maybe we could just use 1
-  // or call a different API to get it. Currently pegged to 1 in
-  // search.js
-  // 'DAI-USD',
+  'DAI-USD',
   'KRW-USD',
   'SGD-USD',
   'GBP-USD',
@@ -66,19 +62,25 @@ async function fetchExchangeRate(markets) {
 
 function parseAndSetRateData(market, rates) {
   const symbol = market.split('-')[0].toLowerCase()
-  if (rates[symbol].value) {
-    // rates are against btc value, here that value is converted to usd
-    // and then used to get the exchange rate
-    const rate = (
+  let rate = ''
+  if(symbol === 'dai'){
+    // setting DAI to value of 1 because coingecko doesn't support it
+    // and this is a stable coin pegged to USD value. Variation should
+    // be so small its irrelevant.
+    rate = '1'
+  } else if (rates[symbol] && rates[symbol].value) {
+    // rates returned by coingecko are against btc value, here that value is 
+    // converted to usd and then used to get the exchange rate
+    rate = (
       1 /
       ((rates.btc.value / rates.usd.value) * rates[symbol].value)
     ).toString()
-    redisClient.set(`${market}_price`, rate)
-    logger.debug(`Exchange rate for ${market} set to ${rate}`)
-    return rate
   } else {
     throw new Error(`${market} not found`)
   }
+  redisClient.set(`${market}_price`, rate)
+  logger.debug(`Exchange rate for ${market} set to ${rate}`)
+  return rate
 }
 
 /**

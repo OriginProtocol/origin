@@ -31,16 +31,26 @@ describe('exchange rate poller', () => {
       .reply(200, {
         rates: {
           btc: { name: 'Bitcoin', unit: 'BTC', value: 1.0, type: 'crypto' },
-          usd: { name: 'US Dollar', unit: '$', value: 11874.946, type: 'fiat' }
+          usd: { name: 'US Dollar', unit: '$', value: 11874.946, type: 'fiat' },
+          eth: { name: "Ether", unit: "ETH", value: 56.755, type: "crypto"}
         }
       })
 
-    const response = await request(app)
-      .get('/utils/exchange-rate?market=BTC-USD')
+    let response = await request(app)
+      .get('/utils/exchange-rate?market=ETH-USD')
+      .expect(200)
+    expect(response.status).to.equal(200)
+    // formula for the rate is 
+    // 1 / ((btc.value / usd.value) * symbol.value)
+    expect(response.body.price).to.equal('209.2317152673773')
+
+    response = await request(app)
+      .get('/utils/exchange-rate?market=DAI-USD')
       .expect(200)
 
     expect(response.status).to.equal(200)
-    expect(response.body.price).to.equal('11874.946')
+    // DAI currently set to '1' in exchange-rate.js
+    expect(response.body.price).to.equal('1')
   })
 
   it('should return default exchange rate if not cached and API is down', async () => {

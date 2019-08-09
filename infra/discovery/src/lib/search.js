@@ -28,14 +28,9 @@ const getExchangeRates = async currencies => {
     const exchangeRates = {}
     // TODO use redis batch features instead of promise.All
     const promises = currencies.map(currency => {
-      // setting these two currencies to 1, to avoid redundant calls.
-      if (currency === 'fiat-USD' || currency === 'token-DAI') {
-        return '1'
-      } else {
-        const splitCurrency = currency.split('-')
-        const resolvedCurrency = splitCurrency[1]
-        return getAsync(`${resolvedCurrency}-USD_price`)
-      }
+      const splitCurrency = currency.split('-')
+      const resolvedCurrency = splitCurrency[1]
+      return getAsync(`${resolvedCurrency}-USD_price`)
     })
     const result = await Promise.all(promises)
     result.forEach((r, i) => {
@@ -188,7 +183,9 @@ class Listing {
       'fiat-JPY',
       'fiat-EUR',
       'fiat-KRW',
-      'fiat-GBP'
+      'fiat-GBP',
+      'fiat-CNY',
+      'fiat-SGD'
     ]
     const exchangeRates = await getExchangeRates(currencies)
 
@@ -342,7 +339,6 @@ class Listing {
       numberOfItems = 1000
     }
 
-    // sorting
     /**
      * Creates sort query
      * @returns {Object} - Sort query for elastic search
@@ -350,7 +346,7 @@ class Listing {
     const getSortQuery = () => {
       const sortWhiteList = ['price.amount']
       const orderWhiteList = ['asc', 'desc']
-      // if sort and order are set, BS  return a sort
+      // if sort and order are set, return a sort
       // otherwise return empty sort to skip
       if (sort && sort.length > 0 && (order && order.length > 0)) {
         try {
