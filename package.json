@@ -2,7 +2,7 @@
   "name": "root",
   "private": true,
   "dependencies": {
-    "lerna": "^3.15.0"
+    "lerna": "3.16.4"
   },
   "workspaces": {
     "packages": [
@@ -15,21 +15,21 @@
     ]
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.2",
-    "chai": "^4.2.0",
-    "eslint": "^6.0.1",
-    "eslint-config-react-app": "^4.0.1",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-flowtype": "^3.11.1",
-    "eslint-plugin-import": "^2.18.0",
-    "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-node": "^9.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-react": "^7.14.2",
-    "eslint-plugin-standard": "^4.0.0",
-    "husky": "^2.7.0",
-    "mocha": "^6.1.4",
-    "prettier": "^1.18.2"
+    "babel-eslint": "10.0.2",
+    "chai": "4.2.0",
+    "eslint": "6.1.0",
+    "eslint-config-react-app": "4.0.1",
+    "eslint-config-standard": "12.0.0",
+    "eslint-plugin-flowtype": "3.13.0",
+    "eslint-plugin-import": "2.18.2",
+    "eslint-plugin-jsx-a11y": "6.2.3",
+    "eslint-plugin-node": "9.1.0",
+    "eslint-plugin-promise": "4.2.1",
+    "eslint-plugin-react": "7.14.3",
+    "eslint-plugin-standard": "4.0.0",
+    "husky": "2.7.0",
+    "mocha": "6.2.0",
+    "prettier": "1.18.2"
   },
   "scripts": {
     "bootstrap": "lerna bootstrap --no-ci --progress",
@@ -52,8 +52,11 @@
     ],
     "groupName": "all",
     "ignoreDeps": [
+      "bip39",
       "ganache-core",
       "web3",
+      "web3-utils",
+      "ipfs",
       "openzeppelin-solidity",
       "truffle",
       "truffle-hdwallet-provider",
@@ -61,6 +64,16 @@
     ],
     "ignorePaths": [
       "mobile"
+    ],
+    "packageRules": [
+      {
+        "packageNames": [
+          "@origin/token"
+        ],
+        "ignoreDeps": [
+          "solc"
+        ]
+      }
     ]
   }
 }

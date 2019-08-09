@@ -40,14 +40,14 @@
     "ipfs": "^0.33.1",
     "ipfs-api": "^26.1.2",
     "ipfs-log": "^4.2.0",
-    "ipfs-pubsub-1on1": "0.0.4",
+    "ipfs-pubsub-1on1": "0.0.6",
     "json-stable-stringify": "^1.0.1",
     "logplease": "^1.2.15",
-    "orbit-db": "^0.19.9",
+    "orbit-db": "^0.21.0",
     "per-env": "^1.0.2",
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.3",
-    "rate-limiter-flexible": "^0.19.4",
+    "rate-limiter-flexible": "^0.25.0",
     "sequelize-cli": "^5.5.0",
     "sequelize": "^5.8.12",
     "web3": "1.0.0-beta.34",
@@ -55,10 +55,10 @@
     "express-ws": "^4.0.0"
   },
   "devDependencies": {
-    "@babel/node": "^7.4.5",
-    "eslint": "^6.0.1",
-    "nodemon": "^1.19.1",
-    "prettier": "^1.18.2"
+    "@babel/node": "7.5.5",
+    "eslint": "6.1.0",
+    "nodemon": "1.19.1",
+    "prettier": "1.18.2"
   },
   "prettier": {
     "semi": false,
