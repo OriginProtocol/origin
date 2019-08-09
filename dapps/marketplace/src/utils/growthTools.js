@@ -202,9 +202,9 @@ export function getTokensEarned({
 }
 
 export function getContentToShare(action, locale) {
-  const translation = action.content.post.text.translations.find(
+  const translation = action.content.post.tweet.translations.find(
     content => content.locale === locale
   )
 
-  return translation ? translation.text : action.content.post.text.default
+  return translation ? translation.text : action.content.post.tweet.default
 }

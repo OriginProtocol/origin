@@ -258,7 +258,7 @@ export default {
               link
               linkKey
               post {
-                text {
+                tweet {
                   default
                   translations {
                     locale

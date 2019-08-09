@@ -9,8 +9,8 @@ class VerifiableSocialShareRule extends SocialShareRule {
   constructor(crules, levelId, config) {
     super(crules, levelId, config)
     // Compute the hashes for the post content, in all the configured languages.
-    this.contentHashes = [this._hashContent(this.content.post.text.default)]
-    for (const translation of this.content.post.text.translations) {
+    this.contentHashes = [this._hashContent(this.content.post.tweet.default)]
+    for (const translation of this.content.post.tweet.translations) {
       this.contentHashes.push(this._hashContent(translation.text))
     }
   }

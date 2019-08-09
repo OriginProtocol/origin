@@ -533,7 +533,7 @@ describe('Growth Engine rules', () => {
           content: {
             tweet_tweet: {
               post: {
-                text: {
+                tweet: {
                   default: 'tweet tweet',
                   translations: []
                 }

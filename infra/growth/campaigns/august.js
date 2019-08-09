@@ -791,7 +791,7 @@ const augustConfig = {
       link: 'https://medium.com/originprotocol/now-optimized-for-mobile-origin-launches-a-fresh-new-app-and-sponsored-gas-80dc2407bd8d',
       linkKey: 'growth.twitterShare.content1.link',
       post: {
-        text: {
+        tweet: {
           default: `Experience the decentralized global #marketplace of the future with @OriginProtocol's fresh new app. Secure transactions. Zero fees. Try it now: https://ogn.dev/mobile`,
           translations: [ ]
         }
@@ -804,7 +804,7 @@ const augustConfig = {
       link: 'https://www.originrewards.com',
       linkKey: 'growth.twitterShare.content2.link',
       post: {
-        text: {
+        tweet: {
           default: `Join @OriginProtocol's #rewards program and earn free Origin tokens! 250,000 OGN already distributed. Sign up and claim your free OGN! https://www.originrewards.com`,
           translations: [ ]
         }
@@ -817,7 +817,7 @@ const augustConfig = {
       link: 'https://techcrunch.com/2018/10/10/origin-protocol/',
       linkKey: 'growth.twitterShare.content3.link',
       post: {
-        text: {
+        tweet: {
           default: `Great @TechCrunch article on how @OriginProtocol is building one of the most promising blockchain platforms for the new sharing economy. https://techcrunch.com/2018/10/10/origin-protocol/`,
           translations: [
           ]
@@ -831,7 +831,7 @@ const augustConfig = {
       link: 'https://www.coindesk.com/another-paypal-co-founder-is-embracing-blockchains-seismic-shift',
       linkKey: 'growth.twitterShare.content4.link',
       post: {
-        text: {
+        tweet: {
           default: `One of the best teams in crypto today! @OriginProtocol's team includes a cofounder from PayPal & the 1st engineer at YouTube! https://www.coindesk.com/another-paypal-co-founder-is-embracing-blockchains-seismic-shift`,
           translations: [
           ]
@@ -845,7 +845,7 @@ const augustConfig = {
       link: 'https://t.me/originprotocol',
       linkKey: 'growth.twitterShare.content5.link',
       post: {
-        text: {
+        tweet: {
           default: `Join me in following @OriginProtocol on #Telegram! https://t.me/originprotocol`,
           translations: [
           ]

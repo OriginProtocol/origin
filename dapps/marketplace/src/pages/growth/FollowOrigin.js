@@ -95,7 +95,7 @@ const VerifyOrConfirmFollow = ({
             // if successful
             if (logSocialFollow) {
               setActionConfirmed(true)
-              
+
               if (showNotification) {
                 const message = getToastMessage(currentAction, decimalDivision)
                 showNotification(message, 'green')
