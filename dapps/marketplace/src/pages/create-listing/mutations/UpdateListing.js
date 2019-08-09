@@ -37,6 +37,9 @@ class UpdateListing extends Component {
       />
     )
 
+    const needsAllowance = get(this.props, 'tokenStatus.needsAllowance', false)
+    const walletIsSeller = this.props.wallet !== this.props.listing.seller.id
+
     if (this.state.error) {
       content = (
         <TransactionError
@@ -49,10 +52,7 @@ class UpdateListing extends Component {
       content = this.renderWaitModal()
     } else if (this.state.waitForAllow) {
       content = this.renderWaitAllowModal()
-    } else if (
-      this.props.wallet !== this.props.listing.seller.id &&
-      this.props.tokenStatus.needsAllowance
-    ) {
+    } else if (walletIsSeller && needsAllowance) {
       action = this.renderAllowTokenMutation()
     } else {
       action = this.renderUpdateListingMutation()
@@ -102,6 +102,8 @@ class UpdateListing extends Component {
 
   additionalDeposit() {
     const { listing, tokenBalance, listingTokens } = this.props
+    if (!tokenBalance) return '0'
+
     const commission = Number(listing.commission)
     const existingCommission = Number(listingTokens)
     let additionalDeposit =

@@ -7,8 +7,6 @@ import parseId from '../../utils/parseId'
 import { listingInputToIPFS } from './createListing'
 
 import { proxyOwner } from '../../utils/proxy'
-import createDebug from 'debug'
-const debug = createDebug('origin:updateListing:')
 
 async function updateListing(_, args) {
   const { data, unitData, fractionalData, autoApprove } = args
@@ -22,6 +20,7 @@ async function updateListing(_, args) {
   let tx
   let gas = cost.updateListing
   let mutation = 'updateListing'
+
   const additionalDeposit = contracts.web3.utils.toWei(
     args.additionalDeposit,
     'ether'
@@ -48,14 +47,7 @@ async function updateListing(_, args) {
       const txData = await contracts.marketplaceExec.methods
         .updateListing(listingId, ipfsHash, additionalDeposit)
         .encodeABI()
-      debug('Using proxy', {
-        from,
-        owner,
-        txData,
-        marketplace: contracts.marketplace._address,
-        ogn: contracts.ognExec._address,
-        additionalDeposit
-      })
+
       tx = Proxy.methods.transferTokenMarketplaceExecute(
         owner,
         contracts.marketplace._address,
@@ -94,9 +86,7 @@ async function updateListing(_, args) {
     from,
     mutation,
     gas,
-    onConfirmation: () => {
-      context.eventSource.resetMemos()
-    }
+    onConfirmation: () => context.eventSource.resetMemos()
   })
 }
 

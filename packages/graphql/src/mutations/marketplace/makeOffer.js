@@ -75,17 +75,6 @@ async function makeOffer(_, data) {
     args.push(offerId)
   }
 
-  console.log({
-    listingId,
-    ipfsHash,
-    finalizes: ipfsData.finalizes,
-    affiliate,
-    commission,
-    value,
-    currencyAddress,
-    arbitrator
-  })
-
   let ethValue = currencyAddress === ZeroAddress ? value : 0
   let tx = marketplace.methods.makeOffer(...args)
   if (contracts.config.proxyAccountsEnabled) {
