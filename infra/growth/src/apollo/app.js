@@ -49,7 +49,9 @@ const server = new ApolloServer({
     const headers = context.req.headers
 
     let authStatus = enums.GrowthParticipantAuthenticationStatus.NotEnrolled
-    let authToken, walletAddress, identityOverriden = false
+    let authToken,
+      walletAddress,
+      identityOverriden = false
 
     if (headers['x-growth-secret'] && headers['x-growth-wallet']) {
       if (headers['x-growth-secret'] === process.env.GROWTH_ADMIN_SECRET) {

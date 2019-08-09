@@ -115,12 +115,11 @@ const resolvers = {
       // if identity overriden with admin_secret always show as enrolled
       if (context.identityOverriden) {
         return enums.GrowthParticipantAuthenticationStatus.Enrolled
-      }
+      } else {
       /* otherwise we need to query the enrolment status again to match the current
        * walletAddress and authentication token. In case user switches the wallet account
        * an otherwise valid authentication token needs to be invalidated.
        */
-      else {
         return await getUserAuthenticationStatus(
           context.authToken,
           args.walletAddress
