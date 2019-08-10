@@ -59,13 +59,15 @@ const SortMenu = ({
           {RenderMobileSort()}
         </React.Fragment>
       ) : (
-        <SortDropdown
-          onChange={onChange}
-          selectedOption={selectedOption}
-          sortVisible={sortVisible}
-          handleSortVisible={handleSortVisible}
-          isMobile={isMobile}
-        />
+        <div className="container">
+          <SortDropdown
+            onChange={onChange}
+            selectedOption={selectedOption}
+            sortVisible={sortVisible}
+            handleSortVisible={handleSortVisible}
+            isMobile={isMobile}
+          />
+        </div>
       )}
     </React.Fragment>
   )
@@ -178,6 +180,7 @@ require('react-styl')(`
     font-size: 14px;
     font-weight: bold;
     font-style: normal;
+    /* padding-left: 0rem; */
   .sortButton:hover
     color: var(--dusk)
   .sortDropDown
