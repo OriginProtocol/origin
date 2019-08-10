@@ -228,6 +228,8 @@ const typeDefs = gql`
   type Query {
     listings(
       searchQuery: String
+      sort: String
+      order: String
       filters: [ListingFilter!]
       page: Page!
     ): ListingPage
