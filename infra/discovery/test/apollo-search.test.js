@@ -15,6 +15,7 @@ describe('Search', () => {
     // change behaviour of elasticsearch's search function to store the generated query
     client.search = function(query) {
       // do not cache aggregation query
+
       if (query.body.aggs === undefined) {
         lastQuery = query
       }
@@ -43,7 +44,7 @@ describe('Search', () => {
   })
 
   it(`Should generate a query for all listings`, async () => {
-    search.Listing.search('', [], 5, 0, false)
+    await search.Listing.search('', '', '', [], 5, 0)
     expect(lastQuery.body.from).to.equal(0)
     expect(lastQuery.body.size).to.equal(5)
     lastQuery.body.query.function_score.query.bool.must.should.include.something.that.deep.equals(
@@ -52,7 +53,7 @@ describe('Search', () => {
   })
 
   it(`Should include queried text with fuzzy query`, async () => {
-    search.Listing.search('Taylor Swift', [], 5, 0, false)
+    await search.Listing.search('Taylor Swift', '', '', [], 5, 0)
 
     lastQuery.body.query.function_score.query.bool.must.should.include.something.that.deep.equals(
       {
@@ -68,7 +69,7 @@ describe('Search', () => {
   })
 
   it(`Should include boost for match in the title`, async () => {
-    search.Listing.search('Taylor Swift', [], 5, 0, false)
+    await search.Listing.search('Taylor Swift', '', '', [], 5, 0)
 
     lastQuery.body.query.function_score.query.bool.should.should.include.something.that.deep.equals(
       {
@@ -78,7 +79,7 @@ describe('Search', () => {
   })
 
   it(`Should include boost for match in the title`, async () => {
-    search.Listing.search('Taylor Swift', [], 5, 0, false)
+    await search.Listing.search('Taylor Swift', '', '', [], 5, 0)
 
     lastQuery.body.query.function_score.query.bool.should.should.include.something.that.deep.equals(
       {
@@ -95,7 +96,7 @@ describe('Search', () => {
         value: 20
       }
     ]
-    search.Listing.search('Taylor Swift', filters, 5, 0, false)
+    await search.Listing.search('Taylor Swift', '', '', filters, 5, 0)
 
     lastQuery.body.query.function_score.query.bool.filter.should.include.something.that.deep.equals(
       { range: { price: { gte: 20 } } }
@@ -110,7 +111,7 @@ describe('Search', () => {
         value: 20
       }
     ]
-    search.Listing.search('Taylor Swift', filters, 5, 0, false)
+    await search.Listing.search('Taylor Swift', '', '', filters, 5, 0)
 
     lastQuery.body.query.function_score.query.bool.filter.should.include.something.that.deep.equals(
       { range: { price: { lte: 20 } } }
@@ -125,7 +126,7 @@ describe('Search', () => {
         value: 'cars'
       }
     ]
-    search.Listing.search('Taylor Swift', filters, 5, 0, false)
+    await search.Listing.search('Taylor Swift', '', '', filters, 5, 0)
 
     lastQuery.body.query.function_score.query.bool.filter.should.include.something.that.deep.equals(
       { term: { category: 'cars' } }
@@ -141,7 +142,7 @@ describe('Search', () => {
         valueType: 'ARRAY_STRING'
       }
     ]
-    search.Listing.search('Taylor Swift', filters, 5, 0, false)
+    await search.Listing.search('Taylor Swift', '', '', filters, 5, 0)
 
     lastQuery.body.query.function_score.query.bool.filter.should.include.something.that.deep.equals(
       {
@@ -161,5 +162,29 @@ describe('Search', () => {
         }
       }
     )
+  })
+
+  it(`Should create empty sort query i.e. disable skip sorting`, async () => {
+    await search.Listing.search('', '', '', [], 5, 0)
+    lastQuery.body.sort.should.deep.equals([])
+  })
+
+  it(`Should create sort by price.amount query with asc order`, async () => {
+    await search.Listing.search('', 'price.amount', 'asc', [], 5, 0)
+    // not using deep equal because excluding _script.script.params as that that could
+    // change depending on the currency exchange rates needed
+    lastQuery.body.sort._script.order.should.equal('asc')
+    lastQuery.body.sort._script.type.should.equal('number')
+    lastQuery.body.sort._script.script.lang.should.equal('painless')
+    lastQuery.body.sort._script.script.source.should.equal(
+      'Float.parseFloat(params._source.price.amount) * Float.parseFloat(params.exchangeRates[params._source.price.currency.id])'
+    )
+  })
+
+  it(`Should throw error and disable sorting if sort variables are not whitelisted`, async () => {
+    // would be great to verify actual error is thrown as well
+    // for now just ensuring sort is disabled
+    await search.Listing.search('', 'foo', 'bar', [], 5, 0)
+    lastQuery.body.sort.should.deep.equals([])
   })
 })
