@@ -65,8 +65,6 @@ class ReadyScreen extends Component {
     await this.setState({ transactionId })
     // Wait for identity deployment transaction receipt
     this.waitForTransaction()
-    // Flag onboarding as complete
-    this.props.setOnboardingComplete(true)
   }
 
   waitForTransaction = async () => {
@@ -131,8 +129,10 @@ class ReadyScreen extends Component {
             type="primary"
             title={fbt('Start Using Origin', 'ReadyScreen.button')}
             onPress={() => {
+              // Flag onboarding as complete
+              this.props.setOnboardingComplete(true)
               // Navigate to subroute to skip authentication requirement
-              this.props.navigation.navigate('App')
+              this.props.navigation.navigate('Main')
             }}
           />
         </View>
@@ -151,12 +151,12 @@ class ReadyScreen extends Component {
           <>
             <Text style={styles.title}>
               <fbt desc="ReadyScreen.transactionWaitTitle">
-                Waiting for confirmation.
+                Waiting for confirmation
               </fbt>
             </Text>
             <Text style={{ ...styles.subtitle, marginBottom: 20 }}>
               <fbt desc="ReadyScreen.transactionWaitSubtitle">
-                This might take a minute.
+                This might take a minute
               </fbt>
             </Text>
           </>

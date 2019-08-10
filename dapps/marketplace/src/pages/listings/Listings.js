@@ -139,7 +139,7 @@ class Listings extends Component {
     const filters = [...getFilters(this.state.search), ...creatorFilters]
 
     const vars = {
-      ...pick(this.state, 'first', 'sort'),
+      ...pick(this.state, 'first', 'sort', 'order'),
       search: this.state.search.searchInput,
       filters: filters.map(filter => omit(filter, '__typename'))
     }

@@ -7,8 +7,7 @@ import { Image, Modal } from 'react-native'
 import {
   createAppContainer,
   createBottomTabNavigator,
-  createStackNavigator,
-  createSwitchNavigator
+  createStackNavigator
 } from 'react-navigation'
 
 import PushNotifications from './PushNotifications'
@@ -48,7 +47,6 @@ import WalletScreen from 'screens/wallet'
 
 // Backup screen
 import BackupScreen from 'screens/backup'
-import { getNextOnboardingStep } from 'utils/user'
 
 const IMAGES_PATH = '../assets/images/'
 
@@ -81,26 +79,12 @@ const OnboardingStack = createStackNavigator(
     Ready: ReadyScreen
   },
   {
+    initialRouteName: 'Welcome',
     defaultNavigationOptions: () => {
       return {
         header: null
       }
     }
-  }
-)
-
-const BackupStack = createSwitchNavigator(
-  {
-    BackupAuth: {
-      screen: AuthenticationGuard,
-      params: {
-        navigateOnSuccess: 'Backup'
-      }
-    },
-    Backup: BackupScreen
-  },
-  {
-    initialRouteName: 'BackupAuth'
   }
 )
 
@@ -117,20 +101,7 @@ const WalletStack = createStackNavigator(
 
 const SettingsStack = createStackNavigator(
   {
-    Account: createSwitchNavigator(
-      {
-        AccountAuth: {
-          screen: AuthenticationGuard,
-          params: {
-            navigateOnSuccess: 'Account'
-          }
-        },
-        Account: AccountScreen
-      },
-      {
-        initialRouteName: 'AccountAuth'
-      }
-    ),
+    Account: AccountScreen,
     Accounts: AccountsScreen,
     Language: LanguageScreen,
     ImportAccount: ImportAccountScreen,
@@ -163,55 +134,78 @@ const SettingsStack = createStackNavigator(
   }
 )
 
-const _MarketplaceApp = createBottomTabNavigator(
+const _MarketplaceApp = createStackNavigator(
   {
-    Marketplace: MarketplaceScreen,
-    Wallet: WalletStack,
-    Settings: SettingsStack
-  },
-  {
-    initialRouteName: 'Marketplace',
-    order: ['Marketplace', 'Wallet', 'Settings'],
-    defaultNavigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused }) => {
-        const { routeName } = navigation.state
+    Onboarding: OnboardingStack,
+    Backup: BackupScreen,
+    Main: createBottomTabNavigator(
+      {
+        Marketplace: MarketplaceScreen,
+        Wallet: WalletStack,
+        Settings: SettingsStack
+      },
+      {
+        initialRouteName: 'Marketplace',
+        order: ['Marketplace', 'Wallet', 'Settings'],
+        defaultNavigationOptions: ({ navigation }) => ({
+          tabBarIcon: ({ focused }) => {
+            const { routeName } = navigation.state
 
-        // require expects string literal :(
-        if (routeName === 'Marketplace') {
-          return focused ? (
-            <Image source={require(IMAGES_PATH + 'market-active.png')} />
-          ) : (
-            <Image source={require(IMAGES_PATH + 'market-inactive.png')} />
-          )
-        } else if (routeName === 'Wallet') {
-          return focused ? (
-            <Image source={require(IMAGES_PATH + 'wallet-active.png')} />
-          ) : (
-            <Image source={require(IMAGES_PATH + 'wallet-inactive.png')} />
-          )
-        } else if (routeName === 'Settings') {
-          return focused ? (
-            <Image source={require(IMAGES_PATH + 'settings-active.png')} />
-          ) : (
-            <Image source={require(IMAGES_PATH + 'settings-inactive.png')} />
-          )
+            // require expects string literal :(
+            if (routeName === 'Marketplace') {
+              return focused ? (
+                <Image source={require(IMAGES_PATH + 'market-active.png')} />
+              ) : (
+                <Image source={require(IMAGES_PATH + 'market-inactive.png')} />
+              )
+            } else if (routeName === 'Wallet') {
+              return focused ? (
+                <Image source={require(IMAGES_PATH + 'wallet-active.png')} />
+              ) : (
+                <Image source={require(IMAGES_PATH + 'wallet-inactive.png')} />
+              )
+            } else if (routeName === 'Settings') {
+              return focused ? (
+                <Image source={require(IMAGES_PATH + 'settings-active.png')} />
+              ) : (
+                <Image
+                  source={require(IMAGES_PATH + 'settings-inactive.png')}
+                />
+              )
+            }
+          }
+        }),
+        tabBarOptions: {
+          activeTintColor: '#007fff',
+          iconStyle: {
+            marginTop: 10
+          },
+          inactiveTintColor: '#c0cbd4',
+          showLabel: false,
+          style: {
+            backgroundColor: 'white'
+          },
+          tabStyle: {
+            justifyContent: 'space-around'
+          }
         }
       }
-    }),
-    tabBarOptions: {
-      activeTintColor: '#007fff',
-      iconStyle: {
-        marginTop: 10
-      },
-      inactiveTintColor: '#c0cbd4',
-      showLabel: false,
-      style: {
-        backgroundColor: 'white'
-      },
-      tabStyle: {
-        justifyContent: 'space-around'
+    )
+  },
+  {
+    // Initial route must be main to force loading of WebView so that onboarding
+    // can use it for GraphQL queries via `window.gql`
+    initialRouteName: 'Main',
+    defaultNavigationOptions: {
+      header: null
+    },
+    // Remove the transition on the stack navigator as it makes it clearer
+    // that the DApp WebView loads first
+    transitionConfig: () => ({
+      transitionSpec: {
+        duration: 0 // Set the animation duration time as 0
       }
-    }
+    })
   }
 )
 
@@ -221,25 +215,12 @@ class MarketplaceApp extends React.Component {
   static router = _MarketplaceApp.router
 
   componentDidUpdate(prevProps) {
+    // Wait for marketplace to become available
     if (!prevProps.marketplace.ready && this.props.marketplace.ready) {
-      // We can't use the withOnboardingSteps HOC here because it isn't
-      // compatible with react-navigation navigators
-      const nextOnboardingStep = getNextOnboardingStep(
-        this.props.onboarding,
-        this.props.settings
-      )
-      if (
-        nextOnboardingStep &&
-        !this.props.onboarding.complete &&
-        nextOnboardingStep !== 'Ready'
-      ) {
-        this.props.navigation.navigate('Welcome')
-      } else if (
-        (this.props.settings.pin && this.props.settings.pin.length > 0) ||
-        this.props.settings.biometryType
-      ) {
-        this.props.setOnboardingComplete(true)
-        this.props.navigation.navigate('Auth')
+      // Onboarding complete, nothing to do here
+      if (!this.props.onboarding.complete) {
+        // Some onboarding still to do, start with onboarding welcome
+        this.props.navigation.navigate('Onboarding')
       }
     }
   }
@@ -249,17 +230,31 @@ class MarketplaceApp extends React.Component {
     let loadingText = 'Loading marketplace...'
     let activityIndicator = true
     let errorComponent = false
+
     if (this.props.marketplace.error) {
-      errorComponent = <NoInternetError />
+      errorComponent = (
+        <NoInternetError
+          errorTextStyle={{ color: 'white' }}
+          buttonType="white"
+        />
+      )
       loadingText = false
       activityIndicator = false
     }
+
     return (
       <>
-        <PushNotifications />
-        <UpdatePrompt />
-        <BackupPrompt />
+        {this.props.marketplace.ready && (
+          <>
+            <AuthenticationGuard />
+            <PushNotifications />
+            <UpdatePrompt />
+            <BackupPrompt />
+          </>
+        )}
+
         <_MarketplaceApp navigation={navigation} />
+
         <Modal visible={!this.props.marketplace.ready}>
           <Loading
             loadingText={loadingText}
@@ -280,34 +275,9 @@ const mapDispatchToProps = dispatch => ({
   setOnboardingComplete: complete => dispatch(setComplete(complete))
 })
 
-export default createAppContainer(
-  createStackNavigator(
-    {
-      Auth: {
-        screen: AuthenticationGuard,
-        params: {
-          navigateOnSuccess: 'App'
-        }
-      },
-      App: connect(
-        mapStateToProps,
-        mapDispatchToProps
-      )(MarketplaceApp),
-      GuardedBackup: BackupStack,
-      Onboarding: OnboardingStack
-    },
-    {
-      initialRouteName: 'App',
-      defaultNavigationOptions: {
-        header: null
-      },
-      // Remove the transition on the switch navigator as it makes it clearer
-      // that the DApp webview loads first
-      transitionConfig: () => ({
-        transitionSpec: {
-          duration: 0 // Set the animation duration time as 0
-        }
-      })
-    }
-  )
-)
+const App = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MarketplaceApp)
+
+export default createAppContainer(App)

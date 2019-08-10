@@ -27,3 +27,9 @@ yarn run seed
 ```
 yarn run start
 ```
+
+##### Additional environment variables for production
+
+```
+export PORTAL_URL="https://<url>
+```

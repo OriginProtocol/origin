@@ -205,7 +205,7 @@ class EthDistributor {
     this.config = config
 
     let hotWalletPk, providerUrl
-    if (config.networkIds[0] === 999) {
+    if (config.networkId === 999) {
       // In dev environment, use truffle's default account as hot wallet.
       hotWalletPk =
         '0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3'

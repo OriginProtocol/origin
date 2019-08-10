@@ -86,6 +86,7 @@ class BanParticipants {
       numEmployeesTagged: 0,
       numTrustedTagged: 0,
       numBanned: 0,
+      numBannedSdn: 0,
       numBannedReferrer: 0,
       numBannedDupe: 0
     }
@@ -189,6 +190,7 @@ class BanParticipants {
       if (sdn) {
         await this._banParticipant(participant, sdn)
         this.stats.numBanned++
+        this.stats.numBannedSdn++
         continue
       }
 
@@ -200,7 +202,7 @@ class BanParticipants {
         this.stats.numBannedDupe++
         continue
       }
-      logger.info(`Account ${address} passed dupe fraud checks.`)
+      logger.debug(`Account ${address} passed dupe fraud checks.`)
     }
 
     //
@@ -226,8 +228,11 @@ class BanParticipants {
         this.stats.numBannedReferrer++
         continue
       }
-      logger.info(`Account ${address} passed fraud referrer checks.`)
+      logger.debug(`Account ${address} passed fraud referrer checks.`)
     }
+
+    logger.info('Detailed FraudEngine stats:')
+    logger.info(this.fraudEngine.stats)
   }
 }
 
@@ -251,7 +256,7 @@ if (require.main === module) {
     .process(config)
     .then(() => {
       logger.info('================================')
-      logger.info('Events verification stats:')
+      logger.info('Ban particpant stats:')
       logger.info(
         '  Total number of participants processed:  ',
         job.stats.numProcessed
@@ -267,6 +272,10 @@ if (require.main === module) {
       logger.info(
         '  Total number of participants banned:       ',
         job.stats.numBanned
+      )
+      logger.info(
+        '  Number of participants banned due to SDN match:     ',
+        job.stats.numBannedSdn
       )
       logger.info(
         '  Number of participants banned as dupe:     ',
