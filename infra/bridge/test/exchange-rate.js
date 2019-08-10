@@ -53,6 +53,19 @@ describe('exchange rate poller', () => {
     expect(response.body.price).to.equal('1')
   })
 
+  it('should return default exchange rate if not cached and API is down', async () => {
+    nock('https://api.coingecko.com')
+      .get('/api/v3/exchange_rates')
+      .reply(200, { ok: false })
+
+    const response = await request(app)
+      .get('/utils/exchange-rate?market=ETH-USD')
+      .expect(200)
+
+    expect(response.status).to.equal(200)
+    expect(response.body.price).to.equal('222.91')
+  })
+
   it('should fetch ETH/DAI exchange rates relative to all supported currencies', async () => {
     const rates = {
       btc: { name: 'Bitcoin', unit: 'BTC', value: 1.0, type: 'crypto' },
@@ -90,10 +103,6 @@ describe('exchange rate poller', () => {
       },
       eur: { name: 'Euro', unit: '€', value: 10581.324, type: 'fiat' }
     }
-    nock('https://api.coingecko.com')
-      // .persist()
-      .get('/api/v3/exchange_rates')
-      .reply(200, { rates })
 
     const exchangeFrom = ['ETH', 'DAI']
     const exchangeTo = ['CNY', 'JPY', 'GBP', 'USD', 'EUR', 'KRW', 'SGD']
@@ -102,6 +111,9 @@ describe('exchange rate poller', () => {
 
     exchangeTo.forEach(t =>
       exchangeFrom.forEach(f => {
+        nock('https://api.coingecko.com')
+          .get('/api/v3/exchange_rates')
+          .reply(200, { rates })
         const market = `${f}-${t}`
         promises.push(
           request(app)
@@ -130,18 +142,5 @@ describe('exchange rate poller', () => {
       expect(r.status).to.equal(200)
       expect(r.body.price).to.equal(rate)
     })
-  })
-
-  it('should return default exchange rate if not cached and API is down', async () => {
-    nock('https://api.coingecko.com')
-      .get('/api/v3/exchange_rates')
-      .reply(200, { ok: false })
-
-    const response = await request(app)
-      .get('/utils/exchange-rate?market=ETH-USD')
-      .expect(200)
-
-    expect(response.status).to.equal(200)
-    expect(response.body.price).to.equal('222.91')
   })
 })
