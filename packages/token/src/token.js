@@ -199,7 +199,7 @@ class Token {
    * @returns {string} - Address of first account.
    */
   async defaultAccount() {
-    return this.web3.eth.currentProvider.getAddresses()[0]
+    return this.web3.eth.defaultAccount
   }
 
   /*

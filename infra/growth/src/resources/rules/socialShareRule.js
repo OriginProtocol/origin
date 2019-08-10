@@ -1,5 +1,4 @@
 const Sequelize = require('sequelize')
-const crypto = require('crypto')
 
 const { SingleEventRule } = require('./singleEventRule')
 const { Reward } = require('./reward')
@@ -25,16 +24,25 @@ class SocialShareRule extends SingleEventRule {
         } for socialNetwork field`
       )
     }
+
     this.socialNetwork = this.config.socialNetwork
-    if (!this.config.content) {
-      throw new Error(`${this.str()}: missing content field`)
+    if (!this.config.contentId) {
+      throw new Error('Missing contentId field')
     }
-    this.content = this.config.content
-    // Compute the hashes for the post content, in all the configured languages.
-    this.contentHashes = [this._hashContent(this.content.post.text.default)]
-    for (const translation of this.content.post.text.translations) {
-      this.contentHashes.push(this._hashContent(translation.text))
+
+    if (!crules.content || !(this.config.contentId in crules.content)) {
+      throw new Error(
+        `${this.str()}: missing content for content id: ${
+          this.config.contentId
+        }`
+      )
     }
+
+    // make a hard copy
+    this.content = JSON.parse(
+      JSON.stringify(crules.content[this.config.contentId])
+    )
+    this.content.id = this.config.contentId
   }
 
   /**
@@ -122,24 +130,29 @@ class SocialShareRule extends SingleEventRule {
     const addresses = [ownerAddress, ...proxies.map(proxy => proxy.address)]
     const whereClause = { ethAddress: { [Sequelize.Op.in]: addresses } }
 
-    // Return a personalized amount calculated based on social network stats stored in the user's identity.
-    const identity =
-      (await db.Identity.findOne({
-        where: whereClause,
-        order: [['createdAt', 'DESC']]
-      })) || identityForTest
-    if (!identity) {
-      logger.error(`No identity found for ${ethAddress}`)
-      return reward
+    if (this.socialNetwork === 'facebook') {
+      return this.reward
+    } else if (this.socialNetwork === 'twitter') {
+      // Return a personalized amount calculated based on social network stats stored in the user's identity.
+      const identity =
+        (await db.Identity.findOne({
+          where: whereClause,
+          order: [['createdAt', 'DESC']]
+        })) || identityForTest
+      if (!identity) {
+        logger.error(`No identity found for ${ethAddress}`)
+        return reward
+      }
+      if (!identity.data || !identity.data.twitterProfile) {
+        logger.error(`Missing twitterProfile in identity of user ${ethAddress}`)
+        return reward
+      }
+      // TODO: handle other social networks.
+      reward.value.amount = this._calcTwitterReward(
+        identity.data.twitterProfile
+      ).toString()
     }
-    if (!identity.data || !identity.data.twitterProfile) {
-      logger.error(`Missing twitterProfile in identity of user ${ethAddress}`)
-      return reward
-    }
-    // TODO: handle other social networks.
-    reward.value.amount = this._calcTwitterReward(
-      identity.data.twitterProfile
-    ).toString()
+
     return reward
   }
 
@@ -182,43 +195,29 @@ class SocialShareRule extends SingleEventRule {
   async getEarnedRewards(ethAddress, events) {
     const inScopeEvents = this._inScope(events)
     const numRewards = await this._numRewards(ethAddress, inScopeEvents)
-    const eventsForCalculation = events
+    let eventsForCalculation = events
       .filter(event => event.type === this.config.eventType)
       .slice(0, numRewards)
 
-    // TODO: handle other social networks.
-    const rewards = this._getTwitterRewardsEarned(
-      ethAddress,
-      eventsForCalculation
-    )
+    if (this.config.socialNetwork === 'facebook') {
+      eventsForCalculation = eventsForCalculation.filter(
+        event => event.customId === this.content.id
+      )
+    }
+
+    let rewards = await super.getEarnedRewards(ethAddress, eventsForCalculation)
+    if (this.config.socialNetwork === 'twitter') {
+      rewards = this._getTwitterRewardsEarned(ethAddress, eventsForCalculation)
+    }
+
     return rewards
   }
 
-  /**
-   * Hashes content for verification of the user's post.
-   *
-   * Important: Make sure to keep this hash function in sync with
-   * the one used in the bridge server.
-   * See infra/bridge/src/promotions.js
-   *
-   * @param text
-   * @returns {string} Hash of the text, hexadecimal encoded.
-   * @private
-   */
-  _hashContent(text) {
-    return crypto
-      .createHash('md5')
-      .update(text)
-      .digest('hex')
-  }
-  /**
-   * Returns true if the event's content hash (stored in customId) belongs to the
-   * set of hashes configured in the rule.
-   * @param {string} customId: hashed content of the post.
-   * @returns {boolean}
-   */
   customIdFilter(customId) {
-    return this.contentHashes.includes(customId)
+    if (this.config.socialNetwork === 'facebook') {
+      return customId === this.content.id
+    }
+    return true
   }
 }
 

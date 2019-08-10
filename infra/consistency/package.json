@@ -18,10 +18,10 @@
     "@origin/discovery": "^0.1.0",
     "@origin/graphql": "^0.1.0",
     "@origin/identity": "^0.1.0",
-    "logplease": "^1.2.15"
+    "logplease": "1.2.15"
   },
   "devDependencies": {
-    "prettier": "^1.18.2"
+    "prettier": "1.18.2"
   },
   "prettier": {
     "semi": false,
