@@ -13,7 +13,7 @@ function withNews(WrappedComponent) {
 
     /* Convert HTML entities to text.
      */
-    convertHtmlEntities = (html) => {
+    convertHtmlEntities = html => {
       const textarea = document.createElement('textarea')
       textarea.innerHTML = html
       return textarea.value

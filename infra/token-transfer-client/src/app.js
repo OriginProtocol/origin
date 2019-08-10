@@ -5,12 +5,14 @@ import PrivateRoute from './components/PrivateRoute'
 import PublicRoute from './components/PublicRoute'
 
 // Public routes
+import Welcome from './components/pages/Welcome'
+import Phone from './components/pages/Phone'
+import Terms from './components/pages/Terms'
 import Login from './components/pages/Login'
 import CheckEmail from './components/pages/CheckEmail'
 import HandleLogin from './components/pages/HandleLogin'
-import Register from './components/pages/Register'
-import Otp from './components/pages/Otp'
 import OtpSetup from './components/pages/OtpSetup'
+import Otp from './components/pages/Otp'
 // Private routes
 import Dashboard from './components/pages/Dashboard'
 import News from './components/pages/News'
@@ -20,11 +22,13 @@ import Security from './components/pages/Security'
 const App = () => (
   <Switch>
     <PublicRoute exact path="/" component={Login} />
+    <PublicRoute exact path="/welcome" component={Welcome} />
+    <PublicRoute exact path="/phone" component={Phone} />
+    <PublicRoute exact path="/terms" component={Terms} />
     <PublicRoute path="/check_email" component={CheckEmail} />
     <PublicRoute path="/login_handler/:token" component={HandleLogin} />
-    <PublicRoute path="/register" component={Register} />
-    <PublicRoute exact path="/otp" component={Otp} />
     <PublicRoute path="/otp/setup" component={OtpSetup} />
+    <PublicRoute exact path="/otp" component={Otp} />
     <PrivateRoute path="/dashboard" component={Dashboard} />
     <PrivateRoute path="/news" component={News} />
     <PrivateRoute path="/history" component={History} />

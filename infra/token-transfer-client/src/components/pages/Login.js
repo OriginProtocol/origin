@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
-import { Redirect, Link } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 
 import { formInput, formFeedback } from '@/utils/formHelpers'
-import { apiUrl } from '@/constants'
-import agent from '@/utils/agent'
+import withSendEmailToken from '@/hoc/withSendEmailToken'
 
 class Login extends Component {
   state = {
     email: '',
     emailError: null,
-    emailSent: false
+    redirectTo: null
   }
 
   handleSendEmailToken = async () => {
@@ -18,11 +17,8 @@ class Login extends Component {
       this.setState({ emailError: 'That does not look like a valid email.' })
       return
     }
-
     try {
-      await agent
-        .post(`${apiUrl}/api/send_email_token`)
-        .send({ email: this.state.email })
+      await this.props.sendEmailToken(this.state.email)
     } catch (error) {
       this.setState({
         emailError: 'Failed to send email token. Try again shortly.'
@@ -30,15 +26,15 @@ class Login extends Component {
       return
     }
 
-    this.setState({ emailSent: true })
+    this.setState({ redirectTo: '/check_email' })
   }
 
   render() {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
-    if (this.state.emailSent) {
-      return <Redirect to="/check_email" />
+    if (this.state.redirectTo) {
+      return <Redirect to={this.state.redirectTo} />
     }
 
     return (
@@ -59,14 +55,9 @@ class Login extends Component {
             Continue
           </button>
         </div>
-        <div style={{ textAlign: 'center', margin: '20px auto' }}>
-          <Link to="/register" style={{ color: 'white' }}>
-            Don&apos;t have an account?
-          </Link>
-        </div>
       </>
     )
   }
 }
 
-export default Login
+export default withSendEmailToken(Login)
