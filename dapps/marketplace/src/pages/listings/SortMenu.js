@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { fbt } from 'fbt-runtime'
 
-// import Modal from 'components/Modal'
 import Dropdown from 'components/DropDown'
 import MobileModal from 'components/MobileModal'
 

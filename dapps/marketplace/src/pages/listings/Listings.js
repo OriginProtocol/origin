@@ -163,6 +163,8 @@ class Listings extends Component {
 
     const injectCTAs = !isSearch
 
+    const {sort, order, sortVisible} = this.state
+
     return (
       <>
         <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
@@ -172,11 +174,11 @@ class Listings extends Component {
             title={fbt('Sort By', 'Sort By')}
             className="sortMenu"
             handleSortVisible={this.handleSortVisible}
-            sortVisible={this.state.sortVisible}
+            sortVisible={sortVisible}
             onChange={this.handleOptionChange}
             onClose={() => this.handleSortVisible(false)}
-            sort={this.state.sort}
-            order={this.state.order}
+            sort={sort}
+            order={order}
           />
         </div>
         <div className="container listings-container">
