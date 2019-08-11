@@ -42,11 +42,11 @@ const SortMenu = ({
   }
 
   return (
-    <React.Fragment>
+    <>
       {isMobile ? (
-        <React.Fragment>
+        <>
           <a
-            className="sortButtonBar"
+            className="sort-button-bar"
             href="#"
             onClick={e => {
               e.preventDefault()
@@ -56,7 +56,7 @@ const SortMenu = ({
             <fbt desc="Sort by">Sort By</fbt>
           </a>
           {RenderMobileSort()}
-        </React.Fragment>
+        </>
       ) : (
         <div className="container">
           <SortDropdown
@@ -68,7 +68,7 @@ const SortMenu = ({
           />
         </div>
       )}
-    </React.Fragment>
+    </>
   )
 }
 
@@ -100,7 +100,7 @@ class SortDropdown extends React.Component {
         content={content}
       >
         <a
-          className="nav-link sortButton"
+          className="nav-link sort-button"
           href="#"
           onClick={e => {
             e.preventDefault()
@@ -120,15 +120,15 @@ class SortDropdown extends React.Component {
 const SortContent = ({ selectedOption, onChange, isMobile }) => {
   const containerClass = isMobile
     ? ''
-    : 'dropdown-menu dropdown-menu-left show sortDropDown'
+    : 'dropdown-menu dropdown-menu-left show sort-dropdown'
   return (
     <div className={containerClass}>
-      <form className="sortForm">
+      <form className="sort-form">
         <div>
-          <label className="sortRadioLabel">
+          <label className="sort-radio-label">
             <input
               type="radio"
-              className="sortRadioButton"
+              className="sort-radio-button"
               value=":"
               checked={selectedOption === ':'}
               onChange={onChange}
@@ -137,10 +137,10 @@ const SortContent = ({ selectedOption, onChange, isMobile }) => {
           </label>
         </div>
         <div>
-          <label className="sortRadioLabel">
+          <label className="sort-radio-label">
             <input
               type="radio"
-              className="sortRadioButton"
+              className="sort-radio-button"
               value="price.amount:asc"
               checked={selectedOption === 'price.amount:asc'}
               onChange={onChange}
@@ -149,15 +149,15 @@ const SortContent = ({ selectedOption, onChange, isMobile }) => {
           </label>
         </div>
         <div>
-          <label className="sortRadioLabel">
+          <label className="sort-radio-label">
             <input
               type="radio"
-              className="sortRadioButton"
+              className="sort-radio-button"
               value="price.amount:desc"
               onChange={onChange}
               checked={selectedOption === 'price.amount:desc'}
             />
-            <fbt desc="Price: High to Low">Price: Low to High</fbt>
+            <fbt desc="Price: High to Low">Price: High to Low</fbt>
           </label>
         </div>
       </form>
@@ -168,21 +168,21 @@ const SortContent = ({ selectedOption, onChange, isMobile }) => {
 export default withIsMobile(SortMenu)
 
 require('react-styl')(`
-  .sortButtonBar
+  .sort-button-bar
     display: flex;
     justify-content: flex-end;
     padding: 1rem;
     font-size: medium
     width: 100%
-  .sortButton
+  .sort-button
     color: var(--dusk)
     font-size: 14px;
     font-weight: bold;
     font-style: normal;
     /* padding-left: 0rem; */
-  .sortButton:hover
+  .sort-button:hover
     color: var(--dusk)
-  .sortDropDown
+  .sort-dropdown
     padding: 0;
     position: absolute !important;
     margin-top: 0;
@@ -191,14 +191,14 @@ require('react-styl')(`
     border: 1px solid var(--light);
     font-weight: normal;
     min-width: 12rem
-  .sortForm
+  .sort-form
     padding: 0.625rem;
-  .sortRadioLabel
+  .sort-radio-label
     padding: 0.1rem 0rem;
     display: flex;
     align-items: center;
     font-size: 0.9rem
-  .sortRadioButton
+  .sort-radio-button
     margin-right: 0.5rem
     padding: 0;
     height: 1.1rem;

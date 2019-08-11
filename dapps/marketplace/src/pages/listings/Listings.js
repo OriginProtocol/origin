@@ -168,11 +168,9 @@ class Listings extends Component {
     return (
       <>
         <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
-        <div className="listingsMenuBar">
+        <div className="listings-menu-bar">
           <SortMenu
             {...this.props}
-            title={fbt('Sort By', 'Sort By')}
-            className="sortMenu"
             handleSortVisible={this.handleSortVisible}
             sortVisible={sortVisible}
             onChange={this.handleOptionChange}
@@ -325,7 +323,7 @@ export default withGrowthRewards(
 )
 
 require('react-styl')(`
-  .listingsMenuBar 
+  .listings-menu-bar 
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     padding: 0 1rem;
     position: relative;
@@ -334,7 +332,7 @@ require('react-styl')(`
     align-items: center;
     justify-content: space-between;
   @media (max-width: 767.98px)
-    .listingsMenuBar 
+    .listings-menu-bar 
       padding: 0;
       min-height: 3.75rem;
       border: none
