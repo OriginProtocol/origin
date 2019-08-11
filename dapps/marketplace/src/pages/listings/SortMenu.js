@@ -23,7 +23,7 @@ const SortMenu = ({
       return (
         <MobileModal
           title={fbt('Sort by', 'Sort by')}
-          className="availability-modal"
+          className="sort-modal"
           shouldClose={closeModal}
           lightMode={true}
           onClose={() => {
@@ -100,7 +100,7 @@ class SortDropdown extends React.Component {
         content={content}
       >
         <a
-          className="nav-link sort-button"
+          className="sort-button"
           href="#"
           onClick={e => {
             e.preventDefault()
@@ -168,18 +168,72 @@ const SortContent = ({ selectedOption, onChange, isMobile }) => {
 export default withIsMobile(SortMenu)
 
 require('react-styl')(`
+  .sort-modal
+    &.modal-content
+      min-height: auto
+    &.modal-header
+      .modal-title
+        display: flex
+        div
+          flex: 1
+        .clear-button, .close-button
+          font-size: 12px
+          flex: auto 0 0
+          cursor: pointer
+          font-weight: 300
+        .close-button
+          content: ''
+          display: inline-block
+          background-image: url('images/close-icon.svg')
+          background-position: center
+          background-repeat: no-repeat
+          background-size: 1rem
+          height: 2rem
+          width: 2rem
+        .clear-button
+          text-decoration: none
+          color: var(--bright-blue)
+          &:hover
+            color: var(--bright-blue)
+  @media (max-width: 767.98px)
+    .sort-modal
+      padding: 1rem
   .sort-button-bar
     display: flex;
     justify-content: flex-end;
     padding: 1rem;
     font-size: medium
     width: 100%
+  .dropdown.show
+    .sort-button
+      border-left: 1px solid var(--light);
+      border-right: 1px solid var(--light);
   .sort-button
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    padding: 0.75rem
     color: var(--dusk)
+    height: 100%
+    display: flex
+    align-items: center
     font-size: 14px;
     font-weight: bold;
     font-style: normal;
-    /* padding-left: 0rem; */
+    &.text
+      background-color: initial
+      padding: 0 0.25rem
+      span
+        color: var(--dusk)
+        padding: 0.25rem 0.75rem
+        border-radius: 1rem
+        &:hover,&.active
+          background-color: rgba(0,0,0,0.1)
+      &.active span
+        background-color: rgba(0,0,0,0.1)
+    &.icon-padding span
+      padding-left: 2rem
+    span
+      display: inline-block
   .sort-button:hover
     color: var(--dusk)
   .sort-dropdown
