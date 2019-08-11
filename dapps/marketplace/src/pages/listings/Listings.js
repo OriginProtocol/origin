@@ -163,7 +163,7 @@ class Listings extends Component {
 
     const injectCTAs = !isSearch
 
-    const {sort, order, sortVisible} = this.state
+    const { sort, order, sortVisible } = this.state
 
     return (
       <>
