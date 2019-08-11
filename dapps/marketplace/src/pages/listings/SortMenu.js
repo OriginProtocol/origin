@@ -53,7 +53,7 @@ const SortMenu = ({
               handleSortVisible(true)
             }}
           >
-            Sort by
+            <fbt desc="Sort by">Sort By</fbt>
           </a>
           {RenderMobileSort()}
         </React.Fragment>
@@ -110,7 +110,7 @@ class SortDropdown extends React.Component {
           aria-haspopup="true"
           aria-expanded="false"
         >
-          Sort by
+          <fbt desc="Sort by">Sort By</fbt>
         </a>
       </Dropdown>
     )
@@ -133,7 +133,7 @@ const SortContent = ({ selectedOption, onChange, isMobile }) => {
               checked={selectedOption === ':'}
               onChange={onChange}
             />
-            Default
+            <fbt desc="Default">Default</fbt>
           </label>
         </div>
         <div>
@@ -145,7 +145,7 @@ const SortContent = ({ selectedOption, onChange, isMobile }) => {
               checked={selectedOption === 'price.amount:asc'}
               onChange={onChange}
             />
-            Price: Low to High
+            <fbt desc="Price: Low to High">Price: Low to High</fbt>
           </label>
         </div>
         <div>
@@ -157,7 +157,7 @@ const SortContent = ({ selectedOption, onChange, isMobile }) => {
               onChange={onChange}
               checked={selectedOption === 'price.amount:desc'}
             />
-            Price: High to Low
+            <fbt desc="Price: High to Low">Price: Low to High</fbt>
           </label>
         </div>
       </form>
