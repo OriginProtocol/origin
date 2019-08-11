@@ -8,8 +8,8 @@ const logger = require('../logger')
 const { transferTokens } = require('../lib/transfer')
 const { ensureLoggedIn } = require('../lib/login')
 const { asyncMiddleware, isEthereumAddress } = require('../utils')
+const { networkId } = require('../config')
 
-const networkId = Number.parseInt(process.env.NETWORK_ID) || 999
 createProvider(networkId) // Ensure web3 credentials are set up
 
 /**

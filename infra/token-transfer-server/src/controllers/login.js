@@ -15,21 +15,14 @@ const { encrypt } = require('../lib/crypto')
 const { Event, User } = require('../models')
 const logger = require('../logger')
 const { ensureLoggedIn, ensureUserInSession } = require('../lib/login')
+const {
+  encryptionSecret,
+  portalUrl,
+  sendgridFromEmail,
+  sendgridApiKey
+} = require('../config')
 
-// Sendgrid configuration.
-const emailFrom = process.env.SENDGRID_FROM_EMAIL
-if (!emailFrom) {
-  logger.error('SENDGRID_FROM_EMAIL must be set through EnvKey or manually')
-  process.exit(1)
-}
-
-const apiKey = process.env.SENDGRID_API_KEY
-if (!emailFrom) {
-  logger.error('SENDGRID_API_KEY must be set through EnvKey or manually')
-  process.exit(1)
-}
-
-sendgridMail.setApiKey(apiKey)
+sendgridMail.setApiKey(sendgridApiKey)
 
 /**
  * Sends a login code by email.
@@ -47,21 +40,21 @@ router.post(
         {
           email
         },
-        process.env.ENCRYPTION_SECRET,
+        encryptionSecret,
         { expiresIn: '5m' }
       )
 
       const data = {
         to: email,
-        from: emailFrom,
+        from: sendgridFromEmail,
         subject: 'Your T3 verification code',
         text: `Welcome to the Origin Investor Portal. Here is your single-use sign in link.
 
-        ${process.env.PORTAL_URL ||
-          'http://localhost:3000'}/login_handler/${token}.
+        ${portalUrl}/login_handler/${token}.
 
         It will expire in 5 minutes. You can reply directly to this email with any questions.`
       }
+
       await sendgridMail.send(data)
       logger.info(`Sent email token to ${email}`)
     } else {

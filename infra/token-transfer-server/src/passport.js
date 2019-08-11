@@ -8,6 +8,7 @@ const { decrypt } = require('./lib/crypto')
 const jwt = require('jsonwebtoken')
 
 const { User } = require('./models')
+const { encryptionSecret } = require('./config')
 
 module.exports = function() {
   passport.serializeUser(function(user, done) {
@@ -32,7 +33,7 @@ module.exports = function() {
       logger.debug('Passport bearer strategy called')
       let decodedToken
       try {
-        decodedToken = jwt.verify(token, process.env.ENCRYPTION_SECRET)
+        decodedToken = jwt.verify(token, encryptionSecret)
       } catch (error) {
         return done(null, false)
       }

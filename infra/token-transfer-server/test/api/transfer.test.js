@@ -25,8 +25,7 @@ describe('Grant HTTP API', () => {
       email: 'user2@originprotocol.com'
     })
 
-    this.grants = [
-    ]
+    this.grants = []
 
     this.mockApp = express()
     this.mockApp.use((req, res, next) => {
@@ -52,10 +51,7 @@ describe('Grant HTTP API', () => {
     })
   })
 
-  it('should return the transfers', async () => {
-  })
+  it('should return the transfers', async () => {})
 
-  it('should not return transfers for other users', async () => {
-  })
+  it('should not return transfers for other users', async () => {})
 })
-
