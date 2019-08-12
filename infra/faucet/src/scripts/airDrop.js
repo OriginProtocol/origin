@@ -198,7 +198,7 @@ class AirDrop {
     logger.info('  Sender address: ', this.sender)
     logger.info(
       '  Token address:  ',
-      this.token.contractAddress(this.networkId)
+      this.token.contractAddress
     )
   }
 
