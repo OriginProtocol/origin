@@ -13,7 +13,9 @@ const MULTI_UNIT_TYPES = ['UnitListing', 'GiftCardListing']
 const getListingDirect = async (contract, listingId) =>
   await contract.methods.listings(listingId).call()
 
-const getListing = memoize(getListingDirect, (...args) => args[1])
+const getListing = memoize(getListingDirect, (...args) =>
+  [args[1], args[2]].join('-')
+)
 
 const getOfferFn = async (contract, listingId, offerId, latestBlock) =>
   await contract.methods.offers(listingId, offerId).call(undefined, latestBlock)
@@ -83,7 +85,7 @@ class OriginEventSource {
       if (process.env.DISABLE_CACHE === 'true') {
         listing = await getListingDirect(this.contract, listingId)
       } else {
-        listing = await getListing(this.contract, listingId)
+        listing = await getListing(this.contract, listingId, cacheBlockNumber)
       }
     } catch (e) {
       throw new Error(`No such listing on contract ${listingId}`)

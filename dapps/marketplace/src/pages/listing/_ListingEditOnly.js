@@ -74,7 +74,7 @@ const Commission = ({ listing }) => {
 
   return (
     <>
-      <div className="listing-buy-editonly mt-3">
+      <div className="listing-buy-editonly mt-3 listing-commission">
         {listing.__typename !== 'UnitListing' || listing.multiUnit ? (
           <MultiUnitCommission listing={listing} />
         ) : (
