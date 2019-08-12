@@ -11,7 +11,7 @@ import db from './models'
 import logger from './logger'
 
 const esmImport = require('esm')(module)
-const contractsContext = esmImport('@origin/graphql/src/contracts').default
+const { isContract } = esmImport('@origin/graphql/src/utils/proxy')
 const { setNetwork } = esmImport('@origin/graphql/src/contracts')
 
 import { verifyNewMessageSignature, verifyRegistrySignature } from './verify'
@@ -23,11 +23,6 @@ import _redis from 'redis'
 const redis = _redis.createClient(process.env.REDIS_URL)
 
 setNetwork(process.env.NETWORK ? process.env.NETWORK : 'localhost')
-
-async function isContract(address) {
-  const code = await contractsContext.web3.eth.getCode(address)
-  return code && code.length > 2
-}
 
 // supply an endpoint for querying global registry
 const app = express()

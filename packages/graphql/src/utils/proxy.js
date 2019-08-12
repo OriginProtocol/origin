@@ -1,6 +1,11 @@
 import memoize from 'lodash/memoize'
 import contracts from '../contracts'
 
+async function isContractRaw(address) {
+  const code = await contracts.web3.eth.getCode(address)
+  return code && code.length > 2
+}
+
 // Get the creation code for the deployed Proxy implementation
 const proxyCreationCode = memoize(async () => {
   const { web3, ProxyImp, ProxyFactory } = contracts
@@ -70,6 +75,7 @@ async function proxyOwnerRaw(address) {
   }
 }
 
+export const isContract = memoize(isContractRaw, address => address)
 export const proxyOwner = memoize(proxyOwnerRaw, address => address)
 export const hasProxy = memoize(hasProxyRaw, address => address)
 export const predictedProxy = memoize(predictedProxyRaw, address => address)
