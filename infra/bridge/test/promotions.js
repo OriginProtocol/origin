@@ -22,7 +22,7 @@ describe('promotion verifications', () => {
     // Clear out redis-mock
     await new Promise(resolve => client.del('*', resolve))
 
-    Attestation.destroy({
+    await Attestation.destroy({
       where: {},
       truncate: true
     })
