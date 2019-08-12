@@ -16,7 +16,7 @@ const { getAbsoluteUrl } = require('../src/utils')
 const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
 
 describe('facebook attestations', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     // Configure environment variables required for tests
     process.env.ATTESTATION_SIGNING_KEY = '0xc1912'
     process.env.FACEBOOK_CLIENT_ID = 'facebook-client-id'
@@ -24,7 +24,7 @@ describe('facebook attestations', () => {
     process.env.FACEBOOK_BASE_GRAPH_URL = 'https://graph.facebook.com'
     process.env.HOST = 'originprotocol.com'
 
-    Attestation.destroy({
+    await Attestation.destroy({
       where: {},
       truncate: true
     })
