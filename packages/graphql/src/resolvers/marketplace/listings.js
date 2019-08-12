@@ -15,10 +15,12 @@ function atob(input) {
 }
 
 const discoveryQuery = `
-query Search($search: String, $filters: [ListingFilter!]) {
+query Search($search: String, $filters: [ListingFilter!], $sort: String, $order: String) {
   listings(
     searchQuery: $search
-    filters: $filters
+    filters: $filters,
+    sort: $sort,
+    order: $order,
     page: { offset: 0, numberOfItems: 1000 }
   ) {
     numberOfItems
@@ -26,13 +28,19 @@ query Search($search: String, $filters: [ListingFilter!]) {
   }
 }`
 
-async function searchIds(search, filters) {
+async function searchIds(search, sort, order, filters) {
   const variables = {}
   if (search) {
     variables.search = search
   }
   if (filters) {
     variables.filters = filters
+  }
+  if (sort) {
+    variables.sort = sort
+  }
+  if (order) {
+    variables.order = order
   }
   const searchResult = await new Promise(resolve => {
     fetch(contracts.discovery, {
@@ -41,7 +49,9 @@ async function searchIds(search, filters) {
       body: JSON.stringify({ query: discoveryQuery, variables })
     })
       .then(response => response.json())
-      .then(response => resolve(response.data.listings))
+      .then(response => {
+        resolve(response.data.listings)
+      })
   })
   const ids = searchResult.nodes
     .map(n => Number(n.id.split('-')[2]))
@@ -125,7 +135,7 @@ export async function listingsBySeller(
 
 export default async function listings(
   contract,
-  { first = 10, after, sort, search, filters = [], listingIds = [] }
+  { first = 10, after, sort, order, search, filters = [], listingIds = [] }
 ) {
   if (!contract) {
     return null
@@ -137,7 +147,7 @@ export default async function listings(
 
   if (contracts.discovery) {
     try {
-      const discoveryResult = await searchIds(search, filters)
+      const discoveryResult = await searchIds(search, sort, order, filters)
       ids = discoveryResult.ids
       totalCount = ids.length
     } catch (err) {
@@ -146,11 +156,12 @@ export default async function listings(
     }
   }
   if (!contracts.discovery || discoveryError) {
-    const decentralizedResults = await allIds({ contract, sort })
+    const decentralizedResults = await allIds({ contract })
     ids = decentralizedResults.ids
     totalCount = decentralizedResults.totalCount
   }
-
+  // Need to determine if this is ever used, it seems to be the only use case
+  // for passing ids from centralised graphql. I changed that to pass the full listing
   if (listingIds.length > 0) {
     ids = listingIds.map(listingId => parseInt(listingId.split('-')[2]))
     totalCount = listingIds.length
