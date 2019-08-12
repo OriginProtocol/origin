@@ -9,12 +9,13 @@ function withListing(WrappedComponent) {
     const listingId = props.match.params.listingID
     return (
       <Query query={ListingQuery} skip={!listingId} variables={{ listingId }}>
-        {({ networkStatus, error, data }) => {
+        {({ networkStatus, error, data, refetch }) => {
           const listing = get(data, 'marketplace.listing')
           return (
             <WrappedComponent
               {...props}
               {...{ networkStatus, error, listing }}
+              refetchListing={refetch}
             />
           )
         }}

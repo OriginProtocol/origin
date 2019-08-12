@@ -104,7 +104,7 @@
     "@babel/plugin-transform-runtime": "7.5.5",
     "@babel/preset-env": "7.5.5",
     "@babel/runtime": "7.5.5",
-    "apollo-client": "2.6.3",
+    "apollo-client": "2.6.4",
     "apollo-server": "2.8.1",
     "babel-eslint": "10.0.2",
     "babel-loader": "8.0.6",
@@ -129,7 +129,7 @@
     "webpack": "4.39.1",
     "webpack-cli": "3.3.6",
     "webpack-dev-middleware": "3.7.0",
-    "webpack-dev-server": "3.7.2"
+    "webpack-dev-server": "3.8.0"
   },
   "eslintConfig": {
     "parser": "babel-eslint",

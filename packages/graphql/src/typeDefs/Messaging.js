@@ -19,6 +19,7 @@ module.exports = `
     conversations: [Conversation]
     conversation(id: String!): Conversation
     canConverseWith(id: String!): Boolean
+    forwardTo(id: String!): String
     totalUnread: Int
   }
 
