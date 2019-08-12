@@ -80,6 +80,7 @@ export const proxyOwner = memoize(proxyOwnerRaw, address => address)
 export const hasProxy = memoize(hasProxyRaw, address => address)
 export const predictedProxy = memoize(predictedProxyRaw, address => address)
 export const resetProxyCache = () => {
+  isContract.cache.clear()
   hasProxy.cache.clear()
   proxyOwner.cache.clear()
 }
