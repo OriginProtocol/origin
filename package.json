@@ -60,20 +60,11 @@
       "openzeppelin-solidity",
       "truffle",
       "truffle-hdwallet-provider",
-      "truffle-privatekey-provider"
+      "truffle-privatekey-provider",
+      "react-image-crop"
     ],
     "ignorePaths": [
       "mobile"
-    ],
-    "packageRules": [
-      {
-        "packageNames": [
-          "@origin/token"
-        ],
-        "ignoreDeps": [
-          "solc"
-        ]
-      }
     ]
   }
 }

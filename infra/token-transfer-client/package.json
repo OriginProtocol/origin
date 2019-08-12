@@ -5,12 +5,12 @@
   "dependencies": {
     "@blueprintjs/core": "3.18.0",
     "moment": "2.24.0",
-    "react": "16.8.6",
-    "react-dom": "16.8.6",
+    "react": "16.9.0",
+    "react-dom": "16.9.0",
     "react-google-login": "5.0.5",
     "react-redux": "7.1.0",
     "react-router-dom": "5.0.1",
-    "react-scripts": "3.0.1",
+    "react-scripts": "3.1.0",
     "redux": "4.0.4"
   },
   "scripts": {
