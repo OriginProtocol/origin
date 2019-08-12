@@ -5,6 +5,7 @@ async function isContractRaw(address) {
   const code = await contracts.web3.eth.getCode(address)
   return code && code.length > 2
 }
+export const isContract = memoize(isContractRaw, address => address)
 
 // Get the creation code for the deployed Proxy implementation
 const proxyCreationCode = memoize(async () => {
@@ -51,8 +52,8 @@ async function hasProxyRaw(address) {
     const predicted = await predictedProxyRaw(address)
 
     // Return the predicted address if code exists there, or false otherwise
-    const code = await contracts.web3.eth.getCode(predicted)
-    return code.slice(2).length > 0 ? predicted : false
+    const predictedIsContract = await isContract(predicted)
+    return predictedIsContract ? predicted : false
   } catch (e) {
     return false
   }
@@ -75,7 +76,6 @@ async function proxyOwnerRaw(address) {
   }
 }
 
-export const isContract = memoize(isContractRaw, address => address)
 export const proxyOwner = memoize(proxyOwnerRaw, address => address)
 export const hasProxy = memoize(hasProxyRaw, address => address)
 export const predictedProxy = memoize(predictedProxyRaw, address => address)
