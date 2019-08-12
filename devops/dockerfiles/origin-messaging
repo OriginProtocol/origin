@@ -32,5 +32,5 @@ RUN yarn install
 RUN yarn run build
 
 CMD eval $(envkey-source) && \
-  yarn run migrate --prefix infra/messaging && \
-  yarn start --prefix infra/messaging
+  npm run migrate --prefix infra/messaging && \
+  npm start --prefix infra/messaging
