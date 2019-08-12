@@ -361,7 +361,7 @@ class Listing {
                     script: {
                       lang: 'painless',
                       source: `if(params._source.containsKey(\"price\") && params._source.price.containsKey(\"currency\") && params._source.price.currency.containsKey(\"id\")) { return Float.parseFloat(params._source.${sort}) * Float.parseFloat(params.exchangeRates[params._source.price.currency.id]); } else { return params.order == \"asc\" ? 1000000000 : 0 }`,   
-                      params : {
+                      params: {
                         order: order,
                         exchangeRates: exchangeRates
                       }
