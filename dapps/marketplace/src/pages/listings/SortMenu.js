@@ -250,7 +250,7 @@ require('react-styl')(`
   .sort-radio-label
     padding: 0.1rem 0rem;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     font-size: 0.9rem
   .sort-radio-button
     margin-right: 0.5rem
@@ -258,4 +258,6 @@ require('react-styl')(`
     height: 1.1rem;
     width: 1.1rem;
     box-sizing: border-box;
+    vertical-align: middle;
+    margin-bottom: 1px;
 `)
