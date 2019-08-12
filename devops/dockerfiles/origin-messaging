@@ -10,9 +10,27 @@ RUN tar -zxf envkey-source.tar.gz 2> /dev/null
 RUN rm envkey-source.tar.gz
 RUN mv envkey-source /usr/local/bin
 
-COPY ./infra/messaging /app
+COPY package.json ./
+COPY yarn.lock ./
+COPY lerna.json ./
+
+# All graphql deps...
+COPY ./packages/contracts ./packages/contracts
+COPY ./packages/eventsource ./packages/eventsource
+COPY ./packages/event-cache ./packages/event-cache
+COPY ./packages/ipfs ./packages/ipfs
+COPY ./packages/mobile-bridge ./packages/mobile-bridge
+COPY ./packages/messaging-client ./packages/messaging-client
+COPY ./packages/services ./packages/services
+COPY ./packages/validator ./packages/validator
+COPY ./packages/web3-provider ./packages/web3-provider
+COPY ./packages/graphql ./packages/graphql
+
+COPY ./infra/messaging ./infra/messaging
 
 RUN yarn install
 RUN yarn run build
 
-CMD eval $(envkey-source) && yarn run migrate && yarn start
+CMD eval $(envkey-source) && \
+  yarn run migrate --prefix infra/messaging && \
+  yarn start --prefix infra/messaging
