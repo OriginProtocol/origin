@@ -584,22 +584,9 @@ class MarketplaceScreen extends Component {
             text: url.searchParams.get('text')
           },
           results => {
-            console.log(results)
+            console.log('Share results: ', results)
           }
         )
-
-        //         try {
-        //           let tmp = this
-        //           const link = 'www.google.com'
-        //           const canShow = await ShareDialog.canShow(link)
-        //           if (!canShow) {
-        //             return
-        //           }
-        //           const result = await ShareDialog.show(link)
-        //           console.log("result", result)
-        //         } catch (e) {
-        //           console.warn("Sharing error", e)
-        //         }
       }
     }
   }

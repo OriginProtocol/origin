@@ -6678,11 +6678,6 @@ react-native-sentry@^0.43.2:
     "@sentry/wizard" "^0.13.0"
     raven-js "^3.27.1"
 
-react-native-share@1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-1.2.1.tgz#3756a3cf383c1489a6a0edf2b529ec025ee8f8f7"
-  integrity sha512-V9q1FM+LuYJ65qN3k6BLWs17mIbJCzGyMOhF3rb4MIQXdJfCUbtkDX9aaV86PzcsL1EudCA53HVTJBmWPDed0Q==
-
 react-native-social-share@^1.6.4:
   version "1.6.4"
   resolved "https://registry.yarnpkg.com/react-native-social-share/-/react-native-social-share-1.6.4.tgz#969896324c7718c9371ab871246720fca58174d0"
