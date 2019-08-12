@@ -14,15 +14,15 @@ const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
 
 const MOCK_PROFILE_DATA = { id_str: '12345', screen_name: 'OriginProtocol' }
 
-describe('twitter attestations', async () => {
-  beforeEach(() => {
+describe('twitter attestations',() => {
+  beforeEach( async () => {
     // Configure environment variables required for tests
     process.env.ATTESTATION_SIGNING_KEY = '0xc1912'
     process.env.HOST = 'originprotocol.com'
     process.env.TWITTER_CONSUMER_KEY = 'twitter-consumer-key'
     process.env.TWITTER_SECRET_KEY = 'twitter-secret-key'
 
-    Attestation.destroy({
+    await Attestation.destroy({
       where: {},
       truncate: true
     })
