@@ -360,7 +360,7 @@ class Listing {
                     type: 'number',
                     script: {
                       lang: 'painless',
-                      source: `if(params._source.containsKey(\"price\") && params._source.price.containsKey(\"currency\") && params._source.price.currency.containsKey(\"id\")) { return Float.parseFloat(params._source.${sort}) * Float.parseFloat(params.exchangeRates[params._source.price.currency.id]); } else { return params.order == \"asc\" ? 1000000000 : 0 }`,   
+                      source: `if(params._source.containsKey("price") && params._source.price.containsKey("currency") && params._source.price.currency.containsKey("id")) { return Float.parseFloat(params._source.${sort}) * Float.parseFloat(params.exchangeRates[params._source.price.currency.id]); } else { return params.order == "asc" ? 1000000000L : 0 }`,   
                       params: {
                         order: order,
                         exchangeRates: exchangeRates
