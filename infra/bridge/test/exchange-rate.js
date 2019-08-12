@@ -13,7 +13,7 @@ const client = redis.createClient()
 describe('exchange rate poller', () => {
   beforeEach(async () => {
     // Clear out redis-mock
-    await new Promise(resolve => client.del('*', resolve))
+    await new Promise(resolve => client.flushall(resolve))
   })
 
   it('should return exchange rate from redis', async () => {

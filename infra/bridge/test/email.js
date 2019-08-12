@@ -18,7 +18,7 @@ describe('email attestations', () => {
     process.env.ATTESTATION_SIGNING_KEY = '0xc1912'
 
     // Clear out redis-mock
-    await new Promise(resolve => client.del('*', resolve))
+    await new Promise(resolve => client.flushall(resolve))
 
     await Attestation.destroy({
       where: {},
