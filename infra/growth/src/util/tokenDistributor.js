@@ -22,6 +22,7 @@ class TokenDistributor {
     this.gasPriceMultiplier = gasPriceMultiplier
     this.token = new Token(networkId)
     this.supplier = await this.token.defaultAccount()
+    this.web3 = this.token.web3
 
     await this.info()
   }
@@ -35,7 +36,7 @@ class TokenDistributor {
 
     logger.info('TokenDistributor:')
     logger.info(`  Network id: ${this.networkId}`)
-    logger.info(`  Provider URL: ${this.token.web3.currentProvider.host}`)
+    logger.info(`  Provider URL: ${this.web3.currentProvider.host}`)
     logger.info(`  Address: ${this.supplier}`)
     logger.info(`  Balance: ${this.token.toTokenUnit(balance)} OGN`)
     logger.info(`  Gas price multiplier: ${this.gasPriceMultiplier}`)
@@ -51,8 +52,7 @@ class TokenDistributor {
   async _calcGasPrice() {
     // Get default gas price from web3 which is determined by the
     // last few blocks median gas price.
-    const web3 = this.token.web3(this.networkId)
-    const medianGasPrice = await web3.eth.getGasPrice()
+    const medianGasPrice = await this.web3.eth.getGasPrice()
 
     if (this.gasPriceMultiplier) {
       // Apply our ratio.

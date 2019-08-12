@@ -2,7 +2,8 @@ const chai = require('chai')
 const expect = chai.expect
 
 const { GrowthEventTypes, GrowthEventStatuses } = require('../src/enums')
-const { CampaignRules, SocialShareRule } = require('../src/resources/rules')
+const { CampaignRules } = require('../src/resources/rules')
+const { VerifiableSocialShareRule } = require('../src/resources/rules/verifiableSocialShareRule')
 const { tokenToNaturalUnits } = require('../src/util/token')
 
 
@@ -525,7 +526,21 @@ describe('Growth Engine rules', () => {
 
     describe('Twitter', () => {
       before( () => {
-        const crules = { campaign: { id: 1 } }
+        const crules = {
+          campaign: {
+            id: 1,
+          },
+          content: {
+            tweet_tweet: {
+              post: {
+                tweet: {
+                  default: 'tweet tweet',
+                  translations: []
+                }
+              }
+            }
+          }
+        }
         const config = {
           config: {
             eventType: 'SharedOnTwitter',
@@ -534,21 +549,14 @@ describe('Growth Engine rules', () => {
               amount: '0',
               currency: 'OGN'
             },
-            content: {
-              post: {
-                text: {
-                  default: 'tweet tweet',
-                  translations: []
-                }
-              }
-            },
+            contentId: 'tweet_tweet',
             limit: 1,
             visible: true,
             scope: 'user',
             statusScope: 'user'
           }
         }
-        this.rule = new SocialShareRule(crules, 0, config)
+        this.rule = new VerifiableSocialShareRule(crules, 0, config)
       })
 
       it(`should calculate reward properly based on social stats`, () => {

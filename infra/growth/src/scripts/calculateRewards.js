@@ -40,7 +40,7 @@ class CalculateRewards {
    *  - in active status
    *  - not an employee
    *
-   * @param {models.GrowthCampgign} campaign
+   * @param {models.GrowthCampaign} campaign
    * @returns {Promise<Array<Object>>}
    * @private
    */
@@ -176,8 +176,8 @@ class CalculateRewards {
         }
 
         // Calculate rewards for this user.
-        // Note that we set the onlyVerifiedEvents param of getRewards to true.
-        const rewards = await rules.getRewards(ethAddress, true)
+        // Note that we set the onlyVerifiedEvents param of getEarnedRewards to true.
+        const rewards = await rules.getEarnedRewards(ethAddress, true)
         if (!rewards.length) {
           // User did not earn any reward.
           continue

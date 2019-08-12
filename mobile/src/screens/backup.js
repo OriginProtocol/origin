@@ -233,7 +233,7 @@ class BackupScreen extends Component {
               type="link"
               title={fbt('Cancel', 'BackupScreen.cancelButton')}
               onPress={() => {
-                this.props.navigation.navigate('App')
+                this.props.navigation.navigate('Main')
               }}
             />
           </View>
@@ -373,7 +373,7 @@ class BackupScreen extends Component {
               await this.props.setBackupWarningStatus(
                 wallet.activeAccount.address
               )
-              this.props.navigation.navigate('App')
+              this.props.navigation.navigate('Main')
             }}
           />
         </View>
