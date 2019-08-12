@@ -21,6 +21,7 @@ import PushNotification from 'react-native-push-notification'
 import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
 import { fbt } from 'fbt-runtime'
+import { shareOnTwitter } from 'react-native-social-share'
 
 import OriginButton from 'components/origin-button'
 import NotificationCard from 'components/notification-card'
@@ -564,9 +565,50 @@ class MarketplaceScreen extends Component {
     updateExchangeRate(this.state.fiatCurrency[1], 'DAI')
   }
 
-  onWebViewNavigationStateChange = state => {
+  checkForShareNativeDialogInterception = async url => {
+    if (
+      url.hostname === 'twitter.com' &&
+      url.pathname === '/intent/tweet' &&
+      Platform.OS === 'android'
+    ) {
+      this.dappWebView.goBack()
+
+      // preventing multiple subsequent shares
+      if (
+        !this.shareTriggeredTime ||
+        new Date() - this.shareTriggeredTime > 3000
+      ) {
+        this.shareTriggeredTime = new Date()
+        shareOnTwitter(
+          {
+            text: url.searchParams.get('text')
+          },
+          results => {
+            console.log(results)
+          }
+        )
+
+        //         try {
+        //           let tmp = this
+        //           const link = 'www.google.com'
+        //           const canShow = await ShareDialog.canShow(link)
+        //           if (!canShow) {
+        //             return
+        //           }
+        //           const result = await ShareDialog.show(link)
+        //           console.log("result", result)
+        //         } catch (e) {
+        //           console.warn("Sharing error", e)
+        //         }
+      }
+    }
+  }
+
+  onWebViewNavigationStateChange = async state => {
     try {
-      this.setState({ currentDomain: new URL(state.url).hostname })
+      const url = new URL(state.url)
+      this.setState({ currentDomain: url.hostname })
+      await this.checkForShareNativeDialogInterception(url)
     } catch (error) {
       console.warn(`Browser reporting malformed url: ${state.url}`)
     }
