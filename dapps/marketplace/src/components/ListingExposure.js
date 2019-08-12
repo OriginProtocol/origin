@@ -1,19 +1,20 @@
 import React from 'react'
+import { fbt } from 'fbt-runtime'
 
 const Exposure = ({ listing }) => {
-  let exposure = 'None',
+  let exposure = fbt('None', 'listingExposure.none'),
     className = 'low'
   if (listing.commissionPerUnit >= 15) {
-    exposure = 'Very High'
+    exposure = fbt('Very High', 'listingExposure.veryHigh')
     className = 'very-high'
   } else if (listing.commissionPerUnit >= 10) {
-    exposure = 'High'
+    exposure = fbt('High', 'listingExposure.high')
     className = 'high'
   } else if (listing.commissionPerUnit >= 5) {
-    exposure = 'Above Average'
+    exposure = fbt('Above Average', 'listingExposure.aboveAverage')
     className = 'medium'
   } else if (listing.commissionPerUnit > 0) {
-    exposure = 'Low'
+    exposure = fbt('Low', 'listingExposure.low')
     className = 'low'
   }
   return <span className={`badge exposure-${className}`}>{exposure}</span>

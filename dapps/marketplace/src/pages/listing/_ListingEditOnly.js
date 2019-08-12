@@ -55,6 +55,50 @@ const MultiUnitCommission = ({ listing }) => (
   </>
 )
 
+const Commission = ({ listing }) => {
+  if (window.localStorage.promoteEnabled !== 'true') {
+    return null
+  }
+
+  if (listing.commissionPerUnit === '0') {
+    return (
+      <div>
+        <Link
+          className="listing-action-link"
+          to={`/promote/${listing.id}`}
+          children={fbt('Promote listing', 'listing.editCommission')}
+        />
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <div className="listing-buy-editonly mt-3">
+        {listing.__typename !== 'UnitListing' || listing.multiUnit ? (
+          <MultiUnitCommission listing={listing} />
+        ) : (
+          <SingleUnitCommission listing={listing} />
+        )}
+        <div className="row">
+          <div>
+            <fbt desc="listing.exposure">Listing Exposure</fbt>
+          </div>
+          <div>
+            <Exposure listing={listing} />
+          </div>
+        </div>
+      </div>
+
+      <Link
+        className="listing-action-link"
+        to={`/promote/${listing.id}/amount`}
+        children={fbt('Edit Commisison', 'listing.editCommission')}
+      />
+    </>
+  )
+}
+
 const EditOnly = ({
   listing,
   isAnnouncement,
@@ -116,39 +160,7 @@ const EditOnly = ({
       children={fbt('Edit listing', 'EditListing')}
     />
 
-    {listing.commissionPerUnit === '0' ? (
-      <div>
-        <Link
-          className="listing-action-link"
-          to={`/promote/${listing.id}`}
-          children={fbt('Promote listing', 'listing.editCommission')}
-        />
-      </div>
-    ) : (
-      <>
-        <div className="listing-buy-editonly mt-3">
-          {listing.__typename !== 'UnitListing' || listing.multiUnit ? (
-            <MultiUnitCommission listing={listing} />
-          ) : (
-            <SingleUnitCommission listing={listing} />
-          )}
-          <div className="row">
-            <div>
-              <fbt desc="listing.exposure">Listing Exposure</fbt>
-            </div>
-            <div>
-              <Exposure listing={listing} />
-            </div>
-          </div>
-        </div>
-
-        <Link
-          className="listing-action-link"
-          to={`/promote/${listing.id}/amount`}
-          children={fbt('Edit Commisison', 'listing.editCommission')}
-        />
-      </>
-    )}
+    <Commission listing={listing} />
   </div>
 )
 

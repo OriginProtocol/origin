@@ -13,26 +13,28 @@ const HowWorks = ({ match }) => (
       <fbt desc="PromoteListing.title">Promote Listing</fbt>
     </h1>
     <div className="how-works">
-      <h4>How does it work?</h4>
+      <h4>
+        <fbt desc="PromoteListing.howItWorksTitle">How does it work?</fbt>
+      </h4>
       <div>
-        You can promote your listing by depositing Origin Tokens (OGN). Your OGN
-        is like a <b>commission</b> that will be deducted each time a sale is
-        made. This gives your listing <b>more exposure</b> across the Origin
-        network
+        <fbt desc="PromoteListing.howItWorksDescription">
+          You can promote your listing by depositing Origin Tokens (OGN). Your
+          OGN is like a <b>commission</b> that will be deducted each time a sale
+          is made. This gives your listing <b>more exposure</b> across the
+          Origin network
+        </fbt>
       </div>
       <div className="actions">
         <Link
           to={`/listing/${match.params.listingId}`}
           className="btn btn-outline-primary btn-rounded btn-lg mr-3 d-none d-sm-inline-block"
-        >
-          Back
-        </Link>
+          children={fbt('Back', 'Back')}
+        />
         <Link
           to={`/promote/${match.params.listingId}/amount`}
           className="btn btn-primary btn-rounded btn-lg"
-        >
-          Continue
-        </Link>
+          children={fbt('Continue', 'Continue')}
+        />
       </div>
     </div>
   </>

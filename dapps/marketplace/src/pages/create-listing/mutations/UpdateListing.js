@@ -213,8 +213,8 @@ class UpdateListing extends Component {
   renderAllowTokenModal() {
     return (
       <>
-        <h2>Approve OGN</h2>
         <fbt desc="updateListing.approveOGN">
+          <h2>Approve OGN</h2>
           Click below to approve OGN for use on Origin
         </fbt>
         <div className="actions">

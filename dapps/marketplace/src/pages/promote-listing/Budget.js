@@ -37,12 +37,21 @@ const PromoteListingBudget = ({
           {`OGN Balance: `} <CoinLogo />
           {tokenBalance}
           {listing.__typename !== 'UnitListing' ? null : (
-            <div>{`Units Available: ${unitsAvailable}`}</div>
+            <div>
+              <fbt desc="PromoteListing.unitsAvailable">
+                {'Units Available: '}
+                <fbt:param name="unitsAvailable">{unitsAvailable}</fbt:param>
+              </fbt>
+            </div>
           )}
         </div>
-        <h4>Total Budget</h4>
+        <h4>
+          <fbt desc="PromoteListing.totalBudget">Total Budget</fbt>
+        </h4>
         <div className="help">
-          Amount you’re willing to spend for all units sold
+          <fbt desc="PromoteListing.totalBudgetHelp">
+            Amount you’re willing to spend for all units sold
+          </fbt>
         </div>
         <div className="input-wrap">
           <input
@@ -69,9 +78,15 @@ const PromoteListingBudget = ({
           </div>
         </div>
         <div className="calc">
-          {`Total commission required to sell ${unitsAvailable} units: ${numberFormat(
-            commissionPerUnit * unitsAvailable
-          )} OGN`}
+          <fbt desc="PromoteListing.commissionRequired">
+            {'Total commission required to sell '}
+            <fbt:param name="unitsAvailable">{unitsAvailable}</fbt:param>
+            {' units: '}
+            <fbt:param name="totalCommission">
+              {numberFormat(commissionPerUnit * unitsAvailable)}
+            </fbt:param>
+            {' OGN'}
+          </fbt>
         </div>
 
         <div className="actions">
@@ -79,7 +94,7 @@ const PromoteListingBudget = ({
             to={`/promote/${match.params.listingId}/amount`}
             className="btn btn-outline-primary btn-rounded btn-lg mr-3 d-none d-sm-inline-block"
           >
-            Back
+            {fbt('Back', 'Back')}
           </Link>
 
           <WithPrices

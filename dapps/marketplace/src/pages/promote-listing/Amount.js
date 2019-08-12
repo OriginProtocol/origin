@@ -50,7 +50,12 @@ const PromoteListingAmount = ({
           {`OGN Balance: `} <CoinLogo />
           {tokenBalance}
           {listing.__typename !== 'UnitListing' || !multiUnit ? null : (
-            <div>{`Units Available: ${unitsAvailable}`}</div>
+            <div>
+              <fbt desc="PromoteListing.unitsAvailable">
+                {'Units Available: '}
+                <fbt:param name="unitsAvailable">{unitsAvailable}</fbt:param>
+              </fbt>
+            </div>
           )}
         </div>
         <h4>{`Commission${multiUnit ? ' per Unit Sold' : ''}`}</h4>
@@ -100,14 +105,26 @@ const PromoteListingAmount = ({
         </div>
         {!multiUnit ? null : (
           <div className="calc">
-            {`${unitsAvailable} units `}&times;{' '}
-            <b>{`${commissionPerUnit} OGN`}</b> ={' '}
-            {`${numberFormat(commissionPerUnit * unitsAvailable)} OGN`}
+            <fbt desc="PromoteListing.unitsAvailable">
+              <fbt:param name="unitsAvailable">{unitsAvailable}</fbt:param>
+              {' units '}&times;{' '}
+              <b>
+                <fbt:param name="commissionPerUnit">
+                  {commissionPerUnit}
+                </fbt:param>
+                {' OGN'}
+              </b>
+              {' = '}
+              <fbt:param name="totalOGN">
+                {numberFormat(commissionPerUnit * unitsAvailable)}
+              </fbt:param>
+              {' OGN'}
+            </fbt>
           </div>
         )}
 
         <div className="exposure">
-          {`Listing exposure: `}
+          <fbt desc="PromoteListing.exposure">Listing exposure:</fbt>{' '}
           <Exposure listing={listing} />
         </div>
         <div className="actions">
@@ -115,14 +132,14 @@ const PromoteListingAmount = ({
             to={`/promote/${match.params.listingId}`}
             className="btn btn-outline-primary btn-rounded btn-lg mr-3 d-none d-sm-inline-block"
           >
-            Back
+            {fbt('Back', 'Back')}
           </Link>
           {multiUnit || listing.__typename !== 'UnitListing' ? (
             <Link
               to={`/promote/${match.params.listingId}/budget`}
               className="btn btn-primary btn-rounded btn-lg"
             >
-              Continue
+              {fbt('Continue', 'Continue')}
             </Link>
           ) : (
             <WithPrices
