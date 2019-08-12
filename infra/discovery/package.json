@@ -44,7 +44,7 @@
     "sequelize": "5.13.1",
     "sequelize-cli": "5.5.0",
     "url": "0.11.0",
-    "util": "^0.12.1",
+    "util": "0.12.1",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
