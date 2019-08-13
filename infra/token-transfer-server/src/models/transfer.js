@@ -21,5 +21,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   )
 
+  Transfer.associate = models => {
+    Transfer.belongsTo(models.Grant)
+  }
+
   return Transfer
 }

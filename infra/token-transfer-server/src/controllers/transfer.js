@@ -5,6 +5,7 @@ const moment = require('moment')
 const { createProvider } = require('@origin/token/src/config')
 
 const logger = require('../logger')
+const { Grant, Transfer } = require('../../src/models')
 const { transferTokens } = require('../lib/transfer')
 const { ensureLoggedIn } = require('../lib/login')
 const { asyncMiddleware, isEthereumAddress } = require('../utils')
@@ -12,11 +13,34 @@ const { networkId } = require('../config')
 
 createProvider(networkId) // Ensure web3 credentials are set up
 
+/*
+ * Returns transfers for the authenticated user.
+ */
+router.get(
+  '/transfers',
+  ensureLoggedIn,
+  asyncMiddleware(async (req, res) => {
+    const grants = await Grant.findAll({
+      where: { userId: req.user.id },
+      include: [{ model: Transfer }]
+    })
+
+    const transfers = []
+    grants.forEach(grant => {
+      grant.Transfers.forEach(transfer => {
+        transfers.push(transfer.get({ plain: true }))
+      })
+    })
+
+    res.json(transfers)
+  })
+)
+
 /**
  * Transfers tokens from hot wallet to address of user's choosing.
  */
 router.post(
-  '/api/transfer',
+  '/transfers',
   [
     check('grantId').isInt(),
     check('amount').isDecimal(),
@@ -32,20 +56,15 @@ router.post(
     // Retrieve the grant, validating email in the process.
     const { grantId, address, amount } = req.body
     try {
-      const grant = await transferTokens({
+      const enqueuedTransfer = enqueueTransfer({
         grantId,
-        email: req.user.email,
-        ip: req.connection.remoteAddress,
-        networkId,
         address,
-        amount
+        amount,
+        ip: req.connection.remoteAddress
       })
-      res.send(grant.get({ plain: true }))
 
-      const grantedAt = moment(grant.grantedAt).format('YYYY-MM-DD')
-      logger.info(
-        `${grant.email} grant ${grantedAt} transferred ${amount} OGN to ${address}`
-      )
+      // TODO: update to be more useful, e.g. users email
+      logger.info(`Grant ${grantId} transferred ${amount} OGN to ${address}`)
     } catch (e) {
       if (e instanceof ReferenceError || e instanceof RangeError) {
         res.status(422).send(e.message)

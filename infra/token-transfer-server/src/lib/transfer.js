@@ -9,6 +9,8 @@ const { Event, Grant, Transfer, sequelize } = require('../models')
 const enums = require('../enums')
 const logger = require('../logger')
 
+const { vestedAmount } = require('./vesting')
+
 // Number of block confirmations required for a transfer to be consider completed.
 const NumBlockConfirmation = 8
 
@@ -36,12 +38,7 @@ async function _checkTransferRequest(grantId, amount, transfer = null) {
     throw new Error(`Could not find specified grant id ${grantId}`)
   }
 
-  // TODO(franck/tom): Replace with a call to the logic for calculating tokens available.
-  //   Note: If transfer arg is not null, make sure to not double count that amount.
-  const placeholderAvailable = () => {
-    return grant.amount
-  }
-  const available = placeholderAvailable(grantId, transfer)
+  const available = vestedAmount(grant.get({ plain: true }))
   if (amount > available) {
     throw new RangeError(
       `Amount of ${amount} OGN exceeds the ${available} available for grant ${grantId}`
@@ -95,7 +92,7 @@ async function enqueueTransfer(grantId, address, amount, ip) {
   logger.info(
     `Enqueued transfer. id: {transfer.id} address: ${address} amount: ${amount}`
   )
-  return transfer.id
+  return transfer
 }
 
 /**

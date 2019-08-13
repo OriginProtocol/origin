@@ -64,9 +64,9 @@ describe('Transfer token lib', () => {
     })
     this.grant = await Grant.create({
       userId: this.user.id,
-      start: new Date('2018-10-10'),
-      end: new Date('2021-10-10'),
-      cliff: new Date('2019-10-10'),
+      start: new Date('2014-10-10'),
+      end: new Date('2018-10-10'),
+      cliff: new Date('2015-10-10'),
       amount: 11125000,
       interval: 'days'
     })
@@ -74,16 +74,10 @@ describe('Transfer token lib', () => {
 
   it('should enqueue a transfer', async () => {
     const amount = 1000
-    const transferId = await enqueueTransfer(
-      this.grant.id,
-      toAddress,
-      amount,
-      ip
-    )
+
+    const transfer = await enqueueTransfer(this.grant.id, toAddress, amount, ip)
 
     // Check a transfer row was created and populated as expected.
-    const transfer = await Transfer.findOne({ where: { id: transferId } })
-
     expect(transfer).to.be.an('object')
     expect(transfer.grantId).to.equal(this.grant.id)
     expect(transfer.toAddress).to.equal(toAddress.toLowerCase())
@@ -99,13 +93,7 @@ describe('Transfer token lib', () => {
   it('should execute a transfer', async () => {
     // Enqueue and execute a transfer.
     const amount = 1000
-    const transferId = await enqueueTransfer(
-      this.grant.id,
-      toAddress,
-      amount,
-      ip
-    )
-    const transfer = await Transfer.findOne({ where: { id: transferId } })
+    const transfer = await enqueueTransfer(this.grant.id, toAddress, amount, ip)
     const { txHash, txStatus } = await executeTransfer(transfer, {
       networkId,
       tokenMock
