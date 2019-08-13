@@ -41,17 +41,19 @@ runs the following packages:
 
 ```
 - elasticsearch on http://localhost:9200
-- postgresql
-- @origin/services (ipfs server and Ethereum blockchain using ganache on http://localhost:8545)
-- @origin/bridge on http://localhost:5000
-- @origin/discovery
-- @origin/marketplace on http://localhost:3000
-- @origin/discovery (event-listener)
-- @origin/discovery (apollo server on http://localhost:4000)
-- @origin/growth (apollo server on http://localhost:4001)
-- @origin/ipfs-proxy on http://localhost:9999
-- @origin/messaging on http://localhost:9012
-- @origin/notifications on http://localhost:3456)
+- postgresql on port 5432
+- redis on port 6379
+- @origin/services: starts ganache, IPFS and IPFS proxy
+   - Ganache: Ethereum blockchain on http://localhost:8545
+   - IPFS daemon on port 5002
+   - @origin/ipfs-proxyL IPFS proxy on http://localhost:9999
+- @origin/bridge: attestation server on http://localhost:5000
+- @origin/discovery: discovery/search server on http://localhost:4000
+- @origin/discovery: event-listener (aka "indexer")
+- @origin/graphql: graphql server on http://localhost:4002
+- @origin/growth: growth server on http://localhost:4001
+- @origin/messaging: messaging server on http://localhost:9012
+- @origin/notifications: email/mobile notification server on http://localhost:3456
 ```
 
 ⚠️ If you want to run the Docker Compose setup, ensure that both
@@ -81,8 +83,8 @@ clear out old containers by stopping any running containers and executing
 `git clone https://github.com/OriginProtocol/origin` `cd origin`
 
 2. Optional: Pick which version of the code you want to run. The latest code is
-   on the master branch (which is checked out by default), while the code
-   currently deployed in production is on the stable branch. For example, to use
+   on the *master* branch (which is checked out by default), while the code
+   currently deployed in production is on the *stable* branch. For example, to use
    the stable branch, run:
 
 ```
@@ -92,12 +94,14 @@ git checkout --track origin/stable
 3. From the root of the repository, run `docker-compose up`. The first time this
    command runs it will take some time to complete due to the initial building
    of the containers.
+   
+When the containers are running (it can take sme time), you can proceed to next step.
+If you see an error in the logs please [raise an issue](https://github.com/OriginProtocol/origin/issues).
 
-Please note this can take some time. If you see an error in the logs please
-[raise an issue](https://github.com/OriginProtocol/origin/issues). When the
-containers are running you can access the DApp at `http://localhost:3000`.
-
-4. Start the DApp by running `yarn start`
+4. Start the marketplace DApp by running `yarn start`
+This will start a `webpack-dev-server` with hot reloading and open the URL
+`http://localhost:3000.` in your browser. You should some see the marketplace sample listings.
+Note: If you get a blank page with a spinner for too long, try to refresh in your browser.
 
 ### Modifying settings
 
