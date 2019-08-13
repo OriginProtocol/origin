@@ -33,6 +33,7 @@ const ruleIdToActionType = {
   MobileAccountCreated: 'MobileAccountCreated',
   TwitterShare: 'TwitterShare',
   TwitterFollow: 'TwitterFollow',
+  TelegramAttestation: 'Telegram',
   TelegramFollow: 'TelegramFollow',
   FacebookLike: 'FacebookLike'
 }

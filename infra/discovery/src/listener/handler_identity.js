@@ -240,10 +240,20 @@ class IdentityEventHandler {
             )
             break
           case 'telegram':
-            decoratedIdentity.telegram = await this._loadValueFromAttestation(
+            const attestation = await this._loadMostRecentAttestation(
               addresses,
               'TELEGRAM'
             )
+            if (attestation) {
+              decoratedIdentity.telegram = attestation.value
+              decoratedIdentity.telegramProfile = attestation.profileData
+            } else {
+              logger.warn(
+                `Could not find TELEGRAM attestation for ${addresses}`
+              )
+              decoratedIdentity.telegram = null
+              decoratedIdentity.telegramProfile = null
+            }
             break
         }
       })
@@ -285,7 +295,11 @@ class IdentityEventHandler {
       twitter: decoratedIdentity.twitter,
       facebookVerified: decoratedIdentity.facebookVerified || false,
       googleVerified: decoratedIdentity.googleVerified || false,
-      data: { blockInfo, twitterProfile: decoratedIdentity.twitterProfile },
+      data: {
+        blockInfo,
+        twitterProfile: decoratedIdentity.twitterProfile,
+        telegramProfile: decoratedIdentity.telegramProfile
+      },
       country: decoratedIdentity.country,
       avatarUrl: decoratedIdentity.avatarUrl,
       website: decoratedIdentity.website,
