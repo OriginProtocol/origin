@@ -108,12 +108,13 @@ export function calculatePendingAndAvailableActions(activeCampaign) {
     'Kakao',
     'WeChat',
     'GitHub',
-    'LinkedIn'
+    'LinkedIn',
+    'Telegram'
   ]
 
   const promotionRewardTypes = ['TwitterShare', 'FacebookShare']
 
-  const followRewardTypes = ['TwitterFollow', 'FacebookLike']
+  const followRewardTypes = ['TwitterFollow', 'FacebookLike', 'TelegramFollow']
 
   const purchaseActions = activeCampaign.actions.filter(action =>
     purchaseRewardTypes.includes(action.type)
