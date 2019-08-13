@@ -1,3 +1,5 @@
+const BigNumber = require('bignumber.js')
+
 const Token = require('@origin/token/src/token')
 
 const {
@@ -32,13 +34,30 @@ async function _checkTransferRequest(grantId, amount, transfer = null) {
   const grant = await Grant.findOne({
     where: {
       id: grantId
-    }
+    },
+    include: [{ model: Transfer }]
   })
   if (!grant) {
     throw new Error(`Could not find specified grant id ${grantId}`)
   }
 
-  const available = vestedAmount(grant.get({ plain: true }))
+  // Sum the amount from transfers that are in a pending or complete state
+  const pendingOrCompleteTransfers = [
+    enums.TransferStatuses.Enqueued,
+    enums.TransferStatuses.Paused,
+    enums.TransferStatuses.WaitingConfirmation,
+    enums.TransferStatuses.Success,
+  ]
+
+  const pendingOrCompleteAmount = grant.Transfers.reduce((total, transfer) => {
+    if (pendingOrCompleteTransfers.includes(transfer.status)) {
+      return total += BigNumber(transfer.amount)
+    }
+    return total
+  }, 0)
+
+  const vested = vestedAmount(grant.get({ plain: true }))
+  const available = vested - pendingOrCompleteAmount
   if (amount > available) {
     throw new RangeError(
       `Amount of ${amount} OGN exceeds the ${available} available for grant ${grantId}`
