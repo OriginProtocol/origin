@@ -20,6 +20,22 @@ module.exports = {
       otp_verified: {
         type: Sequelize.BOOLEAN
       },
+      employee: {
+        type: Sequelize.BOOLEAN,
+        default: false
+      },
+      purchaseDate: {
+        type: Sequelize.DATE
+      },
+      purchaseRound: {
+        type: Sequelize.STRING
+      },
+      purchaseTotal: {
+        type: Sequelize.DECIMAL
+      },
+      investmentAmount: {
+        type: Sequelize.DECIMAL
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
