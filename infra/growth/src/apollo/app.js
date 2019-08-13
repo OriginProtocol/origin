@@ -49,12 +49,15 @@ const server = new ApolloServer({
     const headers = context.req.headers
 
     let authStatus = enums.GrowthParticipantAuthenticationStatus.NotEnrolled
-    let authToken, walletAddress
+    let authToken,
+      walletAddress,
+      identityOverriden = false
 
     if (headers['x-growth-secret'] && headers['x-growth-wallet']) {
       if (headers['x-growth-secret'] === process.env.GROWTH_ADMIN_SECRET) {
         // Grant admin access.
         authToken = 'AdminToken'
+        identityOverriden = true
         walletAddress = headers['x-growth-wallet'].toLowerCase()
         authStatus = enums.GrowthParticipantAuthenticationStatus.Enrolled
       } else {
@@ -78,6 +81,7 @@ const server = new ApolloServer({
     return {
       ...context,
       authToken,
+      identityOverriden,
       walletAddress,
       authentication: authStatus
     }

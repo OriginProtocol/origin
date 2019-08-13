@@ -27,7 +27,7 @@ describe('twitter webhooks', () => {
     process.env.TWITTER_ORIGINPROTOCOL_USERNAME = 'OriginProtocol'
 
     // Clear out redis-mock
-    await new Promise(resolve => client.del('*', resolve))
+    await new Promise(resolve => client.flushall(resolve))
   })
 
   it('should return response token', async () => {

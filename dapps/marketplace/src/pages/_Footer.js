@@ -173,7 +173,7 @@ class Footer extends Component {
                 <fbt desc="footer.creatorLink">Create a Marketplace</fbt>
               </a>
               <span className="d-none d-md-inline">
-                <Link to="/settings">
+                <Link to="/settings" onClick={() => this.onToggle()}>
                   <fbt desc="footer.settings">Settings</fbt>
                 </Link>
               </span>
@@ -248,7 +248,7 @@ require('react-styl')(`
         margin-right: 5px
         color: #6f8294
         font-size: 10px
-    
+
     footer
       position: fixed
       bottom: -100%
@@ -322,7 +322,7 @@ require('react-styl')(`
             -webkit-appearance: none
             padding: 0.25rem 1rem
 
-    &.open 
+    &.open
       .footer-action-button:before
         content: ''
         width: 10px
