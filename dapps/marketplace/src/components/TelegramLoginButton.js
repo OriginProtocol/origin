@@ -4,6 +4,14 @@ const TelegramLoginButton = ({ redirectURL, buttonText, className }) => {
   let rootEl
 
   useEffect(() => {
+    if (
+      !process.env.TELEGRAM_BOT_USERNAME ||
+      process.env.TELEGRAM_BOT_USERNAME === 'origin_protocol_test_bot'
+    ) {
+      // origin_protocol_test_bot is the default value set in dapps/marketplace/webpack.config.js
+      console.error(`Create a bot and set TELEGRAM_BOT_USERNAME env variable`)
+    }
+
     const script = document.createElement('script')
     script.async = true
     script.setAttribute('src', 'https://telegram.org/js/telegram-widget.js?7')
