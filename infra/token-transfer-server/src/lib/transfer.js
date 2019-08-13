@@ -22,14 +22,12 @@ const ConfirmationTimeoutSec = 20 * 60 * 60
 /**
  * Helper method to check the validity of a transfer request.
  * Throws an exception in case the request sis invalid.
- * @param userId
  * @param grantId
  * @param amount
- * @param {Transfer} transfer: Optional. The pending transfer to check for.
- * @returns {Promise<void>}
+ * @returns {Promise<Grant>}
  * @private
  */
-async function _checkTransferRequest(grantId, amount, transfer = null) {
+async function _checkTransferRequest(grantId, amount) {
   // Load the grant and check there are enough tokens available to fullfill the transfer request.
   const grant = await Grant.findOne({
     where: {
@@ -46,12 +44,12 @@ async function _checkTransferRequest(grantId, amount, transfer = null) {
     enums.TransferStatuses.Enqueued,
     enums.TransferStatuses.Paused,
     enums.TransferStatuses.WaitingConfirmation,
-    enums.TransferStatuses.Success,
+    enums.TransferStatuses.Success
   ]
 
   const pendingOrCompleteAmount = grant.Transfers.reduce((total, transfer) => {
     if (pendingOrCompleteTransfers.includes(transfer.status)) {
-      return total += BigNumber(transfer.amount)
+      return (total += BigNumber(transfer.amount))
     }
     return total
   }, 0)

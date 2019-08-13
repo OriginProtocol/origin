@@ -4,7 +4,6 @@ const request = require('supertest')
 const express = require('express')
 
 const { Grant, Transfer, User } = require('../../src/models')
-const transfers = require('../../src/constants/events')
 const TransferStatuses = require('../../src/enums')
 
 process.env.SENDGRID_FROM_EMAIL = 'test@test.com'
