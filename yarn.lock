@@ -3620,6 +3620,16 @@ agentkeepalive@^3.4.1:
   dependencies:
     humanize-ms "^1.2.1"
 
+airgram@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/airgram/-/airgram-1.2.1.tgz#091e16b649d9eea61ce81dcfd9e6a2ab42452f49"
+  integrity sha512-RJdi4xTRXvKksIPix3E4QSPEflfFfHHjcr9aofxNdAc6FFMxVBnQW++NiKmLZl8GHJ3YTfPJArk60+Rtxaq29A==
+  dependencies:
+    "@airgram/api" "^1.2.0"
+    "@airgram/core" "^1.2.2"
+    ffi-napi "^2.4.5"
+    lodash "^4.17.15"
+
 ajv-errors@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/ajv-errors/-/ajv-errors-1.0.1.tgz#f35986aceb91afadec4102fbd85014950cefa64d"
@@ -10353,6 +10363,18 @@ fetch-ponyfill@^4.0.0:
   integrity sha1-rjzl9zLGReq4fkroeTQUcJsjmJM=
   dependencies:
     node-fetch "~1.7.1"
+
+ffi-napi@^2.4.5:
+  version "2.4.5"
+  resolved "https://registry.yarnpkg.com/ffi-napi/-/ffi-napi-2.4.5.tgz#12e807f238f8c68fc094fc46c1ce5193c2ab64f8"
+  integrity sha512-24Et/c5/sRvZvpOZ9nvkK0Be1S8A1Vkt6aJSKGaohOGb5FwV4+EmecaTtNhN4TCLJDjYC8z/k4X8W1SC5IK/fw==
+  dependencies:
+    bindings "^1.3.0"
+    debug "^3.1.0"
+    get-uv-event-loop-napi-h "^1.0.5"
+    node-addon-api "1.5.0"
+    ref-napi "^1.4.0"
+    ref-struct-di "^1.1.0"
 
 figgy-pudding@^3.4.1, figgy-pudding@^3.5.1:
   version "3.5.1"
@@ -22223,6 +22245,22 @@ redux@4.0.4, redux@^4.0.2:
   dependencies:
     loose-envify "^1.4.0"
     symbol-observable "^1.2.0"
+
+ref-napi@^1.4.0:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/ref-napi/-/ref-napi-1.4.1.tgz#ab129c5d4c2b4ccbb50503c09c315334a5a3a77b"
+  integrity sha512-7AK1YNzEO2z8DLFPTf+AvOViCUgLK0stM4hnR0HWLb71Bo10UJWIpMDN3Tz7BNnUJhsj2pHWfjxugcaRvCF7zA==
+  dependencies:
+    bindings "^1.3.0"
+    debug "^3.1.0"
+    node-addon-api "^1.6.2"
+
+ref-struct-di@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/ref-struct-di/-/ref-struct-di-1.1.0.tgz#d252144eb449608ccf2e5c12fda35f8153bd3760"
+  integrity sha512-gghZITj/iQwdwFDduZ6T8kL2B2ogInlOz7AOB0ggFoEc7akAKMcDrbzh3OIPk13Kxy8U2bHPvN6nejcBh4jN7A==
+  dependencies:
+    debug "^3.1.0"
 
 regenerate-unicode-properties@^8.0.2:
   version "8.1.0"

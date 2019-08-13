@@ -128,7 +128,8 @@ const config = {
       ENABLE_LINKEDIN_ATTESTATION: false,
       ENABLE_WECHAT_ATTESTATION: false,
       SENTRY_DSN: null,
-      NAMESPACE: 'dev'
+      NAMESPACE: 'dev',
+      TELEGRAM_BOT_USERNAME: 'origin_protocol_test_bot'
     })
   ],
 
