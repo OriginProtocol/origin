@@ -13,7 +13,7 @@ export default {
   discovery: 'https://discovery.staging.originprotocol.com',
   growth: 'https://growth.staging.originprotocol.com',
   bridge: 'https://bridge.staging.originprotocol.com',
-  graphql: '', //https://graphql.staging.originprotocol.com',
+  graphql: 'https://graphql.staging.originprotocol.com',
   notifications: 'https://notifications.staging.originprotocol.com',
   relayer: 'https://relayer.staging.originprotocol.com',
   messaging: {
@@ -55,7 +55,7 @@ export default {
   messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
 
   // Configs
-  performanceMode: false,
+  performanceMode: true,
   proxyAccountsEnabled: true,
   relayerEnabled: true
 }
