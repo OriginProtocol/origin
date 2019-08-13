@@ -65,7 +65,11 @@ const PromoteCTACmp = ({ listing, tokenBalance }) => (
       <CoinLogo coin="ogn" />
       <span>OGN</span>
     </h6>
-    <div>Get more exposure and sell faster.</div>
+    <div>
+      <fbt desc="PromoteListing.moreExposure">
+        Get more exposure and sell faster.
+      </fbt>
+    </div>
 
     {tokenBalance ? (
       <Link
