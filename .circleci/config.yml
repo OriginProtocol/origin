@@ -248,5 +248,4 @@ workflows:
             branches:
               only:
                 - master
-                - mikeshultz/apollo-engine
           context: origin
