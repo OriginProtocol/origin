@@ -35,6 +35,8 @@ jobs:
             yarn install --frozen-lockfile
             curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | sh
             ./bin/node-prune
+
+      - run: sudo npm install --global apollo
       - persist_to_workspace:
           root: .
           paths:
@@ -64,6 +66,21 @@ jobs:
       - run:
           name: Run GraphQL Tests
           command: cd packages/graphql && yarn test
+
+  GraphQLEngineSchema:
+    <<: *defaults
+    working_directory: ~/origin/packages/graphql
+    branches:
+      only: master
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Starting server
+          command: npm start
+          background: true
+      - run: sleep 5
+      - run: apollo service:push --tag=master
 
   EventCache:
     <<: *db
@@ -221,5 +238,8 @@ workflows:
           requires:
             - Setup
       - Web3Provider:
+          requires:
+            - Setup
+      - GraphQLEngineSchema:
           requires:
             - Setup
