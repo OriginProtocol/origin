@@ -47,6 +47,8 @@ module.exports = `
     ListingSold
     TwitterShare
     TwitterFollow
+    Telegram
+    TelegramFollow
     FacebookShare
     FacebookLike
   }

@@ -407,6 +407,8 @@ require('react-styl')(`
       background-image: url(images/growth/linkedin-icon.svg)
     &.wechat > div h2
       background-image: url(images/growth/wechat-icon.svg)
+    &.telegram > div h2
+      background-image: url(images/growth/telegram-badge.svg)
 
   .mobile-modal-light .attestation-modal
     padding: 20px
@@ -417,6 +419,9 @@ require('react-styl')(`
       width: 100%
       border-radius: 2rem
       padding: 0.75rem
+    .telegram-login-button
+      button.btn
+        padding: 0.375rem 2rem
     .verification-code .form-control
       display: inline-block
     &.phone > div h2::before
@@ -441,8 +446,10 @@ require('react-styl')(`
       background-image: url(images/identity/linkedin-icon-large.svg)
     &.wechat > div h2::before
       background-image: url(images/identity/wechat-icon-large.svg)
-
+    &.telegram > div h2::before
+      background-image: url(images/growth/telegram-badge.svg)
     > div
+
       flex: auto
       display: flex
       flex-direction: column

@@ -26,7 +26,8 @@ const attestationProgressPct = {
   kakao: 10,
   github: 10,
   linkedin: 10,
-  wechat: 10
+  wechat: 10,
+  telegram: 10
 }
 
 function getAttestations(account, attestations) {
@@ -142,6 +143,12 @@ function getAttestations(account, attestations) {
         case 'wechat.com':
           return {
             id: 'wechat',
+            rawData: JSON.stringify(attestation),
+            properties: [issuedDate, userId]
+          }
+        case 'telegram.com':
+          return {
+            id: 'telegram',
             rawData: JSON.stringify(attestation),
             properties: [issuedDate, userId]
           }
@@ -392,7 +399,8 @@ function getAttestationProviders() {
     'website',
     'kakao',
     'github',
-    'linkedin'
+    'linkedin',
+    'telegram'
   ]
 
   if (process.env.ENABLE_WECHAT_ATTESTATION === 'true') {

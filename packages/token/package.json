@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@origin/contracts": "^0.8.6",
-    "bignumber.js": "8.1.1",
+    "bignumber.js": "9.0.0",
     "truffle-hdwallet-provider": "0.0.6",
     "web3": "1.0.0-beta.34"
   },
@@ -32,7 +32,7 @@
     "mocha": "6.2.0",
     "openzeppelin-solidity": "^1.10.0",
     "prettier": "1.18.2",
-    "solc": "0.5.10"
+    "solc": "0.5.11"
   },
   "prettier": {
     "semi": false,

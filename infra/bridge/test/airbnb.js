@@ -12,11 +12,11 @@ const app = require('../src/app')
 const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
 
 describe('airbnb attestations', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     // Configure environment variables required for tests
     process.env.ATTESTATION_SIGNING_KEY = '0xc1912'
 
-    Attestation.destroy({
+    await Attestation.destroy({
       where: {},
       truncate: true
     })
