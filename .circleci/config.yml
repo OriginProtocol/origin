@@ -70,8 +70,9 @@ jobs:
   GraphQLEngineSchema:
     <<: *defaults
     working_directory: ~/origin/packages/graphql
-    branches:
-      only: master
+    filters:
+      branches:
+        only: master
     steps:
       - attach_workspace:
           at: .
@@ -243,3 +244,4 @@ workflows:
       - GraphQLEngineSchema:
           requires:
             - Setup
+          context: origin
