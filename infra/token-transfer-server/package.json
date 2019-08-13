@@ -17,13 +17,14 @@
     "start": "per-env",
     "start:development": "nodemon src/app.js",
     "start:production": "node src/app.js",
-    "test": "NODE_ENV=test mocha -r @babel/register -r @babel/polyfill -t 10000 --exit test/**/*.js"
+    "test": "NODE_ENV=test mocha -r @babel/register  -r @babel/polyfill -t 10000 --exit test/**/*.js"
   },
   "dependencies": {
     "@origin/contracts": "^0.8.6",
     "@origin/ip2geo": "^0.1.0",
     "@origin/token": "^0.1.0",
     "@sendgrid/mail": "^6.4.0",
+    "babel-plugin-rewire": "^1.2.0",
     "bignumber.js": "9.0.0",
     "body-parser": "^1.19.0",
     "chalk": "^2.4.2",

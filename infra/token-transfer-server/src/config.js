@@ -1,3 +1,5 @@
+const moment = require('moment')
+
 const logger = require('./logger')
 
 const encryptionSecret = process.env.ENCRYPTION_SECRET
@@ -24,10 +26,13 @@ if (!sendgridFromEmail) {
   process.exit(1)
 }
 
+const unlockDate = moment.utc('2020-01-01')
+
 module.exports = {
   encryptionSecret,
   networkId,
   portalUrl,
   sendgridFromEmail,
-  sendgridApiKey
+  sendgridApiKey,
+  unlockDate
 }

@@ -4,8 +4,7 @@ const Token = require('@origin/token/src/token')
 
 const {
   GRANT_TRANSFER_DONE,
-  GRANT_TRANSFER_FAILED,
-  GRANT_TRANSFER_REQUEST
+  GRANT_TRANSFER_FAILED
 } = require('../constants/events')
 const { Event, Grant, Transfer, sequelize } = require('../models')
 const enums = require('../enums')
@@ -47,14 +46,17 @@ async function _checkTransferRequest(grantId, amount) {
     enums.TransferStatuses.Success
   ]
 
+  const vested = vestedAmount(grant.get({ plain: true }))
+  logger.info('Vested tokens', vested)
+
   const pendingOrCompleteAmount = grant.Transfers.reduce((total, transfer) => {
     if (pendingOrCompleteTransfers.includes(transfer.status)) {
       return (total += BigNumber(transfer.amount))
     }
     return total
   }, 0)
+  logger.info('Pending or transferred tokens', pendingOrCompleteAmount)
 
-  const vested = vestedAmount(grant.get({ plain: true }))
   const available = vested - pendingOrCompleteAmount
   if (amount > available) {
     throw new RangeError(
@@ -73,39 +75,19 @@ async function _checkTransferRequest(grantId, amount) {
  * @param amount
  * @returns {Promise<integer>} Id of the transfer request.
  */
-async function enqueueTransfer(grantId, address, amount, ip) {
+async function enqueueTransfer(grantId, address, amount) {
   const grant = await _checkTransferRequest(grantId, amount)
 
   // Enqueue the request by inserting a row in the transfer table.
   // It will get picked up asynchronously by the offline job that processes transfers.
   // Record new state in the database.
-  let transfer
-  const txn = await sequelize.transaction()
-  try {
-    transfer = await Transfer.create({
-      grantId: grant.id,
-      status: enums.TransferStatuses.Enqueued,
-      toAddress: address.toLowerCase(),
-      amount,
-      currency: 'OGN' // For now we only support OGN.
-    })
-    await Event.create({
-      userId: grant.userId,
-      grantId: grant.id,
-      action: GRANT_TRANSFER_REQUEST,
-      data: JSON.stringify({
-        transferId: transfer.id,
-        amount: amount,
-        to: address
-      }),
-      ip
-    })
-    await txn.commit()
-  } catch (e) {
-    await txn.rollback()
-    logger.error(`Failed to enqueue transfer for address ${address}: ${e}`)
-    throw e
-  }
+  const transfer = await Transfer.create({
+    grantId: grant.id,
+    status: enums.TransferStatuses.Enqueued,
+    toAddress: address.toLowerCase(),
+    amount,
+    currency: 'OGN' // For now we only support OGN.
+  })
   logger.info(
     `Enqueued transfer. id: {transfer.id} address: ${address} amount: ${amount}`
   )

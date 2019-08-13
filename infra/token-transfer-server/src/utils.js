@@ -1,6 +1,7 @@
 const Web3 = require('web3')
 
 const { Account } = require('./models')
+const { unlockDate } = require('./config')
 
 /**
  * Allows use of async functions for an Express route.
@@ -42,9 +43,15 @@ const isExistingNickname = (value, { req }) => {
   })
 }
 
+// Use a function so that this value can be mocked in tests
+const getUnlockDate = () => {
+  return unlockDate
+}
+
 module.exports = {
   asyncMiddleware,
   isEthereumAddress,
   isExistingAddress,
-  isExistingNickname
+  isExistingNickname,
+  getUnlockDate
 }

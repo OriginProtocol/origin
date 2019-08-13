@@ -1,13 +1,19 @@
 const express = require('express')
 const router = express.Router()
 const { check, validationResult } = require('express-validator')
+const moment = require('moment')
+
 const { createProvider } = require('@origin/token/src/config')
 
 const logger = require('../logger')
 const { Grant, Transfer } = require('../../src/models')
 const { ensureLoggedIn } = require('../lib/login')
-const { asyncMiddleware, isEthereumAddress } = require('../utils')
-const { networkId } = require('../config')
+const {
+  asyncMiddleware,
+  isEthereumAddress,
+  getUnlockDate
+} = require('../utils')
+const { unlockDate, networkId } = require('../config')
 const { enqueueTransfer } = require('../lib/transfer')
 
 createProvider(networkId) // Ensure web3 credentials are set up
@@ -52,15 +58,23 @@ router.post(
       return res.status(422).json({ errors: errors.array() })
     }
 
+    if (moment() < getUnlockDate()) {
+      res
+        .status(422)
+        .send(`Tokens are still locked. Unlock date is ${unlockDate}`)
+      return
+    }
+
     // Retrieve the grant, validating email in the process.
     const { grantId, address, amount } = req.body
+
     try {
-      enqueueTransfer({
+      await enqueueTransfer(
         grantId,
         address,
         amount,
-        ip: req.connection.remoteAddress
-      })
+        req.connection.remoteAddress
+      )
 
       // TODO: update to be more useful, e.g. users email
       logger.info(`Grant ${grantId} transferred ${amount} OGN to ${address}`)
@@ -71,6 +85,7 @@ router.post(
         throw e
       }
     }
+    res.status(201).end()
   })
 )
 
