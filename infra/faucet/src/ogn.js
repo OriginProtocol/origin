@@ -26,7 +26,6 @@ class OgnDistributor {
   }
 
   async process(req, res, next) {
-    const networkId = req.query.network_id
     const wallet = req.query.wallet
     if (!req.query.wallet) {
       res.send('<h2>Error: A wallet address must be supplied.</h2>')
