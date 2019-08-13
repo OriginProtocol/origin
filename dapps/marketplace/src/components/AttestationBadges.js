@@ -117,7 +117,7 @@ require('react-styl')(`
       &.linkedin
         background-image: url('images/growth/linkedin-icon.svg')
       &.telegram
-        background-image: url('images/growth/website-icon.svg')
+        background-image: url('images/growth/telegram-badge.svg')
 
       .badge-label
         position: absolute

@@ -408,7 +408,7 @@ require('react-styl')(`
     &.wechat > div h2
       background-image: url(images/growth/wechat-icon.svg)
     &.telegram > div h2
-      background-image: url(images/growth/website-icon.svg)
+      background-image: url(images/growth/telegram-badge.svg)
 
   .mobile-modal-light .attestation-modal
     padding: 20px
@@ -447,9 +447,9 @@ require('react-styl')(`
     &.wechat > div h2::before
       background-image: url(images/identity/wechat-icon-large.svg)
     &.telegram > div h2::before
-      background-image: url(images/identity/website-icon-light.svg)
-
+      background-image: url(images/growth/telegram-badge.svg)
     > div
+
       flex: auto
       display: flex
       flex-direction: column

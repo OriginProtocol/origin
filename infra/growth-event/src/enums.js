@@ -35,7 +35,7 @@ const GrowthEventTypes = new Enum(
   'SharedOnTwitter',
   'FollowedOnTwitter',
   'FollowedOnTelegram',
-  'TelegramAttestationPublished'
+  'TelegramAttestationPublished',
   'SharedOnFacebook',
   'LikedOnFacebook'
 )

@@ -90,9 +90,9 @@ require('react-styl')(`
       background-size: 100%
       border: 0
     &.telegram
-      border-color: #6331dd
-      background-color: rgba(#6331dd, 75%)
-      background-image: url(images/identity/website-icon-light.svg)
+      background-image: url(images/growth/telegram-badge.svg)
+      background-size: 100%
+      border-color: 0
   .attestations-small .attestation
     width: 1.5rem
     height: 1.5rem
