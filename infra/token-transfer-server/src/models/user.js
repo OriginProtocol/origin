@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
       phone: DataTypes.STRING,
       // Email address of the user.
-      email: DataTypes.STRING,
+      email: { type: DataTypes.STRING, unique: true },
       // OTP secret key, stored encrypted.
       otpKey: DataTypes.STRING,
       otpVerified: DataTypes.BOOLEAN,
