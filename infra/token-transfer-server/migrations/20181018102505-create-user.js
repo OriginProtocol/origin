@@ -24,16 +24,16 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         default: false
       },
-      purchaseDate: {
-        type: Sequelize.DATE
+      purchase_date: {
+        type: Sequelize.DATEONLY
       },
-      purchaseRound: {
+      purchase_round: {
         type: Sequelize.STRING
       },
-      purchaseTotal: {
+      purchase_total: {
         type: Sequelize.DECIMAL
       },
-      investmentAmount: {
+      investment_amount: {
         type: Sequelize.DECIMAL
       },
       created_at: {
