@@ -16,7 +16,7 @@ module.exports = {
         references: { model: 't3_user', key: 'id' }
       },
       grant_type: {
-        types: Sequelize.STRING,
+        types: Sequelize.STRING
       },
       start: {
         type: Sequelize.DATEONLY,
