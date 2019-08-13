@@ -78,6 +78,7 @@ jobs:
           command: npm start
           background: true
       - run: sleep 5
+      - run: apollo schema:check
       - run: apollo service:push --tag=master
 
   EventCache:
@@ -240,7 +241,12 @@ workflows:
             - Setup
   schema:
     jobs:
-      - Setup
+      - Setup:
+          filters:
+            branches:
+              only:
+                - master
+                - mikeshultz/apollo-engine
       - GraphQLEngineSchema:
           requires:
             - Setup
@@ -248,4 +254,5 @@ workflows:
             branches:
               only:
                 - master
+                - mikeshultz/apollo-engine
           context: origin
