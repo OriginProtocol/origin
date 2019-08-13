@@ -104,6 +104,7 @@ function createProvider(networkId) {
       )
     }
     provider = new Web3(new HDWalletProvider(mnemonic, providerUrl))
+    provider.eth.defaultAccount = provider.eth.currentProvider.getAddresses()[0]
   }
   return provider
 }

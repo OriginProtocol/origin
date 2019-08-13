@@ -10,6 +10,10 @@ import Web3 from 'web3'
 import db from './models'
 import logger from './logger'
 
+const esmImport = require('esm')(module)
+const { isContract } = esmImport('@origin/graphql/src/utils/proxy')
+const { setNetwork } = esmImport('@origin/graphql/src/contracts')
+
 import { verifyNewMessageSignature, verifyRegistrySignature } from './verify'
 
 import * as config from './config'
@@ -17,6 +21,8 @@ import * as config from './config'
 import _redis from 'redis'
 
 const redis = _redis.createClient(process.env.REDIS_URL)
+
+setNetwork(process.env.NETWORK ? process.env.NETWORK : 'localhost')
 
 // supply an endpoint for querying global registry
 const app = express()
@@ -66,6 +72,7 @@ app.get('/accounts', async (req, res) => {
   res.send({ count })
 })
 
+// Returns a user's public key and signature  object
 app.get('/accounts/:address', async (req, res) => {
   let { address } = req.params
 
@@ -77,6 +84,14 @@ app.get('/accounts/:address', async (req, res) => {
 
   address = Web3.utils.toChecksumAddress(address)
 
+  // If it's a proxy, make sure we're checking with the owner account address
+  if (await isContract(address)) {
+    console.log(`${address} is a proxy!`)
+    return res.status(400).send('Invalid account (contract)')
+  } else {
+    console.log(`${address} is not a proxy!`)
+  }
+
   const entry = await db.Registry.findOne({ where: { ethAddress: address } })
 
   if (!entry) {
@@ -86,6 +101,7 @@ app.get('/accounts/:address', async (req, res) => {
   res.status(200).send(entry.data)
 })
 
+// Set a user's public key and signature  object
 app.post('/accounts/:address', async (req, res) => {
   let { address } = req.params
 
@@ -96,6 +112,13 @@ app.post('/accounts/:address', async (req, res) => {
   }
 
   address = Web3.utils.toChecksumAddress(address)
+
+  // If it's a proxy, make sure we're checking with the owner account address
+  if (await isContract(address)) {
+    return res.status(400).send('Invalid account (contract)')
+  } else {
+    console.log(`${address} is not a proxy!`)
+  }
 
   const { signature, data } = req.body
 
@@ -115,6 +138,7 @@ app.post('/accounts/:address', async (req, res) => {
   return res.status(400).end()
 })
 
+// Fetch basic information about conversations for an account
 app.get('/conversations/:address', async (req, res) => {
   let { address } = req.params
 
@@ -145,6 +169,7 @@ app.get('/conversations/:address', async (req, res) => {
   )
 })
 
+// Get all messages in a room/conversation
 app.get('/messages/:conversationId', async (req, res) => {
   const { conversationId } = req.params
 
@@ -174,6 +199,7 @@ app.get('/messages/:conversationId', async (req, res) => {
   )
 })
 
+// Add a message to a room/conversation
 app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
   const { conversationId } = req.params
   const conversationIndex = Number(req.params.conversationIndex)
@@ -190,6 +216,16 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
     conv_addresses[0].toLowerCase() === conv_addresses[1].toLowerCase()
   ) {
     return res.status(401).send('Unable to message self.')
+  }
+
+  // If it's a proxy, make sure we're checking with the owner account address
+  if (
+    (await isContract(conv_addresses[0])) ||
+    (await isContract(conv_addresses[1]))
+  ) {
+    return res.status(400).send('Invalid account (contract)')
+  } else {
+    console.log(`participant is not a proxy!`)
   }
 
   if (
@@ -350,6 +386,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
   }
 })
 
+// Websocket to listen for new messages
 app.ws('/message-events/:address', (ws, req) => {
   const { address } = req.params
   const redis_sub = redis.duplicate()

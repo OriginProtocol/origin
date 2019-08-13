@@ -99,12 +99,13 @@ export const changeAccount = async (page, account) => {
   }, account)
 }
 
-export const createAccount = async page => {
+export const createAccount = async (page, ogn) => {
   return await page.evaluate(
-    () =>
+    ogn =>
       new Promise(resolve =>
-        window.ognTools.createAccount(window.gql).then(resolve)
-      )
+        window.ognTools.createAccount(window.gql, ogn).then(resolve)
+      ),
+    ogn
   )
 }
 

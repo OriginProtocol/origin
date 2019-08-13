@@ -5,7 +5,7 @@ services:
   postgres:
     container_name: postgres
     restart: always
-    image: postgres:10.0
+    image: postgres:10.10
     environment:
       - POSTGRES_USER=origin
       - POSTGRES_PASSWORD=origin
@@ -15,7 +15,7 @@ services:
 
   elasticsearch:
     container_name: elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.2
     ports:
       - "9200:9200"
     environment:
@@ -182,6 +182,7 @@ services:
     volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - REDIS_URL=redis://redis-master:6379
       - ELASTICSEARCH_HOST=elasticsearch:9200
       - ELASTICSEARCH=true
       - NETWORK=docker

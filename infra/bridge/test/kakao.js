@@ -15,14 +15,14 @@ const { getAbsoluteUrl } = require('../src/utils')
 const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
 
 describe('kakao attestations', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     // Configure environment variables required for tests
     process.env.ATTESTATION_SIGNING_KEY = '0xc1912'
     process.env.KAKAO_CLIENT_ID = 'kakao-client-id'
     process.env.KAKAO_CLIENT_SECRET = 'kakao-client-secret'
     process.env.HOST = 'originprotocol.com'
 
-    Attestation.destroy({
+    await Attestation.destroy({
       where: {},
       truncate: true
     })

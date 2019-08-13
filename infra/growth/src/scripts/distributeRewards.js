@@ -75,7 +75,7 @@ class DistributeRewards {
       .reduce((a1, a2) => a1.plus(a2))
     const amountTokenUnit = this.distributor.token.toTokenUnit(amount)
 
-    logger.info(`Distribution of ${amountTokenUnit} to ${ethAddress}`)
+    logger.info(`Distribution of ${amountTokenUnit} OGN to ${ethAddress}`)
 
     // Check there is not already a payout row.
     // If there is and it is not in status Failed, something is wrong. Bail out.

@@ -8,7 +8,7 @@ import Steps from 'components/Steps'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
 import Wallet from 'components/Wallet'
-import CoinPrice from 'components/CoinPrice'
+import CoinLogo from 'components/CoinLogo'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
 import withWallet from 'hoc/withWallet'
@@ -189,7 +189,7 @@ class Boost extends Component {
         </div>
         <div className={`boost-value ${level[1]}`}>
           <div className="description">{level[2]}</div>
-          <CoinPrice price={this.state.boost} coin="ogn" />
+          <CoinLogo price={this.state.boost} coin="ogn" />
         </div>
 
         <div className={`form-group slider ${level[1]}`}>

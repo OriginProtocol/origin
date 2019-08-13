@@ -1,6 +1,6 @@
 const elasticsearch = require('elasticsearch')
 const scoring = require('../lib/scoring')
-
+const logger = require('../listener/logger')
 /*
   Module to interface with ElasticSearch.
  */
@@ -14,6 +14,34 @@ const client = new elasticsearch.Client({
 // (and forbids it unless you enable a special flag)
 const LISTINGS_INDEX = 'listings'
 const LISTINGS_TYPE = 'listing'
+
+/**
+ * Pulls exchange rates from redis
+ * @param {Array<string>} currencies - Currency values, token-XYZ/fiat-XYZ
+ * @returns {Object} - Requested exchange rates, curency as key and rate as value
+ */
+const getExchangeRates = async currencies => {
+  try {
+    // lazy import to avoid event-listener depending on redis
+    // this is only used in discovery
+    const { getAsync } = require('../lib/redis')
+    const exchangeRates = {}
+    // TODO use redis batch features instead of promise.All
+    const promises = currencies.map(currency => {
+      const splitCurrency = currency.split('-')
+      const resolvedCurrency = splitCurrency[1]
+      return getAsync(`${resolvedCurrency}-USD_price`)
+    })
+    const result = await Promise.all(promises)
+    result.forEach((r, i) => {
+      exchangeRates[currencies[i]] = r
+    })
+    logger.debug('Exchange Rates - ', exchangeRates)
+    return exchangeRates
+  } catch (e) {
+    logger.error('Error retrieving exchange rates from redis', e)
+  }
+}
 
 class Cluster {
   /**
@@ -140,14 +168,27 @@ class Listing {
   /**
    * Searches for listings.
    * @param {string} query - The search query.
+   * @param {string} sort - The target value to sort on (can be object notation)
+   * @param {string} order - The order of the sort
    * @param {array} filters - Array of filter objects
    * @param {integer} numberOfItems - number of items to display per page
    * @param {integer} offset - what page to return results from
-   * @param {boolean} idsOnly - only returns listing Ids vs listing object.
    * @throws Throws an error if the search operation failed.
    * @returns A list of listings (can be empty).
    */
-  static async search(query, filters, numberOfItems, offset, idsOnly) {
+  static async search(query, sort, order, filters, numberOfItems, offset) {
+    const currencies = [
+      'token-ETH',
+      'token-DAI',
+      'fiat-JPY',
+      'fiat-EUR',
+      'fiat-KRW',
+      'fiat-GBP',
+      'fiat-CNY',
+      'fiat-SGD'
+    ]
+    const exchangeRates = await getExchangeRates(currencies)
+
     if (filters === undefined) {
       filters = []
     }
@@ -298,6 +339,60 @@ class Listing {
       numberOfItems = 1000
     }
 
+    /**
+     * Creates sort query
+     * @returns {Object} - Sort query for elastic search
+     */
+    const getSortQuery = () => {
+      const sortWhiteList = ['price.amount']
+      const orderWhiteList = ['asc', 'desc']
+      // if sort and order are set, return a sort
+      // otherwise return empty sort to skip
+      if (sort && sort.length > 0 && (order && order.length > 0)) {
+        try {
+          // check that sort and order are approved values
+          if (sortWhiteList.includes(sort) && orderWhiteList.includes(order)) {
+            switch (sort) {
+              // script based sorting specifically for calculating price based on exchange rate
+              case 'price.amount':
+                return {
+                  _script: {
+                    type: 'number',
+                    script: {
+                      lang: 'painless',
+                      source: `if(params._source.containsKey("price") && params._source.price.containsKey("currency") && params._source.price.currency.containsKey("id")) { return Float.parseFloat(params._source.${sort}) * Float.parseFloat(params.exchangeRates[params._source.price.currency.id]); } else { return params.order == "asc" ? 1000000000L : 0 }`,
+                      params: {
+                        order: order,
+                        exchangeRates: exchangeRates
+                      }
+                    },
+                    order: order
+                  }
+                }
+              default:
+                // this default is for non script based sorting, should satisfy most cases
+                return [
+                  {
+                    [sort]: {
+                      order: order
+                    }
+                  }
+                ]
+            }
+          } else {
+            throw new Error(
+              `Sort variables are not whitelisted - sort = ${sort}, order = ${order}, disabling sorting`
+            )
+          }
+        } catch (e) {
+          logger.error(e)
+          return []
+        }
+      } else {
+        return []
+      }
+    }
+
     const searchRequest = client.search({
       index: LISTINGS_INDEX,
       type: LISTINGS_TYPE,
@@ -305,6 +400,7 @@ class Listing {
         from: offset,
         size: numberOfItems,
         query: scoreQuery,
+        sort: getSortQuery(),
         _source: [
           'title',
           'description',
@@ -342,7 +438,13 @@ class Listing {
         subCategory: hit._source.subCategory,
         description: hit._source.description,
         priceAmount: (hit._source.price || {}).amount,
-        priceCurrency: (hit._source.price || {}).currency
+        priceCurrency: (hit._source.price || {}).currency,
+        // added redundant fields below to match schema, maybe that
+        // should change to the above two fields
+        price: {
+          amount: (hit._source.price || {}).amount,
+          currency: (hit._source.price || {}).currency.id
+        }
       })
     })
 
@@ -353,13 +455,8 @@ class Listing {
       minPrice: minPrice || 0,
       totalNumberOfListings: searchResponse.hits.total
     }
-
-    if (idsOnly) {
-      const listingIds = listings.map(listing => listing.id)
-      return { listingIds, stats }
-    } else {
-      return { listings, stats }
-    }
+    logger.debug('search listings - ', listings)
+    return { listings, stats }
   }
 }
 
