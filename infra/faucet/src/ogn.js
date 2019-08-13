@@ -38,7 +38,7 @@ class OgnDistributor {
     try {
       // Transfer NUM_TOKENS to the specified wallet.
       const value = this.token.toNaturalUnit(NUM_TOKENS)
-      const contractAddress = this.token.contractAddress(networkId)
+      const contractAddress = this.token.contractAddress
       const txHash = await this.token.credit(wallet, value)
       const { status } = await this.token.waitForTxConfirmation(txHash, {
         numBlocks: NumBlockConfirmation,

@@ -6,6 +6,7 @@ async function sendMessage(_, { to, content, media }) {
 
   to = contracts.web3.utils.toChecksumAddress(to)
   const id = await contracts.messaging.sendConvMessage(to, { content, media })
+  if (!id) throw new Error('Sending of message failed')
   return { id }
 }
 

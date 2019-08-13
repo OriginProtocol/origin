@@ -42,7 +42,9 @@ const GrowthActionType = new Enum(
   'ListingCreated',
   'ListingPurchased',
   'TwitterFollow',
-  'TwitterShare'
+  'TwitterShare',
+  'FacebookLike',
+  'FacebookShare'
 )
 
 const GrowthParticipantStatuses = new Enum('Active', 'Banned')

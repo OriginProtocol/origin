@@ -143,6 +143,7 @@ export const types = `
       search: String
       filters: [ListingFilterInput!]
       sort: String
+      order: String
       listingIds: [String]
     ): ListingConnection!
 

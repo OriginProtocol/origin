@@ -1,7 +1,7 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
 
-import CoinPrice from 'components/CoinPrice'
+import CoinLogo from 'components/CoinLogo'
 import Tooltip from 'components/Tooltip'
 
 const HelpIcon = ({ tooltip }) => (
@@ -37,7 +37,7 @@ const PricingChooser = ({ value, onChange, children }) => {
             onChange(newVal.length ? newVal : ['token-ETH'])
           }}
         >
-          <CoinPrice coin="dai" iconOnly className="lg" />
+          <CoinLogo coin="dai" className="lg" />
           <div className="name">
             Maker Dai<div className="symbol">DAI</div>
           </div>
@@ -61,7 +61,7 @@ const PricingChooser = ({ value, onChange, children }) => {
             onChange(newVal.length ? newVal : ['token-DAI'])
           }}
         >
-          <CoinPrice coin="eth" iconOnly className="lg" />
+          <CoinLogo coin="eth" className="lg" />
           <div className="name">
             Ethereum <div className="symbol">ETH</div>
           </div>

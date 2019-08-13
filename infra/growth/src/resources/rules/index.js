@@ -25,6 +25,7 @@ class CampaignRules {
     this.numLevels = this.config.numLevels
 
     this.allRules = [] // Flat list of rules.
+    this.content = this.config.content
     this.levels = {}
     for (let i = 0; i < this.config.numLevels; i++) {
       if (!this.config.levels[i]) {

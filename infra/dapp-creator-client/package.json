@@ -50,14 +50,14 @@
     "react": "^16.8.6",
     "react-color": "^2.17.3",
     "react-dom": "^16.8.6",
-    "react-router-dom": "^4.3.1",
+    "react-router-dom": "^5.0.0",
     "react-styl": "^0.0.3",
     "react-svg-loader": "^2.1.0",
     "react-web3": "^1.2.0",
     "rework": "^1.0.1",
     "style-loader": "0.23.1",
     "superagent": "^5.1.0",
-    "terser": "4.1.3",
+    "terser": "4.1.4",
     "terser-webpack-plugin": "^1.3.0",
     "web3": "1.0.0-beta.34",
     "webpack": "^4.35.0",
@@ -67,7 +67,7 @@
     "bootstrap": "4.3.1",
     "typeface-lato": "0.0.75",
     "typeface-poppins": "0.0.72",
-    "webpack-dev-server": "3.7.2"
+    "webpack-dev-server": "3.8.0"
   },
   "babel": {
     "presets": [

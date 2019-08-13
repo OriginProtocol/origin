@@ -20,9 +20,9 @@ describe('promotion verifications', () => {
     process.env.VERIFICATION_MAX_TRIES = 3
 
     // Clear out redis-mock
-    await new Promise(resolve => client.del('*', resolve))
+    await new Promise(resolve => client.flushall(resolve))
 
-    Attestation.destroy({
+    await Attestation.destroy({
       where: {},
       truncate: true
     })

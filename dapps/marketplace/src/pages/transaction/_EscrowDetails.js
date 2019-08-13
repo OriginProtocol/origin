@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { fbt } from 'fbt-runtime'
 
-import CoinPrice from 'components/CoinPrice'
+import CoinLogo from 'components/CoinLogo'
 import Price from 'components/Price'
 import Tooltip from 'components/Tooltip'
 import Modal from 'components/Modal'
@@ -53,18 +53,16 @@ class EscrowDetails extends Component {
             <span>
               {offer.totalPrice.currency.id.match('DAI') && (
                 <>
-                  <CoinPrice iconOnly smaller coin="dai" />
+                  <CoinLogo coin="dai" />
                   {numberFormat(offer.totalPrice.amount, 2)}
-                  &nbsp;
-                  {'DAI'}
+                  {' DAI'}
                 </>
               )}
               {offer.totalPrice.currency.id.match('ETH') && (
                 <>
-                  <CoinPrice iconOnly smaller coin="eth" />
+                  <CoinLogo coin="eth" />
                   {numberFormat(offer.totalPrice.amount, 5)}
-                  &nbsp;
-                  {'ETH'}
+                  {' ETH'}
                 </>
               )}
             </span>
