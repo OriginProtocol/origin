@@ -240,6 +240,7 @@ workflows:
             - Setup
   schema:
     jobs:
+      - Setup
       - GraphQLEngineSchema:
           requires:
             - Setup
