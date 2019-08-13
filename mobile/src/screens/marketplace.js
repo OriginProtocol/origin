@@ -565,10 +565,13 @@ class MarketplaceScreen extends Component {
     updateExchangeRate(this.state.fiatCurrency[1], 'DAI')
   }
 
-  _openDeepLinkUrlAttempt = async (interceptUrlPredicate, makeUrl, timeControlVariableName) => {
+  _openDeepLinkUrlAttempt = async (
+    interceptUrlPredicate,
+    makeUrl,
+    timeControlVariableName
+  ) => {
     // non interceptable url
-    if (!interceptUrlPredicate())
-      return
+    if (!interceptUrlPredicate()) return
 
     const url = makeUrl()
     if (Linking.canOpenURL(url)) {
@@ -589,17 +592,21 @@ class MarketplaceScreen extends Component {
 
   checkForShareNativeDialogInterception = async url => {
     // natively tweet if possible on Android
-    await this._openDeepLinkUrlAttempt(() =>
+    await this._openDeepLinkUrlAttempt(
+      () =>
         url.hostname === 'twitter.com' &&
         url.pathname === '/intent/tweet' &&
-        Platform.OS === 'android'
-      ,
-      () => `twitter://post?message=${encodeURIComponent(url.searchParams.get('text'))}`,
+        Platform.OS === 'android',
+      () =>
+        `twitter://post?message=${encodeURIComponent(
+          url.searchParams.get('text')
+        )}`,
       'lastTweetAttemptTime'
     )
 
     // open twitter profile natively if possible on Android
-    await this._openDeepLinkUrlAttempt(() =>
+    await this._openDeepLinkUrlAttempt(
+      () =>
         url.hostname === 'twitter.com' &&
         url.pathname === '/intent/follow' &&
         Platform.OS === 'android',
@@ -608,9 +615,11 @@ class MarketplaceScreen extends Component {
     )
 
     // open facebook profile natively if possible on Android and IOS
-    await this._openDeepLinkUrlAttempt(() =>
-        (url.hostname === 'www.facebook.com' || url.hostname === 'm.facebook.com') &&
-        (url.pathname.toLowerCase() === '/originprotocol/'),
+    await this._openDeepLinkUrlAttempt(
+      () =>
+        (url.hostname === 'www.facebook.com' ||
+          url.hostname === 'm.facebook.com') &&
+        url.pathname.toLowerCase() === '/originprotocol/',
       () => `fb://profile/120151672018856`,
       'lastOpenFacebookProfileTime'
     )
