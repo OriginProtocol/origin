@@ -175,7 +175,7 @@ class IdentityEventHandler {
               'PHONE'
             )
             break
-          case 'twitter':
+          case 'twitter': {
             const attestation = await this._loadMostRecentAttestation(
               addresses,
               'TWITTER'
@@ -189,6 +189,7 @@ class IdentityEventHandler {
               decoratedIdentity.twitterProfile = null
             }
             break
+          }
           case 'airbnb':
             decoratedIdentity.airbnb = await this._loadValueFromAttestation(
               addresses,
@@ -239,7 +240,7 @@ class IdentityEventHandler {
               'WEBSITE'
             )
             break
-          case 'telegram':
+          case 'telegram': {
             const attestation = await this._loadMostRecentAttestation(
               addresses,
               'TELEGRAM'
@@ -255,6 +256,7 @@ class IdentityEventHandler {
               decoratedIdentity.telegramProfile = null
             }
             break
+          }
         }
       })
     )
