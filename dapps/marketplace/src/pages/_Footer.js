@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
 
 import ExternalAnchor from 'components/ExternalAnchor'
@@ -9,6 +10,8 @@ import LocaleDropdown from 'components/LocaleDropdown'
 import CurrencyDropdown from 'components/CurrencyDropdown'
 
 const SupportLink = 'https://goo.gl/forms/86tKQXZdmux3KNFJ2'
+
+const urlPrefixesForShortButton = ['/messages']
 
 class Footer extends Component {
   constructor(props) {
@@ -61,7 +64,15 @@ class Footer extends Component {
 
   renderFooterActionButton() {
     const { open, closing } = this.state
-    const { isMobile } = this.props
+    const {
+      isMobile,
+      history: {
+        location: { pathname }
+      }
+    } = this.props
+    const isButtonShort = Boolean(
+      urlPrefixesForShortButton.filter(url => pathname.startsWith(url)).length
+    )
 
     if (isMobile) {
       return null
@@ -74,6 +85,11 @@ class Footer extends Component {
         onClick={() => this.onToggle()}
       >
         {isMobile && !open && <fbt desc="footer.Help">Help</fbt>}
+        {!isMobile && !open && !isButtonShort && (
+          <fbt desc="footer.supportSettingsAndMore">
+            Support, settings, &amp; more
+          </fbt>
+        )}
         {!isMobile && open && !closing && <fbt desc="footer.Close">Close</fbt>}
       </button>
     )
@@ -219,7 +235,7 @@ class Footer extends Component {
   }
 }
 
-export default withIsMobile(Footer)
+export default withRouter(withIsMobile(Footer))
 
 require('react-styl')(`
   .footer-wrapper
