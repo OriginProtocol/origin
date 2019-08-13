@@ -124,7 +124,7 @@ const PromoteListingBudget = ({
             {({ tokenStatus }) => {
               if (!tokenStatus.hasBalance || !value || value === '0') {
                 return (
-                  <button
+                  <div
                     className="btn btn-primary btn-rounded btn-lg disabled"
                     children={fbt('Promote Now', 'promoteListing.promoteNow')}
                   />
