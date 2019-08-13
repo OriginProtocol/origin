@@ -68,14 +68,14 @@ jobs:
 
   GraphQLEngineSchema:
     <<: *defaults
-    working_directory: ~/origin/packages/graphql
+    working_directory: ~/origin
     steps:
       - attach_workspace:
           at: .
       - run: sudo npm install -g apollo
       - run:
           name: Starting server
-          command: npm start
+          command: npm run start --prefix packages/graphql
           background: true
       - run: sleep 5
       #- run: apollo service:check --endpoint=http://localhost:4002/
