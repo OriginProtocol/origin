@@ -61,7 +61,7 @@ const BuyListingsForRewards = () => {
         <div>
           <h3>
             <fbt desc="listingCard.buyAndEarn">
-              Buy stuffs &amp; earn tokens!
+              Buy stuff &amp; earn tokens!
             </fbt>
           </h3>
         </div>
@@ -134,14 +134,21 @@ require('react-styl')(`
       .main-pic > div
         &:before
           position: absolute
+          background-position: top
+          background-size: contain
           top: 0
           bottom: 0
           right: 0
           left: 0
+          margin: 0 10px
         h3
           position: absolute
           bottom: 0
           left: 0
           right: 0
+          margin-bottom: 0.5rem
+          padding: 0 20px
+          font-size: 14px
+          line-height: 1
 
 `)
