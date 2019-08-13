@@ -1,14 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { fbt } from 'fbt-runtime'
 
 import queryString from 'query-string'
 
-import { withRouter } from 'react-router-dom'
 import withIdentity from 'hoc/withIdentity'
 import withEnrolmentStatus from 'hoc/withEnrolmentStatus'
 
 import Link from 'components/Link'
+import Redirect from 'components/Redirect'
 import UserActivationLink from 'components/UserActivationLink'
 
 const SignUpForRewards = withIdentity(({ identity }) => {
@@ -35,18 +35,27 @@ const SignUpForRewards = withIdentity(({ identity }) => {
   )
 })
 
-const BuyListingsForRewards = withRouter(({ history }) => {
+const BuyListingsForRewards = () => {
+  const [shouldRedirect, setShouldRedirect] = useState(false)
+
+  if (shouldRedirect) {
+    return (
+      <Redirect
+        to={{
+          pathname: '/search',
+          search: queryString.stringify({
+            ognListings: true
+          })
+        }}
+      />
+    )
+  }
   return (
     <div className="listing-card earn-tokens-card">
       <div
         className="main-pic"
         onClick={() => {
-          history.push({
-            pathname: '/search',
-            search: queryString.stringify({
-              ognListings: true
-            })
-          })
+          setShouldRedirect(true)
         }}
       >
         <div>
@@ -59,7 +68,7 @@ const BuyListingsForRewards = withRouter(({ history }) => {
       </div>
     </div>
   )
-})
+}
 
 const EarnTokensCard = ({ growthEnrollmentStatus, ...props }) => {
   if (growthEnrollmentStatus === 'Enrolled') {
@@ -120,4 +129,19 @@ require('react-styl')(`
             font-family: var(--heading-font)
             font-weight: bold
             font-size: 18px
+  @media (max-width: 767.98px)
+    .listing-card.earn-tokens-card
+      .main-pic > div
+        &:before
+          position: absolute
+          top: 0
+          bottom: 0
+          right: 0
+          left: 0
+        h3
+          position: absolute
+          bottom: 0
+          left: 0
+          right: 0
+
 `)

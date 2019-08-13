@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Query } from 'react-apollo'
 import QueryError from 'components/QueryError'
 import get from 'lodash/get'
@@ -10,15 +10,7 @@ function withEnrolmentStatus(
   WrappedComponent,
   { fetchPolicy = 'network-only', suppressErrors } = {}
 ) {
-  let refetchStatus
-
   const WithEnrolmentStatus = props => {
-    useEffect(() => {
-      if (refetchStatus) {
-        refetchStatus()
-      }
-    }, [props.wallet])
-
     return (
       <Query
         query={enrollmentStatusQuery}
@@ -26,9 +18,7 @@ function withEnrolmentStatus(
         skip={!props.wallet}
         fetchPolicy={fetchPolicy}
       >
-        {({ data, error, loading, networkStatus, refetch }) => {
-          refetchStatus = refetch
-
+        {({ data, error, loading, networkStatus }) => {
           if (error && !suppressErrors) {
             return <QueryError error={error} query={enrollmentStatusQuery} />
           }
