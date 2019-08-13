@@ -23,7 +23,11 @@ module.exports = (sequelize, DataTypes) => {
           'seconds'
         ]),
         allowNull: false
-      }
+      },
+      purchaseDate: DataTypes.DATE,
+      purchaseRound: DataTypes.STRING,
+      purchaseTotal: DataTypes.DECIMAL,
+      investmentAmount: DataTypes.DECIMAL
     },
     {
       tableName: 't3_grant'

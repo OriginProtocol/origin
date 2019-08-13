@@ -11,11 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // OTP secret key, stored encrypted.
       otpKey: DataTypes.STRING,
       otpVerified: DataTypes.BOOLEAN,
-      employee: DataTypes.BOOLEAN,
-      purchaseDate: DataTypes.DATE,
-      purchaseRound: DataTypes.STRING,
-      purchaseTotal: DataTypes.DECIMAL,
-      investmentAmount: DataTypes.DECIMAL
+      employee: DataTypes.BOOLEAN
     },
     {
       tableName: 't3_user'

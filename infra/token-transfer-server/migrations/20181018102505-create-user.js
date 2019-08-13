@@ -21,20 +21,7 @@ module.exports = {
         type: Sequelize.BOOLEAN
       },
       employee: {
-        type: Sequelize.BOOLEAN,
-        default: false
-      },
-      purchase_date: {
-        type: Sequelize.DATEONLY
-      },
-      purchase_round: {
-        type: Sequelize.STRING
-      },
-      purchase_total: {
-        type: Sequelize.DECIMAL
-      },
-      investment_amount: {
-        type: Sequelize.DECIMAL
+        type: Sequelize.BOOLEAN
       },
       created_at: {
         allowNull: false,
