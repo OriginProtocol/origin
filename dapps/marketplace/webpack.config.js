@@ -129,7 +129,7 @@ const config = {
       ENABLE_WECHAT_ATTESTATION: false,
       SENTRY_DSN: null,
       NAMESPACE: 'dev',
-      TELEGRAM_BOT_USERNAME: 'origin_protocol_test_bot'
+      TELEGRAM_BOT_USERNAME: 'originprotocol_verification_bot'
     })
   ],
 
