@@ -196,10 +196,7 @@ class AirDrop {
     logger.info('  Amount (wei):   ', this.amount)
     logger.info('  Amount (OGN):   ', this.token.toTokenUnit(this.amount))
     logger.info('  Sender address: ', this.sender)
-    logger.info(
-      '  Token address:  ',
-      this.token.contractAddress
-    )
+    logger.info('  Token address:  ', this.token.contractAddress)
   }
 
   async _checkSenderBalances() {
