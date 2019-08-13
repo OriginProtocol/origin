@@ -22,7 +22,6 @@ import PushNotification from 'react-native-push-notification'
 import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
 import { fbt } from 'fbt-runtime'
-import { shareOnTwitter } from 'react-native-social-share'
 
 import OriginButton from 'components/origin-button'
 import NotificationCard from 'components/notification-card'
@@ -576,10 +575,10 @@ class MarketplaceScreen extends Component {
       this.dappWebView.goBack()
       // preventing multiple subsequent shares
       if (
-        !this['timeControlVariableName'] ||
-        new Date() - this['timeControlVariableName'] > 3000
+        !this[timeControlVariableName] ||
+        new Date() - this[timeControlVariableName] > 3000
       ) {
-        this['timeControlVariableName'] = new Date()
+        this[timeControlVariableName] = new Date()
         return await Linking.openURL(url)
       }
     } else {
