@@ -99,7 +99,7 @@ class TelegramAttestation extends Component {
         <h2>{header}</h2>
         <div className="instructions mb-3">
           <fbt desc="TelegramAttestation.description">
-            We will never message you on Telegram
+            We will never post on your behalf.
           </fbt>
         </div>
         {this.state.error && (
@@ -114,8 +114,7 @@ class TelegramAttestation extends Component {
           }
           children={
             <fbt desc="TelegramAttestation.verifiedButNotNumber">
-              That you have a verified Telegram account, but NOT your actual
-              phone number or username
+              Your Telegram username and account ID
             </fbt>
           }
         />
