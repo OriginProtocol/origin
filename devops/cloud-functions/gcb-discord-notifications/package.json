@@ -4,7 +4,7 @@
   "description": "Google Cloud Function for sending Google Cloud Build results to Discord",
   "main": "index.js",
   "dependencies": {
-    "@octokit/rest": "^15.15.1",
+    "@octokit/rest": "^16.0.0",
     "discord.js": "^11.4.2"
   },
   "devDependencies": {},
