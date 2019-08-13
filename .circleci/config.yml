@@ -72,7 +72,8 @@ jobs:
     working_directory: ~/origin/packages/graphql
     filters:
       branches:
-        only: master
+        only:
+          - master
     steps:
       - attach_workspace:
           at: .
