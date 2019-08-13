@@ -12,7 +12,8 @@ import {
   View,
   ScrollView,
   Text,
-  RefreshControl
+  RefreshControl,
+  Linking
 } from 'react-native'
 import { AndroidBackHandler } from 'react-navigation-backhandler'
 import { connect } from 'react-redux'
@@ -565,30 +566,55 @@ class MarketplaceScreen extends Component {
     updateExchangeRate(this.state.fiatCurrency[1], 'DAI')
   }
 
-  checkForShareNativeDialogInterception = async url => {
-    if (
-      url.hostname === 'twitter.com' &&
-      url.pathname === '/intent/tweet' &&
-      Platform.OS === 'android'
-    ) {
-      this.dappWebView.goBack()
+  _openDeepLinkUrlAttempt = async (interceptUrlPredicate, makeUrl, timeControlVariableName) => {
+    // non interceptable url
+    if (!interceptUrlPredicate())
+      return
 
+    const url = makeUrl()
+    if (Linking.canOpenURL(url)) {
+      this.dappWebView.goBack()
       // preventing multiple subsequent shares
       if (
-        !this.shareTriggeredTime ||
-        new Date() - this.shareTriggeredTime > 3000
+        !this['timeControlVariableName'] ||
+        new Date() - this['timeControlVariableName'] > 3000
       ) {
-        this.shareTriggeredTime = new Date()
-        shareOnTwitter(
-          {
-            text: url.searchParams.get('text')
-          },
-          results => {
-            console.log('Share results: ', results)
-          }
-        )
+        this['timeControlVariableName'] = new Date()
+        return await Linking.openURL(url)
       }
+    } else {
+      // can not open deep link url
+      return false
     }
+  }
+
+  checkForShareNativeDialogInterception = async url => {
+    // natively tweet if possible on Android
+    await this._openDeepLinkUrlAttempt(() =>
+        url.hostname === 'twitter.com' &&
+        url.pathname === '/intent/tweet' &&
+        Platform.OS === 'android'
+      ,
+      () => `twitter://post?message=${encodeURIComponent(url.searchParams.get('text'))}`,
+      'lastTweetAttemptTime'
+    )
+
+    // open twitter profile natively if possible on Android
+    await this._openDeepLinkUrlAttempt(() =>
+        url.hostname === 'twitter.com' &&
+        url.pathname === '/intent/follow' &&
+        Platform.OS === 'android',
+      () => `twitter://user?screen_name=${url.searchParams.get('screen_name')}`,
+      'lastOpenTwitterProfileTime'
+    )
+
+    // open facebook profile natively if possible on Android and IOS
+    await this._openDeepLinkUrlAttempt(() =>
+        (url.hostname === 'www.facebook.com' || url.hostname === 'm.facebook.com') &&
+        (url.pathname.toLowerCase() === '/originprotocol/'),
+      () => `fb://profile/120151672018856`,
+      'lastOpenFacebookProfileTime'
+    )
   }
 
   onWebViewNavigationStateChange = async state => {
