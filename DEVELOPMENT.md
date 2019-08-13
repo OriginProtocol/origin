@@ -6,9 +6,9 @@ what we're building and how to get involved.
 ## Development
 
 To get started quickly, you have two options:
-1. can run a "light" version of the Origin DApp, which
-automatically sets up our DApp, a local IPFS server, and a local blockchain.
-2. or you can use a more full featured development environment with Docker Compose
+1. You can run a "light" version of the Origin DApp, which
+automatically sets up our DApp, a local IPFS server, and a local blockchain. This is the simplest way to run the DApp but does not give you access to a full-fledge DApp: messaging, search, attestation services are not running. 
+2. Or you can use a more full featured development environment with Docker Compose
 orchestrating several containers and providing access to the full suite of the
 Origin DApp features, including messaging, browser notifications, and
 attestation services.
