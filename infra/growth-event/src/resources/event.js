@@ -13,7 +13,8 @@ const AttestationServiceToEventType = {
   linkedin: GrowthEventTypes.LinkedInAttestationPublished,
   kakao: GrowthEventTypes.KakaoAttestationPublished,
   wechat: GrowthEventTypes.WeChatAttestationPublished,
-  website: GrowthEventTypes.WebsiteAttestationPublished
+  website: GrowthEventTypes.WebsiteAttestationPublished,
+  telegram: GrowthEventTypes.TelegramAttestationPublished
 }
 
 class GrowthEvent {
