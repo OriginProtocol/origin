@@ -60,7 +60,7 @@ class Footer extends Component {
   }
 
   renderFooterActionButton() {
-    const { open } = this.state
+    const { open, closing } = this.state
     const { isMobile } = this.props
 
     if (isMobile) {
@@ -74,12 +74,7 @@ class Footer extends Component {
         onClick={() => this.onToggle()}
       >
         {isMobile && !open && <fbt desc="footer.Help">Help</fbt>}
-        {!isMobile && !open && (
-          <fbt desc="footer.supportSettingsAndMore">
-            Support, settings, &amp; more
-          </fbt>
-        )}
-        {!isMobile && open && <fbt desc="footer.Close">Close</fbt>}
+        {!isMobile && open && !closing && <fbt desc="footer.Close">Close</fbt>}
       </button>
     )
   }
