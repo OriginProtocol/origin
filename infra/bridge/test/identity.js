@@ -12,8 +12,8 @@ const baseIdentity = {
 }
 
 describe('identity exists', () => {
-  beforeEach(() => {
-    Identity.destroy({
+  beforeEach(async () => {
+    await Identity.destroy({
       where: {},
       truncate: true
     })

@@ -12,12 +12,12 @@ const app = require('../src/app')
 const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
 
 describe('website attestations', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     // Configure environment variables required for tests
     process.env.ATTESTATION_SIGNING_KEY =
       '0x55b70794dc08958c9d2c657d3446a047f4aad20cca223fe34b6092de802dc668'
 
-    Attestation.destroy({
+    await Attestation.destroy({
       where: {},
       truncate: true
     })
