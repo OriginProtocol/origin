@@ -125,16 +125,22 @@ You need to setup a tunnel to localhost:5000 to work with Twitter Activity API a
 
 3. Kill and restart the bridge server (to pick up the environment vairable change)
 
-4. To destroy and recreate webhooks and subscriptions with the new tunnel host, go to the following URL in a browser and authorize your twitter account
+4. To destroy and recreate webhooks and subscriptions with the new tunnel host, go to the following URLs in a browser and authorize your account
+    #### For Twitter
     ```
     http://localhost:5000/hooks/twitter/__init
     ```
-    If everything is successful, you will see the following JSON printed in your browser window
+    Note: The twitter account you authorize should be same as `TWITTER_ORIGINPROTOCOL_USERNAME`
+    #### For Telegram
+    ```
+    http://localhost:5000/hooks/telegram/__init
+    ```
+
+    If everything is successful, you will see the following JSON printed in your browser window for each of the these URLs
     ```
     { "success": true }
     ````
 
-    Note: The twitter account you authorize should be same as `TWITTER_ORIGINPROTOCOL_USERNAME`
 
 ### Run the Tests
 
