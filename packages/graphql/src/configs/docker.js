@@ -1,7 +1,5 @@
 import get from 'lodash/get'
 
-const HOST = process.env.HOST || 'localhost'
-
 let addresses = {}
 try {
   addresses = require('@origin/contracts/build/contracts.json')
@@ -9,26 +7,43 @@ try {
   /* No local contracts */
 }
 
+const isBrowser =
+  typeof window !== 'undefined' && window.localStorage ? true : false
+const isWebView =
+  typeof window !== 'undefined' &&
+  typeof window.ReactNativeWebView !== 'undefined'
+
+const HOST =
+  isBrowser || isWebView ? process.env.HOST || 'localhost' : undefined
+const SERVICES_HOST = HOST || 'services'
+const IPFS_HOST = HOST || 'ipfs-proxy'
+const BRIDGE_HOST = HOST || 'bridge'
+const GROWTH_HOST = HOST || 'growth'
+const DISCOVERY_HOST = HOST || 'discovery'
+const NOTIFICATIONS_HOST = HOST || 'notifications'
+const GRAPHQL_HOST = HOST || 'graphql'
+const MESSAGING_HOST = HOST || 'messaging'
+
 const config = {
-  provider: get(process.env, 'PROVIDER_URL', `http://${HOST}:8545`),
-  providerWS: get(process.env, 'PROVIDER_WS_URL', `ws://${HOST}:8545`),
-  ipfsGateway: get(process.env, 'IPFS_GATEWAY_URL', `http://${HOST}:9999`),
-  ipfsRPC: get(process.env, 'IPFS_API_URL', `http://${HOST}:9999`),
-  bridge: get(process.env, 'BRIDGE_SERVER_URL', `http://${HOST}:5000`),
-  growth: get(process.env, 'GROWTH_SERVER_URL', `http://${HOST}:4001`),
+  provider: get(process.env, 'PROVIDER_URL', `http://${SERVICES_HOST}:8545`),
+  providerWS: get(process.env, 'PROVIDER_WS_URL', `ws://${SERVICES_HOST}:8545`),
+  ipfsGateway: get(process.env, 'IPFS_GATEWAY_URL', `http://${IPFS_HOST}:9999`),
+  ipfsRPC: get(process.env, 'IPFS_API_URL', `http://${IPFS_HOST}:9999`),
+  bridge: get(process.env, 'BRIDGE_SERVER_URL', `http://${BRIDGE_HOST}:5000`),
+  growth: get(process.env, 'GROWTH_SERVER_URL', `http://${GROWTH_HOST}:4001`),
   discovery: get(
     process.env,
     'DISCOVERY_SERVER_URL',
-    `http://${HOST}:4000/graphql`
+    `http://${DISCOVERY_HOST}:4000/graphql`
   ),
-  notifications: `http://${HOST}:3456`,
+  notifications: `http://${NOTIFICATIONS_HOST}:3456`,
   performanceMode: false,
-  graphql: `http://${HOST}:4002`,
+  graphql: `http://${GRAPHQL_HOST}:4002`,
   automine: 2000,
   attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
   messaging: {
     messagingNamespace: 'origin:docker',
-    globalKeyServer: `http://${HOST}:6647`
+    globalKeyServer: `http://${MESSAGING_HOST}:6647`
   },
 
   affiliate: addresses.Affiliate,
