@@ -25,7 +25,8 @@ describe('telegram attestation', () => {
       .post('/api/attestations/telegram/verify')
       .send({
         identity: ethAddress,
-        hash: '7cc77e64216db0c62395f57e88e4153edfb801a2cd9279c1126a2a5a8d3b588c',
+        hash:
+          '7cc77e64216db0c62395f57e88e4153edfb801a2cd9279c1126a2a5a8d3b588c',
         id: '12345'
       })
       .expect(200)
@@ -40,7 +41,9 @@ describe('telegram attestation', () => {
     expect(response.body.data.attestation.verificationMethod.oAuth).to.equal(
       true
     )
-    expect(response.body.data.attestation.site.siteName).to.equal('telegram.com')
+    expect(response.body.data.attestation.site.siteName).to.equal(
+      'telegram.com'
+    )
     expect(response.body.data.attestation.site.userId.raw).to.equal('12345')
     expect(response.body.data.attestation.site.username.raw).to.undefined
     expect(response.body.data.attestation.site.profileUrl.raw).to.null
@@ -60,11 +63,12 @@ describe('telegram attestation', () => {
       .post('/api/attestations/telegram/verify')
       .send({
         identity: ethAddress,
-        hash: '7cc77e64216db0c62395f57e88e4153edfb801a2cd9279c1126a2a5a8d3b588d',
+        hash:
+          '7cc77e64216db0c62395f57e88e4153edfb801a2cd9279c1126a2a5a8d3b588d',
         id: '12345'
       })
       .expect(400)
-    
+
     expect(response.body.errors.length).to.equal(1)
     expect(response.body.errors[0]).to.equal('Failed to create an attestation')
   })

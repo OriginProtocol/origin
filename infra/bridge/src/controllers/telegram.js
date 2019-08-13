@@ -14,12 +14,12 @@ const logger = require('../logger')
 const { telegramVerify } = require('../utils/validation')
 
 const paramToTelegramKeyMapping = {
-  'authDate': 'auth_date',
-  'firstName': 'first_name',
-  'id': 'id',
-  'lastName': 'last_name',
-  'photoUrl': 'photo_url',
-  'username': 'username'
+  authDate: 'auth_date',
+  firstName: 'first_name',
+  id: 'id',
+  lastName: 'last_name',
+  photoUrl: 'photo_url',
+  username: 'username'
 }
 
 function validateHash({ hash, ...body }) {
@@ -41,14 +41,16 @@ function validateHash({ hash, ...body }) {
     })
     .join('\n')
 
-  const secret = crypto.createHash('sha256')
+  const secret = crypto
+    .createHash('sha256')
     .update(process.env.TELEGRAM_BOT_TOKEN)
     .digest()
 
-  const generatedHash = crypto.createHmac('sha256', secret)
+  const generatedHash = crypto
+    .createHmac('sha256', secret)
     .update(data)
     .digest('hex')
-  
+
   logger.debug('Comparing hashses...', hash, generatedHash)
   return hash === generatedHash
 }
@@ -56,10 +58,9 @@ function validateHash({ hash, ...body }) {
 router.post('/verify', telegramVerify, async (req, res) => {
   if (!validateHash(req.body)) {
     logger.error(`Failed to validate hash`, req.body)
-    return res.status(400)
-      .send({
-        errors: ['Failed to create an attestation']
-      })
+    return res.status(400).send({
+      errors: ['Failed to create an attestation']
+    })
   }
 
   const userProfileData = pick(req.body, [
@@ -71,7 +72,9 @@ router.post('/verify', telegramVerify, async (req, res) => {
     'username'
   ])
 
-  const profileUrl = userProfileData.username ? `https://t.me/${userProfileData.username}` : null
+  const profileUrl = userProfileData.username
+    ? `https://t.me/${userProfileData.username}`
+    : null
 
   const attestationBody = {
     verificationMethod: {
