@@ -78,7 +78,7 @@ jobs:
           command: npm start
           background: true
       - run: sleep 5
-      - run: apollo schema:check
+      - run: apollo schema:check --endpoint=http://localhost:4002/
       - run: apollo service:push --tag=master
 
   EventCache:
