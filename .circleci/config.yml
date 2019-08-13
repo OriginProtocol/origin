@@ -70,10 +70,6 @@ jobs:
   GraphQLEngineSchema:
     <<: *defaults
     working_directory: ~/origin/packages/graphql
-    filters:
-      branches:
-        only:
-          - master
     steps:
       - attach_workspace:
           at: .
@@ -242,7 +238,14 @@ workflows:
       - Web3Provider:
           requires:
             - Setup
+  schema:
+    jobs:
       - GraphQLEngineSchema:
           requires:
             - Setup
+          filters:
+            branches:
+              only:
+                - master
+                - mikeshultz/apollo-engine
           context: origin
