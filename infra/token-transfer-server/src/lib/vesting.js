@@ -54,6 +54,7 @@ function vestingSchedule(grantObj, start = null, end = null) {
   const now = grantObj.now || moment()
   const grant = momentizeGrant(grantObj)
 
+  // TODO implement filtering on start and end
   let bottomThreshold, topThreshold
   if (start) {
     bottomThreshold = start.diff(grant.cliff, grant.interval)
