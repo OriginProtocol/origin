@@ -11,8 +11,9 @@ const app = require('../src/app')
 const client = redis.createClient()
 
 describe('exchange rate poller', () => {
-  beforeEach(() => {
-    client.del('ETH-USD_price')
+  beforeEach(async () => {
+    // Clear out redis-mock
+    await new Promise(resolve => client.flushall(resolve))
   })
 
   it('should return exchange rate from redis', async () => {

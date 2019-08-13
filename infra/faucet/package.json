@@ -31,9 +31,9 @@
     "express": "4.17.1",
     "logplease": "1.2.15",
     "per-env": "1.0.2",
-    "pg": "7.12.0",
-    "rate-limiter-flexible": "0.25.2",
-    "sequelize": "5.12.3",
+    "pg": "7.12.1",
+    "rate-limiter-flexible": "1.1.1",
+    "sequelize": "5.14.0",
     "sequelize-cli": "5.5.0",
     "web3": "1.0.0-beta.34"
   },

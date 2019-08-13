@@ -68,10 +68,10 @@ class CreateListing extends Component {
 
     this.setState({ waitFor: 'pending' })
 
-    const { listing, tokenBalance, walletProxy } = this.props
+    const { walletProxy } = this.props
 
     const variables = applyListingData(this.props, {
-      deposit: tokenBalance >= Number(listing.boost) ? listing.boost : '0',
+      deposit: '0',
       depositManager: walletProxy,
       from: walletProxy
     })

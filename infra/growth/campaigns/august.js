@@ -195,6 +195,22 @@ const augustConfig = {
           }
         },
         {
+          id: 'TelegramAttestation',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'TelegramAttestationPublished',
+            reward: {
+              amount: tokenToNaturalUnits(10),
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
           id: 'TwitterShare1',
           class: 'SocialShare',
           config: {
@@ -401,6 +417,23 @@ const augustConfig = {
           config: {
             eventType: 'FollowedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
+            reward: {
+              amount: tokenToNaturalUnits(10),
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
+          id: 'TelegramFollow',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'FollowedOnTelegram',
+            additionalLockConditions: ['TelegramAttestation'],
             reward: {
               amount: tokenToNaturalUnits(10),
               currency: 'OGN'

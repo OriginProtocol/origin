@@ -26,7 +26,6 @@ class OgnDistributor {
   }
 
   async process(req, res, next) {
-    const networkId = req.query.network_id
     const wallet = req.query.wallet
     if (!req.query.wallet) {
       res.send('<h2>Error: A wallet address must be supplied.</h2>')
@@ -38,7 +37,7 @@ class OgnDistributor {
     try {
       // Transfer NUM_TOKENS to the specified wallet.
       const value = this.token.toNaturalUnit(NUM_TOKENS)
-      const contractAddress = this.token.contractAddress(networkId)
+      const contractAddress = this.token.contractAddress
       const txHash = await this.token.credit(wallet, value)
       const { status } = await this.token.waitForTxConfirmation(txHash, {
         numBlocks: NumBlockConfirmation,

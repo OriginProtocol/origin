@@ -3,6 +3,101 @@ import { fbt } from 'fbt-runtime'
 
 import Link from 'components/Link'
 import Price from 'components/Price'
+import tokenPrice from 'utils/tokenPrice'
+import CoinLogo from 'components/CoinLogo'
+import Exposure from 'components/ListingExposure'
+
+const SingleUnitCommission = ({ listing }) => (
+  <>
+    <div className="row">
+      <div>
+        <fbt desc="listing.commissionPerUnit">Commission</fbt>
+      </div>
+      <div>
+        <CoinLogo coin="ogn" />
+        {tokenPrice(listing.commissionPerUnit)}
+      </div>
+    </div>
+  </>
+)
+
+const MultiUnitCommission = ({ listing }) => (
+  <>
+    <div className="row">
+      <div>
+        <fbt desc="listing.commissionPerUnit">Commission per Unit</fbt>
+      </div>
+      <div>
+        <CoinLogo coin="ogn" />
+        {tokenPrice(listing.commissionPerUnit)}
+      </div>
+    </div>
+    <div className="row">
+      <div>
+        <fbt desc="listing.totalCommissionBudget">Total Budget</fbt>
+      </div>
+      <div>
+        <CoinLogo coin="ogn" />
+        {tokenPrice(listing.commission)}
+      </div>
+    </div>
+    <div className="row">
+      <div>
+        <fbt desc="listing.totalCommissionBudgetRemaining">
+          Total Budget Remaining
+        </fbt>
+      </div>
+      <div>
+        <CoinLogo coin="ogn" />
+        {tokenPrice(listing.depositAvailable)}
+      </div>
+    </div>
+  </>
+)
+
+const Commission = ({ listing }) => {
+  if (window.localStorage.promoteEnabled !== 'true') {
+    return null
+  }
+
+  if (listing.commissionPerUnit === '0') {
+    return (
+      <div>
+        <Link
+          className="listing-action-link"
+          to={`/promote/${listing.id}`}
+          children={fbt('Promote listing', 'listing.editCommission')}
+        />
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <div className="listing-buy-editonly mt-3 listing-commission">
+        {listing.__typename !== 'UnitListing' || listing.multiUnit ? (
+          <MultiUnitCommission listing={listing} />
+        ) : (
+          <SingleUnitCommission listing={listing} />
+        )}
+        <div className="row">
+          <div>
+            <fbt desc="listing.exposure">Listing Exposure</fbt>
+          </div>
+          <div>
+            <Exposure listing={listing} />
+          </div>
+        </div>
+      </div>
+
+      <Link
+        className="listing-action-link"
+        to={`/promote/${listing.id}/amount`}
+        children={fbt('Edit Commisison', 'listing.editCommission')}
+      />
+    </>
+  )
+}
 
 const EditOnly = ({
   listing,
@@ -18,6 +113,18 @@ const EditOnly = ({
         <Price listing={listing} descriptor />
       </div>
     )}
+    {isSingleUnit && listing.status === 'pending' ? (
+      <div className="status">
+        <div className="status-title">
+          <fbt desc="Pending">Pending</fbt>
+        </div>
+        <div className="status-text">
+          <fbt desc="UnitListing.offerMadeOnListing">
+            An offer has been made on this listing
+          </fbt>
+        </div>
+      </div>
+    ) : null}
     {isFractional ||
     isFractionalHourly ||
     isAnnouncement ||
@@ -52,6 +159,8 @@ const EditOnly = ({
       to={`/listing/${listing.id}/edit`}
       children={fbt('Edit listing', 'EditListing')}
     />
+
+    <Commission listing={listing} />
   </div>
 )
 
