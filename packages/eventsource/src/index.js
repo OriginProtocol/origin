@@ -41,9 +41,10 @@ function mutatePrice(price) {
 const netId = memoize(async web3 => await web3.eth.net.getId())
 
 class OriginEventSource {
-  constructor({ ipfsGateway, marketplaceContract, web3 }) {
+  constructor({ ipfsGateway, marketplaceContract, web3, version }) {
     this.ipfsGateway = ipfsGateway
     this.contract = marketplaceContract
+    this.version = version || '000'
     this.web3 = web3
     this.offerCache = {}
     this.listingCache = {}
@@ -69,7 +70,7 @@ class OriginEventSource {
       // Return the listing with the an ID that includes the block number, if
       // one was specified
       return Object.assign({}, this.listingCache[cacheKey], {
-        id: `${networkId}-000-${listingId}${
+        id: `${networkId}-${this.version}-${listingId}${
           blockNumber ? `-${blockNumber}` : ''
         }`
       })
@@ -266,7 +267,7 @@ class OriginEventSource {
     const listingWithOffers = await this.withOffers(listingId, {
       ...data,
       __typename,
-      id: `${networkId}-000-${listingId}${
+      id: `${networkId}-${this.version}-${listingId}${
         blockNumber ? `-${blockNumber}` : ''
       }`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
@@ -456,7 +457,7 @@ class OriginEventSource {
     const networkId = await this.getNetworkId()
 
     const offerObj = {
-      id: `${networkId}-000-${listingId}-${offerId}`,
+      id: `${networkId}-${this.version}-${listingId}-${offerId}`,
       listingId: String(listing.id),
       offerId: String(offerId),
       createdBlock,
@@ -576,7 +577,7 @@ class OriginEventSource {
 
   async getOfferIdExp(listingId, offerId) {
     const networkId = await this.getNetworkId()
-    return `${networkId}-000-${listingId}-${offerId}`
+    return `${networkId}-${this.version}-${listingId}-${offerId}`
   }
 
   resetCache() {

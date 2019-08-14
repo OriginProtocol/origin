@@ -206,12 +206,19 @@ export default async function populate(gqlClient, log, done) {
   })
   log(`Deployed DAI stablecoin to ${DAI.contractAddress}`)
 
-  const Marketplace = await mutate(DeployMarketplaceMutation, Admin, {
+  const MarketplaceV1 = await mutate(DeployMarketplaceMutation, Admin, {
     token: OGN.contractAddress,
     version: '001',
     autoWhitelist: true
   })
-  log(`Deployed marketplace to ${Marketplace.contractAddress}`)
+  log(`Deployed marketplace v1 to ${MarketplaceV1.contractAddress}`)
+
+  const Marketplace = await mutate(DeployMarketplaceMutation, Admin, {
+    token: OGN.contractAddress,
+    version: '000',
+    autoWhitelist: true
+  })
+  log(`Deployed marketplace v0 to ${Marketplace.contractAddress}`)
 
   const relayerMasterAddress = mnemonicToMasterAccount(
     process.env.FORWARDER_MNEMONIC || 'one two three four five six'
@@ -352,6 +359,8 @@ export default async function populate(gqlClient, log, done) {
       DAI: DAI.contractAddress,
       Marketplace: Marketplace.contractAddress,
       MarketplaceEpoch: Marketplace.blockNumber,
+      Marketplace_V01: MarketplaceV1.contractAddress,
+      MarketplaceEpoch_V01: MarketplaceV1.blockNumber,
       IdentityEvents: IdentityEvents.contractAddress,
       IdentityEventsEpoch: IdentityEvents.blockNumber,
       UniswapFactory: UniswapFactory.contractAddress,

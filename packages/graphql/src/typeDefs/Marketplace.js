@@ -46,6 +46,7 @@ export const mutations = `
 
     createListing(
       from: String!
+      version: String
       deposit: String
       depositManager: String
       autoApprove: Boolean

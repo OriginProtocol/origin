@@ -159,6 +159,7 @@ export const DeployIdentityProxyMutation = gql`
 export const CreateListingMutation = gql`
   mutation CreateListing(
     $from: String!
+    $version: String
     $deposit: String
     $depositManager: String
     $autoApprove: Boolean
@@ -168,6 +169,7 @@ export const CreateListingMutation = gql`
   ) {
     createListing(
       from: $from
+      version: $version
       deposit: $deposit
       depositManager: $depositManager
       autoApprove: $autoApprove

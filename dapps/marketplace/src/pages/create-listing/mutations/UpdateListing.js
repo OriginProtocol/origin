@@ -150,7 +150,7 @@ class UpdateListing extends Component {
   }
 
   renderWaitModal() {
-    const netId = get(this.props, 'web3.networkId')
+    const { listing } = this.props
 
     return (
       <WaitForTransaction
@@ -159,7 +159,7 @@ class UpdateListing extends Component {
         contentOnly={true}
         onClose={() => this.setState({ waitFor: null })}
       >
-        {({ event }) => (
+        {() => (
           <div className="make-offer-modal success">
             <div className="success-icon" />
             <fbt desc="updateListing.success">
@@ -192,11 +192,8 @@ class UpdateListing extends Component {
                 if (this.props.refetch) {
                   await this.props.refetch()
                 }
-                const { listingID } = event.returnValues
                 store.set('create-listing', undefined)
-                this.setState({
-                  redirect: `/listing/${netId}-000-${listingID}`
-                })
+                this.setState({ redirect: `/listing/${listing.id}` })
               }}
               children={
                 this.state.loading

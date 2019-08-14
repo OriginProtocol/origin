@@ -210,9 +210,16 @@ export function setNetwork(net, customConfig) {
     )
   }
 
-  context.EventBlock = config.V00_Marketplace_Epoch || 0
+  Object.keys(config)
+    .sort()
+    .reverse()
+    .forEach(k => {
+      const marketVersion = k.match(/^V([0-9]+)_Marketplace$/)
+      if (marketVersion) {
+        setMarketplace(config[k], config[`${k}_Epoch`], `0${marketVersion[1]}`)
+      }
+    })
 
-  setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
   setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
 
   setProxyContracts(config)
@@ -444,8 +451,9 @@ export function toggleMetaMask(enabled) {
   setMetaMask()
 }
 
-export function setMarketplace(address, epoch) {
-  context.marketplace = new web3.eth.Contract(MarketplaceContract.abi, address)
+export function setMarketplace(address, epoch, version = '000') {
+  const contract = new web3.eth.Contract(MarketplaceContract.abi, address)
+  context.marketplace = contract
   patchWeb3Contract(context.marketplace, epoch, {
     ...context.config,
     useLatestFromChain: false,
@@ -458,25 +466,33 @@ export function setMarketplace(address, epoch) {
     platform: typeof window === 'undefined' ? 'memory' : 'browser'
   })
 
-  if (address) {
-    context.marketplaces = [context.marketplace]
-  } else {
-    context.marketplaces = []
-  }
-  context.eventSource = new EventSource({
+  const eventSource = new EventSource({
     marketplaceContract: context.marketplace,
     ipfsGateway: context.ipfsGateway,
-    web3: context.web3
+    web3: context.web3,
+    version
   })
+  context.eventSource = eventSource
   context.marketplaceExec = context.marketplace
+
+  context.marketplaces = context.marketplaces || {}
+  context.marketplaces[version] = {
+    address,
+    epoch,
+    eventSource,
+    contract,
+    contractExec: contract
+  }
 
   if (metaMask) {
     context.marketplaceMM = new metaMask.eth.Contract(
       MarketplaceContract.abi,
       address
     )
+    context.marketplaces[version].contractMM = context.marketplaceMM
     if (metaMaskEnabled) {
       context.marketplaceExec = context.marketplaceMM
+      context.marketplaces[version].contractExec = context.marketplaceMM
     }
   }
 }

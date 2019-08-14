@@ -99,8 +99,8 @@ describe('Marketplace.sol', async function() {
     Marketplace = await deploy('V00_Marketplace', {
       from: Owner,
       // path: `${__dirname}/contracts/`,
-      path: `${contractPath}/marketplace/v00`,
-      file: 'Marketplace.sol',
+      path: `${contractPath}/marketplace`,
+      file: 'V00_Marketplace.sol',
       args: [OriginToken._address]
     })
 

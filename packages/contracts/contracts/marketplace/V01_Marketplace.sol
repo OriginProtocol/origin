@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "../../../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "../../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 /**
  * @title A Marketplace contract for managing listings, offers, payments, escrow and arbitration
@@ -16,7 +16,7 @@ contract ERC20 {
 }
 
 
-contract V00_Marketplace is Ownable {
+contract V01_Marketplace is Ownable {
 
     /**
     * @notice All events have the same indexed signature offsets for easy filtering
@@ -168,6 +168,7 @@ contract V00_Marketplace is Ownable {
         require(msg.sender == listing.depositManager, "Must be depositManager");
         require(_target != 0x0, "No target");
         tokenAddr.transfer(_target, listing.deposit); // Send deposit to target
+        listing.deposit = 0;
         emit ListingWithdrawn(_target, listingID, _ipfsHash);
     }
 
@@ -312,6 +313,8 @@ contract V00_Marketplace is Ownable {
         paySeller(listingID, offerID); // Pay seller
         if (msg.sender == offer.buyer) { // Only pay commission if buyer is finalizing
             payCommission(listingID, offerID);
+        } else {
+            listing.deposit += offer.commission; // Refund commission to seller
         }
         emit OfferFinalized(msg.sender, listingID, offerID, _ipfsHash);
         delete offers[listingID][offerID];

@@ -396,9 +396,8 @@ class Buy extends Component {
               className="btn btn-outline-light"
               onClick={() => {
                 this.setState({ loading: true })
-                const netId = get(this.props, 'web3.networkId')
-                const { listingID, offerID } = event.returnValues
-                const offerId = `${netId}-000-${listingID}-${offerID}`
+                const { offerID } = event.returnValues
+                const offerId = `${this.props.listing.id}-${offerID}`
                 const redirect = `/purchases/${offerId}`
 
                 if (this.props.refetch) {

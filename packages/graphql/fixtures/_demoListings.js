@@ -221,7 +221,7 @@ const TaylorSwiftTickets = {
     ],
     price: {
       amount: '95',
-      currency: 'token-ETH'
+      currency: 'token-USD'
     },
     commission: '10',
     commissionPerUnit: '2'
@@ -352,6 +352,7 @@ const ZincHouse = {
 // T-Shirt, Single Unit
 const Spaceman = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
+  version: '001',
   deposit: '5',
   depositManager: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
   autoApprove: true,
@@ -369,7 +370,7 @@ const Spaceman = {
     ],
     price: {
       amount: '15',
-      currency: 'token-ETH'
+      currency: 'token-USD'
     },
     acceptedTokens: ['token-ETH', 'token-DAI'],
     commission: '10',

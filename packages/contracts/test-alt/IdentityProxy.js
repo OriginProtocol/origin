@@ -51,8 +51,8 @@ describe('Identity', async function() {
 
     Marketplace = await deploy('V00_Marketplace', {
       from: accounts[0],
-      path: `${contractPath}/marketplace/v00`,
-      file: 'Marketplace.sol',
+      path: `${contractPath}/marketplace`,
+      file: 'V00_Marketplace.sol',
       args: [ZERO_ADDRESS]
     })
 

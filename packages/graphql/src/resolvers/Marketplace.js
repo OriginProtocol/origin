@@ -22,8 +22,12 @@ export default {
     if (info && info.cacheControl) {
       info.cacheControl.setCacheHint({ maxAge: 15 })
     }
-    const { listingId, blockNumber } = parseId(args.id)
-    return await contracts.eventSource.getListing(listingId, blockNumber)
+    const { listingId, blockNumber, contractId } = parseId(args.id)
+    if (!contracts.marketplaces[contractId]) {
+      return null
+    }
+    const eventSource = contracts.marketplaces[contractId].eventSource
+    return await eventSource.getListing(listingId, blockNumber)
   },
   listings,
 
