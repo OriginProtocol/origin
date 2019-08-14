@@ -160,7 +160,7 @@ describe('Transfer HTTP API', () => {
       })
       .expect(422)
 
-    expect(response.text).to.match(/lockup/)
+    expect(response.text).to.match(/locked/)
   })
 
   it('should not enqueue a transfer if not enough tokens (vested)', async () => {

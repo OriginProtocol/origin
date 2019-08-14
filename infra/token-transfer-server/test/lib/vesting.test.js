@@ -22,7 +22,7 @@ async function setupDatabase() {
   expect(events.length).to.equal(0)
 }
 
-describe('vestingGrants', () => {
+describe('Vesting library', () => {
   describe('4 year grant with 1 year cliff and monthly vesting', () => {
     let grant
 
@@ -74,8 +74,9 @@ describe('vestingGrants', () => {
       const events = vestingEvents(grant)
       // Remove the first element of the array, which is the cliff vest
       events.shift()
+      // Remove the last element in the array, which has any rounding errors
       // All subsequent vesting events should vest the correct proportion
-      expect(events.every(e => e === 100)).to.equal(true)
+      events.every(e => expect(e).to.be.bignumber.equal(100))
     })
   })
 
@@ -160,9 +161,13 @@ describe('vestingGrants', () => {
       // rounding errors
       events.pop()
       // All subsequent vesting events should vest the correct proportion
-      expect(
-        events.every(e => e === Math.floor(BigNumber(grant.amount).div(1461)))
-      ).to.equal(true)
+      events.every(e =>
+        expect(e).to.be.bignumber.equal(
+          BigNumber(grant.amount)
+            .div(1461)
+            .integerValue(BigNumber.ROUND_FLOOR)
+        )
+      )
     })
   })
 

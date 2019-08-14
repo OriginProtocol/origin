@@ -4,7 +4,8 @@ const Token = require('@origin/token/src/token')
 
 const {
   GRANT_TRANSFER_DONE,
-  GRANT_TRANSFER_FAILED
+  GRANT_TRANSFER_FAILED,
+  GRANT_TRANSFER_REQUEST
 } = require('../constants/events')
 const { Event, Grant, Transfer, sequelize } = require('../models')
 const enums = require('../enums')
@@ -47,17 +48,20 @@ async function _checkTransferRequest(grantId, amount) {
   ]
 
   const vested = vestedAmount(grant.get({ plain: true }))
-  logger.info('Vested tokens', vested)
+  logger.info('Vested tokens', vested.toString())
 
   const pendingOrCompleteAmount = grant.Transfers.reduce((total, transfer) => {
     if (pendingOrCompleteTransfers.includes(transfer.status)) {
-      return (total += BigNumber(transfer.amount))
+      return total.plus(BigNumber(transfer.amount))
     }
     return total
-  }, 0)
-  logger.info('Pending or transferred tokens', pendingOrCompleteAmount)
+  }, BigNumber(0))
+  logger.info(
+    'Pending or transferred tokens',
+    pendingOrCompleteAmount.toString()
+  )
 
-  const available = vested - pendingOrCompleteAmount
+  const available = vested.minus(pendingOrCompleteAmount)
   if (amount > available) {
     throw new RangeError(
       `Amount of ${amount} OGN exceeds the ${available} available for grant ${grantId}`
@@ -75,21 +79,39 @@ async function _checkTransferRequest(grantId, amount) {
  * @param amount
  * @returns {Promise<integer>} Id of the transfer request.
  */
-async function enqueueTransfer(grantId, address, amount) {
+async function enqueueTransfer(grantId, address, amount, ip) {
   const grant = await _checkTransferRequest(grantId, amount)
 
   // Enqueue the request by inserting a row in the transfer table.
   // It will get picked up asynchronously by the offline job that processes transfers.
   // Record new state in the database.
-  const transfer = await Transfer.create({
-    grantId: grant.id,
-    status: enums.TransferStatuses.Enqueued,
-    toAddress: address.toLowerCase(),
-    amount,
-    currency: 'OGN' // For now we only support OGN.
-  })
+  let transfer
+  const txn = await sequelize.transaction()
+  try {
+    transfer = await Transfer.create({
+      grantId: grant.id,
+      status: enums.TransferStatuses.Enqueued,
+      toAddress: address.toLowerCase(),
+      amount,
+      currency: 'OGN' // For now we only support OGN.
+    })
+    await Event.create({
+      userId: grant.userId,
+      grantId,
+      action: GRANT_TRANSFER_REQUEST,
+      data: JSON.stringify({
+        transferId: transfer.id
+      }),
+      ip
+    })
+    await txn.commit()
+  } catch (e) {
+    await txn.rollback()
+    logger.error(`Failed to enqueue transfer for address ${address}: ${e}`)
+    throw e
+  }
   logger.info(
-    `Enqueued transfer. id: {transfer.id} address: ${address} amount: ${amount}`
+    `Enqueued transfer. id: ${transfer.id} address: ${address} amount: ${amount}`
   )
   return transfer
 }
@@ -155,17 +177,15 @@ async function executeTransfer(transfer, opts) {
   // fix the issue and resubmit the transaction if necessary.
   const txn = await sequelize.transaction()
   try {
-    await transfer.update({ status: transferStatus })
+    await transfer.update({
+      status: transferStatus
+    })
     const event = {
       userId: grant.userId,
       grantId: grant.id,
       action: eventAction,
       data: JSON.stringify({
-        transferId: transfer.id,
-        amount: transfer.amount,
-        from: supplier,
-        to: transfer.toAddress,
-        txHash
+        transferId: transfer.id
       })
     }
     if (failureReason) {
