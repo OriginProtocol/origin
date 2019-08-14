@@ -13,7 +13,9 @@ const MULTI_UNIT_TYPES = ['UnitListing', 'GiftCardListing']
 const getListingDirect = async (contract, listingId) =>
   await contract.methods.listings(listingId).call()
 
-const getListing = memoize(getListingDirect, (...args) => args[1])
+const getListing = memoize(getListingDirect, (...args) =>
+  [args[1], args[2]].join('-')
+)
 
 const getOfferFn = async (contract, listingId, offerId, latestBlock) =>
   await contract.methods.offers(listingId, offerId).call(undefined, latestBlock)
@@ -83,7 +85,7 @@ class OriginEventSource {
       if (process.env.DISABLE_CACHE === 'true') {
         listing = await getListingDirect(this.contract, listingId)
       } else {
-        listing = await getListing(this.contract, listingId)
+        listing = await getListing(this.contract, listingId, cacheBlockNumber)
       }
     } catch (e) {
       throw new Error(`No such listing on contract ${listingId}`)
@@ -307,6 +309,10 @@ class OriginEventSource {
     // The "deposit" on a listing is actualy the amount of OGN available to
     // pay for commissions on that listing.
     let commissionAvailable = this.web3.utils.toBN(listing.deposit)
+    const commissionBudget = this.web3.utils.toBN(listing.commission)
+    if (commissionBudget.lt(commissionAvailable)) {
+      commissionAvailable = commissionBudget
+    }
     let unitsAvailable = listing.unitsTotal,
       unitsPending = 0,
       unitsSold = 0
@@ -342,28 +348,28 @@ class OriginEventSource {
               // Created, Accepted or Disputed
               unitsPending += offer.quantity
               pendingBuyers.push({ id: offer.buyer.id })
+
+              // Validate offer commission.
+              const normalCommission = commissionPerUnit.mul(
+                this.web3.utils.toBN(offer.quantity)
+              )
+              const expCommission = normalCommission.lte(commissionAvailable)
+                ? normalCommission
+                : commissionAvailable
+              const offerCommission =
+                (offer.commission && this.web3.utils.toBN(offer.commission)) ||
+                this.web3.utils.toBN(0)
+              if (!offerCommission.eq(expCommission)) {
+                offer.valid = false
+                offer.validationError = `offer commission: ${offerCommission.toString()} != exp ${expCommission.toString()}`
+                return
+              }
+              if (!offerCommission.isZero()) {
+                commissionAvailable = commissionAvailable.sub(offerCommission)
+              }
             } else if (status === 4 || status === 5) {
               // Finalized or Ruling
               unitsSold += offer.quantity
-            }
-
-            // Validate offer commission.
-            const normalCommission = commissionPerUnit.mul(
-              this.web3.utils.toBN(offer.quantity)
-            )
-            const expCommission = normalCommission.lte(commissionAvailable)
-              ? normalCommission
-              : commissionAvailable
-            const offerCommission =
-              (offer.commission && this.web3.utils.toBN(offer.commission)) ||
-              this.web3.utils.toBN(0)
-            if (!offerCommission.eq(expCommission)) {
-              offer.valid = false
-              offer.validationError = `offer commission: ${offerCommission.toString()} != exp ${expCommission.toString()}`
-              return
-            }
-            if (!offerCommission.isZero()) {
-              commissionAvailable = commissionAvailable.sub(offerCommission)
             }
           } catch (e) {
             offer.valid = false
@@ -576,6 +582,10 @@ class OriginEventSource {
   resetCache() {
     this.offerCache = {}
     this.listingCache = {}
+  }
+
+  resetMemos() {
+    getListing.cache.clear()
   }
 }
 

@@ -35,7 +35,7 @@ const config = {
   ProxyFactory: addresses.ProxyFactory,
   ProxyFactory_Epoch: addresses.ProxyFactoryEpoch,
   IdentityProxyImplementation: addresses.IdentityProxyImplementation,
-  proxyAccountsEnabled: true,
+  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled', 'true'),
   relayerEnabled: localStorageHas('relayerEnabled', 'true'),
   tokens: [],
 

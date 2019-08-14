@@ -13,14 +13,14 @@ const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
 const client = redis.createClient()
 
 describe('email attestations', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     // Configure environment variables required for tests
     process.env.ATTESTATION_SIGNING_KEY = '0xc1912'
 
     // Clear out redis-mock
-    client.del('*')
+    await new Promise(resolve => client.flushall(resolve))
 
-    Attestation.destroy({
+    await Attestation.destroy({
       where: {},
       truncate: true
     })

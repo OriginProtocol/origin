@@ -119,6 +119,7 @@ services:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - REDIS_URL=redis://redis-master:6379
       - NOTIFICATIONS_ENDPOINT_URL=http://notifications:3456/messages
+      - NETWORK=docker
     depends_on:
       - postgres
       - redis-master
@@ -182,6 +183,7 @@ services:
     volumes: *volumes
     environment:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - REDIS_URL=redis://redis-master:6379
       - ELASTICSEARCH_HOST=elasticsearch:9200
       - ELASTICSEARCH=true
       - NETWORK=docker

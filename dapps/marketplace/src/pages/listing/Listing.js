@@ -47,7 +47,7 @@ class Listing extends Component {
             if (networkStatus <= 2) {
               return <LoadingSpinner />
             } else if (error) {
-              if (data && data.marketplace && !data.marketplace.listing) {
+              if (String(error).match(/no such listing/i)) {
                 return error404
               }
               return <QueryError error={error} query={query} vars={vars} />

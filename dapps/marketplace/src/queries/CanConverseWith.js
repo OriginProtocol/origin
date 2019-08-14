@@ -6,6 +6,7 @@ export default gql`
       id
       enabled
       canConverseWith(id: $account)
+      forwardTo(id: $account)
     }
   }
 `
