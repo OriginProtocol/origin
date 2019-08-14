@@ -71,4 +71,7 @@ export default withWallet(withTokenBalance(withListing(PromoteListing)))
 require('react-styl')(`
   .promote-listing
     max-width: 550px
+    display: flex
+    flex-direction: column
+    flex: 1
 `)

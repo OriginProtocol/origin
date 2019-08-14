@@ -23,6 +23,23 @@ const PromoteListingBudget = ({
   useEffect(() => inputRef.current.focus(), [inputRef])
   useEffect(() => setValue(String(commission)), [commission])
 
+  let message
+  if (!value || value === '0') {
+    message = (
+      <div className="enter-amount">
+        <fbt desc="PromoteListing.enterBudget">
+          Please enter a commission budget
+        </fbt>
+      </div>
+    )
+  } else if (tokenBalance < Number(value)) {
+    message = (
+      <div className="not-enough">
+        <fbt desc="PromoteListing.notEnough">Not enough OGN</fbt>
+      </div>
+    )
+  }
+
   return (
     <>
       <h1>
@@ -57,9 +74,9 @@ const PromoteListingBudget = ({
           <input
             className="form-control"
             type="tel"
+            autoComplete="no"
             ref={inputRef}
             value={value}
-            maxLength={String(tokenBalance).length}
             onChange={e => {
               const amount = e.target.value
               setValue(amount)
@@ -89,6 +106,8 @@ const PromoteListingBudget = ({
           </fbt>
         </div>
 
+        {message}
+
         <div className="actions">
           <Link
             to={`/promote/${match.params.listingId}/amount`}
@@ -102,17 +121,27 @@ const PromoteListingBudget = ({
             target={'token-OGN'}
             targets={['token-OGN']}
           >
-            {({ tokenStatus }) => (
-              <UpdateListing
-                refetch={refetch}
-                listing={listing}
-                listingTokens={listingTokens}
-                tokenBalance={tokenBalance}
-                tokenStatus={tokenStatus}
-                className="btn btn-primary btn-rounded btn-lg"
-                children={fbt('Promote Now', 'promoteListing.promoteNow')}
-              />
-            )}
+            {({ tokenStatus }) => {
+              if (!tokenStatus.hasBalance || !value || value === '0') {
+                return (
+                  <div
+                    className="btn btn-primary btn-rounded btn-lg disabled"
+                    children={fbt('Promote Now', 'promoteListing.promoteNow')}
+                  />
+                )
+              }
+              return (
+                <UpdateListing
+                  refetch={refetch}
+                  listing={listing}
+                  listingTokens={listingTokens}
+                  tokenBalance={tokenBalance}
+                  tokenStatus={tokenStatus}
+                  className="btn btn-primary btn-rounded btn-lg"
+                  children={fbt('Promote Now', 'promoteListing.promoteNow')}
+                />
+              )
+            }}
           </WithPrices>
         </div>
       </div>

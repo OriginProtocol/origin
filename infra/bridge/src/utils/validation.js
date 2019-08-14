@@ -164,13 +164,15 @@ const verifyPromotions = [
 
 const telegramVerify = [
   identityValidation,
-  check('id')
+  check('code')
     .not()
     .isEmpty()
-    .withMessage('Field id must not be empty.')
+    .withMessage('Field `code` must not be empty.')
     .trim(),
   handleValidationError
 ]
+
+const telegramGenerateCode = [identityValidation, handleValidationError]
 
 module.exports = {
   airbnbGenerateCode,
@@ -189,5 +191,6 @@ module.exports = {
   linkedinVerify,
   wechatVerify,
   verifyPromotions,
-  telegramVerify
+  telegramVerify,
+  telegramGenerateCode
 }

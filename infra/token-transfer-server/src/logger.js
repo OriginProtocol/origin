@@ -2,6 +2,8 @@
 
 const Logger = require('logplease')
 
-Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
+const logLevel = process.env.LOG_LEVEL || 'INFO'
+
+Logger.setLogLevel(logLevel)
 
 module.exports = Logger.create('t3', { showTimestamp: false })

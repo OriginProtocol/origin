@@ -7,6 +7,9 @@ import Link from 'components/Link'
 import MetaMaskAnimation from 'components/MetaMaskAnimation'
 import HelpOriginWallet from 'components/DownloadApp'
 
+import withWallet from 'hoc/withWallet'
+import withIdentity from 'hoc/withIdentity'
+
 import WalletHeader from './_WalletHeader'
 import ListingPreview from './_ListingPreview'
 import HelpWallet from './_HelpWallet'
@@ -188,7 +191,6 @@ const Connected = ({ networkName, nextLink }) => (
         Continue below.
       </fbt>
     </div>
-
     <Link to={nextLink} className={`btn btn-primary`}>
       <fbt desc="continue">Continue</fbt>
     </Link>
@@ -198,7 +200,13 @@ const Connected = ({ networkName, nextLink }) => (
 class OnboardMetaMask extends Component {
   state = {}
   render() {
-    const { listing, linkPrefix, hideOriginWallet } = this.props
+    const {
+      listing,
+      linkPrefix,
+      hideOriginWallet,
+      identityLoaded,
+      identity
+    } = this.props
 
     return (
       <>
@@ -216,7 +224,9 @@ class OnboardMetaMask extends Component {
                 }
 
                 const backLink = `${linkPrefix}/onboard`
-                const nextLink = `${linkPrefix}/onboard/email`
+                const nextLink = `${linkPrefix}/onboard/${
+                  identityLoaded && identity ? 'back' : 'email'
+                }`
 
                 const { web3 } = data
 
@@ -262,7 +272,7 @@ class OnboardMetaMask extends Component {
   }
 }
 
-export default OnboardMetaMask
+export default withWallet(withIdentity(OnboardMetaMask))
 
 require('react-styl')(`
   .onboard .onboard-box
