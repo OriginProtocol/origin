@@ -23,7 +23,7 @@ function Action(props) {
 
   const actionLocked = status === 'Inactive'
   const actionCompleted = ['Exhausted', 'Completed'].includes(status)
-  const allowInteractionWhenCompleted = false
+  let allowInteractionWhenCompleted = false
 
   const [detailsToggled, toggleDetails] = useState(false)
 
