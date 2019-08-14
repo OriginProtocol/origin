@@ -3,8 +3,6 @@ const router = express.Router()
 const { check, validationResult } = require('express-validator')
 const moment = require('moment')
 
-const { createProvider } = require('@origin/token/src/config')
-
 const logger = require('../logger')
 const { Grant, Transfer } = require('../../src/models')
 const { ensureLoggedIn } = require('../lib/login')
@@ -13,10 +11,8 @@ const {
   isEthereumAddress,
   getUnlockDate
 } = require('../utils')
-const { unlockDate, networkId } = require('../config')
+const { unlockDate } = require('../config')
 const { enqueueTransfer } = require('../lib/transfer')
-
-createProvider(networkId) // Ensure web3 credentials are set up
 
 /*
  * Returns transfers for the authenticated user.
