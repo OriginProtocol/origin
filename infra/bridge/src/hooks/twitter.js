@@ -4,22 +4,21 @@ const { OAuth } = require('oauth')
 const request = require('superagent')
 
 const logger = require('./../logger')
+const {
+  getWebhookURL,
+  getTwitterWebhookConsumerKey,
+  getTwitterWebhookConsumerSecret
+} = require('../utils/hooks')
 
 const oauth = new OAuth(
   'https://api.twitter.com/oauth/request_token',
   'https://api.twitter.com/oauth/access_token',
-  process.env.TWITTER_WEBHOOKS_CONSUMER_KEY || process.env.TWITTER_CONSUMER_KEY,
-  process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET ||
-    process.env.TWITTER_CONSUMER_SECRET,
+  getTwitterWebhookConsumerKey(),
+  getTwitterWebhookConsumerSecret(),
   '1.0',
   null,
   'HMAC-SHA1'
 )
-
-const HOST =
-  process.env.NODE_ENV === 'development'
-    ? process.env.WEBHOOK_TUNNEL_HOST
-    : process.env.HOST
 
 const HOOK_ENV = process.env.TWITTER_WEBHOOK_ENV || 'dev'
 
@@ -32,7 +31,7 @@ function getWebhooks(oAuthToken, oAuthAccessTokenSecret) {
   return new Promise((resolve, reject) => {
     oauth.get(
       `https://api.twitter.com/1.1/account_activity/all/webhooks.json?url=${encodeURIComponent(
-        `https://${HOST}/hooks/twitter`
+        getWebhookURL('twitter')
       )}`,
       oAuthToken,
       oAuthAccessTokenSecret,
@@ -56,7 +55,7 @@ function createWebhook(oAuthToken, oAuthAccessTokenSecret) {
   return new Promise((resolve, reject) => {
     oauth.post(
       `https://api.twitter.com/1.1/account_activity/all/${HOOK_ENV}/webhooks.json?url=${encodeURIComponent(
-        `https://${HOST}/hooks/twitter`
+        getWebhookURL('twitter')
       )}`,
       oAuthToken,
       oAuthAccessTokenSecret,
@@ -83,7 +82,7 @@ async function getBearerToken() {
       authorization:
         'Basic ' +
         Buffer.from(
-          `${process.env.TWITTER_WEBHOOKS_CONSUMER_KEY}:${process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET}`
+          `${getTwitterWebhookConsumerKey()}:${getTwitterWebhookConsumerSecret()}`
         ).toString('base64'),
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
     })
