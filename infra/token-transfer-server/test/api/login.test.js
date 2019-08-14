@@ -43,13 +43,13 @@ describe('Login HTTP API', () => {
     })
   })
 
-  afterEach(() => {
-    // Cleanup
-    User.destroy({
+  afterEach(async () => {
+    await Event.destroy({
       where: {}
     })
 
-    Event.destroy({
+    // Cleanup
+    User.destroy({
       where: {}
     })
   })
