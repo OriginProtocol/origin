@@ -8,17 +8,17 @@ const { decrypt } = require('./lib/crypto')
 const jwt = require('jsonwebtoken')
 
 const { User } = require('./models')
+const { encryptionSecret } = require('./config')
 
 module.exports = function() {
   passport.serializeUser(function(user, done) {
-    logger.debug('Serializing user with email', user.email)
-    done(null, user.email)
+    done(null, user.id)
   })
 
   passport.deserializeUser(async function(id, done) {
-    logger.debug('Deserializing user with id', id)
+    logger.debug('Deserializing user with ID', id)
     try {
-      const user = await User.findOne({ where: { email: id } })
+      const user = await User.findOne({ where: { id } })
       if (!user) {
         return done(null, false)
       }
@@ -33,7 +33,7 @@ module.exports = function() {
       logger.debug('Passport bearer strategy called')
       let decodedToken
       try {
-        decodedToken = jwt.verify(token, process.env.ENCRYPTION_SECRET)
+        decodedToken = jwt.verify(token, encryptionSecret)
       } catch (error) {
         return done(null, false)
       }

@@ -31,7 +31,7 @@
     "@babel/register": "7.5.5",
     "ajv": "6.10.2",
     "bs58": "4.0.1",
-    "ethereumjs-abi": "0.6.7",
+    "ethereumjs-abi": "0.6.8",
     "openzeppelin-solidity": "^1.10.0",
     "per-env": "1.0.2",
     "truffle": "^4.1.14",

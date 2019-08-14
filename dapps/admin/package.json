@@ -126,7 +126,7 @@
     "react-router-dom": "5.0.1",
     "style-loader": "1.0.0",
     "terser-webpack-plugin": "1.4.1",
-    "webpack": "4.39.1",
+    "webpack": "4.39.2",
     "webpack-cli": "3.3.6",
     "webpack-dev-middleware": "3.7.0",
     "webpack-dev-server": "3.8.0"

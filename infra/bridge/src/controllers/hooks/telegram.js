@@ -3,6 +3,8 @@
 const express = require('express')
 const router = express.Router()
 
+const Web3 = require('web3')
+
 const logger = require('../../logger')
 
 const { redisClient } = require('../../utils/redis')
@@ -36,8 +38,35 @@ router.post('/', (req, res) => {
   let followCount = 0
   let totalFollowEvents = 0
 
-  if (req.body.message.new_chat_members) {
-    const events = req.body.message.new_chat_members
+  const message = req.body.message
+
+  if (message.text && !message.from.is_bot && message.chat.type === 'private') {
+    // For attestations
+    let payload = /^\/start (.+)$/gi.exec(message.text)
+
+    if (payload && payload[1]) {
+      payload = payload[1]
+
+      const key = `telegram/attestation/event/${Web3.utils.sha3(payload)}`
+      redisBatch.set(
+        key,
+        JSON.stringify({
+          message,
+          payload
+        }),
+        'EX',
+        60 * 30
+      )
+
+      logger.debug(
+        `Pushing attestation message with payload '${payload}' to ${key}`
+      )
+    }
+  }
+
+  if (message.new_chat_members) {
+    // For join verifications
+    const events = message.new_chat_members
     totalFollowEvents = events.length
 
     events.forEach(member => {

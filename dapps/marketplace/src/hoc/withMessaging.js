@@ -1,25 +1,20 @@
 import React from 'react'
-import { Query } from 'react-apollo'
+import { useQuery } from '@apollo/react-hooks'
 
 import query from 'queries/Conversations'
 
 function withMessaging(WrappedComponent) {
   const withMessaging = props => {
-    return (
-      <Query query={query} pollInterval={500}>
-        {({ error, data, loading }) => {
-          if (error) console.error(error)
+    const { error, data, loading } = useQuery(query, { pollInterval: 500 })
+    if (error) console.error(error)
 
-          return (
-            <WrappedComponent
-              {...props}
-              messaging={data ? data.messaging : null}
-              messagingError={error}
-              messagingLoading={loading}
-            />
-          )
-        }}
-      </Query>
+    return (
+      <WrappedComponent
+        {...props}
+        messaging={data ? data.messaging : null}
+        messagingError={error}
+        messagingLoading={loading}
+      />
     )
   }
   return withMessaging
