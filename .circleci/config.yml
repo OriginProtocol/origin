@@ -161,7 +161,7 @@ jobs:
           command: cd infra/relayer && yarn test
 
   T3:
-    <<: *defaults
+    <<: *db
     steps:
       - attach_workspace:
           at: .
