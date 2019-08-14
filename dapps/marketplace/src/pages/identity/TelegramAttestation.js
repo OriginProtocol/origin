@@ -95,9 +95,9 @@ class TelegramAttestation extends Component {
         <div className="actions">
           {!openedLink && (
             <a
-              href={`tg://resolve?domain=origin_protocol_test_bot&start=${encodeURIComponent(
-                code
-              )}`}
+              href={`tg://resolve?domain=${
+                process.env.TELEGRAM_BOT_USERNAME
+              }&start=${encodeURIComponent(code)}`}
               className="btn btn-primary"
               onClick={() => {
                 this.setState({
