@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
-import { withRouter } from 'react-router-dom'
-
 import withIsMobile from 'hoc/withIsMobile'
 import withWallet from 'hoc/withWallet'
 
@@ -97,7 +95,9 @@ class TelegramAttestation extends Component {
         <div className="actions">
           {!openedLink && (
             <a
-              href={`tg://resolve?domain=origin_protocol_test_bot&start=${encodeURIComponent(code)}`}
+              href={`tg://resolve?domain=origin_protocol_test_bot&start=${encodeURIComponent(
+                code
+              )}`}
               className="btn btn-primary"
               onClick={() => {
                 this.setState({
@@ -141,7 +141,7 @@ class TelegramAttestation extends Component {
               loading: false,
               code: null
             })
-        }
+          }
 
           this.setState({
             loading: false,
@@ -161,9 +161,7 @@ class TelegramAttestation extends Component {
             })
           }
 
-          return <AutoMutate
-            mutation={runMutation}
-          />
+          return <AutoMutate mutation={runMutation} />
         }}
       </Mutation>
     )
@@ -231,4 +229,4 @@ class TelegramAttestation extends Component {
   }
 }
 
-export default withWallet(withIsMobile(withRouter(TelegramAttestation)))
+export default withWallet(withIsMobile(TelegramAttestation))

@@ -38,21 +38,17 @@ router.post('/verify', telegramVerify, async (req, res) => {
   const seed = await getAsync(seedKey)
 
   if (!storedEvent || !seed) {
-    return res
-      .status(500)
-      .send({
-        errors: [`You haven't interacted with the verification bot yet.`]
-      })
+    return res.status(500).send({
+      errors: [`You haven't interacted with the verification bot yet.`]
+    })
   }
 
   const { payload, message } = JSON.parse(storedEvent)
 
   if (!verifyTelegramCode(identity, payload, seed)) {
-    return res
-      .status(500)
-      .send({
-        errors: [`Code verification failed`]
-      })
+    return res.status(500).send({
+      errors: [`Code verification failed`]
+    })
   }
 
   const userProfileData = message.from

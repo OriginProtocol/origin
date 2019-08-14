@@ -39,7 +39,9 @@ function generateTelegramCode(ethAddress, seed) {
   }
 
   // Stolen from `generateAirbnbCode()` method
-  const hashCode = Web3.utils.sha3(`${ethAddress.toLowerCase()}${seed}`).substr(-6)
+  const hashCode = Web3.utils
+    .sha3(`${ethAddress.toLowerCase()}${seed}`)
+    .substr(-6)
 
   return {
     seed,

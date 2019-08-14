@@ -172,10 +172,7 @@ const telegramVerify = [
   handleValidationError
 ]
 
-const telegramGenerateCode = [
-  identityValidation,
-  handleValidationError
-]
+const telegramGenerateCode = [identityValidation, handleValidationError]
 
 module.exports = {
   airbnbGenerateCode,

@@ -48,15 +48,21 @@ router.post('/', (req, res) => {
       payload = payload[1]
 
       const key = `telegram/attestation/event/${Web3.utils.sha3(payload)}`
-      redisBatch.set(key, JSON.stringify({
-        message,
-        payload
-      }), 'EX', 60 * 30)
+      redisBatch.set(
+        key,
+        JSON.stringify({
+          message,
+          payload
+        }),
+        'EX',
+        60 * 30
+      )
 
-      logger.debug(`Pushing attestation message with payload '${payload}' to ${key}`)
+      logger.debug(
+        `Pushing attestation message with payload '${payload}' to ${key}`
+      )
     }
   }
-
 
   if (message.new_chat_members) {
     // For join verifications
