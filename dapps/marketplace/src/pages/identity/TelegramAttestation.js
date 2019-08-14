@@ -174,8 +174,6 @@ class TelegramAttestation extends Component {
         onCompleted={res => {
           const result = res.verifyTelegramCode
 
-          this.unloadIframe()
-
           if (!result.success) {
             this.setState({
               error: result.reason,
@@ -200,7 +198,6 @@ class TelegramAttestation extends Component {
             loading: false,
             openedLink: false
           })
-          this.unloadIframe()
         }}
       >
         {verifyCode => {
