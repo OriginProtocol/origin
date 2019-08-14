@@ -32,7 +32,7 @@ const SortMenu = ({
           }}
         >
           <SortContent
-            onChange={(e) => {
+            onChange={e => {
               onChange(e)
               setCloseModal(false)
               onClose()
