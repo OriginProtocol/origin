@@ -33,7 +33,9 @@ function ActionGroup(props) {
 
     if (locked) {
       unlockConditionText = (
-        <fbt desc="Rewards.promotionsLock">Requires: Twitter attestation</fbt>
+        <fbt desc="Rewards.promotionsLock">
+          Requires: Email and profile verifications
+        </fbt>
       )
     }
   } else if (type === 'follows') {
@@ -45,7 +47,7 @@ function ActionGroup(props) {
     if (locked) {
       unlockConditionText = (
         <fbt desc="Rewards.followsLock">
-          Requires: Twitter and Telegram attestation
+          Requires: Email and profile verifications
         </fbt>
       )
     }
