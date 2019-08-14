@@ -268,7 +268,9 @@ const PromotionsHeader = ({
       showBackButton={true}
       className="px-0"
       onBack={() => {
-        history.push(hasSelectedContent ? '/campaigns/promotions' : '/campaigns')
+        history.push(
+          hasSelectedContent ? '/campaigns/promotions' : '/campaigns'
+        )
       }}
     >
       {stageTitle}

@@ -22,7 +22,7 @@ import PushNotification from 'react-native-push-notification'
 import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
 import { fbt } from 'fbt-runtime'
-import { ShareDialog } from 'react-native-fbsdk';
+import { ShareDialog } from 'react-native-fbsdk'
 
 import OriginButton from 'components/origin-button'
 import NotificationCard from 'components/notification-card'
@@ -65,7 +65,6 @@ class MarketplaceScreen extends Component {
       lastDappUrl: null,
       // whenever this change it forces the webView to go to that source
       webViewUrlTrigger: this.props.settings.network.dappUrl
-
     }
     if (Platform.OS === 'android') {
       // Configure swipe handler for back forward navigation on Android because
@@ -124,7 +123,9 @@ class MarketplaceScreen extends Component {
       get(this.props, 'settings.network.dappUrl')
     ) {
       // Active account changed, update messaging keys
-      this.setState({ webViewUrlTrigger: get(this.props, 'settings.network.dappUrl')})
+      this.setState({
+        webViewUrlTrigger: get(this.props, 'settings.network.dappUrl')
+      })
     }
 
     // Check for active Ethereum address changing
@@ -606,7 +607,7 @@ class MarketplaceScreen extends Component {
 
   checkForShareNativeDialogInterception = async url => {
     // natively tweet if possible on Android
-    console.log("Url change: ", url.href)
+    console.log('Url change: ', url.href)
     await this._openDeepLinkUrlAttempt(
       () =>
         url.hostname === 'twitter.com' &&
@@ -634,8 +635,8 @@ class MarketplaceScreen extends Component {
       () =>
         (url.hostname === 'www.facebook.com' ||
           url.hostname === 'm.facebook.com') &&
-          url.pathname.toLowerCase() === '/originprotocol/' &&
-          Platform.OS === 'android',
+        url.pathname.toLowerCase() === '/originprotocol/' &&
+        Platform.OS === 'android',
       () => `fb://page/120151672018856`,
       'lastOpenFacebookProfileTime'
     )
@@ -645,18 +646,18 @@ class MarketplaceScreen extends Component {
       () =>
         (url.hostname === 'www.facebook.com' ||
           url.hostname === 'm.facebook.com') &&
-          url.pathname.toLowerCase() === '/originprotocol/' &&
-          Platform.OS === 'ios',
+        url.pathname.toLowerCase() === '/originprotocol/' &&
+        Platform.OS === 'ios',
       () => `fb://profile/120151672018856`,
       'lastOpenFacebookProfileTime'
     )
 
-
     if (
-      (url.hostname === 'www.facebook.com' || 
-      url.hostname === 'm.facebook.com')
+      url.hostname === 'www.facebook.com' ||
+      url.hostname === 'm.facebook.com'
     ) {
-      const shareHasBeenTriggeredRecenty = this.facebookShareShowTime &&
+      const shareHasBeenTriggeredRecenty =
+        this.facebookShareShowTime &&
         new Date() - this.facebookShareShowTime < 5000
 
       if (url.pathname === '/dialog/share' && !shareHasBeenTriggeredRecenty) {
@@ -666,8 +667,7 @@ class MarketplaceScreen extends Component {
         }
         const canShowFbShare = await ShareDialog.canShow(shareLinkContent)
 
-        if (!canShowFbShare)
-          return
+        if (!canShowFbShare) return
 
         this.facebookShareShowTime = new Date()
         const shareResult = await ShareDialog.show(shareLinkContent)
@@ -691,7 +691,7 @@ class MarketplaceScreen extends Component {
 
   getBackToDapp = () => {
     const url = this.state.lastDappUrl
-    url.searchParams.set('returnRandom', Math.floor(Math.random()*1000))
+    url.searchParams.set('returnRandom', Math.floor(Math.random() * 1000))
     this.setState({ webViewUrlTrigger: url.href })
   }
 
@@ -798,7 +798,6 @@ class MarketplaceScreen extends Component {
   }
 
   render() {
-    console.log("CURRENT URL in STATE in render: ", this.state.webViewUrlTrigger)
     return (
       <AndroidBackHandler onBackPress={this.onBackButtonPressAndroid}>
         <SafeAreaView style={styles.safeAreaView}>
