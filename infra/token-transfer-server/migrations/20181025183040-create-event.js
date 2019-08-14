@@ -1,32 +1,34 @@
 'use strict'
 
+const tableName = 't3_event'
+
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Event', {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable(tableName, {
       id: {
-        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false
+      user_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: { model: 't3_user', key: 'id' }
+      },
+      grant_id: {
+        type: Sequelize.INTEGER,
+        references: { model: 't3_grant', key: 'id' }
       },
       ip: {
         type: Sequelize.STRING,
         allowNull: false
-      },
-      grant_id: {
-        type: Sequelize.INTEGER,
-        references: { model: 'Grant', key: 'id' }
       },
       action: {
         type: Sequelize.STRING,
         allowNull: false
       },
       data: {
-        type: Sequelize.STRING
+        type: Sequelize.JSONB
       },
       created_at: {
         allowNull: false,
@@ -38,7 +40,7 @@ module.exports = {
       }
     })
   },
-  down: (queryInterface) => {
-    return queryInterface.dropTable('Event')
+  down: queryInterface => {
+    return queryInterface.dropTable(tableName)
   }
 }

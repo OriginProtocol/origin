@@ -22,7 +22,7 @@ eventlistenerImageTag: '4bf97d0'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '4bf97d0'
+discoveryImageTag: '58be731'
 
 # origin-growth
 growthImage: origin-growth
@@ -71,4 +71,4 @@ t3ClientImageTag: '17b54fb'
 
 # origin-token-transfer-server
 t3ServerImage: origin-token-transfer-server
-t3ServerImageTag: '17b54fb'
+t3ServerImageTag: 'd1a2c80'
