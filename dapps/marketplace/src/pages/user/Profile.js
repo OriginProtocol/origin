@@ -295,7 +295,7 @@ class UserProfile extends Component {
       <ModalComp
         title={headerContent}
         className={`profile-verifications-modal${
-          this.state.hideVerifyModal ? ' d-none' : ''
+          !this.props.isMobile && this.state.hideVerifyModal ? ' d-none' : ''
         }`}
         shouldClose={this.state.shouldCloseVerifyModal}
         onClose={() =>
