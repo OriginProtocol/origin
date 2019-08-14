@@ -40,7 +40,7 @@ class UpdateListing extends Component {
     const needsAllowance = get(this.props, 'tokenStatus.needsAllowance', false)
     const walletIsNotSeller = this.props.wallet !== this.props.listing.seller.id
 
-    if (JSON.stringify(this.props.tokenStatus) === '{}') {
+    if (get(this.props, 'tokenStatus.loading')) {
       return <button className={this.props.className}>Loading...</button>
     }
 
