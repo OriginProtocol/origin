@@ -3,9 +3,8 @@ import { Query } from 'react-apollo'
 import QueryError from 'components/QueryError'
 import get from 'lodash/get'
 
-import enrollmentStatusQuery from 'queries/EnrollmentStatus'
 import allCampaignsQuery from 'queries/AllGrowthCampaigns'
-import withWallet from './withWallet'
+import withEnrolmentStatus from './withEnrolmentStatus'
 
 function withGrowthCampaign(
   WrappedComponent,
@@ -14,54 +13,38 @@ function withGrowthCampaign(
   const WithGrowthCampaign = props => {
     return (
       <Query
-        query={enrollmentStatusQuery}
-        variables={{ walletAddress: props.wallet }}
-        skip={!props.wallet}
+        query={allCampaignsQuery}
+        notifyOnNetworkStatusChange={true}
+        skip={
+          queryEvenIfNotEnrolled
+            ? false
+            : props.growthEnrollmentStatus !== 'Enrolled'
+        }
         fetchPolicy={fetchPolicy}
       >
-        {({ data, error, loading, networkStatus }) => {
+        {({ data, error, loading, networkStatus, refetch }) => {
           if (error && !suppressErrors) {
-            return <QueryError error={error} query={enrollmentStatusQuery} />
+            return <QueryError error={error} query={allCampaignsQuery} />
           }
 
-          const enrollmentStatus = get(data, 'enrollmentStatus')
-          const walletLoading = !networkStatus || loading || networkStatus === 1
           return (
-            <Query
-              query={allCampaignsQuery}
-              notifyOnNetworkStatusChange={true}
-              skip={
-                queryEvenIfNotEnrolled ? false : enrollmentStatus !== 'Enrolled'
+            <WrappedComponent
+              {...props}
+              growthCampaigns={get(data, 'campaigns.nodes') || []}
+              growthCampaignsLoading={
+                !networkStatus ||
+                loading ||
+                networkStatus === 1 ||
+                props.growthEnrollmentStatusLoading
               }
-              fetchPolicy={fetchPolicy}
-            >
-              {({ data, error, loading, networkStatus, refetch }) => {
-                if (error && !suppressErrors) {
-                  return <QueryError error={error} query={allCampaignsQuery} />
-                }
-
-                return (
-                  <WrappedComponent
-                    {...props}
-                    growthEnrollmentStatus={enrollmentStatus}
-                    growthCampaigns={get(data, 'campaigns.nodes') || []}
-                    growthCampaignsLoading={
-                      !networkStatus ||
-                      loading ||
-                      networkStatus === 1 ||
-                      walletLoading
-                    }
-                    growthCampaignsRefetch={refetch}
-                  />
-                )
-              }}
-            </Query>
+              growthCampaignsRefetch={refetch}
+            />
           )
         }}
       </Query>
     )
   }
-  return withWallet(WithGrowthCampaign)
+  return withEnrolmentStatus(WithGrowthCampaign)
 }
 
 export default withGrowthCampaign

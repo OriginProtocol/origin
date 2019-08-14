@@ -7,7 +7,6 @@ module.exports = (sequelize, DataTypes) => {
     'Transfer',
     {
       id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-      userId: DataTypes.INTEGER,
       grantId: DataTypes.INTEGER,
       status: DataTypes.ENUM(enums.TransferStatuses),
       fromAddress: DataTypes.STRING,
@@ -21,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 't3_transfer'
     }
   )
+
+  Transfer.associate = models => {
+    Transfer.belongsTo(models.Grant)
+  }
 
   return Transfer
 }
