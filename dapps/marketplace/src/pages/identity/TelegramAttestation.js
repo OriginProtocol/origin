@@ -20,47 +20,6 @@ class TelegramAttestation extends Component {
     this.state = {}
   }
 
-  unloadIframe() {
-    if (
-      this.props.walletType !== 'Mobile' &&
-      this.props.walletType !== 'Origin Wallet'
-    ) {
-      return
-    }
-
-    if (this.iframeRef && document.body.contains(this.iframeRef)) {
-      document.body.removeChild(this.iframeRef)
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    // Note: An ugly hack to make the app links work on Origin Wallet
-    // without pushing another update to the App/Play Store
-    if (
-      this.props.walletType !== 'Mobile' &&
-      this.props.walletType !== 'Origin Wallet'
-    ) {
-      return
-    }
-
-    if (!prevState.openedLink && this.state.openedLink && !this.iframeRef) {
-      this.iframeRef = document.createElement('iframe')
-
-      this.iframeRef.setAttribute(
-        'src',
-        `tg://resolve?domain=${
-          process.env.TELEGRAM_BOT_USERNAME
-        }&start=${encodeURIComponent(this.state.code)}`
-      )
-
-      document.body.appendChild(this.iframeRef)
-    }
-  }
-
-  componentWillUnmount() {
-    this.unloadIframe()
-  }
-
   render() {
     if (!this.props.open) {
       return null
@@ -140,15 +99,7 @@ class TelegramAttestation extends Component {
                 process.env.TELEGRAM_BOT_USERNAME
               }&start=${encodeURIComponent(this.state.code)}`}
               className="btn btn-primary"
-              onClick={e => {
-                if (
-                  this.props.walletType === 'Mobile' ||
-                  this.props.walletType === 'Origin Wallet'
-                ) {
-                  // Use `iframe` hack on Origin Wallet for now
-                  e.preventDefault()
-                }
-
+              onClick={() => {
                 this.setState({
                   openedLink: true
                 })
