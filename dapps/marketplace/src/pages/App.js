@@ -46,12 +46,6 @@ class App extends Component {
     footer: false
   }
 
-  componentDidMount() {
-    if (window.ethereum) {
-      setTimeout(() => window.ethereum.enable(), 100)
-    }
-  }
-
   componentDidUpdate() {
     if (get(this.props, 'location.state.scrollToTop')) {
       window.scrollTo(0, 0)
