@@ -2,7 +2,6 @@
 
 const moment = require('moment')
 const BigNumber = require('bignumber.js')
-const logger = require('../logger')
 
 function toMoment(date) {
   if (!date) return date
@@ -57,7 +56,7 @@ function vestingEvents(grantObj) {
 /* Returns an array of vesting objects that include a datetime and status
  * associated with each vesting event.
  */
-function vestingSchedule(grantObj, /* start = null, end = null */) {
+function vestingSchedule(grantObj /* start = null, end = null */) {
   const now = grantObj.now || moment()
   const grant = momentizeGrant(grantObj)
 
