@@ -15,7 +15,7 @@ const { getAbsoluteUrl } = require('../src/utils')
 const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
 
 describe('github attestations', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     // Configure environment variables required for tests
     process.env.ATTESTATION_SIGNING_KEY = '0xc1912'
     process.env.GITHUB_CLIENT_ID = 'github-client-id'
@@ -24,7 +24,7 @@ describe('github attestations', () => {
     process.env.GITHUB_PROFILE_URL = 'https://api.github.com/user'
     process.env.HOST = 'originprotocol.com'
 
-    Attestation.destroy({
+    await Attestation.destroy({
       where: {},
       truncate: true
     })

@@ -26,6 +26,8 @@ const actionTypeToNetwork = actionType => {
   switch (actionType) {
     case 'TwitterFollow':
       return 'TWITTER'
+    case 'TelegramFollow':
+      return 'TELEGRAM'
     case 'FacebookLike':
       return 'FACEBOOK'
   }
@@ -50,7 +52,7 @@ const VerifyOrConfirmFollow = ({
 
   return (
     <>
-      {socialNetwork === 'TWITTER' && (
+      {socialNetwork !== 'FACEBOOK' && (
         <Mutation
           mutation={VerifyPromotionMutation}
           onCompleted={({ verifyPromotion }) => {

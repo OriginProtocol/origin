@@ -15,7 +15,7 @@ const { getAbsoluteUrl } = require('../src/utils')
 const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
 
 describe('wechat attestations', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     // Configure environment variables required for tests
     process.env.ATTESTATION_SIGNING_KEY = '0xc1912'
     process.env.WECHAT_CLIENT_ID = 'wechat-client-id'
@@ -25,7 +25,7 @@ describe('wechat attestations', () => {
     process.env.WECHAT_BASE_API_URL = 'https://api.weixin.qq.com/sns'
     process.env.HOST = 'originprotocol.com'
 
-    Attestation.destroy({
+    await Attestation.destroy({
       where: {},
       truncate: true
     })

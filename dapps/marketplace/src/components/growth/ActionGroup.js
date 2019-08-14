@@ -44,7 +44,9 @@ function ActionGroup(props) {
       : 'images/growth/social-media-follow-icon.svg'
     if (locked) {
       unlockConditionText = (
-        <fbt desc="Rewards.followsLock">Requires: Twitter attestation</fbt>
+        <fbt desc="Rewards.followsLock">
+          Requires: Twitter and Telegram attestation
+        </fbt>
       )
     }
   } else if (type === 'invitations') {

@@ -50,7 +50,7 @@ require('react-styl')(`
       .status-text
         font-size: 16px
     .listing-action-link
-      font-size: 16px
+      font-size: 18px
       margin-top: 0.75rem
       display: inline-block
       &:after

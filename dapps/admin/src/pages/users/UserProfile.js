@@ -25,6 +25,8 @@ const getDisplayName = provider => {
       return 'LinkedIn'
     case 'wechat':
       return 'WeChat'
+    case 'telegram':
+      return 'Telegram'
   }
 
   return provider

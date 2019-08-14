@@ -1,57 +1,16 @@
 import React, { Component } from 'react'
-import pick from 'lodash/pick'
 import get from 'lodash/get'
 
 import withCreatorConfig from 'hoc/withCreatorConfig'
 import withCurrencies from 'hoc/withCurrencies'
 import CreateListing from '../create-listing/CreateListing'
+import { getStateFromListing } from 'pages/create-listing/mutations/_listingData'
 
 class EditListing extends Component {
   constructor(props) {
     super(props)
-    // Translate listing from schema representation to form
-    // representation.
-    // TODO: Can we unify field names or otherwise keep knowledge of
-    // special fields limited to their file in `listings-types` dir?
-    const tokens = get(props, 'listing.acceptedTokens', []).map(t => t.id)
     this.state = {
-      listing: {
-        // FractionalListing fields:
-        weekendPrice: get(props, 'listing.weekendPrice.amount', ''),
-        booked: get(props, 'listing.booked', []),
-        customPricing: get(props, 'listing.customPricing', []),
-        unavailable: get(props, 'listing.unavailable', []),
-        // HourlyFractionalListing fields:
-        timeZone: get(props, 'listing.timeZone', ''),
-        workingHours: get(props, 'listing.workingHours', []),
-        // GiftCardListing fields:
-        retailer: get(props, 'listing.retailer', ''),
-        cardAmount: get(props, 'listing.cardAmount', ''),
-        issuingCountry: get(props, 'listing.issuingCountry', 'US'),
-        isDigital: get(props, 'listing.isDigital', false),
-        isCashPurchase: get(props, 'listing.isCashPurchase', false),
-        receiptAvailable: get(props, 'listing.receiptAvailable', false),
-
-        // Marketplace creator fields:
-        marketplacePublisher: get(props, 'creatorConfig.marketplacePublisher'),
-
-        ...pick(props.listing, [
-          'id',
-          '__typename',
-          'title',
-          'description',
-          'category',
-          'subCategory',
-          'seller'
-        ]),
-        acceptedTokens: tokens.length ? tokens : ['token-ETH'],
-        quantity: String(props.listing.unitsTotal),
-        currency: get(props, 'listing.price.currency.id', ''),
-        price: String(props.listing.price.amount),
-        boost: '0',
-        boostLimit: '0',
-        media: props.listing.media
-      }
+      listing: getStateFromListing(props)
     }
   }
 
