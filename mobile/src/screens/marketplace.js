@@ -117,12 +117,12 @@ class MarketplaceScreen extends Component {
       this.injectLanguage()
     }
 
-    // Check for active Ethereum address changing
+    // Check for default dapp url
     if (
       get(prevProps, 'settings.network.dappUrl') !==
       get(this.props, 'settings.network.dappUrl')
     ) {
-      // Active account changed, update messaging keys
+      // Default dapp url changed, trigger WebView url change
       this.setState({
         webViewUrlTrigger: get(this.props, 'settings.network.dappUrl')
       })
@@ -637,6 +637,7 @@ class MarketplaceScreen extends Component {
           url.hostname === 'm.facebook.com') &&
         url.pathname.toLowerCase() === '/originprotocol/' &&
         Platform.OS === 'android',
+      //Facebook on IOS and Android has different deep-linking format
       () => `fb://page/120151672018856`,
       'lastOpenFacebookProfileTime'
     )
@@ -648,6 +649,7 @@ class MarketplaceScreen extends Component {
           url.hostname === 'm.facebook.com') &&
         url.pathname.toLowerCase() === '/originprotocol/' &&
         Platform.OS === 'ios',
+      //Facebook on IOS and Android has different deep-linking format
       () => `fb://profile/120151672018856`,
       'lastOpenFacebookProfileTime'
     )
@@ -679,9 +681,8 @@ class MarketplaceScreen extends Component {
       }
 
       /* After Facebook shows up the share dialog in dapp's WebView and user is not logged
-       * in it will redirect to login page. For that reason we need to issue back command
-       * repeatedly that after native Facebook share dialog appears the WebView doesn't
-       * get stuck on Facebook login screen.
+       * in it will redirect to login page. For that reason we return to the last dapp's
+       * url instead of triggering back.
        */
       if (shareHasBeenTriggeredRecenty) {
         this.getBackToDapp()
@@ -691,6 +692,10 @@ class MarketplaceScreen extends Component {
 
   getBackToDapp = () => {
     const url = this.state.lastDappUrl
+    /* a random is used to trigger a url change of the WebView. If webView is on a different
+     * page (because user navigation) and we supply it the same source url as we have some time
+     * before the WebView won't navigate to the new url.
+     */
     url.searchParams.set('returnRandom', Math.floor(Math.random() * 1000))
     this.setState({ webViewUrlTrigger: url.href })
   }

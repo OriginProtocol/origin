@@ -22,7 +22,7 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.CallbackManager;
-import android.content.Intent;     // <--- import
+import android.content.Intent;
 import android.os.Bundle;
 
 
