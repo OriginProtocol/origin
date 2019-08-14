@@ -39,7 +39,8 @@ const ATTESTATION_TYPE_MAP_DB = {
   kakao: 'kakao',
   github: 'github',
   linkedin: 'linkedin',
-  wechat: 'wechat'
+  wechat: 'wechat',
+  telegram: 'telegram'
 }
 
 /**
