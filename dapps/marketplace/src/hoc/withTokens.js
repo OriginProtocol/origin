@@ -1,5 +1,5 @@
 import React from 'react'
-import { Query } from 'react-apollo'
+import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 
 const GetTokensQuery = gql`
@@ -12,16 +12,15 @@ const GetTokensQuery = gql`
 `
 
 function withTokens(WrappedComponent) {
-  const WithTokens = props => (
-    <Query query={GetTokensQuery}>
-      {({ data }) => (
-        <WrappedComponent
-          {...props}
-          tokens={data && data.tokens ? data.tokens : []}
-        />
-      )}
-    </Query>
-  )
+  const WithTokens = props => {
+    const { data } = useQuery(GetTokensQuery)
+    return (
+      <WrappedComponent
+        {...props}
+        tokens={data && data.tokens ? data.tokens : []}
+      />
+    )
+  }
   return WithTokens
 }
 
