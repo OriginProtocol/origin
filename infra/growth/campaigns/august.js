@@ -442,7 +442,13 @@ const augustConfig = {
             visible: true,
             nextLevelCondition: false,
             scope: 'campaign',
-            statusScope: 'user'
+            statusScope: 'user',
+            unlockConditionMsg: [
+              {
+                conditionTranslateKey: 'growth.attestation.requirement.telegram',
+                conditionIcon: 'images/growth/telegram-badge.svg'
+              }
+            ]
           }
         },
         {
@@ -459,7 +465,8 @@ const augustConfig = {
               'LinkedInAttestationPublished',
               'KakaoAttestationPublished',
               'WeChatAttestationPublished',
-              'WebsiteAttestationPublished'
+              'WebsiteAttestationPublished',
+              'TelegramAttestationPublished'
             ],
             visible: false,
             numEventsRequired: 2,
