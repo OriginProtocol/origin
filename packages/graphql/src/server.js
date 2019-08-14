@@ -21,6 +21,13 @@ const schema = makeExecutableSchema({
 
 const options = {
   schema,
+  // Enable debug regardless of NODE_ENV value in order to include stack traces in errors.
+  debug: true,
+  // Error handler that writes to the server logs.
+  formatError: err => {
+    console.log('ERROR:', JSON.stringify(err, null, 4))
+    return err
+  },
   context: ({ req }) => {
     const operation = req.body
     if (operation && operation.query) {
