@@ -250,6 +250,18 @@
             }
           },
           "required": ["siteName"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "siteName": {
+              "const": "telegram.com"
+            },
+            "rating": {
+              "$ref": "#/definitions/attribute"
+            }
+          },
+          "required": ["siteName"]
         }
       ],
       "required": ["userId"]

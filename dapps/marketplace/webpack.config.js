@@ -21,6 +21,10 @@ try {
 
 const isProduction = process.env.NODE_ENV === 'production'
 
+const TELEGRAM_BOT_USERNAME = isProduction
+  ? 'originprotocol_verification_bot'
+  : 'origin_protocol_test_bot'
+
 const config = {
   entry: {
     app: './src/index.js'
@@ -128,7 +132,8 @@ const config = {
       ENABLE_LINKEDIN_ATTESTATION: false,
       ENABLE_WECHAT_ATTESTATION: false,
       SENTRY_DSN: null,
-      NAMESPACE: 'dev'
+      NAMESPACE: 'dev',
+      TELEGRAM_BOT_USERNAME: TELEGRAM_BOT_USERNAME
     })
   ],
 

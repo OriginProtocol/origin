@@ -1,31 +1,23 @@
 import React from 'react'
-import { Query } from 'react-apollo'
+import { useQuery } from '@apollo/react-hooks'
 import get from 'lodash/get'
 
 import CounterpartyEventsQuery from 'queries/CounterpartyEventsQuery'
 
 function withCounterpartyEvents(WrappedComponent) {
   const WithCounterpartyEvents = props => {
+    const { data, loading } = useQuery(CounterpartyEventsQuery, {
+      variables: { user: props.wallet, counterparty: props.id },
+      skip: !props.wallet || !props.id
+    })
     return (
-      <Query
-        query={CounterpartyEventsQuery}
-        variables={{ user: props.wallet, counterparty: props.id }}
-        skip={!props.wallet || !props.id}
-      >
-        {({ data, loading }) => {
-          return (
-            <WrappedComponent
-              {...props}
-              counterpartyEventsLoading={loading}
-              counterpartyEvents={
-                loading
-                  ? []
-                  : get(data, 'marketplace.user.counterparty.nodes', [])
-              }
-            />
-          )
-        }}
-      </Query>
+      <WrappedComponent
+        {...props}
+        counterpartyEventsLoading={loading}
+        counterpartyEvents={
+          loading ? [] : get(data, 'marketplace.user.counterparty.nodes', [])
+        }
+      />
     )
   }
   return WithCounterpartyEvents

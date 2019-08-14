@@ -46,12 +46,6 @@ class App extends Component {
     footer: false
   }
 
-  componentDidMount() {
-    if (window.ethereum) {
-      setTimeout(() => window.ethereum.enable(), 100)
-    }
-  }
-
   componentDidUpdate() {
     if (get(this.props, 'location.state.scrollToTop')) {
       window.scrollTo(0, 0)
@@ -194,4 +188,11 @@ require('react-styl')(`
     left: 50%
     text-align: center
     transform: translate(-50%, -50%)
+  main
+    display: flex
+    flex-direction: column
+  #app
+    height: 100%
+    display: flex
+    flex-direction: column
 `)
