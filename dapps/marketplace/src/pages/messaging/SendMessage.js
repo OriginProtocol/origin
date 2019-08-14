@@ -54,6 +54,24 @@ class SendMessage extends Component {
     this.fileInput.current.click()
   }
 
+  handleKeyPress = (e, sendMessage) => {
+    const charCode = e.which || e.keyCode
+    if (e.key === 'Enter' || charCode === 13 || charCode == 10) {
+      if (!e.shiftKey && !e.ctrlKey) {
+        this.handleSubmit(e, sendMessage)
+      }
+    }
+  }
+
+  handleSubmit = (e, sendMessage) => {
+    const { to } = this.props
+    const { images, message } = this.state
+    e.preventDefault()
+    if (trim(message) || images) {
+      this.sendContent(sendMessage, to)
+    }
+  }
+
   async sendContent(sendMessage, to) {
     const { message, images } = this.state
 
@@ -67,20 +85,15 @@ class SendMessage extends Component {
   }
 
   render() {
-    const { to, config } = this.props
-    const { images, message } = this.state
+    const { config } = this.props
+    const { images } = this.state
 
     return (
       <Mutation mutation={mutation}>
         {sendMessage => (
           <form
             className="send-message d-flex"
-            onSubmit={e => {
-              e.preventDefault()
-              if (trim(message) || images) {
-                this.sendContent(sendMessage, to)
-              }
-            }}
+            onSubmit={e => this.handleSubmit(e, sendMessage)}
           >
             {images.length ? (
               <div className="images-preview">
@@ -112,6 +125,7 @@ class SendMessage extends Component {
                 ref={input => (this.input = input)}
                 value={this.state.message}
                 onChange={e => this.setState({ message: e.target.value })}
+                onKeyPress={e => this.handleKeyPress(e, sendMessage)}
               />
             )}
             <img
