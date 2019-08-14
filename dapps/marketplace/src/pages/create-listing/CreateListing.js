@@ -74,7 +74,7 @@ const CreateListing = props => {
     return <LoadingSpinner />
   }
 
-  if (!props.identity) {
+  if (!props.identity && !localStorage.noIdentity) {
     return (
       <UserActivationLink
         location={{ pathname: '/create' }}

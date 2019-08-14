@@ -20,10 +20,14 @@ const PromoteListingAmount = ({
   refetch
 }) => {
   const { unitsAvailable, commissionPerUnit } = listing
-  const [value, setValue] = useState(String(commissionPerUnit))
+  const [value, setValue] = useState(
+    commissionPerUnit === '0' ? '' : String(commissionPerUnit)
+  )
   const inputRef = useRef()
   useEffect(() => inputRef.current.focus(), [inputRef])
-  useEffect(() => setValue(String(commissionPerUnit)), [commissionPerUnit])
+  useEffect(() => {
+    setValue(commissionPerUnit === '0' ? '' : String(commissionPerUnit))
+  }, [commissionPerUnit])
 
   const calcCommission = commissionPerUnit => {
     let commission = tokenBalance
@@ -34,6 +38,65 @@ const PromoteListingAmount = ({
       commissionPerUnit,
       commission: Math.min(tokenBalance, commission)
     }
+  }
+
+  let next, message
+  const needsBudget = multiUnit || listing.__typename !== 'UnitListing'
+  if (needsBudget) {
+    next = (
+      <Link
+        to={`/promote/${match.params.listingId}/budget`}
+        className="btn btn-primary btn-rounded btn-lg"
+      >
+        {fbt('Continue', 'Continue')}
+      </Link>
+    )
+  } else {
+    next = (
+      <WithPrices
+        price={{ amount: value, currency: { id: 'token-OGN' } }}
+        target={'token-OGN'}
+        targets={['token-OGN']}
+      >
+        {({ tokenStatus }) => {
+          if (!tokenStatus.hasBalance || !value || value === '0') {
+            return (
+              <div
+                className="btn btn-primary btn-rounded btn-lg disabled"
+                children={fbt('Promote Now', 'promoteListing.promoteNow')}
+              />
+            )
+          }
+          return (
+            <UpdateListing
+              refetch={refetch}
+              listing={listing}
+              listingTokens={listingTokens}
+              tokenBalance={tokenBalance}
+              tokenStatus={tokenStatus}
+              className="btn btn-primary btn-rounded btn-lg"
+              children={fbt('Promote Now', 'promoteListing.promoteNow')}
+            />
+          )
+        }}
+      </WithPrices>
+    )
+  }
+
+  if (!value || value === '0') {
+    message = (
+      <div className="enter-amount">
+        <fbt desc="PromoteListing.enterAmount">
+          Please enter a commission amount
+        </fbt>
+      </div>
+    )
+  } else if (tokenBalance < Number(value) && !needsBudget) {
+    message = (
+      <div className="not-enough">
+        <fbt desc="PromoteListing.notEnough">Not enough OGN</fbt>
+      </div>
+    )
   }
 
   return (
@@ -64,10 +127,10 @@ const PromoteListingAmount = ({
           <input
             className="form-control"
             name="commissionPerUnit"
+            autoComplete="no"
             type="tel"
             ref={inputRef}
             value={value}
-            maxLength={String(tokenBalance).length}
             onChange={e => {
               const amount = e.target.value
               setValue(amount)
@@ -122,11 +185,14 @@ const PromoteListingAmount = ({
             </fbt>
           </div>
         )}
-
-        <div className="exposure">
-          <fbt desc="PromoteListing.exposure">Listing exposure:</fbt>{' '}
-          <Exposure listing={listing} />
-        </div>
+        {message ? (
+          message
+        ) : (
+          <div className="exposure">
+            <fbt desc="PromoteListing.exposure">Listing exposure:</fbt>{' '}
+            <Exposure listing={listing} />
+          </div>
+        )}
         <div className="actions">
           <Link
             to={`/promote/${match.params.listingId}`}
@@ -134,32 +200,7 @@ const PromoteListingAmount = ({
           >
             {fbt('Back', 'Back')}
           </Link>
-          {multiUnit || listing.__typename !== 'UnitListing' ? (
-            <Link
-              to={`/promote/${match.params.listingId}/budget`}
-              className="btn btn-primary btn-rounded btn-lg"
-            >
-              {fbt('Continue', 'Continue')}
-            </Link>
-          ) : (
-            <WithPrices
-              price={{ amount: value, currency: { id: 'token-OGN' } }}
-              target={'token-OGN'}
-              targets={['token-OGN']}
-            >
-              {({ tokenStatus }) => (
-                <UpdateListing
-                  refetch={refetch}
-                  listing={listing}
-                  listingTokens={listingTokens}
-                  tokenBalance={tokenBalance}
-                  tokenStatus={tokenStatus}
-                  className="btn btn-primary btn-rounded btn-lg"
-                  children={fbt('Promote Now', 'promoteListing.promoteNow')}
-                />
-              )}
-            </WithPrices>
-          )}
+          {next}
         </div>
       </div>
     </>
@@ -178,6 +219,13 @@ require('react-styl')(`
       margin-top: 1.5rem
       font-size: 20px
       font-weight: bold
+    .not-enough,.enter-amount
+      margin: 1.5rem 0
+      font-weight: bold
+      font-size: 14px
+      line-height: 1.5rem
+    .not-enough
+      color: #ff0000
     .amount
       .form-control
         border: 0
@@ -201,6 +249,7 @@ require('react-styl')(`
         font-weight: bold
         font-size: 14px
         margin: 1.5rem 0
+        line-height: 1.5rem
         .badge
           margin-left: 0.375rem
       .input-wrap

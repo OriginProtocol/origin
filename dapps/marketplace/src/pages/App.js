@@ -188,4 +188,11 @@ require('react-styl')(`
     left: 50%
     text-align: center
     transform: translate(-50%, -50%)
+  main
+    display: flex
+    flex-direction: column
+  #app
+    height: 100%
+    display: flex
+    flex-direction: column
 `)
