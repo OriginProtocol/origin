@@ -23,6 +23,7 @@ function Action(props) {
 
   const actionLocked = status === 'Inactive'
   const actionCompleted = ['Exhausted', 'Completed'].includes(status)
+  let allowInteractionWhenCompleted = false
 
   const [detailsToggled, toggleDetails] = useState(false)
 
@@ -107,6 +108,7 @@ function Action(props) {
     externalLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       getContentToShare(props.action, props.locale)
     )}`
+    allowInteractionWhenCompleted = true
   } else if (type === 'FacebookShare') {
     buttonLink = undefined
     foregroundImgSrc = 'images/growth/facebook-icon.svg'
@@ -117,6 +119,7 @@ function Action(props) {
       `&href=${encodeURIComponent(props.action.content.link)}`,
       '&display=popup'
     ].join('')
+    allowInteractionWhenCompleted = true
   } else if (type === 'TwitterFollow') {
     buttonLink = undefined
     foregroundImgSrc = 'images/growth/twitter-icon.svg'
@@ -124,10 +127,12 @@ function Action(props) {
     // TODO: Move screen name to Enviroment variable
     externalLink =
       'https://twitter.com/intent/follow?screen_name=OriginProtocol'
+    allowInteractionWhenCompleted = true
   } else if (type === 'TelegramFollow') {
     buttonLink = undefined
     foregroundImgSrc = 'images/growth/telegram-badge.svg'
     title = fbt('Join us on Telegram', 'RewardActions.followOnTelegram')
+    allowInteractionWhenCompleted = true
     // TODO: Move screen name to Enviroment variable
     externalLink = 'https://web.telegram.org/#/im?p=@originprotocol'
   } else if (type === 'FacebookLike') {
@@ -135,6 +140,7 @@ function Action(props) {
     foregroundImgSrc = 'images/growth/facebook-icon.svg'
     title = fbt('Like our Facebook Page', 'RewardActions.likePageOnFacebook')
     externalLink = 'https://www.facebook.com/originprotocol/'
+    allowInteractionWhenCompleted = true
   }
 
   const renderReward = (amount, style = 'normal') => {
@@ -153,7 +159,9 @@ function Action(props) {
     )
   }
 
-  const isInteractable = !actionCompleted && !actionLocked
+  const isInteractable =
+    (!actionCompleted || (actionCompleted && allowInteractionWhenCompleted)) &&
+    !actionLocked
   const showUnlockModalOnClick =
     actionLocked && isMobile && unlockConditions.length > 0
 
