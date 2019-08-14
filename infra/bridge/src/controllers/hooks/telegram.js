@@ -3,6 +3,8 @@
 const express = require('express')
 const router = express.Router()
 
+const Web3 = require('web3')
+
 const logger = require('../../logger')
 
 const { redisClient } = require('../../utils/redis')
@@ -40,18 +42,15 @@ router.post('/', (req, res) => {
 
   if (message.text && !message.from.is_bot && message.chat.type === 'private') {
     // For attestations
-    let payload = /^\/start (.+)$/.exec(message.text)
+    let payload = /^\/start (.+)$/gi.exec(message.text)
 
     if (payload && payload[1]) {
       payload = payload[1]
 
-      // Payload should be in the format ETH_ADDRESS:ISSUER_SIGN
-      const [ethAddress, sign] = payload.split(':')
-      const key = `telegram/attestation/${ethAddress.toLowerCase()}`
+      const key = `telegram/attestation/event/${Web3.utils.sha3(payload)}`
       redisBatch.set(key, JSON.stringify({
         message,
-        ethAddress,
-        sign
+        payload
       }), 'EX', 60 * 30)
 
       logger.debug(`Pushing attestation message with payload '${payload}' to ${key}`)

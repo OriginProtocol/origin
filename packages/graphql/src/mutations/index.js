@@ -48,7 +48,6 @@ import verifyAirbnbCode from './attestations/verifyAirbnbCode'
 import generateWebsiteCode from './attestations/generateWebsiteCode'
 import verifyWebsite from './attestations/verifyWebsite'
 import verifyOAuthAttestation from './attestations/verifyOAuthAttestation'
-import verifyTelegramAuth from './attestations/verifyTelegramAuth'
 import generateTelegramCode from './attestations/generateTelegramCode'
 import verifyTelegramCode from './attestations/verifyTelegramCode'
 
@@ -112,7 +111,6 @@ export default {
   verifyOAuthAttestation,
   verifyPhoneCode,
   verifyPromotion,
-  verifyTelegramAuth,
   verifyTelegramCode,
   verifyWebsite,
   withdrawListing,

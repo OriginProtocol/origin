@@ -3,7 +3,7 @@ import get from 'lodash/get'
 
 import contracts from '../../contracts'
 
-async function verifyTelegramCode(_, { identity }) {
+async function verifyTelegramCode(_, { identity, code }) {
   const bridgeServer = contracts.config.bridge
   if (!bridgeServer) {
     return { success: false, reason: 'No bridge server configured' }
@@ -15,7 +15,7 @@ async function verifyTelegramCode(_, { identity }) {
     headers: { 'content-type': 'application/json' },
     credentials: 'include',
     method: 'POST',
-    body: JSON.stringify({ identity })
+    body: JSON.stringify({ identity, code })
   })
 
   const data = await response.json()

@@ -3,8 +3,7 @@
 const express = require('express')
 const router = express.Router()
 
-const crypto = require('crypto')
-const pick = require('lodash/pick')
+const Web3 = require('web3')
 
 const Attestation = require('../models/index').Attestation
 const AttestationTypes = Attestation.AttestationTypes
@@ -14,21 +13,31 @@ const logger = require('../logger')
 
 const { telegramGenerateCode, telegramVerify } = require('../utils/validation')
 
-const { getAsync } = require('../utils/redis')
+const { redisClient, getAsync } = require('../utils/redis')
 
 router.get('/generate-code', telegramGenerateCode, async (req, res) => {
-  const code = generateTelegramCode(req.query.identity)
-  res.send({ code })
+  const identity = req.query.identity.toLowerCase()
+
+  const { code, seed } = generateTelegramCode(identity)
+
+  redisClient.set(`telegram/attestation/seed/${identity}`, seed, 'EX', 60 * 30)
+
+  res.send({
+    code: code
+  })
 })
 
 router.post('/verify', telegramVerify, async (req, res) => {
-  const { identity } = req.body
+  const identity = req.body.identity.toLowerCase()
+  const code = req.body.code
 
-  const key = `telegram/attestation/${identity.toLowerCase()}`
+  const eventKey = `telegram/attestation/event/${Web3.utils.sha3(code)}`
+  const seedKey = `telegram/attestation/seed/${identity}`
 
-  const storedEvent = await getAsync(key)
+  const storedEvent = await getAsync(eventKey)
+  const seed = await getAsync(seedKey)
 
-  if (!storedEvent) {
+  if (!storedEvent || !seed) {
     return res
       .status(500)
       .send({
@@ -36,15 +45,13 @@ router.post('/verify', telegramVerify, async (req, res) => {
       })
   }
 
-  const { sign, ethAddress, message } = storedEvent
+  const { payload, message } = JSON.parse(storedEvent)
 
-  const valid = verifyTelegramCode(ethAddress, sign)
-
-  if (!valid) {
+  if (!verifyTelegramCode(identity, payload, seed)) {
     return res
       .status(500)
       .send({
-        errors: ['Failed verify your account']
+        errors: [`Code verification failed`]
       })
   }
 
@@ -93,109 +100,5 @@ router.post('/verify', telegramVerify, async (req, res) => {
     })
   }
 })
-
-// const paramToTelegramKeyMapping = {
-//   authDate: 'auth_date',
-//   firstName: 'first_name',
-//   id: 'id',
-//   lastName: 'last_name',
-//   photoUrl: 'photo_url',
-//   username: 'username'
-// }
-
-// function validateHash({ hash, ...body }) {
-//   // Note: These keys should be sorted in alphabetical order
-//   // Ref: https://core.telegram.org/widgets/login#checking-authorization
-//   const keys = [
-//     'authDate',
-//     'firstName',
-//     'id',
-//     'lastName',
-//     'photoUrl',
-//     'username'
-//   ]
-
-//   const data = keys
-//     .filter(key => typeof body[key] === 'string' && body[key].length)
-//     .map(key => {
-//       return `${paramToTelegramKeyMapping[key]}=${body[key]}`
-//     })
-//     .join('\n')
-
-//   const secret = crypto
-//     .createHash('sha256')
-//     .update(process.env.TELEGRAM_BOT_TOKEN)
-//     .digest()
-
-//   const generatedHash = crypto
-//     .createHmac('sha256', secret)
-//     .update(data)
-//     .digest('hex')
-
-//   logger.debug('Comparing hashses...', hash, generatedHash)
-//   return hash === generatedHash
-// }
-
-// router.post('/verify', telegramVerify, async (req, res) => {
-//   if (!validateHash(req.body)) {
-//     logger.error(`Failed to validate hash`, req.body)
-//     return res.status(400).send({
-//       errors: ['Failed to create an attestation']
-//     })
-//   }
-
-//   const userProfileData = pick(req.body, [
-//     'authDate',
-//     'firstName',
-//     'id',
-//     'lastName',
-//     'photoUrl',
-//     'username'
-//   ])
-
-//   const profileUrl = userProfileData.username
-//     ? `https://t.me/${userProfileData.username}`
-//     : null
-
-//   const attestationBody = {
-//     verificationMethod: {
-//       oAuth: true
-//     },
-//     site: {
-//       siteName: 'telegram.com',
-//       userId: {
-//         raw: String(userProfileData.id)
-//       },
-//       username: {
-//         raw: userProfileData.username
-//       },
-//       profileUrl: {
-//         raw: profileUrl
-//       }
-//     }
-//   }
-
-//   try {
-//     const attestation = await generateAttestation(
-//       AttestationTypes.TELEGRAM,
-//       attestationBody,
-//       {
-//         uniqueId: userProfileData.id,
-//         username: userProfileData.username,
-//         profileUrl: profileUrl,
-//         profileData: userProfileData
-//       },
-//       req.body.identity,
-//       req.ip
-//     )
-
-//     return res.send(attestation)
-//   } catch (error) {
-//     logger.error(error)
-//     return res.status(500).send({
-//       errors: ['Could not create attestation.']
-//     })
-//   }
-// })
 
 module.exports = router

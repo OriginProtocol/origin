@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
-import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import { withRouter } from 'react-router-dom'
@@ -11,10 +10,8 @@ import withWallet from 'hoc/withWallet'
 import Modal from 'components/Modal'
 import MobileModal from 'components/MobileModal'
 import AutoMutate from 'components/AutoMutate'
-import TelegramLoginButton from 'components/TelegramLoginButton'
 import PublishedInfoBox from 'components/_PublishedInfoBox'
 
-import VerifyTelegramAuthMutation from 'mutations/VerifyTelegramAuth'
 import GenerateTelegramCodeMutation from 'mutations/GenerateTelegramCode'
 import VerifyTelegramCodeMutation from 'mutations/VerifyTelegramCode'
 
@@ -24,31 +21,6 @@ class TelegramAttestation extends Component {
 
     this.state = {}
   }
-
-  // componentDidUpdate() {
-  //   const searchParams = new URLSearchParams(
-  //     get(this.props, 'location.search', '')
-  //   )
-
-  //   if (
-  //     searchParams.has('hash') &&
-  //     !this.state.authData &&
-  //     !this.props.walletLoading
-  //   ) {
-  //     this.props.history.replace('/profile')
-  //     this.setState({
-  //       authData: {
-  //         hash: searchParams.get('hash'),
-  //         authDate: searchParams.get('auth_date'),
-  //         username: searchParams.get('username'),
-  //         firstName: searchParams.get('first_name'),
-  //         lastName: searchParams.get('last_name'),
-  //         id: searchParams.get('id'),
-  //         photoUrl: searchParams.get('photo_url')
-  //       }
-  //     })
-  //   }
-  // }
 
   render() {
     if (!this.props.open) {
@@ -91,6 +63,7 @@ class TelegramAttestation extends Component {
 
   renderVerifyCode() {
     const { isMobile } = this.props
+    const { openedLink, code } = this.state
 
     const header = isMobile ? null : (
       <fbt desc="TelegramAttestation.title">Verify your Telegram Account</fbt>
@@ -98,6 +71,7 @@ class TelegramAttestation extends Component {
 
     return (
       <>
+        {this.renderGenerateCode()}
         <h2>{header}</h2>
         <div className="instructions mb-3">
           <fbt desc="TelegramAttestation.description">
@@ -121,9 +95,26 @@ class TelegramAttestation extends Component {
           }
         />
         <div className="actions">
-          {/* {this.renderAuthorizeButton()} */}
-          {this.renderGenerateCode()}
-          {this.renderVerifyButton()}
+          {!openedLink && (
+            <a
+              href={`tg://resolve?domain=origin_protocol_test_bot&start=${encodeURIComponent(code)}`}
+              className="btn btn-primary"
+              onClick={() => {
+                this.setState({
+                  openedLink: true
+                })
+              }}
+              disabled={this.state.loading}
+              children={
+                this.state.loading ? (
+                  <fbt desc="Loading...">Loading...</fbt>
+                ) : (
+                  <fbt desc="Continue">Continue</fbt>
+                )
+              }
+            />
+          )}
+          {openedLink && this.renderVerifyButton()}
           {!isMobile && (
             <button
               className="btn btn-link"
@@ -194,16 +185,14 @@ class TelegramAttestation extends Component {
             data: result.data,
             loading: false,
             completed: true,
-            shouldClose: true,
-            code: null
+            shouldClose: true
           })
         }}
         onError={errorData => {
           console.error('Error', errorData)
           this.setState({
             error: 'Check console',
-            loading: false,
-            code: null
+            loading: false
           })
         }}
       >
@@ -214,7 +203,8 @@ class TelegramAttestation extends Component {
 
             verifyCode({
               variables: {
-                identity: this.props.wallet
+                identity: this.props.wallet,
+                code: this.state.code
               }
             })
           }
@@ -229,7 +219,7 @@ class TelegramAttestation extends Component {
                   this.state.loading ? (
                     <fbt desc="Loading...">Loading...</fbt>
                   ) : (
-                    <fbt desc="Continue">Continue</fbt>
+                    <fbt desc="Verify">Verify</fbt>
                   )
                 }
               />
@@ -239,81 +229,6 @@ class TelegramAttestation extends Component {
       </Mutation>
     )
   }
-
-  // renderAuthorizeButton() {
-  //   if (!this.state.authData) {
-  //     const { origin, pathname } = window.location
-
-  //     return (
-  //       <TelegramLoginButton
-  //         redirectURL={`${origin}${pathname}#/profile/telegram`}
-  //         buttonText={<fbt desc="Continue">Continue</fbt>}
-  //         className="btn btn-primary"
-  //       />
-  //     )
-  //   }
-
-  //   return (
-  //     <Mutation
-  //       mutation={VerifyTelegramAuthMutation}
-  //       onCompleted={res => {
-  //         const result = res.verifyTelegramAuth
-
-  //         if (!result.success) {
-  //           this.setState({ error: result.reason, loading: false, data: null })
-  //           return
-  //         }
-
-  //         this.setState({
-  //           data: result.data,
-  //           loading: false,
-  //           completed: true,
-  //           shouldClose: true,
-  //           authData: null
-  //         })
-  //       }}
-  //       onError={errorData => {
-  //         console.error('Error', errorData)
-  //         this.setState({
-  //           error: 'Check console',
-  //           loading: false,
-  //           authData: null
-  //         })
-  //       }}
-  //     >
-  //       {verifyCode => {
-  //         const runMutation = () => {
-  //           if (this.state.loading) return
-  //           this.setState({ error: false, loading: true })
-
-  //           verifyCode({
-  //             variables: {
-  //               identity: this.props.wallet,
-  //               ...this.state.authData
-  //             }
-  //           })
-  //         }
-
-  //         return (
-  //           <>
-  //             <AutoMutate mutation={runMutation} />
-  //             <button
-  //               className="btn btn-primary"
-  //               onClick={runMutation}
-  //               children={
-  //                 this.state.loading ? (
-  //                   <fbt desc="Loading...">Loading...</fbt>
-  //                 ) : (
-  //                   <fbt desc="Continue">Continue</fbt>
-  //                 )
-  //               }
-  //             />
-  //           </>
-  //         )
-  //       }}
-  //     </Mutation>
-  //   )
-  // }
 }
 
 export default withWallet(withIsMobile(withRouter(TelegramAttestation)))

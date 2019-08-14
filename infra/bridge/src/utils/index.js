@@ -32,19 +32,27 @@ function generateWebsiteCode(ethAddress, host) {
   return sign.slice(2)
 }
 
-function generateTelegramCode(ethAddress) {
-  const data = Web3.utils.sha3(`TELEGRAM_ATTESTATION_FOR_${ethAddress.toLowerCase()}`)
-  const sign = generateSignature(process.env.ATTESTATION_SIGNING_KEY, data)
+function generateTelegramCode(ethAddress, seed) {
+  if (!seed) {
+    // Generating this for randomness
+    seed = generateSixDigitCode()
+  }
 
-  // prepend ETH address to make it in this format: ETH_ADDRESS:ISSUER_SIGN
-  return `${ethAddress.toLowerCase()}:${sign}`
+  // Stolen from `generateAirbnbCode()` method
+  const hashCode = Web3.utils.sha3(`${ethAddress.toLowerCase()}${seed}`).substr(-6)
+
+  return {
+    seed,
+    code: Array.prototype.map
+      .call(hashCode, i => dictionary[i.charCodeAt(0)])
+      .join('')
+  }
 }
 
-function verifyTelegramCode(ethAddress, sign) {
-  const data = Web3.utils.sha3(`TELEGRAM_ATTESTATION_FOR_${ethAddress.toLowerCase()}`)
-  const address = Web3.eth.accounts.recover(data, sign)
-  console.log(address.toLowerCase(), ethAddress.toLowerCase())
-  return address.toLowerCase() === ethAddress.toLowerCase()
+function verifyTelegramCode(ethAddress, code, seed) {
+  const { code: expectedCode } = generateTelegramCode(ethAddress, seed)
+
+  return expectedCode === code
 }
 
 function getAbsoluteUrl(relativeUrl, params = {}) {

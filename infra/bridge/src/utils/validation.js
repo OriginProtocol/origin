@@ -164,11 +164,11 @@ const verifyPromotions = [
 
 const telegramVerify = [
   identityValidation,
-  // check('code')
-  //   .not()
-  //   .isEmpty()
-  //   .withMessage('Field `code` must not be empty.')
-  //   .trim(),
+  check('code')
+    .not()
+    .isEmpty()
+    .withMessage('Field `code` must not be empty.')
+    .trim(),
   handleValidationError
 ]
 
