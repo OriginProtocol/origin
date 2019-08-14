@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 
-import { withSendEmailToken } from '@/hoc/withSendEmailToken'
+import withSendEmailToken from '@/hoc/withSendEmailToken'
 
 class Terms extends Component {
   state = {
