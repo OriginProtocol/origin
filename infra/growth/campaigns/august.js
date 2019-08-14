@@ -465,7 +465,8 @@ const augustConfig = {
               'LinkedInAttestationPublished',
               'KakaoAttestationPublished',
               'WeChatAttestationPublished',
-              'WebsiteAttestationPublished'
+              'WebsiteAttestationPublished',
+              'TelegramAttestationPublished'
             ],
             visible: false,
             numEventsRequired: 2,
