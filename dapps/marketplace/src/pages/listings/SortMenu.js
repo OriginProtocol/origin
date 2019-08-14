@@ -32,7 +32,11 @@ const SortMenu = ({
           }}
         >
           <SortContent
-            onChange={onChange}
+            onChange={(e) => {
+              onChange(e)
+              setCloseModal(false)
+              onClose()
+            }}
             selectedOption={selectedOption}
             isMobile={isMobile}
           />
@@ -199,26 +203,22 @@ require('react-styl')(`
     .sort-modal
       padding: 1rem
   .sort-button-bar
-    display: flex;
-    justify-content: flex-end;
-    padding: 1rem;
+    display: flex
+    justify-content: flex-end
+    padding: 1rem
     font-size: medium
     width: 100%
-  .dropdown.show
-    .sort-button
-      border-left: 1px solid var(--light);
-      border-right: 1px solid var(--light);
   .sort-button
-    border-left: 1px solid transparent;
-    border-right: 1px solid transparent;
+    border-left: 1px solid transparent
+    border-right: 1px solid transparent
     padding: 0.75rem
     color: var(--dusk)
     height: 100%
     display: flex
     align-items: center
-    font-size: 14px;
-    font-weight: bold;
-    font-style: normal;
+    font-size: 14px
+    font-weight: bold
+    font-style: normal
     &.text
       background-color: initial
       padding: 0 0.25rem
@@ -237,27 +237,27 @@ require('react-styl')(`
   .sort-button:hover
     color: var(--dusk)
   .sort-dropdown
-    padding: 0;
-    position: absolute !important;
-    margin-top: 0;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-    border-radius: 0 0 5px 5px;
-    border: 1px solid var(--light);
-    font-weight: normal;
+    padding: 0
+    position: absolute !important
+    margin-top: 0
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1)
+    border-radius: 5px
+    border: 1px solid var(--light)
+    font-weight: normal
     min-width: 12rem
   .sort-form
-    padding: 0.625rem;
+    padding: 0.625rem
   .sort-radio-label
-    padding: 0.1rem 0rem;
-    display: flex;
-    align-items: flex-end;
+    padding: 0.1rem 0rem
+    display: flex
+    align-items: flex-end
     font-size: 0.9rem
   .sort-radio-button
     margin-right: 0.5rem
-    padding: 0;
-    height: 1.1rem;
-    width: 1.1rem;
-    box-sizing: border-box;
-    vertical-align: middle;
-    margin-bottom: 1px;
+    padding: 0
+    height: 1.1rem
+    width: 1.1rem
+    box-sizing: border-box
+    vertical-align: middle
+    margin-bottom: 1px
 `)

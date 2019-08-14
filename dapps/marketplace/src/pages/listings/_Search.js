@@ -246,15 +246,10 @@ require('react-styl')(`
         &.floating
           z-index: 1000
           position: absolute
-          right: 0
           left: 0
-          border-top-left-radius: 0
-          border-top-right-radius: 0
-          border-bottom-left-radius: 5px
-          border-bottom-right-radius: 5px
+          border-radius: 5px
           box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1)
           border: solid 1px #c2cbd3
-          border-top: 0
         .title
           font-size: 12px
           color: var(--dusk)
@@ -264,12 +259,9 @@ require('react-styl')(`
 
         .featured-categories-wrapper
           margin: 0 -2rem
-          overflow-x: scroll
 
         .featured-categories
           display: inline-flex
-          overflow-x: scroll
-          flex-wrap: nowrap
           padding: 0 2rem
           .category-icon
             width: 60px
@@ -310,11 +302,9 @@ require('react-styl')(`
 
             &:last-of-type
               margin-right: 0
-    
+
     &:focus-within
       .form-control
-        border-bottom-left-radius: 0
-        border-bottom-right-radius: 0
         box-shadow: none
         outline: none
       .search-input-wrapper .search-dropdown.floating
@@ -335,11 +325,19 @@ require('react-styl')(`
         .search-dropdown
           padding: 1.5rem 0
 
+   @media (max-width: 767.98px)
+    .listing-search-wrapper
+      .search-input-wrapper
+        .search-dropdown
+          .featured-categories
+            flex-wrap: wrap
+
   .navbar
     .listing-search-wrapper
       max-width: 350px
       flex: 1
       margin-left: 1rem
+      margin-bottom: 1.5rem
       .form-control
         background: url(images/magnifying-glass.svg) no-repeat right 10px center
         border-color: #c2cbd3

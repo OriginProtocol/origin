@@ -323,26 +323,26 @@ export default withGrowthRewards(
 )
 
 require('react-styl')(`
-  .listings-menu-bar 
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 0 1rem;
-    position: relative;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
+  .listings-menu-bar
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1)
+    padding: 0 1rem
+    position: relative
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    justify-content: space-between
   @media (max-width: 767.98px)
-    .listings-menu-bar 
-      padding: 0;
-      min-height: 3.75rem;
+    .listings-menu-bar
+      padding: 0
+      min-height: 3.75rem
       border: none
   .listings-container
     padding-top: 3rem
   .listings-count
-    font-family: var(--heading-font);
-    font-size: 40px;
-    font-weight: 200;
-    color: var(--dark);
+    font-family: var(--heading-font)
+    font-size: 40px
+    font-weight: 200
+    color: var(--dark)
   .listings-empty
     margin-top: 10rem
   @media (max-width: 767.98px)
