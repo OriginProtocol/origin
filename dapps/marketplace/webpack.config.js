@@ -21,9 +21,16 @@ try {
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-const TELEGRAM_BOT_USERNAME = isProduction
-  ? 'originprotocol_verification_bot'
-  : 'origin_protocol_test_bot'
+const isStaging = process.env.NAMESPACE === 'staging'
+const isDev = process.env.NAMESPACE === 'dev'
+
+let TELEGRAM_BOT_USERNAME = 'origin_protocol_test_bot'
+
+if (isStaging) {
+  TELEGRAM_BOT_USERNAME = 'originprotocol_verification_bot'
+} else if (isProduction && !isDev) {
+  TELEGRAM_BOT_USERNAME = 'originprotocol_production_bot'
+}
 
 const config = {
   entry: {

@@ -20,6 +20,47 @@ class TelegramAttestation extends Component {
     this.state = {}
   }
 
+  unloadIframe() {
+    if (
+      this.props.walletType !== 'Mobile' &&
+      this.props.walletType !== 'Origin Wallet'
+    ) {
+      return
+    }
+
+    if (this.iframeRef && document.body.contains(this.iframeRef)) {
+      document.body.removeChild(this.iframeRef)
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // Note: An ugly hack to make the app links work on Origin Wallet
+    // without pushing another update to the App/Play Store
+    if (
+      this.props.walletType !== 'Mobile' &&
+      this.props.walletType !== 'Origin Wallet'
+    ) {
+      return
+    }
+
+    if (!prevState.openedLink && this.state.openedLink && !this.iframeRef) {
+      this.iframeRef = document.createElement('iframe')
+
+      this.iframeRef.setAttribute(
+        'src',
+        `tg://resolve?domain=${
+          process.env.TELEGRAM_BOT_USERNAME
+        }&start=${encodeURIComponent(this.state.code)}`
+      )
+
+      document.body.appendChild(this.iframeRef)
+    }
+  }
+
+  componentWillUnmount() {
+    this.unloadIframe()
+  }
+
   render() {
     if (!this.props.open) {
       return null
@@ -61,7 +102,7 @@ class TelegramAttestation extends Component {
 
   renderVerifyCode() {
     const { isMobile } = this.props
-    const { openedLink, code } = this.state
+    const { openedLink } = this.state
 
     const header = isMobile ? null : (
       <fbt desc="TelegramAttestation.title">Verify your Telegram Account</fbt>
@@ -97,9 +138,17 @@ class TelegramAttestation extends Component {
             <a
               href={`tg://resolve?domain=${
                 process.env.TELEGRAM_BOT_USERNAME
-              }&start=${encodeURIComponent(code)}`}
+              }&start=${encodeURIComponent(this.state.code)}`}
               className="btn btn-primary"
-              onClick={() => {
+              onClick={e => {
+                if (
+                  this.props.walletType === 'Mobile' ||
+                  this.props.walletType === 'Origin Wallet'
+                ) {
+                  // Use `iframe` hack on Origin Wallet for now
+                  e.preventDefault()
+                }
+
                 this.setState({
                   openedLink: true
                 })
@@ -174,8 +223,15 @@ class TelegramAttestation extends Component {
         onCompleted={res => {
           const result = res.verifyTelegramCode
 
+          this.unloadIframe()
+
           if (!result.success) {
-            this.setState({ error: result.reason, loading: false, data: null })
+            this.setState({
+              error: result.reason,
+              loading: false,
+              data: null,
+              openedLink: false
+            })
             return
           }
 
@@ -190,8 +246,10 @@ class TelegramAttestation extends Component {
           console.error('Error', errorData)
           this.setState({
             error: 'Check console',
-            loading: false
+            loading: false,
+            openedLink: false
           })
+          this.unloadIframe()
         }}
       >
         {verifyCode => {
