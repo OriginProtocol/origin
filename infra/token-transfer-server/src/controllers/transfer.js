@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const { check, validationResult } = require('express-validator')
 const moment = require('moment')
+const AsyncLock = require('async-lock')
+const lock = new AsyncLock()
 
 const logger = require('../logger')
 const { Grant, Transfer } = require('../../src/models')
@@ -65,13 +67,14 @@ router.post(
     const { grantId, address, amount } = req.body
 
     try {
-      await enqueueTransfer(
-        grantId,
-        address,
-        amount,
-        req.connection.remoteAddress
-      )
-
+      await lock.acquire(grantId, async () => {
+        await enqueueTransfer(
+          grantId,
+          address,
+          amount,
+          req.connection.remoteAddress
+        )
+      })
       // TODO: update to be more useful, e.g. users email
       logger.info(`Grant ${grantId} transferred ${amount} OGN to ${address}`)
     } catch (e) {

@@ -145,6 +145,10 @@ describe('Transfer HTTP API', () => {
         address: toAddress
       })
       .expect(201)
+
+    expect(
+      (await request(this.mockApp).get('/api/transfers')).body.length
+    ).to.equal(1)
   })
 
   it('should not enqueue a transfer before lockup date passed', async () => {
@@ -161,6 +165,10 @@ describe('Transfer HTTP API', () => {
       .expect(422)
 
     expect(response.text).to.match(/locked/)
+
+    expect(
+      (await request(this.mockApp).get('/api/transfers')).body.length
+    ).to.equal(0)
   })
 
   it('should not enqueue a transfer if not enough tokens (vested)', async () => {
@@ -177,6 +185,10 @@ describe('Transfer HTTP API', () => {
       .expect(422)
 
     expect(response.text).to.match(/exceeds/)
+
+    expect(
+      (await request(this.mockApp).get('/api/transfers')).body.length
+    ).to.equal(0)
   })
 
   it('should not enqueue a transfer if not enough tokens (vested minus enqueued)', async () => {
@@ -201,6 +213,10 @@ describe('Transfer HTTP API', () => {
       .expect(422)
 
     expect(response.text).to.match(/exceeds/)
+
+    expect(
+      (await request(this.mockApp).get('/api/transfers')).body.length
+    ).to.equal(1)
   })
 
   it('should not enqueue a transfer if not enough tokens (vested minus paused)', async () => {
@@ -225,6 +241,10 @@ describe('Transfer HTTP API', () => {
       .expect(422)
 
     expect(response.text).to.match(/exceeds/)
+
+    expect(
+      (await request(this.mockApp).get('/api/transfers')).body.length
+    ).to.equal(1)
   })
 
   it('should not enqueue a transfer if not enough tokens (vested minus waiting)', async () => {
@@ -249,6 +269,10 @@ describe('Transfer HTTP API', () => {
       .expect(422)
 
     expect(response.text).to.match(/exceeds/)
+
+    expect(
+      (await request(this.mockApp).get('/api/transfers')).body.length
+    ).to.equal(1)
   })
 
   it('should not enqueue a transfer if not enough tokens (vested minus success)', async () => {
@@ -273,6 +297,10 @@ describe('Transfer HTTP API', () => {
       .expect(422)
 
     expect(response.text).to.match(/exceeds/)
+
+    expect(
+      (await request(this.mockApp).get('/api/transfers')).body.length
+    ).to.equal(1)
   })
 
   it('should not enqueue a transfer if not enough tokens (multiple states)', async () => {
@@ -306,5 +334,35 @@ describe('Transfer HTTP API', () => {
       .expect(422)
 
     expect(response.text).to.match(/exceeds/)
+
+    expect(
+      (await request(this.mockApp).get('/api/transfers')).body.length
+    ).to.equal(4)
+  })
+
+  it('should not enqueue simultaneous transfers if not enough tokens', async () => {
+    const results = await Promise.all([
+      request(this.mockApp)
+        .post('/api/transfers')
+        .send({
+          grantId: this.grants[0].id,
+          amount: 1000000,
+          address: toAddress
+        }),
+      request(this.mockApp)
+        .post('/api/transfers')
+        .send({
+          grantId: this.grants[0].id,
+          amount: 1000000,
+          address: toAddress
+        })
+    ])
+
+    expect(results.some(result => result.status === 422)).to.equal(true)
+
+    // 1 transfer should be created because 1 failed
+    expect(
+      (await request(this.mockApp).get('/api/transfers')).body.length
+    ).to.equal(1)
   })
 })
