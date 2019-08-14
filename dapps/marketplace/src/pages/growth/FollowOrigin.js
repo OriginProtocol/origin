@@ -26,6 +26,8 @@ const actionTypeToNetwork = actionType => {
   switch (actionType) {
     case 'TwitterFollow':
       return 'TWITTER'
+    case 'TelegramFollow':
+      return 'TELEGRAM'
     case 'FacebookLike':
       return 'FACEBOOK'
   }

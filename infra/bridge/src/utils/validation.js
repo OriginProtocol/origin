@@ -154,11 +154,21 @@ const websiteVerify = websiteGenerateCode
 const verifyPromotions = [
   identityValidation,
   check('socialNetwork')
-    .isIn(['TWITTER'])
+    .isIn(['TWITTER', 'TELEGRAM'])
     .withMessage('Unsupported social network'),
   check('type')
     .isIn(['FOLLOW', 'SHARE'])
     .withMessage('Unknown event type'),
+  handleValidationError
+]
+
+const telegramVerify = [
+  identityValidation,
+  check('id')
+    .not()
+    .isEmpty()
+    .withMessage('Field id must not be empty.')
+    .trim(),
   handleValidationError
 ]
 
@@ -178,5 +188,6 @@ module.exports = {
   githubVerify,
   linkedinVerify,
   wechatVerify,
-  verifyPromotions
+  verifyPromotions,
+  telegramVerify
 }
