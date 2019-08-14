@@ -28,6 +28,7 @@ const isExistingAddress = (value, { req }) => {
       throw new Error('Address already exists')
     }
   })
+  return true
 }
 
 const isExistingNickname = (value, { req }) => {
@@ -41,6 +42,7 @@ const isExistingNickname = (value, { req }) => {
       throw new Error('Nickname already exists')
     }
   })
+  return true
 }
 
 // Use a function so that this value can be mocked in tests
