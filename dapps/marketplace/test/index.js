@@ -144,7 +144,7 @@ function listingTests(autoSwap) {
     })
 
     it('should continue to listing promotion', async function() {
-      await clickByText(page, 'Promote listing', 'a')
+      await clickByText(page, 'Promote Now', 'a')
     })
 
     it('should continue to OGN entry', async function() {
@@ -360,7 +360,7 @@ function listingTests(autoSwap) {
     })
 
     it('should continue to listing promotion', async function() {
-      await clickByText(page, 'Promote listing', 'a')
+      await clickByText(page, 'Promote Now', 'a')
     })
 
     it('should continue to OGN entry', async function() {

@@ -47,9 +47,9 @@ require('react-styl')(`
     .how-works
       display: flex
       flex-direction: column
+      flex: 1
       align-items: center
       text-align: center
-      min-height: calc(100vh - 8rem)
       justify-content: space-around
       font-weight: 300
       font-size: 18px
