@@ -52,7 +52,7 @@ const VerifyOrConfirmFollow = ({
 
   return (
     <>
-      {socialNetwork === 'TWITTER' && (
+      {socialNetwork !== 'FACEBOOK' && (
         <Mutation
           mutation={VerifyPromotionMutation}
           onCompleted={({ verifyPromotion }) => {
