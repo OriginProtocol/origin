@@ -127,6 +127,6 @@ describe('telegram attestation', () => {
       })
       .expect(500)
 
-    expect(response.body.errors[0]).to.equal(`You haven\'t interacted with the verification bot yet.`)
+    expect(response.body.errors[0]).to.equal(`You haven't interacted with the verification bot yet.`)
   })
 })
