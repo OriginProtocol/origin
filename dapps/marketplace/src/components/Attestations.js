@@ -92,7 +92,7 @@ require('react-styl')(`
     &.telegram
       background-image: url(images/growth/telegram-badge.svg)
       background-size: 100%
-      border-color: 0
+      border: 0
   .attestations-small .attestation
     width: 1.5rem
     height: 1.5rem
