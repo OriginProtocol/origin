@@ -13,11 +13,17 @@ module.exports = {
         unique: true,
         allowNull: false
       },
+      phone: {
+        type: Sequelize.STRING
+      },
       // Key used for OTP authentication.
       otp_key: {
         type: Sequelize.STRING
       },
       otp_verified: {
+        type: Sequelize.BOOLEAN
+      },
+      employee: {
         type: Sequelize.BOOLEAN
       },
       created_at: {

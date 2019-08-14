@@ -17,8 +17,8 @@ before(async function() {
   page = (await services()).extrasResult.page
 })
 
-const reset = async () => {
-  const seller = await createAccount(page)
+const reset = async sellerOgn => {
+  const seller = await createAccount(page, sellerOgn)
   const buyer = await createAccount(page)
 
   await page.evaluate(() => {
@@ -83,7 +83,7 @@ function listingTests(autoSwap) {
   describe('Single Unit Listing for Eth', function() {
     let seller, buyer
     before(async function() {
-      ({ seller, buyer } = await reset())
+      ({ seller, buyer } = await reset('100'))
     })
 
     it('should navigate to the Add Listing page', async function() {
@@ -140,6 +140,32 @@ function listingTests(autoSwap) {
     })
 
     it('should continue to listing', async function() {
+      await clickByText(page, 'View Listing', 'button')
+    })
+
+    it('should continue to listing promotion', async function() {
+      await clickByText(page, 'Promote Now', 'a')
+    })
+
+    it('should continue to OGN entry', async function() {
+      await clickByText(page, 'Continue', 'a')
+    })
+
+    it('should enter 10 OGN', async function() {
+      await page.type('input[name=commissionPerUnit]', '10')
+    })
+
+    it('should allow promotion tx', async function() {
+      await clickByText(page, 'Promote Now', 'button')
+    })
+
+    if (autoSwap) {
+      it('should prompt the user to approve their OGN', async function() {
+        await clickByText(page, 'Promote Now', 'button')
+      })
+    }
+
+    it('should allow listing to be viewed', async function() {
       await clickByText(page, 'View Listing', 'button')
     })
 
@@ -262,7 +288,7 @@ function listingTests(autoSwap) {
   describe('Multi Unit Listing for Eth', function() {
     let seller, buyer, listingHash
     before(async function() {
-      ({ seller, buyer } = await reset())
+      ({ seller, buyer } = await reset('100'))
     })
 
     it('should navigate to the Add Listing page', async function() {
@@ -333,6 +359,49 @@ function listingTests(autoSwap) {
       assert(sales.replace(/\n/g, ' ') === 'Sold 0 Pending 0 Available 2')
     })
 
+    it('should continue to listing promotion', async function() {
+      await clickByText(page, 'Promote Now', 'a')
+    })
+
+    it('should continue to OGN entry', async function() {
+      await clickByText(page, 'Continue', 'a')
+    })
+
+    it('should enter 10 OGN', async function() {
+      await page.type('input[name=commissionPerUnit]', '10')
+    })
+
+    it('should continue to OGN budget', async function() {
+      await clickByText(page, 'Continue', 'a')
+    })
+
+    it('should allow promotion tx', async function() {
+      await clickByText(page, 'Promote Now', 'button')
+    })
+
+    if (autoSwap) {
+      it('should prompt the user to approve their OGN', async function() {
+        await clickByText(page, 'Promote Now', 'button')
+      })
+    }
+
+    it('should allow listing to be viewed', async function() {
+      await clickByText(page, 'View Listing', 'button')
+    })
+
+    it('should have the correct commission numbers', async function() {
+      await page.waitForSelector('.listing-commission')
+      const commission = await page.$('.listing-commission')
+      const commissionTxt = await page.evaluate(el => el.innerText, commission)
+      assert(
+        commissionTxt
+          .replace(/\n/g, ' ')
+          .startsWith(
+            'Commission per Unit 10 Total Budget 20 Total Budget Remaining 20'
+          )
+      )
+    })
+
     it('should allow a new listing to be purchased', async function() {
       await pic(page, 'listing-detail')
       await changeAccount(page, buyer)
@@ -387,6 +456,19 @@ function listingTests(autoSwap) {
       const sold = await page.$('.listing-buy-editonly')
       const sales = await page.evaluate(el => el.innerText, sold)
       assert(sales.replace(/\n/g, ' ') === 'Sold 2 Pending 0 Available 8')
+    })
+
+    it('should have the updated commission numbers', async function() {
+      await page.waitForSelector('.listing-commission')
+      const commission = await page.$('.listing-commission')
+      const commissionTxt = await page.evaluate(el => el.innerText, commission)
+      assert(
+        commissionTxt
+          .replace(/\n/g, ' ')
+          .startsWith(
+            'Commission per Unit 10 Total Budget 20 Total Budget Remaining 0'
+          )
+      )
     })
 
     it('should allow the edited listing to be purchased', async function() {
@@ -449,6 +531,7 @@ describe('Marketplace Dapp', function() {
       delete window.localStorage.performanceMode
       delete window.localStorage.proxyAccountsEnabled
       delete window.localStorage.relayerEnabled
+      window.localStorage.promoteEnabled = 'true'
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
@@ -463,6 +546,7 @@ describe('Marketplace Dapp with proxies enabled', function() {
       window.localStorage.proxyAccountsEnabled = true
       delete window.localStorage.performanceMode
       delete window.localStorage.relayerEnabled
+      window.localStorage.promoteEnabled = 'true'
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
@@ -485,6 +569,7 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
       window.localStorage.proxyAccountsEnabled = true
       window.localStorage.relayerEnabled = true
       window.localStorage.debug = 'origin:*'
+      window.localStorage.promoteEnabled = 'true'
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')

@@ -49,6 +49,7 @@ module.exports = {
         }
       })
       .then(() => queryInterface.addIndex(tableName, ['to_address']))
+      .then(() => queryInterface.addIndex(tableName, ['grant_id']))
   },
   down: queryInterface => {
     return queryInterface

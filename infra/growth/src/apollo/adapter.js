@@ -2,7 +2,6 @@ const db = require('../models')
 const { GrowthInvite } = require('../resources/invite')
 const enums = require('../enums')
 const { Money } = require('../util/money')
-
 // Maps rule Id -> Apollo action type.
 const ruleIdToActionType = {
   ProfilePublished: 'Profile',
@@ -33,7 +32,10 @@ const ruleIdToActionType = {
   ListingPurchaseArt: 'ListingIdPurchased',
   MobileAccountCreated: 'MobileAccountCreated',
   TwitterShare: 'TwitterShare',
-  TwitterFollow: 'TwitterFollow'
+  TwitterFollow: 'TwitterFollow',
+  TelegramAttestation: 'Telegram',
+  TelegramFollow: 'TelegramFollow',
+  FacebookLike: 'FacebookLike'
 }
 
 /**
@@ -55,6 +57,8 @@ class ApolloAdapter {
       actionType = 'ListingIdPurchased'
     } else if (ruleId.match(/^TwitterShare[\d-]+$/)) {
       actionType = 'TwitterShare'
+    } else if (ruleId.match(/^FacebookShare[\d-]+$/)) {
+      actionType = 'FacebookShare'
     } else {
       actionType = ruleIdToActionType[ruleId]
     }
@@ -129,6 +133,9 @@ class ApolloAdapter {
         action = { ...action, ...listingInfo }
         break
       case 'TwitterShare':
+        action.content = data.content
+        break
+      case 'FacebookShare':
         action.content = data.content
         break
     }

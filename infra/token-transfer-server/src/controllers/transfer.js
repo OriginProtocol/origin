@@ -2,21 +2,48 @@ const express = require('express')
 const router = express.Router()
 const { check, validationResult } = require('express-validator')
 const moment = require('moment')
-const { createProvider } = require('@origin/token/src/config')
+const AsyncLock = require('async-lock')
+const lock = new AsyncLock()
 
 const logger = require('../logger')
-const { transferTokens } = require('../lib/transfer')
+const { Grant, Transfer } = require('../../src/models')
 const { ensureLoggedIn } = require('../lib/login')
-const { asyncMiddleware, isEthereumAddress } = require('../utils')
+const {
+  asyncMiddleware,
+  isEthereumAddress,
+  getUnlockDate
+} = require('../utils')
+const { unlockDate } = require('../config')
+const { enqueueTransfer } = require('../lib/transfer')
 
-const networkId = Number.parseInt(process.env.NETWORK_ID) || 999
-createProvider(networkId) // Ensure web3 credentials are set up
+/*
+ * Returns transfers for the authenticated user.
+ */
+router.get(
+  '/transfers',
+  ensureLoggedIn,
+  asyncMiddleware(async (req, res) => {
+    const grants = await Grant.findAll({
+      where: { userId: req.user.id },
+      include: [{ model: Transfer }]
+    })
+
+    const transfers = []
+    grants.forEach(grant => {
+      grant.Transfers.forEach(transfer => {
+        transfers.push(transfer.get({ plain: true }))
+      })
+    })
+
+    res.json(transfers)
+  })
+)
 
 /**
  * Transfers tokens from hot wallet to address of user's choosing.
  */
 router.post(
-  '/api/transfer',
+  '/transfers',
   [
     check('grantId').isInt(),
     check('amount').isDecimal(),
@@ -29,23 +56,27 @@ router.post(
       return res.status(422).json({ errors: errors.array() })
     }
 
+    if (moment() < getUnlockDate()) {
+      res
+        .status(422)
+        .send(`Tokens are still locked. Unlock date is ${unlockDate}`)
+      return
+    }
+
     // Retrieve the grant, validating email in the process.
     const { grantId, address, amount } = req.body
-    try {
-      const grant = await transferTokens({
-        grantId,
-        email: req.user.email,
-        ip: req.connection.remoteAddress,
-        networkId,
-        address,
-        amount
-      })
-      res.send(grant.get({ plain: true }))
 
-      const grantedAt = moment(grant.grantedAt).format('YYYY-MM-DD')
-      logger.info(
-        `${grant.email} grant ${grantedAt} transferred ${amount} OGN to ${address}`
-      )
+    try {
+      await lock.acquire(grantId, async () => {
+        await enqueueTransfer(
+          grantId,
+          address,
+          amount,
+          req.connection.remoteAddress
+        )
+      })
+      // TODO: update to be more useful, e.g. users email
+      logger.info(`Grant ${grantId} transferred ${amount} OGN to ${address}`)
     } catch (e) {
       if (e instanceof ReferenceError || e instanceof RangeError) {
         res.status(422).send(e.message)
@@ -53,6 +84,7 @@ router.post(
         throw e
       }
     }
+    res.status(201).end()
   })
 )
 

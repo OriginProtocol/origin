@@ -35,6 +35,7 @@ jobs:
             yarn install --frozen-lockfile
             curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | sh
             ./bin/node-prune
+
       - persist_to_workspace:
           root: .
           paths:
@@ -64,6 +65,34 @@ jobs:
       - run:
           name: Run GraphQL Tests
           command: cd packages/graphql && yarn test
+
+  GraphQLEngineSchemaCheck:
+    <<: *defaults
+    working_directory: ~/origin
+    steps:
+      - attach_workspace:
+          at: .
+      - run: sudo npm install -g apollo
+      - run:
+          name: Starting server
+          command: npm run start --prefix packages/graphql
+          background: true
+      - run: sleep 5
+      - run: apollo service:check --endpoint=http://localhost:4002/
+
+  GraphQLEngineSchemaUpload:
+    <<: *defaults
+    working_directory: ~/origin
+    steps:
+      - attach_workspace:
+          at: .
+      - run: sudo npm install -g apollo
+      - run:
+          name: Starting server
+          command: npm run start --prefix packages/graphql
+          background: true
+      - run: sleep 5
+      - run: apollo service:push --tag=master --endpoint=http://localhost:4002
 
   EventCache:
     <<: *db
@@ -105,7 +134,16 @@ jobs:
           command: cd packages/contracts && yarn test
 
   Discovery:
-    <<: *db
+    docker:
+      - image: circleci/node:10-browsers
+      - image: circleci/redis:5
+      - image: circleci/postgres:9.6-alpine-ram
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: circle_ci_test
+    working_directory: ~/origin
+    environment:
+      DATABASE_URL: postgres://postgres@localhost/circle_ci_test
     steps:
       - attach_workspace:
           at: .
@@ -152,7 +190,7 @@ jobs:
           command: cd infra/relayer && yarn test
 
   T3:
-    <<: *defaults
+    <<: *db
     steps:
       - attach_workspace:
           at: .
@@ -161,7 +199,7 @@ jobs:
           name: Run T3 Tests
           command: cd infra/token-transfer-server && yarn test
     environment:
-      DATABASE_URL: sqlite:///home/circleci/origin/infra/token-transfer-server/data/t3.db
+      DATABASE_URL: postgres://postgres@localhost/circle_ci_test
       ENCRYPTION_SECRET: thisisasecret
 
   Web3Provider:
@@ -214,3 +252,18 @@ workflows:
       - Web3Provider:
           requires:
             - Setup
+  schema:
+    jobs:
+      - Setup
+      - GraphQLEngineSchemaCheck:
+          requires:
+            - Setup
+          context: origin
+      - GraphQLEngineSchemaUpload:
+          requires:
+            - Setup
+          filters:
+            branches:
+              only:
+                - master
+          context: origin

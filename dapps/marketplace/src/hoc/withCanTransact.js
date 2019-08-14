@@ -1,5 +1,5 @@
 import React from 'react'
-import { Query } from 'react-apollo'
+import { useQuery } from '@apollo/react-hooks'
 import get from 'lodash/get'
 
 import CanBuyQuery from 'queries/CanBuy'
@@ -43,18 +43,13 @@ function cannotTransact({ data, error, loading, canTransactConfig }) {
 
 function withCanTransact(WrappedComponent) {
   const WithCanTransact = ({ canTransactConfig, ...props }) => {
+    const { data, error, loading } = useQuery(CanBuyQuery)
     return (
-      <Query query={CanBuyQuery}>
-        {({ data, error, loading }) => {
-          return (
-            <WrappedComponent
-              {...props}
-              {...cannotTransact({ data, error, loading, canTransactConfig })}
-              loadingCanTransact={loading}
-            />
-          )
-        }}
-      </Query>
+      <WrappedComponent
+        {...props}
+        {...cannotTransact({ data, error, loading, canTransactConfig })}
+        loadingCanTransact={loading}
+      />
     )
   }
   return withConfig(WithCanTransact, 'canTransactConfig')

@@ -32,6 +32,7 @@ import EmailAttestationModal from 'pages/identity/EmailAttestationModal'
 import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
 import WebsiteAttestation from 'pages/identity/WebsiteAttestation'
 import OAuthAttestation from 'pages/identity/OAuthAttestation'
+import TelegramAttestation from 'pages/identity/TelegramAttestation'
 
 import EditProfile from './_EditModal'
 import ToastNotification from './ToastNotification'
@@ -61,7 +62,8 @@ const AttestationComponents = {
   kakao: withOAuthAttestationProvider('kakao'),
   github: withOAuthAttestationProvider('github'),
   linkedin: withOAuthAttestationProvider('linkedin'),
-  wechat: withOAuthAttestationProvider('wechat')
+  wechat: withOAuthAttestationProvider('wechat'),
+  telegram: TelegramAttestation
 }
 
 const ProfileFields = [
@@ -293,7 +295,7 @@ class UserProfile extends Component {
       <ModalComp
         title={headerContent}
         className={`profile-verifications-modal${
-          this.state.hideVerifyModal ? ' d-none' : ''
+          !this.props.isMobile && this.state.hideVerifyModal ? ' d-none' : ''
         }`}
         shouldClose={this.state.shouldCloseVerifyModal}
         onClose={() =>

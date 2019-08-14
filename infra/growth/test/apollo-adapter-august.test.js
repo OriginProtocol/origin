@@ -11,7 +11,7 @@ const { tokenToNaturalUnits } = require('../src/util/token')
 
 function checkExpectedState(state, expectedState) {
   expect(state.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-  expect(state.actions.length).to.equal(35) // Note: adjust based on number of rules.
+  expect(state.actions.length).to.equal(43) // Note: adjust based on number of rules.
 
   const actionByRuleId = {}
   for(const action of state.actions) {
@@ -28,7 +28,7 @@ function checkExpectedState(state, expectedState) {
     if (!action) {
       throw new Error('NO action for ruleId' + ruleId)
     }
-    
+
     expect(action.type).to.equal(expectedAction.type)
     expect(action.status).to.deep.equal(expectedAction.status)
     expect(action.rewardEarned).to.deep.equal(expectedAction.rewardEarned)
@@ -97,7 +97,7 @@ describe('Apollo adapter - August campaign', () => {
     expect(this.crules.levels[0]).to.be.an('object')
     expect(this.crules.levels[0].rules.length).to.equal(3) // Note: adjust based on number of rules.
     expect(this.crules.levels[1]).to.be.an('object')
-    expect(this.crules.levels[1].rules.length).to.equal(16) // Note: adjust based on number of rules.
+    expect(this.crules.levels[1].rules.length).to.equal(24) // Note: adjust based on number of rules.
     expect(this.crules.levels[2]).to.be.an('object')
     expect(this.crules.levels[2].rules.length).to.equal(18) // Note: adjust based on number of rules.
 
@@ -186,6 +186,12 @@ describe('Apollo adapter - August campaign', () => {
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenToNaturalUnits(10), currency: 'OGN' }
       },
+      TelegramAttestation: {
+        type: 'Telegram',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(10), currency: 'OGN' }
+      },
       Referral: {
         type: 'Referral',
         status: 'Inactive',
@@ -209,6 +215,24 @@ describe('Apollo adapter - August campaign', () => {
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenToNaturalUnits(10), currency: 'OGN' }
+      },
+      TelegramFollow: {
+        type: 'TelegramFollow',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: tokenToNaturalUnits(10), currency: 'OGN' }
+      },
+      FacebookShare1: {
+        type: 'FacebookShare',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: '0', currency: 'OGN' }
+      },
+      FacebookLike: {
+        type: 'FacebookLike',
+        status: 'Inactive',
+        rewardEarned: { amount: '0', currency: 'OGN' },
+        reward: { amount: '0', currency: 'OGN' }
       },
       'ListingPurchase1-000-2991': {
         type: 'ListingIdPurchased',
@@ -379,6 +403,9 @@ describe('Apollo adapter - August campaign', () => {
     this.expectedState.LinkedInAttestation.status = 'Active'
     this.expectedState.KakaoAttestation.status = 'Active'
     this.expectedState.WebsiteAttestation.status = 'Active'
+    this.expectedState.FacebookShare1.status = 'Active'
+    this.expectedState.FacebookLike.status = 'Active'
+    this.expectedState.TelegramAttestation.status = 'Active'
 
     checkExpectedState(state, this.expectedState)
   })
@@ -671,12 +698,22 @@ describe('Apollo adapter - August campaign', () => {
         expect(twitterShareAction.content).to.be.an('object')
         expect(twitterShareAction.content.titleKey).to.be.a('string')
         expect(twitterShareAction.content.link).to.be.a('string')
+        expect(twitterShareAction.content.id).to.be.a('string')
         expect(twitterShareAction.content.linkKey).to.be.a('string')
         expect(twitterShareAction.content.titleKey).to.be.a('string')
         expect(twitterShareAction.content.post).to.be.an('object')
-        expect(twitterShareAction.content.post.text).to.be.an('object')
-        expect(twitterShareAction.content.post.text.default).to.be.a('string')
-        expect(twitterShareAction.content.post.text.translations).to.be.an('array')
+        expect(twitterShareAction.content.post.tweet).to.be.an('object')
+        expect(twitterShareAction.content.post.tweet.default).to.be.a('string')
+        expect(twitterShareAction.content.post.tweet.translations).to.be.an('array')
+      } else if (action.type === 'FacebookShare') {
+        const facebookShareAction = action
+        expect(facebookShareAction).to.be.an('object')
+        expect(facebookShareAction.content).to.be.an('object')
+        expect(facebookShareAction.content.titleKey).to.be.a('string')
+        expect(facebookShareAction.content.link).to.be.a('string')
+        expect(facebookShareAction.content.id).to.be.a('string')
+        expect(facebookShareAction.content.linkKey).to.be.a('string')
+        expect(facebookShareAction.content.titleKey).to.be.a('string')
       }
     }
 
@@ -718,4 +755,114 @@ describe('Apollo adapter - August campaign', () => {
 
     checkExpectedState(state, this.expectedState)
   })
+
+  it(`It should show facebook share completed `, async () => {
+    this.events.push(...[
+      {
+        id: 18,
+        type: GrowthEventTypes.SharedOnFacebook,
+        customId: 'origin_app',
+        data: null,
+        status: GrowthEventStatuses.Logged,
+        ethAddress: this.userA,
+        createdAt: this.duringCampaign
+      }
+    ])
+
+    const state = await campaignToApolloObject(
+      this.crules,
+      enums.GrowthParticipantAuthenticationStatus.Enrolled,
+      this.userA,
+      this.mockAdapter
+    )
+
+    this.expectedState.FacebookShare1.status = 'Completed'
+    this.expectedState.FacebookShare1.rewardEarned = { amount: '0', currency: 'OGN' }
+
+    checkExpectedState(state, this.expectedState)
+  })
+
+  it(`It should show facebook like completed `, async () => {
+    this.events.push(...[
+      {
+        id: 19,
+        type: GrowthEventTypes.LikedOnFacebook,
+        customId: null,
+        data: null,
+        status: GrowthEventStatuses.Logged,
+        ethAddress: this.userA,
+        createdAt: this.duringCampaign
+      }
+    ])
+
+    const state = await campaignToApolloObject(
+      this.crules,
+      enums.GrowthParticipantAuthenticationStatus.Enrolled,
+      this.userA,
+      this.mockAdapter
+    )
+
+    this.expectedState.FacebookLike.status = 'Completed'
+    this.expectedState.FacebookLike.rewardEarned = { amount: '0', currency: 'OGN' }
+
+    checkExpectedState(state, this.expectedState)
+  })
+  
+  it(`It should unlock TelegramFollow if Telegram attestation is present`, async () => {
+    this.events.push(...[
+      // twitter attestation published
+      {
+        id: 20,
+        type: GrowthEventTypes.TelegramAttestationPublished,
+        status: GrowthEventStatuses.Logged,
+        ethAddress: this.userA,
+        createdAt: this.duringCampaign
+      }
+    ])
+
+    const state = await campaignToApolloObject(
+      this.crules,
+      enums.GrowthParticipantAuthenticationStatus.Enrolled,
+      this.userA,
+      this.mockAdapter
+    )
+
+    // Check the user got rewarded for completing the Telegram attestation.
+    this.expectedState.rewardEarned = { amount: '382000000000000000000', currency: 'OGN' }
+    this.expectedState.TelegramAttestation.status = 'Completed'
+    this.expectedState.TelegramAttestation.rewardEarned = { amount: tokenToNaturalUnits(10), currency: 'OGN' }
+
+    // Check Telegram Follow got unlocked.
+    this.expectedState.TelegramFollow.status = 'Active'
+
+    checkExpectedState(state, this.expectedState)
+  })
+
+  it(`It should reward OGN for following on Telegram`, async () => {
+    this.events.push(...[
+      {
+        id: 21,
+        type: GrowthEventTypes.FollowedOnTelegram,
+        customId: null,
+        data: {},
+        status: GrowthEventStatuses.Logged,
+        ethAddress: this.userA,
+        createdAt: this.duringCampaign
+      }
+    ])
+
+    const state = await campaignToApolloObject(
+      this.crules,
+      enums.GrowthParticipantAuthenticationStatus.Enrolled,
+      this.userA,
+      this.mockAdapter
+    )
+
+    this.expectedState.rewardEarned = { amount: '392000000000000000000', currency: 'OGN' }
+    this.expectedState.TelegramFollow.status = 'Completed'
+    this.expectedState.TelegramFollow.rewardEarned = { amount: tokenToNaturalUnits(10), currency: 'OGN' }
+
+    checkExpectedState(state, this.expectedState)
+  })
+
 })

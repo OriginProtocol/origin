@@ -108,12 +108,13 @@ export function calculatePendingAndAvailableActions(activeCampaign) {
     'Kakao',
     'WeChat',
     'GitHub',
-    'LinkedIn'
+    'LinkedIn',
+    'Telegram'
   ]
 
-  const promotionRewardTypes = ['TwitterShare']
+  const promotionRewardTypes = ['TwitterShare', 'FacebookShare']
 
-  const followRewardTypes = ['TwitterFollow']
+  const followRewardTypes = ['TwitterFollow', 'FacebookLike', 'TelegramFollow']
 
   const purchaseActions = activeCampaign.actions.filter(action =>
     purchaseRewardTypes.includes(action.type)
@@ -202,9 +203,9 @@ export function getTokensEarned({
 }
 
 export function getContentToShare(action, locale) {
-  const translation = action.content.post.text.translations.find(
+  const translation = action.content.post.tweet.translations.find(
     content => content.locale === locale
   )
 
-  return translation ? translation.text : action.content.post.text.default
+  return translation ? translation.text : action.content.post.tweet.default
 }

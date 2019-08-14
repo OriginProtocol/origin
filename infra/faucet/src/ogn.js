@@ -23,10 +23,13 @@ class OgnDistributor {
 
     // Needed to use the process method as a route in Express.
     this.process = this.process.bind(this)
+
+    logger.debug(
+      `TokenDistributor config: networkId=${networkId} contractAddress=${this.token.contractAddress}`
+    )
   }
 
   async process(req, res, next) {
-    const networkId = req.query.network_id
     const wallet = req.query.wallet
     if (!req.query.wallet) {
       res.send('<h2>Error: A wallet address must be supplied.</h2>')
@@ -35,11 +38,15 @@ class OgnDistributor {
       return
     }
 
+    logger.debug(
+      `Processing request to distribute ${NUM_TOKENS} OGN to ${wallet}`
+    )
     try {
       // Transfer NUM_TOKENS to the specified wallet.
       const value = this.token.toNaturalUnit(NUM_TOKENS)
-      const contractAddress = this.token.contractAddress(networkId)
+      const contractAddress = this.token.contractAddress
       const txHash = await this.token.credit(wallet, value)
+      logger.debug(`Sent tx to network, txHash=${txHash}`)
       const { status } = await this.token.waitForTxConfirmation(txHash, {
         numBlocks: NumBlockConfirmation,
         timeoutSec: ConfirmationTimeoutSec
@@ -47,7 +54,7 @@ class OgnDistributor {
       if (status !== 'confirmed') {
         throw new Error(`Failure. status=${status} txHash=${txHash}`)
       }
-      logger.info(`${NUM_TOKENS} OGN -> ${wallet} TxHash=${txHash}`)
+      logger.info(`Distributed ${NUM_TOKENS} OGN to ${wallet} txHash=${txHash}`)
 
       // Send response back to client.
       const resp =

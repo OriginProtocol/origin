@@ -25,7 +25,8 @@ const siteNameToService = {
   'kakao.com': 'kakao',
   'linkedin.com': 'linkedin',
   'twitter.com': 'twitter',
-  'wechat.com': 'wechat'
+  'wechat.com': 'wechat',
+  'telegram.com': 'telegram'
 }
 
 class IdentityEventHandler {
@@ -174,7 +175,7 @@ class IdentityEventHandler {
               'PHONE'
             )
             break
-          case 'twitter':
+          case 'twitter': {
             const attestation = await this._loadMostRecentAttestation(
               addresses,
               'TWITTER'
@@ -188,6 +189,7 @@ class IdentityEventHandler {
               decoratedIdentity.twitterProfile = null
             }
             break
+          }
           case 'airbnb':
             decoratedIdentity.airbnb = await this._loadValueFromAttestation(
               addresses,
@@ -238,7 +240,23 @@ class IdentityEventHandler {
               'WEBSITE'
             )
             break
-          // TODO: handle github, linkedin, kakao, wechat
+          case 'telegram': {
+            const attestation = await this._loadMostRecentAttestation(
+              addresses,
+              'TELEGRAM'
+            )
+            if (attestation) {
+              decoratedIdentity.telegram = attestation.value
+              decoratedIdentity.telegramProfile = attestation.profileData
+            } else {
+              logger.warn(
+                `Could not find TELEGRAM attestation for ${addresses}`
+              )
+              decoratedIdentity.telegram = null
+              decoratedIdentity.telegramProfile = null
+            }
+            break
+          }
         }
       })
     )
@@ -279,7 +297,11 @@ class IdentityEventHandler {
       twitter: decoratedIdentity.twitter,
       facebookVerified: decoratedIdentity.facebookVerified || false,
       googleVerified: decoratedIdentity.googleVerified || false,
-      data: { blockInfo, twitterProfile: decoratedIdentity.twitterProfile },
+      data: {
+        blockInfo,
+        twitterProfile: decoratedIdentity.twitterProfile,
+        telegramProfile: decoratedIdentity.telegramProfile
+      },
       country: decoratedIdentity.country,
       avatarUrl: decoratedIdentity.avatarUrl,
       website: decoratedIdentity.website,
@@ -288,7 +310,8 @@ class IdentityEventHandler {
       kakao: decoratedIdentity.kakao,
       linkedin: decoratedIdentity.linkedin,
       github: decoratedIdentity.github,
-      wechat: decoratedIdentity.wechat
+      wechat: decoratedIdentity.wechat,
+      telegram: decoratedIdentity.telegram
     }
 
     logger.debug('Identity=', identityRow)

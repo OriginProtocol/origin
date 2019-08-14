@@ -1,0 +1,78 @@
+'use strict'
+
+const sendgridMail = require('@sendgrid/mail')
+const Logger = require('logplease')
+const jwt = require('jsonwebtoken')
+
+const { User } = require('../src/models')
+const {
+  encryptionSecret,
+  logLevel,
+  portalUrl,
+  sendgridEmailFrom,
+  sendgridApiKey
+} = require('../src/config')
+
+const logger = Logger.create('sendWelcomeToken')
+Logger.setLogLevel(logLevel)
+
+sendgridMail.setApiKey(sendgridApiKey)
+
+/*
+ * Parse command line arguments into a dict.
+ * @returns {Object} - Parsed arguments.
+ */
+function parseArgv() {
+  const args = {}
+  for (const arg of process.argv) {
+    const elems = arg.split('=')
+    const key = elems[0]
+    const val = elems.length > 1 ? elems[1] : true
+    args[key] = val
+  }
+  return args
+}
+
+/* Send a welcome email to a user allowing them to start the onboarding process.
+ *
+ */
+async function sendWelcomeEmail(email) {
+  logger.info('Sending welcome email to', email)
+
+  const user = await User.findOne({ where: { email } })
+
+  let token
+  if (user) {
+    token = jwt.sign(
+      {
+        email
+      },
+      encryptionSecret,
+      { expiresIn: '24h' }
+    )
+  } else {
+    logger.error('No such user')
+    return
+  }
+
+  const data = {
+    to: email,
+    from: sendgridEmailFrom,
+    subject: 'Welcome to the Origin Investor Portal',
+    text: `The following link will provide you access to the Origin Investor Portal.
+
+    ${portalUrl}/welcome/${token}.
+
+    It will expire in 24 hours. You can reply directly to this email with any questions.`
+  }
+
+  await sendgridMail.send(data)
+  logger.info('Email sent')
+}
+
+const args = parseArgv()
+const config = {
+  email: args['--email']
+}
+
+sendWelcomeEmail(config.email)
