@@ -22,6 +22,7 @@ import PushNotification from 'react-native-push-notification'
 import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
 import { fbt } from 'fbt-runtime'
+import { ShareDialog } from 'react-native-fbsdk';
 
 import OriginButton from 'components/origin-button'
 import NotificationCard from 'components/notification-card'
@@ -60,7 +61,11 @@ class MarketplaceScreen extends Component {
       modals: [],
       fiatCurrency: CURRENCIES.find(c => c[0] === 'fiat-USD'),
       transactionCardLoading: false,
-      currentDomain: ''
+      currentDomain: '',
+      lastDappUrl: null,
+      // whenever this change it forces the webView to go to that source
+      webViewUrlTrigger: this.props.settings.network.dappUrl
+
     }
     if (Platform.OS === 'android') {
       // Configure swipe handler for back forward navigation on Android because
@@ -111,6 +116,15 @@ class MarketplaceScreen extends Component {
     if (prevProps.settings.language !== this.props.settings.language) {
       // Language has changed, need to reload the DApp
       this.injectLanguage()
+    }
+
+    // Check for active Ethereum address changing
+    if (
+      get(prevProps, 'settings.network.dappUrl') !==
+      get(this.props, 'settings.network.dappUrl')
+    ) {
+      // Active account changed, update messaging keys
+      this.setState({ webViewUrlTrigger: get(this.props, 'settings.network.dappUrl')})
     }
 
     // Check for active Ethereum address changing
@@ -575,7 +589,7 @@ class MarketplaceScreen extends Component {
 
     const url = makeUrl()
     if (Linking.canOpenURL(url)) {
-      this.dappWebView.goBack()
+      this.getBackToDapp()
       // preventing multiple subsequent shares
       if (
         !this[timeControlVariableName] ||
@@ -592,6 +606,7 @@ class MarketplaceScreen extends Component {
 
   checkForShareNativeDialogInterception = async url => {
     // natively tweet if possible on Android
+    console.log("Url change: ", url.href)
     await this._openDeepLinkUrlAttempt(
       () =>
         url.hostname === 'twitter.com' &&
@@ -604,7 +619,7 @@ class MarketplaceScreen extends Component {
       'lastTweetAttemptTime'
     )
 
-    // open twitter profile natively if possible on Android
+    //open twitter profile natively if possible on Android
     await this._openDeepLinkUrlAttempt(
       () =>
         url.hostname === 'twitter.com' &&
@@ -614,21 +629,84 @@ class MarketplaceScreen extends Component {
       'lastOpenTwitterProfileTime'
     )
 
-    // open facebook profile natively if possible on Android and IOS
+    // open facebook profile natively if possible on Android
     await this._openDeepLinkUrlAttempt(
       () =>
         (url.hostname === 'www.facebook.com' ||
           url.hostname === 'm.facebook.com') &&
-        url.pathname.toLowerCase() === '/originprotocol/',
+          url.pathname.toLowerCase() === '/originprotocol/' &&
+          Platform.OS === 'android',
+      () => `fb://page/120151672018856`,
+      'lastOpenFacebookProfileTime'
+    )
+
+    // open facebook profile natively if possible and IOS
+    await this._openDeepLinkUrlAttempt(
+      () =>
+        (url.hostname === 'www.facebook.com' ||
+          url.hostname === 'm.facebook.com') &&
+          url.pathname.toLowerCase() === '/originprotocol/' &&
+          Platform.OS === 'ios',
       () => `fb://profile/120151672018856`,
       'lastOpenFacebookProfileTime'
     )
+
+
+    if (
+      (url.hostname === 'www.facebook.com' || 
+      url.hostname === 'm.facebook.com')
+    ) {
+      const shareHasBeenTriggeredRecenty = this.facebookShareShowTime &&
+        new Date() - this.facebookShareShowTime < 5000
+
+      if (url.pathname === '/dialog/share' && !shareHasBeenTriggeredRecenty) {
+        const shareLinkContent = {
+          contentType: 'link',
+          contentUrl: url.searchParams.get('href')
+        }
+        const canShowFbShare = await ShareDialog.canShow(shareLinkContent)
+
+        if (!canShowFbShare)
+          return
+
+        this.facebookShareShowTime = new Date()
+        const shareResult = await ShareDialog.show(shareLinkContent)
+        if (shareResult.isCancelled) {
+          console.log('Share cancelled by user')
+        } else {
+          console.log(`Share success with postId: ${shareResult.postId}`)
+        }
+      }
+
+      /* After Facebook shows up the share dialog in dapp's WebView and user is not logged
+       * in it will redirect to login page. For that reason we need to issue back command
+       * repeatedly that after native Facebook share dialog appears the WebView doesn't
+       * get stuck on Facebook login screen.
+       */
+      if (shareHasBeenTriggeredRecenty) {
+        this.getBackToDapp()
+      }
+    }
+  }
+
+  getBackToDapp = () => {
+    const url = this.state.lastDappUrl
+    url.searchParams.set('returnRandom', Math.floor(Math.random()*1000))
+    this.setState({ webViewUrlTrigger: url.href })
   }
 
   onWebViewNavigationStateChange = async state => {
+    const dappUrl = new URL(this.props.settings.network.dappUrl)
+
     try {
       const url = new URL(state.url)
-      this.setState({ currentDomain: url.hostname })
+      const stateUpdate = { currentDomain: url.hostname }
+
+      if (dappUrl.hostname === url.hostname) {
+        stateUpdate.lastDappUrl = url
+      }
+
+      this.setState(stateUpdate)
       await this.checkForShareNativeDialogInterception(url)
     } catch (error) {
       console.warn(`Browser reporting malformed url: ${state.url}`)
@@ -720,6 +798,7 @@ class MarketplaceScreen extends Component {
   }
 
   render() {
+    console.log("CURRENT URL in STATE in render: ", this.state.webViewUrlTrigger)
     return (
       <AndroidBackHandler onBackPress={this.onBackButtonPressAndroid}>
         <SafeAreaView style={styles.safeAreaView}>
@@ -755,7 +834,7 @@ class MarketplaceScreen extends Component {
               }}
               allowsBackForwardNavigationGestures={Platform.OS === 'ios'}
               useWebKit={Platform.OS === 'ios'}
-              source={{ uri: this.props.settings.network.dappUrl }}
+              source={{ uri: this.state.webViewUrlTrigger }}
               onMessage={this.onWebViewMessage}
               onLoad={this.onWebViewLoad}
               onError={syntheticEvent => {

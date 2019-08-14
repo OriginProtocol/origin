@@ -1,0 +1,9 @@
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/Bolts" "${PODS_ROOT}/Headers/Public/FBSDKCoreKit" "${PODS_ROOT}/Headers/Public/FBSDKLoginKit" "${PODS_ROOT}/Headers/Public/FBSDKShareKit"
+LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Bolts" "${PODS_CONFIGURATION_BUILD_DIR}/FBSDKCoreKit" "${PODS_CONFIGURATION_BUILD_DIR}/FBSDKLoginKit" "${PODS_CONFIGURATION_BUILD_DIR}/FBSDKShareKit"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/Bolts" -isystem "${PODS_ROOT}/Headers/Public/FBSDKCoreKit" -isystem "${PODS_ROOT}/Headers/Public/FBSDKLoginKit" -isystem "${PODS_ROOT}/Headers/Public/FBSDKShareKit"
+OTHER_LDFLAGS = $(inherited) -ObjC -weak_framework "Accounts" -weak_framework "AudioToolbox" -weak_framework "CoreGraphics" -weak_framework "CoreLocation" -weak_framework "Foundation" -weak_framework "QuartzCore" -weak_framework "Security" -weak_framework "Social" -weak_framework "UIKit"
+PODS_BUILD_DIR = ${BUILD_DIR}
+PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
+PODS_PODFILE_DIR_PATH = ${SRCROOT}/.
+PODS_ROOT = ${SRCROOT}/Pods
