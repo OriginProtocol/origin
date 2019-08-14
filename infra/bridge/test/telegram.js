@@ -34,7 +34,11 @@ describe('telegram attestation', () => {
 
     expect(response.body).not.undefined.and.not.null
 
-    const seed = await new Promise(resolve => client.get(`telegram/attestation/seed/${ethAddress}`, (err, data) => resolve(data)))
+    const seed = await new Promise(resolve =>
+      client.get(`telegram/attestation/seed/${ethAddress}`, (err, data) =>
+        resolve(data)
+      )
+    )
 
     expect(seed).not.undefined.and.not.null
   })
@@ -43,22 +47,37 @@ describe('telegram attestation', () => {
     const code = 'weddingcatalogtopplecatalogabovefebruary'
     const eventKey = Web3.utils.sha3(code)
 
-    await new Promise(resolve => client.set(`telegram/attestation/seed/${ethAddress}`, '123456', 'EX', 60, () => resolve()))
-    await new Promise(resolve => client.set(`telegram/attestation/event/${eventKey}`, JSON.stringify({
-      message: {
-        from: {
-          id: '12345'
-        }
-      },
-      payload: 'weddingcatalogtopplecatalogabovefebruary'
-    }), 'EX', 60, () => resolve()))
+    await new Promise(resolve =>
+      client.set(
+        `telegram/attestation/seed/${ethAddress}`,
+        '123456',
+        'EX',
+        60,
+        () => resolve()
+      )
+    )
+    await new Promise(resolve =>
+      client.set(
+        `telegram/attestation/event/${eventKey}`,
+        JSON.stringify({
+          message: {
+            from: {
+              id: '12345'
+            }
+          },
+          payload: 'weddingcatalogtopplecatalogabovefebruary'
+        }),
+        'EX',
+        60,
+        () => resolve()
+      )
+    )
 
     const response = await request(app)
       .post('/api/attestations/telegram/verify')
       .send({
         identity: ethAddress,
-        code:
-          'weddingcatalogtopplecatalogabovefebruary',
+        code: 'weddingcatalogtopplecatalogabovefebruary',
         id: '12345'
       })
       .expect(200)
@@ -94,15 +113,31 @@ describe('telegram attestation', () => {
     const code = 'weddingcatalogtopplecatalogabovefebruary'
     const eventKey = Web3.utils.sha3(code)
 
-    await new Promise(resolve => client.set(`telegram/attestation/seed/${ethAddress}`, '123456', 'EX', 60, () => resolve()))
-    await new Promise(resolve => client.set(`telegram/attestation/event/${eventKey}`, JSON.stringify({
-      message: {
-        from: {
-          id: '12345'
-        }
-      },
-      payload: 'weddingcatalogtopplecatalogabovefebruary234'
-    }), 'EX', 60, () => resolve()))
+    await new Promise(resolve =>
+      client.set(
+        `telegram/attestation/seed/${ethAddress}`,
+        '123456',
+        'EX',
+        60,
+        () => resolve()
+      )
+    )
+    await new Promise(resolve =>
+      client.set(
+        `telegram/attestation/event/${eventKey}`,
+        JSON.stringify({
+          message: {
+            from: {
+              id: '12345'
+            }
+          },
+          payload: 'weddingcatalogtopplecatalogabovefebruary234'
+        }),
+        'EX',
+        60,
+        () => resolve()
+      )
+    )
 
     const response = await request(app)
       .post('/api/attestations/telegram/verify')
@@ -121,12 +156,13 @@ describe('telegram attestation', () => {
       .post('/api/attestations/telegram/verify')
       .send({
         identity: ethAddress,
-        code:
-          'weddingcatalogtopplecatalogabovefebruary',
+        code: 'weddingcatalogtopplecatalogabovefebruary',
         id: '12345'
       })
       .expect(500)
 
-    expect(response.body.errors[0]).to.equal(`You haven't interacted with the verification bot yet.`)
+    expect(response.body.errors[0]).to.equal(
+      `You haven't interacted with the verification bot yet.`
+    )
   })
 })
