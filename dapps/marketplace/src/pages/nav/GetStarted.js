@@ -1,23 +1,25 @@
 import React from 'react'
 
 import Avatar from 'components/Avatar'
+import UserActivationLink from 'components/UserActivationLink'
+import { withRouter } from 'react-router-dom'
 
-const GetStarted = ({ onClick }) => (
+const GetStarted = withRouter(({ onClick, location }) => (
   <ul className="navbar-nav">
     <li className="nav-item">
-      <a
+      <UserActivationLink
         className="nav-link"
-        href="#get-started"
-        onClick={e => {
-          e.preventDefault()
+        to={`/onboard`}
+        onClick={() => {
           if (onClick) onClick()
         }}
+        location={location}
       >
         <Avatar />
-      </a>
+      </UserActivationLink>
     </li>
   </ul>
-)
+))
 
 export default GetStarted
 

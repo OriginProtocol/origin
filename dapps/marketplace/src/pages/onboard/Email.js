@@ -3,6 +3,7 @@ import { fbt } from 'fbt-runtime'
 import { withRouter } from 'react-router-dom'
 
 import withWallet from 'hoc/withWallet'
+import withIdentity from 'hoc/withIdentity'
 import withIsMobile from 'hoc/withIsMobile'
 import MobileModal from 'components/MobileModal'
 import EmailAttestation from 'pages/identity/EmailAttestation'
@@ -23,12 +24,18 @@ class OnboardEmail extends Component {
     super(props)
 
     this.state = {
-      finished: false
+      finished: false,
+      hasIdentity: false
     }
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.wallet !== prevProps.wallet) {
+    if (this.props.identityLoaded && this.props.identity) {
+      this.setState({
+        finished: true,
+        hasIdentity: true
+      })
+    } else if (this.props.wallet !== prevProps.wallet) {
       const storedAccounts = getVerifiedAccounts({
         wallet: this.props.wallet
       })
@@ -40,10 +47,11 @@ class OnboardEmail extends Component {
 
   render() {
     const { linkPrefix } = this.props
-    const { finished } = this.state
+    const { finished, hasIdentity } = this.state
 
     if (finished) {
-      return <Redirect to={`${linkPrefix}/onboard/profile`} />
+      const link = hasIdentity ? '/onboard/rewards' : '/onboard/profile'
+      return <Redirect to={`${linkPrefix}${link}`} />
     }
 
     return this.renderContent()
@@ -113,7 +121,7 @@ class OnboardEmail extends Component {
   }
 }
 
-export default withRouter(withIsMobile(withWallet(OnboardEmail)))
+export default withRouter(withIsMobile(withWallet(withIdentity(OnboardEmail))))
 
 require('react-styl')(`
   .onboard .onboard-box.profile-email
