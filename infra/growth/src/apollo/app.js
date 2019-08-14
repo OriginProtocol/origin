@@ -42,6 +42,13 @@ app.use(bundle)
 const server = new ApolloServer({
   resolvers,
   typeDefs,
+  // Enable debug regardless of NODE_ENV value in order to include stack traces in errors.
+  debug: true,
+  // Error handler that writes to the server logs.
+  formatError: err => {
+    logger.error(JSON.stringify(err, null, 4))
+    return err
+  },
   // Always enable GraphQL playground and schema introspection, regardless of NODE_ENV value.
   introspection: true,
   playground: true,
