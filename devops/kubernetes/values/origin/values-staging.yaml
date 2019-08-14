@@ -75,4 +75,4 @@ t3ClientImageTag: 'b7efe21'
 
 # origin-token-transfer-server
 t3ServerImage: origin-token-transfer-server
-t3ServerImageTag: 'b7efe21'
+t3ServerImageTag: 'acbaaa0'
