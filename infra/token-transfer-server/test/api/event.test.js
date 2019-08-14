@@ -13,7 +13,7 @@ process.env.SESSION_SECRET = 'test'
 
 const app = require('../../src/app')
 
-describe('Grant HTTP API', () => {
+describe('Event HTTP API', () => {
   beforeEach(async () => {
     this.user = await User.create({
       email: 'user@originprotocol.com',
@@ -34,7 +34,8 @@ describe('Grant HTTP API', () => {
             browser: 'Test'
           },
           location: null
-        }
+        },
+        ip: '127.0.0.1'
       }),
       await Event.create({
         userId: this.user.id,
@@ -44,7 +45,8 @@ describe('Grant HTTP API', () => {
             browser: 'Test'
           },
           location: null
-        }
+        },
+        ip: '127.0.0.1'
       })
     ]
 

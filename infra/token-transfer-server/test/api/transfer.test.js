@@ -5,7 +5,7 @@ const express = require('express')
 const moment = require('moment')
 const sinon = require('sinon')
 
-const { Grant, Transfer, User } = require('../../src/models')
+const { Event, Grant, Transfer, User } = require('../../src/models')
 const transferController = require('../../src/controllers/transfer')
 const TransferStatuses = require('../../src/enums')
 const enums = require('../../src/enums')
@@ -75,12 +75,16 @@ describe('Transfer HTTP API', () => {
     this.mockApp.use(app)
   })
 
-  afterEach(() => {
-    Transfer.destroy({
+  afterEach(async () => {
+    await Event.destroy({
       where: {}
     })
 
-    Grant.destroy({
+    await Transfer.destroy({
+      where: {}
+    })
+
+    await Grant.destroy({
       where: {}
     })
 
