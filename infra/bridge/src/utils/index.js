@@ -32,6 +32,21 @@ function generateWebsiteCode(ethAddress, host) {
   return sign.slice(2)
 }
 
+function generateTelegramCode(ethAddress) {
+  const data = Web3.utils.sha3(`TELEGRAM_ATTESTATION_FOR_${ethAddress.toLowerCase()}`)
+  const sign = generateSignature(process.env.ATTESTATION_SIGNING_KEY, data)
+
+  // prepend ETH address to make it in this format: ETH_ADDRESS:ISSUER_SIGN
+  return `${ethAddress.toLowerCase()}:${sign}`
+}
+
+function verifyTelegramCode(ethAddress, sign) {
+  const data = Web3.utils.sha3(`TELEGRAM_ATTESTATION_FOR_${ethAddress.toLowerCase()}`)
+  const address = Web3.eth.accounts.recover(data, sign)
+  console.log(address.toLowerCase(), ethAddress.toLowerCase())
+  return address.toLowerCase() === ethAddress.toLowerCase()
+}
+
 function getAbsoluteUrl(relativeUrl, params = {}) {
   const protocol = process.env.HTTPS ? 'https' : 'http'
   const host = process.env.HOST ? process.env.HOST : 'localhost:5000'
@@ -74,6 +89,8 @@ module.exports = {
   generateAirbnbCode,
   generateSignature,
   generateSixDigitCode,
+  generateTelegramCode,
+  verifyTelegramCode,
   generateWebsiteCode,
   getAbsoluteUrl,
   decodeHTML

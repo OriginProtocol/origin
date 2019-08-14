@@ -36,8 +36,32 @@ router.post('/', (req, res) => {
   let followCount = 0
   let totalFollowEvents = 0
 
-  if (req.body.message.new_chat_members) {
-    const events = req.body.message.new_chat_members
+  const message = req.body.message
+
+  if (message.text && !message.from.is_bot && message.chat.type === 'private') {
+    // For attestations
+    let payload = /^\/start (.+)$/.exec(message.text)
+
+    if (payload && payload[1]) {
+      payload = payload[1]
+
+      // Payload should be in the format ETH_ADDRESS:ISSUER_SIGN
+      const [ethAddress, sign] = payload.split(':')
+      const key = `telegram/attestation/${ethAddress.toLowerCase()}`
+      redisBatch.set(key, JSON.stringify({
+        message,
+        ethAddress,
+        sign
+      }), 'EX', 60 * 30)
+
+      logger.debug(`Pushing attestation message with payload '${payload}' to ${key}`)
+    }
+  }
+
+
+  if (message.new_chat_members) {
+    // For join verifications
+    const events = message.new_chat_members
     totalFollowEvents = events.length
 
     events.forEach(member => {

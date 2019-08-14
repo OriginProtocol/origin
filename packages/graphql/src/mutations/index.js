@@ -49,6 +49,8 @@ import generateWebsiteCode from './attestations/generateWebsiteCode'
 import verifyWebsite from './attestations/verifyWebsite'
 import verifyOAuthAttestation from './attestations/verifyOAuthAttestation'
 import verifyTelegramAuth from './attestations/verifyTelegramAuth'
+import generateTelegramCode from './attestations/generateTelegramCode'
+import verifyTelegramCode from './attestations/verifyTelegramCode'
 
 import swapToToken from './uniswap/swapToToken'
 import uniswapDeployFactory from './uniswap/uniswapDeployFactory'
@@ -80,6 +82,7 @@ export default {
   generateAirbnbCode,
   generateEmailCode,
   generatePhoneCode,
+  generateTelegramCode,
   generateWebsiteCode,
   importWallet,
   importWallets,
@@ -110,6 +113,7 @@ export default {
   verifyPhoneCode,
   verifyPromotion,
   verifyTelegramAuth,
+  verifyTelegramCode,
   verifyWebsite,
   withdrawListing,
   withdrawOffer,

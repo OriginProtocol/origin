@@ -15,6 +15,8 @@ import TelegramLoginButton from 'components/TelegramLoginButton'
 import PublishedInfoBox from 'components/_PublishedInfoBox'
 
 import VerifyTelegramAuthMutation from 'mutations/VerifyTelegramAuth'
+import GenerateTelegramCodeMutation from 'mutations/GenerateTelegramCode'
+import VerifyTelegramCodeMutation from 'mutations/VerifyTelegramCode'
 
 class TelegramAttestation extends Component {
   constructor() {
@@ -23,30 +25,30 @@ class TelegramAttestation extends Component {
     this.state = {}
   }
 
-  componentDidUpdate() {
-    const searchParams = new URLSearchParams(
-      get(this.props, 'location.search', '')
-    )
+  // componentDidUpdate() {
+  //   const searchParams = new URLSearchParams(
+  //     get(this.props, 'location.search', '')
+  //   )
 
-    if (
-      searchParams.has('hash') &&
-      !this.state.authData &&
-      !this.props.walletLoading
-    ) {
-      this.props.history.replace('/profile')
-      this.setState({
-        authData: {
-          hash: searchParams.get('hash'),
-          authDate: searchParams.get('auth_date'),
-          username: searchParams.get('username'),
-          firstName: searchParams.get('first_name'),
-          lastName: searchParams.get('last_name'),
-          id: searchParams.get('id'),
-          photoUrl: searchParams.get('photo_url')
-        }
-      })
-    }
-  }
+  //   if (
+  //     searchParams.has('hash') &&
+  //     !this.state.authData &&
+  //     !this.props.walletLoading
+  //   ) {
+  //     this.props.history.replace('/profile')
+  //     this.setState({
+  //       authData: {
+  //         hash: searchParams.get('hash'),
+  //         authDate: searchParams.get('auth_date'),
+  //         username: searchParams.get('username'),
+  //         firstName: searchParams.get('first_name'),
+  //         lastName: searchParams.get('last_name'),
+  //         id: searchParams.get('id'),
+  //         photoUrl: searchParams.get('photo_url')
+  //       }
+  //     })
+  //   }
+  // }
 
   render() {
     if (!this.props.open) {
@@ -82,12 +84,12 @@ class TelegramAttestation extends Component {
         lightMode={true}
         skipAnimateOnExit={this.props.skipAnimateOnExit}
       >
-        <div>{this.renderGenerateCode()}</div>
+        <div>{this.renderVerifyCode()}</div>
       </ModalComponent>
     )
   }
 
-  renderGenerateCode() {
+  renderVerifyCode() {
     const { isMobile } = this.props
 
     const header = isMobile ? null : (
@@ -119,7 +121,9 @@ class TelegramAttestation extends Component {
           }
         />
         <div className="actions">
-          {this.renderAuthorizeButton()}
+          {/* {this.renderAuthorizeButton()} */}
+          {this.renderGenerateCode()}
+          {this.renderVerifyButton()}
           {!isMobile && (
             <button
               className="btn btn-link"
@@ -133,24 +137,53 @@ class TelegramAttestation extends Component {
     )
   }
 
-  renderAuthorizeButton() {
-    if (!this.state.authData) {
-      const { origin, pathname } = window.location
-
-      return (
-        <TelegramLoginButton
-          redirectURL={`${origin}${pathname}#/profile/telegram`}
-          buttonText={<fbt desc="Continue">Continue</fbt>}
-          className="btn btn-primary"
-        />
-      )
-    }
-
+  renderGenerateCode() {
     return (
       <Mutation
-        mutation={VerifyTelegramAuthMutation}
+        mutation={GenerateTelegramCodeMutation}
         onCompleted={res => {
-          const result = res.verifyTelegramAuth
+          const result = res.generateTelegramCode
+
+          if (!result.success) {
+            this.setState({
+              error: result.reason,
+              loading: false,
+              code: null
+            })
+        }
+
+          this.setState({
+            loading: false,
+            code: result.code
+          })
+        }}
+      >
+        {generateCode => {
+          const runMutation = () => {
+            if (this.state.loading) return
+            this.setState({ error: false, loading: true })
+
+            generateCode({
+              variables: {
+                identity: this.props.wallet
+              }
+            })
+          }
+
+          return <AutoMutate
+            mutation={runMutation}
+          />
+        }}
+      </Mutation>
+    )
+  }
+
+  renderVerifyButton() {
+    return (
+      <Mutation
+        mutation={VerifyTelegramCodeMutation}
+        onCompleted={res => {
+          const result = res.verifyTelegramCode
 
           if (!result.success) {
             this.setState({ error: result.reason, loading: false, data: null })
@@ -162,7 +195,7 @@ class TelegramAttestation extends Component {
             loading: false,
             completed: true,
             shouldClose: true,
-            authData: null
+            code: null
           })
         }}
         onError={errorData => {
@@ -170,7 +203,7 @@ class TelegramAttestation extends Component {
           this.setState({
             error: 'Check console',
             loading: false,
-            authData: null
+            code: null
           })
         }}
       >
@@ -181,18 +214,17 @@ class TelegramAttestation extends Component {
 
             verifyCode({
               variables: {
-                identity: this.props.wallet,
-                ...this.state.authData
+                identity: this.props.wallet
               }
             })
           }
 
           return (
             <>
-              <AutoMutate mutation={runMutation} />
               <button
                 className="btn btn-primary"
                 onClick={runMutation}
+                disabled={this.state.loading}
                 children={
                   this.state.loading ? (
                     <fbt desc="Loading...">Loading...</fbt>
@@ -207,6 +239,81 @@ class TelegramAttestation extends Component {
       </Mutation>
     )
   }
+
+  // renderAuthorizeButton() {
+  //   if (!this.state.authData) {
+  //     const { origin, pathname } = window.location
+
+  //     return (
+  //       <TelegramLoginButton
+  //         redirectURL={`${origin}${pathname}#/profile/telegram`}
+  //         buttonText={<fbt desc="Continue">Continue</fbt>}
+  //         className="btn btn-primary"
+  //       />
+  //     )
+  //   }
+
+  //   return (
+  //     <Mutation
+  //       mutation={VerifyTelegramAuthMutation}
+  //       onCompleted={res => {
+  //         const result = res.verifyTelegramAuth
+
+  //         if (!result.success) {
+  //           this.setState({ error: result.reason, loading: false, data: null })
+  //           return
+  //         }
+
+  //         this.setState({
+  //           data: result.data,
+  //           loading: false,
+  //           completed: true,
+  //           shouldClose: true,
+  //           authData: null
+  //         })
+  //       }}
+  //       onError={errorData => {
+  //         console.error('Error', errorData)
+  //         this.setState({
+  //           error: 'Check console',
+  //           loading: false,
+  //           authData: null
+  //         })
+  //       }}
+  //     >
+  //       {verifyCode => {
+  //         const runMutation = () => {
+  //           if (this.state.loading) return
+  //           this.setState({ error: false, loading: true })
+
+  //           verifyCode({
+  //             variables: {
+  //               identity: this.props.wallet,
+  //               ...this.state.authData
+  //             }
+  //           })
+  //         }
+
+  //         return (
+  //           <>
+  //             <AutoMutate mutation={runMutation} />
+  //             <button
+  //               className="btn btn-primary"
+  //               onClick={runMutation}
+  //               children={
+  //                 this.state.loading ? (
+  //                   <fbt desc="Loading...">Loading...</fbt>
+  //                 ) : (
+  //                   <fbt desc="Continue">Continue</fbt>
+  //                 )
+  //               }
+  //             />
+  //           </>
+  //         )
+  //       }}
+  //     </Mutation>
+  //   )
+  // }
 }
 
 export default withWallet(withIsMobile(withRouter(TelegramAttestation)))

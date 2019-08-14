@@ -15,6 +15,10 @@ export const mutations = `
     verifyWebsite(identity: String!, website: String!): AttestationVerifyResult!
 
     verifyTelegramAuth(identity: String!, hash: String!, authDate: String!, username: String, lastName: String, firstName: String, id: String!, photoUrl: String): AttestationVerifyResult!
+
+    generateTelegramCode(identity: String!): AttestationCodeResult!
+    verifyTelegramCode(identity: String!): AttestationVerifyResult!
+
   }
 `
 export const types = `
