@@ -159,7 +159,9 @@ function Action(props) {
     )
   }
 
-  const isInteractable = (!actionCompleted || (actionCompleted && allowInteractionWhenCompleted)) && !actionLocked
+  const isInteractable =
+    (!actionCompleted || (actionCompleted && allowInteractionWhenCompleted)) &&
+    !actionLocked
   const showUnlockModalOnClick =
     actionLocked && isMobile && unlockConditions.length > 0
 
