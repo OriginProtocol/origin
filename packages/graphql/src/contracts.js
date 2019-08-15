@@ -60,7 +60,7 @@ export function newBlock(blockHeaders) {
   if (!blockHeaders) return
   if (blockHeaders.number <= lastBlock) return
   lastBlock = blockHeaders.number
-  Object.keys(context.marketplaces).forEach(version => {
+  Object.keys(context.marketplaces || {}).forEach(version => {
     context.marketplaces[version].contract.eventCache.setLatestBlock(lastBlock)
   })
   context.identityEvents.eventCache.setLatestBlock(lastBlock)
