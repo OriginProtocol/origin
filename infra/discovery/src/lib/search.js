@@ -16,11 +16,12 @@ const LISTINGS_INDEX = 'listings'
 const LISTINGS_TYPE = 'listing'
 
 /**
- * Pulls exchange rates from redis
- * @param {Array<string>} currencies - Currency values, token-XYZ/fiat-XYZ
- * @returns {Object} - Requested exchange rates, curency as key and rate as value
+ * Returns exchange rates of foreign currencies and tokens to USD.
+ * Pulls the data from Redis. It's written to Redis by the bridge server.
+ * @param {Array<string>} currencies - Currency values, format "token|fiat-XYZ". Ex: "token-ETH", "fiat-KRW"
+ * @returns {Object} - Requested exchange rates, currency as key and rate as value
  */
-const getExchangeRates = async currencies => {
+const getExchangeRateToUSD = async currencies => {
   try {
     // lazy import to avoid event-listener depending on redis
     // this is only used in discovery
@@ -30,11 +31,21 @@ const getExchangeRates = async currencies => {
     const promises = currencies.map(currency => {
       const splitCurrency = currency.split('-')
       const resolvedCurrency = splitCurrency[1]
+      if (resolvedCurrency === 'USD') {
+        return 1
+      }
       return getAsync(`${resolvedCurrency}-USD_price`)
     })
     const result = await Promise.all(promises)
     result.forEach((r, i) => {
-      exchangeRates[currencies[i]] = r
+      if (r === null) {
+        // Rate not present in Redis. Perhaps the bridge server is not pulling the rate for that currency ?
+        logger.error(
+          `Failed getting xrate for ${currencies[i]} from Redis. Check Bridge server.`
+        )
+      } else {
+        exchangeRates[currencies[i]] = r
+      }
     })
     logger.debug('Exchange Rates - ', exchangeRates)
     return exchangeRates
@@ -178,16 +189,16 @@ class Listing {
    */
   static async search(query, sort, order, filters, numberOfItems, offset) {
     const currencies = [
-      'token-ETH',
-      'token-DAI',
-      'fiat-JPY',
+      'fiat-CNBB',
       'fiat-EUR',
-      'fiat-KRW',
       'fiat-GBP',
-      'fiat-CNY',
-      'fiat-SGD'
+      'fiat-JPY',
+      'fiat-KRW',
+      'fiat-SGD',
+      'fiat-USD',
+      'token-DAI',
+      'token-ETH'
     ]
-    const exchangeRates = await getExchangeRates(currencies)
 
     if (filters === undefined) {
       filters = []
@@ -343,7 +354,9 @@ class Listing {
      * Creates sort query
      * @returns {Object} - Sort query for elastic search
      */
-    const getSortQuery = () => {
+    const getSortQuery = async () => {
+      const exchangeRates = await getExchangeRateToUSD(currencies)
+
       const sortWhiteList = ['price.amount']
       const orderWhiteList = ['asc', 'desc']
       // if sort and order are set, return a sort
@@ -360,7 +373,18 @@ class Listing {
                     type: 'number',
                     script: {
                       lang: 'painless',
-                      source: `if(params._source.containsKey("price") && params._source.price.containsKey("currency") && params._source.price.currency.containsKey("id")) { return Float.parseFloat(params._source.${sort}) * Float.parseFloat(params.exchangeRates[params._source.price.currency.id]); } else { return params.order == "asc" ? 1000000000L : 0 }`,
+                      source: `
+                        if (params._source.containsKey("price") &&
+                          params._source.price.containsKey("amount") &&
+                          params._source.price.containsKey("currency") &&
+                          params._source.price.currency.containsKey("id") &&
+                          params.exchangeRates.containsKey(params._source.price.currency.id)) {
+                            float amount = Float.parseFloat(params._source.price.amount);
+                            float rate = Float.parseFloat(params.exchangeRates[params._source.price.currency.id]);
+                            return amount * rate;
+                        } else {
+                          return params.order == "asc" ? 1000000000L : 0;
+                        }`,
                       params: {
                         order: order,
                         exchangeRates: exchangeRates
@@ -400,7 +424,7 @@ class Listing {
         from: offset,
         size: numberOfItems,
         query: scoreQuery,
-        sort: getSortQuery(),
+        sort: await getSortQuery(),
         _source: [
           'title',
           'description',
