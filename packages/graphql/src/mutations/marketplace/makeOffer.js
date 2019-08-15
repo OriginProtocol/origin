@@ -8,23 +8,20 @@ import parseId from '../../utils/parseId'
 import currencies from '../../utils/currencies'
 import { proxyOwner, predictedProxy, resetProxyCache } from '../../utils/proxy'
 import { swapToTokenTx } from '../uniswap/swapToToken'
-import get from 'lodash/get'
 import createDebug from 'debug'
 const debug = createDebug('origin:makeOffer:')
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
 async function makeOffer(_, data) {
-  const { listingId, contractId } = parseId(data.listingID)
+  const { listingId, marketplace } = parseId(data.listingID, contracts)
 
   await checkMetaMask(data.from)
 
   const buyer = data.from || contracts.defaultMobileAccount
-  const marketplace = get(contracts, `marketplaces.${contractId}`)
   if (!marketplace) {
-    throw new Error(`No marketplace with version ${contractId}`)
+    throw new Error('No marketplace')
   }
-  debug(`make offer on marketplace v${contractId}`)
   const marketplaceContract = marketplace.contractExec
   const ipfsData = await toIpfsData(data, marketplace)
   let mutation = 'makeOffer'
