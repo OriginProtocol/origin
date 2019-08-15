@@ -89,14 +89,8 @@ router.post(
  */
 router.post(
   '/setup_totp',
-  ensureUserInSession, // User must have verified their email first.
+  ensureLoggedIn,
   asyncMiddleware(async (req, res) => {
-    if (req.user.otpKey && req.user.otpVerified) {
-      // Two-factor auth has already been setup. Do not allow reset.
-      res.status(403)
-      return res.send('TOTP already setup')
-    }
-
     // TOTP not setup yet. Generate a key and save it encrypted in the DB.
     // TOTP setup is not complete until it has been verified and the otpVerified
     // flag on the user model has been set to true. Until that time the user
@@ -129,7 +123,10 @@ router.post(
  */
 router.post(
   '/verify_totp',
-  ensureUserInSession, // User must have verified their email first.
+  (req, res, next) => {
+    // Skip two factor auth for this endpoint
+    ensureLoggedIn(req, res, next, true)
+  },
   passport.authenticate('totp'),
   asyncMiddleware(async (req, res) => {
     // Set otpVerified to true if it is not already to signify TOTP setup is
