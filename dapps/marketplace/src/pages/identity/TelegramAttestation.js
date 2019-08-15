@@ -61,7 +61,7 @@ class TelegramAttestation extends Component {
 
   renderVerifyCode() {
     const { isMobile } = this.props
-    const { openedLink, code } = this.state
+    const { openedLink } = this.state
 
     const header = isMobile ? null : (
       <fbt desc="TelegramAttestation.title">Verify your Telegram Account</fbt>
@@ -97,7 +97,7 @@ class TelegramAttestation extends Component {
             <a
               href={`tg://resolve?domain=${
                 process.env.TELEGRAM_BOT_USERNAME
-              }&start=${encodeURIComponent(code)}`}
+              }&start=${encodeURIComponent(this.state.code)}`}
               className="btn btn-primary"
               onClick={() => {
                 this.setState({
@@ -175,7 +175,12 @@ class TelegramAttestation extends Component {
           const result = res.verifyTelegramCode
 
           if (!result.success) {
-            this.setState({ error: result.reason, loading: false, data: null })
+            this.setState({
+              error: result.reason,
+              loading: false,
+              data: null,
+              openedLink: false
+            })
             return
           }
 
@@ -190,7 +195,8 @@ class TelegramAttestation extends Component {
           console.error('Error', errorData)
           this.setState({
             error: 'Check console',
-            loading: false
+            loading: false,
+            openedLink: false
           })
         }}
       >
