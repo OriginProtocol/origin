@@ -75,8 +75,8 @@
   "scripts": {
     "build": "node scripts/build.js",
     "lint": "eslint '**/*.js' && npm run prettier:check",
-    "prettier": "prettier --write **/**/*.js",
-    "prettier:check": "prettier -c **/**/*.js",
+    "prettier": "prettier --write \"**/**/*.js\"",
+    "prettier:check": "prettier -c \"**/**/*.js\"",
     "start": "SKIP_PREFLIGHT_CHECK=true node scripts/start.js",
     "test": "SKIP_PREFLIGHT_CHECK=true node scripts/test.js"
   },
