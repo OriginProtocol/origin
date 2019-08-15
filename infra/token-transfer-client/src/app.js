@@ -22,7 +22,7 @@ import Security from './components/pages/Security'
 const App = () => (
   <Switch>
     <PublicRoute exact path="/" component={Login} />
-    <PublicRoute exact path="/welcome" component={Welcome} />
+    <PublicRoute exact path="/welcome/:token" component={Welcome} />
     <PublicRoute exact path="/phone" component={Phone} />
     <PublicRoute exact path="/terms" component={Terms} />
     <PublicRoute path="/check_email" component={CheckEmail} />
