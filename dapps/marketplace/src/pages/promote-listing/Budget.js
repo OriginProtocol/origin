@@ -120,6 +120,7 @@ const PromoteListingBudget = ({
             price={{ amount: commission, currency: { id: 'token-OGN' } }}
             target={'token-OGN'}
             targets={['token-OGN']}
+            allowanceTarget={listing.contractAddr}
           >
             {({ tokenStatus }) => {
               if (!tokenStatus.hasBalance || !value || value === '0') {

@@ -22,18 +22,19 @@ export default {
     if (info && info.cacheControl) {
       info.cacheControl.setCacheHint({ maxAge: 15 })
     }
-    const { listingId, blockNumber, contractId } = parseId(args.id)
-    if (!contracts.marketplaces[contractId]) {
+    const { marketplace, listingId, blockNumber } = parseId(args.id, contracts)
+    if (!marketplace) {
       return null
     }
-    const eventSource = contracts.marketplaces[contractId].eventSource
-    return await eventSource.getListing(listingId, blockNumber)
+    return await marketplace.eventSource.getListing(listingId, blockNumber)
   },
   listings,
 
   offer: async (contract, args) => {
-    const { listingId, offerId } = parseId(args.id)
-    return contracts.eventSource.getOffer(listingId, offerId)
+    const { marketplace, listingId, offerId } = parseId(args.id, contracts)
+    if (!marketplace) return null
+
+    return marketplace.eventSource.getOffer(listingId, offerId)
   },
 
   account: contract => {

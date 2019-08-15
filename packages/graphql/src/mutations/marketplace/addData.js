@@ -13,10 +13,10 @@ async function addData(_, data) {
 
   let args = [ipfsHash]
   if (offerId) {
-    const parsed = parseId(offerId)
+    const parsed = parseId(offerId, contracts)
     args = [parsed.listingId, parsed.offerId, ipfsHash]
   } else if (listingId) {
-    const parsed = parseId(listingId)
+    const parsed = parseId(listingId, contracts)
     args = [parsed.listingId, ipfsHash]
   }
 

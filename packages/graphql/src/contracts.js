@@ -60,7 +60,9 @@ export function newBlock(blockHeaders) {
   if (!blockHeaders) return
   if (blockHeaders.number <= lastBlock) return
   lastBlock = blockHeaders.number
-  context.marketplace.eventCache.setLatestBlock(lastBlock)
+  Object.keys(context.marketplaces).forEach(version => {
+    context.marketplaces[version].contract.eventCache.setLatestBlock(lastBlock)
+  })
   context.identityEvents.eventCache.setLatestBlock(lastBlock)
   context.ProxyFactory.eventCache.setLatestBlock(lastBlock)
   context.eventSource.resetCache()
@@ -210,15 +212,19 @@ export function setNetwork(net, customConfig) {
     )
   }
 
+  let marketplaceVersion
   Object.keys(config)
     .sort()
-    .reverse()
     .forEach(k => {
       const marketVersion = k.match(/^V([0-9]+)_Marketplace$/)
       if (marketVersion) {
         setMarketplace(config[k], config[`${k}_Epoch`], `0${marketVersion[1]}`)
+        marketplaceVersion = `0${marketVersion[1]}`
       }
     })
+  if (!config.marketplaceVersion) {
+    config.marketplaceVersion = marketplaceVersion
+  }
 
   setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
 
@@ -453,21 +459,23 @@ export function toggleMetaMask(enabled) {
 
 export function setMarketplace(address, epoch, version = '000') {
   const contract = new web3.eth.Contract(MarketplaceContract.abi, address)
-  context.marketplace = contract
-  patchWeb3Contract(context.marketplace, epoch, {
+  patchWeb3Contract(contract, epoch, {
     ...context.config,
     useLatestFromChain: false,
-    ipfsEventCache: context.config.V00_Marketplace_EventCache,
-    cacheMaxBlock: context.config.V00_Marketplace_EventCacheMaxBlock,
+    ipfsEventCache:
+      context.config[`V${version.slice(1)}_Marketplace_EventCache`],
+    cacheMaxBlock:
+      context.config[`V${version.slice(1)}_Marketplace_EventCacheMaxBlock`],
     prefix:
       typeof address === 'undefined'
         ? 'Marketplace_'
         : `${address.slice(2, 8)}_`,
     platform: typeof window === 'undefined' ? 'memory' : 'browser'
   })
+  context.marketplace = contract
 
   const eventSource = new EventSource({
-    marketplaceContract: context.marketplace,
+    marketplaceContract: contract,
     ipfsGateway: context.ipfsGateway,
     web3: context.web3,
     version

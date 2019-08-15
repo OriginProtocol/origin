@@ -256,10 +256,17 @@ class UpdateListing extends Component {
 
     this.setState({ modal: true, waitForAllow: 'pending' })
 
+    let to = this.props.listing.contractAddr
+    const forceProxy = this.props.config.proxyAccountsEnabled
+    const predictedProxy = this.props.walletPredictedProxy
+    if (forceProxy && predictedProxy !== this.props.wallet) {
+      to = predictedProxy
+    }
+
     const variables = {
+      to,
       token: 'token-OGN',
       from: this.props.walletProxy,
-      to: 'marketplace',
       value: this.additionalDeposit(),
       forceProxy: this.props.config.proxyAccountsEnabled
     }

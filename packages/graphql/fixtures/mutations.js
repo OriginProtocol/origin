@@ -7,8 +7,8 @@ export const RefetchMutation = gql`
 `
 
 export const AddAffiliateMutation = gql`
-  mutation AddAffiliate($affiliate: String!, $from: String) {
-    addAffiliate(affiliate: $affiliate, from: $from) {
+  mutation AddAffiliate($affiliate: String!, $from: String, $version: String) {
+    addAffiliate(affiliate: $affiliate, from: $from, version: $version) {
       id
     }
   }

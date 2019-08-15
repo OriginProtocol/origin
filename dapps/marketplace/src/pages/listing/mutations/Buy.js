@@ -360,12 +360,18 @@ class Buy extends Component {
 
     this.setState({ modal: true, waitForAllow: 'pending' })
 
+    let to = this.props.listing.contractAddr
+    const forceProxy = this.props.config.proxyAccountsEnabled
+    const predictedProxy = this.props.walletPredictedProxy
+    if (forceProxy && predictedProxy !== this.props.wallet) {
+      to = predictedProxy
+    }
+
     const variables = {
+      to,
       token: this.props.currency,
       from: this.props.walletProxy,
-      to: 'marketplace',
-      value: this.props.value,
-      forceProxy: this.props.config.proxyAccountsEnabled
+      value: this.props.value
     }
 
     allowToken({ variables })

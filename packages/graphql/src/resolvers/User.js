@@ -7,7 +7,6 @@ import { listingsBySeller } from './marketplace/listings'
 import { identity } from './IdentityEvents'
 import { getIdsForPage, getConnection } from './_pagination'
 import { proxyOwner } from '../utils/proxy'
-import apolloPathToString from '../utils/apolloPathToString'
 import { transactions } from './web3/transactions'
 
 const ec = () => contracts.marketplace.eventCache
@@ -107,7 +106,7 @@ async function sales(seller, { first = 10, after, filter }, _, info) {
 }
 
 //TODO: Currently this only returns sellers reviews.
-async function reviews(user, { first = 10, after }, context, info) {
+async function reviews(user, { first = 10, after }) {
   let party = user.id
   const owner = await proxyOwner(party)
   if (owner) {
@@ -163,19 +162,6 @@ async function reviews(user, { first = 10, after }, context, info) {
     if (reviews.length === 0) continue
 
     const review = reviews[0]
-
-    if (review.reviewer && !review.reviewer.id) {
-      console.log(
-        '============== Non-nullable error in User.reviews resolver! ============='
-      )
-      console.log('User.id', review.reviewer.id)
-      console.log('path: ', apolloPathToString(info.path))
-      console.log('returnType: ', info.returnType)
-      console.log('operation: ', info.operation.operation)
-      console.log(
-        '========================================================================='
-      )
-    }
 
     if (review.rating && review.reviewer.id) {
       nodes.push(review)
@@ -397,7 +383,5 @@ export default {
     const events = await ec().allEvents(undefined, user.id)
     return events[events.length - 1]
   },
-  identity: account => {
-    return identity({ id: account.id })
-  }
+  identity: account => identity({ id: account.id })
 }

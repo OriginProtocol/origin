@@ -70,12 +70,14 @@ async function createListing(_, input) {
   let tx
   const deposit = contracts.web3.utils.toWei(String(input.deposit), 'ether')
 
-  if (input.version && !contracts.marketplaces[input.version]) {
-    throw new Error('No marketplace with that version')
+  let version = input.version
+  if (!version) {
+    version = Object.keys(contracts.marketplaces).sort()[0]
   }
-  const marketplace = input.version
-    ? contracts.marketplaces[input.version].contractExec
-    : contracts.marketplaceExec
+  if (!contracts.marketplaces[version]) {
+    throw new Error(`No marketplace with version ${version}`)
+  }
+  const marketplace = contracts.marketplaces[version].contractExec
 
   if (autoApprove && input.deposit > 0) {
     const fnSig = contracts.web3.eth.abi.encodeFunctionSignature(

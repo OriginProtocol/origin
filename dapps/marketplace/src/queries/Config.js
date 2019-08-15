@@ -19,6 +19,7 @@ export default gql`
       originGraphQLVersion
       relayer
       performanceMode
+      marketplaceVersion
     }
   }
 `

@@ -1,5 +1,6 @@
 const ListingInterface = `
   id: ID!
+  contractAddr: String
 
   # On-chain:
   seller: Account
@@ -109,7 +110,7 @@ export const mutations = `
     ): Transaction
 
     addData(data: String!, listingID: ID, offerID: ID, from: String!): Transaction
-    addAffiliate(affiliate: String!, from: String): Transaction
+    addAffiliate(affiliate: String!, from: String, version: String): Transaction
 
     acceptOffer(offerID: ID!, from: String): Transaction
     withdrawOffer(offerID: ID!, from: String): Transaction

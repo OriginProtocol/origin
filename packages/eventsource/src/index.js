@@ -146,6 +146,7 @@ class OriginEventSource {
         'receiptAvailable'
       )
       data.valid = true
+      data.contractAddr = this.contract._address
 
       // TODO: Investigate why some IPFS data has unitsTotal set to -1, eg #1-000-266
       if (data.unitsTotal < 0) {

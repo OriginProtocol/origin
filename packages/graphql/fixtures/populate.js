@@ -213,6 +213,12 @@ export default async function populate(gqlClient, log, done) {
   })
   log(`Deployed marketplace v1 to ${MarketplaceV1.contractAddress}`)
 
+  await mutate(AddAffiliateMutation, Admin, {
+    affiliate: Affiliate,
+    version: '001'
+  })
+  log('Added affiliate to marketplace v1')
+
   const Marketplace = await mutate(DeployMarketplaceMutation, Admin, {
     token: OGN.contractAddress,
     version: '000',

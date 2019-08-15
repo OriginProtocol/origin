@@ -14,14 +14,29 @@ import Redirect from 'components/Redirect'
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 import withWeb3 from 'hoc/withWeb3'
+import withConfig from 'hoc/withConfig'
 
 import Store from 'utils/store'
 const store = Store('sessionStorage')
 
 import applyListingData from './_listingData'
 
+// Used to cycle marketplace contract version when running tests
+let randomVersion = 1
+
 class CreateListing extends Component {
-  state = {}
+  constructor(props) {
+    super(props)
+    this.state = {}
+    if (props.config.marketplaceVersion) {
+      const versions = props.config.marketplaceVersion.split(',')
+      this.state = {
+        version: versions[randomVersion % versions.length]
+      }
+      randomVersion += 1
+    }
+  }
+
   render() {
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} push />
@@ -73,7 +88,8 @@ class CreateListing extends Component {
     const variables = applyListingData(this.props, {
       deposit: '0',
       depositManager: walletProxy,
-      from: walletProxy
+      from: walletProxy,
+      version: this.state.version
     })
 
     createListing({ variables })
@@ -121,7 +137,7 @@ class CreateListing extends Component {
                 store.set('create-listing', undefined)
                 const { listingID } = event.returnValues
                 this.setState({
-                  redirect: `/listing/${netId}-000-${listingID}`
+                  redirect: `/listing/${netId}-${this.state.version}-${listingID}`
                 })
               }}
               children={fbt('View Listing', 'View Listing')}
@@ -133,4 +149,4 @@ class CreateListing extends Component {
   }
 }
 
-export default withWeb3(withWallet(withCanTransact(CreateListing)))
+export default withConfig(withWeb3(withWallet(withCanTransact(CreateListing))))
