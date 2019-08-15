@@ -12,7 +12,7 @@ class Security extends Component {
     super(props)
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.fetchAccounts()
   }
 
@@ -26,7 +26,8 @@ class Security extends Component {
               <div className="row">
                 <div className="col-md-6">{this.props.session.email}</div>
                 <div className="col-md-6 text-md-right">
-                  <a href="mailto:support@originprotocol.com?subject=Change Investor Email"
+                  <a
+                    href="mailto:support@originprotocol.com?subject=Change Investor Email"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -72,9 +73,13 @@ const mapStateToProps = ({ session, account }) => {
   return { session, account }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  fetchAccounts: fetchAccounts
-}, dispatch)
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      fetchAccounts: fetchAccounts
+    },
+    dispatch
+  )
 
 export default connect(
   mapStateToProps,

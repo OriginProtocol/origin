@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
+import { fetchUser } from '@/actions/user'
 import { apiUrl } from '@/constants'
 import agent from '@/utils/agent'
 
 class Welcome extends Component {
   state = {
     loading: true,
-    error: false,
-    user: {},
     redirectTo: null
   }
 
@@ -17,11 +18,11 @@ class Welcome extends Component {
   }
 
   handleWelcomeToken = async token => {
+    // Auth the user using the token
     let response
     try {
-      response = await
-        agent
-        .get(`${apiUrl}/api/user`)
+      response = await agent
+        .post(`${apiUrl}/api/verify_email_token`)
         .set('Authorization', `Bearer ${token}`)
     } catch (error) {
       this.setState({ loading: false, error: 'Invalid token' })
@@ -31,30 +32,34 @@ class Welcome extends Component {
     if (response.body.otpVerified) {
       // Looks like user has already onboarding, probably wants to login
       this.setState({ redirectTo: '/' })
-    } else {
-      this.setState({
-        user: response.body
-      })
     }
+
+    // Load the user
+    this.props.fetchUser()
+
+    this.setState({ loading: false })
   }
 
   render() {
-    if (this.state.emailSent) {
-      return <Redirect to="/check_email" />
+    if (this.state.redirectTo) {
+      return <Redirect to={this.state.redirectTo} />
+    }
+
+    if (this.state.loading || this.props.isFetching) {
+      return null
     }
 
     return (
       <>
         <div className="action-card">
           <h1>Welcome to the Origin Investor Portal</h1>
-          <p>You will be able to use this portal to manage your OGN investment.</p>
-          <div className="form-group">
-            <label htmlFor="email">Investor</label>
-            {this.state.user.name}
-          </div>
+          <p>
+            You will be able to use this portal to manage your OGN investment.
+          </p>
           <div className="form-group">
             <label>Email Address</label>
-            {this.state.user.emailAddress}
+            <br />
+            {this.props.user.email}
           </div>
           <button
             className="btn btn-primary btn-lg"
@@ -69,4 +74,23 @@ class Welcome extends Component {
   }
 }
 
-export default Welcome
+const mapStateToProps = ({ user }) => {
+  return {
+    user: user.user,
+    error: user.error,
+    isFetching: user.isFetching
+  }
+}
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      fetchUser: fetchUser
+    },
+    dispatch
+  )
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Welcome)

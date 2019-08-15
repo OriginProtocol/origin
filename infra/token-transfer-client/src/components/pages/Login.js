@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 
 import { formInput, formFeedback } from '@/utils/formHelpers'
-import withSendEmailToken from '@/hoc/withSendEmailToken'
+import { apiUrl } from '@/constants'
+import agent from '@/utils/agent'
 
 class Login extends Component {
   state = {
@@ -18,7 +19,9 @@ class Login extends Component {
       return
     }
     try {
-      await this.props.sendEmailToken(this.state.email)
+      await agent
+        .post(`${apiUrl}/api/send_email_token`)
+        .send({ email: this.state.email })
     } catch (error) {
       this.setState({
         emailError: 'Failed to send email token. Try again shortly.'
@@ -60,4 +63,4 @@ class Login extends Component {
   }
 }
 
-export default withSendEmailToken(Login)
+export default Login

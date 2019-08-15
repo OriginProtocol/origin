@@ -6,6 +6,7 @@ import storage from 'redux-persist/lib/storage' // defaults to localStorage for 
 import account from '@/reducers/account'
 import grant from '@/reducers/grant'
 import session from '@/reducers/session'
+import user from '@/reducers/user'
 
 const persistConfig = {
   key: 'root',
@@ -17,7 +18,8 @@ const persistedReducer = persistReducer(
   combineReducers({
     account,
     grant,
-    session
+    session,
+    user
   })
 )
 

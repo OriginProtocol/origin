@@ -14,15 +14,15 @@ class Phone extends Component {
 
   handleSubmit = async () => {
     try {
-      await agent
-        .post(`${apiUrl}/api/user`)
-        .send({ phone: this.state.phone })
+      await agent.post(`${apiUrl}/api/user`).send({ phone: this.state.phone })
     } catch (error) {
       this.setState({
         phoneError: 'Failed to save phone number. Try again shortly.'
       })
       return
     }
+
+    this.setState({ redirectTo: '/terms' })
   }
 
   render() {

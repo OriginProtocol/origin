@@ -18,4 +18,8 @@ require('react-styl')(`
     box-shadow: 0 2px 14px 0 rgba(0, 0, 0, 0.1)
   .bordered
     border: 1px solid #dbe6eb
+  .form-check
+    label
+      font-weight: normal
+      margin-top: 0
 `)

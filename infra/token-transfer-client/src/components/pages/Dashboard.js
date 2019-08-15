@@ -31,7 +31,7 @@ class Dashboard extends Component {
   renderDashboard() {
     const grants = this.props.grants.map(momentizeGrant)
 
-    const vestedTotal = grants.reduce((total, currentGrant)  => {
+    const vestedTotal = grants.reduce((total, currentGrant) => {
       return total + currentGrant.vestedAmount
     }, 0)
 
@@ -71,9 +71,13 @@ const mapStateToProps = ({ grant }) => {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  fetchGrants: fetchGrants
-}, dispatch)
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      fetchGrants: fetchGrants
+    },
+    dispatch
+  )
 
 export default connect(
   mapStateToProps,

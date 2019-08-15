@@ -14,7 +14,7 @@ const { LOGIN } = require('../constants/events')
 const { encrypt } = require('../lib/crypto')
 const { Event, User } = require('../models')
 const logger = require('../logger')
-const { ensureLoggedIn, ensureUserInSession } = require('../lib/login')
+const { ensureLoggedIn } = require('../lib/login')
 const {
   encryptionSecret,
   portalUrl,

@@ -87,7 +87,7 @@ const config = {
   all: args['--all'] === 'true' || false
 }
 
-if(!config.email && !config.all) {
+if (!config.email && !config.all) {
   throw new Error('one of --email or --all is a required argument.')
 }
 
