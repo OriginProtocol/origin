@@ -8,6 +8,7 @@ import mutation from 'mutations/SendMessage'
 import withConfig from 'hoc/withConfig'
 
 import { postFile } from 'utils/fileUtils'
+import pasteIntoInput from 'utils/pasteIntoInput'
 
 const acceptedFileTypes = ['image/jpeg', 'image/pjpeg', 'image/png']
 
@@ -57,8 +58,12 @@ class SendMessage extends Component {
   handleKeyPress = (e, sendMessage) => {
     const charCode = e.which || e.keyCode
     if (e.key === 'Enter' || charCode === 13 || charCode == 10) {
-      if (!e.shiftKey && !e.ctrlKey) {
+      if (!e.shiftKey && !e.ctrlKey && !e.altKey) {
         this.handleSubmit(e, sendMessage)
+      } else {
+        pasteIntoInput(this.input, '\n')
+        this.setState({ message: this.input.value })
+        e.preventDefault()
       }
     }
   }
