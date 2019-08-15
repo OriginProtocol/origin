@@ -4,14 +4,20 @@ const sendgridMail = require('@sendgrid/mail')
 const Logger = require('logplease')
 const jwt = require('jsonwebtoken')
 
-const { User } = require('../src/models')
+try {
+  require('envkey')
+} catch (error) {
+  logger.warn('EnvKey not configured')
+}
+
+const { User } = require('../models')
 const {
   encryptionSecret,
   logLevel,
   portalUrl,
-  sendgridEmailFrom,
+  sendgridFromEmail,
   sendgridApiKey
-} = require('../src/config')
+} = require('../config')
 
 const logger = Logger.create('sendWelcomeToken')
 Logger.setLogLevel(logLevel)
@@ -57,7 +63,7 @@ async function sendWelcomeEmail(email) {
 
   const data = {
     to: email,
-    from: sendgridEmailFrom,
+    from: sendgridFromEmail,
     subject: 'Welcome to the Origin Investor Portal',
     text: `The following link will provide you access to the Origin Investor Portal.
 
@@ -66,13 +72,29 @@ async function sendWelcomeEmail(email) {
     It will expire in 24 hours. You can reply directly to this email with any questions.`
   }
 
-  await sendgridMail.send(data)
+  try {
+    await sendgridMail.send(data)
+  } catch (error) {
+    logger.error(error.response.body)
+    return
+  }
   logger.info('Email sent')
 }
 
 const args = parseArgv()
 const config = {
-  email: args['--email']
+  email: args['--email'] || null,
+  all: args['--all'] === 'true' || false
 }
 
-sendWelcomeEmail(config.email)
+if(!config.email && !config.all) {
+  throw new Error('one of --email or --all is a required argument.')
+}
+
+if (config.email) {
+  // TODO validate email
+  sendWelcomeEmail(config.email)
+} else {
+  logger.info('Sending welcome email to all users')
+  // TODO implement this
+}
