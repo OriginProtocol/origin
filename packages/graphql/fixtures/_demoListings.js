@@ -221,7 +221,7 @@ const TaylorSwiftTickets = {
     ],
     price: {
       amount: '95',
-      currency: 'token-USD'
+      currency: 'fiat-USD'
     },
     commission: '10',
     commissionPerUnit: '2'
@@ -370,7 +370,7 @@ const Spaceman = {
     ],
     price: {
       amount: '15',
-      currency: 'token-USD'
+      currency: 'fiat-USD'
     },
     acceptedTokens: ['token-ETH', 'token-DAI'],
     commission: '10',
