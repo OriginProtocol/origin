@@ -62,10 +62,10 @@ export function newBlock(blockHeaders) {
   lastBlock = blockHeaders.number
   Object.keys(context.marketplaces || {}).forEach(version => {
     context.marketplaces[version].contract.eventCache.setLatestBlock(lastBlock)
+    context.marketplaces[version].eventSource.resetCache()
   })
   context.identityEvents.eventCache.setLatestBlock(lastBlock)
   context.ProxyFactory.eventCache.setLatestBlock(lastBlock)
-  context.eventSource.resetCache()
   pubsub.publish('NEW_BLOCK', {
     newBlock: { ...blockHeaders, id: blockHeaders.hash }
   })
