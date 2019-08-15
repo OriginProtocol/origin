@@ -21,7 +21,7 @@ const LISTINGS_TYPE = 'listing'
  * @param {Array<string>} currencies - Currency values, format "token|fiat-XYZ". Ex: "token-ETH", "fiat-KRW"
  * @returns {Object} - Requested exchange rates, currency as key and rate as value
  */
-const getExchangeRateToUSD = async currencies => {
+const getExchangeRatesToUSD = async currencies => {
   try {
     // lazy import to avoid event-listener depending on redis
     // this is only used in discovery
@@ -189,7 +189,7 @@ class Listing {
    */
   static async search(query, sort, order, filters, numberOfItems, offset) {
     const currencies = [
-      'fiat-CNBB',
+      'fiat-CNY',
       'fiat-EUR',
       'fiat-GBP',
       'fiat-JPY',
@@ -355,7 +355,7 @@ class Listing {
      * @returns {Object} - Sort query for elastic search
      */
     const getSortQuery = async () => {
-      const exchangeRates = await getExchangeRateToUSD(currencies)
+      const exchangeRates = await getExchangeRatesToUSD(currencies)
 
       const sortWhiteList = ['price.amount']
       const orderWhiteList = ['asc', 'desc']
