@@ -12,8 +12,12 @@ export async function mutate(mutation, variables, getEvents) {
   const result = await client.mutate({ mutation, variables })
 
   const blockNumber = await contracts.web3.eth.getBlockNumber()
-  contracts.marketplace.eventCache.setLatestBlock(blockNumber)
-  contracts.eventSource.resetCache()
+  if (contracts.marketplace) {
+    contracts.marketplace.eventCache.setLatestBlock(blockNumber)
+  }
+  if (contracts.eventSource) {
+    contracts.eventSource.resetCache()
+  }
 
   // Assume mutation returns an object with a transaction hash in the format
   // data.mutationName.id

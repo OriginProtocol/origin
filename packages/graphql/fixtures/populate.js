@@ -184,6 +184,7 @@ export default async function populate(gqlClient, log, done) {
   const accounts = mnemonicToAccounts()
   const res = await mutate(ImportWalletsMutation, null, { accounts })
   const [Admin, Seller, Buyer, Arbitrator, Affiliate] = res.map(r => r.id)
+  log(`Imported wallets`)
 
   await mutate(SendFromNodeMutation, NodeAccount, { to: Admin, value: '0.5' })
   log('Sent eth to Admin')
