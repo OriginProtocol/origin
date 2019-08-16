@@ -18,7 +18,7 @@ const LISTINGS_TYPE = 'listing'
  * Returns exchange rates of foreign currencies and tokens to USD.
  * Pulls the data from Redis. It's written to Redis by the bridge server.
  * @param {Array<string>} currencies - Currency values, format "token|fiat-XYZ". Ex: "token-ETH", "fiat-KRW"
- * @returns {Object} - Requested exchange rates, currency as key and rate as value
+ * @returns {Object} - Requested exchange rates, currency as key and rate as string value
  */
 const getExchangeRatesToUSD = async currencies => {
   try {
@@ -31,7 +31,7 @@ const getExchangeRatesToUSD = async currencies => {
       const splitCurrency = currency.split('-')
       const resolvedCurrency = splitCurrency[1]
       if (resolvedCurrency === 'USD') {
-        return 1
+        return '1'
       }
       return getAsync(`${resolvedCurrency}-USD_price`)
     })
