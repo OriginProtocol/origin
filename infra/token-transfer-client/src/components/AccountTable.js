@@ -20,6 +20,7 @@ class AccountTable extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    // Parse server errors
     if (prevProps.error !== this.props.error) {
       if (this.props.error && this.props.error.status === 422) {
         // Parse validation errors from API

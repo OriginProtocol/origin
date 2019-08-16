@@ -21,7 +21,7 @@ const VestingHistory = props => (
               <small>{currentVest.vested ? 'vested' : 'unvested'}</small>
             </div>
             <div className="col" style={{ textAlign: 'right' }}>
-              {currentVest.date.format('MM/DD/YYYY')}
+              {currentVest.date.format('L')}
             </div>
           </div>
         ))}

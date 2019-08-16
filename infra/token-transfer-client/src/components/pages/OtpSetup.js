@@ -63,7 +63,7 @@ class OtpVerify extends Component {
               <br />
               {this.state.otpKey}
             </p>
-            <div className="alert alert-warning">
+            <div className="alert alert-warning mx-auto">
               Store this secret key somewhere safe and don&apos;t share it with
               anyone else.
             </div>

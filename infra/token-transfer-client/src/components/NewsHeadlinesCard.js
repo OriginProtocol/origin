@@ -9,6 +9,7 @@ const NewsHeadlinesCard = ({ news = [] }) => {
   if (!news.length) return null
 
   const swiperParams = {
+    autoHeight: true,
     slidesPerView: 1,
     pagination: {
       el: '.swiper-pagination',
@@ -27,7 +28,9 @@ const NewsHeadlinesCard = ({ news = [] }) => {
               <div className="title">{item.title}</div>
               <p>
                 {item.description.substr(0, 120) + '...'}{' '}
-                <a href={item.link} target="_blank">[Read more]</a>
+                <a href={item.link} target="_blank" rel="noopener noreferrer">
+                  [Read more]
+                </a>
               </p>
             </div>
           )
@@ -44,4 +47,8 @@ require('react-styl')(`
     font-size: 28px
     font-weight: bold
     margin: 10px 0
+  .swiper-pagination
+    position: relative
+  .swiper-pagination-bullets
+    bottom: 0px !important
 `)

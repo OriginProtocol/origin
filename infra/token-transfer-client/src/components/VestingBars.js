@@ -3,7 +3,6 @@ import moment from 'moment'
 
 const VestingBars = props => {
   const [displayPopover, setDisplayPopover] = useState({})
-
   if (!props.grants || props.grants.length === 0) {
     return null
   }
@@ -50,7 +49,8 @@ const VestingBars = props => {
     // mouse click
     const leftOffset =
       document.getElementById('main').offsetLeft +
-      document.getElementById('vestingBars').offsetLeft + 50
+      document.getElementById('vestingBars').offsetLeft +
+      50
     setDisplayPopover({
       ...displayPopover,
       [grantId]: displayPopover[grantId] ? false : event.clientX - leftOffset
@@ -96,16 +96,17 @@ const VestingBars = props => {
                     onClick={event => handleTogglePopover(event, grant.id)}
                   />
                   <div>
-                    <strong>Start</strong> {grant.start.format('YYYY-MM-DD')}
+                    <strong>Start</strong> {grant.start.format('L')}
                   </div>
                   <div>
-                    <strong>Cliff</strong> {grant.cliff.format('YYYY-MM-DD')}
+                    <strong>Cliff</strong> {grant.cliff.format('L')}
                   </div>
                   <div>
-                    <strong>End</strong> {grant.end.format('YYYY-MM-DD')}
+                    <strong>End</strong> {grant.end.format('L')}
                   </div>
                   <div>
-                    <strong>Grant</strong> {grant.amount}
+                    <strong>Grant</strong>{' '}
+                    {Number(grant.amount).toLocaleString()}
                   </div>
                 </div>
               )}

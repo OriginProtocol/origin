@@ -43,6 +43,26 @@ label {
   font-weight: bold;
 }
 
+input, select {
+  border: none;
+  margin: 0 auto;
+}
+
+.custom-select {
+  background-color: #e9f0f3;
+  border: none;
+  box-shadow: none;
+  width: 80%;
+}
+
+.custom-select-lg {
+  height: calc(1.5em + 1.5rem + 2px);
+}
+
+.form-control {
+  border-radius: 10px;
+}
+
 .form-control, .form-control:focus {
   background-color: #e9f0f3;
   border: none;
@@ -50,14 +70,21 @@ label {
   width: 80%;
 }
 
-input {
-  border-radius: 10px;
-  border: none;
-  margin: 0 auto;
+.form-control-lg {
+  height: calc(1.5em + 1.5rem + 2px);
 }
 
-input:focus {
+.input-group {
   border-radius: 10px;
+  width: 80%;
+  margin: 0 auto;
+  background-color: #e9f0f3;
+  border: none;
+}
+
+.input-group-append {
+  padding: 12px;
+  display: block;
 }
 
 .alert-warning {
