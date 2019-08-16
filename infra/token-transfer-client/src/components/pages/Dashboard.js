@@ -48,10 +48,10 @@ class Dashboard extends Component {
     return (
       <>
         <div className="row">
-          <div className="col">
+          <div className="col-6">
             <BalanceCard balance={vestedTotal} />
           </div>
-          <div className="col">
+          <div className="col-6">
             <NewsHeadlinesCard />
           </div>
         </div>
