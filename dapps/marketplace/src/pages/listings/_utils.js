@@ -75,5 +75,26 @@ export function getStateFromQuery(props) {
   if (getParams.priceMax) {
     search.priceMax = getParams.priceMax
   }
+  if (getParams.sort) {
+    search.sort = getParams.sort
+  }
+  if (getParams.order) {
+    search.order = getParams.order
+  }
   return search
+}
+
+export function pushSearchHistory(history, search) {
+  history.push({
+    pathname: '/search',
+    search: queryString.stringify({
+      q: search.searchInput || undefined,
+      category: search.category.type || undefined,
+      subCategory: search.subCategory.type || undefined,
+      priceMin: search.priceMin || undefined,
+      priceMax: search.priceMax || undefined,
+      sort: search.sort || undefined,
+      order: search.order || undefined
+    })
+  })
 }
