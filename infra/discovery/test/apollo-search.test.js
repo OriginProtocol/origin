@@ -176,9 +176,7 @@ describe('Search', () => {
     lastQuery.body.sort._script.order.should.equal('asc')
     lastQuery.body.sort._script.type.should.equal('number')
     lastQuery.body.sort._script.script.lang.should.equal('painless')
-    lastQuery.body.sort._script.script.source.should.equal(
-      'if(params._source.containsKey("price") && params._source.price.containsKey("currency") && params._source.price.currency.containsKey("id")) { return Float.parseFloat(params._source.price.amount) * Float.parseFloat(params.exchangeRates[params._source.price.currency.id]); } else { return params.order == "asc" ? 1000000000L : 0 }'
-    )
+    lastQuery.body.sort._script.script.source.should.be.a('string')
   })
 
   it(`Should throw error and disable sorting if sort variables are not whitelisted`, async () => {
