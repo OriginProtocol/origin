@@ -22,7 +22,7 @@ eventlistenerImageTag: 'ace4091'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '58be731'
+discoveryImageTag: 'ace4091'
 
 # origin-growth
 growthImage: origin-growth
