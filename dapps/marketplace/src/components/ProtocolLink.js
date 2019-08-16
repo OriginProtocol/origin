@@ -3,12 +3,15 @@ import withIsMobile from 'hoc/withIsMobile'
 
 import Link from 'components/Link'
 
+import omit from 'lodash/omit'
+
 const ProtocolLink = ({ isMobile, protocolLink, fallbackLink, ...props }) => {
+  const linkProps = omit(props, ['isMobileApp'])
   if (!isMobile) {
     // No hacks on Desktop, Just open the fallback link in new tab
     return (
       <a
-        {...props}
+        {...linkProps}
         src={fallbackLink}
         target="_blank"
         rel="noopener noreferrer"
@@ -18,8 +21,8 @@ const ProtocolLink = ({ isMobile, protocolLink, fallbackLink, ...props }) => {
 
   return (
     <Link
-      {...props}
-      to={`/openapp?protocolLink=${encodeURIComponent(
+      {...linkProps}
+      to={`/openapp/?protocolLink=${encodeURIComponent(
         protocolLink
       )}&fallbackLink=${encodeURIComponent(fallbackLink)}`}
       onClick={e => {
