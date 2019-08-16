@@ -18,7 +18,7 @@ const portInUse = port =>
   new Promise(function(resolve) {
     const srv = net
       .createServer()
-      .once('error', (err) => {
+      .once('error', err => {
         console.error(err)
         resolve(true)
       })
