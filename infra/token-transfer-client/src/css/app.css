@@ -111,8 +111,12 @@ input, select {
   color: #8fa7b7
 }
 
-.action-card .spinner-grow {
+.action-card > .spinner-grow {
   margin: 10rem 0;
+}
+
+.spinner-grow-sm {
+  margin: 2px 4px;
 }
 
 #main .spinner-grow {

@@ -9,6 +9,7 @@ class Login extends Component {
   state = {
     email: '',
     emailError: null,
+    loading: false,
     redirectTo: null
   }
 
@@ -18,18 +19,20 @@ class Login extends Component {
       this.setState({ emailError: 'That does not look like a valid email.' })
       return
     }
+    this.setState({ loading: true })
     try {
       await agent
         .post(`${apiUrl}/api/send_email_token`)
         .send({ email: this.state.email })
     } catch (error) {
       this.setState({
+        loading: false,
         emailError: 'Failed to send email token. Try again shortly.'
       })
       return
     }
 
-    this.setState({ redirectTo: '/check_email' })
+    this.setState({ loading: false, redirectTo: '/check_email' })
   }
 
   render() {
@@ -54,8 +57,16 @@ class Login extends Component {
             className="btn btn-primary btn-lg"
             style={{ marginTop: '40px' }}
             onClick={this.handleSendEmailToken}
+            disabled={this.state.loading}
           >
-            Continue
+            {this.state.loading ? (
+              <>
+                <span className="spinner-grow spinner-grow-sm"></span>
+                Loading...
+              </>
+            ) : (
+              <span>Continue</span>
+            )}
           </button>
         </div>
       </>
