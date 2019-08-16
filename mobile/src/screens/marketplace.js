@@ -311,7 +311,6 @@ class MarketplaceScreen extends Component {
   }
 
   injectJavaScript = (script, name) => {
-    //console.warn(`Injecting ${name}`)
     const injectedJavaScript = `
       (function() {
         
