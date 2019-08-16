@@ -22,9 +22,6 @@ spec:
   ports:
     - name: swarm
       port: 4001
-    - name: swarm-udp
-      port: 4002
-      protocol: udp
     - name: api
       port: 5001
     - name: gateway
