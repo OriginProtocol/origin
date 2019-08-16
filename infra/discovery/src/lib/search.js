@@ -41,7 +41,7 @@ const getExchangeRatesToUSD = async currencies => {
       if (r === null) {
         // Rate not present in Redis. Perhaps the bridge server is not pulling the rate for that currency ?
         logger.error(
-          `Failed getting xrate for ${currencies[i]} from Redis. Check Bridge server.`
+          `Failed getting exchange rate for ${currencies[i]} from Redis. Check Bridge server.`
         )
       } else {
         exchangeRates[currencies[i]] = r
