@@ -18,11 +18,11 @@ faucetImageTag: '699ad10'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '55a3b1e'
+eventlistenerImageTag: '897c148'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: 'ace4091'
+discoveryImageTag: '7963fde'
 
 # origin-growth
 growthImage: origin-growth
