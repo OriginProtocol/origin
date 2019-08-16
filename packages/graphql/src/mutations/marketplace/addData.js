@@ -11,16 +11,20 @@ async function addData(_, data) {
   const listingId = data.listingID,
     offerId = data.offerID
 
-  let args = [ipfsHash]
+  let args = [ipfsHash],
+    parsed = {}
   if (offerId) {
-    const parsed = parseId(offerId, contracts)
+    parsed = parseId(offerId, contracts)
     args = [parsed.listingId, parsed.offerId, ipfsHash]
   } else if (listingId) {
-    const parsed = parseId(listingId, contracts)
+    parsed = parseId(listingId, contracts)
     args = [parsed.listingId, ipfsHash]
   }
 
-  const tx = contracts.marketplaceExec.methods.addData(...args)
+  if (!parsed.marketplace) {
+    throw new Error('Unknown marketplace contract')
+  }
+  const tx = parsed.marketplace.contractExec.methods.addData(...args)
   return txHelper({ tx, from, mutation: 'addData', gas: cost.addData })
 }
 

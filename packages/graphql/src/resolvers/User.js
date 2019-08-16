@@ -19,8 +19,11 @@ async function resultsFromIds({ after, allIds, first, fields }) {
   if (fields.nodes) {
     nodes = await Promise.all(
       ids.map(id => {
-        const [listingId, offerId] = id.split('-')
-        return contracts.eventSource.getOffer(listingId, offerId)
+        const [version, listingId, offerId] = id.split('-')
+        return contracts.marketplaces[version].eventSource.getOffer(
+          listingId,
+          offerId
+        )
       })
     )
   }
@@ -36,31 +39,45 @@ async function offers(buyer, { first = 10, after, filter }, _, info) {
   if (owner) {
     party = [party, owner]
   }
-  const offerEvents = await ec().getEvents({ event: 'OfferCreated', party })
-  const offerIDs = offerEvents.map(e => e.returnValues.offerID)
-  const completedOfferEvents = await ec().getEvents({
-    event: ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
-    offerID: offerIDs.map(id => String(id))
-  })
-  const completedIds = completedOfferEvents.map(ev => {
-    return `${ev.returnValues.listingID}-${ev.returnValues.offerID}`
-  })
 
-  let filteredEvents = offerEvents
-  if (filter === 'complete') {
-    filteredEvents = offerEvents.filter(ev => {
-      const id = `${ev.returnValues.listingID}-${ev.returnValues.offerID}`
-      return completedIds.indexOf(id) > -1
+  let allIds = []
+  for (const version in contracts.marketplaces) {
+    const eventCache = contracts.marketplaces[version].contract.eventCache
+    const offerEvents = await eventCache.getEvents({
+      event: 'OfferCreated',
+      party
     })
-  } else if (filter === 'pending') {
-    filteredEvents = offerEvents.filter(ev => {
-      const id = `${ev.returnValues.listingID}-${ev.returnValues.offerID}`
-      return completedIds.indexOf(id) < 0
+    const offerIDs = offerEvents.map(e => e.returnValues.offerID)
+    const completedOfferEvents = await eventCache.getEvents({
+      event: ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
+      offerID: offerIDs.map(id => String(id))
     })
+    const completedIds = completedOfferEvents.map(ev => {
+      return `${ev.returnValues.listingID}-${ev.returnValues.offerID}`
+    })
+
+    let filteredEvents = offerEvents
+    if (filter === 'complete') {
+      filteredEvents = offerEvents.filter(ev => {
+        const id = `${ev.returnValues.listingID}-${ev.returnValues.offerID}`
+        return completedIds.indexOf(id) > -1
+      })
+    } else if (filter === 'pending') {
+      filteredEvents = offerEvents.filter(ev => {
+        const id = `${ev.returnValues.listingID}-${ev.returnValues.offerID}`
+        return completedIds.indexOf(id) < 0
+      })
+    }
+
+    allIds = allIds.concat(
+      filteredEvents
+        .map(ev => {
+          const { listingID, offerID } = ev.returnValues
+          return `${version}-${listingID}-${offerID}`
+        })
+        .reverse()
+    )
   }
-  const allIds = filteredEvents
-    .map(ev => `${ev.returnValues.listingID}-${ev.returnValues.offerID}`)
-    .reverse()
 
   return await resultsFromIds({ after, allIds, first, fields })
 }
@@ -73,33 +90,39 @@ async function sales(seller, { first = 10, after, filter }, _, info) {
     party = [party, owner]
   }
 
-  const listings = await ec().getEvents({ event: 'ListingCreated', party })
-  const listingIds = listings.map(e => e.returnValues.listingID)
-  const events = await ec().getEvents({
-    listingID: listingIds,
-    event: 'OfferCreated'
-  })
+  let allIds = []
+  for (const version in contracts.marketplaces) {
+    const { getEvents } = contracts.marketplaces[version].contract.eventCache
 
-  let allIds = events
-    .map(e => `${e.returnValues.listingID}-${e.returnValues.offerID}`)
-    .reverse()
-
-  if (filter) {
-    const completedEvents = await ec().getEvents({
-      event: ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
-      offerID: events.map(e => e.returnValues.offerID)
+    const listings = await getEvents({ event: 'ListingCreated', party })
+    const listingIds = listings.map(e => e.returnValues.listingID)
+    const events = await getEvents({
+      listingID: listingIds,
+      event: 'OfferCreated'
     })
-    const completedIds = uniq(
-      completedEvents.map(
-        e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
-      )
-    )
 
-    if (filter === 'complete') {
-      allIds = allIds.filter(id => completedIds.indexOf(id) >= 0)
-    } else if (filter === 'pending') {
-      allIds = allIds.filter(id => completedIds.indexOf(id) < 0)
+    let ids = events
+      .map(e => `${e.returnValues.listingID}-${e.returnValues.offerID}`)
+      .reverse()
+
+    if (filter) {
+      const completedEvents = await getEvents({
+        event: ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
+        offerID: events.map(e => e.returnValues.offerID)
+      })
+      const completedIds = uniq(
+        completedEvents.map(
+          e => `${e.returnValues.listingID}-${e.returnValues.offerID}`
+        )
+      )
+
+      if (filter === 'complete') {
+        ids = ids.filter(id => completedIds.indexOf(id) >= 0)
+      } else if (filter === 'pending') {
+        ids = ids.filter(id => completedIds.indexOf(id) < 0)
+      }
     }
+    allIds = allIds.concat(ids.map(id => `${version}-${id}`))
   }
 
   return await resultsFromIds({ after, allIds, first, fields })
@@ -113,29 +136,33 @@ async function reviews(user, { first = 10, after }) {
     party = [party, owner]
   }
 
-  // Find all the OfferFinalized events associated with this user
-  const listings = await ec().getEvents({ event: 'ListingCreated', party })
-  const listingIds = listings.map(e => String(e.returnValues.listingID))
-  let events = await ec().getEvents({
-    listingID: listingIds,
-    event: ['OfferFinalized', 'OfferData']
-  })
-
-  events = sortBy(events, event => -event.blockNumber)
-
-  const totalCount = events.length
+  let totalCount = 0
   const idEvents = {}
-  for (const event of events) {
-    const id = await contracts.eventSource.getOfferIdExp(
-      event.returnValues.listingID,
-      event.returnValues.offerID
-    )
-    /* Group all OfferFinalized and OfferData events together. This doesn't
-     * break pagination because we extract at most 1 review per group of
-     * events.
-     */
-    idEvents[id] = idEvents[id] ? [event, ...idEvents[id]] : [event]
+  for (const version in contracts.marketplaces) {
+    const ec = contracts.marketplaces[version].contract.eventCache
+
+    // Find all the OfferFinalized events associated with this user
+    const listings = await ec.getEvents({ event: 'ListingCreated', party })
+    const listingIds = listings.map(e => String(e.returnValues.listingID))
+    let events = await ec.getEvents({
+      listingID: listingIds,
+      event: ['OfferFinalized', 'OfferData']
+    })
+
+    events = sortBy(events, event => -event.blockNumber)
+
+    totalCount += events.length
+    for (const event of events) {
+      const { listingID, offerID } = event.returnValues
+      const id = `x-${version}-${listingID}-${offerID}`
+      /* Group all OfferFinalized and OfferData events together. This doesn't
+       * break pagination because we extract at most 1 review per group of
+       * events.
+       */
+      idEvents[id] = idEvents[id] ? [event, ...idEvents[id]] : [event]
+    }
   }
+
   const allIds = Object.keys(idEvents)
   const { ids, start } = getIdsForPage({ after, ids: allIds })
 
@@ -147,7 +174,8 @@ async function reviews(user, { first = 10, after }) {
     // fetch all events that may contain a review
     const reviews = (await Promise.all(
       events.map(event => {
-        return contracts.eventSource.getReview(
+        const es = contracts.marketplaces[id.split('-')[1]].eventSource
+        return es.getReview(
           event.returnValues.listingID,
           event.returnValues.offerID,
           event.returnValues.party,
@@ -181,88 +209,98 @@ async function notifications(user, { first = 10, after, filter }, _, info) {
   const owner = await proxyOwner(user.id)
   if (owner) party.push(owner)
 
-  const sellerListings = await ec().getEvents({
-    event: 'ListingCreated',
-    party
-  })
+  const allIds = [],
+    allEvents = {}
+  for (const version in contracts.marketplaces) {
+    const marketplace = contracts.marketplaces[version]
+    const ec = marketplace.contract.eventCache
+    const sellerListings = await ec.getEvents({
+      event: 'ListingCreated',
+      party
+    })
+    const sellerListingIds = sellerListings.map(e => e.returnValues.listingID)
 
-  const sellerListingIds = sellerListings.map(e => e.returnValues.listingID)
-
-  const unfilteredSellerEvents = await ec().getEvents({
-    event: [
-      'OfferCreated',
-      'OfferFinalized',
-      'OfferWithdrawn',
-      'OfferFundsAdded',
-      'OfferDisputed',
-      'OfferRuling'
-    ],
-    listingID: sellerListingIds
-  })
-  const sellerEvents = unfilteredSellerEvents.filter(
-    e => party.indexOf(e.returnValues.party) < 0
-  )
-
-  const buyerListings = await ec().getEvents({ event: 'OfferCreated', party })
-  const buyerListingIds = buyerListings.map(e => e.returnValues.listingID)
-
-  const unfilteredBuyerEvents = await ec().getEvents({
-    listingID: buyerListingIds,
-    event: ['OfferAccepted', 'OfferRuling']
-  })
-  const buyerEvents = unfilteredBuyerEvents.filter(
-    e => party.indexOf(e.returnValues.party) < 0
-  )
-
-  let allEvents = sortBy([...sellerEvents, ...buyerEvents], e => -e.blockNumber)
-
-  if (filter === 'pending') {
-    const allListingIds = allEvents.map(e => Number(e.returnValues.listingID))
-    const allListings = await Promise.all(
-      allListingIds.map(id => ec().offers(id))
+    const unfilteredSellerEvents = await ec.getEvents({
+      event: [
+        'OfferCreated',
+        'OfferFinalized',
+        'OfferWithdrawn',
+        'OfferFundsAdded',
+        'OfferDisputed',
+        'OfferRuling'
+      ],
+      listingID: sellerListingIds
+    })
+    const sellerEvents = unfilteredSellerEvents.filter(
+      e => party.indexOf(e.returnValues.party) < 0
     )
 
-    allEvents = allEvents.filter(e => {
-      const idx = allListingIds.indexOf(Number(e.returnValues.listingID))
-      const events = allListings[idx]
-      if (e.event === 'OfferFinalized') {
-        return false
-      } else if (
-        e.event === 'OfferCreated' &&
-        events.some(t => t.event.match(/Offer(Withdrawn|Finalized)/))
-      ) {
-        return false
-      } else if (
-        e.event === 'OfferAccepted' &&
-        events.some(t => t.event === 'OfferFinalized')
-      ) {
-        return false
-      } else {
-        return true
-      }
+    const buyerListings = await ec.getEvents({ event: 'OfferCreated', party })
+    const buyerListingIds = buyerListings.map(e => e.returnValues.listingID)
+
+    const unfilteredBuyerEvents = await ec.getEvents({
+      listingID: buyerListingIds,
+      event: ['OfferAccepted', 'OfferRuling']
+    })
+    const buyerEvents = unfilteredBuyerEvents.filter(
+      e => party.indexOf(e.returnValues.party) < 0
+    )
+
+    let events = sortBy([...sellerEvents, ...buyerEvents], e => -e.blockNumber)
+
+    if (filter === 'pending') {
+      const allListingIds = events.map(e => Number(e.returnValues.listingID))
+      const allListings = await Promise.all(allListingIds.map(id => offers(id)))
+
+      events = events.filter(e => {
+        const idx = allListingIds.indexOf(Number(e.returnValues.listingID))
+        const events = allListings[idx]
+        if (e.event === 'OfferFinalized') {
+          return false
+        } else if (
+          e.event === 'OfferCreated' &&
+          events.some(t => t.event.match(/Offer(Withdrawn|Finalized)/))
+        ) {
+          return false
+        } else if (
+          e.event === 'OfferAccepted' &&
+          events.some(t => t.event === 'OfferFinalized')
+        ) {
+          return false
+        } else {
+          return true
+        }
+      })
+    }
+
+    events.forEach(e => {
+      const id = `${version}-${e.returnValues.listingID}-${e.returnValues.offerID}-${e.blockNumber}`
+      allIds.push(id)
+      allEvents[id] = e
     })
   }
 
-  const totalCount = allEvents.length,
-    allIds = allEvents.map(e => e.id)
+  const totalCount = allIds.length
 
   const { ids, start } = getIdsForPage({ after, ids: allIds, first })
-  const filteredEvents = allEvents.filter(e => ids.indexOf(e.id) >= 0)
 
   let offers = [],
     nodes = []
 
   if (fields.nodes) {
     offers = await Promise.all(
-      filteredEvents.map(event =>
-        contracts.eventSource.getOffer(
-          event.returnValues.listingID,
-          event.returnValues.offerID,
-          event.blockNumber
+      ids.map(id => {
+        const split = id.split('-')
+        return contracts.marketplaces[split[0]].eventSource.getOffer(
+          split[1],
+          split[2],
+          split[3]
         )
-      )
+      })
     )
-    nodes = filteredEvents.map((event, idx) => {
+
+    nodes = ids.map((id, idx) => {
+      const event = allEvents[id]
       const party = event.returnValues.party
       return {
         id: event.id,

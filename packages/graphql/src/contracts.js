@@ -378,13 +378,22 @@ function setMetaMask() {
     context.metaMaskEnabled = true
     context.web3Exec = metaMask
     context.marketplaceExec = context.marketplaceMM
+    Object.keys(context.marketplaces).forEach(
+      version =>
+        (context.marketplaces[version].contractExec =
+          context.marketplaces[version].contractMM)
+    )
     context.ognExec = context.ognMM
     context.tokens.forEach(token => (token.contractExec = token.contractMM))
     context.daiExchangeExec = context.daiExchangeMM
   } else {
     context.metaMaskEnabled = false
     context.web3Exec = web3
-    context.marketplaceExec = context.marketplace
+    Object.keys(context.marketplaces).forEach(
+      version =>
+        (context.marketplaces[version].contractExec =
+          context.marketplaces[version].contract)
+    )
     context.ognExec = context.ogn
     context.tokens.forEach(token => (token.contractExec = token.contract))
     context.daiExchangeExec = context.daiExchange
@@ -498,14 +507,14 @@ export function setMarketplace(address, epoch, version = '000') {
   }
 
   if (metaMask) {
-    context.marketplaceMM = new metaMask.eth.Contract(
+    const contractMM = new metaMask.eth.Contract(
       MarketplaceContract.abi,
       address
     )
-    context.marketplaces[version].contractMM = context.marketplaceMM
+    context.marketplaces[version].contractMM = contractMM
     if (metaMaskEnabled) {
-      context.marketplaceExec = context.marketplaceMM
-      context.marketplaces[version].contractExec = context.marketplaceMM
+      context.marketplaceExec = contractMM
+      context.marketplaces[version].contractExec = contractMM
     }
   }
 }

@@ -228,6 +228,12 @@ export default async function populate(gqlClient, log, done) {
   })
   log(`Deployed marketplace v0 to ${Marketplace.contractAddress}`)
 
+  await mutate(AddAffiliateMutation, Admin, {
+    affiliate: Affiliate,
+    version: '000'
+  })
+  log('Added affiliate to marketplace v0')
+
   const relayerMasterAddress = mnemonicToMasterAccount(
     process.env.FORWARDER_MNEMONIC || 'one two three four five six'
   )
@@ -288,9 +294,6 @@ export default async function populate(gqlClient, log, done) {
     value: '0.1'
   })
   log('Sent eth to affiliate')
-
-  await mutate(AddAffiliateMutation, Admin, { affiliate: Affiliate })
-  log('Added affiliate to marketplace')
 
   const IdentityEvents = await mutate(
     DeployIdentityEventsContractMutation,

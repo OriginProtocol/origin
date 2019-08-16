@@ -22,22 +22,21 @@ async function makeOffer(_, data) {
   if (!marketplace) {
     throw new Error('No marketplace')
   }
-  const marketplaceContract = marketplace.contractExec
   const ipfsData = await toIpfsData(data, marketplace)
   let mutation = 'makeOffer'
 
-  const affiliateWhitelistDisabled = await marketplaceContract.methods
-    .allowedAffiliates(marketplaceContract.options.address)
+  const affiliateWhitelistDisabled = await marketplace.contract.methods
+    .allowedAffiliates(marketplace.contract.options.address)
     .call()
 
   const affiliate = data.affiliate || contracts.config.affiliate || ZeroAddress
   if (!affiliateWhitelistDisabled) {
-    const affiliateAllowed = await marketplaceContract.methods
+    const affiliateAllowed = await marketplace.contract.methods
       .allowedAffiliates(affiliate)
       .call()
 
     if (!affiliateAllowed) {
-      throw new Error('Affiliate not on whitelist')
+      throw new Error(`Affiliate ${affiliate} not on whitelist`)
     }
   }
 
@@ -80,7 +79,7 @@ async function makeOffer(_, data) {
   }
 
   let ethValue = currencyAddress === ZeroAddress ? value : 0
-  let tx = marketplaceContract.methods.makeOffer(...args)
+  let tx = marketplace.contractExec.methods.makeOffer(...args)
   if (contracts.config.proxyAccountsEnabled) {
     let owner = await proxyOwner(buyer)
     const isProxy = owner ? true : false
@@ -101,7 +100,7 @@ async function makeOffer(_, data) {
         const swapABI = await swapTx.tx.encodeABI()
         tx = Proxy.methods.swapAndMakeOffer(
           owner, // address _owner,
-          marketplaceContract._address, // address _marketplace,
+          marketplace.contract._address, // address _marketplace,
           txData, // bytes _offer,
           contracts.daiExchange._address, // address _exchange,
           swapABI, // bytes _swap,
@@ -117,7 +116,7 @@ async function makeOffer(_, data) {
         debug('transferTokenMarketplaceExecute', { value, currencyAddress })
         tx = Proxy.methods.transferTokenMarketplaceExecute(
           owner,
-          marketplaceContract._address,
+          marketplace.contract._address,
           txData,
           currencyAddress,
           value
