@@ -466,7 +466,7 @@ class Listing {
         description: hit._source.description,
         price: {
           amount: get(hit, '_source.price.amount', '0'),
-          currency: get(hit, 'source.price.currency.id', 'fiat-USD')
+          currency: get(hit, '_source.price.currency.id', 'fiat-USD')
         }
       })
     })
