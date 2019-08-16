@@ -5,7 +5,7 @@ import queryString from 'query-string'
 /**
  * Tries to open the app using the `protocolLink`.
  * If it fails, opens the `fallbackLink`
- * 
+ *
  * Important: Use only on Mobile
  */
 const OpenApp = ({ location, history }) => {

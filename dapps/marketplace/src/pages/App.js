@@ -88,11 +88,13 @@ class App extends Component {
       /^\/welcome\/?(?!(onboard\/)).*/gi
     )
 
-    const isShowingProtocolLink = this.props.location.pathname.startsWith('/openapp')
+    const isShowingProtocolLink = this.props.location.pathname.startsWith(
+      '/openapp'
+    )
 
     // TODO: Too many regex here, probably it's better to optimize this sooner or later
     const hideNavbar =
-      isShowingProtocolLink || 
+      isShowingProtocolLink ||
       (isOnWelcomeAndNotOboard && !isMobile) ||
       (isMobile &&
         (this.props.location.pathname.match(/^\/purchases\/.*$/gi) ||
