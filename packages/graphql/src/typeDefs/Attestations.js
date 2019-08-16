@@ -13,6 +13,9 @@ export const mutations = `
 
     generateWebsiteCode(identity: String!, website: String!): AttestationCodeResult!
     verifyWebsite(identity: String!, website: String!): AttestationVerifyResult!
+
+    generateTelegramCode(identity: String!): AttestationCodeResult!
+    verifyTelegramCode(identity: String!, code: String!): AttestationVerifyResult!
   }
 `
 export const types = `

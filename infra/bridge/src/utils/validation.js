@@ -154,13 +154,25 @@ const websiteVerify = websiteGenerateCode
 const verifyPromotions = [
   identityValidation,
   check('socialNetwork')
-    .isIn(['TWITTER'])
+    .isIn(['TWITTER', 'TELEGRAM'])
     .withMessage('Unsupported social network'),
   check('type')
     .isIn(['FOLLOW', 'SHARE'])
     .withMessage('Unknown event type'),
   handleValidationError
 ]
+
+const telegramVerify = [
+  identityValidation,
+  check('code')
+    .not()
+    .isEmpty()
+    .withMessage('Field `code` must not be empty.')
+    .trim(),
+  handleValidationError
+]
+
+const telegramGenerateCode = [identityValidation, handleValidationError]
 
 module.exports = {
   airbnbGenerateCode,
@@ -178,5 +190,7 @@ module.exports = {
   githubVerify,
   linkedinVerify,
   wechatVerify,
-  verifyPromotions
+  verifyPromotions,
+  telegramVerify,
+  telegramGenerateCode
 }

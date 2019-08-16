@@ -22,10 +22,10 @@ const WithPrices = ({
     needsAllowance,
     needsBalance
 
-  if (!currency) return children({ prices: {}, tokenStatus: {} })
+  if (!currency) return children({ prices: {}, tokenStatus: { loading: true } })
   const foundCurrency = currencies.find(c => c.id === currency.id)
   if (!foundCurrency || !targets) {
-    return children({ prices: {}, tokenStatus: {} })
+    return children({ prices: {}, tokenStatus: { loading: true } })
   }
 
   const results = targets.reduce((memo, target) => {

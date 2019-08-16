@@ -2,16 +2,20 @@
 
 const OAuth = require('oauth').OAuth
 const { getAbsoluteUrl } = require('./index.js')
+const {
+  getTwitterWebhookConsumerKey,
+  getTwitterWebhookConsumerSecret
+} = require('./hooks')
 
 function twitterOAuth({ sid, redirectUrl, useWebhookCredentials } = {}) {
   return new OAuth(
     'https://api.twitter.com/oauth/request_token',
     'https://api.twitter.com/oauth/access_token',
-    useWebhookCredentials && process.env.TWITTER_WEBHOOKS_CONSUMER_KEY
-      ? process.env.TWITTER_WEBHOOKS_CONSUMER_KEY
+    useWebhookCredentials
+      ? getTwitterWebhookConsumerKey()
       : process.env.TWITTER_CONSUMER_KEY,
-    useWebhookCredentials && process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET
-      ? process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET
+    useWebhookCredentials
+      ? getTwitterWebhookConsumerSecret()
       : process.env.TWITTER_CONSUMER_SECRET,
     '1.0',
     getAbsoluteUrl(redirectUrl ? redirectUrl : '/redirects/twitter/', { sid }),

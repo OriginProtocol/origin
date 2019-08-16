@@ -1,7 +1,7 @@
 const chai = require('chai')
 const expect = chai.expect
 
-const { encrypt, decrypt } = require('../src/lib/crypto')
+const { encrypt, decrypt } = require('../../src/lib/crypto')
 
 describe('Crypto', () => {
   it('Should encrypt and decrypt', () => {

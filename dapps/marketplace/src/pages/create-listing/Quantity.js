@@ -37,6 +37,7 @@ class Details extends Component {
           <div className="col-md-8">
             <form
               className="listing-step"
+              autoComplete="off"
               onSubmit={e => {
                 e.preventDefault()
                 this.validate()
