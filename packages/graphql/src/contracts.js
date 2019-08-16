@@ -329,7 +329,6 @@ export function setNetwork(net, customConfig) {
       config.OriginToken
     )
     context.tokens.forEach(token => {
-      console.log('token', token)
       token.contractMM = new metaMask.eth.Contract(
         token.contract.options.jsonInterface,
         token.contract.options.address
@@ -532,7 +531,6 @@ export function setIdentityEvents(address, epoch) {
   context.identityEventsExec = context.identityEvents
 
   if (metaMask) {
-    console.log('ie')
     context.identityEventsMM = new metaMask.eth.Contract(
       IdentityEventsContract.abi,
       context.identityEvents.options.address
