@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 import queryString from 'query-string'
 
@@ -14,6 +14,7 @@ const OpenApp = ({ location, history }) => {
   const { protocolLink, fallbackLink } = query
 
   useEffect(() => {
+    // eslint-disable-next-line prefer-const
     let timeout
     let loaded = false
 

@@ -13,6 +13,8 @@ import PublishedInfoBox from 'components/_PublishedInfoBox'
 import GenerateTelegramCodeMutation from 'mutations/GenerateTelegramCode'
 import VerifyTelegramCodeMutation from 'mutations/VerifyTelegramCode'
 
+import ProtocolLink from 'components/ProtocolLink'
+
 class TelegramAttestation extends Component {
   constructor() {
     super()
