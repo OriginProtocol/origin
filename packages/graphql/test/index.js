@@ -1,5 +1,6 @@
 import assert from 'assert'
 import get from 'lodash/get'
+const BigNumber = require('bignumber.js')
 
 import client from '../src/index'
 import contracts, { shutdown } from '../src/contracts'
@@ -868,4 +869,81 @@ describe('Marketplace', function() {
       }
     })
   })
+
+  describe('DAI swap transaction', function() {
+    let listingId
+    let offerEvents
+    let ethBefore
+
+    before(async function() {
+      const listing = await createListing({
+        deposit: '0',
+        depositManager: Arbitrator,
+        from: Seller,
+        data: {
+          title: 'Test DAI Listing',
+          description: 'Test description',
+          price: {
+            currency: 'token-DAI',
+            amount: '2.00'
+          },
+          category: 'Test category',
+          subCategory: 'Test sub-category'
+        },
+        unitData: {
+          unitsTotal: 1
+        }
+      })
+      listingId = listing.listingId
+      ethBefore = await contracts.web3.eth.getBalance(Buyer)
+    })
+
+    it('should make an offer', async function() {
+      contracts.config.proxyAccountsEnabled = true
+      offerEvents = await mutate(
+        mutations.MakeOffer,
+        {
+          listingID: listingId,
+          from: Buyer,
+          finalizes: 123,
+          affiliate: ZeroAddress,
+          value: '6000.00',
+          currency: 'token-DAI',
+          arbitrator: Arbitrator,
+          quantity: 1,
+          autoswap: true
+        },
+        true
+      )
+      assert(offerEvents.OfferCreated)
+      assert(offerEvents.TokenPurchase)
+      contracts.config.proxyAccountsEnabled = false
+    })
+
+    it('should have sent more than the exchange amount', async function() {
+      // When buying DIA, we need to send along more eth than the current
+      // exchange rate, since the exchange rate has a good chance of having
+      // changed by the time our purchase happens.
+      const ethAfter = await contracts.web3.eth.getBalance(Buyer)
+      const ethSent = new BigNumber(ethBefore).minus(new BigNumber(ethAfter))
+      const ethTraded = new BigNumber(offerEvents.TokenPurchase.eth_sold)
+      const sendRatio = ethSent.div(ethTraded)
+      assert(sendRatio.toFixed(2) > 1.01)
+    })
+  })
 })
+
+async function createListing(listingData) {
+  const receipt = await mutate(mutations.CreateListing, listingData)
+  const inputAbi = contracts.marketplace._jsonInterface.find(
+    x => x.name == 'ListingCreated'
+  ).inputs
+  const log = receipt.logs[0]
+  const decodedLog = contracts.web3.eth.abi.decodeLog(
+    inputAbi,
+    log.data,
+    log.topics.slice(1)
+  )
+  const listingId = `999-000-${decodedLog['listingID']}`
+  return { receipt, listingId }
+}

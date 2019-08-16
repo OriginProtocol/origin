@@ -109,6 +109,7 @@ const MakeOffer = gql`
     $from: String
     $withdraw: String
     $quantity: Int
+    $autoswap: Boolean
   ) {
     makeOffer(
       listingID: $listingID
@@ -122,6 +123,7 @@ const MakeOffer = gql`
       from: $from
       withdraw: $withdraw
       quantity: $quantity
+      autoswap: $autoswap
     ) {
       id
     }

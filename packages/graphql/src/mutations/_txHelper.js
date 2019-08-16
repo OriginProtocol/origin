@@ -82,7 +82,6 @@ function mineBlock(web3Inst) {
  *  - create-no-wrap: Send transaction direct to proxy after creation
  */
 async function useProxy({ proxy, addr, to, from, mutation }) {
-  if (isServer) return
   const { proxyAccountsEnabled } = contracts.config
   const predicted = await predictedProxy(from)
   const targetIsProxy = addr === predicted
@@ -151,6 +150,7 @@ export default function txHelper({
     const addr = get(tx, '_parent._address')
     const shouldUseRelayer = useRelayer({ mutation, value })
     const shouldUseProxy = await useProxy({ proxy, addr, to, from, mutation })
+    debug(`shouldUseProxy: ${shouldUseProxy}`)
 
     // If this user doesn't have a proxy yet, create one
     if (shouldUseProxy === 'create' || shouldUseProxy === 'create-no-wrap') {
