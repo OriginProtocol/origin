@@ -1,5 +1,6 @@
 const base58 = require('./util_base58')
-const IpfsClusterAPI = require('./ipfs-cluster-api-service.js')
+const IpfsClusterAPI = require('./ipfs-cluster-api-service')
+
 const ipfsClusterApiService = new IpfsClusterAPI(
   process.env.IPFS_CLUSTER_URL,
   process.env.IPFS_CLUSTER_USERNAME,
@@ -12,23 +13,24 @@ const pinService = async event => {
     ? JSON.parse(Buffer.from(pubsubMessage, 'base64').toString())
     : null
 
-  const eventName = data.log.eventName
+  const eventName = data.event.event
   if (
     !['ListingCreated', 'ListingUpdated', 'IdentityUpdated'].includes(eventName)
   ) {
     // Not an event we are interested in pinning anything for
+    console.log(`Skipping event ${eventName}`)
     return
   }
 
-  let pinnedHashes = []
-  let unPinnedHashes = []
+  const pinnedHashes = []
+  const unPinnedHashes = []
 
   if (!Object.is(data, null)) {
     const hashesToPin = parseIncomingData(data)
     for (let i = 0; i < hashesToPin.length; i++) {
-      hashToPin = hashesToPin[i]
+      const hashToPin = hashesToPin[i]
 
-      pinned = await ipfsClusterApiService.pin(hashToPin)
+      const pinned = await ipfsClusterApiService.pin(hashToPin)
 
       if (pinned) {
         pinnedHashes.push(hashToPin)
@@ -37,7 +39,7 @@ const pinService = async event => {
         // interval every try. Set fields accordingly.
         let numberOfRetries = 4
         let initialRetryInterval = 500
-        let retryIntervalGrowthRate = 2
+        const retryIntervalGrowthRate = 2
         let retryPinned = await promiseSetTimeout(
           hashToPin,
           initialRetryInterval
@@ -59,11 +61,13 @@ const pinService = async event => {
     console.log('Error retrieving listing data')
   }
   console.log('Pinned following hashes: ', pinnedHashes.join(', '), '\n')
-  console.log(
-    'Could not pin following hashes: ',
-    unPinnedHashes.join(', '),
-    '\n'
-  )
+  if (unPinnedHashes) {
+    console.log(
+      'Could not pin following hashes: ',
+      unPinnedHashes.join(', '),
+      '\n'
+    )
+  }
 }
 
 const promiseSetTimeout = async (hashToPin, interval) => {
@@ -76,7 +80,7 @@ const promiseSetTimeout = async (hashToPin, interval) => {
 }
 
 const parseIncomingData = data => {
-  let hashesToPin = []
+  const hashesToPin = []
   const eventName = data.event.event
   if (eventName === 'ListingCreated' || eventName === 'ListingUpdated') {
     console.log(`Processing event ${eventName}`)

@@ -1,5 +1,8 @@
 const fetch = require('cross-fetch')
 
+// Per Protocol Labs request, we add this param to any request we send to their cluster.
+const ORIGIN_PARAM = '?name=OriginProtocol'
+
 class IpfsClusterApiService {
   constructor(ifpsClusterUrl, username, password) {
     this.ifpsClusterUrl = ifpsClusterUrl
@@ -7,9 +10,9 @@ class IpfsClusterApiService {
     this.password = password || ''
   }
 
-  async _sendRequest(method, path, params = null) {
+  async _sendRequest(method, path) {
     const resp = await fetch(
-      this.ifpsClusterUrl + path,
+      this.ifpsClusterUrl + path + ORIGIN_PARAM,
       {
         method: method,
         headers: {
@@ -18,21 +21,23 @@ class IpfsClusterApiService {
             Buffer.from(this.username + ':' + this.password).toString('base64')
         }
       },
-      function(error) {
-        throw new Error(`Error occured while trying to connect to ipfs cluster`)
+      function(err) {
+        throw new Error(
+          `Error occurred while trying to connect to ipfs cluster : ${err}`
+        )
       }
     )
 
-    if (resp.status == 404) {
+    if (resp.status === 404) {
       throw new Error(`ipfs cluster api endpoint doesn't exist`)
     }
 
-    if (resp.status == 202) {
-      // e.g succesfully sending a request to pin a hash returns a 202
+    if (resp.status === 202) {
+      // e.g successfully sending a request to pin a hash returns a 202
       return true
     }
     const data = await resp.json()
-    if (data.code && data.code != 200) {
+    if (data.code && data.code !== 200) {
       throw new Error(
         `ipfs cluster api responded with an error, status: ${
           data['code']
@@ -42,7 +47,7 @@ class IpfsClusterApiService {
     return data
   }
 
-  // Following sends a request to pin and returns true if the request has been succesfully made.
+  // Following sends a request to pin and returns true if the request has been successfully made.
   // A few more steps are carried out by the ipfs cluster service to actually successfully pin the hash.
   async pin(ipfsHash) {
     try {
