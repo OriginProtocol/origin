@@ -64,8 +64,12 @@ export function newBlock(blockHeaders) {
     context.marketplaces[version].contract.eventCache.setLatestBlock(lastBlock)
     context.marketplaces[version].eventSource.resetCache()
   })
-  context.identityEvents.eventCache.setLatestBlock(lastBlock)
-  context.ProxyFactory.eventCache.setLatestBlock(lastBlock)
+  if (context.identityEvents) {
+    context.identityEvents.eventCache.setLatestBlock(lastBlock)
+  }
+  if (context.ProxyFactory) {
+    context.ProxyFactory.eventCache.setLatestBlock(lastBlock)
+  }
   pubsub.publish('NEW_BLOCK', {
     newBlock: { ...blockHeaders, id: blockHeaders.hash }
   })
@@ -325,6 +329,7 @@ export function setNetwork(net, customConfig) {
       config.OriginToken
     )
     context.tokens.forEach(token => {
+      console.log('token', token)
       token.contractMM = new metaMask.eth.Contract(
         token.contract.options.jsonInterface,
         token.contract.options.address
@@ -458,6 +463,7 @@ export function toggleMetaMask(enabled) {
 }
 
 export function setMarketplace(address, epoch, version = '000') {
+  if (!address) return
   const contract = new web3.eth.Contract(MarketplaceContract.abi, address)
   patchWeb3Contract(contract, epoch, {
     ...context.config,
@@ -506,6 +512,7 @@ export function setMarketplace(address, epoch, version = '000') {
 }
 
 export function setIdentityEvents(address, epoch) {
+  if (!address) return
   context.identityEvents = new web3.eth.Contract(
     IdentityEventsContract.abi,
     address
@@ -525,6 +532,7 @@ export function setIdentityEvents(address, epoch) {
   context.identityEventsExec = context.identityEvents
 
   if (metaMask) {
+    console.log('ie')
     context.identityEventsMM = new metaMask.eth.Contract(
       IdentityEventsContract.abi,
       context.identityEvents.options.address
@@ -536,6 +544,7 @@ export function setIdentityEvents(address, epoch) {
 }
 
 export function setProxyContracts(config) {
+  if (!config.ProxyFactory) return
   context.ProxyFactory = new web3.eth.Contract(
     IdentityProxyFactory.abi,
     config.ProxyFactory
