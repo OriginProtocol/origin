@@ -4,7 +4,9 @@ function withNews(WrappedComponent) {
   class WithNews extends Component {
     constructor(props) {
       super(props)
-      this.state = { news: [] }
+      this.state = {
+        news: []
+      }
     }
 
     async componentDidMount() {

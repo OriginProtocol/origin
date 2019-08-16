@@ -79,6 +79,19 @@ input:focus {
   margin-bottom: 0.5rem;
 }
 
+
+.spinner-grow {
+  color: #8fa7b7
+}
+
+.action-card .spinner-grow {
+  margin: 10rem 0;
+}
+
+#main .spinner-grow {
+  margin: 50%;
+}
+
 .card-wrapper .header .link {
   font-size: 14px;
   text-align: right;

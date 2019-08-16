@@ -16,7 +16,23 @@ class Security extends Component {
     this.props.fetchAccounts()
   }
 
+  isLoading = () => {
+    return this.props.account.isFetching
+  }
+
+  renderLoading() {
+    return (
+      <div className="spinner-grow" role="status">
+        <span className="sr-only">Loading...</span>
+      </div>
+    )
+  }
+
   render() {
+    if (this.isLoading()) {
+      return this.renderLoading()
+    }
+
     return (
       <>
         <h1>Security</h1>

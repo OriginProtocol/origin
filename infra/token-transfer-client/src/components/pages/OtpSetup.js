@@ -6,6 +6,7 @@ import { apiUrl } from '@/constants'
 
 class OtpVerify extends Component {
   state = {
+    loading: true,
     otpQrUrl: null,
     otpKey: null,
     error: null,
@@ -32,7 +33,8 @@ class OtpVerify extends Component {
 
     this.setState({
       otpQrUrl: response.body.otpQrUrl,
-      otpKey: response.body.otpKey
+      otpKey: response.body.otpKey,
+      loading: false
     })
   }
 
@@ -45,6 +47,10 @@ class OtpVerify extends Component {
       <div className="action-card">
         {this.state.error ? (
           <h1>{this.state.error}</h1>
+        ) : this.state.loading ? (
+          <div className="spinner-grow" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
         ) : (
           <>
             <h1>Scan QR code</h1>

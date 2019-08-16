@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { momentizeGrant } from '@origin/token-transfer-server/src/lib/vesting'
 
 import { fetchGrants } from '@/actions/grant'
+import { fetchUser } from '@/actions/user'
 import BalanceCard from '@/components/BalanceCard'
 import NewsHeadlinesCard from '@/components/NewsHeadlinesCard'
 import VestingBars from '@/components/VestingBars'
@@ -18,18 +19,27 @@ class Dashboard extends Component {
 
   componentDidMount() {
     this.props.fetchGrants()
+    this.props.fetchUser()
   }
 
-  render() {
-    return this.props.isFetching ? this.renderLoading() : this.renderDashboard()
+  isLoading = () => {
+    return this.props.grant.isFetching || this.props.user.isFetching
   }
 
   renderLoading() {
-    return 'Loading'
+    return (
+      <div className="spinner-grow" role="status">
+        <span className="sr-only">Loading...</span>
+      </div>
+    )
   }
 
-  renderDashboard() {
-    const grants = this.props.grants.map(momentizeGrant)
+  render() {
+    if (this.isLoading()) {
+      return this.renderLoading()
+    }
+
+    const grants = this.props.grant.grants.map(momentizeGrant)
 
     const vestedTotal = grants.reduce((total, currentGrant) => {
       return total + currentGrant.vestedAmount
@@ -63,18 +73,15 @@ class Dashboard extends Component {
   }
 }
 
-const mapStateToProps = ({ grant }) => {
-  return {
-    isFetching: grant.isFetching,
-    grants: grant.grants,
-    error: grant.error
-  }
+const mapStateToProps = ({ grant, user }) => {
+  return { grant, user }
 }
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      fetchGrants: fetchGrants
+      fetchGrants: fetchGrants,
+      fetchUser: fetchUser
     },
     dispatch
   )

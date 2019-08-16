@@ -45,29 +45,40 @@ class Welcome extends Component {
       return <Redirect to={this.state.redirectTo} />
     }
 
-    if (this.state.loading || this.props.isFetching) {
-      return null
-    }
-
     return (
       <>
         <div className="action-card">
-          <h1>Welcome to the Origin Investor Portal</h1>
-          <p>
-            You will be able to use this portal to manage your OGN investment.
-          </p>
-          <div className="form-group">
-            <label>Email Address</label>
-            <br />
-            {this.props.user.email}
-          </div>
-          <button
-            className="btn btn-primary btn-lg"
-            style={{ marginTop: '40px' }}
-            onClick={() => this.setState({ redirectTo: '/phone' })}
-          >
-            Continue
-          </button>
+          {this.state.loading || this.props.isFetching ? (
+            <div className="spinner-grow" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+          ) : (
+            <>
+              <h1>Welcome to the Origin Investor Portal</h1>
+              <p>
+                You will be able to use this portal to manage your OGN
+                investment.
+              </p>
+              <div className="form-group">
+                <label>Email Address</label>
+                <br />
+                {this.props.user.email}
+              </div>
+              <button
+                className="btn btn-primary btn-lg"
+                style={{ marginTop: '40px' }}
+                onClick={() => {
+                  if (this.props.user.phone) {
+                    this.setState({ redirectTo: '/terms' })
+                  } else {
+                    this.setState({ redirectTo: '/phone' })
+                  }
+                }}
+              >
+                Continue
+              </button>
+            </>
+          )}
         </div>
       </>
     )

@@ -29,6 +29,7 @@ class HandleLogin extends Component {
     }
 
     const redirectTo = response.body.otpReady ? '/otp' : '/otp/setup'
+
     this.setState({ loading: false, redirectTo })
   }
 
@@ -36,7 +37,9 @@ class HandleLogin extends Component {
     if (this.state.loading) {
       return (
         <div className="action-card">
-          <h1>Loading</h1>
+          <div className="spinner-grow" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
         </div>
       )
     } else if (this.state.error) {
