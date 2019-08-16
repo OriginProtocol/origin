@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import moment from 'moment'
 
 import { addAccount } from '@/actions/account'
 import { formInput, formFeedback } from '@/utils/formHelpers'
@@ -56,9 +57,9 @@ class AccountTable extends Component {
             <table className="table mt-4 mb-4">
               <thead>
                 <tr>
-                  <th>Account Nickname</th>
-                  <th>Account Address</th>
-                  <th>Date Created</th>
+                  <th>Nickname</th>
+                  <th>Address</th>
+                  <th>Created</th>
                   <th></th>
                 </tr>
               </thead>
@@ -74,7 +75,7 @@ class AccountTable extends Component {
                     <tr key={account.address}>
                       <td>{account.nickname}</td>
                       <td>{account.address}</td>
-                      <td>{account.createdAt}</td>
+                      <td>{moment(account.createdAt).format('L')}</td>
                       <td>
                         <DeleteIcon style={{ fill: '#8fa7b7' }} />
                       </td>

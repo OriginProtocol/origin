@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import get from 'lodash.get'
 
 import { fetchAccounts } from '@/actions/account'
 import BorderedCard from '@/components/BorderedCard'
 import GoogleAuthenticatorIcon from '@/assets/google-authenticator-icon@3x.jpg'
 import AccountTable from '@/components/AccountTable'
+import SessionTable from '@/components/SessionTable'
 
 class Security extends Component {
   constructor(props) {
@@ -40,7 +42,7 @@ class Security extends Component {
           <div className="col-xs-12 col-lg-6">
             <BorderedCard>
               <div className="row">
-                <div className="col-md-6">{this.props.session.email}</div>
+                <div className="col-md-6">{get(this.props.user, 'email')}</div>
                 <div className="col-md-6 text-md-right">
                   <a
                     href="mailto:support@originprotocol.com?subject=Change Investor Email"
@@ -79,14 +81,14 @@ class Security extends Component {
 
         <AccountTable />
 
-        <h2>Session History</h2>
+        <SessionTable />
       </>
     )
   }
 }
 
-const mapStateToProps = ({ session, account }) => {
-  return { session, account }
+const mapStateToProps = ({ account }) => {
+  return { account }
 }
 
 const mapDispatchToProps = dispatch =>

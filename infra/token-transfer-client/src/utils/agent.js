@@ -5,6 +5,7 @@ const agent = request
   .withCredentials(true)
   .on('error', error => {
     if (error.status === 401) {
+      // Redirect to login on auth error
       window.location = '/'
     }
   })

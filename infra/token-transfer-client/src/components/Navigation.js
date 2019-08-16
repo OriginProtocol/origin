@@ -8,7 +8,7 @@ import News from '-!react-svg-loader!@/assets/news-icon.svg'
 import Security from '-!react-svg-loader!@/assets/security-icon.svg'
 
 const Navigation = () => (
-  <nav className="navbar navbar-expand-xs">
+  <nav id="sidebar" className="navbar navbar-expand-xs d-none d-md-block">
     <img src={Logo} className="brand" />
     <div className="container">
       <ul className="navbar-nav">
@@ -45,15 +45,14 @@ export default Navigation
 
 require('react-styl')(`
   .navbar
-    height: 100%
+    text-align: center
     align-items: start
     flex-direction: column
     justify-content: start
     background-color: #007cff
     font-family: lato
     .brand
-      margin: 30px auto 50px auto
-      width: 100px
+      margin: 40px 0;
     .nav-item
       font-size: 16px
       margin-bottom: 20px

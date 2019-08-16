@@ -4,11 +4,13 @@ import numeral from 'numeral'
 
 const VestingBars = props => {
   const [displayPopover, setDisplayPopover] = useState({})
+
   if (!props.grants || props.grants.length === 0) {
     return null
   }
 
   const now = moment()
+
   // Momentize all the dates
   const grants = props.grants.map(grant => {
     return {

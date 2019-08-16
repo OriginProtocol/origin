@@ -22,6 +22,21 @@ body {
   height: 100vh;
 }
 
+#sidebar {
+  width: 280px
+}
+
+#main {
+  padding: 70px;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  #main {
+    width: calc(100% - 280px)
+  }
+}
+
 h1 {
   font-size: 30px;
   font-weight: bold;
@@ -37,6 +52,10 @@ small {
   font-size: 14px;
   color: #8fa7b7
 }
+
+/*
+ * Forms
+ */
 
 label {
   margin-top: 20px;
@@ -87,25 +106,9 @@ input, select {
   display: block;
 }
 
-.alert-warning {
-  background-color: rgba(255, 192, 0, 0.1);
-  border: 1px solid #ffcc00;
-}
-
-.action-card {
-  background-color: white;
-  padding: 40px 80px;
-  border-radius: 10px;
-  text-align: center;
-  max-width: 650px;
-  margin: 0 auto;
-}
-
-.action-card h1 {
-  font-size: 40px;
-  margin-bottom: 0.5rem;
-}
-
+/*
+ * Loading indicators
+ */
 
 .spinner-grow {
   color: #8fa7b7
@@ -128,6 +131,24 @@ input, select {
   text-align: right;
 }
 
+/*
+ * Cards
+ */
+
+.action-card {
+  background-color: white;
+  padding: 40px 80px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.action-card h1 {
+  font-size: 40px;
+  margin-bottom: 0.5rem;
+}
+
 .btn {
   margin-top: 20px;
   margin-bottom: 10px;
@@ -140,3 +161,10 @@ input, select {
   min-width: 10rem;
   font-size: 18px;
 }
+
+.alert-warning {
+  background-color: rgba(255, 192, 0, 0.1);
+  border: 1px solid #ffcc00;
+}
+
+

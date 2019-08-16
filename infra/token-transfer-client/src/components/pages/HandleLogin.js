@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
-import { connect } from 'react-redux'
 
-import { setSessionEmail } from '@/actions/session'
 import { apiUrl } from '@/constants'
 import agent from '@/utils/agent'
 
@@ -54,13 +52,4 @@ class HandleLogin extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    setSessionEmail: email => dispatch(setSessionEmail(email))
-  }
-}
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(HandleLogin)
+export default HandleLogin

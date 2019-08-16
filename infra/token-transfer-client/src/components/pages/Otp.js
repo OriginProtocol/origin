@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
-import { connect } from 'react-redux'
 
 import { formInput, formFeedback } from '@/utils/formHelpers'
-import { setSessionEmail } from '@/actions/session'
 import { apiUrl } from '@/constants'
 import agent from '@/utils/agent'
 
@@ -15,9 +13,8 @@ class Otp extends Component {
   }
 
   handleVerifyOtpCode = async () => {
-    let response
     try {
-      response = await agent
+      await agent
         .post(`${apiUrl}/api/verify_totp`)
         .send({ code: this.state.otpCode })
     } catch (error) {
@@ -25,7 +22,6 @@ class Otp extends Component {
       return
     }
 
-    this.props.setSessionEmail(response.body.email)
     this.setState({ redirectToDashboard: true })
   }
 
@@ -58,13 +54,4 @@ class Otp extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    setSessionEmail: email => dispatch(setSessionEmail(email))
-  }
-}
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(Otp)
+export default Otp
