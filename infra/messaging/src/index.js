@@ -343,7 +343,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
 
     // Send to notifications server
     // e.g. http://localhost:3456/messages
-    if (config.NOTIFICATIONS_ENDPOINT_URL) {
+    if (config.NOTIFICATIONS_ENDPOINT_URL && content.type != 'keys') {
       const sender = address
 
       // Filter out the sender
