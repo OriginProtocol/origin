@@ -217,7 +217,7 @@ services:
       - IPFS_API_URL=http://ipfs-proxy:9999
       - DISCOVERY_SERVER_URL=http://discovery:4000/graphql
       - BRIDGE_SERVER_URL=http://bridge:5000
-      - GROWTH_SERVER_URL=http://growth:4001
+      - GROWTH_SERVER_URL=http://growth:4008
     depends_on:
       - discovery
     ports:
@@ -261,7 +261,7 @@ services:
     depends_on:
       - postgres
     ports:
-      - "4001:4001"
+      - "4008:4008"
     command: npm run start --prefix infra/growth
 
   bridge:

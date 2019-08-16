@@ -41,6 +41,9 @@ spec:
         ports:
         - containerPort: 4001
           name: swarm
+        - containerPort: 4002
+          name: swarm-udp
+          protocol: UDP
         - containerPort: 5001
           name: api
         - containerPort: 8080
