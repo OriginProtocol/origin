@@ -337,7 +337,6 @@ require('react-styl')(`
       max-width: 350px
       flex: 1
       margin-left: 1rem
-      margin-bottom: 1.5rem
       .form-control
         background: url(images/magnifying-glass.svg) no-repeat right 10px center
         border-color: #c2cbd3
