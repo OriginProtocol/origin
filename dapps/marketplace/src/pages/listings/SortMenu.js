@@ -16,7 +16,7 @@ const SortMenu = ({
   handleSortVisible
 }) => {
   const [closeModal, setCloseModal] = useState(false)
-  const selectedOption = `${sort}:${order}`
+  const selectedOption = sort && order ? `${sort}:${order}` : ':'
 
   const RenderMobileSort = () => {
     if (sortVisible) {

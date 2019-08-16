@@ -24,7 +24,7 @@ import ListingCards from './ListingCards'
 
 import query from 'queries/Listings'
 
-import { getFilters, getStateFromQuery } from './_filters'
+import { getFilters, getStateFromQuery, pushSearchHistory } from './_utils'
 import SortMenu from './SortMenu'
 
 import LoadingSpinner from 'components/LoadingSpinner'
@@ -41,8 +41,6 @@ class Listings extends Component {
     this.state = {
       first: 12,
       search: getStateFromQuery(props),
-      sort: '',
-      order: '',
       sortVisible: false
     }
   }
@@ -116,12 +114,13 @@ class Listings extends Component {
     return <h5 className={className}>{content}</h5>
   }
 
-  handleOptionChange = e => {
+  handleSortOptionChange = e => {
     const selectedOptions = e.target.value.split(':')
-    this.setState({
-      sort: selectedOptions[0],
-      order: selectedOptions[1]
-    })
+    const search = this.state.search
+    search.sort = selectedOptions[0]
+    search.order = selectedOptions[1]
+    pushSearchHistory(this.props.history, search)
+    this.setState({ search })
   }
 
   handleSortVisible = bool => {
@@ -139,8 +138,10 @@ class Listings extends Component {
     const filters = [...getFilters(this.state.search), ...creatorFilters]
 
     const vars = {
-      ...pick(this.state, 'first', 'sort', 'order'),
+      ...pick(this.state, 'first'),
       search: this.state.search.searchInput,
+      sort: this.state.search.sort,
+      order: this.state.search.order,
       filters: filters.map(filter => omit(filter, '__typename'))
     }
 
@@ -148,6 +149,8 @@ class Listings extends Component {
       // when OGN listings are selected clear other search parameters
       vars.search = ''
       vars.filters = []
+      delete vars.sort
+      delete vars.order
       vars.listingIds = Object.keys(this.props.ognListingRewards)
     }
 
@@ -163,8 +166,6 @@ class Listings extends Component {
 
     const injectCTAs = !isSearch
 
-    const { sort, order, sortVisible } = this.state
-
     return (
       <>
         <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
@@ -172,11 +173,11 @@ class Listings extends Component {
           <SortMenu
             {...this.props}
             handleSortVisible={this.handleSortVisible}
-            sortVisible={sortVisible}
-            onChange={this.handleOptionChange}
+            sortVisible={this.state.sortVisible}
+            onChange={this.handleSortOptionChange}
             onClose={() => this.handleSortVisible(false)}
-            sort={sort}
-            order={order}
+            sort={this.state.search.sort}
+            order={this.state.search.order}
           />
         </div>
         <div className="container listings-container">

@@ -4,7 +4,7 @@ import get from 'lodash/get'
 import queryString from 'query-string'
 import { fbt } from 'fbt-runtime'
 
-import { getStateFromQuery } from './_filters'
+import { getStateFromQuery, pushSearchHistory } from './_utils'
 
 import withConfig from 'hoc/withConfig'
 import withIsMobile from 'hoc/withIsMobile'
@@ -201,16 +201,7 @@ class Search extends Component {
 
   doSearch() {
     const search = this.state
-    this.props.history.push({
-      pathname: '/search',
-      search: queryString.stringify({
-        q: search.searchInput || undefined,
-        category: search.category.type || undefined,
-        subCategory: search.subCategory.type || undefined,
-        priceMin: search.priceMin || undefined,
-        priceMax: search.priceMax || undefined
-      })
-    })
+    pushSearchHistory(this.props.history, search)
     this.setState({
       active: false
     })
