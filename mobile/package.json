@@ -7,7 +7,7 @@
   "scripts": {
     "android": "react-native run-android",
     "clean": "git clean -fdX .",
-    "ios:install": "cd ios && pod install",
+    "postinstall": "cd ios && pod install",
     "ios": "react-native run-ios",
     "lint": "eslint . && npm run prettier:check",
     "prettier": "prettier --write *.js \"**/*.js\"",

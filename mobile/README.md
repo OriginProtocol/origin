@@ -25,8 +25,6 @@ This guide will help you to install a local build of Origin Wallet on a device o
 
 - Intall CocoaPods: `sudo gem install cocoapods`
 
-- Install Pods dependancies: `yarn run ios:install`
-
 #### Android Development
 
 - [Android SDK or Android Studio](https://developer.android.com/studio/) - If you're on Linux, find the instructions for your specific distribution
