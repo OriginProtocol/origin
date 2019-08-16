@@ -11,14 +11,17 @@ const key = fs.readFileSync(`${__dirname}/data/localhost.key`, 'utf8')
 const cert = fs.readFileSync(`${__dirname}/data/localhost.cert`, 'utf8')
 
 const PORTS = {
-  graphql: 4002
+  graphql: 4007
 }
 
 const portInUse = port =>
   new Promise(function(resolve) {
     const srv = net
       .createServer()
-      .once('error', () => resolve(true))
+      .once('error', (err) => {
+        console.error(err)
+        resolve(true)
+      })
       .once('listening', () => srv.once('close', () => resolve(false)).close())
       .listen(port, '0.0.0.0')
   })
