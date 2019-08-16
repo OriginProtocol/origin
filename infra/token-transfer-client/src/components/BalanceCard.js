@@ -87,9 +87,6 @@ class BalanceCard extends Component {
             <div className="col-8">
               <h2>Available Balance</h2>
             </div>
-            <div className="col-4 link">
-              <a href="#">View details</a>
-            </div>
           </div>
           <div className="balance">
             {Number(this.props.balance).toLocaleString()}{' '}
@@ -97,7 +94,7 @@ class BalanceCard extends Component {
           </div>
           <div>
             <button
-              className="btn btn-primary btn-lg"
+              className="btn btn-secondary btn-lg"
               onClick={() => this.setState({ displayModal: true })}
             >
               Withdraw

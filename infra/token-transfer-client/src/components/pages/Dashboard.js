@@ -45,6 +45,11 @@ class Dashboard extends Component {
       return total + currentGrant.vestedAmount
     }, 0)
 
+    const unvestedTotal =
+      grants.reduce((total, currentGrant) => {
+        return total + currentGrant.amount
+      }, 0) - vestedTotal
+
     return (
       <>
         <div className="row">
@@ -57,7 +62,12 @@ class Dashboard extends Component {
         </div>
         <div className="row">
           <div className="col">
-            <VestingBars grants={grants} />
+            <VestingBars
+              grants={grants}
+              user={this.props.user.user}
+              vested={vestedTotal}
+              unvested={unvestedTotal}
+            />
           </div>
         </div>
         <div className="row">

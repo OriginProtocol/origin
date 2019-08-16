@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import moment from 'moment'
+import numeral from 'numeral'
 
 const VestingBars = props => {
   const [displayPopover, setDisplayPopover] = useState({})
@@ -23,9 +24,17 @@ const VestingBars = props => {
   const totalDuration = lastEndDate - firstStartDate
 
   const generateMarkers = () => {
+    const maxMarkers = 5
+    if (props.user.employee) {
+      return generateMonthMarkers(maxMarkers)
+    } else {
+      return generateAmountMarkers(maxMarkers)
+    }
+  }
+
+  const generateMonthMarkers = maxMarkers => {
     // Extract x points (months) across the duration to display between first
     // start date and last end date to display
-    const maxMarkers = Math.floor(window.innerWidth / 200)
     const interim = firstStartDate.clone()
     const intermediateMonths = []
     while (
@@ -35,12 +44,28 @@ const VestingBars = props => {
       intermediateMonths.push(interim.format('YYYY-MM'))
       interim.add(1, 'month')
     }
-    return intermediateMonths.filter((e, i, arr) => {
+    const months = intermediateMonths.filter((e, i, arr) => {
       return (
         i !== 0 &&
         i !== arr.length - 1 &&
         i % Math.floor(arr.length / maxMarkers) === 0
       )
+    })
+
+    return months.map(month => {
+      return {
+        label: moment(month).format('MMM YYYY'),
+        left: ((moment(month) - firstStartDate) / totalDuration) * 100
+      }
+    })
+  }
+
+  const generateAmountMarkers = maxMarkers => {
+    return [...Array(maxMarkers + 1).keys()].map(i => {
+      return {
+        label: numeral((grants[0].amount / maxMarkers) * i).format('0.0a'),
+        left: (100 / maxMarkers) * i
+      }
     })
   }
 
@@ -114,17 +139,16 @@ const VestingBars = props => {
           )
         })}
 
-        {generateMarkers().map(month => {
-          const left = ((moment(month) - firstStartDate) / totalDuration) * 100
+        {generateMarkers().map(marker => {
           const style = {
             position: 'absolute',
-            left: `${left}%`,
+            left: `${marker.left}%`,
             top: 0,
             height: '150%',
             pointerEvents: 'none' // Stop absolute positioning from stealing clicks
           }
           return (
-            <div key={month} style={style}>
+            <div key={marker.label} style={style}>
               <div
                 style={{
                   borderLeft: '1px solid #dbe6eb',
@@ -133,11 +157,21 @@ const VestingBars = props => {
                 }}
               ></div>
               <div style={{ marginLeft: '-50%' }}>
-                <small>{moment(month).format('MMM YYYY')}</small>
+                <small>{marker.label}</small>
               </div>
             </div>
           )
         })}
+      </div>
+      <div className="totals">
+        <div>
+          <div className="vesting-circle vested"></div>
+          {props.vested.toLocaleString()} OGN <small>vested</small>
+        </div>
+        <div>
+          <div className="vesting-circle"></div>
+          {props.unvested.toLocaleString()} OGN <small>unvested</small>
+        </div>
       </div>
     </div>
   )
@@ -147,11 +181,29 @@ export default VestingBars
 
 require('react-styl')(`
   .vesting-bars-wrapper
-    margin-bottom: 150px
+    margin-bottom: 50px
 
   .progress
     margin-top: 20px
     cursor: pointer
+
+  .totals
+    display: flex
+    margin-top: 50px
+    font-size: 14px
+    > div
+      padding-right: 40px
+      small
+        padding-left: 10px
+      .vesting-circle
+        display: inline-block
+        margin-right: 10px
+        width: 14px
+        height: 14px
+        border-radius: 50%
+        background-color: #8fa7b7
+      .vested
+        background-color: #00db8d
 
   .cover
     position: fixed
