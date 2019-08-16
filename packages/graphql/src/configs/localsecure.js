@@ -17,7 +17,7 @@ const config = {
   notifications: `http://${HOST}:3456`,
   //growth: 'http://localhost:4001',
   performanceMode: false,
-  graphql: `https://${HOST}:4002`,
+  graphql: `https://${HOST}:4007`,
   automine: 2000,
   attestationIssuer: '0x02c14Ee67799e1dFac9f776F2f4D5dC69Ab3Ee23',
   affiliate: addresses.Affiliate,

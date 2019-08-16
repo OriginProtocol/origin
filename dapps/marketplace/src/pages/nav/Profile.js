@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import formatHash from 'utils/formatHash'
 import Store from 'utils/store'
 
-import withIdentity from 'hoc/withIdentity'
+import withSkinnyIdentity from 'hoc/withSkinnyIdentity'
 import withWallet from 'hoc/withWallet'
 import withConfig from 'hoc/withConfig'
 import withIsMobile from 'hoc/withIsMobile'
@@ -243,7 +243,7 @@ const ProfileDropdownRaw = ({
 
 const ProfileDropdown = withConfig(withWallet(ProfileDropdownRaw))
 
-export default withIsMobile(withWallet(withIdentity(ProfileNav)))
+export default withIsMobile(withWallet(withSkinnyIdentity(ProfileNav)))
 
 require('react-styl')(`
   .dropdown .nav-link
