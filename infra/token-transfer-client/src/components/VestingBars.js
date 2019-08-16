@@ -47,11 +47,10 @@ const VestingBars = props => {
 
   const handleTogglePopover = (event, grantId) => {
     // Calculate a left offset to make the popover display at the point of the
-    // mouse click. This is calculating the offset of 3 parent relative elements.
+    // mouse click
     const leftOffset =
       document.getElementById('main').offsetLeft +
-      document.getElementById('vestingBars').offsetParent.offsetLeft +
-      document.getElementById('vestingBars').offsetLeft
+      document.getElementById('vestingBars').offsetLeft + 50
     setDisplayPopover({
       ...displayPopover,
       [grantId]: displayPopover[grantId] ? false : event.clientX - leftOffset
