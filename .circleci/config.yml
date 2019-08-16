@@ -77,7 +77,7 @@ jobs:
           name: Starting server
           command: npm run start --prefix packages/graphql
           background: true
-      - run: sleep 5
+      - run: sleep 10
       - run: apollo service:check --endpoint=http://localhost:4002/
 
   GraphQLEngineSchemaUpload:
