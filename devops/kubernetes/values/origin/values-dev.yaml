@@ -18,11 +18,11 @@ faucetImageTag: '699ad10'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '12d7d9d'
+eventlistenerImageTag: 'ace4091'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '58be731'
+discoveryImageTag: 'ace4091'
 
 # origin-growth
 growthImage: origin-growth
@@ -63,7 +63,7 @@ relayerImageTag: '699ad10'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: '12d7d9d'
+graphqlImageTag: 'ace4091'
 
 # origin-token-transfer-client
 t3ClientImage: origin-token-transfer-client
