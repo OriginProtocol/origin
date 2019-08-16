@@ -23,31 +23,27 @@ const VestingBars = props => {
   const lastEndDate = moment(Math.max(...grants.map(g => g.end)))
   const totalDuration = lastEndDate - firstStartDate
 
-  const interim = firstStartDate.clone()
-  const intermediateMonths = []
-  while (
-    lastEndDate > interim ||
-    interim.format('M') === lastEndDate.format('M')
-  ) {
-    intermediateMonths.push(interim.format('YYYY-MM'))
-    interim.add(1, 'month')
+  const generateMarkers = () => {
+    // Extract x points (months) across the duration to display between first
+    // start date and last end date to display
+    const maxMarkers = Math.floor(window.innerWidth / 200)
+    const interim = firstStartDate.clone()
+    const intermediateMonths = []
+    while (
+      lastEndDate > interim ||
+      interim.format('M') === lastEndDate.format('M')
+    ) {
+      intermediateMonths.push(interim.format('YYYY-MM'))
+      interim.add(1, 'month')
+    }
+    return intermediateMonths.filter((e, i, arr) => {
+      return (
+        i !== 0 &&
+        i !== arr.length - 1 &&
+        i % Math.floor(arr.length / maxMarkers) === 0
+      )
+    })
   }
-
-  // Extract x points (months) across the duration to display between first
-  // start date and last end date to display
-  let maxPoints
-  if (window.innerWidth < 1000) {
-    maxPoints = 5
-  } else {
-    maxPoints = 9
-  }
-  const displayMonths = intermediateMonths.filter((e, i, arr) => {
-    return (
-      i !== 0 &&
-      i !== arr.length - 1 &&
-      i % Math.floor(arr.length / maxPoints) === 0
-    )
-  })
 
   const handleTogglePopover = (event, grantId) => {
     // Calculate a left offset to make the popover display at the point of the
@@ -118,7 +114,7 @@ const VestingBars = props => {
           )
         })}
 
-        {displayMonths.map(month => {
+        {generateMarkers().map(month => {
           const left = ((moment(month) - firstStartDate) / totalDuration) * 100
           const style = {
             position: 'absolute',
