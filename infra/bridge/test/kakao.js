@@ -58,7 +58,7 @@ describe('kakao attestations', () => {
 
     nock('https://kapi.kakao.com')
       .matchHeader('Authorization', 'Bearer 12345')
-      .get('/v1/user/me')
+      .get('/v2/user/me')
       .reply(200, { id: 'Origin Protocol' })
 
     const response = await request(app)
@@ -107,7 +107,7 @@ describe('kakao attestations', () => {
 
     nock('https://kapi.kakao.com')
       .matchHeader('Authorization', 'Bearer 12345')
-      .get('/v1/user/me')
+      .get('/v2/user/me')
       .reply(200, { id: 'Origin Protocol' })
 
     // Fake session
