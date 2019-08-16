@@ -1,9 +1,8 @@
 const elasticsearch = require('elasticsearch')
+const get = require('lodash/get')
+
 const scoring = require('../lib/scoring')
 const logger = require('../listener/logger')
-/*
-  Module to interface with ElasticSearch.
- */
 
 const client = new elasticsearch.Client({
   hosts: [process.env.ELASTICSEARCH_HOST || 'elasticsearch:9200']
@@ -373,9 +372,13 @@ class Listing {
                     type: 'number',
                     script: {
                       lang: 'painless',
+                      // Note: Script is very defensive at checking existence and validity
+                      // of the data to be robust to possibly malformed listings that are on testing
+                      // environments and could also exist in production.
                       source: `
                         if (params._source.containsKey("price") &&
                           params._source.price.containsKey("amount") &&
+                          params._source.price.amount != null &&
                           params._source.price.containsKey("currency") &&
                           params._source.price.currency.containsKey("id") &&
                           params.exchangeRates.containsKey(params._source.price.currency.id)) {
@@ -461,13 +464,9 @@ class Listing {
         category: hit._source.category,
         subCategory: hit._source.subCategory,
         description: hit._source.description,
-        priceAmount: (hit._source.price || {}).amount,
-        priceCurrency: (hit._source.price || {}).currency,
-        // added redundant fields below to match schema, maybe that
-        // should change to the above two fields
         price: {
-          amount: (hit._source.price || {}).amount,
-          currency: (hit._source.price || {}).currency.id
+          amount: get(hit, '_source.price.amount', '0'),
+          currency: get(hit, 'source.price.currency.id', 'fiat-USD')
         }
       })
     })
