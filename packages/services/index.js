@@ -10,11 +10,18 @@ const proxy = require('http-proxy')
 const key = fs.readFileSync(`${__dirname}/data/localhost.key`, 'utf8')
 const cert = fs.readFileSync(`${__dirname}/data/localhost.cert`, 'utf8')
 
+const PORTS = {
+  graphql: 4007
+}
+
 const portInUse = port =>
   new Promise(function(resolve) {
     const srv = net
       .createServer()
-      .once('error', () => resolve(true))
+      .once('error', err => {
+        console.error(err)
+        resolve(true)
+      })
       .once('listening', () => srv.once('close', () => resolve(false)).close())
       .listen(port, '0.0.0.0')
   })
@@ -203,7 +210,7 @@ const startGraphql = () =>
     const startServer = spawn(`node`, ['-r', '@babel/register', 'server'], {
       cwd: path.resolve(__dirname, '../graphql'),
       stdio: 'inherit',
-      env: { ...process.env, GRAPHQL_SERVER_PORT: 4007 }
+      env: { ...process.env, GRAPHQL_SERVER_PORT: PORTS.graphql }
     })
     startServer.on('exit', () => console.log('GraphQL Server stopped.'))
     resolve(startServer)
@@ -257,7 +264,7 @@ module.exports = async function start(opts = {}) {
   }
 
   if (opts.graphqlServer) {
-    if (await portInUse(4007)) {
+    if (await portInUse(PORTS.graphql)) {
       console.log('GraphQL Server already started')
     } else {
       started.graphql = await startGraphql()
