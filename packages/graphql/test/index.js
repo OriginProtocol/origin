@@ -928,7 +928,7 @@ describe('Marketplace', function() {
       const ethSent = new BigNumber(ethBefore).minus(new BigNumber(ethAfter))
       const ethTraded = new BigNumber(offerEvents.TokenPurchase.eth_sold)
       const sendRatio = ethSent.div(ethTraded)
-      assert(sendRatio.toFixed(2) > 1.01)
+      assert(sendRatio.toFixed(3) >= 1.01)
     })
   })
 })
