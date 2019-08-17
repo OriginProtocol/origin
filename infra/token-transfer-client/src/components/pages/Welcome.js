@@ -60,6 +60,11 @@ class Welcome extends Component {
                 investment.
               </p>
               <div className="form-group">
+                <label>Name</label>
+                <br />
+                {this.props.user.name}
+              </div>
+              <div className="form-group">
                 <label>Email Address</label>
                 <br />
                 {this.props.user.email}

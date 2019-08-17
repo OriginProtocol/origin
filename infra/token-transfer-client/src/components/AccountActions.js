@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Redirect from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import get from 'lodash.get'
 
 import { apiUrl } from '@/constants'
