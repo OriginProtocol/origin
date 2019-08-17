@@ -12,7 +12,7 @@ module.exports = Object.freeze({
     ethAddress: process.env.ATTESTATION_ACCOUNT
   },
   KAKAO_BASE_AUTH_URL: 'https://kauth.kakao.com/oauth',
-  KAKAO_PROFILE_URL: 'https://kapi.kakao.com/v1/user/me',
+  KAKAO_PROFILE_URL: 'https://kapi.kakao.com/v2/user/me',
   GITHUB_BASE_AUTH_URL: 'https://github.com/login/oauth',
   GITHUB_PROFILE_URL: 'https://api.github.com/user',
   LINKEDIN_BASE_AUTH_URL: 'https://www.linkedin.com/oauth/v2',

@@ -39,7 +39,7 @@ client.defaultOptions = {
 }
 
 server.listen({ port: 4000 }).then(srv => {
-  console.log(`🚀  Server ready at ${srv.url}`)
+  console.log(`🚀  Populate GraphQL server ready at ${srv.url}`)
   populate(client, console.log, async addresses => {
     const output = process.argv[2] || 'contracts'
     try {
