@@ -1,6 +1,5 @@
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
-import queryString from 'query-string'
 
 /**
  * Tries to open the app using the `protocolLink`.
@@ -8,8 +7,21 @@ import queryString from 'query-string'
  *
  * Important: Use only on Mobile
  */
+
 const OpenApp = ({ location, history }) => {
-  const query = queryString.parse(location.search)
+  // Note: location.search is sometimes empty and the query parameters
+  // are appended to the location.pathname prop.
+  const query = (location.search || location.pathname)
+    .split('?', 2)[1]
+    .split('&')
+    .reduce((params, p) => {
+      const [k, v] = p.split('=')
+
+      return {
+        ...params,
+        [k]: decodeURIComponent(v)
+      }
+    }, {})
 
   const { protocolLink, fallbackLink } = query
 
@@ -34,8 +46,6 @@ const OpenApp = ({ location, history }) => {
 
     const frameEl = document.createElement('iframe')
     frameEl.setAttribute('src', protocolLink)
-
-    frameEl.onload = () => console.log('load')
 
     frameEl.classList.add('absolute-iframe')
 
@@ -69,7 +79,11 @@ const OpenApp = ({ location, history }) => {
     }
   }, [])
 
-  return null
+  return (
+    <div>
+      <fbt desc="Opening App...">Opening App...</fbt>
+    </div>
+  )
 }
 
 export default withRouter(OpenApp)

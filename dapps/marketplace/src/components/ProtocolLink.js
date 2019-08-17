@@ -12,7 +12,7 @@ const ProtocolLink = ({ isMobile, protocolLink, fallbackLink, ...props }) => {
     return (
       <a
         {...linkProps}
-        src={fallbackLink}
+        href={fallbackLink}
         target="_blank"
         rel="noopener noreferrer"
       />
