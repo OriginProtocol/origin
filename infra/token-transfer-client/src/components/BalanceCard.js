@@ -7,6 +7,7 @@ import { addAccount, fetchAccounts } from '@/actions/account'
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import BorderedCard from '@/components/BorderedCard'
 import Modal from '@/components/Modal'
+import ExportIcon from '@/assets/export-icon.svg'
 
 class BalanceCard extends Component {
   constructor(props) {
@@ -99,6 +100,7 @@ class BalanceCard extends Component {
               className="btn btn-secondary btn-lg"
               onClick={() => this.setState({ displayModal: true })}
             >
+              <img src={ExportIcon} className="mr-2 pb-1" />
               Withdraw
             </button>
           </div>
