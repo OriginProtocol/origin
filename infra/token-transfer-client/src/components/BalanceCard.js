@@ -12,17 +12,7 @@ import ExportIcon from '@/assets/export-icon.svg'
 class BalanceCard extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      address: '',
-      addressError: '',
-      canChooseExisting: false,
-      displayModal: false,
-      loading: false,
-      modalAddAccount: false,
-      modalState: 'Disclaimer',
-      nickname: '',
-      nicknameError: ''
-    }
+    this.state = this.getInitialState()
   }
 
   componentDidMount() {
@@ -58,18 +48,33 @@ class BalanceCard extends Component {
       if (this.props.account.accounts.length === 0) {
         this.setState({ modalAddAccount: true })
       } else {
-        this.setState({ canChooseExisting: false })
+        this.setState({ canChooseExistingAccount: true })
       }
     }
   }
 
+  getInitialState = () => {
+    const initialState = {
+      address: null,
+      addressError: null,
+      amount: null,
+      amountError: null,
+      canChooseExistingAccount: false,
+      displayModal: false,
+      modalAddAccount: false,
+      modalState: 'Disclaimer',
+      nickname: null,
+      nicknameError: null
+    }
+    return initialState
+  }
+
   isLoading = () => {
-    return this.props.account.isFetching
+    return this.props.account.isAdding || this.props.transfer.isAdding
   }
 
   handleTransfer = async (event) => {
     event.preventDefault()
-
     if (this.state.modalAddAccount) {
       // Add account before processing request
       await this.props.addAccount({
@@ -77,14 +82,22 @@ class BalanceCard extends Component {
         address: this.state.address
       })
     }
+    // Do the transfer
+    await this.props.addTransfer({
+      amount: this.state.amount,
+      address: this.state.address
+    })
+  }
 
-    // TODO do transfer
+  handleModalClose = () => {
+    this.setState(this.getInitialState())
   }
 
   render() {
     return (
       <>
         {this.state.displayModal && this.renderModal()}
+
         <BorderedCard shadowed={true}>
           <div className="row header">
             <div className="col-8">
@@ -117,7 +130,7 @@ class BalanceCard extends Component {
     return (
       <Modal
         appendToId="main"
-        onClose={() => this.setState({ displayModal: false })}
+        onClose={this.handleModalClose}
         closeBtn={true}
       >
         <h1 className="mb-2">Withdraw OGN</h1>
@@ -197,7 +210,7 @@ class BalanceCard extends Component {
                   <input {...input('nickname')} />
                   {Feedback('nickname')}
                 </div>
-                {this.state.canChooseExisting && (
+                {this.state.canChooseExistingAccount && (
                   <div className="form-group">
                     <a
                       href="#"
@@ -212,9 +225,16 @@ class BalanceCard extends Component {
             <button
               type="submit"
               className="btn btn-primary btn-lg mt-5"
-              disabled={this.state.loading}
+              disabled={this.isLoading()}
             >
-              Continue
+              {this.isLoading() ? (
+                <>
+                  <span className="spinner-grow spinner-grow-sm"></span>
+                  Loading...
+                </>
+              ) : (
+                <span>Continue</span>
+              )}
             </button>
           </form>
         )}
@@ -223,8 +243,8 @@ class BalanceCard extends Component {
   }
 }
 
-const mapStateToProps = ({ account }) => {
-  return { account }
+const mapStateToProps = ({ account, transfer }) => {
+  return { account, transfer }
 }
 
 const mapDispatchToProps = dispatch =>
