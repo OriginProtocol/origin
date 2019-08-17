@@ -935,12 +935,12 @@ describe('Marketplace', function() {
 
 async function createListing(listingData) {
   const receipt = await mutate(mutations.CreateListing, listingData)
-  const inputAbi = contracts.marketplace._jsonInterface.find(
+  const eventAbi = contracts.marketplace._jsonInterface.find(
     x => x.name == 'ListingCreated'
   ).inputs
   const log = receipt.logs[0]
   const decodedLog = contracts.web3.eth.abi.decodeLog(
-    inputAbi,
+    eventAbi,
     log.data,
     log.topics.slice(1)
   )
