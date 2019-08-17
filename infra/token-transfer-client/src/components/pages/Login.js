@@ -48,26 +48,29 @@ class Login extends Component {
         <div className="action-card">
           <h1>Sign In</h1>
           <p>We will send you a magic link to your email to confirm access</p>
-          <div className="form-group">
-            <label htmlFor="email">Email address</label>
-            <input {...input('email')} />
-            {Feedback('email')}
-          </div>
-          <button
-            className="btn btn-primary btn-lg"
-            style={{ marginTop: '40px' }}
-            onClick={this.handleSendEmailToken}
-            disabled={this.state.loading}
-          >
-            {this.state.loading ? (
-              <>
-                <span className="spinner-grow spinner-grow-sm"></span>
-                Loading...
-              </>
-            ) : (
-              <span>Continue</span>
-            )}
-          </button>
+          <form>
+            <div className="form-group">
+              <label htmlFor="email">Email address</label>
+              <input {...input('email')} />
+              {Feedback('email')}
+            </div>
+            <button
+              type="submit"
+              className="btn btn-primary btn-lg"
+              style={{ marginTop: '40px' }}
+              onClick={this.handleSendEmailToken}
+              disabled={this.state.loading}
+            >
+              {this.state.loading ? (
+                <>
+                  <span className="spinner-grow spinner-grow-sm"></span>
+                  Loading...
+                </>
+              ) : (
+                <span>Continue</span>
+              )}
+            </button>
+          </form>
         </div>
       </>
     )

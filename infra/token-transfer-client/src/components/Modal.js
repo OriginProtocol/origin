@@ -139,10 +139,6 @@ export default class Modal extends Component {
       // Esc
       this.doClose()
     }
-    if (e.keyCode === 13 && this.props.onPressEnter) {
-      // Enter
-      this.props.onPressEnter()
-    }
   }
 }
 

@@ -22,14 +22,23 @@ class AccountTable extends Component {
 
   componentDidUpdate(prevProps) {
     // Parse server errors
-    if (prevProps.error !== this.props.error) {
-      if (this.props.error && this.props.error.status === 422) {
+    if (prevProps.error !== this.props.account.error) {
+      if (this.props.account.error && this.props.account.error.status === 422) {
         // Parse validation errors from API
-        this.props.error.response.body.errors.forEach(e => {
+        this.props.account.error.response.body.errors.forEach(e => {
           this.setState({ [`${e.param}Error`]: e.msg })
         })
       }
     }
+  }
+
+  handleSubmit = (event) => {
+    event.preventDefault()
+
+    this.props.addAccount({
+      nickname: this.state.nickname,
+      address: this.state.address
+    })
   }
 
   render() {
@@ -64,14 +73,14 @@ class AccountTable extends Component {
                 </tr>
               </thead>
               <tbody>
-                {this.props.accounts.length === 0 ? (
+                {this.props.account.accounts.length === 0 ? (
                   <tr>
                     <td className="table-empty-cell" colSpan="4">
                       You don&apos;t have any accounts
                     </td>
                   </tr>
                 ) : (
-                  this.props.accounts.map(account => (
+                  this.props.account.accounts.map(account => (
                     <tr key={account.address}>
                       <td>{account.nickname}</td>
                       <td>{account.address}</td>
@@ -102,38 +111,39 @@ class AccountTable extends Component {
       >
         <h1 className="mb-2">Add An Account</h1>
         <p>Enter a nickname and an ETH address</p>
-        <div className="form-group">
-          <label htmlFor="email">Nickname</label>
-          <input {...input('nickname')} />
-          {Feedback('nickname')}
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">ETH Address</label>
-          <input {...input('address')} />
-          {Feedback('address')}
-        </div>
-        <button
-          className="btn btn-primary btn-lg mt-5"
-          onClick={() =>
-            this.props.addAccount({
-              nickname: this.state.nickname,
-              address: this.state.address
-            })
-          }
-          disabled={this.props.isAdding}
-        >
-          Add
-        </button>
+        <form onSubmit={this.handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="email">Nickname</label>
+            <input {...input('nickname')} />
+            {Feedback('nickname')}
+          </div>
+          <div className="form-group">
+            <label htmlFor="email">ETH Address</label>
+            <input {...input('address')} />
+            {Feedback('address')}
+          </div>
+          <button
+            type="submit"
+            className="btn btn-primary btn-lg mt-5"
+            disabled={this.props.account.isAdding}
+          >
+            {this.props.account.isAdding ? (
+              <>
+                <span className="spinner-grow spinner-grow-sm"></span>
+                Loading...
+              </>
+            ) : (
+              <span>Add</span>
+            )}
+          </button>
+        </form>
       </Modal>
     )
   }
 }
 
 const mapStateToProps = ({ account }) => {
-  return {
-    accounts: account.accounts,
-    error: account.error
-  }
+  return { account }
 }
 
 const mapDispatchToProps = dispatch =>

@@ -66,7 +66,9 @@ class BalanceCard extends Component {
     return this.props.account.isFetching
   }
 
-  handleTransfer = async () => {
+  handleTransfer = async (event) => {
+    event.preventDefault()
+
     if (this.state.modalAddAccount) {
       // Add account before processing request
       await this.props.addAccount({
@@ -148,7 +150,7 @@ class BalanceCard extends Component {
           </>
         )}
         {this.state.modalState === 'Form' && (
-          <>
+          <form onSubmit={this.handleTransfer}>
             <div className="form-group">
               <label htmlFor="email">Amount of Tokens</label>
               <div className="input-group">
@@ -206,13 +208,13 @@ class BalanceCard extends Component {
               </>
             )}
             <button
+              type="submit"
               className="btn btn-primary btn-lg mt-5"
-              onClick={this.handleTransfer}
               disabled={this.state.loading}
             >
               Continue
             </button>
-          </>
+          </form>
         )}
       </Modal>
     )

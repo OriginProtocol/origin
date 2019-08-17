@@ -38,18 +38,21 @@ class Phone extends Component {
         <div className="action-card">
           <h1>Please provide a phone number</h1>
           <p>We will contact you to verify large withdrawals</p>
-          <div className="form-group">
-            <label htmlFor="phone">Phone Number</label>
-            <input {...input('phone')} />
-            {Feedback('phone')}
-          </div>
-          <button
-            className="btn btn-primary btn-lg"
-            style={{ marginTop: '40px' }}
-            onClick={this.handleSubmit}
-          >
-            Continue
-          </button>
+          <form>
+            <div className="form-group">
+              <label htmlFor="phone">Phone Number</label>
+              <input {...input('phone')} />
+              {Feedback('phone')}
+            </div>
+            <button
+              type="submit"
+              className="btn btn-primary btn-lg"
+              style={{ marginTop: '40px' }}
+              onClick={this.handleSubmit}
+            >
+              Continue
+            </button>
+          </form>
         </div>
       </>
     )
