@@ -60,8 +60,11 @@ class UserProfileCard extends Component {
               small
             />
             {showMessageLink && (
-              <SendMessage to={wallet} className="btn btn-link">
-                <fbt desc="contactUser">Contact user</fbt>
+              <SendMessage
+                to={wallet}
+                className="btn btn-outline-primary btn-rounded mt-3"
+              >
+                <fbt desc="contactUser">Contact</fbt>
               </SendMessage>
             )}
           </div>
