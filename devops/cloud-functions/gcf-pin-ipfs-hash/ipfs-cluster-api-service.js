@@ -4,15 +4,15 @@ const fetch = require('cross-fetch')
 const ORIGIN_PARAM = '?name=OriginProtocol'
 
 class IpfsClusterApiService {
-  constructor(ifpsClusterUrl, username, password) {
-    this.ifpsClusterUrl = ifpsClusterUrl
+  constructor(ipfsClusterUrl, username, password) {
+    this.ipfsClusterUrl = ipfsClusterUrl
     this.username = username || ''
     this.password = password || ''
   }
 
   async _sendRequest(method, path) {
     const resp = await fetch(
-      this.ifpsClusterUrl + path + ORIGIN_PARAM,
+      this.ipfsClusterUrl + path + ORIGIN_PARAM,
       {
         method: method,
         headers: {

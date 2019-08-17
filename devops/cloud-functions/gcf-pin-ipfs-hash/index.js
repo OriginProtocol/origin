@@ -7,11 +7,18 @@ const ipfsClusterApiService = new IpfsClusterAPI(
   process.env.IPFS_CLUSTER_PASSWORD
 )
 
+const retryIntervalGrowthRate = 2
+
 const pinService = async event => {
   const pubsubMessage = event.data
   const data = pubsubMessage
     ? JSON.parse(Buffer.from(pubsubMessage, 'base64').toString())
     : null
+
+  if (!data) {
+    console.log('Error retrieving data')
+    return
+  }
 
   const eventName = data.event.event
   if (
@@ -24,42 +31,35 @@ const pinService = async event => {
 
   const pinnedHashes = []
   const unPinnedHashes = []
+  const hashesToPin = parseIncomingData(data)
 
-  if (!Object.is(data, null)) {
-    const hashesToPin = parseIncomingData(data)
-    for (let i = 0; i < hashesToPin.length; i++) {
-      const hashToPin = hashesToPin[i]
+  for (let i = 0; i < hashesToPin.length; i++) {
+    const hashToPin = hashesToPin[i]
 
-      const pinned = await ipfsClusterApiService.pin(hashToPin)
+    const pinned = await ipfsClusterApiService.pin(hashToPin)
 
-      if (pinned) {
-        pinnedHashes.push(hashToPin)
-      } else {
-        // Retry pinning 5 times with 500ms as initial interval and double the
-        // interval every try. Set fields accordingly.
-        let numberOfRetries = 4
-        let initialRetryInterval = 500
-        const retryIntervalGrowthRate = 2
-        let retryPinned = await promiseSetTimeout(
-          hashToPin,
-          initialRetryInterval
-        )
-        while (!retryPinned && numberOfRetries > 0) {
-          console.log('Retrying Pinning:\n')
-          console.log('Retry Interval : ' + initialRetryInterval + 'ms \n')
-          console.log('Number of Retry : ' + (5 - numberOfRetries) + '\n')
-          numberOfRetries--
-          initialRetryInterval *= retryIntervalGrowthRate
-          retryPinned = await promiseSetTimeout(hashToPin, initialRetryInterval)
-        }
-        retryPinned
-          ? pinnedHashes.push(hashToPin)
-          : unPinnedHashes.push(hashToPin)
+    if (pinned) {
+      pinnedHashes.push(hashToPin)
+    } else {
+      // Retry pinning 5 times with 500ms as initial interval and double the
+      // interval every try. Set fields accordingly.
+      let numberOfRetries = 4
+      let initialRetryInterval = 500
+      let retryPinned = await promiseSetTimeout(hashToPin, initialRetryInterval)
+      while (!retryPinned && numberOfRetries > 0) {
+        console.log('Retrying Pinning:\n')
+        console.log('Retry Interval : ' + initialRetryInterval + 'ms \n')
+        console.log('Number of Retry : ' + (5 - numberOfRetries) + '\n')
+        numberOfRetries--
+        initialRetryInterval *= retryIntervalGrowthRate
+        retryPinned = await promiseSetTimeout(hashToPin, initialRetryInterval)
       }
+      retryPinned
+        ? pinnedHashes.push(hashToPin)
+        : unPinnedHashes.push(hashToPin)
     }
-  } else {
-    console.log('Error retrieving listing data')
   }
+
   console.log('Pinned following hashes: ', pinnedHashes.join(', '), '\n')
   if (unPinnedHashes) {
     console.log(
