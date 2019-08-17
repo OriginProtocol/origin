@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
+import { fbt } from 'fbt-runtime'
 
 /**
  * Tries to open the app using the `protocolLink`.
