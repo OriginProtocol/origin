@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
   )
 
   Grant.associate = models => {
-    Grant.hasMany(models.Transfer)
+    Grant.belongsTo(models.User)
   }
 
   return Grant

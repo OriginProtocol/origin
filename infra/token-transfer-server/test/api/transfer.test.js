@@ -96,7 +96,7 @@ describe('Transfer HTTP API', () => {
 
   it('should return the transfers', async () => {
     await Transfer.create({
-      grantId: this.grants[0].id,
+      userId: this.user.id,
       status: TransferStatuses.Success,
       fromAddress,
       toAddress,
@@ -104,7 +104,7 @@ describe('Transfer HTTP API', () => {
       currency: 'OGN'
     })
     await Transfer.create({
-      grantId: this.grants[0].id,
+      userId: this.user.id,
       status: TransferStatuses.Success,
       fromAddress,
       toAddress,
@@ -120,7 +120,7 @@ describe('Transfer HTTP API', () => {
   it('should not return transfers for other users', async () => {
     // Create a transfer for a grant for the second user
     await Transfer.create({
-      grantId: this.grants[2].id,
+      userId: this.user2.id,
       status: TransferStatuses.Success,
       fromAddress,
       toAddress,
@@ -144,7 +144,6 @@ describe('Transfer HTTP API', () => {
     await request(this.mockApp)
       .post('/api/transfers')
       .send({
-        grantId: this.grants[0].id,
         amount: 1000,
         address: toAddress
       })
@@ -162,7 +161,6 @@ describe('Transfer HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
-        grantId: this.grants[0].id,
         amount: 1000,
         address: toAddress
       })
@@ -182,7 +180,6 @@ describe('Transfer HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
-        grantId: this.grants[0].id,
         amount: 1000001,
         address: toAddress
       })
@@ -200,7 +197,7 @@ describe('Transfer HTTP API', () => {
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
     await Transfer.create({
-      grantId: this.grants[0].id,
+      userId: this.user.id,
       status: enums.TransferStatuses.Enqueued,
       toAddress: toAddress,
       amount: 2,
@@ -210,7 +207,6 @@ describe('Transfer HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
-        grantId: this.grants[0].id,
         amount: 999999,
         address: toAddress
       })
@@ -228,7 +224,7 @@ describe('Transfer HTTP API', () => {
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
     await Transfer.create({
-      grantId: this.grants[0].id,
+      userId: this.user.id,
       status: enums.TransferStatuses.Paused,
       toAddress: toAddress,
       amount: 2,
@@ -238,7 +234,6 @@ describe('Transfer HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
-        grantId: this.grants[0].id,
         amount: 999999,
         address: toAddress
       })
@@ -256,7 +251,7 @@ describe('Transfer HTTP API', () => {
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
     await Transfer.create({
-      grantId: this.grants[0].id,
+      userId: this.user.id,
       status: enums.TransferStatuses.WaitingConfirmation,
       toAddress: toAddress,
       amount: 2,
@@ -266,7 +261,6 @@ describe('Transfer HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
-        grantId: this.grants[0].id,
         amount: 999999,
         address: toAddress
       })
@@ -284,7 +278,7 @@ describe('Transfer HTTP API', () => {
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
     await Transfer.create({
-      grantId: this.grants[0].id,
+      userId: this.user.id,
       status: enums.TransferStatuses.Success,
       toAddress: toAddress,
       amount: 2,
@@ -294,7 +288,6 @@ describe('Transfer HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
-        grantId: this.grants[0].id,
         amount: 999999,
         address: toAddress
       })
@@ -318,7 +311,7 @@ describe('Transfer HTTP API', () => {
       enums.TransferStatuses.Success
     ].map(status => {
       return Transfer.create({
-        grantId: this.grants[0].id,
+        userId: this.user.id,
         status: status,
         toAddress: toAddress,
         amount: 2,
@@ -331,7 +324,7 @@ describe('Transfer HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
-        grantId: this.grants[0].id,
+        userId: this.user.id,
         amount: 999993,
         address: toAddress
       })
@@ -349,14 +342,12 @@ describe('Transfer HTTP API', () => {
       request(this.mockApp)
         .post('/api/transfers')
         .send({
-          grantId: this.grants[0].id,
           amount: 1000000,
           address: toAddress
         }),
       request(this.mockApp)
         .post('/api/transfers')
         .send({
-          grantId: this.grants[0].id,
           amount: 1000000,
           address: toAddress
         })

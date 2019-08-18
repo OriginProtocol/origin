@@ -74,10 +74,10 @@ describe('Token transfer library', () => {
 
   it('should enqueue a transfer', async () => {
     const amount = 1000
-    const transfer = await enqueueTransfer(this.grant.id, toAddress, amount, ip)
+    const transfer = await enqueueTransfer(this.user.id, toAddress, amount, ip)
     // Check a transfer row was created and populated as expected.
     expect(transfer).to.be.an('object')
-    expect(transfer.grantId).to.equal(this.grant.id)
+    expect(transfer.userId).to.equal(this.user.id)
     expect(transfer.toAddress).to.equal(toAddress.toLowerCase())
     expect(transfer.fromAddress).to.be.null
     expect(parseInt(transfer.amount)).to.equal(amount)
@@ -88,7 +88,7 @@ describe('Token transfer library', () => {
 
   it('should enqueue ignoring failed transfer amounts', async () => {
     await Transfer.create({
-      grantId: this.grant.id,
+      userId: this.user.id,
       status: enums.TransferStatuses.Failed,
       toAddress: toAddress,
       amount: 2,
@@ -96,12 +96,12 @@ describe('Token transfer library', () => {
     })
 
     const amount = 99999
-    await enqueueTransfer(this.grant.id, toAddress, amount, ip)
+    await enqueueTransfer(this.user.id, toAddress, amount, ip)
   })
 
   it('should enqueue ignoring cancelled transfer amounts', async () => {
     await Transfer.create({
-      grantId: this.grant.id,
+      userId: this.user.id,
       status: enums.TransferStatuses.Cancelled,
       toAddress: toAddress,
       amount: 2,
@@ -109,19 +109,19 @@ describe('Token transfer library', () => {
     })
 
     const amount = 99999
-    await enqueueTransfer(this.grant.id, toAddress, amount, ip)
+    await enqueueTransfer(this.user.id, toAddress, amount, ip)
   })
 
   it('should not enqueue a transfer if not enough tokens (vested)', async () => {
     const amount = 100001
     await expect(
-      enqueueTransfer(this.grant.id, toAddress, amount, ip)
+      enqueueTransfer(this.user.id, toAddress, amount, ip)
     ).to.eventually.be.rejectedWith(/exceeds/)
   })
 
   it('should not enqueue a transfer if not enough tokens (vested minus enqueued)', async () => {
     await Transfer.create({
-      grantId: this.grant.id,
+      userId: this.user.id,
       status: enums.TransferStatuses.Enqueued,
       toAddress: toAddress,
       amount: 2,
@@ -130,13 +130,13 @@ describe('Token transfer library', () => {
 
     const amount = 99999
     await expect(
-      enqueueTransfer(this.grant.id, toAddress, amount, ip)
+      enqueueTransfer(this.user.id, toAddress, amount, ip)
     ).to.eventually.be.rejectedWith(/exceeds/)
   })
 
   it('should not enqueue a transfer if not enough tokens (vested minus paused)', async () => {
     await Transfer.create({
-      grantId: this.grant.id,
+      userId: this.user.id,
       status: enums.TransferStatuses.Paused,
       toAddress: toAddress,
       amount: 2,
@@ -145,13 +145,13 @@ describe('Token transfer library', () => {
 
     const amount = 99999
     await expect(
-      enqueueTransfer(this.grant.id, toAddress, amount, ip)
+      enqueueTransfer(this.user.id, toAddress, amount, ip)
     ).to.eventually.be.rejectedWith(/exceeds/)
   })
 
   it('should not enqueue a transfer if not enough tokens (vested minus waiting)', async () => {
     await Transfer.create({
-      grantId: this.grant.id,
+      userId: this.user.id,
       status: enums.TransferStatuses.WaitingConfirmation,
       toAddress: toAddress,
       amount: 2,
@@ -160,13 +160,13 @@ describe('Token transfer library', () => {
 
     const amount = 99999
     await expect(
-      enqueueTransfer(this.grant.id, toAddress, amount, ip)
+      enqueueTransfer(this.user.id, toAddress, amount, ip)
     ).to.eventually.be.rejectedWith(/exceeds/)
   })
 
   it('should not enqueue a transfer if not enough tokens (vested minus success)', async () => {
     await Transfer.create({
-      grantId: this.grant.id,
+      userId: this.user.id,
       status: enums.TransferStatuses.Success,
       toAddress: toAddress,
       amount: 2,
@@ -175,7 +175,7 @@ describe('Token transfer library', () => {
 
     const amount = 99999
     await expect(
-      enqueueTransfer(this.grant.id, toAddress, amount, ip)
+      enqueueTransfer(this.user.id, toAddress, amount, ip)
     ).to.eventually.be.rejectedWith(/exceeds/)
   })
 
@@ -187,7 +187,7 @@ describe('Token transfer library', () => {
       enums.TransferStatuses.Success
     ].map(status => {
       return Transfer.create({
-        grantId: this.grant.id,
+        userId: this.user.id,
         status: status,
         toAddress: toAddress,
         amount: 2,
@@ -199,14 +199,14 @@ describe('Token transfer library', () => {
 
     const amount = 99993
     await expect(
-      enqueueTransfer(this.grant.id, toAddress, amount, ip)
+      enqueueTransfer(this.user.id, toAddress, amount, ip)
     ).to.eventually.be.rejectedWith(/exceeds/)
   })
 
   it('should execute a transfer', async () => {
     // Enqueue and execute a transfer.
     const amount = 1000
-    const transfer = await enqueueTransfer(this.grant.id, toAddress, amount, ip)
+    const transfer = await enqueueTransfer(this.user.id, toAddress, amount, ip)
     const { txHash, txStatus } = await executeTransfer(transfer, {
       networkId,
       tokenMock
