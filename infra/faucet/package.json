@@ -26,7 +26,7 @@
   "dependencies": {
     "@origin/bridge": "^0.1.0",
     "@origin/token": "^0.1.0",
-    "dotenv": "8.0.0",
+    "dotenv": "8.1.0",
     "envkey": "1.2.7",
     "express": "4.17.1",
     "logplease": "1.2.15",

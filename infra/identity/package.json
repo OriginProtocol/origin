@@ -11,7 +11,7 @@
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
-    "dotenv": "8.0.0",
+    "dotenv": "8.1.0",
     "envkey": "1.2.7",
     "pg": "7.12.1",
     "sequelize": "5.15.0",
