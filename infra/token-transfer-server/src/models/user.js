@@ -18,5 +18,11 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 't3_user'
     }
   )
+
+  User.associate = models => {
+    User.hasMany(models.Grant)
+    User.hasMany(models.Transfer)
+  }
+
   return User
 }

@@ -6,7 +6,7 @@ const AsyncLock = require('async-lock')
 const lock = new AsyncLock()
 
 const logger = require('../logger')
-const { Grant, Transfer } = require('../../src/models')
+const { Transfer } = require('../../src/models')
 const { ensureLoggedIn } = require('../lib/login')
 const {
   asyncMiddleware,
@@ -23,19 +23,10 @@ router.get(
   '/transfers',
   ensureLoggedIn,
   asyncMiddleware(async (req, res) => {
-    const grants = await Grant.findAll({
-      where: { userId: req.user.id },
-      include: [{ model: Transfer }]
+    const transfers = await Transfer.findAll({
+      where: { userId: req.user.id }
     })
-
-    const transfers = []
-    grants.forEach(grant => {
-      grant.Transfers.forEach(transfer => {
-        transfers.push(transfer.get({ plain: true }))
-      })
-    })
-
-    res.json(transfers)
+    res.json(transfers.map(transfer => transfer.get({ plain: true })))
   })
 )
 
@@ -45,7 +36,6 @@ router.get(
 router.post(
   '/transfers',
   [
-    check('grantId').isInt(),
     check('amount').isDecimal(),
     check('address').custom(isEthereumAddress),
     ensureLoggedIn
@@ -63,20 +53,21 @@ router.post(
       return
     }
 
-    // Retrieve the grant, validating email in the process.
-    const { grantId, address, amount } = req.body
+    const { address, amount } = req.body
 
     try {
-      await lock.acquire(grantId, async () => {
+      await lock.acquire(req.user.id, async () => {
         await enqueueTransfer(
-          grantId,
+          req.user.id,
           address,
           amount,
           req.connection.remoteAddress
         )
       })
       // TODO: update to be more useful, e.g. users email
-      logger.info(`Grant ${grantId} transferred ${amount} OGN to ${address}`)
+      logger.info(
+        `User ${req.user.email} transferred ${amount} OGN to ${address}`
+      )
     } catch (e) {
       if (e instanceof ReferenceError || e instanceof RangeError) {
         res.status(422).send(e.message)
