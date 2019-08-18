@@ -11,7 +11,7 @@ export default BorderedCard
 require('react-styl')(`
   .card-wrapper
     background-color: white
-    padding: 40px
+    padding: 30px
     border-radius: 10px
     margin-bottom: 40px
   .shadowed

@@ -32,7 +32,7 @@ class AccountTable extends Component {
     }
   }
 
-  handleSubmit = (event) => {
+  handleSubmit = event => {
     event.preventDefault()
 
     this.props.addAccount({

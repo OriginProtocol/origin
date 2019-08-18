@@ -2,12 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import get from 'lodash.get'
+import moment from 'moment'
 
 import { addAccount, fetchAccounts } from '@/actions/account'
 import { formInput, formFeedback } from '@/utils/formHelpers'
+import { unlockDate } from '@/constants'
 import BorderedCard from '@/components/BorderedCard'
 import Modal from '@/components/Modal'
 import ExportIcon from '@/assets/export-icon.svg'
+import ClockIcon from '@/assets/clock-icon.svg'
 
 class BalanceCard extends Component {
   constructor(props) {
@@ -73,7 +76,7 @@ class BalanceCard extends Component {
     return this.props.account.isAdding || this.props.transfer.isAdding
   }
 
-  handleTransfer = async (event) => {
+  handleTransfer = async event => {
     event.preventDefault()
     if (this.state.modalAddAccount) {
       // Add account before processing request
@@ -105,19 +108,35 @@ class BalanceCard extends Component {
             </div>
           </div>
           <div className="balance">
-            {Number(this.props.balance).toLocaleString()}{' '}
+            {this.props.isLocked
+              ? 0
+              : Number(this.props.balance).toLocaleString()}{' '}
             <span className="ogn">OGN</span>
           </div>
           <div>
-            <button
-              className="btn btn-secondary btn-lg"
-              onClick={() => this.setState({ displayModal: true })}
-            >
-              <img src={ExportIcon} className="mr-2 pb-1" />
-              Withdraw
-            </button>
+            {this.props.isLocked ? (
+              <>
+                Lockup Period Ends{' '}
+                <img src={ClockIcon} className="ml-3 mr-1 mb-1" />{' '}
+                <strong>{unlockDate.fromNow(true)}</strong>
+                <div className="alert alert-warning mt-3 mb-1 small">
+                  Tokens will become available for withdrawal on{' '}
+                  {unlockDate.format('L')}
+                </div>
+              </>
+            ) : (
+              <button
+                className="btn btn-secondary btn-lg"
+                onClick={() => this.setState({ displayModal: true })}
+              >
+                <img src={ExportIcon} className="mr-2 pb-1" />
+                Withdraw
+              </button>
+            )}
           </div>
-          <small>You will need an Ethereum wallet to withdraw OGN</small>
+          {!this.props.isLocked && (
+            <small>You will need an Ethereum wallet to withdraw OGN</small>
+          )}
         </BorderedCard>
       </>
     )
@@ -128,11 +147,7 @@ class BalanceCard extends Component {
     const Feedback = formFeedback(this.state)
 
     return (
-      <Modal
-        appendToId="main"
-        onClose={this.handleModalClose}
-        closeBtn={true}
-      >
+      <Modal appendToId="main" onClose={this.handleModalClose} closeBtn={true}>
         <h1 className="mb-2">Withdraw OGN</h1>
         {this.state.modalState === 'Disclaimer' && (
           <>
@@ -268,8 +283,9 @@ require('react-styl')(`
   .ogn
     font-size: 20px
     color: #007cff
-  .alert
-    width: 80%
+  .modal
+    .alert
+      width: 80%
   ul
     text-align: left
     width: 90%

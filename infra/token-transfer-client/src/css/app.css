@@ -126,14 +126,14 @@ input, select {
   margin: 50%;
 }
 
+/*
+ * Cards
+ */
+
 .card-wrapper .header .link {
   font-size: 14px;
   text-align: right;
 }
-
-/*
- * Cards
- */
 
 .action-card {
   background-color: white;
@@ -166,5 +166,3 @@ input, select {
   background-color: rgba(255, 192, 0, 0.1);
   border: 1px solid #ffcc00;
 }
-
-
