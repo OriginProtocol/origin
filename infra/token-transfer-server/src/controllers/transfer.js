@@ -11,7 +11,9 @@ const { ensureLoggedIn } = require('../lib/login')
 const {
   asyncMiddleware,
   isEthereumAddress,
-  getUnlockDate
+  getFingerprintData,
+  getUnlockDate,
+  hasBalance
 } = require('../utils')
 const { unlockDate } = require('../config')
 const { enqueueTransfer } = require('../lib/transfer')
@@ -36,7 +38,10 @@ router.get(
 router.post(
   '/transfers',
   [
-    check('amount').isDecimal(),
+    check('amount')
+      .isNumeric()
+      .toInt()
+      .custom(hasBalance),
     check('address').custom(isEthereumAddress),
     ensureLoggedIn
   ],
@@ -55,13 +60,14 @@ router.post(
 
     const { address, amount } = req.body
 
+    let transfer
     try {
       await lock.acquire(req.user.id, async () => {
-        await enqueueTransfer(
+        transfer = await enqueueTransfer(
           req.user.id,
           address,
           amount,
-          req.connection.remoteAddress
+          await getFingerprintData(req)
         )
       })
       // TODO: update to be more useful, e.g. users email
@@ -75,7 +81,7 @@ router.post(
         throw e
       }
     }
-    res.status(201).end()
+    res.status(201).json(transfer.get({ plain: true }))
   })
 )
 

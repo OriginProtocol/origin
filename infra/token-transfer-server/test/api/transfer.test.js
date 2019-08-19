@@ -5,7 +5,7 @@ const express = require('express')
 const moment = require('moment')
 const sinon = require('sinon')
 
-const { Event, Grant, Transfer, User } = require('../../src/models')
+const { Grant, Transfer, User, sequelize } = require('../../src/models')
 const transferController = require('../../src/controllers/transfer')
 const TransferStatuses = require('../../src/enums')
 const enums = require('../../src/enums')
@@ -22,14 +22,20 @@ const toAddress = '0xf17f52151ebef6c7334fad080c5704d77216b732'
 
 describe('Transfer HTTP API', () => {
   beforeEach(async () => {
+    // Wipe database before each test
+    expect(process.env.NODE_ENV).to.equal('test')
+    await sequelize.sync({ force: true })
+
     this.user = await User.create({
       email: 'user@originprotocol.com',
+      name: 'User 1',
       otpKey: '123',
       otpVerified: true
     })
 
     this.user2 = await User.create({
-      email: 'user2@originprotocol.com'
+      email: 'user2@originprotocol.com',
+      name: 'User 2'
     })
 
     this.grants = [
@@ -73,25 +79,6 @@ describe('Transfer HTTP API', () => {
       next()
     })
     this.mockApp.use(app)
-  })
-
-  afterEach(async () => {
-    await Event.destroy({
-      where: {}
-    })
-
-    await Transfer.destroy({
-      where: {}
-    })
-
-    await Grant.destroy({
-      where: {}
-    })
-
-    // Cleanup
-    User.destroy({
-      where: {}
-    })
   })
 
   it('should return the transfers', async () => {

@@ -21,13 +21,13 @@ const ConfirmationTimeoutSec = 20 * 60 * 60
 
 /**
  * Helper method to check the validity of a transfer request.
- * Throws an exception in case the request sis invalid.
+ * Throws an exception in case the request is invalid.
  * @param userId
  * @param amount
  * @returns {Promise<Grant>}
  * @private
  */
-async function _checkTransferRequest(userId, amount) {
+async function checkTransferRequest(userId, amount) {
   const user = await User.findOne({
     where: {
       id: userId
@@ -70,8 +70,12 @@ async function _checkTransferRequest(userId, amount) {
 
   const available = vested.minus(pendingOrCompleteAmount)
   if (amount > available) {
-    throw new RangeError(
+    logger.info(
       `Amount of ${amount} OGN exceeds the ${available} available for user ${user.email}`
+    )
+
+    throw new RangeError(
+      `Amount of ${amount} OGN exceeds the ${available} available balance`
     )
   }
 
@@ -85,8 +89,8 @@ async function _checkTransferRequest(userId, amount) {
  * @param amount
  * @returns {Promise<integer>} Id of the transfer request.
  */
-async function enqueueTransfer(userId, address, amount, ip) {
-  const user = await _checkTransferRequest(userId, amount)
+async function enqueueTransfer(userId, address, amount, data = {}) {
+  const user = await checkTransferRequest(userId, amount)
 
   // Enqueue the request by inserting a row in the transfer table.
   // It will get picked up asynchronously by the offline job that processes transfers.
@@ -99,15 +103,15 @@ async function enqueueTransfer(userId, address, amount, ip) {
       status: enums.TransferStatuses.Enqueued,
       toAddress: address.toLowerCase(),
       amount,
-      currency: 'OGN' // For now we only support OGN.
+      currency: 'OGN', // For now we only support OGN.
+      data
     })
     await Event.create({
       userId: user.id,
       action: TRANSFER_REQUEST,
       data: JSON.stringify({
         transferId: transfer.id
-      }),
-      ip
+      })
     })
     await txn.commit()
   } catch (e) {
@@ -130,7 +134,7 @@ async function enqueueTransfer(userId, address, amount, ip) {
 async function executeTransfer(transfer, opts) {
   const { networkId, tokenMock } = opts
 
-  const user = await _checkTransferRequest(
+  const user = await checkTransferRequest(
     transfer.userId,
     transfer.amount,
     transfer
@@ -208,4 +212,4 @@ async function executeTransfer(transfer, opts) {
   return { txHash, txStatus: status }
 }
 
-module.exports = { enqueueTransfer, executeTransfer }
+module.exports = { checkTransferRequest, enqueueTransfer, executeTransfer }

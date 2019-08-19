@@ -5,9 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     'Event',
     {
       id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-      ip: DataTypes.STRING,
       userId: DataTypes.INTEGER,
-      grantId: DataTypes.INTEGER,
       action: DataTypes.STRING,
       data: DataTypes.JSONB
     },
@@ -15,9 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 't3_event'
     }
   )
-  Event.associate = function() {
-    // TODO: add a hasOne association for Grant when hasOne supports sourceKey
-    // (due in Sequelize 5)
+  Event.associate = models => {
+    Event.belongsTo(models.User)
   }
   return Event
 }
