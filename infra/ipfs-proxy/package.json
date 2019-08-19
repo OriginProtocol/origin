@@ -24,7 +24,7 @@
   "homepage": "https://github.com/OriginProtocol/origin#readme",
   "dependencies": {
     "busboy": "0.3.1",
-    "file-type": "12.1.0",
+    "file-type": "12.2.0",
     "http-proxy": "1.17.0",
     "ipfs": "0.34.4",
     "ipfsd-ctl": "0.44.1",
