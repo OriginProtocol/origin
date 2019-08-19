@@ -24,7 +24,7 @@
     "apollo-server-express": "2.8.1",
     "bs58": "4.0.1",
     "cors": "2.8.5",
-    "dotenv": "8.0.0",
+    "dotenv": "8.1.0",
     "elasticsearch": "16.3.0",
     "envkey": "1.2.7",
     "esm": "3.2.25",

@@ -76,9 +76,15 @@ class SendMessage extends Component {
                 ) {
                   return this.renderCannotConverse()
                 } else if (this.state.sent) {
-                  return this.renderSent()
+                  let to = account
+
+                  // If it's a proxy, we'll see a forwarding address
+                  const forwardTo = get(data, 'messaging.forwardTo')
+                  if (forwardTo) to = forwardTo
+
+                  return this.renderSent(to)
                 } else {
-                  let to = get(data, 'messaging.id')
+                  let to = account
 
                   // If it's a proxy, we'll see a forwarding address
                   const forwardTo = get(data, 'messaging.forwardTo')
@@ -156,8 +162,9 @@ class SendMessage extends Component {
     )
   }
 
-  renderSent() {
-    return <Redirect to={`/messages/${this.props.to}`} />
+  renderSent(to) {
+    to = to ? to : this.props.to
+    return <Redirect to={`/messages/${to}`} />
   }
 }
 
