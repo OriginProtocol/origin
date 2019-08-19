@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
 import { addAccount } from '@/actions/account'
+import { getAccounts, getError, getIsLoading } from '@/reducers/account'
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
 import DeleteIcon from '@material-ui/icons/Delete'
@@ -22,10 +23,10 @@ class AccountTable extends Component {
 
   componentDidUpdate(prevProps) {
     // Parse server errors
-    if (prevProps.error !== this.props.account.error) {
-      if (this.props.account.error && this.props.account.error.status === 422) {
+    if (prevProps.error !== this.props.error) {
+      if (this.props.error && this.props.error.status === 422) {
         // Parse validation errors from API
-        this.props.account.error.response.body.errors.forEach(e => {
+        this.props.error.response.body.errors.forEach(e => {
           this.setState({ [`${e.param}Error`]: e.msg })
         })
       }
@@ -63,7 +64,7 @@ class AccountTable extends Component {
         </div>
         <div className="row">
           <div className="col">
-            <table className="table mt-4 mb-4">
+            <table className="table table-responsive mt-4 mb-4">
               <thead>
                 <tr>
                   <th>Nickname</th>
@@ -73,14 +74,14 @@ class AccountTable extends Component {
                 </tr>
               </thead>
               <tbody>
-                {this.props.account.accounts.length === 0 ? (
+                {this.props.accounts.length === 0 ? (
                   <tr>
                     <td className="table-empty-cell" colSpan="4">
                       You don&apos;t have any accounts
                     </td>
                   </tr>
                 ) : (
-                  this.props.account.accounts.map(account => (
+                  this.props.accounts.map(account => (
                     <tr key={account.address}>
                       <td>{account.nickname}</td>
                       <td>{account.address}</td>
@@ -125,9 +126,9 @@ class AccountTable extends Component {
           <button
             type="submit"
             className="btn btn-primary btn-lg mt-5"
-            disabled={this.props.account.isAdding}
+            disabled={this.props.isLoading}
           >
-            {this.props.account.isAdding ? (
+            {this.props.isLoading ? (
               <>
                 <span className="spinner-grow spinner-grow-sm"></span>
                 Loading...
@@ -143,7 +144,11 @@ class AccountTable extends Component {
 }
 
 const mapStateToProps = ({ account }) => {
-  return { account }
+  return {
+    accounts: getAccounts(account),
+    error: getError(account),
+    isLoading: getIsLoading(account)
+  }
 }
 
 const mapDispatchToProps = dispatch =>
@@ -158,17 +163,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(AccountTable)
-
-require('react-styl')(`
-  .table
-    font-size: 14px
-    th
-      font-weight: normal
-      color: #638298
-      border-top: 0
-      border-bottom: 1px solid #bdcbd5 !important
-    th, td
-      padding: 1rem 0
-    td.table-empty-cell
-      color: #638298
-`)

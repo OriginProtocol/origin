@@ -173,11 +173,11 @@ const VestingBars = props => {
       </div>
       <div className="totals">
         <div>
-          <div className="vesting-circle vested"></div>
+          <div className="status-circle status-circle-success mr-2"></div>
           {props.vested.toLocaleString()} OGN <small>vested</small>
         </div>
         <div>
-          <div className="vesting-circle"></div>
+          <div className="status-circle mr-2"></div>
           {props.unvested.toLocaleString()} OGN <small>unvested</small>
         </div>
       </div>
@@ -203,15 +203,6 @@ require('react-styl')(`
       padding-right: 40px
       small
         padding-left: 10px
-      .vesting-circle
-        display: inline-block
-        margin-right: 10px
-        width: 14px
-        height: 14px
-        border-radius: 50%
-        background-color: #8fa7b7
-      .vested
-        background-color: #00db8d
 
   .cover
     position: fixed

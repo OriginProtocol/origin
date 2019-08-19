@@ -1,33 +1,13 @@
 import agent from '@/utils/agent'
 import { apiUrl } from '@/constants'
 
-export const FETCH_ACCOUNTS_PENDING = 'FETCH_ACCOUNTS_PENDING'
-export const FETCH_ACCOUNTS_SUCCESS = 'FETCH_ACCOUNTS_SUCCESS'
-export const FETCH_ACCOUNTS_ERROR = 'FETCH_ACCOUNTS_ERROR'
 export const ADD_ACCOUNT_PENDING = 'ADD_ACCOUNT_PENDING'
 export const ADD_ACCOUNT_SUCCESS = 'ADD_ACCOUNT_SUCCESS'
 export const ADD_ACCOUNT_ERROR = 'ADD_ACCOUNT_ERROR'
+export const FETCH_ACCOUNTS_PENDING = 'FETCH_ACCOUNTS_PENDING'
+export const FETCH_ACCOUNTS_SUCCESS = 'FETCH_ACCOUNTS_SUCCESS'
+export const FETCH_ACCOUNTS_ERROR = 'FETCH_ACCOUNTS_ERROR'
 export const DELETE_ACCOUNT = 'DELETE_ACCOUNT'
-
-function fetchAccountsPending() {
-  return {
-    type: FETCH_ACCOUNTS_PENDING
-  }
-}
-
-function fetchAccountsSuccess(payload) {
-  return {
-    type: FETCH_ACCOUNTS_SUCCESS,
-    payload
-  }
-}
-
-function fetchAccountsError(error) {
-  return {
-    type: FETCH_ACCOUNTS_ERROR,
-    error
-  }
-}
 
 function addAccountPending() {
   return {
@@ -45,6 +25,26 @@ function addAccountSuccess(payload) {
 function addAccountError(error) {
   return {
     type: ADD_ACCOUNT_ERROR,
+    error
+  }
+}
+
+function fetchAccountsPending() {
+  return {
+    type: FETCH_ACCOUNTS_PENDING
+  }
+}
+
+function fetchAccountsSuccess(payload) {
+  return {
+    type: FETCH_ACCOUNTS_SUCCESS,
+    payload
+  }
+}
+
+function fetchAccountsError(error) {
+  return {
+    type: FETCH_ACCOUNTS_ERROR,
     error
   }
 }

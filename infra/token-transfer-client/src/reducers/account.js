@@ -9,7 +9,7 @@ import {
 
 const initialState = {
   isAdding: false,
-  isFetching: false,
+  isLoading: true,
   accounts: [],
   error: null
 }
@@ -37,22 +37,27 @@ export default function accountsReducer(state = initialState, action) {
     case FETCH_ACCOUNTS_PENDING:
       return {
         ...state,
-        isFetching: true
+        isLoading: true
       }
     case FETCH_ACCOUNTS_SUCCESS:
       return {
         ...state,
-        isFetching: false,
+        isLoading: false,
         accounts: action.payload,
         error: null
       }
     case FETCH_ACCOUNTS_ERROR:
       return {
         ...state,
-        isFetching: false,
+        isLoading: false,
         error: action.error
       }
     default:
       return state
   }
 }
+
+export const getAccounts = state => state.accounts
+export const getError = state => state.error
+export const getIsAdding = state => state.isAdding
+export const getIsLoading = state => state.isLoading

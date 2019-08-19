@@ -18,10 +18,6 @@ class Security extends Component {
     this.props.fetchAccounts()
   }
 
-  isLoading = () => {
-    return this.props.account.isFetching
-  }
-
   renderLoading() {
     return (
       <div className="spinner-grow" role="status">
@@ -31,7 +27,7 @@ class Security extends Component {
   }
 
   render() {
-    if (this.isLoading()) {
+    if (this.props.isLoading) {
       return this.renderLoading()
     }
 
@@ -87,10 +83,6 @@ class Security extends Component {
   }
 }
 
-const mapStateToProps = ({ account }) => {
-  return { account }
-}
-
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
@@ -100,6 +92,6 @@ const mapDispatchToProps = dispatch =>
   )
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(Security)

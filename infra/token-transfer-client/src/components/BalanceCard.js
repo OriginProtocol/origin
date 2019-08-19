@@ -2,9 +2,17 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import get from 'lodash.get'
-import moment from 'moment'
 
-import { addAccount, fetchAccounts } from '@/actions/account'
+import { addAccount } from '@/actions/account'
+import {
+  getError as getAccountsError,
+  getIsAdding as getAccountIsAdding
+} from '@/reducers/account'
+import { addTransfer } from '@/actions/transfer'
+import {
+  getError as getTransfersError,
+  getIsAdding as getTransferIsAdding
+} from '@/reducers/transfer'
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import { unlockDate } from '@/constants'
 import BorderedCard from '@/components/BorderedCard'
@@ -18,82 +26,91 @@ class BalanceCard extends Component {
     this.state = this.getInitialState()
   }
 
-  componentDidMount() {
-    this.props.fetchAccounts()
+  componentDidUpdate(prevProps) {
+    // Parse server errors for account add
+    if (get(prevProps, 'accountsError') !== this.props.accountsError) {
+      this.handleErrors(this.props.accountsError)
+    }
+    // Parse server errors for transfer add
+    if (get(prevProps, 'transfersError') !== this.props.transfersError) {
+      this.handleServerError(this.props.transfersError)
+    }
   }
 
-  componentDidUpdate(prevProps) {
-    // TODO: remove duplicate server error parsing code
-
-    // Parse server errors for account add
-    if (get(prevProps, 'account.error') !== this.props.account.error) {
-      if (this.props.account.error && this.props.account.error.status === 422) {
-        // Parse validation errors from API
-        this.props.account.error.response.body.errors.forEach(e => {
+  handleServerError(error) {
+    if (error && error.status === 422) {
+      // Parse validation errors from API
+      if (error.response.body && error.response.body.errors) {
+        error.response.body.errors.forEach(e => {
           this.setState({ [`${e.param}Error`]: e.msg })
         })
-      }
-    }
-
-    // Parse server errors for transfer add
-    if (get(prevProps, 'account.error') !== this.props.account.error) {
-      if (this.props.account.error && this.props.account.error.status === 422) {
-        // Parse validation errors from API
-        this.props.account.error.response.body.errors.forEach(e => {
-          this.setState({ [`${e.param}Error`]: e.msg })
-        })
-      }
-    }
-
-    // If there are no accounts, then set the withdraw form to add an account
-    // to the account address book, otherwise default to selecting one
-    if (get(prevProps, 'account.accounts') !== this.props.account.accounts) {
-      if (this.props.account.accounts.length === 0) {
-        this.setState({ modalAddAccount: true })
       } else {
-        this.setState({ canChooseExistingAccount: true })
+        console.error(error.response.body)
       }
     }
   }
 
   getInitialState = () => {
     const initialState = {
-      address: null,
+      address:
+        this.props.accounts.length > 0 ? this.props.accounts[0].address : '',
       addressError: null,
-      amount: null,
+      amount: '',
       amountError: null,
-      canChooseExistingAccount: false,
       displayModal: false,
-      modalAddAccount: false,
+      modalAddAccount: this.props.accounts.length === 0,
       modalState: 'Disclaimer',
-      nickname: null,
+      nickname: '',
       nicknameError: null
     }
     return initialState
   }
 
-  isLoading = () => {
-    return this.props.account.isAdding || this.props.transfer.isAdding
-  }
-
-  handleTransfer = async event => {
+  handleTransfer = event => {
     event.preventDefault()
     if (this.state.modalAddAccount) {
       // Add account before processing request
-      await this.props.addAccount({
+      this.props.addAccount({
         nickname: this.state.nickname,
         address: this.state.address
       })
     }
+
     // Do the transfer
-    await this.props.addTransfer({
+    this.props.addTransfer({
       amount: this.state.amount,
       address: this.state.address
     })
   }
 
   handleModalClose = () => {
+    // Reset the state of the modal back to defaults
     this.setState(this.getInitialState())
+  }
+
+  handleAddAccount = () => {
+    this.setState({
+      ...this.getInitialState(),
+      address: '',
+      amount: this.state.amount,
+      displayModal: true,
+      modalAddAccount: !this.state.modalAddAccount,
+      modalState: this.state.modalState
+    })
+  }
+
+  handleChooseAccount = () => {
+    this.setState({
+      ...this.getInitialState(),
+      amount: this.state.amount,
+      displayModal: true,
+      modalAddAccount: !this.state.modalAddAccount,
+      modalState: this.state.modalState
+    })
+  }
+
+  isAdding = () => {
+    return this.props.accountIsAdding || this.props.transferIsAdding
   }
 
   render() {
@@ -189,15 +206,18 @@ class BalanceCard extends Component {
                   <span className="badge badge-secondary">OGN</span>
                 </div>
               </div>
-              {Feedback('amount')}
+              Feedback {Feedback('amount')}
             </div>
-            {this.props.account.accounts.length > 0 &&
-            !this.state.modalAddAccount ? (
+            {this.props.accounts.length > 0 && !this.state.modalAddAccount ? (
               <>
                 <div className="form-group">
                   <label htmlFor="email">Destination Account</label>
-                  <select className="custom-select custom-select-lg">
-                    {this.props.account.accounts.map(account => (
+                  <select
+                    className="custom-select custom-select-lg"
+                    value={this.state.address}
+                    onChange={e => this.setState({ address: e.target.value })}
+                  >
+                    {this.props.accounts.map(account => (
                       <option key={account.address} value={account.address}>
                         {account.nickname}
                       </option>
@@ -205,10 +225,7 @@ class BalanceCard extends Component {
                   </select>
                 </div>
                 <div className="form-group">
-                  <a
-                    href="#"
-                    onClick={() => this.setState({ modalAddAccount: true })}
-                  >
+                  <a href="#" onClick={this.handleAddAccount}>
                     Add Another Account
                   </a>
                 </div>
@@ -225,12 +242,9 @@ class BalanceCard extends Component {
                   <input {...input('nickname')} />
                   {Feedback('nickname')}
                 </div>
-                {this.state.canChooseExistingAccount && (
+                {this.props.accounts.length > 0 && (
                   <div className="form-group">
-                    <a
-                      href="#"
-                      onClick={() => this.setState({ modalAddAccount: false })}
-                    >
+                    <a href="#" onClick={this.handleChooseAccount}>
                       Choose Existing Account
                     </a>
                   </div>
@@ -240,9 +254,9 @@ class BalanceCard extends Component {
             <button
               type="submit"
               className="btn btn-primary btn-lg mt-5"
-              disabled={this.isLoading()}
+              disabled={this.isAdding()}
             >
-              {this.isLoading() ? (
+              {this.isAdding() ? (
                 <>
                   <span className="spinner-grow spinner-grow-sm"></span>
                   Loading...
@@ -259,14 +273,19 @@ class BalanceCard extends Component {
 }
 
 const mapStateToProps = ({ account, transfer }) => {
-  return { account, transfer }
+  return {
+    accountsError: getAccountsError(account),
+    accountIsAdding: getAccountIsAdding(account),
+    transfersError: getTransfersError(transfer),
+    transferIsAdding: getTransferIsAdding(transfer)
+  }
 }
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       addAccount: addAccount,
-      fetchAccounts: fetchAccounts
+      addTransfer: addTransfer
     },
     dispatch
   )

@@ -119,7 +119,7 @@ input, select {
 }
 
 .spinner-grow-sm {
-  margin: 2px 4px;
+  margin: 2px 4px !important;
 }
 
 #main .spinner-grow {
@@ -165,4 +165,60 @@ input, select {
 .alert-warning {
   background-color: rgba(255, 192, 0, 0.1);
   border: 1px solid #ffcc00;
+}
+
+/*
+ * Tables
+ */
+
+.table {
+  font-size: 14px;
+  padding-top: 20px;
+  max-height: 300px;
+  overflow-y: scroll;
+  border-bottom: 1px solid #dbe6eb;
+}
+
+
+.table th {
+  font-weight: normal;
+  color: #638298;
+  border-top: 0;
+  border-bottom: 1px solid #bdcbd5 !important;
+}
+
+.table-row {
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.empty {
+  text-align: center;
+  color: #8fa7b7;
+  padding: 5rem 0;
+}
+
+/*
+ * Status circle indicators
+ */
+
+.status-circle {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #bdcbd5;
+  vertical-align: middle;
+}
+
+.status-circle-warning {
+  background-color: #ffc000;
+}
+
+.status-circle-success {
+  background-color: #00db8d;
+}
+
+.status-circle-error {
+  background-color: #ff0000;
 }

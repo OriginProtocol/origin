@@ -5,7 +5,7 @@ import {
 } from '../actions/user'
 
 const initialState = {
-  isFetching: false,
+  isLoading: true,
   error: null,
   user: null
 }
@@ -15,19 +15,19 @@ export default function Session(state = initialState, action) {
     case FETCH_USER_PENDING:
       return {
         ...state,
-        isFetching: true
+        isLoading: true
       }
     case FETCH_USER_SUCCESS:
       return {
         ...state,
-        isFetching: false,
+        isLoading: false,
         user: action.payload,
         error: null
       }
     case FETCH_USER_ERROR:
       return {
         ...state,
-        isFetching: false,
+        isLoading: false,
         error: action.error
       }
     default:

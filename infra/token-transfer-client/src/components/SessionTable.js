@@ -17,7 +17,7 @@ const SessionTable = props => {
       </div>
       <div className="row">
         <div className="col">
-          <table className="table mt-4 mb-4">
+          <table className="table table-responsive mt-4 mb-4">
             <thead>
               <tr>
                 <th>IP Address</th>
@@ -71,17 +71,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(SessionTable)
-
-require('react-styl')(`
-  .table
-    font-size: 14px
-    th
-      font-weight: normal
-      color: #638298
-      border-top: 0
-      border-bottom: 1px solid #bdcbd5 !important
-    th, td
-      padding: 1rem 0
-    td.table-empty-cell
-      color: #638298
-`)

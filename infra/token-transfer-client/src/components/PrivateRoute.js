@@ -18,7 +18,7 @@ const PrivateRoute = ({ component: Component, user, ...rest }) => {
           <div className="logged-in">
             <Navigation />
             <div id="main">
-              {user.isFetching ? (
+              {user.isLoading ? (
                 <div className="spinner-grow" role="status">
                   <span className="sr-only">Loading...</span>
                 </div>

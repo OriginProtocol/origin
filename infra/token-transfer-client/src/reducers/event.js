@@ -5,8 +5,7 @@ import {
 } from '../actions/event'
 
 const initialState = {
-  isAdding: false,
-  isFetching: false,
+  isLoading: true,
   events: [],
   error: null
 }
@@ -16,19 +15,19 @@ export default function eventsReducer(state = initialState, action) {
     case FETCH_EVENTS_PENDING:
       return {
         ...state,
-        isFetching: true
+        isLoading: true
       }
     case FETCH_EVENTS_SUCCESS:
       return {
         ...state,
-        isFetching: false,
+        isLoading: false,
         events: action.payload,
         error: null
       }
     case FETCH_EVENTS_ERROR:
       return {
         ...state,
-        isFetching: false,
+        isLoading: false,
         error: action.error
       }
     default:

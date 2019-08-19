@@ -5,7 +5,7 @@ import {
 } from '../actions/grant'
 
 const initialState = {
-  isFetching: false,
+  isLoading: true,
   grants: [],
   error: null
 }
@@ -15,22 +15,26 @@ export default function grantsReducer(state = initialState, action) {
     case FETCH_GRANTS_PENDING:
       return {
         ...state,
-        isFetching: true
+        isLoading: true
       }
     case FETCH_GRANTS_SUCCESS:
       return {
         ...state,
-        isFetching: false,
+        isLoading: false,
         grants: action.payload,
         error: null
       }
     case FETCH_GRANTS_ERROR:
       return {
         ...state,
-        isFetching: false,
+        isLoading: false,
         error: action.error
       }
     default:
       return state
   }
 }
+
+export const getGrants = state => state.grants
+export const getError = state => state.error
+export const getIsLoading = state => state.isLoading
