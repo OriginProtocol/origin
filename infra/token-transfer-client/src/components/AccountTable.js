@@ -64,7 +64,7 @@ class AccountTable extends Component {
         </div>
         <div className="row">
           <div className="col">
-            <table className="table table-responsive mt-4 mb-4">
+            <table className="table mt-4 mb-4">
               <thead>
                 <tr>
                   <th>Nickname</th>
@@ -76,7 +76,7 @@ class AccountTable extends Component {
               <tbody>
                 {this.props.accounts.length === 0 ? (
                   <tr>
-                    <td className="table-empty-cell" colSpan="4">
+                    <td className="table-empty-cell" colSpan="100%">
                       You don&apos;t have any accounts
                     </td>
                   </tr>

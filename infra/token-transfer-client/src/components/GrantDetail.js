@@ -11,6 +11,3 @@ const GrantDetail = () => (
 )
 
 export default GrantDetail
-
-require('react-styl')(`
-`)

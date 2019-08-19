@@ -36,12 +36,12 @@ const WithdrawalHistory = props => {
     <>
       <div className="row">
         <div className="col">
-          <h1>Withdrawal WithdrawalHistory</h1>
+          <h1>Withdrawal History</h1>
         </div>
       </div>
       <div className="row">
         <div className="col">
-          <table className="table table-responsive mt-4 mb-4">
+          <table className="table mt-4 mb-4">
             <thead>
               <tr>
                 <th>Amount</th>
@@ -54,8 +54,8 @@ const WithdrawalHistory = props => {
             <tbody>
               {props.transfers.length === 0 ? (
                 <tr>
-                  <td className="table-empty-cell" colSpan="4">
-                    You don&apos;t have any withdrawals
+                  <td className="table-empty-cell" colSpan="100%">
+                    You have not made any withdrawals.
                   </td>
                 </tr>
               ) : (

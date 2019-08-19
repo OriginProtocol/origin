@@ -149,22 +149,19 @@ input, select {
   margin-bottom: 0.5rem;
 }
 
-.btn {
-  margin-top: 20px;
-  margin-bottom: 10px;
+.table-card {
+  border-top: 1px solid #dbe6eb;
+  border-bottom: 1px solid #dbe6eb;
+  max-height: 320px;
+  overflow-y: scroll;
 }
 
-.btn.btn-lg {
-  font-weight: bold;
-  border-radius: 2rem;
-  padding: 0.5rem 4rem;
-  min-width: 10rem;
-  font-size: 18px;
+.table-card .table thead th {
+  border-bottom: none;
 }
 
-.alert-warning {
-  background-color: rgba(255, 192, 0, 0.1);
-  border: 1px solid #ffcc00;
+.table-card .table {
+  border-bottom: none;
 }
 
 /*
@@ -174,22 +171,50 @@ input, select {
 .table {
   font-size: 14px;
   padding-top: 20px;
-  max-height: 300px;
-  overflow-y: scroll;
   border-bottom: 1px solid #dbe6eb;
 }
 
 
-.table th {
+.table thead th {
   font-weight: normal;
   color: #638298;
   border-top: 0;
-  border-bottom: 1px solid #bdcbd5 !important;
+  border-bottom: 1px solid #dbe6eb !important;
+}
+
+.table td {
+  border-top: none;
 }
 
 .table-row {
   font-size: 14px;
   margin-bottom: 20px;
+}
+
+.table-empty-cell {
+  text-align: center;
+  color: #8fa7b7;
+  padding: 2rem 0 !important;
+}
+
+/*
+ * Status circle indicators
+ */
+
+.status-circle {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #bdcbd5;
+  vertical-align: middle;
+}
+
+.status-circle-warning {
+  background-color: #ffc000;
+}
+
+.status-circle-success {
 }
 
 .empty {
@@ -222,3 +247,23 @@ input, select {
 .status-circle-error {
   background-color: #ff0000;
 }
+
+.btn {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.btn.btn-lg {
+  font-weight: bold;
+  border-radius: 2rem;
+  padding: 0.5rem 4rem;
+  min-width: 10rem;
+  font-size: 18px;
+}
+
+.alert-warning {
+  background-color: rgba(255, 192, 0, 0.1);
+  border: 1px solid #ffcc00;
+}
+
+

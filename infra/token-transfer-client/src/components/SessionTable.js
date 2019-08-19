@@ -17,7 +17,7 @@ const SessionTable = props => {
       </div>
       <div className="row">
         <div className="col">
-          <table className="table table-responsive mt-4 mb-4">
+          <table className="table mt-4 mb-4">
             <thead>
               <tr>
                 <th>IP Address</th>
@@ -29,24 +29,32 @@ const SessionTable = props => {
               </tr>
             </thead>
             <tbody>
-              {props.event.events
-                .filter(event => event.action === 'LOGIN')
-                .map(event => (
-                  <tr key={event.id}>
-                    <td>{event.ip}</td>
-                    <td>
-                      {event.data.device.isDesktop ? 'Desktop' : 'Mobile'}
-                    </td>
-                    <td>{event.data.device.browser}</td>
-                    <td>{event.data.location}</td>
-                    <td>{moment(event.createdAt).fromNow()}</td>
-                    <td>
-                      {moment(event.createdAt).diff(moment(), 'minutes') > -30
-                        ? 'Active'
-                        : 'Expired'}
-                    </td>
-                  </tr>
-                ))}
+              {props.event.events.length === 0 ? (
+                <tr>
+                  <td className="table-empty-cell" colSpan="100%">
+                    No session events found.
+                  </td>
+                </tr>
+              ) : (
+                props.event.events
+                  .filter(event => event.action === 'LOGIN')
+                  .map(event => (
+                    <tr key={event.id}>
+                      <td>{event.ip}</td>
+                      <td>
+                        {event.data.device.isDesktop ? 'Desktop' : 'Mobile'}
+                      </td>
+                      <td>{event.data.device.browser}</td>
+                      <td>{event.data.location}</td>
+                      <td>{moment(event.createdAt).fromNow()}</td>
+                      <td>
+                        {moment(event.createdAt).diff(moment(), 'minutes') > -30
+                          ? 'Active'
+                          : 'Expired'}
+                      </td>
+                    </tr>
+                  ))
+              )}
             </tbody>
           </table>
         </div>
