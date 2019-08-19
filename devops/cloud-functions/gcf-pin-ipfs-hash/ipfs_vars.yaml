@@ -1,3 +1,3 @@
-IPFS_CLUSTER_URL: http://example.com:9094
-IPFS_CLUSTER_USERNAME: username
-IPFS_CLUSTER_PASSWORD: password
+IPFS_CLUSTER_URL: https://api.cluster.ipfs.io:9094
+IPFS_CLUSTER_USERNAME: origin
+IPFS_CLUSTER_PASSWORD: iojaweAq32fQ#F9%@#0asdfAWEoiju89qfUTer9021

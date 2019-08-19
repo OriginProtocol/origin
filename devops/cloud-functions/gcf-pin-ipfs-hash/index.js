@@ -9,6 +9,26 @@ const ipfsClusterApiService = new IpfsClusterAPI(
 
 const retryIntervalGrowthRate = 2
 
+const listingEvents = [
+  'ListingCreated',
+  'ListingUpdated',
+  'ListingWithdrawn',
+  'ListingArbitrated',
+  'ListingData'
+]
+const offerEvents = [
+  'OfferCreated',
+  'OfferAccepted',
+  'OfferFinalized',
+  'OfferWithdrawn',
+  'OfferFundsAdded',
+  'OfferDisputed',
+  'OfferRuling',
+  'OfferData'
+]
+const identityEvents = ['IdentityUpdated']
+const allEvents = listingEvents.concat(offerEvents).concat(identityEvents)
+
 const pinService = async event => {
   const pubsubMessage = event.data
   const data = pubsubMessage
@@ -21,9 +41,7 @@ const pinService = async event => {
   }
 
   const eventName = data.event.event
-  if (
-    !['ListingCreated', 'ListingUpdated', 'IdentityUpdated'].includes(eventName)
-  ) {
+  if (!allEvents.includes(eventName)) {
     // Not an event we are interested in pinning anything for
     console.log(`Skipping event ${eventName}`)
     return
@@ -61,7 +79,7 @@ const pinService = async event => {
   }
 
   console.log('Pinned following hashes: ', pinnedHashes.join(', '), '\n')
-  if (unPinnedHashes) {
+  if (unPinnedHashes.length) {
     console.log(
       'Could not pin following hashes: ',
       unPinnedHashes.join(', '),
@@ -80,10 +98,15 @@ const promiseSetTimeout = async (hashToPin, interval) => {
 }
 
 const parseIncomingData = data => {
-  const hashesToPin = []
   const eventName = data.event.event
-  if (eventName === 'ListingCreated' || eventName === 'ListingUpdated') {
-    console.log(`Processing event ${eventName}`)
+  if (!data.event.returnValues.ipfsHash) {
+    console.log(`No IPFS hash for event ${eventName}`)
+    return []
+  }
+
+  const hashesToPin = []
+  if (listingEvents.includes(eventName)) {
+    console.log(`Processing listing event ${eventName}`)
     hashesToPin.push(getIpfsHashFromBytes32(data.event.returnValues.ipfsHash))
     const listing = data.related.listing
     if ('media' in listing && listing.media.length > 0) {
@@ -94,8 +117,11 @@ const parseIncomingData = data => {
     } else {
       console.log('No IPFS media hashes found in listing data')
     }
-  } else if (eventName === 'IdentityUpdated') {
-    console.log(`Processing event ${eventName}`)
+  } else if (offerEvents.includes(eventName)) {
+    console.log(`Processing offer event ${eventName}`)
+    hashesToPin.push(getIpfsHashFromBytes32(data.event.returnValues.ipfsHash))
+  } else if (identityEvents.includes(eventName)) {
+    console.log(`Processing identity event ${eventName}`)
     hashesToPin.push(getIpfsHashFromBytes32(data.event.returnValues.ipfsHash))
     const identity = data.related.identity
     if (identity.avatarUrl) {
