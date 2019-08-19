@@ -56,8 +56,8 @@ describe('Grant HTTP API', () => {
     this.mockApp.use(app)
   })
 
-  afterEach(() => {
-    Grant.destroy({
+  afterEach(async () => {
+    await Grant.destroy({
       where: {}
     })
 

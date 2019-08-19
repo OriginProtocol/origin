@@ -531,6 +531,7 @@ describe('Marketplace Dapp', function() {
       delete window.localStorage.performanceMode
       delete window.localStorage.proxyAccountsEnabled
       delete window.localStorage.relayerEnabled
+      delete window.localStorage.debug
       window.localStorage.promoteEnabled = 'true'
       window.transactionPoll = 100
     })
@@ -546,6 +547,7 @@ describe('Marketplace Dapp with proxies enabled', function() {
       window.localStorage.proxyAccountsEnabled = true
       delete window.localStorage.performanceMode
       delete window.localStorage.relayerEnabled
+      delete window.localStorage.debug
       window.localStorage.promoteEnabled = 'true'
       window.transactionPoll = 100
     })
