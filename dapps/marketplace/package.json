@@ -134,7 +134,7 @@
     "bootstrap": "4.3.1",
     "clean-webpack-plugin": "3.0.0",
     "css-loader": "3.2.0",
-    "eslint": "6.1.0",
+    "eslint": "6.2.0",
     "eslint-plugin-babel": "5.3.0",
     "eslint-plugin-react": "7.14.3",
     "file-loader": "4.2.0",
@@ -156,7 +156,7 @@
     "typeface-poppins": "0.0.72",
     "url-loader": "2.1.0",
     "webpack": "4.39.2",
-    "webpack-cli": "3.3.6",
+    "webpack-cli": "3.3.7",
     "webpack-dev-middleware": "3.7.0",
     "webpack-dev-server": "3.8.0"
   },
