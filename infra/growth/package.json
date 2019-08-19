@@ -21,7 +21,7 @@
     "apollo-server-express": "2.8.1",
     "bignumber.js": "9.0.0",
     "cors": "2.8.5",
-    "dotenv": "8.0.0",
+    "dotenv": "8.1.0",
     "envkey": "1.2.7",
     "express": "4.17.1",
     "express-prom-bundle": "5.1.5",
