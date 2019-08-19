@@ -94,6 +94,31 @@ If you plan on using different OAuth client for webhooks, you should set the fol
 - TWITTER_WEBHOOKS_CONSUMER_KEY
 - TWITTER_WEBHOOKS_CONSUMER_SECRET
 
+### Setting up Telegram Attestation and Webhook (Optional)
+1. Go to [`@BotFather` on Telegram](https://web.telegram.org/#/im?p=@BotFather)
+2. Send the following command to create a new bot
+    ```
+    /newbot
+    ```
+    Give a name and username when prompted. Note down the Bot Token once the bot is created.
+3. Enter the command `/mybots` to list all your bots and select the bot you created in the previous step.
+4. Add the bot you created to the group as an admin. 
+    
+    Note: You can add the bot to as many groups as you want. Events from all the groups will be posted to the webhook endpoint
+5. Add the following env variables to the DApp during build time or export it on the terminal
+    ```
+    TELEGRAM_BOT_USERNAME=<YOUR BOT USERNAME>
+    ```
+6. Add the following env variables to bridge server's ENVKEY or export it on the terminal
+    ```
+    TELEGRAM_BOT_TOKEN=<YOUR BOT TOKEN HERE>
+    ```
+7. Create a web tunnel for bridge server. [Refer `@origin/bridge`'s README.md](https://github.com/OriginProtocol/origin/blob/master/infra/bridge/README.md#setup-tunnel-for-webhooks-optional)
+8. Hit the following URL on your browser
+    ```
+    http://localhost:5000/hooks/telegram/__init
+    ```
+
 ### Set Up Your Database
 
 ```bash
@@ -140,7 +165,6 @@ You need to setup a tunnel to localhost:5000 to work with Twitter Activity API a
     ```
     { "success": true }
     ````
-
 
 ### Run the Tests
 
