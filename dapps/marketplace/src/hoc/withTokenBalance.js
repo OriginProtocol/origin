@@ -1,21 +1,17 @@
 import React from 'react'
-import { Query } from 'react-apollo'
+import { useQuery } from '@apollo/react-hooks'
 import get from 'lodash/get'
 
 import AccountTokenBalance from 'queries/TokenBalance'
 
 function withTokenBalance(WrappedComponent) {
-  const WithTokenBalance = ({ wallet, token = 'OGN', ...props }) => (
-    <Query
-      query={AccountTokenBalance}
-      variables={{ account: wallet, token }}
-      skip={!wallet}
-    >
-      {({ data }) => (
-        <WrappedComponent wallet={wallet} {...props} {...tokenInfo(data)} />
-      )}
-    </Query>
-  )
+  const WithTokenBalance = ({ wallet, token = 'OGN', ...props }) => {
+    const { data } = useQuery(AccountTokenBalance, {
+      variables: { account: wallet, token },
+      skip: !wallet
+    })
+    return <WrappedComponent wallet={wallet} {...props} {...tokenInfo(data)} />
+  }
   return WithTokenBalance
 }
 

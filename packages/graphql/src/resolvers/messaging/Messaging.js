@@ -1,5 +1,5 @@
 import contracts from '../../contracts'
-
+import { proxyOwner } from '../../utils/proxy'
 import { totalUnread } from './Conversation'
 
 function isEnabled() {
@@ -58,5 +58,19 @@ export default {
   canConverseWith: async (_, args) => {
     const recipient = await contracts.messaging.canReceiveMessages(args.id)
     return recipient ? true : false
+  },
+  forwardTo: async (_, args) => {
+    // If this is a proxy contract, provide the owner's address as a forwarding address
+    if (contracts.config.proxyAccountsEnabled) {
+      // Can not convers with proxy accounts, get owner
+      try {
+        const owner = await proxyOwner(args.id)
+        console.log('using owner', owner)
+        if (owner && owner.length > 2) return owner
+      } catch (e) {
+        /* pass */
+      }
+    }
+    return null
   }
 }

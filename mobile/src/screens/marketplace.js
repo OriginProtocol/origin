@@ -12,7 +12,8 @@ import {
   View,
   ScrollView,
   Text,
-  RefreshControl
+  RefreshControl,
+  Linking
 } from 'react-native'
 import { AndroidBackHandler } from 'react-navigation-backhandler'
 import { connect } from 'react-redux'
@@ -72,9 +73,11 @@ class MarketplaceScreen extends Component {
         'graphqlMutation',
         this.injectGraphqlMutation
       ),
-      DeviceEventEmitter.addListener('reloadMarketplace', () =>
-        this.dappWebView.reload()
-      )
+      DeviceEventEmitter.addListener('reloadMarketplace', () => {
+        if (this.dappWebView) {
+          this.dappWebView.reload()
+        }
+      })
     ]
   }
 
@@ -87,7 +90,9 @@ class MarketplaceScreen extends Component {
   /* Handle back button presses on Android devices so that they work on the
    * WebView */
   onBackButtonPressAndroid = () => {
-    this.dappWebView.goBack()
+    if (this.dappWebView) {
+      this.dappWebView.goBack()
+    }
     return true
   }
 
@@ -148,10 +153,12 @@ class MarketplaceScreen extends Component {
         )
       },
       onPanResponderRelease: (evt, gestureState) => {
-        if (gestureState.moveX > swipeDistance) {
-          this.dappWebView.goBack()
-        } else if (gestureState.moveX < swipeDistance) {
-          this.dappWebView.goForward()
+        if (this.dappWebView) {
+          if (gestureState.moveX > swipeDistance) {
+            this.dappWebView.goBack()
+          } else if (gestureState.moveX < swipeDistance) {
+            this.dappWebView.goForward()
+          }
         }
       }
     })
@@ -303,18 +310,29 @@ class MarketplaceScreen extends Component {
     })
   }
 
-  injectInviteCode = inviteCode => {
+  injectJavaScript = (script, name) => {
     const injectedJavaScript = `
       (function() {
-        if (window && window.localStorage) {
-          window.localStorage.growth_invite_code = '${inviteCode}';
-        }
+        
+          ${script}
+        
       })();
     `
     if (this.dappWebView) {
-      console.debug(`Injecting invite code: ${inviteCode}`)
+      console.debug(`Injecting ${name}`)
       this.dappWebView.injectJavaScript(injectedJavaScript)
     }
+  }
+
+  injectInviteCode = inviteCode => {
+    this.injectJavaScript(
+      `
+        if (window && window.localStorage) {
+          window.localStorage.growth_invite_code = '${inviteCode}';
+        }
+      `,
+      'invite code'
+    )
   }
 
   /* Inject the cookies required for messaging to allow preenabling of messaging
@@ -345,8 +363,8 @@ class MarketplaceScreen extends Component {
     const pubSignature = global.web3.eth.accounts.sign(pubMessage, privateKey)
       .signature
 
-    const keyInjection = `
-      (function() {
+    this.injectJavaScript(
+      `
         if (window && window.context && window.context.messaging) {
           window.context.messaging.onPreGenKeys({
             address: '${wallet.activeAccount.address}',
@@ -354,13 +372,10 @@ class MarketplaceScreen extends Component {
             pubMessage: '${pubMessage}',
             pubSignature: '${pubSignature}'
           });
-        }
-      })()
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting messaging keys')
-      this.dappWebView.injectJavaScript(keyInjection)
-    }
+        } 
+      `,
+      'messaging keys'
+    )
   }
 
   /* Inject the language setting in from redux into the DApp
@@ -369,50 +384,43 @@ class MarketplaceScreen extends Component {
     const language = this.props.settings.language
       ? this.props.settings.language
       : findBestAvailableLanguage()
-    const injectedJavaScript = `
-      (function() {
+
+    this.injectJavaScript(
+      `
         if (window && window.appComponent && window.appComponent.onLocale) {
           window.appComponent.onLocale('${language}');
         }
-      })()
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting language')
-      this.dappWebView.injectJavaScript(injectedJavaScript)
-    }
+      `,
+      'language'
+    )
   }
 
   injectCurrency = () => {
     const currency = findBestAvailableCurrency()
-    const injectedJavaScript = `
-      (function() {
+
+    this.injectJavaScript(
+      `
         if (window && window.appComponent && window.appComponent.onCurrency) {
           window.appComponent.onCurrency('${currency}');
         }
-      })()
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting currency')
-      this.dappWebView.injectJavaScript(injectedJavaScript)
-    }
+      `,
+      'currency'
+    )
   }
 
   /* Inject Javascript that causes the page to refresh when it hits the top
    */
   injectScrollHandler = () => {
-    const injectedJavaScript = `
-      (function() {
+    this.injectJavaScript(
+      `
         window.onscroll = function() {
           window.webViewBridge.send('handleScrollHandlerResponse', {
             scrollTop: document.documentElement.scrollTop || document.body.scrollTop
           });
         }
-      })();
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting scroll handler')
-      this.dappWebView.injectJavaScript(injectedJavaScript)
-    }
+      `,
+      'scroll handler'
+    )
   }
 
   /* Handle the response from window.onScroll
@@ -427,8 +435,8 @@ class MarketplaceScreen extends Component {
     variables = {},
     fetchPolicy = 'cache-first'
   ) => {
-    const injectedJavaScript = `
-      (function() {
+    this.injectJavaScript(
+      `
         if (window && window.gql) {
           window.gql.query({
             query: ${JSON.stringify(query)},
@@ -446,17 +454,14 @@ class MarketplaceScreen extends Component {
             });
           });
         }
-      })();
-    `
-    if (this.dappWebView) {
-      // console.debug('Injecting GraphQL query: ', query.definitions[0].name.value)
-      this.dappWebView.injectJavaScript(injectedJavaScript)
-    }
+      `,
+      'GraphQL query'
+    )
   }
 
   injectGraphqlMutation = (id, mutation, variables = {}) => {
-    const injectedJavaScript = `
-      (function() {
+    this.injectJavaScript(
+      `
         if (window && window.gql) {
           window.gql.mutate({
             mutation: ${JSON.stringify(mutation)},
@@ -473,12 +478,9 @@ class MarketplaceScreen extends Component {
             });
           });
         }
-      })();
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting GraphQL mutation')
-      this.dappWebView.injectJavaScript(injectedJavaScript)
-    }
+      `,
+      'GraphQL mutation'
+    )
   }
 
   handleGraphqlResult = result => {
@@ -492,18 +494,15 @@ class MarketplaceScreen extends Component {
   /* Get the uiState from DApp localStorage via a webview bridge request.
    */
   injectUiStateRequest = () => {
-    const injectedJavaScript = `
-      (function() {
+    this.injectJavaScript(
+      `
         if (window && window.localStorage && window.webViewBridge) {
           const uiState = window.localStorage['uiState'];
           window.webViewBridge.send('handleUiStateMessage', uiState);
         }
-      })();
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting uiState request')
-      this.dappWebView.injectJavaScript(injectedJavaScript)
-    }
+      `,
+      'uiState request'
+    )
   }
 
   /* Handle the postMessagefrom the uiState request. The uiState localStorage object
@@ -536,17 +535,15 @@ class MarketplaceScreen extends Component {
     if (!this.props.onboarding.growth) {
       return
     }
-    const injectedJavaScript = `
-      (function() {
+
+    this.injectJavaScript(
+      `
         if (window && window.localStorage && window.webViewBridge) {
           window.localStorage.growth_auth_token = '${this.props.onboarding.growth}';
         }
-      })();
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting growth auth token')
-      this.dappWebView.injectJavaScript(injectedJavaScript)
-    }
+      `,
+      'growth auth token'
+    )
   }
 
   /* Send a response back to the DApp using postMessage in the webview
@@ -554,7 +551,9 @@ class MarketplaceScreen extends Component {
   handleBridgeResponse = (msgData, result) => {
     msgData.isSuccessful = Boolean(result)
     msgData.args = [result]
-    this.dappWebView.postMessage(JSON.stringify(msgData))
+    if (this.dappWebView) {
+      this.dappWebView.postMessage(JSON.stringify(msgData))
+    }
   }
 
   updateExchangeRates = () => {
@@ -564,9 +563,71 @@ class MarketplaceScreen extends Component {
     updateExchangeRate(this.state.fiatCurrency[1], 'DAI')
   }
 
-  onWebViewNavigationStateChange = state => {
+  _openDeepLinkUrlAttempt = async (
+    interceptUrlPredicate,
+    makeUrl,
+    timeControlVariableName
+  ) => {
+    // non interceptable url
+    if (!interceptUrlPredicate()) return
+
+    const url = makeUrl()
+    if (Linking.canOpenURL(url)) {
+      this.dappWebView.goBack()
+      // preventing multiple subsequent shares
+      if (
+        !this[timeControlVariableName] ||
+        new Date() - this[timeControlVariableName] > 3000
+      ) {
+        this[timeControlVariableName] = new Date()
+        return await Linking.openURL(url)
+      }
+    } else {
+      // can not open deep link url
+      return false
+    }
+  }
+
+  checkForShareNativeDialogInterception = async url => {
+    // natively tweet if possible on Android
+    await this._openDeepLinkUrlAttempt(
+      () =>
+        url.hostname === 'twitter.com' &&
+        url.pathname === '/intent/tweet' &&
+        Platform.OS === 'android',
+      () =>
+        `twitter://post?message=${encodeURIComponent(
+          url.searchParams.get('text')
+        )}`,
+      'lastTweetAttemptTime'
+    )
+
+    // open twitter profile natively if possible on Android
+    await this._openDeepLinkUrlAttempt(
+      () =>
+        url.hostname === 'twitter.com' &&
+        url.pathname === '/intent/follow' &&
+        Platform.OS === 'android',
+      () => `twitter://user?screen_name=${url.searchParams.get('screen_name')}`,
+      'lastOpenTwitterProfileTime'
+    )
+
+    // open facebook profile natively if possible on Android and IOS
+    await this._openDeepLinkUrlAttempt(
+      () =>
+        (url.hostname === 'www.facebook.com' ||
+          url.hostname === 'm.facebook.com') &&
+        url.pathname.toLowerCase() === '/originprotocol/',
+      () => `fb://profile/120151672018856`,
+      'lastOpenFacebookProfileTime'
+    )
+  }
+
+  onWebViewNavigationStateChange = async state => {
     try {
-      this.setState({ currentDomain: new URL(state.url).hostname })
+      const url = new URL(state.url)
+      this.setState({ currentDomain: url.hostname })
+      await this.checkForShareNativeDialogInterception(url)
     } catch (error) {
       console.warn(`Browser reporting malformed url: ${state.url}`)
     }
@@ -670,12 +731,14 @@ class MarketplaceScreen extends Component {
                   if (Platform.OS === 'android') {
                     // Workaround for broken refreshing in Android, insert a
                     // time string alongside the # to force a reload
-                    this.dappWebView.injectJavaScript(
-                      'location.href = `/?${+ new Date()}${location.hash}`'
+                    this.injectJavaScript(
+                      'location.href = `/?${+ new Date()}${location.hash}`',
+                      'reload'
                     )
                   } else {
-                    this.dappWebView.injectJavaScript(
-                      `document.location.reload()`
+                    this.injectJavaScript(
+                      'document.location.reload()',
+                      'reload'
                     )
                   }
                   setTimeout(() => this.setState({ refreshing: false }), 1000)
@@ -688,7 +751,10 @@ class MarketplaceScreen extends Component {
           >
             <WebView
               ref={webview => {
-                this.dappWebView = webview
+                // for an unknown reason webview has null value even when a non null value has already been returned
+                if (webview) {
+                  this.dappWebView = webview
+                }
               }}
               allowsBackForwardNavigationGestures={Platform.OS === 'ios'}
               useWebKit={Platform.OS === 'ios'}

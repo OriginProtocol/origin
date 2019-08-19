@@ -13,7 +13,7 @@ const resolvers = {
     async listings(root, args) {
       // Get listing Ids from Elastic.
       const { listings, stats } = await search.Listing.search(
-        args.search,
+        args.searchQuery,
         args.sort,
         args.order,
         args.filters,
@@ -21,7 +21,7 @@ const resolvers = {
         args.page.offset
       )
       logger.info(
-        `Query: "${args.search}" returned ${listings.length} results.`
+        `Query: "${args.searchQuery}" returned ${listings.length} results.`
       )
       return {
         nodes: listings,

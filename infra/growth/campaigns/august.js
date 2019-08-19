@@ -195,6 +195,22 @@ const augustConfig = {
           }
         },
         {
+          id: 'TelegramAttestation',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'TelegramAttestationPublished',
+            reward: {
+              amount: tokenToNaturalUnits(10),
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user'
+          }
+        },
+        {
           id: 'TwitterShare1',
           class: 'SocialShare',
           config: {
@@ -413,6 +429,29 @@ const augustConfig = {
           }
         },
         {
+          id: 'TelegramFollow',
+          class: 'SingleEvent',
+          config: {
+            eventType: 'FollowedOnTelegram',
+            additionalLockConditions: ['TelegramAttestation'],
+            reward: {
+              amount: tokenToNaturalUnits(10),
+              currency: 'OGN'
+            },
+            limit: 1,
+            visible: true,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            statusScope: 'user',
+            unlockConditionMsg: [
+              {
+                conditionTranslateKey: 'growth.attestation.requirement.telegram',
+                conditionIcon: 'images/growth/telegram-badge.svg'
+              }
+            ]
+          }
+        },
+        {
           id: 'TwoAttestations',
           class: 'MultiEvents',
           config: {
@@ -426,7 +465,8 @@ const augustConfig = {
               'LinkedInAttestationPublished',
               'KakaoAttestationPublished',
               'WeChatAttestationPublished',
-              'WebsiteAttestationPublished'
+              'WebsiteAttestationPublished',
+              'TelegramAttestationPublished'
             ],
             visible: false,
             numEventsRequired: 2,

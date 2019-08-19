@@ -1,5 +1,5 @@
 import React from 'react'
-import { Query } from 'react-apollo'
+import { useQuery } from '@apollo/react-hooks'
 import { withRouter } from 'react-router-dom'
 import queryString from 'query-string'
 import get from 'lodash/get'
@@ -28,16 +28,18 @@ function withCreatorConfig(WrappedComponent) {
       creatorConfigUrl = `config.${window.location.hostname}`
     }
 
+    const { data, networkStatus } = useQuery(CreatorConfigQuery, {
+      variables: {
+        creatorConfigUrl
+      }
+    })
+
     return (
-      <Query query={CreatorConfigQuery} variables={{ creatorConfigUrl }}>
-        {({ data, networkStatus }) => (
-          <WrappedComponent
-            {...props}
-            creatorConfigLoading={networkStatus === 1}
-            creatorConfig={get(data, 'creatorConfig', {})}
-          />
-        )}
-      </Query>
+      <WrappedComponent
+        {...props}
+        creatorConfigLoading={networkStatus === 1}
+        creatorConfig={get(data, 'creatorConfig', {})}
+      />
     )
   }
   return withRouter(WithCreatorConfig)

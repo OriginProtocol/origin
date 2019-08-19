@@ -17,6 +17,7 @@ import LoadingSpinner from 'components/LoadingSpinner'
 import Onboard from './onboard/Onboard'
 import Listings from './listings/Listings'
 import Listing from './listing/Listing'
+import PromoteListing from './promote-listing/PromoteListing'
 import Transaction from './transaction/Transaction'
 import MyPurchases from './transactions/Purchases'
 import MySales from './transactions/Sales'
@@ -43,12 +44,6 @@ class App extends Component {
     displayMobileModal: false,
     mobileModalDismissed: false,
     footer: false
-  }
-
-  componentDidMount() {
-    if (window.ethereum) {
-      setTimeout(() => window.ethereum.enable(), 100)
-    }
   }
 
   componentDidUpdate() {
@@ -102,7 +97,7 @@ class App extends Component {
           ) ||
           this.props.location.pathname.match(/\/onboard\/finished/gi) ||
           this.props.location.pathname.match(
-            /^\/(create\/.+|listing\/[-0-9]+\/edit\/.+)/gi
+            /^\/(promote\/.+|create\/.+|listing\/[-0-9]+\/edit\/.+)/gi
           )))
 
     return (
@@ -118,6 +113,7 @@ class App extends Component {
           <Switch>
             <Route path="/onboard" component={Onboard} />
             <Route path="/listing/:listingID" component={Listing} />
+            <Route path="/promote/:listingID" component={PromoteListing} />
             <Route path="/purchases/:offerId" component={Transaction} />
             <Route path="/my-purchases/:filter?" component={MyPurchases} />
             <Route path="/my-sales/:filter?" component={MySales} />
@@ -192,4 +188,11 @@ require('react-styl')(`
     left: 50%
     text-align: center
     transform: translate(-50%, -50%)
+  main
+    display: flex
+    flex-direction: column
+  #app
+    height: 100%
+    display: flex
+    flex-direction: column
 `)

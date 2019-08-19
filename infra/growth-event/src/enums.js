@@ -34,6 +34,8 @@ const GrowthEventTypes = new Enum(
   'MobileAccountCreated', // User installed Origin mobile app and registered an account.
   'SharedOnTwitter',
   'FollowedOnTwitter',
+  'FollowedOnTelegram',
+  'TelegramAttestationPublished',
   'SharedOnFacebook',
   'LikedOnFacebook'
 )

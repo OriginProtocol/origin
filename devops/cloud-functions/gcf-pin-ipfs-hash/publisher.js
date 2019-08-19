@@ -7,7 +7,7 @@
 
   const topicName = 'test-topic'
 
-  //for testing purposes, retreive json from file.
+  //for testing purposes, retrieve json from file.
   const listing_data = require('./listing-data.json')
   const data = JSON.stringify({
     type: 'listing',

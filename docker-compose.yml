@@ -119,6 +119,7 @@ services:
       - DATABASE_URL=postgres://origin:origin@postgres/origin
       - REDIS_URL=redis://redis-master:6379
       - NOTIFICATIONS_ENDPOINT_URL=http://notifications:3456/messages
+      - NETWORK=docker
     depends_on:
       - postgres
       - redis-master
@@ -209,7 +210,7 @@ services:
     environment:
       - DOCKER=true
       - NETWORK=docker
-      - GRAPHQL_SERVER_PORT=4002
+      - GRAPHQL_SERVER_PORT=4007
       - PROVIDER_URL=http://services:8545
       - PROVIDER_WS_URL=ws://services:8545
       - IPFS_GATEWAY_URL=http://ipfs-proxy:9999
@@ -220,7 +221,7 @@ services:
     depends_on:
       - discovery
     ports:
-      - "4002:4002"
+      - "4007:4007"
     command:
       >
       /bin/bash -c "wait-for.sh -t 0 -q services:1111 --

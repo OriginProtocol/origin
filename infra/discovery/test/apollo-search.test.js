@@ -176,9 +176,7 @@ describe('Search', () => {
     lastQuery.body.sort._script.order.should.equal('asc')
     lastQuery.body.sort._script.type.should.equal('number')
     lastQuery.body.sort._script.script.lang.should.equal('painless')
-    lastQuery.body.sort._script.script.source.should.equal(
-      'Float.parseFloat(params._source.price.amount) * Float.parseFloat(params.exchangeRates[params._source.price.currency.id])'
-    )
+    lastQuery.body.sort._script.script.source.should.be.a('string')
   })
 
   it(`Should throw error and disable sorting if sort variables are not whitelisted`, async () => {

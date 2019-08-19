@@ -1,6 +1,8 @@
 import gql from 'graphql-tag'
 
-import mnemonicToAccounts, { mnemonicToMasterAccount } from '../src/utils/mnemonicToAccount'
+import mnemonicToAccounts, {
+  mnemonicToMasterAccount
+} from '../src/utils/mnemonicToAccount'
 import demoListings from './_demoListings'
 import get from 'lodash/get'
 import sortBy from 'lodash/sortBy'
@@ -99,7 +101,7 @@ async function getNodeAccount(gqlClient) {
   return NodeAccountObj.id
 }
 
-export async function createAccount(gqlClient) {
+export async function createAccount(gqlClient, ogn) {
   const NodeAccount = await getNodeAccount(gqlClient)
   await gqlClient.mutate({
     mutation: ToggleMetaMaskMutation,
@@ -114,6 +116,18 @@ export async function createAccount(gqlClient) {
     mutation: SendFromNodeMutation,
     variables: { from: NodeAccount, to: user, value: '0.5' }
   })
+  if (ogn) {
+    const res = await gqlClient.mutate({
+      mutation: TransferTokenMutation,
+      variables: {
+        from: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
+        to: user,
+        token: 'OGN',
+        value: ogn
+      }
+    })
+    await transactionConfirmed(res.data.transferToken.id, gqlClient)
+  }
   return user
 }
 
@@ -203,7 +217,10 @@ export default async function populate(gqlClient, log, done) {
   const relayerMasterAddress = mnemonicToMasterAccount(
     process.env.FORWARDER_MNEMONIC || 'one two three four five six'
   )
-  await mutate(SendFromNodeMutation, NodeAccount, { to: relayerMasterAddress, value: '3' })
+  await mutate(SendFromNodeMutation, NodeAccount, {
+    to: relayerMasterAddress,
+    value: '3'
+  })
   log(`Sent eth to Relayer master account(${relayerMasterAddress})`)
 
   const ProxyFactory = await mutate(DeployProxyFactoryContractMutation, Admin)

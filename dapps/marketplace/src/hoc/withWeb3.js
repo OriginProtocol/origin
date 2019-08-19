@@ -1,24 +1,19 @@
 import React from 'react'
-import { Query } from 'react-apollo'
+import { useQuery } from '@apollo/react-hooks'
 import get from 'lodash/get'
 
 import Web3Query from 'queries/Web3'
 
 function withWeb3(WrappedComponent) {
   const WithWeb3 = props => {
+    const { data, networkStatus } = useQuery(Web3Query)
+    const web3 = get(data, 'web3', {})
     return (
-      <Query query={Web3Query}>
-        {({ data, networkStatus }) => {
-          const web3 = get(data, 'web3', {})
-          return (
-            <WrappedComponent
-              {...props}
-              web3={web3}
-              web3Loading={networkStatus === 1}
-            />
-          )
-        }}
-      </Query>
+      <WrappedComponent
+        {...props}
+        web3={web3}
+        web3Loading={networkStatus === 1}
+      />
     )
   }
   return WithWeb3

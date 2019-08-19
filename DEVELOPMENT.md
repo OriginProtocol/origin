@@ -5,15 +5,15 @@ what we're building and how to get involved.
 
 ## Development
 
-To get started quickly, you can run a "light" version of the Origin DApp, which
-automatically sets up our DApp, a local IPFS server, and a local blockchain.
-
-Or you can use a more full featured development environment with Docker Compose
+To get started quickly, you have two options:
+1. You can run a "light" version of the Origin DApp, which
+automatically sets up our DApp, a local IPFS server, and a local blockchain. This is the simplest way to run the DApp but does not give you access to a full-fledge DApp: messaging, search, attestation services are not running. 
+2. Or you can use a more full featured development environment with Docker Compose
 orchestrating several containers and providing access to the full suite of the
 Origin DApp features, including messaging, browser notifications, and
 attestation services.
 
-### Quick start - Running a local DApp
+## Option 1: Quick start - Running a local DApp
 
 1. Check out the repository from GitHub and make sure you have installed all the
    necessary dependencies:
@@ -32,48 +32,8 @@ yarn start
 This will start a `webpack-dev-server` with hot reloading on
 `http://localhost:3000.`. When you open it you should some sample listings.
 
-### Network selection
 
-You can also change the Ethereum network being used by the marketplace DApp by
-appending a network name to the URL.
-
-- http://localhost:3000/docker - Local Ganache and services run by Docker
-  Compose (see below for further instructions)
-
-- http://localhost:3000/origin - Origin testnet backed by origin dev services
-  (e.g. https://dapp.dev.originprotocol.com)
-- http://localhost:3000/rinkeby - Ethereum Rinkeby backed by Origin staging
-  services (e.g. https://dapp.staging.originprotocol.com)
-- http://localhost:3000/mainnet - Ethereum Mainnet backed by Origin production
-  services (e.g. https://dapp.originprotocol.com)
-
-### Configuring Origin's Ethereum Testnet
-
-- Open MetaMask by clicking on the extension.
-- Open MetaMask's settings by clicking on the account icon in the top right and
-  selecting `Settings` from the menu.
-- Under `Net Network` enter `https://testnet.originprotocol.com/rpc` for the RPC
-  URL.
-- Select the Origin Testnet from the network selection in MetaMask.
-- To receive Ethereum to transact on this network, visit our faucet at
-  `https://faucet.dev.originprotocol/eth?code=decentralize` and enter your
-  wallet address.
-
-You can view the state of the network at https://testnet.originprotocol.com/.
-
-### Other settings
-
-The marketplace DApp includes a settings page at
-`http://localhost:3000/settings` that is useful if you want to switch individual
-services, e.g. use a different Web3 provider or attestation server.
-
-### About the Origin repository
-
-Origin uses a monorepo setup that is managed by `lerna`. `yarn` is used for
-package management so that we can leverage the workspaces feature to pull common
-dependencies to the root of the monorepo on installation.
-
-## Running Docker Compose
+## Option 2: Running Docker Compose
 
 There is a Docker Compose configuration available for running a variety of
 backend services the DApp integrates with. The `docker-compose` configuration
@@ -81,17 +41,19 @@ runs the following packages:
 
 ```
 - elasticsearch on http://localhost:9200
-- postgresql
-- @origin/services (ipfs server and Ethereum blockchain using ganache on http://localhost:8545)
-- @origin/bridge on http://localhost:5000
-- @origin/discovery
-- @origin/marketplace on http://localhost:3000
-- @origin/discovery (event-listener)
-- @origin/discovery (apollo server on http://localhost:4000)
-- @origin/growth (apollo server on http://localhost:4001)
-- @origin/ipfs-proxy on http://localhost:9999
-- @origin/messaging on http://localhost:9012
-- @origin/notifications on http://localhost:3456)
+- postgresql on port 5432
+- redis on port 6379
+- @origin/services: various back-end services
+   - Ganache: Ethereum blockchain on http://localhost:8545
+   - IPFS daemon on port 5002
+   - @origin/ipfs-proxy: IPFS proxy on http://localhost:9999
+- @origin/bridge: attestation server on http://localhost:5000
+- @origin/discovery: discovery/search server on http://localhost:4000
+- @origin/discovery: event-listener (aka "indexer")
+- @origin/graphql: graphql server on http://localhost:4002
+- @origin/growth: growth server on http://localhost:4001
+- @origin/messaging: messaging server on http://localhost:9012
+- @origin/notifications: email/mobile notification server on http://localhost:3456
 ```
 
 ⚠️ If you want to run the Docker Compose setup, ensure that both
@@ -121,8 +83,8 @@ clear out old containers by stopping any running containers and executing
 `git clone https://github.com/OriginProtocol/origin` `cd origin`
 
 2. Optional: Pick which version of the code you want to run. The latest code is
-   on the master branch (which is checked out by default), while the code
-   currently deployed in production is on the stable branch. For example, to use
+   on the *master* branch (which is checked out by default), while the code
+   currently deployed in production is on the *stable* branch. For example, to use
    the stable branch, run:
 
 ```
@@ -132,10 +94,14 @@ git checkout --track origin/stable
 3. From the root of the repository, run `docker-compose up`. The first time this
    command runs it will take some time to complete due to the initial building
    of the containers.
+   
+When the containers are running (it can take sme time), you can proceed to next step.
+If you see an error in the logs please [raise an issue](https://github.com/OriginProtocol/origin/issues).
 
-Please note this can take some time. If you see an error in the logs please
-[raise an issue](https://github.com/OriginProtocol/origin/issues). When the
-containers are running you can access the DApp at `http://localhost:3000`.
+4. Start the marketplace DApp by running `yarn start`
+This will start a `webpack-dev-server` with hot reloading and open the URL
+`http://localhost:3000.` in your browser. You should some see the marketplace sample listings.
+Note: If you get a blank page with a spinner for too long, try to refresh in your browser.
 
 ### Modifying settings
 
@@ -258,11 +224,71 @@ The environment requires a number of ports to be free on your machine (3000,
 spinning up the development environment may fail. This includes `@origin/dapp`
 and `@origin/admin`. Ensure you start those after you run `docker-compose up`.
 
-#### Metamask errors
+## Metamask
+In order to use the marketplace DApp, you need a web3 enable wallet. Metamask is a popular choice. It runs as a Chrome extension. You can install it by visiting [this URL](https://metamask.io/).
 
+### Ethereum network
+Within Metamask, you can select which Ethereum network to connect to.
+For local development, pick "Localhost 8545". This will have metamask using your local ganache blockchain.
+
+### Errors
 Sometimes Metamask gets confused on private networks. If you see errors
 generated by Metamask in your console while developing, clicking
 `Settings`→`Reset Account` in Metamask should resolve the issue.
+
+## Getting ETH for testing
+Depending on which Ethereum network you use, here are ways to get ETH for testing:
+ - On local ganache blockchain (aka localhost 8545)
+    - In metamask, on the login page, click on "Import using account seed phrase" at the bottom
+    - Then use the default ganache seed phase: "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
+    - Choose a password
+    - In Metamask, your account should show as having an ETH balance of about 90 ETH or more.
+- On Rinkeby
+    - Visit the [Rinkeby faucet](https://faucet.rinkeby.io/)
+ 
+## DApp settings
+
+### Network selection
+
+You can  change the Ethereum network being used by the marketplace DApp by
+appending a network name to the URL.
+
+- http://localhost:3000/ - Local Ganache and services 
+- http://localhost:3000/origin - Origin testnet backed by origin dev services
+  (e.g. https://dapp.dev.originprotocol.com)
+- http://localhost:3000/rinkeby - Ethereum Rinkeby backed by Origin staging
+  services (e.g. https://dapp.staging.originprotocol.com)
+- http://localhost:3000/mainnet - Ethereum Mainnet backed by Origin production
+  services (e.g. https://dapp.originprotocol.com)
+
+### Using Origin's Ethereum Testnet
+Origin runs a few nodes with its own test blockchain that can be used for testing.
+
+Note: This is **not recommended for new developers**. Using the local ganache blockchain (aka localhost 8545) should be sufficient in most cases.
+
+- Open MetaMask by clicking on the extension.
+- Open MetaMask's settings by clicking on the account icon in the top right and
+  selecting `Settings` from the menu.
+- Under `Net Network` enter `https://testnet.originprotocol.com/rpc` for the RPC
+  URL.
+- Select the Origin Testnet from the network selection in MetaMask.
+- To receive Ethereum to transact on this network, visit our faucet at
+  `https://faucet.dev.originprotocol/eth?code=decentralize` and enter your
+  wallet address.
+
+You can view the state of the network at https://testnet.originprotocol.com/.
+
+### Other settings
+
+The marketplace DApp includes a settings page at
+`http://localhost:3000/settings` that is useful if you want to switch individual
+services, e.g. use a different Web3 provider or attestation server.
+
+## About the Origin repository
+
+Origin uses a monorepo setup that is managed by `lerna`. `yarn` is used for
+package management so that we can leverage the workspaces feature to pull common
+dependencies to the root of the monorepo on installation.
 
 ## Useful Commands
 
