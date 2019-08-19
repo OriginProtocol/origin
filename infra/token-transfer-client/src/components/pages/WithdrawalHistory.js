@@ -14,7 +14,7 @@ import {
   getIsLoading as getTransferIsLoading
 } from '@/reducers/transfer'
 
-const History = props => {
+const WithdrawalHistory = props => {
   useEffect(() => {
     props.fetchAccounts(), props.fetchTransfers()
   }, [])
@@ -36,7 +36,7 @@ const History = props => {
     <>
       <div className="row">
         <div className="col">
-          <h1>Withdrawal History</h1>
+          <h1>Withdrawal WithdrawalHistory</h1>
         </div>
       </div>
       <div className="row">
@@ -135,4 +135,4 @@ const mapDispatchToProps = dispatch =>
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(History)
+)(WithdrawalHistory)
