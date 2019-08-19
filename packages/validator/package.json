@@ -11,11 +11,10 @@
     "prettier": "prettier --write *.js \"src/**/*.js\"",
     "prettier:check": "prettier -c *.js \"src/**/*.js\""
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "ajv": "6.10.2",
-    "eslint": "6.2.0",
+    "eslint": "6.1.0",
     "prettier": "1.18.2"
   },
   "prettier": {

@@ -11,12 +11,11 @@
     "prettier": "prettier --write *.js \"src/**/*.js\"",
     "prettier:check": "prettier -c *.js \"src/**/*.js\""
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "bs58": "4.0.1",
     "cross-fetch": "3.0.4",
-    "eslint": "6.2.0",
+    "eslint": "6.1.0",
     "prettier": "1.18.2",
     "form-data": "2.5.0"
   },
