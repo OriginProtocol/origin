@@ -1,5 +1,4 @@
 export default function pasteIntoInput(el, text) {
-  el.focus()
   if (
     typeof el.selectionStart == 'number' &&
     typeof el.selectionEnd == 'number'
@@ -14,4 +13,6 @@ export default function pasteIntoInput(el, text) {
     textRange.collapse(false)
     textRange.select()
   }
+  el.blur()
+  el.focus()
 }

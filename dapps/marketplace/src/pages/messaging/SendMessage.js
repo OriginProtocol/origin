@@ -62,7 +62,7 @@ class SendMessage extends Component {
         this.handleSubmit(e, sendMessage)
       } else {
         pasteIntoInput(this.input, '\n')
-        this.setState({ message: this.input.value })
+        this.state.message = this.input.value // eslint-disable-line
         e.preventDefault()
       }
     }
@@ -171,6 +171,7 @@ require('react-styl')(`
     border-top: 1px solid var(--pale-grey)
     padding-top: 1rem
     margin-top: 1rem
+    margin-bottom: 0.2rem
     .form-control
       margin-right: 1rem
       border: 0
