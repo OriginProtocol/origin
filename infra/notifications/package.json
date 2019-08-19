@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "chai": "4.2.0",
-    "eslint": "6.1.0",
+    "eslint": "6.2.0",
     "mocha": "6.2.0",
     "nodemon": "1.19.1"
   },
