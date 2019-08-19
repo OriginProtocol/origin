@@ -9,7 +9,7 @@ class Terms extends Component {
 
   render() {
     if (this.state.redirectTo) {
-      return <Redirect to={this.state.redirectTo} />
+      return <Redirect push to={this.state.redirectTo} />
     }
 
     return (

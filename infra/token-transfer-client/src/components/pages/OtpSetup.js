@@ -40,7 +40,7 @@ class OtpVerify extends Component {
 
   render() {
     if (this.state.redirectToVerify) {
-      return <Redirect to="/otp" />
+      return <Redirect push to="/otp" />
     }
 
     return (

@@ -14,7 +14,7 @@ const AccountActions = props => {
   }
 
   if (redirectTo) {
-    return <Redirect to={redirectTo} />
+    return <Redirect push to={redirectTo} />
   }
 
   return (
