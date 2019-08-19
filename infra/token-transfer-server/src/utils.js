@@ -2,6 +2,7 @@ const Web3 = require('web3')
 
 const { Account } = require('./models')
 const { unlockDate } = require('./config')
+const { checkTransferRequest } = require('./lib/transfer')
 
 /**
  * Allows use of async functions for an Express route.
@@ -45,6 +46,10 @@ const isExistingNickname = (value, { req }) => {
   })
 }
 
+const hasBalance = (value, { req }) => {
+  return checkTransferRequest(req.user.id, value)
+}
+
 // Use a function so that this value can be mocked in tests
 const getUnlockDate = () => {
   return unlockDate
@@ -55,5 +60,6 @@ module.exports = {
   isEthereumAddress,
   isExistingAddress,
   isExistingNickname,
-  getUnlockDate
+  getUnlockDate,
+  hasBalance
 }
