@@ -156,7 +156,7 @@ export default async function listings(
     }
   }
   if (!contracts.discovery || discoveryError) {
-    // Important: `search`, `sort`, `order` and `filters` params are applied only when 
+    // Important: `search`, `sort`, `order` and `filters` params are applied only when
     // discovery server is up. They are ignored when running in decentralized mode
     // due to performance and implementation issues
 
