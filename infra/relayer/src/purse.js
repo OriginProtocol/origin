@@ -414,7 +414,7 @@ class Purse {
       throw err
     }
 
-    // Triggers checking if the child account funds needs to be replenished.
+    // Triggers checking if the child account needs to be replenished.
     this.checkChildBalances = true
 
     return { txHash, gasPrice }
