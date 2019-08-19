@@ -105,6 +105,8 @@ const parseIncomingData = data => {
   }
 
   const hashesToPin = []
+
+  // Listing events.
   if (listingEvents.includes(eventName)) {
     console.log(`Processing listing event ${eventName}`)
     hashesToPin.push(getIpfsHashFromBytes32(data.event.returnValues.ipfsHash))
@@ -117,19 +119,28 @@ const parseIncomingData = data => {
     } else {
       console.log('No IPFS media hashes found in listing data')
     }
-  } else if (offerEvents.includes(eventName)) {
+    return hashesToPin
+  }
+
+  // Offer events.
+  if (offerEvents.includes(eventName)) {
     console.log(`Processing offer event ${eventName}`)
     hashesToPin.push(getIpfsHashFromBytes32(data.event.returnValues.ipfsHash))
-  } else if (identityEvents.includes(eventName)) {
+    return hashesToPin
+  }
+
+  // Identity events.
+  if (identityEvents.includes(eventName)) {
     console.log(`Processing identity event ${eventName}`)
     hashesToPin.push(getIpfsHashFromBytes32(data.event.returnValues.ipfsHash))
     const identity = data.related.identity
     if (identity.avatarUrl) {
       hashesToPin.push(extractIpfsHashFromUrl(identity.avatarUrl))
     }
+    return hashesToPin
   }
 
-  return hashesToPin
+  return []
 }
 
 const extractIpfsHashFromUrl = url => {
