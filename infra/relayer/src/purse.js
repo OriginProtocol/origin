@@ -136,6 +136,7 @@ class Purse {
     this.accountLookupInProgress = false
     this.masterKey = null
     this.masterWallet = null
+    this.checkChildBalances = true
 
     this.children = []
     this.accounts = {}
@@ -412,6 +413,9 @@ class Purse {
       handleError(err)
       throw err
     }
+
+    // Triggers checking if the child account funds needs to be replenished.
+    this.checkChildBalances = true
 
     return { txHash, gasPrice }
   }
@@ -924,7 +928,10 @@ class Purse {
           const childrenToFund = []
 
           // Check for child balances dropping below set minimum and fund if necessary
-          if (this.ready && this.autofundChildren) {
+          if (this.ready && this.autofundChildren && this.checkChildBalances) {
+            // We are going to check the balances, so no need to redo it
+            // until a new transaction gets processed.
+            this.checkChildBalances = false
             for (let i = 0; i < this.children.length; i++) {
               const child = this.children[i]
               const childBalance = numberToBN(
