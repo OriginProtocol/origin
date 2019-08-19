@@ -63,8 +63,12 @@ const History = props => {
                   <tr key={transfer.id}>
                     <td>{transfer.amount}</td>
                     <td>{transfer.toAddress}</td>
-                    <td className="text-nowrap">{accountNicknameMap[transfer.toAddress]}</td>
-                    <td className="text-nowrap">{moment(transfer.createdAt).fromNow()}</td>
+                    <td className="text-nowrap">
+                      {accountNicknameMap[transfer.toAddress]}
+                    </td>
+                    <td className="text-nowrap">
+                      {moment(transfer.createdAt).fromNow()}
+                    </td>
                     <td className="text-nowrap">
                       {['Enqueued', 'WaitingConfirmation'].includes(
                         transfer.status
