@@ -6,7 +6,7 @@ chai.use(require('chai-moment'))
 const expect = chai.expect
 
 const { enqueueTransfer, executeTransfer } = require('../../src/lib/transfer')
-const { Event, Grant, Transfer, User, sequelize } = require('../../src/models')
+const { Grant, Transfer, User, sequelize } = require('../../src/models')
 const enums = require('../../src/enums')
 
 // Mock for the Token class in the @origin/token package.
@@ -42,26 +42,23 @@ class TokenMock {
 }
 
 describe('Token transfer library', () => {
-  const ip = '127.0.0.1'
   const networkId = 999
   const fromAddress = '0x627306090abaB3A6e1400e9345bC60c78a8BEf57'
   const toAddress = '0xf17f52151ebef6c7334fad080c5704d77216b732'
   const tokenMock = new TokenMock(networkId, fromAddress, toAddress)
 
   beforeEach(async () => {
-    // Wipe database before each test.
+    // Wipe database before each test
     expect(process.env.NODE_ENV).to.equal('test')
     await sequelize.sync({ force: true })
-    const grants = await Grant.findAll()
-    expect(grants.length).to.equal(0)
-    const events = await Event.findAll()
-    expect(events.length).to.equal(0)
 
     this.user = await User.create({
       email: 'user@originprotocol.com',
+      name: 'User 1',
       otpKey: '123',
       otpVerified: true
     })
+
     this.grant = await Grant.create({
       userId: this.user.id,
       start: new Date('2014-10-10'),
@@ -74,7 +71,7 @@ describe('Token transfer library', () => {
 
   it('should enqueue a transfer', async () => {
     const amount = 1000
-    const transfer = await enqueueTransfer(this.user.id, toAddress, amount, ip)
+    const transfer = await enqueueTransfer(this.user.id, toAddress, amount)
     // Check a transfer row was created and populated as expected.
     expect(transfer).to.be.an('object')
     expect(transfer.userId).to.equal(this.user.id)
@@ -83,7 +80,7 @@ describe('Token transfer library', () => {
     expect(parseInt(transfer.amount)).to.equal(amount)
     expect(transfer.currency).to.equal('OGN')
     expect(transfer.txHash).to.be.null
-    expect(transfer.data).to.be.null
+    expect(transfer.data).to.be.an('object')
   })
 
   it('should enqueue ignoring failed transfer amounts', async () => {
@@ -96,7 +93,7 @@ describe('Token transfer library', () => {
     })
 
     const amount = 99999
-    await enqueueTransfer(this.user.id, toAddress, amount, ip)
+    await enqueueTransfer(this.user.id, toAddress, amount)
   })
 
   it('should enqueue ignoring cancelled transfer amounts', async () => {
@@ -109,13 +106,13 @@ describe('Token transfer library', () => {
     })
 
     const amount = 99999
-    await enqueueTransfer(this.user.id, toAddress, amount, ip)
+    await enqueueTransfer(this.user.id, toAddress, amount)
   })
 
   it('should not enqueue a transfer if not enough tokens (vested)', async () => {
     const amount = 100001
     await expect(
-      enqueueTransfer(this.user.id, toAddress, amount, ip)
+      enqueueTransfer(this.user.id, toAddress, amount)
     ).to.eventually.be.rejectedWith(/exceeds/)
   })
 
@@ -130,7 +127,7 @@ describe('Token transfer library', () => {
 
     const amount = 99999
     await expect(
-      enqueueTransfer(this.user.id, toAddress, amount, ip)
+      enqueueTransfer(this.user.id, toAddress, amount)
     ).to.eventually.be.rejectedWith(/exceeds/)
   })
 
@@ -145,7 +142,7 @@ describe('Token transfer library', () => {
 
     const amount = 99999
     await expect(
-      enqueueTransfer(this.user.id, toAddress, amount, ip)
+      enqueueTransfer(this.user.id, toAddress, amount)
     ).to.eventually.be.rejectedWith(/exceeds/)
   })
 
@@ -160,7 +157,7 @@ describe('Token transfer library', () => {
 
     const amount = 99999
     await expect(
-      enqueueTransfer(this.user.id, toAddress, amount, ip)
+      enqueueTransfer(this.user.id, toAddress, amount)
     ).to.eventually.be.rejectedWith(/exceeds/)
   })
 
@@ -175,7 +172,7 @@ describe('Token transfer library', () => {
 
     const amount = 99999
     await expect(
-      enqueueTransfer(this.user.id, toAddress, amount, ip)
+      enqueueTransfer(this.user.id, toAddress, amount)
     ).to.eventually.be.rejectedWith(/exceeds/)
   })
 
@@ -199,14 +196,14 @@ describe('Token transfer library', () => {
 
     const amount = 99993
     await expect(
-      enqueueTransfer(this.user.id, toAddress, amount, ip)
+      enqueueTransfer(this.user.id, toAddress, amount)
     ).to.eventually.be.rejectedWith(/exceeds/)
   })
 
   it('should execute a transfer', async () => {
     // Enqueue and execute a transfer.
     const amount = 1000
-    const transfer = await enqueueTransfer(this.user.id, toAddress, amount, ip)
+    const transfer = await enqueueTransfer(this.user.id, toAddress, amount)
     const { txHash, txStatus } = await executeTransfer(transfer, {
       networkId,
       tokenMock

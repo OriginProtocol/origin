@@ -11,6 +11,7 @@ const { ensureLoggedIn } = require('../lib/login')
 const {
   asyncMiddleware,
   isEthereumAddress,
+  getFingerprintData,
   getUnlockDate,
   hasBalance
 } = require('../utils')
@@ -66,7 +67,7 @@ router.post(
           req.user.id,
           address,
           amount,
-          req.connection.remoteAddress
+          await getFingerprintData(req)
         )
       })
       // TODO: update to be more useful, e.g. users email

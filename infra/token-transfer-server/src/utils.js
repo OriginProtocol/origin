@@ -1,5 +1,7 @@
 const Web3 = require('web3')
 
+const { ip2geo } = require('@origin/ip2geo')
+
 const { Account } = require('./models')
 const { unlockDate } = require('./config')
 const { checkTransferRequest } = require('./lib/transfer')
@@ -55,11 +57,30 @@ const getUnlockDate = () => {
   return unlockDate
 }
 
+const getFingerprintData = async req => {
+  // Parsed user agent from express-useragent
+  const device = req.useragent
+  return {
+    ip: req.connection.remoteAddress,
+    device: {
+      source: device.source,
+      browser: device.browser,
+      isMobile: device.isMobile,
+      isDesktop: device.isDesktop,
+      platform: device.platform,
+      version: device.version,
+      os: device.os
+    },
+    location: await ip2geo(req.connection.remoteAddress)
+  }
+}
+
 module.exports = {
   asyncMiddleware,
   isEthereumAddress,
   isExistingAddress,
   isExistingNickname,
+  getFingerprintData,
   getUnlockDate,
   hasBalance
 }

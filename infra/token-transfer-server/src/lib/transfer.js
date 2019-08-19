@@ -89,7 +89,7 @@ async function checkTransferRequest(userId, amount) {
  * @param amount
  * @returns {Promise<integer>} Id of the transfer request.
  */
-async function enqueueTransfer(userId, address, amount, ip) {
+async function enqueueTransfer(userId, address, amount, data = {}) {
   const user = await checkTransferRequest(userId, amount)
 
   // Enqueue the request by inserting a row in the transfer table.
@@ -103,15 +103,15 @@ async function enqueueTransfer(userId, address, amount, ip) {
       status: enums.TransferStatuses.Enqueued,
       toAddress: address.toLowerCase(),
       amount,
-      currency: 'OGN' // For now we only support OGN.
+      currency: 'OGN', // For now we only support OGN.
+      data
     })
     await Event.create({
       userId: user.id,
       action: TRANSFER_REQUEST,
       data: JSON.stringify({
         transferId: transfer.id
-      }),
-      ip
+      })
     })
     await txn.commit()
   } catch (e) {

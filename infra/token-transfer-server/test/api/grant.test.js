@@ -3,7 +3,7 @@ const expect = chai.expect
 const request = require('supertest')
 const express = require('express')
 
-const { User, Grant } = require('../../src/models')
+const { User, Grant, sequelize } = require('../../src/models')
 
 process.env.SENDGRID_FROM_EMAIL = 'test@test.com'
 process.env.SENDGRID_API_KEY = 'test'
@@ -14,14 +14,20 @@ const app = require('../../src/app')
 
 describe('Grant HTTP API', () => {
   beforeEach(async () => {
+    // Wipe database before each test
+    expect(process.env.NODE_ENV).to.equal('test')
+    await sequelize.sync({ force: true })
+
     this.user = await User.create({
       email: 'user@originprotocol.com',
+      name: 'User 1',
       otpKey: '123',
       otpVerified: true
     })
 
     this.user2 = await User.create({
-      email: 'user2@originprotocol.com'
+      email: 'user2@originprotocol.com',
+      name: 'User 2'
     })
 
     this.grants = [
@@ -54,17 +60,6 @@ describe('Grant HTTP API', () => {
       next()
     })
     this.mockApp.use(app)
-  })
-
-  afterEach(() => {
-    Grant.destroy({
-      where: {}
-    })
-
-    // Cleanup
-    User.destroy({
-      where: {}
-    })
   })
 
   it('should return the grants', async () => {
