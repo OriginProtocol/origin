@@ -112,10 +112,11 @@ export async function createAccount(gqlClient, ogn) {
     variables: { name: 'Seller', role: 'Seller' }
   })
   const user = result.data.createWallet.id
-  await gqlClient.mutate({
+  const sendTx = await gqlClient.mutate({
     mutation: SendFromNodeMutation,
     variables: { from: NodeAccount, to: user, value: '0.5' }
   })
+  await transactionConfirmed(sendTx.data.sendFromNode.id, gqlClient)
   if (ogn) {
     const res = await gqlClient.mutate({
       mutation: TransferTokenMutation,

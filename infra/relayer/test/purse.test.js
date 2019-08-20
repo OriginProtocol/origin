@@ -492,13 +492,14 @@ describe('Purse', () => {
       assert(chidlBal.gt(ZERO), 'zero balance on child')
     }
 
-    // Draing
+    // Disable autofund and drain.
+    purse.autofundChildren = false
     await purse.drainChildren()
 
     // Give it a bit to process
     await wait(5000)
 
-    // Verify they'r eempty
+    // Verify they're empty
     for (let i = 0; i < childCount; i++) {
       const chidlBal = await getBalance(web3, purse.children[i])
       assert(chidlBal.eq(ZERO), 'non-zero balance on child')

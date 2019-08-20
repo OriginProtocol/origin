@@ -338,7 +338,7 @@ app.post('/events', async (req, res) => {
   let party = returnValues.party.toLowerCase()
   if (party === buyer.identity.owner.proxy.id.toLowerCase()) {
     party = buyer.identity.owner.id.toLowerCase()
-  } else if (party === seller.owner.proxy.id.toLowerCase()) {
+  } else if (party === seller.identity.owner.proxy.id.toLowerCase()) {
     party = seller.identity.owner.id.toLowerCase()
   }
   const buyerAddress = buyer.identity.owner.id
