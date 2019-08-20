@@ -1,6 +1,5 @@
 import assert from 'assert'
-import helper, { contractPath } from './_helper'
-import { ZERO_ADDRESS, IpfsHash } from './_marketplaceHelpers'
+import helper, { contractPath, ZERO_ADDRESS, IpfsHash } from './_helper'
 import Table from 'cli-table'
 import GasPriceInDollars from './_gasPriceInDollars'
 

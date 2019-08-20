@@ -9,10 +9,12 @@ import "../../node_modules/openzeppelin-solidity/contracts/ownership/Ownable.sol
  * Listings may be priced in Eth or ERC20.
  */
 
+
 contract ERC20 {
     function transfer(address _to, uint256 _value) external returns (bool);
     function transferFrom(address _from, address _to, uint256 _value) external returns (bool);
 }
+
 
 contract V00_Marketplace is Ownable {
 
