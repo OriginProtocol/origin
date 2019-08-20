@@ -756,6 +756,40 @@ function runTests(marketplaceVersion) {
         const ognAfter = Number(balanceAfter.ogn.toString())
         assert.equal(ognAfter, ognBefore + 2)
       })
+
+      it('should not allow multi withdrawl of OGN', async function() {
+        const balance1 = await helpers.getBalance(Marketplace._address)
+        const ognBalance1 = Number(balance1.ogn.toString())
+
+        const listing = await helpers.createListing({ ogn })
+        listingID = listing.events.ListingCreated.returnValues.listingID
+
+        const balance2 = await helpers.getBalance(Marketplace._address)
+        const ognBalance2 = Number(balance2.ogn.toString())
+        assert.equal(ognBalance2, ognBalance1 + ogn)
+
+        await Marketplace.methods
+          .withdrawListing(listingID, Seller, IpfsHash)
+          .send({ from: Seller })
+
+        const balance3 = await helpers.getBalance(Marketplace._address)
+        const ognBalance3 = Number(balance3.ogn.toString())
+        assert.equal(ognBalance3, ognBalance2 - ogn)
+
+        await Marketplace.methods
+          .withdrawListing(listingID, Seller, IpfsHash)
+          .send({ from: Seller })
+
+        const balance4 = await helpers.getBalance(Marketplace._address)
+        const ognBalance4 = Number(balance4.ogn.toString())
+
+        if (marketplaceVersion === 'V00_Marketplace') {
+          // Bug in V00 allows OGN to be withdrawn multiple times
+          assert.notEqual(ognBalance4, ognBalance3)
+        } else {
+          assert.equal(ognBalance4, ognBalance3)
+        }
+      })
     })
   })
 }
