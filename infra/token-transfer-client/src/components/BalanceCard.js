@@ -203,11 +203,13 @@ class BalanceCard extends Component {
           <form onSubmit={this.handleTransfer}>
             <div className="form-group">
               <label htmlFor="email">Amount of Tokens</label>
-              <div className="input-group flex-wrap">
+              <div className="input-group">
                 <input {...input('amount')} />
                 <div className="input-group-append">
                   <span className="badge badge-secondary">OGN</span>
                 </div>
+              </div>
+              <div className={this.state.amountError ? 'input-group-fix' : ''}>
                 {Feedback('amount')}
               </div>
             </div>

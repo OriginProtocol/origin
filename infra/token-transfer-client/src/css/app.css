@@ -127,11 +127,8 @@ input, select {
   display: block;
 }
 
-/* Fix for bootstrap bug */
-.input-group.is-invalid {
-  ~ .invalid-feedback {
-    display: block;
-  }
+.input-group-fix .invalid-feedback {
+  display: block;
 }
 
 /*
