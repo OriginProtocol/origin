@@ -4,7 +4,7 @@
  * that position is focused (in textarea it is scrolled)
  * @param { inputfield } el the input field
  * @param { string } text the text to be inserted
- * 
+ *
  * @returns { void }
  */
 export default function pasteIntoInput(el, text) {
