@@ -29,7 +29,7 @@ export function fetchNews() {
     dispatch(fetchNewsPending())
 
     const mediumUrl = 'https://medium.com/feed/originprotocol'
-    return request.get(
+    request.get(
       `https://api.rss2json.com/v1/api.json?rss_url=${mediumUrl}`
     )
       .then(response => dispatch(fetchNewsSuccess(response.body.items)))
