@@ -75,9 +75,13 @@ class Security extends Component {
           </div>
         </div>
 
-        <AccountTable />
+        <div className="mb-4">
+          <AccountTable />
+        </div>
 
-        <SessionTable />
+        <div className="mb-4">
+          <SessionTable />
+        </div>
       </>
     )
   }

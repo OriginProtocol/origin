@@ -23,7 +23,7 @@ const SessionTable = props => {
             <table className="table mt-4 mb-4">
               <thead>
                 <tr>
-                  <th>IP Address</th>
+                  <th>IP</th>
                   <th>Device</th>
                   <th>Browser</th>
                   <th>Location</th>
@@ -39,23 +39,22 @@ const SessionTable = props => {
                     </td>
                   </tr>
                 ) : (
-                  loginEvents
-                    .map(event => (
-                      <tr key={event.id}>
-                        <td>{event.ip}</td>
-                        <td>
-                          {event.data.device.isDesktop ? 'Desktop' : 'Mobile'}
-                        </td>
-                        <td>{event.data.device.browser}</td>
-                        <td>{event.data.location}</td>
-                        <td>{moment(event.createdAt).fromNow()}</td>
-                        <td>
-                          {moment(event.createdAt).diff(moment(), 'minutes') > -30
-                            ? 'Active'
-                            : 'Expired'}
-                        </td>
-                      </tr>
-                    ))
+                  loginEvents.map(event => (
+                    <tr key={event.id}>
+                      <td>{event.ip}</td>
+                      <td>
+                        {event.data.device.isDesktop ? 'Desktop' : 'Mobile'}
+                      </td>
+                      <td>{event.data.device.browser}</td>
+                      <td>{event.data.location}</td>
+                      <td>{moment(event.createdAt).fromNow()}</td>
+                      <td>
+                        {moment(event.createdAt).diff(moment(), 'minutes') > -30
+                          ? 'Active'
+                          : 'Expired'}
+                      </td>
+                    </tr>
+                  ))
                 )}
               </tbody>
             </table>

@@ -24,7 +24,9 @@ const PrivateRoute = ({ component: Component, user, ...rest }) => {
                 </div>
               ) : (
                 <>
-                  <AccountActions user={user.user} />
+                  <div className="d-none d-md-block">
+                    <AccountActions user={user.user} />
+                  </div>
                   <Component {...props} user={user.user} />
                 </>
               )}

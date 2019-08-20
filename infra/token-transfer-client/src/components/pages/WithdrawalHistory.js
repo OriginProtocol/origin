@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
@@ -23,6 +24,7 @@ import {
   getIsLoading as getTransferIsLoading
 } from '@/reducers/transfer'
 import WithdrawalHistoryCard from '@/components/WithdrawalHistoryCard'
+import EthAddress from '@/components/EthAddress'
 
 const WithdrawalHistory = props => {
   useEffect(() => {
@@ -81,14 +83,16 @@ const WithdrawalHistory = props => {
       <div className="row">
         <div className="col">
           <div className="table-responsive">
-            <table className="table mt-4 mb-4">
+            <table className="table table-clickable mt-4 mb-4">
               <thead>
                 <tr>
                   <th>Amount</th>
+                  <th>IP</th>
                   <th>Destination</th>
                   <th>Nickname</th>
                   <th>Time</th>
                   <th>Status</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -100,9 +104,12 @@ const WithdrawalHistory = props => {
                   </tr>
                 ) : (
                   props.transfers.map(transfer => (
-                    <tr key={transfer.id}>
+                    <tr key={transfer.id} onClick={() => props.history.push(`/withdrawal/${transfer.id}`)}>
                       <td>{transfer.amount}</td>
-                      <td>{transfer.toAddress}</td>
+                      <td>{transfer.data.ip}</td>
+                      <td>
+                        <EthAddress address={transfer.toAddress} />
+                      </td>
                       <td className="text-nowrap">
                         {accountNicknameMap[transfer.toAddress]}
                       </td>
@@ -143,6 +150,7 @@ const WithdrawalHistory = props => {
                           </>
                         )}
                       </td>
+                      <td>&rsaquo;</td>
                     </tr>
                   ))
                 )}
@@ -177,7 +185,7 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(WithdrawalHistory)
+)(WithdrawalHistory))

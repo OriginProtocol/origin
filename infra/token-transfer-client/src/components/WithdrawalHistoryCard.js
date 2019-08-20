@@ -17,15 +17,15 @@ const WithdrawalHistoryCard = props => {
         </div>
       </div>
       <div className="row">
-        <div className="col">
+        <div className="col-12 col-md-4">
           <small>
             Total Withdrawn: {props.withdrawnAmount.toLocaleString()} OGN
           </small>
         </div>
-        <div className="col">
+        <div className="col-12 col-md-4">
           <small>Unvested: {props.unvestedTotal.toLocaleString()} OGN</small>
         </div>
-        <div className="col">
+        <div className="col-12 col-md-4">
           <small>Total Purchase: {props.grantTotal.toLocaleString()} OGN</small>
         </div>
       </div>

@@ -25,7 +25,7 @@ const Navigation = () => (
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to="/history" className="nav-link text">
+          <NavLink to="/withdrawal" className="nav-link text">
             <History className="icon" />
             Withdrawal History
           </NavLink>

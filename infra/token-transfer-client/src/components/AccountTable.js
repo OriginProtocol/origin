@@ -8,6 +8,7 @@ import { getAccounts, getError, getIsLoading } from '@/reducers/account'
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
 import DeleteIcon from '@material-ui/icons/Delete'
+import EthAddress from '@/components/EthAddress'
 
 class AccountTable extends Component {
   constructor(props) {
@@ -47,10 +48,10 @@ class AccountTable extends Component {
       <>
         {this.state.displayModal && this.renderModal()}
         <div className="row">
-          <div className="col">
+          <div className="col-7">
             <h2>Ethereum Accounts</h2>
           </div>
-          <div className="col text-right">
+          <div className="col-5 text-right">
             <a
               href="#"
               onClick={e => {
@@ -58,7 +59,7 @@ class AccountTable extends Component {
                 this.setState({ displayModal: true })
               }}
             >
-              + Add an Account
+              + Add Account
             </a>
           </div>
         </div>
@@ -85,7 +86,9 @@ class AccountTable extends Component {
                     this.props.accounts.map(account => (
                       <tr key={account.address}>
                         <td>{account.nickname}</td>
-                        <td>{account.address}</td>
+                        <td>
+                          <EthAddress address={account.address} />
+                        </td>
                         <td>{moment(account.createdAt).format('L')}</td>
                         <td>
                           <DeleteIcon style={{ fill: '#8fa7b7' }} />

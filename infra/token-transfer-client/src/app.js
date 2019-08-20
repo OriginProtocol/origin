@@ -16,6 +16,7 @@ import Otp from './components/pages/Otp'
 // Private routes
 import Dashboard from './components/pages/Dashboard'
 import News from './components/pages/News'
+import WithdrawalDetail from './components/pages/WithdrawalDetail'
 import WithdrawalHistory from './components/pages/WithdrawalHistory'
 import Security from './components/pages/Security'
 
@@ -31,7 +32,8 @@ const App = () => (
     <PublicRoute exact path="/otp" component={Otp} />
     <PrivateRoute path="/dashboard" component={Dashboard} />
     <PrivateRoute path="/news" component={News} />
-    <PrivateRoute path="/history" component={WithdrawalHistory} />
+    <PrivateRoute exact path="/withdrawal" component={WithdrawalHistory} />
+    <PrivateRoute path="/withdrawal/:id" component={WithdrawalDetail} />
     <PrivateRoute path="/security" component={Security} />
   </Switch>
 )

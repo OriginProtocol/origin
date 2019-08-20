@@ -21,12 +21,13 @@ body {
 }
 
 #main {
-  padding: 70px;
+  padding: 20px;
   width: 100%;
 }
 
 @media (min-width: 768px) {
   #main {
+    padding: 70px;
     width: calc(100% - 280px)
   }
 }
@@ -183,6 +184,10 @@ input, select {
 .table-row {
   font-size: 14px;
   margin-bottom: 20px;
+}
+
+.table-clickable {
+  cursor: pointer;
 }
 
 .table-empty-cell {

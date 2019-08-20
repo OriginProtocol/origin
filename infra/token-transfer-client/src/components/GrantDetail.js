@@ -12,33 +12,25 @@ const GrantDetail = props => (
         <div className="col">
           <strong>Purchase Date</strong>
         </div>
-        <div className="col">
-          {props.grants[0].purchaseDate}
-        </div>
+        <div className="col">{props.grants[0].purchaseDate}</div>
       </div>
       <div className="row mb-5">
         <div className="col">
           <strong>Purchase Round</strong>
         </div>
-        <div className="col">
-          {props.grants[0].purchaseRound}
-        </div>
+        <div className="col">{props.grants[0].purchaseRound}</div>
       </div>
       <div className="row mb-5">
         <div className="col">
           <strong>Total Purchase</strong>
         </div>
-        <div className="col">
-          {props.grants[0].purchaseTotal}
-        </div>
+        <div className="col">{props.grants[0].purchaseTotal}</div>
       </div>
       <div className="row mb-5">
         <div className="col">
           <strong>Investment Amount</strong>
         </div>
-        <div className="col">
-          {props.grants[0].investmentAmount}
-        </div>
+        <div className="col">{props.grants[0].investmentAmount}</div>
       </div>
     </div>
   </>
