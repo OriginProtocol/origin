@@ -170,6 +170,10 @@ export default async function listings(
     }
   }
   if (!contracts.discovery || discoveryError) {
+    // Important: `search`, `sort`, `order` and `filters` params are applied only when
+    // discovery server is up. They are ignored when running in decentralized mode
+    // due to performance and implementation issues
+
     for (const version in contracts.marketplaces) {
       const curContract = contracts.marketplaces[version].contract
       const decentralizedResults = await allIds(curContract, version, '999')
