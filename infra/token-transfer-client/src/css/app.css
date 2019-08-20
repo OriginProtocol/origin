@@ -16,19 +16,29 @@ body {
   font-family: 'Lato'
 }
 
-#sidebar {
-  width: 280px
-}
-
 #main {
   padding: 20px;
   width: 100%;
 }
 
+.logged-in {
+  background-color: #f7fbfd;
+  display: flex;
+  flex-direction: column;
+}
+
 @media (min-width: 768px) {
+  #sidebar {
+    width: 280px
+  }
+
   #main {
     padding: 70px;
     width: calc(100% - 280px)
+  }
+
+  .logged-in {
+    flex-direction: row;
   }
 }
 

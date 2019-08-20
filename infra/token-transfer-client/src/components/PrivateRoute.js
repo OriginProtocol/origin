@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { Route } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Route, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
@@ -7,8 +7,20 @@ import { fetchUser } from '@/actions/user'
 import AccountActions from '@/components/AccountActions'
 import Navigation from '@/components/Navigation'
 
-const PrivateRoute = ({ component: Component, user, ...rest }) => {
+const PrivateRoute = ({ component: Component, history, user, ...rest }) => {
+  const [expandSidebar, setExpandSidebar] = useState(false)
   useEffect(rest.fetchUser, [])
+  useEffect(
+    () =>
+      history.listen(() => {
+        setExpandSidebar(false)
+      }),
+    []
+  )
+
+  const toggleSidebar = () => {
+    setExpandSidebar(!expandSidebar)
+  }
 
   return (
     <Route
@@ -16,8 +28,11 @@ const PrivateRoute = ({ component: Component, user, ...rest }) => {
       render={props => {
         return (
           <div className="logged-in">
-            <Navigation />
-            <div id="main">
+            <Navigation
+              onExpandSidebar={toggleSidebar}
+              expandSidebar={expandSidebar}
+            />
+            <div id="main" className={expandSidebar ? 'd-none' : ''}>
               {user.isLoading ? (
                 <div className="spinner-grow" role="status">
                   <span className="sr-only">Loading...</span>
@@ -50,10 +65,12 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PrivateRoute)
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(PrivateRoute)
+)
 
 require('react-styl')(`
   .logged-in

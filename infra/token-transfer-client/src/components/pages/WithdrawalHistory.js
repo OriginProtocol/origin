@@ -104,7 +104,12 @@ const WithdrawalHistory = props => {
                   </tr>
                 ) : (
                   props.transfers.map(transfer => (
-                    <tr key={transfer.id} onClick={() => props.history.push(`/withdrawal/${transfer.id}`)}>
+                    <tr
+                      key={transfer.id}
+                      onClick={() =>
+                        props.history.push(`/withdrawal/${transfer.id}`)
+                      }
+                    >
                       <td>{transfer.amount}</td>
                       <td>{transfer.data.ip}</td>
                       <td>
@@ -185,7 +190,9 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-export default withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WithdrawalHistory))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(WithdrawalHistory)
+)
