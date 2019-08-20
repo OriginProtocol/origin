@@ -135,12 +135,8 @@ function listingTests(autoSwap) {
 
     it('should create listing', async function() {
       await clickByText(page, 'Publish', 'button')
-      await waitForText(page, 'View Listing', 'button')
+      await waitForText(page, 'Promote Now', 'a')
       await pic(page, 'add-listing')
-    })
-
-    it('should continue to listing', async function() {
-      await clickByText(page, 'View Listing', 'button')
     })
 
     it('should continue to listing promotion', async function() {
@@ -166,7 +162,7 @@ function listingTests(autoSwap) {
     }
 
     it('should allow listing to be viewed', async function() {
-      await clickByText(page, 'View Listing', 'button')
+      await clickByText(page, 'View My Listing', 'a')
     })
 
     it('should allow a new listing to be purchased', async function() {
@@ -235,12 +231,12 @@ function listingTests(autoSwap) {
 
     it('should create listing', async function() {
       await clickByText(page, 'Publish', 'button')
-      await waitForText(page, 'View Listing', 'button')
+      await waitForText(page, 'View My Listing', 'a')
       await pic(page, 'add-listing')
     })
 
     it('should continue to listing', async function() {
-      await clickByText(page, 'View Listing', 'button')
+      await clickByText(page, 'View My Listing', 'a')
       await pic(page, 'listing-detail')
     })
 
@@ -343,20 +339,8 @@ function listingTests(autoSwap) {
 
     it('should create listing', async function() {
       await clickByText(page, 'Publish', 'button')
-      await waitForText(page, 'View Listing')
+      await waitForText(page, 'Promote Now')
       await pic(page, 'add-listing')
-    })
-
-    it('should continue to listing', async function() {
-      await clickByText(page, 'View Listing', 'button')
-      listingHash = await page.evaluate(() => window.location.hash)
-    })
-
-    it('should have the correct sales numbers', async function() {
-      await page.waitForSelector('.listing-buy-editonly')
-      const sold = await page.$('.listing-buy-editonly')
-      const sales = await page.evaluate(el => el.innerText, sold)
-      assert(sales.replace(/\n/g, ' ') === 'Sold 0 Pending 0 Available 2')
     })
 
     it('should continue to listing promotion', async function() {
@@ -386,7 +370,15 @@ function listingTests(autoSwap) {
     }
 
     it('should allow listing to be viewed', async function() {
-      await clickByText(page, 'View Listing', 'button')
+      await clickByText(page, 'View My Listing', 'a')
+      listingHash = await page.evaluate(() => window.location.hash)
+    })
+
+    it('should have the correct sales numbers', async function() {
+      await page.waitForSelector('.listing-buy-editonly')
+      const sold = await page.$('.listing-buy-editonly')
+      const sales = await page.evaluate(el => el.innerText, sold)
+      assert(sales.replace(/[\n\t\r ]+/g, ' ') === 'Sold 0 Pending 0 Available 2')
     })
 
     it('should have the correct commission numbers', async function() {
@@ -395,7 +387,7 @@ function listingTests(autoSwap) {
       const commissionTxt = await page.evaluate(el => el.innerText, commission)
       assert(
         commissionTxt
-          .replace(/\n/g, ' ')
+          .replace(/[\n\t\r ]+/g, ' ')
           .startsWith(
             'Commission per Unit 10 Total Budget 20 Total Budget Remaining 20'
           )
@@ -448,14 +440,14 @@ function listingTests(autoSwap) {
       await clickByText(page, 'Continue')
       await clickByText(page, 'Continue')
       await clickByText(page, 'Publish', 'button')
-      await clickByText(page, 'View Listing', 'button')
+      await clickByText(page, 'View My Listing', 'a')
     })
 
     it('should have the edited sales numbers', async function() {
       await page.waitForSelector('.listing-buy-editonly')
       const sold = await page.$('.listing-buy-editonly')
       const sales = await page.evaluate(el => el.innerText, sold)
-      assert(sales.replace(/\n/g, ' ') === 'Sold 2 Pending 0 Available 8')
+      assert(sales.replace(/[\n\t\r ]+/g, ' ') === `Sold 2 Pending 0 Available 0`)
     })
 
     it('should have the updated commission numbers', async function() {
@@ -464,7 +456,7 @@ function listingTests(autoSwap) {
       const commissionTxt = await page.evaluate(el => el.innerText, commission)
       assert(
         commissionTxt
-          .replace(/\n/g, ' ')
+          .replace(/[\n\t\r ]+/g, ' ')
           .startsWith(
             'Commission per Unit 10 Total Budget 20 Total Budget Remaining 0'
           )
