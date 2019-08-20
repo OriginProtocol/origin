@@ -2,6 +2,9 @@ import {
   ADD_ACCOUNT_PENDING,
   ADD_ACCOUNT_SUCCESS,
   ADD_ACCOUNT_ERROR,
+  DELETE_ACCOUNT_PENDING,
+  DELETE_ACCOUNT_SUCCESS,
+  DELETE_ACCOUNT_ERROR,
   FETCH_ACCOUNTS_PENDING,
   FETCH_ACCOUNTS_SUCCESS,
   FETCH_ACCOUNTS_ERROR
@@ -9,6 +12,7 @@ import {
 
 const initialState = {
   isAdding: false,
+  isDeleting: false,
   isLoading: true,
   accounts: [],
   error: null
@@ -32,6 +36,28 @@ export default function accountsReducer(state = initialState, action) {
       return {
         ...state,
         isAdding: false,
+        error: action.error
+      }
+    case DELETE_ACCOUNT_PENDING:
+      return {
+        ...state,
+        isDeleting: true
+      }
+    case DELETE_ACCOUNT_SUCCESS:
+      const index = state.accounts.findIndex(a => a.id == action.payload)
+      return {
+        ...state,
+        isDeleting: false,
+        accounts: [
+          ...state.accounts.slice(0, index),
+          ...state.accounts.slice(index + 1)
+        ],
+        error: null
+      }
+    case DELETE_ACCOUNT_ERROR:
+      return {
+        ...state,
+        isDeleting: false,
         error: action.error
       }
     case FETCH_ACCOUNTS_PENDING:

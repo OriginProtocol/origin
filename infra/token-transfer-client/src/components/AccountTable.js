@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-import { addAccount } from '@/actions/account'
+import { addAccount, deleteAccount } from '@/actions/account'
 import {
   getAccounts,
   getError,
@@ -54,6 +54,13 @@ class AccountTable extends Component {
 
     if (result.type === 'ADD_ACCOUNT_SUCCESS') {
       this.reset()
+    }
+  }
+
+  handleDeleteAccount = id => {
+    const result = window.confirm('Are you sure you want to delete that account?')
+    if (result) {
+      this.props.deleteAccount(id)
     }
   }
 
@@ -109,7 +116,10 @@ class AccountTable extends Component {
                         </td>
                         <td>{moment(account.createdAt).format('L')}</td>
                         <td>
-                          <DeleteIcon style={{ fill: '#8fa7b7' }} />
+                          <DeleteIcon
+                            style={{ fill: '#8fa7b7', cursor: 'pointer' }}
+                            onClick={() => this.handleDeleteAccount(account.id)}
+                          />
                         </td>
                       </tr>
                     ))
@@ -174,7 +184,8 @@ const mapStateToProps = ({ account }) => {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      addAccount: addAccount
+      addAccount: addAccount,
+      deleteAccount: deleteAccount
     },
     dispatch
   )
