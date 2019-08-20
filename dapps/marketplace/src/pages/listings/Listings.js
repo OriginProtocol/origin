@@ -137,6 +137,17 @@ class Listings extends Component {
     const creatorFilters = get(this.props, 'creatorConfig.listingFilters', [])
     const filters = [...getFilters(this.state.search), ...creatorFilters]
 
+    const hasStatusFilter = filters.find(filter => filter.name === 'status')
+
+    if (!hasStatusFilter) {
+      filters.push({
+        name: 'status',
+        value: 'active',
+        valueType: 'STRING',
+        operator: 'EQUALS'
+      })
+    }
+
     const vars = {
       ...pick(this.state, 'first'),
       search: this.state.search.searchInput,
