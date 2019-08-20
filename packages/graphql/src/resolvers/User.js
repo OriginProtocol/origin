@@ -92,11 +92,14 @@ async function sales(seller, { first = 10, after, filter }, _, info) {
 
   let allIds = []
   for (const version in contracts.marketplaces) {
-    const { getEvents } = contracts.marketplaces[version].contract.eventCache
+    const eventCache = contracts.marketplaces[version].contract.eventCache
 
-    const listings = await getEvents({ event: 'ListingCreated', party })
+    const listings = await eventCache.getEvents({
+      event: 'ListingCreated',
+      party
+    })
     const listingIds = listings.map(e => e.returnValues.listingID)
-    const events = await getEvents({
+    const events = await eventCache.getEvents({
       listingID: listingIds,
       event: 'OfferCreated'
     })
@@ -106,7 +109,7 @@ async function sales(seller, { first = 10, after, filter }, _, info) {
       .reverse()
 
     if (filter) {
-      const completedEvents = await getEvents({
+      const completedEvents = await eventCache.getEvents({
         event: ['OfferFinalized', 'OfferWithdrawn', 'OfferRuling'],
         offerID: events.map(e => e.returnValues.offerID)
       })

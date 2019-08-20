@@ -53,7 +53,7 @@ const acceptOffer = async ({ seller }) => {
   await pic(page, 'transaction-accepted')
 }
 
-const confirmReleaseFundsAndRate = async ({ buyer }) => {
+const confirmReleaseFundsAndRate = async ({ buyer, review }) => {
   await changeAccount(page, buyer)
   await waitForText(page, 'Your offer has been accepted by the seller')
   await pic(page, 'transaction-confirm')
@@ -67,6 +67,9 @@ const confirmReleaseFundsAndRate = async ({ buyer }) => {
   await clickByText(page, 'OK', 'button')
   await waitForText(page, 'Leave a review of the seller')
   await giveRating(page, 3)
+  if (review) {
+    await page.type('textarea', review)
+  }
   await pic(page, 'transaction-release-funds-rated')
   await clickByText(page, 'Submit', 'button')
   await waitForText(page, 'Success!')
@@ -79,16 +82,53 @@ function randomTitle() {
   return `T-Shirt ${Math.floor(Math.random() * 100000)}`
 }
 
+function randomReview() {
+  return `Very good ${Math.floor(Math.random() * 100000)}`
+}
+
 function listingTests(autoSwap) {
   describe('Single Unit Listing for Eth', function() {
-    let seller, buyer, title
+    let seller, buyer, title, review
     before(async function() {
       ({ seller, buyer } = await reset('100'))
       title = randomTitle()
+      review = randomReview()
+    })
+
+    it('should switch to Seller account', async function() {
+      await changeAccount(page, seller)
+    })
+
+    it('should have no Purchases', async function() {
+      await clickByText(page, 'Purchases', 'a/span')
+      await waitForText(page, 'You haven’t bought anything yet.')
+    })
+
+    it('should have no Listings', async function() {
+      await clickByText(page, 'Listings', 'a/span')
+      await waitForText(page, "You don't have any listings yet.")
+    })
+
+    it('should have no Sales', async function() {
+      await clickByText(page, 'Sales', 'a/span')
+      await waitForText(page, 'You haven’t sold anything yet.')
+    })
+
+    it('should have no Notifications', async function() {
+      await clickBySelector(page, '.nav-item.notifications a')
+      await page.waitForFunction(
+        `(function() {
+          try {
+            const selector = '.notifications.dropdown .dropdown-menu .count'
+            return document.querySelector(selector).innerText.replace(/\\s/, ' ').includes("0 Notifications")
+          } catch(e) {
+            return false
+          }
+        })()`
+      )
     })
 
     it('should navigate to the Add Listing page', async function() {
-      await changeAccount(page, seller)
       await clickByText(page, 'Add Listing')
       await pic(page, 'add-listing')
     })
@@ -144,6 +184,13 @@ function listingTests(autoSwap) {
       await clickByText(page, 'View Listing', 'button')
     })
 
+    it('should have listing under Listings tab', async function() {
+      await clickByText(page, 'Listings', 'a/span')
+      await waitForText(page, 'Listings', 'h1')
+      await waitForText(page, title, 'a')
+      await clickByText(page, title, 'a')
+    })
+
     it('should continue to listing promotion', async function() {
       await clickByText(page, 'Promote Now', 'a')
     })
@@ -186,7 +233,19 @@ function listingTests(autoSwap) {
     })
 
     it('should allow a new listing to be finalized', async function() {
-      await confirmReleaseFundsAndRate({ buyer })
+      await confirmReleaseFundsAndRate({ buyer, review })
+    })
+
+    it('should have review on listing', async function() {
+      await clickByText(page, 'View Listing', 'li/div/a')
+      await waitForText(page, review, 'div')
+    })
+
+    it('should have purchase in Complete Purchases tab', async function() {
+      await clickByText(page, 'Purchases', 'a/span')
+      await waitForText(page, 'Purchases', 'h1')
+      await clickByText(page, 'Complete', 'a')
+      await waitForText(page, title, 'a')
     })
   })
 
