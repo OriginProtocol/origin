@@ -15,6 +15,8 @@ import listingTypes from './listing-types'
 import ChooseListingType from './ChooseListingType'
 import ChooseCategory from './ChooseCategory'
 
+import ListingCreated from './ListingCreated'
+
 import Store from 'utils/store'
 const store = Store('sessionStorage')
 
@@ -120,6 +122,10 @@ const CreateListing = props => {
           )}
         />
         <Route
+          path="/create/:listingId/success"
+          render={() => <ListingCreated {...cmpProps} />}
+        />
+        <Route
           path="/listing/:listingId/edit/:step"
           render={({ match }) => (
             <ListingTypeComponent
@@ -180,7 +186,10 @@ require('react-styl')(`
 
   @media (max-width: 767.98px)
     .create-listing
-      padding-top: 1rem
+      display: flex
+      flex-direction: column
+      flex: 1
+      padding: 1rem
       .step-description
         font-size: 16px
         margin-top: 2rem

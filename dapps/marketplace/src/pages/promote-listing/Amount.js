@@ -74,6 +74,7 @@ const PromoteListingAmount = ({
               listingTokens={listingTokens}
               tokenBalance={tokenBalance}
               tokenStatus={tokenStatus}
+              listingPromotion={true}
               className="btn btn-primary btn-rounded btn-lg"
               children={fbt('Promote Now', 'promoteListing.promoteNow')}
             />
@@ -110,7 +111,9 @@ const PromoteListingAmount = ({
       </h1>
       <div className="amount">
         <div className="balance">
-          {`OGN Balance: `} <CoinLogo />
+          <fbt desc="PromoteListing.OGNBalance">OGN Balance: </fbt>
+          {` `}
+          <CoinLogo />
           {tokenBalance}
           {listing.__typename !== 'UnitListing' || !multiUnit ? null : (
             <div>
@@ -121,7 +124,22 @@ const PromoteListingAmount = ({
             </div>
           )}
         </div>
-        <h4>{`Commission${multiUnit ? ' per Unit Sold' : ''}`}</h4>
+        <h4>
+          {multiUnit ? (
+            <fbt desc="PromoteListing.commissionPerUnit">
+              Commission per Unit Sold
+            </fbt>
+          ) : (
+            <fbt desc="PromoteListing.commissionAmount">Commission Amount</fbt>
+          )}
+        </h4>
+        {multiUnit ? null : (
+          <div className="desc">
+            <fbt desc="PromoteListing.paidOnSale">
+              Paid out when your listing is sold.
+            </fbt>
+          </div>
+        )}
 
         <div className="input-wrap">
           <input
@@ -219,6 +237,8 @@ require('react-styl')(`
       margin-top: 1.5rem
       font-size: 20px
       font-weight: bold
+    .desc
+      font-size: 16px
     .not-enough,.enter-amount
       margin: 1.5rem 0
       font-weight: bold

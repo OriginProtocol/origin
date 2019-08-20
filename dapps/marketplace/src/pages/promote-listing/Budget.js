@@ -139,6 +139,7 @@ const PromoteListingBudget = ({
                   tokenStatus={tokenStatus}
                   className="btn btn-primary btn-rounded btn-lg"
                   children={fbt('Promote Now', 'promoteListing.promoteNow')}
+                  listingPromotion={true}
                 />
               )
             }}
@@ -161,7 +162,4 @@ require('react-styl')(`
         border-radius: 0
       .input-wrap
         margin-top: 0.5rem
-      .actions
-        margin-top: 1.5rem
-
 `)
