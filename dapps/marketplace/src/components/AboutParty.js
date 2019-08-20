@@ -30,7 +30,7 @@ const Identity = ({ id, owner }) => {
   if (error) {
     return <QueryError error={error} query={query} vars={{ id }} />
   }
-  if (loading) return null
+  if (loading || !id || !owner) return null
 
   const profile = get(data, 'identity')
   if (!profile) {
