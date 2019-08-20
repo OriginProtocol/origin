@@ -141,7 +141,7 @@ const config = {
       SENTRY_DSN: null,
       NAMESPACE: 'dev',
       TELEGRAM_BOT_USERNAME: TELEGRAM_BOT_USERNAME,
-      NODE_ENV: process.env.NODE_ENV
+      NODE_ENV: process.env.NODE_ENV || 'development'
     })
   ],
 
