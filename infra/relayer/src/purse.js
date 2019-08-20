@@ -414,9 +414,6 @@ class Purse {
       throw err
     }
 
-    // Trigger a check of the balances for every new transaction.
-    this.checkBalances = true
-
     return { txHash, gasPrice }
   }
 
@@ -1010,6 +1007,9 @@ class Purse {
           if (!receipt || !receipt.blockNumber) continue
 
           logger.debug(`Transaction ${txHash} has been mined.`)
+
+          // Trigger a check of the balances for every new transaction mined.
+          this.checkBalances = true
 
           // Remove from pending if it exists(it should)
           if (!receipt.status) {
