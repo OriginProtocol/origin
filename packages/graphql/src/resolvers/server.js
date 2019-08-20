@@ -9,6 +9,7 @@ import Offer from './Offer'
 import TokenHolder from './TokenHolder'
 import Event from './Event'
 import Token from './Token'
+import JSONRPC from './JSONRPC'
 import IdentityEvents from './IdentityEvents'
 import Conversation from './messaging/Conversation'
 import Mutation from '../mutations/index'
@@ -42,5 +43,6 @@ export default {
     __resolveType(obj) {
       return obj.id.indexOf('fiat-') === 0 ? 'FiatCurrency' : 'Token'
     }
-  }
+  },
+  JSONRPC
 }

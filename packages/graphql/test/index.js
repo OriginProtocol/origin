@@ -869,3 +869,22 @@ describe('Marketplace', function() {
     })
   })
 })
+
+describe('JSON-RPC', function() {
+  it('should get the network ID', async function() {
+    const res = await client.query({
+      query: queries.BlockNumber,
+      variables: {}
+    })
+    const netId = get(res, 'data.JSONRPC.net_version')
+    assert(netId === 999)
+  })
+  it('should get the current block number', async function() {
+    const res = await client.query({
+      query: queries.BlockNumber,
+      variables: {}
+    })
+    const blockNumber = get(res, 'data.JSONRPC.eth_blockNumber')
+    assert(blockNumber > 0)
+  })
+})

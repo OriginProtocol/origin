@@ -129,9 +129,19 @@ const GetListing = gql`
   }
 `
 
+const BlockNumber = gql`
+  query BlockNumber {
+    JSONRPC {
+      net_version
+      eth_blockNumber
+    }
+  }
+`
+
 export default {
   GetNodeAccounts,
   GetReceipt,
   GetAllOffers,
-  GetListing
+  GetListing,
+  BlockNumber
 }

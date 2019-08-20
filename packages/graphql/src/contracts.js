@@ -1,3 +1,5 @@
+import { get } from 'lodash'
+
 import MarketplaceContract from '@origin/contracts/build/contracts/V00_Marketplace'
 import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken'
 import TokenContract from '@origin/contracts/build/contracts/TestToken'
@@ -69,6 +71,14 @@ export function newBlock(blockHeaders) {
   })
 }
 
+const blockQuery = `
+query BlockNumber {
+  JSONRPC {
+    eth_blockNumber
+  }
+}
+`
+
 function pollForBlocks() {
   let inProgress = false
   try {
@@ -94,6 +104,48 @@ function pollForBlocks() {
     console.log(`Polling for new blocks failed: ${error}`)
     inProgress = false
   }
+}
+
+function queryForBlocks() {
+  let inProgress = false,
+    blockInterval = null
+  try {
+    blockInterval = setInterval(() => {
+      if (inProgress) {
+        return
+      }
+      inProgress = true
+      fetch(`${context.config.graphql}/graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          operationName: 'BlockNumber',
+          variables: {},
+          query: blockQuery
+        })
+      })
+        .then(resp => {
+          resp.json().then(result => {
+            const blockNumber = get(result, 'data.JSONRPC.eth_blockNumber')
+            if (blockNumber > lastBlock) {
+              web3.eth.getBlock(blockNumber).then(newBlock)
+            }
+          })
+          inProgress = false
+        })
+        .catch(err => {
+          console.log(err)
+          inProgress = false
+        })
+    }, 5000)
+  } catch (error) {
+    console.log(`Querying for new blocks failed: ${error}`)
+    inProgress = false
+  }
+
+  return blockInterval
 }
 
 export function setNetwork(net, customConfig) {
@@ -217,7 +269,9 @@ export function setNetwork(net, customConfig) {
 
   setProxyContracts(config)
 
-  if (config.providerWS) {
+  if (config.performanceMode) {
+    queryForBlocks()
+  } else if (config.providerWS) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
     context.web3WS = web3WS
     try {

@@ -9,6 +9,7 @@ import Offer from './Offer'
 import TokenHolder from './TokenHolder'
 import Event from './Event'
 import Token from './Token'
+import JSONRPC from './JSONRPC'
 import Conversation from './messaging/Conversation'
 import Messaging from './messaging/Messaging'
 import IdentityEvents from './IdentityEvents'
@@ -53,5 +54,6 @@ export default {
   Messaging,
   IdentityEvents,
   Config,
-  CreatorConfig
+  CreatorConfig,
+  JSONRPC
 }

@@ -10,6 +10,7 @@ import CreatorConfig from './CreatorConfig'
 import Currency from './Currency'
 import Uniswap from './Uniswap'
 import Promotions from './Promotions'
+import JSONRPC from './JSONRPC'
 
 export default [
   Common,
@@ -23,5 +24,6 @@ export default [
   CreatorConfig,
   Currency,
   Uniswap,
-  Promotions
+  Promotions,
+  JSONRPC
 ]

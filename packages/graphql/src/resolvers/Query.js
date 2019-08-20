@@ -126,5 +126,8 @@ export default {
       ids = ids.filter(c => args.tokens.indexOf(c) >= 0)
     }
     return await Promise.all(ids.map(id => currencies.get(id)))
-  }
+  },
+
+  // A hierarchical placeholder
+  JSONRPC: () => ({})
 }
