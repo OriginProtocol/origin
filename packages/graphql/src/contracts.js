@@ -57,16 +57,16 @@ async function isValidContract(web3, address) {
 }
 
 let lastBlock
-export function newBlock(blockHeaders) {
-  if (!blockHeaders) return
-  if (blockHeaders.number <= lastBlock) return
-  lastBlock = blockHeaders.number
-  context.marketplace.eventCache.setLatestBlock(lastBlock)
-  context.identityEvents.eventCache.setLatestBlock(lastBlock)
-  context.ProxyFactory.eventCache.setLatestBlock(lastBlock)
+export function newBlock(blockNumber) {
+  if (blockNumber <= lastBlock) return
+  lastBlock = blockNumber
+  context.marketplace.eventCache.setLatestBlock(blockNumber)
+  context.identityEvents.eventCache.setLatestBlock(blockNumber)
+  context.ProxyFactory.eventCache.setLatestBlock(blockNumber)
   context.eventSource.resetCache()
+
   pubsub.publish('NEW_BLOCK', {
-    newBlock: { ...blockHeaders, id: blockHeaders.hash }
+    newBlock: { id: blockNumber }
   })
 }
 
@@ -95,7 +95,7 @@ function queryForBlocks() {
           resp.json().then(result => {
             const blockNumber = get(result, 'data.web3.blockNumber')
             if (blockNumber > lastBlock) {
-              web3.eth.getBlock(blockNumber).then(newBlock)
+              newBlock(blockNumber)
             }
           })
           inProgress = false
@@ -123,9 +123,9 @@ function pollForBlocks() {
       inProgress = true
       web3.eth
         .getBlockNumber()
-        .then(block => {
-          if (block > lastBlock) {
-            web3.eth.getBlock(block).then(newBlock)
+        .then(blockNumber => {
+          if (blockNumber > lastBlock) {
+            newBlock(blockNumber)
           }
           inProgress = false
         })
@@ -269,7 +269,7 @@ export function setNetwork(net, customConfig) {
     try {
       wsSub = web3WS.eth
         .subscribe('newBlockHeaders')
-        .on('data', newBlock)
+        .on('data', latestBlock => newBlock(latestBlock.number))
         .on('error', () => {
           console.log('WS connection error. Polling for new blocks...')
           pollForBlocks()
@@ -283,9 +283,7 @@ export function setNetwork(net, customConfig) {
     pollForBlocks()
   }
   try {
-    web3.eth.getBlockNumber().then(block => {
-      web3.eth.getBlock(block).then(newBlock)
-    })
+    web3.eth.getBlockNumber().then(newBlock)
   } catch (error) {
     console.log(`Could not retrieve block: ${error}`)
   }
