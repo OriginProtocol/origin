@@ -7,6 +7,7 @@ import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import { exchangeAbi, factoryAbi } from './contracts/UniswapExchange'
 
 import Web3 from 'web3'
+import get from 'lodash/get'
 import EventSource from '@origin/eventsource'
 import { patchWeb3Contract } from '@origin/event-cache'
 import { initStandardSubproviders, createEngine } from '@origin/web3-provider'
@@ -67,6 +68,49 @@ export function newBlock(blockHeaders) {
   pubsub.publish('NEW_BLOCK', {
     newBlock: { ...blockHeaders, id: blockHeaders.hash }
   })
+}
+
+const blockQuery = `query BlockNumber { web3 { blockNumber } }`
+function queryForBlocks() {
+  let inProgress = false,
+    blockInterval = null
+  try {
+    blockInterval = setInterval(() => {
+      if (inProgress) {
+        return
+      }
+      inProgress = true
+      fetch(`${context.config.graphql}/graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          operationName: 'BlockNumber',
+          variables: {},
+          query: blockQuery
+        })
+      })
+        .then(resp => {
+          resp.json().then(result => {
+            const blockNumber = get(result, 'data.web3.blockNumber')
+            if (blockNumber > lastBlock) {
+              web3.eth.getBlock(blockNumber).then(newBlock)
+            }
+          })
+          inProgress = false
+        })
+        .catch(err => {
+          console.log(err)
+          inProgress = false
+        })
+    }, 5000)
+  } catch (error) {
+    console.log(`Querying for new blocks failed: ${error}`)
+    inProgress = false
+  }
+
+  return blockInterval
 }
 
 function pollForBlocks() {
@@ -217,7 +261,9 @@ export function setNetwork(net, customConfig) {
 
   setProxyContracts(config)
 
-  if (config.providerWS) {
+  if (config.performanceMode && context.config.graphql) {
+    queryForBlocks()
+  } else if (config.providerWS) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
     context.web3WS = web3WS
     try {
