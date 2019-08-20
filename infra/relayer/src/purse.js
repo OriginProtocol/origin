@@ -136,7 +136,7 @@ class Purse {
     this.accountLookupInProgress = false
     this.masterKey = null
     this.masterWallet = null
-    this.checkChildBalances = true
+    this.checkBalances = true
 
     this.children = []
     this.accounts = {}
@@ -414,8 +414,8 @@ class Purse {
       throw err
     }
 
-    // Triggers checking if the child account needs to be replenished.
-    this.checkChildBalances = true
+    // Trigger a check of the balances for every new transaction.
+    this.checkBalances = true
 
     return { txHash, gasPrice }
   }
@@ -894,7 +894,7 @@ class Purse {
     do {
       if (!this.ready) continue
 
-      if (interval % 10 === 0) {
+      if (this.checkBalances) {
         try {
           // Prompt for funding of the master account
           const masterAddress = this.masterWallet.getChecksumAddressString()
@@ -928,10 +928,7 @@ class Purse {
           const childrenToFund = []
 
           // Check for child balances dropping below set minimum and fund if necessary
-          if (this.ready && this.autofundChildren && this.checkChildBalances) {
-            // We are going to check the balances, so no need to redo it
-            // until a new transaction gets processed.
-            this.checkChildBalances = false
+          if (this.ready && this.autofundChildren) {
             for (let i = 0; i < this.children.length; i++) {
               const child = this.children[i]
               const childBalance = numberToBN(
@@ -990,6 +987,8 @@ class Purse {
           } else {
             logger.debug('Not ready or autofund disabled')
           }
+          // Balances check completed.
+          this.checkBalances = false
         } catch (err) {
           logger.error(
             'Error occurred in the balance checks and funding block of _process()'
