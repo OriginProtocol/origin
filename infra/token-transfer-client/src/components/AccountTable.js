@@ -4,7 +4,12 @@ import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
 import { addAccount } from '@/actions/account'
-import { getAccounts, getError, getIsLoading } from '@/reducers/account'
+import {
+  getAccounts,
+  getError,
+  getIsAdding,
+  getIsLoading
+} from '@/reducers/account'
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
 import DeleteIcon from '@material-ui/icons/Delete'
@@ -13,13 +18,7 @@ import EthAddress from '@/components/EthAddress'
 class AccountTable extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      nickname: '',
-      nicknameError: '',
-      address: '',
-      addressError: '',
-      displayModal: false
-    }
+    this.state = this.getInitialState()
   }
 
   componentDidUpdate(prevProps) {
@@ -34,13 +33,32 @@ class AccountTable extends Component {
     }
   }
 
-  handleSubmit = event => {
+  getInitialState = () => {
+    const initialState = {
+      nickname: '',
+      nicknameError: '',
+      address: '',
+      addressError: '',
+      displayModal: false
+    }
+    return initialState
+  }
+
+  handleSubmit = async event => {
     event.preventDefault()
 
-    this.props.addAccount({
+    const result = await this.props.addAccount({
       nickname: this.state.nickname,
       address: this.state.address
     })
+
+    if (result.type === 'ADD_ACCOUNT_SUCCESS') {
+      this.reset()
+    }
+  }
+
+  reset = () => {
+    this.setState(this.getInitialState())
   }
 
   render() {
@@ -110,11 +128,7 @@ class AccountTable extends Component {
     const Feedback = formFeedback(this.state)
 
     return (
-      <Modal
-        appendToId="main"
-        onClose={() => this.setState({ displayModal: false })}
-        closeBtn={true}
-      >
+      <Modal appendToId="main" onClose={this.reset} closeBtn={true}>
         <h1 className="mb-2">Add An Account</h1>
         <p>Enter a nickname and an ETH address</p>
         <form onSubmit={this.handleSubmit}>
@@ -131,9 +145,9 @@ class AccountTable extends Component {
           <button
             type="submit"
             className="btn btn-primary btn-lg mt-5"
-            disabled={this.props.isLoading}
+            disabled={this.props.isAdding}
           >
-            {this.props.isLoading ? (
+            {this.props.isAdding ? (
               <>
                 <span className="spinner-grow spinner-grow-sm"></span>
                 Loading...
@@ -151,8 +165,9 @@ class AccountTable extends Component {
 const mapStateToProps = ({ account }) => {
   return {
     accounts: getAccounts(account),
-    error: getError(account),
-    isLoading: getIsLoading(account)
+    isAdding: getIsAdding(account),
+    isLoading: getIsLoading(account),
+    error: getError(account)
   }
 }
 

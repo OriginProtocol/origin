@@ -71,10 +71,3 @@ export default withRouter(
     mapDispatchToProps
   )(PrivateRoute)
 )
-
-require('react-styl')(`
-  .logged-in
-    background-color: #f7fbfd
-    min-height: 100vh
-    display: flex
-`)

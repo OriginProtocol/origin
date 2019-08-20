@@ -53,7 +53,7 @@ export function addAccount(account) {
   return dispatch => {
     dispatch(addAccountPending())
 
-    agent
+    return agent
       .post(`${apiUrl}/api/accounts`)
       .send(account)
       .then(response => dispatch(addAccountSuccess(response.body)))
@@ -68,7 +68,7 @@ export function fetchAccounts() {
   return dispatch => {
     dispatch(fetchAccountsPending())
 
-    agent
+    return agent
       .get(`${apiUrl}/api/accounts`)
       .then(response => dispatch(fetchAccountsSuccess(response.body)))
       .catch(error => {
