@@ -8,6 +8,8 @@ import { fetchEvents } from '@/actions/event'
 const SessionTable = props => {
   useEffect(props.fetchEvents, [])
 
+  const loginEvents = props.event.events.filter(e => e.action === 'LOGIN')
+
   return (
     <>
       <div className="row">
@@ -17,46 +19,47 @@ const SessionTable = props => {
       </div>
       <div className="row">
         <div className="col">
-          <table className="table mt-4 mb-4">
-            <thead>
-              <tr>
-                <th>IP Address</th>
-                <th>Device</th>
-                <th>Browser</th>
-                <th>Location</th>
-                <th>Time</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {props.event.events.length === 0 ? (
+          <div className="table-responsive">
+            <table className="table mt-4 mb-4">
+              <thead>
                 <tr>
-                  <td className="table-empty-cell" colSpan="100%">
-                    No session events found.
-                  </td>
+                  <th>IP Address</th>
+                  <th>Device</th>
+                  <th>Browser</th>
+                  <th>Location</th>
+                  <th>Time</th>
+                  <th>Status</th>
                 </tr>
-              ) : (
-                props.event.events
-                  .filter(event => event.action === 'LOGIN')
-                  .map(event => (
-                    <tr key={event.id}>
-                      <td>{event.ip}</td>
-                      <td>
-                        {event.data.device.isDesktop ? 'Desktop' : 'Mobile'}
-                      </td>
-                      <td>{event.data.device.browser}</td>
-                      <td>{event.data.location}</td>
-                      <td>{moment(event.createdAt).fromNow()}</td>
-                      <td>
-                        {moment(event.createdAt).diff(moment(), 'minutes') > -30
-                          ? 'Active'
-                          : 'Expired'}
-                      </td>
-                    </tr>
-                  ))
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {loginEvents.length === 0 ? (
+                  <tr>
+                    <td className="table-empty-cell" colSpan="100%">
+                      No session events found.
+                    </td>
+                  </tr>
+                ) : (
+                  loginEvents
+                    .map(event => (
+                      <tr key={event.id}>
+                        <td>{event.ip}</td>
+                        <td>
+                          {event.data.device.isDesktop ? 'Desktop' : 'Mobile'}
+                        </td>
+                        <td>{event.data.device.browser}</td>
+                        <td>{event.data.location}</td>
+                        <td>{moment(event.createdAt).fromNow()}</td>
+                        <td>
+                          {moment(event.createdAt).diff(moment(), 'minutes') > -30
+                            ? 'Active'
+                            : 'Expired'}
+                        </td>
+                      </tr>
+                    ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </>

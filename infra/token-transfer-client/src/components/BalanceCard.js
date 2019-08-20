@@ -145,7 +145,9 @@ class BalanceCard extends Component {
               <button
                 className="btn btn-secondary btn-lg"
                 onClick={() => this.setState({ displayModal: true })}
-                disabled={this.props.isLocked || Number(this.props.balance) === 0}
+                disabled={
+                  this.props.isLocked || Number(this.props.balance) === 0
+                }
               >
                 <img src={ExportIcon} className="mr-2 pb-1" />
                 Withdraw

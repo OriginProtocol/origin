@@ -24,27 +24,26 @@ const VestingHistory = props => (
               </tr>
             ) : (
               vestingSchedule(props.grants[0]).map(currentVest => (
-              <tr key={currentVest.date}>
-                <td>
-                  <div
-                    className={`status-circle ${
-                      currentVest.date < moment.now()
-                        ? `status-circle-success`
-                        : ''
-                    }`}>
-                  </div>
-                </td>
-                <td>
-                  {currentVest.amount.toLocaleString()} OGN
-                </td>
-                <td>
-                  <small>
-                    {currentVest.date < moment.now() ? 'vested' : 'unvested'}
-                  </small>
-                </td>
-                <td>{currentVest.date.format('L')}</td>
-              </tr>
-              )))}
+                <tr key={currentVest.date}>
+                  <td>
+                    <div
+                      className={`status-circle ${
+                        currentVest.date < moment.now()
+                          ? `status-circle-success`
+                          : ''
+                      }`}
+                    ></div>
+                  </td>
+                  <td>{currentVest.amount.toLocaleString()} OGN</td>
+                  <td>
+                    <small>
+                      {currentVest.date < moment.now() ? 'vested' : 'unvested'}
+                    </small>
+                  </td>
+                  <td>{currentVest.date.format('L')}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

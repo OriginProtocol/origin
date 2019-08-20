@@ -7,19 +7,13 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  height: 100vh;
 }
 
 body {
   font-size: 1.125rem;
   line-height: 1.5;
   background-color: white;
-  height: 100vh;;
   font-family: 'Lato'
-}
-
-#app {
-  height: 100vh;
 }
 
 #sidebar {
@@ -123,7 +117,7 @@ input, select {
 }
 
 #main .spinner-grow {
-  margin: 50%;
+  margin: 30% 50% 0% 50%;
 }
 
 /*
@@ -152,7 +146,7 @@ input, select {
 .table-card {
   border-top: 1px solid #dbe6eb;
   border-bottom: 1px solid #dbe6eb;
-  max-height: 320px;
+  max-height: 330px;
   overflow-y: scroll;
 }
 

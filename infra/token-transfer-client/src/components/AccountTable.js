@@ -64,36 +64,38 @@ class AccountTable extends Component {
         </div>
         <div className="row">
           <div className="col">
-            <table className="table mt-4 mb-4">
-              <thead>
-                <tr>
-                  <th>Nickname</th>
-                  <th>Address</th>
-                  <th>Created</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.props.accounts.length === 0 ? (
+            <div className="table-responsive">
+              <table className="table mt-4 mb-4">
+                <thead>
                   <tr>
-                    <td className="table-empty-cell" colSpan="100%">
-                      You don&apos;t have any accounts
-                    </td>
+                    <th>Nickname</th>
+                    <th>Address</th>
+                    <th>Created</th>
+                    <th></th>
                   </tr>
-                ) : (
-                  this.props.accounts.map(account => (
-                    <tr key={account.address}>
-                      <td>{account.nickname}</td>
-                      <td>{account.address}</td>
-                      <td>{moment(account.createdAt).format('L')}</td>
-                      <td>
-                        <DeleteIcon style={{ fill: '#8fa7b7' }} />
+                </thead>
+                <tbody>
+                  {this.props.accounts.length === 0 ? (
+                    <tr>
+                      <td className="table-empty-cell" colSpan="100%">
+                        You don&apos;t have any accounts
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ) : (
+                    this.props.accounts.map(account => (
+                      <tr key={account.address}>
+                        <td>{account.nickname}</td>
+                        <td>{account.address}</td>
+                        <td>{moment(account.createdAt).format('L')}</td>
+                        <td>
+                          <DeleteIcon style={{ fill: '#8fa7b7' }} />
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </>
