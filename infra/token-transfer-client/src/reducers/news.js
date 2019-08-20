@@ -41,14 +41,13 @@ const convertHtmlEntities = html => {
   return textarea.value
 }
 
-export const getNews = (state) => {
+export const getNews = state => {
   return state.news.map(item => {
     const tagIndex = item.description.indexOf('<img')
     const srcIndex =
       item.description.substring(tagIndex).indexOf('src=') + tagIndex
     const srcStart = srcIndex + 5
-    const srcEnd =
-      item.description.substring(srcStart).indexOf('"') + srcStart
+    const srcEnd = item.description.substring(srcStart).indexOf('"') + srcStart
     const imgSrc = item.description.substring(srcStart, srcEnd)
     const description =
       item.description.replace(/<[^>]*>?/gm, '').substr(0, 320) + '...'

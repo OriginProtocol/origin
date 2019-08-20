@@ -1,15 +1,11 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import Swiper from 'react-id-swiper'
 import 'react-id-swiper/lib/styles/css/swiper.css'
 
 import { fetchNews } from '@/actions/news'
-import {
-  getNews,
-  getIsLoading as getNewsIsLoading
-} from '@/reducers/news'
+import { getNews, getIsLoading as getNewsIsLoading } from '@/reducers/news'
 import BorderedCard from '@/components/BorderedCard'
 
 const NewsHeadlinesCard = props => {
@@ -52,7 +48,7 @@ const NewsHeadlinesCard = props => {
 const mapStateToProps = ({ news }) => {
   return {
     news: getNews(news),
-    newsIsLoading: getNewsIsLoading(news),
+    newsIsLoading: getNewsIsLoading(news)
   }
 }
 
@@ -64,7 +60,10 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-export default connect(mapStateToProps, mapDispatchToProps)(NewsHeadlinesCard)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NewsHeadlinesCard)
 
 require('react-styl')(`
   .title

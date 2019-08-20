@@ -92,7 +92,7 @@ export function deleteAccount(id) {
 
     return agent
       .delete(`${apiUrl}/api/accounts/${id}`)
-      .then(response => dispatch(deleteAccountSuccess(id)))
+      .then(() => dispatch(deleteAccountSuccess(id)))
       .catch(error => {
         dispatch(deleteAccountError(error))
         throw error

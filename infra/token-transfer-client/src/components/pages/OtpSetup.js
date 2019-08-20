@@ -60,7 +60,7 @@ class OtpVerify extends Component {
             <img src={this.state.otpQrUrl} style={{ margin: '20px 0' }} />
             <p>
               <strong>Secret Key:</strong>
-              <br/>
+              <br />
               <small className="d-md-none">{this.state.otpKey}</small>
               <span className="d-none d-md-block">{this.state.otpKey}</span>
             </p>

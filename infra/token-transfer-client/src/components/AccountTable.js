@@ -58,7 +58,9 @@ class AccountTable extends Component {
   }
 
   handleDeleteAccount = id => {
-    const result = window.confirm('Are you sure you want to delete that account?')
+    const result = window.confirm(
+      'Are you sure you want to delete that account?'
+    )
     if (result) {
       this.props.deleteAccount(id)
     }

@@ -3,10 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { fetchNews } from '@/actions/news'
-import {
-  getNews,
-  getIsLoading as getNewsIsLoading
-} from '@/reducers/news'
+import { getNews, getIsLoading as getNewsIsLoading } from '@/reducers/news'
 import NewsCard from '@/components/NewsCard'
 
 const News = props => {
@@ -39,7 +36,7 @@ const News = props => {
 const mapStateToProps = ({ news }) => {
   return {
     news: getNews(news),
-    newsIsLoading: getNewsIsLoading(news),
+    newsIsLoading: getNewsIsLoading(news)
   }
 }
 
@@ -51,4 +48,7 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-export default connect(mapStateToProps, mapDispatchToProps)(News)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(News)

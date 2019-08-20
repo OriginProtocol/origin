@@ -36,25 +36,35 @@ const WithdrawalDetail = props => {
         <div className="col-12 col-xl-6">
           <BorderedCard shadowed={true}>
             <div className="row mb-3">
-              <div className="col"><strong>Amount</strong></div>
+              <div className="col">
+                <strong>Amount</strong>
+              </div>
               <div className="col">{transfer.amount.toLocaleString()} OGN</div>
             </div>
             <div className="row mb-3">
-              <div className="col"><strong>IP</strong></div>
+              <div className="col">
+                <strong>IP</strong>
+              </div>
               <div className="col">{transfer.data.ip}</div>
             </div>
             <div className="row mb-3">
-              <div className="col"><strong>UserAgent</strong></div>
+              <div className="col">
+                <strong>UserAgent</strong>
+              </div>
               <div className="col">{transfer.data.device.source}</div>
             </div>
             <div className="row mb-3">
-              <div className="col"><strong>Destination</strong></div>
+              <div className="col">
+                <strong>Destination</strong>
+              </div>
               <div className="col">
                 <EthAddress address={transfer.toAddress} />
               </div>
             </div>
             <div className="row mb-3">
-              <div className="col"><strong>Time</strong></div>
+              <div className="col">
+                <strong>Time</strong>
+              </div>
               <div className="col">{moment(transfer.createdAt).fromNow()}</div>
             </div>
           </BorderedCard>
