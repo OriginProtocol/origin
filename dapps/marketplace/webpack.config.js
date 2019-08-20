@@ -140,7 +140,8 @@ const config = {
       ENABLE_WECHAT_ATTESTATION: false,
       SENTRY_DSN: null,
       NAMESPACE: 'dev',
-      TELEGRAM_BOT_USERNAME: TELEGRAM_BOT_USERNAME
+      TELEGRAM_BOT_USERNAME: TELEGRAM_BOT_USERNAME,
+      NODE_ENV: process.env.NODE_ENV
     })
   ],
 

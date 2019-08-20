@@ -86,6 +86,7 @@ class Currencies {
         id: 'token-OGN',
         name: 'Origin Token',
         code: 'OGN',
+        priceInUSD: 1,
         decimals: 18
       },
       'token-USDC': {
@@ -169,6 +170,9 @@ class Currencies {
   async get(currencyId) {
     if (!this.data[currencyId]) {
       throw new Error('Unsupported currency id', currencyId)
+    }
+    if (process.env.NODE_ENV === 'test') {
+      return this.data[currencyId]
     }
 
     // Wait until any existing fetching is completed before continuing
