@@ -203,13 +203,13 @@ class BalanceCard extends Component {
           <form onSubmit={this.handleTransfer}>
             <div className="form-group">
               <label htmlFor="email">Amount of Tokens</label>
-              <div className="input-group">
+              <div className="input-group flex-wrap">
                 <input {...input('amount')} />
                 <div className="input-group-append">
                   <span className="badge badge-secondary">OGN</span>
                 </div>
+                {Feedback('amount')}
               </div>
-              Feedback {Feedback('amount')}
             </div>
             {this.props.accounts.length > 0 && !this.state.modalAddAccount ? (
               <>

@@ -127,6 +127,13 @@ input, select {
   display: block;
 }
 
+/* Fix for bootstrap bug */
+.input-group.is-invalid {
+  ~ .invalid-feedback {
+    display: block;
+  }
+}
+
 /*
  * Loading indicators
  */

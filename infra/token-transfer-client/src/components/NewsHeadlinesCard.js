@@ -1,12 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import { bindActionCreators } from 'redux'
 import Swiper from 'react-id-swiper'
 import 'react-id-swiper/lib/styles/css/swiper.css'
 
-import withNews from '@/hoc/withNews'
+import { fetchNews } from '@/actions/news'
+import {
+  getNews,
+  getIsLoading as getNewsIsLoading
+} from '@/reducers/news'
 import BorderedCard from '@/components/BorderedCard'
 
-const NewsHeadlinesCard = ({ news = [] }) => {
-  if (!news.length) return null
+const NewsHeadlinesCard = props => {
+  useEffect(props.fetchNews, [])
+
+  if (props.newsIsLoading || props.error) return null
 
   const swiperParams = {
     autoHeight: true,
@@ -22,7 +31,7 @@ const NewsHeadlinesCard = ({ news = [] }) => {
     <BorderedCard shadowed={true}>
       <h2>News</h2>
       <Swiper {...swiperParams}>
-        {news.map(item => {
+        {props.news.map(item => {
           return (
             <div key={item.title}>
               <div className="title">{item.title}</div>
@@ -40,7 +49,22 @@ const NewsHeadlinesCard = ({ news = [] }) => {
   )
 }
 
-export default withNews(NewsHeadlinesCard)
+const mapStateToProps = ({ news }) => {
+  return {
+    news: getNews(news),
+    newsIsLoading: getNewsIsLoading(news),
+  }
+}
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      fetchNews: fetchNews
+    },
+    dispatch
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewsHeadlinesCard)
 
 require('react-styl')(`
   .title
