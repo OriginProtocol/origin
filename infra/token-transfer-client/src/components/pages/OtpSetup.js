@@ -60,8 +60,10 @@ class OtpVerify extends Component {
             <img src={this.state.otpQrUrl} style={{ margin: '20px 0' }} />
             <p>
               <strong>Secret Key:</strong>
-              <br />
-              {this.state.otpKey}
+              <div>
+                <small className="d-md-none">{this.state.otpKey}</small>
+                <span className="d-none d-md-block">{this.state.otpKey}</span>
+              </div>
             </p>
             <div className="alert alert-warning mx-auto">
               Store this secret key somewhere safe and don&apos;t share it with

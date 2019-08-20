@@ -51,7 +51,7 @@ class Login extends Component {
           <form>
             <div className="form-group">
               <label htmlFor="email">Email address</label>
-              <input {...input('email')} />
+              <input {...input('email')} type="email" />
               {Feedback('email')}
             </div>
             <button

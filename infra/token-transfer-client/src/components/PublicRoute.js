@@ -9,8 +9,8 @@ const PublicRoute = ({ component: Component, ...rest }) => {
       {...rest}
       render={props => (
         <div className="not-logged-in">
-          <div className="logo-wrapper">
-            <img src={Logo} className="logo" />
+          <div className="text-center" style={{ backgroundColor: '#007cff' }}>
+            <img src={Logo} className="my-5" style={{ width: '160px' }} />
           </div>
           <Component {...props} />
         </div>
@@ -20,15 +20,3 @@ const PublicRoute = ({ component: Component, ...rest }) => {
 }
 
 export default PublicRoute
-
-require('react-styl')(`
-  .not-logged-in
-    background-color: #007cff
-    min-height: 100vh;
-    padding-bottom: 50px
-    .logo-wrapper
-      text-align: center
-    .logo
-      margin: 80px auto
-      width: 160px
-`)

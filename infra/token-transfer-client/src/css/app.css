@@ -28,6 +28,11 @@ body {
   min-height: 100vh;
 }
 
+.not-logged-in {
+  min-height: 100vh;
+  padding-bottom: 50px;
+}
+
 @media (min-width: 768px) {
   #sidebar {
     width: 280px
@@ -40,6 +45,10 @@ body {
 
   .logged-in {
     flex-direction: row;
+  }
+
+  .not-logged-in {
+    background-color: #007cff;
   }
 }
 
@@ -95,6 +104,12 @@ input, select {
   width: 80%;
 }
 
+@media (max-width: 768px) {
+  .form-control, .form-control:focus {
+    width: 90%;
+  }
+}
+
 .form-control-lg {
   height: calc(1.5em + 1.5rem + 2px);
 }
@@ -148,6 +163,13 @@ input, select {
   text-align: center;
   max-width: 650px;
   margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .action-card {
+    padding: 40px 20px;
+    border-radius: 0;
+  }
 }
 
 .action-card h1 {
