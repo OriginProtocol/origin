@@ -378,7 +378,7 @@ function setMetaMask() {
     context.metaMaskEnabled = true
     context.web3Exec = metaMask
     context.marketplaceExec = context.marketplaceMM
-    Object.keys(context || {}).forEach(
+    Object.keys(context.marketplaces || {}).forEach(
       version =>
         (context.marketplaces[version].contractExec =
           context.marketplaces[version].contractMM)
