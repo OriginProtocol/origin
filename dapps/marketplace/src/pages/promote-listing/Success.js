@@ -42,7 +42,9 @@ const Success = ({ match, listing, multiUnit }) => {
                 </div>
                 <div>
                   <CoinLogo coin="ogn" />
-                  {listing.commissionPerUnit}
+                  <span>
+                    {listing.commissionPerUnit}
+                  </span>
                 </div>
               </div>
               <div>
@@ -51,7 +53,9 @@ const Success = ({ match, listing, multiUnit }) => {
                 </div>
                 <div>
                   <CoinLogo coin="ogn" />
-                  {listing.commission}
+                  <span>
+                    {listing.commission}
+                  </span>
                 </div>
               </div>
             </>
@@ -64,7 +68,9 @@ const Success = ({ match, listing, multiUnit }) => {
               </div>
               <div>
                 <CoinLogo coin="ogn" />
-                {listing.commissionPerUnit}
+                <span>
+                  {listing.commissionPerUnit}
+                </span>
               </div>
             </div>
           )}
@@ -132,6 +138,9 @@ require('react-styl')(`
           justify-content: space-between
           &:not(:last-child)
             margin-bottom: 0.5rem
+          > div
+            display: flex
+            align-items: center
           > div:nth-child(1)
             margin-right: 1rem
       .actions

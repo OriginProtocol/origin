@@ -31,13 +31,16 @@ const CreateMutationWaitModal = ({ waitFor, onCompleted, onClose }) => {
       onClose={() => onClose()}
     >
       {({ event }) => (
-        <AutoMutate
-          mutation={() => {
-            store.set('create-listing', undefined)
-            const { listingID } = event.returnValues
-            onCompleted(listingID)
-          }}
-        />
+        <>
+          <div className="spinner light" />
+          <AutoMutate
+            mutation={() => {
+              store.set('create-listing', undefined)
+              const { listingID } = event.returnValues
+              onCompleted(listingID)
+            }}
+          />
+        </>
       )}
     </WaitForTransaction>
   )

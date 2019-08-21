@@ -159,29 +159,32 @@ class UpdateListing extends Component {
         onClose={() => this.setState({ waitFor: null })}
       >
         {({ event }) => (
-          <AutoMutate
-            mutation={() => {
-              this.setState({ loading: true })
+          <>
+            <div className="spinner light" />
+            <AutoMutate
+              mutation={() => {
+                this.setState({ loading: true })
 
-              const { listingID } = event.returnValues
+                const { listingID } = event.returnValues
 
-              const dappListingID = `${netId}-000-${listingID}`
+                const dappListingID = `${netId}-000-${listingID}`
 
-              if (this.props.listingPromotion) {
-                this.setState({
-                  redirect: `/promote/${dappListingID}/success`
-                })
-              } else {
-                this.setState({
-                  redirect: `/create/${dappListingID}/success`
-                })
-              }
+                if (this.props.listingPromotion) {
+                  this.setState({
+                    redirect: `/promote/${dappListingID}/success`
+                  })
+                } else {
+                  this.setState({
+                    redirect: `/create/${dappListingID}/success`
+                  })
+                }
 
-              if (this.props.refetch) {
-                this.props.refetch()
-              }
-            }}
-          />
+                if (this.props.refetch) {
+                  this.props.refetch()
+                }
+              }}
+            />
+          </>
         )}
       </WaitForTransaction>
     )
