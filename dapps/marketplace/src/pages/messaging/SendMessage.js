@@ -8,6 +8,7 @@ import mutation from 'mutations/SendMessage'
 import withConfig from 'hoc/withConfig'
 
 import { postFile } from 'utils/fileUtils'
+import pasteIntoInput from 'utils/pasteIntoInput'
 
 const acceptedFileTypes = ['image/jpeg', 'image/pjpeg', 'image/png']
 
@@ -54,6 +55,28 @@ class SendMessage extends Component {
     this.fileInput.current.click()
   }
 
+  handleKeyPress = (e, sendMessage) => {
+    const charCode = e.which || e.keyCode
+    if (e.key === 'Enter' || charCode === 13 || charCode == 10) {
+      if (!e.shiftKey && !e.ctrlKey && !e.altKey) {
+        this.handleSubmit(e, sendMessage)
+      } else {
+        pasteIntoInput(this.input, '\n')
+        this.state.message = this.input.value // eslint-disable-line
+        e.preventDefault()
+      }
+    }
+  }
+
+  handleSubmit = (e, sendMessage) => {
+    const { to } = this.props
+    const { images, message } = this.state
+    e.preventDefault()
+    if (trim(message) || images) {
+      this.sendContent(sendMessage, to)
+    }
+  }
+
   async sendContent(sendMessage, to) {
     const { message, images } = this.state
 
@@ -67,20 +90,15 @@ class SendMessage extends Component {
   }
 
   render() {
-    const { to, config } = this.props
-    const { images, message } = this.state
+    const { config } = this.props
+    const { images } = this.state
 
     return (
       <Mutation mutation={mutation}>
         {sendMessage => (
           <form
             className="send-message d-flex"
-            onSubmit={e => {
-              e.preventDefault()
-              if (trim(message) || images) {
-                this.sendContent(sendMessage, to)
-              }
-            }}
+            onSubmit={e => this.handleSubmit(e, sendMessage)}
           >
             {images.length ? (
               <div className="images-preview">
@@ -112,6 +130,7 @@ class SendMessage extends Component {
                 ref={input => (this.input = input)}
                 value={this.state.message}
                 onChange={e => this.setState({ message: e.target.value })}
+                onKeyPress={e => this.handleKeyPress(e, sendMessage)}
               />
             )}
             <img
@@ -152,6 +171,7 @@ require('react-styl')(`
     border-top: 1px solid var(--pale-grey)
     padding-top: 1rem
     margin-top: 1rem
+    margin-bottom: 0.2rem
     .form-control
       margin-right: 1rem
       border: 0
