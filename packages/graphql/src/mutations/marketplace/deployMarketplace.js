@@ -1,9 +1,14 @@
-import Marketplace from '@origin/contracts/build/contracts/V00_Marketplace'
+import MarketplaceV0 from '@origin/contracts/build/contracts/V00_Marketplace'
+import MarketplaceV1 from '@origin/contracts/build/contracts/V01_Marketplace'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts, { setMarketplace } from '../../contracts'
-const data = Marketplace.bytecode
 
-async function deployMarketplace(_, { token, from, autoWhitelist }) {
+async function deployMarketplace(_, { token, from, autoWhitelist, version }) {
+  if (!version) {
+    throw new Error('Marketplace version must be specified')
+  }
+  const Marketplace = version === '001' ? MarketplaceV1 : MarketplaceV0
+  const data = Marketplace.bytecode
   const web3 = contracts.web3Exec
   await checkMetaMask(from)
   const Contract = new web3.eth.Contract(Marketplace.abi)
@@ -14,12 +19,7 @@ async function deployMarketplace(_, { token, from, autoWhitelist }) {
     from,
     mutation: 'deployMarketplace',
     onReceipt: receipt => {
-      // console.log('Deployed marketplace to', receipt.contractAddress)
-      if (typeof window !== 'undefined') {
-        window.localStorage.marketplaceContract = receipt.contractAddress
-      }
-
-      setMarketplace(receipt.contractAddress, receipt.blockNumber)
+      setMarketplace(receipt.contractAddress, receipt.blockNumber, version)
 
       const Token = contracts[token]
       if (!autoWhitelist || !Token) {

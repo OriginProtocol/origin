@@ -1,6 +1,5 @@
 import assert from 'assert'
-import helper, { contractPath } from './_helper'
-import { ZERO_ADDRESS, IpfsHash } from './_marketplaceHelpers'
+import helper, { contractPath, ZERO_ADDRESS, IpfsHash } from './_helper'
 import Table from 'cli-table'
 import GasPriceInDollars from './_gasPriceInDollars'
 
@@ -51,8 +50,8 @@ describe('Identity', async function() {
 
     Marketplace = await deploy('V00_Marketplace', {
       from: accounts[0],
-      path: `${contractPath}/marketplace/v00`,
-      file: 'Marketplace.sol',
+      path: `${contractPath}/marketplace`,
+      file: 'V00_Marketplace.sol',
       args: [ZERO_ADDRESS]
     })
 

@@ -7,8 +7,8 @@ export const RefetchMutation = gql`
 `
 
 export const AddAffiliateMutation = gql`
-  mutation AddAffiliate($affiliate: String!, $from: String) {
-    addAffiliate(affiliate: $affiliate, from: $from) {
+  mutation AddAffiliate($affiliate: String!, $from: String, $version: String) {
+    addAffiliate(affiliate: $affiliate, from: $from, version: $version) {
       id
     }
   }
@@ -110,7 +110,7 @@ export const DeployMarketplaceMutation = gql`
   mutation DeployMarketplace(
     $from: String
     $token: String!
-    $version: String
+    $version: String!
     $autoWhitelist: Boolean
   ) {
     deployMarketplace(
@@ -159,6 +159,7 @@ export const DeployIdentityProxyMutation = gql`
 export const CreateListingMutation = gql`
   mutation CreateListing(
     $from: String!
+    $version: String
     $deposit: String
     $depositManager: String
     $autoApprove: Boolean
@@ -168,6 +169,7 @@ export const CreateListingMutation = gql`
   ) {
     createListing(
       from: $from
+      version: $version
       deposit: $deposit
       depositManager: $depositManager
       autoApprove: $autoApprove

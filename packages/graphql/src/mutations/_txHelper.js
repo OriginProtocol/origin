@@ -210,9 +210,9 @@ export default function txHelper({
             if (!receipt) {
               receipt = await web3.eth.getTransactionReceipt(relayerResponse.id)
             }
-            if (receipt && newBlock.number === receipt.blockNumber) {
+            if (receipt && newBlock.id === receipt.blockNumber) {
               if (onReceipt) onReceipt()
-            } else if (receipt && newBlock.number === receipt.blockNumber + 1) {
+            } else if (receipt && newBlock.id === receipt.blockNumber + 1) {
               if (onConfirmation) onConfirmation()
               pubsub.ee.off('NEW_BLOCK', responseBlocks)
             }

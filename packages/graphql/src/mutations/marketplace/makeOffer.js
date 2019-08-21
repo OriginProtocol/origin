@@ -14,25 +14,29 @@ const debug = createDebug('origin:makeOffer:')
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
 async function makeOffer(_, data) {
+  const { listingId, marketplace } = parseId(data.listingID, contracts)
+
   await checkMetaMask(data.from)
 
   const buyer = data.from || contracts.defaultMobileAccount
-  const marketplace = contracts.marketplaceExec
-  const ipfsData = await toIpfsData(data)
+  if (!marketplace) {
+    throw new Error('No marketplace')
+  }
+  const ipfsData = await toIpfsData(data, marketplace)
   let mutation = 'makeOffer'
 
-  const affiliateWhitelistDisabled = await marketplace.methods
-    .allowedAffiliates(marketplace.options.address)
+  const affiliateWhitelistDisabled = await marketplace.contract.methods
+    .allowedAffiliates(marketplace.contract.options.address)
     .call()
 
   const affiliate = data.affiliate || contracts.config.affiliate || ZeroAddress
   if (!affiliateWhitelistDisabled) {
-    const affiliateAllowed = await marketplace.methods
+    const affiliateAllowed = await marketplace.contract.methods
       .allowedAffiliates(affiliate)
       .call()
 
     if (!affiliateAllowed) {
-      throw new Error('Affiliate not on whitelist')
+      throw new Error(`Affiliate ${affiliate} not on whitelist`)
     }
   }
 
@@ -59,7 +63,6 @@ async function makeOffer(_, data) {
     throw new Error(`Could not find token address for ${data.currency}`)
   }
 
-  const { listingId } = parseId(data.listingID)
   const args = [
     listingId,
     ipfsHash,
@@ -76,7 +79,7 @@ async function makeOffer(_, data) {
   }
 
   let ethValue = currencyAddress === ZeroAddress ? value : 0
-  let tx = marketplace.methods.makeOffer(...args)
+  let tx = marketplace.contractExec.methods.makeOffer(...args)
   if (contracts.config.proxyAccountsEnabled) {
     let owner = await proxyOwner(buyer)
     const isProxy = owner ? true : false
@@ -97,7 +100,7 @@ async function makeOffer(_, data) {
         const swapABI = await swapTx.tx.encodeABI()
         tx = Proxy.methods.swapAndMakeOffer(
           owner, // address _owner,
-          contracts.marketplace._address, // address _marketplace,
+          marketplace.contract._address, // address _marketplace,
           txData, // bytes _offer,
           contracts.daiExchange._address, // address _exchange,
           swapABI, // bytes _swap,
@@ -113,7 +116,7 @@ async function makeOffer(_, data) {
         debug('transferTokenMarketplaceExecute', { value, currencyAddress })
         tx = Proxy.methods.transferTokenMarketplaceExecute(
           owner,
-          contracts.marketplace._address,
+          marketplace.contract._address,
           txData,
           currencyAddress,
           value
@@ -133,9 +136,9 @@ async function makeOffer(_, data) {
   })
 }
 
-async function toIpfsData(data) {
+async function toIpfsData(data, marketplace) {
   const { listingId } = parseId(data.listingID)
-  const listing = await contracts.eventSource.getListing(listingId)
+  const listing = await marketplace.eventSource.getListing(listingId)
   const web3 = contracts.web3
 
   // Validate units purchased vs. available

@@ -8,9 +8,9 @@ async function updateRefund(_, data) {
   const from = data.from || contracts.defaultMobileAccount
   await checkMetaMask(from)
   const ipfsHash = await post(contracts.ipfsRPC, data)
-  const { listingId, offerId } = parseId(data.offerID)
+  const { listingId, offerId, marketplace } = parseId(data.offerID, contracts)
 
-  const tx = contracts.marketplaceExec.methods.updateRefund(
+  const tx = marketplace.contractExec.methods.updateRefund(
     listingId,
     offerId,
     data.amount,

@@ -3,7 +3,7 @@ const expect = chai.expect
 const request = require('supertest')
 const express = require('express')
 
-const { Account, User } = require('../../src/models')
+const { Account, User, sequelize } = require('../../src/models')
 
 process.env.SENDGRID_FROM_EMAIL = 'test@test.com'
 process.env.SENDGRID_API_KEY = 'test'
@@ -14,12 +14,18 @@ const app = require('../../src/app')
 
 describe('Account HTTP API', () => {
   beforeEach(async () => {
+    // Wipe database before each test
+    expect(process.env.NODE_ENV).to.equal('test')
+    await sequelize.sync({ force: true })
+
     this.user = await User.create({
-      email: 'user@originprotocol.com'
+      email: 'user@originprotocol.com',
+      name: 'User 1'
     })
 
     this.user2 = await User.create({
-      email: 'user2@originprotocol.com'
+      email: 'user2@originprotocol.com',
+      name: 'User 2'
     })
 
     this.mockApp = express()
@@ -33,16 +39,6 @@ describe('Account HTTP API', () => {
       next()
     })
     this.mockApp.use(app)
-  })
-
-  afterEach(async () => {
-    await Account.destroy({
-      where: {}
-    })
-
-    await User.destroy({
-      where: {}
-    })
   })
 
   it('should add an account', async () => {

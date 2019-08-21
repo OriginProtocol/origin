@@ -8,10 +8,10 @@ async function disputeOffer(_, data) {
   const from = data.from || contracts.defaultMobileAccount
   await checkMetaMask(from)
   const ipfsHash = await post(contracts.ipfsRPC, data)
-  const { listingId, offerId } = parseId(data.offerID)
+  const { listingId, offerId, marketplace } = parseId(data.offerID, contracts)
 
   return txHelper({
-    tx: contracts.marketplaceExec.methods.dispute(listingId, offerId, ipfsHash),
+    tx: marketplace.contractExec.methods.dispute(listingId, offerId, ipfsHash),
     from,
     mutation: 'disputeOffer',
     gas: cost.disputeOffer

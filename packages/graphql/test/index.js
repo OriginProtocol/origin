@@ -45,7 +45,7 @@ describe('Marketplace', function() {
   it('should deploy the marketplace contract', async function() {
     const receipt = await mutate(mutations.DeployMarketplace, {
       token: OGN,
-      version: '001',
+      version: '000',
       autoWhitelist: true,
       from: Admin
     })

@@ -56,7 +56,7 @@
     "solc": "0.5.11",
     "solidity-coverage": "0.6.4",
     "solium": "1.2.4",
-    "web3-provider-engine": "15.0.0"
+    "web3-provider-engine": "15.0.3"
   },
   "babel": {
     "presets": [

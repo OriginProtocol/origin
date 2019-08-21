@@ -3,7 +3,7 @@ const expect = chai.expect
 
 const { encrypt, decrypt } = require('../../src/lib/crypto')
 
-describe('Crypto', () => {
+describe('Crypto library', () => {
   it('Should encrypt and decrypt', () => {
     const data = 'I will be back'
     const encrypted = encrypt(data)

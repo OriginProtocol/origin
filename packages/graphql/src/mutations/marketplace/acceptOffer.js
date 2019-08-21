@@ -10,14 +10,14 @@ async function acceptOffer(_, data) {
   const ipfsHash = await post(contracts.ipfsRPC, {
     schemaId: 'https://schema.originprotocol.com/offer-accept_1.0.0.json'
   })
-  const { listingId, offerId } = parseId(data.offerID)
+  const { listingId, offerId, marketplace } = parseId(data.offerID, contracts)
 
-  const offer = await contracts.eventSource.getOffer(listingId, offerId)
+  const offer = await marketplace.eventSource.getOffer(listingId, offerId)
   if (!offer.valid) {
     throw new Error(`Invalid offer: ${offer.validationError}`)
   }
 
-  const tx = contracts.marketplaceExec.methods.acceptOffer(
+  const tx = marketplace.contractExec.methods.acceptOffer(
     listingId,
     offerId,
     ipfsHash
