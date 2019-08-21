@@ -35,6 +35,7 @@ module.exports = function() {
       try {
         decodedToken = jwt.verify(token, encryptionSecret)
       } catch (error) {
+        logger.error('Could not decode token')
         return done(null, false)
       }
 
@@ -44,12 +45,16 @@ module.exports = function() {
         })
         if (!user) {
           // No user with that email found.
+          logger.warning(
+            `Passport authentication attempted for invalid user ${decodedToken.email}`
+          )
           return done(null, false)
         }
         // All good
         return done(null, user)
       } catch (e) {
         // Something went wrong. Return an error.
+        logger.error(e)
         return done(e)
       }
     })
