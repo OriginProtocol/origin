@@ -7,7 +7,7 @@ function bota(input) {
 }
 
 function convertCursorToOffset(cursor) {
-  return parseInt(atob(cursor))
+  return atob(cursor)
 }
 
 function atob(input) {
@@ -71,9 +71,11 @@ async function allIds(contract, version) {
 async function resultsFromIds({ after, ids, first, totalCount, fields }) {
   let start = 0,
     nodes = []
+
   if (after) {
     start = ids.indexOf(convertCursorToOffset(after)) + 1
   }
+
   const end = start + first
   ids = ids.slice(start, end)
 
@@ -102,17 +104,6 @@ async function resultsFromIds({ after, ids, first, totalCount, fields }) {
   }
 }
 
-// Returns events from each marketplace contract. Expects filters to be passed,
-// eg `getEvents({ event: 'ListingWithdrawn', })`
-async function getEvents(args) {
-  const results = {}
-  for (const version in contracts.marketplaces) {
-    const eventCache = contracts.marketplaces[version].contract.eventCache
-    results[version] = await eventCache.getEvents(args)
-  }
-  return results
-}
-
 export async function listingsBySeller(
   listingSeller,
   { first = 10, after, filter },
@@ -126,27 +117,30 @@ export async function listingsBySeller(
     party = [party, owner]
   }
 
-  let events = await getEvents({ event: 'ListingCreated', party })
+  let allIds = []
+  for (const version in contracts.marketplaces) {
+    const eventCache = contracts.marketplaces[version].contract.eventCache
 
-  if (filter === 'active') {
-    const withdrawn = await getEvents({ event: 'ListingWithdrawn', party })
-    Object.keys(withdrawn).forEach(v => {
-      const ids = withdrawn[v].map(e => e.returnValues.listingID)
-      events[v] = events[v].filter(
-        e => ids.indexOf(e.returnValues.listingID) < 0
-      )
-    })
-  } else if (filter === 'inactive') {
-    events = await getEvents({ event: 'ListingWithdrawn', party })
+    let events = await eventCache.getEvents({ event: 'ListingCreated', party })
+
+    if (filter === 'active') {
+      const withdrawn = await eventCache.getEvents({
+        event: 'ListingWithdrawn',
+        party
+      })
+      const ids = withdrawn.map(e => e.returnValues.listingID)
+      events = events.filter(e => ids.indexOf(e.returnValues.listingID) < 0)
+    } else if (filter === 'inactive') {
+      events = await eventCache.getEvents({ event: 'ListingWithdrawn', party })
+    }
+
+    allIds = allIds.concat(
+      events.map(e => `x-${version}-${e.returnValues.listingID}`)
+    )
   }
 
-  const ids = Object.keys(events)
-    .map(v => events[v].map(e => `x-${v}-${e.returnValues.listingID}`))
-    .flat()
-
-  const totalCount = ids.length
-
-  return await resultsFromIds({ after, ids, first, totalCount, fields })
+  const totalCount = allIds.length
+  return await resultsFromIds({ after, ids: allIds, first, totalCount, fields })
 }
 
 export default async function listings(
