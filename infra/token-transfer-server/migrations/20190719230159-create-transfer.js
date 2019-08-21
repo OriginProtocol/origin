@@ -13,10 +13,10 @@ module.exports = {
           primaryKey: true,
           type: Sequelize.INTEGER
         },
-        grant_id: {
+        user_id: {
           allowNull: false,
           type: Sequelize.INTEGER,
-          references: { model: 't3_grant', key: 'id' }
+          references: { model: 't3_user', key: 'id' }
         },
         status: {
           type: Sequelize.ENUM(TransferStatuses)
@@ -49,7 +49,7 @@ module.exports = {
         }
       })
       .then(() => queryInterface.addIndex(tableName, ['to_address']))
-      .then(() => queryInterface.addIndex(tableName, ['grant_id']))
+      .then(() => queryInterface.addIndex(tableName, ['user_id']))
   },
   down: queryInterface => {
     return queryInterface

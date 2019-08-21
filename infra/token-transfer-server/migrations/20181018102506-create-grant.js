@@ -15,9 +15,6 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: { model: 't3_user', key: 'id' }
       },
-      grant_type: {
-        type: Sequelize.STRING
-      },
       start: {
         type: Sequelize.DATEONLY,
         allowNull: false
@@ -48,6 +45,9 @@ module.exports = {
           'seconds'
         ]),
         allowNull: false
+      },
+      grant_type: {
+        type: Sequelize.STRING
       },
       purchase_date: {
         type: Sequelize.DATEONLY
