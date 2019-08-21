@@ -38,7 +38,7 @@ export default async function() {
           width: 1280,
           height: 1024
         },
-        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disk-cache-size=1']
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
         // dumpio: true
         // slowMo: headless ? undefined : 40
       })

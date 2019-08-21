@@ -148,9 +148,33 @@ class UpdateListing extends Component {
     })
   }
 
-  renderWaitModal() {
+  async onTxCompleted(event) {
     const netId = get(this.props, 'web3.networkId')
 
+    this.setState({ loading: true })
+
+    const { listingID } = event.returnValues
+
+    const dappListingID = `${netId}-000-${listingID}`
+
+    const { refetch, listingPromotion } = this.props
+
+    if (refetch) {
+      await refetch()
+    }
+
+    if (listingPromotion) {
+      this.setState({
+        redirect: `/promote/${dappListingID}/success`
+      })
+    } else {
+      this.setState({
+        redirect: `/create/${dappListingID}/success`
+      })
+    }
+  }
+
+  renderWaitModal() {
     return (
       <WaitForTransaction
         hash={this.state.waitFor}
@@ -163,25 +187,7 @@ class UpdateListing extends Component {
             <div className="spinner light" />
             <AutoMutate
               mutation={() => {
-                this.setState({ loading: true })
-
-                const { listingID } = event.returnValues
-
-                const dappListingID = `${netId}-000-${listingID}`
-
-                if (this.props.listingPromotion) {
-                  this.setState({
-                    redirect: `/promote/${dappListingID}/success`
-                  })
-                } else {
-                  this.setState({
-                    redirect: `/create/${dappListingID}/success`
-                  })
-                }
-
-                if (this.props.refetch) {
-                  this.props.refetch()
-                }
+                this.onTxCompleted(event)
               }}
             />
           </>

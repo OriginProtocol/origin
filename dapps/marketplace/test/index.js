@@ -15,12 +15,6 @@ let page
 before(async function() {
   this.timeout(60000)
   page = (await services()).extrasResult.page
-  await page.setCacheEnabled(false)
-  const client = await page.target().createCDPSession()
-  await client.send('Network.enable')
-  await client.send('Network.setCacheDisabled', {
-    cacheDisabled: true
-  })
 })
 
 const reset = async sellerOgn => {
@@ -468,7 +462,7 @@ function listingTests(autoSwap) {
       await page.waitForSelector('.listing-buy-editonly')
       const sold = await page.$('.listing-buy-editonly')
       const sales = await page.evaluate(el => el.innerText, sold)
-      assert(sales.replace(/[\n\t\r ]+/g, ' ') === `Sold 2 Pending 0 Available 0`)
+      assert(sales.replace(/[\n\t\r ]+/g, ' ') === `Sold 2 Pending 0 Available 8`)
     })
 
     it('should have the updated commission numbers', async function() {
