@@ -1,7 +1,6 @@
-import React, { Component } from 'react'
-import { Mutation } from 'react-apollo'
+import React, { useState } from 'react'
+import { useMutation } from 'react-apollo'
 import get from 'lodash/get'
-import { fbt } from 'fbt-runtime'
 
 // Note that this is NOT the same as this file. This `CreateListing`
 // is under `origin-dapp/src/mutations`
@@ -10,6 +9,8 @@ import CreateListingMutation from 'mutations/CreateListing'
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
+
+import AutoMutate from 'components/AutoMutate'
 
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
@@ -21,132 +22,103 @@ const store = Store('sessionStorage')
 
 import applyListingData from './_listingData'
 
+const CreateMutationWaitModal = ({ waitFor, onCompleted, onClose }) => {
+  if (!waitFor) return null
+
+  return (
+    <WaitForTransaction
+      hash={waitFor}
+      event="ListingCreated"
+      onClose={() => onClose()}
+    >
+      {({ event }) => (
+        <>
+          <div className="spinner light" />
+          <AutoMutate
+            mutation={() => {
+              store.set('create-listing', undefined)
+              const { listingID } = event.returnValues
+              onCompleted(listingID)
+            }}
+          />
+        </>
+      )}
+    </WaitForTransaction>
+  )
+}
+
 // Used to cycle marketplace contract version when running tests
 let randomVersion = 1
 
-class CreateListing extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-    if (props.config.marketplaceVersion) {
-      const versions = props.config.marketplaceVersion.split(',')
-      this.state = {
-        version: versions[randomVersion % versions.length]
-      }
-      randomVersion += 1
-    }
+const CreateListing = props => {
+  const [state, setState] = useState({})
+  const netId = get(props, 'web3.networkId')
+
+  const [createListing] = useMutation(CreateListingMutation, {
+    onCompleted: ({ createListing }) => {
+      setState({ ...state, waitFor: createListing.id })
+    },
+    onError: errorData =>
+      setState({ ...state, waitFor: false, error: 'mutation', errorData })
+  })
+
+  if (state.redirect) {
+    return <Redirect to={state.redirect} push />
   }
 
-  render() {
-    if (this.state.redirect) {
-      return <Redirect to={this.state.redirect} push />
-    }
-    return (
-      <Mutation
-        mutation={CreateListingMutation}
-        onCompleted={({ createListing }) => {
-          this.setState({ waitFor: createListing.id })
+  return (
+    <>
+      <button
+        className={props.className}
+        onClick={() => {
+          if (props.cannotTransact) {
+            setState({
+              ...state,
+              error: props.cannotTransact,
+              errorData: props.cannotTransactData
+            })
+            return
+          }
+
+          const { walletProxy } = props
+
+          const variables = applyListingData(props, {
+            deposit: '0',
+            depositManager: walletProxy,
+            from: walletProxy,
+            version: '000'
+          })
+
+          if (props.config.marketplaceVersion) {
+            randomVersion += 1
+            const versions = props.config.marketplaceVersion.split(',')
+            variables.version = versions[randomVersion % versions.length]
+          }
+
+          setState({ ...state, waitFor: 'pending', version: variables.version })
+          createListing({ variables })
         }}
-        onError={errorData =>
-          this.setState({ waitFor: false, error: 'mutation', errorData })
+        children={props.children}
+      />
+      <CreateMutationWaitModal
+        waitFor={state.waitFor}
+        onClose={() => setState({ ...state, waitFor: null })}
+        onCompleted={listingID =>
+          setState({
+            ...state,
+            redirect: `/create/${netId}-${state.version}-${listingID}/success`
+          })
         }
-      >
-        {createListing => (
-          <>
-            <button
-              className={this.props.className}
-              onClick={() => this.onClick(createListing)}
-              children={this.props.children}
-            />
-            {this.renderWaitModal()}
-            {this.state.error && (
-              <TransactionError
-                reason={this.state.error}
-                data={this.state.errorData}
-                onClose={() => this.setState({ error: false })}
-              />
-            )}
-          </>
-        )}
-      </Mutation>
-    )
-  }
-
-  onClick(createListing) {
-    if (this.props.cannotTransact) {
-      this.setState({
-        error: this.props.cannotTransact,
-        errorData: this.props.cannotTransactData
-      })
-      return
-    }
-
-    this.setState({ waitFor: 'pending' })
-
-    const { walletProxy } = this.props
-
-    const variables = applyListingData(this.props, {
-      deposit: '0',
-      depositManager: walletProxy,
-      from: walletProxy,
-      version: this.state.version
-    })
-
-    createListing({ variables })
-  }
-
-  renderWaitModal() {
-    if (!this.state.waitFor) return null
-    const netId = get(this.props, 'web3.networkId')
-
-    return (
-      <WaitForTransaction
-        hash={this.state.waitFor}
-        event="ListingCreated"
-        onClose={() => this.setState({ waitFor: null })}
-      >
-        {({ event }) => (
-          <div className="make-offer-modal success">
-            <div className="success-icon" />
-            <fbt desc="createListing.success">
-              <div>Your listing has been created!</div>
-              <div>
-                Your listing will be visible within a few seconds. Here&apos;s
-                what happens next:
-                <ul>
-                  <li>Buyers will now see your listing on the marketplace.</li>
-                  <li>
-                    When a buyer makes an offer on your listing, you can choose
-                    to accept or reject it.
-                  </li>
-                  <li>
-                    Once the offer is accepted, you will be expected to fulfill
-                    the order.
-                  </li>
-                  <li>
-                    You will receive payment once the buyer confirms that the
-                    order has been fulfilled.
-                  </li>
-                </ul>
-              </div>
-            </fbt>
-            <button
-              href="#"
-              className="btn btn-outline-light"
-              onClick={() => {
-                store.set('create-listing', undefined)
-                const { listingID } = event.returnValues
-                this.setState({
-                  redirect: `/listing/${netId}-${this.state.version}-${listingID}`
-                })
-              }}
-              children={fbt('View Listing', 'View Listing')}
-            />
-          </div>
-        )}
-      </WaitForTransaction>
-    )
-  }
+      />
+      {state.error && (
+        <TransactionError
+          reason={state.error}
+          data={state.errorData}
+          onClose={() => setState({ ...state, error: false })}
+        />
+      )}
+    </>
+  )
 }
 
 export default withConfig(withWeb3(withWallet(withCanTransact(CreateListing))))
