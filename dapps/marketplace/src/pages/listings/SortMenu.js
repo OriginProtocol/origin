@@ -62,7 +62,7 @@ const SortMenu = ({
           {RenderMobileSort()}
         </>
       ) : (
-        <div className="container">
+        <div className="container d-flex">
           <SortDropdown
             onChange={onChange}
             selectedOption={selectedOption}
@@ -96,8 +96,6 @@ class SortDropdown extends React.Component {
 
     return (
       <Dropdown
-        el="li"
-        className="d-md-flex dropdown"
         open={sortVisible}
         onClose={() => handleSortVisible(false)}
         onChange={onChange}
@@ -202,8 +200,6 @@ require('react-styl')(`
   @media (max-width: 767.98px)
     .sort-modal
       padding: 1rem
-  .dropdown
-    width: 75px
   .sort-button-bar
     display: flex
     justify-content: flex-end
