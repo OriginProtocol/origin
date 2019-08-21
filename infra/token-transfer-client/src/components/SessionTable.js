@@ -41,7 +41,7 @@ const SessionTable = props => {
                 ) : (
                   loginEvents.map(event => (
                     <tr key={event.id}>
-                      <td>{event.ip}</td>
+                      <td>{event.data.ip}</td>
                       <td>
                         {event.data.device.isDesktop ? 'Desktop' : 'Mobile'}
                       </td>
@@ -49,9 +49,15 @@ const SessionTable = props => {
                       <td>{event.data.location}</td>
                       <td>{moment(event.createdAt).fromNow()}</td>
                       <td>
-                        {moment(event.createdAt).diff(moment(), 'minutes') > -30
-                          ? 'Active'
-                          : 'Expired'}
+                        {moment(event.createdAt).diff(moment(), 'minutes') > -30 ? (
+                          <>
+                            <div className="status-circle status-circle-success mr-2"></div>Active
+                          </>
+                        ) : (
+                          <>
+                            <div className="status-circle mr-2"></div>Expired
+                          </>
+                        )}
                       </td>
                     </tr>
                   ))
