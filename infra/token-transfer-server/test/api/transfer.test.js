@@ -388,7 +388,7 @@ describe('Transfer HTTP API', () => {
 
     const totpToken = '123456'
 
-    const response = await request(this.mockApp)
+    await request(this.mockApp)
       .post(`/api/transfers/${transfer.id}`)
       .send({
         code: totpToken
