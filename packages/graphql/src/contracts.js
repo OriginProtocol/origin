@@ -74,7 +74,6 @@ export function newBlock(blockNumber) {
   if (context.ProxyFactory) {
     context.ProxyFactory.eventCache.setLatestBlock(blockNumber)
   }
-  context.eventSource.resetCache()
 
   pubsub.publish('NEW_BLOCK', {
     newBlock: { id: blockNumber }
