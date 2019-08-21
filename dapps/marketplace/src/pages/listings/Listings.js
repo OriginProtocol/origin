@@ -120,7 +120,7 @@ class Listings extends Component {
     search.sort = selectedOptions[0]
     search.order = selectedOptions[1]
     pushSearchHistory(this.props.history, search)
-    this.setState({ search })
+    this.setState({ search, sortVisible: false })
   }
 
   handleSortVisible = bool => {
@@ -167,7 +167,7 @@ class Listings extends Component {
 
     const showCategory = get(this.state, 'search.category.type') ? false : true
     const showCount =
-      vars.search || vars.filters.length || this.state.search.ognListings
+      vars.search || vars.filters.length > 1 || this.state.search.ognListings
 
     const isSearch =
       get(this.state.search, 'searchInput', '') !== '' ||
