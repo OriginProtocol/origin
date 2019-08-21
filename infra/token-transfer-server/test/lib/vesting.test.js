@@ -5,7 +5,7 @@ chai.use(require('chai-bignumber')(BigNumber))
 const expect = chai.expect
 const moment = require('moment')
 
-const { Event, Grant, sequelize } = require('../../src/models')
+const { Grant, User, sequelize } = require('../../src/models')
 const {
   momentizeGrant,
   vestedAmount,
@@ -16,10 +16,6 @@ const {
 async function setupDatabase() {
   expect(process.env.NODE_ENV).to.equal('test')
   await sequelize.sync({ force: true })
-  const grants = await Grant.findAll()
-  expect(grants.length).to.equal(0)
-  const events = await Event.findAll()
-  expect(events.length).to.equal(0)
 }
 
 describe('Vesting library', () => {
@@ -28,8 +24,13 @@ describe('Vesting library', () => {
 
     beforeEach(async () => {
       await setupDatabase()
+      this.user = await User.create({
+        email: 'user@originprotocol.com',
+        otpKey: '123',
+        otpVerified: true
+      })
       const grantObj = new Grant({
-        userId: 1,
+        userId: this.user.id,
         start: '2014-01-01 00:00:00',
         end: '2018-01-01 00:00:00',
         cliff: '2015-01-01 00:00:00',
@@ -85,8 +86,13 @@ describe('Vesting library', () => {
 
     beforeEach(async () => {
       await setupDatabase()
+      this.user = await User.create({
+        email: 'user@originprotocol.com',
+        otpKey: '123',
+        otpVerified: true
+      })
       const grantObj = new Grant({
-        userId: 1,
+        userId: this.user.id,
         start: '2014-01-01 00:00:00',
         end: '2018-01-01 00:00:00',
         cliff: '2015-01-01 00:00:00',

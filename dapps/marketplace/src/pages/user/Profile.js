@@ -135,6 +135,7 @@ class UserProfile extends Component {
     if (
       (walletChanged || identityLoaded) &&
       !identity &&
+      !window.localStorage.noIdentity &&
       !this.state.redirectToOnboarding
     ) {
       // redirect to onboarding, if user doesn't have a deployed profile

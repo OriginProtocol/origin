@@ -1,13 +1,14 @@
 const BigNumber = require('bignumber.js')
+const moment = require('moment')
 
 const Token = require('@origin/token/src/token')
 
 const {
-  GRANT_TRANSFER_DONE,
-  GRANT_TRANSFER_FAILED,
-  GRANT_TRANSFER_REQUEST
+  TRANSFER_DONE,
+  TRANSFER_FAILED,
+  TRANSFER_REQUEST
 } = require('../constants/events')
-const { Event, Grant, Transfer, sequelize } = require('../models')
+const { Event, Grant, Transfer, User, sequelize } = require('../models')
 const enums = require('../enums')
 const logger = require('../logger')
 
@@ -18,39 +19,48 @@ const NumBlockConfirmation = 8
 
 // Wait up to 20 min for a transaction to get confirmed
 const ConfirmationTimeoutSec = 20 * 60 * 60
+const TwofactorTimeoutMinutes = 5
 
 /**
  * Helper method to check the validity of a transfer request.
- * Throws an exception in case the request sis invalid.
- * @param grantId
+ * Throws an exception in case the request is invalid.
+ * @param userId
  * @param amount
- * @returns {Promise<Grant>}
+ * @returns (Promise<User>)
  * @private
  */
-async function _checkTransferRequest(grantId, amount) {
-  // Load the grant and check there are enough tokens available to fullfill the transfer request.
-  const grant = await Grant.findOne({
+async function checkTransferRequest(userId, amount) {
+  const user = await User.findOne({
     where: {
-      id: grantId
+      id: userId
     },
-    include: [{ model: Transfer }]
+    include: [{ model: Grant }, { model: Transfer }]
   })
-  if (!grant) {
-    throw new Error(`Could not find specified grant id ${grantId}`)
+  // Load the user and check there enough tokens available to fulfill the
+  // transfer request
+  if (!user) {
+    throw new Error(`Could not find specified user id ${userId}`)
   }
 
   // Sum the amount from transfers that are in a pending or complete state
   const pendingOrCompleteTransfers = [
+    enums.TransferStatuses.WaitingTwoFactor,
     enums.TransferStatuses.Enqueued,
     enums.TransferStatuses.Paused,
     enums.TransferStatuses.WaitingConfirmation,
     enums.TransferStatuses.Success
   ]
 
-  const vested = vestedAmount(grant.get({ plain: true }))
+  // Sum the vested tokens for all of the users grants
+  const vested = user.Grants.map(grant => grant.get({ plain: true })).reduce(
+    (total, grant) => {
+      return total.plus(vestedAmount(grant))
+    },
+    BigNumber(0)
+  )
   logger.info('Vested tokens', vested.toString())
 
-  const pendingOrCompleteAmount = grant.Transfers.reduce((total, transfer) => {
+  const pendingOrCompleteAmount = user.Transfers.reduce((total, transfer) => {
     if (pendingOrCompleteTransfers.includes(transfer.status)) {
       return total.plus(BigNumber(transfer.amount))
     }
@@ -63,24 +73,27 @@ async function _checkTransferRequest(grantId, amount) {
 
   const available = vested.minus(pendingOrCompleteAmount)
   if (amount > available) {
+    logger.info(
+      `Amount of ${amount} OGN exceeds the ${available} available for user ${user.email}`
+    )
+
     throw new RangeError(
-      `Amount of ${amount} OGN exceeds the ${available} available for grant ${grantId}`
+      `Amount of ${amount} OGN exceeds the ${available} available balance`
     )
   }
 
-  return grant
+  return user
 }
 
 /**
  * Enqueues a request to transfer tokens.
  * @param userId
- * @param grantId
  * @param address
  * @param amount
  * @returns {Promise<integer>} Id of the transfer request.
  */
-async function enqueueTransfer(grantId, address, amount, ip) {
-  const grant = await _checkTransferRequest(grantId, amount)
+async function addTransfer(userId, address, amount, data = {}) {
+  const user = await checkTransferRequest(userId, amount)
 
   // Enqueue the request by inserting a row in the transfer table.
   // It will get picked up asynchronously by the offline job that processes transfers.
@@ -89,31 +102,54 @@ async function enqueueTransfer(grantId, address, amount, ip) {
   const txn = await sequelize.transaction()
   try {
     transfer = await Transfer.create({
-      grantId: grant.id,
-      status: enums.TransferStatuses.Enqueued,
+      userId: user.id,
+      status: enums.TransferStatuses.WaitingTwoFactor,
       toAddress: address.toLowerCase(),
       amount,
-      currency: 'OGN' // For now we only support OGN.
+      currency: 'OGN', // For now we only support OGN.
+      data
     })
     await Event.create({
-      userId: grant.userId,
-      grantId,
-      action: GRANT_TRANSFER_REQUEST,
+      userId: user.id,
+      action: TRANSFER_REQUEST,
       data: JSON.stringify({
         transferId: transfer.id
-      }),
-      ip
+      })
     })
     await txn.commit()
   } catch (e) {
     await txn.rollback()
-    logger.error(`Failed to enqueue transfer for address ${address}: ${e}`)
+    logger.error(`Failed to add transfer for address ${address}: ${e}`)
     throw e
   }
   logger.info(
-    `Enqueued transfer. id: ${transfer.id} address: ${address} amount: ${amount}`
+    `Added transfer. id: ${transfer.id} address: ${address} amount: ${amount}`
   )
   return transfer
+}
+
+/* Moves a transfer from waiting for two factor to enqueued.
+ * Throws an exception if the request is invalid.
+ * @param transfer
+ */
+async function confirmTransfer(transfer) {
+  if (transfer.status !== enums.TransferStatuses.WaitingTwoFactor) {
+    throw new Error('Transfer is not waiting for confirmation')
+  }
+
+  if (
+    moment().diff(moment(transfer.createdAt), 'minutes') >
+    TwofactorTimeoutMinutes
+  ) {
+    await transfer.update({
+      status: enums.TransferStatuses.Expired
+    })
+    throw new Error('Transfer was not confirmed in the required time')
+  }
+
+  return await transfer.update({
+    status: enums.TransferStatuses.Enqueued
+  })
 }
 
 /**
@@ -125,8 +161,8 @@ async function enqueueTransfer(grantId, address, amount, ip) {
 async function executeTransfer(transfer, opts) {
   const { networkId, tokenMock } = opts
 
-  const grant = await _checkTransferRequest(
-    transfer.grantId,
+  const user = await checkTransferRequest(
+    transfer.userId,
     transfer.amount,
     transfer
   )
@@ -153,16 +189,16 @@ async function executeTransfer(transfer, opts) {
   switch (status) {
     case 'confirmed':
       transferStatus = enums.TransferStatuses.Success
-      eventAction = GRANT_TRANSFER_DONE
+      eventAction = TRANSFER_DONE
       break
     case 'failed':
       transferStatus = enums.TransferStatuses.Failed
-      eventAction = GRANT_TRANSFER_FAILED
+      eventAction = TRANSFER_FAILED
       failureReason = 'Tx failed'
       break
     case 'timeout':
       transferStatus = enums.TransferStatuses.Failed
-      eventAction = GRANT_TRANSFER_FAILED
+      eventAction = TRANSFER_FAILED
       failureReason = 'Confirmation timeout'
       break
     default:
@@ -181,8 +217,7 @@ async function executeTransfer(transfer, opts) {
       status: transferStatus
     })
     const event = {
-      userId: grant.userId,
-      grantId: grant.id,
+      userId: user.id,
       action: eventAction,
       data: JSON.stringify({
         transferId: transfer.id
@@ -204,4 +239,9 @@ async function executeTransfer(transfer, opts) {
   return { txHash, txStatus: status }
 }
 
-module.exports = { enqueueTransfer, executeTransfer }
+module.exports = {
+  addTransfer,
+  checkTransferRequest,
+  confirmTransfer,
+  executeTransfer
+}
