@@ -368,13 +368,12 @@ describe('Transfer HTTP API', () => {
 
     const totpToken = totp.gen(this.otpKey)
 
-    const response = await request(this.mockApp)
+    await request(this.mockApp)
       .post(`/api/transfers/${transfer.id}`)
       .send({
         code: totpToken
       })
-    // .expect(201)
-    console.log(response.error)
+      .expect(201)
   })
 
   it('should not confirm a transfer with invalid totp code', async () => {

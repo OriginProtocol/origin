@@ -113,7 +113,10 @@ router.post(
       return res.status(422).send(e.message)
     }
 
-    return res.status(201).end()
+    return res
+      .status(201)
+      .json(transfer.get({ plain: true }))
+      .end()
   })
 )
 
