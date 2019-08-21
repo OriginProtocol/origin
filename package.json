@@ -61,7 +61,8 @@
       "truffle",
       "truffle-hdwallet-provider",
       "truffle-privatekey-provider",
-      "react-image-crop"
+      "react-image-crop",
+      "eslint"
     ],
     "ignorePaths": [
       "mobile"
