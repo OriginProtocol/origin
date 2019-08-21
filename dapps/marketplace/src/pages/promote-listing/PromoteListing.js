@@ -74,4 +74,25 @@ require('react-styl')(`
     display: flex
     flex-direction: column
     flex: 1
+    > div
+      display: flex
+      flex-direction: column
+      flex: 1
+      padding: 1rem
+      align-items: center
+      text-align: center
+      font-weight: 300
+      font-size: 18px
+      .actions
+        width: 100%
+        margin-top: 2rem
+      h4
+        font-size: 20px
+        font-weight: bold
+  @media (max-width: 767.98px)
+    .promote-listing > div
+      .actions
+        margin-top: auto
+        .btn
+          width: 100%
 `)
