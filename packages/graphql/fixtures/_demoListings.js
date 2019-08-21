@@ -3,6 +3,7 @@
 // House, Fractional Nightly
 const HawaiiHouse = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
+  version: '000',
   deposit: '0',
   depositManager: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
   autoApprove: true,
@@ -132,6 +133,7 @@ const HawaiiHouse = {
 // Car, Fractional Hourly
 const Car = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
+  version: '000',
   deposit: '0',
   depositManager: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
   autoApprove: true,
@@ -188,6 +190,7 @@ const Car = {
 // Tickets, Mutli-Unit
 const TaylorSwiftTickets = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
+  version: '000',
   deposit: '5',
   depositManager: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
   autoApprove: true,
@@ -234,6 +237,7 @@ const TaylorSwiftTickets = {
 // House, Fractional Nightly
 const LakeHouse = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
+  version: '000',
   deposit: '0',
   depositManager: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
   autoApprove: true,
@@ -281,6 +285,7 @@ const LakeHouse = {
 // House, Fractional Nightly
 const ZincHouse = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
+  version: '000',
   deposit: '0',
   depositManager: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
   autoApprove: true,
