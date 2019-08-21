@@ -373,8 +373,7 @@ describe('Transfer HTTP API', () => {
       .send({
         code: totpToken
       })
-    // .expect(201)
-    console.log(response.error)
+      .expect(201)
   })
 
   it('should not confirm a transfer with invalid totp code', async () => {
