@@ -114,7 +114,7 @@ require('react-styl')(`
     .nav-icon-open:before
       transform: translateY(5px) rotate(135deg)
     .nav-icon-open:after
-      transform: translateY(-4px) rotate(-135deg)
+      transform: translateY(-5px) rotate(-135deg)
     .nav-icon-open div
       transform: scale(0)
     .nav-item

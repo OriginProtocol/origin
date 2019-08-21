@@ -52,7 +52,7 @@ const PrivateRoute = ({
                   <div className="d-none d-md-block">
                     <AccountActions user={user} />
                   </div>
-                  <div className="mt-3">
+                  <div className="mt-4">
                     <Component {...props} user={user} />
                   </div>
                 </>
