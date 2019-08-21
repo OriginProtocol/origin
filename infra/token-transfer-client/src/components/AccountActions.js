@@ -34,7 +34,6 @@ export default AccountActions
 
 require('react-styl')(`
   .account-actions
-    margin-bottom: 40px
     font-size: 14px
     text-align: right
     color: #638298

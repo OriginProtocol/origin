@@ -1,5 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Redirect } from 'react-router-dom'
 
+import { apiUrl } from '@/constants'
+import agent from '@/utils/agent'
 import NavLink from '@/components/NavLink'
 import Logo from '@/assets/origin-logo.svg'
 import Dashboard from '-!react-svg-loader!@/assets/dashboard-icon.svg'
@@ -8,6 +11,17 @@ import News from '-!react-svg-loader!@/assets/news-icon.svg'
 import Security from '-!react-svg-loader!@/assets/security-icon.svg'
 
 const Navigation = props => {
+  const [redirectTo, setRedirectTo] = useState(null)
+
+  const handleLogout = async () => {
+    await agent.post(`${apiUrl}/api/logout`)
+    setRedirectTo('/')
+  }
+
+  if (redirectTo) {
+    return <Redirect push to={redirectTo} />
+  }
+
   return (
     <nav
       id="sidebar"
@@ -22,9 +36,9 @@ const Navigation = props => {
       >
         <div></div>
       </div>
-      <img src={Logo} className="brand my-2" />
+      <img src={Logo} className="brand my-3" />
       <div
-        className={`container mt-5 ${
+        className={`container mt-4 ${
           props.expandSidebar ? '' : 'd-none d-md-block'
         }`}
       >
@@ -54,6 +68,16 @@ const Navigation = props => {
             </NavLink>
           </li>
         </ul>
+        <ul className="navbar-nav small-links mt-4 d-md-none">
+          <li className="mt-4 mb-3">
+            <a href="mailto:support@originprotocol.com">Contact Support</a>
+          </li>
+          <li>
+            <a onClick={handleLogout} style={{ cursor: 'pointer' }}>
+              Logout
+            </a>
+          </li>
+        </ul>
       </div>
     </nav>
   )
@@ -70,7 +94,7 @@ require('react-styl')(`
     .nav-icon
       background: white
       border-radius: 50%
-      margin: 0.75em
+      margin: 1.2em
       height: 30px
       width: 30px
       position: absolute
@@ -90,19 +114,24 @@ require('react-styl')(`
     .nav-icon-open:before
       transform: translateY(5px) rotate(135deg)
     .nav-icon-open:after
-      transform: translateY(-5px) rotate(-135deg)
+      transform: translateY(-4px) rotate(-135deg)
     .nav-icon-open div
       transform: scale(0)
     .nav-item
       font-size: 16px
       a.nav-link
-        color: rgba(255, 255, 255, 0.5)
+        color: rgba(255, 255, 255, 0.8)
         .icon
           width: 28px
           margin-right: 15px
-          fill-opacity: 0.5
+          fill-opacity: 0.8
       a.nav-link.active
         color: rgba(255, 255, 255, 1)
         .icon
           fill-opacity: 1
+    .small-links
+      border-top: 1px solid rgba(255, 255, 255, 0.5)
+      font-size: 14px
+      a
+        color: rgba(255, 255, 255, 0.8)
 `)
