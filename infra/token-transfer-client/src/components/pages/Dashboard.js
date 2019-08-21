@@ -65,11 +65,11 @@ const Dashboard = props => {
             </div>
           </div>
           <div className="row">
-            <div className="col-12 col-lg-6 mb-4">
+            <div className="col-12 col-lg-6 mb-5">
               <VestingHistory grants={props.grants} isLocked={isLocked} />
             </div>
             {!props.user.employee && (
-              <div className="col-12 col-lg-6">
+              <div className="col-12 col-lg-6 mb-5">
                 <GrantDetails grants={props.grants} />
               </div>
             )}

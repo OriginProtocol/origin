@@ -72,6 +72,4 @@ require('react-styl')(`
     margin: 10px 0
   .swiper-pagination
     position: relative
-  .swiper-pagination-bullets
-    bottom: 0px !important
 `)

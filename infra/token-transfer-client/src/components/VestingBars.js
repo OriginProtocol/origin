@@ -31,7 +31,7 @@ const VestingBars = props => {
 
   const generateMarkers = () => {
     const maxMarkers = 5
-    if (props.user.employee) {
+    if (grants.length > 1 || props.user.employee) {
       return generateMonthMarkers(maxMarkers)
     } else {
       return generateAmountMarkers(maxMarkers)
