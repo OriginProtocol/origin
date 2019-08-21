@@ -2,6 +2,9 @@ import {
   ADD_TRANSFER_PENDING,
   ADD_TRANSFER_SUCCESS,
   ADD_TRANSFER_ERROR,
+  CONFIRM_TRANSFER_PENDING,
+  CONFIRM_TRANSFER_SUCCESS,
+  CONFIRM_TRANSFER_ERROR,
   FETCH_TRANSFERS_PENDING,
   FETCH_TRANSFERS_SUCCESS,
   FETCH_TRANSFERS_ERROR
@@ -9,6 +12,7 @@ import {
 
 const initialState = {
   isAdding: false,
+  isConfirming: false,
   isLoading: true,
   transfers: [],
   error: null
@@ -32,6 +36,29 @@ export default function transfersReducer(state = initialState, action) {
       return {
         ...state,
         isAdding: false,
+        error: action.error
+      }
+    case CONFIRM_TRANSFER_PENDING:
+      return {
+        ...state,
+        isConfirming: true
+      }
+    case CONFIRM_TRANSFER_SUCCESS:
+      return {
+        ...state,
+        isConfirming: false,
+        transfers: [
+          ...state.transfers.filter(t => t.id === action.payload.id),
+          {
+            ...action.payload
+          }
+        ],
+        error: null
+      }
+    case CONFIRM_TRANSFER_ERROR:
+      return {
+        ...state,
+        isConfirming: false,
         error: action.error
       }
     case FETCH_TRANSFERS_PENDING:
@@ -60,4 +87,5 @@ export default function transfersReducer(state = initialState, action) {
 export const getTransfers = state => state.transfers
 export const getError = state => state.error
 export const getIsAdding = state => state.isAdding
+export const getIsConfirming = state => state.isConfirming
 export const getIsLoading = state => state.isLoading

@@ -8,10 +8,11 @@ import {
   getError as getAccountsError,
   getIsAdding as getAccountIsAdding
 } from '@/reducers/account'
-import { addTransfer } from '@/actions/transfer'
+import { addTransfer, confirmTransfer } from '@/actions/transfer'
 import {
   getError as getTransfersError,
-  getIsAdding as getTransferIsAdding
+  getIsAdding as getTransferIsAdding,
+  getIsConfirming as getTransferIsConfirming
 } from '@/reducers/transfer'
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import { unlockDate } from '@/constants'
@@ -28,12 +29,12 @@ class BalanceCard extends Component {
 
   componentDidUpdate(prevProps) {
     // Parse server errors for account add
-    if (get(prevProps, 'accountsError') !== this.props.accountsError) {
-      this.handleErrors(this.props.accountsError)
+    if (get(prevProps, 'accountError') !== this.props.accountError) {
+      this.handleErrors(this.props.accountError)
     }
     // Parse server errors for transfer add
-    if (get(prevProps, 'transfersError') !== this.props.transfersError) {
-      this.handleServerError(this.props.transfersError)
+    if (get(prevProps, 'transferError') !== this.props.transferError) {
+      this.handleServerError(this.props.transferError)
     }
   }
 
@@ -57,16 +58,19 @@ class BalanceCard extends Component {
       addressError: null,
       amount: '',
       amountError: null,
+      code: '',
+      codeError: null,
       displayModal: false,
       modalAddAccount: this.props.accounts.length === 0,
       modalState: 'Disclaimer',
       nickname: '',
-      nicknameError: null
+      nicknameError: null,
+      pendingTransfer: null
     }
     return initialState
   }
 
-  handleTransfer = event => {
+  handleTransfer = async event => {
     event.preventDefault()
     if (this.state.modalAddAccount) {
       // Add account before processing request
@@ -77,10 +81,27 @@ class BalanceCard extends Component {
     }
 
     // Do the transfer
-    this.props.addTransfer({
+    const result = await this.props.addTransfer({
       amount: this.state.amount,
       address: this.state.address
     })
+    console.log(result)
+    if (result.type === 'ADD_TRANSFER_SUCCESS') {
+      this.setState({
+        pendingTransfer: result.payload,
+        modalState: 'TwoFactor'
+      })
+    }
+  }
+
+  handleConfirm = async () => {
+    const result = await this.props.confirmTransfer(
+      this.state.pendingTransfer.id,
+      this.state.code
+    )
+    if (result.type === 'CONFIRM_TRANSFER_SUCCESS') {
+      this.handleModalClose()
+    }
   }
 
   handleModalClose = () => {
@@ -163,126 +184,174 @@ class BalanceCard extends Component {
   }
 
   renderModal() {
+    return (
+      <Modal appendToId="main" onClose={this.handleModalClose} closeBtn={true}>
+        {this.state.modalState === 'Disclaimer' && this.renderDisclaimer()}
+        {this.state.modalState === 'Form' && this.renderTransferForm()}
+        {this.state.modalState === 'TwoFactor' && this.renderTwoFactor()}
+      </Modal>
+    )
+  }
+
+  renderDisclaimer() {
+    return (
+      <>
+        <h1 className="mb-2">Withdraw OGN</h1>
+        <div className="alert alert-warning mt-4 mb-4 mx-auto">
+          This transaction is not reversible and we cannot help you recover
+          these funds
+        </div>
+        <ul className="my-4 mx-auto">
+          <li className="mt-1">
+            Ut non eleifend enim. Curabitur tempor tellus nunc, sit amet
+            vehicula enim porttitor id.
+          </li>
+          <li className="mt-1">
+            Nam consequat est mi, eu semper augue interdum nec.
+          </li>
+          <li className="mt-1">
+            Duis posuere lectus velit, vitae cursus velit molestie congue.
+          </li>
+          <li className="mt-1">
+            Aenean justo tellus, vestibulum sit amet pharetra id, ultricies ut
+            neque.
+          </li>
+        </ul>
+        <button
+          className="btn btn-primary btn-lg mt-3"
+          onClick={() => this.setState({ modalState: 'Form' })}
+        >
+          Continue
+        </button>
+      </>
+    )
+  }
+
+  renderTransferForm() {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
     return (
-      <Modal appendToId="main" onClose={this.handleModalClose} closeBtn={true}>
+      <>
         <h1 className="mb-2">Withdraw OGN</h1>
-        {this.state.modalState === 'Disclaimer' && (
-          <>
-            <div className="alert alert-warning mt-4 mb-4 mx-auto">
-              This transaction is not reversible and we cannot help you recover
-              these funds
-            </div>
-            <ul className="my-4 mx-auto">
-              <li className="mt-1">
-                Ut non eleifend enim. Curabitur tempor tellus nunc, sit amet
-                vehicula enim porttitor id.
-              </li>
-              <li className="mt-1">
-                Nam consequat est mi, eu semper augue interdum nec.
-              </li>
-              <li className="mt-1">
-                Duis posuere lectus velit, vitae cursus velit molestie congue.
-              </li>
-              <li className="mt-1">
-                Aenean justo tellus, vestibulum sit amet pharetra id, ultricies
-                ut neque.
-              </li>
-            </ul>
-            <button
-              className="btn btn-primary btn-lg mt-3"
-              onClick={() => this.setState({ modalState: 'Form' })}
-            >
-              Continue
-            </button>
-          </>
-        )}
-        {this.state.modalState === 'Form' && (
-          <form onSubmit={this.handleTransfer}>
-            <div className="form-group">
-              <label htmlFor="email">Amount of Tokens</label>
-              <div className="input-group">
-                <input {...input('amount')} />
-                <div className="input-group-append">
-                  <span className="badge badge-secondary">OGN</span>
-                </div>
-              </div>
-              <div className={this.state.amountError ? 'input-group-fix' : ''}>
-                {Feedback('amount')}
+        <form onSubmit={this.handleTransfer}>
+          <div className="form-group">
+            <label htmlFor="email">Amount of Tokens</label>
+            <div className="input-group">
+              <input {...input('amount')} />
+              <div className="input-group-append">
+                <span className="badge badge-secondary">OGN</span>
               </div>
             </div>
-            {this.props.accounts.length > 0 && !this.state.modalAddAccount ? (
-              <>
+            <div className={this.state.amountError ? 'input-group-fix' : ''}>
+              {Feedback('amount')}
+            </div>
+          </div>
+          {this.props.accounts.length > 0 && !this.state.modalAddAccount ? (
+            <>
+              <div className="form-group">
+                <label htmlFor="email">Destination Account</label>
+                <select
+                  className="custom-select custom-select-lg"
+                  value={this.state.address}
+                  onChange={e => this.setState({ address: e.target.value })}
+                >
+                  {this.props.accounts.map(account => (
+                    <option key={account.address} value={account.address}>
+                      {account.nickname}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <a href="#" onClick={this.handleAddAccount}>
+                  Add Another Account
+                </a>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="form-group">
+                <label htmlFor="email">Destination Account</label>
+                <input {...input('address')} placeholder="0x..." />
+                {Feedback('address')}
+              </div>
+              <div className="form-group">
+                <label htmlFor="email">Destination Account Nickname</label>
+                <input {...input('nickname')} />
+                {Feedback('nickname')}
+              </div>
+              {this.props.accounts.length > 0 && (
                 <div className="form-group">
-                  <label htmlFor="email">Destination Account</label>
-                  <select
-                    className="custom-select custom-select-lg"
-                    value={this.state.address}
-                    onChange={e => this.setState({ address: e.target.value })}
-                  >
-                    {this.props.accounts.map(account => (
-                      <option key={account.address} value={account.address}>
-                        {account.nickname}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <a href="#" onClick={this.handleAddAccount}>
-                    Add Another Account
+                  <a href="#" onClick={this.handleChooseAccount}>
+                    Choose Existing Account
                   </a>
                 </div>
+              )}
+            </>
+          )}
+          <button
+            type="submit"
+            className="btn btn-primary btn-lg mt-5"
+            disabled={this.isAdding()}
+          >
+            {this.isAdding() ? (
+              <>
+                <span className="spinner-grow spinner-grow-sm"></span>
+                Loading...
               </>
             ) : (
-              <>
-                <div className="form-group">
-                  <label htmlFor="email">Destination Account</label>
-                  <input {...input('address')} placeholder="0x..." />
-                  {Feedback('address')}
-                </div>
-                <div className="form-group">
-                  <label htmlFor="email">Destination Account Nickname</label>
-                  <input {...input('nickname')} />
-                  {Feedback('nickname')}
-                </div>
-                {this.props.accounts.length > 0 && (
-                  <div className="form-group">
-                    <a href="#" onClick={this.handleChooseAccount}>
-                      Choose Existing Account
-                    </a>
-                  </div>
-                )}
-              </>
+              <span>Continue</span>
             )}
-            <button
-              type="submit"
-              className="btn btn-primary btn-lg mt-5"
-              disabled={this.isAdding()}
-            >
-              {this.isAdding() ? (
-                <>
-                  <span className="spinner-grow spinner-grow-sm"></span>
-                  Loading...
-                </>
-              ) : (
-                <span>Continue</span>
-              )}
-            </button>
-          </form>
-        )}
-      </Modal>
+          </button>
+        </form>
+      </>
+    )
+  }
+
+  renderTwoFactor() {
+    const input = formInput(this.state, state => this.setState(state))
+    const Feedback = formFeedback(this.state)
+
+    return (
+      <>
+        <h1>2-Step Verification</h1>
+        <p>Enter the code generated by your authenticator app</p>
+        <form onSubmit={this.handleConfirm}>
+          <div className="form-group">
+            <label htmlFor="email">QR Code</label>
+            <input {...input('code')} />
+            {Feedback('code')}
+          </div>
+          <button
+            type="submit"
+            className="btn btn-primary btn-lg"
+            style={{ marginTop: '40px' }}
+            onClick={this.handleConfirm}
+            disabled={this.props.transferIsConfirming}
+          >
+            {this.props.transferIsConfirming ? (
+              <>
+                <span className="spinner-grow spinner-grow-sm"></span>
+                Loading...
+              </>
+            ) : (
+              <span>Verify</span>
+            )}
+          </button>
+        </form>
+      </>
     )
   }
 }
 
 const mapStateToProps = ({ account, transfer }) => {
   return {
-    accountsError: getAccountsError(account),
+    accountError: getAccountsError(account),
     accountIsAdding: getAccountIsAdding(account),
-    transfersError: getTransfersError(transfer),
-    transferIsAdding: getTransferIsAdding(transfer)
+    transferError: getTransfersError(transfer),
+    transferIsAdding: getTransferIsAdding(transfer),
+    transferIsConfirming: getTransferIsConfirming(transfer)
   }
 }
 
@@ -290,7 +359,8 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       addAccount: addAccount,
-      addTransfer: addTransfer
+      addTransfer: addTransfer,
+      confirmTransfer: confirmTransfer
     },
     dispatch
   )

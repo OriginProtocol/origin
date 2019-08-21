@@ -110,7 +110,7 @@ const WithdrawalHistory = props => {
                         props.history.push(`/withdrawal/${transfer.id}`)
                       }
                     >
-                      <td>{transfer.amount}</td>
+                      <td>{transfer.amount.toLocaleString()} OGN</td>
                       <td>{transfer.data.ip}</td>
                       <td>
                         <EthAddress address={transfer.toAddress} />
@@ -122,6 +122,20 @@ const WithdrawalHistory = props => {
                         {moment(transfer.createdAt).fromNow()}
                       </td>
                       <td className="text-nowrap">
+                        {transfer.status === 'WaitingTwoFactor' &&
+                          (moment
+                            .utc()
+                            .diff(moment(transfer.createdAt), 'minutes') > 5 ? (
+                            <>
+                              <div className="status-circle mr-2"></div>
+                              Expired
+                            </>
+                          ) : (
+                            <>
+                              <div className="status-circle status-circle-warning mr-2"></div>
+                              Waiting 2FA
+                            </>
+                          ))}
                         {['Enqueued', 'WaitingConfirmation'].includes(
                           transfer.status
                         ) && (
@@ -148,10 +162,10 @@ const WithdrawalHistory = props => {
                             Failed
                           </>
                         )}
-                        {transfer.status === 'Cancelled' && (
+                        {['Expired', 'Cancelled'].includes(transfer.status) && (
                           <>
                             <div className="status-circle mr-2"></div>
-                            Cancelled
+                            {transfer.status}
                           </>
                         )}
                       </td>
