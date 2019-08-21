@@ -7,6 +7,7 @@ import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import { exchangeAbi, factoryAbi } from './contracts/UniswapExchange'
 
 import Web3 from 'web3'
+import get from 'lodash/get'
 import EventSource from '@origin/eventsource'
 import { patchWeb3Contract } from '@origin/event-cache'
 import { initStandardSubproviders, createEngine } from '@origin/web3-provider'
@@ -56,17 +57,60 @@ async function isValidContract(web3, address) {
 }
 
 let lastBlock
-export function newBlock(blockHeaders) {
-  if (!blockHeaders) return
-  if (blockHeaders.number <= lastBlock) return
-  lastBlock = blockHeaders.number
-  context.marketplace.eventCache.setLatestBlock(lastBlock)
-  context.identityEvents.eventCache.setLatestBlock(lastBlock)
-  context.ProxyFactory.eventCache.setLatestBlock(lastBlock)
+export function newBlock(blockNumber) {
+  if (blockNumber <= lastBlock) return
+  lastBlock = blockNumber
+  context.marketplace.eventCache.setLatestBlock(blockNumber)
+  context.identityEvents.eventCache.setLatestBlock(blockNumber)
+  context.ProxyFactory.eventCache.setLatestBlock(blockNumber)
   context.eventSource.resetCache()
+
   pubsub.publish('NEW_BLOCK', {
-    newBlock: { ...blockHeaders, id: blockHeaders.hash }
+    newBlock: { id: blockNumber }
   })
+}
+
+const blockQuery = `query BlockNumber { web3 { blockNumber } }`
+function queryForBlocks() {
+  let inProgress = false,
+    blockInterval = null
+  try {
+    blockInterval = setInterval(() => {
+      if (inProgress) {
+        return
+      }
+      inProgress = true
+      fetch(`${context.config.graphql}/graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          operationName: 'BlockNumber',
+          variables: {},
+          query: blockQuery
+        })
+      })
+        .then(resp => {
+          resp.json().then(result => {
+            const blockNumber = get(result, 'data.web3.blockNumber')
+            if (blockNumber > lastBlock) {
+              newBlock(blockNumber)
+            }
+          })
+          inProgress = false
+        })
+        .catch(err => {
+          console.log(err)
+          inProgress = false
+        })
+    }, 5000)
+  } catch (error) {
+    console.log(`Querying for new blocks failed: ${error}`)
+    inProgress = false
+  }
+
+  return blockInterval
 }
 
 function pollForBlocks() {
@@ -79,9 +123,9 @@ function pollForBlocks() {
       inProgress = true
       web3.eth
         .getBlockNumber()
-        .then(block => {
-          if (block > lastBlock) {
-            web3.eth.getBlock(block).then(newBlock)
+        .then(blockNumber => {
+          if (blockNumber > lastBlock) {
+            newBlock(blockNumber)
           }
           inProgress = false
         })
@@ -217,13 +261,15 @@ export function setNetwork(net, customConfig) {
 
   setProxyContracts(config)
 
-  if (config.providerWS) {
+  if (config.performanceMode && context.config.graphql) {
+    queryForBlocks()
+  } else if (config.providerWS) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
     context.web3WS = web3WS
     try {
       wsSub = web3WS.eth
         .subscribe('newBlockHeaders')
-        .on('data', newBlock)
+        .on('data', latestBlock => newBlock(latestBlock.number))
         .on('error', () => {
           console.log('WS connection error. Polling for new blocks...')
           pollForBlocks()
@@ -237,9 +283,7 @@ export function setNetwork(net, customConfig) {
     pollForBlocks()
   }
   try {
-    web3.eth.getBlockNumber().then(block => {
-      web3.eth.getBlock(block).then(newBlock)
-    })
+    web3.eth.getBlockNumber().then(newBlock)
   } catch (error) {
     console.log(`Could not retrieve block: ${error}`)
   }
