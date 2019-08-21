@@ -218,8 +218,8 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 
 {{- define "t3.host" -}}
 {{- if eq .Release.Namespace "prod" -}}
-{{- printf "t3.originprotocol.com" }}
+{{- printf "investor.originprotocol.com" }}
 {{- else -}}
-{{- printf "t3.%s.originprotocol.com" .Release.Namespace -}}
+{{- printf "investor.%s.originprotocol.com" .Release.Namespace -}}
 {{- end -}}
 {{- end -}}
