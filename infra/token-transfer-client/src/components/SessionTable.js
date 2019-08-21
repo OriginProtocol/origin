@@ -4,11 +4,24 @@ import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
 import { fetchEvents } from '@/actions/event'
+import {
+  getEvents,
+  getError,
+  getIsLoading
+} from '@/reducers/event'
 
 const SessionTable = props => {
   useEffect(props.fetchEvents, [])
 
-  const loginEvents = props.event.events.filter(e => e.action === 'LOGIN')
+  const loginEvents = props.events.filter(e => e.action === 'LOGIN')
+
+  if (props.isLoading) {
+    return (
+      <div className="spinner-grow" role="status">
+        <span className="sr-only">Loading...</span>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -72,7 +85,10 @@ const SessionTable = props => {
 }
 
 const mapStateToProps = ({ event }) => {
-  return { event }
+  return {
+    events: getEvents(event),
+    isLoading: getIsLoading(event)
+  }
 }
 
 const mapDispatchToProps = dispatch =>

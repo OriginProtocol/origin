@@ -4,12 +4,19 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { fetchUser } from '@/actions/user'
+import {
+  getUser,
+  getIsLoading
+} from '@/reducers/user'
+
 import AccountActions from '@/components/AccountActions'
 import Navigation from '@/components/Navigation'
 
-const PrivateRoute = ({ component: Component, history, user, ...rest }) => {
+const PrivateRoute = ({ component: Component, history, isLoading, user, ...rest }) => {
   const [expandSidebar, setExpandSidebar] = useState(false)
+
   useEffect(rest.fetchUser, [])
+
   useEffect(
     () =>
       history.listen(() => {
@@ -33,16 +40,16 @@ const PrivateRoute = ({ component: Component, history, user, ...rest }) => {
               expandSidebar={expandSidebar}
             />
             <div id="main" className={expandSidebar ? 'd-none' : ''}>
-              {user.isLoading ? (
+              {isLoading ? (
                 <div className="spinner-grow" role="status">
                   <span className="sr-only">Loading...</span>
                 </div>
               ) : (
                 <>
                   <div className="d-none d-md-block">
-                    <AccountActions user={user.user} />
+                    <AccountActions user={user} />
                   </div>
-                  <Component {...props} user={user.user} />
+                  <Component {...props} user={user} />
                 </>
               )}
             </div>
@@ -54,7 +61,10 @@ const PrivateRoute = ({ component: Component, history, user, ...rest }) => {
 }
 
 const mapStateToProps = ({ user }) => {
-  return { user }
+  return {
+    user: getUser(user),
+    isLoading: getIsLoading(user)
+  }
 }
 
 const mapDispatchToProps = dispatch =>

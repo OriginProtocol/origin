@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+iport React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
@@ -71,6 +71,14 @@ class AccountTable extends Component {
   }
 
   render() {
+    if (props.isLoading) {
+      return (
+        <div className="spinner-grow" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      )
+    }
+
     return (
       <>
         {this.state.displayModal && this.renderModal()}

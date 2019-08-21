@@ -34,3 +34,8 @@ export default function Session(state = initialState, action) {
       return state
   }
 }
+
+export const getUser = state => state.user
+export const getError = state => state.error
+export const getIsLoading = state => state.isLoading
+
