@@ -532,6 +532,7 @@ require('react-styl')(`
       margin-top: 1rem
 
     .dropdown
+      width: auto
       .dropdown-menu
         position: absolute
         left: 16px

@@ -59,7 +59,14 @@ const PromoteListingAmount = ({
         targets={['token-OGN']}
       >
         {({ tokenStatus }) => {
-          if (!tokenStatus.hasBalance || !value || value === '0') {
+          if (tokenStatus.loading) {
+            return (
+              <div
+                className="btn btn-primary btn-rounded btn-lg disabled"
+                children={fbt('Loading', 'Loading')}
+              />
+            )
+          } else if (!tokenStatus.hasBalance || !value || value === '0') {
             return (
               <div
                 className="btn btn-primary btn-rounded btn-lg disabled"

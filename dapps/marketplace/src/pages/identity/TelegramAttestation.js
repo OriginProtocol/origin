@@ -13,6 +13,8 @@ import PublishedInfoBox from 'components/_PublishedInfoBox'
 import GenerateTelegramCodeMutation from 'mutations/GenerateTelegramCode'
 import VerifyTelegramCodeMutation from 'mutations/VerifyTelegramCode'
 
+import ProtocolLink from 'components/ProtocolLink'
+
 class TelegramAttestation extends Component {
   constructor() {
     super()
@@ -94,10 +96,13 @@ class TelegramAttestation extends Component {
         />
         <div className="actions">
           {!openedLink && (
-            <a
-              href={`tg://resolve?domain=${
+            <ProtocolLink
+              protocolLink={`tg://resolve?domain=${
                 process.env.TELEGRAM_BOT_USERNAME
               }&start=${encodeURIComponent(this.state.code)}`}
+              fallbackLink={`https://t.me/${
+                process.env.TELEGRAM_BOT_USERNAME
+              }?start=${encodeURIComponent(this.state.code)}`}
               className="btn btn-primary"
               onClick={() => {
                 this.setState({

@@ -15,7 +15,7 @@
     "@origin/growth": "^0.1.0",
     "@sendgrid/mail": "6.4.0",
     "bull": "3.10.0",
-    "dotenv": "8.0.0",
+    "dotenv": "8.1.0",
     "envkey": "1.2.7",
     "logplease": "1.2.15",
     "per-env": "1.0.2",
