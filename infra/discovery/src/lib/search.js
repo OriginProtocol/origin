@@ -5,7 +5,8 @@ const scoring = require('../lib/scoring')
 const logger = require('../listener/logger')
 
 const client = new elasticsearch.Client({
-  hosts: [process.env.ELASTICSEARCH_HOST || 'elasticsearch:9200']
+  hosts: [process.env.ELASTICSEARCH_HOST || 'elasticsearch:9200'],
+  apiVersion: '6.8'
 })
 
 // Elasticsearch index and type names for our data
