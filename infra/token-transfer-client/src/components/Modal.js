@@ -15,10 +15,7 @@ export default class Modal extends Component {
   }
 
   componentDidMount() {
-    const el = this.props.appendToId
-      ? document.getElementById(this.props.appendToId)
-      : document.body
-    el.appendChild(this.portal)
+    document.body.appendChild(this.portal)
     document.body.className += ' pl-modal-open'
     document.body.addEventListener('touchmove', freezeVp, false)
     this.renderContent(this.props)
@@ -43,10 +40,7 @@ export default class Modal extends Component {
     )
     document.body.removeEventListener('touchmove', freezeVp, false)
     window.removeEventListener('keydown', this.onKeyDown)
-    const el = this.props.appendToId
-      ? document.getElementById(this.props.appendToId)
-      : document.body
-    el.removeChild(this.portal)
+    document.body.removeChild(this.portal)
     clearTimeout(this.timeout)
   }
 
@@ -148,7 +142,7 @@ require('react-styl')(`
     touch-action: none
 
   .pl-modal
-    position: absolute
+    position: fixed
     z-index: 2000
     top: 0
     right: 0
