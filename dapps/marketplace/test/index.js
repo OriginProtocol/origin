@@ -15,6 +15,7 @@ let page
 before(async function() {
   this.timeout(60000)
   page = (await services()).extrasResult.page
+  await page.setCacheEnabled(false)
 })
 
 const reset = async sellerOgn => {
