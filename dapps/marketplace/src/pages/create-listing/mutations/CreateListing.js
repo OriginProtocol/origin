@@ -15,6 +15,7 @@ import AutoMutate from 'components/AutoMutate'
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 import withWeb3 from 'hoc/withWeb3'
+import withConfig from 'hoc/withConfig'
 
 import Store from 'utils/store'
 const store = Store('sessionStorage')
@@ -46,9 +47,11 @@ const CreateMutationWaitModal = ({ waitFor, onCompleted, onClose }) => {
   )
 }
 
+// Used to cycle marketplace contract version when running tests
+let randomVersion = 1
+
 const CreateListing = props => {
   const [state, setState] = useState({})
-
   const netId = get(props, 'web3.networkId')
 
   const [createListing] = useMutation(CreateListingMutation, {
@@ -77,16 +80,22 @@ const CreateListing = props => {
             return
           }
 
-          setState({ ...state, waitFor: 'pending' })
-
           const { walletProxy } = props
 
           const variables = applyListingData(props, {
             deposit: '0',
             depositManager: walletProxy,
-            from: walletProxy
+            from: walletProxy,
+            version: '000'
           })
 
+          if (props.config.marketplaceVersion) {
+            randomVersion += 1
+            const versions = props.config.marketplaceVersion.split(',')
+            variables.version = versions[randomVersion % versions.length]
+          }
+
+          setState({ ...state, waitFor: 'pending', version: variables.version })
           createListing({ variables })
         }}
         children={props.children}
@@ -97,7 +106,7 @@ const CreateListing = props => {
         onCompleted={listingID =>
           setState({
             ...state,
-            redirect: `/create/${netId}-000-${listingID}/success`
+            redirect: `/create/${netId}-${state.version}-${listingID}/success`
           })
         }
       />
@@ -112,4 +121,4 @@ const CreateListing = props => {
   )
 }
 
-export default withWeb3(withWallet(withCanTransact(CreateListing)))
+export default withConfig(withWeb3(withWallet(withCanTransact(CreateListing))))

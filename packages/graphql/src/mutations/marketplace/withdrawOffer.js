@@ -9,8 +9,8 @@ async function withdrawOffer(_, data) {
   await checkMetaMask(from)
 
   const ipfsHash = await post(contracts.ipfsRPC, data)
-  const { listingId, offerId } = parseId(data.offerID)
-  const { withdrawOffer } = contracts.marketplaceExec.methods
+  const { listingId, offerId, marketplace } = parseId(data.offerID, contracts)
+  const { withdrawOffer } = marketplace.contractExec.methods
 
   return txHelper({
     tx: withdrawOffer(listingId, offerId, ipfsHash),

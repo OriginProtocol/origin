@@ -30,6 +30,7 @@ const MultiUnit = ({
       price={totalPrice}
       target={token}
       targets={['token-ETH', 'token-DAI', totalPrice.currency.id]}
+      allowanceTarget={listing.contractAddr}
     >
       {({ prices, tokenStatus }) => {
         if (!prices) return null

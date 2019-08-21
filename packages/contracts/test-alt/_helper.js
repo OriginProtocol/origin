@@ -102,9 +102,7 @@ export default async function testHelper(contracts, provider) {
           }
           if (log) {
             console.log(
-              `Deployed ${contractName} to ${receipt.contractAddress} (${
-                receipt.cumulativeGasUsed
-              } gas used)`
+              `Deployed ${contractName} to ${receipt.contractAddress} (${receipt.cumulativeGasUsed} gas used)`
             )
           }
         })
@@ -232,3 +230,6 @@ export async function assertRevertWithMessage(message, promise) {
   }
   assert.fail('Expected revert not received')
 }
+
+export const IpfsHash = '0x12345678901234567890123456789012'
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'

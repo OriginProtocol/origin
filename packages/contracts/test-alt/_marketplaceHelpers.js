@@ -12,7 +12,7 @@ export default function({
   ArbitratorAddr,
   trackGas
 }) {
-  async function createListing({ Identity }) {
+  async function createListing({ Identity, ogn = 5 }) {
     if (Identity) {
       await OriginToken.methods
         .transfer(Identity._address, 10)
@@ -35,11 +35,11 @@ export default function({
         .send({ from: Seller })
     } else {
       await OriginToken.methods
-        .approve(Marketplace._address, 5)
+        .approve(Marketplace._address, ogn)
         .send({ from: Seller })
 
       return await Marketplace.methods
-        .createListing(IpfsHash, 5, Seller)
+        .createListing(IpfsHash, ogn, Seller)
         .send({ from: Seller })
         .once('receipt', trackGas('Create Listing'))
 
@@ -53,7 +53,8 @@ export default function({
     withdraw,
     listingID = 0,
     affiliate = Affiliate,
-    commission = 2
+    commission = 2,
+    finalizeNow
   }) {
     const blockNumber = await web3.eth.getBlockNumber()
     const block = await web3.eth.getBlock(blockNumber)
@@ -62,7 +63,7 @@ export default function({
     const args = [
       listingID,
       IpfsHash,
-      block.timestamp + 60 * 120,
+      finalizeNow ? block.timestamp - 1 : block.timestamp + 60 * 120,
       affiliate,
       commission,
       value,
@@ -178,6 +179,7 @@ export default function({
 
   return {
     makeOffer,
+    acceptOffer,
     makeERC20Offer,
     createListing,
     listingWithAcceptedOffer,

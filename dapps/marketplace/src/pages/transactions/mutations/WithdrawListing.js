@@ -89,7 +89,7 @@ class WithdrawListing extends Component {
     withdrawListing({
       variables: {
         listingID: this.props.listing.id,
-        from: this.props.listing.arbitrator.id,
+        from: this.props.listing.seller.id,
         target: this.props.listing.seller.id
       }
     })
