@@ -26,7 +26,9 @@ if (!sendgridFromEmail) {
   process.exit(1)
 }
 
-const unlockDate = moment.utc('2020-01-01')
+const unlockDate = process.env.UNLOCK_DATE
+  ? moment.utc(process.env.UNLOCK_DATE)
+  : moment.utc('2020-01-01')
 
 module.exports = {
   encryptionSecret,
