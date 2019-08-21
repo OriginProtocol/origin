@@ -4,7 +4,7 @@ import moment from 'moment'
 import { vestingSchedule } from '@origin/token-transfer-server/src/lib/vesting'
 
 const VestingHistory = props => {
-  let schedule = {}
+  const schedule = {}
   props.grants.forEach(grant => {
     vestingSchedule(grant).forEach(vest => {
       const dateKey = vest.date.format()
@@ -16,21 +16,21 @@ const VestingHistory = props => {
 
   const tableRows = []
   for (const [date, amount] of Object.entries(schedule)) {
-    date = moment(date)
+    const momentDate = moment(date)
     tableRows.push(
       <tr key={date}>
         <td>
           <div
             className={`status-circle ${
-              date < moment.now() ? `status-circle-success` : ''
+              momentDate < moment.now() ? `status-circle-success` : ''
             }`}
           ></div>
         </td>
         <td>{amount.toLocaleString()} OGN</td>
         <td>
-          <small>{date < moment.now() ? 'vested' : 'unvested'}</small>
+          <small>{momentDate < moment.now() ? 'vested' : 'unvested'}</small>
         </td>
-        <td>{date.format('L')}</td>
+        <td>{momentDate.format('L')}</td>
       </tr>
     )
   }
