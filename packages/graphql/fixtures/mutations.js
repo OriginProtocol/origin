@@ -110,7 +110,7 @@ export const DeployMarketplaceMutation = gql`
   mutation DeployMarketplace(
     $from: String
     $token: String!
-    $version: String
+    $version: String!
     $autoWhitelist: Boolean
   ) {
     deployMarketplace(

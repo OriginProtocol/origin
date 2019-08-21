@@ -59,11 +59,11 @@ async function searchIds(search, sort, order, filters) {
   return { totalCount: searchResult.numberOfItems, ids }
 }
 
-async function allIds(contract, version, netId) {
+async function allIds(contract, version) {
   const totalListings = Number(await contract.methods.totalListings().call())
   const ids = Array.from(
     { length: Number(totalListings) },
-    (v, i) => `${netId}-${version}-${i}`
+    (v, i) => `x-${version}-${i}`
   ).reverse()
   return { totalCount: ids.length, ids }
 }
@@ -102,6 +102,8 @@ async function resultsFromIds({ after, ids, first, totalCount, fields }) {
   }
 }
 
+// Returns events from each marketplace contract. Expects filters to be passed,
+// eg `getEvents({ event: 'ListingWithdrawn', })`
 async function getEvents(args) {
   const results = {}
   for (const version in contracts.marketplaces) {
@@ -139,7 +141,7 @@ export async function listingsBySeller(
   }
 
   const ids = Object.keys(events)
-    .map(v => events[v].map(e => `999-${v}-${e.returnValues.listingID}`))
+    .map(v => events[v].map(e => `x-${v}-${e.returnValues.listingID}`))
     .flat()
 
   const totalCount = ids.length
@@ -176,7 +178,7 @@ export default async function listings(
 
     for (const version in contracts.marketplaces) {
       const curContract = contracts.marketplaces[version].contract
-      const decentralizedResults = await allIds(curContract, version, '999')
+      const decentralizedResults = await allIds(curContract, version)
       ids = ids.concat(decentralizedResults.ids)
       totalCount += decentralizedResults.totalCount
     }

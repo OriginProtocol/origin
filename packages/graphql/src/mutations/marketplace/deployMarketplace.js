@@ -4,6 +4,9 @@ import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts, { setMarketplace } from '../../contracts'
 
 async function deployMarketplace(_, { token, from, autoWhitelist, version }) {
+  if (!version) {
+    throw new Error('Marketplace version must be specified')
+  }
   const Marketplace = version === '001' ? MarketplaceV1 : MarketplaceV0
   const data = Marketplace.bytecode
   const web3 = contracts.web3Exec

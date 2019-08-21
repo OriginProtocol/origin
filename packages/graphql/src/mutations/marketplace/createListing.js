@@ -72,7 +72,8 @@ async function createListing(_, input) {
 
   let version = input.version
   if (!version) {
-    version = Object.keys(contracts.marketplaces).sort()[0]
+    const versions = Object.keys(contracts.marketplaces).sort()
+    version = versions[versions.length - 1]
   }
   if (!contracts.marketplaces[version]) {
     throw new Error(`No marketplace with version ${version}`)
