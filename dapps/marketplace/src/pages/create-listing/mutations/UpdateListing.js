@@ -11,15 +11,14 @@ import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
 import Modal from 'components/Modal'
 
+import AutoMutate from 'components/AutoMutate'
+
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 import withWeb3 from 'hoc/withWeb3'
 import withConfig from 'hoc/withConfig'
 
 import applyListingData from './_listingData'
-
-import Store from 'utils/store'
-const store = Store('sessionStorage')
 
 class UpdateListing extends Component {
   state = {}
@@ -149,9 +148,33 @@ class UpdateListing extends Component {
     })
   }
 
-  renderWaitModal() {
+  async onTxCompleted(event) {
     const netId = get(this.props, 'web3.networkId')
 
+    this.setState({ loading: true })
+
+    const { listingID } = event.returnValues
+
+    const dappListingID = `${netId}-000-${listingID}`
+
+    const { refetch, listingPromotion } = this.props
+
+    if (refetch) {
+      await refetch()
+    }
+
+    if (listingPromotion) {
+      this.setState({
+        redirect: `/promote/${dappListingID}/success`
+      })
+    } else {
+      this.setState({
+        redirect: `/create/${dappListingID}/success`
+      })
+    }
+  }
+
+  renderWaitModal() {
     return (
       <WaitForTransaction
         hash={this.state.waitFor}
@@ -160,51 +183,14 @@ class UpdateListing extends Component {
         onClose={() => this.setState({ waitFor: null })}
       >
         {({ event }) => (
-          <div className="make-offer-modal success">
-            <div className="success-icon" />
-            <fbt desc="updateListing.success">
-              <div>Your listing has been updated!</div>
-              <div>
-                Your listing will be visible within a few seconds. Here&apos;s
-                what happens next:
-                <ul>
-                  <li>Buyers will now see your listing on the marketplace.</li>
-                  <li>
-                    When a buyer makes an offer on your listing, you can choose
-                    to accept or reject it.
-                  </li>
-                  <li>
-                    Once the offer is accepted, you will be expected to fulfill
-                    the order.
-                  </li>
-                  <li>
-                    You will receive payment once the buyer confirms that the
-                    order has been fulfilled.
-                  </li>
-                </ul>
-              </div>
-            </fbt>
-            <button
-              href="#"
-              className="btn btn-outline-light"
-              onClick={async () => {
-                this.setState({ loading: true })
-                if (this.props.refetch) {
-                  await this.props.refetch()
-                }
-                const { listingID } = event.returnValues
-                store.set('create-listing', undefined)
-                this.setState({
-                  redirect: `/listing/${netId}-000-${listingID}`
-                })
+          <>
+            <div className="spinner light" />
+            <AutoMutate
+              mutation={() => {
+                this.onTxCompleted(event)
               }}
-              children={
-                this.state.loading
-                  ? fbt('Loading', 'Loading')
-                  : fbt('View Listing', 'View Listing')
-              }
             />
-          </div>
+          </>
         )}
       </WaitForTransaction>
     )
