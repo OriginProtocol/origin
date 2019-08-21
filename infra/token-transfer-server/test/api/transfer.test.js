@@ -4,8 +4,12 @@ const request = require('supertest')
 const express = require('express')
 const moment = require('moment')
 const sinon = require('sinon')
+const totp = require('notp').totp
+const base32 = require('thirty-two')
+const crypto = require('crypto')
 
 const { Grant, Transfer, User, sequelize } = require('../../src/models')
+const { encrypt } = require('../../src/lib/crypto')
 const transferController = require('../../src/controllers/transfer')
 const TransferStatuses = require('../../src/enums')
 const enums = require('../../src/enums')
@@ -26,10 +30,15 @@ describe('Transfer HTTP API', () => {
     expect(process.env.NODE_ENV).to.equal('test')
     await sequelize.sync({ force: true })
 
+    // Generate an OTP key
+    this.otpKey = crypto.randomBytes(10).toString('hex')
+    this.encodedKey = base32.encode(this.otpKey).toString()
+    const encryptedKey = encrypt(this.otpKey)
+
     this.user = await User.create({
       email: 'user@originprotocol.com',
       name: 'User 1',
-      otpKey: '123',
+      otpKey: encryptedKey,
       otpVerified: true
     })
 
@@ -124,32 +133,38 @@ describe('Transfer HTTP API', () => {
     expect(response.body.length).to.equal(0)
   })
 
-  it('should enqueue a transfer if lockup date has passed', async () => {
+  it('should add a transfer if lockup date has passed', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
+
+    const totpToken = totp.gen(this.otpKey)
 
     await request(this.mockApp)
       .post('/api/transfers')
       .send({
         amount: 1000,
-        address: toAddress
+        address: toAddress,
+        code: totpToken
       })
       .expect(201)
 
-    expect(
-      (await request(this.mockApp).get('/api/transfers')).body.length
-    ).to.equal(1)
+    const response = await request(this.mockApp).get('/api/transfers')
+    expect(response.body.length).to.equal(1)
+    expect(response.body[0].status).to.equal('WaitingTwoFactor')
   })
 
-  it('should not enqueue a transfer before lockup date passed', async () => {
+  it('should not add a transfer before lockup date passed', async () => {
     const unlockFake = sinon.fake.returns(moment().add(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
+
+    const totpToken = totp.gen(this.otpKey)
 
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
         amount: 1000,
-        address: toAddress
+        address: toAddress,
+        code: totpToken
       })
       .expect(422)
 
@@ -160,15 +175,18 @@ describe('Transfer HTTP API', () => {
     ).to.equal(0)
   })
 
-  it('should not enqueue a transfer if not enough tokens (vested)', async () => {
+  it('should not add a transfer if not enough tokens (vested)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
+
+    const totpToken = totp.gen(this.otpKey)
 
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
         amount: 1000001,
-        address: toAddress
+        address: toAddress,
+        code: totpToken
       })
       .expect(422)
 
@@ -179,7 +197,7 @@ describe('Transfer HTTP API', () => {
     ).to.equal(0)
   })
 
-  it('should not enqueue a transfer if not enough tokens (vested minus enqueued)', async () => {
+  it('should not add a transfer if not enough tokens (vested minus addd)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
@@ -191,11 +209,14 @@ describe('Transfer HTTP API', () => {
       currency: 'OGN'
     })
 
+    const totpToken = totp.gen(this.otpKey)
+
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
         amount: 999999,
-        address: toAddress
+        address: toAddress,
+        code: totpToken
       })
       .expect(422)
 
@@ -206,7 +227,7 @@ describe('Transfer HTTP API', () => {
     ).to.equal(1)
   })
 
-  it('should not enqueue a transfer if not enough tokens (vested minus paused)', async () => {
+  it('should not add a transfer if not enough tokens (vested minus paused)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
@@ -218,11 +239,14 @@ describe('Transfer HTTP API', () => {
       currency: 'OGN'
     })
 
+    const totpToken = totp.gen(this.otpKey)
+
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
         amount: 999999,
-        address: toAddress
+        address: toAddress,
+        code: totpToken
       })
       .expect(422)
 
@@ -233,7 +257,7 @@ describe('Transfer HTTP API', () => {
     ).to.equal(1)
   })
 
-  it('should not enqueue a transfer if not enough tokens (vested minus waiting)', async () => {
+  it('should not add a transfer if not enough tokens (vested minus waiting)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
@@ -245,11 +269,14 @@ describe('Transfer HTTP API', () => {
       currency: 'OGN'
     })
 
+    const totpToken = totp.gen(this.otpKey)
+
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
         amount: 999999,
-        address: toAddress
+        address: toAddress,
+        code: totpToken
       })
       .expect(422)
 
@@ -260,7 +287,7 @@ describe('Transfer HTTP API', () => {
     ).to.equal(1)
   })
 
-  it('should not enqueue a transfer if not enough tokens (vested minus success)', async () => {
+  it('should not add a transfer if not enough tokens (vested minus success)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
@@ -272,11 +299,14 @@ describe('Transfer HTTP API', () => {
       currency: 'OGN'
     })
 
+    const totpToken = totp.gen(this.otpKey)
+
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
         amount: 999999,
-        address: toAddress
+        address: toAddress,
+        code: totpToken
       })
       .expect(422)
 
@@ -287,7 +317,7 @@ describe('Transfer HTTP API', () => {
     ).to.equal(1)
   })
 
-  it('should not enqueue a transfer if not enough tokens (multiple states)', async () => {
+  it('should not add a transfer if not enough tokens (multiple states)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
@@ -308,12 +338,15 @@ describe('Transfer HTTP API', () => {
 
     await Promise.all(promises)
 
+    const totpToken = totp.gen(this.otpKey)
+
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
         userId: this.user.id,
         amount: 999993,
-        address: toAddress
+        address: toAddress,
+        code: totpToken
       })
       .expect(422)
 
@@ -324,19 +357,23 @@ describe('Transfer HTTP API', () => {
     ).to.equal(4)
   })
 
-  it('should not enqueue simultaneous transfers if not enough tokens', async () => {
+  it('should not add simultaneous transfers if not enough tokens', async () => {
+    const totpToken = totp.gen(this.otpKey)
+
     const results = await Promise.all([
       request(this.mockApp)
         .post('/api/transfers')
         .send({
           amount: 1000000,
-          address: toAddress
+          address: toAddress,
+          code: totpToken
         }),
       request(this.mockApp)
         .post('/api/transfers')
         .send({
           amount: 1000000,
-          address: toAddress
+          address: toAddress,
+          code: totpToken
         })
     ])
 

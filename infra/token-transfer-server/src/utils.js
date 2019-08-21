@@ -1,10 +1,12 @@
 const Web3 = require('web3')
+const totp = require('notp').totp
 
 const { ip2geo } = require('@origin/ip2geo')
 
 const { Account } = require('./models')
 const { unlockDate } = require('./config')
 const { checkTransferRequest } = require('./lib/transfer')
+const { decrypt } = require('./lib/crypto')
 
 /**
  * Allows use of async functions for an Express route.
@@ -75,11 +77,24 @@ const getFingerprintData = async req => {
   }
 }
 
+const isValidTotp = (value, { req }) => {
+  if (!req.user.otpVerified) {
+    throw new Error('No 2fa configured')
+  }
+  console.log('Validating TOTP')
+  console.log(value)
+  console.log(decrypt(req.user.otpKey))
+  if (!totp.verify(value, decrypt(req.user.otpKey))) {
+    throw new Error('Invalid 2fa value')
+  }
+}
+
 module.exports = {
   asyncMiddleware,
   isEthereumAddress,
   isExistingAddress,
   isExistingNickname,
+  isValidTotp,
   getFingerprintData,
   getUnlockDate,
   hasBalance
