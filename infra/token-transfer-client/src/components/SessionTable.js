@@ -4,11 +4,7 @@ import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
 import { fetchEvents } from '@/actions/event'
-import {
-  getEvents,
-  getError,
-  getIsLoading
-} from '@/reducers/event'
+import { getEvents, getError, getIsLoading } from '@/reducers/event'
 
 const SessionTable = props => {
   useEffect(props.fetchEvents, [])
@@ -62,9 +58,11 @@ const SessionTable = props => {
                       <td>{event.data.location}</td>
                       <td>{moment(event.createdAt).fromNow()}</td>
                       <td>
-                        {moment(event.createdAt).diff(moment(), 'minutes') > -30 ? (
+                        {moment(event.createdAt).diff(moment(), 'minutes') >
+                        -30 ? (
                           <>
-                            <div className="status-circle status-circle-success mr-2"></div>Active
+                            <div className="status-circle status-circle-success mr-2"></div>
+                            Active
                           </>
                         ) : (
                           <>
@@ -87,7 +85,8 @@ const SessionTable = props => {
 const mapStateToProps = ({ event }) => {
   return {
     events: getEvents(event),
-    isLoading: getIsLoading(event)
+    isLoading: getIsLoading(event),
+    error: getError(event)
   }
 }
 

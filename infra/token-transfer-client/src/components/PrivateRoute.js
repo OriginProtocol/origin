@@ -4,15 +4,18 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { fetchUser } from '@/actions/user'
-import {
-  getUser,
-  getIsLoading
-} from '@/reducers/user'
+import { getUser, getIsLoading } from '@/reducers/user'
 
 import AccountActions from '@/components/AccountActions'
 import Navigation from '@/components/Navigation'
 
-const PrivateRoute = ({ component: Component, history, isLoading, user, ...rest }) => {
+const PrivateRoute = ({
+  component: Component,
+  history,
+  isLoading,
+  user,
+  ...rest
+}) => {
   const [expandSidebar, setExpandSidebar] = useState(false)
 
   useEffect(rest.fetchUser, [])
