@@ -137,14 +137,11 @@ describe('Transfer HTTP API', () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
-    const totpToken = totp.gen(this.otpKey)
-
     await request(this.mockApp)
       .post('/api/transfers')
       .send({
         amount: 1000,
-        address: toAddress,
-        code: totpToken
+        address: toAddress
       })
       .expect(201)
 
@@ -157,14 +154,11 @@ describe('Transfer HTTP API', () => {
     const unlockFake = sinon.fake.returns(moment().add(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
-    const totpToken = totp.gen(this.otpKey)
-
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
         amount: 1000,
-        address: toAddress,
-        code: totpToken
+        address: toAddress
       })
       .expect(422)
 
@@ -179,14 +173,11 @@ describe('Transfer HTTP API', () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
-    const totpToken = totp.gen(this.otpKey)
-
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
         amount: 1000001,
-        address: toAddress,
-        code: totpToken
+        address: toAddress
       })
       .expect(422)
 
@@ -209,14 +200,11 @@ describe('Transfer HTTP API', () => {
       currency: 'OGN'
     })
 
-    const totpToken = totp.gen(this.otpKey)
-
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
         amount: 999999,
-        address: toAddress,
-        code: totpToken
+        address: toAddress
       })
       .expect(422)
 
@@ -239,14 +227,11 @@ describe('Transfer HTTP API', () => {
       currency: 'OGN'
     })
 
-    const totpToken = totp.gen(this.otpKey)
-
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
         amount: 999999,
-        address: toAddress,
-        code: totpToken
+        address: toAddress
       })
       .expect(422)
 
@@ -269,14 +254,11 @@ describe('Transfer HTTP API', () => {
       currency: 'OGN'
     })
 
-    const totpToken = totp.gen(this.otpKey)
-
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
         amount: 999999,
-        address: toAddress,
-        code: totpToken
+        address: toAddress
       })
       .expect(422)
 
@@ -299,14 +281,11 @@ describe('Transfer HTTP API', () => {
       currency: 'OGN'
     })
 
-    const totpToken = totp.gen(this.otpKey)
-
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
         amount: 999999,
-        address: toAddress,
-        code: totpToken
+        address: toAddress
       })
       .expect(422)
 
@@ -338,15 +317,12 @@ describe('Transfer HTTP API', () => {
 
     await Promise.all(promises)
 
-    const totpToken = totp.gen(this.otpKey)
-
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
         userId: this.user.id,
         amount: 999993,
-        address: toAddress,
-        code: totpToken
+        address: toAddress
       })
       .expect(422)
 
@@ -357,23 +333,19 @@ describe('Transfer HTTP API', () => {
     ).to.equal(4)
   })
 
-  it('should not add simultaneous transfers if not enough tokens', async () => {
-    const totpToken = totp.gen(this.otpKey)
-
+  it('should not add transfers simultaneously if not enough tokens', async () => {
     const results = await Promise.all([
       request(this.mockApp)
         .post('/api/transfers')
         .send({
           amount: 1000000,
-          address: toAddress,
-          code: totpToken
+          address: toAddress
         }),
       request(this.mockApp)
         .post('/api/transfers')
         .send({
-          amount: 1000000,
-          address: toAddress,
-          code: totpToken
+          amount: 1,
+          address: toAddress
         })
     ])
 
@@ -383,5 +355,44 @@ describe('Transfer HTTP API', () => {
     expect(
       (await request(this.mockApp).get('/api/transfers')).body.length
     ).to.equal(1)
+  })
+
+  it('should confirm a transfer', async () => {
+    const transfer = await Transfer.create({
+      userId: this.user.id,
+      status: enums.TransferStatuses.WaitingTwoFactor,
+      toAddress: toAddress,
+      amount: 1000000,
+      currency: 'OGN'
+    })
+
+    const totpToken = totp.gen(this.otpKey)
+
+    const response = await request(this.mockApp)
+      .post(`/api/transfers/${transfer.id}`)
+      .send({
+        code: totpToken
+      })
+    // .expect(201)
+    console.log(response.error)
+  })
+
+  it('should not confirm a transfer with invalid totp code', async () => {
+    const transfer = await Transfer.create({
+      userId: this.user.id,
+      status: enums.TransferStatuses.WaitingTwoFactor,
+      toAddress: toAddress,
+      amount: 1000000,
+      currency: 'OGN'
+    })
+
+    const totpToken = '123456'
+
+    const response = await request(this.mockApp)
+      .post(`/api/transfers/${transfer.id}`)
+      .send({
+        code: totpToken
+      })
+      .expect(422)
   })
 })

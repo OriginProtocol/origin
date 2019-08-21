@@ -81,12 +81,10 @@ const isValidTotp = (value, { req }) => {
   if (!req.user.otpVerified) {
     throw new Error('No 2fa configured')
   }
-  console.log('Validating TOTP')
-  console.log(value)
-  console.log(decrypt(req.user.otpKey))
   if (!totp.verify(value, decrypt(req.user.otpKey))) {
     throw new Error('Invalid 2fa value')
   }
+  return true
 }
 
 module.exports = {

@@ -285,39 +285,6 @@ describe('Token transfer library', () => {
     expect(transfer.status).to.equal(enums.TransferStatuses.Enqueued)
   })
 
-  it('should not confirm a transfer greater than the grant size', async () => {
-    const transfer = await Transfer.create({
-      userId: this.user.id,
-      status: enums.TransferStatuses.WaitingTwoFactor,
-      toAddress: toAddress,
-      amount: 100001,
-      currency: 'OGN'
-    })
-    await expect(confirmTransfer(transfer)).to.eventually.be.rejectedWith(
-      /exceeds/
-    )
-  })
-
-  it('should not confirm a transfer where tokens already withdrawn', async () => {
-    const transfer = await Transfer.create({
-      userId: this.user.id,
-      status: enums.TransferStatuses.WaitingTwoFactor,
-      toAddress: toAddress,
-      amount: 100000,
-      currency: 'OGN'
-    })
-    await Transfer.create({
-      userId: this.user.id,
-      status: enums.TransferStatuses.WaitingTwoFactor,
-      toAddress: toAddress,
-      amount: 1,
-      currency: 'OGN'
-    })
-    await expect(confirmTransfer(transfer)).to.eventually.be.rejectedWith(
-      /exceeds/
-    )
-  })
-
   it('should not confirm a transfer in any state except waiting for two factor', async () => {
     const transfers = await Promise.all(
       [

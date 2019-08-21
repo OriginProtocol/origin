@@ -93,13 +93,7 @@ router.post(
  */
 router.post(
   '/transfers/:id',
-  [
-    check('code')
-      .not()
-      .isEmpty()
-      .custom(isValidTotp),
-    ensureLoggedIn
-  ],
+  [check('code').custom(isValidTotp), ensureLoggedIn],
   asyncMiddleware(async (req, res) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -108,7 +102,7 @@ router.post(
         .json({ errors: errors.array({ onlyFirstError: true }) })
     }
 
-    const transfer = Transfer.findOne({ where: { id: req.params.id } })
+    const transfer = await Transfer.findOne({ where: { id: req.params.id } })
     if (!transfer) {
       return res.status(404)
     }
@@ -116,10 +110,10 @@ router.post(
     try {
       await confirmTransfer(transfer)
     } catch (e) {
-      res.status(422).send(e.message)
+      return res.status(422).send(e.message)
     }
 
-    res.status(201)
+    return res.status(201).end()
   })
 )
 

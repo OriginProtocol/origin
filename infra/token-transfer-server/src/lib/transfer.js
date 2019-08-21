@@ -133,8 +133,6 @@ async function addTransfer(userId, address, amount, data = {}) {
  * @param transfer
  */
 async function confirmTransfer(transfer) {
-  await checkTransferRequest(transfer.userId, transfer.amount, transfer)
-
   if (transfer.status !== enums.TransferStatuses.WaitingTwoFactor) {
     throw new Error('Transfer is not waiting for confirmation')
   }
@@ -149,7 +147,7 @@ async function confirmTransfer(transfer) {
     throw new Error('Transfer was not confirmed in the required time')
   }
 
-  await transfer.update({
+  return await transfer.update({
     status: enums.TransferStatuses.Enqueued
   })
 }
