@@ -14,11 +14,11 @@ ipfsProxyImageTag: 'bb14c52'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: 'bb14c52'
+faucetImageTag: '20362cb'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '470687a'
+eventlistenerImageTag: '20362cb'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -26,7 +26,7 @@ discoveryImageTag: 'ee4e122'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '208db12'
+growthImageTag: '20362cb'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -59,7 +59,7 @@ adminImageTag: '589feef'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: '68791b5'
+relayerImageTag: '20362cb'
 
 # origin-graphql
 graphqlImage: origin-graphql
