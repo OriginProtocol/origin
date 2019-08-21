@@ -5,7 +5,7 @@ const BigNumber = require('bignumber.js')
 
 function toMoment(date) {
   if (!date) return date
-  if (!moment.isMoment()) return moment(date)
+  if (!moment.isMoment()) return moment.utc(date)
   return date
 }
 

@@ -6,10 +6,8 @@ const sendgridMail = require('@sendgrid/mail')
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 
-const { ip2geo } = require('@origin/ip2geo')
-
 require('../passport')()
-const { asyncMiddleware } = require('../utils')
+const { asyncMiddleware, getFingerprintData } = require('../utils')
 const { LOGIN } = require('../constants/events')
 const { encrypt } = require('../lib/crypto')
 const { Event, User } = require('../models')
@@ -136,26 +134,11 @@ router.post(
     // complete.
     await req.user.update({ otpVerified: true })
 
-    // Parsed user agent
-    const device = req.useragent
     // Log the successfull login in the Event table.
     await Event.create({
-      ip: req.connection.remoteAddress,
-      grantId: null,
       userId: req.user.id,
       action: LOGIN,
-      data: {
-        device: {
-          source: device.source,
-          browser: device.browser,
-          isMobile: device.isMobile,
-          isDesktop: device.isDesktop,
-          platform: device.platform,
-          version: device.version,
-          os: device.os
-        },
-        location: await ip2geo(req.connection.remoteAddress)
-      }
+      data: await getFingerprintData(req)
     })
 
     // Save in the session that the user successfully authed with TOTP.
