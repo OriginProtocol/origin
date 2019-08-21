@@ -1,10 +1,33 @@
 const base58 = require('./util_base58')
-const IpfsClusterAPI = require('./ipfs-cluster-api-service.js')
+const IpfsClusterAPI = require('./ipfs-cluster-api-service')
+
 const ipfsClusterApiService = new IpfsClusterAPI(
   process.env.IPFS_CLUSTER_URL,
   process.env.IPFS_CLUSTER_USERNAME,
   process.env.IPFS_CLUSTER_PASSWORD
 )
+
+const retryIntervalGrowthRate = 2
+
+const listingEvents = [
+  'ListingCreated',
+  'ListingUpdated',
+  'ListingWithdrawn',
+  'ListingArbitrated',
+  'ListingData'
+]
+const offerEvents = [
+  'OfferCreated',
+  'OfferAccepted',
+  'OfferFinalized',
+  'OfferWithdrawn',
+  'OfferFundsAdded',
+  'OfferDisputed',
+  'OfferRuling',
+  'OfferData'
+]
+const identityEvents = ['IdentityUpdated']
+const allEvents = listingEvents.concat(offerEvents).concat(identityEvents)
 
 const pinService = async event => {
   const pubsubMessage = event.data
@@ -12,58 +35,57 @@ const pinService = async event => {
     ? JSON.parse(Buffer.from(pubsubMessage, 'base64').toString())
     : null
 
-  const eventName = data.log.eventName
-  if (
-    !['ListingCreated', 'ListingUpdated', 'IdentityUpdated'].includes(eventName)
-  ) {
-    // Not an event we are interested in pinning anything for
+  if (!data) {
+    console.log('Error retrieving data')
     return
   }
 
-  let pinnedHashes = []
-  let unPinnedHashes = []
-
-  if (!Object.is(data, null)) {
-    const hashesToPin = parseIncomingData(data)
-    for (let i = 0; i < hashesToPin.length; i++) {
-      hashToPin = hashesToPin[i]
-
-      pinned = await ipfsClusterApiService.pin(hashToPin)
-
-      if (pinned) {
-        pinnedHashes.push(hashToPin)
-      } else {
-        // Retry pinning 5 times with 500ms as initial interval and double the
-        // interval every try. Set fields accordingly.
-        let numberOfRetries = 4
-        let initialRetryInterval = 500
-        let retryIntervalGrowthRate = 2
-        let retryPinned = await promiseSetTimeout(
-          hashToPin,
-          initialRetryInterval
-        )
-        while (!retryPinned && numberOfRetries > 0) {
-          console.log('Retrying Pinning:\n')
-          console.log('Retry Interval : ' + initialRetryInterval + 'ms \n')
-          console.log('Number of Retry : ' + (5 - numberOfRetries) + '\n')
-          numberOfRetries--
-          initialRetryInterval *= retryIntervalGrowthRate
-          retryPinned = await promiseSetTimeout(hashToPin, initialRetryInterval)
-        }
-        retryPinned
-          ? pinnedHashes.push(hashToPin)
-          : unPinnedHashes.push(hashToPin)
-      }
-    }
-  } else {
-    console.log('Error retrieving listing data')
+  const eventName = data.event.event
+  if (!allEvents.includes(eventName)) {
+    // Not an event we are interested in pinning anything for
+    console.log(`Skipping event ${eventName}`)
+    return
   }
+
+  const pinnedHashes = []
+  const unPinnedHashes = []
+  const hashesToPin = parseIncomingData(data)
+
+  for (let i = 0; i < hashesToPin.length; i++) {
+    const hashToPin = hashesToPin[i]
+
+    const pinned = await ipfsClusterApiService.pin(hashToPin)
+
+    if (pinned) {
+      pinnedHashes.push(hashToPin)
+    } else {
+      // Retry pinning 5 times with 500ms as initial interval and double the
+      // interval every try. Set fields accordingly.
+      let numberOfRetries = 4
+      let initialRetryInterval = 500
+      let retryPinned = await promiseSetTimeout(hashToPin, initialRetryInterval)
+      while (!retryPinned && numberOfRetries > 0) {
+        console.log('Retrying Pinning:\n')
+        console.log('Retry Interval : ' + initialRetryInterval + 'ms \n')
+        console.log('Number of Retry : ' + (5 - numberOfRetries) + '\n')
+        numberOfRetries--
+        initialRetryInterval *= retryIntervalGrowthRate
+        retryPinned = await promiseSetTimeout(hashToPin, initialRetryInterval)
+      }
+      retryPinned
+        ? pinnedHashes.push(hashToPin)
+        : unPinnedHashes.push(hashToPin)
+    }
+  }
+
   console.log('Pinned following hashes: ', pinnedHashes.join(', '), '\n')
-  console.log(
-    'Could not pin following hashes: ',
-    unPinnedHashes.join(', '),
-    '\n'
-  )
+  if (unPinnedHashes.length) {
+    console.log(
+      'Could not pin following hashes: ',
+      unPinnedHashes.join(', '),
+      '\n'
+    )
+  }
 }
 
 const promiseSetTimeout = async (hashToPin, interval) => {
@@ -76,10 +98,17 @@ const promiseSetTimeout = async (hashToPin, interval) => {
 }
 
 const parseIncomingData = data => {
-  let hashesToPin = []
   const eventName = data.event.event
-  if (eventName === 'ListingCreated' || eventName === 'ListingUpdated') {
-    console.log(`Processing event ${eventName}`)
+  if (!data.event.returnValues.ipfsHash) {
+    console.log(`No IPFS hash for event ${eventName}`)
+    return []
+  }
+
+  const hashesToPin = []
+
+  // Listing events.
+  if (listingEvents.includes(eventName)) {
+    console.log(`Processing listing event ${eventName}`)
     hashesToPin.push(getIpfsHashFromBytes32(data.event.returnValues.ipfsHash))
     const listing = data.related.listing
     if ('media' in listing && listing.media.length > 0) {
@@ -90,16 +119,28 @@ const parseIncomingData = data => {
     } else {
       console.log('No IPFS media hashes found in listing data')
     }
-  } else if (eventName === 'IdentityUpdated') {
-    console.log(`Processing event ${eventName}`)
+    return hashesToPin
+  }
+
+  // Offer events.
+  if (offerEvents.includes(eventName)) {
+    console.log(`Processing offer event ${eventName}`)
+    hashesToPin.push(getIpfsHashFromBytes32(data.event.returnValues.ipfsHash))
+    return hashesToPin
+  }
+
+  // Identity events.
+  if (identityEvents.includes(eventName)) {
+    console.log(`Processing identity event ${eventName}`)
     hashesToPin.push(getIpfsHashFromBytes32(data.event.returnValues.ipfsHash))
     const identity = data.related.identity
     if (identity.avatarUrl) {
       hashesToPin.push(extractIpfsHashFromUrl(identity.avatarUrl))
     }
+    return hashesToPin
   }
 
-  return hashesToPin
+  return []
 }
 
 const extractIpfsHashFromUrl = url => {

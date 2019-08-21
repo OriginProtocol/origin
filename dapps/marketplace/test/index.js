@@ -81,9 +81,10 @@ function randomTitle() {
 
 function listingTests(autoSwap) {
   describe('Single Unit Listing for Eth', function() {
-    let seller, buyer
+    let seller, buyer, title
     before(async function() {
       ({ seller, buyer } = await reset('100'))
+      title = randomTitle()
     })
 
     it('should navigate to the Add Listing page', async function() {
@@ -102,7 +103,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow title and description entry', async function() {
-      await page.type('input[name=title]', randomTitle())
+      await page.type('input[name=title]', title)
       await page.type('textarea[name=description]', 'T-Shirt in size large')
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
@@ -151,6 +152,12 @@ function listingTests(autoSwap) {
       await clickByText(page, 'Continue', 'a')
     })
 
+    it('should wait for correct OGN balance', async function() {
+      await page.waitForFunction(
+        `document.querySelector('.promote-listing .balance').innerText.includes("OGN Balance: 100")`
+      )
+    })
+
     it('should enter 10 OGN', async function() {
       await page.type('input[name=commissionPerUnit]', '10')
     })
@@ -167,6 +174,7 @@ function listingTests(autoSwap) {
 
     it('should allow listing to be viewed', async function() {
       await clickByText(page, 'View Listing', 'button')
+      await waitForText(page, title, 'h2')
     })
 
     it('should allow a new listing to be purchased', async function() {
@@ -286,9 +294,10 @@ function listingTests(autoSwap) {
   })
 
   describe('Multi Unit Listing for Eth', function() {
-    let seller, buyer, listingHash
+    let seller, buyer, title, listingHash
     before(async function() {
       ({ seller, buyer } = await reset('100'))
+      title = randomTitle()
     })
 
     it('should navigate to the Add Listing page', async function() {
@@ -307,7 +316,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow title and description entry', async function() {
-      await page.type('input[name=title]', randomTitle())
+      await page.type('input[name=title]', title)
       await page.type('textarea[name=description]', 'T-Shirt in size large')
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
@@ -349,6 +358,7 @@ function listingTests(autoSwap) {
 
     it('should continue to listing', async function() {
       await clickByText(page, 'View Listing', 'button')
+      await waitForText(page, title, 'h2')
       listingHash = await page.evaluate(() => window.location.hash)
     })
 
@@ -365,6 +375,12 @@ function listingTests(autoSwap) {
 
     it('should continue to OGN entry', async function() {
       await clickByText(page, 'Continue', 'a')
+    })
+
+    it('should wait for correct OGN balance', async function() {
+      await page.waitForFunction(
+        `document.querySelector('.promote-listing .balance').innerText.includes("OGN Balance: 100")`
+      )
     })
 
     it('should enter 10 OGN', async function() {
@@ -531,6 +547,7 @@ describe('Marketplace Dapp', function() {
       delete window.localStorage.performanceMode
       delete window.localStorage.proxyAccountsEnabled
       delete window.localStorage.relayerEnabled
+      delete window.localStorage.debug
       window.localStorage.promoteEnabled = 'true'
       window.transactionPoll = 100
     })
@@ -546,6 +563,7 @@ describe('Marketplace Dapp with proxies enabled', function() {
       window.localStorage.proxyAccountsEnabled = true
       delete window.localStorage.performanceMode
       delete window.localStorage.relayerEnabled
+      delete window.localStorage.debug
       window.localStorage.promoteEnabled = 'true'
       window.transactionPoll = 100
     })

@@ -372,20 +372,14 @@ class Listing {
                     type: 'number',
                     script: {
                       lang: 'painless',
-                      // Note: Script is very defensive at checking existence and validity
-                      // of the data to be robust to possibly malformed listings that are on testing
-                      // environments and could also exist in production.
+                      // Note: Wrap calculation in a try/catch statement to be robust to possibly
+                      // malformed listings that exist on testing environments and could also exist in production.
                       source: `
-                        if (params._source.containsKey("price") &&
-                          params._source.price.containsKey("amount") &&
-                          params._source.price.amount != null &&
-                          params._source.price.containsKey("currency") &&
-                          params._source.price.currency.containsKey("id") &&
-                          params.exchangeRates.containsKey(params._source.price.currency.id)) {
-                            float amount = Float.parseFloat(params._source.price.amount);
-                            float rate = Float.parseFloat(params.exchangeRates[params._source.price.currency.id]);
-                            return amount * rate;
-                        } else {
+                        try {
+                          float amount = Float.parseFloat(params._source.price.amount);
+                          float rate = Float.parseFloat(params.exchangeRates[params._source.price.currency.id]);
+                          return amount * rate;
+                        } catch (Exception e) {
                           return params.order == "asc" ? 1000000000L : 0;
                         }`,
                       params: {

@@ -1,4 +1,5 @@
 const BigNumber = require('bignumber.js')
+const moment = require('moment')
 
 const Token = require('@origin/token/src/token')
 
@@ -18,13 +19,14 @@ const NumBlockConfirmation = 8
 
 // Wait up to 20 min for a transaction to get confirmed
 const ConfirmationTimeoutSec = 20 * 60 * 60
+const TwofactorTimeoutMinutes = 5
 
 /**
  * Helper method to check the validity of a transfer request.
  * Throws an exception in case the request is invalid.
  * @param userId
  * @param amount
- * @returns {Promise<Grant>}
+ * @returns (Promise<User>)
  * @private
  */
 async function checkTransferRequest(userId, amount) {
@@ -42,6 +44,7 @@ async function checkTransferRequest(userId, amount) {
 
   // Sum the amount from transfers that are in a pending or complete state
   const pendingOrCompleteTransfers = [
+    enums.TransferStatuses.WaitingTwoFactor,
     enums.TransferStatuses.Enqueued,
     enums.TransferStatuses.Paused,
     enums.TransferStatuses.WaitingConfirmation,
@@ -89,7 +92,7 @@ async function checkTransferRequest(userId, amount) {
  * @param amount
  * @returns {Promise<integer>} Id of the transfer request.
  */
-async function enqueueTransfer(userId, address, amount, data = {}) {
+async function addTransfer(userId, address, amount, data = {}) {
   const user = await checkTransferRequest(userId, amount)
 
   // Enqueue the request by inserting a row in the transfer table.
@@ -100,7 +103,7 @@ async function enqueueTransfer(userId, address, amount, data = {}) {
   try {
     transfer = await Transfer.create({
       userId: user.id,
-      status: enums.TransferStatuses.Enqueued,
+      status: enums.TransferStatuses.WaitingTwoFactor,
       toAddress: address.toLowerCase(),
       amount,
       currency: 'OGN', // For now we only support OGN.
@@ -116,13 +119,37 @@ async function enqueueTransfer(userId, address, amount, data = {}) {
     await txn.commit()
   } catch (e) {
     await txn.rollback()
-    logger.error(`Failed to enqueue transfer for address ${address}: ${e}`)
+    logger.error(`Failed to add transfer for address ${address}: ${e}`)
     throw e
   }
   logger.info(
-    `Enqueued transfer. id: ${transfer.id} address: ${address} amount: ${amount}`
+    `Added transfer. id: ${transfer.id} address: ${address} amount: ${amount}`
   )
   return transfer
+}
+
+/* Moves a transfer from waiting for two factor to enqueued.
+ * Throws an exception if the request is invalid.
+ * @param transfer
+ */
+async function confirmTransfer(transfer) {
+  if (transfer.status !== enums.TransferStatuses.WaitingTwoFactor) {
+    throw new Error('Transfer is not waiting for confirmation')
+  }
+
+  if (
+    moment().diff(moment(transfer.createdAt), 'minutes') >
+    TwofactorTimeoutMinutes
+  ) {
+    await transfer.update({
+      status: enums.TransferStatuses.Expired
+    })
+    throw new Error('Transfer was not confirmed in the required time')
+  }
+
+  return await transfer.update({
+    status: enums.TransferStatuses.Enqueued
+  })
 }
 
 /**
@@ -212,4 +239,9 @@ async function executeTransfer(transfer, opts) {
   return { txHash, txStatus: status }
 }
 
-module.exports = { checkTransferRequest, enqueueTransfer, executeTransfer }
+module.exports = {
+  addTransfer,
+  checkTransferRequest,
+  confirmTransfer,
+  executeTransfer
+}
