@@ -10,7 +10,7 @@ server
       } else if (v && Number.isNaN(v)) {
         console.warn('GRAPHQL_SERVER_PORT is NaN.  Using default')
       }
-      return 4002
+      return 4007
     })()
   })
   .then(({ url }) => {
