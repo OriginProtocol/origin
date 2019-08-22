@@ -9,6 +9,7 @@ export default gql`
     $data: ListingInput!
     $unitData: UnitListingInput
     $fractionalData: FractionalListingInput
+    $version: String
   ) {
     createListing(
       from: $from
@@ -18,6 +19,7 @@ export default gql`
       data: $data
       unitData: $unitData
       fractionalData: $fractionalData
+      version: $version
     ) {
       id
     }

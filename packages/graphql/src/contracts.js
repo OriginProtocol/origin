@@ -7,6 +7,7 @@ import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import { exchangeAbi, factoryAbi } from './contracts/UniswapExchange'
 
 import Web3 from 'web3'
+import get from 'lodash/get'
 import EventSource from '@origin/eventsource'
 import { patchWeb3Contract } from '@origin/event-cache'
 import { initStandardSubproviders, createEngine } from '@origin/web3-provider'
@@ -56,17 +57,70 @@ async function isValidContract(web3, address) {
 }
 
 let lastBlock
-export function newBlock(blockHeaders) {
-  if (!blockHeaders) return
-  if (blockHeaders.number <= lastBlock) return
-  lastBlock = blockHeaders.number
-  context.marketplace.eventCache.setLatestBlock(lastBlock)
-  context.identityEvents.eventCache.setLatestBlock(lastBlock)
-  context.ProxyFactory.eventCache.setLatestBlock(lastBlock)
-  context.eventSource.resetCache()
-  pubsub.publish('NEW_BLOCK', {
-    newBlock: { ...blockHeaders, id: blockHeaders.hash }
+
+export function newBlock(blockNumber) {
+  if (blockNumber <= lastBlock) return
+  lastBlock = blockNumber
+  Object.keys(context.marketplaces || {}).forEach(version => {
+    context.marketplaces[version].contract.eventCache.setLatestBlock(
+      blockNumber
+    )
+    context.marketplaces[version].eventSource.resetCache()
   })
+
+  if (context.identityEvents) {
+    context.identityEvents.eventCache.setLatestBlock(blockNumber)
+  }
+  if (context.ProxyFactory) {
+    context.ProxyFactory.eventCache.setLatestBlock(blockNumber)
+  }
+
+  pubsub.publish('NEW_BLOCK', {
+    newBlock: { id: blockNumber }
+  })
+}
+
+const blockQuery = `query BlockNumber { web3 { blockNumber } }`
+function queryForBlocks() {
+  let inProgress = false,
+    blockInterval = null
+  try {
+    blockInterval = setInterval(() => {
+      if (inProgress) {
+        return
+      }
+      inProgress = true
+      fetch(`${context.config.graphql}/graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          operationName: 'BlockNumber',
+          variables: {},
+          query: blockQuery
+        })
+      })
+        .then(resp => {
+          resp.json().then(result => {
+            const blockNumber = get(result, 'data.web3.blockNumber')
+            if (blockNumber > lastBlock) {
+              newBlock(blockNumber)
+            }
+          })
+          inProgress = false
+        })
+        .catch(err => {
+          console.log(err)
+          inProgress = false
+        })
+    }, 5000)
+  } catch (error) {
+    console.log(`Querying for new blocks failed: ${error}`)
+    inProgress = false
+  }
+
+  return blockInterval
 }
 
 function pollForBlocks() {
@@ -79,9 +133,9 @@ function pollForBlocks() {
       inProgress = true
       web3.eth
         .getBlockNumber()
-        .then(block => {
-          if (block > lastBlock) {
-            web3.eth.getBlock(block).then(newBlock)
+        .then(blockNumber => {
+          if (blockNumber > lastBlock) {
+            newBlock(blockNumber)
           }
           inProgress = false
         })
@@ -210,20 +264,33 @@ export function setNetwork(net, customConfig) {
     )
   }
 
-  context.EventBlock = config.V00_Marketplace_Epoch || 0
+  let marketplaceVersion
+  Object.keys(config)
+    .sort()
+    .forEach(k => {
+      const marketVersion = k.match(/^V([0-9]+)_Marketplace$/)
+      if (marketVersion) {
+        setMarketplace(config[k], config[`${k}_Epoch`], `0${marketVersion[1]}`)
+        marketplaceVersion = `0${marketVersion[1]}`
+      }
+    })
+  if (!config.marketplaceVersion) {
+    config.marketplaceVersion = marketplaceVersion
+  }
 
-  setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
   setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
 
   setProxyContracts(config)
 
-  if (config.providerWS) {
+  if (config.performanceMode && context.config.graphql) {
+    queryForBlocks()
+  } else if (config.providerWS) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
     context.web3WS = web3WS
     try {
       wsSub = web3WS.eth
         .subscribe('newBlockHeaders')
-        .on('data', newBlock)
+        .on('data', latestBlock => newBlock(latestBlock.number))
         .on('error', () => {
           console.log('WS connection error. Polling for new blocks...')
           pollForBlocks()
@@ -237,9 +304,7 @@ export function setNetwork(net, customConfig) {
     pollForBlocks()
   }
   try {
-    web3.eth.getBlockNumber().then(block => {
-      web3.eth.getBlock(block).then(newBlock)
-    })
+    web3.eth.getBlockNumber().then(newBlock)
   } catch (error) {
     console.log(`Could not retrieve block: ${error}`)
   }
@@ -361,13 +426,22 @@ function setMetaMask() {
     context.metaMaskEnabled = true
     context.web3Exec = metaMask
     context.marketplaceExec = context.marketplaceMM
+    Object.keys(context.marketplaces || {}).forEach(
+      version =>
+        (context.marketplaces[version].contractExec =
+          context.marketplaces[version].contractMM)
+    )
     context.ognExec = context.ognMM
     context.tokens.forEach(token => (token.contractExec = token.contractMM))
     context.daiExchangeExec = context.daiExchangeMM
   } else {
     context.metaMaskEnabled = false
     context.web3Exec = web3
-    context.marketplaceExec = context.marketplace
+    Object.keys(context.marketplaces || {}).forEach(
+      version =>
+        (context.marketplaces[version].contractExec =
+          context.marketplaces[version].contract)
+    )
     context.ognExec = context.ogn
     context.tokens.forEach(token => (token.contractExec = token.contract))
     context.daiExchangeExec = context.daiExchange
@@ -444,44 +518,57 @@ export function toggleMetaMask(enabled) {
   setMetaMask()
 }
 
-export function setMarketplace(address, epoch) {
-  context.marketplace = new web3.eth.Contract(MarketplaceContract.abi, address)
-  patchWeb3Contract(context.marketplace, epoch, {
+export function setMarketplace(address, epoch, version = '000') {
+  if (!address) return
+  const contract = new web3.eth.Contract(MarketplaceContract.abi, address)
+  patchWeb3Contract(contract, epoch, {
     ...context.config,
     useLatestFromChain: false,
-    ipfsEventCache: context.config.V00_Marketplace_EventCache,
-    cacheMaxBlock: context.config.V00_Marketplace_EventCacheMaxBlock,
+    ipfsEventCache:
+      context.config[`V${version.slice(1)}_Marketplace_EventCache`],
+    cacheMaxBlock:
+      context.config[`V${version.slice(1)}_Marketplace_EventCacheMaxBlock`],
     prefix:
       typeof address === 'undefined'
         ? 'Marketplace_'
         : `${address.slice(2, 8)}_`,
     platform: typeof window === 'undefined' ? 'memory' : 'browser'
   })
+  context.marketplace = contract
 
-  if (address) {
-    context.marketplaces = [context.marketplace]
-  } else {
-    context.marketplaces = []
-  }
-  context.eventSource = new EventSource({
-    marketplaceContract: context.marketplace,
+  const eventSource = new EventSource({
+    marketplaceContract: contract,
     ipfsGateway: context.ipfsGateway,
-    web3: context.web3
+    web3: context.web3,
+    version
   })
+  context.eventSource = eventSource
   context.marketplaceExec = context.marketplace
 
+  context.marketplaces = context.marketplaces || {}
+  context.marketplaces[version] = {
+    address,
+    epoch,
+    eventSource,
+    contract,
+    contractExec: contract
+  }
+
   if (metaMask) {
-    context.marketplaceMM = new metaMask.eth.Contract(
+    const contractMM = new metaMask.eth.Contract(
       MarketplaceContract.abi,
       address
     )
+    context.marketplaces[version].contractMM = contractMM
     if (metaMaskEnabled) {
-      context.marketplaceExec = context.marketplaceMM
+      context.marketplaceExec = contractMM
+      context.marketplaces[version].contractExec = contractMM
     }
   }
 }
 
 export function setIdentityEvents(address, epoch) {
+  if (!address) return
   context.identityEvents = new web3.eth.Contract(
     IdentityEventsContract.abi,
     address
@@ -512,6 +599,7 @@ export function setIdentityEvents(address, epoch) {
 }
 
 export function setProxyContracts(config) {
+  if (!config.ProxyFactory) return
   context.ProxyFactory = new web3.eth.Contract(
     IdentityProxyFactory.abi,
     config.ProxyFactory

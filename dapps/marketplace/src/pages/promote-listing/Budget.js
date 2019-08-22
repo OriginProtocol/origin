@@ -120,9 +120,17 @@ const PromoteListingBudget = ({
             price={{ amount: commission, currency: { id: 'token-OGN' } }}
             target={'token-OGN'}
             targets={['token-OGN']}
+            allowanceTarget={listing.contractAddr}
           >
             {({ tokenStatus }) => {
-              if (!tokenStatus.hasBalance || !value || value === '0') {
+              if (tokenStatus.loading) {
+                return (
+                  <div
+                    className="btn btn-primary btn-rounded btn-lg disabled"
+                    children={fbt('Loading', 'Loading')}
+                  />
+                )
+              } else if (!tokenStatus.hasBalance || !value || value === '0') {
                 return (
                   <div
                     className="btn btn-primary btn-rounded btn-lg disabled"
@@ -139,6 +147,7 @@ const PromoteListingBudget = ({
                   tokenStatus={tokenStatus}
                   className="btn btn-primary btn-rounded btn-lg"
                   children={fbt('Promote Now', 'promoteListing.promoteNow')}
+                  listingPromotion={true}
                 />
               )
             }}
@@ -161,7 +170,4 @@ require('react-styl')(`
         border-radius: 0
       .input-wrap
         margin-top: 0.5rem
-      .actions
-        margin-top: 1.5rem
-
 `)

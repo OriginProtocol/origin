@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Query } from 'react-apollo'
+import { useQuery } from '@apollo/react-hooks'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
@@ -12,53 +12,58 @@ import QueryError from 'components/QueryError'
 import Attestations from 'components/Attestations'
 import Link from 'components/Link'
 
-import query from 'queries/Identity'
+import query from 'queries/SkinnyIdentity'
 import withOwner from 'hoc/withOwner'
 
-const AboutParty = ({ id, owner }) => {
+const Identity = ({ id, owner }) => {
   const [redirect, setRedirect] = useState(false)
+
+  const { data, loading, error } = useQuery(query, {
+    skip: !id,
+    variables: { id }
+  })
 
   if (redirect) {
     return <Redirect push to={`/user/${id}`} />
   }
 
+  if (error) {
+    return <QueryError error={error} query={query} vars={{ id }} />
+  }
+  if (loading || !id || !owner) return null
+
+  const profile = get(data, 'identity')
+  if (!profile) {
+    return (
+      <div className="profile">
+        <Identicon size={50} address={owner} />
+        <div className="user-detail">
+          <div>
+            <fbt desc="aboutParty.ethAddress">ETH Address</fbt>
+          </div>
+          <div>
+            <EthAddress address={owner} short />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="profile" onClick={() => setRedirect(true)}>
+      <Avatar profile={profile} size={50} />
+      <div className="user-detail">
+        <div className="name">{profile.fullName}</div>
+        <Attestations profile={profile} small />
+      </div>
+    </div>
+  )
+}
+
+const AboutParty = ({ id, owner }) => {
   return (
     <div className="about-party">
-      <Query query={query} variables={{ id }}>
-        {({ data, loading, error }) => {
-          if (error) {
-            return <QueryError error={error} query={query} vars={{ id }} />
-          }
-          if (loading) return null
-
-          const profile = get(data, 'web3.account.identity')
-          if (!profile) {
-            return (
-              <div className="profile">
-                <Identicon size={50} address={owner} />
-                <div className="user-detail">
-                  <div>
-                    <fbt desc="aboutParty.ethAddress">ETH Address</fbt>
-                  </div>
-                  <div>
-                    <EthAddress address={owner} short />
-                  </div>
-                </div>
-              </div>
-            )
-          }
-
-          return (
-            <div className="profile" onClick={() => setRedirect(true)}>
-              <Avatar profile={profile} size={50} />
-              <div className="user-detail">
-                <div className="name">{profile.fullName}</div>
-                <Attestations profile={profile} small />
-              </div>
-            </div>
-          )
-        }}
-      </Query>
+      <Identity owner={owner} id={id} />
       <div className="actions">
         <SendMessage to={id} className="btn btn-link">
           <fbt desc="AboutParty.contactSeller">Contact seller</fbt>

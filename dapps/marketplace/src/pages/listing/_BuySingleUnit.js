@@ -17,6 +17,7 @@ const SingleUnit = ({ listing, from, refetch, growthReward }) => {
       price={listing.price}
       target={token}
       targets={['token-ETH', 'token-DAI', listing.price.currency.id]}
+      allowanceTarget={listing.contractAddr}
     >
       {({ prices, tokenStatus }) => {
         if (!prices) return null

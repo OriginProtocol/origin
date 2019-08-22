@@ -50,8 +50,8 @@ runs the following packages:
 - @origin/bridge: attestation server on http://localhost:5000
 - @origin/discovery: discovery/search server on http://localhost:4000
 - @origin/discovery: event-listener (aka "indexer")
-- @origin/graphql: graphql server on http://localhost:4002
-- @origin/growth: growth server on http://localhost:4001
+- @origin/graphql: graphql server on http://localhost:4007
+- @origin/growth: growth server on http://localhost:4008
 - @origin/messaging: messaging server on http://localhost:9012
 - @origin/notifications: email/mobile notification server on http://localhost:3456
 ```
@@ -145,7 +145,7 @@ Restart a container. In a new terminal window:
 Rebuild containers (takes some time), in case you update dependencies (including
 npm). In a new terminal window:
 
-    docker-compose build --no-cache origin
+    docker-compose build --no-cache services
 
 ### Suggested workflow
 

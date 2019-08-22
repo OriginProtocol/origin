@@ -168,7 +168,7 @@ class MarketplaceEventHandler {
 
     if (this.config.elasticsearch) {
       logger.info(`Indexing listing in Elastic:  id=${listing.id}`)
-      search.Listing.index(
+      await search.Listing.index(
         removeListingIdBlockNumber(listing.id),
         userAddress,
         ipfsHash,

@@ -33,7 +33,7 @@ spec:
               name: {{ template "growth.fullname" . }}
               key: ENVKEY
         ports:
-        - containerPort: 4001
+        - containerPort: 4008
       - name: cloudsql-proxy
         image: gcr.io/cloudsql-docker/gce-proxy:1.11
         command: ["/cloud_sql_proxy",

@@ -4,8 +4,12 @@ const request = require('supertest')
 const express = require('express')
 const moment = require('moment')
 const sinon = require('sinon')
+const totp = require('notp').totp
+const base32 = require('thirty-two')
+const crypto = require('crypto')
 
-const { Event, Grant, Transfer, User } = require('../../src/models')
+const { Grant, Transfer, User, sequelize } = require('../../src/models')
+const { encrypt } = require('../../src/lib/crypto')
 const transferController = require('../../src/controllers/transfer')
 const TransferStatuses = require('../../src/enums')
 const enums = require('../../src/enums')
@@ -22,14 +26,25 @@ const toAddress = '0xf17f52151ebef6c7334fad080c5704d77216b732'
 
 describe('Transfer HTTP API', () => {
   beforeEach(async () => {
+    // Wipe database before each test
+    expect(process.env.NODE_ENV).to.equal('test')
+    await sequelize.sync({ force: true })
+
+    // Generate an OTP key
+    this.otpKey = crypto.randomBytes(10).toString('hex')
+    this.encodedKey = base32.encode(this.otpKey).toString()
+    const encryptedKey = encrypt(this.otpKey)
+
     this.user = await User.create({
       email: 'user@originprotocol.com',
-      otpKey: '123',
+      name: 'User 1',
+      otpKey: encryptedKey,
       otpVerified: true
     })
 
     this.user2 = await User.create({
-      email: 'user2@originprotocol.com'
+      email: 'user2@originprotocol.com',
+      name: 'User 2'
     })
 
     this.grants = [
@@ -75,28 +90,9 @@ describe('Transfer HTTP API', () => {
     this.mockApp.use(app)
   })
 
-  afterEach(async () => {
-    await Event.destroy({
-      where: {}
-    })
-
-    await Transfer.destroy({
-      where: {}
-    })
-
-    await Grant.destroy({
-      where: {}
-    })
-
-    // Cleanup
-    User.destroy({
-      where: {}
-    })
-  })
-
   it('should return the transfers', async () => {
     await Transfer.create({
-      grantId: this.grants[0].id,
+      userId: this.user.id,
       status: TransferStatuses.Success,
       fromAddress,
       toAddress,
@@ -104,7 +100,7 @@ describe('Transfer HTTP API', () => {
       currency: 'OGN'
     })
     await Transfer.create({
-      grantId: this.grants[0].id,
+      userId: this.user.id,
       status: TransferStatuses.Success,
       fromAddress,
       toAddress,
@@ -120,7 +116,7 @@ describe('Transfer HTTP API', () => {
   it('should not return transfers for other users', async () => {
     // Create a transfer for a grant for the second user
     await Transfer.create({
-      grantId: this.grants[2].id,
+      userId: this.user2.id,
       status: TransferStatuses.Success,
       fromAddress,
       toAddress,
@@ -137,32 +133,30 @@ describe('Transfer HTTP API', () => {
     expect(response.body.length).to.equal(0)
   })
 
-  it('should enqueue a transfer if lockup date has passed', async () => {
+  it('should add a transfer if lockup date has passed', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
     await request(this.mockApp)
       .post('/api/transfers')
       .send({
-        grantId: this.grants[0].id,
         amount: 1000,
         address: toAddress
       })
       .expect(201)
 
-    expect(
-      (await request(this.mockApp).get('/api/transfers')).body.length
-    ).to.equal(1)
+    const response = await request(this.mockApp).get('/api/transfers')
+    expect(response.body.length).to.equal(1)
+    expect(response.body[0].status).to.equal('WaitingTwoFactor')
   })
 
-  it('should not enqueue a transfer before lockup date passed', async () => {
+  it('should not add a transfer before lockup date passed', async () => {
     const unlockFake = sinon.fake.returns(moment().add(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
-        grantId: this.grants[0].id,
         amount: 1000,
         address: toAddress
       })
@@ -175,14 +169,13 @@ describe('Transfer HTTP API', () => {
     ).to.equal(0)
   })
 
-  it('should not enqueue a transfer if not enough tokens (vested)', async () => {
+  it('should not add a transfer if not enough tokens (vested)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
-        grantId: this.grants[0].id,
         amount: 1000001,
         address: toAddress
       })
@@ -195,12 +188,12 @@ describe('Transfer HTTP API', () => {
     ).to.equal(0)
   })
 
-  it('should not enqueue a transfer if not enough tokens (vested minus enqueued)', async () => {
+  it('should not add a transfer if not enough tokens (vested minus addd)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
     await Transfer.create({
-      grantId: this.grants[0].id,
+      userId: this.user.id,
       status: enums.TransferStatuses.Enqueued,
       toAddress: toAddress,
       amount: 2,
@@ -210,7 +203,6 @@ describe('Transfer HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
-        grantId: this.grants[0].id,
         amount: 999999,
         address: toAddress
       })
@@ -223,12 +215,12 @@ describe('Transfer HTTP API', () => {
     ).to.equal(1)
   })
 
-  it('should not enqueue a transfer if not enough tokens (vested minus paused)', async () => {
+  it('should not add a transfer if not enough tokens (vested minus paused)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
     await Transfer.create({
-      grantId: this.grants[0].id,
+      userId: this.user.id,
       status: enums.TransferStatuses.Paused,
       toAddress: toAddress,
       amount: 2,
@@ -238,7 +230,6 @@ describe('Transfer HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
-        grantId: this.grants[0].id,
         amount: 999999,
         address: toAddress
       })
@@ -251,12 +242,12 @@ describe('Transfer HTTP API', () => {
     ).to.equal(1)
   })
 
-  it('should not enqueue a transfer if not enough tokens (vested minus waiting)', async () => {
+  it('should not add a transfer if not enough tokens (vested minus waiting)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
     await Transfer.create({
-      grantId: this.grants[0].id,
+      userId: this.user.id,
       status: enums.TransferStatuses.WaitingConfirmation,
       toAddress: toAddress,
       amount: 2,
@@ -266,7 +257,6 @@ describe('Transfer HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
-        grantId: this.grants[0].id,
         amount: 999999,
         address: toAddress
       })
@@ -279,12 +269,12 @@ describe('Transfer HTTP API', () => {
     ).to.equal(1)
   })
 
-  it('should not enqueue a transfer if not enough tokens (vested minus success)', async () => {
+  it('should not add a transfer if not enough tokens (vested minus success)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
     await Transfer.create({
-      grantId: this.grants[0].id,
+      userId: this.user.id,
       status: enums.TransferStatuses.Success,
       toAddress: toAddress,
       amount: 2,
@@ -294,7 +284,6 @@ describe('Transfer HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
-        grantId: this.grants[0].id,
         amount: 999999,
         address: toAddress
       })
@@ -307,7 +296,7 @@ describe('Transfer HTTP API', () => {
     ).to.equal(1)
   })
 
-  it('should not enqueue a transfer if not enough tokens (multiple states)', async () => {
+  it('should not add a transfer if not enough tokens (multiple states)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
@@ -318,7 +307,7 @@ describe('Transfer HTTP API', () => {
       enums.TransferStatuses.Success
     ].map(status => {
       return Transfer.create({
-        grantId: this.grants[0].id,
+        userId: this.user.id,
         status: status,
         toAddress: toAddress,
         amount: 2,
@@ -331,7 +320,7 @@ describe('Transfer HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
-        grantId: this.grants[0].id,
+        userId: this.user.id,
         amount: 999993,
         address: toAddress
       })
@@ -344,20 +333,18 @@ describe('Transfer HTTP API', () => {
     ).to.equal(4)
   })
 
-  it('should not enqueue simultaneous transfers if not enough tokens', async () => {
+  it('should not add transfers simultaneously if not enough tokens', async () => {
     const results = await Promise.all([
       request(this.mockApp)
         .post('/api/transfers')
         .send({
-          grantId: this.grants[0].id,
           amount: 1000000,
           address: toAddress
         }),
       request(this.mockApp)
         .post('/api/transfers')
         .send({
-          grantId: this.grants[0].id,
-          amount: 1000000,
+          amount: 1,
           address: toAddress
         })
     ])
@@ -368,5 +355,43 @@ describe('Transfer HTTP API', () => {
     expect(
       (await request(this.mockApp).get('/api/transfers')).body.length
     ).to.equal(1)
+  })
+
+  it('should confirm a transfer', async () => {
+    const transfer = await Transfer.create({
+      userId: this.user.id,
+      status: enums.TransferStatuses.WaitingTwoFactor,
+      toAddress: toAddress,
+      amount: 1000000,
+      currency: 'OGN'
+    })
+
+    const totpToken = totp.gen(this.otpKey)
+
+    await request(this.mockApp)
+      .post(`/api/transfers/${transfer.id}`)
+      .send({
+        code: totpToken
+      })
+      .expect(201)
+  })
+
+  it('should not confirm a transfer with invalid totp code', async () => {
+    const transfer = await Transfer.create({
+      userId: this.user.id,
+      status: enums.TransferStatuses.WaitingTwoFactor,
+      toAddress: toAddress,
+      amount: 1000000,
+      currency: 'OGN'
+    })
+
+    const totpToken = '123456'
+
+    await request(this.mockApp)
+      .post(`/api/transfers/${transfer.id}`)
+      .send({
+        code: totpToken
+      })
+      .expect(422)
   })
 })

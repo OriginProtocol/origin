@@ -15,14 +15,6 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: { model: 't3_user', key: 'id' }
       },
-      grant_id: {
-        type: Sequelize.INTEGER,
-        references: { model: 't3_grant', key: 'id' }
-      },
-      ip: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
       action: {
         type: Sequelize.STRING,
         allowNull: false

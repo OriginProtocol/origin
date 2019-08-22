@@ -2,7 +2,7 @@ import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import get from 'lodash/get'
 
-import IdentityQuery from 'queries/Identity'
+import IdentityQuery from 'queries/SkinnyIdentity'
 
 function withIdentity(WrappedComponent, walletProp = 'walletProxy') {
   const WithIdentity = props => {
@@ -11,7 +11,7 @@ function withIdentity(WrappedComponent, walletProp = 'walletProxy') {
       skip: !id,
       variables: { id }
     })
-    const identity = get(data, 'web3.account.identity')
+    const identity = get(data, 'identity')
     return (
       <WrappedComponent
         {...props}

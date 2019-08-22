@@ -1,6 +1,7 @@
 import graphqlFields from 'graphql-fields'
 import { getIdsForPage, getConnection } from '../_pagination'
 import contracts from '../../contracts'
+import get from 'lodash/get'
 // import memoize from 'lodash/memoize'
 
 export async function getTransactionReceipt(id) {
@@ -13,12 +14,10 @@ export async function getTransactionReceipt(id) {
   }
 
   const jsonInterfaces = [
-    ...contracts.marketplace.options.jsonInterface,
-    ...contracts.identityEvents.options.jsonInterface,
-    ...contracts.uniswapFactory.options.jsonInterface,
-    ...(contracts.daiExchange
-      ? contracts.daiExchange.options.jsonInterface
-      : [])
+    ...get(contracts, 'marketplace.options.jsonInterface', []),
+    ...get(contracts, 'identityEvents.options.jsonInterface', []),
+    ...get(contracts, 'uniswapFactory.options.jsonInterface', []),
+    ...get(contracts, 'daiExchange.options.jsonInterface', [])
   ]
 
   const events = rawReceipt.logs.map(log => {

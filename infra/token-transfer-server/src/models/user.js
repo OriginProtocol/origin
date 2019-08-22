@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     'User',
     {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+      name: DataTypes.STRING,
       phone: DataTypes.STRING,
       // Email address of the user.
       email: { type: DataTypes.STRING, unique: true },
@@ -17,5 +18,11 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 't3_user'
     }
   )
+
+  User.associate = models => {
+    User.hasMany(models.Grant)
+    User.hasMany(models.Transfer)
+  }
+
   return User
 }

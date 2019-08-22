@@ -11,6 +11,7 @@ const query = gql`
     $account: String!
     $proxy: String!
     $useProxy: Boolean!
+    $target: String!
   ) {
     currencies(tokens: $tokens) {
       __typename
@@ -24,7 +25,7 @@ const query = gql`
         id
         decimals
         balance(address: $account)
-        allowance(address: $account, target: "marketplace")
+        allowance(address: $account, target: $target)
       }
     }
     proxyCurrencies: currencies(tokens: $tokens) @include(if: $useProxy) {
@@ -47,16 +48,20 @@ const query = gql`
 
 function withCurrencyBalances(WrappedComponent) {
   const WithCurrencyBalances = props => {
-    const { data } = useQuery(query, {
+    const { data, error } = useQuery(query, {
       skip: !props.wallet,
       variables: {
         account: props.wallet,
         proxy: props.walletPredictedProxy,
         tokens: props.targets,
-        useProxy: props.walletPredictedProxy !== props.wallet
+        useProxy: props.walletPredictedProxy !== props.wallet,
+        target: props.allowanceTarget
       },
       fetchPolicy: 'network-only'
     })
+    if (error) {
+      console.log('withCurrencyPrices', error)
+    }
     return (
       <WrappedComponent
         {...props}

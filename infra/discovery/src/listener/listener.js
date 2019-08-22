@@ -114,7 +114,7 @@ async function main() {
   // List of contracts the listener watches events from.
   const contracts = {
     IdentityEvents: contractsContext.identityEvents,
-    Marketplace: contractsContext.marketplace,
+    Marketplace: contractsContext.marketplaces['000'].contract,
     ProxyFactory: contractsContext.ProxyFactory
   }
 
