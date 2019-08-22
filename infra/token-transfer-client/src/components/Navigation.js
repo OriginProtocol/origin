@@ -37,11 +37,7 @@ const Navigation = props => {
         <div></div>
       </div>
       <img src={Logo} className="brand my-3" />
-      <div
-        className={`mt-4 ${
-          props.expandSidebar ? '' : 'd-none d-md-block'
-        }`}
-      >
+      <div className={`mt-4 ${props.expandSidebar ? '' : 'd-none d-md-block'}`}>
         <ul className="navbar-nav">
           <li className="nav-item mb-3">
             <NavLink to="/dashboard" exact className="nav-link text">

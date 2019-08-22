@@ -96,7 +96,7 @@ router.post(
     const key = crypto.randomBytes(10).toString('hex')
     const encodedKey = base32.encode(key).toString()
     const encryptedKey = encrypt(key)
-    await req.user.update({ otpKey: encryptedKey })
+    await req.user.update({ otpKey: encryptedKey, otpVerified: false })
 
     // Generate QR token for scanning into Google Authenticator
     // Reference: https://code.google.com/p/google-authenticator/wiki/KeyUriFormat

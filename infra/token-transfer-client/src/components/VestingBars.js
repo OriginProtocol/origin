@@ -109,7 +109,7 @@ const VestingBars = props => {
 
           return (
             <div
-              className="mt-3 pointer"
+              className="progress mt-3 pointer"
               key={grant.id}
               style={{ width: `${width}%`, marginLeft: `${left}%` }}
               onClick={event => handleTogglePopover(event, grant.id)}
@@ -171,7 +171,7 @@ const VestingBars = props => {
           )
         })}
       </div>
-      <div className="mt-5" style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', marginTop: '4rem' }}>
         <div>
           <div className="status-circle status-circle-success ml-3 mr-2"></div>
           {props.vested.toLocaleString()} OGN{' '}

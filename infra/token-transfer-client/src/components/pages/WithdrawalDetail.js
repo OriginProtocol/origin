@@ -101,24 +101,23 @@ class WithdrawalDetail extends Component {
             authentication in the required time.
           </div>
         )}
-        {(!hasExpired && transfer.status === 'WaitingTwoFactor') ||
-          (true && (
-            <div className="alert alert-warning">
-              <strong>Next Step:</strong> Confirm your transaction with{' '}
-              <a
-                href="javascript:void(0)"
-                onClick={() => this.setState({ displayModal: true })}
-              >
-                two factor authentication
-              </a>
-              <br />
-              <strong>Transaction will expire in:</strong>{' '}
-              <img src={ClockIcon} className="ml-3 mr-1 mb-1" />{' '}
-              {moment(transfer.createdAt)
-                .add(5, 'minutes')
-                .fromNow()}
-            </div>
-          ))}
+        {!hasExpired && transfer.status === 'WaitingTwoFactor' && (
+          <div className="alert alert-warning">
+            <strong>Next Step:</strong> Confirm your transaction with{' '}
+            <a
+              href="javascript:void(0)"
+              onClick={() => this.setState({ displayModal: true })}
+            >
+              two factor authentication
+            </a>
+            <br />
+            <strong>Transaction will expire in:</strong>{' '}
+            <img src={ClockIcon} className="ml-3 mr-1 mb-1" />{' '}
+            {moment(transfer.createdAt)
+              .add(5, 'minutes')
+              .fromNow()}
+          </div>
+        )}
         <div className="row">
           <div className="col-12 col-xl-6">
             <BorderedCard shadowed={true}>

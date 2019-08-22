@@ -203,7 +203,7 @@ class BalanceCard extends Component {
     return (
       <>
         <h1 className="mb-2">Withdraw OGN</h1>
-        <div className="alert alert-warning mt-4 mb-4 mx-auto">
+        <div className="alert alert-warning m-4">
           This transaction is not reversible and we cannot help you recover
           these funds
         </div>
@@ -270,7 +270,7 @@ class BalanceCard extends Component {
                 </select>
               </div>
               <div className="form-group">
-                <a href="#" onClick={this.handleAddAccount}>
+                <a href="javascript:void(0);" onClick={this.handleAddAccount}>
                   Add Another Account
                 </a>
               </div>
@@ -289,7 +289,10 @@ class BalanceCard extends Component {
               </div>
               {this.props.accounts.length > 0 && (
                 <div className="form-group">
-                  <a href="#" onClick={this.handleChooseAccount}>
+                  <a
+                    href="javascript:void(0);"
+                    onClick={this.handleChooseAccount}
+                  >
                     Choose Existing Account
                   </a>
                 </div>

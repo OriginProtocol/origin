@@ -22,12 +22,11 @@ const AccountActions = props => {
       <small>
         {get(props.user, 'email')}
         <div className="mx-3 d-inline-block">|</div>
-        <a className="text-muted" href="mailto:support@originprotocol.com">Contact Support</a>
+        <a className="text-muted" href="mailto:support@originprotocol.com">
+          Contact Support
+        </a>
         <div className="mx-2 d-inline-block"></div>
-        <a
-          className="text-muted pointer"
-          onClick={handleLogout}
-        >
+        <a className="text-muted pointer" onClick={handleLogout}>
           Logout
         </a>
       </small>
