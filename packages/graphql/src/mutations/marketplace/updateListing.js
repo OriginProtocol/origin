@@ -11,7 +11,7 @@ import { proxyOwner } from '../../utils/proxy'
 async function updateListing(_, args) {
   const { data, unitData, fractionalData, autoApprove } = args
   const from = args.from || contracts.defaultMobileAccount
-  const { listingId } = parseId(args.listingID)
+  const { listingId, marketplace } = parseId(args.listingID, contracts)
   await checkMetaMask(from)
 
   const ipfsData = listingInputToIPFS(data, unitData, fractionalData)
@@ -30,7 +30,7 @@ async function updateListing(_, args) {
   // all valid offers for this listing. This prevents unitsAvailable from going
   // negative.
   const newUnitsTotal = Number(ipfsData.unitsTotal) || 0
-  const listing = await contracts.eventSource.getListing(listingId)
+  const listing = await marketplace.eventSource.getListing(listingId)
   if (newUnitsTotal < listing.unitsPending) {
     throw new Error('New unitsTotal is lower than units pending sale')
   }
@@ -44,13 +44,13 @@ async function updateListing(_, args) {
     }
     if (isProxy) {
       const Proxy = new contracts.web3Exec.eth.Contract(IdentityProxy.abi, from)
-      const txData = await contracts.marketplaceExec.methods
+      const txData = await marketplace.contractExec.methods
         .updateListing(listingId, ipfsHash, additionalDeposit)
         .encodeABI()
 
       tx = Proxy.methods.transferTokenMarketplaceExecute(
         owner,
-        contracts.marketplace._address,
+        marketplace.contract._address,
         txData,
         contracts.ognExec._address,
         additionalDeposit
@@ -66,7 +66,7 @@ async function updateListing(_, args) {
         [listingId, ipfsHash, additionalDeposit]
       )
       tx = contracts.ognExec.methods.approveAndCallWithSender(
-        contracts.marketplace._address,
+        marketplace.contract._address,
         additionalDeposit,
         fnSig,
         params
@@ -74,7 +74,7 @@ async function updateListing(_, args) {
       gas += 100000
     }
   } else {
-    tx = contracts.marketplaceExec.methods.updateListing(
+    tx = marketplace.contractExec.methods.updateListing(
       listingId,
       ipfsHash,
       additionalDeposit
@@ -86,8 +86,8 @@ async function updateListing(_, args) {
     from,
     mutation,
     gas,
-    onReceipt: () => context.eventSource.resetMemos(),
-    onConfirmation: () => context.eventSource.resetMemos()
+    onReceipt: () => marketplace.eventSource.resetMemos(),
+    onConfirmation: () => marketplace.eventSource.resetMemos()
   })
 }
 

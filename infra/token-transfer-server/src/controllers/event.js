@@ -12,7 +12,10 @@ router.get(
   '/events',
   ensureLoggedIn,
   asyncMiddleware(async (req, res) => {
-    const query = { where: { userId: req.user.id } }
+    const query = {
+      where: { userId: req.user.id },
+      order: [['created_at', 'DESC']]
+    }
     if (req.query.action) {
       query.where.action = req.query.action
     }

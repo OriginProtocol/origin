@@ -120,7 +120,7 @@ class Listings extends Component {
     search.sort = selectedOptions[0]
     search.order = selectedOptions[1]
     pushSearchHistory(this.props.history, search)
-    this.setState({ search })
+    this.setState({ search, sortVisible: false })
   }
 
   handleSortVisible = bool => {
@@ -136,6 +136,17 @@ class Listings extends Component {
     )
     const creatorFilters = get(this.props, 'creatorConfig.listingFilters', [])
     const filters = [...getFilters(this.state.search), ...creatorFilters]
+
+    const hasStatusFilter = filters.find(filter => filter.name === 'status')
+
+    if (!hasStatusFilter) {
+      filters.push({
+        name: 'status',
+        value: 'active',
+        valueType: 'STRING',
+        operator: 'EQUALS'
+      })
+    }
 
     const vars = {
       ...pick(this.state, 'first'),
@@ -156,7 +167,7 @@ class Listings extends Component {
 
     const showCategory = get(this.state, 'search.category.type') ? false : true
     const showCount =
-      vars.search || vars.filters.length || this.state.search.ognListings
+      vars.search || vars.filters.length > 1 || this.state.search.ognListings
 
     const isSearch =
       get(this.state.search, 'searchInput', '') !== '' ||

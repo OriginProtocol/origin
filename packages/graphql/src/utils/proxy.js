@@ -18,6 +18,7 @@ const proxyCreationCode = memoize(async () => {
 async function predictedProxyRaw(address) {
   if (
     !contracts.config.proxyAccountsEnabled ||
+    !contracts.ProxyFactory ||
     !contracts.ProxyFactory._address
   ) {
     return null
@@ -45,7 +46,11 @@ async function predictedProxyRaw(address) {
  * the address the contract will be deployed to for a given account.
  */
 async function hasProxyRaw(address) {
-  if (!contracts.config.proxyAccountsEnabled || !contracts.ProxyImp._address) {
+  if (
+    !contracts.config.proxyAccountsEnabled ||
+    !contracts.ProxyImp ||
+    !contracts.ProxyImp._address
+  ) {
     return false
   }
   try {
@@ -63,7 +68,11 @@ async function hasProxyRaw(address) {
  * Returns proxy owner, or null
  */
 async function proxyOwnerRaw(address) {
-  if (!contracts.config.proxyAccountsEnabled || !contracts.ProxyImp._address) {
+  if (
+    !contracts.config.proxyAccountsEnabled ||
+    !contracts.ProxyImp ||
+    !contracts.ProxyImp._address
+  ) {
     return null
   }
   try {

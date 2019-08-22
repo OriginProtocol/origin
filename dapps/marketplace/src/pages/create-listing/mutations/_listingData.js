@@ -31,6 +31,7 @@ export function getStateFromListing(props) {
 
     ...pick(props.listing, [
       'id',
+      'contractAddr',
       '__typename',
       'title',
       'description',

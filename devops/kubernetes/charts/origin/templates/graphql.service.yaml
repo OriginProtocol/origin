@@ -17,4 +17,4 @@ spec:
     app: {{ template "graphql.fullname" . }}
   ports:
   - name: apollo
-    port: 4002
+    port: 4007

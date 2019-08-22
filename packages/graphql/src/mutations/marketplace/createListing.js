@@ -70,6 +70,16 @@ async function createListing(_, input) {
   let tx
   const deposit = contracts.web3.utils.toWei(String(input.deposit), 'ether')
 
+  let version = input.version
+  if (!version) {
+    const versions = Object.keys(contracts.marketplaces).sort()
+    version = versions[versions.length - 1]
+  }
+  if (!contracts.marketplaces[version]) {
+    throw new Error(`No marketplace with version ${version}`)
+  }
+  const marketplace = contracts.marketplaces[version].contractExec
+
   if (autoApprove && input.deposit > 0) {
     const fnSig = contracts.web3.eth.abi.encodeFunctionSignature(
       'createListingWithSender(address,bytes32,uint256,address)'
@@ -79,17 +89,13 @@ async function createListing(_, input) {
       [ipfsHash, deposit, depositManager]
     )
     tx = contracts.ognExec.methods.approveAndCallWithSender(
-      contracts.marketplace._address,
+      marketplace._address,
       deposit,
       fnSig,
       params
     )
   } else {
-    tx = contracts.marketplaceExec.methods.createListing(
-      ipfsHash,
-      deposit,
-      depositManager
-    )
+    tx = marketplace.methods.createListing(ipfsHash, deposit, depositManager)
   }
 
   return txHelper({

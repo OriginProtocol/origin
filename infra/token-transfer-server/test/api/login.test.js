@@ -9,7 +9,7 @@ const totp = require('notp').totp
 const base32 = require('thirty-two')
 const crypto = require('crypto')
 
-const { Event, User } = require('../../src/models')
+const { Event, User, sequelize } = require('../../src/models')
 const { encrypt } = require('../../src/lib/crypto')
 
 process.env.SENDGRID_FROM_EMAIL = 'test@test.com'
@@ -21,6 +21,10 @@ const app = require('../../src/app')
 
 describe('Login HTTP API', () => {
   beforeEach(async () => {
+    // Wipe database before each test
+    expect(process.env.NODE_ENV).to.equal('test')
+    await sequelize.sync({ force: true })
+
     // Generate an OTP key
     this.otpKey = crypto.randomBytes(10).toString('hex')
     this.encodedKey = base32.encode(this.otpKey).toString()
@@ -28,29 +32,21 @@ describe('Login HTTP API', () => {
 
     this.user = await User.create({
       email: 'user@originprotocol.com',
+      name: 'User 1',
       otpKey: encryptedKey,
       otpVerified: true
     })
 
     this.user2 = await User.create({
       email: 'user2@originprotocol.com',
+      name: 'User 2',
       otpKey: '123'
     })
 
     this.user3 = await User.create({
       email: 'user3@originprotocol.com',
+      name: 'User 3',
       otpVerified: true
-    })
-  })
-
-  afterEach(async () => {
-    await Event.destroy({
-      where: {}
-    })
-
-    // Cleanup
-    User.destroy({
-      where: {}
     })
   })
 
@@ -163,7 +159,7 @@ describe('Login HTTP API', () => {
 
     await request(mockApp)
       .post('/api/setup_totp')
-      .expect(403)
+      .expect(401)
   })
 
   it('should allow setup of totp if not verified', async () => {
