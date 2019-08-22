@@ -18,10 +18,7 @@ const portInUse = port =>
   new Promise(function(resolve) {
     const srv = net
       .createServer()
-      .once('error', err => {
-        console.error(err)
-        resolve(true)
-      })
+      .once('error', () => resolve(true))
       .once('listening', () => srv.once('close', () => resolve(false)).close())
       .listen(port, '0.0.0.0')
   })
@@ -205,6 +202,67 @@ const startRelayer = () =>
     resolve(startServer)
   })
 
+const startListener = () =>
+  new Promise(resolve => {
+    const cwd = path.resolve(__dirname, '../../infra/discovery')
+
+    const spawnedListener = spawn(
+      `node`,
+      [
+        'src/listener/listener.js',
+        '--network=localhost',
+        '--marketplace',
+        '--identity',
+        '--elasticsearch'
+      ],
+      {
+        cwd,
+        stdio: 'inherit',
+        env: {
+          ...process.env,
+          ELASTICSEARCH_HOST: 'localhost:9200',
+          DATABASE_URL: 'postgres://origin:origin@localhost/origin',
+          LOG_LEVEL: process.env.LOG_LEVEL || 'NONE'
+        }
+      }
+    )
+    spawnedListener.on('exit', () => {
+      console.log('Listener stopped.')
+    })
+    resolve(spawnedListener)
+  })
+
+const startDiscovery = () =>
+  new Promise(resolve => {
+    const cwd = path.resolve(__dirname, '../../infra/discovery')
+
+    const spawnedDiscovery = spawn(
+      `node`,
+      [
+        'src/apollo/app.js',
+        '--network=localhost',
+        '--marketplace',
+        '--identity',
+        '--elasticsearch'
+      ],
+      {
+        cwd,
+        stdio: 'inherit',
+        env: {
+          ...process.env,
+          NETWORK_ID: '999',
+          ELASTICSEARCH_HOST: 'localhost:9200',
+          DATABASE_URL: 'postgres://origin:origin@localhost/origin',
+          LOG_LEVEL: process.env.LOG_LEVEL || 'NONE'
+        }
+      }
+    )
+    spawnedDiscovery.on('exit', () => {
+      console.log('Discovery stopped.')
+    })
+    resolve(spawnedDiscovery)
+  })
+
 const startGraphql = () =>
   new Promise(resolve => {
     const startServer = spawn(`node`, ['-r', '@babel/register', 'server'], {
@@ -271,6 +329,30 @@ module.exports = async function start(opts = {}) {
     }
   }
 
+  if (opts.listener) {
+    if (!(await portInUse(5432))) {
+      console.log('Listener requires Postgres to be running on port 5432')
+    } else if (!(await portInUse(9200))) {
+      console.log('Listener requires ElasticSearch to be running on port 9200')
+    } else {
+      started.listener = await startListener()
+    }
+  }
+
+  if (opts.discovery) {
+    if (!(await portInUse(5432))) {
+      console.log('Discovery requires Postgres to be running on port 5432')
+    } else if (!(await portInUse(9200))) {
+      console.log('Discovery requires ElasticSearch to be running on port 9200')
+    } else if (!(await portInUse(6379))) {
+      console.log('Discovery requires Redis to be running on port 6379')
+    } else if (await portInUse(4000)) {
+      console.log('Discovery Server already started')
+    } else {
+      started.discovery = await startDiscovery()
+    }
+  }
+
   if (opts.relayer && !started.relayer) {
     if (await portInUse(5100)) {
       console.log('Relayer already started')
@@ -299,6 +381,12 @@ module.exports = async function start(opts = {}) {
     }
     if (started.graphql) {
       started.graphql.kill('SIGHUP')
+    }
+    if (started.listener) {
+      started.listener.kill('SIGHUP')
+    }
+    if (started.discovery) {
+      started.discovery.kill('SIGHUP')
     }
     if (started.ipfs) {
       await new Promise(resolve => started.ipfs.stop(() => resolve()))
