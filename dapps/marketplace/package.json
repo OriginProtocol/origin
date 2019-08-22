@@ -133,5 +133,6 @@
     "semi": false,
     "singleQuote": true,
     "proseWrap": "always"
-  }
+  },
+  "browserslist": "> 0.05%, not dead"
 }

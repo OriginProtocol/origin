@@ -2,12 +2,7 @@ module.exports = function (api) {
   api.cache(true)
 
   const presets = [
-    [
-      '@babel/preset-env',
-      {
-        'targets': '> 0.1%, not dead'
-      }
-    ],
+    '@babel/preset-env',
     '@babel/preset-react'
   ]
 
