@@ -826,10 +826,6 @@
     "*": "{number} 상품 목록",
     "_1": "1 상품 목록"
   },
-  "2CpFQp": {
-    "*": "{count} {category} results",
-    "_1": "{count} {category} result"
-  },
   "3pJs9O": {
     "*": "{count} Listings with Origin Rewards",
     "_1": "{count} Listing with Origin Rewards"
@@ -845,11 +841,11 @@
   "2Qfyq": "목록 리스팅 만들기",
   "4u7nzi": "목록 리스팅이 없습니다",
   "4v3q78": "더 많은 상품 목록 불러오기",
-  "114jZK": "Sort by",
-  "2LiG2d": "Sort By",
-  "6v09l": "Default",
+  "4pf0yW": "Featured",
   "3Ul6WQ": "Price: Low to High",
   "1rioH9": "Price: High to Low",
+  "qqmM": "Sort",
+  "114jZK": "Sort by",
   "2XkwlS": "메시지에 의혹을 제기할 수 없습니다.",
   "333iq2": "대화 기록이 없습니다!",
   "1DH3KE": "메시지",

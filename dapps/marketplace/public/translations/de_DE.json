@@ -111,7 +111,7 @@
   "3O3nPR": "Verify your Wechat Profile",
   "2yQKie": "Verify your GitHub Profile",
   "22ykGg": "Verify your LinkedIn Profile",
-  "FajrL": "Verify your Telegram Profile",
+  "FajrL": "Überprüfen Sie Ihr Telegram-Profil",
   "2peucP": "Erstellen Sie eine Auflistung",
   "2QerxF": "Kaufen Sie eine Auflistung",
   "1RwTp": {
@@ -238,7 +238,7 @@
   "3H6hnZ": "Share this on Twitter",
   "2TpGxd": "Share this on Facebook",
   "9RNU7": "Follow us on Twitter",
-  "3ia70n": "Join us on Telegram",
+  "3ia70n": "Treten Sie Telegramm bei",
   "2anQQJ": "Like our Facebook Page",
   "3XLL4i": "Requires:",
   "nbvr5": "Less Details",
@@ -737,8 +737,8 @@
   "2sRdX8": "That you have a verified phone number, but NOT your actual phone number",
   "1OUJhq": "Enter the code we sent you below",
   "jNcvI": "We’ve sent you a verification code via SMS. Please enter it below",
-  "4laugF": "Verify Telegram Account",
-  "3hKLwD": "Verify your Telegram Account",
+  "4laugF": "Überprüfen Sie Telegram-Konto",
+  "3hKLwD": "Überprüfen Sie Ihr Telegram-Konto",
   "2KQpoG": "We will never post on your behalf.",
   "2Ezyas": "What will be visible on the blockchain?",
   "44w6ur": "Your Telegram username and account ID",
@@ -826,10 +826,6 @@
     "*": "{number} Inserate",
     "_1": "1 Listing"
   },
-  "2CpFQp": {
-    "*": "{count} {category} results",
-    "_1": "{count} {category} result"
-  },
   "3pJs9O": {
     "*": "{count} Listings with Origin Rewards",
     "_1": "{count} Listing with Origin Rewards"
@@ -845,11 +841,11 @@
   "2Qfyq": "Erstellen Sie eine Auflistung",
   "4u7nzi": "Keine Angebote gefunden",
   "4v3q78": "Mehr laden",
-  "114jZK": "Sort by",
-  "2LiG2d": "Sort By",
-  "6v09l": "Default",
+  "4pf0yW": "Featured",
   "3Ul6WQ": "Price: Low to High",
   "1rioH9": "Price: High to Low",
+  "qqmM": "Sort",
+  "114jZK": "Sort by",
   "2XkwlS": "Nachrichten können nicht abgefragt werden",
   "333iq2": "Keine Gespräche!",
   "1DH3KE": "Mitteilungen",

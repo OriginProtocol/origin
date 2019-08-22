@@ -826,10 +826,6 @@
     "*": "{number} Listados",
     "_1": "1 Listado"
   },
-  "2CpFQp": {
-    "*": "{count} {category} results",
-    "_1": "{count} {category} result"
-  },
   "3pJs9O": {
     "*": "{count} Listings with Origin Rewards",
     "_1": "{count} Listing with Origin Rewards"
@@ -845,11 +841,11 @@
   "2Qfyq": "Crear un listado",
   "4u7nzi": "No se encontraron listados",
   "4v3q78": "Carga más",
-  "114jZK": "Sort by",
-  "2LiG2d": "Sort By",
-  "6v09l": "Default",
+  "4pf0yW": "Featured",
   "3Ul6WQ": "Price: Low to High",
   "1rioH9": "Price: High to Low",
+  "qqmM": "Sort",
+  "114jZK": "Sort by",
   "2XkwlS": "No se pueden consultar mensajes",
   "333iq2": "¡Sin conversaciones!",
   "1DH3KE": "Mensajes",
