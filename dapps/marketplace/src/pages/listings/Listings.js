@@ -18,9 +18,10 @@ import QueryError from 'components/QueryError'
 import DocumentTitle from 'components/DocumentTitle'
 import Link from 'components/Link'
 
-import store from 'utils/store'
 import nextPageFactory from 'utils/nextPageFactory'
 
+import NoResults from './_NoResults'
+import Header from './_Header'
 import ListingCards from './ListingCards'
 
 import query from 'queries/Listings'
@@ -32,8 +33,24 @@ import LoadingSpinner from 'components/LoadingSpinner'
 
 const CategoriesEnum = require('Categories$FbtEnum')
 
-const memStore = store('memory')
 const nextPage = nextPageFactory('marketplace.listings')
+
+const CategoryHeader = ({ search: { category, subCategory } }) => {
+  let content
+
+  if (category.id) {
+    content = CategoriesEnum[category.id]
+  } else if (subCategory.id) {
+    content =
+      subCategory.type === 'clothingAccessories'
+        ? CategoriesEnum['schema.apparel']
+        : subCategory.type === 'artsCrafts'
+        ? CategoriesEnum['schema.art']
+        : CategoriesEnum[subCategory.id]
+  }
+
+  return content ? <h3 className="category-title">{content}</h3> : null
+}
 
 class Listings extends Component {
   constructor(props) {
@@ -50,58 +67,6 @@ class Listings extends Component {
     if (prevProps.location.search !== this.props.location.search) {
       this.setState({ search: getStateFromQuery(this.props) })
     }
-  }
-
-  getCategoryHeader() {
-    let content
-
-    if (this.state.search.category.id) {
-      content = CategoriesEnum[this.state.search.category.id]
-    } else if (this.state.search.subCategory.id) {
-      content =
-        this.state.search.subCategory.type === 'clothingAccessories'
-          ? CategoriesEnum['schema.apparel']
-          : this.state.search.subCategory.type === 'artsCrafts'
-          ? CategoriesEnum['schema.art']
-          : CategoriesEnum[this.state.search.subCategory.id]
-    }
-
-    return content ? <h3 className="category-title">{content}</h3> : null
-  }
-
-  getHeader(totalCount, isSearch) {
-    let className = 'listings-count'
-    let content = (
-      <fbt desc="Num Listings">
-        <fbt:plural count={totalCount} showCount="yes">
-          Listing
-        </fbt:plural>
-      </fbt>
-    )
-
-    if (isSearch) {
-      className += ' search-results'
-      if (this.state.search.ognListings) {
-        content = (
-          <fbt desc="NumOgnRewardsResult">
-            <fbt:param name="count">{totalCount}</fbt:param>{' '}
-            <fbt:plural count={totalCount} showCount="no">
-              Listing
-            </fbt:plural>
-            with Origin Rewards
-          </fbt>
-        )
-      } else {
-        content = (
-          <fbt desc="NumResults">
-            <fbt:plural count={totalCount} showCount="yes">
-              result
-            </fbt:plural>
-          </fbt>
-        )
-      }
-    }
-    return <h5 className={className}>{content}</h5>
   }
 
   handleSortOptionChange = e => {
@@ -164,7 +129,7 @@ class Listings extends Component {
 
     const injectCTAs = !isSearch
 
-    const { walletType } = this.props
+    const { walletType, isMobile } = this.props
 
     const shouldShowBackButton =
       isSearch && (walletType === 'Mobile' || walletType === 'Origin Wallet')
@@ -181,7 +146,7 @@ class Listings extends Component {
     return (
       <>
         <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
-        {this.props.isMobile ? null : (
+        {isMobile ? null : (
           <div className="listings-menu-bar">{filterComp}</div>
         )}
         <div className="container listings-container">
@@ -224,96 +189,40 @@ class Listings extends Component {
                     }
                   }}
                 >
-                  <>
-                    {totalCount == 0 && (
-                      <div className="listings-empty">
-                        <div className="row">
-                          <div className="col text-center">
-                            <img src="images/empty-listings-graphic.svg" />
-                            {isSearch && (
-                              <h1>
-                                <fbt desc="listings.noListingsSearch">
-                                  No search results found
-                                </fbt>
-                              </h1>
-                            )}
-
-                            {isCreatedMarketplace && !isSearch && (
-                              <>
-                                <h1>
-                                  <fbt desc="listings.noListingsWhitelabel">
-                                    Your marketplace doesn&apos;t have any
-                                    listings yet
-                                  </fbt>
-                                </h1>
-                                <p>
-                                  <fbt desc="listings.noListingsWhitelabelMessage">
-                                    You can create listings yourself or invite
-                                    sellers to join your platform!
-                                  </fbt>
-                                </p>
-                                <div className="row">
-                                  <div className="col text-center">
-                                    <Link
-                                      to="/create"
-                                      className="btn btn-lg btn-primary"
-                                    >
-                                      <fbt desc="listings.createListingButton">
-                                        Create a Listing
-                                      </fbt>
-                                    </Link>
-                                  </div>
-                                </div>
-                              </>
-                            )}
-
-                            {!isCreatedMarketplace && !isSearch && (
-                              <h1>
-                                <fbt desc="listings.noListings">
-                                  No listings found
-                                </fbt>
-                              </h1>
-                            )}
-                          </div>
-                        </div>
+                  {totalCount == 0 ? (
+                    <NoResults {...{ isSearch, isCreatedMarketplace }} />
+                  ) : (
+                    <>
+                      <div className="search-sort-bar">
+                        <Header {...{ isSearch, totalCount, showCount }} />
+                        {!isMobile ? null : filterComp}
                       </div>
-                    )}
-
-                    {totalCount > 0 && (
-                      <>
-                        <div className="search-sort-bar">
-                          {showCount
-                            ? this.getHeader(totalCount, isSearch)
-                            : null}
-                          {!this.props.isMobile ? null : filterComp}
-                        </div>
-                        {showCount && isCategorySearch
-                          ? this.getCategoryHeader()
-                          : null}
-                        <ListingCards
-                          listings={nodes}
-                          hasNextPage={hasNextPage}
-                          showCategory={showCategory}
-                          tokenDecimals={this.props.tokenDecimals}
-                          injectCTAs={injectCTAs}
-                        />
-                        {!hasNextPage ? null : (
-                          <button
-                            className="btn btn-outline-primary btn-rounded mt-3"
-                            onClick={() => {
-                              if (!loading) {
-                                nextPage(fetchMore, { ...vars, after })
-                              }
-                            }}
-                          >
-                            {loading
-                              ? fbt('Loading...', 'Loading...')
-                              : fbt('Load more', 'Load more')}
-                          </button>
-                        )}
-                      </>
-                    )}
-                  </>
+                      {showCount && isCategorySearch ? (
+                        <CategoryHeader search={this.state.search} />
+                      ) : null}
+                      <ListingCards
+                        listings={nodes}
+                        hasNextPage={hasNextPage}
+                        showCategory={showCategory}
+                        tokenDecimals={this.props.tokenDecimals}
+                        injectCTAs={injectCTAs}
+                      />
+                      {!hasNextPage ? null : (
+                        <button
+                          className="btn btn-outline-primary btn-rounded mt-3"
+                          onClick={() => {
+                            if (!loading) {
+                              nextPage(fetchMore, { ...vars, after })
+                            }
+                          }}
+                        >
+                          {loading
+                            ? fbt('Loading...', 'Loading...')
+                            : fbt('Load more', 'Load more')}
+                        </button>
+                      )}
+                    </>
+                  )}
                 </BottomScrollListener>
               )
             }}
@@ -321,11 +230,6 @@ class Listings extends Component {
         </div>
       </>
     )
-  }
-
-  doSearch(search) {
-    this.setState({ activeSearch: search, search })
-    memStore.set('listingsPage.search', search)
   }
 }
 
@@ -359,13 +263,6 @@ require('react-styl')(`
 
   .listings-container
     padding-top: 3rem
-  .listings-count
-    font-family: var(--heading-font)
-    font-size: 40px
-    font-weight: 200
-    color: var(--dark)
-  .listings-empty
-    margin-top: 10rem
   @media (max-width: 767.98px)
     .listings-container
       padding-top: 0
@@ -373,12 +270,4 @@ require('react-styl')(`
         margin-bottom: 1.5rem
         &.active
           margin-bottom: 0
-    .listings-count
-      margin: 0
-      font-size: 32px
-      &.search-results
-        font-size: 14px
-        font-weight: normal
-      &.category-filter
-        font-size: 28px
 `)
