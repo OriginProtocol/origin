@@ -4,6 +4,8 @@ const sendgridMail = require('@sendgrid/mail')
 const Logger = require('logplease')
 const jwt = require('jsonwebtoken')
 
+const logger = Logger.create('sendWelcomeToken')
+
 try {
   require('envkey')
 } catch (error) {
@@ -19,9 +21,7 @@ const {
   sendgridApiKey
 } = require('../config')
 
-const logger = Logger.create('sendWelcomeToken')
 Logger.setLogLevel(logLevel)
-
 sendgridMail.setApiKey(sendgridApiKey)
 
 /*
@@ -40,29 +40,20 @@ function parseArgv() {
 }
 
 /* Send a welcome email to a user allowing them to start the onboarding process.
- *
  */
-async function sendWelcomeEmail(email) {
-  logger.info('Sending welcome email to', email)
+async function sendWelcomeEmail(user) {
+  logger.info('Sending welcome email to', user.email)
 
-  const user = await User.findOne({ where: { email } })
-
-  let token
-  if (user) {
-    token = jwt.sign(
-      {
-        email
-      },
-      encryptionSecret,
-      { expiresIn: '24h' }
-    )
-  } else {
-    logger.error('No such user')
-    return
-  }
+  const token = jwt.sign(
+    {
+      email: user.email
+    },
+    encryptionSecret,
+    { expiresIn: '24h' }
+  )
 
   const data = {
-    to: email,
+    to: user.email,
     from: sendgridFromEmail,
     subject: 'Welcome to the Origin Investor Portal',
     text: `The following link will provide you access to the Origin Investor Portal.
@@ -81,6 +72,23 @@ async function sendWelcomeEmail(email) {
   logger.info('Email sent')
 }
 
+/* Sends emails to a single user or all users depending on args.
+ */
+async function main(config) {
+  if (config.email) {
+    const user = await User.findOne({ where: { email: config.email } })
+    if (!user) {
+      logger.error('User with that email does not exist')
+      process.exit()
+    }
+    sendWelcomeEmail(user)
+  } else {
+    logger.info('Sending welcome email to all users')
+    const users = await User.findAll()
+    users.map(sendWelcomeEmail)
+  }
+}
+
 const args = parseArgv()
 const config = {
   email: args['--email'] || null,
@@ -91,10 +99,4 @@ if (!config.email && !config.all) {
   throw new Error('one of --email or --all is a required argument.')
 }
 
-if (config.email) {
-  // TODO validate email
-  sendWelcomeEmail(config.email)
-} else {
-  logger.info('Sending welcome email to all users')
-  // TODO implement this
-}
+main(config)
