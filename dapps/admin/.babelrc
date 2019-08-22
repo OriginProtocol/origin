@@ -1,0 +1,36 @@
+{
+  "presets": [
+    "@babel/preset-env",
+    "@babel/preset-react"
+  ],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+	"alias": {
+	  "actions": "./src/actions",
+	  "components": "./src/components",
+	  "constants": "./src/constants",
+	  "contracts": "./src/contracts",
+	  "pages": "./src/pages",
+	  "reducers": "./src/reducers",
+	  "utils": "./src/utils",
+	  "hoc": "./src/hoc",
+	  "queries": "./src/queries"
+	}
+      }
+    ],
+    [
+      "@babel/plugin-proposal-decorators",
+      {
+	"legacy": true
+      }
+    ],
+    "@babel/plugin-proposal-export-default-from",
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-transform-destructuring",
+    "@babel/plugin-transform-object-assign",
+    "@babel/plugin-proposal-object-rest-spread",
+    "@babel/plugin-proposal-class-properties"
+  ]
+}

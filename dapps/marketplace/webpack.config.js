@@ -38,12 +38,18 @@ const config = {
         test: /\.js$/,
         include: [
           path.resolve(__dirname, 'src'),
+          path.resolve(__dirname, '../../node_modules/@origin')
+        ],
+        exclude: [
+          path.resolve(__dirname, '../../node_modules/@origin/web3-provider/node_modules'),
+          path.resolve(__dirname, '../../node_modules/@origin/mobile-bridge/node_modules')
         ],
         use: [{
           loader: 'echo-loader',
         }, {
           loader: 'babel-loader',
           query: {
+            rootMode: 'upward',
             plugins: [
               [
                 'babel-plugin-fbt',

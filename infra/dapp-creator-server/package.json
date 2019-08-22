@@ -49,11 +49,6 @@
     "nodemon": "^1.19.1",
     "supertest": "^4.0.2"
   },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ]
-  },
   "prettier": {
     "semi": false,
     "singleQuote": true

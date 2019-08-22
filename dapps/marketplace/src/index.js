@@ -1,3 +1,5 @@
+'use strict'
+
 // Ensure storage is cleared on each deploy
 const appHash = process.env.GIT_COMMIT_HASH || 'marketplace'
 const ognNetwork = localStorage.ognNetwork

@@ -57,13 +57,5 @@
     "solidity-coverage": "^0.5.11",
     "solium": "^1.2.4",
     "web3-provider-engine": "^15.0.0"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ],
-    "plugins": [
-      "@babel/plugin-transform-runtime"
-    ]
   }
 }

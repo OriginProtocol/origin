@@ -1,0 +1,26 @@
+{
+  "presets": [
+    "@babel/preset-env",
+    "@babel/preset-react"
+  ],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+	"alias": {
+	  "actions": "./src/actions",
+	  "components": "./src/components",
+	  "pages": "./src/pages",
+	  "reducers": "./src/reducers",
+	  "utils": "./src/utils"
+	}
+      }
+    ],
+    [
+      "@babel/plugin-proposal-decorators",
+      {
+	"legacy": true
+      }
+    ]
+  ]
+}

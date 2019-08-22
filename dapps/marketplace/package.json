@@ -80,44 +80,6 @@
     "serve-static": "^1.14.1",
     "web3": "1.0.0-beta.34"
   },
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react"
-    ],
-    "plugins": [
-      [
-        "module-resolver",
-        {
-          "alias": {
-            "actions": "./src/actions",
-            "components": "./src/components",
-            "constants": "./src/constants",
-            "contracts": "./src/contracts",
-            "pages": "./src/pages",
-            "reducers": "./src/reducers",
-            "utils": "./src/utils",
-            "hoc": "./src/hoc",
-            "queries": "./src/queries",
-            "mutations": "./src/mutations"
-          }
-        }
-      ],
-      [
-        "@babel/plugin-proposal-decorators",
-        {
-          "legacy": true
-        }
-      ],
-      "@babel/plugin-transform-async-to-generator",
-      "@babel/plugin-proposal-export-default-from",
-      "@babel/plugin-transform-runtime",
-      "@babel/plugin-transform-destructuring",
-      "@babel/plugin-transform-object-assign",
-      "@babel/plugin-proposal-object-rest-spread",
-      "@babel/plugin-proposal-class-properties"
-    ]
-  },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/plugin-proposal-decorators": "^7.4.4",

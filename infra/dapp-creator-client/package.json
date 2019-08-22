@@ -69,32 +69,6 @@
     "typeface-poppins": "0.0.72",
     "webpack-dev-server": "3.7.2"
   },
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react"
-    ],
-    "plugins": [
-      [
-        "module-resolver",
-        {
-          "alias": {
-            "actions": "./src/actions",
-            "components": "./src/components",
-            "pages": "./src/pages",
-            "reducers": "./src/reducers",
-            "utils": "./src/utils"
-          }
-        }
-      ],
-      [
-        "@babel/plugin-proposal-decorators",
-        {
-          "legacy": true
-        }
-      ]
-    ]
-  },
   "prettier": {
     "semi": false,
     "singleQuote": true

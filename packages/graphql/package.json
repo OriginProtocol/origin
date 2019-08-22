@@ -65,20 +65,6 @@
     "semi": false,
     "singleQuote": true
   },
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react"
-    ],
-    "plugins": [
-      "@babel/plugin-proposal-export-default-from",
-      "@babel/plugin-transform-runtime",
-      "@babel/plugin-transform-destructuring",
-      "@babel/plugin-transform-object-assign",
-      "@babel/plugin-proposal-object-rest-spread",
-      "@babel/plugin-proposal-class-properties"
-    ]
-  },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/plugin-proposal-export-default-from": "^7.2.0",
