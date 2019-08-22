@@ -15,4 +15,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('app')
 )
-require('react-styl').addStylesheet()

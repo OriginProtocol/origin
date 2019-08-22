@@ -89,7 +89,7 @@ const VestingBars = props => {
   }
 
   return (
-    <div className="vesting-bars-wrapper">
+    <div className="mb-5">
       <h2>Vesting Progress</h2>
       <div id="vestingBars" style={{ position: 'relative' }}>
         {grants.map(grant => {
@@ -109,7 +109,7 @@ const VestingBars = props => {
 
           return (
             <div
-              className="progress"
+              className="progress mt-3 pointer"
               key={grant.id}
               style={{ width: `${width}%`, marginLeft: `${left}%` }}
               onClick={event => handleTogglePopover(event, grant.id)}
@@ -165,20 +165,22 @@ const VestingBars = props => {
                 }}
               ></div>
               <div style={{ marginLeft: '-50%' }}>
-                <small>{marker.label}</small>
+                <small className="text-muted">{marker.label}</small>
               </div>
             </div>
           )
         })}
       </div>
-      <div className="totals">
+      <div style={{ display: 'flex', marginTop: '4rem' }}>
         <div>
-          <div className="status-circle status-circle-success mr-2"></div>
-          {props.vested.toLocaleString()} OGN <small>vested</small>
+          <div className="status-circle status-circle-success ml-3 mr-2"></div>
+          {props.vested.toLocaleString()} OGN{' '}
+          <small className="ml-2">vested</small>
         </div>
         <div>
-          <div className="status-circle mr-2"></div>
-          {props.unvested.toLocaleString()} OGN <small>unvested</small>
+          <div className="status-circle ml-3 mr-2"></div>
+          {props.unvested.toLocaleString()} OGN{' '}
+          <small className="ml-2">unvested</small>
         </div>
       </div>
     </div>
@@ -186,40 +188,3 @@ const VestingBars = props => {
 }
 
 export default VestingBars
-
-require('react-styl')(`
-  .vesting-bars-wrapper
-    margin-bottom: 50px
-
-  .progress
-    margin-top: 20px
-    cursor: pointer
-
-  .totals
-    display: flex
-    margin-top: 50px
-    font-size: 14px
-    > div
-      padding-right: 40px
-      small
-        padding-left: 10px
-
-  .cover
-    position: fixed
-    top: 0
-    right: 0
-    bottom: 0
-    left: 0
-
-  .popover
-    position: absolute
-    z-index: 2
-    padding: 20px
-    border-radius: 5px;
-    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.29);
-    div
-      margin-bottom: 2px
-    strong
-      width: 50px
-      display: inline-block
-`)

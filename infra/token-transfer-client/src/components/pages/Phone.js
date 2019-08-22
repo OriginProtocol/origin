@@ -1,28 +1,47 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import get from 'lodash.get'
 
+import { editUser } from '@/actions/user'
+import {
+  getError as getUserError,
+  getIsEditing as getUserIsEditing
+} from '@/reducers/user'
 import { formInput, formFeedback } from '@/utils/formHelpers'
-import { apiUrl } from '@/constants'
-import agent from '@/utils/agent'
 
 class Phone extends Component {
   state = {
     phone: '',
-    phoneError: null,
     redirectTo: null
   }
 
-  handleSubmit = async () => {
-    try {
-      await agent.post(`${apiUrl}/api/user`).send({ phone: this.state.phone })
-    } catch (error) {
-      this.setState({
-        phoneError: 'Failed to save phone number. Try again shortly.'
-      })
-      return
+  componentDidUpdate(prevProps) {
+    // Parse server errors for user edit
+    if (get(prevProps, 'userError') !== this.props.userError) {
+      this.handleServerError(this.props.userError)
     }
+  }
 
-    this.setState({ redirectTo: '/terms' })
+  handleServerError(error) {
+    if (error && error.status === 422) {
+      // Parse validation errors from API
+      if (error.response.body && error.response.body.errors) {
+        error.response.body.errors.forEach(e => {
+          this.setState({ [`${e.param}Error`]: e.msg })
+        })
+      } else {
+        console.error(error.response.body)
+      }
+    }
+  }
+
+  handleSubmit = async () => {
+    const result = await this.props.editUser({ phone: this.state.phone })
+    if (result.type === 'EDIT_USER_SUCCESS') {
+      this.setState({ redirectTo: '/terms' })
+    }
   }
 
   render() {
@@ -59,4 +78,22 @@ class Phone extends Component {
   }
 }
 
-export default Phone
+const mapStateToProps = ({ user }) => {
+  return {
+    userError: getUserError(user),
+    userIsEditing: getUserIsEditing(user)
+  }
+}
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      editUser: editUser
+    },
+    dispatch
+  )
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Phone)

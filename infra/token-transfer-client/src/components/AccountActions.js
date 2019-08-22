@@ -18,28 +18,20 @@ const AccountActions = props => {
   }
 
   return (
-    <div className="account-actions">
-      {get(props.user, 'email')}
-      <div className="separator">|</div>
-      <a href="mailto:support@originprotocol.com">Contact Support</a>
-      <div className="separator"></div>
-      <a onClick={handleLogout} style={{ cursor: 'pointer' }}>
-        Logout
-      </a>
+    <div className="text-right" style={{ color: '#638298' }}>
+      <small>
+        {get(props.user, 'email')}
+        <div className="mx-3 d-inline-block">|</div>
+        <a className="text-muted" href="mailto:support@originprotocol.com">
+          Contact Support
+        </a>
+        <div className="mx-2 d-inline-block"></div>
+        <a className="text-muted pointer" onClick={handleLogout}>
+          Logout
+        </a>
+      </small>
     </div>
   )
 }
 
 export default AccountActions
-
-require('react-styl')(`
-  .account-actions
-    font-size: 14px
-    text-align: right
-    color: #638298
-    .separator
-      margin: 0 10px
-      display: inline-block
-    a
-      color: #638298
-`)

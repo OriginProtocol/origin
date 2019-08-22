@@ -41,7 +41,7 @@ class Terms extends Component {
               id="acceptCheck"
               onClick={e => this.setState({ accepted: e.target.checked })}
             />
-            <label className="form-check-label" htmlFor="acceptCheck">
+            <label className="form-check-label mt-0" htmlFor="acceptCheck">
               I have read and agree ot the terms and conditions
             </label>
           </div>
@@ -60,15 +60,3 @@ class Terms extends Component {
 }
 
 export default Terms
-
-require('react-styl')(`
-  .terms-wrapper
-    border-radius: 10px
-    height: 300px
-    overflow-y: scroll
-    background-color: #e9f0f3
-    font-size: 14px
-    padding: 20px
-    text-align: left
-    margin: 40px 0
-`)
