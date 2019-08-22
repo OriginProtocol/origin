@@ -1,6 +1,6 @@
-ARG ENVKEY
-
 FROM node:10 as build
+
+ARG ENVKEY
 
 WORKDIR /app
 
@@ -15,7 +15,14 @@ RUN mv envkey-source /usr/local/bin
 COPY package.json ./
 COPY yarn.lock ./
 COPY lerna.json ./
+COPY .eslintrc.react.js ./
+COPY .eslintrc.js ./
 COPY ./infra/token-transfer-client ./infra/token-transfer-client
+COPY ./infra/token-transfer-server ./infra/token-transfer-server
+COPY ./packages/contracts ./packages/contracts
+COPY ./packages/ip2geo ./packages/ip2geo
+COPY ./packages/token ./packages/token
+
 
 RUN yarn install
 
