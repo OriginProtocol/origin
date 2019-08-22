@@ -145,7 +145,7 @@ Restart a container. In a new terminal window:
 Rebuild containers (takes some time), in case you update dependencies (including
 npm). In a new terminal window:
 
-    docker-compose build --no-cache origin
+    docker-compose build --no-cache services
 
 ### Suggested workflow
 
