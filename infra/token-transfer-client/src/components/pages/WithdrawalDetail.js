@@ -181,7 +181,7 @@ class WithdrawalDetail extends Component {
             </BorderedCard>
           </div>
         </div>
-        <small>
+        <small className="text-muted">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed arcu
           non odio euismod. Donec massa sapien faucibus et molestie. Massa massa

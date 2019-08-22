@@ -60,15 +60,3 @@ class Terms extends Component {
 }
 
 export default Terms
-
-require('react-styl')(`
-  .terms-wrapper
-    border-radius: 10px
-    height: 300px
-    overflow-y: scroll
-    background-color: #e9f0f3
-    font-size: 14px
-    padding: 20px
-    text-align: left
-    margin: 40px 0
-`)
