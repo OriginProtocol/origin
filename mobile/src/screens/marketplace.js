@@ -313,9 +313,7 @@ class MarketplaceScreen extends Component {
   injectJavaScript = (script, name) => {
     const injectedJavaScript = `
       (function() {
-        
           ${script}
-        
       })();
     `
     if (this.dappWebView) {
@@ -372,7 +370,7 @@ class MarketplaceScreen extends Component {
             pubMessage: '${pubMessage}',
             pubSignature: '${pubSignature}'
           });
-        } 
+        }
       `,
       'messaging keys'
     )
