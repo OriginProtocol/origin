@@ -21,7 +21,7 @@ const SORT_OPTIONS = [
   }
 ]
 
-const SortMenu = ({ onClose, isMobile, onChange, sort, order }) => {
+const SortMenu = ({ isMobile, onChange, sort, order }) => {
   const [closeModal, setCloseModal] = useState(false)
   const [modal, setModal] = useState(false)
   const selectedOption = sort && order ? `${sort}:${order}` : ':'
@@ -57,8 +57,9 @@ const SortMenu = ({ onClose, isMobile, onChange, sort, order }) => {
               onClose={() => {
                 setCloseModal(false)
                 setModal(false)
-                onClose()
               }}
+              slideUp={true}
+              showCloseButton={true}
             >
               <SortContent
                 onChange={e => {
@@ -161,57 +162,28 @@ export default withIsMobile(SortMenu)
 require('react-styl')(`
   .sort-modal
     &.modal-content
-      min-height: auto
-    &.modal-header
-      .modal-title
-        display: flex
-        div
-          flex: 1
-        .clear-button, .close-button
-          font-size: 12px
-          flex: auto 0 0
-          cursor: pointer
-          font-weight: 300
-        .close-button
-          content: ''
-          display: inline-block
-          background-image: url('images/close-icon.svg')
-          background-position: center
-          background-repeat: no-repeat
-          background-size: 1rem
-          height: 2rem
-          width: 2rem
-        .clear-button
-          text-decoration: none
-          color: var(--bright-blue)
-          &:hover
-            color: var(--bright-blue)
-  @media (max-width: 767.98px)
-    .sort-modal
-      padding: 1rem
-      &.modal-content
-        padding: 0 1rem
-        .sort-form
-          padding: 0
-          label
-            border: solid 1px #c2cbd3
-            border-radius: 10px
-            position: relative
-            padding: 0.75rem 1rem
-            input
-              display: none
-            &.checked:after
-              content: ''
-              display: inline-block
-              background-image: url('images/checkmark-icon.svg')
-              background-position: center
-              background-repeat: no-repeat
-              background-size: 1.75rem
-              position: absolute
-              top: 0
-              bottom: 0
-              right: 0
-              width: 3rem
+      padding: 0 1rem
+      .sort-form
+        padding: 0
+        label
+          border: solid 1px #c2cbd3
+          border-radius: 10px
+          position: relative
+          padding: 0.75rem 1rem
+          input
+            display: none
+          &.checked:after
+            content: ''
+            display: inline-block
+            background-image: url('images/checkmark-icon.svg')
+            background-position: center
+            background-repeat: no-repeat
+            background-size: 1.75rem
+            position: absolute
+            top: 0
+            bottom: 0
+            right: 0
+            width: 3rem
 
   .dropdown
     width: 75px
