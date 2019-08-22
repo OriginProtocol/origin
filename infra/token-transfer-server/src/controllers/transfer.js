@@ -27,7 +27,8 @@ router.get(
   ensureLoggedIn,
   asyncMiddleware(async (req, res) => {
     const transfers = await Transfer.findAll({
-      where: { userId: req.user.id }
+      where: { userId: req.user.id },
+      order: [['created_at', 'DESC']]
     })
     res.json(transfers.map(transfer => transfer.get({ plain: true })))
   })

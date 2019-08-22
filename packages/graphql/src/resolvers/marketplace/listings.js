@@ -7,7 +7,7 @@ function bota(input) {
 }
 
 function convertCursorToOffset(cursor) {
-  return parseInt(atob(cursor))
+  return atob(cursor)
 }
 
 function atob(input) {
@@ -59,11 +59,11 @@ async function searchIds(search, sort, order, filters) {
   return { totalCount: searchResult.numberOfItems, ids }
 }
 
-async function allIds({ contract }) {
+async function allIds(contract, version) {
   const totalListings = Number(await contract.methods.totalListings().call())
   const ids = Array.from(
     { length: Number(totalListings) },
-    (v, i) => i
+    (v, i) => `x-${version}-${i}`
   ).reverse()
   return { totalCount: ids.length, ids }
 }
@@ -71,15 +71,21 @@ async function allIds({ contract }) {
 async function resultsFromIds({ after, ids, first, totalCount, fields }) {
   let start = 0,
     nodes = []
+
   if (after) {
     start = ids.indexOf(convertCursorToOffset(after)) + 1
   }
+
   const end = start + first
   ids = ids.slice(start, end)
 
   if (!fields || fields.nodes) {
     nodes = (await Promise.all(
-      ids.map(id => contracts.eventSource.getListing(id).catch(e => e))
+      ids.map(id => {
+        const splitId = id.split('-')
+        const eventSource = contracts.marketplaces[splitId[1]].eventSource
+        return eventSource.getListing(id.split('-')[2]).catch(e => e)
+      })
     )).filter(node => !(node instanceof Error))
   }
   const firstNodeId = ids[0] || 0
@@ -111,26 +117,30 @@ export async function listingsBySeller(
     party = [party, owner]
   }
 
-  let events = await contracts.marketplace.eventCache.getEvents({
-    event: 'ListingCreated',
-    party
-  })
-  if (filter === 'active') {
-    const withdrawnEvents = await contracts.marketplace.eventCache.getEvents({
-      event: 'ListingWithdrawn',
-      party
-    })
-    const withdrawnListingIds = withdrawnEvents.map(
-      e => e.returnValues.listingID
-    )
-    events = events.filter(
-      e => withdrawnListingIds.indexOf(e.returnValues.listingID) < 0
+  let allIds = []
+  for (const version in contracts.marketplaces) {
+    const eventCache = contracts.marketplaces[version].contract.eventCache
+
+    let events = await eventCache.getEvents({ event: 'ListingCreated', party })
+
+    if (filter === 'active') {
+      const withdrawn = await eventCache.getEvents({
+        event: 'ListingWithdrawn',
+        party
+      })
+      const ids = withdrawn.map(e => e.returnValues.listingID)
+      events = events.filter(e => ids.indexOf(e.returnValues.listingID) < 0)
+    } else if (filter === 'inactive') {
+      events = await eventCache.getEvents({ event: 'ListingWithdrawn', party })
+    }
+
+    allIds = allIds.concat(
+      events.map(e => `x-${version}-${e.returnValues.listingID}`)
     )
   }
-  const ids = events.map(e => Number(e.returnValues.listingID)).reverse()
-  const totalCount = ids.length
 
-  return await resultsFromIds({ after, ids, first, totalCount, fields })
+  const totalCount = allIds.length
+  return await resultsFromIds({ after, ids: allIds, first, totalCount, fields })
 }
 
 export default async function listings(
@@ -160,14 +170,17 @@ export default async function listings(
     // discovery server is up. They are ignored when running in decentralized mode
     // due to performance and implementation issues
 
-    const decentralizedResults = await allIds({ contract })
-    ids = decentralizedResults.ids
-    totalCount = decentralizedResults.totalCount
+    for (const version in contracts.marketplaces) {
+      const curContract = contracts.marketplaces[version].contract
+      const decentralizedResults = await allIds(curContract, version)
+      ids = ids.concat(decentralizedResults.ids)
+      totalCount += decentralizedResults.totalCount
+    }
   }
   // Need to determine if this is ever used, it seems to be the only use case
   // for passing ids from centralised graphql. I changed that to pass the full listing
   if (listingIds.length > 0) {
-    ids = listingIds.map(listingId => parseInt(listingId.split('-')[2]))
+    ids = listingIds
     totalCount = listingIds.length
   }
 

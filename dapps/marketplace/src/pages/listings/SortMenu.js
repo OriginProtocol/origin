@@ -72,7 +72,7 @@ const SortMenu = ({ isMobile, onChange, sort, order }) => {
           )}
         </>
       ) : (
-        <div className="container">
+        <div className="container d-flex">
           <SortDropdown
             onChange={onChange}
             selectedOption={selectedOption}

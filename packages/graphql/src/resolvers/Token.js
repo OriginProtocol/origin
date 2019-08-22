@@ -74,9 +74,6 @@ export default {
     const contract = tokenContract(token.code)
     if (!contract) return null
     if (!target) return null
-    if (target === 'marketplace') {
-      target = contracts.marketplace.options.address
-    }
     return await contract.methods.allowance(address, target).call()
   }
 }

@@ -50,8 +50,8 @@ runs the following packages:
 - @origin/bridge: attestation server on http://localhost:5000
 - @origin/discovery: discovery/search server on http://localhost:4000
 - @origin/discovery: event-listener (aka "indexer")
-- @origin/graphql: graphql server on http://localhost:4002
-- @origin/growth: growth server on http://localhost:4001
+- @origin/graphql: graphql server on http://localhost:4007
+- @origin/growth: growth server on http://localhost:4008
 - @origin/messaging: messaging server on http://localhost:9012
 - @origin/notifications: email/mobile notification server on http://localhost:3456
 ```

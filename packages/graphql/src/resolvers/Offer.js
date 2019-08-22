@@ -6,7 +6,7 @@ import get from 'lodash/get'
 import { getIpfsHashFromBytes32 } from '@origin/ipfs'
 
 const _firstEventByType = async (offer, eventType) => {
-  const { listingId, offerId } = parseId(offer.id)
+  const { listingId, offerId } = parseId(offer.id, contracts)
   const events = await offer.contract.eventCache.getEvents({
     listingID: String(listingId),
     offerID: String(offerId),
@@ -17,8 +17,9 @@ const _firstEventByType = async (offer, eventType) => {
 
 export default {
   listing: async offer => {
-    const { listingId } = parseId(offer.listingId)
-    return contracts.eventSource.getListing(listingId, offer.createdBlock)
+    const { listingId, marketplace } = parseId(offer.listingId, contracts)
+    if (!marketplace) return null
+    return marketplace.eventSource.getListing(listingId, offer.createdBlock)
   },
 
   events: async offer => {
