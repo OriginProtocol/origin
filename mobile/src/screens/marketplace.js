@@ -656,11 +656,11 @@ class MarketplaceScreen extends Component {
       url.hostname === 'www.facebook.com' ||
       url.hostname === 'm.facebook.com'
     ) {
-      const shareHasBeenTriggeredRecenty =
+      const shareHasBeenTriggeredRecently =
         this.facebookShareShowTime &&
         new Date() - this.facebookShareShowTime < 5000
 
-      if (url.pathname === '/dialog/share' && !shareHasBeenTriggeredRecenty) {
+      if (url.pathname === '/dialog/share' && !shareHasBeenTriggeredRecently) {
         const shareLinkContent = {
           contentType: 'link',
           contentUrl: url.searchParams.get('href')
@@ -682,7 +682,7 @@ class MarketplaceScreen extends Component {
        * in it will redirect to login page. For that reason we return to the last dapp's
        * url instead of triggering back.
        */
-      if (shareHasBeenTriggeredRecenty) {
+      if (shareHasBeenTriggeredRecently) {
         this.getBackToDapp()
       }
     }
