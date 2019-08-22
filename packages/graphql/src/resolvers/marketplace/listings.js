@@ -53,9 +53,7 @@ async function searchIds(search, sort, order, filters) {
         resolve(response.data.listings)
       })
   })
-  const ids = searchResult.nodes
-    .map(n => Number(n.id.split('-')[2]))
-    .filter(id => id >= 0)
+  const ids = searchResult.nodes.map(n => n.id)
   return { totalCount: searchResult.numberOfItems, ids }
 }
 
