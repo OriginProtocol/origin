@@ -11,6 +11,7 @@ import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withGrowthRewards from 'hoc/withGrowthRewards'
 import withWallet from 'hoc/withWallet'
 import withTokenBalance from 'hoc/withTokenBalance'
+import withIsMobile from 'hoc/withIsMobile'
 
 import BottomScrollListener from 'components/BottomScrollListener'
 import QueryError from 'components/QueryError'
@@ -51,6 +52,23 @@ class Listings extends Component {
     }
   }
 
+  getCategoryHeader() {
+    let content
+
+    if (this.state.search.category.id) {
+      content = CategoriesEnum[this.state.search.category.id]
+    } else if (this.state.search.subCategory.id) {
+      content =
+        this.state.search.subCategory.type === 'clothingAccessories'
+          ? CategoriesEnum['schema.apparel']
+          : this.state.search.subCategory.type === 'artsCrafts'
+          ? CategoriesEnum['schema.art']
+          : CategoriesEnum[this.state.search.subCategory.id]
+    }
+
+    return content ? <h3 className="category-title">{content}</h3> : null
+  }
+
   getHeader(totalCount, isSearch) {
     let className = 'listings-count'
     let content = (
@@ -63,35 +81,7 @@ class Listings extends Component {
 
     if (isSearch) {
       className += ' search-results'
-      if (this.state.search.category.id) {
-        content = (
-          <fbt desc="NumCategoryResults">
-            <fbt:param name="count">{totalCount}</fbt:param>{' '}
-            <fbt:param name="category">
-              {CategoriesEnum[this.state.search.category.id]}
-            </fbt:param>{' '}
-            <fbt:plural count={totalCount} showCount="no">
-              result
-            </fbt:plural>
-          </fbt>
-        )
-      } else if (this.state.search.subCategory.id) {
-        content = (
-          <fbt desc="NumCategoryResults">
-            <fbt:param name="count">{totalCount}</fbt:param>{' '}
-            <fbt:param name="category">
-              {this.state.search.subCategory.type === 'clothingAccessories'
-                ? CategoriesEnum['schema.apparel']
-                : this.state.search.subCategory.type === 'artsCrafts'
-                ? CategoriesEnum['schema.art']
-                : CategoriesEnum[this.state.search.subCategory.id]}
-            </fbt:param>{' '}
-            <fbt:plural count={totalCount} showCount="no">
-              result
-            </fbt:plural>
-          </fbt>
-        )
-      } else if (this.state.search.ognListings) {
+      if (this.state.search.ognListings) {
         content = (
           <fbt desc="NumOgnRewardsResult">
             <fbt:param name="count">{totalCount}</fbt:param>{' '}
@@ -121,12 +111,6 @@ class Listings extends Component {
     search.order = selectedOptions[1]
     pushSearchHistory(this.props.history, search)
     this.setState({ search })
-  }
-
-  handleSortVisible = bool => {
-    this.setState({
-      sortVisible: bool
-    })
   }
 
   render() {
@@ -169,29 +153,45 @@ class Listings extends Component {
     const showCount =
       vars.search || vars.filters.length || this.state.search.ognListings
 
+    const isCategorySearch =
+      !isEmpty(get(this.state.search, 'category', {})) ||
+      !isEmpty(get(this.state.search, 'subCategory', {}))
+
     const isSearch =
       get(this.state.search, 'searchInput', '') !== '' ||
-      !isEmpty(get(this.state.search, 'category', {})) ||
-      !isEmpty(get(this.state.search, 'subCategory', {})) ||
+      isCategorySearch ||
       this.state.search.ognListings
 
     const injectCTAs = !isSearch
 
+    const { walletType } = this.props
+
+    const shouldShowBackButton =
+      isSearch && (walletType === 'Mobile' || walletType === 'Origin Wallet')
+
+    const filterComp = (
+      <SortMenu
+        {...this.props}
+        onChange={this.handleSortOptionChange}
+        sort={this.state.search.sort}
+        order={this.state.search.order}
+      />
+    )
+
     return (
       <>
         <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
-        <div className="listings-menu-bar">
-          <SortMenu
-            {...this.props}
-            handleSortVisible={this.handleSortVisible}
-            sortVisible={this.state.sortVisible}
-            onChange={this.handleSortOptionChange}
-            onClose={() => this.handleSortVisible(false)}
-            sort={this.state.search.sort}
-            order={this.state.search.order}
-          />
-        </div>
+        {this.props.isMobile ? null : (
+          <div className="listings-menu-bar">{filterComp}</div>
+        )}
         <div className="container listings-container">
+          {shouldShowBackButton && (
+            <Link
+              to="/"
+              className="btn btn-link btn-back-link"
+              children={fbt('Back to home', 'Back to home')}
+            />
+          )}
           <Query
             query={query}
             variables={{
@@ -281,8 +281,14 @@ class Listings extends Component {
 
                     {totalCount > 0 && (
                       <>
-                        {showCount
-                          ? this.getHeader(totalCount, isSearch)
+                        <div className="search-sort-bar">
+                          {showCount
+                            ? this.getHeader(totalCount, isSearch)
+                            : null}
+                          {!this.props.isMobile ? null : filterComp}
+                        </div>
+                        {showCount && isCategorySearch
+                          ? this.getCategoryHeader()
                           : null}
                         <ListingCards
                           listings={nodes}
@@ -323,14 +329,16 @@ class Listings extends Component {
   }
 }
 
-export default withGrowthRewards(
-  withGrowthCampaign(
-    withWallet(withTokenBalance(withCreatorConfig(Listings))),
-    {
-      fetchPolicy: 'cache-first',
-      queryEvenIfNotEnrolled: true,
-      suppressErrors: true // still show listings in case growth can not be reached
-    }
+export default withIsMobile(
+  withGrowthRewards(
+    withGrowthCampaign(
+      withWallet(withTokenBalance(withCreatorConfig(Listings))),
+      {
+        fetchPolicy: 'cache-first',
+        queryEvenIfNotEnrolled: true,
+        suppressErrors: true // still show listings in case growth can not be reached
+      }
+    )
   )
 )
 
@@ -343,11 +351,12 @@ require('react-styl')(`
     flex-wrap: wrap
     align-items: center
     justify-content: space-between
-  @media (max-width: 767.98px)
-    .listings-menu-bar
-      padding: 0
-      min-height: 3.75rem
-      border: none
+  .search-sort-bar
+    display: flex
+    align-items: center
+    justify-content: space-between
+    margin: 0.5rem 0
+
   .listings-container
     padding-top: 3rem
   .listings-count
@@ -369,6 +378,7 @@ require('react-styl')(`
       font-size: 32px
       &.search-results
         font-size: 14px
-        margin-bottom: 1rem
         font-weight: normal
+      &.category-filter
+        font-size: 28px
 `)
