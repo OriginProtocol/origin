@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react'
 import {
-  AppState,
   Image,
   KeyboardAvoidingView,
   Modal,
