@@ -24,11 +24,11 @@ const LISTINGS_TYPE = 'listing'
  * @returns {Object} - Requested exchange rates, currency as key and rate as string value
  */
 const getExchangeRatesToUSD = async currencies => {
+  let exchangeRates = {}
   try {
     // lazy import to avoid event-listener depending on redis
     // this is only used in discovery
     const { getAsync } = require('../lib/redis')
-    const exchangeRates = {}
     // TODO use redis batch features instead of promise.All
     const promises = currencies.map(currency => {
       const splitCurrency = currency.split('-')
@@ -49,11 +49,25 @@ const getExchangeRatesToUSD = async currencies => {
         exchangeRates[currencies[i]] = r
       }
     })
-    logger.debug('Exchange Rates - ', exchangeRates)
-    return exchangeRates
   } catch (e) {
-    logger.error('Error retrieving exchange rates from redis', e)
+    logger.error(
+      'Error retrieving exchange rates from redis. Using defaults',
+      e
+    )
+    exchangeRates = {
+      'fiat-CNY': '0.14',
+      'fiat-EUR': '1.12',
+      'fiat-GBP': '1.22',
+      'fiat-JPY': '0.0094',
+      'fiat-KRW': '0.00082',
+      'fiat-SGD': '0.72',
+      'fiat-USD': '1.0',
+      'token-DAI': '1.0',
+      'token-ETH': '200.0'
+    }
   }
+  logger.debug('Exchange Rates - ', exchangeRates)
+  return exchangeRates
 }
 
 class Cluster {
