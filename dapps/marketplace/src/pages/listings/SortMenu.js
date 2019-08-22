@@ -28,13 +28,11 @@ const SortMenu = ({ onClose, isMobile, onChange, sort, order }) => {
 
   const selectedOptionObj = SORT_OPTIONS.find(x => x.value === selectedOption)
 
-  let textContent =
+  const textContent =
     !selectedOptionObj || selectedOption === ':' ? (
       <fbt desc="Sort">Sort</fbt>
     ) : (
-      <fbt desc="Sort.sortedBy">
-        Sort: <fbt:param name="selectedOp">{selectedOptionObj.label}</fbt:param>
-      </fbt>
+      selectedOptionObj.label
     )
 
   return (
