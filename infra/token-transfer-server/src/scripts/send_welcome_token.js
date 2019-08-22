@@ -85,7 +85,7 @@ async function main(config) {
   } else {
     logger.info('Sending welcome email to all users')
     const users = await User.findAll()
-    users.map(sendWelcomeEmail)
+    users.map(await sendWelcomeEmail)
   }
 }
 
