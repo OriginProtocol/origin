@@ -37,11 +37,7 @@ const Navigation = props => {
         <div></div>
       </div>
       <img src={Logo} className="brand my-3" />
-      <div
-        className={`container mt-4 ${
-          props.expandSidebar ? '' : 'd-none d-md-block'
-        }`}
-      >
+      <div className={`mt-4 ${props.expandSidebar ? '' : 'd-none d-md-block'}`}>
         <ul className="navbar-nav">
           <li className="nav-item mb-3">
             <NavLink to="/dashboard" exact className="nav-link text">
@@ -84,54 +80,3 @@ const Navigation = props => {
 }
 
 export default Navigation
-
-require('react-styl')(`
-  .navbar
-    flex-direction: column
-    justify-content: start
-    background-color: #007cff
-    font-family: lato
-    .nav-icon
-      background: white
-      border-radius: 50%
-      margin: 1.2em
-      height: 30px
-      width: 30px
-      position: absolute
-      top: 0
-      left: 0
-      padding: 6px 5px
-    .nav-icon:after,
-    .nav-icon:before,
-    .nav-icon div
-      background-color: #007cff
-      border-radius: 3px
-      content: ''
-      display: block
-      height: 2px
-      margin: 3px 0
-      transition: all .2s ease-in-out
-    .nav-icon-open:before
-      transform: translateY(5px) rotate(135deg)
-    .nav-icon-open:after
-      transform: translateY(-5px) rotate(-135deg)
-    .nav-icon-open div
-      transform: scale(0)
-    .nav-item
-      font-size: 16px
-      a.nav-link
-        color: rgba(255, 255, 255, 0.8)
-        .icon
-          width: 28px
-          margin-right: 15px
-          fill-opacity: 0.8
-      a.nav-link.active
-        color: rgba(255, 255, 255, 1)
-        .icon
-          fill-opacity: 1
-    .small-links
-      border-top: 1px solid rgba(255, 255, 255, 0.5)
-      font-size: 14px
-      a
-        color: rgba(255, 255, 255, 0.8)
-`)

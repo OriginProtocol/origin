@@ -1,11 +1,18 @@
 import React from 'react'
 
 const NewsCard = props => (
-  <div className="wrapper">
-    {props.feature && <div className="title feature">{props.title}</div>}
+  <div
+    className="mb-5 bordered"
+    style={{ backgroundColor: 'white', borderRadius: '10px' }}
+  >
+    {props.feature && (
+      <div className="p-3">
+        <strong style={{ fontSize: '40px' }}>{props.title}</strong>
+      </div>
+    )}
     <div
-      className="image"
       style={{
+        height: '300px',
         backgroundImage: `url(${props.image})`,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
@@ -13,8 +20,12 @@ const NewsCard = props => (
         borderTopRightRadius: props.feature ? 0 : '5px'
       }}
     ></div>
-    {!props.feature && <div className="title">{props.title}</div>}
-    <div className="description">
+    {!props.feature && (
+      <div className="p-3">
+        <strong style={{ fontSize: '20px' }}>{props.title}</strong>
+      </div>
+    )}
+    <div className="p-3" style={{ fontSize: '18px' }}>
       <p>{props.description}</p>
       <a href={props.link}>Read more</a>
     </div>
@@ -22,21 +33,3 @@ const NewsCard = props => (
 )
 
 export default NewsCard
-
-require('react-styl')(`
-  .wrapper
-    margin: 0 0 50px 0
-    border: 1px solid #dbe6eb
-    background-color: white
-    border-radius: 10px
-    .image
-      height: 300px;
-    .feature
-      font-size: 40px
-    .title
-      padding: 20px
-      font-weight: bold;
-    .description
-      font-size: 18px
-      padding: 20px;
-`)
