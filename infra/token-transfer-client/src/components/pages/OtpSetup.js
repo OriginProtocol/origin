@@ -61,7 +61,9 @@ class OtpVerify extends Component {
             <p>
               <strong>Secret Key:</strong>
               <br />
-              <small className="d-md-none">{this.state.otpKey}</small>
+              <small className="d-md-none text-muted">
+                {this.state.otpKey}
+              </small>
               <span className="d-none d-md-block">{this.state.otpKey}</span>
             </p>
             <div className="alert alert-warning mx-auto">

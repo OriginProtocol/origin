@@ -85,7 +85,7 @@ class BalanceCard extends Component {
       amount: this.state.amount,
       address: this.state.address
     })
-    console.log(result)
+
     if (result.type === 'ADD_TRANSFER_SUCCESS') {
       this.setState({
         pendingTransfer: result.payload,
@@ -145,11 +145,13 @@ class BalanceCard extends Component {
               <h2>Available Balance</h2>
             </div>
           </div>
-          <div className="balance">
-            {this.props.isLocked
-              ? 0
-              : Number(this.props.balance).toLocaleString()}{' '}
-            <span className="ogn">OGN</span>
+          <div style={{ fontSize: '40px' }}>
+            <strong>
+              {this.props.isLocked
+                ? 0
+                : Number(this.props.balance).toLocaleString()}{' '}
+              <span style={{ fontSize: '20px', color: '#007cff' }}>OGN</span>
+            </strong>
           </div>
           <div>
             {this.props.isLocked ? (
@@ -157,9 +159,11 @@ class BalanceCard extends Component {
                 Lockup Period Ends{' '}
                 <img src={ClockIcon} className="ml-3 mr-1 mb-1" />{' '}
                 <strong>{unlockDate.fromNow(true)}</strong>
-                <div className="alert alert-warning mt-3 mb-1 small">
-                  Tokens will become available for withdrawal on{' '}
-                  {unlockDate.format('L')}
+                <div className="alert alert-warning mt-3 mb-1 my-2">
+                  <small className="text-muted">
+                    Tokens will become available for withdrawal on{' '}
+                    {unlockDate.format('L')}
+                  </small>
                 </div>
               </>
             ) : (
@@ -176,7 +180,9 @@ class BalanceCard extends Component {
             )}
           </div>
           {!this.props.isLocked && (
-            <small>You will need an Ethereum wallet to withdraw OGN</small>
+            <small className="text-muted">
+              You will need an Ethereum wallet to withdraw OGN
+            </small>
           )}
         </BorderedCard>
       </>
@@ -197,11 +203,11 @@ class BalanceCard extends Component {
     return (
       <>
         <h1 className="mb-2">Withdraw OGN</h1>
-        <div className="alert alert-warning mt-4 mb-4 mx-auto">
+        <div className="alert alert-warning m-4">
           This transaction is not reversible and we cannot help you recover
           these funds
         </div>
-        <ul className="my-4 mx-auto">
+        <ul className="my-4 mx-2 text-left">
           <li className="mt-1">
             Ut non eleifend enim. Curabitur tempor tellus nunc, sit amet
             vehicula enim porttitor id.
@@ -264,7 +270,7 @@ class BalanceCard extends Component {
                 </select>
               </div>
               <div className="form-group">
-                <a href="#" onClick={this.handleAddAccount}>
+                <a href="javascript:void(0);" onClick={this.handleAddAccount}>
                   Add Another Account
                 </a>
               </div>
@@ -283,7 +289,10 @@ class BalanceCard extends Component {
               </div>
               {this.props.accounts.length > 0 && (
                 <div className="form-group">
-                  <a href="#" onClick={this.handleChooseAccount}>
+                  <a
+                    href="javascript:void(0);"
+                    onClick={this.handleChooseAccount}
+                  >
                     Choose Existing Account
                   </a>
                 </div>
@@ -369,18 +378,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(BalanceCard)
-
-require('react-styl')(`
-  .balance
-    font-size: 40px
-    font-weight: bold;
-  .ogn
-    font-size: 20px
-    color: #007cff
-  .modal
-    .alert
-      width: 80%
-  ul
-    text-align: left
-    width: 90%
-`)
