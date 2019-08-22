@@ -35,53 +35,48 @@ const SortMenu = ({ isMobile, onChange, sort, order }) => {
       selectedOptionObj.label
     )
 
-  return (
-    <>
-      {isMobile ? (
-        <>
-          <button
-            type="button"
-            className="btn btn-link sort-button"
-            onClick={() => {
-              setModal(true)
+  if (isMobile) {
+    return (
+      <>
+        <a
+          href="#sort"
+          className="sort-button"
+          onClick={e => {
+            e.preventDefault()
+            setModal(true)
+          }}
+          children={textContent}
+        />
+        {modal && (
+          <MobileModal
+            title={fbt('Sort by', 'Sort by')}
+            className="sort-modal"
+            shouldClose={closeModal}
+            lightMode={true}
+            onClose={() => {
+              setCloseModal(false)
+              setModal(false)
             }}
+            slideUp={true}
+            showCloseButton={true}
           >
-            {textContent}
-          </button>
-          {modal && (
-            <MobileModal
-              title={fbt('Sort by', 'Sort by')}
-              className="sort-modal"
-              shouldClose={closeModal}
-              lightMode={true}
-              onClose={() => {
-                setCloseModal(false)
-                setModal(false)
-              }}
-              slideUp={true}
-              showCloseButton={true}
-            >
-              <SortContent
-                onChange={e => {
-                  onChange(e)
-                }}
-                selectedOption={selectedOption}
-                isMobile={isMobile}
-              />
-            </MobileModal>
-          )}
-        </>
-      ) : (
-        <div className="container d-flex">
-          <SortDropdown
-            onChange={onChange}
-            selectedOption={selectedOption}
-            isMobile={isMobile}
-            content={textContent}
-          />
-        </div>
-      )}
-    </>
+            <SortContent
+              onChange={onChange}
+              selectedOption={selectedOption}
+              isMobile={isMobile}
+            />
+          </MobileModal>
+        )}
+      </>
+    )
+  }
+  return (
+    <SortDropdown
+      onChange={onChange}
+      selectedOption={selectedOption}
+      isMobile={isMobile}
+      content={textContent}
+    />
   )
 }
 
@@ -105,24 +100,17 @@ const SortDropdown = ({
   )
 
   return (
-    <Dropdown
-      el="li"
-      className="d-md-flex dropdown"
-      open={open}
-      onClose={() => setOpen(false)}
-      content={content}
-    >
-      <button
-        type="button"
-        className="btn btn-link sort-button"
-        onClick={() => {
-          setOpen(true)
+    <Dropdown open={open} onClose={() => setOpen(false)} content={content}>
+      <a
+        href="#sort"
+        className="sort-button"
+        onClick={e => {
+          e.preventDefault()
+          setOpen(!open)
         }}
-        aria-haspopup="true"
-        aria-expanded="false"
       >
         {textContent}
-      </button>
+      </a>
     </Dropdown>
   )
 }
@@ -134,21 +122,21 @@ const SortContent = ({ selectedOption, onChange, isMobile }) => {
   return (
     <div className={containerClass}>
       <form className="sort-form">
-        {SORT_OPTIONS.map((sortOption, index) => (
+        {SORT_OPTIONS.map(({ label, value }, index) => (
           <div key={index}>
             <label
               className={`sort-radio-label${
-                (selectedOption || ':') === sortOption.value ? ' checked' : ''
+                (selectedOption || ':') === value ? ' checked' : ''
               }`}
             >
               <input
                 type="radio"
                 className="sort-radio-button"
-                value={sortOption.value}
-                checked={selectedOption === sortOption.value}
+                value={value}
+                checked={selectedOption === value}
                 onChange={onChange}
               />
-              {sortOption.label}
+              {label}
             </label>
           </div>
         ))}
@@ -184,9 +172,6 @@ require('react-styl')(`
             bottom: 0
             right: 0
             width: 3rem
-
-  .dropdown
-    width: 75px
   .sort-dropdown
     padding: 0
     position: absolute !important
@@ -211,7 +196,13 @@ require('react-styl')(`
     box-sizing: border-box
     vertical-align: middle
     margin-bottom: 1px
-  .btn.sort-button
-    font-weight: normal
-    white-space: nowrap
+  .sort-button
+    display: inline-block
+  @media (min-width: 768px)
+    .sort-button
+      padding: 0.5rem 0
+      color: #000
+  @media (max-width: 767.98px)
+    .sort-button
+      font-size: 14px
 `)

@@ -1,7 +1,6 @@
-import React, { Component } from 'react'
-import { Query } from 'react-apollo'
+import React, { useState, useEffect } from 'react'
+import { useQuery } from '@apollo/react-hooks'
 import omit from 'lodash/omit'
-import pick from 'lodash/pick'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import { fbt } from 'fbt-runtime'
@@ -52,185 +51,170 @@ const CategoryHeader = ({ search: { category, subCategory } }) => {
   return content ? <h3 className="category-title">{content}</h3> : null
 }
 
-class Listings extends Component {
-  constructor(props) {
-    super(props)
+const Listings = ({ isMobile, creatorConfig, ...props }) => {
+  const [search, setSearch] = useState(getStateFromQuery(props))
 
-    this.state = {
-      first: 12,
-      search: getStateFromQuery(props),
-      sortVisible: false
-    }
+  useEffect(() => {
+    setSearch(getStateFromQuery(props))
+  }, [props.location.search])
+
+  const isCreatedMarketplace = get(creatorConfig, 'isCreatedMarketplace')
+  const creatorFilters = get(creatorConfig, 'listingFilters', [])
+  const filters = [...getFilters(search), ...creatorFilters]
+
+  const hasStatusFilter = filters.find(filter => filter.name === 'status')
+
+  if (!hasStatusFilter) {
+    filters.push({
+      name: 'status',
+      value: 'active',
+      valueType: 'STRING',
+      operator: 'EQUALS'
+    })
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.location.search !== this.props.location.search) {
-      this.setState({ search: getStateFromQuery(this.props) })
-    }
+  const vars = {
+    first: 12,
+    search: search.searchInput,
+    sort: search.sort,
+    order: search.order,
+    filters: filters.map(filter => omit(filter, '__typename'))
   }
 
-  handleSortOptionChange = e => {
-    const selectedOptions = e.target.value.split(':')
-    const search = this.state.search
-    search.sort = selectedOptions[0]
-    search.order = selectedOptions[1]
-    pushSearchHistory(this.props.history, search)
-    this.setState({ search, sortVisible: false })
+  if (search.ognListings) {
+    // when OGN listings are selected clear other search parameters
+    vars.search = ''
+    vars.filters = []
+    delete vars.sort
+    delete vars.order
+    vars.listingIds = Object.keys(props.ognListingRewards)
   }
 
-  render() {
-    const isCreatedMarketplace = get(
-      this.props,
-      'creatorConfig.isCreatedMarketplace'
-    )
-    const creatorFilters = get(this.props, 'creatorConfig.listingFilters', [])
-    const filters = [...getFilters(this.state.search), ...creatorFilters]
+  const showCategory = get(search, 'category.type') ? false : true
+  const showCount = vars.search || vars.filters.length > 1 || search.ognListings
 
-    const hasStatusFilter = filters.find(filter => filter.name === 'status')
+  const isCategorySearch =
+    !isEmpty(search.category) || !isEmpty(search.subCategory)
 
-    if (!hasStatusFilter) {
-      filters.push({
-        name: 'status',
-        value: 'active',
-        valueType: 'STRING',
-        operator: 'EQUALS'
-      })
-    }
+  const isSearch =
+    get(search, 'searchInput', '') !== '' ||
+    isCategorySearch ||
+    search.ognListings
 
-    const vars = {
-      ...pick(this.state, 'first'),
-      search: this.state.search.searchInput,
-      sort: this.state.search.sort,
-      order: this.state.search.order,
-      filters: filters.map(filter => omit(filter, '__typename'))
-    }
+  const injectCTAs = !isSearch
+  const shouldShowBackButton = isSearch && isMobile //(walletType === 'Mobile' || walletType === 'Origin Wallet')
 
-    if (this.state.search.ognListings) {
-      // when OGN listings are selected clear other search parameters
-      vars.search = ''
-      vars.filters = []
-      delete vars.sort
-      delete vars.order
-      vars.listingIds = Object.keys(this.props.ognListingRewards)
-    }
+  const filterComp = (
+    <SortMenu
+      {...props}
+      onChange={e => {
+        const selectedOptions = e.target.value.split(':')
+        const newSearch = {
+          ...search,
+          sort: selectedOptions[0],
+          order: selectedOptions[1]
+        }
+        pushSearchHistory(props.history, newSearch)
+        setSearch(newSearch)
+      }}
+      sort={search.sort}
+      order={search.order}
+    />
+  )
 
-    const showCategory = get(this.state, 'search.category.type') ? false : true
-    const showCount =
-      vars.search || vars.filters.length > 1 || this.state.search.ognListings
+  const { error, data, fetchMore, networkStatus, loading } = useQuery(query, {
+    variables: {
+      ...vars,
+      // Fetch two less cards (just for the first request) since we are probably injecting CTAs
+      first: injectCTAs ? vars.first - 2 : vars.first
+    },
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-and-network'
+  })
 
-    const isCategorySearch =
-      !isEmpty(get(this.state.search, 'category', {})) ||
-      !isEmpty(get(this.state.search, 'subCategory', {}))
+  if (networkStatus <= 2) {
+    return <LoadingSpinner />
+  } else if (error) {
+    return <QueryError error={error} query={query} vars={vars} />
+  } else if (!data || !data.marketplace) {
+    return <div className="container">No marketplace contract?</div>
+  }
 
-    const isSearch =
-      get(this.state.search, 'searchInput', '') !== '' ||
-      isCategorySearch ||
-      this.state.search.ognListings
+  const { nodes, pageInfo, totalCount } = data.marketplace.listings
+  const { hasNextPage, endCursor: after } = pageInfo
 
-    const injectCTAs = !isSearch
-
-    const { walletType, isMobile } = this.props
-
-    const shouldShowBackButton =
-      isSearch && (walletType === 'Mobile' || walletType === 'Origin Wallet')
-
-    const filterComp = (
-      <SortMenu
-        {...this.props}
-        onChange={this.handleSortOptionChange}
-        sort={this.state.search.sort}
-        order={this.state.search.order}
-      />
-    )
-
-    return (
-      <>
-        <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
-        {isMobile ? null : (
-          <div className="listings-menu-bar">{filterComp}</div>
-        )}
-        <div className="container listings-container">
-          {shouldShowBackButton && (
+  return (
+    <>
+      <DocumentTitle pageTitle={<fbt desc="listings.title">Listings</fbt>} />
+      {!isMobile && (
+        <div className="listings-menu-bar">
+          <div className="container d-flex align-items-center justify-content-between">
+            {filterComp}
+            <Header {...{ isSearch, totalCount, showCount, search }} />
+          </div>
+        </div>
+      )}
+      <div className="container listings-container">
+        {shouldShowBackButton && (
+          <div className="listings-back-link">
             <Link
               to="/"
               className="btn btn-link btn-back-link"
-              children={fbt('Back to home', 'Back to home')}
+              children={fbt('Back', 'Back')}
             />
-          )}
-          <Query
-            query={query}
-            variables={{
-              ...vars,
-              // Fetch two less cards (just for the first request) since we are probably injecting CTAs
-              first: injectCTAs ? vars.first - 2 : vars.first
-            }}
-            notifyOnNetworkStatusChange={true}
-            fetchPolicy="cache-and-network"
-          >
-            {({ error, data, fetchMore, networkStatus, loading }) => {
-              if (networkStatus <= 2) {
-                return <LoadingSpinner />
-              } else if (error) {
-                return <QueryError error={error} query={query} vars={vars} />
-              } else if (!data || !data.marketplace) {
-                return <p className="p-3">No marketplace contract?</p>
-              }
-              const { nodes, pageInfo, totalCount } = data.marketplace.listings
-              const { hasNextPage, endCursor: after } = pageInfo
+          </div>
+        )}
 
-              return (
-                <BottomScrollListener
-                  offset={400}
-                  ready={networkStatus === 7}
-                  hasMore={hasNextPage}
-                  onBottom={() => {
-                    if (!loading) {
-                      nextPage(fetchMore, { ...vars, after })
-                    }
-                  }}
-                >
-                  {totalCount == 0 ? (
-                    <NoResults {...{ isSearch, isCreatedMarketplace }} />
-                  ) : (
-                    <>
-                      <div className="search-sort-bar">
-                        <Header {...{ isSearch, totalCount, showCount }} />
-                        {!isMobile ? null : filterComp}
-                      </div>
-                      {showCount && isCategorySearch ? (
-                        <CategoryHeader search={this.state.search} />
-                      ) : null}
-                      <ListingCards
-                        listings={nodes}
-                        hasNextPage={hasNextPage}
-                        showCategory={showCategory}
-                        tokenDecimals={this.props.tokenDecimals}
-                        injectCTAs={injectCTAs}
-                      />
-                      {!hasNextPage ? null : (
-                        <button
-                          className="btn btn-outline-primary btn-rounded mt-3"
-                          onClick={() => {
-                            if (!loading) {
-                              nextPage(fetchMore, { ...vars, after })
-                            }
-                          }}
-                        >
-                          {loading
-                            ? fbt('Loading...', 'Loading...')
-                            : fbt('Load more', 'Load more')}
-                        </button>
-                      )}
-                    </>
-                  )}
-                </BottomScrollListener>
-              )
+        {isMobile && (
+          <div className={`search-sort-bar${isSearch ? '' : ' inactive'}`}>
+            <Header {...{ isSearch, totalCount, showCount, search }} />
+            {filterComp}
+          </div>
+        )}
+
+        {showCount && isCategorySearch ? (
+          <CategoryHeader search={search} />
+        ) : null}
+
+        {totalCount == 0 ? (
+          <NoResults {...{ isSearch, isCreatedMarketplace }} />
+        ) : (
+          <BottomScrollListener
+            offset={400}
+            ready={networkStatus === 7}
+            hasMore={hasNextPage}
+            onBottom={() => {
+              if (!loading) {
+                nextPage(fetchMore, { ...vars, after })
+              }
             }}
-          </Query>
-        </div>
-      </>
-    )
-  }
+          >
+            <ListingCards
+              listings={nodes}
+              hasNextPage={hasNextPage}
+              showCategory={showCategory}
+              tokenDecimals={props.tokenDecimals}
+              injectCTAs={injectCTAs}
+            />
+          </BottomScrollListener>
+        )}
+        {hasNextPage && (
+          <button
+            className="btn btn-outline-primary btn-rounded mt-3"
+            onClick={() => {
+              if (!loading) {
+                nextPage(fetchMore, { ...vars, after })
+              }
+            }}
+          >
+            {loading
+              ? fbt('Loading...', 'Loading...')
+              : fbt('Load more', 'Load more')}
+          </button>
+        )}
+      </div>
+    </>
+  )
 }
 
 export default withIsMobile(
@@ -249,21 +233,21 @@ export default withIsMobile(
 require('react-styl')(`
   .listings-menu-bar
     border-bottom: 1px solid rgba(0, 0, 0, 0.1)
-    padding: 0 1rem
-    position: relative
-    display: flex
-    flex-wrap: wrap
-    align-items: center
-    justify-content: space-between
+    font-size: 14px
   .search-sort-bar
     display: flex
     align-items: center
     justify-content: space-between
-    margin: 0.5rem 0
-
+    margin: 1rem 0
+    font-size: 14px
+    &.inactive
+      justify-content: flex-end
   .listings-container
     padding-top: 3rem
   @media (max-width: 767.98px)
+    .listings-back-link
+      margin-top: 1rem
+      margin-bottom: -1rem
     .listings-container
       padding-top: 0
       .search

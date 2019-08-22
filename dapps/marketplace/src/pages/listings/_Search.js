@@ -42,6 +42,7 @@ class Search extends Component {
   renderContent() {
     const enabled = get(this.props, 'config.discovery', false)
     const { placeholder, className, isMobile } = this.props
+    const { searchInput } = this.state
 
     return (
       <form
@@ -59,11 +60,9 @@ class Search extends Component {
             <div className="search-input">
               <input
                 ref={ref => (this.inputRef = ref)}
-                className={`form-control${
-                  !this.state.searchInput ? ' empty' : ''
-                }`}
+                className={`form-control${!searchInput ? ' empty' : ''}`}
                 type="input"
-                value={this.state.searchInput}
+                value={searchInput}
                 onChange={e => this.setState({ searchInput: e.target.value })}
                 onFocus={() => this.setState({ active: true })}
                 onKeyUp={e => {
@@ -72,7 +71,7 @@ class Search extends Component {
                 placeholder={
                   enabled
                     ? placeholder
-                      ? 'Search'
+                      ? fbt('Search', 'Search')
                       : null
                     : fbt(
                         'Note: Search unavailable',
@@ -93,9 +92,7 @@ class Search extends Component {
               <button
                 type="button"
                 className="cancel-button"
-                onClick={() => {
-                  this.setState({ active: false })
-                }}
+                onClick={() => this.setState({ active: false })}
               />
             )}
           </div>
@@ -172,38 +169,25 @@ class Search extends Component {
   }
 
   onCategoryClick({ category, subCategory }) {
-    this.setState(
-      {
-        category: {
-          type: category
-        },
-        subCategory: {
-          type: subCategory
-        }
-      },
-      () => this.doSearch()
-    )
+    const newState = {
+      category: { type: category },
+      subCategory: { type: subCategory }
+    }
+    this.setState(newState, () => this.doSearch())
   }
 
   onOutsideClick(e) {
     if (!this.formRef.contains(e.target)) {
-      this.setState({
-        active: false
-      })
+      this.setState({ active: false })
     }
   }
 
   onRewardsClick() {
     this.props.history.push({
       pathname: '/search',
-      search: queryString.stringify({
-        ognListings: true
-      })
+      search: queryString.stringify({ ognListings: true })
     })
-    this.setState({
-      active: false,
-      searchInput: ''
-    })
+    this.setState({ active: false, searchInput: '' })
     this.inputRef.blur()
   }
 
@@ -211,9 +195,7 @@ class Search extends Component {
     const search = this.state
     pushSearchHistory(this.props.history, search)
     if (shouldClose) {
-      this.setState({
-        active: false
-      })
+      this.setState({ active: false })
       this.inputRef.blur()
     }
   }
@@ -252,7 +234,7 @@ require('react-styl')(`
             padding-right: 2rem
             &:valid + .clear-button
               display: inline-block
-          
+
       .cancel-button
         flex: 2rem 0 0
         height: auto
@@ -363,20 +345,19 @@ require('react-styl')(`
   @media (max-width: 767.98px)
     .listing-search-wrapper
       padding: 0 1rem
-      .search-wrapper
-        .form-control
-          font-size: 22px
-          border: 0
-          border-bottom: 1px solid #dde6ea
-          background-image: url(images/magnifying-glass.svg)
-          background-repeat: no-repeat
-          background-position: right 0 center
-          background-size: 20px
-          border-radius: 0
-          padding-left: 0
+      .search-wrapper .search-input-wrapper .search-input .form-control
+        font-size: 22px
+        border: 0
+        border-bottom: 1px solid #dde6ea
+        background-image: url(images/magnifying-glass.svg)
+        background-repeat: no-repeat
+        background-position: right 0 center
+        background-size: 20px
+        border-radius: 0
+        padding-left: 0
 
-          &::-webkit-input-placeholder
-            color: #94a7b5
-          &:focus
-            box-shadow: none
+        &::-webkit-input-placeholder
+          color: #94a7b5
+        &:focus
+          box-shadow: none
 `)
