@@ -148,15 +148,8 @@ class UpdateListing extends Component {
     })
   }
 
-  async onTxCompleted(event) {
-    const netId = get(this.props, 'web3.networkId')
-
+  async onTxCompleted() {
     this.setState({ loading: true })
-
-    const { listingID } = event.returnValues
-
-    const dappListingID = `${netId}-000-${listingID}`
-
     const { refetch, listingPromotion } = this.props
 
     if (refetch) {
@@ -165,11 +158,11 @@ class UpdateListing extends Component {
 
     if (listingPromotion) {
       this.setState({
-        redirect: `/promote/${dappListingID}/success`
+        redirect: `/promote/${this.props.listing.id}/success`
       })
     } else {
       this.setState({
-        redirect: `/create/${dappListingID}/success`
+        redirect: `/create/${this.props.listing.id}/success`
       })
     }
   }
@@ -182,12 +175,12 @@ class UpdateListing extends Component {
         contentOnly={true}
         onClose={() => this.setState({ waitFor: null })}
       >
-        {({ event }) => (
+        {() => (
           <>
             <div className="spinner light" />
             <AutoMutate
               mutation={() => {
-                this.onTxCompleted(event)
+                this.onTxCompleted()
               }}
             />
           </>
@@ -245,10 +238,17 @@ class UpdateListing extends Component {
 
     this.setState({ modal: true, waitForAllow: 'pending' })
 
+    let to = this.props.listing.contractAddr
+    const forceProxy = this.props.config.proxyAccountsEnabled
+    const predictedProxy = this.props.walletPredictedProxy
+    if (forceProxy && predictedProxy !== this.props.wallet) {
+      to = predictedProxy
+    }
+
     const variables = {
+      to,
       token: 'token-OGN',
       from: this.props.walletProxy,
-      to: 'marketplace',
       value: this.additionalDeposit(),
       forceProxy: this.props.config.proxyAccountsEnabled
     }

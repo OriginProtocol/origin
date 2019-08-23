@@ -159,7 +159,7 @@ describe('Login HTTP API', () => {
 
     await request(mockApp)
       .post('/api/setup_totp')
-      .expect(403)
+      .expect(401)
   })
 
   it('should allow setup of totp if not verified', async () => {

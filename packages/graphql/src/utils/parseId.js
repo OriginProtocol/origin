@@ -1,6 +1,11 @@
-export default function(id) {
-  const [netId, contractId, listingId, offerId] = id
-    .split('-')
-    .map(i => Number(i))
-  return { netId, contractId, listingId, offerId, blockNumber: offerId }
+export default function(id, contracts) {
+  const [netId, contractId, listingId, offerId] = id.split('-')
+  return {
+    netId,
+    contractId,
+    marketplace: contracts ? contracts.marketplaces[contractId] : null,
+    listingId: Number(listingId),
+    offerId: Number(offerId),
+    blockNumber: offerId
+  }
 }

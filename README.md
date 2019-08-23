@@ -10,8 +10,7 @@ blockchain!
 Visit our [Developer's page](https://www.originprotocol.com/developers) to learn
 more about what we're building and how to get involved.
 
-You can see the Origin ecosystem in action
-[here](https://www.shoporigin.com).
+You can see the Origin ecosystem in action [here](https://www.shoporigin.com).
 
 ## Development
 
@@ -24,6 +23,16 @@ This repository is a monorepo containing many
 [npm packages](https://www.npmjs.com/). It is managed using
 [Lerna.](https://github.com/lerna/lerna)
 
+### DApp packages
+
+Example DApps that we have built.
+
+| Package                                                     | Description                                                            |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------- |
+| [`@origin/marketplace`](/dapps/marketplace)                 | Our marketplace DApp. [https://shoporigin.com](https://shoporigin.com) |
+| [`@origin/admin`](/dapps/admin)                             | DApp similar to `@origin/marketplace` but exposes more functionality   |
+| [`@origin/graphql-simple-demo`](/dapps/graphql-simple-demo) | Example of building a DApp with `@origin/graphql`                      |
+
 ### Core packages
 
 These packages are used to build DApps on Origin.
@@ -31,23 +40,13 @@ These packages are used to build DApps on Origin.
 | Package                                                  | Description                                                       |
 | -------------------------------------------------------- | ----------------------------------------------------------------- |
 | [`@origin/contracts`](/packages/contracts)               | Smart contracts                                                   |
-| [`@origin/eventsource`](/packages/eventsource)           | Derives current state of listings and offers from contract events |
 | [`@origin/graphql`](/packages/graphql)                   | GraphQL interface to Origin Protocol                              |
+| [`@origin/services`](/packages/services)                 | Utility package for running a local blockchain and IPFS           |
+| [`@origin/eventsource`](/packages/eventsource)           | Derives current state of listings and offers from contract events |
 | [`@origin/ipfs`](/packages/ipfs)                         | Convenience methods for getting and setting data in IPFS          |
 | [`@origin/messaging-client`](/packages/messaging-client) | Client for Origin messaging                                       |
-| [`@origin/services`](/packages/services)                 | Utility package for running Ganache and IPFS                      |
 | [`@origin/token`](/packages/token)                       | Package for manipulating Origin Tokens (OGN)                      |
 | [`@origin/validator`](/packages/validator)               | JSON Schema validation                                            |
-
-### DApp packages
-
-Example DApps that we have built.
-
-| Package                                                     | Description                                                          |
-| ----------------------------------------------------------- | -------------------------------------------------------------------- |
-| [`@origin/admin`](/dapps/admin)                             | DApp similar to `@origin/marketplace` but exposes more functionality |
-| [`@origin/graphql-simple-demo`](/dapps/graphql-simple-demo) | Example of building a DApp with `@origin/graphql`                    |
-| [`@origin/marketplace`](/dapps/marketplace)                 | Our marketplace DApp                                                 |
 
 ### Infrastructure packages
 

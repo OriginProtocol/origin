@@ -24,8 +24,11 @@ export default {
     return listing.contract.methods.totalOffers(listingId).call()
   },
   offer: async (listing, args) => {
-    const { listingId, offerId } = parseId(args.id)
-    return contracts.eventSource.getOffer(listingId, offerId)
+    const { listingId, offerId, marketplace } = parseId(args.id)
+    if (!marketplace) {
+      return null
+    }
+    return marketplace.eventSource.getOffer(listingId, offerId)
   },
   offers: async listing => listing.allOffers.filter(o => o.valid),
   createdEvent: async listing => {
@@ -43,5 +46,12 @@ export default {
         get(listing, 'price.currency.id', 'token-ETH')
       )
     }
+  },
+  contractAddr: listing => {
+    const { contractId } = parseId(listing.id)
+    return get(
+      contracts,
+      `marketplaces['${contractId}'].contract.options.address`
+    )
   }
 }

@@ -57,6 +57,7 @@ const PromoteListingAmount = ({
         price={{ amount: value, currency: { id: 'token-OGN' } }}
         target={'token-OGN'}
         targets={['token-OGN']}
+        allowanceTarget={listing.contractAddr}
       >
         {({ tokenStatus }) => {
           if (tokenStatus.loading) {

@@ -360,12 +360,18 @@ class Buy extends Component {
 
     this.setState({ modal: true, waitForAllow: 'pending' })
 
+    let to = this.props.listing.contractAddr
+    const forceProxy = this.props.config.proxyAccountsEnabled
+    const predictedProxy = this.props.walletPredictedProxy
+    if (forceProxy && predictedProxy !== this.props.wallet) {
+      to = predictedProxy
+    }
+
     const variables = {
+      to,
       token: this.props.currency,
       from: this.props.walletProxy,
-      to: 'marketplace',
-      value: this.props.value,
-      forceProxy: this.props.config.proxyAccountsEnabled
+      value: this.props.value
     }
 
     allowToken({ variables })
@@ -396,9 +402,8 @@ class Buy extends Component {
               className="btn btn-outline-light"
               onClick={() => {
                 this.setState({ loading: true })
-                const netId = get(this.props, 'web3.networkId')
-                const { listingID, offerID } = event.returnValues
-                const offerId = `${netId}-000-${listingID}-${offerID}`
+                const { offerID } = event.returnValues
+                const offerId = `${this.props.listing.id}-${offerID}`
                 const redirect = `/purchases/${offerId}`
 
                 if (this.props.refetch) {

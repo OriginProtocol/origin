@@ -11,6 +11,8 @@ program
   .option('-x, --ssl-proxy', 'Start SSL proxy')
   .option('-r, --relayer', 'Start Relayer')
   .option('-q, --graphql', 'Start GraphQL Server (Performance)')
+  .option('-l, --listener', 'Start Listener')
+  .option('-d, --discovery', 'Start Discovery server')
   .parse(process.argv)
 
 async function setup() {
@@ -38,6 +40,8 @@ if (!process.argv.slice(2).length) {
     writeTruffle: program.truffle,
     sslProxy: program.sslProxy,
     relayer: program.relayer,
-    graphqlServer: program.graphql
+    graphqlServer: program.graphql,
+    listener: program.listener,
+    discovery: program.discovery
   })
 }

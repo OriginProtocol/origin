@@ -29,6 +29,8 @@ const config = {
   OriginToken: addresses.OGN,
   V00_Marketplace: addresses.Marketplace,
   V00_Marketplace_Epoch: addresses.MarketplaceEpoch,
+  V01_Marketplace: addresses.Marketplace_V01,
+  V01_Marketplace_Epoch: addresses.MarketplaceEpoch_V01,
   IdentityEvents: addresses.IdentityEvents,
   IdentityEvents_Epoch: addresses.IdentityEventsEpoch,
   DaiExchange: addresses.UniswapDaiExchange,

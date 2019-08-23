@@ -812,10 +812,6 @@
     "*": "{number} Danh sách",
     "_1": "1 danh sách"
   },
-  "2CpFQp": {
-    "*": "{count} {category} results",
-    "_1": "{count} {category} result"
-  },
   "3pJs9O": {
     "*": "{count} Listings with Origin Rewards",
     "_1": "{count} Listing with Origin Rewards"
@@ -831,11 +827,11 @@
   "2Qfyq": "Tạo một danh sách",
   "4u7nzi": "Không tìm thấy danh sách",
   "4v3q78": "Tải thêm",
-  "114jZK": "Sort by",
-  "2LiG2d": "Sort By",
-  "6v09l": "Default",
+  "4pf0yW": "Featured",
   "3Ul6WQ": "Price: Low to High",
   "1rioH9": "Price: High to Low",
+  "qqmM": "Sort",
+  "114jZK": "Sort by",
   "2XkwlS": "Không thể truy vấn tin nhắn",
   "333iq2": "Không có cuộc trò chuyện!",
   "1DH3KE": "Tin nhắn",
@@ -976,6 +972,7 @@
   "XaD4D": "Có sẵn cho {browser}",
   "29RrPk": "Kết nối MetaMask",
   "1AQgmT": "Opening App...",
+  "4iVrWM": "Loading",
   "4apdzo": "Promote Now",
   "1o5hKC": "Please enter a commission amount",
   "2IWJV3": "Not enough OGN",
