@@ -75,12 +75,12 @@ class AuthenticationGuard extends Component {
 
     // app coming from background
     if (this.state.appState === 'background' && nextAppState === 'active') {
-      const secondsFromSuspend = (new Date() - this.state.suspendTime)/1000
+      const secondsFromSuspend = (new Date() - this.state.suspendTime) / 1000
 
       if (secondsFromSuspend > RESTART_SUSPEND_TIME) {
         RNRestart.Restart()
         // uncomment to re-enable authentication on re-focus
-        
+
         // If we are coming from a backgrounded state pop the touch authentication
         // if (this.props.settings.biometryType) {
         //   this.touchAuthenticate()
