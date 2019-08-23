@@ -51,7 +51,7 @@ const CategoryHeader = ({ search: { category, subCategory } }) => {
   return content ? <h3 className="category-title">{content}</h3> : null
 }
 
-const Listings = ({ isMobile, creatorConfig, ...props }) => {
+const Listings = ({ isMobile, creatorConfig, walletType, ...props }) => {
   const [search, setSearch] = useState(getStateFromQuery(props))
 
   useEffect(() => {
@@ -102,7 +102,8 @@ const Listings = ({ isMobile, creatorConfig, ...props }) => {
     search.ognListings
 
   const injectCTAs = !isSearch
-  const shouldShowBackButton = isSearch && isMobile //(walletType === 'Mobile' || walletType === 'Origin Wallet')
+  const shouldShowBackButton =
+    isSearch && (walletType === 'Mobile' || walletType === 'Origin Wallet')
 
   const filterComp = (
     <SortMenu
@@ -246,7 +247,6 @@ require('react-styl')(`
     padding-top: 3rem
   @media (max-width: 767.98px)
     .listings-back-link
-      margin-top: 1rem
       margin-bottom: -1rem
     .listings-container
       padding-top: 0
