@@ -63,7 +63,7 @@ class MarketplaceScreen extends Component {
       transactionCardLoading: false,
       currentDomain: '',
       lastDappUrl: null,
-      // whenever this change it forces the webView to go to that source
+      // Whenever this change it forces the WebView to go to that source
       webViewUrlTrigger: this.props.settings.network.dappUrl
     }
     if (Platform.OS === 'android') {
@@ -328,9 +328,7 @@ class MarketplaceScreen extends Component {
   injectJavaScript = (script, name) => {
     const injectedJavaScript = `
       (function() {
-        
-          ${script}
-        
+        ${script}
       })();
     `
     if (this.dappWebView) {
@@ -387,7 +385,7 @@ class MarketplaceScreen extends Component {
             pubMessage: '${pubMessage}',
             pubSignature: '${pubSignature}'
           });
-        } 
+        }
       `,
       'messaging keys'
     )
@@ -588,7 +586,7 @@ class MarketplaceScreen extends Component {
 
     const url = makeUrl()
     if (Linking.canOpenURL(url)) {
-      this.getBackToDapp()
+      this.goBackToDapp()
       // preventing multiple subsequent shares
       if (
         !this[timeControlVariableName] ||
@@ -683,17 +681,14 @@ class MarketplaceScreen extends Component {
        * url instead of triggering back.
        */
       if (shareHasBeenTriggeredRecently) {
-        this.getBackToDapp()
+        this.goBackToDapp()
       }
     }
   }
 
-  getBackToDapp = () => {
+  goBackToDapp = () => {
     const url = this.state.lastDappUrl
-    /* a random is used to trigger a url change of the WebView. If webView is on a different
-     * page (because user navigation) and we supply it the same source url as we have some time
-     * before the WebView won't navigate to the new url.
-     */
+    // A random is used to force the WebView to navigate.
     url.searchParams.set('returnRandom', Math.floor(Math.random() * 1000))
     this.setState({ webViewUrlTrigger: url.href })
   }
@@ -834,7 +829,8 @@ class MarketplaceScreen extends Component {
           >
             <WebView
               ref={webview => {
-                // for an unknown reason webview has null value even when a non null value has already been returned
+                // For an unknown reason webview has null value even when a non
+                // null value has already been returned
                 if (webview) {
                   this.dappWebView = webview
                 }

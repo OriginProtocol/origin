@@ -3,6 +3,7 @@ package com.origincatcher;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.avishayil.rnrestart.ReactNativeRestartPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.bitgo.randombytes.RandomBytesPackage;
@@ -47,6 +48,7 @@ public class MainApplication extends Application implements ReactApplication {
       mCallbackManager = new CallbackManager.Factory().create();
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativeRestartPackage(),
           new FBSDKPackage(mCallbackManager),
           new RNDeviceInfo(),
           new RandomBytesPackage(),

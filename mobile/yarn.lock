@@ -6722,6 +6722,11 @@ react-native-randombytes@^3.5.1, react-native-randombytes@^3.5.3:
     buffer "^4.9.1"
     sjcl "^1.0.3"
 
+react-native-restart@^0.0.12:
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/react-native-restart/-/react-native-restart-0.0.12.tgz#afd51c445bdadfd34a02e29955eefe66a86af86d"
+  integrity sha512-aSvcsiSLUbHt1E0AXuC2gpIXBTn1p3J4jfTYFbFv/D19zTLW5WVUb4blgVt70RCkqvZWD3NEymS4ZZmFWGDclA==
+
 react-native-safe-area-view@^0.14.1, react-native-safe-area-view@^0.14.5:
   version "0.14.6"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.14.6.tgz#9a9d37d9f8f3887d60c4076eae7b5d2319539446"
