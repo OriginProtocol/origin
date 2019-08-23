@@ -231,7 +231,7 @@ export function setNetwork(net, customConfig) {
       qps,
       ethGasStation: ['mainnet', 'rinkeby'].includes(net)
     })
-  } else if (!isBrowser && !isWebView && net !== 'test') {
+  } else if (!isBrowser && !isWebView) {
     // TODO: Allow for browser?
     createEngine(web3, { qps, maxConcurrent })
   }

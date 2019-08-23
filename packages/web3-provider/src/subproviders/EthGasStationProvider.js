@@ -1,5 +1,5 @@
 const fetch = require('cross-fetch')
-const SubProvider = require('web3-provider-engine/subproviders/subprovider')
+const SubProvider = require('./Subprovider')
 
 const CACHE_TIME = 15000
 const GAS_STATION_URL = 'https://ethgasstation.info/json/ethgasAPI.json'
