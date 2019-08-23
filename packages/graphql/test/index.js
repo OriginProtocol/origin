@@ -43,6 +43,8 @@ describe('Marketplace', function() {
   })
 
   it('should deploy the marketplace contract', async function() {
+    // Remove existing marketplace contracts from config
+    delete contracts.marketplaces
     const receipt = await mutate(mutations.DeployMarketplace, {
       token: OGN,
       version: '000',
