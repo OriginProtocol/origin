@@ -4,10 +4,10 @@ function MobileModalHeader({
   children,
   headerImageUrl,
   className = '',
-  showBackButton = true,
-  showCloseButton = false,
+  showBackButton,
+  showCloseButton,
   onBack,
-  fullscreen = false
+  fullscreen
 }) {
   if (!children && !headerImageUrl) {
     return null
@@ -35,6 +35,8 @@ function MobileModalHeader({
     headerClassList = headerClassList.concat(className.split(' '))
   }
 
+  showBackButton = showBackButton !== false // True by default or if unset
+
   let closeButton
 
   if (showCloseButton || showBackButton) {
@@ -50,9 +52,9 @@ function MobileModalHeader({
 
   return (
     <div className={`${headerClassList.join(' ')}`} style={headerStyle}>
-      {closeButton}
+      {showCloseButton ? <span className="modal-action-button" /> : closeButton}
       <h3 className="modal-title">{children}</h3>
-      {closeButton ? <span className="modal-action-button" /> : null}
+      {showCloseButton ? closeButton : <span className="modal-action-button" />}
     </div>
   )
 }
@@ -87,6 +89,12 @@ require('react-styl')(`
       height: 2rem
       &.back-button
         background-image: url('images/caret-grey.svg')
+        background-size: 1.5rem
+        background-position: top center
+        transform: rotateZ(270deg)
+        background-repeat: no-repeat
+      &.close-button
+        background-image: url('images/close-icon.svg')
         background-size: 1.5rem
         background-position: top center
         transform: rotateZ(270deg)

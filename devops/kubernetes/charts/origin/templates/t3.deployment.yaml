@@ -13,7 +13,7 @@ metadata:
     app.kubernetes.io/component: frontend
     app.kubernetes.io/part-of: origin-t3
 spec:
-  replicas: {{ default 2 .Values.t3Replicas }}
+  replicas: {{ default 1 .Values.t3Replicas }}
   selector:
     matchLabels:
       app: {{ template "t3.fullname" . }}

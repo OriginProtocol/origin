@@ -279,7 +279,7 @@ require('react-styl')(`
       margin-top: 2rem
       .btn
         margin: 0 0.5rem 1rem 0.5rem
-  
+
   .pl-modal.light-theme
     .pl-modal-table .pl-modal-cell .pl-modal-content
       background-color: #fff

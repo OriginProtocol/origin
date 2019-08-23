@@ -812,10 +812,6 @@
     "*": "{number} Оголошення",
     "_1": "1 Лістинг"
   },
-  "2CpFQp": {
-    "*": "{count} {category} results",
-    "_1": "{count} {category} result"
-  },
   "3pJs9O": {
     "*": "{count} Listings with Origin Rewards",
     "_1": "{count} Listing with Origin Rewards"
@@ -831,11 +827,11 @@
   "2Qfyq": "Створити лістинг",
   "4u7nzi": "Не знайдено жодного списку",
   "4v3q78": "Завантажити ще",
-  "114jZK": "Sort by",
-  "2LiG2d": "Sort By",
-  "6v09l": "Default",
+  "4pf0yW": "Featured",
   "3Ul6WQ": "Price: Low to High",
   "1rioH9": "Price: High to Low",
+  "qqmM": "Sort",
+  "114jZK": "Sort by",
   "2XkwlS": "Неможливо запитувати повідомлення",
   "333iq2": "Немає розмов!",
   "1DH3KE": "Повідомлення",
@@ -976,6 +972,7 @@
   "XaD4D": "Доступно для {browser}",
   "29RrPk": "Підключіть MetaMask",
   "1AQgmT": "Opening App...",
+  "4iVrWM": "Loading",
   "4apdzo": "Promote Now",
   "1o5hKC": "Please enter a commission amount",
   "2IWJV3": "Not enough OGN",

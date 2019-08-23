@@ -57,13 +57,23 @@ async function isValidContract(web3, address) {
 }
 
 let lastBlock
+
 export function newBlock(blockNumber) {
   if (blockNumber <= lastBlock) return
   lastBlock = blockNumber
-  context.marketplace.eventCache.setLatestBlock(blockNumber)
-  context.identityEvents.eventCache.setLatestBlock(blockNumber)
-  context.ProxyFactory.eventCache.setLatestBlock(blockNumber)
-  context.eventSource.resetCache()
+  Object.keys(context.marketplaces || {}).forEach(version => {
+    context.marketplaces[version].contract.eventCache.setLatestBlock(
+      blockNumber
+    )
+    context.marketplaces[version].eventSource.resetCache()
+  })
+
+  if (context.identityEvents) {
+    context.identityEvents.eventCache.setLatestBlock(blockNumber)
+  }
+  if (context.ProxyFactory) {
+    context.ProxyFactory.eventCache.setLatestBlock(blockNumber)
+  }
 
   pubsub.publish('NEW_BLOCK', {
     newBlock: { id: blockNumber }
@@ -254,9 +264,20 @@ export function setNetwork(net, customConfig) {
     )
   }
 
-  context.EventBlock = config.V00_Marketplace_Epoch || 0
+  let marketplaceVersion
+  Object.keys(config)
+    .sort()
+    .forEach(k => {
+      const marketVersion = k.match(/^V([0-9]+)_Marketplace$/)
+      if (marketVersion) {
+        setMarketplace(config[k], config[`${k}_Epoch`], `0${marketVersion[1]}`)
+        marketplaceVersion = `0${marketVersion[1]}`
+      }
+    })
+  if (!config.marketplaceVersion) {
+    config.marketplaceVersion = marketplaceVersion
+  }
 
-  setMarketplace(config.V00_Marketplace, config.V00_Marketplace_Epoch)
   setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
 
   setProxyContracts(config)
@@ -405,13 +426,22 @@ function setMetaMask() {
     context.metaMaskEnabled = true
     context.web3Exec = metaMask
     context.marketplaceExec = context.marketplaceMM
+    Object.keys(context.marketplaces || {}).forEach(
+      version =>
+        (context.marketplaces[version].contractExec =
+          context.marketplaces[version].contractMM)
+    )
     context.ognExec = context.ognMM
     context.tokens.forEach(token => (token.contractExec = token.contractMM))
     context.daiExchangeExec = context.daiExchangeMM
   } else {
     context.metaMaskEnabled = false
     context.web3Exec = web3
-    context.marketplaceExec = context.marketplace
+    Object.keys(context.marketplaces || {}).forEach(
+      version =>
+        (context.marketplaces[version].contractExec =
+          context.marketplaces[version].contract)
+    )
     context.ognExec = context.ogn
     context.tokens.forEach(token => (token.contractExec = token.contract))
     context.daiExchangeExec = context.daiExchange
@@ -488,44 +518,57 @@ export function toggleMetaMask(enabled) {
   setMetaMask()
 }
 
-export function setMarketplace(address, epoch) {
-  context.marketplace = new web3.eth.Contract(MarketplaceContract.abi, address)
-  patchWeb3Contract(context.marketplace, epoch, {
+export function setMarketplace(address, epoch, version = '000') {
+  if (!address) return
+  const contract = new web3.eth.Contract(MarketplaceContract.abi, address)
+  patchWeb3Contract(contract, epoch, {
     ...context.config,
     useLatestFromChain: false,
-    ipfsEventCache: context.config.V00_Marketplace_EventCache,
-    cacheMaxBlock: context.config.V00_Marketplace_EventCacheMaxBlock,
+    ipfsEventCache:
+      context.config[`V${version.slice(1)}_Marketplace_EventCache`],
+    cacheMaxBlock:
+      context.config[`V${version.slice(1)}_Marketplace_EventCacheMaxBlock`],
     prefix:
       typeof address === 'undefined'
         ? 'Marketplace_'
         : `${address.slice(2, 8)}_`,
     platform: typeof window === 'undefined' ? 'memory' : 'browser'
   })
+  context.marketplace = contract
 
-  if (address) {
-    context.marketplaces = [context.marketplace]
-  } else {
-    context.marketplaces = []
-  }
-  context.eventSource = new EventSource({
-    marketplaceContract: context.marketplace,
+  const eventSource = new EventSource({
+    marketplaceContract: contract,
     ipfsGateway: context.ipfsGateway,
-    web3: context.web3
+    web3: context.web3,
+    version
   })
+  context.eventSource = eventSource
   context.marketplaceExec = context.marketplace
 
+  context.marketplaces = context.marketplaces || {}
+  context.marketplaces[version] = {
+    address,
+    epoch,
+    eventSource,
+    contract,
+    contractExec: contract
+  }
+
   if (metaMask) {
-    context.marketplaceMM = new metaMask.eth.Contract(
+    const contractMM = new metaMask.eth.Contract(
       MarketplaceContract.abi,
       address
     )
+    context.marketplaces[version].contractMM = contractMM
     if (metaMaskEnabled) {
-      context.marketplaceExec = context.marketplaceMM
+      context.marketplaceExec = contractMM
+      context.marketplaces[version].contractExec = contractMM
     }
   }
 }
 
 export function setIdentityEvents(address, epoch) {
+  if (!address) return
   context.identityEvents = new web3.eth.Contract(
     IdentityEventsContract.abi,
     address
@@ -556,6 +599,7 @@ export function setIdentityEvents(address, epoch) {
 }
 
 export function setProxyContracts(config) {
+  if (!config.ProxyFactory) return
   context.ProxyFactory = new web3.eth.Contract(
     IdentityProxyFactory.abi,
     config.ProxyFactory

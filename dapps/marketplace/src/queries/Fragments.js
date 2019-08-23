@@ -22,6 +22,7 @@ export default {
     basic: gql`
       fragment basicListingFields on Listing {
         id
+        contractAddr
         valid
         validationError
         status

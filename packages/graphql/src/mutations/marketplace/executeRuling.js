@@ -8,7 +8,7 @@ async function executeRuling(_, data) {
   const from = data.from || contracts.defaultMobileAccount
   await checkMetaMask(from)
   const ipfsHash = await post(contracts.ipfsRPC, data)
-  const { listingId, offerId } = parseId(data.offerID)
+  const { listingId, offerId, marketplace } = parseId(data.offerID, contracts)
 
   let ruling = 0,
     refund = contracts.web3.utils.toWei('0', 'ether')
@@ -33,7 +33,7 @@ async function executeRuling(_, data) {
     throw new Error('commission must be either "pay", or "refund"')
   }
 
-  const tx = contracts.marketplaceExec.methods.executeRuling(
+  const tx = marketplace.contractExec.methods.executeRuling(
     listingId,
     offerId,
     ipfsHash,
