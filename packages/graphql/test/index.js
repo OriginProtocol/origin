@@ -1,8 +1,9 @@
 import assert from 'assert'
 import get from 'lodash/get'
+import fs from 'fs'
 
 import client from '../src/index'
-import contracts, { shutdown } from '../src/contracts'
+import contracts, { setNetwork, shutdown } from '../src/contracts'
 
 import { getOffer, mutate } from './_helpers'
 import queries from './_queries'
@@ -10,12 +11,31 @@ import mutations from './_mutations'
 import { trackGas, showGasTable } from './_gasTable'
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
+const testBuildPath = `${__dirname}/../../contracts/build/tests.json`
 
 describe('Marketplace', function() {
   let Admin, Seller, Buyer, Arbitrator, Affiliate
   let OGN, Marketplace
 
   before(async function() {
+    const addresses = JSON.parse(fs.readFileSync(testBuildPath))
+    setNetwork('test', {
+      automine: false,
+      DaiExchange: addresses.UniswapDaiExchange,
+      ProxyFactory: addresses.ProxyFactory,
+      IdentityProxyImplementation: addresses.IdentityProxyImplementation,
+
+      tokens: [
+        {
+          id: addresses.DAI,
+          type: 'Standard',
+          name: 'DAI Stablecoin',
+          symbol: 'DAI',
+          decimals: '18'
+        }
+      ]
+    })
+
     await trackGas()
     const res = await client.query({ query: queries.GetNodeAccounts })
     const nodeAccounts = get(res, 'data.web3.nodeAccounts').map(a => a.id)
