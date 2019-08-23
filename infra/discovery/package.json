@@ -30,7 +30,7 @@
     "esm": "3.2.25",
     "express": "4.17.1",
     "express-prom-bundle": "5.1.5",
-    "graphql": "14.5.0",
+    "graphql": "14.5.1",
     "graphql-iso-date": "3.6.1",
     "graphql-tag": "2.10.1",
     "graphql-type-json": "0.3.0",
