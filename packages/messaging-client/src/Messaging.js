@@ -688,7 +688,7 @@ class Messaging {
       // a conversation haven't even been started yet
       //
       const conversationIndex = convObj ? convObj.messageCount : 0
-      const encryptKey = cryptoRandomString(32).toString('hex')
+      const encryptKey = cryptoRandomString({ length: 32 }).toString('hex')
 
       const keysContent = {
         type: 'keys',
