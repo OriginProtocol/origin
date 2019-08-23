@@ -23,6 +23,10 @@ This guide will help you to install a local build of Origin Wallet on a device o
 
 - Xcode Command Line Tools: `xcode-select --install`
 
+- Install CocoaPods: `sudo gem install cocoapods`
+
+- (!) For the project to load with cocoa pods dependencies be sure to open the `OriginCatcher.xcworkspace` file instead of `OriginCatcher.xcodeproj`
+
 #### Android Development
 
 - [Android SDK or Android Studio](https://developer.android.com/studio/) - If you're on Linux, find the instructions for your specific distribution
