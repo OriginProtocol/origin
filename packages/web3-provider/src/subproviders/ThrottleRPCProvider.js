@@ -7,8 +7,8 @@
 const fetch = require('cross-fetch')
 const Bottleneck = require('bottleneck/es5')
 const JsonRpcError = require('json-rpc-error')
-const createPayload = require('web3-provider-engine/util/create-payload')
-const SubProvider = require('web3-provider-engine/subproviders/subprovider')
+const createPayload = require('./createPayload')
+const SubProvider = require('./Subprovider')
 
 const MAX_RETRIES = 3
 const BUFFER_MS = 5
