@@ -48,7 +48,7 @@ public class MainApplication extends Application implements ReactApplication {
       mCallbackManager = new CallbackManager.Factory().create();
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new ReactNativeRestartPackage(),
+          new ReactNativeRestartPackage(),
           new FBSDKPackage(mCallbackManager),
           new RNDeviceInfo(),
           new RandomBytesPackage(),
