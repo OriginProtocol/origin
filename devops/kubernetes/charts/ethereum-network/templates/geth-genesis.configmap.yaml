@@ -18,7 +18,8 @@ data:
             "eip155Block": 0,
             "eip158Block": 0,
             "byzantiumBlock": 1200000,
-            "constantinopleBlock": 1201800
+            "constantinopleBlock": 1201800,
+            "petersburgBlock": 1557000
         },
         "difficulty":  {{ .Values.gethGenesisDifficulty | quote }},
         "gasLimit": {{ .Values.gethGenesisGasLimit | quote }},

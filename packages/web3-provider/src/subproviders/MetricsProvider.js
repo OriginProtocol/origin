@@ -1,4 +1,4 @@
-const SubProvider = require('web3-provider-engine/subproviders/subprovider')
+const SubProvider = require('./Subprovider')
 
 /**
  * A web3-provider-engine subprovider to gether metrics on JSON-RPC calls

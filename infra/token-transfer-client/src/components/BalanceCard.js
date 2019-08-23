@@ -30,7 +30,7 @@ class BalanceCard extends Component {
   componentDidUpdate(prevProps) {
     // Parse server errors for account add
     if (get(prevProps, 'accountError') !== this.props.accountError) {
-      this.handleErrors(this.props.accountError)
+      this.handleServerError(this.props.accountError)
     }
     // Parse server errors for transfer add
     if (get(prevProps, 'transferError') !== this.props.transferError) {
@@ -74,10 +74,15 @@ class BalanceCard extends Component {
     event.preventDefault()
     if (this.state.modalAddAccount) {
       // Add account before processing request
-      this.props.addAccount({
-        nickname: this.state.nickname,
-        address: this.state.address
-      })
+      try {
+        await this.props.addAccount({
+          nickname: this.state.nickname,
+          address: this.state.address
+        })
+      } catch (error) {
+        // Error will be displayed in form, don't continue to add transfer
+        return
+      }
     }
 
     // Do the transfer
