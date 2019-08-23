@@ -812,10 +812,6 @@
     "*": "{number} Annonces",
     "_1": "1 Annonce"
   },
-  "2CpFQp": {
-    "*": "{count} {category} results",
-    "_1": "{count} {category} result"
-  },
   "3pJs9O": {
     "*": "{count} Listings with Origin Rewards",
     "_1": "{count} Listing with Origin Rewards"
@@ -831,11 +827,11 @@
   "2Qfyq": "Créer une annonce",
   "4u7nzi": "Aucune annonce trouvée",
   "4v3q78": "Charger plus",
-  "114jZK": "Sort by",
-  "2LiG2d": "Sort By",
-  "6v09l": "Default",
+  "4pf0yW": "Featured",
   "3Ul6WQ": "Price: Low to High",
   "1rioH9": "Price: High to Low",
+  "qqmM": "Sort",
+  "114jZK": "Sort by",
   "2XkwlS": "Impossible d'interroger les messages",
   "333iq2": "Pas de conversation!",
   "1DH3KE": "Messages",
@@ -976,6 +972,7 @@
   "XaD4D": "Disponible pour {browser}",
   "29RrPk": "Connecter le méta-masque",
   "1AQgmT": "Opening App...",
+  "4iVrWM": "Loading",
   "4apdzo": "Promote Now",
   "1o5hKC": "Please enter a commission amount",
   "2IWJV3": "Not enough OGN",

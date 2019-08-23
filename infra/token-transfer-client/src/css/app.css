@@ -73,6 +73,10 @@ h2 {
  * Forms
  */
 
+form {
+  padding: 1rem 1rem 0 1rem;
+}
+
 label {
   margin-top: 20px;
   font-weight: bold;
@@ -87,7 +91,6 @@ input, select {
   background-color: #e9f0f3;
   border: none;
   box-shadow: none;
-  width: 80%;
 }
 
 .custom-select-lg {
@@ -102,13 +105,6 @@ input, select {
   background-color: #e9f0f3;
   border: none;
   box-shadow: none;
-  width: 80%;
-}
-
-@media (max-width: 768px) {
-  .form-control, .form-control:focus {
-    width: 90%;
-  }
 }
 
 .form-control-lg {
@@ -117,7 +113,6 @@ input, select {
 
 .input-group {
   border-radius: 10px;
-  width: 80%;
   margin: 0 auto;
   background-color: #e9f0f3;
   border: none;
