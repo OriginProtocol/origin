@@ -112,9 +112,7 @@ class ThrottleRPCProvider extends SubProvider {
     const self = this
     const targetUrl = self.rpcUrl
     const { method } = payload
-    const priority = METHOD_PRIORITY.hasOwnProperty(method)
-      ? METHOD_PRIORITY[method]
-      : 5
+    const priority = METHOD_PRIORITY[method] || 5
 
     // overwrite id to conflict with other concurrent users
     const newPayload = createPayload(payload)

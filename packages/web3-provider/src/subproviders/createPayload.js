@@ -1,24 +1,14 @@
-// gotta keep it within MAX_SAFE_INTEGER
-const extraDigits = 3
-
 function createRandomId() {
-  // 13 time digits
-  const datePart = new Date().getTime() * Math.pow(10, extraDigits)
-  // 3 random digits
-  const extraPart = Math.floor(Math.random() * Math.pow(10, extraDigits))
-  // 16 digits
+  const datePart = new Date().getTime() * 1000
+  const extraPart = Math.floor(Math.random() * 1000)
   return datePart + extraPart
 }
 
-function createPayload(data) {
-  return {
-    // defaults
-    id: createRandomId(),
-    jsonrpc: '2.0',
-    params: [],
-    // user-specified
-    ...data
-  }
-}
+const createPayload = data => ({
+  id: createRandomId(),
+  jsonrpc: '2.0',
+  params: [],
+  ...data
+})
 
 module.exports = createPayload
