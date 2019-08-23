@@ -227,6 +227,7 @@ require('react-styl')(`
       .conversations-list
         flex: 1
         overflow-y: scroll
+        -webkit-overflow-scrolling: touch
         overflow-x: hidden
       .conversation-view
         flex: 3
@@ -234,6 +235,7 @@ require('react-styl')(`
         overflow-x: hidden
         padding: 0 2rem
         display: flex
+        -webkit-overflow-scrolling: touch
         flex-direction: column
 
   .mobile-modal-light
@@ -247,7 +249,7 @@ require('react-styl')(`
           margin-bottom: 1rem
           padding: 1rem 1rem 0rem 1rem
           margin-top: auto
-      
+
         .conversations-wrapper
           height: 100%
           flex: 1
