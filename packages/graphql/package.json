@@ -43,7 +43,6 @@
     "apollo-link-schema": "^1.2.3",
     "apollo-link-ws": "^1.0.18",
     "apollo-server": "^2.6.7",
-    "bignumber.js": "9.0.0",
     "cross-fetch": "^3.0.4",
     "dayjs": "^1.8.14",
     "dotenv": "^8.0.0",

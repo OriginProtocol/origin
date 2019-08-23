@@ -1,6 +1,5 @@
 import assert from 'assert'
 import get from 'lodash/get'
-const BigNumber = require('bignumber.js')
 
 import client from '../src/index'
 import contracts, { shutdown } from '../src/contracts'
@@ -927,10 +926,15 @@ describe('Marketplace', function() {
       // exchange rate, since the exchange rate has a good chance of having
       // changed by the time our purchase happens.
       const ethAfter = await contracts.web3.eth.getBalance(Buyer)
-      const ethSent = new BigNumber(ethBefore).minus(new BigNumber(ethAfter))
-      const ethTraded = new BigNumber(offerEvents.TokenPurchase.eth_sold)
-      const sendRatio = ethSent.div(ethTraded)
-      assert(sendRatio.toFixed(3) >= 1.01)
+      const { toBN, fromWei } = contracts.web3.utils
+      const ethSentWei = toBN(ethBefore).sub(toBN(ethAfter))
+      const ethTradedWei = toBN(offerEvents.TokenPurchase.eth_sold)
+      const ethSent = Number(fromWei(ethSentWei, 'ether'))
+      const ethTraded = Number(fromWei(ethTradedWei, 'ether'))
+      const sendRatio = ethSent / ethTraded
+      console.log(sendRatio)
+
+      assert(sendRatio >= 1.01)
     })
   })
 })

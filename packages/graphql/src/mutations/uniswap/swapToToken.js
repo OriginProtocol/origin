@@ -1,6 +1,5 @@
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
-const BigNumber = require('bignumber.js')
 
 export async function swapToTokenTx(tokenValue) {
   const exchange = contracts.daiExchangeExec
@@ -24,7 +23,11 @@ export async function swapToTokenTx(tokenValue) {
   // It takes some time to finish a transaction, and the exchange will
   // fail our transaction if the user did not send enough eth for
   // the new price.
-  const value = new BigNumber(marketValue).times(1.01).toFixed(0) // have to be an integer.
+  const toBN = contracts.web3.utils.toBN
+  const value = toBN(marketValue)
+    .mul(toBN(101))
+    .div(toBN(100))
+    .toString()
 
   const tx = exchange.methods.ethToTokenSwapOutput(tokenValue, deadline)
   return { tx, value }
