@@ -12,7 +12,7 @@ const { LOGIN } = require('../constants/events')
 const { encrypt } = require('../lib/crypto')
 const { Event, User } = require('../models')
 const logger = require('../logger')
-const { ensureLoggedIn, ensureUserInSession } = require('../lib/login')
+const { ensureLoggedIn } = require('../lib/login')
 const {
   encryptionSecret,
   portalUrl,
@@ -87,14 +87,8 @@ router.post(
  */
 router.post(
   '/setup_totp',
-  ensureUserInSession, // User must have verified their email first.
+  ensureLoggedIn,
   asyncMiddleware(async (req, res) => {
-    if (req.user.otpKey && req.user.otpVerified) {
-      // Two-factor auth has already been setup. Do not allow reset.
-      res.status(403)
-      return res.send('TOTP already setup')
-    }
-
     // TOTP not setup yet. Generate a key and save it encrypted in the DB.
     // TOTP setup is not complete until it has been verified and the otpVerified
     // flag on the user model has been set to true. Until that time the user
@@ -102,7 +96,7 @@ router.post(
     const key = crypto.randomBytes(10).toString('hex')
     const encodedKey = base32.encode(key).toString()
     const encryptedKey = encrypt(key)
-    await req.user.update({ otpKey: encryptedKey })
+    await req.user.update({ otpKey: encryptedKey, otpVerified: false })
 
     // Generate QR token for scanning into Google Authenticator
     // Reference: https://code.google.com/p/google-authenticator/wiki/KeyUriFormat
@@ -127,7 +121,10 @@ router.post(
  */
 router.post(
   '/verify_totp',
-  ensureUserInSession, // User must have verified their email first.
+  (req, res, next) => {
+    // Skip two factor auth for this endpoint
+    ensureLoggedIn(req, res, next, true)
+  },
   passport.authenticate('totp'),
   asyncMiddleware(async (req, res) => {
     // Set otpVerified to true if it is not already to signify TOTP setup is

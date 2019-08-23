@@ -68,3 +68,6 @@ ios/sentry.properties
 /.src_manifest.json
 /.source_strings.json
 /.translated_fbts.json
+
+# CocoaPods
+ios/Pods/

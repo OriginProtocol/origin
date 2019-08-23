@@ -16,13 +16,17 @@
 #endif
 #import <React/RCTPushNotificationManager.h>
 #import <React/RCTLinkingManager.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  // You can skip this line if you have the latest version of the SDK installed
+  [[FBSDKApplicationDelegate sharedInstance] application:application
+                           didFinishLaunchingWithOptions:launchOptions];
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
-RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
+  RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"OriginCatcher"
                                             initialProperties:nil];
 [RNSentry installWithRootView:rootView];
@@ -50,7 +54,13 @@ RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-  return [RCTLinkingManager application:application openURL:url options:options];
+  BOOL handledFB = [[FBSDKApplicationDelegate sharedInstance] application:application
+    openURL:url
+    sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+    annotation:options[UIApplicationOpenURLOptionsAnnotationKey]
+                  ];
+  BOOL handledRCT = [RCTLinkingManager application:application openURL:url options:options];
+  return handledFB || handledRCT;
 }
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
