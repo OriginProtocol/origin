@@ -163,10 +163,10 @@ require('react-styl')(`
           &.checked:after
             content: ''
             display: inline-block
-            background-image: url('images/checkmark-icon.svg')
+            background-image: url('images/checkmark-blue.svg')
             background-position: center
             background-repeat: no-repeat
-            background-size: 1.75rem
+            background-size: 1.25rem
             position: absolute
             top: 0
             bottom: 0
