@@ -932,7 +932,6 @@ describe('Marketplace', function() {
       const ethSent = Number(fromWei(ethSentWei, 'ether'))
       const ethTraded = Number(fromWei(ethTradedWei, 'ether'))
       const sendRatio = ethSent / ethTraded
-      console.log(sendRatio)
 
       assert(sendRatio >= 1.01)
     })
