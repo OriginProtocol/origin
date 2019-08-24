@@ -10,6 +10,7 @@ import MetaMask from './MetaMask'
 import Email from './Email'
 import Profile from './Profile'
 import Finished from './Finished'
+import Messaging from './Messaging'
 import RewardsSignUp from './RewardsSignUp'
 
 const sessionStore = store('sessionStorage')
@@ -34,7 +35,11 @@ class Onboard extends Component {
           />
           <Route
             path={`${linkPathPrefix}/onboard/email`}
-            render={() => <Email listing={listing} linkPrefix={linkPrefix} />}
+            render={() => <Email
+              listing={listing}
+              linkPrefix={linkPrefix}
+              hideOriginWallet={hideOriginWallet}
+            />}
           />
           <Route
             path={`${linkPathPrefix}/onboard/profile`}
@@ -50,6 +55,15 @@ class Onboard extends Component {
             path={`${linkPathPrefix}/onboard/finished`}
             render={() => (
               <Finished redirectto={redirectTo} linkPrefix={linkPrefix} />
+            )}
+          />
+          <Route
+            path={`${linkPathPrefix}/onboard/messaging`}
+            render={() => (
+              <Messaging
+                linkPrefix={linkPrefix}
+                hideOriginWallet={hideOriginWallet}
+              />
             )}
           />
           <Redirect
