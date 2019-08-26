@@ -334,7 +334,7 @@ class BalanceCard extends Component {
         <form onSubmit={this.handleConfirm}>
           <div className="form-group">
             <label htmlFor="email">QR Code</label>
-            <input {...input('code')} />
+            <input {...input('code')} type="number" />
             {Feedback('code')}
           </div>
           <button
