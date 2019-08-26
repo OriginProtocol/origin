@@ -17,7 +17,16 @@ const sessionStore = store('sessionStorage')
 
 class Onboard extends Component {
   render() {
-    const { listing, hideOriginWallet, linkprefix, redirectTo } = this.props
+    const {
+      listing,
+      hideOriginWallet,
+      linkprefix,
+      redirectTo,
+      skipMessaging,
+      skipRewards,
+      onSkipMessaging,
+      onSkipRewards
+    } = this.props
     const linkPathPrefix = linkprefix || (listing ? '/listing/:listingID' : '')
     const linkPrefix = linkprefix || (listing ? `/listing/${listing.id}` : '')
 
@@ -48,7 +57,12 @@ class Onboard extends Component {
           <Route
             path={`${linkPathPrefix}/onboard/rewards`}
             render={() => (
-              <RewardsSignUp listing={listing} linkPrefix={linkPrefix} />
+              <RewardsSignUp
+                listing={listing}
+                linkPrefix={linkPrefix}
+                skip={skipRewards}
+                onSkip={onSkipRewards}
+              />
             )}
           />
           <Route
@@ -63,6 +77,8 @@ class Onboard extends Component {
               <Messaging
                 linkPrefix={linkPrefix}
                 hideOriginWallet={hideOriginWallet}
+                skip={skipMessaging}
+                onSkip={onSkipMessaging}
               />
             )}
           />

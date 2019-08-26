@@ -29,9 +29,13 @@ class OnboardRewardsSignUp extends Component {
       shouldCloseConfirmSkipModal
     } = this.state
 
-    const { linkPrefix } = this.props
+    const {
+      linkPrefix,
+      skip,
+      onSkip
+    } = this.props
 
-    if (finished) {
+    if (finished || skip) {
       return <Redirect to={`${linkPrefix}/onboard/finished`} />
     }
 
@@ -51,14 +55,14 @@ class OnboardRewardsSignUp extends Component {
             }}
             headerImageUrl="images/onboard/tout-header-image@3x.png"
           >
-            {this.renderSkipConfirmModal()}
+            {this.renderSkipConfirmModal({ onSkip })}
           </MobileModal>
         )}
       </>
     )
   }
 
-  renderSkipConfirmModal() {
+  renderSkipConfirmModal({ onSkip }) {
     return (
       <div className="text-center">
         <h2>
@@ -75,7 +79,7 @@ class OnboardRewardsSignUp extends Component {
         <div className="actions">
           <button
             className="btn btn-primary btn-rounded mt-4"
-            onClick={() => this.onCompleted()}
+            onClick={() => onSkip()}
           >
             <fbt desc="UserActivation.imSure">I&apos;m sure</fbt>
           </button>

@@ -8,7 +8,7 @@ import MobileModal from 'components/MobileModal'
 import Link from 'components/Link'
 import Steps from 'components/Steps'
 import MetaMaskAnimation from 'components/MetaMaskAnimation'
-
+import Redirect from 'components/Redirect'
 import HelpOriginWallet from 'components/DownloadApp'
 import ListingPreview from './_ListingPreview'
 import HelpMessaging from './_HelpMessaging'
@@ -59,8 +59,7 @@ const MessagingSyncing = ({ pct }) => (
   </div>
 )
 
-const EnableMessaging = ({ next, firstMessageSigned }) => {
-  const [enableMessaging] = useMutation(EnableMessagingMutation)
+const EnableMessaging = ({ firstMessageSigned, buttons, error }) => {
   return (
     <div className="onboard-box">
       <div className="messaging-logo" />
@@ -74,35 +73,19 @@ const EnableMessaging = ({ next, firstMessageSigned }) => {
         </fbt>
       </div>
 
+      {error && <div className="help error">
+        {error}
+      </div>}
       <div className="help mb">
         <fbt desc="onboard.Messaging.capabilities">
           Messaging will allow you to chat with other buyers and sellers.
         </fbt>
       </div>
-      <button
-        className="btn btn-primary btn-rounded"
-        type="submit"
-        onClick={() => {
-          next()
-          enableMessaging()
-        }}
-        children={fbt('Enable Origin Messaging', 'Enable Origin Messaging')}
-      />
-      <button
-        type="button"
-        className="btn btn-outline btn-link mb-5"
-        children={fbt('No, thanks', 'UserActivation.noThanks')}
-        onClick={() =>
-          this.setState({
-            confirmSkipModal: true,
-            shouldCloseConfirmSkipModal: false
-          })
-        }
-      />
+      {buttons}
     </div>
 )}
 
-const SignMessage = ({ num }) => (
+const SignMessage = ({ num, buttons }) => (
   <div className="onboard-box">
     <MetaMaskAnimation light />
     <div className="status">
@@ -125,11 +108,12 @@ const SignMessage = ({ num }) => (
         The Metamask icon is located on the top right of your browser tool bar.
       </fbt>
     </div>
+    {buttons}
     <div className="click-metamask-extension" />
   </div>
 )
 
-const MessagingEnabled = () => (
+const MessagingEnabled = ({ nextLink }) => (
   <div className="onboard-box">
     <div className="messaging-logo">
       <div className="qm active" />
@@ -156,14 +140,58 @@ const MessagingEnabled = () => (
         You’re done and can continue by pressing the button below.
       </fbt>
     </em>
+    <div className="continue-btn">
+      {nextLink && (   
+        <Link    
+          to={nextLink}    
+          className="btn btn-primary"    
+        >    
+          <fbt desc="onboard.Messaging.continue">Continue</fbt>
+        </Link>    
+      )}   
+    </div>
   </div>
 )
 
+const EnableMessagingButtons = ({ next, showButtons, onError, nextLink, onSkip }) => {
+  const [enableMessaging] = useMutation(EnableMessagingMutation)
+  if (!showButtons)
+    return null
+
+  return (
+    <>
+      <button
+        className="btn btn-primary btn-rounded"
+        type="submit"
+        onClick={async () => {
+          next()
+          try {
+            await enableMessaging()
+          } catch (e) {
+            onError()
+            console.log("Error enabling messaging:", e.message)
+          }
+        }}
+        children={fbt('Enable Origin Messaging', 'Enable Origin Messaging')}
+      />
+      <Link    
+        to={nextLink}
+        onClick={onSkip}
+        className="btn btn-outline btn-link mb-5"    
+      >    
+        <fbt desc="UserActivation.noThanks">No, thanks</fbt>
+      </Link>
+    </>
+  )
+}
+
 const OnboardMessaging = props => {
   const [waitForSignature, setWaitForSignature] = useState(false)
+  const [signatureError, setSignatureError] = useState(null)
 
   const { nextLink } = props
   const { data, error, networkStatus } = useQuery(WalletStatus, {notifyOnNetworkStatusChange: true})
+
   if (networkStatus === 1) {
     return <MessagingInitializing />
   } else if (error) {
@@ -182,8 +210,24 @@ const OnboardMessaging = props => {
 
   const firstMessageSigned = data.messaging.pubKey
   const secondMessageSigned = data.messaging.pubSig
-  let nextEnabled = false
-  console.log(`Pub Key: ${data.messaging.pubKey} pub sig: ${data.messaging.pubSig}, enabled: ${data.messaging.enabled} wait for sig: ${waitForSignature} synced: ${data.messaging.synced}`)
+  const buttons = (
+    <EnableMessagingButtons
+      next={() => {
+        setSignatureError(null)
+        setWaitForSignature(true)
+      }}
+      onError={() => {
+        setSignatureError(fbt('An unexpected error occurred.', 'onboard.Messaging.errorEnablingMessaging'))
+        setWaitForSignature(false)
+      }}
+      showButtons={!waitForSignature}
+      nextLink={nextLink}
+      onSkip={() => {
+        props.onSkip()
+      }}
+    />
+  )
+
   let cmp
   if (!data.messaging.synced) {
     cmp = <MessagingSyncing pct={data.messaging.syncProgress} />
@@ -191,42 +235,34 @@ const OnboardMessaging = props => {
     cmp = (
       <EnableMessaging
         firstMessageSigned={firstMessageSigned}
-        next={() => setWaitForSignature(true)}
+        buttons={buttons}
+        error={signatureError}
       />
     )
   } else if (!firstMessageSigned) {
-    cmp = <SignMessage num={1} />
+    cmp = <SignMessage num={1} buttons={buttons}/>
   } else if (!secondMessageSigned) {
-    cmp = <SignMessage num={2} />
+    cmp = <SignMessage num={2} buttons={buttons}/>
   } else {
-    nextEnabled = true
-    cmp = <MessagingEnabled />
+    cmp = <MessagingEnabled
+      nextLink={nextLink}
+    />
   }
 
   return cmp
-  // return (
-  //   <>
-  //     {cmp}
-  //     <div className="continue-btn">
-  //       {nextLink && (
-  //         <Link
-  //           to={nextLink}
-  //           className={`btn btn-primary${
-  //             nextEnabled ? '' : ' disabled'
-  //           }`}
-  //         >
-  //           Continue
-  //         </Link>
-  //       )}
-  //     </div>
-  //   </>
-  // )
 }
 
-const Messaging = ({ listing, linkPrefix, isMobile, hideOriginWallet }) => {
+const Messaging = ({ listing, linkPrefix, isMobile, hideOriginWallet, skip, onSkip }) => {
+  const nextLink=`${linkPrefix}/onboard/notifications`
+
+  if (skip) {
+    return <Redirect to={nextLink} />
+  }
+
   const content = (
       <OnboardMessaging
-        nextLink={`${linkPrefix}/onboard/notifications`}
+        nextLink={nextLink}
+        onSkip={onSkip}
       />
     )
 
@@ -271,6 +307,11 @@ export default withIsMobile(Messaging)
 
 require('react-styl')(`
   .onboard-box
+    .help.error
+      color: var(--red)
+      font-size: 18px
+      font-weight: 400
+      margin: 0
     .messaging-logo
       margin-bottom: 1rem
       width: 10rem
