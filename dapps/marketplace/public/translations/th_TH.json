@@ -812,10 +812,6 @@
     "*": "{number} รายชื่อ",
     "_1": "1 รายการ"
   },
-  "2CpFQp": {
-    "*": "{count} {category} results",
-    "_1": "{count} {category} result"
-  },
   "3pJs9O": {
     "*": "{count} Listings with Origin Rewards",
     "_1": "{count} Listing with Origin Rewards"
@@ -831,11 +827,11 @@
   "2Qfyq": "สร้างรายชื่อ",
   "4u7nzi": "ไม่พบรายชื่อ",
   "4v3q78": "โหลดมากขึ้น",
-  "114jZK": "Sort by",
-  "2LiG2d": "Sort By",
-  "6v09l": "Default",
+  "4pf0yW": "Featured",
   "3Ul6WQ": "Price: Low to High",
   "1rioH9": "Price: High to Low",
+  "qqmM": "Sort",
+  "114jZK": "Sort by",
   "2XkwlS": "ไม่สามารถสืบค้นข้อความ",
   "333iq2": "ไม่มีการสนทนา!",
   "1DH3KE": "ข้อความ",
@@ -976,6 +972,7 @@
   "XaD4D": "พร้อมใช้งานสำหรับ {browser}",
   "29RrPk": "เชื่อมต่อ MetaMask",
   "1AQgmT": "Opening App...",
+  "4iVrWM": "Loading",
   "4apdzo": "Promote Now",
   "1o5hKC": "Please enter a commission amount",
   "2IWJV3": "Not enough OGN",

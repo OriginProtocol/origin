@@ -60,6 +60,7 @@ const Nav = ({
   location: { pathname, state: locationState },
   isMobile,
   wallet,
+  walletType,
   onGetStarted,
   onShowFooter,
   navbarDarkMode,
@@ -87,7 +88,11 @@ const Nav = ({
     const isStacked =
       (locationState && locationState.canGoBack) || (isProfilePage && canGoBack)
     const canShowBack =
-      canGoBack && pathname.match(ShowBackRegex) ? true : false
+      canGoBack &&
+      (walletType === 'Mobile' || walletType === 'Origin Wallet') &&
+      pathname.match(ShowBackRegex)
+        ? true
+        : false
     const canShowSearch = pathname.match(ShowSearchRegex) ? true : false
 
     return (
@@ -275,6 +280,7 @@ require('react-styl')(`
     position: relative
     padding: 0 0 0 1rem
     line-height: 1rem
+    margin-top: 1rem
     margin-bottom: 0.5rem
     &:before
       content: ''

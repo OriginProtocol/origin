@@ -67,6 +67,15 @@ export default class MobileModal extends Component {
   }
 
   renderContent() {
+    const shouldSlideUp =
+      this.props.slideUp === true || this.props.fullscreen === false
+
+    if (shouldSlideUp) {
+      this.portal.classList.add('animate-slide-up')
+    } else {
+      this.portal.classList.add('animate-slide-up')
+    }
+
     if (this.props.fullscreen === false) {
       this.portal.classList.add('contained')
       return this.renderModal()
@@ -84,6 +93,7 @@ export default class MobileModal extends Component {
       headerImageUrl = '',
       onBack,
       showBackButton,
+      showCloseButton,
       fullscreen
     } = this.props
 
@@ -95,6 +105,7 @@ export default class MobileModal extends Component {
           fullscreen={fullscreen}
           headerImageUrl={headerImageUrl}
           showBackButton={showBackButton}
+          showCloseButton={showCloseButton}
           onBack={() => {
             if (onBack) {
               onBack()
@@ -121,6 +132,7 @@ export default class MobileModal extends Component {
       headerImageUrl = '',
       onBack,
       showBackButton,
+      showCloseButton,
       fullscreen
     } = this.props
 
@@ -131,6 +143,7 @@ export default class MobileModal extends Component {
           fullscreen={fullscreen}
           headerImageUrl={headerImageUrl}
           showBackButton={showBackButton}
+          showCloseButton={showCloseButton}
           onBack={() => {
             if (onBack) {
               onBack()
@@ -254,17 +267,9 @@ require('react-styl')(`
         & + .actions
           margin-top: 3rem !important
     &.contained
-      top: 100%
-      bottom: -100%
-      left: 0
-      right: 0
-      box-sizing: border-box
       padding: 30px
       background: transparent
-      transition: top 0.3s ease, opacity 0.3s ease, bottom 0.3s ease
-      &.open
-        top: 0
-        bottom: 0
+      box-sizing: border-box
       .modal-content
         overflow: auto
         flex-grow: 0
@@ -273,4 +278,13 @@ require('react-styl')(`
       .modal-content
         max-width: 400px
         margin: 0 auto
+    &.animate-slide-up
+      top: 100%
+      bottom: -100%
+      left: 0
+      right: 0
+      transition: top 0.3s ease, opacity 0.3s ease, bottom 0.3s ease
+      &.open
+        top: 0
+        bottom: 0
 `)
