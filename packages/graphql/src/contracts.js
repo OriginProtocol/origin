@@ -1,3 +1,7 @@
+import fetch from 'cross-fetch'
+import Web3 from 'web3'
+import get from 'lodash/get'
+
 import MarketplaceContract from '@origin/contracts/build/contracts/V00_Marketplace'
 import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken'
 import TokenContract from '@origin/contracts/build/contracts/TestToken'
@@ -6,8 +10,6 @@ import IdentityProxyFactory from '@origin/contracts/build/contracts/ProxyFactory
 import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import { exchangeAbi, factoryAbi } from './contracts/UniswapExchange'
 
-import Web3 from 'web3'
-import get from 'lodash/get'
 import EventSource from '@origin/eventsource'
 import { patchWeb3Contract } from '@origin/event-cache'
 import { initStandardSubproviders, createEngine } from '@origin/web3-provider'
@@ -231,7 +233,7 @@ export function setNetwork(net, customConfig) {
       qps,
       ethGasStation: ['mainnet', 'rinkeby'].includes(net)
     })
-  } else if (!isBrowser && !isWebView && net !== 'test') {
+  } else if (!isBrowser && !isWebView) {
     // TODO: Allow for browser?
     createEngine(web3, { qps, maxConcurrent })
   }

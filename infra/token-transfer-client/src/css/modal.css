@@ -259,6 +259,9 @@
 }
 
 .close {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
   width: 36px;
   height: 36px;
   background-color: #dbe6eb;

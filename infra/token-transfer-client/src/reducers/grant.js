@@ -1,4 +1,5 @@
 import moment from 'moment'
+import BigNumber from 'bignumber.js'
 
 import { momentizeGrant } from '@origin/token-transfer-server/src/lib/vesting'
 
@@ -48,11 +49,13 @@ export const getTotals = state => {
   const grants = getGrants(state)
   const isLocked = moment.utc() < unlockDate
   const grantTotal = grants.reduce((total, currentGrant) => {
-    return total + Number(currentGrant.amount)
-  }, 0)
+    return total.plus(BigNumber(currentGrant.amount))
+  }, BigNumber(0))
   const vestedTotal = grants.reduce((total, currentGrant) => {
-    return isLocked ? 0 : total + Number(currentGrant.vestedAmount)
-  }, 0)
-  const unvestedTotal = grantTotal - vestedTotal
+    return isLocked
+      ? BigNumber(0)
+      : total.plus(BigNumber(currentGrant.vestedAmount))
+  }, BigNumber(0))
+  const unvestedTotal = grantTotal.minus(vestedTotal)
   return { grantTotal, vestedTotal, unvestedTotal }
 }

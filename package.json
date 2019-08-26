@@ -15,7 +15,7 @@
     ]
   },
   "devDependencies": {
-    "babel-eslint": "10.0.2",
+    "babel-eslint": "10.0.3",
     "chai": "4.2.0",
     "eslint": "6.1.0",
     "eslint-config-react-app": "5.0.1",
@@ -35,7 +35,7 @@
     "bootstrap": "lerna bootstrap --no-ci --progress",
     "build": "lerna run build",
     "clean": "git clean -fdX .",
-    "start": "lerna run start --scope @origin/marketplace",
+    "start": "lerna run start --scope @origin/marketplace --stream --no-prefix",
     "lint": "lerna run lint",
     "format": "eslint **/**/*.js --quiet --fix",
     "test": "node scripts/test.js",
