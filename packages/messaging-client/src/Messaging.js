@@ -146,22 +146,27 @@ class Messaging {
     return this.getKeyItem(`${MESSAGING_PHRASE}:${this.account_key}`)
   }
 
-  initKeys() {
+  getPublicMessagingSignature() {
+    return this.getKeyItem(`${PUB_MESSAGING_SIG}:${this.account_key}`)
+  }
+
+  async initKeys() {
     const sigKey = this.getMessagingKey()
     const sigPhrase = this.getMessagingPhrase()
     // lock in the message to the hardcoded one
     if (sigKey && sigPhrase == PROMPT_MESSAGE) {
-      this.setAccount(sigKey, sigPhrase)
+      await this.setAccount(sigKey, sigPhrase)
     } else {
-      this.promptInit()
+      await this.promptInit()
     }
   }
 
-  startConversing() {
+  // throws exception when user denies signature
+  async startConversing() {
     debug('startConversing')
-    if (!this.account) {
+    if (!this.accoun && !this.getPublicMessagingSignature()) {
       // Remote has been initialized
-      this.initKeys()
+      await this.initKeys()
     } else {
       this.convsEnabled = true
     }
@@ -185,7 +190,7 @@ class Messaging {
 
       this.events.emit('initialized', this.account_key)
       if (this.convsEnabled || this.getMessagingKey()) {
-        this.initKeys()
+        await this.initKeys()
       }
     }
     // bootstrap read status
@@ -269,7 +274,7 @@ class Messaging {
         await this.promptForSignature()
       }
     } else if (!accountMatch) {
-      this.setRemoteMessagingSig()
+      await this.setRemoteMessagingSig()
     }
     this.events.emit('ready', this.account_key)
     this.loadMyConvs()
@@ -308,7 +313,7 @@ class Messaging {
     }
   }
 
-  setAccount(keyStr, phraseStr) {
+  async setAccount(keyStr, phraseStr) {
     debug('setAccount', keyStr, phraseStr)
     this.account = this.web3.eth.accounts.privateKeyToAccount(keyStr)
     this.account.publicKey =
@@ -323,7 +328,11 @@ class Messaging {
     //set phrase in the cookie
     const scopedMessagingPhraseName = `${MESSAGING_PHRASE}:${this.account_key}`
     this.setKeyItem(scopedMessagingPhraseName, phraseStr)
-    this.initMessaging()
+    await this.initMessaging()
+  }
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
   }
 
   async promptInit() {
@@ -338,7 +347,8 @@ class Messaging {
     const sigKey = signature.substring(0, 66)
 
     // Delay to prevent hidden MetaMask popup
-    setTimeout(() => this.setAccount(sigKey, sigPhrase), 500)
+    await this.sleep(500)
+    await this.setAccount(sigKey, sigPhrase)
   }
 
   async promptForSignature() {
