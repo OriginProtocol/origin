@@ -10,7 +10,7 @@
    node import_data.js --filename=investors.csv
 
  Example 2: Import the data in the DB.
-   node import_data.js --filename=investors.csv --dryRun=false
+   node import_data.js --filename=investors.csv --doIt=true
  */
 
 const assert = require('assert')
@@ -43,9 +43,11 @@ class CsvFileParser {
     const validCsvLineRegex = /^\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*(?:,\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*)*$/
     const csvValueRegex = /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:,|$)/g
 
-    // Return NULL if input string is not well formed CSV string.
-    if (!validCsvLineRegex.test(line)) return null
-    // Initialize array to receive values.
+    // Return null if the input string is not a well formed CSV string.
+    if (!validCsvLineRegex.test(line)) {
+      return null
+    }
+
     const a = []
     // Walk the string using replace with callback.
     line.replace(csvValueRegex, function(m0, m1, m2, m3) {
