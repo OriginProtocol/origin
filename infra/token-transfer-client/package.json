@@ -54,7 +54,7 @@
     "react-dev-utils": "9.0.3",
     "react-dom": "16.8.6",
     "react-id-swiper": "2.3.2",
-    "react-redux": "7.1.0",
+    "react-redux": "7.1.1",
     "react-router-dom": "5.0.1",
     "redux": "4.0.4",
     "redux-thunk": "2.3.0",
