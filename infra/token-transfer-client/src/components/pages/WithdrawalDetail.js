@@ -85,7 +85,7 @@ class WithdrawalDetail extends Component {
     const hasExpired =
       transfer.status === 'Expired' ||
       (transfer.status === 'WaitingTwoFactor' &&
-        moment.utc(transfer.createdAt).diff(moment.utc(), 'minutes' > 5))
+        moment.utc(transfer.createdAt).diff(moment.utc(), 'minutes') > 5)
 
     if (!transfer) {
       return <div>Transfer not found</div>
@@ -202,7 +202,7 @@ class WithdrawalDetail extends Component {
         <form onSubmit={this.handleConfirm}>
           <div className="form-group">
             <label htmlFor="email">QR Code</label>
-            <input {...input('code')} />
+            <input {...input('code')} type="number" />
             {Feedback('code')}
           </div>
           <button
