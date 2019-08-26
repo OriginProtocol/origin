@@ -163,6 +163,7 @@ export default {
         statusStr
         startDate
         endDate
+        shippingAddressEncrypted
         totalPrice {
           amount
           currency {
