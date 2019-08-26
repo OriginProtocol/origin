@@ -1,5 +1,6 @@
 import {
   changeAccount,
+  clearCookies,
   waitForText,
   clickByText,
   clickBySelector,
@@ -17,15 +18,25 @@ before(async function() {
   page = (await services()).extrasResult.page
 })
 
-const reset = async sellerOgn => {
-  const seller = await createAccount(page, sellerOgn)
-  const buyer = await createAccount(page)
+const reset = async (sellerOgn, reload = false) => {
+  // clear cookies to clear possible messaging cookies
+  await clearCookies(page)
 
-  await page.evaluate(() => {
+  await page.evaluate((reload) => {
     window.transactionPoll = 100
     window.sessionStorage.clear()
     window.location = '/#/'
-  })
+    if (reload) {
+      window.location.reload(true)
+    }
+  }, reload)
+
+  if (reload) {
+    await page.waitForNavigation({ waitUntil: 'networkidle0' })
+  }
+
+  const seller = await createAccount(page, sellerOgn)
+  const buyer = await createAccount(page)
 
   return { buyer, seller }
 }
@@ -598,6 +609,41 @@ function listingTests(autoSwap) {
   })
 }
 
+function onboardingTests() {
+  describe('Complete onboarding once', function() {
+    before(async function() {
+      this.timeout(10000)
+      const { seller } = await reset('100', true)
+      await page.evaluate(() => {
+        window.location = '/#/'
+      })
+      await changeAccount(page, seller, true)
+    })
+
+    it('should be redirected to onboarding page', async function() {
+      this.timeout(8000)
+      await page.evaluate(() => {
+        window.location = '/#/profile'
+      })
+
+      await waitForText(page, 'Connect a Crypto Wallet')
+    })
+
+    it('should enable messaging', async function() {
+      this.timeout(8000)
+      await page.evaluate(() => {
+        window.location = '/#/onboard/messaging'
+      })
+
+      await waitForText(page, '0 of 2 MetaMask messages signed')
+      await clickByText(page, 'Enable Origin Messaging', 'button')
+
+      await waitForText(page, 'Congratulations! You can now message other users')
+      await clickByText(page, 'Continue', 'a')
+    })
+  })
+}
+
 describe('Marketplace Dapp', function() {
   this.timeout(6000)
   before(async function() {
@@ -612,6 +658,7 @@ describe('Marketplace Dapp', function() {
     await page.goto('http://localhost:8083')
   })
   listingTests()
+  onboardingTests()
 })
 
 describe('Marketplace Dapp with proxies enabled', function() {
@@ -628,6 +675,7 @@ describe('Marketplace Dapp with proxies enabled', function() {
     await page.goto('http://localhost:8083')
   })
   listingTests(true)
+  onboardingTests()
 })
 
 describe('Marketplace Dapp with proxies, relayer and performance mode enabled', function() {
@@ -663,4 +711,6 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
   })
 
   listingTests(true)
+  // broken ATM empty profile does not redirect to /#/onboard
+  //onboardingTests()
 })

@@ -5,7 +5,6 @@ async function enableMessaging() {
     try {
       contracts.messaging.events.once('ready', () => resolve(true))
     	const result = await contracts.messaging.startConversing()
-      console.log("MUTATION RETURNED", result)
     } catch (e) {
       console.error(`Error enabling messaging: ${e.message}`)
       reject(e)

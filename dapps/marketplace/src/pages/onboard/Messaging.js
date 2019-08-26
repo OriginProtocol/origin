@@ -253,7 +253,7 @@ const OnboardMessaging = props => {
 }
 
 const Messaging = ({ listing, linkPrefix, isMobile, hideOriginWallet, skip, onSkip }) => {
-  const nextLink=`${linkPrefix}/onboard/notifications`
+  const nextLink=`${linkPrefix}/onboard/rewards`
 
   if (skip) {
     return <Redirect to={nextLink} />
