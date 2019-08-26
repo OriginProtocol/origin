@@ -14,7 +14,7 @@
  */
 
 const assert = require('assert')
-const fs = require('fs')
+const csv = require('csvtojson')
 const Logger = require('logplease')
 
 const db = require('../models')
@@ -36,103 +36,64 @@ class CsvFileParser {
   constructor(filename, employee) {
     this.filename = filename
     this.employee = employee
-    this.numCols = 6
   }
 
-  _parseLine(line) {
-    const validCsvLineRegex = /^\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*(?:,\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*)*$/
-    const csvValueRegex = /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:,|$)/g
-
-    // Return null if the input string is not a well formed CSV string.
-    if (!validCsvLineRegex.test(line)) {
-      return null
-    }
-
-    const a = []
-    // Walk the string using replace with callback.
-    line.replace(csvValueRegex, function(m0, m1, m2, m3) {
-      // Remove backslash from \' in single quoted values.
-      if (m1 !== undefined) a.push(m1.replace(/\\'/g, "'"))
-      // Remove backslash from \" in double quoted values.
-      else if (m2 !== undefined) a.push(m2.replace(/\\"/g, '"'))
-      else if (m3 !== undefined) a.push(m3)
-      return ''
-    })
-    // Handle special case of empty last value.
-    if (/,\s*$/.test(line)) a.push('')
-    return a
-  }
-
-  _checkHeader(header) {
-    assert(header[0] === 'Name')
-    assert(header[1] === 'Email')
-    assert(header[2] === 'OGN Amount')
+  _checkCells(row) {
+    assert(row['Name'] !== undefined)
+    assert(row['Email'] !== undefined)
+    assert(row['OGN Amount'] !== undefined)
     if (this.employee) {
-      assert(header[3] === 'Vesting Start')
-      assert(header[4] === 'Vesting End')
-      assert(header[5] === 'Vesting Cliff')
-      assert(header[6] === 'Vesting Interval')
+      assert(row['Vesting Start'] !== undefined)
+      assert(row['Vesting End'] !== undefined)
+      assert(row['Vesting Cliff'] !== undefined)
+      assert(row['Vesting Interval'] !== undefined)
     } else {
-      assert(header[3] === 'Purchase Date')
-      assert(header[4] === 'Purchase Round')
-      assert(header[5] === 'Investment Amount')
+      assert(row['Purchase Date'] !== undefined)
+      assert(row['Purchase Round'] !== undefined)
+      assert(row['Investment Amount'] !== undefined)
     }
   }
 
-  parse() {
+  async parse() {
+    const csvRows = await csv().fromFile(this.filename)
+
     const emailRegex = /^[a-z0-9-._+]+@[a-z0-9-]+(\.[a-z]+)*(\.[a-z]{2,})$/i
     const dollarAmountRegex = /^\$[0-9,]+(\.[0-9][0-9])?$/
 
-    const data = fs.readFileSync(this.filename).toString()
-    const lines = data.split('\r\n')
-
-    // Validate the header.
-    let lineNumber = 1
-    const header = this._parseLine(lines[0])
-    this._checkHeader(header)
-
-    // Read records.
+    let lineNum = 1
     const records = []
-    for (const line of lines.slice(1)) {
-      lineNumber++
-      logger.debug(`Parsing line ${lineNumber}: |${line}|`)
-      if (!line || line.length === 0) {
-        continue
-      }
-      const cells = this._parseLine(line)
-      if (!cells || cells.length !== this.numCols) {
-        logger.error(`Invalid line #${lineNumber}: |${line}|`)
-        throw new Error('Invalid data')
-      }
-
+    for (const row of csvRows) {
+      lineNum++
+      this._checkCells(row)
+      logger.debug(`Line #${lineNum} ${JSON.stringify(row, 2, null)}`)
       const record = {}
 
       // Parse common fields for both employees and investors
-      const name = cells[0].trim()
+      const name = row['Name'].trim()
       assert(name.length > 0)
       record.name = name
 
-      const email = cells[1].trim()
+      const email = row['Email'].trim()
       assert(email.length > 0)
       assert(emailRegex.test(email))
       record.email = email
 
-      const amount = Number(cells[2].trim().replace(/,/g, ''))
+      const amount = Number(row['OGN Amount'].trim().replace(/,/g, ''))
       assert(!Number.isNaN(amount))
       record.amount = amount
 
       if (this.employee) {
         // Parse employee specific fields
-        const vestingStart = new Date(cells[3])
+        const vestingStart = new Date(row['Vesting Start'])
         assert(vestingStart instanceof Date)
         record.start = vestingStart
 
-        const vestingEnd = new Date(cells[4])
+        const vestingEnd = new Date(row['Vesting End'])
         assert(vestingEnd instanceof Date)
         assert(vestingEnd > vestingStart)
         record.end = vestingEnd
 
-        const vestingCliff = new Date(cells[5])
+        const vestingCliff = new Date(row['Vesting Cliff'])
         assert(vestingCliff instanceof Date)
         assert(vestingCliff > vestingStart)
         assert(vestingCliff < vestingEnd)
@@ -141,18 +102,18 @@ class CsvFileParser {
         record.interval = employeesVestingInterval
       } else {
         // Parse investor specific fields
-        const purchaseDate = new Date(cells[3])
+        const purchaseDate = new Date(row['Purchase Date'])
         assert(purchaseDate instanceof Date)
         record.purchaseDate = purchaseDate
 
         // TODO(franck): this DB field may get renamed.
-        const purchaseRound = cells[4].trim()
+        const purchaseRound = row['Purchase Round'].trim()
         assert(purchaseRounds.includes(purchaseRound))
         record.purchaseRound = purchaseRound
 
         // We expect amounts to be formatted as $X.Y
         // For example $123,457.789
-        let investmentAmount = cells[5].trim()
+        let investmentAmount = row['Investment Amount'].trim()
         assert(dollarAmountRegex.test(investmentAmount))
         investmentAmount = Number(investmentAmount.replace(/[$,]/g, ''))
         assert(!Number.isNaN(investmentAmount))
@@ -183,7 +144,7 @@ class ImportData {
 
   async process() {
     const parser = new CsvFileParser(this.config.filename, this.config.employee)
-    const records = parser.parse()
+    const records = await parser.parse()
 
     for (const record of records) {
       // Check if user already exists, otherwise create a new user.
