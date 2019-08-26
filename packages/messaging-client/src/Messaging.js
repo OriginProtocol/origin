@@ -164,7 +164,7 @@ class Messaging {
   // throws exception when user denies signature
   async startConversing() {
     debug('startConversing')
-    if (!this.accoun && !this.getPublicMessagingSignature()) {
+    if (!this.account || !this.getPublicMessagingSignature()) {
       // Remote has been initialized
       await this.initKeys()
     } else {
