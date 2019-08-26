@@ -123,7 +123,7 @@ class App extends Component {
           <Switch>
             <Route
               path="/onboard"
-              component={props => (
+              component={() => (
                 <Onboard
                   skipMessaging={this.state.onboard.skipMessaging}
                   skipRewards={this.state.onboard.skipRewards}

@@ -19,13 +19,16 @@ before(async function() {
 })
 
 const reset = async (sellerOgn, reload = false) => {
-  // clear cookies to clear possible messaging cookies
+  // clear cookies (for messaging)
   await clearCookies(page)
 
   await page.evaluate((reload) => {
     window.transactionPoll = 100
     window.sessionStorage.clear()
     window.location = '/#/'
+    /* Some tests require reload... e.g. to reset messaging 
+     * initialisation.
+     */
     if (reload) {
       window.location.reload(true)
     }

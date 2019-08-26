@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { useState } from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { fbt } from 'fbt-runtime'
@@ -6,7 +6,6 @@ import { fbt } from 'fbt-runtime'
 import withIsMobile from 'hoc/withIsMobile'
 import MobileModal from 'components/MobileModal'
 import Link from 'components/Link'
-import Steps from 'components/Steps'
 import MetaMaskAnimation from 'components/MetaMaskAnimation'
 import Redirect from 'components/Redirect'
 import HelpOriginWallet from 'components/DownloadApp'
@@ -225,7 +224,7 @@ const OnboardMessaging = props => {
       onError={() => {
         setSignatureError(
           fbt(
-            'An unexpected error occurred.',
+            'An unexpected error has occurred.',
             'onboard.Messaging.errorEnablingMessaging'
           )
         )
