@@ -472,6 +472,7 @@ class OriginEventSource {
       finalizes: offer.finalizes,
       ipfs: { id: ipfsHash },
       buyer: { id: offer.buyer },
+      shippingAddressEncrypted: JSON.stringify(_get(data, 'shippingAddressEncrypted')),
       affiliate: { id: offer.affiliate },
       arbitrator: { id: offer.arbitrator },
       quantity: _get(data, 'unitsPurchased'),

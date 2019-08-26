@@ -72,5 +72,18 @@ export default {
       }
     }
     return null
+  },
+  decryptOutOfBandMessage: async (_, args) => {
+    let encrypted
+    try {
+      encrypted = JSON.parse(args.encrypted)
+    } catch (e) {
+      throw new Error('Message to decrypt must be JSON')
+    }
+    const d = await contracts.messaging.decryptOutOfBandMessage(encrypted)
+    if (d === null) {
+      throw new Error('Could not decrypt message')
+    }
+    return d.content
   }
 }

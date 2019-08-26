@@ -82,6 +82,7 @@ export const mutations = `
       from: String
       withdraw: String
       quantity: Int
+      shippingAddress: String
       autoswap: Boolean
 
       # Optional: normally inherited from listing
@@ -373,6 +374,9 @@ export const types = `
     statusStr: String
     valid: Boolean
     validationError: String
+    # A json encoded, encrypted OutOfBandMessage 
+    # from @origin/messaging-client.
+    shippingAddressEncrypted: String
 
     # IPFS
     quantity: Int

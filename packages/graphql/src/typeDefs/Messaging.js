@@ -21,6 +21,7 @@ module.exports = `
     canConverseWith(id: String!): Boolean
     forwardTo(id: String!): String
     totalUnread: Int
+    decryptOutOfBandMessage(encrypted: String): OutOfBandMessage
   }
 
   type Conversation {
@@ -40,6 +41,12 @@ module.exports = `
     media: [Media]
     timestamp: Int
     status: String
+  }
+
+  type OutOfBandMessage {
+    content: String
+    media: [Media]
+    timestamp: Int
   }
 
 `
