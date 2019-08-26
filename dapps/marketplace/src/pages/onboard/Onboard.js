@@ -44,11 +44,13 @@ class Onboard extends Component {
           />
           <Route
             path={`${linkPathPrefix}/onboard/email`}
-            render={() => <Email
-              listing={listing}
-              linkPrefix={linkPrefix}
-              hideOriginWallet={hideOriginWallet}
-            />}
+            render={() => (
+              <Email
+                listing={listing}
+                linkPrefix={linkPrefix}
+                hideOriginWallet={hideOriginWallet}
+              />
+            )}
           />
           <Route
             path={`${linkPathPrefix}/onboard/profile`}

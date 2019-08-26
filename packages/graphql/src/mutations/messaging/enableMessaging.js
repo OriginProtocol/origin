@@ -4,7 +4,7 @@ async function enableMessaging() {
   await new Promise(async (resolve, reject) => {
     try {
       contracts.messaging.events.once('ready', () => resolve(true))
-    	const result = await contracts.messaging.startConversing()
+      await contracts.messaging.startConversing()
     } catch (e) {
       console.error(`Error enabling messaging: ${e.message}`)
       reject(e)

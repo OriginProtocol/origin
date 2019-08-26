@@ -29,11 +29,7 @@ class OnboardRewardsSignUp extends Component {
       shouldCloseConfirmSkipModal
     } = this.state
 
-    const {
-      linkPrefix,
-      skip,
-      onSkip
-    } = this.props
+    const { linkPrefix, skip, onSkip } = this.props
 
     if (finished || skip) {
       return <Redirect to={`${linkPrefix}/onboard/finished`} />

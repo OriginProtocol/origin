@@ -65,17 +65,18 @@ const EnableMessaging = ({ firstMessageSigned, buttons, error }) => {
       <div className="messaging-logo" />
       <div className="status">Origin Messaging</div>
       <div className="connected">
-        <span className={`oval ${firstMessageSigned ? '' : 'warn'}`}/>
+        <span className={`oval ${firstMessageSigned ? '' : 'warn'}`} />
         <span className="oval warn" />
         <fbt desc="onboard.Messaging.zeroOfTwoSigned">
           {' '}
-          <fbt:param name="messageNumber">{firstMessageSigned ? '1' : '0'}</fbt:param> of 2 MetaMask messages signed
+          <fbt:param name="messageNumber">
+            {firstMessageSigned ? '1' : '0'}
+          </fbt:param>{' '}
+          of 2 MetaMask messages signed
         </fbt>
       </div>
 
-      {error && <div className="help error">
-        {error}
-      </div>}
+      {error && <div className="help error">{error}</div>}
       <div className="help mb">
         <fbt desc="onboard.Messaging.capabilities">
           Messaging will allow you to chat with other buyers and sellers.
@@ -83,7 +84,8 @@ const EnableMessaging = ({ firstMessageSigned, buttons, error }) => {
       </div>
       {buttons}
     </div>
-)}
+  )
+}
 
 const SignMessage = ({ num, buttons }) => (
   <div className="onboard-box">
@@ -141,22 +143,24 @@ const MessagingEnabled = ({ nextLink }) => (
       </fbt>
     </em>
     <div className="continue-btn">
-      {nextLink && (   
-        <Link    
-          to={nextLink}    
-          className="btn btn-primary"    
-        >    
+      {nextLink && (
+        <Link to={nextLink} className="btn btn-primary">
           <fbt desc="onboard.Messaging.continue">Continue</fbt>
-        </Link>    
-      )}   
+        </Link>
+      )}
     </div>
   </div>
 )
 
-const EnableMessagingButtons = ({ next, showButtons, onError, nextLink, onSkip }) => {
+const EnableMessagingButtons = ({
+  next,
+  showButtons,
+  onError,
+  nextLink,
+  onSkip
+}) => {
   const [enableMessaging] = useMutation(EnableMessagingMutation)
-  if (!showButtons)
-    return null
+  if (!showButtons) return null
 
   return (
     <>
@@ -169,16 +173,16 @@ const EnableMessagingButtons = ({ next, showButtons, onError, nextLink, onSkip }
             await enableMessaging()
           } catch (e) {
             onError()
-            console.log("Error enabling messaging:", e.message)
+            console.log('Error enabling messaging:', e.message)
           }
         }}
         children={fbt('Enable Origin Messaging', 'Enable Origin Messaging')}
       />
-      <Link    
+      <Link
         to={nextLink}
         onClick={onSkip}
-        className="btn btn-outline btn-link mb-5"    
-      >    
+        className="btn btn-outline btn-link mb-5"
+      >
         <fbt desc="UserActivation.noThanks">No, thanks</fbt>
       </Link>
     </>
@@ -190,7 +194,9 @@ const OnboardMessaging = props => {
   const [signatureError, setSignatureError] = useState(null)
 
   const { nextLink } = props
-  const { data, error, networkStatus } = useQuery(WalletStatus, {notifyOnNetworkStatusChange: true})
+  const { data, error, networkStatus } = useQuery(WalletStatus, {
+    notifyOnNetworkStatusChange: true
+  })
 
   if (networkStatus === 1) {
     return <MessagingInitializing />
@@ -217,7 +223,12 @@ const OnboardMessaging = props => {
         setWaitForSignature(true)
       }}
       onError={() => {
-        setSignatureError(fbt('An unexpected error occurred.', 'onboard.Messaging.errorEnablingMessaging'))
+        setSignatureError(
+          fbt(
+            'An unexpected error occurred.',
+            'onboard.Messaging.errorEnablingMessaging'
+          )
+        )
         setWaitForSignature(false)
       }}
       showButtons={!waitForSignature}
@@ -240,31 +251,31 @@ const OnboardMessaging = props => {
       />
     )
   } else if (!firstMessageSigned) {
-    cmp = <SignMessage num={1} buttons={buttons}/>
+    cmp = <SignMessage num={1} buttons={buttons} />
   } else if (!secondMessageSigned) {
-    cmp = <SignMessage num={2} buttons={buttons}/>
+    cmp = <SignMessage num={2} buttons={buttons} />
   } else {
-    cmp = <MessagingEnabled
-      nextLink={nextLink}
-    />
+    cmp = <MessagingEnabled nextLink={nextLink} />
   }
 
   return cmp
 }
 
-const Messaging = ({ listing, linkPrefix, isMobile, hideOriginWallet, skip, onSkip }) => {
-  const nextLink=`${linkPrefix}/onboard/rewards`
+const Messaging = ({
+  listing,
+  linkPrefix,
+  isMobile,
+  hideOriginWallet,
+  skip,
+  onSkip
+}) => {
+  const nextLink = `${linkPrefix}/onboard/rewards`
 
   if (skip) {
     return <Redirect to={nextLink} />
   }
 
-  const content = (
-      <OnboardMessaging
-        nextLink={nextLink}
-        onSkip={onSkip}
-      />
-    )
+  const content = <OnboardMessaging nextLink={nextLink} onSkip={onSkip} />
 
   if (isMobile) {
     return (
@@ -290,9 +301,7 @@ const Messaging = ({ listing, linkPrefix, isMobile, hideOriginWallet, skip, onSk
         </fbt>
       </p>
       <div className="row">
-        <div className="col-md-8">
-          {content}
-        </div>
+        <div className="col-md-8">{content}</div>
         <div className="col-md-4">
           <ListingPreview listing={listing} />
           {hideOriginWallet ? null : <HelpOriginWallet />}
