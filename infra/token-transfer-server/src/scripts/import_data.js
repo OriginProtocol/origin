@@ -1,3 +1,18 @@
+/*
+ Script to import users and grants data into the T3 database.
+ Input is a csv file. It is advised to run the script in dry-run mode first
+ in order to validate the input data before loading it in the database.
+
+ Usage:
+   node import_data.js --filename=<filename>
+
+ Example 1: Validate the data.
+   node import_data.js --filename=investors.csv
+
+ Example 2: Import the data in the DB.
+   node import_data.js --filename=investors.csv --dryRun=false
+ */
+
 const assert = require('assert')
 const fs = require('fs')
 const Logger = require('logplease')
@@ -5,13 +20,13 @@ const Logger = require('logplease')
 const db = require('../models')
 
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
-const logger = Logger.create('t3Import', { showTimestamp: false })
+const logger = Logger.create('import_data', { showTimestamp: false })
 
-const employeeVestingIntervals = ['months']
+const employeesVestingInterval = 'months'
 
 const purchaseRounds = ['Advisor', 'Strategic', 'Coinlist']
 
-// TODO(franck): Update those values based on final investor schedule.
+// TODO(franck): Update those values based on final investors vesting schedule.
 const investorsVestingStart = new Date('2020/01/01')
 const investorsVestingEnd = new Date('2020/12/31')
 const investorsVestingCliff = new Date('2020/04/01')
@@ -21,7 +36,7 @@ class CsvFileParser {
   constructor(filename, employee) {
     this.filename = filename
     this.employee = employee
-    this.numCols = employee ? 10 : 6
+    this.numCols = 6
   }
 
   _parseLine(line) {
@@ -49,7 +64,7 @@ class CsvFileParser {
   _checkHeader(header) {
     assert(header[0] === 'Name')
     assert(header[1] === 'Email')
-    assert(header[2] === 'Amount')
+    assert(header[2] === 'OGN Amount')
     if (this.employee) {
       assert(header[3] === 'Vesting Start')
       assert(header[4] === 'Vesting End')
@@ -70,17 +85,22 @@ class CsvFileParser {
     const lines = data.split('\r\n')
 
     // Validate the header.
+    let lineNumber = 1
     const header = this._parseLine(lines[0])
     this._checkHeader(header)
 
     // Read records.
     const records = []
     for (const line of lines.slice(1)) {
+      lineNumber++
+      logger.debug(`Parsing line ${lineNumber}: |${line}|`)
+      if (!line || line.length === 0) {
+        continue
+      }
       const cells = this._parseLine(line)
       if (!cells || cells.length !== this.numCols) {
-        logger.error('Skipping invalid line:')
-        logger.error(line)
-        continue
+        logger.error(`Invalid line #${lineNumber}: |${line}|`)
+        throw new Error('Invalid data')
       }
 
       const record = {}
@@ -95,7 +115,7 @@ class CsvFileParser {
       assert(emailRegex.test(email))
       record.email = email
 
-      const amount = Number(cells[2])
+      const amount = Number(cells[2].trim().replace(/,/g, ''))
       assert(!Number.isNaN(amount))
       record.amount = amount
 
@@ -116,9 +136,7 @@ class CsvFileParser {
         assert(vestingCliff < vestingEnd)
         record.cliff = vestingCliff
 
-        const vestingInterval = cells[6].trim()
-        assert(employeeVestingIntervals.includes(vestingInterval))
-        record.interval = vestingInterval
+        record.interval = employeesVestingInterval
       } else {
         // Parse investor specific fields
         const purchaseDate = new Date(cells[3])
@@ -148,6 +166,7 @@ class CsvFileParser {
       records.push(record)
     }
     logger.info(`Read ${records.length} records from ${this.filename}.`)
+    return records
   }
 }
 
@@ -161,7 +180,7 @@ class ImportData {
   }
 
   async process() {
-    const parser = CsvFileParser(this.config.filename, this.config.employee)
+    const parser = new CsvFileParser(this.config.filename, this.config.employee)
     const records = parser.parse()
 
     for (const record of records) {
@@ -169,24 +188,30 @@ class ImportData {
       let user
       user = await db.User.findOne({ where: { email: record.email } })
       if (!user) {
-        user = await db.User.create({
-          name: record.name,
-          email: record.email,
-          employee: this.config.employee
-        })
+        if (this.config.doIt) {
+          user = await db.User.create({
+            name: record.name,
+            email: record.email,
+            employee: this.config.employee
+          })
+        }
         this.stats.numUserRowsInserted++
       }
-      await db.Grant.create({
-        userId: user.id,
-        start: record.start,
-        end: record.end,
-        cliff: record.cliff,
-        amount: record.amount,
-        interval: record.interval,
-        purchaseDate: record.purchaseDate,
-        purchaseRound: record.purchaseRound,
-        investmentAmount: record.investmentAmount
-      })
+      if (this.config.doIt) {
+        await db.Grant.create({
+          userId: user.id,
+          start: record.start,
+          end: record.end,
+          cliff: record.cliff,
+          // Note: Some investors were granted a decimal amount of OGN.
+          // We round it up to an integer amount.
+          amount: Math.ceil(record.amount),
+          interval: record.interval,
+          purchaseDate: record.purchaseDate,
+          purchaseRound: record.purchaseRound,
+          investmentAmount: record.investmentAmount
+        })
+      }
       this.stats.numGrantRowsInserted++
     }
   }
@@ -211,8 +236,9 @@ logger.info('Starting script to import data into T3 DB.')
 const args = parseArgv()
 const config = {
   filename: args['--filename'],
+  // Investor by default.
   employee: args['--employee'] === 'true' || false,
-  // By default run in dry-run mode unless explicitly specified.
+  // Run in in dry-run mode by default.
   doIt: args['--doIt'] === 'true' || false
 }
 logger.info('Config:')
