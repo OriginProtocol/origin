@@ -7,8 +7,8 @@
 const fetch = require('cross-fetch')
 const Bottleneck = require('bottleneck/es5')
 const JsonRpcError = require('json-rpc-error')
-const createPayload = require('web3-provider-engine/util/create-payload')
-const SubProvider = require('web3-provider-engine/subproviders/subprovider')
+const createPayload = require('./createPayload')
+const SubProvider = require('./Subprovider')
 
 const MAX_RETRIES = 3
 const BUFFER_MS = 5
@@ -112,9 +112,7 @@ class ThrottleRPCProvider extends SubProvider {
     const self = this
     const targetUrl = self.rpcUrl
     const { method } = payload
-    const priority = METHOD_PRIORITY.hasOwnProperty(method)
-      ? METHOD_PRIORITY[method]
-      : 5
+    const priority = METHOD_PRIORITY[method] || 5
 
     // overwrite id to conflict with other concurrent users
     const newPayload = createPayload(payload)

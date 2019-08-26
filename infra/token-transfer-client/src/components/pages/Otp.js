@@ -42,7 +42,7 @@ class Otp extends Component {
         <form>
           <div className="form-group">
             <label htmlFor="email">QR Code</label>
-            <input {...input('otpCode')} />
+            <input {...input('otpCode')} type="number" />
             {Feedback('otpCode')}
           </div>
           <button

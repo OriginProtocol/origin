@@ -4,8 +4,6 @@ import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-const enums = require('@origin/token-transfer-server/src/enums')
-
 import { fetchAccounts } from '@/actions/account'
 import {
   getAccounts,
@@ -21,7 +19,8 @@ import { unlockDate } from '@/constants'
 import { fetchTransfers } from '@/actions/transfer'
 import {
   getTransfers,
-  getIsLoading as getTransferIsLoading
+  getIsLoading as getTransferIsLoading,
+  getWithdrawnAmount
 } from '@/reducers/transfer'
 import WithdrawalHistoryCard from '@/components/WithdrawalHistoryCard'
 import EthAddress from '@/components/EthAddress'
@@ -50,20 +49,6 @@ const WithdrawalHistory = props => {
     accountNicknameMap[account.address.toLowerCase()] = account.nickname
   })
 
-  const pendingOrCompleteTransfers = [
-    enums.TransferStatuses.Enqueued,
-    enums.TransferStatuses.Paused,
-    enums.TransferStatuses.WaitingConfirmation,
-    enums.TransferStatuses.Success
-  ]
-
-  const pendingOrCompleteAmount = props.transfers.reduce((total, transfer) => {
-    if (pendingOrCompleteTransfers.includes(transfer.status)) {
-      return total + Number(transfer.amount)
-    }
-    return total
-  }, 0)
-
   return (
     <>
       <div className="row">
@@ -75,7 +60,7 @@ const WithdrawalHistory = props => {
         <div className="col">
           <WithdrawalHistoryCard
             isLocked={isLocked}
-            withdrawnAmount={pendingOrCompleteAmount}
+            withdrawnAmount={props.withdrawnAmount}
             {...props.grantTotals}
           />
         </div>
@@ -190,7 +175,8 @@ const mapStateToProps = ({ account, grant, transfer }) => {
     grantIsLoading: getGrantIsLoading(grant),
     grantTotals: getGrantTotals(grant),
     transfers: getTransfers(transfer),
-    transferIsLoading: getTransferIsLoading(transfer)
+    transferIsLoading: getTransferIsLoading(transfer),
+    withdrawnAmount: getWithdrawnAmount(transfer)
   }
 }
 

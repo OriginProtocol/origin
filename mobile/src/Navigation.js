@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import { Image, Modal } from 'react-native'
+import { Image, Modal, StatusBar } from 'react-native'
 
 import {
   createAppContainer,
@@ -244,6 +244,7 @@ class MarketplaceApp extends React.Component {
 
     return (
       <>
+        <StatusBar />
         {this.props.marketplace.ready && (
           <>
             <AuthenticationGuard />

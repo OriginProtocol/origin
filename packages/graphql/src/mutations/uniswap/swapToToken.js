@@ -11,9 +11,23 @@ export async function swapToTokenTx(tokenValue) {
   const now = Math.round(+new Date() / 1000)
   const deadline = (block.timestamp < now - 60 ? now : block.timestamp) + 300
 
-  const value = await exchange.methods
+  const marketValue = await exchange.methods
     .getEthToTokenOutputPrice(tokenValue)
     .call()
+
+  // We send 1% extra value to cover 99% of market price moves.
+  // See https://github.com/OriginProtocol/origin/issues/2771
+  // for how this amount was determined.
+  //
+  // Marketplace prices change on average every 10 blocks.
+  // It takes some time to finish a transaction, and the exchange will
+  // fail our transaction if the user did not send enough eth for
+  // the new price.
+  const toBN = contracts.web3.utils.toBN
+  const value = toBN(marketValue)
+    .mul(toBN(101))
+    .div(toBN(100))
+    .toString()
 
   const tx = exchange.methods.ethToTokenSwapOutput(tokenValue, deadline)
   return { tx, value }
