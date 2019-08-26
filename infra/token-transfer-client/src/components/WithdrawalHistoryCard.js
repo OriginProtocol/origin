@@ -9,7 +9,9 @@ const WithdrawalHistoryCard = props => {
         <div className="col">
           Available Balance{' '}
           <strong className="ml-2">
-            {props.isLocked ? 0 : Number(props.vestedTotal).toLocaleString()}
+            {props.isLocked
+              ? 0
+              : (props.vestedTotal.minus(props.withdrawnAmount)).toLocaleString()}
           </strong>{' '}
           <span className="ogn" style={{ fontSize: '14px' }}>
             OGN
