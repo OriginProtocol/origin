@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import get from 'lodash.get'
+import BigNumber from 'bignumber.js'
 
 import { addAccount } from '@/actions/account'
 import {
@@ -72,6 +73,14 @@ class BalanceCard extends Component {
 
   handleTransfer = async event => {
     event.preventDefault()
+
+    if (BigNumber(this.state.amount).isGreaterThan(this.props.balance)) {
+      this.setState({
+        amountError: `Withdrawal amount is greater than your balance of ${this.props.balance} OGN`
+      })
+      return
+    }
+
     if (this.state.modalAddAccount) {
       // Add account before processing request
       try {
@@ -152,9 +161,7 @@ class BalanceCard extends Component {
           </div>
           <div style={{ fontSize: '40px' }}>
             <strong>
-              {this.props.isLocked
-                ? 0
-                : Number(this.props.balance).toLocaleString()}{' '}
+              {this.props.isLocked ? 0 : this.props.balance.toLocaleString()}{' '}
               <span style={{ fontSize: '20px', color: '#007cff' }}>OGN</span>
             </strong>
           </div>
@@ -249,7 +256,7 @@ class BalanceCard extends Component {
           <div className="form-group">
             <label htmlFor="email">Amount of Tokens</label>
             <div className="input-group">
-              <input {...input('amount')} />
+              <input {...input('amount')} type="number" />
               <div className="input-group-append">
                 <span className="badge badge-secondary">OGN</span>
               </div>
