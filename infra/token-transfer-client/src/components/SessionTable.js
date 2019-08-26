@@ -56,8 +56,12 @@ const SessionTable = props => {
                         {event.data.device.isDesktop ? 'Desktop' : 'Mobile'}
                       </td>
                       <td>{event.data.device.browser}</td>
-                      <td className="text-nowrap">{get(event.data.location, 'countryName', null)}</td>
-                      <td className="text-nowrap">{moment(event.createdAt).fromNow()}</td>
+                      <td className="text-nowrap">
+                        {get(event.data.location, 'countryName', null)}
+                      </td>
+                      <td className="text-nowrap">
+                        {moment(event.createdAt).fromNow()}
+                      </td>
                       <td className="text-nowrap">
                         {moment(event.createdAt).diff(moment(), 'minutes') >
                         -30 ? (
