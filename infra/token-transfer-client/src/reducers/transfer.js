@@ -50,7 +50,7 @@ export default function transfersReducer(state = initialState, action) {
         ...state,
         isConfirming: false,
         transfers: [
-          ...state.transfers.filter(t => t.id === action.payload.id),
+          ...state.transfers.filter(t => t.id !== action.payload.id),
           {
             ...action.payload
           }
@@ -93,6 +93,7 @@ export const getIsConfirming = state => state.isConfirming
 export const getIsLoading = state => state.isLoading
 export const getWithdrawnAmount = state => {
   const pendingOrCompleteTransfers = [
+    enums.TransferStatuses.WaitingTwoFactor,
     enums.TransferStatuses.Enqueued,
     enums.TransferStatuses.Paused,
     enums.TransferStatuses.WaitingConfirmation,
