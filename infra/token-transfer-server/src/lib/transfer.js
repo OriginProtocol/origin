@@ -1,7 +1,11 @@
 const BigNumber = require('bignumber.js')
 const moment = require('moment')
+const get = require('lodash.get')
 
 const Token = require('@origin/token/src/token')
+
+const { discordWebhookUrl } = require('../config')
+const { postToWebhook } = require('./webhook')
 
 const {
   TRANSFER_DONE,
@@ -122,17 +126,20 @@ async function addTransfer(userId, address, amount, data = {}) {
     logger.error(`Failed to add transfer for address ${address}: ${e}`)
     throw e
   }
+
   logger.info(
     `Added transfer. id: ${transfer.id} address: ${address} amount: ${amount}`
   )
+
   return transfer
 }
 
 /* Moves a transfer from waiting for two factor to enqueued.
  * Throws an exception if the request is invalid.
  * @param transfer
+ * @param user
  */
-async function confirmTransfer(transfer) {
+async function confirmTransfer(transfer, user) {
   if (transfer.status !== enums.TransferStatuses.WaitingTwoFactor) {
     throw new Error('Transfer is not waiting for confirmation')
   }
@@ -146,6 +153,26 @@ async function confirmTransfer(transfer) {
     })
     throw new Error('Transfer was not confirmed in the required time')
   }
+
+  try {
+    if (discordWebhookUrl) {
+      const countryDisplay = get(transfer.data.location, 'countryName', 'Unknown')
+      const webhookData = {
+        embeds: [{
+          title: `A transfer of \`${transfer.amount} OGN\` was queued by \`${user.email}\``,
+          description: [
+            `**ID:** \`${transfer.id}\``,
+            `**Address:** \`${transfer.toAddress}\``,
+            `**Country:** ${countryDisplay}`,
+          ].join('\n'),
+        }]
+      }
+      await postToWebhook(discordWebhookUrl, JSON.stringify(webhookData))
+    }
+  } catch (e) {
+    logger.error(`Failed sending Discord webhook for token transfer confirmation:`, e)
+  }
+
 
   return await transfer.update({
     status: enums.TransferStatuses.Enqueued
