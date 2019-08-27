@@ -15,7 +15,7 @@
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
-    "@google-cloud/pubsub": "0.31.0",
+    "@google-cloud/pubsub": "0.31.1",
     "@origin/bridge": "^0.1.0",
     "@origin/graphql": "^0.1.1",
     "@origin/growth-event": "^0.1.0",
