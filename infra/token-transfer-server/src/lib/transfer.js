@@ -156,23 +156,31 @@ async function confirmTransfer(transfer, user) {
 
   try {
     if (discordWebhookUrl) {
-      const countryDisplay = get(transfer.data.location, 'countryName', 'Unknown')
+      const countryDisplay = get(
+        transfer.data.location,
+        'countryName',
+        'Unknown'
+      )
       const webhookData = {
-        embeds: [{
-          title: `A transfer of \`${transfer.amount} OGN\` was queued by \`${user.email}\``,
-          description: [
-            `**ID:** \`${transfer.id}\``,
-            `**Address:** \`${transfer.toAddress}\``,
-            `**Country:** ${countryDisplay}`,
-          ].join('\n'),
-        }]
+        embeds: [
+          {
+            title: `A transfer of \`${transfer.amount} OGN\` was queued by \`${user.email}\``,
+            description: [
+              `**ID:** \`${transfer.id}\``,
+              `**Address:** \`${transfer.toAddress}\``,
+              `**Country:** ${countryDisplay}`
+            ].join('\n')
+          }
+        ]
       }
       await postToWebhook(discordWebhookUrl, JSON.stringify(webhookData))
     }
   } catch (e) {
-    logger.error(`Failed sending Discord webhook for token transfer confirmation:`, e)
+    logger.error(
+      `Failed sending Discord webhook for token transfer confirmation:`,
+      e
+    )
   }
-
 
   return await transfer.update({
     status: enums.TransferStatuses.Enqueued
