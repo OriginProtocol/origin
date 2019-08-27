@@ -1,6 +1,8 @@
 import graphqlFields from 'graphql-fields'
 import contracts from '../../contracts'
+import listingIsVisible from '../../utils/listing'
 import { proxyOwner } from '../../utils/proxy'
+import { getListingId } from '../../utils/getId'
 
 function bota(input) {
   return new Buffer(input.toString(), 'binary').toString('base64')
@@ -59,9 +61,8 @@ async function searchIds(search, sort, order, filters) {
 
 async function allIds(contract, version) {
   const totalListings = Number(await contract.methods.totalListings().call())
-  const ids = Array.from(
-    { length: Number(totalListings) },
-    (v, i) => `x-${version}-${i}`
+  const ids = Array.from({ length: Number(totalListings) }, (v, i) =>
+    getListingId(contract.networkId, version, i)
   ).reverse()
   return { totalCount: ids.length, ids }
 }
@@ -79,12 +80,18 @@ async function resultsFromIds({ after, ids, first, totalCount, fields }) {
 
   if (!fields || fields.nodes) {
     nodes = (await Promise.all(
-      ids.map(id => {
+      ids.map(async id => {
+        // If a discovery server is configured, check the listing's visibility.
+        if (contracts.discovery) {
+          if (!(await listingIsVisible(id))) {
+            return null
+          }
+        }
         const splitId = id.split('-')
         const eventSource = contracts.marketplaces[splitId[1]].eventSource
         return eventSource.getListing(id.split('-')[2]).catch(e => e)
       })
-    )).filter(node => !(node instanceof Error))
+    )).filter(node => node && !(node instanceof Error))
   }
   const firstNodeId = ids[0] || 0
   const lastNodeId = ids[ids.length - 1] || 0
@@ -133,7 +140,9 @@ export async function listingsBySeller(
     }
 
     allIds = allIds.concat(
-      events.map(e => `x-${version}-${e.returnValues.listingID}`)
+      events.map(e =>
+        getListingId(contracts.networkId, version, e.returnValues.listingID)
+      )
     )
   }
 
@@ -171,8 +180,8 @@ export default async function listings(
     for (const version in contracts.marketplaces) {
       const curContract = contracts.marketplaces[version].contract
       const decentralizedResults = await allIds(curContract, version)
-      ids = ids.concat(decentralizedResults.ids)
-      totalCount += decentralizedResults.totalCount
+      ids = decentralizedResults.ids
+      totalCount = decentralizedResults.totalCount
     }
   }
   // Need to determine if this is ever used, it seems to be the only use case

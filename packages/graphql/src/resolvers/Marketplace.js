@@ -1,7 +1,9 @@
 import contracts from '../contracts'
 import listings from './marketplace/listings'
 import users from './marketplace/users'
+import listingIsVisible from '../utils/listing'
 import parseId from '../utils/parseId'
+import { getListingId } from '../utils/getId'
 import apolloPathToString from '../utils/apolloPathToString'
 
 export default {
@@ -22,10 +24,22 @@ export default {
     if (info && info.cacheControl) {
       info.cacheControl.setCacheHint({ maxAge: 15 })
     }
-    const { marketplace, listingId, blockNumber } = parseId(args.id, contracts)
+    const { netId, contractId, marketplace, listingId, blockNumber } = parseId(
+      args.id,
+      contracts
+    )
     if (!marketplace) {
       return null
     }
+
+    // If a discovery server is configured, check the listing's visibility.
+    if (contracts.discovery) {
+      const id = getListingId(netId, contractId, listingId)
+      if (!(await listingIsVisible(id))) {
+        return null
+      }
+    }
+
     return await marketplace.eventSource.getListing(listingId, blockNumber)
   },
   listings,

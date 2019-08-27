@@ -162,6 +162,7 @@ services:
       - TRAIL_BEHIND_BLOCKS=
       - NETWORK=docker
       - NOTIFICATIONS_WEBHOOK=
+      - DISCOVERY_AUTH_TOKEN=discovery_token
       - PROVIDER_URL=http://services:8545
       - IPFS_GATEWAY_URL=http://ipfs-proxy:9999
       - IPFS_API_URL=http://ipfs-proxy:9999
@@ -187,6 +188,7 @@ services:
       - ELASTICSEARCH_HOST=elasticsearch:9200
       - ELASTICSEARCH=true
       - NETWORK=docker
+      - DISCOVERY_AUTH_TOKEN=discovery_token
       - MODERATOR_ADDRESSES=0x627306090abaB3A6e1400e9345bC60c78a8BEf57,0xf17f52151EbEF6C7334FAD080c5704D77216b732
       - ENVKEY=
     depends_on:
@@ -216,6 +218,7 @@ services:
       - IPFS_GATEWAY_URL=http://ipfs-proxy:9999
       - IPFS_API_URL=http://ipfs-proxy:9999
       - DISCOVERY_SERVER_URL=http://discovery:4000/graphql
+      - DISCOVERY_AUTH_TOKEN=discovery_token
       - BRIDGE_SERVER_URL=http://bridge:5000
       - GROWTH_SERVER_URL=http://growth:4008
     depends_on:

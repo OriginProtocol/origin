@@ -141,9 +141,19 @@ const resolvers = {
   }
 }
 
+/**
+ * Authenticates a request.
+ * @param {string} authToken
+ * @returns {Object||undefined} Returns undefined if the authentication failed.
+ */
 async function authenticate(authToken) {
   if (!authToken) {
     return undefined
+  }
+  // Check if the auh token matches the one used by other servers
+  // in the infrastructure to make request to the discovery server.
+  if (authToken === process.env.DISCOVERY_AUTH_TOKEN) {
+    return { authToken }
   }
   const accessToken = await db.DiscoveryAccessToken.findOne({
     where: { authToken }
