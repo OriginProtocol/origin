@@ -63,7 +63,7 @@ const getFingerprintData = async req => {
   // Parsed user agent from express-useragent
   const device = req.useragent
   return {
-    ip: req.connection.remoteAddress,
+    ip: req.headers['x-real-ip'],
     device: {
       source: device.source,
       browser: device.browser,
@@ -73,7 +73,7 @@ const getFingerprintData = async req => {
       version: device.version,
       os: device.os
     },
-    location: await ip2geo(req.connection.remoteAddress)
+    location: await ip2geo(req.headers['x-real-ip'])
   }
 }
 

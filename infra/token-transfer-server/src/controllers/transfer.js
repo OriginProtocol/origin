@@ -103,13 +103,15 @@ router.post(
         .json({ errors: errors.array({ onlyFirstError: true }) })
     }
 
-    const transfer = await Transfer.findOne({ where: { id: req.params.id } })
+    const transfer = await Transfer.findOne({
+      where: { id: req.params.id, userId: req.user.id }
+    })
     if (!transfer) {
       return res.status(404)
     }
 
     try {
-      await confirmTransfer(transfer)
+      await confirmTransfer(transfer, req.user)
     } catch (e) {
       return res.status(422).send(e.message)
     }
