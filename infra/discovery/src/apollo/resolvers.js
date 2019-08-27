@@ -150,8 +150,8 @@ async function authenticate(authToken) {
   if (!authToken) {
     return undefined
   }
-  // Check if the auh token matches the one used by other servers
-  // in the infrastructure to make request to the discovery server.
+  // Note: process.env.DISCOVERY_AUTH_TOKEN is the auth token value used
+  // by other servers in the infrastructure when calling the discovery server.
   if (authToken === process.env.DISCOVERY_AUTH_TOKEN) {
     return { authToken }
   }
