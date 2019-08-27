@@ -8,6 +8,7 @@ const mayConfig = require('../../campaigns/may')
 const juneConfig = require('../../campaigns/june')
 const julyConfig = require('../../campaigns/july')
 const augustConfig = require('../../campaigns/august')
+const septemberConfig = require('../../campaigns/september')
 
 async function createAprilProdCampaign() {
   console.log('Creating April campaign data in prod...')
@@ -137,6 +138,33 @@ async function updateAugProdRules() {
   await campaign.update({ rules: JSON.stringify(augustConfig) })
 }
 
+async function createSepProdCampaign() {
+  console.log('Creating September campaign data in prod...')
+
+  /* IMPORTANT when adding new translatable fields update the enums document:
+   * origin-dapp/src/constants/Growth$FbtEnum.js
+   */
+  await db.GrowthCampaign.create({
+    nameKey: 'growth.sep2019.name',
+    shortNameKey: 'growth.sep.short_name',
+    rules: JSON.stringify(septemberConfig),
+    startDate: Date.parse('September 1, 2019, 00:00 UTC'),
+    endDate: Date.parse('October 1, 2019, 00:00 UTC'),
+    distributionDate: Date.parse('October 1, 2019, 00:00 UTC'),
+    cap: tokenToNaturalUnits(1000000), // Set cap to 1M tokens
+    capUsed: 0,
+    currency: 'OGN',
+    rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
+  })
+}
+
+async function updateSepProdRules() {
+  console.log('Updating September campaign rules in prod...')
+
+  const campaign = await db.GrowthCampaign.findOne({ where: { id: 7 } })
+  await campaign.update({ rules: JSON.stringify(septemberConfig) })
+}
+
 const args = {}
 process.argv.forEach(arg => {
   const t = arg.split('=')
@@ -149,14 +177,16 @@ const createByMonth = {
   may: createMayProdCampaign,
   june: createJuneProdCampaign,
   july: createJulyProdCampaign,
-  august: createAugProdCampaign
+  august: createAugProdCampaign,
+  september: createSepProdCampaign,
 }
 
 const updateByMonth = {
   may: updateMayProdRules,
   june: updateJuneProdRules,
   july: updateJulyProdRules,
-  august: updateAugProdRules
+  august: updateAugProdRules,
+  september: updateSepProdRules
 }
 
 const action = args['--action']
