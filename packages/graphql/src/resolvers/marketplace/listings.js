@@ -84,6 +84,8 @@ async function resultsFromIds({ after, ids, first, totalCount, fields }) {
         // If a discovery server is configured, check the listing's visibility.
         if (contracts.discovery) {
           if (!(await listingIsVisible(id))) {
+            // Note: this will cause less listings than requested to get returned.
+            // Since it is an edge case, not worth adding complexity for now...
             return null
           }
         }
