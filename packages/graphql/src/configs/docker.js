@@ -30,7 +30,7 @@ const config = {
   ipfsGateway: get(process.env, 'IPFS_GATEWAY_URL', `http://${IPFS_HOST}:9999`),
   ipfsRPC: get(process.env, 'IPFS_API_URL', `http://${IPFS_HOST}:9999`),
   bridge: get(process.env, 'BRIDGE_SERVER_URL', `http://${BRIDGE_HOST}:5000`),
-  growth: get(process.env, 'GROWTH_SERVER_URL', `http://${GROWTH_HOST}:4001`),
+  growth: get(process.env, 'GROWTH_SERVER_URL', `http://${GROWTH_HOST}:4008`),
   discovery: get(
     process.env,
     'DISCOVERY_SERVER_URL',
