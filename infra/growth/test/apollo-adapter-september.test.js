@@ -33,6 +33,9 @@ function checkExpectedState(state, expectedState) {
     expect(action.status).to.deep.equal(expectedAction.status)
     expect(action.rewardEarned).to.deep.equal(expectedAction.rewardEarned)
     expect(action.reward).to.deep.equal(expectedAction.reward)
+    if (expectedAction.limit) {
+      expect(action.limit).to.equal(expectedAction.limit)
+    }
     if (action.type === 'ListingIdPurchased') {
       expect(action.listingId).to.be.a('string')
       expect(action.iconSrc).to.be.a('string')
@@ -196,7 +199,8 @@ describe('Apollo adapter - September campaign', () => {
         type: 'Referral',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(50), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(50), currency: 'OGN' },
+        limit: 50
       },
       MobileAccountCreated: {
         type: 'MobileAccountCreated',
