@@ -42,7 +42,7 @@ class Terms extends Component {
               onClick={e => this.setState({ accepted: e.target.checked })}
             />
             <label className="form-check-label mt-0" htmlFor="acceptCheck">
-              I have read and agree ot the terms and conditions
+              I have read and agree to the terms and conditions
             </label>
           </div>
           <button
