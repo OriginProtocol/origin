@@ -209,16 +209,12 @@ require('react-styl')(`
       position: relative
       width: 100%
       .search-input-wrapper
-        display: flex
-        flex: 1
         .search-input
-          display: flex
-          flex: 1
           position: relative
           .clear-button
             display: none
             position: absolute
-            right: 0
+            right: 0.25rem
             top: 1px
             bottom: 1px
             width: 2rem
@@ -231,7 +227,7 @@ require('react-styl')(`
           .form-control
             border-radius: 5px
             flex: 1
-            padding-right: 2rem
+            padding-right: 2.375rem
             &:valid + .clear-button
               display: inline-block
 
