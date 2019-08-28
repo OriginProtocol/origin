@@ -5182,10 +5182,10 @@ babel-plugin-dynamic-import-node@2.3.0, babel-plugin-dynamic-import-node@^2.3.0:
   dependencies:
     object.assign "^4.1.0"
 
-babel-plugin-fbt-runtime@0.9.1:
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/babel-plugin-fbt-runtime/-/babel-plugin-fbt-runtime-0.9.1.tgz#4475bcdf53cb1582ed1926e512c16e007ccf2749"
-  integrity sha512-ZPCfnX1zqg6flly3BEr4bSSfV8nCECM1YtRiCg2+sqyiI5aY0dq0OJsPd5kSiv5KkCz8hCA58VpQ/V+fRCMUdQ==
+babel-plugin-fbt-runtime@0.9.2:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/babel-plugin-fbt-runtime/-/babel-plugin-fbt-runtime-0.9.2.tgz#d94a1a8fc521a5ecc3c0ad8c32e183fd02f4429b"
+  integrity sha512-osER6X8uaK7R5+ZsmAjZdst0sEcNa2TMqGGaSjy9vl/mjLebKQIgLZUcaN4LHRXZz4/VsKiqsW3KjK/PgjXleg==
   dependencies:
     "@babel/core" "^7.2.2"
 
