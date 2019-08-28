@@ -18,7 +18,7 @@ const config = {
   // discovery: `http://${HOST}:4000/graphql`,
   notifications: `http://${HOST}:3456`,
   growth: localStorageHas('localGrowthServer', 'true')
-    ? 'http://localhost:4001'
+    ? 'http://localhost:4008'
     : null,
   performanceMode: localStorageHas('performanceMode', 'true'),
   graphql: `http://${HOST}:4007`,

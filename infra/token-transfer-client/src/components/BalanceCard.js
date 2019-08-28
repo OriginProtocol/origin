@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import get from 'lodash.get'
+import BigNumber from 'bignumber.js'
 
 import { addAccount } from '@/actions/account'
 import {
@@ -30,7 +31,7 @@ class BalanceCard extends Component {
   componentDidUpdate(prevProps) {
     // Parse server errors for account add
     if (get(prevProps, 'accountError') !== this.props.accountError) {
-      this.handleErrors(this.props.accountError)
+      this.handleServerError(this.props.accountError)
     }
     // Parse server errors for transfer add
     if (get(prevProps, 'transferError') !== this.props.transferError) {
@@ -72,12 +73,25 @@ class BalanceCard extends Component {
 
   handleTransfer = async event => {
     event.preventDefault()
+
+    if (BigNumber(this.state.amount).isGreaterThan(this.props.balance)) {
+      this.setState({
+        amountError: `Withdrawal amount is greater than your balance of ${this.props.balance} OGN`
+      })
+      return
+    }
+
     if (this.state.modalAddAccount) {
       // Add account before processing request
-      this.props.addAccount({
-        nickname: this.state.nickname,
-        address: this.state.address
-      })
+      try {
+        await this.props.addAccount({
+          nickname: this.state.nickname,
+          address: this.state.address
+        })
+      } catch (error) {
+        // Error will be displayed in form, don't continue to add transfer
+        return
+      }
     }
 
     // Do the transfer
@@ -147,9 +161,7 @@ class BalanceCard extends Component {
           </div>
           <div style={{ fontSize: '40px' }}>
             <strong>
-              {this.props.isLocked
-                ? 0
-                : Number(this.props.balance).toLocaleString()}{' '}
+              {this.props.isLocked ? 0 : this.props.balance.toLocaleString()}{' '}
               <span style={{ fontSize: '20px', color: '#007cff' }}>OGN</span>
             </strong>
           </div>
@@ -244,7 +256,7 @@ class BalanceCard extends Component {
           <div className="form-group">
             <label htmlFor="email">Amount of Tokens</label>
             <div className="input-group">
-              <input {...input('amount')} />
+              <input {...input('amount')} type="number" />
               <div className="input-group-append">
                 <span className="badge badge-secondary">OGN</span>
               </div>
@@ -329,7 +341,7 @@ class BalanceCard extends Component {
         <form onSubmit={this.handleConfirm}>
           <div className="form-group">
             <label htmlFor="email">QR Code</label>
-            <input {...input('code')} />
+            <input {...input('code')} type="number" />
             {Feedback('code')}
           </div>
           <button

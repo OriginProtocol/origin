@@ -6,117 +6,113 @@ import MobileModal from 'components/MobileModal'
 
 import withIsMobile from 'hoc/withIsMobile'
 
-const SortMenu = ({
-  onClose,
-  sortVisible,
-  isMobile,
-  onChange,
-  sort,
-  order,
-  handleSortVisible
-}) => {
+const SORT_OPTIONS = [
+  {
+    value: ':',
+    label: <fbt desc="Featured">Featured</fbt>
+  },
+  {
+    value: 'price.amount:asc',
+    label: <fbt desc="Price: Low to High">Price: Low to High</fbt>
+  },
+  {
+    value: 'price.amount:desc',
+    label: <fbt desc="Price: High to Low">Price: High to Low</fbt>
+  }
+]
+
+const SortMenu = ({ isMobile, onChange, sort, order }) => {
   const [closeModal, setCloseModal] = useState(false)
+  const [modal, setModal] = useState(false)
   const selectedOption = sort && order ? `${sort}:${order}` : ':'
 
-  const RenderMobileSort = () => {
-    if (sortVisible) {
-      return (
-        <MobileModal
-          title={fbt('Sort by', 'Sort by')}
-          className="sort-modal"
-          shouldClose={closeModal}
-          lightMode={true}
-          onClose={() => {
-            setCloseModal(false)
-            onClose()
-          }}
-        >
-          <SortContent
-            onChange={e => {
-              onChange(e)
-              setCloseModal(false)
-              onClose()
-            }}
-            selectedOption={selectedOption}
-            isMobile={isMobile}
-          />
-        </MobileModal>
-      )
-    }
-  }
+  const selectedOptionObj = SORT_OPTIONS.find(x => x.value === selectedOption)
 
-  return (
-    <>
-      {isMobile ? (
-        <>
-          <a
-            className="sort-button-bar"
-            href="#"
-            onClick={e => {
-              e.preventDefault()
-              handleSortVisible(true)
+  const textContent =
+    !selectedOptionObj || selectedOption === ':' ? (
+      <fbt desc="Sort">Sort</fbt>
+    ) : (
+      selectedOptionObj.label
+    )
+
+  if (isMobile) {
+    return (
+      <>
+        <a
+          href="#sort"
+          className="sort-button"
+          onClick={e => {
+            e.preventDefault()
+            setModal(true)
+          }}
+          children={textContent}
+        />
+        {modal && (
+          <MobileModal
+            title={fbt('Sort by', 'Sort by')}
+            className="sort-modal"
+            shouldClose={closeModal}
+            lightMode={true}
+            onClose={() => {
+              setCloseModal(false)
+              setModal(false)
             }}
+            slideUp={true}
+            showCloseButton={true}
           >
-            <fbt desc="Sort by">Sort By</fbt>
-          </a>
-          {RenderMobileSort()}
-        </>
-      ) : (
-        <div className="container d-flex">
-          <SortDropdown
-            onChange={onChange}
-            selectedOption={selectedOption}
-            sortVisible={sortVisible}
-            handleSortVisible={handleSortVisible}
-            isMobile={isMobile}
-          />
-        </div>
-      )}
-    </>
+            <SortContent
+              onChange={onChange}
+              selectedOption={selectedOption}
+              isMobile={isMobile}
+            />
+          </MobileModal>
+        )}
+      </>
+    )
+  }
+  return (
+    <SortDropdown
+      onChange={onChange}
+      selectedOption={selectedOption}
+      isMobile={isMobile}
+      content={textContent}
+    />
   )
 }
 
-class SortDropdown extends React.Component {
-  render() {
-    const {
-      sortVisible,
-      onChange,
-      selectedOption,
-      handleSortVisible,
-      isMobile
-    } = this.props
+const SortDropdown = ({
+  onChange,
+  selectedOption,
+  isMobile,
+  content: textContent
+}) => {
+  const [open, setOpen] = useState(false)
 
-    const content = (
-      <SortContent
-        selectedOption={selectedOption}
-        onChange={onChange}
-        isMobile={isMobile}
-      />
-    )
+  const content = (
+    <SortContent
+      selectedOption={selectedOption}
+      onChange={args => {
+        onChange(args)
+        setOpen(false)
+      }}
+      isMobile={isMobile}
+    />
+  )
 
-    return (
-      <Dropdown
-        open={sortVisible}
-        onClose={() => handleSortVisible(false)}
-        onChange={onChange}
-        content={content}
+  return (
+    <Dropdown open={open} onClose={() => setOpen(false)} content={content}>
+      <a
+        href="#sort"
+        className="sort-button"
+        onClick={e => {
+          e.preventDefault()
+          setOpen(!open)
+        }}
       >
-        <a
-          className="sort-button"
-          href="#"
-          onClick={e => {
-            e.preventDefault()
-            handleSortVisible(true)
-          }}
-          role="button"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          <fbt desc="Sort by">Sort By</fbt>
-        </a>
-      </Dropdown>
-    )
-  }
+        {textContent}
+      </a>
+    </Dropdown>
+  )
 }
 
 const SortContent = ({ selectedOption, onChange, isMobile }) => {
@@ -126,42 +122,24 @@ const SortContent = ({ selectedOption, onChange, isMobile }) => {
   return (
     <div className={containerClass}>
       <form className="sort-form">
-        <div>
-          <label className="sort-radio-label">
-            <input
-              type="radio"
-              className="sort-radio-button"
-              value=":"
-              checked={selectedOption === ':'}
-              onChange={onChange}
-            />
-            <fbt desc="Default">Default</fbt>
-          </label>
-        </div>
-        <div>
-          <label className="sort-radio-label">
-            <input
-              type="radio"
-              className="sort-radio-button"
-              value="price.amount:asc"
-              checked={selectedOption === 'price.amount:asc'}
-              onChange={onChange}
-            />
-            <fbt desc="Price: Low to High">Price: Low to High</fbt>
-          </label>
-        </div>
-        <div>
-          <label className="sort-radio-label">
-            <input
-              type="radio"
-              className="sort-radio-button"
-              value="price.amount:desc"
-              onChange={onChange}
-              checked={selectedOption === 'price.amount:desc'}
-            />
-            <fbt desc="Price: High to Low">Price: High to Low</fbt>
-          </label>
-        </div>
+        {SORT_OPTIONS.map(({ label, value }, index) => (
+          <div key={index}>
+            <label
+              className={`sort-radio-label${
+                (selectedOption || ':') === value ? ' checked' : ''
+              }`}
+            >
+              <input
+                type="radio"
+                className="sort-radio-button"
+                value={value}
+                checked={selectedOption === value}
+                onChange={onChange}
+              />
+              {label}
+            </label>
+          </div>
+        ))}
       </form>
     </div>
   )
@@ -172,68 +150,28 @@ export default withIsMobile(SortMenu)
 require('react-styl')(`
   .sort-modal
     &.modal-content
-      min-height: auto
-    &.modal-header
-      .modal-title
-        display: flex
-        div
-          flex: 1
-        .clear-button, .close-button
-          font-size: 12px
-          flex: auto 0 0
-          cursor: pointer
-          font-weight: 300
-        .close-button
-          content: ''
-          display: inline-block
-          background-image: url('images/close-icon.svg')
-          background-position: center
-          background-repeat: no-repeat
-          background-size: 1rem
-          height: 2rem
-          width: 2rem
-        .clear-button
-          text-decoration: none
-          color: var(--bright-blue)
-          &:hover
-            color: var(--bright-blue)
-  @media (max-width: 767.98px)
-    .sort-modal
-      padding: 1rem
-  .sort-button-bar
-    display: flex
-    justify-content: flex-end
-    padding: 1rem
-    font-size: medium
-    width: 100%
-  .sort-button
-    border-left: 1px solid transparent
-    border-right: 1px solid transparent
-    padding: 0.75rem
-    color: var(--dusk)
-    height: 100%
-    display: flex
-    align-items: center
-    font-size: 14px
-    font-weight: bold
-    font-style: normal
-    &.text
-      background-color: initial
-      padding: 0 0.25rem
-      span
-        color: var(--dusk)
-        padding: 0.25rem 0.75rem
-        border-radius: 1rem
-        &:hover,&.active
-          background-color: rgba(0,0,0,0.1)
-      &.active span
-        background-color: rgba(0,0,0,0.1)
-    &.icon-padding span
-      padding-left: 2rem
-    span
-      display: inline-block
-  .sort-button:hover
-    color: var(--dusk)
+      padding: 0 1rem
+      .sort-form
+        padding: 0
+        label
+          border: solid 1px #c2cbd3
+          border-radius: 10px
+          position: relative
+          padding: 0.75rem 1rem
+          input
+            display: none
+          &.checked:after
+            content: ''
+            display: inline-block
+            background-image: url('images/checkmark-blue.svg')
+            background-position: center
+            background-repeat: no-repeat
+            background-size: 1.25rem
+            position: absolute
+            top: 0
+            bottom: 0
+            right: 0
+            width: 3rem
   .sort-dropdown
     padding: 0
     position: absolute !important
@@ -258,4 +196,13 @@ require('react-styl')(`
     box-sizing: border-box
     vertical-align: middle
     margin-bottom: 1px
+  .sort-button
+    display: inline-block
+  @media (min-width: 768px)
+    .sort-button
+      padding: 0.5rem 0
+      color: #000
+  @media (max-width: 767.98px)
+    .sort-button
+      font-size: 14px
 `)

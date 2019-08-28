@@ -812,10 +812,6 @@
     "*": "{number} Anúncios",
     "_1": "1 listagem"
   },
-  "2CpFQp": {
-    "*": "{count} {category} results",
-    "_1": "{count} {category} result"
-  },
   "3pJs9O": {
     "*": "{count} Listings with Origin Rewards",
     "_1": "{count} Listing with Origin Rewards"
@@ -831,11 +827,11 @@
   "2Qfyq": "Crie uma listagem",
   "4u7nzi": "Nenhuma listagem encontrada",
   "4v3q78": "Carregue mais",
-  "114jZK": "Sort by",
-  "2LiG2d": "Sort By",
-  "6v09l": "Default",
+  "4pf0yW": "Featured",
   "3Ul6WQ": "Price: Low to High",
   "1rioH9": "Price: High to Low",
+  "qqmM": "Sort",
+  "114jZK": "Sort by",
   "2XkwlS": "Não é possível consultar mensagens",
   "333iq2": "Nenhuma conversa!",
   "1DH3KE": "Mensagens",

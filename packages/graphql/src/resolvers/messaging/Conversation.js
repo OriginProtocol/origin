@@ -25,7 +25,7 @@ export async function getAllMessages(conversationId) {
   const supportAccount = contracts.config.messagingAccount
   if (supportAccount && conversationId === supportAccount) {
     const created = messages.length
-      ? messages[messages.length - 1].msg.created + 1
+      ? messages[0].msg.created - 1
       : new Date('01-01-2017')
     if (isEnabled()) {
       messages.unshift({

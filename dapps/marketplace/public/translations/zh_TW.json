@@ -812,10 +812,6 @@
     "*": "{number} 刊登",
     "_1": "1上市"
   },
-  "2CpFQp": {
-    "*": "{count} {category} results",
-    "_1": "{count} {category} result"
-  },
   "3pJs9O": {
     "*": "{count} Listings with Origin Rewards",
     "_1": "{count} Listing with Origin Rewards"
@@ -831,11 +827,11 @@
   "2Qfyq": "創建一個列表",
   "4u7nzi": "找不到房源",
   "4v3q78": "裝載更多",
-  "114jZK": "Sort by",
-  "2LiG2d": "Sort By",
-  "6v09l": "Default",
+  "4pf0yW": "Featured",
   "3Ul6WQ": "Price: Low to High",
   "1rioH9": "Price: High to Low",
+  "qqmM": "Sort",
+  "114jZK": "Sort by",
   "2XkwlS": "無法查詢郵件",
   "333iq2": "沒有對話！",
   "1DH3KE": "消息",

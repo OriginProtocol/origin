@@ -261,8 +261,11 @@ require('react-styl')(`
       right: 0
       border-bottom: 1px solid white
       z-index: 1001
-  .dropdown.nav-item.profile .avatar
-    min-width: 28px
+  .dropdown.nav-item.profile
+    .nav-link
+      margin-left: auto
+      .avatar
+        min-width: 28px
   .dropdown-menu.profile
     width: 250px
     font-size: 14px

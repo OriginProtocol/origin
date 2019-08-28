@@ -812,10 +812,6 @@
     "*": "{number} 列表",
     "_1": "一个列表项目"
   },
-  "2CpFQp": {
-    "*": "{count} {category} 结果",
-    "_1": "{count} {category} 结果"
-  },
   "3pJs9O": {
     "*": "{count}带有Origin奖励的列表",
     "_1": "{count}带有Origin奖励的列表"
@@ -831,11 +827,11 @@
   "2Qfyq": "创建列表",
   "4u7nzi": "找不到任何列表",
   "4v3q78": "装载更多",
-  "114jZK": "Sort by",
-  "2LiG2d": "Sort By",
-  "6v09l": "Default",
+  "4pf0yW": "Featured",
   "3Ul6WQ": "Price: Low to High",
   "1rioH9": "Price: High to Low",
+  "qqmM": "Sort",
+  "114jZK": "Sort by",
   "2XkwlS": "无法找到信息",
   "333iq2": "没有对话！",
   "1DH3KE": "消息",

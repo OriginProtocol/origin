@@ -812,10 +812,6 @@
     "*": "{number} Annunci",
     "_1": "1 Annuncio"
   },
-  "2CpFQp": {
-    "*": "{count} {category} risultati",
-    "_1": "{count} {category} risultati"
-  },
   "3pJs9O": {
     "*": "{count} annunci con premi Origin",
     "_1": "{count} Inserzione con i premi Origin"
@@ -831,11 +827,11 @@
   "2Qfyq": "Crea un annuncio",
   "4u7nzi": "Nessun annuncio trovato",
   "4v3q78": "Carica di più",
-  "114jZK": "Ordina per",
-  "2LiG2d": "Ordina Per",
-  "6v09l": "Default",
+  "4pf0yW": "Featured",
   "3Ul6WQ": "Prezzo: dal basso all'alto",
   "1rioH9": "Prezzo: dall'alto al basso",
+  "qqmM": "Sort",
+  "114jZK": "Ordina per",
   "2XkwlS": "Non è possibile interrogare i messaggi",
   "333iq2": "Nessuna conversazione!",
   "1DH3KE": "Messaggi",

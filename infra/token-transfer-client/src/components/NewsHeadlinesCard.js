@@ -30,7 +30,7 @@ const NewsHeadlinesCard = props => {
         {props.news.map(item => {
           return (
             <div key={item.title}>
-              <div className="title mx-2">
+              <div className="title my-2">
                 <strong style={{ fontSize: '20px' }}>{item.title}</strong>
               </div>
               <p>
