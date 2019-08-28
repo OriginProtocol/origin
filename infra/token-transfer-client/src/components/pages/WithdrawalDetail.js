@@ -73,17 +73,19 @@ class WithdrawalDetail extends Component {
             authentication in the required time.
           </div>
         )}
-        {!hasExpired && transfer.status === 'WaitingEmailConfirm' && (
-          <div className="alert alert-warning">
-            <strong>Next Step:</strong> Confirm your transaction with email link
-            <br />
-            <strong>Transaction will expire:</strong>{' '}
-            <img src={ClockIcon} className="mx-1 mb-1" />{' '}
-            {moment(transfer.createdAt)
-              .add(5, 'minutes')
-              .fromNow()}
-          </div>
-        )}
+        {!hasExpired &&
+          transfer.status === enums.TransferStatuses.WaitingEmailConfirm && (
+            <div className="alert alert-warning">
+              <strong>Next Step:</strong> Confirm your transaction with email
+              link
+              <br />
+              <strong>Transaction will expire:</strong>{' '}
+              <img src={ClockIcon} className="mx-1 mb-1" />{' '}
+              {moment(transfer.createdAt)
+                .add(5, 'minutes')
+                .fromNow()}
+            </div>
+          )}
         <div className="row">
           <div className="col-12 col-xl-6">
             <BorderedCard shadowed={true}>
