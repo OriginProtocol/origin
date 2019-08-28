@@ -38,7 +38,8 @@ class SocialShareRule extends SingleEventRule {
       )
     }
 
-    if (!crules.config.twitter_share_config ||
+    if (
+      !crules.config.twitter_share_config ||
       !('minAccountAgeDays' in crules.config.twitter_share_config) ||
       !('minAgeLastTweetDays' in crules.config.twitter_share_config) ||
       !('minFollowersThreshold' in crules.config.twitter_share_config) ||
@@ -78,12 +79,18 @@ class SocialShareRule extends SingleEventRule {
     }
 
     // Constants for the formula
-    const minAccountAgeDays = this.crules.config.twitter_share_config.minAccountAgeDays
-    const minAgeLastTweetDays = this.crules.config.twitter_share_config.minAgeLastTweetDays
-    const minFollowersThreshold = this.crules.config.twitter_share_config.minFollowersThreshold
-    const tierFollowersThreshold = this.crules.config.twitter_share_config.tierFollowersThreshold
-    const tierFollowersIncrement = this.crules.config.twitter_share_config.tierFollowersIncrement
-    const verifiedMultiplier = this.crules.config.twitter_share_config.verifiedMultiplier
+    const minAccountAgeDays = this.crules.config.twitter_share_config
+      .minAccountAgeDays
+    const minAgeLastTweetDays = this.crules.config.twitter_share_config
+      .minAgeLastTweetDays
+    const minFollowersThreshold = this.crules.config.twitter_share_config
+      .minFollowersThreshold
+    const tierFollowersThreshold = this.crules.config.twitter_share_config
+      .tierFollowersThreshold
+    const tierFollowersIncrement = this.crules.config.twitter_share_config
+      .tierFollowersIncrement
+    const verifiedMultiplier = this.crules.config.twitter_share_config
+      .verifiedMultiplier
     // set to -1 to disable the cap
     const cap = this.crules.config.twitter_share_config.cap
 
