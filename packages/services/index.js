@@ -74,6 +74,7 @@ const startIpfs = async () => {
   const httpAPI = new HttpIPFS(ipfs)
   await httpAPI.start()
   console.log('Started IPFS')
+  return httpAPI
 }
 
 const populateIpfs = ({ logFiles } = {}) =>
@@ -392,7 +393,8 @@ module.exports = async function start(opts = {}) {
       started.discovery.kill('SIGHUP')
     }
     if (started.ipfs) {
-      await new Promise(resolve => started.ipfs.stop(() => resolve()))
+      await started.ipfs.stop()
+      await started.ipfs._ipfs.stop()
     }
   }
 
