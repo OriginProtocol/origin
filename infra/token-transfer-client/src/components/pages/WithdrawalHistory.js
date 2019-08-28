@@ -107,7 +107,7 @@ const WithdrawalHistory = props => {
                         {moment(transfer.createdAt).fromNow()}
                       </td>
                       <td className="text-nowrap">
-                        {transfer.status === 'WaitingTwoFactor' &&
+                        {transfer.status === 'WaitingEmailConfirm' &&
                           (moment
                             .utc()
                             .diff(moment(transfer.createdAt), 'minutes') > 5 ? (
@@ -118,7 +118,7 @@ const WithdrawalHistory = props => {
                           ) : (
                             <>
                               <div className="status-circle status-circle-warning mr-2"></div>
-                              Waiting 2FA
+                              Email Confirmation
                             </>
                           ))}
                         {['Enqueued', 'WaitingConfirmation'].includes(
