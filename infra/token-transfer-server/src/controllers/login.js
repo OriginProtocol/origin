@@ -45,7 +45,7 @@ router.post(
       const data = {
         to: email,
         from: sendgridFromEmail,
-        subject: 'Your T3 verification code',
+        subject: 'Your Origin Token Portal Verification Code',
         text: `Welcome to the Origin Investor Portal. Here is your single-use sign in link.
 
         ${portalUrl}/login_handler/${token}.
