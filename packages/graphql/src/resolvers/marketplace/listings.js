@@ -182,8 +182,8 @@ export default async function listings(
     for (const version in contracts.marketplaces) {
       const curContract = contracts.marketplaces[version].contract
       const decentralizedResults = await allIds(curContract, version)
-      ids = decentralizedResults.ids
-      totalCount = decentralizedResults.totalCount
+      ids = ids.concat(decentralizedResults.ids)
+      totalCount += decentralizedResults.totalCount
     }
   }
   // Need to determine if this is ever used, it seems to be the only use case
