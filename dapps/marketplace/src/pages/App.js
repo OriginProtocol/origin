@@ -45,10 +45,8 @@ class App extends Component {
     displayMobileModal: false,
     mobileModalDismissed: false,
     footer: false,
-    onboard: {
-      skipMessaging: false,
-      skipRewards: false
-    }
+    skipOnboardMessaging: false,
+    skipOnboardRewards: false
   }
 
   componentDidUpdate() {
@@ -125,22 +123,16 @@ class App extends Component {
               path="/onboard"
               component={() => (
                 <Onboard
-                  skipMessaging={this.state.onboard.skipMessaging}
-                  skipRewards={this.state.onboard.skipRewards}
+                  skipMessaging={this.state.skipOnboardMessaging}
+                  skipRewards={this.state.skipOnboardRewards}
                   onSkipMessaging={() => {
                     this.setState({
-                      onboard: {
-                        ...this.state.onboard,
-                        skipMessaging: true
-                      }
+                      skipOnboardMessaging: true
                     })
                   }}
                   onSkipRewards={() => {
                     this.setState({
-                      onboard: {
-                        ...this.state.onboard,
-                        skipRewards: true
-                      }
+                      skipOnboardRewards: true
                     })
                   }}
                 />

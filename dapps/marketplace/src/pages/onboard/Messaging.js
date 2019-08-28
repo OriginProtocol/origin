@@ -62,7 +62,9 @@ const EnableMessaging = ({ firstMessageSigned, buttons, error }) => {
   return (
     <div className="onboard-box">
       <div className="messaging-logo" />
-      <div className="status">Origin Messaging</div>
+      <div className="status">
+        <fbt desc="onboard.Messaging.originMessaging">Origin Messaging</fbt>
+      </div>
       <div className="connected">
         <span className={`oval ${firstMessageSigned ? '' : 'warn'}`} />
         <span className="oval warn" />
