@@ -47,8 +47,7 @@ class Otp extends Component {
           </div>
           <button
             type="submit"
-            className="btn btn-primary btn-lg"
-            style={{ marginTop: '40px' }}
+            className="btn btn-secondary btn-lg mt-5"
             onClick={this.handleVerifyOtpCode}
             disabled={this.state.loading}
           >
