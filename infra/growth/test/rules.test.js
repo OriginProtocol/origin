@@ -530,6 +530,17 @@ describe('Growth Engine rules', () => {
           campaign: {
             id: 1,
           },
+          config: {
+            twitter_share_config: {
+              minAccountAgeDays: 365,
+              minAgeLastTweetDays: 365,
+              minFollowersThreshold: 10,
+              tierFollowersThreshold: 100,
+              tierFollowersIncrement: 200,
+              verifiedMultiplier: 2,
+              cap: -1,
+            }
+          },
           content: {
             tweet_tweet: {
               post: {

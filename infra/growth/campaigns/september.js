@@ -823,6 +823,15 @@ const septemberConfig = {
       ]
     }
   },
+  twitter_share_config: {
+    minAccountAgeDays: 365,
+    minAgeLastTweetDays: 365,
+    minFollowersThreshold: 10,
+    tierFollowersThreshold: 100,
+    tierFollowersIncrement: 100,
+    verifiedMultiplier: 2,
+    cap: 100,
+  },
   content: {
     origin_app: {
       titleKey: 'growth.twitterShare.content1.title',

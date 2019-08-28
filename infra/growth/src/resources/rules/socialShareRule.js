@@ -38,6 +38,18 @@ class SocialShareRule extends SingleEventRule {
       )
     }
 
+    if (!crules.config.twitter_share_config ||
+      !('minAccountAgeDays' in crules.config.twitter_share_config) ||
+      !('minAgeLastTweetDays' in crules.config.twitter_share_config) ||
+      !('minFollowersThreshold' in crules.config.twitter_share_config) ||
+      !('tierFollowersThreshold' in crules.config.twitter_share_config) ||
+      !('tierFollowersIncrement' in crules.config.twitter_share_config) ||
+      !('verifiedMultiplier' in crules.config.twitter_share_config) ||
+      !('cap' in crules.config.twitter_share_config)
+    ) {
+      throw new Error('Twitter share config is missing some rules')
+    }
+
     // make a hard copy
     this.content = JSON.parse(
       JSON.stringify(crules.content[this.config.contentId])
@@ -66,12 +78,14 @@ class SocialShareRule extends SingleEventRule {
     }
 
     // Constants for the formula
-    const minAccountAgeDays = 365
-    const minAgeLastTweetDays = 365
-    const minFollowersThreshold = 10
-    const tierFollowersThreshold = 100
-    const tierFollowersIncrement = 200
-    const verifiedMultiplier = 2
+    const minAccountAgeDays = this.crules.config.twitter_share_config.minAccountAgeDays
+    const minAgeLastTweetDays = this.crules.config.twitter_share_config.minAgeLastTweetDays
+    const minFollowersThreshold = this.crules.config.twitter_share_config.minFollowersThreshold
+    const tierFollowersThreshold = this.crules.config.twitter_share_config.tierFollowersThreshold
+    const tierFollowersIncrement = this.crules.config.twitter_share_config.tierFollowersIncrement
+    const verifiedMultiplier = this.crules.config.twitter_share_config.verifiedMultiplier
+    // set to -1 to disable the cap
+    const cap = this.crules.config.twitter_share_config.cap
 
     // Extract stats of interest from the profile data.
     const verified = twitterProfile.verified
@@ -101,8 +115,14 @@ class SocialShareRule extends SingleEventRule {
     // Apply formula to compute reward.
     if (numFollowers < minFollowersThreshold) return 0
     if (numFollowers < tierFollowersThreshold) return tokenToNaturalUnits(1)
-    const amount = Math.floor(numFollowers / tierFollowersIncrement) + 1
-    return tokenToNaturalUnits(verified ? amount * verifiedMultiplier : amount)
+    // calculate number of followers
+    let amount = Math.floor(numFollowers / tierFollowersIncrement) + 1
+    // boost if verified and cap
+    amount = verified ? amount * verifiedMultiplier : amount
+    if (cap !== -1) {
+      Math.min(amount, cap)
+    }
+    return tokenToNaturalUnits(amount)
   }
 
   /**
