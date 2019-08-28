@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import get from 'lodash.get'
 import BigNumber from 'bignumber.js'
+import web3Utils from 'web3-utils'
 
 import { addAccount } from '@/actions/account'
 import {
@@ -77,6 +78,13 @@ class BalanceCard extends Component {
     if (BigNumber(this.state.amount).isGreaterThan(this.props.balance)) {
       this.setState({
         amountError: `Withdrawal amount is greater than your balance of ${this.props.balance} OGN`
+      })
+      return
+    }
+
+    if (!web3Utils.isAddress(this.state.address)) {
+      this.setState({
+        addressError: 'Not a valid Ethereum address'
       })
       return
     }
