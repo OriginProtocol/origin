@@ -56,13 +56,11 @@
       "ganache-core",
       "web3",
       "web3-utils",
-      "ipfs",
       "openzeppelin-solidity",
       "truffle",
       "truffle-hdwallet-provider",
       "truffle-privatekey-provider",
-      "react-image-crop",
-      "eslint"
+      "react-image-crop"
     ],
     "ignorePaths": [
       "mobile"
