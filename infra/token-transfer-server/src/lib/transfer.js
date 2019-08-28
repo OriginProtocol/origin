@@ -174,7 +174,7 @@ async function sendTransferConfirmationEmail(transfer, user) {
 
   await sendgridMail.send(data)
 
-  logger.info(`Sent email transfer confirmation token to ${user.email}`)
+  logger.info(`Sent email transfer confirmation token to ${user.email} for transfer ${transfer.id}`)
 }
 
 /* Moves a transfer from waiting for two factor to enqueued.
