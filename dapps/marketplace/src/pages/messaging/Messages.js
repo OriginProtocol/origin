@@ -223,6 +223,7 @@ require('react-styl')(`
     .conversations-wrapper
       display: flex
       flex-direction: row
+      height: calc(100vh - 6rem)
       .conversations-list
         flex: 1
         overflow-y: scroll
@@ -264,4 +265,8 @@ require('react-styl')(`
           .counterparty
             color: var(--dark-blue-grey)
 
+  @media (max-width: 767.97px)
+    .messages-page
+      .conversations-wrapper
+        height: auto
 `)
