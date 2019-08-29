@@ -127,8 +127,9 @@ class SocialShareRule extends SingleEventRule {
     // boost if verified and cap
     amount = verified ? amount * verifiedMultiplier : amount
     if (cap !== -1) {
-      Math.min(amount, cap)
+      amount = Math.min(amount, cap)
     }
+
     return tokenToNaturalUnits(amount)
   }
 

@@ -753,9 +753,9 @@ describe('Apollo adapter - September campaign', () => {
       this.mockAdapter
     )
 
-    this.expectedState.rewardEarned = { amount: '504000000000000000000', currency: 'OGN' }
+    this.expectedState.rewardEarned = { amount: '340000000000000000000', currency: 'OGN' }
     this.expectedState.TwitterShare5.status = 'Completed'
-    this.expectedState.TwitterShare5.rewardEarned = { amount: tokenToNaturalUnits(264), currency: 'OGN' }
+    this.expectedState.TwitterShare5.rewardEarned = { amount: tokenToNaturalUnits(100), currency: 'OGN' }
 
     checkExpectedState(state, this.expectedState)
   })
@@ -832,7 +832,7 @@ describe('Apollo adapter - September campaign', () => {
     )
 
     // Check the user got rewarded for completing the Telegram attestation.
-    this.expectedState.rewardEarned = { amount: '514000000000000000000', currency: 'OGN' }
+    this.expectedState.rewardEarned = { amount: '350000000000000000000', currency: 'OGN' }
     this.expectedState.TelegramAttestation.status = 'Completed'
     this.expectedState.TelegramAttestation.rewardEarned = { amount: tokenToNaturalUnits(10), currency: 'OGN' }
 
@@ -862,7 +862,7 @@ describe('Apollo adapter - September campaign', () => {
       this.mockAdapter
     )
 
-    this.expectedState.rewardEarned = { amount: '524000000000000000000', currency: 'OGN' }
+    this.expectedState.rewardEarned = { amount: '360000000000000000000', currency: 'OGN' }
     this.expectedState.TelegramFollow.status = 'Completed'
     this.expectedState.TelegramFollow.rewardEarned = { amount: tokenToNaturalUnits(10), currency: 'OGN' }
 
