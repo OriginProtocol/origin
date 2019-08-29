@@ -177,7 +177,28 @@ const Growth$FbtEnum = {
   'growth.twitterShare.content5.details':
     'Origin has a global presence, with tens of thousands community members supporting our vision. Join our Telegram (ENG) today.',
   'growth.twitterShare.content5.link': 'Read the article',
-  'growth.purchase.empty.details': ''
+  'growth.purchase.empty.details': '',
+
+  'growth.share.content6.title':
+    'YouTube Founder Discusses Strength of Origin Team',
+  'growth.share.content6.details':
+    'Steve Chen, co-founder of YouTube discusses strength of Origin team.',
+  'growth.share.content6.link': 'Watch the video',
+  'growth.share.content7.title': 'New Ways to Earn OGN in September',
+  'growth.share.content7.details':
+    'Join Origin Rewards and become a token holder alongside thousands of users around the world.',
+  'growth.share.content7.link': 'Read the article',
+  'growth.share.content8.title': 'Origin is now live on Blockfolio Signal!',
+  'growth.share.content8.details': `Follow Origin on Blockfolio & receive latest updates from Origin's core team.`,
+  'growth.share.content8.link': 'Read the article',
+  'growth.share.content9.title': `Join Origin's Telegram and earn OGN`,
+  'growth.share.content9.details':
+    'Follow Origin on Telegram and earn free Origin Tokens!',
+  'growth.share.content9.link': 'Read the article',
+  'growth.share.content10.title': 'Decentralized Commerce in Venezuela',
+  'growth.share.content10.details':
+    'Inexpensive mobile phones can give 2 billion unbanked access to blockchain-powered marketplaces.',
+  'growth.share.content10.link': 'Read the article'
 }
 
 module.exports = Growth$FbtEnum
