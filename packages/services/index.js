@@ -1,5 +1,6 @@
 const { spawn } = require('child_process')
 const Ganache = require('ganache-core')
+const IPFS = require('ipfs')
 const HttpIPFS = require('ipfs/src/http')
 const ipfsAPI = require('ipfs-api')
 const fs = require('fs')
@@ -54,24 +55,27 @@ const startGanache = (opts = {}) =>
     })
   })
 
-const startIpfs = () =>
-  new Promise((resolve, reject) => {
-    const httpAPI = new HttpIPFS(`${__dirname}/data/ipfs`, {
+const startIpfs = async () => {
+  console.log('Start IPFS')
+  const ipfs = await IPFS.create({
+    repo: `${__dirname}/data/ipfs`,
+    preload: {
+      enabled: false
+    },
+    config: {
       Addresses: {
         API: '/ip4/0.0.0.0/tcp/5002',
-        Gateway: '/ip4/0.0.0.0/tcp/8080'
+        Gateway: '/ip4/0.0.0.0/tcp/8080',
+        Swarm: []
       },
       Bootstrap: []
-    })
-    console.log('Start IPFS')
-    httpAPI.start(true, err => {
-      if (err) {
-        return reject(err)
-      }
-      console.log('Started IPFS')
-      resolve(httpAPI)
-    })
+    }
   })
+  const httpAPI = new HttpIPFS(ipfs)
+  await httpAPI.start()
+  console.log('Started IPFS')
+  return httpAPI
+}
 
 const populateIpfs = ({ logFiles } = {}) =>
   new Promise((resolve, reject) => {
@@ -389,7 +393,8 @@ module.exports = async function start(opts = {}) {
       started.discovery.kill('SIGHUP')
     }
     if (started.ipfs) {
-      await new Promise(resolve => started.ipfs.stop(() => resolve()))
+      await started.ipfs.stop()
+      await started.ipfs._ipfs.stop()
     }
   }
 
