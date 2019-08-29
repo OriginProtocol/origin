@@ -46,10 +46,9 @@ class Terms extends Component {
             </label>
           </div>
           <button
-            className="btn btn-primary btn-lg"
-            style={{ marginTop: '40px' }}
+            className="btn btn-secondary btn-lg mt-5"
             disabled={!this.state.accepted}
-            onClick={() => this.setState({ redirectTo: '/otp/setup' })}
+            onClick={() => this.setState({ redirectTo: '/otp/explain' })}
           >
             Continue
           </button>

@@ -5,7 +5,7 @@ import EmailIcon from '@/assets/email-icon.svg'
 const CheckEmail = () => (
   <div className="action-card">
     <h1>Check your email</h1>
-    <img src={EmailIcon} style={{ margin: '40px 0' }} />
+    <img src={EmailIcon} className="my-5" />
     <p>
       We just sent you an email.
       <br />

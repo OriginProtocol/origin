@@ -93,7 +93,7 @@ export const getIsConfirming = state => state.isConfirming
 export const getIsLoading = state => state.isLoading
 export const getWithdrawnAmount = state => {
   const pendingOrCompleteTransfers = [
-    enums.TransferStatuses.WaitingTwoFactor,
+    enums.TransferStatuses.WaitingEmailConfirm,
     enums.TransferStatuses.Enqueued,
     enums.TransferStatuses.Paused,
     enums.TransferStatuses.WaitingConfirmation,
