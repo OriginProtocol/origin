@@ -823,6 +823,15 @@ const augustConfig = {
       ]
     }
   },
+  twitter_share_config: {
+    minAccountAgeDays: 365,
+    minAgeLastTweetDays: 365,
+    minFollowersThreshold: 10,
+    tierFollowersThreshold: 100,
+    tierFollowersIncrement: 200,
+    verifiedMultiplier: 2,
+    cap: -1,
+  },
   content: {
     origin_app: {
       titleKey: 'growth.twitterShare.content1.title',

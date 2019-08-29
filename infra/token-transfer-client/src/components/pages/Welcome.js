@@ -70,8 +70,7 @@ class Welcome extends Component {
                 {this.props.user.email}
               </div>
               <button
-                className="btn btn-primary btn-lg"
-                style={{ marginTop: '40px' }}
+                className="btn btn-secondary btn-lg mt-5"
                 onClick={() => {
                   if (this.props.user.phone) {
                     this.setState({ redirectTo: '/terms' })

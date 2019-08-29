@@ -13,7 +13,7 @@ const WithdrawalHistoryCard = props => {
               ? 0
               : props.vestedTotal.minus(props.withdrawnAmount).toLocaleString()}
           </strong>{' '}
-          <span className="ogn" style={{ fontSize: '14px' }}>
+          <span className="ogn" style={{ fontSize: '14px', color: '#007cff' }}>
             OGN
           </span>
         </div>

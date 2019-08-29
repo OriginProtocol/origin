@@ -11,6 +11,7 @@ import Terms from './components/pages/Terms'
 import Login from './components/pages/Login'
 import CheckEmail from './components/pages/CheckEmail'
 import HandleLogin from './components/pages/HandleLogin'
+import OtpExplain from './components/pages/OtpExplain'
 import OtpSetup from './components/pages/OtpSetup'
 import Otp from './components/pages/Otp'
 // Private routes
@@ -28,12 +29,13 @@ const App = () => (
     <PublicRoute exact path="/terms" component={Terms} />
     <PublicRoute path="/check_email" component={CheckEmail} />
     <PublicRoute path="/login_handler/:token" component={HandleLogin} />
+    <PublicRoute path="/otp/explain" component={OtpExplain} />
     <PublicRoute path="/otp/setup" component={OtpSetup} />
     <PublicRoute exact path="/otp" component={Otp} />
     <PrivateRoute path="/dashboard" component={Dashboard} />
     <PrivateRoute path="/news" component={News} />
     <PrivateRoute exact path="/withdrawal" component={WithdrawalHistory} />
-    <PrivateRoute path="/withdrawal/:id" component={WithdrawalDetail} />
+    <PrivateRoute path="/withdrawal/:id/:token?" component={WithdrawalDetail} />
     <PrivateRoute path="/security" component={Security} />
   </Switch>
 )
