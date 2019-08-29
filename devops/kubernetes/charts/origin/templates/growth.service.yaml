@@ -17,4 +17,4 @@ spec:
     app: {{ template "growth.fullname" . }}
   ports:
   - name: apollo
-    port: 4001
+    port: 4008

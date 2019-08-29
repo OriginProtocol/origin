@@ -59,8 +59,15 @@ android/keystores/keystore.properties
 android/app/debug/
 android/app/release/
 
+# Sentry
+android/sentry.properties
+ios/sentry.properties
+
 # Translations
 /.enum_manifest.json
 /.src_manifest.json
 /.source_strings.json
 /.translated_fbts.json
+
+# CocoaPods
+ios/Pods/

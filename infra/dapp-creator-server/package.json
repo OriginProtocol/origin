@@ -37,17 +37,17 @@
     "dotenv": "^8.0.0",
     "envkey": "^1.2.6",
     "express": "^4.17.1",
-    "ipfs-http-client": "^29.1.0",
+    "ipfs-http-client": "^34.0.0",
     "logplease": "^1.2.15",
     "per-env": "^1.0.2",
     "raven": "^2.6.4",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^6.1.4",
-    "nodemon": "^1.19.1",
-    "supertest": "^4.0.2"
+    "chai": "4.2.0",
+    "mocha": "6.2.0",
+    "nodemon": "1.19.1",
+    "supertest": "4.0.2"
   },
   "babel": {
     "presets": [

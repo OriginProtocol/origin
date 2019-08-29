@@ -15,6 +15,7 @@ const cors = require('cors')
 const express = require('express')
 const promBundle = require('express-prom-bundle')
 
+const logger = require('./logger')
 const resolvers = require('./resolvers')
 const typeDefs = require('./schema')
 
@@ -41,6 +42,13 @@ const server = new ApolloServer({
       context.discoveryAuthToken = headers['x-discovery-auth-token']
     }
     return context
+  },
+  // Enable debug regardless of NODE_ENV value in order to include stack traces in errors.
+  debug: true,
+  // Error handler that writes to the server logs.
+  formatError: err => {
+    logger.error(JSON.stringify(err, null, 4))
+    return err
   },
   // Always enable GraphQL playground and schema introspection, regardless of NODE_ENV value.
   introspection: true,

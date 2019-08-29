@@ -9,10 +9,13 @@ const isDone = () => new Promise(resolve => requestQueue.push(resolve))
 
 class Currencies {
   constructor() {
-    // Note: we set default values for the priceInUSD field in case the
+    // Note:
+    // 1. We set default values for the priceInUSD field in case the
     // centralized server we query to dynamically fetch exchange rates is down.
     // We have an open issue https://github.com/OriginProtocol/origin/issues/1860
     // to show a warning banner to the user in case rates are stale.
+    // 2. When updating this list, make sure to also update it in other
+    // places. See https://github.com/OriginProtocol/origin/issues/2990
     this.data = {
       'fiat-USD': {
         id: 'fiat-USD',
@@ -83,6 +86,7 @@ class Currencies {
         id: 'token-OGN',
         name: 'Origin Token',
         code: 'OGN',
+        priceInUSD: 1,
         decimals: 18
       },
       'token-USDC': {
@@ -166,6 +170,9 @@ class Currencies {
   async get(currencyId) {
     if (!this.data[currencyId]) {
       throw new Error('Unsupported currency id', currencyId)
+    }
+    if (process.env.NODE_ENV === 'test') {
+      return this.data[currencyId]
     }
 
     // Wait until any existing fetching is completed before continuing

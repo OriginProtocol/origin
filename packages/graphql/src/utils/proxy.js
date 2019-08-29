@@ -1,6 +1,12 @@
 import memoize from 'lodash/memoize'
 import contracts from '../contracts'
 
+async function isContractRaw(address) {
+  const code = await contracts.web3.eth.getCode(address)
+  return code && code.length > 2
+}
+export const isContract = memoize(isContractRaw, address => address)
+
 // Get the creation code for the deployed Proxy implementation
 const proxyCreationCode = memoize(async () => {
   const { web3, ProxyImp, ProxyFactory } = contracts
@@ -12,6 +18,7 @@ const proxyCreationCode = memoize(async () => {
 async function predictedProxyRaw(address) {
   if (
     !contracts.config.proxyAccountsEnabled ||
+    !contracts.ProxyFactory ||
     !contracts.ProxyFactory._address
   ) {
     return null
@@ -39,15 +46,19 @@ async function predictedProxyRaw(address) {
  * the address the contract will be deployed to for a given account.
  */
 async function hasProxyRaw(address) {
-  if (!contracts.config.proxyAccountsEnabled || !contracts.ProxyImp._address) {
+  if (
+    !contracts.config.proxyAccountsEnabled ||
+    !contracts.ProxyImp ||
+    !contracts.ProxyImp._address
+  ) {
     return false
   }
   try {
     const predicted = await predictedProxyRaw(address)
 
     // Return the predicted address if code exists there, or false otherwise
-    const code = await contracts.web3.eth.getCode(predicted)
-    return code.slice(2).length > 0 ? predicted : false
+    const predictedIsContract = await isContract(predicted)
+    return predictedIsContract ? predicted : false
   } catch (e) {
     return false
   }
@@ -57,7 +68,11 @@ async function hasProxyRaw(address) {
  * Returns proxy owner, or null
  */
 async function proxyOwnerRaw(address) {
-  if (!contracts.config.proxyAccountsEnabled || !contracts.ProxyImp._address) {
+  if (
+    !contracts.config.proxyAccountsEnabled ||
+    !contracts.ProxyImp ||
+    !contracts.ProxyImp._address
+  ) {
     return null
   }
   try {
@@ -74,6 +89,7 @@ export const proxyOwner = memoize(proxyOwnerRaw, address => address)
 export const hasProxy = memoize(hasProxyRaw, address => address)
 export const predictedProxy = memoize(predictedProxyRaw, address => address)
 export const resetProxyCache = () => {
+  isContract.cache.clear()
   hasProxy.cache.clear()
   proxyOwner.cache.clear()
 }

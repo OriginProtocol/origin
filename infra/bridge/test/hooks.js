@@ -21,13 +21,13 @@ const getAsync = key =>
     })
   })
 
-describe('promotion verifications', () => {
+describe('twitter webhooks', () => {
   beforeEach(async () => {
-    process.env.TWITTER_CONSUMER_SECRET = 'abcdef'
+    process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET = 'abcdef'
     process.env.TWITTER_ORIGINPROTOCOL_USERNAME = 'OriginProtocol'
 
     // Clear out redis-mock
-    await new Promise(resolve => client.del('*', resolve))
+    await new Promise(resolve => client.flushall(resolve))
   })
 
   it('should return response token', async () => {
@@ -46,6 +46,12 @@ describe('promotion verifications', () => {
   it('should push follow events to redis', async () => {
     await request(app)
       .post('/hooks/twitter')
+      .set({
+        // Note: These signs have been hard-coded in the test
+        // Don't forget to update it, if you make any change to the body
+        'x-twitter-webhooks-signature':
+          'sha256=rOlK2y3cO0EnsVh2JrVqglj75zStF4mcN5HmyWvqMlQ='
+      })
       .send({
         follow_events: [
           {
@@ -54,26 +60,33 @@ describe('promotion verifications', () => {
               screen_name: 'originprotocol'
             },
             source: {
-              id: '12345'
+              id: '12345',
+              screen_name: 'testaccount'
             }
           }
         ]
       })
       .expect(200)
 
-    const event = JSON.parse(await getAsync('twitter/follow/12345'))
+    const event = JSON.parse(await getAsync('twitter/follow/testaccount'))
     expect(event.id).to.equal('abc')
   })
 
   it('should push mention events to redis', async () => {
     await request(app)
       .post('/hooks/twitter')
+      .set({
+        // Note: These signs have been hard-coded in the test
+        // Don't forget to update it, if you make any change to the body
+        'x-twitter-webhooks-signature':
+          'sha256=aMPAoi2EHMNU6/rL0TtAtbBx0R1ZoNbYL72Gbin3X0o='
+      })
       .send({
         tweet_create_events: [
           {
             id: 'abcd',
             user: {
-              id: '123456',
+              id_str: '123456',
               screen_name: 'someuser'
             },
             entities: {
@@ -84,21 +97,27 @@ describe('promotion verifications', () => {
       })
       .expect(200)
 
-    const event = JSON.parse(await getAsync('twitter/share/123456'))
+    const event = JSON.parse(await getAsync('twitter/share/someuser'))
     expect(event.id).to.equal('abcd')
   })
 
   it('should not push retweets/favorites/own tweet events to redis', async () => {
     await request(app)
       .post('/hooks/twitter')
+      .set({
+        // Note: These signs have been hard-coded in the test
+        // Don't forget to update it, if you make any change to the body
+        'x-twitter-webhooks-signature':
+          'sha256=ht8B0jY6QyEl1t2qbPs0jul3lRexDD5TCQN/L9MfykA='
+      })
       .send({
         tweet_create_events: [
           {
             id: 'abcd',
             retweeted: true,
             user: {
-              id: '9876',
-              screen_name: 'someuser'
+              id_str: '9876',
+              screen_name: 'unknownuser'
             },
             entities: {
               urls: []
@@ -108,8 +127,8 @@ describe('promotion verifications', () => {
             id: 'abcd',
             favorited: true,
             user: {
-              id: '9876',
-              screen_name: 'someuser'
+              id_str: '9876',
+              screen_name: 'unknownuser'
             },
             entities: {
               urls: []
@@ -118,7 +137,7 @@ describe('promotion verifications', () => {
           {
             id: 'abcd',
             user: {
-              id: '9876',
+              id_str: '9876',
               screen_name: 'originprotocol'
             },
             entities: {
@@ -129,7 +148,96 @@ describe('promotion verifications', () => {
       })
       .expect(200)
 
-    const event = await getAsync('twitter/share/9876')
+    let event = await getAsync('twitter/share/unknownuser')
     expect(event).to.equal(null)
+    event = await getAsync('twitter/share/originprotocol')
+    expect(event).to.equal(null)
+  })
+
+  // it('should fail on invalid signature', async () => {
+  //   await request(app)
+  //     .post('/hooks/twitter')
+  //     .set({
+  //       // Note: These signs have been hard-coded in the test
+  //       // Don't forget to update it, if you make any change to the body
+  //       'x-twitter-webhooks-signature':
+  //         'sha256=aMPAoi2EHMNU6/rL0TtAtbBx0R1ZoNbYL72Gbin3X0o='
+  //     })
+  //     .send({
+  //       tweet_create_events: [
+  //         {
+  //           id: 'abcd',
+  //           user: {
+  //             id_str: '123456',
+  //             screen_name: 'someuser'
+  //           }
+  //         }
+  //       ]
+  //     })
+  //     .expect(403)
+  // })
+})
+
+describe('telegram webhooks', () => {
+  beforeEach(async () => {
+    // Clear out redis-mock
+    await new Promise(resolve => client.del('*', resolve))
+  })
+
+  it('should push follow events to redis', async () => {
+    await request(app)
+      .post('/hooks/telegram')
+      .send({
+        message: {
+          new_chat_members: [
+            {
+              id: 'abc',
+              username: 'testaccount'
+            }
+          ]
+        }
+      })
+      .expect(200)
+
+    const event = JSON.parse(await getAsync('telegram/follow/testaccount'))
+    expect(event.id).to.equal('abc')
+  })
+
+  it('should ignore follow events of bots', async () => {
+    await request(app)
+      .post('/hooks/telegram')
+      .send({
+        message: {
+          new_chat_members: [
+            {
+              id: 'abc',
+              username: 'test_bot',
+              is_bot: true
+            }
+          ]
+        }
+      })
+      .expect(200)
+
+    const event = JSON.parse(await getAsync('telegram/follow/test_bot'))
+    expect(event).to.null
+  })
+
+  it('should use `id` if `username` is not available', async () => {
+    await request(app)
+      .post('/hooks/telegram')
+      .send({
+        message: {
+          new_chat_members: [
+            {
+              id: 'abc'
+            }
+          ]
+        }
+      })
+      .expect(200)
+
+    const event = JSON.parse(await getAsync('telegram/follow/abc'))
+    expect(event.id).to.equal('abc')
   })
 })

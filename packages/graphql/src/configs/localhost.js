@@ -18,7 +18,7 @@ const config = {
   // discovery: `http://${HOST}:4000/graphql`,
   notifications: `http://${HOST}:3456`,
   growth: localStorageHas('localGrowthServer', 'true')
-    ? 'http://localhost:4001'
+    ? 'http://localhost:4008'
     : null,
   performanceMode: localStorageHas('performanceMode', 'true'),
   graphql: `http://${HOST}:4007`,
@@ -29,13 +29,15 @@ const config = {
   OriginToken: addresses.OGN,
   V00_Marketplace: addresses.Marketplace,
   V00_Marketplace_Epoch: addresses.MarketplaceEpoch,
+  V01_Marketplace: addresses.Marketplace_V01,
+  V01_Marketplace_Epoch: addresses.MarketplaceEpoch_V01,
   IdentityEvents: addresses.IdentityEvents,
   IdentityEvents_Epoch: addresses.IdentityEventsEpoch,
   DaiExchange: addresses.UniswapDaiExchange,
   ProxyFactory: addresses.ProxyFactory,
   ProxyFactory_Epoch: addresses.ProxyFactoryEpoch,
   IdentityProxyImplementation: addresses.IdentityProxyImplementation,
-  proxyAccountsEnabled: true,
+  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled', 'true'),
   relayerEnabled: localStorageHas('relayerEnabled', 'true'),
   tokens: [],
 

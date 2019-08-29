@@ -42,6 +42,13 @@ app.use(bundle)
 const server = new ApolloServer({
   resolvers,
   typeDefs,
+  // Enable debug regardless of NODE_ENV value in order to include stack traces in errors.
+  debug: true,
+  // Error handler that writes to the server logs.
+  formatError: err => {
+    logger.error(JSON.stringify(err, null, 4))
+    return err
+  },
   // Always enable GraphQL playground and schema introspection, regardless of NODE_ENV value.
   introspection: true,
   playground: true,
@@ -49,12 +56,15 @@ const server = new ApolloServer({
     const headers = context.req.headers
 
     let authStatus = enums.GrowthParticipantAuthenticationStatus.NotEnrolled
-    let authToken, walletAddress
+    let authToken,
+      walletAddress,
+      identityOverriden = false
 
     if (headers['x-growth-secret'] && headers['x-growth-wallet']) {
       if (headers['x-growth-secret'] === process.env.GROWTH_ADMIN_SECRET) {
         // Grant admin access.
         authToken = 'AdminToken'
+        identityOverriden = true
         walletAddress = headers['x-growth-wallet'].toLowerCase()
         authStatus = enums.GrowthParticipantAuthenticationStatus.Enrolled
       } else {
@@ -78,6 +88,7 @@ const server = new ApolloServer({
     return {
       ...context,
       authToken,
+      identityOverriden,
       walletAddress,
       authentication: authStatus
     }
@@ -86,7 +97,7 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app })
 
-const port = process.env.PORT || 4001
+const port = process.env.PORT || 4008
 
 app.listen({ port: port }, () =>
   logger.info(

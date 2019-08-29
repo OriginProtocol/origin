@@ -13,7 +13,9 @@ const MULTI_UNIT_TYPES = ['UnitListing', 'GiftCardListing']
 const getListingDirect = async (contract, listingId) =>
   await contract.methods.listings(listingId).call()
 
-const getListing = memoize(getListingDirect, (...args) => args[1])
+const getListing = memoize(getListingDirect, (...args) =>
+  [args[1], args[2]].join('-')
+)
 
 const getOfferFn = async (contract, listingId, offerId, latestBlock) =>
   await contract.methods.offers(listingId, offerId).call(undefined, latestBlock)
@@ -39,9 +41,10 @@ function mutatePrice(price) {
 const netId = memoize(async web3 => await web3.eth.net.getId())
 
 class OriginEventSource {
-  constructor({ ipfsGateway, marketplaceContract, web3 }) {
+  constructor({ ipfsGateway, marketplaceContract, web3, version }) {
     this.ipfsGateway = ipfsGateway
     this.contract = marketplaceContract
+    this.version = version || '000'
     this.web3 = web3
     this.offerCache = {}
     this.listingCache = {}
@@ -67,7 +70,7 @@ class OriginEventSource {
       // Return the listing with the an ID that includes the block number, if
       // one was specified
       return Object.assign({}, this.listingCache[cacheKey], {
-        id: `${networkId}-000-${listingId}${
+        id: `${networkId}-${this.version}-${listingId}${
           blockNumber ? `-${blockNumber}` : ''
         }`
       })
@@ -83,7 +86,7 @@ class OriginEventSource {
       if (process.env.DISABLE_CACHE === 'true') {
         listing = await getListingDirect(this.contract, listingId)
       } else {
-        listing = await getListing(this.contract, listingId)
+        listing = await getListing(this.contract, listingId, cacheBlockNumber)
       }
     } catch (e) {
       throw new Error(`No such listing on contract ${listingId}`)
@@ -149,6 +152,7 @@ class OriginEventSource {
         'receiptAvailable'
       )
       data.valid = true
+      data.contractAddr = this.contract._address
 
       // TODO: Investigate why some IPFS data has unitsTotal set to -1, eg #1-000-266
       if (data.unitsTotal < 0) {
@@ -271,7 +275,7 @@ class OriginEventSource {
     const listingWithOffers = await this.withOffers(listingId, {
       ...data,
       __typename,
-      id: `${networkId}-000-${listingId}${
+      id: `${networkId}-${this.version}-${listingId}${
         blockNumber ? `-${blockNumber}` : ''
       }`,
       ipfs: ipfsHash ? { id: ipfsHash } : null,
@@ -314,6 +318,10 @@ class OriginEventSource {
     // The "deposit" on a listing is actualy the amount of OGN available to
     // pay for commissions on that listing.
     let commissionAvailable = this.web3.utils.toBN(listing.deposit)
+    const commissionBudget = this.web3.utils.toBN(listing.commission)
+    if (commissionBudget.lt(commissionAvailable)) {
+      commissionAvailable = commissionBudget
+    }
     let unitsAvailable = listing.unitsTotal,
       unitsPending = 0,
       unitsSold = 0
@@ -349,28 +357,28 @@ class OriginEventSource {
               // Created, Accepted or Disputed
               unitsPending += offer.quantity
               pendingBuyers.push({ id: offer.buyer.id })
+
+              // Validate offer commission.
+              const normalCommission = commissionPerUnit.mul(
+                this.web3.utils.toBN(offer.quantity)
+              )
+              const expCommission = normalCommission.lte(commissionAvailable)
+                ? normalCommission
+                : commissionAvailable
+              const offerCommission =
+                (offer.commission && this.web3.utils.toBN(offer.commission)) ||
+                this.web3.utils.toBN(0)
+              if (!offerCommission.eq(expCommission)) {
+                offer.valid = false
+                offer.validationError = `offer commission: ${offerCommission.toString()} != exp ${expCommission.toString()}`
+                return
+              }
+              if (!offerCommission.isZero()) {
+                commissionAvailable = commissionAvailable.sub(offerCommission)
+              }
             } else if (status === 4 || status === 5) {
               // Finalized or Ruling
               unitsSold += offer.quantity
-            }
-
-            // Validate offer commission.
-            const normalCommission = commissionPerUnit.mul(
-              this.web3.utils.toBN(offer.quantity)
-            )
-            const expCommission = normalCommission.lte(commissionAvailable)
-              ? normalCommission
-              : commissionAvailable
-            const offerCommission =
-              (offer.commission && this.web3.utils.toBN(offer.commission)) ||
-              this.web3.utils.toBN(0)
-            if (!offerCommission.eq(expCommission)) {
-              offer.valid = false
-              offer.validationError = `offer commission: ${offerCommission.toString()} != exp ${expCommission.toString()}`
-              return
-            }
-            if (!offerCommission.isZero()) {
-              commissionAvailable = commissionAvailable.sub(offerCommission)
             }
           } catch (e) {
             offer.valid = false
@@ -457,7 +465,7 @@ class OriginEventSource {
     const networkId = await this.getNetworkId()
 
     const offerObj = {
-      id: `${networkId}-000-${listingId}-${offerId}`,
+      id: `${networkId}-${this.version}-${listingId}-${offerId}`,
       listingId: String(listing.id),
       offerId: String(offerId),
       createdBlock,
@@ -577,12 +585,16 @@ class OriginEventSource {
 
   async getOfferIdExp(listingId, offerId) {
     const networkId = await this.getNetworkId()
-    return `${networkId}-000-${listingId}-${offerId}`
+    return `${networkId}-${this.version}-${listingId}-${offerId}`
   }
 
   resetCache() {
     this.offerCache = {}
     this.listingCache = {}
+  }
+
+  resetMemos() {
+    getListing.cache.clear()
   }
 }
 

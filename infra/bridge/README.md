@@ -1,8 +1,3 @@
-![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
-
-Head to https://www.originprotocol.com/developers to learn more about what we're
-building and how to get involved.
-
 # Origin Bridge Server
 
 The Origin Bridge Server connects the old world to the new.
@@ -25,7 +20,7 @@ DApps can connect to the Bridge Server of their choosing in order to enable the
 following functionality which is either impossible or impractical to do directly
 onchain, including:
 
-### Identity
+## Identity
 
 We need a centralized server that can handle tasks like issuing identity
 attestations and decryptying data that is returned from third-party services
@@ -87,7 +82,30 @@ functionality.
 - [WeChat](https://docs.microsoft.com/en-us/linkedin/shared/authentication/authentication)
   - WECHAT_CLIENT_ID
   - WECHAT_CLIENT_SECRET
+- [Telegram](https://web.telegram.org/#/im?p=@BotFather)
+  - TELEGRAM_BOT_TOKEN
 
+If you plan on using different OAuth client for webhooks, you should set the following environment variables
+
+- TWITTER_WEBHOOKS_CONSUMER_KEY
+- TWITTER_WEBHOOKS_CONSUMER_SECRET
+
+### Setting up Telegram Attestation and Webhook (Optional)
+
+1. Go to [`@BotFather` on Telegram](https://web.telegram.org/#/im?p=@BotFather)
+2. Send the following command to create a new bot: `/newbot`
+   Give a name and username when prompted. Note down the Bot Token once the bot is created.
+3. Enter the command `/mybots` to list all your bots and select the bot you created in the previous step.
+4. Add the bot you created to the group as an admin.
+
+   _Note:_ You can add the bot to as many groups as you want. Events from all the groups will be posted to the webhook endpoint
+
+5. Add the following env variables to the DApp during build time or export it on the terminal: `TELEGRAM_BOT_USERNAME=<YOUR BOT USERNAME>`
+
+6. Add the following env variables to bridge server's ENVKEY or export it on the terminal: `TELEGRAM_BOT_TOKEN=<YOUR BOT TOKEN HERE>`
+
+7. Create a web tunnel for bridge server. [Refer `@origin/bridge`'s README.md](https://github.com/OriginProtocol/origin/blob/master/infra/bridge/README.md#setup-tunnel-for-webhooks-optional)
+8. Hit the following URL on your browser: `http://localhost:5000/hooks/telegram/__init`
 
 ### Set Up Your Database
 
@@ -109,27 +127,32 @@ npm run start
 This starts a development server on `localhost:5000` by default.
 
 ### Setup tunnel for webhooks (Optional)
+
 You need to setup a tunnel to localhost:5000 to work with Twitter Activity API and its webhooks.
 
 1. To spin up a tunnel with `ngrok`:
-    ```bash
-    ngrok http 5000
-    ```
+
+   ```bash
+   ngrok http 5000
+   ```
 
 2. Copy the tunnel host that `ngrok` prints and set that to `WEBHOOK_TUNNEL_HOST` environment variable.
 
 3. Kill and restart the bridge server (to pick up the environment vairable change)
 
-4. To destroy and recreate webhooks and subscriptions with the new tunnel host, go to the following URL in a browser and authorize your twitter account
-    ```
-    http://localhost:5000/hooks/twitter/__init
-    ```
-    If everything is successful, you will see the following JSON printed in your browser window
-    ```
-    { "success": true }
-    ````
+4. To destroy and recreate webhooks and subscriptions with the new tunnel host, go to the following URLs in a browser and authorize your account
 
-    Note: The twitter account you authorize should be same as `TWITTER_ORIGINPROTOCOL_USERNAME`
+   - **Twitter:** `http://localhost:5000/hooks/twitter/__init`
+
+     _Note:_ The twitter account you authorize should be same as `TWITTER_ORIGINPROTOCOL_USERNAME`
+
+   - **Telegram:** `http://localhost:5000/hooks/telegram/__init`
+
+   If everything is successful, you will see the following JSON printed in your browser window for each of the these URLs
+
+   ```json
+   { "success": true }
+   ```
 
 ### Run the Tests
 
@@ -144,15 +167,13 @@ npm run test
 We use [prettier](https://github.com/prettier/prettier) to enforce code
 formatting. You can automatically format code by running:
 
-```
+```sh
 npm run prettier
 ```
 
 ## Contributing
 
 Please send your pull requests to the `master` branch.
-
-## Contributing
 
 Origin is an 100% open-source and community-driven project and we welcome
 contributions of all sorts. There are many ways to help, from reporting issues,

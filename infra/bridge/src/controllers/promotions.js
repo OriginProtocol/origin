@@ -16,12 +16,15 @@ const { verifyPromotions } = require('../utils/validation')
 
 const db = require('../models/index')
 
-const { decodeHTML } = require('../utils/index')
+const EventValidators = require('../utils/event-validators')
 
 const PromotionEventToGrowthEvent = {
   TWITTER: {
     FOLLOW: GrowthEventTypes.FollowedOnTwitter,
     SHARE: GrowthEventTypes.SharedOnTwitter
+  },
+  TELEGRAM: {
+    FOLLOW: GrowthEventTypes.FollowedOnTelegram
   }
 }
 
@@ -32,17 +35,22 @@ const waitFor = timeInMs =>
  * Returns user profile data from the event
  */
 const getUserProfileFromEvent = ({ event, socialNetwork, type }) => {
-  if (socialNetwork !== 'TWITTER') {
-    // TODO: As of now, only twitter is supported
-    logger.error(`Trying to parse event of unknown network: ${socialNetwork}`)
-    return null
+  switch (socialNetwork) {
+    case 'TWITTER': {
+      if (type === 'FOLLOW') {
+        return event.target
+      }
+
+      return event.user
+    }
+
+    case 'TELEGRAM':
+      return event
   }
 
-  if (type === 'FOLLOW') {
-    return event.target
-  }
-
-  return event.user
+  // TODO: As of now, only twitter and telegram are supported
+  logger.error(`Trying to parse event of unknown network: ${socialNetwork}`)
+  return null
 }
 
 /**
@@ -77,13 +85,15 @@ const insertGrowthEvent = async ({
   logger.debug(`content hash: ${contentHash}`)
 
   try {
-    const twitterProfile = getUserProfileFromEvent({
+    const profile = getUserProfileFromEvent({
       event,
       socialNetwork,
       type
     })
 
-    logger.debug(`twitterProfile: ${JSON.stringify(twitterProfile)}`)
+    const key = `${socialNetwork.toLowerCase()}Profile` // twitterProfile | telegramProfile
+
+    logger.debug(`${key}: ${JSON.stringify(profile)}`)
     await GrowthEvent.insert(
       logger,
       1, // insert a single entry
@@ -93,7 +103,7 @@ const insertGrowthEvent = async ({
       // Store the raw event and the profile data that contains the user's social stats in the GrowthEvent.data column.
       // Note: the raw event is mostly for debugging purposes. If it starts taking too much storage
       // we could stop storing it in the DB.
-      { event, twitterProfile },
+      { event, [key]: profile },
       Date.now()
     )
   } catch (e) {
@@ -137,44 +147,16 @@ const getAttestation = async ({ identity, identityProxy, socialNetwork }) => {
 /**
  * Returns decodedContent (for SHARE) or true (for FOLLOW) if event is what you are looking for, false otherwise
  */
-const isEventValid = ({ socialNetwork, type, event, content }) => {
-  if (socialNetwork !== 'TWITTER') {
+const isEventValid = ({ socialNetwork, ...args }) => {
+  const validator = EventValidators[socialNetwork.toUpperCase()]
+
+  if (!validator) {
     logger.error(`Trying to parse event of unknown network: ${socialNetwork}`)
     // TODO: As of now, only twitter is supported
     return false
   }
 
-  if (type === 'FOLLOW') {
-    return true
-  }
-
-  // Note: `event.text` is truncated to 140chars, use `event.extended_tweet.full_text`, if it exists, to get whole tweet content
-  // Clone to avoid mutation
-  let encodedContent = JSON.parse(
-    JSON.stringify(
-      event.extended_tweet ? event.extended_tweet.full_text : event.text
-    )
-  )
-
-  // IMPORTANT: Twitter shortens and replaces URLs
-  // we have revert that back to get the original content and to get the hash
-  // IMPORTANT: Twitter prepends 'http://' if it idenitifies a text as URL
-  // It may result in a different content than expected, So always prepend URLs with `http://` in rule configs.
-
-  const entities = (event.extended_tweet || event).entities
-  entities.urls.forEach(entity => {
-    encodedContent = encodedContent.replace(entity.url, entity.expanded_url)
-  })
-
-  // Invalid if tweet content is not same as expected
-  // Note: Twitter sends HTML encoded contents
-  const decodedContent = decodeHTML(encodedContent)
-
-  logger.debug('encoded content:', encodedContent)
-  logger.debug('decoded content:', decodedContent)
-  logger.debug('expected content:', content)
-
-  return decodedContent === content ? decodedContent : false
+  return validator(args)
 }
 
 router.post('/verify', verifyPromotions, async (req, res) => {
@@ -191,15 +173,30 @@ router.post('/verify', verifyPromotions, async (req, res) => {
   })
 
   if (!attestation) {
+    logger.error(`No attestation found for ${identity}`)
     return res.status(400).send({
       success: false,
       errors: [`Attestation missing`]
     })
   }
 
-  const redisKey = `${socialNetwork.toLowerCase()}/${type.toLowerCase()}/${
-    attestation.value
-  }`
+  // Info regarding Twitter:
+  // We are using `screen_name` instead of `id` or `id_str` since they are
+  // not deterministic with all events
+  // Caveat: attestation.value for some rows stores an incorrect value
+  // because we had a bug caused by JS incorrect handling of large integers.
+  // See for reference https://developer.twitter.com/en/docs/basics/twitter-ids.html
+
+  let userId = attestation.username
+
+  if (!userId) {
+    // For Telegram, username is optional
+    // So fallback to id only if username is not available
+    userId = attestation.value
+  }
+
+  const redisKey = `${socialNetwork.toLowerCase()}/${type.toLowerCase()}/${userId}`
+
   const maxTries = process.env.VERIFICATION_MAX_TRIES || 60
   let tries = 0
   do {

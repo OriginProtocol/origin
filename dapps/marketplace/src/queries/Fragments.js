@@ -22,6 +22,7 @@ export default {
     basic: gql`
       fragment basicListingFields on Listing {
         id
+        contractAddr
         valid
         validationError
         status
@@ -251,13 +252,14 @@ export default {
           }
           ... on SocialShareAction {
             content {
+              id
               titleKey
               detailsKey
               image
               link
               linkKey
               post {
-                text {
+                tweet {
                   default
                   translations {
                     locale

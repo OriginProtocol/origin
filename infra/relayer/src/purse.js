@@ -136,6 +136,7 @@ class Purse {
     this.accountLookupInProgress = false
     this.masterKey = null
     this.masterWallet = null
+    this.checkBalances = true
 
     this.children = []
     this.accounts = {}
@@ -890,7 +891,7 @@ class Purse {
     do {
       if (!this.ready) continue
 
-      if (interval % 10 === 0) {
+      if (this.checkBalances) {
         try {
           // Prompt for funding of the master account
           const masterAddress = this.masterWallet.getChecksumAddressString()
@@ -983,6 +984,8 @@ class Purse {
           } else {
             logger.debug('Not ready or autofund disabled')
           }
+          // Balances check completed.
+          this.checkBalances = false
         } catch (err) {
           logger.error(
             'Error occurred in the balance checks and funding block of _process()'
@@ -1004,6 +1007,9 @@ class Purse {
           if (!receipt || !receipt.blockNumber) continue
 
           logger.debug(`Transaction ${txHash} has been mined.`)
+
+          // Trigger a check of the balances for every new transaction mined.
+          this.checkBalances = true
 
           // Remove from pending if it exists(it should)
           if (!receipt.status) {

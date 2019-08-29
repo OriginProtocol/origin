@@ -1,12 +1,14 @@
 const elasticsearch = require('elasticsearch')
-const scoring = require('../lib/scoring')
+const get = require('lodash/get')
 
-/*
-  Module to interface with ElasticSearch.
- */
+const scoring = require('../lib/scoring')
+const logger = require('../listener/logger')
 
 const client = new elasticsearch.Client({
-  hosts: [process.env.ELASTICSEARCH_HOST || 'elasticsearch:9200']
+  hosts: [process.env.ELASTICSEARCH_HOST || 'elasticsearch:9200'],
+  // Pin the API version since we do not want to use the default as it changes
+  // upon upgrade of the elasticsearch npm package and that may break things.
+  apiVersion: '6.8'
 })
 
 // Elasticsearch index and type names for our data
@@ -14,6 +16,59 @@ const client = new elasticsearch.Client({
 // (and forbids it unless you enable a special flag)
 const LISTINGS_INDEX = 'listings'
 const LISTINGS_TYPE = 'listing'
+
+/**
+ * Returns exchange rates of foreign currencies and tokens to USD.
+ * Pulls the data from Redis. It's written to Redis by the bridge server.
+ * @param {Array<string>} currencies - Currency values, format "token|fiat-XYZ". Ex: "token-ETH", "fiat-KRW"
+ * @returns {Object} - Requested exchange rates, currency as key and rate as string value
+ */
+const getExchangeRatesToUSD = async currencies => {
+  let exchangeRates = {}
+  try {
+    // lazy import to avoid event-listener depending on redis
+    // this is only used in discovery
+    const { getAsync } = require('../lib/redis')
+    // TODO use redis batch features instead of promise.All
+    const promises = currencies.map(currency => {
+      const splitCurrency = currency.split('-')
+      const resolvedCurrency = splitCurrency[1]
+      if (resolvedCurrency === 'USD') {
+        return '1'
+      }
+      return getAsync(`${resolvedCurrency}-USD_price`)
+    })
+    const result = await Promise.all(promises)
+    result.forEach((r, i) => {
+      if (r === null) {
+        // Rate not present in Redis. Perhaps the bridge server is not pulling the rate for that currency ?
+        logger.error(
+          `Failed getting exchange rate for ${currencies[i]} from Redis. Check Bridge server.`
+        )
+      } else {
+        exchangeRates[currencies[i]] = r
+      }
+    })
+  } catch (e) {
+    logger.error(
+      'Error retrieving exchange rates from redis. Using defaults',
+      e
+    )
+    exchangeRates = {
+      'fiat-CNY': '0.14',
+      'fiat-EUR': '1.12',
+      'fiat-GBP': '1.22',
+      'fiat-JPY': '0.0094',
+      'fiat-KRW': '0.00082',
+      'fiat-SGD': '0.72',
+      'fiat-USD': '1.0',
+      'token-DAI': '1.0',
+      'token-ETH': '200.0'
+    }
+  }
+  logger.debug('Exchange Rates - ', exchangeRates)
+  return exchangeRates
+}
 
 class Cluster {
   /**
@@ -140,14 +195,27 @@ class Listing {
   /**
    * Searches for listings.
    * @param {string} query - The search query.
+   * @param {string} sort - The target value to sort on (can be object notation)
+   * @param {string} order - The order of the sort
    * @param {array} filters - Array of filter objects
    * @param {integer} numberOfItems - number of items to display per page
    * @param {integer} offset - what page to return results from
-   * @param {boolean} idsOnly - only returns listing Ids vs listing object.
    * @throws Throws an error if the search operation failed.
    * @returns A list of listings (can be empty).
    */
-  static async search(query, filters, numberOfItems, offset, idsOnly) {
+  static async search(query, sort, order, filters, numberOfItems, offset) {
+    const currencies = [
+      'fiat-CNY',
+      'fiat-EUR',
+      'fiat-GBP',
+      'fiat-JPY',
+      'fiat-KRW',
+      'fiat-SGD',
+      'fiat-USD',
+      'token-DAI',
+      'token-ETH'
+    ]
+
     if (filters === undefined) {
       filters = []
     }
@@ -298,6 +366,71 @@ class Listing {
       numberOfItems = 1000
     }
 
+    /**
+     * Creates sort query
+     * @returns {Object} - Sort query for elastic search
+     */
+    const getSortQuery = async () => {
+      const exchangeRates = await getExchangeRatesToUSD(currencies)
+
+      const sortWhiteList = ['price.amount']
+      const orderWhiteList = ['asc', 'desc']
+      // if sort and order are set, return a sort
+      // otherwise return empty sort to skip
+      if (sort && sort.length > 0 && (order && order.length > 0)) {
+        try {
+          // check that sort and order are approved values
+          if (sortWhiteList.includes(sort) && orderWhiteList.includes(order)) {
+            switch (sort) {
+              // script based sorting specifically for calculating price based on exchange rate
+              case 'price.amount':
+                return {
+                  _script: {
+                    type: 'number',
+                    script: {
+                      lang: 'painless',
+                      // Note: Wrap calculation in a try/catch statement to be robust to possibly
+                      // malformed listings that exist on testing environments and could also exist in production.
+                      source: `
+                        try {
+                          float amount = Float.parseFloat(params._source.price.amount);
+                          float rate = Float.parseFloat(params.exchangeRates[params._source.price.currency.id]);
+                          return amount * rate;
+                        } catch (Exception e) {
+                          return params.order == "asc" ? 1000000000L : 0;
+                        }`,
+                      params: {
+                        order: order,
+                        exchangeRates: exchangeRates
+                      }
+                    },
+                    order: order
+                  }
+                }
+              default:
+                // this default is for non script based sorting, should satisfy most cases
+                return [
+                  {
+                    [sort]: {
+                      order: order
+                    }
+                  }
+                ]
+            }
+          } else {
+            throw new Error(
+              `Sort variables are not whitelisted - sort = ${sort}, order = ${order}, disabling sorting`
+            )
+          }
+        } catch (e) {
+          logger.error(e)
+          return []
+        }
+      } else {
+        return []
+      }
+    }
+
     const searchRequest = client.search({
       index: LISTINGS_INDEX,
       type: LISTINGS_TYPE,
@@ -305,6 +438,7 @@ class Listing {
         from: offset,
         size: numberOfItems,
         query: scoreQuery,
+        sort: await getSortQuery(),
         _source: [
           'title',
           'description',
@@ -341,8 +475,10 @@ class Listing {
         category: hit._source.category,
         subCategory: hit._source.subCategory,
         description: hit._source.description,
-        priceAmount: (hit._source.price || {}).amount,
-        priceCurrency: (hit._source.price || {}).currency
+        price: {
+          amount: get(hit, '_source.price.amount', '0'),
+          currency: get(hit, '_source.price.currency.id', 'fiat-USD')
+        }
       })
     })
 
@@ -353,13 +489,8 @@ class Listing {
       minPrice: minPrice || 0,
       totalNumberOfListings: searchResponse.hits.total
     }
-
-    if (idsOnly) {
-      const listingIds = listings.map(listing => listing.id)
-      return { listingIds, stats }
-    } else {
-      return { listings, stats }
-    }
+    logger.debug('search listings - ', listings)
+    return { listings, stats }
   }
 }
 

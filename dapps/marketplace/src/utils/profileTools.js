@@ -145,6 +145,8 @@ export function getProviderDisplayName(provider) {
       return fbt('LinkedIn', 'LinkedIn')
     case 'wechat':
       return fbt('WeChat', 'WeChat')
+    case 'telegram':
+      return fbt('Telegram', 'Telegram')
   }
 
   console.error(`Unknown attestation provider: ${provider}`)
@@ -164,6 +166,7 @@ export function getVerifiedTooltip(provider) {
     case 'kakao':
     case 'linkedin':
     case 'wechat':
+    case 'telegram':
       return fbt(
         fbt.param('provider', displayName) + ' Account Verified',
         'profileTools.providerAccountVerified'

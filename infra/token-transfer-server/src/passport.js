@@ -1,22 +1,24 @@
 'use strict'
 
 const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy
+const BearerStrategy = require('passport-http-bearer').Strategy
 const TotpStrategy = require('passport-totp').Strategy
 const logger = require('./logger')
 const { decrypt } = require('./lib/crypto')
+const jwt = require('jsonwebtoken')
+
 const { User } = require('./models')
+const { encryptionSecret } = require('./config')
 
 module.exports = function() {
   passport.serializeUser(function(user, done) {
-    logger.debug('Serializing user with email', user.email)
-    done(null, user.email)
+    done(null, user.id)
   })
 
   passport.deserializeUser(async function(id, done) {
-    logger.debug('Deserializing user with id', id)
+    logger.debug('Deserializing user with ID', id)
     try {
-      const user = await User.findOne({ where: { email: id } })
+      const user = await User.findOne({ where: { id } })
       if (!user) {
         return done(null, false)
       }
@@ -27,36 +29,35 @@ module.exports = function() {
   })
 
   passport.use(
-    new LocalStrategy(
-      {
-        usernameField: 'email',
-        passwordField: 'code',
-        session: false,
-        passReqToCallback: true
-      },
-      async function(req, email, code, done) {
-        logger.debug('Passport local strategy called.', email, code)
-        try {
-          const user = await User.findOne({ where: { email } })
-          if (!user) {
-            // No user with that email found.
-            return done(null, false)
-          }
-          if (
-            code !== req.session.emailVerification.code ||
-            Date.now() > req.session.emailVerification.ttl
-          ) {
-            // Code does not match or is expired.
-            return done(null, false)
-          }
-          // Email and code match. All good !
-          return done(null, user)
-        } catch (e) {
-          // Something went wrong. Return an error.
-          return done(e)
-        }
+    new BearerStrategy(async (token, done) => {
+      logger.debug('Passport bearer strategy called')
+      let decodedToken
+      try {
+        decodedToken = jwt.verify(token, encryptionSecret)
+      } catch (error) {
+        logger.error('Could not decode token')
+        return done(null, false)
       }
-    )
+
+      try {
+        const user = await User.findOne({
+          where: { email: decodedToken.email }
+        })
+        if (!user) {
+          // No user with that email found.
+          logger.warning(
+            `Passport authentication attempted for invalid user ${decodedToken.email}`
+          )
+          return done(null, false)
+        }
+        // All good
+        return done(null, user)
+      } catch (e) {
+        // Something went wrong. Return an error.
+        logger.error(e)
+        return done(e)
+      }
+    })
   )
 
   passport.use(

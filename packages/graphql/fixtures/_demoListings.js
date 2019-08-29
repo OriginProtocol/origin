@@ -3,6 +3,7 @@
 // House, Fractional Nightly
 const HawaiiHouse = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
+  version: '000',
   deposit: '0',
   depositManager: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
   autoApprove: true,
@@ -37,7 +38,7 @@ const HawaiiHouse = {
     ],
     price: {
       amount: '80',
-      currency: 'fiat-USD'
+      currency: 'fiat-GBP'
     },
     commissionPerUnit: '50',
     marketplacePublisher: ''
@@ -45,7 +46,7 @@ const HawaiiHouse = {
   fractionalData: {
     weekendPrice: {
       amount: '95',
-      currency: 'fiat-USD'
+      currency: 'fiat-GBP'
     },
     workingHours: [],
     timeZone: '',
@@ -132,6 +133,7 @@ const HawaiiHouse = {
 // Car, Fractional Hourly
 const Car = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
+  version: '000',
   deposit: '0',
   depositManager: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
   autoApprove: true,
@@ -162,7 +164,7 @@ const Car = {
     ],
     price: {
       amount: '15',
-      currency: 'fiat-USD'
+      currency: 'fiat-EUR'
     },
     commission: '0',
     commissionPerUnit: '0',
@@ -188,6 +190,7 @@ const Car = {
 // Tickets, Mutli-Unit
 const TaylorSwiftTickets = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
+  version: '000',
   deposit: '5',
   depositManager: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
   autoApprove: true,
@@ -234,6 +237,7 @@ const TaylorSwiftTickets = {
 // House, Fractional Nightly
 const LakeHouse = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
+  version: '000',
   deposit: '0',
   depositManager: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
   autoApprove: true,
@@ -260,7 +264,7 @@ const LakeHouse = {
     ],
     price: {
       amount: '300',
-      currency: 'fiat-USD'
+      currency: 'fiat-KRW'
     },
     commissionPerUnit: '50',
     marketplacePublisher: ''
@@ -268,7 +272,7 @@ const LakeHouse = {
   fractionalData: {
     weekendPrice: {
       amount: '400',
-      currency: 'fiat-USD'
+      currency: 'fiat-KRW'
     },
     workingHours: [],
     timeZone: '',
@@ -281,6 +285,7 @@ const LakeHouse = {
 // House, Fractional Nightly
 const ZincHouse = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
+  version: '000',
   deposit: '0',
   depositManager: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
   autoApprove: true,
@@ -331,7 +336,7 @@ const ZincHouse = {
     ],
     price: {
       amount: '500',
-      currency: 'fiat-USD'
+      currency: 'fiat-JPY'
     },
     commissionPerUnit: '50',
     marketplacePublisher: ''
@@ -339,7 +344,7 @@ const ZincHouse = {
   fractionalData: {
     weekendPrice: {
       amount: '600',
-      currency: 'fiat-USD'
+      currency: 'fiat-JPY'
     },
     workingHours: [],
     timeZone: '',
@@ -352,6 +357,7 @@ const ZincHouse = {
 // T-Shirt, Single Unit
 const Spaceman = {
   from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
+  version: '001',
   deposit: '5',
   depositManager: '0x821aEa9a577a9b44299B9c15c88cf3087F3b5544',
   autoApprove: true,

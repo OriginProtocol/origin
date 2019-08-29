@@ -1,6 +1,8 @@
 import gql from 'graphql-tag'
 
-import mnemonicToAccounts, { mnemonicToMasterAccount } from '../src/utils/mnemonicToAccount'
+import mnemonicToAccounts, {
+  mnemonicToMasterAccount
+} from '../src/utils/mnemonicToAccount'
 import demoListings from './_demoListings'
 import get from 'lodash/get'
 import sortBy from 'lodash/sortBy'
@@ -99,7 +101,7 @@ async function getNodeAccount(gqlClient) {
   return NodeAccountObj.id
 }
 
-export async function createAccount(gqlClient) {
+export async function createAccount(gqlClient, ogn) {
   const NodeAccount = await getNodeAccount(gqlClient)
   await gqlClient.mutate({
     mutation: ToggleMetaMaskMutation,
@@ -110,10 +112,23 @@ export async function createAccount(gqlClient) {
     variables: { name: 'Seller', role: 'Seller' }
   })
   const user = result.data.createWallet.id
-  await gqlClient.mutate({
+  const sendTx = await gqlClient.mutate({
     mutation: SendFromNodeMutation,
     variables: { from: NodeAccount, to: user, value: '0.5' }
   })
+  await transactionConfirmed(sendTx.data.sendFromNode.id, gqlClient)
+  if (ogn) {
+    const res = await gqlClient.mutate({
+      mutation: TransferTokenMutation,
+      variables: {
+        from: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
+        to: user,
+        token: 'OGN',
+        value: ogn
+      }
+    })
+    await transactionConfirmed(res.data.transferToken.id, gqlClient)
+  }
   return user
 }
 
@@ -171,6 +186,7 @@ export default async function populate(gqlClient, log, done) {
   const accounts = mnemonicToAccounts()
   const res = await mutate(ImportWalletsMutation, null, { accounts })
   const [Admin, Seller, Buyer, Arbitrator, Affiliate] = res.map(r => r.id)
+  log(`Imported wallets`)
 
   await mutate(SendFromNodeMutation, NodeAccount, { to: Admin, value: '0.5' })
   log('Sent eth to Admin')
@@ -193,17 +209,39 @@ export default async function populate(gqlClient, log, done) {
   })
   log(`Deployed DAI stablecoin to ${DAI.contractAddress}`)
 
-  const Marketplace = await mutate(DeployMarketplaceMutation, Admin, {
+  const MarketplaceV1 = await mutate(DeployMarketplaceMutation, Admin, {
     token: OGN.contractAddress,
     version: '001',
     autoWhitelist: true
   })
-  log(`Deployed marketplace to ${Marketplace.contractAddress}`)
+  log(`Deployed marketplace v1 to ${MarketplaceV1.contractAddress}`)
+
+  await mutate(AddAffiliateMutation, Admin, {
+    affiliate: Affiliate,
+    version: '001'
+  })
+  log('Added affiliate to marketplace v1')
+
+  const Marketplace = await mutate(DeployMarketplaceMutation, Admin, {
+    token: OGN.contractAddress,
+    version: '000',
+    autoWhitelist: true
+  })
+  log(`Deployed marketplace v0 to ${Marketplace.contractAddress}`)
+
+  await mutate(AddAffiliateMutation, Admin, {
+    affiliate: Affiliate,
+    version: '000'
+  })
+  log('Added affiliate to marketplace v0')
 
   const relayerMasterAddress = mnemonicToMasterAccount(
     process.env.FORWARDER_MNEMONIC || 'one two three four five six'
   )
-  await mutate(SendFromNodeMutation, NodeAccount, { to: relayerMasterAddress, value: '3' })
+  await mutate(SendFromNodeMutation, NodeAccount, {
+    to: relayerMasterAddress,
+    value: '3'
+  })
   log(`Sent eth to Relayer master account(${relayerMasterAddress})`)
 
   const ProxyFactory = await mutate(DeployProxyFactoryContractMutation, Admin)
@@ -257,9 +295,6 @@ export default async function populate(gqlClient, log, done) {
     value: '0.1'
   })
   log('Sent eth to affiliate')
-
-  await mutate(AddAffiliateMutation, Admin, { affiliate: Affiliate })
-  log('Added affiliate to marketplace')
 
   const IdentityEvents = await mutate(
     DeployIdentityEventsContractMutation,
@@ -336,6 +371,8 @@ export default async function populate(gqlClient, log, done) {
       DAI: DAI.contractAddress,
       Marketplace: Marketplace.contractAddress,
       MarketplaceEpoch: Marketplace.blockNumber,
+      Marketplace_V01: MarketplaceV1.contractAddress,
+      MarketplaceEpoch_V01: MarketplaceV1.blockNumber,
       IdentityEvents: IdentityEvents.contractAddress,
       IdentityEventsEpoch: IdentityEvents.blockNumber,
       UniswapFactory: UniswapFactory.contractAddress,

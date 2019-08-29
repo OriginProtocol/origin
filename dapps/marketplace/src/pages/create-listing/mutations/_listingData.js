@@ -1,4 +1,56 @@
 import pick from 'lodash/pick'
+import get from 'lodash/get'
+
+import tokenBalance from 'utils/tokenPrice'
+
+// Translate listing from schema representation to form
+// representation.
+export function getStateFromListing(props) {
+  const tokens = get(props, 'listing.acceptedTokens', []).map(t => t.id)
+  return {
+    // FractionalListing fields:
+    weekendPrice: get(props, 'listing.weekendPrice.amount', ''),
+    booked: get(props, 'listing.booked', []),
+    customPricing: get(props, 'listing.customPricing', []),
+    unavailable: get(props, 'listing.unavailable', []),
+
+    // HourlyFractionalListing fields:
+    timeZone: get(props, 'listing.timeZone', ''),
+    workingHours: get(props, 'listing.workingHours', []),
+
+    // GiftCardListing fields:
+    retailer: get(props, 'listing.retailer', ''),
+    cardAmount: get(props, 'listing.cardAmount', ''),
+    issuingCountry: get(props, 'listing.issuingCountry', 'US'),
+    isDigital: get(props, 'listing.isDigital', false),
+    isCashPurchase: get(props, 'listing.isCashPurchase', false),
+    receiptAvailable: get(props, 'listing.receiptAvailable', false),
+
+    // Marketplace creator fields:
+    marketplacePublisher: get(props, 'listing.marketplacePublisher'),
+
+    ...pick(props.listing, [
+      'id',
+      'contractAddr',
+      '__typename',
+      'title',
+      'description',
+      'category',
+      'subCategory',
+      'seller',
+      'unitsAvailable'
+    ]),
+    acceptedTokens: tokens.length ? tokens : ['token-ETH'],
+    quantity: String(props.listing.unitsTotal),
+    currency: get(props, 'listing.price.currency.id', ''),
+    price: String(props.listing.price.amount),
+    commission: tokenBalance(get(props, 'listing.commission', '0')),
+    commissionPerUnit: tokenBalance(
+      get(props, 'listing.commissionPerUnit', '0')
+    ),
+    media: props.listing.media
+  }
+}
 
 export default function applyListingData(props, data) {
   const { listing } = props
@@ -15,7 +67,10 @@ export default function applyListingData(props, data) {
       category: listing.category,
       subCategory: listing.subCategory,
       media: listing.media.map(m => pick(m, 'contentType', 'url')),
-      commissionPerUnit: listing.boost,
+      commission: listing.commission ? String(listing.commission) : '0',
+      commissionPerUnit: listing.commissionPerUnit
+        ? String(listing.commissionPerUnit)
+        : '0',
       marketplacePublisher: listing.marketplacePublisher
     }
   }
@@ -28,7 +83,6 @@ export default function applyListingData(props, data) {
     case 'UnitListing': {
       const unitsTotal = Number(listing.quantity)
       variables.unitData = { unitsTotal }
-      variables.commission = unitsTotal > 1 ? listing.boostLimit : listing.boost
       break
     }
 
@@ -45,7 +99,6 @@ export default function applyListingData(props, data) {
         customPricing: listing.customPricing,
         unavailable: listing.unavailable
       }
-      variables.commission = listing.boostLimit
       break
 
     case 'GiftCardListing':
@@ -59,7 +112,6 @@ export default function applyListingData(props, data) {
         isCashPurchase: listing.isCashPurchase,
         receiptAvailable: listing.receiptAvailable
       }
-      variables.commission = unitsTotal > 1 ? listing.boostLimit : listing.boost
       break
 
     case 'AnnouncementListing':

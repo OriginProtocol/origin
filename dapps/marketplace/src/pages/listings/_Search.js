@@ -4,7 +4,7 @@ import get from 'lodash/get'
 import queryString from 'query-string'
 import { fbt } from 'fbt-runtime'
 
-import { getStateFromQuery } from './_filters'
+import { getStateFromQuery, pushSearchHistory } from './_utils'
 
 import withConfig from 'hoc/withConfig'
 import withIsMobile from 'hoc/withIsMobile'
@@ -42,6 +42,7 @@ class Search extends Component {
   renderContent() {
     const enabled = get(this.props, 'config.discovery', false)
     const { placeholder, className, isMobile } = this.props
+    const { searchInput } = this.state
 
     return (
       <form
@@ -54,40 +55,44 @@ class Search extends Component {
         }}
         ref={ref => (this.formRef = ref)}
       >
-        <div className="search-input-wrapper">
-          <div className="search-input">
-            <input
-              ref={ref => (this.inputRef = ref)}
-              className={`form-control${
-                !this.state.searchInput ? ' empty' : ''
-              }`}
-              type="input"
-              value={this.state.searchInput}
-              onChange={e => this.setState({ searchInput: e.target.value })}
-              onFocus={() => this.setState({ active: true })}
-              onKeyUp={e => {
-                if (e.keyCode === 13) this.doSearch()
-              }}
-              onInput={e => {
-                // When 'clear' button is clicked
-                if (e.target.value === '') {
-                  this.setState({ searchInput: '' }, () => this.doSearch())
+        <div className="search-wrapper">
+          <div className="search-input-wrapper">
+            <div className="search-input">
+              <input
+                ref={ref => (this.inputRef = ref)}
+                className={`form-control${!searchInput ? ' empty' : ''}`}
+                type="input"
+                value={searchInput}
+                onChange={e => this.setState({ searchInput: e.target.value })}
+                onFocus={() => this.setState({ active: true })}
+                onKeyUp={e => {
+                  if (e.keyCode === 13) this.doSearch()
+                }}
+                placeholder={
+                  enabled
+                    ? placeholder
+                      ? fbt('Search', 'Search')
+                      : null
+                    : fbt(
+                        'Note: Search unavailable',
+                        'search.search-unavailable'
+                      )
                 }
-              }}
-              placeholder={
-                enabled
-                  ? placeholder
-                    ? 'Search'
-                    : null
-                  : fbt('Note: Search unavailable', 'search.search-unavailable')
-              }
-            />
+                required={true}
+              />
+              <button
+                type="button"
+                className="clear-button"
+                onClick={() =>
+                  this.setState({ searchInput: '' }, () => this.doSearch(false))
+                }
+              />
+            </div>
             {isMobile && this.state.active && (
               <button
+                type="button"
                 className="cancel-button"
-                onClick={() => {
-                  this.setState({ active: false })
-                }}
+                onClick={() => this.setState({ active: false })}
               />
             )}
           </div>
@@ -164,57 +169,35 @@ class Search extends Component {
   }
 
   onCategoryClick({ category, subCategory }) {
-    this.setState(
-      {
-        category: {
-          type: category
-        },
-        subCategory: {
-          type: subCategory
-        }
-      },
-      () => this.doSearch()
-    )
+    const newState = {
+      category: { type: category },
+      subCategory: { type: subCategory }
+    }
+    this.setState(newState, () => this.doSearch())
   }
 
   onOutsideClick(e) {
     if (!this.formRef.contains(e.target)) {
-      this.setState({
-        active: false
-      })
+      this.setState({ active: false })
     }
   }
 
   onRewardsClick() {
     this.props.history.push({
       pathname: '/search',
-      search: queryString.stringify({
-        ognListings: true
-      })
+      search: queryString.stringify({ ognListings: true })
     })
-    this.setState({
-      active: false,
-      searchInput: ''
-    })
+    this.setState({ active: false, searchInput: '' })
     this.inputRef.blur()
   }
 
-  doSearch() {
+  doSearch(shouldClose = true) {
     const search = this.state
-    this.props.history.push({
-      pathname: '/search',
-      search: queryString.stringify({
-        q: search.searchInput || undefined,
-        category: search.category.type || undefined,
-        subCategory: search.subCategory.type || undefined,
-        priceMin: search.priceMin || undefined,
-        priceMax: search.priceMax || undefined
-      })
-    })
-    this.setState({
-      active: false
-    })
-    this.inputRef.blur()
+    pushSearchHistory(this.props.history, search)
+    if (shouldClose) {
+      this.setState({ active: false })
+      this.inputRef.blur()
+    }
   }
 }
 
@@ -222,23 +205,42 @@ export default withIsMobile(withConfig(withRouter(Search)))
 
 require('react-styl')(`
   .listing-search-wrapper
-    .search-input-wrapper
+    .search-wrapper
       position: relative
       width: 100%
-      .search-input
-        display: flex
-      .form-control
-        border-radius: 5px
-        flex: auto 1 1
+      .search-input-wrapper
+        .search-input
+          position: relative
+          .clear-button
+            display: none
+            position: absolute
+            right: 0.25rem
+            top: 1px
+            bottom: 1px
+            width: 2rem
+            background-color: white
+            background-image: url('images/nav/close-icon.svg')
+            background-repeat: no-repeat
+            background-position: center
+            border: 0
+            background-size: 1.25rem
+          .form-control
+            border-radius: 5px
+            flex: 1
+            padding-right: 2.375rem
+            &:valid + .clear-button
+              display: inline-block
+
       .cancel-button
-        flex: 3rem 0 0
+        flex: 2rem 0 0
         height: auto
         background-color: white
         display: inline-block
-        background-image: url('images/nav/close-icon.svg')
+        background-image: url('images/close-icon.svg')
         background-repeat: no-repeat
         background-position: center right
         border: 0
+        background-size: 1rem
 
       .search-dropdown
         background-color: var(--white)
@@ -246,15 +248,10 @@ require('react-styl')(`
         &.floating
           z-index: 1000
           position: absolute
-          right: 0
           left: 0
-          border-top-left-radius: 0
-          border-top-right-radius: 0
-          border-bottom-left-radius: 5px
-          border-bottom-right-radius: 5px
+          border-radius: 5px
           box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1)
           border: solid 1px #c2cbd3
-          border-top: 0
         .title
           font-size: 12px
           color: var(--dusk)
@@ -268,8 +265,6 @@ require('react-styl')(`
 
         .featured-categories
           display: inline-flex
-          overflow-x: scroll
-          flex-wrap: nowrap
           padding: 0 2rem
           .category-icon
             width: 60px
@@ -310,14 +305,12 @@ require('react-styl')(`
 
             &:last-of-type
               margin-right: 0
-    
+
     &:focus-within
       .form-control
-        border-bottom-left-radius: 0
-        border-bottom-right-radius: 0
         box-shadow: none
         outline: none
-      .search-input-wrapper .search-dropdown.floating
+      .search-wrapper .search-dropdown.floating
         &:focus
           box-shadow: none
           outline: none
@@ -328,10 +321,10 @@ require('react-styl')(`
       bottom: 0
       right: 0
       left: 0
-      padding: 1.5rem
+      padding: 0.5rem 1rem
       background-color: white
       z-index: 1000
-      .search-input-wrapper
+      .search-wrapper
         .search-dropdown
           padding: 1.5rem 0
 
@@ -348,21 +341,19 @@ require('react-styl')(`
   @media (max-width: 767.98px)
     .listing-search-wrapper
       padding: 0 1rem
-      .search-input-wrapper
-        margin-bottom: 1.5rem
-        .form-control
-          font-size: 22px
-          border: 0
-          border-bottom: 1px solid #dde6ea
-          background-image: url(images/magnifying-glass.svg)
-          background-repeat: no-repeat
-          background-position: right 0 center
-          background-size: 20px
-          border-radius: 0
-          padding-left: 0
+      .search-wrapper .search-input-wrapper .search-input .form-control
+        font-size: 22px
+        border: 0
+        border-bottom: 1px solid #dde6ea
+        background-image: url(images/magnifying-glass.svg)
+        background-repeat: no-repeat
+        background-position: right 0 center
+        background-size: 20px
+        border-radius: 0
+        padding-left: 0
 
-          &::-webkit-input-placeholder
-            color: #94a7b5
-          &:focus
-            box-shadow: none
+        &::-webkit-input-placeholder
+          color: #94a7b5
+        &:focus
+          box-shadow: none
 `)

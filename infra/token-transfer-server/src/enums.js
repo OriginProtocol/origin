@@ -14,6 +14,8 @@ class Enum extends Array {
 }
 
 const TransferStatuses = new Enum(
+  // User has requested transfer but has not been confirmed by email token.
+  'WaitingEmailConfirm',
   // Transfer requested by user.
   'Enqueued',
   // Request paused. For example for Origin staff to review the transfer before its exection.
@@ -25,7 +27,9 @@ const TransferStatuses = new Enum(
   // Transfer transaction failed.
   'Failed',
   // Transfer cancelled by the user.
-  'Cancelled'
+  'Cancelled',
+  // Transfer was not confirmed by 2fa in the required time.
+  'Expired'
 )
 
 module.exports = {

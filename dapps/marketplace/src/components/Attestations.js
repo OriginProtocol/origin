@@ -6,7 +6,7 @@ import { getVerifiedTooltip } from 'utils/profileTools'
 const Attestations = ({ profile = {}, small, className }) => {
   const verifiedAttestations = profile.verifiedAttestations
 
-  if (!verifiedAttestations) {
+  if (!verifiedAttestations || verifiedAttestations.length === 0) {
     return null
   }
 
@@ -87,6 +87,10 @@ require('react-styl')(`
       border: 0
     &.kakao
       background-image: url(images/growth/kakao-icon.svg)
+      background-size: 100%
+      border: 0
+    &.telegram
+      background-image: url(images/growth/telegram-badge.svg)
       background-size: 100%
       border: 0
   .attestations-small .attestation

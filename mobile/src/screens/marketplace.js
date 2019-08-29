@@ -11,7 +11,9 @@ import {
   StyleSheet,
   View,
   ScrollView,
-  RefreshControl
+  Text,
+  RefreshControl,
+  Linking
 } from 'react-native'
 import { AndroidBackHandler } from 'react-navigation-backhandler'
 import { connect } from 'react-redux'
@@ -19,7 +21,10 @@ import { WebView } from 'react-native-webview'
 import PushNotification from 'react-native-push-notification'
 import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
+import { fbt } from 'fbt-runtime'
+import { ShareDialog } from 'react-native-fbsdk'
 
+import OriginButton from 'components/origin-button'
 import NotificationCard from 'components/notification-card'
 import SignatureCard from 'components/signature-card'
 import TransactionCard from 'components/transaction-card'
@@ -40,6 +45,7 @@ import { setAccountBalances, setIdentity } from 'actions/Wallet'
 import withOriginGraphql from 'hoc/withOriginGraphql'
 import { getCurrentRoute } from '../NavigationService'
 import { PROMPT_MESSAGE, PROMPT_PUB_KEY } from '../constants'
+import CardStyles from 'styles/card'
 
 class MarketplaceScreen extends Component {
   static navigationOptions = () => {
@@ -54,27 +60,43 @@ class MarketplaceScreen extends Component {
       enablePullToRefresh: true,
       modals: [],
       fiatCurrency: CURRENCIES.find(c => c[0] === 'fiat-USD'),
-      transactionCardLoading: false
+      transactionCardLoading: false,
+      currentDomain: '',
+      lastDappUrl: null,
+      // Whenever this change it forces the WebView to go to that source
+      webViewUrlTrigger: this.props.settings.network.dappUrl
     }
     if (Platform.OS === 'android') {
       // Configure swipe handler for back forward navigation on Android because
       // it does not support allowsBackForwardNavigationGestures
       this.setSwipeHandler()
     }
-    DeviceEventEmitter.addListener('graphqlQuery', this.injectGraphqlQuery)
-    DeviceEventEmitter.addListener(
-      'graphqlMutation',
-      this.injectGraphqlMutation
-    )
-    DeviceEventEmitter.addListener('reloadMarketplace', () =>
-      this.dappWebView.reload()
-    )
+    this.subscriptions = [
+      DeviceEventEmitter.addListener('graphqlQuery', this.injectGraphqlQuery),
+      DeviceEventEmitter.addListener(
+        'graphqlMutation',
+        this.injectGraphqlMutation
+      ),
+      DeviceEventEmitter.addListener('reloadMarketplace', () => {
+        if (this.dappWebView) {
+          this.dappWebView.reload()
+        }
+      })
+    ]
+  }
+
+  componentWillUnmount() {
+    if (this.subscriptions) {
+      this.subscriptions.map(s => s.remove())
+    }
   }
 
   /* Handle back button presses on Android devices so that they work on the
    * WebView */
   onBackButtonPressAndroid = () => {
-    this.dappWebView.goBack()
+    if (this.dappWebView) {
+      this.dappWebView.goBack()
+    }
     return true
   }
 
@@ -87,7 +109,8 @@ class MarketplaceScreen extends Component {
       if (this.dappWebView) {
         // Inject invite code
         this.injectInviteCode(inviteCode)
-        // Clipboard.setString('')
+        // Clear clipboard
+        Clipboard.setString('')
       }
     }
   }
@@ -96,6 +119,17 @@ class MarketplaceScreen extends Component {
     if (prevProps.settings.language !== this.props.settings.language) {
       // Language has changed, need to reload the DApp
       this.injectLanguage()
+    }
+
+    // Check for default dapp url
+    if (
+      get(prevProps, 'settings.network.dappUrl') !==
+      get(this.props, 'settings.network.dappUrl')
+    ) {
+      // Default dapp url changed, trigger WebView url change
+      this.setState({
+        webViewUrlTrigger: get(this.props, 'settings.network.dappUrl')
+      })
     }
 
     // Check for active Ethereum address changing
@@ -134,10 +168,12 @@ class MarketplaceScreen extends Component {
         )
       },
       onPanResponderRelease: (evt, gestureState) => {
-        if (gestureState.moveX > swipeDistance) {
-          this.dappWebView.goBack()
-        } else if (gestureState.moveX < swipeDistance) {
-          this.dappWebView.goForward()
+        if (this.dappWebView) {
+          if (gestureState.moveX > swipeDistance) {
+            this.dappWebView.goBack()
+          } else if (gestureState.moveX < swipeDistance) {
+            this.dappWebView.goForward()
+          }
         }
       }
     })
@@ -289,18 +325,27 @@ class MarketplaceScreen extends Component {
     })
   }
 
-  injectInviteCode = inviteCode => {
+  injectJavaScript = (script, name) => {
     const injectedJavaScript = `
       (function() {
-        if (window && window.localStorage) {
-          window.localStorage.growth_invite_code = '${inviteCode}';
-        }
+        ${script}
       })();
     `
     if (this.dappWebView) {
-      console.debug(`Injecting invite code: ${inviteCode}`)
+      console.debug(`Injecting ${name}`)
       this.dappWebView.injectJavaScript(injectedJavaScript)
     }
+  }
+
+  injectInviteCode = inviteCode => {
+    this.injectJavaScript(
+      `
+        if (window && window.localStorage) {
+          window.localStorage.growth_invite_code = '${inviteCode}';
+        }
+      `,
+      'invite code'
+    )
   }
 
   /* Inject the cookies required for messaging to allow preenabling of messaging
@@ -331,8 +376,8 @@ class MarketplaceScreen extends Component {
     const pubSignature = global.web3.eth.accounts.sign(pubMessage, privateKey)
       .signature
 
-    const keyInjection = `
-      (function() {
+    this.injectJavaScript(
+      `
         if (window && window.context && window.context.messaging) {
           window.context.messaging.onPreGenKeys({
             address: '${wallet.activeAccount.address}',
@@ -341,12 +386,9 @@ class MarketplaceScreen extends Component {
             pubSignature: '${pubSignature}'
           });
         }
-      })()
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting messaging keys')
-      this.dappWebView.injectJavaScript(keyInjection)
-    }
+      `,
+      'messaging keys'
+    )
   }
 
   /* Inject the language setting in from redux into the DApp
@@ -355,50 +397,43 @@ class MarketplaceScreen extends Component {
     const language = this.props.settings.language
       ? this.props.settings.language
       : findBestAvailableLanguage()
-    const injectedJavaScript = `
-      (function() {
+
+    this.injectJavaScript(
+      `
         if (window && window.appComponent && window.appComponent.onLocale) {
           window.appComponent.onLocale('${language}');
         }
-      })()
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting language')
-      this.dappWebView.injectJavaScript(injectedJavaScript)
-    }
+      `,
+      'language'
+    )
   }
 
   injectCurrency = () => {
     const currency = findBestAvailableCurrency()
-    const injectedJavaScript = `
-      (function() {
+
+    this.injectJavaScript(
+      `
         if (window && window.appComponent && window.appComponent.onCurrency) {
           window.appComponent.onCurrency('${currency}');
         }
-      })()
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting currency')
-      this.dappWebView.injectJavaScript(injectedJavaScript)
-    }
+      `,
+      'currency'
+    )
   }
 
   /* Inject Javascript that causes the page to refresh when it hits the top
    */
   injectScrollHandler = () => {
-    const injectedJavaScript = `
-      (function() {
+    this.injectJavaScript(
+      `
         window.onscroll = function() {
           window.webViewBridge.send('handleScrollHandlerResponse', {
             scrollTop: document.documentElement.scrollTop || document.body.scrollTop
           });
         }
-      })();
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting scroll handler')
-      this.dappWebView.injectJavaScript(injectedJavaScript)
-    }
+      `,
+      'scroll handler'
+    )
   }
 
   /* Handle the response from window.onScroll
@@ -413,8 +448,8 @@ class MarketplaceScreen extends Component {
     variables = {},
     fetchPolicy = 'cache-first'
   ) => {
-    const injectedJavaScript = `
-      (function() {
+    this.injectJavaScript(
+      `
         if (window && window.gql) {
           window.gql.query({
             query: ${JSON.stringify(query)},
@@ -432,17 +467,14 @@ class MarketplaceScreen extends Component {
             });
           });
         }
-      })();
-    `
-    if (this.dappWebView) {
-      // console.debug('Injecting GraphQL query: ', query.definitions[0].name.value)
-      this.dappWebView.injectJavaScript(injectedJavaScript)
-    }
+      `,
+      'GraphQL query'
+    )
   }
 
   injectGraphqlMutation = (id, mutation, variables = {}) => {
-    const injectedJavaScript = `
-      (function() {
+    this.injectJavaScript(
+      `
         if (window && window.gql) {
           window.gql.mutate({
             mutation: ${JSON.stringify(mutation)},
@@ -459,12 +491,9 @@ class MarketplaceScreen extends Component {
             });
           });
         }
-      })();
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting GraphQL mutation')
-      this.dappWebView.injectJavaScript(injectedJavaScript)
-    }
+      `,
+      'GraphQL mutation'
+    )
   }
 
   handleGraphqlResult = result => {
@@ -478,18 +507,15 @@ class MarketplaceScreen extends Component {
   /* Get the uiState from DApp localStorage via a webview bridge request.
    */
   injectUiStateRequest = () => {
-    const injectedJavaScript = `
-      (function() {
+    this.injectJavaScript(
+      `
         if (window && window.localStorage && window.webViewBridge) {
           const uiState = window.localStorage['uiState'];
           window.webViewBridge.send('handleUiStateMessage', uiState);
         }
-      })();
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting uiState request')
-      this.dappWebView.injectJavaScript(injectedJavaScript)
-    }
+      `,
+      'uiState request'
+    )
   }
 
   /* Handle the postMessagefrom the uiState request. The uiState localStorage object
@@ -522,17 +548,15 @@ class MarketplaceScreen extends Component {
     if (!this.props.onboarding.growth) {
       return
     }
-    const injectedJavaScript = `
-      (function() {
+
+    this.injectJavaScript(
+      `
         if (window && window.localStorage && window.webViewBridge) {
           window.localStorage.growth_auth_token = '${this.props.onboarding.growth}';
         }
-      })();
-    `
-    if (this.dappWebView) {
-      console.debug('Injecting growth auth token')
-      this.dappWebView.injectJavaScript(injectedJavaScript)
-    }
+      `,
+      'growth auth token'
+    )
   }
 
   /* Send a response back to the DApp using postMessage in the webview
@@ -540,7 +564,9 @@ class MarketplaceScreen extends Component {
   handleBridgeResponse = (msgData, result) => {
     msgData.isSuccessful = Boolean(result)
     msgData.args = [result]
-    this.dappWebView.postMessage(JSON.stringify(msgData))
+    if (this.dappWebView) {
+      this.dappWebView.postMessage(JSON.stringify(msgData))
+    }
   }
 
   updateExchangeRates = () => {
@@ -548,6 +574,141 @@ class MarketplaceScreen extends Component {
     // is added to the DApp (or when OGN has a market price)
     updateExchangeRate(this.state.fiatCurrency[1], 'ETH')
     updateExchangeRate(this.state.fiatCurrency[1], 'DAI')
+  }
+
+  _openDeepLinkUrlAttempt = async (
+    interceptUrlPredicate,
+    makeUrl,
+    timeControlVariableName
+  ) => {
+    // non interceptable url
+    if (!interceptUrlPredicate()) return
+
+    const url = makeUrl()
+    if (Linking.canOpenURL(url)) {
+      this.goBackToDapp()
+      // preventing multiple subsequent shares
+      if (
+        !this[timeControlVariableName] ||
+        new Date() - this[timeControlVariableName] > 3000
+      ) {
+        this[timeControlVariableName] = new Date()
+        return await Linking.openURL(url)
+      }
+    } else {
+      // can not open deep link url
+      return false
+    }
+  }
+
+  checkForShareNativeDialogInterception = async url => {
+    // natively tweet if possible on Android
+    console.log('Url change: ', url.href)
+    await this._openDeepLinkUrlAttempt(
+      () =>
+        url.hostname === 'twitter.com' &&
+        url.pathname === '/intent/tweet' &&
+        Platform.OS === 'android',
+      () =>
+        `twitter://post?message=${encodeURIComponent(
+          url.searchParams.get('text')
+        )}`,
+      'lastTweetAttemptTime'
+    )
+
+    //open twitter profile natively if possible on Android
+    await this._openDeepLinkUrlAttempt(
+      () =>
+        url.hostname === 'twitter.com' &&
+        url.pathname === '/intent/follow' &&
+        Platform.OS === 'android',
+      () => `twitter://user?screen_name=${url.searchParams.get('screen_name')}`,
+      'lastOpenTwitterProfileTime'
+    )
+
+    // open facebook profile natively if possible on Android
+    await this._openDeepLinkUrlAttempt(
+      () =>
+        (url.hostname === 'www.facebook.com' ||
+          url.hostname === 'm.facebook.com') &&
+        url.pathname.toLowerCase() === '/originprotocol/' &&
+        Platform.OS === 'android',
+      //Facebook on IOS and Android has different deep-linking format
+      () => `fb://page/120151672018856`,
+      'lastOpenFacebookProfileTime'
+    )
+
+    // open facebook profile natively if possible and IOS
+    await this._openDeepLinkUrlAttempt(
+      () =>
+        (url.hostname === 'www.facebook.com' ||
+          url.hostname === 'm.facebook.com') &&
+        url.pathname.toLowerCase() === '/originprotocol/' &&
+        Platform.OS === 'ios',
+      //Facebook on IOS and Android has different deep-linking format
+      () => `fb://profile/120151672018856`,
+      'lastOpenFacebookProfileTime'
+    )
+
+    if (
+      url.hostname === 'www.facebook.com' ||
+      url.hostname === 'm.facebook.com'
+    ) {
+      const shareHasBeenTriggeredRecently =
+        this.facebookShareShowTime &&
+        new Date() - this.facebookShareShowTime < 5000
+
+      if (url.pathname === '/dialog/share' && !shareHasBeenTriggeredRecently) {
+        const shareLinkContent = {
+          contentType: 'link',
+          contentUrl: url.searchParams.get('href')
+        }
+        const canShowFbShare = await ShareDialog.canShow(shareLinkContent)
+
+        if (!canShowFbShare) return
+
+        this.facebookShareShowTime = new Date()
+        const shareResult = await ShareDialog.show(shareLinkContent)
+        if (shareResult.isCancelled) {
+          console.log('Share cancelled by user')
+        } else {
+          console.log(`Share success with postId: ${shareResult.postId}`)
+        }
+      }
+
+      /* After Facebook shows up the share dialog in dapp's WebView and user is not logged
+       * in it will redirect to login page. For that reason we return to the last dapp's
+       * url instead of triggering back.
+       */
+      if (shareHasBeenTriggeredRecently) {
+        this.goBackToDapp()
+      }
+    }
+  }
+
+  goBackToDapp = () => {
+    const url = this.state.lastDappUrl
+    // A random is used to force the WebView to navigate.
+    url.searchParams.set('returnRandom', Math.floor(Math.random() * 1000))
+    this.setState({ webViewUrlTrigger: url.href })
+  }
+
+  onWebViewNavigationStateChange = async state => {
+    const dappUrl = new URL(this.props.settings.network.dappUrl)
+
+    try {
+      const url = new URL(state.url)
+      const stateUpdate = { currentDomain: url.hostname }
+
+      if (dappUrl.hostname === url.hostname) {
+        stateUpdate.lastDappUrl = url
+      }
+
+      this.setState(stateUpdate)
+      await this.checkForShareNativeDialogInterception(url)
+    } catch (error) {
+      console.warn(`Browser reporting malformed url: ${state.url}`)
+    }
   }
 
   onWebViewLoad = async () => {
@@ -648,12 +809,14 @@ class MarketplaceScreen extends Component {
                   if (Platform.OS === 'android') {
                     // Workaround for broken refreshing in Android, insert a
                     // time string alongside the # to force a reload
-                    this.dappWebView.injectJavaScript(
-                      'location.href = `/?${+ new Date()}${location.hash}`'
+                    this.injectJavaScript(
+                      'location.href = `/?${+ new Date()}${location.hash}`',
+                      'reload'
                     )
                   } else {
-                    this.dappWebView.injectJavaScript(
-                      `document.location.reload()`
+                    this.injectJavaScript(
+                      'document.location.reload()',
+                      'reload'
                     )
                   }
                   setTimeout(() => this.setState({ refreshing: false }), 1000)
@@ -666,17 +829,22 @@ class MarketplaceScreen extends Component {
           >
             <WebView
               ref={webview => {
-                this.dappWebView = webview
+                // For an unknown reason webview has null value even when a non
+                // null value has already been returned
+                if (webview) {
+                  this.dappWebView = webview
+                }
               }}
               allowsBackForwardNavigationGestures={Platform.OS === 'ios'}
               useWebKit={Platform.OS === 'ios'}
-              source={{ uri: this.props.settings.network.dappUrl }}
+              source={{ uri: this.state.webViewUrlTrigger }}
               onMessage={this.onWebViewMessage}
               onLoad={this.onWebViewLoad}
               onError={syntheticEvent => {
                 const { nativeEvent } = syntheticEvent
                 this.props.setMarketplaceWebViewError(nativeEvent.description)
               }}
+              onNavigationStateChange={this.onWebViewNavigationStateChange}
               renderLoading={() => {
                 return (
                   <View style={styles.loading}>
@@ -685,9 +853,44 @@ class MarketplaceScreen extends Component {
                 )
               }}
               decelerationRate="normal"
-              userAgent={webViewToBrowserUserAgent()}
+              // On Android twitter share dialog will not appear with all
+              // user agents. For that reason we hardcode one that does work
+              userAgent={webViewToBrowserUserAgent(
+                this.state.currentDomain === 'twitter.com' &&
+                  Platform.OS === 'android'
+              )}
               startInLoadingState={true}
+              renderError={() => (
+                <Modal animationType="fade" transparent={true} visible={true}>
+                  <SafeAreaView style={styles.modalSafeAreaView}>
+                    <View style={styles.card}>
+                      <Text style={styles.cardHeading}>
+                        <fbt desc="MarketplaceScreen.heading">
+                          Connection Error
+                        </fbt>
+                      </Text>
+                      <Text style={styles.cardContent}>
+                        <fbt desc="NoInternetError.errorText">
+                          An error occurred loading the Origin Marketplace.
+                          Please check your internet connection.
+                        </fbt>
+                      </Text>
+                      <View style={styles.buttonContainer}>
+                        <OriginButton
+                          size="large"
+                          type="primary"
+                          title={fbt('Retry', 'MarketplaceScreen.retryButton')}
+                          onPress={() => {
+                            DeviceEventEmitter.emit('reloadMarketplace')
+                          }}
+                        />
+                      </View>
+                    </View>
+                  </SafeAreaView>
+                </Modal>
+              )}
             />
+
             {this.state.modals.map((modal, index) => {
               let card
               if (modal.type === 'enableNotifications') {
@@ -805,5 +1008,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     backgroundColor: 'white'
-  }
+  },
+  ...CardStyles
 })

@@ -1,6 +1,9 @@
 const Web3 = require('web3')
 const fetch = require('cross-fetch')
-const { createEngine, initStandardSubproviders } = require('@origin/web3-provider')
+const {
+  createEngine,
+  initStandardSubproviders
+} = require('@origin/web3-provider')
 const assert = require('assert')
 
 const TEST_PROVIDER_URL = 'http://localhost:8545'
@@ -27,11 +30,6 @@ describe('web3-provider', function() {
     ;[admin, bob] = await web3.eth.getAccounts()
   })
 
-  after(() => {
-    // Stop its block poller so the test suite can wrap up
-    web3.currentProvider.stop()
-  })
-
   it('sends a basic transaction', async () => {
     createEngine(web3, {
       rpcUrl: TEST_PROVIDER_URL
@@ -51,7 +49,7 @@ describe('web3-provider', function() {
 
   /**
    * Too often EGS updates the gas price between the test grabbing data and
-   * the subprovider grabbing data, so this test has a fairly high chance of 
+   * the subprovider grabbing data, so this test has a fairly high chance of
    * faiure, especially during high volume times...
    */
   it.skip('gets gas price from ethgasstation', async () => {

@@ -396,6 +396,29 @@ class Settings extends Component {
                           />
                         </div>
                       </div>
+                      <div className="form-group row d-flex">
+                        <div className="col-sm">
+                          <label htmlFor="indexing">
+                            <fbt desc="settings.promoteToggleLabel">
+                              Promote Listings enabled
+                            </fbt>
+                          </label>
+                        </div>
+                        <div className="col-sm d-flex align-items-center">
+                          <Toggle
+                            className="mt-0"
+                            value={localStorage.promoteEnabled === 'true'}
+                            onChange={on => {
+                              if (on) {
+                                localStorage.promoteEnabled = 'true'
+                              } else {
+                                delete localStorage.promoteEnabled
+                              }
+                              window.location.reload()
+                            }}
+                          />
+                        </div>
+                      </div>
                       <div className="form-group row">
                         <a
                           href="#"
@@ -509,6 +532,7 @@ require('react-styl')(`
       margin-top: 1rem
 
     .dropdown
+      width: auto
       .dropdown-menu
         position: absolute
         left: 16px

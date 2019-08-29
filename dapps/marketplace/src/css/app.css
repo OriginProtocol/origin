@@ -34,10 +34,8 @@ body {
   height: 3rem;
 }
 
-/* sticky footer sibling */
 main {
   flex: 1 0 auto;
-  min-height: calc(100vh - 4rem);
   padding-bottom: 4rem;
 }
 
@@ -153,4 +151,10 @@ textarea:-moz-ui-invalid {
 
 .table tbody td {
   white-space: nowrap;
+}
+
+@media (max-width: 767.98px) {
+  main {
+    padding-bottom: 0;
+  }
 }

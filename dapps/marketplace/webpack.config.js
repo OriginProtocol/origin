@@ -21,6 +21,17 @@ try {
 
 const isProduction = process.env.NODE_ENV === 'production'
 
+const isStaging = process.env.NAMESPACE === 'staging'
+const isDev = process.env.NAMESPACE === 'dev'
+
+let TELEGRAM_BOT_USERNAME = 'origin_protocol_test_bot'
+
+if (isStaging) {
+  TELEGRAM_BOT_USERNAME = 'originprotocol_verification_bot'
+} else if (isProduction && !isDev) {
+  TELEGRAM_BOT_USERNAME = 'originprotocol_production_bot'
+}
+
 const config = {
   entry: {
     app: './src/index.js'
@@ -129,7 +140,9 @@ const config = {
       ENABLE_LINKEDIN_ATTESTATION: false,
       ENABLE_WECHAT_ATTESTATION: false,
       SENTRY_DSN: null,
-      NAMESPACE: 'dev'
+      NAMESPACE: 'dev',
+      TELEGRAM_BOT_USERNAME: TELEGRAM_BOT_USERNAME,
+      NODE_ENV: process.env.NODE_ENV || 'development'
     })
   ],
 

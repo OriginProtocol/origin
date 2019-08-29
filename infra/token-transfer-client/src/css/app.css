@@ -1,0 +1,363 @@
+@import '~bootstrap/dist/css/bootstrap.css';
+@import '~typeface-lato';
+@import '~typeface-poppins';
+@import 'bootstrap.css';
+@import 'navbar.css';
+@import 'modal.css';
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-size: 1.125rem;
+  line-height: 1.5;
+  background-color: white;
+  font-family: 'Lato'
+}
+
+#main {
+  padding: 20px;
+  width: 100%;
+}
+
+.logged-in {
+  background-color: #f7fbfd;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.not-logged-in {
+  min-height: 100vh;
+  padding-bottom: 50px;
+}
+
+@media (min-width: 768px) {
+  #sidebar {
+    width: 280px
+  }
+
+  #main {
+    padding: 70px;
+    width: calc(100% - 280px)
+  }
+
+  .logged-in {
+    flex-direction: row;
+  }
+
+  .not-logged-in {
+    background-color: #007cff;
+  }
+}
+
+h1 {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.text-muted {
+  color: #8fa7b7
+}
+
+/*
+ * Forms
+ */
+
+form {
+  padding: 1rem 1rem 0 1rem;
+}
+
+label {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+input, select {
+  border: none;
+  margin: 0 auto;
+}
+
+.custom-select {
+  background-color: #e9f0f3;
+  border: none;
+  box-shadow: none;
+}
+
+.custom-select-lg {
+  height: calc(1.5em + 1.5rem + 2px);
+}
+
+.form-control {
+  border-radius: 10px;
+}
+
+.form-control, .form-control:focus {
+  background-color: #e9f0f3;
+  border: none;
+  box-shadow: none;
+}
+
+.form-control-lg {
+  height: calc(1.5em + 1.5rem + 2px);
+}
+
+.input-group {
+  border-radius: 10px;
+  margin: 0 auto;
+  background-color: #e9f0f3;
+  border: none;
+}
+
+.input-group-append {
+  padding: 12px;
+  display: block;
+}
+
+.input-group-fix .invalid-feedback {
+  display: block;
+}
+
+/*
+ * Loading indicators
+ */
+
+.spinner-grow {
+  color: #8fa7b7
+}
+
+.action-card > .spinner-grow {
+  margin: 10rem 0;
+}
+
+.spinner-grow-sm {
+  margin: 2px 4px !important;
+}
+
+#main .spinner-grow {
+  margin: 30% 50% 0% 50%;
+}
+
+/*
+ * Cards
+ */
+
+.card-wrapper {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  margin-bottom: 40px;
+}
+
+.shadowed {
+  box-shadow: 0 2px 14px 0 rgba(0, 0, 0, 0.1)
+}
+
+.bordered {
+  border: 1px solid #dbe6eb
+}
+
+.card-wrapper .header .link {
+  font-size: 14px;
+  text-align: right;
+}
+
+.action-card {
+  background-color: white;
+  padding: 40px 80px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .action-card {
+    padding: 40px 20px;
+    border-radius: 0;
+  }
+}
+
+.action-card h1 {
+  font-size: 40px;
+  margin-bottom: 0.5rem;
+}
+
+.table-card {
+  border-top: 1px solid #dbe6eb;
+  border-bottom: 1px solid #dbe6eb;
+  max-height: 330px;
+  overflow-y: scroll;
+}
+
+.table-card .table thead th {
+  border-bottom: none;
+}
+
+.table-card .table {
+  border-bottom: none;
+}
+
+/*
+ * Tables
+ */
+
+.table {
+  font-size: 14px;
+  padding-top: 20px;
+  border-bottom: 1px solid #dbe6eb;
+}
+
+
+.table thead th {
+  font-weight: normal;
+  color: #638298;
+  border-top: 0;
+  border-bottom: 1px solid #dbe6eb !important;
+}
+
+.table td {
+  border-top: none;
+}
+
+.table-row {
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.table-clickable {
+  cursor: pointer;
+}
+
+.table-empty-cell {
+  text-align: center;
+  color: #8fa7b7;
+  padding: 2rem 0 !important;
+}
+
+/*
+ * Status circle indicators
+ */
+
+.status-circle {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #bdcbd5;
+  vertical-align: middle;
+}
+
+.status-circle-warning {
+  background-color: #ffc000;
+}
+
+.status-circle-success {
+}
+
+.empty {
+  text-align: center;
+  color: #8fa7b7;
+  padding: 5rem 0;
+}
+
+/*
+ * Status circle indicators
+ */
+
+.status-circle {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #bdcbd5;
+  vertical-align: middle;
+}
+
+.status-circle-warning {
+  background-color: #ffc000;
+}
+
+.status-circle-success {
+  background-color: #00db8d;
+}
+
+.status-circle-error {
+  background-color: #ff0000;
+}
+
+.btn {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.btn.btn-lg {
+  font-weight: bold;
+  border-radius: 2rem;
+  padding: 0.5rem 4rem;
+  min-width: 10rem;
+  font-size: 18px;
+}
+
+.alert-warning {
+  background-color: rgba(255, 192, 0, 0.1);
+  border: 1px solid #ffcc00;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+/* Vesting bars popover
+ */
+
+.cover {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.popover {
+  position: absolute;
+  z-index: 2;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.29);
+}
+
+.popover div {
+  margin-bottom: 2px
+}
+
+.popover strong {
+  width: 50px;
+  display: inline-block;
+}
+
+/* iDangerous Swiper
+ */
+.swiper-pagination {
+  position: relative !important;
+}
+
+.terms-wrapper {
+  border-radius: 10px;
+  height: 300px;
+  overflow-y: scroll;
+  background-color: #e9f0f3;
+  font-size: 14px;
+  padding: 20px;
+  text-align: left;
+  margin: 40px 0;
+}

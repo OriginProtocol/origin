@@ -1,5 +1,6 @@
 const ListingInterface = `
   id: ID!
+  contractAddr: String
 
   # On-chain:
   seller: Account
@@ -42,10 +43,11 @@ const ListingInterface = `
 
 export const mutations = `
   extend type Mutation {
-    deployMarketplace(token: String!, version: String, from: String, autoWhitelist: Boolean): Transaction
+    deployMarketplace(token: String!, version: String!, from: String, autoWhitelist: Boolean): Transaction
 
     createListing(
       from: String!
+      version: String
       deposit: String
       depositManager: String
       autoApprove: Boolean
@@ -108,7 +110,7 @@ export const mutations = `
     ): Transaction
 
     addData(data: String!, listingID: ID, offerID: ID, from: String!): Transaction
-    addAffiliate(affiliate: String!, from: String): Transaction
+    addAffiliate(affiliate: String!, from: String, version: String): Transaction
 
     acceptOffer(offerID: ID!, from: String): Transaction
     withdrawOffer(offerID: ID!, from: String): Transaction
@@ -143,6 +145,7 @@ export const types = `
       search: String
       filters: [ListingFilterInput!]
       sort: String
+      order: String
       listingIds: [String]
     ): ListingConnection!
 

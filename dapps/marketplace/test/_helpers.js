@@ -54,6 +54,10 @@ export const hasText = async (page, text, path) => {
   return result ? true : false
 }
 
+export const clearCookies = async (page) => {
+  await page._client.send('Network.clearBrowserCookies')
+}
+
 export const clickByText = async (page, text, path) => {
   const xpath = await waitForText(page, text, path)
 
@@ -82,10 +86,10 @@ export const clickBySelector = async (page, path) => {
   }
 }
 
-export const changeAccount = async (page, account) => {
-  await page.evaluate(account => {
+export const changeAccount = async (page, account, isFreshAccount = false) => {
+  await page.evaluate(({ account, isFreshAccount }) => {
     window.localStorage.useWeb3Wallet = account
-    window.localStorage.useWeb3Identity = JSON.stringify({
+    const accountData = {
       id: account,
       profile: {
         firstName: 'Test',
@@ -95,16 +99,18 @@ export const changeAccount = async (page, account) => {
       },
       attestations: [],
       strength: 0
-    })
-  }, account)
+    }
+    window.localStorage.useWeb3Identity = isFreshAccount ? null : JSON.stringify(accountData)
+  }, { account, isFreshAccount })
 }
 
-export const createAccount = async page => {
+export const createAccount = async (page, ogn) => {
   return await page.evaluate(
-    () =>
+    ogn =>
       new Promise(resolve =>
-        window.ognTools.createAccount(window.gql).then(resolve)
-      )
+        window.ognTools.createAccount(window.gql, ogn).then(resolve)
+      ),
+    ogn
   )
 }
 

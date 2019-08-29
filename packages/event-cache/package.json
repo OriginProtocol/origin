@@ -44,9 +44,9 @@
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
-    "eslint": "^6.0.1",
-    "prettier": "^1.18.2",
-    "webpack": "^4.35.0"
+    "eslint": "6.2.2",
+    "prettier": "1.18.2",
+    "webpack": "4.39.3"
   },
   "babel": {
     "presets": [

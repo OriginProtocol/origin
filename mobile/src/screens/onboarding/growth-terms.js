@@ -62,7 +62,7 @@ class GrowthTermsScreen extends Component {
       fingerprintData: { mobile_id: DeviceInfo.getUniqueID() }
     }
     const result = await this.props.growthEnroll(vars)
-    await this.props.setGrowth(result.data.enroll.authToken)
+    this.props.setGrowth(result.data.enroll.authToken)
     this.props.navigation.navigate(this.props.nextOnboardingStep)
   }
 

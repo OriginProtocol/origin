@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
 
 import ExternalAnchor from 'components/ExternalAnchor'
@@ -9,6 +10,8 @@ import LocaleDropdown from 'components/LocaleDropdown'
 import CurrencyDropdown from 'components/CurrencyDropdown'
 
 const SupportLink = 'https://goo.gl/forms/86tKQXZdmux3KNFJ2'
+
+const urlPrefixesForShortButton = ['/messages']
 
 class Footer extends Component {
   constructor(props) {
@@ -60,8 +63,16 @@ class Footer extends Component {
   }
 
   renderFooterActionButton() {
-    const { open } = this.state
-    const { isMobile } = this.props
+    const { open, closing } = this.state
+    const {
+      isMobile,
+      history: {
+        location: { pathname }
+      }
+    } = this.props
+    const isButtonShort = Boolean(
+      urlPrefixesForShortButton.filter(url => pathname.startsWith(url)).length
+    )
 
     if (isMobile) {
       return null
@@ -74,12 +85,12 @@ class Footer extends Component {
         onClick={() => this.onToggle()}
       >
         {isMobile && !open && <fbt desc="footer.Help">Help</fbt>}
-        {!isMobile && !open && (
+        {!isMobile && !open && !isButtonShort && (
           <fbt desc="footer.supportSettingsAndMore">
             Support, settings, &amp; more
           </fbt>
         )}
-        {!isMobile && open && <fbt desc="footer.Close">Close</fbt>}
+        {!isMobile && open && !closing && <fbt desc="footer.Close">Close</fbt>}
       </button>
     )
   }
@@ -173,7 +184,7 @@ class Footer extends Component {
                 <fbt desc="footer.creatorLink">Create a Marketplace</fbt>
               </a>
               <span className="d-none d-md-inline">
-                <Link to="/settings">
+                <Link to="/settings" onClick={() => this.onToggle()}>
                   <fbt desc="footer.settings">Settings</fbt>
                 </Link>
               </span>
@@ -224,7 +235,7 @@ class Footer extends Component {
   }
 }
 
-export default withIsMobile(Footer)
+export default withRouter(withIsMobile(Footer))
 
 require('react-styl')(`
   .footer-wrapper
@@ -248,7 +259,7 @@ require('react-styl')(`
         margin-right: 5px
         color: #6f8294
         font-size: 10px
-    
+
     footer
       position: fixed
       bottom: -100%
@@ -322,7 +333,7 @@ require('react-styl')(`
             -webkit-appearance: none
             padding: 0.25rem 1rem
 
-    &.open 
+    &.open
       .footer-action-button:before
         content: ''
         width: 10px

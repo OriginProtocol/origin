@@ -1,8 +1,9 @@
 import assert from 'assert'
 import get from 'lodash/get'
+import fs from 'fs'
 
 import client from '../src/index'
-import contracts, { shutdown } from '../src/contracts'
+import contracts, { setNetwork, shutdown } from '../src/contracts'
 
 import { getOffer, mutate } from './_helpers'
 import queries from './_queries'
@@ -10,12 +11,31 @@ import mutations from './_mutations'
 import { trackGas, showGasTable } from './_gasTable'
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
+const testBuildPath = `${__dirname}/../../contracts/build/tests.json`
 
 describe('Marketplace', function() {
   let Admin, Seller, Buyer, Arbitrator, Affiliate
   let OGN, Marketplace
 
   before(async function() {
+    const addresses = JSON.parse(fs.readFileSync(testBuildPath))
+    setNetwork('test', {
+      automine: false,
+      DaiExchange: addresses.UniswapDaiExchange,
+      ProxyFactory: addresses.ProxyFactory,
+      IdentityProxyImplementation: addresses.IdentityProxyImplementation,
+
+      tokens: [
+        {
+          id: addresses.DAI,
+          type: 'Standard',
+          name: 'DAI Stablecoin',
+          symbol: 'DAI',
+          decimals: '18'
+        }
+      ]
+    })
+
     await trackGas()
     const res = await client.query({ query: queries.GetNodeAccounts })
     const nodeAccounts = get(res, 'data.web3.nodeAccounts').map(a => a.id)
@@ -42,9 +62,11 @@ describe('Marketplace', function() {
   })
 
   it('should deploy the marketplace contract', async function() {
+    // Remove existing marketplace contracts from config
+    delete contracts.marketplaces
     const receipt = await mutate(mutations.DeployMarketplace, {
       token: OGN,
-      version: '001',
+      version: '000',
       autoWhitelist: true,
       from: Admin
     })
@@ -868,4 +890,85 @@ describe('Marketplace', function() {
       }
     })
   })
+
+  describe('DAI swap transaction', function() {
+    let listingId
+    let offerEvents
+    let ethBefore
+
+    before(async function() {
+      const listing = await createListing({
+        deposit: '0',
+        depositManager: Arbitrator,
+        from: Seller,
+        data: {
+          title: 'Test DAI Listing',
+          description: 'Test description',
+          price: {
+            currency: 'token-DAI',
+            amount: '2.00'
+          },
+          category: 'Test category',
+          subCategory: 'Test sub-category'
+        },
+        unitData: {
+          unitsTotal: 1
+        }
+      })
+      listingId = listing.listingId
+      ethBefore = await contracts.web3.eth.getBalance(Buyer)
+    })
+
+    it('should make an offer', async function() {
+      contracts.config.proxyAccountsEnabled = true
+      offerEvents = await mutate(
+        mutations.MakeOffer,
+        {
+          listingID: listingId,
+          from: Buyer,
+          finalizes: 123,
+          affiliate: ZeroAddress,
+          value: '6000.00',
+          currency: 'token-DAI',
+          arbitrator: Arbitrator,
+          quantity: 1,
+          autoswap: true
+        },
+        true
+      )
+      assert(offerEvents.OfferCreated)
+      assert(offerEvents.TokenPurchase)
+      contracts.config.proxyAccountsEnabled = false
+    })
+
+    it('should have sent more than the exchange amount', async function() {
+      // When buying DIA, we need to send along more eth than the current
+      // exchange rate, since the exchange rate has a good chance of having
+      // changed by the time our purchase happens.
+      const ethAfter = await contracts.web3.eth.getBalance(Buyer)
+      const { toBN, fromWei } = contracts.web3.utils
+      const ethSentWei = toBN(ethBefore).sub(toBN(ethAfter))
+      const ethTradedWei = toBN(offerEvents.TokenPurchase.eth_sold)
+      const ethSent = Number(fromWei(ethSentWei, 'ether'))
+      const ethTraded = Number(fromWei(ethTradedWei, 'ether'))
+      const sendRatio = ethSent / ethTraded
+
+      assert(sendRatio >= 1.01)
+    })
+  })
 })
+
+async function createListing(listingData) {
+  const receipt = await mutate(mutations.CreateListing, listingData)
+  const eventAbi = contracts.marketplace._jsonInterface.find(
+    x => x.name == 'ListingCreated'
+  ).inputs
+  const log = receipt.logs[0]
+  const decodedLog = contracts.web3.eth.abi.decodeLog(
+    eventAbi,
+    log.data,
+    log.topics.slice(1)
+  )
+  const listingId = `999-000-${decodedLog['listingID']}`
+  return { receipt, listingId }
+}

@@ -5,20 +5,26 @@ import { fbt } from 'fbt-runtime'
 const GrowthEnum = require('Growth$FbtEnum')
 
 const ShareableContent = ({ action, onShare }) => {
-  const { titleKey, detailsKey, image, link, linkKey } = action.content
+  const { titleKey, detailsKey, image, link } = action.content
   const title = GrowthEnum[titleKey] || titleKey
   const details = GrowthEnum[detailsKey] || detailsKey
-  const linkText = GrowthEnum[linkKey] || linkKey
   return (
-    <div className="shareable-content">
-      <img src={image} className="promotion-image" />
-      <h2>{title}</h2>
-      <div className="promotion-desc">{details}</div>
-      {link && (
-        <a href={link} className="promotion-link">
-          {linkText}
+    <div className="shareable-content col-12 col-md-6 d-flex flex-column">
+      {link ? (
+        <a href={link}>
+          <div
+            style={{ backgroundImage: `url(${image})` }}
+            className="promotion-image"
+          ></div>
         </a>
+      ) : (
+        <div
+          style={{ backgroundImage: `url(${image})` }}
+          className="promotion-image"
+        ></div>
       )}
+      <h2>{title}</h2>
+      <div className="promotion-desc mb-auto">{details}</div>
       <div className="actions">
         <button
           className="btn btn-primary"
@@ -46,7 +52,12 @@ require('react-styl')(`
       border-bottom: 0
       padding-bottom: 0
     .promotion-image
+      height: 250px
+      background-position: 50% 50%
+      background-repeat: no-repeat
+      background-size: cover
       width: 100%
+      border-radius: 10px
     h2
       margin-top: 1.25rem
       margin-bottom: 0

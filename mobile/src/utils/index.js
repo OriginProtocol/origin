@@ -14,7 +14,7 @@ export function shuffleArray(array) {
 /* Build a user agent string for the current platform that approximates what
  * would be returned by the standard browser for this device
  */
-export function webViewToBrowserUserAgent() {
+export function webViewToBrowserUserAgent(useHardcodedUserAgent = false) {
   const DEFAULT_IOS_UA =
     'Mozilla/5.0 (iPhone; CPU iPhone OS 10_1 like Mac OS X) AppleWebKit/602.2.14 (KHTML, like Gecko) Version/10.0 Mobile/14B72 Safari/602.1'
   // Samsung Galaxy s9
@@ -23,6 +23,10 @@ export function webViewToBrowserUserAgent() {
   let userAgent = UserAgent.getWebViewUserAgent()
   try {
     if (Platform.OS === 'ios') {
+      if (useHardcodedUserAgent) {
+        return DEFAULT_IOS_UA
+      }
+
       // Derive a reasonable version number to insert
       const versionMatch = userAgent.match(/OS (\d+)_/)
       const versionCode =
@@ -40,6 +44,9 @@ export function webViewToBrowserUserAgent() {
       // Insert Safari version that matches the parsed WebKit version
       userAgent = `${userAgent} Safari/${webkitVersion}`
     } else {
+      if (useHardcodedUserAgent) {
+        return DEFAULT_ANDROID_UA
+      }
       // Android
       // Ref: https://developer.chrome.com/multidevice/user-agent#webview_user_agent
       userAgent = userAgent.replace(/ Chrome\/(?:.+) Mobile/, '')

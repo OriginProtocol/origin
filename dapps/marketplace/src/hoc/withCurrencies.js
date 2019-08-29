@@ -1,5 +1,5 @@
 import React from 'react'
-import { Query } from 'react-apollo'
+import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import get from 'lodash/get'
 
@@ -21,16 +21,12 @@ const query = gql`
 `
 
 function withCurrencies(WrappedComponent) {
-  const WithCurrencies = props => (
-    <Query query={query}>
-      {({ data }) => (
-        <WrappedComponent
-          {...props}
-          currencies={get(data, 'currencies') || []}
-        />
-      )}
-    </Query>
-  )
+  const WithCurrencies = props => {
+    const { data } = useQuery(query)
+    return (
+      <WrappedComponent {...props} currencies={get(data, 'currencies') || []} />
+    )
+  }
   return WithCurrencies
 }
 

@@ -47,6 +47,10 @@ module.exports = `
     ListingSold
     TwitterShare
     TwitterFollow
+    Telegram
+    TelegramFollow
+    FacebookShare
+    FacebookLike
   }
 
   enum GrowthInviteStatus {
@@ -151,16 +155,17 @@ module.exports = `
   }
 
   type Post {
-    text: TranslatedText!
+    tweet: TranslatedText!
   }
 
   type SocialContent {
+    id: String!,
     titleKey: String!,
     detailsKey: String!,
     image: String!
     link: String!,
     linkKey: String!,
-    post: Post!
+    post: Post
   }
 
   type SocialShareAction implements GrowthBaseAction {
@@ -221,5 +226,9 @@ module.exports = `
     log(event: JSON!): Boolean
     # Remind a user that his invitation is still pending
     inviteRemind(invitationId: Int!): Boolean
+    # Log executing social share
+    logSocialShare(contentId: String!, actionType: GrowthActionType!): Boolean
+    # Log executing social follow
+    logSocialFollow(actionType: GrowthActionType!): Boolean
   }
 `

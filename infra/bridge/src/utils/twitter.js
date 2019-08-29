@@ -2,13 +2,21 @@
 
 const OAuth = require('oauth').OAuth
 const { getAbsoluteUrl } = require('./index.js')
+const {
+  getTwitterWebhookConsumerKey,
+  getTwitterWebhookConsumerSecret
+} = require('./hooks')
 
-function twitterOAuth({ sid, redirectUrl } = {}) {
+function twitterOAuth({ sid, redirectUrl, useWebhookCredentials } = {}) {
   return new OAuth(
     'https://api.twitter.com/oauth/request_token',
     'https://api.twitter.com/oauth/access_token',
-    process.env.TWITTER_CONSUMER_KEY,
-    process.env.TWITTER_CONSUMER_SECRET,
+    useWebhookCredentials
+      ? getTwitterWebhookConsumerKey()
+      : process.env.TWITTER_CONSUMER_KEY,
+    useWebhookCredentials
+      ? getTwitterWebhookConsumerSecret()
+      : process.env.TWITTER_CONSUMER_SECRET,
     '1.0',
     getAbsoluteUrl(redirectUrl ? redirectUrl : '/redirects/twitter/', { sid }),
     'HMAC-SHA1'
@@ -34,10 +42,11 @@ function getTwitterOAuthRequestToken(params = {}) {
 function getTwitterOAuthAccessToken(
   oAuthToken,
   oAuthTokenSecret,
-  oAuthVerifier
+  oAuthVerifier,
+  useWebhookCredentials
 ) {
   return new Promise((resolve, reject) => {
-    twitterOAuth().getOAuthAccessToken(
+    twitterOAuth({ useWebhookCredentials }).getOAuthAccessToken(
       oAuthToken,
       oAuthTokenSecret,
       oAuthVerifier,
@@ -52,9 +61,13 @@ function getTwitterOAuthAccessToken(
   })
 }
 
-function verifyTwitterCredentials(oAuthAccessToken, oAuthAccessTokenSecret) {
+function verifyTwitterCredentials(
+  oAuthAccessToken,
+  oAuthAccessTokenSecret,
+  useWebhookCredentials
+) {
   return new Promise((resolve, reject) => {
-    twitterOAuth().get(
+    twitterOAuth({ useWebhookCredentials }).get(
       'https://api.twitter.com/1.1/account/verify_credentials.json',
       oAuthAccessToken,
       oAuthAccessTokenSecret,

@@ -28,6 +28,9 @@ export default StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: '5%'
   },
+  menuItemInactionable: {
+    opacity: 0.75
+  },
   menuItemIconContainer: {
     height: 17,
     justifyContent: 'center'

@@ -1,6 +1,5 @@
 const esmImport = require('esm')(module)
 const { find, get } = esmImport('lodash')
-const Web3 = require('web3')
 const ipfs = esmImport('@origin/ipfs')
 const ProxyFactoryContract = esmImport(
   '@origin/contracts/build/contracts/ProxyFactory_solc'
@@ -12,8 +11,6 @@ const addresses = esmImport('@origin/contracts/build/contracts_mainnet.json')
 const db = {
   ...require('@origin/identity/src/models')
 }
-
-const { log } = require('../logger')
 
 const { assert, getListenerBlock, getPastEvents } = require('./utils')
 
@@ -42,7 +39,8 @@ const ATTESTATION_TYPE_MAP_DB = {
   kakao: 'kakao',
   github: 'github',
   linkedin: 'linkedin',
-  wechat: 'wechat'
+  wechat: 'wechat',
+  telegram: 'telegram'
 }
 
 /**
@@ -199,7 +197,14 @@ function validateIPFSToDB(ipfsJson, ownerRecord, validAddresses) {
 /**
  * Verify an identity is what's expected between the IPFS record and database
  */
-async function verifyIdent(web3, address, ipfsGateway, ipfsHash, contracts) {
+async function verifyIdent({
+  web3,
+  log,
+  address,
+  ipfsGateway,
+  ipfsHash,
+  contracts
+}) {
   address = normalizeAddress(address)
   let proxyAddress
   const validAddresses = [address]
@@ -259,7 +264,7 @@ async function verifyIdent(web3, address, ipfsGateway, ipfsHash, contracts) {
   )
 
   if (!ipfsJson) {
-    log.error(`IPFS Data missing at ${ipfsGateway}/${qmHash}`)
+    log.error(`IPFS Data missing at ${ipfsGateway}/ipfs/${qmHash}`)
     return false
   }
 
@@ -284,17 +289,16 @@ async function verifyIdent(web3, address, ipfsGateway, ipfsHash, contracts) {
  * Validate that all idents are what is expected
  */
 async function validateIdentities({
+  web3,
+  log,
   contractsContext,
   fromBlock = 0,
   toBlock = 'latest',
-  ipfsGateway = 'https://ipfs.originprotocol.com',
-  jsonRPCURL = 'https://eth-mainnet.alchemyapi.io/jsonrpc/'
+  ipfsGateway = 'https://ipfs.originprotocol.com'
 }) {
   const identityEvents = contractsContext.identityEvents
   const identities = {}
   const latestEvents = {}
-
-  const web3 = new Web3(jsonRPCURL)
 
   const ProxyFactory = new web3.eth.Contract(
     ProxyFactoryContract.abi,
@@ -338,16 +342,17 @@ async function validateIdentities({
   for (const address of Object.keys(identities)) {
     let verified = false
     try {
-      verified = await verifyIdent(
+      verified = await verifyIdent({
         web3,
+        log,
         address,
         ipfsGateway,
-        identities[address],
-        {
+        ipfsHash: identities[address],
+        contracts: {
           ProxyFactory,
           IdentityProxy
         }
-      )
+      })
     } catch (err) {
       log.error(err)
     }

@@ -4,17 +4,17 @@ module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define(
     'Event',
     {
-      email: DataTypes.STRING,
-      ip: DataTypes.STRING,
-      grantId: DataTypes.INTEGER,
+      id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+      userId: DataTypes.INTEGER,
       action: DataTypes.STRING,
-      data: DataTypes.STRING
+      data: DataTypes.JSONB
     },
-    {}
+    {
+      tableName: 't3_event'
+    }
   )
-  Event.associate = function() {
-    // TODO: add a hasOne association for Grant when hasOne supports sourceKey
-    // (due in Sequelize 5)
+  Event.associate = models => {
+    Event.belongsTo(models.User)
   }
   return Event
 }
