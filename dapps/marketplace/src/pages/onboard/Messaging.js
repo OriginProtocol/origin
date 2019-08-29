@@ -12,23 +12,7 @@ import HelpOriginWallet from 'components/DownloadApp'
 import ListingPreview from './_ListingPreview'
 import HelpMessaging from './_HelpMessaging'
 
-const WalletStatus = gql`
-  query WalletStatus {
-    web3 {
-      metaMaskAccount {
-        id
-      }
-    }
-    messaging(id: "defaultAccount") {
-      id
-      pubKey
-      pubSig
-      enabled
-      synced
-      syncProgress
-    }
-  }
-`
+import WalletStatusQuery from 'queries/WalletStatus'
 
 const EnableMessagingMutation = gql`
   mutation enableMessaging {
@@ -157,8 +141,7 @@ const EnableMessagingButtons = ({
   next,
   showButtons,
   onError,
-  nextLink,
-  onSkip
+  nextLink
 }) => {
   const [enableMessaging] = useMutation(EnableMessagingMutation)
   if (!showButtons) return null
@@ -179,13 +162,6 @@ const EnableMessagingButtons = ({
         }}
         children={fbt('Enable Origin Messaging', 'Enable Origin Messaging')}
       />
-      <Link
-        to={nextLink}
-        onClick={onSkip}
-        className="btn btn-outline btn-link mb-5"
-      >
-        <fbt desc="UserActivation.noThanks">No, thanks</fbt>
-      </Link>
     </>
   )
 }
@@ -195,7 +171,7 @@ const OnboardMessaging = props => {
   const [signatureError, setSignatureError] = useState(null)
 
   const { nextLink } = props
-  const { data, error, networkStatus } = useQuery(WalletStatus, {
+  const { data, error, networkStatus } = useQuery(WalletStatusQuery, {
     notifyOnNetworkStatusChange: true
   })
 
@@ -234,9 +210,6 @@ const OnboardMessaging = props => {
       }}
       showButtons={!waitForSignature}
       nextLink={nextLink}
-      onSkip={() => {
-        props.onSkip()
-      }}
     />
   )
 
@@ -266,17 +239,11 @@ const Messaging = ({
   listing,
   linkPrefix,
   isMobile,
-  hideOriginWallet,
-  skip,
-  onSkip
+  hideOriginWallet
 }) => {
   const nextLink = `${linkPrefix}/onboard/rewards`
 
-  if (skip) {
-    return <Redirect to={nextLink} />
-  }
-
-  const content = <OnboardMessaging nextLink={nextLink} onSkip={onSkip} />
+  const content = <OnboardMessaging nextLink={nextLink} />
 
   if (isMobile) {
     return (
