@@ -236,7 +236,7 @@ const septemberConfig = {
             socialNetwork: 'twitter',
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
-            contentId: 'join_rewards',
+            contentId: 'join_rewards_september',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -329,7 +329,7 @@ const septemberConfig = {
           config: {
             socialNetwork: 'facebook',
             eventType: 'SharedOnFacebook',
-            contentId: 'join_rewards',
+            contentId: 'join_rewards_september',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -841,12 +841,12 @@ const septemberConfig = {
       linkKey: 'growth.share.content6.link',
       post: {
         tweet: {
-          default: `Steve Chen, co-founder of @YouTube, talks about what it was like working with some of @OriginProtocol's employees in the early days of YouTube.`,
+          default: `Steve Chen, co-founder of @YouTube, talks about what it was like working with some of @OriginProtocol's employees in the early days of YouTube: https://youtu.be/qNj1qRZeeaM`,
           translations: [ ]
         }
       }
     },
-    join_rewards: {
+    join_rewards_september: {
       titleKey: 'growth.share.content7.title',
       detailsKey: 'growth.share.content7.details',
       image: 'images/growth/share-content7.png',
@@ -893,7 +893,7 @@ const septemberConfig = {
       linkKey: 'growth.share.content10.link',
       post: {
         tweet: {
-          default: `Support @OriginProtocol in decentralizing commerce in Venezuela and other regions where crypto can provide improved financial access.`,
+          default: `Support @OriginProtocol in decentralizing commerce in Venezuela and other regions where crypto can provide improved financial access: https://medium.com/originprotocol/decentralized-commerce-in-venezuela-d79cc2e21220`,
           translations: [ ]
         }
       }
