@@ -223,7 +223,6 @@ require('react-styl')(`
     .conversations-wrapper
       display: flex
       flex-direction: row
-      height: calc(100vh - 6rem)
       .conversations-list
         flex: 1
         overflow-y: scroll
