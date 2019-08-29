@@ -12,7 +12,7 @@ import {
 
 import SendFromNodeBtn from './_SendFromNodeBtn'
 import RemoveWalletBtn from './_RemoveWalletBtn'
-import AccountButton from '../accounts/AccountButton'
+import AccountButton from '../settings/AccountButton'
 import Toaster from '../Toaster'
 import Price from 'components/Price'
 

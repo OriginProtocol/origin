@@ -21,7 +21,7 @@ const SetNetworkMutation = gql`
 
 const Subs = () => (
   <Mutation mutation={SetNetworkMutation}>
-    {(setNetwork, { client }) => (
+    {setNetwork => (
       <Subscription subscription={NEW_BLOCKS_SUBSCRIPTION}>
         {({ data, loading, error }) => {
           let networkName = 'Custom network'
@@ -40,42 +40,42 @@ const Subs = () => (
                     text="Mainnet"
                     onClick={() => {
                       setNetwork({ variables: { network: 'mainnet' } })
-                      client.resetStore()
+                      gql.reFetchObservableQueries()
                     }}
                   />
                   <Menu.Item
                     text="Rinkeby"
                     onClick={() => {
                       setNetwork({ variables: { network: 'rinkeby' } })
-                      client.resetStore()
+                      gql.reFetchObservableQueries()
                     }}
                   />
                   <Menu.Item
                     text="Localhost"
                     onClick={() => {
                       setNetwork({ variables: { network: 'localhost' } })
-                      client.resetStore()
+                      gql.reFetchObservableQueries()
                     }}
                   />
                   <Menu.Item
                     text="Rinkby Test"
                     onClick={() => {
                       setNetwork({ variables: { network: 'rinkebyTst' } })
-                      client.resetStore()
+                      gql.reFetchObservableQueries()
                     }}
                   />
                   <Menu.Item
                     text="Kovan Test"
                     onClick={() => {
                       setNetwork({ variables: { network: 'kovanTst' } })
-                      client.resetStore()
+                      gql.reFetchObservableQueries()
                     }}
                   />
                   <Menu.Item
                     text="Origin Testnet"
                     onClick={() => {
                       setNetwork({ variables: { network: 'origin' } })
-                      client.resetStore()
+                      gql.reFetchObservableQueries()
                     }}
                   />
                 </Menu>

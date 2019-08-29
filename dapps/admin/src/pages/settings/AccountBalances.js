@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { HTMLTable } from '@blueprintjs/core'
 import get from 'lodash/get'
 
-import AccountButton from '../accounts/AccountButton'
+import AccountButton from '../settings/AccountButton'
 import TokenBalance from 'components/TokenBalance'
 import Price from 'components/Price'
 

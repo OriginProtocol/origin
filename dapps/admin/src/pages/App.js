@@ -4,7 +4,7 @@ import { Navbar, Alignment, Icon, Tooltip } from '@blueprintjs/core'
 
 import Price from 'components/Price'
 import MetaMaskSwitcher from 'components/MetaMaskSwitcher'
-import Accounts from './accounts/Accounts'
+import Accounts from './settings/Accounts'
 import Listings from './listings/Listings'
 import Listing from './listings/Listing'
 import Activity from './marketplace/Activity'
