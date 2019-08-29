@@ -86,13 +86,13 @@ export function addTransfer(transfer) {
   }
 }
 
-export function confirmTransfer(id, otpCode) {
+export function confirmTransfer(id, token) {
   return dispatch => {
     dispatch(confirmTransferPending())
 
     return agent
       .post(`${apiUrl}/api/transfers/${id}`)
-      .send({ code: otpCode })
+      .send({ token })
       .then(response => dispatch(confirmTransferSuccess(response.body)))
       .catch(error => {
         dispatch(confirmTransferError(error))

@@ -7,11 +7,12 @@ const sinon = require('sinon')
 const totp = require('notp').totp
 const base32 = require('thirty-two')
 const crypto = require('crypto')
+const sendgridMail = require('@sendgrid/mail')
+const jwt = require('jsonwebtoken')
 
 const { Grant, Transfer, User, sequelize } = require('../../src/models')
 const { encrypt } = require('../../src/lib/crypto')
 const transferController = require('../../src/controllers/transfer')
-const TransferStatuses = require('../../src/enums')
 const enums = require('../../src/enums')
 
 process.env.SENDGRID_FROM_EMAIL = 'test@test.com'
@@ -19,6 +20,7 @@ process.env.SENDGRID_API_KEY = 'test'
 process.env.ENCRYPTION_SECRET = 'test'
 process.env.SESSION_SECRET = 'test'
 
+const { encryptionSecret } = require('../../src/config')
 const app = require('../../src/app')
 
 const fromAddress = '0x627306090abaB3A6e1422e9345bC60c78a8BEf57'
@@ -93,7 +95,7 @@ describe('Transfer HTTP API', () => {
   it('should return the transfers', async () => {
     await Transfer.create({
       userId: this.user.id,
-      status: TransferStatuses.Success,
+      status: enums.TransferStatuses.Success,
       fromAddress,
       toAddress,
       amount: 10000,
@@ -101,7 +103,7 @@ describe('Transfer HTTP API', () => {
     })
     await Transfer.create({
       userId: this.user.id,
-      status: TransferStatuses.Success,
+      status: enums.TransferStatuses.Success,
       fromAddress,
       toAddress,
       amount: 100000,
@@ -117,7 +119,7 @@ describe('Transfer HTTP API', () => {
     // Create a transfer for a grant for the second user
     await Transfer.create({
       userId: this.user2.id,
-      status: TransferStatuses.Success,
+      status: enums.TransferStatuses.Success,
       fromAddress,
       toAddress,
       amount: 10000,
@@ -137,17 +139,23 @@ describe('Transfer HTTP API', () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
     await request(this.mockApp)
       .post('/api/transfers')
       .send({
         amount: 1000,
-        address: toAddress
+        address: toAddress,
+        code: totp.gen(this.otpKey)
       })
-      .expect(201)
 
     const response = await request(this.mockApp).get('/api/transfers')
     expect(response.body.length).to.equal(1)
-    expect(response.body[0].status).to.equal('WaitingTwoFactor')
+    expect(response.body[0].status).to.equal('WaitingEmailConfirm')
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
   })
 
   it('should not add a transfer before lockup date passed', async () => {
@@ -158,7 +166,8 @@ describe('Transfer HTTP API', () => {
       .post('/api/transfers')
       .send({
         amount: 1000,
-        address: toAddress
+        address: toAddress,
+        code: totp.gen(this.otpKey)
       })
       .expect(422)
 
@@ -177,7 +186,8 @@ describe('Transfer HTTP API', () => {
       .post('/api/transfers')
       .send({
         amount: 1000001,
-        address: toAddress
+        address: toAddress,
+        code: totp.gen(this.otpKey)
       })
       .expect(422)
 
@@ -204,7 +214,8 @@ describe('Transfer HTTP API', () => {
       .post('/api/transfers')
       .send({
         amount: 999999,
-        address: toAddress
+        address: toAddress,
+        code: totp.gen(this.otpKey)
       })
       .expect(422)
 
@@ -231,7 +242,8 @@ describe('Transfer HTTP API', () => {
       .post('/api/transfers')
       .send({
         amount: 999999,
-        address: toAddress
+        address: toAddress,
+        code: totp.gen(this.otpKey)
       })
       .expect(422)
 
@@ -258,7 +270,8 @@ describe('Transfer HTTP API', () => {
       .post('/api/transfers')
       .send({
         amount: 999999,
-        address: toAddress
+        address: toAddress,
+        code: totp.gen(this.otpKey)
       })
       .expect(422)
 
@@ -285,7 +298,8 @@ describe('Transfer HTTP API', () => {
       .post('/api/transfers')
       .send({
         amount: 999999,
-        address: toAddress
+        address: toAddress,
+        code: totp.gen(this.otpKey)
       })
       .expect(422)
 
@@ -320,9 +334,9 @@ describe('Transfer HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/transfers')
       .send({
-        userId: this.user.id,
         amount: 999993,
-        address: toAddress
+        address: toAddress,
+        code: totp.gen(this.otpKey)
       })
       .expect(422)
 
@@ -339,13 +353,15 @@ describe('Transfer HTTP API', () => {
         .post('/api/transfers')
         .send({
           amount: 1000000,
-          address: toAddress
+          address: toAddress,
+          code: totp.gen(this.otpKey)
         }),
       request(this.mockApp)
         .post('/api/transfers')
         .send({
           amount: 1,
-          address: toAddress
+          address: toAddress,
+          code: totp.gen(this.otpKey)
         })
     ])
 
@@ -360,38 +376,46 @@ describe('Transfer HTTP API', () => {
   it('should confirm a transfer', async () => {
     const transfer = await Transfer.create({
       userId: this.user.id,
-      status: enums.TransferStatuses.WaitingTwoFactor,
+      status: enums.TransferStatuses.WaitingEmailConfirm,
       toAddress: toAddress,
       amount: 1000000,
       currency: 'OGN'
     })
 
-    const totpToken = totp.gen(this.otpKey)
+    const token = jwt.sign(
+      {
+        transferId: transfer.id
+      },
+      encryptionSecret,
+      { expiresIn: '5m' }
+    )
 
     await request(this.mockApp)
       .post(`/api/transfers/${transfer.id}`)
-      .send({
-        code: totpToken
-      })
+      .send({ token })
       .expect(201)
   })
 
-  it('should not confirm a transfer with invalid totp code', async () => {
+  it('should not confirm a transfer with invalid token', async () => {
     const transfer = await Transfer.create({
       userId: this.user.id,
-      status: enums.TransferStatuses.WaitingTwoFactor,
+      status: enums.TransferStatuses.WaitingEmailConfirm,
       toAddress: toAddress,
       amount: 1000000,
       currency: 'OGN'
     })
 
-    const totpToken = '123456'
+    const token = jwt.sign(
+      {
+        transferId: 'invalid'
+      },
+      encryptionSecret,
+      { expiresIn: '5m' }
+    )
 
     await request(this.mockApp)
       .post(`/api/transfers/${transfer.id}`)
-      .send({
-        code: totpToken
-      })
-      .expect(422)
+      .send({ token })
+      .expect(401)
   })
 })
