@@ -31,6 +31,7 @@ const config = {
     path: path.resolve(__dirname, 'public')
   },
   externals: {
+    sequelize: 'sequelize',
     Web3: 'web3'
   },
   module: {
