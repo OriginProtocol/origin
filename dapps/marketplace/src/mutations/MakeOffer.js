@@ -8,7 +8,7 @@ export default gql`
     $quantity: Int!
     $currency: String
     $fractionalData: FractionalOfferInput
-    $shippingAddress: String
+    $shippingAddress: ShippingAddressInput
     $autoswap: Boolean
   ) {
     makeOffer(

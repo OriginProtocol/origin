@@ -26,6 +26,20 @@ async function convosWithSupport() {
   }))
 }
 
+async function decryptOutOfBandMessage(_, args) {
+  let encrypted
+  try {
+    encrypted = JSON.parse(args.encrypted)
+  } catch (e) {
+    throw new Error('Message to decrypt must be JSON')
+  }
+  const d = await contracts.messaging.decryptOutOfBandMessage(encrypted)
+  if (d === null) {
+    throw new Error('Could not decrypt message')
+  }
+  return d.content
+}
+
 export default {
   enabled: () => isEnabled(),
   conversations: () => convosWithSupport(),
@@ -73,17 +87,9 @@ export default {
     }
     return null
   },
-  decryptOutOfBandMessage: async (_, args) => {
-    let encrypted
-    try {
-      encrypted = JSON.parse(args.encrypted)
-    } catch (e) {
-      throw new Error('Message to decrypt must be JSON')
-    }
-    const d = await contracts.messaging.decryptOutOfBandMessage(encrypted)
-    if (d === null) {
-      throw new Error('Could not decrypt message')
-    }
-    return d.content
+  decryptOutOfBandMessage: decryptOutOfBandMessage,
+  decryptShippingAddress: async (_, args) => {
+    const data = await decryptOutOfBandMessage(_, args)
+    return JSON.parse(data.content)
   }
 }

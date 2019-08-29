@@ -9,5 +9,4 @@ const DecryptOutOfBandMessage = gql`
     }
   }
 `
-window.DecryptOutOfBandMessage = DecryptOutOfBandMessage
 export default DecryptOutOfBandMessage

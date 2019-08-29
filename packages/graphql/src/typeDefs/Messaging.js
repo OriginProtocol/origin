@@ -22,6 +22,7 @@ module.exports = `
     forwardTo(id: String!): String
     totalUnread: Int
     decryptOutOfBandMessage(encrypted: String): OutOfBandMessage
+    decryptShippingAddress(encrypted: String!): ShippingAddress
   }
 
   type Conversation {
@@ -49,4 +50,13 @@ module.exports = `
     timestamp: Int
   }
 
+  type ShippingAddress {
+    name: String
+    address1: String
+    address2: String
+    city: String
+    stateProvinceRegion: String
+    postalCode: String
+    country: String
+  }
 `

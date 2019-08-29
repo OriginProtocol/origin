@@ -82,7 +82,7 @@ export const mutations = `
       from: String
       withdraw: String
       quantity: Int
-      shippingAddress: String
+      shippingAddress: ShippingAddressInput
       autoswap: Boolean
 
       # Optional: normally inherited from listing
@@ -473,6 +473,16 @@ export const types = `
   input PriceInput {
     amount: String
     currency: String
+  }
+
+  input ShippingAddressInput {
+    name: String
+    address1: String
+    address2: String
+    city: String
+    stateProvinceRegion: String
+    postalCode: String
+    country: String
   }
 `
 export default types + mutations
