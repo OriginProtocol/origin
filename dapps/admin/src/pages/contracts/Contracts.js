@@ -20,6 +20,7 @@ const Contracts = () => {
   const [state, setStateRaw] = useState({})
   const { loading, error, data } = useQuery(query)
   const setState = newState => setStateRaw({ ...state, ...newState })
+
   if (loading) return <p className="mt-3">Loading...</p>
   if (error) {
     console.log(error)

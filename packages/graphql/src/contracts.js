@@ -77,9 +77,7 @@ export function newBlock(blockNumber) {
     context.ProxyFactory.eventCache.setLatestBlock(blockNumber)
   }
 
-  pubsub.publish('NEW_BLOCK', {
-    newBlock: { id: blockNumber }
-  })
+  pubsub.publish('NEW_BLOCK', { newBlock: { id: blockNumber } })
 }
 
 const blockQuery = `query BlockNumber { web3 { blockNumber } }`

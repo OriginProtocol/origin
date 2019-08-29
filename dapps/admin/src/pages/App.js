@@ -4,7 +4,7 @@ import { Navbar, Alignment, Icon, Tooltip } from '@blueprintjs/core'
 
 import Price from 'components/Price'
 import MetaMaskSwitcher from 'components/MetaMaskSwitcher'
-import Accounts from './settings/Accounts'
+import Settings from './settings/Settings'
 import Listings from './listings/Listings'
 import Listing from './listings/Listing'
 import Activity from './marketplace/Activity'
@@ -56,7 +56,7 @@ const App = () => (
         <Link to="/identities" icon="mugshot" tooltip="Identities" />
         <Link to="/messaging" icon="chat" tooltip="Messaging" />
         <Link to="/explorer" icon="console" tooltip="GraphQL Console" />
-        <Link to="/accounts" icon="settings" tooltip="Settings" />
+        <Link to="/settings" icon="settings" tooltip="Settings" />
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT}>
         <MetaMaskSwitcher />
@@ -71,7 +71,7 @@ const App = () => (
       </Navbar.Group>
     </Navbar>
     <Switch>
-      <Route path="/accounts" component={Accounts} />
+      <Route path="/settings" component={Settings} />
       <Route path="/marketplace/listings/:listingID" component={Listing} />
       <Route path="/marketplace" component={Listings} />
       <Route path="/users/:userId" component={User} />

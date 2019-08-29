@@ -1,4 +1,5 @@
 const addresses = require('@origin/contracts/build/contracts_origin.json')
+const localStorageHas = require('./_localStorageHas')
 
 export default {
   // Web3 provider
@@ -45,7 +46,7 @@ export default {
   messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
 
   // Configs
-  performanceMode: true,
+  performanceMode: localStorageHas('performanceMode', 'true'),
   proxyAccountsEnabled: true,
   relayerEnabled: true
 }
