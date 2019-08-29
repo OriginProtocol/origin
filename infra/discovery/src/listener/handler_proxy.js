@@ -4,7 +4,7 @@ const contracts = esmImport('@origin/graphql/src/contracts').default
 
 const logger = require('./logger')
 
-const ZeroAddress = '0x00000000000000000000000000000000000000'
+const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
 class ProxyEventHandler {
   constructor(config) {
