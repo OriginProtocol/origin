@@ -169,34 +169,93 @@ app.get('/conversations/:address', async (req, res) => {
   )
 })
 
-// Get all messages in a room/conversation
-app.get('/messages/:conversationId', async (req, res) => {
-  const { conversationId } = req.params
+/**
+ * Returns paginated results of messages in a given conversation
+ * @param {String} args.conversationId - Conversation ID
+ * @param {Integer} args.after - To get messages with converstationIndex > after
+ * @param {Integer} args.before - To get messages with converstationIndex < before
+ * @param {Integer} args.isKeys - Returns only keys if true, otherwise returns all other messages
+ * @returns {Promise<[Object]>} Always returns an array of message objects. Array will be empty if no messages matched the given constraint.
+ */
+async function getMessages({ conversationId, after, before, isKeys }) {
+  const where = {
+    isKeys
+  }
+
+  if (!isKeys) {
+    // Don't paginate when fetching keys
+    const constraints = {}
+
+    if (after) {
+      constraints[db.Sequelize.Op.gt] = parseInt(after)
+    }
+  
+    if (before) {
+      constraints[db.Sequelize.Op.lt] = parseInt(before)
+    }
+  
+    if (before || after) {
+      where.conversationIndex = constraints
+    }
+  }
+
+  // Don't paginate messages if `after` is specified
+  // Don't paginate when fetching keys
+  // Limit 10 per query otherwise
+  const limit = isKeys || after ? undefined : 10
 
   const messages = await db.Message.findAll({
     include: [
       { model: db.Conversation, where: { externalId: conversationId } }
     ],
-    order: [['conversationIndex', 'ASC']]
+    order: [['conversationIndex', 'DESC']],
+    where,
+    limit,
+    offset: 0
   })
 
-  if (!messages) {
+  return (messages || []).map(m => {
+    return {
+      conversationIndex: m.conversationIndex,
+      address: m.ethAddress,
+      content: m.data.content,
+      ext: m.data.ext,
+      signature: m.signature,
+      isKeys: m.isKeys,
+      timestamp: m.createdAt
+    }
+
+  }) 
+}
+
+// Get all messages of type 'key' in a room/conversation
+app.get('/messages/:conversationId/keys', async (req, res) => {
+  const messages = await getMessages({
+    ...req.params,
+    ...req.query,
+    isKeys: true
+  })
+
+  if (!messages.length) {
     return res.status(204).end()
   }
 
-  res.status(200).send(
-    messages.map(m => {
-      return {
-        conversationIndex: m.conversationIndex,
-        address: m.ethAddress,
-        content: m.data.content,
-        ext: m.data.ext,
-        signature: m.signature,
-        isKeys: m.isKeys,
-        timestamp: m.createdAt
-      }
-    })
-  )
+  res.status(200).send(messages)
+})
+
+// Get all messages in a room/conversation
+app.get('/messages/:conversationId', async (req, res) => {
+  const messages = await getMessages({
+    ...req.params,
+    ...req.query,
+    isKeys: false
+  })
+
+  if (!messages.length) {
+    return res.status(204).end()
+  }
+
+  res.status(200).send(messages)
 })
 
 // Add a message to a room/conversation
