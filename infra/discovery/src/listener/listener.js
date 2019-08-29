@@ -114,9 +114,14 @@ async function main() {
   // List of contracts the listener watches events from.
   const contracts = {
     IdentityEvents: contractsContext.identityEvents,
-    Marketplace: contractsContext.marketplaces['000'].contract,
     ProxyFactory: contractsContext.ProxyFactory
   }
+  // Listen to all versions of marketplace
+  Object.keys(contractsContext.marketplaces).forEach(key => {
+    console.log('key', key)
+    contracts[`V${key}_Marketplace`] =
+      contractsContext.marketplaces[key].contract
+  })
 
   if (context.config.concurrency > 1) {
     logger.warn(`Backfill mode: concurrency=${context.config.concurrency}`)
