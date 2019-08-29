@@ -168,7 +168,7 @@ contract V01_Marketplace is Ownable {
         require(msg.sender == listing.depositManager, "Must be depositManager");
         require(_target != 0x0, "No target");
         tokenAddr.transfer(_target, listing.deposit); // Send deposit to target
-        listing.deposit = 0; // Prevent multiple deposit withdrawls
+        listing.deposit = 0; // Prevent multiple deposit withdrawals
         emit ListingWithdrawn(_target, listingID, _ipfsHash);
     }
 
