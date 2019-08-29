@@ -4,6 +4,7 @@ const { check, validationResult } = require('express-validator')
 const moment = require('moment')
 const AsyncLock = require('async-lock')
 const lock = new AsyncLock()
+const jwt = require('jsonwebtoken')
 
 const logger = require('../logger')
 const { Transfer } = require('../../src/models')
@@ -16,7 +17,7 @@ const {
   getUnlockDate,
   hasBalance
 } = require('../utils')
-const { unlockDate } = require('../config')
+const { encryptionSecret, unlockDate } = require('../config')
 const { addTransfer, confirmTransfer } = require('../lib/transfer')
 
 /*
@@ -45,6 +46,7 @@ router.post(
       .toInt()
       .custom(hasBalance),
     check('address').custom(isEthereumAddress),
+    check('code').custom(isValidTotp),
     ensureLoggedIn
   ],
   asyncMiddleware(async (req, res) => {
@@ -90,11 +92,17 @@ router.post(
 )
 
 /*
- * Confirm a transfer request using 2fa and enqueue it.
+ * Confirm a transfer request using the email token link and change the state
+ * to enqueued.
  */
 router.post(
   '/transfers/:id',
-  [check('code').custom(isValidTotp), ensureLoggedIn],
+  [
+    check('token')
+      .not()
+      .isEmpty(),
+    ensureLoggedIn
+  ],
   asyncMiddleware(async (req, res) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -103,8 +111,19 @@ router.post(
         .json({ errors: errors.array({ onlyFirstError: true }) })
     }
 
+    let decodedToken
+    try {
+      decodedToken = jwt.verify(req.body.token, encryptionSecret)
+    } catch (error) {
+      return res.status(401).send('Could not decode email confirmation token')
+    }
+
+    if (decodedToken.transferId !== Number(req.params.id)) {
+      return res.status(401).end('Invalid transfer id')
+    }
+
     const transfer = await Transfer.findOne({
-      where: { id: req.params.id, userId: req.user.id }
+      where: { id: decodedToken.transferId, userId: req.user.id }
     })
     if (!transfer) {
       return res.status(404)

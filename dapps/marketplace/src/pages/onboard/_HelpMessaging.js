@@ -15,9 +15,6 @@ const OnboardHelpWallet = () => (
         digital wallet.
       </fbt>
     </div>
-    <div className="learn-more">
-      <a href="#">Learn more</a>
-    </div>
   </div>
 )
 
