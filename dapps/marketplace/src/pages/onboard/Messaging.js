@@ -7,7 +7,6 @@ import withIsMobile from 'hoc/withIsMobile'
 import MobileModal from 'components/MobileModal'
 import Link from 'components/Link'
 import MetaMaskAnimation from 'components/MetaMaskAnimation'
-import Redirect from 'components/Redirect'
 import HelpOriginWallet from 'components/DownloadApp'
 import ListingPreview from './_ListingPreview'
 import HelpMessaging from './_HelpMessaging'
@@ -137,7 +136,7 @@ const MessagingEnabled = ({ nextLink }) => (
   </div>
 )
 
-const EnableMessagingButtons = ({ next, showButtons, onError, nextLink }) => {
+const EnableMessagingButtons = ({ next, showButtons, onError }) => {
   const [enableMessaging] = useMutation(EnableMessagingMutation)
   if (!showButtons) return null
 
@@ -204,7 +203,6 @@ const OnboardMessaging = props => {
         setWaitForSignature(false)
       }}
       showButtons={!waitForSignature}
-      nextLink={nextLink}
     />
   )
 

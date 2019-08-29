@@ -4,7 +4,7 @@ import get from 'lodash/get'
 
 import WalletStatusQuery from 'queries/WalletStatus'
 
-function withMessagingStatus(WrappedComponent, walletProp = 'walletProxy') {
+function withMessagingStatus(WrappedComponent) {
   const WithMessagingStatus = props => {
     const { data } = useQuery(WalletStatusQuery, {
       notifyOnNetworkStatusChange: true
