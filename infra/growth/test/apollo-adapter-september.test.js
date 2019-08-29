@@ -208,7 +208,7 @@ describe('Apollo adapter - September campaign', () => {
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenToNaturalUnits(150), currency: 'OGN' }
       },
-      TwitterShare5: {
+      TwitterShare10: {
         type: 'TwitterShare',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
@@ -226,7 +226,7 @@ describe('Apollo adapter - September campaign', () => {
         rewardEarned: { amount: '0', currency: 'OGN' },
         reward: { amount: tokenToNaturalUnits(10), currency: 'OGN' }
       },
-      FacebookShare1: {
+      FacebookShare6: {
         type: 'FacebookShare',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
@@ -407,7 +407,7 @@ describe('Apollo adapter - September campaign', () => {
     this.expectedState.LinkedInAttestation.status = 'Active'
     this.expectedState.KakaoAttestation.status = 'Active'
     this.expectedState.WebsiteAttestation.status = 'Active'
-    this.expectedState.FacebookShare1.status = 'Active'
+    this.expectedState.FacebookShare6.status = 'Active'
     this.expectedState.FacebookLike.status = 'Active'
     this.expectedState.TelegramAttestation.status = 'Active'
 
@@ -450,7 +450,7 @@ describe('Apollo adapter - September campaign', () => {
 
     // Level 2 should be unlocked.
     this.expectedState.Referral.status = 'Active'
-    this.expectedState.TwitterShare5.status = 'Inactive'
+    this.expectedState.TwitterShare10.status = 'Inactive'
     this.expectedState.MobileAccountCreated.status = 'Active'
 
     // Unlock all ListingPurchase listings
@@ -634,7 +634,7 @@ describe('Apollo adapter - September campaign', () => {
         .levels['2']
         .rules
         .map(rule => {
-          if (rule.id === 'TwitterShare5') {
+          if (rule.id === 'TwitterShare10') {
             modificationCallback(rule)
           }
           return rule
@@ -691,7 +691,7 @@ describe('Apollo adapter - September campaign', () => {
     this.expectedState.TwitterAttestation.rewardEarned = { amount: tokenToNaturalUnits(10), currency: 'OGN' }
 
     // Check Twitter Share/Follow got unlocked.
-    this.expectedState.TwitterShare5.status = 'Active'
+    this.expectedState.TwitterShare10.status = 'Active'
     this.expectedState.TwitterFollow.status = 'Active'
 
     // Find the TwitterShare actions and check they include all expected fields.
@@ -729,7 +729,7 @@ describe('Apollo adapter - September campaign', () => {
       {
         id: 17,
         type: GrowthEventTypes.SharedOnTwitter,
-        customId: '8e6ab35b03176537f66217b54d840545',
+        customId: '12d91e0291da89614dfa92df3115f821',
         data: {
           twitterProfile: {
             verified: false,
@@ -754,8 +754,8 @@ describe('Apollo adapter - September campaign', () => {
     )
 
     this.expectedState.rewardEarned = { amount: '340000000000000000000', currency: 'OGN' }
-    this.expectedState.TwitterShare5.status = 'Completed'
-    this.expectedState.TwitterShare5.rewardEarned = { amount: tokenToNaturalUnits(100), currency: 'OGN' }
+    this.expectedState.TwitterShare10.status = 'Completed'
+    this.expectedState.TwitterShare10.rewardEarned = { amount: tokenToNaturalUnits(100), currency: 'OGN' }
 
     checkExpectedState(state, this.expectedState)
   })
@@ -765,7 +765,7 @@ describe('Apollo adapter - September campaign', () => {
       {
         id: 18,
         type: GrowthEventTypes.SharedOnFacebook,
-        customId: 'origin_app',
+        customId: 'youtube_founder',
         data: null,
         status: GrowthEventStatuses.Logged,
         ethAddress: this.userA,
@@ -780,8 +780,8 @@ describe('Apollo adapter - September campaign', () => {
       this.mockAdapter
     )
 
-    this.expectedState.FacebookShare1.status = 'Completed'
-    this.expectedState.FacebookShare1.rewardEarned = { amount: '0', currency: 'OGN' }
+    this.expectedState.FacebookShare6.status = 'Completed'
+    this.expectedState.FacebookShare6.rewardEarned = { amount: '0', currency: 'OGN' }
 
     checkExpectedState(state, this.expectedState)
   })

@@ -211,7 +211,7 @@ const septemberConfig = {
           }
         },
         {
-          id: 'TwitterShare1',
+          id: 'TwitterShare6',
           class: 'SocialShare',
           config: {
             socialNetwork: 'twitter',
@@ -230,7 +230,7 @@ const septemberConfig = {
           }
         },
         {
-          id: 'TwitterShare2',
+          id: 'TwitterShare7',
           class: 'SocialShare',
           config: {
             socialNetwork: 'twitter',
@@ -249,7 +249,7 @@ const septemberConfig = {
           }
         },
         {
-          id: 'TwitterShare3',
+          id: 'TwitterShare8',
           class: 'SocialShare',
           config: {
             socialNetwork: 'twitter',
@@ -268,7 +268,7 @@ const septemberConfig = {
           }
         },
         {
-          id: 'TwitterShare4',
+          id: 'TwitterShare9',
           class: 'SocialShare',
           config: {
             socialNetwork: 'twitter',
@@ -287,7 +287,7 @@ const septemberConfig = {
           }
         },
         {
-          id: 'TwitterShare5',
+          id: 'TwitterShare10',
           class: 'SocialShare',
           config: {
             socialNetwork: 'twitter',
@@ -306,7 +306,7 @@ const septemberConfig = {
           }
         },
         {
-          id: 'FacebookShare1',
+          id: 'FacebookShare6',
           class: 'SimpleSocialShare',
           config: {
             socialNetwork: 'facebook',
@@ -324,7 +324,7 @@ const septemberConfig = {
           }
         },
         {
-          id: 'FacebookShare2',
+          id: 'FacebookShare7',
           class: 'SimpleSocialShare',
           config: {
             socialNetwork: 'facebook',
@@ -342,7 +342,7 @@ const septemberConfig = {
           }
         },
         {
-          id: 'FacebookShare3',
+          id: 'FacebookShare8',
           class: 'SimpleSocialShare',
           config: {
             socialNetwork: 'facebook',
@@ -360,7 +360,7 @@ const septemberConfig = {
           }
         },
         {
-          id: 'FacebookShare4',
+          id: 'FacebookShare9',
           class: 'SimpleSocialShare',
           config: {
             socialNetwork: 'facebook',
@@ -378,7 +378,7 @@ const septemberConfig = {
           }
         },
         {
-          id: 'FacebookShare5',
+          id: 'FacebookShare10',
           class: 'SimpleSocialShare',
           config: {
             socialNetwork: 'facebook',
