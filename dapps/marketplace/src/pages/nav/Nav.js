@@ -345,6 +345,7 @@ require('react-styl')(`
         max-width: calc(100% - 7rem)
         overflow: hidden
         text-overflow: ellipsis
+        margin-bottom: 0
       .nav-item
         position: initial
         .dropdown-menu
