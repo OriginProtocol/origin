@@ -25,10 +25,7 @@ jobs:
   Setup:
     <<: *defaults
     steps:
-      - run:
-          name: Clone Repo
-          command: |
-            git clone --depth=1 -b $CIRCLE_BRANCH https://github.com/${CIRCLE_PR_USERNAME:-OriginProtocol}/origin.git ~/origin
+      - checkout
       - run:
           name: Yarn Install
           command: |
