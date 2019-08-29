@@ -40,7 +40,7 @@
     "@babel/register": "7.5.5",
     "autocannon": "4.1.0",
     "chai": "4.2.0",
-    "form-data": "2.5.0",
+    "form-data": "2.5.1",
     "mocha": "6.2.0",
     "nodemon": "1.19.1",
     "supertest": "4.0.2",
