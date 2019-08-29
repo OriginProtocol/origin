@@ -449,9 +449,11 @@ class Buy extends Component {
   }
 }
 
-export default withConfig(withMessagingStatus(
-  withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy)))))
-))
+export default withConfig(
+  withMessagingStatus(
+    withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy)))))
+  )
+)
 
 require('react-styl')(`
   .make-offer-modal

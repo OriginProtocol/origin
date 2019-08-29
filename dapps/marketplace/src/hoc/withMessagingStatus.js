@@ -11,12 +11,7 @@ function withMessagingStatus(WrappedComponent, walletProp = 'walletProxy') {
     })
 
     const messaging = get(data, 'messaging')
-    return (
-      <WrappedComponent
-        {...props}
-        messagingStatus={messaging}
-      />
-    )
+    return <WrappedComponent {...props} messagingStatus={messaging} />
   }
   return WithMessagingStatus
 }

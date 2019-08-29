@@ -137,12 +137,7 @@ const MessagingEnabled = ({ nextLink }) => (
   </div>
 )
 
-const EnableMessagingButtons = ({
-  next,
-  showButtons,
-  onError,
-  nextLink
-}) => {
+const EnableMessagingButtons = ({ next, showButtons, onError, nextLink }) => {
   const [enableMessaging] = useMutation(EnableMessagingMutation)
   if (!showButtons) return null
 
@@ -235,12 +230,7 @@ const OnboardMessaging = props => {
   return cmp
 }
 
-const Messaging = ({
-  listing,
-  linkPrefix,
-  isMobile,
-  hideOriginWallet
-}) => {
+const Messaging = ({ listing, linkPrefix, isMobile, hideOriginWallet }) => {
   const nextLink = `${linkPrefix}/onboard/rewards`
 
   const content = <OnboardMessaging nextLink={nextLink} />
