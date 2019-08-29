@@ -44,7 +44,9 @@ class App extends Component {
     hasError: false,
     displayMobileModal: false,
     mobileModalDismissed: false,
-    footer: false
+    footer: false,
+    skipOnboardMessaging: false,
+    skipOnboardRewards: false
   }
 
   componentDidUpdate() {
@@ -117,7 +119,25 @@ class App extends Component {
         )}
         <main>
           <Switch>
-            <Route path="/onboard" component={Onboard} />
+            <Route
+              path="/onboard"
+              component={() => (
+                <Onboard
+                  skipMessaging={this.state.skipOnboardMessaging}
+                  skipRewards={this.state.skipOnboardRewards}
+                  onSkipMessaging={() => {
+                    this.setState({
+                      skipOnboardMessaging: true
+                    })
+                  }}
+                  onSkipRewards={() => {
+                    this.setState({
+                      skipOnboardRewards: true
+                    })
+                  }}
+                />
+              )}
+            />
             <Route path="/listing/:listingID" component={Listing} />
             <Route path="/promote/:listingID" component={PromoteListing} />
             <Route path="/purchases/:offerId" component={Transaction} />

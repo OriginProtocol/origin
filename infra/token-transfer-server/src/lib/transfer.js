@@ -1,6 +1,8 @@
 const BigNumber = require('bignumber.js')
 const moment = require('moment')
 const get = require('lodash.get')
+const sendgridMail = require('@sendgrid/mail')
+const jwt = require('jsonwebtoken')
 
 const Token = require('@origin/token/src/token')
 
@@ -18,12 +20,21 @@ const logger = require('../logger')
 
 const { vestedAmount } = require('./vesting')
 
+const {
+  encryptionSecret,
+  portalUrl,
+  sendgridFromEmail,
+  sendgridApiKey
+} = require('../config')
+
 // Number of block confirmations required for a transfer to be consider completed.
 const NumBlockConfirmation = 8
 
 // Wait up to 20 min for a transaction to get confirmed
 const ConfirmationTimeoutSec = 20 * 60 * 60
 const TwofactorTimeoutMinutes = 5
+
+sendgridMail.setApiKey(sendgridApiKey)
 
 /**
  * Helper method to check the validity of a transfer request.
@@ -48,7 +59,7 @@ async function checkTransferRequest(userId, amount) {
 
   // Sum the amount from transfers that are in a pending or complete state
   const pendingOrCompleteTransfers = [
-    enums.TransferStatuses.WaitingTwoFactor,
+    enums.TransferStatuses.WaitingEmailConfirm,
     enums.TransferStatuses.Enqueued,
     enums.TransferStatuses.Paused,
     enums.TransferStatuses.WaitingConfirmation,
@@ -94,7 +105,7 @@ async function checkTransferRequest(userId, amount) {
  * @param userId
  * @param address
  * @param amount
- * @returns {Promise<integer>} Id of the transfer request.
+ * @returns {Promise<integer>} Transfer object.
  */
 async function addTransfer(userId, address, amount, data = {}) {
   const user = await checkTransferRequest(userId, amount)
@@ -107,7 +118,7 @@ async function addTransfer(userId, address, amount, data = {}) {
   try {
     transfer = await Transfer.create({
       userId: user.id,
-      status: enums.TransferStatuses.WaitingTwoFactor,
+      status: enums.TransferStatuses.WaitingEmailConfirm,
       toAddress: address.toLowerCase(),
       amount,
       currency: 'OGN', // For now we only support OGN.
@@ -131,7 +142,41 @@ async function addTransfer(userId, address, amount, data = {}) {
     `Added transfer. id: ${transfer.id} address: ${address} amount: ${amount}`
   )
 
+  await sendTransferConfirmationEmail(transfer, user)
+
   return transfer
+}
+
+/**
+ * Sends an email with a token that can be used for confirming a transfer.
+ * @param transfer
+ * @param user
+ */
+async function sendTransferConfirmationEmail(transfer, user) {
+  const token = jwt.sign(
+    {
+      transferId: transfer.id
+    },
+    encryptionSecret,
+    { expiresIn: '5m' }
+  )
+
+  const data = {
+    to: user.email,
+    from: sendgridFromEmail,
+    subject: 'Confirm Your Origin Token Withdrawal',
+    text: `Please confirm your withdrawal of Origin tokens by clicking the link below.
+
+    ${portalUrl}/withdrawal/${transfer.id}/${token}.
+
+    This link will expire in 5 minutes. You can reply directly to this email with any questions.`
+  }
+
+  await sendgridMail.send(data)
+
+  logger.info(
+    `Sent email transfer confirmation token to ${user.email} for transfer ${transfer.id}`
+  )
 }
 
 /* Moves a transfer from waiting for two factor to enqueued.
@@ -140,7 +185,7 @@ async function addTransfer(userId, address, amount, data = {}) {
  * @param user
  */
 async function confirmTransfer(transfer, user) {
-  if (transfer.status !== enums.TransferStatuses.WaitingTwoFactor) {
+  if (transfer.status !== enums.TransferStatuses.WaitingEmailConfirm) {
     throw new Error('Transfer is not waiting for confirmation')
   }
 
@@ -164,7 +209,7 @@ async function confirmTransfer(transfer, user) {
       const webhookData = {
         embeds: [
           {
-            title: `A transfer of \`${transfer.amount} OGN\` was queued by \`${user.email}\``,
+            title: `A transfer of \`${transfer.amount}\` OGN was queued by \`${user.email}\``,
             description: [
               `**ID:** \`${transfer.id}\``,
               `**Address:** \`${transfer.toAddress}\``,

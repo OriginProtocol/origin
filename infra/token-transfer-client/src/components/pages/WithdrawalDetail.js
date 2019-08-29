@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
-import get from 'lodash.get'
+
+import enums from '@origin/token-transfer-server/src/enums'
 
 import { confirmTransfer, fetchTransfers } from '@/actions/transfer'
 import {
@@ -11,20 +12,13 @@ import {
   getIsLoading as getTransferIsLoading,
   getIsConfirming as getTransferIsConfirming
 } from '@/reducers/transfer'
-import { formInput, formFeedback } from '@/utils/formHelpers'
 import BorderedCard from '@/components/BorderedCard'
 import EthAddress from '@/components/EthAddress'
 import ClockIcon from '@/assets/clock-icon.svg'
-import Modal from '@/components/Modal'
 
 class WithdrawalDetail extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      code: '',
-      codeError: null,
-      displayModal: false
-    }
   }
 
   componentDidMount() {
@@ -32,40 +26,20 @@ class WithdrawalDetail extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // Parse server errors for transfer confirm
-    if (get(prevProps, 'transferError') !== this.props.transferError) {
-      this.handleServerError(this.props.transferError)
-    }
-  }
-
-  handleServerError(error) {
-    if (error && error.status === 422) {
-      // Parse validation errors from API
-      if (error.response.body && error.response.body.errors) {
-        error.response.body.errors.forEach(e => {
-          this.setState({ [`${e.param}Error`]: e.msg })
-        })
-      } else {
-        // General errors, apply to code field as it is the only field in
-        // the form
-        this.setState({
-          codeError: error.response.text
-        })
+    if (prevProps.transferIsLoading && !this.props.transferIsLoading) {
+      const token = this.props.match.params.token
+      if (token) {
+        const transferToConfirm = this.props.transfers.find(
+          t => t.id == this.props.match.params.id
+        )
+        if (
+          transferToConfirm &&
+          transferToConfirm.status ===
+            enums.TransferStatuses.WaitingEmailConfirm
+        ) {
+          this.props.confirmTransfer(transferToConfirm.id, token)
+        }
       }
-    }
-  }
-
-  handleConfirm = async transfer => {
-    const result = await this.props.confirmTransfer(
-      transfer.id,
-      this.state.code
-    )
-    if (result.type === 'CONFIRM_TRANSFER_SUCCESS') {
-      this.setState({
-        code: '',
-        codeError: null,
-        displayModal: false
-      })
     }
   }
 
@@ -83,9 +57,9 @@ class WithdrawalDetail extends Component {
     )
 
     const hasExpired =
-      transfer.status === 'Expired' ||
-      (transfer.status === 'WaitingTwoFactor' &&
-        moment.utc(transfer.createdAt).diff(moment.utc(), 'minutes') > 5)
+      transfer.status === enums.TransferStatuses.Expired ||
+      (transfer.status === enums.TransferStatuses.WaitingEmailConfirm &&
+        moment.utc().diff(moment.utc(transfer.createdAt), 'minutes') > 5)
 
     if (!transfer) {
       return <div>Transfer not found</div>
@@ -93,31 +67,25 @@ class WithdrawalDetail extends Component {
 
     return (
       <>
-        {this.state.displayModal && this.renderModal(transfer)}
-
         {hasExpired && (
           <div className="alert alert-danger">
             This transaction has expired. It was not confirmed with two factor
             authentication in the required time.
           </div>
         )}
-        {!hasExpired && transfer.status === 'WaitingTwoFactor' && (
-          <div className="alert alert-warning">
-            <strong>Next Step:</strong> Confirm your transaction with{' '}
-            <a
-              href="javascript:void(0)"
-              onClick={() => this.setState({ displayModal: true })}
-            >
-              two factor authentication
-            </a>
-            <br />
-            <strong>Transaction will expire in:</strong>{' '}
-            <img src={ClockIcon} className="ml-3 mr-1 mb-1" />{' '}
-            {moment(transfer.createdAt)
-              .add(5, 'minutes')
-              .fromNow()}
-          </div>
-        )}
+        {!hasExpired &&
+          transfer.status === enums.TransferStatuses.WaitingEmailConfirm && (
+            <div className="alert alert-warning">
+              <strong>Next Step:</strong> Confirm your transaction with email
+              link
+              <br />
+              <strong>Transaction will expire:</strong>{' '}
+              <img src={ClockIcon} className="mx-1 mb-1" />{' '}
+              {moment(transfer.createdAt)
+                .add(5, 'minutes')
+                .fromNow()}
+            </div>
+          )}
         <div className="row">
           <div className="col-12 col-xl-6">
             <BorderedCard shadowed={true}>
@@ -188,41 +156,6 @@ class WithdrawalDetail extends Component {
           egestas integer.
         </small>
       </>
-    )
-  }
-
-  renderModal(transfer) {
-    const input = formInput(this.state, state => this.setState(state))
-    const Feedback = formFeedback(this.state)
-
-    return (
-      <Modal appendToId="main" closeBtn={true}>
-        <h1>2-Step Verification</h1>
-        <p>Enter the code generated by your authenticator app</p>
-        <form onSubmit={this.handleConfirm}>
-          <div className="form-group">
-            <label htmlFor="email">Code</label>
-            <input {...input('code')} type="number" />
-            {Feedback('code')}
-          </div>
-          <button
-            type="submit"
-            className="btn btn-primary btn-lg"
-            style={{ marginTop: '40px' }}
-            onClick={() => this.handleConfirm(transfer)}
-            disabled={this.props.transferIsConfirming}
-          >
-            {this.props.transferIsConfirming ? (
-              <>
-                <span className="spinner-grow spinner-grow-sm"></span>
-                Loading...
-              </>
-            ) : (
-              <span>Verify</span>
-            )}
-          </button>
-        </form>
-      </Modal>
     )
   }
 }

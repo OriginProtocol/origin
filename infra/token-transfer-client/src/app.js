@@ -35,7 +35,7 @@ const App = () => (
     <PrivateRoute path="/dashboard" component={Dashboard} />
     <PrivateRoute path="/news" component={News} />
     <PrivateRoute exact path="/withdrawal" component={WithdrawalHistory} />
-    <PrivateRoute path="/withdrawal/:id" component={WithdrawalDetail} />
+    <PrivateRoute path="/withdrawal/:id/:token?" component={WithdrawalDetail} />
     <PrivateRoute path="/security" component={Security} />
   </Switch>
 )

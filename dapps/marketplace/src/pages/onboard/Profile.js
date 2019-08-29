@@ -73,11 +73,16 @@ class OnboardProfile extends Component {
   }
 
   render() {
-    const { linkPrefix } = this.props
+    const { linkPrefix, walletType } = this.props
     const { finished, back, signTxModal } = this.state
 
     if (finished) {
-      return <Redirect to={`${linkPrefix}/onboard/rewards`} />
+      // Origin wallet does not require signing of messaging strings
+      if (walletType === 'Origin Wallet') {
+        return <Redirect to={`${linkPrefix}/onboard/rewards`} />
+      } else {
+        return <Redirect to={`${linkPrefix}/onboard/messaging`} />
+      }
     } else if (back) {
       return <Redirect to={`${linkPrefix}/onboard/email`} />
     }
