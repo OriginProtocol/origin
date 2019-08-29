@@ -41,15 +41,14 @@ class Terms extends Component {
               id="acceptCheck"
               onClick={e => this.setState({ accepted: e.target.checked })}
             />
-            <label className="form-check-label" htmlFor="acceptCheck">
-              I have read and agree ot the terms and conditions
+            <label className="form-check-label mt-0" htmlFor="acceptCheck">
+              I have read and agree to the terms and conditions
             </label>
           </div>
           <button
-            className="btn btn-primary btn-lg"
-            style={{ marginTop: '40px' }}
+            className="btn btn-secondary btn-lg mt-5"
             disabled={!this.state.accepted}
-            onClick={() => this.setState({ redirectTo: '/otp/setup' })}
+            onClick={() => this.setState({ redirectTo: '/otp/explain' })}
           >
             Continue
           </button>
@@ -60,15 +59,3 @@ class Terms extends Component {
 }
 
 export default Terms
-
-require('react-styl')(`
-  .terms-wrapper
-    border-radius: 10px
-    height: 300px
-    overflow-y: scroll
-    background-color: #e9f0f3
-    font-size: 14px
-    padding: 20px
-    text-align: left
-    margin: 40px 0
-`)

@@ -1,37 +1,32 @@
 # ![origin_github_banner](https://user-images.githubusercontent.com/673455/37314301-f8db9a90-2618-11e8-8fee-b44f38febf38.png)
 
-Head to [here](https://www.originprotocol.com/developers) to learn more about
-what we're building and how to get involved.
+Head [here](https://www.originprotocol.com/developers) to learn more about what
+we're building and how to get involved.
 
 ## Development
 
-To get started quickly, you have two options:
-1. You can run a "light" version of the Origin DApp, which
-automatically sets up our DApp, a local IPFS server, and a local blockchain. This is the simplest way to run the DApp but does not give you access to a full-fledge DApp: messaging, search, attestation services are not running. 
-2. Or you can use a more full featured development environment with Docker Compose
-orchestrating several containers and providing access to the full suite of the
-Origin DApp features, including messaging, browser notifications, and
-attestation services.
+To get started running the DApp, you have two options:
+
+1. You can run a "light" version of the Origin DApp, which automatically sets up
+   our DApp, a local IPFS server, and a local blockchain. This is the simplest
+   way to run the DApp and is recommended for developers new to Origin.
+2. Or you can use a more full featured development environment with Docker
+   Compose orchestrating several containers and providing access to the full
+   suite of the Origin DApp features, including messaging, search, browser
+   notifications, and attestation services.
 
 ## Option 1: Quick start - Running a local DApp
 
-1. Check out the repository from GitHub and make sure you have installed all the
-   necessary dependencies:
+Check out the repository from GitHub, install the necessary dependencies, and
+start the DApp:
 
-```
-git clone https://github.com/OriginProtocol/origin
-cd origin && yarn
-```
-
-2. You can then start the marketplace DApp using:
-
-```
-yarn start
-```
+       git clone https://github.com/OriginProtocol/origin
+       cd origin
+       yarn install
+       yarn start
 
 This will start a `webpack-dev-server` with hot reloading on
-`http://localhost:3000.`. When you open it you should some sample listings.
-
+`http://localhost:3000`. When you open it you should some sample listings.
 
 ## Option 2: Running Docker Compose
 
@@ -39,22 +34,20 @@ There is a Docker Compose configuration available for running a variety of
 backend services the DApp integrates with. The `docker-compose` configuration
 runs the following packages:
 
-```
-- elasticsearch on http://localhost:9200
-- postgresql on port 5432
-- redis on port 6379
-- @origin/services: various back-end services
-   - Ganache: Ethereum blockchain on http://localhost:8545
-   - IPFS daemon on port 5002
-   - @origin/ipfs-proxy: IPFS proxy on http://localhost:9999
-- @origin/bridge: attestation server on http://localhost:5000
-- @origin/discovery: discovery/search server on http://localhost:4000
-- @origin/discovery: event-listener (aka "indexer")
-- @origin/graphql: graphql server on http://localhost:4007
-- @origin/growth: growth server on http://localhost:4008
-- @origin/messaging: messaging server on http://localhost:9012
-- @origin/notifications: email/mobile notification server on http://localhost:3456
-```
+    - elasticsearch on http://localhost:9200
+    - postgresql on port 5432
+    - redis on port 6379
+    - @origin/services: various back-end services
+       - Ganache: Ethereum blockchain on http://localhost:8545
+       - IPFS daemon on port 5002
+       - @origin/ipfs-proxy: IPFS proxy on http://localhost:9999
+    - @origin/bridge: attestation server on http://localhost:5000
+    - @origin/discovery: discovery/search server on http://localhost:4000
+    - @origin/discovery: event-listener (aka "indexer")
+    - @origin/graphql: graphql server on http://localhost:4007
+    - @origin/growth: growth server on http://localhost:4008
+    - @origin/messaging: messaging server on http://localhost:9012
+    - @origin/notifications: email/mobile notification server on http://localhost:3456
 
 ⚠️ If you want to run the Docker Compose setup, ensure that both
 `@origin/marketplace` and `@origin/admin` are not running before you start the
@@ -78,30 +71,31 @@ started before running `docker-compose up`.
 clear out old containers by stopping any running containers and executing
 `docker system prune --volumes --all` before completing these steps.
 
-1. Clone the repository:
+1.  Clone the repository:
 
-`git clone https://github.com/OriginProtocol/origin` `cd origin`
+        git clone https://github.com/OriginProtocol/origin
+        cd origin
 
-2. Optional: Pick which version of the code you want to run. The latest code is
-   on the *master* branch (which is checked out by default), while the code
-   currently deployed in production is on the *stable* branch. For example, to use
-   the stable branch, run:
+2.  _Optional_: Pick which version of the code you want to run. The latest code
+    is on the _master_ branch (which is checked out by default), while the code
+    currently deployed in production is on the _stable_ branch. For example, to
+    use the stable branch, run:
 
-```
-git checkout --track origin/stable
-```
+         git checkout --track origin/stable
 
-3. From the root of the repository, run `docker-compose up`. The first time this
-   command runs it will take some time to complete due to the initial building
-   of the containers.
-   
-When the containers are running (it can take sme time), you can proceed to next step.
-If you see an error in the logs please [raise an issue](https://github.com/OriginProtocol/origin/issues).
+3.  From the root of the repository, run `docker-compose up`. The first time
+    this command runs it will take some time to complete due to the initial
+    building of the containers.
 
-4. Start the marketplace DApp by running `yarn start`
-This will start a `webpack-dev-server` with hot reloading and open the URL
-`http://localhost:3000.` in your browser. You should some see the marketplace sample listings.
-Note: If you get a blank page with a spinner for too long, try to refresh in your browser.
+    When the containers are running (it can take sme time), you can proceed to
+    next step. If you see an error in the logs please
+    [raise an issue](https://github.com/OriginProtocol/origin/issues).
+
+4.  Start the marketplace DApp by running `yarn start` This will start a
+    `webpack-dev-server` with hot reloading and open the URL
+    `http://localhost:3000.` in your browser. You should some see the
+    marketplace sample listings. Note: If you get a blank page with a spinner
+    for too long, try to refresh in your browser.
 
 ### Modifying settings
 
@@ -117,10 +111,8 @@ documentation for usage. Some commands that may be useful are included below.
 
 Start and stop the environment:
 
-```
     docker-compose up
     docker-compose stop
-```
 
 ⚠️ When docker builds an image, part of the build process is `yarn install`,
 meaning that dependent packages from `package.json` are built into the image.
@@ -145,7 +137,7 @@ Restart a container. In a new terminal window:
 Rebuild containers (takes some time), in case you update dependencies (including
 npm). In a new terminal window:
 
-    docker-compose build --no-cache origin
+    docker-compose build --no-cache services
 
 ### Suggested workflow
 
@@ -157,12 +149,10 @@ solution is to rebuild the image with `docker-compose build`, which can be time
 consuming. To install new dependencies, get a shell in the container and run
 `npm install`.
 
-```
-host-machine$ docker exec -ti <container_name> /bin/bash
-docker-container$ npm run bootstrap # run inside /app directory
-# close connection
-host-machine$ docker-compose restart <container_name>
-```
+    host-machine$ docker exec -ti <container_name> /bin/bash
+    docker-container$ npm run bootstrap # run inside /app directory
+    # close connection
+    host-machine$ docker-compose restart <container_name>
 
 ⚠️ Don't run `docker-compose down` when stopping containers! Any changes made
 since the initial Docker build will be lost. Instead use `docker-compose stop`.
@@ -187,9 +177,7 @@ consume disk space that docker might have problems releasing. One indication of
 this is that containers are unable to start. Check available disk space in
 `Disk` tab under Docker Desktop preferences. To free disk space:
 
-```
-$docker system prune --volumes --all
-```
+    $docker system prune --volumes --all
 
 When doing a hard delete of Docker data Origin, images need to be rebuilt
 `docker-compose build`
@@ -225,35 +213,47 @@ spinning up the development environment may fail. This includes `@origin/dapp`
 and `@origin/admin`. Ensure you start those after you run `docker-compose up`.
 
 ## Metamask
-In order to use the marketplace DApp, you need a web3 enable wallet. Metamask is a popular choice. It runs as a Chrome extension. You can install it by visiting [this URL](https://metamask.io/).
+
+In order to use the marketplace DApp, you need a web3 enable wallet. Metamask is
+a popular choice. It runs as a Chrome extension. You can install it by visiting
+[this URL](https://metamask.io/).
 
 ### Ethereum network
-Within Metamask, you can select which Ethereum network to connect to.
-For local development, pick "Localhost 8545". This will have metamask using your local ganache blockchain.
+
+Within Metamask, you can select which Ethereum network to connect to. For local
+development, pick "Localhost 8545". This will have metamask using your local
+ganache blockchain.
 
 ### Errors
+
 Sometimes Metamask gets confused on private networks. If you see errors
 generated by Metamask in your console while developing, clicking
 `Settings`→`Reset Account` in Metamask should resolve the issue.
 
 ## Getting ETH for testing
-Depending on which Ethereum network you use, here are ways to get ETH for testing:
- - On local ganache blockchain (aka localhost 8545)
-    - In metamask, on the login page, click on "Import using account seed phrase" at the bottom
-    - Then use the default ganache seed phase: "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
-    - Choose a password
-    - In Metamask, your account should show as having an ETH balance of about 90 ETH or more.
+
+Depending on which Ethereum network you use, here are ways to get ETH for
+testing:
+
+- On local ganache blockchain (aka localhost 8545)
+  - In metamask, on the login page, click on "Import using account seed phrase"
+    at the bottom
+  - Then use the default ganache seed phase: "candy maple cake sugar pudding
+    cream honey rich smooth crumble sweet treat"
+  - Choose a password
+  - In Metamask, your account should show as having an ETH balance of about 90
+    ETH or more.
 - On Rinkeby
-    - Visit the [Rinkeby faucet](https://faucet.rinkeby.io/)
- 
+  - Visit the [Rinkeby faucet](https://faucet.rinkeby.io/)
+
 ## DApp settings
 
 ### Network selection
 
-You can  change the Ethereum network being used by the marketplace DApp by
+You can change the Ethereum network being used by the marketplace DApp by
 appending a network name to the URL.
 
-- http://localhost:3000/ - Local Ganache and services 
+- http://localhost:3000 - Local Ganache and services
 - http://localhost:3000/origin - Origin testnet backed by origin dev services
   (e.g. https://dapp.dev.originprotocol.com)
 - http://localhost:3000/rinkeby - Ethereum Rinkeby backed by Origin staging
@@ -262,9 +262,12 @@ appending a network name to the URL.
   services (e.g. https://dapp.originprotocol.com)
 
 ### Using Origin's Ethereum Testnet
-Origin runs a few nodes with its own test blockchain that can be used for testing.
 
-Note: This is **not recommended for new developers**. Using the local ganache blockchain (aka localhost 8545) should be sufficient in most cases.
+Origin runs a few nodes with its own test blockchain that can be used for
+testing.
+
+Note: This is **not recommended for new developers**. Using the local ganache
+blockchain (aka localhost 8545) should be sufficient in most cases.
 
 - Open MetaMask by clicking on the extension.
 - Open MetaMask's settings by clicking on the account icon in the top right and
@@ -296,4 +299,4 @@ dependencies to the root of the monorepo on installation.
 
 Here's an example for adding the module `rot13` to the graphql pacakge:
 
-  lerna add rot13 --scope=@origin/graphql
+    lerna add rot13 --scope=@origin/graphql

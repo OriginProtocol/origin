@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom'
 import agent from '@/utils/agent'
 import { apiUrl } from '@/constants'
 
-class OtpVerify extends Component {
+class OtpSetup extends Component {
   state = {
     loading: true,
     otpQrUrl: null,
@@ -61,7 +61,9 @@ class OtpVerify extends Component {
             <p>
               <strong>Secret Key:</strong>
               <br />
-              <small className="d-md-none">{this.state.otpKey}</small>
+              <small className="d-md-none text-muted">
+                {this.state.otpKey}
+              </small>
               <span className="d-none d-md-block">{this.state.otpKey}</span>
             </p>
             <div className="alert alert-warning mx-auto">
@@ -69,8 +71,7 @@ class OtpVerify extends Component {
               anyone else.
             </div>
             <button
-              className="btn btn-primary btn-lg"
-              style={{ marginTop: '20px' }}
+              className="btn btn-secondary btn-lg mt-5"
               onClick={() => this.setState({ redirectToVerify: true })}
             >
               Continue
@@ -82,4 +83,4 @@ class OtpVerify extends Component {
   }
 }
 
-export default OtpVerify
+export default OtpSetup

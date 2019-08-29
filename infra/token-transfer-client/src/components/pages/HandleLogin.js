@@ -26,7 +26,7 @@ class HandleLogin extends Component {
       return
     }
 
-    const redirectTo = response.body.otpReady ? '/otp' : '/otp/setup'
+    const redirectTo = response.body.otpReady ? '/otp' : '/otp/explain'
 
     this.setState({ loading: false, redirectTo })
   }

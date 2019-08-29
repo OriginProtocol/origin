@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { fetchUser } from '@/actions/user'
+import { getUser, getError, getIsLoading } from '@/reducers/user'
 import { apiUrl } from '@/constants'
 import agent from '@/utils/agent'
 
@@ -34,7 +35,6 @@ class Welcome extends Component {
       this.setState({ redirectTo: '/' })
     }
 
-    // Load the user
     this.props.fetchUser()
 
     this.setState({ loading: false })
@@ -48,7 +48,7 @@ class Welcome extends Component {
     return (
       <>
         <div className="action-card">
-          {this.state.loading || this.props.isFetching ? (
+          {this.state.loading || this.props.isLoading ? (
             <div className="spinner-grow" role="status">
               <span className="sr-only">Loading...</span>
             </div>
@@ -70,8 +70,7 @@ class Welcome extends Component {
                 {this.props.user.email}
               </div>
               <button
-                className="btn btn-primary btn-lg"
-                style={{ marginTop: '40px' }}
+                className="btn btn-secondary btn-lg mt-5"
                 onClick={() => {
                   if (this.props.user.phone) {
                     this.setState({ redirectTo: '/terms' })
@@ -92,9 +91,9 @@ class Welcome extends Component {
 
 const mapStateToProps = ({ user }) => {
   return {
-    user: user.user,
-    error: user.error,
-    isFetching: user.isFetching
+    user: getUser(user),
+    error: getError(user),
+    isLoading: getIsLoading(user)
   }
 }
 

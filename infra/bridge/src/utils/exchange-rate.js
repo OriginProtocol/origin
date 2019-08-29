@@ -19,6 +19,7 @@ const currencies = [
 function startExchangeRatePolling() {
   // TODO: Store the markets to be polled somewhere or in ENV and start poll with that.
   pollExchangeRate(currencies)
+  fetchExchangeRate(currencies)
 }
 
 /**

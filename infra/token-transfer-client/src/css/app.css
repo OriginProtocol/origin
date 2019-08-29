@@ -2,6 +2,8 @@
 @import '~typeface-lato';
 @import '~typeface-poppins';
 @import 'bootstrap.css';
+@import 'navbar.css';
+@import 'modal.css';
 
 html {
   font-size: 16px;
@@ -63,14 +65,17 @@ h2 {
   font-weight: bold;
 }
 
-small {
-  font-size: 14px;
+.text-muted {
   color: #8fa7b7
 }
 
 /*
  * Forms
  */
+
+form {
+  padding: 1rem 1rem 0 1rem;
+}
 
 label {
   margin-top: 20px;
@@ -86,7 +91,6 @@ input, select {
   background-color: #e9f0f3;
   border: none;
   box-shadow: none;
-  width: 80%;
 }
 
 .custom-select-lg {
@@ -101,13 +105,6 @@ input, select {
   background-color: #e9f0f3;
   border: none;
   box-shadow: none;
-  width: 80%;
-}
-
-@media (max-width: 768px) {
-  .form-control, .form-control:focus {
-    width: 90%;
-  }
 }
 
 .form-control-lg {
@@ -116,7 +113,6 @@ input, select {
 
 .input-group {
   border-radius: 10px;
-  width: 80%;
   margin: 0 auto;
   background-color: #e9f0f3;
   border: none;
@@ -154,6 +150,21 @@ input, select {
 /*
  * Cards
  */
+
+.card-wrapper {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  margin-bottom: 40px;
+}
+
+.shadowed {
+  box-shadow: 0 2px 14px 0 rgba(0, 0, 0, 0.1)
+}
+
+.bordered {
+  border: 1px solid #dbe6eb
+}
 
 .card-wrapper .header .link {
   font-size: 14px;
@@ -302,4 +313,51 @@ input, select {
   border: 1px solid #ffcc00;
 }
 
+.pointer {
+  cursor: pointer;
+}
 
+/* Vesting bars popover
+ */
+
+.cover {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.popover {
+  position: absolute;
+  z-index: 2;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.29);
+}
+
+.popover div {
+  margin-bottom: 2px
+}
+
+.popover strong {
+  width: 50px;
+  display: inline-block;
+}
+
+/* iDangerous Swiper
+ */
+.swiper-pagination {
+  position: relative !important;
+}
+
+.terms-wrapper {
+  border-radius: 10px;
+  height: 300px;
+  overflow-y: scroll;
+  background-color: #e9f0f3;
+  font-size: 14px;
+  padding: 20px;
+  text-align: left;
+  margin: 40px 0;
+}

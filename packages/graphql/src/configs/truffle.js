@@ -12,7 +12,7 @@ const config = {
   providerWS: `ws://${HOST}:8545`,
   ipfsGateway: `http://${HOST}:8080`,
   ipfsRPC: `http://${HOST}:5002`,
-  growth: `http://${HOST}:4001`,
+  growth: `http://${HOST}:4008`,
   bridge: `http://${HOST}:5000`,
   performanceMode: false,
   graphql: `http://${HOST}:4002`,

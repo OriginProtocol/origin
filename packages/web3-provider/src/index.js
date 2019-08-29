@@ -1,7 +1,7 @@
 /**
  * Web3 Provider Engine Subproviders
  */
-const ProviderEngine = require('web3-provider-engine')
+const ProviderEngine = require('./ProviderEngine')
 const {
   MetricsProvider,
   ThrottleRPCProvider,
@@ -43,39 +43,9 @@ function createEngine(web3Inst, options) {
     options
   )
 
-  /**
-   * The blockTracker seems be a default function of web3-provider-engine, but
-   * it's not completely clear if it's necessary(emits the 'latest' event).  It
-   * has an internal currentBlock tracker.  Perhaps we should bolt onto it.
-   * Right now, we're specifically initializing the block tracker so we can
-   * disable the `skipConfig` parameter that it sends which breaks Alchemy
-   */
-  const engine = new ProviderEngine({ useSkipCache: false })
-
-  /**
-   * IF YOU REMOVE THIS, EVERYTHING WITH EXPLODE
-   *
-   * This is more or less duplication of the handling in MetricsProvider, but we
-   * can't do anything intelligent from here.  And if we don't have this event
-   * listener, web3-provider-engine will crash the process...  And looking at
-   * their source, I don't *think* there's any exceptions where an error would
-   * present here, and not in the next() callback, so we're more or less just
-   * supressing the crash here.  Probably.
-   */
-  engine.on('error', () => {})
-
-  // web3-provider-engine sets to 30, which apparently isn't enough for Origin
-  engine.setMaxListeners(75)
-
+  const engine = new ProviderEngine()
   engine.addProvider(convertedProvider)
-
   web3Inst.setProvider(engine)
-
-  /**
-   * This is REQUIRED.  If you don't do this, you will probably spend a few
-   * hours wondering why web3-provider-engine is gaslighting you.
-   */
-  engine.start()
 }
 
 /**
@@ -93,15 +63,6 @@ function addSubprovider(web3Inst, subprovider, index = 0) {
     currentProvider.addProvider(subprovider, index)
   } else if (web3Inst.currentProvider instanceof ProviderEngine) {
     web3Inst.currentProvider.addProvider(subprovider, index)
-
-    /**
-     * Internal API, but really dont' want to be there if start() was never
-     * called by accident.
-     * Ref: https://github.com/MetaMask/web3-provider-engine/blob/master/index.js#L71
-     */
-    if (!web3Inst.currentProvider._running) {
-      web3Inst.currentProvider.start()
-    }
   } else {
     throw new Error('Unsupported provider type')
   }

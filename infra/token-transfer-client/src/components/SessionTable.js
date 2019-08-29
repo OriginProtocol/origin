@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
+import get from 'lodash.get'
 
 import { fetchEvents } from '@/actions/event'
 import { getEvents, getError, getIsLoading } from '@/reducers/event'
@@ -55,9 +56,13 @@ const SessionTable = props => {
                         {event.data.device.isDesktop ? 'Desktop' : 'Mobile'}
                       </td>
                       <td>{event.data.device.browser}</td>
-                      <td>{event.data.location}</td>
-                      <td>{moment(event.createdAt).fromNow()}</td>
-                      <td>
+                      <td className="text-nowrap">
+                        {get(event.data.location, 'countryName', null)}
+                      </td>
+                      <td className="text-nowrap">
+                        {moment(event.createdAt).fromNow()}
+                      </td>
+                      <td className="text-nowrap">
                         {moment(event.createdAt).diff(moment(), 'minutes') >
                         -30 ? (
                           <>

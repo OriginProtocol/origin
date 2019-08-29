@@ -30,7 +30,9 @@ const NewsHeadlinesCard = props => {
         {props.news.map(item => {
           return (
             <div key={item.title}>
-              <div className="title">{item.title}</div>
+              <div className="title my-2">
+                <strong style={{ fontSize: '20px' }}>{item.title}</strong>
+              </div>
               <p>
                 {item.description.substr(0, 120) + '...'}{' '}
                 <a href={item.link} target="_blank" rel="noopener noreferrer">
@@ -64,12 +66,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(NewsHeadlinesCard)
-
-require('react-styl')(`
-  .title
-    font-size: 28px
-    font-weight: bold
-    margin: 10px 0
-  .swiper-pagination
-    position: relative
-`)

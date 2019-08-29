@@ -1,3 +1,5 @@
+import enums from '@origin/token-transfer-server/src/enums'
+
 import {
   ADD_TRANSFER_PENDING,
   ADD_TRANSFER_SUCCESS,
@@ -48,7 +50,7 @@ export default function transfersReducer(state = initialState, action) {
         ...state,
         isConfirming: false,
         transfers: [
-          ...state.transfers.filter(t => t.id === action.payload.id),
+          ...state.transfers.filter(t => t.id !== action.payload.id),
           {
             ...action.payload
           }
@@ -89,3 +91,19 @@ export const getError = state => state.error
 export const getIsAdding = state => state.isAdding
 export const getIsConfirming = state => state.isConfirming
 export const getIsLoading = state => state.isLoading
+export const getWithdrawnAmount = state => {
+  const pendingOrCompleteTransfers = [
+    enums.TransferStatuses.WaitingEmailConfirm,
+    enums.TransferStatuses.Enqueued,
+    enums.TransferStatuses.Paused,
+    enums.TransferStatuses.WaitingConfirmation,
+    enums.TransferStatuses.Success
+  ]
+
+  return state.transfers.reduce((total, transfer) => {
+    if (pendingOrCompleteTransfers.includes(transfer.status)) {
+      return total + Number(transfer.amount)
+    }
+    return total
+  }, 0)
+}
