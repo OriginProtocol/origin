@@ -16,13 +16,12 @@ const config = {
   ipfsRPC: `http://${HOST}:5002`,
   relayer: `http://${HOST}:5100`,
   bridge: 'https://bridge.dev.originprotocol.com',
-  discovery: `http://${HOST}:4000/graphql`,
+  // discovery: `http://${HOST}:4000/graphql`,
   notifications: `http://${HOST}:3456`,
   growth: localStorageHas('localGrowthServer', 'true')
     ? 'http://localhost:4008'
     : null,
-  //performanceMode: localStorageHas('performanceMode', 'true'),
-  performanceMode: true,
+  performanceMode: localStorageHas('performanceMode', 'true'),
   graphql: `http://${HOST}:4007`,
   automine: 2000,
   attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
