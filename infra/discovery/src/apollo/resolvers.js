@@ -1,4 +1,6 @@
 const GraphQLJSON = require('graphql-type-json')
+const Sequelize = require('sequelize')
+
 const logger = require('./logger')
 const search = require('../lib/search')
 const db = require('../models')
@@ -10,27 +12,46 @@ const web3 = new Web3(process.env.PROVIDER_URL || 'http://localhost:8545')
 const resolvers = {
   JSON: GraphQLJSON,
   Query: {
+    /**
+     * Search for listings by either terms or by ids.
+     * Non-visible listings are filtered out.
+     */
     async listings(root, args) {
-      // Get listing Ids from Elastic.
-      const { listings, stats } = await search.Listing.search(
-        args.searchQuery,
-        args.sort,
-        args.order,
-        args.filters,
-        args.page.numberOfItems,
-        args.page.offset
-      )
-      logger.info(
-        `Query: "${args.searchQuery}" returned ${listings.length} results.`
-      )
-      return {
-        nodes: listings,
-        offset: args.page.offset,
-        numberOfItems: listings.length,
-        totalNumberOfItems: stats.totalNumberOfListings,
-        stats: {
-          maxPrice: stats.maxPrice,
-          minPrice: stats.minPrice
+      if (args.ids) {
+        // ListingIds provided in the query. Not a search by terms.
+        const ids = args.ids.slice(
+          args.page.offset,
+          args.page.offset + args.page.numberOfItems
+        )
+        const listings = await search.Listing.getByIds(ids)
+        return {
+          nodes: listings,
+          offset: args.page.offset,
+          numberOfItems: listings.length,
+          totalNumberOfItems: args.ids.length
+        }
+      } else {
+        // Search query. Get listings from the search index.
+        const { listings, stats } = await search.Listing.search(
+          args.searchQuery,
+          args.sort,
+          args.order,
+          args.filters,
+          args.page.numberOfItems,
+          args.page.offset
+        )
+        logger.info(
+          `Query: "${args.searchQuery}" returned ${listings.length} results.`
+        )
+        return {
+          nodes: listings,
+          offset: args.page.offset,
+          numberOfItems: listings.length,
+          totalNumberOfItems: stats.totalNumberOfListings,
+          stats: {
+            maxPrice: stats.maxPrice,
+            minPrice: stats.minPrice
+          }
         }
       }
     },
@@ -57,6 +78,31 @@ const resolvers = {
         listing._source.scoreTags = []
       }
       return listing._source
+    },
+
+    /**
+     * Given a list of listing ids, filter out the ones that have been
+     * flagged by the moderator in the discovery_tag_action table.
+     */
+    async visibleListingIds(root, args) {
+      // Load all the action tags by listing ids.
+      // A listing may have multiple tag rows. We only consider the most recent.
+      const rows = await db.DiscoveryTagAction.findAll({
+        where: { ListingId: { [Sequelize.Op.in]: args.ids } },
+        order: [['id', 'DESC']]
+      })
+      const blacklistById = {}
+      for (const row of rows) {
+        if (
+          blacklistById[row.ListingId] === undefined &&
+          row.data &&
+          row.data.tags
+        ) {
+          blacklistById[row.ListingId] =
+            row.data.tags.includes('Hide') || row.data.tags.includes('Delete')
+        }
+      }
+      return args.ids.filter(id => !blacklistById[id])
     },
 
     info() {
@@ -149,11 +195,6 @@ const resolvers = {
 async function authenticate(authToken) {
   if (!authToken) {
     return undefined
-  }
-  // Note: process.env.DISCOVERY_AUTH_TOKEN is the auth token value used
-  // by other servers in the infrastructure when calling the discovery server.
-  if (authToken === process.env.DISCOVERY_AUTH_TOKEN) {
-    return { authToken }
   }
   const accessToken = await db.DiscoveryAccessToken.findOne({
     where: { authToken }

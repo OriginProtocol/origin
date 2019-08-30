@@ -1,8 +1,9 @@
 import graphqlFields from 'graphql-fields'
 import contracts from '../../contracts'
-import listingIsVisible from '../../utils/listing'
+import { filterNonVisibleListingIds } from '../../utils/listingVisibility'
 import { proxyOwner } from '../../utils/proxy'
 import { getListingId } from '../../utils/getId'
+import parseId from '../../utils/parseId'
 
 function bota(input) {
   return new Buffer(input.toString(), 'binary').toString('base64')
@@ -67,36 +68,61 @@ async function allIds(contract, version) {
   return { totalCount: ids.length, ids }
 }
 
-async function resultsFromIds({ after, ids, first, totalCount, fields }) {
+/**
+ * Given a complete set of listing ids, computes pagination and fetches
+ * listing metadata data for the page requested.
+ *
+ * @param {Array<string>} ids: List of listing
+ * @param {String} after: cursor. base64 encoded listing id. Ex: 'MS0wMDAtMjky' -> '1-000-292'
+ * @param {Integer} first: number of listings requested
+ * @param {Integer} totalCount: total number of listings in the set
+ * @param fields
+ * @param {boolean} checkVisibility: whether or not a visibility check should be performed against the discovery server
+ * @returns {Promise<{nodes: Array, pageInfo: {hasNextPage: boolean, hasPreviousPage: boolean, endCursor: string, startCursor: string}, edges: {cursor: string, node: *}[], totalCount: *}>}
+ */
+async function resultsFromIds({
+  ids,
+  after,
+  first,
+  totalCount,
+  fields,
+  checkVisibility
+}) {
   let start = 0,
-    nodes = []
+    nodes = [],
+    listingIds
 
   if (after) {
     start = ids.indexOf(convertCursorToOffset(after)) + 1
   }
 
-  const end = start + first
-  ids = ids.slice(start, end)
+  let end
+  if (contracts.discovery && checkVisibility) {
+    // Check the listings are visible against the discovery server. We check a few
+    // extra ids so that we can return the number of listings requested in case
+    // some fail the visibility check and get filtered out.
+    const numToCheck = Math.ceil(first * 1.2)
+    const idsToCheck = ids.slice(start, start + numToCheck)
+    const visibleIds = await filterNonVisibleListingIds(idsToCheck)
+    listingIds = visibleIds.slice(0, first)
+    end = ids.indexOf(listingIds[listingIds.length - 1])
+  } else {
+    end = start + first
+    listingIds = ids.slice(start, end)
+  }
 
   if (!fields || fields.nodes) {
     nodes = (await Promise.all(
-      ids.map(async id => {
-        // If a discovery server is configured, check the listing's visibility.
-        if (contracts.discovery) {
-          if (!(await listingIsVisible(id))) {
-            // Note: this will cause less listings than requested to get returned.
-            // Since it is an edge case, not worth adding complexity for now...
-            return null
-          }
-        }
-        const splitId = id.split('-')
-        const eventSource = contracts.marketplaces[splitId[1]].eventSource
-        return eventSource.getListing(id.split('-')[2]).catch(e => e)
+      listingIds.map(async id => {
+        // Fetch the listing data from eventSource.
+        const { marketplace, listingId } = parseId(id, contracts)
+        const eventSource = marketplace.eventSource
+        return eventSource.getListing(listingId).catch(e => e)
       })
     )).filter(node => node && !(node instanceof Error))
   }
-  const firstNodeId = ids[0] || 0
-  const lastNodeId = ids[ids.length - 1] || 0
+  const firstNodeId = listingIds[0] || 0
+  const lastNodeId = listingIds[listingIds.length - 1] || 0
 
   return {
     totalCount,
@@ -104,7 +130,7 @@ async function resultsFromIds({ after, ids, first, totalCount, fields }) {
     pageInfo: {
       endCursor: bota(lastNodeId),
       hasNextPage: end < totalCount,
-      hasPreviousPage: firstNodeId > totalCount,
+      hasPreviousPage: start > 0,
       startCursor: bota(firstNodeId)
     },
     edges: nodes.map(node => ({ cursor: bota(node.id), node }))
@@ -149,7 +175,14 @@ export async function listingsBySeller(
   }
 
   const totalCount = allIds.length
-  return await resultsFromIds({ after, ids: allIds, first, totalCount, fields })
+  return await resultsFromIds({
+    after,
+    ids: allIds,
+    first,
+    totalCount,
+    fields,
+    checkVisibility: true
+  })
 }
 
 export default async function listings(
@@ -164,34 +197,42 @@ export default async function listings(
     totalCount = 0,
     discoveryError = false
 
-  if (contracts.discovery) {
-    try {
-      const discoveryResult = await searchIds(search, sort, order, filters)
-      ids = discoveryResult.ids
-      totalCount = ids.length
-    } catch (err) {
-      console.log('Failed to retrieve results from discovery server', err)
-      discoveryError = true
-    }
-  }
-  if (!contracts.discovery || discoveryError) {
-    // Important: `search`, `sort`, `order` and `filters` params are applied only when
-    // discovery server is up. They are ignored when running in decentralized mode
-    // due to performance and implementation issues
-
-    for (const version in contracts.marketplaces) {
-      const curContract = contracts.marketplaces[version].contract
-      const decentralizedResults = await allIds(curContract, version)
-      ids = ids.concat(decentralizedResults.ids)
-      totalCount += decentralizedResults.totalCount
-    }
-  }
-  // Need to determine if this is ever used, it seems to be the only use case
-  // for passing ids from centralised graphql. I changed that to pass the full listing
   if (listingIds.length > 0) {
+    // List of ids to consider is supplied by the caller.
     ids = listingIds
     totalCount = listingIds.length
+  } else {
+    if (contracts.discovery) {
+      // Issue a search query against the discovery server.
+      // Non-visible listings are filtered.
+      try {
+        const discoveryResult = await searchIds(search, sort, order, filters)
+        ids = discoveryResult.ids
+        totalCount = ids.length
+      } catch (err) {
+        console.log('Failed to retrieve results from discovery server', err)
+        discoveryError = true
+      }
+    }
+    if (!contracts.discovery || discoveryError) {
+      // Important: `search`, `sort`, `order` and `filters` params are applied only when
+      // discovery server is up. They are ignored when running in decentralized mode
+      // due to performance and implementation issues
+
+      for (const version in contracts.marketplaces) {
+        const curContract = contracts.marketplaces[version].contract
+        const decentralizedResults = await allIds(curContract, version)
+        ids = ids.concat(decentralizedResults.ids)
+        totalCount += decentralizedResults.totalCount
+      }
+    }
   }
 
-  return await resultsFromIds({ after, ids, first, totalCount })
+  return await resultsFromIds({
+    after,
+    ids,
+    first,
+    totalCount,
+    checkVisibility: false // No need to check again. Search results are already filtered.
+  })
 }
