@@ -167,6 +167,7 @@ services:
       - IPFS_GATEWAY_URL=http://ipfs-proxy:9999
       - IPFS_API_URL=http://ipfs-proxy:9999
       - ENVKEY=
+      - ENABLE_EVENTCACHE_DB=true
     depends_on:
       - postgres
       - elasticsearch
