@@ -1,6 +1,5 @@
 import React from 'react'
-import { Mutation } from 'react-apollo'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import populate from '@origin/graphql/fixtures/populate'
 
@@ -16,15 +15,17 @@ import Contracts from '../contracts/Contracts'
 import AccountBalances from './AccountBalances'
 
 const SetNetworkMutation = gql`
-  mutation SetNetwork($network: String) {
-    setNetwork(network: $network)
+  mutation SetNetwork($network: String, $customConfig: ConfigInput) {
+    setNetwork(network: $network, customConfig: $customConfig)
   }
 `
 
 const Accounts = () => {
-  const { networkStatus, error, data, refetch, client } = useQuery(query, {
+  const client = useApolloClient()
+  const { networkStatus, error, data, refetch } = useQuery(query, {
     notifyOnNetworkStatusChange: true
   })
+  const [setNetwork] = useMutation(SetNetworkMutation)
   if (networkStatus === 1) {
     return <LoadingSpinner />
   }
@@ -49,25 +50,25 @@ const Accounts = () => {
         maxNodeAccount={maxNodeAccount ? maxNodeAccount.id : null}
       />
       <NodeAccounts data={data.web3.nodeAccounts} />
-      <Mutation mutation={SetNetworkMutation}>
-        {(setNetwork, { client }) => (
-          <Button
-            style={{ marginTop: '1rem' }}
-            intent="danger"
-            onClick={async () => {
-              localStorage.clear()
-              web3.eth.accounts.wallet.clear()
-              setNetwork({ variables: { network: 'localhost' } })
-              await client.reFetchObservableQueries()
-            }}
-            text="Reset"
-          />
-        )}
-      </Mutation>
+      <Button
+        style={{ marginTop: '1rem' }}
+        intent="danger"
+        onClick={async () => {
+          localStorage.clear()
+          web3.eth.accounts.wallet.clear()
+          setNetwork({ variables: { network: 'localhost' } })
+          await client.reFetchObservableQueries()
+        }}
+        text="Reset"
+      />
       <Button
         style={{ marginTop: '1rem', marginLeft: '0.5rem' }}
         intent="success"
-        onClick={() => populate(client, console.log)}
+        onClick={() =>
+          populate(client, console.log, c =>
+            console.log(JSON.stringify(c, null, 4))
+          )
+        }
         text="Populate"
       />
       <Button

@@ -651,7 +651,7 @@ function onboardingTests() {
 }
 
 describe('Marketplace Dapp', function() {
-  this.timeout(6000)
+  this.timeout(10000)
   before(async function() {
     await page.evaluate(() => {
       delete window.localStorage.performanceMode

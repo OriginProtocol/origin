@@ -118,6 +118,12 @@ export async function createAccount(gqlClient, ogn) {
   })
   await transactionConfirmed(sendTx.data.sendFromNode.id, gqlClient)
   if (ogn) {
+    const accounts = mnemonicToAccounts()
+    await gqlClient.mutate({
+      mutation: ImportWalletsMutation,
+      variables: { accounts: [accounts[0]] }
+    })
+
     const res = await gqlClient.mutate({
       mutation: TransferTokenMutation,
       variables: {
