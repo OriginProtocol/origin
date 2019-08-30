@@ -15,7 +15,8 @@ export const WalletConstants = keyMirror(
     SET_ACCOUNT_BALANCES: null,
     SET_ACCOUNT_SERVER_NOTIFICATIONS: null,
     SET_MESSAGING_KEYS: null,
-    SET_IDENTITY: null
+    SET_IDENTITY: null,
+    SET_USE_SAMSUNG_BKS: null
   },
   'WALLET'
 )
@@ -107,6 +108,13 @@ export function setAccountActive(account) {
 export function setIdentity(payload) {
   return {
     type: WalletConstants.SET_IDENTITY,
+    payload
+  }
+}
+
+export function setUseSamsungBks(payload) {
+  return {
+    type: WalletConstants.SET_USE_SAMSUNG_BKS,
     payload
   }
 }

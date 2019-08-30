@@ -11,7 +11,8 @@ const initialState = {
     dai: 0,
     ogn: 0
   },
-  identities: {}
+  identities: {},
+  useSamsungBks: false
 }
 
 export default function Wallet(state = initialState, action = {}) {

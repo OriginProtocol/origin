@@ -24,7 +24,6 @@ YellowBox.ignoreWarnings([
 class App extends Component {
   constructor(props) {
     super(props)
-
     // Add web3 to the react-native global object so it is available everywhere
     global.web3 = new Web3()
   }
@@ -66,6 +65,7 @@ class App extends Component {
     }
 
     console.debug(`Found ${wallet.accounts.length} accounts`)
+
     // Add all the stored accounts to the global web3 object
     for (let i = 0; i < wallet.accounts.length; i++) {
       global.web3.eth.accounts.wallet.add(wallet.accounts[i])
