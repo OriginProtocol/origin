@@ -22,11 +22,11 @@ const reset = async (sellerOgn, reload = false) => {
   // clear cookies (for messaging)
   await clearCookies(page)
 
-  await page.evaluate((reload) => {
+  await page.evaluate(reload => {
     window.transactionPoll = 100
     window.sessionStorage.clear()
     window.location = '/#/'
-    /* Some tests require reload... e.g. to reset messaging 
+    /* Some tests require reload... e.g. to reset messaging
      * initialisation.
      */
     if (reload) {
@@ -641,7 +641,10 @@ function onboardingTests() {
       await waitForText(page, '0 of 2 MetaMask messages signed')
       await clickByText(page, 'Enable Origin Messaging', 'button')
 
-      await waitForText(page, 'Congratulations! You can now message other users')
+      await waitForText(
+        page,
+        'Congratulations! You can now message other users'
+      )
       await clickByText(page, 'Continue', 'a')
     })
   })

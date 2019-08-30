@@ -344,6 +344,9 @@ export default async function populate(gqlClient, log, done) {
   })
   log('Approved DAI on Uniswap Dai Exchange')
 
+  await mutate(SendFromNodeMutation, NodeAccount, { to: Admin, value: '1' })
+  log('Sent eth to Admin')
+
   await mutate(UniswapAddLiquidity, Admin, {
     exchange: UniswapDaiExchange,
     value: '1',
