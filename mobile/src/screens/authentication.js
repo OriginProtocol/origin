@@ -20,7 +20,7 @@ import { setBiometryType } from 'actions/Settings'
 import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'
 
-const IMAGES_PATH = '../../../assets/images/'
+const IMAGES_PATH = '../../assets/images/'
 
 class AuthenticationScreen extends Component {
   constructor(props) {

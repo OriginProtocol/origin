@@ -43,7 +43,6 @@ import {
 } from 'actions/Marketplace'
 import { setAccountBalances, setIdentity } from 'actions/Wallet'
 import withOriginGraphql from 'hoc/withOriginGraphql'
-import { getCurrentRoute } from '../NavigationService'
 import { PROMPT_MESSAGE, PROMPT_PUB_KEY } from '../constants'
 import CardStyles from 'styles/card'
 
@@ -141,14 +140,6 @@ class MarketplaceScreen extends Component {
       this.injectMessagingKeys()
     }
 
-    // Check for growth enrollment changing
-    if (
-      get(prevProps, 'onboarding.growth') !==
-      get(this.props, 'onboarding.growth')
-    ) {
-      this.injectGrowthAuthToken()
-    }
-
     if (prevState.fiatCurrency !== this.state.fiatCurrency) {
       // Currency changed, update exchange rates
       this.updateExchangeRates()
@@ -190,7 +181,6 @@ class MarketplaceScreen extends Component {
       return
     }
 
-    const currentRoute = getCurrentRoute()
     const { wallet } = this.props
 
     if (msgData.targetFunc === 'getAccounts') {
@@ -249,15 +239,6 @@ class MarketplaceScreen extends Component {
       } else {
         console.warn('Invalid meta transaction: ', decodedTransaction)
       }
-    } else if (currentRoute === 'Ready') {
-      // Relayer failure fallback, if we are on the onboarding step where identity
-      // gets published reject the transaction because we don't want to display a
-      // modal, the user most likely can't proceed because the account is new and
-      // has no balance
-      console.warn('Could not process WebView message: ', msgData)
-      this.handleBridgeResponse(msgData, {
-        message: 'User denied transaction signature'
-      })
     } else {
       // Not handled yet, display a modal that deals with the target function
       PushNotification.checkPermissions(permissions => {
@@ -544,21 +525,6 @@ class MarketplaceScreen extends Component {
     }
   }
 
-  injectGrowthAuthToken = () => {
-    if (!this.props.onboarding.growth) {
-      return
-    }
-
-    this.injectJavaScript(
-      `
-        if (window && window.localStorage && window.webViewBridge) {
-          window.localStorage.growth_auth_token = '${this.props.onboarding.growth}';
-        }
-      `,
-      'growth auth token'
-    )
-  }
-
   /* Send a response back to the DApp using postMessage in the webview
    */
   handleBridgeResponse = (msgData, result) => {
@@ -714,7 +680,6 @@ class MarketplaceScreen extends Component {
   onWebViewLoad = async () => {
     // Check if a growth invie code needs to be set
     this.clipboardInviteCodeCheck()
-    this.injectGrowthAuthToken()
     // Set the language in the DApp to the same as the mobile app
     this.injectLanguage()
     // Set the currency in the DApp
@@ -971,14 +936,8 @@ class MarketplaceScreen extends Component {
   }
 }
 
-const mapStateToProps = ({
-  activation,
-  marketplace,
-  onboarding,
-  wallet,
-  settings
-}) => {
-  return { activation, marketplace, onboarding, wallet, settings }
+const mapStateToProps = ({ activation, marketplace, wallet, settings }) => {
+  return { activation, marketplace, wallet, settings }
 }
 
 const mapDispatchToProps = dispatch => ({

@@ -5,10 +5,7 @@ import android.app.Application;
 import com.facebook.react.ReactApplication;
 import com.avishayil.rnrestart.ReactNativeRestartPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.bitgo.randombytes.RandomBytesPackage;
-import fr.bamlab.rnimageresizer.ImageResizerPackage;
-import com.imagepicker.ImagePickerPackage;
 import com.reactcommunity.rnlocalize.RNLocalizePackage;
 import com.levelasquez.androidopensettings.AndroidOpenSettingsPackage;
 import com.rnfingerprint.FingerprintAuthPackage;
@@ -50,10 +47,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
           new ReactNativeRestartPackage(),
           new FBSDKPackage(mCallbackManager),
-          new RNDeviceInfo(),
           new RandomBytesPackage(),
-          new ImageResizerPackage(),
-          new ImagePickerPackage(),
           new RNLocalizePackage(),
           new AndroidOpenSettingsPackage(),
           new FingerprintAuthPackage(),
