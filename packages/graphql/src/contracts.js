@@ -383,7 +383,7 @@ export function setNetwork(net, customConfig) {
 
   // Do a little contract validation
   if (net !== 'mainnet') {
-    Object.keys(context.marketplaces).forEach(version => {
+    Object.keys(context.marketplaces || {}).forEach(version => {
       const marketplace = context.marketplaces[version].contract
       isValidContract(web3, marketplace, `Marketplace V${version}`)
     })
