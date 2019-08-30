@@ -22,9 +22,7 @@ class Onboard extends Component {
       hideOriginWallet,
       linkprefix,
       redirectTo,
-      skipMessaging,
       skipRewards,
-      onSkipMessaging,
       onSkipRewards
     } = this.props
     const linkPathPrefix = linkprefix || (listing ? '/listing/:listingID' : '')
@@ -79,8 +77,6 @@ class Onboard extends Component {
               <Messaging
                 linkPrefix={linkPrefix}
                 hideOriginWallet={hideOriginWallet}
-                skip={skipMessaging}
-                onSkip={onSkipMessaging}
               />
             )}
           />

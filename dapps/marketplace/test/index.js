@@ -613,13 +613,14 @@ function listingTests(autoSwap) {
 }
 
 function onboardingTests() {
-  describe('Complete onboarding once', function() {
+  describe('Complete onboarding', function() {
     before(async function() {
       this.timeout(10000)
-      const { seller } = await reset('100', true)
+      const { seller, buyer } = await reset('100', true)
       await page.evaluate(() => {
         window.location = '/#/'
       })
+      await changeAccount(page, buyer)
       await changeAccount(page, seller, true)
     })
 
@@ -651,6 +652,7 @@ describe('Marketplace Dapp', function() {
   this.timeout(6000)
   before(async function() {
     await page.evaluate(() => {
+      delete window.localStorage.noIdentity
       delete window.localStorage.performanceMode
       delete window.localStorage.proxyAccountsEnabled
       delete window.localStorage.relayerEnabled
@@ -669,6 +671,7 @@ describe('Marketplace Dapp with proxies enabled', function() {
   before(async function() {
     await page.evaluate(() => {
       window.localStorage.proxyAccountsEnabled = true
+      delete window.localStorage.noIdentity
       delete window.localStorage.performanceMode
       delete window.localStorage.relayerEnabled
       delete window.localStorage.debug
