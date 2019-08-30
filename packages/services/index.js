@@ -68,7 +68,11 @@ const startIpfs = async () => {
         Gateway: '/ip4/0.0.0.0/tcp/8080',
         Swarm: []
       },
-      Bootstrap: []
+      Bootstrap: [],
+      Discovery: {
+        MDNS: { Enabled: false },
+        webRTCStar: { Enabled: false }
+      }
     }
   })
   const httpAPI = new HttpIPFS(ipfs)

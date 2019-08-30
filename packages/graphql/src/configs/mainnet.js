@@ -1,6 +1,7 @@
 const addresses = require('@origin/contracts/build/contracts_mainnet.json')
 
 export default {
+  networkId: 1,
   // Web3 provider
   //provider: 'https://mainnet.infura.io/v3/98df57f0748e455e871c48b96f2095b2',
   provider:

@@ -59,7 +59,14 @@ export default {
     }
     return contracts
   },
-  marketplaces: () => contracts.marketplaces,
+  marketplaces: () => {
+    return Object.keys(contracts.marketplaces)
+      .sort()
+      .map(version => ({
+        ...contracts.marketplaces[version].contract,
+        version
+      }))
+  },
   identityEvents: () => {
     const address = contracts.identityEvents.options.address
     if (!address) return null

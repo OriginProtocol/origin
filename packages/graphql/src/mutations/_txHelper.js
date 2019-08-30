@@ -1,6 +1,7 @@
 import ProxyFactory from '@origin/contracts/build/contracts/ProxyFactory_solc'
 import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import pubsub from '../utils/pubsub'
+import mineBlock from '../utils/mineBlock'
 import contracts from '../contracts'
 import { proxyOwner, resetProxyCache, predictedProxy } from '../utils/proxy'
 import get from 'lodash/get'
@@ -55,17 +56,6 @@ function useRelayer({ mutation, value }) {
     return false
   }
   return true
-}
-
-/**
- * trigger the EVM to mine a block, supporting the WPE-style providers, and
- * the standard ones...
- * @param web3 {Web3} a Web3 instance
- */
-function mineBlock(web3Inst) {
-  const hasAsync = typeof web3Inst.currentProvider.sendAsync !== 'undefined'
-  const sendMethod = hasAsync ? 'sendAsync' : 'send'
-  return web3Inst.currentProvider[sendMethod]({ method: 'evm_mine' }, () => {})
 }
 
 /**
@@ -289,9 +279,7 @@ export default function txHelper({
           }
         })
         if (contracts.automine) {
-          setTimeout(() => {
-            mineBlock(contracts.web3)
-          }, contracts.automine)
+          setTimeout(() => mineBlock(contracts.web3), contracts.automine)
         }
       })
       .on(`confirmation${isServer ? 'X' : ''}`, function(confNumber, receipt) {
