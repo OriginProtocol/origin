@@ -1,7 +1,7 @@
 const { tokenToNaturalUnits } = require('../src/util/token')
 
 
-const augustConfig = {
+const septemberConfig = {
   numLevels: 3,
   levels: {
     0: {
@@ -211,13 +211,13 @@ const augustConfig = {
           }
         },
         {
-          id: 'TwitterShare1',
+          id: 'TwitterShare6',
           class: 'SocialShare',
           config: {
             socialNetwork: 'twitter',
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
-            contentId: 'origin_app',
+            contentId: 'youtube_founder',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -230,13 +230,13 @@ const augustConfig = {
           }
         },
         {
-          id: 'TwitterShare2',
+          id: 'TwitterShare7',
           class: 'SocialShare',
           config: {
             socialNetwork: 'twitter',
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
-            contentId: 'join_rewards',
+            contentId: 'join_rewards_september',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -249,13 +249,13 @@ const augustConfig = {
           }
         },
         {
-          id: 'TwitterShare3',
+          id: 'TwitterShare8',
           class: 'SocialShare',
           config: {
             socialNetwork: 'twitter',
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
-            contentId: 'origin_promising_platform',
+            contentId: 'blockfolio_signal',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -268,13 +268,13 @@ const augustConfig = {
           }
         },
         {
-          id: 'TwitterShare4',
+          id: 'TwitterShare9',
           class: 'SocialShare',
           config: {
             socialNetwork: 'twitter',
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
-            contentId: 'origin_best_team',
+            contentId: 'join_telegram',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -287,13 +287,13 @@ const augustConfig = {
           }
         },
         {
-          id: 'TwitterShare5',
+          id: 'TwitterShare10',
           class: 'SocialShare',
           config: {
             socialNetwork: 'twitter',
             eventType: 'SharedOnTwitter',
             additionalLockConditions: ['TwitterAttestation'],
-            contentId: 'follow_on_telegram',
+            contentId: 'support_venezuela',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -306,12 +306,12 @@ const augustConfig = {
           }
         },
         {
-          id: 'FacebookShare1',
+          id: 'FacebookShare6',
           class: 'SimpleSocialShare',
           config: {
             socialNetwork: 'facebook',
             eventType: 'SharedOnFacebook',
-            contentId: 'origin_app',
+            contentId: 'youtube_founder',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -324,12 +324,12 @@ const augustConfig = {
           }
         },
         {
-          id: 'FacebookShare2',
+          id: 'FacebookShare7',
           class: 'SimpleSocialShare',
           config: {
             socialNetwork: 'facebook',
             eventType: 'SharedOnFacebook',
-            contentId: 'join_rewards',
+            contentId: 'join_rewards_september',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -342,12 +342,12 @@ const augustConfig = {
           }
         },
         {
-          id: 'FacebookShare3',
+          id: 'FacebookShare8',
           class: 'SimpleSocialShare',
           config: {
             socialNetwork: 'facebook',
             eventType: 'SharedOnFacebook',
-            contentId: 'origin_promising_platform',
+            contentId: 'blockfolio_signal',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -360,12 +360,12 @@ const augustConfig = {
           }
         },
         {
-          id: 'FacebookShare4',
+          id: 'FacebookShare9',
           class: 'SimpleSocialShare',
           config: {
             socialNetwork: 'facebook',
             eventType: 'SharedOnFacebook',
-            contentId: 'origin_best_team',
+            contentId: 'join_telegram',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -378,12 +378,12 @@ const augustConfig = {
           }
         },
         {
-          id: 'FacebookShare5',
+          id: 'FacebookShare10',
           class: 'SimpleSocialShare',
           config: {
             socialNetwork: 'facebook',
             eventType: 'SharedOnFacebook',
-            contentId: 'follow_on_telegram',
+            contentId: 'support_venezuela',
             reward: {
               amount: '0',
               currency: 'OGN'
@@ -494,7 +494,7 @@ const augustConfig = {
               amount: tokenToNaturalUnits(50),
               currency: 'OGN'
             },
-            limit: 25,
+            limit: 50,
             visible: true,
             nextLevelCondition: false,
             scope: 'campaign'
@@ -828,80 +828,77 @@ const augustConfig = {
     minAgeLastTweetDays: 365,
     minFollowersThreshold: 10,
     tierFollowersThreshold: 100,
-    tierFollowersIncrement: 200,
+    tierFollowersIncrement: 100,
     verifiedMultiplier: 2,
-    cap: -1,
+    cap: 100,
   },
   content: {
-    origin_app: {
-      titleKey: 'growth.twitterShare.content1.title',
-      detailsKey: 'growth.twitterShare.content1.details',
-      image: 'images/growth/twitter-share-content1.png',
-      link: 'https://medium.com/originprotocol/now-optimized-for-mobile-origin-launches-a-fresh-new-app-and-sponsored-gas-80dc2407bd8d',
-      linkKey: 'growth.twitterShare.content1.link',
+    youtube_founder: {
+      titleKey: 'growth.share.content6.title',
+      detailsKey: 'growth.share.content6.details',
+      image: 'images/growth/share-content6.jpg',
+      link: 'https://youtu.be/qNj1qRZeeaM',
+      linkKey: 'growth.share.content6.link',
       post: {
         tweet: {
-          default: `Experience the decentralized global #marketplace of the future with @OriginProtocol's fresh new app. Secure transactions. Zero fees. Try it now: https://ogn.dev/mobile`,
+          default: `Steve Chen, co-founder of @YouTube, talks about what it was like working with some of @OriginProtocol's employees in the early days of YouTube: https://youtu.be/qNj1qRZeeaM`,
           translations: [ ]
         }
       }
     },
-    join_rewards: {
-      titleKey: 'growth.twitterShare.content2.title',
-      detailsKey: 'growth.twitterShare.content2.details',
-      image: 'images/growth/twitter-share-content2.png',
+    join_rewards_september: {
+      titleKey: 'growth.share.content7.title',
+      detailsKey: 'growth.share.content7.details',
+      image: 'images/growth/share-content7.png',
       link: 'https://www.originrewards.com',
-      linkKey: 'growth.twitterShare.content2.link',
+      linkKey: 'growth.share.content7.link',
       post: {
         tweet: {
-          default: `Join @OriginProtocol's #rewards program and earn free Origin tokens! 250,000 OGN already distributed. Sign up and claim your free OGN! https://www.originrewards.com`,
+          default: `Join @OriginProtocol's rewards program and earn free Origin Tokens. Sign up today and claim your free OGN! https://www.originrewards.com `,
           translations: [ ]
         }
       }
     },
-    origin_promising_platform: {
-      titleKey: 'growth.twitterShare.content3.title',
-      detailsKey: 'growth.twitterShare.content3.details',
-      image: 'images/growth/twitter-share-content3.png',
-      link: 'https://techcrunch.com/2018/10/10/origin-protocol/',
-      linkKey: 'growth.twitterShare.content3.link',
+    blockfolio_signal: {
+      titleKey: 'growth.share.content8.title',
+      detailsKey: 'growth.share.content8.details',
+      image: 'images/growth/share-content8.png',
+      link: 'http://blockfolio.com/coin/OGN',
+      linkKey: 'growth.share.content8.link',
       post: {
         tweet: {
-          default: `Great @TechCrunch article on how @OriginProtocol is building one of the most promising blockchain platforms for the new sharing economy. https://techcrunch.com/2018/10/10/origin-protocol/`,
-          translations: [
-          ]
+          default: `Origin is now live on @Blockfolio Signal! Follow @OriginProtocol here and never miss another update again: http://blockfolio.com/coin/OGN`,
+          translations: [ ]
         }
       }
     },
-    origin_best_team: {
-      titleKey: 'growth.twitterShare.content4.title',
-      detailsKey: 'growth.twitterShare.content4.details',
-      image: 'images/growth/twitter-share-content4.png',
-      link: 'https://www.coindesk.com/another-paypal-co-founder-is-embracing-blockchains-seismic-shift',
-      linkKey: 'growth.twitterShare.content4.link',
-      post: {
-        tweet: {
-          default: `One of the best teams in crypto today! @OriginProtocol's team includes a cofounder from PayPal & the 1st engineer at YouTube! https://www.coindesk.com/another-paypal-co-founder-is-embracing-blockchains-seismic-shift`,
-          translations: [
-          ]
-        }
-      }
-    },
-    follow_on_telegram: {
-      titleKey: 'growth.twitterShare.content5.title',
-      detailsKey: 'growth.twitterShare.content5.details',
-      image: 'images/growth/twitter-share-content5.png',
+    join_telegram: {
+      titleKey: 'growth.share.content9.title',
+      detailsKey: 'growth.share.content9.details',
+      image: 'images/growth/share-content9.png',
       link: 'https://t.me/originprotocol',
-      linkKey: 'growth.twitterShare.content5.link',
+      linkKey: 'growth.share.content9.link',
       post: {
         tweet: {
-          default: `Join me in following @OriginProtocol on #Telegram! https://t.me/originprotocol`,
-          translations: [
-          ]
+          default: `Follow @OriginProtocol on #Telegram and earn free Origin Tokens today! https://t.me/originprotocol`,
+          translations: [ ]
         }
       }
-    }
+    },
+    support_venezuela: {
+      titleKey: 'growth.share.content10.title',
+      detailsKey: 'growth.share.content10.details',
+      image: 'images/growth/share-content10.png',
+      link: 'https://medium.com/originprotocol/decentralized-commerce-in-venezuela-d79cc2e21220',
+      linkKey: 'growth.share.content10.link',
+      post: {
+        tweet: {
+          default: `Support @OriginProtocol in decentralizing commerce in Venezuela and other regions where crypto can provide improved financial access: https://medium.com/originprotocol/decentralized-commerce-in-venezuela-d79cc2e21220`,
+          translations: [ ]
+        }
+      }
+    },
   }
 }
 
-module.exports = augustConfig
+module.exports = septemberConfig

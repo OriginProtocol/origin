@@ -260,7 +260,7 @@ class BaseRule {
     }
     const conditions = []
     for (const rule of this.crules.levels[prevLevel].rules) {
-      if (rule.config.unlockConditionMsg) {
+      if (rule.config.nextLevelCondition) {
         const ruleConditions = rule.config.unlockConditionMsg.map(c => {
           return {
             messageKey: c.conditionTranslateKey,
