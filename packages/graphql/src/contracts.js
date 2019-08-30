@@ -180,6 +180,7 @@ export function setNetwork(net, customConfig) {
   config = { ...config, ...customConfig }
 
   context.net = net
+  context.networkId = config.networkId
   context.config = config
   context.automine = config.automine
 

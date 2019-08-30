@@ -1,6 +1,7 @@
 const addresses = require('@origin/contracts/build/contracts_rinkeby.json')
 
 export default {
+  networkId: 4,
   // Web3 provider
   provider:
     'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI',

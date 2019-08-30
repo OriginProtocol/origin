@@ -1,6 +1,7 @@
 const addresses = require('@origin/contracts/build/contracts_origin.json')
 
 export default {
+  networkId: 2222,
   // Web3 provider
   provider: 'https://testnet.originprotocol.com/rpc',
 
