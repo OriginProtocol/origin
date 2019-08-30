@@ -10,7 +10,7 @@ try {
 
 const config = {
   provider: `http://${HOST}:8545`,
-  providerWS: `ws://${HOST}:8546`,
+  providerWS: `ws://${HOST}:8545`,
   ipfsGateway: `http://${HOST}:8080`,
   ipfsRPC: `http://${HOST}:5002`,
   relayer: `http://${HOST}:5100`,
