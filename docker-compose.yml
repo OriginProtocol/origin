@@ -220,6 +220,8 @@ services:
       - DISCOVERY_SERVER_URL=http://discovery:4000/graphql
       - BRIDGE_SERVER_URL=http://bridge:5000
       - GROWTH_SERVER_URL=http://growth:4008
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - ENABLE_EVENTCACHE_DB=true
     depends_on:
       - discovery
     ports:
