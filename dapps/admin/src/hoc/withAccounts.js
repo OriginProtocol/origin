@@ -3,7 +3,7 @@ import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import get from 'lodash/get'
 
-const AccountsQuery = gql`
+export const AccountsQuery = gql`
   {
     web3 {
       accounts {
