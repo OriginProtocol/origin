@@ -118,7 +118,6 @@ async function main() {
   }
   // Listen to all versions of marketplace
   Object.keys(contractsContext.marketplaces).forEach(key => {
-    console.log('key', key)
     contracts[`V${key}_Marketplace`] =
       contractsContext.marketplaces[key].contract
   })
