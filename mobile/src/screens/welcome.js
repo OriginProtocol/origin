@@ -10,11 +10,10 @@ import RNSamsungBKS from 'react-native-samsung-bks'
 import { createAccount } from 'actions/Wallet'
 import Disclaimer from 'components/disclaimer'
 import OriginButton from 'components/origin-button'
-import withOnboardingSteps from 'hoc/withOnboardingSteps'
 import CommonStyles from 'styles/common'
 import OnboardingStyles from 'styles/onboarding'
 
-const IMAGES_PATH = '../../../assets/images/'
+const IMAGES_PATH = '../../assets/images/'
 
 class WelcomeScreen extends Component {
   constructor(props) {
@@ -35,7 +34,7 @@ class WelcomeScreen extends Component {
         this.props.createAccount()
         this.setState({ loading: false })
         this.props.navigation.navigate(
-          this.props.nextOnboardingStep
+          'Authentication'
         )
       })
     })
@@ -112,7 +111,7 @@ class WelcomeScreen extends Component {
         type="primary"
         title={fbt('Continue', 'WelcomeScreen.continueButton')}
         onPress={() => {
-          this.props.navigation.navigate(this.props.nextOnboardingStep)
+          this.props.navigation.navigate('Authentication')
         }}
       />
     )
@@ -128,12 +127,10 @@ const mapDispatchToProps = dispatch => ({
   setUseSamsungBks: value => dispatch(setUseSamsungBks(value))
 })
 
-export default withOnboardingSteps(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(WelcomeScreen)
-)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WelcomeScreen)
 
 const styles = StyleSheet.create({
   ...CommonStyles,

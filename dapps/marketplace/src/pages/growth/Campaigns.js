@@ -23,7 +23,7 @@ import LoadingSpinner from 'components/LoadingSpinner'
 import ToastNotification from 'pages/user/ToastNotification'
 
 const GrowthEnum = require('Growth$FbtEnum')
-const maxProgressBarTokens = 1000
+const maxProgressBarTokens = 2000
 
 const GrowthTranslation = ({ stringKey }) => {
   return (

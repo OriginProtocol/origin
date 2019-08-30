@@ -5,6 +5,8 @@ chai.use(require('chai-bignumber')(BigNumber))
 chai.use(require('chai-moment'))
 const expect = chai.expect
 const moment = require('moment')
+const sinon = require('sinon')
+const sendgridMail = require('@sendgrid/mail')
 
 const {
   addTransfer,
@@ -75,8 +77,11 @@ describe('Token transfer library', () => {
   })
 
   it('should add a transfer', async () => {
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
     const amount = 1000
     const transfer = await addTransfer(this.user.id, toAddress, amount)
+
     // Check a transfer row was created and populated as expected.
     expect(transfer).to.be.an('object')
     expect(transfer.userId).to.equal(this.user.id)
@@ -86,9 +91,15 @@ describe('Token transfer library', () => {
     expect(transfer.currency).to.equal('OGN')
     expect(transfer.txHash).to.be.null
     expect(transfer.data).to.be.an('object')
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
   })
 
   it('should add a transfer where required amount spans multiple grants', async () => {
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
     await Grant.create({
       userId: this.user.id,
       start: new Date('2014-10-10'),
@@ -108,9 +119,15 @@ describe('Token transfer library', () => {
     expect(transfer.currency).to.equal('OGN')
     expect(transfer.txHash).to.be.null
     expect(transfer.data).to.be.an('object')
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
   })
 
   it('should add ignoring failed transfer amounts', async () => {
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
     await Transfer.create({
       userId: this.user.id,
       status: enums.TransferStatuses.Failed,
@@ -121,9 +138,15 @@ describe('Token transfer library', () => {
 
     const amount = 99999
     await addTransfer(this.user.id, toAddress, amount)
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
   })
 
   it('should add ignoring cancelled transfer amounts', async () => {
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
     await Transfer.create({
       userId: this.user.id,
       status: enums.TransferStatuses.Cancelled,
@@ -134,9 +157,15 @@ describe('Token transfer library', () => {
 
     const amount = 99999
     await addTransfer(this.user.id, toAddress, amount)
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
   })
 
   it('should add ignoring expired transfer amounts', async () => {
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
     await Transfer.create({
       userId: this.user.id,
       status: enums.TransferStatuses.Expired,
@@ -147,6 +176,10 @@ describe('Token transfer library', () => {
 
     const amount = 99999
     await addTransfer(this.user.id, toAddress, amount)
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
   })
 
   it('should not add a transfer if not enough tokens (vested)', async () => {
@@ -159,7 +192,7 @@ describe('Token transfer library', () => {
   it('should not add a transfer if not enough tokens (vested minus waiting 2fa)', async () => {
     await Transfer.create({
       userId: this.user.id,
-      status: enums.TransferStatuses.WaitingTwoFactor,
+      status: enums.TransferStatuses.WaitingEmailConfirm,
       toAddress: toAddress,
       amount: 2,
       currency: 'OGN'
@@ -233,7 +266,7 @@ describe('Token transfer library', () => {
 
   it('should not add a transfer if not enough tokens (multiple states)', async () => {
     const promises = [
-      enums.TransferStatuses.WaitingTwoFactor,
+      enums.TransferStatuses.WaitingEmailConfirm,
       enums.TransferStatuses.Enqueued,
       enums.TransferStatuses.Paused,
       enums.TransferStatuses.WaitingConfirmation,
@@ -257,7 +290,10 @@ describe('Token transfer library', () => {
   })
 
   it('should execute a transfer', async () => {
-    // Enqueue and execute a transfer.
+    // Stub SendGrid so it doesn't return an error
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
+    // Enqueue and execute a transfer
     const amount = 1000
     const transfer = await addTransfer(this.user.id, toAddress, amount)
     const { txHash, txStatus } = await executeTransfer(transfer, {
@@ -270,12 +306,14 @@ describe('Token transfer library', () => {
     // Check the transfer row was updated as expected.
     transfer.reload()
     expect(transfer.status).to.equal(enums.TransferStatuses.Success)
+
+    sendStub.restore()
   })
 
   it('should confirm a transfer', async () => {
     const transfer = await Transfer.create({
       userId: this.user.id,
-      status: enums.TransferStatuses.WaitingTwoFactor,
+      status: enums.TransferStatuses.WaitingEmailConfirm,
       toAddress: toAddress,
       amount: 2,
       currency: 'OGN'
@@ -285,7 +323,7 @@ describe('Token transfer library', () => {
     expect(transfer.status).to.equal(enums.TransferStatuses.Enqueued)
   })
 
-  it('should not confirm a transfer in any state except waiting for two factor', async () => {
+  it('should not confirm a transfer in any state except waiting for email confirmation', async () => {
     const transfers = await Promise.all(
       [
         enums.TransferStatuses.Enqueued,
@@ -318,7 +356,7 @@ describe('Token transfer library', () => {
   it('should not confirm a transfer that passed the timeout', async () => {
     const transfer = await Transfer.create({
       userId: this.user.id,
-      status: enums.TransferStatuses.WaitingTwoFactor,
+      status: enums.TransferStatuses.WaitingEmailConfirm,
       toAddress: toAddress,
       amount: 1,
       currency: 'OGN',

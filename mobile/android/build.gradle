@@ -54,11 +54,6 @@ allprojects {
     repositories {
         configurations.all {
             resolutionStrategy {
-                // This is all apparently required for react-native-camera to build... no clue why
-                // I suppose this has the potential to break things, so keep an eye out
-                force 'com.google.android.gms:play-services-base:15.0.1'
-                force 'com.google.android.gms:play-services-basement:15.0.1'
-                force 'com.google.android.gms:play-services-tasks:15.0.1'
                 force 'com.android.support:support-core-utils:27.1.0'
                 force 'com.android.support:support-core-ui:27.1.0'
                 force 'com.android.support:support-core-ui:27.1.0'

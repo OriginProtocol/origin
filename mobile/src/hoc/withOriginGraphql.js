@@ -11,15 +11,7 @@ import React, { Component } from 'react'
 import { DeviceEventEmitter } from 'react-native'
 import { connect } from 'react-redux'
 
-import {
-  balance,
-  growthEligible,
-  identity,
-  tokenBalance,
-  transactionReceipt,
-  wallet
-} from 'graphql/queries'
-import { growthEnroll, deployIdentity } from 'graphql/mutations'
+import { balance, identity, tokenBalance, wallet } from 'graphql/queries'
 
 const withOriginGraphql = WrappedComponent => {
   class WithOriginGraphql extends Component {
@@ -114,41 +106,17 @@ const withOriginGraphql = WrappedComponent => {
       return this._sendGraphqlQuery(identity, { id }, 'no-cache')
     }
 
-    getTransactionReceipt = async id => {
-      return this._sendGraphqlQuery(transactionReceipt, { id }, 'no-cache')
-    }
-
     getWallet = () => {
       return this._sendGraphqlQuery(wallet)
-    }
-
-    getGrowthEligibility = () => {
-      return this._sendGraphqlQuery(growthEligible)
-    }
-
-    publishIdentity = (from, profile, attestations) => {
-      return this._sendGraphqlMutation(deployIdentity, {
-        from,
-        profile,
-        attestations
-      })
-    }
-
-    growthEnroll = vars => {
-      return this._sendGraphqlMutation(growthEnroll, vars)
     }
 
     render() {
       return (
         <WrappedComponent
           getBalance={this.getBalance}
-          getGrowthEligibility={this.getGrowthEligibility}
           getIdentity={this.getIdentity}
           getTokenBalance={this.getTokenBalance}
-          getTransactionReceipt={this.getTransactionReceipt}
           getWallet={this.getWallet}
-          publishIdentity={this.publishIdentity}
-          growthEnroll={this.growthEnroll}
           {...this.props}
         />
       )
