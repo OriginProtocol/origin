@@ -23755,10 +23755,10 @@ sequelize-pool@^2.3.0:
   resolved "https://registry.yarnpkg.com/sequelize-pool/-/sequelize-pool-2.3.0.tgz#64f1fe8744228172c474f530604b6133be64993d"
   integrity sha512-Ibz08vnXvkZ8LJTiUOxRcj1Ckdn7qafNZ2t59jYHMX1VIebTAOYefWdRYFt6z6+hy52WGthAHAoLc9hvk3onqA==
 
-sequelize@5.17.1:
-  version "5.17.1"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.17.1.tgz#b341c30626131151dedd5598690d81386c8a93f7"
-  integrity sha512-tzjOaV6gTdS8wp3HXjSh63oeZZ6HM7aqSoZTNDBDJ+GN0iWVanJKGNdD3ol6Nb7Bf4QMx0mML9iFbagOKjf3cQ==
+sequelize@5.17.2:
+  version "5.17.2"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.17.2.tgz#f3ca65f44cea5e7fd2175f30d181348c2de1d3ab"
+  integrity sha512-+a2enR6PU8aUw4H49ZV8OJd7dYruCxvOhP5yBmBRBXKGF8x+aHfEDmukEMN30W+GQDbYD/wkXNxYWYNBB76tgg==
   dependencies:
     bluebird "^3.5.0"
     cls-bluebird "^2.1.0"
