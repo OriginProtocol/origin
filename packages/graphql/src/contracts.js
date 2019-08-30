@@ -524,7 +524,6 @@ export function setMarketplace(address, epoch, version = '000') {
   if (!address) return
   const contract = new web3.eth.Contract(MarketplaceContract.abi, address)
   patchWeb3Contract(contract, epoch, {
-    ...context.config,
     useLatestFromChain: false,
     ipfsEventCache:
       context.config[`V${version.slice(1)}_Marketplace_EventCache`],
@@ -623,7 +622,6 @@ export function setProxyContracts(config) {
   )
   // Add an event cache to ProxyFactory.
   patchWeb3Contract(context.ProxyFactory, config.ProxyFactory_Epoch, {
-    ...context.config,
     ipfsEventCache: null, // TODO add IPFS cache after Meta-txn launch, once we have a non trivial number of events.
     cacheMaxBlock: null,
     useLatestFromChain: false,
@@ -637,7 +635,8 @@ export function setProxyContracts(config) {
           ? 'postgresql'
           : 'memory'
         : 'browser',
-    batchSize: 2500
+    batchSize: 2500,
+    ...context.config
   })
 }
 
