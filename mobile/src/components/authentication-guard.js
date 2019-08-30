@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import {
+  AppState,
   Image,
   KeyboardAvoidingView,
   Modal,
@@ -13,12 +14,21 @@ import {
 import { connect } from 'react-redux'
 import TouchID from 'react-native-touch-id'
 import { fbt } from 'fbt-runtime'
+import RNRestart from 'react-native-restart'
 
 import CommonStyles from 'styles/common'
 import PinInput from 'components/pin-input'
 import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../assets/images/'
+/* The minimum amount of time the app needs to be suspended to trigger a restart when
+ * it becomes active again - in seconds.
+ *
+ * This is a compromise to handle the "white screen of death" bug without sacrificing
+ * security. If the app is suspended for a smaller interval a restart is not triggered
+ * and the user doesn't need to unlock the app with biometrics / pin code.
+ */
+const RESTART_SUSPEND_TIME = 60 * 60
 
 class AuthenticationGuard extends Component {
   constructor(props) {
@@ -27,18 +37,45 @@ class AuthenticationGuard extends Component {
       pin: '',
       error: null,
       // If authentication is set display on init
-      display: this._hasAuthentication()
+      display: this._hasAuthentication(),
+      suspendTime: null,
+      appState: AppState.currentState
     }
   }
 
   componentDidMount() {
-    if (this.props.settings.biometryType) {
+    if (this.props.settings.biometryType && this.state.appState === 'active') {
       this.touchAuthenticate()
     }
+
+    AppState.addEventListener('change', this._handleAppStateChange)
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange)
   }
 
   _hasAuthentication = () => {
     return this.props.settings.biometryType || this.props.settings.pin
+  }
+
+  _handleAppStateChange = nextAppState => {
+    // app going to background
+    if (nextAppState === 'background') {
+      this.setState({
+        suspendTime: new Date()
+      })
+    }
+
+    // app coming from background
+    if (this.state.appState === 'background' && nextAppState === 'active') {
+      const secondsFromSuspend = (new Date() - this.state.suspendTime) / 1000
+
+      if (secondsFromSuspend > RESTART_SUSPEND_TIME) {
+        RNRestart.Restart()
+      }
+    }
+    this.setState({ appState: nextAppState })
   }
 
   touchAuthenticate = () => {

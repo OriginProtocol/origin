@@ -2,24 +2,26 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import get from 'lodash.get'
+import BigNumber from 'bignumber.js'
+import web3Utils from 'web3-utils'
 
 import { addAccount } from '@/actions/account'
 import {
   getError as getAccountsError,
   getIsAdding as getAccountIsAdding
 } from '@/reducers/account'
-import { addTransfer, confirmTransfer } from '@/actions/transfer'
+import { addTransfer } from '@/actions/transfer'
 import {
   getError as getTransfersError,
-  getIsAdding as getTransferIsAdding,
-  getIsConfirming as getTransferIsConfirming
+  getIsAdding as getTransferIsAdding
 } from '@/reducers/transfer'
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import { unlockDate } from '@/constants'
 import BorderedCard from '@/components/BorderedCard'
 import Modal from '@/components/Modal'
-import ExportIcon from '@/assets/export-icon.svg'
 import ClockIcon from '@/assets/clock-icon.svg'
+import EmailIcon from '@/assets/email-icon.svg'
+import ExportIcon from '@/assets/export-icon.svg'
 
 class BalanceCard extends Component {
   constructor(props) {
@@ -70,8 +72,23 @@ class BalanceCard extends Component {
     return initialState
   }
 
-  handleTransfer = async event => {
+  handleTransferFormSubmit = async event => {
     event.preventDefault()
+
+    if (BigNumber(this.state.amount).isGreaterThan(this.props.balance)) {
+      this.setState({
+        amountError: `Withdrawal amount is greater than your balance of ${this.props.balance} OGN`
+      })
+      return
+    }
+
+    if (!web3Utils.isAddress(this.state.address)) {
+      this.setState({
+        addressError: 'Not a valid Ethereum address'
+      })
+      return
+    }
+
     if (this.state.modalAddAccount) {
       // Add account before processing request
       try {
@@ -80,32 +97,29 @@ class BalanceCard extends Component {
           address: this.state.address
         })
       } catch (error) {
-        // Error will be displayed in form, don't continue to add transfer
+        // Error will be displayed in form, don't continue to two factor input
         return
       }
     }
 
-    // Do the transfer
-    const result = await this.props.addTransfer({
-      amount: this.state.amount,
-      address: this.state.address
-    })
-
-    if (result.type === 'ADD_TRANSFER_SUCCESS') {
-      this.setState({
-        pendingTransfer: result.payload,
-        modalState: 'TwoFactor'
-      })
-    }
+    this.setState({ modalState: 'TwoFactor' })
   }
 
-  handleConfirm = async () => {
-    const result = await this.props.confirmTransfer(
-      this.state.pendingTransfer.id,
-      this.state.code
-    )
-    if (result.type === 'CONFIRM_TRANSFER_SUCCESS') {
-      this.handleModalClose()
+  handleTwoFactorFormSubmit = async () => {
+    // Do the transfer
+    let result
+    try {
+      result = await this.props.addTransfer({
+        amount: this.state.amount,
+        address: this.state.address,
+        code: this.state.code
+      })
+    } catch (error) {
+      return
+    }
+
+    if (result.type === 'ADD_TRANSFER_SUCCESS') {
+      this.setState({ modalState: 'CheckEmail' })
     }
   }
 
@@ -135,10 +149,6 @@ class BalanceCard extends Component {
     })
   }
 
-  isAdding = () => {
-    return this.props.accountIsAdding || this.props.transferIsAdding
-  }
-
   render() {
     return (
       <>
@@ -152,9 +162,7 @@ class BalanceCard extends Component {
           </div>
           <div style={{ fontSize: '40px' }}>
             <strong>
-              {this.props.isLocked
-                ? 0
-                : Number(this.props.balance).toLocaleString()}{' '}
+              {this.props.isLocked ? 0 : this.props.balance.toLocaleString()}{' '}
               <span style={{ fontSize: '20px', color: '#007cff' }}>OGN</span>
             </strong>
           </div>
@@ -200,6 +208,7 @@ class BalanceCard extends Component {
         {this.state.modalState === 'Disclaimer' && this.renderDisclaimer()}
         {this.state.modalState === 'Form' && this.renderTransferForm()}
         {this.state.modalState === 'TwoFactor' && this.renderTwoFactor()}
+        {this.state.modalState === 'CheckEmail' && this.renderCheckEmail()}
       </Modal>
     )
   }
@@ -229,7 +238,7 @@ class BalanceCard extends Component {
           </li>
         </ul>
         <button
-          className="btn btn-primary btn-lg mt-3"
+          className="btn btn-primary btn-lg mt-5"
           onClick={() => this.setState({ modalState: 'Form' })}
         >
           Continue
@@ -245,11 +254,11 @@ class BalanceCard extends Component {
     return (
       <>
         <h1 className="mb-2">Withdraw OGN</h1>
-        <form onSubmit={this.handleTransfer}>
+        <form onSubmit={this.handleTransferFormSubmit}>
           <div className="form-group">
-            <label htmlFor="email">Amount of Tokens</label>
+            <label htmlFor="amount">Amount of Tokens</label>
             <div className="input-group">
-              <input {...input('amount')} />
+              <input {...input('amount')} type="number" />
               <div className="input-group-append">
                 <span className="badge badge-secondary">OGN</span>
               </div>
@@ -261,7 +270,7 @@ class BalanceCard extends Component {
           {this.props.accounts.length > 0 && !this.state.modalAddAccount ? (
             <>
               <div className="form-group">
-                <label htmlFor="email">Destination Account</label>
+                <label htmlFor="address">Destination Account</label>
                 <select
                   className="custom-select custom-select-lg"
                   value={this.state.address}
@@ -283,12 +292,12 @@ class BalanceCard extends Component {
           ) : (
             <>
               <div className="form-group">
-                <label htmlFor="email">Destination Account</label>
+                <label htmlFor="address">Destination Account</label>
                 <input {...input('address')} placeholder="0x..." />
                 {Feedback('address')}
               </div>
               <div className="form-group">
-                <label htmlFor="email">Destination Account Nickname</label>
+                <label htmlFor="nickname">Destination Account Nickname</label>
                 <input {...input('nickname')} />
                 {Feedback('nickname')}
               </div>
@@ -307,9 +316,9 @@ class BalanceCard extends Component {
           <button
             type="submit"
             className="btn btn-primary btn-lg mt-5"
-            disabled={this.isAdding()}
+            disabled={this.props.accountIsAdding}
           >
-            {this.isAdding() ? (
+            {this.props.accountIsAdding ? (
               <>
                 <span className="spinner-grow spinner-grow-sm"></span>
                 Loading...
@@ -329,22 +338,21 @@ class BalanceCard extends Component {
 
     return (
       <>
-        <h1>2-Step Verification</h1>
+        <h1 className="mb-2">2-Step Verification</h1>
         <p>Enter the code generated by your authenticator app</p>
-        <form onSubmit={this.handleConfirm}>
+        <form onSubmit={this.handleTwoFactorFormSubmit}>
           <div className="form-group">
-            <label htmlFor="email">QR Code</label>
-            <input {...input('code')} />
+            <label htmlFor="code">Code</label>
+            <input {...input('code')} type="number" />
             {Feedback('code')}
           </div>
           <button
             type="submit"
-            className="btn btn-primary btn-lg"
-            style={{ marginTop: '40px' }}
+            className="btn btn-primary btn-lg mt-5"
             onClick={this.handleConfirm}
             disabled={this.props.transferIsConfirming}
           >
-            {this.props.transferIsConfirming ? (
+            {this.props.transferIsAdding ? (
               <>
                 <span className="spinner-grow spinner-grow-sm"></span>
                 Loading...
@@ -357,6 +365,24 @@ class BalanceCard extends Component {
       </>
     )
   }
+
+  renderCheckEmail() {
+    return (
+      <>
+        <h1 className="mb-2">Check your email</h1>
+        <p>Please click the link in the email we just sent you</p>
+        <div className="mt-5">
+          <img src={EmailIcon} />
+        </div>
+        <button
+          className="btn btn-primary btn-lg mt-5"
+          onClick={this.handleModalClose}
+        >
+          Done
+        </button>
+      </>
+    )
+  }
 }
 
 const mapStateToProps = ({ account, transfer }) => {
@@ -364,8 +390,7 @@ const mapStateToProps = ({ account, transfer }) => {
     accountError: getAccountsError(account),
     accountIsAdding: getAccountIsAdding(account),
     transferError: getTransfersError(transfer),
-    transferIsAdding: getTransferIsAdding(transfer),
-    transferIsConfirming: getTransferIsConfirming(transfer)
+    transferIsAdding: getTransferIsAdding(transfer)
   }
 }
 
@@ -373,8 +398,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       addAccount: addAccount,
-      addTransfer: addTransfer,
-      confirmTransfer: confirmTransfer
+      addTransfer: addTransfer
     },
     dispatch
   )

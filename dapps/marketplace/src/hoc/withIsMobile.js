@@ -20,9 +20,9 @@ function withIsMobile(WrappedComponent) {
     }
 
     onResize() {
-      if (window.innerWidth < 767 && !this.state.isMobile) {
+      if (window.innerWidth < 768 && !this.state.isMobile) {
         this.setState({ isMobile: true })
-      } else if (window.innerWidth >= 767 && this.state.isMobile) {
+      } else if (window.innerWidth >= 768 && this.state.isMobile) {
         this.setState({ isMobile: false })
       }
     }

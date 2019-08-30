@@ -526,21 +526,34 @@ describe('Growth Engine rules', () => {
 
     describe('Twitter', () => {
       before( () => {
-        const crules = {
-          campaign: {
-            id: 1,
-          },
-          content: {
-            tweet_tweet: {
-              post: {
-                tweet: {
-                  default: 'tweet tweet',
-                  translations: []
+        const crules = (tierFollowersIncrement, cap) => {
+          return {
+            campaign: {
+              id: 1,
+            },
+            config: {
+              twitter_share_config: {
+                minAccountAgeDays: 365,
+                minAgeLastTweetDays: 365,
+                minFollowersThreshold: 10,
+                tierFollowersThreshold: 100,
+                tierFollowersIncrement: tierFollowersIncrement,
+                verifiedMultiplier: 2,
+                cap: cap,
+              }
+            },
+            content: {
+              tweet_tweet: {
+                post: {
+                  tweet: {
+                    default: 'tweet tweet',
+                    translations: []
+                  }
                 }
               }
             }
           }
-        }
+          }
         const config = {
           config: {
             eventType: 'SharedOnTwitter',
@@ -556,7 +569,8 @@ describe('Growth Engine rules', () => {
             statusScope: 'user'
           }
         }
-        this.rule = new VerifiableSocialShareRule(crules, 0, config)
+        this.rule = new VerifiableSocialShareRule(crules(200, -1), 0, config)
+        this.generousTwitterShareRule = new VerifiableSocialShareRule(crules(100, 100), 0, config)
       })
 
       it(`should calculate reward properly based on social stats`, () => {
@@ -617,6 +631,42 @@ describe('Growth Engine rules', () => {
         const identity = { data: { twitterProfile } }
         const reward = await this.rule.getReward('0x123', identity)
         expect(reward.value.amount).to.equal(tokenToNaturalUnits(2))
+        expect(reward.value.currency).to.equal('OGN')
+      })
+
+      it(`should use stats from the user's identity to calculate the more generous projected reward`, async () => {
+        const now = new Date()
+        const oneMonthAgo = new Date(now.getTime() - 30*24*60*60*1000)
+        const twoYearsAgo = new Date(now.getTime() - 2*365*24*60*60*1000)
+        const twitterProfile = {
+          created_at: twoYearsAgo.toString(),
+          verified: false,
+          followers_count: 600,
+          status: {
+            created_at: oneMonthAgo.toString()
+          }
+        }
+        const identity = { data: { twitterProfile } }
+        const reward = await this.generousTwitterShareRule.getReward('0x123', identity)
+        expect(reward.value.amount).to.equal(tokenToNaturalUnits(7))
+        expect(reward.value.currency).to.equal('OGN')
+      })
+
+      it(`should use stats from the user's identity to cap user's reward`, async () => {
+        const now = new Date()
+        const oneMonthAgo = new Date(now.getTime() - 30*24*60*60*1000)
+        const twoYearsAgo = new Date(now.getTime() - 2*365*24*60*60*1000)
+        const twitterProfile = {
+          created_at: twoYearsAgo.toString(),
+          verified: false,
+          followers_count: 60000,
+          status: {
+            created_at: oneMonthAgo.toString()
+          }
+        }
+        const identity = { data: { twitterProfile } }
+        const reward = await this.generousTwitterShareRule.getReward('0x123', identity)
+        expect(reward.value.amount).to.equal(tokenToNaturalUnits(100))
         expect(reward.value.currency).to.equal('OGN')
       })
 

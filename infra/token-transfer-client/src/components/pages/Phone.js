@@ -10,9 +10,17 @@ import {
   getIsEditing as getUserIsEditing
 } from '@/reducers/user'
 import { formInput, formFeedback } from '@/utils/formHelpers'
+import CountryCodes from '@/constants/countryCodes'
+
+const TopCountries = ['us', 'gb', 'cn', 'kr', 'it', 'fr', 'es']
+const SortedCountryCodes = [
+  ...TopCountries.map(id => CountryCodes.find(c => c.code === id)),
+  ...CountryCodes.filter(c => TopCountries.indexOf(c.code) < 0)
+]
 
 class Phone extends Component {
   state = {
+    countryCode: 1,
     phone: '',
     redirectTo: null
   }
@@ -38,7 +46,9 @@ class Phone extends Component {
   }
 
   handleSubmit = async () => {
-    const result = await this.props.editUser({ phone: this.state.phone })
+    const result = await this.props.editUser({
+      phone: `${this.state.countryCode} ${this.state.phone}`
+    })
     if (result.type === 'EDIT_USER_SUCCESS') {
       this.setState({ redirectTo: '/terms' })
     }
@@ -59,17 +69,37 @@ class Phone extends Component {
           <p>We will contact you to verify large withdrawals</p>
           <form>
             <div className="form-group">
+              <label htmlFor="country-code">Country Code</label>
+              <select
+                className="custom-select custom-select-lg"
+                onChange={e => this.setState({ countryCode: e.target.value })}
+              >
+                {SortedCountryCodes.map(country => (
+                  <option key={country.code} value={country.prefix}>
+                    {country.name} (+{country.prefix})
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
               <label htmlFor="phone">Phone Number</label>
               <input {...input('phone')} />
               {Feedback('phone')}
             </div>
             <button
               type="submit"
-              className="btn btn-primary btn-lg"
-              style={{ marginTop: '40px' }}
+              className="btn btn-secondary btn-lg mt-5"
               onClick={this.handleSubmit}
+              disabled={this.props.userIsEditing}
             >
-              Continue
+              {this.props.userIsEditing ? (
+                <>
+                  <span className="spinner-grow spinner-grow-sm"></span>
+                  Loading...
+                </>
+              ) : (
+                <span>Continue</span>
+              )}
             </button>
           </form>
         </div>

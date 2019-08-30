@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-const enums = require('@origin/token-transfer-server/src/enums')
+import enums from '@origin/token-transfer-server/src/enums'
 
 import { fetchAccounts } from '@/actions/account'
 import {
@@ -21,7 +21,8 @@ import { unlockDate } from '@/constants'
 import { fetchTransfers } from '@/actions/transfer'
 import {
   getTransfers,
-  getIsLoading as getTransferIsLoading
+  getIsLoading as getTransferIsLoading,
+  getWithdrawnAmount
 } from '@/reducers/transfer'
 import WithdrawalHistoryCard from '@/components/WithdrawalHistoryCard'
 import EthAddress from '@/components/EthAddress'
@@ -50,20 +51,6 @@ const WithdrawalHistory = props => {
     accountNicknameMap[account.address.toLowerCase()] = account.nickname
   })
 
-  const pendingOrCompleteTransfers = [
-    enums.TransferStatuses.Enqueued,
-    enums.TransferStatuses.Paused,
-    enums.TransferStatuses.WaitingConfirmation,
-    enums.TransferStatuses.Success
-  ]
-
-  const pendingOrCompleteAmount = props.transfers.reduce((total, transfer) => {
-    if (pendingOrCompleteTransfers.includes(transfer.status)) {
-      return total + Number(transfer.amount)
-    }
-    return total
-  }, 0)
-
   return (
     <>
       <div className="row">
@@ -75,7 +62,7 @@ const WithdrawalHistory = props => {
         <div className="col">
           <WithdrawalHistoryCard
             isLocked={isLocked}
-            withdrawnAmount={pendingOrCompleteAmount}
+            withdrawnAmount={props.withdrawnAmount}
             {...props.grantTotals}
           />
         </div>
@@ -122,7 +109,8 @@ const WithdrawalHistory = props => {
                         {moment(transfer.createdAt).fromNow()}
                       </td>
                       <td className="text-nowrap">
-                        {transfer.status === 'WaitingTwoFactor' &&
+                        {transfer.status ===
+                          enums.TransferStatuses.WaitingEmailConfirm &&
                           (moment
                             .utc()
                             .diff(moment(transfer.createdAt), 'minutes') > 5 ? (
@@ -133,36 +121,40 @@ const WithdrawalHistory = props => {
                           ) : (
                             <>
                               <div className="status-circle status-circle-warning mr-2"></div>
-                              Waiting 2FA
+                              Email Confirmation
                             </>
                           ))}
-                        {['Enqueued', 'WaitingConfirmation'].includes(
-                          transfer.status
-                        ) && (
+                        {[
+                          enums.TransferStatuses.Enqueued,
+                          enums.TransferStatuses.WaitingConfirmation
+                        ].includes(transfer.status) && (
                           <>
                             <div className="status-circle status-circle-warning mr-2"></div>
                             Processing
                           </>
                         )}
-                        {transfer.status === 'Paused' && (
+                        {transfer.status === enums.TransferStatuses.Paused && (
                           <>
                             <div className="status-circle status-circle-error mr-2"></div>
                             Paused
                           </>
                         )}
-                        {transfer.status === 'Success' && (
+                        {transfer.status === enums.TransferStatuses.Success && (
                           <>
                             <div className="status-circle status-circle-success mr-2"></div>
                             Confirmed
                           </>
                         )}
-                        {transfer.status === 'Failed' && (
+                        {transfer.status === enums.TransferStatuses.Failed && (
                           <>
                             <div className="status-circle status-circle-error mr-2"></div>
                             Failed
                           </>
                         )}
-                        {['Expired', 'Cancelled'].includes(transfer.status) && (
+                        {[
+                          enums.TransferStatuses.Expired,
+                          enums.TransferStatuses.Cancelled
+                        ].includes(transfer.status) && (
                           <>
                             <div className="status-circle mr-2"></div>
                             {transfer.status}
@@ -190,7 +182,8 @@ const mapStateToProps = ({ account, grant, transfer }) => {
     grantIsLoading: getGrantIsLoading(grant),
     grantTotals: getGrantTotals(grant),
     transfers: getTransfers(transfer),
-    transferIsLoading: getTransferIsLoading(transfer)
+    transferIsLoading: getTransferIsLoading(transfer),
+    withdrawnAmount: getWithdrawnAmount(transfer)
   }
 }
 

@@ -14,6 +14,11 @@ import {
   getIsLoading as getGrantIsLoading,
   getTotals as getGrantTotals
 } from '@/reducers/grant'
+import { fetchTransfers } from '@/actions/transfer'
+import {
+  getIsLoading as getTransferIsLoading,
+  getWithdrawnAmount
+} from '@/reducers/transfer'
 import { unlockDate } from '@/constants'
 import BalanceCard from '@/components/BalanceCard'
 import NewsHeadlinesCard from '@/components/NewsHeadlinesCard'
@@ -23,17 +28,20 @@ import GrantDetails from '@/components/GrantDetail'
 
 const Dashboard = props => {
   useEffect(() => {
-    props.fetchAccounts(), props.fetchGrants()
+    props.fetchAccounts(), props.fetchTransfers(), props.fetchGrants()
   }, [])
 
-  if (props.accountIsLoading || props.grantIsLoading) {
+  if (
+    props.accountIsLoading ||
+    props.transferIsLoading ||
+    props.grantIsLoading
+  ) {
     return (
       <div className="spinner-grow" role="status">
         <span className="sr-only">Loading...</span>
       </div>
     )
   }
-
   const isLocked = moment.utc() < unlockDate
 
   const { vestedTotal, unvestedTotal } = props.grantTotals
@@ -43,7 +51,7 @@ const Dashboard = props => {
       <div className="row">
         <div className="col-12 col-lg-6">
           <BalanceCard
-            balance={vestedTotal}
+            balance={vestedTotal.minus(props.withdrawnAmount)}
             accounts={props.accounts}
             isLocked={isLocked}
           />
@@ -84,13 +92,15 @@ const Dashboard = props => {
   )
 }
 
-const mapStateToProps = ({ account, grant }) => {
+const mapStateToProps = ({ account, grant, transfer }) => {
   return {
     accounts: getAccounts(account),
     accountIsLoading: getAccountIsLoading(account),
     grants: getGrants(grant),
     grantIsLoading: getGrantIsLoading(grant),
-    grantTotals: getGrantTotals(grant)
+    grantTotals: getGrantTotals(grant),
+    transferIsLoading: getTransferIsLoading(transfer),
+    withdrawnAmount: getWithdrawnAmount(transfer)
   }
 }
 
@@ -98,7 +108,8 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       fetchAccounts: fetchAccounts,
-      fetchGrants: fetchGrants
+      fetchGrants: fetchGrants,
+      fetchTransfers: fetchTransfers
     },
     dispatch
   )
