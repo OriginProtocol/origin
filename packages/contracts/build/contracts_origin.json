@@ -3,10 +3,10 @@
   "MarketplaceEpoch": 0,
   "IdentityEvents": "0xe760d066bd8bbe22d7e9d8107be878102bd8d57d",
   "IdentityEventsEpoch": 0,
-  "UniswapDaiExchange": "0xD4fbAF1dFe100d07f8Ef73d8c92e93d0Bcf7b45D",
-  "ProxyFactory": "0xa43bD34038Ca13e7115e16770D722E62ea706212",
+  "UniswapDaiExchange": "0x68344dCa5e6Ef7F7935f262C91f1319A85947B20",
+  "ProxyFactory": "0x7BF7ae2DA6013aA8de29627E29e4b9fa807D4469",
   "ProxyFactoryEpoch": 0,
-  "IdentityProxyImplementation": "0x1cff61b8259f05F4BBF7aA4F769321e5Fa70B22d",
+  "IdentityProxyImplementation": "0xf491289b5DA695D7892B4960dcf48eB7e1ACb6B8",
   "OGN": "0xc341384f6fe00179b33ef7ae638ed2937a9e4501",
   "DAI": "0xB9B7e0cb2EDF5Ea031C8B297A5A1Fa20379b6A0a"
 }
