@@ -76,6 +76,9 @@ allprojects {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/../node_modules/react-native/android"
         }
+        flatDir {
+            dirs "$rootDir/../node_modules/react-native-samsung-bks/android/aar"
+        }
         maven { url "https://jitpack.io" }
         maven { url "https://maven.google.com" }
         google()

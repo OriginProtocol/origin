@@ -67,6 +67,7 @@
     "react-native-randombytes": "^3.5.3",
     "react-native-restart": "^0.0.12",
     "react-native-safe-area-view": "^0.14.5",
+    "react-native-samsung-bks": "../packages/react-native-samsung-bks",
     "react-native-sentry": "^0.43.2",
     "react-native-touch-id": "^4.4.1",
     "react-native-user-agent": "^1.0.4",
