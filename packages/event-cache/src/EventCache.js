@@ -9,9 +9,10 @@ const { get, post } = require('@origin/ipfs')
 
 const { debug, validateParams } = require('./utils')
 const { InMemoryBackend, IndexedDBBackend } = require('./backends/browser')
+
 let PostgreSQLBackend
-if (typeof window === 'undefined') {
-  PostgreSQLBackend = require('./backends').PostgreSQLBackend
+if (!process.env.WEBPACK_BUILD) {
+  PostgreSQLBackend = require('./backends/PostgreSQLBackend').PostgreSQLBackend
 }
 
 const limiter = new Bottleneck({ maxConcurrent: 25 })
