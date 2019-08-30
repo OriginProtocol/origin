@@ -48,9 +48,7 @@ export async function filterNonVisibleListingIds(listingIds) {
     )
     visibleIds = listingIds
   }
-  // Note: visibleIds are not guaranteed to be returned in the same order as listingIds.
-  // By applying a filter on listingIds, we ensure order is preserved.
-  return listingIds.filter(id => visibleIds.indexOf(id) !== -1)
+  return visibleIds
 }
 
 /**
