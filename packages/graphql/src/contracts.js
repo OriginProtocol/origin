@@ -52,10 +52,17 @@ function applyWeb3Hack(web3Instance) {
   return web3Instance
 }
 
-async function isValidContract(web3, address) {
+async function isValidContract(web3, contract, name) {
+  const address = get(contract, 'options.address')
   if (!address) return false
-  const code = await web3.eth.getCode(address)
-  return code && typeof code === 'string' && code.length > 2
+  let valid
+  try {
+    const code = await web3.eth.getCode(address)
+    valid = code && typeof code === 'string' && code.length > 2
+  } catch (err) {
+    console.debug(err)
+  }
+  if (!valid) console.error(`${name} contract appears to be invalid!`)
 }
 
 let lastBlock
@@ -77,15 +84,12 @@ export function newBlock(blockNumber) {
     context.ProxyFactory.eventCache.setLatestBlock(blockNumber)
   }
 
-  pubsub.publish('NEW_BLOCK', {
-    newBlock: { id: blockNumber }
-  })
+  pubsub.publish('NEW_BLOCK', { newBlock: { id: blockNumber } })
 }
 
 const blockQuery = `query BlockNumber { web3 { blockNumber } }`
 function queryForBlocks() {
-  let inProgress = false,
-    blockInterval = null
+  let inProgress = false
   try {
     blockInterval = setInterval(() => {
       if (inProgress) {
@@ -121,8 +125,6 @@ function queryForBlocks() {
     console.log(`Querying for new blocks failed: ${error}`)
     inProgress = false
   }
-
-  return blockInterval
 }
 
 function pollForBlocks() {
@@ -330,18 +332,6 @@ export function setNetwork(net, customConfig) {
     })
   }
 
-  try {
-    const storedTokens = JSON.parse(window.localStorage[`${net}Tokens`])
-    storedTokens.forEach(token => {
-      if (context.tokens.find(t => t.id === token.id)) {
-        return
-      }
-      context.tokens.push(token)
-    })
-  } catch (e) {
-    /* Ignore */
-  }
-
   context.tokens.forEach(token => {
     const contractDef =
       token.type === 'OriginToken' ? OriginTokenContract : TokenContract
@@ -394,33 +384,13 @@ export function setNetwork(net, customConfig) {
 
   // Do a little contract validation
   if (net !== 'mainnet') {
-    if (context.marketplace)
-      isValidContract(web3, context.marketplace.options.address)
-        .then(valid => {
-          if (!valid)
-            console.error('Marketplace contract appears to be invalid!')
-        })
-        .catch(err => console.debug(err))
-    if (context.identityEvents)
-      isValidContract(web3, context.identityEvents.options.address)
-        .then(valid => {
-          if (!valid)
-            console.error('IdentityEvents contract appears to be invalid!')
-        })
-        .catch(err => console.debug(err))
-    if (context.ProxyFactory)
-      isValidContract(web3, context.ProxyFactory.options.address)
-        .then(valid => {
-          if (!valid)
-            console.error('ProxyFactory contract appears to be invalid!')
-        })
-        .catch(err => console.debug(err))
-    if (context.ProxyImp)
-      isValidContract(web3, context.ProxyImp.options.address)
-        .then(valid => {
-          if (!valid) console.error('ProxyImp contract appears to be invalid!')
-        })
-        .catch(err => console.debug(err))
+    Object.keys(context.marketplaces || {}).forEach(version => {
+      const marketplace = context.marketplaces[version].contract
+      isValidContract(web3, marketplace, `Marketplace V${version}`)
+    })
+    isValidContract(web3, context.identityEvents, 'IdentityEvents')
+    isValidContract(web3, context.ProxyFactory, 'ProxyFactory')
+    isValidContract(web3, context.ProxyImp, 'ProxyImp')
   }
 }
 

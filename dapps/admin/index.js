@@ -3,14 +3,11 @@ import serveStatic from 'serve-static'
 import { spawn } from 'child_process'
 import opener from 'opener'
 import fs from 'fs'
-import bodyParser from 'body-parser'
 
 import services from '@origin/services'
 
 const HOST = process.env.HOST || 'localhost'
 const app = express()
-
-app.use(bodyParser())
 
 app.get('/', (req, res) => {
   const html = fs.readFileSync(__dirname + '/public/dev.html').toString()
