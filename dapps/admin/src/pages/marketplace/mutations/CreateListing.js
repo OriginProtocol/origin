@@ -133,37 +133,37 @@ class CreateListing extends Component {
                 />
                 <Button
                   small="true"
-                  text="House 1"
+                  text="T-Shirt"
                   className="ml-2"
                   onClick={() => this.setDemoListing(0)}
                 />
                 <Button
                   small="true"
-                  text="House 2"
+                  text="Car"
                   className="ml-2"
                   onClick={() => this.setDemoListing(1)}
                 />
                 <Button
                   small="true"
-                  text="House 3"
+                  text="House 1"
                   className="ml-2"
                   onClick={() => this.setDemoListing(2)}
                 />
                 <Button
                   small="true"
-                  text="Car"
+                  text="House 2"
                   className="ml-2"
                   onClick={() => this.setDemoListing(3)}
                 />
                 <Button
                   small="true"
-                  text="Tickets"
+                  text="House 3"
                   className="ml-2"
                   onClick={() => this.setDemoListing(4)}
                 />
                 <Button
                   small="true"
-                  text="Basic"
+                  text="Tickets"
                   className="ml-2"
                   onClick={() => this.setDemoListing(5)}
                 />
@@ -374,16 +374,16 @@ class CreateListing extends Component {
     }
     const egListing = demoListings[idx]
     this.setState({
-      title: egListing.title,
-      price: egListing.price.amount,
-      category: egListing.category,
-      subCategory: egListing.subCategory,
-      description: egListing.description,
-      media: egListing.media,
-      initialMedia: egListing.media,
-      unitsTotal: egListing.unitsTotal,
-      commission: egListing.commission || '2',
-      commissionPerUnit: egListing.commissionPerUnit || '2'
+      title: egListing.data.title,
+      price: egListing.data.price.amount,
+      category: egListing.data.category,
+      subCategory: egListing.data.subCategory,
+      description: egListing.data.description,
+      media: egListing.data.media,
+      initialMedia: egListing.data.media,
+      unitsTotal: get(egListing, 'unitData.unitsTotal', 1),
+      commission: egListing.data.commission || '0',
+      commissionPerUnit: egListing.data.commissionPerUnit || '0'
     })
   }
 

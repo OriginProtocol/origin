@@ -9,6 +9,7 @@ try {
 }
 
 const config = {
+  networkId: 999,
   provider: `http://${HOST}:8545`,
   providerWS: `ws://${HOST}:8545`,
   ipfsGateway: `http://${HOST}:8080`,

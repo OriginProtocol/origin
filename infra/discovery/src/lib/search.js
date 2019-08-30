@@ -140,7 +140,7 @@ class Listing {
   }
 
   /**
-   * Gets a listing
+   * Gets a single listing by id.
    * @param {string} id
    */
   static async get(id) {
@@ -149,6 +149,30 @@ class Listing {
       type: LISTINGS_TYPE,
       id: id
     })
+  }
+
+  /**
+   * Gets multiple listings by ids. Filters out non-visible listings.
+   * @param {Array<string>} ids: listing ids.
+   * @returns {Promise<Array<Object>>}
+   */
+  static async getByIds(ids) {
+    const resp = await client.search({
+      index: LISTINGS_INDEX,
+      type: LISTINGS_TYPE,
+      body: {
+        query: {
+          bool: {
+            // Must match listing ids.
+            must: { ids: { values: ids } },
+            // Filter out non-visible listings.
+            must_not: { terms: { scoreTags: ['Hide', 'Delete'] } }
+          }
+        }
+      }
+    })
+    const listings = resp.hits.hits
+    return listings.map(listing => listing._source)
   }
 
   /**
@@ -322,7 +346,7 @@ class Listing {
       esQuery.bool.filter.push(innerFilter)
     })
 
-    // All non-time based scoring is staticly computed ahead of time and
+    // All non-time based scoring is statically computed ahead of time and
     // index in a listing's `scoreMultiplier` field
     const scoreQuery = {
       function_score: {

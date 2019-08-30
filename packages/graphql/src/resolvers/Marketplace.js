@@ -1,7 +1,9 @@
 import contracts from '../contracts'
 import listings from './marketplace/listings'
 import users from './marketplace/users'
+import { listingIsVisible } from '../utils/listingVisibility'
 import parseId from '../utils/parseId'
+import { getListingId } from '../utils/getId'
 import apolloPathToString from '../utils/apolloPathToString'
 
 export default {
@@ -22,10 +24,26 @@ export default {
     if (info && info.cacheControl) {
       info.cacheControl.setCacheHint({ maxAge: 15 })
     }
-    const { marketplace, listingId, blockNumber } = parseId(args.id, contracts)
+    const { netId, contractId, marketplace, listingId, blockNumber } = parseId(
+      args.id,
+      contracts
+    )
     if (!marketplace) {
       return null
     }
+
+    // If a discovery server is configured, check the listing's visibility.
+    // TODO: Support an optional argument for the client to be able to specify
+    // whether the visibility check should be applied. In some rare cases, the DAp
+    // may want to display a listing even though it is hidden. For example if
+    // there is an offer on a listing and either the buyer or the seller is requesting the data.
+    if (contracts.discovery) {
+      const id = getListingId(netId, contractId, listingId)
+      if (!(await listingIsVisible(id))) {
+        return null
+      }
+    }
+
     return await marketplace.eventSource.getListing(listingId, blockNumber)
   },
   listings,
