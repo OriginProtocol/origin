@@ -41,8 +41,8 @@
     "pg": "7.12.1",
     "pg-hstore": "2.3.3",
     "redis": "2.8.0",
-    "sequelize": "5.17.2",
-    "sequelize-cli": "5.5.0",
+    "sequelize": "5.18.0",
+    "sequelize-cli": "5.5.1",
     "url": "0.11.0",
     "util": "0.12.1",
     "web3": "1.0.0-beta.34"
