@@ -15,19 +15,19 @@ class BrowserModal extends Component {
       <Modal
         onClose={() => this.props.onClose()}
         closeBtn={true}
-        classNameOuter="pl-modal-mobile"
+        classNameOuter="pl-modal-browse"
         className={isMobile ? 'is-mobile' : 'is-desktop'}
       >
-        <div className="mobile-modal">
+        <div className="browse-modal">
           <div className="description">
             <div className="blurb">
               <h5>
-                <fbt desc="MobileModal.header">
+                <fbt desc="BrowseModal.header">
                   It seems that you are using Brave
                 </fbt>
               </h5>
               <div>
-                <fbt desc="MobileModal.description">
+                <fbt desc="BrowseModal.description">
                   To avoid problems with OGN dApp you should lower your shields
                   while using the marketplace
                 </fbt>{' '}
@@ -43,7 +43,7 @@ class BrowserModal extends Component {
 export default withIsMobile(BrowserModal)
 
 require('react-styl')(`
-  .mobile-modal
+  .browse-modal
     font-size: 16px
     a
       color: var(--white)
@@ -82,14 +82,14 @@ require('react-styl')(`
         font-size: 12px
         input
           margin-right: 0.25rem
-  .pl-modal-mobile
+  .pl-modal-browse
     .pl-modal-content.is-mobile
       position: relative
       .close
         position: absolute
         right: 15px
         top: 15px
-      .mobile-modal
+      .browse-modal
         margin: 20px 15px 0
     .pl-modal-content.is-desktop
       max-width: 655px !important
