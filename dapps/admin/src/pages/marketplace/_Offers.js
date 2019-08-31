@@ -19,7 +19,7 @@ import {
   AddData
 } from './mutations'
 
-import AccountButton from '../accounts/AccountButton'
+import AccountButton from '../settings/AccountButton'
 
 const Offers = ({ listing, offers, accounts }) => {
   if (!offers.length) return null

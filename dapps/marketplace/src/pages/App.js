@@ -49,7 +49,6 @@ class App extends Component {
     isBrave: false,
     broseModalDismissed: false,
     footer: false,
-    skipOnboardMessaging: false,
     skipOnboardRewards: false
   }
 
@@ -154,13 +153,7 @@ class App extends Component {
               path="/onboard"
               component={() => (
                 <Onboard
-                  skipMessaging={this.state.skipOnboardMessaging}
                   skipRewards={this.state.skipOnboardRewards}
-                  onSkipMessaging={() => {
-                    this.setState({
-                      skipOnboardMessaging: true
-                    })
-                  }}
                   onSkipRewards={() => {
                     this.setState({
                       skipOnboardRewards: true

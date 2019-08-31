@@ -26,8 +26,20 @@ async function convosWithSupport() {
   }))
 }
 
+// We need to do this check inside the resolver function
+const checkForMessagingOverride = () => {
+  // needed for testing pu
+  if (typeof localStorage !== 'undefined' && localStorage.useMessagingObject) {
+    messagingOverride = JSON.parse(localStorage.useMessagingObject)
+  }
+}
+let messagingOverride
+
 export default {
-  enabled: () => isEnabled(),
+  enabled: () => {
+    checkForMessagingOverride()
+    return messagingOverride ? messagingOverride.enabled : isEnabled()
+  },
   conversations: () => convosWithSupport(),
   conversation: (_, args) =>
     new Promise(async resolve => {

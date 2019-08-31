@@ -1,0 +1,109 @@
+mutation UniswapDeployFactory($from: String!) {
+  uniswapDeployFactory(from: $from) {
+    id
+  }
+}
+{
+  "from": "0x627306090abaB3A6e1400e9345bC60c78a8BEf57"
+}
+
+mutation UniswapExchangeTemplate($from: String!) {
+  uniswapDeployExchangeTemplate(from: $from) {
+    id
+  }
+}
+{
+  "from": "0x627306090abaB3A6e1400e9345bC60c78a8BEf57"
+}
+
+
+mutation UniswapInitFactory(
+  $from: String!
+  $exchange: String
+  $factory: String
+) {
+  uniswapInitializeFactory(
+    from: $from
+    exchange: $exchange
+    factory: $factory
+  ) {
+    id
+  }
+}
+{
+  "from": "0x627306090abaB3A6e1400e9345bC60c78a8BEf57",
+  "exchange": "0x647520713D70a754baD30A6c25c58DFF9621EA08",
+  "factory": "0x394BfB86641Bf8cA8A757a318499A580Cc1f26C6"
+}
+
+
+mutation UniswapCreateExchange(
+  $from: String!
+  $tokenAddress: String!
+  $factory: String
+) {
+  uniswapCreateExchange(
+    from: $from
+    tokenAddress: $tokenAddress
+    factory: $factory
+  ) {
+    id
+  }
+}
+{
+  "from": "0x627306090abaB3A6e1400e9345bC60c78a8BEf57",
+  "tokenAddress": "0xB9B7e0cb2EDF5Ea031C8B297A5A1Fa20379b6A0a",
+  "factory": "0x394BfB86641Bf8cA8A757a318499A580Cc1f26C6"
+}
+
+context.uniswapFactory.options.address = "0x394BfB86641Bf8cA8A757a318499A580Cc1f26C6"
+events = await context.uniswapFactory.getPastEvents({ fromBlock: 1600000 })
+exchangeAddress = events[0].returnValues.exchange
+
+mutation UpdateTokenAllowance(
+  $token: String!
+  $from: String!
+  $to: String!
+  $value: String!
+) {
+  updateTokenAllowance(token: $token, from: $from, to: $to, value: $value) {
+    id
+  }
+}
+{
+  "token": "0xB9B7e0cb2EDF5Ea031C8B297A5A1Fa20379b6A0a",
+  "from": "0x627306090abaB3A6e1400e9345bC60c78a8BEf57",
+  "to": "0x68344dCa5e6Ef7F7935f262C91f1319A85947B20",
+  "value": "100000"
+}
+
+
+mutation UniswapAddLiquidity(
+  $from: String!
+  $exchange: String!
+  $value: String!
+  $tokens: String!
+  $liquidity: String!
+) {
+  uniswapAddLiquidity(
+    from: $from
+    exchange: $exchange
+    value: $value
+    tokens: $tokens
+    liquidity: $liquidity
+  ) {
+    id
+  }
+}
+{
+  "from": "0x627306090abaB3A6e1400e9345bC60c78a8BEf57",
+  "exchange": "0x68344dCa5e6Ef7F7935f262C91f1319A85947B20",
+  "value": "1",
+  "tokens": "100000",
+  "liquidity": "0"
+}
+
+
+factory: 0x394BfB86641Bf8cA8A757a318499A580Cc1f26C6
+exchImp: 0x647520713D70a754baD30A6c25c58DFF9621EA08
+exch: 0x68344dCa5e6Ef7F7935f262C91f1319A85947B20
