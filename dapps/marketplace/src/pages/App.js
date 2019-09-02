@@ -44,7 +44,7 @@ class App extends Component {
   state = {
     hasError: false,
     displayMobileModal: false,
-    mobileModalDismissed: false,
+    mobileModalDismissed: true,
     displayBrowseModal: false,
     isBrave: false,
     broseModalDismissed: false,
@@ -89,6 +89,9 @@ class App extends Component {
       'https://api.duckduckgo.com/?q=useragent&format=json'
     )).json()).Answer.includes('Brave')
     this.state.isBrave = isBrave
+    if (!isBrave) {
+      this.state.mobileModalDismissed = false
+    }
     return isBrave
   }
 
@@ -221,7 +224,8 @@ class App extends Component {
             onClose={() =>
               this.setState({
                 displayBrowseModal: false,
-                browseModalDismissed: true
+                browseModalDismissed: true,
+                mobileModalDismissed: false
               })
             }
           />
