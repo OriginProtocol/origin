@@ -21,15 +21,14 @@ class BrowserModal extends Component {
         <div className="browse-modal">
           <div className="description">
             <div className="blurb">
-              <h5>
+              <h5 className="mb-4">
                 <fbt desc="BrowseModal.header">
                   It seems that you are using Brave
                 </fbt>
               </h5>
               <div>
                 <fbt desc="BrowseModal.description">
-                  To avoid problems with OGN dApp you should lower your shields
-                  while using the marketplace
+                  To avoid problems with Origin Marketplace you should lower your shields
                 </fbt>{' '}
               </div>
             </div>
@@ -67,6 +66,7 @@ require('react-styl')(`
     .blurb
       font-size: 18px
       line-height: 1.33
+      text-align: center
     .qr
       margin-left: 10px
       padding: 5px
