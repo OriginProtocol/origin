@@ -48,3 +48,7 @@ export function truncate(data, chars = 5) {
   if (chars && data.length <= chars) return data
   return data.substr(0, chars) + '...'
 }
+
+export function generateHdPath(index) {
+  return `m/44'/60'/0'/0/${index}`
+}

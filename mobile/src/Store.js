@@ -8,6 +8,7 @@ import activation from 'reducers/Activation'
 import exchangeRates from 'reducers/ExchangeRates'
 import marketplace from 'reducers/Marketplace'
 import notifications from 'reducers/Notifications'
+import samsungBKS from 'reducers/SamsungBKS'
 import settings from 'reducers/Settings'
 import wallet from 'reducers/Wallet'
 import { persistStore, persistReducer } from 'redux-persist'
@@ -44,6 +45,7 @@ const persistConfig = {
     'activation',
     'exchangeRates',
     'notifications',
+    'samsungBKS',
     'settings',
     'wallet'
   ],
@@ -61,6 +63,7 @@ const store = createStore(
       exchangeRates,
       marketplace,
       notifications,
+      samsungBKS,
       settings,
       wallet
     })

@@ -22,6 +22,37 @@ class WelcomeScreen extends Component {
     }
   }
 
+  componentDidMount = () => {
+    const hasAccount = this.props.wallet.accounts.length > 0
+    if (!hasAccount) {
+      // No accounts, see if we Samsung BKS is supported on this device
+      this.props.getSamsungBKSIsSupported()
+    }
+  }
+
+  componentDidUpdate = (prevProps) => {
+    // Handle updates to check if Samsung BKS is supported
+    if (get(prevProps, 'samsungBKS.isSupported') !== this.props.samsungBKS.isSupported) {
+      if (this.props.samsungBKS.isSupported === false) {
+        // No support for Samsung BKS, use Redux for account storage
+        this.setState({ loading: false })
+      } else if (this.props.samsungBKS.isSupported === true) {
+        // Samsung BKS is supported on this device
+        this.props.getSamsungBKSApiLevel()
+      }
+    }
+
+    // Handle updates to Samsung BKS API level
+    if (get(prevProps, 'samsungBKS.apiLevel') !== this.props.samsungBKS.apiLevel) {
+      this.props.getSamsungBKSSeedHash()
+    }
+
+    // Handle updates to the Samsung BKS seed hash
+    if (get(prevProps, 'samsungBKS.seedHash') !== this.props.samsungBKS.seedHash) {
+
+    }
+  }
+
   handleCreateWallet = async () => {
     this.setState({ loading: true }, () => {
       setTimeout(() => {
@@ -114,7 +145,9 @@ const mapStateToProps = ({ wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  createAccount: () => dispatch(createAccount())
+  createAccount: () => dispatch(createAccount()),
+  getSamsungBKSIsSupported: () => dispatch(getSamsungBKSIsSupported())
+  getSamsungBKSSeedHash: () => dispatch(getSamsungBKSSeedHash())
 })
 
 export default connect(

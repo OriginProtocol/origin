@@ -2,8 +2,8 @@
 
 import { DeviceEventEmitter } from 'react-native'
 import { ethers } from 'ethers'
-import RNSamsungBKS from 'react-native-samsung-bks'
 
+import { generateHdPath } from 'utils/user'
 import keyMirror from 'utils/keyMirror'
 import Store from '../Store'
 
@@ -11,33 +11,39 @@ export const WalletConstants = keyMirror(
   {
     ADD_ACCOUNT: null,
     REMOVE_ACCOUNT: null,
+    SET_ACCOUNTS: null,
     SET_ACCOUNT_ACTIVE: null,
-    SET_ACCOUNT_NAME: null,
     SET_ACCOUNT_BALANCES: null,
-    SET_ACCOUNT_SERVER_NOTIFICATIONS: null,
-    SET_MESSAGING_KEYS: null,
     SET_IDENTITY: null,
-    // Samsung Blockchain Keystore integration
-    SET_SAMSUNG_BKS_SUPPORTED: null,
-    SET_SAMSUNG_BKS_SEEDHASH: null
+    SET_USE_SAMSUNG_BKS: null
   },
   'WALLET'
 )
 
 export function addAccount(account) {
   global.web3.eth.accounts.wallet.add(account)
-  // Emit addAccount, not used by any components at this time
-  DeviceEventEmitter.emit('addAccount', account)
   return {
     type: WalletConstants.ADD_ACCOUNT,
     account
   }
 }
 
+/* Override the account store with a new array. This is used for integration
+ * with Samsung BKS where the store seed hash changes, which indicates the
+ * user has done a reset, so none of the old accounts stored are valid.
+ */
+export function setAccounts(accountArray) {
+  return {
+    type: WalletConstants.SET_ACCOUNTS,
+    accountArray
+  }
+}
+
+/* Generate a new wallet from a random mnemonic and import an account from that
+ * mnemonic.
+ */
 export function createAccount() {
-  // Generate a random account and get the mnemonic for it
   const mnemonic = ethers.Wallet.createRandom().mnemonic
-  // Import an account based on that mnemonic
   return importAccountFromMnemonic(mnemonic)
 }
 
@@ -49,13 +55,13 @@ export function importAccountFromMnemonic(mnemonic, maxRetries = 10) {
   // Use a loop to try the next account in the derivation path
   for (let i = 0; i < maxRetries; i++) {
     // This is the default path but explicitly stated here for clarity
-    const derivePath = `m/44'/60'/0'/0/${i}`
+    const hdPath = generateHdPath(i)
     // Web3js doesn't support wallet creation from a mnemonic, so somewhat
     // redundantly we have to include ethersjs. Perhaps migrate everything
     // away from web3js to ethersjs or the functionality will be added to web3js
     // sometime in the future, see:
     // https://github.com/ethereum/web3.js/issues/1594
-    const account = ethers.Wallet.fromMnemonic(mnemonic, derivePath)
+    const account = ethers.Wallet.fromMnemonic(mnemonic, hdPath)
     if (!existingAddresses.includes(account.address)) {
       return addAccount({
         address: account.address,
@@ -81,6 +87,8 @@ export function importAccountFromPrivateKey(privateKey) {
   })
 }
 
+/* Remove an account from the accoun store.
+ */
 export function removeAccount(account) {
   if (account && account.address) {
     global.web3.eth.accounts.wallet.remove(account.address)
@@ -112,25 +120,5 @@ export function setIdentity(payload) {
   return {
     type: WalletConstants.SET_IDENTITY,
     payload
-  }
-}
-
-export function setSamsungBksSupported() {
-  return async function(dispatch) {
-    const isSupported = await RNSamsungBKS.isSupported()
-    return dispatch({
-      type: WalletConstants.SET_SAMSUNG_BKS_SUPPORTED,
-      payload: isSupported
-    })
-  }
-}
-
-export function setSamsungBksSeedHash() {
-  return async function(dispatch) {
-    const seedHash = await RNSamsungBKS.getSeedHash()
-    return dispatch({
-      type: WalletConstants.SET_SAMSUNG_BKS_SEEDHASH,
-      payload: seedHash
-    })
   }
 }

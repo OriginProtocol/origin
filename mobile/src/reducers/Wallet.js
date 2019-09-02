@@ -11,9 +11,7 @@ const initialState = {
     dai: 0,
     ogn: 0
   },
-  identities: {},
-  samsungBksSupported: false,
-  samsungBksSeedHash: null
+  identities: {}
 }
 
 export default function Wallet(state = initialState, action = {}) {
@@ -54,6 +52,7 @@ export default function Wallet(state = initialState, action = {}) {
         return state
       }
 
+    // TODO: Move below two actions to a separate cache store
     case WalletConstants.SET_ACCOUNT_BALANCES:
       return {
         ...state,
@@ -67,18 +66,6 @@ export default function Wallet(state = initialState, action = {}) {
           ...state.identities,
           [action.payload.address]: action.payload.identity
         }
-      }
-
-    case WalletConstants.SET_SAMSUNG_BKS_SUPPORTED:
-      return {
-        ...state,
-        samsungBksSupported: action.payload
-      }
-
-    case WalletConstants.SET_SAMSUNG_BKS_SEEDHASH:
-      return {
-        ...state,
-        samsungBksSeedHash: action.payload
       }
   }
 
