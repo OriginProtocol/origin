@@ -68,7 +68,7 @@ import * as en_US from 'locales/en_US.json'
 import * as es_ES from 'locales/es_ES.json'
 import * as fr_FR from 'locales/fr_FR.json'
 import * as it_IT from 'locales/it_IT.json'
-// import * as ja_JP from 'locales/ja_JP.json'
+import * as ja_JP from 'locales/ja_JP.json'
 // import * as ko_KR from 'locales/ko_KR.json'
 // import * as nl_NL from 'locales/nl_NL.json'
 // import * as pt_PT from 'locales/pt_PT.json'
@@ -88,7 +88,7 @@ export const TRANSLATIONS = {
   es_ES,
   fr_FR,
   it_IT,
-  // ja_JP,
+  ja_JP,
   // ko_KR,
   // nl_NL,
   // pt_PT,
