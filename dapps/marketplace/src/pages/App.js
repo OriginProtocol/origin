@@ -10,6 +10,7 @@ import withIsMobile from 'hoc/withIsMobile'
 import Nav from './nav/Nav'
 import TranslationModal from './_TranslationModal'
 import MobileModal from './_MobileModal'
+import BrowseModal from './_BrowseModal'
 import Footer from './_Footer'
 
 import LoadingSpinner from 'components/LoadingSpinner'
@@ -43,9 +44,19 @@ class App extends Component {
   state = {
     hasError: false,
     displayMobileModal: false,
-    mobileModalDismissed: false,
+    mobileModalDismissed: true,
+    displayBrowseModal: false,
+    isBrave: false,
+    broseModalDismissed: false,
     footer: false,
     skipOnboardRewards: false
+  }
+
+  componentDidMount() {
+    this._asyncRequest = this.checkBrave().then(externalData => {
+      this._asyncRequest = null
+      this.setState({ isBrave: externalData })
+    })
   }
 
   componentDidUpdate() {
@@ -60,10 +71,28 @@ class App extends Component {
     ) {
       this.setState({ displayMobileModal: true })
     }
+    if (
+      this.state.isBrave &&
+      this.state.displayBrowseModal === false &&
+      !this.state.browseModalDismissed
+    ) {
+      this.setState({ displayBrowseModal: true })
+    }
   }
 
   static getDerivedStateFromError(err) {
     return { hasError: true, err }
+  }
+
+  async checkBrave() {
+    const isBrave = (await (await fetch(
+      'https://api.duckduckgo.com/?q=useragent&format=json'
+    )).json()).Answer.includes('Brave')
+    this.state.isBrave = isBrave
+    if (!isBrave) {
+      this.state.mobileModalDismissed = false
+    }
+    return isBrave
   }
 
   render() {
@@ -111,7 +140,12 @@ class App extends Component {
       <CurrencyContext.Provider value={this.props.currency}>
         {!hideNavbar && (
           <Nav
-            onGetStarted={() => this.setState({ mobileModalDismissed: false })}
+            onGetStarted={() =>
+              this.setState({
+                mobileModalDismissed: false,
+                browseModalDismissed: false
+              })
+            }
             onShowFooter={() => this.setState({ footer: true })}
             navbarDarkMode={isOnWelcomeAndNotOboard}
           />
@@ -181,6 +215,17 @@ class App extends Component {
               this.setState({
                 displayMobileModal: false,
                 mobileModalDismissed: true
+              })
+            }
+          />
+        )}
+        {this.state.displayBrowseModal && (
+          <BrowseModal
+            onClose={() =>
+              this.setState({
+                displayBrowseModal: false,
+                browseModalDismissed: true,
+                mobileModalDismissed: false
               })
             }
           />
