@@ -13,7 +13,6 @@ const { Event, User } = require('../models')
 const logger = require('../logger')
 const { sendEmail } = require('../lib/email')
 const { ensureLoggedIn } = require('../lib/login')
-
 const { encryptionSecret, portalUrl } = require('../config')
 
 /**
@@ -37,7 +36,7 @@ router.post(
       )
 
       const vars = { url: `${portalUrl}/login_handler/${token}` }
-      await sendEmail(user.email, 'transfer', vars)
+      await sendEmail(user.email, 'login', vars)
       logger.info(`Sent email token to ${email}`)
     } else {
       // Do nothing in case email not found in our DB.

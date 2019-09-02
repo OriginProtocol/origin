@@ -40,6 +40,7 @@
     "helmet": "^3.20.0",
     "ip": "^1.1.5",
     "jsonwebtoken": "^8.5.1",
+    "lodash-es": "^4.17.15",
     "logplease": "^1.2.15",
     "moment": "^2.24.0",
     "notp": "^2.0.3",
