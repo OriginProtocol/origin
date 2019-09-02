@@ -1,7 +1,8 @@
 'use strict'
 
-import { createStore, combineReducers, compose } from 'redux'
+import { applyMiddleware, createStore, combineReducers, compose } from 'redux'
 import { createTransform } from 'redux-persist'
+import thunk from 'redux-thunk'
 
 import activation from 'reducers/Activation'
 import exchangeRates from 'reducers/ExchangeRates'
@@ -64,7 +65,7 @@ const store = createStore(
       wallet
     })
   ),
-  composeEnhancers()
+  composeEnhancers(applyMiddleware(thunk))
 )
 
 const persistor = persistStore(store)

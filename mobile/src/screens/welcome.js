@@ -5,7 +5,6 @@ import { Image, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
-import RNSamsungBKS from 'react-native-samsung-bks'
 
 import { createAccount } from 'actions/Wallet'
 import Disclaimer from 'components/disclaimer'
@@ -23,19 +22,12 @@ class WelcomeScreen extends Component {
     }
   }
 
-  componentDidMount = async () => {
-    const useSamsungKeystore = await RNSamsungBKS.isSupported()
-    await this.props.setUseSamsungBks(useSamsungKeystore)
-  }
-
   handleCreateWallet = async () => {
     this.setState({ loading: true }, () => {
       setTimeout(() => {
         this.props.createAccount()
         this.setState({ loading: false })
-        this.props.navigation.navigate(
-          'Authentication'
-        )
+        this.props.navigation.navigate('Authentication')
       })
     })
   }
@@ -65,7 +57,9 @@ class WelcomeScreen extends Component {
           </Text>
         </View>
         <View style={styles.container}>
-          {this.props.wallet.accounts.length === 0 ? this.renderWalletButtons() : this.renderContinueButton}
+          {this.props.wallet.accounts.length === 0
+            ? this.renderWalletButtons()
+            : this.renderContinueButton()}
           <Disclaimer>
             <fbt desc="WelcomeScreen.disclaimer">
               By signing up you agree to the Terms of Use and Privacy Policy
@@ -82,10 +76,7 @@ class WelcomeScreen extends Component {
         <OriginButton
           size="large"
           type="primary"
-          title={fbt(
-            'Create a wallet',
-            'WelcomeScreen.createWalletButton'
-          )}
+          title={fbt('Create a wallet', 'WelcomeScreen.createWalletButton')}
           loading={this.state.loading}
           disabled={this.state.loading}
           onPress={this.handleCreateWallet}
@@ -123,8 +114,7 @@ const mapStateToProps = ({ wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  createAccount: () => dispatch(createAccount()),
-  setUseSamsungBks: value => dispatch(setUseSamsungBks(value))
+  createAccount: () => dispatch(createAccount())
 })
 
 export default connect(

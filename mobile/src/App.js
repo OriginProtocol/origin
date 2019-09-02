@@ -7,7 +7,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import Web3 from 'web3'
 
 import Store, { persistor } from './Store'
-import AppContainer from './Navigation'
+import AppContainer from './AppContainer'
 import NavigationService from './NavigationService'
 import setLanguage from 'utils/language'
 import { NETWORKS } from './constants'

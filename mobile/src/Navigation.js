@@ -1,23 +1,13 @@
 'use strict'
 
 import React from 'react'
-import { connect } from 'react-redux'
-import { Image, StatusBar } from 'react-native'
+import { Image } from 'react-native'
 
 import {
-  createAppContainer,
   createBottomTabNavigator,
   createStackNavigator,
   createSwitchNavigator
 } from 'react-navigation'
-
-import PushNotifications from './PushNotifications'
-
-// Utility components
-import AuthenticationGuard from 'components/authentication-guard'
-import UpdatePrompt from 'components/update-prompt'
-import BackupPrompt from 'components/backup-prompt'
-import NoInternetError from 'components/no-internet-error'
 
 // Onboarding
 import WelcomeScreen from 'screens/welcome'
@@ -115,7 +105,7 @@ const SettingsStack = createStackNavigator(
   }
 )
 
-const _MarketplaceApp = createSwitchNavigator(
+export const Navigation = createSwitchNavigator(
   {
     Onboarding: OnboardingStack,
     Backup: BackupScreen,
@@ -180,47 +170,3 @@ const _MarketplaceApp = createSwitchNavigator(
     }
   }
 )
-
-// Extend the main app navigator to render components that prompt as well
-// This is to avoid prompts coming up over other screens (i.e. auth guard)
-class MarketplaceApp extends React.Component {
-  static router = _MarketplaceApp.router
-
-  componentDidMount() {
-    const hasAccount = this.props.wallet.accounts.length > 0
-    const hasAuthentication =
-      this.props.settings.biometryType || this.props.settings.pin
-
-    if (!hasAccount || !hasAuthentication) {
-      this.props.navigation.navigate('Welcome')
-    }
-  }
-
-  render() {
-    if (this.props.marketplace.error) {
-      return <NoInternetError />
-    }
-
-    return (
-      <>
-        <StatusBar />
-        <AuthenticationGuard />
-        <PushNotifications />
-        <UpdatePrompt />
-        <BackupPrompt />
-        <_MarketplaceApp navigation={this.props.navigation} />
-      </>
-    )
-  }
-}
-
-const mapStateToProps = ({ marketplace, settings, wallet }) => {
-  return { marketplace, settings, wallet }
-}
-
-const App = connect(
-  mapStateToProps,
-  null
-)(MarketplaceApp)
-
-export default createAppContainer(App)

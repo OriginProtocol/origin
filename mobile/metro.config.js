@@ -10,7 +10,9 @@ const path = require('path')
 const externalPackages = {
   '@origin/graphql': path.resolve(__dirname + '/../packages/graphql/'),
   '@origin/contracts': path.resolve(__dirname + '/../packages/contracts/'),
-  'react-native-samsung-bks': path.resolve(__dirname + '/../packages/react-native-samsung-bks')
+  'react-native-samsung-bks': path.resolve(
+    __dirname + '/../packages/react-native-samsung-bks'
+  )
 }
 
 const extraNodeModules = {

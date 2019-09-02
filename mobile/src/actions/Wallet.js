@@ -2,6 +2,7 @@
 
 import { DeviceEventEmitter } from 'react-native'
 import { ethers } from 'ethers'
+import RNSamsungBKS from 'react-native-samsung-bks'
 
 import keyMirror from 'utils/keyMirror'
 import Store from '../Store'
@@ -16,7 +17,9 @@ export const WalletConstants = keyMirror(
     SET_ACCOUNT_SERVER_NOTIFICATIONS: null,
     SET_MESSAGING_KEYS: null,
     SET_IDENTITY: null,
-    SET_USE_SAMSUNG_BKS: null
+    // Samsung Blockchain Keystore integration
+    SET_SAMSUNG_BKS_SUPPORTED: null,
+    SET_SAMSUNG_BKS_SEEDHASH: null
   },
   'WALLET'
 )
@@ -112,9 +115,22 @@ export function setIdentity(payload) {
   }
 }
 
-export function setUseSamsungBks(payload) {
-  return {
-    type: WalletConstants.SET_USE_SAMSUNG_BKS,
-    payload
+export function setSamsungBksSupported() {
+  return async function(dispatch) {
+    const isSupported = await RNSamsungBKS.isSupported()
+    return dispatch({
+      type: WalletConstants.SET_SAMSUNG_BKS_SUPPORTED,
+      payload: isSupported
+    })
+  }
+}
+
+export function setSamsungBksSeedHash() {
+  return async function(dispatch) {
+    const seedHash = await RNSamsungBKS.getSeedHash()
+    return dispatch({
+      type: WalletConstants.SET_SAMSUNG_BKS_SEEDHASH,
+      payload: seedHash
+    })
   }
 }

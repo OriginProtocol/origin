@@ -12,7 +12,8 @@ const initialState = {
     ogn: 0
   },
   identities: {},
-  useSamsungBks: false
+  samsungBksSupported: false,
+  samsungBksSeedHash: null
 }
 
 export default function Wallet(state = initialState, action = {}) {
@@ -66,6 +67,18 @@ export default function Wallet(state = initialState, action = {}) {
           ...state.identities,
           [action.payload.address]: action.payload.identity
         }
+      }
+
+    case WalletConstants.SET_SAMSUNG_BKS_SUPPORTED:
+      return {
+        ...state,
+        samsungBksSupported: action.payload
+      }
+
+    case WalletConstants.SET_SAMSUNG_BKS_SEEDHASH:
+      return {
+        ...state,
+        samsungBksSeedHash: action.payload
       }
   }
 
