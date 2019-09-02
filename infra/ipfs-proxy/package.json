@@ -27,7 +27,7 @@
     "file-type": "12.2.0",
     "http-proxy": "1.17.0",
     "ipfs": "0.37.1",
-    "ipfsd-ctl": "0.44.2",
+    "ipfsd-ctl": "0.45.0",
     "is-json": "2.0.1",
     "logplease": "1.2.15",
     "per-env": "1.0.2",
