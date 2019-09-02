@@ -1,4 +1,5 @@
 export default {
+  networkId: 42,
   provider: 'https://kovan.infura.io',
   // providerWS: 'wss://kovan.infura.io/ws/v3/98df57f0748e455e871c48b96f2095b2',
   ipfsGateway: 'https://ipfs.staging.originprotocol.com',

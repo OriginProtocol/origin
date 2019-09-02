@@ -22,11 +22,11 @@ const reset = async (sellerOgn, reload = false) => {
   // clear cookies (for messaging)
   await clearCookies(page)
 
-  await page.evaluate((reload) => {
+  await page.evaluate(reload => {
     window.transactionPoll = 100
     window.sessionStorage.clear()
     window.location = '/#/'
-    /* Some tests require reload... e.g. to reset messaging 
+    /* Some tests require reload... e.g. to reset messaging
      * initialisation.
      */
     if (reload) {
@@ -613,13 +613,14 @@ function listingTests(autoSwap) {
 }
 
 function onboardingTests() {
-  describe('Complete onboarding once', function() {
+  describe('Complete onboarding', function() {
     before(async function() {
       this.timeout(10000)
-      const { seller } = await reset('100', true)
+      const { seller, buyer } = await reset('100', true)
       await page.evaluate(() => {
         window.location = '/#/'
       })
+      await changeAccount(page, buyer)
       await changeAccount(page, seller, true)
     })
 
@@ -641,16 +642,20 @@ function onboardingTests() {
       await waitForText(page, '0 of 2 MetaMask messages signed')
       await clickByText(page, 'Enable Origin Messaging', 'button')
 
-      await waitForText(page, 'Congratulations! You can now message other users')
+      await waitForText(
+        page,
+        'Congratulations! You can now message other users'
+      )
       await clickByText(page, 'Continue', 'a')
     })
   })
 }
 
 describe('Marketplace Dapp', function() {
-  this.timeout(6000)
+  this.timeout(10000)
   before(async function() {
     await page.evaluate(() => {
+      delete window.localStorage.noIdentity
       delete window.localStorage.performanceMode
       delete window.localStorage.proxyAccountsEnabled
       delete window.localStorage.relayerEnabled
@@ -669,6 +674,7 @@ describe('Marketplace Dapp with proxies enabled', function() {
   before(async function() {
     await page.evaluate(() => {
       window.localStorage.proxyAccountsEnabled = true
+      delete window.localStorage.noIdentity
       delete window.localStorage.performanceMode
       delete window.localStorage.relayerEnabled
       delete window.localStorage.debug
