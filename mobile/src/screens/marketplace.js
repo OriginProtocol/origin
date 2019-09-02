@@ -8,8 +8,7 @@ import {
   Modal,
   PanResponder,
   Platform,
-  StyleSheet,
-  View,
+  StyleSheet, View,
   ScrollView,
   Text,
   RefreshControl,
@@ -23,6 +22,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
 import { fbt } from 'fbt-runtime'
 import { ShareDialog } from 'react-native-fbsdk'
+import { Sentry } from 'react-native-sentry'
 
 import OriginButton from 'components/origin-button'
 import NotificationCard from 'components/notification-card'
@@ -247,7 +247,9 @@ class MarketplaceScreen extends Component {
         this.handleBridgeResponse(msgData, signature)
         console.debug('Got meta transaction: ', decodedTransaction)
       } else {
-        console.warn('Invalid meta transaction: ', decodedTransaction)
+        const errorMessage = `Invalid meta transaction ${decodedTransaction.functionName}`
+        console.warn(errorMessage)
+        Sentry.captureMessage(errorMessage)
       }
     } else if (currentRoute === 'Ready') {
       // Relayer failure fallback, if we are on the onboarding step where identity
@@ -294,15 +296,17 @@ class MarketplaceScreen extends Component {
 
   isValidMetaTransaction = data => {
     const validFunctions = [
+      'acceptOffer',
       'addData',
       'createListing',
       'createProxyWithSenderNonce',
       'emitIdentityUpdated',
       'finalize',
-      'swapAndMakeOffer',
       'makeOffer',
       'marketplaceFinalizeAndPay',
-      'updateListing'
+      'updateListing',
+      'withdrawListing',
+      'withdrawOffer'
     ]
     return validFunctions.includes(data.functionName)
   }
