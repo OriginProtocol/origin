@@ -42,6 +42,23 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void checkForMandatoryAppUpdate(final Promise promise) {
+      ScwService.ScwCheckForMandatoryAppUpdateCallback callback =
+          new ScwService.ScwCheckForMandatoryAppUpdateCallback() {
+	      @Override
+	      public void onMandatoryAppUpdateNeeded(boolean needed) {
+	          if (needed) {
+		      promise.resolve(ScwDeepLink.GALAXY_STORE);
+		  } else {
+		      promise.resolve(false);
+		  }
+	       }
+	   };
+
+    ScwService.getInstance().checkForMandatoryAppUpdate(callback);
+  }
+
+  @ReactMethod
   public void getAddressList(String hdPath, final Promise promise) {
     ScwService.ScwGetAddressListCallback callback = new ScwService.ScwGetAddressListCallback() {
 	@Override
