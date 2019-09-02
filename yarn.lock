@@ -1427,6 +1427,30 @@
     "@hapi/teamwork" "3.x.x"
     "@hapi/topo" "3.x.x"
 
+"@hapi/hapi@^18.3.2":
+  version "18.3.2"
+  resolved "https://registry.yarnpkg.com/@hapi/hapi/-/hapi-18.3.2.tgz#c625cf6473e51cea54cd50163112c4aaa547169b"
+  integrity sha512-UJogSyMPe4VFfzjQW5v2ixLvTLZLSfPs1XV/DRnAl2znzsGCaNJI+tgNxjM9lszOjEEkMfxLgoXZadk9exnIxw==
+  dependencies:
+    "@hapi/accept" "3.x.x"
+    "@hapi/ammo" "3.x.x"
+    "@hapi/boom" "7.x.x"
+    "@hapi/bounce" "1.x.x"
+    "@hapi/call" "5.x.x"
+    "@hapi/catbox" "10.x.x"
+    "@hapi/catbox-memory" "4.x.x"
+    "@hapi/heavy" "6.x.x"
+    "@hapi/hoek" "8.x.x"
+    "@hapi/joi" "15.x.x"
+    "@hapi/mimos" "4.x.x"
+    "@hapi/podium" "3.x.x"
+    "@hapi/shot" "4.x.x"
+    "@hapi/somever" "2.x.x"
+    "@hapi/statehood" "6.x.x"
+    "@hapi/subtext" "6.x.x"
+    "@hapi/teamwork" "3.x.x"
+    "@hapi/topo" "3.x.x"
+
 "@hapi/heavy@6.x.x":
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/@hapi/heavy/-/heavy-6.2.0.tgz#b6c30578e1f30ab6ca17a818772f11b1116ba8cc"
@@ -10514,10 +10538,10 @@ execa@^1.0.0:
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
 
-execa@^2.0.2:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/execa/-/execa-2.0.3.tgz#4b84301b33042cfb622771e886ed0b10e5634642"
-  integrity sha512-iM124nlyGSrXmuyZF1EMe83ESY2chIYVyDRZKgmcDynid2Q2v/+GuE7gNMl6Sy9Niwf4MC0DDxagOxeMPjuLsw==
+execa@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/execa/-/execa-2.0.4.tgz#2f5cc589c81db316628627004ea4e37b93391d8e"
+  integrity sha512-VcQfhuGD51vQUQtKIq2fjGDLDbL6N1DTQVpYzxZ7LPIXw3HqTuIz6uxRmpV1qf8i31LHf2kjiaGI+GdHwRgbnQ==
   dependencies:
     cross-spawn "^6.0.5"
     get-stream "^5.0.0"
@@ -13936,24 +13960,24 @@ ipfs@0.37.1, ipfs@^0.37.0, ipfs@^0.37.1:
     prom-client "^11.5.3"
     prometheus-gc-stats "~0.6.0"
 
-ipfsd-ctl@0.44.2:
-  version "0.44.2"
-  resolved "https://registry.yarnpkg.com/ipfsd-ctl/-/ipfsd-ctl-0.44.2.tgz#bb2bf20dd3bfbb7a17392b522e4a4cedb2ded865"
-  integrity sha512-JpQHVx5lhWViWBrEI54KVthkfEYTaldbXYZjDsLWASllc9pj0wO5faP5lFWKl1G+cS6aaukJDwPa7/myk1d03Q==
+ipfsd-ctl@0.45.0:
+  version "0.45.0"
+  resolved "https://registry.yarnpkg.com/ipfsd-ctl/-/ipfsd-ctl-0.45.0.tgz#0b4972b3a4625182c19274441e6d7cbe2cdbd2c9"
+  integrity sha512-zvvKeLSulu1+ZkiVdh0fcu73nl7Wt1mwa5tCBlbxyo4KJL31GA6O9PkCFsuD6S6dbZjtWQsJFExoRsV5g7CHLA==
   dependencies:
-    "@hapi/hapi" "^18.3.1"
+    "@hapi/hapi" "^18.3.2"
     boom "^7.3.0"
     debug "^4.1.1"
     detect-node "^2.0.4"
     dexie "^2.0.4"
-    execa "^2.0.2"
+    execa "^2.0.4"
     fs-extra "^8.1.0"
     hat "~0.0.3"
-    ipfs-http-client "^33.0.2"
+    ipfs-http-client "^34.0.0"
     joi "^14.3.1"
     lodash.clone "^4.5.0"
     lodash.defaults "^4.2.0"
-    lodash.defaultsdeep "^4.6.0"
+    lodash.defaultsdeep "^4.6.1"
     multiaddr "^6.1.0"
     safe-json-stringify "^1.2.0"
     superagent "^5.0.5"
@@ -17211,7 +17235,7 @@ lodash.defaults@^4.2.0:
   resolved "https://registry.yarnpkg.com/lodash.defaults/-/lodash.defaults-4.2.0.tgz#d09178716ffea4dde9e5fb7b37f6f0802274580c"
   integrity sha1-0JF4cW/+pN3p5ft7N/bwgCJ0WAw=
 
-lodash.defaultsdeep@^4.6.0:
+lodash.defaultsdeep@^4.6.1:
   version "4.6.1"
   resolved "https://registry.yarnpkg.com/lodash.defaultsdeep/-/lodash.defaultsdeep-4.6.1.tgz#512e9bd721d272d94e3d3a63653fa17516741ca6"
   integrity sha512-3j8wdDzYuWO3lM3Reg03MuQR957t287Rpcxp1njpEa8oDrikb+FwGdW3n+FELh/A6qib6yPit0j/pv9G/yeAqA==
