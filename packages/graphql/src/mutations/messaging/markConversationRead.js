@@ -1,10 +1,10 @@
 import contracts from '../../contracts'
 
-import { getAllMessages } from '../../resolvers/messaging/Conversation'
+import { getMessages } from '../../resolvers/messaging/Conversation'
 
 export default async function markConversationRead(_, { id }) {
   if (!id) return false
-  const messages = await getAllMessages(id)
+  const messages = await getMessages(id)
   if (!messages) return false
   messages.forEach(({ hash }) =>
     contracts.messaging.set({ hash, status: 'read' })

@@ -1,56 +1,45 @@
 // https://github.com/karl-run/react-bottom-scroll-listener/blob/master/lib/index.js
-import React, { Component } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import debounce from 'lodash/debounce'
 
-class BottomScrollListener extends Component {
-  constructor(props) {
-    super(props)
+const BottomScrollListener = (props) => {
 
-    if (props.debounce) {
-      this.handleOnScroll = debounce(
-        this.handleOnScroll.bind(this),
-        props.debounce,
-        { trailing: true }
-      )
-    } else {
-      this.handleOnScroll = this.handleOnScroll.bind(this)
-    }
-  }
+  const callbackWrapper = props.debounce ? debounce : f => f
 
-  componentDidMount() {
-    document.addEventListener('scroll', this.handleOnScroll)
-  }
+  const rebindListenerOnProps = [props.hasMore, props.debounce, props.onTop, props.offset]
 
-  componentWillUnmount() {
-    document.removeEventListener('scroll', this.handleOnScroll)
-  }
-
-  handleOnScroll() {
+  const onScrollListener = useCallback(callbackWrapper(() => {
     const scrollNode = document.scrollingElement || document.documentElement
 
     if (
-      scrollNode.scrollHeight - this.props.offset <=
+      scrollNode.scrollHeight - props.offset <=
         scrollNode.scrollTop + window.innerHeight &&
-      this.props.hasMore
+      props.hasMore
     ) {
-      this.props.onBottom()
+      props.onBottom()
     }
-  }
+  }, props.debounce, { trailing: true }), rebindListenerOnProps)
 
-  render() {
-    window.requestAnimationFrame(() => {
-      if (
-        document.body.clientHeight < window.innerHeight &&
-        this.props.ready &&
-        this.props.hasMore
-      ) {
-        this.props.onBottom()
-      }
-    })
+  useEffect(() => {
+    document.addEventListener('scroll', onScrollListener)
 
-    return !this.props.children ? null : <div>{this.props.children}</div>
-  }
+    return () => {
+      document.removeEventListener('scroll', onScrollListener)
+    }
+  }, rebindListenerOnProps)
+
+  window.requestAnimationFrame(() => {
+    if (
+      document.body.clientHeight < window.innerHeight &&
+      props.ready &&
+      props.hasMore
+    ) {
+      props.onBottom()
+    }
+  })
+
+  return !props.children ? null : <div>{props.children}</div>
 }
 
 BottomScrollListener.defaultProps = {

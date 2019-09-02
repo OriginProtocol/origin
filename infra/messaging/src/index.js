@@ -67,7 +67,7 @@ app.get('/', async (req, res) => {
 })
 
 app.get('/accounts', async (req, res) => {
-  const count = db.Registry.count()
+  const count = await db.Registry.count()
 
   res.send({ count })
 })
@@ -132,6 +132,7 @@ app.post('/accounts/:address', async (req, res) => {
     if (!entry || entry.signature != signature) {
       await db.Registry.upsert({ ethAddress: address, data, signature })
     }
+
     return res.status(200).send(address)
   }
   res.statusMessage = 'Cannot verify signature of registry'
@@ -141,6 +142,7 @@ app.post('/accounts/:address', async (req, res) => {
 // Fetch basic information about conversations for an account
 app.get('/conversations/:address', async (req, res) => {
   let { address } = req.params
+  const { after, before } = req.query
 
   if (!Web3.utils.isAddress(address)) {
     res.statusMessage = `Address '${address}' is not a valid Ethereum address`
@@ -150,20 +152,43 @@ app.get('/conversations/:address', async (req, res) => {
 
   address = Web3.utils.toChecksumAddress(address)
 
+  // Limit to 10 conversations per query
+  const limit = after ? undefined : 10
+
+  const conversationWhere = {}
+  const constraints = {}
+  if (after) {
+    constraints[db.Sequelize.Op.gt] = new Date(after)
+  }
+
+  if (before) {
+    constraints[db.Sequelize.Op.lt] = new Date(before)
+  }
+
+  if (before || after) {
+    conversationWhere.updatedAt = constraints
+  }
+
   const convs = await db.Conversee.findAll({
     where: { ethAddress: address },
-    include: [{ model: db.Conversation }]
+    include: [{
+      model: db.Conversation,
+      where: conversationWhere
+    }],
+    order: [[db.Conversation, 'updatedAt', 'DESC']],
+    limit
   })
 
   if (!convs) {
-    return res.status(204).end()
+    return res.status(204).send([])
   }
 
   res.status(200).send(
     convs.map(c => {
       return {
         id: c.Conversation.externalId,
-        count: c.Conversation.messageCount
+        count: c.Conversation.messageCount,
+        timestamp: c.Conversation.updatedAt
       }
     })
   )
@@ -210,8 +235,7 @@ async function getMessages({ conversationId, after, before, isKeys }) {
     ],
     order: [['conversationIndex', 'DESC']],
     where,
-    limit,
-    offset: 0
+    limit
   })
 
   return (messages || []).map(m => {
@@ -231,13 +255,12 @@ async function getMessages({ conversationId, after, before, isKeys }) {
 // Get all messages of type 'key' in a room/conversation
 app.get('/messages/:conversationId/keys', async (req, res) => {
   const messages = await getMessages({
-    ...req.params,
-    ...req.query,
+    conversationId: req.params.conversationId,
     isKeys: true
   })
 
   if (!messages.length) {
-    return res.status(204).end()
+    return res.status(204).send([])
   }
 
   res.status(200).send(messages)
@@ -246,13 +269,13 @@ app.get('/messages/:conversationId/keys', async (req, res) => {
 // Get all messages in a room/conversation
 app.get('/messages/:conversationId', async (req, res) => {
   const messages = await getMessages({
-    ...req.params,
+    conversationId: req.params.conversationId,
     ...req.query,
     isKeys: false
   })
 
   if (!messages.length) {
-    return res.status(204).end()
+    return res.status(204).send([])
   }
 
   res.status(200).send(messages)

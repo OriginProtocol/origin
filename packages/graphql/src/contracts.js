@@ -255,7 +255,8 @@ export function setNetwork(net, customConfig) {
     context.messaging = OriginMessaging({
       ...MessagingConfig,
       web3,
-      mobileBridge: context.mobileBridge
+      mobileBridge: context.mobileBridge,
+      pubsub: pubsub
     })
   }
 

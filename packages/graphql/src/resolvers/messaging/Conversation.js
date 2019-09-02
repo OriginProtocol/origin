@@ -1,6 +1,8 @@
 import contracts from '../../contracts'
 
 import sortBy from 'lodash/sortBy'
+import { withFilter } from 'graphql-subscriptions'
+import pubsub from '../../utils/pubsub'
 
 function isEnabled() {
   return contracts.messaging.pub_sig &&
@@ -16,46 +18,49 @@ Get started with messaging in two steps. First, you will use your Ethereum walle
 
 const congratsMessage = `Congratulations! You can now message other users on Origin. Why not start by taking a look around and telling us what you think about our DApp?`
 
-export async function getAllMessages(conversationId) {
-  let messages =
-    (await contracts.messaging.getAllMessages(conversationId)) || []
-
-  messages = sortBy(messages, m => m.msg.created)
+export async function getMessages(conversationId, { after, before } = {}) {
+  const messages =
+    (await contracts.messaging.getMessages(conversationId, { after, before })) || []
 
   const supportAccount = contracts.config.messagingAccount
   if (supportAccount && conversationId === supportAccount) {
-    const created = messages.length
-      ? messages[0].msg.created - 1
-      : new Date('01-01-2017')
-    if (isEnabled()) {
+    const hasInjectedMessages = messages.find(x => x.index < 0)
+
+    if (!hasInjectedMessages) {
+      const created = messages.length
+        ? messages[0].msg.created - 1
+        : new Date('01-01-2017')
+      if (isEnabled()) {
+        messages.unshift({
+          msg: { content: congratsMessage, created },
+          hash: 'origin-congrats-message',
+          address: supportAccount,
+          index: -1
+        })
+      }
       messages.unshift({
-        msg: { content: congratsMessage, created },
-        hash: 'origin-congrats-message',
+        msg: { content: welcomeMessage, created },
+        hash: 'origin-welcome-message',
         address: supportAccount,
-        index: -1
+        index: -2
       })
     }
-    messages.unshift({
-      msg: { content: welcomeMessage, created },
-      hash: 'origin-welcome-message',
-      address: supportAccount,
-      index: -2
-    })
   }
 
   return messages.map(m => getMessage(m))
 }
 
 export async function totalUnread(account) {
-  const messages = await getAllMessages(account)
-  return messages.reduce((m, o) => {
-    const addr = o.address || ''
-    if (addr.toLowerCase() !== account.toLowerCase()) return m
-    return m + (o.status === 'unread' ? 1 : 0)
-  }, 0)
+  // const messages = await getMessages(account)
+  // return messages.reduce((m, o) => {
+  //   const addr = o.address || ''
+  //   if (addr.toLowerCase() !== account.toLowerCase()) return m
+  //   return m + (o.status === 'unread' ? 1 : 0)
+  // }, 0)
+  return await contracts.messaging.getUnreadCount(account)
 }
 
-function getMessage(message) {
+export function getMessage(message) {
   if (!message) return null
   let status = contracts.messaging.getStatus(message)
   if (message.hash === 'origin-welcome-message' && !isEnabled()) {
@@ -71,10 +76,13 @@ function getMessage(message) {
 }
 
 export default {
-  messages: async account => await getAllMessages(account.id),
+  messages: async (account) => await getMessages(account.id, {
+    before: account.before,
+    after: account.after
+  }),
   lastMessage: account =>
     new Promise(async resolve => {
-      const messages = await getAllMessages(account.id)
+      const messages = await getMessages(account.id)
       if (!messages) return resolve(null)
       resolve(getMessage(messages[messages.length - 1]))
     }),

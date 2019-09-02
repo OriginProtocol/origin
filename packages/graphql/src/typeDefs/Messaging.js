@@ -16,8 +16,8 @@ module.exports = `
     synced: Boolean
     pubKey: String
     pubSig: String
-    conversations: [Conversation]
-    conversation(id: String!): Conversation
+    conversations(before: Int, after: Int): [Conversation]
+    conversation(id: String!, before: Int, after: Int): Conversation
     canConverseWith(id: String!): Boolean
     forwardTo(id: String!): String
     totalUnread: Int

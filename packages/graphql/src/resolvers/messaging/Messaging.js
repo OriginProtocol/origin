@@ -18,8 +18,8 @@ async function getMyConvs() {
   return rawConvos
 }
 
-async function convosWithSupport() {
-  const rawConvos = await getMyConvs()
+async function convosWithSupport({ before, after }) {
+  const rawConvos = await getMyConvs({ before, after })
   return Object.keys(rawConvos).map(id => ({
     id,
     timestamp: Math.round(rawConvos[id] / 1000)
@@ -28,24 +28,31 @@ async function convosWithSupport() {
 
 export default {
   enabled: () => isEnabled(),
-  conversations: () => convosWithSupport(),
+  conversations: (_, { before, after }) => convosWithSupport({ before, after }),
   conversation: (_, args) =>
     new Promise(async resolve => {
       const convos = await getMyConvs()
       if (!convos[args.id]) {
         resolve(null)
       }
-      resolve({ id: args.id, timestamp: Math.round(convos[args.id] / 1000) })
+
+      resolve({
+        id: args.id, 
+        timestamp: Math.round(convos[args.id] / 1000),
+        before: args.before,
+        after: args.after
+      })
     }),
   totalUnread: async () => {
     // Show 1 unread when messaging disabled. Intro message from Origin Support
-    if (!isEnabled()) {
-      return 1
-    }
-    const convos = await contracts.messaging.getMyConvs()
-    const ids = Object.keys(convos)
-    const allUnreads = await Promise.all(ids.map(c => totalUnread(c)))
-    return allUnreads.reduce((m, o) => m + o, 0)
+    return 1
+    // if (!isEnabled()) {
+    //   return 1
+    // }
+    // const convos = await contracts.messaging.getMyConvs()
+    // const ids = Object.keys(convos)
+    // const allUnreads = await Promise.all(ids.map(c => totalUnread(c)))
+    // return allUnreads.reduce((m, o) => m + o, 0)
   },
   synced: () => {
     if (contracts.messaging.globalKeyServer) return true

@@ -57,7 +57,8 @@ class Messaging {
     ecies,
     messagingNamespace,
     globalKeyServer,
-    personalSign = true
+    personalSign = true,
+    pubsub
   }) {
     this.contractService = contractService
     this.web3 = this.contractService.web3
@@ -77,6 +78,7 @@ class Messaging {
     // Use cookie storage
     this.currentStorage = this.cookieStorage
     this._registryCache = {}
+    this.pubsub = pubsub
   }
 
   onAccount(accountKey) {
@@ -463,12 +465,27 @@ class Messaging {
   onMessageUpdate(entry) {
     debug('we got a update entry:', entry)
     const { content, conversationId, conversationIndex } = entry
+    const roomId = conversationId
+    const remoteEthAddress = this.getRecipients(roomId).find(
+      addr => addr !== this.account_key
+    )
+
     if (content && conversationId) {
       if (!this.convs[conversationId]) {
-        this.getRoom(conversationId)
+        (async () => {
+          await this.getRoom(conversationId, { keys: true })
+          const convObj = await this.getRoom(conversationId)
+          this.pubsub.publish('MESSAGE_ADDED', {
+            messageAdded: {
+              conversationId: remoteEthAddress,
+              roomId,
+              message: convObj.messages[0]
+            }
+          })
+        })()
       } else {
         const convObj = this.convs[conversationId]
-        if (conversationIndex != convObj.conversationIndex + 1) {
+        if (conversationIndex === (convObj.lastConversationIndex + 1)) {
           this.processContent(
             entry.content,
             convObj,
@@ -479,9 +496,19 @@ class Messaging {
                 entry,
                 address
               )
+
               convObj.messages.push(message)
               debug('message:', message)
               this.events.emit('msg', message)
+
+              this.pubsub.publish('MESSAGE_ADDED', {
+                messageAdded: {
+                  conversationId: remoteEthAddress,
+                  roomId,
+                  message
+                }
+              })
+
             },
             (msg, address) => {
               this.events.emit(
@@ -494,7 +521,23 @@ class Messaging {
           convObj.messageCount = entry.conversationIndex + 1
         } else {
           // we are missing a message
-          this.getRoom(conversationId)
+          const lastConversationIndex = convObj.lastConversationIndex
+
+          (async () => {
+            const updatedConvObj = await this.getRoom(conversationId)
+            updatedConvObj.messages
+              .filter(message => message.conversationId > lastConversationIndex)
+              // TODO: Should this be sorted before sending?
+              .map(message => {
+                this.pubsub.publish('MESSAGE_ADDED', {
+                  messageAdded: {
+                    conversationId: remoteEthAddress,
+                    roomId,
+                    message
+                  }
+                })
+              })
+          })()
         }
       }
     }
@@ -514,14 +557,47 @@ class Messaging {
     }
   }
 
-  async getRoom(roomId) {
-    const convObj = { keys: [], messages: [] }
+  async getRoom(roomId, { keys, before, after } = {}) {
+    let convObj = {
+      keys: [],
+      messages: [],
+      lastConversationIndex: 0,
+      messageCount: 0,
+      loaded: false
+    }
+
+    const existingConv = this.convs[roomId]
+    if (existingConv) {
+      convObj = {
+        ...existingConv,
+        keys: [...existingConv.keys],
+        messages: [...existingConv.messages]
+      }
+    }
+
     this.convs[roomId] = convObj
 
+    const url = new URL(`${this.globalKeyServer}/messages/${roomId}${keys ? '/keys': ''}`)
+
+    if (!keys) {
+      before && url.searchParams.set('before', before)
+      after && url.searchParams.set('after', after)
+
+      if (!after && !before) {
+        // Clear messages if pagination is not mentioned
+        convObj.messages = []
+      }
+    }
+
     const messages = await limiter.schedule(async () => {
-      const res = await fetch(`${this.globalKeyServer}/messages/${roomId}`, {
+      const res = await fetch(url.toString(), {
         headers: { 'content-type': 'application/json' }
       })
+
+      if (res.status === 204) {
+        return []
+      }
+
       return await res.json()
     })
 
@@ -539,9 +615,25 @@ class Messaging {
           this.events.emit('emsg', this.toMessage(msg, roomId, entry, address))
         }
       )
-      convObj.lastConversationIndex = entry.conversationIndex
-      convObj.messageCount = entry.conversationIndex + 1
+
+      if (convObj.lastConversationIndex < entry.conversationIndex) {
+        convObj.lastConversationIndex = entry.conversationIndex
+      }
+
+      convObj.messageCount = entry.lastConversationIndex + 1
     })
+
+    // Sort things in descending order
+    convObj.messages = convObj.messages
+      .sort((m1, m2) => {
+        return m2.index - m1.index
+      })
+
+    if (!keys && !convObj.loaded) {
+      convObj.loaded = true
+    }
+
+    return convObj
   }
 
   getMessagesCount(remoteEthAddress) {
@@ -589,16 +681,24 @@ class Messaging {
     }
   }
 
-  async loadMyConvs() {
+  async loadMyConvs({ after, before } = {}) {
     debug('loading convs:')
-    for (const conv of await this.fetchConvs()) {
-      // TODO: make use of the count and do actual lazy loading!
-      this.getRoom(conv.id)
+    const conversations = await this.fetchConvs({ after, before })
+
+    for (const conv of conversations) {
+      // Populate keys and messages for all loaded conversations
+      (async () => {
+        await this.getRoom(conv.id, { keys: true })
+        await this.getRoom(conv.id)
+      })()
     }
-    this.listenForUpdates()
+
+    if (!after && !before) {
+      this.listenForUpdates()
+    }
   }
 
-  async getMyConvs() {
+  async getMyConvs({ after, before } = {}) {
     const outConvs = {}
     for (const id of Object.keys(this.convs)) {
       const recipients = this.getRecipients(id)
@@ -614,14 +714,31 @@ class Messaging {
     return outConvs
   }
 
-  getAllMessages(remoteEthAddress) {
+  async getMessages(remoteEthAddress, { before, after } = {}) {
     const roomId = this.generateRoomId(this.account_key, remoteEthAddress)
-    const convObj = this.convs[roomId]
+    let convObj = this.convs[roomId]
 
-    if (convObj) {
-      return convObj.messages
+    if (!convObj) {
+      convObj = await this.getRoom(roomId, {
+        keys: true
+      })
+      convObj = await this.getRoom(roomId, {
+        before,
+        after
+      })
+    } else if (before || after) {
+      convObj = await this.getRoom(roomId, {
+        before,
+        after
+      })
     }
-    return []
+
+    return convObj.messages
+  }
+
+  async getUnreadCount(remoteEthAddress) {
+    // TODO
+    return 10
   }
 
   ecEncrypt(text, pubKey) {
@@ -691,13 +808,13 @@ class Messaging {
     }
 
     const roomId = this.generateRoomId(this.account_key, remoteEthAddress)
-    const convObj = this.convs[roomId] || { keys: [], messageCount: 0 }
+    const convObj = this.convs[roomId] || { keys: [], lastConversationIndex: 0 }
 
     if (!convObj.keys.length) {
       //
       // a conversation haven't even been started yet
       //
-      const conversationIndex = convObj ? convObj.messageCount : 0
+      const conversationIndex = convObj.lastConversationIndex + 1
       const encryptKey = cryptoRandomString({ length: 32 }).toString('hex')
 
       const keysContent = {
@@ -725,6 +842,10 @@ class Messaging {
       if (result) {
         convObj.keys.push(encryptKey)
         convObj.messageCount += 1
+
+        if (convObj.lastConversationIndex < conversationIndex) {
+          convObj.lastConversationIndex = conversationIndex
+        }
       }
     }
     return convObj
@@ -780,7 +901,7 @@ class Messaging {
     this._sending_message = true
     // include a random iv str so that people can't match strings of the same message
     if (
-      await this.addRoomMsg(roomId, convObj.messageCount, {
+      await this.addRoomMsg(roomId, convObj.lastConversationIndex + 1, {
         type: 'msg',
         emsg: encmsg,
         i: ivStr,

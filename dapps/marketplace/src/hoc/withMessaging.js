@@ -5,7 +5,7 @@ import query from 'queries/Conversations'
 
 function withMessaging(WrappedComponent) {
   const withMessaging = props => {
-    const { error, data, loading } = useQuery(query, { pollInterval: 500 })
+    const { error, data, loading } = useQuery(query)
     if (error) console.error(error)
 
     return (

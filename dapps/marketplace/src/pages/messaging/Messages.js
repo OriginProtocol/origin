@@ -65,16 +65,6 @@ class Messages extends Component {
 
   getSortedConversations() {
     return get(this.props, 'messaging.conversations', [])
-      .sort((a, b) => {
-        const alm = a.lastMessage || { timestamp: Date.now() }
-        const blm = b.lastMessage || { timestamp: Date.now() }
-
-        return alm.timestamp > blm.timestamp ? -1 : 1
-      })
-      .filter(
-        conv =>
-          conv.id !== this.props.wallet && conv.id !== this.props.walletProxy
-      )
   }
 
   goBack() {
@@ -105,7 +95,7 @@ class Messages extends Component {
 
     if (messagingError) {
       return <QueryError query={query} error={messagingError} />
-    } else if (messagingLoading) {
+    } else if (messagingLoading && !messaging) {
       return <LoadingSpinner />
     } else if (!messaging) {
       return (

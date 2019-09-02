@@ -9,12 +9,6 @@ export default gql`
         id
         timestamp
         totalUnread
-        messages {
-          status
-          address
-          content
-          timestamp
-        }
         lastMessage {
           address
           media {
