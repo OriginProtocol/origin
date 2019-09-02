@@ -1,6 +1,7 @@
 import contracts from '../contracts'
 import IdentityProxyContract from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import createDebug from 'debug'
+import mineBlock from '../utils/mineBlock'
 
 const debug = createDebug('origin:relayer:')
 const addr = address => (address ? address.substr(0, 8) : '')
@@ -103,9 +104,7 @@ export default async function relayerHelper({ tx, from, proxy, to }) {
   })
 
   if (contracts.automine) {
-    setTimeout(() => {
-      contracts.web3.currentProvider.send({ method: 'evm_mine' }, () => {})
-    }, contracts.automine)
+    setTimeout(() => mineBlock(contracts.web3), contracts.automine)
   }
 
   const data = await response.json()

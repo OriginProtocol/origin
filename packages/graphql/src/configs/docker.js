@@ -25,6 +25,7 @@ const GRAPHQL_HOST = HOST || 'graphql'
 const MESSAGING_HOST = HOST || 'messaging'
 
 const config = {
+  networkId: 999,
   provider: get(process.env, 'PROVIDER_URL', `http://${SERVICES_HOST}:8545`),
   providerWS: get(process.env, 'PROVIDER_WS_URL', `ws://${SERVICES_HOST}:8545`),
   ipfsGateway: get(process.env, 'IPFS_GATEWAY_URL', `http://${IPFS_HOST}:9999`),
@@ -50,6 +51,9 @@ const config = {
   arbitrator: addresses.Arbitrator,
   OriginToken: addresses.OGN,
   V00_Marketplace: addresses.Marketplace,
+  V00_Marketplace_Epoch: addresses.MarketplaceEpoch,
+  V01_Marketplace: addresses.Marketplace_V01,
+  V01_Marketplace_Epoch: addresses.MarketplaceEpoch_V01,
   IdentityEvents: addresses.IdentityEvents,
   DaiExchange: addresses.UniswapDaiExchange,
   ProxyFactory: addresses.ProxyFactory,

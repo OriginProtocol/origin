@@ -21,6 +21,7 @@ import withWallet from 'hoc/withWallet'
 import withWeb3 from 'hoc/withWeb3'
 import withIdentity from 'hoc/withIdentity'
 import withConfig from 'hoc/withConfig'
+import withMessagingStatus from 'hoc/withMessagingStatus'
 
 import { fbt } from 'fbt-runtime'
 
@@ -33,6 +34,10 @@ class Buy extends Component {
 
   hasAllowance() {
     return get(this.props, 'tokenStatus.hasAllowance', false)
+  }
+
+  hasMessagingEnabled() {
+    return get(this.props, 'messagingStatus.enabled', false)
   }
 
   render() {
@@ -50,7 +55,7 @@ class Buy extends Component {
     )
 
     const hasIdentity = localStorage.noIdentity || this.props.identity
-    if (!hasIdentity || !this.props.wallet) {
+    if (!hasIdentity || !this.props.wallet || !this.hasMessagingEnabled()) {
       action = (
         <UserActivationLink
           className={this.props.className}
@@ -445,7 +450,9 @@ class Buy extends Component {
 }
 
 export default withConfig(
-  withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy)))))
+  withMessagingStatus(
+    withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy)))))
+  )
 )
 
 require('react-styl')(`

@@ -118,6 +118,12 @@ export async function createAccount(gqlClient, ogn) {
   })
   await transactionConfirmed(sendTx.data.sendFromNode.id, gqlClient)
   if (ogn) {
+    const accounts = mnemonicToAccounts()
+    await gqlClient.mutate({
+      mutation: ImportWalletsMutation,
+      variables: { accounts: [accounts[0]] }
+    })
+
     const res = await gqlClient.mutate({
       mutation: TransferTokenMutation,
       variables: {
@@ -343,6 +349,9 @@ export default async function populate(gqlClient, log, done) {
     value: '100000'
   })
   log('Approved DAI on Uniswap Dai Exchange')
+
+  await mutate(SendFromNodeMutation, NodeAccount, { to: Admin, value: '1' })
+  log('Sent eth to Admin')
 
   await mutate(UniswapAddLiquidity, Admin, {
     exchange: UniswapDaiExchange,
