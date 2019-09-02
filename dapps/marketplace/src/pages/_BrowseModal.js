@@ -28,8 +28,9 @@ class BrowserModal extends Component {
               </h5>
               <div>
                 <fbt desc="BrowseModal.description">
-                  To avoid problems with Origin Marketplace you should lower your shields
-                </fbt>{' '}
+                  To avoid problems with Origin Marketplace you should lower
+                  your shields
+                </fbt>
               </div>
             </div>
           </div>
