@@ -10,7 +10,6 @@ import withIsMobile from 'hoc/withIsMobile'
 import Nav from './nav/Nav'
 import TranslationModal from './_TranslationModal'
 import MobileModal from './_MobileModal'
-import BrowseModal from './_BrowseModal'
 import Footer from './_Footer'
 
 import LoadingSpinner from 'components/LoadingSpinner'
@@ -37,7 +36,6 @@ import AboutToken from './about/AboutTokens'
 import AboutPayments from './about/AboutPayments'
 import AboutCrypto from './about/AboutCrypto'
 import { applyConfiguration } from 'utils/marketplaceCreator'
-//import { detectBraveBrowser } from 'utils/braveBrowser'
 import CurrencyContext from 'constants/CurrencyContext'
 import OpenApp from './OpenApp'
 
@@ -46,16 +44,8 @@ class App extends Component {
     hasError: false,
     displayMobileModal: false,
     mobileModalDismissed: false,
-    displayBraveModal: false,
-    isBrave: undefined,
-    braveModalDismissed: false,
     footer: false,
     skipOnboardRewards: false
-  }
-
-  async componentDidMount() {
-    // todo implement this
-    //this.setState({ isBrave: await detectBraveBrowser() })
   }
 
   componentDidUpdate() {
@@ -63,30 +53,13 @@ class App extends Component {
       window.scrollTo(0, 0)
     }
 
-    const {
-      displayMobileModal,
-      mobileModalDismissed,
-      isBrave,
-      braveModalDismissed,
-      displayBraveModal
-    } = this.state
-
-    // brave check has not run yet exit
-    if (isBrave === undefined) {
-      return
-    }
-
     if (
       !this.props.web3Loading &&
       !this.props.web3.walletType &&
-      displayMobileModal === false &&
-      !mobileModalDismissed & (!isBrave || (isBrave && braveModalDismissed))
+      this.state.displayMobileModal === false &&
+      !this.state.mobileModalDismissed
     ) {
       this.setState({ displayMobileModal: true })
-    }
-
-    if (isBrave && displayBraveModal === false && !braveModalDismissed) {
-      this.setState({ displayBraveModal: true })
     }
   }
 
@@ -141,8 +114,7 @@ class App extends Component {
           <Nav
             onGetStarted={() =>
               this.setState({
-                mobileModalDismissed: false,
-                braveModalDismissed: false
+                mobileModalDismissed: false
               })
             }
             onShowFooter={() => this.setState({ footer: true })}
@@ -214,16 +186,6 @@ class App extends Component {
               this.setState({
                 displayMobileModal: false,
                 mobileModalDismissed: true
-              })
-            }
-          />
-        )}
-        {this.state.displayBraveModal && (
-          <BrowseModal
-            onClose={() =>
-              this.setState({
-                displayBraveModal: false,
-                braveModalDismissed: true
               })
             }
           />
