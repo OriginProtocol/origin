@@ -52,3 +52,25 @@ export function truncate(data, chars = 5) {
 export function generateHdPath(index) {
   return `m/44'/60'/0'/0/${index}`
 }
+
+/* Determines if a transaction is a valid meta transaction fomr the decoded
+ * transaction data. This only checks the function name.
+ *
+ * TODO: add contract address validation
+ */
+export function isValidMetaTransaction(data) {
+  const validFunctions = [
+    'acceptOffer',
+    'addData',
+    'createListing',
+    'createProxyWithSenderNonce',
+    'emitIdentityUpdated',
+    'finalize',
+    'makeOffer',
+    'marketplaceFinalizeAndPay',
+    'updateListing',
+    'withdrawListing',
+    'withdrawOffer'
+  ]
+  return validFunctions.includes(data.functionName)
+}

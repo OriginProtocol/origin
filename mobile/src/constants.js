@@ -9,12 +9,19 @@ class Enum extends Array {
   }
 }
 
-export const ACCOUNT_MAPPING = 'ACCOUNT_MAPPING'
 export const DEFAULT_NOTIFICATION_PERMISSIONS = {
   alert: true,
   badge: true,
   sound: true
 }
+
+// Default user agents to be used by the WebView
+export const DEFAULT_IOS_UA =
+  'Mozilla/5.0 (iPhone; CPU iPhone OS 10_1 like Mac OS X) AppleWebKit/602.2.14 (KHTML, like Gecko) Version/10.0 Mobile/14B72 Safari/602.1'
+
+export const DEFAULT_ANDROID_UA =
+  'Mozilla/5.0 (Linux; Android 8.0.0; SM-G960F Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36'
+
 export const WALLET_INFO = 'WALLET_INFO'
 export const WALLET_PASSWORD = 'WALLET_PASSWORD'
 export const WALLET_STORE = 'WALLET_STORE'
@@ -24,13 +31,17 @@ export const ETH_NOTIFICATION_TYPES = new Enum('APN', 'FCM')
 export const BALANCE_POLL_INTERVAL = 5000
 
 export const NETWORKS = [
-  { id: 1, name: 'Mainnet', dappUrl: 'https://shoporigin.com' },
+  { id: 1, name: 'Mainnet', dappUrl: 'https://shoporigin.com/#/' },
   {
     id: 4,
     name: 'Rinkeby',
-    dappUrl: 'https://dapp.staging.originprotocol.com'
+    dappUrl: 'https://dapp.staging.originprotocol.com/#/'
   },
-  { id: 2222, name: 'Origin', dappUrl: 'https://dapp.dev.originprotocol.com' }
+  {
+    id: 2222,
+    name: 'Origin',
+    dappUrl: 'https://dapp.dev.originprotocol.com/#/'
+  }
 ]
 
 // Push additional networks if in development
