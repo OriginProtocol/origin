@@ -77,6 +77,7 @@ const Gallery = ({ pics = [] }) => {
   const [zoom, setZoom] = useState(false)
   const thumbnails = useRef()
   useEffect(() => {
+    if (!thumbnails || !thumbnails.current) return
     const img = thumbnails.current.querySelector(`img:nth-child(${active + 1})`)
     thumbnails.current.scrollTo({
       left:
