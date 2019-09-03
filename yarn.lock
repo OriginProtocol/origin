@@ -9581,10 +9581,10 @@ eslint-plugin-flowtype@3.13.0:
   dependencies:
     lodash "^4.17.15"
 
-eslint-plugin-flowtype@4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-flowtype/-/eslint-plugin-flowtype-4.2.0.tgz#a89ac991eef6753226eb8871261e266645aca4b9"
-  integrity sha512-mqf6AbQCP6N8Bk+ryXYwxt6sj3RT7i3kt8JOOx7WOQNlZtsLxqvnkXRRrToFHcN52E5W9c/p3UfNxCMsfENIJA==
+eslint-plugin-flowtype@4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-flowtype/-/eslint-plugin-flowtype-4.3.0.tgz#06d0837ac341caf369e7e6dbb112dd7fd21acf17"
+  integrity sha512-elvqoadMHnYqSYN1YXn02DR7SFW8Kc2CLe8na3m2GdQPQhIY+BgCd2quVJ1AbW3aO0zcyE9loVJ7Szy8A/xlMA==
   dependencies:
     lodash "^4.17.15"
 
@@ -13960,10 +13960,10 @@ ipfs@0.37.1, ipfs@^0.37.0, ipfs@^0.37.1:
     prom-client "^11.5.3"
     prometheus-gc-stats "~0.6.0"
 
-ipfsd-ctl@0.45.0:
-  version "0.45.0"
-  resolved "https://registry.yarnpkg.com/ipfsd-ctl/-/ipfsd-ctl-0.45.0.tgz#0b4972b3a4625182c19274441e6d7cbe2cdbd2c9"
-  integrity sha512-zvvKeLSulu1+ZkiVdh0fcu73nl7Wt1mwa5tCBlbxyo4KJL31GA6O9PkCFsuD6S6dbZjtWQsJFExoRsV5g7CHLA==
+ipfsd-ctl@0.45.1:
+  version "0.45.1"
+  resolved "https://registry.yarnpkg.com/ipfsd-ctl/-/ipfsd-ctl-0.45.1.tgz#b0b598fe4a1bc2298eadd37bf4d09f8cdf403a72"
+  integrity sha512-vgQH7DIJ9pOtPLSVLwNLyG7FtDZ+v3dYINDG1VWiEwwB9wIGsil2zMI0cqn5HRGhe8TYqdE+KAkAo6lkGkmI9A==
   dependencies:
     "@hapi/hapi" "^18.3.2"
     boom "^7.3.0"
@@ -18899,10 +18899,10 @@ nodeify@^1.0.1:
     is-promise "~1.0.0"
     promise "~1.3.0"
 
-nodemon@1.19.1:
-  version "1.19.1"
-  resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-1.19.1.tgz#576f0aad0f863aabf8c48517f6192ff987cd5071"
-  integrity sha512-/DXLzd/GhiaDXXbGId5BzxP1GlsqtMGM9zTmkWrgXtSqjKmGSbLicM/oAy4FR0YWm14jCHRwnR31AHS2dYFHrg==
+nodemon@1.19.2:
+  version "1.19.2"
+  resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-1.19.2.tgz#b0975147dc99b3761ceb595b3f9277084931dcc0"
+  integrity sha512-hRLYaw5Ihyw9zK7NF+9EUzVyS6Cvgc14yh8CAYr38tPxJa6UrOxwAQ351GwrgoanHCF0FalQFn6w5eoX/LGdJw==
   dependencies:
     chokidar "^2.1.5"
     debug "^3.1.0"
@@ -23832,10 +23832,10 @@ sequelize-pool@^2.3.0:
   resolved "https://registry.yarnpkg.com/sequelize-pool/-/sequelize-pool-2.3.0.tgz#64f1fe8744228172c474f530604b6133be64993d"
   integrity sha512-Ibz08vnXvkZ8LJTiUOxRcj1Ckdn7qafNZ2t59jYHMX1VIebTAOYefWdRYFt6z6+hy52WGthAHAoLc9hvk3onqA==
 
-sequelize@5.18.0:
-  version "5.18.0"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.18.0.tgz#3ed8eda9ec741f64f134752e0765216d760d2efe"
-  integrity sha512-Kw2LHYpXGa1v5T3Q1r+cPvYeeCJV53RbpoDO/NAVZAUiGj/UFPxaJH9qV/pYw2AAhkNkyzfml6Ud6dieJllB2A==
+sequelize@5.18.1:
+  version "5.18.1"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.18.1.tgz#31d5246dcdf01d0ac317454c28fb598359d5b60a"
+  integrity sha512-jngo7pqilyOycMv6ZEwHLVn2wuHi/xkSQZfwK4jhjG8ta1HWYJK3XyQDFdhVEOH1GEq9pnqaf+7Kwqm+eqXD9Q==
   dependencies:
     bluebird "^3.5.0"
     cls-bluebird "^2.1.0"
@@ -27750,7 +27750,18 @@ webpack-cli@3.3.7:
     v8-compile-cache "2.0.3"
     yargs "13.2.4"
 
-webpack-dev-middleware@3.7.0, webpack-dev-middleware@^3.5.1, webpack-dev-middleware@^3.7.0:
+webpack-dev-middleware@3.7.1:
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/webpack-dev-middleware/-/webpack-dev-middleware-3.7.1.tgz#1167aea02afa034489869b8368fe9fed1aea7d09"
+  integrity sha512-5MWu9SH1z3hY7oHOV6Kbkz5x7hXbxK56mGHNqHTe6d+ewxOwKUxoUJBs7QIaJb33lPjl9bJZ3X0vCoooUzC36A==
+  dependencies:
+    memory-fs "^0.4.1"
+    mime "^2.4.4"
+    mkdirp "^0.5.1"
+    range-parser "^1.2.1"
+    webpack-log "^2.0.0"
+
+webpack-dev-middleware@^3.5.1, webpack-dev-middleware@^3.7.0:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/webpack-dev-middleware/-/webpack-dev-middleware-3.7.0.tgz#ef751d25f4e9a5c8a35da600c5fda3582b5c6cff"
   integrity sha512-qvDesR1QZRIAZHOE3iQ4CXLZZSQ1lAUsSpnQmlB1PBfoN/xdRjmge3Dok0W4IdaVLJOGJy3sGI4sZHwjRU0PCA==
