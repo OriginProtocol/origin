@@ -35,35 +35,6 @@ class App extends Component {
     global.web3 = new Web3()
   }
 
-  _validateNetworkSetting = () => {
-    // Validate the network setting
-    const networkExists = NETWORKS.find(n => n.name === settings.network.name)
-    // If network wasn't found, default to mainnet
-    if (!networkExists) {
-      Store.dispatch(setNetwork(NETWORKS.find(n => n.id === 1)))
-    }
-  }
-
-  _validateAccounts = () => {
-    const { wallet } = Store.getState()
-    if (wallet.accounts.length === 0) return
-    // Verify there is a valid active account, and if not set one
-    let hasValidActiveAccount = false
-    if (wallet.activeAccount) {
-      hasValidActiveAccount = wallet.accounts.find(
-        a => a.address === wallet.activeAccount.address
-      )
-    }
-    // Setup the active account
-    if (!hasValidActiveAccount) {
-      const activeAccount = hasValidActiveAccount
-        ? wallet.activeAccount
-        : wallet.accounts[0]
-      console.log(wallet.accounts[0])
-      Store.dispatch(setAccountActive(activeAccount))
-    }
-  }
-
   /* Called after the PersistGate loads the data from redux but before the child
    * components are mounted.
    *
@@ -72,6 +43,7 @@ class App extends Component {
    */
   onBeforeLift = async () => {
     const { samsungBKS, settings, wallet } = Store.getState()
+
     // Set the language for the DApp
     setLanguage(settings.language)
 
@@ -84,22 +56,11 @@ class App extends Component {
         // Set state flag to render the SamsungBKS component. It will call
         // onAccountsReady when it is initialized
         this.setState({ samsungBKSIsSupported })
-      } else {
-        // No Samsung BKS, accounts are initialized
-        this.onAccountsReady()
+        return
       }
-    } else {
-      // Not using Samsung BKS (not supported or accounts created prior to
-      // implementation of support)
-      this.onAccountsReady()
     }
 
-    // Make sure the network is set correctly
-    this._validateNetworkSetting()
-  }
-
-  onAccountsReady = () => {
-    this._validateAccounts()
+    // Not using Samsung BKS, stop loading
     this.setState({ loading: false })
   }
 
@@ -108,7 +69,7 @@ class App extends Component {
       <ReduxProvider store={Store}>
         <PersistGate onBeforeLift={this.onBeforeLift} persistor={persistor}>
           {this.state.samsungBKSIsSupported && (
-            <SamsungBKS onReady={this.onAccountsReady} />
+            <SamsungBKS onReady={() => this.setState({ loading: false })} />
           )}
           {!this.state.loading && (
             <AppContainer

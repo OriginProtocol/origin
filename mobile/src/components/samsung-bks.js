@@ -9,6 +9,7 @@ import { connect } from 'react-redux'
 import { AppState } from 'react-native'
 import RNSamsungBKS from 'react-native-samsung-bks'
 
+import NavigationService from '../NavigationService'
 import { SamsungBKSConstants, getSeedHash } from 'actions/SamsungBKS'
 import { setAccounts } from 'actions/Wallet'
 import { generateHdPath } from 'utils/user'
@@ -49,25 +50,25 @@ class SamsungBKS extends React.Component {
   _updateAccounts = async () => {
     console.debug('Updating account list from Samsung BKS')
     const address = await RNSamsungBKS.getAddressList(generateHdPath(0))
-    await this.props.setAccounts([{
-      address
-    }])
+    await this.props.setAccounts([
+      {
+        address
+      }
+    ])
   }
 
   _checkSeedHash = async () => {
     const previousSeedHash = this.props.samsungBKS.seedHash
     const seedHash = await this.props.getSeedHash()
     if (seedHash.type === SamsungBKSConstants.GET_SEEDHASH_SUCCESS) {
-      if (seedHash.payload !== previousSeedHash) {
-        // Samsung BKS seed hash change indicates the address has changed, update the
-        // accounts list in the local cache
-        await this._updateAccounts()
-      } else if (
-        this.props.wallet.accounts.length === 0 &&
-        seedHash.payload.length > 0
-      ) {
-        // Seed hash exists, but no accounts in local cache, update
-        await this._updateAccounts()
+      if (seedHash.payload.length > 0) {
+        if (seedHash.payload !== previousSeedHash || this.props.wallet.accounts.length === 0) {
+          // Update local account cache if the seed hash has changed or no accounts are in the local cache
+          await this._updateAccounts()
+        }
+      } else {
+        // User reset Samsung BKS, send to start of onboarding
+        NavigationService.navigate('Welcome')
       }
     }
   }

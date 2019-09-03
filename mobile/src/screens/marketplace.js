@@ -345,6 +345,12 @@ class MarketplaceScreen extends Component {
     }
 
     let privateKey = wallet.activeAccount.privateKey
+    if (!privateKey) {
+      // No private key for the account, using Samsung BKS to store keys
+      // can't inject keys
+      return
+    }
+
     if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
       privateKey = '0x' + privateKey
     }

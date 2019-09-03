@@ -1,16 +1,16 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, Linking, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
 import SafeAreaView from 'react-native-safe-area-view'
+import RNSamsungBKS from 'react-native-samsung-bks'
 
 import { createAccount } from 'actions/Wallet'
 import Disclaimer from 'components/disclaimer'
 import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'
-import OnboardingStyles from 'styles/onboarding'
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -38,6 +38,15 @@ class WelcomeScreen extends Component {
   }
 
   render() {
+    let action
+    if (this.props.samsungBKS.seedHash === '') {
+      action = this.renderSamsungBKSRequiresSetup()
+    } else if (this.props.wallet.accounts.length === 0) {
+      action = this.renderWalletButtons()
+    } else {
+      action = this.renderContinueButton()
+    }
+
     return (
       <SafeAreaView style={styles.content}>
         <View style={{ ...styles.container, flexGrow: 2 }}>
@@ -57,9 +66,7 @@ class WelcomeScreen extends Component {
           </Text>
         </View>
         <View style={styles.container}>
-          {this.props.wallet.accounts.length === 0
-            ? this.renderWalletButtons()
-            : this.renderContinueButton()}
+          {action}
           <Disclaimer>
             <fbt desc="WelcomeScreen.disclaimer">
               By signing up you agree to the Terms of Use and Privacy Policy
@@ -67,6 +74,28 @@ class WelcomeScreen extends Component {
           </Disclaimer>
         </View>
       </SafeAreaView>
+    )
+  }
+
+  renderSamsungBKSRequiresSetup() {
+    return (
+      <>
+        <View style={styles.container}>
+          <Text style={styles.text}>
+            Your phone supports Samsung Blockchain Keystore but it needs to be
+            configured.
+          </Text>
+        </View>
+        <OriginButton
+          size="large"
+          type="primary"
+          title={fbt('Continue', 'WelcomeScreen.continueButton')}
+          onPress={async () => {
+            const deepLinks = await RNSamsungBKS.getDeepLinks()
+            Linking.openURL(deepLinks['MAIN'])
+          }}
+        />
+      </>
     )
   }
 
@@ -109,8 +138,8 @@ class WelcomeScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
+const mapStateToProps = ({ samsungBKS, wallet }) => {
+  return { samsungBKS, wallet }
 }
 
 const mapDispatchToProps = dispatch => ({
@@ -124,5 +153,9 @@ export default connect(
 
 const styles = StyleSheet.create({
   ...CommonStyles,
-  ...OnboardingStyles
+  text: {
+    textAlign: 'center',
+    color: '#98a7b4',
+    fontFamily: 'Lato'
+  }
 })

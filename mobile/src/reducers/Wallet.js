@@ -30,6 +30,23 @@ export default function Wallet(state = initialState, action = {}) {
         return state
       }
 
+    case WalletConstants.SET_ACCOUNTS:
+      // Verify there is a valid active account, and if not set one
+      let hasValidActiveAccount = false
+      if (state.activeAccount) {
+        hasValidActiveAccount = state.accounts.find(
+          a => a.address === state.activeAccount.address
+        )
+      }
+      const activeAccount = hasValidActiveAccount
+        ? state.activeAccount
+        : action.payload[0]
+      return {
+        ...state,
+        accounts: action.payload,
+        activeAccount
+      }
+
     case WalletConstants.REMOVE_ACCOUNT:
       return {
         ...state,
@@ -43,13 +60,9 @@ export default function Wallet(state = initialState, action = {}) {
       }
 
     case WalletConstants.SET_ACCOUNT_ACTIVE:
-      if (action.account.address && action.account.privateKey) {
-        return {
-          ...state,
-          activeAccount: action.account
-        }
-      } else {
-        return state
+      return {
+        ...state,
+        activeAccount: action.account
       }
 
     // TODO: Move below two actions to a separate cache store
@@ -66,12 +79,6 @@ export default function Wallet(state = initialState, action = {}) {
           ...state.identities,
           [action.payload.address]: action.payload.identity
         }
-      }
-
-    case WalletConstants.SET_ACCOUNTS:
-      return {
-        ...state,
-        accounts: action.payload
       }
   }
 
