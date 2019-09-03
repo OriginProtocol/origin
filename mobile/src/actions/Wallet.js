@@ -14,8 +14,7 @@ export const WalletConstants = keyMirror(
     SET_ACCOUNTS: null,
     SET_ACCOUNT_ACTIVE: null,
     SET_ACCOUNT_BALANCES: null,
-    SET_IDENTITY: null,
-    SET_USE_SAMSUNG_BKS: null
+    SET_IDENTITY: null
   },
   'WALLET'
 )
@@ -32,10 +31,10 @@ export function addAccount(account) {
  * with Samsung BKS where the store seed hash changes, which indicates the
  * user has done a reset, so none of the old accounts stored are valid.
  */
-export function setAccounts(accountArray) {
+export function setAccounts(payload) {
   return {
     type: WalletConstants.SET_ACCOUNTS,
-    accountArray
+    payload
   }
 }
 

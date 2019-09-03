@@ -3,8 +3,8 @@
 import React, { Component } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
-import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
+import SafeAreaView from 'react-native-safe-area-view'
 
 import { createAccount } from 'actions/Wallet'
 import Disclaimer from 'components/disclaimer'
@@ -19,37 +19,6 @@ class WelcomeScreen extends Component {
     super(props)
     this.state = {
       loading: false
-    }
-  }
-
-  componentDidMount = () => {
-    const hasAccount = this.props.wallet.accounts.length > 0
-    if (!hasAccount) {
-      // No accounts, see if we Samsung BKS is supported on this device
-      this.props.getSamsungBKSIsSupported()
-    }
-  }
-
-  componentDidUpdate = (prevProps) => {
-    // Handle updates to check if Samsung BKS is supported
-    if (get(prevProps, 'samsungBKS.isSupported') !== this.props.samsungBKS.isSupported) {
-      if (this.props.samsungBKS.isSupported === false) {
-        // No support for Samsung BKS, use Redux for account storage
-        this.setState({ loading: false })
-      } else if (this.props.samsungBKS.isSupported === true) {
-        // Samsung BKS is supported on this device
-        this.props.getSamsungBKSApiLevel()
-      }
-    }
-
-    // Handle updates to Samsung BKS API level
-    if (get(prevProps, 'samsungBKS.apiLevel') !== this.props.samsungBKS.apiLevel) {
-      this.props.getSamsungBKSSeedHash()
-    }
-
-    // Handle updates to the Samsung BKS seed hash
-    if (get(prevProps, 'samsungBKS.seedHash') !== this.props.samsungBKS.seedHash) {
-
     }
   }
 
@@ -145,9 +114,7 @@ const mapStateToProps = ({ wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  createAccount: () => dispatch(createAccount()),
-  getSamsungBKSIsSupported: () => dispatch(getSamsungBKSIsSupported())
-  getSamsungBKSSeedHash: () => dispatch(getSamsungBKSSeedHash())
+  createAccount: () => dispatch(createAccount())
 })
 
 export default connect(

@@ -67,6 +67,12 @@ export default function Wallet(state = initialState, action = {}) {
           [action.payload.address]: action.payload.identity
         }
       }
+
+    case WalletConstants.SET_ACCOUNTS:
+      return {
+        ...state,
+        accounts: action.payload
+      }
   }
 
   return state

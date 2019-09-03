@@ -5,6 +5,7 @@ import { YellowBox } from 'react-native'
 import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import Web3 from 'web3'
+import RNSamsungBKS from 'react-native-samsung-bks'
 
 import Store, { persistor } from './Store'
 import AppContainer from './AppContainer'
@@ -13,6 +14,7 @@ import setLanguage from 'utils/language'
 import { NETWORKS } from './constants'
 import { setNetwork } from 'actions/Settings'
 import { setAccountActive } from 'actions/Wallet'
+import SamsungBKS from 'components/samsung-bks'
 
 YellowBox.ignoreWarnings([
   // https://github.com/facebook/react-native/issues/18868
@@ -22,33 +24,29 @@ YellowBox.ignoreWarnings([
 ])
 
 class App extends Component {
+  state = {
+    samsungBKSIsSupported: null,
+    loading: true
+  }
+
   constructor(props) {
     super(props)
     // Add web3 to the react-native global object so it is available everywhere
     global.web3 = new Web3()
   }
 
-  /* Called after the PersistGate loads the data from redux but before the child
-   * components are mounted.
-   *
-   * Handle some required initialisation for language, web3, and network setting
-   * validation.
-   */
-  async onBeforeLift() {
-    const state = Store.getState()
-    const settings = state.settings
-    const wallet = state.wallet
-
-    // Set the language for the DApp
-    setLanguage(settings.language)
-
+  _validateNetworkSetting = () => {
     // Validate the network setting
     const networkExists = NETWORKS.find(n => n.name === settings.network.name)
     // If network wasn't found, default to mainnet
     if (!networkExists) {
-      await Store.dispatch(setNetwork(NETWORKS.find(n => n.id === 1)))
+      Store.dispatch(setNetwork(NETWORKS.find(n => n.id === 1)))
     }
+  }
 
+  _validateAccounts = () => {
+    const { wallet } = Store.getState()
+    if (wallet.accounts.length === 0) return
     // Verify there is a valid active account, and if not set one
     let hasValidActiveAccount = false
     if (wallet.activeAccount) {
@@ -61,26 +59,64 @@ class App extends Component {
       const activeAccount = hasValidActiveAccount
         ? wallet.activeAccount
         : wallet.accounts[0]
+      console.log(wallet.accounts[0])
       Store.dispatch(setAccountActive(activeAccount))
     }
+  }
 
-    console.debug(`Found ${wallet.accounts.length} accounts`)
+  /* Called after the PersistGate loads the data from redux but before the child
+   * components are mounted.
+   *
+   * Handle some required initialisation for language, web3, and network setting
+   * validation.
+   */
+  onBeforeLift = async () => {
+    const { samsungBKS, settings, wallet } = Store.getState()
+    // Set the language for the DApp
+    setLanguage(settings.language)
 
-    // Add all the stored accounts to the global web3 object
-    for (let i = 0; i < wallet.accounts.length; i++) {
-      global.web3.eth.accounts.wallet.add(wallet.accounts[i])
+    // See if we can (or are) using Samsung BKS and conditionally render the
+    // component
+    if (wallet.accounts.length === 0 || samsungBKS.seedHash) {
+      // No accounts yet, see if Samsung BKS is available
+      const samsungBKSIsSupported = await RNSamsungBKS.isSupported()
+      if (samsungBKSIsSupported) {
+        // Set state flag to render the SamsungBKS component. It will call
+        // onAccountsReady when it is initialized
+        this.setState({ samsungBKSIsSupported })
+      } else {
+        // No Samsung BKS, accounts are initialized
+        this.onAccountsReady()
+      }
+    } else {
+      // Not using Samsung BKS (not supported or accounts created prior to
+      // implementation of support)
+      this.onAccountsReady()
     }
+
+    // Make sure the network is set correctly
+    this._validateNetworkSetting()
+  }
+
+  onAccountsReady = () => {
+    this._validateAccounts()
+    this.setState({ loading: false })
   }
 
   render() {
     return (
       <ReduxProvider store={Store}>
         <PersistGate onBeforeLift={this.onBeforeLift} persistor={persistor}>
-          <AppContainer
-            ref={navigatorRef => {
-              NavigationService.setTopLevelNavigator(navigatorRef)
-            }}
-          />
+          {this.state.samsungBKSIsSupported && (
+            <SamsungBKS onReady={this.onAccountsReady} />
+          )}
+          {!this.state.loading && (
+            <AppContainer
+              ref={navigatorRef => {
+                NavigationService.setTopLevelNavigator(navigatorRef)
+              }}
+            />
+          )}
         </PersistGate>
       </ReduxProvider>
     )

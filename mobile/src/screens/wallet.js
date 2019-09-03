@@ -102,7 +102,7 @@ class WalletScreen extends Component {
         <Text
           style={{ ...styles.listHeader, fontSize: 16, marginVertical: 50 }}
         >
-          No accounts found.
+          No account found.
         </Text>
         <OriginButton
           size="large"

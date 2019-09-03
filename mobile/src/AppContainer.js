@@ -14,13 +14,11 @@ import BackupPrompt from 'components/backup-prompt'
 class MarketplaceApp extends React.Component {
   static router = Navigation.router
 
-  async componentDidMount() {
+  componentDidMount = async () => {
     const { biometryType, pin } = this.props.settings
     const hasAuthentication = biometryType || pin
     const hasAccount = this.props.wallet.accounts.length > 0
-    // Redirect to start of onboarding if there are no accounts or authentication
-    // has not been configured
-    if (!hasAccount || !hasAuthentication) {
+    if (!hasAuthentication || !hasAccount) {
       this.props.navigation.navigate('Welcome')
     }
   }
