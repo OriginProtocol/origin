@@ -92,10 +92,20 @@ class OAuthAttestation extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const { isMobile, provider } = this.props
+
     const didOpen = !prevProps.open && this.props.open,
       didChangeStage = prevState.stage !== this.state.stage
     if (this.inputRef && (didOpen || didChangeStage)) {
       this.inputRef.focus()
+    }
+
+    // Check wether OAuth is allowed via the current browser (WebView is not supported by Google)
+    if (provider === 'google' && !prevProps.isMobile && isMobile) {
+      const isWebView = /(iPhone|iPod|iPad)(?!.*Safari)|Android.*(wv|\.0\.0\.0)|Version\/_*.*_|WebView/.test(
+        window.navigator.userAgent
+      )
+      this.setState({ isForbidden: isWebView })
     }
   }
 
@@ -195,7 +205,15 @@ class OAuthAttestation extends Component {
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
-        <InfoStoredOnChain provider={this.props.provider} />
+        {this.state.isForbidden ? (
+          <PublishedInfoBox title="Unsupported Browser" pii={true}>
+            {' '}
+            Your browser does not support Google verification. Please use our
+            mobile app instead.
+          </PublishedInfoBox>
+        ) : (
+          <InfoStoredOnChain provider={this.props.provider} />
+        )}
         <div className="actions mt-5">
           {this.renderVerifyButton({ authUrl, redirect })}
         </div>
@@ -257,6 +275,7 @@ class OAuthAttestation extends Component {
                     ? fbt('Loading...', 'Loading...')
                     : fbt('Continue', 'Continue')
                 }
+                disabled={this.state.isForbidden}
               />
               {isMobile ? null : (
                 <button
