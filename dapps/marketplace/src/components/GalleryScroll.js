@@ -3,6 +3,7 @@ import debounce from 'lodash/debounce'
 
 const GalleryScroll = ({ pics = [] }) => {
   const [offset, setOffset] = useState(0)
+  const [forceOffset, setForceOffset] = useState(0)
   const [scrollOffset, setScrollOffset] = useState(0)
   const [zoom, setZoomRaw] = useState(false)
 
@@ -15,9 +16,10 @@ const GalleryScroll = ({ pics = [] }) => {
       document.body.style.position = 'fixed'
     }
     setZoomRaw(zoom)
+    setForceOffset(offset)
   }
 
-  const props = { offset, setOffset, pics }
+  const props = { offset, setOffset, pics, forceOffset }
 
   return (
     <>
@@ -40,7 +42,13 @@ const GalleryScroll = ({ pics = [] }) => {
   )
 }
 
-const GalleryScrollInner = ({ pics = [], onZoom, offset, setOffset }) => {
+const GalleryScrollInner = ({
+  pics = [],
+  onZoom,
+  offset,
+  setOffset,
+  forceOffset = 0
+}) => {
   if (!pics.length) return null
 
   const scrollEl = useRef(null)
@@ -58,7 +66,7 @@ const GalleryScrollInner = ({ pics = [], onZoom, offset, setOffset }) => {
   useEffect(() => {
     const width = scrollEl.current.clientWidth
     scrollEl.current.scrollTo(width * offset, 0)
-  }, [offset])
+  }, [forceOffset])
 
   return (
     <>
