@@ -37,7 +37,7 @@ import AboutToken from './about/AboutTokens'
 import AboutPayments from './about/AboutPayments'
 import AboutCrypto from './about/AboutCrypto'
 import { applyConfiguration } from 'utils/marketplaceCreator'
-import { detectBraveBrowser } from 'utils/braveBrowser'
+//import { detectBraveBrowser } from 'utils/braveBrowser'
 import CurrencyContext from 'constants/CurrencyContext'
 import OpenApp from './OpenApp'
 
