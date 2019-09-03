@@ -179,6 +179,16 @@ class OAuthAttestation extends Component {
     )
   }
 
+  renderAppDownloadButton() {
+    return (
+      <>
+        <a className="btn btn-primary" href="https://originprotocol.com/mobile">
+          Get the Origin App
+        </a>
+      </>
+    )
+  }
+
   renderGenerateCode({ authUrl, redirect }) {
     const { isMobile } = this.props
     const providerName = getProviderDisplayName(this.props.provider)
@@ -215,7 +225,16 @@ class OAuthAttestation extends Component {
           <InfoStoredOnChain provider={this.props.provider} />
         )}
         <div className="actions mt-5">
-          {this.renderVerifyButton({ authUrl, redirect })}
+          {this.state.isForbidden
+            ? this.renderAppDownloadButton()
+            : this.renderVerifyButton({ authUrl, redirect })}
+          {isMobile ? null : (
+            <button
+              className="btn btn-link"
+              onClick={() => this.setState({ shouldClose: true })}
+              children={fbt('Cancel', 'VerifyWebsite.cancel')}
+            />
+          )}
         </div>
       </>
     )
@@ -224,7 +243,6 @@ class OAuthAttestation extends Component {
   renderVerifyButton({ authUrl, redirect }) {
     const matchSid = window.location.href.match(/sid=([a-zA-Z0-9_-]+)/i)
     const sid = matchSid && matchSid[1] ? matchSid[1] : null
-    const { isMobile } = this.props
 
     return (
       <Mutation
@@ -277,13 +295,6 @@ class OAuthAttestation extends Component {
                 }
                 disabled={this.state.isForbidden}
               />
-              {isMobile ? null : (
-                <button
-                  className="btn btn-link"
-                  onClick={() => this.setState({ shouldClose: true })}
-                  children={fbt('Cancel', 'VerifyWebsite.cancel')}
-                />
-              )}
             </>
           )
         }}
