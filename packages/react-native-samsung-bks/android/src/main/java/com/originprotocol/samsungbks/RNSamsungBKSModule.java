@@ -1,5 +1,6 @@
 package com.originprotocol.samsungbks;
 
+
 import java.util.List;
 import java.util.ArrayList;
 import java.lang.reflect.Field;
@@ -7,6 +8,8 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
 
 import com.samsung.android.sdk.coldwallet.*;
 
@@ -56,6 +59,22 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
 	   };
 
     ScwService.getInstance().checkForMandatoryAppUpdate(callback);
+  }
+
+  @ReactMethod
+  public void getDeepLinks(Promise promise) {
+      Field[] interfaceFields = ScwDeepLink.class.getFields();
+
+      WritableMap links = new WritableNativeMap();
+      for (Field f: interfaceFields) {
+	  try {
+	      links.putString(f.getName(), f.get(ScwDeepLink.class).toString());
+	  } catch (Exception error) {
+	      // Skip
+	  }
+      }
+
+      promise.resolve(links);
   }
 
   @ReactMethod
