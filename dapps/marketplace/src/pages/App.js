@@ -37,6 +37,7 @@ import AboutToken from './about/AboutTokens'
 import AboutPayments from './about/AboutPayments'
 import AboutCrypto from './about/AboutCrypto'
 import { applyConfiguration } from 'utils/marketplaceCreator'
+import { detectBraveBrowser } from 'utils/braveBrowser'
 import CurrencyContext from 'constants/CurrencyContext'
 import OpenApp from './OpenApp'
 
@@ -44,55 +45,53 @@ class App extends Component {
   state = {
     hasError: false,
     displayMobileModal: false,
-    mobileModalDismissed: true,
-    displayBrowseModal: false,
-    isBrave: false,
-    broseModalDismissed: false,
+    mobileModalDismissed: false,
+    displayBraveModal: false,
+    isBrave: undefined,
+    braveModalDismissed: false,
     footer: false,
     skipOnboardRewards: false
   }
 
-  componentDidMount() {
-    this._asyncRequest = this.checkBrave().then(externalData => {
-      this._asyncRequest = null
-      this.setState({ isBrave: externalData })
-    })
+  async componentDidMount() {
+    // todo implement this
+    //this.setState({ isBrave: await detectBraveBrowser() })
   }
 
   componentDidUpdate() {
     if (get(this.props, 'location.state.scrollToTop')) {
       window.scrollTo(0, 0)
     }
+
+    const {
+      displayMobileModal,
+      mobileModalDismissed,
+      isBrave,
+      braveModalDismissed,
+      displayBraveModal
+    } = this.state
+
+    // brave check has not run yet exit
+    if (isBrave === undefined) {
+      return
+    }
+
     if (
       !this.props.web3Loading &&
       !this.props.web3.walletType &&
-      this.state.displayMobileModal === false &&
-      !this.state.mobileModalDismissed
+      displayMobileModal === false &&
+      !mobileModalDismissed & (!isBrave || (isBrave && braveModalDismissed))
     ) {
       this.setState({ displayMobileModal: true })
     }
-    if (
-      this.state.isBrave &&
-      this.state.displayBrowseModal === false &&
-      !this.state.browseModalDismissed
-    ) {
-      this.setState({ displayBrowseModal: true })
+
+    if (isBrave && displayBraveModal === false && !braveModalDismissed) {
+      this.setState({ displayBraveModal: true })
     }
   }
 
   static getDerivedStateFromError(err) {
     return { hasError: true, err }
-  }
-
-  async checkBrave() {
-    const isBrave = (await (await fetch(
-      'https://api.duckduckgo.com/?q=useragent&format=json'
-    )).json()).Answer.includes('Brave')
-    this.state.isBrave = isBrave
-    if (!isBrave) {
-      this.state.mobileModalDismissed = false
-    }
-    return isBrave
   }
 
   render() {
@@ -143,7 +142,7 @@ class App extends Component {
             onGetStarted={() =>
               this.setState({
                 mobileModalDismissed: false,
-                browseModalDismissed: false
+                braveModalDismissed: false
               })
             }
             onShowFooter={() => this.setState({ footer: true })}
@@ -219,13 +218,12 @@ class App extends Component {
             }
           />
         )}
-        {this.state.displayBrowseModal && (
+        {this.state.displayBraveModal && (
           <BrowseModal
             onClose={() =>
               this.setState({
-                displayBrowseModal: false,
-                browseModalDismissed: true,
-                mobileModalDismissed: false
+                displayBraveModal: false,
+                braveModalDismissed: true
               })
             }
           />
