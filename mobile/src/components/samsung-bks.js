@@ -62,7 +62,10 @@ class SamsungBKS extends React.Component {
     const seedHash = await this.props.getSeedHash()
     if (seedHash.type === SamsungBKSConstants.GET_SEEDHASH_SUCCESS) {
       if (seedHash.payload.length > 0) {
-        if (seedHash.payload !== previousSeedHash || this.props.wallet.accounts.length === 0) {
+        if (
+          seedHash.payload !== previousSeedHash ||
+          this.props.wallet.accounts.length === 0
+        ) {
           // Update local account cache if the seed hash has changed or no accounts are in the local cache
           await this._updateAccounts()
         }

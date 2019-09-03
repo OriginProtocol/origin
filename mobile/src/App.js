@@ -11,9 +11,6 @@ import Store, { persistor } from './Store'
 import AppContainer from './AppContainer'
 import NavigationService from './NavigationService'
 import setLanguage from 'utils/language'
-import { NETWORKS } from './constants'
-import { setNetwork } from 'actions/Settings'
-import { setAccountActive } from 'actions/Wallet'
 import SamsungBKS from 'components/samsung-bks'
 
 YellowBox.ignoreWarnings([

@@ -43,7 +43,6 @@ export function getSeedHash() {
       })
       .catch(error => {
         return dispatch(getSeedHashError(error))
-        throw error
       })
   }
 }
