@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
 
 import { decodeTransaction } from '../utils/contractDecoder'
+import { findBestAvailableCurrency } from 'utils/currencies'
 import Address from 'components/address'
 import OriginButton from 'components/origin-button'
 import currencies from 'utils/currencies'
@@ -13,7 +14,7 @@ import CommonStyles from 'styles/common'
 import CardStyles from 'styles/card'
 
 const TransactionCard = props => {
-  const { msgData, fiatCurrency, wallet, loading } = props
+  const { msgData, wallet, loading } = props
   let { functionName, contractName, parameters } = decodeTransaction(
     msgData.data.data
   )
@@ -25,6 +26,9 @@ const TransactionCard = props => {
       parameters._data
     ))
   }
+
+  const fiatCurrency =
+    props.settings.currency || findBestAvailableCurrency()
 
   console.debug(`Contract: ${contractName}, Function: ${functionName}`)
   console.debug(parameters)
@@ -255,8 +259,8 @@ const TransactionCard = props => {
   )
 }
 
-const mapStateToProps = ({ exchangeRates, wallet }) => {
-  return { exchangeRates, wallet }
+const mapStateToProps = ({ exchangeRates, settings, wallet }) => {
+  return { exchangeRates, settings, wallet }
 }
 
 export default connect(mapStateToProps)(TransactionCard)

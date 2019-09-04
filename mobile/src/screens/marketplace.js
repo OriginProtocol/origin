@@ -254,7 +254,7 @@ class MarketplaceScreen extends Component {
           });
         }
       `,
-      'GraphQL query'
+      `GraphQL query: ${query.definitions[0].name.value}`
     )
   }
 

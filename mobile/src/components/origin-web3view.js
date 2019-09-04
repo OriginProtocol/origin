@@ -69,12 +69,11 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
         dataToSign,
         wallet.activeAccount.privateKey
       )
-      callback(true, signature)
+      callback(signature)
       console.debug('Got meta transaction: ', decodedTransaction)
     } else {
-      const errorMessage = `Invalid meta transaction ${decodedTransaction.functionName}`
-      console.warn(errorMessage)
-      Sentry.captureMessage(errorMessage)
+      // Not a meta transaction, display a modal prompting the user
+      onWeb3Call(callback, msgData)
     }
   }
 
@@ -82,7 +81,10 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
    * resposible for hanlding signMessage and processTransaction web3 calls.
    */
   const onWeb3Call = (callback, msgData) => {
-    const { functionName } = decodeTransaction(msgData.data.data)
+    console.debug(`Got web3 call to ${msgData.targetFunc}`)
+    const { functionName, contractName } = decodeTransaction(msgData.data.data)
+    console.debug(`Contract method is ${functionName} on ${contractName}`)
+
     // Bump the gas for swapAndMakeOffer by 10% to handle out of gas failures caused
     // by the proxy contract
     // TODO find a better way to handle this
@@ -115,6 +117,7 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
       Platform.OS === 'ios'
         ? newModals.push(web3Modal)
         : newModals.unshift(web3Modal)
+      console.log(newModals)
       // Update the state with the new modals
       setModals([...modals, ...newModals])
     })
@@ -134,7 +137,7 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
    * requires user intervention.
    */
   const renderModals = () => {
-    modals.map((modal, index) => {
+    return modals.map((modal, index) => {
       let card
       if (modal.type === 'enableNotifications') {
         // This is not a web3 call but a prompt to enable notifications if
@@ -170,7 +173,6 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
     return (
       <TransactionCard
         msgData={modal.msgData}
-        fiatCurrency={this.state.fiatCurrency}
         onConfirm={() => {
           setTransactionCardLoading(true)
           global.web3.eth
