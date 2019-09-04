@@ -1,5 +1,6 @@
 'use strict'
 
+import { ethers } from 'ethers'
 import * as RNLocalize from 'react-native-localize'
 import get from 'lodash.get'
 
@@ -7,6 +8,8 @@ import { CURRENCIES } from '../constants'
 
 const IMAGES_PATH = '../../assets/images/'
 
+/* The supported cryptocurrencies
+ */
 export default {
   dai: {
     color: '#fec100',
@@ -25,22 +28,18 @@ export default {
   }
 }
 
-export function tokenBalanceFromGql(result, places = 0) {
-  const web3 = global.web3
-
+/* TODO
+ *
+ */
+export function tokenBalanceFromGql(result) {
   const amount = get(result.data, 'web3.account.token.balance', 0)
-  const amountBN = web3.utils.toBN(amount)
   const decimals = get(result.data, 'web3.account.token.token.decimals', 0)
-  const decimalsBN = web3.utils.toBN(
-    web3.utils.padRight('1', decimals + 1 - places)
-  )
-  const balance = amountBN.div(decimalsBN)
-  if (places > 0) {
-    return Number(balance / Math.pow(10, places))
-  }
-  return Number(balance)
+  return Number(ethers.utils.formatUnits(amount, decimals))
 }
 
+/* TODO
+ *
+ */
 export function findBestAvailableCurrency() {
   const supportedCurrencyCodes = CURRENCIES.map(currency => currency.code)
   const preferredCurrencyCodes = RNLocalize.getCurrencies().filter(code =>
