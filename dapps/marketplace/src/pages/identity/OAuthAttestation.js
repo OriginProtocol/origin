@@ -191,31 +191,39 @@ class OAuthAttestation extends Component {
 
   renderGenerateCode({ authUrl, redirect }) {
     const { isMobile } = this.props
+    const { isForbidden } = this.state
     const providerName = getProviderDisplayName(this.props.provider)
 
-    const header = isMobile ? (
-      <fbt desc="OAuthAttestation.tapToBegin">
-        Tap the button below to begin.
-      </fbt>
-    ) : (
-      <fbt desc="OAuthAttestation.verify">
-        Verify your <fbt:param name="provider">{providerName}</fbt:param>{' '}
-        Account
-      </fbt>
-    )
+    const header =
+      isMobile && !isForbidden ? (
+        <fbt desc="OAuthAttestation.tapToBegin">
+          Tap the button below to begin
+        </fbt>
+      ) : isMobile && isForbidden ? (
+        <fbt desc="OAuthAttestation.getAppHeader">
+          Get the Origin Marketplace App
+        </fbt>
+      ) : (
+        <fbt desc="OAuthAttestation.verify">
+          Verify your <fbt:param name="provider">{providerName}</fbt:param>{' '}
+          Account
+        </fbt>
+      )
 
     return (
       <>
         <h2>{header}</h2>
-        <div className="help mt-0 mb-3">
-          <fbt desc="OAuthAttestation.neverPost">
-            We will never post on your behalf.
-          </fbt>
-        </div>
+        {!isForbidden && (
+          <div className="help mt-0 mb-3">
+            <fbt desc="OAuthAttestation.neverPost">
+              We will never post on your behalf.
+            </fbt>
+          </div>
+        )}
         {this.state.error && (
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
-        {this.state.isForbidden ? (
+        {isForbidden ? (
           <PublishedInfoBox title="Unsupported Browser" pii={true}>
             {' '}
             Your browser does not support Google verification. Please use our
@@ -225,7 +233,7 @@ class OAuthAttestation extends Component {
           <InfoStoredOnChain provider={this.props.provider} />
         )}
         <div className="actions mt-5">
-          {this.state.isForbidden
+          {isForbidden
             ? this.renderAppDownloadButton()
             : this.renderVerifyButton({ authUrl, redirect })}
           {isMobile ? null : (
