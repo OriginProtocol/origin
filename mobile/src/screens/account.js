@@ -116,6 +116,7 @@ class AccountScreen extends Component {
     const { address, privateKey, mnemonic } = account
     const multipleAccounts = wallet.accounts.length > 1
     const isActive = address === wallet.activeAccount.address
+
     const identity = get(wallet.identities, address, {})
     const avatarUrl = get(identity, 'avatarUrl')
     const fullName = get(identity, 'fullName')
