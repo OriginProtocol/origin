@@ -262,7 +262,7 @@ class MarketplaceScreen extends Component {
         message: 'User denied transaction signature'
       })
     } else {
-      let { functionName } = decodeTransaction(msgData.data.data)
+      const { functionName } = decodeTransaction(msgData.data.data)
       // Bump the gas for swapAndMakeOffer by 10% to handle out of gas failures caused
       // by the proxy contract
       // TODO find a better way to handle this
