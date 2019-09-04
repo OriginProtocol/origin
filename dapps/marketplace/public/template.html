@@ -27,7 +27,41 @@
     <link rel="stylesheet" href="<%- file %>" />
     <% }); %>
   </head>
-  <body></body>
+  <body>
+    <div id="app">
+      <script>
+        function checkLocalStorage() {
+          var test = 'test'
+          try {
+            localStorage.setItem(test, test)
+            localStorage.removeItem(test)
+            return true
+          } catch (e) {
+            return false
+          }
+        }
+        var loadingDiv = document.createElement('div')
+
+        if (checkLocalStorage()) {
+          loadingDiv.className = 'loading-screen'
+        } else {
+          loadingDiv.className = 'alert'
+          loadingDiv.id = 'warning'
+          document.body.appendChild(loadingDiv)
+          var error = document.createElement('div')
+          error.className = 'closebtn'
+          error.innerHTML += '&times;'
+          error.onclick = function() {
+            document.getElementById('app').removeChild(loadingDiv)
+          }
+          loadingDiv.innerHTML +=
+            '<fbt>You might have cookies disabled. If you are using Brave lower your shileds.</fbt>'
+          loadingDiv.appendChild(error)
+        }
+        document.getElementById('app').appendChild(loadingDiv)
+      </script>
+    </div>
+  </body>
   <!-- <script crossorigin src="vendor/openpgp.min.js"></script>
   <script>
     if (typeof window.openpgp !== 'undefined') {
