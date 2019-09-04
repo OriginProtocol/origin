@@ -196,7 +196,7 @@ class OAuthAttestation extends Component {
               : 'https://originprotocol.com/mobile'
           }
         >
-          Get the Origin App
+          <fbt desc="OAuthAttestation.getAppButton">Get the Origin App</fbt>
         </a>
       </>
     )
@@ -237,10 +237,14 @@ class OAuthAttestation extends Component {
           <div className="alert alert-danger mt-3">{this.state.error}</div>
         )}
         {isForbidden ? (
-          <PublishedInfoBox title="Unsupported Browser" pii={true}>
-            {' '}
-            Your browser does not support Google verification. Please use our
-            mobile app instead.
+          <PublishedInfoBox
+            title={fbt('Unsupported Browser', 'OAuthAttestation.unsupported')}
+            pii={true}
+          >
+            <fbt desc="OAuthAttestation.unsupportedInfo">
+              Your browser does not support Google verification. Please use our
+              mobile app instead.
+            </fbt>
           </PublishedInfoBox>
         ) : (
           <InfoStoredOnChain provider={this.props.provider} />
