@@ -2,23 +2,23 @@ databaseInstance: origin-214503:us-west1:prod
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: '2d62343'
+bridgeImageTag: '070af05'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'a4ded2c'
+dappImageTag: '2e181bd'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: 'aa36fe4'
+ipfsProxyImageTag: '070af05'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '2d62343'
+faucetImageTag: '070af05'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'a4ded2c'
+eventlistenerImageTag: '070af05'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -26,15 +26,15 @@ discoveryImageTag: '2d62343'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '2d62343'
+growthImageTag: '070af05'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: 'a076e2c'
+messagingImageTag: '070af05'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: 'aa36fe4'
+notificationsImageTag: '070af05'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
@@ -59,11 +59,11 @@ cronImageTag: '3c90d04'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: 'a4ded2c'
+relayerImageTag: '070af05'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: 'a4ded2c'
+graphqlImageTag: '070af05'
 
 ipfsLoadBalancerIP: 35.233.189.126
 
