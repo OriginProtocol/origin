@@ -21,6 +21,7 @@ export const WalletConstants = keyMirror(
 
 export function addAccount(account) {
   global.web3.eth.accounts.wallet.add(account)
+
   return {
     type: WalletConstants.ADD_ACCOUNT,
     account
