@@ -163,10 +163,12 @@ const withOriginGraphql = WrappedComponent => {
         return
       }
 
-      this.props.setIdentity({
-        address: identityResult.id,
-        identity: identityResult
-      })
+      if (identityResult && identityResult.id) {
+        this.props.setIdentity({
+          address: identityResult.id,
+          identity: identityResult
+        })
+      }
     }
 
     updateBalance = async () => {
