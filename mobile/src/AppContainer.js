@@ -4,6 +4,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { StatusBar } from 'react-native'
 import { createAppContainer } from 'react-navigation'
+import get from 'lodash.get'
 
 import { Navigation } from './Navigation'
 import { updateExchangeRate } from 'utils/price'
@@ -30,6 +31,7 @@ class MarketplaceApp extends React.Component {
     this.updateExchangeRates = () => {
       const fiatCurrency =
         this.props.settings.currency || findBestAvailableCurrency()
+      console.debug('Updating exchange rates for', fiatCurrency)
       updateExchangeRate(fiatCurrency, 'ETH')
       updateExchangeRate(fiatCurrency, 'DAI')
     }
@@ -37,6 +39,7 @@ class MarketplaceApp extends React.Component {
       this.updateExchangeRates,
       EXCHANGE_RATE_POLL_INTERVAL
     )
+    this.updateExchangeRates()
   }
 
   componentWillUnmount = () => {
@@ -48,7 +51,7 @@ class MarketplaceApp extends React.Component {
 
   componentWillUpdate = prevProps => {
     // Update exchange rates on currency change
-    if (prevProps.settings.currency !== this.settings.currency) {
+    if (get(prevProps, 'settings.currency') !== this.props.settings.currency) {
       this.updateExchangeRates()
     }
   }

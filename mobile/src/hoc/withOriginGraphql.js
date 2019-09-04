@@ -149,12 +149,13 @@ const withOriginGraphql = WrappedComponent => {
       if (!this.props.wallet.activeAccount || !this.props.marketplace.ready) {
         return
       }
-      let identity
+
+      let identityResult
       try {
         const graphqlResponse = await this.getIdentity(
           this.props.wallet.activeAccount.address
         )
-        identity = get(graphqlResponse, 'data.web3.account.identity')
+        identityResult = get(graphqlResponse, 'data.web3.account.identity')
       } catch (error) {
         // Handle GraphQL errors for things like invalid JSON RPC response or we
         // could crash the app
@@ -163,7 +164,7 @@ const withOriginGraphql = WrappedComponent => {
       }
       this.props.setIdentity({
         address: this.props.wallet.activeAccount.address,
-        identity
+        identity: identityResult
       })
     }
 

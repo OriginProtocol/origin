@@ -422,12 +422,10 @@ class MarketplaceScreen extends Component {
     } catch (error) {
       console.warn(`Browser reporting malformed url: ${state.url}`)
     }
-
     const dappUrl = new URL(this.props.settings.network.dappUrl)
     if (dappUrl.hostname === url.hostname) {
       this.setState({ lastDappUrl: url })
     }
-
     await this.checkForShareNativeDialogInterception(url)
   }
 
