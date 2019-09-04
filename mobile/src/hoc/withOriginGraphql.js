@@ -45,9 +45,15 @@ const withOriginGraphql = WrappedComponent => {
       ]
 
       // Update balance periodically
-      this.balanceUpdater = setInterval(this.updateBalance, BALANCE_UPDATE_INTERVAL)
+      this.balanceUpdater = setInterval(
+        this.updateBalance,
+        BALANCE_UPDATE_INTERVAL
+      )
       // Update identity periodically
-      this.identityUpdater = setInterval(this.updateIdentity, IDENTITY_UPDATE_INTERVAL)
+      this.identityUpdater = setInterval(
+        this.updateIdentity,
+        IDENTITY_UPDATE_INTERVAL
+      )
     }
 
     componentWillUnmount = () => {
