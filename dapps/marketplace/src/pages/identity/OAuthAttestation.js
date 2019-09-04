@@ -92,7 +92,7 @@ class OAuthAttestation extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { isMobile, provider } = this.props
+    const { isMobile, provider, walletType } = this.props
 
     const didOpen = !prevProps.open && this.props.open,
       didChangeStage = prevState.stage !== this.state.stage
@@ -101,10 +101,9 @@ class OAuthAttestation extends Component {
     }
 
     if (provider === 'google' && !prevProps.isMobile && isMobile) {
-      // Check wether the current browser is WebView in order to block Google OAuth and warn the user
-      const isWebView = /(iPhone|iPod|iPad)(?!.*Safari)|Android.*(wv|\.0\.0\.0)|Version\/_*.*_|WebView/.test(
-        window.navigator.userAgent
-      )
+      // Check wether the user is using a WebView via a third party app
+      const isWebView =
+        isMobile && (walletType !== 'Mobile' && walletType !== 'Origin Wallet')
       // Determin mobile platform to render the correct App Download link
       const mobilePlatform = /(iPhone|iPod|iPad)/.test(
         window.navigator.userAgent
