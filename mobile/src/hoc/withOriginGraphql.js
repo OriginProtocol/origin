@@ -49,9 +49,15 @@ const withOriginGraphql = WrappedComponent => {
         this.updateBalance,
         BALANCE_UPDATE_INTERVAL
       )
-      // Update identity periodically
+      // Update identity periodically for all accounts
+      const updateAllIdentities = () => {
+        console.debug(`Updating all identities`)
+        return this.props.wallet.accounts.map(account =>
+          this.updateIdentity(account.address)
+        )
+      }
       this.identityUpdater = setInterval(
-        this.updateIdentity,
+        updateAllIdentities,
         IDENTITY_UPDATE_INTERVAL
       )
     }
@@ -145,16 +151,25 @@ const withOriginGraphql = WrappedComponent => {
       return this._sendGraphqlQuery(wallet)
     }
 
-    updateIdentity = async () => {
-      if (!this.props.wallet.activeAccount || !this.props.marketplace.ready) {
+    updateIdentity = async address => {
+      if (!this.props.marketplace.ready) {
         return
       }
 
+      if (!address && this.props.wallet.activeAccount) {
+        if (this.props.wallet.activeAccount) {
+          address = this.props.wallet.activeAccount.address
+        } else {
+          return
+        }
+      }
+
+      // Save this here in case of update while waiting for GraphQL response
+      const network = `${this.props.settings.network.name}`
+
       let identityResult
       try {
-        const graphqlResponse = await this.getIdentity(
-          this.props.wallet.activeAccount.address
-        )
+        const graphqlResponse = await this.getIdentity(address)
         identityResult = get(graphqlResponse, 'data.web3.account.identity')
       } catch (error) {
         // Handle GraphQL errors for things like invalid JSON RPC response or we
@@ -165,7 +180,8 @@ const withOriginGraphql = WrappedComponent => {
 
       if (identityResult && identityResult.id) {
         this.props.setIdentity({
-          address: identityResult.id,
+          network,
+          address,
           identity: identityResult
         })
       }
@@ -175,24 +191,36 @@ const withOriginGraphql = WrappedComponent => {
       if (!this.props.wallet.activeAccount || !this.props.marketplace.ready) {
         return
       }
-      const activeAddress = this.props.wallet.activeAccount.address
+
+      // Save this here in case of update while waiting for GraphQL response
+      const activeAddress = `${this.props.wallet.activeAccount.address}`
+      const network = `${this.props.settings.network.name}`
+
+      const balances = {}
       try {
-        const balances = {}
         // Get ETH balance, decimals don't need modifying
         const ethBalanceResponse = await this.getBalance(activeAddress)
+
         balances['eth'] = Number(
           get(ethBalanceResponse.data, 'web3.account.balance.eth', 0)
         )
+
         balances['dai'] = tokenBalanceFromGql(
           await this.getTokenBalance(activeAddress, 'DAI')
         )
+
         balances['ogn'] = tokenBalanceFromGql(
           await this.getTokenBalance(activeAddress, 'OGN')
         )
-        this.props.setAccountBalances(balances)
       } catch (error) {
         console.warn('Could not retrieve balances using GraphQL: ', error)
       }
+
+      this.props.setAccountBalances({
+        network,
+        address: activeAddress,
+        balances
+      })
     }
 
     render() {
@@ -208,8 +236,8 @@ const withOriginGraphql = WrappedComponent => {
     }
   }
 
-  const mapStateToProps = ({ marketplace, wallet }) => {
-    return { marketplace, wallet }
+  const mapStateToProps = ({ marketplace, settings, wallet }) => {
+    return { marketplace, settings, wallet }
   }
 
   const mapDispatchToProps = dispatch => ({

@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React from 'react'
 import {
   Alert,
   Clipboard,
@@ -20,24 +20,9 @@ import currencies from 'utils/currencies'
 import ListStyles from 'styles/list'
 import OriginButton from 'components/origin-button'
 
-class WalletScreen extends Component {
-  static navigationOptions = () => {
-    return {
-      title: String(fbt('Wallet', 'WalletScreen.navigationTitle')),
-      headerTitleStyle: {
-        fontFamily: 'Poppins',
-        fontSize: 17,
-        fontWeight: 'normal'
-      }
-    }
-  }
-
-  constructor(props) {
-    super(props)
-  }
-
-  handleFunding(currency) {
-    const { address } = this.props.wallet.activeAccount
+const walletScreen = props => {
+  const handleFunding = currency => {
+    const { address } = props.wallet.activeAccount
 
     Alert.alert(
       String(fbt('Funding', 'WalletScreen.fundingAlertTitle')),
@@ -89,14 +74,56 @@ class WalletScreen extends Component {
     )
   }
 
-  render() {
-    const hasActiveAccount = get(this.props.wallet, 'activeAccount.address')
-    return hasActiveAccount
-      ? this.renderBalances()
-      : this.renderNoActiveAddress()
+  const renderBalances = balances => {
+    return (
+      <>
+        <View style={styles.listHeaderContainer}>
+          <Address
+            address={props.wallet.activeAccount.address}
+            label={fbt('Wallet Address', 'WalletScreen.addressLabel')}
+            styles={{ textAlign: 'center' }}
+          />
+        </View>
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ paddingHorizontal: 20 }}
+        >
+          <Currency
+            abbreviation={'ETH'}
+            balance={balances.eth}
+            labelColor={currencies['eth'].color}
+            name={currencies['eth'].name}
+            imageSource={currencies['eth'].icon}
+            onPress={() => handleFunding('ETH')}
+          />
+          <Currency
+            abbreviation={'DAI'}
+            balance={balances.dai || 0}
+            labelColor={currencies['dai'].color}
+            name={currencies['dai'].name}
+            imageSource={currencies['dai'].icon}
+            precision={2}
+            onPress={() => handleFunding('DAI')}
+          />
+          <Currency
+            abbreviation={'OGN'}
+            balance={balances.ogn || 0}
+            labelColor={currencies['ogn'].color}
+            name={currencies['ogn'].name}
+            imageSource={currencies['ogn'].icon}
+            precision={0}
+            onPress={() => handleFunding('OGN')}
+          />
+        </ScrollView>
+      </>
+    )
   }
 
-  renderNoActiveAddress() {
+  const renderLoading = () => {
+    return <Text>Loading</Text>
+  }
+
+  const renderNoActiveAddress = () => {
     return (
       <>
         <Text
@@ -116,59 +143,39 @@ class WalletScreen extends Component {
     )
   }
 
-  renderBalances() {
-    const { wallet } = this.props
+  const activeAddress = get(props.wallet, 'activeAccount.address')
+  const networkName = get(props.settings.network, 'name', null)
+  const balances = get(
+    props.wallet.accountBalance,
+    `${networkName}.${activeAddress}`,
+    null
+  )
 
-    return (
-      <>
-        <View style={styles.listHeaderContainer}>
-          <Address
-            address={wallet.activeAccount.address}
-            label={fbt('Wallet Address', 'WalletScreen.addressLabel')}
-            styles={{ textAlign: 'center' }}
-          />
-        </View>
-        <ScrollView
-          style={{ flex: 1 }}
-          contentContainerStyle={{ paddingHorizontal: 20 }}
-        >
-          <Currency
-            abbreviation={'ETH'}
-            balance={wallet.accountBalance.eth}
-            labelColor={currencies['eth'].color}
-            name={currencies['eth'].name}
-            imageSource={currencies['eth'].icon}
-            onPress={() => this.handleFunding('ETH')}
-          />
-          <Currency
-            abbreviation={'DAI'}
-            balance={wallet.accountBalance.dai || 0}
-            labelColor={currencies['dai'].color}
-            name={currencies['dai'].name}
-            imageSource={currencies['dai'].icon}
-            precision={2}
-            onPress={() => this.handleFunding('DAI')}
-          />
-          <Currency
-            abbreviation={'OGN'}
-            balance={wallet.accountBalance.ogn || 0}
-            labelColor={currencies['ogn'].color}
-            name={currencies['ogn'].name}
-            imageSource={currencies['ogn'].icon}
-            precision={0}
-            onPress={() => this.handleFunding('OGN')}
-          />
-        </ScrollView>
-      </>
-    )
+  if (!activeAddress) {
+    return renderNoActiveAddress()
+  } else if (!balances) {
+    return renderLoading()
+  } else {
+    return renderBalances(balances)
   }
 }
 
-const mapStateToProps = ({ activation, wallet }) => {
-  return { activation, wallet }
+walletScreen.navigationOptions = () => {
+  return {
+    title: String(fbt('Wallet', 'WalletScreen.navigationTitle')),
+    headerTitleStyle: {
+      fontFamily: 'Poppins',
+      fontSize: 17,
+      fontWeight: 'normal'
+    }
+  }
 }
 
-export default connect(mapStateToProps)(WalletScreen)
+const mapStateToProps = ({ settings, wallet }) => {
+  return { settings, wallet }
+}
+
+export default connect(mapStateToProps)(walletScreen)
 
 const styles = StyleSheet.create({
   ...ListStyles

@@ -6,11 +6,7 @@ import get from 'lodash.get'
 const initialState = {
   accounts: [],
   activeAccount: null,
-  accountBalance: {
-    eth: 0,
-    dai: 0,
-    ogn: 0
-  },
+  accountBalance: {},
   identities: {}
 }
 
@@ -65,11 +61,16 @@ export default function Wallet(state = initialState, action = {}) {
         activeAccount: action.account
       }
 
-    // TODO: Move below two actions to a separate cache store
     case WalletConstants.SET_ACCOUNT_BALANCES:
       return {
         ...state,
-        accountBalance: action.balances
+        accountBalance: {
+          ...state.accountBalance,
+          [action.payload.network]: {
+            ...state.accountBalance[action.payload.network],
+            [action.payload.address]: action.payload.balances
+          }
+        }
       }
 
     case WalletConstants.SET_IDENTITY:
@@ -77,7 +78,10 @@ export default function Wallet(state = initialState, action = {}) {
         ...state,
         identities: {
           ...state.identities,
-          [action.payload.address]: action.payload.identity
+          [action.payload.network]: {
+            ...state.identities[action.payload.network],
+            [action.payload.address]: action.payload.identity
+          }
         }
       }
   }

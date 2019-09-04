@@ -102,10 +102,10 @@ export function removeAccount(account) {
   }
 }
 
-export function setAccountBalances(balances) {
+export function setAccountBalances(payload) {
   return {
     type: WalletConstants.SET_ACCOUNT_BALANCES,
-    balances
+    payload
   }
 }
 

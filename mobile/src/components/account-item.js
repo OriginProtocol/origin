@@ -20,11 +20,13 @@ import ListStyles from 'styles/list'
 
 const IMAGES_PATH = '../../assets/images/'
 
-const AccountItem = ({ item, navigation, wallet }) => {
+const AccountItem = ({ item, navigation, settings, wallet }) => {
   // Truncate the account name to something that looks reasonable, the upper
   // bound was set from an iPhone X
   const truncateLength = Dimensions.get('window').width < 375 ? 15 : 20
-  const identity = get(wallet.identities, item.address, {})
+
+  const networkName = get(settings.network, 'name', null)
+  const identity = get(wallet.identities, `${networkName}.${item.address}`, {})
   const name = get(identity, 'fullName')
   const avatarUrl = get(identity, 'avatarUrl')
 
@@ -68,8 +70,8 @@ const AccountItem = ({ item, navigation, wallet }) => {
   )
 }
 
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
+const mapStateToProps = ({ settings, wallet }) => {
+  return { settings, wallet }
 }
 
 export default connect(mapStateToProps)(AccountItem)
