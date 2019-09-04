@@ -17,11 +17,11 @@ import { setAccountBalances, setIdentity } from 'actions/Wallet'
 import { tokenBalanceFromGql } from 'utils/currencies'
 
 // Update account balance frequency
-// TODO make this reactive
+// TODO make this reactive to contract calls that will change balance
 const BALANCE_UPDATE_INTERVAL = 10000
 
 // Update identity frequency
-// TODO make this reactive
+// TODO make this reactive to identity changes
 const IDENTITY_UPDATE_INTERVAL = 10000
 
 const withOriginGraphql = WrappedComponent => {
@@ -162,8 +162,9 @@ const withOriginGraphql = WrappedComponent => {
         console.warn('Could not retrieve identity using GraphQL: ', error)
         return
       }
+
       this.props.setIdentity({
-        address: this.props.wallet.activeAccount.address,
+        address: identityResult.id,
         identity: identityResult
       })
     }
