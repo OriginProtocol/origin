@@ -49,12 +49,8 @@ const ListingImages = ({ prev, next, listing, onChange, isMobile }) => {
                       Hold down &apos;command&apos; (⌘) to select multiple
                       images
                     </li>
-                    <li>
-                      First image will be featured
-                    </li>
-                    <li>
-                      Drag and drop to reorder
-                    </li>
+                    <li>First image will be featured</li>
+                    <li>Drag and drop to reorder</li>
                     <li>Recommended aspect ratio is 4:3</li>
                   </fbt>
                 )}
