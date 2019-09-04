@@ -100,12 +100,18 @@ class OAuthAttestation extends Component {
       this.inputRef.focus()
     }
 
-    // Check wether OAuth is allowed via the current browser (WebView is not supported by Google)
     if (provider === 'google' && !prevProps.isMobile && isMobile) {
+      // Check wether the current browser is WebView in order to block Google OAuth and warn the user
       const isWebView = /(iPhone|iPod|iPad)(?!.*Safari)|Android.*(wv|\.0\.0\.0)|Version\/_*.*_|WebView/.test(
         window.navigator.userAgent
       )
-      this.setState({ isForbidden: isWebView })
+      // Determin mobile platform to render the correct App Download link
+      const mobilePlatform = /(iPhone|iPod|iPad)/.test(
+        window.navigator.userAgent
+      )
+        ? 'ios'
+        : 'android/other'
+      this.setState({ isForbidden: isWebView, mobilePlatform })
     }
   }
 
@@ -182,7 +188,14 @@ class OAuthAttestation extends Component {
   renderAppDownloadButton() {
     return (
       <>
-        <a className="btn btn-primary" href="https://originprotocol.com/mobile">
+        <a
+          className="btn btn-primary"
+          href={
+            this.state.mobilePlatform === 'ios'
+              ? 'https://itunes.apple.com/us/app/apple-store/id1446091928?mt=8'
+              : 'https://originprotocol.com/mobile'
+          }
+        >
           Get the Origin App
         </a>
       </>
