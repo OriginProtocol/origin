@@ -231,9 +231,13 @@ const typeDefs = gql`
       sort: String
       order: String
       filters: [ListingFilter!]
+      ids: [ID!]
       page: Page!
     ): ListingPage
     listing(id: ID!, blockInfo: inBlockInfo): Listing
+
+    # Filters out listing Ids that are not visible.
+    visibleListingIds(ids: [ID!]): [ID!]
 
     offers(buyerAddress: ID, sellerAddress: ID, listingId: ID): OfferConnection
     offer(id: ID!): Offer

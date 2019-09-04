@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.19</string>
+	<string>0.22</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
@@ -41,7 +41,7 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>We will not be using the calendar</string>
 	<key>NSCameraUsageDescription</key>
-	<string>We would like to use your camera to photograph and upload images</string>
+	<string>We would like to use your camera to take photos for your profile image and any listings that you create</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Enabling Face ID allows you quick and secure access to your account</string>
 	<key>NSLocationAlwaysUsageDescription</key>

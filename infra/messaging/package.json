@@ -58,8 +58,8 @@
   },
   "devDependencies": {
     "@babel/node": "7.5.5",
-    "eslint": "6.2.2",
-    "nodemon": "1.19.1",
+    "eslint": "6.3.0",
+    "nodemon": "1.19.2",
     "prettier": "1.18.2"
   },
   "prettier": {

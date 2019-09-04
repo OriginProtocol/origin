@@ -23,6 +23,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
 import { fbt } from 'fbt-runtime'
 import { ShareDialog } from 'react-native-fbsdk'
+import { Sentry } from 'react-native-sentry'
 
 import OriginButton from 'components/origin-button'
 import NotificationCard from 'components/notification-card'
@@ -247,7 +248,9 @@ class MarketplaceScreen extends Component {
         this.handleBridgeResponse(msgData, signature)
         console.debug('Got meta transaction: ', decodedTransaction)
       } else {
-        console.warn('Invalid meta transaction: ', decodedTransaction)
+        const errorMessage = `Invalid meta transaction ${decodedTransaction.functionName}`
+        console.warn(errorMessage)
+        Sentry.captureMessage(errorMessage)
       }
     } else if (currentRoute === 'Ready') {
       // Relayer failure fallback, if we are on the onboarding step where identity
@@ -259,6 +262,18 @@ class MarketplaceScreen extends Component {
         message: 'User denied transaction signature'
       })
     } else {
+      const { functionName } = decodeTransaction(msgData.data.data)
+      // Bump the gas for swapAndMakeOffer by 10% to handle out of gas failures caused
+      // by the proxy contract
+      // TODO find a better way to handle this
+      // https://github.com/OriginProtocol/origin/issues/2771
+      if (functionName === 'swapAndMakeOffer') {
+        msgData.data.gas =
+          '0x' +
+          Math.ceil(
+            parseInt(msgData.data.gas) + parseInt(msgData.data.gas) * 0.1
+          ).toString(16)
+      }
       // Not handled yet, display a modal that deals with the target function
       PushNotification.checkPermissions(permissions => {
         const newModals = []
@@ -269,8 +284,7 @@ class MarketplaceScreen extends Component {
           !__DEV__ &&
           !permissions.alert &&
           msgData.targetFunc === 'processTransaction' &&
-          decodeTransaction(msgData.data.data).functionName !==
-            'emitIdentityUpdated'
+          functionName !== 'emitIdentityUpdate'
         ) {
           newModals.push({ type: 'enableNotifications' })
         }
@@ -294,15 +308,17 @@ class MarketplaceScreen extends Component {
 
   isValidMetaTransaction = data => {
     const validFunctions = [
+      'acceptOffer',
       'addData',
       'createListing',
       'createProxyWithSenderNonce',
       'emitIdentityUpdated',
       'finalize',
-      'swapAndMakeOffer',
       'makeOffer',
       'marketplaceFinalizeAndPay',
-      'updateListing'
+      'updateListing',
+      'withdrawListing',
+      'withdrawOffer'
     ]
     return validFunctions.includes(data.functionName)
   }
