@@ -1,7 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { YellowBox } from 'react-native'
+import { Platform, YellowBox } from 'react-native'
 import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import Web3 from 'web3'
@@ -57,14 +57,16 @@ class App extends Component {
 
     // See if we can (or are) using Samsung BKS and conditionally render the
     // component
-    if (wallet.accounts.length === 0 || samsungBKS.seedHash) {
-      // No accounts yet, see if Samsung BKS is available
-      const samsungBKSIsSupported = await RNSamsungBKS.isSupported()
-      if (samsungBKSIsSupported) {
-        // Set state flag to render the SamsungBKS component. It will call
-        // onAccountsReady when it is initialized
-        this.setState({ samsungBKSIsSupported })
-        return
+    if (Platform.OS === 'android') {
+      if (wallet.accounts.length === 0 || samsungBKS.seedHash) {
+        // No accounts yet, see if Samsung BKS is available
+        const samsungBKSIsSupported = await RNSamsungBKS.isSupported()
+        if (samsungBKSIsSupported) {
+          // Set state flag to render the SamsungBKS component. It will set
+          // the loading state to false when it is ready
+          this.setState({ samsungBKSIsSupported })
+          return
+        }
       }
     }
 
