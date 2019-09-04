@@ -6,10 +6,14 @@ import { StatusBar } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 
 import { Navigation } from './Navigation'
+import { updateExchangeRate } from 'utils/price'
+import { findBestAvailableCurrency } from 'utils/currencies'
 import PushNotifications from './PushNotifications'
 import AuthenticationGuard from 'components/authentication-guard'
 import UpdatePrompt from 'components/update-prompt'
 import BackupPrompt from 'components/backup-prompt'
+
+const EXCHANGE_RATE_POLL_INTERVAL = 60 * 10 * 1000
 
 class MarketplaceApp extends React.Component {
   static router = Navigation.router
@@ -20,6 +24,32 @@ class MarketplaceApp extends React.Component {
     const hasAccount = this.props.wallet.accounts.length > 0
     if (!hasAuthentication || !hasAccount) {
       this.props.navigation.navigate('Welcome')
+    }
+
+    // Update exchange rates at a regular interval
+    this.updateExchangeRates = () => {
+      const fiatCurrency =
+        this.props.settings.currency || findBestAvailableCurrency()
+      updateExchangeRate(fiatCurrency, 'ETH')
+      updateExchangeRate(fiatCurrency, 'DAI')
+    }
+    this.exchangeRateUpdater = setInterval(
+      this.updateExchangeRates,
+      EXCHANGE_RATE_POLL_INTERVAL
+    )
+  }
+
+  componentWillUnmount = () => {
+    // Cleanup exchange rate updater
+    if (this.exchangeRateUpdater) {
+      clearInterval(this.exchangeRateUpdateR)
+    }
+  }
+
+  componentWillUpdate = prevProps => {
+    // Update exchange rates on currency change
+    if (prevProps.settings.currency !== this.settings.currency) {
+      this.updateExchangeRates()
     }
   }
 
