@@ -2,9 +2,12 @@
 <html lang="en" dir="ltr">
   <head>
     <title>Origin Protocol DApp - devel</title>
-    <meta name="title" content="Origin Protocol">
+    <meta name="title" content="Origin Protocol" />
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no, user-scalable=no">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no, user-scalable=no"
+    />
     <meta http-equiv="Content-Language" content="en" />
     <link rel="icon" href="favicon.ico" />
     <style>
@@ -17,10 +20,63 @@
         width: 3rem;
         height: 3rem;
       }
+      .alert {
+        padding: 20px;
+        background-color: #f44336; /* Red */
+        color: white;
+        margin-bottom: 15px;
+      }
+
+      .closebtn {
+        margin-left: 15px;
+        color: white;
+        font-weight: bold;
+        float: right;
+        font-size: 22px;
+        line-height: 20px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .closebtn:hover {
+        color: black;
+      }
     </style>
   </head>
   <body>
-    <div id="app"><div class="loading-screen"></div></div>
+    <div id="app">
+      <script>
+        function checkLocalStorage() {
+          var test = 'test'
+          try {
+            localStorage.setItem(test, test)
+            localStorage.removeItem(test)
+            return true
+          } catch (e) {
+            return false
+          }
+        }
+        var loadingDiv = document.createElement('div')
+
+        if (checkLocalStorage()) {
+          loadingDiv.className = 'loading-screen'
+        } else {
+          loadingDiv.className = 'alert'
+          loadingDiv.id = 'warning'
+          document.body.appendChild(loadingDiv)
+          var error = document.createElement('div')
+          error.className = 'closebtn'
+          error.innerHTML += '&times;'
+          error.onclick = function() {
+            document.getElementById('app').removeChild(loadingDiv)
+          }
+          loadingDiv.innerHTML +=
+            '<fbt>You might have cookies disabled. If you are using Brave lower your shileds.</fbt>'
+          loadingDiv.appendChild(error)
+        }
+        document.getElementById('app').appendChild(loadingDiv)
+      </script>
+    </div>
   </body>
   <!-- <script crossorigin src="vendor/openpgp.min.js"></script>
   <script>

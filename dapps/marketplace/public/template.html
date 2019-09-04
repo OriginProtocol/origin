@@ -1,22 +1,33 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
     <title>Origin Protocol DApp</title>
-    <meta name="title" content="Origin Protocol">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no, user-scalable=no">
-    <meta http-equiv="Content-Language" content="en">
-    <meta http-equiv="expires" content="0">
-    <meta property="og:url" content="https://www.shoporigin.com">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Origin Protocol Dapp">
-    <meta property="og:description" content="Decentralized marketplace on the blockchain">
-    <meta property="og:image" content="https://www.shoporigin.com/images/join-origin-earn-tokens.png">
-    <meta name="apple-itunes-app" content="app-id=1446091928">
+    <meta name="title" content="Origin Protocol" />
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no, user-scalable=no"
+    />
+    <meta http-equiv="Content-Language" content="en" />
+    <meta http-equiv="expires" content="0" />
+    <meta property="og:url" content="https://www.shoporigin.com" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Origin Protocol Dapp" />
+    <meta
+      property="og:description"
+      content="Decentralized marketplace on the blockchain"
+    />
+    <meta
+      property="og:image"
+      content="https://www.shoporigin.com/images/join-origin-earn-tokens.png"
+    />
+    <meta name="apple-itunes-app" content="app-id=1446091928" />
     <link rel="icon" href="favicon.ico" />
-    <% _.forEach(htmlWebpackPlugin.files.css, function(file) { %><link rel="stylesheet" href="<%- file %>" /><% }); %>
+    <% _.forEach(htmlWebpackPlugin.files.css, function(file) { %>
+    <link rel="stylesheet" href="<%- file %>" />
+    <% }); %>
   </head>
-  <body><div id="app"><div class="loading-screen"></div></div></body>
+  <body></body>
   <!-- <script crossorigin src="vendor/openpgp.min.js"></script>
   <script>
     if (typeof window.openpgp !== 'undefined') {
@@ -26,19 +37,25 @@
     }
   </script> -->
   <script>
-    localStorage.ognNetwork = "<%= htmlWebpackPlugin.options.network %>"
-    localStorage.metaMaskEnabled = "<%= htmlWebpackPlugin.options.metaMask %>"
+    localStorage.ognNetwork = '<%= htmlWebpackPlugin.options.network %>'
+    localStorage.metaMaskEnabled = '<%= htmlWebpackPlugin.options.metaMask %>'
   </script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-106384880-2"></script>
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=UA-106384880-2"
+  ></script>
   <script>
     var hostname = window.location.hostname
     window.dataLayer = window.dataLayer || []
     if (window.gtag == undefined) {
-      function gtag(){ dataLayer.push(arguments) }
+      function gtag() {
+        dataLayer.push(arguments)
+      }
     }
     if (hostname !== 'localhost' && hostname !== '0.0.0.0') {
-      gtag('js', new Date());
+      gtag('js', new Date())
     }
   </script>
-  <% _.forEach(htmlWebpackPlugin.files.js, function(file) { %><script src="<%- file %>"></script><% }); %>
+  <% _.forEach(htmlWebpackPlugin.files.js, function(file) { %><script src="<%- file %>"></script
+  ><% }); %>
 </html>
