@@ -407,11 +407,11 @@ class MarketplaceScreen extends Component {
 
   onWebViewMessage = msg => {
     if (msg.targetFunc === 'handleGraphqlResult') {
-      DeviceEventEmitter.emit('graphqlResult', result)
+      DeviceEventEmitter.emit('graphqlResult', msg.data)
     } else if (msg.targetFunc === 'handleGraphqlError') {
-      DeviceEventEmitter.emit('graphqlError', result)
+      DeviceEventEmitter.emit('graphqlError', msg.data)
     } else if (msg.targetFunc === 'handleScrollHandlerResponse') {
-      this.setState({ enablePullToRefresh: scrollTop === 0 })
+      this.setState({ enablePullToRefresh: msg.data === 0 })
     }
   }
 

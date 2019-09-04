@@ -163,7 +163,7 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   }
 
   const renderNotificationCard = modal => {
-    ;<NotificationCard onRequestClose={() => toggleModal(modal)} />
+    return <NotificationCard onRequestClose={() => toggleModal(modal)} />
   }
 
   const renderTransactionCard = modal => {
