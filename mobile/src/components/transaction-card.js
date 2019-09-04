@@ -40,8 +40,11 @@ const TransactionCard = props => {
 
   // Convert gas price to ether
   const gas = global.web3.utils.fromWei(gasWei.toString(), 'ether')
-  const ethExchangeRate = props.exchangeRates[`${fiatCurrency[1]}/ETH`].rate
-  const daiExchangeRate = props.exchangeRates[`${fiatCurrency[1]}/DAI`].rate
+
+  // Get the exchange rates for ETH and DAI
+  const ethExchangeRate = props.exchangeRates[`${fiatCurrency.code}/ETH`].rate
+  const daiExchangeRate = props.exchangeRates[`${fiatCurrency.code}/DAI`].rate
+
   const balances = wallet.accountBalance
 
   let heading,
@@ -112,7 +115,7 @@ const TransactionCard = props => {
 
   const total =
     calculableTotal &&
-    `${fiatCurrency[2]}${(gasFiatPrice + paymentFiatPrice).toFixed(2)}`
+    `${fiatCurrency.symbol}${(gasFiatPrice + paymentFiatPrice).toFixed(2)}`
 
   const hasSufficientDai = daiRequired <= Number(balances['dai'] || 0)
   const hasSufficientEth = ethRequired <= Number(balances['eth'] || 0)
@@ -136,7 +139,7 @@ const TransactionCard = props => {
                 </View>
                 <View>
                   <Text style={[styles.amount, styles.converted]}>{`${
-                    fiatCurrency[2]
+                    fiatCurrency.symbol
                   }${paymentFiatPrice.toFixed(2)}`}</Text>
                   <Text style={styles.amount}>
                     <Image
@@ -156,7 +159,7 @@ const TransactionCard = props => {
               </View>
               <View>
                 <Text style={[styles.amount, styles.converted]}>{`${
-                  fiatCurrency[2]
+                  fiatCurrency.symbol
                 }${gasFiatPrice.toFixed(2)}`}</Text>
                 <Text style={styles.amount}>
                   <Image source={currencies['eth'].icon} style={styles.icon} />

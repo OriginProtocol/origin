@@ -22,26 +22,30 @@ const IMAGES_PATH = '../../assets/images/'
 
 const currencyScreen = props => {
   // Sorted list of available currencies
-  const currencies = CURRENCIES.map(i => {
-    return { key: i[1], value: `${i[2]} ${i[1]}` }
-  }).sort((a, b) => (a.key > b.key ? 1 : -1))
+  const currencies = CURRENCIES.map(currency => {
+    return { key: currency.code, value: `${currency.symbol} ${currency.code}` }
+  }).sort((a, b) => (a.code > b.code ? 1 : -1))
 
   const selectedCurrency =
     props.settings.currency || findBestAvailableCurrency()
+
+  const handleSetCurrency = (currencyCode) => {
+    props.setCurrency(CURRENCIES.find(currency => currency.code === currencyCode))
+  }
 
   return (
     <ScrollView style={styles.listContainer}>
       <FlatList
         data={currencies}
         renderItem={({ item }) => (
-          <TouchableHighlight onPress={() => props.setCurrency(item.key)}>
+          <TouchableHighlight onPress={() => handleSetCurrency(item.key)}>
             <View style={styles.listItem}>
               <View style={styles.listItemTextContainer}>
                 <Text>{item.value}</Text>
               </View>
               {
                 <View style={styles.listItemIconContainer}>
-                  {selectedCurrency === item.key && (
+                  {selectedCurrency.code === item.key && (
                     <Image
                       source={require(`${IMAGES_PATH}selected.png`)}
                       style={styles.listItemSelected}

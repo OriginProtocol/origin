@@ -72,13 +72,13 @@ export const PROMPT_MESSAGE = 'I am ready to start messaging on Origin.'
 export const PROMPT_PUB_KEY = 'My public messaging key is: '
 
 export const CURRENCIES = [
-  ['fiat-USD', 'USD', '$'],
-  ['fiat-GBP', 'GBP', '£'],
-  ['fiat-EUR', 'EUR', '€'],
-  ['fiat-KRW', 'KRW', '₩'],
-  ['fiat-JPY', 'JPY', '¥'],
-  ['fiat-CNY', 'CNY', '¥'],
-  ['fiat-SGD', 'SGD', 'S$']
+  { code: 'USD', symbol: '$' },
+  { code: 'GBP', symbol: '£' },
+  { code: 'EUR', symbol: '€' },
+  { code: 'KRW', symbol: '₩' },
+  { code: 'JPY', symbol: '¥' },
+  { code: 'CNY', symbol: '¥' },
+  { code: 'SGD', symbol: 'S$' }
 ]
 
 /* eslint-disable camelcase */

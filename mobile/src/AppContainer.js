@@ -31,9 +31,9 @@ class MarketplaceApp extends React.Component {
     this.updateExchangeRates = () => {
       const fiatCurrency =
         this.props.settings.currency || findBestAvailableCurrency()
-      console.debug('Updating exchange rates for', fiatCurrency)
-      updateExchangeRate(fiatCurrency, 'ETH')
-      updateExchangeRate(fiatCurrency, 'DAI')
+      console.debug('Updating exchange rates for', fiatCurrency.code)
+      updateExchangeRate(fiatCurrency.code, 'ETH')
+      updateExchangeRate(fiatCurrency.code, 'DAI')
     }
     this.exchangeRateUpdater = setInterval(
       this.updateExchangeRates,
