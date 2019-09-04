@@ -581,6 +581,7 @@ require('react-styl')(`
   @media (max-width: 767.98px)
     .settings
       padding-top: 2rem
+      padding-bottom: 4rem
       h1
         font-size: 32px
         margin-bottom: 1rem
