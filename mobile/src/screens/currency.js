@@ -13,40 +13,35 @@ import {
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
 
-import { LANGUAGES } from '../constants'
-import { setLanguage } from 'actions/Settings'
-import setFbtLanguage, { findBestAvailableLanguage } from 'utils/language'
+import { CURRENCIES } from '../constants'
+import { setCurrency } from 'actions/Settings'
+import { findBestAvailableCurrency } from 'utils/currencies'
 import ListStyles from 'styles/list'
 
 const IMAGES_PATH = '../../assets/images/'
 
-const languageScreen = props => {
-  // Sorted list of available languages
-  const languages = LANGUAGES.map(i => {
-    return { key: i[0], value: i[1] }
-  }).sort((a, b) => (a.value > b.value ? 1 : -1))
+const currencyScreen = props => {
+  // Sorted list of available currencies
+  const currencies = CURRENCIES.map(i => {
+    return { key: i[1], value: `${i[2]} ${i[1]}` }
+  }).sort((a, b) => (a.key > b.key ? 1 : -1))
 
-  const selectedLanguage =
-    props.settings.language || findBestAvailableLanguage()
+  const selectedCurrency =
+    props.settings.currency || findBestAvailableCurrency()
 
   return (
     <ScrollView style={styles.listContainer}>
       <FlatList
-        data={languages}
+        data={currencies}
         renderItem={({ item }) => (
-          <TouchableHighlight
-            onPress={() => {
-              setFbtLanguage(item.key)
-              props.setLanguage(item.key)
-            }}
-          >
+          <TouchableHighlight onPress={() => props.setCurrency(item.key)}>
             <View style={styles.listItem}>
               <View style={styles.listItemTextContainer}>
                 <Text>{item.value}</Text>
               </View>
               {
                 <View style={styles.listItemIconContainer}>
-                  {selectedLanguage === item.key && (
+                  {selectedCurrency === item.key && (
                     <Image
                       source={require(`${IMAGES_PATH}selected.png`)}
                       style={styles.listItemSelected}
@@ -64,9 +59,9 @@ const languageScreen = props => {
   )
 }
 
-languageScreen.navigationOptions = () => {
+currencyScreen.navigationOptions = () => {
   return {
-    title: String(fbt('Language', 'LanguageScreen.headerTitle')),
+    title: String(fbt('Currency', 'CurrencyScreen.headerTitle')),
     headerTitleStyle: {
       fontFamily: 'Poppins',
       fontSize: 17,
@@ -80,13 +75,13 @@ const mapStateToProps = ({ settings }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  setLanguage: language => dispatch(setLanguage(language))
+  setCurrency: currency => dispatch(setCurrency(currency))
 })
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(languageScreen)
+)(currencyScreen)
 
 const styles = StyleSheet.create({
   ...ListStyles

@@ -21,6 +21,7 @@ import PinScreen from 'screens/pin'
 import AccountsScreen from 'screens/accounts'
 import AccountScreen from 'screens/account'
 import LanguageScreen from 'screens/language'
+import CurrencyScreen from 'screens/currency'
 import MarketplaceScreen from 'screens/marketplace'
 import SettingsScreen from 'screens/settings'
 import WalletScreen from 'screens/wallet'
@@ -74,6 +75,7 @@ const SettingsStack = createStackNavigator(
   {
     Account: AccountScreen,
     Accounts: AccountsScreen,
+    Currency: CurrencyScreen,
     Language: LanguageScreen,
     ImportAccount: ImportAccountScreen,
     ImportMnemonic: {

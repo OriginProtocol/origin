@@ -8,7 +8,8 @@ export const SettingsConstants = keyMirror(
     SET_DEVICE_TOKEN: null,
     SET_PIN: null,
     SET_BIOMETRY_TYPE: null,
-    SET_LANGUAGE: null
+    SET_LANGUAGE: null,
+    SET_CURRENCY: null
   },
   'SETTINGS'
 )
@@ -45,5 +46,12 @@ export function setLanguage(language) {
   return {
     type: SettingsConstants.SET_LANGUAGE,
     language
+  }
+}
+
+export function setCurrency(currency) {
+  return {
+    type: SettingsConstants.SET_CURRENCY,
+    currency
   }
 }

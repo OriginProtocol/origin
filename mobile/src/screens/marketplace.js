@@ -80,6 +80,10 @@ class MarketplaceScreen extends Component {
       this.injectLanguage()
     }
 
+    if (prevProps.settings.currency !== this.props.settings.currency) {
+      this.injectCurrency()
+    }
+
     // Check for default dapp url
     if (
       get(prevProps, 'settings.network.dappUrl') !==
@@ -411,7 +415,7 @@ class MarketplaceScreen extends Component {
     this.setState({ webViewUrlTrigger: url.href })
   }
 
-  onWebViewMessage = (msg) => {
+  onWebViewMessage = msg => {
     console.log(msg)
   }
 
@@ -576,8 +580,8 @@ class MarketplaceScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ activation, marketplace, wallet, settings }) => {
-  return { activation, marketplace, wallet, settings }
+const mapStateToProps = ({ wallet, settings }) => {
+  return { wallet, settings }
 }
 
 const mapDispatchToProps = dispatch => ({
