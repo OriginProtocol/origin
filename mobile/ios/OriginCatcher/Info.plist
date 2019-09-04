@@ -41,7 +41,7 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>We will not be using the calendar</string>
 	<key>NSCameraUsageDescription</key>
-	<string>We would like to use your camera to photograph and upload images</string>
+	<string>We would like to use your camera to take photos for your profile image and any listings that you create</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Enabling Face ID allows you quick and secure access to your account</string>
 	<key>NSLocationAlwaysUsageDescription</key>
