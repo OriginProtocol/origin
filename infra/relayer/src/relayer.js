@@ -3,6 +3,7 @@
 const memoize = require('lodash/memoize')
 const Web3 = require('web3')
 const utils = require('ethereumjs-util')
+const { Validator, PROXY_HARDCODE } = require('../src/validator')
 const ProxyFactoryContract = require('@origin/contracts/build/contracts/ProxyFactory_solc')
 const IdentityProxyContract = require('@origin/contracts/build/contracts/IdentityProxy_solc')
 const MarketplaceContract = require('@origin/contracts/build/contracts/V00_Marketplace')
@@ -156,6 +157,8 @@ class Relayer {
       .forEach(o => (this.methods[o.signature] = o))
 
     this.riskEngine = new RiskEngine()
+
+    this.validator = new Validator(this.addresses)
   }
 
   /**
@@ -333,6 +336,12 @@ class Relayer {
       Sentry.captureMessage(msg)
       return res.status(400).send({ errors: ['Invalid function signature'] })
     }
+
+    // 2.1 Deep check that the potentialy nested transaction are calling
+    // approved methods. For now, we don't fail on this, since we might
+    // have the whitelist too tight. We'll check the logs after a while
+    // and see if there is anything we should add.
+    this.validator.validate(PROXY_HARDCODE, txData)
 
     let tx, txHash, dbTx
 

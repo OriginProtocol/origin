@@ -44,7 +44,8 @@
     "start": "per-env",
     "start:development": "nodemon src/app.js",
     "start:production": "node src/app.js",
-    "test": "LOG_LEVEL=NONE NODE_ENV=test mocha --timeout 10000 --file test/setup --exit"
+    "test": "LOG_LEVEL=NONE NODE_ENV=test mocha --timeout 10000 --file test/setup --exit",
+    "test:whitelist": "LOG_LEVEL=NONE NODE_ENV=test mocha --exit test/validator.test.js"
   },
   "prettier": {
     "semi": false,
