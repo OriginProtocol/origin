@@ -4,21 +4,21 @@
     "Ri5Gg2SNwcgIl8+233d8Ag==": {
       "translations": [
         {
-          "translation": "Address"
+          "translation": "アドレス"
         }
       ]
     },
     "xcXF5fEWXTaRWnAPnImIEA==": {
       "translations": [
         {
-          "translation": "Copy"
+          "translation": "コピー"
         }
       ]
     },
     "FZRVHsdXqI51WS0/rgsmvQ==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "クリップボードにコピーしました！"
         }
       ]
     },
@@ -32,1435 +32,1463 @@
     "vpHbx0KGwimfUDMM2yWJiw==": {
       "translations": [
         {
-          "translation": "Authentication failed"
+          "translation": "認証に失敗しました"
         }
       ]
     },
     "RDq5ZjyJ3If5xODxIb74hg==": {
       "translations": [
         {
-          "translation": "Incorrect pin code"
+          "translation": "Pinコードが一致しません"
         }
       ]
     },
-    "LnwecOVmQ25DVugF+RemxQ==": {
+    "fsX2zn/I8IxKM/YS6pNIiA==": {
       "translations": [
         {
-          "translation": "Authentication required"
+          "translation": "Authentication Required"
         }
       ]
     },
-    "J/SHV34/Q6NzSn+T7V8i2w==": {
-      "translations": [
-        {
-          "translation": "Pin required"
-        }
-      ]
-    },
-    "jakn3qdMee3dY1QQSnxPBw==": {
-      "translations": [
-        {
-          "translation": "Back up account"
-        }
-      ]
-    },
-    "zq6BJdlScS7RmSd1QYOx/w==": {
-      "translations": [
-        {
-          "translation": "If you lose your account private key, you will not be able to access your funds."
-        }
-      ]
-    },
-    "4usqugeX/QJAVYFd20+Juw==": {
-      "translations": [
-        {
-          "translation": "If you lose your account recovery phrase, you will not be able to access your funds."
-        }
-      ]
-    },
-    "tnjbZFYtRWMI0Cvx7tUoLw==": {
-      "translations": [
-        {
-          "translation": "Back up private key"
-        }
-      ]
-    },
-    "NtSYu4dP1gx3Q867CPSNqA==": {
-      "translations": [
-        {
-          "translation": "Back up recovery phrase"
-        }
-      ]
-    },
-    "gS5uLfzsGn8W+iy1wGPcFA==": {
-      "translations": [
-        {
-          "translation": "Back up later"
-        }
-      ]
-    },
-    "leoyo7yPyqCZYLzdYarxVg==": {
-      "translations": [
-        {
-          "translation": "Blockchain & Your Personal Data"
-        }
-      ]
-    },
-    "TsWyCTUsQI/nO9f3+35sXw==": {
-      "translations": [
-        {
-          "translation": "By creating a profile, you are associating your name and photo with your Ethereum account. This means that others will be able to connect your blockchain transactions to your name and photo."
-        }
-      ]
-    },
-    "293hkFZBDThJ9B1cWDqFeA==": {
-      "translations": [
-        {
-          "translation": "Got it"
-        }
-      ]
-    },
-    "53OPnmUdKU2hcrljQxQZLA==": {
-      "translations": [
-        {
-          "translation": "An error occurred loading the Origin Marketplace. Please check your internet connection."
-        }
-      ]
-    },
-    "y5hrsKtem9k4a3YYBARQUQ==": {
+    "uBbr58ZsBIlotqS29XDzmA==": {
       "translations": [
         {
           "translation": "Retry"
         }
       ]
     },
+    "b1eg8txmL9GsnAqK+wcpDA==": {
+      "translations": [
+        {
+          "translation": "Pin Required"
+        }
+      ]
+    },
+    "jakn3qdMee3dY1QQSnxPBw==": {
+      "translations": [
+        {
+          "translation": "アカウントをバックアップする"
+        }
+      ]
+    },
+    "zq6BJdlScS7RmSd1QYOx/w==": {
+      "translations": [
+        {
+          "translation": "アカウントの秘密鍵をなくした場合、あなたの資金にアクセスすることはできません。"
+        }
+      ]
+    },
+    "4usqugeX/QJAVYFd20+Juw==": {
+      "translations": [
+        {
+          "translation": "アカウントのリカバリフレーズをなくした場合、あなたの資金にアクセスすることはできません。"
+        }
+      ]
+    },
+    "tnjbZFYtRWMI0Cvx7tUoLw==": {
+      "translations": [
+        {
+          "translation": "秘密鍵をバックアップする"
+        }
+      ]
+    },
+    "NtSYu4dP1gx3Q867CPSNqA==": {
+      "translations": [
+        {
+          "translation": "リカバリフレーズのバックアップ"
+        }
+      ]
+    },
+    "gS5uLfzsGn8W+iy1wGPcFA==": {
+      "translations": [
+        {
+          "translation": "後でバックアップする"
+        }
+      ]
+    },
+    "leoyo7yPyqCZYLzdYarxVg==": {
+      "translations": [
+        {
+          "translation": "ブロックチェーンと個人データ"
+        }
+      ]
+    },
+    "TsWyCTUsQI/nO9f3+35sXw==": {
+      "translations": [
+        {
+          "translation": "プロファイルを作成することにより、名前と写真をイーサリアムアカウントに関連付けます。これは、他の人があなたのブロックチェーントランザクションをあなたと紐付け可能になるということです。"
+        }
+      ]
+    },
+    "293hkFZBDThJ9B1cWDqFeA==": {
+      "translations": [
+        {
+          "translation": "了解！"
+        }
+      ]
+    },
+    "53OPnmUdKU2hcrljQxQZLA==": {
+      "translations": [
+        {
+          "translation": "Origin マーケットプレイスの読み込み中にエラーが発生しました。インターネット接続を確認してください。"
+        }
+      ]
+    },
+    "y5hrsKtem9k4a3YYBARQUQ==": {
+      "translations": [
+        {
+          "translation": "リトライ"
+        }
+      ]
+    },
     "KU9ATM6FUSyE4otzmBVDgA==": {
       "translations": [
         {
-          "translation": "Are you sure you don't want Origin Rewards?"
+          "translation": "Origin からの報酬は不要ですか？"
         }
       ]
     },
     "09diYnabOsFOs1TD+djfhw==": {
       "translations": [
         {
-          "translation": "Your new wallet will be ineligible to earn OGN."
+          "translation": "新しいウォレットはOGNを獲得する資格がありません。"
         }
       ]
     },
     "irOaYRzzICZEzzJSVHZuPw==": {
       "translations": [
         {
-          "translation": "I'm sure"
+          "translation": "はい、了解です"
         }
       ]
     },
     "ElbsZ92b2NSuDKUhrEhInA==": {
       "translations": [
         {
-          "translation": "No, wait"
+          "translation": "いいえ！欲しいです"
         }
       ]
     },
     "FCBgGtybLVdEFPoBHMNwRw==": {
       "translations": [
         {
-          "translation": "Enable Notifications"
+          "translation": "通知を有効にする"
         }
       ]
     },
     "2UTQi1Ij4joTFsZVJtd81g==": {
       "translations": [
         {
-          "translation": "Woops! It looks like you have notifications disabled. To get the latest updates about your transactions we recommend enabling them in the settings for the Origin Marketplace application."
+          "translation": "通知が無効になっているようです。あなたの取引に関する最新の更新を入手するには、Origin アプリの設定で通知を有効にしてください。"
         }
       ]
     },
     "lOwKCA3REqk0Tz8uOBf3Pw==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "設定を開く"
         }
       ]
     },
     "Ka8PTaoYl8PmXeWLQ8Qrzw==": {
       "translations": [
         {
-          "translation": "Close"
+          "translation": "閉じる"
         }
       ]
     },
     "Hd7GnyffrmsytOC81wf1og==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "設定を開く"
         }
       ]
     },
     "2Ys/u9LEtc69RMwvBUge9g==": {
       "translations": [
         {
-          "translation": "Signature Request"
+          "translation": "署名リクエスト"
         }
       ]
     },
     "/EqSe0JWGoaELSz+mVvOhw==": {
       "translations": [
         {
-          "translation": "Sign"
+          "translation": "署名"
         }
       ]
     },
     "aHPwi7q8WIdH6tItKZGWpQ==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "キャンセル"
         }
       ]
     },
     "BSXd24qMR/v2kkJGZSzAkA==": {
       "translations": [
         {
-          "translation": "Create Listing"
+          "translation": "出品情報を作成する。"
         }
       ]
     },
     "kht+lHwylljzghuxx6U44Q==": {
       "translations": [
         {
-          "translation": "Purchase"
+          "translation": "購入"
         }
       ]
     },
     "I2HWbFKlgUggmCCeJAAi6w==": {
       "translations": [
         {
-          "translation": "Publish Identity"
+          "translation": "IDを公開する"
         }
       ]
     },
     "HcQ+0ssTVx9JP0dbueE6EA==": {
       "translations": [
         {
-          "translation": "Approve Currency Conversion"
+          "translation": "通貨換算を承認する"
         }
       ]
     },
     "6i7qqM7tIY6QrQPlZk0sgA==": {
       "translations": [
         {
-          "translation": "Enable Meta Transactions"
+          "translation": "メタトランザクションを有効にする"
         }
       ]
     },
     "UptEXt/80yEZlV42llBLzQ==": {
       "translations": [
         {
-          "translation": "Blockchain Transaction"
+          "translation": "ブロックチェーントランザクション"
         }
       ]
     },
     "0Hcb7EEcgWvM/wgaryT03g==": {
       "translations": [
         {
-          "translation": "Payment"
+          "translation": "支払い"
         }
       ]
     },
     "2immGCBCROovRIdEMKqUlw==": {
       "translations": [
         {
-          "translation": "Gas Cost"
+          "translation": "ガス代"
         }
       ]
     },
     "aHqIW5wN2myfcutOuKhMCA==": {
       "translations": [
         {
-          "translation": "Boost"
+          "translation": "ブースト"
         }
       ]
     },
     "ATXUAJSbJ1McXJqB89l9lQ==": {
       "translations": [
         {
-          "translation": "Your Account"
+          "translation": "マイアカウント"
         }
       ]
     },
     "8vFUXSEVa7KZBhBbxn2FHw==": {
       "translations": [
         {
-          "translation": "Your Balances"
+          "translation": "残高"
         }
       ]
     },
     "VjPzFy1pA4SOMEquZR4l8w==": {
       "translations": [
         {
-          "translation": "Your Balance"
+          "translation": "残高"
         }
       ]
     },
     "WGap/aXIb4uxFVQuBIhjuw==": {
       "translations": [
         {
-          "translation": "You don't have enough ETH to submit this transaction."
+          "translation": "ETHが不足しているので送信できません。"
         }
       ]
     },
     "bpJjuZr6/qPESAQkORoCMg==": {
       "translations": [
         {
-          "translation": "You don't have enough ETH to publish your identity."
+          "translation": "IDを公開するためのETHが不足しています。"
         }
       ]
     },
     "4/6+bbpzXA+zeU20pC0xdQ==": {
       "translations": [
         {
-          "translation": "Confirm"
+          "translation": "確認する"
         }
       ]
     },
     "nxwmAvEdE7w9cM6fSB+fHw==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "キャンセル"
         }
       ]
     },
     "Yzqk2XJTQiSxv2t8cdh3nw==": {
       "translations": [
         {
-          "translation": "Update required"
+          "translation": "アップデートしてください"
         }
       ]
     },
     "VgnIScPQ4MxmjP3MHHSlpA==": {
       "translations": [
         {
-          "translation": "Woops! It looks like you are using an old version of the Origin Marketplace App. Please update to proceed."
+          "translation": "古いバージョンのOriginアプリを使用していませんか？続けるには最新バージョンへのアップデートが必要です。"
         }
       ]
     },
     "HSJ4lSFH52qxe5hmSMBLaQ==": {
       "translations": [
         {
-          "translation": "Update available"
+          "translation": "利用可能なアップデート"
         }
       ]
     },
     "6QOETx2H8d657NCFME14fQ==": {
       "translations": [
         {
-          "translation": "It looks like you are using an old version of the Origin Marketplace App. For the best experience, we recommend you update."
+          "translation": "古いバージョンのOriginアプリを使用していませんか？ベストなパフォーマンスを維持するためにアプリを最新版へアップデートしてください。"
         }
       ]
     },
     "QpVi6Q8bytL6nnct+8vJDg==": {
       "translations": [
         {
-          "translation": "Update"
+          "translation": "アップデート"
         }
       ]
     },
     "BY1VaMBt7Cf6hcIW3G+xTw==": {
       "translations": [
         {
-          "translation": "Not now"
+          "translation": "今はやめておく"
         }
       ]
     },
     "XsJI4lHivUR4kWUoxiX2XA==": {
       "translations": [
         {
-          "translation": "What will be visible on the blockchain?"
+          "translation": "何がブロックチェーン上で表示されますか？"
         }
       ]
     },
     "rfyOc2A6KqTaGmyE0aHtuA==": {
       "translations": [
         {
-          "translation": "Account Details"
+          "translation": "アカウント詳細"
         }
       ]
     },
     "63n7ZrjXs/xul67zZMRH6Q==": {
       "translations": [
         {
-          "translation": "Important!"
+          "translation": "重要！"
         }
       ]
     },
     "fbdJ5PgCtMiZoKwpqFSHFw==": {
       "translations": [
         {
-          "translation": "As a security precaution, the clipboard will be cleared after one minute."
+          "translation": "セキュリティ上の措置として、クリップボードは1分後に消去されます。"
         }
       ]
     },
     "fr/gqa6K0WToleM5Z+fKjQ==": {
       "translations": [
         {
-          "translation": "Got it"
+          "translation": "了解！"
         }
       ]
     },
     "rVHYls86LiL2qXmPeABLyg==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "クリップボードにコピーしました！"
         }
       ]
     },
     "ARxpkvUPK0jFYXwVrYuIMw==": {
       "translations": [
         {
-          "translation": "Important!"
+          "translation": "重要！"
         }
       ]
     },
     "Fj7mSGlzBW8WmXnCJpygjA==": {
       "translations": [
         {
-          "translation": "Have you backed up your private key or recovery phrase for this account? The account will be permanently deleted and you must have the private key or recovery phrase to recover it. Are you sure that you want to delete this account?"
+          "translation": "このアカウントの秘密鍵または回復フレーズをバックアップしましたか。アカウントは完全に削除されますので、復元するには秘密鍵または復元フレーズが必要です。このアカウントを削除してよろしいですか？"
         }
       ]
     },
     "0bq6YbxhOXa2A6WJpEaL+g==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "キャンセル"
         }
       ]
     },
     "lpp3lYIsSATmD+bTHnp7fA==": {
       "translations": [
         {
-          "translation": "Delete"
+          "translation": "削除する"
         }
       ]
     },
     "KaZkh00tsKdzL4PMvmqOWw==": {
       "translations": [
         {
-          "translation": "Make Active Account"
+          "translation": "アクティブアカウントを作る"
         }
       ]
     },
     "p3W1jjM1O7xwySSBNKVkeQ==": {
       "translations": [
         {
-          "translation": "Show Recovery Phrase"
+          "translation": "リカバリフレーズを表示する"
         }
       ]
     },
     "vHA/IbKFZOLZEIvk17fbOQ==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "リカバリフレーズ"
         }
       ]
     },
     "3T0ncUvbWQQYHxwCYIWCzQ==": {
       "translations": [
         {
-          "translation": "Copy Recovery Phrase"
+          "translation": "リカバリフレーズをコピーする"
         }
       ]
     },
     "2Ql766BBWhadduhv1A8mCg==": {
       "translations": [
         {
-          "translation": "Show Private Key"
+          "translation": "秘密鍵を表示する"
         }
       ]
     },
     "qgFPa2G/IoAt9CIVn6ey1A==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "秘密鍵"
         }
       ]
     },
     "YL1+Pt1Th3TvLZQaVxak9w==": {
       "translations": [
         {
-          "translation": "Copy Private Key"
+          "translation": "秘密鍵をコピーする"
         }
       ]
     },
     "sL6k42V4vn/2x26sVAldkw==": {
       "translations": [
         {
-          "translation": "Delete Account"
+          "translation": "アカウントを削除する"
         }
       ]
     },
     "IiicX5WBjylfRHl57pd/cw==": {
       "translations": [
         {
-          "translation": "Accounts"
+          "translation": "アカウント"
         }
       ]
     },
     "dcugbzsCXlIcz+MDEjVWhw==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "リカバリフレーズ"
         }
       ]
     },
     "/qUSB40G8z1yEmSpGgnhpw==": {
       "translations": [
         {
-          "translation": "Imported from Private Key"
+          "translation": "秘密鍵からインポートされました"
         }
       ]
     },
     "0j7TBsobep8YH0Qkvtrqcg==": {
       "translations": [
         {
-          "translation": "Important!"
+          "translation": "重要！"
         }
       ]
     },
     "PwgVT2B+QoumKmdtky/t5Q==": {
       "translations": [
         {
-          "translation": "As a security precaution, the clipboard will be cleared after one minute."
+          "translation": "セキュリティ上の措置として、クリップボードは1分後に消去されます。"
         }
       ]
     },
     "BM9rEF51uzQdLEjljSVj0A==": {
       "translations": [
         {
-          "translation": "Got it"
+          "translation": "了解！"
         }
       ]
     },
     "2s+9bYBUsRvylceP3dEVLA==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "クリップボードにコピーしました！"
         }
       ]
     },
     "5e+ltpuxscfACFNaS2dcOw==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "秘密鍵"
         }
       ]
     },
     "XyxrGJkJ5zgb6isZ0BdDlg==": {
       "translations": [
         {
-          "translation": "Write down your private key"
+          "translation": "秘密鍵を書き留める"
         }
       ]
     },
     "KmMOc82inx1QRhhp/fyMyQ==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "リカバリフレーズ"
         }
       ]
     },
     "DIhU+yQs2asm5wXqej7dfg==": {
       "translations": [
         {
-          "translation": "Write down your recovery phrase"
+          "translation": "リカバリフレーズを書き留める"
         }
       ]
     },
     "qS83Klnh433/5rED9+ibOg==": {
       "translations": [
         {
-          "translation": "Copy to clipboard"
+          "translation": "クリップボードにコピーしてください"
         }
       ]
     },
     "zLMFuSkl3GBjE3tx50sIhw==": {
       "translations": [
         {
-          "translation": "This private key is the key to your account. Write it down, or copy it to a password manager. We recommend NOT emailing it to yourself."
+          "translation": "この秘密鍵はあなたのアカウントの鍵です。それを書き留めるか、パスワードマネージャにコピーしてください。セキュリティの観点から、秘密鍵を電子メールなどで送信しないことをお勧めします。"
         }
       ]
     },
     "MAOXf1kKWz/7TYu8RqMmFQ==": {
       "translations": [
         {
-          "translation": "This recovery phrase is the key to your account. Write it down, or copy it to a password manager. We recommend NOT emailing it to yourself."
+          "translation": "このリカバリフレーズはあなたのアカウントの鍵です。それを書き留めるか、パスワードマネージャにコピーしてください。セキュリティの観点から、リカバリフレーズを電子メールなどで送信しないことをお勧めします。"
         }
       ]
     },
     "XMtHJ6TJ3X8ym6yKQ0KKVQ==": {
       "translations": [
         {
-          "translation": "Next"
+          "translation": "次へ"
         }
       ]
     },
     "zTv/d3wo3BWrq3lxTDiPvA==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "キャンセル"
         }
       ]
     },
     "KOevTAZaVtyeDehBuvlCrA==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "秘密鍵"
         }
       ]
     },
     "EhJiSCEWoUvWM8XEDOzT/g==": {
       "translations": [
         {
-          "translation": "Enter your private key"
+          "translation": "秘密鍵を入力してください"
         }
       ]
     },
     "yzRqhh/Qk+7ZfmQcdOrjUw==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "リカバリフレーズ"
         }
       ]
     },
     "myq3OtUs+Fi+a0kMs+wbIg==": {
       "translations": [
         {
-          "translation": "Select the words in the correct order"
+          "translation": "正しい順番で単語を選択してください"
         }
       ]
     },
     "EDxEE4K6bae2M7ydCHp6Zw==": {
       "translations": [
         {
-          "translation": "Go Back"
+          "translation": "戻る"
         }
       ]
     },
     "GkFF5s8F0GpJycWhOhK/iA==": {
       "translations": [
         {
-          "translation": "You have successfully backed up your recovery phrase"
+          "translation": "リカバリフレーズを正常にバックアップしました"
         }
       ]
     },
     "ODOQveQR0RNc0DEs0MLAxg==": {
       "translations": [
         {
-          "translation": "Done"
+          "translation": "完了"
         }
       ]
     },
     "P19QeS8TSjISSt0doVlLyA==": {
       "translations": [
         {
-          "translation": "Import your wallet"
+          "translation": "他のウォレットをインポート"
         }
       ]
     },
     "31RyFwYE/GDQQsrh3Ulvtw==": {
       "translations": [
         {
-          "translation": "You can import a wallet using one of the methods below."
+          "translation": "以下のいずれかの方法を使用してウォレットをインポートできます。"
         }
       ]
     },
     "2eAz/IqchpMLxH7uzquWIg==": {
       "translations": [
         {
-          "translation": "Use Recovery Phrase"
+          "translation": "リカバリフレーズを入力してください"
         }
       ]
     },
     "FvAa7D4zZNCqy+i4K2/9PQ==": {
       "translations": [
         {
-          "translation": "Use Private Key"
+          "translation": "秘密鍵を入力してください"
         }
       ]
     },
     "EAvFlbnkWZvKJZAe/pfhsA==": {
       "translations": [
         {
-          "translation": "That does not look like a valid recovery phrase."
+          "translation": "Emailアドレスが無効です"
         }
       ]
     },
     "HSUBJXtSYEYyVbjVfwQmtg==": {
       "translations": [
         {
-          "translation": "Enter Recovery Phrase"
+          "translation": "リカバリフレーズを入力してください"
         }
       ]
     },
     "peoX+3Gbnsy8TqdLquCI1g==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "続ける"
         }
       ]
     },
     "5/XzkOw7jsXF3hNFdAOfVw==": {
       "translations": [
         {
-          "translation": "That is not a valid private key."
+          "translation": "これは有効な秘密鍵ではありません。"
         }
       ]
     },
     "6kOIRuFPg13nKeGrxENaaw==": {
       "translations": [
         {
-          "translation": "Enter Private Key"
+          "translation": "秘密鍵を入力してください"
         }
       ]
     },
     "Aw26GuAppbsDwcsIGOynqA==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "続ける"
         }
       ]
     },
-    "bJwnJVo5lwuFi394jn741w==": {
+    "imEcy9mqva2P4QkCGKkG7w==": {
       "translations": [
         {
-          "translation": "Import your wallet to earn more OGN"
+          "translation": "検出されたその他のウォレット"
         }
       ]
     },
-    "nWjFXBqXG9oCHoaLwTYfXw==": {
+    "DktheTKIZ/i7gQzBzStqKQ==": {
       "translations": [
         {
-          "translation": "We’ve detected an existing wallet associated with this email. Please import it to continue earning rewards."
+          "translation": "以前に別のウォレットでこのメールを使用してOrigin Rewardsにサインアップしたことがわかりました。 Origin Rewardsを獲得し続けるには、そちらのウォレットをインポートしてください。"
         }
       ]
     },
-    "MNlD7ug4Qb5knKTv38TSRA==": {
+    "JdP7rfOo7gmvo9L/wkL+Zg==": {
       "translations": [
         {
-          "translation": "Import a wallet"
+          "translation": "他のウォレットをインポート"
         }
       ]
     },
     "QxzO198tsuRhwRSgbXnSSA==": {
       "translations": [
         {
-          "translation": "Continue without rewards"
+          "translation": "報酬なしで続ける"
         }
       ]
     },
     "59TOqnoYcFhWfpYdUrJdiw==": {
       "translations": [
         {
-          "translation": "Language"
+          "translation": "言語"
+        }
+      ]
+    },
+    "lPK1A5cn8JlhIPgCDjiuAg==": {
+      "translations": [
+        {
+          "translation": "Connection Error"
+        }
+      ]
+    },
+    "a3s77Iq0FypOEuisvfUcYg==": {
+      "translations": [
+        {
+          "translation": "Retry"
         }
       ]
     },
     "eeZwTjiz+eTRGp9qpIdbUg==": {
       "translations": [
         {
-          "translation": "{biometryType} Unavailable"
+          "translation": "{biometryType} 利用不可"
         }
       ]
     },
     "IaE+AHV4HvjUVM7WH5QGEQ==": {
       "translations": [
         {
-          "translation": "It looks like you have {biometryType} disabled. You will need to enable it in the settings for the Origin Marketplace App."
+          "translation": "{biometryType} が無効になっています。Originアプリの設定から有効にしてください。"
         }
       ]
     },
     "+2JgKmxomPm6EphuMZAFIg==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "設定を開く"
         }
       ]
     },
     "33H9wgLoaZ0e06VAnLqWDQ==": {
       "translations": [
         {
-          "translation": "Protect your wallet"
+          "translation": "ウォレットを守る"
         }
       ]
     },
     "LeVyToxA5TxqpAsWD4H61w==": {
       "translations": [
         {
-          "translation": "Add an extra layer of security to keep your crypto safe."
+          "translation": "暗号通貨を安全に保つため、セキュリティをさらに強化してください。"
         }
       ]
     },
     "Rs0apd73mOXN6yDQ2xy9/w==": {
       "translations": [
         {
-          "translation": "Create a Pin Code"
+          "translation": "Pinコードを作成する"
         }
       ]
     },
     "JzJZ+OTpb9hzNw77rQa8nw==": {
       "translations": [
         {
-          "translation": "Photo uploaded failed"
+          "translation": "写真のアップロードに失敗しました"
         }
       ]
     },
     "mVZ3B6uerQ4HZmCph0E5tQ==": {
       "translations": [
         {
-          "translation": "Photo library permissions not granted"
+          "translation": "写真ライブラリの権限が付与されていません"
         }
       ]
     },
     "8ZM8FmUk6ZfijCtumgXusw==": {
       "translations": [
         {
-          "translation": "Your photo will be visible on the blockchain"
+          "translation": "この写真はブロックチェーン上で表示されます。"
         }
       ]
     },
     "qMaDEzxqr8Ix4ron05p/oQ==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "続ける"
         }
       ]
     },
     "XEjWdGrZ6rODE6mbkHNr8A==": {
       "translations": [
         {
-          "translation": "Gallery access denied"
+          "translation": "ギャラリーへのアクセスが拒否されました"
         }
       ]
     },
     "AtumglY5rafPmxS5bIbDRQ==": {
       "translations": [
         {
-          "translation": "It looks like we cannot access your photo gallery. You will need to allow access in the onboarding for the Origin Marketplace App."
+          "translation": "フォトギャラリーにアクセスできないようです。 Origin Marketplaceアプリのアクセスを許可する必要があります。"
         }
       ]
     },
     "1BsZZVEF1PmW8lwWzkHYmg==": {
       "translations": [
         {
-          "translation": "Upload a photo"
+          "translation": "写真をアップロードする"
         }
       ]
     },
     "Sgdsg46ONGdu6O6X2qxfcg==": {
       "translations": [
         {
-          "translation": "Looking good"
+          "translation": "いいですね！"
         }
       ]
     },
     "HIo5dv7pY9YsS7Fqm3bXfg==": {
       "translations": [
         {
-          "translation": "That does not look like a valid email."
+          "translation": "Emailアドレスが無効です"
         }
       ]
     },
     "Peq94zFjleGar7Rv3g1lgg==": {
       "translations": [
         {
-          "translation": "Let's get started"
+          "translation": "始めましょう"
         }
       ]
     },
     "RNEgkK4iv5gSEf8ZLkbgjg==": {
       "translations": [
         {
-          "translation": "What's your email address?"
+          "translation": "メールアドレスを教えてください"
         }
       ]
     },
     "En1GXA0gOCZoss4o/D8dNg==": {
       "translations": [
         {
-          "translation": "We will use your email to notify you of important notifications when you buy or sell."
+          "translation": "あなたが販売または購入する際に、Originはメールで重要な通知をお知らせします。"
         }
       ]
     },
     "gneL+SMREOKfFfW2Ust3kg==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "続ける"
         }
       ]
     },
     "6bERcxQ2fGSwj490/D7Vuw==": {
       "translations": [
         {
-          "translation": "Verify your email"
+          "translation": "電子メールアドレスの確認"
         }
       ]
     },
     "MKqWd/5PlnVqEJThDppnRw==": {
       "translations": [
         {
-          "translation": "Enter code"
+          "translation": "コードを入力する"
         }
       ]
     },
     "2gZws9N5PqCKOwXVtEAC4Q==": {
       "translations": [
         {
-          "translation": "We sent you a code to the email address you provided. Please enter it above."
+          "translation": "提供されたメールアドレス宛に認証コードを送信しました。上にそのコードを入力してください。"
         }
       ]
     },
     "5Ytz1SpM8+qqFM6zuiP0yw==": {
       "translations": [
         {
-          "translation": "Verify"
+          "translation": "認証"
         }
       ]
     },
     "yA8uydHyuptDK//yqS34XA==": {
       "translations": [
         {
-          "translation": "That you have a verified email, but NOT your actual email address."
+          "translation": "認証済みのメールはありますが、これはあなたの本当のメールアドレスではありません。"
         }
       ]
     },
     "yCoiTqACk89DXAWoi3BMoA==": {
       "translations": [
         {
-          "translation": "Checking eligibility"
+          "translation": "資格の確認"
         }
       ]
     },
     "TF+HFktY9AXDNH8LNJQhUQ==": {
       "translations": [
         {
-          "translation": "Origin Rewards"
+          "translation": "Originリワード"
         }
       ]
     },
     "CJ0/lS8MDCaa37qmXjKQFg==": {
       "translations": [
         {
-          "translation": "Oops, {countryName} is not eligible"
+          "translation": "おっと、 {countryName} は対象外です"
         }
       ]
     },
     "Riq5Tdahtx7XxXBl7aX1Ug==": {
       "translations": [
         {
-          "translation": "Unfortunately, it looks like you’re currently in a country where government regulations do not allow you to participate in Origin Rewards."
+          "translation": "残念ながら、あなたは現在、政府の規制によりOriginリワードに参加することが許可されていない国にいるようです。"
         }
       ]
     },
     "4YNELtqVCN8E2G3QYp1Cqg==": {
       "translations": [
         {
-          "translation": "Did we detect your country incorrectly?"
+          "translation": "あなたの国が誤って検出されましたか？"
         }
       ]
     },
     "3SE1zCnFKOuvd6Jp635bRQ==": {
       "translations": [
         {
-          "translation": "I certify that I am not a citizen or resident of {countryName}"
+          "translation": "私は私が {countryName} の市民でも居住者でもないことを証明します。"
         }
       ]
     },
     "lLkgrumZR50TcaB65im+QA==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "続ける"
         }
       ]
     },
     "e2u4nhuK5gTY0CktzGnp9g==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "キャンセル"
         }
       ]
     },
     "/UBlfxY244oqVerZ50a4kA==": {
       "translations": [
         {
-          "translation": "Origin Rewards Terms"
+          "translation": "Origin リワード規約"
         }
       ]
     },
     "M0aW3hsME0GRN2erlboMPQ==": {
       "translations": [
         {
-          "translation": "Join Origin’s reward program to earn Origin tokens (OGN). Terms & conditions apply."
+          "translation": "Originのリワードプログラムに参加して、Originトークン（OGN）を獲得してください。これには、規約が適用されます。"
         }
       ]
     },
     "qkndnSlpAK84Dm13IY+AbA==": {
       "translations": [
         {
-          "translation": "Earned OGN will be distributed at the end of each campaign. OGN is currently locked for usage on the Origin platform and cannot be transferred. It is expected that OGN will be unlocked and transferrable in the future. By joining the Origin rewards program, you agree that you will not transfer or sell future earned Origin tokens to other for at least 1 year from the date of earning your tokens."
+          "translation": "獲得したOGNは、各キャンペーンの最後に配布されます。 OGNは現在、Originプラットフォームでの使用がロックされており、転送できません。 OGNのロックは解除され、将来譲渡可能になる予定です。 Originの報酬プログラムに参加することにより、トークンを獲得した日から少なくとも1年間、将来獲得したOriginトークンを他者に譲渡または販売しないことに同意します。"
         }
       ]
     },
     "9Wy3RxCzhQrxJlnXfTVo7g==": {
       "translations": [
         {
-          "translation": "OGN are being issued in a transaction originally exempt from registration under the U.S. Securities Act of 1933, as amended (the “Securities Act”), and may not be transferred in the United States to, or for the account or benefit of, any U.S. person except pursuant to an available exemption from the registration requirements of the Securities Act and all applicable state securities laws. Terms used above have the meanings given to them in Regulation S under the Securities Act and all applicable laws and regulations."
+          "translation": "OGNは、もともと1933年の米国証券法の下で修正された（「証券法」）登録から免除された取引で発行されており、米国で、または米国の口座または利益のために譲渡することはできません。証券法および該当するすべての州証券法の登録要件の利用可能な免除に従う場合を除き、個人。上記で使用されている用語は、証券法および適用されるすべての法律および規制に基づく規則で与えられている意味を持ちます。"
         }
       ]
     },
     "mV7gMrH1PUulSFXaNYOdvg==": {
       "translations": [
         {
-          "translation": "I accept the terms and conditions"
+          "translation": "利用規約に同意します"
         }
       ]
     },
     "H+BZVjVjM4+IejWLGWVyhA==": {
       "translations": [
         {
-          "translation": "Accept Terms"
+          "translation": "利用規約に同意する"
         }
       ]
     },
     "wnFr35kFZ4iM1Ku4hZwUmA==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "キャンセル"
         }
       ]
     },
     "YNkCMDVkWdODeqZBgGdakw==": {
       "translations": [
         {
-          "translation": "Are you sure you don't want Origin Rewards?"
+          "translation": "Origin からの報酬は不要ですか？"
         }
       ]
     },
     "ZybZxwhEQLQFw3K7TlMb5Q==": {
       "translations": [
         {
-          "translation": "You will not be able to earn OGN on Origin, but you can still verify your profile."
+          "translation": "OriginでOGNを獲得することはできませんが、プロフィールを認証することはできます。"
         }
       ]
     },
     "0q0HZMWU7Zaxkf21fXF7bw==": {
       "translations": [
         {
-          "translation": "No, wait"
+          "translation": "いや、待って"
         }
       ]
     },
     "caWiQ9MV++tRiOpjfzGXbg==": {
       "translations": [
         {
-          "translation": "I'm, sure"
+          "translation": "はい、了解です"
         }
       ]
     },
     "8kzZqWiXkbW+TAsfJ2wF2w==": {
       "translations": [
         {
-          "translation": "Yes! Sign me up"
+          "translation": "はい！サインアップします。"
         }
       ]
     },
     "vvayvkUbDXMztNsDHtqVxg==": {
       "translations": [
         {
-          "translation": "No, thanks"
+          "translation": "いいえ、結構です。"
         }
       ]
     },
     "cKNz7tWusaI7mgYnY6GJjg==": {
       "translations": [
         {
-          "translation": "Looking for your account"
+          "translation": "アカウントを探しています"
         }
       ]
     },
     "KeWVNCqIuy/5jj5oxSE76A==": {
       "translations": [
         {
-          "translation": "Hi {name}!"
+          "translation": "こんにちは {name}！"
         }
       ]
     },
     "b2pa9zJ/zom712iIyfwpAw==": {
       "translations": [
         {
-          "translation": "There are a few more steps required to complete your Origin account."
+          "translation": "Originアカウントを完了するには、さらにいくつかの手順が必要です。"
         }
       ]
     },
     "jxC2CYxK7d6CUoJX8yjOjw==": {
       "translations": [
         {
-          "translation": "Looks like you are all set to go!"
+          "translation": "全ての準備が整いました！"
         }
       ]
     },
     "c0kC64N++nnO7YdUXpPkJA==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "続ける"
         }
       ]
     },
     "nT671l79mnT9TUemKKeA8g==": {
       "translations": [
         {
-          "translation": "You've imported your wallet"
+          "translation": "ウォレットをインポートしました"
         }
       ]
     },
     "492X/a02RgI2kX1CY4OWfA==": {
       "translations": [
         {
-          "translation": "Next, create an Origin profile that will be linked to this wallet."
+          "translation": "次に、このウォレットにリンクされるOriginプロファイルを作成します。"
         }
       ]
     },
     "weAsFjgd4z8GxgH80OrGeg==": {
       "translations": [
         {
-          "translation": "Please note, your wallet will no longer be anonymous"
+          "translation": "ウォレットは匿名ではなくなりますのでご注意ください"
         }
       ]
     },
     "3ZoiRX1L5tYXGwsTNPAyYA==": {
       "translations": [
         {
-          "translation": "Learn more"
+          "translation": "詳細について"
         }
       ]
     },
     "t3fzdBVeOZ+86XM456+6OQ==": {
       "translations": [
         {
-          "translation": "Create a profile"
+          "translation": "プロフィールを作成する"
         }
       ]
     },
     "NMOn9OVOm+Q83MCggA+Qhw==": {
       "translations": [
         {
-          "translation": "Oops, wait. Let's start over..."
+          "translation": "ちょっと待って！最初からやり直してみましょう..."
         }
       ]
     },
     "lCIO39XYueDt+SlnJ14ozA==": {
       "translations": [
         {
-          "translation": "Create a profile"
+          "translation": "プロフィールを作成する"
         }
       ]
     },
     "6YgdpUZBYWeBELyMTnFapw==": {
       "translations": [
         {
-          "translation": "Enter your first name"
+          "translation": "名を入力してください"
         }
       ]
     },
     "jQ/kAfe+VaXifrBypObqtQ==": {
       "translations": [
         {
-          "translation": "Enter your last name"
+          "translation": "姓を入力してください"
         }
       ]
     },
     "Jl+otuv0Lja5dPoHRGgnPQ==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "続ける"
         }
       ]
     },
     "3pU9dBapWm3w0SdYNr/Zkw==": {
       "translations": [
         {
-          "translation": "Your name will be visible on the blockchain"
+          "translation": "この名前はブロックチェーン上で表示されます。"
         }
       ]
     },
-    "Lp93xb08b3XQgFxrkhcWaw==": {
+    "+RVM+8puOIMhob2MxHX2bA==": {
       "translations": [
         {
-          "translation": "Enter phone number"
+          "translation": "電話番号を入力する"
         }
       ]
     },
     "uqaHngk+36/IrdZ9m9dU1Q==": {
       "translations": [
         {
-          "translation": "By verifying your phone number, you give Origin permission to send you occasional messages such as notifications about your transactions."
+          "translation": "電話番号を承認することで、あなたはOriginがあなたの取引について通知などを送る事に同意する事になります。"
         }
       ]
     },
     "3g9qvEu1GiNMNh6JBijqHg==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "続ける"
         }
       ]
     },
     "XwrNYmVJlDBLt6bAM+2xFg==": {
       "translations": [
         {
-          "translation": "Verify phone"
+          "translation": "電話番号を認証"
         }
       ]
     },
     "XAWHUFhdiQP6HPqgZSD9Ow==": {
       "translations": [
         {
-          "translation": "Enter code"
+          "translation": "コードを入力する"
         }
       ]
     },
     "0afMb8DymUzAeiwd1ZoCOA==": {
       "translations": [
         {
-          "translation": "We sent you a code to the phone address you provided. Please enter it above."
+          "translation": "提供されたメールアドレス宛に認証コードを送信しました。上にそのコードを入力してください。"
         }
       ]
     },
     "cVQ5WUbAd0AwThKrYa0XUg==": {
       "translations": [
         {
-          "translation": "Skip"
+          "translation": "スキップ"
         }
       ]
     },
     "hSS4TyNhyW0XIRPWLPTNkQ==": {
       "translations": [
         {
-          "translation": "Verify"
+          "translation": "認証"
         }
       ]
     },
     "PyFVYexIJiaH2u8MLa9guA==": {
       "translations": [
         {
-          "translation": "That you have a verified phone, but NOT your actual phone number."
+          "translation": "認証済みの電話番号はありますが、これはあなたの本当の電話番号ではありません。"
         }
       ]
     },
     "/aGURKePsq3sTnkUrus4+g==": {
       "translations": [
         {
-          "translation": "Re-enter Pin Code"
+          "translation": "Pinコードを再入力してください"
         }
       ]
     },
     "6TNQrsvPH7Jg+9BxOuTPQw==": {
       "translations": [
         {
-          "translation": "Create a Pin Code"
+          "translation": "Pinコードを作成する"
         }
       ]
     },
     "K/aDJpTjmvmNt/MSEGDQUQ==": {
       "translations": [
         {
-          "translation": "Pins did not match, try again"
+          "translation": "Pinが一致しません。もう一度やり直してください。"
         }
       ]
     },
     "N/BpKgn5giDbaBNOo6O9HQ==": {
       "translations": [
         {
-          "translation": "Your Pin Code will be used to login to the app."
+          "translation": "Pinはアプリにログインするために使用されます。"
         }
       ]
     },
     "Ip7Mr7tIHRRsNQPeJcaJFA==": {
       "translations": [
         {
-          "translation": "You're ready to start buying and selling on Origin"
+          "translation": "Originで売買を開始する準備が整いました"
         }
       ]
     },
     "SbM4isH7VRSRb3Kzhb2Xdw==": {
       "translations": [
         {
-          "translation": "Unfortunately we could not publish your identity on your behalf."
+          "translation": "残念ながら、あなたの情報を公開することはできませんでした。"
         }
       ]
     },
     "OEbNUu60r5gTdbiIFyusag==": {
       "translations": [
         {
-          "translation": "Start Using Origin"
+          "translation": "Originを使い始める"
         }
       ]
     },
     "MB0ie95S2AA9xAwYRkPG2Q==": {
       "translations": [
         {
-          "translation": "Publishing your account"
+          "translation": "アカウントを公開する"
         }
       ]
     },
-    "/ZRamsgXYO6P2TSz5J9w9Q==": {
+    "lgpP8skCH3wOustvhptxBA==": {
       "translations": [
         {
-          "translation": "Waiting for confirmation."
+          "translation": "Waiting for confirmation"
         }
       ]
     },
-    "oIOKtoc/Vu54ytVuwI0Tmw==": {
+    "tWJHZWSsiD6K0ek//UcW6Q==": {
       "translations": [
         {
-          "translation": "This might take a minute."
+          "translation": "This might take a minute"
         }
       ]
     },
     "RQqR7szL1Z0RUueooggK8w==": {
       "translations": [
         {
-          "translation": "Buy and sell stuff with crypto."
+          "translation": "暗号資産を使って売買する"
         }
       ]
     },
     "NS4tuPyGpGvlopEQ9CgpaQ==": {
       "translations": [
         {
-          "translation": "Earn rewards."
+          "translation": "報酬を稼ぐ"
         }
       ]
     },
     "4ngVhZSzyusgelFj2N7DSA==": {
       "translations": [
         {
-          "translation": "Create a wallet"
+          "translation": "ウォレットを作成する"
         }
       ]
     },
     "DqUT7JADQFjo22wU9bvsmg==": {
       "translations": [
         {
-          "translation": "I already have a wallet"
+          "translation": "既にウォレットを持っています"
         }
       ]
     },
     "XSqsabas04tq+ha/t4s+cQ==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "続ける"
         }
       ]
     },
     "qrLh9UBi6Dk+4Sjgbqwhmg==": {
       "translations": [
         {
-          "translation": "By signing up you agree to the Terms of Use and Privacy Policy"
+          "translation": "サインアップすることであなたは利用規約とプライバシーポリシーに同意したことになります。"
         }
       ]
     },
     "O1VMdGobKc4WbUg9gMwhBQ==": {
       "translations": [
         {
-          "translation": "Settings"
+          "translation": "設定"
         }
       ]
     },
     "LcZb2FnXOZvXBJaKB/sXTw==": {
       "translations": [
         {
-          "translation": "General"
+          "translation": "一般"
         }
       ]
     },
     "rRrFuJKbAi/LO7RrEyMt2Q==": {
       "translations": [
         {
-          "translation": "Accounts"
+          "translation": "アカウント"
         }
       ]
     },
     "5RkbvYJ6la3jlOnXZ5KIoQ==": {
       "translations": [
         {
-          "translation": "Language"
+          "translation": "言語"
         }
       ]
     },
     "ob6dsrEPfJxAbOpd4plQGA==": {
       "translations": [
         {
-          "translation": "Network"
+          "translation": "ネットワーク"
+        }
+      ]
+    },
+    "j5rIPEDyOjXyubSdCUgZ6A==": {
+      "translations": [
+        {
+          "translation": "Version"
         }
       ]
     },
     "suj8KDO/kpGSuWSeoiYk7A==": {
       "translations": [
         {
-          "translation": "Wallet"
+          "translation": "ウォレット"
         }
       ]
     },
     "qwt5DPbEmQbgHhDgriLciA==": {
       "translations": [
         {
-          "translation": "Funding"
+          "translation": "資金"
         }
       ]
     },
     "yEmOPvByK+VpH6+CO13qdw==": {
       "translations": [
         {
-          "translation": "For now, you will need to transfer {currency} into your Origin Wallet from another source."
+          "translation": "現在は、他からあなたのOriginウォレットに {currency} を送る必要があります。"
         }
       ]
     },
     "yHd/aoBlbe3kUXfROlRz4Q==": {
       "translations": [
         {
-          "translation": "Show Address"
+          "translation": "アドレスを表示"
         }
       ]
     },
     "ba+qT6IM6x1p9Zq2KM/sOA==": {
       "translations": [
         {
-          "translation": "Wallet Address"
+          "translation": "ウォレットアドレス"
         }
       ]
     },
     "kaZsDMAAk9n+m4vDL24hhg==": {
       "translations": [
         {
-          "translation": "Copy Address"
+          "translation": "アドレスをコピー"
         }
       ]
     },
     "cev6fBNlultWVlLlmimovA==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "クリップボードにコピーしました！"
         }
       ]
     },
     "MqIZn3Tps2BNhT8GpKl49Q==": {
       "translations": [
         {
-          "translation": "Add Account"
+          "translation": "アカウントを追加する"
         }
       ]
     },
     "k9ik7lp8zzY9UDgOal86Tg==": {
       "translations": [
         {
-          "translation": "Wallet Address"
+          "translation": "ウォレットアドレス"
         }
       ]
     }

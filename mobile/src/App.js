@@ -8,6 +8,8 @@ import Web3 from 'web3'
 import RNSamsungBKS from 'react-native-samsung-bks'
 
 import Store, { persistor } from './Store'
+import { NETWORKS } from './constants'
+import { setNetwork } from 'actions/Settings'
 import AppContainer from './AppContainer'
 import NavigationService from './NavigationService'
 import setLanguage from 'utils/language'
@@ -43,6 +45,15 @@ class App extends Component {
 
     // Set the language for the DApp
     setLanguage(settings.language)
+
+    // Validate the network setting
+    let network = NETWORKS.find(n => n.name === settings.network.name)
+    if (!network) {
+      network = NETWORKS.find(n => n.id === 1)
+    }
+    await Store.dispatch(setNetwork(network))
+
+    global.web3.setProvider(network.provider)
 
     // See if we can (or are) using Samsung BKS and conditionally render the
     // component

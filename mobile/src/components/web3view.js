@@ -7,7 +7,7 @@
 import React from 'react'
 import { WebView } from 'react-native-webview'
 
-const Web3View = React.forwardRef(({ onMessage, ...props } , ref) => {
+const Web3View = React.forwardRef(({ onMessage, ...props }, ref) => {
   /* Handles messages received from the WebView via window.postMessage and if
    * it is a web3 call then calls the appropriate prop callback.
    */

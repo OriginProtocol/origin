@@ -82,6 +82,19 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
    * resposible for hanlding signMessage and processTransaction web3 calls.
    */
   const onWeb3Call = (callback, msgData) => {
+    const { functionName } = decodeTransaction(msgData.data.data)
+    // Bump the gas for swapAndMakeOffer by 10% to handle out of gas failures caused
+    // by the proxy contract
+    // TODO find a better way to handle this
+    // https://github.com/OriginProtocol/origin/issues/2771
+    if (functionName === 'swapAndMakeOffer') {
+      msgData.data.gas =
+        '0x' +
+        Math.ceil(
+          parseInt(msgData.data.gas) + parseInt(msgData.data.gas) * 0.1
+        ).toString(16)
+    }
+
     PushNotification.checkPermissions(permissions => {
       const newModals = []
       // Check if the user has enabled push notifications and prompt them
@@ -90,8 +103,7 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
         !__DEV__ &&
         !permissions.alert &&
         msgData.targetFunc === 'processTransaction' &&
-        decodeTransaction(msgData.data.data).functionName !==
-          'emitIdentityUpdated'
+        functionName !== 'emitIdentityUpdated'
       ) {
         newModals.push({ type: 'enableNotifications' })
       }

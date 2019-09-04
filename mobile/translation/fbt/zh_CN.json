@@ -43,17 +43,24 @@
         }
       ]
     },
-    "LnwecOVmQ25DVugF+RemxQ==": {
+    "fsX2zn/I8IxKM/YS6pNIiA==": {
       "translations": [
         {
-          "translation": "需要验证"
+          "translation": "Authentication Required"
         }
       ]
     },
-    "J/SHV34/Q6NzSn+T7V8i2w==": {
+    "uBbr58ZsBIlotqS29XDzmA==": {
       "translations": [
         {
-          "translation": "需要PIN码"
+          "translation": "Retry"
+        }
+      ]
+    },
+    "b1eg8txmL9GsnAqK+wcpDA==": {
+      "translations": [
+        {
+          "translation": "Pin Required"
         }
       ]
     },
@@ -249,7 +256,7 @@
     "6i7qqM7tIY6QrQPlZk0sgA==": {
       "translations": [
         {
-          "translation": "Enable Meta Transactions"
+          "translation": "启用gas费赞助功能"
         }
       ]
     },
@@ -729,24 +736,24 @@
         }
       ]
     },
-    "bJwnJVo5lwuFi394jn741w==": {
+    "imEcy9mqva2P4QkCGKkG7w==": {
       "translations": [
         {
-          "translation": "导入你的钱包以赚取更多OGN"
+          "translation": "Other Wallet Detected"
         }
       ]
     },
-    "nWjFXBqXG9oCHoaLwTYfXw==": {
+    "DktheTKIZ/i7gQzBzStqKQ==": {
       "translations": [
         {
-          "translation": "我们找到与该电子邮件地址关联的钱包。请将钱包导入以继续赚取奖励。"
+          "translation": "We've noticed that you previously signed up for Origin Rewards using this email with a different wallet. Please import your other wallet to continue earning Origin Rewards."
         }
       ]
     },
-    "MNlD7ug4Qb5knKTv38TSRA==": {
+    "JdP7rfOo7gmvo9L/wkL+Zg==": {
       "translations": [
         {
-          "translation": "导入钱包"
+          "translation": "Import other wallet"
         }
       ]
     },
@@ -761,6 +768,20 @@
       "translations": [
         {
           "translation": "语言"
+        }
+      ]
+    },
+    "lPK1A5cn8JlhIPgCDjiuAg==": {
+      "translations": [
+        {
+          "translation": "Connection Error"
+        }
+      ]
+    },
+    "a3s77Iq0FypOEuisvfUcYg==": {
+      "translations": [
+        {
+          "translation": "Retry"
         }
       ]
     },
@@ -1005,7 +1026,7 @@
     "qkndnSlpAK84Dm13IY+AbA==": {
       "translations": [
         {
-          "translation": "Earned OGN will be distributed at the end of each campaign. OGN is currently locked for usage on the Origin platform and cannot be transferred. It is expected that OGN will be unlocked and transferrable in the future. By joining the Origin rewards program, you agree that you will not transfer or sell future earned Origin tokens to other for at least 1 year from the date of earning your tokens."
+          "translation": "你赚取的的OGN将在每次的奖励活动结束后分发。 OGN目前是锁定的，无法被转移并只能在Origin平台上使用。我们预计OGN将来会被解锁并可以被转移。参与Origin奖励计划，即表示你同意自获得OGN之日起至少1年内不能将获得的Origin代币转让或出售给他人。"
         }
       ]
     },
@@ -1191,10 +1212,10 @@
         }
       ]
     },
-    "Lp93xb08b3XQgFxrkhcWaw==": {
+    "+RVM+8puOIMhob2MxHX2bA==": {
       "translations": [
         {
-          "translation": "输入电话号码"
+          "translation": "Enter phone"
         }
       ]
     },
@@ -1310,17 +1331,17 @@
         }
       ]
     },
-    "/ZRamsgXYO6P2TSz5J9w9Q==": {
+    "lgpP8skCH3wOustvhptxBA==": {
       "translations": [
         {
-          "translation": "等待确认中。"
+          "translation": "Waiting for confirmation"
         }
       ]
     },
-    "oIOKtoc/Vu54ytVuwI0Tmw==": {
+    "tWJHZWSsiD6K0ek//UcW6Q==": {
       "translations": [
         {
-          "translation": "请稍等。"
+          "translation": "This might take a minute"
         }
       ]
     },
@@ -1398,6 +1419,13 @@
       "translations": [
         {
           "translation": "网络"
+        }
+      ]
+    },
+    "j5rIPEDyOjXyubSdCUgZ6A==": {
+      "translations": [
+        {
+          "translation": "Version"
         }
       ]
     },
