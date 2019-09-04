@@ -226,12 +226,8 @@ class MarketplaceScreen extends Component {
     )
   }
 
-  /* Handle the response from window.onScroll
+  /* Inject a GraphQL query into the DApp using `window.gql`.
    */
-  handleScrollHandlerResponse = ({ scrollTop }) => {
-    this.setState({ enablePullToRefresh: scrollTop === 0 })
-  }
-
   injectGraphqlQuery = (
     id,
     query,
@@ -262,6 +258,8 @@ class MarketplaceScreen extends Component {
     )
   }
 
+  /* Inject a GraphQL mutation into the DApp using `window.gql`.
+   */
   injectGraphqlMutation = (id, mutation, variables = {}) => {
     this.injectJavaScript(
       `
@@ -284,14 +282,6 @@ class MarketplaceScreen extends Component {
       `,
       'GraphQL mutation'
     )
-  }
-
-  handleGraphqlResult = result => {
-    DeviceEventEmitter.emit('graphqlResult', result)
-  }
-
-  handleGraphqlError = result => {
-    DeviceEventEmitter.emit('graphqlError', result)
   }
 
   /* Enables left and right swiping to go forward/back in the WebView on Android.
@@ -416,7 +406,13 @@ class MarketplaceScreen extends Component {
   }
 
   onWebViewMessage = msg => {
-    console.log(msg)
+    if (msg.targetFunc === 'handleGraphqlResult') {
+      DeviceEventEmitter.emit('graphqlResult', result)
+    } else if (msg.targetFunc === 'handleGraphqlError') {
+      DeviceEventEmitter.emit('graphqlError', result)
+    } else if (msg.targetFunc === 'handleScrollHandlerResponse') {
+      this.setState({ enablePullToRefresh: scrollTop === 0 })
+    }
   }
 
   onWebViewNavigationStateChange = async state => {
@@ -527,7 +523,7 @@ class MarketplaceScreen extends Component {
     return (
       <OriginWeb3View
         ref={this.state.webViewRef}
-        onWebViewMessage={this.onWebViewMessage}
+        onMessage={this.onWebViewMessage}
         allowsBackForwardNavigationGestures={Platform.OS === 'ios'}
         useWebKit={Platform.OS === 'ios'}
         source={{ uri: this.state.webViewUrlTrigger }}
