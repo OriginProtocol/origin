@@ -77,8 +77,9 @@ class ListingDetail extends Component {
   renderContent() {
     const { listing, isMobile } = this.props
 
-    const gallery =
-      listing.media && listing.media.length ? (
+    let gallery
+    if (listing.media && listing.media.length) {
+      gallery = (
         <div className="listing-media">
           {this.props.isMobile ? (
             <GalleryScroll pics={listing.media} />
@@ -86,7 +87,8 @@ class ListingDetail extends Component {
             <Gallery pics={listing.media} />
           )}
         </div>
-      ) : null
+      )
+    }
 
     const reviews = <Reviews id={listing.seller.id} seller hideWhenZero />
     const userListings = (
@@ -106,19 +108,15 @@ class ListingDetail extends Component {
     if (isMobile) {
       return (
         <>
-          <div className="listing-hero-section">
-            <div className="listing-info">
-              {this.renderHeading()}
-              {this.renderAction()}
-            </div>
-            {gallery}
+          <div className="listing-info">
+            {this.renderHeading()}
+            {this.renderAction()}
           </div>
+          {gallery}
           <div className="listing-description">
             {this.renderListingDetail()}
           </div>
-          <div className="listing-hero-section">
-            <div className="about-seller">{this.renderSellerInfo()}</div>
-          </div>
+          <div className="about-seller">{this.renderSellerInfo()}</div>
           <div className="seller-info">
             {userListings}
             {reviews}
@@ -129,12 +127,14 @@ class ListingDetail extends Component {
 
     return (
       <>
-        <div className="listing-hero-section">
-          {gallery}
-          <div className="listing-info">
-            {this.renderHeading()}
-            {this.renderAction()}
-            {this.renderSellerInfo()}
+        <div className="row">
+          <div className="col-md-7 col-xl-8">{gallery}</div>
+          <div className="col-md-5 col-xl-4">
+            <div className="listing-info">
+              {this.renderHeading()}
+              {this.renderAction()}
+              {this.renderSellerInfo()}
+            </div>
           </div>
         </div>
         <div className="listing-description">{this.renderListingDetail()}</div>
@@ -329,19 +329,6 @@ require('react-styl')(`
   .listing-detail
     margin-top: 2.5rem
 
-    .listing-hero-section
-      display: flex
-      .listing-media
-        padding: 0 15px
-        flex: 50% 1 1
-        max-width: 50%
-        width: 50%
-      .listing-info
-        padding: 0 15px
-        flex: 50% 1 1
-        width: 50%
-        max-width: 50%
-
     .seller-info
       display: grid
       grid-column-gap: 2rem
@@ -489,25 +476,23 @@ require('react-styl')(`
       .about-party
         margin-bottom: 1.5rem
 
-      .listing-hero-section
-        flex-direction: column
-        .listing-media
-          padding: 15px 0
-          max-width: 100%
-          width: 100%
-          .gallery-scroll-wrap
-            border-radius: 10px
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3)
-        .listing-info
-          width: 100%
-          max-width: 100%
-          padding: 0
-          .heading h2
-            font-size: 28px
-            margin-bottom: 1rem
-        .about-seller
-          border-top: 1px solid #dde6ea
-          padding: 1.5rem 0 0 0
+      .listing-media
+        padding: 15px 0
+        max-width: 100%
+        width: 100%
+        .gallery-scroll-wrap
+          border-radius: 10px
+          box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3)
+      .listing-info
+        width: 100%
+        max-width: 100%
+        padding: 0
+        .heading h2
+          font-size: 28px
+          margin-bottom: 1rem
+      .about-seller
+        border-top: 1px solid #dde6ea
+        padding: 1.5rem 0 0 0
 
       .seller-info
         border: 0
@@ -551,5 +536,6 @@ require('react-styl')(`
 
   @media (min-width: 1200px)
     .listing-detail.container
-      max-width: 960px
+      .listing-description
+        max-width: 960px
 `)
