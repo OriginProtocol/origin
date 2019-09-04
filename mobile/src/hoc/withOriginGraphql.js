@@ -10,8 +10,19 @@ import uuid from 'uuid/v1'
 import React, { Component } from 'react'
 import { DeviceEventEmitter } from 'react-native'
 import { connect } from 'react-redux'
+import get from 'lodash.get'
 
 import { balance, identity, tokenBalance, wallet } from 'graphql/queries'
+import { setAccountBalances, setIdentity } from 'actions/Wallet'
+import { tokenBalanceFromGql } from 'utils/currencies'
+
+// Update account balance frequency
+// TODO make this reactive
+const BALANCE_UPDATE_INTERVAL = 10000
+
+// Update identity frequency
+// TODO make this reactive
+const IDENTITY_UPDATE_INTERVAL = 10000
 
 const withOriginGraphql = WrappedComponent => {
   class WithOriginGraphql extends Component {
@@ -21,7 +32,10 @@ const withOriginGraphql = WrappedComponent => {
       this.state = {
         deferredPromises: []
       }
+    }
 
+    componentWillMount = () => {
+      // Subscribe to GraphQL result events
       this.subscriptions = [
         DeviceEventEmitter.addListener(
           'graphqlResult',
@@ -29,11 +43,26 @@ const withOriginGraphql = WrappedComponent => {
         ),
         DeviceEventEmitter.addListener('graphqlError', this._handleGraphqlError)
       ]
+
+      // Update balance periodically
+      this.balanceUpdater = setInterval(this.updateBalance, BALANCE_UPDATE_INTERVAL)
+      // Update identity periodically
+      this.identityUpdater = setInterval(this.updateIdentity, IDENTITY_UPDATE_INTERVAL)
     }
 
-    componentWillUnmount() {
+    componentWillUnmount = () => {
+      // Cleanup subscriptions to GraphQL result events
       if (this.subscriptions) {
         this.subscriptions.map(s => s.remove())
+      }
+
+      // Cleanup polling updates
+      if (this.balanceUpdater) {
+        clearInterval(this.balanceUpdater)
+      }
+
+      if (this.identityUpdater) {
+        clearInterval(this.identityUpdater)
       }
     }
 
@@ -110,6 +139,52 @@ const withOriginGraphql = WrappedComponent => {
       return this._sendGraphqlQuery(wallet)
     }
 
+    updateIdentity = async () => {
+      if (!this.props.wallet.activeAccount || !this.props.marketplace.ready) {
+        return
+      }
+      let identity
+      try {
+        const graphqlResponse = await this.getIdentity(
+          this.props.wallet.activeAccount.address
+        )
+        identity = get(graphqlResponse, 'data.web3.account.identity')
+      } catch (error) {
+        // Handle GraphQL errors for things like invalid JSON RPC response or we
+        // could crash the app
+        console.warn('Could not retrieve identity using GraphQL: ', error)
+        return
+      }
+      this.props.setIdentity({
+        address: this.props.wallet.activeAccount.address,
+        identity
+      })
+    }
+
+    updateBalance = async () => {
+      if (!this.props.wallet.activeAccount || !this.props.marketplace.ready) {
+        return
+      }
+      const activeAddress = this.props.wallet.activeAccount.address
+      try {
+        const balances = {}
+        // Get ETH balance, decimals don't need modifying
+        const ethBalanceResponse = await this.getBalance(activeAddress)
+        balances['eth'] = Number(
+          get(ethBalanceResponse.data, 'web3.account.balance.eth', 0)
+        )
+        balances['dai'] = tokenBalanceFromGql(
+          await this.getTokenBalance(activeAddress, 'DAI')
+        )
+        balances['ogn'] = tokenBalanceFromGql(
+          await this.getTokenBalance(activeAddress, 'OGN')
+        )
+        this.props.setAccountBalances(balances)
+      } catch (error) {
+        console.warn('Could not retrieve balances using GraphQL: ', error)
+      }
+    }
+
     render() {
       return (
         <WrappedComponent
@@ -123,11 +198,19 @@ const withOriginGraphql = WrappedComponent => {
     }
   }
 
-  const mapStateToProps = ({ marketplace }) => {
-    return { marketplace }
+  const mapStateToProps = ({ marketplace, wallet }) => {
+    return { marketplace, wallet }
   }
 
-  return connect(mapStateToProps)(WithOriginGraphql)
+  const mapDispatchToProps = dispatch => ({
+    setIdentity: payload => dispatch(setIdentity(payload)),
+    setAccountBalances: balance => dispatch(setAccountBalances(balance))
+  })
+
+  return connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(WithOriginGraphql)
 }
 
 export default withOriginGraphql

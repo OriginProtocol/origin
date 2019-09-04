@@ -4,7 +4,7 @@
  * DApps and react-native code.
  */
 
-import React, { useRef } from 'react'
+import React from 'react'
 import { WebView } from 'react-native-webview'
 
 const Web3View = React.forwardRef((props, ref) => {
@@ -12,6 +12,7 @@ const Web3View = React.forwardRef((props, ref) => {
    * it is a web3 call then calls the appropriate prop callback.
    */
   const onWebViewMessage = async event => {
+    // Let messages bubble up
     if (props.onMessage) {
       props.onMessage(event)
     }

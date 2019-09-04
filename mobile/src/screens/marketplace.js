@@ -17,31 +17,23 @@ import {
 } from 'react-native'
 import { AndroidBackHandler } from 'react-navigation-backhandler'
 import { connect } from 'react-redux'
-import { WebView } from 'react-native-webview'
-import SafeAreaView from 'react-native-safe-area-view'
-import get from 'lodash.get'
 import { fbt } from 'fbt-runtime'
 import { ShareDialog } from 'react-native-fbsdk'
+import SafeAreaView from 'react-native-safe-area-view'
+import get from 'lodash.get'
 
 import OriginButton from 'components/origin-button'
 import OriginWeb3View from 'components/origin-web3view'
 
-import { DEFAULT_ANDROID_UA, DEFAULT_IOS_UA, CURRENCIES } from '../constants'
-import { updateExchangeRate } from 'utils/price'
-import { webViewToBrowserUserAgent } from 'utils'
+import { DEFAULT_ANDROID_UA, DEFAULT_IOS_UA } from '../constants'
 import { findBestAvailableLanguage } from 'utils/language'
-import {
-  findBestAvailableCurrency,
-  tokenBalanceFromGql
-} from 'utils/currencies'
+import { findBestAvailableCurrency } from 'utils/currencies'
 import {
   setMarketplaceReady,
   setMarketplaceWebViewError
 } from 'actions/Marketplace'
-import { setAccountBalances, setIdentity } from 'actions/Wallet'
 import withOriginGraphql from 'hoc/withOriginGraphql'
 import { PROMPT_MESSAGE, PROMPT_PUB_KEY } from '../constants'
-import CardStyles from 'styles/card'
 
 class MarketplaceScreen extends Component {
   static navigationOptions = () => {
@@ -82,7 +74,7 @@ class MarketplaceScreen extends Component {
     }
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
+  componentDidUpdate = prevProps => {
     if (prevProps.settings.language !== this.props.settings.language) {
       // Language has changed, need to reload the DApp
       this.injectLanguage()
@@ -109,34 +101,6 @@ class MarketplaceScreen extends Component {
     }
   }
 
-  /* Handle back button presses on Android devices so that they work on the
-   * WebView */
-  onBackButtonPressAndroid = () => {}
-
-  /* Enables left and right swiping to go forward/back in the WebView.
-   */
-  setSwipeHandler = () => {
-    const swipeDistance = 200
-    this._panResponder = PanResponder.create({
-      onStartShouldSetPanResponderCapture: () => false,
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
-        return (
-          Math.abs(gestureState.dx) > swipeDistance &&
-          Math.abs(gestureState.dy) < 50
-        )
-      },
-      onPanResponderRelease: (evt, gestureState) => {
-        if (this.state.webViewRef.current) {
-          if (gestureState.moveX > swipeDistance) {
-            this.state.webViewRef.current.goBack()
-          } else if (gestureState.moveX < swipeDistance) {
-            this.state.webViewRef.current.goForward()
-          }
-        }
-      }
-    })
-  }
-
   injectJavaScript = (script, name) => {
     const injectedJavaScript = `
       (function() {
@@ -151,7 +115,7 @@ class MarketplaceScreen extends Component {
     }
   }
 
-  injectInviteCode = async inviteCode => {
+  injectInviteCode = async () => {
     const INVITE_CODE_PREFIX = 'origin:growth_invite_code:'
     const content = await Clipboard.getString()
     if (content && content.startsWith(INVITE_CODE_PREFIX)) {
@@ -326,15 +290,34 @@ class MarketplaceScreen extends Component {
     DeviceEventEmitter.emit('graphqlError', result)
   }
 
-  updateExchangeRates = () => {
-    // TODO: this will need to be adjusted if multiple non stablecoin support
-    // is added to the DApp (or when OGN has a market price)
-    updateExchangeRate(this.state.fiatCurrency[1], 'ETH')
-    updateExchangeRate(this.state.fiatCurrency[1], 'DAI')
+  /* Enables left and right swiping to go forward/back in the WebView on Android.
+   */
+  setSwipeHandler = () => {
+    const swipeDistance = 200
+    this._panResponder = PanResponder.create({
+      onStartShouldSetPanResponderCapture: () => false,
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
+        return (
+          Math.abs(gestureState.dx) > swipeDistance &&
+          Math.abs(gestureState.dy) < 50
+        )
+      },
+      onPanResponderRelease: (evt, gestureState) => {
+        if (this.state.webViewRef.current) {
+          if (gestureState.moveX > swipeDistance) {
+            this.state.webViewRef.current.goBack()
+          } else if (gestureState.moveX < swipeDistance) {
+            this.state.webViewRef.current.goForward()
+          }
+        }
+      }
+    })
   }
 
+  /* Attempt to open a native deep link URL on this phone. If the relevant
+   * app is installed this will open it, otherwise returns false.
+   */
   openNativeDeepLink = async (url, timeControlVariableName) => {
-    // Non interceptable url
     if (Linking.canOpenURL(url)) {
       this.goBackToDapp()
       // Preventing multiple subsequent shares
@@ -351,6 +334,10 @@ class MarketplaceScreen extends Component {
     }
   }
 
+  /* Monitor the state of the WebView and if attempting to open a URL from
+   * Twitter or Facebook for sharing for Origin Rewards, attempt to open the
+   * link using the native app on the phone.
+   */
   checkForShareNativeDialogInterception = async url => {
     // Handle Twitter links on Android (iOS handles them automatically)
     if (Platform.OS === 'android') {
@@ -363,7 +350,7 @@ class MarketplaceScreen extends Component {
             )}`,
             'lastTweetAttemptTime'
           )
-        } else if ((url.pathname = '/intent/follow')) {
+        } else if (url.pathname === '/intent/follow') {
           // Natively open Twitter profile on Android
           this.openNativeDeepLink(
             `twitter://user?screen_name=${url.searchParams.get('screen_name')}`,
@@ -424,6 +411,10 @@ class MarketplaceScreen extends Component {
     this.setState({ webViewUrlTrigger: url.href })
   }
 
+  onWebViewMessage = (msg) => {
+    console.log(msg)
+  }
+
   onWebViewNavigationStateChange = async state => {
     let url
     try {
@@ -440,7 +431,7 @@ class MarketplaceScreen extends Component {
     await this.checkForShareNativeDialogInterception(url)
   }
 
-  onWebViewLoad = async () => {
+  onWebViewLoad = () => {
     // Set the language in the DApp to the same as the mobile app
     this.injectLanguage()
     // Set the currency in the DApp
@@ -453,70 +444,14 @@ class MarketplaceScreen extends Component {
     this.injectMessagingKeys()
     // Check if a growth invie code needs to be set
     this.injectInviteCode()
-
-    // Periodic ui updates
-    const uiUpdates = () => {
-      if (this.props.wallet.activeAccount) {
-        // Update account identity and balances
-        this.updateIdentity()
-        this.updateBalance()
-      }
-    }
-    // Clear existing updater if exists
-    if (this.uiUpdater) {
-      clearInterval(this.uiUpdater)
-    }
-    uiUpdates()
-    this.uiUpdater = setInterval(uiUpdates, 5000)
-
     // Set state to ready in redux
-    await this.props.setMarketplaceReady(true)
+    this.props.setMarketplaceReady(true)
     // Make sure any error state is cleared
-    await this.props.setMarketplaceWebViewError(false)
-  }
-
-  updateIdentity = async () => {
-    let identity
-    try {
-      const graphqlResponse = await this.props.getIdentity(
-        this.props.wallet.activeAccount.address
-      )
-      identity = get(graphqlResponse, 'data.web3.account.identity')
-    } catch (error) {
-      // Handle GraphQL errors for things like invalid JSON RPC response or we
-      // could crash the app
-      console.warn('Could not retrieve identity using GraphQL: ', error)
-      return
-    }
-    this.props.setIdentity({
-      address: this.props.wallet.activeAccount.address,
-      identity
-    })
-  }
-
-  updateBalance = async () => {
-    const activeAddress = this.props.wallet.activeAccount.address
-    try {
-      const balances = {}
-      // Get ETH balance, decimals don't need modifying
-      const ethBalanceResponse = await this.props.getBalance(activeAddress)
-      balances['eth'] = Number(
-        get(ethBalanceResponse.data, 'web3.account.balance.eth', 0)
-      )
-      balances['dai'] = tokenBalanceFromGql(
-        await this.props.getTokenBalance(activeAddress, 'DAI')
-      )
-      balances['ogn'] = tokenBalanceFromGql(
-        await this.props.getTokenBalance(activeAddress, 'OGN')
-      )
-      this.props.setAccountBalances(balances)
-    } catch (error) {
-      console.warn('Could not retrieve balances using GraphQL: ', error)
-    }
+    this.props.setMarketplaceWebViewError(false)
   }
 
   /* Handle refresh requests, e.g. from the RefreshControl component.
-  */
+   */
   onRefresh = () => {
     if (Platform.OS === 'android') {
       // Workaround for broken refreshing in Android, insert a
@@ -588,6 +523,7 @@ class MarketplaceScreen extends Component {
     return (
       <OriginWeb3View
         ref={this.state.webViewRef}
+        onWebViewMessage={this.onWebViewMessage}
         allowsBackForwardNavigationGestures={Platform.OS === 'ios'}
         useWebKit={Platform.OS === 'ios'}
         source={{ uri: this.state.webViewUrlTrigger }}
@@ -647,9 +583,7 @@ const mapStateToProps = ({ activation, marketplace, wallet, settings }) => {
 const mapDispatchToProps = dispatch => ({
   setMarketplaceReady: ready => dispatch(setMarketplaceReady(ready)),
   setMarketplaceWebViewError: error =>
-    dispatch(setMarketplaceWebViewError(error)),
-  setIdentity: payload => dispatch(setIdentity(payload)),
-  setAccountBalances: balance => dispatch(setAccountBalances(balance))
+    dispatch(setMarketplaceWebViewError(error))
 })
 
 export default withOriginGraphql(
@@ -671,6 +605,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     backgroundColor: 'white'
-  },
-  ...CardStyles
+  }
 })
