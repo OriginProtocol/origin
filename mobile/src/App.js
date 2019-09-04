@@ -72,6 +72,7 @@ class App extends Component {
 
     // Not using Samsung BKS, load any accounts into web3 and stop loading
     console.debug(`Found ${wallet.accounts.length} accounts`)
+
     // Add all the stored accounts to the global web3 object
     for (let i = 0; i < wallet.accounts.length; i++) {
       global.web3.eth.accounts.wallet.add(wallet.accounts[i])
