@@ -46,6 +46,8 @@ export function findBestAvailableCurrency() {
   const preferredCurrencyCodes = RNLocalize.getCurrencies().filter(code =>
     supportedCurrencyCodes.includes(code)
   )
-  const currencyCode = preferredCurrencyCodes.length ? preferredCurrencyCodes[0] : 'USD'
+  const currencyCode = preferredCurrencyCodes.length
+    ? preferredCurrencyCodes[0]
+    : 'USD'
   return CURRENCIES.find(currency => currency.code === currencyCode)
 }

@@ -6,7 +6,6 @@
 
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { Sentry } from 'react-native-sentry'
 import { Modal, Platform, StyleSheet } from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import PushNotification from 'react-native-push-notification'
@@ -70,7 +69,9 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
         wallet.activeAccount.privateKey
       )
       callback(signature)
-      console.debug('Got meta transaction: ', decodedTransaction)
+      console.debug(
+        `Got meta transaction for ${decodedTransaction.functionName} on ${decodedTransaction.contractName}`
+      )
     } else {
       // Not a meta transaction, display a modal prompting the user
       onWeb3Call(callback, msgData)
@@ -83,8 +84,9 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   const onWeb3Call = (callback, msgData) => {
     console.debug(`Got web3 call to ${msgData.targetFunc}`)
     const { functionName, contractName } = decodeTransaction(msgData.data.data)
-    console.debug(`Contract method is ${functionName} on ${contractName}`)
-
+    if (functionName && contractName) {
+      console.debug(`Contract method is ${functionName} on ${contractName}`)
+    }
     // Bump the gas for swapAndMakeOffer by 10% to handle out of gas failures caused
     // by the proxy contract
     // TODO find a better way to handle this

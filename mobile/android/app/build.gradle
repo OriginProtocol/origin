@@ -90,7 +90,6 @@ dependencies {
     implementation project(':react-native-localize')
     implementation project(':react-native-android-open-settings')
     implementation project(':react-native-touch-id')
-    implementation project(':react-native-user-agent')
     implementation project(':react-native-sentry')
     implementation project(':react-native-gesture-handler')
     implementation project(':react-native-push-notification')

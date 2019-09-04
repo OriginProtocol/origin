@@ -27,8 +27,7 @@ const TransactionCard = props => {
     ))
   }
 
-  const fiatCurrency =
-    props.settings.currency || findBestAvailableCurrency()
+  const fiatCurrency = props.settings.currency || findBestAvailableCurrency()
 
   console.debug(`Contract: ${contractName}, Function: ${functionName}`)
   console.debug(parameters)

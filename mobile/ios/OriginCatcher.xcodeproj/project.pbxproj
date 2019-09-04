@@ -27,7 +27,6 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		1A37C177A63E42818048D4DF /* libRNUserAgent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B56569E81424F259C496E82 /* libRNUserAgent.a */; };
 		26E4BC2421AC4DE5A8D23BD3 /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EF606C5D7AD4DD889E6E74D /* libRNRandomBytes.a */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -464,13 +463,6 @@
 			remoteGlobalIDString = 274692C321B4414400BF91A8;
 			remoteInfo = "RNSentry-tvOS";
 		};
-		E28C6632228D6FE0002D18CA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 80B737197F034943B4DE9376 /* RNUserAgent.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = RNUserAgent;
-		};
 		E28C6693228D7380002D18CA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1ED4BF3A66454272BE762F44 /* TouchID.xcodeproj */;
@@ -523,7 +515,6 @@
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E6EDFBA21FB44F9AF721F5D /* libRNLocalize-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNLocalize-tvOS.a"; sourceTree = "<group>"; };
 		34E7384A1E2EE904DE2D587C /* Pods-OriginCatcher-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginCatcher-tvOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-OriginCatcher-tvOS/Pods-OriginCatcher-tvOS.release.xcconfig"; sourceTree = "<group>"; };
-		3B56569E81424F259C496E82 /* libRNUserAgent.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNUserAgent.a; sourceTree = "<group>"; };
 		505EC6A20899474080B156FB /* libRCTRestart.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTRestart.a; sourceTree = "<group>"; };
 		5B096D35AE6E7D631A9B6E38 /* Pods-OriginCatcherTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginCatcherTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OriginCatcherTests/Pods-OriginCatcherTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
@@ -566,7 +557,6 @@
 		76C13B2F2303FEE200C1DC3D /* libFBSDKLoginKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFBSDKLoginKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		76C13B312303FEE200C1DC3D /* libFBSDKShareKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFBSDKShareKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
-		80B737197F034943B4DE9376 /* RNUserAgent.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNUserAgent.xcodeproj; path = "../node_modules/react-native-user-agent/ios/RNUserAgent.xcodeproj"; sourceTree = "<group>"; };
 		82BEBCD3CA1A4818AE827217 /* libRNCWebView.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCWebView.a; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		8449319460B64DD8B96B7F20 /* libRCTFBSDK.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTFBSDK.a; sourceTree = "<group>"; };
@@ -632,7 +622,6 @@
 				3DD1114276D54F4797055EE0 /* libRNGestureHandler.a in Frameworks */,
 				831D9D3FB6694622A920B4DF /* libRNSentry.a in Frameworks */,
 				EC64857355DF45FA8C9CE510 /* libz.tbd in Frameworks */,
-				1A37C177A63E42818048D4DF /* libRNUserAgent.a in Frameworks */,
 				A635BA30DFE44CD7BDF8261E /* libTouchID.a in Frameworks */,
 				09A89EF79E9840A19E79C2E7 /* libRNLocalize.a in Frameworks */,
 				26E4BC2421AC4DE5A8D23BD3 /* libRNRandomBytes.a in Frameworks */,
@@ -947,7 +936,6 @@
 				96E20D4D3D714036B5BA0BAD /* ReactNativePermissions.xcodeproj */,
 				A54BF30EB45D4DED9EFE913D /* RNGestureHandler.xcodeproj */,
 				C38539245BF84CF08148EFA9 /* RNSentry.xcodeproj */,
-				80B737197F034943B4DE9376 /* RNUserAgent.xcodeproj */,
 				1ED4BF3A66454272BE762F44 /* TouchID.xcodeproj */,
 				E69D8CF844444C358EB4067D /* RNLocalize.xcodeproj */,
 				A44CAA20139845DD8F11C612 /* RNRandomBytes.xcodeproj */,
@@ -1050,14 +1038,6 @@
 			children = (
 				E28C65B8228CF8E2002D18CA /* libRNSentry.a */,
 				E28C65BA228CF8E2002D18CA /* libRNSentry-tvOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		E28C662F228D6FDF002D18CA /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				E28C6633228D6FE0002D18CA /* libRNUserAgent.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1293,10 +1273,6 @@
 				{
 					ProductGroup = E23F6B3C2280E3D300620F02 /* Products */;
 					ProjectRef = 0B3C092BFCBD424AB9B88564 /* RNSentry.xcodeproj */;
-				},
-				{
-					ProductGroup = E28C662F228D6FDF002D18CA /* Products */;
-					ProjectRef = 80B737197F034943B4DE9376 /* RNUserAgent.xcodeproj */;
 				},
 				{
 					ProductGroup = E28C6690228D7380002D18CA /* Products */;
@@ -1671,13 +1647,6 @@
 			remoteRef = E28C65B9228CF8E2002D18CA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		E28C6633228D6FE0002D18CA /* libRNUserAgent.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNUserAgent.a;
-			remoteRef = E28C6632228D6FE0002D18CA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		E28C6694228D7380002D18CA /* libTouchID.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1978,7 +1947,6 @@
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-user-agent/ios",
 					"$(SRCROOT)/../node_modules/react-native-touch-id",
 					"$(SRCROOT)/../node_modules/react-native-localize/ios",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
@@ -2015,7 +1983,6 @@
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-user-agent/ios",
 					"$(SRCROOT)/../node_modules/react-native-touch-id",
 					"$(SRCROOT)/../node_modules/react-native-localize/ios",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
@@ -2054,7 +2021,6 @@
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-user-agent/ios",
 					"$(SRCROOT)/../node_modules/react-native-touch-id",
 					"$(SRCROOT)/../node_modules/react-native-localize/ios",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
@@ -2091,7 +2057,6 @@
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-user-agent/ios",
 					"$(SRCROOT)/../node_modules/react-native-touch-id",
 					"$(SRCROOT)/../node_modules/react-native-localize/ios",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
@@ -2133,7 +2098,6 @@
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-user-agent/ios",
 					"$(SRCROOT)/../node_modules/react-native-touch-id",
 					"$(SRCROOT)/../node_modules/react-native-localize/ios",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
@@ -2177,7 +2141,6 @@
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-user-agent/ios",
 					"$(SRCROOT)/../node_modules/react-native-touch-id",
 					"$(SRCROOT)/../node_modules/react-native-localize/ios",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
@@ -2220,7 +2183,6 @@
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-user-agent/ios",
 					"$(SRCROOT)/../node_modules/react-native-touch-id",
 					"$(SRCROOT)/../node_modules/react-native-localize/ios",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
@@ -2263,7 +2225,6 @@
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-sentry/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-user-agent/ios",
 					"$(SRCROOT)/../node_modules/react-native-touch-id",
 					"$(SRCROOT)/../node_modules/react-native-localize/ios",
 					"$(SRCROOT)/../node_modules/react-native-randombytes",

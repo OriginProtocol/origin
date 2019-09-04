@@ -29,8 +29,10 @@ const currencyScreen = props => {
   const selectedCurrency =
     props.settings.currency || findBestAvailableCurrency()
 
-  const handleSetCurrency = (currencyCode) => {
-    props.setCurrency(CURRENCIES.find(currency => currency.code === currencyCode))
+  const handleSetCurrency = currencyCode => {
+    props.setCurrency(
+      CURRENCIES.find(currency => currency.code === currencyCode)
+    )
   }
 
   return (

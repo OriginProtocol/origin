@@ -6740,11 +6740,6 @@ react-native-touch-id@^4.4.1:
   resolved "https://registry.yarnpkg.com/react-native-touch-id/-/react-native-touch-id-4.4.1.tgz#8b1bb2d04c30bac36bb9696d2d723e719c4a8b08"
   integrity sha512-1jTl8fC+0fxvqegy/XXTyo6vMvPhjzkoDdaqoYZx0OH8AT250NuXnNPyKktvigIcys3+2acciqOeaCall7lrvg==
 
-react-native-user-agent@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/react-native-user-agent/-/react-native-user-agent-1.0.4.tgz#2be1da43028b41118d6c0ab325a0dc2e2c7d3bf4"
-  integrity sha512-kSrtMeIHgDVBep2S88LNjyCsU6bWOOR66CJ+DU27EAOS5NOVHB8hLKylEALg5wI5fedGYb70xLsDMic29f7SNQ==
-
 react-native-webview@^5.12.0:
   version "5.12.1"
   resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-5.12.1.tgz#5e2b124e9087d64fc40040d911c10ee5744b5d4d"
