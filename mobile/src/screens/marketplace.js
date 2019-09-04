@@ -266,6 +266,7 @@ class MarketplaceScreen extends Component {
       // Bump the gas for swapAndMakeOffer by 10% to handle out of gas failures caused
       // by the proxy contract
       // TODO find a better way to handle this
+      // https://github.com/OriginProtocol/origin/issues/2771
       if (functionName === 'swapAndMakeOffer') {
         msgData.data.gas =
           '0x' +
