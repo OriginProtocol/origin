@@ -226,6 +226,8 @@ export default function txHelper({
     if (web3 && to) {
       toSend = web3.eth.sendTransaction({ from, to, value, gas })
     } else {
+      const toContract = get(toSend, '_parent._address')
+      debug('send', { mutation, from, to: toContract, value, gas })
       toSend = toSend.send({ from, value, gas })
     }
     toSend

@@ -102,9 +102,8 @@ class Buy extends Component {
         {action}
         {!this.state.modal ? null : (
           <Modal
-            onClose={() =>
-              this.setState({ error: false, modal: false, shouldClose: false })
-            }
+            disableDismiss={true}
+            onClose={() => this.resetState()}
             shouldClose={this.state.shouldClose}
           >
             {content}
@@ -112,6 +111,15 @@ class Buy extends Component {
         )}
       </>
     )
+  }
+
+  resetState() {
+    const newState = Object.keys(this.state).reduce((m, o) => {
+      m[o] = null
+      return m
+    }, {})
+
+    this.setState(newState)
   }
 
   renderTransactionError() {

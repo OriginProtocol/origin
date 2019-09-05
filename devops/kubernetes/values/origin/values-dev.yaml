@@ -6,7 +6,7 @@ bridgeImageTag: '66f9619'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: 'a182231'
+dappImageTag: '00651ff'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
@@ -63,7 +63,7 @@ relayerImageTag: '99e8254'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: 'aa348bb'
+graphqlImageTag: '58c089a'
 
 # origin-token-transfer-client
 t3ClientImage: origin-token-transfer-client
