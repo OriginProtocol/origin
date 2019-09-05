@@ -34,6 +34,7 @@ import {
 } from 'actions/Marketplace'
 import withOriginGraphql from 'hoc/withOriginGraphql'
 import { PROMPT_MESSAGE, PROMPT_PUB_KEY } from '../constants'
+import CardStyles from 'styles/card'
 
 class MarketplaceScreen extends Component {
   static navigationOptions = () => {
@@ -493,7 +494,7 @@ class MarketplaceScreen extends Component {
     return Platform.OS === 'ios' ? DEFAULT_IOS_UA : DEFAULT_ANDROID_UA
   }
 
-  render() {
+  render = () => {
     const refreshControl = (
       <RefreshControl
         enabled={this.state.enablePullToRefresh}
@@ -517,7 +518,7 @@ class MarketplaceScreen extends Component {
     )
   }
 
-  renderWebView() {
+  renderWebView = () => {
     return (
       <OriginWeb3View
         ref={this.state.webViewRef}
@@ -536,15 +537,13 @@ class MarketplaceScreen extends Component {
     )
   }
 
-  renderWebViewLoading() {
+  renderWebViewLoading = () => {
     return (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" color="black" />
-      </View>
+      <ActivityIndicator size="large" color="black" />
     )
   }
 
-  renderWebViewError() {
+  renderWebViewError = () => {
     return (
       <Modal animationType="fade" transparent={true} visible={true}>
         <SafeAreaView style={styles.modalSafeAreaView}>
@@ -602,5 +601,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     backgroundColor: 'white'
-  }
+  },
+  ...CardStyles
 })
