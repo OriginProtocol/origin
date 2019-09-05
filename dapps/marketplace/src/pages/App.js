@@ -36,6 +36,7 @@ import AboutToken from './about/AboutTokens'
 import AboutPayments from './about/AboutPayments'
 import AboutCrypto from './about/AboutCrypto'
 import { applyConfiguration } from 'utils/marketplaceCreator'
+import Sentry from 'utils/sentry'
 import CurrencyContext from 'constants/CurrencyContext'
 import OpenApp from './OpenApp'
 
@@ -65,6 +66,10 @@ class App extends Component {
 
   static getDerivedStateFromError(err) {
     return { hasError: true, err }
+  }
+
+  componentDidCatch(err) {
+    Sentry.captureException(err)
   }
 
   render() {
