@@ -13,6 +13,7 @@ import MobileModalHeader from 'components/MobileModalHeader'
 import withIsMobile from 'hoc/withIsMobile'
 
 import { ConfirmSingleUnitPurchase } from './_BuySingleUnit'
+import { ConfirmMultiUnitPurchase } from './_BuyMultiUnit'
 
 
 
@@ -22,12 +23,17 @@ const ConfirmPurchase = ({ listing, quantity, prev, isMobile, history, refetch, 
   const isFractional = listing.__typename === 'FractionalListing'
   const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
 
-  let buyButton = <ConfirmSingleUnitPurchase
-    listing={listing}
-    refetch={refetch}
-    quantity={quantity}
-    bookingRange={bookingRange}
-  />
+  let ConfirmButtonComponent
+  switch (true) {
+    case multiUnit:
+      ConfirmButtonComponent = ConfirmMultiUnitPurchase
+      break
+
+    case singleUnit:
+    default:
+      ConfirmButtonComponent = ConfirmSingleUnitPurchase
+      break
+  }
 
   return (
     <div className="container confirm-purchase-page">
@@ -69,7 +75,12 @@ const ConfirmPurchase = ({ listing, quantity, prev, isMobile, history, refetch, 
           </div>
         </div>
         <div className="actions">
-          {buyButton}
+          <ConfirmButtonComponent
+            listing={listing}
+            refetch={refetch}
+            quantity={quantity}
+            bookingRange={bookingRange}
+          />
           {isMobile ? null : (
             <button
               className="btn btn-outline-primary btn-rounded"

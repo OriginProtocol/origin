@@ -8,7 +8,7 @@ import OgnBadge from 'components/OgnBadge'
 import WithPrices from 'components/WithPrices'
 import Buy from './mutations/Buy'
 import PaymentOptions from './_PaymentOptions'
-import ConfirmShippingAndPurchase from './_ConfirmShippingAndPurchase';
+import ConfirmShippingAndPurchase from './_ConfirmShippingAndPurchase'
 
 const withSingleUnitData = (WrappedComponent) => {
   const WithSingleUnitData = ({ listing, ...props }) => {
