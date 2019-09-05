@@ -176,7 +176,10 @@ class ListingDetail extends Component {
           description={description}
           availability={this.state.availability}
           isOwnerViewing={isOwnerViewing}
-          onChange={state => this.setState(state)}
+          onChange={state => {
+            this.setState(state)
+            this.props.updateBookingRange(state.range)
+          }}
           openCalendar={this.state.openCalendar}
           onClose={() => this.setState({ openCalendar: false })}
         />
@@ -188,7 +191,10 @@ class ListingDetail extends Component {
           description={description}
           availability={this.state.availabilityHourly}
           isOwnerViewing={isOwnerViewing}
-          onChange={state => this.setState(state)}
+          onChange={state => {
+            this.setState(state)
+            this.props.updateBookingRange(state.range)
+          }}
           openCalendar={this.state.openCalendar}
           onClose={() => this.setState({ openCalendar: false })}
         />

@@ -22,7 +22,7 @@ const MultiUnit = ({
   const selectedCurrency = useContext(CurrencyContext)
   const amount = String(Number(listing.price.amount) * Number(quantity))
   const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
-  const [token, setToken] = useState(acceptsDai ? 'token-DAI' : 'token-ETH')
+  const token = acceptsDai ? 'token-DAI' : 'token-ETH'
   const totalPrice = { amount, currency: listing.price.currency }
 
   return (
@@ -73,7 +73,6 @@ const MultiUnit = ({
               price={totalPrice}
               acceptedTokens={listing.acceptedTokens}
               value={token}
-              onChange={setToken}
               hasBalance={tokenStatus.hasBalance}
               hasEthBalance={tokenStatus.hasEthBalance}
             >

@@ -12,7 +12,23 @@ import MobileModalHeader from 'components/MobileModalHeader'
 
 import withIsMobile from 'hoc/withIsMobile'
 
-const ConfirmPurchase = ({ listing, quantity, prev, isMobile }) => {
+import { ConfirmSingleUnitPurchase } from './_BuySingleUnit'
+
+
+
+const ConfirmPurchase = ({ listing, quantity, prev, isMobile, history, refetch, shippingAddress, bookingRange }) => {
+  const singleUnit = !listing.multiUnit && listing.__typename === 'UnitListing'
+  const multiUnit = listing.multiUnit && listing.__typename === 'UnitListing'
+  const isFractional = listing.__typename === 'FractionalListing'
+  const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
+
+  let buyButton = <ConfirmSingleUnitPurchase
+    listing={listing}
+    refetch={refetch}
+    quantity={quantity}
+    bookingRange={bookingRange}
+  />
+
   return (
     <div className="container confirm-purchase-page">
       <DocumentTitle>
@@ -53,9 +69,7 @@ const ConfirmPurchase = ({ listing, quantity, prev, isMobile }) => {
           </div>
         </div>
         <div className="actions">
-          <button className="btn btn-primary btn-rounded">
-            <fbt desc="Continue">Confirm</fbt>
-          </button>
+          {buyButton}
           {isMobile ? null : (
             <button
               className="btn btn-outline-primary btn-rounded"
@@ -117,6 +131,7 @@ require('react-styl')(`
           width: 100%
           padding: 0.875rem 0
           margin-top: 1rem
+          border-radius: 50px
   @media (max-width: 767.98px)
     .confirm-purchase-page
       .confirm-purchase-content

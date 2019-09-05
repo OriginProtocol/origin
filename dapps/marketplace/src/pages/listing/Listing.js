@@ -28,6 +28,7 @@ const Listing = props => {
   const [quantity, setQuantity] = useState('1')
   const [redirect, setRedirect] = useState()
   const [shippingAddress, setShippingAddress] = useState(null)
+  const [bookingRange, setBookingRange] = useState(null)
 
   const listingId = props.match.params.listingID
   const variables = { listingId }
@@ -110,6 +111,7 @@ const Listing = props => {
               refetch={wrappedRefetch}
               quantity={quantity}
               shippingAddress={shippingAddress}
+              bookingRange={bookingRange}
               prev={`/listing/${listingId}${
                 listing.requiresShipping ? '/shipping' : ''
               }`}
@@ -123,6 +125,7 @@ const Listing = props => {
               refetch={wrappedRefetch}
               quantity={quantity}
               updateQuantity={quantity => setQuantity(quantity)}
+              updateBookingRange={bookingRange => setBookingRange(bookingRange)}
               shippingAddress={shippingAddress}
               next={`/listing/${listingId}/${
                 listing.requiresShipping ? 'shipping' : 'confirm'

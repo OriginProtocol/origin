@@ -23,7 +23,7 @@ const Fractional = ({
 }) => {
   const selectedCurrency = useContext(CurrencyContext)
   const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
-  const [token, setToken] = useState(acceptsDai ? 'token-DAI' : 'token-ETH')
+  const token = acceptsDai ? 'token-DAI' : 'token-ETH'
 
   let startDate = null,
     endDate = null,
@@ -104,7 +104,6 @@ const Fractional = ({
                   price={totalPrice}
                   acceptedTokens={listing.acceptedTokens}
                   value={token}
-                  onChange={setToken}
                   hasBalance={tokenStatus.hasBalance}
                   hasEthBalance={tokenStatus.hasEthBalance}
                 >
