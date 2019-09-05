@@ -33,6 +33,7 @@ import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
 import WebsiteAttestation from 'pages/identity/WebsiteAttestation'
 import OAuthAttestation from 'pages/identity/OAuthAttestation'
 import TelegramAttestation from 'pages/identity/TelegramAttestation'
+import UnsupportedAttestation from 'pages/identity/UnsupportedAttestation'
 
 import EditProfile from './_EditModal'
 import ToastNotification from './ToastNotification'
@@ -154,6 +155,13 @@ class UserProfile extends Component {
     ) {
       this.setState(getState(identity))
     }
+
+    // Check for WebView and block Google Attestation
+    const isWebView = /(iPhone|iPod|iPad)(?!.*Safari)|Android.*(wv|\.0\.0\.0)|Version\/_*.*_|WebView/.test(
+      window.navigator.userAgent
+    )
+    if (isWebView && this.props.isMobile)
+      AttestationComponents.google = UnsupportedAttestation
   }
 
   showDeploySuccessMessage(type) {
