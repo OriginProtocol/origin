@@ -24,10 +24,10 @@
   "homepage": "https://github.com/OriginProtocol/origin#readme",
   "dependencies": {
     "busboy": "0.3.1",
-    "file-type": "12.2.0",
+    "file-type": "12.3.0",
     "http-proxy": "1.17.0",
     "ipfs": "0.37.1",
-    "ipfsd-ctl": "0.44.2",
+    "ipfsd-ctl": "0.46.0",
     "is-json": "2.0.1",
     "logplease": "1.2.15",
     "per-env": "1.0.2",
@@ -42,7 +42,7 @@
     "chai": "4.2.0",
     "form-data": "2.5.1",
     "mocha": "6.2.0",
-    "nodemon": "1.19.1",
+    "nodemon": "1.19.2",
     "supertest": "4.0.2",
     "webrtcsupport": "2.2.0"
   },

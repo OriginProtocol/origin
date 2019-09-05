@@ -32,7 +32,8 @@ const TransactionCard = props => {
   // Calculate gas in wei
   const gasWei = global.web3.utils
     .toBN(msgData.data.gasPrice)
-    .mul(global.web3.utils.toBN(msgData.data.gasLimit))
+    .mul(global.web3.utils.toBN(msgData.data.gas))
+
   // Convert gas price to ether
   const gas = global.web3.utils.fromWei(gasWei.toString(), 'ether')
   const ethExchangeRate = props.exchangeRates[`${fiatCurrency[1]}/ETH`].rate

@@ -24,13 +24,26 @@ export const ETH_NOTIFICATION_TYPES = new Enum('APN', 'FCM')
 export const BALANCE_POLL_INTERVAL = 5000
 
 export const NETWORKS = [
-  { id: 1, name: 'Mainnet', dappUrl: 'https://shoporigin.com' },
+  {
+    id: 1,
+    name: 'Mainnet',
+    dappUrl: 'https://shoporigin.com',
+    provider:
+      'https://eth-mainnet.alchemyapi.io/jsonrpc/FCA-3myPH5VFN8naOWyxDU6VkxelafK6'
+  },
   {
     id: 4,
     name: 'Rinkeby',
-    dappUrl: 'https://dapp.staging.originprotocol.com'
+    dappUrl: 'https://dapp.staging.originprotocol.com',
+    provider:
+      'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI'
   },
-  { id: 2222, name: 'Origin', dappUrl: 'https://dapp.dev.originprotocol.com' }
+  {
+    id: 2222,
+    name: 'Origin',
+    dappUrl: 'https://dapp.dev.originprotocol.com',
+    provider: 'https://testnet.originprotocol.com/rpc'
+  }
 ]
 
 // Push additional networks if in development
@@ -68,12 +81,12 @@ import * as en_US from 'locales/en_US.json'
 import * as es_ES from 'locales/es_ES.json'
 import * as fr_FR from 'locales/fr_FR.json'
 import * as it_IT from 'locales/it_IT.json'
-// import * as ja_JP from 'locales/ja_JP.json'
-// import * as ko_KR from 'locales/ko_KR.json'
+import * as ja_JP from 'locales/ja_JP.json'
+import * as ko_KR from 'locales/ko_KR.json'
 // import * as nl_NL from 'locales/nl_NL.json'
 // import * as pt_PT from 'locales/pt_PT.json'
 // import * as ro_RO from 'locales/ro_RO.json'
-// import * as ru_RU from 'locales/ru_RU.json'
+import * as ru_RU from 'locales/ru_RU.json'
 // import * as tr_TR from 'locales/tr_TR.json'
 // import * as uk_UA from 'locales/uk_UA.json'
 // import * as vi_VN from 'locales/vi_VN.json'
@@ -88,12 +101,12 @@ export const TRANSLATIONS = {
   es_ES,
   fr_FR,
   it_IT,
-  // ja_JP,
-  // ko_KR,
+  ja_JP,
+  ko_KR,
   // nl_NL,
   // pt_PT,
   // ro_RO,
-  // ru_RU,
+  ru_RU,
   // tr_TR,
   // uk_UA,
   // vi_VN,

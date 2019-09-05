@@ -43,14 +43,21 @@
         }
       ]
     },
-    "LnwecOVmQ25DVugF+RemxQ==": {
+    "fsX2zn/I8IxKM/YS6pNIiA==": {
       "translations": [
         {
           "translation": "인증 필요"
         }
       ]
     },
-    "J/SHV34/Q6NzSn+T7V8i2w==": {
+    "uBbr58ZsBIlotqS29XDzmA==": {
+      "translations": [
+        {
+          "translation": "다시 하기"
+        }
+      ]
+    },
+    "b1eg8txmL9GsnAqK+wcpDA==": {
       "translations": [
         {
           "translation": "비밀번호를 입력해주세요"
@@ -67,14 +74,14 @@
     "zq6BJdlScS7RmSd1QYOx/w==": {
       "translations": [
         {
-          "translation": "If you lose your account private key, you will not be able to access your funds."
+          "translation": "프라이벗 키를 잃어 버리면 펀드를 액세스 할 수 없습니다."
         }
       ]
     },
     "4usqugeX/QJAVYFd20+Juw==": {
       "translations": [
         {
-          "translation": "If you lose your account recovery phrase, you will not be able to access your funds."
+          "translation": "계정 복구 구문을 잃어 버리면 펀드를 액세스 할 수 없습니다."
         }
       ]
     },
@@ -109,7 +116,7 @@
     "TsWyCTUsQI/nO9f3+35sXw==": {
       "translations": [
         {
-          "translation": "By creating a profile, you are associating your name and photo with your Ethereum account. This means that others will be able to connect your blockchain transactions to your name and photo."
+          "translation": "프로필을 만들면 이름과 사진이 이더리움 계정과 연결됩니다. 이는 다른 사람들이 귀하의 블록체인 거래를 귀하의 이름과 사진에 연결할 수 있음을 의미합니다."
         }
       ]
     },
@@ -123,7 +130,7 @@
     "53OPnmUdKU2hcrljQxQZLA==": {
       "translations": [
         {
-          "translation": "An error occurred loading the Origin Marketplace. Please check your internet connection."
+          "translation": "Origin Marketplace 로딩 중 오류가 발생했습니다. 인터넷 연결을 확인해주세요."
         }
       ]
     },
@@ -137,42 +144,42 @@
     "KU9ATM6FUSyE4otzmBVDgA==": {
       "translations": [
         {
-          "translation": "Are you sure you don't want Origin Rewards?"
+          "translation": "오리진 리워드에 참여하고 싶지 않은게 확실한가요?"
         }
       ]
     },
     "09diYnabOsFOs1TD+djfhw==": {
       "translations": [
         {
-          "translation": "Your new wallet will be ineligible to earn OGN."
+          "translation": "귀하의 새 지갑은 OGN을 받을 수 없을것 입니다."
         }
       ]
     },
     "irOaYRzzICZEzzJSVHZuPw==": {
       "translations": [
         {
-          "translation": "I'm sure"
+          "translation": "네, 확실합니다."
         }
       ]
     },
     "ElbsZ92b2NSuDKUhrEhInA==": {
       "translations": [
         {
-          "translation": "No, wait"
+          "translation": "아니요, 잠시만요."
         }
       ]
     },
     "FCBgGtybLVdEFPoBHMNwRw==": {
       "translations": [
         {
-          "translation": "Enable Notifications"
+          "translation": "알림 허용"
         }
       ]
     },
     "2UTQi1Ij4joTFsZVJtd81g==": {
       "translations": [
         {
-          "translation": "Woops! It looks like you have notifications disabled. To get the latest updates about your transactions we recommend enabling them in the settings for the Origin Marketplace application."
+          "translation": "웁스! 알림 사용이 중지 된 것 같습니다. 거래에 대한 최신 업데이트를 받으려면 Origin Marketplace 애플리케이션의 설정에서 알림을 허용하세요."
         }
       ]
     },
@@ -242,7 +249,7 @@
     "HcQ+0ssTVx9JP0dbueE6EA==": {
       "translations": [
         {
-          "translation": "Approve Currency Conversion"
+          "translation": "환율 변환 승인"
         }
       ]
     },
@@ -340,7 +347,7 @@
     "VgnIScPQ4MxmjP3MHHSlpA==": {
       "translations": [
         {
-          "translation": "Woops! It looks like you are using an old version of the Origin Marketplace App. Please update to proceed."
+          "translation": "웁스! 이전 버전의 Origin Marketplace 앱을 사용중인 것 같습니다. 계속 진행하려면 업데이트 해주세요."
         }
       ]
     },
@@ -354,7 +361,7 @@
     "6QOETx2H8d657NCFME14fQ==": {
       "translations": [
         {
-          "translation": "It looks like you are using an old version of the Origin Marketplace App. For the best experience, we recommend you update."
+          "translation": "이전 버전의 Origin Marketplace 앱을 사용중인 것 같습니다. 최상의 환경을 위해 업데이트하는 것이 좋습니다."
         }
       ]
     },
@@ -368,14 +375,14 @@
     "BY1VaMBt7Cf6hcIW3G+xTw==": {
       "translations": [
         {
-          "translation": "Not now"
+          "translation": "나중에 하기"
         }
       ]
     },
     "XsJI4lHivUR4kWUoxiX2XA==": {
       "translations": [
         {
-          "translation": "What will be visible on the blockchain?"
+          "translation": "어떤 것들이 블록체인에 기록되나요?"
         }
       ]
     },
@@ -424,7 +431,7 @@
     "Fj7mSGlzBW8WmXnCJpygjA==": {
       "translations": [
         {
-          "translation": "Have you backed up your private key or recovery phrase for this account? The account will be permanently deleted and you must have the private key or recovery phrase to recover it. Are you sure that you want to delete this account?"
+          "translation": "이 계정에 대한 개인 키 또는 복구 구문을 백업 했습니까? 계정이 영구적으로 삭제되므로 복구하려면 개인 키 또는 복구 구문이 있어야합니다. 정말 이 계정을 삭제 하시겠습니까?"
         }
       ]
     },
@@ -445,7 +452,7 @@
     "KaZkh00tsKdzL4PMvmqOWw==": {
       "translations": [
         {
-          "translation": "Make Active Account"
+          "translation": "계정 활성화하기"
         }
       ]
     },
@@ -515,7 +522,7 @@
     "/qUSB40G8z1yEmSpGgnhpw==": {
       "translations": [
         {
-          "translation": "Imported from Private Key"
+          "translation": "개인 키에서 가져 오기"
         }
       ]
     },
@@ -529,7 +536,7 @@
     "PwgVT2B+QoumKmdtky/t5Q==": {
       "translations": [
         {
-          "translation": "As a security precaution, the clipboard will be cleared after one minute."
+          "translation": "보안 예방 조치로 1분 후에 클립 보드가 지워집니다."
         }
       ]
     },
@@ -557,7 +564,7 @@
     "XyxrGJkJ5zgb6isZ0BdDlg==": {
       "translations": [
         {
-          "translation": "Write down your private key"
+          "translation": "개인 키를 입력해 주세요"
         }
       ]
     },
@@ -585,14 +592,14 @@
     "zLMFuSkl3GBjE3tx50sIhw==": {
       "translations": [
         {
-          "translation": "This private key is the key to your account. Write it down, or copy it to a password manager. We recommend NOT emailing it to yourself."
+          "translation": "이 개인 키는 계정의 핵심입니다. 적어 두거나 패스워드 매니저 앱에 보관하세요. 이메일로 개인 키를 자신에게 보내지 않는 것이 좋습니다."
         }
       ]
     },
     "MAOXf1kKWz/7TYu8RqMmFQ==": {
       "translations": [
         {
-          "translation": "This recovery phrase is the key to your account. Write it down, or copy it to a password manager. We recommend NOT emailing it to yourself."
+          "translation": "이 복구 구문은 계정의 핵심입니다. 적어 두거나 패스워드 매니저 앱에 보관하세요. 이메일로 복구 구문을 자신에게 보내지 않는 것이 좋습니다."
         }
       ]
     },
@@ -634,14 +641,14 @@
     "myq3OtUs+Fi+a0kMs+wbIg==": {
       "translations": [
         {
-          "translation": "Select the words in the correct order"
+          "translation": "올바른 순서로 단어를 선택하세요"
         }
       ]
     },
     "EDxEE4K6bae2M7ydCHp6Zw==": {
       "translations": [
         {
-          "translation": "Go Back"
+          "translation": "뒤로 가기"
         }
       ]
     },
@@ -669,7 +676,7 @@
     "31RyFwYE/GDQQsrh3Ulvtw==": {
       "translations": [
         {
-          "translation": "You can import a wallet using one of the methods below."
+          "translation": "아래 방법 중 하나를 사용하여 지갑을 가져올 수 있습니다."
         }
       ]
     },
@@ -690,7 +697,7 @@
     "EAvFlbnkWZvKJZAe/pfhsA==": {
       "translations": [
         {
-          "translation": "That does not look like a valid recovery phrase."
+          "translation": "유효한 복구 구문이 아닙니다."
         }
       ]
     },
@@ -729,31 +736,31 @@
         }
       ]
     },
-    "bJwnJVo5lwuFi394jn741w==": {
+    "imEcy9mqva2P4QkCGKkG7w==": {
       "translations": [
         {
-          "translation": "Import your wallet to earn more OGN"
+          "translation": "다른 지갑 감지"
         }
       ]
     },
-    "nWjFXBqXG9oCHoaLwTYfXw==": {
+    "DktheTKIZ/i7gQzBzStqKQ==": {
       "translations": [
         {
-          "translation": "We’ve detected an existing wallet associated with this email. Please import it to continue earning rewards."
+          "translation": "이전에 다른 지갑으로 이 이메일을 사용하여 오리진 리워드에 가입 한 것으로 나타났습니다. 오리진 리워드를 계속 얻으려면 다른 지갑을 가져 오세요."
         }
       ]
     },
-    "MNlD7ug4Qb5knKTv38TSRA==": {
+    "JdP7rfOo7gmvo9L/wkL+Zg==": {
       "translations": [
         {
-          "translation": "Import a wallet"
+          "translation": "다른 지갑 가져 오기"
         }
       ]
     },
     "QxzO198tsuRhwRSgbXnSSA==": {
       "translations": [
         {
-          "translation": "Continue without rewards"
+          "translation": "리워드 없이 계속하기"
         }
       ]
     },
@@ -761,6 +768,20 @@
       "translations": [
         {
           "translation": "언어"
+        }
+      ]
+    },
+    "lPK1A5cn8JlhIPgCDjiuAg==": {
+      "translations": [
+        {
+          "translation": "연결 오류"
+        }
+      ]
+    },
+    "a3s77Iq0FypOEuisvfUcYg==": {
+      "translations": [
+        {
+          "translation": "다시 시도"
         }
       ]
     },
@@ -774,28 +795,28 @@
     "IaE+AHV4HvjUVM7WH5QGEQ==": {
       "translations": [
         {
-          "translation": "It looks like you have {biometryType} disabled. You will need to enable it in the settings for the Origin Marketplace App."
+          "translation": "{biometryType} 이 비활성화 된 것 같습니다. Origin Marketplace 앱의 설정에서 활성시켜주세요."
         }
       ]
     },
     "+2JgKmxomPm6EphuMZAFIg==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "설정 열기"
         }
       ]
     },
     "33H9wgLoaZ0e06VAnLqWDQ==": {
       "translations": [
         {
-          "translation": "Protect your wallet"
+          "translation": "지갑 보호하기"
         }
       ]
     },
     "LeVyToxA5TxqpAsWD4H61w==": {
       "translations": [
         {
-          "translation": "Add an extra layer of security to keep your crypto safe."
+          "translation": "암호화폐를 안전하게 유지하기 위해 추가 보안 계층을 더하기"
         }
       ]
     },
@@ -816,14 +837,14 @@
     "mVZ3B6uerQ4HZmCph0E5tQ==": {
       "translations": [
         {
-          "translation": "Photo library permissions not granted"
+          "translation": "포토 라이브러리 권한이 부여되지 않았습니다"
         }
       ]
     },
     "8ZM8FmUk6ZfijCtumgXusw==": {
       "translations": [
         {
-          "translation": "Your photo will be visible on the blockchain"
+          "translation": "사용자의 사진이 블록체인에 기록됩니다"
         }
       ]
     },
@@ -844,7 +865,7 @@
     "AtumglY5rafPmxS5bIbDRQ==": {
       "translations": [
         {
-          "translation": "It looks like we cannot access your photo gallery. You will need to allow access in the onboarding for the Origin Marketplace App."
+          "translation": "포토 갤러리에 액세스 할 수 없습니다. Origin Marketplace 앱의 온보딩(onboarding) 에서 액세스를 허용해야합니다."
         }
       ]
     },
@@ -858,35 +879,35 @@
     "Sgdsg46ONGdu6O6X2qxfcg==": {
       "translations": [
         {
-          "translation": "Looking good"
+          "translation": "거의 다 왔습니다"
         }
       ]
     },
     "HIo5dv7pY9YsS7Fqm3bXfg==": {
       "translations": [
         {
-          "translation": "That does not look like a valid email."
+          "translation": "유효한 이메일이 아닙니다."
         }
       ]
     },
     "Peq94zFjleGar7Rv3g1lgg==": {
       "translations": [
         {
-          "translation": "Let's get started"
+          "translation": "이제 시작하겠습니다"
         }
       ]
     },
     "RNEgkK4iv5gSEf8ZLkbgjg==": {
       "translations": [
         {
-          "translation": "What's your email address?"
+          "translation": "이메일 주소는 무엇인가요?"
         }
       ]
     },
     "En1GXA0gOCZoss4o/D8dNg==": {
       "translations": [
         {
-          "translation": "We will use your email to notify you of important notifications when you buy or sell."
+          "translation": "우리는 귀하가 사고 팔 때 중요한 알림을 알리기 위해 귀하의 이메일을 사용합니다."
         }
       ]
     },
@@ -914,7 +935,7 @@
     "2gZws9N5PqCKOwXVtEAC4Q==": {
       "translations": [
         {
-          "translation": "We sent you a code to the email address you provided. Please enter it above."
+          "translation": "제공하신 이메일 주소로 코드를 보냈습니다. 위에 입력해주세요."
         }
       ]
     },
@@ -928,14 +949,14 @@
     "yA8uydHyuptDK//yqS34XA==": {
       "translations": [
         {
-          "translation": "That you have a verified email, but NOT your actual email address."
+          "translation": "인증된 이메일이 있다는 사실, 실제 이메일 주소는 아닙니다."
         }
       ]
     },
     "yCoiTqACk89DXAWoi3BMoA==": {
       "translations": [
         {
-          "translation": "Checking eligibility"
+          "translation": "자격 확인중"
         }
       ]
     },
@@ -1191,10 +1212,10 @@
         }
       ]
     },
-    "Lp93xb08b3XQgFxrkhcWaw==": {
+    "+RVM+8puOIMhob2MxHX2bA==": {
       "translations": [
         {
-          "translation": "전화 번호 입력"
+          "translation": "Enter phone"
         }
       ]
     },
@@ -1310,17 +1331,17 @@
         }
       ]
     },
-    "/ZRamsgXYO6P2TSz5J9w9Q==": {
+    "lgpP8skCH3wOustvhptxBA==": {
       "translations": [
         {
-          "translation": "거래 확정을 기다리는 중입니다"
+          "translation": "Waiting for confirmation"
         }
       ]
     },
-    "oIOKtoc/Vu54ytVuwI0Tmw==": {
+    "tWJHZWSsiD6K0ek//UcW6Q==": {
       "translations": [
         {
-          "translation": "이 작업은 약 1 분 정도 소요 될 수 있습니다"
+          "translation": "This might take a minute"
         }
       ]
     },
@@ -1398,6 +1419,13 @@
       "translations": [
         {
           "translation": "네트워크"
+        }
+      ]
+    },
+    "j5rIPEDyOjXyubSdCUgZ6A==": {
+      "translations": [
+        {
+          "translation": "Version"
         }
       ]
     },

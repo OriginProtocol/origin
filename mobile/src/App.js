@@ -24,7 +24,6 @@ YellowBox.ignoreWarnings([
 class App extends Component {
   constructor(props) {
     super(props)
-
     // Add web3 to the react-native global object so it is available everywhere
     global.web3 = new Web3()
   }
@@ -44,11 +43,14 @@ class App extends Component {
     setLanguage(settings.language)
 
     // Validate the network setting
-    const networkExists = NETWORKS.find(n => n.name === settings.network.name)
-    // If network wasn't found, default to mainnet
-    if (!networkExists) {
-      await Store.dispatch(setNetwork(NETWORKS.find(n => n.id === 1)))
+    let network = NETWORKS.find(n => n.name === settings.network.name)
+    if (!network) {
+      network = NETWORKS.find(n => n.id === 1)
     }
+
+    await Store.dispatch(setNetwork(network))
+
+    global.web3.setProvider(network.provider)
 
     // Verify there is a valid active account, and if not set one
     let hasValidActiveAccount = false
