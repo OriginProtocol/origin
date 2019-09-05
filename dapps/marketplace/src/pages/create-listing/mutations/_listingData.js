@@ -71,7 +71,8 @@ export default function applyListingData(props, data) {
       commissionPerUnit: listing.commissionPerUnit
         ? String(listing.commissionPerUnit)
         : '0',
-      marketplacePublisher: listing.marketplacePublisher
+      marketplacePublisher: listing.marketplacePublisher,
+      requiresShipping: listing.requiresShipping
     }
   }
 
