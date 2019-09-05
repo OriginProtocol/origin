@@ -4,6 +4,8 @@ import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
+import { ethers } from 'ethers'
+import get from 'lodash.get'
 
 import { decodeTransaction } from '../utils/contractDecoder'
 import { findBestAvailableCurrency } from 'utils/currencies'
@@ -33,18 +35,21 @@ const TransactionCard = props => {
   console.debug(parameters)
 
   // Calculate gas in wei
-  const gasWei = global.web3.utils
-    .toBN(msgData.data.gasPrice)
-    .mul(global.web3.utils.toBN(msgData.data.gas))
-
+  const gasWei = ethers.utils.bigNumberify(msgData.data.gasPrice)
+    .mul(ethers.utils.bigNumberify(msgData.data.gas))
   // Convert gas price to ether
-  const gas = global.web3.utils.fromWei(gasWei.toString(), 'ether')
+  const gas = ethers.utils.formatEther(gasWei)
 
   // Get the exchange rates for ETH and DAI
   const ethExchangeRate = props.exchangeRates[`${fiatCurrency.code}/ETH`].rate
   const daiExchangeRate = props.exchangeRates[`${fiatCurrency.code}/DAI`].rate
 
-  const balances = wallet.accountBalance
+  const networkName = get(props.settings.network, 'name', null)
+  const balances = get(
+    props.wallet.accountBalance,
+    `${networkName}.${props.wallet.activeAccount.address}`,
+    null
+  )
 
   let heading,
     boost,
@@ -59,9 +64,10 @@ const TransactionCard = props => {
       heading = fbt('Create Listing', 'TransactionCard.headingCreate')
       boost = 0
       break
+
     case 'makeOffer':
-      heading = fbt('Purchase', 'TransactionCard.headingPurchase')
-      payment = global.web3.utils.fromWei(parameters._value)
+      heading = fbt('Make Offer', 'TransactionCard.headingMakeOffer')
+      payment = ethers.utils.formatEther(parameters._value)
       // TODO: handle this detection better, this will only work while there
       // is a single alternate payment currency
       if (
@@ -75,11 +81,10 @@ const TransactionCard = props => {
       }
       ognRequired = parseInt(parameters._commission)
       break
+
     case 'swapAndMakeOffer':
       heading = fbt('Purchase', 'TransactionCard.headingPurchase')
-      payment =
-        global.web3.utils.fromWei(parameters._value.toString()) /
-        ethExchangeRate
+      payment = ether.utils.formatEther(parameters._value) / ethExchangeRate
       paymentCurrency = 'eth'
       ethRequired += Number(payment)
       break
@@ -89,18 +94,21 @@ const TransactionCard = props => {
         'TransactionCard.headingPublishIdentity'
       )
       break
+
     case 'approve':
       heading = fbt(
         'Approve Currency Conversion',
         'TransactionCard.headingApprove'
       )
       break
+
     case 'createProxyWithSenderNonce':
       heading = fbt(
         'Enable Meta Transactions',
         'TransactionCard.createProxyHeading'
       )
       break
+
     default:
       heading = fbt('Blockchain Transaction', 'TransactionCard.default')
   }
