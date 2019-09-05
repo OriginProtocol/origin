@@ -53,7 +53,8 @@ class ImportAccountScreen extends Component {
     let account
 
     try {
-      account = this.props.importAccountFromMnemonic(this.state.value.trim())
+      const existingAddresses = this.props.wallet.accounts.map(a => a.address)
+      account = this.props.importAccountFromMnemonic(this.state.value.trim(), existingAddresses)
     } catch (error) {
       let errorMessage = error.message
       if (errorMessage === 'invalid mnemonic') {
@@ -147,8 +148,8 @@ const mapStateToProps = ({ activation, settings, wallet }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  importAccountFromMnemonic: mnemonic =>
-    dispatch(importAccountFromMnemonic(mnemonic)),
+  importAccountFromMnemonic: (mnemonic, existingAddresses) =>
+    dispatch(importAccountFromMnemonic(mnemonic, existingAddresses)),
   setBackupWarningStatus: address => dispatch(setBackupWarningStatus(address))
 })
 

@@ -3,8 +3,8 @@
 import { applyMiddleware, createStore, combineReducers, compose } from 'redux'
 import { createTransform } from 'redux-persist'
 import { persistStore, persistReducer } from 'redux-persist'
+import AsyncStorage from '@react-native-community/async-storage';
 import createEncryptor from 'redux-persist-transform-encrypt'
-import storage from 'redux-persist/lib/storage'
 import thunk from 'redux-thunk'
 
 import activation from 'reducers/Activation'
@@ -19,18 +19,9 @@ const encryptor = createEncryptor({
   secretKey: 'WALLET_PASSWORD'
 })
 
-const ValidateAccountTransform = createTransform(
-  inboundState => inboundState,
-  outboundState => outboundState,
-  {
-    // Only apply this to wallet
-    whitelist: ['wallet']
-  }
-)
-
 const persistConfig = {
   key: 'EncryptedOriginWallet',
-  storage: storage,
+  storage: AsyncStorage,
   whitelist: [
     'activation',
     'exchangeRates',
@@ -39,7 +30,7 @@ const persistConfig = {
     'settings',
     'wallet'
   ],
-  transforms: [ValidateAccountTransform, encryptor]
+  transforms: [encryptor]
 }
 
 // eslint-disable-next-line no-underscore-dangle

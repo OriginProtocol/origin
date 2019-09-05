@@ -521,18 +521,17 @@ class MarketplaceScreen extends Component {
     return (
       <OriginWeb3View
         ref={this.state.webViewRef}
-        onMessage={this.onWebViewMessage}
-        allowsBackForwardNavigationGestures={Platform.OS === 'ios'}
-        useWebKit={Platform.OS === 'ios'}
         source={{ uri: this.state.webViewUrlTrigger }}
+        onMessage={this.onWebViewMessage}
         onLoad={this.onWebViewLoad}
         onError={this.onWebViewError}
         onNavigationStateChange={this.onWebViewNavigationStateChange}
         renderLoading={this.renderWebViewLoading}
-        decelerationRate="normal"
+        renderError={this.renderWebViewError}
         userAgent={this.getUserAgent()}
         startInLoadingState={true}
-        renderError={this.renderWebViewError}
+        allowsBackForwardNavigationGestures={true} // iOS support only
+        decelerationRate="normal"
       />
     )
   }

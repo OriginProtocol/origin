@@ -34,17 +34,13 @@ buildscript {
         targetSdkVersion = 28
         compileSdkVersion = 28
         supportLibVersion = "27.1.0"
-        googlePlayServicesVersion = "16.0.0"
-        firebaseVersion = "17.3.4"
     }
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        // Release builds crash with 3.4.0 and 3.4.1
-        // https://github.com/facebook/react-native/issues/18357#issuecomment-437186504
-        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.android.tools.build:gradle:3.5.0'
         classpath 'com.google.gms:google-services:4.0.2'
         classpath 'com.google.android.gms:strict-version-matcher-plugin:1.0.2'
     }
@@ -52,24 +48,13 @@ buildscript {
 
 allprojects {
     repositories {
-        configurations.all {
-            resolutionStrategy {
-                force 'com.android.support:support-core-utils:27.1.0'
-                force 'com.android.support:support-core-ui:27.1.0'
-                force 'com.android.support:support-core-ui:27.1.0'
-                force 'com.android.support:support-fragment:27.1.0'
-                force 'com.android.support:support-compat:27.1.0'
-                force 'com.android.support:support-annotations:27.1.0'
-                force 'android.arch.lifecycle:common:1.1.0'
-                force 'android.arch.core:common:1.1.0'
-                // Not sure what needs this
-                force "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
-            }
-        }
-
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/../node_modules/react-native/android"
+        }
+        maven {
+            // Android JSC is installed from npm
+            url("$rootDir/../node_modules/jsc-android/dist")
         }
         flatDir {
             dirs "$rootDir/../node_modules/react-native-samsung-bks/android/aar"

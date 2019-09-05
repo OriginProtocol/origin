@@ -7,6 +7,7 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Platform, StyleSheet } from 'react-native'
+import { ethers } from 'ethers'
 import SafeAreaView from 'react-native-safe-area-view'
 import PushNotification from 'react-native-push-notification'
 

@@ -36,7 +36,7 @@ class MarketplaceApp extends React.Component {
     this.updateExchangeRates()
   }
 
-  componentWillUpdate = prevProps => {
+  componentDidUpdate = prevProps => {
     // Update exchange rates on currency change
     if (get(prevProps, 'settings.currency') !== this.props.settings.currency) {
       this.updateExchangeRates()

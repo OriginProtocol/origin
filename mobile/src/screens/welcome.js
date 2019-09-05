@@ -41,8 +41,8 @@ class WelcomeScreen extends Component {
     let action
     if (this.props.samsungBKS.seedHash === '') {
       action = this.renderSamsungBKSRequiresSetup()
-    } else if (this.props.samsungBKS.seedHash.length > 0) {
-      action = this.renderSamsungBKSDetectedMessage() + this.renderContinueButton()
+    } else if (this.props.samsungBKS.seedHash && this.props.samsungBKS.seedHash.length > 0) {
+      action = this.renderSamsungBKSDetectedMessage()
     } else if (this.props.wallet.accounts.length === 0) {
       action = this.renderWalletButtons()
     } else {
@@ -128,11 +128,14 @@ class WelcomeScreen extends Component {
 
   renderSamsungBKSDetectedMessage() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>
-          Your phone supports Samsung Blockchain Keystore and we've detected an account.
-        </Text>
-      </View>
+      <>
+        <View style={styles.container}>
+          <Text style={styles.text}>
+            Your phone supports Samsung Blockchain Keystore and we've detected an account.
+          </Text>
+        </View>
+        {this.renderContinueButton()}
+      </>
     )
   }
 

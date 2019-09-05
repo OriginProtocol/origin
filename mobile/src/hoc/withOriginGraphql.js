@@ -34,7 +34,7 @@ const withOriginGraphql = WrappedComponent => {
       }
     }
 
-    componentWillMount = () => {
+    componentDidMount = () => {
       // Subscribe to GraphQL result events
       this.subscriptions = [
         DeviceEventEmitter.addListener(

@@ -6,9 +6,9 @@ import {
   AppState,
   DeviceEventEmitter,
   Platform,
-  PushNotificationIOS
 } from 'react-native'
 import PushNotification from 'react-native-push-notification'
+import PushNotificationIOS from '@react-native-community/push-notification-ios'
 import { connect } from 'react-redux'
 import get from 'lodash.get'
 
