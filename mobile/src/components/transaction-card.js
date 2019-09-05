@@ -35,7 +35,8 @@ const TransactionCard = props => {
   console.debug(parameters)
 
   // Calculate gas in wei
-  const gasWei = ethers.utils.bigNumberify(msgData.data.gasPrice)
+  const gasWei = ethers.utils
+    .bigNumberify(msgData.data.gasPrice)
     .mul(ethers.utils.bigNumberify(msgData.data.gas))
   // Convert gas price to ether
   const gas = ethers.utils.formatEther(gasWei)
