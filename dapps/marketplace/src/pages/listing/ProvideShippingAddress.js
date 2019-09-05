@@ -94,7 +94,13 @@ const ProvideShippingAddress = ({
   return (
     <div className="container confirm-shipping-address">
       <DocumentTitle>{listing.title}</DocumentTitle>
-      {!isMobile ? null : (
+      {!isMobile ? (
+        <h1>
+          <fbt desc="PurchaseListing.shippingAddressTitle">
+            Shipping Address
+          </fbt>
+        </h1>
+      ) : (
         <MobileModalHeader
           onBack={() => {
             history.goBack()
@@ -128,6 +134,13 @@ const ProvideShippingAddress = ({
           }
         }}
       >
+        {isMobile ? null : (
+          <h2>
+            <fbt desc="PurchaseListing.shippingAddress">
+              Provide a Shipping Address
+            </fbt>
+          </h2>
+        )}
         <div className="desc">
           <fbt desc="PurchaseListing.enterShippingAddress">
             Let the seller know where they should send your item.
@@ -193,9 +206,15 @@ const ProvideShippingAddress = ({
           <button type="submit" className="btn btn-primary btn-rounded">
             <fbt desc="Continue">Continue</fbt>
           </button>
-          <button type="submit" className="btn btn-outline-primary btn-rounded">
-            <fbt desc="Cancel">Cancel</fbt>
-          </button>
+          {isMobile ? null : (
+            <button
+              type="button"
+              className="btn btn-outline-primary btn-rounded"
+              onClick={() => history.goBack()}
+            >
+              <fbt desc="Cancel">Cancel</fbt>
+            </button>
+          )}
         </div>
       </form>
     </div>
@@ -207,8 +226,19 @@ export default withRouter(withIsMobile(ProvideShippingAddress))
 require('react-styl')(`
   .confirm-shipping-address
     padding: 0
+    h1
+      margin-top: 5rem
+      text-align: center
+    h2 
+      margin-top: 3rem
+      text-align: center
+      font-weight: bold
     .shipping-address-form
-      padding: 1rem
+      padding: 1rem 2.625rem
+      max-width: 600px
+      margin: 0 auto
+      border: 1px solid #c2cbd3
+      border-radius: 10px
       .desc
         font-size: 1.125rem
         margin-bottom: 1rem
@@ -230,4 +260,10 @@ require('react-styl')(`
         width: 100%
         padding: 0.875rem 0
         margin-top: 1rem
+  
+  @media (max-width: 767.98px)
+    .confirm-shipping-address
+      .shipping-address-form
+        border: 0
+        padding: 1rem
 `)
