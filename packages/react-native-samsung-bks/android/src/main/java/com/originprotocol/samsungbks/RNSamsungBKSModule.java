@@ -117,6 +117,7 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
     ScwService.getInstance().getAddressList(callback, hdPathList);
   }
 
+  /*
   @ReactMethod
   public void signEthTransaction(
       String hdPath,
@@ -159,4 +160,5 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
 
     ScwService.getInstance().signEthPersonalMessage(callback, unSignedMsg, hdPath);
   }
+  */
 }

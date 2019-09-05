@@ -49,10 +49,12 @@ class SamsungBKS extends React.Component {
 
   _updateAccounts = async () => {
     console.debug('Updating account list from Samsung BKS')
-    const address = await RNSamsungBKS.getAddressList(generateHdPath(0))
+    const hdPath = generateHdPath(0)
+    const address = await RNSamsungBKS.getAddressList(hdPath)
     await this.props.setAccounts([
       {
-        address
+        address,
+        hdPath
       }
     ])
   }

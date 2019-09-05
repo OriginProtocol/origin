@@ -2,6 +2,9 @@
 
 import { applyMiddleware, createStore, combineReducers, compose } from 'redux'
 import { createTransform } from 'redux-persist'
+import { persistStore, persistReducer } from 'redux-persist'
+import createEncryptor from 'redux-persist-transform-encrypt'
+import storage from 'redux-persist/lib/storage'
 import thunk from 'redux-thunk'
 
 import activation from 'reducers/Activation'
@@ -11,9 +14,6 @@ import notifications from 'reducers/Notifications'
 import samsungBKS from 'reducers/SamsungBKS'
 import settings from 'reducers/Settings'
 import wallet from 'reducers/Wallet'
-import { persistStore, persistReducer } from 'redux-persist'
-import createEncryptor from 'redux-persist-transform-encrypt'
-import storage from 'redux-persist/lib/storage'
 
 const encryptor = createEncryptor({
   secretKey: 'WALLET_PASSWORD'
@@ -21,17 +21,7 @@ const encryptor = createEncryptor({
 
 const ValidateAccountTransform = createTransform(
   inboundState => inboundState,
-  // Transform state being rehydrated
-  outboundState => {
-    // Make sure all accounts in the store are valid, i.e. that they have
-    // both an address and a private key
-    return {
-      ...outboundState,
-      accounts: outboundState.accounts.filter(account => {
-        return account.address && account.privateKey
-      })
-    }
-  },
+  outboundState => outboundState,
   {
     // Only apply this to wallet
     whitelist: ['wallet']

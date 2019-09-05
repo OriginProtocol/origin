@@ -14,8 +14,6 @@ import AuthenticationGuard from 'components/authentication-guard'
 import UpdatePrompt from 'components/update-prompt'
 import BackupPrompt from 'components/backup-prompt'
 
-const EXCHANGE_RATE_POLL_INTERVAL = 60 * 10 * 1000
-
 class MarketplaceApp extends React.Component {
   static router = Navigation.router
 
@@ -31,22 +29,11 @@ class MarketplaceApp extends React.Component {
     this.updateExchangeRates = () => {
       const fiatCurrency =
         this.props.settings.currency || findBestAvailableCurrency()
-      console.debug('Updating exchange rates for', fiatCurrency.code)
       updateExchangeRate(fiatCurrency.code, 'ETH')
       updateExchangeRate(fiatCurrency.code, 'DAI')
     }
-    this.exchangeRateUpdater = setInterval(
-      this.updateExchangeRates,
-      EXCHANGE_RATE_POLL_INTERVAL
-    )
-    this.updateExchangeRates()
-  }
 
-  componentWillUnmount = () => {
-    // Cleanup exchange rate updater
-    if (this.exchangeRateUpdater) {
-      clearInterval(this.exchangeRateUpdateR)
-    }
+    this.updateExchangeRates()
   }
 
   componentWillUpdate = prevProps => {

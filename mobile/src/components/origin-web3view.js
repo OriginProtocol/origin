@@ -21,6 +21,15 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   const [transactionCardLoading, setTransactionCardLoading] = useState(false)
   const [modals, setModals] = useState([])
 
+  const _signMessage = () => {
+  }
+
+  const _sendTransaction = () => {
+  }
+
+  const _signTransaction = () => {
+  }
+
   /* Web3 getAccounts request. Returns a list of accounts from the local cache.
    */
   const onGetAccounts = callback => {

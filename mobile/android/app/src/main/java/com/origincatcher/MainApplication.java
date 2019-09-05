@@ -1,6 +1,7 @@
 package com.origincatcher;
 
 import android.app.Application;
+import android.webkit.WebView;
 
 import com.facebook.react.ReactApplication;
 import com.originprotocol.samsungbks.RNSamsungBKSPackage;
@@ -22,7 +23,6 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.CallbackManager;
 import android.content.Intent;
 import android.os.Bundle;
-
 
 import java.util.Arrays;
 import java.util.List;
@@ -75,5 +75,6 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     AppEventsLogger.activateApp(this);
+    WebView.setWebContentsDebuggingEnabled(true);
   }
 }

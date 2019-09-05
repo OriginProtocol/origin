@@ -85,10 +85,11 @@ const TransactionCard = props => {
 
     case 'swapAndMakeOffer':
       heading = fbt('Purchase', 'TransactionCard.headingPurchase')
-      payment = ether.utils.formatEther(parameters._value) / ethExchangeRate
+      payment = ethers.utils.formatEther(parameters._value) / ethExchangeRate
       paymentCurrency = 'eth'
       ethRequired += Number(payment)
       break
+
     case 'emitIdentityUpdated':
       heading = fbt(
         'Publish Identity',

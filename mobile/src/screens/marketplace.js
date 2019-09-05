@@ -530,7 +530,7 @@ class MarketplaceScreen extends Component {
         onNavigationStateChange={this.onWebViewNavigationStateChange}
         renderLoading={this.renderWebViewLoading}
         decelerationRate="normal"
-        userAgent={this.getUserAgent}
+        userAgent={this.getUserAgent()}
         startInLoadingState={true}
         renderError={this.renderWebViewError}
       />

@@ -51,7 +51,6 @@ const withOriginGraphql = WrappedComponent => {
       )
       // Update identity periodically for all accounts
       const updateAllIdentities = () => {
-        console.debug(`Updating all identities`)
         return this.props.wallet.accounts.map(account =>
           this.updateIdentity(account.address)
         )
