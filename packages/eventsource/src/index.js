@@ -130,6 +130,7 @@ class OriginEventSource {
         'commission',
         'commissionPerUnit',
         'marketplacePublisher',
+        'requiresShipping',
 
         'weekendPrice',
         'booked',

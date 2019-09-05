@@ -13,6 +13,8 @@ import query from 'queries/Listing'
 import ListingDetail from './ListingDetail'
 import EditListing from './Edit'
 import Onboard from '../onboard/Onboard'
+import ConfirmPurchase from './ConfirmPuchase'
+import ProvideShippingAddress from './ProvideShippingAddress'
 
 const error404 = (
   <Error404>
@@ -25,6 +27,7 @@ const error404 = (
 const Listing = props => {
   const [quantity, setQuantity] = useState('1')
   const [redirect, setRedirect] = useState()
+  const [shippingAddress, setShippingAddress] = useState(null)
 
   const listingId = props.match.params.listingID
   const variables = { listingId }
@@ -88,12 +91,39 @@ const Listing = props => {
           )}
         />
         <Route
+          path="/listing/:listingID/shipping"
+          render={() => (
+            <ProvideShippingAddress
+              listing={listing}
+              updateShippingAddress={shippingAddress =>
+                setShippingAddress(shippingAddress)
+              }
+              next={`/listing/${listingId}/confirm`}
+            />
+          )}
+        />
+        <Route
+          path="/listing/:listingID/confirm"
+          render={() => (
+            <ConfirmPurchase
+              listing={listing}
+              refetch={wrappedRefetch}
+              quantity={quantity}
+              shippingAddress={shippingAddress}
+              next={`/listing/${listingId}/${
+                listing.requiresShipping ? 'shipping' : 'confirm'
+              }`}
+            />
+          )}
+        />
+        <Route
           render={() => (
             <ListingDetail
               listing={listing}
               refetch={wrappedRefetch}
               quantity={quantity}
               updateQuantity={quantity => setQuantity(quantity)}
+              shippingAddress={shippingAddress}
             />
           )}
         />

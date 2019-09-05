@@ -48,7 +48,8 @@ export function getStateFromListing(props) {
     commissionPerUnit: tokenBalance(
       get(props, 'listing.commissionPerUnit', '0')
     ),
-    media: props.listing.media
+    media: props.listing.media,
+    requiresShipping: get(props, 'listing.requiresShipping', false)
   }
 }
 
