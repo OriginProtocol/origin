@@ -8,6 +8,7 @@ import MetaMaskAnimation from 'components/MetaMaskAnimation'
 import query from 'queries/TransactionReceipt'
 import withWallet from 'hoc/withWallet'
 import withConfig from 'hoc/withConfig'
+import Sentry from 'utils/sentry'
 
 const WaitForFirstBlock = () => (
   <div className="make-offer-modal">
@@ -128,6 +129,7 @@ class WaitForTransaction extends Component {
           let content
           if (error) {
             console.error(error)
+            Sentry.captureException(error)
             content = <Error />
           } else if (!receipt || !confirmedBlock) {
             content = <WaitForFirstBlock />
