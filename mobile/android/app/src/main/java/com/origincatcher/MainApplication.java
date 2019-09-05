@@ -52,7 +52,6 @@ public class MainApplication extends Application implements ReactApplication {
           new RNLocalizePackage(),
           new AndroidOpenSettingsPackage(),
           new FingerprintAuthPackage(),
-          new RNUserAgentPackage(),
           new RNSentryPackage(),
           new RNGestureHandlerPackage(),
           new ReactNativePushNotificationPackage(),
