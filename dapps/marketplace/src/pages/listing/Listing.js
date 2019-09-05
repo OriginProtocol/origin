@@ -110,8 +110,8 @@ const Listing = props => {
               refetch={wrappedRefetch}
               quantity={quantity}
               shippingAddress={shippingAddress}
-              next={`/listing/${listingId}/${
-                listing.requiresShipping ? 'shipping' : 'confirm'
+              prev={`/listing/${listingId}${
+                listing.requiresShipping ? '/shipping' : ''
               }`}
             />
           )}
@@ -124,6 +124,9 @@ const Listing = props => {
               quantity={quantity}
               updateQuantity={quantity => setQuantity(quantity)}
               shippingAddress={shippingAddress}
+              next={`/listing/${listingId}/${
+                listing.requiresShipping ? 'shipping' : 'confirm'
+              }`}
             />
           )}
         />
