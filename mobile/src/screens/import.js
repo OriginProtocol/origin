@@ -10,7 +10,6 @@ import CommonStyles from 'styles/common'
 import withIsSamsungBKS from 'hoc/withIsSamsungBKS'
 
 const importAccountScreen = props => {
-
   const renderImportButtons = () => {
     return (
       <>
@@ -21,13 +20,13 @@ const importAccountScreen = props => {
             'Use Recovery Phrase',
             'ImportScreen.useRecoveryPhraseButton'
           )}
-          onPress={() => this.props.navigation.navigate('ImportMnemonic')}
+          onPress={() => props.navigation.navigate('ImportMnemonic')}
         />
         <OriginButton
           size="large"
           type="primary"
           title={fbt('Use Private Key', 'ImportScreen.usePrivateKeyButton')}
-          onPress={() => this.props.navigation.navigate('ImportPrivateKey')}
+          onPress={() => props.navigation.navigate('ImportPrivateKey')}
         />
       </>
     )
@@ -38,10 +37,7 @@ const importAccountScreen = props => {
       <OriginButton
         size="large"
         type="primary"
-        title={fbt(
-          'Add Account',
-          'ImportScreen.addSamsungBKSAccount'
-        )}
+        title={fbt('Add Account', 'ImportScreen.addSamsungBKSAccount')}
         onPress={() => {
           console.log('Add account')
         }}
@@ -65,7 +61,11 @@ const importAccountScreen = props => {
             {renderAddSamsungBKSAccountButton()}
             {__DEV__ && (
               <>
-                <Text style={{...styles.text, marginTop: 30, marginBottom: 10 }}>Developer Options</Text>
+                <Text
+                  style={{ ...styles.text, marginTop: 30, marginBottom: 10 }}
+                >
+                  Developer Options
+                </Text>
                 {renderImportButtons()}
               </>
             )}

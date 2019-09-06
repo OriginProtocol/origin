@@ -185,6 +185,6 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
 
     byte[] unSignedMsg = Base64.getDecoder().decode(b64MessageToSign);
 
-    ScwService.getInstance().signEthPersonalMessage(callback, unSignedMsg, hdPath);
+    ScwService.getInstance().signEthPersonalMessage(callback, messageToSign, hdPath);
   }
 }

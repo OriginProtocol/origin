@@ -35,6 +35,7 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
    */
   const _signMessage = async messageToSign => {
     if (isSamsungBKS) {
+      console.debug('Signing message with Samsung BKS')
       // React native doesn't support passing binary data, so encode it as base64
       // string so that we can
       messageToSign = Buffer.from(messageToSign).toString('base64')
@@ -43,6 +44,7 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
         messageToSign
       )
     } else {
+      console.debug('Signing message with locale wallet cache')
       const wallet = new ethers.Wallet(props.wallet.activeAccount.privateKey)
       return await wallet.signMessage(messageToSign)
     }
@@ -54,9 +56,9 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
 
   const _signTransaction = async () => {
     if (isSamsungBKS) {
-      console.debug('Signing a transaction with Samsung BKS')
+      console.debug('Signing transaction with Samsung BKS')
     } else {
-      console.debug('Signing a transaction with local wallet cache')
+      console.debug('Signing transaction with local wallet cache')
     }
   }
 

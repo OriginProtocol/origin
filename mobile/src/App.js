@@ -1,7 +1,7 @@
 'use strict'
 
 import React, { useState } from 'react'
-import { Platform, YellowBox } from 'react-native'
+import { Platform, Text, YellowBox } from 'react-native'
 import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import RNSamsungBKS from 'react-native-samsung-bks'
@@ -88,7 +88,9 @@ const App = () => {
     <ReduxProvider store={Store}>
       <PersistGate onBeforeLift={onBeforeLift} persistor={persistor}>
         {samsungBKSIsSupported && <SamsungBKS onReady={onReady} />}
-        {!loading && (
+        {loading ? (
+          <Text>Loading</Text>
+        ) : (
           <AppContainer
             ref={navigatorRef => {
               NavigationService.setTopLevelNavigator(navigatorRef)
