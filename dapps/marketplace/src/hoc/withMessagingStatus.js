@@ -1,7 +1,7 @@
 import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 
-import query from 'queries/Messaging'
+import query from 'queries/WalletStatus'
 
 import get from 'lodash/get'
 
@@ -11,6 +11,7 @@ function withMessagingStatus(WrappedComponent) {
 
     if (error) console.error(error)
 
+    const messaging = get(data, 'messaging')
     const messagingEnabled = get(data, 'messaging.enabled', false)
     const hasKeys =
       messagingEnabled &&
@@ -24,6 +25,7 @@ function withMessagingStatus(WrappedComponent) {
         hasMessagingKeys={hasKeys}
         messagingStatusError={error}
         messagingStatusLoading={loading}
+        messagingStatus={messaging}
       />
     )
   }

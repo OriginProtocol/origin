@@ -34,11 +34,14 @@ module.exports = `
     growth: String
     relayer: String
     bridge: String
+    graphql: String
     ipfsRPC: String
     ipfsGateway: String
     provider: String
     providerWS: String
     performanceMode: Boolean
+    relayerEnabled: Boolean
+    proxyAccountsEnabled: Boolean
   }
 
   type Config {
@@ -47,6 +50,7 @@ module.exports = `
     discovery: String
     growth: String
     bridge: String
+    graphql: String
     ipfsRPC: String
     ipfsGateway: String
     ipfsEventCache: String

@@ -6,7 +6,7 @@ function withIsMobile(WrappedComponent) {
       super(props)
       this.onResize = this.onResize.bind(this)
       this.state = {
-        isMobile: false
+        isMobile: window.innerWidth < 768
       }
     }
 
@@ -16,7 +16,6 @@ function withIsMobile(WrappedComponent) {
 
     componentDidMount() {
       window.addEventListener('resize', this.onResize)
-      this.onResize()
     }
 
     onResize() {

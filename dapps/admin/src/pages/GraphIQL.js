@@ -8,24 +8,31 @@ const DefaultQuery = `{
   marketplace {
     listings {
       nodes {
-        id
-        title
-        price {
-          currency
-          amount
-        }
-        seller {
+        ... on Listing {
           id
-          identity {
+          title
+          price {
+            currency {
+              ... on Currency {
+                id
+              }
+            }
+            amount
+          }
+          seller {
             id
-            firstName
-            lastName
+            identity {
+              id
+              firstName
+              lastName
+            }
           }
         }
       }
     }
   }
 }
+
 `
 
 class GraphExplorer extends Component {
