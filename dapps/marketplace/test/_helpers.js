@@ -27,7 +27,12 @@ export const clickXpath = async (page, xpath, linkName) => {
   const linkHandlers = await page.$x(xpath)
 
   if (linkHandlers.length > 0) {
-    await linkHandlers[0].click()
+    try {
+      await linkHandlers[0].click()
+    } catch (err) {
+      console.log('LinkHandler', linkHandlers)
+      throw err
+    }
   } else {
     throw new Error(`Link not found: ${linkName || xpath}`)
   }
@@ -80,7 +85,12 @@ export const clickBySelector = async (page, path) => {
   await page.waitForSelector(path)
   const linkHandler = await page.$(path)
   if (linkHandler) {
-    await linkHandler.click()
+    try {
+      await linkHandler.click()
+    } catch (err) {
+      console.log('LinkHandler', linkHandler)
+      throw err
+    }
   } else {
     throw new Error(`Link not found: ${path}`)
   }

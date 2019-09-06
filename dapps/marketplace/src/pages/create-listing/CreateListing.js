@@ -35,6 +35,7 @@ function initialState(props) {
     boost: '0',
     boostLimit: '0',
     media: [],
+    requiresShipping: false,
 
     // Unit fields:
     quantity: '1',
