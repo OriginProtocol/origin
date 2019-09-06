@@ -18,7 +18,7 @@ const PROXY_HARDCODE = 'PROXY'
 
 /**
  * Deep inspection of transactions we are requested to relay,
- * to recursively ensure that only call allow methods are called on
+ * to recursively ensure that they only call allowed methods on
  * allowed contracts.
  *
  * Handles things like a transaction calling swapAndMakeOffer
@@ -104,7 +104,7 @@ class Validator {
 
 /**
  * Base call validator. Allows known addresses and known methods by default.
- * 
+ *
  * Can be inherited from to allow or disallow certain methods, or validate
  * individual method parameters.
  */
@@ -148,8 +148,8 @@ class ContractCallVailidator {
 
   // eslint-disable-next-line no-unused-vars
   validateMethod(method, txdata, params) {
-     // Empty list of new validations to be added 
-     // means that no further validation is required for this method
+    // Empty list of new validations to be added
+    // means that no further validation is required for this method
     return []
   }
 
