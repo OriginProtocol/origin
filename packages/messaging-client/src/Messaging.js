@@ -896,7 +896,6 @@ class Messaging {
     const remoteEthAddress = addresses[0]
 
     const convObj = await this.startConv(remoteEthAddress)
-    console.log('Conversation object', convObj)
     if (!convObj) {
       debug('ERR: no room to get message from')
       return
