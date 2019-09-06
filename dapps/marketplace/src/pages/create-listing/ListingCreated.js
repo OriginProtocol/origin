@@ -23,8 +23,6 @@ const ListingCreated = ({ match }) => {
     return <Redirect to={redirectTo} push />
   }
 
-  const isPromotionsEnabled = window.localStorage.promoteEnabled === 'true'
-
   return (
     <div className="listing-created">
       <h2 className="mt-3">
@@ -36,7 +34,7 @@ const ListingCreated = ({ match }) => {
         </fbt>
       </div>
       <div className="actions">
-        {isPromotionsEnabled && <PromoteCTA listingId={listingId} />}
+        <PromoteCTA listingId={listingId} />
         <Link
           className="btn btn-link"
           to={`/listing/${listingId}`}
