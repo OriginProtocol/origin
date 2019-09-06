@@ -124,7 +124,7 @@ const ProvideShippingAddress = ({
           }}
         >
           <fbt desc="PurchaseListing.shippingAddress">
-            Provide a Shipping Address
+            Shipping Address
           </fbt>
         </MobileModalHeader>
       )}
@@ -155,7 +155,7 @@ const ProvideShippingAddress = ({
           {isMobile ? null : (
             <h2>
               <fbt desc="PurchaseListing.shippingAddress">
-                Provide a Shipping Address
+                Shipping Address
               </fbt>
             </h2>
           )}
