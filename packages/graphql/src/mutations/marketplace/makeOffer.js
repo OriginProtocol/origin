@@ -25,7 +25,7 @@ async function makeOffer(_, data) {
 
   if (data.shippingAddress && data.shippingAddress !== '') {
     const listing = await marketplace.eventSource.getListing(listingId)
-    const seller = listing.seller.id
+    const seller = proxyOwner(listing.seller.id) || listing.seller.id
     const shippingAddress = Object.assign({}, data.shippingAddress)
     shippingAddress.version = 1
     const encrypted = await contracts.messaging.createOutOfBandMessage(
