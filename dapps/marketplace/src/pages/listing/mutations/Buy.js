@@ -36,10 +36,6 @@ class Buy extends Component {
     return get(this.props, 'tokenStatus.hasAllowance', false)
   }
 
-  hasMessagingEnabled() {
-    return get(this.props, 'messagingStatus.enabled', false)
-  }
-
   render() {
     if (this.state.onboard) {
       return <Redirect to={`/listing/${this.props.listing.id}/onboard`} />
@@ -54,8 +50,12 @@ class Buy extends Component {
       />
     )
 
-    const hasIdentity = localStorage.noIdentity || this.props.identity
-    if (!hasIdentity || !this.props.wallet || !this.hasMessagingEnabled()) {
+    const hasIdentity = this.props.identity
+    const hasMessaging = get(this.props, 'messagingStatus.enabled', false)
+    const needsOnboarding = !hasIdentity || !this.props.wallet || !hasMessaging
+    const onboardingDisabled = localStorage.noIdentity ? true : false
+
+    if (needsOnboarding && !onboardingDisabled) {
       action = (
         <UserActivationLink
           className={this.props.className}

@@ -1,0 +1,5 @@
+The following link will provide you access to the Origin Investor Portal.
+
+<%= url %>
+
+It will expire in 24 hours. You can reply directly to this email with any questions.
