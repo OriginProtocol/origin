@@ -25,6 +25,48 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
     return "RNSamsungBKS";
   }
 
+  private void onKeystoreFailure(int errorCode, Promise promise) {
+    Field[] interfaceFields = ScwErrorCode.class.getFields();
+    Field errorField = null;
+    for (Field f : interfaceFields) {
+      try {
+	if (f.getInt(ScwErrorCode.class) == errorCode) {
+	  errorField = f;
+	}
+      } catch (Exception error) {
+	// Skip
+      }
+    }
+
+    if (errorField != null) {
+      try {
+	promise.reject(errorField.get(ScwErrorCode.class).toString(), errorField.getName());
+      } catch (Exception error) {
+	System.out.println(error);
+	promise.reject("Samsung Blockchain Keystore error " + errorCode);
+      }
+    } else {
+      promise.reject("Samsung Blockchain Keystore error " + errorCode);
+    }
+  }
+
+	private static String bytesToHex(final byte[] bytes) {
+	    final int numBytes = bytes.length;
+	    final char[] container = new char[numBytes * 2];
+
+	    for (int i = 0; i < numBytes; i++)
+	    {
+		final int b = bytes[i] & 0xFF;
+
+		container[i * 2] = Character.forDigit(b >>> 4, 0x10);
+		container[i * 2 + 1] = Character.forDigit(b & 0xF, 0x10);
+	    }
+
+	    return new String(container);
+	}
+
+
+
   @ReactMethod
   public void isSupported(Promise promise) {
     promise.resolve(ScwService.getInstance() != null);
@@ -86,28 +128,7 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
 
           @Override
           public void onFailure(int errorCode) {
-            Field[] interfaceFields = ScwErrorCode.class.getFields();
-            Field errorField = null;
-            for (Field f : interfaceFields) {
-              try {
-                if (f.getInt(ScwErrorCode.class) == errorCode) {
-                  errorField = f;
-                }
-              } catch (Exception error) {
-                // Skip
-              }
-            }
-
-            if (errorField != null) {
-              try {
-                promise.reject(errorField.get(ScwErrorCode.class).toString(), errorField.getName());
-              } catch (Exception error) {
-                System.out.println(error);
-                promise.reject("Samsung Blockchain Keystore error " + errorCode);
-              }
-            } else {
-              promise.reject("Samsung Blockchain Keystore error " + errorCode);
-            }
+	      onKeystoreFailure(errorCode, promise);
           }
         };
 
@@ -144,21 +165,26 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
 
     ScwService.getInstance().signEthTransaction(callback, encodedUnsignedEthTx, hdPath);
   }
+  */
 
-  @ReatMethod
-  public void signEthPersonalMessage(String hdPath, Promise promise) {
+  @ReactMethod
+  public void signEthPersonalMessage(String hdPath, String messageToSign, final Promise promise) {
     ScwService.ScwSignEthPersonalMessageCallback callback =
         new ScwService.ScwSignEthPersonalMessageCallback() {
           @Override
-          public void onSuccess(byte[] signedPersonalMessage) {}
+          public void onSuccess(byte[] signedPersonalMessage) {
+		promise.resolve("0x" + bytesToHex(signedPersonalMessage));
+	  }
 
           @Override
-          public void onFailure(int errorCode) {}
+          public void onFailure(int errorCode) {
+	      onKeystoreFailure(errorCode, promise);
+	  }
         };
 
-    byte[] unSignedMsg = "To sign up, please sign this message.".getBytes();
+    System.out.println(messageToSign);
+    byte[] unSignedMsg = messageToSign.getBytes();
 
     ScwService.getInstance().signEthPersonalMessage(callback, unSignedMsg, hdPath);
   }
-  */
 }

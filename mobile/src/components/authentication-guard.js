@@ -37,7 +37,7 @@ class AuthenticationGuard extends Component {
       pin: '',
       error: null,
       // If authentication is set display on init
-      display: this._hasAuthentication(),
+      display: this._hasAuthentication() && false,
       suspendTime: null,
       appState: AppState.currentState
     }

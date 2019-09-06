@@ -5,6 +5,7 @@
  */
 
 import React from 'react'
+import { Text } from 'react-native'
 import { connect } from 'react-redux'
 import { AppState } from 'react-native'
 import RNSamsungBKS from 'react-native-samsung-bks'
@@ -16,6 +17,7 @@ import { generateHdPath } from 'utils/user'
 
 class SamsungBKS extends React.Component {
   state = {
+    samsungBKSError: null,
     appState: AppState.currentState
   }
 
@@ -50,7 +52,15 @@ class SamsungBKS extends React.Component {
   _updateAccounts = async () => {
     console.debug('Updating account list from Samsung BKS')
     const hdPath = generateHdPath(0)
-    const address = await RNSamsungBKS.getAddressList(hdPath)
+
+    let address
+    try {
+      address = await RNSamsungBKS.getAddressList(hdPath)
+    } catch (error) {
+      this.setState({ samsungBKSError: error })
+      return
+    }
+
     await this.props.setAccounts([
       {
         address,
@@ -79,6 +89,9 @@ class SamsungBKS extends React.Component {
   }
 
   render() {
+    if (this.state.samsungBKSError) {
+      return <Text>Error</Text>
+    }
     return null
   }
 }

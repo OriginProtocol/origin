@@ -1,5 +1,7 @@
 'use strict'
 
+import { ethers } from 'ethers'
+
 import MarketplaceContract from '@origin/contracts/build/contracts/V00_Marketplace'
 import OriginTokenContract from '@origin/contracts/build/contracts/OriginToken'
 import IdentityEventsContract from '@origin/contracts/build/contracts/IdentityEvents'
@@ -20,31 +22,27 @@ export function decodeTransaction(data) {
 
   let functionAbiMatch
   let contractName
+  let contractInterface
 
   for (contractName in contractAbi) {
-    const functions = contractAbi[contractName]
-    functionAbiMatch = functions.find(functionAbi => {
-      if (functionAbi.type === 'function') {
-        const sig = global.web3.eth.abi.encodeFunctionSignature(functionAbi)
-        // First 4 bytes of data is the function signature
-        return data.substr(0, 10) === sig
+    contractInterface = new ethers.utils.Interface(contractAbi[contractName])
+    functionAbiMatch = Object.values(contractInterface.functions).find(
+      functionAbi => {
+        return data.substr(0, 10) === functionAbi.sighash
       }
-    })
+    )
     if (functionAbiMatch) {
       break
     }
   }
 
   if (!functionAbiMatch) {
+    console.debug('No matching function signature in Origin contracts')
     return false
   }
 
   return {
     functionName: functionAbiMatch.name,
-    contractName: contractName,
-    parameters: web3.eth.abi.decodeLog(
-      functionAbiMatch.inputs,
-      '0x' + data.substr(10)
-    )
+    contractName: contractName
   }
 }

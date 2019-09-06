@@ -1,9 +1,8 @@
 'use strict'
 
 import { applyMiddleware, createStore, combineReducers, compose } from 'redux'
-import { createTransform } from 'redux-persist'
 import { persistStore, persistReducer } from 'redux-persist'
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage'
 import createEncryptor from 'redux-persist-transform-encrypt'
 import thunk from 'redux-thunk'
 
@@ -20,6 +19,7 @@ const encryptor = createEncryptor({
 })
 
 const persistConfig = {
+  timeout: null,
   key: 'EncryptedOriginWallet',
   storage: AsyncStorage,
   whitelist: [

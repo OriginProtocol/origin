@@ -144,11 +144,11 @@ class MarketplaceScreen extends Component {
    */
   injectMessagingKeys = () => {
     const { wallet } = this.props
+    // No active account, can't proceed
+    if (!wallet.activeAccount) return
     let { privateKey } = wallet.activeAccount
-
-    // No active account or no private key (Samsung BKS account), can't generate
-    // messaging keys
-    if (!wallet.activeAccount || !privateKey) return
+    // No private key (Samsung BKS account), can't proceed
+    if (!privateKey) return
 
     if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
       privateKey = '0x' + privateKey
@@ -538,9 +538,7 @@ class MarketplaceScreen extends Component {
   }
 
   renderWebViewLoading = () => {
-    return (
-      <ActivityIndicator size="large" color="black" />
-    )
+    return <ActivityIndicator size="large" color="black" />
   }
 
   renderWebViewError = () => {

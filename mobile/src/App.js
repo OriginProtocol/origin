@@ -1,10 +1,9 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { Platform, YellowBox } from 'react-native'
 import { Provider as ReduxProvider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
-import Web3 from 'web3'
 import RNSamsungBKS from 'react-native-samsung-bks'
 
 import Store, { persistor } from './Store'
@@ -22,17 +21,9 @@ YellowBox.ignoreWarnings([
   'Module RCTImageLoader requires main queue setup'
 ])
 
-class App extends Component {
-  state = {
-    samsungBKSIsSupported: null,
-    loading: true
-  }
-
-  constructor(props) {
-    super(props)
-    // Add web3 to the react-native global object so it is available everywhere
-    global.web3 = new Web3()
-  }
+const App = () => {
+  const [samsungBKSIsSupported, setSamsungBKSIsSupported] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   /* Called after the PersistGate loads the data from redux but before the child
    * components are mounted.
@@ -40,7 +31,7 @@ class App extends Component {
    * Handle some required initialisation for language, web3, and network setting
    * validation.
    */
-  onBeforeLift = async () => {
+  const onBeforeLift = async () => {
     const { samsungBKS, settings, wallet } = Store.getState()
 
     // Set the language for the DApp
@@ -53,8 +44,6 @@ class App extends Component {
     }
     await Store.dispatch(setNetwork(network))
 
-    global.web3.setProvider(network.provider)
-
     // See if we can (or are) using Samsung BKS and conditionally render the
     // component
     if (Platform.OS === 'android') {
@@ -64,41 +53,51 @@ class App extends Component {
         if (samsungBKSIsSupported) {
           // Set state flag to render the SamsungBKS component. It will set
           // the loading state to false when it is ready
-          this.setState({ samsungBKSIsSupported })
+          setSamsungBKSIsSupported(true)
           return
         }
       }
     }
 
-    // Not using Samsung BKS, load any accounts into web3 and stop loading
-    console.debug(`Found ${wallet.accounts.length} accounts`)
+    onReady()
+  }
 
-    // Add all the stored accounts to the global web3 object
-    for (let i = 0; i < wallet.accounts.length; i++) {
-      global.web3.eth.accounts.wallet.add(wallet.accounts[i])
+  const validateAccounts = () => {
+    const { wallet } = Store.getState()
+
+    // Verify there is a valid active account, and if not set one
+    let validActiveAccount = false
+    if (wallet.activeAccount) {
+      validActiveAccount = wallet.accounts.find(
+        a => a.address === wallet.activeAccount.address
+      )
     }
 
-    this.setState({ loading: false })
+    // Setup the active account
+    if (!validActiveAccount) {
+      Store.dispatch(setAccountActive(wallet.accounts[0]))
+    }
   }
 
-  render() {
-    return (
-      <ReduxProvider store={Store}>
-        <PersistGate onBeforeLift={this.onBeforeLift} persistor={persistor}>
-          {this.state.samsungBKSIsSupported && (
-            <SamsungBKS onReady={() => this.setState({ loading: false })} />
-          )}
-          {!this.state.loading && (
-            <AppContainer
-              ref={navigatorRef => {
-                NavigationService.setTopLevelNavigator(navigatorRef)
-              }}
-            />
-          )}
-        </PersistGate>
-      </ReduxProvider>
-    )
+  const onReady = () => {
+    validateAccounts()
+    setLoading(false)
   }
+
+  return (
+    <ReduxProvider store={Store}>
+      <PersistGate onBeforeLift={onBeforeLift} persistor={persistor}>
+        {samsungBKSIsSupported && <SamsungBKS onReady={onReady} />}
+        {!loading && (
+          <AppContainer
+            ref={navigatorRef => {
+              NavigationService.setTopLevelNavigator(navigatorRef)
+            }}
+          />
+        )}
+      </PersistGate>
+    </ReduxProvider>
+  )
 }
 
 export default App

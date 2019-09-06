@@ -49,7 +49,11 @@ export function createAccount() {
 /* Import a new account from a mnemonic, retrying up until a limit is reached
  * or a a free derive path is found.
  */
-export function importAccountFromMnemonic(mnemonic, existingAddresses, maxRetries = 10) {
+export function importAccountFromMnemonic(
+  mnemonic,
+  existingAddresses,
+  maxRetries = 10
+) {
   // Use a loop to try the next account in the derivation path
   for (let i = 0; i < maxRetries; i++) {
     // This is the default path but explicitly stated here for clarity

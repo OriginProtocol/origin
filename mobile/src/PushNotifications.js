@@ -1,12 +1,7 @@
 'use strict'
 
 import { Component } from 'react'
-import {
-  Alert,
-  AppState,
-  DeviceEventEmitter,
-  Platform,
-} from 'react-native'
+import { Alert, AppState, DeviceEventEmitter, Platform } from 'react-native'
 import PushNotification from 'react-native-push-notification'
 import PushNotificationIOS from '@react-native-community/push-notification-ios'
 import { connect } from 'react-redux'

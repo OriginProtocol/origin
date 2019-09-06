@@ -10,6 +10,8 @@ import { Modal, Platform, StyleSheet } from 'react-native'
 import { ethers } from 'ethers'
 import SafeAreaView from 'react-native-safe-area-view'
 import PushNotification from 'react-native-push-notification'
+import get from 'lodash.get'
+import RNSamsungBKS from 'react-native-samsung-bks'
 
 import { decodeTransaction } from 'utils/contractDecoder'
 import { isValidMetaTransaction } from 'utils/user'
@@ -22,13 +24,37 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   const [transactionCardLoading, setTransactionCardLoading] = useState(false)
   const [modals, setModals] = useState([])
 
-  const _signMessage = () => {
+  // TODO use the HOC, need to get forwardRef working through HOC
+  const isSamsungBKS =
+    Platform.OS === 'android' &&
+    get(props, 'samsungBKS.seedHash', '').length > 0
+
+  /* Sign a message. Uses Samsung BKS if it is enabled or uses ethers and the
+   * local wallet cache.
+   */
+  const _signMessage = async messageToSign => {
+    messageToSign = ethers.utils.toUtf8String(messageToSign)
+    if (isSamsungBKS) {
+      return await RNSamsungBKS.signEthPersonalMessage(
+        props.wallet.activeAccount.hdPath,
+        messageToSign
+      )
+    } else {
+      const wallet = new ethers.Wallet(props.wallet.activeAccount.privateKey)
+      return await wallet.signMessage(messageToSign)
+    }
   }
 
-  const _sendTransaction = () => {
+  const _sendTransaction = async () => {
+    console.debug('Sending a transaction')
   }
 
-  const _signTransaction = () => {
+  const _signTransaction = async () => {
+    if (isSamsungBKS) {
+      console.debug('Signing a transaction with Samsung BKS')
+    } else {
+      console.debug('Signing a transaction with local wallet cache')
+    }
   }
 
   /* Web3 getAccounts request. Returns a list of accounts from the local cache.
@@ -57,16 +83,13 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
    * intervene. If it is not a valid meta transaction it displays the request
    * to the user.
    */
-  const onSignPersonalMessage = (callback, msgData) => {
-    const { wallet } = props
-    // Personal sign is for handling meta transaction requests
-    const decodedData = JSON.parse(
-      global.web3.utils.hexToUtf8(msgData.data.data)
-    )
+  const onSignPersonalMessage = async (callback, msgData) => {
+    // Personal sign is typically for handling meta transaction requests
+    const decodedData = JSON.parse(ethers.utils.toUtf8String(msgData.data.data))
     const decodedTransaction = decodeTransaction(decodedData.txData)
     // If the transaction validate the sha3 hash and sign that for the relayer
     if (isValidMetaTransaction(decodedTransaction)) {
-      const dataToSign = global.web3.utils.soliditySha3(
+      const dataToSign = ethers.utils.keccak256(
         { t: 'address', v: decodedData.from },
         { t: 'address', v: decodedData.to },
         { t: 'uint256', v: global.web3.utils.toWei('0', 'ether') },
@@ -74,14 +97,12 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
         { t: 'uint256', v: decodedData.nonce }
       )
       // Sign it
-      const { signature } = global.web3.eth.accounts.sign(
-        dataToSign,
-        wallet.activeAccount.privateKey
-      )
-      callback(signature)
       console.debug(
         `Got meta transaction for ${decodedTransaction.functionName} on ${decodedTransaction.contractName}`
       )
+      const signature = await _signMessage(dataToSign)
+      console.debug('Signed meta transaction', signature)
+      callback(signature)
     } else {
       // Not a meta transaction, display a modal prompting the user
       onWeb3Call(callback, msgData)
@@ -97,19 +118,8 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
     if (functionName && contractName) {
       console.debug(`Contract method is ${functionName} on ${contractName}`)
     }
-    // Bump the gas for swapAndMakeOffer by 10% to handle out of gas failures caused
-    // by the proxy contract
-    // TODO find a better way to handle this
-    // https://github.com/OriginProtocol/origin/issues/2771
-    if (functionName === 'swapAndMakeOffer') {
-      msgData.data.gas =
-        '0x' +
-        Math.ceil(
-          parseInt(msgData.data.gas) + parseInt(msgData.data.gas) * 0.1
-        ).toString(16)
-    }
 
-    PushNotification.checkPermissions(permissions => {
+    PushNotification.checkPermissions(async permissions => {
       const newModals = []
       // Check if the user has enabled push notifications and prompt them
       // to do so if they have not and it is not just a simple identity update
@@ -121,17 +131,29 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
       ) {
         newModals.push({ type: 'enableNotifications' })
       }
-      // Transaction/signature modal
-      const web3Modal = { type: msgData.targetFunc, msgData, callback }
-      // Modals render in different ordering on Android/iOS so use a different
-      // method of adding the modal to the array to get the notifications modal
-      // to display on top of the web3 modal
-      Platform.OS === 'ios'
-        ? newModals.push(web3Modal)
-        : newModals.unshift(web3Modal)
-      console.log(newModals)
-      // Update the state with the new modals
-      setModals([...modals, ...newModals])
+
+      if (isSamsungBKS) {
+        if (
+          ['signMessage', 'signPersonalMessage'].includes(msgData.targetFunc)
+        ) {
+          const signature = await _signMessage(msgData.data.data)
+          console.debug('Got signature', signature)
+          return callback(signature)
+        }
+        console.debug('TODO something with Samsung BKS')
+      } else {
+        // Not using Samsung BKS, display our own modal for the user to confirm
+        // or deny the transaction
+        const web3Modal = { type: msgData.targetFunc, msgData, callback }
+        // Modals render in different ordering on Android/iOS so use a different
+        // method of adding the modal to the array to get the notifications modal
+        // to display on top of the web3 modal
+        Platform.OS === 'ios'
+          ? newModals.push(web3Modal)
+          : newModals.unshift(web3Modal)
+        // Update the state with the new modals
+        setModals([...modals, ...newModals])
+      }
     })
   }
 
@@ -209,11 +231,8 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
     return (
       <SignatureCard
         msgData={modal.msgData}
-        onConfirm={() => {
-          const { signature } = global.web3.eth.accounts.sign(
-            modal.msgData.data.data,
-            wallet.activeAccount.privateKey
-          )
+        onConfirm={async () => {
+          const signature = await _signMessage(modal.msgData.data.data)
           toggleModal(modal, signature)
         }}
         onRequestClose={() =>
@@ -241,8 +260,8 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   )
 })
 
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
+const mapStateToProps = ({ samsungBKS, wallet }) => {
+  return { samsungBKS, wallet }
 }
 
 export default connect(

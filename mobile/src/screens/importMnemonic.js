@@ -54,7 +54,10 @@ class ImportAccountScreen extends Component {
 
     try {
       const existingAddresses = this.props.wallet.accounts.map(a => a.address)
-      account = this.props.importAccountFromMnemonic(this.state.value.trim(), existingAddresses)
+      account = this.props.importAccountFromMnemonic(
+        this.state.value.trim(),
+        existingAddresses
+      )
     } catch (error) {
       let errorMessage = error.message
       if (errorMessage === 'invalid mnemonic') {
