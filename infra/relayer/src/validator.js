@@ -9,6 +9,8 @@ const IdentityEventsBuild = require('@origin/contracts/build/contracts/IdentityE
 const IdentityEvents = new web3.eth.Contract(IdentityEventsBuild.abi)
 const V00MarketplaceBuild = require('@origin/contracts/build/contracts/V00_Marketplace.json')
 const V00Marketplace = new web3.eth.Contract(V00MarketplaceBuild.abi)
+const V01MarketplaceBuild = require('@origin/contracts/build/contracts/V01_Marketplace.json')
+const V01Marketplace = new web3.eth.Contract(V01MarketplaceBuild.abi)
 const UniswapDaiExchangeBuild = require('./contracts/UniswapExchange.json')
 const UniswapDaiExchange = new web3.eth.Contract(UniswapDaiExchangeBuild.abi)
 
@@ -28,9 +30,14 @@ class Validator {
     // Setup the individual validators used for checking allowed transactions
     this.validators = [
       new ContractCallVailidator(
-        'Marketplace',
+        'Marketplace V00',
         addresses.Marketplace,
         V00Marketplace._jsonInterface
+      ),
+      new ContractCallVailidator(
+        'Marketplace V01',
+        addresses.Marketplace_V01,
+        V01Marketplace._jsonInterface
       ),
       new ContractCallVailidator(
         'IdentityEvents',

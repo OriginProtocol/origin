@@ -14,6 +14,8 @@ const IdentityEventsBuild = require('@origin/contracts/build/contracts/IdentityE
 const IdentityEvents = new web3.eth.Contract(IdentityEventsBuild.abi)
 const V00MarketplaceBuild = require('@origin/contracts/build/contracts/V00_Marketplace.json')
 const V00Marketplace = new web3.eth.Contract(V00MarketplaceBuild.abi)
+const V01MarketplaceBuild = require('@origin/contracts/build/contracts/V01_Marketplace.json')
+const V01Marketplace = new web3.eth.Contract(V01MarketplaceBuild.abi)
 const UniswapDaiExchangeBuild = require('../src/contracts/UniswapExchange.json')
 const UniswapDaiExchange = new web3.eth.Contract(UniswapDaiExchangeBuild.abi)
 
@@ -282,6 +284,13 @@ describe('relayer whitelist', async () => {
       }
       it('should succeed', async () => {
         assert(testSwapAndMakeOffer({}))
+      })
+      it('should succeed if V01 marketplace', async () => {
+        assert(
+          testSwapAndMakeOffer({
+            marketplace: addresses.Marketplace_V01
+          })
+        )
       })
       it('should fail if wrong marketplace', async () => {
         assert(
