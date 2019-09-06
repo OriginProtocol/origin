@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 

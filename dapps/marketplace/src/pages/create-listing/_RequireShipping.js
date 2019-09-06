@@ -2,9 +2,7 @@ import React, { useCallback, useState } from 'react'
 
 import { fbt } from 'fbt-runtime'
 
-import { useQuery, useMutation } from 'react-apollo'
-
-import get from 'lodash/get'
+import { useMutation } from 'react-apollo'
 
 import EnableMessagingMutation from 'mutations/EnableMessaging'
 import withMessagingStatus from 'hoc/withMessagingStatus'
@@ -103,7 +101,7 @@ const RequireShipping = ({
   )
 
   if (messagingStatusError) {
-    console.error(error)
+    console.error(messagingStatusError)
     return null
   }
 

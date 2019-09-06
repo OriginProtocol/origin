@@ -8,7 +8,6 @@ const PurchaseSummary = ({
   listing,
   quantity,
   totalPrice,
-  prices,
   token,
   shippingAddress,
   startDate,

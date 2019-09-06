@@ -4,7 +4,6 @@ import dayjs from 'dayjs'
 import { fbt } from 'fbt-runtime'
 
 import Link from 'components/Link'
-import ShippingAddress from './_ShippingAddress.js'
 
 const OfferDetails = ({ offer }) => (
   <ul className="offer-details list-unstyled">

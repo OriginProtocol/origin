@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React from 'react'
 
 import { fbt } from 'fbt-runtime'
 
@@ -10,7 +10,6 @@ import AvailabilityCalculator from '@origin/graphql/src/utils/AvailabilityCalcul
 import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/AvailabilityCalculatorHourly'
 
 import DocumentTitle from 'components/DocumentTitle'
-import Redirect from 'components/Redirect'
 import MobileModalHeader from 'components/MobileModalHeader'
 
 import withIsMobile from 'hoc/withIsMobile'
