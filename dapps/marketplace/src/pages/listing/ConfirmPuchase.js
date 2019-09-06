@@ -40,11 +40,11 @@ const ConfirmPurchase = ({ listing, quantity, isMobile, history, refetch, shippi
       BuyMutationComponent = BuyFractionalMutation
       SummaryComponent = FractionalPurchaseSummary
       availability = new AvailabilityCalculator({
-        weekdayPrice: get(lsiting, 'price.amount'),
-        weekendPrice: get(lsiting, 'weekendPrice.amount'),
-        booked: get(lsiting, 'booked'),
-        unavailable: get(lsiting, 'unavailable'),
-        customPricing: get(lsiting, 'customPricing')
+        weekdayPrice: get(listing, 'price.amount'),
+        weekendPrice: get(listing, 'weekendPrice.amount'),
+        booked: get(listing, 'booked'),
+        unavailable: get(listing, 'unavailable'),
+        customPricing: get(listing, 'customPricing')
       })
       break
       
@@ -108,7 +108,7 @@ const ConfirmPurchase = ({ listing, quantity, isMobile, history, refetch, shippi
               className="btn btn-outline-primary btn-rounded"
               onClick={() => history.goBack()}
             >
-              <fbt desc="Cancel">Cancel</fbt>
+              <fbt desc="Back">Back</fbt>
             </button>
           )}
         </div>

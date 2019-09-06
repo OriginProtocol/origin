@@ -89,7 +89,8 @@ const FractionalHourly = ({
   token,
   tokenStatus,
   startDate,
-  endDate
+  endDate,
+  prices
 }) => {
   const selectedCurrency = useContext(CurrencyContext)
   const showUnavailable = range && !available 

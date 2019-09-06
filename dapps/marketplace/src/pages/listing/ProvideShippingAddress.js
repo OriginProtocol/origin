@@ -228,7 +228,7 @@ const ProvideShippingAddress = ({
               className="btn btn-outline-primary btn-rounded"
               onClick={() => history.goBack()}
             >
-              <fbt desc="Cancel">Cancel</fbt>
+              <fbt desc="Back">Back</fbt>
             </button>
           )}
         </div>
