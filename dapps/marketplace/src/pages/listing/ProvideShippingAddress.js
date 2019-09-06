@@ -220,21 +220,21 @@ const ProvideShippingAddress = ({
             <input {...input('country')} />
             {Feedback('country')}
           </div>
+          <div className="actions">
+            <button type="submit" className="btn btn-primary btn-rounded">
+              <fbt desc="Continue">Continue</fbt>
+            </button>
+            {isMobile ? null : (
+              <button
+                type="button"
+                className="btn btn-outline-primary btn-rounded"
+                onClick={() => history.goBack()}
+              >
+                <fbt desc="Back">Back</fbt>
+              </button>
+            )}
+          </div>
         </form>
-      </div>
-      <div className="actions">
-        <button type="submit" className="btn btn-primary btn-rounded">
-          <fbt desc="Continue">Continue</fbt>
-        </button>
-        {isMobile ? null : (
-          <button
-            type="button"
-            className="btn btn-outline-primary btn-rounded"
-            onClick={() => history.goBack()}
-          >
-            <fbt desc="Back">Back</fbt>
-          </button>
-        )}
       </div>
     </div>
   )

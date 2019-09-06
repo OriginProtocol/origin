@@ -6,10 +6,11 @@ import { useMutation } from 'react-apollo'
 
 import EnableMessagingMutation from 'mutations/EnableMessaging'
 import withMessagingStatus from 'hoc/withMessagingStatus'
+import withWallet from 'hoc/withWallet'
 
 import MobileModal from 'components/MobileModal'
 
-const EnableEncryptionModal = ({ onEnabled, onClose }) => {
+const EnableEncryptionModal = withWallet(({ walletType, onEnabled, onClose }) => {
   const [enableMessagingMutation] = useMutation(EnableMessagingMutation)
 
   const [shouldClose, setShouldClose] = useState(false)
@@ -51,7 +52,7 @@ const EnableEncryptionModal = ({ onEnabled, onClose }) => {
           <div className="encryption-content">
             <fbt desc="RequireShipping.enableMessagingForAddress">
               Shipping addresses will be securely encrypted and visible only to
-              you and your buyers. To make this possible, Coinbase Wallet will
+              you and your buyers. To make this possible, <fbt:param name="walletType">{walletType}</fbt:param> will
               ask you to enable Origin Messaging.
             </fbt>
           </div>
@@ -73,7 +74,7 @@ const EnableEncryptionModal = ({ onEnabled, onClose }) => {
       }
     />
   )
-}
+})
 
 const RequireShipping = ({
   onChange,
