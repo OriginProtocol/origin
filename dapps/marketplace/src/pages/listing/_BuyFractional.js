@@ -47,20 +47,18 @@ const withFractionalData = WrappedComponent => {
       >
         {({ prices, tokenStatus }) => (
           <WrappedComponent
-            {...{
-              prices,
-              tokenStatus,
-              token,
-              acceptsDai,
-              listing,
-              range,
-              availability,
-              available,
-              totalPrice,
-              startDate,
-              endDate,
-              ...props
-            }}
+            {...props}
+            prices={prices}
+            tokenStatus={tokenStatus}
+            token={token}
+            acceptsDai={acceptsDai}
+            listing={listing}
+            range={range}
+            availability={availability}
+            available={available}
+            totalPrice={totalPrice}
+            startDate={startDate}
+            endDate={endDate}
           />
         )}
       </WithPrices>

@@ -9,7 +9,7 @@ function withMessagingStatus(WrappedComponent) {
   const WithMessagingStatus = props => {
     const { data, loading, error } = useQuery(query)
 
-    if (error) console.error(error)
+    if (error) console.error('error executing WalletStatusQuery', error)
 
     const messagingEnabled = get(data, 'messaging.enabled', false)
     const hasKeys =

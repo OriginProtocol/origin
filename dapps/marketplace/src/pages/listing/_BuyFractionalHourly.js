@@ -57,20 +57,18 @@ const withFractionalHourlyData = WrappedComponent => {
       >
         {({ prices, tokenStatus }) => (
           <WrappedComponent
-            {...{
-              prices,
-              tokenStatus,
-              token,
-              acceptsDai,
-              listing,
-              startDate,
-              endDate,
-              totalPrice,
-              availability,
-              available,
-              range,
-              ...props
-            }}
+            {...props}
+            prices={prices}
+            tokenStatus={tokenStatus}
+            token={token}
+            acceptsDai={acceptsDai}
+            listing={listing}
+            startDate={startDate}
+            endDate={endDate}
+            totalPrice={totalPrice}
+            availability={availability}
+            available={available}
+            range={range}
           />
         )}
       </WithPrices>

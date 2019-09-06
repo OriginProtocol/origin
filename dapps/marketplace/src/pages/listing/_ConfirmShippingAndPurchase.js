@@ -3,8 +3,7 @@ import React from 'react'
 import Link from 'components/Link'
 import UserActivationLink from 'components/UserActivationLink'
 
-import withWallet from 'hoc/withWallet'
-import withIdentity from 'hoc/withIdentity'
+import withMessagingStatus from 'hoc/withMessagingStatus'
 
 import { fbt } from 'fbt-runtime'
 
@@ -15,16 +14,13 @@ import { fbt } from 'fbt-runtime'
  *  - "Confirm Purchase" screen, if user has identity and listing  doesn't require shipping
  */
 const ConfirmShippingAndPurchase = ({
-  identity,
-  wallet,
+  hasMessagingKeys,
   className,
   children,
   listing,
   disabled
 }) => {
-  const hasIdentity = localStorage.noIdentity || identity
-
-  if (!hasIdentity || !wallet) {
+  if (!hasMessagingKeys) {
     return (
       <UserActivationLink
         className={className}
@@ -46,4 +42,4 @@ const ConfirmShippingAndPurchase = ({
   )
 }
 
-export default withWallet(withIdentity(ConfirmShippingAndPurchase))
+export default withMessagingStatus(ConfirmShippingAndPurchase)

@@ -28,16 +28,14 @@ const withMultiUnitData = WrappedComponent => {
       >
         {({ prices, tokenStatus }) => (
           <WrappedComponent
-            {...{
-              prices,
-              tokenStatus,
-              token,
-              acceptsDai,
-              listing,
-              totalPrice,
-              quantity,
-              ...props
-            }}
+            {...props}
+            prices={prices}
+            tokenStatus={tokenStatus}
+            token={token}
+            acceptsDai={acceptsDai}
+            listing={listing}
+            totalPrice={totalPrice}
+            quantity={quantity}
           />
         )}
       </WithPrices>

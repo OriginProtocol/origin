@@ -1,7 +1,4 @@
 import React, { Component } from 'react'
-import AvailabilityCalculator from '@origin/graphql/src/utils/AvailabilityCalculator'
-import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/AvailabilityCalculatorHourly'
-import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
@@ -32,28 +29,13 @@ import GiftCardDetail from './listing-types/GiftCard'
 import FractionalNightlyDetail from './listing-types/FractionalNightly'
 import FractionalHourlyDetail from './listing-types/FractionalHourly'
 
+import getAvailabilityCalculator from 'utils/getAvailabilityCalculator'
+
 class ListingDetail extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
-    if (props.listing.__typename === 'FractionalListing') {
-      this.state.availability = new AvailabilityCalculator({
-        weekdayPrice: get(props, 'listing.price.amount'),
-        weekendPrice: get(props, 'listing.weekendPrice.amount'),
-        booked: get(props, 'listing.booked'),
-        unavailable: get(props, 'listing.unavailable'),
-        customPricing: get(props, 'listing.customPricing')
-      })
-    }
-    if (props.listing.__typename === 'FractionalHourlyListing') {
-      this.state.availabilityHourly = new AvailabilityCalculatorHourly({
-        booked: get(props, 'listing.booked'),
-        unavailable: get(props, 'listing.unavailable'),
-        customPricing: get(props, 'listing.customPricing'),
-        timeZone: get(props, 'listing.timeZone'),
-        workingHours: get(props, 'listing.workingHours'),
-        price: get(props, 'listing.price.amount')
-      })
+    this.state = {
+      availability: getAvailabilityCalculator(props.listing)
     }
   }
 
@@ -189,7 +171,7 @@ class ListingDetail extends Component {
         <FractionalHourlyDetail
           listing={listing}
           description={description}
-          availability={this.state.availabilityHourly}
+          availability={this.state.availability}
           isOwnerViewing={isOwnerViewing}
           onChange={state => {
             this.setState(state)
@@ -295,7 +277,7 @@ class ListingDetail extends Component {
         <FractionalHourly
           {...props}
           range={this.state.range}
-          availability={this.state.availabilityHourly}
+          availability={this.state.availability}
           onShowAvailability={() => {
             this.setState({
               openCalendar: true

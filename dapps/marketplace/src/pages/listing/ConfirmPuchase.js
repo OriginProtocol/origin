@@ -2,17 +2,14 @@ import React from 'react'
 
 import { fbt } from 'fbt-runtime'
 
-import get from 'lodash/get'
-
 import { withRouter } from 'react-router-dom'
-
-import AvailabilityCalculator from '@origin/graphql/src/utils/AvailabilityCalculator'
-import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/AvailabilityCalculatorHourly'
 
 import DocumentTitle from 'components/DocumentTitle'
 import MobileModalHeader from 'components/MobileModalHeader'
 
 import withIsMobile from 'hoc/withIsMobile'
+
+import getAvailabilityCalculator from 'utils/getAvailabilityCalculator'
 
 import {
   BuySingleUnitMutation,
@@ -42,7 +39,9 @@ const ConfirmPurchase = ({
   const isFractional = listing.__typename === 'FractionalListing'
   const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
 
-  let BuyMutationComponent, SummaryComponent, availability
+  let BuyMutationComponent, SummaryComponent
+
+  const availability = getAvailabilityCalculator(listing)
 
   switch (true) {
     case multiUnit:
@@ -53,26 +52,11 @@ const ConfirmPurchase = ({
     case isFractional:
       BuyMutationComponent = BuyFractionalMutation
       SummaryComponent = FractionalPurchaseSummary
-      availability = new AvailabilityCalculator({
-        weekdayPrice: get(listing, 'price.amount'),
-        weekendPrice: get(listing, 'weekendPrice.amount'),
-        booked: get(listing, 'booked'),
-        unavailable: get(listing, 'unavailable'),
-        customPricing: get(listing, 'customPricing')
-      })
       break
 
     case isFractionalHourly:
       BuyMutationComponent = BuyFractionalHourlyMutation
       SummaryComponent = FractionalHourlyPurchaseSummary
-      availability = new AvailabilityCalculatorHourly({
-        booked: get(listing, 'booked'),
-        unavailable: get(listing, 'unavailable'),
-        customPricing: get(listing, 'customPricing'),
-        timeZone: get(listing, 'timeZone'),
-        workingHours: get(listing, 'workingHours'),
-        price: get(listing, 'price.amount')
-      })
       break
 
     case singleUnit:
