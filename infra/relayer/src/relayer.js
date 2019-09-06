@@ -341,7 +341,12 @@ class Relayer {
     // approved methods. For now, we don't fail on this, since we might
     // have the whitelist too tight. We'll check the logs after a while
     // and see if there is anything we should add.
-    this.validator.validate(PROXY_HARDCODE, txData)
+    try {
+      this.validator.validate(PROXY_HARDCODE, txData)
+    } catch (e) {
+      logger.error('Error in transaction validator', e)
+      throw e
+    }
 
     let tx, txHash, dbTx
 
