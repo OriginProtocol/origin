@@ -8,16 +8,6 @@ import ShippingAddress from './_ShippingAddress.js'
 
 const OfferDetails = ({ offer }) => (
   <ul className="offer-details list-unstyled">
-    {offer.shippingAddressEncrypted && (
-      <li>
-        <span>
-          <fbt desc="OfferDetails.shippingAddress">Shipping Address</fbt>
-        </span>
-        <span>
-          <ShippingAddress offer={offer} />
-        </span>
-      </li>
-    )}
     {offer.listing.__typename === 'FractionalListing' ||
     offer.listing.__typename === 'FractionalHourlyListing' ||
     offer.quantity === 1 ? null : (

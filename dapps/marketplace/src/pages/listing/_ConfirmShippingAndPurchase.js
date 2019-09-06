@@ -8,6 +8,12 @@ import withIdentity from 'hoc/withIdentity'
 
 import { fbt } from 'fbt-runtime'
 
+/**
+ * Renders a button that takes you to
+ *  - Onboarding, if user doesn't have an identity
+ *  - "Shipping Address" screen, if user has identity and listing requires shipping
+ *  - "Confirm Purchase" screen, if user has identity and listing  doesn't require shipping
+ */
 const ConfirmShippingAndPurchase = ({ identity, wallet, className, children, listing }) => {
   const hasIdentity = localStorage.noIdentity || identity
 

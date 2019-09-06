@@ -42,7 +42,7 @@ const withSingleUnitData = (WrappedComponent) => {
 }
 
 /**
- * Renders the buy button that you see on the listing detail page
+ * Renders the buy widget and button that you see on the listing detail page
  * When user clicks on purchase, it takes you to Purchase confirmation page
  */
 const SingleUnit = ({ listing, growthReward, prices, tokenStatus, token }) => {
@@ -78,7 +78,7 @@ const SingleUnit = ({ listing, growthReward, prices, tokenStatus, token }) => {
 /**
  * Renders the button that runs the makeOffer/swapAndMakeOffer mutation
  */
-const ConfirmSingleUnitPurchase = withSingleUnitData(({ refetch, listing, from, prices, token, tokenStatus }) => {
+const BuySingleUnitMutation = withSingleUnitData(({ refetch, listing, from, prices, token, tokenStatus, shippingAddress }) => {
   return (
     <Buy
       refetch={refetch}
@@ -88,6 +88,7 @@ const ConfirmSingleUnitPurchase = withSingleUnitData(({ refetch, listing, from, 
       quantity={1}
       currency={token}
       tokenStatus={tokenStatus}
+      shippingAddress={shippingAddress}
       className="btn btn-primary"
       children={fbt('Purchase', 'Purchase')}
     />
@@ -97,5 +98,5 @@ const ConfirmSingleUnitPurchase = withSingleUnitData(({ refetch, listing, from, 
 export default withSingleUnitData(SingleUnit)
 
 export {
-  ConfirmSingleUnitPurchase
+  BuySingleUnitMutation
 }

@@ -88,7 +88,7 @@ const ProvideShippingAddress = ({
   if (!listing) {
     return <Redirect to="/" />
   } else if (!listing.requiresShipping || redirect) {
-    return <Redirect to={next} />
+    return <Redirect to={next} push />
   }
 
   return (

@@ -294,7 +294,8 @@ class Buy extends Component {
       quantity,
       startDate,
       endDate,
-      currency
+      currency,
+      shippingAddress
     } = this.props
 
     const variables = {
@@ -311,6 +312,10 @@ class Buy extends Component {
       listing.__typename === 'FractionalHourlyListing'
     ) {
       variables.fractionalData = { startDate, endDate }
+    }
+
+    if (listing.requiresShipping){
+      variables.shippingAddress = shippingAddress
     }
 
     makeOffer({ variables })

@@ -47,7 +47,7 @@ const withMultiUnitData = (WrappedComponent) => {
 }
 
 /**
- * Renders the buy button that you see on the listing detail page
+ * Renders the buy widget and button that you see on the listing detail page
  * When user clicks on purchase, it takes you to Purchase confirmation page
  */
 const MultiUnit = ({
@@ -120,7 +120,7 @@ const MultiUnit = ({
 /**
  * Renders the button that runs the makeOffer/swapAndMakeOffer mutation
  */
-const ConfirmMultiUnitPurchase = withMultiUnitData(({ refetch, listing, from, prices, token, tokenStatus, quantity }) => {
+const BuyMultiUnitMutation = withMultiUnitData(({ refetch, listing, from, prices, token, tokenStatus, quantity, shippingAddress }) => {
   return (
     <Buy
       refetch={refetch}
@@ -130,6 +130,7 @@ const ConfirmMultiUnitPurchase = withMultiUnitData(({ refetch, listing, from, pr
       quantity={quantity}
       currency={token}
       tokenStatus={tokenStatus}
+      shippingAddress={shippingAddress}
       className="btn btn-primary"
       children={fbt('Purchase', 'Purchase')}
     />
@@ -139,5 +140,5 @@ const ConfirmMultiUnitPurchase = withMultiUnitData(({ refetch, listing, from, pr
 export default withMultiUnitData(MultiUnit)
 
 export {
-  ConfirmMultiUnitPurchase
+  BuyMultiUnitMutation
 }

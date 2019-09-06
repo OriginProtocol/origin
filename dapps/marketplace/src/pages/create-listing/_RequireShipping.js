@@ -2,12 +2,13 @@ import React, { useCallback, useState } from 'react'
 
 import { fbt } from 'fbt-runtime'
 
-import query from 'queries/Messaging'
 import { useQuery, useMutation } from 'react-apollo'
 
 import get from 'lodash/get'
 
 import EnableMessagingMutation from 'mutations/EnableMessaging'
+import withMessagingStatus from 'hoc/withMessagingStatus'
+
 import MobileModal from 'components/MobileModal'
 
 const EnableEncryptionModal = ({ onEnabled, onClose }) => {
@@ -27,10 +28,11 @@ const EnableEncryptionModal = ({ onEnabled, onClose }) => {
       onEnabled(true)
       setShouldClose(true)
     } catch (e) {
-      setLoading(false)
       setError('Check console.')
       console.error(e)
     }
+
+    setLoading(false)
   }, [onEnabled])
 
   return (
@@ -75,23 +77,16 @@ const EnableEncryptionModal = ({ onEnabled, onClose }) => {
   )
 }
 
-const RequireShipping = ({ onChange }) => {
-  const { data, loading, error } = useQuery(query)
+const RequireShipping = ({ onChange, hasMessagingKeys, messagingStatusError, messagingStatusLoading }) => {
 
   const [requriresShipping, setRequriresShipping] = useState(false)
   const [encryptionModal, setEncryptionModal] = useState(false)
-
-  const messagingEnabled = get(data, 'messaging.enabled', false)
-  const hasKeys =
-    messagingEnabled &&
-    get(data, 'messaging.pubKey') &&
-    get(data, 'messaging.pubSig')
 
   const onChangeCallback = useCallback(
     e => {
       const value = e.target.value === 'yes'
 
-      if (hasKeys) {
+      if (hasMessagingKeys) {
         setRequriresShipping(value)
       } else if (value) {
         // Show enable messaging modal if not enabled
@@ -100,15 +95,15 @@ const RequireShipping = ({ onChange }) => {
 
       onChange(value)
     },
-    [onChange, data]
+    [onChange, hasMessagingKeys]
   )
 
-  if (error) {
+  if (messagingStatusError) {
     console.error(error)
     return null
   }
 
-  if (loading) {
+  if (messagingStatusLoading) {
     return null
   }
 
@@ -161,7 +156,7 @@ const RequireShipping = ({ onChange }) => {
   )
 }
 
-export default RequireShipping
+export default withMessagingStatus(RequireShipping)
 
 require('react-styl')(`
   .require-shipping

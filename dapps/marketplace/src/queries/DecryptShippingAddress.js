@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 const DecryptShippingAddress = gql`
   query DecryptShippingAddress($encrypted: String!) {
     messaging(id: "defaultAccount") {
-      DecryptShippingAddress(encrypted: $encrypted) {
+      decryptShippingAddress(encrypted: $encrypted) {
         name
         address1
         address2

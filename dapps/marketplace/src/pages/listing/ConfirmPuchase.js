@@ -12,8 +12,8 @@ import MobileModalHeader from 'components/MobileModalHeader'
 
 import withIsMobile from 'hoc/withIsMobile'
 
-import { ConfirmSingleUnitPurchase } from './_BuySingleUnit'
-import { ConfirmMultiUnitPurchase } from './_BuyMultiUnit'
+import { BuySingleUnitMutation } from './_BuySingleUnit'
+import { BuyMultiUnitMutation } from './_BuyMultiUnit'
 
 
 
@@ -23,15 +23,15 @@ const ConfirmPurchase = ({ listing, quantity, prev, isMobile, history, refetch, 
   const isFractional = listing.__typename === 'FractionalListing'
   const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
 
-  let ConfirmButtonComponent
+  let BuyMutationComponent
   switch (true) {
     case multiUnit:
-      ConfirmButtonComponent = ConfirmMultiUnitPurchase
+      BuyMutationComponent = BuyMultiUnitMutation
       break
 
     case singleUnit:
     default:
-      ConfirmButtonComponent = ConfirmSingleUnitPurchase
+      BuyMutationComponent = BuySingleUnitMutation
       break
   }
 
@@ -75,11 +75,12 @@ const ConfirmPurchase = ({ listing, quantity, prev, isMobile, history, refetch, 
           </div>
         </div>
         <div className="actions">
-          <ConfirmButtonComponent
+          <BuyMutationComponent
             listing={listing}
             refetch={refetch}
             quantity={quantity}
             bookingRange={bookingRange}
+            shippingAddress={shippingAddress}
           />
           {isMobile ? null : (
             <button
