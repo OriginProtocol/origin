@@ -11,9 +11,9 @@ export function currentListingIdFromHistoricalId(listing) {
   const historicalListingMatch = listing.id.match(regex)
 
   if (historicalListingMatch) {
-    return `${historicalListingMatch[1]}-${
-      historicalListingMatch[2]
-    }-${historicalListingMatch[3]}`
+    return `${historicalListingMatch[1]}-${historicalListingMatch[2]}-${
+      historicalListingMatch[3]
+    }`
   }
   return null
 }

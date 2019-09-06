@@ -11,9 +11,7 @@ const HistoricalListingWarning = ({ listingId }) => (
       </fbt>
     </div>
     <Link to={`/listing/${listingId}`} className="btn btn-primary">
-      <fbt desc="listingDetail.view-current-listing">
-        View Current Listing
-      </fbt>
+      <fbt desc="listingDetail.view-current-listing">View Current Listing</fbt>
     </Link>
   </>
 )
