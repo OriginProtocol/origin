@@ -6,16 +6,14 @@ const { TEST_PROVIDER_URL, JUNK_HASH } = require('./const')
 
 const web3 = new Web3(TEST_PROVIDER_URL)
 
-const addresses = require('@origin/contracts/build/tests.json')
-
 const IdentityProxyBuild = require('@origin/contracts/build/contracts/IdentityProxy_solc.json')
 const Proxy = new web3.eth.Contract(IdentityProxyBuild.abi)
 const IdentityEventsBuild = require('@origin/contracts/build/contracts/IdentityEvents.json')
 const IdentityEvents = new web3.eth.Contract(IdentityEventsBuild.abi)
 const V00MarketplaceBuild = require('@origin/contracts/build/contracts/V00_Marketplace.json')
 const V00Marketplace = new web3.eth.Contract(V00MarketplaceBuild.abi)
-const V01MarketplaceBuild = require('@origin/contracts/build/contracts/V01_Marketplace.json')
-const V01Marketplace = new web3.eth.Contract(V01MarketplaceBuild.abi)
+// const V01MarketplaceBuild = require('@origin/contracts/build/contracts/V01_Marketplace.json')
+// const V01Marketplace = new web3.eth.Contract(V01MarketplaceBuild.abi)
 const UniswapDaiExchangeBuild = require('../src/contracts/UniswapExchange.json')
 const UniswapDaiExchange = new web3.eth.Contract(UniswapDaiExchangeBuild.abi)
 
@@ -24,9 +22,13 @@ describe('relayer whitelist', async () => {
   const Bob = '0xb0bC19BAECeC052CF2a95450008158AaecEC445f'
   const Mallory = '0xBad88c0c39a28888a069261714d21528F7e2DF3F'
 
-  const whitelist = new Validator(addresses)
+  let addresses
+  let whitelist
 
-  before(async () => {})
+  before(async () => {
+    addresses = require('@origin/contracts/build/tests.json')
+    whitelist = new Validator(addresses)
+  })
 
   describe('whitelist identity events methods', async () => {
     describe('identityUpdated', async () => {
