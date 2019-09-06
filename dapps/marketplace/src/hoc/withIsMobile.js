@@ -16,7 +16,6 @@ function withIsMobile(WrappedComponent) {
 
     componentDidMount() {
       window.addEventListener('resize', this.onResize)
-      this.onResize()
     }
 
     onResize() {
