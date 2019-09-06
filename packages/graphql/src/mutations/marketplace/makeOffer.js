@@ -22,6 +22,25 @@ async function makeOffer(_, data) {
   if (!marketplace) {
     throw new Error('No marketplace')
   }
+
+  if (data.shippingAddress && data.shippingAddress !== '') {
+    const listing = await marketplace.eventSource.getListing(listingId)
+    const seller = listing.seller.id
+    const shippingAddress = Object.assign({}, data.shippingAddress)
+    shippingAddress.version = 1
+    const encrypted = await contracts.messaging.createOutOfBandMessage(
+      seller,
+      JSON.stringify(shippingAddress)
+    )
+    if (!encrypted) {
+      throw new Error(
+        'Could not encrypt shipping address. Probably either buyer or seller do not have messaging enabled.'
+      )
+    }
+    data.shippingAddressEncrypted = encrypted
+    data.shippingAddress = undefined
+  }
+
   const ipfsData = await toIpfsData(data, marketplace)
   let mutation = 'makeOffer'
 
@@ -177,6 +196,7 @@ async function toIpfsData(data, marketplace) {
     },
     commission,
     finalizes: data.finalizes || 60 * 60 * 24 * 14,
+    shippingAddressEncrypted: data.shippingAddressEncrypted,
     ...(data.fractionalData || {})
   }
 

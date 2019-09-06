@@ -26,6 +26,19 @@ async function convosWithSupport() {
   }))
 }
 
+async function decryptOutOfBandMessage(_, args) {
+  let encrypted
+  try {
+    encrypted = JSON.parse(args.encrypted)
+  } catch (e) {
+    throw new Error('Message to decrypt must be JSON')
+  }
+  const d = await contracts.messaging.decryptOutOfBandMessage(encrypted)
+  if (d === null) {
+    throw new Error('Could not decrypt message')
+  }
+  return d.content
+}
 // We need to do this check inside the resolver function
 const checkForMessagingOverride = () => {
   // needed for testing pu
@@ -84,5 +97,10 @@ export default {
       }
     }
     return null
+  },
+  decryptOutOfBandMessage: decryptOutOfBandMessage,
+  decryptShippingAddress: async (_, args) => {
+    const data = await decryptOutOfBandMessage(_, args)
+    return JSON.parse(data.content)
   }
 }

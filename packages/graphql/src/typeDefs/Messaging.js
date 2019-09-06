@@ -21,6 +21,8 @@ module.exports = `
     canConverseWith(id: String!): Boolean
     forwardTo(id: String!): String
     totalUnread: Int
+    decryptOutOfBandMessage(encrypted: String): OutOfBandMessage
+    decryptShippingAddress(encrypted: String!): ShippingAddress
   }
 
   type Conversation {
@@ -42,4 +44,19 @@ module.exports = `
     status: String
   }
 
+  type OutOfBandMessage {
+    content: String
+    media: [Media]
+    timestamp: Int
+  }
+
+  type ShippingAddress {
+    name: String
+    address1: String
+    address2: String
+    city: String
+    stateProvinceRegion: String
+    postalCode: String
+    country: String
+  }
 `
