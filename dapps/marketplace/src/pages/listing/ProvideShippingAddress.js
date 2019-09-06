@@ -123,9 +123,7 @@ const ProvideShippingAddress = ({
             history.goBack()
           }}
         >
-          <fbt desc="PurchaseListing.shippingAddress">
-            Shipping Address
-          </fbt>
+          <fbt desc="PurchaseListing.shippingAddress">Shipping Address</fbt>
         </MobileModalHeader>
       )}
       <div className="form-container">
@@ -154,9 +152,7 @@ const ProvideShippingAddress = ({
         >
           {isMobile ? null : (
             <h2>
-              <fbt desc="PurchaseListing.shippingAddress">
-                Shipping Address
-              </fbt>
+              <fbt desc="PurchaseListing.shippingAddress">Shipping Address</fbt>
             </h2>
           )}
           <div className="desc">
