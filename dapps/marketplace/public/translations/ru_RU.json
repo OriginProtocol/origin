@@ -808,6 +808,8 @@
   "OTShT": "Описание товара",
   "4xrZ3E": "О продавце",
   "R7RmQ": "Поменять сейчас",
+  "3tUXPh": "A newer version of this listing is available",
+  "28LlnA": "View Current Listing",
   "Oa11f": "Произведён обмен {eth} ETH на {dai} DAI",
   "4IPsp": "Пожалуйста, дайте разрешение Origin переместить DAI от вашего имени.",
   "Tp60Z": "Нажмите ниже, чтобы одобрить использование DAI в Origin",
@@ -994,11 +996,7 @@
   "XaD4D": "Доступно для {browser}",
   "29RrPk": "Подключите MetaMask",
   "1AQgmT": "Открытие приложения...",
-<<<<<<< HEAD
-  "4iVrWM": "Loading",
-=======
   "4iVrWM": "Загрузка",
->>>>>>> origin/master
   "4apdzo": "Рекламировать сейчас",
   "1o5hKC": "Пожалуйста, введите сумму комиссии",
   "2IWJV3": "Недостаточно OGN",
