@@ -20,7 +20,7 @@ const ConfirmShippingAndPurchase = ({
   listing,
   disabled
 }) => {
-  if (!hasMessagingKeys) {
+  if (!hasMessagingKeys && !localStorage.bypassOnboarding) {
     return (
       <UserActivationLink
         className={className}

@@ -18,7 +18,8 @@ before(async function() {
   page = (await services()).extrasResult.page
 })
 
-const waitFor = (timeInMs) => new Promise(resolve => setTimeout(resolve, timeInMs))
+const waitFor = timeInMs =>
+  new Promise(resolve => setTimeout(resolve, timeInMs))
 
 const reset = async (sellerOgn, reload = false) => {
   // clear cookies (for messaging)
@@ -49,7 +50,7 @@ const reset = async (sellerOgn, reload = false) => {
 const purchaseListing = async ({ buyer }) => {
   await pic(page, 'listing-detail')
   await changeAccount(page, buyer)
-  
+
   // Note: Some prop causes the Purchase button to rerender after a few hundred milliseconds
   // Puppeteer doesn't support click events if the button is not in the DOM
   // Puppeteer throws if the element get unmounted when it tries to click
@@ -60,10 +61,10 @@ const purchaseListing = async ({ buyer }) => {
   await waitForText(page, 'Please confirm your purchase', 'h1')
   await pic(page, 'purchase-confirmation')
   await clickByText(page, 'Purchase', 'button')
-  
+
   await waitForText(page, 'View Purchase Details', 'button')
   await pic(page, 'purchase-listing')
-  
+
   await clickByText(page, 'View Purchase Details', 'button')
   await waitForText(page, 'Transaction History')
   await pic(page, 'transaction-wait-for-seller')
@@ -72,7 +73,7 @@ const purchaseListing = async ({ buyer }) => {
 const purchaseListingWithDAI = async ({ buyer, autoSwap }) => {
   await pic(page, 'listing-detail')
   await changeAccount(page, buyer)
-  
+
   // Note: Some prop causes the Purchase button to rerender after a few hundred milliseconds
   // Puppeteer doesn't support click events if the button is not in the DOM
   // Puppeteer throws if the element get unmounted when it tries to click
@@ -660,6 +661,7 @@ function onboardingTests() {
       this.timeout(10000)
       const { seller, buyer } = await reset('100', true)
       await page.evaluate(() => {
+        delete window.localStorage.bypassOnboarding
         window.location = '/#/'
       })
       await changeAccount(page, buyer)
@@ -697,11 +699,11 @@ describe('Marketplace Dapp', function() {
   this.timeout(10000)
   before(async function() {
     await page.evaluate(() => {
-      delete window.localStorage.noIdentity
       delete window.localStorage.performanceMode
       delete window.localStorage.proxyAccountsEnabled
       delete window.localStorage.relayerEnabled
       delete window.localStorage.debug
+      window.localStorage.bypassOnboarding = true
       window.localStorage.promoteEnabled = 'true'
       window.transactionPoll = 100
     })
@@ -716,10 +718,10 @@ describe('Marketplace Dapp with proxies enabled', function() {
   before(async function() {
     await page.evaluate(() => {
       window.localStorage.proxyAccountsEnabled = true
-      delete window.localStorage.noIdentity
       delete window.localStorage.performanceMode
       delete window.localStorage.relayerEnabled
       delete window.localStorage.debug
+      window.localStorage.bypassOnboarding = true
       window.localStorage.promoteEnabled = 'true'
       window.transactionPoll = 100
     })
@@ -739,7 +741,7 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
 
   before(async function() {
     await page.evaluate(() => {
-      window.localStorage.noIdentity = true
+      window.localStorage.bypassOnboarding = true
       window.localStorage.performanceMode = true
       window.localStorage.proxyAccountsEnabled = true
       window.localStorage.relayerEnabled = true

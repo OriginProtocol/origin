@@ -82,7 +82,7 @@ const PaymentOptions = ({
   const ethPrice = <Price price={price} target="token-ETH" className="bold" />
   const daiPrice = <Price price={price} target="token-DAI" className="bold" />
 
-  const hasIdentity = localStorage.noIdentity || identity
+  const hasIdentity = localStorage.bypassOnboarding || identity
 
   let cannotPurchase = false,
     content,
