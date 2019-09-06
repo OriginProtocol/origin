@@ -7,7 +7,6 @@ import {
   DeviceEventEmitter,
   KeyboardAvoidingView,
   Linking,
-  Modal,
   PanResponder,
   Platform,
   StyleSheet,

@@ -25,7 +25,7 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   const [modals, setModals] = useState([])
 
   // TODO use the HOC, need to get forwardRef working through HOC
-  const isSamsungBKS =
+  const isUsingSamsungBKS =
     Platform.OS === 'android' &&
     get(props, 'samsungBKS.seedHash', '').length > 0 &&
     props.wallet.activeAccount.hdPath
@@ -34,8 +34,10 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
    * local wallet cache.
    */
   const _signMessage = async messageToSign => {
-    if (isSamsungBKS) {
-      console.debug('Signing message with Samsung BKS')
+    if (typeof messageToSign === 'string') {
+      messageToSign = ethers.utils.toUtf8String(messageToSign)
+    }
+    if (isUsingSamsungBKS) {
       // React native doesn't support passing binary data, so encode it as base64
       // string so that we can
       messageToSign = Buffer.from(messageToSign).toString('base64')
@@ -44,7 +46,6 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
         messageToSign
       )
     } else {
-      console.debug('Signing message with locale wallet cache')
       const wallet = new ethers.Wallet(props.wallet.activeAccount.privateKey)
       return await wallet.signMessage(messageToSign)
     }
@@ -55,7 +56,7 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   }
 
   const _signTransaction = async () => {
-    if (isSamsungBKS) {
+    if (isUsingSamsungBKS) {
       console.debug('Signing transaction with Samsung BKS')
     } else {
       console.debug('Signing transaction with local wallet cache')
@@ -97,10 +98,18 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
       console.debug(
         `Got meta transaction for ${decodedTransaction.functionName} on ${decodedTransaction.contractName}`
       )
-      const dataToSign = ethers.utils.arrayify(ethers.utils.solidityKeccak256(
-        ['address', 'address', 'uint256', 'bytes', 'uint256'],
-        [decodedData.from, decodedData.to, 0, decodedData.txData, decodedData.nonce]
-      ))
+      const dataToSign = ethers.utils.arrayify(
+        ethers.utils.solidityKeccak256(
+          ['address', 'address', 'uint256', 'bytes', 'uint256'],
+          [
+            decodedData.from,
+            decodedData.to,
+            0,
+            decodedData.txData,
+            decodedData.nonce
+          ]
+        )
+      )
       const signature = await _signMessage(dataToSign)
       callback(signature)
     } else {
@@ -132,12 +141,11 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
         newModals.push({ type: 'enableNotifications' })
       }
 
-      if (isSamsungBKS) {
+      if (isUsingSamsungBKS) {
         if (
           ['signMessage', 'signPersonalMessage'].includes(msgData.targetFunc)
         ) {
-          const signature = await _signMessage(msgData.data.data)
-          return callback(signature)
+          return callback(await _signMessage(msgData.data.data))
         }
         console.debug('TODO something with Samsung BKS')
       } else {
@@ -223,7 +231,6 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   }
 
   const renderSignatureCard = modal => {
-    const { wallet } = props
     return (
       <SignatureCard
         msgData={modal.msgData}
