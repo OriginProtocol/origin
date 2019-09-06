@@ -67,8 +67,9 @@ class Buy extends Component {
     )
 
     const hasIdentity = this.props.identity
-    const hasMessaging = this.props.messagingEnabled
-    const needsOnboarding = !hasIdentity || !this.props.wallet || !hasMessaging
+    const hasMessagingKeys = this.props.hasMessagingKeys
+    const needsOnboarding =
+      !hasIdentity || !this.props.wallet || !hasMessagingKeys
     const onboardingDisabled = localStorage.noIdentity ? true : false
 
     if (needsOnboarding && !onboardingDisabled) {
