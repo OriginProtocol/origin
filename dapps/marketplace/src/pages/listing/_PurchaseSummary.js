@@ -4,7 +4,16 @@ import { fbt } from 'fbt-runtime'
 
 import Price from 'components/Price'
 
-const PurchaseSummary = ({ listing, quantity, totalPrice, prices, token, shippingAddress, startDate, endDate }) => {
+const PurchaseSummary = ({
+  listing,
+  quantity,
+  totalPrice,
+  prices,
+  token,
+  shippingAddress,
+  startDate,
+  endDate
+}) => {
   return (
     <div className="summary">
       <div className="summary-row">
@@ -56,13 +65,17 @@ const PurchaseSummary = ({ listing, quantity, totalPrice, prices, token, shippin
         <div className="summary-name">
           <fbt desc="PurchaseSummary.totalPrice">Total Price</fbt>
         </div>
-        <div className="summary-value"><Price price={totalPrice} /></div>
+        <div className="summary-value">
+          <Price price={totalPrice} />
+        </div>
       </div>
       <div className="summary-row">
         <div className="summary-name">
           <fbt desc="PurchaseSummary.Payment">Payment</fbt>
         </div>
-        <div className="summary-value"><Price price={totalPrice} target={token} /></div>
+        <div className="summary-value">
+          <Price price={totalPrice} target={token} />
+        </div>
       </div>
     </div>
   )

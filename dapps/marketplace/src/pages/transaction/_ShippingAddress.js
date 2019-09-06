@@ -7,12 +7,23 @@ import query from 'queries/DecryptShippingAddress'
 import withMessagingStatus from 'hoc/withMessagingStatus'
 import EnableMessagingMutation from 'mutations/EnableMessaging'
 
-const ShippingAddress = ({ offer, className, hasMessagingKeys, messagingStatusError, messagingStatusLoading }) => {
+const ShippingAddress = ({
+  offer,
+  className,
+  hasMessagingKeys,
+  messagingStatusError,
+  messagingStatusLoading
+}) => {
   const { loading, error, data, refetch } = useQuery(query, {
     variables: {
       encrypted: offer.shippingAddressEncrypted
     },
-    skip: !hasMessagingKeys || messagingStatusError || messagingStatusLoading || !offer || !offer.shippingAddressEncrypted,
+    skip:
+      !hasMessagingKeys ||
+      messagingStatusError ||
+      messagingStatusLoading ||
+      !offer ||
+      !offer.shippingAddressEncrypted,
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'no-cache'
   })
@@ -45,7 +56,11 @@ const ShippingAddress = ({ offer, className, hasMessagingKeys, messagingStatusEr
 
   if (loading || messagingStatusLoading) {
     return (
-      <div className={`decrypted-shipping-address${className ? ' ' + className : ''}`}>
+      <div
+        className={`decrypted-shipping-address${
+          className ? ' ' + className : ''
+        }`}
+      >
         <fbt desc="Loading...">Loading...</fbt>
       </div>
     )
@@ -53,18 +68,26 @@ const ShippingAddress = ({ offer, className, hasMessagingKeys, messagingStatusEr
 
   if (!hasMessagingKeys) {
     return (
-      <div className={`decrypted-shipping-address${className ? ' ' + className : ''}`}>
-        <p className="mb-3"><fbt desc="DecryptedShippingAddress.enableMessaging">Enable messaging to decrypt shipping address</fbt></p>
+      <div
+        className={`decrypted-shipping-address${
+          className ? ' ' + className : ''
+        }`}
+      >
+        <p className="mb-3">
+          <fbt desc="DecryptedShippingAddress.enableMessaging">
+            Enable messaging to decrypt shipping address
+          </fbt>
+        </p>
         <button
           className="btn btn-primary"
           onClick={enableMessagingCallback}
           disabled={loadingMutation}
         >
-          {
-            loadingMutation ? 
-            <fbt desc="Loading...">Loading...</fbt> :
+          {loadingMutation ? (
+            <fbt desc="Loading...">Loading...</fbt>
+          ) : (
             <fbt desc="Enable Messaging">Enable Messaging</fbt>
-          }
+          )}
         </button>
       </div>
     )
@@ -75,7 +98,11 @@ const ShippingAddress = ({ offer, className, hasMessagingKeys, messagingStatusEr
   if (error || !ship) {
     if (error) console.error(error)
     return (
-      <div className={`decrypted-shipping-address${className ? ' ' + className : ''}`}>
+      <div
+        className={`decrypted-shipping-address${
+          className ? ' ' + className : ''
+        }`}
+      >
         <fbt desc="DecryptedShippingAddress.failed">
           Could not decrypt shipping address
         </fbt>
@@ -84,22 +111,36 @@ const ShippingAddress = ({ offer, className, hasMessagingKeys, messagingStatusEr
   }
 
   return (
-    <div className={`decrypted-shipping-address${className ? ' ' + className : ''}`}>
+    <div
+      className={`decrypted-shipping-address${
+        className ? ' ' + className : ''
+      }`}
+    >
       <h4>Shipping Address</h4>
 
-      <div className="field-label"><fbt desc="DecryptedShippingAddress.Name">Name:</fbt></div>
+      <div className="field-label">
+        <fbt desc="DecryptedShippingAddress.Name">Name:</fbt>
+      </div>
       <div className="field-value">{ship.name}</div>
 
-      <div className="field-label"><fbt desc="DecryptedShippingAddress.StreetAddress">Street Address:</fbt></div>
+      <div className="field-label">
+        <fbt desc="DecryptedShippingAddress.StreetAddress">Street Address:</fbt>
+      </div>
       <div className="field-value">
         <div>{ship.address1}</div>
         <div>{ship.address2}</div>
       </div>
 
-      <div className="field-label"><fbt desc="DecryptedShippingAddress.city">City/State/Region</fbt></div>
-      <div className="field-value">{ship.city}, {ship.stateProvinceRegion} {ship.postalCode}</div>
+      <div className="field-label">
+        <fbt desc="DecryptedShippingAddress.city">City/State/Region</fbt>
+      </div>
+      <div className="field-value">
+        {ship.city}, {ship.stateProvinceRegion} {ship.postalCode}
+      </div>
 
-      <div className="field-label"><fbt desc="DecryptedShippingAddress.country">Country</fbt></div>
+      <div className="field-label">
+        <fbt desc="DecryptedShippingAddress.country">Country</fbt>
+      </div>
       <div className="field-value">{ship.country}</div>
     </div>
   )

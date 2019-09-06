@@ -12,7 +12,7 @@ import PaymentOptions from './_PaymentOptions'
 import ConfirmShippingAndPurchase from './_ConfirmShippingAndPurchase'
 import PurchaseSummary from './_PurchaseSummary'
 
-const withMultiUnitData = (WrappedComponent) => {
+const withMultiUnitData = WrappedComponent => {
   const WithMultiUnitData = ({ listing, quantity, ...props }) => {
     const amount = String(Number(listing.price.amount) * Number(quantity))
     const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
@@ -79,10 +79,7 @@ const MultiUnit = ({
           </div>
           {listing.price.currency.id === selectedCurrency ? null : (
             <span className="orig">
-              <Price
-                price={listing.price}
-                target={listing.price.currency.id}
-              />
+              <Price price={listing.price} target={listing.price.currency.id} />
             </span>
           )}
         </div>
@@ -121,28 +118,36 @@ const MultiUnit = ({
 /**
  * Renders the button that runs the makeOffer/swapAndMakeOffer mutation
  */
-const BuyMultiUnitMutation = withMultiUnitData(({ refetch, listing, from, prices, token, tokenStatus, quantity, shippingAddress }) => {
-  return (
-    <Buy
-      refetch={refetch}
-      listing={listing}
-      from={from}
-      value={get(prices, `${token}.amount`)}
-      quantity={quantity}
-      currency={token}
-      tokenStatus={tokenStatus}
-      shippingAddress={shippingAddress}
-      className="btn btn-primary"
-      children={fbt('Purchase', 'Purchase')}
-    />
-  )
-})
+const BuyMultiUnitMutation = withMultiUnitData(
+  ({
+    refetch,
+    listing,
+    from,
+    prices,
+    token,
+    tokenStatus,
+    quantity,
+    shippingAddress
+  }) => {
+    return (
+      <Buy
+        refetch={refetch}
+        listing={listing}
+        from={from}
+        value={get(prices, `${token}.amount`)}
+        quantity={quantity}
+        currency={token}
+        tokenStatus={tokenStatus}
+        shippingAddress={shippingAddress}
+        className="btn btn-primary"
+        children={fbt('Purchase', 'Purchase')}
+      />
+    )
+  }
+)
 
 const MultiUnitPurchaseSummary = withMultiUnitData(PurchaseSummary)
 
 export default withMultiUnitData(MultiUnit)
 
-export {
-  BuyMultiUnitMutation,
-  MultiUnitPurchaseSummary
-}
+export { BuyMultiUnitMutation, MultiUnitPurchaseSummary }

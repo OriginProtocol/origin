@@ -314,7 +314,7 @@ class Buy extends Component {
       variables.fractionalData = { startDate, endDate }
     }
 
-    if (listing.requiresShipping){
+    if (listing.requiresShipping) {
       variables.shippingAddress = shippingAddress
     }
 

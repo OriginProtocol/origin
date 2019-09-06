@@ -171,7 +171,9 @@ class OfferAcceptedBuyer extends Component {
                 party="seller"
                 className="btn btn-link withdraw small mr-auto"
               >
-                <fbt desc="OfferAcceptBuyer.reportProblme">Report a Problem</fbt>
+                <fbt desc="OfferAcceptBuyer.reportProblme">
+                  Report a Problem
+                </fbt>
               </DisputeOffer>
             </div>
           </div>

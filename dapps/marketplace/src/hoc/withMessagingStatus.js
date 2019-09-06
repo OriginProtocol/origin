@@ -8,7 +8,7 @@ import get from 'lodash/get'
 function withMessagingStatus(WrappedComponent) {
   const WithMessagingStatus = props => {
     const { data, loading, error } = useQuery(query)
-  
+
     if (error) console.error(error)
 
     const messagingEnabled = get(data, 'messaging.enabled', false)

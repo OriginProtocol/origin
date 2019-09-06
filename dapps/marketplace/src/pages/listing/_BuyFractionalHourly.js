@@ -15,8 +15,13 @@ import DateRange from './_DateRange'
 import ConfirmShippingAndPurchase from './_ConfirmShippingAndPurchase'
 import PurchaseSummary from './_PurchaseSummary'
 
-const withFractionalHourlyData = (WrappedComponent) => {
-  const WithFractionalHourlyData = ({ listing, range, availability, ...props }) => {
+const withFractionalHourlyData = WrappedComponent => {
+  const WithFractionalHourlyData = ({
+    listing,
+    range,
+    availability,
+    ...props
+  }) => {
     const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
     const token = acceptsDai ? 'token-DAI' : 'token-ETH'
 
@@ -24,7 +29,7 @@ const withFractionalHourlyData = (WrappedComponent) => {
       endDate = null,
       totalPrice,
       available = false
-      
+
     if (range) {
       const split = range.split('/')
       startDate = split[0]
@@ -93,7 +98,7 @@ const FractionalHourly = ({
   prices
 }) => {
   const selectedCurrency = useContext(CurrencyContext)
-  const showUnavailable = range && !available 
+  const showUnavailable = range && !available
 
   return (
     <div className="listing-buy fractional">
@@ -110,10 +115,7 @@ const FractionalHourly = ({
         </div>
         {listing.price.currency.id === selectedCurrency ? null : (
           <span className="orig">
-            <Price
-              price={listing.price}
-              target={listing.price.currency.id}
-            />
+            <Price price={listing.price} target={listing.price.currency.id} />
           </span>
         )}
       </div>
@@ -167,40 +169,41 @@ const FractionalHourly = ({
 /**
  * Renders the button that runs the makeOffer/swapAndMakeOffer mutation
  */
-const BuyFractionalHourlyMutation = withFractionalHourlyData(({
-  refetch, 
-  listing, 
-  from, 
-  prices, 
-  token, 
-  tokenStatus,
-  startDate,
-  endDate,
-  available
-}) => {
-  return (
-    <Buy
-      refetch={refetch}
-      listing={listing}
-      from={from}
-      value={get(prices, `['${token}'].amount`)}
-      quantity={1}
-      disabled={available ? false : true}
-      startDate={startDate}
-      endDate={endDate}
-      currency={token}
-      tokenStatus={tokenStatus}
-      className={`btn btn-primary${available ? '' : ' disabled'}`}
-      children={fbt('Book', 'Book')}
-    />
-  )
-})
+const BuyFractionalHourlyMutation = withFractionalHourlyData(
+  ({
+    refetch,
+    listing,
+    from,
+    prices,
+    token,
+    tokenStatus,
+    startDate,
+    endDate,
+    available
+  }) => {
+    return (
+      <Buy
+        refetch={refetch}
+        listing={listing}
+        from={from}
+        value={get(prices, `['${token}'].amount`)}
+        quantity={1}
+        disabled={available ? false : true}
+        startDate={startDate}
+        endDate={endDate}
+        currency={token}
+        tokenStatus={tokenStatus}
+        className={`btn btn-primary${available ? '' : ' disabled'}`}
+        children={fbt('Book', 'Book')}
+      />
+    )
+  }
+)
 
-const FractionalHourlyPurchaseSummary = withFractionalHourlyData(PurchaseSummary)
+const FractionalHourlyPurchaseSummary = withFractionalHourlyData(
+  PurchaseSummary
+)
 
 export default withFractionalHourlyData(FractionalHourly)
 
-export {
-  BuyFractionalHourlyMutation,
-  FractionalHourlyPurchaseSummary
-}
+export { BuyFractionalHourlyMutation, FractionalHourlyPurchaseSummary }

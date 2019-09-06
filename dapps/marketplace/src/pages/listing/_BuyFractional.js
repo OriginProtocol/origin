@@ -14,15 +14,15 @@ import DateRange from './_DateRange'
 import ConfirmShippingAndPurchase from './_ConfirmShippingAndPurchase'
 import PurchaseSummary from './_PurchaseSummary'
 
-const withFractionalData = (WrappedComponent) => {
+const withFractionalData = WrappedComponent => {
   const WithFractionalData = ({ listing, range, availability, ...props }) => {
     const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
     const token = acceptsDai ? 'token-DAI' : 'token-ETH'
 
     let startDate = null,
-    endDate = null,
-    totalPrice,
-    available = false
+      endDate = null,
+      totalPrice,
+      available = false
 
     if (range) {
       const split = range.split('/')
@@ -104,10 +104,7 @@ const Fractional = ({
         </div>
         {listing.price.currency.id === selectedCurrency ? null : (
           <span className="orig">
-            <Price
-              price={listing.price}
-              target={listing.price.currency.id}
-            />
+            <Price price={listing.price} target={listing.price.currency.id} />
           </span>
         )}
       </div>
@@ -160,40 +157,39 @@ const Fractional = ({
 /**
  * Renders the button that runs the makeOffer/swapAndMakeOffer mutation
  */
-const BuyFractionalMutation = withFractionalData(({
-  refetch, 
-  listing, 
-  from, 
-  prices, 
-  token, 
-  tokenStatus,
-  startDate,
-  endDate,
-  available
-}) => {
-  return (
-    <Buy
-      refetch={refetch}
-      listing={listing}
-      from={from}
-      value={get(prices, `['${token}'].amount`)}
-      quantity={1}
-      disabled={available ? false : true}
-      startDate={startDate}
-      endDate={endDate}
-      currency={token}
-      tokenStatus={tokenStatus}
-      className={`btn btn-primary${available ? '' : ' disabled'}`}
-      children={fbt('Book', 'Book')}
-    />
-  )
-})
+const BuyFractionalMutation = withFractionalData(
+  ({
+    refetch,
+    listing,
+    from,
+    prices,
+    token,
+    tokenStatus,
+    startDate,
+    endDate,
+    available
+  }) => {
+    return (
+      <Buy
+        refetch={refetch}
+        listing={listing}
+        from={from}
+        value={get(prices, `['${token}'].amount`)}
+        quantity={1}
+        disabled={available ? false : true}
+        startDate={startDate}
+        endDate={endDate}
+        currency={token}
+        tokenStatus={tokenStatus}
+        className={`btn btn-primary${available ? '' : ' disabled'}`}
+        children={fbt('Book', 'Book')}
+      />
+    )
+  }
+)
 
 const FractionalPurchaseSummary = withFractionalData(PurchaseSummary)
 
 export default withFractionalData(Fractional)
 
-export {
-  BuyFractionalMutation,
-  FractionalPurchaseSummary
-}
+export { BuyFractionalMutation, FractionalPurchaseSummary }

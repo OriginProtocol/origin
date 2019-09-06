@@ -39,13 +39,14 @@ const ProvideShippingAddress = ({
 
   const input = formInput(
     inputState,
-    useCallback(state => {
-      const newState = { ...inputState, ...state }
-      setInputState(newState)
-      storeShippingAddress(newState)
-    }, [
-      inputState
-    ])
+    useCallback(
+      state => {
+        const newState = { ...inputState, ...state }
+        setInputState(newState)
+        storeShippingAddress(newState)
+      },
+      [inputState]
+    )
   )
   const Feedback = formFeedback(inputState)
 

@@ -15,14 +15,29 @@ import MobileModalHeader from 'components/MobileModalHeader'
 
 import withIsMobile from 'hoc/withIsMobile'
 
-import { BuySingleUnitMutation, SingleUnitPurchaseSummary } from './_BuySingleUnit'
+import {
+  BuySingleUnitMutation,
+  SingleUnitPurchaseSummary
+} from './_BuySingleUnit'
 import { BuyMultiUnitMutation, MultiUnitPurchaseSummary } from './_BuyMultiUnit'
-import { BuyFractionalMutation, FractionalPurchaseSummary } from './_BuyFractional'
-import { BuyFractionalHourlyMutation, FractionalHourlyPurchaseSummary } from './_BuyFractionalHourly'
+import {
+  BuyFractionalMutation,
+  FractionalPurchaseSummary
+} from './_BuyFractional'
+import {
+  BuyFractionalHourlyMutation,
+  FractionalHourlyPurchaseSummary
+} from './_BuyFractionalHourly'
 
-
-
-const ConfirmPurchase = ({ listing, quantity, isMobile, history, refetch, shippingAddress, bookingRange }) => {
+const ConfirmPurchase = ({
+  listing,
+  quantity,
+  isMobile,
+  history,
+  refetch,
+  shippingAddress,
+  bookingRange
+}) => {
   const singleUnit = !listing.multiUnit && listing.__typename === 'UnitListing'
   const multiUnit = listing.multiUnit && listing.__typename === 'UnitListing'
   const isFractional = listing.__typename === 'FractionalListing'
@@ -47,7 +62,7 @@ const ConfirmPurchase = ({ listing, quantity, isMobile, history, refetch, shippi
         customPricing: get(listing, 'customPricing')
       })
       break
-      
+
     case isFractionalHourly:
       BuyMutationComponent = BuyFractionalHourlyMutation
       SummaryComponent = FractionalHourlyPurchaseSummary

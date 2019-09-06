@@ -77,8 +77,12 @@ const EnableEncryptionModal = ({ onEnabled, onClose }) => {
   )
 }
 
-const RequireShipping = ({ onChange, hasMessagingKeys, messagingStatusError, messagingStatusLoading }) => {
-
+const RequireShipping = ({
+  onChange,
+  hasMessagingKeys,
+  messagingStatusError,
+  messagingStatusLoading
+}) => {
   const [requriresShipping, setRequriresShipping] = useState(false)
   const [encryptionModal, setEncryptionModal] = useState(false)
 

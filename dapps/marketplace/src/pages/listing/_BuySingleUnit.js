@@ -11,7 +11,7 @@ import PaymentOptions from './_PaymentOptions'
 import ConfirmShippingAndPurchase from './_ConfirmShippingAndPurchase'
 import PurchaseSummary from './_PurchaseSummary'
 
-const withSingleUnitData = (WrappedComponent) => {
+const withSingleUnitData = WrappedComponent => {
   const WithSingleUnitData = ({ listing, ...props }) => {
     const amount = listing.price.amount
     const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
@@ -82,28 +82,27 @@ const SingleUnit = ({ listing, growthReward, prices, tokenStatus, token }) => {
 /**
  * Renders the button that runs the makeOffer/swapAndMakeOffer mutation
  */
-const BuySingleUnitMutation = withSingleUnitData(({ refetch, listing, from, prices, token, tokenStatus, shippingAddress }) => {
-  return (
-    <Buy
-      refetch={refetch}
-      listing={listing}
-      from={from}
-      value={get(prices, `${token}.amount`)}
-      quantity={1}
-      currency={token}
-      tokenStatus={tokenStatus}
-      shippingAddress={shippingAddress}
-      className="btn btn-primary"
-      children={fbt('Purchase', 'Purchase')}
-    />
-  )
-})
+const BuySingleUnitMutation = withSingleUnitData(
+  ({ refetch, listing, from, prices, token, tokenStatus, shippingAddress }) => {
+    return (
+      <Buy
+        refetch={refetch}
+        listing={listing}
+        from={from}
+        value={get(prices, `${token}.amount`)}
+        quantity={1}
+        currency={token}
+        tokenStatus={tokenStatus}
+        shippingAddress={shippingAddress}
+        className="btn btn-primary"
+        children={fbt('Purchase', 'Purchase')}
+      />
+    )
+  }
+)
 
 const SingleUnitPurchaseSummary = withSingleUnitData(PurchaseSummary)
 
 export default withSingleUnitData(SingleUnit)
 
-export {
-  BuySingleUnitMutation,
-  SingleUnitPurchaseSummary
-}
+export { BuySingleUnitMutation, SingleUnitPurchaseSummary }
