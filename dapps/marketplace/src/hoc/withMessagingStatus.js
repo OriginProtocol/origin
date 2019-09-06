@@ -11,12 +11,11 @@ function withMessagingStatus(WrappedComponent) {
 
     if (error) console.error(error)
 
-    const messaging = get(data, 'messaging')
     const messagingEnabled = get(data, 'messaging.enabled', false)
     const hasKeys =
       messagingEnabled &&
       get(data, 'messaging.pubKey') &&
-      get(data, 'messaging.pubSig')
+      get(data, 'messaging.pubSig') ? true : false
 
     return (
       <WrappedComponent
@@ -25,7 +24,6 @@ function withMessagingStatus(WrappedComponent) {
         hasMessagingKeys={hasKeys}
         messagingStatusError={error}
         messagingStatusLoading={loading}
-        messagingStatus={messaging}
       />
     )
   }

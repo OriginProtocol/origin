@@ -28,7 +28,7 @@ export const clickXpath = async (page, xpath, linkName) => {
 
   if (linkHandlers.length > 0) {
     try {
-      await Promise.all(Array.from(linkHandlers).map(link => link.click()))
+      await linkHandlers[0].click()
     } catch (err) {
       console.log('LinkHandler', linkHandlers)
       throw err

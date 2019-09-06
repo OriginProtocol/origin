@@ -18,6 +18,8 @@ before(async function() {
   page = (await services()).extrasResult.page
 })
 
+const waitFor = (timeInMs) => new Promise(resolve => setTimeout(resolve, timeInMs))
+
 const reset = async (sellerOgn, reload = false) => {
   // clear cookies (for messaging)
   await clearCookies(page)
@@ -67,21 +69,16 @@ const purchaseListingWithDAI = async ({ buyer, autoSwap }) => {
   await pic(page, 'listing-detail')
   await changeAccount(page, buyer)
   
+  // Note: Some prop causes the Purchase button to rerender after a few hundred milliseconds
+  // Pupeeter doesn't support click events if the button is not in the DOM
+  // Pupeeter throws if the element get unmounted when it tries to click
+  await waitFor(300)
   await clickByText(page, 'Purchase', 'a')
 
   // Purchase confirmation
   await waitForText(page, 'Please confirm your purchase', 'h1')
   await pic(page, 'purchase-confirmation')
   await clickByText(page, autoSwap ? 'Purchase' : 'Swap Now', 'button')
-  
-  if (autoSwap) {
-    await waitForText(page, 'View Purchase', 'button')
-    await pic(page, 'purchase-listing')
-  
-    await clickByText(page, 'View Purchase', 'button')
-    await waitForText(page, 'Transaction History')
-    await pic(page, 'transaction-wait-for-seller')
-  }
 }
 
 const purchaseMultiUnitListing = async ({ buyer }) => {
