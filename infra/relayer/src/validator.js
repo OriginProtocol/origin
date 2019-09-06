@@ -14,6 +14,87 @@ const UniswapDaiExchange = new web3.eth.Contract(UniswapDaiExchangeBuild.abi)
 
 const PROXY_HARDCODE = 'PROXY'
 
+/**
+ * Deep inspection of transactions we are requested to relay,
+ * to recursively ensure that only call allow methods are called on
+ * allowed contracts.
+ *
+ * Handles things like a transaction calling swapAndMakeOffer
+ * that nest sub-transactions to the marketplace, to a unisawp exchange,
+ * and to a token contract.
+ */
+class Validator {
+  constructor(addresses) {
+    // Setup the individual validators used for checking allowed transactions
+    this.validators = [
+      new ContractCallVailidator(
+        'Marketplace',
+        addresses.Marketplace,
+        V00Marketplace._jsonInterface
+      ),
+      new ContractCallVailidator(
+        'IdentityEvents',
+        addresses.IdentityEvents,
+        IdentityEvents._jsonInterface
+      ),
+      new ProxyValidator(
+        'IdentityProxy',
+        PROXY_HARDCODE,
+        Proxy._jsonInterface,
+        { addresses: addresses }
+      ),
+      new UniswapValidator(
+        'UniswapExchange',
+        addresses.UniswapDaiExchange,
+        UniswapDaiExchange._jsonInterface
+      )
+    ]
+    // A way to look up the correct validator for an address being called.
+    this.validatorsByAddress = {}
+    this.validators.forEach(x => (this.validatorsByAddress[x.address] = x))
+  }
+
+  validate(address, txdata) {
+    let toCheck = [[address, txdata]]
+
+    /* Unrolled recursive transaction checks. Each address/transaction pair
+       is verified, and any further verifications that are required inside that
+       are added to the stack to be checked.
+       
+       So a check on swapAndMakeOffer would return two more validations that 
+       need to be checked. Once all validates to be checked, have been checked,
+       the transaction is good.
+
+       In theory you could almost infinitily nest transactions - that's why
+       there is a for loop with an explict number for how many inner transactions we are 
+       willing to check.
+    */
+
+    for (let i = 1; i <= 20; i++) {
+      const [_address, _txdata] = toCheck.pop()
+      const validator = this.validatorsByAddress[_address]
+      logger.info(`${i}. Checking call to ${_address} data ${_txdata}`)
+      if (!validator) {
+        logger.info(
+          `Validation failed. Address ${_address} not in list of allowed contracts`
+        )
+        return false
+      }
+      const result = validator.validate(_txdata)
+      if (result === false) {
+        return false
+      }
+      toCheck = toCheck.concat(result)
+      if (toCheck.length === 0) {
+        logger.info(`Validation succeed`)
+        return true
+      }
+    }
+    logger.info(`Validation failed. Too many calls to check.`)
+    return false
+  }
+}
+
 class ContractCallVailidator {
   constructor(name, address, jsonInterface, opts) {
     opts = opts || {}
@@ -135,63 +216,6 @@ class UniswapValidator extends ContractCallVailidator {
       )
       return false
     }
-  }
-}
-
-class Validator {
-  constructor(addresses) {
-    this.validators = [
-      new ContractCallVailidator(
-        'Marketplace',
-        addresses.Marketplace,
-        V00Marketplace._jsonInterface
-      ),
-      new ContractCallVailidator(
-        'IdentityEvents',
-        addresses.IdentityEvents,
-        IdentityEvents._jsonInterface
-      ),
-      new ProxyValidator(
-        'IdentityProxy',
-        PROXY_HARDCODE,
-        Proxy._jsonInterface,
-        { addresses: addresses }
-      ),
-      new UniswapValidator(
-        'UniswapExchange',
-        addresses.UniswapDaiExchange,
-        UniswapDaiExchange._jsonInterface
-      )
-    ]
-    this.validatorsByAddress = {}
-    this.validators.forEach(x => (this.validatorsByAddress[x.address] = x))
-  }
-
-  validate(address, txdata) {
-    let toCheck = [[address, txdata]]
-
-    for (let i = 1; i <= 20; i++) {
-      const [_address, _txdata] = toCheck.pop()
-      const validator = this.validatorsByAddress[_address]
-      logger.info(`${i}. Checking call to ${_address} data ${_txdata}`)
-      if (!validator) {
-        logger.info(
-          `Validation failed. Address ${_address} not in list of allowed contracts`
-        )
-        return false
-      }
-      const result = validator.validate(_txdata)
-      if (result === false) {
-        return false
-      }
-      toCheck = toCheck.concat(result)
-      if (toCheck.length === 0) {
-        logger.info(`Validation succeed`)
-        return true
-      }
-    }
-    logger.info(`Validation failed. Too many calls to check.`)
-    return false
   }
 }
 
