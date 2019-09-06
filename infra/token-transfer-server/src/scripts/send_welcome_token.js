@@ -1,10 +1,11 @@
 'use strict'
 
-const sendgridMail = require('@sendgrid/mail')
 const Logger = require('logplease')
 const jwt = require('jsonwebtoken')
 
 const logger = Logger.create('sendWelcomeToken')
+
+const { sendEmail } = require('../lib/email')
 
 try {
   require('envkey')
@@ -13,18 +14,11 @@ try {
 }
 
 const { User } = require('../models')
-const {
-  encryptionSecret,
-  logLevel,
-  portalUrl,
-  sendgridFromEmail,
-  sendgridApiKey
-} = require('../config')
+const { encryptionSecret, logLevel, portalUrl } = require('../config')
 
 Logger.setLogLevel(logLevel)
-sendgridMail.setApiKey(sendgridApiKey)
 
-/*
+/**
  * Parse command line arguments into a dict.
  * @returns {Object} - Parsed arguments.
  */
@@ -39,7 +33,8 @@ function parseArgv() {
   return args
 }
 
-/* Send a welcome email to a user allowing them to start the onboarding process.
+/**
+ * Send a welcome email to a user allowing them to start the onboarding process.
  */
 async function sendWelcomeEmail(user) {
   logger.info('Sending welcome email to', user.email)
@@ -52,19 +47,9 @@ async function sendWelcomeEmail(user) {
     { expiresIn: '24h' }
   )
 
-  const data = {
-    to: user.email,
-    from: sendgridFromEmail,
-    subject: 'Welcome to the Origin Investor Portal',
-    text: `The following link will provide you access to the Origin Investor Portal.
-
-    ${portalUrl}/welcome/${token}.
-
-    It will expire in 24 hours. You can reply directly to this email with any questions.`
-  }
-
+  const vars = { url: `${portalUrl}/welcome/${token}` }
   try {
-    await sendgridMail.send(data)
+    await sendEmail(user.email, 'welcome', vars)
   } catch (error) {
     logger.error(error.response.body)
     return
@@ -72,7 +57,8 @@ async function sendWelcomeEmail(user) {
   logger.info('Email sent')
 }
 
-/* Sends emails to a single user or all users depending on args.
+/**
+ * Sends emails to a single user or all users depending on args.
  */
 async function main(config) {
   if (config.email) {
@@ -81,7 +67,7 @@ async function main(config) {
       logger.error('User with that email does not exist')
       process.exit()
     }
-    sendWelcomeEmail(user)
+    await sendWelcomeEmail(user)
   } else {
     logger.info('Sending welcome email to all users')
     const users = await User.findAll()
