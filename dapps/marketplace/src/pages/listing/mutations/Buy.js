@@ -60,9 +60,13 @@ class Buy extends Component {
     /* Matches when we are not looking at current listing state, rather a snapshot in the past.
      * This can happen when for example user clicks on a listing from a Purchase detail view
      */
-    const historicalListingMatch = currentListingId.match(/(\d*)-(\d*)-(\d*)-(\d*)/)
+    const historicalListingMatch = currentListingId.match(
+      /(\d*)-(\d*)-(\d*)-(\d*)/
+    )
     if (historicalListingMatch) {
-      currentListingId = `${historicalListingMatch[1]}-${historicalListingMatch[2]}-${historicalListingMatch[3]}`
+      currentListingId = `${historicalListingMatch[1]}-${
+        historicalListingMatch[2]
+      }-${historicalListingMatch[3]}`
     }
 
     if (needsOnboarding && !onboardingDisabled) {
@@ -134,18 +138,19 @@ class Buy extends Component {
   }
 
   renderContinueToCurrentListing(currentListingId) {
-    return (<>
-      <div className="historical-warning mb-2">
-        <fbt desc="listingDetail.view-current-listing">A newer version of this listing is available</fbt>
-      </div>
-      <Link
-        to={`/listing/${currentListingId}`}
-        className="btn btn-primary"
-      >
-        <fbt desc="listingDetail.view-current-listing">View Current Listing</fbt>
-      </Link>
-    </>
-
+    return (
+      <>
+        <div className="historical-warning mb-2">
+          <fbt desc="listingDetail.view-current-listing">
+            A newer version of this listing is available
+          </fbt>
+        </div>
+        <Link to={`/listing/${currentListingId}`} className="btn btn-primary">
+          <fbt desc="listingDetail.view-current-listing">
+            View Current Listing
+          </fbt>
+        </Link>
+      </>
     )
   }
 
