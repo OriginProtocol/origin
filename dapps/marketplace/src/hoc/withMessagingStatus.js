@@ -15,7 +15,9 @@ function withMessagingStatus(WrappedComponent) {
     const hasKeys =
       messagingEnabled &&
       get(data, 'messaging.pubKey') &&
-      get(data, 'messaging.pubSig') ? true : false
+      get(data, 'messaging.pubSig')
+        ? true
+        : false
 
     return (
       <WrappedComponent

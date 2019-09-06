@@ -42,15 +42,21 @@ class Buy extends Component {
     }
     let content
 
-    const isLoadingData = get(this.props, 'tokenStatus.loading') || this.props.cannotTransact === 'loading' || Object.keys(this.props).some(key => key.endsWith('Loading') && this.props[key])
+    const isLoadingData =
+      get(this.props, 'tokenStatus.loading') ||
+      this.props.cannotTransact === 'loading' ||
+      Object.keys(this.props).some(
+        key => key.endsWith('Loading') && this.props[key]
+      )
 
-    if (isLoadingData) return (
-      <button
-        className={this.props.className}
-        disabled={true}
-        children={<fbt desc="Loading...">Loading...</fbt>}
-      />
-    )
+    if (isLoadingData)
+      return (
+        <button
+          className={this.props.className}
+          disabled={true}
+          children={<fbt desc="Loading...">Loading...</fbt>}
+        />
+      )
 
     let action = (
       <button
