@@ -20,6 +20,7 @@ import { AndroidBackHandler } from 'react-navigation-backhandler'
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
 import { ShareDialog } from 'react-native-fbsdk'
+import { ethers } from 'ethers'
 import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
 
@@ -144,7 +145,7 @@ class MarketplaceScreen extends Component {
   /* Inject the cookies required for messaging to allow preenabling of messaging
    * for accounts
    */
-  injectMessagingKeys = () => {
+  injectMessagingKeys = async () => {
     const { wallet } = this.props
     // No active account, can't proceed
     if (!wallet.activeAccount) return
@@ -157,17 +158,12 @@ class MarketplaceScreen extends Component {
     }
 
     // Sign the first message
-    const signatureKey = global.web3.eth.accounts
-      .sign(PROMPT_MESSAGE, privateKey)
-      .signature.substring(0, 66)
-    const msgAccount = global.web3.eth.accounts.privateKeyToAccount(
-      signatureKey
-    )
-
-    // Sign the second message
+    const ethersWallet = new ethers.Wallet(wallet.activeAccount.privateKey)
+    const signature = await ethersWallet.signMessage(PROMPT_MESSAGE)
+    const signatureKey = signature.substring(0, 66)
+    const msgAccount = new ethers.Wallet(signatureKey)
     const pubMessage = PROMPT_PUB_KEY + msgAccount.address
-    const pubSignature = global.web3.eth.accounts.sign(pubMessage, privateKey)
-      .signature
+    const pubSignature = ethersWallet.signMessage(pubMessage)
 
     this.injectJavaScript(
       `
@@ -549,7 +545,7 @@ class MarketplaceScreen extends Component {
 
   renderWebViewLoading = () => {
     return (
-      <View style={styles.webviewLoading}>
+      <View style={styles.webviewLoadingOrError}>
         <ActivityIndicator size="large" color="black" />
       </View>
     )
@@ -557,29 +553,33 @@ class MarketplaceScreen extends Component {
 
   renderWebViewError = () => {
     return (
-      <Modal animationType="fade" transparent={true} visible={true}>
-        <SafeAreaView style={styles.darkOverlay}>
-          <View style={styles.card}>
-            <Text style={styles.cardHeading}>
-              <fbt desc="MarketplaceScreen.heading">Connection Error</fbt>
-            </Text>
-            <Text style={styles.cardContent}>
-              <fbt desc="NoInternetError.errorText">
-                An error occurred loading the Origin Marketplace. Please check
-                your internet connection.
-              </fbt>
-            </Text>
-            <View style={styles.buttonContainer}>
-              <OriginButton
-                size="large"
-                type="primary"
-                title={fbt('Retry', 'MarketplaceScreen.retryButton')}
-                onPress={this.onReload}
-              />
-            </View>
-          </View>
-        </SafeAreaView>
-      </Modal>
+      <SafeAreaView style={styles.webviewLoadingOrError}>
+        <View style={{ ...styles.container, flexGrow: 2 }}>
+          <Text style={styles.title}>
+            <fbt desc="MarketplaceScreen.heading">Connection Error</fbt>
+          </Text>
+          <Text style={styles.subtitle}>
+            <fbt desc="NoInternetError.errorText">
+              An error occurred loading the Origin Marketplace. Please check
+              your internet connection.
+            </fbt>
+          </Text>
+        </View>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
+          <OriginButton
+            size="large"
+            type="primary"
+            title={fbt('Retry', 'MarketplaceScreen.retryButton')}
+            onPress={this.onReload}
+          />
+          <OriginButton
+            size="large"
+            type="link"
+            title={fbt('Settings', 'MarketplaceScreen.errorSettingsButton')}
+            onPress={() => this.props.navigation.navigate('Settings')}
+          />
+        </View>
+      </SafeAreaView>
     )
   }
 }
@@ -602,7 +602,7 @@ export default withOriginGraphql(
 )
 
 const styles = StyleSheet.create({
-  webviewLoading: {
+  webviewLoadingOrError: {
     position: 'absolute',
     flex: 1,
     justifyContent: 'center',

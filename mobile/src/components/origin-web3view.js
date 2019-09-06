@@ -27,13 +27,13 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   // TODO use the HOC, need to get forwardRef working through HOC
   const isSamsungBKS =
     Platform.OS === 'android' &&
-    get(props, 'samsungBKS.seedHash', '').length > 0
+    get(props, 'samsungBKS.seedHash', '').length > 0 &&
+    props.wallet.activeAccount.hdPath
 
   /* Sign a message. Uses Samsung BKS if it is enabled or uses ethers and the
    * local wallet cache.
    */
   const _signMessage = async messageToSign => {
-    messageToSign = ethers.utils.toUtf8String(messageToSign)
     if (isSamsungBKS) {
       return await RNSamsungBKS.signEthPersonalMessage(
         props.wallet.activeAccount.hdPath,
@@ -89,19 +89,14 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
     const decodedTransaction = decodeTransaction(decodedData.txData)
     // If the transaction validate the sha3 hash and sign that for the relayer
     if (isValidMetaTransaction(decodedTransaction)) {
-      const dataToSign = ethers.utils.keccak256(
-        { t: 'address', v: decodedData.from },
-        { t: 'address', v: decodedData.to },
-        { t: 'uint256', v: global.web3.utils.toWei('0', 'ether') },
-        { t: 'bytes', v: decodedData.txData },
-        { t: 'uint256', v: decodedData.nonce }
-      )
-      // Sign it
       console.debug(
         `Got meta transaction for ${decodedTransaction.functionName} on ${decodedTransaction.contractName}`
       )
+      const dataToSign = ethers.utils.arrayify(ethers.utils.solidityKeccak256(
+        ['address', 'address', 'uint256', 'bytes', 'uint256'],
+        [decodedData.from, decodedData.to, 0, decodedData.txData, decodedData.nonce]
+      ))
       const signature = await _signMessage(dataToSign)
-      console.debug('Signed meta transaction', signature)
       callback(signature)
     } else {
       // Not a meta transaction, display a modal prompting the user
@@ -207,14 +202,11 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
     return (
       <TransactionCard
         msgData={modal.msgData}
-        onConfirm={() => {
+        onConfirm={async () => {
           setTransactionCardLoading(true)
-          global.web3.eth
-            .sendTransaction(modal.msgData.data)
-            .on('transactionHash', hash => {
-              setTransactionCardLoading(false)
-              toggleModal(modal, hash)
-            })
+          const hash = await _sendTransaction(modal.msgData.data)
+          setTransactionCardLoading(false)
+          toggleModal(modal, hash)
         }}
         loading={transactionCardLoading}
         onRequestClose={() =>

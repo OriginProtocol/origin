@@ -19,8 +19,6 @@ export const WalletConstants = keyMirror(
 )
 
 export function addAccount(account) {
-  global.web3.eth.accounts.wallet.add(account)
-
   return {
     type: WalletConstants.ADD_ACCOUNT,
     account
@@ -92,9 +90,6 @@ export function importAccountFromPrivateKey(privateKey) {
 /* Remove an account from the accoun store.
  */
 export function removeAccount(account) {
-  if (account && account.address) {
-    global.web3.eth.accounts.wallet.remove(account.address)
-  }
   // Emit removeAccount, used by PushNotification component to unregister the
   // account from the notifications server
   DeviceEventEmitter.emit('removeAccount', account)
