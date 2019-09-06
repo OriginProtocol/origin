@@ -15,7 +15,8 @@ import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
 import UserActivationLink from 'components/UserActivationLink'
-import Link from 'components/Link'
+import { isHistoricalListing, currentListingIdFromHistoricalId } from 'utils/listing'
+import HistoricalListingWarning from 'pages/listing/_HistoricalListingWarning'
 
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
@@ -73,19 +74,6 @@ class Buy extends Component {
       !hasIdentity || !this.props.wallet || !hasMessagingKeys
     const onboardingDisabled = localStorage.noIdentity ? true : false
 
-    let currentListingId = this.props.listing.id
-    /* Matches when we are not looking at current listing state, rather a snapshot in the past.
-     * This can happen when for example user clicks on a listing from a Purchase detail view
-     */
-    const historicalListingMatch = currentListingId.match(
-      /(\d*)-(\d*)-(\d*)-(\d*)/
-    )
-    if (historicalListingMatch) {
-      currentListingId = `${historicalListingMatch[1]}-${
-        historicalListingMatch[2]
-      }-${historicalListingMatch[3]}`
-    }
-
     if (needsOnboarding && !onboardingDisabled) {
       action = (
         <UserActivationLink
@@ -99,8 +87,10 @@ class Buy extends Component {
 
       if (this.state.error) {
         content = this.renderTransactionError()
-      } else if (historicalListingMatch) {
-        action = this.renderContinueToCurrentListing(currentListingId)
+      } else if (isHistoricalListing(this.props.listing)) {
+        action = <HistoricalListingWarning
+          listingId={currentListingIdFromHistoricalId(this.props.listing)}
+        />
       } else if (this.state.waitFor) {
         content = this.renderWaitModal()
       } else if (this.state.waitForAllow) {
@@ -152,23 +142,6 @@ class Buy extends Component {
     }, {})
 
     this.setState(newState)
-  }
-
-  renderContinueToCurrentListing(currentListingId) {
-    return (
-      <>
-        <div className="historical-warning mb-2">
-          <fbt desc="listingDetail.view-current-listing">
-            A newer version of this listing is available
-          </fbt>
-        </div>
-        <Link to={`/listing/${currentListingId}`} className="btn btn-primary">
-          <fbt desc="listingDetail.view-current-listing">
-            View Current Listing
-          </fbt>
-        </Link>
-      </>
-    )
   }
 
   renderTransactionError() {
