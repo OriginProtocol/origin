@@ -34,6 +34,7 @@ import {
 } from 'actions/Marketplace'
 import withOriginGraphql from 'hoc/withOriginGraphql'
 import { PROMPT_MESSAGE, PROMPT_PUB_KEY } from '../constants'
+import CommonStyles from 'styles/common'
 import CardStyles from 'styles/card'
 
 class MarketplaceScreen extends Component {
@@ -506,7 +507,7 @@ class MarketplaceScreen extends Component {
 
     return (
       <AndroidBackHandler onBackPress={this.onBack}>
-        <SafeAreaView style={styles.safeAreaView}>
+        <SafeAreaView style={{ flex: 1 }}>
           <ScrollView
             contentContainerStyle={{ flex: 1 }}
             refreshControl={refreshControl}
@@ -538,13 +539,17 @@ class MarketplaceScreen extends Component {
   }
 
   renderWebViewLoading = () => {
-    return <ActivityIndicator size="large" color="black" />
+    return (
+      <View style={styles.webviewLoading}>
+        <ActivityIndicator size="large" color="black" />
+      </View>
+    )
   }
 
   renderWebViewError = () => {
     return (
       <Modal animationType="fade" transparent={true} visible={true}>
-        <SafeAreaView style={styles.modalSafeAreaView}>
+        <SafeAreaView style={styles.darkOverlay}>
           <View style={styles.card}>
             <Text style={styles.cardHeading}>
               <fbt desc="MarketplaceScreen.heading">Connection Error</fbt>
@@ -588,17 +593,15 @@ export default withOriginGraphql(
 )
 
 const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1
-  },
-  modalSafeAreaView: {
+  webviewLoading: {
+    position: 'absolute',
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)'
-  },
-  loading: {
-    flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    width: '100%',
     backgroundColor: 'white'
   },
+  ...CommonStyles,
   ...CardStyles
 })
