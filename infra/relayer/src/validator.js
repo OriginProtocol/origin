@@ -102,6 +102,12 @@ class Validator {
   }
 }
 
+/**
+ * Base call validator. Allows known addresses and known methods by default.
+ * 
+ * Can be inherited from to allow or disallow certain methods, or validate
+ * individual method parameters.
+ */
 class ContractCallVailidator {
   constructor(name, address, jsonInterface, opts) {
     opts = opts || {}
@@ -142,6 +148,8 @@ class ContractCallVailidator {
 
   // eslint-disable-next-line no-unused-vars
   validateMethod(method, txdata, params) {
+     // Empty list of new validations to be added 
+     // means that no further validation is required for this method
     return []
   }
 
