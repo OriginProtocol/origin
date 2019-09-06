@@ -7,6 +7,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.samsung.android.sdk.coldwallet.*;
+import java.util.Base64;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -168,7 +169,7 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
   */
 
   @ReactMethod
-  public void signEthPersonalMessage(String hdPath, String messageToSign, final Promise promise) {
+  public void signEthPersonalMessage(String hdPath, String b64messageToSign, final Promise promise) {
     ScwService.ScwSignEthPersonalMessageCallback callback =
         new ScwService.ScwSignEthPersonalMessageCallback() {
           @Override
@@ -182,8 +183,7 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
 	  }
         };
 
-    System.out.println(messageToSign);
-    byte[] unSignedMsg = messageToSign.getBytes();
+    byte[] unSignedMsg = Base64.getDecoder().decode(b64MessageToSign);
 
     ScwService.getInstance().signEthPersonalMessage(callback, unSignedMsg, hdPath);
   }

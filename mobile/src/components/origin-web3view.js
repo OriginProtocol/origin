@@ -35,6 +35,9 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
    */
   const _signMessage = async messageToSign => {
     if (isSamsungBKS) {
+      // React native doesn't support passing binary data, so encode it as base64
+      // string so that we can
+      messageToSign = Buffer.from(messageToSign).toString('base64')
       return await RNSamsungBKS.signEthPersonalMessage(
         props.wallet.activeAccount.hdPath,
         messageToSign
@@ -132,7 +135,6 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
           ['signMessage', 'signPersonalMessage'].includes(msgData.targetFunc)
         ) {
           const signature = await _signMessage(msgData.data.data)
-          console.debug('Got signature', signature)
           return callback(signature)
         }
         console.debug('TODO something with Samsung BKS')
