@@ -3,17 +3,18 @@
 import React, { Component } from 'react'
 import {
   ActivityIndicator,
-  DeviceEventEmitter,
   Clipboard,
+  DeviceEventEmitter,
+  KeyboardAvoidingView,
+  Linking,
   Modal,
   PanResponder,
   Platform,
   StyleSheet,
-  View,
   ScrollView,
   Text,
-  RefreshControl,
-  Linking
+  View,
+  RefreshControl
 } from 'react-native'
 import { AndroidBackHandler } from 'react-navigation-backhandler'
 import { connect } from 'react-redux'
@@ -508,12 +509,20 @@ class MarketplaceScreen extends Component {
     return (
       <AndroidBackHandler onBackPress={this.onBack}>
         <SafeAreaView style={{ flex: 1 }}>
-          <ScrollView
+          <KeyboardAvoidingView
+            behavior={Platform.select({ ios: 'position', android: 'padding' })}
+            enabled
             contentContainerStyle={{ flex: 1 }}
-            refreshControl={refreshControl}
+            keyboardVerticalOffset={Platform.select({ ios: 0, android: 20 })}
+            style={{ flexGrow: 1 }}
           >
-            {this.renderWebView()}
-          </ScrollView>
+            <ScrollView
+              contentContainerStyle={{ flex: 1 }}
+              refreshControl={refreshControl}
+            >
+              {this.renderWebView()}
+            </ScrollView>
+          </KeyboardAvoidingView>
         </SafeAreaView>
       </AndroidBackHandler>
     )
