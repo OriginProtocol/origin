@@ -10,6 +10,7 @@ import Buy from './mutations/Buy'
 import SelectQuantity from './_SelectQuantity'
 import PaymentOptions from './_PaymentOptions'
 import ConfirmShippingAndPurchase from './_ConfirmShippingAndPurchase'
+import PurchaseSummary from './_PurchaseSummary'
 
 const withMultiUnitData = (WrappedComponent) => {
   const WithMultiUnitData = ({ listing, quantity, ...props }) => {
@@ -137,8 +138,11 @@ const BuyMultiUnitMutation = withMultiUnitData(({ refetch, listing, from, prices
   )
 })
 
+const MultiUnitPurchaseSummary = withMultiUnitData(PurchaseSummary)
+
 export default withMultiUnitData(MultiUnit)
 
 export {
-  BuyMultiUnitMutation
+  BuyMultiUnitMutation,
+  MultiUnitPurchaseSummary
 }

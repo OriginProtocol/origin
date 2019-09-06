@@ -112,9 +112,6 @@ const Listing = props => {
               quantity={quantity}
               shippingAddress={shippingAddress}
               bookingRange={bookingRange}
-              prev={`/listing/${listingId}${
-                listing.requiresShipping ? '/shipping' : ''
-              }`}
             />
           )}
         />
@@ -127,9 +124,6 @@ const Listing = props => {
               updateQuantity={quantity => setQuantity(quantity)}
               updateBookingRange={bookingRange => setBookingRange(bookingRange)}
               shippingAddress={shippingAddress}
-              next={`/listing/${listingId}/${
-                listing.requiresShipping ? 'shipping' : 'confirm'
-              }`}
             />
           )}
         />

@@ -14,7 +14,7 @@ import { fbt } from 'fbt-runtime'
  *  - "Shipping Address" screen, if user has identity and listing requires shipping
  *  - "Confirm Purchase" screen, if user has identity and listing  doesn't require shipping
  */
-const ConfirmShippingAndPurchase = ({ identity, wallet, className, children, listing }) => {
+const ConfirmShippingAndPurchase = ({ identity, wallet, className, children, listing, disabled }) => {
   const hasIdentity = localStorage.noIdentity || identity
 
   if (!hasIdentity || !wallet) {
@@ -32,6 +32,7 @@ const ConfirmShippingAndPurchase = ({ identity, wallet, className, children, lis
       to={`/listing/${listing.id}/${listing.requiresShipping ? 'shipping' : 'confirm'}`}
       className={className}
       children={children || <fbt desc="Purchase">Purchase</fbt>}
+      disabled={disabled === true}
     />
   )
 }

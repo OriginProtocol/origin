@@ -9,6 +9,7 @@ import WithPrices from 'components/WithPrices'
 import Buy from './mutations/Buy'
 import PaymentOptions from './_PaymentOptions'
 import ConfirmShippingAndPurchase from './_ConfirmShippingAndPurchase'
+import PurchaseSummary from './_PurchaseSummary'
 
 const withSingleUnitData = (WrappedComponent) => {
   const WithSingleUnitData = ({ listing, ...props }) => {
@@ -95,8 +96,11 @@ const BuySingleUnitMutation = withSingleUnitData(({ refetch, listing, from, pric
   )
 })
 
+const SingleUnitPurchaseSummary = withSingleUnitData(PurchaseSummary)
+
 export default withSingleUnitData(SingleUnit)
 
 export {
-  BuySingleUnitMutation
+  BuySingleUnitMutation,
+  SingleUnitPurchaseSummary
 }

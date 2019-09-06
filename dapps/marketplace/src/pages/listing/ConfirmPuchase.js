@@ -2,9 +2,12 @@ import React, { useState, useCallback } from 'react'
 
 import { fbt } from 'fbt-runtime'
 
-import pick from 'lodash/pick'
+import get from 'lodash/get'
 
 import { withRouter } from 'react-router-dom'
+
+import AvailabilityCalculator from '@origin/graphql/src/utils/AvailabilityCalculator'
+import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/AvailabilityCalculatorHourly'
 
 import DocumentTitle from 'components/DocumentTitle'
 import Redirect from 'components/Redirect'
@@ -12,26 +15,56 @@ import MobileModalHeader from 'components/MobileModalHeader'
 
 import withIsMobile from 'hoc/withIsMobile'
 
-import { BuySingleUnitMutation } from './_BuySingleUnit'
-import { BuyMultiUnitMutation } from './_BuyMultiUnit'
+import { BuySingleUnitMutation, SingleUnitPurchaseSummary } from './_BuySingleUnit'
+import { BuyMultiUnitMutation, MultiUnitPurchaseSummary } from './_BuyMultiUnit'
+import { BuyFractionalMutation, FractionalPurchaseSummary } from './_BuyFractional'
+import { BuyFractionalHourlyMutation, FractionalHourlyPurchaseSummary } from './_BuyFractionalHourly'
 
 
 
-const ConfirmPurchase = ({ listing, quantity, prev, isMobile, history, refetch, shippingAddress, bookingRange }) => {
+const ConfirmPurchase = ({ listing, quantity, isMobile, history, refetch, shippingAddress, bookingRange }) => {
   const singleUnit = !listing.multiUnit && listing.__typename === 'UnitListing'
   const multiUnit = listing.multiUnit && listing.__typename === 'UnitListing'
   const isFractional = listing.__typename === 'FractionalListing'
   const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
 
-  let BuyMutationComponent
+  let BuyMutationComponent, SummaryComponent, availability
+
   switch (true) {
     case multiUnit:
       BuyMutationComponent = BuyMultiUnitMutation
+      SummaryComponent = MultiUnitPurchaseSummary
+      break
+
+    case isFractional:
+      BuyMutationComponent = BuyFractionalMutation
+      SummaryComponent = FractionalPurchaseSummary
+      availability = new AvailabilityCalculator({
+        weekdayPrice: get(lsiting, 'price.amount'),
+        weekendPrice: get(lsiting, 'weekendPrice.amount'),
+        booked: get(lsiting, 'booked'),
+        unavailable: get(lsiting, 'unavailable'),
+        customPricing: get(lsiting, 'customPricing')
+      })
+      break
+      
+    case isFractionalHourly:
+      BuyMutationComponent = BuyFractionalHourlyMutation
+      SummaryComponent = FractionalHourlyPurchaseSummary
+      availability = new AvailabilityCalculatorHourly({
+        booked: get(listing, 'booked'),
+        unavailable: get(listing, 'unavailable'),
+        customPricing: get(listing, 'customPricing'),
+        timeZone: get(listing, 'timeZone'),
+        workingHours: get(listing, 'workingHours'),
+        price: get(listing, 'price.amount')
+      })
       break
 
     case singleUnit:
     default:
       BuyMutationComponent = BuySingleUnitMutation
+      SummaryComponent = SingleUnitPurchaseSummary
       break
   }
 
@@ -54,33 +87,21 @@ const ConfirmPurchase = ({ listing, quantity, prev, isMobile, history, refetch, 
         </MobileModalHeader>
       )}
       <div className="confirm-purchase-content">
-        <div className="summary">
-          <div className="summary-row">
-            <div className="summary-name">Purchase Item</div>
-            <div className="summary-value">{listing.title}</div>
-          </div>
-          {quantity && (
-            <div className="summary-row">
-              <div className="summary-name">Quantity</div>
-              <div className="summary-value">{quantity}</div>
-            </div>
-          )}
-          <div className="summary-row">
-            <div className="summary-name">Total price</div>
-            <div className="summary-value">$0.95</div>
-          </div>
-          <div className="summary-row">
-            <div className="summary-name">Payment</div>
-            <div className="summary-value">124 ETH</div>
-          </div>
-        </div>
+        <SummaryComponent
+          listing={listing}
+          quantity={quantity}
+          bookingRange={bookingRange}
+          shippingAddress={shippingAddress}
+          availability={availability}
+        />
         <div className="actions">
           <BuyMutationComponent
             listing={listing}
             refetch={refetch}
             quantity={quantity}
-            bookingRange={bookingRange}
+            range={bookingRange}
             shippingAddress={shippingAddress}
+            availability={availability}
           />
           {isMobile ? null : (
             <button
