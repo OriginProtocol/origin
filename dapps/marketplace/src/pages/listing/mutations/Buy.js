@@ -21,6 +21,7 @@ import withWallet from 'hoc/withWallet'
 import withWeb3 from 'hoc/withWeb3'
 import withIdentity from 'hoc/withIdentity'
 import withConfig from 'hoc/withConfig'
+import withMessagingStatus from 'hoc/withMessagingStatus'
 
 import { fbt } from 'fbt-runtime'
 
@@ -49,8 +50,12 @@ class Buy extends Component {
       />
     )
 
-    const hasIdentity = localStorage.noIdentity || this.props.identity
-    if (!hasIdentity || !this.props.wallet) {
+    const hasIdentity = this.props.identity
+    const hasMessaging = get(this.props, 'messagingStatus.enabled', false)
+    const needsOnboarding = !hasIdentity || !this.props.wallet || !hasMessaging
+    const onboardingDisabled = localStorage.noIdentity ? true : false
+
+    if (needsOnboarding && !onboardingDisabled) {
       action = (
         <UserActivationLink
           className={this.props.className}
@@ -97,9 +102,8 @@ class Buy extends Component {
         {action}
         {!this.state.modal ? null : (
           <Modal
-            onClose={() =>
-              this.setState({ error: false, modal: false, shouldClose: false })
-            }
+            disableDismiss={true}
+            onClose={() => this.resetState()}
             shouldClose={this.state.shouldClose}
           >
             {content}
@@ -107,6 +111,15 @@ class Buy extends Component {
         )}
       </>
     )
+  }
+
+  resetState() {
+    const newState = Object.keys(this.state).reduce((m, o) => {
+      m[o] = null
+      return m
+    }, {})
+
+    this.setState(newState)
   }
 
   renderTransactionError() {
@@ -445,7 +458,9 @@ class Buy extends Component {
 }
 
 export default withConfig(
-  withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy)))))
+  withMessagingStatus(
+    withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy)))))
+  )
 )
 
 require('react-styl')(`

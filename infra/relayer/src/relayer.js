@@ -40,7 +40,7 @@ const ContractAddresses = {
   2222: '@origin/contracts/build/contracts_origin.json'
 }
 
-const ZeroAddress = '0x00000000000000000000000000000000000000'
+const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
 if (isTestEnv) {
   ContractAddresses['999'] = '@origin/contracts/build/tests.json'

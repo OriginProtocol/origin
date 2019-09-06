@@ -50,7 +50,7 @@ class OnboardEmail extends Component {
     const { finished, hasIdentity } = this.state
 
     if (finished) {
-      const link = hasIdentity ? '/onboard/rewards' : '/onboard/profile'
+      const link = hasIdentity ? '/onboard/messaging' : '/onboard/profile'
       return <Redirect to={`${linkPrefix}${link}`} />
     }
 
