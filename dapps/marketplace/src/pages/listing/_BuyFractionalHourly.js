@@ -50,7 +50,7 @@ const withFractionalHourlyData = WrappedComponent => {
 
     return (
       <WithPrices
-        price={listing.price}
+        price={totalPrice}
         target={token}
         targets={['token-ETH', 'token-DAI', listing.price.currency.id]}
         allowanceTarget={listing.contractAddr}
