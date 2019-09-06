@@ -39,6 +39,7 @@ const ListingInterface = `
   "IPFS: commission, in natural units, to be paid for each unit sold"
   commissionPerUnit: String
   marketplacePublisher: String
+  requiresShipping: Boolean
 `
 
 export const mutations = `
@@ -433,6 +434,8 @@ export const types = `
     commissionPerUnit: String
 
     marketplacePublisher: String
+
+    requiresShipping: Boolean
   }
 
   input UnitListingInput {
