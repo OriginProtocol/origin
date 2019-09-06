@@ -10,71 +10,76 @@ import withWallet from 'hoc/withWallet'
 
 import MobileModal from 'components/MobileModal'
 
-const EnableEncryptionModal = withWallet(({ walletType, onEnabled, onClose }) => {
-  const [enableMessagingMutation] = useMutation(EnableMessagingMutation)
+const EnableEncryptionModal = withWallet(
+  ({ walletType, onEnabled, onClose }) => {
+    const [enableMessagingMutation] = useMutation(EnableMessagingMutation)
 
-  const [shouldClose, setShouldClose] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+    const [shouldClose, setShouldClose] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(null)
 
-  const enableMessagingCallback = useCallback(async () => {
-    try {
-      setLoading(true)
-      setError(null)
+    const enableMessagingCallback = useCallback(async () => {
+      try {
+        setLoading(true)
+        setError(null)
 
-      await enableMessagingMutation()
+        await enableMessagingMutation()
 
-      onEnabled(true)
-      setShouldClose(true)
-    } catch (e) {
-      setError('Check console.')
-      console.error(e)
-    }
-
-    setLoading(false)
-  }, [onEnabled])
-
-  return (
-    <MobileModal
-      headerImageUrl="images/encrypt-shipping-address-graphic.png"
-      closeOnEsc={false}
-      fullscreen={false}
-      shouldClose={shouldClose}
-      onClose={() => {
-        setShouldClose(false)
-        onClose()
-      }}
-      children={
-        <div className="encryption-modal">
-          <h3>
-            <fbt desc="RequireShipping.EnableEncryption">Enable Encryption</fbt>
-          </h3>
-          <div className="encryption-content">
-            <fbt desc="RequireShipping.enableMessagingForAddress">
-              Shipping addresses will be securely encrypted and visible only to
-              you and your buyers. To make this possible, <fbt:param name="walletType">{walletType}</fbt:param> will
-              ask you to enable Origin Messaging.
-            </fbt>
-          </div>
-          {error && <div className="alert alert-danger mt-3">{error}</div>}
-          <div className="actions">
-            <button
-              className="btn btn-primary"
-              onClick={enableMessagingCallback}
-              disabled={loading}
-            >
-              {loading ? (
-                <fbt desc="Loading...">Loading...</fbt>
-              ) : (
-                <fbt desc="Got it">Got it</fbt>
-              )}
-            </button>
-          </div>
-        </div>
+        onEnabled(true)
+        setShouldClose(true)
+      } catch (e) {
+        setError('Check console.')
+        console.error(e)
       }
-    />
-  )
-})
+
+      setLoading(false)
+    }, [onEnabled])
+
+    return (
+      <MobileModal
+        headerImageUrl="images/encrypt-shipping-address-graphic.png"
+        closeOnEsc={false}
+        fullscreen={false}
+        shouldClose={shouldClose}
+        onClose={() => {
+          setShouldClose(false)
+          onClose()
+        }}
+        children={
+          <div className="encryption-modal">
+            <h3>
+              <fbt desc="RequireShipping.EnableEncryption">
+                Enable Encryption
+              </fbt>
+            </h3>
+            <div className="encryption-content">
+              <fbt desc="RequireShipping.enableMessagingForAddress">
+                Shipping addresses will be securely encrypted and visible only
+                to you and your buyers. To make this possible,{' '}
+                <fbt:param name="walletType">{walletType}</fbt:param> will ask
+                you to enable Origin Messaging.
+              </fbt>
+            </div>
+            {error && <div className="alert alert-danger mt-3">{error}</div>}
+            <div className="actions">
+              <button
+                className="btn btn-primary"
+                onClick={enableMessagingCallback}
+                disabled={loading}
+              >
+                {loading ? (
+                  <fbt desc="Loading...">Loading...</fbt>
+                ) : (
+                  <fbt desc="Got it">Got it</fbt>
+                )}
+              </button>
+            </div>
+          </div>
+        }
+      />
+    )
+  }
+)
 
 const RequireShipping = ({
   onChange,
