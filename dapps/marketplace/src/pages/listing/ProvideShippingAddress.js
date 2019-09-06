@@ -128,112 +128,114 @@ const ProvideShippingAddress = ({
           </fbt>
         </MobileModalHeader>
       )}
-      <form
-        className="shipping-address-form"
-        onSubmit={e => {
-          e.preventDefault()
-          if (validate()) {
-            updateShippingAddress(
-              pick(inputState, [
-                'name',
-                'address1',
-                'address2',
-                'city',
-                'stateProvinceRegion',
-                'country',
-                'postalCode'
-              ])
-            )
+      <div className="form-container">
+        <form
+          className="shipping-address-form"
+          onSubmit={e => {
+            e.preventDefault()
+            if (validate()) {
+              updateShippingAddress(
+                pick(inputState, [
+                  'name',
+                  'address1',
+                  'address2',
+                  'city',
+                  'stateProvinceRegion',
+                  'country',
+                  'postalCode'
+                ])
+              )
 
-            setRedirect(true)
-          } else {
-            window.scrollTo(0, 0)
-          }
-        }}
-      >
-        {isMobile ? null : (
-          <h2>
-            <fbt desc="PurchaseListing.shippingAddress">
-              Provide a Shipping Address
-            </fbt>
-          </h2>
-        )}
-        <div className="desc">
-          <fbt desc="PurchaseListing.enterShippingAddress">
-            Let the seller know where they should send your item.
-          </fbt>
-        </div>
-        {valid !== false ? null : (
-          <div className="alert alert-danger">
-            <fbt desc="errorsInSubmissions">
-              There were some errors in your submission. Fix them to continue.
+              setRedirect(true)
+            } else {
+              window.scrollTo(0, 0)
+            }
+          }}
+        >
+          {isMobile ? null : (
+            <h2>
+              <fbt desc="PurchaseListing.shippingAddress">
+                Provide a Shipping Address
+              </fbt>
+            </h2>
+          )}
+          <div className="desc">
+            <fbt desc="PurchaseListing.enterShippingAddress">
+              Let the seller know where they should send your item.
             </fbt>
           </div>
-        )}
-        <div className="form-group">
-          <label>
-            <fbt desc="ShippingAddress.name">Name</fbt>
-          </label>
-          <input {...input('name')} />
-          {Feedback('name')}
-        </div>
-        <div className="form-group">
-          <label>
-            <fbt desc="ShippingAddress.address1">Street Address 1</fbt>
-          </label>
-          <input {...input('address1')} />
-          {Feedback('address1')}
-        </div>
-        <div className="form-group">
-          <label>
-            <fbt desc="ShippingAddress.address2">Street Address 2</fbt>
-          </label>
-          <input {...input('address2')} />
-          {Feedback('address2')}
-        </div>
-        <div className="form-group">
-          <label>
-            <fbt desc="ShippingAddress.city">City</fbt>
-          </label>
-          <input {...input('city')} />
-          {Feedback('city')}
-        </div>
-        <div className="form-group">
-          <label>
-            <fbt desc="ShippingAddress.region">State/Province/Region</fbt>
-          </label>
-          <input {...input('stateProvinceRegion')} />
-          {Feedback('stateProvinceRegion')}
-        </div>
-        <div className="form-group">
-          <label>
-            <fbt desc="ShippingAddress.postalCode">Postal Code</fbt>
-          </label>
-          <input {...input('postalCode')} />
-          {Feedback('postalCode')}
-        </div>
-        <div className="form-group">
-          <label>
-            <fbt desc="ShippingAddress.country">Country</fbt>
-          </label>
-          <input {...input('country')} />
-          {Feedback('country')}
-        </div>
-        <div className="actions">
-          <button type="submit" className="btn btn-primary btn-rounded">
-            <fbt desc="Continue">Continue</fbt>
-          </button>
-          {isMobile ? null : (
-            <button
-              type="button"
-              className="btn btn-outline-primary btn-rounded"
-              onClick={() => history.goBack()}
-            >
-              <fbt desc="Back">Back</fbt>
-            </button>
+          {valid !== false ? null : (
+            <div className="alert alert-danger">
+              <fbt desc="errorsInSubmissions">
+                There were some errors in your submission. Fix them to continue.
+              </fbt>
+            </div>
           )}
-        </div>
-      </form>
+          <div className="form-group">
+            <label>
+              <fbt desc="ShippingAddress.name">Name</fbt>
+            </label>
+            <input {...input('name')} />
+            {Feedback('name')}
+          </div>
+          <div className="form-group">
+            <label>
+              <fbt desc="ShippingAddress.address1">Street Address 1</fbt>
+            </label>
+            <input {...input('address1')} />
+            {Feedback('address1')}
+          </div>
+          <div className="form-group">
+            <label>
+              <fbt desc="ShippingAddress.address2">Street Address 2</fbt>
+            </label>
+            <input {...input('address2')} />
+            {Feedback('address2')}
+          </div>
+          <div className="form-group">
+            <label>
+              <fbt desc="ShippingAddress.city">City</fbt>
+            </label>
+            <input {...input('city')} />
+            {Feedback('city')}
+          </div>
+          <div className="form-group">
+            <label>
+              <fbt desc="ShippingAddress.region">State/Province/Region</fbt>
+            </label>
+            <input {...input('stateProvinceRegion')} />
+            {Feedback('stateProvinceRegion')}
+          </div>
+          <div className="form-group">
+            <label>
+              <fbt desc="ShippingAddress.postalCode">Postal Code</fbt>
+            </label>
+            <input {...input('postalCode')} />
+            {Feedback('postalCode')}
+          </div>
+          <div className="form-group">
+            <label>
+              <fbt desc="ShippingAddress.country">Country</fbt>
+            </label>
+            <input {...input('country')} />
+            {Feedback('country')}
+          </div>
+        </form>
+      </div>
+      <div className="actions">
+        <button type="submit" className="btn btn-primary btn-rounded">
+          <fbt desc="Continue">Continue</fbt>
+        </button>
+        {isMobile ? null : (
+          <button
+            type="button"
+            className="btn btn-outline-primary btn-rounded"
+            onClick={() => history.goBack()}
+          >
+            <fbt desc="Back">Back</fbt>
+          </button>
+        )}
+      </div>
     </div>
   )
 }
@@ -243,6 +245,8 @@ export default withRouter(withIsMobile(withWallet(ProvideShippingAddress)))
 require('react-styl')(`
   .confirm-shipping-address
     padding: 0
+    display: flex
+    flex-direction: column
     h1
       margin-top: 5rem
       text-align: center
@@ -250,6 +254,9 @@ require('react-styl')(`
       margin-top: 3rem
       text-align: center
       font-weight: bold
+    .form-container
+      overflow: auto
+      flex: 1
     .shipping-address-form
       padding: 1rem 2.625rem
       max-width: 600px
@@ -272,15 +279,22 @@ require('react-styl')(`
           border: 0
           border-bottom: 1px solid #c2cbd3
     .actions
-      padding-top: 1.5rem
+      padding: 1rem
+      display: flex
+      flex-direction: row-reverse
       .btn
         width: 100%
         padding: 0.875rem 0
-        margin-top: 1rem
+        margin: 1rem 1rem 0 1rem
   
   @media (max-width: 767.98px)
     .confirm-shipping-address
       .shipping-address-form
         border: 0
         padding: 1rem
+      .actions
+        flex-direction: column
+        .btn
+          margin-right: 0
+          margin-left: 0
 `)

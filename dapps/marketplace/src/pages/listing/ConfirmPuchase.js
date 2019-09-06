@@ -174,11 +174,14 @@ require('react-styl')(`
             text-align: right
       .actions
         padding-top: 1.5rem
+        display: flex
+        flex-direction: row-reverse
         .btn
           width: 100%
           padding: 0.875rem 0
-          margin-top: 1rem
+          margin: 1rem 1rem 0 1rem
           border-radius: 50px
+
   @media (max-width: 767.98px)
     .confirm-purchase-page
       .confirm-purchase-content
@@ -189,4 +192,8 @@ require('react-styl')(`
         .actions
           padding: 1rem
           margin-top: auto
+          flex-direction: column
+          .btn
+            margin-left: 0
+            margin-right: 0
 `)
