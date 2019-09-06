@@ -18,6 +18,8 @@ before(async function() {
   page = (await services()).extrasResult.page
 })
 
+const waitFor = (timeInMs) => new Promise(resolve => setTimeout(resolve, timeInMs))
+
 const reset = async (sellerOgn, reload = false) => {
   // clear cookies (for messaging)
   await clearCookies(page)
@@ -47,12 +49,67 @@ const reset = async (sellerOgn, reload = false) => {
 const purchaseListing = async ({ buyer }) => {
   await pic(page, 'listing-detail')
   await changeAccount(page, buyer)
+  
+  // Note: Some prop causes the Purchase button to rerender after a few hundred milliseconds
+  // Puppeteer doesn't support click events if the button is not in the DOM
+  // Puppeteer throws if the element get unmounted when it tries to click
+  await waitFor(300)
+  await clickByText(page, 'Purchase', 'a')
+
+  // Purchase confirmation
+  await waitForText(page, 'Please confirm your purchase', 'h1')
+  await pic(page, 'purchase-confirmation')
+  await clickByText(page, 'Purchase', 'button')
+  
+  await waitForText(page, 'View Purchase Details', 'button')
+  await pic(page, 'purchase-listing')
+  
+  await clickByText(page, 'View Purchase Details', 'button')
+  await waitForText(page, 'Transaction History')
+  await pic(page, 'transaction-wait-for-seller')
+}
+
+const purchaseListingWithDAI = async ({ buyer, autoSwap }) => {
+  await pic(page, 'listing-detail')
+  await changeAccount(page, buyer)
+  
+  // Note: Some prop causes the Purchase button to rerender after a few hundred milliseconds
+  // Puppeteer doesn't support click events if the button is not in the DOM
+  // Puppeteer throws if the element get unmounted when it tries to click
+  await waitFor(300)
+  await clickByText(page, 'Purchase', 'a')
+
+  // Purchase confirmation
+  await waitForText(page, 'Please confirm your purchase', 'h1')
+  await pic(page, 'purchase-confirmation')
+  await clickByText(page, autoSwap ? 'Purchase' : 'Swap Now', 'button')
+}
+
+const purchaseMultiUnitListing = async ({ buyer }) => {
+  await pic(page, 'listing-detail')
+  await changeAccount(page, buyer)
+  await page.waitForSelector('.quantity select')
+  await page.select('.quantity select', '2')
+
+  // Note: Some prop causes the Purchase button to rerender after a few hundred milliseconds
+  // Puppeteer doesn't support click events if the button is not in the DOM
+  // Puppeteer throws if the element get unmounted when it tries to click
+  await waitFor(300)
+  await clickByText(page, 'Purchase', 'a')
+
+  // Purchase confirmation
+  await waitForText(page, 'Please confirm your purchase', 'h1')
+  await pic(page, 'purchase-confirmation')
+
   await clickByText(page, 'Purchase', 'button')
   await waitForText(page, 'View Purchase', 'button')
   await pic(page, 'purchase-listing')
 
   await clickByText(page, 'View Purchase', 'button')
-  await waitForText(page, 'Transaction History')
+  await waitForText(
+    page,
+    `You've made an offer. Wait for the seller to accept it.`
+  )
   await pic(page, 'transaction-wait-for-seller')
 }
 
@@ -69,9 +126,9 @@ const acceptOffer = async ({ seller }) => {
 
 const confirmReleaseFundsAndRate = async ({ buyer, review }) => {
   await changeAccount(page, buyer)
-  await waitForText(page, 'Your offer has been accepted by the seller')
+  await waitForText(page, 'Seller has accepted your offer.')
   await pic(page, 'transaction-confirm')
-  await clickByText(page, 'Confirm', 'button')
+  await clickByText(page, 'Confirm receipt', 'button')
   await waitForText(page, 'Release the funds to the seller.')
   await pic(page, 'transaction-release-funds')
   await clickByText(page, 'Release Funds', 'button')
@@ -325,9 +382,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow a new listing to be purchased', async function() {
-      await changeAccount(page, buyer)
-      await waitForText(page, 'Payment', 'span')
-      await clickByText(page, autoSwap ? 'Purchase' : 'Swap Now', 'button')
+      await purchaseListingWithDAI({ buyer, autoSwap })
     })
 
     if (!autoSwap) {
@@ -489,20 +544,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow a new listing to be purchased', async function() {
-      await pic(page, 'listing-detail')
-      await changeAccount(page, buyer)
-      await page.waitForSelector('.quantity select')
-      await page.select('.quantity select', '2')
-      await clickByText(page, 'Purchase', 'button')
-      await waitForText(page, 'View Purchase', 'button')
-      await pic(page, 'purchase-listing')
-
-      await clickByText(page, 'View Purchase', 'button')
-      await waitForText(
-        page,
-        `You've made an offer. Wait for the seller to accept it.`
-      )
-      await pic(page, 'transaction-wait-for-seller')
+      await purchaseMultiUnitListing({ buyer })
     })
 
     it('should allow a new listing to be accepted', async function() {

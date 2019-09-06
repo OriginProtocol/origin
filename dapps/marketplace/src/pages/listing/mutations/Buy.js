@@ -43,6 +43,22 @@ class Buy extends Component {
     }
     let content
 
+    const isLoadingData =
+      get(this.props, 'tokenStatus.loading') ||
+      this.props.cannotTransact === 'loading' ||
+      Object.keys(this.props).some(
+        key => key.endsWith('Loading') && this.props[key]
+      )
+
+    if (isLoadingData)
+      return (
+        <button
+          className={this.props.className}
+          disabled={true}
+          children={<fbt desc="Loading...">Loading...</fbt>}
+        />
+      )
+
     let action = (
       <button
         className={this.props.className}
@@ -52,8 +68,9 @@ class Buy extends Component {
     )
 
     const hasIdentity = this.props.identity
-    const hasMessaging = get(this.props, 'messagingStatus.enabled', false)
-    const needsOnboarding = !hasIdentity || !this.props.wallet || !hasMessaging
+    const hasMessagingKeys = this.props.hasMessagingKeys
+    const needsOnboarding =
+      !hasIdentity || !this.props.wallet || !hasMessagingKeys
     const onboardingDisabled = localStorage.noIdentity ? true : false
 
     let currentListingId = this.props.listing.id
@@ -339,7 +356,8 @@ class Buy extends Component {
       quantity,
       startDate,
       endDate,
-      currency
+      currency,
+      shippingAddress
     } = this.props
 
     const variables = {
@@ -356,6 +374,10 @@ class Buy extends Component {
       listing.__typename === 'FractionalHourlyListing'
     ) {
       variables.fractionalData = { startDate, endDate }
+    }
+
+    if (listing.requiresShipping) {
+      variables.shippingAddress = shippingAddress
     }
 
     makeOffer({ variables })

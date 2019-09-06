@@ -66,6 +66,7 @@ export default {
         }
         commission
         commissionPerUnit
+        requiresShipping
         ... on UnitListing {
           unitsTotal
           unitsAvailable
