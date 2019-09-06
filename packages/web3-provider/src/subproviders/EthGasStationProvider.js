@@ -23,7 +23,7 @@ class EthGasStationProvider extends SubProvider {
     const jason = await res.json()
     if (typeof jason[GAS_PRICE_KEY] !== 'undefined') {
       // values come from EGS as tenths of gwei
-      return String(jason[GAS_PRICE_KEY] * 1e8)
+      return '0x' + (jason[GAS_PRICE_KEY] * 1e8).toString(16)
     }
     throw new Error(`Gas key of ${GAS_PRICE_KEY} is unavailable`)
   }
