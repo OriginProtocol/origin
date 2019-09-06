@@ -13,8 +13,10 @@ import PurchaseSummary from './_PurchaseSummary'
 
 const withSingleUnitData = (WrappedComponent) => {
   const WithSingleUnitData = ({ listing, ...props }) => {
+    const amount = listing.price.amount
     const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
     const token = acceptsDai ? 'token-DAI' : 'token-ETH'
+    const totalPrice = { amount, currency: listing.price.currency }
 
     return (
       <WithPrices
@@ -31,6 +33,7 @@ const withSingleUnitData = (WrappedComponent) => {
               token,
               acceptsDai,
               listing,
+              totalPrice,
               ...props
             }}
           />

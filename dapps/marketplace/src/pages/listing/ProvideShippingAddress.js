@@ -11,23 +11,39 @@ import Redirect from 'components/Redirect'
 import MobileModalHeader from 'components/MobileModalHeader'
 
 import withIsMobile from 'hoc/withIsMobile'
+import withWallet from 'hoc/withWallet'
 
 import { formInput, formFeedback } from 'utils/formHelpers'
+
+import Store from 'utils/store'
+
+const localStore = Store('localStorage')
 
 const ProvideShippingAddress = ({
   listing,
   isMobile,
   history,
   next,
-  updateShippingAddress
+  updateShippingAddress,
+  walletProxy
 }) => {
-  const [inputState, setInputState] = useState({})
+  const storageKey = `${walletProxy}-shipping-address`
+
+  const [inputState, setInputState] = useState(localStore.get(storageKey, {}))
   const [valid, setValid] = useState(null)
   const [redirect, setRedirect] = useState(false)
 
+  const storeShippingAddress = useCallback(shippingAddress => {
+    localStore.set(storageKey, shippingAddress)
+  }, [])
+
   const input = formInput(
     inputState,
-    useCallback(state => setInputState({ ...inputState, ...state }), [
+    useCallback(state => {
+      const newState = { ...inputState, ...state }
+      setInputState(newState)
+      storeShippingAddress(newState)
+    }, [
       inputState
     ])
   )
@@ -221,7 +237,7 @@ const ProvideShippingAddress = ({
   )
 }
 
-export default withRouter(withIsMobile(ProvideShippingAddress))
+export default withRouter(withIsMobile(withWallet(ProvideShippingAddress)))
 
 require('react-styl')(`
   .confirm-shipping-address

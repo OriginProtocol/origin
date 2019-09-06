@@ -90,7 +90,7 @@ const ConfirmPurchase = ({ listing, quantity, isMobile, history, refetch, shippi
         <SummaryComponent
           listing={listing}
           quantity={quantity}
-          bookingRange={bookingRange}
+          range={bookingRange}
           shippingAddress={shippingAddress}
           availability={availability}
         />
