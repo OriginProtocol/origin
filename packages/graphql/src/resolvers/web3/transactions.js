@@ -5,7 +5,19 @@ import get from 'lodash/get'
 // import memoize from 'lodash/memoize'
 
 export async function getTransactionReceipt(id) {
-  const rawReceipt = await contracts.web3.eth.getTransactionReceipt(id)
+  if (!id || typeof id !== 'string' || ![66, 64].includes(id.length)) {
+    console.warn('Invalid transaction hash')
+    return null
+  }
+
+  let rawReceipt
+
+  try {
+    rawReceipt = await contracts.web3.eth.getTransactionReceipt(id)
+  } catch (err) {
+    console.error('Failed to fetch receipt')
+    console.error(err)
+  }
 
   // Note: Check on the both receipt and receipt.blockNumber since Parity returns
   // a receipt with no blockNumber if transaction is not yet mined (Geth does not).
