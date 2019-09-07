@@ -64,8 +64,24 @@ const PaymentOptions = ({
   hasBalance,
   hasEthBalance,
   children,
-  cannotTransact
+  cannotTransact,
+  tokenStatus,
+  ...props
 }) => {
+  const isLoadingData =
+    !tokenStatus ||
+    tokenStatus.loading ||
+    cannotTransact === 'loading' ||
+    Object.keys(props).some(key => key.endsWith('Loading') && props[key])
+
+  if (isLoadingData) {
+    return (
+      <div>
+        <fbt desc="Loading...">Loading...</fbt>
+      </div>
+    )
+  }
+
   if (cannotTransact && cannotTransact !== 'no-balance') {
     return children
   }
