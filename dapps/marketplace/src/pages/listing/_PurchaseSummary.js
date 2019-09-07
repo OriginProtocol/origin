@@ -11,8 +11,20 @@ const PurchaseSummary = ({
   token,
   shippingAddress,
   startDate,
-  endDate
+  endDate,
+  tokenStatus
 }) => {
+  const { hasBalance, hasEthBalance } = tokenStatus || {}
+  const acceptedTokens = listing.acceptedTokens
+
+  const isEth = token === 'token-ETH'
+  const isDai = token === 'token-DAI'
+  const acceptsDai = acceptedTokens.find(t => t.id === 'token-DAI')
+
+  const needsSwap = isDai && acceptsDai && !hasBalance && hasEthBalance
+
+  const displayToken = isEth || needsSwap ? 'token-ETH' : 'token-DAI'
+
   return (
     <div className="summary">
       <div className="summary-row">
@@ -74,7 +86,7 @@ const PurchaseSummary = ({
           <fbt desc="PurchaseSummary.Payment">Payment</fbt>
         </div>
         <div className="summary-value">
-          <Price price={totalPrice} target={token} />
+          <Price price={totalPrice} target={displayToken} />
         </div>
       </div>
     </div>
