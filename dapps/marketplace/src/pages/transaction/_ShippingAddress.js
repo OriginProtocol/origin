@@ -118,17 +118,21 @@ const ShippingAddress = ({
     >
       <h4>Shipping Address</h4>
 
-      <div className="field-label">
-        <fbt desc="DecryptedShippingAddress.Name">Name:</fbt>
-      </div>
-      <div className="field-value">{ship.name}</div>
+      {ship.name && (
+        <>
+          <div className="field-label">
+            <fbt desc="DecryptedShippingAddress.Name">Name:</fbt>
+          </div>
+          <div className="field-value">{ship.name}</div>
+        </>
+      )}
 
       <div className="field-label">
         <fbt desc="DecryptedShippingAddress.StreetAddress">Street Address:</fbt>
       </div>
       <div className="field-value">
         <div>{ship.address1}</div>
-        <div>{ship.address2}</div>
+        {ship.address2 && <div>{ship.address2}</div>}
       </div>
 
       <div className="field-label">
@@ -143,10 +147,14 @@ const ShippingAddress = ({
       </div>
       <div className="field-value">{ship.country}</div>
 
-      <div className="field-label">
-        <fbt desc="DecryptedShippingAddress.other">Other</fbt>
-      </div>
-      <div className="field-value">{ship.other}</div>
+      {ship.other && (
+        <>
+          <div className="field-label">
+            <fbt desc="DecryptedShippingAddress.other">Other</fbt>
+          </div>
+          <div className="field-value">{ship.other}</div>
+        </>
+      )}
     </div>
   )
 }
