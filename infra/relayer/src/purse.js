@@ -27,7 +27,11 @@ const redis = require('redis')
 const BN = require('bn.js')
 const bip39 = require('bip39')
 const hdkey = require('ethereumjs-wallet/hdkey')
-const { createEngine } = require('@origin/web3-provider')
+const {
+  createEngine,
+  addSubprovider,
+  EthGasStationProvider
+} = require('@origin/web3-provider')
 const {
   stringToBN,
   numberToBN,
@@ -126,6 +130,10 @@ class Purse {
         maxConcurrent: JSONRPC_MAX_CONCURRENT,
         ethGasStation: [1, 4].includes(networkId)
       })
+      // add the EthGasStationProvider if mainnet or Rinkeby
+      if ([1, 4].includes(networkId)) {
+        addSubprovider(web3, new EthGasStationProvider())
+      }
     }
 
     this.web3 = web3
