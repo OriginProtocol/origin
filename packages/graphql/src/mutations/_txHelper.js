@@ -170,7 +170,7 @@ export default function txHelper({
     debug(`shouldUseRelayer: ${shouldUseRelayer}`)
 
     // Get our gas price
-    if (!shouldUseRelayer) {
+    if (!shouldUseRelayer && ['mainnet', 'rinkeby'].includes(contracts.net)) {
       if (window.ethereum) {
         // Don't use eth_gasPrice for MM
         try {
