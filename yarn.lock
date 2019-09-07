@@ -9749,7 +9749,7 @@ eslint-visitor-keys@^1.1.0:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-1.1.0.tgz#e2a82cea84ff246ad6fb57f9bde5b46621459ec2"
   integrity sha512-8y9YjtM1JBJU/A9Kc+SbaOV4y29sSWckBwMHa+FGtVj5gN/sbnKDf6xJUl+8g7FAij9LVaP8C24DUiH/f/2Z9A==
 
-eslint@6.3.0, eslint@^6.0.1:
+eslint@6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-6.3.0.tgz#1f1a902f67bfd4c354e7288b81e40654d927eb6a"
   integrity sha512-ZvZTKaqDue+N8Y9g0kp6UPZtS4FSY3qARxBs7p4f0H0iof381XHduqVerFWtK8DPtKmemqbqCFENWSQgPR/Gow==
@@ -24036,10 +24036,10 @@ sequelize-pool@^2.3.0:
   resolved "https://registry.yarnpkg.com/sequelize-pool/-/sequelize-pool-2.3.0.tgz#64f1fe8744228172c474f530604b6133be64993d"
   integrity sha512-Ibz08vnXvkZ8LJTiUOxRcj1Ckdn7qafNZ2t59jYHMX1VIebTAOYefWdRYFt6z6+hy52WGthAHAoLc9hvk3onqA==
 
-sequelize@5.18.1:
-  version "5.18.1"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.18.1.tgz#31d5246dcdf01d0ac317454c28fb598359d5b60a"
-  integrity sha512-jngo7pqilyOycMv6ZEwHLVn2wuHi/xkSQZfwK4jhjG8ta1HWYJK3XyQDFdhVEOH1GEq9pnqaf+7Kwqm+eqXD9Q==
+sequelize@5.18.2:
+  version "5.18.2"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.18.2.tgz#126d2a557997b55d627d35cece0605ea65ac9fd7"
+  integrity sha512-o1vkzXCpwGosUTkUWSI0jnsokJqWBi4TCVDE+NA+sT1FGPWpGyUWWm30pAA5kZSOpNVeG78zn4O197rDM4sQlw==
   dependencies:
     bluebird "^3.5.0"
     cls-bluebird "^2.1.0"
