@@ -50,10 +50,6 @@ const purchaseListing = async ({ buyer }) => {
   await pic(page, 'listing-detail')
   await changeAccount(page, buyer)
   
-  // Note: Some prop causes the Purchase button to rerender after a few hundred milliseconds
-  // Puppeteer doesn't support click events if the button is not in the DOM
-  // Puppeteer throws if the element get unmounted when it tries to click
-  await waitFor(300)
   await clickByText(page, 'Purchase', 'a')
 
   // Purchase confirmation
@@ -73,10 +69,6 @@ const purchaseListingWithDAI = async ({ buyer, autoSwap }) => {
   await pic(page, 'listing-detail')
   await changeAccount(page, buyer)
   
-  // Note: Some prop causes the Purchase button to rerender after a few hundred milliseconds
-  // Puppeteer doesn't support click events if the button is not in the DOM
-  // Puppeteer throws if the element get unmounted when it tries to click
-  await waitFor(300)
   await clickByText(page, 'Purchase', 'a')
 
   // Purchase confirmation
@@ -91,10 +83,6 @@ const purchaseMultiUnitListing = async ({ buyer }) => {
   await page.waitForSelector('.quantity select')
   await page.select('.quantity select', '2')
 
-  // Note: Some prop causes the Purchase button to rerender after a few hundred milliseconds
-  // Puppeteer doesn't support click events if the button is not in the DOM
-  // Puppeteer throws if the element get unmounted when it tries to click
-  await waitFor(300)
   await clickByText(page, 'Purchase', 'a')
 
   // Purchase confirmation

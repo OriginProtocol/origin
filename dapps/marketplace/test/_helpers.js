@@ -24,17 +24,28 @@ export const escapeXpathString = str => {
 }
 
 export const clickXpath = async (page, xpath, linkName) => {
-  const linkHandlers = await page.$x(xpath)
-
-  if (linkHandlers.length > 0) {
-    try {
-      await linkHandlers[0].click()
-    } catch (err) {
-      console.log('LinkHandler', linkHandlers)
-      throw err
+  let tries = 0
+  while (tries < 3) {
+    const linkHandlers = await page.$x(xpath)
+  
+    if (linkHandlers.length > 0) {
+      try {
+        if (await linkHandlers[0].boundingBox()) {
+          await linkHandlers[0].click()
+          return
+        }
+        tries++
+      } catch (err) {
+        tries++
+        if (tries === 3) {
+          throw err
+        } else {
+          console.log(`Failed to click element with xpath ${xpath} (try: ${tries})`)
+        }
+      }
+    } else {
+      throw new Error(`Link not found: ${linkName || xpath}`)
     }
-  } else {
-    throw new Error(`Link not found: ${linkName || xpath}`)
   }
 }
 
@@ -48,7 +59,9 @@ export const waitForText = async (page, text, path) => {
   // }
   const escapedText = escapeXpathString(text)
   const xpath = `/html/body//${path || '*'}[contains(text(), ${escapedText})]`
-  await page.waitForXPath(xpath)
+  await page.waitForXPath(xpath, {
+    visible: true
+  })
   return xpath
 }
 
@@ -71,7 +84,9 @@ export const clickByText = async (page, text, path) => {
 
 export const waitForElementWithClassName = async (page, className, path) => {
   const xpath = `/html/body//${path || '*'}[contains(@class, '${className}')]`
-  await page.waitForXPath(xpath)
+  await page.waitForXPath(xpath, {
+    visible: true
+  })
   return xpath
 }
 
