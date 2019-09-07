@@ -42,8 +42,13 @@ async function swapToToken(_, { from, token, tokenValue }) {
   }
   await checkMetaMask(from)
 
-  const { value, tx } = await swapToTokenTx(tokenValue)
-  return txHelper({ tx, from, mutation: 'swapToToken', value, gas: 103828 })
+  try {
+    const { value, tx } = await swapToTokenTx(tokenValue)
+    return txHelper({ tx, from, mutation: 'swapToToken', value, gas: 103828 })
+  } catch (err) {
+    console.error(err)
+    throw new Error('Unable to make token swap transaction')
+  }
 }
 
 export default swapToToken
