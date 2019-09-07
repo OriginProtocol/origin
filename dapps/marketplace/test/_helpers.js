@@ -113,7 +113,9 @@ export const changeAccount = async (page, account, isFreshAccount = false) => {
 
     window.localStorage.useWeb3Identity = isFreshAccount ? null : JSON.stringify(accountData)
     window.localStorage.useMessagingObject = isFreshAccount ? null : JSON.stringify({
-      enabled: true
+      enabled: true,
+      pubKey: '0xff',
+      pubSig: '0xff'
     })
   }, { account, isFreshAccount })
 }
