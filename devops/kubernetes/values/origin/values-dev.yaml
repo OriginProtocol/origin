@@ -63,7 +63,7 @@ relayerImageTag: 'b653802'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: 'a4e6ac5'
+graphqlImageTag: '8525290'
 
 # origin-token-transfer-client
 t3ClientImage: origin-token-transfer-client
