@@ -102,6 +102,7 @@ class Account {
  */
 class Purse {
   constructor({
+    networkId,
     web3,
     mnemonic = DEFAULT_MNEMONIC,
     children = DEFAULT_CHILDREN,
@@ -122,7 +123,8 @@ class Purse {
       // init the custom provider
       createEngine(web3, {
         qps: jsonrpcQPS,
-        maxConcurrent: JSONRPC_MAX_CONCURRENT
+        maxConcurrent: JSONRPC_MAX_CONCURRENT,
+        ethGasStation: [1, 4].includes(networkId)
       })
     }
 

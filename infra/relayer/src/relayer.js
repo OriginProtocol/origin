@@ -126,6 +126,7 @@ class Relayer {
     this.web3 = new Web3(providerUrl)
 
     this.purse = new Purse({
+      networkId,
       web3: this.web3,
       mnemonic: env.FORWARDER_MNEMONIC,
       children: env.FORWARDER_ACCOUNTS ? parseInt(env.FORWARDER_ACCOUNTS) : 3,
