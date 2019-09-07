@@ -77,9 +77,20 @@ export default {
     return contracts.messaging.synced
   },
   syncProgress: () => contracts.messaging.syncProgress,
-  pubKey: () =>
-    contracts.messaging.account ? contracts.messaging.account.publicKey : null,
-  pubSig: () => contracts.messaging.pub_sig,
+  pubKey: () => {
+    if (messagingOverride) {
+      return messagingOverride.pubKey
+    }
+
+    return contracts.messaging.account ? contracts.messaging.account.publicKey : null
+  },
+  pubSig: () => {
+    if (messagingOverride) {
+      return messagingOverride.pubSig
+    }
+
+    return contracts.messaging.pub_sig
+  },
   canConverseWith: async (_, args) => {
     const recipient = await contracts.messaging.canReceiveMessages(args.id)
     return recipient ? true : false
