@@ -109,7 +109,7 @@ class MobileBridge {
     // we're returning.
     provider._providers.splice(3, 1)
     provider._providers.splice(4, 1)
-    provider._providers.unshift(new EthGasStationProvider())
+    //provider._providers.unshift(new EthGasStationProvider())
     provider.isOrigin = true
 
     return provider
