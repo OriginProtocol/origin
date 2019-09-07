@@ -104,5 +104,6 @@ module.exports = {
   initStandardSubproviders,
   addSubprovider,
   MetricsProvider,
-  ThrottleRPCProvider
+  ThrottleRPCProvider,
+  EthGasStationProvider
 }
