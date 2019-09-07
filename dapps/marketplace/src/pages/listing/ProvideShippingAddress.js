@@ -53,40 +53,13 @@ const ProvideShippingAddress = ({
   const validate = useCallback(() => {
     const newState = {}
 
-    const stringFields = [
-      'name',
-      'address1',
-      'address2',
-      'city',
-      'stateProvinceRegion',
-      'country'
-    ]
+    const stringFields = ['address1', 'city', 'stateProvinceRegion', 'country']
 
     for (const strField of stringFields) {
       if (!inputState[strField] || !inputState[strField].trim()) {
         newState[`${strField}Error`] = fbt(
           'This field is required',
           'This field is required'
-        )
-      }
-    }
-
-    if (!inputState.postalCode || !inputState.postalCode.length) {
-      newState.postalCodeError = fbt(
-        'Postal code is required',
-        'Postal code is required'
-      )
-    } else {
-      const v = Number(inputState.postalCode)
-      if (Number.isNaN(v)) {
-        newState.postalCodeError = fbt(
-          'Postal code must be a number',
-          'Postal code must be a number'
-        )
-      } else if (v <= 0) {
-        newState.postalCodeError = fbt(
-          'Invalid postal code',
-          'Invalid postal code'
         )
       }
     }
@@ -123,9 +96,7 @@ const ProvideShippingAddress = ({
             history.goBack()
           }}
         >
-          <fbt desc="PurchaseListing.shippingAddress">
-            Provide a Shipping Address
-          </fbt>
+          <fbt desc="PurchaseListing.shippingAddress">Shipping Address</fbt>
         </MobileModalHeader>
       )}
       <div className="form-container">
@@ -142,7 +113,8 @@ const ProvideShippingAddress = ({
                   'city',
                   'stateProvinceRegion',
                   'country',
-                  'postalCode'
+                  'postalCode',
+                  'other'
                 ])
               )
 
@@ -154,20 +126,19 @@ const ProvideShippingAddress = ({
         >
           {isMobile ? null : (
             <h2>
-              <fbt desc="PurchaseListing.shippingAddress">
-                Provide a Shipping Address
-              </fbt>
+              <fbt desc="PurchaseListing.shippingAddress">Shipping Address</fbt>
             </h2>
           )}
           <div className="desc">
             <fbt desc="PurchaseListing.enterShippingAddress">
-              Let the seller know where they should send your item.
+              Let the seller know where to send your item.
             </fbt>
           </div>
           {valid !== false ? null : (
             <div className="alert alert-danger">
               <fbt desc="errorsInSubmissions">
-                There were some errors in your submission. Fix them to continue.
+                There were some errors with your shipping address. Please fix
+                them to continue.
               </fbt>
             </div>
           )}
@@ -208,7 +179,7 @@ const ProvideShippingAddress = ({
           </div>
           <div className="form-group">
             <label>
-              <fbt desc="ShippingAddress.postalCode">Postal Code</fbt>
+              <fbt desc="ShippingAddress.postalCode">Zip/Postal Code</fbt>
             </label>
             <input {...input('postalCode')} />
             {Feedback('postalCode')}
@@ -219,6 +190,13 @@ const ProvideShippingAddress = ({
             </label>
             <input {...input('country')} />
             {Feedback('country')}
+          </div>
+          <div className="form-group">
+            <label>
+              <fbt desc="ShippingAddress.other">Other</fbt>
+            </label>
+            <input {...input('other')} />
+            {Feedback('other')}
           </div>
           <div className="actions">
             <button type="submit" className="btn btn-primary btn-rounded">

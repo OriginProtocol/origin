@@ -238,7 +238,11 @@ export function setNetwork(net, customConfig) {
     })
   } else if (!isBrowser && !isWebView) {
     // TODO: Allow for browser?
-    createEngine(web3, { qps, maxConcurrent })
+    createEngine(web3, {
+      qps,
+      maxConcurrent,
+      ethGasStation: ['mainnet', 'rinkeby'].includes(net)
+    })
   }
 
   if (isBrowser) {

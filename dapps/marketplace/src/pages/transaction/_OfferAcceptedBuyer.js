@@ -63,37 +63,42 @@ class OfferAcceptedBuyer extends Component {
 
     const offerConfirmedView = () => (
       <div className="transaction-progress">
-        <div className="top">
-          <h4>
-            <fbt desc="Progress.releaseFundsToSeller">
-              Release the funds to the seller.
-            </fbt>
-          </h4>
-          <Stages className="mt-4" mini="true" offer={offer} />
-          <div className="help mt-3 mb-0 ">
-            <fbt desc="OfferAcceptBuyer.releaseFundsConcern">
-              If you&apos;re concerned about releasing the funds, report a
-              problem to Origin.
-            </fbt>
+        <div className="tx-progress-wrapper">
+          <div className="tx-receipt-status top">
+            <h4>
+              <fbt desc="Progress.releaseFundsToSeller">
+                Release the funds to the seller.
+              </fbt>
+            </h4>
+            <Stages className="mt-4" mini="true" offer={offer} />
+            <div className="help mt-3 mb-0 ">
+              <fbt desc="OfferAcceptBuyer.releaseFundsConcern">
+                If you&apos;re concerned about releasing the funds, report a
+                problem to Origin.
+              </fbt>
+            </div>
+            <div className="actions-offers d-flex mt-3">
+              <FinalizeOffer
+                disabled={false}
+                offer={offer}
+                refetch={this.props.refetch}
+                from={offer.buyer.id}
+                className="btn btn-primary"
+              >
+                <fbt desc="OfferAcceptBuyer.releaseFunds">Release Funds</fbt>
+              </FinalizeOffer>
+              <DisputeOffer
+                offer={offer}
+                party="seller"
+                className="btn btn-link withdraw mr-md-0 ml-md-5 mb-md-0 mt-3 mt-md-0 align-self-start align-self-md-center"
+              >
+                <fbt desc="OfferAcceptBuyer.reportProblme">
+                  Report a Problem
+                </fbt>
+              </DisputeOffer>
+            </div>
           </div>
-          <div className="actions-offers d-flex mt-3">
-            <FinalizeOffer
-              disabled={false}
-              offer={offer}
-              refetch={this.props.refetch}
-              from={offer.buyer.id}
-              className="btn btn-primary"
-            >
-              <fbt desc="OfferAcceptBuyer.releaseFunds">Release Funds</fbt>
-            </FinalizeOffer>
-            <DisputeOffer
-              offer={offer}
-              party="seller"
-              className="btn btn-link withdraw mr-md-0 ml-md-5 mb-md-0 mt-3 mt-md-0 align-self-start align-self-md-center"
-            >
-              <fbt desc="OfferAcceptBuyer.reportProblme">Report a Problem</fbt>
-            </DisputeOffer>
-          </div>
+          <ShippingAddress offer={this.props.offer} />
         </div>
       </div>
     )
