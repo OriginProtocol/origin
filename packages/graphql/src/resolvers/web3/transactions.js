@@ -45,21 +45,26 @@ export async function getTransactionReceipt(id) {
       throw new Error(`Found event with no id in receipt ${id}`)
     }
     if (eventDef) {
-      const decoded = contracts.web3.eth.abi.decodeLog(
-        eventDef.inputs,
-        log.data,
-        log.topics.slice(1)
-      )
-      if (decoded.listingID) {
-        logObj.returnValues = decoded
+      try {
+        const decoded = contracts.web3.eth.abi.decodeLog(
+          eventDef.inputs,
+          log.data,
+          log.topics.slice(1)
+        )
+        if (decoded.listingID) {
+          logObj.returnValues = decoded
+        }
+        logObj.returnValuesArr = Object.keys(decoded)
+          .filter(f => !f.match(/^[0-9]+$/) && !f.match(/^__/))
+          .map(field => ({
+            field,
+            value: decoded[field]
+          }))
+        logObj.event = eventDef.name
+      } catch (err) {
+        console.error(err)
+        throw new Error(`Unable to decode event log for transaction ${id}!`)
       }
-      logObj.returnValuesArr = Object.keys(decoded)
-        .filter(f => !f.match(/^[0-9]+$/) && !f.match(/^__/))
-        .map(field => ({
-          field,
-          value: decoded[field]
-        }))
-      logObj.event = eventDef.name
     }
     return logObj
   })
