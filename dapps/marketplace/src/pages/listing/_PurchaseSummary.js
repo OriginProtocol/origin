@@ -57,6 +57,7 @@ const PurchaseSummary = ({
             <div>{shippingAddress.city}</div>
             <div>{`${shippingAddress.stateProvinceRegion} ${shippingAddress.postalCode}`}</div>
             <div>{shippingAddress.country}</div>
+            <div>{shippingAddress.other}</div>
           </div>
         </div>
       )}
