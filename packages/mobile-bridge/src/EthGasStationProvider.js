@@ -25,8 +25,8 @@ class EthGasStationProvider extends SubProvider {
       // values come from EGS as tenths of gwei
       if (
         !jason[GAS_PRICE_KEY] ||
-        jason[GAS_PRICE_KEY] < 1 ||
-        typeof jason[GAS_PRICE_KEY] !== 'number'
+        typeof jason[GAS_PRICE_KEY] !== 'number' ||
+        jason[GAS_PRICE_KEY] < 1
       ) {
         throw new Error('Gas price from ethgasstation does not appear valid')
       }
