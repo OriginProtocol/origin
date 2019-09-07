@@ -64,21 +64,6 @@ const ProvideShippingAddress = ({
       }
     }
 
-    if (inputState.postalCode && inputState.postalCode.trim().length) {
-      const v = Number(inputState.postalCode.trim())
-      if (Number.isNaN(v)) {
-        newState.postalCodeError = fbt(
-          'Postal code must be a number',
-          'Postal code must be a number'
-        )
-      } else if (v <= 0) {
-        newState.postalCodeError = fbt(
-          'Invalid postal code',
-          'Invalid postal code'
-        )
-      }
-    }
-
     const valid = Object.keys(newState).every(f => f.indexOf('Error') < 0)
 
     setInputState({
@@ -146,13 +131,14 @@ const ProvideShippingAddress = ({
           )}
           <div className="desc">
             <fbt desc="PurchaseListing.enterShippingAddress">
-              Let the seller know where they should send your item.
+              Let the seller know where to send your item.
             </fbt>
           </div>
           {valid !== false ? null : (
             <div className="alert alert-danger">
               <fbt desc="errorsInSubmissions">
-                There were some errors in your submission. Fix them to continue.
+                There were some errors with your shipping address. Please fix
+                them to continue.
               </fbt>
             </div>
           )}
@@ -193,7 +179,7 @@ const ProvideShippingAddress = ({
           </div>
           <div className="form-group">
             <label>
-              <fbt desc="ShippingAddress.postalCode">Postal Code</fbt>
+              <fbt desc="ShippingAddress.postalCode">Zip/Postal Code</fbt>
             </label>
             <input {...input('postalCode')} />
             {Feedback('postalCode')}
