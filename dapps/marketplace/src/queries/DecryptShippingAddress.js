@@ -11,6 +11,7 @@ const DecryptShippingAddress = gql`
         stateProvinceRegion
         postalCode
         country
+        other
       }
     }
   }
