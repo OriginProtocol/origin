@@ -142,6 +142,11 @@ const ShippingAddress = ({
         <fbt desc="DecryptedShippingAddress.country">Country</fbt>
       </div>
       <div className="field-value">{ship.country}</div>
+
+      <div className="field-label">
+        <fbt desc="DecryptedShippingAddress.other">Other</fbt>
+      </div>
+      <div className="field-value">{ship.other}</div>
     </div>
   )
 }
