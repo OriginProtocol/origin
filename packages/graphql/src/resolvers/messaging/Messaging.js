@@ -82,7 +82,9 @@ export default {
       return messagingOverride.pubKey
     }
 
-    return contracts.messaging.account ? contracts.messaging.account.publicKey : null
+    return contracts.messaging.account
+      ? contracts.messaging.account.publicKey
+      : null
   },
   pubSig: () => {
     if (messagingOverride) {
