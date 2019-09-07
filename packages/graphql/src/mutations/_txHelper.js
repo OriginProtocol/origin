@@ -1,3 +1,4 @@
+import fetch from 'cross-fetch'
 import ProxyFactory from '@origin/contracts/build/contracts/ProxyFactory_solc'
 import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import pubsub from '../utils/pubsub'
@@ -9,6 +10,9 @@ import createDebug from 'debug'
 
 import { getTransaction } from '../resolvers/web3/transactions'
 import relayer from './_relayer'
+
+const GAS_STATION_URL = 'https://ethgasstation.info/json/ethgasAPI.json'
+const GAS_PRICE_KEY = process.env.GAS_PRICE_KEY || 'average' // 'safeLow'
 
 const debug = createDebug('origin:tx-helper:')
 const formatAddr = address => (address ? address.substr(0, 8) : '')
@@ -46,7 +50,11 @@ function useRelayer({ mutation, value }) {
   if (!contracts.config.relayer) reason = 'relayer not configured'
   if (!mutation) reason = 'no mutation specified'
 
-  if (mutation === 'makeOffer' && value && value !== '0') {
+  if (
+    ['makeOffer', 'swapAndMakeOffer'].includes(mutation) &&
+    value &&
+    value !== '0'
+  ) {
     reason = 'makeOffer has a value'
   }
   if (mutation === 'transferToken') reason = 'transferToken is disabled'
@@ -114,6 +122,24 @@ async function useProxy({ proxy, addr, to, from, mutation }) {
   debug('cannot useProxy: no proxy specified')
 }
 
+/**
+ * Fetch the gas price data from ethgasstation
+ * @returns String hex of gas price
+ * @throws Error if it fails
+ */
+async function fetchGasPrice() {
+  const res = await fetch(GAS_STATION_URL)
+  if (res.status !== 200) {
+    throw new Error(`Fetch returned code ${res.status}`)
+  }
+  const jason = await res.json()
+  if (typeof jason[GAS_PRICE_KEY] !== 'undefined') {
+    // values come from EGS as tenths of gwei
+    return jason[GAS_PRICE_KEY] * 1e8
+  }
+  throw new Error(`Gas key of ${GAS_PRICE_KEY} is unavailable`)
+}
+
 export default function txHelper({
   tx, // Raw web3.js transaction
   mutation, // Name of mutation
@@ -128,7 +154,7 @@ export default function txHelper({
   return new Promise(async (resolve, reject) => {
     debug(`Mutation ${mutation} from ${formatAddr(from)}`)
 
-    let txHash
+    let txHash, gasPrice
     let toSend = tx
     web3 = contracts.web3Exec
 
@@ -141,6 +167,22 @@ export default function txHelper({
     const shouldUseRelayer = useRelayer({ mutation, value })
     const shouldUseProxy = await useProxy({ proxy, addr, to, from, mutation })
     debug(`shouldUseProxy: ${shouldUseProxy}`)
+    debug(`shouldUseRelayer: ${shouldUseRelayer}`)
+
+    // Get our gas price
+    if (!shouldUseRelayer) {
+      if (window.ethereum) {
+        // Don't use eth_gasPrice for MM
+        try {
+          gasPrice = await fetchGasPrice()
+        } catch (err) {
+          debug(`Error fetching gas price`, err)
+        }
+      } else {
+        // But use it when we're using our provider
+        gasPrice = await web3.eth.getGasPrice()
+      }
+    }
 
     // If this user doesn't have a proxy yet, create one
     if (shouldUseProxy === 'create' || shouldUseProxy === 'create-no-wrap') {
@@ -224,11 +266,11 @@ export default function txHelper({
     }
 
     if (web3 && to) {
-      toSend = web3.eth.sendTransaction({ from, to, value, gas })
+      toSend = web3.eth.sendTransaction({ from, to, value, gas, gasPrice })
     } else {
       const toContract = get(toSend, '_parent._address')
-      debug('send', { mutation, from, to: toContract, value, gas })
-      toSend = toSend.send({ from, value, gas })
+      debug('send', { mutation, from, to: toContract, value, gas, gasPrice })
+      toSend = toSend.send({ from, value, gas, gasPrice })
     }
     toSend
       .once('transactionHash', async hash => {
