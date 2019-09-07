@@ -18,8 +18,19 @@ const ConfirmShippingAndPurchase = ({
   className,
   children,
   listing,
-  disabled
+  disabled,
+  messagingStatusLoading
 }) => {
+  if (messagingStatusLoading) {
+    return (
+      <button
+        className={className}
+        children={<fbt desc="Loading...">Loading...</fbt>}
+        disabled={true}
+      />
+    )
+  }
+
   if (!hasMessagingKeys) {
     return (
       <UserActivationLink

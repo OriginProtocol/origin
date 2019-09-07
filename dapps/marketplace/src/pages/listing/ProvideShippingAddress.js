@@ -53,14 +53,7 @@ const ProvideShippingAddress = ({
   const validate = useCallback(() => {
     const newState = {}
 
-    const stringFields = [
-      'name',
-      'address1',
-      'address2',
-      'city',
-      'stateProvinceRegion',
-      'country'
-    ]
+    const stringFields = ['address1', 'city', 'stateProvinceRegion', 'country']
 
     for (const strField of stringFields) {
       if (!inputState[strField] || !inputState[strField].trim()) {
@@ -71,13 +64,8 @@ const ProvideShippingAddress = ({
       }
     }
 
-    if (!inputState.postalCode || !inputState.postalCode.length) {
-      newState.postalCodeError = fbt(
-        'Postal code is required',
-        'Postal code is required'
-      )
-    } else {
-      const v = Number(inputState.postalCode)
+    if (inputState.postalCode && inputState.postalCode.trim().length) {
+      const v = Number(inputState.postalCode.trim())
       if (Number.isNaN(v)) {
         newState.postalCodeError = fbt(
           'Postal code must be a number',
@@ -123,9 +111,7 @@ const ProvideShippingAddress = ({
             history.goBack()
           }}
         >
-          <fbt desc="PurchaseListing.shippingAddress">
-            Provide a Shipping Address
-          </fbt>
+          <fbt desc="PurchaseListing.shippingAddress">Shipping Address</fbt>
         </MobileModalHeader>
       )}
       <div className="form-container">
@@ -142,7 +128,8 @@ const ProvideShippingAddress = ({
                   'city',
                   'stateProvinceRegion',
                   'country',
-                  'postalCode'
+                  'postalCode',
+                  'other'
                 ])
               )
 
@@ -154,9 +141,7 @@ const ProvideShippingAddress = ({
         >
           {isMobile ? null : (
             <h2>
-              <fbt desc="PurchaseListing.shippingAddress">
-                Provide a Shipping Address
-              </fbt>
+              <fbt desc="PurchaseListing.shippingAddress">Shipping Address</fbt>
             </h2>
           )}
           <div className="desc">
@@ -219,6 +204,13 @@ const ProvideShippingAddress = ({
             </label>
             <input {...input('country')} />
             {Feedback('country')}
+          </div>
+          <div className="form-group">
+            <label>
+              <fbt desc="ShippingAddress.other">Other</fbt>
+            </label>
+            <input {...input('other')} />
+            {Feedback('other')}
           </div>
           <div className="actions">
             <button type="submit" className="btn btn-primary btn-rounded">

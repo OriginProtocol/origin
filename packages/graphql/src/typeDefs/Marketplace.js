@@ -486,6 +486,7 @@ export const types = `
     stateProvinceRegion: String
     postalCode: String
     country: String
+    other: String
   }
 `
 export default types + mutations
