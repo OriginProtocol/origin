@@ -1,6 +1,8 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
 
+import get from 'lodash/get'
+
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
@@ -64,8 +66,18 @@ const PaymentOptions = ({
   hasBalance,
   hasEthBalance,
   children,
-  cannotTransact
+  cannotTransact,
+  ...props
 }) => {
+  const isLoadingData =
+    get(props, 'tokenStatus.loading') ||
+    props.cannotTransact === 'loading' ||
+    Object.keys(props).some(key => key.endsWith('Loading') && props[key])
+
+  if (isLoadingData) {
+    return null
+  }
+
   if (cannotTransact && cannotTransact !== 'no-balance') {
     return children
   }
