@@ -127,6 +127,7 @@ const config = {
       DOCKER: false,
       ENABLE_GROWTH: false,
       FACEBOOK_CLIENT_ID: null,
+      GAS_PRICE_KEY: null,
       GIT_COMMIT_HASH: gitCommitHash,
       GIT_BRANCH: gitBranch,
       HOST: 'localhost',
