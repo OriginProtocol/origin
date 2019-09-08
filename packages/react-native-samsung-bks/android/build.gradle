@@ -40,4 +40,5 @@ repositories {
 dependencies {
     implementation 'com.facebook.react:react-native:+'
     implementation 'com.samsung.android.sdk.coldwallet:KeystoreSDK_v1.1.0@aar'
+    implementation 'org.web3j:core:4.2.0-android'
 }

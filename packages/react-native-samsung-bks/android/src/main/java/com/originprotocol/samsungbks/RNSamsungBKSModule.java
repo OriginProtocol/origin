@@ -7,6 +7,8 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.samsung.android.sdk.coldwallet.*;
+import org.web3j.crypto.RawTransaction;
+import org.web3j.crypto.TransactionEncoder;
 import java.util.Base64;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -139,34 +141,38 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
     ScwService.getInstance().getAddressList(callback, hdPathList);
   }
 
-  /*
   @ReactMethod
   public void signEthTransaction(
       String hdPath,
-      String toAddress,
-      String ethAmount,
-      string ethGasPrice,
-      String ethGasLimit,
+      String to,
+      string gasPrice,
+      String gasLimit,
+      String value,
       String data,
       final Promise promise) {
     ScwService.ScwSignEthTransactionCallback callback =
         new ScwService.ScwSignEthTransactionCallback() {
           @Override
-          public void onSuccess(byte[] signedEthTransaction) {}
+          public void onSuccess(byte[] signedEthTransaction) {
+	      promise.resolve("0x" + bytesToHex(signedPersonalMessage));
+	  }
 
           @Override
-          public void onFailure(int errorCode) {}
+          public void onFailure(int errorCode) {
+	      onKeystoreFailure(errorCode, promise);
+	  }
         };
 
     byte[] encodedUnsignedEthTx =
-        createRawTransaction(toAddress, ethAmount, ethGasPrice, ethGasLimit, data);
+        createRawTransaction(gasPrice, gasLimit, to, value, data);
 
-    // private byte[] createRawTransaction () {
-    // }
+    private byte[] createRawTransaction(gasPrice, gasLimit, to, value, data) {
+	RawTransaction transaction = RawTransaction.createTransaction(0, gasPrice, gasLimit, to, value, data);
+	return TransactionEncoder.encode(transaction)
+    }
 
     ScwService.getInstance().signEthTransaction(callback, encodedUnsignedEthTx, hdPath);
   }
-  */
 
   @ReactMethod
   public void signEthPersonalMessage(String hdPath, String b64messageToSign, final Promise promise) {
