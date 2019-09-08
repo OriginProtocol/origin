@@ -30,9 +30,7 @@ const RequireShipping = ({ onChange, listing }) => {
         </fbt>
       </div>
       <div className="actions">
-        <label
-          className={`radio-button${requiresShipping ? ' selected' : ''}`}
-        >
+        <label className={`radio-button${requiresShipping ? ' selected' : ''}`}>
           <input
             type="radio"
             value="yes"

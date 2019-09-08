@@ -481,7 +481,8 @@ class Buy extends Component {
 
 export default withConfig(
   withMessagingStatus(
-    withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy)))))
+    withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy))))),
+    { excludeData: true }
   )
 )
 

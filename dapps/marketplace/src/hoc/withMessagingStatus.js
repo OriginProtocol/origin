@@ -5,7 +5,7 @@ import query from 'queries/WalletStatus'
 
 import get from 'lodash/get'
 
-function withMessagingStatus(WrappedComponent) {
+function withMessagingStatus(WrappedComponent, { excludeData } = {}) {
   const WithMessagingStatus = props => {
     const { data, loading, error, networkStatus } = useQuery(query)
 
@@ -26,7 +26,7 @@ function withMessagingStatus(WrappedComponent) {
         hasMessagingKeys={hasKeys}
         messagingStatusError={error}
         messagingStatusLoading={loading || networkStatus === 1}
-        messagingStatus={data}
+        messagingStatus={excludeData ? null : data}
       />
     )
   }

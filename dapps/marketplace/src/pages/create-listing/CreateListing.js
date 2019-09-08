@@ -80,8 +80,8 @@ const CreateListing = props => {
   }
 
   if (
-    (!props.identity && !localStorage.noIdentity) ||
-    !props.hasMessagingKeys
+    (!props.identity || !props.hasMessagingKeys) &&
+    !localStorage.noIdentity
   ) {
     return (
       <UserActivationLink
@@ -172,7 +172,8 @@ const CreateListing = props => {
 }
 
 export default withMessagingStatus(
-  withCreatorConfig(withWallet(withIdentity(CreateListing)))
+  withCreatorConfig(withWallet(withIdentity(CreateListing))),
+  { excludeData: true }
 )
 
 require('react-styl')(`

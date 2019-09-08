@@ -53,4 +53,6 @@ const ConfirmShippingAndPurchase = ({
   )
 }
 
-export default withMessagingStatus(ConfirmShippingAndPurchase)
+export default withMessagingStatus(ConfirmShippingAndPurchase, {
+  excludeData: true
+})
