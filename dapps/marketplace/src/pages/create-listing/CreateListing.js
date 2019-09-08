@@ -84,7 +84,8 @@ const CreateListing = props => {
 
   if (
     (!props.identity || !props.hasMessagingKeys) &&
-    !localStorage.noIdentity && !localStorage.useWeb3Identity
+    !localStorage.noIdentity &&
+    !localStorage.useWeb3Identity
   ) {
     return (
       <UserActivationLink
