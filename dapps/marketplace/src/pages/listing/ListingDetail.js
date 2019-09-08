@@ -14,6 +14,12 @@ import AboutParty from 'components/AboutParty'
 import DocumentTitle from 'components/DocumentTitle'
 import Category from 'components/Category'
 import UserListings from 'pages/user/_UserListings'
+import {
+  isHistoricalListing,
+  historicalListingIsCurrent,
+  currentListingIdFromHistoricalId
+} from 'utils/listing'
+import Redirect from 'components/Redirect'
 
 import Sold from './_ListingSold'
 import Pending from './_ListingPending'
@@ -41,6 +47,14 @@ class ListingDetail extends Component {
 
   render() {
     const { listing } = this.props
+
+    if (isHistoricalListing(listing) && historicalListingIsCurrent(listing)) {
+      return (
+        <Redirect
+          to={`/listing/${currentListingIdFromHistoricalId(listing)}`}
+        />
+      )
+    }
 
     if (!listing || !listing.seller || !listing.seller.id) {
       console.error(
