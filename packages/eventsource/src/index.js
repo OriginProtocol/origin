@@ -8,7 +8,7 @@ const _get = require('lodash/get')
 const memoize = require('lodash/memoize')
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
-const MULTI_UNIT_TYPES = ['UnitListing', 'GiftCardListing']
+const MULTI_UNIT_TYPES = ['UnitListing', 'GiftCardListing', 'ServiceListing']
 
 const getListingDirect = async (contract, listingId) =>
   await contract.methods.listings(listingId).call()

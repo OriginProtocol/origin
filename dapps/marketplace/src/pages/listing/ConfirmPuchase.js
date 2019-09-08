@@ -25,6 +25,8 @@ import {
   FractionalHourlyPurchaseSummary
 } from './_BuyFractionalHourly'
 
+const MULTI_UNIT_TYPES = ['UnitListing', 'GiftCardListing', 'ServiceListing']
+
 const ConfirmPurchase = ({
   listing,
   quantity,
@@ -34,8 +36,10 @@ const ConfirmPurchase = ({
   shippingAddress,
   bookingRange
 }) => {
-  const singleUnit = !listing.multiUnit && listing.__typename === 'UnitListing'
-  const multiUnit = listing.multiUnit && listing.__typename === 'UnitListing'
+  const singleUnit =
+    !listing.multiUnit && MULTI_UNIT_TYPES.includes(listing.__typename)
+  const multiUnit =
+    listing.multiUnit && MULTI_UNIT_TYPES.includes(listing.__typename)
   const isFractional = listing.__typename === 'FractionalListing'
   const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
 
