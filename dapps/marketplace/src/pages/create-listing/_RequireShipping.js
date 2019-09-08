@@ -108,11 +108,17 @@ const RequireShipping = ({
 
   if (messagingStatusError) {
     console.error(messagingStatusError)
-    return null
+    return (
+      <div className="alert alert-danger">
+        <fbt desc="fix errors">Something went wrong. Try enabling messaging and refreshing the page.</fbt>
+      </div>
+    )
   }
 
   if (messagingStatusLoading) {
-    return null
+    return (
+      <fbt desc="Loading...">Loading...</fbt>
+    )
   }
 
   return (
