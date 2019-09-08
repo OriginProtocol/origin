@@ -17,3 +17,16 @@ export function currentListingIdFromHistoricalId(listing) {
   }
   return null
 }
+export function historicalListingIsCurrent(listing) {
+  if (!isHistoricalListing(listing)) {
+    return true
+  }
+
+  const historicalListingMatch = listing.id.match(regex)
+  const blockNumber = parseInt(historicalListingMatch[4])
+  const maxBlockNumber = Math.max(
+    ...listing.events.map(event => event.blockNumber)
+  )
+
+  return blockNumber === maxBlockNumber
+}
