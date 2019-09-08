@@ -50,7 +50,7 @@ const FractionalNightlyDetail = ({
               />
             </>
           }
-          className="availability-modal"
+          className="availability-modal nightly"
           shouldClose={closeModal}
           lightMode={true}
           showBackButton={false}
@@ -103,6 +103,7 @@ export default withIsMobile(FractionalNightlyDetail)
 
 require('react-styl')(`
   .availability-modal
+    height: 95vh
     .choose-dates
       flex: auto 0 0
     .actions
@@ -113,6 +114,18 @@ require('react-styl')(`
         width: 250px
         margin-left: auto
         margin-right: auto
+    &.nightly
+      .actions
+        position: absolute
+        left: 3rem
+        right: 3rem
+        bottom: 0.5rem
+      .availability-calendar
+        position: absolute
+        top: 7.5rem
+        bottom: 8.125rem
+        left: 3rem
+        right: 3rem
     &.modal-content
       min-height: auto
     &.modal-header
@@ -141,7 +154,18 @@ require('react-styl')(`
             color: var(--bright-blue)
   @media (max-width: 767.98px)
     .availability-modal
+      height: auto
       padding: 1rem
+      &.nightly
+        .actions
+          left: 1rem
+          right: 1rem
+          bottom: 1rem
+        .availability-calendar
+          top: 5rem
+          bottom: 6rem
+          left: 1rem
+          right: 1rem
       .actions
         border-top: 1px solid #dde6ea
         .btn

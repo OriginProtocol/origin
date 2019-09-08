@@ -23,6 +23,13 @@ class EthGasStationProvider extends SubProvider {
     const jason = await res.json()
     if (typeof jason[GAS_PRICE_KEY] !== 'undefined') {
       // values come from EGS as tenths of gwei
+      if (
+        !jason[GAS_PRICE_KEY] ||
+        typeof jason[GAS_PRICE_KEY] !== 'number' ||
+        jason[GAS_PRICE_KEY] < 1
+      ) {
+        throw new Error('Gas price from ethgasstation does not appear valid')
+      }
       return '0x' + (jason[GAS_PRICE_KEY] * 1e8).toString(16)
     }
     throw new Error(`Gas key of ${GAS_PRICE_KEY} is unavailable`)
@@ -51,10 +58,12 @@ class EthGasStationProvider extends SubProvider {
           console.error('Error fetching results from ethgastation.info')
           console.error(err)
           // Send to next subprovider
-          return next()
+          next()
+          return
         })
     } else {
-      return next()
+      next()
+      return
     }
   }
 }
