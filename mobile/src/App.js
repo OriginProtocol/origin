@@ -19,7 +19,8 @@ YellowBox.ignoreWarnings([
   // https://github.com/facebook/react-native/issues/18868
   'Warning: isMounted(...) is deprecated',
   // https://github.com/facebook/react-native/issues/17504
-  'Module RCTImageLoader requires main queue setup'
+  'Module RCTImageLoader requires main queue setup',
+  'Setting a timer'
 ])
 
 const App = () => {

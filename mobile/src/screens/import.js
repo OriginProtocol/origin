@@ -1,9 +1,10 @@
 'use strict'
 
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Platform, StyleSheet, Text, View } from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
+import get from 'lodash.get'
 
 import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'

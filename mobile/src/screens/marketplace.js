@@ -209,23 +209,6 @@ class MarketplaceScreen extends Component {
     )
   }
 
-  /* Inject Javascript that causes the page to refresh when it hits the top.
-   * The scrolling element from the scroll event is used as the element to
-   * handle modals.
-   */
-  injectScrollHandler = () => {
-    this.injectJavaScript(
-      `
-        window.onscroll = function(e) {
-          window.webViewBridge.send('handleScrollHandlerResponse', {
-            scrollTop: e.srcElement.scrollingElement.scrollTop
-          });
-        }
-      `,
-      'scroll handler'
-    )
-  }
-
   /* Inject a GraphQL query into the DApp using `window.gql`.
    */
   injectGraphqlQuery = (
@@ -312,9 +295,12 @@ class MarketplaceScreen extends Component {
    * app is installed this will open it, otherwise returns false.
    */
   openNativeDeepLink = async (url, timeControlVariableName) => {
-    if (Linking.canOpenURL(url)) {
+    console.debug(`Attempting to open ${url} with native application`)
+
+    const canOpen = await Linking.canOpenURL(url)
+    if (canOpen) {
+      console.debug('Can open URL with native application')
       this.goBackToDapp()
-      // Preventing multiple subsequent shares
       if (
         !this[timeControlVariableName] ||
         new Date() - this[timeControlVariableName] > 3000
@@ -323,9 +309,10 @@ class MarketplaceScreen extends Component {
         return await Linking.openURL(url)
       }
     } else {
-      // Can not open deep link url
-      return false
+      console.debug('Could not open URL with native application')
     }
+
+    return false
   }
 
   /* Monitor the state of the WebView and if attempting to open a URL from
@@ -410,8 +397,6 @@ class MarketplaceScreen extends Component {
       DeviceEventEmitter.emit('graphqlResult', msg.data)
     } else if (msg.targetFunc === 'handleGraphqlError') {
       DeviceEventEmitter.emit('graphqlError', msg.data)
-    } else if (msg.targetFunc === 'handleScrollHandlerResponse') {
-      this.setState({ enablePullToRefresh: msg.data === 0 })
     }
   }
 
@@ -430,14 +415,11 @@ class MarketplaceScreen extends Component {
   }
 
   onWebViewLoad = () => {
+    console.debug('WebView completed load')
     // Set the language in the DApp to the same as the mobile app
     this.injectLanguage()
     // Set the currency in the DApp
     this.injectCurrency()
-    // Inject scroll handler for pull to refresh function
-    if (Platform.OS === 'android') {
-      this.injectScrollHandler()
-    }
     // Preload messaging keys so user doesn't have to enable messaging
     this.injectMessagingKeys()
     // Check if a growth invie code needs to be set
@@ -495,12 +477,10 @@ class MarketplaceScreen extends Component {
   }
 
   render = () => {
-    const refreshControl = (
+    const refreshControl = Platform.OS === 'android' ? <></> : (
       <RefreshControl
-        enabled={this.state.enablePullToRefresh}
         refreshing={this.state.refreshing}
         onRefresh={this.onRefresh}
-        {...(Platform.OS === 'android' ? this._panResponder.panHandlers : [])}
       />
     )
 
@@ -517,6 +497,7 @@ class MarketplaceScreen extends Component {
             <ScrollView
               contentContainerStyle={{ flex: 1 }}
               refreshControl={refreshControl}
+              {...(Platform.OS === 'android' ? this._panResponder.panHandlers : [])}
             >
               {this.renderWebView()}
             </ScrollView>
