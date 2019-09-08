@@ -6,8 +6,9 @@ import get from 'lodash/get'
 
 const RequireShipping = ({ onChange, listing }) => {
   const isForSale = get(listing, 'category') === 'schema.forSale'
+  const newListing = !get(listing, 'id')
   const [requiresShipping, setRequiresShipping] = useState(
-    get(listing, 'requiresShipping', isForSale)
+    (isForSale && newListing) || get(listing, 'requiresShipping')
   )
 
   const onChangeCallback = useCallback(

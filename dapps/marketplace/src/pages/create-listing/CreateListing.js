@@ -24,7 +24,10 @@ const store = Store('sessionStorage')
 function initialState(props) {
   // If a listing is passed in (as when editing) use that, otherwise
   // fall back to anything in `store` (an unfinished listing creation)
-  const existingListing = props.listing || store.get('create-listing') || {}
+  const existingListing =
+    (props.listing && props.listing.id
+      ? store.get(`edit-listing-${props.listing.id}`, props.listing)
+      : store.get('create-listing')) || {}
 
   return {
     __typename: 'UnitListing', // Default
@@ -106,7 +109,11 @@ const CreateListing = props => {
     listing: { ...listing, ...forceType },
     onChange: listing => {
       setListing(listing)
-      store.set('create-listing', listing)
+      if (listing.id) {
+        store.set(`edit-listing-${listing.id}`, listing)
+      } else {
+        store.set('create-listing', listing)
+      }
     }
   }
 
