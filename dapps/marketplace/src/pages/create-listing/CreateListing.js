@@ -6,6 +6,7 @@ import get from 'lodash/get'
 import withWallet from 'hoc/withWallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 import withIdentity from 'hoc/withIdentity'
+import withMessagingStatus from 'hoc/withMessagingStatus'
 
 import DocumentTitle from 'components/DocumentTitle'
 import UserActivationLink from 'components/UserActivationLink'
@@ -72,12 +73,16 @@ const CreateListing = props => {
   if (
     props.creatorConfigLoading ||
     props.walletLoading ||
-    props.identityLoading
+    props.identityLoading ||
+    props.messagingStatusLoading
   ) {
     return <LoadingSpinner />
   }
 
-  if (!props.identity && !localStorage.noIdentity) {
+  if (
+    (!props.identity && !localStorage.noIdentity) ||
+    !props.hasMessagingKeys
+  ) {
     return (
       <UserActivationLink
         location={{ pathname: '/create' }}
@@ -166,7 +171,9 @@ const CreateListing = props => {
   )
 }
 
-export default withCreatorConfig(withWallet(withIdentity(CreateListing)))
+export default withMessagingStatus(
+  withCreatorConfig(withWallet(withIdentity(CreateListing)))
+)
 
 require('react-styl')(`
   .create-listing
