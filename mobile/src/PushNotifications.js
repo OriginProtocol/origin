@@ -1,7 +1,7 @@
 'use strict'
 
 import { Component } from 'react'
-import { Alert, AppState, DeviceEventEmitter, Platform } from 'react-native'
+import { Alert, AppState, Platform } from 'react-native'
 import PushNotification from 'react-native-push-notification'
 import PushNotificationIOS from '@react-native-community/push-notification-ios'
 import { connect } from 'react-redux'
@@ -20,17 +20,9 @@ import withConfig from 'hoc/withConfig'
 class PushNotifications extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
       backgroundNotification: null
     }
-
-    DeviceEventEmitter.addListener(
-      'requestNotificationPermissions',
-      this.requestNotificationPermissions.bind(this)
-    )
-
-    DeviceEventEmitter.addListener('removeAccount', this.unregister.bind(this))
   }
 
   async componentDidMount() {
@@ -292,26 +284,6 @@ class PushNotifications extends Component {
     }
   }
 
-  /* Request permissions to send push notifications
-   */
-  async requestNotificationPermissions() {
-    console.debug('Requesting notification permissions')
-    if (Platform.OS === 'ios') {
-      DeviceEventEmitter.emit(
-        'notificationPermission',
-        await PushNotificationIOS.requestPermissions()
-      )
-    } else {
-      // Android has push notifications enabled by default
-      DeviceEventEmitter.emit(
-        'notificationPermission',
-        DEFAULT_NOTIFICATION_PERMISSIONS
-      )
-    }
-  }
-
-  /* This is a renderless component
-   */
   render() {
     return null
   }

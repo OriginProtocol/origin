@@ -140,10 +140,11 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
       console.debug(`Contract method is ${functionName} on ${contractName}`)
     }
 
-    PushNotification.checkPermissions(async permissions => {
+    PushNotification.requestPermissions(async permissions => {
       const newModals = []
       // Check if the user has enabled push notifications and prompt them
       // to do so if they have not and it is not just a simple identity update
+      await PushNotificationIOS.requestPermissions()
       if (
         !__DEV__ &&
         !permissions.alert &&
