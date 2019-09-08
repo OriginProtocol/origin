@@ -20,9 +20,14 @@ import NotificationCard from 'components/notification-card'
 import SignatureCard from 'components/signature-card'
 import TransactionCard from 'components/transaction-card'
 
+/* eslint-disable react/display-name */
 const OriginWeb3View = React.forwardRef((props, ref) => {
   const [transactionCardLoading, setTransactionCardLoading] = useState(false)
   const [modals, setModals] = useState([])
+
+  const web3Provider = new ethers.providers.Web3Provider(
+    props.settings.network.provider
+  )
 
   // TODO use the HOC, need to get forwardRef working through HOC
   const isUsingSamsungBKS =
@@ -51,15 +56,23 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
     }
   }
 
-  const _sendTransaction = async () => {
-    console.debug('Sending a transaction')
-  }
-
-  const _signTransaction = async () => {
+  const _sendTransaction = async transaction => {
     if (isUsingSamsungBKS) {
       console.debug('Signing transaction with Samsung BKS')
+      // TODO
+      const signedTransaction = await RNSamsungBKS.signTransaction(
+        props.wallet.activeAccount.hdPath
+      )
+      console.debug('Sending transaction via provider')
+      return await web3Provider.sendTransaction(signedTransaction)
+      // Return hash
     } else {
-      console.debug('Signing transaction with local wallet cache')
+      const wallet = new ethers.Wallet(
+        props.wallet.activeAccount.privateKey,
+        web3Provider
+      )
+      console.debug('Sending transaction with local wallet cache')
+      return await wallet.sendTransaction(transaction)
     }
   }
 
@@ -71,12 +84,11 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
     // of the accounts array
     let result
     if (wallet.activeAccount) {
-      const filteredAccounts = wallet.accounts.filter(
-        a => a.address !== wallet.activeAccount.address
-      )
       result = [
         wallet.activeAccount.address,
-        ...filteredAccounts.map(a => a.address)
+        ...wallet.accounts
+          .filter(a => a.address !== wallet.activeAccount.address)
+          .map(a => a.address)
       ]
     } else {
       result = wallet.accounts.map(a => a.address)
@@ -216,9 +228,9 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
         msgData={modal.msgData}
         onConfirm={async () => {
           setTransactionCardLoading(true)
-          const hash = await _sendTransaction(modal.msgData.data)
+          const transaction = await _sendTransaction(modal.msgData.data)
           setTransactionCardLoading(false)
-          toggleModal(modal, hash)
+          toggleModal(modal, transaction.hash)
         }}
         loading={transactionCardLoading}
         onRequestClose={() =>
