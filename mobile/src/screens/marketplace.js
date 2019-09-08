@@ -209,14 +209,16 @@ class MarketplaceScreen extends Component {
     )
   }
 
-  /* Inject Javascript that causes the page to refresh when it hits the top
+  /* Inject Javascript that causes the page to refresh when it hits the top.
+   * The scrolling element from the scroll event is used as the element to
+   * handle modals.
    */
   injectScrollHandler = () => {
     this.injectJavaScript(
       `
-        window.onscroll = function() {
+        window.onscroll = function(e) {
           window.webViewBridge.send('handleScrollHandlerResponse', {
-            scrollTop: document.documentElement.scrollTop || document.body.scrollTop
+            scrollTop: e.srcElement.scrollingElement.scrollTop
           });
         }
       `,
@@ -449,6 +451,7 @@ class MarketplaceScreen extends Component {
   /* Handle refresh requests, e.g. from the RefreshControl component.
    */
   onRefresh = () => {
+    console.debug('Refresh control called refresh')
     if (Platform.OS === 'android') {
       // Workaround for broken refreshing in Android, insert a
       // time string alongside the # to force a reload

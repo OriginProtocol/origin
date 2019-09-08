@@ -7,9 +7,12 @@ import { fbt } from 'fbt-runtime'
 
 import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'
-import withIsSamsungBKS from 'hoc/withIsSamsungBKS'
 
 const importAccountScreen = props => {
+  const canUseSamsungBKS =
+    Platform.OS === 'android' &&
+    get(props, 'samsungBKS.seedHash', '').length > 0
+
   const renderImportButtons = () => {
     return (
       <>
@@ -45,7 +48,7 @@ const importAccountScreen = props => {
     )
   }
 
-  if (props.isSamsungBKS) {
+  if (canUseSamsungBKS) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={{ ...styles.container, flexGrow: 2 }}>
@@ -57,19 +60,19 @@ const importAccountScreen = props => {
               Your wallet is managed by the Samsung Blockchain Keystore.
             </fbt>
           </Text>
-          <View style={{ ...styles.container, ...styles.buttonContainer }}>
-            {renderAddSamsungBKSAccountButton()}
-            {__DEV__ && (
-              <>
-                <Text
-                  style={{ ...styles.text, marginTop: 30, marginBottom: 10 }}
-                >
-                  Developer Options
-                </Text>
-                {renderImportButtons()}
-              </>
-            )}
-          </View>
+        </View>
+        <View style={{ ...styles.container, ...styles.buttonContainer }}>
+          {renderAddSamsungBKSAccountButton()}
+          {__DEV__ && (
+            <>
+              <Text
+                style={{ ...styles.text, marginTop: 30, marginBottom: 10 }}
+              >
+                Developer Options
+              </Text>
+              {renderImportButtons()}
+            </>
+          )}
         </View>
       </SafeAreaView>
     )
@@ -86,15 +89,15 @@ const importAccountScreen = props => {
             You can import a wallet using one of the methods below.
           </fbt>
         </Text>
-        <View style={{ ...styles.container, ...styles.buttonContainer }}>
-          {renderImportButtons()}
-        </View>
+      </View>
+      <View style={{ ...styles.container, ...styles.buttonContainer }}>
+        {renderImportButtons()}
       </View>
     </SafeAreaView>
   )
 }
 
-export default withIsSamsungBKS(importAccountScreen)
+export default importAccountScreen
 
 const styles = StyleSheet.create({
   ...CommonStyles,

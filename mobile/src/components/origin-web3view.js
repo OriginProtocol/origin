@@ -25,7 +25,7 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   const [transactionCardLoading, setTransactionCardLoading] = useState(false)
   const [modals, setModals] = useState([])
 
-  const web3Provider = new ethers.providers.Web3Provider(
+  const web3Provider = new ethers.providers.JsonRpcProvider(
     props.settings.network.provider
   )
 
@@ -275,8 +275,8 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   )
 })
 
-const mapStateToProps = ({ samsungBKS, wallet }) => {
-  return { samsungBKS, wallet }
+const mapStateToProps = ({ samsungBKS, settings, wallet }) => {
+  return { samsungBKS, settings, wallet }
 }
 
 export default connect(
