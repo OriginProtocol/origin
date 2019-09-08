@@ -266,7 +266,7 @@ class UpdateListing extends Component {
               <fbt desc="success">Success!</fbt>
             </h5>
             <div className="help">
-              <fbt desc="buy.sucessMoveOgn">
+              <fbt desc="update.sucessMoveOgn">
                 Origin may now move OGN on your behalf.
               </fbt>
             </div>
