@@ -3,7 +3,7 @@
 const memoize = require('lodash/memoize')
 const Web3 = require('web3')
 const utils = require('ethereumjs-util')
-const { Validator, PROXY_HARDCODE } = require('../src/validator')
+const { Validator, PROXY_HARDCODE } = require('validator')
 const ProxyFactoryContract = require('@origin/contracts/build/contracts/ProxyFactory_solc')
 const IdentityProxyContract = require('@origin/contracts/build/contracts/IdentityProxy_solc')
 const MarketplaceContract = require('@origin/contracts/build/contracts/V00_Marketplace')
@@ -345,7 +345,6 @@ class Relayer {
       this.validator.validate(PROXY_HARDCODE, txData)
     } catch (e) {
       logger.error('Error in transaction validator', e)
-      throw e
     }
 
     let tx, txHash, dbTx

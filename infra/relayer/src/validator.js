@@ -210,6 +210,8 @@ class ProxyValidator extends ContractCallVailidator {
       }
       validationsNeeded.push([params._marketplace, params._offer])
       validationsNeeded.push([params._exchange, params._swap])
+    } else if (method.name == 'transferToOwner') {
+      return [] // No further validation needed
     } else {
       logger.info(
         `Validation failed. ${method.name} is not an allowed to be called on a proxy contract`
