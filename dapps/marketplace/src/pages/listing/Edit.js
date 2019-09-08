@@ -1,4 +1,4 @@
-import React, { Component, useRef } from 'react'
+import React, { useRef } from 'react'
 import get from 'lodash/get'
 
 import withCreatorConfig from 'hoc/withCreatorConfig'
