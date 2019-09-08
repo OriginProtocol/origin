@@ -6,14 +6,14 @@ import get from 'lodash/get'
 
 const RequireShipping = ({ onChange, listing }) => {
   const isForSale = get(listing, 'category') === 'schema.forSale'
-  const [requriresShipping, setRequriresShipping] = useState(
-    get(listing, 'requriresShipping', isForSale)
+  const [requiresShipping, setRequiresShipping] = useState(
+    get(listing, 'requiresShipping', isForSale)
   )
 
   const onChangeCallback = useCallback(
     e => {
       const value = e.target.value === 'yes'
-      setRequriresShipping(value)
+      setRequiresShipping(value)
       onChange(value)
     },
     [onChange]
@@ -31,23 +31,23 @@ const RequireShipping = ({ onChange, listing }) => {
       </div>
       <div className="actions">
         <label
-          className={`radio-button${requriresShipping ? ' selected' : ''}`}
+          className={`radio-button${requiresShipping ? ' selected' : ''}`}
         >
           <input
             type="radio"
             value="yes"
-            checked={requriresShipping}
+            checked={requiresShipping}
             onChange={onChangeCallback}
           />
           <fbt desc="Yes">Yes</fbt>
         </label>
         <label
-          className={`radio-button${!requriresShipping ? ' selected' : ''}`}
+          className={`radio-button${!requiresShipping ? ' selected' : ''}`}
         >
           <input
             type="radio"
             value="no"
-            checked={!requriresShipping}
+            checked={!requiresShipping}
             onChange={onChangeCallback}
           />
           <fbt desc="No">No</fbt>
