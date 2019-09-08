@@ -28,7 +28,9 @@ const Success = ({ match, listing, multiUnit }) => {
         </h4>
         <div>
           <fbt desc="PromoteListing.promoted">
-            You&apos;ve successfully promoted your listing. This gives your listing higher visibility than others on the Origin app and broader network.
+            You&apos;ve successfully promoted your listing. This gives your
+            listing higher visibility than others on the Origin app and broader
+            network.
           </fbt>
         </div>
         <div className="summary">
