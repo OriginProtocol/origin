@@ -63,6 +63,7 @@ const SingleUnit = ({ listing, growthReward, prices, tokenStatus, token }) => {
         tokens={prices}
         price={listing.price}
         acceptedTokens={listing.acceptedTokens}
+        listing={listing}
         value={token}
         hasBalance={tokenStatus.hasBalance}
         hasEthBalance={tokenStatus.hasEthBalance}

@@ -7,6 +7,7 @@ import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 import withWeb3 from 'hoc/withWeb3'
+import { isHistoricalListing } from 'utils/listing'
 
 import Price from 'components/Price'
 import Link from 'components/Link'
@@ -60,6 +61,7 @@ const SwapEthToDai = () => (
 const PaymentOptions = ({
   identity,
   acceptedTokens,
+  listing,
   value,
   price,
   tokens,
@@ -101,7 +103,7 @@ const PaymentOptions = ({
     needsSwap = false,
     noEthOrDai = false
 
-  if (hasIdentity) {
+  if (hasIdentity && !isHistoricalListing(listing)) {
     if (acceptsDai && acceptsEth && daiActive) {
       if (hasBalance) {
         content = <PayWithDai />
@@ -150,7 +152,7 @@ const PaymentOptions = ({
         />
       ) : (
         <>
-          {hasIdentity && (
+          {hasIdentity && !isHistoricalListing(listing) && (
             <div className="payment-total">
               <span>
                 <fbt desc="paymentOptions.payment">Payment</fbt>
