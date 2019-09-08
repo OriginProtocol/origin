@@ -15,10 +15,7 @@ import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
 import UserActivationLink from 'components/UserActivationLink'
-import {
-  isHistoricalListing,
-  currentListingIdFromHistoricalId
-} from 'utils/listing'
+import { isHistoricalListing } from 'utils/listing'
 import HistoricalListingWarning from 'pages/listing/_HistoricalListingWarning'
 
 import withCanTransact from 'hoc/withCanTransact'
@@ -91,11 +88,7 @@ class Buy extends Component {
       if (this.state.error) {
         content = this.renderTransactionError()
       } else if (isHistoricalListing(this.props.listing)) {
-        action = (
-          <HistoricalListingWarning
-            listingId={currentListingIdFromHistoricalId(this.props.listing)}
-          />
-        )
+        action = <HistoricalListingWarning listing={this.props.listing} />
       } else if (this.state.waitFor) {
         content = this.renderWaitModal()
       } else if (this.state.waitForAllow) {

@@ -1,16 +1,20 @@
 import React from 'react'
 import Link from 'components/Link'
+import { currentListingIdFromHistoricalId } from 'utils/listing'
 
 import { fbt } from 'fbt-runtime'
 
-const HistoricalListingWarning = ({ listingId }) => (
+const HistoricalListingWarning = ({ listing }) => (
   <>
     <div className="historical-warning">
       <fbt desc="listingDetail.view-current-listing">
         A newer version of this listing has been published
       </fbt>
     </div>
-    <Link to={`/listing/${listingId}`} className="btn btn-primary">
+    <Link
+      to={`/listing/${currentListingIdFromHistoricalId(listing)}`}
+      className="btn btn-primary"
+    >
       <fbt desc="listingDetail.view-current-listing">View Current Listing</fbt>
     </Link>
   </>
