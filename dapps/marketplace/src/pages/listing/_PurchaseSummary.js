@@ -17,7 +17,7 @@ const PurchaseSummary = ({
     <div className="summary">
       <div className="summary-row">
         <div className="summary-name">
-          <fbt desc="PurchaseSummary.name">Purchase Item</fbt>
+          <fbt desc="PurchaseSummary.name">Item</fbt>
         </div>
         <div className="summary-value">{listing.title}</div>
       </div>
