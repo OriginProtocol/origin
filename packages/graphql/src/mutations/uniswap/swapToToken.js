@@ -25,7 +25,7 @@ export async function swapToTokenTx(tokenValue) {
   // the new price.
   const toBN = contracts.web3.utils.toBN
   const value = toBN(marketValue)
-    .mul(toBN(101))
+    .mul(toBN(102))
     .div(toBN(100))
     .toString()
 
