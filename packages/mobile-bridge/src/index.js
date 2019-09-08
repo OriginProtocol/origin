@@ -1,6 +1,7 @@
 'use strict'
 
 import ZeroClientProvider from 'web3-provider-engine/zero'
+import EthGasStationProvider from './EthGasStationProvider'
 
 import initBridge from './webviewbridge'
 
@@ -108,6 +109,7 @@ class MobileBridge {
     // we're returning.
     provider._providers.splice(3, 1)
     provider._providers.splice(4, 1)
+    provider._providers.unshift(new EthGasStationProvider())
     provider.isOrigin = true
 
     return provider

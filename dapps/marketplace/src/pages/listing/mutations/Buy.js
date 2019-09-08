@@ -36,15 +36,27 @@ class Buy extends Component {
     return get(this.props, 'tokenStatus.hasAllowance', false)
   }
 
-  hasMessagingEnabled() {
-    return get(this.props, 'messagingStatus.enabled', false)
-  }
-
   render() {
     if (this.state.onboard) {
       return <Redirect to={`/listing/${this.props.listing.id}/onboard`} />
     }
     let content
+
+    const isLoadingData =
+      get(this.props, 'tokenStatus.loading') ||
+      this.props.cannotTransact === 'loading' ||
+      Object.keys(this.props).some(
+        key => key.endsWith('Loading') && this.props[key]
+      )
+
+    if (isLoadingData)
+      return (
+        <button
+          className={this.props.className}
+          disabled={true}
+          children={<fbt desc="Loading...">Loading...</fbt>}
+        />
+      )
 
     let action = (
       <button
@@ -54,8 +66,13 @@ class Buy extends Component {
       />
     )
 
-    const hasIdentity = localStorage.noIdentity || this.props.identity
-    if (!hasIdentity || !this.props.wallet || !this.hasMessagingEnabled()) {
+    const hasIdentity = this.props.identity
+    const hasMessagingKeys = this.props.hasMessagingKeys
+    const needsOnboarding =
+      !hasIdentity || !this.props.wallet || !hasMessagingKeys
+    const onboardingDisabled = localStorage.noIdentity ? true : false
+
+    if (needsOnboarding && !onboardingDisabled) {
       action = (
         <UserActivationLink
           className={this.props.className}
@@ -102,9 +119,8 @@ class Buy extends Component {
         {action}
         {!this.state.modal ? null : (
           <Modal
-            onClose={() =>
-              this.setState({ error: false, modal: false, shouldClose: false })
-            }
+            disableDismiss={true}
+            onClose={() => this.resetState()}
             shouldClose={this.state.shouldClose}
           >
             {content}
@@ -112,6 +128,15 @@ class Buy extends Component {
         )}
       </>
     )
+  }
+
+  resetState() {
+    const newState = Object.keys(this.state).reduce((m, o) => {
+      m[o] = null
+      return m
+    }, {})
+
+    this.setState(newState)
   }
 
   renderTransactionError() {
@@ -299,7 +324,8 @@ class Buy extends Component {
       quantity,
       startDate,
       endDate,
-      currency
+      currency,
+      shippingAddress
     } = this.props
 
     const variables = {
@@ -316,6 +342,10 @@ class Buy extends Component {
       listing.__typename === 'FractionalHourlyListing'
     ) {
       variables.fractionalData = { startDate, endDate }
+    }
+
+    if (listing.requiresShipping) {
+      variables.shippingAddress = shippingAddress
     }
 
     makeOffer({ variables })

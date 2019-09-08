@@ -8,6 +8,9 @@ import MetaMaskAnimation from 'components/MetaMaskAnimation'
 import query from 'queries/TransactionReceipt'
 import withWallet from 'hoc/withWallet'
 import withConfig from 'hoc/withConfig'
+import Sentry from 'utils/sentry'
+
+const INVALID_JSON_RPC = 'Invalid JSON RPC response'
 
 const WaitForFirstBlock = () => (
   <div className="make-offer-modal">
@@ -126,8 +129,13 @@ class WaitForTransaction extends Component {
             events.find(e => e.event === this.props.event) || events[0]
 
           let content
-          if (error) {
+          // Catch errors, but ignore one-off JSON-RPC errors
+          if (
+            error &&
+            (error.message && !error.message.indexOf(INVALID_JSON_RPC))
+          ) {
             console.error(error)
+            Sentry.captureException(error)
             content = <Error />
           } else if (!receipt || !confirmedBlock) {
             content = <WaitForFirstBlock />

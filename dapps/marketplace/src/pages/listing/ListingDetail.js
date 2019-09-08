@@ -1,7 +1,4 @@
 import React, { Component } from 'react'
-import AvailabilityCalculator from '@origin/graphql/src/utils/AvailabilityCalculator'
-import AvailabilityCalculatorHourly from '@origin/graphql/src/utils/AvailabilityCalculatorHourly'
-import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
@@ -32,28 +29,13 @@ import GiftCardDetail from './listing-types/GiftCard'
 import FractionalNightlyDetail from './listing-types/FractionalNightly'
 import FractionalHourlyDetail from './listing-types/FractionalHourly'
 
+import getAvailabilityCalculator from 'utils/getAvailabilityCalculator'
+
 class ListingDetail extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
-    if (props.listing.__typename === 'FractionalListing') {
-      this.state.availability = new AvailabilityCalculator({
-        weekdayPrice: get(props, 'listing.price.amount'),
-        weekendPrice: get(props, 'listing.weekendPrice.amount'),
-        booked: get(props, 'listing.booked'),
-        unavailable: get(props, 'listing.unavailable'),
-        customPricing: get(props, 'listing.customPricing')
-      })
-    }
-    if (props.listing.__typename === 'FractionalHourlyListing') {
-      this.state.availabilityHourly = new AvailabilityCalculatorHourly({
-        booked: get(props, 'listing.booked'),
-        unavailable: get(props, 'listing.unavailable'),
-        customPricing: get(props, 'listing.customPricing'),
-        timeZone: get(props, 'listing.timeZone'),
-        workingHours: get(props, 'listing.workingHours'),
-        price: get(props, 'listing.price.amount')
-      })
+    this.state = {
+      availability: getAvailabilityCalculator(props.listing)
     }
   }
 
@@ -77,8 +59,9 @@ class ListingDetail extends Component {
   renderContent() {
     const { listing, isMobile } = this.props
 
-    const gallery =
-      listing.media && listing.media.length ? (
+    let gallery
+    if (listing.media && listing.media.length) {
+      gallery = (
         <div className="listing-media">
           {this.props.isMobile ? (
             <GalleryScroll pics={listing.media} />
@@ -86,7 +69,8 @@ class ListingDetail extends Component {
             <Gallery pics={listing.media} />
           )}
         </div>
-      ) : null
+      )
+    }
 
     const reviews = <Reviews id={listing.seller.id} seller hideWhenZero />
     const userListings = (
@@ -106,19 +90,15 @@ class ListingDetail extends Component {
     if (isMobile) {
       return (
         <>
-          <div className="listing-hero-section">
-            <div className="listing-info">
-              {this.renderHeading()}
-              {this.renderAction()}
-            </div>
-            {gallery}
+          <div className="listing-info">
+            {this.renderHeading()}
+            {this.renderAction()}
           </div>
+          {gallery}
           <div className="listing-description">
             {this.renderListingDetail()}
           </div>
-          <div className="listing-hero-section">
-            <div className="about-seller">{this.renderSellerInfo()}</div>
-          </div>
+          <div className="about-seller">{this.renderSellerInfo()}</div>
           <div className="seller-info">
             {userListings}
             {reviews}
@@ -129,12 +109,14 @@ class ListingDetail extends Component {
 
     return (
       <>
-        <div className="listing-hero-section">
-          {gallery}
-          <div className="listing-info">
-            {this.renderHeading()}
-            {this.renderAction()}
-            {this.renderSellerInfo()}
+        <div className="row">
+          <div className="col-md-7 col-xl-8">{gallery}</div>
+          <div className="col-md-5 col-xl-4">
+            <div className="listing-info">
+              {this.renderHeading()}
+              {this.renderAction()}
+              {this.renderSellerInfo()}
+            </div>
           </div>
         </div>
         <div className="listing-description">{this.renderListingDetail()}</div>
@@ -176,7 +158,10 @@ class ListingDetail extends Component {
           description={description}
           availability={this.state.availability}
           isOwnerViewing={isOwnerViewing}
-          onChange={state => this.setState(state)}
+          onChange={state => {
+            this.setState(state)
+            this.props.updateBookingRange(state.range)
+          }}
           openCalendar={this.state.openCalendar}
           onClose={() => this.setState({ openCalendar: false })}
         />
@@ -186,9 +171,12 @@ class ListingDetail extends Component {
         <FractionalHourlyDetail
           listing={listing}
           description={description}
-          availability={this.state.availabilityHourly}
+          availability={this.state.availability}
           isOwnerViewing={isOwnerViewing}
-          onChange={state => this.setState(state)}
+          onChange={state => {
+            this.setState(state)
+            this.props.updateBookingRange(state.range)
+          }}
           openCalendar={this.state.openCalendar}
           onClose={() => this.setState({ openCalendar: false })}
         />
@@ -289,7 +277,7 @@ class ListingDetail extends Component {
         <FractionalHourly
           {...props}
           range={this.state.range}
-          availability={this.state.availabilityHourly}
+          availability={this.state.availability}
           onShowAvailability={() => {
             this.setState({
               openCalendar: true
@@ -328,19 +316,6 @@ export default withGrowthCampaign(
 require('react-styl')(`
   .listing-detail
     margin-top: 2.5rem
-
-    .listing-hero-section
-      display: flex
-      .listing-media
-        padding: 0 15px
-        flex: 50% 1 1
-        max-width: 50%
-        width: 50%
-      .listing-info
-        padding: 0 15px
-        flex: 50% 1 1
-        width: 50%
-        max-width: 50%
 
     .seller-info
       display: grid
@@ -489,25 +464,23 @@ require('react-styl')(`
       .about-party
         margin-bottom: 1.5rem
 
-      .listing-hero-section
-        flex-direction: column
-        .listing-media
-          padding: 15px 0
-          max-width: 100%
-          width: 100%
-          .gallery-scroll-wrap
-            border-radius: 10px
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3)
-        .listing-info
-          width: 100%
-          max-width: 100%
-          padding: 0
-          .heading h2
-            font-size: 28px
-            margin-bottom: 1rem
-        .about-seller
-          border-top: 1px solid #dde6ea
-          padding: 1.5rem 0 0 0
+      .listing-media
+        padding: 15px 0
+        max-width: 100%
+        width: 100%
+        .gallery-scroll-wrap
+          border-radius: 10px
+          box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3)
+      .listing-info
+        width: 100%
+        max-width: 100%
+        padding: 0
+        .heading h2
+          font-size: 28px
+          margin-bottom: 1rem
+      .about-seller
+        border-top: 1px solid #dde6ea
+        padding: 1.5rem 0 0 0
 
       .seller-info
         border: 0
@@ -551,5 +524,6 @@ require('react-styl')(`
 
   @media (min-width: 1200px)
     .listing-detail.container
-      max-width: 960px
+      .listing-description
+        max-width: 960px
 `)
