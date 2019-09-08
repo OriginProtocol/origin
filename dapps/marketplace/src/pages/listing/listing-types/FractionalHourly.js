@@ -35,7 +35,7 @@ const FractionalHourlyDetail = ({
       {openCalendar && (
         <ModalComp
           title={fbt('Availability', 'Availability')}
-          className="availability-modal"
+          className="availability-modal hourly"
           shouldClose={closeModal}
           lightMode={true}
           onClose={() => {
@@ -99,4 +99,30 @@ require('react-styl')(`
   .timeZone
     font-size: 14px
     margin-bottom: 1rem
+  .availability-modal
+    &.hourly
+      .weekCalendar
+        overflow-y: scroll
+        position: absolute
+        top: 10.5rem
+        bottom: 6.125rem
+        left: 3rem
+        right: 3rem
+      .actions
+        position: absolute
+        left: 3rem
+        right: 3rem
+        bottom: 0.5rem
+  @media (max-width: 767.98px)
+    .availability-modal
+      &.hourly
+        .weekCalendar
+          top: 9.6rem
+          bottom: 4.125rem
+          left: 1rem
+          right: 1rem
+        .actions
+          left: 1rem
+          right: 1rem
+          bottom: 1rem
 `)

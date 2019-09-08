@@ -193,7 +193,7 @@ require('react-styl')(`
       .actions
         .btn
           border-radius: 2rem
-          padding: 0.625rem 2rem
+          padding: 0.875rem 2rem
           min-width: 10rem
           font-size: 18px
           &:not(:last-child)
