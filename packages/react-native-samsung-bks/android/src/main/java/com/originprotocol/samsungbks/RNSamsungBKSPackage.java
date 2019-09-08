@@ -10,8 +10,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class RNSamsungBKSPackage implements ReactPackage {
+
   @Override
-  public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
+  public List<NativeModule> createNativeModules(
+    ReactApplicationContext reactContext
+  ) {
     return Arrays.<NativeModule>asList(new RNSamsungBKSModule(reactContext));
   }
 
@@ -21,7 +24,9 @@ public class RNSamsungBKSPackage implements ReactPackage {
   }
 
   @Override
-  public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
+  public List<ViewManager> createViewManagers(
+    ReactApplicationContext reactContext
+  ) {
     return Collections.emptyList();
   }
 }

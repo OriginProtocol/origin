@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
-
   private final ReactApplicationContext reactContext;
 
   public RNSamsungBKSModule(ReactApplicationContext reactContext) {
@@ -33,42 +32,42 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
     Field errorField = null;
     for (Field f : interfaceFields) {
       try {
-	if (f.getInt(ScwErrorCode.class) == errorCode) {
-	  errorField = f;
-	}
+        if (f.getInt(ScwErrorCode.class) == errorCode) {
+          errorField = f;
+        }
       } catch (Exception error) {
-	// Skip
+        // Skip
       }
     }
 
     if (errorField != null) {
       try {
-	promise.reject(errorField.get(ScwErrorCode.class).toString(), errorField.getName());
+        promise.reject(
+          errorField.get(ScwErrorCode.class).toString(),
+          errorField.getName()
+        );
       } catch (Exception error) {
-	System.out.println(error);
-	promise.reject("Samsung Blockchain Keystore error " + errorCode);
+        System.out.println(error);
+        promise.reject("Samsung Blockchain Keystore error " + errorCode);
       }
     } else {
       promise.reject("Samsung Blockchain Keystore error " + errorCode);
     }
   }
 
-	private static String bytesToHex(final byte[] bytes) {
-	    final int numBytes = bytes.length;
-	    final char[] container = new char[numBytes * 2];
+  private static String bytesToHex(final byte[] bytes) {
+    final int numBytes = bytes.length;
+    final char[] container = new char[numBytes * 2];
 
-	    for (int i = 0; i < numBytes; i++)
-	    {
-		final int b = bytes[i] & 0xFF;
+    for (int i = 0; i < numBytes; i++) {
+      final int b = bytes[i] & 0xFF;
 
-		container[i * 2] = Character.forDigit(b >>> 4, 0x10);
-		container[i * 2 + 1] = Character.forDigit(b & 0xF, 0x10);
-	    }
+      container[i * 2] = Character.forDigit(b >>> 4, 0x10);
+      container[i * 2 + 1] = Character.forDigit(b & 0xF, 0x10);
+    }
 
-	    return new String(container);
-	}
-
-
+    return new String(container);
+  }
 
   @ReactMethod
   public void isSupported(Promise promise) {
@@ -89,17 +88,17 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void checkForMandatoryAppUpdate(final Promise promise) {
-    ScwService.ScwCheckForMandatoryAppUpdateCallback callback =
-        new ScwService.ScwCheckForMandatoryAppUpdateCallback() {
-          @Override
-          public void onMandatoryAppUpdateNeeded(boolean needed) {
-            if (needed) {
-              promise.resolve(ScwDeepLink.GALAXY_STORE);
-            } else {
-              promise.resolve(false);
-            }
-          }
-        };
+    ScwService.ScwCheckForMandatoryAppUpdateCallback callback = new ScwService.ScwCheckForMandatoryAppUpdateCallback() {
+
+      @Override
+      public void onMandatoryAppUpdateNeeded(boolean needed) {
+        if (needed) {
+          promise.resolve(ScwDeepLink.GALAXY_STORE);
+        } else {
+          promise.resolve(false);
+        }
+      }
+    };
 
     ScwService.getInstance().checkForMandatoryAppUpdate(callback);
   }
@@ -122,18 +121,18 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void getAddressList(String hdPath, final Promise promise) {
-    ScwService.ScwGetAddressListCallback callback =
-        new ScwService.ScwGetAddressListCallback() {
-          @Override
-          public void onSuccess(List<String> addressList) {
-            promise.resolve(addressList.get(0));
-          }
+    ScwService.ScwGetAddressListCallback callback = new ScwService.ScwGetAddressListCallback() {
 
-          @Override
-          public void onFailure(int errorCode) {
-	      onKeystoreFailure(errorCode, promise);
-          }
-        };
+      @Override
+      public void onSuccess(List<String> addressList) {
+        promise.resolve(addressList.get(0));
+      }
+
+      @Override
+      public void onFailure(int errorCode) {
+        onKeystoreFailure(errorCode, promise);
+      }
+    };
 
     ArrayList<String> hdPathList = new ArrayList<>();
     hdPathList.add(hdPath);
@@ -143,54 +142,63 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void signEthTransaction(
-      String hdPath,
-      String to,
-      string gasPrice,
-      String gasLimit,
-      String value,
-      String data,
-      final Promise promise) {
-    ScwService.ScwSignEthTransactionCallback callback =
-        new ScwService.ScwSignEthTransactionCallback() {
-          @Override
-          public void onSuccess(byte[] signedEthTransaction) {
-	      promise.resolve("0x" + bytesToHex(signedPersonalMessage));
-	  }
+    String hdPath,
+    String to,
+    string gasPrice,
+    String gasLimit,
+    String value,
+    String data,
+    final Promise promise
+  ) {
+    ScwService.ScwSignEthTransactionCallback callback = new ScwService.ScwSignEthTransactionCallback() {
 
-          @Override
-          public void onFailure(int errorCode) {
-	      onKeystoreFailure(errorCode, promise);
-	  }
-        };
+      @Override
+      public void onSuccess(byte[] signedEthTransaction) {
+        promise.resolve("0x" + bytesToHex(signedPersonalMessage));
+      }
 
-    byte[] encodedUnsignedEthTx =
-        createRawTransaction(gasPrice, gasLimit, to, value, data);
+      @Override
+      public void onFailure(int errorCode) {
+        onKeystoreFailure(errorCode, promise);
+      }
+    };
 
-    private byte[] createRawTransaction(gasPrice, gasLimit, to, value, data) {
-	RawTransaction transaction = RawTransaction.createTransaction(0, gasPrice, gasLimit, to, value, data);
-	return TransactionEncoder.encode(transaction)
-    }
+    RawTransaction transaction = RawTransaction.createTransaction(
+      0,
+      gasPrice,
+      gasLimit,
+      to,
+      value,
+      data
+    );
+    byte[] encodedUnsignedEthTx = TransactionEncoder.encode(transaction);
 
-    ScwService.getInstance().signEthTransaction(callback, encodedUnsignedEthTx, hdPath);
+    ScwService.getInstance()
+      .signEthTransaction(callback, encodedUnsignedEthTx, hdPath);
   }
 
   @ReactMethod
-  public void signEthPersonalMessage(String hdPath, String b64messageToSign, final Promise promise) {
-    ScwService.ScwSignEthPersonalMessageCallback callback =
-        new ScwService.ScwSignEthPersonalMessageCallback() {
-          @Override
-          public void onSuccess(byte[] signedPersonalMessage) {
-		promise.resolve("0x" + bytesToHex(signedPersonalMessage));
-	  }
+  public void signEthPersonalMessage(
+    String hdPath,
+    String b64messageToSign,
+    final Promise promise
+  ) {
+    ScwService.ScwSignEthPersonalMessageCallback callback = new ScwService.ScwSignEthPersonalMessageCallback() {
 
-          @Override
-          public void onFailure(int errorCode) {
-	      onKeystoreFailure(errorCode, promise);
-	  }
-        };
+      @Override
+      public void onSuccess(byte[] signedPersonalMessage) {
+        promise.resolve("0x" + bytesToHex(signedPersonalMessage));
+      }
+
+      @Override
+      public void onFailure(int errorCode) {
+        onKeystoreFailure(errorCode, promise);
+      }
+    };
 
     byte[] unSignedMsg = Base64.getDecoder().decode(b64MessageToSign);
 
-    ScwService.getInstance().signEthPersonalMessage(callback, messageToSign, hdPath);
+    ScwService.getInstance()
+      .signEthPersonalMessage(callback, messageToSign, hdPath);
   }
 }
