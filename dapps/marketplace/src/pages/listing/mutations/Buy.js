@@ -15,6 +15,8 @@ import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
 import UserActivationLink from 'components/UserActivationLink'
+import { isHistoricalListing } from 'utils/listing'
+import HistoricalListingWarning from 'pages/listing/_HistoricalListingWarning'
 
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
@@ -85,6 +87,8 @@ class Buy extends Component {
 
       if (this.state.error) {
         content = this.renderTransactionError()
+      } else if (isHistoricalListing(this.props.listing)) {
+        action = <HistoricalListingWarning listing={this.props.listing} />
       } else if (this.state.waitFor) {
         content = this.renderWaitModal()
       } else if (this.state.waitForAllow) {
@@ -113,7 +117,6 @@ class Buy extends Component {
         action = this.renderMakeOfferMutation()
       }
     }
-
     return (
       <>
         {action}
@@ -486,6 +489,11 @@ export default withConfig(
 )
 
 require('react-styl')(`
+  .historical-warning
+    border-radius: 0.625rem
+    border: solid 1px #ffc000
+    background-color: rgba(255, 192, 0, 0.1)
+    padding: 0.75rem 1.25rem
   .make-offer-modal
     display: flex
     flex-direction: column
