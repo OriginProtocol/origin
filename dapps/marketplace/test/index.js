@@ -697,11 +697,7 @@ describe('Marketplace Dapp', function() {
   this.timeout(10000)
   before(async function() {
     await page.evaluate(() => {
-      delete window.localStorage.noIdentity
-      delete window.localStorage.performanceMode
-      delete window.localStorage.proxyAccountsEnabled
-      delete window.localStorage.relayerEnabled
-      delete window.localStorage.debug
+      window.localStorage.clear()
       window.localStorage.promoteEnabled = 'true'
       window.transactionPoll = 100
     })
@@ -715,11 +711,8 @@ describe('Marketplace Dapp with proxies enabled', function() {
   this.timeout(10000)
   before(async function() {
     await page.evaluate(() => {
+      window.localStorage.clear()
       window.localStorage.proxyAccountsEnabled = true
-      delete window.localStorage.noIdentity
-      delete window.localStorage.performanceMode
-      delete window.localStorage.relayerEnabled
-      delete window.localStorage.debug
       window.localStorage.promoteEnabled = 'true'
       window.transactionPoll = 100
     })
@@ -739,6 +732,7 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
 
   before(async function() {
     await page.evaluate(() => {
+      window.localStorage.clear()
       window.localStorage.noIdentity = true
       window.localStorage.performanceMode = true
       window.localStorage.proxyAccountsEnabled = true
