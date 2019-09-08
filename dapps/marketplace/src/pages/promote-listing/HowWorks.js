@@ -18,15 +18,12 @@ const HowWorks = ({ match }) => (
       </h4>
       <div className="mt-3">
         <fbt desc="PromoteListing.howItWorksDescription">
-          You can promote your listing by depositing Origin Tokens (OGN). Your
-          OGN is like a <b>commission</b> that will be deducted each time a sale
-          is made.
+          You can promote your listing with Origin Tokens (OGN) to get higher placement and more exposure on the Origin app and broader network.
         </fbt>
       </div>
       <div className="mt-3">
         <fbt desc="PromoteListing.exposure">
-          This gives your listing higher placement and <b>more exposure</b>{' '}
-          across the Origin network
+          Your OGN deposit acts as a commission that will be deducted every time a sale is made. Think of this as advertising to attract more buyers to your listing.
         </fbt>
       </div>
       <div className="actions">
