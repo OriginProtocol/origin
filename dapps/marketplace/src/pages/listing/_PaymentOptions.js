@@ -58,6 +58,25 @@ const SwapEthToDai = () => (
   </fbt>
 )
 
+/**
+ * Component with the logic for deciding what payment options should be
+ * used for a purchase.
+ *
+ * @param identity
+ * @param {Array<string>} acceptedTokens: List of crypt-currencies accepted by the buyer.
+ *   Ex: ['token-ETH', 'token-DAI'] indicates the seller accepts payment in both ETH and DAI.
+ * @param {Object} listing: Listing to be purchased
+ * @param value
+ * @param price
+ * @param tokens
+ * @param hasBalance
+ * @param hasEthBalance
+ * @param children
+ * @param cannotTransact
+ * @param props
+ * @returns {null|boolean}
+ * @constructor
+ */
 const PaymentOptions = ({
   identity,
   acceptedTokens,
@@ -93,8 +112,7 @@ const PaymentOptions = ({
     const daiActive = value === 'token-DAI' ? ' active' : ''
     const ethActive = value === 'token-ETH' ? ' active' : ''
     const acceptsDai = acceptedTokens.find(t => t.id === 'token-DAI')
-    const acceptsEth =
-      !acceptsDai || acceptedTokens.find(t => t.id === 'token-ETH')
+    const acceptsEth = acceptedTokens.find(t => t.id === 'token-ETH')
 
     const ethPrice = <Price price={price} target="token-ETH" className="bold" />
     const daiPrice = <Price price={price} target="token-DAI" className="bold" />
