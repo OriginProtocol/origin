@@ -47,8 +47,8 @@ const ConfirmPurchase = ({
   switch (true) {
     case multiUnit:
     case isService:
-      BuyMutationComponent = BuySingleUnitMutation
-      SummaryComponent = SingleUnitPurchaseSummary
+      BuyMutationComponent = BuyMultiUnitMutation
+      SummaryComponent = MultiUnitPurchaseSummary
       break
 
     case isFractional:
@@ -63,8 +63,8 @@ const ConfirmPurchase = ({
 
     case singleUnit:
     default:
-      BuyMutationComponent = BuyMultiUnitMutation
-      SummaryComponent = MultiUnitPurchaseSummary
+      BuyMutationComponent = BuySingleUnitMutation
+      SummaryComponent = SingleUnitPurchaseSummary
       break
   }
 
