@@ -13,7 +13,7 @@ import RNSamsungBKS from 'react-native-samsung-bks'
 import NavigationService from '../NavigationService'
 import { SamsungBKSConstants, getSeedHash } from 'actions/SamsungBKS'
 import { setAccounts } from 'actions/Wallet'
-import { generateHdPath } from 'utils/user'
+import { generateHdPath } from 'utils'
 
 class SamsungBKS extends React.Component {
   state = {

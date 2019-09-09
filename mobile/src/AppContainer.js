@@ -7,7 +7,7 @@ import { createAppContainer } from 'react-navigation'
 import get from 'lodash.get'
 
 import { Navigation } from './Navigation'
-import { updateExchangeRate } from 'utils/price'
+import { updateExchangeRate } from 'utils/exchangeRate'
 import { findBestAvailableCurrency } from 'utils/currencies'
 import PushNotifications from './PushNotifications'
 import AuthenticationGuard from 'components/authentication-guard'

@@ -3,7 +3,7 @@
 import { DeviceEventEmitter } from 'react-native'
 import { ethers } from 'ethers'
 
-import { generateHdPath } from 'utils/user'
+import { generateHdPath } from 'utils'
 import keyMirror from 'utils/keyMirror'
 
 export const WalletConstants = keyMirror(

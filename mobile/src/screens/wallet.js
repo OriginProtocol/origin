@@ -14,7 +14,7 @@ import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash.get'
 
-import { evenlySplitAddress } from 'utils/user'
+import { evenlySplitAddress } from 'utils'
 import Address from 'components/address'
 import Currency from 'components/currency'
 import currencies from 'utils/currencies'

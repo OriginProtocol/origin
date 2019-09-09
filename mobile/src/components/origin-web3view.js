@@ -14,7 +14,7 @@ import get from 'lodash.get'
 import RNSamsungBKS from 'react-native-samsung-bks'
 
 import { decodeTransaction } from 'utils/contractDecoder'
-import { isValidMetaTransaction } from 'utils/user'
+import { isValidMetaTransaction } from 'utils'
 import Web3View from 'components/web3view'
 import NotificationCard from 'components/notification-card'
 import SignatureCard from 'components/signature-card'
