@@ -25,10 +25,6 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   const [transactionCardLoading, setTransactionCardLoading] = useState(false)
   const [modals, setModals] = useState([])
 
-  const web3Provider = new ethers.providers.JsonRpcProvider(
-    props.settings.network.provider
-  )
-
   // TODO use the HOC, need to get forwardRef working through HOC
   const isUsingSamsungBKS =
     Platform.OS === 'android' &&
@@ -57,6 +53,10 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   }
 
   const _sendTransaction = async transaction => {
+    const web3Provider = new ethers.providers.JsonRpcProvider(
+      props.settings.network.provider
+    )
+
     if (isUsingSamsungBKS) {
       console.debug('Signing transaction with Samsung BKS')
       // TODO
