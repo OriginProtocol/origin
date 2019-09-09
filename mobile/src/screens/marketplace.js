@@ -209,6 +209,21 @@ class MarketplaceScreen extends Component {
     )
   }
 
+  /* Inject Javascript that causes the page to refresh when it hits the top
+   */
+  injectScrollHandler = () => {
+    this.injectJavaScript(
+      `
+        window.onscroll = function() {
+          window.webViewBridge.send('handleScrollHandlerResponse', {
+            scrollTop: document.documentElement.scrollTop || document.body.scrollTop
+          });
+        }
+      `,
+      'scroll handler'
+    )
+  }
+
   /* Inject a GraphQL query into the DApp using `window.gql`.
    */
   injectGraphqlQuery = (
@@ -397,6 +412,11 @@ class MarketplaceScreen extends Component {
       DeviceEventEmitter.emit('graphqlResult', msg.data)
     } else if (msg.targetFunc === 'handleGraphqlError') {
       DeviceEventEmitter.emit('graphqlError', msg.data)
+    } else if (msg.targetFunc === 'handleScrollHandlerResponse') {
+      // TODO disabled due to https://github.com/OriginProtocol/origin/issues/2884
+      // Requires implementation where scrolling in modals can be detected,
+      // possibly from React side?
+      // this.setState({ enablePullToRefresh: msg.data.scrollTop === 0 })
     }
   }
 
@@ -423,6 +443,10 @@ class MarketplaceScreen extends Component {
     this.injectMessagingKeys()
     // Check if a growth invie code needs to be set
     this.injectInviteCode()
+    // Inject scroll handler for pull to refresh function
+    if (Platform.OS === 'android') {
+      this.injectScrollHandler()
+    }
     // Set state to ready in redux
     this.props.setMarketplaceReady(true)
     // Make sure any error state is cleared
