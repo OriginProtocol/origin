@@ -159,7 +159,7 @@ const ShippingAddress = ({
   )
 }
 
-export default withMessagingStatus(ShippingAddress)
+export default withMessagingStatus(ShippingAddress, { excludeData: true })
 
 require('react-styl')(`
   .transaction-progress .decrypted-shipping-address

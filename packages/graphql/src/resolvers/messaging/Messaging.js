@@ -78,6 +78,7 @@ export default {
   },
   syncProgress: () => contracts.messaging.syncProgress,
   pubKey: () => {
+    checkForMessagingOverride()
     if (messagingOverride) {
       return messagingOverride.pubKey
     }
@@ -87,6 +88,7 @@ export default {
       : null
   },
   pubSig: () => {
+    checkForMessagingOverride()
     if (messagingOverride) {
       return messagingOverride.pubSig
     }
