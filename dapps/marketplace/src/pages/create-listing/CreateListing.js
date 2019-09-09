@@ -82,7 +82,10 @@ const CreateListing = props => {
     return <LoadingSpinner />
   }
 
-  if (!props.identity && !localStorage.bypassOnboarding) {
+  if (
+    !props.identity &&
+    (!localStorage.bypassOnboarding || !localStorage.useWeb3Identity)
+  ) {
     return (
       <UserActivationLink
         location={{ pathname: '/create' }}

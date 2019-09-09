@@ -99,7 +99,8 @@ const PaymentOptions = ({
     const ethPrice = <Price price={price} target="token-ETH" className="bold" />
     const daiPrice = <Price price={price} target="token-DAI" className="bold" />
 
-    const hasIdentity = localStorage.bypassOnboarding || identity
+    const hasIdentity =
+      localStorage.bypassOnboarding || localStorage.useWeb3Identity || identity
 
     if (hasIdentity && !isHistoricalListing(listing)) {
       if (acceptsDai && acceptsEth && daiActive) {
