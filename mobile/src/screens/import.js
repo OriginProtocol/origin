@@ -36,6 +36,7 @@ const importAccountScreen = props => {
     )
   }
 
+  /*
   const renderAddSamsungBKSAccountButton = () => {
     return (
       <OriginButton
@@ -48,6 +49,7 @@ const importAccountScreen = props => {
       />
     )
   }
+  */
 
   if (canUseSamsungBKS) {
     return (
@@ -63,7 +65,7 @@ const importAccountScreen = props => {
           </Text>
         </View>
         <View style={{ ...styles.container, ...styles.buttonContainer }}>
-          {renderAddSamsungBKSAccountButton()}
+          {/*renderAddSamsungBKSAccountButton()*/}
           {__DEV__ && (
             <>
               <Text style={{ ...styles.text, marginTop: 30, marginBottom: 10 }}>
