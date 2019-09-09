@@ -1,6 +1,8 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
 
+import get from 'lodash/get'
+
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
@@ -66,8 +68,18 @@ const PaymentOptions = ({
   hasBalance,
   hasEthBalance,
   children,
-  cannotTransact
+  cannotTransact,
+  ...props
 }) => {
+  const isLoadingData =
+    get(props, 'tokenStatus.loading') ||
+    props.cannotTransact === 'loading' ||
+    Object.keys(props).some(key => key.endsWith('Loading') && props[key])
+
+  if (isLoadingData) {
+    return null
+  }
+
   const noBalance = cannotTransact && cannotTransact !== 'no-balance'
   const noTokens = !Object.keys(tokens).length
 
@@ -87,7 +99,8 @@ const PaymentOptions = ({
     const ethPrice = <Price price={price} target="token-ETH" className="bold" />
     const daiPrice = <Price price={price} target="token-DAI" className="bold" />
 
-    const hasIdentity = localStorage.bypassOnboarding || identity
+    const hasIdentity =
+      localStorage.bypassOnboarding || localStorage.useWeb3Identity || identity
 
     if (hasIdentity && !isHistoricalListing(listing)) {
       if (acceptsDai && acceptsEth && daiActive) {

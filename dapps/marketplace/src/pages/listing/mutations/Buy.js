@@ -72,7 +72,10 @@ class Buy extends Component {
     const hasMessagingKeys = this.props.hasMessagingKeys
     const needsOnboarding =
       !hasIdentity || !this.props.wallet || !hasMessagingKeys
-    const onboardingDisabled = localStorage.bypassOnboarding ? true : false
+    const onboardingDisabled =
+      localStorage.bypassOnboarding || localStorage.useWeb3Identity
+        ? true
+        : false
 
     if (needsOnboarding && !onboardingDisabled) {
       action = (
@@ -484,7 +487,8 @@ class Buy extends Component {
 
 export default withConfig(
   withMessagingStatus(
-    withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy)))))
+    withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy))))),
+    { excludeData: true }
   )
 )
 

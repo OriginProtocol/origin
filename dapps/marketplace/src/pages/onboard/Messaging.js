@@ -1,17 +1,17 @@
 import React, { useState } from 'react'
-import { useQuery, useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { fbt } from 'fbt-runtime'
 
 import withIsMobile from 'hoc/withIsMobile'
+import withMessagingStatus from 'hoc/withMessagingStatus'
+
 import MobileModal from 'components/MobileModal'
 import Link from 'components/Link'
 import MetaMaskAnimation from 'components/MetaMaskAnimation'
 import HelpOriginWallet from 'components/DownloadApp'
 import ListingPreview from './_ListingPreview'
 import HelpMessaging from './_HelpMessaging'
-
-import WalletStatusQuery from 'queries/WalletStatus'
 
 const EnableMessagingMutation = gql`
   mutation enableMessaging {
@@ -160,24 +160,24 @@ const EnableMessagingButtons = ({ next, showButtons, onError }) => {
   )
 }
 
-const OnboardMessaging = props => {
+const OnboardMessagingRaw = ({
+  messagingStatusError,
+  messagingStatusLoading,
+  messagingStatus,
+  nextLink
+}) => {
   const [waitForSignature, setWaitForSignature] = useState(false)
   const [signatureError, setSignatureError] = useState(null)
 
-  const { nextLink } = props
-  const { data, error, networkStatus } = useQuery(WalletStatusQuery, {
-    notifyOnNetworkStatusChange: true
-  })
-
-  if (networkStatus === 1) {
+  if (messagingStatusLoading) {
     return <MessagingInitializing />
-  } else if (error) {
+  } else if (messagingStatusError) {
     return (
       <p className="p-3">
         <fbt desc="Error">Error</fbt>
       </p>
     )
-  } else if (!data || !data.messaging) {
+  } else if (!messagingStatus || !messagingStatus.messaging) {
     return (
       <p className="p-3">
         <fbt desc="No Web3">No Web3</fbt>
@@ -185,8 +185,8 @@ const OnboardMessaging = props => {
     )
   }
 
-  const firstMessageSigned = data.messaging.pubKey
-  const secondMessageSigned = data.messaging.pubSig
+  const firstMessageSigned = messagingStatus.messaging.pubKey
+  const secondMessageSigned = messagingStatus.messaging.pubSig
   const buttons = (
     <EnableMessagingButtons
       next={() => {
@@ -207,9 +207,9 @@ const OnboardMessaging = props => {
   )
 
   let cmp
-  if (!data.messaging.synced) {
-    cmp = <MessagingSyncing pct={data.messaging.syncProgress} />
-  } else if (!data.messaging.enabled && !waitForSignature) {
+  if (!messagingStatus.messaging.synced) {
+    cmp = <MessagingSyncing pct={messagingStatus.messaging.syncProgress} />
+  } else if (!messagingStatus.messaging.enabled && !waitForSignature) {
     cmp = (
       <EnableMessaging
         firstMessageSigned={firstMessageSigned}
@@ -227,6 +227,8 @@ const OnboardMessaging = props => {
 
   return cmp
 }
+
+const OnboardMessaging = withMessagingStatus(OnboardMessagingRaw)
 
 const Messaging = ({ listing, linkPrefix, isMobile, hideOriginWallet }) => {
   const nextLink = `${linkPrefix}/onboard/rewards`

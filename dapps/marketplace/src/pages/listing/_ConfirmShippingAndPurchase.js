@@ -33,7 +33,10 @@ const ConfirmShippingAndPurchase = ({
     )
   }
 
-  if (!hasMessagingKeys && !localStorage.bypassOnboarding) {
+  if (
+    !hasMessagingKeys &&
+    (!localStorage.bypassOnboarding || !localStorage.useWeb3Identity)
+  ) {
     return (
       <UserActivationLink
         className={className}
@@ -59,4 +62,6 @@ const ConfirmShippingAndPurchase = ({
   )
 }
 
-export default withMessagingStatus(ConfirmShippingAndPurchase)
+export default withMessagingStatus(ConfirmShippingAndPurchase, {
+  excludeData: true
+})
