@@ -66,9 +66,7 @@ const importAccountScreen = props => {
           {renderAddSamsungBKSAccountButton()}
           {__DEV__ && (
             <>
-              <Text
-                style={{ ...styles.text, marginTop: 30, marginBottom: 10 }}
-              >
+              <Text style={{ ...styles.text, marginTop: 30, marginBottom: 10 }}>
                 Developer Options
               </Text>
               {renderImportButtons()}

@@ -144,7 +144,6 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
       const newModals = []
       // Check if the user has enabled push notifications and prompt them
       // to do so if they have not and it is not just a simple identity update
-      await PushNotificationIOS.requestPermissions()
       if (
         !__DEV__ &&
         !permissions.alert &&

@@ -92,7 +92,7 @@ class MarketplaceScreen extends Component {
       get(prevProps, 'settings.network.dappUrl') !==
       get(this.props, 'settings.network.dappUrl')
     ) {
-      // Default dapp url changed, trigger WebView url change
+      // Default DApp url changed, trigger WebView url change
       this.setState({
         webViewUrlTrigger: get(this.props, 'settings.network.dappUrl')
       })
@@ -477,12 +477,15 @@ class MarketplaceScreen extends Component {
   }
 
   render = () => {
-    const refreshControl = Platform.OS === 'android' ? <></> : (
-      <RefreshControl
-        refreshing={this.state.refreshing}
-        onRefresh={this.onRefresh}
-      />
-    )
+    const refreshControl =
+      Platform.OS === 'android' ? (
+        <></>
+      ) : (
+        <RefreshControl
+          refreshing={this.state.refreshing}
+          onRefresh={this.onRefresh}
+        />
+      )
 
     return (
       <AndroidBackHandler onBackPress={this.onBack}>
@@ -497,7 +500,9 @@ class MarketplaceScreen extends Component {
             <ScrollView
               contentContainerStyle={{ flex: 1 }}
               refreshControl={refreshControl}
-              {...(Platform.OS === 'android' ? this._panResponder.panHandlers : [])}
+              {...(Platform.OS === 'android'
+                ? this._panResponder.panHandlers
+                : [])}
             >
               {this.renderWebView()}
             </ScrollView>
