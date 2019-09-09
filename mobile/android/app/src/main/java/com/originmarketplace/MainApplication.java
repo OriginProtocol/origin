@@ -1,4 +1,4 @@
-package com.origincatcher;
+package com.originmarketplace;
 
 import android.app.Application;
 import android.webkit.WebView;

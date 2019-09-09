@@ -1,4 +1,4 @@
-package com.origincatcher;
+package com.originmarketplace;
 
 import android.content.Intent;
 
@@ -15,7 +15,7 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "OriginCatcher";
+        return "OriginMarketplaceMarketplace";
     }
 
     @Override

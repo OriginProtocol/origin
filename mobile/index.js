@@ -19,4 +19,4 @@ import App from './src/App'
 // https://github.com/ethers-io/ethers.js/issues/304
 import 'ethers/dist/shims.js'
 
-AppRegistry.registerComponent('OriginCatcher', () => App)
+AppRegistry.registerComponent('OriginMarketplace', () => App)

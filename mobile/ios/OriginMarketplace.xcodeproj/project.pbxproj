@@ -7,19 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* OriginCatcherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* OriginCatcherTests.m */; };
+		00E356F31AD99517003FC87E /* OriginMarketplaceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* OriginMarketplaceTests.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		26FD52796B92C7505204C7F3 /* libPods-OriginCatcherTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 80F532CF9BF01F65D813DE8A /* libPods-OriginCatcherTests.a */; };
+		26FD52796B92C7505204C7F3 /* libPods-OriginMarketplaceTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 80F532CF9BF01F65D813DE8A /* libPods-OriginMarketplaceTests.a */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
-		2DCD954D1E0B4F2C00145EB5 /* OriginCatcherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* OriginCatcherTests.m */; };
-		41DFCB0721FC7D83AF9D8458 /* libPods-OriginCatcher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E388DD998E229B6D0C116FB9 /* libPods-OriginCatcher.a */; };
-		4DC6B3F18959B8345C3D74A7 /* libPods-OriginCatcher-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D90BA1892D587D14348F7C25 /* libPods-OriginCatcher-tvOS.a */; };
+		2DCD954D1E0B4F2C00145EB5 /* OriginMarketplaceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* OriginMarketplaceTests.m */; };
+		41DFCB0721FC7D83AF9D8458 /* libPods-OriginMarketplace.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E388DD998E229B6D0C116FB9 /* libPods-OriginMarketplace.a */; };
+		4DC6B3F18959B8345C3D74A7 /* libPods-OriginMarketplace-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D90BA1892D587D14348F7C25 /* libPods-OriginMarketplace-tvOS.a */; };
 		768A86372224A5D20061132A /* Poppins-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 768A861B2224A5D10061132A /* Poppins-ThinItalic.ttf */; };
 		768A86382224A5D20061132A /* Poppins-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 768A861C2224A5D10061132A /* Poppins-Italic.ttf */; };
 		768A86392224A5D20061132A /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 768A861D2224A5D10061132A /* Lato-Light.ttf */; };
@@ -48,7 +48,7 @@
 		768A86502224A5D20061132A /* Lato-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 768A86342224A5D20061132A /* Lato-BlackItalic.ttf */; };
 		768A86512224A5D20061132A /* Lato-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 768A86352224A5D20061132A /* Lato-Black.ttf */; };
 		768A86522224A5D20061132A /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 768A86362224A5D20061132A /* Poppins-Bold.ttf */; };
-		8375536A8B2FC41E740211B8 /* libPods-OriginCatcher-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D4A98BCB6FF44357FBCDFC /* libPods-OriginCatcher-tvOSTests.a */; };
+		8375536A8B2FC41E740211B8 /* libPods-OriginMarketplace-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D4A98BCB6FF44357FBCDFC /* libPods-OriginMarketplace-tvOSTests.a */; };
 		EC64857355DF45FA8C9CE510 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 620DA7C606ED4A35A770EC2B /* libz.tbd */; };
 		ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED297162215061F000B7C4FE /* JavaScriptCore.framework */; };
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
@@ -60,14 +60,14 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = OriginCatcher;
+			remoteInfo = OriginMarketplace;
 		};
 		2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
-			remoteInfo = "OriginCatcher-tvOS";
+			remoteInfo = "OriginMarketplace-tvOS";
 		};
 		E28C65B9228CF8E2002D18CA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -80,25 +80,25 @@
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
-		00E356EE1AD99517003FC87E /* OriginCatcherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OriginCatcherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* OriginMarketplaceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OriginMarketplaceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* OriginCatcherTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OriginCatcherTests.m; sourceTree = "<group>"; };
-		04D4A98BCB6FF44357FBCDFC /* libPods-OriginCatcher-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OriginCatcher-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		120103125B2218531B412CDA /* Pods-OriginCatcherTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginCatcherTests.debug.xcconfig"; path = "Target Support Files/Pods-OriginCatcherTests/Pods-OriginCatcherTests.debug.xcconfig"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* OriginCatcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OriginCatcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = OriginCatcher/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = OriginCatcher/AppDelegate.m; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* OriginMarketplaceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OriginMarketplaceTests.m; sourceTree = "<group>"; };
+		04D4A98BCB6FF44357FBCDFC /* libPods-OriginMarketplace-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OriginMarketplace-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		120103125B2218531B412CDA /* Pods-OriginMarketplaceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginMarketplaceTests.debug.xcconfig"; path = "Target Support Files/Pods-OriginMarketplaceTests/Pods-OriginMarketplaceTests.debug.xcconfig"; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* OriginMarketplace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OriginMarketplace.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = OriginMarketplace/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = OriginMarketplace/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = OriginCatcher/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = OriginCatcher/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = OriginCatcher/main.m; sourceTree = "<group>"; };
-		16AD459E1919511F16B92100 /* Pods-OriginCatcher-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginCatcher-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-OriginCatcher-tvOSTests/Pods-OriginCatcher-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		2B09652D3C87AB4349988412 /* Pods-OriginCatcher-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginCatcher-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-OriginCatcher-tvOS/Pods-OriginCatcher-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		2D02E47B1E0B4A5D006451C7 /* OriginCatcher-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OriginCatcher-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D02E4901E0B4A5D006451C7 /* OriginCatcher-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OriginCatcher-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = OriginMarketplace/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = OriginMarketplace/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = OriginMarketplace/main.m; sourceTree = "<group>"; };
+		16AD459E1919511F16B92100 /* Pods-OriginMarketplace-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginMarketplace-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-OriginMarketplace-tvOSTests/Pods-OriginMarketplace-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		2B09652D3C87AB4349988412 /* Pods-OriginMarketplace-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginMarketplace-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-OriginMarketplace-tvOS/Pods-OriginMarketplace-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		2D02E47B1E0B4A5D006451C7 /* OriginMarketplace-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OriginMarketplace-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D02E4901E0B4A5D006451C7 /* OriginMarketplace-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OriginMarketplace-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		620DA7C606ED4A35A770EC2B /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		756AF17A22288D5C00A35211 /* OriginCatcher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = OriginCatcher.entitlements; path = OriginCatcher/OriginCatcher.entitlements; sourceTree = "<group>"; };
+		756AF17A22288D5C00A35211 /* OriginMarketplace.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = OriginMarketplace.entitlements; path = OriginMarketplace/OriginMarketplace.entitlements; sourceTree = "<group>"; };
 		768A861B2224A5D10061132A /* Poppins-ThinItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-ThinItalic.ttf"; path = "../assets/fonts/Poppins-ThinItalic.ttf"; sourceTree = "<group>"; };
 		768A861C2224A5D10061132A /* Poppins-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Italic.ttf"; path = "../assets/fonts/Poppins-Italic.ttf"; sourceTree = "<group>"; };
 		768A861D2224A5D10061132A /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Light.ttf"; path = "../assets/fonts/Lato-Light.ttf"; sourceTree = "<group>"; };
@@ -130,15 +130,15 @@
 		76C13B2D2303FEE200C1DC3D /* libFBSDKCoreKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFBSDKCoreKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		76C13B2F2303FEE200C1DC3D /* libFBSDKLoginKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFBSDKLoginKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		76C13B312303FEE200C1DC3D /* libFBSDKShareKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFBSDKShareKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		80F532CF9BF01F65D813DE8A /* libPods-OriginCatcherTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OriginCatcherTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		81359216B159A5CB9465AC47 /* Pods-OriginCatcherTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginCatcherTests.release.xcconfig"; path = "Target Support Files/Pods-OriginCatcherTests/Pods-OriginCatcherTests.release.xcconfig"; sourceTree = "<group>"; };
-		928C662D288F6A04877D90AD /* Pods-OriginCatcher.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginCatcher.release.xcconfig"; path = "Target Support Files/Pods-OriginCatcher/Pods-OriginCatcher.release.xcconfig"; sourceTree = "<group>"; };
-		AF49FF401494BCB9F9ECFC5C /* Pods-OriginCatcher-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginCatcher-tvOS.release.xcconfig"; path = "Target Support Files/Pods-OriginCatcher-tvOS/Pods-OriginCatcher-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		80F532CF9BF01F65D813DE8A /* libPods-OriginMarketplaceTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OriginMarketplaceTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		81359216B159A5CB9465AC47 /* Pods-OriginMarketplaceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginMarketplaceTests.release.xcconfig"; path = "Target Support Files/Pods-OriginMarketplaceTests/Pods-OriginMarketplaceTests.release.xcconfig"; sourceTree = "<group>"; };
+		928C662D288F6A04877D90AD /* Pods-OriginMarketplace.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginMarketplace.release.xcconfig"; path = "Target Support Files/Pods-OriginMarketplace/Pods-OriginMarketplace.release.xcconfig"; sourceTree = "<group>"; };
+		AF49FF401494BCB9F9ECFC5C /* Pods-OriginMarketplace-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginMarketplace-tvOS.release.xcconfig"; path = "Target Support Files/Pods-OriginMarketplace-tvOS/Pods-OriginMarketplace-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		C38539245BF84CF08148EFA9 /* RNSentry.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSentry.xcodeproj; path = "../node_modules/react-native-sentry/ios/RNSentry.xcodeproj"; sourceTree = "<group>"; };
-		CBB21F855C5F01AD4DC9B887 /* Pods-OriginCatcher.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginCatcher.debug.xcconfig"; path = "Target Support Files/Pods-OriginCatcher/Pods-OriginCatcher.debug.xcconfig"; sourceTree = "<group>"; };
-		D90BA1892D587D14348F7C25 /* libPods-OriginCatcher-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OriginCatcher-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		DCD9E69F704B0E0EF730380D /* Pods-OriginCatcher-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginCatcher-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-OriginCatcher-tvOSTests/Pods-OriginCatcher-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		E388DD998E229B6D0C116FB9 /* libPods-OriginCatcher.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OriginCatcher.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CBB21F855C5F01AD4DC9B887 /* Pods-OriginMarketplace.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginMarketplace.debug.xcconfig"; path = "Target Support Files/Pods-OriginMarketplace/Pods-OriginMarketplace.debug.xcconfig"; sourceTree = "<group>"; };
+		D90BA1892D587D14348F7C25 /* libPods-OriginMarketplace-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OriginMarketplace-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCD9E69F704B0E0EF730380D /* Pods-OriginMarketplace-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OriginMarketplace-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-OriginMarketplace-tvOSTests/Pods-OriginMarketplace-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		E388DD998E229B6D0C116FB9 /* libPods-OriginMarketplace.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OriginMarketplace.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -148,7 +148,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				26FD52796B92C7505204C7F3 /* libPods-OriginCatcherTests.a in Frameworks */,
+				26FD52796B92C7505204C7F3 /* libPods-OriginMarketplaceTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,7 +158,7 @@
 			files = (
 				ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */,
 				EC64857355DF45FA8C9CE510 /* libz.tbd in Frameworks */,
-				41DFCB0721FC7D83AF9D8458 /* libPods-OriginCatcher.a in Frameworks */,
+				41DFCB0721FC7D83AF9D8458 /* libPods-OriginMarketplace.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -168,7 +168,7 @@
 			files = (
 				ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */,
 				2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */,
-				4DC6B3F18959B8345C3D74A7 /* libPods-OriginCatcher-tvOS.a in Frameworks */,
+				4DC6B3F18959B8345C3D74A7 /* libPods-OriginMarketplace-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,20 +176,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8375536A8B2FC41E740211B8 /* libPods-OriginCatcher-tvOSTests.a in Frameworks */,
+				8375536A8B2FC41E740211B8 /* libPods-OriginMarketplace-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* OriginCatcherTests */ = {
+		00E356EF1AD99517003FC87E /* OriginMarketplaceTests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* OriginCatcherTests.m */,
+				00E356F21AD99517003FC87E /* OriginMarketplaceTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = OriginCatcherTests;
+			path = OriginMarketplaceTests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -203,22 +203,22 @@
 		0CC59DF6A42B2F573A51CCD8 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				CBB21F855C5F01AD4DC9B887 /* Pods-OriginCatcher.debug.xcconfig */,
-				928C662D288F6A04877D90AD /* Pods-OriginCatcher.release.xcconfig */,
-				2B09652D3C87AB4349988412 /* Pods-OriginCatcher-tvOS.debug.xcconfig */,
-				AF49FF401494BCB9F9ECFC5C /* Pods-OriginCatcher-tvOS.release.xcconfig */,
-				DCD9E69F704B0E0EF730380D /* Pods-OriginCatcher-tvOSTests.debug.xcconfig */,
-				16AD459E1919511F16B92100 /* Pods-OriginCatcher-tvOSTests.release.xcconfig */,
-				120103125B2218531B412CDA /* Pods-OriginCatcherTests.debug.xcconfig */,
-				81359216B159A5CB9465AC47 /* Pods-OriginCatcherTests.release.xcconfig */,
+				CBB21F855C5F01AD4DC9B887 /* Pods-OriginMarketplace.debug.xcconfig */,
+				928C662D288F6A04877D90AD /* Pods-OriginMarketplace.release.xcconfig */,
+				2B09652D3C87AB4349988412 /* Pods-OriginMarketplace-tvOS.debug.xcconfig */,
+				AF49FF401494BCB9F9ECFC5C /* Pods-OriginMarketplace-tvOS.release.xcconfig */,
+				DCD9E69F704B0E0EF730380D /* Pods-OriginMarketplace-tvOSTests.debug.xcconfig */,
+				16AD459E1919511F16B92100 /* Pods-OriginMarketplace-tvOSTests.release.xcconfig */,
+				120103125B2218531B412CDA /* Pods-OriginMarketplaceTests.debug.xcconfig */,
+				81359216B159A5CB9465AC47 /* Pods-OriginMarketplaceTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* OriginCatcher */ = {
+		13B07FAE1A68108700A75B9A /* OriginMarketplace */ = {
 			isa = PBXGroup;
 			children = (
-				756AF17A22288D5C00A35211 /* OriginCatcher.entitlements */,
+				756AF17A22288D5C00A35211 /* OriginMarketplace.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -227,7 +227,7 @@
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
-			name = OriginCatcher;
+			name = OriginMarketplace;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -240,10 +240,10 @@
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 				620DA7C606ED4A35A770EC2B /* libz.tbd */,
-				E388DD998E229B6D0C116FB9 /* libPods-OriginCatcher.a */,
-				D90BA1892D587D14348F7C25 /* libPods-OriginCatcher-tvOS.a */,
-				04D4A98BCB6FF44357FBCDFC /* libPods-OriginCatcher-tvOSTests.a */,
-				80F532CF9BF01F65D813DE8A /* libPods-OriginCatcherTests.a */,
+				E388DD998E229B6D0C116FB9 /* libPods-OriginMarketplace.a */,
+				D90BA1892D587D14348F7C25 /* libPods-OriginMarketplace-tvOS.a */,
+				04D4A98BCB6FF44357FBCDFC /* libPods-OriginMarketplace-tvOSTests.a */,
+				80F532CF9BF01F65D813DE8A /* libPods-OriginMarketplaceTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -300,9 +300,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* OriginCatcher */,
+				13B07FAE1A68108700A75B9A /* OriginMarketplace */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* OriginCatcherTests */,
+				00E356EF1AD99517003FC87E /* OriginMarketplaceTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				7692E6DA22248FBB00FA984E /* Recovered References */,
@@ -317,10 +317,10 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* OriginCatcher.app */,
-				00E356EE1AD99517003FC87E /* OriginCatcherTests.xctest */,
-				2D02E47B1E0B4A5D006451C7 /* OriginCatcher-tvOS.app */,
-				2D02E4901E0B4A5D006451C7 /* OriginCatcher-tvOSTests.xctest */,
+				13B07F961A680F5B00A75B9A /* OriginMarketplace.app */,
+				00E356EE1AD99517003FC87E /* OriginMarketplaceTests.xctest */,
+				2D02E47B1E0B4A5D006451C7 /* OriginMarketplace-tvOS.app */,
+				2D02E4901E0B4A5D006451C7 /* OriginMarketplace-tvOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -336,9 +336,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* OriginCatcherTests */ = {
+		00E356ED1AD99517003FC87E /* OriginMarketplaceTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "OriginCatcherTests" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "OriginMarketplaceTests" */;
 			buildPhases = (
 				8FA60C254AA36E0A861AED92 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
@@ -350,14 +350,14 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = OriginCatcherTests;
-			productName = OriginCatcherTests;
-			productReference = 00E356EE1AD99517003FC87E /* OriginCatcherTests.xctest */;
+			name = OriginMarketplaceTests;
+			productName = OriginMarketplaceTests;
+			productReference = 00E356EE1AD99517003FC87E /* OriginMarketplaceTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* OriginCatcher */ = {
+		13B07F861A680F5B00A75B9A /* OriginMarketplace */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "OriginCatcher" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "OriginMarketplace" */;
 			buildPhases = (
 				BB26D80C84D9F2660FC05135 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
@@ -370,14 +370,14 @@
 			);
 			dependencies = (
 			);
-			name = OriginCatcher;
+			name = OriginMarketplace;
 			productName = "Hello World";
-			productReference = 13B07F961A680F5B00A75B9A /* OriginCatcher.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* OriginMarketplace.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E47A1E0B4A5D006451C7 /* OriginCatcher-tvOS */ = {
+		2D02E47A1E0B4A5D006451C7 /* OriginMarketplace-tvOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "OriginCatcher-tvOS" */;
+			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "OriginMarketplace-tvOS" */;
 			buildPhases = (
 				08A30A71AB3A653C1AE2DFFA /* [CP] Check Pods Manifest.lock */,
 				2D02E4771E0B4A5D006451C7 /* Sources */,
@@ -389,14 +389,14 @@
 			);
 			dependencies = (
 			);
-			name = "OriginCatcher-tvOS";
-			productName = "OriginCatcher-tvOS";
-			productReference = 2D02E47B1E0B4A5D006451C7 /* OriginCatcher-tvOS.app */;
+			name = "OriginMarketplace-tvOS";
+			productName = "OriginMarketplace-tvOS";
+			productReference = 2D02E47B1E0B4A5D006451C7 /* OriginMarketplace-tvOS.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E48F1E0B4A5D006451C7 /* OriginCatcher-tvOSTests */ = {
+		2D02E48F1E0B4A5D006451C7 /* OriginMarketplace-tvOSTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "OriginCatcher-tvOSTests" */;
+			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "OriginMarketplace-tvOSTests" */;
 			buildPhases = (
 				4ADE158AC6D082C6770DB6DC /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
@@ -408,9 +408,9 @@
 			dependencies = (
 				2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */,
 			);
-			name = "OriginCatcher-tvOSTests";
-			productName = "OriginCatcher-tvOSTests";
-			productReference = 2D02E4901E0B4A5D006451C7 /* OriginCatcher-tvOSTests.xctest */;
+			name = "OriginMarketplace-tvOSTests";
+			productName = "OriginMarketplace-tvOSTests";
+			productReference = 2D02E4901E0B4A5D006451C7 /* OriginMarketplace-tvOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -446,7 +446,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "OriginCatcher" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "OriginMarketplace" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -466,10 +466,10 @@
 			);
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* OriginCatcher */,
-				00E356ED1AD99517003FC87E /* OriginCatcherTests */,
-				2D02E47A1E0B4A5D006451C7 /* OriginCatcher-tvOS */,
-				2D02E48F1E0B4A5D006451C7 /* OriginCatcher-tvOSTests */,
+				13B07F861A680F5B00A75B9A /* OriginMarketplace */,
+				00E356ED1AD99517003FC87E /* OriginMarketplaceTests */,
+				2D02E47A1E0B4A5D006451C7 /* OriginMarketplace-tvOS */,
+				2D02E48F1E0B4A5D006451C7 /* OriginMarketplace-tvOSTests */,
 			);
 		};
 /* End PBXProject section */
@@ -576,7 +576,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OriginCatcher-tvOS-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-OriginMarketplace-tvOS-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -612,7 +612,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OriginCatcher-tvOSTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-OriginMarketplace-tvOSTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -625,7 +625,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OriginCatcher/Pods-OriginCatcher-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-OriginMarketplace/Pods-OriginMarketplace-resources.sh",
 				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -634,7 +634,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OriginCatcher/Pods-OriginCatcher-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OriginMarketplace/Pods-OriginMarketplace-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8FA60C254AA36E0A861AED92 /* [CP] Check Pods Manifest.lock */ = {
@@ -652,7 +652,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OriginCatcherTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-OriginMarketplaceTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -674,7 +674,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OriginCatcher-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-OriginMarketplace-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -688,7 +688,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00E356F31AD99517003FC87E /* OriginCatcherTests.m in Sources */,
+				00E356F31AD99517003FC87E /* OriginMarketplaceTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -714,7 +714,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DCD954D1E0B4F2C00145EB5 /* OriginCatcherTests.m in Sources */,
+				2DCD954D1E0B4F2C00145EB5 /* OriginMarketplaceTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -723,12 +723,12 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* OriginCatcher */;
+			target = 13B07F861A680F5B00A75B9A /* OriginMarketplace */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 		2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2D02E47A1E0B4A5D006451C7 /* OriginCatcher-tvOS */;
+			target = 2D02E47A1E0B4A5D006451C7 /* OriginMarketplace-tvOS */;
 			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -740,7 +740,7 @@
 				13B07FB21A68108700A75B9A /* Base */,
 			);
 			name = LaunchScreen.xib;
-			path = OriginCatcher;
+			path = OriginMarketplace;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -748,7 +748,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 120103125B2218531B412CDA /* Pods-OriginCatcherTests.debug.xcconfig */;
+			baseConfigurationReference = 120103125B2218531B412CDA /* Pods-OriginMarketplaceTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 94974H5R2L;
@@ -757,7 +757,7 @@
 					"$(inherited)",
 				);
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = OriginCatcherTests/Info.plist;
+				INFOPLIST_FILE = OriginMarketplaceTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -767,19 +767,19 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OriginCatcher.app/OriginCatcher";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OriginMarketplace.app/OriginMarketplace";
 			};
 			name = Debug;
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 81359216B159A5CB9465AC47 /* Pods-OriginCatcherTests.release.xcconfig */;
+			baseConfigurationReference = 81359216B159A5CB9465AC47 /* Pods-OriginMarketplaceTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = 94974H5R2L;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = OriginCatcherTests/Info.plist;
+				INFOPLIST_FILE = OriginMarketplaceTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -789,21 +789,21 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OriginCatcher.app/OriginCatcher";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OriginMarketplace.app/OriginMarketplace";
 			};
 			name = Release;
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CBB21F855C5F01AD4DC9B887 /* Pods-OriginCatcher.debug.xcconfig */;
+			baseConfigurationReference = CBB21F855C5F01AD4DC9B887 /* Pods-OriginMarketplace.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = OriginCatcher/OriginCatcher.entitlements;
+				CODE_SIGN_ENTITLEMENTS = OriginMarketplace/OriginMarketplace.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 94974H5R2L;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = OriginCatcher/Info.plist;
+				INFOPLIST_FILE = OriginMarketplace/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -812,7 +812,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.originprotocol.catcher;
-				PRODUCT_NAME = OriginCatcher;
+				PRODUCT_NAME = OriginMarketplace;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -820,14 +820,14 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 928C662D288F6A04877D90AD /* Pods-OriginCatcher.release.xcconfig */;
+			baseConfigurationReference = 928C662D288F6A04877D90AD /* Pods-OriginMarketplace.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = OriginCatcher/OriginCatcher.entitlements;
+				CODE_SIGN_ENTITLEMENTS = OriginMarketplace/OriginMarketplace.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 94974H5R2L;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = OriginCatcher/Info.plist;
+				INFOPLIST_FILE = OriginMarketplace/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -836,7 +836,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.originprotocol.catcher;
-				PRODUCT_NAME = OriginCatcher;
+				PRODUCT_NAME = OriginMarketplace;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -844,7 +844,7 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2B09652D3C87AB4349988412 /* Pods-OriginCatcher-tvOS.debug.xcconfig */;
+			baseConfigurationReference = 2B09652D3C87AB4349988412 /* Pods-OriginMarketplace-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -856,14 +856,14 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "OriginCatcher-tvOS/Info.plist";
+				INFOPLIST_FILE = "OriginMarketplace-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.OriginCatcher-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.OriginMarketplace-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -873,7 +873,7 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AF49FF401494BCB9F9ECFC5C /* Pods-OriginCatcher-tvOS.release.xcconfig */;
+			baseConfigurationReference = AF49FF401494BCB9F9ECFC5C /* Pods-OriginMarketplace-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -885,14 +885,14 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "OriginCatcher-tvOS/Info.plist";
+				INFOPLIST_FILE = "OriginMarketplace-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.OriginCatcher-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.OriginMarketplace-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -902,7 +902,7 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DCD9E69F704B0E0EF730380D /* Pods-OriginCatcher-tvOSTests.debug.xcconfig */;
+			baseConfigurationReference = DCD9E69F704B0E0EF730380D /* Pods-OriginMarketplace-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -913,24 +913,24 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "OriginCatcher-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "OriginMarketplace-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.OriginCatcher-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.OriginMarketplace-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OriginCatcher-tvOS.app/OriginCatcher-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OriginMarketplace-tvOS.app/OriginMarketplace-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Debug;
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 16AD459E1919511F16B92100 /* Pods-OriginCatcher-tvOSTests.release.xcconfig */;
+			baseConfigurationReference = 16AD459E1919511F16B92100 /* Pods-OriginMarketplace-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -941,17 +941,17 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
 				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = "OriginCatcher-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "OriginMarketplace-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.OriginCatcher-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.OriginMarketplace-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OriginCatcher-tvOS.app/OriginCatcher-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OriginMarketplace-tvOS.app/OriginMarketplace-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Release;
@@ -1060,7 +1060,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "OriginCatcherTests" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "OriginMarketplaceTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
@@ -1069,7 +1069,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "OriginCatcher" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "OriginMarketplace" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -1078,7 +1078,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "OriginCatcher-tvOS" */ = {
+		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "OriginMarketplace-tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4971E0B4A5E006451C7 /* Debug */,
@@ -1087,7 +1087,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "OriginCatcher-tvOSTests" */ = {
+		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "OriginMarketplace-tvOSTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4991E0B4A5E006451C7 /* Debug */,
@@ -1096,7 +1096,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "OriginCatcher" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "OriginMarketplace" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
