@@ -646,7 +646,7 @@ function onboardingTests() {
       this.timeout(10000)
       const { seller, buyer } = await reset('100', true)
       await page.evaluate(() => {
-        delete window.localStorage.bypassOnboarding
+        localStorage.clear()
         window.location = '/#/'
       })
       await changeAccount(page, buyer)
