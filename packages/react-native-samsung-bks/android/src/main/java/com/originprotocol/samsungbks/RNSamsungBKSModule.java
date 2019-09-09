@@ -9,8 +9,9 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.samsung.android.sdk.coldwallet.*;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
-import java.util.Base64;
 import java.lang.reflect.Field;
+import java.math.BigInteger;
+import java.util.Base64;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,7 +145,7 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
   public void signEthTransaction(
     String hdPath,
     String to,
-    string gasPrice,
+    String gasPrice,
     String gasLimit,
     String value,
     String data,
@@ -154,7 +155,7 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
 
       @Override
       public void onSuccess(byte[] signedEthTransaction) {
-        promise.resolve("0x" + bytesToHex(signedPersonalMessage));
+        promise.resolve("0x" + bytesToHex(signedEthTransaction));
       }
 
       @Override
@@ -164,11 +165,11 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
     };
 
     RawTransaction transaction = RawTransaction.createTransaction(
-      0,
-      gasPrice,
-      gasLimit,
+      BigInteger.ZERO,
+      new BigInteger(gasPrice),
+      new BigInteger(gasLimit),
       to,
-      value,
+      new BigInteger(value),
       data
     );
     byte[] encodedUnsignedEthTx = TransactionEncoder.encode(transaction);
@@ -180,7 +181,7 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void signEthPersonalMessage(
     String hdPath,
-    String b64messageToSign,
+    String b64MessageToSign,
     final Promise promise
   ) {
     ScwService.ScwSignEthPersonalMessageCallback callback = new ScwService.ScwSignEthPersonalMessageCallback() {
@@ -196,9 +197,9 @@ public class RNSamsungBKSModule extends ReactContextBaseJavaModule {
       }
     };
 
-    byte[] unSignedMsg = Base64.getDecoder().decode(b64MessageToSign);
+    byte[] unsignedMessage = Base64.getDecoder().decode(b64MessageToSign);
 
     ScwService.getInstance()
-      .signEthPersonalMessage(callback, messageToSign, hdPath);
+      .signEthPersonalMessage(callback, unsignedMessage, hdPath);
   }
 }
