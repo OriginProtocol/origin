@@ -37,7 +37,7 @@ function validateTwitterEvent({ type, event, content }) {
   logger.debug('decoded content:', decodedContent)
   logger.debug('expected content:', content)
 
-  return decodedContent === content ? decodedContent : false
+  return decodedContent.trim() === content.trim() ? decodedContent : false
 }
 
 /**
