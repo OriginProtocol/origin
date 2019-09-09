@@ -173,7 +173,7 @@ const Settings = props => {
               <fbt desc="settings.relayerToggleLabel">Relayer</fbt>
             </ToggleRow>
 
-            <ToggleRow config={config} field="noIdentity">
+            <ToggleRow config={config} field="bypassOnboarding">
               <fbt desc="settings.onboardDisabled">Onboarding Disabled</fbt>
             </ToggleRow>
 
