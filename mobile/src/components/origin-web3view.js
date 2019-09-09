@@ -25,7 +25,6 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   const [transactionCardLoading, setTransactionCardLoading] = useState(false)
   const [modals, setModals] = useState([])
 
-  // TODO use the HOC, need to get forwardRef working through HOC
   const isUsingSamsungBKS =
     Platform.OS === 'android' &&
     get(props, 'samsungBKS.seedHash', '').length > 0 &&
