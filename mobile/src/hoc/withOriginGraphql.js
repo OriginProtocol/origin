@@ -18,7 +18,7 @@ import { tokenBalanceFromGql } from 'utils/currencies'
 
 // Update account balance frequency
 // TODO make this reactive to contract calls that will change balance
-const BALANCE_UPDATE_INTERVAL = 30000
+const BALANCE_UPDATE_INTERVAL = 10000
 
 // Update identity frequency
 // TODO make this reactive to identity changes

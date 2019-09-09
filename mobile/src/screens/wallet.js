@@ -2,6 +2,7 @@
 
 import React from 'react'
 import {
+  ActivityIndicator,
   Alert,
   Clipboard,
   ScrollView,
@@ -120,7 +121,11 @@ const walletScreen = props => {
   }
 
   const renderLoading = () => {
-    return <Text>Loading</Text>
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color="black" />
+      </View>
+    )
   }
 
   const renderNoActiveAddress = () => {
@@ -178,5 +183,14 @@ const mapStateToProps = ({ settings, wallet }) => {
 export default connect(mapStateToProps)(walletScreen)
 
 const styles = StyleSheet.create({
-  ...ListStyles
+  ...ListStyles,
+  loading: {
+    position: 'absolute',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    width: '100%',
+    backgroundColor: 'white'
+  }
 })
