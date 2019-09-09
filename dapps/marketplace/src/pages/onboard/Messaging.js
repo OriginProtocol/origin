@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { fbt } from 'fbt-runtime'
+import { withRouter } from 'react-router-dom'
 
 import withIsMobile from 'hoc/withIsMobile'
 import withMessagingStatus from 'hoc/withMessagingStatus'
@@ -230,7 +231,13 @@ const OnboardMessagingRaw = ({
 
 const OnboardMessaging = withMessagingStatus(OnboardMessagingRaw)
 
-const Messaging = ({ listing, linkPrefix, isMobile, hideOriginWallet }) => {
+const Messaging = ({
+  listing,
+  linkPrefix,
+  isMobile,
+  hideOriginWallet,
+  history
+}) => {
   const nextLink = `${linkPrefix}/onboard/rewards`
 
   const content = <OnboardMessaging nextLink={nextLink} />
@@ -239,7 +246,7 @@ const Messaging = ({ listing, linkPrefix, isMobile, hideOriginWallet }) => {
     return (
       <MobileModal
         title={fbt('Enable Messaging', 'onboard.Messaging.enableMessaging')}
-        onBack={() => this.props.history.goBack()}
+        onBack={() => history.goBack()}
         className="profile-email"
       >
         {content}
@@ -270,7 +277,7 @@ const Messaging = ({ listing, linkPrefix, isMobile, hideOriginWallet }) => {
   )
 }
 
-export default withIsMobile(Messaging)
+export default withRouter(withIsMobile(Messaging))
 
 require('react-styl')(`
   .onboard-box
