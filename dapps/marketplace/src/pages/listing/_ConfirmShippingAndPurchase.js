@@ -33,7 +33,7 @@ const ConfirmShippingAndPurchase = ({
     )
   }
 
-  if (!hasMessagingKeys) {
+  if (!hasMessagingKeys && !localStorage.bypassOnboarding) {
     return (
       <UserActivationLink
         className={className}
