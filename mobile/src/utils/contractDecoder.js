@@ -43,8 +43,12 @@ export function decodeTransaction(data) {
 
   const parameterNames = functionAbiMatch.inputs.map(i => i.name)
   const parsedTransaction = contractInterface.parseTransaction({ data })
-  let parameters = {}
-  parameterNames.forEach((key, i) => parameters[key] = parsedTransaction.args[i])
+
+  // Build an object of parameters with the key as the arg name
+  const parameters = {}
+  parameterNames.forEach(
+    (key, i) => (parameters[key] = parsedTransaction.args[i])
+  )
 
   return {
     functionName: functionAbiMatch.name,

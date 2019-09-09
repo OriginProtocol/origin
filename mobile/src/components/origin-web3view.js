@@ -53,23 +53,32 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   }
 
   const _sendTransaction = async transaction => {
-    const web3Provider = new ethers.providers.JsonRpcProvider(
+    const provider = new ethers.providers.JsonRpcProvider(
       props.settings.network.provider
     )
 
     if (isUsingSamsungBKS) {
       console.debug('Signing transaction with Samsung BKS')
-      // TODO
-      const signedTransaction = await RNSamsungBKS.signTransaction(
-        props.wallet.activeAccount.hdPath
+      const nonce = await provider.getTransactionCount(
+        props.wallet.activeAccount.address
+      )
+      console.debug('Using nonce', nonce)
+      const signedTransaction = await RNSamsungBKS.signEthTransaction(
+        props.wallet.activeAccount.hdPath,
+        ethers.utils.bigNumberify(nonce).toString(),
+        ethers.utils.bigNumberify(transaction.gasPrice).toString(),
+        ethers.utils.bigNumberify(transaction.gasLimit).toString(),
+        transaction.to,
+        ethers.utils.bigNumberify(transaction.value).toString(),
+        transaction.data
       )
       console.debug('Sending transaction via provider')
-      return await web3Provider.sendTransaction(signedTransaction)
+      return await provider.sendTransaction(signedTransaction)
       // Return hash
     } else {
       const wallet = new ethers.Wallet(
         props.wallet.activeAccount.privateKey,
-        web3Provider
+        provider
       )
       console.debug('Sending transaction with local wallet cache')
       return await wallet.sendTransaction(transaction)
@@ -133,47 +142,49 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   /* Generic Web3 request handler which displays a prompt to the user. This is
    * resposible for hanlding signMessage and processTransaction web3 calls.
    */
-  const onWeb3Call = (callback, msgData) => {
+  const onWeb3Call = async (callback, msgData) => {
     console.debug(`Got web3 call to ${msgData.targetFunc}`)
+
+    // Decode the transaction and print some debugging information
     const { functionName, contractName } = decodeTransaction(msgData.data.data)
     if (functionName && contractName) {
       console.debug(`Contract method is ${functionName} on ${contractName}`)
     }
 
-    PushNotification.requestPermissions(async permissions => {
-      const newModals = []
-      // Check if the user has enabled push notifications and prompt them
-      // to do so if they have not and it is not just a simple identity update
-      if (
-        !__DEV__ &&
-        !permissions.alert &&
-        msgData.targetFunc === 'processTransaction' &&
-        functionName !== 'emitIdentityUpdated'
-      ) {
-        newModals.push({ type: 'enableNotifications' })
-      }
+    // Message signing via Samsung BKS
+    if (
+      isUsingSamsungBKS &&
+      ['signMessage', 'signPersonalMessage'].includes(msgData.targetFunc)
+    ) {
+      return callback(await _signMessage(msgData.data.data))
+    }
 
-      if (isUsingSamsungBKS) {
-        if (
-          ['signMessage', 'signPersonalMessage'].includes(msgData.targetFunc)
-        ) {
-          return callback(await _signMessage(msgData.data.data))
-        }
-        console.debug('TODO something with Samsung BKS')
-      } else {
-        // Not using Samsung BKS, display our own modal for the user to confirm
-        // or deny the transaction
-        const web3Modal = { type: msgData.targetFunc, msgData, callback }
-        // Modals render in different ordering on Android/iOS so use a different
-        // method of adding the modal to the array to get the notifications modal
-        // to display on top of the web3 modal
-        Platform.OS === 'ios'
-          ? newModals.push(web3Modal)
-          : newModals.unshift(web3Modal)
-        // Update the state with the new modals
-        setModals([...modals, ...newModals])
-      }
-    })
+    // Check if the user has enabled push notifications
+    const permissions = await PushNotification.requestPermissions()
+
+    const newModals = []
+    //  Nag the user to enable push notifications if they have not and the
+    //  transaction is not a simple identity update
+    if (
+      !__DEV__ &&
+      !permissions.alert &&
+      msgData.targetFunc === 'processTransaction' &&
+      functionName !== 'emitIdentityUpdated'
+    ) {
+      newModals.push({ type: 'enableNotifications' })
+    }
+
+    // Dispay a modal for the user to accept or reject the transaction. The
+    // transaction confirmation will be passed to Samsung BKS if it is used
+    const web3Modal = { type: msgData.targetFunc, msgData, callback }
+    // Modals render in different ordering on Android/iOS so use a different
+    // method of adding the modal to the array to get the notifications modal
+    // to display on top of the web3 modal
+    Platform.OS === 'ios'
+      ? newModals.push(web3Modal)
+      : newModals.unshift(web3Modal)
+    // Update the state with the new modals
+    setModals([...modals, ...newModals])
   }
 
   /* Calls the callback from web3view with the result and closes the modal.
@@ -208,9 +219,7 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
           animationType="fade"
           transparent={true}
           visible={true}
-          onRequestClose={() => {
-            toggleModal(modal)
-          }}
+          onRequestClose={() => toggleModal(modal)}
         >
           <SafeAreaView style={styles.modalSafeAreaView}>{card}</SafeAreaView>
         </Modal>
@@ -228,7 +237,14 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
         msgData={modal.msgData}
         onConfirm={async () => {
           setTransactionCardLoading(true)
-          const transaction = await _sendTransaction(modal.msgData.data)
+          const data = modal.msgData.data
+          const transaction = await _sendTransaction({
+            to: data.to,
+            value: data.value,
+            gasLimit: data.gasLimit,
+            gasPrice: data.gasPrice,
+            data: data.data
+          })
           setTransactionCardLoading(false)
           toggleModal(modal, transaction.hash)
         }}
@@ -279,6 +295,13 @@ const mapStateToProps = ({ samsungBKS, settings, wallet }) => {
   return { samsungBKS, settings, wallet }
 }
 
+const areEqual = (prevProps, nextProps) => {
+  if (prevProps.source !== nextProps.source) {
+    return false
+  }
+  return true
+}
+
 export default connect(
   mapStateToProps,
   null,
@@ -286,7 +309,7 @@ export default connect(
   {
     forwardRef: true
   }
-)(OriginWeb3View)
+)(React.memo(OriginWeb3View, areEqual))
 
 const styles = StyleSheet.create({
   modalSafeAreaView: {

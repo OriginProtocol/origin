@@ -16,10 +16,10 @@ const externalPackages = {
 }
 
 const extraNodeModules = {
-  ...require('node-libs-react-native'),
+  // ...require('node-libs-react-native'),
   ...externalPackages
 }
-extraNodeModules.vm = require.resolve('vm-browserify')
+// extraNodeModules.vm = require.resolve('vm-browserify')
 
 const watchFolders = [
   path.resolve(__dirname + '/../node_modules/'),

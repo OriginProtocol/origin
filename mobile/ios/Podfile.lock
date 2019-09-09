@@ -82,8 +82,6 @@ PODS:
   - react-native-fbsdk/Share (1.0.3):
     - FBSDKShareKit (~> 5.0)
     - React
-  - react-native-randombytes (3.5.3):
-    - React
   - react-native-webview (7.0.3):
     - React
   - React-RCTActionSheet (0.60.5):
@@ -144,7 +142,6 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-fbsdk (from `../node_modules/react-native-fbsdk`)
-  - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -199,8 +196,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-fbsdk:
     :path: "../node_modules/react-native-fbsdk"
-  react-native-randombytes:
-    :path: "../node_modules/react-native-randombytes"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-RCTActionSheet:
@@ -259,7 +254,6 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 90ad2f9db09513fc763bc757fdc3c4ff8bde2a30
   React-jsinspector: e08662d1bf5b129a3d556eb9ea343a3f40353ae4
   react-native-fbsdk: 7bde3b84fc093d2c5e7fdccea03fe8fa9f112834
-  react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
   react-native-webview: 90a496cbdd0d84b2f48f9eb9332ac7c43ee05c1e
   React-RCTActionSheet: b0f1ea83f4bf75fb966eae9bfc47b78c8d3efd90
   React-RCTAnimation: 359ba1b5690b1e87cc173558a78e82d35919333e

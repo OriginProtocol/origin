@@ -34,7 +34,7 @@ export const NETWORKS = [
   {
     id: 1,
     name: 'Mainnet',
-    dappUrl: 'https://shoporigin.com/#/',
+    dappUrl: 'https://shoporigin.com/#/listing/1-000-3127',
     provider:
       'https://eth-mainnet.alchemyapi.io/jsonrpc/FCA-3myPH5VFN8naOWyxDU6VkxelafK6'
   },

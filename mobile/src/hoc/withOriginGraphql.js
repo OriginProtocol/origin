@@ -18,11 +18,11 @@ import { tokenBalanceFromGql } from 'utils/currencies'
 
 // Update account balance frequency
 // TODO make this reactive to contract calls that will change balance
-const BALANCE_UPDATE_INTERVAL = 10000
+const BALANCE_UPDATE_INTERVAL = 30000
 
 // Update identity frequency
 // TODO make this reactive to identity changes
-const IDENTITY_UPDATE_INTERVAL = 10000
+const IDENTITY_UPDATE_INTERVAL = 60000
 
 const withOriginGraphql = WrappedComponent => {
   class WithOriginGraphql extends Component {
