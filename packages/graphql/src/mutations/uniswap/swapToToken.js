@@ -3,13 +3,14 @@ import contracts from '../../contracts'
 
 export async function swapToTokenTx(tokenValue) {
   const exchange = contracts.daiExchangeExec
-  const blockNumber = await contracts.web3.eth.getBlockNumber()
-  const block = await contracts.web3.eth.getBlock(blockNumber)
 
-  // If we're running on a private blockchain that hasn't mined a block
-  // recently, use a more recent timestamp
+  // The uniswap contract requires to specify a deadline which is a timestamp
+  // in second after which the transaction can no longer be executed.
+  // See method tokenToExchangeSwapInput here:
+  //   https://github.com/Uniswap/contracts-vyper/blob/master/contracts/uniswap_exchange.vy
+  // We set the deadline to a very conservative value of 1 hour from now.
   const now = Math.round(+new Date() / 1000)
-  const deadline = (block.timestamp < now - 60 ? now : block.timestamp) + 300
+  const deadline = now + 60 * 60 // current time + 1 hour in second.
 
   const marketValue = await exchange.methods
     .getEthToTokenOutputPrice(tokenValue)
