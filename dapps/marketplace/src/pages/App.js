@@ -38,7 +38,6 @@ import AboutCrypto from './about/AboutCrypto'
 import { applyConfiguration } from 'utils/marketplaceCreator'
 import Sentry from 'utils/sentry'
 import CurrencyContext from 'constants/CurrencyContext'
-import OpenApp from './OpenApp'
 
 class App extends Component {
   state = {
@@ -95,13 +94,8 @@ class App extends Component {
       /^\/welcome\/?(?!(onboard\/)).*/gi
     )
 
-    const isShowingProtocolLink = this.props.location.pathname.startsWith(
-      '/openapp'
-    )
-
     // TODO: Too many regex here, probably it's better to optimize this sooner or later
     const hideNavbar =
-      isShowingProtocolLink ||
       (isOnWelcomeAndNotOboard && !isMobile) ||
       (isMobile &&
         (this.props.location.pathname.match(/^\/purchases\/.*$/gi) ||
@@ -178,7 +172,6 @@ class App extends Component {
             <Route exact path="/rewards/banned" component={GrowthBanned} />
             <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />
             <Route path="/search" component={Listings} />
-            <Route path="/openapp" component={OpenApp} />
             <Route component={Listings} />
           </Switch>
         </main>
