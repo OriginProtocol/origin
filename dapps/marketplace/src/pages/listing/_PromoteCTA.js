@@ -62,7 +62,7 @@ require('react-styl')(`
 
   @media (max-width: 767.98px)
     .promote-listing-cta
-      margin: 1rem -1rem 1rem -1rem
+      margin: 1rem -15px 1rem -15px
       border-width: 1px 0
       .btn
         width: 100%

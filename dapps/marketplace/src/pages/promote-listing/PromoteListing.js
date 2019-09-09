@@ -46,7 +46,7 @@ const PromoteListing = props => {
   }
 
   return (
-    <div className="container create-listing promote-listing">
+    <div className="container promote-listing">
       <Switch>
         <Route
           path="/promote/:listingId/amount"
@@ -75,6 +75,8 @@ require('react-styl')(`
     display: flex
     flex-direction: column
     flex: 1
+    h1, &.create-listing h1
+      font-size: 1.5rem
     > div
       display: flex
       flex-direction: column
@@ -86,14 +88,17 @@ require('react-styl')(`
       font-size: 18px
       .actions
         width: 100%
-        margin-top: 2rem
+        .btn
+          margin-top: 2rem
       h4
         font-size: 20px
         font-weight: bold
   @media (max-width: 767.98px)
-    .promote-listing > div
-      .actions
-        margin-top: auto
-        .btn
-          width: 100%
+    .promote-listing 
+      max-height: 100%
+      > div
+        .actions
+          margin-top: auto
+          .btn
+            width: 100%
 `)

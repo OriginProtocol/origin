@@ -84,7 +84,7 @@ const CreateListing = props => {
 
   if (
     !props.identity &&
-    (!localStorage.bypassOnboarding || !localStorage.useWeb3Identity)
+    !(localStorage.bypassOnboarding || localStorage.useWeb3Identity)
   ) {
     return (
       <UserActivationLink
