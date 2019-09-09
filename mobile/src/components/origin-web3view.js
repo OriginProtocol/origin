@@ -244,6 +244,7 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
             gasPrice: data.gasPrice,
             data: data.data
           })
+          console.debug('Got transaction hash', transaction.hash)
           setTransactionCardLoading(false)
           toggleModal(modal, transaction.hash)
         }}
