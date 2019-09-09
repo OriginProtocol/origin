@@ -414,8 +414,7 @@ class MarketplaceScreen extends Component {
     await this.checkForShareNativeDialogInterception(url)
   }
 
-  onWebViewLoad = () => {
-    console.debug('WebView completed load')
+  onWebViewLoadEnd = () => {
     // Set the language in the DApp to the same as the mobile app
     this.injectLanguage()
     // Set the currency in the DApp
@@ -518,7 +517,7 @@ class MarketplaceScreen extends Component {
         ref={this.state.webViewRef}
         source={{ uri: this.state.webViewUrlTrigger }}
         onMessage={this.onWebViewMessage}
-        onLoad={this.onWebViewLoad}
+        onLoadEnd={this.onWebViewLoadEnd}
         onError={this.onWebViewError}
         onNavigationStateChange={this.onWebViewNavigationStateChange}
         renderLoading={this.renderWebViewLoading}
