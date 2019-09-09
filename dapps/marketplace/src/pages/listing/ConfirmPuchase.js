@@ -38,13 +38,15 @@ const ConfirmPurchase = ({
   const multiUnit = listing.multiUnit && listing.__typename === 'UnitListing'
   const isFractional = listing.__typename === 'FractionalListing'
   const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
+  const isService = listing.__typename === 'ServiceListing'
 
   let BuyMutationComponent, SummaryComponent
 
   const availability = getAvailabilityCalculator(listing)
 
   switch (true) {
-    case singleUnit:
+    case multiUnit:
+    case isService:
       BuyMutationComponent = BuySingleUnitMutation
       SummaryComponent = SingleUnitPurchaseSummary
       break
@@ -59,7 +61,7 @@ const ConfirmPurchase = ({
       SummaryComponent = FractionalHourlyPurchaseSummary
       break
 
-    case multiUnit:
+    case singleUnit:
     default:
       BuyMutationComponent = BuyMultiUnitMutation
       SummaryComponent = MultiUnitPurchaseSummary
