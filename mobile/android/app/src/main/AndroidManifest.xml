@@ -32,7 +32,7 @@
       <meta-data android:name="com.facebook.sdk.ApplicationId"
         android:value="@string/facebook_app_id"/>
 
-      <meta-data android:name="scw_app_id" android:value="SCW_APP_ID" /
+      <meta-data android:name="scw_app_id" android:value="SCW_APP_ID" />
 
       <activity
         android:name=".MainActivity"

@@ -57,7 +57,7 @@ allprojects {
             url("$rootDir/../node_modules/jsc-android/dist")
         }
         flatDir {
-            dirs "$rootDir/../node_modules/react-native-samsung-bks/android/aar"
+            dirs "$rootDir/aar"
         }
         maven { url "https://jitpack.io" }
         maven { url "https://maven.google.com" }

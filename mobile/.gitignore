@@ -71,3 +71,6 @@ ios/sentry.properties
 
 # CocoaPods
 ios/Pods/
+
+# Samsung Blockchain Keystore aar
+android/aar/*
