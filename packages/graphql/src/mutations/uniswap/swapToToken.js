@@ -6,7 +6,7 @@ export async function swapToTokenTx(tokenValue) {
 
   // The uniswap contract requires to specify a deadline which is a timestamp
   // in second after which the transaction can no longer be executed.
-  // See method tokenToExchangeSwapInput here:
+  // See method tokenToExchangeSwapOutput here:
   //   https://github.com/Uniswap/contracts-vyper/blob/master/contracts/uniswap_exchange.vy
   // Under normal condition it should not take more than a couple minutes
   // for the transaction to get mined. But in case the network is extremely
