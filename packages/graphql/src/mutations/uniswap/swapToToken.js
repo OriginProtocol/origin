@@ -8,7 +8,9 @@ export async function swapToTokenTx(tokenValue) {
   // in second after which the transaction can no longer be executed.
   // See method tokenToExchangeSwapInput here:
   //   https://github.com/Uniswap/contracts-vyper/blob/master/contracts/uniswap_exchange.vy
-  // We set the deadline to a very conservative value of 1 hour from now.
+  // Under normal condition it should not take more than a couple minutes
+  // for the transaction to get mined. But in case the network is extremely
+  // congested, we set the deadline to a very conservative value of 1 hour from now.
   const now = Math.round(+new Date() / 1000)
   const deadline = now + 60 * 60 // current time + 1 hour in second.
 
