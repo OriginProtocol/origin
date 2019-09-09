@@ -5524,8 +5524,10 @@ react-native-safe-area-view@^0.14.1, react-native-safe-area-view@^0.14.8:
   dependencies:
     hoist-non-react-statics "^2.3.1"
 
-react-native-samsung-bks@../../react-native-samsung-bks:
+react-native-samsung-bks@^0.1.0:
   version "0.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-samsung-bks/-/react-native-samsung-bks-0.1.0.tgz#e815cd72d179b9371a9a970d220e3f2551a1aa43"
+  integrity sha512-PFk2YE15zWyCGqxfqRVq3+JhaPgFK+Lwk7GVP6h4eJdm2aQFTMTEOo4o1LBWBcWfy6MZ9yl7NJRfRzoAHJv25A==
 
 "react-native-screens@^1.0.0 || ^1.0.0-alpha":
   version "1.0.0-alpha.23"

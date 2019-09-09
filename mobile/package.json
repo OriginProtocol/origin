@@ -62,7 +62,7 @@
     "react-native-push-notification": "^3.1.9",
     "react-native-restart": "^0.0.13",
     "react-native-safe-area-view": "^0.14.8",
-    "react-native-samsung-bks": "../../react-native-samsung-bks",
+    "react-native-samsung-bks": "^0.1.0",
     "react-native-touch-id": "^4.4.1",
     "react-native-webview": "^7.0.4",
     "react-navigation": "^3.11.0",
