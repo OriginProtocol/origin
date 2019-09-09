@@ -664,6 +664,7 @@ function onboardingTests() {
 
     it('should enable messaging', async function() {
       this.timeout(8000)
+      await page.reload()
       await page.evaluate(() => {
         window.location = '/#/onboard/messaging'
       })
@@ -746,5 +747,5 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
 
   listingTests(true)
   // broken ATM empty profile does not redirect to /#/onboard
-  //onboardingTests()
+  // onboardingTests()
 })
