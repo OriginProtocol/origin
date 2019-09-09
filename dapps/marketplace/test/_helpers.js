@@ -111,12 +111,17 @@ export const changeAccount = async (page, account, isFreshAccount = false) => {
       strength: 0
     }
 
-    window.localStorage.useWeb3Identity = isFreshAccount ? null : JSON.stringify(accountData)
-    window.localStorage.useMessagingObject = isFreshAccount ? null : JSON.stringify({
-      enabled: true,
-      pubKey: '0xff',
-      pubSig: '0xff'
-    })
+    if (isFreshAccount) {
+      delete window.localStorage.useWeb3Identity
+      delete window.localStorage.useMessagingObject
+    } else {
+      window.localStorage.useWeb3Identity = JSON.stringify(accountData)
+      window.localStorage.useMessagingObject = JSON.stringify({
+        enabled: true,
+        pubKey: '0xff',
+        pubSig: '0xff'
+      })
+    }
   }, { account, isFreshAccount })
 }
 
