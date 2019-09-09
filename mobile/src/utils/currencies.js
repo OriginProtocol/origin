@@ -34,6 +34,9 @@ export default {
 export function tokenBalanceFromGql(result) {
   const amount = get(result.data, 'web3.account.token.balance', 0)
   const decimals = get(result.data, 'web3.account.token.token.decimals', 0)
+  if (amount === null || decimals === null) {
+    return null
+  }
   return Number(ethers.utils.formatUnits(amount, decimals))
 }
 
