@@ -21,7 +21,7 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
-  - RCTRestart (0.0.12):
+  - RCTRestart (0.0.13):
     - React
   - React (0.60.5):
     - React-Core (= 0.60.5)
@@ -82,7 +82,7 @@ PODS:
   - react-native-fbsdk/Share (1.0.3):
     - FBSDKShareKit (~> 5.0)
     - React
-  - react-native-webview (7.0.3):
+  - react-native-webview (7.0.4):
     - React
   - React-RCTActionSheet (0.60.5):
     - React-Core (= 0.60.5)
@@ -245,7 +245,7 @@ SPEC CHECKSUMS:
   FBSDKShareKit: 6316a2dcd2fbc419c87281aa4c50ad0b6ed431e7
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
-  RCTRestart: 3abdd55016c31254b996e0a55cc14cc2544fa3c1
+  RCTRestart: dd19aab87fc1118e05b6b5b91b959105647f56b4
   React: 53c53c4d99097af47cf60594b8706b4e3321e722
   React-Core: ba421f6b4f4cbe2fb17c0b6fc675f87622e78a64
   React-cxxreact: 8384287780c4999351ad9b6e7a149d9ed10a2395
@@ -254,7 +254,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 90ad2f9db09513fc763bc757fdc3c4ff8bde2a30
   React-jsinspector: e08662d1bf5b129a3d556eb9ea343a3f40353ae4
   react-native-fbsdk: 7bde3b84fc093d2c5e7fdccea03fe8fa9f112834
-  react-native-webview: 90a496cbdd0d84b2f48f9eb9332ac7c43ee05c1e
+  react-native-webview: 122ba855a538d6081501246256047613116e08c3
   React-RCTActionSheet: b0f1ea83f4bf75fb966eae9bfc47b78c8d3efd90
   React-RCTAnimation: 359ba1b5690b1e87cc173558a78e82d35919333e
   React-RCTBlob: 5e2b55f76e9a1c7ae52b826923502ddc3238df24

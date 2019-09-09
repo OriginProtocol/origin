@@ -21,6 +21,7 @@ import PinInput from 'components/pin-input'
 import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../assets/images/'
+
 /* The minimum amount of time the app needs to be suspended to trigger a restart when
  * it becomes active again - in seconds.
  *
@@ -37,7 +38,7 @@ class AuthenticationGuard extends Component {
       pin: '',
       error: null,
       // If authentication is set display on init
-      display: this._hasAuthentication() && false,
+      display: this._hasAuthentication(),
       suspendTime: null,
       appState: AppState.currentState
     }
@@ -72,6 +73,7 @@ class AuthenticationGuard extends Component {
       const secondsFromSuspend = (new Date() - this.state.suspendTime) / 1000
 
       if (secondsFromSuspend > RESTART_SUSPEND_TIME) {
+        console.debug('Restart called')
         RNRestart.Restart()
       }
     }

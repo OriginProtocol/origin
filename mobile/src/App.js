@@ -23,6 +23,8 @@ YellowBox.ignoreWarnings([
   'Setting a timer'
 ])
 
+const enableSamsungBKS = __DEV__
+
 const App = () => {
   const [samsungBKSIsSupported, setSamsungBKSIsSupported] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -48,7 +50,7 @@ const App = () => {
 
     // See if we can (or are) using Samsung BKS and conditionally render the
     // component
-    if (Platform.OS === 'android') {
+    if (Platform.OS === 'android' && enableSamsungBKS) {
       if (wallet.accounts.length === 0 || samsungBKS.seedHash) {
         // No accounts yet, see if Samsung BKS is available
         const samsungBKSIsSupported = await RNSamsungBKS.isSupported()
