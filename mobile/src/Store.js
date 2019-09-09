@@ -30,6 +30,7 @@ const persistConfig = {
     'settings',
     'wallet'
   ],
+  blacklist: ['onboarding'],
   transforms: [encryptor]
 }
 
