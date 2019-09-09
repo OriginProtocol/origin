@@ -35,7 +35,7 @@ const ConfirmShippingAndPurchase = ({
 
   if (
     !hasMessagingKeys &&
-    (!localStorage.bypassOnboarding || !localStorage.useWeb3Identity)
+    !(localStorage.bypassOnboarding || localStorage.useWeb3Identity)
   ) {
     return (
       <UserActivationLink
