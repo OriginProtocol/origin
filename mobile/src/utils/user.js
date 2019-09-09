@@ -53,6 +53,7 @@ export function isValidMetaTransaction(data) {
     'finalize',
     'makeOffer',
     'marketplaceFinalizeAndPay',
+    'transferTokenMarketplaceExecute',
     'updateListing',
     'withdrawListing',
     'withdrawOffer'
