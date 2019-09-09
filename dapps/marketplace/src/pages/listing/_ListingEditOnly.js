@@ -83,7 +83,7 @@ const Commission = ({ listing }) => {
       <Link
         className="listing-action-link"
         to={`/promote/${listing.id}/amount`}
-        children={fbt('Edit Commisison', 'listing.editCommission')}
+        children={fbt('Edit Commission', 'listing.editCommission')}
       />
     </>
   )
