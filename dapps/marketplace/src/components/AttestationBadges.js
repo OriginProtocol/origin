@@ -104,8 +104,6 @@ require('react-styl')(`
         background-image: url('images/growth/twitter-icon.svg')
       &.airbnb
         background-image: url('images/growth/airbnb-icon.svg')
-      &.website
-        background-image: url('images/growth/website-icon.svg')
       &.google
         background-image: url('images/growth/google-icon.svg')
       &.wechat
@@ -118,6 +116,8 @@ require('react-styl')(`
         background-image: url('images/growth/linkedin-icon.svg')
       &.telegram
         background-image: url('images/growth/telegram-badge.svg')
+      &.website
+        background-image: url('images/growth/website-icon.svg')
 
       .badge-label
         position: absolute

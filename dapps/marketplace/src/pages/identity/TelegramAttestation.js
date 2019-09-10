@@ -32,8 +32,8 @@ class TelegramAttestation extends Component {
     return (
       <ModalComponent
         title={fbt(
-          'Verify Telegram Account',
-          'TelegramAttestation.verifyTelegramNumber'
+          'Verify Account',
+          'TelegramAttestation.verifyAccount'
         )}
         className="attestation-modal telegram"
         shouldClose={this.state.shouldClose}
@@ -66,7 +66,7 @@ class TelegramAttestation extends Component {
     const { openedLink } = this.state
 
     const header = isMobile ? null : (
-      <fbt desc="TelegramAttestation.title">Verify your Telegram Account</fbt>
+      <fbt desc="TelegramAttestation.title">Verify Your Telegram Account</fbt>
     )
 
     return (
