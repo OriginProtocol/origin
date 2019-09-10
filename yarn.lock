@@ -17471,10 +17471,10 @@ libp2p@~0.25.4:
     peer-info "^0.15.1"
     superstruct "^0.6.0"
 
-libphonenumber-js@1.7.23:
-  version "1.7.23"
-  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.7.23.tgz#7263e5eaed0c8b3340cdc7af08f664efb8c8479e"
-  integrity sha512-PoL4q+VyljlBE5VBC0GegDYnBAYPAvoa6uihi5GmqlKGAC3bf4ha4KXiHOl3+6VvClgTnmiqHQUZcj/+SswnCQ==
+libphonenumber-js@1.7.24:
+  version "1.7.24"
+  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.7.24.tgz#f224103b6c211ee488d688e4533c7dbcbc8f027c"
+  integrity sha512-2+8rEz5mLHUqSFNedMcBcP1gb0KMjnOSxt+3me1bNgcyTreHL6M1dVds41rgvYN5XLcmZmMGLwGL2bOxpGoi1Q==
   dependencies:
     minimist "^1.2.0"
     xml2js "^0.4.17"
@@ -24312,10 +24312,10 @@ sequelize-pool@^2.3.0:
   resolved "https://registry.yarnpkg.com/sequelize-pool/-/sequelize-pool-2.3.0.tgz#64f1fe8744228172c474f530604b6133be64993d"
   integrity sha512-Ibz08vnXvkZ8LJTiUOxRcj1Ckdn7qafNZ2t59jYHMX1VIebTAOYefWdRYFt6z6+hy52WGthAHAoLc9hvk3onqA==
 
-sequelize@5.18.2:
-  version "5.18.2"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.18.2.tgz#126d2a557997b55d627d35cece0605ea65ac9fd7"
-  integrity sha512-o1vkzXCpwGosUTkUWSI0jnsokJqWBi4TCVDE+NA+sT1FGPWpGyUWWm30pAA5kZSOpNVeG78zn4O197rDM4sQlw==
+sequelize@5.18.4:
+  version "5.18.4"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.18.4.tgz#1e2c7eabe4c554fa257a0115fad39f271bd56150"
+  integrity sha512-bBmJqpO1H8Z7L0xzITqVo5KHXFI7GmKfGl/5SIPDKsuUMbuZT98s+gyGeaLXpOWGH1ZUO79hvJ8z74vNcxBWHg==
   dependencies:
     bluebird "^3.5.0"
     cls-bluebird "^2.1.0"
@@ -25926,10 +25926,10 @@ terser-webpack-plugin@^1.1.0:
     webpack-sources "^1.3.0"
     worker-farm "^1.7.0"
 
-terser@4.2.1, terser@^4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-4.2.1.tgz#1052cfe17576c66e7bc70fcc7119f22b155bdac1"
-  integrity sha512-cGbc5utAcX4a9+2GGVX4DsenG6v0x3glnDi5hx8816X1McEAwPlPgRtXPJzSBsbpILxZ8MQMT0KvArLuE0HP5A==
+terser@4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-4.3.1.tgz#09820bcb3398299c4b48d9a86aefc65127d0ed65"
+  integrity sha512-pnzH6dnFEsR2aa2SJaKb1uSCl3QmIsJ8dEkj0Fky+2AwMMcC9doMqLOQIH6wVTEKaVfKVvLSk5qxPBEZT9mywg==
   dependencies:
     commander "^2.20.0"
     source-map "~0.6.1"
@@ -25948,6 +25948,15 @@ terser@^4.1.2:
   version "4.1.3"
   resolved "https://registry.yarnpkg.com/terser/-/terser-4.1.3.tgz#6074fbcf3517561c3272ea885f422c7a8c32d689"
   integrity sha512-on13d+cnpn5bMouZu+J8tPYQecsdRJCJuxFJ+FVoPBoLJgk5bCBkp+Uen2hWyi0KIUm6eDarnlAlH+KgIx/PuQ==
+  dependencies:
+    commander "^2.20.0"
+    source-map "~0.6.1"
+    source-map-support "~0.5.12"
+
+terser@^4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-4.2.1.tgz#1052cfe17576c66e7bc70fcc7119f22b155bdac1"
+  integrity sha512-cGbc5utAcX4a9+2GGVX4DsenG6v0x3glnDi5hx8816X1McEAwPlPgRtXPJzSBsbpILxZ8MQMT0KvArLuE0HP5A==
   dependencies:
     commander "^2.20.0"
     source-map "~0.6.1"
