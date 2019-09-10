@@ -19,10 +19,10 @@ export const DEFAULT_NOTIFICATION_PERMISSIONS = {
 
 // Default user agents to be used by the WebView
 export const DEFAULT_IOS_UA =
-  'Mozilla/5.0 (iPhone; CPU iPhone OS 10_1 like Mac OS X) AppleWebKit/602.2.14 (KHTML, like Gecko) Version/10.0 Mobile/14B72 Safari/602.1'
+  'Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1'
 
 export const DEFAULT_ANDROID_UA =
-  'Mozilla/5.0 (Linux; Android 8.0.0; SM-G960F Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36'
+  'Mozilla/5.0 (Linux; Android 8.0.0;) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Mobile Safari/537.36'
 
 export const WALLET_INFO = 'WALLET_INFO'
 export const WALLET_PASSWORD = 'WALLET_PASSWORD'
