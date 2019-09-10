@@ -129,8 +129,6 @@ export function getProviderDisplayName(provider) {
       return fbt('Phone', 'Phone')
     case 'airbnb':
       return fbt('Airbnb', 'Airbnb')
-    case 'website':
-      return fbt('Website', 'Website')
     case 'github':
       return fbt('GitHub', 'GitHub')
     case 'facebook':
@@ -147,6 +145,8 @@ export function getProviderDisplayName(provider) {
       return fbt('WeChat', 'WeChat')
     case 'telegram':
       return fbt('Telegram', 'Telegram')
+    case 'website':
+      return fbt('Website', 'Website')
   }
 
   console.error(`Unknown attestation provider: ${provider}`)
