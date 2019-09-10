@@ -116,7 +116,7 @@ const TransactionCard = props => {
       break
 
     case 'approve':
-      heading = fbt('Grant Token Allowance', 'TransactionCard.grantHeading')
+      heading = fbt('Grant Token Access', 'TransactionCard.grantHeading')
       const allowanceCurrency = getCurrencyTypeFromAddress(msgData.data.to)
       if (allowanceCurrency) {
         subheading = fbt(
