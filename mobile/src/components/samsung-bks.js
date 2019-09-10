@@ -5,15 +5,17 @@
  */
 
 import React from 'react'
-import { Text } from 'react-native'
+import { Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import { AppState } from 'react-native'
+import { fbt } from 'fbt-runtime'
 import RNSamsungBKS from 'react-native-samsung-bks'
 
-import NavigationService from '../NavigationService'
 import { SamsungBKSConstants, getSeedHash } from 'actions/SamsungBKS'
 import { setAccounts } from 'actions/Wallet'
 import { generateHdPath } from 'utils'
+import NavigationService from '../NavigationService'
+import CommonStyles from 'styles/common'
 
 class SamsungBKS extends React.Component {
   state = {
@@ -49,6 +51,8 @@ class SamsungBKS extends React.Component {
     // TODO handle required update
   }
 
+  /* Update the account list according to the Samsung BKS seed hash.
+   */
   _updateAccounts = async seedHash => {
     console.debug('Updating account list from Samsung BKS')
     const hdPath = generateHdPath(0)
@@ -73,6 +77,9 @@ class SamsungBKS extends React.Component {
     ])
   }
 
+  /* Check for changes to the Samsung BKS seed hash and update the account list
+   * if it has changed
+   */
   _checkSeedHash = async () => {
     const previousSeedHash = this.props.samsungBKS.seedHash
     const seedHash = await this.props.getSeedHash()
@@ -94,7 +101,19 @@ class SamsungBKS extends React.Component {
 
   render() {
     if (this.state.samsungBKSError) {
-      return <Text>Error</Text>
+      return (
+        <View style={styles.error}>
+          <Text style={styles.title}>
+            <fbt desc="SamsungBKSScreen.heading">Keystore Error</fbt>
+          </Text>
+          <Text style={styles.subtitle}>
+            <fbt desc="SamsungBKSScreen.errorText">
+              An error occurred accessing Samsung Blockchain Keystore.
+            </fbt>
+          </Text>
+          <Text>{this.state.samsungBKSError}</Text>
+        </View>
+      )
     }
     return null
   }
@@ -113,3 +132,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(SamsungBKS)
+
+const styles = StyleSheet.create({
+  ...CommonStyles,
+  error: {
+    position: 'absolute',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    width: '100%',
+    backgroundColor: 'white'
+  }
+})
