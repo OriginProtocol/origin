@@ -12,7 +12,7 @@ import { DeviceEventEmitter } from 'react-native'
 import { connect } from 'react-redux'
 import get from 'lodash.get'
 
-import { balance, identity, tokenBalance, wallet } from 'graphql/queries'
+import { balance, identity, tokenBalance } from 'graphql/queries'
 import { setAccountBalances, setIdentity } from 'actions/Wallet'
 import { tokenBalanceFromGql } from 'utils/currencies'
 
@@ -22,7 +22,7 @@ const BALANCE_UPDATE_INTERVAL = 10000
 
 // Update identity frequency
 // TODO make this reactive to identity changes
-const IDENTITY_UPDATE_INTERVAL = 60000
+const IDENTITY_UPDATE_INTERVAL = 10000
 
 const withOriginGraphql = WrappedComponent => {
   class WithOriginGraphql extends Component {
@@ -146,10 +146,6 @@ const withOriginGraphql = WrappedComponent => {
       return this._sendGraphqlQuery(identity, { id }, 'no-cache')
     }
 
-    getWallet = () => {
-      return this._sendGraphqlQuery(wallet)
-    }
-
     updateIdentity = async address => {
       if (!this.props.marketplace.ready) {
         console.debug('Could not update identity, marketplace not ready')
@@ -171,7 +167,7 @@ const withOriginGraphql = WrappedComponent => {
       let identityResult
       try {
         const graphqlResponse = await this.getIdentity(address)
-        identityResult = get(graphqlResponse, 'data.web3.account.identity')
+        identityResult = get(graphqlResponse, 'data.identity')
       } catch (error) {
         // Handle GraphQL errors for things like invalid JSON RPC response or we
         // could crash the app
@@ -238,7 +234,6 @@ const withOriginGraphql = WrappedComponent => {
           getBalance={this.getBalance}
           getIdentity={this.getIdentity}
           getTokenBalance={this.getTokenBalance}
-          getWallet={this.getWallet}
           {...this.props}
         />
       )
