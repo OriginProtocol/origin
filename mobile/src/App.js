@@ -9,7 +9,7 @@ import RNSamsungBKS from 'react-native-samsung-bks'
 import Store, { persistor } from './Store'
 import { NETWORKS } from './constants'
 import { setNetwork } from 'actions/Settings'
-import { setAccountActive } from 'actions/Wallet'
+import { setAccounts, setAccountActive } from 'actions/Wallet'
 import AppContainer from './AppContainer'
 import NavigationService from './NavigationService'
 import setLanguage from 'utils/language'
@@ -48,6 +48,14 @@ const App = () => {
     }
     await Store.dispatch(setNetwork(network))
 
+    const filteredAccounts = wallet.accounts.filter(account => {
+      // No seed hash or account seed hash matches
+      return !account.seedHash || account.seedHash === samsungBKS.seedHash
+    })
+    if (filteredAccounts !== wallet.accounts) {
+      await Store.dispatch(setAccounts(filteredAccounts))
+    }
+
     // See if we can (or are) using Samsung BKS and conditionally render the
     // component
     if (Platform.OS === 'android' && enableSamsungBKS) {
@@ -66,7 +74,7 @@ const App = () => {
     onReady()
   }
 
-  const validateAccounts = () => {
+  const validateActiveAccount = () => {
     const { wallet } = Store.getState()
 
     // Verify there is a valid active account, and if not set one
@@ -84,7 +92,7 @@ const App = () => {
   }
 
   const onReady = () => {
-    validateAccounts()
+    validateActiveAccount()
     setLoading(false)
   }
 

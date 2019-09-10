@@ -134,6 +134,16 @@ class PushNotifications extends Component {
       console.debug('Registering with notifications server')
       await this.register()
     }
+
+    // Unregister deleted accounts
+    prevProps.wallet.accounts.forEach(oldAccount => {
+      const stillExists = this.props.wallet.accounts.find(
+        a => a.address === oldAccount.address
+      )
+      if (!stillExists) {
+        this.unregister(oldAccount)
+      }
+    })
   }
 
   /* Handles a notification by displaying an alert and saving it to redux

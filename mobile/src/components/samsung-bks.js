@@ -49,7 +49,7 @@ class SamsungBKS extends React.Component {
     // TODO handle required update
   }
 
-  _updateAccounts = async () => {
+  _updateAccounts = async seedHash => {
     console.debug('Updating account list from Samsung BKS')
     const hdPath = generateHdPath(0)
 
@@ -64,7 +64,11 @@ class SamsungBKS extends React.Component {
     await this.props.setAccounts([
       {
         address,
-        hdPath
+        hdPath,
+        // Store the seed hash alongside accounts so we can remove these
+        // accounts if the seed hash changes (i.e. Keystore was reset and
+        // reinitialized while the app was closed)
+        seedHash
       }
     ])
   }
@@ -79,7 +83,7 @@ class SamsungBKS extends React.Component {
           this.props.wallet.accounts.length === 0
         ) {
           // Update local account cache if the seed hash has changed or no accounts are in the local cache
-          await this._updateAccounts()
+          await this._updateAccounts(seedHash.payload)
         }
       } else {
         // User reset Samsung BKS, send to start of onboarding
