@@ -3,7 +3,8 @@ export default {
   // -----------
   createListing: 189553,
   updateListing: 38048,
-  makeOffer: 301785,
+  // makeOffer: 301785,
+  makeOffer: 350000, // Temp fix... swapAndMakeOffer transactions are running out of gas
   acceptOffer: 48099,
   finalizeOffer: 150000,
   withdrawOffer: 41321,

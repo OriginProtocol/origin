@@ -24,10 +24,10 @@
   "homepage": "https://github.com/OriginProtocol/origin#readme",
   "dependencies": {
     "busboy": "0.3.1",
-    "file-type": "12.2.0",
+    "file-type": "12.3.0",
     "http-proxy": "1.17.0",
     "ipfs": "0.37.1",
-    "ipfsd-ctl": "0.45.1",
+    "ipfsd-ctl": "0.46.0",
     "is-json": "2.0.1",
     "logplease": "1.2.15",
     "per-env": "1.0.2",
@@ -35,9 +35,9 @@
     "zlib": "1.0.5"
   },
   "devDependencies": {
-    "@babel/core": "7.5.5",
-    "@babel/preset-env": "7.5.5",
-    "@babel/register": "7.5.5",
+    "@babel/core": "7.6.0",
+    "@babel/preset-env": "7.6.0",
+    "@babel/register": "7.6.0",
     "autocannon": "4.1.0",
     "chai": "4.2.0",
     "form-data": "2.5.1",

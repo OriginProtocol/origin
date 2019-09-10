@@ -1,20 +1,27 @@
 import React from 'react'
 
-export const formInput = (state, setState, className) => (
-  field,
-  valueOnly
-) => ({
-  value: state[field] || '',
-  className: `form-control form-control-lg${
-    state[`${field}Error`] ? ' is-invalid' : ''
-  }${className ? ` ${className}` : ''}`,
-  name: field,
-  onChange: e =>
-    setState({
-      [field]: valueOnly ? e : e.target.value,
-      [`${field}Error`]: false
-    })
-})
+export const formInput = (state, setState, opts = {}) => (field, valueOnly) => {
+  let className = 'form-control'
+  if (opts.className) {
+    className += ` ${opts.className}`
+  }
+  if (!opts.small) {
+    className += ' form-control-lg'
+  }
+  if (state[`${field}Error`]) {
+    className += ' is-invalid'
+  }
+  return {
+    value: state[field] || '',
+    className,
+    name: field,
+    onChange: e =>
+      setState({
+        [field]: valueOnly ? e : e.target.value,
+        [`${field}Error`]: false
+      })
+  }
+}
 
 export const formFeedback = state =>
   function InvalidFeedback(field) {

@@ -257,7 +257,7 @@ require('react-styl')(`
     .amount
       .form-control
         border: 0
-        height: 1em
+        height: 1.5em
       .input-wrap
         margin-top: 1.5rem
     .amount,.budget

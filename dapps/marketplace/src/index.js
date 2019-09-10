@@ -15,10 +15,10 @@ import { ApolloProvider } from 'react-apollo'
 import { HashRouter } from 'react-router-dom'
 import Styl from 'react-styl'
 import client from '@origin/graphql'
-import * as Sentry from '@sentry/browser'
 
 import setLocale from 'utils/setLocale'
 import Store from 'utils/store'
+import { initSentry } from 'utils/sentry'
 
 import App from './pages/App'
 import Analytics from './components/Analytics'
@@ -33,11 +33,7 @@ if (process.env.NODE_ENV === 'production') {
     console.warn('No built CSS found')
   }
   if (process.env.SENTRY_DSN) {
-    Sentry.init({
-      dsn: process.env.SENTRY_DSN,
-      release: `marketplace-dapp@${process.env.GIT_COMMIT_HASH}`,
-      environment: process.env.NAMESPACE
-    })
+    initSentry()
   }
 } else {
   try {
@@ -97,12 +93,8 @@ class AppWrapper extends Component {
 
 ReactDOM.render(
   <AppWrapper
-    ref={() => {
-      const override = {
-        onLocale: () => {},
-        onCurrency: () => {}
-      }
-      window.appComponent = override
+    ref={app => {
+      window.appComponent = app
     }}
   />,
   document.getElementById('app')

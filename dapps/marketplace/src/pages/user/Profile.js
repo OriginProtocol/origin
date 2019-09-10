@@ -30,9 +30,9 @@ import UserActivationLink from 'components/UserActivationLink'
 import PhoneAttestation from 'pages/identity/PhoneAttestation'
 import EmailAttestationModal from 'pages/identity/EmailAttestationModal'
 import AirbnbAttestation from 'pages/identity/AirbnbAttestation'
-import WebsiteAttestation from 'pages/identity/WebsiteAttestation'
 import OAuthAttestation from 'pages/identity/OAuthAttestation'
 import TelegramAttestation from 'pages/identity/TelegramAttestation'
+import WebsiteAttestation from 'pages/identity/WebsiteAttestation'
 
 import EditProfile from './_EditModal'
 import ToastNotification from './ToastNotification'
@@ -58,12 +58,12 @@ const AttestationComponents = {
   twitter: withOAuthAttestationProvider('twitter'),
   airbnb: AirbnbAttestation,
   google: withOAuthAttestationProvider('google'),
-  website: WebsiteAttestation,
   kakao: withOAuthAttestationProvider('kakao'),
   github: withOAuthAttestationProvider('github'),
   linkedin: withOAuthAttestationProvider('linkedin'),
   wechat: withOAuthAttestationProvider('wechat'),
-  telegram: TelegramAttestation
+  telegram: TelegramAttestation,
+  website: WebsiteAttestation
 }
 
 const ProfileFields = [
@@ -135,7 +135,10 @@ class UserProfile extends Component {
     if (
       (walletChanged || identityLoaded) &&
       !identity &&
-      !window.localStorage.noIdentity &&
+      !(
+        window.localStorage.bypassOnboarding ||
+        window.localStorage.useWeb3Identity
+      ) &&
       !this.state.redirectToOnboarding
     ) {
       // redirect to onboarding, if user doesn't have a deployed profile

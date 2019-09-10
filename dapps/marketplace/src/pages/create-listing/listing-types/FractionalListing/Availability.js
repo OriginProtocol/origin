@@ -82,8 +82,8 @@ class ListingAvailability extends Component {
               <div className="gray-box">
                 <fbt desc="listing.create.fractional.calendar.help">
                   Click the calendar to enter pricing and availability
-                  information. To select multiple time slots, click the starting
-                  time slot and drag to the ending one.
+                  information. To select multiple days, click the start and then
+                  click the end.
                 </fbt>
               </div>
             )}
