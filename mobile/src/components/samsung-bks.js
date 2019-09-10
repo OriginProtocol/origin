@@ -5,7 +5,7 @@
  */
 
 import React from 'react'
-import { Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import { AppState } from 'react-native'
 import { fbt } from 'fbt-runtime'

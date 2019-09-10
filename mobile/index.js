@@ -7,9 +7,9 @@ import { AppRegistry } from 'react-native'
 
 import * as Sentry from '@sentry/react-native'
 if (!__DEV__) {
-  Sentry.config(
-    'https://0711315529954f25bb2ee58315fe477b@sentry.io/1399965'
-  ).install()
+  Sentry.init({
+    dsn: 'https://0711315529954f25bb2ee58315fe477b@sentry.io/1399965'
+  })
 }
 
 import './global'
