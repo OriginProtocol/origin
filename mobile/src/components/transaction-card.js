@@ -8,7 +8,10 @@ import { ethers } from 'ethers'
 import get from 'lodash.get'
 
 import { decodeTransaction } from '../utils/contractDecoder'
-import { findBestAvailableCurrency } from 'utils/currencies'
+import {
+  findBestAvailableCurrency,
+  getCurrencyTypeFromAddress
+} from 'utils/currencies'
 import Address from 'components/address'
 import OriginButton from 'components/origin-button'
 import currencies from 'utils/currencies'
@@ -32,6 +35,7 @@ const TransactionCard = props => {
   const fiatCurrency = props.settings.currency || findBestAvailableCurrency()
 
   console.debug(`Contract: ${contractName}, Function: ${functionName}`)
+  console.debug(msgData)
   console.debug(parameters)
 
   // Calculate gas in wei
@@ -53,6 +57,7 @@ const TransactionCard = props => {
   )
 
   let heading,
+    subheading,
     boost,
     payment = 0,
     paymentCurrency,
@@ -68,26 +73,39 @@ const TransactionCard = props => {
 
     case 'makeOffer':
       heading = fbt('Make Offer', 'TransactionCard.headingMakeOffer')
-      payment = ethers.utils.formatEther(parameters._value)
-      // TODO: handle this detection better, this will only work while there
-      // is a single alternate payment currency
-      if (
-        parameters._currency === '0x0000000000000000000000000000000000000000'
-      ) {
-        paymentCurrency = 'eth'
-        ethRequired += Number(payment)
-      } else {
-        paymentCurrency = 'dai'
-        daiRequired += Number(payment)
+      paymentCurrency = getCurrencyTypeFromAddress(parameters._currency)
+      if (paymentCurrency) {
+        payment = ethers.utils.formatEther(parameters._value)
+        if (paymentCurrency === 'eth') {
+          ethRequired += Number(payment)
+        } else if (paymentCurrency === 'dai') {
+          daiRequired += Number(payment)
+        }
       }
       ognRequired = parseInt(parameters._commission)
       break
 
     case 'swapAndMakeOffer':
-      heading = fbt('Purchase', 'TransactionCard.headingPurchase')
+      heading = fbt('Make Offer', 'TransactionCard.headingMakeOffer')
+      paymentCurrency = 'eth' // Always swapping eth
       payment = ethers.utils.formatEther(parameters._value) / ethExchangeRate
-      paymentCurrency = 'eth'
       ethRequired += Number(payment)
+      break
+
+
+    case 'transferTokenMarketplaceExecute':
+      heading = fbt('Transfer Tokens', 'TransactionCard.headingTransferTokens')
+      paymentCurrency = getCurrencyTypeFromAddress(parameters._token)
+      if (paymentCurrency) {
+        payment = ethers.utils.formatEther(parameters._value)
+        if (paymentCurrency === 'eth') {
+          ethRequired += Number(payment)
+        } else if (paymentCurrency === 'dai') {
+          daiRequired += Number(payment)
+        } else if (paymentCurrency === 'ogn') {
+          ognRequired += Number(payment)
+        }
+      }
       break
 
     case 'emitIdentityUpdated':
@@ -98,10 +116,16 @@ const TransactionCard = props => {
       break
 
     case 'approve':
-      heading = fbt(
-        'Approve Currency Conversion',
-        'TransactionCard.headingApprove'
-      )
+      heading = fbt('Grant Token Allowance', 'TransactionCard.grantHeading')
+      const allowanceCurrency = getCurrencyTypeFromAddress(msgData.data.to)
+      if (allowanceCurrency) {
+        subheading = fbt(
+          'We are requesting permission to move ' +
+            fbt.param('currency', allowanceCurrency.toUpperCase()) +
+            ' on your behalf',
+          'TransactionCard.grantSubheading'
+        )
+      }
       break
 
     case 'createProxyWithSenderNonce':
@@ -130,9 +154,11 @@ const TransactionCard = props => {
   const hasSufficientEth = ethRequired <= Number(balances['eth'] || 0)
   // const hasSufficientOgn = ognRequired <= Number(balances['ogn'] || 0)
 
+
   return (
     <View style={styles.card}>
       <Text style={styles.cardHeading}>{heading}</Text>
+      {subheading && <Text style={styles.cardContent}>{subheading}</Text>}
       {calculableTotal ? (
         <>
           <View style={styles.primaryContainer}>
