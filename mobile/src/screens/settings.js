@@ -13,7 +13,7 @@ import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
 
 import { setNetwork } from 'actions/Settings'
-import { NETWORKS, VERSION  } from '../constants'
+import { NETWORKS, VERSION } from '../constants'
 import CommonStyles from 'styles/common'
 import MenuStyles from 'styles/menu'
 

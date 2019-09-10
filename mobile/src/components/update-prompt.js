@@ -40,11 +40,11 @@ class UpdatePrompt extends React.Component {
         console.warn('Could not fetch versions: ', error)
       }
 
-      if (versions && compareVersions(version, versions.force) === -1) {
+      if (versions && compareVersions(VERSION, versions.force) === -1) {
         this.setState({ upgrade: 'force' })
       } else if (
         versions &&
-        compareVersions(version, versions.recommend) === -1
+        compareVersions(VERSION, versions.recommend) === -1
       ) {
         this.setState({ upgrade: 'recommend' })
       }
