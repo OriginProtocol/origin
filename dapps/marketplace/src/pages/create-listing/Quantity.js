@@ -102,6 +102,7 @@ const Quantity = ({ next, onChange, prev, ...props }) => {
             </div>
 
             <RequireShipping
+              listing={props.listing}
               onChange={requiresShipping => {
                 setInputState({
                   ...inputState,

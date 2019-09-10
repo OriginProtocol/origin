@@ -2,6 +2,8 @@ import React from 'react'
 
 import Link from 'components/Link'
 import UserActivationLink from 'components/UserActivationLink'
+import { isHistoricalListing } from 'utils/listing'
+import HistoricalListingWarning from 'pages/listing/_HistoricalListingWarning'
 
 import withMessagingStatus from 'hoc/withMessagingStatus'
 
@@ -31,7 +33,10 @@ const ConfirmShippingAndPurchase = ({
     )
   }
 
-  if (!hasMessagingKeys) {
+  if (
+    !hasMessagingKeys &&
+    !(localStorage.bypassOnboarding || localStorage.useWeb3Identity)
+  ) {
     return (
       <UserActivationLink
         className={className}
@@ -39,6 +44,10 @@ const ConfirmShippingAndPurchase = ({
         location={{ pathname: `/listing/${listing.id}` }}
       />
     )
+  }
+
+  if (isHistoricalListing(listing)) {
+    return <HistoricalListingWarning listing={listing} />
   }
 
   return (
@@ -53,4 +62,6 @@ const ConfirmShippingAndPurchase = ({
   )
 }
 
-export default withMessagingStatus(ConfirmShippingAndPurchase)
+export default withMessagingStatus(ConfirmShippingAndPurchase, {
+  excludeData: true
+})

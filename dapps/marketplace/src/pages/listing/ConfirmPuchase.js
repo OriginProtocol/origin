@@ -34,10 +34,12 @@ const ConfirmPurchase = ({
   shippingAddress,
   bookingRange
 }) => {
-  const singleUnit = !listing.multiUnit && listing.__typename === 'UnitListing'
-  const multiUnit = listing.multiUnit && listing.__typename === 'UnitListing'
+  const singleUnit =
+    listing.__typename === 'UnitListing' && listing.unitsTotal === 1
+  const multiUnit = listing.multiUnit
   const isFractional = listing.__typename === 'FractionalListing'
   const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
+  const isService = listing.__typename === 'ServiceListing'
 
   let BuyMutationComponent, SummaryComponent
 
@@ -45,6 +47,7 @@ const ConfirmPurchase = ({
 
   switch (true) {
     case multiUnit:
+    case isService:
       BuyMutationComponent = BuyMultiUnitMutation
       SummaryComponent = MultiUnitPurchaseSummary
       break
