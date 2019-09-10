@@ -101,8 +101,7 @@ const MultiUnit = ({
         acceptedTokens={listing.acceptedTokens}
         listing={listing}
         value={token}
-        hasBalance={tokenStatus.hasBalance}
-        hasEthBalance={tokenStatus.hasEthBalance}
+        tokenStatus={tokenStatus}
       >
         <ConfirmShippingAndPurchase
           listing={listing}

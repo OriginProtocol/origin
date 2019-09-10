@@ -135,6 +135,8 @@ require('react-styl')(`
 
   @media (max-width: 767.98px)
     .create-listing
+      h1
+        font-size: 1.5rem
       .choose-category
         border: unset
         padding: unset
