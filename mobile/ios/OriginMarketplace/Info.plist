@@ -19,7 +19,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0</string>
+	<string>1</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -50,6 +50,8 @@
 	<string>We will not be using the location</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We will not be using microphone</string>
+	<key>NSContactsUsageDescription</key>
+	<string>We will not be accessing your contacts</string>
 	<key>NSMotionUsageDescription</key>
 	<string>We will not be using motion</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
