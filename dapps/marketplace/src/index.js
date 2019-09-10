@@ -93,12 +93,8 @@ class AppWrapper extends Component {
 
 ReactDOM.render(
   <AppWrapper
-    ref={() => {
-      const override = {
-        onLocale: () => {},
-        onCurrency: () => {}
-      }
-      window.appComponent = override
+    ref={app => {
+      window.appComponent = app
     }}
   />,
   document.getElementById('app')
