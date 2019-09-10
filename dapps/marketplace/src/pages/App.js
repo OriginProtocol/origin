@@ -36,6 +36,7 @@ import AboutToken from './about/AboutTokens'
 import AboutPayments from './about/AboutPayments'
 import AboutCrypto from './about/AboutCrypto'
 import { applyConfiguration } from 'utils/marketplaceCreator'
+import Sentry from 'utils/sentry'
 import CurrencyContext from 'constants/CurrencyContext'
 import OpenApp from './OpenApp'
 
@@ -45,7 +46,6 @@ class App extends Component {
     displayMobileModal: false,
     mobileModalDismissed: false,
     footer: false,
-    skipOnboardMessaging: false,
     skipOnboardRewards: false
   }
 
@@ -53,6 +53,7 @@ class App extends Component {
     if (get(this.props, 'location.state.scrollToTop')) {
       window.scrollTo(0, 0)
     }
+
     if (
       !this.props.web3Loading &&
       !this.props.web3.walletType &&
@@ -65,6 +66,10 @@ class App extends Component {
 
   static getDerivedStateFromError(err) {
     return { hasError: true, err }
+  }
+
+  componentDidCatch(err) {
+    Sentry.captureException(err)
   }
 
   render() {
@@ -105,14 +110,18 @@ class App extends Component {
           ) ||
           this.props.location.pathname.match(/\/onboard\/finished/gi) ||
           this.props.location.pathname.match(
-            /^\/(promote\/.+|create\/.+|listing\/[-0-9]+\/edit\/.+)/gi
+            /^\/(promote\/.+|create\/.+|listing\/[-0-9]+\/(edit\/.+|shipping|confirm)\/?)/gi
           )))
 
     return (
       <CurrencyContext.Provider value={this.props.currency}>
         {!hideNavbar && (
           <Nav
-            onGetStarted={() => this.setState({ mobileModalDismissed: false })}
+            onGetStarted={() =>
+              this.setState({
+                mobileModalDismissed: false
+              })
+            }
             onShowFooter={() => this.setState({ footer: true })}
             navbarDarkMode={isOnWelcomeAndNotOboard}
           />
@@ -123,13 +132,7 @@ class App extends Component {
               path="/onboard"
               component={() => (
                 <Onboard
-                  skipMessaging={this.state.skipOnboardMessaging}
                   skipRewards={this.state.skipOnboardRewards}
-                  onSkipMessaging={() => {
-                    this.setState({
-                      skipOnboardMessaging: true
-                    })
-                  }}
                   onSkipRewards={() => {
                     this.setState({
                       skipOnboardRewards: true

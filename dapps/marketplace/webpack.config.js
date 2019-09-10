@@ -127,6 +127,7 @@ const config = {
       DOCKER: false,
       ENABLE_GROWTH: false,
       FACEBOOK_CLIENT_ID: null,
+      GAS_PRICE_KEY: null,
       GIT_COMMIT_HASH: gitCommitHash,
       GIT_BRANCH: gitBranch,
       HOST: 'localhost',
@@ -162,7 +163,7 @@ const config = {
 if (isProduction) {
   config.output.filename = '[name].[hash:8].js'
   config.optimization.minimizer = [
-    new TerserPlugin({ cache: true, parallel: true, sourceMap: true }),
+    new TerserPlugin({ extractComments: false }),
     new OptimizeCSSAssetsPlugin({})
   ]
   config.plugins.push(

@@ -1,10 +1,13 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
 
+import get from 'lodash/get'
+
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 import withWeb3 from 'hoc/withWeb3'
+import { isHistoricalListing } from 'utils/listing'
 
 import Price from 'components/Price'
 import Link from 'components/Link'
@@ -58,99 +61,122 @@ const SwapEthToDai = () => (
 const PaymentOptions = ({
   identity,
   acceptedTokens,
+  listing,
   value,
   price,
   tokens,
   hasBalance,
   hasEthBalance,
   children,
-  cannotTransact
+  cannotTransact,
+  ...props
 }) => {
-  if (cannotTransact && cannotTransact !== 'no-balance') {
-    return children
+  const isLoadingData =
+    get(props, 'tokenStatus.loading') ||
+    props.cannotTransact === 'loading' ||
+    Object.keys(props).some(key => key.endsWith('Loading') && props[key])
+
+  if (isLoadingData) {
+    return null
   }
-  if (!Object.keys(tokens).length) {
-    return children
-  }
 
-  const daiActive = value === 'token-DAI' ? ' active' : ''
-  const ethActive = value === 'token-ETH' ? ' active' : ''
-  const acceptsDai = acceptedTokens.find(t => t.id === 'token-DAI')
-  const acceptsEth =
-    !acceptsDai || acceptedTokens.find(t => t.id === 'token-ETH')
+  const noBalance = cannotTransact && cannotTransact !== 'no-balance'
+  const noTokens = !Object.keys(tokens).length
 
-  const ethPrice = <Price price={price} target="token-ETH" className="bold" />
-  const daiPrice = <Price price={price} target="token-DAI" className="bold" />
+  let content, notEnoughFunds, paymentTotal, exchanged
 
-  const hasIdentity = localStorage.noIdentity || identity
+  if (!noBalance && !noTokens) {
+    let cannotPurchase = false,
+      needsSwap = false,
+      noEthOrDai = false
 
-  let cannotPurchase = false,
-    content,
-    needsSwap = false,
-    noEthOrDai = false
+    const daiActive = value === 'token-DAI' ? ' active' : ''
+    const ethActive = value === 'token-ETH' ? ' active' : ''
+    const acceptsDai = acceptedTokens.find(t => t.id === 'token-DAI')
+    const acceptsEth =
+      !acceptsDai || acceptedTokens.find(t => t.id === 'token-ETH')
 
-  if (hasIdentity) {
-    if (acceptsDai && acceptsEth && daiActive) {
-      if (hasBalance) {
-        content = <PayWithDai />
-      } else if (!hasBalance && !hasEthBalance) {
-        cannotPurchase = true
-        noEthOrDai = true
-        content = <NotEnoughFunds noEthOrDai />
-      } else {
-        needsSwap = true
-        content = <SwapEthToDai ethPrice={ethPrice} />
-      }
-    } else if (acceptsDai && acceptsEth && ethActive) {
-      if (hasBalance) {
-        content = <PayWithEth />
-      } else {
-        cannotPurchase = true
-        content = <NotEnoughFunds />
-      }
-    } else if (acceptsDai) {
-      if (hasBalance) {
-        content = <PayWithDai />
-      } else if (hasEthBalance) {
-        needsSwap = true
-        content = <SwapEthToDai ethPrice={ethPrice} />
-      } else {
-        cannotPurchase = true
-        content = <NotEnoughFunds />
-      }
-    } else if (acceptsEth) {
-      if (hasBalance) {
-        content = <PayWithEth />
-      } else {
-        cannotPurchase = true
-        content = <NotEnoughFunds />
+    const ethPrice = <Price price={price} target="token-ETH" className="bold" />
+    const daiPrice = <Price price={price} target="token-DAI" className="bold" />
+
+    const hasIdentity =
+      localStorage.bypassOnboarding || localStorage.useWeb3Identity || identity
+
+    if (hasIdentity && !isHistoricalListing(listing)) {
+      if (acceptsDai && acceptsEth && daiActive) {
+        if (hasBalance) {
+          content = <PayWithDai />
+        } else if (!hasBalance && !hasEthBalance) {
+          cannotPurchase = true
+          noEthOrDai = true
+          content = <NotEnoughFunds noEthOrDai />
+        } else {
+          needsSwap = true
+          content = <SwapEthToDai ethPrice={ethPrice} />
+        }
+      } else if (acceptsDai && acceptsEth && ethActive) {
+        if (hasBalance) {
+          content = <PayWithEth />
+        } else {
+          cannotPurchase = true
+          content = <NotEnoughFunds />
+        }
+      } else if (acceptsDai) {
+        if (hasBalance) {
+          content = <PayWithDai />
+        } else if (hasEthBalance) {
+          needsSwap = true
+          content = <SwapEthToDai ethPrice={ethPrice} />
+        } else {
+          cannotPurchase = true
+          content = <NotEnoughFunds />
+        }
+      } else if (acceptsEth) {
+        if (hasBalance) {
+          content = <PayWithEth />
+        } else {
+          cannotPurchase = true
+          content = <NotEnoughFunds />
+        }
       }
     }
-  }
 
-  return (
-    <div className="payment-options">
-      {cannotPurchase ? (
+    if (cannotPurchase) {
+      notEnoughFunds = (
         <NotEnoughFunds
           ethPrice={ethPrice}
           daiPrice={daiPrice}
           noEthOrDai={noEthOrDai}
         />
+      )
+    }
+
+    if (hasIdentity) {
+      paymentTotal = (
+        <div className="payment-total">
+          <span>
+            <fbt desc="paymentOptions.payment">Payment</fbt>
+          </span>
+          <span className={cannotPurchase ? 'danger' : ''}>
+            {needsSwap || ethActive ? ethPrice : daiPrice}
+          </span>
+        </div>
+      )
+    }
+
+    if (!(!hasIdentity || ethActive || hasBalance || needsSwap)) {
+      exchanged = <div className="exchanged">{ethPrice}</div>
+    }
+  }
+
+  return (
+    <div className="payment-options">
+      {notEnoughFunds ? (
+        notEnoughFunds
       ) : (
         <>
-          {hasIdentity && (
-            <div className="payment-total">
-              <span>
-                <fbt desc="paymentOptions.payment">Payment</fbt>
-              </span>
-              <span className={cannotPurchase ? 'danger' : ''}>
-                {needsSwap || ethActive ? ethPrice : daiPrice}
-              </span>
-            </div>
-          )}
-          {!hasIdentity || ethActive || hasBalance || needsSwap ? null : (
-            <div className="exchanged">{ethPrice}</div>
-          )}
+          {paymentTotal}
+          {exchanged}
           {children}
           <div className="help">{content}</div>
         </>

@@ -5,7 +5,10 @@
   "license": "MIT",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "NODE_ENV=test mocha -r esm -r @babel/register test/index.js -t 8000",
+    "lint": "eslint . && npm run prettier:check",
+    "prettier": "prettier --write *.js \"src/**/*.js\" \"test/**/*.js\"",
+    "prettier:check": "prettier -c *.js \"src/**/*.js\" \"test/**/*.js\""
   },
   "dependencies": {
     "ajv": "^6.10.0",
@@ -17,5 +20,39 @@
     "json-stable-stringify": "^1.0.1",
     "secp256k1": "^3.5.2"
   },
-  "devDependencies": {}
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-export-default-from",
+      "@babel/plugin-transform-runtime",
+      "@babel/plugin-transform-destructuring",
+      "@babel/plugin-transform-object-assign",
+      "@babel/plugin-proposal-object-rest-spread",
+      "@babel/plugin-proposal-class-properties"
+    ]
+  },
+  "devDependencies": {
+    "@babel/core": "7.6.0",
+    "@babel/plugin-proposal-class-properties": "7.5.5",
+    "@babel/plugin-proposal-export-default-from": "7.5.2",
+    "@babel/plugin-proposal-object-rest-spread": "7.5.5",
+    "@babel/plugin-transform-destructuring": "7.6.0",
+    "@babel/plugin-transform-object-assign": "7.2.0",
+    "@babel/plugin-transform-runtime": "7.6.0",
+    "@babel/preset-env": "7.6.0",
+    "@babel/preset-react": "7.0.0",
+    "@babel/register": "7.6.0",
+    "@babel/runtime": "7.6.0",
+    "debug": "4.1.1",
+    "mocha": "6.2.0",
+    "eslint": "6.3.0",
+    "prettier": "1.18.2"
+  }
 }

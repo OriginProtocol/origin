@@ -21,6 +21,8 @@ const PUB_MESSAGING_SIG = 'PMS_'
 const PUB_MESSAGING = 'KEY_'
 const UNREAD_STATUS = 'unread'
 const READ_STATUS = 'read'
+const COULD_NOT_DECRYPT = 'Could not decrypt'
+const INVALID_MESSAGE_OBJECT = 'Invalid message object'
 
 const storeKeys = {
   messageSubscriptionStart: 'message_subscription_start',
@@ -51,6 +53,22 @@ const validator = new Ajv()
 const validateMessage = validator.compile(MESSAGE_FORMAT)
 const limiter = new Bottleneck({ maxConcurrent: 25 })
 
+/**
+ * Origin Messaging Client
+ *
+ * To use:
+ *
+ * ```
+ * const messaging = new Messaging(options)
+ * await messaging.init(this.address)
+ * await messaging.startConversing()
+ * // Once ready:
+ * await messaging.sendConvMessage(aliceAddress, { content: 'Hi' })
+ * // Once someone else's messages have arrived
+ * const messages = messaging.getAllMessages(aliceAddress)
+ * ```
+ *
+ */
 class Messaging {
   constructor({
     contractService,
@@ -159,7 +177,7 @@ class Messaging {
     if (sigKey && sigPhrase == PROMPT_MESSAGE) {
       await this.setAccount(sigKey, sigPhrase)
     } else {
-      await this.promptInit()
+      await this.promptToEnable()
     }
   }
 
@@ -196,15 +214,11 @@ class Messaging {
       }
     }
     // bootstrap read status
-    const scopedSubStartKeyName = `${storeKeys.messageSubscriptionStart}:${
-      this.account_key
-    }`
+    const scopedSubStartKeyName = `${storeKeys.messageSubscriptionStart}:${this.account_key}`
     if (!localStorage.getItem(scopedSubStartKeyName)) {
       localStorage.setItem(scopedSubStartKeyName, JSON.stringify(Date.now()))
     }
-    const scopedStatusesKeyName = `${storeKeys.messageStatuses}:${
-      this.account_key
-    }`
+    const scopedStatusesKeyName = `${storeKeys.messageStatuses}:${this.account_key}`
     if (!localStorage.getItem(scopedStatusesKeyName)) {
       localStorage.setItem(scopedStatusesKeyName, JSON.stringify({}))
     }
@@ -337,8 +351,11 @@ class Messaging {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
-  async promptInit() {
-    debug('promptInit', this.account_key)
+  /**
+   * Enable messsaging by getting the user to sign the magic text.
+   */
+  async promptToEnable() {
+    debug('promptToEnable', this.account_key)
     const sigPhrase = PROMPT_MESSAGE
     const signer = this.personalSign ? this.web3.eth.personal : this.web3.eth
     const signature = await signer.sign(sigPhrase, this.account_key)
@@ -397,7 +414,7 @@ class Messaging {
     return this.convs[roomId]
   }
 
-  decryptMsg(ivStr, msg, key) {
+  decryptEmsg(ivStr, msg, key) {
     const buffer = CryptoJS.AES.decrypt(msg, key, {
       iv: CryptoJS.enc.Base64.parse(ivStr)
     })
@@ -420,46 +437,68 @@ class Messaging {
     }
   }
 
+  /**
+   * Handles reading from content update object.
+   *
+   * New keys are stored on the convObj, while a decrypted message
+   * fires a callback.
+   */
   processContent(content, convObj, onMessage, onEncrypted) {
     if (content.type == 'keys') {
-      for (const v of content.keys) {
-        if (v.address == this.account_key) {
-          let key
-          try {
-            key = this.ecDecrypt(v.ekey)
-          } catch (e) {
-            /* Ignore */
-          }
-          if (key && !convObj.keys.includes(key)) {
-            convObj.keys.push(key)
-          }
-        }
-      }
+      this.processKeys(content, convObj)
     } else if (content.type == 'msg') {
-      const v = content
-      let decrypted = false
-      for (const key of convObj.keys) {
-        const buffer = this.decryptMsg(v.i, v.emsg, key)
-        if (buffer != undefined) {
-          let obj = buffer
-          try {
-            obj = JSON.parse(buffer)
-          } catch (error) {
-            // pass
-          }
-          if (!validateMessage(obj)) {
-            // force it to be an object
-            continue
-          }
-          onMessage(obj, v.address)
-          decrypted = true
-          break
-        }
-      }
-      if (!decrypted && onEncrypted) {
-        onEncrypted(v.emsg, v.address)
+      const decrypted = this.decryptMessage(content, convObj)
+      if (decrypted.error == COULD_NOT_DECRYPT) {
+        onEncrypted(content.emsg, content.address)
+      } else if (decrypted.error == INVALID_MESSAGE_OBJECT) {
+        // Do nothing
+      } else if (decrypted.content) {
+        onMessage(decrypted.content, content.address)
       }
     }
+  }
+
+  /**
+   * Adds any of my keys to the conversation
+   */
+  processKeys(content, convObj) {
+    for (const v of content.keys) {
+      if (v.address == this.account_key) {
+        let key
+        try {
+          key = this.ecDecrypt(v.ekey)
+        } catch (e) {
+          /* Ignore */
+        }
+        if (key && !convObj.keys.includes(key)) {
+          convObj.keys.push(key)
+        }
+      }
+    }
+  }
+
+  /**
+   * Decrypts a message using the keys from a conversation.
+   */
+  decryptMessage(content, convObj) {
+    const v = content
+    for (const key of convObj.keys) {
+      const buffer = this.decryptEmsg(v.i, v.emsg, key)
+      if (buffer != undefined) {
+        let obj = buffer
+        try {
+          obj = JSON.parse(buffer)
+        } catch (error) {
+          return { error: INVALID_MESSAGE_OBJECT }
+        }
+        if (!validateMessage(obj)) {
+          // force it to be an object
+          return { error: INVALID_MESSAGE_OBJECT }
+        }
+        return { content: obj }
+      }
+    }
+    return { error: COULD_NOT_DECRYPT }
   }
 
   onMessageUpdate(entry) {
@@ -714,6 +753,9 @@ class Messaging {
     return outConvs
   }
 
+  /**
+   * Read from our local cache for messages to or from particular user
+   */
   async getMessages(remoteEthAddress, { before, after } = {}) {
     const roomId = this.generateRoomId(this.account_key, remoteEthAddress)
     let convObj = this.convs[roomId]
@@ -851,11 +893,48 @@ class Messaging {
     return convObj
   }
 
+  async createEncrypted(address, convObj, messageObj) {
+    let remoteEthAddress = address
+    if (!this.web3.utils.isAddress(remoteEthAddress)) {
+      throw new Error(`${remoteEthAddress} is not a valid Ethereum address`)
+    }
+    remoteEthAddress = this.web3.utils.toChecksumAddress(remoteEthAddress)
+
+    if (typeof messageObj == 'string') {
+      messageObj = { content: messageObj }
+    }
+    const message = Object.assign({}, messageObj)
+    // set timestamp
+    message.created = Date.now()
+
+    if (!validateMessage(message)) {
+      debug('ERR: invalid message')
+      return
+    }
+    const key = convObj.keys[0]
+    const iv = CryptoJS.lib.WordArray.random(16)
+    const messageStr = JSON.stringify(message)
+    const shaSub = CryptoJS.enc.Base64.stringify(
+      CryptoJS.SHA1(messageStr)
+    ).substr(0, 6)
+    const encmsg = CryptoJS.AES.encrypt(messageStr + shaSub, key, {
+      iv: iv
+    }).toString()
+    const ivStr = CryptoJS.enc.Base64.stringify(iv)
+
+    return {
+      type: 'msg',
+      emsg: encmsg,
+      i: ivStr,
+      address: this.account_key
+    }
+  }
+
   async sendConvMessage(roomIdOrAddress, messageObj) {
     debug('sendConvMessage', roomIdOrAddress, messageObj)
     if (this._sending_message) {
       debug('ERR: already sending message')
-      return false
+      return
     }
     let remoteEthAddress, roomId
     if (this.isRoomId(roomIdOrAddress)) {
@@ -877,37 +956,18 @@ class Messaging {
       return
     }
 
-    if (typeof messageObj == 'string') {
-      messageObj = { content: messageObj }
+    const encryptedContent = await this.createEncrypted(
+      remoteEthAddress,
+      convObj,
+      messageObj
+    )
+    if (!encryptedContent) {
+      return
     }
-    const message = Object.assign({}, messageObj)
-    // set timestamp
-    message.created = Date.now()
 
-    if (!validateMessage(message)) {
-      debug('ERR: invalid message')
-      return false
-    }
-    const key = convObj.keys[0]
-    const iv = CryptoJS.lib.WordArray.random(16)
-    const messageStr = JSON.stringify(message)
-    const shaSub = CryptoJS.enc.Base64.stringify(
-      CryptoJS.SHA1(messageStr)
-    ).substr(0, 6)
-    const encmsg = CryptoJS.AES.encrypt(messageStr + shaSub, key, {
-      iv: iv
-    }).toString()
-    const ivStr = CryptoJS.enc.Base64.stringify(iv)
     this._sending_message = true
     // include a random iv str so that people can't match strings of the same message
-    if (
-      await this.addRoomMsg(roomId, convObj.lastConversationIndex + 1, {
-        type: 'msg',
-        emsg: encmsg,
-        i: ivStr,
-        address: this.account_key
-      })
-    ) {
+    if (await this.addRoomMsg(roomId, convObj.lastConversationIndex + 1, encryptedContent)) {
       debug('room.add OK')
       //do something different if this succeeds
     } else {
@@ -915,6 +975,53 @@ class Messaging {
     }
     this._sending_message = false
     return roomId
+  }
+
+  async createOutOfBandMessage(address, messageObj) {
+    debug('createOutOfBandMessage', address, messageObj)
+    let remoteEthAddress = address
+    if (!this.web3.utils.isAddress(remoteEthAddress)) {
+      throw new Error(`${remoteEthAddress} is not a valid Ethereum address`)
+    }
+    remoteEthAddress = this.web3.utils.toChecksumAddress(remoteEthAddress)
+    const convObj = await this.startConv(remoteEthAddress)
+    if (!convObj) {
+      debug('ERR: no room to send message to')
+      return
+    }
+    const encryptedContent = await this.createEncrypted(
+      remoteEthAddress,
+      convObj,
+      messageObj
+    )
+    if (!encryptedContent) {
+      return
+    }
+    const myAddress = this.web3.utils.toChecksumAddress(remoteEthAddress)
+    encryptedContent.to = myAddress
+    return encryptedContent
+  }
+
+  async decryptOutOfBandMessage(message) {
+    // We don't know which one will be us, because we could be
+    // reading our own message.
+    const addresses = [message.address, message.to].map(x => {
+      if (!this.web3.utils.isAddress(x)) {
+        throw new Error(`${x} is not a valid Ethereum address`)
+      }
+      return this.web3.utils.toChecksumAddress(x)
+    })
+    // Sort my address to the end of the array
+    // Making the the first address not me (unless I'm messaging myself)
+    addresses.sort(x => (x == this.account_key ? 1 : -1))
+    const remoteEthAddress = addresses[0]
+
+    const convObj = await this.startConv(remoteEthAddress)
+    if (!convObj) {
+      debug('ERR: no room to get message from')
+      return
+    }
+    return this.decryptMessage(message, convObj)
   }
 
   // messages supplied by the 'msg' event have status included
@@ -933,9 +1040,7 @@ class Messaging {
   // we allow the entire message to be passed in (for consistency with other resources + convenience)
   // however all we are updating is the status
   set({ hash, status }) {
-    const scopedStatusesKeyName = `${storeKeys.messageStatuses}:${
-      this.account_key
-    }`
+    const scopedStatusesKeyName = `${storeKeys.messageStatuses}:${this.account_key}`
     const messageStatuses = JSON.parse(
       localStorage.getItem(scopedStatusesKeyName)
     )

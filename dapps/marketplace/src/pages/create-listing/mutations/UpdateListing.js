@@ -22,6 +22,15 @@ import applyListingData from './_listingData'
 
 class UpdateListing extends Component {
   state = {}
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevState.error && this.state.error && !this.state.shouldClose) {
+      this.setState({
+        shouldClose: true
+      })
+    }
+  }
+
   render() {
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} push />
@@ -44,13 +53,7 @@ class UpdateListing extends Component {
     }
 
     if (this.state.error) {
-      content = (
-        <TransactionError
-          reason={this.state.error}
-          data={this.state.errorData}
-          onClose={() => this.setState({ error: false })}
-        />
-      )
+      content = null
     } else if (this.state.waitFor) {
       content = this.renderWaitModal()
     } else if (this.state.waitForAllow) {
@@ -72,12 +75,20 @@ class UpdateListing extends Component {
     return (
       <>
         {action}
-        {!this.state.modal ? null : (
-          <Modal
+        {!this.state.error ? null : (
+          <TransactionError
+            reason={this.state.error}
+            data={this.state.errorData}
             onClose={() =>
               this.setState({ error: false, modal: false, shouldClose: false })
             }
+          />
+        )}
+        {!this.state.modal ? null : (
+          <Modal
+            onClose={() => this.setState({ modal: false, shouldClose: false })}
             shouldClose={this.state.shouldClose}
+            disableDismiss={true}
           >
             {content}
           </Modal>
@@ -266,8 +277,8 @@ class UpdateListing extends Component {
               <fbt desc="success">Success!</fbt>
             </h5>
             <div className="help">
-              <fbt desc="buy.sucessMoveDai">
-                Origin may now move DAI on your behalf.
+              <fbt desc="update.sucessMoveOgn">
+                Origin may now move OGN on your behalf.
               </fbt>
             </div>
             {this.renderUpdateListingMutation()}

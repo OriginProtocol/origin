@@ -22,11 +22,11 @@ const reset = async (sellerOgn, reload = false) => {
   // clear cookies (for messaging)
   await clearCookies(page)
 
-  await page.evaluate((reload) => {
+  await page.evaluate(reload => {
     window.transactionPoll = 100
     window.sessionStorage.clear()
     window.location = '/#/'
-    /* Some tests require reload... e.g. to reset messaging 
+    /* Some tests require reload... e.g. to reset messaging
      * initialisation.
      */
     if (reload) {
@@ -47,12 +47,55 @@ const reset = async (sellerOgn, reload = false) => {
 const purchaseListing = async ({ buyer }) => {
   await pic(page, 'listing-detail')
   await changeAccount(page, buyer)
+
+  await clickByText(page, 'Purchase', 'a')
+
+  // Purchase confirmation
+  await waitForText(page, 'Please confirm your purchase', 'h1')
+  await pic(page, 'purchase-confirmation')
+  await clickByText(page, 'Purchase', 'button')
+
+  await waitForText(page, 'View Purchase Details', 'button')
+  await pic(page, 'purchase-listing')
+
+  await clickByText(page, 'View Purchase Details', 'button')
+  await waitForText(page, 'Transaction History')
+  await pic(page, 'transaction-wait-for-seller')
+}
+
+const purchaseListingWithDAI = async ({ buyer, autoSwap }) => {
+  await pic(page, 'listing-detail')
+  await changeAccount(page, buyer)
+
+  await clickByText(page, 'Purchase', 'a')
+
+  // Purchase confirmation
+  await waitForText(page, 'Please confirm your purchase', 'h1')
+  await pic(page, 'purchase-confirmation')
+  await clickByText(page, autoSwap ? 'Purchase' : 'Swap Now', 'button')
+}
+
+const purchaseMultiUnitListing = async ({ buyer }) => {
+  await pic(page, 'listing-detail')
+  await changeAccount(page, buyer)
+  await page.waitForSelector('.quantity select')
+  await page.select('.quantity select', '2')
+
+  await clickByText(page, 'Purchase', 'a')
+
+  // Purchase confirmation
+  await waitForText(page, 'Please confirm your purchase', 'h1')
+  await pic(page, 'purchase-confirmation')
+
   await clickByText(page, 'Purchase', 'button')
   await waitForText(page, 'View Purchase', 'button')
   await pic(page, 'purchase-listing')
 
   await clickByText(page, 'View Purchase', 'button')
-  await waitForText(page, 'Transaction History')
+  await waitForText(
+    page,
+    `You've made an offer. Wait for the seller to accept it.`
+  )
   await pic(page, 'transaction-wait-for-seller')
 }
 
@@ -69,9 +112,9 @@ const acceptOffer = async ({ seller }) => {
 
 const confirmReleaseFundsAndRate = async ({ buyer, review }) => {
   await changeAccount(page, buyer)
-  await waitForText(page, 'Your offer has been accepted by the seller')
+  await waitForText(page, 'Seller has accepted your offer.')
   await pic(page, 'transaction-confirm')
-  await clickByText(page, 'Confirm', 'button')
+  await clickByText(page, 'Confirm receipt', 'button')
   await waitForText(page, 'Release the funds to the seller.')
   await pic(page, 'transaction-release-funds')
   await clickByText(page, 'Release Funds', 'button')
@@ -325,9 +368,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow a new listing to be purchased', async function() {
-      await changeAccount(page, buyer)
-      await waitForText(page, 'Payment', 'span')
-      await clickByText(page, autoSwap ? 'Purchase' : 'Swap Now', 'button')
+      await purchaseListingWithDAI({ buyer, autoSwap })
     })
 
     if (!autoSwap) {
@@ -489,20 +530,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow a new listing to be purchased', async function() {
-      await pic(page, 'listing-detail')
-      await changeAccount(page, buyer)
-      await page.waitForSelector('.quantity select')
-      await page.select('.quantity select', '2')
-      await clickByText(page, 'Purchase', 'button')
-      await waitForText(page, 'View Purchase', 'button')
-      await pic(page, 'purchase-listing')
-
-      await clickByText(page, 'View Purchase', 'button')
-      await waitForText(
-        page,
-        `You've made an offer. Wait for the seller to accept it.`
-      )
-      await pic(page, 'transaction-wait-for-seller')
+      await purchaseMultiUnitListing({ buyer })
     })
 
     it('should allow a new listing to be accepted', async function() {
@@ -613,13 +641,15 @@ function listingTests(autoSwap) {
 }
 
 function onboardingTests() {
-  describe('Complete onboarding once', function() {
+  describe('Complete onboarding', function() {
     before(async function() {
       this.timeout(10000)
-      const { seller } = await reset('100', true)
+      const { seller, buyer } = await reset('100', true)
       await page.evaluate(() => {
+        localStorage.clear()
         window.location = '/#/'
       })
+      await changeAccount(page, buyer)
       await changeAccount(page, seller, true)
     })
 
@@ -634,6 +664,7 @@ function onboardingTests() {
 
     it('should enable messaging', async function() {
       this.timeout(8000)
+      await page.reload()
       await page.evaluate(() => {
         window.location = '/#/onboard/messaging'
       })
@@ -641,20 +672,21 @@ function onboardingTests() {
       await waitForText(page, '0 of 2 MetaMask messages signed')
       await clickByText(page, 'Enable Origin Messaging', 'button')
 
-      await waitForText(page, 'Congratulations! You can now message other users')
+      await waitForText(
+        page,
+        'Congratulations! You can now message other users'
+      )
       await clickByText(page, 'Continue', 'a')
     })
   })
 }
 
 describe('Marketplace Dapp', function() {
-  this.timeout(6000)
+  this.timeout(10000)
   before(async function() {
     await page.evaluate(() => {
-      delete window.localStorage.performanceMode
-      delete window.localStorage.proxyAccountsEnabled
-      delete window.localStorage.relayerEnabled
-      delete window.localStorage.debug
+      window.localStorage.clear()
+      window.localStorage.bypassOnboarding = true
       window.localStorage.promoteEnabled = 'true'
       window.transactionPoll = 100
     })
@@ -668,10 +700,9 @@ describe('Marketplace Dapp with proxies enabled', function() {
   this.timeout(10000)
   before(async function() {
     await page.evaluate(() => {
+      window.localStorage.clear()
       window.localStorage.proxyAccountsEnabled = true
-      delete window.localStorage.performanceMode
-      delete window.localStorage.relayerEnabled
-      delete window.localStorage.debug
+      window.localStorage.bypassOnboarding = true
       window.localStorage.promoteEnabled = 'true'
       window.transactionPoll = 100
     })
@@ -691,7 +722,8 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
 
   before(async function() {
     await page.evaluate(() => {
-      window.localStorage.noIdentity = true
+      window.localStorage.clear()
+      window.localStorage.bypassOnboarding = true
       window.localStorage.performanceMode = true
       window.localStorage.proxyAccountsEnabled = true
       window.localStorage.relayerEnabled = true
@@ -715,5 +747,5 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
 
   listingTests(true)
   // broken ATM empty profile does not redirect to /#/onboard
-  //onboardingTests()
+  // onboardingTests()
 })

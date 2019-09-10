@@ -40,7 +40,7 @@ const ContractAddresses = {
   2222: '@origin/contracts/build/contracts_origin.json'
 }
 
-const ZeroAddress = '0x00000000000000000000000000000000000000'
+const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
 if (isTestEnv) {
   ContractAddresses['999'] = '@origin/contracts/build/tests.json'
@@ -126,6 +126,7 @@ class Relayer {
     this.web3 = new Web3(providerUrl)
 
     this.purse = new Purse({
+      networkId,
       web3: this.web3,
       mnemonic: env.FORWARDER_MNEMONIC,
       children: env.FORWARDER_ACCOUNTS ? parseInt(env.FORWARDER_ACCOUNTS) : 3,

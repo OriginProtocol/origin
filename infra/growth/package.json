@@ -18,7 +18,7 @@
     "@origin/ip2geo": "^0.1.0",
     "@origin/token": "^0.1.0",
     "@sendgrid/mail": "6.4.0",
-    "apollo-server-express": "2.9.1",
+    "apollo-server-express": "2.9.3",
     "bignumber.js": "9.0.0",
     "cors": "2.8.5",
     "dotenv": "8.1.0",
@@ -32,8 +32,8 @@
     "logplease": "1.2.15",
     "per-env": "1.0.2",
     "pg": "7.12.1",
-    "sequelize": "5.17.0",
-    "sequelize-cli": "5.5.0",
+    "sequelize": "5.18.2",
+    "sequelize-cli": "5.5.1",
     "url": "0.11.0",
     "validator": "11.1.0",
     "web3": "1.0.0-beta.34"
@@ -43,7 +43,7 @@
     "chai-things": "0.2.0",
     "chalk": "2.4.2",
     "mocha": "6.2.0",
-    "nodemon": "1.19.1",
+    "nodemon": "1.19.2",
     "rewire": "4.0.1"
   },
   "scripts": {

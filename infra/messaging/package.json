@@ -39,7 +39,7 @@
     "dotenv": "^8.0.0",
     "envkey": "^1.2.6",
     "esm": "3.2.25",
-    "ipfs": "^0.33.1",
+    "ipfs": "^0.37.0",
     "ipfs-api": "^26.1.2",
     "ipfs-log": "^4.2.0",
     "ipfs-pubsub-1on1": "0.0.6",
@@ -57,9 +57,9 @@
     "express-ws": "^4.0.0"
   },
   "devDependencies": {
-    "@babel/node": "7.5.5",
-    "eslint": "6.1.0",
-    "nodemon": "1.19.1",
+    "@babel/node": "7.6.1",
+    "eslint": "6.3.0",
+    "nodemon": "1.19.2",
     "prettier": "1.18.2"
   },
   "prettier": {
