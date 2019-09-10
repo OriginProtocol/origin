@@ -16,7 +16,6 @@ import { setNetwork } from 'actions/Settings'
 import { NETWORKS } from '../constants'
 import CommonStyles from 'styles/common'
 import MenuStyles from 'styles/menu'
-const Package = require('../../package.json')
 
 const IMAGES_PATH = '../../assets/images/'
 
@@ -99,7 +98,7 @@ const settingsScreen = props => (
 
     <TouchableHighlight>
       <View style={[styles.menuItem, styles.menuItemInactionable]}>
-        <Text style={styles.menuText}>{Package.version}</Text>
+        <Text style={styles.menuText}>0.23.0</Text>
       </View>
     </TouchableHighlight>
   </ScrollView>
