@@ -35,7 +35,7 @@ class WebsiteAttestation extends Component {
 
     return (
       <ModalComponent
-        title={fbt('Verify your website', 'VerifyWebsite.verifyYourWebsite')}
+        title={fbt('Verify Website', 'VerifyWebsite.verifyWebsite')}
         className={`attestation-modal website${
           this.state.stage === 'VerifiedOK' ? ' success' : ''
         }`}
@@ -69,7 +69,7 @@ class WebsiteAttestation extends Component {
     const { isMobile } = this.props
 
     const header = isMobile ? null : (
-      <fbt desc="VerifyWebsite.verifyYourWebsite">Verify your website</fbt>
+      <fbt desc="VerifyWebsite.verifyWebsite">Verify Website</fbt>
     )
 
     return (
