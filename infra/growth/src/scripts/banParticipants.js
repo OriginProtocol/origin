@@ -54,8 +54,11 @@ class OriginEmployees {
 
   async match(ethAddress) {
     const identity = await db.Identity.findOne({ where: { ethAddress } })
-    const employeeEmail = identity && identity.email && identity.email.toLowerCase().indexOf('@originprotocol.com') !== -1
-    const employeeAddress = this.addresses[ethAddress] !== undefined
+    const employeeEmail =
+      identity &&
+      identity.email &&
+      identity.email.toLowerCase().indexOf('@originprotocol.com') !== -1
+    const employeeAddress = ethAddress in this.addresses
     return employeeEmail || employeeAddress
   }
 }
