@@ -3,7 +3,7 @@
 import { SamsungBKSConstants } from 'actions/SamsungBKS'
 
 const initialState = {
-  seedHash: '',
+  seedHash: null,
   error: null
 }
 
