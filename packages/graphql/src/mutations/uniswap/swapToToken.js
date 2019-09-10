@@ -13,7 +13,7 @@ export async function swapToTokenTx(tokenValue) {
   // for the transaction to get mined. But in case the network is extremely
   // congested, we set the deadline to a conservative value of 1 hour from now.
   //
-  // We use max of (now, block.timestamp) to calculate the current time because:
+  // We use max of (localTimestamp, block.timestamp) to calculate the current time because:
   //  - The local clock could be skewed
   //  - When running in test/dev environment blocks may not be mined for some time.
   const blockNumber = await contracts.web3.eth.getBlockNumber()
