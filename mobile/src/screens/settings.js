@@ -13,7 +13,7 @@ import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
 
 import { setNetwork } from 'actions/Settings'
-import { NETWORKS } from '../constants'
+import { NETWORKS, VERSION  } from '../constants'
 import CommonStyles from 'styles/common'
 import MenuStyles from 'styles/menu'
 
@@ -98,7 +98,7 @@ const settingsScreen = props => (
 
     <TouchableHighlight>
       <View style={[styles.menuItem, styles.menuItemInactionable]}>
-        <Text style={styles.menuText}>0.23.0</Text>
+        <Text style={styles.menuText}>{VERSION}</Text>
       </View>
     </TouchableHighlight>
   </ScrollView>
