@@ -3,7 +3,7 @@
 const memoize = require('lodash/memoize')
 const Web3 = require('web3')
 const utils = require('ethereumjs-util')
-const { Validator, PROXY_HARDCODE } = require('validator')
+const { Validator, PROXY_HARDCODE } = require('./validator')
 const ProxyFactoryContract = require('@origin/contracts/build/contracts/ProxyFactory_solc')
 const IdentityProxyContract = require('@origin/contracts/build/contracts/IdentityProxy_solc')
 const MarketplaceContract = require('@origin/contracts/build/contracts/V00_Marketplace')
