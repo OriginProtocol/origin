@@ -152,6 +152,7 @@ const withOriginGraphql = WrappedComponent => {
 
     updateIdentity = async address => {
       if (!this.props.marketplace.ready) {
+        console.warn('Could not update identity, marketplace not ready')
         return
       }
 
@@ -159,6 +160,7 @@ const withOriginGraphql = WrappedComponent => {
         if (this.props.wallet.activeAccount) {
           address = this.props.wallet.activeAccount.address
         } else {
+          console.warn('No active account for identity update')
           return
         }
       }
@@ -183,6 +185,8 @@ const withOriginGraphql = WrappedComponent => {
           address,
           identity: identityResult
         })
+      } else {
+        console.debug('No result for identity', identityResult)
       }
     }
 

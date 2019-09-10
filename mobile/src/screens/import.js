@@ -1,6 +1,7 @@
 'use strict'
 
 import React from 'react'
+import { connect } from 'react-redux'
 import { Platform, StyleSheet, Text, View } from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
@@ -10,6 +11,7 @@ import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'
 
 const importAccountScreen = props => {
+
   const canUseSamsungBKS =
     Platform.OS === 'android' &&
     get(props, 'samsungBKS.seedHash', '').length > 0
@@ -98,7 +100,11 @@ const importAccountScreen = props => {
   )
 }
 
-export default importAccountScreen
+const mapStateToProps = ({ samsungBKS }) => {
+  return { samsungBKS }
+}
+
+export default connect(mapStateToProps)(importAccountScreen)
 
 const styles = StyleSheet.create({
   ...CommonStyles,

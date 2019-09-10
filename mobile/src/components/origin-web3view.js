@@ -25,9 +25,11 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   const [transactionCardLoading, setTransactionCardLoading] = useState(false)
   const [modals, setModals] = useState([])
 
+  const samsungBKSSeedHash = get(props, 'samsungBKS.seedHash', '')
   const isUsingSamsungBKS =
     Platform.OS === 'android' &&
-    get(props, 'samsungBKS.seedHash', '').length > 0 &&
+    samsungBKSSeedHash &&
+    samsungBKSSeedHash.length > 0 &&
     props.wallet.activeAccount.hdPath
 
   /* Sign a message. Uses Samsung BKS if it is enabled or uses ethers and the
