@@ -22,10 +22,7 @@ class EmailAttestationModal extends Component {
 
     return (
       <ModalComponent
-        title={fbt(
-          'Verify Email',
-          'EmailAttestation.verifyEmail'
-        )}
+        title={fbt('Verify Email', 'EmailAttestation.verifyEmail')}
         className="attestation-modal email"
         shouldClose={this.state.shouldClose}
         onClose={() => {

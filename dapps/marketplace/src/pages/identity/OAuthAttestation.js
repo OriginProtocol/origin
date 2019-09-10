@@ -115,11 +115,7 @@ class OAuthAttestation extends Component {
 
     return (
       <ModalComp
-        title={
-          <fbt desc="OAuthAttestation.verifyAccount">
-            Verify Account
-          </fbt>
-        }
+        title={<fbt desc="OAuthAttestation.verifyAccount">Verify Account</fbt>}
         className={`${provider} attestation-modal oauth`}
         shouldClose={this.state.shouldClose}
         onClose={() => {

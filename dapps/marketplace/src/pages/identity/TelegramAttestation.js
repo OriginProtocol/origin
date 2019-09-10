@@ -31,10 +31,7 @@ class TelegramAttestation extends Component {
 
     return (
       <ModalComponent
-        title={fbt(
-          'Verify Account',
-          'TelegramAttestation.verifyAccount'
-        )}
+        title={fbt('Verify Account', 'TelegramAttestation.verifyAccount')}
         className="attestation-modal telegram"
         shouldClose={this.state.shouldClose}
         onClose={() => {
