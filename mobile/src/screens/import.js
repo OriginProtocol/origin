@@ -11,7 +11,6 @@ import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'
 
 const importAccountScreen = props => {
-
   const canUseSamsungBKS =
     Platform.OS === 'android' &&
     get(props, 'samsungBKS.seedHash', '').length > 0

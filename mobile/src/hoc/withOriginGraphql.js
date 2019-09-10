@@ -152,7 +152,7 @@ const withOriginGraphql = WrappedComponent => {
 
     updateIdentity = async address => {
       if (!this.props.marketplace.ready) {
-        console.warn('Could not update identity, marketplace not ready')
+        console.debug('Could not update identity, marketplace not ready')
         return
       }
 
@@ -191,7 +191,13 @@ const withOriginGraphql = WrappedComponent => {
     }
 
     updateBalance = async () => {
-      if (!this.props.wallet.activeAccount || !this.props.marketplace.ready) {
+      if (!this.props.marketplace.ready) {
+        console.debug('Could not update balances, marketplace not ready')
+        return
+      }
+
+      if (!this.props.wallet.activeAccount) {
+        console.debug('Could not update balances, no active account')
         return
       }
 
