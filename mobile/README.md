@@ -15,7 +15,6 @@ Origin Wallet is an "ejected" React Native application. Go [here](https://facebo
 This guide will help you to install a local build of Origin Wallet on a device or simulator so that you can modify the application itself.
 
 - run `yarn install` to install dependencies
-- run `yarn run start`
 
 #### iOS Development
 
@@ -32,6 +31,8 @@ This guide will help you to install a local build of Origin Wallet on a device o
 - [Android SDK or Android Studio](https://developer.android.com/studio/) - If you're on Linux, find the instructions for your specific distribution
 
 - jre-openjdk
+
+- The Android build also implements Samsung Blockchain Keystore via the SDK they provide. To build for Android you will need to download this SDK from https://developer.samsung.com/blockchain/keystore and place it in the `android/aar` directory.
 
 ### Backend Services
 
