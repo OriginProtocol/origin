@@ -1,17 +1,16 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { fbt } from 'fbt-runtime'
 
 import DisputeOffer from './mutations/DisputeOffer'
 import Stages from 'components/TransactionStages'
 
-class OfferAcceptedSeller extends Component {
-  state = {}
+import ShippingAddress from './_ShippingAddress'
 
-  render() {
-    const { offer } = this.props
-    return (
-      <div className="transaction-progress">
-        <div className="top">
+const OfferAcceptedSeller = ({ offer }) => {
+  return (
+    <div className="transaction-progress">
+      <div className="tx-progress-wrapper">
+        <div className="tx-receipt-status top">
           <h4>
             <fbt desc="WaitForFinalize.youVeAcceptedOffer">
               You&apos;ve accepted this offer.
@@ -26,16 +25,17 @@ class OfferAcceptedSeller extends Component {
           </div>
 
           <DisputeOffer
-            offer={this.props.offer}
+            offer={offer}
             party="seller"
             className="btn btn-link withdraw mt-3 mr-auto"
           >
             <fbt desc="WaitForFinalize.reportProblme">Report a Problem</fbt>
           </DisputeOffer>
         </div>
+        <ShippingAddress offer={offer} />
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 export default OfferAcceptedSeller

@@ -6,6 +6,8 @@ import Stages from 'components/TransactionStages'
 import AddData from 'pages/transaction/mutations/AddData'
 import Link from 'components/Link'
 
+import ShippingAddress from './_ShippingAddress'
+
 const RATED_OFFERS_KEY = 'rated_offers'
 const ReviewAndFinalization = props => {
   const [rating, setRating] = useState(0)
@@ -26,45 +28,50 @@ const ReviewAndFinalization = props => {
   const renderFinalization = ({ loading, offer, isSeller, isBuyer }) => {
     return (
       <div className={`transaction-progress${loading ? ' loading' : ''}`}>
-        <div className="top">
-          <h4>
-            {isSeller && (
-              <fbt desc="Progress.yourSaleComplete">Your sale is complete.</fbt>
-            )}
-            {isBuyer && (
-              <fbt desc="Progress.yourPurchaseComplete">
-                Your purchase is complete.
-              </fbt>
-            )}
-          </h4>
-          <Stages className="mt-4" mini="true" offer={offer} />
-          {isBuyer && (
-            <Fragment>
-              <div className="help mb-0 mt-4">
-                <fbt desc="Progress.seeOtherListings">
-                  See what other listings are available on Origin.
+        <div className="tx-progress-wrapper">
+          <div className="tx-receipt-status top">
+            <h4>
+              {isSeller && (
+                <fbt desc="Progress.yourSaleComplete">
+                  Your sale is complete.
                 </fbt>
-              </div>
+              )}
+              {isBuyer && (
+                <fbt desc="Progress.yourPurchaseComplete">
+                  Your purchase is complete.
+                </fbt>
+              )}
+            </h4>
+            <Stages className="mt-4" mini="true" offer={offer} />
+            {isBuyer && (
+              <Fragment>
+                <div className="help mb-0 mt-4">
+                  <fbt desc="Progress.seeOtherListings">
+                    See what other listings are available on Origin.
+                  </fbt>
+                </div>
+                <div className="actions">
+                  <div className="btn btn-link mr-auto">
+                    <Link to="/">
+                      <fbt desc="Progress.viewListings">View Listings</fbt>
+                    </Link>
+                  </div>
+                </div>
+              </Fragment>
+            )}
+            {isSeller && (
               <div className="actions">
                 <div className="btn btn-link mr-auto">
-                  <Link to="/">
-                    <fbt desc="Progress.viewListings">View Listings</fbt>
+                  <Link to="/create">
+                    <fbt desc="Progress.createAnotherListing">
+                      Create Another Listing
+                    </fbt>
                   </Link>
                 </div>
               </div>
-            </Fragment>
-          )}
-          {isSeller && (
-            <div className="actions">
-              <div className="btn btn-link mr-auto">
-                <Link to="/create">
-                  <fbt desc="Progress.createAnotherListing">
-                    Create Another Listing
-                  </fbt>
-                </Link>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
+          <ShippingAddress offer={offer} />
         </div>
       </div>
     )

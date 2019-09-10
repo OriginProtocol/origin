@@ -110,7 +110,7 @@ if (isProduction) {
   config.output.filename = '[name].[hash:8].js'
 
   config.optimization.minimizer = [
-    new TerserPlugin({ cache: true, parallel: true }),
+    new TerserPlugin({ extractComments: false }),
     new OptimizeCSSAssetsPlugin({})
   ]
 

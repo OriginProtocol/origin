@@ -231,7 +231,6 @@ require('react-styl')(`
       opacity: 1
       display: block
   .mobile-modal-light
-    touch-action: none
     position: fixed
     z-index: 2000
     -webkit-transform: translate3d(0, 0, 0)

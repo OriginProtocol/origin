@@ -130,7 +130,12 @@ const PromoteListingBudget = ({
                     children={fbt('Loading', 'Loading')}
                   />
                 )
-              } else if (!tokenStatus.hasBalance || !value || value === '0') {
+              } else if (
+                !tokenStatus.hasBalance ||
+                !value ||
+                value === '0' ||
+                tokenBalance < Number(value)
+              ) {
                 return (
                   <div
                     className="btn btn-primary btn-rounded btn-lg disabled"

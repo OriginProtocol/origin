@@ -1,12 +1,12 @@
 const BigNumber = require('bignumber.js')
 const moment = require('moment')
 const get = require('lodash.get')
-const sendgridMail = require('@sendgrid/mail')
 const jwt = require('jsonwebtoken')
 
 const Token = require('@origin/token/src/token')
 
 const { discordWebhookUrl } = require('../config')
+const { sendEmail } = require('../lib/email')
 const { postToWebhook } = require('./webhook')
 
 const {
@@ -20,12 +20,7 @@ const logger = require('../logger')
 
 const { vestedAmount } = require('./vesting')
 
-const {
-  encryptionSecret,
-  portalUrl,
-  sendgridFromEmail,
-  sendgridApiKey
-} = require('../config')
+const { encryptionSecret, portalUrl } = require('../config')
 
 // Number of block confirmations required for a transfer to be consider completed.
 const NumBlockConfirmation = 8
@@ -33,8 +28,6 @@ const NumBlockConfirmation = 8
 // Wait up to 20 min for a transaction to get confirmed
 const ConfirmationTimeoutSec = 20 * 60 * 60
 const TwofactorTimeoutMinutes = 5
-
-sendgridMail.setApiKey(sendgridApiKey)
 
 /**
  * Helper method to check the validity of a transfer request.
@@ -161,18 +154,8 @@ async function sendTransferConfirmationEmail(transfer, user) {
     { expiresIn: '5m' }
   )
 
-  const data = {
-    to: user.email,
-    from: sendgridFromEmail,
-    subject: 'Confirm Your Origin Token Withdrawal',
-    text: `Please confirm your withdrawal of Origin tokens by clicking the link below.
-
-    ${portalUrl}/withdrawal/${transfer.id}/${token}.
-
-    This link will expire in 5 minutes. You can reply directly to this email with any questions.`
-  }
-
-  await sendgridMail.send(data)
+  const vars = { url: `${portalUrl}/withdrawal/${transfer.id}/${token}` }
+  await sendEmail(user.email, 'transfer', vars)
 
   logger.info(
     `Sent email transfer confirmation token to ${user.email} for transfer ${transfer.id}`

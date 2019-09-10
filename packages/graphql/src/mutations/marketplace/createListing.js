@@ -27,7 +27,8 @@ export function listingInputToIPFS(data, unitData, fractionalData) {
     commissionPerUnit: {
       currency: 'OGN',
       amount: data.commissionPerUnit || '0'
-    }
+    },
+    requiresShipping: data.requiresShipping || false
   }
 
   if (data.marketplacePublisher) {

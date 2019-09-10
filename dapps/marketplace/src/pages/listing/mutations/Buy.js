@@ -15,6 +15,8 @@ import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
 import Redirect from 'components/Redirect'
 import UserActivationLink from 'components/UserActivationLink'
+import { isHistoricalListing } from 'utils/listing'
+import HistoricalListingWarning from 'pages/listing/_HistoricalListingWarning'
 
 import withCanTransact from 'hoc/withCanTransact'
 import withWallet from 'hoc/withWallet'
@@ -36,15 +38,27 @@ class Buy extends Component {
     return get(this.props, 'tokenStatus.hasAllowance', false)
   }
 
-  hasMessagingEnabled() {
-    return get(this.props, 'messagingStatus.enabled', false)
-  }
-
   render() {
     if (this.state.onboard) {
       return <Redirect to={`/listing/${this.props.listing.id}/onboard`} />
     }
     let content
+
+    const isLoadingData =
+      get(this.props, 'tokenStatus.loading') ||
+      this.props.cannotTransact === 'loading' ||
+      Object.keys(this.props).some(
+        key => key.endsWith('Loading') && this.props[key]
+      )
+
+    if (isLoadingData)
+      return (
+        <button
+          className={this.props.className}
+          disabled={true}
+          children={<fbt desc="Loading...">Loading...</fbt>}
+        />
+      )
 
     let action = (
       <button
@@ -54,8 +68,16 @@ class Buy extends Component {
       />
     )
 
-    const hasIdentity = localStorage.noIdentity || this.props.identity
-    if (!hasIdentity || !this.props.wallet || !this.hasMessagingEnabled()) {
+    const hasIdentity = this.props.identity
+    const hasMessagingKeys = this.props.hasMessagingKeys
+    const needsOnboarding =
+      !hasIdentity || !this.props.wallet || !hasMessagingKeys
+    const onboardingDisabled =
+      localStorage.bypassOnboarding || localStorage.useWeb3Identity
+        ? true
+        : false
+
+    if (needsOnboarding && !onboardingDisabled) {
       action = (
         <UserActivationLink
           className={this.props.className}
@@ -68,6 +90,8 @@ class Buy extends Component {
 
       if (this.state.error) {
         content = this.renderTransactionError()
+      } else if (isHistoricalListing(this.props.listing)) {
+        action = <HistoricalListingWarning listing={this.props.listing} />
       } else if (this.state.waitFor) {
         content = this.renderWaitModal()
       } else if (this.state.waitForAllow) {
@@ -96,15 +120,13 @@ class Buy extends Component {
         action = this.renderMakeOfferMutation()
       }
     }
-
     return (
       <>
         {action}
         {!this.state.modal ? null : (
           <Modal
-            onClose={() =>
-              this.setState({ error: false, modal: false, shouldClose: false })
-            }
+            disableDismiss={true}
+            onClose={() => this.resetState()}
             shouldClose={this.state.shouldClose}
           >
             {content}
@@ -112,6 +134,15 @@ class Buy extends Component {
         )}
       </>
     )
+  }
+
+  resetState() {
+    const newState = Object.keys(this.state).reduce((m, o) => {
+      m[o] = null
+      return m
+    }, {})
+
+    this.setState(newState)
   }
 
   renderTransactionError() {
@@ -299,7 +330,8 @@ class Buy extends Component {
       quantity,
       startDate,
       endDate,
-      currency
+      currency,
+      shippingAddress
     } = this.props
 
     const variables = {
@@ -316,6 +348,10 @@ class Buy extends Component {
       listing.__typename === 'FractionalHourlyListing'
     ) {
       variables.fractionalData = { startDate, endDate }
+    }
+
+    if (listing.requiresShipping) {
+      variables.shippingAddress = shippingAddress
     }
 
     makeOffer({ variables })
@@ -451,11 +487,17 @@ class Buy extends Component {
 
 export default withConfig(
   withMessagingStatus(
-    withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy)))))
+    withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy))))),
+    { excludeData: true }
   )
 )
 
 require('react-styl')(`
+  .historical-warning
+    border-radius: 0.625rem
+    border: solid 1px #ffc000
+    background-color: rgba(255, 192, 0, 0.1)
+    padding: 0.75rem 1.25rem
   .make-offer-modal
     display: flex
     flex-direction: column
