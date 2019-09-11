@@ -115,15 +115,7 @@ class OAuthAttestation extends Component {
 
     return (
       <ModalComp
-        title={
-          <fbt desc="OAuthAttestation.verifyAccount">
-            Verify{' '}
-            <fbt:param name="provider">
-              {getProviderDisplayName(provider)}
-            </fbt:param>{' '}
-            Account
-          </fbt>
-        }
+        title={<fbt desc="OAuthAttestation.verifyAccount">Verify Account</fbt>}
         className={`${provider} attestation-modal oauth`}
         shouldClose={this.state.shouldClose}
         onClose={() => {
@@ -179,7 +171,7 @@ class OAuthAttestation extends Component {
       </fbt>
     ) : (
       <fbt desc="OAuthAttestation.verify">
-        Verify your <fbt:param name="provider">{providerName}</fbt:param>{' '}
+        Verify Your <fbt:param name="provider">{providerName}</fbt:param>{' '}
         Account
       </fbt>
     )
