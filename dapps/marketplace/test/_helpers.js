@@ -111,6 +111,8 @@ export const changeAccount = async (page, account, isFreshAccount = false) => {
       strength: 0
     }
 
+    delete window.localStorage.uiState
+
     if (isFreshAccount) {
       delete window.localStorage.useWeb3Identity
       delete window.localStorage.useMessagingObject
@@ -119,7 +121,14 @@ export const changeAccount = async (page, account, isFreshAccount = false) => {
       window.localStorage.useMessagingObject = JSON.stringify({
         enabled: true,
         pubKey: '0xff',
-        pubSig: '0xff'
+        pubSig: '0xff',
+        shippingOverride: {
+          name: 'Bruce Wayne',
+          address1: '123 Wayne Towers',
+          stateProvinceRegion: 'New Jersey',
+          postalCode: '123456',
+          country: 'USA'
+        }
       })
     }
   }, { account, isFreshAccount })

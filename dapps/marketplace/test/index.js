@@ -44,15 +44,39 @@ const reset = async (sellerOgn, reload = false) => {
   return { buyer, seller }
 }
 
-const purchaseListing = async ({ buyer }) => {
+const purchaseListing = async ({ buyer, withShipping, title }) => {
   await pic(page, 'listing-detail')
   await changeAccount(page, buyer)
 
   await clickByText(page, 'Purchase', 'a')
 
+  if (withShipping) {
+    await page.waitForSelector('.shipping-address-form [name=name]')
+    await page.type('.shipping-address-form [name=name]', 'Bruce Wayne')
+    await page.type('.shipping-address-form [name=address1]', '123 Wayne Towers')
+    await page.type('.shipping-address-form [name=city]', 'Gotham City')
+    await page.type('.shipping-address-form [name=stateProvinceRegion]', 'New Jersey')
+    await page.type('.shipping-address-form [name=postalCode]', '123456')
+    await page.type('.shipping-address-form [name=country]', 'USA')
+
+    await clickByText(page, 'Continue', 'button')
+  }
+
   // Purchase confirmation
   await waitForText(page, 'Please confirm your purchase', 'h1')
   await pic(page, 'purchase-confirmation')
+  
+  await waitForText(page, 'Total Price')
+
+  const summaryEls = await page.$('.summary')
+  const summaryText = await page.evaluate(el => el.innerText, summaryEls)
+
+  if (withShipping) {
+    assert(summaryText.replace(/[\n\t\r ]+/g, ' ') === `Item ${title} Shipping Address Bruce Wayne 123 Wayne Towers Gotham City New Jersey 123456 USA Total Price $1 Payment 0.00632 ETH`, 'Invalid Summary')
+  } else {
+    assert(summaryText.replace(/[\n\t\r ]+/g, ' ') === `Item ${title} Total Price $1 Payment 0.00632 ETH`, 'Invalid Summary')
+  }
+
   await clickByText(page, 'Purchase', 'button')
 
   await waitForText(page, 'View Purchase Details', 'button')
@@ -63,19 +87,43 @@ const purchaseListing = async ({ buyer }) => {
   await pic(page, 'transaction-wait-for-seller')
 }
 
-const purchaseListingWithDAI = async ({ buyer, autoSwap }) => {
+const purchaseListingWithDAI = async ({ buyer, autoSwap, withShipping, title }) => {
   await pic(page, 'listing-detail')
   await changeAccount(page, buyer)
 
   await clickByText(page, 'Purchase', 'a')
 
+  if (withShipping) {
+    await page.waitForSelector('.shipping-address-form [name=name]')
+    await page.type('.shipping-address-form [name=name]', 'Bruce Wayne')
+    await page.type('.shipping-address-form [name=address1]', '123 Wayne Towers')
+    await page.type('.shipping-address-form [name=city]', 'Gotham City')
+    await page.type('.shipping-address-form [name=stateProvinceRegion]', 'New Jersey')
+    await page.type('.shipping-address-form [name=postalCode]', '123456')
+    await page.type('.shipping-address-form [name=country]', 'USA')
+
+    await clickByText(page, 'Continue', 'button')
+  }
+
   // Purchase confirmation
   await waitForText(page, 'Please confirm your purchase', 'h1')
   await pic(page, 'purchase-confirmation')
+
+  await waitForText(page, 'Total Price')
+
+  const summaryEls = await page.$('.summary')
+  const summaryText = await page.evaluate(el => el.innerText, summaryEls)
+
+  if (withShipping) {
+    assert(summaryText.replace(/[\n\t\r ]+/g, ' ') === `Item ${title} Shipping Address Bruce Wayne 123 Wayne Towers Gotham City New Jersey 123456 USA Total Price $1 Payment 0.00632 ETH`, 'Invalid Summary')
+  } else {
+    assert(summaryText.replace(/[\n\t\r ]+/g, ' ') === `Item ${title} Total Price $1 Payment 0.00632 ETH`, 'Invalid Summary')
+  }
+
   await clickByText(page, autoSwap ? 'Purchase' : 'Swap Now', 'button')
 }
 
-const purchaseMultiUnitListing = async ({ buyer }) => {
+const purchaseMultiUnitListing = async ({ buyer, withShipping, title }) => {
   await pic(page, 'listing-detail')
   await changeAccount(page, buyer)
   await page.waitForSelector('.quantity select')
@@ -83,9 +131,32 @@ const purchaseMultiUnitListing = async ({ buyer }) => {
 
   await clickByText(page, 'Purchase', 'a')
 
+  if (withShipping) {
+    await page.waitForSelector('.shipping-address-form [name=name]')
+    await page.type('.shipping-address-form [name=name]', 'Bruce Wayne')
+    await page.type('.shipping-address-form [name=address1]', '123 Wayne Towers')
+    await page.type('.shipping-address-form [name=city]', 'Gotham City')
+    await page.type('.shipping-address-form [name=stateProvinceRegion]', 'New Jersey')
+    await page.type('.shipping-address-form [name=postalCode]', '123456')
+    await page.type('.shipping-address-form [name=country]', 'USA')
+
+    await clickByText(page, 'Continue', 'button')
+  }
+
   // Purchase confirmation
   await waitForText(page, 'Please confirm your purchase', 'h1')
   await pic(page, 'purchase-confirmation')
+
+  await waitForText(page, 'Total Price')
+
+  const summaryEls = await page.$('.summary')
+  const summaryText = await page.evaluate(el => el.innerText, summaryEls)
+
+  if (withShipping) {
+    assert(summaryText.replace(/[\n\t\r ]+/g, ' ') === `Item ${title} Quantity 2 Shipping Address Bruce Wayne 123 Wayne Towers Gotham City New Jersey 123456 USA Total Price $2 Payment 0.01265 ETH`, 'Invalid Summary')
+  } else {
+    assert(summaryText.replace(/[\n\t\r ]+/g, ' ') === `Item ${title} Quantity 2 Total Price $2 Payment 0.01265 ETH`, 'Invalid Summary')
+  }
 
   await clickByText(page, 'Purchase', 'button')
   await waitForText(page, 'View Purchase', 'button')
@@ -143,8 +214,8 @@ function randomReview() {
   return `Very good ${Math.floor(Math.random() * 100000)}`
 }
 
-function listingTests(autoSwap) {
-  describe('Single Unit Listing for Eth', function() {
+function singleUnitTests({ autoSwap, withShipping } = {}) {
+  describe(`Single Unit Listing${withShipping ? ' with Shipping' : ''} for Eth`, function() {
     let seller, buyer, title, review
     before(async function() {
       ({ seller, buyer } = await reset('100'))
@@ -207,6 +278,10 @@ function listingTests(autoSwap) {
     })
 
     it('should allow quantity entry', async function() {
+      if (!withShipping) {
+        await waitForText(page, 'Require Shipping')
+        await clickByText(page, 'No')
+      }
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
@@ -281,7 +356,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow a new listing to be purchased', async function() {
-      await purchaseListing({ buyer })
+      await purchaseListing({ buyer, withShipping, title })
     })
 
     it('should allow a new listing to be accepted', async function() {
@@ -304,11 +379,15 @@ function listingTests(autoSwap) {
       await waitForText(page, title, 'a')
     })
   })
+}
 
-  describe('Single Unit Listing for Dai', function() {
+function singleUnitDaiTests({ autoSwap, withShipping } = {}) {
+  describe(`Single Unit Listing${withShipping ? ' with Shipping' : ''} for Dai`, function() {
     let seller, buyer
+    let title
     before(async function() {
       ({ seller, buyer } = await reset())
+      title = randomTitle()
     })
 
     it('should navigate to the Add Listing page', async function() {
@@ -327,13 +406,18 @@ function listingTests(autoSwap) {
     })
 
     it('should allow title and description entry', async function() {
-      await page.type('input[name=title]', randomTitle())
+      await page.type('input[name=title]', title)
       await page.type('textarea[name=description]', 'T-Shirt in size large')
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
 
     it('should allow quantity entry', async function() {
+      if (!withShipping) {
+        await waitForText(page, 'Require Shipping')
+        await clickByText(page, 'No')
+      }
+
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
@@ -368,7 +452,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow a new listing to be purchased', async function() {
-      await purchaseListingWithDAI({ buyer, autoSwap })
+      await purchaseListingWithDAI({ buyer, autoSwap, withShipping, title })
     })
 
     if (!autoSwap) {
@@ -405,8 +489,10 @@ function listingTests(autoSwap) {
       await confirmReleaseFundsAndRate({ buyer })
     })
   })
+}
 
-  describe('Multi Unit Listing for Eth', function() {
+function multiUnitTests({ autoSwap, withShipping } = {}) {
+  describe(`Multi Unit Listing${withShipping ? ' with Shipping' : ''} for Eth`, function() {
     let seller, buyer, title, listingHash
     before(async function() {
       ({ seller, buyer } = await reset('100'))
@@ -439,6 +525,12 @@ function listingTests(autoSwap) {
       await page.focus('input[name=quantity]')
       await page.keyboard.press('Backspace')
       await page.type('input[name=quantity]', '2')
+
+      if (!withShipping) {
+        await waitForText(page, 'Require Shipping')
+        await clickByText(page, 'No')
+      }
+
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
@@ -530,7 +622,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow a new listing to be purchased', async function() {
-      await purchaseMultiUnitListing({ buyer })
+      await purchaseMultiUnitListing({ buyer, withShipping, title })
     })
 
     it('should allow a new listing to be accepted', async function() {
@@ -588,7 +680,7 @@ function listingTests(autoSwap) {
     })
 
     it('should allow the edited listing to be purchased', async function() {
-      await purchaseListing({ buyer })
+      await purchaseMultiUnitListing({ buyer, withShipping, title })
     })
 
     it('should allow a new listing to be accepted', async function() {
@@ -599,7 +691,18 @@ function listingTests(autoSwap) {
       await confirmReleaseFundsAndRate({ buyer })
     })
   })
+}
 
+function listingTests({ autoSwap } = {}) {
+  singleUnitTests({ autoSwap })
+  singleUnitTests({ autoSwap, withShipping: true })
+  singleUnitDaiTests({ autoSwap })
+  singleUnitDaiTests({ autoSwap, withShipping: true })
+  multiUnitTests({ autoSwap })
+  multiUnitTests({ autoSwap, withShipping: true })
+}
+
+function userProfileTests() {
   describe('Edit user profile', function() {
     before(async function() {
       const { seller } = await reset()
@@ -692,7 +795,9 @@ describe('Marketplace Dapp', function() {
     })
     await page.goto('http://localhost:8083')
   })
+
   listingTests()
+  userProfileTests()
   onboardingTests()
 })
 
@@ -708,7 +813,8 @@ describe('Marketplace Dapp with proxies enabled', function() {
     })
     await page.goto('http://localhost:8083')
   })
-  listingTests(true)
+  listingTests({ autoSwap: true })
+  userProfileTests()
   onboardingTests()
 })
 
@@ -734,7 +840,7 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
     await page.goto('http://localhost:8083')
   })
 
-  beforeEach(function() {
+  beforeEach(() => {
     page.on('pageerror', pageError)
     page.on('error', pageError)
   })
@@ -745,7 +851,7 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
     assert(!didThrow, 'Page error detected: ' + didThrow)
   })
 
-  listingTests(true)
-  // broken ATM empty profile does not redirect to /#/onboard
-  // onboardingTests()
+  listingTests({ autoSwap: true })
+  userProfileTests()
+  onboardingTests()
 })

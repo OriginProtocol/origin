@@ -9,6 +9,7 @@ import currencies from '../../utils/currencies'
 import { proxyOwner, predictedProxy, resetProxyCache } from '../../utils/proxy'
 import { swapToTokenTx } from '../uniswap/swapToToken'
 import createDebug from 'debug'
+import { checkForMessagingOverride } from '../../resolvers/messaging/Messaging'
 const debug = createDebug('origin:makeOffer:')
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
@@ -23,7 +24,11 @@ async function makeOffer(_, data) {
     throw new Error('No marketplace')
   }
 
-  if (data.shippingAddress && data.shippingAddress !== '') {
+  let messagingOverride
+  if (messagingOverride = checkForMessagingOverride()) {
+    // Skip encryption in test environment
+    data.shippingAddressEncrypted = JSON.stringify(messagingOverride.shippingOverride)
+  } else if (data.shippingAddress && data.shippingAddress !== '') {
     const listing = await marketplace.eventSource.getListing(listingId)
     let seller = await proxyOwner(listing.seller.id)
     seller = seller || listing.seller.id
