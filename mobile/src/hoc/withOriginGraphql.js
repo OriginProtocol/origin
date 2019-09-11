@@ -12,7 +12,7 @@ import { DeviceEventEmitter } from 'react-native'
 import { connect } from 'react-redux'
 import get from 'lodash.get'
 
-import { balance, identity, tokenBalance } from 'graphql/queries'
+import { balance, identity, tokenBalance, wallet } from 'graphql/queries'
 import { setAccountBalances, setIdentity } from 'actions/Wallet'
 import { tokenBalanceFromGql } from 'utils/currencies'
 
@@ -142,6 +142,10 @@ const withOriginGraphql = WrappedComponent => {
       )
     }
 
+    getWallet = () => {
+      return this._sendGraphqlQuery(wallet)
+    }
+
     getIdentity = async id => {
       return this._sendGraphqlQuery(identity, { id }, 'no-cache')
     }
@@ -161,12 +165,19 @@ const withOriginGraphql = WrappedComponent => {
         }
       }
 
+      const wallet = await this.getWallet()
+      const identityAddress = get(
+        wallet,
+        'data.web3.primaryAccount.proxy.id',
+        address
+      )
+
       // Save this here in case of update while waiting for GraphQL response
       const network = `${this.props.settings.network.name}`
 
       let identityResult
       try {
-        const graphqlResponse = await this.getIdentity(address)
+        const graphqlResponse = await this.getIdentity(identityAddress)
         identityResult = get(graphqlResponse, 'data.identity')
       } catch (error) {
         // Handle GraphQL errors for things like invalid JSON RPC response or we
@@ -234,6 +245,7 @@ const withOriginGraphql = WrappedComponent => {
           getBalance={this.getBalance}
           getIdentity={this.getIdentity}
           getTokenBalance={this.getTokenBalance}
+          getWallet={this.getWallet}
           {...this.props}
         />
       )

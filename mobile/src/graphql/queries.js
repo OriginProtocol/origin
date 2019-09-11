@@ -36,6 +36,30 @@ export const identity = gql`
     }
   }
 `
+
+export const wallet = gql`
+  query Wallet {
+    web3 {
+      metaMaskAccount {
+        id
+      }
+      walletType
+      mobileWalletAccount {
+        id
+      }
+      primaryAccount {
+        id
+        proxy {
+          id
+        }
+        predictedProxy {
+          id
+        }
+      }
+    }
+  }
+`
+
 export const tokenBalance = gql`
   query Balance($id: ID!, $token: String!) {
     web3 {
