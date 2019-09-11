@@ -127,7 +127,7 @@ class AuthenticationScreen extends Component {
                 TouchID.authenticate('Enable access to Origin Marketplace App')
                   .then(() => {
                     this.props.setBiometryType(this.state.biometryType)
-                    this.props.navigation.navigate('Ready')
+                    this.props.navigation.navigate('Main')
                   })
                   .catch(error => {
                     console.warn('Biometry failure: ', error)
