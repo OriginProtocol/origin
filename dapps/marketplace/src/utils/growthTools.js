@@ -104,12 +104,12 @@ export function calculatePendingAndAvailableActions(activeCampaign) {
     'Airbnb',
     'Facebook',
     'Google',
-    'Website',
     'Kakao',
     'WeChat',
     'GitHub',
     'LinkedIn',
-    'Telegram'
+    'Telegram',
+    'Website'
   ]
 
   const promotionRewardTypes = ['TwitterShare', 'FacebookShare']
