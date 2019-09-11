@@ -290,6 +290,7 @@ require('react-styl')(`
     flex: 1
     overflow-y: scroll
     overflow-x: hidden
+    -webkit-overflow-scrolling: touch
     .calendar
       margin-bottom: 2rem
       .days
