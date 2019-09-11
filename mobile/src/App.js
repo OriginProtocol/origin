@@ -52,7 +52,6 @@ const App = () => {
       // No seed hash or account seed hash matches
       return !account.seedHash || account.seedHash === samsungBKS.seedHash
     })
-    console.log(filteredAccounts)
     if (filteredAccounts !== wallet.accounts) {
       await Store.dispatch(setAccounts(filteredAccounts))
     }

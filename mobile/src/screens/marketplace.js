@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Linking,
   PanResponder,
+  PermissionsAndroid,
   Platform,
   StyleSheet,
   ScrollView,
@@ -282,6 +283,12 @@ class MarketplaceScreen extends Component {
     )
   }
 
+  requestAndroidCameraPermissions = () => {
+    if (Platform.OS === 'android') {
+      PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA)
+    }
+  }
+
   /* Enables left and right swiping to go forward/back in the WebView on Android.
    */
   setSwipeHandler = () => {
@@ -407,7 +414,7 @@ class MarketplaceScreen extends Component {
     this.setState({ webViewUrlTrigger: url.href })
   }
 
-  onWebViewMessage = msg => {
+  onMessage = msg => {
     if (msg.targetFunc === 'handleGraphqlResult') {
       DeviceEventEmitter.emit('graphqlResult', msg.data)
     } else if (msg.targetFunc === 'handleGraphqlError') {
@@ -420,21 +427,42 @@ class MarketplaceScreen extends Component {
     }
   }
 
-  onWebViewNavigationStateChange = async state => {
+  onNavigationStateChange = async state => {
     let url
     try {
       url = new URL(state.url)
     } catch (error) {
       console.warn(`Browser reporting malformed url: ${state.url}`)
     }
+
+    // Request Android user permissions if doing something that is likely
+    // to need them
+    try {
+      if (Platform.OS === 'android') {
+        if (
+          // Create a listing
+          url.hash.startsWith('#/create') ||
+          // Edit a listing
+          (url.hash.startsWith('#/listing') && url.hash.endsWith('/edit')) ||
+          // Create oredit profile
+          url.hash.startsWith('#/profile')
+        ) {
+          this.requestAndroidCameraPermissions()
+        }
+      }
+    } catch {
+      /* Skip */
+    }
+
     const dappUrl = new URL(this.props.settings.network.dappUrl)
     if (dappUrl.hostname === url.hostname) {
       this.setState({ lastDappUrl: url })
     }
+
     await this.checkForShareNativeDialogInterception(url)
   }
 
-  onWebViewLoadEnd = () => {
+  onLoadEnd = () => {
     // Set the language in the DApp to the same as the mobile app
     this.injectLanguage()
     // Set the currency in the DApp
@@ -490,7 +518,7 @@ class MarketplaceScreen extends Component {
 
   /* Handle an error loading the WebView
    */
-  onWebViewError = syntheticEvent => {
+  onError = syntheticEvent => {
     const { nativeEvent } = syntheticEvent
     this.props.setMarketplaceWebViewError(nativeEvent.description)
   }
@@ -539,13 +567,15 @@ class MarketplaceScreen extends Component {
       <OriginWeb3View
         ref={this.state.webViewRef}
         source={{ uri: this.state.webViewUrlTrigger }}
-        onMessage={this.onWebViewMessage}
-        onLoadEnd={this.onWebViewLoadEnd}
-        onError={this.onWebViewError}
-        onNavigationStateChange={this.onWebViewNavigationStateChange}
+        onMessage={this.onMessage}
+        onLoadEnd={this.onLoadEnd}
+        onError={this.onError}
+        onNavigationStateChange={this.onNavigationStateChange}
         renderLoading={this.renderWebViewLoading}
         renderError={this.renderWebViewError}
         userAgent={this.getUserAgent()}
+        // https://github.com/react-native-community/react-native-webview/issues/575
+        androidHardwareAccelerationDisabled={true}
         startInLoadingState={true}
         allowsBackForwardNavigationGestures={true} // iOS support only
         decelerationRate="normal"
