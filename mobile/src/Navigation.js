@@ -166,7 +166,7 @@ export const Navigation = createSwitchNavigator(
     )
   },
   {
-    initialRouteName: 'Main',
+    initialRouteName: 'Onboarding',
     defaultNavigationOptions: {
       header: null
     }

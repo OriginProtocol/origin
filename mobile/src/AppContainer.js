@@ -18,13 +18,6 @@ class MarketplaceApp extends React.Component {
   static router = Navigation.router
 
   componentDidMount = async () => {
-    const { biometryType, pin } = this.props.settings
-    const hasAuthentication = biometryType || pin
-    const hasAccount = this.props.wallet.accounts.length > 0
-    if (!hasAuthentication || !hasAccount) {
-      this.props.navigation.navigate('Welcome')
-    }
-
     // Update exchange rates at a regular interval
     this.updateExchangeRates = () => {
       const fiatCurrency =
@@ -57,8 +50,8 @@ class MarketplaceApp extends React.Component {
   }
 }
 
-const mapStateToProps = ({ settings, wallet }) => {
-  return { settings, wallet }
+const mapStateToProps = ({ settings }) => {
+  return { settings }
 }
 
 const App = connect(

@@ -22,6 +22,16 @@ class WelcomeScreen extends Component {
     }
   }
 
+  componentDidMount = async () => {
+    const { biometryType, pin } = this.props.settings
+    const hasAuthentication = biometryType || pin
+    const hasAccount = this.props.wallet.accounts.length > 0
+    if (hasAuthentication || hasAccount) {
+      console.debug('Onboarding is completed')
+      this.props.navigation.navigate('Main')
+    }
+  }
+
   handleCreateWallet = async () => {
     this.setState({ loading: true }, () => {
       setTimeout(() => {
@@ -157,8 +167,8 @@ class WelcomeScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ samsungBKS, wallet }) => {
-  return { samsungBKS, wallet }
+const mapStateToProps = ({ samsungBKS, settings, wallet }) => {
+  return { samsungBKS, settings, wallet }
 }
 
 const mapDispatchToProps = dispatch => ({
