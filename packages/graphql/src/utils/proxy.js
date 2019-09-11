@@ -5,7 +5,10 @@ async function isContractRaw(address) {
   const code = await contracts.web3.eth.getCode(address)
   return code && code.length > 2
 }
-export const isContract = memoize(isContractRaw, address => address)
+export const isContract =
+  process.env.DISABLE_CACHE === 'true'
+    ? isContractRaw
+    : memoize(isContractRaw, address => address)
 
 // Get the creation code for the deployed Proxy implementation
 const proxyCreationCode = memoize(async () => {
@@ -85,9 +88,18 @@ async function proxyOwnerRaw(address) {
   }
 }
 
-export const proxyOwner = memoize(proxyOwnerRaw, address => address)
-export const hasProxy = memoize(hasProxyRaw, address => address)
-export const predictedProxy = memoize(predictedProxyRaw, address => address)
+export const proxyOwner =
+  process.env.DISABLE_CACHE === 'true'
+    ? proxyOwnerRaw
+    : memoize(proxyOwnerRaw, address => address)
+export const hasProxy =
+  process.env.DISABLE_CACHE === 'true'
+    ? hasProxyRaw
+    : memoize(hasProxyRaw, address => address)
+export const predictedProxy =
+  process.env.DISABLE_CACHE === 'true'
+    ? predictedProxyRaw
+    : memoize(predictedProxyRaw, address => address)
 export const resetProxyCache = () => {
   isContract.cache.clear()
   hasProxy.cache.clear()
