@@ -25,9 +25,11 @@ async function makeOffer(_, data) {
   }
 
   let messagingOverride
-  if (messagingOverride = checkForMessagingOverride()) {
+  if ((messagingOverride = checkForMessagingOverride())) {
     // Skip encryption in test environment
-    data.shippingAddressEncrypted = JSON.stringify(messagingOverride.shippingOverride)
+    data.shippingAddressEncrypted = JSON.stringify(
+      messagingOverride.shippingOverride
+    )
   } else if (data.shippingAddress && data.shippingAddress !== '') {
     const listing = await marketplace.eventSource.getListing(listingId)
     let seller = await proxyOwner(listing.seller.id)
