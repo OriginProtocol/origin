@@ -49,7 +49,7 @@ export function createAccount() {
  */
 export function importAccountFromMnemonic(
   mnemonic,
-  existingAddresses,
+  existingAddresses = [],
   maxRetries = 10
 ) {
   // Use a loop to try the next account in the derivation path
