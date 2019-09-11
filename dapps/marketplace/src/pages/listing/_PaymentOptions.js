@@ -71,7 +71,7 @@ const PaymentOptions = ({
   ...props
 }) => {
   const isLoadingData =
-    get(props, 'tokenStatus.loading') ||
+    get(tokenStatus, 'loading') ||
     props.cannotTransact === 'loading' ||
     Object.keys(props).some(key => key.endsWith('Loading') && props[key])
 

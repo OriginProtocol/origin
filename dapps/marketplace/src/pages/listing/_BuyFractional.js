@@ -137,7 +137,7 @@ const Fractional = ({
             acceptedTokens={listing.acceptedTokens}
             listing={listing}
             value={token}
-            tookenStatus={tokenStatus}
+            tokenStatus={tokenStatus}
           >
             <ConfirmShippingAndPurchase
               listing={listing}

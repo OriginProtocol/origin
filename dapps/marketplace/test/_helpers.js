@@ -52,6 +52,15 @@ export const waitForText = async (page, text, path) => {
   return xpath
 }
 
+export const waitUntilTextHides = async (page, text, path) => {
+  const escapedText = escapeXpathString(text)
+  const xpath = `/html/body//${path || '*'}[contains(text(), ${escapedText})]`
+  await page.waitForXPath(xpath, {
+    hidden: true
+  })
+  return xpath
+}
+
 export const hasText = async (page, text, path) => {
   const escapedText = escapeXpathString(text)
   const xpath = `/html/body//${path || '*'}[contains(text(), ${escapedText})]`
