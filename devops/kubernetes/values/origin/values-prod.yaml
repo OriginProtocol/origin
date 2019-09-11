@@ -59,7 +59,7 @@ cronImageTag: '9d488a5'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: 'c43067c'
+relayerImageTag: '64d6880'
 
 # origin-graphql
 graphqlImage: origin-graphql
