@@ -40,7 +40,7 @@ export const identity = gql`
 export const wallet = gql`
   query Wallet($id: ID!) {
     web3 {
-			account(id: $id) {
+      account(id: $id) {
         id
         owner {
           id

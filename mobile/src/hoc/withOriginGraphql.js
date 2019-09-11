@@ -132,13 +132,10 @@ const withOriginGraphql = WrappedComponent => {
     }
 
     getTokenBalance = (ethAddress, token) => {
-      return this._sendGraphqlQuery(
-        tokenBalance,
-        {
-          id: ethAddress,
-          token: token
-        }
-      )
+      return this._sendGraphqlQuery(tokenBalance, {
+        id: ethAddress,
+        token: token
+      })
     }
 
     getWallet = id => {
