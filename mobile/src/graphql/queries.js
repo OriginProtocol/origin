@@ -38,21 +38,14 @@ export const identity = gql`
 `
 
 export const wallet = gql`
-  query Wallet {
+  query Wallet($id: ID!) {
     web3 {
-      metaMaskAccount {
+			account(id: $id) {
         id
-      }
-      walletType
-      mobileWalletAccount {
-        id
-      }
-      primaryAccount {
-        id
-        proxy {
+        owner {
           id
         }
-        predictedProxy {
+        proxy {
           id
         }
       }

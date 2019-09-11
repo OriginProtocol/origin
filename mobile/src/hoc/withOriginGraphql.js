@@ -128,7 +128,7 @@ const withOriginGraphql = WrappedComponent => {
     }
 
     getBalance = ethAddress => {
-      return this._sendGraphqlQuery(balance, { id: ethAddress }, 'no-cache')
+      return this._sendGraphqlQuery(balance, { id: ethAddress })
     }
 
     getTokenBalance = (ethAddress, token) => {
@@ -137,17 +137,16 @@ const withOriginGraphql = WrappedComponent => {
         {
           id: ethAddress,
           token: token
-        },
-        'no-cache'
+        }
       )
     }
 
-    getWallet = () => {
-      return this._sendGraphqlQuery(wallet)
+    getWallet = id => {
+      return this._sendGraphqlQuery(wallet, { id })
     }
 
     getIdentity = async id => {
-      return this._sendGraphqlQuery(identity, { id }, 'no-cache')
+      return this._sendGraphqlQuery(identity, { id })
     }
 
     updateIdentity = async address => {
@@ -165,7 +164,7 @@ const withOriginGraphql = WrappedComponent => {
         }
       }
 
-      const wallet = await this.getWallet()
+      const wallet = await this.getWallet(address)
       const identityAddress = get(
         wallet,
         'data.web3.primaryAccount.proxy.id',
