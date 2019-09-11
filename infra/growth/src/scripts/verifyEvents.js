@@ -107,7 +107,7 @@ class VerifyEvents {
       const fraud = await this.fraudEngine.isFraudEvent(participant, event)
       if (fraud) {
         status = enums.GrowthEventStatuses.Fraud
-        data = Object.assign(event.data, { fraud })
+        data = Object.assign(event.data || {}, { fraud })
         this.stats.numFraud++
       } else {
         status = enums.GrowthEventStatuses.Verified
