@@ -513,7 +513,12 @@ class MarketplaceScreen extends Component {
     return (
       <AndroidBackHandler onBackPress={this.onBack}>
         <SafeAreaView style={{ flex: 1 }}>
-          <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }} enabled>
+          <KeyboardAvoidingView
+            behavior="padding"
+            keyboardVerticalOffset={Platform.select({ ios: 0, android: 20 })}
+            style={{ flex: 1 }}
+            enabled
+          >
             <ScrollView
               contentContainerStyle={{ flex: 1 }}
               refreshControl={refreshControl}

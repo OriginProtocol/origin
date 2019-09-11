@@ -92,7 +92,6 @@ const TransactionCard = props => {
       ethRequired += Number(payment)
       break
 
-
     case 'transferTokenMarketplaceExecute':
       heading = fbt('Transfer Tokens', 'TransactionCard.headingTransferTokens')
       paymentCurrency = getCurrencyTypeFromAddress(parameters._token)
@@ -153,7 +152,6 @@ const TransactionCard = props => {
   const hasSufficientDai = daiRequired <= Number(balances['dai'] || 0)
   const hasSufficientEth = ethRequired <= Number(balances['eth'] || 0)
   // const hasSufficientOgn = ognRequired <= Number(balances['ogn'] || 0)
-
 
   return (
     <View style={styles.card}>

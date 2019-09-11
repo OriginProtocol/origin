@@ -82,5 +82,8 @@ export function isValidMetaTransaction(data) {
 
 /* Change an object to values -> keys
  */
-export const reverseMapping = o => Object.keys(o).reduce((r, k) =>
-        Object.assign(r, { [o[k]]: (r[o[k]] || []).concat(k) }), {})
+export const reverseMapping = o =>
+  Object.keys(o).reduce(
+    (r, k) => Object.assign(r, { [o[k]]: (r[o[k]] || []).concat(k) }),
+    {}
+  )
