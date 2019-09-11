@@ -64,13 +64,14 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
         props.wallet.activeAccount.address
       )
       console.debug('Using nonce', nonce)
+      const value = transaction.value ? transaction.value : 0
       const signedTransaction = await RNSamsungBKS.signEthTransaction(
         props.wallet.activeAccount.hdPath,
         ethers.utils.bigNumberify(nonce).toString(),
         ethers.utils.bigNumberify(transaction.gasPrice).toString(),
         ethers.utils.bigNumberify(transaction.gasLimit).toString(),
         transaction.to,
-        ethers.utils.bigNumberify(transaction.value).toString(),
+        ethers.utils.bigNumberify(value).toString(),
         transaction.data
       )
       console.debug('Sending transaction via provider')
