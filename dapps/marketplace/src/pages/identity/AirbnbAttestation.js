@@ -36,7 +36,7 @@ class AirbnbAttestation extends Component {
 
     return (
       <ModalComponent
-        title={fbt('Verify Airbnb Account', 'VerifyAirbnb.verifyAirbnbAccount')}
+        title={fbt('Verify Account', 'VerifyAirbnb.verifyAccount')}
         className="attestation-modal airbnb"
         shouldClose={this.state.shouldClose}
         onClose={() => {
@@ -69,7 +69,7 @@ class AirbnbAttestation extends Component {
 
     const header = isMobile ? null : (
       <fbt desc="VerifyAirbnb.averifyAirbnbAccount">
-        Verify your Airbnb account
+        Verify Your Airbnb Account
       </fbt>
     )
 
