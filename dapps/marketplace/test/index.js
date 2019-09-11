@@ -247,7 +247,7 @@ const confirmReleaseFundsAndRate = async ({ buyer, review }) => {
   await pic(page, 'transaction-release-funds-finalized')
 }
 
-function randomTitle({ isFractional }) {
+function randomTitle({ isFractional } = {}) {
   if (isFractional) {
     return `3BHK apartment ${Math.floor(Math.random() * 100000)}`
   }
