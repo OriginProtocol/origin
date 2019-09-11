@@ -24,36 +24,35 @@ class SamsungBKS extends React.Component {
   }
 
   componentDidMount = async () => {
-    await this._checkForMandatoryUpdate()
-    await this._checkSeedHash()
-    this.props.onReady()
-    AppState.addEventListener('change', this._handleAppStateChange)
+    await this.checkForMandatoryUpdate()
+    await this.checkSeedHash()
+    AppState.addEventListener('change', this.handleAppStateChange)
   }
 
   componentWillUnmount = () => {
-    AppState.removeEventListener('change', this._handleAppStateChange)
+    AppState.removeEventListener('change', this.handleAppStateChange)
   }
 
-  _handleAppStateChange = nextAppState => {
+  handleAppStateChange = nextAppState => {
     // Coming from background
     if (this.state.appState === 'background' && nextAppState === 'active') {
       // Get seed hash to update account list on change
-      this._checkSeedHash()
+      this.checkSeedHash()
     }
     this.setState({ appState: nextAppState })
   }
 
-  _checkForMandatoryUpdate = async () => {
+  checkForMandatoryUpdate = async () => {
+    console.debug('Checking for Samsung BKS update')
     const samsungUpdateUrl = await RNSamsungBKS.checkForMandatoryAppUpdate()
     if (!samsungUpdateUrl) {
       console.debug('No Samsung BKS update required')
     }
-    // TODO handle required update
   }
 
   /* Update the account list according to the Samsung BKS seed hash.
    */
-  _updateAccounts = async seedHash => {
+  updateAccounts = async seedHash => {
     console.debug('Updating account list from Samsung BKS')
     const hdPath = generateHdPath(0)
 
@@ -80,7 +79,8 @@ class SamsungBKS extends React.Component {
   /* Check for changes to the Samsung BKS seed hash and update the account list
    * if it has changed
    */
-  _checkSeedHash = async () => {
+  checkSeedHash = async () => {
+    console.debug('Checking SamsungBKS seed hash')
     const previousSeedHash = this.props.samsungBKS.seedHash
     const seedHash = await this.props.getSeedHash()
     if (seedHash.type === SamsungBKSConstants.GET_SEEDHASH_SUCCESS) {
@@ -89,8 +89,9 @@ class SamsungBKS extends React.Component {
           seedHash.payload !== previousSeedHash ||
           this.props.wallet.accounts.length === 0
         ) {
-          // Update local account cache if the seed hash has changed or no accounts are in the local cache
-          await this._updateAccounts(seedHash.payload)
+          // Update local account cache if the seed hash has changed or no
+          // accounts are in the local cache
+          await this.updateAccounts(seedHash.payload)
         }
       } else {
         // User reset Samsung BKS, send to start of onboarding
@@ -111,7 +112,6 @@ class SamsungBKS extends React.Component {
               An error occurred accessing Samsung Blockchain Keystore.
             </fbt>
           </Text>
-          <Text>{this.state.samsungBKSError}</Text>
         </View>
       )
     }

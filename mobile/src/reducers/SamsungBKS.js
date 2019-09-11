@@ -3,6 +3,7 @@
 import { SamsungBKSConstants } from 'actions/SamsungBKS'
 
 const initialState = {
+  enabled: null,
   seedHash: null,
   error: null
 }
@@ -20,6 +21,12 @@ export default function SamsungBKS(state = initialState, action = {}) {
       return {
         ...state,
         error: action.error
+      }
+
+    case SamsungBKSConstants.SET_ENABLED:
+      return {
+        ...state,
+        enabled: action.payload
       }
   }
 

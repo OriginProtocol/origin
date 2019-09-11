@@ -8,7 +8,8 @@ export const SamsungBKSConstants = keyMirror(
   {
     GET_SEEDHASH_PENDING: null,
     GET_SEEDHASH_SUCCESS: null,
-    GET_SEEDHASH_ERROR: null
+    GET_SEEDHASH_ERROR: null,
+    SET_ENABLED: null
   },
   'SAMSUNG_BKS'
 )
@@ -30,6 +31,13 @@ function getSeedHashError(error) {
   return {
     type: SamsungBKSConstants.GET_SEEDHASH_ERROR,
     error
+  }
+}
+
+export function setEnabled(payload) {
+  return {
+    type: SamsungBKSConstants.SET_ENABLED,
+    payload
   }
 }
 

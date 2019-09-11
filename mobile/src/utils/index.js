@@ -1,5 +1,8 @@
 'use strict'
 
+import { Platform } from 'react-native'
+import RNSamsungBKS from 'react-native-samsung-bks'
+
 export function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
@@ -87,3 +90,17 @@ export const reverseMapping = o =>
     (r, k) => Object.assign(r, { [o[k]]: (r[o[k]] || []).concat(k) }),
     {}
   )
+
+export const canUseSamsungBKS = async wallet => {
+  if (!__DEV__) {
+    // Cannot use BKS if not in dev mode because we don't have SCW_APP_ID
+    return false
+  } else if (Platform.OS === 'ios') {
+    // Android only
+    return false
+  } else if (wallet.accounts.length > 0) {
+    // Cant use BKS if there are already accounts
+    return false
+  }
+  return await RNSamsungBKS.isSupported()
+}

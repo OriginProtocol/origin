@@ -26,7 +26,7 @@ class WelcomeScreen extends Component {
     const { biometryType, pin } = this.props.settings
     const hasAuthentication = biometryType || pin
     const hasAccount = this.props.wallet.accounts.length > 0
-    if (hasAuthentication || hasAccount) {
+    if (hasAuthentication && hasAccount) {
       console.debug('Onboarding is completed')
       this.props.navigation.navigate('Main')
     }

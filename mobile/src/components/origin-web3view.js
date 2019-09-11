@@ -10,7 +10,6 @@ import { Modal, Platform, StyleSheet } from 'react-native'
 import { ethers } from 'ethers'
 import SafeAreaView from 'react-native-safe-area-view'
 import PushNotification from 'react-native-push-notification'
-import get from 'lodash.get'
 import RNSamsungBKS from 'react-native-samsung-bks'
 
 import { decodeTransaction } from 'utils/contractDecoder'
@@ -25,12 +24,8 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
   const [transactionCardLoading, setTransactionCardLoading] = useState(false)
   const [modals, setModals] = useState([])
 
-  const samsungBKSSeedHash = get(props, 'samsungBKS.seedHash', '')
   const isUsingSamsungBKS =
-    Platform.OS === 'android' &&
-    samsungBKSSeedHash &&
-    samsungBKSSeedHash.length > 0 &&
-    props.wallet.activeAccount.hdPath
+    props.wallet.activeAccount && props.wallet.activeAccount.hdPath
 
   /* Sign a message. Uses Samsung BKS if it is enabled or uses ethers and the
    * local wallet cache.

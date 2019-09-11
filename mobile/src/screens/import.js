@@ -2,19 +2,14 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import { Platform, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
-import get from 'lodash.get'
 
 import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'
 
 const importAccountScreen = props => {
-  const canUseSamsungBKS =
-    Platform.OS === 'android' &&
-    get(props, 'samsungBKS.seedHash', '').length > 0
-
   const renderImportButtons = () => {
     return (
       <>
@@ -52,7 +47,7 @@ const importAccountScreen = props => {
   }
   */
 
-  if (canUseSamsungBKS) {
+  if (props.samsungBKS.enabled) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={{ ...styles.container, flexGrow: 2 }}>
