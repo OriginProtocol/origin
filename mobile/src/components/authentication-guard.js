@@ -77,6 +77,7 @@ class AuthenticationGuard extends Component {
         RNRestart.Restart()
       }
     }
+
     this.setState({ appState: nextAppState })
   }
 
@@ -87,7 +88,6 @@ class AuthenticationGuard extends Component {
         this.onSuccess()
       })
       .catch(e => {
-        console.log(e)
         this.setState({
           error: String(
             fbt(
