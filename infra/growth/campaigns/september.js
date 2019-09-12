@@ -854,7 +854,7 @@ const septemberConfig = {
       linkKey: 'growth.share.content7.link',
       post: {
         tweet: {
-          default: `Join @OriginProtocol's rewards program and earn free Origin Tokens. Sign up today and claim your free OGN! https://www.originrewards.com `,
+          default: `Join @OriginProtocol's rewards program and earn free Origin Tokens. Sign up today and claim your free OGN! https://www.originrewards.com`,
           translations: [ ]
         }
       }
