@@ -64,7 +64,7 @@ class SamsungBKS extends React.Component {
     try {
       address = await RNSamsungBKS.getAddressList(hdPath)
     } catch (error) {
-      this.props.setSamsungBKSError(error)
+      this.props.setSamsungBKSError(error.message)
       return
     }
 
@@ -108,14 +108,18 @@ class SamsungBKS extends React.Component {
     if (this.props.samsungBKS.error) {
       return (
         <View style={styles.error}>
-          <Text style={styles.title}>
-            <fbt desc="SamsungBKSScreen.heading">Keystore Error</fbt>
-          </Text>
-          <Text style={styles.subtitle}>
-            <fbt desc="SamsungBKSScreen.errorText">
-              An error occurred accessing Samsung Blockchain Keystore.
-            </fbt>
-          </Text>
+          <View style={styles.container}>
+            <Text style={styles.title}>
+              <fbt desc="SamsungBKSScreen.heading">
+                Samsung Blockchain Keystore Error
+              </fbt>
+            </Text>
+            <Text style={styles.subtitle}>
+              <fbt desc="SamsungBKSScreen.errorText">
+                An error occurred accessing Samsung Blockchain Keystore.
+              </fbt>
+            </Text>
+          </View>
           {this.renderError()}
         </View>
       )
@@ -239,40 +243,46 @@ class SamsungBKS extends React.Component {
 
   renderRetryButton() {
     return (
-      <OriginButton
-        size="large"
-        type="primary"
-        title={fbt('Retry', 'SamsungBKSScreen.retryButton')}
-        onPress={this.checkSeedHash}
-      />
+      <View style={[styles.container, styles.buttonContainer]}>
+        <OriginButton
+          size="large"
+          type="primary"
+          title={fbt('Retry', 'SamsungBKSScreen.retryButton')}
+          onPress={this.checkSeedHash}
+        />
+      </View>
     )
   }
 
   renderSamsungBKSSettingsLink() {
     return (
-      <OriginButton
-        size="large"
-        type="primary"
-        title={fbt('Continue', 'SamsungBKSScreen.continueButton')}
-        onPress={async () => {
-          const deepLinks = await RNSamsungBKS.getDeepLinks()
-          Linking.openURL(deepLinks['MAIN'])
-        }}
-      />
+      <View style={[styles.container, styles.buttonContainer]}>
+        <OriginButton
+          size="large"
+          type="primary"
+          title={fbt('Continue', 'SamsungBKSScreen.continueButton')}
+          onPress={async () => {
+            const deepLinks = await RNSamsungBKS.getDeepLinks()
+            Linking.openURL(deepLinks['MAIN'])
+          }}
+        />
+      </View>
     )
   }
 
   renderDisableKeystoreButton() {
     return (
-      <OriginButton
-        size="large"
-        type="primary"
-        title={fbt('Continue', 'SamsungBKSScreen.continueButton')}
-        onPress={() => {
-          this.props.setSamsungBKSEnabled(false)
-          this.props.setSamsungBKSError(null)
-        }}
-      />
+      <View style={[styles.container, styles.buttonContainer]}>
+        <OriginButton
+          size="large"
+          type="primary"
+          title={fbt('Continue', 'SamsungBKSScreen.continueButton')}
+          onPress={() => {
+            this.props.setSamsungBKSEnabled(false)
+            this.props.setSamsungBKSError(null)
+          }}
+        />
+      </View>
     )
   }
 }

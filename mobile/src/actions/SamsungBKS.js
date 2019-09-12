@@ -58,7 +58,7 @@ export function getSeedHash() {
         return dispatch(getSeedHashSuccess(result))
       })
       .catch(error => {
-        return dispatch(getSeedHashError(error))
+        return dispatch(getSeedHashError(error.message))
       })
   }
 }
