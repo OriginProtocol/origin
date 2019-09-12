@@ -40,6 +40,7 @@ spec:
             --wsaddr 0.0.0.0
             --wsport 8546
             --rpc
+            --rpcapi eth,web3,net,debug
             --rpcaddr 0.0.0.0
             --rpcport 8545
             --rpcvhosts=\"*\"
