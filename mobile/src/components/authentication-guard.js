@@ -46,7 +46,7 @@ class AuthenticationGuard extends Component {
 
   componentDidMount() {
     if (this.props.settings.biometryType && AppState.currentState === 'active') {
-      setTimeout(this.touchAuthenticate()
+      this.touchAuthenticate()
     }
 
     AppState.addEventListener('change', this._handleAppStateChange)
