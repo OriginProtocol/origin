@@ -90,7 +90,7 @@ class AuthenticationGuard extends Component {
         this.setState({ error: null })
         this.onSuccess()
       })
-      .catch(e => {
+      .catch(() => {
         this.setState({
           error: String(
             fbt(

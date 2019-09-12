@@ -114,7 +114,7 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
     // If the transaction validate the sha3 hash and sign that for the relayer
     if (isValidMetaTransaction(decodedTransaction)) {
       // Check if the user has enabled push notifications
-      const permissions = await PushNotification.requestPermissions()
+      PushNotification.requestPermissions()
 
       console.debug(
         `Got meta transaction for ${decodedTransaction.functionName} on ${decodedTransaction.contractName}`
