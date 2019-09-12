@@ -79,16 +79,7 @@ class MarketplaceScreen extends Component {
   }
 
   componentDidUpdate = prevProps => {
-    if (prevProps.settings.language !== this.props.settings.language) {
-      // Language has changed, need to reload the DApp
-      this.injectLanguage()
-    }
-
-    if (prevProps.settings.currency !== this.props.settings.currency) {
-      this.injectCurrency()
-    }
-
-    // Check for default dapp url
+    // Check for changes to network
     if (
       get(prevProps, 'settings.network.dappUrl') !==
       get(this.props, 'settings.network.dappUrl')
@@ -97,6 +88,15 @@ class MarketplaceScreen extends Component {
       this.setState({
         webViewUrlTrigger: get(this.props, 'settings.network.dappUrl')
       })
+    }
+
+    if (prevProps.settings.language !== this.props.settings.language) {
+      // Language has changed, need to reload the DApp
+      this.injectLanguage()
+    }
+
+    if (prevProps.settings.currency !== this.props.settings.currency) {
+      this.injectCurrency()
     }
 
     // Check for active Ethereum address changing
