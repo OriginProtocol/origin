@@ -45,10 +45,7 @@ class AuthenticationGuard extends Component {
   }
 
   componentDidMount() {
-    if (
-      this.props.settings.biometryType &&
-      AppState.currentState === 'active'
-    ) {
+    if (this.props.settings.biometryType) {
       this.touchAuthenticate()
     }
 
