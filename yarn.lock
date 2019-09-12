@@ -13750,6 +13750,11 @@ ip-regex@^2.0.0, ip-regex@^2.1.0:
   resolved "https://registry.yarnpkg.com/ip-regex/-/ip-regex-2.1.0.tgz#fa78bf5d2e6913c911ce9f819ee5146bb6d844e9"
   integrity sha1-+ni/XS5pE8kRzp+BnuUUa7bYROk=
 
+ip-regex@^4.0.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/ip-regex/-/ip-regex-4.1.0.tgz#5ad62f685a14edb421abebc2fff8db94df67b455"
+  integrity sha512-pKnZpbgCTfH/1NLIlOduP/V+WRXzC2MOz3Qo8xmxk8C5GudJLgK5QyLVXOSWy3ParAH7Eemurl3xjv/WXYFvMA==
+
 ip@^1.1.0, ip@^1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/ip/-/ip-1.1.5.tgz#bdded70114290828c0a039e72ef25f5aaec4354a"
@@ -13954,10 +13959,10 @@ ipfs-http-client@^34.0.0:
     tar-stream "^2.0.1"
     through2 "^3.0.1"
 
-ipfs-http-client@^35.0.0:
-  version "35.0.0"
-  resolved "https://registry.yarnpkg.com/ipfs-http-client/-/ipfs-http-client-35.0.0.tgz#1b9418736010a66af786664f37509af4b37b78e2"
-  integrity sha512-nSiuaLOQQFSdd49GvPihDvpD7lbiyQhSrXm0Hgx8akJQiVARsI5wJ3ZlBSYArFTiplQKOI/aNar7St6lKV7boA==
+ipfs-http-client@^36.0.0:
+  version "36.0.0"
+  resolved "https://registry.yarnpkg.com/ipfs-http-client/-/ipfs-http-client-36.0.0.tgz#f053bd0592d3143866b18e139075d58c6bc412c4"
+  integrity sha512-t9CnsABeIHoXYMdGq7gtYAqiUScnv1TGMs3Q+M9SuTGBQyRdzJERm20OW9/BE2jtbBLGvrDmq+5k6bW6A6eQTw==
   dependencies:
     abort-controller "^3.0.0"
     async "^2.6.1"
@@ -13996,7 +14001,7 @@ ipfs-http-client@^35.0.0:
     ky "^0.13.0"
     ky-universal "^0.3.0"
     lru-cache "^5.1.1"
-    multiaddr "^6.0.6"
+    multiaddr "^7.1.0"
     multibase "~0.6.0"
     multicodec "~0.5.1"
     multihashes "~0.4.14"
@@ -14855,6 +14860,13 @@ is-ip@^2.0.0:
   integrity sha1-aO6gfooKCpTC0IDdZ0xzGrKkYas=
   dependencies:
     ip-regex "^2.0.0"
+
+is-ip@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/is-ip/-/is-ip-3.1.0.tgz#2ae5ddfafaf05cb8008a62093cf29734f657c5d8"
+  integrity sha512-35vd5necO7IitFPjd/YBeqwWnyDWbuLH9ZXQdMfDA8TEo7pv5X8yfrvVO3xbJbLUlERCMvf6X0hTUamQxCYJ9Q==
+  dependencies:
+    ip-regex "^4.0.0"
 
 is-ipfs@~0.4.2, is-ipfs@~0.4.7:
   version "0.4.8"
@@ -18785,6 +18797,18 @@ multiaddr@^6.0.3, multiaddr@^6.0.4, multiaddr@^6.0.6, multiaddr@^6.1.0:
     hi-base32 "~0.5.0"
     ip "^1.1.5"
     is-ip "^2.0.0"
+    varint "^5.0.0"
+
+multiaddr@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/multiaddr/-/multiaddr-7.1.0.tgz#e74d69b10cff2840c4c36eb2ecef94a6b933a977"
+  integrity sha512-XQS/KsvlsnlTs2krhSYP8Nzin3S8vKBBQcaQO2K4gd/4Oq56kfxiPeAOWEvloB5gY8iv9wSorZ3WOA9yYqf9+A==
+  dependencies:
+    bs58 "^4.0.1"
+    class-is "^1.1.0"
+    hi-base32 "~0.5.0"
+    ip "^1.1.5"
+    is-ip "^3.1.0"
     varint "^5.0.0"
 
 multibase@~0.5.0:
