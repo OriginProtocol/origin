@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Mutation } from 'react-apollo'
+import React, { useState, useEffect } from 'react'
+import { useMutation } from '@apollo/react-hooks'
 import pick from 'lodash/pick'
 import { fbt } from 'fbt-runtime'
 
@@ -13,6 +13,9 @@ import CurrencyDropdown from 'components/CurrencyDropdown'
 import DocumentTitle from 'components/DocumentTitle'
 import Toggle from 'components/Toggle'
 
+import TextRow from './_TextRow'
+import ToggleRow from './_ToggleRow'
+
 import Store from 'utils/store'
 const store = Store('sessionStorage')
 
@@ -25,37 +28,32 @@ const configurableFields = [
   'provider',
   'providerWS',
   'performanceMode',
-  'relayer'
+  'relayer',
+  'graphql'
 ]
 
-class Settings extends Component {
-  constructor(props) {
-    super(props)
+const Settings = props => {
+  const { locale, onLocale, currency, onCurrency, isMobile, config } = props
 
-    this.state = {
-      ...Object.assign(...configurableFields.map(key => ({ [key]: '' }))),
-      ...pick(this.props.config, configurableFields),
-      developerMode: store.get('developerMode')
-    }
+  const [devMode, setDevMode] = useState(store.get('developerMode'))
+  const [state, _setState] = useState({
+    ...configurableFields.map(key => ({ [key]: '' })),
+    ...pick(config, configurableFields)
+  })
 
-    this.saveConfig = this.saveConfig.bind(this)
-  }
+  const setState = newState => _setState({ ...state, ...newState })
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.config !== this.props.config) {
-      this.setState({
-        ...pick(this.props.config, configurableFields)
-      })
-    }
-  }
+  useEffect(() => setState(pick(config, configurableFields)), [config])
 
-  saveConfig(setNetwork, configUpdate = {}, restoreDefaults = false) {
+  const input = formInput(state, setState, { small: true })
+  const [setNetwork] = useMutation(SetNetwork, {
+    refetchQueries: () => [{ query: ConfigQuery }]
+  })
+
+  const saveConfig = (configUpdate = {}, restoreDefaults = false) => {
     let customConfig = {}
     if (!restoreDefaults) {
-      customConfig = {
-        ...pick(this.state, configurableFields),
-        ...configUpdate
-      }
+      customConfig = { ...pick(state, configurableFields), ...configUpdate }
     }
     window.localStorage.customConfig = JSON.stringify(customConfig)
     setNetwork({
@@ -66,415 +64,142 @@ class Settings extends Component {
     })
   }
 
-  requestNotificationPermission() {
-    Notification.requestPermission().then(permission => {
-      this.setState({ permission: permission })
-      if (permission === 'granted') {
-        this.showNotification()
-      }
-    })
-  }
+  return (
+    <div className="container settings">
+      <DocumentTitle pageTitle={<fbt desc="settings.title">Settings</fbt>} />
+      {!isMobile && (
+        <h1>
+          <fbt desc="settings.heading">Settings</fbt>
+        </h1>
+      )}
+      <div className="settings-box">
+        <div className="form-group">
+          <div>
+            <label>
+              <fbt desc="settings.languageLabel">Language</fbt>
+            </label>
+            <small className="form-text form-text-muted">
+              <fbt desc="settings.language">
+                Please make a selection from the list.
+              </fbt>
+            </small>
+          </div>
+          <LocaleDropdown
+            locale={locale}
+            onLocale={onLocale}
+            className="settings-dropdown"
+            dropdown={true}
+          />
+        </div>
 
-  showNotification() {
-    new Notification(
-      fbt('Desktop notifications enabled ✅', 'settings.notificationsEnabled'),
-      {
-        icon: 'images/app-icon.png'
-      }
-    )
-  }
+        <div className="form-group">
+          <div>
+            <label>
+              <fbt desc="settings.currencyLabel">Currency</fbt>
+            </label>
+            <small className="form-text form-text-muted">
+              <fbt desc="settings.currency">
+                Please make a selection from the list below.
+              </fbt>
+            </small>
+          </div>
+          <CurrencyDropdown
+            value={currency}
+            onChange={onCurrency}
+            className="settings-dropdown"
+          />
+        </div>
+      </div>
+      <div className="settings-box">
+        <div className="form-group">
+          <div>
+            <label>
+              <fbt desc="settings.developerMode">Developer Mode</fbt>
+            </label>
+            <small className="form-text form-text-muted">
+              <fbt desc="settings.developerModeHint">
+                Provides more granular control over your experience.
+              </fbt>
+            </small>
+          </div>
+          <Toggle
+            value={devMode}
+            className="float-right"
+            onChange={on => {
+              store.set('developerMode', on)
+              setDevMode(on)
+            }}
+          />
+        </div>
+        {devMode && (
+          <div className="developer">
+            <TextRow {...input('ipfsGateway')} onBlur={() => saveConfig()}>
+              <fbt desc="settings.ipfsLabel">IPFS Gateway</fbt>
+            </TextRow>
 
-  render() {
-    const input = formInput(this.state, state => this.setState(state))
-    const {
-      locale,
-      onLocale,
-      currency,
-      onCurrency,
-      config,
-      isMobile
-    } = this.props
+            <TextRow {...input('provider')} onBlur={() => saveConfig()}>
+              <fbt desc="settings.providerLabel">Ethereum Node</fbt>
+            </TextRow>
 
-    let proxyAccountsEnabled = config.proxyAccountsEnabled ? true : false
-    if (localStorage.proxyAccountsEnabled === 'true') {
-      proxyAccountsEnabled = true
-    } else if (localStorage.proxyAccountsEnabled === 'false') {
-      proxyAccountsEnabled = false
-    }
-    let relayerEnabled = config.relayerEnabled ? true : false
-    if (localStorage.relayerEnabled === 'true') {
-      relayerEnabled = true
-    } else if (localStorage.relayerEnabled === 'false') {
-      relayerEnabled = false
-    }
+            <TextRow {...input('bridge')} onBlur={() => saveConfig()}>
+              <fbt desc="settings.bridgeLabel">Bridge Server</fbt>
+            </TextRow>
 
-    return (
-      <Mutation
-        mutation={SetNetwork}
-        refetchQueries={() => {
-          return [
-            {
-              query: ConfigQuery
-            }
-          ]
-        }}
-      >
-        {setNetwork => (
-          <div className="container settings">
-            <DocumentTitle
-              pageTitle={<fbt desc="settings.title">Settings</fbt>}
-            />
-            <div className="row">
-              <div className="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1">
-                {!isMobile && (
-                  <h1>
-                    <fbt desc="settings.heading">Settings</fbt>
-                  </h1>
-                )}
-                <div className="settings-group">
-                  <div className="settings-box">
-                    <div className="form-group row">
-                      <div className="col-sm">
-                        <label htmlFor="language">
-                          <fbt desc="settings.languageLabel">Language</fbt>
-                        </label>
-                        <div className="form-text form-text-muted">
-                          <small>
-                            <fbt desc="settings.language">
-                              Please make a selection from the list.
-                            </fbt>
-                          </small>
-                        </div>
-                      </div>
-                      <div className="col-sm">
-                        <LocaleDropdown
-                          locale={locale}
-                          onLocale={onLocale}
-                          className="settings-dropdown float-right"
-                          dropdown={true}
-                        />
-                      </div>
-                    </div>
+            <TextRow {...input('discovery')} onBlur={() => saveConfig()}>
+              <fbt desc="settings.discoveryLabel">Discovery Server</fbt>
+            </TextRow>
 
-                    <div className="form-group row">
-                      <div className="col-sm">
-                        <label htmlFor="language">
-                          <fbt desc="settings.currencyLabel">Currency</fbt>
-                        </label>
-                        <div className="form-text form-text-muted">
-                          <small>
-                            <fbt desc="settings.currency">
-                              Please make a selection from the list below.
-                            </fbt>
-                          </small>
-                        </div>
-                      </div>
-                      <div className="col-sm">
-                        <CurrencyDropdown
-                          value={currency}
-                          onChange={onCurrency}
-                          className="settings-dropdown float-right"
-                        />
-                      </div>
-                    </div>
+            <TextRow {...input('growth')} onBlur={() => saveConfig()}>
+              <fbt desc="settings.growthLabel">Growth Server</fbt>
+            </TextRow>
 
-                    {/* TODO: this will require a grqphql mutation and mods to
-                    @origin/messaging-client.
+            <TextRow {...input('relayer')} onBlur={() => saveConfig()}>
+              <fbt desc="settings.relayerLabel">Relayer Server</fbt>
+            </TextRow>
 
-                    <div className="form-group row">
-                      <div className="col">
-                        <label htmlFor="Messaging">
-                          <fbt desc="settings.messagingLabel">
-                            Messaging
-                          </fbt>
-                        </label>
-                        <div className="form-text form-text-muted">
-                          <small><fbt desc="settings.messagingHint">Enable/disable messaging by clicking on the button.</fbt></small>
-                        </div>
-                      </div>
-                      <div className="col">
-                        <button className="btn btn-outline-danger float-right">
-                          <fbt desc="settings.messagingButton">
-                            Disable
-                          </fbt>
-                        </button>
-                      </div>
-                    </div>
-                    */}
-                  </div>
-                </div>
-                <div className="settings-group">
-                  <div className="settings-box">
-                    <div
-                      className={`form-group row${
-                        this.state.developerMode ? '' : ' no-border-bottom'
-                      }`}
-                    >
-                      <div className="col">
-                        <label htmlFor="performanceMode">
-                          <fbt desc="settings.developerMode">
-                            Developer Mode
-                          </fbt>
-                        </label>
-                        <div className="form-text form-text-muted">
-                          <small>
-                            <fbt desc="settings.developerModeHint">
-                              Provides more granular control over your
-                              experience.
-                            </fbt>
-                          </small>
-                        </div>
-                      </div>
-                      <div className="col">
-                        <Toggle
-                          value={this.state.developerMode}
-                          className="float-right"
-                          onChange={on => {
-                            store.set('developerMode', on)
-                            this.setState({ developerMode: on })
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div
-                      className={`developer${
-                        this.state.developerMode ? '' : ' hide'
-                      }`}
-                    >
-                      <div className="form-group row">
-                        <div className="col-sm">
-                          <label htmlFor="indexing">
-                            <fbt desc="settings.ipfsLabel">IPFS Gateway</fbt>
-                          </label>
-                        </div>
-                        <div className="col-sm">
-                          <input
-                            className="form-control form-control-lg"
-                            type="text"
-                            name="ipfsGateway"
-                            {...input('ipfsGateway')}
-                            onBlur={() => this.saveConfig(setNetwork)}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group row">
-                        <div className="col-sm">
-                          <label htmlFor="indexing">
-                            <fbt desc="settings.providerLabel">
-                              Ethereum Node
-                            </fbt>
-                          </label>
-                        </div>
-                        <div className="col-sm">
-                          <input
-                            className="form-control form-control-lg"
-                            type="text"
-                            name="web3Provider"
-                            {...input('provider')}
-                            onBlur={() => this.saveConfig(setNetwork)}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group row">
-                        <div className="col-sm">
-                          <label htmlFor="indexing">
-                            <fbt desc="settings.bridgeLabel">Bridge Server</fbt>
-                          </label>
-                        </div>
-                        <div className="col-sm">
-                          <input
-                            className="form-control form-control-lg"
-                            type="text"
-                            name="bridgeServer"
-                            {...input('bridge')}
-                            onBlur={() => this.saveConfig(setNetwork)}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group row">
-                        <div className="col-sm">
-                          <label htmlFor="indexing">
-                            <fbt desc="settings.discoveryLabel">
-                              Discovery Server
-                            </fbt>
-                          </label>
-                        </div>
-                        <div className="col-sm">
-                          <input
-                            className="form-control form-control-lg"
-                            type="text"
-                            name="discovery"
-                            {...input('discovery')}
-                            onBlur={() => this.saveConfig(setNetwork)}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group row">
-                        <div className="col-sm">
-                          <label htmlFor="indexing">
-                            <fbt desc="settings.growthLabel">Growth Server</fbt>
-                          </label>
-                        </div>
-                        <div className="col-sm">
-                          <input
-                            className="form-control form-control-lg"
-                            type="text"
-                            name="growth"
-                            {...input('growth')}
-                            onBlur={() => this.saveConfig(setNetwork)}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group row less-margin-bottom">
-                        <div className="col-sm">
-                          <label htmlFor="indexing">
-                            <fbt desc="settings.relayerLabel">
-                              Relayer Server
-                            </fbt>
-                          </label>
-                        </div>
-                        <div className="col-sm">
-                          <input
-                            className="form-control form-control-lg"
-                            type="text"
-                            name="relayer"
-                            {...input('relayer')}
-                            onBlur={() => this.saveConfig(setNetwork)}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group row d-flex">
-                        <div className="col-sm">
-                          <label htmlFor="indexing">
-                            <fbt desc="settings.proxyAccountsLabel">
-                              Enable Proxy Accounts
-                            </fbt>
-                          </label>
-                          <div className="form-text form-text-muted pt-1">
-                            <small className="mt-1">
-                              <fbt desc="settings.enableRisk">
-                                Warning: enable at your own risk!
-                              </fbt>
-                            </small>
-                          </div>
-                        </div>
-                        <div className="col-sm d-flex align-items-center">
-                          <Toggle
-                            value={proxyAccountsEnabled}
-                            className="mt-0"
-                            onChange={on => {
-                              if (on) {
-                                localStorage.proxyAccountsEnabled = 'true'
-                              } else {
-                                localStorage.proxyAccountsEnabled = 'false'
-                              }
-                              window.location.reload()
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group row d-flex">
-                        <div className="col-sm">
-                          <label htmlFor="indexing">
-                            <fbt desc="settings.relayerToggleLabel">
-                              Relayer Enabled
-                            </fbt>
-                          </label>
-                        </div>
-                        <div className="col-sm d-flex align-items-center">
-                          <Toggle
-                            className="mt-0"
-                            value={relayerEnabled}
-                            onChange={on => {
-                              if (on) {
-                                localStorage.relayerEnabled = 'true'
-                              } else {
-                                localStorage.relayerEnabled = 'false'
-                              }
-                              window.location.reload()
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group row d-flex">
-                        <div className="col-sm">
-                          <label htmlFor="indexing">
-                            <fbt desc="settings.promoteToggleLabel">
-                              Promote Listings enabled
-                            </fbt>
-                          </label>
-                        </div>
-                        <div className="col-sm d-flex align-items-center">
-                          <Toggle
-                            className="mt-0"
-                            value={localStorage.promoteEnabled === 'true'}
-                            onChange={on => {
-                              if (on) {
-                                localStorage.promoteEnabled = 'true'
-                              } else {
-                                delete localStorage.promoteEnabled
-                              }
-                              window.location.reload()
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group row">
-                        <a
-                          href="#"
-                          className="container text-center restore"
-                          onClick={ev => {
-                            ev.preventDefault()
-                            this.saveConfig(setNetwork, {}, true)
-                          }}
-                        >
-                          Restore Defaults
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {this.state.developerMode && (
-                  <div className="text-center test-builds">
-                    <a href="https://originprotocol.github.io/test-builds/">
-                      Test Builds
-                    </a>
-                  </div>
-                )}
-              </div>
+            <TextRow {...input('graphql')} onBlur={() => saveConfig()}>
+              <fbt desc="settings.graphqlLabel">GraphQL Server</fbt>
+            </TextRow>
+
+            <ToggleRow config={config} field="performanceMode">
+              <fbt desc="settings.performanceMode">Performance Mode</fbt>
+            </ToggleRow>
+
+            <ToggleRow config={config} field="proxyAccountsEnabled">
+              <fbt desc="settings.proxyAccountsLabel">Proxy Accounts</fbt>
+            </ToggleRow>
+
+            <ToggleRow config={config} field="relayerEnabled">
+              <fbt desc="settings.relayerToggleLabel">Relayer</fbt>
+            </ToggleRow>
+
+            <ToggleRow config={config} field="bypassOnboarding">
+              <fbt desc="settings.onboardDisabled">Onboarding Disabled</fbt>
+            </ToggleRow>
+
+            <div className="form-group restore">
+              <a
+                href="#"
+                onClick={e => {
+                  e.preventDefault()
+                  saveConfig(setNetwork, {}, true)
+                }}
+              >
+                <fbt desc="settings.restoreDefaults">Restore Defaults</fbt>
+              </a>
             </div>
-            {/* TODO: See #2320
-            <div className="settings-group">
-              <div className="settings-box">
-                <div className="form-group row">
-                  <div className="col">
-                    <label htmlFor="Messaging">
-                      <fbt desc="settings.decentralizedLabel">
-                        Decentralized Mode
-                      </fbt>
-                    </label>
-                    <div className="form-text form-text-muted">
-                      <small><fbt desc="settings.decentralizedHint">
-                        Go fully decentralized but lose certain feaures like seach and free gas.
-                      </fbt></small>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <button className="btn btn-outline-danger float-right">
-                      <fbt desc="settings.decentralizedButton">
-                        Launch
-                      </fbt>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            */}
           </div>
         )}
-      </Mutation>
-    )
-  }
+      </div>
+      {devMode && (
+        <div className="text-center test-builds">
+          <a href="https://originprotocol.github.io/test-builds/">
+            Test Builds
+          </a>
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default withIsMobile(withConfig(Settings))
@@ -482,64 +207,10 @@ export default withIsMobile(withConfig(Settings))
 require('react-styl')(`
   .settings
     padding-top: 3rem
-
-    .form-text
-      margin-top: -0.75rem
-      margin-bottom: 0.5rem
-      small
-        font-size: 14px
-        font-weight: 300
-
-    .form-group
-      margin-bottom: 1.5rem
-
-      &.row
-        border-bottom: solid 1px #c2cbd3
-        background-color: var(--white)
-        padding: 0 1rem 1rem 1rem
-
-      &.row.less-margin-bottom
-        margin-bottom: 1rem
-
-      &.row:last-of-type,
-      &.row.no-border-bottom
-        border-bottom: 0
-        padding: 0 1rem
-        margin-bottom: 0
-
-      label
-        font-size: 18px
-        margin-bottom: 0.75rem
-
-      button
-        margin-top: 0.5rem
-
-      .form-text
-        line-height: 0.75rem
-
-  .settings-box
-    margin-bottom: 1rem
-    padding: 1rem
-    border-radius: 14px
-    border: solid 1px #c2cbd3
-    background-color: var(--white)
-    color: #000
-
-    .hide
-      display: none
-
-    .toggle
-      margin-top: 1rem
-
-    .dropdown
-      width: auto
-      .dropdown-menu
-        position: absolute
-        left: 16px
-        top: -3px
-        width: 322px
+    max-width: 720px
 
     .settings-dropdown
+      display: flex
       color: #000
       font-size: 1.25rem
       font-weight: normal
@@ -561,28 +232,65 @@ require('react-styl')(`
           width: 24px
           background: url('images/keyboard-arrow-down-material.svg') no-repeat center
 
-    .developer label
-      line-height: calc(1.5em + 1rem + 2px)
-      margin-bottom: 0
-      font-size: 0.875rem
-
-    .developer,
-    .restore,
-    input,
-    label
+    .settings-box
+      margin-bottom: 1rem
+      border-radius: 1rem
+      border: solid 1px #c2cbd3
       color: #000
-      font-size: 0.875rem
 
-    .restore
-      color: var(--clear-blue)
-  .test-builds
-    font-size: 0.875rem
+      .form-group
+        display: flex
+        align-items: center
+        justify-content: space-between
+        padding: 1.5rem 2rem
+        border-bottom: 1px solid #c2cbd3
+        margin: 0
+        label
+          margin-bottom: 0
+          font-size: 18px
+          color: var(--dark)
+          flex: 1
+        &:last-of-type
+          border-bottom: 0
+          border-radius: 0 0 1rem 1rem
+        .form-text
+          font-size: 14px
+          font-weight: 300
+          margin: 0
+        input
+          flex: 1
+        &.restore
+          padding: 0.75rem
+          justify-content: center
+          font-size: 14px
+
+    .settings-box .developer .form-group
+      label
+        font-size: 14px
+        margin-left: 2rem
+
+    .test-builds
+      font-size: 14px
 
   @media (max-width: 767.98px)
     .settings
       padding-top: 2rem
+      padding-bottom: 4rem
       h1
         font-size: 32px
         margin-bottom: 1rem
         line-height: 1.25
+
+      .settings-box
+        .form-group
+          flex-direction: column
+          align-items: flex-start
+          padding: 1rem 1.5rem
+          label
+            margin: 0 0 0.5rem 0
+          .form-text
+            margin-bottom: 0.5rem
+        .developer .form-group
+          label
+            margin: 0 0 0.5rem 0
 `)

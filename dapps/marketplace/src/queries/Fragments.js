@@ -66,6 +66,7 @@ export default {
         }
         commission
         commissionPerUnit
+        requiresShipping
         ... on UnitListing {
           unitsTotal
           unitsAvailable
@@ -163,6 +164,7 @@ export default {
         statusStr
         startDate
         endDate
+        shippingAddressEncrypted
         totalPrice {
           amount
           currency {

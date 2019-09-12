@@ -43,17 +43,24 @@
         }
       ]
     },
-    "LnwecOVmQ25DVugF+RemxQ==": {
+    "fsX2zn/I8IxKM/YS6pNIiA==": {
       "translations": [
         {
-          "translation": "Требуется аутентификация"
+          "translation": "Authentication Required"
         }
       ]
     },
-    "J/SHV34/Q6NzSn+T7V8i2w==": {
+    "uBbr58ZsBIlotqS29XDzmA==": {
       "translations": [
         {
-          "translation": "Требуется пин-код"
+          "translation": "Retry"
+        }
+      ]
+    },
+    "b1eg8txmL9GsnAqK+wcpDA==": {
+      "translations": [
+        {
+          "translation": "Pin Required"
         }
       ]
     },
@@ -729,24 +736,24 @@
         }
       ]
     },
-    "bJwnJVo5lwuFi394jn741w==": {
+    "imEcy9mqva2P4QkCGKkG7w==": {
       "translations": [
         {
-          "translation": "Import your wallet to earn more OGN"
+          "translation": "Other Wallet Detected"
         }
       ]
     },
-    "nWjFXBqXG9oCHoaLwTYfXw==": {
+    "DktheTKIZ/i7gQzBzStqKQ==": {
       "translations": [
         {
-          "translation": "We’ve detected an existing wallet associated with this email. Please import it to continue earning rewards."
+          "translation": "We've noticed that you previously signed up for Origin Rewards using this email with a different wallet. Please import your other wallet to continue earning Origin Rewards."
         }
       ]
     },
-    "MNlD7ug4Qb5knKTv38TSRA==": {
+    "JdP7rfOo7gmvo9L/wkL+Zg==": {
       "translations": [
         {
-          "translation": "Import a wallet"
+          "translation": "Import other wallet"
         }
       ]
     },
@@ -761,6 +768,20 @@
       "translations": [
         {
           "translation": "Язык"
+        }
+      ]
+    },
+    "lPK1A5cn8JlhIPgCDjiuAg==": {
+      "translations": [
+        {
+          "translation": "Connection Error"
+        }
+      ]
+    },
+    "a3s77Iq0FypOEuisvfUcYg==": {
+      "translations": [
+        {
+          "translation": "Retry"
         }
       ]
     },
@@ -1191,10 +1212,10 @@
         }
       ]
     },
-    "Lp93xb08b3XQgFxrkhcWaw==": {
+    "+RVM+8puOIMhob2MxHX2bA==": {
       "translations": [
         {
-          "translation": "Enter phone number"
+          "translation": "Enter phone"
         }
       ]
     },
@@ -1310,17 +1331,17 @@
         }
       ]
     },
-    "/ZRamsgXYO6P2TSz5J9w9Q==": {
+    "lgpP8skCH3wOustvhptxBA==": {
       "translations": [
         {
-          "translation": "Waiting for confirmation."
+          "translation": "Waiting for confirmation"
         }
       ]
     },
-    "oIOKtoc/Vu54ytVuwI0Tmw==": {
+    "tWJHZWSsiD6K0ek//UcW6Q==": {
       "translations": [
         {
-          "translation": "This might take a minute."
+          "translation": "This might take a minute"
         }
       ]
     },
@@ -1398,6 +1419,13 @@
       "translations": [
         {
           "translation": "Сеть"
+        }
+      ]
+    },
+    "j5rIPEDyOjXyubSdCUgZ6A==": {
+      "translations": [
+        {
+          "translation": "Version"
         }
       ]
     },

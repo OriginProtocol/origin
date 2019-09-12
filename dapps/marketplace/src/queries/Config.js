@@ -8,6 +8,7 @@ export default gql`
       arbitrator
       discovery
       growth
+      graphql
       bridge
       ipfsRPC
       ipfsGateway

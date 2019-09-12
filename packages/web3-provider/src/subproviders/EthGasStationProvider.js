@@ -3,7 +3,7 @@ const SubProvider = require('./Subprovider')
 
 const CACHE_TIME = 15000
 const GAS_STATION_URL = 'https://ethgasstation.info/json/ethgasAPI.json'
-const GAS_PRICE_KEY = 'safeLow'
+const GAS_PRICE_KEY = process.env.GAS_PRICE_KEY || 'average' // 'safeLow'
 
 class EthGasStationProvider extends SubProvider {
   constructor() {
@@ -23,7 +23,7 @@ class EthGasStationProvider extends SubProvider {
     const jason = await res.json()
     if (typeof jason[GAS_PRICE_KEY] !== 'undefined') {
       // values come from EGS as tenths of gwei
-      return String(jason[GAS_PRICE_KEY] * 1e8)
+      return '0x' + (jason[GAS_PRICE_KEY] * 1e8).toString(16)
     }
     throw new Error(`Gas key of ${GAS_PRICE_KEY} is unavailable`)
   }

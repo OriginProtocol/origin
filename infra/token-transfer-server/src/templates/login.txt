@@ -1,0 +1,5 @@
+Welcome to the Origin Investor Portal. Here is your single-use sign in link.
+
+<%= url %>
+
+It will expire in 5 minutes. You can reply directly to this email with any questions.

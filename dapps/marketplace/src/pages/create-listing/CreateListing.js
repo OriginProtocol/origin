@@ -6,6 +6,7 @@ import get from 'lodash/get'
 import withWallet from 'hoc/withWallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 import withIdentity from 'hoc/withIdentity'
+import withMessagingStatus from 'hoc/withMessagingStatus'
 
 import DocumentTitle from 'components/DocumentTitle'
 import UserActivationLink from 'components/UserActivationLink'
@@ -23,7 +24,10 @@ const store = Store('sessionStorage')
 function initialState(props) {
   // If a listing is passed in (as when editing) use that, otherwise
   // fall back to anything in `store` (an unfinished listing creation)
-  const existingListing = props.listing || store.get('create-listing') || {}
+  const existingListing =
+    (props.listing && props.listing.id
+      ? store.get(`edit-listing-${props.listing.id}`, props.listing)
+      : store.get('create-listing')) || {}
 
   return {
     __typename: 'UnitListing', // Default
@@ -35,6 +39,7 @@ function initialState(props) {
     boost: '0',
     boostLimit: '0',
     media: [],
+    requiresShipping: false,
 
     // Unit fields:
     quantity: '1',
@@ -71,12 +76,16 @@ const CreateListing = props => {
   if (
     props.creatorConfigLoading ||
     props.walletLoading ||
-    props.identityLoading
+    props.identityLoading ||
+    props.messagingStatusLoading
   ) {
     return <LoadingSpinner />
   }
 
-  if (!props.identity && !localStorage.noIdentity) {
+  if (
+    !props.identity &&
+    !(localStorage.bypassOnboarding || localStorage.useWeb3Identity)
+  ) {
     return (
       <UserActivationLink
         location={{ pathname: '/create' }}
@@ -100,7 +109,11 @@ const CreateListing = props => {
     listing: { ...listing, ...forceType },
     onChange: listing => {
       setListing(listing)
-      store.set('create-listing', listing)
+      if (listing.id) {
+        store.set(`edit-listing-${listing.id}`, listing)
+      } else {
+        store.set('create-listing', listing)
+      }
     }
   }
 
@@ -165,7 +178,10 @@ const CreateListing = props => {
   )
 }
 
-export default withCreatorConfig(withWallet(withIdentity(CreateListing)))
+export default withMessagingStatus(
+  withCreatorConfig(withWallet(withIdentity(CreateListing))),
+  { excludeData: true }
+)
 
 require('react-styl')(`
   .create-listing

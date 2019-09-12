@@ -262,6 +262,18 @@ class MarketplaceScreen extends Component {
         message: 'User denied transaction signature'
       })
     } else {
+      const { functionName } = decodeTransaction(msgData.data.data)
+      // Bump the gas for swapAndMakeOffer by 10% to handle out of gas failures caused
+      // by the proxy contract
+      // TODO find a better way to handle this
+      // https://github.com/OriginProtocol/origin/issues/2771
+      if (functionName === 'swapAndMakeOffer') {
+        msgData.data.gas =
+          '0x' +
+          Math.ceil(
+            parseInt(msgData.data.gas) + parseInt(msgData.data.gas) * 0.1
+          ).toString(16)
+      }
       // Not handled yet, display a modal that deals with the target function
       PushNotification.checkPermissions(permissions => {
         const newModals = []
@@ -272,8 +284,7 @@ class MarketplaceScreen extends Component {
           !__DEV__ &&
           !permissions.alert &&
           msgData.targetFunc === 'processTransaction' &&
-          decodeTransaction(msgData.data.data).functionName !==
-            'emitIdentityUpdated'
+          functionName !== 'emitIdentityUpdate'
         ) {
           newModals.push({ type: 'enableNotifications' })
         }
