@@ -6,7 +6,12 @@ import contracts from '../../contracts'
 import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
 import currencies from '../../utils/currencies'
-import { proxyOwner, predictedProxy, resetProxyCache } from '../../utils/proxy'
+import {
+  isContract,
+  proxyOwner,
+  predictedProxy,
+  resetProxyCache
+} from '../../utils/proxy'
 import { swapToTokenTx } from '../uniswap/swapToToken'
 import createDebug from 'debug'
 import { checkForMessagingOverride } from '../../resolvers/messaging/Messaging'
@@ -115,6 +120,10 @@ async function makeOffer(_, data) {
       if (!owner) {
         owner = buyer
         proxy = await predictedProxy(buyer)
+        // This shouldn't happen at this point, a proxy should already exist
+        if (!isContract(proxy)) {
+          throw new Error('Proxy does not exist')
+        }
       }
       const Proxy = new contracts.web3Exec.eth.Contract(
         IdentityProxy.abi,
