@@ -56,7 +56,7 @@ export const hasText = async (page, text, path) => {
   const escapedText = escapeXpathString(text)
   const xpath = `/html/body//${path || '*'}[contains(text(), ${escapedText})]`
   const result = await page.$x(xpath)
-  return result ? true : false
+  return result.length > 0
 }
 
 export const clearCookies = async (page) => {
