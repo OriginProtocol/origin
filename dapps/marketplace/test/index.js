@@ -258,8 +258,8 @@ function randomReview() {
   return `Very good ${Math.floor(Math.random() * 100000)}`
 }
 
-function singleUnitTests({ autoSwap, withShipping } = {}) {
-  describe(`Single Unit Listing${withShipping ? ' with Shipping' : ''} for Eth`, function() {
+function singleUnitTests({ autoSwap, withShipping, EthAndDaiAccepted } = {}) {
+  describe(`Single Unit Listing${withShipping ? ' with Shipping' : ''} ${EthAndDaiAccepted ? ' both ETH and DAI accepted' : ''} payment in ETH`, function() {
     let seller, buyer, title, review
     before(async function() {
       ({ seller, buyer } = await reset('100'))
@@ -332,8 +332,12 @@ function singleUnitTests({ autoSwap, withShipping } = {}) {
 
     it('should allow price entry', async function() {
       await page.type('input[name=price]', '1')
-      await clickByText(page, 'Ethereum') // Select Eth
-      await clickByText(page, 'Maker Dai') // De-select Dai
+      // ETH is deselected in the UI by default. Always select it.
+      // DAI is selected in the UI by default. Deselect it if EthAndDaiAccepted is not true.
+      await clickByText(page, 'Ethereum')
+      if (!EthAndDaiAccepted) {
+        await clickByText(page, 'Maker Dai')
+      }
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
@@ -401,6 +405,10 @@ function singleUnitTests({ autoSwap, withShipping } = {}) {
 
     it('should allow a new listing to be purchased', async function() {
       await purchaseListing({ buyer, withShipping, title })
+      // Payment should always be in ETH, even if both ETH and DAI are accepted.
+      await page.waitForFunction(
+        `document.querySelector('.escrow-amount').innerText.includes("ETH")`
+      )
     })
 
     it('should allow a new listing to be accepted', async function() {
@@ -426,7 +434,7 @@ function singleUnitTests({ autoSwap, withShipping } = {}) {
 }
 
 function singleUnitDaiTests({ autoSwap, withShipping } = {}) {
-  describe(`Single Unit Listing${withShipping ? ' with Shipping' : ''} for Dai`, function() {
+  describe(`Single Unit Listing${withShipping ? ' with Shipping' : ''} payment in DAI`, function() {
     let seller, buyer
     let title
     before(async function() {
@@ -536,7 +544,7 @@ function singleUnitDaiTests({ autoSwap, withShipping } = {}) {
 }
 
 function multiUnitTests({ autoSwap, withShipping } = {}) {
-  describe(`Multi Unit Listing${withShipping ? ' with Shipping' : ''} for Eth`, function() {
+  describe(`Multi Unit Listing${withShipping ? ' with Shipping' : ''} payment in ETH`, function() {
     let seller, buyer, title, listingHash
     before(async function() {
       ({ seller, buyer } = await reset('100'))
@@ -915,6 +923,7 @@ function fractionalTests({ autoSwap } = {}) {
 
 function listingTests({ autoSwap } = {}) {
   singleUnitTests({ autoSwap })
+  singleUnitTests({ autoSwap, EthAndDaiAccepted: true })
   singleUnitTests({ autoSwap, withShipping: true })
   singleUnitDaiTests({ autoSwap })
   singleUnitDaiTests({ autoSwap, withShipping: true })
