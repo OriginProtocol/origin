@@ -37,6 +37,8 @@ import FractionalHourlyDetail from './listing-types/FractionalHourly'
 
 import getAvailabilityCalculator from 'utils/getAvailabilityCalculator'
 
+import HistoricalListingWarning from 'pages/listing/_HistoricalListingWarning'
+
 class ListingDetail extends Component {
   constructor(props) {
     super(props)
@@ -216,6 +218,11 @@ class ListingDetail extends Component {
 
   renderAction() {
     const { listing, wallet, walletProxy, ognListingRewards } = this.props
+
+    if (isHistoricalListing(listing)) {
+      return <HistoricalListingWarning listing={listing} />
+    }
+
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
