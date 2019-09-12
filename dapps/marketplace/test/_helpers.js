@@ -52,6 +52,15 @@ export const waitForText = async (page, text, path) => {
   return xpath
 }
 
+export const waitUntilTextHides = async (page, text, path) => {
+  const escapedText = escapeXpathString(text)
+  const xpath = `/html/body//${path || '*'}[contains(text(), ${escapedText})]`
+  await page.waitForXPath(xpath, {
+    hidden: true
+  })
+  return xpath
+}
+
 export const hasText = async (page, text, path) => {
   const escapedText = escapeXpathString(text)
   const xpath = `/html/body//${path || '*'}[contains(text(), ${escapedText})]`
@@ -111,12 +120,26 @@ export const changeAccount = async (page, account, isFreshAccount = false) => {
       strength: 0
     }
 
-    window.localStorage.useWeb3Identity = isFreshAccount ? null : JSON.stringify(accountData)
-    window.localStorage.useMessagingObject = isFreshAccount ? null : JSON.stringify({
-      enabled: true,
-      pubKey: '0xff',
-      pubSig: '0xff'
-    })
+    delete window.localStorage.uiState
+
+    if (isFreshAccount) {
+      delete window.localStorage.useWeb3Identity
+      delete window.localStorage.useMessagingObject
+    } else {
+      window.localStorage.useWeb3Identity = JSON.stringify(accountData)
+      window.localStorage.useMessagingObject = JSON.stringify({
+        enabled: true,
+        pubKey: '0xff',
+        pubSig: '0xff',
+        shippingOverride: {
+          name: 'Bruce Wayne',
+          address1: '123 Wayne Towers',
+          stateProvinceRegion: 'New Jersey',
+          postalCode: '123456',
+          country: 'USA'
+        }
+      })
+    }
   }, { account, isFreshAccount })
 }
 

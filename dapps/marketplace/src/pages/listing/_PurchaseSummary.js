@@ -14,7 +14,16 @@ const PurchaseSummary = ({
   endDate,
   tokenStatus
 }) => {
-  const { hasBalance, hasEthBalance } = tokenStatus || {}
+  const { hasBalance, hasEthBalance, loading } = tokenStatus || {}
+
+  if (loading) {
+    return (
+      <div className="summary">
+        <fbt desc="Loading...">Loading...</fbt>
+      </div>
+    )
+  }
+
   const acceptedTokens = listing.acceptedTokens
 
   const isEth = token === 'token-ETH'
