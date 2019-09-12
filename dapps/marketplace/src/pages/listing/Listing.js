@@ -16,6 +16,10 @@ import Onboard from '../onboard/Onboard'
 import ConfirmPurchase from './ConfirmPuchase'
 import ProvideShippingAddress from './ProvideShippingAddress'
 
+import Store from 'utils/store'
+
+const sessionStore = Store('sessionStorage')
+
 const error404 = (
   <Error404>
     <h1 className="d-md-block">
@@ -25,12 +29,15 @@ const error404 = (
 )
 
 const Listing = props => {
-  const [quantity, setQuantity] = useState('1')
+  const listingId = props.match.params.listingID
+
+  const [quantity, setQuantity] = useState(
+    sessionStore.get(`${listingId}-quantity`, '1')
+  )
   const [redirect, setRedirect] = useState()
   const [shippingAddress, setShippingAddress] = useState(null)
   const [bookingRange, setBookingRange] = useState(null)
 
-  const listingId = props.match.params.listingID
   const variables = { listingId }
 
   const { networkStatus, error, data, refetch } = useQuery(query, {
@@ -121,7 +128,10 @@ const Listing = props => {
               listing={listing}
               refetch={wrappedRefetch}
               quantity={quantity}
-              updateQuantity={quantity => setQuantity(quantity)}
+              updateQuantity={quantity => {
+                sessionStore.set(`${listingId}-quantity`, quantity)
+                setQuantity(quantity)
+              }}
               updateBookingRange={bookingRange => setBookingRange(bookingRange)}
               shippingAddress={shippingAddress}
             />
