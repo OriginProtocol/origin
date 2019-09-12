@@ -49,6 +49,11 @@ async function printTransaction(txHash) {
     console.log('--> 2. ' + chalk.bold(forwarded.method.name))
     console.log(cleanerParams(forwarded.parameters))
   }
+  if (input.parameters._offer) {
+    const forwarded = decodeAbi(input.parameters._offer)
+    console.log('--> 2. ' + chalk.bold(forwarded.method.name))
+    console.log(cleanerParams(forwarded.parameters))
+  }
   if (input.parameters.initializer) {
     const initializer = decodeAbi(input.parameters.initializer)
     console.log('--> 2. ' + chalk.bold(initializer.method.name))
