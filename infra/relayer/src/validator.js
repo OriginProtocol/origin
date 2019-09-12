@@ -86,7 +86,7 @@ class Validator {
 
     for (let i = 1; i <= 20; i++) {
       const [_address, _txdata] = toCheck.pop()
-      const validator = this.validatorsByAddress[_address]
+      const validator = this.validatorsByAddress[_address.toLowerCase()]
       logger.info(`${i}. Checking call to ${_address} data ${_txdata}`)
       if (!validator) {
         logger.info(
@@ -119,7 +119,7 @@ class ContractCallVailidator {
   constructor(name, address, jsonInterface, opts) {
     opts = opts || {}
     this.name = name
-    this.address = address
+    this.address = address.toLowerCase()
     this.methods = this._methodsBySignature(jsonInterface)
     this.addresses = opts.addresses || {}
     const { whitelistMethods } = opts || {}
