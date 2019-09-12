@@ -68,6 +68,18 @@ describe('relayer whitelist', async () => {
         assert(res)
       })
     })
+    describe('createListing', async () => {
+      it('should succeed with different address casing', async () => {
+        const txdata = V00Marketplace.methods
+          .createListing(JUNK_HASH, 0, Bob)
+          .encodeABI()
+        const res = whitelist.validate(
+          addresses.Marketplace.toLowerCase(),
+          txdata
+        )
+        assert(res)
+      })
+    })
     describe('updateListing', async () => {
       it('should succeed', async () => {
         const txdata = V00Marketplace.methods
