@@ -31,7 +31,6 @@ const Brand = withCreatorConfig(({ creatorConfig }) => {
 
 const ShowBackRegex = /^\/(listing)(\/[-0-9]*\/?)?$/gi
 const ShowSearchRegex = /^\/(listings?|search)?(\/|$)/gi
-const ProfilePageRegex = /^\/(profile|user)\/?.*/gi
 
 const getTitle = pathname => {
   let title
@@ -77,7 +76,9 @@ const Nav = ({
     const canGoBack = history && history.length > 1
 
     // Make the hamburger menu absolute and hide branding and profile icon.
-    const isProfilePage = ProfilePageRegex.test(pathname)
+    const isProfilePage =
+      pathname &&
+      (pathname.startsWith('/profile') || pathname.startsWith('/user'))
 
     const walletEl = wallet ? (
       <Profile {...navProps('profile')} />
