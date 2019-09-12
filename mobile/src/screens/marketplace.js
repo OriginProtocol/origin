@@ -148,22 +148,34 @@ class MarketplaceScreen extends Component {
   injectMessagingKeys = async () => {
     const { wallet } = this.props
     // No active account, can't proceed
-    if (!wallet.activeAccount) return
-    let { privateKey } = wallet.activeAccount
+    if (!wallet.activeAccount) {
+      console.debug('Cannot inject messaging keys, no active account')
+      return
+    }
     // No private key (Samsung BKS account), can't proceed
-    if (!privateKey) return
+    if (wallet.activeAccount.hdPath) {
+      console.debug('Cannot inject messaging keys for Samsung BKS account')
+      return
+    }
 
-    if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
-      privateKey = '0x' + privateKey
+    const { privateKey, mnemonic } = wallet.activeAccount
+
+    let ethersWallet
+    if (privateKey) {
+      if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
+        privateKey = '0x' + privateKey
+      }
+      ethersWallet = new ethers.Wallet(privateKey)
+    } else {
+      ethersWallet = new ethers.Wallet.fromMnemonic(mnemonic)
     }
 
     // Sign the first message
-    const ethersWallet = new ethers.Wallet(wallet.activeAccount.privateKey)
     const signature = await ethersWallet.signMessage(PROMPT_MESSAGE)
     const signatureKey = signature.substring(0, 66)
     const msgAccount = new ethers.Wallet(signatureKey)
     const pubMessage = PROMPT_PUB_KEY + msgAccount.address
-    const pubSignature = ethersWallet.signMessage(pubMessage)
+    const pubSignature = await ethersWallet.signMessage(pubMessage)
 
     this.injectJavaScript(
       `
