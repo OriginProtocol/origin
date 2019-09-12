@@ -28,6 +28,12 @@ export default function SamsungBKS(state = initialState, action = {}) {
         ...state,
         enabled: action.payload
       }
+
+    case SamsungBKSConstants.SET_ERROR:
+      return {
+        ...state,
+        error: action.payload
+      }
   }
 
   return state

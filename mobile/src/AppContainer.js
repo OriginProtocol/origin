@@ -125,18 +125,19 @@ class MarketplaceApp extends React.Component {
     return (
       <>
         {this.props.samsungBKS.enabled && <SamsungBKS />}
-        {samsungBKSInitializing ? (
-          <Loading />
-        ) : (
-          <>
-            <StatusBar />
-            <AuthenticationGuard />
-            <PushNotifications />
-            <UpdatePrompt />
-            <BackupPrompt />
-            <Navigation navigation={this.props.navigation} />
-          </>
-        )}
+        {!this.props.samsungBKS.error &&
+          (samsungBKSInitializing ? (
+            <Loading />
+          ) : (
+            <>
+              <StatusBar />
+              <AuthenticationGuard />
+              <PushNotifications />
+              <UpdatePrompt />
+              <BackupPrompt />
+              <Navigation navigation={this.props.navigation} />
+            </>
+          ))}
       </>
     )
   }

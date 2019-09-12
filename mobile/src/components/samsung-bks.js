@@ -5,27 +5,31 @@
  */
 
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Linking, StyleSheet, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import { AppState } from 'react-native'
 import { fbt } from 'fbt-runtime'
 import RNSamsungBKS from 'react-native-samsung-bks'
 
-import { SamsungBKSConstants, getSeedHash } from 'actions/SamsungBKS'
+import {
+  SamsungBKSConstants,
+  getSeedHash,
+  setEnabled as setSamsungBKSEnabled,
+  setError as setSamsungBKSError
+} from 'actions/SamsungBKS'
 import { setAccounts } from 'actions/Wallet'
 import { generateHdPath } from 'utils'
 import NavigationService from '../NavigationService'
+import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'
 
 class SamsungBKS extends React.Component {
   state = {
-    samsungBKSError: null,
     appState: AppState.currentState
   }
 
-  componentDidMount = async () => {
-    await this.checkForMandatoryUpdate()
-    await this.checkSeedHash()
+  componentDidMount = () => {
+    this.checkSeedHash()
     AppState.addEventListener('change', this.handleAppStateChange)
   }
 
@@ -60,7 +64,7 @@ class SamsungBKS extends React.Component {
     try {
       address = await RNSamsungBKS.getAddressList(hdPath)
     } catch (error) {
-      this.setState({ samsungBKSError: error })
+      this.props.setSamsungBKSError(error)
       return
     }
 
@@ -101,7 +105,7 @@ class SamsungBKS extends React.Component {
   }
 
   render() {
-    if (this.state.samsungBKSError) {
+    if (this.props.samsungBKS.error) {
       return (
         <View style={styles.error}>
           <Text style={styles.title}>
@@ -112,10 +116,164 @@ class SamsungBKS extends React.Component {
               An error occurred accessing Samsung Blockchain Keystore.
             </fbt>
           </Text>
+          {this.renderError()}
         </View>
       )
     }
     return null
+  }
+
+  renderError() {
+    switch (this.props.samsungBKS.error) {
+      case 'ERROR_MANDATORY_APP_UPDATE_NEEDED':
+        return this.renderMandatoryAppUpdate()
+      case 'ERROR_INVALID_SCW_APP_ID':
+        return this.renderInvalidSCWAppId()
+      case 'ERROR_CHECK_INTEGRITY_FAILED':
+        return this.renderIntegrityCheckFailed()
+      case 'ERROR_EXCEED_NUMBER_OF_DEVICES':
+        return this.renderDeveloperDevicesExceeded()
+      case 'ERROR_NETWORK_FAILED':
+        return this.renderNetworkError()
+      case 'ERROR_NETWORK_NOT_AVAILABLE':
+        return this.renderNetworkError()
+      case 'ERROR_SERVER_FAILED':
+        return this.renderNetworkError()
+      case 'ERROR_TNC_NOT_AGREED':
+        return this.renderTermsNotAgreed()
+      case 'ERROR_WALLET_NOT_CREATED':
+        return this.renderWalletNotCreated()
+      case 'ERROR_WALLET_RESET':
+        return this.renderWalletReset()
+    }
+    return null
+  }
+
+  renderMandatoryAppUpdate() {
+    return (
+      <>
+        <Text>Samsung Keystore requires an update.</Text>
+        {this.renderSamsungBKSSettingsLink()}
+      </>
+    )
+  }
+
+  renderInvalidSCWAppId() {
+    return (
+      <>
+        <Text>
+          Samsung Keystore reported an error with this applications ID.
+        </Text>
+      </>
+    )
+  }
+
+  renderIntegrityCheckFailed() {
+    return (
+      <>
+        <Text>
+          Samsung Keystore Integrity check failed. Contact customer support or
+          continue without Keystore.
+        </Text>
+        {this.renderRetryButton()}
+      </>
+    )
+  }
+
+  renderDeveloperDevicesExceeded() {
+    return (
+      <Text>You have exceeded the allowed number of developer devices.</Text>
+    )
+  }
+
+  renderNetworkError() {
+    return (
+      <>
+        <Text>A network error occurred.</Text>
+        {this.renderRetryButton()}
+      </>
+    )
+  }
+
+  renderErrorNotSupportedInCountry() {
+    return (
+      <>
+        <Text>
+          Samsung Blockchain Keystore is not supported in your country. You can
+          continue without Keystore but you will need to import a wallet.
+        </Text>
+        {this.renderDisableKeystoreButton()}
+      </>
+    )
+  }
+
+  renderTermsNotAgreed() {
+    return (
+      <>
+        <Text>
+          Samsung Blockchain Keystore Terms & Conditions have changed. Please
+          agree to the new terms.
+        </Text>
+        {this.renderSamsungBKSSettingsLink()}
+      </>
+    )
+  }
+
+  renderWalletNotCreated() {
+    return (
+      <>
+        <Text>Please create a wallet in Samsung Blockchain Keystore.</Text>
+        {this.renderSamsungBKSSettingsLink()}
+      </>
+    )
+  }
+
+  renderWalletReset() {
+    return (
+      <>
+        <Text>Please create a wallet in Samsung Blockchain Keystore.</Text>
+        {this.renderSamsungBKSSettingsLink()}
+      </>
+    )
+  }
+
+  renderRetryButton() {
+    return (
+      <OriginButton
+        size="large"
+        type="primary"
+        title={fbt('Retry', 'SamsungBKSScreen.retryButton')}
+        onPress={this.checkSeedHash}
+      />
+    )
+  }
+
+  renderSamsungBKSSettingsLink() {
+    return (
+      <OriginButton
+        size="large"
+        type="primary"
+        title={fbt('Continue', 'SamsungBKSScreen.continueButton')}
+        onPress={async () => {
+          const deepLinks = await RNSamsungBKS.getDeepLinks()
+          Linking.openURL(deepLinks['MAIN'])
+        }}
+      />
+    )
+  }
+
+  renderDisableKeystoreButton() {
+    return (
+      <OriginButton
+        size="large"
+        type="primary"
+        title={fbt('Continue', 'SamsungBKSScreen.continueButton')}
+        onPress={() => {
+          this.props.setSamsungBKSEnabled(false)
+          this.props.setSamsungBKSError(null)
+        }}
+      />
+    )
   }
 }
 
@@ -125,7 +283,9 @@ const mapStateToProps = ({ samsungBKS, wallet }) => {
 
 const mapDispatchToProps = dispatch => ({
   getSeedHash: () => dispatch(getSeedHash()),
-  setAccounts: payload => dispatch(setAccounts(payload))
+  setAccounts: payload => dispatch(setAccounts(payload)),
+  setSamsungBKSEnabled: payload => dispatch(setSamsungBKSEnabled(payload)),
+  setSamsungBKSError: error => dispatch(setSamsungBKSError(error))
 })
 
 export default connect(
