@@ -84,20 +84,21 @@ const PaymentOptions = ({
   value,
   price,
   tokens,
-  hasBalance,
-  hasEthBalance,
+  tokenStatus,
   children,
   cannotTransact,
   ...props
 }) => {
   const isLoadingData =
-    get(props, 'tokenStatus.loading') ||
+    get(tokenStatus, 'loading') ||
     props.cannotTransact === 'loading' ||
     Object.keys(props).some(key => key.endsWith('Loading') && props[key])
 
   if (isLoadingData) {
     return null
   }
+
+  const { hasBalance, hasEthBalance } = tokenStatus
 
   const noBalance = cannotTransact && cannotTransact !== 'no-balance'
   const noTokens = !Object.keys(tokens).length
