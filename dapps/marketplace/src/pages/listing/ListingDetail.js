@@ -99,6 +99,7 @@ class ListingDetail extends Component {
             'Other listings by this seller',
             'ListingDetail.othersFromSeller'
           )}
+          hideIfEmpty={true}
         />
       </div>
     )
