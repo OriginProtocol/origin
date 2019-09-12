@@ -31,7 +31,7 @@ const Brand = withCreatorConfig(({ creatorConfig }) => {
 
 const ShowBackRegex = /^\/(listing)(\/[-0-9]*\/?)?$/gi
 const ShowSearchRegex = /^\/(listings?|search)?(\/|$)/gi
-const ProfilePageRegex = /^\/(profile|user)/gi
+const ProfilePageRegex = /^\/(profile|user)\/?.*/gi
 
 const getTitle = pathname => {
   let title
