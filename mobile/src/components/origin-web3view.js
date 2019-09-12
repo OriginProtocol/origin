@@ -113,9 +113,13 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
     const decodedTransaction = decodeTransaction(decodedData.txData)
     // If the transaction validate the sha3 hash and sign that for the relayer
     if (isValidMetaTransaction(decodedTransaction)) {
+      // Check if the user has enabled push notifications
+      const permissions = await PushNotification.requestPermissions()
+
       console.debug(
         `Got meta transaction for ${decodedTransaction.functionName} on ${decodedTransaction.contractName}`
       )
+
       const dataToSign = ethers.utils.arrayify(
         ethers.utils.solidityKeccak256(
           ['address', 'address', 'uint256', 'bytes', 'uint256'],
@@ -128,6 +132,7 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
           ]
         )
       )
+
       const signature = await _signMessage(dataToSign)
       callback(signature)
     } else {
@@ -148,7 +153,8 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
       console.debug(`Contract method is ${functionName} on ${contractName}`)
     }
 
-    // Message signing via Samsung BKS
+    // Message signing via Samsung BKS no need to pop the modal here because
+    // we don't add any useful information
     if (
       isUsingSamsungBKS &&
       ['signMessage', 'signPersonalMessage'].includes(msgData.targetFunc)
@@ -160,14 +166,8 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
     const permissions = await PushNotification.requestPermissions()
 
     const newModals = []
-    //  Nag the user to enable push notifications if they have not and the
-    //  transaction is not a simple identity update
-    if (
-      !__DEV__ &&
-      !permissions.alert &&
-      msgData.targetFunc === 'processTransaction' &&
-      functionName !== 'emitIdentityUpdated'
-    ) {
+    //  Nag the user to enable push notifications if they have not
+    if (!__DEV__ && !permissions.alert) {
       newModals.push({ type: 'enableNotifications' })
     }
 
