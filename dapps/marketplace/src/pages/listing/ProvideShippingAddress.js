@@ -193,7 +193,9 @@ const ProvideShippingAddress = ({
           </div>
           <div className="form-group">
             <label>
-              <fbt desc="ShippingAddress.instructions">Additional Instructions</fbt>
+              <fbt desc="ShippingAddress.instructions">
+                Additional Instructions
+              </fbt>
             </label>
             <input {...input('instructions')} />
             {Feedback('instructions')}

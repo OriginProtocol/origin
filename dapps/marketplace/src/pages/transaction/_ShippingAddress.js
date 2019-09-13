@@ -150,7 +150,9 @@ const ShippingAddress = ({
       {ship.instructions && (
         <>
           <div className="field-label">
-            <fbt desc="DecryptedShippingAddress.instructions">Additional Instructions</fbt>
+            <fbt desc="DecryptedShippingAddress.instructions">
+              Additional Instructions
+            </fbt>
           </div>
           <div className="field-value">{ship.instructions}</div>
         </>
