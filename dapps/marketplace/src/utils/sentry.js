@@ -21,6 +21,13 @@ export function initSentry() {
     release: `marketplace-dapp@${process.env.GIT_COMMIT_HASH}`,
     environment: getEnvName()
   })
+  Sentry.configureScope(scope => {
+    scope.setTag(
+      'is_webview',
+      typeof window !== 'undefined' &&
+        typeof window.ReactNativeWebView !== 'undefined'
+    )
+  })
 }
 
 export default Sentry
