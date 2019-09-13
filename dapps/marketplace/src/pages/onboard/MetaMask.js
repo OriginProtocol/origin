@@ -9,12 +9,17 @@ import HelpOriginWallet from 'components/DownloadApp'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
+import withMessagingStatus from 'hoc/withMessagingStatus'
 
 import WalletHeader from './_WalletHeader'
 import ListingPreview from './_ListingPreview'
 import HelpWallet from './_HelpWallet'
 
 import LoadingSpinner from 'components/LoadingSpinner'
+
+import Store from 'utils/store'
+
+const localStore = Store('localStorage')
 
 const MetaMaskURL = 'https://metamask.io'
 
@@ -190,13 +195,25 @@ const Connected = ({ networkName, nextLink }) => (
   </div>
 )
 
-const OnboardMetaMask = ({ linkPrefix, identityLoaded, identity }) => {
+const OnboardMetaMask = ({
+  linkPrefix,
+  messagingStatusRefetch,
+  hasMessagingKeys,
+  messagingStatusLoading,
+  wallet
+}) => {
   const [installing, setInstalling] = useState(false)
   const { error, data, networkStatus } = useQuery(query, {
     notifyOnNetworkStatusChange: true
   })
 
-  if (networkStatus === 1) {
+  useEffect(() => {
+    if (wallet) {
+      messagingStatusRefetch()
+    }
+  }, [wallet])
+
+  if (networkStatus === 1 || messagingStatusLoading) {
     return <LoadingSpinner />
   } else if (error) {
     return <p className="p-3">Error :(</p>
@@ -204,10 +221,13 @@ const OnboardMetaMask = ({ linkPrefix, identityLoaded, identity }) => {
     return <p className="p-3">No Web3</p>
   }
 
+  const onboardCompleted = localStore.get(`${wallet}-onboarding-completed`)
+
   const backLink = `${linkPrefix}/onboard`
-  const nextLink = `${linkPrefix}/onboard/${
-    identityLoaded && identity ? 'back' : 'email'
-  }`
+  const nextLink =
+    onboardCompleted && hasMessagingKeys
+      ? `${linkPrefix}/onboard/back`
+      : `${linkPrefix}/onboard/email`
 
   const { web3 } = data
 
@@ -250,7 +270,9 @@ const OnboardMetaMaskWrap = ({ hideOriginWallet, listing, ...props }) => (
   </>
 )
 
-export default withWallet(withIdentity(OnboardMetaMaskWrap))
+export default withWallet(
+  withIdentity(withMessagingStatus(OnboardMetaMaskWrap, { excludeData: true }))
+)
 
 require('react-styl')(`
   .onboard .onboard-box

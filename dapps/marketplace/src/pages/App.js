@@ -45,7 +45,8 @@ class App extends Component {
     displayMobileModal: false,
     mobileModalDismissed: false,
     footer: false,
-    skipOnboardRewards: false
+    skipOnboardRewards: false,
+    isTestBuild: window.location.pathname.startsWith('/test-builds')
   }
 
   componentDidUpdate() {
@@ -85,6 +86,7 @@ class App extends Component {
       return <LoadingSpinner />
     }
 
+    const { isTestBuild } = this.state
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
 
@@ -109,6 +111,9 @@ class App extends Component {
 
     return (
       <CurrencyContext.Provider value={this.props.currency}>
+        {isTestBuild ? (
+          <div className="test-build-badge">TEST BUILD</div>
+        ) : null}
         {!hideNavbar && (
           <Nav
             onGetStarted={() =>
@@ -218,4 +223,16 @@ require('react-styl')(`
     height: 100%
     display: flex
     flex-direction: column
+  .test-build-badge
+    position: fixed
+    top: 0
+    display: inline-block
+    opacity: 0.8
+    background-color: #007bff
+    color: #fff
+    left: 50%
+    transform: translateX(-50%)
+    z-index: 1000
+    padding: 0.2rem 0.4rem
+    font-size: 0.5rem
 `)

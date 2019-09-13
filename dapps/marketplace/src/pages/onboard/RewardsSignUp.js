@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 import withIsMobile from 'hoc/withIsMobile'
+import withWallet from 'hoc/withWallet'
 import MobileModal from 'components/MobileModal'
 import WithEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 import Redirect from 'components/Redirect'
@@ -8,6 +9,12 @@ import { fbt } from 'fbt-runtime'
 import HelpOriginWallet from 'components/DownloadApp'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
+
+import LoadingSpinner from 'components/LoadingSpinner'
+
+import Store from 'utils/store'
+
+const localStore = Store('localStorage')
 
 class OnboardRewardsSignUp extends Component {
   constructor(props) {
@@ -29,9 +36,21 @@ class OnboardRewardsSignUp extends Component {
       shouldCloseConfirmSkipModal
     } = this.state
 
-    const { linkPrefix, skip, onSkip } = this.props
+    const { linkPrefix, skip, onSkip, wallet, walletLoading } = this.props
+
+    if (walletLoading) {
+      return <LoadingSpinner />
+    }
+
+    const onboardCompleted = localStore.get(`${wallet}-onboarding-completed`)
+
+    if (onboardCompleted) {
+      // Back to where you came from.
+      return <Redirect to={`${linkPrefix}/onboard/back`} />
+    }
 
     if (finished || skip) {
+      localStore.set(`${wallet}-onboarding-completed`, true)
       return <Redirect to={`${linkPrefix}/onboard/finished`} />
     }
 
@@ -190,7 +209,7 @@ class OnboardRewardsSignUp extends Component {
   }
 }
 
-export default withIsMobile(OnboardRewardsSignUp)
+export default withIsMobile(withWallet(OnboardRewardsSignUp))
 
 require('react-styl')(`
   .rewards-signup
