@@ -119,7 +119,7 @@ class ContractCallVailidator {
   constructor(name, address, jsonInterface, opts) {
     opts = opts || {}
     this.name = name
-    this.address = address.toLowerCase()
+    this.address = (address || 'NO_CONTRACT').toLowerCase()
     this.methods = this._methodsBySignature(jsonInterface)
     this.addresses = opts.addresses || {}
     const { whitelistMethods } = opts || {}
