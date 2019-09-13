@@ -140,7 +140,8 @@ const config = {
       ENABLE_LINKEDIN_ATTESTATION: false,
       ENABLE_WECHAT_ATTESTATION: false,
       SENTRY_DSN: null,
-      NAMESPACE: 'dev',
+      NAMESPACE: process.env.NAMESPACE || 'dev',
+      ETH_NETWORK_ID: process.env.ETH_NETWORK_ID || null,
       TELEGRAM_BOT_USERNAME: TELEGRAM_BOT_USERNAME,
       NODE_ENV: process.env.NODE_ENV || 'development'
     })
