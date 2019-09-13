@@ -538,7 +538,8 @@ export function setMarketplace(address, epoch, version = '000') {
     contract,
     contractExec: contract
   }
-  context.marketplaceVersionByAddress = context.marketplaceVersionByAddress || {}
+  context.marketplaceVersionByAddress =
+    context.marketplaceVersionByAddress || {}
   context.marketplaceVersionByAddress[address] = version
 
   if (metaMask) {

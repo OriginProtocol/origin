@@ -2,7 +2,8 @@ import context from '../contracts'
 
 export function getOriginListingId(networkId, event) {
   // config addresses are all lowercase
-  const version = context.marketplaceVersionByAddress[event.address.toLowerCase()] || '000'
+  const version =
+    context.marketplaceVersionByAddress[event.address.toLowerCase()] || '000'
   return `${networkId}-${version}-${event.returnValues.listingID}-${event.blockNumber}`
 }
 
