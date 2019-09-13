@@ -11,6 +11,7 @@ import { ethers } from 'ethers'
 import SafeAreaView from 'react-native-safe-area-view'
 import PushNotification from 'react-native-push-notification'
 import RNSamsungBKS from 'react-native-samsung-bks'
+import * as Sentry from '@sentry/react-native'
 
 import { decodeTransaction } from 'utils/contractDecoder'
 import { isValidMetaTransaction } from 'utils'
@@ -134,7 +135,11 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
       callback(signature)
 
       // Check if the user has enabled push notifications
-      await PushNotification.requestPermissions()
+      PushNotification.checkPermissions(permissions => {
+        if (!permissions.alert) {
+          requestNotificationPermissions()
+        }
+      })
     } else {
       // Not a meta transaction, display a modal prompting the user
       onWeb3Call(callback, msgData)
@@ -162,26 +167,39 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
       return callback(await _signMessage(msgData.data.data))
     }
 
-    // Check if the user has enabled push notifications
-    const permissions = await PushNotification.requestPermissions()
+    PushNotification.checkPermissions(async permissions => {
+      const newModals = [] // Array of modals that will be displayed
 
-    const newModals = []
-    //  Nag the user to enable push notifications if they have not
-    if (!__DEV__ && !permissions.alert) {
-      newModals.push({ type: 'enableNotifications' })
+      if (!permissions.alert) {
+        // No permissions, try and get permissions
+        permissions = await requestNotificationPermissions()
+      }
+
+      //  Nag the user to enable push notifications if they have not
+      if (!__DEV__ && !permissions.alert) {
+        newModals.push({ type: 'enableNotifications' })
+      }
+
+      // Dispay a modal for the user to accept or reject the transaction. The
+      // transaction confirmation will be passed to Samsung BKS if it is used
+      const web3Modal = { type: msgData.targetFunc, msgData, callback }
+      // Modals render in different ordering on Android/iOS so use a different
+      // method of adding the modal to the array to get the notifications modal
+      // to display on top of the web3 modal
+      Platform.OS === 'ios'
+        ? newModals.push(web3Modal)
+        : newModals.unshift(web3Modal)
+      // Update the state with the new modals
+      setModals([...modals, ...newModals])
+    })
+  }
+
+  const requestNotificationPermissions = async () => {
+    try {
+      return await PushNotification.requestPermissions()
+    } catch (error) {
+      Sentry.captureMessage(error.toString())
     }
-
-    // Dispay a modal for the user to accept or reject the transaction. The
-    // transaction confirmation will be passed to Samsung BKS if it is used
-    const web3Modal = { type: msgData.targetFunc, msgData, callback }
-    // Modals render in different ordering on Android/iOS so use a different
-    // method of adding the modal to the array to get the notifications modal
-    // to display on top of the web3 modal
-    Platform.OS === 'ios'
-      ? newModals.push(web3Modal)
-      : newModals.unshift(web3Modal)
-    // Update the state with the new modals
-    setModals([...modals, ...newModals])
   }
 
   /* Calls the callback from web3view with the result and closes the modal.

@@ -158,13 +158,11 @@ class MarketplaceScreen extends Component {
       return
     }
 
-    const { privateKey, mnemonic } = wallet.activeAccount
+    let { privateKey } = wallet.activeAccount
+    const { mnemonic } = wallet.activeAccount
 
     let ethersWallet
     if (privateKey) {
-      if (!privateKey.startsWith('0x') && /^[0-9a-fA-F]+$/.test(privateKey)) {
-        privateKey = '0x' + privateKey
-      }
       ethersWallet = new ethers.Wallet(privateKey)
     } else {
       ethersWallet = new ethers.Wallet.fromMnemonic(mnemonic)
