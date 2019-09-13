@@ -8,6 +8,8 @@ const web3 = new Web3(TEST_PROVIDER_URL)
 
 const IdentityProxyBuild = require('@origin/contracts/build/contracts/IdentityProxy_solc.json')
 const Proxy = new web3.eth.Contract(IdentityProxyBuild.abi)
+const ProxyFactoryBuild = require('@origin/contracts/build/contracts/ProxyFactory_solc.json')
+const ProxyFactory = new web3.eth.Contract(ProxyFactoryBuild.abi)
 const IdentityEventsBuild = require('@origin/contracts/build/contracts/IdentityEvents.json')
 const IdentityEvents = new web3.eth.Contract(IdentityEventsBuild.abi)
 const V00MarketplaceBuild = require('@origin/contracts/build/contracts/V00_Marketplace.json')
@@ -56,13 +58,25 @@ describe('relayer whitelist', async () => {
     })
   })
 
-  describe('whitelist marketplace 000 methods', async () => {
+  describe('whitelist marketplace methods', async () => {
     describe('createListing', async () => {
       it('should succeed', async () => {
         const txdata = V00Marketplace.methods
           .createListing(JUNK_HASH, 0, Bob)
           .encodeABI()
         const res = whitelist.validate(addresses.Marketplace, txdata)
+        assert(res)
+      })
+    })
+    describe('createListing', async () => {
+      it('should succeed with different address casing', async () => {
+        const txdata = V00Marketplace.methods
+          .createListing(JUNK_HASH, 0, Bob)
+          .encodeABI()
+        const res = whitelist.validate(
+          addresses.Marketplace.toLowerCase(),
+          txdata
+        )
         assert(res)
       })
     })
@@ -345,6 +359,27 @@ describe('relayer whitelist', async () => {
         const res = whitelist.validate(PROXY_HARDCODE, txdata)
         assert(!res)
       })
+    })
+  })
+
+  describe('whitelist proxy factory', () => {
+    it('will create new proxy', () => {
+      const txData = IdentityEvents.methods
+        .emitIdentityUpdated(JUNK_HASH)
+        .encodeABI()
+      const Proxy = new web3.eth.Contract(IdentityProxyBuild.abi)
+      const proxyTxData = Proxy.methods
+        .changeOwnerAndExecute(Alice, addresses.IdentityEvents, '0', txData)
+        .encodeABI()
+      const createCallTxData = ProxyFactory.methods
+        .createProxyWithSenderNonce(
+          addresses.IdentityProxyImplementation,
+          proxyTxData,
+          Alice,
+          '0'
+        )
+        .encodeABI()
+      assert(whitelist.validate(addresses.ProxyFactory, createCallTxData))
     })
   })
 })

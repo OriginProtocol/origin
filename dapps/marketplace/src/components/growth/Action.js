@@ -39,42 +39,54 @@ function Action(props) {
   if (type === 'Email') {
     foregroundImgSrc = 'images/growth/email-icon.svg'
     title = fbt('Verify your email address', 'RewardActions.emailTitle')
+    buttonLink = '/profile/email'
   } else if (type === 'Profile') {
     foregroundImgSrc = 'images/growth/profile-icon.svg'
     title = fbt('Add name and photo to profile', 'RewardActions.profileTitle')
   } else if (type === 'Phone') {
     foregroundImgSrc = 'images/growth/phone-icon.svg'
     title = fbt('Verify your phone number', 'RewardActions.phoneTitle')
+    buttonLink = '/profile/phone'
   } else if (type === 'Twitter') {
     foregroundImgSrc = 'images/growth/twitter-icon.svg'
     title = fbt('Verify your Twitter account', 'RewardActions.twitterTitle')
+    buttonLink = '/profile/twitter'
   } else if (type === 'Airbnb') {
     foregroundImgSrc = 'images/growth/airbnb-icon.svg'
     title = fbt('Verify your Airbnb account', 'RewardActions.airbnbTitle')
+    buttonLink = '/profile/airbnb'
   } else if (type === 'Facebook') {
     foregroundImgSrc = 'images/growth/facebook-icon.svg'
     title = fbt('Verify your Facebook account', 'RewardActions.facebookTitle')
+    buttonLink = '/profile/facebook'
   } else if (type === 'Google') {
     foregroundImgSrc = 'images/growth/google-icon.svg'
     title = fbt('Verify your Google account', 'RewardActions.googleTitle')
+    buttonLink = '/profile/google'
   } else if (type === 'Kakao') {
     foregroundImgSrc = 'images/growth/kakao-icon.svg'
     title = fbt('Verify your Kakao account', 'RewardActions.kakaoTitle')
+    buttonLink = '/profile/kakao'
   } else if (type === 'WeChat') {
     foregroundImgSrc = 'images/growth/wechat-icon.svg'
     title = fbt('Verify your Wechat account', 'RewardActions.wechatTitle')
+    buttonLink = '/profile/wechat'
   } else if (type === 'GitHub') {
     foregroundImgSrc = 'images/growth/github-icon.svg'
     title = fbt('Verify your GitHub account', 'RewardActions.githubTitle')
+    buttonLink = '/profile/github'
   } else if (type === 'LinkedIn') {
     foregroundImgSrc = 'images/growth/linkedin-icon.svg'
     title = fbt('Verify your LinkedIn account', 'RewardActions.linkedInTitle')
+    buttonLink = '/profile/linkedin'
   } else if (type === 'Telegram') {
     foregroundImgSrc = 'images/growth/telegram-badge.svg'
     title = fbt('Verify your Telegram account', 'RewardActions.telegramTitle')
+    buttonLink = '/profile/telegram'
   } else if (type === 'Website') {
     foregroundImgSrc = 'images/growth/website-icon.svg'
     title = fbt('Verify your website', 'RewardActions.websiteTitle')
+    buttonLink = '/profile/website'
   } else if (type === 'ListingCreated') {
     foregroundImgSrc = 'images/growth/purchase-icon.svg'
     title = fbt('Create a listing', 'RewardActions.listingCreatedTitle')

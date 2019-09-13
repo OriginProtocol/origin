@@ -84,6 +84,7 @@ const User = ({ match, isMobile, history }) => {
               hideHeader={isMobile}
               hideLoadMore
               horizontal={isMobile ? false : true}
+              hideIfEmpty={true}
             />
           )
           return (

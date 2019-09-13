@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
@@ -15,8 +15,10 @@ import PurchaseSummary from './_PurchaseSummary'
 const withMultiUnitData = WrappedComponent => {
   const WithMultiUnitData = ({ listing, quantity, ...props }) => {
     const amount = String(Number(listing.price.amount) * Number(quantity))
+    const acceptsEth = listing.acceptedTokens.find(t => t.id === 'token-ETH')
     const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
-    const token = acceptsDai ? 'token-DAI' : 'token-ETH'
+    // Favor payment in ETH over DAI if the seller accepts it.
+    const token = acceptsEth ? 'token-ETH' : 'token-DAI'
     const totalPrice = { amount, currency: listing.price.currency }
 
     return (
@@ -63,6 +65,12 @@ const MultiUnit = ({
   if (!prices) return null
 
   const selectedCurrency = useContext(CurrencyContext)
+
+  useEffect(() => {
+    if (Number(quantity) > Number(listing.unitsAvailable)) {
+      updateQuantity('1')
+    }
+  }, [])
 
   return (
     <div className="listing-buy multi">

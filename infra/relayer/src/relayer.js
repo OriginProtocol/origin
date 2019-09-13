@@ -343,7 +343,10 @@ class Relayer {
     // have the whitelist too tight. We'll check the logs after a while
     // and see if there is anything we should add.
     try {
-      this.validator.validate(PROXY_HARDCODE, txData)
+      // Is the user is calling a method directly on their own proxy
+      const isCallingOwnProxy =
+        normalizeAddress(to) === normalizeAddress(predictedAddress)
+      this.validator.validate(isCallingOwnProxy ? PROXY_HARDCODE : to, txData)
     } catch (e) {
       logger.error('Error in transaction validator', e)
     }

@@ -33,7 +33,8 @@ class EmailAttestationModal extends Component {
           }
 
           this.setState({
-            shouldClose: false
+            shouldClose: false,
+            data: null
           })
         }}
         lightMode={true}
