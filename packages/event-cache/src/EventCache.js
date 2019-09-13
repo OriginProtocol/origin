@@ -118,6 +118,14 @@ class EventCache {
   constructor(contract, originBlock = 0, config) {
     this._processConfig(config)
 
+    if (
+      !(contract._address || (contract.options && contract.options.address))
+    ) {
+      throw new Error(
+        'Contract missing address!  Can not initialize EventCache'
+      )
+    }
+
     this.contract = contract
     this.originBlock = Number(originBlock)
     this.web3 = new Web3(contract.currentProvider)

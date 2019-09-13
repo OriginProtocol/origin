@@ -7,7 +7,7 @@ export default {
   makeOffer: 350000, // Temp fix... swapAndMakeOffer transactions are running out of gas
   acceptOffer: 48099,
   finalizeOffer: 150000,
-  withdrawOffer: 41321,
+  withdrawOffer: 150000,
   withdrawListing: 60000,
   addFunds: 200000, // Needs real value. Needs GraphQL tests.
   updateRefund: 200000, // Needs real value. Needs GraphQL tests.

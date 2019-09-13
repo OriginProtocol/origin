@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
@@ -65,6 +65,12 @@ const MultiUnit = ({
   if (!prices) return null
 
   const selectedCurrency = useContext(CurrencyContext)
+
+  useEffect(() => {
+    if (Number(quantity) > Number(listing.unitsAvailable)) {
+      updateQuantity('1')
+    }
+  }, [])
 
   return (
     <div className="listing-buy multi">

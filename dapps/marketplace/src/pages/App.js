@@ -38,7 +38,6 @@ import AboutCrypto from './about/AboutCrypto'
 import { applyConfiguration } from 'utils/marketplaceCreator'
 import Sentry from 'utils/sentry'
 import CurrencyContext from 'constants/CurrencyContext'
-import OpenApp from './OpenApp'
 
 class App extends Component {
   state = {
@@ -46,7 +45,8 @@ class App extends Component {
     displayMobileModal: false,
     mobileModalDismissed: false,
     footer: false,
-    skipOnboardRewards: false
+    skipOnboardRewards: false,
+    isTestBuild: window.location.pathname.startsWith('/test-builds')
   }
 
   componentDidUpdate() {
@@ -86,6 +86,7 @@ class App extends Component {
       return <LoadingSpinner />
     }
 
+    const { isTestBuild } = this.state
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
 
@@ -95,13 +96,8 @@ class App extends Component {
       /^\/welcome\/?(?!(onboard\/)).*/gi
     )
 
-    const isShowingProtocolLink = this.props.location.pathname.startsWith(
-      '/openapp'
-    )
-
     // TODO: Too many regex here, probably it's better to optimize this sooner or later
     const hideNavbar =
-      isShowingProtocolLink ||
       (isOnWelcomeAndNotOboard && !isMobile) ||
       (isMobile &&
         (this.props.location.pathname.match(/^\/purchases\/.*$/gi) ||
@@ -115,6 +111,9 @@ class App extends Component {
 
     return (
       <CurrencyContext.Provider value={this.props.currency}>
+        {isTestBuild ? (
+          <div className="test-build-badge">TEST BUILD</div>
+        ) : null}
         {!hideNavbar && (
           <Nav
             onGetStarted={() =>
@@ -178,7 +177,6 @@ class App extends Component {
             <Route exact path="/rewards/banned" component={GrowthBanned} />
             <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />
             <Route path="/search" component={Listings} />
-            <Route path="/openapp" component={OpenApp} />
             <Route component={Listings} />
           </Switch>
         </main>
@@ -225,4 +223,16 @@ require('react-styl')(`
     height: 100%
     display: flex
     flex-direction: column
+  .test-build-badge
+    position: fixed
+    top: 0
+    display: inline-block
+    opacity: 0.8
+    background-color: #007bff
+    color: #fff
+    left: 50%
+    transform: translateX(-50%)
+    z-index: 1000
+    padding: 0.2rem 0.4rem
+    font-size: 0.5rem
 `)

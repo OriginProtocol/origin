@@ -7,7 +7,7 @@ import get from 'lodash/get'
 
 function withMessagingStatus(WrappedComponent, { excludeData } = {}) {
   const WithMessagingStatus = props => {
-    const { data, loading, error, networkStatus } = useQuery(query)
+    const { data, loading, error, networkStatus, refetch } = useQuery(query)
 
     if (error) console.error('error executing WalletStatusQuery', error)
 
@@ -22,6 +22,7 @@ function withMessagingStatus(WrappedComponent, { excludeData } = {}) {
     return (
       <WrappedComponent
         {...props}
+        messagingStatusRefetch={refetch}
         messagingEnabled={messagingEnabled}
         hasMessagingKeys={hasKeys}
         messagingStatusError={error}
