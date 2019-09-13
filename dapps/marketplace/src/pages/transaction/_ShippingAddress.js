@@ -147,12 +147,12 @@ const ShippingAddress = ({
       </div>
       <div className="field-value">{ship.country}</div>
 
-      {ship.other && (
+      {ship.instructions && (
         <>
           <div className="field-label">
-            <fbt desc="DecryptedShippingAddress.other">Other</fbt>
+            <fbt desc="DecryptedShippingAddress.instructions">Additional Instructions</fbt>
           </div>
-          <div className="field-value">{ship.other}</div>
+          <div className="field-value">{ship.instructions}</div>
         </>
       )}
     </div>
