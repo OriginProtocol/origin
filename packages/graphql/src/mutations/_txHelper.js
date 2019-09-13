@@ -229,14 +229,13 @@ export default function txHelper({
           from,
           to: address
         })
-        const hasCallbacks = onReceipt || onConfirmation ? true : false
 
         /**
          * Since we don't get the event handlers when the relayer processes a
          * transaction, make sure that any provided callbacks are run by
          * manually listening for new blocks.
          */
-        if (hasCallbacks && relayerResponse && relayerResponse.id) {
+        if (relayerResponse && relayerResponse.id) {
           let receipt
           const responseBlocks = async ({ newBlock }) => {
             if (!receipt) {
@@ -244,6 +243,14 @@ export default function txHelper({
             }
             if (receipt && newBlock.id === receipt.blockNumber) {
               if (onReceipt) onReceipt()
+
+              // Reset the proxy data cache
+              if (String(shouldUseProxy).startsWith('create')) {
+                resetProxyCache()
+              }
+
+              // Kill this process early if we're not waiting on confirm
+              if (!onConfirmation) pubsub.ee.off('NEW_BLOCK', responseBlocks)
             } else if (receipt && newBlock.id === receipt.blockNumber + 1) {
               if (onConfirmation) onConfirmation()
               pubsub.ee.off('NEW_BLOCK', responseBlocks)
