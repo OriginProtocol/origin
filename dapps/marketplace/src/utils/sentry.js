@@ -23,7 +23,7 @@ export function initSentry() {
   })
   Sentry.configureScope(scope => {
     scope.setTag(
-      'is_webview',
+      'isWebView',
       typeof window !== 'undefined' &&
         typeof window.ReactNativeWebView !== 'undefined'
     )
