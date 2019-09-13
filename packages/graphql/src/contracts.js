@@ -193,6 +193,7 @@ export function setNetwork(net, customConfig) {
   context.graphql = config.graphql
 
   delete context.marketplace
+  delete context.marketplaceVersionByAddress
   delete context.marketplaceExec
   delete context.ogn
   delete context.ognExec
@@ -537,6 +538,9 @@ export function setMarketplace(address, epoch, version = '000') {
     contract,
     contractExec: contract
   }
+  context.marketplaceVersionByAddress =
+    context.marketplaceVersionByAddress || {}
+  context.marketplaceVersionByAddress[address] = version
 
   if (metaMask) {
     const contractMM = new metaMask.eth.Contract(
