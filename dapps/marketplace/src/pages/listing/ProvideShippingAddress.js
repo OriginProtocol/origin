@@ -114,7 +114,7 @@ const ProvideShippingAddress = ({
                   'stateProvinceRegion',
                   'country',
                   'postalCode',
-                  'other'
+                  'instructions'
                 ])
               )
 
@@ -193,10 +193,12 @@ const ProvideShippingAddress = ({
           </div>
           <div className="form-group">
             <label>
-              <fbt desc="ShippingAddress.other">Other</fbt>
+              <fbt desc="ShippingAddress.instructions">
+                Additional Instructions
+              </fbt>
             </label>
-            <input {...input('other')} />
-            {Feedback('other')}
+            <input {...input('instructions')} />
+            {Feedback('instructions')}
           </div>
           <div className="actions">
             <button type="submit" className="btn btn-primary btn-rounded">
