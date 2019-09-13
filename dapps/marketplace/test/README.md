@@ -17,6 +17,11 @@ The following commands are available:
 - `npm run test:browser` - runs tests in a browser
 - `npm run test:watch` - re-runs tests in a browser window when a file changes
 
+If you would like screenshots to get captured during the tests, set the SCREENSHOTS environment variable before running the tests.
+- `export SCREENSHOTS=true`
+
+The screenshots will be saved under the test/screenshots directory.
+
 ## Writing tests
 
 1. Start in watch mode with `npm run test:watch`
