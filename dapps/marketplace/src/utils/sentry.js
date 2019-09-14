@@ -27,6 +27,14 @@ export function initSentry() {
       typeof window !== 'undefined' &&
         typeof window.ReactNativeWebView !== 'undefined'
     )
+    scope.setTag(
+      'isOrigin',
+      typeof window !== 'undefined' &&
+        typeof window.web3 !== 'undefined' &&
+        typeof window.web3.providers !== 'undefined' &&
+        window.web3.providers.length > 0 &&
+        window.web3.providers[0].isOrigin
+    )
   })
 }
 
