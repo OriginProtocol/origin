@@ -6,7 +6,7 @@ bridgeImageTag: '1c44f9d'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '321fa7e'
+dappImageTag: '5ee9b0e'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
@@ -18,7 +18,7 @@ faucetImageTag: 'ea536a6'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'e1ad228'
+eventlistenerImageTag: '5ee9b0e'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -63,7 +63,7 @@ relayerImageTag: 'efbe8ca'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: 'e1ad228'
+graphqlImageTag: '5ee9b0e'
 
 # origin-token-transfer-client
 t3ClientImage: origin-token-transfer-client
