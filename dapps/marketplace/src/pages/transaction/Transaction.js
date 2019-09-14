@@ -61,13 +61,14 @@ const Transaction = props => {
 
           const seller = offer.listing.seller.id
           const buyer = offer.buyer.id
+          const isBuyer = isOwner(buyer, props)
           const isSeller = isOwner(seller, props)
           const party = isSeller ? seller : buyer
 
           const Progress = (
             <>
               <TxProgress
-                isBuyer={isOwner(buyer, props)}
+                isBuyer={isBuyer}
                 isSeller={isSeller}
                 party={party}
                 offer={offer}
@@ -106,13 +107,13 @@ const Transaction = props => {
                 <fbt desc="Transaction.about">
                   About the{' '}
                   <fbt:param name="sellerOrBuyer">
-                    {isSeller
-                      ? fbt('Buyer', 'Transaction.seller')
-                      : fbt('Seller', 'Transaction.seller')}
-                  </fbt:param>.
+                    {isBuyer
+                      ? fbt('Seller', 'Transaction.seller')
+                      : fbt('Buyer', 'Transaction.buyer')}
+                  </fbt:param>
                 </fbt>
               </h3>
-              <AboutParty id={isSeller ? buyer : seller} />
+              {isBuyer ? <AboutParty id={seller} role={fbt('Seller', 'Transaction.seller')} /> : <AboutParty id={buyer} role={fbt('Buyer', 'Transaction.buyer')} />}
             </>
           )
 
