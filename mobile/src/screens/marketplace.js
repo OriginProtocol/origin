@@ -158,8 +158,7 @@ class MarketplaceScreen extends Component {
       return
     }
 
-    let { privateKey } = wallet.activeAccount
-    const { mnemonic } = wallet.activeAccount
+    const { privateKey, mnemonic } = wallet.activeAccount
 
     let ethersWallet
     if (privateKey) {
