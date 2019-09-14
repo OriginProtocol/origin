@@ -5,6 +5,8 @@ const web3 = new Web3()
 
 const IdentityProxyBuild = require('@origin/contracts/build/contracts/IdentityProxy_solc.json')
 const Proxy = new web3.eth.Contract(IdentityProxyBuild.abi)
+const ProxyFactoryBuild = require('@origin/contracts/build/contracts/ProxyFactory_solc.json')
+const ProxyFactory = new web3.eth.Contract(ProxyFactoryBuild.abi)
 const IdentityEventsBuild = require('@origin/contracts/build/contracts/IdentityEvents.json')
 const IdentityEvents = new web3.eth.Contract(IdentityEventsBuild.abi)
 const V00MarketplaceBuild = require('@origin/contracts/build/contracts/V00_Marketplace.json')
@@ -54,6 +56,11 @@ class Validator {
         'UniswapExchange',
         addresses.UniswapDaiExchange,
         UniswapDaiExchange._jsonInterface
+      ),
+      new ProxyFactoryValidator(
+        'ProxyFactory',
+        addresses.ProxyFactory,
+        ProxyFactory._jsonInterface
       )
     ]
     // A way to look up the correct validator for an address being called.
@@ -79,7 +86,7 @@ class Validator {
 
     for (let i = 1; i <= 20; i++) {
       const [_address, _txdata] = toCheck.pop()
-      const validator = this.validatorsByAddress[_address]
+      const validator = this.validatorsByAddress[_address.toLowerCase()]
       logger.info(`${i}. Checking call to ${_address} data ${_txdata}`)
       if (!validator) {
         logger.info(
@@ -112,7 +119,7 @@ class ContractCallVailidator {
   constructor(name, address, jsonInterface, opts) {
     opts = opts || {}
     this.name = name
-    this.address = address
+    this.address = (address || 'NO_CONTRACT').toLowerCase()
     this.methods = this._methodsBySignature(jsonInterface)
     this.addresses = opts.addresses || {}
     const { whitelistMethods } = opts || {}
@@ -230,6 +237,20 @@ class UniswapValidator extends ContractCallVailidator {
     } else {
       logger.info(
         `Validation failed. ${method.name} is not an allowed to be called on an exchange contract`
+      )
+      return false
+    }
+  }
+}
+
+class ProxyFactoryValidator extends ContractCallVailidator {
+  // eslint-disable-next-line no-unused-vars
+  validateMethod(method, txdata, params) {
+    if (method.name == 'createProxyWithSenderNonce') {
+      return []
+    } else {
+      logger.info(
+        `Validation failed. ${method.name} is not an allowed to be called on an proxy factory contract`
       )
       return false
     }

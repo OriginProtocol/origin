@@ -52,11 +52,20 @@ export const waitForText = async (page, text, path) => {
   return xpath
 }
 
+export const waitUntilTextHides = async (page, text, path) => {
+  const escapedText = escapeXpathString(text)
+  const xpath = `/html/body//${path || '*'}[contains(text(), ${escapedText})]`
+  await page.waitForXPath(xpath, {
+    hidden: true
+  })
+  return xpath
+}
+
 export const hasText = async (page, text, path) => {
   const escapedText = escapeXpathString(text)
   const xpath = `/html/body//${path || '*'}[contains(text(), ${escapedText})]`
   const result = await page.$x(xpath)
-  return result ? true : false
+  return result.length > 0
 }
 
 export const clearCookies = async (page) => {
@@ -111,6 +120,8 @@ export const changeAccount = async (page, account, isFreshAccount = false) => {
       strength: 0
     }
 
+    delete window.localStorage.uiState
+
     if (isFreshAccount) {
       delete window.localStorage.useWeb3Identity
       delete window.localStorage.useMessagingObject
@@ -119,7 +130,14 @@ export const changeAccount = async (page, account, isFreshAccount = false) => {
       window.localStorage.useMessagingObject = JSON.stringify({
         enabled: true,
         pubKey: '0xff',
-        pubSig: '0xff'
+        pubSig: '0xff',
+        shippingOverride: {
+          name: 'Bruce Wayne',
+          address1: '123 Wayne Towers',
+          stateProvinceRegion: 'New Jersey',
+          postalCode: '123456',
+          country: 'USA'
+        }
       })
     }
   }, { account, isFreshAccount })

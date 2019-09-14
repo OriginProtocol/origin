@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 
 import { fbt } from 'fbt-runtime'
 
@@ -10,6 +10,12 @@ const RequireShipping = ({ onChange, listing }) => {
   const [requiresShipping, setRequiresShipping] = useState(
     (isForSale && newListing) || get(listing, 'requiresShipping')
   )
+
+  useEffect(() => {
+    if (newListing) {
+      onChange(requiresShipping)
+    }
+  }, [])
 
   const onChangeCallback = useCallback(
     e => {

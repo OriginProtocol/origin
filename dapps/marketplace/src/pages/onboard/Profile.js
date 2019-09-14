@@ -6,6 +6,7 @@ import pick from 'lodash/pick'
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 import withIsMobile from 'hoc/withIsMobile'
+import withMessagingStatus from 'hoc/withMessagingStatus'
 import MobileModal from 'components/MobileModal'
 import EditProfile from 'pages/user/_EditProfile'
 
@@ -72,17 +73,28 @@ class OnboardProfile extends Component {
     }
   }
 
+  getNextLink() {
+    const { linkPrefix, wallet, walletType, hasMessagingKeys } = this.props
+
+    const onboardCompleted = localStore.get(`${wallet}-onboarding-completed`)
+
+    if (onboardCompleted && hasMessagingKeys) {
+      // Back to where you came from.
+      return `${linkPrefix}/onboard/back`
+    } else if (walletType === 'Origin Wallet') {
+      // Keys are injected in Origin Wallet, so skip `messaging` step
+      return `${linkPrefix}/onboard/rewards`
+    } else {
+      return `${linkPrefix}/onboard/messaging`
+    }
+  }
+
   render() {
-    const { linkPrefix, walletType } = this.props
+    const { linkPrefix } = this.props
     const { finished, back, signTxModal } = this.state
 
     if (finished) {
-      // Origin wallet does not require signing of messaging strings
-      if (walletType === 'Origin Wallet') {
-        return <Redirect to={`${linkPrefix}/onboard/rewards`} />
-      } else {
-        return <Redirect to={`${linkPrefix}/onboard/messaging`} />
-      }
+      return <Redirect to={this.getNextLink()} />
     } else if (back) {
       return <Redirect to={`${linkPrefix}/onboard/email`} />
     }
@@ -238,7 +250,11 @@ class OnboardProfile extends Component {
   }
 }
 
-export default withIsMobile(withWallet(withIdentity(OnboardProfile)))
+export default withIsMobile(
+  withWallet(
+    withIdentity(withMessagingStatus(OnboardProfile, { excludeData: true }))
+  )
+)
 
 require('react-styl')(`
   .onboard .onboard-box.profile-bio
