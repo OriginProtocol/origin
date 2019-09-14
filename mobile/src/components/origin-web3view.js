@@ -8,6 +8,7 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Platform, StyleSheet } from 'react-native'
 import { ethers } from 'ethers'
+import { WebView } from 'react-native-webview'
 import SafeAreaView from 'react-native-safe-area-view'
 import PushNotification from 'react-native-push-notification'
 import RNSamsungBKS from 'react-native-samsung-bks'
@@ -15,7 +16,6 @@ import * as Sentry from '@sentry/react-native'
 
 import { decodeTransaction } from 'utils/contractDecoder'
 import { isValidMetaTransaction } from 'utils'
-import Web3View from 'components/web3view'
 import NotificationCard from 'components/notification-card'
 import SignatureCard from 'components/signature-card'
 import TransactionCard from 'components/transaction-card'
@@ -291,17 +291,39 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
     )
   }
 
+  const onWebViewMessage = async event => {
+    let msgData
+    try {
+      msgData = JSON.parse(event.nativeEvent.data)
+    } catch (err) {
+      if (props.onMessage) props.onMessage(event)
+      return
+    }
+
+    if (props.onMessage) props.onMessage(msgData)
+
+    const callback = result => {
+      msgData.isSuccessful = Boolean(result)
+      msgData.args = [result]
+      if (ref) {
+        ref.current.postMessage(JSON.stringify(msgData))
+      }
+    }
+
+    if (msgData.targetFunc === 'getAccounts') {
+      onGetAccounts(callback, msgData)
+    } else if (msgData.targetFunc === 'signMessage') {
+      onWeb3Call(callback, msgData)
+    } else if (msgData.targetFunc === 'signPersonalMessage') {
+      onSignPersonalMessage(callback, msgData)
+    } else if (msgData.targetFunc === 'processTransaction') {
+      onWeb3Call(callback, msgData)
+    }
+  }
+
   return (
     <>
-      <Web3View
-        ref={ref}
-        onGetAccounts={onGetAccounts}
-        onSignMessage={onWeb3Call}
-        onSignPersonalMessage={onSignPersonalMessage}
-        onProcessTransaction={onWeb3Call}
-        {...props}
-      />
-
+      <WebView ref={ref} onMessage={onWebViewMessage} {...props} />
       {renderModals()}
     </>
   )
@@ -311,13 +333,6 @@ const mapStateToProps = ({ samsungBKS, settings, wallet }) => {
   return { samsungBKS, settings, wallet }
 }
 
-const areEqual = (prevProps, nextProps) => {
-  if (prevProps.source !== nextProps.source) {
-    return false
-  }
-  return true
-}
-
 export default connect(
   mapStateToProps,
   null,
@@ -325,7 +340,7 @@ export default connect(
   {
     forwardRef: true
   }
-)(React.memo(OriginWeb3View, areEqual))
+)(OriginWeb3View)
 
 const styles = StyleSheet.create({
   modalSafeAreaView: {
