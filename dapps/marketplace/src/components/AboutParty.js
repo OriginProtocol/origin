@@ -67,10 +67,7 @@ const AboutParty = ({ id, owner, role }) => {
       <div className="actions">
         <SendMessage to={id} className="btn btn-link">
           <fbt desc="AboutParty.contact">
-            Contact{' '}
-            <fbt:param name="role">
-              {role}
-            </fbt:param>
+            Contact <fbt:param name="role">{role}</fbt:param>
           </fbt>
         </SendMessage>
         <Link to={`/user/${id}/reviews`} className="btn btn-link">

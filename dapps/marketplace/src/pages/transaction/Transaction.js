@@ -113,7 +113,17 @@ const Transaction = props => {
                   </fbt:param>
                 </fbt>
               </h3>
-              {isBuyer ? <AboutParty id={seller} role={fbt('Seller', 'Transaction.seller')} /> : <AboutParty id={buyer} role={fbt('Buyer', 'Transaction.buyer')} />}
+              {isBuyer ? (
+                <AboutParty
+                  id={seller}
+                  role={fbt('Seller', 'Transaction.seller')}
+                />
+              ) : (
+                <AboutParty
+                  id={buyer}
+                  role={fbt('Buyer', 'Transaction.buyer')}
+                />
+              )}
             </>
           )
 
