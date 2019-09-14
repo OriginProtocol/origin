@@ -320,7 +320,10 @@ class ListingDetail extends Component {
         <h5>
           <fbt desc="listingDetail.about-the-seller">About the Seller</fbt>
         </h5>
-        <AboutParty id={listing.seller.id} role={fbt('Seller', 'listingDetail.seller')} />
+        <AboutParty
+          id={listing.seller.id}
+          role={fbt('Seller', 'listingDetail.seller')}
+        />
       </>
     )
   }
