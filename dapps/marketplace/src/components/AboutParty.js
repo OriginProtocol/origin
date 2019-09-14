@@ -60,13 +60,15 @@ const Identity = ({ id, owner }) => {
   )
 }
 
-const AboutParty = ({ id, owner }) => {
+const AboutParty = ({ id, owner, role }) => {
   return (
     <div className="about-party">
       <Identity owner={owner} id={id} />
       <div className="actions">
         <SendMessage to={id} className="btn btn-link">
-          <fbt desc="AboutParty.contactSeller">Contact seller</fbt>
+          <fbt desc="AboutParty.contact">
+            Contact <fbt:param name="role">{role}</fbt:param>
+          </fbt>
         </SendMessage>
         <Link to={`/user/${id}/reviews`} className="btn btn-link">
           <fbt desc="Reviews">Reviews</fbt>
