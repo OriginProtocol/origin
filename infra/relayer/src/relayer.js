@@ -432,8 +432,6 @@ class Relayer {
           }
         }
 
-
-
         // Revert the failed nonce
         this.knownProxyNonces[proxy] -= 1
 

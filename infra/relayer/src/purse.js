@@ -278,12 +278,22 @@ class Purse {
   async getAvailableAccount() {
     let resolvedAccount = null
 
-    // We don't want to be waiting on an account forever
-    const acquisitionTimeout = setTimeout(() => {
+    /**
+     * Need this function because if we throw in setTimeout it won't bubble up
+     * properly and can't be handled.
+     */
+    const timeout = () => {
       throw new Error('Account acquisition timeout!')
+    }
+
+    // We don't want to be waiting on an account forever
+    let hasTimedOut = false
+    const acquisitionTimeout = setTimeout(() => {
+      hasTimedOut = true
     }, ACCOUNT_ACQUISITION_TIMEOUT)
 
     do {
+      if (hasTimedOut) timeout()
       // We only want to be doing one lookup at a time
       if (this.accountLookupInProgress) {
         logger.debug('Waiting for lookup in progress to finish...')
@@ -305,6 +315,8 @@ class Purse {
      */
     try {
       do {
+        if (hasTimedOut) timeout()
+
         let totalPending = 0
         let lowestPending = this.maxPendingPerAccount
         for (const child of this.children) {
@@ -333,6 +345,9 @@ class Purse {
         }
       } while (await tick())
     } catch (err) {
+      // We want to throw on timeouts so it can be handled by the sender
+      if (err.message.indexOf('timeout') > -1) throw err
+
       logger.error('Unhandled error in getAvailableAccount()')
       handleError(err)
     }
