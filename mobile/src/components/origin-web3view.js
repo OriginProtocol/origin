@@ -21,7 +21,7 @@ import SignatureCard from 'components/signature-card'
 import TransactionCard from 'components/transaction-card'
 
 /* eslint-disable react/display-name */
-const OriginWeb3View = React.forwardRef((props, ref) => {
+const OriginWeb3View = React.forwardRef(({ onMessage, ...props }, ref) => {
   const [transactionCardLoading, setTransactionCardLoading] = useState(false)
   const [modals, setModals] = useState([])
 
@@ -296,11 +296,11 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
     try {
       msgData = JSON.parse(event.nativeEvent.data)
     } catch (err) {
-      if (props.onMessage) props.onMessage(event)
+      if (onMessage) onMessage(event)
       return
     }
 
-    if (props.onMessage) props.onMessage(msgData)
+    if (onMessage) onMessage(msgData)
 
     const callback = result => {
       msgData.isSuccessful = Boolean(result)
@@ -311,7 +311,7 @@ const OriginWeb3View = React.forwardRef((props, ref) => {
     }
 
     if (msgData.targetFunc === 'getAccounts') {
-      onGetAccounts(callback, msgData)
+      onGetAccounts(callback)
     } else if (msgData.targetFunc === 'signMessage') {
       onWeb3Call(callback, msgData)
     } else if (msgData.targetFunc === 'signPersonalMessage') {
