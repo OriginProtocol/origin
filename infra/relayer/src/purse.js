@@ -59,6 +59,7 @@ const REDIS_PENDING_PREFIX = `pending_tx_`
 const REDIS_PENDING_TX_PREFIX = `pending_txobj_`
 const JSONRPC_QPS = 100
 const JSONRPC_MAX_CONCURRENT = 25
+const ACCOUNT_ACQUISITION_TIMEOUT = 15000
 
 async function tick(wait = 1000) {
   return new Promise(resolve => setTimeout(() => resolve(true), wait))
@@ -277,6 +278,11 @@ class Purse {
   async getAvailableAccount() {
     let resolvedAccount = null
 
+    // We don't want to be waiting on an account forever
+    const acquisitionTimeout = setTimeout(() => {
+      throw new Error('Account acquisition timeout!')
+    }, ACCOUNT_ACQUISITION_TIMEOUT)
+
     do {
       // We only want to be doing one lookup at a time
       if (this.accountLookupInProgress) {
@@ -330,6 +336,9 @@ class Purse {
       logger.error('Unhandled error in getAvailableAccount()')
       handleError(err)
     }
+
+    // Clear the acquistiion timeout
+    clearTimeout(acquisitionTimeout)
 
     // Unlock the lookup process
     this.accountLookupInProgress = false
