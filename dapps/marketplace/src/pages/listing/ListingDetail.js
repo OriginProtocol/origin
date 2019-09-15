@@ -60,7 +60,7 @@ class ListingDetail extends Component {
 
     if (!listing || !listing.seller || !listing.seller.id) {
       console.error(
-        'Error: ListingDetail: Unable to get seller ID due to missing dta!'
+        'Error: ListingDetail: Unable to get seller ID due to missing data!'
       )
     }
 
@@ -318,9 +318,12 @@ class ListingDetail extends Component {
     return (
       <>
         <h5>
-          <fbt desc="listingDetail.about-the-seller">About the seller</fbt>
+          <fbt desc="listingDetail.about-the-seller">About the Seller</fbt>
         </h5>
-        <AboutParty id={listing.seller.id} />
+        <AboutParty
+          id={listing.seller.id}
+          role={fbt('Seller', 'listingDetail.seller')}
+        />
       </>
     )
   }
