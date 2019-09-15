@@ -40,8 +40,10 @@ const HowWorks = ({ match, web3, web3Loading }) => {
         )}
         <div className="promotions-disabled mt-3">
           <fbt desc="PromoteListing.disabledOnMainnet">
-            <div>We’re currently updating our smart contracts.</div>
-            <div>Please check back soon.</div>
+            <div>
+              This feature is temporarily disabled while we update our smart
+              contracts. Please check back soon.
+            </div>
           </fbt>
         </div>
         <div className="actions">
