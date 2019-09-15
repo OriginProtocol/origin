@@ -23,13 +23,17 @@ const WithPrices = ({
     needsAllowance,
     needsBalance
 
-  const isLoadingData = Object.keys(props).some(key => key.endsWith('Loading') && props[key])
+  const isLoadingData = Object.keys(props).some(
+    key => key.endsWith('Loading') && props[key]
+  )
 
   // loading: true if wallet or anything else is loading
-  if (isLoadingData) return children({ prices: {}, tokenStatus: { loading: true } })
+  if (isLoadingData)
+    return children({ prices: {}, tokenStatus: { loading: true } })
 
   // If there is no wallet after it has loaded, return loading: false
-  if (!props.wallet) return children({ prices: {}, tokenStatus: { loading: false } })
+  if (!props.wallet)
+    return children({ prices: {}, tokenStatus: { loading: false } })
 
   if (!currency) return children({ prices: {}, tokenStatus: { loading: true } })
   const foundCurrency = currencies.find(c => c.id === currency.id)
