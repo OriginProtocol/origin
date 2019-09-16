@@ -112,3 +112,14 @@ Add the `NODE_OPTIONS` env var to your Metro builder startup command to add the 
     INSTALL_FAILED_UPDATE_INCOMPATIBLE: Package com.origincatcher signatures do not match previously installed version; ignoring!
 
 Uninstall the app from your phone and try again.
+
+-----------
+
+> Error: Activity class {com.origincatcher/com.origincatcher.MainActivity} does not exist.
+  Error while Launching activity
+
+Run the following command in a terminal
+
+```
+adb uninstall com.origincatcher
+```
