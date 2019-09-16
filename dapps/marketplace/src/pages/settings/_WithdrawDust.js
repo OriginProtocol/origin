@@ -5,14 +5,17 @@ import { fbt } from 'fbt-runtime'
 import withWalletBalances from 'hoc/withWalletBalances'
 
 import mutation from 'mutations/WithdrawDust'
-import { useMutation } from 'react-apollo';
+import { useMutation } from 'react-apollo'
 
 const WithdrawDust = ({ wallet, currencies }) => {
   const [withdrawDust] = useMutation(mutation)
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  if (!currencies.length || !currencies.some(({ balance }) => Number(balance) > 0)) {
+  if (
+    !currencies.length ||
+    !currencies.some(({ balance }) => Number(balance) > 0)
+  ) {
     // Don't render this section if there is nothing to show
     return null
   }
@@ -22,11 +25,7 @@ const WithdrawDust = ({ wallet, currencies }) => {
       <div className="title">
         <fbt desc="WithdrawDust.title">Withdraw Dust</fbt>
       </div>
-      {!error ? null : (
-        <div className="alert alert-danger">
-          {error}
-        </div>
-      )}
+      {!error ? null : <div className="alert alert-danger">{error}</div>}
       <div className="balances">
         {currencies.map(({ id, balance, code }) => {
           if (Number(balance) <= 0) {
@@ -35,9 +34,7 @@ const WithdrawDust = ({ wallet, currencies }) => {
 
           return (
             <div className="token-balance" key={code}>
-              <div className="token">
-                {`${balance} ${code}`}
-              </div>
+              <div className="token">{`${balance} ${code}`}</div>
               <div className="actions">
                 <button
                   disabled={loading === id}
@@ -61,13 +58,9 @@ const WithdrawDust = ({ wallet, currencies }) => {
                   }}
                 >
                   {loading === id ? (
-                    <fbt desc="Loading...">
-                      Loading...
-                    </fbt>
+                    <fbt desc="Loading...">Loading...</fbt>
                   ) : (
-                    <fbt desc="Withdraw">
-                      Withdraw
-                    </fbt>
+                    <fbt desc="Withdraw">Withdraw</fbt>
                   )}
                 </button>
               </div>
@@ -79,11 +72,11 @@ const WithdrawDust = ({ wallet, currencies }) => {
   )
 }
 
-export default withWalletBalances(WithdrawDust, [
-  'token-ETH',
-  'token-DAI',
-  'token-OGN'
-], 'walletProxy')
+export default withWalletBalances(
+  WithdrawDust,
+  ['token-ETH', 'token-DAI', 'token-OGN'],
+  'walletProxy'
+)
 
 require('react-styl')(`
   .withdraw-dust

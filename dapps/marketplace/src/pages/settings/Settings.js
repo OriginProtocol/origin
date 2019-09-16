@@ -17,7 +17,7 @@ import TextRow from './_TextRow'
 import ToggleRow from './_ToggleRow'
 
 import Store from 'utils/store'
-import WithdrawDust from './_WithdrawDust';
+import WithdrawDust from './_WithdrawDust'
 const store = Store('sessionStorage')
 
 const configurableFields = [

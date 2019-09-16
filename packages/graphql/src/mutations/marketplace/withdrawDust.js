@@ -1,9 +1,8 @@
-import { post } from '@origin/ipfs'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import contracts from '../../contracts'
 import cost from '../_gasCost'
-import { proxyOwner, hasProxy } from '../../utils/proxy'
+import { hasProxy } from '../../utils/proxy'
 import currencies from '../../utils/currencies';
 
 async function withdrawDust(_, data) {
