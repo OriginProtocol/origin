@@ -3,7 +3,7 @@ import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import contracts from '../../contracts'
 import cost from '../_gasCost'
 import { hasProxy } from '../../utils/proxy'
-import currencies from '../../utils/currencies';
+import currencies from '../../utils/currencies'
 
 async function withdrawDust(_, data) {
   const from = data.from || contracts.defaultMobileAccount
