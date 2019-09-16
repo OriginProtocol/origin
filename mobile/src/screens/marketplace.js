@@ -595,14 +595,17 @@ class MarketplaceScreen extends Component {
   _openDeepLinkUrlAttempt = async (
     interceptUrlPredicate,
     makeUrl,
-    timeControlVariableName
+    timeControlVariableName,
+    skipForceRefresh
   ) => {
     // non interceptable url
     if (!interceptUrlPredicate()) return
 
     const url = makeUrl()
     if (await Linking.canOpenURL(url)) {
-      // this.goBackToDapp()
+      if (!skipForceRefresh) {
+        this.goBackToDapp()
+      }
       // preventing multiple subsequent shares
       if (
         !this[timeControlVariableName] ||
@@ -610,8 +613,8 @@ class MarketplaceScreen extends Component {
       ) {
         this[timeControlVariableName] = new Date()
         await Linking.openURL(url)
-        return true
       }
+      return true
     } else {
       // can not open deep link url
       return false
@@ -689,7 +692,8 @@ class MarketplaceScreen extends Component {
       await this._openDeepLinkUrlAttempt(
         () => url.hostname === 't.me',
         () => url.toString(),
-        'lastOpenTelegramProfileTime'
+        'lastOpenTelegramProfileTime',
+        true
       )
     ) {
       return true
@@ -710,7 +714,9 @@ class MarketplaceScreen extends Component {
         }
         const canShowFbShare = await ShareDialog.canShow(shareLinkContent)
 
-        if (!canShowFbShare) return
+        if (!canShowFbShare) {
+          return
+        }
 
         this.facebookShareShowTime = new Date()
         const shareResult = await ShareDialog.show(shareLinkContent)
