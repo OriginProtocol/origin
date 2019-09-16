@@ -4,7 +4,6 @@ import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
 import formatHash from 'utils/formatHash'
 import Store from 'utils/store'
-import Sentry from 'utils/sentry'
 
 import withSkinnyIdentity from 'hoc/withSkinnyIdentity'
 import withWallet from 'hoc/withWallet'
@@ -47,11 +46,6 @@ const ProfileNav = ({
         if (!accountID) {
           return null
         }
-
-        // set the user for sentry
-        Sentry.configureScope(scope => {
-          scope.setUser({ id: accountID })
-        })
 
         return (
           <>

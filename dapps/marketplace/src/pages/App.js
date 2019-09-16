@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withWeb3 from 'hoc/withWeb3'
+import withWallet from 'hoc/withWallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 import withIsMobile from 'hoc/withIsMobile'
 
@@ -49,7 +50,7 @@ class App extends Component {
     isTestBuild: window.location.pathname.startsWith('/test-builds')
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (get(this.props, 'location.state.scrollToTop')) {
       window.scrollTo(0, 0)
     }
@@ -61,6 +62,16 @@ class App extends Component {
       !this.state.mobileModalDismissed
     ) {
       this.setState({ displayMobileModal: true })
+    }
+
+    const accountID = get(this.props, 'wallet')
+    const prevAccountID = get(prevProps, 'wallet')
+
+    if (accountID !== prevAccountID) {
+      // set the user for sentry
+      Sentry.configureScope(scope => {
+        scope.setUser({ id: accountID })
+      })
     }
   }
 
@@ -207,7 +218,9 @@ class App extends Component {
   }
 }
 
-export default withIsMobile(withWeb3(withCreatorConfig(withRouter(App))))
+export default withWallet(
+  withIsMobile(withWeb3(withCreatorConfig(withRouter(App))))
+)
 
 require('react-styl')(`
   .app-spinner
