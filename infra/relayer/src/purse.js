@@ -43,9 +43,9 @@ const logger = require('./logger')
 const Sentry = require('./sentry')
 const { metrics } = require('./prom')
 
-const MAX_LOCK_TIME = 15000
-const REDIS_RETRY_TIMEOUT = 30000
-const REDIS_RETRY_DELAY = 500
+const MAX_LOCK_TIME = 15000 // msec
+const REDIS_RETRY_TIMEOUT = 30000 // msec
+const REDIS_RETRY_DELAY = 500 // msec
 const DEFAULT_CHILDREN = 5
 const DEFAULT_MNEMONIC = 'one two three four five six'
 const DEFAULT_MAX_PENDING_PER_ACCOUNT = 3
@@ -59,7 +59,7 @@ const REDIS_PENDING_PREFIX = `pending_tx_`
 const REDIS_PENDING_TX_PREFIX = `pending_txobj_`
 const JSONRPC_QPS = 100
 const JSONRPC_MAX_CONCURRENT = 25
-const ACCOUNT_ACQUISITION_TIMEOUT = 15000
+const ACCOUNT_ACQUISITION_TIMEOUT = 15000 // msec
 
 async function tick(wait = 1000) {
   return new Promise(resolve => setTimeout(() => resolve(true), wait))
