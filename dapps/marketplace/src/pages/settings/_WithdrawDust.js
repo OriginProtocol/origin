@@ -24,10 +24,7 @@ const WithdrawDust = ({
   const [loading, setLoading] = useState(false)
   const [withdrawDustMutation] = useMutation(mutation)
 
-  if (
-    !currencies.length ||
-    !currencies.some(({ balance }) => Number(balance) > 0)
-  ) {
+  if (!currencies.length) {
     // Don't render this section if there is nothing to show
     return null
   }
@@ -75,20 +72,16 @@ const WithdrawDust = ({
       )}
       <div className="withdraw-dust">
         <div className="title">
-          <fbt desc="WithdrawDust.title">Withdraw Dust</fbt>
+          <fbt desc="WithdrawDust.title">Proxy Balances</fbt>
         </div>
         <div className="balances">
           {currencies.map(({ id, balance, code }) => {
-            if (Number(balance) <= 0) {
-              return null
-            }
-
             return (
               <div className="token-balance" key={code}>
                 <div className="token">{`${balance} ${code}`}</div>
                 <div className="actions">
                   <button
-                    disabled={loading === id}
+                    disabled={loading === id || Number(balance) <= 0}
                     className="btn btn-primary btn-sm"
                     onClick={async () => {
                       if (cannotTransact) {
