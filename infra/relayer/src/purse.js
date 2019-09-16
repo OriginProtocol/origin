@@ -352,7 +352,7 @@ class Purse {
       handleError(err)
     }
 
-    // Clear the acquistiion timeout
+    // Clear the acquisition timeout
     clearTimeout(acquisitionTimeout)
 
     // Unlock the lookup process
