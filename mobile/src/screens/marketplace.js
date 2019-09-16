@@ -601,7 +601,7 @@ class MarketplaceScreen extends Component {
     if (!interceptUrlPredicate()) return
 
     const url = makeUrl()
-    if (Linking.canOpenURL(url)) {
+    if (await Linking.canOpenURL(url)) {
       this.goBackToDapp()
       // preventing multiple subsequent shares
       if (
@@ -691,6 +691,13 @@ class MarketplaceScreen extends Component {
           console.log(`Share success with postId: ${shareResult.postId}`)
         }
       }
+
+      // Open telegram links on native web browser
+      await this._openDeepLinkUrlAttempt(
+        () => url.hostname === 't.me',
+        () => url.toString(),
+        'lastOpenTelegramProfileTime'
+      )
 
       /* After Facebook shows up the share dialog in dapp's WebView and user is not logged
        * in it will redirect to login page. For that reason we return to the last dapp's
