@@ -17,6 +17,7 @@ import TextRow from './_TextRow'
 import ToggleRow from './_ToggleRow'
 
 import Store from 'utils/store'
+import WithdrawDust from './_WithdrawDust'
 const store = Store('sessionStorage')
 
 const configurableFields = [
@@ -188,6 +189,8 @@ const Settings = props => {
                 <fbt desc="settings.restoreDefaults">Restore Defaults</fbt>
               </a>
             </div>
+
+            <WithdrawDust />
           </div>
         )}
       </div>

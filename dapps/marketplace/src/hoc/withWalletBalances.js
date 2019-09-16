@@ -24,12 +24,12 @@ const query = gql`
   }
 `
 
-function withWalletBalances(WrappedComponent, targets) {
+function withWalletBalances(WrappedComponent, targets, walletProp = 'wallet') {
   const WithWalletBalances = props => {
     const { data } = useQuery(query, {
       skip: !props.wallet,
       variables: {
-        account: props.wallet,
+        account: props[walletProp],
         proxy: props.walletPredictedProxy,
         tokens: targets
       },
