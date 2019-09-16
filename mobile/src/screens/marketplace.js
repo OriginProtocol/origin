@@ -602,14 +602,15 @@ class MarketplaceScreen extends Component {
 
     const url = makeUrl()
     if (await Linking.canOpenURL(url)) {
-      this.goBackToDapp()
+      // this.goBackToDapp()
       // preventing multiple subsequent shares
       if (
         !this[timeControlVariableName] ||
         new Date() - this[timeControlVariableName] > 3000
       ) {
         this[timeControlVariableName] = new Date()
-        return await Linking.openURL(url)
+        await Linking.openURL(url)
+        return true
       }
     } else {
       // can not open deep link url
@@ -618,53 +619,81 @@ class MarketplaceScreen extends Component {
   }
 
   checkForShareNativeDialogInterception = async url => {
-    // natively tweet if possible on Android
     console.log('Url change: ', url.href)
-    await this._openDeepLinkUrlAttempt(
-      () =>
-        url.hostname === 'twitter.com' &&
-        url.pathname === '/intent/tweet' &&
-        Platform.OS === 'android',
-      () =>
-        `twitter://post?message=${encodeURIComponent(
-          url.searchParams.get('text')
-        )}`,
-      'lastTweetAttemptTime'
-    )
+    // natively tweet if possible on Android
+    if (
+      await this._openDeepLinkUrlAttempt(
+        () =>
+          url.hostname === 'twitter.com' &&
+          url.pathname === '/intent/tweet' &&
+          Platform.OS === 'android',
+        () =>
+          `twitter://post?message=${encodeURIComponent(
+            url.searchParams.get('text')
+          )}`,
+        'lastTweetAttemptTime'
+      )
+    ) {
+      return true
+    }
 
     //open twitter profile natively if possible on Android
-    await this._openDeepLinkUrlAttempt(
-      () =>
-        url.hostname === 'twitter.com' &&
-        url.pathname === '/intent/follow' &&
-        Platform.OS === 'android',
-      () => `twitter://user?screen_name=${url.searchParams.get('screen_name')}`,
-      'lastOpenTwitterProfileTime'
-    )
+    if (
+      await this._openDeepLinkUrlAttempt(
+        () =>
+          url.hostname === 'twitter.com' &&
+          url.pathname === '/intent/follow' &&
+          Platform.OS === 'android',
+        () =>
+          `twitter://user?screen_name=${url.searchParams.get('screen_name')}`,
+        'lastOpenTwitterProfileTime'
+      )
+    ) {
+      return true
+    }
 
     // open facebook profile natively if possible on Android
-    await this._openDeepLinkUrlAttempt(
-      () =>
-        (url.hostname === 'www.facebook.com' ||
-          url.hostname === 'm.facebook.com') &&
-        url.pathname.toLowerCase() === '/originprotocol/' &&
-        Platform.OS === 'android',
-      //Facebook on IOS and Android has different deep-linking format
-      () => `fb://page/120151672018856`,
-      'lastOpenFacebookProfileTime'
-    )
+    if (
+      await this._openDeepLinkUrlAttempt(
+        () =>
+          (url.hostname === 'www.facebook.com' ||
+            url.hostname === 'm.facebook.com') &&
+          url.pathname.toLowerCase() === '/originprotocol/' &&
+          Platform.OS === 'android',
+        //Facebook on IOS and Android has different deep-linking format
+        () => `fb://page/120151672018856`,
+        'lastOpenFacebookProfileTime'
+      )
+    ) {
+      return true
+    }
 
     // open facebook profile natively if possible and IOS
-    await this._openDeepLinkUrlAttempt(
-      () =>
-        (url.hostname === 'www.facebook.com' ||
-          url.hostname === 'm.facebook.com') &&
-        url.pathname.toLowerCase() === '/originprotocol/' &&
-        Platform.OS === 'ios',
-      //Facebook on IOS and Android has different deep-linking format
-      () => `fb://profile/120151672018856`,
-      'lastOpenFacebookProfileTime'
-    )
+    if (
+      await this._openDeepLinkUrlAttempt(
+        () =>
+          (url.hostname === 'www.facebook.com' ||
+            url.hostname === 'm.facebook.com') &&
+          url.pathname.toLowerCase() === '/originprotocol/' &&
+          Platform.OS === 'ios',
+        //Facebook on IOS and Android has different deep-linking format
+        () => `fb://profile/120151672018856`,
+        'lastOpenFacebookProfileTime'
+      )
+    ) {
+      return true
+    }
+
+    // Open telegram links on native web browser
+    if (
+      await this._openDeepLinkUrlAttempt(
+        () => url.hostname === 't.me',
+        () => url.toString(),
+        'lastOpenTelegramProfileTime'
+      )
+    ) {
+      return true
+    }
 
     if (
       url.hostname === 'www.facebook.com' ||
@@ -691,13 +720,6 @@ class MarketplaceScreen extends Component {
           console.log(`Share success with postId: ${shareResult.postId}`)
         }
       }
-
-      // Open telegram links on native web browser
-      await this._openDeepLinkUrlAttempt(
-        () => url.hostname === 't.me',
-        () => url.toString(),
-        'lastOpenTelegramProfileTime'
-      )
 
       /* After Facebook shows up the share dialog in dapp's WebView and user is not logged
        * in it will redirect to login page. For that reason we return to the last dapp's
@@ -728,10 +750,18 @@ class MarketplaceScreen extends Component {
       }
 
       this.setState(stateUpdate)
-      await this.checkForShareNativeDialogInterception(url)
+
+      const intercepted = await this.checkForShareNativeDialogInterception(url)
+      if (intercepted) {
+        // Stop loading if URL has been intercepted
+        this.dappWebView.stopLoading()
+        return false
+      }
     } catch (error) {
       console.warn(`Browser reporting malformed url: ${state.url}`)
     }
+
+    return true
   }
 
   onWebViewLoad = async () => {
@@ -868,6 +898,7 @@ class MarketplaceScreen extends Component {
                 this.props.setMarketplaceWebViewError(nativeEvent.description)
               }}
               onNavigationStateChange={this.onWebViewNavigationStateChange}
+              onShouldStartLoadWithRequest={this.onWebViewNavigationStateChange}
               renderLoading={() => {
                 return (
                   <View style={styles.loading}>
