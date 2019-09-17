@@ -29,23 +29,23 @@ const HowWorks = ({ match, web3, web3Loading }) => {
             placement and more exposure on the Origin app and broader network.
           </fbt>
         </div>
+        <div className="mt-3">
+          <fbt desc="PromoteListing.exposure">
+            Your OGN deposit acts as a commission that will be deducted every
+            time a sale is made. Think of this as advertising to attract more
+            buyers to your listing.
+          </fbt>
+        </div>
         {!web3Loading && isMainnet && (
-          <div className="mt-3">
-            <fbt desc="PromoteListing.exposure">
-              Your OGN deposit acts as a commission that will be deducted every
-              time a sale is made. Think of this as advertising to attract more
-              buyers to your listing.
+          <div className="promotions-disabled mt-3">
+            <fbt desc="PromoteListing.disabledOnMainnet">
+              <div>
+                This feature is temporarily disabled while we update our smart
+                contracts. Please check back soon.
+              </div>
             </fbt>
           </div>
         )}
-        <div className="promotions-disabled mt-3">
-          <fbt desc="PromoteListing.disabledOnMainnet">
-            <div>
-              This feature is temporarily disabled while we update our smart
-              contracts. Please check back soon.
-            </div>
-          </fbt>
-        </div>
         <div className="actions">
           <Link
             to={`/listing/${match.params.listingId}`}
