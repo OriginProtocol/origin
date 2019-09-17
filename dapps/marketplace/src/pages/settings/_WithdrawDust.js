@@ -3,79 +3,135 @@ import React, { useState } from 'react'
 import { fbt } from 'fbt-runtime'
 
 import withWalletBalances from 'hoc/withWalletBalances'
+import withCanTransact from 'hoc/withCanTransact'
 
 import mutation from 'mutations/WithdrawDust'
 import { useMutation } from 'react-apollo'
 
-const WithdrawDust = ({ wallet, currencies }) => {
-  const [withdrawDust] = useMutation(mutation)
-  const [error, setError] = useState(false)
-  const [loading, setLoading] = useState(false)
+import TransactionError from 'components/TransactionError'
+import WaitForTransaction from 'components/WaitForTransaction'
 
-  if (
-    !currencies.length ||
-    !currencies.some(({ balance }) => Number(balance) > 0)
-  ) {
+const WithdrawDust = ({
+  wallet,
+  currencies,
+  refetchCurrencies,
+  cannotTransact,
+  cannotTransactData
+}) => {
+  const [error, setError] = useState(null)
+  const [errorData, setErrorData] = useState(null)
+  const [waitFor, setWaitFor] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [withdrawDustMutation] = useMutation(mutation)
+
+  if (!currencies.length) {
     // Don't render this section if there is nothing to show
     return null
   }
 
   return (
-    <div className="withdraw-dust">
-      <div className="title">
-        <fbt desc="WithdrawDust.title">Withdraw Dust</fbt>
-      </div>
-      {!error ? null : <div className="alert alert-danger">{error}</div>}
-      <div className="balances">
-        {currencies.map(({ id, balance, code }) => {
-          if (Number(balance) <= 0) {
-            return null
-          }
-
-          return (
-            <div className="token-balance" key={code}>
-              <div className="token">{`${balance} ${code}`}</div>
-              <div className="actions">
-                <button
-                  disabled={loading === id}
-                  className="btn btn-primary btn-sm"
-                  onClick={async () => {
-                    try {
-                      setLoading(id)
-                      setError(false)
-                      await withdrawDust({
-                        variables: {
-                          currency: id,
-                          amount: balance,
-                          from: wallet
-                        }
-                      })
-                    } catch (e) {
-                      console.error(e)
-                      setError('Check console')
-                    }
-                    setLoading(false)
-                  }}
-                >
-                  {loading === id ? (
-                    <fbt desc="Loading...">Loading...</fbt>
-                  ) : (
-                    <fbt desc="Withdraw">Withdraw</fbt>
-                  )}
-                </button>
+    <>
+      {error && (
+        <TransactionError
+          reason={error}
+          data={errorData}
+          onClose={() => {
+            setError(null)
+            setErrorData(null)
+          }}
+        />
+      )}
+      {waitFor && (
+        <WaitForTransaction
+          hash={waitFor}
+          onClose={async () => {
+            setWaitFor(null)
+            await refetchCurrencies()
+          }}
+        >
+          {() => (
+            <div className="make-offer-modal success">
+              <div className="success-icon-lg" />
+              <h5>
+                <fbt desc="success">Success!</fbt>
+              </h5>
+              <div className="help">
+                <fbt desc="update.movedToWallet">
+                  Funds have been moved to your wallet address
+                </fbt>
               </div>
+              <button
+                href="#"
+                className="btn btn-outline-light"
+                onClick={() => setWaitFor(null)}
+                children={fbt('OK', 'OK')}
+              />
             </div>
-          )
-        })}
+          )}
+        </WaitForTransaction>
+      )}
+      <div className="withdraw-dust">
+        <div className="title">
+          <fbt desc="WithdrawDust.title">Proxy Balances</fbt>
+        </div>
+        <div className="balances">
+          {currencies.map(({ id, balance, code }) => {
+            return (
+              <div className="token-balance" key={code}>
+                <div className="token">{`${balance} ${code}`}</div>
+                <div className="actions">
+                  <button
+                    disabled={loading === id || Number(balance) <= 0}
+                    className="btn btn-primary btn-sm"
+                    onClick={async () => {
+                      if (cannotTransact) {
+                        setError(cannotTransact)
+                        setErrorData(cannotTransactData)
+                        return
+                      }
+
+                      try {
+                        setLoading(id)
+                        setWaitFor('pending')
+                        const { data } = await withdrawDustMutation({
+                          variables: {
+                            currency: id,
+                            amount: balance,
+                            from: wallet
+                          }
+                        })
+                        setWaitFor(data.withdrawDust.id)
+                      } catch (e) {
+                        console.error(e)
+                        setError('mutation')
+                        setErrorData(e)
+                        setWaitFor(null)
+                      }
+                      setLoading(false)
+                    }}
+                  >
+                    {loading === id ? (
+                      <fbt desc="Loading...">Loading...</fbt>
+                    ) : (
+                      <fbt desc="Withdraw">Withdraw</fbt>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )
+          })}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
-export default withWalletBalances(
-  WithdrawDust,
-  ['token-ETH', 'token-DAI', 'token-OGN'],
-  'walletProxy'
+export default withCanTransact(
+  withWalletBalances(
+    WithdrawDust,
+    ['token-ETH', 'token-DAI', 'token-OGN'],
+    'walletProxy'
+  )
 )
 
 require('react-styl')(`
