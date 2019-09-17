@@ -142,7 +142,9 @@ async function getUserAuthenticationStatus(token, accountId) {
     case enums.GrowthParticipantStatuses.Closed:
       return enums.GrowthParticipantAuthenticationStatus.Closed
     default:
-      throw new Error(`Unexpected GrowthParticipant status ${growthParticipant.status}`)
+      throw new Error(
+        `Unexpected GrowthParticipant status ${growthParticipant.status}`
+      )
   }
 }
 
