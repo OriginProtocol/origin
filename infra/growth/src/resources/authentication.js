@@ -132,12 +132,17 @@ async function getUserAuthenticationStatus(token, accountId) {
 
   if (growthParticipant === null) {
     return enums.GrowthParticipantAuthenticationStatus.NotEnrolled
-  } else if (
-    growthParticipant.status === enums.GrowthParticipantStatuses.Banned
-  ) {
-    return enums.GrowthParticipantAuthenticationStatus.Banned
-  } else {
-    return enums.GrowthParticipantAuthenticationStatus.Enrolled
+  }
+
+  switch (growthParticipant.status) {
+    case enums.GrowthParticipantStatuses.Enrolled:
+      return enums.GrowthParticipantAuthenticationStatus.Enrolled
+    case enums.GrowthParticipantStatuses.Banned:
+      return enums.GrowthParticipantAuthenticationStatus.Banned
+    case enums.GrowthParticipantStatuses.Closed:
+      return enums.GrowthParticipantAuthenticationStatus.Closed
+    default:
+      throw new Error(`Unexpected GrowthParticipant status ${growthParticipant.status}`)
   }
 }
 
