@@ -595,22 +595,26 @@ class MarketplaceScreen extends Component {
   _openDeepLinkUrlAttempt = async (
     interceptUrlPredicate,
     makeUrl,
-    timeControlVariableName
+    timeControlVariableName,
+    skipForceRefresh
   ) => {
     // non interceptable url
     if (!interceptUrlPredicate()) return
 
     const url = makeUrl()
-    if (Linking.canOpenURL(url)) {
-      this.goBackToDapp()
+    if (await Linking.canOpenURL(url)) {
+      if (!skipForceRefresh) {
+        this.goBackToDapp()
+      }
       // preventing multiple subsequent shares
       if (
         !this[timeControlVariableName] ||
         new Date() - this[timeControlVariableName] > 3000
       ) {
         this[timeControlVariableName] = new Date()
-        return await Linking.openURL(url)
+        await Linking.openURL(url)
       }
+      return true
     } else {
       // can not open deep link url
       return false
@@ -618,53 +622,82 @@ class MarketplaceScreen extends Component {
   }
 
   checkForShareNativeDialogInterception = async url => {
-    // natively tweet if possible on Android
     console.log('Url change: ', url.href)
-    await this._openDeepLinkUrlAttempt(
-      () =>
-        url.hostname === 'twitter.com' &&
-        url.pathname === '/intent/tweet' &&
-        Platform.OS === 'android',
-      () =>
-        `twitter://post?message=${encodeURIComponent(
-          url.searchParams.get('text')
-        )}`,
-      'lastTweetAttemptTime'
-    )
+    // natively tweet if possible on Android
+    if (
+      await this._openDeepLinkUrlAttempt(
+        () =>
+          url.hostname === 'twitter.com' &&
+          url.pathname === '/intent/tweet' &&
+          Platform.OS === 'android',
+        () =>
+          `twitter://post?message=${encodeURIComponent(
+            url.searchParams.get('text')
+          )}`,
+        'lastTweetAttemptTime'
+      )
+    ) {
+      return true
+    }
 
     //open twitter profile natively if possible on Android
-    await this._openDeepLinkUrlAttempt(
-      () =>
-        url.hostname === 'twitter.com' &&
-        url.pathname === '/intent/follow' &&
-        Platform.OS === 'android',
-      () => `twitter://user?screen_name=${url.searchParams.get('screen_name')}`,
-      'lastOpenTwitterProfileTime'
-    )
+    if (
+      await this._openDeepLinkUrlAttempt(
+        () =>
+          url.hostname === 'twitter.com' &&
+          url.pathname === '/intent/follow' &&
+          Platform.OS === 'android',
+        () =>
+          `twitter://user?screen_name=${url.searchParams.get('screen_name')}`,
+        'lastOpenTwitterProfileTime'
+      )
+    ) {
+      return true
+    }
 
     // open facebook profile natively if possible on Android
-    await this._openDeepLinkUrlAttempt(
-      () =>
-        (url.hostname === 'www.facebook.com' ||
-          url.hostname === 'm.facebook.com') &&
-        url.pathname.toLowerCase() === '/originprotocol/' &&
-        Platform.OS === 'android',
-      //Facebook on IOS and Android has different deep-linking format
-      () => `fb://page/120151672018856`,
-      'lastOpenFacebookProfileTime'
-    )
+    if (
+      await this._openDeepLinkUrlAttempt(
+        () =>
+          (url.hostname === 'www.facebook.com' ||
+            url.hostname === 'm.facebook.com') &&
+          url.pathname.toLowerCase() === '/originprotocol/' &&
+          Platform.OS === 'android',
+        //Facebook on IOS and Android has different deep-linking format
+        () => `fb://page/120151672018856`,
+        'lastOpenFacebookProfileTime'
+      )
+    ) {
+      return true
+    }
 
     // open facebook profile natively if possible and IOS
-    await this._openDeepLinkUrlAttempt(
-      () =>
-        (url.hostname === 'www.facebook.com' ||
-          url.hostname === 'm.facebook.com') &&
-        url.pathname.toLowerCase() === '/originprotocol/' &&
-        Platform.OS === 'ios',
-      //Facebook on IOS and Android has different deep-linking format
-      () => `fb://profile/120151672018856`,
-      'lastOpenFacebookProfileTime'
-    )
+    if (
+      await this._openDeepLinkUrlAttempt(
+        () =>
+          (url.hostname === 'www.facebook.com' ||
+            url.hostname === 'm.facebook.com') &&
+          url.pathname.toLowerCase() === '/originprotocol/' &&
+          Platform.OS === 'ios',
+        //Facebook on IOS and Android has different deep-linking format
+        () => `fb://profile/120151672018856`,
+        'lastOpenFacebookProfileTime'
+      )
+    ) {
+      return true
+    }
+
+    // Open telegram links on native web browser
+    if (
+      await this._openDeepLinkUrlAttempt(
+        () => url.hostname === 't.me',
+        () => url.toString(),
+        'lastOpenTelegramProfileTime',
+        true
+      )
+    ) {
+      return true
+    }
 
     if (
       url.hostname === 'www.facebook.com' ||
@@ -681,7 +714,9 @@ class MarketplaceScreen extends Component {
         }
         const canShowFbShare = await ShareDialog.canShow(shareLinkContent)
 
-        if (!canShowFbShare) return
+        if (!canShowFbShare) {
+          return
+        }
 
         this.facebookShareShowTime = new Date()
         const shareResult = await ShareDialog.show(shareLinkContent)
@@ -721,10 +756,18 @@ class MarketplaceScreen extends Component {
       }
 
       this.setState(stateUpdate)
-      await this.checkForShareNativeDialogInterception(url)
+
+      const intercepted = await this.checkForShareNativeDialogInterception(url)
+      if (intercepted) {
+        // Stop loading if URL has been intercepted
+        this.dappWebView.stopLoading()
+        return false
+      }
     } catch (error) {
       console.warn(`Browser reporting malformed url: ${state.url}`)
     }
+
+    return true
   }
 
   onWebViewLoad = async () => {
@@ -861,6 +904,7 @@ class MarketplaceScreen extends Component {
                 this.props.setMarketplaceWebViewError(nativeEvent.description)
               }}
               onNavigationStateChange={this.onWebViewNavigationStateChange}
+              onShouldStartLoadWithRequest={this.onWebViewNavigationStateChange}
               renderLoading={() => {
                 return (
                   <View style={styles.loading}>

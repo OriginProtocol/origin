@@ -18,6 +18,7 @@ const {
   MNEMONIC_FOUR,
   MNEMONIC_FIVE,
   MNEMONIC_SIX,
+  MNEMONIC_SEVEN,
   TEST_NET_ID,
   TEST_PROVIDER_URL,
   ZERO,
@@ -558,5 +559,23 @@ describe('Purse', () => {
     assert(purse.hasPending(Funder) === false)
 
     await purse.teardown(true)
+  })
+
+  it('should timeout when it cannot get an account', async function () {
+    this.timeout(30000)
+    const purse = new Purse({
+      web3,
+      mnemonic: MNEMONIC_SEVEN,
+      children: 0, // No accounts
+      autofundChildren: true
+    })
+    await purse.init()
+
+    try {
+      await purse.getAvailableAccount()
+      assert(false, 'should have timed out')
+    } catch (err) {
+      assert(err.message.indexOf('timeout') > -1)
+    }
   })
 })

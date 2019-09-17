@@ -270,7 +270,6 @@ require('react-styl')(`
     .settings-box .developer .form-group
       label
         font-size: 14px
-        margin-left: 2rem
 
     .test-builds
       font-size: 14px
