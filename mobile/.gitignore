@@ -54,6 +54,7 @@ buck-out/
 
 # Bundle artifact
 *.jsbundle
+*.hprof
 
 android/keystores/keystore.properties
 android/app/debug/

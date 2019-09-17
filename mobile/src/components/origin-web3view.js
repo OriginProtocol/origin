@@ -253,13 +253,21 @@ const OriginWeb3View = React.forwardRef(({ onMessage, ...props }, ref) => {
         onConfirm={async () => {
           setTransactionCardLoading(true)
           const data = modal.msgData.data
-          const transaction = await _sendTransaction({
-            to: data.to,
-            value: data.value,
-            gasLimit: data.gasLimit,
-            gasPrice: data.gasPrice,
-            data: data.data
-          })
+          let transaction
+          try {
+            transaction = await _sendTransaction({
+              to: data.to,
+              value: data.value,
+              gasLimit: data.gasLimit,
+              gasPrice: data.gasPrice,
+              data: data.data
+            })
+          } catch (error) {
+            Sentry.captureException(error)
+            toggleModal(modal, {
+              message: 'User denied transaction signature'
+            })
+          }
           console.debug('Got transaction hash', transaction.hash)
           setTransactionCardLoading(false)
           toggleModal(modal, transaction.hash)
