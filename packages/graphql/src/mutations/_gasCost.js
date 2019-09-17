@@ -15,7 +15,8 @@ export default {
   executeRuling: 200000, // If ERC20 token used, actual cost will vary
   addData: 28690, // Contract test. Uses offer addData, since amount is larger.
 
-  withdrawDust: 120000, // 21000 is enough for ETH, but ERC20 transfer might need more
+  withdrawDust: 80000, // For ETH
+  withdrawDustERC20: 200000, // ERC20 transfer might need more gas
 
   // Identity
   // -----------

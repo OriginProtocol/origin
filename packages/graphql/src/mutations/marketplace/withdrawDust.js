@@ -38,7 +38,9 @@ async function withdrawDust(_, data) {
   if (currency.code !== 'ETH') {
     // For ERC20
     const txData = await tx.encodeABI()
-
+    
+    // Use `marketplaceExecute` to invoke `transferToOwner` instead of 
+    // directly calling it to avoid approval step
     tx = Proxy.methods.marketplaceExecute(
       owner,
       proxy,
@@ -46,8 +48,10 @@ async function withdrawDust(_, data) {
       currencyAddress,
       weiValue
     )
-
-    gas = gas + 100000
+    
+    // More gas might be needed since we call `marketplaceExecute` method
+    // that `delegatecall`s `trasnferToOwner` method from Proxy Contract
+    gas = cost.withdrawDustERC20
   }
 
   return txHelper({
