@@ -42,7 +42,8 @@ const ProfileNav = ({
           console.error(error)
           return null
         }
-        if (!get(data, 'web3.primaryAccount')) {
+        const accountID = get(data, 'web3.primaryAccount.id')
+        if (!accountID) {
           return null
         }
 

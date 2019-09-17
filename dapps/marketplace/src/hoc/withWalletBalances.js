@@ -26,7 +26,7 @@ const query = gql`
 
 function withWalletBalances(WrappedComponent, targets, walletProp = 'wallet') {
   const WithWalletBalances = props => {
-    const { data } = useQuery(query, {
+    const { data, refetch } = useQuery(query, {
       skip: !props.wallet,
       variables: {
         account: props[walletProp],
@@ -36,7 +36,11 @@ function withWalletBalances(WrappedComponent, targets, walletProp = 'wallet') {
       fetchPolicy: 'network-only'
     })
     return (
-      <WrappedComponent {...props} currencies={get(data, 'currencies') || []} />
+      <WrappedComponent
+        {...props}
+        currencies={get(data, 'currencies') || []}
+        refetchCurrencies={refetch}
+      />
     )
   }
   return withWallet(WithWalletBalances)

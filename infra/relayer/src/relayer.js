@@ -422,9 +422,14 @@ class Relayer {
         let status = enums.RelayerTxnStatuses.Failed
         let errMsg = 'Error sending transaction'
 
-        if (reason.message && reason.message.indexOf('gas prices') > -1) {
-          status = enums.RelayerTxnStatuses.GasLimit
-          errMsg = 'Network is too congested right now.  Try again later.'
+        if (reason.message) {
+          if (reason.message.indexOf('gas prices') > -1) {
+            status = enums.RelayerTxnStatuses.GasLimit
+            errMsg = 'Network is too congested right now.  Try again later.'
+          } else if (reason.message.indexOf('acquisition') > -1) {
+            status = enums.RelayerTxnStatuses.NoAvailableAccount
+            errMsg = 'Relayer is overloaded right now.  Try again later.'
+          }
         }
 
         // Revert the failed nonce
