@@ -5498,13 +5498,6 @@ react-native-permissions@^1.2.0:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-1.2.0.tgz#0deb616bf1565c17c91f1cb1f953809b2892c29e"
   integrity sha512-+KrP1JZ30RI9p30wsGlGQx22qwiClDnznSQZPpvBMkOIZQ9kXOkLAFXS+vwiHRiiRu/pBMBXYHfI7ng6t2+LbQ==
 
-react-native-picker-select@^6.3.2:
-  version "6.3.2"
-  resolved "https://registry.yarnpkg.com/react-native-picker-select/-/react-native-picker-select-6.3.2.tgz#5fad902e77e23f4217eea7e93ef513a4dcf641d7"
-  integrity sha512-f7DNP9M4UHOtsXizpbd1jWgzV38Yn9WEPu+rY2o8to4rr+CHXl/V6W2G1qXkDPMIzUa9oClYsK8PylVRSoH8iQ==
-  dependencies:
-    lodash.isequal "^4.5.0"
-
 react-native-push-notification@^3.1.9:
   version "3.1.9"
   resolved "https://registry.yarnpkg.com/react-native-push-notification/-/react-native-push-notification-3.1.9.tgz#760ee06e743fef74fc9fcb672dac40794fdc4c47"
