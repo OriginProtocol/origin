@@ -120,6 +120,7 @@ export const mutations = `
     disputeOffer(offerID: ID!, from: String): Transaction
     addFunds(offerID: ID!, amount: String!, from: String): Transaction
     updateRefund(offerID: ID!, amount: String!, from: String): Transaction
+    withdrawDust(from: String, currency: String!, amount: String!): Transaction
   }
 `
 
@@ -486,7 +487,7 @@ export const types = `
     stateProvinceRegion: String
     postalCode: String
     country: String
-    other: String
+    instructions: String
   }
 `
 export default types + mutations

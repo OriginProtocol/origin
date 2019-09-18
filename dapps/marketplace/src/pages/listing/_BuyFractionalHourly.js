@@ -22,8 +22,10 @@ const withFractionalHourlyData = WrappedComponent => {
     availability,
     ...props
   }) => {
+    const acceptsEth = listing.acceptedTokens.find(t => t.id === 'token-ETH')
     const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
-    const token = acceptsDai ? 'token-DAI' : 'token-ETH'
+    // Favor payment in ETH over DAI if the seller accepts it.
+    const token = acceptsEth ? 'token-ETH' : 'token-DAI'
 
     let startDate = null,
       endDate = null,
@@ -149,8 +151,7 @@ const FractionalHourly = ({
             acceptedTokens={listing.acceptedTokens}
             listing={listing}
             value={token}
-            hasBalance={tokenStatus.hasBalance}
-            hasEthBalance={tokenStatus.hasEthBalance}
+            tokenStatus={tokenStatus}
           >
             <ConfirmShippingAndPurchase
               listing={listing}

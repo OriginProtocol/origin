@@ -14,8 +14,10 @@ import PurchaseSummary from './_PurchaseSummary'
 const withSingleUnitData = WrappedComponent => {
   const WithSingleUnitData = ({ listing, ...props }) => {
     const amount = listing.price.amount
+    const acceptsEth = listing.acceptedTokens.find(t => t.id === 'token-ETH')
     const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
-    const token = acceptsDai ? 'token-DAI' : 'token-ETH'
+    // Favor payment in ETH over DAI if the seller accepts it.
+    const token = acceptsEth ? 'token-ETH' : 'token-DAI'
     const totalPrice = { amount, currency: listing.price.currency }
 
     return (
@@ -65,8 +67,7 @@ const SingleUnit = ({ listing, growthReward, prices, tokenStatus, token }) => {
         acceptedTokens={listing.acceptedTokens}
         listing={listing}
         value={token}
-        hasBalance={tokenStatus.hasBalance}
-        hasEthBalance={tokenStatus.hasEthBalance}
+        tokenStatus={tokenStatus}
       >
         <ConfirmShippingAndPurchase
           listing={listing}

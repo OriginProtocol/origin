@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom'
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 import withIsMobile from 'hoc/withIsMobile'
+import withMessagingStatus from 'hoc/withMessagingStatus'
 import MobileModal from 'components/MobileModal'
 import EmailAttestation from 'pages/identity/EmailAttestation'
 
@@ -13,11 +14,17 @@ import HelpOriginWallet from 'components/DownloadApp'
 import ListingPreview from './_ListingPreview'
 import HelpProfile from './_HelpProfile'
 
+import LoadingSpinner from 'components/LoadingSpinner'
+
 import {
   updateVerifiedAccounts,
   getVerifiedAccounts,
   clearVerifiedAccounts
 } from 'utils/profileTools'
+
+import Store from 'utils/store'
+
+const localStore = Store('localStorage')
 
 class OnboardEmail extends Component {
   constructor(props) {
@@ -30,7 +37,11 @@ class OnboardEmail extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.identityLoaded && this.props.identity) {
+    if (
+      this.props.identityLoaded &&
+      this.props.identity &&
+      !this.props.finished
+    ) {
       this.setState({
         finished: true,
         hasIdentity: true
@@ -39,18 +50,46 @@ class OnboardEmail extends Component {
       const storedAccounts = getVerifiedAccounts({
         wallet: this.props.wallet
       })
-      if (storedAccounts && storedAccounts.emailAttestation) {
+      if (
+        storedAccounts &&
+        storedAccounts.emailAttestation &&
+        !this.props.finished
+      ) {
         this.setState({ finished: true })
       }
     }
   }
 
   render() {
-    const { linkPrefix } = this.props
+    const {
+      linkPrefix,
+      wallet,
+      walletType,
+      hasMessagingKeys,
+      messagingStatusLoading
+    } = this.props
     const { finished, hasIdentity } = this.state
 
+    if (messagingStatusLoading) {
+      return <LoadingSpinner />
+    }
+
     if (finished) {
-      const link = hasIdentity ? '/onboard/messaging' : '/onboard/profile'
+      let link = '/onboard/profile'
+      const onboardCompleted = localStore.get(`${wallet}-onboarding-completed`)
+
+      if (hasIdentity) {
+        if (onboardCompleted && hasMessagingKeys) {
+          // Back to where you came from.
+          link = '/onboard/back'
+        } else if (walletType === 'Origin Wallet') {
+          // Keys are injected in Origin Wallet, so skip `messaging` step
+          link = '/onboard/rewards'
+        } else if (!hasMessagingKeys) {
+          link = '/onboard/messaging'
+        }
+      }
+
       return <Redirect to={`${linkPrefix}${link}`} />
     }
 
@@ -121,7 +160,9 @@ class OnboardEmail extends Component {
   }
 }
 
-export default withRouter(withIsMobile(withWallet(withIdentity(OnboardEmail))))
+export default withRouter(
+  withIsMobile(withWallet(withIdentity(withMessagingStatus(OnboardEmail))))
+)
 
 require('react-styl')(`
   .onboard .onboard-box.profile-email

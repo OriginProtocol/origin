@@ -26,6 +26,19 @@ async function convosWithSupport({ before, after }) {
   }))
 }
 
+let messagingOverride
+
+// We need to do this check inside the resolver function
+export const checkForMessagingOverride = () => {
+  // needed for testing pu
+  if (typeof localStorage !== 'undefined' && localStorage.useMessagingObject) {
+    messagingOverride = JSON.parse(localStorage.useMessagingObject)
+    return messagingOverride
+  }
+
+  return false
+}
+
 async function decryptOutOfBandMessage(_, args) {
   let encrypted
   try {
@@ -39,19 +52,10 @@ async function decryptOutOfBandMessage(_, args) {
   }
   return d.content
 }
-// We need to do this check inside the resolver function
-const checkForMessagingOverride = () => {
-  // needed for testing pu
-  if (typeof localStorage !== 'undefined' && localStorage.useMessagingObject) {
-    messagingOverride = JSON.parse(localStorage.useMessagingObject)
-  }
-}
-let messagingOverride
 
 export default {
   enabled: () => {
-    checkForMessagingOverride()
-    return messagingOverride ? messagingOverride.enabled : isEnabled()
+    return checkForMessagingOverride() ? messagingOverride.enabled : isEnabled()
   },
   conversations: (_, { before, after }) => convosWithSupport({ before, after }),
   conversation: (_, args) =>
@@ -85,8 +89,7 @@ export default {
   },
   syncProgress: () => contracts.messaging.syncProgress,
   pubKey: () => {
-    checkForMessagingOverride()
-    if (messagingOverride) {
+    if (checkForMessagingOverride()) {
       return messagingOverride.pubKey
     }
 
@@ -95,8 +98,7 @@ export default {
       : null
   },
   pubSig: () => {
-    checkForMessagingOverride()
-    if (messagingOverride) {
+    if (checkForMessagingOverride()) {
       return messagingOverride.pubSig
     }
 
@@ -122,6 +124,10 @@ export default {
   },
   decryptOutOfBandMessage: decryptOutOfBandMessage,
   decryptShippingAddress: async (_, args) => {
+    if (checkForMessagingOverride()) {
+      return messagingOverride.shippingOverride
+    }
+
     const data = await decryptOutOfBandMessage(_, args)
     return JSON.parse(data.content)
   }

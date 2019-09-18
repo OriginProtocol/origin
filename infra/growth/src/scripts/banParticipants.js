@@ -31,8 +31,11 @@ if (process.env.NODE_ENV === 'production' || process.env.USE_PROD_FRAUD) {
 }
 
 /**
- * Helper class that loads the list of Origin employees accounts.
- * These accounts are exempt from fraud check but also do not get any reward payout.
+ * Helper class that checks if a participant is an employee by checking
+ * two sources:
+ *  1. List of ETH addresses self-reported by employees
+ *  2. Email stored in the identity (looks for @originprotocol.com domain in the email).
+ * Employee accounts are exempt from fraud check but do not get any reward payout.
  */
 class OriginEmployees {
   constructor(filename) {
@@ -49,8 +52,14 @@ class OriginEmployees {
     logger.info(`Loaded ${lines.length} employee addresses.`)
   }
 
-  match(ethAddress) {
-    return this.addresses[ethAddress] || false
+  async match(ethAddress) {
+    const identity = await db.Identity.findOne({ where: { ethAddress } })
+    const employeeEmail =
+      identity &&
+      identity.email &&
+      identity.email.toLowerCase().indexOf('@originprotocol.com') !== -1
+    const employeeAddress = ethAddress in this.addresses
+    return employeeEmail || employeeAddress
   }
 }
 
@@ -156,7 +165,7 @@ class BanParticipants {
       let isEmployee, isTrusted
 
       // Check if participant is an employee and if yes mark them as such.
-      if (this.employees.match(address)) {
+      if (await this.employees.match(address)) {
         if (this.config.persist) {
           await participant.update({ employee: true })
           logger.info('Setting employee flag on account ', address)

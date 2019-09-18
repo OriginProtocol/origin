@@ -58,6 +58,6 @@ module.exports = `
     stateProvinceRegion: String
     postalCode: String
     country: String
-    other: String
+    instructions: String
   }
 `
