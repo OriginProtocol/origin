@@ -207,12 +207,16 @@ class MarketplaceScreen extends Component {
   }
 
   injectCurrency = () => {
-    const currency = findBestAvailableCurrency()
+    const currency = this.props.settings.currency
+      ? this.props.settings.currency
+      : findBestAvailableCurrency()
+
+    const currencyValue = currency ? `fiat-${currency.code}` : 'fiat-USD'
 
     this.injectJavaScript(
       `
         if (window && window.appComponent && window.appComponent.onCurrency) {
-          window.appComponent.onCurrency('${currency}');
+          window.appComponent.onCurrency('${currencyValue}');
         }
       `,
       'currency'
