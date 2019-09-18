@@ -54,9 +54,9 @@ class AccountsScreen extends Component {
 
   renderLists() {
     const { wallet } = this.props
-    // Display headers if there are more than one mnemonic, this covers the
-    // case of private key accounts because mnemonic will be undefined
-    const uniqueMnemonics = [...new Set(wallet.accounts.map(a => a.mnemonic))]
+    const uniqueMnemonics = [
+      ...new Set(wallet.accounts.filter(a => a.mnemonic).map(a => a.mnemonic))
+    ]
 
     const accountsByHeader = {}
     wallet.accounts.forEach(account => {
@@ -65,7 +65,7 @@ class AccountsScreen extends Component {
         header = `${fbt(
           'Recovery Phrase',
           'AccountScreen.recoveryPhraseListHeader'
-        )} ${uniqueMnemonics.indexOf(account.mnemonic)}`
+        )} ${uniqueMnemonics.indexOf(account.mnemonic) + 1}`
       } else if (account.privateKey) {
         header = fbt(
           'Imported from Private Key',
