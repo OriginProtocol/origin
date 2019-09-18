@@ -50,28 +50,28 @@ export async function getMessages(conversationId, { after, before } = {}) {
   return messages.map(m => getMessage(m))
 }
 
-export async function totalUnread(account) {
-  // const messages = await getMessages(account)
-  // return messages.reduce((m, o) => {
-  //   const addr = o.address || ''
-  //   if (addr.toLowerCase() !== account.toLowerCase()) return m
-  //   return m + (o.status === 'unread' ? 1 : 0)
-  // }, 0)
-  return await contracts.messaging.getUnreadCount(account)
+/**
+ * Returns count of all unread messages acroos conversations
+ */
+export async function getUnreadCount(account) {
+  console.log(account)
+  return contracts.messaging.getUnreadCount(account.id)
 }
 
 export function getMessage(message) {
   if (!message) return null
-  let status = contracts.messaging.getStatus(message)
+
+  let read = message.msg.read
   if (message.hash === 'origin-welcome-message' && !isEnabled()) {
-    status = 'unread'
+    message.read = true
   }
+
   return {
     ...message,
     content: message.msg.content,
     media: message.msg.media,
     timestamp: Math.round(message.msg.created / 1000),
-    status
+    read
   }
 }
 
@@ -86,5 +86,11 @@ export default {
       if (!messages) return resolve(null)
       resolve(getMessage(messages[messages.length - 1]))
     }),
-  totalUnread: account => totalUnread(account.id)
+  totalUnread: async account => {
+    if (!isEnabled()) {
+      return 1
+    }
+
+    return (await getUnreadCount(account) || 0)
+  }
 }

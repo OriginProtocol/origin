@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Query } from 'react-apollo'
+import React, { Component, useState } from 'react'
+import { Query, useQuery } from 'react-apollo'
 import get from 'lodash/get'
 import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
@@ -14,6 +14,8 @@ import Link from 'components/Link'
 import EnableMessaging from 'components/EnableMessaging'
 import RoomStatus from 'pages/messaging/RoomStatus'
 
+import subscription from 'queries/NewMessageSubscription'
+
 class MessagesNav extends Component {
   constructor() {
     super()
@@ -21,11 +23,13 @@ class MessagesNav extends Component {
   }
   render() {
     return (
-      <Query query={MessagingQuery} pollInterval={2000}>
+      <Query query={MessagingQuery}>
         {({ data, loading, error }) => {
           const enabled = get(data, 'messaging.enabled', false)
           const totalUnread = get(data, 'messaging.totalUnread', 0)
           const hasUnread = totalUnread > 0 ? ' active' : ''
+
+          console.log(data)
 
           return (
             <Dropdown
@@ -76,80 +80,87 @@ const Loading = () => (
   </div>
 )
 
-class MessagesDropdown extends Component {
-  state = {}
-  render() {
-    const { onClick, totalUnread, enabled, loading, error } = this.props
-
-    if (error) {
-      return <Error />
-    } else if (loading) {
-      return <Loading />
-    }
-
-    return (
-      <Query query={ConversationsQuery} pollInterval={500}>
-        {({ data, error, loading }) => {
-          if (error) {
-            return <Error />
-          } else if (loading) {
-            return <Loading />
-          }
-
-          const conversations = get(data, 'messaging.conversations', [])
-            .filter(c => c.totalUnread > 0)
-            .sort((a, b) => {
-              const alm = a.lastMessage || { timestamp: Date.now() }
-              const blm = b.lastMessage || { timestamp: Date.now() }
-
-              return alm.timestamp > blm.timestamp ? -1 : 1
-            })
-            .slice(0, 5)
-
-          return (
-            <div className="dropdown-menu dropdown-menu-right show">
-              <div className="count">
-                <div className="total">{totalUnread}</div>
-                <div className="title">
-                  <fbt desc="messages.unreadMessages">
-                    Unread
-                    <fbt:plural count={totalUnread} showCount="no">
-                      Message
-                    </fbt:plural>
-                  </fbt>
-                </div>
-                {enabled ? null : (
-                  <EnableMessaging
-                    className="btn-sm"
-                    onClose={() => onClick()}
-                  />
-                )}
-              </div>
-              <div className="messaging-dropdown-content">
-                {conversations.map((conv, idx) => (
-                  <RoomStatus
-                    onClick={() => {
-                      this.props.history.push({
-                        pathname: `/messages/${conv.id}`,
-                        state: { scrollToTop: true }
-                      })
-                      onClick()
-                    }}
-                    key={idx}
-                    conversation={conv}
-                    wallet={conv.id}
-                  />
-                ))}
-              </div>
-              <Link to="/messages" onClick={() => onClick()}>
-                <fbt desc="messages.viewMessages">View Messages</fbt>
-              </Link>
-            </div>
-          )
-        }}
-      </Query>
-    )
+const MessagesDropdown = ({ onClick, totalUnread, enabled, loading, error }) => {
+  const { data, ...queryProps } = useQuery(ConversationsQuery)
+  
+  if (error || queryProps,error) {
+    console.error(error)
+    return <Error />
+  } else if (loading || queryProps.loading) {
+    return <Loading />
   }
+
+  // const [recentConversations, setRecentConversations] = useState([])
+
+  // useSubscription(subscription, {
+  //   onSubscriptionData: ({ subscriptionData: { data: { messageAdded } } }) => {
+  //     const { conversationId, message } = messageAdded
+
+  //     const conversationIndex = recentConversations
+  //     //   .findIndex(conversation => conversationId === conversation.id)
+
+  //     // if (conversationIndex < 0) {
+  //     //   setRecentConversations([
+  //     //     ...recentConversations
+  //     //   ])
+  //     // }
+
+  //       // .slice(0, 5)
+
+  //     // if (id === conversationId) {
+  //     //   setMessages([
+  //     //     ...messages,
+  //     //     message
+  //     //   ])
+  //     // }
+  //   }
+  // })
+
+  const conversations = get(data, 'messaging.conversations', [])
+    .slice(0, 5)
+  
+  console.log(conversations)
+
+  return (
+    <div className="dropdown-menu dropdown-menu-right show">
+      <div className="count">
+        <div className="total">{totalUnread}</div>
+        <div className="title">
+          <fbt desc="messages.unreadMessages">
+            Unread
+            <fbt:plural count={totalUnread} showCount="no">
+              Message
+            </fbt:plural>
+          </fbt>
+        </div>
+        {enabled ? null : (
+          <EnableMessaging
+            className="btn-sm"
+            onClose={() => onClick()}
+          />
+        )}
+      </div>
+      <div className="messaging-dropdown-content">
+        {conversations.map((conv, idx) => (
+          <RoomStatus
+            onClick={() => {
+              this.props.history.push({
+                pathname: `/messages/${conv.id}`,
+                state: { scrollToTop: true }
+              })
+              onClick()
+            }}
+            key={idx}
+            conversation={conv}
+            wallet={conv.id}
+          />
+        ))}
+      </div>
+      <Link to="/messages" onClick={() => onClick()}>
+        <fbt desc="messages.viewMessages">View Messages</fbt>
+      </Link>
+    </div>
+  )
 }
 
 const MessagesDropdownWithRouter = withRouter(MessagesDropdown)

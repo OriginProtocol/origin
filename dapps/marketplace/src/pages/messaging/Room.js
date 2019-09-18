@@ -183,7 +183,7 @@ const Room = (props) => {
 
   // Subscribe to new messages
   useSubscription(subscription, {
-    onSubscriptionData: ({ subscriptionData: { data: { messageAdded } }}) => {
+    onSubscriptionData: ({ subscriptionData: { data: { messageAdded } } }) => {
       const { conversationId, message } = messageAdded
 
       if (id === conversationId) {

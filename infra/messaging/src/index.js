@@ -139,10 +139,9 @@ app.post('/accounts/:address', async (req, res) => {
   return res.status(400).end()
 })
 
-// Fetch basic information about conversations for an account
-app.get('/conversations/:address', async (req, res) => {
+// Fetch total unread message count of an address
+app.get('/conversations/:address/unread', async (req, res) => {
   let { address } = req.params
-  const { after, before } = req.query
 
   if (!Web3.utils.isAddress(address)) {
     res.statusMessage = `Address '${address}' is not a valid Ethereum address`
@@ -152,46 +151,152 @@ app.get('/conversations/:address', async (req, res) => {
 
   address = Web3.utils.toChecksumAddress(address)
 
-  // Limit to 10 conversations per query
-  const limit = after ? undefined : 10
+  // TODO: Get rid of the custom query and find the correct ORM way
 
-  const conversationWhere = {}
-  const constraints = {}
-  if (after) {
-    constraints[db.Sequelize.Op.gt] = new Date(after)
-  }
-
-  if (before) {
-    constraints[db.Sequelize.Op.lt] = new Date(before)
-  }
-
-  if (before || after) {
-    conversationWhere.updatedAt = constraints
-  }
-
-  const convs = await db.Conversee.findAll({
-    where: { ethAddress: address },
-    include: [{
-      model: db.Conversation,
-      where: conversationWhere
-    }],
-    order: [[db.Conversation, 'updatedAt', 'DESC']],
-    limit
-  })
-
-  if (!convs) {
-    return res.status(204).send([])
-  }
-
-  res.status(200).send(
-    convs.map(c => {
-      return {
-        id: c.Conversation.externalId,
-        count: c.Conversation.messageCount,
-        timestamp: c.Conversation.updatedAt
+  try {
+    const [[convs]] = await db.sequelize.query(`
+SELECT SUM(unread) as unread FROM (SELECT messages.unread_count::integer as unread FROM msg_conversee conversee
+  LEFT JOIN 
+    (SELECT m.conversation_id, count(m.conversation_id)::integer as unread_count 
+      FROM msg_message m 
+      WHERE m.read=False AND m.is_keys=False
+      GROUP BY m.conversation_id) messages
+    ON messages.conversation_id=conversee.conversation_id
+  WHERE conversee.eth_address=:address) unread_by_conv`, {
+      replacements: {
+        address
       }
     })
-  )
+  
+    return res.status(200).send(convs)
+  } catch (e) {
+    return res.status(500).send(e)
+  }
+})
+
+// Fetch basic information about conversations for an account
+app.get('/conversations/:address', async (req, res) => {
+  let { address } = req.params
+  let { limit, offset } = {
+    limit: 10,
+    offset: 0,
+    ...req.query
+  }
+
+  if (!Web3.utils.isAddress(address)) {
+    res.statusMessage = `Address '${address}' is not a valid Ethereum address`
+
+    return res.status(400).end()
+  }
+
+  address = Web3.utils.toChecksumAddress(address)
+
+  // TODO: Get rid of the custom query and find the correct ORM way
+
+  // // Limit to 10 conversations per query
+  // const limit = after ? undefined : 10
+
+  // const conversationWhere = {}
+  // const constraints = {}
+  // if (after) {
+  //   constraints[db.Sequelize.Op.gt] = new Date(after)
+  // }
+
+  // if (before) {
+  //   constraints[db.Sequelize.Op.lt] = new Date(before)
+  // }
+
+  // if (before || after) {
+  //   conversationWhere.updatedAt = constraints
+  // }
+
+  // const convs = await db.Conversee.findAll({
+  //   where: { ethAddress: address },
+  //   include: [{
+  //     model: db.Conversation,
+  //     where: conversationWhere,
+  //     as: 'conversations',
+  //     include: [{
+  //       model: db.Message,
+  //       as: 'messages',
+  //       where: {
+  //         read: false
+  //       }
+  //     }],
+  //     // attributes: {
+  //     //   include: [
+  //     //     [db.Sequelize.fn('COUNT', db.Sequelize.col('msg_message.id'), 'unreadCount')]
+  //     //   ]
+  //     // }
+  //     // include: [{
+  //     //   model: db.Message,
+  //     //   // attributes: [],
+  //     //   where: {
+  //     //     read: false
+  //     //   }
+  //     // }]
+  //   }],
+  //   order: [[db.Conversation, 'updatedAt', 'DESC']],
+  //   limit
+  // })
+
+  try {
+    const [convs] = await db.sequelize.query(`
+SELECT conversations.external_id as id, conversations.updated_at as timestamp, conversations.message_count as count, messages.unread_count as unread FROM msg_conversee conversee 
+  INNER JOIN msg_conversation conversations 
+    ON conversations.id=conversee.conversation_id 
+  LEFT JOIN 
+    (SELECT m.conversation_id, count(m.conversation_id)::integer as unread_count 
+      FROM msg_message m 
+      WHERE m.read=False AND m.is_keys=False
+      GROUP BY m.conversation_id) messages
+    ON messages.conversation_id=conversations.id
+  WHERE conversee.eth_address=:address
+  ORDER BY conversations.updated_at DESC
+  LIMIT :limit OFFSET :offset`, {
+      replacements: {
+        address,
+        limit,
+        offset
+      }
+    })
+  
+    return res.status(200).send(convs)
+  } catch (e) {
+    return res.status(500).send(e)
+  }
+})
+
+// Mark the conversation as read
+app.put('/messages/:conversationId/read', async (req, res) => {
+  const conversation = await db.Conversation.findOne({
+    where: {
+      externalId: req.params.conversationId
+    }
+  })
+
+  if (!conversation) {
+    return res.status(404)
+      .send({
+        success: false,
+        errors: 'Conversation not found'
+      })
+  }
+
+  const [messagesRead] = await db.Message.update({
+    read: true
+  }, {
+    where: {
+      conversationId: conversation.id,
+      read: false,
+    }
+  })
+
+  return res.status(200)
+    .send({
+      success: true,
+      messagesRead
+    })
 })
 
 /**
@@ -200,9 +305,12 @@ app.get('/conversations/:address', async (req, res) => {
  * @param {Integer} args.after - To get messages with converstationIndex > after
  * @param {Integer} args.before - To get messages with converstationIndex < before
  * @param {Integer} args.isKeys - Returns only keys if true, otherwise returns all other messages
- * @returns {Promise<[Object]>} Always returns an array of message objects. Array will be empty if no messages matched the given constraint.
+ * @param {Integer} args.read - To filter messages based on read status
+ * @param {Integer} args.returnCount - Returns only the count, if true.
+ * @returns {Promise<[Object]>|Integer} Returns count of records if returnCount is true. Otherwise, returns an array of message objects. 
+ *                                      Array will be empty if no messages matched the given constraint.
  */
-async function getMessages({ conversationId, after, before, isKeys }) {
+async function getMessages({ returnCount, conversationId, after, before, isKeys, read }) {
   const where = {
     isKeys
   }
@@ -222,21 +330,31 @@ async function getMessages({ conversationId, after, before, isKeys }) {
     if (before || after) {
       where.conversationIndex = constraints
     }
+
+    if (read === 'true' || read === 'false') {
+      where.read = read === 'true'
+    }
   }
 
   // Don't paginate messages if `after` is specified
-  // Don't paginate when fetching keys
+  // Don't paginate when fetching keys or count of messages
   // Limit 10 per query otherwise
-  const limit = isKeys || after ? undefined : 10
-
-  const messages = await db.Message.findAll({
+  const limit = returnCount || isKeys || after ? undefined : 10
+  
+  const queryOpts = {
     include: [
       { model: db.Conversation, where: { externalId: conversationId } }
     ],
     order: [['conversationIndex', 'DESC']],
     where,
     limit
-  })
+  }
+
+  if (returnCount) {
+    return db.Message.count(queryOpts)
+  }
+
+  const messages = await db.Message.findAll(queryOpts)
 
   return (messages || []).map(m => {
     return {
@@ -246,7 +364,8 @@ async function getMessages({ conversationId, after, before, isKeys }) {
       ext: m.data.ext,
       signature: m.signature,
       isKeys: m.isKeys,
-      timestamp: m.createdAt
+      timestamp: m.createdAt,
+      read: m.read
     }
 
   }) 
@@ -264,6 +383,20 @@ app.get('/messages/:conversationId/keys', async (req, res) => {
   }
 
   res.status(200).send(messages)
+})
+
+// Get count of all messages in a room/conversation
+app.get('/messages/:conversationId/count', async (req, res) => {
+  const messageCount = await getMessages({
+    conversationId: req.params.conversationId,
+    ...req.query,
+    isKeys: false,
+    returnCount: true
+  })
+
+  return res.status(200).send({
+    messageCount
+  })
 })
 
 // Get all messages in a room/conversation
@@ -363,7 +496,8 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
           data: { content },
           contentHash,
           signature,
-          isKeys: true
+          isKeys: true,
+          read: true
         },
         { transaction: t }
       )
@@ -399,7 +533,8 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
           data: { content },
           contentHash,
           signature,
-          isKeys: content.type == 'keys'
+          isKeys: content.type === 'keys',
+          read: content.type !== 'msg' // Mark `events` and `keys` as read by default
         },
         { transaction: t }
       )

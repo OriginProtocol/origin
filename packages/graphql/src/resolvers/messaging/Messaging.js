@@ -1,6 +1,6 @@
 import contracts from '../../contracts'
 import { proxyOwner } from '../../utils/proxy'
-import { totalUnread } from './Conversation'
+import { getUnreadCount } from './Conversation'
 
 function isEnabled() {
   return contracts.messaging.pub_sig &&
@@ -73,15 +73,11 @@ export default {
       })
     }),
   totalUnread: async () => {
-    // Show 1 unread when messaging disabled. Intro message from Origin Support
-    return 1
-    // if (!isEnabled()) {
-    //   return 1
-    // }
-    // const convos = await contracts.messaging.getMyConvs()
-    // const ids = Object.keys(convos)
-    // const allUnreads = await Promise.all(ids.map(c => totalUnread(c)))
-    // return allUnreads.reduce((m, o) => m + o, 0)
+    if (!isEnabled()) {
+      return 1
+    }
+
+    return await getUnreadCount()
   },
   synced: () => {
     if (contracts.messaging.globalKeyServer) return true

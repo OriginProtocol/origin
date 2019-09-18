@@ -19,8 +19,6 @@ const MESSAGING_KEY = 'MK_'
 const MESSAGING_PHRASE = 'MP_'
 const PUB_MESSAGING_SIG = 'PMS_'
 const PUB_MESSAGING = 'KEY_'
-const UNREAD_STATUS = 'unread'
-const READ_STATUS = 'read'
 const COULD_NOT_DECRYPT = 'Could not decrypt'
 const INVALID_MESSAGE_OBJECT = 'Invalid message object'
 
@@ -97,6 +95,8 @@ class Messaging {
     this.currentStorage = this.cookieStorage
     this._registryCache = {}
     this.pubsub = pubsub
+    this.unreadCount = 0
+    this.unreadCountLoaded = false
   }
 
   onAccount(accountKey) {
@@ -197,6 +197,8 @@ class Messaging {
 
     // Reset state...
     this.convs = {}
+    this.unreadCount = 0
+    this.unreadCountLoaded = false
     this.convsEnabled = false
     clearInterval(this.refreshIntervalId)
 
@@ -510,6 +512,7 @@ class Messaging {
     )
 
     if (content && conversationId) {
+      this.unreadCount++
       if (!this.convs[conversationId]) {
         (async () => {
           await this.getRoom(conversationId, { keys: true })
@@ -540,6 +543,8 @@ class Messaging {
               debug('message:', message)
               this.events.emit('msg', message)
 
+              convObj.lastMessage = message
+
               this.pubsub.publish('MESSAGE_ADDED', {
                 messageAdded: {
                   conversationId: remoteEthAddress,
@@ -562,7 +567,7 @@ class Messaging {
           // we are missing a message
           const lastConversationIndex = convObj.lastConversationIndex
 
-          (async () => {
+          ;(async () => {
             const updatedConvObj = await this.getRoom(conversationId)
             updatedConvObj.messages
               .filter(message => message.conversationId > lastConversationIndex)
@@ -728,7 +733,8 @@ class Messaging {
       // Populate keys and messages for all loaded conversations
       (async () => {
         await this.getRoom(conv.id, { keys: true })
-        await this.getRoom(conv.id)
+        const convObj = await this.getRoom(conv.id)
+        convObj.unreadCount = conv.unread || 0
       })()
     }
 
@@ -779,8 +785,45 @@ class Messaging {
   }
 
   async getUnreadCount(remoteEthAddress) {
-    // TODO
-    return 10
+    if (remoteEthAddress) {
+      let convObj = this.getConvo(remoteEthAddress)
+
+      if (convObj) {
+        return convObj.unread
+      } else {
+        const roomId = this.generateRoomId(this.account_key, remoteEthAddress)
+        await this.getRoom(roomId, { keys: true })
+        convObj = await this.getRoom(roomId)
+
+        this.convs[roomId] = convObj
+
+        return convObj.unread
+      }
+    }
+
+    if (this.unreadCountLoaded) {
+      return this.unreadCount
+    }
+
+    const accountId = this.web3.utils.toChecksumAddress(this.account_key)
+
+    try {
+      const response = await fetch(
+        `${this.globalKeyServer}/conversations/${accountId}/unread`,
+        {
+          headers: { 'content-type': 'application/json' }
+        }
+      )
+      
+      const { unread } = (await response.json())
+  
+      this.unreadCount = unread
+    } catch (e) {
+      console.error('Failed to get unread count for ', accountId, e)
+      this.unreadCount = 0
+    }
+
+    return this.unreadCount
   }
 
   ecEncrypt(text, pubKey) {
@@ -1022,19 +1065,6 @@ class Messaging {
       return
     }
     return this.decryptMessage(message, convObj)
-  }
-
-  // messages supplied by the 'msg' event have status included
-  // this is a convenience method for tracking status on spoofed messages
-  getStatus({ hash }) {
-    const messageStatuses = JSON.parse(
-      localStorage.getItem(`${storeKeys.messageStatuses}:${this.account_key}`)
-    )
-    const status =
-      messageStatuses && messageStatuses[hash] === READ_STATUS
-        ? READ_STATUS
-        : UNREAD_STATUS
-    return status
   }
 
   // we allow the entire message to be passed in (for consistency with other resources + convenience)
