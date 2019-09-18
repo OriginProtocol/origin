@@ -67,7 +67,7 @@ const getPastEvents = memoize(
     // Paranoia check.
     if (!instance.contract || !instance.contract.options.address) {
       throw new Error(
-        `EventCache.getPastEvents failure. Contract ${this.prefix} missing address!`
+        `EventCache.getPastEvents failure. Contract ${instance.prefix} missing address!`
       )
     }
 
