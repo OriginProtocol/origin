@@ -8,33 +8,10 @@ import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import validateAttestation from '../../utils/validateAttestation'
 import { hasProxy, proxyOwner, resetProxyCache } from '../../utils/proxy'
-import remoteQuery from '../../utils/remoteQuery'
+import remoteQuery, { identityQuery } from '../../utils/remoteQuery'
 import costs from '../_gasCost.js'
 
 import { identity } from './../../resolvers/IdentityEvents'
-
-const identityQuery = `query SkinnyIdentity($id: ID!) {
-  identity(id: $id) {
-    id
-    firstName
-    lastName
-    fullName
-    description
-    avatarUrl
-    avatarUrlExpanded
-    strength
-    attestations
-
-    verifiedAttestations {
-      id
-      rawData
-      properties {
-        type
-        value
-      }
-    }
-  }
-}`
 
 const deduplicateAttestations = attestations => {
   // Note: sortAttestations() method under `packages/graphql/src/resolvers/IdentityEvent.js`
