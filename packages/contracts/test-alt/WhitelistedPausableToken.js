@@ -24,7 +24,9 @@ describe('WhitelistedPausableToken.sol', async function() {
     return await OriginToken.methods.allowedTransactors(address).call()
   }
   async function removeAllowedTransactor(address) {
-    const res = await OriginToken.methods.removeAllowedTransactor(address).send()
+    const res = await OriginToken.methods
+      .removeAllowedTransactor(address)
+      .send()
     assert(res.events.AllowedTransactorRemoved)
     return res
   }
@@ -32,11 +34,12 @@ describe('WhitelistedPausableToken.sol', async function() {
     return await OriginToken.methods.whitelistExpiration().call()
   }
   async function setWhitelistExpiration(expiration) {
-    const res = await OriginToken.methods.setWhitelistExpiration(expiration).send()
+    const res = await OriginToken.methods
+      .setWhitelistExpiration(expiration)
+      .send()
     assert(res.events.SetWhitelistExpiration)
     return res
   }
-
 
   beforeEach(async function() {
     ({
@@ -44,7 +47,7 @@ describe('WhitelistedPausableToken.sol', async function() {
       accounts,
       web3,
       blockTimestamp,
-      evmIncreaseTime,
+      evmIncreaseTime
     } = await helper(`${__dirname}/..`))
     owner = accounts[1]
     sender = accounts[2]
@@ -55,7 +58,9 @@ describe('WhitelistedPausableToken.sol', async function() {
       path: `${contractPath}/token/`,
       args: [initialSupply]
     })
-    await OriginToken.methods.transfer(sender, senderBalance).send({ from: owner })
+    await OriginToken.methods
+      .transfer(sender, senderBalance)
+      .send({ from: owner })
   })
 
   it('starts with an inactive whitelist', async function() {
@@ -63,18 +68,21 @@ describe('WhitelistedPausableToken.sol', async function() {
   })
 
   it('allows transfers before activating whitelist', async function() {
-    await OriginToken.methods.transfer(recipient, transferAmount).send({from: sender})
+    await OriginToken.methods
+      .transfer(recipient, transferAmount)
+      .send({ from: sender })
     assert.equal(await balanceOf(sender), senderBalance - transferAmount)
     assert.equal(await balanceOf(recipient), transferAmount)
   })
 
   it('disallows setting an unreasonably short whitelist expiration', async function() {
-    const expiration = await blockTimestamp() + minWhitelistExpirationSecs - 60
+    const expiration =
+      (await blockTimestamp()) + minWhitelistExpirationSecs - 60
     await assertRevert(setWhitelistExpiration(expiration))
   })
 
   it('allows extending the whitelist expiration', async function() {
-    const expiration = await blockTimestamp() + minWhitelistExpirationSecs
+    const expiration = (await blockTimestamp()) + minWhitelistExpirationSecs
     await setWhitelistExpiration(expiration)
     assert.equal(await whitelistExpiration(), expiration)
     const newExpiration = expiration + 86400
@@ -83,7 +91,7 @@ describe('WhitelistedPausableToken.sol', async function() {
   })
 
   it('allows extending the whitelist expiration with active whitelist', async function() {
-    const expiration = await blockTimestamp() + minWhitelistExpirationSecs
+    const expiration = (await blockTimestamp()) + minWhitelistExpirationSecs
     await setWhitelistExpiration(expiration)
     assert.equal(await whitelistExpiration(), expiration)
     const newExpiration = expiration + 86400
@@ -92,7 +100,7 @@ describe('WhitelistedPausableToken.sol', async function() {
   })
 
   it('disallows setting an expiration after it has already expired', async function() {
-    const expiration = await blockTimestamp() + minWhitelistExpirationSecs
+    const expiration = (await blockTimestamp()) + minWhitelistExpirationSecs
     await setWhitelistExpiration(expiration)
     assert.equal(await whitelistExpiration(), expiration)
     await evmIncreaseTime(minWhitelistExpirationSecs)
@@ -101,14 +109,14 @@ describe('WhitelistedPausableToken.sol', async function() {
 
   describe('with an active whitelist', async function() {
     beforeEach(async function() {
-      const expiration = await blockTimestamp() + minWhitelistExpirationSecs
+      const expiration = (await blockTimestamp()) + minWhitelistExpirationSecs
       await setWhitelistExpiration(expiration)
       assert.equal(await OriginToken.methods.whitelistActive().call(), true)
     })
 
     it('disallows transfers with an empty whitelist', async function() {
       await assertRevert(
-        OriginToken.methods.transfer(recipient, 1).send({from: sender})
+        OriginToken.methods.transfer(recipient, 1).send({ from: sender })
       )
       assert.equal(await balanceOf(sender), senderBalance)
     })
@@ -117,7 +125,9 @@ describe('WhitelistedPausableToken.sol', async function() {
       await addAllowedTransactor(sender)
       assert.equal(await isAllowedTransactor(sender), true)
       assert.equal(await isAllowedTransactor(recipient), false)
-      await OriginToken.methods.transfer(recipient, transferAmount).send({from: sender})
+      await OriginToken.methods
+        .transfer(recipient, transferAmount)
+        .send({ from: sender })
       assert.equal(await balanceOf(sender), senderBalance - transferAmount)
       assert.equal(await balanceOf(recipient), transferAmount)
     })
@@ -128,7 +138,9 @@ describe('WhitelistedPausableToken.sol', async function() {
       await removeAllowedTransactor(sender)
       assert.equal(await isAllowedTransactor(sender), false)
       assertRevert(
-        OriginToken.methods.transfer(recipient, transferAmount).send({from: sender})
+        OriginToken.methods
+          .transfer(recipient, transferAmount)
+          .send({ from: sender })
       )
     })
 
@@ -136,7 +148,9 @@ describe('WhitelistedPausableToken.sol', async function() {
       await addAllowedTransactor(recipient)
       assert.equal(await isAllowedTransactor(sender), false)
       assert.equal(await isAllowedTransactor(recipient), true)
-      await OriginToken.methods.transfer(recipient, transferAmount).send({from: sender})
+      await OriginToken.methods
+        .transfer(recipient, transferAmount)
+        .send({ from: sender })
       assert.equal(await balanceOf(sender), senderBalance - transferAmount)
       assert.equal(await balanceOf(recipient), transferAmount)
     })
@@ -148,7 +162,9 @@ describe('WhitelistedPausableToken.sol', async function() {
       await removeAllowedTransactor(recipient)
       assert.equal(await isAllowedTransactor(recipient), false)
       assertRevert(
-        OriginToken.methods.transfer(recipient, transferAmount).send({from: sender})
+        OriginToken.methods
+          .transfer(recipient, transferAmount)
+          .send({ from: sender })
       )
     })
 
@@ -166,13 +182,17 @@ describe('WhitelistedPausableToken.sol', async function() {
         assert.equal(await isAllowedTransactor(recipient), false)
         assert.equal(await OriginToken.methods.whitelistActive().call(), true)
         await assertRevert(
-          OriginToken.methods.transfer(recipient, transferAmount).send({from: sender})
+          OriginToken.methods
+            .transfer(recipient, transferAmount)
+            .send({ from: sender })
         )
 
         // Expire the whitelist
         await evmIncreaseTime(minWhitelistExpirationSecs)
 
-        await OriginToken.methods.transfer(recipient, transferAmount).send({from: sender})
+        await OriginToken.methods
+          .transfer(recipient, transferAmount)
+          .send({ from: sender })
         assert.equal(await balanceOf(sender), senderBalance - transferAmount)
         assert.equal(await balanceOf(recipient), transferAmount)
       })

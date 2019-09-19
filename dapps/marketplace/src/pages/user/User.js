@@ -3,7 +3,7 @@ import { Query } from 'react-apollo'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
-import query from 'queries/Identity'
+import query from 'queries/SkinnyIdentity'
 import Reviews from 'components/Reviews'
 import DocumentTitle from 'components/DocumentTitle'
 import QueryError from 'components/QueryError'
@@ -38,7 +38,7 @@ const User = ({ match, isMobile, history }) => {
           }
           if (loading) return <LoadingSpinner />
 
-          const profile = get(data, 'web3.account.identity') || {}
+          const profile = get(data, 'identity') || {}
 
           const showingReviews = content === 'reviews'
 
