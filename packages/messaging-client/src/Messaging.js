@@ -780,6 +780,17 @@ class Messaging {
 
     const sortedConvs = cachedConvs
       .sort((conv1, conv2) => {
+        const conv1LastMessage = this.convs[conv1].lastMessage
+        const conv2LastMessage = this.convs[conv2].lastMessage
+
+        if (conv1LastMessage && !conv2LastMessage) {
+          return -1
+        } else if (!conv1LastMessage && conv2LastMessage) {
+          return 1
+        } else if (!conv1LastMessage && !conv2LastMessage) {
+          return 0
+        }
+
         return this.convs[conv2].lastMessage.timestamp - this.convs[conv1].lastMessage.timestamp
       })
       .slice(Number(offset) || 0, Number(limit) || 10)

@@ -27,9 +27,7 @@ export async function getMessages(conversationId, { after, before } = {}) {
     const hasInjectedMessages = messages.find(x => x.index < 0)
 
     if (!hasInjectedMessages) {
-      const created = messages.length
-        ? messages[0].msg.created - 1
-        : new Date('01-01-2017')
+      const created = 1483209000000 // 01/01/2017
       if (isEnabled()) {
         messages.unshift({
           msg: { content: congratsMessage, created },
@@ -79,12 +77,10 @@ export default {
     before: account.before,
     after: account.after
   }),
-  lastMessage: account =>
-    new Promise(async resolve => {
-      const messages = await getMessages(account.id)
-      if (!messages) return resolve(null)
-      resolve(getMessage(messages[messages.length - 1]))
-    }),
+  lastMessage: async account => {
+    const messages = await getMessages(account.id)
+    return messages && messages.length ? getMessage(messages[0]) : null
+  },
   totalUnread: async account => {
     if (!isEnabled()) {
       return 1

@@ -58,7 +58,7 @@ export default {
   conversations: async (_, { limit, offset }) => await getConversationIds({ limit, offset }),
   conversation: (_, args) =>
     new Promise(async resolve => {
-      if (!await contracts.messaging.conversationExists()) {
+      if (!await contracts.messaging.conversationExists(args.id)) {
         resolve(null)
       }
 
