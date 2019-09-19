@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Mutation } from 'react-apollo'
+import React, { useState, useEffect } from 'react'
+import { useMutation } from 'react-apollo'
 import { Link } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
@@ -31,124 +31,98 @@ const RoomTitle = withIdentity(({ identity, walletProxy }) => (
   </Link>
 ))
 
-class Messages extends Component {
-  constructor(props) {
-    super(props)
+const ConversationList = ({ isMobile, messagingError, messaging, messagingLoading, room, onBack, ...props }) => {
+  const [markConversationRead] = useMutation(MarkConversationRead)
 
-    this.state = { defaultRoomSet: false, back: false }
+  if (messagingError) {
+    return <QueryError query={query} error={messagingError} />
+  } else if (messagingLoading && !messaging) {
+    return <LoadingSpinner />
+  } else if (!messagingLoading && !messaging) {
+    return (
+      <p className="p-3">
+        <fbt desc="Messages.no Message">You have no messages</fbt>
+      </p>
+    )
   }
 
-  componentDidUpdate() {
-    const room = get(this.props, 'match.params.room')
+  const conversations = get(messaging, 'conversations', [])
 
+  let content = !room ? null : (
+      <div className="conversation-view">
+        <Room id={room} markRead={markConversationRead} enabled={messaging.enabled} />
+      </div>
+  )
+
+  if (content && isMobile) {
+    content = (
+      <MobileModal
+        className="messages-page messages-modal"
+        title={<RoomTitle walletProxy={room} wallet={room} />}
+        onBack={onBack}
+      >
+        <div className="conversations-wrapper">{content}</div>
+      </MobileModal>
+    )
+  }
+
+  return (
+    <div className="conversations-wrapper">
+      <div className={`conversations-list`}>
+        {conversations.length ? null : (
+          <div>
+            <fbt desc="Messages.none">No conversations!</fbt>
+          </div>
+        )}
+        {conversations.map((conv, idx) => (
+          <RoomStatus
+            key={idx}
+            active={room === conv.id}
+            conversation={conv}
+            wallet={conv.id}
+          />
+        ))}
+      </div>
+      {content}
+    </div>
+  )
+}
+
+const Messages = (props) => {
+  const [defaultRoom, setDefaultRoom] = useState(false)
+  const [back, setBack] = useState(false)
+
+  const room = get(props, 'match.params.room')
+  useEffect(() => {
+    // To set a default room
     if (
-      this.state.defaultRoomSet ||
-      this.state.back ||
-      !this.props.messaging ||
+      defaultRoom ||
+      back ||
+      !props.messaging ||
       room ||
-      this.props.isMobile
+      props.isMobile
     ) {
       return
     }
 
-    const conversations = get(this.props, 'messaging.conversations', [])
-
+    const conversations = get(props, 'messaging.conversations', [])
     const defaultRoom = get(conversations, '0.id')
 
     if (defaultRoom) {
-      this.props.history.push(`/messages/${defaultRoom}`)
-      this.setState({
-        defaultRoomSet: true
-      })
+      props.history.push(`/messages/${defaultRoom}`)
+      setDefaultRoom(true)
     }
-  }
+  }, [room, defaultRoom, back, props.messaging, props.isMobile])
 
-  goBack() {
-    this.setState({
-      back: true
-    })
-    this.props.history.goBack()
-  }
-
-  renderRoom({ room, enabled }) {
-    if (!room) {
-      return null
-    }
-
-    return (
-      <Mutation mutation={MarkConversationRead}>
-        {markConversationRead => (
-          <div className="conversation-view">
-            <Room id={room} markRead={markConversationRead} enabled={enabled} />
-          </div>
-        )}
-      </Mutation>
-    )
-  }
-
-  renderContent() {
-    const { isMobile, messagingError, messaging, messagingLoading } = this.props
-
-    if (messagingError) {
-      return <QueryError query={query} error={messagingError} />
-    } else if (messagingLoading && !messaging) {
-      return <LoadingSpinner />
-    } else if (!messaging) {
-      return (
-        <p className="p-3">
-          <fbt desc="Messages.cannotQuery">Cannot query messages</fbt>
-        </p>
-      )
-    }
-
-    const conversations = get(this.props, 'messaging.conversations', [])
-
-    const room = get(this.props, 'match.params.room')
-
-    let content = this.renderRoom({ room, enabled: messaging.enabled })
-
-    if (content && isMobile) {
-      content = (
-        <MobileModal
-          className="messages-page messages-modal"
-          title={<RoomTitle walletProxy={room} wallet={room} />}
-          onBack={() => this.goBack()}
-        >
-          <div className="conversations-wrapper">{content}</div>
-        </MobileModal>
-      )
-    }
-
-    return (
-      <div className="conversations-wrapper">
-        <div className={`conversations-list`}>
-          {conversations.length ? null : (
-            <div>
-              <fbt desc="Messages.none">No conversations!</fbt>
-            </div>
-          )}
-          {conversations.map((conv, idx) => (
-            <RoomStatus
-              key={idx}
-              active={room === conv.id}
-              conversation={conv}
-              wallet={conv.id}
-            />
-          ))}
-        </div>
-        {content}
-      </div>
-    )
-  }
-
-  render() {
-    return (
-      <div className="container messages-page">
-        <DocumentTitle pageTitle={<fbt desc="Messages.title">Messages</fbt>} />
-        {this.renderContent()}
-      </div>
-    )
-  }
+  return (
+    <div className="container messages-page">
+      <DocumentTitle pageTitle={<fbt desc="Messages.title">Messages</fbt>} />
+      <ConversationList {...props} room={room} onBack={() => {
+        setBack(true)
+        props.history.goBack()
+      }} />
+    </div>
+  )
 }
 
 export default withIsMobile(withWallet(withMessaging(Messages)))
