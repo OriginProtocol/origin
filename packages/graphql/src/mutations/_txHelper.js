@@ -168,7 +168,11 @@ function globalWeb3() {
 async function getGasPrice(w3) {
   w3 = w3 ? w3 : globalWeb3()
   // Don't use eth_gasPrice for MM
-  if (window.ethereum) {
+  if (
+    typeof window !== 'undefined' &&
+    window.ethereum &&
+    ['mainnet', 'rinkeby'].includes(contracts.net)
+  ) {
     return await fetchGasPrice()
   }
   // But use it when we're using our provider
@@ -629,7 +633,7 @@ export default function txHelper({
     })
 
     // Get our gas price if not using the relayer
-    if (!shouldUseRelayer && ['mainnet', 'rinkeby'].includes(contracts.net)) {
+    if (!shouldUseRelayer) {
       try {
         gasPrice = await getGasPrice(web3)
       } catch (err) {
