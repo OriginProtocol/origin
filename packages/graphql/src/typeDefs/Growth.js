@@ -69,6 +69,7 @@ module.exports = `
     Enrolled
     NotEnrolled
     Banned
+    Closed
   }
 
   # TODO: use Common.Price

@@ -112,7 +112,7 @@ const resolvers = {
       return eligibility
     },
     async enrollmentStatus(_, args, context) {
-      // if identity overriden with admin_secret always show as enrolled
+      // if identity is overridden with admin_secret always show as enrolled
       if (context.identityOverriden) {
         return enums.GrowthParticipantAuthenticationStatus.Enrolled
       } else {
