@@ -506,8 +506,8 @@ class Messaging {
     return { error: COULD_NOT_DECRYPT }
   }
 
-  onMessageUpdate(entry) {
-    debug('we got a update entry:', entry)
+  onNewMessageUpdate(entry) {
+    debug('we got a new message entry:', entry)
     const { content, conversationId, conversationIndex } = entry
     const roomId = conversationId
     const remoteEthAddress = this.getRecipients(roomId).find(
@@ -587,6 +587,25 @@ class Messaging {
           })()
         }
       }
+    }
+  }
+
+  onMarkedAsReadUpdate(entry) {
+    debug('user marked conversation as read', entry)
+    // TODO
+  }
+
+  onMessageUpdate(entry) {
+    debug('we got a new message entry:', entry)
+    switch (entry.type) {
+      case 'NEW_MESSAGE':
+        this.onNewMessageUpdate(entry)
+        break
+      case 'MARKED_AS_READ':
+        this.onMarkedAsReadUpdate(entry)
+        break
+      default:
+        debug('dropping update')
     }
   }
 
@@ -747,7 +766,7 @@ class Messaging {
       })
     }))
 
-    if (!limit && !offset) {
+    if (!this.ws) {
       this.listenForUpdates()
     }
   }

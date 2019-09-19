@@ -285,14 +285,34 @@ app.put('/messages/:conversationId/read', async (req, res) => {
       })
   }
 
+  const { address } = req.query
+
   const [messagesRead] = await db.Message.update({
     read: true
   }, {
     where: {
       conversationId: conversation.id,
-      read: false,
+      ethAddress: {
+        [db.sequelize.Op.not]: address
+      },
+      read: false
     }
   })
+
+  conversationId
+    .split('-')
+    .map(async notify_address => {
+      // Push to redis
+      await redis.publish(
+        notify_address.toLowerCase(),
+        JSON.stringify({
+          type: 'MARKED_AS_READ',
+          address,
+          conversationId,
+          messagesRead
+        })
+      )
+    })
 
   return res.status(200)
     .send({
@@ -548,6 +568,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
   if (message) {
     // Publish messages to be consumed by the websocket(below)
     for (const notify_address of conv_addresses) {
+      console.log('pub', notify_address)
       // Push to redis
       await redis.publish(
         notify_address,
@@ -612,7 +633,9 @@ app.ws('/message-events/:address', (ws, req) => {
   const redis_sub = redis.duplicate()
   redis_sub.subscribe(address)
 
+  console.log('subscribe', address)
   const msg_handler = (channel, msg) => {
+    console.log(channel, msg)
     ws.send(msg)
   }
 
