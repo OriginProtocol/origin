@@ -57,7 +57,6 @@
     "react-native-fbsdk": "1.0.3",
     "react-native-gesture-handler": "^1.4.1",
     "react-native-localize": "^1.1.4",
-    "react-native-permissions": "^1.2.0",
     "react-native-push-notification": "^3.1.9",
     "react-native-restart": "^0.0.13",
     "react-native-safe-area-view": "^0.14.8",
