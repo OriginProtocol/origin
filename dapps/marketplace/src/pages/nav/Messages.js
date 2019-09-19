@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { Component, useState, useEffect } from 'react'
 import { Query, useQuery } from 'react-apollo'
 import get from 'lodash/get'
 import { withRouter } from 'react-router-dom'
@@ -16,57 +16,50 @@ import RoomStatus from 'pages/messaging/RoomStatus'
 
 import subscription from 'queries/NewMessageSubscription'
 
-class MessagesNav extends Component {
-  constructor() {
-    super()
-    this.state = {}
-  }
-  render() {
-    return (
-      <Query query={MessagingQuery}>
-        {({ data, loading, error }) => {
-          const enabled = get(data, 'messaging.enabled', false)
-          const totalUnread = get(data, 'messaging.totalUnread', 0)
-          const hasUnread = totalUnread > 0 ? ' active' : ''
+const MessagesNav = ({ open, onClose, onOpen, wallet }) => {
+  // TODO: Simplify query to fetch just `totalUnread` and use `wallet` as variable instead of `defaultAccount`
+  const { data, refetch, networkStatus } = useQuery(MessagingQuery)
 
-          console.log(data)
+  useEffect(() => {
+    // Rerender on wallet change
+    if (wallet && networkStatus !== 1 && networkStatus !== 4) {
+      refetch()
+    }
+  }, [wallet])
 
-          return (
-            <Dropdown
-              el="li"
-              className="nav-item messages d-none d-md-flex"
-              open={this.props.open}
-              onClose={() => this.props.onClose()}
-              content={
-                <MessagesDropdownWithRouter
-                  error={error}
-                  loading={loading}
-                  enabled={enabled}
-                  onClick={() => this.props.onClose()}
-                  totalUnread={totalUnread}
-                  wallet={this.props.wallet}
-                />
-              }
-            >
-              <a
-                className="nav-link"
-                href="#"
-                onClick={e => {
-                  e.preventDefault()
-                  this.props.open ? this.props.onClose() : this.props.onOpen()
-                }}
-                role="button"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                <div className={`messages-icon${hasUnread}`} />
-              </a>
-            </Dropdown>
-          )
+  const enabled = get(data, 'messaging.enabled', false)
+  const totalUnread =  get(data, 'messaging.totalUnread', 0)
+  const hasUnread = totalUnread > 0 ? ' active' : ''
+
+  return (
+    <Dropdown
+      el="li"
+      className="nav-item messages d-none d-md-flex"
+      open={open}
+      onClose={() => onClose()}
+      content={
+        <MessagesDropdown
+          onClick={() => onClose()}
+          totalUnread={totalUnread}
+          messagingEnabled={enabled}
+        />
+      }
+    >
+      <a
+        className="nav-link"
+        href="#"
+        onClick={e => {
+          e.preventDefault()
+          open ? onClose() : onOpen()
         }}
-      </Query>
-    )
-  }
+        role="button"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <div className={`messages-icon${hasUnread}`} />
+      </a>
+    </Dropdown>
+  )
 }
 
 const Error = () => (
@@ -80,46 +73,24 @@ const Loading = () => (
   </div>
 )
 
-const MessagesDropdown = ({ onClick, totalUnread, enabled, loading, error }) => {
-  const { data, ...queryProps } = useQuery(ConversationsQuery)
+const MessagesDropdown = ({ onClick, totalUnread, messagingEnabled }) => {
+  const { data, error, networkStatus } = useQuery(ConversationsQuery, {
+    variables: {
+      limit: 1
+    },
+    skip: !messagingEnabled
+  })
+
+  const enabled = messagingEnabled
   
-  if (error || queryProps,error) {
+  if (error) {
     console.error(error)
     return <Error />
-  } else if (loading || queryProps.loading) {
+  } else if (networkStatus === 1) {
     return <Loading />
   }
 
-  // const [recentConversations, setRecentConversations] = useState([])
-
-  // useSubscription(subscription, {
-  //   onSubscriptionData: ({ subscriptionData: { data: { messageAdded } } }) => {
-  //     const { conversationId, message } = messageAdded
-
-  //     const conversationIndex = recentConversations
-  //     //   .findIndex(conversation => conversationId === conversation.id)
-
-  //     // if (conversationIndex < 0) {
-  //     //   setRecentConversations([
-  //     //     ...recentConversations
-  //     //   ])
-  //     // }
-
-  //       // .slice(0, 5)
-
-  //     // if (id === conversationId) {
-  //     //   setMessages([
-  //     //     ...messages,
-  //     //     message
-  //     //   ])
-  //     // }
-  //   }
-  // })
-
   const conversations = get(data, 'messaging.conversations', [])
-    .slice(0, 5)
-  
-  console.log(conversations)
 
   return (
     <div className="dropdown-menu dropdown-menu-right show">
@@ -143,13 +114,7 @@ const MessagesDropdown = ({ onClick, totalUnread, enabled, loading, error }) => 
       <div className="messaging-dropdown-content">
         {conversations.map((conv, idx) => (
           <RoomStatus
-            onClick={() => {
-              this.props.history.push({
-                pathname: `/messages/${conv.id}`,
-                state: { scrollToTop: true }
-              })
-              onClick()
-            }}
+            onClick={onClick}
             key={idx}
             conversation={conv}
             wallet={conv.id}
@@ -162,8 +127,6 @@ const MessagesDropdown = ({ onClick, totalUnread, enabled, loading, error }) => 
     </div>
   )
 }
-
-const MessagesDropdownWithRouter = withRouter(MessagesDropdown)
 
 export default withWallet(MessagesNav)
 

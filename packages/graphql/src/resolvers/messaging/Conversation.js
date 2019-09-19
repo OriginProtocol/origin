@@ -54,8 +54,7 @@ export async function getMessages(conversationId, { after, before } = {}) {
  * Returns count of all unread messages acroos conversations
  */
 export async function getUnreadCount(account) {
-  console.log(account)
-  return contracts.messaging.getUnreadCount(account.id)
+  return contracts.messaging.getUnreadCount(account ? account.id : null)
 }
 
 export function getMessage(message) {
@@ -76,7 +75,7 @@ export function getMessage(message) {
 }
 
 export default {
-  messages: async (account) => await getMessages(account.id, {
+  messages: async account => await getMessages(account.id, {
     before: account.before,
     after: account.after
   }),

@@ -4,13 +4,6 @@ module.exports = `
     newTransaction: NewTransaction
     transactionUpdated: TransactionUpdate
     transactionUpdated2(id: String!): TransactionUpdate
-    messageAdded: NewMessageResult
-  }
-
-  type NewMessageResult {
-    conversationId: String
-    roomId: String
-    message: Message
   }
 
   type TransactionUpdate {

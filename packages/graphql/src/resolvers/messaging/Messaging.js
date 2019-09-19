@@ -10,27 +10,25 @@ function isEnabled() {
     : false
 }
 
-async function getMyConvs() {
-  const rawConvos = isEnabled() ? await contracts.messaging.getMyConvs() : {}
-  if (contracts.config.messagingAccount) {
-    rawConvos[contracts.config.messagingAccount] = +new Date()
+async function getConversationIds({ limit, offset }) {
+  if (!isEnabled()) {
+    return contracts.config.messagingAccount ? [contracts.config.messagingAccount] : []
   }
-  return rawConvos
-}
 
-async function convosWithSupport({ before, after }) {
-  const rawConvos = await getMyConvs({ before, after })
-  return Object.keys(rawConvos).map(id => ({
-    id,
-    timestamp: Math.round(rawConvos[id] / 1000)
-  }))
+  const convos = await contracts.messaging.getMyConvs({ limit, offset })
+
+  if (contracts.config.messagingAccount && !convos.find(convId => convId === contracts.config.messagingAccount)) {
+    convos.push(contracts.config.messagingAccount)
+  }
+
+  return convos.map(convId => ({ id: convId }))
 }
 
 let messagingOverride
 
 // We need to do this check inside the resolver function
 export const checkForMessagingOverride = () => {
-  // needed for testing pu
+  // needed for testing
   if (typeof localStorage !== 'undefined' && localStorage.useMessagingObject) {
     messagingOverride = JSON.parse(localStorage.useMessagingObject)
     return messagingOverride
@@ -57,17 +55,16 @@ export default {
   enabled: () => {
     return checkForMessagingOverride() ? messagingOverride.enabled : isEnabled()
   },
-  conversations: (_, { before, after }) => convosWithSupport({ before, after }),
+  conversations: async (_, { limit, offset }) => await getConversationIds({ limit, offset }),
   conversation: (_, args) =>
     new Promise(async resolve => {
-      const convos = await getMyConvs()
-      if (!convos[args.id]) {
+      if (!await contracts.messaging.conversationExists()) {
         resolve(null)
       }
 
       resolve({
         id: args.id, 
-        timestamp: Math.round(convos[args.id] / 1000),
+        // timestamp: Math.round(convos[args.id] / 1000),
         before: args.before,
         after: args.after
       })

@@ -30,5 +30,11 @@ export default {
       }
     },
     subscribe: () => pubsub.asyncIterator('MESSAGE_ADDED')
+  },
+  markedAsRead: {
+    resolve: ({ markedAsRead }) => {
+      return markedAsRead
+    },
+    subscribe: () => pubsub.asyncIterator('MARKED_AS_READ')
   }
 }

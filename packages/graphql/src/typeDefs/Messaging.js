@@ -1,4 +1,21 @@
 module.exports = `
+  extend type Subscription {
+    messageAdded: NewMessageResult
+    markedAsRead: MarkedAsReadResult
+  }
+
+  type NewMessageResult {
+    conversationId: String
+    roomId: String
+    message: Message
+  }
+
+  type MarkedAsReadResult {
+    conversationId: String
+    roomId: String
+    readCount: Int
+  }
+
   extend type Query {
     messaging(id: String!): Messaging
   }
@@ -16,7 +33,7 @@ module.exports = `
     synced: Boolean
     pubKey: String
     pubSig: String
-    conversations(before: Int, after: Int): [Conversation]
+    conversations(limit: Int, offset: Int): [Conversation]
     conversation(id: String!, before: Int, after: Int): Conversation
     canConverseWith(id: String!): Boolean
     forwardTo(id: String!): String

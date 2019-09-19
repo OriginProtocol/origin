@@ -1,11 +1,11 @@
 import gql from 'graphql-tag'
 
 export default gql`
-  query Conversations {
+  query Conversations($limit: Int, $offset: Int) {
     messaging(id: "defaultAccount") {
       id
       enabled
-      conversations {
+      conversations(limit: $limit, offset: $offset) {
         id
         timestamp
         totalUnread

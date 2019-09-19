@@ -160,6 +160,7 @@ SELECT SUM(unread) as unread FROM (SELECT messages.unread_count::integer as unre
     (SELECT m.conversation_id, count(m.conversation_id)::integer as unread_count 
       FROM msg_message m 
       WHERE m.read=False AND m.is_keys=False
+        AND m.eth_address<>:address
       GROUP BY m.conversation_id) messages
     ON messages.conversation_id=conversee.conversation_id
   WHERE conversee.eth_address=:address) unread_by_conv`, {
@@ -249,6 +250,7 @@ SELECT conversations.external_id as id, conversations.updated_at as timestamp, c
     (SELECT m.conversation_id, count(m.conversation_id)::integer as unread_count 
       FROM msg_message m 
       WHERE m.read=False AND m.is_keys=False
+        AND m.eth_address<>:address
       GROUP BY m.conversation_id) messages
     ON messages.conversation_id=conversations.id
   WHERE conversee.eth_address=:address
@@ -550,6 +552,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
       await redis.publish(
         notify_address,
         JSON.stringify({
+          type: 'NEW_MESSAGE',
           content,
           timestamp: message.createdAt,
           conversationIndex,

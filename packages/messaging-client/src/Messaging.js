@@ -295,7 +295,10 @@ class Messaging {
       await this.setRemoteMessagingSig()
     }
     this.events.emit('ready', this.account_key)
-    this.loadMyConvs()
+    // Should this be awaited?
+    this.loadMyConvs({
+      limit: 10
+    })
   }
 
   async getRemoteMessagingSig() {
@@ -690,9 +693,13 @@ class Messaging {
     return 0
   }
 
-  async fetchConvs() {
+  async fetchConvs({ limit, offset }) {
     const res = await fetch(
-      `${this.globalKeyServer}/conversations/${this.account_key}`,
+      `${this.globalKeyServer}/conversations/${this.account_key}?${
+        !Number.isNaN(Number(limit)) ? `limit=${limit}&` : ''
+      }${
+        !Number.isNaN(Number(offset)) ? `offset=${offset}` : ''
+      }`,
       {
         headers: { 'content-type': 'application/json' }
       }
@@ -725,38 +732,69 @@ class Messaging {
     }
   }
 
-  async loadMyConvs({ after, before } = {}) {
+  async loadMyConvs({ limit, offset, skipIfLoaded } = {}) {
     debug('loading convs:')
-    const conversations = await this.fetchConvs({ after, before })
+    const conversations = await this.fetchConvs({ limit, offset })
 
-    for (const conv of conversations) {
-      // Populate keys and messages for all loaded conversations
-      (async () => {
+    await Promise.all(conversations.map(conv => {
+      return new Promise(async resolve => {
+        // Populate keys and messages for all loaded conversations
         await this.getRoom(conv.id, { keys: true })
         const convObj = await this.getRoom(conv.id)
         convObj.unreadCount = conv.unread || 0
-      })()
-    }
 
-    if (!after && !before) {
+        resolve(convObj)
+      })
+    }))
+
+    if (!limit && !offset) {
       this.listenForUpdates()
     }
   }
 
-  async getMyConvs({ after, before } = {}) {
-    const outConvs = {}
-    for (const id of Object.keys(this.convs)) {
-      const recipients = this.getRecipients(id)
-      if (recipients.length == 2) {
-        const remoteEthAddress = recipients.find(
-          addr => addr !== this.account_key
-        )
-        outConvs[remoteEthAddress] = new Date()
-      } else {
-        outConvs[id] = new Date()
-      }
+  async getMyConvs({ limit, offset } = {}) {
+    let cachedConvs = Object.keys(this.convs)
+    if (!cachedConvs.length || (offset && cachedConvs.length - (Number(limit) || 10) < offset)) {
+      await this.loadMyConvs({ limit, offset, skipIfLoaded: true })
+      cachedConvs = Object.keys(this.convs)
     }
-    return outConvs
+
+    const sortedConvs = cachedConvs
+      .sort((conv1, conv2) => {
+        return this.convs[conv2].lastMessage.timestamp - this.convs[conv1].lastMessage.timestamp
+      })
+      .slice(Number(offset) || 0, Number(limit) || 10)
+      .map(convId => {
+        const recipients = this.getRecipients(convId)
+        if (recipients.length === 2) {
+          return recipients.find(
+            addr => addr !== this.account_key
+          )
+        }
+
+        return convId
+      })
+
+    return sortedConvs
+  }
+
+  async conversationExists(remoteEthAddress) {
+    const roomId = this.generateRoomId(this.account_key, remoteEthAddress)
+    let convObj = this.convs[roomId]
+
+    try {
+      if (!convObj) {
+        await this.getRoom(roomId, {
+          keys: true
+        })
+        convObj = await this.getRoom(roomId)
+      }
+
+      return true
+    } catch (e) {
+      console.error('conversationExists', e)
+      return false
+    }
   }
 
   /**
@@ -767,19 +805,26 @@ class Messaging {
     let convObj = this.convs[roomId]
 
     if (!convObj) {
-      convObj = await this.getRoom(roomId, {
+      await this.getRoom(roomId, {
         keys: true
       })
       convObj = await this.getRoom(roomId, {
         before,
         after
       })
-    } else if (before || after) {
+    } else if (!convObj.loaded || before || after) {
+      if (!convObj.keys.length) {
+        await this.getRoom(roomId, {
+          keys: true
+        })
+      }
       convObj = await this.getRoom(roomId, {
         before,
         after
       })
     }
+
+    this.convs[roomId] = convObj
 
     return convObj.messages
   }

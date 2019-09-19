@@ -6,18 +6,20 @@ import withIdentity from 'hoc/withIdentity'
 
 import Avatar from 'components/Avatar'
 
-const RoomStatus = ({ conversation, identity, onClick, active }) => {
+import Link from 'components/Link'
+
+const RoomStatus = ({ conversation, identity, onClick, active, wallet }) => {
   const name = get(identity, 'fullName', conversation.id)
-  // if (!conversation.lastMessage) {
-  //   return null
-  // }
+
   const timestamp = conversation.lastMessage
     ? conversation.lastMessage.timestamp
     : conversation.timestamp
+
   return (
-    <div
+    <Link
       className={`room-status${active ? ' active' : ''}`}
-      onClick={() => (onClick ? onClick() : {})}
+      to={`/messages/${wallet}`}
+      onClick={onClick}
     >
       <Avatar profile={identity} size={40} />
       <div className="right">
@@ -34,7 +36,7 @@ const RoomStatus = ({ conversation, identity, onClick, active }) => {
           )}
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
 
@@ -47,12 +49,16 @@ require('react-styl')(`
     cursor: pointer
     font-size: 16px
     border-bottom: 1px solid #dde6ea
+    color: #000
     &:last-child
       border: 0
     &.active
       background: rgba(0, 0, 0, 0.1)
+      color: #000
       .time
         color: var(--white)
+    &:hover
+      color: #000
     .avatar
       align-self: flex-start
       flex: 0 0 40px
