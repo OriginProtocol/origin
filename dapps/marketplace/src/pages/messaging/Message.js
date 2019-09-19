@@ -102,6 +102,17 @@ const Message = props => {
     showTailAndAvatar
   )
 
+  let formattedDate = null
+
+  if (showTime) {
+    const day = dayjs.unix(message.timestamp)
+    const messageYear = day.format('YYYY')
+    const currentYear = dayjs().format('YYYY')
+
+    const format = (messageYear === currentYear) ? 'MMM Do h:mmA' : 'MMM Do, YYYY h:mmA'
+    formattedDate = day.format(format)
+  }
+
   return (
     <>
       <div
@@ -127,7 +138,7 @@ const Message = props => {
       </div>
       {showTime && (
         <div className="timestamp">
-          {dayjs.unix(message.timestamp).format('MMM Do h:mmA')}
+          {formattedDate}
         </div>
       )}
     </>
