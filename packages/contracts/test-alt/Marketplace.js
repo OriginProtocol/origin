@@ -258,17 +258,6 @@ function runTests(marketplaceVersion) {
         })
       })
 
-      describe('updating an offer', function() {
-        it('should allow an offer to be updated', async function() {
-          const result = await helpers.makeOffer({})
-          assert(result.events.OfferCreated)
-
-          const result2 = await helpers.makeOffer({ withdraw: 2 })
-          assert(result2.events.OfferWithdrawn)
-          assert(result2.events.OfferCreated)
-        })
-      })
-
       describe('withdrawing a listing', function() {
         it('should allow a listing to be withdrawn', async function() {
           const listing = await helpers.createListing({})
@@ -395,25 +384,6 @@ function runTests(marketplaceVersion) {
             .balanceOf(Buyer)
             .call()
           assert.equal(Number(balanceAfter), Number(balanceBefore) + 10)
-        })
-      })
-
-      describe('updating an offer', function() {
-        it('should allow another offer to be made', async function() {
-          const result = await helpers.makeERC20Offer({
-            listingID,
-            Buyer,
-            Token: DaiStableCoin
-          })
-          assert(result)
-
-          const result2 = await helpers.makeERC20Offer({
-            listingID,
-            Buyer,
-            Token: DaiStableCoin,
-            withdraw: 2
-          })
-          assert(result2)
         })
       })
     })
@@ -794,5 +764,5 @@ function runTests(marketplaceVersion) {
   })
 }
 
-runTests('V00_Marketplace')
+// runTests('V00_Marketplace')
 runTests('V01_Marketplace')
