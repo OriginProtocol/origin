@@ -118,7 +118,10 @@ contract V01_Marketplace is Ownable {
         }));
 
         if (_deposit > 0) {
-            tokenAddr.transferFrom(_seller, this, _deposit); // Transfer Origin Token
+            require(
+                tokenAddr.transferFrom(_seller, this, _deposit), // Transfer Origin Token
+                "transferFrom failed"
+            );
         }
         emit ListingCreated(_seller, listings.length - 1, _ipfsHash);
     }
@@ -156,7 +159,10 @@ contract V01_Marketplace is Ownable {
 
         if (_additionalDeposit > 0) {
             listing.deposit += _additionalDeposit;
-            tokenAddr.transferFrom(_seller, this, _additionalDeposit);
+            require(
+                tokenAddr.transferFrom(_seller, this, _additionalDeposit),
+                "transferFrom failed"
+            );
         }
 
         emit ListingUpdated(listing.seller, listingID, _ipfsHash);
@@ -169,7 +175,7 @@ contract V01_Marketplace is Ownable {
         require(_target != 0x0, "No target");
         uint deposit = listing.deposit;
         listing.deposit = 0; // Prevent multiple deposit withdrawals
-        tokenAddr.transfer(_target, deposit); // Send deposit to target
+        require(tokenAddr.transfer(_target, deposit), "transfer failed"); // Send deposit to target
         emit ListingWithdrawn(_target, listingID, _ipfsHash);
     }
 
@@ -221,25 +227,6 @@ contract V01_Marketplace is Ownable {
         }
 
         emit OfferCreated(msg.sender, listingID, offers[listingID].length-1, _ipfsHash);
-    }
-
-    // @dev Make new offer after withdrawl
-    function makeOffer(
-        uint listingID,
-        bytes32 _ipfsHash,
-        uint _finalizes,
-        address _affiliate,
-        uint256 _commission,
-        uint _value,
-        ERC20 _currency,
-        address _arbitrator,
-        uint _withdrawOfferID
-    )
-        public
-        payable
-    {
-        withdrawOffer(listingID, _withdrawOfferID, _ipfsHash);
-        makeOffer(listingID, _ipfsHash, _finalizes, _affiliate, _commission, _value, _currency, _arbitrator);
     }
 
     // @dev Seller accepts offer
