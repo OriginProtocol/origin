@@ -3,23 +3,34 @@ import React, { useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import debounce from 'lodash/debounce'
 
-const BottomScrollListener = (props) => {
-
+const BottomScrollListener = props => {
   const callbackWrapper = props.debounce ? debounce : f => f
 
-  const rebindListenerOnProps = [props.hasMore, props.debounce, props.onTop, props.offset]
+  const rebindListenerOnProps = [
+    props.hasMore,
+    props.debounce,
+    props.onTop,
+    props.offset
+  ]
 
-  const onScrollListener = useCallback(callbackWrapper(() => {
-    const scrollNode = document.scrollingElement || document.documentElement
+  const onScrollListener = useCallback(
+    callbackWrapper(
+      () => {
+        const scrollNode = document.scrollingElement || document.documentElement
 
-    if (
-      scrollNode.scrollHeight - props.offset <=
-        scrollNode.scrollTop + window.innerHeight &&
-      props.hasMore
-    ) {
-      props.onBottom()
-    }
-  }, props.debounce, { trailing: true }), rebindListenerOnProps)
+        if (
+          scrollNode.scrollHeight - props.offset <=
+            scrollNode.scrollTop + window.innerHeight &&
+          props.hasMore
+        ) {
+          props.onBottom()
+        }
+      },
+      props.debounce,
+      { trailing: true }
+    ),
+    rebindListenerOnProps
+  )
 
   useEffect(() => {
     document.addEventListener('scroll', onScrollListener)

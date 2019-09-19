@@ -31,7 +31,15 @@ const RoomTitle = withIdentity(({ identity, walletProxy }) => (
   </Link>
 ))
 
-const ConversationList = ({ isMobile, messagingError, messaging, messagingLoading, room, onBack, ...props }) => {
+const ConversationList = ({
+  isMobile,
+  messagingError,
+  messaging,
+  messagingLoading,
+  room,
+  onBack,
+  ...props
+}) => {
   const [markConversationRead] = useMutation(MarkConversationRead)
 
   if (messagingError) {
@@ -49,9 +57,13 @@ const ConversationList = ({ isMobile, messagingError, messaging, messagingLoadin
   const conversations = get(messaging, 'conversations', [])
 
   let content = !room ? null : (
-      <div className="conversation-view">
-        <Room id={room} markRead={markConversationRead} enabled={messaging.enabled} />
-      </div>
+    <div className="conversation-view">
+      <Room
+        id={room}
+        markRead={markConversationRead}
+        enabled={messaging.enabled}
+      />
+    </div>
   )
 
   if (content && isMobile) {
@@ -88,20 +100,14 @@ const ConversationList = ({ isMobile, messagingError, messaging, messagingLoadin
   )
 }
 
-const Messages = (props) => {
+const Messages = props => {
   const [defaultRoom, setDefaultRoom] = useState(false)
   const [back, setBack] = useState(false)
 
   const room = get(props, 'match.params.room')
   useEffect(() => {
     // To set a default room
-    if (
-      defaultRoom ||
-      back ||
-      !props.messaging ||
-      room ||
-      props.isMobile
-    ) {
+    if (defaultRoom || back || !props.messaging || room || props.isMobile) {
       return
     }
 
@@ -117,10 +123,14 @@ const Messages = (props) => {
   return (
     <div className="container messages-page">
       <DocumentTitle pageTitle={<fbt desc="Messages.title">Messages</fbt>} />
-      <ConversationList {...props} room={room} onBack={() => {
-        setBack(true)
-        props.history.goBack()
-      }} />
+      <ConversationList
+        {...props}
+        room={room}
+        onBack={() => {
+          setBack(true)
+          props.history.goBack()
+        }}
+      />
     </div>
   )
 }

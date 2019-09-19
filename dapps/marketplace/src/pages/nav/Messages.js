@@ -28,7 +28,7 @@ const MessagesNav = ({ open, onClose, onOpen, wallet }) => {
   }, [wallet])
 
   const enabled = get(data, 'messaging.enabled', false)
-  const totalUnread =  get(data, 'messaging.totalUnread', 0)
+  const totalUnread = get(data, 'messaging.totalUnread', 0)
   const hasUnread = totalUnread > 0 ? ' active' : ''
 
   return (
@@ -82,7 +82,7 @@ const MessagesDropdown = ({ onClick, totalUnread, messagingEnabled }) => {
   })
 
   const enabled = messagingEnabled
-  
+
   if (error) {
     console.error(error)
     return <Error />
@@ -105,10 +105,7 @@ const MessagesDropdown = ({ onClick, totalUnread, messagingEnabled }) => {
           </fbt>
         </div>
         {enabled ? null : (
-          <EnableMessaging
-            className="btn-sm"
-            onClose={() => onClick()}
-          />
+          <EnableMessaging className="btn-sm" onClose={onClick} />
         )}
       </div>
       <div className="messaging-dropdown-content">

@@ -81,7 +81,7 @@ class AllMessages extends Component {
     if (prevProps.convId === this.props.convId) {
       return
     }
-    
+
     this.shouldScrollToBottom()
 
     if (this.props.markRead) {
@@ -137,7 +137,7 @@ class AllMessages extends Component {
       <TopScrollListener
         onTop={() => {
           this.onTopListener()
-        }} 
+        }}
         hasMore={this.props.hasMore}
         ready={this.state.ready}
         onInnerRef={el => (this.el = el)}
@@ -174,7 +174,9 @@ class AllMessages extends Component {
             return (
               <MessageWithIdentity
                 message={message}
-                lastMessage={messages.length - 1 === idx ? null : messages[idx + 1]}
+                lastMessage={
+                  messages.length - 1 === idx ? null : messages[idx + 1]
+                }
                 nextMessage={idx > 0 ? messages[idx - 1] : null}
                 key={`message-${message.index}`}
                 wallet={get(message, 'address')}
@@ -188,7 +190,7 @@ class AllMessages extends Component {
   }
 }
 
-const Room = (props) => {
+const Room = props => {
   const { id, wallet, markRead, enabled, counterpartyEvents } = props
 
   const [messages, setMessages] = useState(null)
@@ -203,14 +205,15 @@ const Room = (props) => {
 
   // Subscribe to new messages
   useSubscription(subscription, {
-    onSubscriptionData: ({ subscriptionData: { data: { messageAdded } } }) => {
+    onSubscriptionData: ({
+      subscriptionData: {
+        data: { messageAdded }
+      }
+    }) => {
       const { conversationId, message } = messageAdded
 
       if (id === conversationId) {
-        setMessages([
-          message,
-          ...messages
-        ])
+        setMessages([message, ...messages])
       }
     }
   })
@@ -221,7 +224,7 @@ const Room = (props) => {
     // To set `loaded` control variable to true
     // After the data has loaded for the first time
     if (loaded) {
-      return 
+      return
     }
     if (networkStatus === 7) {
       setLoaded(true)
@@ -266,7 +269,8 @@ const Room = (props) => {
               before
             },
             updateQuery: (prevData, { fetchMoreResult }) => {
-              const newMessages = fetchMoreResult.messaging.conversation.messages
+              const newMessages =
+                fetchMoreResult.messaging.conversation.messages
 
               setMessages(newMessages)
 
@@ -284,7 +288,6 @@ const Room = (props) => {
       )}
     </>
   )
-
 }
 
 export default withWallet(withCounterpartyEvents(Room))

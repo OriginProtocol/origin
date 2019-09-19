@@ -2,21 +2,38 @@ import React, { useEffect, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import debounce from 'lodash/debounce'
 
-const TopScrollListener = ({ hasMore, debounce: debounceTime, onTop, offset, ready, children, onInnerRef, ...props }) => {
-
+const TopScrollListener = ({
+  hasMore,
+  debounce: debounceTime,
+  onTop,
+  offset,
+  ready,
+  children,
+  onInnerRef,
+  ...props
+}) => {
   const elementRef = useRef(document)
-  
-  const rebindListenerOnProps = [elementRef.current, hasMore, debounceTime, offset]
-  
+
+  const rebindListenerOnProps = [
+    elementRef.current,
+    hasMore,
+    debounceTime,
+    offset
+  ]
+
   const callbackWrapper = debounceTime ? debounce : f => f
-  const onScrollListener = useCallback(callbackWrapper(() => {
-    if (
-      elementRef.current.scrollTop <= offset &&
-      hasMore
-    ) {
-      onTop()
-    }
-  }, debounceTime, { trailing: true }), rebindListenerOnProps)
+  const onScrollListener = useCallback(
+    callbackWrapper(
+      () => {
+        if (elementRef.current.scrollTop <= offset && hasMore) {
+          onTop()
+        }
+      },
+      debounceTime,
+      { trailing: true }
+    ),
+    rebindListenerOnProps
+  )
 
   useEffect(() => {
     elementRef.current.addEventListener('scroll', onScrollListener)
@@ -44,7 +61,11 @@ const TopScrollListener = ({ hasMore, debounce: debounceTime, onTop, offset, rea
     })
   })
 
-  return !children ? null : <div {...props} ref={elementRef}>{children}</div>
+  return !children ? null : (
+    <div {...props} ref={elementRef}>
+      {children}
+    </div>
+  )
 }
 
 TopScrollListener.defaultProps = {

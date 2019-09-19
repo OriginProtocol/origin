@@ -109,7 +109,8 @@ const Message = props => {
     const messageYear = day.format('YYYY')
     const currentYear = dayjs().format('YYYY')
 
-    const format = (messageYear === currentYear) ? 'MMM Do h:mmA' : 'MMM Do, YYYY h:mmA'
+    const format =
+      messageYear === currentYear ? 'MMM Do h:mmA' : 'MMM Do, YYYY h:mmA'
     formattedDate = day.format(format)
   }
 
@@ -136,11 +137,7 @@ const Message = props => {
           </div>
         </div>
       </div>
-      {showTime && (
-        <div className="timestamp">
-          {formattedDate}
-        </div>
-      )}
+      {showTime && <div className="timestamp">{formattedDate}</div>}
     </>
   )
 }

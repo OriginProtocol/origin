@@ -6,16 +6,16 @@ export default gql`
       conversationId
       roomId
       message {
-          index
-          address
-          content
-          status
-          hash
-          media {
-            url
-            contentType
-          }
-          timestamp
+        index
+        address
+        content
+        status
+        hash
+        media {
+          url
+          contentType
+        }
+        timestamp
       }
     }
   }
