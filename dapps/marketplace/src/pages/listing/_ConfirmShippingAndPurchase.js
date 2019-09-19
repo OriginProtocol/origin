@@ -17,7 +17,7 @@ const ConfirmShippingAndPurchase = ({
   hasMessagingKeys,
   className,
   children,
-  listing,
+  listing: { id, requiresShipping },
   disabled,
   messagingStatusLoading
 }) => {
@@ -31,24 +31,21 @@ const ConfirmShippingAndPurchase = ({
     )
   }
 
-  if (
-    !hasMessagingKeys &&
-    !(localStorage.bypassOnboarding || localStorage.useWeb3Identity)
-  ) {
+  const { bypassOnboarding, useWeb3Identity } = localStorage
+
+  if (!hasMessagingKeys && !(bypassOnboarding || useWeb3Identity)) {
     return (
       <UserActivationLink
         className={className}
         children={children}
-        location={{ pathname: `/listing/${listing.id}` }}
+        location={{ pathname: `/listing/${id}` }}
       />
     )
   }
 
   return (
     <Link
-      to={`/listing/${listing.id}/${
-        listing.requiresShipping ? 'shipping' : 'confirm'
-      }`}
+      to={`/listing/${id}/${requiresShipping ? 'shipping' : 'confirm'}`}
       className={className}
       children={children || <fbt desc="Purchase">Purchase</fbt>}
       disabled={disabled === true}

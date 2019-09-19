@@ -5,7 +5,7 @@ import { fbt } from 'fbt-runtime'
 import CurrencyContext from 'constants/CurrencyContext'
 import Price from 'components/Price'
 import OgnBadge from 'components/OgnBadge'
-import WithPrices from 'components/WithPrices'
+import WithPrices from 'components/WithPrices2'
 import Buy from './mutations/Buy'
 import SelectQuantity from './_SelectQuantity'
 import PaymentOptions from './_PaymentOptions'
@@ -15,16 +15,12 @@ import PurchaseSummary from './_PurchaseSummary'
 const withMultiUnitData = WrappedComponent => {
   const WithMultiUnitData = ({ listing, quantity, ...props }) => {
     const amount = String(Number(listing.price.amount) * Number(quantity))
-    const acceptsEth = listing.acceptedTokens.find(t => t.id === 'token-ETH')
-    const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
     // Favor payment in ETH over DAI if the seller accepts it.
-    const token = acceptsEth ? 'token-ETH' : 'token-DAI'
     const totalPrice = { amount, currency: listing.price.currency }
 
     return (
       <WithPrices
         price={totalPrice}
-        target={token}
         targets={['token-ETH', 'token-DAI', totalPrice.currency.id]}
         allowanceTarget={listing.contractAddr}
       >
@@ -33,8 +29,6 @@ const withMultiUnitData = WrappedComponent => {
             {...props}
             prices={prices}
             tokenStatus={tokenStatus}
-            token={token}
-            acceptsDai={acceptsDai}
             listing={listing}
             totalPrice={totalPrice}
             quantity={quantity}
@@ -134,22 +128,20 @@ const BuyMultiUnitMutation = withMultiUnitData(
     tokenStatus,
     quantity,
     shippingAddress
-  }) => {
-    return (
-      <Buy
-        refetch={refetch}
-        listing={listing}
-        from={from}
-        value={get(prices, `${token}.amount`)}
-        quantity={quantity}
-        currency={token}
-        tokenStatus={tokenStatus}
-        shippingAddress={shippingAddress}
-        className="btn btn-primary"
-        children={fbt('Purchase', 'Purchase')}
-      />
-    )
-  }
+  }) => (
+    <Buy
+      refetch={refetch}
+      listing={listing}
+      from={from}
+      value={get(prices, `${token}.amount`)}
+      quantity={quantity}
+      currency={token}
+      tokenStatus={tokenStatus}
+      shippingAddress={shippingAddress}
+      className="btn btn-primary"
+      children={fbt('Purchase', 'Purchase')}
+    />
+  )
 )
 
 const MultiUnitPurchaseSummary = withMultiUnitData(PurchaseSummary)

@@ -8,7 +8,6 @@ function removeExtraDecimals(numStr) {
 }
 
 const WithPrices = ({
-  target,
   targets = [],
   currencies,
   proxyCurrencies,
@@ -17,11 +16,6 @@ const WithPrices = ({
   ...props
 }) => {
   proxyCurrencies = proxyCurrencies.length ? proxyCurrencies : currencies
-
-  let hasBalance = false,
-    hasAllowance = false,
-    needsAllowance,
-    needsBalance
 
   const isLoadingData = Object.keys(props).some(
     key => key.endsWith('Loading') && props[key]
@@ -41,7 +35,7 @@ const WithPrices = ({
     return children({ prices: {}, tokenStatus: { loading: true } })
   }
 
-  const results = targets.reduce((memo, target) => {
+  const wallet = targets.reduce((memo, target) => {
     const targetCurrency = currencies.find(c => c.id === target)
     if (!targetCurrency) return memo
 
@@ -52,7 +46,7 @@ const WithPrices = ({
     return memo
   }, {})
 
-  const proxyResults = targets.reduce((memo, target) => {
+  const proxy = targets.reduce((memo, target) => {
     const targetCurrency = proxyCurrencies.find(c => c.id === target)
     if (!targetCurrency) return memo
 
@@ -63,46 +57,41 @@ const WithPrices = ({
     return memo
   }, {})
 
-  console.log({ results, proxyResults })
+  const tokenStatus = targets.reduce((memo, target) => {
+    memo[target] = tokenStatusFor(target, wallet, proxy)
+    return memo
+  }, {})
 
-  const ethBalance = web3.utils.toBN(
-    get(results, `token-ETH.currency.balance`) || '0'
-  )
-  const targetWei = removeExtraDecimals(get(results, `${target}.amount`) || '0')
+  return children({ prices: wallet, tokenStatus })
+}
+
+function tokenStatusFor(target, wallet, proxy) {
+  const targetWei = removeExtraDecimals(get(wallet, `${target}.amount`) || '0')
   const targetValue = web3.utils.toBN(web3.utils.toWei(targetWei, 'ether'))
-  const ethInWei = removeExtraDecimals(get(results, `token-ETH.amount`) || '0')
-  const targetValueEth = web3.utils.toBN(web3.utils.toWei(ethInWei, 'ether'))
-  const hasEthBalance = ethBalance.gte(targetValueEth)
+
+  const availableBalance = web3.utils.toBN(
+    get(wallet, `${target}.currency.balance`) || '0'
+  )
+  const availableAllowance = web3.utils.toBN(
+    get(proxy, `${target}.currency.allowance`) || '0'
+  )
+
+  const hasBalance = availableBalance.gte(targetValue)
+  const neededBalance = targetValue.sub(availableBalance).toString()
+
+  let hasAllowance = availableAllowance.gte(targetValue)
+  const neededAllowance = targetValue.sub(availableAllowance).toString()
 
   if (target === 'token-ETH') {
-    hasBalance = hasEthBalance
     hasAllowance = true
-  } else if (target) {
-    const availableBalance = web3.utils.toBN(
-      get(results, `${target}.currency.balance`) || '0'
-    )
-    const availableAllowance = web3.utils.toBN(
-      get(proxyResults, `${target}.currency.allowance`) || '0'
-    )
-
-    hasBalance = availableBalance.gte(targetValue)
-    needsBalance = hasBalance ? 0 : targetValue.sub(availableBalance).toString()
-
-    hasAllowance = availableAllowance.gte(targetValue)
-    needsAllowance = hasAllowance
-      ? 0
-      : targetValue.sub(availableAllowance).toString()
   }
 
-  const tokenStatus = {
+  return {
     hasBalance,
     hasAllowance,
-    hasEthBalance,
-    needsAllowance,
-    needsBalance
+    needsAllowance: hasAllowance ? 0 : neededAllowance,
+    needsBalance: hasBalance ? 0 : neededBalance
   }
-
-  return children({ prices: results, tokenStatus })
 }
 
 export default withCurrencyBalances(WithPrices)
