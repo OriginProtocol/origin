@@ -94,7 +94,7 @@ class WithdrawalDetail extends Component {
                   <strong>Amount</strong>
                 </div>
                 <div className="col">
-                  {transfer.amount.toLocaleString()} OGN
+                  {Number(transfer.amount).toLocaleString()} OGN
                 </div>
               </div>
               <div className="row mb-3">
