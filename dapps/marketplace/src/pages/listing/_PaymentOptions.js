@@ -103,16 +103,13 @@ const PaymentOptions = ({
 
   let content, notEnoughFunds, paymentTotal, exchanged
 
-  console.log('payment options', { value, noBalance, noTokens, tokenStatus })
-
   if (!noBalance && !noTokens) {
     if (!value) {
-      if (get(tokenStatus, 'token-DAI.hasBalance')) {
-        value = 'token-DAI'
-      }
+      value = tokenStatus.suggestedToken
     }
 
-    const { hasBalance, hasEthBalance } = get(tokenStatus, value)
+    const { hasBalance } = get(tokenStatus, value)
+    const hasEthBalance = get(tokenStatus, 'token-ETH.hasBalance')
 
     let cannotPurchase = false,
       needsSwap = false,

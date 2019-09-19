@@ -54,9 +54,15 @@ const purchaseListing = async ({ buyer, withShipping, title }) => {
   if (withShipping) {
     await page.waitForSelector('.shipping-address-form [name=name]')
     await page.type('.shipping-address-form [name=name]', 'Bruce Wayne')
-    await page.type('.shipping-address-form [name=address1]', '123 Wayne Towers')
+    await page.type(
+      '.shipping-address-form [name=address1]',
+      '123 Wayne Towers'
+    )
     await page.type('.shipping-address-form [name=city]', 'Gotham City')
-    await page.type('.shipping-address-form [name=stateProvinceRegion]', 'New Jersey')
+    await page.type(
+      '.shipping-address-form [name=stateProvinceRegion]',
+      'New Jersey'
+    )
     await page.type('.shipping-address-form [name=postalCode]', '123456')
     await page.type('.shipping-address-form [name=country]', 'USA')
 
@@ -66,16 +72,24 @@ const purchaseListing = async ({ buyer, withShipping, title }) => {
   // Purchase confirmation
   await waitForText(page, 'Please confirm your purchase', 'h1')
   await pic(page, 'purchase-confirmation')
-  
+
   await waitForText(page, 'Total Price')
 
   const summaryEls = await page.$('.summary')
   const summaryText = await page.evaluate(el => el.innerText, summaryEls)
 
   if (withShipping) {
-    assert(summaryText.replace(/[\n\t\r ]+/g, ' ') === `Item ${title} Shipping Address Bruce Wayne 123 Wayne Towers Gotham City New Jersey 123456 USA Total Price $1 Payment 0.00632 ETH`, 'Invalid Summary')
+    assert(
+      summaryText.replace(/[\n\t\r ]+/g, ' ') ===
+        `Item ${title} Shipping Address Bruce Wayne 123 Wayne Towers Gotham City New Jersey 123456 USA Total Price $1 Payment 0.00632 ETH`,
+      'Invalid Summary'
+    )
   } else {
-    assert(summaryText.replace(/[\n\t\r ]+/g, ' ') === `Item ${title} Total Price $1 Payment 0.00632 ETH`, 'Invalid Summary')
+    assert(
+      summaryText.replace(/[\n\t\r ]+/g, ' ') ===
+        `Item ${title} Total Price $1 Payment 0.00632 ETH`,
+      'Invalid Summary'
+    )
   }
 
   await clickByText(page, 'Purchase', 'button')
@@ -88,7 +102,12 @@ const purchaseListing = async ({ buyer, withShipping, title }) => {
   await pic(page, 'transaction-wait-for-seller')
 }
 
-const purchaseListingWithDAI = async ({ buyer, autoSwap, withShipping, title }) => {
+const purchaseListingWithDAI = async ({
+  buyer,
+  autoSwap,
+  withShipping,
+  title
+}) => {
   await pic(page, 'listing-detail')
   await changeAccount(page, buyer)
 
@@ -97,9 +116,15 @@ const purchaseListingWithDAI = async ({ buyer, autoSwap, withShipping, title }) 
   if (withShipping) {
     await page.waitForSelector('.shipping-address-form [name=name]')
     await page.type('.shipping-address-form [name=name]', 'Bruce Wayne')
-    await page.type('.shipping-address-form [name=address1]', '123 Wayne Towers')
+    await page.type(
+      '.shipping-address-form [name=address1]',
+      '123 Wayne Towers'
+    )
     await page.type('.shipping-address-form [name=city]', 'Gotham City')
-    await page.type('.shipping-address-form [name=stateProvinceRegion]', 'New Jersey')
+    await page.type(
+      '.shipping-address-form [name=stateProvinceRegion]',
+      'New Jersey'
+    )
     await page.type('.shipping-address-form [name=postalCode]', '123456')
     await page.type('.shipping-address-form [name=country]', 'USA')
 
@@ -116,9 +141,17 @@ const purchaseListingWithDAI = async ({ buyer, autoSwap, withShipping, title }) 
   const summaryText = await page.evaluate(el => el.innerText, summaryEls)
 
   if (withShipping) {
-    assert(summaryText.replace(/[\n\t\r ]+/g, ' ') === `Item ${title} Shipping Address Bruce Wayne 123 Wayne Towers Gotham City New Jersey 123456 USA Total Price $1 Payment 0.00632 ETH`, 'Invalid Summary')
+    assert(
+      summaryText.replace(/[\n\t\r ]+/g, ' ') ===
+        `Item ${title} Shipping Address Bruce Wayne 123 Wayne Towers Gotham City New Jersey 123456 USA Total Price $1 Payment 0.00632 ETH`,
+      'Invalid Summary'
+    )
   } else {
-    assert(summaryText.replace(/[\n\t\r ]+/g, ' ') === `Item ${title} Total Price $1 Payment 0.00632 ETH`, 'Invalid Summary')
+    assert(
+      summaryText.replace(/[\n\t\r ]+/g, ' ') ===
+        `Item ${title} Total Price $1 Payment 0.00632 ETH`,
+      'Invalid Summary'
+    )
   }
 
   await clickByText(page, autoSwap ? 'Purchase' : 'Swap Now', 'button')
@@ -135,9 +168,15 @@ const purchaseMultiUnitListing = async ({ buyer, withShipping, title }) => {
   if (withShipping) {
     await page.waitForSelector('.shipping-address-form [name=name]')
     await page.type('.shipping-address-form [name=name]', 'Bruce Wayne')
-    await page.type('.shipping-address-form [name=address1]', '123 Wayne Towers')
+    await page.type(
+      '.shipping-address-form [name=address1]',
+      '123 Wayne Towers'
+    )
     await page.type('.shipping-address-form [name=city]', 'Gotham City')
-    await page.type('.shipping-address-form [name=stateProvinceRegion]', 'New Jersey')
+    await page.type(
+      '.shipping-address-form [name=stateProvinceRegion]',
+      'New Jersey'
+    )
     await page.type('.shipping-address-form [name=postalCode]', '123456')
     await page.type('.shipping-address-form [name=country]', 'USA')
 
@@ -154,9 +193,17 @@ const purchaseMultiUnitListing = async ({ buyer, withShipping, title }) => {
   const summaryText = await page.evaluate(el => el.innerText, summaryEls)
 
   if (withShipping) {
-    assert(summaryText.replace(/[\n\t\r ]+/g, ' ') === `Item ${title} Quantity 2 Shipping Address Bruce Wayne 123 Wayne Towers Gotham City New Jersey 123456 USA Total Price $2 Payment 0.01265 ETH`, 'Invalid Summary')
+    assert(
+      summaryText.replace(/[\n\t\r ]+/g, ' ') ===
+        `Item ${title} Quantity 2 Shipping Address Bruce Wayne 123 Wayne Towers Gotham City New Jersey 123456 USA Total Price $2 Payment 0.01265 ETH`,
+      'Invalid Summary'
+    )
   } else {
-    assert(summaryText.replace(/[\n\t\r ]+/g, ' ') === `Item ${title} Quantity 2 Total Price $2 Payment 0.01265 ETH`, 'Invalid Summary')
+    assert(
+      summaryText.replace(/[\n\t\r ]+/g, ' ') ===
+        `Item ${title} Quantity 2 Total Price $2 Payment 0.01265 ETH`,
+      'Invalid Summary'
+    )
   }
 
   await clickByText(page, 'Purchase', 'button')
@@ -177,8 +224,12 @@ const purchaseFractionalListing = async ({ buyer }) => {
 
   await clickByText(page, 'Availability', 'button')
 
-  const startDay = await page.$('.calendar:not(:first-child) .days .day:nth-child(9)')
-  const endDay = await page.$('.calendar:not(:first-child) .days .day:nth-child(15)')
+  const startDay = await page.$(
+    '.calendar:not(:first-child) .days .day:nth-child(9)'
+  )
+  const endDay = await page.$(
+    '.calendar:not(:first-child) .days .day:nth-child(15)'
+  )
   await startDay.click()
   await endDay.click()
 
@@ -193,7 +244,7 @@ const purchaseFractionalListing = async ({ buyer }) => {
   // Purchase confirmation
   await waitForText(page, 'Please confirm your purchase', 'h1')
   await pic(page, 'purchase-confirmation')
-  
+
   await waitForText(page, 'Total Price')
 
   // TODO: Find a way to verify check in and check out dates in summary
@@ -259,7 +310,9 @@ function randomReview() {
 }
 
 function singleUnitTests({ autoSwap, withShipping, EthAndDaiAccepted } = {}) {
-  describe(`Single Unit Listing${withShipping ? ' with Shipping' : ''} ${EthAndDaiAccepted ? ' both ETH and DAI accepted' : ''} payment in ETH`, function() {
+  describe(`Single Unit Listing${withShipping ? ' with Shipping' : ''}${
+    EthAndDaiAccepted ? ' both ETH and DAI accepted' : ''
+  } payment in ETH`, function() {
     let seller, buyer, title, review
     before(async function() {
       ({ seller, buyer } = await reset('100'))
@@ -434,7 +487,9 @@ function singleUnitTests({ autoSwap, withShipping, EthAndDaiAccepted } = {}) {
 }
 
 function singleUnitDaiTests({ autoSwap, withShipping } = {}) {
-  describe(`Single Unit Listing${withShipping ? ' with Shipping' : ''} payment in DAI`, function() {
+  describe(`Single Unit Listing${
+    withShipping ? ' with Shipping' : ''
+  } payment in DAI`, function() {
     let seller, buyer
     let title
     before(async function() {
@@ -544,7 +599,9 @@ function singleUnitDaiTests({ autoSwap, withShipping } = {}) {
 }
 
 function multiUnitTests({ autoSwap, withShipping } = {}) {
-  describe(`Multi Unit Listing${withShipping ? ' with Shipping' : ''} payment in ETH`, function() {
+  describe(`Multi Unit Listing${
+    withShipping ? ' with Shipping' : ''
+  } payment in ETH`, function() {
     let seller, buyer, title, listingHash
     before(async function() {
       ({ seller, buyer } = await reset('100'))

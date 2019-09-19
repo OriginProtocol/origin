@@ -14,26 +14,21 @@ import PurchaseSummary from './_PurchaseSummary'
 const withSingleUnitData = WrappedComponent => {
   const WithSingleUnitData = ({ listing, ...props }) => {
     const amount = listing.price.amount
-    const acceptsEth = listing.acceptedTokens.find(t => t.id === 'token-ETH')
-    const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
-    // Favor payment in ETH over DAI if the seller accepts it.
-    const token = acceptsEth ? 'token-ETH' : 'token-DAI'
     const totalPrice = { amount, currency: listing.price.currency }
 
     return (
       <WithPrices
+        listing={listing}
         price={totalPrice}
-        target={token}
         targets={['token-ETH', 'token-DAI', listing.price.currency.id]}
         allowanceTarget={listing.contractAddr}
       >
-        {({ prices, tokenStatus }) => (
+        {({ prices, tokenStatus, suggestedToken }) => (
           <WrappedComponent
             {...props}
             prices={prices}
             tokenStatus={tokenStatus}
-            token={token}
-            acceptsDai={acceptsDai}
+            token={suggestedToken}
             listing={listing}
             totalPrice={totalPrice}
           />

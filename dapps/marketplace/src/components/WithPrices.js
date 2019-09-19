@@ -7,21 +7,42 @@ function removeExtraDecimals(numStr) {
   return numStr.replace(/^([0-9]+\.[0-9]{18}).*/, '$1')
 }
 
+/**
+ * Given a list of tokens and a price, returns an object with information on
+ * whether the current account has enough balance and allowance to pay.
+ *
+ * If a `listing` is passed in as a prop, will pass down a `suggestedToken` prop
+ * set to the token the user has enough balance to pay for, avoiding token swaps
+ * if possible. Eg if the listing is set to accept Eth and Dai, and the user has
+ * enough Eth, it will suggest to pay in Eth to avoid a swap.
+ *
+ * Example usage:
+ *
+ * <WithPrices
+ *   listing={listing} // If listing is provided, suggestedToken will be populated
+ *   price={{ currency: 'fiat-USD', amount: '100' }}
+ *   targets={['token-ETH', 'token-DAI']}
+ * >
+ *   {{ tokenStatus, suggestedToken } => {
+ *      // tokenStatus: {
+ *      //   'token-ETH': { hasBalance: false, hasAllowance: true, needsAllowance: '0', needsBalance: '1000000000' },
+ *      //   'token-DAI': { hasBalance: true, hasAllowance: false, needsAllowance: '1000000000', needsBalance: '0' }
+ *      // },
+ *      // suggestedToken: 'token-DAI'
+ *   }}
+ * </WithPrices>
+ */
 const WithPrices = ({
-  target,
-  targets = [],
-  currencies,
-  proxyCurrencies,
-  price: { currency, amount } = {},
+  targets = [], // List of currencies to return the status of
+  price = {}, // Price to base status of
+  listing, // Optional listing.
+  currencies, // Passed in from withCurrencyBalances hoc
+  proxyCurrencies, // Passed in from withCurrencyBalances hoc
   children,
   ...props
 }) => {
+  const { currency, amount } = price
   proxyCurrencies = proxyCurrencies.length ? proxyCurrencies : currencies
-
-  let hasBalance = false,
-    hasAllowance = false,
-    needsAllowance,
-    needsBalance
 
   const isLoadingData = Object.keys(props).some(
     key => key.endsWith('Loading') && props[key]
@@ -41,7 +62,7 @@ const WithPrices = ({
     return children({ prices: {}, tokenStatus: { loading: true } })
   }
 
-  const results = targets.reduce((memo, target) => {
+  const wallet = targets.reduce((memo, target) => {
     const targetCurrency = currencies.find(c => c.id === target)
     if (!targetCurrency) return memo
 
@@ -52,7 +73,7 @@ const WithPrices = ({
     return memo
   }, {})
 
-  const proxyResults = targets.reduce((memo, target) => {
+  const proxy = targets.reduce((memo, target) => {
     const targetCurrency = proxyCurrencies.find(c => c.id === target)
     if (!targetCurrency) return memo
 
@@ -63,46 +84,53 @@ const WithPrices = ({
     return memo
   }, {})
 
-  console.log({ results, proxyResults })
+  const tokenStatus = targets.reduce((memo, target) => {
+    memo[target] = tokenStatusFor(target, wallet, proxy)
+    return memo
+  }, {})
 
-  const ethBalance = web3.utils.toBN(
-    get(results, `token-ETH.currency.balance`) || '0'
-  )
-  const targetWei = removeExtraDecimals(get(results, `${target}.amount`) || '0')
-  const targetValue = web3.utils.toBN(web3.utils.toWei(targetWei, 'ether'))
-  const ethInWei = removeExtraDecimals(get(results, `token-ETH.amount`) || '0')
-  const targetValueEth = web3.utils.toBN(web3.utils.toWei(ethInWei, 'ether'))
-  const hasEthBalance = ethBalance.gte(targetValueEth)
+  let suggestedToken
+  if (listing) {
+    const acceptsEth = listing.acceptedTokens.find(t => t.id === 'token-ETH')
+    const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
 
-  if (target === 'token-ETH') {
-    hasBalance = hasEthBalance
-    hasAllowance = true
-  } else if (target) {
-    const availableBalance = web3.utils.toBN(
-      get(results, `${target}.currency.balance`) || '0'
-    )
-    const availableAllowance = web3.utils.toBN(
-      get(proxyResults, `${target}.currency.allowance`) || '0'
-    )
-
-    hasBalance = availableBalance.gte(targetValue)
-    needsBalance = hasBalance ? 0 : targetValue.sub(availableBalance).toString()
-
-    hasAllowance = availableAllowance.gte(targetValue)
-    needsAllowance = hasAllowance
-      ? 0
-      : targetValue.sub(availableAllowance).toString()
+    if (acceptsEth && get(tokenStatus, 'token-ETH.hasBalance')) {
+      suggestedToken = 'token-ETH'
+    } else if (acceptsDai) {
+      suggestedToken = 'token-DAI'
+    } else {
+      suggestedToken = 'token-ETH'
+    }
   }
 
-  const tokenStatus = {
+  return children({ prices: wallet, tokenStatus, suggestedToken })
+}
+
+function tokenStatusFor(target, wallet, proxy) {
+  const targetWei = removeExtraDecimals(get(wallet, `${target}.amount`) || '0')
+  const targetValue = web3.utils.toBN(web3.utils.toWei(targetWei, 'ether'))
+
+  const walletBalance = get(wallet, `${target}.currency.balance`) || '0'
+  const availableBalance = web3.utils.toBN(walletBalance)
+  const proxyAllowance = get(proxy, `${target}.currency.allowance`) || '0'
+  const availableAllowance = web3.utils.toBN(proxyAllowance)
+
+  const hasBalance = availableBalance.gte(targetValue)
+  const neededBalance = targetValue.sub(availableBalance).toString()
+
+  const neededAllowance = targetValue.sub(availableAllowance).toString()
+
+  let hasAllowance = availableAllowance.gte(targetValue)
+  if (target === 'token-ETH') {
+    hasAllowance = true
+  }
+
+  return {
     hasBalance,
     hasAllowance,
-    hasEthBalance,
-    needsAllowance,
-    needsBalance
+    needsAllowance: hasAllowance ? 0 : neededAllowance,
+    needsBalance: hasBalance ? 0 : neededBalance
   }
-
-  return children({ prices: results, tokenStatus })
 }
 
 export default withCurrencyBalances(WithPrices)

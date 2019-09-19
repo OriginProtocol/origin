@@ -5,7 +5,7 @@ import { fbt } from 'fbt-runtime'
 import CurrencyContext from 'constants/CurrencyContext'
 import Price from 'components/Price'
 import OgnBadge from 'components/OgnBadge'
-import WithPrices from 'components/WithPrices2'
+import WithPrices from 'components/WithPrices'
 import Buy from './mutations/Buy'
 import SelectQuantity from './_SelectQuantity'
 import PaymentOptions from './_PaymentOptions'
@@ -15,20 +15,21 @@ import PurchaseSummary from './_PurchaseSummary'
 const withMultiUnitData = WrappedComponent => {
   const WithMultiUnitData = ({ listing, quantity, ...props }) => {
     const amount = String(Number(listing.price.amount) * Number(quantity))
-    // Favor payment in ETH over DAI if the seller accepts it.
     const totalPrice = { amount, currency: listing.price.currency }
 
     return (
       <WithPrices
+        listing={listing}
         price={totalPrice}
         targets={['token-ETH', 'token-DAI', totalPrice.currency.id]}
         allowanceTarget={listing.contractAddr}
       >
-        {({ prices, tokenStatus }) => (
+        {({ prices, tokenStatus, suggestedToken }) => (
           <WrappedComponent
             {...props}
             prices={prices}
             tokenStatus={tokenStatus}
+            token={suggestedToken}
             listing={listing}
             totalPrice={totalPrice}
             quantity={quantity}
