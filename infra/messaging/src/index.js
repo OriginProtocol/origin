@@ -270,10 +270,12 @@ SELECT conversations.external_id as id, conversations.updated_at as timestamp, c
 })
 
 // Mark the conversation as read
-app.put('/messages/:conversationId/read', async (req, res) => {
+app.post('/messages/:conversationId/read', async (req, res) => {
+  const { conversationId } = req.params
+
   const conversation = await db.Conversation.findOne({
     where: {
-      externalId: req.params.conversationId
+      externalId: conversationId
     }
   })
 
@@ -285,7 +287,7 @@ app.put('/messages/:conversationId/read', async (req, res) => {
       })
   }
 
-  const { address } = req.query
+  const address = Web3.utils.toChecksumAddress(req.query.address)
 
   const [messagesRead] = await db.Message.update({
     read: true
@@ -293,26 +295,21 @@ app.put('/messages/:conversationId/read', async (req, res) => {
     where: {
       conversationId: conversation.id,
       ethAddress: {
-        [db.sequelize.Op.not]: address
+        [db.Sequelize.Op.not]: address
       },
       read: false
     }
   })
 
-  conversationId
-    .split('-')
-    .map(async notify_address => {
-      // Push to redis
-      await redis.publish(
-        notify_address.toLowerCase(),
-        JSON.stringify({
-          type: 'MARKED_AS_READ',
-          address,
-          conversationId,
-          messagesRead
-        })
-      )
+  await redis.publish(
+    address,
+    JSON.stringify({
+      type: 'MARKED_AS_READ',
+      address,
+      conversationId,
+      messagesRead
     })
+  )
 
   return res.status(200)
     .send({

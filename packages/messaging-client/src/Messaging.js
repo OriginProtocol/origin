@@ -506,6 +506,32 @@ class Messaging {
     return { error: COULD_NOT_DECRYPT }
   }
 
+  async markConversationRead(remoteEthAddress) {
+    const roomId = this.generateRoomId(this.account_key, remoteEthAddress)
+    debug(`Marking conversation ${roomId} as read from account`)
+
+    if (this.convs[roomId] && this.convs[roomId].unreadCount === 0) {
+      // If there is nothing to mark as read, ignore
+      debug('Not marking as read')
+      return null
+    }
+
+    try {
+      const response = await fetch(
+        `${this.globalKeyServer}/messages/${roomId}/read?address=${this.account_key}`,
+        {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' }
+        }
+      )
+
+      return await response.json()
+    } catch (e) {
+      console.error(e)
+      return null
+    }
+  }
+
   onNewMessageUpdate(entry) {
     debug('we got a new message entry:', entry)
     const { content, conversationId, conversationIndex } = entry
@@ -592,7 +618,39 @@ class Messaging {
 
   onMarkedAsReadUpdate(entry) {
     debug('user marked conversation as read', entry)
-    // TODO
+    const { messagesRead, conversationId, address } = entry
+
+    if (messagesRead === 0 || this.account_key !== address) {
+      return
+    }
+
+    const roomId = conversationId
+    const remoteEthAddress = this.getRecipients(roomId).find(
+      addr => addr !== this.account_key
+    )
+
+    const convObj = this.convs[roomId]
+
+    // Total unread count
+    this.unreadCount = Math.min(this.unreadCount - messagesRead, 0)
+
+    if (convObj) {
+      // Reset conversation unread count
+      convObj.unreadCount = 0
+      convObj.messages = convObj.messages.map(m => ({
+        ...m,
+        read: true
+      }))
+    }
+
+    // Notify DApp
+    this.pubsub.publish('MARKED_AS_READ', {
+      markedAsRead: {
+        conversationId: remoteEthAddress,
+        roomId,
+        messagesRead
+      }
+    })
   }
 
   onMessageUpdate(entry) {

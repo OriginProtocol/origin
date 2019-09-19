@@ -13,7 +13,7 @@ module.exports = `
   type MarkedAsReadResult {
     conversationId: String
     roomId: String
-    readCount: Int
+    messagesRead: Int
   }
 
   extend type Query {
@@ -23,7 +23,12 @@ module.exports = `
   extend type Mutation {
     enableMessaging: Boolean
     sendMessage(to: String!, content: String, media: [MediaInput]): Conversation
-    markConversationRead(id: String!): Boolean
+    markConversationRead(id: String!): MarkReadResult
+  }
+
+  type MarkReadResult {
+    success: Boolean
+    messagesRead: Int
   }
 
   type Messaging {

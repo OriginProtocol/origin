@@ -200,7 +200,8 @@ const Room = props => {
   const { error, data, networkStatus, fetchMore } = useQuery(query, {
     variables: { id },
     skip: !id,
-    notifyOnNetworkStatusChange: true
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'network-only'
   })
 
   // Subscribe to new messages
