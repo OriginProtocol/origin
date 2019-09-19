@@ -1,5 +1,5 @@
-import React, { Component, useState, useEffect } from 'react'
-import { Query, useQuery } from 'react-apollo'
+import React, { useEffect } from 'react'
+import { useQuery } from 'react-apollo'
 import get from 'lodash/get'
 import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
@@ -14,11 +14,14 @@ import Link from 'components/Link'
 import EnableMessaging from 'components/EnableMessaging'
 import RoomStatus from 'pages/messaging/RoomStatus'
 
-import subscription from 'queries/NewMessageSubscription'
+import RefetchOnMessageData from 'pages/messaging/RefetchOnMessageData'
 
 const MessagesNav = ({ open, onClose, onOpen, wallet }) => {
   // TODO: Simplify query to fetch just `totalUnread` and use `wallet` as variable instead of `defaultAccount`
-  const { data, refetch, networkStatus } = useQuery(MessagingQuery)
+  const { data, refetch, networkStatus } = useQuery(MessagingQuery, {
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true
+  })
 
   useEffect(() => {
     // Rerender on wallet change
@@ -32,33 +35,36 @@ const MessagesNav = ({ open, onClose, onOpen, wallet }) => {
   const hasUnread = totalUnread > 0 ? ' active' : ''
 
   return (
-    <Dropdown
-      el="li"
-      className="nav-item messages d-none d-md-flex"
-      open={open}
-      onClose={() => onClose()}
-      content={
-        <MessagesDropdown
-          onClick={() => onClose()}
-          totalUnread={totalUnread}
-          messagingEnabled={enabled}
-        />
-      }
-    >
-      <a
-        className="nav-link"
-        href="#"
-        onClick={e => {
-          e.preventDefault()
-          open ? onClose() : onOpen()
-        }}
-        role="button"
-        aria-haspopup="true"
-        aria-expanded="false"
+    <>
+      <RefetchOnMessageData refetch={refetch} />
+      <Dropdown
+        el="li"
+        className="nav-item messages d-none d-md-flex"
+        open={open}
+        onClose={() => onClose()}
+        content={
+          <MessagesDropdown
+            onClick={() => onClose()}
+            totalUnread={totalUnread}
+            messagingEnabled={enabled}
+          />
+        }
       >
-        <div className={`messages-icon${hasUnread}`} />
-      </a>
-    </Dropdown>
+        <a
+          className="nav-link"
+          href="#"
+          onClick={e => {
+            e.preventDefault()
+            open ? onClose() : onOpen()
+          }}
+          role="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <div className={`messages-icon${hasUnread}`} />
+        </a>
+      </Dropdown>
+    </>
   )
 }
 
@@ -74,14 +80,14 @@ const Loading = () => (
 )
 
 const MessagesDropdown = ({ onClick, totalUnread, messagingEnabled }) => {
-  const { data, error, networkStatus } = useQuery(ConversationsQuery, {
+  const { data, error, networkStatus, refetch } = useQuery(ConversationsQuery, {
     variables: {
-      limit: 1
+      limit: 5
     },
-    skip: !messagingEnabled
+    // skip: !messagingEnabled,
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true
   })
-
-  const enabled = messagingEnabled
 
   if (error) {
     console.error(error)
@@ -93,35 +99,38 @@ const MessagesDropdown = ({ onClick, totalUnread, messagingEnabled }) => {
   const conversations = get(data, 'messaging.conversations', [])
 
   return (
-    <div className="dropdown-menu dropdown-menu-right show">
-      <div className="count">
-        <div className="total">{totalUnread}</div>
-        <div className="title">
-          <fbt desc="messages.unreadMessages">
-            Unread
-            <fbt:plural count={totalUnread} showCount="no">
-              Message
-            </fbt:plural>
-          </fbt>
+    <>
+      <RefetchOnMessageData refetch={refetch} />
+      <div className="dropdown-menu dropdown-menu-right show">
+        <div className="count">
+          <div className="total">{totalUnread}</div>
+          <div className="title">
+            <fbt desc="messages.unreadMessages">
+              Unread
+              <fbt:plural count={totalUnread} showCount="no">
+                Message
+              </fbt:plural>
+            </fbt>
+          </div>
+          {messagingEnabled ? null : (
+            <EnableMessaging className="btn-sm" onClose={onClick} />
+          )}
         </div>
-        {enabled ? null : (
-          <EnableMessaging className="btn-sm" onClose={onClick} />
-        )}
+        <div className="messaging-dropdown-content">
+          {conversations.map((conv, idx) => (
+            <RoomStatus
+              onClick={onClick}
+              key={idx}
+              conversation={conv}
+              wallet={conv.id}
+            />
+          ))}
+        </div>
+        <Link to="/messages" onClick={() => onClick()}>
+          <fbt desc="messages.viewMessages">View Messages</fbt>
+        </Link>
       </div>
-      <div className="messaging-dropdown-content">
-        {conversations.map((conv, idx) => (
-          <RoomStatus
-            onClick={onClick}
-            key={idx}
-            conversation={conv}
-            wallet={conv.id}
-          />
-        ))}
-      </div>
-      <Link to="/messages" onClick={() => onClick()}>
-        <fbt desc="messages.viewMessages">View Messages</fbt>
-      </Link>
-    </div>
+    </>
   )
 }
 

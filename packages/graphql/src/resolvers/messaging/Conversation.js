@@ -79,7 +79,7 @@ export default {
   }),
   lastMessage: async account => {
     const messages = await getMessages(account.id)
-    return messages && messages.length ? getMessage(messages[messages.length - 1]) : null
+    return messages && messages.length ? getMessage(messages[0]) : null
   },
   totalUnread: async account => {
     if (!isEnabled()) {

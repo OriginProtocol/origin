@@ -22,6 +22,8 @@ import MobileModal from 'components/MobileModal'
 import { abbreviateName, truncateAddress } from 'utils/user'
 import LoadingSpinner from 'components/LoadingSpinner'
 
+import RefetchOnMessageData from 'pages/messaging/RefetchOnMessageData'
+
 const RoomTitle = withIdentity(({ identity, walletProxy }) => (
   <Link to={`/user/${walletProxy}`} className="user-profile-link">
     <Avatar profile={identity} size={30} />
@@ -37,8 +39,7 @@ const ConversationList = ({
   messaging,
   messagingLoading,
   room,
-  onBack,
-  ...props
+  onBack
 }) => {
   const [markConversationRead] = useMutation(MarkConversationRead)
 
@@ -123,6 +124,7 @@ const Messages = props => {
   return (
     <div className="container messages-page">
       <DocumentTitle pageTitle={<fbt desc="Messages.title">Messages</fbt>} />
+      <RefetchOnMessageData refetch={props.messagingRefetch} />
       <ConversationList
         {...props}
         room={room}

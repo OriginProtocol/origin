@@ -542,7 +542,7 @@ class Messaging {
                 address
               )
 
-              convObj.messages.push(message)
+              convObj.messages.unshift(message)
               debug('message:', message)
               this.events.emit('msg', message)
 
@@ -805,7 +805,7 @@ class Messaging {
           return 0
         }
 
-        return this.convs[conv2].lastMessage.timestamp - this.convs[conv1].lastMessage.timestamp
+        return conv2LastMessage.msg.created - conv1LastMessage.msg.created
       })
       .slice(Number(offset) || 0, Number(limit) || 10)
       .map(convId => {
