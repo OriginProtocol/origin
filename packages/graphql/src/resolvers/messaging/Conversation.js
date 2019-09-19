@@ -23,20 +23,20 @@ export async function getMessages(conversationId, { after, before } = {}) {
     (await contracts.messaging.getMessages(conversationId, { after, before })) || []
 
   const supportAccount = contracts.config.messagingAccount
-  if (supportAccount && conversationId === supportAccount) {
+  if (supportAccount && contracts.messaging.account_key !== supportAccount && conversationId === supportAccount) {
     const hasInjectedMessages = messages.find(x => x.index < 0)
 
     if (!hasInjectedMessages) {
       const created = 1483209000000 // 01/01/2017
       if (isEnabled()) {
-        messages.unshift({
+        messages.push({
           msg: { content: congratsMessage, created },
           hash: 'origin-congrats-message',
           address: supportAccount,
           index: -1
         })
       }
-      messages.unshift({
+      messages.push({
         msg: { content: welcomeMessage, created },
         hash: 'origin-welcome-message',
         address: supportAccount,
@@ -79,7 +79,7 @@ export default {
   }),
   lastMessage: async account => {
     const messages = await getMessages(account.id)
-    return messages && messages.length ? getMessage(messages[0]) : null
+    return messages && messages.length ? getMessage(messages[messages.length - 1]) : null
   },
   totalUnread: async account => {
     if (!isEnabled()) {
@@ -87,5 +87,9 @@ export default {
     }
 
     return (await getUnreadCount(account) || 0)
+  },
+  hasMore: account => {
+    const conv = contracts.messaging.getConvo(account.id)
+    return conv && conv.hasMore
   }
 }

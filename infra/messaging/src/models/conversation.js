@@ -3,7 +3,12 @@ module.exports = (sequelize, DataTypes) => {
   const Conversation = sequelize.define(
     'Conversation',
     {
-      id: { type: DataTypes.INTEGER, primaryKey: true },
+      id: { 
+        type: DataTypes.INTEGER,
+        primaryKey: true, 
+        allowNull: false,
+        autoIncrement: true
+      },
       externalId: { type: DataTypes.STRING(128), unique: true },
       data: DataTypes.JSON, // this should contain the info about the conversation
       messageCount: { type: DataTypes.INTEGER, defaultValue: 0 }
@@ -12,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'msg_conversation'
     }
   )
-  Conversation.associate = function(models) {
+  Conversation.associate = function() {
     // // associations can be defined here
     // Conversation.hasMany(models.Message, {
     //   foreignKey: 'conversationId',

@@ -63,6 +63,7 @@ function showItems(props) {
       }
     }
   }
+
   if (nextMessage) {
     const futureTimeDiff = nextMessage.timestamp - message.timestamp
     const sameSender =
@@ -103,11 +104,6 @@ const Message = props => {
 
   return (
     <>
-      {showTime && (
-        <div className="timestamp">
-          {dayjs.unix(message.timestamp).format('MMM Do h:mmA')}
-        </div>
-      )}
       <div
         className={`d-flex flex-row ${justifyContent} message${userType}${contentOnly}`}
       >
@@ -129,6 +125,11 @@ const Message = props => {
           </div>
         </div>
       </div>
+      {showTime && (
+        <div className="timestamp">
+          {dayjs.unix(message.timestamp).format('MMM Do h:mmA')}
+        </div>
+      )}
     </>
   )
 }

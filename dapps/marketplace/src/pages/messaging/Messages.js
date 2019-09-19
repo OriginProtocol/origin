@@ -51,7 +51,7 @@ class Messages extends Component {
       return
     }
 
-    const conversations = this.getSortedConversations()
+    const conversations = get(this.props, 'messaging.conversations', [])
 
     const defaultRoom = get(conversations, '0.id')
 
@@ -61,10 +61,6 @@ class Messages extends Component {
         defaultRoomSet: true
       })
     }
-  }
-
-  getSortedConversations() {
-    return get(this.props, 'messaging.conversations', [])
   }
 
   goBack() {
@@ -105,7 +101,7 @@ class Messages extends Component {
       )
     }
 
-    const conversations = this.getSortedConversations()
+    const conversations = get(this.props, 'messaging.conversations', [])
 
     const room = get(this.props, 'match.params.room')
 
@@ -137,9 +133,6 @@ class Messages extends Component {
               active={room === conv.id}
               conversation={conv}
               wallet={conv.id}
-              onClick={() => {
-                this.props.history.push(`/messages/${conv.id}`)
-              }}
             />
           ))}
         </div>

@@ -48,6 +48,7 @@ module.exports = `
     messages: [Message]
     lastMessage: Message
     totalUnread: Int
+    hasMore: Boolean
   }
 
   type Message {

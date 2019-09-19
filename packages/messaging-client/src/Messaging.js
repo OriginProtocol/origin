@@ -629,7 +629,8 @@ class Messaging {
       messages: [],
       lastConversationIndex: 0,
       messageCount: 0,
-      loaded: false
+      loaded: false,
+      hasMore: true
     }
 
     const existingConv = this.convs[roomId]
@@ -655,48 +656,61 @@ class Messaging {
       }
     }
 
-    const messages = await limiter.schedule(async () => {
-      const res = await fetch(url.toString(), {
-        headers: { 'content-type': 'application/json' }
-      })
-
-      if (res.status === 204) {
-        return []
-      }
-
-      return await res.json()
-    })
-
-    messages.forEach(entry => {
-      this.processContent(
-        entry.content,
-        convObj,
-        (msg, address) => {
-          const message = this.toMessage(msg, roomId, entry, address)
-          convObj.messages.push(message)
-          debug('msg:', message)
-          this.events.emit('msg', message)
-        },
-        (msg, address) => {
-          this.events.emit('emsg', this.toMessage(msg, roomId, entry, address))
+    if (convObj.hasMore) {
+      // Fetch only if there are more messages
+      const messages = await limiter.schedule(async () => {
+        const res = await fetch(url.toString(), {
+          headers: { 'content-type': 'application/json' }
+        })
+  
+        if (res.status === 204) {
+          return []
         }
-      )
-
-      if (convObj.lastConversationIndex < entry.conversationIndex) {
-        convObj.lastConversationIndex = entry.conversationIndex
-      }
-
-      convObj.messageCount = entry.lastConversationIndex + 1
-    })
-
-    // Sort things in descending order
-    convObj.messages = convObj.messages
-      .sort((m1, m2) => {
-        return m2.index - m1.index
+  
+        return await res.json()
       })
-
-    if (!keys && !convObj.loaded) {
-      convObj.loaded = true
+  
+      if (typeof before === 'number' && messages.length === 0) {
+        convObj.hasMore = false
+      }
+  
+      messages.forEach(entry => {
+        this.processContent(
+          entry.content,
+          convObj,
+          (msg, address) => {
+            const message = this.toMessage(msg, roomId, entry, address)
+  
+            if (convObj.messages.findIndex(m => m.index === message.index) < 0) {
+              // Push only if it is not already there
+              convObj.messages.push(message)
+              debug('msg:', message)
+            } else {
+              debug('Ignoring duplicate message', message.index)
+            }
+            this.events.emit('msg', message)
+          },
+          (msg, address) => {
+            this.events.emit('emsg', this.toMessage(msg, roomId, entry, address))
+          }
+        )
+  
+        if (convObj.lastConversationIndex < entry.conversationIndex) {
+          convObj.lastConversationIndex = entry.conversationIndex
+        }
+  
+        convObj.messageCount = entry.lastConversationIndex + 1
+      })
+  
+      // Sort things in descending order
+      convObj.messages = convObj.messages
+        .sort((m1, m2) => {
+          return m2.index - m1.index
+        })
+  
+      if (!keys && !convObj.loaded) {
+        convObj.loaded = true
+      }
     }
 
     return convObj
@@ -854,8 +868,6 @@ class Messaging {
       })
     }
 
-    this.convs[roomId] = convObj
-
     return convObj.messages
   }
 
@@ -974,7 +986,7 @@ class Messaging {
       //
       // a conversation haven't even been started yet
       //
-      const conversationIndex = convObj.lastConversationIndex + 1
+      const conversationIndex = convObj.lastConversationIndex
       const encryptKey = cryptoRandomString({ length: 32 }).toString('hex')
 
       const keysContent = {

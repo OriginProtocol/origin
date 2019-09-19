@@ -21,6 +21,7 @@ export default gql`
           }
           timestamp
         }
+        hasMore
       }
     }
   }
