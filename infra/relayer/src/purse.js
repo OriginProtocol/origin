@@ -282,7 +282,9 @@ class Purse {
      * Need this function because if we throw in setTimeout it won't bubble up
      * properly and can't be handled.
      */
+    const that = this
     const timeout = () => {
+      that.accountLookupInProgress = false
       throw new Error('Account acquisition timeout!')
     }
 
