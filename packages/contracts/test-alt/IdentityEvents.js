@@ -16,14 +16,16 @@ describe('IdentityEvents', async function() {
   })
 
   it('identity update', async function() {
-    const ipfsHash = '0x1234567890123456789012345678901234567890123456789012345678901234'
-    await identityEvents.methods.emitIdentityUpdated(ipfsHash).send({ from: user })
+    const ipfsHash =
+      '0x1234567890123456789012345678901234567890123456789012345678901234'
+    await identityEvents.methods
+      .emitIdentityUpdated(ipfsHash)
+      .send({ from: user })
 
     // Check an update event was emitted
-    const events = await identityEvents.getPastEvents(
-      'IdentityUpdated',
-      { filter: { account: user } },
-    )
+    const events = await identityEvents.getPastEvents('IdentityUpdated', {
+      filter: { account: user }
+    })
     const updateEvent = events[0]
     assert.equal(updateEvent.returnValues.account, user)
     assert.equal(updateEvent.returnValues.ipfsHash, ipfsHash)
@@ -33,12 +35,10 @@ describe('IdentityEvents', async function() {
     await identityEvents.methods.emitIdentityDeleted().send({ from: user })
 
     // Check a delete event was emitted.
-    const events = await identityEvents.getPastEvents(
-      'IdentityDeleted',
-      { filter: { account: user } },
-    )
+    const events = await identityEvents.getPastEvents('IdentityDeleted', {
+      filter: { account: user }
+    })
     const deleteEvent = events[0]
     assert.equal(deleteEvent.returnValues.account, user)
   })
-
 })

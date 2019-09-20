@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.origincatcher">
+    package="com.originmarketplace">
 
     <meta-data
       android:name="com.google.firebase.messaging.default_notification_icon"
@@ -12,7 +12,7 @@
     <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_description"
                 android:value="Notifications from the dapp, usually about transactions"/>
 
-    <uses-feature android:name="android.hardware.camera.any" android:required="false" />
+    <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -31,6 +31,8 @@
 
       <meta-data android:name="com.facebook.sdk.ApplicationId"
         android:value="@string/facebook_app_id"/>
+
+      <meta-data android:name="scw_app_id" android:value="SCW_APP_ID" />
 
       <activity
         android:name=".MainActivity"

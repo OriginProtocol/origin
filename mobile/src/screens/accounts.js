@@ -54,38 +54,45 @@ class AccountsScreen extends Component {
 
   renderLists() {
     const { wallet } = this.props
-    // Display headers if there are more than one mnemonic, this covers the
-    // case of private key accounts because mnemonic will be undefined
-    const uniqueMnemonics = [...new Set(wallet.accounts.map(a => a.mnemonic))]
+    const uniqueMnemonics = [
+      ...new Set(wallet.accounts.filter(a => a.mnemonic).map(a => a.mnemonic))
+    ]
 
-    if (uniqueMnemonics.length > 1) {
-      let recoveryPhraseNumber = 1
-      return uniqueMnemonics.map((mnemonic, i) => {
+    const accountsByHeader = {}
+    wallet.accounts.forEach(account => {
+      let header
+      if (account.mnemonic) {
+        header = `${fbt(
+          'Recovery Phrase',
+          'AccountScreen.recoveryPhraseListHeader'
+        )} ${uniqueMnemonics.indexOf(account.mnemonic) + 1}`
+      } else if (account.privateKey) {
+        header = fbt(
+          'Imported from Private Key',
+          'AccountScreen.privateKeyListHeader'
+        )
+      } else {
+        header = fbt(`Samsung Blockchain Keystore`, 'AccountScreen.samsungBKS')
+      }
+
+      if (accountsByHeader[header]) {
+        accountsByHeader[header].push(account)
+      } else {
+        accountsByHeader[header] = [account]
+      }
+    })
+
+    // Render headers if more than 1 type of account
+    const renderHeaders = Object.keys(accountsByHeader).length > 1
+
+    if (renderHeaders) {
+      return Object.entries(accountsByHeader).map(entry => {
         const listHeaderComponent = (
           <View style={styles.listHeaderContainer}>
-            <Text style={styles.listHeader}>
-              {(mnemonic &&
-                `${fbt(
-                  'Recovery Phrase',
-                  'AccountScreen.recoveryPhraseListHeader'
-                )} ${recoveryPhraseNumber}`) ||
-                fbt(
-                  'Imported from Private Key',
-                  'AccountScreen.privateKeyListHeader'
-                )}
-            </Text>
+            <Text style={styles.listHeader}>{entry[0]}</Text>
           </View>
         )
-
-        if (mnemonic) {
-          recoveryPhraseNumber += 1
-        }
-
-        return this.renderAccountList(
-          wallet.accounts.filter(a => a.mnemonic === mnemonic),
-          listHeaderComponent,
-          i
-        )
+        return this.renderAccountList(entry[1], listHeaderComponent, entry[0])
       })
     } else {
       return this.renderAccountList(wallet.accounts, <></>)
