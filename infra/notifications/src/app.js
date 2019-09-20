@@ -165,20 +165,93 @@ app.post('/', async (req, res) => {
 
 /**
  * Endpoint called from the mobile marketplace app to register a device token
- * and Ethereum address.
+ * and Ethereum address for push notifications.
+ *
+ * Notes:
+ *  - The app may call this end point more than once.
+ *  - On iOS devices, the app may call this endpoint before the user accepts
+ *    to turn on notifications. So the deviceToken argument may be empty.
  */
 app.post('/mobile/register', async (req, res) => {
-  logger.info('Call to mobile device registry endpoint')
-
   const mobileRegister = {
-    ethAddress: req.body.eth_address,
-    deviceType: req.body.device_type,
+    ethAddress: _.get(req.body, 'eth_address', null),
+    deviceType: _.get(req.body, 'device_type', null),
     deviceToken: _.get(req.body, 'device_token', null),
-    permissions: req.body.permissions
+    permissions: _.get(req.body, 'permissions', null)
+  }
+  logger.info(`POST /mobile/register for ${mobileRegister.ethAddress}`)
+
+  if (!mobileRegister.ethAddress) {
+    return res.status(400).send({ errors: ['Invalid Eth address'] })
+  }
+  // By convention all Eth addresses are stored lower cased in the DB.
+  mobileRegister.ethAddress = mobileRegister.ethAddress.toLowerCase()
+
+  if (mobileRegister.deviceToken) {
+    // See if a row already exists for this (Eth address, device token) pair.
+    const registryRow = await MobileRegistry.findOne({
+      where: {
+        ethAddress: mobileRegister.ethAddress,
+        deviceToken: mobileRegister.deviceToken
+      }
+    })
+
+    if (!registryRow) {
+      // Nothing exists, create a new row.
+      await MobileRegistry.create(mobileRegister)
+      res.sendStatus(201)
+      logger.debug('Added new mobile device to registry: ', req.body)
+    } else {
+      // Update existing row since permissions might have changed.
+      await MobileRegistry.upsert(mobileRegister)
+      res.sendStatus(200)
+      logger.debug('Updated mobile device registry: ', req.body)
+    }
   }
 
+  // Record the mobile account creation in the growth_event table.
+  // Notes:
+  //  - deviceToken may be null. Not an issue since it is just informational
+  //    metadata that is not used.
+  //  - The insert method is idempotent. It checks for existing rows before
+  //    inserting, so it's alright to call it every time /mobile/register
+  //    gets executed.
+  await GrowthEvent.insert(
+    logger,
+    1,
+    mobileRegister.ethAddress,
+    GrowthEventTypes.MobileAccountCreated,
+    mobileRegister.deviceToken,
+    { deviceType: mobileRegister.deviceType },
+    new Date()
+  )
+  logger.debug(
+    `Recorded mobile account creation for ${mobileRegister.ethAddress} in growth system.`
+  )
+})
+
+/**
+ * Unregisters a device for push notifications.
+ */
+app.delete('/mobile/register', async (req, res) => {
+  const mobileRegister = {
+    ethAddress: _.get(req.body, 'eth_address', null),
+    deviceToken: _.get(req.body, 'device_token', null)
+  }
+  logger.info(`DELETE /mobile/register for ${mobileRegister.ethAddress}`)
+
+  if (!mobileRegister.ethAddress) {
+    return res.status(400).send({ errors: ['Invalid Eth address'] })
+  }
+  // To unregister a deviceToken must be passed.
+  if (!mobileRegister.deviceToken) {
+    return res.sendStatus(204)
+  }
+  // By convention all Eth addresses are stored lower case in the DB.
+  mobileRegister.ethAddress = mobileRegister.ethAddress.toLowerCase()
+
   // See if a row already exists for this device/address
-  let registryRow = await MobileRegistry.findOne({
+  const registryRow = await MobileRegistry.findOne({
     where: {
       ethAddress: mobileRegister.ethAddress,
       deviceToken: mobileRegister.deviceToken
@@ -186,47 +259,13 @@ app.post('/mobile/register', async (req, res) => {
   })
 
   if (!registryRow) {
-    // Nothing exists, create a new row
-    logger.debug('Adding new mobile device to registry: ', req.body)
-    registryRow = await MobileRegistry.create(mobileRegister)
-
-    // Record the mobile account creation in the growth_event table.
-    await GrowthEvent.insert(
-      logger,
-      1,
-      mobileRegister.ethAddress,
-      GrowthEventTypes.MobileAccountCreated,
-      mobileRegister.deviceToken,
-      { deviceType: mobileRegister.deviceType },
-      new Date()
-    )
-
-    res.sendStatus(201)
-  } else {
-    // Row exists, permissions might have changed, update if required
-    logger.debug('Updating mobile device registry: ', req.body)
-    registryRow = await MobileRegistry.upsert(mobileRegister)
-    res.sendStatus(200)
-  }
-})
-
-app.delete('/mobile/register', async (req, res) => {
-  logger.info('Call to delete mobile registry endpoint')
-
-  // See if a row already exists for this device/address
-  const registryRow = await MobileRegistry.findOne({
-    where: {
-      ethAddress: req.body.eth_address,
-      deviceToken: _.get(req.body, 'device_token', null)
-    }
-  })
-
-  if (!registryRow) {
     res.sendStatus(204)
+    logger.debug('Device not registered. Nothing to do !')
   } else {
     // Update the soft delete column
     await registryRow.update({ deleted: true })
     res.sendStatus(200)
+    logger.debug('Device unregistered.')
   }
 })
 
