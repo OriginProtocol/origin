@@ -37,7 +37,7 @@ contract ERC20 {
 }
 
 
-**
+/**
  * @title A Marketplace contract for managing listings, offers, payments, escrow and arbitration
  *
  * Listings may be priced in ETH or ERC20.
