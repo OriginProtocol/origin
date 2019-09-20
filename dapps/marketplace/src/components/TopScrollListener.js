@@ -47,7 +47,7 @@ const TopScrollListener = ({
     if (onInnerRef) {
       onInnerRef(elementRef.current)
     }
-  }, elementRef.current)
+  }, [elementRef.current])
 
   useEffect(() => {
     window.requestAnimationFrame(() => {

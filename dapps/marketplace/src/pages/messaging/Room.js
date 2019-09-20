@@ -262,11 +262,10 @@ const Room = props => {
         convId={id}
         markRead={() => markRead({ variables: { id } })}
         hasMore={hasMore}
-        fetchMore={({ after, before }) => {
+        fetchMore={({ before }) => {
           fetchMore({
             variables: {
               id,
-              after,
               before
             },
             updateQuery: (prevData, { fetchMoreResult }) => {
@@ -275,7 +274,16 @@ const Room = props => {
 
               setMessages(newMessages)
 
-              return prevData
+              return {
+                ...prevData,
+                messaging: {
+                  ...prevData.messaging,
+                  conversation: {
+                    ...prevData.messaging.conversation,
+                    messages: newMessages
+                  }
+                }
+              }
             }
           })
         }}

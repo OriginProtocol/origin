@@ -1,9 +1,5 @@
 import contracts from '../../contracts'
 
-import sortBy from 'lodash/sortBy'
-import { withFilter } from 'graphql-subscriptions'
-import pubsub from '../../utils/pubsub'
-
 export function isEnabled() {
   return contracts.messaging.pub_sig &&
     contracts.messaging.account &&

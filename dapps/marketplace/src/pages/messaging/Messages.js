@@ -24,6 +24,8 @@ import LoadingSpinner from 'components/LoadingSpinner'
 
 import RefetchOnMessageData from 'pages/messaging/RefetchOnMessageData'
 
+import BottomScrollListener from 'components/BottomScrollListener'
+
 const RoomTitle = withIdentity(({ identity, walletProxy }) => (
   <Link to={`/user/${walletProxy}`} className="user-profile-link">
     <Avatar profile={identity} size={30} />
@@ -39,9 +41,12 @@ const ConversationList = ({
   messaging,
   messagingLoading,
   room,
-  onBack
+  onBack,
+  messagingFetchMore,
+  messagingNetworkStatus
 }) => {
   const [markConversationRead] = useMutation(MarkConversationRead)
+  const [hasMore, setHasMore] = useState(true)
 
   if (messagingError) {
     return <QueryError query={query} error={messagingError} />
@@ -81,21 +86,52 @@ const ConversationList = ({
 
   return (
     <div className="conversations-wrapper">
-      <div className={`conversations-list`}>
-        {conversations.length ? null : (
-          <div>
-            <fbt desc="Messages.none">No conversations!</fbt>
-          </div>
-        )}
-        {conversations.map((conv, idx) => (
-          <RoomStatus
-            key={idx}
-            active={room === conv.id}
-            conversation={conv}
-            wallet={conv.id}
-          />
-        ))}
-      </div>
+      <BottomScrollListener
+        className="conversations-list"
+        ready={messaging.enabled && messagingNetworkStatus === 7}
+        bindOnContainer={true}
+        hasMore={hasMore}
+        onBottom={() => {
+          messagingFetchMore({
+            variables: {
+              offset: conversations.length
+            },
+            updateQuery: (prevData, { fetchMoreResult }) => {
+              const convs = fetchMoreResult.messaging.conversations
+
+              if (convs.length === 0) {
+                setHasMore(false)
+              }
+
+              return {
+                ...prevData,
+                messaging: {
+                  ...prevData.messaging,
+                  conversations: [
+                    ...prevData.messaging.conversations,
+                    ...convs
+                  ]
+                }
+              }
+            }
+          })
+      }}>
+        <>
+          {conversations.length ? null : (
+            <div>
+              <fbt desc="Messages.none">No conversations!</fbt>
+            </div>
+          )}
+          {conversations.map((conv, idx) => (
+            <RoomStatus
+              key={idx}
+              active={room === conv.id}
+              conversation={conv}
+              wallet={conv.id}
+            />
+          ))}
+        </>
+      </BottomScrollListener>
       {content}
     </div>
   )
