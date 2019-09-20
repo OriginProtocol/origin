@@ -212,31 +212,26 @@ class PushNotifications extends Component {
       return
     }
 
-    const deviceToken = get(this.props, 'settings.deviceToken')
-    if (!deviceToken) {
-      console.debug(
-        'Could not register with notifications server, no device token'
-      )
-      return
-    }
-
-    console.debug(
-      `Registering ${activeAddress} and device token ${deviceToken}`
-    )
+    console.debug(`Adding ${activeAddress} to mobile registry`)
 
     PushNotification.checkPermissions(permissions => {
+      const data = {
+        eth_address: activeAddress,
+        device_type: this.getNotificationType(),
+        permissions: permissions
+      }
+
+      if (this.props.settings.deviceToken) {
+        data['device_token'] = this.props.settings.deviceToken
+      }
+
       fetch(this.getNotificationServerUrl(), {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          eth_address: activeAddress,
-          device_token: deviceToken,
-          device_type: this.getNotificationType(),
-          permissions: permissions
-        })
+        body: JSON.stringify(data)
       }).catch(error => {
         Sentry.captureException(error)
         console.warn(
@@ -250,16 +245,15 @@ class PushNotifications extends Component {
   /* Unregister for notifications for deleted accounts
    */
   async unregister(account) {
-    const deviceToken = this.props.settings.deviceToken
+    console.debug(`Removing ${account.address} from mobile registry`)
 
-    if (!deviceToken) {
-      console.debug('No device token')
-      return
+    const data = {
+      eth_address: account.address
     }
 
-    console.debug(
-      `Unregistering ${account.address} and device token ${deviceToken}`
-    )
+    if (this.props.settings.deviceToken) {
+      data['device_token'] = this.props.settings.deviceToken
+    }
 
     return fetch(this.getNotificationServerUrl(), {
       method: 'DELETE',
@@ -267,10 +261,7 @@ class PushNotifications extends Component {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        eth_address: account.address,
-        device_token: deviceToken
-      })
+      body: JSON.stringify(data)
     }).catch(error => {
       console.warn(
         'Failed to unregister notification address with notifications server',
