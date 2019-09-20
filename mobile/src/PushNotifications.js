@@ -9,6 +9,7 @@ import {
   PushNotificationIOS
 } from 'react-native'
 import PushNotification from 'react-native-push-notification'
+import { Sentry } from 'react-native-sentry'
 import { connect } from 'react-redux'
 import get from 'lodash.get'
 
@@ -240,6 +241,7 @@ class PushNotifications extends Component {
           permissions: permissions
         })
       }).catch(error => {
+        Sentry.captureException(error)
         console.warn(
           'Failed to register notification address with notifications server',
           error
