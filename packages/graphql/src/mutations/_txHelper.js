@@ -188,7 +188,7 @@ async function getGasPrice(w3) {
 async function encodeTransaction(tx) {
   if (
     typeof tx !== 'object' ||
-    Object.prototype.hasOwnProperty.call(tx, 'encodeABI')
+    !Object.prototype.hasOwnProperty.call(tx, 'encodeABI')
   ) {
     return tx
   }
