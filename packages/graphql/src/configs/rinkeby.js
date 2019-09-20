@@ -31,6 +31,8 @@ export default {
     'QmSUR3caMhEy3DEQJp7QuSyHSsBrFtqQ1UQEKKPB5fWMRT'
   ],
   V00_Marketplace_EventCacheMaxBlock: 4263321,
+  V01_Marketplace: addresses.Marketplace_V01,
+  V01_Marketplace_Epoch: addresses.MarketplaceEpoch_V01,
   IdentityEvents: addresses.IdentityEvents,
   IdentityEvents_Epoch: addresses.IdentityEventsEpoch,
   IdentityEvents_EventCache: ['QmPe4ESMh4FhCN82bKwk2y2dkgVSMYS98U7Y5w8qmuhcUh'],

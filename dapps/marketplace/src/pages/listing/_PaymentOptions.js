@@ -58,6 +58,25 @@ const SwapEthToDai = () => (
   </fbt>
 )
 
+/**
+ * Component with the logic for deciding what payment options should be
+ * used for a purchase.
+ *
+ * @param identity
+ * @param {Array<string>} acceptedTokens: List of crypt-currencies accepted by the seller.
+ *   Ex: ['token-ETH', 'token-DAI'] indicates the seller accepts payment in both ETH and DAI.
+ * @param {Object} listing: Listing to be purchased
+ * @param {string} value: Id of the currency the buyer chose to make the payment in. Ex: 'token-ETH'
+ * @param {{amount:string, currency:{id:string}}} price: price of the listing.
+ * @param {Object.<string, {token:string}>} tokens: Dictionary with price of the listing in various currencies.
+ *  Loaded asynchronously. Empty object until loaded.
+ * @param {boolean} hasBalance: True if buyer has enough token to purchase the listing
+ * @param {boolean} hasEthBalance: True if buyer has enough ETH to purchase the listing.
+ * @param {Object} children: React element.
+ * @param {undefined||string} cannotTransact: string with reason for buyer not able to transact
+ *   (ex: 'loading'), or undefined if buyer can transact.
+ * @param {Object} props: React properties.
+ */
 const PaymentOptions = ({
   identity,
   acceptedTokens,
@@ -65,20 +84,21 @@ const PaymentOptions = ({
   value,
   price,
   tokens,
-  hasBalance,
-  hasEthBalance,
+  tokenStatus,
   children,
   cannotTransact,
   ...props
 }) => {
   const isLoadingData =
-    get(props, 'tokenStatus.loading') ||
+    get(tokenStatus, 'loading') ||
     props.cannotTransact === 'loading' ||
     Object.keys(props).some(key => key.endsWith('Loading') && props[key])
 
   if (isLoadingData) {
     return null
   }
+
+  const { hasBalance, hasEthBalance } = tokenStatus
 
   const noBalance = cannotTransact && cannotTransact !== 'no-balance'
   const noTokens = !Object.keys(tokens).length
@@ -90,8 +110,8 @@ const PaymentOptions = ({
       needsSwap = false,
       noEthOrDai = false
 
-    const daiActive = value === 'token-DAI' ? ' active' : ''
-    const ethActive = value === 'token-ETH' ? ' active' : ''
+    const daiActive = value === 'token-DAI'
+    const ethActive = value === 'token-ETH'
     const acceptsDai = acceptedTokens.find(t => t.id === 'token-DAI')
     const acceptsEth =
       !acceptsDai || acceptedTokens.find(t => t.id === 'token-ETH')

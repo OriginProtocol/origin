@@ -43,22 +43,23 @@ const logger = require('./logger')
 const Sentry = require('./sentry')
 const { metrics } = require('./prom')
 
-const MAX_LOCK_TIME = 15000
-const REDIS_RETRY_TIMEOUT = 30000
-const REDIS_RETRY_DELAY = 500
+const MAX_LOCK_TIME = 15000 // msec
+const REDIS_RETRY_TIMEOUT = 30000 // msec
+const REDIS_RETRY_DELAY = 500 // msec
 const DEFAULT_CHILDREN = 5
 const DEFAULT_MNEMONIC = 'one two three four five six'
 const DEFAULT_MAX_PENDING_PER_ACCOUNT = 3
 const ZERO = new BN('0', 10)
 const BASE_FUND_VALUE = new BN('500000000000000000', 10) // 0.5 Ether
 const MIN_CHILD_BALANCE = new BN('100000000000000000', 10) // 0.1 Ether
-const MAX_GAS_PRICE = new BN('25000000000', 10) // 25 gwei
+const MAX_GAS_PRICE = new BN('100000000000', 10) // 100 gwei. Hopefully we'll never have to raise this again...
 const REDIS_TX_COUNT_PREFIX = 'txcount_'
 const REDIS_PENDING_KEY = `pending_txs`
 const REDIS_PENDING_PREFIX = `pending_tx_`
 const REDIS_PENDING_TX_PREFIX = `pending_txobj_`
 const JSONRPC_QPS = 100
 const JSONRPC_MAX_CONCURRENT = 25
+const ACCOUNT_ACQUISITION_TIMEOUT = 15000 // msec
 
 async function tick(wait = 1000) {
   return new Promise(resolve => setTimeout(() => resolve(true), wait))
@@ -277,7 +278,24 @@ class Purse {
   async getAvailableAccount() {
     let resolvedAccount = null
 
+    /**
+     * Need this function because if we throw in setTimeout it won't bubble up
+     * properly and can't be handled.
+     */
+    const that = this
+    const timeout = () => {
+      that.accountLookupInProgress = false
+      throw new Error('Account acquisition timeout!')
+    }
+
+    // We don't want to be waiting on an account forever
+    let hasTimedOut = false
+    const acquisitionTimeout = setTimeout(() => {
+      hasTimedOut = true
+    }, ACCOUNT_ACQUISITION_TIMEOUT)
+
     do {
+      if (hasTimedOut) timeout()
       // We only want to be doing one lookup at a time
       if (this.accountLookupInProgress) {
         logger.debug('Waiting for lookup in progress to finish...')
@@ -299,6 +317,8 @@ class Purse {
      */
     try {
       do {
+        if (hasTimedOut) timeout()
+
         let totalPending = 0
         let lowestPending = this.maxPendingPerAccount
         for (const child of this.children) {
@@ -327,9 +347,15 @@ class Purse {
         }
       } while (await tick())
     } catch (err) {
+      // We want to throw on timeouts so it can be handled by the sender
+      if (err.message.indexOf('timeout') > -1) throw err
+
       logger.error('Unhandled error in getAvailableAccount()')
       handleError(err)
     }
+
+    // Clear the acquisition timeout
+    clearTimeout(acquisitionTimeout)
 
     // Unlock the lookup process
     this.accountLookupInProgress = false

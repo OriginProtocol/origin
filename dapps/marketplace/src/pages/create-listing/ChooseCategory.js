@@ -179,7 +179,7 @@ require('react-styl')(`
         min-width: 15rem
 
   @media (max-width: 767.98px)
-    .create-listing
+    .create-listing, .promote-listing
       h1
         font-size: 24px
         text-align: center

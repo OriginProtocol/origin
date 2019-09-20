@@ -37,6 +37,8 @@ import FractionalHourlyDetail from './listing-types/FractionalHourly'
 
 import getAvailabilityCalculator from 'utils/getAvailabilityCalculator'
 
+import HistoricalListingWarning from 'pages/listing/_HistoricalListingWarning'
+
 class ListingDetail extends Component {
   constructor(props) {
     super(props)
@@ -58,7 +60,7 @@ class ListingDetail extends Component {
 
     if (!listing || !listing.seller || !listing.seller.id) {
       console.error(
-        'Error: ListingDetail: Unable to get seller ID due to missing dta!'
+        'Error: ListingDetail: Unable to get seller ID due to missing data!'
       )
     }
 
@@ -97,6 +99,7 @@ class ListingDetail extends Component {
             'Other listings by this seller',
             'ListingDetail.othersFromSeller'
           )}
+          hideIfEmpty={true}
         />
       </div>
     )
@@ -216,6 +219,11 @@ class ListingDetail extends Component {
 
   renderAction() {
     const { listing, wallet, walletProxy, ognListingRewards } = this.props
+
+    if (isHistoricalListing(listing)) {
+      return <HistoricalListingWarning listing={listing} />
+    }
+
     const isFractional = listing.__typename === 'FractionalListing'
     const isFractionalHourly = listing.__typename === 'FractionalHourlyListing'
     const isAnnouncement = listing.__typename === 'AnnouncementListing'
@@ -310,9 +318,12 @@ class ListingDetail extends Component {
     return (
       <>
         <h5>
-          <fbt desc="listingDetail.about-the-seller">About the seller</fbt>
+          <fbt desc="listingDetail.about-the-seller">About the Seller</fbt>
         </h5>
-        <AboutParty id={listing.seller.id} />
+        <AboutParty
+          id={listing.seller.id}
+          role={fbt('Seller', 'listingDetail.seller')}
+        />
       </>
     )
   }

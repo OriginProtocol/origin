@@ -24,7 +24,7 @@ const TransactionProgress = ({
 }) => {
   const props = { offer, loading, party }
   if (!isBuyer && !isSeller) {
-    return <TransactionStages {...props} />
+    return null
   }
   if (offer.status === 3) {
     return <Disputed {...props} />
