@@ -33,7 +33,7 @@ export default StyleSheet.create({
     fontWeight: '600',
     paddingTop: 20,
     paddingBottom: 20,
-    color: '#293f55',
+    color: '#0b1823',
     textAlign: 'center'
   },
   subtitle: {

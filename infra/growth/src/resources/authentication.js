@@ -135,7 +135,7 @@ async function getUserAuthenticationStatus(token, accountId) {
   }
 
   switch (growthParticipant.status) {
-    case enums.GrowthParticipantStatuses.Enrolled:
+    case enums.GrowthParticipantStatuses.Active:
       return enums.GrowthParticipantAuthenticationStatus.Enrolled
     case enums.GrowthParticipantStatuses.Banned:
       return enums.GrowthParticipantAuthenticationStatus.Banned

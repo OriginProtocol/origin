@@ -1,5 +1,7 @@
 'use strict'
 
+export const VERSION = '0.23.18'
+
 class Enum extends Array {
   constructor(...args) {
     super(...args)
@@ -9,12 +11,19 @@ class Enum extends Array {
   }
 }
 
-export const ACCOUNT_MAPPING = 'ACCOUNT_MAPPING'
 export const DEFAULT_NOTIFICATION_PERMISSIONS = {
   alert: true,
   badge: true,
   sound: true
 }
+
+// Default user agents to be used by the WebView
+export const DEFAULT_IOS_UA =
+  'Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1'
+
+export const DEFAULT_ANDROID_UA =
+  'Mozilla/5.0 (Linux; Android 8.0.0;) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Mobile Safari/537.36'
+
 export const WALLET_INFO = 'WALLET_INFO'
 export const WALLET_PASSWORD = 'WALLET_PASSWORD'
 export const WALLET_STORE = 'WALLET_STORE'
@@ -27,21 +36,21 @@ export const NETWORKS = [
   {
     id: 1,
     name: 'Mainnet',
-    dappUrl: 'https://shoporigin.com',
+    dappUrl: 'https://shoporigin.com/#/',
     provider:
       'https://eth-mainnet.alchemyapi.io/jsonrpc/FCA-3myPH5VFN8naOWyxDU6VkxelafK6'
   },
   {
     id: 4,
     name: 'Rinkeby',
-    dappUrl: 'https://dapp.staging.originprotocol.com',
+    dappUrl: 'https://dapp.staging.originprotocol.com/#/',
     provider:
       'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI'
   },
   {
     id: 2222,
     name: 'Origin',
-    dappUrl: 'https://dapp.dev.originprotocol.com',
+    dappUrl: 'https://dapp.dev.originprotocol.com/#/',
     provider: 'https://testnet.originprotocol.com/rpc'
   }
 ]
@@ -65,13 +74,13 @@ export const PROMPT_MESSAGE = 'I am ready to start messaging on Origin.'
 export const PROMPT_PUB_KEY = 'My public messaging key is: '
 
 export const CURRENCIES = [
-  ['fiat-USD', 'USD', '$'],
-  ['fiat-GBP', 'GBP', '£'],
-  ['fiat-EUR', 'EUR', '€'],
-  ['fiat-KRW', 'KRW', '₩'],
-  ['fiat-JPY', 'JPY', '¥'],
-  ['fiat-CNY', 'CNY', '¥'],
-  ['fiat-SGD', 'SGD', 'S$']
+  { code: 'USD', symbol: '$' },
+  { code: 'GBP', symbol: '£' },
+  { code: 'EUR', symbol: '€' },
+  { code: 'KRW', symbol: '₩' },
+  { code: 'JPY', symbol: '¥' },
+  { code: 'CNY', symbol: '¥' },
+  { code: 'SGD', symbol: 'S$' }
 ]
 
 /* eslint-disable camelcase */
