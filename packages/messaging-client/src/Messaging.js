@@ -22,11 +22,6 @@ const PUB_MESSAGING = 'KEY_'
 const COULD_NOT_DECRYPT = 'Could not decrypt'
 const INVALID_MESSAGE_OBJECT = 'Invalid message object'
 
-const storeKeys = {
-  messageSubscriptionStart: 'message_subscription_start',
-  messageStatuses: 'message_statuses'
-}
-
 const MESSAGE_FORMAT = {
   type: 'object',
   required: ['created'],
@@ -100,7 +95,7 @@ class Messaging {
   }
 
   onAccount(accountKey) {
-    if ((accountKey && !this.account_key) || accountKey != this.account_key) {
+    if ((accountKey && !this.account_key) || accountKey !== this.account_key) {
       this.checkSetCurrentStorage(accountKey)
       this.init(accountKey)
     }
@@ -215,40 +210,12 @@ class Messaging {
         await this.initKeys()
       }
     }
-    // bootstrap read status
-    const scopedSubStartKeyName = `${storeKeys.messageSubscriptionStart}:${this.account_key}`
-    if (!localStorage.getItem(scopedSubStartKeyName)) {
-      localStorage.setItem(scopedSubStartKeyName, JSON.stringify(Date.now()))
-    }
-    const scopedStatusesKeyName = `${storeKeys.messageStatuses}:${this.account_key}`
-    if (!localStorage.getItem(scopedStatusesKeyName)) {
-      localStorage.setItem(scopedStatusesKeyName, JSON.stringify({}))
-    }
   }
 
   async initRemote() {
     debug('initRemote')
     this.events.emit('initRemote')
     return true
-  }
-
-  signRegistry() {
-    return this.pub_sig
-  }
-
-  signMessaging(key, data) {
-    return this.account.sign(data).signature
-  }
-
-  signInitPair(key, data) {
-    return this.account.sign(data).signature
-  }
-
-  async verifySignature() {
-    return (/* signature, key, data */) => {
-      // pass through for now
-      return true
-    }
   }
 
   async getGlobalKey(key) {
@@ -295,6 +262,10 @@ class Messaging {
       await this.setRemoteMessagingSig()
     }
     this.events.emit('ready', this.account_key)
+    this.pubsub.publish('MESSAGING_READY', {
+      messagingReady: true
+    })
+
     // Should this be awaited?
     this.loadMyConvs({
       limit: 10
@@ -404,11 +375,6 @@ class Messaging {
     return key.split('-')
   }
 
-  getSharedKeys(roomId) {
-    const room = this.convs[roomId]
-    return room ? room.keys || [] : []
-  }
-
   getConvo(ethAddress) {
     const roomId = this.generateRoomId(this.account_key, ethAddress)
     return this.convs[roomId]
@@ -506,6 +472,11 @@ class Messaging {
     return { error: COULD_NOT_DECRYPT }
   }
 
+  /**
+   * Marks the conversation with `remoteEthAddres` as read
+   * @param {String} remoteEthAddress ETH address of the counter party
+   * @returns {Object|null} An object with `success` and `messagesRead` keys if successful, null otherwise
+   */
   async markConversationRead(remoteEthAddress) {
     const roomId = this.generateRoomId(this.account_key, remoteEthAddress)
     debug(`Marking conversation ${roomId} as read from account`)
@@ -532,6 +503,10 @@ class Messaging {
     }
   }
 
+  /**
+   * Parses, decrypts and processes the new message sent by socket server
+   * @param {Object} entry Message received from socket
+   */
   onNewMessageUpdate(entry) {
     debug('we got a new message entry:', entry)
     const { content, conversationId, conversationIndex } = entry
@@ -541,8 +516,12 @@ class Messaging {
     )
 
     if (content && conversationId) {
+      // The new message is yet to be read
       this.unreadCount++
+
       if (!this.convs[conversationId]) {
+        // The conversation isn't locally cached or queried before.
+        // Fetch the conversation keys, recent messages and push the update to GraphQL subscription
         (async () => {
           await this.getRoom(conversationId, { keys: true })
           const convObj = await this.getRoom(conversationId)
@@ -557,6 +536,8 @@ class Messaging {
       } else {
         const convObj = this.convs[conversationId]
         if (conversationIndex === (convObj.lastConversationIndex + 1)) {
+          // The conversation is cached and the ordering of the message is correct too.
+          // Append it to existing object and push the update to GraphQL subscription
           this.processContent(
             entry.content,
             convObj,
@@ -593,14 +574,15 @@ class Messaging {
           convObj.lastConversationIndex = entry.conversationIndex
           convObj.messageCount = entry.conversationIndex + 1
         } else {
-          // we are missing a message
+          // Locally cached version is out of sync
+          // Clear and fetch the messages again and push the update to GraphQL subscription
+
           const lastConversationIndex = convObj.lastConversationIndex
 
           ;(async () => {
             const updatedConvObj = await this.getRoom(conversationId)
             updatedConvObj.messages
               .filter(message => message.conversationId > lastConversationIndex)
-              // TODO: Should this be sorted before sending?
               .map(message => {
                 this.pubsub.publish('MESSAGE_ADDED', {
                   messageAdded: {
@@ -616,6 +598,11 @@ class Messaging {
     }
   }
 
+  /**
+   * Updates `unreadCount` and `<Conversation>.unreadCount` when 
+   * a conversation has been marked as read successfully
+   * @param {Object} entry Message received from socket
+   */
   onMarkedAsReadUpdate(entry) {
     debug('user marked conversation as read', entry)
     const { messagesRead, conversationId, address } = entry
@@ -653,6 +640,10 @@ class Messaging {
     })
   }
 
+  /**
+   * Parses the update from socket server and invokes corresponding callbacks
+   * @param {Object} entry Message from socket server
+   */
   onMessageUpdate(entry) {
     debug('we got a new message entry:', entry)
     switch (entry.type) {
@@ -798,6 +789,9 @@ class Messaging {
     return await res.json()
   }
 
+  /**
+   * Subcscribes to the socket server
+   */
   listenForUpdates() {
     if (this.ws) {
       this.ws.close()
@@ -823,7 +817,12 @@ class Messaging {
     }
   }
 
-  async loadMyConvs({ limit, offset, skipIfLoaded } = {}) {
+  /**
+   * Loads user's conversations from messaging server and populates the local `this.convs` object
+   * @param {Integer} params.limit No. of conversation to fetch
+   * @param {Integer} params.ofsset No. of conversation to skip
+   */
+  async loadMyConvs({ limit, offset } = {}) {
     debug('loading convs:')
     const conversations = await this.fetchConvs({ limit, offset })
 
@@ -843,6 +842,13 @@ class Messaging {
     }
   }
 
+  /**
+   * Returns cached conversations, if it exists.
+   * Loads from messaging server, populates the cache and then returns it, otherwise.
+   * @param {Integer} params.limit No. of conversation to return
+   * @param {Integer} params.ofsset No. of conversation to skip
+   * @returns {[Object]} A sorted array of conversations by time in descending order
+   */
   async getMyConvs({ limit, offset } = {}) {
     let cachedConvs = Object.keys(this.convs)
     if (!cachedConvs.length || (offset && cachedConvs.length - (Number(limit) || 10) < offset)) {
@@ -880,6 +886,11 @@ class Messaging {
     return sortedConvs
   }
 
+  /**
+   * Checks if an conversation exists and prepopulates the data from messaging server
+   * @param {String} remoteEthAddress 
+   * @return {Boolean} true if the has conversed with address identified by `remoteEthAddress`. False, otherwise
+   */
   async conversationExists(remoteEthAddress) {
     const roomId = this.generateRoomId(this.account_key, remoteEthAddress)
     let convObj = this.convs[roomId]
@@ -907,6 +918,7 @@ class Messaging {
     let convObj = this.convs[roomId]
 
     if (!convObj) {
+      // Conversation isn't cached, fetch the keys and recent messages
       await this.getRoom(roomId, {
         keys: true
       })
@@ -915,27 +927,42 @@ class Messaging {
         after
       })
     } else if (!convObj.loaded || before || after) {
+      // Conversation hasn't loaded before or the user has specified a pagination
+      // In either keys, fetch the room from messaging server
       if (!convObj.keys.length) {
+        // Load keys if it does not exist
         await this.getRoom(roomId, {
           keys: true
         })
       }
+      // Fetch paginated results
       convObj = await this.getRoom(roomId, {
         before,
         after
       })
     }
 
+    // Return entire set of messages
+    // TODO: Should only the subset that satisfies `after` and `before` be returned?
     return convObj.messages
   }
 
+  /**
+   * Returns the unread count of a conversation, if `remoteEthAddress` is specified
+   * Returns the unread count across all conversation otherwise
+   * @param {String} remoteEthAddress 
+   * @returns {Integer} count of unread messages
+   */
   async getUnreadCount(remoteEthAddress) {
     if (remoteEthAddress) {
+      // Return the unread count of a conversation
       let convObj = this.getConvo(remoteEthAddress)
 
       if (convObj) {
+        // from cache, if it exists
         return convObj.unread
       } else {
+        // fetch and then return, if it doesn't
         const roomId = this.generateRoomId(this.account_key, remoteEthAddress)
         await this.getRoom(roomId, { keys: true })
         convObj = await this.getRoom(roomId)
@@ -947,11 +974,14 @@ class Messaging {
     }
 
     if (this.unreadCountLoaded) {
+      // We have loaded the unread count across all messages already
+      // Return that
       return this.unreadCount
     }
 
     const accountId = this.web3.utils.toChecksumAddress(this.account_key)
 
+    // Fetch unread count across all conversations
     try {
       const response = await fetch(
         `${this.globalKeyServer}/conversations/${accountId}/unread`,
@@ -963,6 +993,7 @@ class Messaging {
       const { unread } = (await response.json())
   
       this.unreadCount = unread
+      this.unreadCountLoaded = true
     } catch (e) {
       console.error('Failed to get unread count for ', accountId, e)
       this.unreadCount = 0
@@ -1210,17 +1241,6 @@ class Messaging {
       return
     }
     return this.decryptMessage(message, convObj)
-  }
-
-  // we allow the entire message to be passed in (for consistency with other resources + convenience)
-  // however all we are updating is the status
-  set({ hash, status }) {
-    const scopedStatusesKeyName = `${storeKeys.messageStatuses}:${this.account_key}`
-    const messageStatuses = JSON.parse(
-      localStorage.getItem(scopedStatusesKeyName)
-    )
-    messageStatuses[hash] = status
-    localStorage.setItem(scopedStatusesKeyName, JSON.stringify(messageStatuses))
   }
 }
 

@@ -24,7 +24,7 @@ const MessagesNav = ({ open, onClose, onOpen, wallet }) => {
   })
 
   useEffect(() => {
-    // Rerender on wallet change
+    // Rerender on wallet or messaging status change
     if (wallet && networkStatus !== 1 && networkStatus !== 4) {
       refetch()
     }
@@ -84,7 +84,7 @@ const MessagesDropdown = ({ onClick, totalUnread, messagingEnabled }) => {
     variables: {
       limit: 5
     },
-    // skip: !messagingEnabled,
+    skip: !messagingEnabled,
     fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true
   })
@@ -102,20 +102,26 @@ const MessagesDropdown = ({ onClick, totalUnread, messagingEnabled }) => {
     <>
       <RefetchOnMessageData refetch={refetch} />
       <div className="dropdown-menu dropdown-menu-right show">
+        {messagingEnabled && !totalUnread ? null : (
         <div className="count">
-          <div className="total">{totalUnread}</div>
-          <div className="title">
-            <fbt desc="messages.unreadMessages">
-              Unread
-              <fbt:plural count={totalUnread} showCount="no">
-                Message
-              </fbt:plural>
-            </fbt>
-          </div>
+          {!totalUnread ? null : (
+            <>
+              <div className="total">{totalUnread}</div>
+              <div className="title">
+                <fbt desc="messages.unreadMessages">
+                  Unread
+                  <fbt:plural count={totalUnread} showCount="no">
+                    Message
+                  </fbt:plural>
+                </fbt>
+              </div>
+            </>
+          )}
           {messagingEnabled ? null : (
             <EnableMessaging className="btn-sm" onClose={onClick} />
           )}
         </div>
+        )}
         <div className="messaging-dropdown-content">
           {conversations.map((conv, idx) => (
             <RoomStatus

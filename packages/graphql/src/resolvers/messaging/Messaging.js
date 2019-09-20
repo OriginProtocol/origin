@@ -1,14 +1,6 @@
 import contracts from '../../contracts'
 import { proxyOwner } from '../../utils/proxy'
-import { getUnreadCount } from './Conversation'
-
-function isEnabled() {
-  return contracts.messaging.pub_sig &&
-    contracts.messaging.account &&
-    contracts.messaging.account.publicKey
-    ? true
-    : false
-}
+import { getUnreadCount, isEnabled } from './Conversation'
 
 async function getConversationIds({ limit, offset }) {
   if (!isEnabled()) {

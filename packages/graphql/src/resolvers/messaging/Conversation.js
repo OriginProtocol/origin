@@ -4,7 +4,7 @@ import sortBy from 'lodash/sortBy'
 import { withFilter } from 'graphql-subscriptions'
 import pubsub from '../../utils/pubsub'
 
-function isEnabled() {
+export function isEnabled() {
   return contracts.messaging.pub_sig &&
     contracts.messaging.account &&
     contracts.messaging.account.publicKey

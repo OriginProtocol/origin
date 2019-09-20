@@ -2,6 +2,7 @@ module.exports = `
   extend type Subscription {
     messageAdded: NewMessageResult
     markedAsRead: MarkedAsReadResult
+    messagingReady: Boolean
   }
 
   type NewMessageResult {
