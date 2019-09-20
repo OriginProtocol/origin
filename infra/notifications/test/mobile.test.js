@@ -27,7 +27,7 @@ describe('register device token endpoint', () => {
     const results = await MobileRegistry.findAll()
     expect(results.length).to.equal(1)
     expect(results[0].ethAddress).to.equal(
-      '0x78655B524c1dc1CbfacDA55620249F3AFDbFBf3B'
+      '0x78655b524c1dc1cbfacda55620249f3afdbfbf3b'
     )
     expect(results[0].deviceToken).to.equal('5678')
     expect(results[0].deviceType).to.equal('FCM')
