@@ -25,9 +25,34 @@ const {
   logNotificationSent
 } = require('./dupeTools')
 
-//
-// Email notifications for Messages
-//
+/**
+ * Write the content of an email to a file. Useful during development.
+ * @param {Object} email
+ * @param {Object} config: Notification server config.
+ * @private
+ */
+function _writeEmailToFile(email, config) {
+  const now = new Date()
+  fs.writeFile(
+    `${config.emailFileOut}_${now.getTime()}_${email.to}.html`,
+    email.html,
+    error => {
+      logger.error(error)
+    }
+  )
+  fs.writeFile(
+    `${config.emailFileOut}_${now.getTime()}_${email.to}.txt`,
+    email.text,
+    error => {
+      logger.error(error)
+    }
+  )
+}
+
+/**
+ * Sends an email to a list of receivers to let them know they
+ * received a new Message in Origin messaging.
+ */
 async function messageEmailSend(receivers, sender, messageHash, config) {
   if (!receivers) throw new Error('receivers not defined')
   if (!sender) throw new Error('sender not defined')
@@ -111,24 +136,11 @@ async function messageEmailSend(receivers, sender, messageHash, config) {
               __messageHash: messageHash // Not part of SendGrid spec, here prevent different messages from being counted as duplicates.
             }
 
+            // Optional writing of email contents to files
             if (config.emailFileOut) {
-              // Optional writing of email contents to files
-              const now = new Date()
-              fs.writeFile(
-                `${config.emailFileOut}_${now.getTime()}_${email.to}.html`,
-                email.html,
-                error => {
-                  logger.error(error)
-                }
-              )
-              fs.writeFile(
-                `${config.emailFileOut}_${now.getTime()}_${email.to}.txt`,
-                email.text,
-                error => {
-                  logger.error(error)
-                }
-              )
+              _writeEmailToFile(email)
             }
+
             const messageFingerprint = getMessageFingerprint(email)
             if ((await isNotificationDupe(messageFingerprint, config)) > 0) {
               logger.warn(
@@ -201,7 +213,7 @@ async function transactionEmailSend(
     fs.readFileSync(`${templateDir}/emailTemplate.txt`).toString()
   )
 
-  const emails = await Identity.findAll({
+  const identities = await Identity.findAll({
     where: {
       ethAddress: {
         [Op.or]: [buyerAddress, sellerAddress, party]
@@ -209,12 +221,12 @@ async function transactionEmailSend(
     }
   })
 
-  await emails.forEach(async s => {
+  for (const identity of identities) {
     try {
-      const recipient = s.ethAddress.toLowerCase()
+      const recipient = identity.ethAddress.toLowerCase()
       const recipientRole = recipient === sellerAddress ? 'seller' : 'buyer'
 
-      logger.info(`Checking messages for ${s.ethAddress} as ${recipientRole}`)
+      logger.info(`Checking messages for ${identity.ethAddress} as ${recipientRole}`)
 
       const message = getNotificationMessage(
         eventName,
@@ -224,74 +236,63 @@ async function transactionEmailSend(
         'email'
       )
 
-      if (!s.email && !config.overrideEmail) {
-        logger.info(`${s.ethAddress} has no email address. Skipping.`)
-      } else if (!message) {
+      if (!identity.email && !config.overrideEmail) {
+        logger.info(`${identity.ethAddress} has no email address. Skipping.`)
+        continue
+      }
+      if (!message) {
         logger.info(`No message found`)
-      } else {
-        const templateVars = {
-          listing,
-          offer,
-          config,
-          dappUrl: config.dappUrl,
-          ipfsGatewayUrl: config.ipfsGatewayUrl
+        continue
+      }
+      const templateVars = {
+        listing,
+        offer,
+        config,
+        dappUrl: config.dappUrl,
+        ipfsGatewayUrl: config.ipfsGatewayUrl
+      }
+      const email = {
+        to: config.overrideEmail || identity.email,
+        from: config.fromEmail,
+        subject: message.subject(templateVars),
+        text: emailTemplateTxt({
+          message: message.text(templateVars)
+        }),
+        html: emailTemplateHtml({
+          message: message.html(templateVars)
+        }),
+        asm: {
+          groupId: config.asmGroupId
         }
-        const email = {
-          to: config.overrideEmail || s.email,
-          from: config.fromEmail,
-          subject: message.subject(templateVars),
-          text: emailTemplateTxt({
-            message: message.text(templateVars)
-          }),
-          html: emailTemplateHtml({
-            message: message.html(templateVars)
-          }),
-          asm: {
-            groupId: config.asmGroupId
-          }
-        }
+      }
 
-        if (config.emailFileOut) {
-          // Optional writing of email contents to files
-          const now = new Date()
-          fs.writeFile(
-            `${config.emailFileOut}_${now.getTime()}_${email.to}.html`,
-            email.html,
-            error => {
-              logger.error(error)
-            }
+      // Optional writing of email contents to files
+      if (config.emailFileOut) {
+        _writeEmailToFile(email)
+      }
+
+      const messageFingerprint = getMessageFingerprint(email)
+      if ((await isNotificationDupe(messageFingerprint, config)) > 0) {
+        logger.warn(
+          `Duplicate. Notification already recently sent. Skipping.`
+        )
+      } else {
+        try {
+          await sendgridMail.send(email)
+          await logNotificationSent(messageFingerprint, s.ethAddress, 'email')
+          logger.log(
+            `Email sent to ${buyerAddress} at ${email.to} ${
+              config.overrideEmail ? ' instead of ' + s.email : ''
+            }`
           )
-          fs.writeFile(
-            `${config.emailFileOut}_${now.getTime()}_${email.to}.txt`,
-            email.text,
-            error => {
-              logger.error(error)
-            }
-          )
-        }
-        const messageFingerprint = getMessageFingerprint(email)
-        if ((await isNotificationDupe(messageFingerprint, config)) > 0) {
-          logger.warn(
-            `Duplicate. Notification already recently sent. Skipping.`
-          )
-        } else {
-          try {
-            await sendgridMail.send(email)
-            await logNotificationSent(messageFingerprint, s.ethAddress, 'email')
-            logger.log(
-              `Email sent to ${buyerAddress} at ${email.to} ${
-                config.overrideEmail ? ' instead of ' + s.email : ''
-              }`
-            )
-          } catch (error) {
-            logger.error(`Could not email via Sendgrid: ${error}`)
-          }
+        } catch (error) {
+          logger.error(`Could not email via Sendgrid: ${error}`)
         }
       }
     } catch (error) {
       logger.error(`Could not email via Sendgrid: ${error}`)
     }
-  })
+  }
 }
 
 module.exports = { transactionEmailSend, messageEmailSend }
