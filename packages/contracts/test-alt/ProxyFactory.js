@@ -1,17 +1,15 @@
 import assert from 'assert'
 import helper, { contractPath, ZERO_ADDRESS, assertRevert } from './_helper'
-import Table from 'cli-table'
-import GasPriceInDollars from './_gasPriceInDollars'
 
 describe('ProxyFactory', async function() {
-  let web3, accounts, deploy
+  let accounts, deploy
   let ProxyFactory,
     IdentityProxyImp,
     Forwarder,
     Seller
 
-	before(async function() {
-    ({ web3, deploy, accounts } = await helper(`${__dirname}/..`))
+  before(async function() {
+    ({ deploy, accounts } = await helper(`${__dirname}/..`))
 
     // Address that pays for new user
     Forwarder = accounts[0]
