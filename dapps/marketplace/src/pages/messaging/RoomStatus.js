@@ -8,12 +8,17 @@ import Avatar from 'components/Avatar'
 
 import Link from 'components/Link'
 
+import OfferEvent from 'pages/messaging/OfferEvent'
+
 const RoomStatus = ({ conversation, identity, onClick, active, wallet }) => {
   const name = get(identity, 'fullName', conversation.id)
 
-  const timestamp = conversation.lastMessage
-    ? conversation.lastMessage.timestamp
+  const lastMessage = conversation.lastMessage
+
+  const timestamp = lastMessage
+    ? lastMessage.timestamp
     : conversation.timestamp
+
 
   return (
     <Link
@@ -28,9 +33,21 @@ const RoomStatus = ({ conversation, identity, onClick, active, wallet }) => {
           <div className="time">{distanceToNow(timestamp)}</div>
         </div>
         <div className="bottom">
-          <div className="last-message">
-            {get(conversation, 'lastMessage.content')}
-          </div>
+          {
+            !lastMessage ? null : (
+              <div className="last-message">
+                {lastMessage.type === 'event' ? (
+                  <OfferEvent
+                    event={lastMessage}
+                    wallet={wallet}
+                    minimal={true}
+                  />
+                ) : (
+                  get(conversation, 'lastMessage.content')
+                )}
+              </div>
+            )
+          }
           {!conversation.totalUnread ? null : (
             <div className="unread">{conversation.totalUnread}</div>
           )}
@@ -102,5 +119,8 @@ require('react-styl')(`
           color: white
           padding: 0 0.5rem
           margin-left: 0.25rem
+    .offer-event
+      font-style: italic
+      color: var(--bluey-grey)
 
 `)

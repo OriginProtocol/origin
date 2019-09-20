@@ -1,60 +1,21 @@
 import React, { Component, useEffect, useState } from 'react'
 import { useQuery, useSubscription } from 'react-apollo'
-import dayjs from 'dayjs'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
-import withIdentity from 'hoc/withIdentity'
 
 import query from 'queries/Room'
 import subscription from 'queries/NewMessageSubscription'
 import SendMessage from './SendMessage'
 import MessageWithIdentity from './Message'
-import Link from 'components/Link'
 import QueryError from 'components/QueryError'
 import EnableMessaging from 'components/EnableMessaging'
-import Stages from 'components/TransactionStages'
 import LoadingSpinner from 'components/LoadingSpinner'
 
 import TopScrollListener from 'components/TopScrollListener'
 
-function eventName(name) {
-  if (name === 'OfferCreated') {
-    return fbt('made an offer', 'EventDescription.offerCreated')
-  } else if (name === 'OfferAccepted') {
-    return fbt('accepted an offer on', 'EventDescription.offerAccepted')
-  } else if (name === 'OfferFinalized') {
-    return fbt('finalized an offer on', 'EventDescription.offerFinalized')
-  } else if (name === 'OfferWithdrawn') {
-    return fbt('withdrew an offer on', 'EventDescription.offerWithdrawn')
-  } else if (name === 'OfferDisputed') {
-    return fbt('disputed an offer on', 'EventDescription.offerDisputed')
-  }
-}
-
-const OfferEvent = ({ event, wallet, identity }) => (
-  <>
-    <div className="offer-event">
-      {event.address === wallet
-        ? 'You'
-        : get(identity, 'fullName')}
-      {` ${eventName(event.eventData.eventType)} `}
-      <Link to={`/purchases/${event.offer.id}`}>
-        {event.offer.listing.title}
-      </Link>
-      {` on ${dayjs.unix(event.timestamp).format('MMM Do, YYYY')}`}
-    </div>
-    {event.eventData.eventType !== 'OfferCreated' ? null : (
-      <Stages offer={event.offer} />
-    )}
-  </>
-)
-
-const OfferEventWithIdentity = withIdentity(
-  OfferEvent,
-  'event.address'
-)
+import OfferEvent from './OfferEvent'
 
 class AllMessages extends Component {
   state = {
@@ -131,29 +92,31 @@ class AllMessages extends Component {
         onInnerRef={el => (this.el = el)}
         className="messages"
       >
-        {messages.map((message, idx) => {
-          if (message.type === 'event') {
+        <>
+          {messages.map((message, idx) => {
+            if (message.type === 'event') {
+              return (
+                <OfferEvent
+                  key={`event-${message.index}`}
+                  event={message}
+                  wallet={this.props.wallet}
+                />
+              )
+            }
             return (
-              <OfferEventWithIdentity
-                key={`event-${message.index}`}
-                event={message}
-                wallet={this.props.wallet}
+              <MessageWithIdentity
+                message={message}
+                lastMessage={
+                  messages.length - 1 === idx ? null : messages[idx + 1]
+                }
+                nextMessage={idx > 0 ? messages[idx - 1] : null}
+                key={`message-${message.index}`}
+                wallet={get(message, 'address')}
+                isUser={this.props.wallet === get(message, 'address')}
               />
             )
-          }
-          return (
-            <MessageWithIdentity
-              message={message}
-              lastMessage={
-                messages.length - 1 === idx ? null : messages[idx + 1]
-              }
-              nextMessage={idx > 0 ? messages[idx - 1] : null}
-              key={`message-${message.index}`}
-              wallet={get(message, 'address')}
-              isUser={this.props.wallet === get(message, 'address')}
-            />
-          )
-        })}
+          })}
+        </>
       </TopScrollListener>
     )
   }
@@ -288,13 +251,6 @@ require('react-styl')(`
       text-align: center
       align-self: center
       margin-top: 1rem
-    .offer-event
-      color: var(--bluey-grey)
-      font-size: 18px
-      font-style: italic
-      align-self: center
-      margin-bottom: 1rem
-      font-weight: normal
     .stages
       min-height: 4rem
 `)
