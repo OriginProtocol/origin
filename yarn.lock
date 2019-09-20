@@ -1484,10 +1484,10 @@
   resolved "https://registry.yarnpkg.com/@google-cloud/promisify/-/promisify-1.0.2.tgz#e581aa79ff71fb6074acc1cc59e3d81bf84ce07b"
   integrity sha512-7WfV4R/3YV5T30WRZW0lqmvZy9hE2/p9MvpI34WuKa2Wz62mLu5XplGTFEMK6uTbJCLWUxTcZ4J4IyClKucE5g==
 
-"@google-cloud/pubsub@0.31.1":
-  version "0.31.1"
-  resolved "https://registry.yarnpkg.com/@google-cloud/pubsub/-/pubsub-0.31.1.tgz#61b04a241033eb4d5cd2d4b960fd7a01f6c62279"
-  integrity sha512-50edW72W9rZQKm6+lb7a84OkfiosJmo/kE9BlUeWkOPc64pITgtyMtwdgip0PZGKUosOb/zb/tJ0p35+WuqhZw==
+"@google-cloud/pubsub@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@google-cloud/pubsub/-/pubsub-1.0.0.tgz#26b609183888a82026a34825bb521b2fa9e7ba16"
+  integrity sha512-JlZ8ZhDe2t9rmAaeFvMNsXWA9RxhT+Be4reu1jpF2EZ09BGGk3cIVr0qhnPlA95wh3gxF6DXwBPxHSl86EJciA==
   dependencies:
     "@google-cloud/paginator" "^2.0.0"
     "@google-cloud/precise-date" "^1.0.0"
@@ -1501,7 +1501,7 @@
     async-each "^1.0.1"
     extend "^3.0.2"
     google-auth-library "^5.0.0"
-    google-gax "^1.0.0"
+    google-gax "^1.5.2"
     is-stream-ended "^0.1.4"
     lodash.snakecase "^4.1.1"
     p-defer "^3.0.0"
@@ -9030,6 +9030,11 @@ del@^4.1.1:
     pify "^4.0.1"
     rimraf "^2.6.3"
 
+delay@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/delay/-/delay-4.3.0.tgz#efeebfb8f545579cb396b3a722443ec96d14c50e"
+  integrity sha512-Lwaf3zVFDMBop1yDuFZ19F9WyGcZcGacsbdlZtWjQmM50tOcMntm1njF/Nb/Vjij3KaSvCF+sEYGKrrjObu2NA==
+
 delayed-stream@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
@@ -12406,23 +12411,6 @@ google-auth-library@^5.0.0:
     jws "^3.1.5"
     lru-cache "^5.0.0"
 
-google-gax@^1.0.0:
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/google-gax/-/google-gax-1.1.5.tgz#150c3e886bda816b33ce79dec188b789dfa986b5"
-  integrity sha512-G4D/pgj1DD2gGHDq2If34+gAZhhR59odaBV4yrfnRX8Y1XhTc02Krkbh68IITNHiWOEeY06Gq6l0rPi5fsoRCA==
-  dependencies:
-    "@grpc/grpc-js" "^0.5.2"
-    "@grpc/proto-loader" "^0.5.1"
-    duplexify "^3.6.0"
-    google-auth-library "^4.0.0"
-    is-stream-ended "^0.1.4"
-    lodash.at "^4.6.0"
-    lodash.has "^4.5.2"
-    protobufjs "^6.8.8"
-    retry-request "^4.0.0"
-    semver "^6.0.0"
-    walkdir "^0.4.0"
-
 google-gax@^1.1.2:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/google-gax/-/google-gax-1.3.0.tgz#e9b39cbba532acae87f3813189921572aa7a1225"
@@ -12435,6 +12423,25 @@ google-gax@^1.1.2:
     is-stream-ended "^0.1.4"
     lodash.at "^4.6.0"
     lodash.has "^4.5.2"
+    protobufjs "^6.8.8"
+    retry-request "^4.0.0"
+    semver "^6.0.0"
+    walkdir "^0.4.0"
+
+google-gax@^1.5.2:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/google-gax/-/google-gax-1.6.0.tgz#176a25c608eadddcfd37aab057984309053a9e39"
+  integrity sha512-58QrU+a8VtsqYdWGxouKVozsgOrn6vVQYFf5zZDEAMqq1dWjTobSa43FJsXwnTujYLLLHjdx9v78Jto7Hlqggw==
+  dependencies:
+    "@grpc/grpc-js" "^0.5.2"
+    "@grpc/proto-loader" "^0.5.1"
+    abort-controller "^3.0.0"
+    duplexify "^3.6.0"
+    google-auth-library "^5.0.0"
+    is-stream-ended "^0.1.4"
+    lodash.at "^4.6.0"
+    lodash.has "^4.5.2"
+    node-fetch "^2.6.0"
     protobufjs "^6.8.8"
     retry-request "^4.0.0"
     semver "^6.0.0"
@@ -13750,11 +13757,6 @@ ip-regex@^2.0.0, ip-regex@^2.1.0:
   resolved "https://registry.yarnpkg.com/ip-regex/-/ip-regex-2.1.0.tgz#fa78bf5d2e6913c911ce9f819ee5146bb6d844e9"
   integrity sha1-+ni/XS5pE8kRzp+BnuUUa7bYROk=
 
-ip-regex@^4.0.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/ip-regex/-/ip-regex-4.1.0.tgz#5ad62f685a14edb421abebc2fff8db94df67b455"
-  integrity sha512-pKnZpbgCTfH/1NLIlOduP/V+WRXzC2MOz3Qo8xmxk8C5GudJLgK5QyLVXOSWy3ParAH7Eemurl3xjv/WXYFvMA==
-
 ip@^1.1.0, ip@^1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/ip/-/ip-1.1.5.tgz#bdded70114290828c0a039e72ef25f5aaec4354a"
@@ -13959,10 +13961,10 @@ ipfs-http-client@^34.0.0:
     tar-stream "^2.0.1"
     through2 "^3.0.1"
 
-ipfs-http-client@^36.0.0:
-  version "36.0.0"
-  resolved "https://registry.yarnpkg.com/ipfs-http-client/-/ipfs-http-client-36.0.0.tgz#f053bd0592d3143866b18e139075d58c6bc412c4"
-  integrity sha512-t9CnsABeIHoXYMdGq7gtYAqiUScnv1TGMs3Q+M9SuTGBQyRdzJERm20OW9/BE2jtbBLGvrDmq+5k6bW6A6eQTw==
+ipfs-http-client@^37.0.0:
+  version "37.0.2"
+  resolved "https://registry.yarnpkg.com/ipfs-http-client/-/ipfs-http-client-37.0.2.tgz#ef91528a07254cdb33641ab80469226c447ddeaf"
+  integrity sha512-MIpiukyAPv9C+xsjiGOV4FB3Z/CPrqTujp61Z0W2P/dl4L6xx0T+ju+SrjpI3n/jrBHUVLLYfXrB2Mo+QxBSTA==
   dependencies:
     abort-controller "^3.0.0"
     async "^2.6.1"
@@ -13975,6 +13977,7 @@ ipfs-http-client@^36.0.0:
     cids "~0.7.1"
     concat-stream "github:hugomrdias/concat-stream#feat/smaller"
     debug "^4.1.0"
+    delay "^4.3.0"
     detect-node "^2.0.4"
     end-of-stream "^1.4.1"
     err-code "^2.0.0"
@@ -13983,7 +13986,7 @@ ipfs-http-client@^36.0.0:
     fs-extra "^8.1.0"
     glob "^7.1.3"
     ipfs-block "~0.8.1"
-    ipfs-utils "^0.1.0"
+    ipfs-utils "^0.4.0"
     ipld-dag-cbor "~0.15.0"
     ipld-dag-pb "~0.17.3"
     ipld-raw "^4.0.0"
@@ -13998,10 +14001,11 @@ ipfs-http-client@^36.0.0:
     just-kebab-case "^1.1.0"
     just-map-keys "^1.1.0"
     kind-of "^6.0.2"
-    ky "^0.13.0"
+    ky "^0.14.0"
     ky-universal "^0.3.0"
     lru-cache "^5.1.1"
-    multiaddr "^7.1.0"
+    merge-options "^1.0.1"
+    multiaddr "^6.0.6"
     multibase "~0.6.0"
     multicodec "~0.5.1"
     multihashes "~0.4.14"
@@ -14215,10 +14219,10 @@ ipfs-unixfs@~0.1.16:
   dependencies:
     protons "^1.0.1"
 
-ipfs-utils@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/ipfs-utils/-/ipfs-utils-0.1.0.tgz#f756297d157c1d4d62a74e27791b2edc5ae1e311"
-  integrity sha512-ukL46N8nxURmTAWC2fUKPLFaHQEvCuMn6mrM/6izEbthB6TCkFTqmUl/dhx5cRJFkYOUTvBzKNo9dnvo+8oAwQ==
+ipfs-utils@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/ipfs-utils/-/ipfs-utils-0.4.0.tgz#32e80ba1756979f23336dbee9f7f5e21b2af1bda"
+  integrity sha512-JLFmCcA058knmYiSB+WBw6nxcDHFS6p05weQOTFR/edufYot0UpgsJTcoMd1fHMq81n0nciJ3QQBqLcJxqGqhA==
   dependencies:
     buffer "^5.2.1"
     err-code "^2.0.0"
@@ -14860,13 +14864,6 @@ is-ip@^2.0.0:
   integrity sha1-aO6gfooKCpTC0IDdZ0xzGrKkYas=
   dependencies:
     ip-regex "^2.0.0"
-
-is-ip@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/is-ip/-/is-ip-3.1.0.tgz#2ae5ddfafaf05cb8008a62093cf29734f657c5d8"
-  integrity sha512-35vd5necO7IitFPjd/YBeqwWnyDWbuLH9ZXQdMfDA8TEo7pv5X8yfrvVO3xbJbLUlERCMvf6X0hTUamQxCYJ9Q==
-  dependencies:
-    ip-regex "^4.0.0"
 
 is-ipfs@~0.4.2, is-ipfs@~0.4.7:
   version "0.4.8"
@@ -16687,10 +16684,10 @@ ky@^0.11.2:
   resolved "https://registry.yarnpkg.com/ky/-/ky-0.11.2.tgz#4ffe6621d9d9ab61bf0f5500542e3a96d1ba0815"
   integrity sha512-5Aou5BWue5/mkPqIRqzSWW+0Hkl403pr/2AIrCKYw7cVl/Xoe8Xe4KLBO0PRjbz7GnRe1/8wW1KhqQNFFE7/GQ==
 
-ky@^0.13.0:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/ky/-/ky-0.13.0.tgz#354c3d209f26d772415cbfe4f5d02ccbcb5ed536"
-  integrity sha512-qmyUE2IvwLveZEHiLmFzUIrW4EsSX18ItZgEfgx8JXFxSEPKrnXvWrjQDP6zi4mwcie3MWBEHyUg0aNF8OS9oA==
+ky@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/ky/-/ky-0.14.0.tgz#b99bda5818d3a493f9857f39532ff567e2773c35"
+  integrity sha512-NSjg+WCElQPdlF3BFZnjh8s5QlMIP+vIGoyukrRU+n+23VBUX87bQYOoG5h3HX5tO7kKQYXvg+QZVt8n0uWmhg==
 
 last-call-webpack-plugin@^3.0.0:
   version "3.0.0"
@@ -18797,18 +18794,6 @@ multiaddr@^6.0.3, multiaddr@^6.0.4, multiaddr@^6.0.6, multiaddr@^6.1.0:
     hi-base32 "~0.5.0"
     ip "^1.1.5"
     is-ip "^2.0.0"
-    varint "^5.0.0"
-
-multiaddr@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/multiaddr/-/multiaddr-7.1.0.tgz#e74d69b10cff2840c4c36eb2ecef94a6b933a977"
-  integrity sha512-XQS/KsvlsnlTs2krhSYP8Nzin3S8vKBBQcaQO2K4gd/4Oq56kfxiPeAOWEvloB5gY8iv9wSorZ3WOA9yYqf9+A==
-  dependencies:
-    bs58 "^4.0.1"
-    class-is "^1.1.0"
-    hi-base32 "~0.5.0"
-    ip "^1.1.5"
-    is-ip "^3.1.0"
     varint "^5.0.0"
 
 multibase@~0.5.0:
@@ -25718,10 +25703,10 @@ swarm-js@0.1.39:
     tar "^4.0.2"
     xhr-request-promise "^0.1.2"
 
-swiper@4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/swiper/-/swiper-4.5.0.tgz#4d870bec4f5abe2fb259325849dd2641c9243c0d"
-  integrity sha512-jRCd/CGet9kaHwthHdd/sL/YU8CI157PWLyItnIcn/o/jP4haVky3zTF6f9F3JDpmQIw7jdWihISiYx0/oTHsg==
+swiper@5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/swiper/-/swiper-5.0.3.tgz#d8ac9447cd1f61b515a61a98dec4c4420efeb675"
+  integrity sha512-I0Af9Zl1PgJmRVFZMwI1AfIJL1qx4oVtOWIrh/wNCRSr63DjD3YO8s0V/HvW0O3ds9jx2LNtTRuiHiRdALLhTg==
   dependencies:
     dom7 "^2.1.3"
     ssr-window "^1.0.1"

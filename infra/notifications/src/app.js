@@ -10,7 +10,7 @@ try {
 const express = require('express')
 const bodyParser = require('body-parser')
 const webpush = require('web-push')
-const { RateLimiterMemory } = require('rate-limiter-flexible')
+const _ = require('lodash')
 
 // const { browserPush } = require('./browserPush')
 const { transactionEmailSend, messageEmailSend } = require('./emailSend')
@@ -101,35 +101,6 @@ app.use((req, res, next) => {
   next()
 })
 
-// limit request to one per minute
-const rateLimiterOptions = {
-  points: 1,
-  duration: 60
-}
-const rateLimiter = new RateLimiterMemory(rateLimiterOptions)
-const rateLimiterMiddleware = (req, res, next) => {
-  if (
-    !req.url.startsWith('/events') &&
-    !req.url.startsWith('/mobile') &&
-    !req.url.startsWith('/messages')
-  ) {
-    rateLimiter
-      .consume(req.connection.remoteAddress)
-      .then(() => {
-        next()
-      })
-      .catch(() => {
-        logger.error(`Rejecting request due to rate limiting: ${req.url}`)
-        res.status(429).send('<h2>Too Many Requests</h2>')
-      })
-  } else {
-    next()
-  }
-}
-// Note: register rate limiting middleware *before* all routes
-// so that it gets executed first.
-app.use(rateLimiterMiddleware)
-
 // Note: bump up default payload max size since the event-listener posts
 // payload that may contain user profile with b64 encoded profile picture.
 app.use(bodyParser.json({ limit: '10mb' }))
@@ -202,7 +173,7 @@ app.post('/mobile/register', async (req, res) => {
   const mobileRegister = {
     ethAddress: req.body.eth_address,
     deviceType: req.body.device_type,
-    deviceToken: req.body.device_token,
+    deviceToken: _.get(req.body, 'device_token', null),
     permissions: req.body.permissions
   }
 
@@ -246,7 +217,7 @@ app.delete('/mobile/register', async (req, res) => {
   const registryRow = await MobileRegistry.findOne({
     where: {
       ethAddress: req.body.eth_address,
-      deviceToken: req.body.device_token
+      deviceToken: _.get(req.body, 'device_token', null)
     }
   })
 
