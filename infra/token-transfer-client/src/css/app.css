@@ -311,6 +311,7 @@ input, select {
 .alert-warning {
   background-color: rgba(255, 192, 0, 0.1);
   border: 1px solid #ffcc00;
+  color: black;
 }
 
 .pointer {
