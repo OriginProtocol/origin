@@ -13,7 +13,6 @@ class PinInput extends React.Component {
   componentDidMount() {
     if (Platform.OS === 'android') {
       setTimeout(() => {
-        console.log('Calling focus')
         this.workaroundFocus()
       }, 100)
     }
@@ -24,7 +23,6 @@ class PinInput extends React.Component {
   workaroundFocus = () => {
     this.textInput.blur()
     setTimeout(() => {
-      console.log('Focusing')
       this.textInput.focus()
     }, 100)
   }

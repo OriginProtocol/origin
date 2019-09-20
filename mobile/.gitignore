@@ -54,6 +54,7 @@ buck-out/
 
 # Bundle artifact
 *.jsbundle
+*.hprof
 
 android/keystores/keystore.properties
 android/app/debug/
@@ -71,3 +72,6 @@ ios/sentry.properties
 
 # CocoaPods
 ios/Pods/
+
+# Samsung Blockchain Keystore aar
+android/aar/*

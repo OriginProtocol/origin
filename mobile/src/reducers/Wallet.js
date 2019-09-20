@@ -6,11 +6,7 @@ import get from 'lodash.get'
 const initialState = {
   accounts: [],
   activeAccount: null,
-  accountBalance: {
-    eth: 0,
-    dai: 0,
-    ogn: 0
-  },
+  accountBalance: {},
   identities: {}
 }
 
@@ -30,6 +26,23 @@ export default function Wallet(state = initialState, action = {}) {
         return state
       }
 
+    case WalletConstants.SET_ACCOUNTS:
+      // Verify there is a valid active account, and if not set one
+      let hasValidActiveAccount = false
+      if (state.activeAccount) {
+        hasValidActiveAccount = state.accounts.find(
+          a => a.address === state.activeAccount.address
+        )
+      }
+      const activeAccount = hasValidActiveAccount
+        ? state.activeAccount
+        : action.payload[0]
+      return {
+        ...state,
+        accounts: action.payload,
+        activeAccount
+      }
+
     case WalletConstants.REMOVE_ACCOUNT:
       return {
         ...state,
@@ -43,19 +56,21 @@ export default function Wallet(state = initialState, action = {}) {
       }
 
     case WalletConstants.SET_ACCOUNT_ACTIVE:
-      if (action.account.address && action.account.privateKey) {
-        return {
-          ...state,
-          activeAccount: action.account
-        }
-      } else {
-        return state
+      return {
+        ...state,
+        activeAccount: action.account
       }
 
     case WalletConstants.SET_ACCOUNT_BALANCES:
       return {
         ...state,
-        accountBalance: action.balances
+        accountBalance: {
+          ...state.accountBalance,
+          [action.payload.network]: {
+            ...state.accountBalance[action.payload.network],
+            [action.payload.address]: action.payload.balances
+          }
+        }
       }
 
     case WalletConstants.SET_IDENTITY:
@@ -63,7 +78,10 @@ export default function Wallet(state = initialState, action = {}) {
         ...state,
         identities: {
           ...state.identities,
-          [action.payload.address]: action.payload.identity
+          [action.payload.network]: {
+            ...state.identities[action.payload.network],
+            [action.payload.address]: action.payload.identity
+          }
         }
       }
   }
