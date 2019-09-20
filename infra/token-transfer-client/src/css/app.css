@@ -69,6 +69,12 @@ h2 {
   color: #8fa7b7
 }
 
+a:not([href]):not([tabindex]),
+a:not([href]):not([tabindex]):focus,
+a:not([href]):not([tabindex]):hover {
+  text-decoration: underline;
+}
+
 /*
  * Forms
  */
