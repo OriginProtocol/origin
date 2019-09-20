@@ -41,7 +41,7 @@ export default async function() {
         args: [
           '--no-sandbox',
           '--disable-setuid-sandbox',
-          process.env.DISABLE_GPU === 'true' ? '--disable-gpu' : ''
+          process.env.DISABLE_GPU === 'false' ? '' : '--disable-gpu'
         ]
         // dumpio: true
         // slowMo: headless ? undefined : 40
