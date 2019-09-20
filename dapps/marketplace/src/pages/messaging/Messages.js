@@ -107,15 +107,13 @@ const ConversationList = ({
                 ...prevData,
                 messaging: {
                   ...prevData.messaging,
-                  conversations: [
-                    ...prevData.messaging.conversations,
-                    ...convs
-                  ]
+                  conversations: [...prevData.messaging.conversations, ...convs]
                 }
               }
             }
           })
-      }}>
+        }}
+      >
         <>
           {conversations.length ? null : (
             <div>

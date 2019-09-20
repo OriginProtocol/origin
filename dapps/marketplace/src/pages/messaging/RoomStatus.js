@@ -15,10 +15,7 @@ const RoomStatus = ({ conversation, identity, onClick, active, wallet }) => {
 
   const lastMessage = conversation.lastMessage
 
-  const timestamp = lastMessage
-    ? lastMessage.timestamp
-    : conversation.timestamp
-
+  const timestamp = lastMessage ? lastMessage.timestamp : conversation.timestamp
 
   return (
     <Link
@@ -33,21 +30,19 @@ const RoomStatus = ({ conversation, identity, onClick, active, wallet }) => {
           <div className="time">{distanceToNow(timestamp)}</div>
         </div>
         <div className="bottom">
-          {
-            !lastMessage ? null : (
-              <div className="last-message">
-                {lastMessage.type === 'event' ? (
-                  <OfferEvent
-                    event={lastMessage}
-                    wallet={wallet}
-                    minimal={true}
-                  />
-                ) : (
-                  get(conversation, 'lastMessage.content')
-                )}
-              </div>
-            )
-          }
+          {!lastMessage ? null : (
+            <div className="last-message">
+              {lastMessage.type === 'event' ? (
+                <OfferEvent
+                  event={lastMessage}
+                  wallet={wallet}
+                  minimal={true}
+                />
+              ) : (
+                get(conversation, 'lastMessage.content')
+              )}
+            </div>
+          )}
           {!conversation.totalUnread ? null : (
             <div className="unread">{conversation.totalUnread}</div>
           )}

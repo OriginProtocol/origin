@@ -3,9 +3,9 @@ module.exports = (sequelize, DataTypes) => {
   const Conversation = sequelize.define(
     'Conversation',
     {
-      id: { 
+      id: {
         type: DataTypes.INTEGER,
-        primaryKey: true, 
+        primaryKey: true,
         allowNull: false,
         autoIncrement: true
       },

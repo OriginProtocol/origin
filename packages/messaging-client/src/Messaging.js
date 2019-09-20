@@ -414,20 +414,16 @@ class Messaging {
    * New keys are stored on the convObj, while a decrypted message
    * fires a callback.
    */
-  processContent({
-    content, 
-    convObj, 
-    onMessage, 
-    onEncrypted
-  }) {
+  processContent({ content, convObj, onMessage, onEncrypted }) {
     switch (content.type) {
       case 'keys':
-          this.processKeys(content, convObj)
+        this.processKeys(content, convObj)
         break
       case 'event':
         onMessage(content.eventData, content.sender)
         break
-      case 'msg': {
+      case 'msg':
+        {
           const decrypted = this.decryptMessage(content, convObj)
           if (decrypted.error == COULD_NOT_DECRYPT) {
             onEncrypted(content.emsg, content.address)
@@ -537,7 +533,8 @@ class Messaging {
       if (!this.convs[conversationId]) {
         // The conversation isn't locally cached or queried before.
         // Fetch the conversation keys, recent messages and push the update to GraphQL subscription
-        (async () => {
+        // eslint-disable-next-line no-extra-semi
+        ;(async () => {
           await this.getRoom(conversationId, { keys: true })
           const convObj = await this.getRoom(conversationId)
           this.pubsub.publish('MESSAGE_ADDED', {
@@ -550,7 +547,7 @@ class Messaging {
         })()
       } else {
         const convObj = this.convs[conversationId]
-        if (conversationIndex === (convObj.lastConversationIndex + 1)) {
+        if (conversationIndex === convObj.lastConversationIndex + 1) {
           // The conversation is cached and the ordering of the message is correct too.
           // Append it to existing object and push the update to GraphQL subscription
           this.processContent({
@@ -581,7 +578,6 @@ class Messaging {
                   message
                 }
               })
-
             },
             onEncrypted: (msg, address) => {
               this.events.emit(
@@ -618,7 +614,7 @@ class Messaging {
   }
 
   /**
-   * Updates `unreadCount` and `<Conversation>.unreadCount` when 
+   * Updates `unreadCount` and `<Conversation>.unreadCount` when
    * a conversation has been marked as read successfully
    * @param {Object} entry Message received from socket
    */
@@ -726,7 +722,9 @@ class Messaging {
 
     this.convs[roomId] = convObj
 
-    const url = new URL(`${this.globalKeyServer}/messages/${roomId}${keys ? '/keys': ''}`)
+    const url = new URL(
+      `${this.globalKeyServer}/messages/${roomId}${keys ? '/keys' : ''}`
+    )
 
     if (!keys) {
       before && url.searchParams.set('before', before)
@@ -744,26 +742,28 @@ class Messaging {
         const res = await fetch(url.toString(), {
           headers: { 'content-type': 'application/json' }
         })
-  
+
         if (res.status === 204) {
           return []
         }
-  
+
         return await res.json()
       })
-  
+
       if (typeof before === 'number' && messages.length === 0) {
         convObj.hasMore = false
       }
-  
+
       messages.forEach(entry => {
         this.processContent({
           content: entry.content,
           convObj,
           onMessage: (msg, address) => {
             const message = this.toMessage(msg, roomId, entry, address)
-  
-            if (convObj.messages.findIndex(m => m.index === message.index) < 0) {
+
+            if (
+              convObj.messages.findIndex(m => m.index === message.index) < 0
+            ) {
               // Push only if it is not already there
               convObj.messages.push(message)
               debug('msg:', message)
@@ -773,23 +773,25 @@ class Messaging {
             this.events.emit('msg', message)
           },
           onEncrypted: (msg, address) => {
-            this.events.emit('emsg', this.toMessage(msg, roomId, entry, address))
+            this.events.emit(
+              'emsg',
+              this.toMessage(msg, roomId, entry, address)
+            )
           }
         })
-  
+
         if (convObj.lastConversationIndex < entry.conversationIndex) {
           convObj.lastConversationIndex = entry.conversationIndex
         }
-  
+
         convObj.messageCount = entry.lastConversationIndex + 1
       })
-  
+
       // Sort things in descending order
-      convObj.messages = convObj.messages
-        .sort((m1, m2) => {
-          return m2.index - m1.index
-        })
-  
+      convObj.messages = convObj.messages.sort((m1, m2) => {
+        return m2.index - m1.index
+      })
+
       if (!keys && !convObj.loaded) {
         convObj.loaded = true
       }
@@ -812,9 +814,7 @@ class Messaging {
     const res = await fetch(
       `${this.globalKeyServer}/conversations/${this.account_key}?${
         !Number.isNaN(Number(limit)) ? `limit=${limit}&` : ''
-      }${
-        !Number.isNaN(Number(offset)) ? `offset=${offset}` : ''
-      }`,
+      }${!Number.isNaN(Number(offset)) ? `offset=${offset}` : ''}`,
       {
         headers: { 'content-type': 'application/json' }
       }
@@ -859,16 +859,18 @@ class Messaging {
     debug('loading convs:')
     const conversations = await this.fetchConvs({ limit, offset })
 
-    await Promise.all(conversations.map(conv => {
-      return new Promise(async resolve => {
-        // Populate keys and messages for all loaded conversations
-        await this.getRoom(conv.id, { keys: true })
-        const convObj = await this.getRoom(conv.id)
-        convObj.unreadCount = conv.unread || 0
+    await Promise.all(
+      conversations.map(conv => {
+        return new Promise(async resolve => {
+          // Populate keys and messages for all loaded conversations
+          await this.getRoom(conv.id, { keys: true })
+          const convObj = await this.getRoom(conv.id)
+          convObj.unreadCount = conv.unread || 0
 
-        resolve(convObj)
+          resolve(convObj)
+        })
       })
-    }))
+    )
 
     if (!this.ws) {
       this.listenForUpdates()
@@ -884,7 +886,10 @@ class Messaging {
    */
   async getMyConvs({ limit, offset } = {}) {
     let cachedConvs = Object.keys(this.convs)
-    if (!cachedConvs.length || (offset && cachedConvs.length - (Number(limit) || 10) < offset)) {
+    if (
+      !cachedConvs.length ||
+      (offset && cachedConvs.length - (Number(limit) || 10) < offset)
+    ) {
       await this.loadMyConvs({ limit, offset, skipIfLoaded: true })
       cachedConvs = Object.keys(this.convs)
     }
@@ -908,9 +913,7 @@ class Messaging {
       .map(convId => {
         const recipients = this.getRecipients(convId)
         if (recipients.length === 2) {
-          return recipients.find(
-            addr => addr !== this.account_key
-          )
+          return recipients.find(addr => addr !== this.account_key)
         }
 
         return convId
@@ -921,7 +924,7 @@ class Messaging {
 
   /**
    * Checks if an conversation exists and prepopulates the data from messaging server
-   * @param {String} remoteEthAddress 
+   * @param {String} remoteEthAddress
    * @return {Boolean} true if the has conversed with address identified by `remoteEthAddress`. False, otherwise
    */
   async conversationExists(remoteEthAddress) {
@@ -983,7 +986,7 @@ class Messaging {
   /**
    * Returns the unread count of a conversation, if `remoteEthAddress` is specified
    * Returns the unread count across all conversation otherwise
-   * @param {String} remoteEthAddress 
+   * @param {String} remoteEthAddress
    * @returns {Integer} count of unread messages
    */
   async getUnreadCount(remoteEthAddress) {
@@ -1023,9 +1026,9 @@ class Messaging {
           headers: { 'content-type': 'application/json' }
         }
       )
-      
-      const { unread } = (await response.json())
-  
+
+      const { unread } = await response.json()
+
       this.unreadCount = unread
       this.unreadCountLoaded = true
     } catch (e) {
@@ -1220,7 +1223,13 @@ class Messaging {
 
     this._sending_message = true
     // include a random iv str so that people can't match strings of the same message
-    if (await this.addRoomMsg(roomId, convObj.lastConversationIndex + 1, encryptedContent)) {
+    if (
+      await this.addRoomMsg(
+        roomId,
+        convObj.lastConversationIndex + 1,
+        encryptedContent
+      )
+    ) {
       debug('room.add OK')
       //do something different if this succeeds
     } else {

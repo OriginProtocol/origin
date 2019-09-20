@@ -5,7 +5,14 @@ import query from 'queries/Conversations'
 
 function withMessaging(WrappedComponent) {
   const withMessaging = props => {
-    const { error, data, loading, refetch, fetchMore, networkStatus } = useQuery(query, {
+    const {
+      error,
+      data,
+      loading,
+      refetch,
+      fetchMore,
+      networkStatus
+    } = useQuery(query, {
       fetchPolicy: 'network-only',
       notifyOnNetworkStatusChange: true
     })

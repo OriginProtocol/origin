@@ -307,19 +307,22 @@ class MarketplaceEventHandler {
     }
 
     // Publish to redis channel
-    await redisClient.publish('MESSAGING:MARKETPLACE_EVENT', JSON.stringify({
-      eventData: {
-        blockNumber,
-        blockDate,
-        logIndex,
-        eventType: event.event,
-        seller,
-        buyer,
-        listingID: details.listing.id,
-        offerID: details.offer.id
-      },
-      sender
-    }))
+    await redisClient.publish(
+      'MESSAGING:MARKETPLACE_EVENT',
+      JSON.stringify({
+        eventData: {
+          blockNumber,
+          blockDate,
+          logIndex,
+          eventType: event.event,
+          seller,
+          buyer,
+          listingID: details.listing.id,
+          offerID: details.offer.id
+        },
+        sender
+      })
+    )
   }
 
   /**

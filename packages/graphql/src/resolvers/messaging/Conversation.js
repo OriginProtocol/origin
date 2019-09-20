@@ -16,10 +16,17 @@ const congratsMessage = `Congratulations! You can now message other users on Ori
 
 export async function getMessages(conversationId, { after, before } = {}) {
   const messages =
-    (await contracts.messaging.getMessages(conversationId, { after, before })) || []
+    (await contracts.messaging.getMessages(conversationId, {
+      after,
+      before
+    })) || []
 
   const supportAccount = contracts.config.messagingAccount
-  if (supportAccount && contracts.messaging.account_key !== supportAccount && conversationId === supportAccount) {
+  if (
+    supportAccount &&
+    contracts.messaging.account_key !== supportAccount &&
+    conversationId === supportAccount
+  ) {
     const hasInjectedMessages = messages.find(x => x.index < 0)
 
     if (!hasInjectedMessages) {
@@ -75,8 +82,8 @@ export async function getMessage(message) {
   }
 
   let read = message.msg.read
-  if (message.hash === 'origin-welcome-message' && !isEnabled()) {
-    message.read = true
+  if (message.hash === 'origin-welcome-message') {
+    read = isEnabled()
   }
 
   return {
@@ -89,10 +96,11 @@ export async function getMessage(message) {
 }
 
 export default {
-  messages: async account => await getMessages(account.id, {
-    before: account.before,
-    after: account.after
-  }),
+  messages: async account =>
+    await getMessages(account.id, {
+      before: account.before,
+      after: account.after
+    }),
   lastMessage: async account => {
     const messages = await getMessages(account.id)
     return messages && messages.length ? getMessage(messages[0]) : null
@@ -102,7 +110,7 @@ export default {
       return 1
     }
 
-    return (await getUnreadCount(account) || 0)
+    return (await getUnreadCount(account)) || 0
   },
   hasMore: account => {
     const conv = contracts.messaging.getConvo(account.id)

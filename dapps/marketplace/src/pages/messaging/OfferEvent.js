@@ -23,18 +23,16 @@ function eventName(name) {
 }
 
 const OfferEvent = ({ event, wallet, identity, minimal }) => {
-  const offerTitle = minimal ? event.offer.listing.title : (
-    <Link to={`/purchases/${event.offer.id}`}>
-      {event.offer.listing.title}
-    </Link>
+  const offerTitle = minimal ? (
+    event.offer.listing.title
+  ) : (
+    <Link to={`/purchases/${event.offer.id}`}>{event.offer.listing.title}</Link>
   )
 
   return (
     <>
       <div className="offer-event">
-        {event.address === wallet
-          ? 'You'
-          : get(identity, 'fullName')}
+        {event.address === wallet ? 'You' : get(identity, 'fullName')}
         {` ${eventName(event.eventData.eventType)} `}
         {offerTitle}
         {` on ${dayjs.unix(event.timestamp).format('MMM Do, YYYY')}`}

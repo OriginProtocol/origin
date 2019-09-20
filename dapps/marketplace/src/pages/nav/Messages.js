@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { useQuery } from 'react-apollo'
 import get from 'lodash/get'
-import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
 
 import MessagingQuery from 'queries/Messaging'
@@ -103,24 +102,24 @@ const MessagesDropdown = ({ onClick, totalUnread, messagingEnabled }) => {
       <RefetchOnMessageData refetch={refetch} />
       <div className="dropdown-menu dropdown-menu-right show">
         {messagingEnabled && !totalUnread ? null : (
-        <div className="count">
-          {!totalUnread ? null : (
-            <>
-              <div className="total">{totalUnread}</div>
-              <div className="title">
-                <fbt desc="messages.unreadMessages">
-                  Unread
-                  <fbt:plural count={totalUnread} showCount="no">
-                    Message
-                  </fbt:plural>
-                </fbt>
-              </div>
-            </>
-          )}
-          {messagingEnabled ? null : (
-            <EnableMessaging className="btn-sm" onClose={onClick} />
-          )}
-        </div>
+          <div className="count">
+            {!totalUnread ? null : (
+              <>
+                <div className="total">{totalUnread}</div>
+                <div className="title">
+                  <fbt desc="messages.unreadMessages">
+                    Unread
+                    <fbt:plural count={totalUnread} showCount="no">
+                      Message
+                    </fbt:plural>
+                  </fbt>
+                </div>
+              </>
+            )}
+            {messagingEnabled ? null : (
+              <EnableMessaging className="btn-sm" onClose={onClick} />
+            )}
+          </div>
         )}
         <div className="messaging-dropdown-content">
           {conversations.map((conv, idx) => (

@@ -154,7 +154,8 @@ app.get('/conversations/:address/unread', async (req, res) => {
   // TODO: Get rid of the custom query and find the correct ORM way
 
   try {
-    const [[convs]] = await db.sequelize.query(`
+    const [[convs]] = await db.sequelize.query(
+      `
 SELECT SUM(unread) as unread FROM (SELECT messages.unread_count::integer as unread FROM msg_conversee conversee
   LEFT JOIN 
     (SELECT m.conversation_id, count(m.conversation_id)::integer as unread_count 
@@ -163,12 +164,14 @@ SELECT SUM(unread) as unread FROM (SELECT messages.unread_count::integer as unre
         AND m.eth_address<>:address
       GROUP BY m.conversation_id) messages
     ON messages.conversation_id=conversee.conversation_id
-  WHERE conversee.eth_address=:address) unread_by_conv`, {
-      replacements: {
-        address
+  WHERE conversee.eth_address=:address) unread_by_conv`,
+      {
+        replacements: {
+          address
+        }
       }
-    })
-  
+    )
+
     return res.status(200).send(convs)
   } catch (e) {
     return res.status(500).send(e)
@@ -178,7 +181,7 @@ SELECT SUM(unread) as unread FROM (SELECT messages.unread_count::integer as unre
 // Fetch basic information about conversations for an account
 app.get('/conversations/:address', async (req, res) => {
   let { address } = req.params
-  let { limit, offset } = {
+  const { limit, offset } = {
     limit: 10,
     offset: 0,
     ...req.query
@@ -242,7 +245,8 @@ app.get('/conversations/:address', async (req, res) => {
   // })
 
   try {
-    const [convs] = await db.sequelize.query(`
+    const [convs] = await db.sequelize.query(
+      `
 SELECT conversations.external_id as id, conversations.updated_at as timestamp, conversations.message_count as count, messages.unread_count as unread FROM msg_conversee conversee 
   INNER JOIN msg_conversation conversations 
     ON conversations.id=conversee.conversation_id 
@@ -255,14 +259,16 @@ SELECT conversations.external_id as id, conversations.updated_at as timestamp, c
     ON messages.conversation_id=conversations.id
   WHERE conversee.eth_address=:address
   ORDER BY conversations.updated_at DESC
-  LIMIT :limit OFFSET :offset`, {
-      replacements: {
-        address,
-        limit,
-        offset
+  LIMIT :limit OFFSET :offset`,
+      {
+        replacements: {
+          address,
+          limit,
+          offset
+        }
       }
-    })
-  
+    )
+
     return res.status(200).send(convs)
   } catch (e) {
     return res.status(500).send(e)
@@ -280,26 +286,28 @@ app.post('/messages/:conversationId/read', async (req, res) => {
   })
 
   if (!conversation) {
-    return res.status(404)
-      .send({
-        success: false,
-        errors: 'Conversation not found'
-      })
+    return res.status(404).send({
+      success: false,
+      errors: 'Conversation not found'
+    })
   }
 
   const address = Web3.utils.toChecksumAddress(req.query.address)
 
-  const [messagesRead] = await db.Message.update({
-    read: true
-  }, {
-    where: {
-      conversationId: conversation.id,
-      ethAddress: {
-        [db.Sequelize.Op.not]: address
-      },
-      read: false
+  const [messagesRead] = await db.Message.update(
+    {
+      read: true
+    },
+    {
+      where: {
+        conversationId: conversation.id,
+        ethAddress: {
+          [db.Sequelize.Op.not]: address
+        },
+        read: false
+      }
     }
-  })
+  )
 
   await redis.publish(
     address,
@@ -311,11 +319,10 @@ app.post('/messages/:conversationId/read', async (req, res) => {
     })
   )
 
-  return res.status(200)
-    .send({
-      success: true,
-      messagesRead
-    })
+  return res.status(200).send({
+    success: true,
+    messagesRead
+  })
 })
 
 /**
@@ -326,10 +333,17 @@ app.post('/messages/:conversationId/read', async (req, res) => {
  * @param {Integer} args.isKeys - Returns only keys if true, otherwise returns all other messages
  * @param {Integer} args.read - To filter messages based on read status
  * @param {Integer} args.returnCount - Returns only the count, if true.
- * @returns {Promise<[Object]>|Integer} Returns count of records if returnCount is true. Otherwise, returns an array of message objects. 
+ * @returns {Promise<[Object]>|Integer} Returns count of records if returnCount is true. Otherwise, returns an array of message objects.
  *                                      Array will be empty if no messages matched the given constraint.
  */
-async function getMessages({ returnCount, conversationId, after, before, isKeys, read }) {
+async function getMessages({
+  returnCount,
+  conversationId,
+  after,
+  before,
+  isKeys,
+  read
+}) {
   const where = {
     isKeys
   }
@@ -341,11 +355,11 @@ async function getMessages({ returnCount, conversationId, after, before, isKeys,
     if (after) {
       constraints[db.Sequelize.Op.gt] = parseInt(after)
     }
-  
+
     if (before) {
       constraints[db.Sequelize.Op.lt] = parseInt(before)
     }
-  
+
     if (before || after) {
       where.conversationIndex = constraints
     }
@@ -359,7 +373,7 @@ async function getMessages({ returnCount, conversationId, after, before, isKeys,
   // Don't paginate when fetching keys or count of messages
   // Limit 10 per query otherwise
   const limit = returnCount || isKeys || after ? undefined : 10
-  
+
   const queryOpts = {
     include: [
       { model: db.Conversation, where: { externalId: conversationId } }
@@ -386,8 +400,7 @@ async function getMessages({ returnCount, conversationId, after, before, isKeys,
       timestamp: m.createdAt,
       read: m.read
     }
-
-  }) 
+  })
 }
 
 // Get all messages of type 'key' in a room/conversation
@@ -628,7 +641,7 @@ function subscribeToMarketplaceEvents() {
   logger.debug('Subscribing to Marketplace events...')
   const redis_sub = redis.duplicate()
   redis_sub.subscribe('MESSAGING:MARKETPLACE_EVENT')
-  
+
   redis_sub.on('message', async (channel, message) => {
     try {
       const { eventData, sender } = JSON.parse(message)
@@ -645,7 +658,9 @@ function subscribeToMarketplaceEvents() {
       const externalId = [
         Web3.utils.toChecksumAddress(seller),
         Web3.utils.toChecksumAddress(buyer)
-      ].sort().join('-')
+      ]
+        .sort()
+        .join('-')
 
       let conversation = await db.Conversation.findOne({
         where: { externalId }
@@ -716,13 +731,15 @@ function subscribeToMarketplaceEvents() {
           })
         )
       }
-      logger.info(`Inserted '${eventData.eventType}' event to ${externalId} at ${newMessageIndex}`)
+      logger.info(
+        `Inserted '${eventData.eventType}' event to ${externalId} at ${newMessageIndex}`
+      )
     } catch (err) {
       // TODO: Should we try if it failed because of duplicate conversationIndex?
       logger.error('Cannot process marketplace event', message, err)
     }
   })
-} 
+}
 
 // Websocket to listen for new messages
 app.ws('/message-events/:address', (ws, req) => {

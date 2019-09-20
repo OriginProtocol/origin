@@ -33,7 +33,11 @@ const BottomScrollListener = ({
         }
 
         if (bindOnContainer) {
-          if ((elementRef.current.scrollHeight - (elementRef.current.scrollTop + elementRef.current.clientHeight)) < offset) {
+          if (
+            elementRef.current.scrollHeight -
+              (elementRef.current.scrollTop + elementRef.current.clientHeight) <
+            offset
+          ) {
             onBottom()
           }
           return
@@ -42,7 +46,7 @@ const BottomScrollListener = ({
         const scrollNode = document.scrollingElement || document.documentElement
         if (
           scrollNode.scrollHeight - offset <=
-            scrollNode.scrollTop + window.innerHeight
+          scrollNode.scrollTop + window.innerHeight
         ) {
           onBottom()
         }
@@ -57,14 +61,16 @@ const BottomScrollListener = ({
     elementRef.current.addEventListener('scroll', onScrollListener)
 
     return () => {
-      elementRef.current.removeEventListener('scroll', onScrollListener) 
+      elementRef.current.removeEventListener('scroll', onScrollListener)
     }
   }, rebindListenerOnProps)
 
   window.requestAnimationFrame(() => {
     if (
-      ((bindOnContainer && elementRef.current.scrollHeight < elementRef.current.clientHeight) 
-        || (!bindOnContainer && document.body.clientHeight < window.innerHeight)) &&
+      ((bindOnContainer &&
+        elementRef.current.scrollHeight < elementRef.current.clientHeight) ||
+        (!bindOnContainer &&
+          document.body.clientHeight < window.innerHeight)) &&
       ready &&
       hasMore
     ) {

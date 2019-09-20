@@ -4,12 +4,17 @@ import { getUnreadCount, isEnabled } from './Conversation'
 
 async function getConversationIds({ limit, offset }) {
   if (!isEnabled()) {
-    return contracts.config.messagingAccount ? [contracts.config.messagingAccount] : []
+    return contracts.config.messagingAccount
+      ? [contracts.config.messagingAccount]
+      : []
   }
 
   const convos = await contracts.messaging.getMyConvs({ limit, offset })
 
-  if (contracts.config.messagingAccount && !convos.find(convId => convId === contracts.config.messagingAccount)) {
+  if (
+    contracts.config.messagingAccount &&
+    !convos.find(convId => convId === contracts.config.messagingAccount)
+  ) {
     convos.push(contracts.config.messagingAccount)
   }
 
@@ -47,15 +52,16 @@ export default {
   enabled: () => {
     return checkForMessagingOverride() ? messagingOverride.enabled : isEnabled()
   },
-  conversations: async (_, { limit, offset }) => await getConversationIds({ limit, offset }),
+  conversations: async (_, { limit, offset }) =>
+    await getConversationIds({ limit, offset }),
   conversation: (_, args) =>
     new Promise(async resolve => {
-      if (!await contracts.messaging.conversationExists(args.id)) {
+      if (!(await contracts.messaging.conversationExists(args.id))) {
         resolve(null)
       }
 
       resolve({
-        id: args.id, 
+        id: args.id,
         // timestamp: Math.round(convos[args.id] / 1000),
         before: args.before,
         after: args.after
