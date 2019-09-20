@@ -32,7 +32,11 @@ class Otp extends Component {
       return <Redirect push to="/dashboard" />
     }
 
-    const input = formInput(this.state, state => this.setState(state), 'text-center w-auto')
+    const input = formInput(
+      this.state,
+      state => this.setState(state),
+      'text-center w-auto'
+    )
     const Feedback = formFeedback(this.state)
 
     return (

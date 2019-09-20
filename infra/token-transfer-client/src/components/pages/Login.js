@@ -36,7 +36,11 @@ class Login extends Component {
   }
 
   render() {
-    const input = formInput(this.state, state => this.setState(state), 'text-center')
+    const input = formInput(
+      this.state,
+      state => this.setState(state),
+      'text-center'
+    )
     const Feedback = formFeedback(this.state)
 
     if (this.state.redirectTo) {
