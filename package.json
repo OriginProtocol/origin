@@ -17,8 +17,8 @@
   "devDependencies": {
     "babel-eslint": "10.0.3",
     "chai": "4.2.0",
-    "eslint": "6.3.0",
-    "eslint-config-react-app": "5.0.1",
+    "eslint": "6.4.0",
+    "eslint-config-react-app": "5.0.2",
     "eslint-config-standard": "14.1.0",
     "eslint-plugin-flowtype": "4.3.0",
     "eslint-plugin-import": "2.18.2",
