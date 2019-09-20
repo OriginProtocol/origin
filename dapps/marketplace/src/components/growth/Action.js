@@ -146,8 +146,7 @@ function Action(props) {
     title = fbt('Join us on Telegram', 'RewardActions.followOnTelegram')
     allowInteractionWhenCompleted = true
     // TODO: Move screen name to Enviroment variable
-    // externalLink = 'tg://resolve?domain=@originprotocol'
-    externalLink = 'https://t.me/originprotocol'
+    externalLink = 'tg://resolve?domain=@originprotocol'
   } else if (type === 'FacebookLike') {
     buttonLink = undefined
     foregroundImgSrc = 'images/growth/facebook-icon.svg'

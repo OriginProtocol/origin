@@ -118,7 +118,10 @@ contract V01_Marketplace is Ownable {
         }));
 
         if (_deposit > 0) {
-            tokenAddr.transferFrom(_seller, this, _deposit); // Transfer Origin Token
+            require(
+                tokenAddr.transferFrom(_seller, this, _deposit), // Transfer Origin Token
+                "transferFrom failed"
+            );
         }
         emit ListingCreated(_seller, listings.length - 1, _ipfsHash);
     }
@@ -155,8 +158,11 @@ contract V01_Marketplace is Ownable {
         require(listing.seller == _seller, "Seller must call");
 
         if (_additionalDeposit > 0) {
-            tokenAddr.transferFrom(_seller, this, _additionalDeposit);
             listing.deposit += _additionalDeposit;
+            require(
+                tokenAddr.transferFrom(_seller, this, _additionalDeposit),
+                "transferFrom failed"
+            );
         }
 
         emit ListingUpdated(listing.seller, listingID, _ipfsHash);
@@ -167,8 +173,9 @@ contract V01_Marketplace is Ownable {
         Listing storage listing = listings[listingID];
         require(msg.sender == listing.depositManager, "Must be depositManager");
         require(_target != 0x0, "No target");
-        tokenAddr.transfer(_target, listing.deposit); // Send deposit to target
+        uint deposit = listing.deposit;
         listing.deposit = 0; // Prevent multiple deposit withdrawals
+        require(tokenAddr.transfer(_target, deposit), "transfer failed"); // Send deposit to target
         emit ListingWithdrawn(_target, listingID, _ipfsHash);
     }
 
@@ -222,25 +229,6 @@ contract V01_Marketplace is Ownable {
         emit OfferCreated(msg.sender, listingID, offers[listingID].length-1, _ipfsHash);
     }
 
-    // @dev Make new offer after withdrawl
-    function makeOffer(
-        uint listingID,
-        bytes32 _ipfsHash,
-        uint _finalizes,
-        address _affiliate,
-        uint256 _commission,
-        uint _value,
-        ERC20 _currency,
-        address _arbitrator,
-        uint _withdrawOfferID
-    )
-        public
-        payable
-    {
-        withdrawOffer(listingID, _withdrawOfferID, _ipfsHash);
-        makeOffer(listingID, _ipfsHash, _finalizes, _affiliate, _commission, _value, _currency, _arbitrator);
-    }
-
     // @dev Seller accepts offer
     function acceptOffer(uint listingID, uint offerID, bytes32 _ipfsHash) public {
         Listing storage listing = listings[listingID];
@@ -262,15 +250,15 @@ contract V01_Marketplace is Ownable {
     // @dev Buyer withdraws offer. IPFS hash contains reason for withdrawl.
     function withdrawOffer(uint listingID, uint offerID, bytes32 _ipfsHash) public {
         Listing storage listing = listings[listingID];
-        Offer storage offer = offers[listingID][offerID];
+        Offer memory offer = offers[listingID][offerID];
         require(
             msg.sender == offer.buyer || msg.sender == listing.seller,
             "Restricted to buyer or seller"
         );
         require(offer.status == 1, "status != created");
-        refundBuyer(listingID, offerID);
-        emit OfferWithdrawn(msg.sender, listingID, offerID, _ipfsHash);
         delete offers[listingID][offerID];
+        refundBuyer(offer.buyer, offer.currency, offer.value);
+        emit OfferWithdrawn(msg.sender, listingID, offerID, _ipfsHash);
     }
 
     // @dev Buyer adds extra funds to an accepted offer.
@@ -278,6 +266,7 @@ contract V01_Marketplace is Ownable {
         Offer storage offer = offers[listingID][offerID];
         require(msg.sender == offer.buyer, "Buyer must call");
         require(offer.status == 2, "status != accepted");
+        offer.value += _value;
         if (address(offer.currency) == 0x0) { // Listing is in ETH
             require(
                 msg.value == _value,
@@ -290,14 +279,13 @@ contract V01_Marketplace is Ownable {
                 "transferFrom failed"
             );
         }
-        offer.value += _value;
         emit OfferFundsAdded(msg.sender, listingID, offerID, _ipfsHash);
     }
 
     // @dev Buyer must finalize transaction to receive commission
     function finalize(uint listingID, uint offerID, bytes32 _ipfsHash) public {
         Listing storage listing = listings[listingID];
-        Offer storage offer = offers[listingID][offerID];
+        Offer memory offer = offers[listingID][offerID];
         if (now <= offer.finalizes) { // Only buyer can finalize before finalization window
             require(
                 msg.sender == offer.buyer,
@@ -310,14 +298,18 @@ contract V01_Marketplace is Ownable {
             );
         }
         require(offer.status == 2, "status != accepted");
-        paySeller(listingID, offerID); // Pay seller
-        if (msg.sender == offer.buyer) { // Only pay commission if buyer is finalizing
-            payCommission(listingID, offerID);
-        } else {
-            listing.deposit += offer.commission; // Refund commission to seller
-        }
-        emit OfferFinalized(msg.sender, listingID, offerID, _ipfsHash);
         delete offers[listingID][offerID];
+
+        if (msg.sender != offer.buyer) {
+            listing.deposit += offer.commission; // Refund commission to seller
+        } else {
+            // Only pay commission if buyer is finalizing
+            payCommission(offer.affiliate, offer.commission);
+        }
+
+        paySeller(listing.seller, offer.buyer, offer.currency, offer.value, offer.refund); // Pay seller
+
+        emit OfferFinalized(msg.sender, listingID, offerID, _ipfsHash);
     }
 
     // @dev Buyer or seller can dispute transaction during finalization window
@@ -342,23 +334,23 @@ contract V01_Marketplace is Ownable {
         uint _ruling, // 0: Seller, 1: Buyer, 2: Com + Seller, 3: Com + Buyer
         uint _refund
     ) public {
-        Offer storage offer = offers[listingID][offerID];
+        Listing storage listing = listings[listingID];
+        Offer memory offer = offers[listingID][offerID];
         require(msg.sender == offer.arbitrator, "Must be arbitrator");
         require(offer.status == 3, "status != disputed");
         require(_refund <= offer.value, "refund too high");
-        offer.refund = _refund;
-        if (_ruling & 1 == 1) {
-            refundBuyer(listingID, offerID);
-        } else  {
-            paySeller(listingID, offerID);
-        }
+        delete offers[listingID][offerID];
         if (_ruling & 2 == 2) {
-            payCommission(listingID, offerID);
+            payCommission(offer.affiliate, offer.commission);
         } else  { // Refund commission to seller
             listings[listingID].deposit += offer.commission;
         }
+        if (_ruling & 1 == 1) {
+            refundBuyer(offer.buyer, offer.currency, offer.value);
+        } else  {
+            paySeller(listing.seller, offer.buyer, offer.currency, offer.value, _refund); // Pay seller
+        }
         emit OfferRuling(offer.arbitrator, listingID, offerID, _ipfsHash, _ruling);
-        delete offers[listingID][offerID];
     }
 
     // @dev Sets the amount that a seller wants to refund to a buyer.
@@ -373,45 +365,41 @@ contract V01_Marketplace is Ownable {
     }
 
     // @dev Refunds buyer in ETH or ERC20 - used by 1) executeRuling() and 2) to allow a seller to refund a purchase
-    function refundBuyer(uint listingID, uint offerID) private {
-        Offer storage offer = offers[listingID][offerID];
-        if (address(offer.currency) == 0x0) {
-            require(offer.buyer.send(offer.value), "ETH refund failed");
+    function refundBuyer(address buyer, ERC20 currency, uint value) private {
+        if (address(currency) == 0x0) {
+            require(buyer.send(value), "ETH refund failed");
         } else {
             require(
-                offer.currency.transfer(offer.buyer, offer.value),
+                currency.transfer(buyer, value),
                 "Refund failed"
             );
         }
     }
 
     // @dev Pay seller in ETH or ERC20
-    function paySeller(uint listingID, uint offerID) private {
-        Listing storage listing = listings[listingID];
-        Offer storage offer = offers[listingID][offerID];
-        uint value = offer.value - offer.refund;
+    function paySeller(address seller, address buyer, ERC20 currency, uint offerValue, uint offerRefund) private {
+        uint value = offerValue - offerRefund;
 
-        if (address(offer.currency) == 0x0) {
-            require(offer.buyer.send(offer.refund), "ETH refund failed");
-            require(listing.seller.send(value), "ETH send failed");
+        if (address(currency) == 0x0) {
+            require(buyer.send(offerRefund), "ETH refund failed");
+            require(seller.send(value), "ETH send failed");
         } else {
             require(
-                offer.currency.transfer(offer.buyer, offer.refund),
+                currency.transfer(buyer, offerRefund),
                 "Refund failed"
             );
             require(
-                offer.currency.transfer(listing.seller, value),
+                currency.transfer(seller, value),
                 "Transfer failed"
             );
         }
     }
 
     // @dev Pay commission to affiliate
-    function payCommission(uint listingID, uint offerID) private {
-        Offer storage offer = offers[listingID][offerID];
-        if (offer.affiliate != 0x0) {
+    function payCommission(address affiliate, uint commission) private {
+        if (affiliate != 0x0) {
             require(
-                tokenAddr.transfer(offer.affiliate, offer.commission),
+                tokenAddr.transfer(affiliate, commission),
                 "Commission transfer failed"
             );
         }
