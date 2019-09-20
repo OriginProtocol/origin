@@ -68,14 +68,14 @@ class WithdrawalDetail extends Component {
     return (
       <>
         {hasExpired && (
-          <div className="alert alert-danger">
+          <div className="alert alert-danger mb-4">
             This transaction has expired. It was not confirmed with two factor
             authentication in the required time.
           </div>
         )}
         {!hasExpired &&
           transfer.status === enums.TransferStatuses.WaitingEmailConfirm && (
-            <div className="alert alert-warning">
+            <div className="alert alert-warning mb-4">
               <strong>Next Step:</strong> Confirm your transaction with email
               link
               <br />
@@ -94,7 +94,7 @@ class WithdrawalDetail extends Component {
                   <strong>Amount</strong>
                 </div>
                 <div className="col">
-                  {transfer.amount.toLocaleString()} OGN
+                  {Number(transfer.amount).toLocaleString()} OGN
                 </div>
               </div>
               <div className="row mb-3">
