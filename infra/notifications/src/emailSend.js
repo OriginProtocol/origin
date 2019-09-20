@@ -1,16 +1,20 @@
-// TODO: We need better way to refer to models in other packages.
-const Identity = require('../../identity/src/models').Identity
-
-const { messageTemplates } = require('../templates/messageTemplates')
-const { getNotificationMessage } = require('./notification')
 const fs = require('fs')
-const Sequelize = require('sequelize')
-const Op = Sequelize.Op
 const _ = require('lodash')
-const logger = require('./logger')
+const sendgridMail = require('@sendgrid/mail')
+const Sequelize = require('sequelize')
 const web3Utils = require('web3-utils')
 
-const sendgridMail = require('@sendgrid/mail')
+const Identity = require('@origin/identity/src/models')
+const { messageTemplates } = require('../templates/messageTemplates')
+const { getNotificationMessage } = require('./notification')
+const logger = require('./logger')
+const {
+  getMessageFingerprint,
+  isNotificationDupe,
+  logNotificationSent
+} = require('./dupeTools')
+
+// Configure SendGrid.
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
 if (!process.env.SENDGRID_API_KEY) {
   logger.warn('Warning: SENDGRID_API_KEY env var is not set')
@@ -18,12 +22,6 @@ if (!process.env.SENDGRID_API_KEY) {
 if (!process.env.SENDGRID_FROM_EMAIL) {
   logger.warn('Warning: SENDGRID_FROM_EMAIL env var is not set')
 }
-
-const {
-  getMessageFingerprint,
-  isNotificationDupe,
-  logNotificationSent
-} = require('./dupeTools')
 
 /**
  * Write the content of an email to a file. Useful during development.
@@ -50,8 +48,42 @@ function _writeEmailToFile(email, config) {
 }
 
 /**
- * Sends an email to a list of receivers to let them know they
- * received a new Message in Origin messaging.
+ * Sends an email to a user.
+ *
+ * @param {string} ethAddress: Eth address of the receiver.
+ * @param {Object} email: SendGrid email object
+ * @param {Object} config: Notification server configuration.
+ * @returns {Promise<void>}
+ * @private
+ */
+async function _sendEmail(ethAddress, email, config) {
+  // Optional writing of email contents to files
+  if (config.emailFileOut) {
+    _writeEmailToFile(email, config)
+  }
+
+  // Check we are not spamming the user.
+  const messageFingerprint = getMessageFingerprint(email)
+  if ((await isNotificationDupe(messageFingerprint, config)) > 0) {
+    logger.warn(`Duplicate. Notification already recently sent. Skipping.`)
+    return
+  }
+
+  // Send the email and record the action in the notification_log table.
+  await sendgridMail.send(email)
+  await logNotificationSent(messageFingerprint, ethAddress, 'email')
+  logger.log(`Email sent to ${ethAddress} at ${email.to}`)
+}
+
+/**
+ * Sends an email to a list of users to let them know they
+ * have a new Message in Origin messaging.
+ *
+ * @param {Array<string>} receivers: List of Eth address an email should be sent to.
+ * @param {string} sender: Eth address of the user that sent the Origin message.
+ * @param {string} messageHash: Origin message hash.
+ * @param {Object} config: Notification server config.
+ * @returns {Promise<void>}
  */
 async function messageEmailSend(receivers, sender, messageHash, config) {
   if (!receivers) throw new Error('receivers not defined')
@@ -59,9 +91,7 @@ async function messageEmailSend(receivers, sender, messageHash, config) {
 
   // Force lowercase
   sender = sender.toLowerCase()
-  receivers = receivers.map(function(r) {
-    return r.toLowerCase()
-  })
+  receivers = receivers.map(r => r.toLowerCase())
 
   logger.info(
     `Messsage email: attempting to email addresses ${receivers.join(',')}`
@@ -79,102 +109,85 @@ async function messageEmailSend(receivers, sender, messageHash, config) {
     fs.readFileSync(`${templateDir}/emailTemplate.txt`).toString()
   )
 
-  const messageSender = Identity.findOne({
+  // Load the sender's identity and construct the best human readable
+  // version of sender name.
+  const senderIdentity = Identity.findOne({
     where: {
       ethAddress: sender
     }
   })
-  const messageReceivers = Identity.findAll({
-    where: {
-      ethAddress: {
-        [Op.or]: receivers
-      }
-    }
+  const senderName =
+    senderIdentity !== null &&
+    senderIdentity.firstName &&
+    senderIdentity.lastName
+      ? `${senderIdentity.firstName || ''} ${senderIdentity.lastName ||
+          ''} (${web3Utils.toChecksumAddress(sender)})`
+      : web3Utils.toChecksumAddress(sender)
+
+  // Dynamic variables used when evaluating the template.
+  const templateVars = {
+    config,
+    sender,
+    senderName,
+    dappUrl: config.dappUrl,
+    ipfsGatewayUrl: config.ipfsGatewayUrl,
+    messageHash
+  }
+
+  // Load the identities of all the receivers.
+  const identities = Identity.findAll({
+    where: { ethAddress: { [Sequelize.Op.or]: receivers } }
   })
-  Promise.all([messageSender, messageReceivers]).then(
-    ([senderIdentity, receiversIdentities]) => {
-      console.log(senderIdentity)
-      receiversIdentities.forEach(async s => {
-        try {
-          const message = messageTemplates.message['email']['messageReceived']
 
-          if (!s.email && config.overrideEmail) {
-            logger.info(`${s.ethAddress} has no email address. Skipping.`)
-          } else {
-            // Construct best human readable version of sender name
-            const senderName =
-              senderIdentity !== null &&
-              senderIdentity.firstName &&
-              senderIdentity.lastName
-                ? `${senderIdentity.firstName ||
-                    ''} ${senderIdentity.lastName ||
-                    ''} (${web3Utils.toChecksumAddress(sender)})`
-                : web3Utils.toChecksumAddress(sender)
-            const templateVars = {
-              config,
-              sender,
-              senderName,
-              dappUrl: config.dappUrl,
-              ipfsGatewayUrl: config.ipfsGatewayUrl,
-              messageHash
-            }
-            const email = {
-              to: config.overrideEmail || s.email,
-              from: config.fromEmail,
-              subject: message.subject(templateVars),
-              text: emailTemplateTxt({
-                message: message.text(templateVars),
-                messageHash
-              }),
-              html: emailTemplateHtml({
-                message: message.html(templateVars),
-                messageHash
-              }),
-              asm: {
-                groupId: config.asmGroupId
-              },
-              __messageHash: messageHash // Not part of SendGrid spec, here prevent different messages from being counted as duplicates.
-            }
-
-            // Optional writing of email contents to files
-            if (config.emailFileOut) {
-              _writeEmailToFile(email)
-            }
-
-            const messageFingerprint = getMessageFingerprint(email)
-            if ((await isNotificationDupe(messageFingerprint, config)) > 0) {
-              logger.warn(
-                `Duplicate. Notification already recently sent. Skipping.`
-              )
-            } else {
-              try {
-                await sendgridMail.send(email)
-                await logNotificationSent(
-                  messageFingerprint,
-                  s.ethAddress,
-                  'email'
-                )
-                logger.log(
-                  `Email sent to ${s.ethAddress} at ${email.to} ${
-                    config.overrideEmail ? ' instead of ' + s.email : ''
-                  }`
-                )
-              } catch (error) {
-                logger.error(`Could not email via Sendgrid: ${error}`)
-              }
-            }
-          }
-        } catch (error) {
-          logger.error(`Could not email via Sendgrid: ${error}`)
-        }
-      })
+  // Send an email to each receiver.
+  for (const identity of identities) {
+    if (!identity.email && !config.overrideEmail) {
+      logger.info(`${identity.ethAddress} has no email address. Skipping.`)
+      continue
     }
-  )
+
+    try {
+      const message = messageTemplates.message['email']['messageReceived']
+      const email = {
+        to: config.overrideEmail || identity.email,
+        from: config.fromEmail,
+        subject: message.subject(templateVars),
+        text: emailTemplateTxt({
+          message: message.text(templateVars),
+          messageHash
+        }),
+        html: emailTemplateHtml({
+          message: message.html(templateVars),
+          messageHash
+        }),
+        asm: {
+          groupId: config.asmGroupId
+        },
+        __messageHash: messageHash // Not part of SendGrid spec, here prevent different messages from being counted as duplicates.
+      }
+
+      await _sendEmail(identity.ethAddress, email, config)
+    } catch (error) {
+      logger.error(
+        `Could not email ${identity.ethAddress} via Sendgrid: ${error}`
+      )
+    }
+  }
 }
 
-//
-// Email notifications for Transactions
-//
+/**
+ * Sends an email to a buyer or seller to notify them
+ * that the state of one of their offer changed.
+ *
+ * @param {string} eventName: Name of the event. Example: OfferCreated, OfferAccepted, ...
+ * @param {string} party: Either the buyer or the seller Eth address.
+ * @param {string} buyerAddress: Buyer's Eth address.
+ * @param {string} sellerAddress: Seller's Eth address.
+ * @param {Object} offer: Offer object.
+ * @param {Object} listing: Listing object.
+ * @param {Object} config: Notification server configuration.
+ * @returns {Promise<void>}
+ */
 async function transactionEmailSend(
   eventName,
   party,
@@ -213,20 +226,35 @@ async function transactionEmailSend(
     fs.readFileSync(`${templateDir}/emailTemplate.txt`).toString()
   )
 
+  const templateVars = {
+    listing,
+    offer,
+    config,
+    dappUrl: config.dappUrl,
+    ipfsGatewayUrl: config.ipfsGatewayUrl
+  }
+
   const identities = await Identity.findAll({
     where: {
       ethAddress: {
-        [Op.or]: [buyerAddress, sellerAddress, party]
+        [Sequelize.Op.or]: [buyerAddress, sellerAddress, party]
       }
     }
   })
 
+  // Send an email to each recipient.
   for (const identity of identities) {
+    if (!identity.email && !config.overrideEmail) {
+      logger.info(`${identity.ethAddress} has no email address. Skipping.`)
+      continue
+    }
+
     try {
       const recipient = identity.ethAddress.toLowerCase()
       const recipientRole = recipient === sellerAddress ? 'seller' : 'buyer'
-
-      logger.info(`Checking messages for ${identity.ethAddress} as ${recipientRole}`)
+      logger.info(
+        `Sending email for ${identity.ethAddress} as ${recipientRole}`
+      )
 
       const message = getNotificationMessage(
         eventName,
@@ -235,22 +263,11 @@ async function transactionEmailSend(
         recipientRole,
         'email'
       )
-
-      if (!identity.email && !config.overrideEmail) {
-        logger.info(`${identity.ethAddress} has no email address. Skipping.`)
-        continue
-      }
       if (!message) {
-        logger.info(`No message found`)
+        logger.info(`No template defined for ${eventName}. Skipping.`)
         continue
       }
-      const templateVars = {
-        listing,
-        offer,
-        config,
-        dappUrl: config.dappUrl,
-        ipfsGatewayUrl: config.ipfsGatewayUrl
-      }
+
       const email = {
         to: config.overrideEmail || identity.email,
         from: config.fromEmail,
@@ -266,29 +283,7 @@ async function transactionEmailSend(
         }
       }
 
-      // Optional writing of email contents to files
-      if (config.emailFileOut) {
-        _writeEmailToFile(email)
-      }
-
-      const messageFingerprint = getMessageFingerprint(email)
-      if ((await isNotificationDupe(messageFingerprint, config)) > 0) {
-        logger.warn(
-          `Duplicate. Notification already recently sent. Skipping.`
-        )
-      } else {
-        try {
-          await sendgridMail.send(email)
-          await logNotificationSent(messageFingerprint, s.ethAddress, 'email')
-          logger.log(
-            `Email sent to ${buyerAddress} at ${email.to} ${
-              config.overrideEmail ? ' instead of ' + s.email : ''
-            }`
-          )
-        } catch (error) {
-          logger.error(`Could not email via Sendgrid: ${error}`)
-        }
-      }
+      await _sendEmail(identity.ethAddress, email, config)
     } catch (error) {
       logger.error(`Could not email via Sendgrid: ${error}`)
     }

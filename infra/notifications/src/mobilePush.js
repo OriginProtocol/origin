@@ -3,7 +3,7 @@ const firebase = require('firebase-admin')
 const Sequelize = require('sequelize')
 const web3Utils = require('web3-utils')
 
-const Identity = require('../../identity/src/models').Identity
+const Identity = require('@origin/identity/src/models')
 const MobileRegistry = require('./models').MobileRegistry
 const { messageTemplates } = require('../templates/messageTemplates')
 const { getNotificationMessage } = require('./notification')
@@ -194,8 +194,9 @@ async function _sendNotificationToEthAddress(
 }
 
 /**
- * Sends a mobile push notifications to users to let them know they
- * received a new Message in Origin messaging.
+ * Sends a mobile push notifications to a list of receivers to let them
+ * know they have a new Message in Origin messaging.
+ *
  * @param {Array<string>} receivers: List of receivers Eth address.
  * @param {string} sender: Eth address of the sender of the message.
  * @param {string} messageHash: Hash of the message
@@ -208,9 +209,7 @@ async function messageMobilePush(receivers, sender, messageHash, config) {
 
   // Force lowercase
   sender = sender.toLowerCase()
-  receivers = receivers.map(function(r) {
-    return r.toLowerCase()
-  })
+  receivers = receivers.map(r => r.toLowerCase())
 
   const payload = {
     url: `${config.dappUrl}/#/messages`
@@ -266,7 +265,7 @@ async function messageMobilePush(receivers, sender, messageHash, config) {
  * @param {string} buyerAddress: Buyer's Eth address.
  * @param {string} sellerAddress: Seller's Eth address.
  * @param {Object} offer: Offer object.
- * @param {Object} listing: Listing object
+ * @param {Object} listing: Listing object.
  * @param {Object} config: Notification server configuration.
  * @returns {Promise<void>}
  */
@@ -290,7 +289,6 @@ async function transactionMobilePush(
   sellerAddress = sellerAddress.toLowerCase()
   party = party.toLowerCase()
 
-  const receivers = {}
   const buyerMessageTemplate = getNotificationMessage(
     eventName,
     party,
@@ -305,6 +303,11 @@ async function transactionMobilePush(
     'seller',
     'mobile'
   )
+  if (!(buyerMessageTemplate || sellerMessageTemplate)) {
+    logger.info(`No template defined for ${eventName}. Skipping.`)
+    return
+  }
+
   const payload = {
     url: offer && `${config.dappUrl}/#/purchases/${offer.id}`
   }
@@ -317,29 +320,28 @@ async function transactionMobilePush(
     ipfsGatewayUrl: config.ipfsGatewayUrl
   }
 
-  if (buyerMessageTemplate || sellerMessageTemplate) {
-    if (buyerMessageTemplate) {
-      receivers[buyerAddress] = {
-        message: {
-          title: buyerMessageTemplate.title(templateVars),
-          body: buyerMessageTemplate.body(templateVars)
-        },
-        payload
-      }
+  const receivers = {}
+  if (buyerMessageTemplate) {
+    receivers[buyerAddress] = {
+      message: {
+        title: buyerMessageTemplate.title(templateVars),
+        body: buyerMessageTemplate.body(templateVars)
+      },
+      payload
     }
-    if (sellerMessageTemplate) {
-      receivers[sellerAddress] = {
-        message: {
-          title: sellerMessageTemplate.title(templateVars),
-          body: sellerMessageTemplate.body(templateVars)
-        },
-        payload
-      }
+  }
+  if (sellerMessageTemplate) {
+    receivers[sellerAddress] = {
+      message: {
+        title: sellerMessageTemplate.title(templateVars),
+        body: sellerMessageTemplate.body(templateVars)
+      },
+      payload
     }
+  }
 
-    for (const [ethAddress, notificationObj] of Object.entries(receivers)) {
-      await _sendNotificationToEthAddress(ethAddress, notificationObj, config)
-    }
+  for (const [ethAddress, notificationObj] of Object.entries(receivers)) {
+    await _sendNotificationToEthAddress(ethAddress, notificationObj, config)
   }
 }
 
