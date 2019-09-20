@@ -229,6 +229,10 @@ input, select {
   border-top: none;
 }
 
+.table tr.hoverable:hover {
+  background-color: white;
+}
+
 .table-row {
   font-size: 14px;
   margin-bottom: 20px;

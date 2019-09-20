@@ -93,6 +93,7 @@ const WithdrawalHistory = props => {
                   props.transfers.map(transfer => (
                     <tr
                       key={transfer.id}
+                      className="hoverable"
                       onClick={() =>
                         props.history.push(`/withdrawal/${transfer.id}`)
                       }
