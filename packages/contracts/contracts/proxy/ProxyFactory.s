@@ -51,7 +51,7 @@ contract ProxyFactory {
         }
 
         // create2 failed
-        if (proxy == address(0)) {
+        if (address(proxy) == address(0)) {
             revert("proxy-deploy-failed");
         }
 
@@ -81,7 +81,7 @@ contract ProxyFactory {
         }
 
         // create2 failed
-        if (proxy == address(0)) {
+        if (address(proxy) == address(0)) {
             revert("proxy-deploy-failed");
         }
 
