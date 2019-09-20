@@ -66,6 +66,13 @@ module.exports = `
     media: [Media]
     timestamp: Int
     status: String
+    type: String
+    offer: Offer
+    eventData: MarketplaceEventData
+  }
+
+  type MarketplaceEventData {
+    eventType: String
   }
 
   type OutOfBandMessage {

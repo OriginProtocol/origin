@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+import fragments from './Fragments'
 
 export default gql`
   query Conversations($limit: Int, $offset: Int) {
@@ -17,8 +18,20 @@ export default gql`
           }
           content
           timestamp
+          type
+          offer {
+            ...basicOfferFields
+            listing {
+              ...basicListingFields
+            }
+          }
+          eventData {
+            eventType
+          }
         }
       }
     }
   }
+  ${fragments.Listing.basic}
+  ${fragments.Offer.basic}
 `

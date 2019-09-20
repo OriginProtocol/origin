@@ -414,18 +414,30 @@ class Messaging {
    * New keys are stored on the convObj, while a decrypted message
    * fires a callback.
    */
-  processContent(content, convObj, onMessage, onEncrypted) {
-    if (content.type == 'keys') {
-      this.processKeys(content, convObj)
-    } else if (content.type == 'msg') {
-      const decrypted = this.decryptMessage(content, convObj)
-      if (decrypted.error == COULD_NOT_DECRYPT) {
-        onEncrypted(content.emsg, content.address)
-      } else if (decrypted.error == INVALID_MESSAGE_OBJECT) {
-        // Do nothing
-      } else if (decrypted.content) {
-        onMessage(decrypted.content, content.address)
-      }
+  processContent({
+    content, 
+    convObj, 
+    onMessage, 
+    onEncrypted
+  }) {
+    switch (content.type) {
+      case 'keys':
+          this.processKeys(content, convObj)
+        break
+      case 'event':
+        onMessage(content.eventData, content.sender)
+        break
+      case 'msg': {
+          const decrypted = this.decryptMessage(content, convObj)
+          if (decrypted.error == COULD_NOT_DECRYPT) {
+            onEncrypted(content.emsg, content.address)
+          } else if (decrypted.error == INVALID_MESSAGE_OBJECT) {
+            // Do nothing
+          } else if (decrypted.content) {
+            onMessage(decrypted.content, content.address)
+          }
+        }
+        break
     }
   }
 
@@ -516,8 +528,11 @@ class Messaging {
     )
 
     if (content && conversationId) {
-      // The new message is yet to be read
-      this.unreadCount++
+      if (content.address !== this.account_key) {
+        // The new message is yet to be read
+        debug('increaming unread count')
+        this.unreadCount++
+      }
 
       if (!this.convs[conversationId]) {
         // The conversation isn't locally cached or queried before.
@@ -538,10 +553,10 @@ class Messaging {
         if (conversationIndex === (convObj.lastConversationIndex + 1)) {
           // The conversation is cached and the ordering of the message is correct too.
           // Append it to existing object and push the update to GraphQL subscription
-          this.processContent(
-            entry.content,
+          this.processContent({
+            content: entry.content,
             convObj,
-            (msg, address) => {
+            onMessage: (msg, address) => {
               const message = this.toMessage(
                 msg,
                 conversationId,
@@ -552,6 +567,10 @@ class Messaging {
               convObj.messages.unshift(message)
               debug('message:', message)
               this.events.emit('msg', message)
+
+              if (content.address !== this.account_key) {
+                convObj.unreadCount = (convObj.unreadCount || 0) + 1
+              }
 
               convObj.lastMessage = message
 
@@ -564,13 +583,13 @@ class Messaging {
               })
 
             },
-            (msg, address) => {
+            onEncrypted: (msg, address) => {
               this.events.emit(
                 'emsg',
                 this.toMessage(msg, conversationId, entry, address)
               )
             }
-          )
+          })
           convObj.lastConversationIndex = entry.conversationIndex
           convObj.messageCount = entry.conversationIndex + 1
         } else {
@@ -641,6 +660,16 @@ class Messaging {
   }
 
   /**
+   * Pushes an event to the messages
+   * @param {Object} entry Message received from socket
+   */
+  async onMarketplaceEventUpdate(entry) {
+    debug('Received event update', entry)
+    // TODO
+    console.log('Received event update', entry)
+  }
+
+  /**
    * Parses the update from socket server and invokes corresponding callbacks
    * @param {Object} entry Message from socket server
    */
@@ -653,6 +682,9 @@ class Messaging {
       case 'MARKED_AS_READ':
         this.onMarkedAsReadUpdate(entry)
         break
+      case 'MARKETPLACE_EVENT':
+        this.onMarketplaceEventUpdate(entry)
+        break
       default:
         debug('dropping update')
     }
@@ -662,9 +694,10 @@ class Messaging {
     return roomId + '.' + container.conversationIndex
   }
 
-  toMessage(msg, roomId, container, address) {
+  toMessage(data, roomId, container, address) {
     return {
-      msg: msg,
+      msg: data,
+      type: container.content.type,
       room_id: roomId,
       index: container.conversationIndex,
       address,
@@ -724,10 +757,10 @@ class Messaging {
       }
   
       messages.forEach(entry => {
-        this.processContent(
-          entry.content,
+        this.processContent({
+          content: entry.content,
           convObj,
-          (msg, address) => {
+          onMessage: (msg, address) => {
             const message = this.toMessage(msg, roomId, entry, address)
   
             if (convObj.messages.findIndex(m => m.index === message.index) < 0) {
@@ -739,10 +772,10 @@ class Messaging {
             }
             this.events.emit('msg', message)
           },
-          (msg, address) => {
+          onEncrypted: (msg, address) => {
             this.events.emit('emsg', this.toMessage(msg, roomId, entry, address))
           }
-        )
+        })
   
         if (convObj.lastConversationIndex < entry.conversationIndex) {
           convObj.lastConversationIndex = entry.conversationIndex
@@ -954,13 +987,14 @@ class Messaging {
    * @returns {Integer} count of unread messages
    */
   async getUnreadCount(remoteEthAddress) {
+    debug('getUnreadCount', remoteEthAddress)
     if (remoteEthAddress) {
       // Return the unread count of a conversation
       let convObj = this.getConvo(remoteEthAddress)
 
       if (convObj) {
         // from cache, if it exists
-        return convObj.unread
+        return convObj.unreadCount
       } else {
         // fetch and then return, if it doesn't
         const roomId = this.generateRoomId(this.account_key, remoteEthAddress)
@@ -969,7 +1003,7 @@ class Messaging {
 
         this.convs[roomId] = convObj
 
-        return convObj.unread
+        return convObj.unreadCount
       }
     }
 
@@ -1193,6 +1227,9 @@ class Messaging {
       debug('Err: cannot add message.')
     }
     this._sending_message = false
+
+    this.markConversationRead(remoteEthAddress)
+
     return roomId
   }
 

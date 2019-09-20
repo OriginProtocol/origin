@@ -488,9 +488,9 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
         .status(401)
         .send('One of the conversers involved must initiate the conversation.')
     }
-    if (conversationIndex != 0) {
+    if (conversationIndex !== 0) {
       return res.status(409).end()
-    } else if (content.type != 'keys') {
+    } else if (content.type !== 'keys') {
       return res
         .status(400)
         .send('Conversations must be initiated by a keys exchange')
@@ -565,7 +565,6 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
   if (message) {
     // Publish messages to be consumed by the websocket(below)
     for (const notify_address of conv_addresses) {
-      console.log('pub', notify_address)
       // Push to redis
       await redis.publish(
         notify_address,
@@ -624,15 +623,114 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
   }
 })
 
+// Subscribe to marketplace events
+function subscribeToMarketplaceEvents() {
+  logger.debug('Subscribing to Marketplace events...')
+  const redis_sub = redis.duplicate()
+  redis_sub.subscribe('MESSAGING:MARKETPLACE_EVENT')
+  
+  redis_sub.on('message', async (channel, message) => {
+    try {
+      const { eventData, sender } = JSON.parse(message)
+      const { seller, buyer } = eventData
+
+      const content = {
+        type: 'event',
+        eventData,
+        sender
+      }
+
+      const contentHash = Web3.utils.sha3(JSON.stringify(content))
+
+      const externalId = [
+        Web3.utils.toChecksumAddress(seller),
+        Web3.utils.toChecksumAddress(buyer)
+      ].sort().join('-')
+
+      let conversation = await db.Conversation.findOne({
+        where: { externalId }
+      })
+
+      let newMessageIndex = 0
+
+      let newMessage
+
+      if (!conversation) {
+        // Seller and buyer haven't interacted yet
+        // Create a conversation now and let them generate keys later
+        newMessage = await db.sequelize.transaction(async t => {
+          conversation = await db.Conversation.create(
+            { externalId, messageCount: 1 },
+            { transaction: t }
+          )
+
+          return await db.Message.create(
+            {
+              conversationId: conversation.id,
+              conversationIndex: 0,
+              ethAddress: sender,
+              data: { content },
+              contentHash,
+              signature: null,
+              isKeys: false,
+              read: true
+            },
+            { transaction: t }
+          )
+        })
+        logger.info(`Created conversation room ${externalId}`)
+      } else {
+        newMessageIndex = conversation.messageCount
+        newMessage = await db.sequelize.transaction(async t => {
+          conversation.update({
+            messageCount: newMessageIndex + 1
+          })
+
+          return await db.Message.create(
+            {
+              conversationId: conversation.id,
+              conversationIndex: newMessageIndex,
+              ethAddress: sender,
+              data: { content },
+              contentHash,
+              signature: null,
+              isKeys: false,
+              read: true
+            },
+            { transaction: t }
+          )
+        })
+      }
+
+      // Publish messages to be consumed by the websocket(below)
+      for (const notify_address of [seller, buyer]) {
+        // Push to redis
+        await redis.publish(
+          notify_address,
+          JSON.stringify({
+            type: 'MARKETPLACE_EVENT',
+            content,
+            timestamp: newMessage.createdAt,
+            newMessageIndex,
+            conversationId: externalId
+          })
+        )
+      }
+      logger.info(`Inserted '${eventData.eventType}' event to ${externalId} at ${newMessageIndex}`)
+    } catch (err) {
+      // TODO: Should we try if it failed because of duplicate conversationIndex?
+      logger.error('Cannot process marketplace event', message, err)
+    }
+  })
+} 
+
 // Websocket to listen for new messages
 app.ws('/message-events/:address', (ws, req) => {
   const { address } = req.params
   const redis_sub = redis.duplicate()
   redis_sub.subscribe(address)
 
-  console.log('subscribe', address)
   const msg_handler = (channel, msg) => {
-    console.log(channel, msg)
     ws.send(msg)
   }
 
@@ -646,4 +744,5 @@ app.ws('/message-events/:address', (ws, req) => {
 
 app.listen(port, () => {
   logger.debug(`REST endpoint listening on port ${port}`)
+  subscribeToMarketplaceEvents()
 })

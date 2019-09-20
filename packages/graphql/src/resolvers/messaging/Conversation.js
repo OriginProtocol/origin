@@ -41,7 +41,7 @@ export async function getMessages(conversationId, { after, before } = {}) {
     }
   }
 
-  return messages.map(m => getMessage(m))
+  return await Promise.all(messages.map(m => getMessage(m)))
 }
 
 /**
@@ -51,8 +51,28 @@ export async function getUnreadCount(account) {
   return contracts.messaging.getUnreadCount(account ? account.id : null)
 }
 
-export function getMessage(message) {
+export async function getMessage(message) {
   if (!message) return null
+
+  if (message.type === 'event') {
+    const { listingID, offerID, blockNumber } = message.msg
+
+    const offer = await contracts.eventSource.getOffer(
+      listingID,
+      offerID,
+      blockNumber
+    )
+
+    return {
+      ...message,
+      offer,
+      eventData: message.msg,
+      content: null,
+      media: null,
+      timestamp: Math.round(message.msg.timestamp / 1000),
+      read: true
+    }
+  }
 
   let read = message.msg.read
   if (message.hash === 'origin-welcome-message' && !isEnabled()) {

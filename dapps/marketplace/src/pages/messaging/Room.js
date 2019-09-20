@@ -1,62 +1,60 @@
 import React, { Component, useEffect, useState } from 'react'
 import { useQuery, useSubscription } from 'react-apollo'
-// import dayjs from 'dayjs'
+import dayjs from 'dayjs'
 import get from 'lodash/get'
-// import sortBy from 'lodash/sortBy'
 import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
-// import withIdentity from 'hoc/withIdentity'
-import withCounterpartyEvents from 'hoc/withCounterpartyEvents'
+import withIdentity from 'hoc/withIdentity'
 
 import query from 'queries/Room'
 import subscription from 'queries/NewMessageSubscription'
 import SendMessage from './SendMessage'
 import MessageWithIdentity from './Message'
-// import Link from 'components/Link'
+import Link from 'components/Link'
 import QueryError from 'components/QueryError'
 import EnableMessaging from 'components/EnableMessaging'
-// import Stages from 'components/TransactionStages'
+import Stages from 'components/TransactionStages'
 import LoadingSpinner from 'components/LoadingSpinner'
 
 import TopScrollListener from 'components/TopScrollListener'
 
-// function eventName(name) {
-//   if (name === 'OfferCreated') {
-//     return fbt('made an offer', 'EventDescription.offerCreated')
-//   } else if (name === 'OfferAccepted') {
-//     return fbt('accepted an offer on', 'EventDescription.offerAccepted')
-//   } else if (name === 'OfferFinalized') {
-//     return fbt('finalized an offer on', 'EventDescription.offerFinalized')
-//   } else if (name === 'OfferWithdrawn') {
-//     return fbt('withdrew an offer on', 'EventDescription.offerWithdrawn')
-//   } else if (name === 'OfferDisputed') {
-//     return fbt('disputed an offer on', 'EventDescription.offerDisputed')
-//   }
-// }
+function eventName(name) {
+  if (name === 'OfferCreated') {
+    return fbt('made an offer', 'EventDescription.offerCreated')
+  } else if (name === 'OfferAccepted') {
+    return fbt('accepted an offer on', 'EventDescription.offerAccepted')
+  } else if (name === 'OfferFinalized') {
+    return fbt('finalized an offer on', 'EventDescription.offerFinalized')
+  } else if (name === 'OfferWithdrawn') {
+    return fbt('withdrew an offer on', 'EventDescription.offerWithdrawn')
+  } else if (name === 'OfferDisputed') {
+    return fbt('disputed an offer on', 'EventDescription.offerDisputed')
+  }
+}
 
-// const OfferEvent = ({ event, wallet, identity }) => (
-//   <>
-//     <div className="offer-event">
-//       {event.event.returnValues.party === wallet
-//         ? 'You'
-//         : get(identity, 'fullName')}
-//       {` ${eventName(event.event.event)} `}
-//       <Link to={`/purchases/${event.offer.id}`}>
-//         {event.offer.listing.title}
-//       </Link>
-//       {` on ${dayjs.unix(event.event.timestamp).format('MMM Do, YYYY')}`}
-//     </div>
-//     {event.event.event !== 'OfferCreated' ? null : (
-//       <Stages offer={event.offer} />
-//     )}
-//   </>
-// )
+const OfferEvent = ({ event, wallet, identity }) => (
+  <>
+    <div className="offer-event">
+      {event.address === wallet
+        ? 'You'
+        : get(identity, 'fullName')}
+      {` ${eventName(event.eventData.eventType)} `}
+      <Link to={`/purchases/${event.offer.id}`}>
+        {event.offer.listing.title}
+      </Link>
+      {` on ${dayjs.unix(event.timestamp).format('MMM Do, YYYY')}`}
+    </div>
+    {event.eventData.eventType !== 'OfferCreated' ? null : (
+      <Stages offer={event.offer} />
+    )}
+  </>
+)
 
-// const OfferEventWithIdentity = withIdentity(
-//   OfferEvent,
-//   'event.event.returnValues.party'
-// )
+const OfferEventWithIdentity = withIdentity(
+  OfferEvent,
+  'event.address'
+)
 
 class AllMessages extends Component {
   state = {
@@ -121,16 +119,6 @@ class AllMessages extends Component {
   }
 
   render() {
-    // const messages = this.props.messages.map(message => ({
-    //   message,
-    //   timestamp: message.timestamp
-    // }))
-    // const events = this.props.events.map(event => ({
-    //   event,
-    //   timestamp: event.event.timestamp
-    // }))
-    // const items = sortBy([...messages, ...events], ['timestamp'])
-
     const { messages } = this.props
 
     return (
@@ -143,48 +131,29 @@ class AllMessages extends Component {
         onInnerRef={el => (this.el = el)}
         className="messages"
       >
-        <>
-          {/* {this.props.eventsLoading ? (
-            <div className="offer-event">Loading Events...</div>
-          ) : null} */}
-          {/* {items.map((item, idx) => {
-            const { message, event } = item
-            if (message) {
-              return (
-                <MessageWithIdentity
-                  message={message}
-                  lastMessage={idx > 0 ? messages[idx - 1] : null}
-                  nextMessage={messages[idx + 1]}
-                  key={`message-${message.index}`}
-                  wallet={get(message, 'address')}
-                  isUser={this.props.wallet === get(message, 'address')}
-                />
-              )
-            } else if (event) {
-              return (
-                <OfferEventWithIdentity
-                  key={`event-${idx}`}
-                  event={event}
-                  wallet={this.props.wallet}
-                />
-              )
-            }
-          })} */}
-          {messages.map((message, idx) => {
+        {messages.map((message, idx) => {
+          if (message.type === 'event') {
             return (
-              <MessageWithIdentity
-                message={message}
-                lastMessage={
-                  messages.length - 1 === idx ? null : messages[idx + 1]
-                }
-                nextMessage={idx > 0 ? messages[idx - 1] : null}
-                key={`message-${message.index}`}
-                wallet={get(message, 'address')}
-                isUser={this.props.wallet === get(message, 'address')}
+              <OfferEventWithIdentity
+                key={`event-${message.index}`}
+                event={message}
+                wallet={this.props.wallet}
               />
             )
-          })}
-        </>
+          }
+          return (
+            <MessageWithIdentity
+              message={message}
+              lastMessage={
+                messages.length - 1 === idx ? null : messages[idx + 1]
+              }
+              nextMessage={idx > 0 ? messages[idx - 1] : null}
+              key={`message-${message.index}`}
+              wallet={get(message, 'address')}
+              isUser={this.props.wallet === get(message, 'address')}
+            />
+          )
+        })}
       </TopScrollListener>
     )
   }
@@ -299,7 +268,7 @@ const Room = props => {
   )
 }
 
-export default withWallet(withCounterpartyEvents(Room))
+export default withWallet(Room)
 
 require('react-styl')(`
   .messages-page .messages
