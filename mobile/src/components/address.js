@@ -4,7 +4,7 @@ import React from 'react'
 import { Alert, Clipboard, Text, TouchableOpacity } from 'react-native'
 import { fbt } from 'fbt-runtime'
 
-import { evenlySplitAddress, truncateAddress } from 'utils/user'
+import { evenlySplitAddress, truncateAddress } from 'utils'
 
 const Address = ({ address, chars, label, styles, onPress }) => {
   const textStyles = {
