@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/core": "7.6.0",
-    "@material-ui/core": "4.4.1",
+    "@material-ui/core": "4.4.2",
     "@material-ui/icons": "4.4.1",
     "@origin/token-transfer-server": "0.1.0",
     "@svgr/webpack": "4.3.2",
@@ -64,7 +64,7 @@
     "semver": "6.3.0",
     "style-loader": "1.0.0",
     "superagent": "5.1.0",
-    "swiper": "4.5.0",
+    "swiper": "5.0.3",
     "terser-webpack-plugin": "2.0.1",
     "ts-pnp": "1.1.4",
     "typeface-lato": "0.0.75",

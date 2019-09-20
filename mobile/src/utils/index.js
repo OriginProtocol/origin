@@ -1,7 +1,7 @@
 'use strict'
 
 import { Platform } from 'react-native'
-import UserAgent from 'react-native-user-agent'
+import RNSamsungBKS from 'react-native-samsung-bks'
 
 export function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -11,52 +11,96 @@ export function shuffleArray(array) {
   return array
 }
 
-/* Build a user agent string for the current platform that approximates what
- * would be returned by the standard browser for this device
+export function abbreviateName(party, defaultName = '') {
+  const { profile = {}, fullName } = party
+  const { firstName = '', lastName = '' } = profile
+  const lastNameLetter = lastName.length ? `${lastName.charAt(0)}.` : ''
+  const abbreviatedName = fullName && `${firstName} ${lastNameLetter}`
+
+  return abbreviatedName || defaultName
+}
+
+/* Split an Ethereum address into two separate strings.
  */
-export function webViewToBrowserUserAgent(useHardcodedUserAgent = false) {
-  const DEFAULT_IOS_UA =
-    'Mozilla/5.0 (iPhone; CPU iPhone OS 10_1 like Mac OS X) AppleWebKit/602.2.14 (KHTML, like Gecko) Version/10.0 Mobile/14B72 Safari/602.1'
-  // Samsung Galaxy s9
-  const DEFAULT_ANDROID_UA =
-    'Mozilla/5.0 (Linux; Android 8.0.0; SM-G960F Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36'
-  let userAgent = UserAgent.getWebViewUserAgent()
-  try {
-    if (Platform.OS === 'ios') {
-      if (useHardcodedUserAgent) {
-        return DEFAULT_IOS_UA
-      }
+export function evenlySplitAddress(address = '') {
+  const { length } = address
+  const middle = length / 2
 
-      // Derive a reasonable version number to insert
-      const versionMatch = userAgent.match(/OS (\d+)_/)
-      const versionCode =
-        versionMatch && versionMatch[1] ? `${versionMatch[1]}.0` : '12.0'
-      userAgent = userAgent.replace(
-        /\) Mobile/,
-        `) Version/${versionCode} Mobile`
-      )
+  return [address.slice(0, middle), address.slice(middle)]
+}
 
-      const webkitVersionMatch = userAgent.match(/AppleWebKit\/([\d+\\.]+)/)
-      const webkitVersion =
-        webkitVersionMatch && webkitVersionMatch[1]
-          ? webkitVersionMatch[1]
-          : '602.1'
-      // Insert Safari version that matches the parsed WebKit version
-      userAgent = `${userAgent} Safari/${webkitVersion}`
-    } else {
-      if (useHardcodedUserAgent) {
-        return DEFAULT_ANDROID_UA
-      }
-      // Android
-      // Ref: https://developer.chrome.com/multidevice/user-agent#webview_user_agent
-      userAgent = userAgent.replace(/ Chrome\/(?:.+) Mobile/, '')
-      // Lollipop and above includes an extra ' ;wv' in the string, remove it
-      userAgent = userAgent.replace(/; wv/, '')
-    }
-  } catch (error) {
-    // Something went wrong, return a default user agent
-    console.debug('Failed parsing UserAgent: ', userAgent)
-    userAgent = Platform.OS === 'ios' ? DEFAULT_IOS_UA : DEFAULT_ANDROID_UA
+/* Truncate an Ethereum address to a maximum length and add an ellipsis
+ * in the middle so the start and the last characters of the address can be
+ * seen.
+ */
+export function truncateAddress(address = '', chars = 5) {
+  const MAX_ADDRESS_LENGTH = 10
+
+  if (address.length <= MAX_ADDRESS_LENGTH) return address
+
+  const separator = '...'
+  return (
+    address.substr(0, chars) +
+    separator +
+    address.substr(address.length - chars)
+  )
+}
+
+/* Truncate a string and add an ellipsis suffix.
+ */
+export function truncate(data, chars = 5) {
+  if (chars && data.length <= chars) return data
+  return data.substr(0, chars) + '...'
+}
+
+/* Return HD deriviation path for an account with an index. The derivation path
+ * uses the BIP44 deriviation specification.
+ */
+export function generateHdPath(index) {
+  return `m/44'/60'/0'/0/${index}`
+}
+
+/* Determines if a transaction is a valid meta transaction fomr the decoded
+ * transaction data. This only checks the function name.
+ *
+ * TODO: add contract address validation
+ */
+export function isValidMetaTransaction(data) {
+  const validFunctions = [
+    'acceptOffer',
+    'addData',
+    'createListing',
+    'createProxyWithSenderNonce',
+    'emitIdentityUpdated',
+    'finalize',
+    'makeOffer',
+    'marketplaceFinalizeAndPay',
+    'transferTokenMarketplaceExecute',
+    'updateListing',
+    'withdrawListing',
+    'withdrawOffer'
+  ]
+  return validFunctions.includes(data.functionName)
+}
+
+/* Change an object to values -> keys
+ */
+export const reverseMapping = o =>
+  Object.keys(o).reduce(
+    (r, k) => Object.assign(r, { [o[k]]: (r[o[k]] || []).concat(k) }),
+    {}
+  )
+
+export const canUseSamsungBKS = async wallet => {
+  if (!__DEV__) {
+    // Cannot use BKS if not in dev mode because we don't have SCW_APP_ID
+    return false
+  } else if (Platform.OS === 'ios') {
+    // Android only
+    return false
+  } else if (wallet.accounts.length > 0) {
+    // Cant use BKS if there are already accounts
+    return false
   }
-  return userAgent
+  return await RNSamsungBKS.isSupported()
 }
