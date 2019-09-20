@@ -281,7 +281,6 @@ async function txWrapChangeOwner({
  */
 async function handleCallbacks({ callbacks, val }) {
   if (!callbacks) return
-
   for (let i = 0; i < callbacks.length; i++) {
     const ret = callbacks[i](val)
     if (ret instanceof Promise) {
@@ -346,6 +345,7 @@ async function handleReceipt({ shouldUseProxy, receipt, mutation }) {
   if (String(shouldUseProxy).startsWith('create')) {
     resetProxyCache()
   }
+
   pubsub.publish('TRANSACTION_UPDATED', {
     transactionUpdated: {
       id: receipt.transactionHash,
@@ -354,6 +354,7 @@ async function handleReceipt({ shouldUseProxy, receipt, mutation }) {
       mutation
     }
   })
+
   if (contracts.automine) {
     setTimeout(() => mineBlock(contracts.web3), contracts.automine)
   }
@@ -403,7 +404,7 @@ async function handleConfirmation({
  * @param {string} args.proxy - the proxy address to use
  * @param {string} args.sourceAccount - the originating Ethereum account
  * @param {string} args.to - the destination Ethereum address
- * @param {Array} args.txHashCallbacks - Array of functions to use as callbacks for transaction hash
+ * @param {Array} args.hashCallbacks - Array of functions to use as callbacks for transaction hash
  * @param {Array} args.receiptCallbacks - Array of functions to use as callbacks for transaction receipts
  * @param {Array} args.confirmCallbacks - Array of functions to use as callbacks for transaction confirmations
  * @returns {string} transaction hash
@@ -414,7 +415,7 @@ async function sendViaRelayer({
   proxy,
   sourceAccount,
   to,
-  txHashCallbacks,
+  hashCallbacks,
   receiptCallbacks,
   confirmCallbacks
 }) {
@@ -431,9 +432,9 @@ async function sendViaRelayer({
 
   const txHash = resp.id
 
-  if (txHashCallbacks && txHashCallbacks.length) {
-    handleCallbacks({
-      callbacks: txHashCallbacks,
+  if (hashCallbacks && hashCallbacks.length) {
+    await handleCallbacks({
+      callbacks: hashCallbacks,
       val: txHash
     })
   }
@@ -446,13 +447,21 @@ async function sendViaRelayer({
    * transaction, make sure that any provided callbacks are run by
    * manually listening for new blocks.
    */
+  let foundReceipt = false
   if (hasCallbacks) {
     let receipt
     const responseBlocks = async ({ newBlock }) => {
       if (!receipt) {
         receipt = await web3.eth.getTransactionReceipt(txHash)
       }
-      if (receipt && newBlock.id === receipt.blockNumber) {
+      /**
+       * There some potential races going on here, where we can't use === for
+       * block numbers because there may actually be a delay between relayer
+       * response and when a tx has been mined.
+       */
+      if (receipt && newBlock.id >= receipt.blockNumber && !foundReceipt) {
+        foundReceipt = true
+
         if (receiptCallbacks.length) {
           await handleCallbacks({ callbacks: receiptCallbacks, val: receipt })
         }
@@ -461,7 +470,9 @@ async function sendViaRelayer({
         if (!confirmCallbacks || confirmCallbacks.length < 1) {
           pubsub.ee.off('NEW_BLOCK', responseBlocks)
         }
-      } else if (receipt && newBlock.id === receipt.blockNumber + 1) {
+      }
+
+      if (receipt && newBlock.id >= receipt.blockNumber + 1) {
         if (confirmCallbacks.length) {
           const confNumber = newBlock.id - receipt.blockNumber
           await handleCallbacks({
@@ -489,7 +500,7 @@ async function sendViaRelayer({
  * @param {T} args.value - the ETH value sent with the tx
  * @param {number} args.gas - the gas limit to use
  * @param {T} args.gas - the gas price to use in wei
- * @param {Array} args.txHashCallbacks - Array of functions to use as callbacks for transaction hash
+ * @param {Array} args.hashCallbacks - Array of functions to use as callbacks for transaction hash
  * @param {Array} args.receiptCallbacks - Array of functions to use as callbacks for transaction receipts
  * @param {Array} args.confirmCallbacks - Array of functions to use as callbacks for transaction confirmations
  * @param {string} args.mutation - the graphql mutation being executed
@@ -620,7 +631,7 @@ export default function txHelper({
       await handleHash({ hash, from, mutation })
       resolve({ id: hash })
     })
-    confirmCallbacks.push(async (confNumber, receipt) => {
+    confirmCallbacks.push(async ({ confNumber, receipt }) => {
       await handleConfirmation({
         shouldUseProxy,
         confNumber,
