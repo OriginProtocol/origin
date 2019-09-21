@@ -329,13 +329,19 @@ class MarketplaceScreen extends Component {
   /* Attempt to open a native deep link URL on this phone. If the relevant
    * app is installed this will open it, otherwise returns false.
    */
-  openNativeDeepLink = async (url, timeControlVariableName) => {
+  openNativeDeepLink = async (
+    url,
+    timeControlVariableName,
+    skipForceRefresh
+  ) => {
     console.debug(`Attempting to open ${url} with native application`)
 
     const canOpen = await Linking.canOpenURL(url)
     if (canOpen) {
       console.debug('Can open URL with native application')
-      this.goBackToDapp()
+      if (!skipForceRefresh) {
+        this.goBackToDapp()
+      }
       if (
         !this[timeControlVariableName] ||
         new Date() - this[timeControlVariableName] > 3000
@@ -360,18 +366,26 @@ class MarketplaceScreen extends Component {
       if (url.hostname === 'twitter.com') {
         if (url.pathname === '/intent/tweet') {
           // Natively Tweet on Android
-          this.openNativeDeepLink(
+          const success = this.openNativeDeepLink(
             `twitter://post?message=${encodeURIComponent(
               url.searchParams.get('text')
             )}`,
             'lastTweetAttemptTime'
           )
+
+          if (success) {
+            return true
+          }
         } else if (url.pathname === '/intent/follow') {
           // Natively open Twitter profile on Android
-          this.openNativeDeepLink(
+          const success = this.openNativeDeepLink(
             `twitter://user?screen_name=${url.searchParams.get('screen_name')}`,
             'lastOpenTwitterProfileTime'
           )
+
+          if (success) {
+            return true
+          }
         }
       }
     }
@@ -381,10 +395,14 @@ class MarketplaceScreen extends Component {
       url.pathname.toLowerCase() === '/originprotocol'
     ) {
       // Open facebook profile natively if possible and IOS and Android
-      this.openNativeDeepLink(
+      const success = this.openNativeDeepLink(
         `fb://${Platform.OS === 'ios' ? 'profile' : 'page'}/120151672018856`,
         'lastOpenFacebookProfileTime'
       )
+
+      if (success) {
+        return true
+      }
     }
 
     if (url.hostname.includes('facebook.com')) {
@@ -418,6 +436,20 @@ class MarketplaceScreen extends Component {
         this.goBackToDapp()
       }
     }
+
+    if (url.hostname === 't.me') {
+      const success = await this.openNativeDeepLink(
+        url,
+        'lastOpenTelegramProfileTime',
+        true
+      )
+      if (success) {
+        return true
+      }
+    }
+
+    // The URL cannot be intercepted or failed to open native browser
+    return false
   }
 
   goBackToDapp = () => {
@@ -472,7 +504,17 @@ class MarketplaceScreen extends Component {
       this.setState({ lastDappUrl: url })
     }
 
-    await this.checkForShareNativeDialogInterception(url)
+    const intercepted = await this.checkForShareNativeDialogInterception(url)
+    if (intercepted) {
+      // Stop loading if URL has been intercepted
+      // Otherwise, the webview continues to go that page
+      if (this.state.webViewRef.current) {
+        this.state.webViewRef.current.stopLoading()
+      }
+      return false
+    }
+
+    return true
   }
 
   onLoadEnd = () => {
@@ -584,6 +626,7 @@ class MarketplaceScreen extends Component {
         onLoadEnd={this.onLoadEnd}
         onError={this.onError}
         onNavigationStateChange={this.onNavigationStateChange}
+        onShouldStartLoadWithRequest={this.onNavigationStateChange}
         renderLoading={this.renderWebViewLoading}
         renderError={this.renderWebViewError}
         userAgent={this.getUserAgent()}
