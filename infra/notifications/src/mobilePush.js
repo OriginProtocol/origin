@@ -82,34 +82,38 @@ async function _sendNotification(
     throw new Error(`Invalid device type ${deviceType}`)
   }
 
+  // CHeck we are not spamming the user.
   const notificationObjAndHash = { ...notificationObj, messageHash }
   const messageFingerprint = getMessageFingerprint(notificationObjAndHash)
+  if ((await isNotificationDupe(messageFingerprint, config)) > 0) {
+    logger.warn(`Duplicate. Notification already recently sent. Skipping.`)
+    return
+  }
+
   if (deviceType === 'APN') {
     if (!apnProvider) {
       throw new Error('APN provider not configured, notification failed')
     }
 
-    if ((await isNotificationDupe(messageFingerprint, config)) > 0) {
-      logger.warn(`Duplicate. Notification already recently sent. Skipping.`)
-      return
-    }
-
-    // iOS notifications
     const notification = new apn.Notification({
       alert: notificationObj.message,
       sound: 'default',
       payload: notificationObj.payload,
       topic: apnBundle
     })
-    await apnProvider.send(notification, deviceToken).then(async result => {
-      if (result.sent.length) {
+
+    try {
+      const response = await apnProvider.send(notification, deviceToken)
+      if (response.sent.length) {
         await logNotificationSent(messageFingerprint, ethAddress, 'mobile-ios')
-        logger.debug('APN sent: ', result.sent.length)
+        logger.debug('APN sent: ', response.sent.length)
       }
-      if (result.failed) {
-        logger.error('APN failed: ', result.failed)
+      if (response.failed) {
+        logger.error('APN failed: ', response.failed)
       }
-    })
+    } catch (error) {
+      logger.error('APN message failed to send: ', error)
+    }
   } else if (deviceType === 'FCM') {
     if (!firebaseMessaging) {
       throw new Error('Firebase messaging not configured, notification failed')
@@ -130,19 +134,17 @@ async function _sendNotification(
       token: deviceToken
     }
 
-    await firebaseMessaging
-      .send(message)
-      .then(async response => {
-        await logNotificationSent(
-          messageFingerprint,
-          ethAddress,
-          'mobile-android'
-        )
-        logger.debug('FCM message sent:', response)
-      })
-      .catch(error => {
-        logger.error('FCM message failed to send: ', error)
-      })
+    try {
+      const response = await firebaseMessaging.send(message)
+      logger.debug('FCM message sent:', response)
+      await logNotificationSent(
+        messageFingerprint,
+        ethAddress,
+        'mobile-android'
+      )
+    } catch (error) {
+      logger.error('FCM message failed to send: ', error)
+    }
   }
 }
 
