@@ -1,14 +1,10 @@
 'use strict'
 
 import { Component } from 'react'
-import {
-  Alert,
-  AppState,
-  DeviceEventEmitter,
-  Platform,
-  PushNotificationIOS
-} from 'react-native'
+import { Alert, AppState, Platform } from 'react-native'
 import PushNotification from 'react-native-push-notification'
+import PushNotificationIOS from '@react-native-community/push-notification-ios'
+import * as Sentry from '@sentry/react-native'
 import { connect } from 'react-redux'
 import get from 'lodash.get'
 
@@ -25,17 +21,9 @@ import withConfig from 'hoc/withConfig'
 class PushNotifications extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
       backgroundNotification: null
     }
-
-    DeviceEventEmitter.addListener(
-      'requestNotificationPermissions',
-      this.requestNotificationPermissions.bind(this)
-    )
-
-    DeviceEventEmitter.addListener('removeAccount', this.unregister.bind(this))
   }
 
   async componentDidMount() {
@@ -147,6 +135,16 @@ class PushNotifications extends Component {
       console.debug('Registering with notifications server')
       await this.register()
     }
+
+    // Unregister deleted accounts
+    prevProps.wallet.accounts.forEach(oldAccount => {
+      const stillExists = this.props.wallet.accounts.find(
+        a => a.address === oldAccount.address
+      )
+      if (!stillExists) {
+        this.unregister(oldAccount)
+      }
+    })
   }
 
   /* Handles a notification by displaying an alert and saving it to redux
@@ -214,32 +212,28 @@ class PushNotifications extends Component {
       return
     }
 
-    const deviceToken = get(this.props, 'settings.deviceToken')
-    if (!deviceToken) {
-      console.debug(
-        'Could not register with notifications server, no device token'
-      )
-      return
-    }
-
-    console.debug(
-      `Registering ${activeAddress} and device token ${deviceToken}`
-    )
+    console.debug(`Adding ${activeAddress} to mobile registry`)
 
     PushNotification.checkPermissions(permissions => {
+      const data = {
+        eth_address: activeAddress,
+        device_type: this.getNotificationType(),
+        permissions: permissions
+      }
+
+      if (this.props.settings.deviceToken) {
+        data['device_token'] = this.props.settings.deviceToken
+      }
+
       fetch(this.getNotificationServerUrl(), {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          eth_address: activeAddress,
-          device_token: deviceToken,
-          device_type: this.getNotificationType(),
-          permissions: permissions
-        })
+        body: JSON.stringify(data)
       }).catch(error => {
+        Sentry.captureException(error)
         console.warn(
           'Failed to register notification address with notifications server',
           error
@@ -251,16 +245,15 @@ class PushNotifications extends Component {
   /* Unregister for notifications for deleted accounts
    */
   async unregister(account) {
-    const deviceToken = this.props.settings.deviceToken
+    console.debug(`Removing ${account.address} from mobile registry`)
 
-    if (!deviceToken) {
-      console.debug('No device token')
-      return
+    const data = {
+      eth_address: account.address
     }
 
-    console.debug(
-      `Unregistering ${account.address} and device token ${deviceToken}`
-    )
+    if (this.props.settings.deviceToken) {
+      data['device_token'] = this.props.settings.deviceToken
+    }
 
     return fetch(this.getNotificationServerUrl(), {
       method: 'DELETE',
@@ -268,10 +261,7 @@ class PushNotifications extends Component {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        eth_address: account.address,
-        device_token: deviceToken
-      })
+      body: JSON.stringify(data)
     }).catch(error => {
       console.warn(
         'Failed to unregister notification address with notifications server',
@@ -297,26 +287,6 @@ class PushNotifications extends Component {
     }
   }
 
-  /* Request permissions to send push notifications
-   */
-  async requestNotificationPermissions() {
-    console.debug('Requesting notification permissions')
-    if (Platform.OS === 'ios') {
-      DeviceEventEmitter.emit(
-        'notificationPermission',
-        await PushNotificationIOS.requestPermissions()
-      )
-    } else {
-      // Android has push notifications enabled by default
-      DeviceEventEmitter.emit(
-        'notificationPermission',
-        DEFAULT_NOTIFICATION_PERMISSIONS
-      )
-    }
-  }
-
-  /* This is a renderless component
-   */
   render() {
     return null
   }
