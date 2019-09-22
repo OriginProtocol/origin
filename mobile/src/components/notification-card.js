@@ -9,9 +9,13 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
-import AndroidOpenSettings from 'react-native-android-open-settings'
+import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
+import AndroidOpenSettings from 'react-native-android-open-settings'
+import PushNotification from 'react-native-push-notification'
+import * as Sentry from '@sentry/react-native'
 
+import { setNotificationsRequested } from 'actions/Activation'
 import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'
 import CardStyles from 'styles/card'
@@ -22,25 +26,56 @@ const NotificationCard = props => (
       <fbt desc="NotificationCard.heading">Enable Notifications</fbt>
     </Text>
     <Text style={styles.cardContent}>
-      <fbt desc="NotificationCard.message">
-        Woops! It looks like you have notifications disabled. To get the latest
-        updates about your transactions we recommend enabling them in the
-        settings for the Origin Marketplace application.
-      </fbt>
+      {props.activation.notificationsRequested ? (
+        <fbt desc="NotificationCard.disabledMessage">
+          Woops! It looks like you have notifications disabled. To get the
+          latest updates about your transactions we recommend enabling them in
+          the settings for the Origin Marketplace application.
+        </fbt>
+      ) : (
+        <fbt desc="NotificationCard.enableMessage">
+          Woops! It looks like you have notifications disabled. To get the
+          latest updates about your transactions we recommend enabling them in
+          the settings for the Origin Marketplace application.
+        </fbt>
+      )}
     </Text>
     <View style={styles.buttonContainer}>
-      <OriginButton
-        size="large"
-        type="primary"
-        title={fbt('Open Settings', 'NotificationCard.button')}
-        onPress={() => {
-          if (Platform.OS === 'ios') {
-            Linking.openURL('app-settings:')
-          } else {
-            AndroidOpenSettings.appDetailsSettings()
-          }
-        }}
-      />
+      {props.activation.notificationsRequested ? (
+        <OriginButton
+          size="large"
+          type="primary"
+          title={fbt('Open Settings', 'NotificationCard.button')}
+          onPress={() => {
+            if (Platform.OS === 'ios') {
+              Linking.openURL('app-settings:')
+            } else {
+              AndroidOpenSettings.appDetailsSettings()
+            }
+          }}
+        />
+      ) : (
+        <OriginButton
+          size="large"
+          type="primary"
+          title={fbt('Open Settings', 'NotificationCard.button')}
+          onPress={async () => {
+            let permissions
+            try {
+              permissions = await PushNotification.requestPermissions()
+            } catch (error) {
+              Sentry.captureMessage(error.toString())
+              props.onRequestClose()
+            }
+
+            setNotificationsRequested(true)
+
+            if (permissions.alert) {
+              props.onRequestClose()
+            }
+          }}
+        />
+      )}
     </View>
     <TouchableOpacity onPress={props.onRequestClose}>
       <Text style={styles.cardCancelText}>
@@ -50,7 +85,18 @@ const NotificationCard = props => (
   </View>
 )
 
-export default NotificationCard
+const mapStateToProps = ({ activation }) => {
+  return { activation }
+}
+
+const mapDispatchToProps = dispatch => ({
+  setNotificationsRequested: value => dispatch(setNotificationsRequested(value))
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NotificationCard)
 
 const styles = StyleSheet.create({
   ...CommonStyles,

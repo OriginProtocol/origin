@@ -4,7 +4,8 @@ import { ActivationConstants } from 'actions/Activation'
 
 const initialState = {
   // Address to date of backup/dismissal
-  backupWarningDismissed: {}
+  backupWarningDismissed: {},
+  notificationsRequested: null
 }
 
 export default function Activation(state = initialState, action = {}) {
@@ -16,6 +17,12 @@ export default function Activation(state = initialState, action = {}) {
           ...state.backupWarningDismissed,
           [action.address]: action.date
         }
+      }
+
+    case ActivationConstants.SET_NOTIFICATIONS_REQUESTED:
+      return {
+        ...state,
+        notificationsRequeted: action.value
       }
   }
 
