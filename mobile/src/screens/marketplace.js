@@ -556,9 +556,9 @@ class MarketplaceScreen extends Component {
         <SafeAreaView style={{ flex: 1 }}>
           <KeyboardAvoidingView
             behavior="padding"
-            keyboardVerticalOffset={Platform.select({ ios: 0, android: 20 })}
+            keyboardVerticalOffset={20}
             style={{ flex: 1 }}
-            enabled
+            enabled={Platform.os === 'android'}
           >
             <ScrollView
               contentContainerStyle={{ flex: 1 }}
