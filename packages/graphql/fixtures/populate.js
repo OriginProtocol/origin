@@ -101,7 +101,8 @@ async function getNodeAccount(gqlClient) {
   return NodeAccountObj.id
 }
 
-export async function createAccount(gqlClient, ogn) {
+export async function createAccount(gqlClient, opts = {}) {
+  const { ogn, dai, eth = '0.5' } = opts
   const NodeAccount = await getNodeAccount(gqlClient)
   await gqlClient.mutate({
     mutation: ToggleMetaMaskMutation,
@@ -114,7 +115,7 @@ export async function createAccount(gqlClient, ogn) {
   const user = result.data.createWallet.id
   const sendTx = await gqlClient.mutate({
     mutation: SendFromNodeMutation,
-    variables: { from: NodeAccount, to: user, value: '0.5' }
+    variables: { from: NodeAccount, to: user, value: eth }
   })
   await transactionConfirmed(sendTx.data.sendFromNode.id, gqlClient)
   if (ogn) {
@@ -131,6 +132,24 @@ export async function createAccount(gqlClient, ogn) {
         to: user,
         token: 'OGN',
         value: ogn
+      }
+    })
+    await transactionConfirmed(res.data.transferToken.id, gqlClient)
+  }
+  if (dai) {
+    const accounts = mnemonicToAccounts()
+    await gqlClient.mutate({
+      mutation: ImportWalletsMutation,
+      variables: { accounts: [accounts[0]] }
+    })
+
+    const res = await gqlClient.mutate({
+      mutation: TransferTokenMutation,
+      variables: {
+        from: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
+        to: user,
+        token: 'DAI',
+        value: dai
       }
     })
     await transactionConfirmed(res.data.transferToken.id, gqlClient)

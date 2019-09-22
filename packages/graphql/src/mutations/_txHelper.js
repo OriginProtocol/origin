@@ -59,6 +59,8 @@ function useRelayer({ mutation, value }) {
     reason = 'makeOffer has a value'
   }
   if (mutation === 'transferToken') reason = 'transferToken is disabled'
+  if (mutation === 'transferTokenMakeOffer')
+    reason = 'transferTokenMakeOffer is disabled'
   if (mutation === 'swapToToken') reason = 'swapToToken is disabled'
   if (reason) {
     debug(`cannot useRelayer: ${reason}`)
@@ -113,7 +115,10 @@ async function useProxy({ proxy, destinationContract, to, from, mutation }) {
     // For 'first time' interactions, create proxy and execute in single transaction
     debug(`useProxy: create`)
     return 'create'
-  } else if (mutation === 'makeOffer') {
+  } else if (
+    mutation === 'makeOffer' ||
+    mutation === 'transferTokenMakeOffer'
+  ) {
     // If the target contract is the same as the predicted proxy address,
     // no need to wrap with changeOwnerAndExecute
     debug(`useProxy: ${targetIsProxy ? 'create-no-wrap' : 'create'}`)
