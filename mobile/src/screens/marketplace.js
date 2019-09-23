@@ -366,26 +366,20 @@ class MarketplaceScreen extends Component {
       if (url.hostname === 'twitter.com') {
         if (url.pathname === '/intent/tweet') {
           // Natively Tweet on Android
-          const success = this.openNativeDeepLink(
+          return await this.openNativeDeepLink(
             `twitter://post?message=${encodeURIComponent(
               url.searchParams.get('text')
             )}`,
-            'lastTweetAttemptTime'
+            'lastTweetAttemptTime',
+            true
           )
-
-          if (success) {
-            return true
-          }
         } else if (url.pathname === '/intent/follow') {
           // Natively open Twitter profile on Android
-          const success = this.openNativeDeepLink(
+          return await this.openNativeDeepLink(
             `twitter://user?screen_name=${url.searchParams.get('screen_name')}`,
-            'lastOpenTwitterProfileTime'
+            'lastOpenTwitterProfileTime',
+            true
           )
-
-          if (success) {
-            return true
-          }
         }
       }
     }
@@ -395,17 +389,17 @@ class MarketplaceScreen extends Component {
       url.pathname.toLowerCase() === '/originprotocol'
     ) {
       // Open facebook profile natively if possible and IOS and Android
-      const success = this.openNativeDeepLink(
+      return await this.openNativeDeepLink(
         `fb://${Platform.OS === 'ios' ? 'profile' : 'page'}/120151672018856`,
-        'lastOpenFacebookProfileTime'
+        'lastOpenFacebookProfileTime',
+        true
       )
-
-      if (success) {
-        return true
-      }
     }
 
-    if (url.hostname.includes('facebook.com')) {
+    if (
+      url.hostname.includes('facebook.com') &&
+      !url.pathname.startsWith('/v3.2/')
+    ) {
       const shareHasBeenTriggeredRecently =
         this.facebookShareShowTime &&
         new Date() - this.facebookShareShowTime < 5000
@@ -417,35 +411,48 @@ class MarketplaceScreen extends Component {
         }
         const canShowFbShare = await ShareDialog.canShow(shareLinkContent)
 
-        if (!canShowFbShare) return
+        if (!canShowFbShare) {
+          return await this.openNativeDeepLink(
+            url,
+            'lastOpenFacebookShareTime',
+            true
+          )
+        }
 
         this.facebookShareShowTime = new Date()
-        const shareResult = await ShareDialog.show(shareLinkContent)
-        if (shareResult.isCancelled) {
-          console.log('Share cancelled by user')
-        } else {
-          console.log(`Share success with postId: ${shareResult.postId}`)
-        }
+
+        // Not `await`ing this promise intentionally
+        // Because returning true will prevent the redirect and
+        // we need not wait for this promise to resolve to return true.
+        ShareDialog.show(shareLinkContent).then(({ isCancelled, postId }) => {
+          if (isCancelled) {
+            console.log('Share cancelled by user')
+          } else {
+            console.log(`Share success with postId: ${postId}`)
+          }
+        })
+
+        return true
       }
 
-      /* After Facebook shows up the share dialog in dapp's WebView and user is not logged
-       * in it will redirect to login page. For that reason we return to the last dapp's
-       * url instead of triggering back.
-       */
       if (shareHasBeenTriggeredRecently) {
-        this.goBackToDapp()
+        return true
       }
+      // /* After Facebook shows up the share dialog in dapp's WebView and user is not logged
+      //  * in it will redirect to login page. For that reason we return to the last dapp's
+      //  * url instead of triggering back.
+      //  */
+      // if (shareHasBeenTriggeredRecently) {
+      //   this.goBackToDapp()
+      // }
     }
 
     if (url.hostname === 't.me') {
-      const success = await this.openNativeDeepLink(
+      return await this.openNativeDeepLink(
         url,
         'lastOpenTelegramProfileTime',
         true
       )
-      if (success) {
-        return true
-      }
     }
 
     // The URL cannot be intercepted or failed to open native browser
