@@ -747,7 +747,7 @@ class Messaging {
           return []
         }
 
-        return await res.json()
+        return (await res.json()) || []
       })
 
       if (typeof before === 'number' && messages.length === 0) {
@@ -1106,13 +1106,13 @@ class Messaging {
     }
 
     const roomId = this.generateRoomId(this.account_key, remoteEthAddress)
-    const convObj = this.convs[roomId] || { keys: [], lastConversationIndex: 0 }
+    const convObj = this.convs[roomId] || { keys: [], lastConversationIndex: -1 }
 
     if (!convObj.keys.length) {
       //
       // a conversation haven't even been started yet
       //
-      const conversationIndex = convObj.lastConversationIndex
+      const conversationIndex = convObj.lastConversationIndex + 1
       const encryptKey = cryptoRandomString({ length: 32 }).toString('hex')
 
       const keysContent = {

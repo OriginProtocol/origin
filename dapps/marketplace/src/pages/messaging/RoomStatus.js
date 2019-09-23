@@ -20,7 +20,7 @@ const RoomStatus = ({ conversation, identity, onClick, active, wallet }) => {
   return (
     <Link
       className={`room-status${active ? ' active' : ''}`}
-      to={`/messages/${wallet}`}
+      to={`/messages/${conversation.id}`}
       onClick={onClick}
     >
       <Avatar profile={identity} size={40} />
@@ -52,7 +52,7 @@ const RoomStatus = ({ conversation, identity, onClick, active, wallet }) => {
   )
 }
 
-export default withIdentity(RoomStatus, 'wallet')
+export default withIdentity(RoomStatus, 'conversation.id')
 
 require('react-styl')(`
   .room-status

@@ -46,6 +46,7 @@ const MessagesNav = ({ open, onClose, onOpen, wallet }) => {
             onClick={() => onClose()}
             totalUnread={totalUnread}
             messagingEnabled={enabled}
+            wallet={wallet}
           />
         }
       >
@@ -78,7 +79,7 @@ const Loading = () => (
   </div>
 )
 
-const MessagesDropdown = ({ onClick, totalUnread, messagingEnabled }) => {
+const MessagesDropdown = ({ onClick, totalUnread, messagingEnabled, wallet }) => {
   const { data, error, networkStatus, refetch } = useQuery(ConversationsQuery, {
     variables: {
       limit: 5
@@ -101,9 +102,9 @@ const MessagesDropdown = ({ onClick, totalUnread, messagingEnabled }) => {
     <>
       <RefetchOnMessageData refetch={refetch} />
       <div className="dropdown-menu dropdown-menu-right show">
-        {messagingEnabled && !totalUnread ? null : (
+        {messagingEnabled && totalUnread <= 0 ? null : (
           <div className="count">
-            {!totalUnread ? null : (
+            {totalUnread <= 0 ? null : (
               <>
                 <div className="total">{totalUnread}</div>
                 <div className="title">
@@ -127,7 +128,7 @@ const MessagesDropdown = ({ onClick, totalUnread, messagingEnabled }) => {
               onClick={onClick}
               key={idx}
               conversation={conv}
-              wallet={conv.id}
+              wallet={wallet}
             />
           ))}
         </div>

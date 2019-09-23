@@ -43,7 +43,8 @@ const ConversationList = ({
   room,
   onBack,
   messagingFetchMore,
-  messagingNetworkStatus
+  messagingNetworkStatus,
+  wallet
 }) => {
   const [markConversationRead] = useMutation(MarkConversationRead)
   const [hasMore, setHasMore] = useState(true)
@@ -125,7 +126,7 @@ const ConversationList = ({
               key={idx}
               active={room === conv.id}
               conversation={conv}
-              wallet={conv.id}
+              wallet={wallet}
             />
           ))}
         </>

@@ -64,11 +64,16 @@ export async function getMessage(message) {
   if (message.type === 'event') {
     const { listingID, offerID, blockNumber } = message.msg
 
-    const offer = await contracts.eventSource.getOffer(
-      listingID,
-      offerID,
-      blockNumber
-    )
+    let offer
+    try {
+      offer = await contracts.eventSource.getOffer(
+        listingID,
+        offerID,
+        blockNumber
+      )
+    } catch (err) {
+      console.error('Conversation.js/getMessage()', err)
+    }
 
     return {
       ...message,

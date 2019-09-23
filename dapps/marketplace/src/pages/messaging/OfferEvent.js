@@ -23,6 +23,10 @@ function eventName(name) {
 }
 
 const OfferEvent = ({ event, wallet, identity, minimal }) => {
+  if (!event.offer) {
+    return null
+  }
+
   const offerTitle = minimal ? (
     event.offer.listing.title
   ) : (
