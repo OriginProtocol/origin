@@ -356,19 +356,22 @@ app.post('/events', async (req, res) => {
   }
 
   // Normalize buyer, seller and party to use owner (aka "wallet") rather than proxy addresses.
-  // The reason is that identity and notification data is stored under owner address.
+  // The reason is that identity and notification data are stored under the owner's address.
+  // Note: some legacy users do not have a proxy and in that case buyer/seller.identity is null.
   let party = returnValues.party.toLowerCase()
-  if (party === buyer.identity.owner.proxy.id.toLowerCase()) {
-    party = buyer.identity.owner.id.toLowerCase()
-  } else if (party === seller.identity.owner.proxy.id.toLowerCase()) {
-    party = seller.identity.owner.id.toLowerCase()
+  const buyerAddress = (
+    _.get(buyer, 'identity.owner.id', '') || buyer.id
+  ).toLowerCase()
+  const sellerAddress = (
+    _.get(seller, 'identity.owner.id', '') || seller.id
+  ).toLowerCase()
+  const buyerProxy = _.get(buyer, 'identity.owner.proxy.id', '').toLowerCase()
+  const sellerProxy = _.get(seller, 'identity.owner.proxy.id', '').toLowerCase()
+  if (party === buyerProxy) {
+    party = buyerAddress
+  } else if (party === sellerProxy) {
+    party = sellerAddress
   }
-  const buyerAddress = buyer.identity.owner.id
-    ? buyer.identity.owner.id.toLowerCase()
-    : null
-  const sellerAddress = seller.identity.owner.id
-    ? seller.identity.owner.id.toLowerCase()
-    : null
 
   logger.info(`>eventName: ${eventName}`)
   logger.info(`>party: ${party}`)
