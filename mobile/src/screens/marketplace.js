@@ -315,11 +315,28 @@ class MarketplaceScreen extends Component {
   /* Attempt to open a native deep link URL on this phone. If the relevant
    * app is installed this will open it, otherwise returns false.
    */
-  openNativeDeepLink = async url => {
+  openNativeDeepLink = async (navigationState, url) => {
     const canOpen = await Linking.canOpenURL(url)
     if (canOpen) {
       console.debug(`Can open URL ${url} with native application`)
-      return await Linking.openURL(url)
+
+      // Stop loading the URL change
+      if (this.state.webViewRef.current) {
+        this.state.webViewRef.current.stopLoading()
+      }
+
+      let open
+      try {
+        // Only actually open on click events to prevent multiple attempts at
+        // the deep link because onNavigationStateChange captures mutliple events
+        // for each click (e.g. click, load, etc).
+        if (navigationState.navigationType === 'click') {
+          open = await Linking.openURL(url)
+        }
+      } catch (error) {
+        console.warn('Failed opening native URL', error)
+      }
+      return open
     } else {
       console.debug(`Cannot open URL ${url} with native application`)
     }
@@ -330,23 +347,24 @@ class MarketplaceScreen extends Component {
    * Twitter, Facebook or Telegram for sharing for Origin Rewards, attempt to
    * open the link using the native app on the phone.
    */
-  attemptNativeIntercept = async url => {
+  attemptNativeIntercept = async (navigationState, url) => {
     // Handle Twitter links on Android (iOS handles them automatically)
     if (Platform.OS === 'android' && url.hostname === 'twitter.com') {
-      return await this.handleTwitterUrl(url)
+      return await this.handleTwitterUrl(navigationState, url)
     } else if (url.hostname.includes('facebook.com')) {
-      return await this.handleFacebookUrl(url)
+      return await this.handleFacebookUrl(navigationState, url)
     } else if (url.hostname === 't.me') {
-      return await this.handleTelegramUrl(url)
+      return await this.handleTelegramUrl(navigationState, url)
     }
     // The URL cannot be intercepted or failed to open native browser
     return false
   }
 
-  handleTwitterUrl = async url => {
+  handleTwitterUrl = async (navigationState, url) => {
     if (url.pathname === '/intent/tweet') {
       // Natively Tweet on Android
       return await this.openNativeDeepLink(
+        navigationState,
         `twitter://post?message=${encodeURIComponent(
           url.searchParams.get('text')
         )}`
@@ -354,16 +372,18 @@ class MarketplaceScreen extends Component {
     } else if (url.pathname === '/intent/follow') {
       // Natively follow on Android
       return await this.openNativeDeepLink(
+        navigationState,
         `twitter://user?screen_name=${url.searchParams.get('screen_name')}`
       )
     }
     return false
   }
 
-  handleFacebookUrl = async url => {
+  handleFacebookUrl = async (navigationState, url) => {
     if (url.pathname.toLowerCase() === '/originprotocol/') {
       // Open Facebook profile natively if possible and IOS and Android
       return await this.openNativeDeepLink(
+        navigationState,
         `fb://${Platform.OS === 'ios' ? 'profile' : 'page'}/120151672018856`
       )
     } else if (url.pathname === '/dialog/share') {
@@ -377,21 +397,29 @@ class MarketplaceScreen extends Component {
       const canShowFbShare = await ShareDialog.canShow(shareLinkContent)
       if (canShowFbShare) {
         console.debug('Displaying Facebook share dialog')
-        ShareDialog.show(shareLinkContent).then(({ isCancelled, postId }) => {
-          if (isCancelled) {
-            console.debug('Facebook share cancelled by user')
-          } else {
-            console.debug(`Facebook share success with postId: ${postId}`)
-          }
-        })
+
+        // Stop loading the URL change
+        if (this.state.webViewRef.current) {
+          this.state.webViewRef.current.stopLoading()
+        }
+
+        if (navigationState.navigationType === 'click') {
+          ShareDialog.show(shareLinkContent).then(({ isCancelled, postId }) => {
+            if (isCancelled) {
+              console.debug('Facebook share cancelled by user')
+            } else {
+              console.debug(`Facebook share success with postId: ${postId}`)
+            }
+          })
+        }
         return true
       }
     }
     return false
   }
 
-  handleTelegramUrl = async url => {
-    return this.openNativeDeepLink(url)
+  handleTelegramUrl = async (navigationState, url) => {
+    return this.openNativeDeepLink(navigationState, url)
   }
 
   onMessage = msg => {
@@ -415,6 +443,8 @@ class MarketplaceScreen extends Component {
       console.warn(`Browser reporting malformed url: ${state.url}`)
     }
 
+    await this.attemptNativeIntercept(state, url)
+
     // Request Android user permissions if doing something that is likely
     // to need them
     try {
@@ -433,14 +463,6 @@ class MarketplaceScreen extends Component {
     } catch {
       /* Skip */
     }
-
-    const intercepted = await this.attemptNativeIntercept(url)
-    if (intercepted) {
-      if (this.state.webViewRef.current) {
-        this.state.webViewRef.current.stopLoading()
-      }
-    }
-    return intercepted
   }
 
   onLoadEnd = () => {

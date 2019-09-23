@@ -5487,10 +5487,10 @@ react-dom@^16.9.0:
     prop-types "^15.6.2"
     scheduler "^0.15.0"
 
-react-hot-loader@^4.12.13:
-  version "4.12.13"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.12.13.tgz#78dcb55f49f88ce3d4316c7c86a8c01fdd196cd2"
-  integrity sha512-4Byk3aVQhcmTnVCBvDHOEOUnMFMj81r2yRKZQSfLOG2yd/4hm/A3oK15AnCZilQExqSFSsHcK64lIIU+dU2zQQ==
+react-hot-loader@^4.12.14:
+  version "4.12.14"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.12.14.tgz#81ca06ffda0b90aad15d6069339f73ed6428340a"
+  integrity sha512-ecxH4eBvEaJ9onT8vkEmK1FAAJUh1PqzGqds9S3k+GeihSp7nKAp4fOxytO+Ghr491LiBD38jaKyDXYnnpI9pQ==
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"
@@ -5579,10 +5579,10 @@ react-native-touch-id@^4.4.1:
   resolved "https://registry.yarnpkg.com/react-native-touch-id/-/react-native-touch-id-4.4.1.tgz#8b1bb2d04c30bac36bb9696d2d723e719c4a8b08"
   integrity sha512-1jTl8fC+0fxvqegy/XXTyo6vMvPhjzkoDdaqoYZx0OH8AT250NuXnNPyKktvigIcys3+2acciqOeaCall7lrvg==
 
-react-native-webview@^7.1.1:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-7.1.1.tgz#41e93af88ba4172049bba3a0e75d6e1eabf03429"
-  integrity sha512-Ly5Qs/bbeb98DX/0jg+NA8gVBn5AvpI/vBJXRoJ37eKcqJ/C4QZrwBvGt5MrVYuPwiwn/c7ysf52efkzAChoVA==
+react-native-webview@^7.2.3:
+  version "7.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-7.2.3.tgz#f7be35cf8749d403e38ba21d9e4e707995e4737f"
+  integrity sha512-JUdPINHlx8zW6qGNcCTm0b+/rPV4V/0afRtEg5Pxw9sa344YJOwSvGJrWinb71IWbal1rTWIiOuKlvE+foK4bg==
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
