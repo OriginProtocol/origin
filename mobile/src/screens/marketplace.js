@@ -418,7 +418,7 @@ class MarketplaceScreen extends Component {
         return true
       } else {
         // Couldn't use Facebook SDK to show a ShareDialog, revert to deep link
-        return await this.openNativeDeepLink(url)
+        return await this.openNativeDeepLink(url.href)
       }
     }
   }
@@ -426,7 +426,7 @@ class MarketplaceScreen extends Component {
   /* Intercepts Telegram URLs and attempts to open the native Telegram app.
    */
   handleTelegramUrl = async url => {
-    return this.openNativeDeepLink(url)
+    return this.openNativeDeepLink(url.href)
   }
 
   /* Watches changes to navigation and determines if any actions should be taken.
