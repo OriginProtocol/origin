@@ -34,14 +34,14 @@ describe('register device token endpoint', () => {
     expect(results[0].deleted).to.equal(false)
   })
 
-  it(`should upsert on existing row`, async () => {
+  it(`should update on existing row`, async () => {
     await request(app)
       .post('/mobile/register')
       .send({
         eth_address: '0x78655B524c1dc1CbfacDA55620249F3AFDbFBf3B',
         device_token: '5678',
         device_type: 'FCM',
-        permissions: {}
+        permissions: { alert: 1 }
       })
       .expect(201)
 
@@ -51,13 +51,13 @@ describe('register device token endpoint', () => {
         eth_address: '0x78655B524c1dc1CbfacDA55620249F3AFDbFBf3B',
         device_token: '5678',
         device_type: 'FCM',
-        permissions: { alert: 1, sound: 1, badge: 1 }
+        permissions: { alert: 2, sound: 1, badge: 1 }
       })
       .expect(200)
 
     const results = await MobileRegistry.findAll()
     expect(results.length).to.equal(1)
-    expect(results[0].permissions.alert).to.equal(1)
+    expect(results[0].permissions.alert).to.equal(2)
     expect(results[0].permissions.sound).to.equal(1)
     expect(results[0].permissions.badge).to.equal(1)
   })

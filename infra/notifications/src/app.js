@@ -13,10 +13,9 @@ const webpush = require('web-push')
 const _ = require('lodash')
 
 // const { browserPush } = require('./browserPush')
-const { transactionEmailSend, messageEmailSend } = require('./emailSend')
-const { transactionMobilePush, messageMobilePush } = require('./mobilePush')
+const MobilePush = require('./mobilePush')
+const EmailSender = require('./emailSend')
 const MobileRegistry = require('./models').MobileRegistry
-
 const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
 const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
 
@@ -38,6 +37,10 @@ if (!privateKey || !publicKey) {
 webpush.setVapidDetails(`mailto:${emailAddress}`, publicKey, privateKey)
 
 const { processableEvent } = require('./notification')
+
+//
+// TODO: use express-validator for route arguments validation.
+//
 
 // ------------------------------------------------------------------
 
@@ -202,8 +205,13 @@ app.post('/mobile/register', async (req, res) => {
       res.sendStatus(201)
       logger.debug('Added new mobile device to registry: ', req.body)
     } else {
-      // Update existing row since permissions might have changed.
-      await MobileRegistry.upsert(mobileRegister)
+      // Update existing row if the permissions have changed.
+      if (
+        JSON.stringify(mobileRegister.permissions) !==
+        JSON.stringify(registryRow.permissions)
+      ) {
+        await registryRow.update({ permissions: mobileRegister.permissions })
+      }
       res.sendStatus(200)
       logger.debug('Updated mobile device registry: ', req.body)
     }
@@ -270,32 +278,40 @@ app.delete('/mobile/register', async (req, res) => {
 })
 
 /**
- * Endpoint called by the messaging-server
- * list of eth address that have received a message
+ * Endpoint called by the messaging-server with a list of eth addresses that
+ * have received a message from a sender.
+ *
+ * Sends an email and mobile push notification to the receivers.
  */
 app.post('/messages', async (req, res) => {
-  res.status(200).send({ status: 'ok' })
-
   const sender = req.body.sender // eth address
   const receivers = req.body.receivers // array of eth addresses
   const messageHash = req.body.messageHash // hash of all message details
 
   if (!sender || !receivers) {
-    console.warn('Invalid json received.')
-    return
+    logger.warn('Invalid json received.')
+    return res.status(400).send({ errors: ['Invalid sender or receivers'] })
   }
 
   // Email notifications
-  messageEmailSend(receivers, sender, messageHash, config)
+  await new EmailSender(config).sendMessageEmail(receivers, sender, messageHash)
 
   // Mobile Push notifications
-  messageMobilePush(receivers, sender, messageHash, config)
+  await new MobilePush(config).sendMessageNotification(
+    receivers,
+    sender,
+    messageHash
+  )
+
+  res.status(200).send({ status: 'ok' })
 })
 
 /**
  * Endpoint called by the event-listener to notify
  * the notification server of a new event.
  * Sample json payloads in test/fixtures
+ *
+ * Sends the buyer and seller and email and a mobile push notification.
  */
 app.post('/events', async (req, res) => {
   // Source of queries, and resulting json structure:
@@ -309,9 +325,6 @@ app.post('/events', async (req, res) => {
   const buyer = offer ? offer.buyer : {} // Not all events have offers
   const eventDetailsSummary = `eventName=${eventName} blockNumber=${event.blockNumber} logIndex=${event.logIndex}`
   logger.info(`Info: Processing event ${eventDetailsSummary}`)
-
-  // Return 200 to the event-listener without waiting for processing of the event.
-  res.status(200).send({ status: 'ok' })
 
   // TODO: Temp hack for now that we only test for mobile messages.
   // Thats how the old listener decided if there was a message. Will do
@@ -368,29 +381,29 @@ app.post('/events', async (req, res) => {
   logger.info(listing)
 
   // Email notifications
-  transactionEmailSend(
+  await new EmailSender(config).sendMarketplaceEmail(
     eventName,
     party,
     buyerAddress,
     sellerAddress,
     offer,
-    listing,
-    config
+    listing
   )
 
   // Mobile Push notifications
-  transactionMobilePush(
+  await new MobilePush(config).sendMarketplaceNotification(
     eventName,
     party,
     buyerAddress,
     sellerAddress,
     offer,
-    listing,
-    config
+    listing
   )
 
   // Browser push subscripttions
   // browserPush(eventName, party, buyerAddress, sellerAddress, offer)
+
+  res.status(200).send({ status: 'ok' })
 })
 
 app.listen(port, () =>
