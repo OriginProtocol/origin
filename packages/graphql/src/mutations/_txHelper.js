@@ -1,6 +1,6 @@
 import fetch from 'cross-fetch'
-import ProxyFactory from '@origin/contracts/build/contracts/ProxyFactory_solc'
-import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
+import ProxyFactoryDef from '@origin/contracts/build/contracts/ProxyFactory_solc'
+import IdentityProxyDef from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import pubsub from '../utils/pubsub'
 import mineBlock from '../utils/mineBlock'
 import contracts from '../contracts'
@@ -13,6 +13,7 @@ import relayer from './_relayer'
 
 const GAS_STATION_URL = 'https://ethgasstation.info/json/ethgasAPI.json'
 const GAS_PRICE_KEY = process.env.GAS_PRICE_KEY || 'average' // 'safeLow'
+const SAFETY_GAS_IMIT = 1000000 // 1m
 
 const debug = createDebug('origin:tx-helper:')
 const formatAddr = address => (address ? address.substr(0, 8) : '')
@@ -68,21 +69,21 @@ function useRelayer({ mutation, value }) {
 
 /**
  * Should we use existing proxy, create new proxy, or don't use proxy at all.
- * @param proxy     Existing proxy address
- * @param addr      Contract address
- * @param to        Receipient wallet
- * @param from      Wallet address (proxy owner)
- * @param mutation  Name of mutation
+ * @param {string} proxy - Existing proxy address
+ * @param {string} destinationContract - Contract address
+ * @param {string} to - Receipient wallet
+ * @param {string} from - Wallet address (proxy owner)
+ * @param {string} mutation - Name of mutation
  * @returns String or `undefined` if proxy should not be used.
  *  - execute: Wrap transaction with proxy's `execute` method
  *  - execute-no-wrap: Send transaction direct to proxy
  *  - create: Wrap transaction with proxy's `changeOwnerAndExecute` method
  *  - create-no-wrap: Send transaction direct to proxy after creation
  */
-async function useProxy({ proxy, addr, to, from, mutation }) {
+async function useProxy({ proxy, destinationContract, to, from, mutation }) {
   const { proxyAccountsEnabled } = contracts.config
   const predicted = await predictedProxy(from)
-  const targetIsProxy = addr === predicted
+  const targetIsProxy = destinationContract === predicted
 
   if (!proxyAccountsEnabled) {
     debug('cannot useProxy: disabled in config')
@@ -124,7 +125,8 @@ async function useProxy({ proxy, addr, to, from, mutation }) {
 
 /**
  * Fetch the gas price data from ethgasstation
- * @returns String hex of gas price
+ *
+ * @returns {number} gas price in wei
  * @throws Error if it fails
  */
 async function fetchGasPrice() {
@@ -138,6 +140,437 @@ async function fetchGasPrice() {
     return jason[GAS_PRICE_KEY] * 1e8
   }
   throw new Error(`Gas key of ${GAS_PRICE_KEY} is unavailable`)
+}
+
+/**
+ * Return a globally available web3 instance if available, or die
+ *
+ * @returns {object} web3 instance
+ * @throws {Error} if no global web3 available
+ */
+function globalWeb3() {
+  if (window && window.web3) {
+    return window.web3
+  } else if (global && global.web3) {
+    return global.web3
+  }
+  throw new Error('No available web3')
+}
+
+/**
+ * Get the current going gas price.  If MM is in use, don't use eth_gasPrice,
+ * but fetch from ethgasstation
+ *
+ * @param {object} web3 instance to use (optional)
+ * @returns {number} gas price in wei
+ * @throws {Error} if no web3 given, and no global web3 available
+ */
+async function getGasPrice(w3) {
+  w3 = w3 ? w3 : globalWeb3()
+  // Don't use eth_gasPrice for MM
+  if (
+    typeof window !== 'undefined' &&
+    window.ethereum &&
+    ['mainnet', 'rinkeby'].includes(contracts.net)
+  ) {
+    return await fetchGasPrice()
+  }
+  // But use it when we're using our provider
+  return await w3.eth.getGasPrice()
+}
+
+/**
+ * ABI encode a transaction if necessary
+ *
+ * @param {object} a web3.js transaction object
+ * @returns {string} hex encoded transaction
+ */
+async function encodeTransaction(tx) {
+  if (
+    typeof tx !== 'object' ||
+    !Object.prototype.hasOwnProperty.call(tx, 'encodeABI')
+  ) {
+    return tx
+  }
+  return await tx.encodeABI()
+}
+
+/**
+ * Wrap a transaction for sending through a proxy
+ *
+ * @param {object} args
+ * @param {object} args.ProxyContract - An instance of IdentityProxy
+ * @param {object} args.tx - A web3.js transaction object
+ * @param {string} args.destinationContract - Address of the target contract
+ * @param {string} args.value - the value being sent with the tx
+ * @returns {object} a web3.js transaction object
+ */
+async function txWrapExecute({
+  ProxyContract,
+  tx,
+  destinationContract,
+  value
+}) {
+  const txData = await encodeTransaction(tx)
+
+  return ProxyContract.methods.execute(
+    0,
+    destinationContract,
+    value || '0',
+    txData
+  )
+}
+
+/**
+ * Wrap a transaction for sending through a proxy, and wrap that in a create
+ * proxy tx.
+ *
+ * @param {object} args
+ * @param {object} args.ProxyFactory - An instance of ProxyFactory
+ * @param {object} args.tx - A web3.js transaction object
+ * @param {string} args.from - The originating Ethereum account address
+ * @returns {object} a web3.js transaction object
+ */
+async function txWrapCreateProxy({ ProxyFactory, tx, from }) {
+  const txData = await encodeTransaction(tx)
+
+  return ProxyFactory.methods.createProxyWithSenderNonce(
+    contracts.config.IdentityProxyImplementation,
+    txData,
+    from,
+    '0'
+  )
+}
+
+/**
+ * Wrap a transaction for sending through a proxy, and wrap that in a create
+ * proxy tx that also sets owner.
+ *
+ * @param {object} args
+ * @param {object} args.ProxyContract - An instance of IdentityProxy
+ * @param {object} args.tx - A web3.js transaction object
+ * @param {string} args.from - The originating Ethereum account address
+ * @param {string} args.destinationContract - Address of the target contract
+ * @param {string} args.value - the value being sent with the tx
+ * @returns {object} a web3.js transaction object
+ */
+async function txWrapChangeOwner({
+  ProxyContract,
+  tx,
+  from,
+  destinationContract,
+  value
+}) {
+  const txData = await encodeTransaction(tx)
+
+  return ProxyContract.methods.changeOwnerAndExecute(
+    from,
+    destinationContract,
+    value || '0',
+    txData
+  )
+}
+
+/**
+ * Run callback functions giving them val as an argument
+ *
+ * @param {object} args
+ * @param {Array} args.callbacks - Array of functions to call with val
+ * @param {T} args.val - Value to provide callbacks as an argument
+ * @returns {undefined}
+ */
+async function handleCallbacks({ callbacks, val }) {
+  if (!callbacks) return
+  for (let i = 0; i < callbacks.length; i++) {
+    const ret = callbacks[i](val)
+    if (ret instanceof Promise) {
+      await ret
+    }
+  }
+  return
+}
+
+/**
+ * Transaction hash handler. Used as an internal callback
+ *
+ * @param {object} args
+ * @param {string} args.hash - The transaction hash
+ * @param {string} args.from - The originating Ethereum account
+ * @param {string} args.mutation - The graphql mutation being executed
+ * @returns {undefined}
+ */
+async function handleHash({ hash, from, mutation }) {
+  debug(`got hash ${hash}`)
+
+  contracts.transactions[from] = contracts.transactions[from] || []
+  contracts.transactions[from].unshift({
+    id: hash,
+    submittedAt: Math.round(+new Date() / 1000)
+  })
+  // Only store last 10 transactions...
+  contracts.transactions[from] = contracts.transactions[from].slice(0, 10)
+
+  try {
+    window.localStorage[`${contracts.net}Transactions`] = JSON.stringify(
+      contracts.transactions
+    )
+  } catch (e) {
+    /* Ignore */
+  }
+
+  const node = await getTransaction(hash, true)
+
+  pubsub.publish('NEW_TRANSACTION', {
+    newTransaction: { totalCount: 1, node }
+  })
+  pubsub.publish('TRANSACTION_UPDATED', {
+    transactionUpdated: {
+      id: hash,
+      status: 'pending',
+      mutation
+    }
+  })
+}
+
+/**
+ * Transaction receipt handler. Used as an internal callback
+ *
+ * @param {object} args
+ * @param {string} args.shouldUseProxy - TODO
+ * @param {object} args.receipt - The receipt object from web3.js
+ * @param {string} args.mutation - The graphql mutation being executed
+ * @returns {undefined}
+ */
+async function handleReceipt({ shouldUseProxy, receipt, mutation }) {
+  if (String(shouldUseProxy).startsWith('create')) {
+    resetProxyCache()
+  }
+
+  pubsub.publish('TRANSACTION_UPDATED', {
+    transactionUpdated: {
+      id: receipt.transactionHash,
+      status: 'receipt',
+      gasUsed: receipt.gasUsed,
+      mutation
+    }
+  })
+
+  if (contracts.automine) {
+    setTimeout(() => mineBlock(contracts.web3), contracts.automine)
+  }
+}
+
+/**
+ * Transaction confirmation handler. Used as an internal callback. Each
+ * "confirmation" is a mined block *after* the transaction was included in a
+ * block
+ *
+ * @param {object} args
+ * @param {string} args.shouldUseProxy - Return from useProxy function
+ * @param {number} args.confNumber - The amount of confirmations since a transaction
+ * @param {object} args.receipt - The receipt object from web3.js
+ * @param {string} args.mutation - The graphql mutation being executed
+ * @returns {undefined}
+ */
+async function handleConfirmation({
+  shouldUseProxy,
+  confNumber,
+  receipt,
+  mutation
+}) {
+  if (confNumber === 1) {
+    if (String(shouldUseProxy).indexOf('create') === 0) {
+      resetProxyCache()
+    }
+  }
+  if (confNumber > 0) {
+    pubsub.publish('TRANSACTION_UPDATED', {
+      transactionUpdated: {
+        id: receipt.transactionHash,
+        status: 'confirmed',
+        mutation,
+        confirmations: confNumber
+      }
+    })
+  }
+}
+
+/**
+ * Send a trnsaction using the Origin relayer
+ *
+ * @param {object} args
+ * @param {object} args.web3 - a web3.js instance
+ * @param {object} args.tx - a web3.js transaction object
+ * @param {string} args.proxy - the proxy address to use
+ * @param {string} args.sourceAccount - the originating Ethereum account
+ * @param {string} args.to - the destination Ethereum address
+ * @param {Array} args.hashCallbacks - Array of functions to use as callbacks for transaction hash
+ * @param {Array} args.receiptCallbacks - Array of functions to use as callbacks for transaction receipts
+ * @param {Array} args.confirmCallbacks - Array of functions to use as callbacks for transaction confirmations
+ * @returns {string} transaction hash
+ */
+async function sendViaRelayer({
+  web3,
+  tx,
+  proxy,
+  sourceAccount,
+  to,
+  hashCallbacks,
+  receiptCallbacks,
+  confirmCallbacks
+}) {
+  const resp = await relayer({
+    tx,
+    proxy,
+    from: sourceAccount,
+    to
+  })
+
+  if (!resp) {
+    throw new Error('No response from relayer!')
+  }
+
+  const txHash = resp.id
+
+  if (hashCallbacks && hashCallbacks.length) {
+    await handleCallbacks({
+      callbacks: hashCallbacks,
+      val: txHash
+    })
+  }
+
+  const hasCallbacks =
+    receiptCallbacks.length > 0 || confirmCallbacks.length > 0 ? true : false
+
+  /**
+   * Since we don't get the event handlers when the relayer processes a
+   * transaction, make sure that any provided callbacks are run by
+   * manually listening for new blocks.
+   */
+  let foundReceipt = false
+  if (hasCallbacks) {
+    let receipt
+    const responseBlocks = async ({ newBlock }) => {
+      if (!receipt) {
+        receipt = await web3.eth.getTransactionReceipt(txHash)
+      }
+      /**
+       * There some potential races going on here, where we can't use === for
+       * block numbers because there may actually be a delay between relayer
+       * response and when a tx has been mined.
+       */
+      if (receipt && newBlock.id >= receipt.blockNumber && !foundReceipt) {
+        foundReceipt = true
+
+        if (receiptCallbacks.length) {
+          await handleCallbacks({ callbacks: receiptCallbacks, val: receipt })
+        }
+
+        // Kill this process early if we're not waiting on confirm
+        if (!confirmCallbacks || confirmCallbacks.length < 1) {
+          pubsub.ee.off('NEW_BLOCK', responseBlocks)
+        }
+      }
+
+      if (receipt && newBlock.id >= receipt.blockNumber + 1) {
+        if (confirmCallbacks.length) {
+          const confNumber = newBlock.id - receipt.blockNumber
+          await handleCallbacks({
+            callbacks: confirmCallbacks,
+            val: { confNumber, receipt }
+          })
+        }
+        pubsub.ee.off('NEW_BLOCK', responseBlocks)
+      }
+    }
+    pubsub.ee.on('NEW_BLOCK', responseBlocks)
+  }
+
+  return txHash
+}
+
+/**
+ * Send a trnsaction using the given web3 or contract instance
+ *
+ * @param {object} args
+ * @param {object} args.web3 - a web3.js instance
+ * @param {object} args.tx - a web3.js transaction object
+ * @param {string} args.to - the destination Ethereum address
+ * @param {string} args.sourceAccount - the originating Ethereum account
+ * @param {T} args.value - the ETH value sent with the tx
+ * @param {number} args.gas - the gas limit to use
+ * @param {T} args.gas - the gas price to use in wei
+ * @param {Array} args.hashCallbacks - Array of functions to use as callbacks for transaction hash
+ * @param {Array} args.receiptCallbacks - Array of functions to use as callbacks for transaction receipts
+ * @param {Array} args.confirmCallbacks - Array of functions to use as callbacks for transaction confirmations
+ * @param {string} args.mutation - the graphql mutation being executed
+ * @returns {undefined}
+ */
+async function sendViaWeb3({
+  web3,
+  tx,
+  to,
+  sourceAccount,
+  value,
+  gas,
+  gasPrice,
+  hashCallbacks,
+  receiptCallbacks,
+  confirmCallbacks,
+  mutation
+}) {
+  if (web3 && to) {
+    tx = web3.eth.sendTransaction({
+      from: sourceAccount,
+      to,
+      value,
+      gas,
+      gasPrice
+    })
+  } else {
+    const toContract = get(tx, '_parent._address')
+    debug('send', {
+      mutation,
+      from: sourceAccount,
+      to: toContract,
+      value,
+      gas,
+      gasPrice
+    })
+    tx = tx.send({ from: sourceAccount, value, gas, gasPrice })
+  }
+
+  let txHash
+
+  tx.once('transactionHash', async hash => {
+    txHash = hash
+    await handleCallbacks({ callbacks: hashCallbacks, val: hash })
+  })
+    .once('receipt', async receipt => {
+      await handleCallbacks({ callbacks: receiptCallbacks, val: receipt })
+    })
+    .on(`confirmation${isServer ? 'X' : ''}`, async (confNumber, receipt) => {
+      await handleCallbacks({
+        callbacks: confirmCallbacks,
+        val: { confNumber, receipt }
+      })
+    })
+    .on('error', function(error) {
+      if (txHash) {
+        pubsub.publish('TRANSACTION_UPDATED', {
+          transactionUpdated: {
+            id: txHash,
+            status: 'error',
+            error,
+            mutation
+          }
+        })
+      }
+    })
+    .catch(err => {
+      console.error('Error sending transaction via web3')
+      throw err
+    })
 }
 
 export default function txHelper({
@@ -154,113 +587,127 @@ export default function txHelper({
   return new Promise(async (resolve, reject) => {
     debug(`Mutation ${mutation} from ${formatAddr(from)}`)
 
-    let txHash, gasPrice
+    let gasPrice
     let toSend = tx
     web3 = contracts.web3Exec
+
+    // callbacks, as an array
+    const hashCallbacks = []
+    const confirmCallbacks = onConfirmation ? [onConfirmation] : []
+    const receiptCallbacks = onReceipt ? [onReceipt] : []
+
+    /**
+     * Initialize the contracts we need (ProxyContract will be given an address
+     * when we need to)
+     */
+    const ProxyContract = new web3.eth.Contract(IdentityProxyDef.abi)
+    const ProxyFactory = new web3.eth.Contract(
+      ProxyFactoryDef.abi,
+      contracts.config.ProxyFactory
+    )
 
     // If the from address is a proxy, find the owner
     const owner = await proxyOwner(from)
     const proxy = owner ? from : null
     from = owner || from
 
-    const addr = get(tx, '_parent._address')
+    // The contract address if the tx is a contract transaction
+    const destinationContract = get(tx, '_parent._address')
+
+    // Determine if we should/can use proxies and the relayer
     const shouldUseRelayer = useRelayer({ mutation, value })
-    const shouldUseProxy = await useProxy({ proxy, addr, to, from, mutation })
+    const shouldUseProxy = await useProxy({
+      proxy,
+      destinationContract,
+      to,
+      from,
+      mutation
+    })
     debug(`shouldUseProxy: ${shouldUseProxy}`)
     debug(`shouldUseRelayer: ${shouldUseRelayer}`)
 
-    // Get our gas price
-    if (!shouldUseRelayer && ['mainnet', 'rinkeby'].includes(contracts.net)) {
-      if (window.ethereum) {
-        // Don't use eth_gasPrice for MM
-        try {
-          gasPrice = await fetchGasPrice()
-        } catch (err) {
-          debug(`Error fetching gas price`, err)
-        }
-      } else {
-        // But use it when we're using our provider
-        gasPrice = await web3.eth.getGasPrice()
+    // Add our internal callbacks
+    hashCallbacks.push(async hash => {
+      await handleHash({ hash, from, mutation })
+      resolve({ id: hash })
+    })
+    confirmCallbacks.push(async ({ confNumber, receipt }) => {
+      await handleConfirmation({
+        shouldUseProxy,
+        confNumber,
+        receipt,
+        mutation
+      })
+    })
+    receiptCallbacks.push(async receipt => {
+      await handleReceipt({ shouldUseProxy, receipt, mutation })
+    })
+
+    // Get our gas price if not using the relayer
+    if (!shouldUseRelayer) {
+      try {
+        gasPrice = await getGasPrice(web3)
+      } catch (err) {
+        console.warn('Unable to get a gas price.  Using default set by web3')
+        console.warn(err)
       }
     }
 
     // If this user doesn't have a proxy yet, create one
     if (shouldUseProxy === 'create' || shouldUseProxy === 'create-no-wrap') {
-      const txData = await tx.encodeABI()
-      let initFn = txData
       if (shouldUseProxy === 'create') {
-        debug('wrapping tx with Proxy.changeOwnerAndExecute')
-        const Proxy = new web3.eth.Contract(IdentityProxy.abi)
-        initFn = await Proxy.methods
-          .changeOwnerAndExecute(from, addr, value || '0', txData)
-          .encodeABI()
+        // wrap the tx in changeOwnerAndExecute
+        // TODO: It's not clear to me why create vs create-no-wrap here.
+        // don't most proxy calls have changeOwner in them as well?
+        toSend = await txWrapChangeOwner({
+          ProxyContract,
+          tx: toSend,
+          from,
+          destinationContract,
+          value
+        })
       }
 
-      debug('wrapping tx with Proxy.createProxyWithSenderNonce')
-      const Contract = new web3.eth.Contract(
-        ProxyFactory.abi,
-        contracts.config.ProxyFactory
-      )
-      toSend = Contract.methods.createProxyWithSenderNonce(
-        contracts.config.IdentityProxyImplementation,
-        initFn,
-        from,
-        '0'
-      )
+      // Wrap the tx in a ProxyFactory createProxyWithSenderNonce call
+      toSend = await txWrapCreateProxy({ ProxyFactory, tx: toSend, from })
+
       // TODO: result from estimateGas is too low. Need to work out exact amount
       // gas = await toSend.estimateGas({ from })
-      gas = 1000000
+      gas = SAFETY_GAS_IMIT
     } else if (shouldUseProxy && !shouldUseRelayer) {
       debug(`wrapping tx with Proxy.execute. value: ${value}`)
-      const Proxy = new web3.eth.Contract(IdentityProxy.abi, proxy)
-      const txData = await tx.encodeABI()
-      toSend = Proxy.methods.execute(0, addr, value || '0', txData)
-      // TODO: result from estimateGas is too low. Need to work out exact amount
-      // gas = await toSend.estimateGas({ from })
-      gas = 1000000
+
+      // Set the address now that we need
+      const UserProxy = ProxyContract.clone()
+      UserProxy.options.address = proxy
+
+      // Wrap the tx in Proxy.execute
+      toSend = await txWrapExecute({
+        ProxyContract: UserProxy,
+        proxy,
+        tx: toSend,
+        destinationContract,
+        value
+      })
+
+      gas = SAFETY_GAS_IMIT
     }
 
     if (shouldUseRelayer && shouldUseProxy) {
-      const address = toSend._parent._address
+      const address = get(toSend, '_parent._address')
       try {
-        const relayerResponse = await relayer({
+        await sendViaRelayer({
+          web3,
           tx: toSend,
           proxy,
-          from,
-          to: address
+          sourceAccount: from, // originating real account
+          to: address,
+          hashCallbacks,
+          receiptCallbacks,
+          confirmCallbacks
         })
-
-        /**
-         * Since we don't get the event handlers when the relayer processes a
-         * transaction, make sure that any provided callbacks are run by
-         * manually listening for new blocks.
-         */
-        if (relayerResponse && relayerResponse.id) {
-          let receipt
-          const responseBlocks = async ({ newBlock }) => {
-            if (!receipt) {
-              receipt = await web3.eth.getTransactionReceipt(relayerResponse.id)
-            }
-            if (receipt && newBlock.id === receipt.blockNumber) {
-              if (onReceipt) onReceipt()
-
-              // Reset the proxy data cache
-              if (String(shouldUseProxy).startsWith('create')) {
-                resetProxyCache()
-              }
-
-              // Kill this process early if we're not waiting on confirm
-              if (!onConfirmation) pubsub.ee.off('NEW_BLOCK', responseBlocks)
-            } else if (receipt && newBlock.id === receipt.blockNumber + 1) {
-              if (onConfirmation) onConfirmation()
-              pubsub.ee.off('NEW_BLOCK', responseBlocks)
-            }
-          }
-          pubsub.ee.on('NEW_BLOCK', responseBlocks)
-        }
-
-        return resolve(relayerResponse)
       } catch (err) {
+        // TODO: I have no idea why any of this is a thing
         if (String(err).match(/denied message signature/)) {
           return reject(err)
         } else {
@@ -270,102 +717,27 @@ export default function txHelper({
           }, 1)
         }
       }
-    }
-
-    if (web3 && to) {
-      toSend = web3.eth.sendTransaction({ from, to, value, gas, gasPrice })
     } else {
-      const toContract = get(toSend, '_parent._address')
-      debug('send', { mutation, from, to: toContract, value, gas, gasPrice })
-      toSend = toSend.send({ from, value, gas, gasPrice })
+      // Send using the availble or given web3 instance
+      // TODO: holy argument hell, batman!  Why isn't half of this part of the tx?
+      debug(`Sending via web3`)
+      await sendViaWeb3({
+        web3,
+        tx: toSend,
+        to,
+        sourceAccount: from,
+        value,
+        gas,
+        gasPrice,
+        hashCallbacks,
+        receiptCallbacks,
+        confirmCallbacks,
+        mutation
+      })
+      debug(`Sent via web3`)
     }
-    toSend
-      .once('transactionHash', async hash => {
-        debug(`got hash ${hash}`)
-        txHash = hash
-        resolve({ id: hash })
-
-        contracts.transactions[from] = contracts.transactions[from] || []
-        contracts.transactions[from].unshift({
-          id: hash,
-          submittedAt: Math.round(+new Date() / 1000)
-        })
-        // Only store last 10 transactions...
-        contracts.transactions[from] = contracts.transactions[from].slice(0, 10)
-
-        try {
-          window.localStorage[`${contracts.net}Transactions`] = JSON.stringify(
-            contracts.transactions
-          )
-        } catch (e) {
-          /* Ignore */
-        }
-
-        const node = await getTransaction(hash, true)
-
-        pubsub.publish('NEW_TRANSACTION', {
-          newTransaction: { totalCount: 1, node }
-        })
-        pubsub.publish('TRANSACTION_UPDATED', {
-          transactionUpdated: {
-            id: hash,
-            status: 'pending',
-            mutation
-          }
-        })
-      })
-      .once('receipt', receipt => {
-        if (String(shouldUseProxy).startsWith('create')) {
-          resetProxyCache()
-        }
-        if (onReceipt) {
-          onReceipt(receipt)
-        }
-        pubsub.publish('TRANSACTION_UPDATED', {
-          transactionUpdated: {
-            id: receipt.transactionHash,
-            status: 'receipt',
-            gasUsed: receipt.gasUsed,
-            mutation
-          }
-        })
-        if (contracts.automine) {
-          setTimeout(() => mineBlock(contracts.web3), contracts.automine)
-        }
-      })
-      .on(`confirmation${isServer ? 'X' : ''}`, function(confNumber, receipt) {
-        if (confNumber === 1) {
-          if (String(shouldUseProxy).indexOf('create') === 0) {
-            resetProxyCache()
-          }
-          if (onConfirmation) {
-            onConfirmation(receipt)
-          }
-        }
-        if (confNumber > 0) {
-          pubsub.publish('TRANSACTION_UPDATED', {
-            transactionUpdated: {
-              id: receipt.transactionHash,
-              status: 'confirmed',
-              mutation,
-              confirmations: confNumber
-            }
-          })
-        }
-      })
-      .on('error', function(error) {
-        console.log('tx error', error)
-        if (txHash) {
-          pubsub.publish('TRANSACTION_UPDATED', {
-            transactionUpdated: {
-              id: txHash,
-              status: 'error',
-              error,
-              mutation
-            }
-          })
-        }
-      })
-      .catch(reject)
+  }).catch(err => {
+    console.error(err)
+    throw err
   })
 }

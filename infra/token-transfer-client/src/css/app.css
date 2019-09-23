@@ -69,6 +69,12 @@ h2 {
   color: #8fa7b7
 }
 
+a:not([href]):not([tabindex]),
+a:not([href]):not([tabindex]):focus,
+a:not([href]):not([tabindex]):hover {
+  text-decoration: underline;
+}
+
 /*
  * Forms
  */
@@ -229,6 +235,10 @@ input, select {
   border-top: none;
 }
 
+.table tr.hoverable:hover {
+  background-color: white;
+}
+
 .table-row {
   font-size: 14px;
   margin-bottom: 20px;
@@ -308,9 +318,14 @@ input, select {
   font-size: 18px;
 }
 
+.alert-danger {
+  color: black;
+}
+
 .alert-warning {
   background-color: rgba(255, 192, 0, 0.1);
   border: 1px solid #ffcc00;
+  color: black;
 }
 
 .pointer {

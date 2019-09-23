@@ -182,33 +182,29 @@ class AccountScreen extends Component {
                 />
               </>
             )}
-            {mnemonic === undefined && (
-              <>
-                <OriginButton
-                  size="large"
-                  type="primary"
-                  title={fbt(
-                    'Show Private Key',
-                    'AccountScreen.showPrivateKeyButton'
-                  )}
-                  onPress={() =>
-                    Alert.alert(
-                      String(fbt('Private Key', 'AccountScreen.privateKey')),
-                      privateKey
-                    )
-                  }
-                />
-                <OriginButton
-                  size="large"
-                  type="primary"
-                  title={fbt(
-                    'Copy Private Key',
-                    'AccountScreen.copyPrivateKeyButton'
-                  )}
-                  onPress={() => this.handleDangerousCopy(privateKey)}
-                />
-              </>
-            )}
+            <OriginButton
+              size="large"
+              type="primary"
+              title={fbt(
+                'Show Private Key',
+                'AccountScreen.showPrivateKeyButton'
+              )}
+              onPress={() =>
+                Alert.alert(
+                  String(fbt('Private Key', 'AccountScreen.privateKey')),
+                  privateKey
+                )
+              }
+            />
+            <OriginButton
+              size="large"
+              type="primary"
+              title={fbt(
+                'Copy Private Key',
+                'AccountScreen.copyPrivateKeyButton'
+              )}
+              onPress={() => this.handleDangerousCopy(privateKey)}
+            />
             {(multipleAccounts || true) && (
               <OriginButton
                 size="large"
