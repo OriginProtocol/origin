@@ -187,7 +187,10 @@ app.post('/mobile/register', async (req, res) => {
   }
   logger.info(`POST /mobile/register for ${mobileRegister.ethAddress}`)
 
-  if (!mobileRegister.ethAddress || !web3Utils.isAddress(mobileRegister.ethAddress)) {
+  if (
+    !mobileRegister.ethAddress ||
+    !web3Utils.isAddress(mobileRegister.ethAddress)
+  ) {
     return res.status(400).send({ errors: ['Invalid Eth address'] })
   }
   // By convention all Eth addresses are stored lower cased in the DB.
@@ -251,7 +254,10 @@ app.delete('/mobile/register', async (req, res) => {
   }
   logger.info(`DELETE /mobile/register for ${mobileRegister.ethAddress}`)
 
-  if (!mobileRegister.ethAddress || !web3Utils.isAddress(mobileRegister.ethAddress)) {
+  if (
+    !mobileRegister.ethAddress ||
+    !web3Utils.isAddress(mobileRegister.ethAddress)
+  ) {
     return res.status(400).send({ errors: ['Invalid Eth address'] })
   }
   // To unregister a deviceToken must be passed.
