@@ -43,6 +43,20 @@ describe('Email and MobilePush notifications for Marketplace events', () => {
     })
   })
 
+  it(`Should skip an unprocessable event`, async () => {
+    await request(app)
+      .post('/events')
+      .send({ event: { event: 'InvalidEventName' } })
+      .expect(200)
+  })
+
+  it(`Should error on an invalid event`, async () => {
+    await request(app)
+      .post('/events')
+      .send({ event: { event: 'OfferAccepted' } })
+      .expect(400)
+  })
+
   it(`Should send an email and a mobile push notification for an offer accepted`, async () => {
     await request(app)
       .post('/events')
