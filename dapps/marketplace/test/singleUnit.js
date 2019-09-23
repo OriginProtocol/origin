@@ -27,7 +27,8 @@ function randomReview() {
 export function singleUnitTests({
   autoSwap,
   withShipping,
-  EthAndDaiAccepted
+  EthAndDaiAccepted,
+  deployIdentity
 } = {}) {
   let testName = 'Single Unit Listing, payment in ETH'
   if (withShipping) testName += ', with Shipping'
@@ -37,7 +38,12 @@ export function singleUnitTests({
     let seller, buyer, title, review, page
     before(async function() {
       page = await getPage()
-      ;({ seller, buyer } = await reset({ page, sellerOpts: { ogn: '100' } }))
+      const accounts = await reset({
+        page,
+        sellerOpts: { ogn: '100', deployIdentity }
+      })
+      seller = accounts.seller
+      buyer = accounts.buyer
       title = randomTitle()
       review = randomReview()
     })
@@ -208,18 +214,24 @@ export function singleUnitTests({
   })
 }
 
-export function singleUnitDaiTests({ autoSwap, withShipping, buyerDai } = {}) {
+export function singleUnitDaiTests({
+  autoSwap,
+  withShipping,
+  buyerDai,
+  deployIdentity
+} = {}) {
   let testName = 'Single Unit Listing, payment in DAI'
   if (buyerDai) testName += ', buyer has DAI'
   if (withShipping) testName += ', with Shipping'
+  if (deployIdentity) testName += ', with existing Identity'
 
   describe(testName, function() {
     let seller, buyer, title, page
     before(async function() {
       page = await getPage()
-      const resetOpts = { page }
+      const resetOpts = { page, deployIdentity }
       if (buyerDai) {
-        resetOpts.buyerOpts = { dai: '100' }
+        resetOpts.buyerOpts = { dai: '100', deployIdentity }
       }
       ({ seller, buyer } = await reset(resetOpts))
       title = randomTitle()

@@ -86,6 +86,7 @@ async function useProxy({ proxy, destinationContract, to, from, mutation }) {
   const { proxyAccountsEnabled } = contracts.config
   const predicted = await predictedProxy(from)
   const targetIsProxy = destinationContract === predicted
+  debug('useProxy', { proxy, targetIsProxy, predicted, destinationContract })
 
   if (!proxyAccountsEnabled) {
     debug('cannot useProxy: disabled in config')
@@ -110,7 +111,9 @@ async function useProxy({ proxy, destinationContract, to, from, mutation }) {
 
   if (proxy) {
     debug(`useProxy: ${targetIsProxy ? 'execute-no-wrap' : 'execute'}`)
-    return targetIsProxy ? 'execute-no-wrap' : 'execute'
+    return targetIsProxy && mutation !== 'finalizeOffer'
+      ? 'execute-no-wrap'
+      : 'execute'
   } else if (mutation === 'deployIdentity' || mutation === 'createListing') {
     // For 'first time' interactions, create proxy and execute in single transaction
     debug(`useProxy: create`)
@@ -679,7 +682,7 @@ export default function txHelper({
       // TODO: result from estimateGas is too low. Need to work out exact amount
       // gas = await toSend.estimateGas({ from })
       gas = SAFETY_GAS_IMIT
-    } else if (shouldUseProxy && !shouldUseRelayer) {
+    } else if (shouldUseProxy === 'execute' && !shouldUseRelayer) {
       debug(`wrapping tx with Proxy.execute. value: ${value}`)
 
       // Set the address now that we need

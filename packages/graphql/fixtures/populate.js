@@ -102,7 +102,7 @@ async function getNodeAccount(gqlClient) {
 }
 
 export async function createAccount(gqlClient, opts = {}) {
-  const { ogn, dai, eth = '0.5' } = opts
+  const { ogn, dai, eth = '0.5', deployIdentity } = opts
   const NodeAccount = await getNodeAccount(gqlClient)
   await gqlClient.mutate({
     mutation: ToggleMetaMaskMutation,
@@ -118,6 +118,24 @@ export async function createAccount(gqlClient, opts = {}) {
     variables: { from: NodeAccount, to: user, value: eth }
   })
   await transactionConfirmed(sendTx.data.sendFromNode.id, gqlClient)
+
+  if (deployIdentity) {
+    const identity = await gqlClient.mutate({
+      mutation: DeployIdentityMutation,
+      variables: {
+        from: user,
+        profile: {
+          firstName: 'Test',
+          lastName: 'Account',
+          description: 'Tester',
+          avatar: ''
+        },
+        attestations: []
+      }
+    })
+    await transactionConfirmed(identity.data.deployIdentity.id, gqlClient)
+  }
+
   if (ogn) {
     const accounts = mnemonicToAccounts()
     await gqlClient.mutate({
@@ -136,6 +154,7 @@ export async function createAccount(gqlClient, opts = {}) {
     })
     await transactionConfirmed(res.data.transferToken.id, gqlClient)
   }
+
   if (dai) {
     const accounts = mnemonicToAccounts()
     await gqlClient.mutate({
@@ -156,33 +175,6 @@ export async function createAccount(gqlClient, opts = {}) {
   }
   return user
 }
-
-// export async function deployIdentity(gqlClient, ethAddress) {
-//   const variables = {
-//     profile: {
-//       firstName: 'Test',
-//       lastName: 'Account',
-//       description: 'Tester',
-//       avatar: ''
-//     },
-//     attestations: [],
-//     from: ethAddress
-//   }
-
-//   let result
-//   try {
-//     result = await gqlClient.mutate({ DeployIdentityMutation, variables })
-//   } catch (e) {
-//     console.log(JSON.stringify(e, null, 4))
-//     throw e
-//   }
-//   const key = Object.keys(result.data)[0]
-//   const hash = result.data[key].id
-//   if (hash) {
-//     return await transactionConfirmed(hash, gqlClient)
-//   }
-//   return result.data[key]
-// }
 
 export default async function populate(gqlClient, log, done) {
   async function mutate(mutation, from, variables = {}) {

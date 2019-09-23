@@ -14,6 +14,7 @@ function listingTests({ autoSwap } = {}) {
 
   singleUnitDaiTests({ autoSwap })
   singleUnitDaiTests({ buyerDai: true })
+  singleUnitDaiTests({ buyerDai: true, deployIdentity: true })
   singleUnitDaiTests({ autoSwap, withShipping: true })
 
   multiUnitTests({ autoSwap })
