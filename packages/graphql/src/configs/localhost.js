@@ -42,7 +42,7 @@ const config = {
   relayerEnabled: localStorageHas('relayerEnabled', 'true'),
   tokens: [],
 
-  messagingAccount: '0x5DD8CE91e8bc6B258B2964e34F7F56034f03fcC9',
+  messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
   messaging: {
     messagingNamespace: 'origin',
     globalKeyServer: 'http://localhost:6647'

@@ -123,8 +123,11 @@ app.post('/accounts/:address', async (req, res) => {
   const { signature, data } = req.body
 
   if (
-    verifyRegistrySignature(signature, '', {
-      payload: { value: data, key: address }
+    verifyRegistrySignature(signature, {
+      payload: {
+        value: data,
+        key: address
+      }
     })
   ) {
     const entry = await db.Registry.findOne({ where: { ethAddress: address } })
