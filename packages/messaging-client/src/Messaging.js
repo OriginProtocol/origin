@@ -1106,7 +1106,10 @@ class Messaging {
     }
 
     const roomId = this.generateRoomId(this.account_key, remoteEthAddress)
-    const convObj = this.convs[roomId] || { keys: [], lastConversationIndex: -1 }
+    const convObj = this.convs[roomId] || {
+      keys: [],
+      lastConversationIndex: -1
+    }
 
     if (!convObj.keys.length) {
       //

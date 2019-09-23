@@ -12,8 +12,8 @@ const web3 = new Web3(config.RPC_SERVER)
  * Returns the ID of the room between two conversations
  * Sorts the address before concating so that there is no duplicate rooms
  * between two addresses, i.e. joinConversationKey(x, y) === joinConversationKey(y, x)
- * @param {Address} converser1 
- * @param {Address} converser2 
+ * @param {Address} converser1
+ * @param {Address} converser2
  * @returns {String}
  */
 function joinConversationKey(converser1, converser2) {
@@ -130,7 +130,7 @@ function verifyMessageSignature(keysMap, orbitGlobal) {
 
 /**
  * Verifies registry signature
- * @param {String} signature 
+ * @param {String} signature
  * @param {String} message.payload.key User's public ethereum address
  * @param {String} message.payload.value The data that was signed
  * @return {Boolean} true if `message.payload.value` was signed by `message.payload.key`; false otherwise

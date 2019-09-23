@@ -682,7 +682,9 @@ function subscribeToMarketplaceEvents() {
             { transaction: t }
           )
 
-          for (const converser of Array.from(new Set([buyer, seller, sender]))) {
+          for (const converser of Array.from(
+            new Set([buyer, seller, sender])
+          )) {
             await db.Conversee.create(
               { conversationId: conversation.id, ethAddress: converser },
               { transaction: t }

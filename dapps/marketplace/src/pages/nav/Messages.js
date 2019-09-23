@@ -79,7 +79,12 @@ const Loading = () => (
   </div>
 )
 
-const MessagesDropdown = ({ onClick, totalUnread, messagingEnabled, wallet }) => {
+const MessagesDropdown = ({
+  onClick,
+  totalUnread,
+  messagingEnabled,
+  wallet
+}) => {
   const { data, error, networkStatus, refetch } = useQuery(ConversationsQuery, {
     variables: {
       limit: 5
