@@ -39,7 +39,9 @@ webpush.setVapidDetails(`mailto:${emailAddress}`, publicKey, privateKey)
 const { processableEvent } = require('./notification')
 
 //
-// TODO: use express-validator for route arguments validation.
+// TODO:
+//  - Use express-validator for route arguments validation.
+//  - Add some sort of authentication to the /mobile/register route.
 //
 
 // ------------------------------------------------------------------
