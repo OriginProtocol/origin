@@ -51,10 +51,7 @@ class MarketplaceScreen extends Component {
 
     this.state = {
       enablePullToRefresh: true,
-      webViewRef: React.createRef(),
-      lastDappUrl: null,
-      // Whenever this change it forces the WebView to go to that source
-      webViewUrlTrigger: this.props.settings.network.dappUrl
+      webViewRef: React.createRef()
     }
 
     if (Platform.OS === 'android') {
@@ -79,17 +76,6 @@ class MarketplaceScreen extends Component {
   }
 
   componentDidUpdate = prevProps => {
-    // Check for changes to network
-    if (
-      get(prevProps, 'settings.network.dappUrl') !==
-      get(this.props, 'settings.network.dappUrl')
-    ) {
-      // Default DApp url changed, trigger WebView url change
-      this.setState({
-        webViewUrlTrigger: get(this.props, 'settings.network.dappUrl')
-      })
-    }
-
     if (prevProps.settings.language !== this.props.settings.language) {
       // Language has changed, need to reload the DApp
       this.injectLanguage()
@@ -329,141 +315,83 @@ class MarketplaceScreen extends Component {
   /* Attempt to open a native deep link URL on this phone. If the relevant
    * app is installed this will open it, otherwise returns false.
    */
-  openNativeDeepLink = async (
-    url,
-    timeControlVariableName,
-    skipForceRefresh
-  ) => {
-    console.debug(`Attempting to open ${url} with native application`)
-
+  openNativeDeepLink = async url => {
     const canOpen = await Linking.canOpenURL(url)
     if (canOpen) {
-      console.debug('Can open URL with native application')
-      if (!skipForceRefresh) {
-        this.goBackToDapp()
-      }
-      if (
-        !this[timeControlVariableName] ||
-        new Date() - this[timeControlVariableName] > 3000
-      ) {
-        this[timeControlVariableName] = new Date()
-        return await Linking.openURL(url)
-      }
+      console.debug(`Can open URL ${url} with native application`)
+      return await Linking.openURL(url)
     } else {
-      console.debug('Could not open URL with native application')
+      console.debug(`Cannot open URL ${url} with native application`)
     }
-
     return false
   }
 
   /* Monitor the state of the WebView and if attempting to open a URL from
-   * Twitter or Facebook for sharing for Origin Rewards, attempt to open the
-   * link using the native app on the phone.
+   * Twitter, Facebook or Telegram for sharing for Origin Rewards, attempt to
+   * open the link using the native app on the phone.
    */
-  checkForShareNativeDialogInterception = async url => {
+  attemptNativeIntercept = async url => {
     // Handle Twitter links on Android (iOS handles them automatically)
-    if (Platform.OS === 'android') {
-      if (url.hostname === 'twitter.com') {
-        if (url.pathname === '/intent/tweet') {
-          // Natively Tweet on Android
-          return await this.openNativeDeepLink(
-            `twitter://post?message=${encodeURIComponent(
-              url.searchParams.get('text')
-            )}`,
-            'lastTweetAttemptTime',
-            true
-          )
-        } else if (url.pathname === '/intent/follow') {
-          // Natively open Twitter profile on Android
-          return await this.openNativeDeepLink(
-            `twitter://user?screen_name=${url.searchParams.get('screen_name')}`,
-            'lastOpenTwitterProfileTime',
-            true
-          )
-        }
-      }
+    if (Platform.OS === 'android' && url.hostname === 'twitter.com') {
+      return await this.handleTwitterUrl(url)
+    } else if (url.hostname.includes('facebook.com')) {
+      return await this.handleFacebookUrl(url)
+    } else if (url.hostname === 't.me') {
+      return await this.handleTelegramUrl(url)
     }
-
-    if (
-      url.hostname.includes('facebook.com') &&
-      url.pathname.toLowerCase() === '/originprotocol'
-    ) {
-      // Open facebook profile natively if possible and IOS and Android
-      return await this.openNativeDeepLink(
-        `fb://${Platform.OS === 'ios' ? 'profile' : 'page'}/120151672018856`,
-        'lastOpenFacebookProfileTime',
-        true
-      )
-    }
-
-    if (
-      url.hostname.includes('facebook.com') &&
-      !url.pathname.startsWith('/v3.2/')
-    ) {
-      const shareHasBeenTriggeredRecently =
-        this.facebookShareShowTime &&
-        new Date() - this.facebookShareShowTime < 5000
-
-      if (url.pathname === '/dialog/share' && !shareHasBeenTriggeredRecently) {
-        const shareLinkContent = {
-          contentType: 'link',
-          contentUrl: url.searchParams.get('href')
-        }
-        const canShowFbShare = await ShareDialog.canShow(shareLinkContent)
-
-        if (!canShowFbShare) {
-          return await this.openNativeDeepLink(
-            url,
-            'lastOpenFacebookShareTime',
-            true
-          )
-        }
-
-        this.facebookShareShowTime = new Date()
-
-        // Not `await`ing this promise intentionally
-        // Because returning true will prevent the redirect and
-        // we need not wait for this promise to resolve to return true.
-        ShareDialog.show(shareLinkContent).then(({ isCancelled, postId }) => {
-          if (isCancelled) {
-            console.log('Share cancelled by user')
-          } else {
-            console.log(`Share success with postId: ${postId}`)
-          }
-        })
-
-        return true
-      }
-
-      if (shareHasBeenTriggeredRecently) {
-        return true
-      }
-      // /* After Facebook shows up the share dialog in dapp's WebView and user is not logged
-      //  * in it will redirect to login page. For that reason we return to the last dapp's
-      //  * url instead of triggering back.
-      //  */
-      // if (shareHasBeenTriggeredRecently) {
-      //   this.goBackToDapp()
-      // }
-    }
-
-    if (url.hostname === 't.me') {
-      return await this.openNativeDeepLink(
-        url,
-        'lastOpenTelegramProfileTime',
-        true
-      )
-    }
-
     // The URL cannot be intercepted or failed to open native browser
     return false
   }
 
-  goBackToDapp = () => {
-    const url = this.state.lastDappUrl
-    // A random is used to force the WebView to navigate.
-    url.searchParams.set('returnRandom', Math.floor(Math.random() * 1000))
-    this.setState({ webViewUrlTrigger: url.href })
+  handleTwitterUrl = async url => {
+    if (url.pathname === '/intent/tweet') {
+      // Natively Tweet on Android
+      return await this.openNativeDeepLink(
+        `twitter://post?message=${encodeURIComponent(
+          url.searchParams.get('text')
+        )}`
+      )
+    } else if (url.pathname === '/intent/follow') {
+      // Natively follow on Android
+      return await this.openNativeDeepLink(
+        `twitter://user?screen_name=${url.searchParams.get('screen_name')}`
+      )
+    }
+    return false
+  }
+
+  handleFacebookUrl = async url => {
+    if (url.pathname.toLowerCase() === '/originprotocol/') {
+      // Open Facebook profile natively if possible and IOS and Android
+      return await this.openNativeDeepLink(
+        `fb://${Platform.OS === 'ios' ? 'profile' : 'page'}/120151672018856`
+      )
+    } else if (url.pathname === '/dialog/share') {
+      // Facebook share action, attempt to open a dialog using the Facebook SDK
+      // if possible. Fall back to the native app deep linking otherwise.
+      const shareLinkContent = {
+        contentType: 'link',
+        contentUrl: url.searchParams.get('href')
+      }
+
+      const canShowFbShare = await ShareDialog.canShow(shareLinkContent)
+      if (canShowFbShare) {
+        console.debug('Displaying Facebook share dialog')
+        ShareDialog.show(shareLinkContent).then(({ isCancelled, postId }) => {
+          if (isCancelled) {
+            console.debug('Facebook share cancelled by user')
+          } else {
+            console.debug(`Facebook share success with postId: ${postId}`)
+          }
+        })
+        return true
+      }
+    }
+    return false
+  }
+
+  handleTelegramUrl = async url => {
+    return this.openNativeDeepLink(url)
   }
 
   onMessage = msg => {
@@ -506,22 +434,13 @@ class MarketplaceScreen extends Component {
       /* Skip */
     }
 
-    const dappUrl = new URL(this.props.settings.network.dappUrl)
-    if (dappUrl.hostname === url.hostname) {
-      this.setState({ lastDappUrl: url })
-    }
-
-    const intercepted = await this.checkForShareNativeDialogInterception(url)
+    const intercepted = await this.attemptNativeIntercept(url)
     if (intercepted) {
-      // Stop loading if URL has been intercepted
-      // Otherwise, the webview continues to go that page
       if (this.state.webViewRef.current) {
         this.state.webViewRef.current.stopLoading()
       }
-      return false
     }
-
-    return true
+    return intercepted
   }
 
   onLoadEnd = () => {
@@ -628,12 +547,11 @@ class MarketplaceScreen extends Component {
     return (
       <OriginWeb3View
         ref={this.state.webViewRef}
-        source={{ uri: this.state.webViewUrlTrigger }}
+        source={{ uri: this.props.settings.network.dappUrl }}
         onMessage={this.onMessage}
         onLoadEnd={this.onLoadEnd}
         onError={this.onError}
         onNavigationStateChange={this.onNavigationStateChange}
-        onShouldStartLoadWithRequest={this.onNavigationStateChange}
         renderLoading={this.renderWebViewLoading}
         renderError={this.renderWebViewError}
         userAgent={this.getUserAgent()}
