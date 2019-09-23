@@ -26,7 +26,7 @@ const VestingHistory = props => {
             }`}
           ></div>
         </td>
-        <td>{amount.toLocaleString()} OGN</td>
+        <td>{Number(amount).toLocaleString()} OGN</td>
         <td>
           <small className="text-muted">
             {momentDate < moment.now() ? 'vested' : 'unvested'}

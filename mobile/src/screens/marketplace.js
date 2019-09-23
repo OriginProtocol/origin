@@ -524,9 +524,9 @@ class MarketplaceScreen extends Component {
         <SafeAreaView style={{ flex: 1 }}>
           <KeyboardAvoidingView
             behavior="padding"
-            keyboardVerticalOffset={Platform.select({ ios: 0, android: 20 })}
+            keyboardVerticalOffset={20}
             style={{ flex: 1 }}
-            enabled
+            enabled={Platform.os === 'android'}
           >
             <ScrollView
               contentContainerStyle={{ flex: 1 }}
@@ -555,8 +555,6 @@ class MarketplaceScreen extends Component {
         renderLoading={this.renderWebViewLoading}
         renderError={this.renderWebViewError}
         userAgent={this.getUserAgent()}
-        // https://github.com/react-native-community/react-native-webview/issues/575
-        androidHardwareAccelerationDisabled={true}
         startInLoadingState={true}
         allowsBackForwardNavigationGestures={true} // iOS support only
         decelerationRate="normal"
