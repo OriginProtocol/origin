@@ -315,28 +315,15 @@ class MarketplaceScreen extends Component {
   /* Attempt to open a native deep link URL on this phone. If the relevant
    * app is installed this will open it, otherwise returns false.
    */
-  openNativeDeepLink = async (navigationState, url) => {
+  openNativeDeepLink = async url => {
     const canOpen = await Linking.canOpenURL(url)
     if (canOpen) {
       console.debug(`Can open URL ${url} with native application`)
-
-      // Stop loading the URL change
-      if (this.state.webViewRef.current) {
-        this.state.webViewRef.current.stopLoading()
-      }
-
-      let open
       try {
-        // Only actually open on click events to prevent multiple attempts at
-        // the deep link because onNavigationStateChange captures mutliple events
-        // for each click (e.g. click, load, etc).
-        if (navigationState.navigationType === 'click') {
-          open = await Linking.openURL(url)
-        }
+        return await Linking.openURL(url)
       } catch (error) {
         console.warn('Failed opening native URL', error)
       }
-      return open
     } else {
       console.debug(`Cannot open URL ${url} with native application`)
     }
@@ -347,16 +334,16 @@ class MarketplaceScreen extends Component {
    * Twitter, Facebook or Telegram for sharing for Origin Rewards, attempt to
    * open the link using the native app on the phone.
    */
-  attemptNativeIntercept = async (navigationState, url) => {
+  attemptNativeIntercept = async url => {
     if (Platform.OS === 'android' && url.hostname === 'twitter.com') {
       // Handle Twitter links on Android (iOS handles them automatically)
-      return await this.handleTwitterUrl(navigationState, url)
+      return await this.handleTwitterUrl(url)
     } else if (url.hostname.includes('facebook.com')) {
       // Facebook URLs
-      return await this.handleFacebookUrl(navigationState, url)
+      return await this.handleFacebookUrl(url)
     } else if (url.hostname === 't.me') {
       // Telegram URLs
-      return await this.handleTelegramUrl(navigationState, url)
+      return await this.handleTelegramUrl(url)
     }
     // The URL cannot be intercepted or failed to open native browser
     return false
@@ -366,11 +353,10 @@ class MarketplaceScreen extends Component {
    * intent to tweet and intent to follow. Convert them to the equivalent
    * deep link and attempt to open in native Twitter app.
    */
-  handleTwitterUrl = async (navigationState, url) => {
+  handleTwitterUrl = async url => {
     if (url.pathname === '/intent/tweet') {
       // Intent to Tweet on Android, open native deep link
       return await this.openNativeDeepLink(
-        navigationState,
         `twitter://post?message=${encodeURIComponent(
           url.searchParams.get('text')
         )}`
@@ -378,7 +364,6 @@ class MarketplaceScreen extends Component {
     } else if (url.pathname === '/intent/follow') {
       // Intent to follow a twitter account on Android, open native deep link
       return await this.openNativeDeepLink(
-        navigationState,
         `twitter://user?screen_name=${url.searchParams.get('screen_name')}`
       )
     }
@@ -391,11 +376,10 @@ class MarketplaceScreen extends Component {
    * app if the Facebook SDK is not availalbe (Android) or pops a ShareDialog
    * if it is.
    */
-  handleFacebookUrl = async (navigationState, url) => {
+  handleFacebookUrl = async url => {
     if (url.pathname.toLowerCase() === '/originprotocol/') {
       // Open Facebook profile natively if possible and IOS and Android
       return await this.openNativeDeepLink(
-        navigationState,
         `fb://${Platform.OS === 'ios' ? 'profile' : 'page'}/120151672018856`
       )
     } else if (url.pathname === '/dialog/share') {
@@ -406,32 +390,29 @@ class MarketplaceScreen extends Component {
         contentUrl: url.searchParams.get('href')
       }
 
-      const canShowFbShare = await ShareDialog.canShow(shareLinkContent)
+      let canShowFbShare
+      try {
+        canShowFbShare = await ShareDialog.canShow(shareLinkContent)
+      } catch (error) {
+        console.warn('ShareDialog error', error)
+      }
+
       if (canShowFbShare) {
-        console.debug('Displaying Facebook share dialog')
-        // Stop loading the URL change
-        if (this.state.webViewRef.current) {
-          this.state.webViewRef.current.stopLoading()
-        }
-        // Only actually open on click events to prevent multiple attempts at
-        // the deep link because onNavigationStateChange captures mutliple events
-        // for each click (e.g. click, load, etc).
-        if (navigationState.navigationType === 'click') {
-          ShareDialog.show(shareLinkContent).then(({ isCancelled, postId }) => {
+        ShareDialog.show(shareLinkContent)
+          .then(({ isCancelled, postId }) => {
             if (isCancelled) {
-              console.debug('Facebook share cancelled by user')
+              console.debug('Share cancelled by user')
             } else {
-              console.debug(`Facebook share success with postId: ${postId}`)
+              console.debug(`Share success with postId: ${postId}`)
             }
           })
-        }
+          .catch(error => {
+            console.warn('ShareDialog show error', error)
+          })
         return true
       } else {
         // Couldn't use Facebook SDK to show a ShareDialog, revert to deep link
-        return await this.openNativeDeepLink(
-          navigationState,
-          url
-        )
+        return await this.openNativeDeepLink(url)
       }
     }
   }
@@ -442,30 +423,18 @@ class MarketplaceScreen extends Component {
     return this.openNativeDeepLink(navigationState, url)
   }
 
-  onMessage = msg => {
-    if (msg.targetFunc === 'handleGraphqlResult') {
-      DeviceEventEmitter.emit('graphqlResult', msg.data)
-    } else if (msg.targetFunc === 'handleGraphqlError') {
-      DeviceEventEmitter.emit('graphqlError', msg.data)
-    } else if (msg.targetFunc === 'handleScrollHandlerResponse') {
-      // TODO disabled due to https://github.com/OriginProtocol/origin/issues/2884
-      // Requires implementation where scrolling in modals can be detected,
-      // possibly from React side?
-      // this.setState({ enablePullToRefresh: msg.data.scrollTop === 0 })
-    }
-  }
-
+  /* Watches changes to navigation and determines if any actions should be taken.
+   */
   onNavigationStateChange = async state => {
     let url
     try {
       url = new URL(state.url)
     } catch (error) {
       console.warn(`Browser reporting malformed url: ${state.url}`)
+      return
     }
 
-    await this.attemptNativeIntercept(state, url)
-
-    // Request Android user permissions if doing something that is likely
+    // Request Android camera permissions if doing something that is likely
     // to need them
     try {
       if (Platform.OS === 'android') {
@@ -482,6 +451,48 @@ class MarketplaceScreen extends Component {
       }
     } catch {
       /* Skip */
+    }
+  }
+
+  /* Watches for requests and decides if they should be loaded or not, e.g.
+   * from a click in the DApp. We prevent loading in cases where the link
+   * can be handled in a native app on the phone.
+   */
+  onShouldStartLoadWithRequest = async request => {
+    let url
+    try {
+      url = new URL(request.url)
+    } catch (error) {
+      console.warn(`Browser reporting malformed url: ${request.url}`)
+    }
+    const intercepted = await this.attemptNativeIntercept(url)
+    if (intercepted) {
+      // Returning false from this function should stop the load of the URL but
+      // it does not appear to work correctly, see related issues:
+      // https://github.com/react-native-community/react-native-webview/issues/772
+      // https://github.com/react-native-community/react-native-webview/issues/124
+      // Adding the additional stopLoading call here seems to fix this in most
+      // cases
+      if (this.state.webViewRef.current) {
+        this.state.webViewRef.current.stopLoading()
+      }
+      return false
+    }
+    return true
+  }
+
+  /* Handle a message received via window.postMessage from the WebView.
+   */
+  onMessage = msg => {
+    if (msg.targetFunc === 'handleGraphqlResult') {
+      DeviceEventEmitter.emit('graphqlResult', msg.data)
+    } else if (msg.targetFunc === 'handleGraphqlError') {
+      DeviceEventEmitter.emit('graphqlError', msg.data)
+    } else if (msg.targetFunc === 'handleScrollHandlerResponse') {
+      // TODO disabled due to https://github.com/OriginProtocol/origin/issues/2884
+      // Requires implementation where scrolling in modals can be detected,
+      // possibly from React side?
+      // this.setState({ enablePullToRefresh: msg.data.scrollTop === 0 })
     }
   }
 
@@ -594,6 +605,7 @@ class MarketplaceScreen extends Component {
         onLoadEnd={this.onLoadEnd}
         onError={this.onError}
         onNavigationStateChange={this.onNavigationStateChange}
+        onShouldStartLoadWithRequest={this.onShouldStartLoadWithRequest}
         renderLoading={this.renderWebViewLoading}
         renderError={this.renderWebViewError}
         userAgent={this.getUserAgent()}
