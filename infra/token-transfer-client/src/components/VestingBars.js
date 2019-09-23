@@ -174,12 +174,12 @@ const VestingBars = props => {
       <div style={{ display: 'flex', marginTop: '4rem' }}>
         <div>
           <div className="status-circle status-circle-success ml-3 mr-2"></div>
-          {props.vested.toLocaleString()} OGN{' '}
+          {Number(props.vested).toLocaleString()} OGN{' '}
           <small className="ml-2">vested</small>
         </div>
         <div>
           <div className="status-circle ml-3 mr-2"></div>
-          {props.unvested.toLocaleString()} OGN{' '}
+          {Number(props.unvested).toLocaleString()} OGN{' '}
           <small className="ml-2">unvested</small>
         </div>
       </div>

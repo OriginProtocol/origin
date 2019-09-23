@@ -93,11 +93,12 @@ const WithdrawalHistory = props => {
                   props.transfers.map(transfer => (
                     <tr
                       key={transfer.id}
+                      className="hoverable"
                       onClick={() =>
                         props.history.push(`/withdrawal/${transfer.id}`)
                       }
                     >
-                      <td>{transfer.amount.toLocaleString()} OGN</td>
+                      <td>{Number(transfer.amount).toLocaleString()} OGN</td>
                       <td>{transfer.data.ip}</td>
                       <td>
                         <EthAddress address={transfer.toAddress} />

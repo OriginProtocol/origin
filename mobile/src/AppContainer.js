@@ -19,7 +19,6 @@ import AuthenticationGuard from 'components/authentication-guard'
 import UpdatePrompt from 'components/update-prompt'
 import BackupPrompt from 'components/backup-prompt'
 import SamsungBKS from 'components/samsung-bks'
-import Loading from 'components/loading'
 
 class MarketplaceApp extends React.Component {
   static router = Navigation.router
@@ -126,9 +125,7 @@ class MarketplaceApp extends React.Component {
       <>
         {this.props.samsungBKS.enabled && <SamsungBKS />}
         {!this.props.samsungBKS.error &&
-          (samsungBKSInitializing ? (
-            <Loading />
-          ) : (
+          (samsungBKSInitializing ? null : (
             <>
               <StatusBar />
               <AuthenticationGuard />
