@@ -329,7 +329,7 @@ app.post('/events', async (req, res) => {
   const { event = {}, related = {} } = req.body
   const { returnValues = {} } = event
   const eventName = event.event
-  const { listing, offer } = related
+  const { listing = {}, offer = {} } = related
   const { seller = {} } = listing
   const buyer = offer ? offer.buyer : {} // Not all events have offers
   const eventDetailsSummary = `eventName=${eventName} blockNumber=${event.blockNumber} logIndex=${event.logIndex}`
@@ -342,27 +342,17 @@ app.post('/events', async (req, res) => {
     logger.info(
       `Info: Not a processable event. Skipping ${eventDetailsSummary}`
     )
-    return
+    return res.status(200).send({ status: 'ok' })
   }
 
-  if (!listing) {
-    logger.error(`Error: Missing listing data. Skipping ${eventDetailsSummary}`)
-    return
-  }
-  if (!seller.id) {
-    logger.error(`Error: Missing seller.id. Skipping ${eventDetailsSummary}`)
-    return
-  }
-  if (!buyer.id) {
-    logger.error(`Error: Missing buyer.id. Skipping ${eventDetailsSummary}`)
-    return
-  }
-
-  // ETH address of the party who initiated the action.
-  // Could be the seller, buyer or a 3rd party (ex: arbitrator, affiliate, etc...).
-  if (!returnValues.party) {
-    logger.error(`Error: Invalid part, skipping ${eventDetailsSummary}`)
-    return
+  let error
+  if (!listing) error = 'Missing listing data'
+  if (!seller || !seller.id) error = 'Missing seller id'
+  if (!buyer || !buyer.id) error = 'Missing buyer id'
+  if (!returnValues.party) error = 'Missing party'
+  if (error) {
+    logger.error(`${error}. Skipping ${eventDetailsSummary}`)
+    return res.status(400).send({ errors: [error] })
   }
 
   // Normalize buyer, seller and party to use owner (aka "wallet") rather than proxy addresses.
