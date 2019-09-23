@@ -51,13 +51,8 @@ class MarketplaceScreen extends Component {
 
     this.state = {
       enablePullToRefresh: true,
+      panResponder: this.getSwipeHandler(),
       webViewRef: React.createRef()
-    }
-
-    if (Platform.OS === 'android') {
-      // Configure swipe handler for back forward navigation on Android because
-      // it does not support allowsBackForwardNavigationGestures
-      this.setSwipeHandler()
     }
 
     this.subscriptions = [
@@ -77,15 +72,13 @@ class MarketplaceScreen extends Component {
 
   componentDidUpdate = prevProps => {
     if (prevProps.settings.language !== this.props.settings.language) {
-      // Language has changed, need to reload the DApp
+      // Language has changed
       this.injectLanguage()
     }
-
     if (prevProps.settings.currency !== this.props.settings.currency) {
+      // Currency has changed
       this.injectCurrency()
     }
-
-    // Check for active Ethereum address changing
     if (
       get(prevProps, 'wallet.activeAccount.address') !==
       get(this.props, 'wallet.activeAccount.address')
@@ -93,6 +86,43 @@ class MarketplaceScreen extends Component {
       // Active account changed, update messaging keys
       this.injectMessagingKeys()
     }
+  }
+
+  /* Enables left and right swiping to go forward/back in the WebView on Android.
+   * This is required because the allowBackForwardNavigation prop is only
+   * supported on iOS.
+   */
+  getSwipeHandler = () => {
+    if (Platform.OS === 'ios') {
+      // No panHandlers required for iOS
+      return { panHandlers: [] }
+    }
+
+    // Distance required to trigger a back/forward request
+    const swipeDistance = 200
+
+    const panResponder = PanResponder.create({
+      onStartShouldSetPanResponderCapture: () => false,
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
+        return (
+          Math.abs(gestureState.dx) > swipeDistance &&
+          Math.abs(gestureState.dy) < 50
+        )
+      },
+      onPanResponderRelease: (evt, gestureState) => {
+        console.debug('Release')
+        if (this.state.webViewRef.current) {
+          if (gestureState.moveX > swipeDistance) {
+            console.debug('Swipe triggered goBack')
+            this.state.webViewRef.current.goBack()
+          } else if (gestureState.moveX < swipeDistance) {
+            console.debug('Swipe triggered goForward')
+            this.state.webViewRef.current.goForward()
+          }
+        }
+      }
+    })
+    return panResponder
   }
 
   injectJavaScript = (script, name) => {
@@ -286,30 +316,6 @@ class MarketplaceScreen extends Component {
     if (Platform.OS === 'android') {
       PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA)
     }
-  }
-
-  /* Enables left and right swiping to go forward/back in the WebView on Android.
-   */
-  setSwipeHandler = () => {
-    const swipeDistance = 200
-    this._panResponder = PanResponder.create({
-      onStartShouldSetPanResponderCapture: () => false,
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
-        return (
-          Math.abs(gestureState.dx) > swipeDistance &&
-          Math.abs(gestureState.dy) < 50
-        )
-      },
-      onPanResponderRelease: (evt, gestureState) => {
-        if (this.state.webViewRef.current) {
-          if (gestureState.moveX > swipeDistance) {
-            this.state.webViewRef.current.goBack()
-          } else if (gestureState.moveX < swipeDistance) {
-            this.state.webViewRef.current.goForward()
-          }
-        }
-      }
-    })
   }
 
   /* Attempt to open a native deep link URL on this phone. If the relevant
@@ -584,9 +590,7 @@ class MarketplaceScreen extends Component {
             <ScrollView
               contentContainerStyle={{ flex: 1 }}
               refreshControl={refreshControl}
-              {...(Platform.OS === 'android'
-                ? this._panResponder.panHandlers
-                : [])}
+              {...this.state.panResponder.panHandlers}
             >
               {this.renderWebView()}
             </ScrollView>
