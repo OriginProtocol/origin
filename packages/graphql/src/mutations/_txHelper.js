@@ -12,8 +12,8 @@ import { getTransaction } from '../resolvers/web3/transactions'
 import relayer from './_relayer'
 
 const GAS_STATION_URL = 'https://ethgasstation.info/json/ethgasAPI.json'
-const GAS_PRICE_KEY = process.env.GAS_PRICE_KEY || 'average' // 'safeLow'
-const SAFETY_GAS_IMIT = 1000000 // 1m
+const GAS_PRICE_KEY = process.env.GAS_PRICE_KEY || 'average'
+const SAFETY_GAS_LIMIT = 1000000 // 1m
 
 const debug = createDebug('origin:tx-helper:')
 const formatAddr = address => (address ? address.substr(0, 8) : '')
@@ -71,7 +71,7 @@ function useRelayer({ mutation, value }) {
  * Should we use existing proxy, create new proxy, or don't use proxy at all.
  * @param {string} proxy - Existing proxy address
  * @param {string} destinationContract - Contract address
- * @param {string} to - Receipient wallet
+ * @param {string} to - Recipient wallet
  * @param {string} from - Wallet address (proxy owner)
  * @param {string} mutation - Name of mutation
  * @returns String or `undefined` if proxy should not be used.
@@ -163,10 +163,10 @@ function globalWeb3() {
  *
  * @param {object} web3 instance to use (optional)
  * @returns {number} gas price in wei
- * @throws {Error} if no web3 given, and no global web3 available
+ * @throws {Error} if gas price fetch fails, no web3 given, and no global web3 available
  */
 async function getGasPrice(w3) {
-  w3 = w3 ? w3 : globalWeb3()
+  w3 = w3 || globalWeb3()
   // Don't use eth_gasPrice for MM
   if (
     typeof window !== 'undefined' &&
@@ -281,8 +281,8 @@ async function txWrapChangeOwner({
  */
 async function handleCallbacks({ callbacks, val }) {
   if (!callbacks) return
-  for (let i = 0; i < callbacks.length; i++) {
-    const ret = callbacks[i](val)
+  for (const callback of callbacks) {
+    const ret = callback(val)
     if (ret instanceof Promise) {
       await ret
     }
@@ -343,6 +343,7 @@ async function handleHash({ hash, from, mutation }) {
  */
 async function handleReceipt({ shouldUseProxy, receipt, mutation }) {
   if (String(shouldUseProxy).startsWith('create')) {
+    // clear the cache since we just created a proxy
     resetProxyCache()
   }
 
@@ -379,7 +380,8 @@ async function handleConfirmation({
   mutation
 }) {
   if (confNumber === 1) {
-    if (String(shouldUseProxy).indexOf('create') === 0) {
+    if (String(shouldUseProxy).startsWith('create')) {
+      // clear the cache since we just created a proxy
       resetProxyCache()
     }
   }
@@ -396,7 +398,7 @@ async function handleConfirmation({
 }
 
 /**
- * Send a trnsaction using the Origin relayer
+ * Send a transaction using the Origin relayer
  *
  * @param {object} args
  * @param {object} args.web3 - a web3.js instance
@@ -426,8 +428,8 @@ async function sendViaRelayer({
     to
   })
 
-  if (!resp) {
-    throw new Error('No response from relayer!')
+  if (!resp || !resp.id) {
+    throw new Error('No transaction hashfrom relayer!')
   }
 
   const txHash = resp.id
@@ -673,7 +675,7 @@ export default function txHelper({
 
       // TODO: result from estimateGas is too low. Need to work out exact amount
       // gas = await toSend.estimateGas({ from })
-      gas = SAFETY_GAS_IMIT
+      gas = SAFETY_GAS_LIMIT
     } else if (shouldUseProxy && !shouldUseRelayer) {
       debug(`wrapping tx with Proxy.execute. value: ${value}`)
 
@@ -690,7 +692,7 @@ export default function txHelper({
         value
       })
 
-      gas = SAFETY_GAS_IMIT
+      gas = SAFETY_GAS_LIMIT
     }
 
     if (shouldUseRelayer && shouldUseProxy) {
