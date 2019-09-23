@@ -13,14 +13,18 @@ describe('Email and MobilePush notifications for Origin Messages', () => {
     await NotificationLog.destroy({ where: {}, truncate: true })
     await Identity.destroy({ where: {}, truncate: true })
 
+    this.sender = '0x78655b524c1dc1cbfacda55620249f3afdbfbf3b'
+    this.receiver = '0x627306090abab3a6e1400e9345bc60c78a8bef57'
+
+    // Create an identity and register mobile for the receiver.
     await MobileRegistry.create({
-      ethAddress: '0x123',
+      ethAddress: this.receiver,
       deviceToken: 'testToken',
       permissions: { alert: true },
       deviceType: 'APN'
     })
     await Identity.create({
-      ethAddress: '0x123',
+      ethAddress: this.receiver,
       email: 'foo@bar.com'
     })
   })
@@ -29,8 +33,8 @@ describe('Email and MobilePush notifications for Origin Messages', () => {
     await request(app)
       .post('/messages')
       .send({
-        sender: '0x78655B524c1dc1CbfacDA55620249F3AFDbFBf3B',
-        receivers: ['0x123'],
+        sender: this.sender,
+        receivers: [this.receiver],
         messageHash: 'ABCD'
       })
       .expect(200)
@@ -38,11 +42,11 @@ describe('Email and MobilePush notifications for Origin Messages', () => {
     // There should be 2 entries in notification_log, one for email and the
     // other for the mobile push.
     const logEmail = await NotificationLog.findOne({
-      where: { channel: 'email' }
+      where: { ethAddress: this.receiver, channel: 'email' }
     })
     expect(logEmail).to.be.an('object')
     const logMobile = await NotificationLog.findOne({
-      where: { channel: 'mobile-ios' }
+      where: { ethAddress: this.receiver, channel: 'mobile-ios' }
     })
     expect(logMobile).to.be.an('object')
   })
