@@ -347,7 +347,7 @@ class MarketplaceScreen extends Component {
     } else if (url.hostname.includes('facebook.com')) {
       // Facebook URLs
       return await this.handleFacebookUrl(url)
-    } else if (url.hostname === 't.me') {
+    } else if (url.protocol === 'tg:' || url.hostname === 't.me') {
       // Telegram URLs
       return await this.handleTelegramUrl(url)
     }
@@ -473,6 +473,7 @@ class MarketplaceScreen extends Component {
     }
     const intercepted = await this.attemptNativeIntercept(url)
     if (intercepted) {
+      console.debug('Intercepted URL request')
       // Returning false from this function should stop the load of the URL but
       // it does not appear to work correctly, see related issues:
       // https://github.com/react-native-community/react-native-webview/issues/772
