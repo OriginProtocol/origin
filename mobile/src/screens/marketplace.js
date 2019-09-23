@@ -425,8 +425,8 @@ class MarketplaceScreen extends Component {
 
   /* Intercepts Telegram URLs and attempts to open the native Telegram app.
    */
-  handleTelegramUrl = async (navigationState, url) => {
-    return this.openNativeDeepLink(navigationState, url)
+  handleTelegramUrl = async url => {
+    return this.openNativeDeepLink(url)
   }
 
   /* Watches changes to navigation and determines if any actions should be taken.
