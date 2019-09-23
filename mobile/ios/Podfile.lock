@@ -68,21 +68,21 @@ PODS:
     - React-cxxreact (= 0.60.5)
     - React-jsi (= 0.60.5)
   - React-jsinspector (0.60.5)
-  - react-native-fbsdk (1.0.3):
+  - react-native-fbsdk (1.0.4):
     - React
-    - react-native-fbsdk/Core (= 1.0.3)
-    - react-native-fbsdk/Login (= 1.0.3)
-    - react-native-fbsdk/Share (= 1.0.3)
-  - react-native-fbsdk/Core (1.0.3):
-    - FBSDKCoreKit (~> 5.0)
+    - react-native-fbsdk/Core (= 1.0.4)
+    - react-native-fbsdk/Login (= 1.0.4)
+    - react-native-fbsdk/Share (= 1.0.4)
+  - react-native-fbsdk/Core (1.0.4):
+    - FBSDKCoreKit (~> 5.5)
     - React
-  - react-native-fbsdk/Login (1.0.3):
-    - FBSDKLoginKit (~> 5.0)
+  - react-native-fbsdk/Login (1.0.4):
+    - FBSDKLoginKit (~> 5.5)
     - React
-  - react-native-fbsdk/Share (1.0.3):
-    - FBSDKShareKit (~> 5.0)
+  - react-native-fbsdk/Share (1.0.4):
+    - FBSDKShareKit (~> 5.5)
     - React
-  - react-native-webview (7.0.4):
+  - react-native-webview (7.1.1):
     - React
   - React-RCTActionSheet (0.60.5):
     - React-Core (= 0.60.5)
@@ -111,13 +111,11 @@ PODS:
     - React
   - RNCPushNotificationIOS (1.0.2):
     - React
-  - RNDeviceInfo (2.3.2):
-    - React
   - RNGestureHandler (1.4.1):
     - React
-  - RNLocalize (1.1.4):
+  - RNLocalize (1.2.1):
     - React
-  - RNSentry (1.0.4):
+  - RNSentry (1.0.6):
     - React
     - Sentry (~> 4.4.0)
   - Sentry (4.4.0):
@@ -153,7 +151,6 @@ DEPENDENCIES:
   - React-RCTWebSocket (from `../node_modules/react-native/Libraries/WebSocket`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
-  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNLocalize (from `../node_modules/react-native-localize`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
@@ -219,8 +216,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/async-storage"
   RNCPushNotificationIOS:
     :path: "../node_modules/@react-native-community/push-notification-ios"
-  RNDeviceInfo:
-    :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNLocalize:
@@ -248,8 +243,8 @@ SPEC CHECKSUMS:
   React-jsi: 4d8c9efb6312a9725b18d6fc818ffc103f60fec2
   React-jsiexecutor: 90ad2f9db09513fc763bc757fdc3c4ff8bde2a30
   React-jsinspector: e08662d1bf5b129a3d556eb9ea343a3f40353ae4
-  react-native-fbsdk: 7bde3b84fc093d2c5e7fdccea03fe8fa9f112834
-  react-native-webview: 122ba855a538d6081501246256047613116e08c3
+  react-native-fbsdk: 45e28bbab3e905cbc635c0bdd3444b372e933ae9
+  react-native-webview: 68faa15904405832c5f1761164fc1bc052890e2e
   React-RCTActionSheet: b0f1ea83f4bf75fb966eae9bfc47b78c8d3efd90
   React-RCTAnimation: 359ba1b5690b1e87cc173558a78e82d35919333e
   React-RCTBlob: 5e2b55f76e9a1c7ae52b826923502ddc3238df24
@@ -262,10 +257,9 @@ SPEC CHECKSUMS:
   React-RCTWebSocket: cd932a16b7214898b6b7f788c8bddb3637246ac4
   RNCAsyncStorage: 2e2e3feb9bdadc752a026703d8c4065ca912e75a
   RNCPushNotificationIOS: 0b8d06ff190d84627dd17501bfb96652375970e4
-  RNDeviceInfo: 17e34f6dd902f08d88cbe2c0b7a01be948d43641
   RNGestureHandler: 4cb47a93019c1a201df2644413a0a1569a51c8aa
-  RNLocalize: 62a949d2ec5bee0eb8f39a80a48f01e2f4f67080
-  RNSentry: 8d2b90f29054794a8b508362e5831ef7aaf781c9
+  RNLocalize: f42aea3133d91d7fa3ec01284a6895019af1a83f
+  RNSentry: f1c8e34f9109a94b77e946d0ca50803375c1c19e
   Sentry: 26650184fe71eb7476dfd2737acb5ea6cc64b4b1
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   yoga: 312528f5bbbba37b4dcea5ef00e8b4033fdd9411

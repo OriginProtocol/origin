@@ -587,8 +587,6 @@ class MarketplaceScreen extends Component {
         renderLoading={this.renderWebViewLoading}
         renderError={this.renderWebViewError}
         userAgent={this.getUserAgent()}
-        // https://github.com/react-native-community/react-native-webview/issues/575
-        androidHardwareAccelerationDisabled={true}
         startInLoadingState={true}
         allowsBackForwardNavigationGestures={true} // iOS support only
         decelerationRate="normal"
