@@ -429,7 +429,7 @@ async function sendViaRelayer({
   })
 
   if (!resp || !resp.id) {
-    throw new Error('No transaction hashfrom relayer!')
+    throw new Error('No transaction hash from relayer!')
   }
 
   const txHash = resp.id
