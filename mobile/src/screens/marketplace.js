@@ -348,21 +348,27 @@ class MarketplaceScreen extends Component {
    * open the link using the native app on the phone.
    */
   attemptNativeIntercept = async (navigationState, url) => {
-    // Handle Twitter links on Android (iOS handles them automatically)
     if (Platform.OS === 'android' && url.hostname === 'twitter.com') {
+      // Handle Twitter links on Android (iOS handles them automatically)
       return await this.handleTwitterUrl(navigationState, url)
     } else if (url.hostname.includes('facebook.com')) {
+      // Facebook URLs
       return await this.handleFacebookUrl(navigationState, url)
     } else if (url.hostname === 't.me') {
+      // Telegram URLs
       return await this.handleTelegramUrl(navigationState, url)
     }
     // The URL cannot be intercepted or failed to open native browser
     return false
   }
 
+  /* Handle attempt to access a Twitter URL. Intercepts two types of URLs,
+   * intent to tweet and intent to follow. Convert them to the equivalent
+   * deep link and attempt to open in native Twitter app.
+   */
   handleTwitterUrl = async (navigationState, url) => {
     if (url.pathname === '/intent/tweet') {
-      // Natively Tweet on Android
+      // Intent to Tweet on Android, open native deep link
       return await this.openNativeDeepLink(
         navigationState,
         `twitter://post?message=${encodeURIComponent(
@@ -370,7 +376,7 @@ class MarketplaceScreen extends Component {
         )}`
       )
     } else if (url.pathname === '/intent/follow') {
-      // Natively follow on Android
+      // Intent to follow a twitter account on Android, open native deep link
       return await this.openNativeDeepLink(
         navigationState,
         `twitter://user?screen_name=${url.searchParams.get('screen_name')}`
@@ -379,6 +385,12 @@ class MarketplaceScreen extends Component {
     return false
   }
 
+  /* Handle attempt to access a Facebook URL. Intercepts opening Origin Protocol's
+   * profile page (i.e. intent to follow) and opens it in the native Facebook app.
+   * Also intercepts an intent to share Origin content and opens it in the native
+   * app if the Facebook SDK is not availalbe (Android) or pops a ShareDialog
+   * if it is.
+   */
   handleFacebookUrl = async (navigationState, url) => {
     if (url.pathname.toLowerCase() === '/originprotocol/') {
       // Open Facebook profile natively if possible and IOS and Android
@@ -397,12 +409,13 @@ class MarketplaceScreen extends Component {
       const canShowFbShare = await ShareDialog.canShow(shareLinkContent)
       if (canShowFbShare) {
         console.debug('Displaying Facebook share dialog')
-
         // Stop loading the URL change
         if (this.state.webViewRef.current) {
           this.state.webViewRef.current.stopLoading()
         }
-
+        // Only actually open on click events to prevent multiple attempts at
+        // the deep link because onNavigationStateChange captures mutliple events
+        // for each click (e.g. click, load, etc).
         if (navigationState.navigationType === 'click') {
           ShareDialog.show(shareLinkContent).then(({ isCancelled, postId }) => {
             if (isCancelled) {
@@ -413,11 +426,18 @@ class MarketplaceScreen extends Component {
           })
         }
         return true
+      } else {
+        // Couldn't use Facebook SDK to show a ShareDialog, revert to deep link
+        return await this.openNativeDeepLink(
+          navigationState,
+          url
+        )
       }
     }
-    return false
   }
 
+  /* Intercepts Telegram URLs and attempts to open the native Telegram app.
+   */
   handleTelegramUrl = async (navigationState, url) => {
     return this.openNativeDeepLink(navigationState, url)
   }
