@@ -68,7 +68,7 @@ export const hasText = async (page, text, path) => {
   return result.length > 0
 }
 
-export const clearCookies = async (page) => {
+export const clearCookies = async page => {
   await page._client.send('Network.clearBrowserCookies')
 }
 
@@ -106,50 +106,63 @@ export const clickBySelector = async (page, path) => {
 }
 
 export const changeAccount = async (page, account, isFreshAccount = false) => {
-  await page.evaluate(({ account, isFreshAccount }) => {
-    window.localStorage.useWeb3Wallet = account
-    const accountData = {
-      id: account,
-      profile: {
-        firstName: 'Test',
-        lastName: 'Account',
-        description: '',
-        avatar: ''
-      },
-      attestations: [],
-      strength: 0
-    }
+  await page.evaluate(
+    ({ account, isFreshAccount }) => {
+      window.localStorage.useWeb3Wallet = account
+      const accountData = {
+        id: account,
+        profile: {
+          firstName: 'Test',
+          lastName: 'Account',
+          description: '',
+          avatar: ''
+        },
+        attestations: [],
+        strength: 0
+      }
 
-    delete window.localStorage.uiState
+      delete window.localStorage.uiState
 
-    if (isFreshAccount) {
-      delete window.localStorage.useWeb3Identity
-      delete window.localStorage.useMessagingObject
-    } else {
-      window.localStorage.useWeb3Identity = JSON.stringify(accountData)
-      window.localStorage.useMessagingObject = JSON.stringify({
-        enabled: true,
-        pubKey: '0xff',
-        pubSig: '0xff',
-        shippingOverride: {
-          name: 'Bruce Wayne',
-          address1: '123 Wayne Towers',
-          stateProvinceRegion: 'New Jersey',
-          postalCode: '123456',
-          country: 'USA'
-        }
-      })
-    }
-  }, { account, isFreshAccount })
+      if (isFreshAccount) {
+        delete window.localStorage.useWeb3Identity
+        delete window.localStorage.useMessagingObject
+      } else {
+        window.localStorage.useWeb3Identity = JSON.stringify(accountData)
+        window.localStorage.useMessagingObject = JSON.stringify({
+          enabled: true,
+          pubKey: '0xff',
+          pubSig: '0xff',
+          shippingOverride: {
+            name: 'Bruce Wayne',
+            address1: '123 Wayne Towers',
+            stateProvinceRegion: 'New Jersey',
+            postalCode: '123456',
+            country: 'USA'
+          }
+        })
+      }
+    },
+    { account, isFreshAccount }
+  )
 }
 
-export const createAccount = async (page, ogn) => {
+export const createAccount = async (page, opts) => {
   return await page.evaluate(
-    ogn =>
+    opts =>
       new Promise(resolve =>
-        window.ognTools.createAccount(window.gql, ogn).then(resolve)
+        window.ognTools.createAccount(window.gql, opts).then(resolve)
       ),
-    ogn
+    opts
+  )
+}
+
+export const createListing = async (page, opts) => {
+  return await page.evaluate(
+    opts =>
+      new Promise(resolve =>
+        window.ognTools.createListing(window.gql, opts).then(resolve)
+      ),
+    opts
   )
 }
 
@@ -158,11 +171,7 @@ let screenshots = 0
 export const pic = async (page, name) => {
   if (!shouldScreenshot) return
   screenshots++
-  await page.screenshot({
-    path: `test/screenshots/${String(screenshots).padStart(
-      3,
-      '0'
-    )}-${name}.png`,
-    fullPage: true
-  })
+  const filePrefix = String(screenshots).padStart(3, '0')
+  const path = `test/screenshots/${filePrefix}-${name}.png`
+  await page.screenshot({ path, fullPage: true })
 }

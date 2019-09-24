@@ -3,7 +3,7 @@
  * the --file option to mocha. It sets up and tears down the infrastructure
  * (ethereum test node and IPFS) required to run tests.
  */
-import services from './_services'
+import services from './utils/_services'
 
 const isWatchMode = process.argv.some(arg => arg === '-w' || arg === '--watch')
 
