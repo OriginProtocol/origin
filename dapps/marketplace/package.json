@@ -136,7 +136,7 @@
     "mocha": "6.2.0",
     "opener": "1.5.1",
     "optimize-css-assets-webpack-plugin": "5.0.3",
-    "react-router-dom": "5.0.1",
+    "react-router-dom": "5.1.0",
     "style-loader": "1.0.0",
     "terser-webpack-plugin": "2.1.0",
     "typeface-lato": "0.0.75",
