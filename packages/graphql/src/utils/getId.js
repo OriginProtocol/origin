@@ -1,14 +1,14 @@
 import context from '../contracts'
 
 export function getOriginListingId(networkId, event) {
-  // config addresses are all lowercase
-  const version =
-    context.marketplaceVersionByAddress[event.address.toLowerCase()] || '000'
+  const address = context.web3.utils.toChecksumAddress(event.address)
+  const version = context.marketplaceVersionByAddress[address] || '000'
   return `${networkId}-${version}-${event.returnValues.listingID}-${event.blockNumber}`
 }
 
 export function getOriginOfferId(networkId, event) {
-  const version = context.marketplaceVersionByAddress[event.address] || '000'
+  const address = context.web3.utils.toChecksumAddress(event.address)
+  const version = context.marketplaceVersionByAddress[address] || '000'
   return `${networkId}-${version}-${event.returnValues.listingID}-${event.returnValues.offerID}`
 }
 
