@@ -170,7 +170,7 @@ const OriginWeb3View = React.forwardRef(({ onMessage, ...props }, ref) => {
   const checkNotificationPermissions = () => {
     // Check if the user has enabled push notifications
     return PushNotification.checkPermissions(permissions => {
-      if (!__DEV__ && !permissions.alert) {
+      if (!permissions.alert) {
         setModals([...modals, { type: 'enableNotifications' }])
       }
     })

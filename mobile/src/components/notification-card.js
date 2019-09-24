@@ -34,9 +34,8 @@ const NotificationCard = props => (
         </fbt>
       ) : (
         <fbt desc="NotificationCard.enableMessage">
-          Woops! It looks like you have notifications disabled. To get the
-          latest updates about your transactions we recommend enabling them in
-          the settings for the Origin Marketplace application.
+          We highly recommend enabling notifications to get the latest updates
+          about your transaction with timely alerts.
         </fbt>
       )}
     </Text>
@@ -45,7 +44,7 @@ const NotificationCard = props => (
         <OriginButton
           size="large"
           type="primary"
-          title={fbt('Open Settings', 'NotificationCard.button')}
+          title={fbt('Open Settings', 'NotificationCard.settingsButton')}
           onPress={() => {
             if (Platform.OS === 'ios') {
               Linking.openURL('app-settings:')
@@ -58,7 +57,7 @@ const NotificationCard = props => (
         <OriginButton
           size="large"
           type="primary"
-          title={fbt('Open Settings', 'NotificationCard.button')}
+          title={fbt('Enable Notifications', 'NotificationCard.enableButton')}
           onPress={async () => {
             let permissions
             try {

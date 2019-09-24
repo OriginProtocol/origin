@@ -5,7 +5,7 @@ import { ActivationConstants } from 'actions/Activation'
 const initialState = {
   // Address to date of backup/dismissal
   backupWarningDismissed: {},
-  notificationsRequested: null
+  notificationsRequested: false
 }
 
 export default function Activation(state = initialState, action = {}) {
