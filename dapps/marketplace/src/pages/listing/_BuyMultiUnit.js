@@ -15,26 +15,21 @@ import PurchaseSummary from './_PurchaseSummary'
 const withMultiUnitData = WrappedComponent => {
   const WithMultiUnitData = ({ listing, quantity, ...props }) => {
     const amount = String(Number(listing.price.amount) * Number(quantity))
-    const acceptsEth = listing.acceptedTokens.find(t => t.id === 'token-ETH')
-    const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
-    // Favor payment in ETH over DAI if the seller accepts it.
-    const token = acceptsEth ? 'token-ETH' : 'token-DAI'
     const totalPrice = { amount, currency: listing.price.currency }
 
     return (
       <WithPrices
+        listing={listing}
         price={totalPrice}
-        target={token}
         targets={['token-ETH', 'token-DAI', totalPrice.currency.id]}
         allowanceTarget={listing.contractAddr}
       >
-        {({ prices, tokenStatus }) => (
+        {({ prices, tokenStatus, suggestedToken }) => (
           <WrappedComponent
             {...props}
             prices={prices}
             tokenStatus={tokenStatus}
-            token={token}
-            acceptsDai={acceptsDai}
+            token={suggestedToken}
             listing={listing}
             totalPrice={totalPrice}
             quantity={quantity}
@@ -134,22 +129,20 @@ const BuyMultiUnitMutation = withMultiUnitData(
     tokenStatus,
     quantity,
     shippingAddress
-  }) => {
-    return (
-      <Buy
-        refetch={refetch}
-        listing={listing}
-        from={from}
-        value={get(prices, `${token}.amount`)}
-        quantity={quantity}
-        currency={token}
-        tokenStatus={tokenStatus}
-        shippingAddress={shippingAddress}
-        className="btn btn-primary"
-        children={fbt('Purchase', 'Purchase')}
-      />
-    )
-  }
+  }) => (
+    <Buy
+      refetch={refetch}
+      listing={listing}
+      from={from}
+      value={get(prices, `${token}.amount`)}
+      quantity={quantity}
+      currency={token}
+      tokenStatus={tokenStatus}
+      shippingAddress={shippingAddress}
+      className="btn btn-primary"
+      children={fbt('Purchase', 'Purchase')}
+    />
+  )
 )
 
 const MultiUnitPurchaseSummary = withMultiUnitData(PurchaseSummary)

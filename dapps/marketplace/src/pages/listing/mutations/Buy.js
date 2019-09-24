@@ -29,11 +29,13 @@ class Buy extends Component {
   state = {}
 
   hasBalance() {
-    return get(this.props, 'tokenStatus.hasBalance', false)
+    const { currency } = this.props
+    return get(this.props, `tokenStatus.${currency}.hasBalance`, false)
   }
 
   hasAllowance() {
-    return get(this.props, 'tokenStatus.hasAllowance', false)
+    const { currency } = this.props
+    return get(this.props, `tokenStatus.${currency}.hasAllowance`, false)
   }
 
   render() {
@@ -84,7 +86,8 @@ class Buy extends Component {
         />
       )
     } else {
-      const hasEth = get(this.props, 'tokenStatus.hasEthBalance', false)
+      const { tokenStatus } = this.props
+      const hasEth = get(tokenStatus, 'token-ETH.hasBalance', false)
 
       if (this.state.error) {
         content = this.renderTransactionError()
@@ -380,13 +383,10 @@ class Buy extends Component {
     }
 
     this.setState({ modal: true, waitForSwap: 'pending' })
+    const { currency, walletProxy, tokenStatus } = this.props
+    const tokenValue = get(tokenStatus, `${currency}.needsBalance`)
 
-    const variables = {
-      from: this.props.walletProxy,
-      token: this.props.currency,
-      tokenValue: String(this.props.tokenStatus.needsBalance)
-    }
-
+    const variables = { from: walletProxy, token: currency, tokenValue }
     swapToToken({ variables })
   }
 

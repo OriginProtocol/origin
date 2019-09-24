@@ -39,7 +39,9 @@ const GrantDetail = props => {
           <div className="col">
             <strong>Investment Amount</strong>
           </div>
-          <div className="col">{grant.investmentAmount}</div>
+          <div className="col">
+            {Number(grant.investmentAmount).toLocaleString()}
+          </div>
         </div>
       </div>
     )
