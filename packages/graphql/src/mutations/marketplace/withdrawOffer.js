@@ -4,6 +4,7 @@ import IdentityProxy from '@origin/contracts/build/contracts/IdentityProxy_solc'
 import contracts from '../../contracts'
 import cost from '../_gasCost'
 import parseId from '../../utils/parseId'
+import { normalCompare } from '../../utils/normalize'
 import { proxyOwner } from '../../utils/proxy'
 
 async function withdrawOffer(_, data) {
@@ -18,8 +19,13 @@ async function withdrawOffer(_, data) {
 
   let gas = cost.withdrawOffer
 
+  const { seller } = await marketplace.contractExec.methods
+    .listings(listingId)
+    .call()
   const owner = await proxyOwner(from)
-  if (owner) {
+
+  // Only use the proxy if the proxy is the seller
+  if (owner && normalCompare(seller, from)) {
     const offer = await marketplace.eventSource.getOffer(listingId, offerId)
     const Proxy = new contracts.web3Exec.eth.Contract(IdentityProxy.abi, from)
     const txData = await tx.encodeABI()
