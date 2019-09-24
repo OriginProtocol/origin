@@ -148,7 +148,7 @@ async function makeOffer(_, data) {
           currencyAddress,
           value
         )
-        mutation = 'transferTokenMarketplaceExecute'
+        mutation = 'transferTokenMakeOffer'
       }
     }
   }

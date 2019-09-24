@@ -59,6 +59,8 @@ function useRelayer({ mutation, value }) {
     reason = 'makeOffer has a value'
   }
   if (mutation === 'transferToken') reason = 'transferToken is disabled'
+  if (mutation === 'transferTokenMakeOffer')
+    reason = 'transferTokenMakeOffer is disabled'
   if (mutation === 'swapToToken') reason = 'swapToToken is disabled'
   if (reason) {
     debug(`cannot useRelayer: ${reason}`)
@@ -84,6 +86,7 @@ async function useProxy({ proxy, destinationContract, to, from, mutation }) {
   const { proxyAccountsEnabled } = contracts.config
   const predicted = await predictedProxy(from)
   const targetIsProxy = destinationContract === predicted
+  debug('useProxy', { proxy, targetIsProxy, predicted, destinationContract })
 
   if (!proxyAccountsEnabled) {
     debug('cannot useProxy: disabled in config')
@@ -108,12 +111,17 @@ async function useProxy({ proxy, destinationContract, to, from, mutation }) {
 
   if (proxy) {
     debug(`useProxy: ${targetIsProxy ? 'execute-no-wrap' : 'execute'}`)
-    return targetIsProxy ? 'execute-no-wrap' : 'execute'
+    return targetIsProxy && mutation !== 'finalizeOffer'
+      ? 'execute-no-wrap'
+      : 'execute'
   } else if (mutation === 'deployIdentity' || mutation === 'createListing') {
     // For 'first time' interactions, create proxy and execute in single transaction
     debug(`useProxy: create`)
     return 'create'
-  } else if (mutation === 'makeOffer') {
+  } else if (
+    mutation === 'makeOffer' ||
+    mutation === 'transferTokenMakeOffer'
+  ) {
     // If the target contract is the same as the predicted proxy address,
     // no need to wrap with changeOwnerAndExecute
     debug(`useProxy: ${targetIsProxy ? 'create-no-wrap' : 'create'}`)
@@ -676,7 +684,7 @@ export default function txHelper({
       // TODO: result from estimateGas is too low. Need to work out exact amount
       // gas = await toSend.estimateGas({ from })
       gas = SAFETY_GAS_LIMIT
-    } else if (shouldUseProxy && !shouldUseRelayer) {
+    } else if (shouldUseProxy === 'execute' && !shouldUseRelayer) {
       debug(`wrapping tx with Proxy.execute. value: ${value}`)
 
       // Set the address now that we need
