@@ -26,9 +26,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@babel/core": "7.6.0",
+    "@babel/core": "7.6.2",
     "@babel/polyfill": "7.6.0",
-    "@babel/register": "7.6.0",
+    "@babel/register": "7.6.2",
     "ajv": "6.10.2",
     "bs58": "4.0.1",
     "ethereumjs-abi": "0.6.8",
@@ -40,10 +40,10 @@
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
-    "@babel/cli": "7.6.0",
-    "@babel/plugin-transform-runtime": "7.6.0",
-    "@babel/preset-env": "7.6.0",
-    "@babel/runtime": "7.6.0",
+    "@babel/cli": "7.6.2",
+    "@babel/plugin-transform-runtime": "7.6.2",
+    "@babel/preset-env": "7.6.2",
+    "@babel/runtime": "7.6.2",
     "bignumber.js": "9.0.0",
     "chai": "4.2.0",
     "chai-bignumber": "3.0.0",
@@ -54,8 +54,8 @@
     "mocha": "6.2.0",
     "prettier-eslint-cli": "5.0.0",
     "solc": "0.5.11",
-    "solidity-coverage": "0.6.5",
-    "solium": "1.2.4",
+    "solidity-coverage": "0.6.7",
+    "solium": "1.2.5",
     "web3-provider-engine": "15.0.3"
   },
   "babel": {

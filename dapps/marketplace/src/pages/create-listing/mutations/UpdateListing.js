@@ -45,7 +45,7 @@ class UpdateListing extends Component {
       />
     )
 
-    const needsAllowance = get(this.props, 'tokenStatus.needsAllowance', false)
+    const needsAllowance = get(this.props, 'needsAllowance', false)
     const walletIsNotSeller = this.props.wallet !== this.props.listing.seller.id
 
     if (get(this.props, 'tokenStatus.loading')) {
