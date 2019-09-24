@@ -116,10 +116,11 @@ Uninstall the app from your phone and try again.
 
 -----------	
 
-> Error: Activity class {com.originmarketplace/com.originmarketplace.MainActivity} does not exist.	
+> Error: Activity class {com.origincatcher/com.originmarketplace.MainActivity} does not exist.
+
   Error while Launching activity	
 Run the following command in a terminal	
 
 ```	
-adb uninstall com.originmarketplace	
+adb uninstall com.origincatcher
 ```
