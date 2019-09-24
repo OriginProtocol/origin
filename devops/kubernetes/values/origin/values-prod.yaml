@@ -55,7 +55,7 @@ linkingImageTag: 'a0d9e2f'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: '9d488a5'
+cronImageTag: 'e8c9420'
 
 # origin-relayer
 relayerImage: origin-relayer
