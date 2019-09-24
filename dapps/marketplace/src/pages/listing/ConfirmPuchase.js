@@ -79,11 +79,7 @@ const ConfirmPurchase = ({
           <fbt desc="ConfirmPurchase.title">Please confirm your purchase</fbt>
         </h1>
       ) : (
-        <MobileModalHeader
-          onBack={() => {
-            history.goBack()
-          }}
-        >
+        <MobileModalHeader onBack={() => history.goBack()}>
           <fbt desc="ConfirmPurchase.mobileTitle">Confirm Purchase</fbt>
         </MobileModalHeader>
       )}

@@ -35,9 +35,9 @@
     "zlib": "1.0.5"
   },
   "devDependencies": {
-    "@babel/core": "7.6.0",
-    "@babel/preset-env": "7.6.0",
-    "@babel/register": "7.6.0",
+    "@babel/core": "7.6.2",
+    "@babel/preset-env": "7.6.2",
+    "@babel/register": "7.6.2",
     "autocannon": "4.1.1",
     "chai": "4.2.0",
     "form-data": "2.5.1",
