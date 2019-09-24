@@ -6,6 +6,7 @@ import { multiUnitTests } from './multiUnit'
 import { fractionalTests } from './fractional'
 import { onboardingTests } from './onboarding'
 import { userProfileTests } from './userProfile'
+import { paymentTests } from './payments'
 
 function listingTests({ autoSwap } = {}) {
   singleUnitTests({ autoSwap })
@@ -30,12 +31,12 @@ describe('Marketplace Dapp', function() {
     await page.evaluate(() => {
       window.localStorage.clear()
       window.localStorage.bypassOnboarding = true
-      window.localStorage.promoteEnabled = 'true'
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
   })
 
+  paymentTests()
   listingTests()
   userProfileTests()
   onboardingTests()
@@ -49,12 +50,12 @@ describe('Marketplace Dapp with proxies enabled', function() {
       window.localStorage.clear()
       window.localStorage.proxyAccountsEnabled = true
       window.localStorage.bypassOnboarding = true
-      window.localStorage.promoteEnabled = 'true'
       window.localStorage.debug = 'origin:*'
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
   })
+  paymentTests({ autoSwap: true })
   listingTests({ autoSwap: true })
   userProfileTests()
   onboardingTests()
@@ -78,7 +79,6 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
       window.localStorage.proxyAccountsEnabled = true
       window.localStorage.relayerEnabled = true
       window.localStorage.debug = 'origin:*'
-      window.localStorage.promoteEnabled = 'true'
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
@@ -95,6 +95,7 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
     assert(!didThrow, 'Page error detected: ' + didThrow)
   })
 
+  paymentTests({ autoSwap: true })
   listingTests({ autoSwap: true })
   userProfileTests()
   onboardingTests()

@@ -23,9 +23,10 @@ function randomTitle({ isFractional } = {}) {
 }
 
 export function multiUnitTests({ autoSwap, withShipping } = {}) {
-  describe(`Multi Unit Listing${
-    withShipping ? ' with Shipping' : ''
-  } payment in ETH`, function() {
+  let testName = 'Multi Unit Listing, payment in ETH'
+  if (withShipping) testName += ', with Shipping'
+
+  describe(testName, function() {
     let seller, buyer, title, listingHash, page
     before(async function() {
       page = await getPage()

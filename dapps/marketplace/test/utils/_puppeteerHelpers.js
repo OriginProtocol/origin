@@ -156,6 +156,16 @@ export const createAccount = async (page, opts) => {
   )
 }
 
+export const createListing = async (page, opts) => {
+  return await page.evaluate(
+    opts =>
+      new Promise(resolve =>
+        window.ognTools.createListing(window.gql, opts).then(resolve)
+      ),
+    opts
+  )
+}
+
 const shouldScreenshot = process.env.SCREENSHOTS ? true : false
 let screenshots = 0
 export const pic = async (page, name) => {

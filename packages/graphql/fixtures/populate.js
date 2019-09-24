@@ -101,6 +101,56 @@ async function getNodeAccount(gqlClient) {
   return NodeAccountObj.id
 }
 
+export async function createListing(gqlClient, opts = {}) {
+  const {
+    from,
+    title = 'Product Title',
+    acceptedTokens = ['token-DAI', 'token-ETH']
+  } = opts
+
+  const result = await gqlClient.mutate({
+    mutation: CreateListingMutation,
+    variables: {
+      from: from,
+      version: '001',
+      deposit: '0',
+      depositManager: from,
+      autoApprove: true,
+      data: {
+        typename: 'UnitListing',
+        title,
+        description: 'The amazing Origin Spaceman shirt',
+        category: 'schema.forSale',
+        subCategory: 'schema.clothingAccessories',
+        acceptedTokens,
+        media: [
+          {
+            url: 'ipfs://QmdjjwsF7bbejYJ7CecAmMpGB9RMNtFN1Gbs79KmKSGdHD',
+            contentType: 'image/jpeg'
+          }
+        ],
+        price: {
+          amount: '1',
+          currency: 'fiat-USD'
+        },
+        commission: '0',
+        commissionPerUnit: '0',
+        marketplacePublisher: '',
+        requiresShipping: false
+      },
+      unitData: {
+        unitsTotal: 1
+      }
+    }
+  })
+
+  const tx = await transactionConfirmed(result.data.createListing.id, gqlClient)
+
+  const listingEvent = tx.events.find(e => e.event === 'ListingCreated')
+  const returnValues = get(listingEvent, 'returnValuesArr', [])
+  return get(returnValues.find(e => e.field === 'listingID'), 'value')
+}
+
 export async function createAccount(gqlClient, opts = {}) {
   const { ogn, dai, eth = '0.5', deployIdentity } = opts
   const NodeAccount = await getNodeAccount(gqlClient)
