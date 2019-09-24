@@ -22,7 +22,6 @@
 	<string>18</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>tg</string>
 		<string>fb</string>
 		<string>fbapi</string>
 		<string>fb-messenger-share-api</string>

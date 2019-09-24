@@ -329,6 +329,8 @@ class MarketplaceScreen extends Component {
         return await Linking.openURL(url)
       } catch (error) {
         console.warn('Failed opening native URL', error)
+        // Return true anyway so the WebView doesn't navigate to the deep link
+        return true
       }
     } else {
       console.debug(`Cannot open URL ${url} with native application`)
@@ -347,7 +349,7 @@ class MarketplaceScreen extends Component {
     } else if (url.hostname.includes('facebook.com')) {
       // Facebook URLs
       return await this.handleFacebookUrl(url)
-    } else if (url.protocol === 'tg:' || url.hostname === 't.me') {
+    } else if (url.hostname === 't.me') {
       // Telegram URLs
       return await this.handleTelegramUrl(url)
     }
@@ -445,11 +447,11 @@ class MarketplaceScreen extends Component {
     try {
       if (Platform.OS === 'android') {
         if (
-          // Create a listing
+          // Create a listing (requires photos)
           url.hash.startsWith('#/create') ||
-          // Edit a listing
+          // Edit a listing (may be changing photos)
           (url.hash.startsWith('#/listing') && url.hash.endsWith('/edit')) ||
-          // Create oredit profile
+          // Create or edit profile (may be changing profile image)
           url.hash.startsWith('#/profile')
         ) {
           this.requestAndroidCameraPermissions()
@@ -471,9 +473,9 @@ class MarketplaceScreen extends Component {
     } catch (error) {
       console.warn(`Browser reporting malformed url: ${request.url}`)
     }
+
     const intercepted = await this.attemptNativeIntercept(url)
     if (intercepted) {
-      console.debug('Intercepted URL request')
       // Returning false from this function should stop the load of the URL but
       // it does not appear to work correctly, see related issues:
       // https://github.com/react-native-community/react-native-webview/issues/772
