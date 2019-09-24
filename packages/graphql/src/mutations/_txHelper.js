@@ -706,7 +706,7 @@ export default function txHelper({
     if (shouldUseRelayer && shouldUseProxy) {
       const address = get(toSend, '_parent._address')
       try {
-        await sendViaRelayer({
+        return await sendViaRelayer({
           web3,
           tx: toSend,
           proxy,
