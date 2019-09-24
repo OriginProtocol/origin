@@ -3,6 +3,8 @@ import React from 'react'
 import Link from 'components/Link'
 import UserActivationLink from 'components/UserActivationLink'
 
+import withWallet from 'hoc/withWallet'
+import withIdentity from 'hoc/withIdentity'
 import withMessagingStatus from 'hoc/withMessagingStatus'
 
 import { fbt } from 'fbt-runtime'
@@ -13,15 +15,19 @@ import { fbt } from 'fbt-runtime'
  *  - "Shipping Address" screen, if user has identity and listing requires shipping
  *  - "Confirm Purchase" screen, if user has identity and listing  doesn't require shipping
  */
-const ConfirmShippingAndPurchase = ({
+const ConfirmPurchaseButton = ({
   hasMessagingKeys,
   className,
   children,
   listing,
   disabled,
-  messagingStatusLoading
+  wallet,
+  identity,
+  messagingStatusLoading,
+  identityLoading,
+  walletLoading
 }) => {
-  if (messagingStatusLoading) {
+  if (messagingStatusLoading || identityLoading || walletLoading) {
     return (
       <button
         className={className}
@@ -31,24 +37,27 @@ const ConfirmShippingAndPurchase = ({
     )
   }
 
+
   if (
-    !hasMessagingKeys &&
-    !(localStorage.bypassOnboarding || localStorage.useWeb3Identity)
+    !wallet ||
+    !identity ||
+    (!hasMessagingKeys &&
+    !(localStorage.bypassOnboarding || localStorage.useWeb3Identity))
   ) {
     return (
       <UserActivationLink
         className={className}
         children={children}
-        location={{ pathname: `/listing/${listing.id}` }}
+        location={{
+          pathname: `/listing/${listing.id}/payment`
+        }}
       />
     )
   }
 
   return (
     <Link
-      to={`/listing/${listing.id}/${
-        listing.requiresShipping ? 'shipping' : 'confirm'
-      }`}
+      to={`/listing/${listing.id}/payment`}
       className={className}
       children={children || <fbt desc="Purchase">Purchase</fbt>}
       disabled={disabled === true}
@@ -56,6 +65,6 @@ const ConfirmShippingAndPurchase = ({
   )
 }
 
-export default withMessagingStatus(ConfirmShippingAndPurchase, {
+export default withWallet(withIdentity(withMessagingStatus(ConfirmPurchaseButton, {
   excludeData: true
-})
+})))

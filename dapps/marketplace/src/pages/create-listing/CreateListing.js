@@ -45,7 +45,7 @@ function initialState(props) {
     quantity: '1',
     price: '',
     currency: 'fiat-USD',
-    acceptedTokens: ['token-DAI'],
+    acceptedTokens: ['token-ETH', 'token-DAI', 'token-OGN'],
 
     // Fractional fields:
     timeZone: '',

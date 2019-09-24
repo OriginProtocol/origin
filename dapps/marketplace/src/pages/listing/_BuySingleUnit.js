@@ -8,7 +8,7 @@ import OgnBadge from 'components/OgnBadge'
 import WithPrices from 'components/WithPrices'
 import Buy from './mutations/Buy'
 import PaymentOptions from './_PaymentOptions'
-import ConfirmShippingAndPurchase from './_ConfirmShippingAndPurchase'
+import ConfirmPurchaseButton from './_ConfirmPurchaseButton'
 import PurchaseSummary from './_PurchaseSummary'
 
 const withSingleUnitData = WrappedComponent => {
@@ -56,20 +56,11 @@ const SingleUnit = ({ listing, growthReward, prices, tokenStatus, token }) => {
           className="listing-detail-growth-reward"
         />
       </div>
-      <PaymentOptions
-        tokens={prices}
-        price={listing.price}
-        acceptedTokens={listing.acceptedTokens}
+      <ConfirmPurchaseButton
         listing={listing}
-        value={token}
-        tokenStatus={tokenStatus}
-      >
-        <ConfirmShippingAndPurchase
-          listing={listing}
-          className="btn btn-primary"
-          children={fbt('Purchase', 'Purchase')}
-        />
-      </PaymentOptions>
+        className="btn btn-primary"
+        children={fbt('Purchase', 'Purchase')}
+      />
     </div>
   )
 }

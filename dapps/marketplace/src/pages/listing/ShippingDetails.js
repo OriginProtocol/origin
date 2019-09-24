@@ -19,7 +19,7 @@ import Store from 'utils/store'
 
 const localStore = Store('localStorage')
 
-const ProvideShippingAddress = ({
+const ShippingDetails = ({
   listing,
   isMobile,
   history,
@@ -220,7 +220,7 @@ const ProvideShippingAddress = ({
   )
 }
 
-export default withRouter(withIsMobile(withWallet(ProvideShippingAddress)))
+export default withRouter(withIsMobile(withWallet(ShippingDetails)))
 
 require('react-styl')(`
   .confirm-shipping-address

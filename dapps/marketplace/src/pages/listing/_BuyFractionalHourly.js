@@ -12,7 +12,7 @@ import PaymentOptions from './_PaymentOptions'
 
 import Buy from './mutations/Buy'
 import DateRange from './_DateRange'
-import ConfirmShippingAndPurchase from './_ConfirmShippingAndPurchase'
+import ConfirmPurchaseButton from './_ConfirmPurchaseButton'
 import PurchaseSummary from './_PurchaseSummary'
 
 const withFractionalHourlyData = WrappedComponent => {
@@ -139,21 +139,12 @@ const FractionalHourly = ({
               <Price price={totalPrice} />
             </span>
           </div>
-          <PaymentOptions
-            tokens={prices}
-            price={totalPrice}
-            acceptedTokens={listing.acceptedTokens}
+          <ConfirmPurchaseButton
             listing={listing}
-            value={token}
-            tokenStatus={tokenStatus}
-          >
-            <ConfirmShippingAndPurchase
-              listing={listing}
-              className={`btn btn-primary${available ? '' : ' disabled'}`}
-              disabled={!available}
-              children={fbt('Book', 'Book')}
-            />
-          </PaymentOptions>
+            className={`btn btn-primary${available ? '' : ' disabled'}`}
+            disabled={!available}
+            children={fbt('Book', 'Book')}
+          />
         </>
       )}
     </div>

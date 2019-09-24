@@ -14,7 +14,8 @@ import ListingDetail from './ListingDetail'
 import EditListing from './Edit'
 import Onboard from '../onboard/Onboard'
 import ConfirmPurchase from './ConfirmPuchase'
-import ProvideShippingAddress from './ProvideShippingAddress'
+import ShippingDetails from './ShippingDetails'
+import PaymentMethods from './PaymentMethods'
 
 import Store from 'utils/store'
 
@@ -101,7 +102,7 @@ const Listing = props => {
         <Route
           path="/listing/:listingID/shipping"
           render={() => (
-            <ProvideShippingAddress
+            <ShippingDetails
               listing={listing}
               updateShippingAddress={shippingAddress =>
                 setShippingAddress(shippingAddress)
@@ -118,6 +119,16 @@ const Listing = props => {
               refetch={wrappedRefetch}
               quantity={quantity}
               shippingAddress={shippingAddress}
+              bookingRange={bookingRange}
+            />
+          )}
+        />
+        <Route
+        path="/listing/:listingID/payment"
+          render={() => (
+            <PaymentMethods
+              listing={listing}
+              quantity={quantity}
               bookingRange={bookingRange}
             />
           )}

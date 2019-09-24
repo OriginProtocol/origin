@@ -9,7 +9,7 @@ import WithPrices from 'components/WithPrices'
 import Buy from './mutations/Buy'
 import SelectQuantity from './_SelectQuantity'
 import PaymentOptions from './_PaymentOptions'
-import ConfirmShippingAndPurchase from './_ConfirmShippingAndPurchase'
+import ConfirmPurchaseButton from './_ConfirmPurchaseButton'
 import PurchaseSummary from './_PurchaseSummary'
 
 const withMultiUnitData = WrappedComponent => {
@@ -95,23 +95,14 @@ const MultiUnit = ({
           <fbt desc="totalPrice">Total Price</fbt>
         </span>
         <span>
-          <Price price={totalPrice} />
+          <Price price={totalPrice} target="fiat-USD" />
         </span>
       </div>
-      <PaymentOptions
-        tokens={prices}
-        price={totalPrice}
-        acceptedTokens={listing.acceptedTokens}
+      <ConfirmPurchaseButton
         listing={listing}
-        value={token}
-        tokenStatus={tokenStatus}
-      >
-        <ConfirmShippingAndPurchase
-          listing={listing}
-          className="btn btn-primary"
-          children={fbt('Purchase', 'Purchase')}
-        />
-      </PaymentOptions>
+        className="btn btn-primary"
+        children={fbt('Purchase', 'Purchase')}
+      />
     </div>
   )
 }

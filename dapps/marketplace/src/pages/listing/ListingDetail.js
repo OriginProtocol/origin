@@ -26,18 +26,20 @@ import Pending from './_ListingPending'
 import Withdrawn from './_ListingWithdrawn'
 import EditOnly from './_ListingEditOnly'
 import OfferMade from './_ListingOfferMade'
-import SingleUnit from './_BuySingleUnit'
-import MultiUnit from './_BuyMultiUnit'
-import Fractional from './_BuyFractional'
-import FractionalHourly from './_BuyFractionalHourly'
+
 
 import GiftCardDetail from './listing-types/GiftCard'
-import FractionalNightlyDetail from './listing-types/FractionalNightly'
-import FractionalHourlyDetail from './listing-types/FractionalHourly'
+import FractionalNightlyDetail from './listing-types/fractional/FractionalNightlyDetail'
+import FractionalHourlyDetail from './listing-types/fractional-hourly/FractionalHourlyDetail'
 
 import getAvailabilityCalculator from 'utils/getAvailabilityCalculator'
 
 import HistoricalListingWarning from 'pages/listing/_HistoricalListingWarning'
+
+import BuySingleUnitWidget from './listing-types/single-unit/BuySingleUnitWidget'
+import BuyMultiUnitWidget from './listing-types/multi-unit/BuyMultiUnitWidget'
+import BuyFractionalWidget from './listing-types/fractional/BuyFractionalWidget'
+import BuyFractionalHourlyWidget from './listing-types/fractional-hourly/BuyFractionalHourlyWidget'
 
 class ListingDetail extends Component {
   constructor(props) {
@@ -274,7 +276,7 @@ class ListingDetail extends Component {
       return (
         <>
           <OfferMade {...props} isSingleUnit={isSingleUnit} offers={offers} />
-          <MultiUnit {...props} isPendingBuyer={isPendingBuyer} />
+          <BuyMultiUnitWidget {...props} isPendingBuyer={isPendingBuyer} />
         </>
       )
     } else if (listing.status === 'pending' && !isService) {
@@ -283,7 +285,7 @@ class ListingDetail extends Component {
       return <Withdrawn />
     } else if (isFractional) {
       return (
-        <Fractional
+        <BuyFractionalWidget
           {...props}
           range={this.state.range}
           availability={this.state.availability}
@@ -296,7 +298,7 @@ class ListingDetail extends Component {
       )
     } else if (isFractionalHourly) {
       return (
-        <FractionalHourly
+        <BuyFractionalHourlyWidget
           {...props}
           range={this.state.range}
           availability={this.state.availability}
@@ -308,9 +310,9 @@ class ListingDetail extends Component {
         />
       )
     } else if (listing.multiUnit || isService) {
-      return <MultiUnit {...props} isPendingBuyer={isPendingBuyer} />
+      return <BuyMultiUnitWidget {...props} isPendingBuyer={isPendingBuyer} />
     }
-    return <SingleUnit {...props} />
+    return <BuySingleUnitWidget {...props} />
   }
 
   renderSellerInfo() {
@@ -447,6 +449,9 @@ require('react-styl')(`
           font-weight: bold
       .total
         padding-top: 0
+        padding-bottom: 1rem
+        border-bottom: 1px solid #dde6ea
+        margin-bottom: 1rem
 
       .price
         font-family: var(--default-font)

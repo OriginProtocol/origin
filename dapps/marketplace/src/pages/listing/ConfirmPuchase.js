@@ -11,19 +11,17 @@ import withIsMobile from 'hoc/withIsMobile'
 
 import getAvailabilityCalculator from 'utils/getAvailabilityCalculator'
 
-import {
-  BuySingleUnitMutation,
-  SingleUnitPurchaseSummary
-} from './_BuySingleUnit'
-import { BuyMultiUnitMutation, MultiUnitPurchaseSummary } from './_BuyMultiUnit'
-import {
-  BuyFractionalMutation,
-  FractionalPurchaseSummary
-} from './_BuyFractional'
-import {
-  BuyFractionalHourlyMutation,
-  FractionalHourlyPurchaseSummary
-} from './_BuyFractionalHourly'
+import BuySingleUnitMutation from './listing-types/single-unit/BuySingleUnitMutation'
+import SingleUnitSummary from './listing-types/single-unit/SingleUnitSummary'
+
+import BuyMultiUnitMutation from './listing-types/multi-unit/BuyMultiUnitMutation'
+import MultiUnitSummary from './listing-types/multi-unit/MultiUnitSummary'
+
+import BuyFractionalHourlyMutation from './listing-types/fractional-hourly/BuyFractionalHourlyMutation'
+import FractionalHourlySummary from './listing-types/fractional-hourly/FractionalHourlySummary'
+
+import BuyFractionalMutation from './listing-types/fractional/BuyFractionalMutation'
+import FractionalSummary from './listing-types/fractional/FractionalSummary'
 
 const ConfirmPurchase = ({
   listing,
@@ -49,23 +47,23 @@ const ConfirmPurchase = ({
     case multiUnit:
     case isService:
       BuyMutationComponent = BuyMultiUnitMutation
-      SummaryComponent = MultiUnitPurchaseSummary
+      SummaryComponent = MultiUnitSummary
       break
 
     case isFractional:
       BuyMutationComponent = BuyFractionalMutation
-      SummaryComponent = FractionalPurchaseSummary
+      SummaryComponent = FractionalSummary
       break
 
     case isFractionalHourly:
       BuyMutationComponent = BuyFractionalHourlyMutation
-      SummaryComponent = FractionalHourlyPurchaseSummary
+      SummaryComponent = FractionalHourlySummary
       break
 
     case singleUnit:
     default:
       BuyMutationComponent = BuySingleUnitMutation
-      SummaryComponent = SingleUnitPurchaseSummary
+      SummaryComponent = SingleUnitSummary
       break
   }
 
