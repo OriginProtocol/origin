@@ -142,7 +142,7 @@
     "typeface-lato": "0.0.75",
     "typeface-poppins": "0.0.72",
     "url-loader": "2.1.0",
-    "webpack": "4.40.2",
+    "webpack": "4.41.0",
     "webpack-cli": "3.3.9",
     "webpack-dev-server": "3.8.1"
   },
