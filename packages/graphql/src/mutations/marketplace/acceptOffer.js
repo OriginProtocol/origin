@@ -42,16 +42,14 @@ async function acceptOffer(_, data) {
 
   // Only use the proxy if the proxy is the seller
   if (owner && normalCompare(seller, from)) {
-    const offer = await marketplace.eventSource.getOffer(listingId, offerId)
     const Proxy = new contracts.web3Exec.eth.Contract(IdentityProxy.abi, from)
     const txData = await tx.encodeABI()
 
-    tx = Proxy.methods.marketplaceFinalizeAndPay(
+    tx = Proxy.methods.execute(
+      0, // OPERATION_CALL
       marketplace.contract._address,
-      txData,
-      from,
-      offer.currency,
-      offer.value
+      0, // value
+      txData
     )
     gas += 100000
   }

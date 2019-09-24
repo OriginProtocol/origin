@@ -16,7 +16,7 @@ function addPrefix(v) {
 
 function isHex(v) {
   v = removePrefix(v)
-  return v.match(/^[A-Fa-f0-9]$/) !== null
+  return v.match(/^[A-Fa-f0-9]+$/) !== null
 }
 
 /**
@@ -30,7 +30,9 @@ export default function normalize(v) {
 
   v = removePrefix(v)
 
-  if (!isHex(v)) throw TypeError('Value is not hex')
+  if (!isHex(v)) {
+    throw TypeError('Value is not hex')
+  }
 
   // Address
   if (v.length === 40) {
