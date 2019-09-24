@@ -1,5 +1,6 @@
 import pick from 'lodash/pick'
 import get from 'lodash/get'
+import pickBy from 'lodash/pickBy'
 
 import { post } from '@origin/ipfs'
 import validator from '@origin/validator'
@@ -80,12 +81,15 @@ async function deployIdentity(
   if (oldIdentity) {
     // Upsert
     profile = {
-      ...pick(oldIdentity, [
-        'firstName',
-        'lastName',
-        'description',
-        'avatarUrl'
-      ]),
+      ...pickBy(
+        pick(oldIdentity, [
+          'firstName',
+          'lastName',
+          'description',
+          'avatarUrl'
+        ]),
+        field => typeof field === 'string'
+      ),
       ...profile
     }
 
