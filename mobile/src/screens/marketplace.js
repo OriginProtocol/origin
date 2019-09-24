@@ -51,16 +51,8 @@ class MarketplaceScreen extends Component {
 
     this.state = {
       enablePullToRefresh: true,
-      webViewRef: React.createRef(),
-      lastDappUrl: null,
-      // Whenever this change it forces the WebView to go to that source
-      webViewUrlTrigger: this.props.settings.network.dappUrl
-    }
-
-    if (Platform.OS === 'android') {
-      // Configure swipe handler for back forward navigation on Android because
-      // it does not support allowsBackForwardNavigationGestures
-      this.setSwipeHandler()
+      panResponder: this.getSwipeHandler(),
+      webViewRef: React.createRef()
     }
 
     this.subscriptions = [
@@ -79,27 +71,14 @@ class MarketplaceScreen extends Component {
   }
 
   componentDidUpdate = prevProps => {
-    // Check for changes to network
-    if (
-      get(prevProps, 'settings.network.dappUrl') !==
-      get(this.props, 'settings.network.dappUrl')
-    ) {
-      // Default DApp url changed, trigger WebView url change
-      this.setState({
-        webViewUrlTrigger: get(this.props, 'settings.network.dappUrl')
-      })
-    }
-
     if (prevProps.settings.language !== this.props.settings.language) {
-      // Language has changed, need to reload the DApp
+      // Language has changed
       this.injectLanguage()
     }
-
     if (prevProps.settings.currency !== this.props.settings.currency) {
+      // Currency has changed
       this.injectCurrency()
     }
-
-    // Check for active Ethereum address changing
     if (
       get(prevProps, 'wallet.activeAccount.address') !==
       get(this.props, 'wallet.activeAccount.address')
@@ -107,6 +86,43 @@ class MarketplaceScreen extends Component {
       // Active account changed, update messaging keys
       this.injectMessagingKeys()
     }
+  }
+
+  /* Enables left and right swiping to go forward/back in the WebView on Android.
+   * This is required because the allowBackForwardNavigation prop is only
+   * supported on iOS.
+   */
+  getSwipeHandler = () => {
+    if (Platform.OS === 'ios') {
+      // No panHandlers required for iOS
+      return { panHandlers: [] }
+    }
+
+    // Distance required to trigger a back/forward request
+    const swipeDistance = 200
+
+    const panResponder = PanResponder.create({
+      onStartShouldSetPanResponderCapture: () => false,
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
+        return (
+          Math.abs(gestureState.dx) > swipeDistance &&
+          Math.abs(gestureState.dy) < 50
+        )
+      },
+      onPanResponderRelease: (evt, gestureState) => {
+        console.debug('Release')
+        if (this.state.webViewRef.current) {
+          if (gestureState.moveX > swipeDistance) {
+            console.debug('Swipe triggered goBack')
+            this.state.webViewRef.current.goBack()
+          } else if (gestureState.moveX < swipeDistance) {
+            console.debug('Swipe triggered goForward')
+            this.state.webViewRef.current.goForward()
+          }
+        }
+      }
+    })
+    return panResponder
   }
 
   injectJavaScript = (script, name) => {
@@ -302,131 +318,180 @@ class MarketplaceScreen extends Component {
     }
   }
 
-  /* Enables left and right swiping to go forward/back in the WebView on Android.
-   */
-  setSwipeHandler = () => {
-    const swipeDistance = 200
-    this._panResponder = PanResponder.create({
-      onStartShouldSetPanResponderCapture: () => false,
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
-        return (
-          Math.abs(gestureState.dx) > swipeDistance &&
-          Math.abs(gestureState.dy) < 50
-        )
-      },
-      onPanResponderRelease: (evt, gestureState) => {
-        if (this.state.webViewRef.current) {
-          if (gestureState.moveX > swipeDistance) {
-            this.state.webViewRef.current.goBack()
-          } else if (gestureState.moveX < swipeDistance) {
-            this.state.webViewRef.current.goForward()
-          }
-        }
-      }
-    })
-  }
-
   /* Attempt to open a native deep link URL on this phone. If the relevant
    * app is installed this will open it, otherwise returns false.
    */
-  openNativeDeepLink = async (url, timeControlVariableName) => {
-    console.debug(`Attempting to open ${url} with native application`)
-
+  openNativeDeepLink = async url => {
     const canOpen = await Linking.canOpenURL(url)
     if (canOpen) {
-      console.debug('Can open URL with native application')
-      this.goBackToDapp()
-      if (
-        !this[timeControlVariableName] ||
-        new Date() - this[timeControlVariableName] > 3000
-      ) {
-        this[timeControlVariableName] = new Date()
+      console.debug(`Can open URL ${url} with native application`)
+      try {
         return await Linking.openURL(url)
+      } catch (error) {
+        console.warn('Failed opening native URL', error)
+        // Return true anyway so the WebView doesn't navigate to the deep link
+        return true
       }
     } else {
-      console.debug('Could not open URL with native application')
+      console.debug(`Cannot open URL ${url} with native application`)
     }
-
     return false
   }
 
   /* Monitor the state of the WebView and if attempting to open a URL from
-   * Twitter or Facebook for sharing for Origin Rewards, attempt to open the
-   * link using the native app on the phone.
+   * Twitter, Facebook or Telegram for sharing for Origin Rewards, attempt to
+   * open the link using the native app on the phone.
    */
-  checkForShareNativeDialogInterception = async url => {
-    // Handle Twitter links on Android (iOS handles them automatically)
-    if (Platform.OS === 'android') {
-      if (url.hostname === 'twitter.com') {
-        if (url.pathname === '/intent/tweet') {
-          // Natively Tweet on Android
-          this.openNativeDeepLink(
-            `twitter://post?message=${encodeURIComponent(
-              url.searchParams.get('text')
-            )}`,
-            'lastTweetAttemptTime'
-          )
-        } else if (url.pathname === '/intent/follow') {
-          // Natively open Twitter profile on Android
-          this.openNativeDeepLink(
-            `twitter://user?screen_name=${url.searchParams.get('screen_name')}`,
-            'lastOpenTwitterProfileTime'
-          )
-        }
-      }
+  attemptNativeIntercept = async url => {
+    if (Platform.OS === 'android' && url.hostname === 'twitter.com') {
+      // Handle Twitter links on Android (iOS handles them automatically)
+      return await this.handleTwitterUrl(url)
+    } else if (url.hostname.includes('facebook.com')) {
+      // Facebook URLs
+      return await this.handleFacebookUrl(url)
+    } else if (url.hostname === 't.me') {
+      // Telegram URLs
+      return await this.handleTelegramUrl(url)
     }
+    // The URL cannot be intercepted or failed to open native browser
+    return false
+  }
 
-    if (
-      url.hostname.includes('facebook.com') &&
-      url.pathname.toLowerCase() === '/originprotocol'
-    ) {
-      // Open facebook profile natively if possible and IOS and Android
-      this.openNativeDeepLink(
-        `fb://${Platform.OS === 'ios' ? 'profile' : 'page'}/120151672018856`,
-        'lastOpenFacebookProfileTime'
+  /* Handle attempt to access a Twitter URL. Intercepts two types of URLs,
+   * intent to tweet and intent to follow. Convert them to the equivalent
+   * deep link and attempt to open in native Twitter app.
+   */
+  handleTwitterUrl = async url => {
+    if (url.pathname === '/intent/tweet') {
+      // Intent to Tweet on Android, open native deep link
+      return await this.openNativeDeepLink(
+        `twitter://post?message=${encodeURIComponent(
+          url.searchParams.get('text')
+        )}`
+      )
+    } else if (url.pathname === '/intent/follow') {
+      // Intent to follow a twitter account on Android, open native deep link
+      return await this.openNativeDeepLink(
+        `twitter://user?screen_name=${url.searchParams.get('screen_name')}`
       )
     }
+    return false
+  }
 
-    if (url.hostname.includes('facebook.com')) {
-      const shareHasBeenTriggeredRecently =
-        this.facebookShareShowTime &&
-        new Date() - this.facebookShareShowTime < 5000
-
-      if (url.pathname === '/dialog/share' && !shareHasBeenTriggeredRecently) {
-        const shareLinkContent = {
-          contentType: 'link',
-          contentUrl: url.searchParams.get('href')
-        }
-        const canShowFbShare = await ShareDialog.canShow(shareLinkContent)
-
-        if (!canShowFbShare) return
-
-        this.facebookShareShowTime = new Date()
-        const shareResult = await ShareDialog.show(shareLinkContent)
-        if (shareResult.isCancelled) {
-          console.log('Share cancelled by user')
-        } else {
-          console.log(`Share success with postId: ${shareResult.postId}`)
-        }
+  /* Handle attempt to access a Facebook URL. Intercepts opening Origin Protocol's
+   * profile page (i.e. intent to follow) and opens it in the native Facebook app.
+   * Also intercepts an intent to share Origin content and opens it in the native
+   * app if the Facebook SDK is not availalbe (Android) or pops a ShareDialog
+   * if it is.
+   */
+  handleFacebookUrl = async url => {
+    if (url.pathname.toLowerCase() === '/originprotocol/') {
+      // Open Facebook profile natively if possible and IOS and Android
+      return await this.openNativeDeepLink(
+        `fb://${Platform.OS === 'ios' ? 'profile' : 'page'}/120151672018856`
+      )
+    } else if (url.pathname === '/dialog/share') {
+      // Facebook share action, attempt to open a dialog using the Facebook SDK
+      // if possible. Fall back to the native app deep linking otherwise.
+      const shareLinkContent = {
+        contentType: 'link',
+        contentUrl: url.searchParams.get('href')
       }
 
-      /* After Facebook shows up the share dialog in dapp's WebView and user is not logged
-       * in it will redirect to login page. For that reason we return to the last dapp's
-       * url instead of triggering back.
-       */
-      if (shareHasBeenTriggeredRecently) {
-        this.goBackToDapp()
+      let canShowFbShare
+      try {
+        canShowFbShare = await ShareDialog.canShow(shareLinkContent)
+      } catch (error) {
+        console.warn('ShareDialog error', error)
+      }
+
+      if (canShowFbShare) {
+        ShareDialog.show(shareLinkContent)
+          .then(({ isCancelled, postId }) => {
+            if (isCancelled) {
+              console.debug('Share cancelled by user')
+            } else {
+              console.debug(`Share success with postId: ${postId}`)
+            }
+          })
+          .catch(error => {
+            console.warn('ShareDialog show error', error)
+          })
+        return true
+      } else {
+        // Couldn't use Facebook SDK to show a ShareDialog, revert to deep link
+        return await this.openNativeDeepLink(url.href)
       }
     }
   }
 
-  goBackToDapp = () => {
-    const url = this.state.lastDappUrl
-    // A random is used to force the WebView to navigate.
-    url.searchParams.set('returnRandom', Math.floor(Math.random() * 1000))
-    this.setState({ webViewUrlTrigger: url.href })
+  /* Intercepts Telegram URLs and attempts to open the native Telegram app.
+   */
+  handleTelegramUrl = async url => {
+    return await this.openNativeDeepLink(url.href)
   }
 
+  /* Watches changes to navigation and determines if any actions should be taken.
+   */
+  onNavigationStateChange = async state => {
+    let url
+    try {
+      url = new URL(state.url)
+    } catch (error) {
+      console.warn(`Browser reporting malformed url: ${state.url}`)
+      return
+    }
+
+    // Request Android camera permissions if doing something that is likely
+    // to need them
+    try {
+      if (Platform.OS === 'android') {
+        if (
+          // Create a listing (requires photos)
+          url.hash.startsWith('#/create') ||
+          // Edit a listing (may be changing photos)
+          (url.hash.startsWith('#/listing') && url.hash.endsWith('/edit')) ||
+          // Create or edit profile (may be changing profile image)
+          url.hash.startsWith('#/profile')
+        ) {
+          this.requestAndroidCameraPermissions()
+        }
+      }
+    } catch {
+      /* Skip */
+    }
+  }
+
+  /* Watches for requests and decides if they should be loaded or not, e.g.
+   * from a click in the DApp. We prevent loading in cases where the link
+   * can be handled in a native app on the phone.
+   */
+  onShouldStartLoadWithRequest = async request => {
+    let url
+    try {
+      url = new URL(request.url)
+    } catch (error) {
+      console.warn(`Browser reporting malformed url: ${request.url}`)
+    }
+
+    const intercepted = await this.attemptNativeIntercept(url)
+    if (intercepted) {
+      // Returning false from this function should stop the load of the URL but
+      // it does not appear to work correctly, see related issues:
+      // https://github.com/react-native-community/react-native-webview/issues/772
+      // https://github.com/react-native-community/react-native-webview/issues/124
+      // Adding the additional stopLoading call here seems to fix this in most
+      // cases
+      if (this.state.webViewRef.current) {
+        this.state.webViewRef.current.stopLoading()
+      }
+      return false
+    }
+    return true
+  }
+
+  /* Handle a message received via window.postMessage from the WebView.
+   */
   onMessage = msg => {
     if (msg.targetFunc === 'handleGraphqlResult') {
       DeviceEventEmitter.emit('graphqlResult', msg.data)
@@ -438,41 +503,6 @@ class MarketplaceScreen extends Component {
       // possibly from React side?
       // this.setState({ enablePullToRefresh: msg.data.scrollTop === 0 })
     }
-  }
-
-  onNavigationStateChange = async state => {
-    let url
-    try {
-      url = new URL(state.url)
-    } catch (error) {
-      console.warn(`Browser reporting malformed url: ${state.url}`)
-    }
-
-    // Request Android user permissions if doing something that is likely
-    // to need them
-    try {
-      if (Platform.OS === 'android') {
-        if (
-          // Create a listing
-          url.hash.startsWith('#/create') ||
-          // Edit a listing
-          (url.hash.startsWith('#/listing') && url.hash.endsWith('/edit')) ||
-          // Create oredit profile
-          url.hash.startsWith('#/profile')
-        ) {
-          this.requestAndroidCameraPermissions()
-        }
-      }
-    } catch {
-      /* Skip */
-    }
-
-    const dappUrl = new URL(this.props.settings.network.dappUrl)
-    if (dappUrl.hostname === url.hostname) {
-      this.setState({ lastDappUrl: url })
-    }
-
-    await this.checkForShareNativeDialogInterception(url)
   }
 
   onLoadEnd = () => {
@@ -556,16 +586,14 @@ class MarketplaceScreen extends Component {
         <SafeAreaView style={{ flex: 1 }}>
           <KeyboardAvoidingView
             behavior="padding"
-            keyboardVerticalOffset={20}
+            keyboardVerticalOffset={40}
             style={{ flex: 1 }}
-            enabled={Platform.os === 'android'}
+            enabled={Platform.OS === 'android'}
           >
             <ScrollView
               contentContainerStyle={{ flex: 1 }}
               refreshControl={refreshControl}
-              {...(Platform.OS === 'android'
-                ? this._panResponder.panHandlers
-                : [])}
+              {...this.state.panResponder.panHandlers}
             >
               {this.renderWebView()}
             </ScrollView>
@@ -579,16 +607,15 @@ class MarketplaceScreen extends Component {
     return (
       <OriginWeb3View
         ref={this.state.webViewRef}
-        source={{ uri: this.state.webViewUrlTrigger }}
+        source={{ uri: this.props.settings.network.dappUrl }}
         onMessage={this.onMessage}
         onLoadEnd={this.onLoadEnd}
         onError={this.onError}
         onNavigationStateChange={this.onNavigationStateChange}
+        onShouldStartLoadWithRequest={this.onShouldStartLoadWithRequest}
         renderLoading={this.renderWebViewLoading}
         renderError={this.renderWebViewError}
         userAgent={this.getUserAgent()}
-        // https://github.com/react-native-community/react-native-webview/issues/575
-        androidHardwareAccelerationDisabled={true}
         startInLoadingState={true}
         allowsBackForwardNavigationGestures={true} // iOS support only
         decelerationRate="normal"
