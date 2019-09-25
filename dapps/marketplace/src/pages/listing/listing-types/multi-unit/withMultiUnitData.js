@@ -19,7 +19,7 @@ const withMultiUnitData = WrappedComponent => {
             {...props}
             prices={prices}
             tokenStatus={tokenStatus}
-            token={suggestedToken}
+            token={props.paymentMethod || suggestedToken}
             listing={listing}
             totalPrice={totalPrice}
             quantity={quantity}

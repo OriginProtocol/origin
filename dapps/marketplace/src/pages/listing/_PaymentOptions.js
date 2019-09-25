@@ -66,7 +66,7 @@ const SwapEthToDai = () => (
  * @param {Array<string>} acceptedTokens: List of crypt-currencies accepted by the seller.
  *   Ex: ['token-ETH', 'token-DAI'] indicates the seller accepts payment in both ETH and DAI.
  * @param {Object} listing: Listing to be purchased
- * @param {string} value: Id of the currency the buyer chose to make the payment in. Ex: 'token-ETH'
+ * @param {string} selectedToken: Id of the currency the buyer chose to make the payment in. Ex: 'token-ETH'
  * @param {{amount:string, currency:{id:string}}} price: price of the listing.
  * @param {Object.<string, {token:string}>} tokens: Dictionary with price of the listing in various currencies.
  *  Loaded asynchronously. Empty object until loaded.
@@ -81,7 +81,7 @@ const PaymentOptions = ({
   identity,
   acceptedTokens,
   listing,
-  value,
+  selectedToken,
   price,
   tokens,
   tokenStatus,
@@ -104,19 +104,19 @@ const PaymentOptions = ({
   let content, notEnoughFunds, paymentTotal, exchanged
 
   if (!noBalance && !noTokens) {
-    if (!value) {
-      value = tokenStatus.suggestedToken
+    if (!selectedToken) {
+      selectedToken = tokenStatus.suggestedToken
     }
 
-    const { hasBalance } = get(tokenStatus, value)
+    const { hasBalance } = get(tokenStatus, selectedToken)
     const hasEthBalance = get(tokenStatus, 'token-ETH.hasBalance')
 
     let cannotPurchase = false,
       needsSwap = false,
       noEthOrDai = false
 
-    const daiActive = value === 'token-DAI'
-    const ethActive = value === 'token-ETH'
+    const daiActive = selectedToken === 'token-DAI'
+    const ethActive = selectedToken === 'token-ETH'
     const acceptsDai = acceptedTokens.find(t => t.id === 'token-DAI')
     const acceptsEth =
       !acceptsDai || acceptedTokens.find(t => t.id === 'token-ETH')

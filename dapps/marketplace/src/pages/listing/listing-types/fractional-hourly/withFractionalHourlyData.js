@@ -45,7 +45,7 @@ const withFractionalHourlyData = WrappedComponent => {
             {...props}
             prices={prices}
             tokenStatus={tokenStatus}
-            token={suggestedToken}
+            token={props.paymentMethod || suggestedToken}
             listing={listing}
             startDate={startDate}
             endDate={endDate}

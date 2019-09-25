@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom'
 
 import DocumentTitle from 'components/DocumentTitle'
 import MobileModalHeader from 'components/MobileModalHeader'
+import Redirect from 'components/Redirect'
 
 import withIsMobile from 'hoc/withIsMobile'
 
@@ -30,8 +31,13 @@ const ConfirmPurchase = ({
   history,
   refetch,
   shippingAddress,
-  bookingRange
+  bookingRange,
+  paymentMethod
 }) => {
+  if (!paymentMethod) {
+    return <Redirect to={`/listing/${listing.id}/payment`} />
+  }
+
   const singleUnit =
     listing.__typename === 'UnitListing' && listing.unitsTotal === 1
   const multiUnit = listing.multiUnit
@@ -88,6 +94,7 @@ const ConfirmPurchase = ({
           range={bookingRange}
           shippingAddress={shippingAddress}
           availability={availability}
+          paymentMethod={paymentMethod}
         />
         <div className="actions">
           <BuyMutationComponent
@@ -97,6 +104,7 @@ const ConfirmPurchase = ({
             range={bookingRange}
             shippingAddress={shippingAddress}
             availability={availability}
+            paymentMethod={paymentMethod}
           />
           {isMobile ? null : (
             <button

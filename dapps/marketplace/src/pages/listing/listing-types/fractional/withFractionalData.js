@@ -39,7 +39,7 @@ const withFractionalData = WrappedComponent => {
             {...props}
             prices={prices}
             tokenStatus={tokenStatus}
-            token={suggestedToken}
+            token={props.paymentMethod || suggestedToken}
             listing={listing}
             range={range}
             availability={availability}

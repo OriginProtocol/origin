@@ -7,6 +7,8 @@ let fetching = false
 const requestQueue = []
 const isDone = () => new Promise(resolve => requestQueue.push(resolve))
 
+const OGN_PER_USD = 6.67 // 1 OGN = 0.15 USD
+
 class Currencies {
   constructor() {
     // Note:
@@ -86,7 +88,7 @@ class Currencies {
         id: 'token-OGN',
         name: 'Origin Token',
         code: 'OGN',
-        priceInUSD: 1,
+        priceInUSD: OGN_PER_USD,
         decimals: 18
       },
       'token-USDC': {
@@ -142,8 +144,11 @@ class Currencies {
       console.error('API call to fetch xrates from CryptoCompare failed.')
       return false
     }
+
+    // DAI is always a constant
     rates.DAI = 1
-    rates.OGN = 1
+    // OGN is constant for now, might change later
+    rates.OGN = OGN_PER_USD
 
     // Update rates in our data structure.
     for (const key of Object.keys(this.data)) {

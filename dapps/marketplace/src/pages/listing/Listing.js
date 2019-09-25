@@ -38,6 +38,7 @@ const Listing = props => {
   const [redirect, setRedirect] = useState()
   const [shippingAddress, setShippingAddress] = useState(null)
   const [bookingRange, setBookingRange] = useState(null)
+  const [paymentMethod, setPaymentMethod] = useState(null)
 
   const variables = { listingId }
 
@@ -100,6 +101,21 @@ const Listing = props => {
           )}
         />
         <Route
+        path="/listing/:listingID/payment"
+          render={() => (
+            <PaymentMethods
+              listing={listing}
+              quantity={quantity}
+              bookingRange={bookingRange}
+              paymentMethod={paymentMethod}
+              setPaymentMethod={setPaymentMethod}
+              next={`/listing/${listing.id}/${
+                listing.requiresShipping ? 'shipping' : 'confirm'
+              }`}
+            />
+          )}
+        />
+        <Route
           path="/listing/:listingID/shipping"
           render={() => (
             <ShippingDetails
@@ -108,6 +124,7 @@ const Listing = props => {
                 setShippingAddress(shippingAddress)
               }
               next={`/listing/${listingId}/confirm`}
+              paymentMethod={paymentMethod}
             />
           )}
         />
@@ -120,16 +137,7 @@ const Listing = props => {
               quantity={quantity}
               shippingAddress={shippingAddress}
               bookingRange={bookingRange}
-            />
-          )}
-        />
-        <Route
-        path="/listing/:listingID/payment"
-          render={() => (
-            <PaymentMethods
-              listing={listing}
-              quantity={quantity}
-              bookingRange={bookingRange}
+              paymentMethod={paymentMethod}
             />
           )}
         />
