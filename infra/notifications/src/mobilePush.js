@@ -115,15 +115,16 @@ class MobilePush {
 
       try {
         const response = await apnProvider.send(notification, deviceToken)
+        // response.sent: Array of device tokens to which the notification was sent successfully
+        // response.failed: Array of objects containing the device token (`device`) and either
         if (response.sent.length) {
           success = true
-          logger.debug('APN sent: ', response.sent.length)
-        }
-        if (response.failed) {
-          logger.error('APN failed: ', response.failed)
+          logger.debug('APN sent')
+        } else {
+          logger.error('APN send failure:', response)
         }
       } catch (error) {
-        logger.error('APN message failed to send: ', error)
+        logger.error('APN send error: ', error)
       }
     } else if (deviceType === 'FCM' && !isTest) {
       if (!firebaseMessaging) {
