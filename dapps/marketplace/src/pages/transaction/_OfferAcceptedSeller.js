@@ -6,7 +6,7 @@ import Stages from 'components/TransactionStages'
 
 import ShippingAddress from './_ShippingAddress'
 
-const OfferAcceptedSeller = ({ offer }) => {
+const OfferAcceptedSeller = ({ offer, refetch }) => {
   return (
     <div className="transaction-progress">
       <div className="tx-progress-wrapper">
@@ -26,7 +26,8 @@ const OfferAcceptedSeller = ({ offer }) => {
 
           <DisputeOffer
             offer={offer}
-            party="seller"
+            refetch={refetch}
+            from={offer.listing.seller.id}
             className="btn btn-link withdraw mt-3 mr-auto"
           >
             <fbt desc="WaitForFinalize.reportProblme">Report a Problem</fbt>
