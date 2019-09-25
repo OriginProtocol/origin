@@ -19,7 +19,11 @@ export function listingInputToIPFS(data, unitData, fractionalData) {
     description: data.description,
     media: data.media,
     price: data.price,
-    acceptedTokens: data.acceptedTokens || ['token-ETH', 'token-DAI', 'token-OGN'],
+    acceptedTokens: data.acceptedTokens || [
+      'token-ETH',
+      'token-DAI',
+      'token-OGN'
+    ],
     commission: {
       currency: 'OGN',
       amount: data.commission || '0'
