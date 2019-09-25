@@ -217,9 +217,11 @@ app.post('/mobile/register', async (req, res) => {
         JSON.stringify(registryRow.permissions)
       ) {
         await registryRow.update({ permissions: mobileRegister.permissions })
+        logger.debug('Updated mobile device registry: ', req.body)
+      } else {
+        logger.debug('Mobile registry up to date. No update needed.')
       }
       res.sendStatus(200)
-      logger.debug('Updated mobile device registry: ', req.body)
     }
   }
 
@@ -357,7 +359,8 @@ app.post('/events', async (req, res) => {
 
   // Normalize buyer, seller and party to use owner (aka "wallet") rather than proxy addresses.
   // The reason is that identity and notification data are stored under the owner's address.
-  // Note: some legacy users do not have a proxy and in that case buyer/seller.identity is null.
+  // Note: there is some malformed data on dev and staging causing some identities to
+  // fail loading. This is why we have all those defensive checks.
   let party = returnValues.party.toLowerCase()
   const buyerAddress = (
     _.get(buyer, 'identity.owner.id', '') || buyer.id

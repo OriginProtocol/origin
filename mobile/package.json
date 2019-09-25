@@ -5,7 +5,7 @@
   "repository": "https://github.com/OriginProtocol/origin/mobile",
   "version": "0.23.18",
   "scripts": {
-    "android": "react-native run-android",
+    "android": "react-native run-android --appId com.origincatcher",
     "clean": "git clean -fdX .",
     "postinstall": "cd ios && pod install",
     "ios": "react-native run-ios",

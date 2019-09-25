@@ -706,7 +706,7 @@ export default function txHelper({
     if (shouldUseRelayer && shouldUseProxy) {
       const address = get(toSend, '_parent._address')
       try {
-        await sendViaRelayer({
+        return await sendViaRelayer({
           web3,
           tx: toSend,
           proxy,
@@ -721,31 +721,34 @@ export default function txHelper({
         if (String(err).match(/denied message signature/)) {
           return reject(err)
         } else {
-          // Re-throw in a timeout so we can catch the error in tests
+          /**
+           * Re-throw in a timeout so we can catch the error in tests, but it
+           * should not cause the whole process to burn, so we can fallback to
+           * the traditional wallet sendTransaction
+           */
           setTimeout(() => {
             throw err
           }, 1)
         }
       }
-    } else {
-      // Send using the availble or given web3 instance
-      // TODO: holy argument hell, batman!  Why isn't half of this part of the tx?
-      debug(`Sending via web3`)
-      await sendViaWeb3({
-        web3,
-        tx: toSend,
-        to,
-        sourceAccount: from,
-        value,
-        gas,
-        gasPrice,
-        hashCallbacks,
-        receiptCallbacks,
-        confirmCallbacks,
-        mutation
-      })
-      debug(`Sent via web3`)
     }
+
+    // Send using the availble or given web3 instance
+    debug(`Sending via web3`)
+    await sendViaWeb3({
+      web3,
+      tx: toSend,
+      to,
+      sourceAccount: from,
+      value,
+      gas,
+      gasPrice,
+      hashCallbacks,
+      receiptCallbacks,
+      confirmCallbacks,
+      mutation
+    })
+    debug(`Sent via web3`)
   }).catch(err => {
     console.error(err)
     throw err
