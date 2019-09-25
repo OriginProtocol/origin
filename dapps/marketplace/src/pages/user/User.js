@@ -1,5 +1,5 @@
 import React from 'react'
-import { Query } from 'react-apollo'
+import { useQuery } from '@apollo/react-hooks'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
@@ -27,111 +27,102 @@ const goBack = history => {
 
 const User = ({ match, isMobile, history }) => {
   const { id, content } = match.params
-  const vars = { id: match.params.id }
+  const variables = { id: match.params.id }
 
+  const { data, loading, error } = useQuery(query, { variables })
+
+  if (error) {
+    return <QueryError error={error} query={query} vars={variables} />
+  }
+  if (loading) return <LoadingSpinner />
+
+  const profile = get(data, 'identity') || {}
+  const showingReviews = content === 'reviews'
+
+  const reviewsComp = (
+    <Reviews
+      id={id}
+      hideWhenZero={!showingReviews && !isMobile}
+      hideHeader={isMobile}
+    />
+  )
+
+  if (showingReviews) {
+    return (
+      <div className="container user-public-profile">
+        <DocumentTitle
+          pageTitle={fbt(
+            fbt.param('user', profile.fullName) + ' Reviews',
+            'User.reviews.title'
+          )}
+        />
+        <div className="row reviews-only">
+          <div className="col-md-8">
+            {isMobile ? (
+              <MobileModal
+                className="reviews-modal"
+                title={fbt('Reviews', 'Reviews')}
+                onBack={() => goBack(history)}
+              >
+                {reviewsComp}
+              </MobileModal>
+            ) : (
+              reviewsComp
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const listingsComp = (
+    <UserListings
+      user={id}
+      hideHeader={isMobile}
+      hideLoadMore
+      horizontal={isMobile ? false : true}
+      hideIfEmpty={true}
+    />
+  )
   return (
     <div className="container user-public-profile">
-      <Query query={query} variables={vars}>
-        {({ data, loading, error }) => {
-          if (error) {
-            return <QueryError error={error} query={query} vars={vars} />
-          }
-          if (loading) return <LoadingSpinner />
-
-          const profile = get(data, 'identity') || {}
-
-          const showingReviews = content === 'reviews'
-
-          const reviewsComp = (
-            <Reviews
-              id={id}
-              hideWhenZero={!showingReviews && !isMobile}
-              hideHeader={isMobile}
-            />
-          )
-
-          if (showingReviews) {
-            return (
-              <>
-                <DocumentTitle
-                  pageTitle={fbt(
-                    fbt.param('user', profile.fullName) + ' Reviews',
-                    'User.reviews.title'
-                  )}
-                />
-                <div className="row reviews-only">
-                  <div className="col-md-8">
-                    {isMobile ? (
-                      <MobileModal
-                        className="reviews-modal"
-                        title={fbt('Reviews', 'Reviews')}
-                        onBack={() => goBack(history)}
-                      >
-                        {reviewsComp}
-                      </MobileModal>
-                    ) : (
-                      reviewsComp
-                    )}
-                  </div>
-                </div>
-              </>
-            )
-          }
-
-          const listingsComp = (
-            <UserListings
-              user={id}
-              hideHeader={isMobile}
-              hideLoadMore
-              horizontal={isMobile ? false : true}
-              hideIfEmpty={true}
-            />
-          )
-          return (
-            <>
-              <DocumentTitle
-                pageTitle={
-                  profile.fullName || fbt('Unnamed User', 'User.title')
+      <DocumentTitle
+        pageTitle={profile.fullName || fbt('Unnamed User', 'User.title')}
+      />
+      <div className="row">
+        <div className="col-md-8">
+          <UserProfileCard
+            wallet={profile.id}
+            avatarUrl={profile.avatarUrl}
+            firstName={profile.firstName}
+            lastName={profile.lastName}
+            description={profile.description}
+            verifiedAttestations={profile.verifiedAttestations}
+            showMessageLink={true}
+          />
+          {isMobile ? (
+            <TabView
+              tabs={[
+                {
+                  id: 'reviews',
+                  title: fbt('Reviews', 'Reviews'),
+                  component: reviewsComp
+                },
+                {
+                  id: 'listings',
+                  title: fbt('Listings', 'Listings'),
+                  component: listingsComp
                 }
-              />
-              <div className="row">
-                <div className="col-md-8">
-                  <UserProfileCard
-                    wallet={profile.id}
-                    avatarUrl={profile.avatarUrl}
-                    firstName={profile.firstName}
-                    lastName={profile.lastName}
-                    description={profile.description}
-                    verifiedAttestations={profile.verifiedAttestations}
-                    showMessageLink={true}
-                  />
-                  {isMobile ? (
-                    <TabView
-                      tabs={[
-                        {
-                          id: 'reviews',
-                          title: fbt('Reviews', 'Reviews'),
-                          component: reviewsComp
-                        },
-                        {
-                          id: 'listings',
-                          title: fbt('Listings', 'Listings'),
-                          component: listingsComp
-                        }
-                      ]}
-                    />
-                  ) : (
-                    <>
-                      {listingsComp}
-                      {reviewsComp}
-                    </>
-                  )}
-                </div>
-              </div>
+              ]}
+            />
+          ) : (
+            <>
+              {listingsComp}
+              {reviewsComp}
             </>
-          )
-        }}
-      </Query>
+          )}
+        </div>
+      </div>
     </div>
   )
 }

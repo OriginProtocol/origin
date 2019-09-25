@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { Query } from 'react-apollo'
+import React from 'react'
+import { useQuery } from '@apollo/react-hooks'
 import get from 'lodash/get'
-import set from 'lodash/set'
 import { fbt } from 'fbt-runtime'
 import distanceToNow from 'utils/distanceToNow'
+import nextPageFactory from 'utils/nextPageFactory'
 
 import StarRating from 'components/StarRating'
 import Avatar from 'components/Avatar'
@@ -14,193 +14,124 @@ import LoadingSpinner from 'components/LoadingSpinner'
 import query from 'queries/Reviews'
 import EthAddress from './EthAddress'
 
-export default class Reviews extends Component {
-  readMore(fetchMore, after) {
-    fetchMore({
-      variables: {
-        after
-      },
-      updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) {
-          return prev
-        }
+const nextPage = nextPageFactory('marketplace.user.reviews')
 
-        if (!prev) {
-          return fetchMoreResult
-        }
+const Reviews = ({ id, first = 3, hideWhenZero, hideHeader, seller }) => {
+  const { data, loading, error, fetchMore, networkStatus } = useQuery(query, {
+    variables: { id, first },
+    skip: !id,
+    notifyOnNetworkStatusChange: true
+  })
 
-        let updatedData = { ...prev }
+  const vars = { id, first, after }
 
-        const prevReviews = get(prev, 'marketplace.user.reviews.nodes', [])
-        const newReviews = get(
-          fetchMoreResult,
-          'marketplace.user.reviews.nodes',
-          []
-        )
-        const prevPageInfo = get(prev, 'marketplace.user.reviews.pageInfo', {})
-        const pageInfo = get(
-          fetchMoreResult,
-          'marketplace.user.reviews.pageInfo',
-          {}
-        )
-
-        updatedData = set(updatedData, 'marketplace.user.reviews.nodes', [
-          ...prevReviews,
-          ...newReviews
-        ])
-
-        updatedData = set(updatedData, 'marketplace.user.reviews.pageInfo', {
-          ...prevPageInfo,
-          ...pageInfo
-        })
-
-        return updatedData
-      }
-    })
+  if (error) {
+    return <QueryError error={error} query={query} vars={vars} />
+  }
+  if (networkStatus <= 2) {
+    return null
   }
 
-  render() {
-    const { id, after } = this.props
-    const first = this.props.first || 3
+  const { nodes, pageInfo, totalCount } = get(data, 'marketplace.user.reviews')
+  const { hasNextPage, endCursor: after } = pageInfo
 
-    return (
-      <Query
-        query={query}
-        variables={{ id, first, after }}
-        skip={!id}
-        notifyOnNetworkStatusChange
-      >
-        {({ data, loading, error, fetchMore, networkStatus }) => {
-          if (error) {
-            return (
-              <QueryError
-                error={error}
-                query={query}
-                vars={{ id, first, after }}
-              />
-            )
-          }
-          if (networkStatus <= 2) {
-            return null
-          }
+  if (hideWhenZero && !totalCount) {
+    return null
+  }
 
-          const reviews = get(data, 'marketplace.user.reviews.nodes', [])
-          const count = get(data, 'marketplace.user.reviews.totalCount', 0)
-
-          const { hasNextPage, endCursor } = get(
-            data,
-            'marketplace.user.reviews.pageInfo',
-            {}
-          )
-
-          if (this.props.hideWhenZero && !count) {
-            return null
-          }
-
+  return (
+    <div className="reviews">
+      {!hideHeader && (
+        <h3>
+          {seller ? (
+            <fbt desc="reviews.headingSeller">Reviews about this seller</fbt>
+          ) : (
+            <fbt desc="reviews.headingUser">Reviews about this user</fbt>
+          )}
+        </h3>
+      )}
+      {!nodes.length && (
+        <div className="no-reviews">
+          {seller ? (
+            <fbt desc="reviews.none.seller">
+              No reviews available for this seller
+            </fbt>
+          ) : (
+            <fbt desc="reviews.none.user">
+              No reviews available for this user
+            </fbt>
+          )}
+        </div>
+      )}
+      {!!nodes.length &&
+        nodes.map((review, idx) => {
+          const profile = get(review, 'reviewer.account.identity') || {}
           return (
-            <div className="reviews">
-              {!this.props.hideHeader && (
-                <h3>
-                  {this.props.seller && (
-                    <fbt desc="reviews.headingSeller">
-                      Reviews about this seller
-                    </fbt>
-                  )}
-                  {!this.props.seller && (
-                    <fbt desc="reviews.headingUser">
-                      Reviews about this user
-                    </fbt>
-                  )}
-                </h3>
-              )}
-              {!reviews.length && (
-                <div className="no-reviews">
-                  {this.props.seller ? (
-                    <fbt desc="reviews.none.seller">
-                      No reviews available for this seller
-                    </fbt>
-                  ) : (
-                    <fbt desc="reviews.none.user">
-                      No reviews available for this user
-                    </fbt>
-                  )}
+            <div key={idx} className="review">
+              <div className="user-info">
+                <div className="avatar-wrap">
+                  <Link to={`/user/${review.reviewer.id}`}>
+                    <Avatar size="4rem" profile={profile} />
+                  </Link>
                 </div>
-              )}
-              {!!reviews.length &&
-                reviews.map((review, idx) => {
-                  const profile = get(review, 'reviewer.account.identity') || {}
-                  return (
-                    <div key={idx} className="review">
-                      <div className="user-info">
-                        <div className="avatar-wrap">
-                          <Link to={`/user/${review.reviewer.id}`}>
-                            <Avatar size="4rem" profile={profile} />
-                          </Link>
-                        </div>
-                        <div className="user">
-                          <div className="top">
-                            <div className="name">
-                              <Link to={`/user/${review.reviewer.id}`}>
-                                {profile.fullName || (
-                                  <fbt desc="reviews.unamedUser">
-                                    Unnamed User
-                                  </fbt>
-                                )}
-                              </Link>
-                            </div>
-                            <EthAddress
-                              address={review.reviewer.id}
-                              short={true}
-                            />
-                          </div>
-                          <div className="info">
-                            <div className="purchase">
-                              {`Purchased `}
-                              <Link to={`/listing/${review.listing.id}`}>
-                                {review.listing.title}
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="review-meta">
-                        <StarRating small={true} active={review.rating} />
-                        <div className="timestamp">
-                          {distanceToNow(review.event.timestamp)}
-                        </div>
-                      </div>
-                      <div className="text">{review.review}</div>
+                <div className="user">
+                  <div className="top">
+                    <div className="name">
+                      <Link to={`/user/${review.reviewer.id}`}>
+                        {profile.fullName || (
+                          <fbt desc="reviews.unamedUser">Unnamed User</fbt>
+                        )}
+                      </Link>
                     </div>
-                  )
-                })}
-              {hasNextPage ? (
-                <a
-                  href="#more-reviews"
-                  className="read-more"
-                  onClick={e => {
-                    e.preventDefault()
-                    if (!loading) {
-                      this.readMore(fetchMore, endCursor)
-                    }
-                  }}
-                >
-                  {loading ? (
-                    <LoadingSpinner />
-                  ) : (
-                    <>
-                      <fbt desc="reviews.readMore">Read More</fbt>
-                      <i className="read-more-caret" />
-                    </>
-                  )}
-                </a>
-              ) : null}
+                    <EthAddress address={review.reviewer.id} short={true} />
+                  </div>
+                  <div className="info">
+                    <div className="purchase">
+                      {`Purchased `}
+                      <Link to={`/listing/${review.listing.id}`}>
+                        {review.listing.title}
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="review-meta">
+                <StarRating small={true} active={review.rating} />
+                <div className="timestamp">
+                  {distanceToNow(review.event.timestamp)}
+                </div>
+              </div>
+              <div className="text">{review.review}</div>
             </div>
           )
-        }}
-      </Query>
-    )
-  }
+        })}
+      {hasNextPage ? (
+        <a
+          href="#more-reviews"
+          className="read-more"
+          onClick={e => {
+            e.preventDefault()
+            if (!loading) {
+              // readMore(fetchMore, endCursor)
+              nextPage(fetchMore, { ...vars, after })
+            }
+          }}
+        >
+          {loading ? (
+            <LoadingSpinner />
+          ) : (
+            <>
+              <fbt desc="reviews.readMore">Read More</fbt>
+              <i className="read-more-caret" />
+            </>
+          )}
+        </a>
+      ) : null}
+    </div>
+  )
 }
+
+export default Reviews
 
 require('react-styl')(`
   .reviews
