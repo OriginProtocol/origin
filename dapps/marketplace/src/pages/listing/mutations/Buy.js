@@ -108,11 +108,7 @@ class Buy extends Component {
       ) {
         action = this.renderMakeOfferMutation(null, true)
       } else if (!this.hasBalance()) {
-        action = this.renderSwapTokenMutation(
-          this.props.cannotTransact
-            ? fbt('Purchase', 'Purchase')
-            : fbt('Swap Now', 'Swap Now')
-        )
+        action = this.renderSwapTokenMutation(fbt('Purchase', 'Purchase'))
         content = this.renderSwapTokenModal()
       } else if (!this.hasAllowance()) {
         action = this.renderAllowTokenMutation(fbt('Purchase', 'Purchase'))
@@ -201,7 +197,7 @@ class Buy extends Component {
           <button
             className={buttonContent ? this.props.className : 'btn btn-clear'}
             onClick={() => this.onSwapToToken(swapToToken)}
-            children={buttonContent || fbt('Swap Now', 'Swap Now')}
+            children={buttonContent || fbt('Purchase', 'Purchase')}
           />
         )}
       </Mutation>

@@ -7,7 +7,11 @@ let fetching = false
 const requestQueue = []
 const isDone = () => new Promise(resolve => requestQueue.push(resolve))
 
-const OGN_PER_USD = 6.67 // 1 OGN = 0.15 USD
+let OGN_PER_USD = 1 / 0.15 // 1 OGN = 0.15 USD
+
+if (process.env.NODE_ENV === 'test') {
+  OGN_PER_USD = 1 // Keeping it simple for tests
+}
 
 class Currencies {
   constructor() {
