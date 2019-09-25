@@ -89,6 +89,7 @@ export function multiUnitTests({
       if (!acceptedTokens.includes('OGN'))
         await clickByText(page, 'Origin Token')
 
+      await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
 

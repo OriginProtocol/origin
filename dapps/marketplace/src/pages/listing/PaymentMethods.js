@@ -25,6 +25,8 @@ import Price from 'components/Price'
 import InsufficientBalance from './_InsufficientBalance'
 import TokenExchangeNote from './_TokenExchangeNote'
 
+import getAvailabilityCalculator from 'utils/getAvailabilityCalculator'
+
 const PaymentAmountRaw = ({
   paymentMethod,
   totalPrice,
@@ -104,6 +106,7 @@ const PaymentAmountRaw = ({
   )
 }
 
+// TODO: Is there a better way to do this?
 const MultiUnitPaymentAmount = withMultiUnitData(PaymentAmountRaw)
 const FractionalPaymentAmount = withFractionalData(PaymentAmountRaw)
 const FractionalHourlyPaymentAmount = withFractionalHourlyData(PaymentAmountRaw)
@@ -191,12 +194,13 @@ const PaymentMethods = ({
         <PaymentAmount
           listing={listing}
           quantity={quantity}
-          bookingRange={bookingRange}
+          range={bookingRange}
           paymentMethod={paymentMethod}
           acceptedTokens={acceptedTokens}
           history={history}
           next={next}
           isMobile={isMobile}
+          availability={getAvailabilityCalculator(listing)}
         />
       </div>
     </div>

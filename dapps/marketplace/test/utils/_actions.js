@@ -238,6 +238,10 @@ export const purchaseFractionalListing = async ({ page, buyer }) => {
 
   await clickByText(page, 'Book')
 
+  await clickByText(page, 'Ethereum')
+
+  await clickByText(page, 'Continue', 'a')
+
   // Purchase confirmation
   await waitForText(page, 'Please confirm your purchase', 'h1')
   await pic(page, 'purchase-confirmation')
