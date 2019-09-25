@@ -1,6 +1,6 @@
 import React from 'react'
-
 import { fbt } from 'fbt-runtime'
+import get from 'lodash/get'
 
 import Price from 'components/Price'
 
@@ -12,9 +12,9 @@ const PurchaseSummary = ({
   shippingAddress,
   startDate,
   endDate,
-  tokenStatus
+  tokenStatus = {}
 }) => {
-  const { hasBalance, hasEthBalance, loading } = tokenStatus || {}
+  const { loading } = tokenStatus
 
   if (loading) {
     return (
@@ -24,6 +24,8 @@ const PurchaseSummary = ({
     )
   }
 
+  const { hasBalance } = get(tokenStatus, token, {})
+  const hasEthBalance = get(tokenStatus, 'token-ETH.hasBalance')
   const acceptedTokens = listing.acceptedTokens
 
   const isEth = token === 'token-ETH'

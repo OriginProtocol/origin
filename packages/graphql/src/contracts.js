@@ -499,6 +499,7 @@ export function toggleMetaMask(enabled) {
 
 export function setMarketplace(address, epoch, version = '000') {
   if (!address) return
+  address = web3.utils.toChecksumAddress(address)
   const contract = new web3.eth.Contract(MarketplaceContract.abi, address)
 
   try {
@@ -558,6 +559,7 @@ export function setMarketplace(address, epoch, version = '000') {
 
 export function setIdentityEvents(address, epoch) {
   if (!address) return
+  address = web3.utils.toChecksumAddress(address)
   context.identityEvents = new web3.eth.Contract(
     IdentityEventsContract.abi,
     address

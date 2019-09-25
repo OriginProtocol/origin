@@ -98,14 +98,19 @@ const PaymentOptions = ({
     return null
   }
 
-  const { hasBalance, hasEthBalance } = tokenStatus
-
   const noBalance = cannotTransact && cannotTransact !== 'no-balance'
   const noTokens = !Object.keys(tokens).length
 
   let content, notEnoughFunds, paymentTotal, exchanged
 
   if (!noBalance && !noTokens) {
+    if (!value) {
+      value = tokenStatus.suggestedToken
+    }
+
+    const { hasBalance } = get(tokenStatus, value)
+    const hasEthBalance = get(tokenStatus, 'token-ETH.hasBalance')
+
     let cannotPurchase = false,
       needsSwap = false,
       noEthOrDai = false

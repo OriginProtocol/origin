@@ -22,11 +22,6 @@ const withFractionalHourlyData = WrappedComponent => {
     availability,
     ...props
   }) => {
-    const acceptsEth = listing.acceptedTokens.find(t => t.id === 'token-ETH')
-    const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
-    // Favor payment in ETH over DAI if the seller accepts it.
-    const token = acceptsEth ? 'token-ETH' : 'token-DAI'
-
     let startDate = null,
       endDate = null,
       totalPrice,
@@ -52,18 +47,17 @@ const withFractionalHourlyData = WrappedComponent => {
 
     return (
       <WithPrices
+        listing={listing}
         price={totalPrice}
-        target={token}
         targets={['token-ETH', 'token-DAI', listing.price.currency.id]}
         allowanceTarget={listing.contractAddr}
       >
-        {({ prices, tokenStatus }) => (
+        {({ prices, tokenStatus, suggestedToken }) => (
           <WrappedComponent
             {...props}
             prices={prices}
             tokenStatus={tokenStatus}
-            token={token}
-            acceptsDai={acceptsDai}
+            token={suggestedToken}
             listing={listing}
             startDate={startDate}
             endDate={endDate}
