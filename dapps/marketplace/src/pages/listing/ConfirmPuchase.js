@@ -138,29 +138,6 @@ require('react-styl')(`
       margin: 0 auto
       flex-direction: column
       flex: 1
-      .summary
-        text-align: center
-        padding: 1.25rem
-        background-color: #f3f7f9
-        border: solid 1px #eaf0f3
-        border-radius: 10px
-        margin-bottom: 1.5rem
-        margin-bottom: 0.5rem
-        margin: 0 auto
-        width: 100%
-        .summary-row
-          display: flex
-          width: 100%
-          margin-bottom: 1rem
-          .summary-name
-            font-size:  1.125rem
-            flex: 50% 0 0
-            text-align: left
-          .summary-value
-            flex: 50% 0 0
-            font-size: 1.125rem
-            font-weight: 700
-            text-align: right
       .actions
         padding-top: 1.5rem
         display: flex

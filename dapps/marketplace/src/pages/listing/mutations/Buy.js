@@ -23,6 +23,8 @@ import withIdentity from 'hoc/withIdentity'
 import withConfig from 'hoc/withConfig'
 import withMessagingStatus from 'hoc/withMessagingStatus'
 
+import { getTokenSymbol } from 'utils/tokenUtils'
+
 import { fbt } from 'fbt-runtime'
 
 class Buy extends Component {
@@ -158,8 +160,20 @@ class Buy extends Component {
   renderSwapTokenModal() {
     return (
       <>
-        <h2>Swap for DAI</h2>
-        Click below to swap ETH for DAI
+        <h2>
+          <fbt desc="BuyModal.swapForToken">
+            Swap for{' '}
+            <fbt:param name="token">
+              {getTokenSymbol(this.props.currency)}
+            </fbt:param>
+          </fbt>
+        </h2>
+        <fbt desc="BuyModal.swapForTokenDesc">
+          Click below to swap ETH for{' '}
+          <fbt:param name="token">
+            {getTokenSymbol(this.props.currency)}
+          </fbt:param>
+        </fbt>
         <div className="actions">
           <button
             className="btn btn-outline-light"
@@ -210,7 +224,7 @@ class Buy extends Component {
               ),
               5
             ),
-            dai = numberFormat(
+            tokenValue = numberFormat(
               web3.utils.fromWei(
                 get(event, 'returnValuesArr.2.value', '0'),
                 'ether'
@@ -224,12 +238,14 @@ class Buy extends Component {
                 <fbt desc="success">Success!</fbt>
               </h5>
               <div className="help">
-                <fbt desc="buy.swappedEthForDai">
+                <fbt desc="buy.swappedEthForToken">
                   Swapped
                   <fbt:param name="eth">${eth}</fbt:param>
                   ETH for
-                  <fbt:param name="dai">${dai}</fbt:param>
-                  DAI
+                  <fbt:param name="tokenValue">${tokenValue}</fbt:param>
+                  <fbt:param name="token">
+                    {getTokenSymbol(this.props.currency)}
+                  </fbt:param>
                 </fbt>
               </div>
               {this.hasAllowance() ? (
@@ -239,8 +255,12 @@ class Buy extends Component {
               ) : (
                 <>
                   <div className="help">
-                    <fbt desc="buy.authorizeOriginMoveDai">
-                      Please authorize Origin to move DAI on your behalf.
+                    <fbt desc="buy.authorizeOriginMoveToken">
+                      Please authorize Origin to move{' '}
+                      <fbt:param name="token">
+                        {getTokenSymbol(this.props.currency)}
+                      </fbt:param>{' '}
+                      on your behalf.
                     </fbt>
                   </div>
                   {this.renderAllowTokenMutation()}
@@ -256,9 +276,20 @@ class Buy extends Component {
   renderAllowTokenModal() {
     return (
       <>
-        <h2>Approve DAI</h2>
-        <fbt desc="buy.approveDaiOrigin">
-          Click below to approve DAI for use on Origin
+        <h2>
+          <fbt desc="BuyModal.approveToken">
+            Approve{' '}
+            <fbt:param name="token">
+              {getTokenSymbol(this.props.currency)}
+            </fbt:param>
+          </fbt>
+        </h2>
+        <fbt desc="buy.approveTokenForOrigin">
+          Click below to approve{' '}
+          <fbt:param name="token">
+            {getTokenSymbol(this.props.currency)}
+          </fbt:param>{' '}
+          for use on Origin
         </fbt>
         <div className="actions">
           <button
@@ -469,8 +500,12 @@ class Buy extends Component {
               <fbt desc="success">Success!</fbt>
             </h5>
             <div className="help">
-              <fbt desc="buy.sucessMoveDai">
-                Origin may now move DAI on your behalf.
+              <fbt desc="buy.sucessMoveToken">
+                Origin may now move{' '}
+                <fbt:param name="token">
+                  {getTokenSymbol(this.props.currency)}
+                </fbt:param>{' '}
+                on your behalf.
               </fbt>
             </div>
             {this.renderMakeOfferMutation(fbt('Continue', 'Continue'))}

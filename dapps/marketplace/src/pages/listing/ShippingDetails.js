@@ -274,6 +274,7 @@ require('react-styl')(`
         padding: 1rem
       .actions
         flex-direction: column
+        padding: 1rem 0
         .btn
           margin-right: 0
           margin-left: 0

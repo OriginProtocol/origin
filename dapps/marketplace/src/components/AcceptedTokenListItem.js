@@ -1,14 +1,14 @@
 import React from 'react'
-import { fbt } from 'fbt-runtime'
+
+import {
+  getTokenName,
+  getTokenSymbol,
+  getTokenTooltip,
+  tokenToCoinLogoMap
+} from 'utils/tokenUtils'
 
 import CoinLogo from 'components/CoinLogo'
 import Tooltip from 'components/Tooltip'
-
-const tokenToCoinLogoMap = {
-  'token-ETH': 'eth',
-  'token-DAI': 'dai',
-  'token-OGN': 'ogn'
-}
 
 const HelpIcon = ({ tooltip }) => (
   <Tooltip tooltip={tooltip} placement="top">
@@ -20,54 +20,6 @@ const HelpIcon = ({ tooltip }) => (
     </svg>
   </Tooltip>
 )
-
-/**
- * Returns the display name of tokens
- * @param {String} token Can be one of [token-ETH, token-DAI, token-OGN]
- */
-function getTokenName(token) {
-  switch (token) {
-    case 'token-ETH':
-      return <fbt desc="Ethereum">Ethereum</fbt>
-    case 'token-DAI':
-      return <fbt desc="MakerDai">Maker Dai</fbt>
-    case 'token-OGN':
-      return <fbt desc="Origin Token">Origin Token</fbt>
-  }
-
-  return null
-}
-
-/**
- * Returns tooltip content for the given token
- * @param {String} token Can be one of [token-ETH, token-DAI, token-OGN]
- */
-function getTokenTooltip(token) {
-  switch (token) {
-    case 'token-ETH':
-      return (
-        <fbt desc="pricingChooser.ether">
-          Ether is good for short term listings.
-        </fbt>
-      )
-    case 'token-DAI':
-      return (
-        <fbt desc="pricingChooser.dai">
-          Maker Dai is good for long term listings like rentals or property
-          sales.
-        </fbt>
-      )
-    case 'token-OGN':
-      return <fbt desc="pricingChooser.ogn">Origin Token</fbt>
-  }
-
-  return null
-}
-
-function getTokenSymbol(token) {
-  // token-ETH => ETH, token-DAI => token-OGN => OGN
-  return token ? token.split('-').pop() : null
-}
 
 const AcceptedTokenListItem = ({ selected, onSelect, token, hideTooltip }) => {
   return (

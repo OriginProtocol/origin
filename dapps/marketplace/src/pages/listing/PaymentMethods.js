@@ -6,6 +6,8 @@ import { withRouter } from 'react-router-dom'
 
 import get from 'lodash/get'
 
+import { getDefaultToken } from 'utils/tokenUtils'
+
 import DocumentTitle from 'components/DocumentTitle'
 import MobileModalHeader from 'components/MobileModalHeader'
 
@@ -20,31 +22,8 @@ import withFractionalData from './listing-types/fractional/withFractionalData'
 import withFractionalHourlyData from './listing-types/fractional-hourly/withFractionalHourlyData'
 import Price from 'components/Price'
 
-// Default token to select by order of preference
-const defaultTokens = ['token-DAI', 'token-ETH', 'token-OGN']
-
-/**
- * Returns the default currency to be selected for a listing
- * @param {Array} acceptedTokens An array of accepted tokens
- */
-const getDefaultToken = acceptedTokens => {
-  if (!acceptedTokens.length) {
-    return null
-  }
-
-  if (acceptedTokens.length === 1) {
-    return acceptedTokens[0]
-  }
-
-  for (const token of defaultTokens) {
-    if (acceptedTokens.includes(token)) {
-      return token
-    }
-  }
-
-  // This should never happen
-  return null
-}
+import InsufficientBalance from './_InsufficientBalance'
+import TokenExchangeNote from './_TokenExchangeNote'
 
 const PaymentAmountRaw = ({
   paymentMethod,
@@ -67,23 +46,25 @@ const PaymentAmountRaw = ({
   }
 
   let message = null
+  let canTransact = true
 
   if (!tokenObj.hasBalance) {
+    canTransact = false
     // When you don't have enough balance
     switch (paymentMethod) {
       case 'token-ETH':
       case 'token-OGN':
-        // No Conversion for ETH and OGN, you must have that balance
-        message = <div>Insufficient balance</div>
+        message = <InsufficientBalance token={paymentMethod} />
         break
 
       case 'token-DAI':
         if (tokenStatus['token-ETH'].hasBalance) {
           // Has ETH. Can exchange that to DAI
-          message = <div>Will be converted</div>
+          message = <TokenExchangeNote />
+          canTransact = true
         } else {
           // Not enough ETH either. :/
-          message = <div>Insufficient balance</div>
+          message = <InsufficientBalance token={paymentMethod} />
         }
     }
   }
@@ -101,9 +82,15 @@ const PaymentAmountRaw = ({
       {message}
 
       <div className="actions">
-        <Link className="btn btn-primary btn-rounded" to={next}>
-          <fbt desc="Continue">Continue</fbt>
-        </Link>
+        {canTransact ? (
+          <Link className="btn btn-primary btn-rounded" to={next}>
+            <fbt desc="Continue">Continue</fbt>
+          </Link>
+        ) : (
+          <button className="btn btn-primary btn-rounded" disabled={true}>
+            <fbt desc="Continue">Continue</fbt>
+          </button>
+        )}
         {isMobile ? null : (
           <button
             className="btn btn-outline-primary btn-rounded"
@@ -123,7 +110,7 @@ const FractionalHourlyPaymentAmount = withFractionalHourlyData(PaymentAmountRaw)
 const SingleUnitPaymentAmount = withSingleUnitData(PaymentAmountRaw)
 
 /**
- * Returns PaymentAmountRaw component wrapped with the
+ * @returns PaymentAmountRaw component wrapped with the
  * appropriate data for the listing type
  */
 const PaymentAmount = props => {
