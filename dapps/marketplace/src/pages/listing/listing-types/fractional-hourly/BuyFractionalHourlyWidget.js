@@ -11,7 +11,6 @@ import ConfirmPurchaseButton from '../../_ConfirmPurchaseButton'
 
 import withFractionalHourlyData from './withFractionalHourlyData'
 
-
 /**
  * Renders the buy widget and button that you see on the listing detail page
  * When user clicks on purchase, it takes you to Purchase confirmation page

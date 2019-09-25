@@ -11,7 +11,12 @@ const withMultiUnitData = WrappedComponent => {
       <WithPrices
         listing={listing}
         price={totalPrice}
-        targets={['token-ETH', 'token-DAI', 'token-OGN', totalPrice.currency.id]}
+        targets={[
+          'token-ETH',
+          'token-DAI',
+          'token-OGN',
+          totalPrice.currency.id
+        ]}
         allowanceTarget={listing.contractAddr}
       >
         {({ prices, tokenStatus, suggestedToken }) => (

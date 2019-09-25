@@ -3,7 +3,7 @@ import React from 'react'
 import WithPrices from 'components/WithPrices'
 
 /**
- * HOC that returns all the data that you need for running the 
+ * HOC that returns all the data that you need for running the
  * makeOffer mutation for fractional listing
  */
 const withFractionalData = WrappedComponent => {
@@ -31,7 +31,12 @@ const withFractionalData = WrappedComponent => {
       <WithPrices
         listing={listing}
         price={totalPrice}
-        targets={['token-ETH', 'token-DAI', 'token-OGN', listing.price.currency.id]}
+        targets={[
+          'token-ETH',
+          'token-DAI',
+          'token-OGN',
+          listing.price.currency.id
+        ]}
         allowanceTarget={listing.contractAddr}
       >
         {({ prices, tokenStatus, suggestedToken }) => (

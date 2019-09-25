@@ -39,4 +39,3 @@ const BuyFractionalHourlyMutation = ({
 }
 
 export default withFractionalHourlyData(BuyFractionalHourlyMutation)
-

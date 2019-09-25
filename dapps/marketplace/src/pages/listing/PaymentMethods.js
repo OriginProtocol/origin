@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 
 import { fbt } from 'fbt-runtime'
 
@@ -19,7 +19,6 @@ import withSingleUnitData from './listing-types/single-unit/withSingleUnitData'
 import withFractionalData from './listing-types/fractional/withFractionalData'
 import withFractionalHourlyData from './listing-types/fractional-hourly/withFractionalHourlyData'
 import Price from 'components/Price'
-
 
 // Default token to select by order of preference
 const defaultTokens = ['token-DAI', 'token-ETH', 'token-OGN']
@@ -60,10 +59,7 @@ const PaymentAmountRaw = ({
   if (!tokenObj || tokenObj.loading) {
     return (
       <div className="actions">
-        <button
-          className="btn btn-primary btn-rounded"
-          disabled={true}
-        >
+        <button className="btn btn-primary btn-rounded" disabled={true}>
           <fbt desc="Loading...">Loading...</fbt>
         </button>
       </div>
@@ -83,7 +79,7 @@ const PaymentAmountRaw = ({
 
       case 'token-DAI':
         if (tokenStatus['token-ETH'].hasBalance) {
-          // Has ETH. Can exchange that to DAI 
+          // Has ETH. Can exchange that to DAI
           message = <div>Will be converted</div>
         } else {
           // Not enough ETH either. :/
@@ -105,10 +101,7 @@ const PaymentAmountRaw = ({
       {message}
 
       <div className="actions">
-        <Link
-          className="btn btn-primary btn-rounded"
-          to={next}
-        >
+        <Link className="btn btn-primary btn-rounded" to={next}>
           <fbt desc="Continue">Continue</fbt>
         </Link>
         {isMobile ? null : (
@@ -130,12 +123,12 @@ const FractionalHourlyPaymentAmount = withFractionalHourlyData(PaymentAmountRaw)
 const SingleUnitPaymentAmount = withSingleUnitData(PaymentAmountRaw)
 
 /**
- * Returns PaymentAmountRaw component wrapped with the 
+ * Returns PaymentAmountRaw component wrapped with the
  * appropriate data for the listing type
  */
 const PaymentAmount = props => {
   const { listing } = props
-  
+
   const singleUnit =
     listing.__typename === 'UnitListing' && listing.unitsTotal === 1
   const multiUnit = listing.multiUnit
@@ -170,8 +163,7 @@ const PaymentMethods = ({
   history,
   next
 }) => {
-  const acceptedTokens = get(listing, 'acceptedTokens', [])
-    .map(t => t.id)
+  const acceptedTokens = get(listing, 'acceptedTokens', []).map(t => t.id)
 
   const setTokenCallback = useCallback(token => setPaymentMethod(token))
 
@@ -190,9 +182,7 @@ const PaymentMethods = ({
         {title} | {listing.title}
       </DocumentTitle>
       {!isMobile ? (
-        <h1>
-          {title}
-        </h1>
+        <h1>{title}</h1>
       ) : (
         <MobileModalHeader onBack={() => history.goBack()}>
           {title}
@@ -200,21 +190,17 @@ const PaymentMethods = ({
       )}
       <div className="payment-methods-content">
         <div className="my-4">
-          <fbt desc="PaymentMethod.acceptedCurrencies">
-            This seller accepts
-          </fbt>
+          <fbt desc="PaymentMethod.acceptedCurrencies">This seller accepts</fbt>
         </div>
-        {
-          acceptedTokens.map(token => (
-            <AcceptedTokenListItem
-              key={token}
-              token={token}
-              selected={paymentMethod === token}
-              onSelect={setTokenCallback}
-              hideTooltip={true}
-            />
-          ))
-        }
+        {acceptedTokens.map(token => (
+          <AcceptedTokenListItem
+            key={token}
+            token={token}
+            selected={paymentMethod === token}
+            onSelect={setTokenCallback}
+            hideTooltip={true}
+          />
+        ))}
         <PaymentAmount
           listing={listing}
           quantity={quantity}

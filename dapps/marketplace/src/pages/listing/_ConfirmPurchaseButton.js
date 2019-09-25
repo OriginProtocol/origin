@@ -37,12 +37,11 @@ const ConfirmPurchaseButton = ({
     )
   }
 
-
   if (
     !wallet ||
     !identity ||
     (!hasMessagingKeys &&
-    !(localStorage.bypassOnboarding || localStorage.useWeb3Identity))
+      !(localStorage.bypassOnboarding || localStorage.useWeb3Identity))
   ) {
     return (
       <UserActivationLink
@@ -65,6 +64,10 @@ const ConfirmPurchaseButton = ({
   )
 }
 
-export default withWallet(withIdentity(withMessagingStatus(ConfirmPurchaseButton, {
-  excludeData: true
-})))
+export default withWallet(
+  withIdentity(
+    withMessagingStatus(ConfirmPurchaseButton, {
+      excludeData: true
+    })
+  )
+)

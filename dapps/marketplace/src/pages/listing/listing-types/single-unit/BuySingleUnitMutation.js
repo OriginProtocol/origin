@@ -9,7 +9,15 @@ import withSingleUnitData from './withSingleUnitData'
 /**
  * Renders the button that runs the makeOffer/swapAndMakeOffer mutation
  */
-const BuySingleUnitMutation = ({ refetch, listing, from, prices, token, tokenStatus, shippingAddress }) => {
+const BuySingleUnitMutation = ({
+  refetch,
+  listing,
+  from,
+  prices,
+  token,
+  tokenStatus,
+  shippingAddress
+}) => {
   return (
     <Buy
       refetch={refetch}

@@ -45,9 +45,18 @@ function getTokenName(token) {
 function getTokenTooltip(token) {
   switch (token) {
     case 'token-ETH':
-      return <fbt desc="pricingChooser.ether">Ether is good for short term listings.</fbt>
+      return (
+        <fbt desc="pricingChooser.ether">
+          Ether is good for short term listings.
+        </fbt>
+      )
     case 'token-DAI':
-      return <fbt desc="pricingChooser.dai">Maker Dai is good for long term listings like rentals or property sales.</fbt>
+      return (
+        <fbt desc="pricingChooser.dai">
+          Maker Dai is good for long term listings like rentals or property
+          sales.
+        </fbt>
+      )
     case 'token-OGN':
       return <fbt desc="pricingChooser.ogn">Origin Token</fbt>
   }
@@ -60,12 +69,7 @@ function getTokenSymbol(token) {
   return token ? token.split('-').pop() : null
 }
 
-const AcceptedTokenListItem = ({
-  selected,
-  onSelect,
-  token,
-  hideTooltip
-}) => {
+const AcceptedTokenListItem = ({ selected, onSelect, token, hideTooltip }) => {
   return (
     <div
       className={`accepted-token-list-item${
@@ -73,14 +77,16 @@ const AcceptedTokenListItem = ({
       }`}
       onClick={() => onSelect(token)}
     >
-      {tokenToCoinLogoMap[token] && <CoinLogo coin={tokenToCoinLogoMap[token]} className="lg" />}
+      {tokenToCoinLogoMap[token] && (
+        <CoinLogo coin={tokenToCoinLogoMap[token]} className="lg" />
+      )}
       <div className="name">
-        {getTokenName(token)}{` `}<div className="symbol">{getTokenSymbol(token)}</div>
+        {getTokenName(token)}
+        {` `}
+        <div className="symbol">{getTokenSymbol(token)}</div>
       </div>
       {hideTooltip === true ? null : (
-        <HelpIcon
-          tooltip={getTokenTooltip(token)}
-        />
+        <HelpIcon tooltip={getTokenTooltip(token)} />
       )}
     </div>
   )

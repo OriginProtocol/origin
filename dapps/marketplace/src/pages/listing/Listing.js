@@ -101,7 +101,7 @@ const Listing = props => {
           )}
         />
         <Route
-        path="/listing/:listingID/payment"
+          path="/listing/:listingID/payment"
           render={() => (
             <PaymentMethods
               listing={listing}

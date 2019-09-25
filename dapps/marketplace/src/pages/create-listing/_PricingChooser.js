@@ -4,23 +4,26 @@ import { fbt } from 'fbt-runtime'
 import AcceptedTokenListItem from 'components/AcceptedTokenListItem'
 
 const PricingChooser = ({ value, onChange, children }) => {
-  const toggleCurrencies = useCallback(token => {
-    let newValue
+  const toggleCurrencies = useCallback(
+    token => {
+      let newValue
 
-    if (value.includes(token)) {
-      // Deselect if already selected
-      newValue = value.filter(t => t !== token)
-      if (!newValue.length) {
-        // The default currency
-        newValue.push('token-ETH')
+      if (value.includes(token)) {
+        // Deselect if already selected
+        newValue = value.filter(t => t !== token)
+        if (!newValue.length) {
+          // The default currency
+          newValue.push('token-ETH')
+        }
+      } else {
+        // Select if not already selected
+        newValue = [...value, token]
       }
-    } else {
-      // Select if not already selected
-      newValue = [...value, token]
-    }
 
-    onChange(newValue)
-  }, [value])
+      onChange(newValue)
+    },
+    [value]
+  )
 
   return (
     <div className="pricing-chooser">

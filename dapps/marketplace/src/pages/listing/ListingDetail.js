@@ -27,7 +27,6 @@ import Withdrawn from './_ListingWithdrawn'
 import EditOnly from './_ListingEditOnly'
 import OfferMade from './_ListingOfferMade'
 
-
 import GiftCardDetail from './listing-types/GiftCard'
 import FractionalNightlyDetail from './listing-types/fractional/FractionalNightlyDetail'
 import FractionalHourlyDetail from './listing-types/fractional-hourly/FractionalHourlyDetail'

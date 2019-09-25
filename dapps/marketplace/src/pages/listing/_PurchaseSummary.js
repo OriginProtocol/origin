@@ -1,6 +1,5 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
-import get from 'lodash/get'
 
 import Price from 'components/Price'
 
