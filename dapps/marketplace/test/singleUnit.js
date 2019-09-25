@@ -257,6 +257,7 @@ export function singleUnitTokenTests({
           deployIdentity
         }
       }
+      // eslint-disable-next-line no-extra-semi
       ;({ seller, buyer } = await reset(resetOpts))
       title = randomTitle()
     })
