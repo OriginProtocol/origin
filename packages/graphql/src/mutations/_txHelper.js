@@ -527,7 +527,8 @@ async function sendViaWeb3({
   hashCallbacks,
   receiptCallbacks,
   confirmCallbacks,
-  mutation
+  mutation,
+  reject
 }) {
   if (web3 && to) {
     tx = web3.eth.sendTransaction({
@@ -577,10 +578,7 @@ async function sendViaWeb3({
         })
       }
     })
-    .catch(err => {
-      console.error('Error sending transaction via web3')
-      throw err
-    })
+    .catch(reject)
 }
 
 export default function txHelper({
@@ -746,11 +744,9 @@ export default function txHelper({
       hashCallbacks,
       receiptCallbacks,
       confirmCallbacks,
-      mutation
+      mutation,
+      reject
     })
     debug(`Sent via web3`)
-  }).catch(err => {
-    console.error(err)
-    throw err
   })
 }
