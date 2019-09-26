@@ -364,7 +364,7 @@ class MarketplaceEventHandler {
       await this._recordGrowthEvent(block, event, details)
     }
 
-    if (isOffer) {
+    if (isOffer && this.messagingEventsEnabled()) {
       await this._storeEventForMessaging(block, event, details)
     }
 
@@ -385,6 +385,10 @@ class MarketplaceEventHandler {
 
   gcloudPubsubEnabled() {
     return this.config.marketplace
+  }
+
+  messagingEventsEnabled() {
+    return this.config.messagingEvents
   }
 }
 
