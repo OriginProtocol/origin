@@ -180,7 +180,6 @@ export function multiUnitTests({ autoSwap, withShipping } = {}) {
         page,
         '.listing-buy-editonly + a.listing-action-link'
       )
-      await clickByText(page, 'For Sale')
       await clickByText(page, 'Continue')
       await page.focus('input[name=quantity]')
       await page.keyboard.press('Backspace')

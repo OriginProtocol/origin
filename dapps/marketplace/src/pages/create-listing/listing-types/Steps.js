@@ -11,6 +11,9 @@ const Steps = ({ steps, linkPrefix, listing, onChange, refetch }) => {
 
   function path(step) {
     if (!step) {
+      if (listing.id) {
+        return `/listing/${listing.id}`
+      }
       return '/create/listing-type'
     }
     return `${linkPrefix}${step.path ? `/${step.path}` : ''}`
@@ -44,6 +47,7 @@ const Steps = ({ steps, linkPrefix, listing, onChange, refetch }) => {
           }}
         />
       ))}
+      <Redirect to={path(steps[0])} />
     </Switch>
   )
 }
