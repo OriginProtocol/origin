@@ -413,7 +413,8 @@ describe('Marketplace', function() {
           value: '0.01',
           currency: 'token-ETH',
           arbitrator: Arbitrator,
-          quantity: 1
+          quantity: 1,
+          commission: '2'
         },
         true
       )
@@ -436,7 +437,8 @@ describe('Marketplace', function() {
           value: '0.01',
           currency: 'token-ETH',
           arbitrator: Arbitrator,
-          quantity: 1
+          quantity: 1,
+          commission: '1'
         },
         true
       )
@@ -531,27 +533,28 @@ describe('Marketplace', function() {
       assert.strictEqual(listing.unitsAvailable, 1)
     })
 
-    it('should refuse to decrease total units below units sold', async function() {
-      const updatedListingData = Object.assign({}, listingData)
-      updatedListingData.unitData.unitsTotal = 2
-      await assert.rejects(
-        mutate(
-          mutations.UpdateListing,
-          {
-            listingID: '999-000-2',
-            additionalDeposit: '0',
-            from: Seller,
-            data: updatedListingData.data,
-            unitData: updatedListingData.unitData
-          },
-          true
-        ),
-        {
-          message:
-            'GraphQL error: New unitsTotal is lower than units pending sale'
-        }
-      )
-    })
+    // Disable mutation validation check as the call to EventSource is expensive
+    // it('should refuse to decrease total units below units sold', async function() {
+    //   const updatedListingData = Object.assign({}, listingData)
+    //   updatedListingData.unitData.unitsTotal = 2
+    //   await assert.rejects(
+    //     mutate(
+    //       mutations.UpdateListing,
+    //       {
+    //         listingID: '999-000-2',
+    //         additionalDeposit: '0',
+    //         from: Seller,
+    //         data: updatedListingData.data,
+    //         unitData: updatedListingData.unitData
+    //       },
+    //       true
+    //     ),
+    //     {
+    //       message:
+    //         'GraphQL error: New unitsTotal is lower than units pending sale'
+    //     }
+    //   )
+    // })
 
     it('should decline third offer', async function() {
       // "Decline offer" means seller withdraws offer
@@ -658,28 +661,29 @@ describe('Marketplace', function() {
       assert.strictEqual(unitsAvailable, 4)
     })
 
-    it('should error when purchasing too many units', async function() {
-      await assert.rejects(
-        mutate(
-          mutations.MakeOffer,
-          {
-            listingID: '999-000-2',
-            from: Buyer,
-            finalizes: 123,
-            affiliate: Affiliate,
-            value: '0.05',
-            currency: 'token-ETH',
-            arbitrator: Arbitrator,
-            quantity: 5
-          },
-          true
-        ),
-        {
-          message:
-            'GraphQL error: Insufficient units available (4) for offer (5)'
-        }
-      )
-    })
+    // Disabling mutation checks as it requires expensive calls to EventSource
+    // it('should error when purchasing too many units', async function() {
+    //   await assert.rejects(
+    //     mutate(
+    //       mutations.MakeOffer,
+    //       {
+    //         listingID: '999-000-2',
+    //         from: Buyer,
+    //         finalizes: 123,
+    //         affiliate: Affiliate,
+    //         value: '0.05',
+    //         currency: 'token-ETH',
+    //         arbitrator: Arbitrator,
+    //         quantity: 5
+    //       },
+    //       true
+    //     ),
+    //     {
+    //       message:
+    //         'GraphQL error: Insufficient units available (4) for offer (5)'
+    //     }
+    //   )
+    // })
   })
 
   describe('Home share listing with commission', async function() {
