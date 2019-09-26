@@ -26,15 +26,6 @@ async function updateListing(_, args) {
     'ether'
   )
 
-  // Ensure that the new total units exceeds the sum of units purchased through
-  // all valid offers for this listing. This prevents unitsAvailable from going
-  // negative.
-  const newUnitsTotal = Number(ipfsData.unitsTotal) || 0
-  const listing = await marketplace.eventSource.getListing(listingId)
-  if (newUnitsTotal < listing.unitsPending) {
-    throw new Error('New unitsTotal is lower than units pending sale')
-  }
-
   if (autoApprove && additionalDeposit > 0) {
     let owner = from,
       isProxy
