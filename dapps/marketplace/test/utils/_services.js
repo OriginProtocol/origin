@@ -39,7 +39,11 @@ export default async function srv() {
           width: 1280,
           height: 1024
         },
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          process.env.DISABLE_GPU === 'false' ? '' : '--disable-gpu'
+        ]
         // dumpio: true
         // slowMo: headless ? undefined : 40
       })

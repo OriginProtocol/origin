@@ -94,7 +94,7 @@ class WithdrawOffer extends Component {
     withdrawOffer({
       variables: {
         offerID: this.props.offer.id,
-        from: this.props.from
+        from: this.props.offer.buyer.id
       }
     })
   }
