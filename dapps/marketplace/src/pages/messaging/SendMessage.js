@@ -34,35 +34,23 @@ class SendMessage extends Component {
     super(props)
 
     this.fileInput = React.createRef()
+    this.input = React.createRef()
     this.handleClick = this.handleClick.bind(this)
     this.state = { message: '', images: '' }
   }
-
-  // TODO: Focusing an offscreen element causes page to jump
-  // componentDidMount() {
-  //   if (this.input) {
-  //     this.input.focus()
-  //   }
-  // }
-
-  // componentDidUpdate(prevProps) {
-  //   if (this.input && this.props.to !== prevProps.to) {
-  //     this.input.focus()
-  //   }
-  // }
 
   handleClick() {
     this.fileInput.current.click()
   }
 
-  handleKeyPress = (e, sendMessage) => {
+  handleKeyPress(e, sendMessage) {
     const charCode = e.which || e.keyCode
     if (e.key === 'Enter' || charCode === 13 || charCode == 10) {
       if (!e.shiftKey && !e.ctrlKey && !e.altKey) {
         this.handleSubmit(e, sendMessage)
       } else {
-        pasteIntoInput(this.input, '\n')
-        this.state.message = this.input.value // eslint-disable-line
+        pasteIntoInput(this.input.current, '\n')
+        this.state.message = this.input.current.value // eslint-disable-line
         e.preventDefault()
       }
     }
@@ -127,7 +115,7 @@ class SendMessage extends Component {
                   'Type something...',
                   'SendMessage.placeholder'
                 )}
-                innerRef={input => (this.input = input)}
+                innerRef={this.input}
                 value={this.state.message}
                 onChange={e => this.setState({ message: e.target.value })}
                 onKeyPress={e => this.handleKeyPress(e, sendMessage)}

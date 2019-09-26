@@ -144,7 +144,7 @@ class DisputeOffer extends Component {
     })
   }
 
-  renderWaitModal(client) {
+  renderWaitModal() {
     if (!this.state.waitFor) return null
 
     return (
@@ -152,7 +152,12 @@ class DisputeOffer extends Component {
         hash={this.state.waitFor}
         event="OfferDisputed"
         shouldClose={this.state.waitForShouldClose}
-        onClose={async () => await client.resetStore()}
+        onClose={async () => {
+          if (this.props.refetch) {
+            this.props.refetch()
+          }
+          window.scrollTo(0, 0)
+        }}
       >
         {() => (
           <>

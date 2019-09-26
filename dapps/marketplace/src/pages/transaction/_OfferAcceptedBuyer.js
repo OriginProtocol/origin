@@ -89,7 +89,8 @@ class OfferAcceptedBuyer extends Component {
               </FinalizeOffer>
               <DisputeOffer
                 offer={offer}
-                party="seller"
+                refetch={this.props.refetch}
+                from={offer.buyer.id}
                 className="btn btn-link withdraw mr-md-0 ml-md-5 mb-md-0 mt-3 mt-md-0 align-self-start align-self-md-center"
               >
                 <fbt desc="OfferAcceptBuyer.reportProblme">
@@ -172,8 +173,9 @@ class OfferAcceptedBuyer extends Component {
                 <fbt desc="OfferAcceptBuyer.havingIssues">Having issues?</fbt>
               </span>
               <DisputeOffer
-                offer={this.props.offer}
-                party="seller"
+                offer={offer}
+                refetch={this.props.refetch}
+                from={offer.buyer.id}
                 className="btn btn-link withdraw small mr-auto"
               >
                 <fbt desc="OfferAcceptBuyer.reportProblme">

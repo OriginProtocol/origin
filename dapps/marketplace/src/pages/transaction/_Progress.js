@@ -41,7 +41,7 @@ const TransactionProgress = ({
       if (offer.finalizes < +new Date() / 1000) {
         return <SellerFinalize {...props} refetch={refetch} />
       } else {
-        return <OfferAcceptedSeller {...props} />
+        return <OfferAcceptedSeller {...props} refetch={refetch} />
       }
     } else if (offer.status === 0) {
       if (offer.withdrawnBy && offer.withdrawnBy.id !== offer.buyer.id) {
@@ -269,13 +269,13 @@ const Disputed = ({ offer, loading }) => (
       <h4>
         <fbt desc="Progress.offerDisputed">Offer Disputed</fbt>
       </h4>
-      <div className="help mb-0">
+      <div className="help mb-0 mt-2">
         <fbt desc="Progress.waitToBeContacted">
           Wait to be contacted by an Origin team member
         </fbt>
       </div>
     </div>
-    <Stages mini="true" offer={offer} />
+    <Stages className="mt-4" mini="true" offer={offer} />
   </div>
 )
 
