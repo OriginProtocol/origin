@@ -14,9 +14,7 @@ const GAS_PRICE_KEY = process.env.GAS_PRICE_KEY || 'average' // 'safeLow'
  */
 function timeoutFetch(url, ms = 10000) {
   return Promise.race([
-    fetch(url).then(res => {
-      return res
-    }),
+    fetch(url),
     new Promise((resolve, reject) => {
       setTimeout(() => reject(new Error('timeout')), ms)
     })
