@@ -1,6 +1,6 @@
 'use strict'
 
-import logger from './logger'
+const logger = require('./logger')
 
 const Channel = require('ipfs-pubsub-1on1')
 

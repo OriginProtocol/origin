@@ -1,12 +1,13 @@
 'use strict'
 
-import logger from './logger'
-import Web3 from 'web3'
-import * as config from './config'
-import fetch from 'cross-fetch'
-import stringify from 'json-stable-stringify'
+const logger = require('./logger')
+const Web3Utils = require('web3-utils')
+const Eth = require('web3-eth')
+const config = require('./config')
+const fetch = require('cross-fetch')
+const stringify = require('json-stable-stringify')
 
-const web3 = new Web3(config.RPC_SERVER)
+const Web3Eth = new Eth()
 
 /**
  * Returns the ID of the room between two conversations
@@ -22,7 +23,7 @@ function joinConversationKey(converser1, converser2) {
 
 function verifyConversationSignature(keysMap) {
   return (signature, key, message, buffer) => {
-    const verifyAddress = web3.eth.accounts.recover(
+    const verifyAddress = Web3Eth.accounts.recover(
       buffer.toString('utf8'),
       signature
     )
@@ -41,7 +42,7 @@ function verifyConversers(conversee, keysMap) {
   return (o, contentObject) => {
     const checkString =
       joinConversationKey(conversee, o.parentSub) + contentObject.ts.toString()
-    const verifyAddress = web3.eth.accounts.recover(
+    const verifyAddress = Web3Eth.accounts.recover(
       checkString,
       contentObject.sig
     )
@@ -69,7 +70,7 @@ function verifyNewMessageSignature(
   address
 ) {
   const buffer = stringify({ conversationId, conversationIndex, content })
-  const recoveredAddress = web3.eth.accounts.recover(buffer, signature)
+  const recoveredAddress = Web3Eth.accounts.recover(buffer, signature)
   console.log(
     'recovered buffer:',
     buffer,
@@ -78,7 +79,7 @@ function verifyNewMessageSignature(
     ' address:',
     address
   )
-  return recoveredAddress == address
+  return recoveredAddress === address
 }
 
 function verifyMessageSignature(keysMap, orbitGlobal) {
@@ -87,7 +88,7 @@ function verifyMessageSignature(keysMap, orbitGlobal) {
       `Verify message: ${message.id}, Key: ${key}, Signature: ${signature}`
     )
 
-    const verifyAddress = web3.eth.accounts.recover(
+    const verifyAddress = Web3Eth.accounts.recover(
       buffer.toString('utf8'),
       signature
     )
@@ -138,13 +139,13 @@ function verifyMessageSignature(keysMap, orbitGlobal) {
 function verifyRegistrySignature(signature, message) {
   const value = message.payload.value
   const setKey = message.payload.key
-  const verifyAddress = web3.eth.accounts.recover(value.msg, signature)
+  const verifyAddress = Web3Eth.accounts.recover(value.msg, signature)
 
   if (verifyAddress === setKey && value.msg.includes(value.address)) {
-    const extractedAddress = '0x' + web3.utils.sha3(value.pub_key).substr(-40)
+    const extractedAddress = '0x' + Web3Utils.sha3(value.pub_key).substr(-40)
 
     if (extractedAddress == value.address.toLowerCase()) {
-      const verifyPhAddress = web3.eth.accounts.recover(value.ph, value.phs)
+      const verifyPhAddress = Web3Eth.accounts.recover(value.ph, value.phs)
       if (verifyPhAddress == value.address) {
         logger.debug(
           `Key verified: ${value.msg}, Signature: ${signature}, Signed with, ${verifyAddress}`

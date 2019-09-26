@@ -1,24 +1,27 @@
 'use strict'
 
-import '@babel/polyfill'
-import bodyParser from 'body-parser'
-import express from 'express'
-import expressWs from 'express-ws'
-import fetch from 'cross-fetch'
-import { RateLimiterMemory } from 'rate-limiter-flexible'
-import Web3 from 'web3'
-import db from './models'
-import logger from './logger'
+require('@babel/polyfill')
+const bodyParser = require('body-parser')
+const express = require('express')
+const expressWs = require('express-ws')
+const fetch = require('cross-fetch')
+const { RateLimiterMemory } = require('rate-limiter-flexible')
+const Web3Utils = require('web3-utils')
+const db = require('./models')
+const logger = require('./logger')
 
 const esmImport = require('esm')(module)
 const { isContract } = esmImport('@origin/graphql/src/utils/proxy')
 const { setNetwork } = esmImport('@origin/graphql/src/contracts')
 
-import { verifyNewMessageSignature, verifyRegistrySignature } from './verify'
+const {
+  verifyNewMessageSignature,
+  verifyRegistrySignature
+} = require('./verify')
 
-import * as config from './config'
+const config = require('./config')
 
-import _redis from 'redis'
+const _redis = require('redis')
 
 const redis = _redis.createClient(process.env.REDIS_URL)
 
@@ -76,13 +79,13 @@ app.get('/accounts', async (req, res) => {
 app.get('/accounts/:address', async (req, res) => {
   let { address } = req.params
 
-  if (!Web3.utils.isAddress(address)) {
+  if (!Web3Utils.isAddress(address)) {
     res.statusMessage = `Address '${address}' is not a valid Ethereum address`
 
     return res.status(400).end()
   }
 
-  address = Web3.utils.toChecksumAddress(address)
+  address = Web3Utils.toChecksumAddress(address)
 
   // If it's a proxy, make sure we're checking with the owner account address
   if (await isContract(address)) {
@@ -105,13 +108,13 @@ app.get('/accounts/:address', async (req, res) => {
 app.post('/accounts/:address', async (req, res) => {
   let { address } = req.params
 
-  if (!Web3.utils.isAddress(address)) {
+  if (!Web3Utils.isAddress(address)) {
     res.statusMessage = `Address '${address}' is not a valid Ethereum address`
 
     return res.status(400).end()
   }
 
-  address = Web3.utils.toChecksumAddress(address)
+  address = Web3Utils.toChecksumAddress(address)
 
   // If it's a proxy, make sure we're checking with the owner account address
   if (await isContract(address)) {
@@ -132,7 +135,7 @@ app.post('/accounts/:address', async (req, res) => {
   ) {
     const entry = await db.Registry.findOne({ where: { ethAddress: address } })
     console.log('setting registry existing entry:', entry)
-    if (!entry || entry.signature != signature) {
+    if (!entry || entry.signature !== signature) {
       await db.Registry.upsert({ ethAddress: address, data, signature })
     }
 
@@ -146,13 +149,13 @@ app.post('/accounts/:address', async (req, res) => {
 app.get('/conversations/:address/unread', async (req, res) => {
   let { address } = req.params
 
-  if (!Web3.utils.isAddress(address)) {
+  if (!Web3Utils.isAddress(address)) {
     res.statusMessage = `Address '${address}' is not a valid Ethereum address`
 
     return res.status(400).end()
   }
 
-  address = Web3.utils.toChecksumAddress(address)
+  address = Web3Utils.toChecksumAddress(address)
 
   // TODO: Get rid of the custom query and find the correct ORM way
 
@@ -190,13 +193,13 @@ app.get('/conversations/:address', async (req, res) => {
     ...req.query
   }
 
-  if (!Web3.utils.isAddress(address)) {
+  if (!Web3Utils.isAddress(address)) {
     res.statusMessage = `Address '${address}' is not a valid Ethereum address`
 
     return res.status(400).end()
   }
 
-  address = Web3.utils.toChecksumAddress(address)
+  address = Web3Utils.toChecksumAddress(address)
 
   // TODO: Get rid of the custom query and find the correct ORM way
 
@@ -295,7 +298,7 @@ app.post('/messages/:conversationId/read', async (req, res) => {
     })
   }
 
-  const address = Web3.utils.toChecksumAddress(req.query.address)
+  const address = Web3Utils.toChecksumAddress(req.query.address)
 
   const [messagesRead] = await db.Message.update(
     {
@@ -459,6 +462,10 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
 
   const entry = await db.Registry.findOne({ where: { ethAddress: address } })
 
+  if (!entry) {
+    return res.status(400).send('Messaging not enabled')
+  }
+
   // Don't allow a user to message themselves.  It's weird.
   if (
     conv_addresses &&
@@ -494,7 +501,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
     where: { externalId: conversationId }
   })
 
-  const contentHash = Web3.utils.sha3(JSON.stringify(content))
+  const contentHash = Web3Utils.sha3(JSON.stringify(content))
 
   let message
   if (!conv) {
@@ -557,7 +564,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
         transaction: t,
         lock: t.LOCK.UPDATE
       })
-      if (conversationIndex != conversation.messageCount) {
+      if (conversationIndex !== conversation.messageCount) {
         return false
       }
       message = await db.Message.create(
@@ -656,11 +663,11 @@ function subscribeToMarketplaceEvents() {
         sender
       }
 
-      const contentHash = Web3.utils.sha3(JSON.stringify(content))
+      const contentHash = Web3Utils.sha3(JSON.stringify(content))
 
       const externalId = [
-        Web3.utils.toChecksumAddress(seller),
-        Web3.utils.toChecksumAddress(buyer)
+        Web3Utils.toChecksumAddress(seller),
+        Web3Utils.toChecksumAddress(buyer)
       ]
         .sort()
         .join('-')
@@ -775,3 +782,5 @@ app.listen(port, () => {
   logger.debug(`REST endpoint listening on port ${port}`)
   subscribeToMarketplaceEvents()
 })
+
+module.exports = app
