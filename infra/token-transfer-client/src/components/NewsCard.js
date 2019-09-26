@@ -27,7 +27,7 @@ const NewsCard = props => (
     )}
     <div className="p-3" style={{ fontSize: '18px' }}>
       <p>{props.description}</p>
-      <a href={props.link}>Read more</a>
+      <a href={props.link} target="_blank" rel="noopener noreferrer">Read more</a>
     </div>
   </div>
 )
