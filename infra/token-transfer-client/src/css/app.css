@@ -213,8 +213,8 @@ input, select {
 
 .table-card .scrolling-table {
   padding-top: 0;
-  margin-top: 20px;
-  max-height: 330px;
+  margin: 20px 0;
+  max-height: 310px;
   overflow-y: scroll;
 }
 
