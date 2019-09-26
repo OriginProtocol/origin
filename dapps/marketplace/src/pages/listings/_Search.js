@@ -209,7 +209,10 @@ require('react-styl')(`
       position: relative
       width: 100%
       .search-input-wrapper
+        display: flex
+        width: 100%
         .search-input
+          flex: 1;
           position: relative
           .clear-button
             display: none
