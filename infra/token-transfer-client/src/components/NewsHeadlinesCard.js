@@ -20,7 +20,8 @@ const NewsHeadlinesCard = props => {
       el: '.swiper-pagination',
       type: 'bullets',
       clickable: true
-    }
+    },
+    loop: true
   }
 
   return (
