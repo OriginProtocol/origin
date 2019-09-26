@@ -1,6 +1,6 @@
 'use strict'
 
-import { Platfrom } from 'react-native'
+import { Platform } from 'react-native'
 
 import { ActivationConstants } from 'actions/Activation'
 
