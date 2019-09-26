@@ -225,6 +225,10 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Starting Ganache
+          command: cd packages/services && node start.js -g
+          background: true
+      - run:
           name: Run Messaging Server Tests
           command: cd infra/messaging && yarn migrate && yarn test
 
