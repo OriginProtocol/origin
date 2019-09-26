@@ -139,20 +139,11 @@ const CreateListing = props => {
           render={() => <ListingCreated {...cmpProps} />}
         />
         <Route
-          path="/listing/:listingId/edit/:step"
+          path="/listing/:listingId/edit/:step?"
           render={({ match }) => (
             <ListingTypeComponent
               linkPrefix={`/listing/${match.params.listingId}/edit/details`}
               refetch={props.refetch}
-              {...cmpProps}
-            />
-          )}
-        />
-        <Route
-          path="/listing/:listingId/edit"
-          render={({ match }) => (
-            <ChooseListingType
-              next={`/listing/${match.params.listingId}/edit/details`}
               {...cmpProps}
             />
           )}
