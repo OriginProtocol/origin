@@ -12,10 +12,11 @@ async function acceptOffer(_, data) {
   })
   const { listingId, offerId, marketplace } = parseId(data.offerID, contracts)
 
-  const offer = await marketplace.eventSource.getOffer(listingId, offerId)
-  if (!offer.valid) {
-    throw new Error(`Invalid offer: ${offer.validationError}`)
-  }
+  // Disable for now as this is a heavy call...
+  // const offer = await marketplace.eventSource.getOffer(listingId, offerId)
+  // if (!offer.valid) {
+  //   throw new Error(`Invalid offer: ${offer.validationError}`)
+  // }
 
   const tx = marketplace.contractExec.methods.acceptOffer(
     listingId,
