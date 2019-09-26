@@ -67,9 +67,9 @@ const NotificationCard = props => (
               props.onRequestClose()
             }
 
-            setNotificationsRequested(true)
+            await props.setNotificationsRequested(true)
 
-            if (permissions.alert) {
+            if (permissions && permissions.alert) {
               props.onRequestClose()
             }
           }}

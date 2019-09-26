@@ -1,11 +1,14 @@
 'use strict'
 
+import { Platfrom } from 'react-native'
+
 import { ActivationConstants } from 'actions/Activation'
 
 const initialState = {
   // Address to date of backup/dismissal
   backupWarningDismissed: {},
-  notificationsRequested: false
+  // Notifications don't require request on Android, so mark as though requested
+  notificationsRequested: Platform.OS === 'android'
 }
 
 export default function Activation(state = initialState, action = {}) {
@@ -22,7 +25,7 @@ export default function Activation(state = initialState, action = {}) {
     case ActivationConstants.SET_NOTIFICATIONS_REQUESTED:
       return {
         ...state,
-        notificationsRequeted: action.value
+        notificationsRequested: action.value
       }
   }
 
