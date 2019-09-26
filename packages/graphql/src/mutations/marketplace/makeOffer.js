@@ -31,9 +31,9 @@ async function makeOffer(_, data) {
       messagingOverride.shippingOverride
     )
   } else if (data.shippingAddress && data.shippingAddress !== '') {
-    const listing = await marketplace.eventSource.getListing(listingId)
-    let seller = await proxyOwner(listing.seller.id)
-    seller = seller || listing.seller.id
+    const listing = await marketplace.contract.methods.listings(listingId)
+    let seller = await proxyOwner(listing.seller)
+    seller = seller || listing.seller
     const shippingAddress = Object.assign({}, data.shippingAddress)
     shippingAddress.version = 1
     const encrypted = await contracts.messaging.createOutOfBandMessage(
