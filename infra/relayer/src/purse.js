@@ -1003,7 +1003,9 @@ class Purse {
               }
 
               logger.info(
-                `Will fund children with ${this.web3.utils.fromWei(
+                `Will fund ${
+                  childrenToFund.length
+                } children with ${this.web3.utils.fromWei(
                   valueToSend,
                   'ether'
                 )} ether`
@@ -1011,7 +1013,13 @@ class Purse {
 
               if (valueToSend.gte(MIN_CHILD_BALANCE)) {
                 for (const child of childrenToFund) {
-                  await this._fundChild(child, valueToSend)
+                  try {
+                    logger.debug(`Making funding request for ${child}`)
+                    await this._fundChild(child, valueToSend)
+                  } catch (err) {
+                    logger.error(`Unable to fund child ${child} due to error`)
+                    handleError(err)
+                  }
                 }
               } else {
                 logger.warn('Unable to fund children.  Balance too low.')
@@ -1036,7 +1044,12 @@ class Purse {
        */
       try {
         const pendingHashes = Object.keys(this.pendingTransactions)
+
         metrics.pendingTxGauge.set(pendingHashes.length)
+        if (pendingHashes.length > 0) {
+          logger.debug(`We have ${pendingHashes.length} pending transactions`)
+        }
+
         for (const txHash of pendingHashes) {
           const receipt = await this.web3.eth.getTransactionReceipt(txHash)
 
