@@ -38,10 +38,8 @@ const ConfirmPurchaseButton = ({
   }
 
   if (
-    !wallet ||
-    !identity ||
-    (!hasMessagingKeys &&
-      !(localStorage.bypassOnboarding || localStorage.useWeb3Identity))
+    !(localStorage.bypassOnboarding || localStorage.useWeb3Identity) &&
+    (!wallet || !identity || !hasMessagingKeys)
   ) {
     return (
       <UserActivationLink

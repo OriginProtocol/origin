@@ -335,28 +335,31 @@ export function singleUnitTokenTests({
       })
     })
 
-    if (token === 'DAI' && !autoSwap && !buyerHasTokens) {
-      it('should prompt the user to approve their Dai', async function() {
-        await waitForText(page, 'Approve', 'button')
-        await pic(page, 'listing-detail')
-        await clickByText(page, 'Approve', 'button')
+    if (token === 'DAI' && !autoSwap) {
+      if (!buyerHasTokens) {
+        it('should prompt the user to approve their Dai', async function() {
+          await waitForText(page, 'Approve', 'button')
+          await pic(page, 'listing-detail')
+          await clickByText(page, 'Approve', 'button')
 
-        await waitForText(page, 'Origin may now move DAI on your behalf.')
-        await pic(page, 'listing-detail')
-      })
-    } else {
-      it(`should show approved modal for ${token}`, async function() {
-        // TBD: OGN contract is auto-approved? If yes, should we show this modal at all?
-        await waitForText(page, `Origin may now move ${token} on your behalf.`)
-        await pic(page, 'listing-detail')
-      })
-    }
+          await waitForText(page, 'Origin may now move DAI on your behalf.')
+          await pic(page, 'listing-detail')
+        })
+      }
 
-    if (!autoSwap) {
       it('should prompt to continue with purchase', async function() {
         await clickByText(page, 'Continue', 'button')
         await waitForText(page, 'View Purchase', 'button')
         await pic(page, 'purchase-listing')
+      })
+    }
+
+    if (token === 'OGN') {
+      it(`should show approved modal for ${token}`, async function() {
+        // TBD: OGN contract is auto-approved? If yes, should we show this modal at all?
+        await waitForText(page, `Origin may now move ${token} on your behalf.`)
+        await pic(page, 'listing-detail')
+        await clickByText(page, 'Continue', 'button')
       })
     }
 

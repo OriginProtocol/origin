@@ -23,7 +23,9 @@ function tokenPaymentTests({ deployIdentity, autoSwap, token }) {
       const accounts = await reset({
         page,
         sellerOpts: { deployIdentity },
-        buyerOpts: { ogn: token === 'OGN' ? '1' : undefined }
+        buyerOpts: {
+          ogn: token === 'OGN' ? '1' : undefined
+        }
       })
       seller = accounts.seller
       buyer = accounts.buyer
@@ -46,34 +48,29 @@ function tokenPaymentTests({ deployIdentity, autoSwap, token }) {
       await purchaseListing({ page, buyer, title, autoSwap, withToken: token })
     })
 
-    if (!autoSwap) {
-      if (token === 'DAI') {
-        it(`should prompt the user to approve their ${token}`, async function() {
-          await waitForText(page, 'Approve', 'button')
-          await pic(page, 'listing-detail')
-          await clickByText(page, 'Approve', 'button')
+    if (!autoSwap && token === 'DAI') {
+      it(`should prompt the user to approve their ${token}`, async function() {
+        await waitForText(page, 'Approve', 'button')
+        await pic(page, 'listing-detail')
+        await clickByText(page, 'Approve', 'button')
 
-          await waitForText(
-            page,
-            `Origin may now move ${token} on your behalf.`
-          )
-          await pic(page, 'listing-detail')
-        })
-      } else {
-        it(`should show approved modal for ${token}`, async function() {
-          // TBD: OGN contract is auto-approved? If yes, should we show this modal at all?
-          await waitForText(
-            page,
-            `Origin may now move ${token} on your behalf.`
-          )
-          await pic(page, 'listing-detail')
-        })
-      }
+        await waitForText(page, `Origin may now move ${token} on your behalf.`)
+        await pic(page, 'listing-detail')
+      })
 
       it('should prompt to continue with purchase', async function() {
         await clickByText(page, 'Continue', 'button')
         await waitForText(page, 'View Purchase', 'button')
         await pic(page, 'purchase-listing')
+      })
+    }
+
+    if (token === 'OGN') {
+      // OGN token cannot be auto swapped
+      it(`should show approved modal for ${token}`, async function() {
+        await waitForText(page, `Origin may now move ${token} on your behalf.`)
+        await pic(page, 'listing-detail')
+        await clickByText(page, 'Continue', 'button')
       })
     }
 
