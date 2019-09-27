@@ -171,7 +171,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     textAlign: 'center',
     width: 300,
-    height: 100
+    height: 100,
+    color: '#000'
   },
   invalid: {
     borderColor: '#ff0000',
