@@ -12,12 +12,13 @@ const NewsCard = props => (
     )}
     <div
       style={{
-        height: '300px',
+        paddingBottom: '70%',
         backgroundImage: `url(${props.image})`,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         borderTopLeftRadius: props.feature ? 0 : '5px',
-        borderTopRightRadius: props.feature ? 0 : '5px'
+        borderTopRightRadius: props.feature ? 0 : '5px',
+        backgroundPosition: 'center bottom'
       }}
     ></div>
     {!props.feature && (
