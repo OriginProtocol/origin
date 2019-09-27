@@ -290,7 +290,6 @@ class MarketplaceEventHandler {
     const buyer = details.offer.buyer.id
     const seller = details.listing.seller.id
     const sender = event.returnValues.party
-    const { listingID, offerID } = event.returnValues
 
     switch (event.event) {
       case 'OfferCreated':
@@ -318,8 +317,8 @@ class MarketplaceEventHandler {
           eventType: event.event,
           seller,
           buyer,
-          listingID,
-          offerID
+          listingID: details.listing.id,
+          offerID: details.offer.id
         },
         sender
       })
