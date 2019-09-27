@@ -94,11 +94,11 @@ const encryptPayload = (payload, pubKey) => {
 
 const decryptPayload = (payload, privateKey) => {
   return ecies
-    .encrypt(
+    .decrypt(
       new Buffer(privateKey.substring(2), 'hex'),
       new Buffer(payload, 'hex')
     )
-    .toString('hex')
+    .toString('utf8')
 }
 
 describe('messaging server', () => {
@@ -209,8 +209,11 @@ describe('messaging server', () => {
     expect(response.body.created).to.equal(1)
   })
 
-  it('should fetch conversation keys', async () => {
+  it('should fetch and decrypt conversation keys', async () => {
     const roomId = [USER_ADDRESS_1, USER_ADDRESS_2].sort().join('-')
+
+    const msgAccount1 = generateMessagingAccount(PROMPT_MESSAGE, USER_ACCOUNT)
+    const msgAccount2 = generateMessagingAccount(PROMPT_MESSAGE, USER_ACCOUNT_2)
 
     const response = await request(app).get(`/messages/${roomId}/keys`)
 
@@ -238,6 +241,18 @@ describe('messaging server', () => {
     expect(keypair.content.keys[1].maddress).to.equal(
       '0x529aBCeEB20B17338D1627A16661ed49C991f87F'
     )
+
+    // Decrypting with private key
+    const decryptedKey = decryptPayload(
+      keypair.content.keys[0].ekey,
+      msgAccount1.account.privateKey
+    )
+    expect(decryptedKey).to.equal('randomstring')
+    const decryptedKey2 = decryptPayload(
+      keypair.content.keys[1].ekey,
+      msgAccount2.account.privateKey
+    )
+    expect(decryptedKey2).to.equal('randomstring')
   })
 
   it('should allow messages to be added to the conversation', async () => {
@@ -245,7 +260,7 @@ describe('messaging server', () => {
 
     const msgAccount = generateMessagingAccount(PROMPT_MESSAGE, USER_ACCOUNT)
 
-    const key1 = 'randomstring'
+    const key1 = 'randomstring' // This is to be decrypted from `keys`
 
     const iv = 6
 
@@ -349,5 +364,25 @@ describe('messaging server', () => {
       .expect(400)
 
     expect(response.text).to.equal('cannot create message')
+  })
+
+  it('should get and decrypt messages from a conversation', async () => {
+    const roomId = [USER_ADDRESS_1, USER_ADDRESS_2].sort().join('-')
+
+    const key1 = 'randomstring'
+
+    const response = await request(app).get(`/messages/${roomId}`)
+
+    expect(response.body.length).to.equal(2)
+
+    response.body.map(msg => {
+      expect(msg.read).to.equal(false)
+      expect(msg.isKeys).to.equal(false)
+      expect(msg.content.type).to.equal('msg')
+
+      const buffer = CryptoJS.AES.decrypt(msg.content.emsg, key1, msg.content.i)
+
+      expect(buffer.toString(CryptoJS.enc.Utf8)).to.equal('hello')
+    })
   })
 })

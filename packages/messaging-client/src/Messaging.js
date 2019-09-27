@@ -94,21 +94,6 @@ class Messaging {
     this.unreadCountLoaded = false
   }
 
-  onAccount(accountKey) {
-    if ((accountKey && !this.account_key) || accountKey !== this.account_key) {
-      this.checkSetCurrentStorage(accountKey)
-      this.init(accountKey)
-    }
-  }
-
-  checkSetCurrentStorage(accountKey) {
-    if (sessionStorage.getItem(`${MESSAGING_KEY}:${accountKey}`)) {
-      this.currentStorage = sessionStorage
-    } else {
-      this.currentStorage = this.cookieStorage
-    }
-  }
-
   // Helper function for use by outside services
   preGenKeys(web3Account) {
     const sigPhrase = PROMPT_MESSAGE
@@ -376,11 +361,6 @@ class Messaging {
   }
 
   getConvo(ethAddress) {
-    const roomId = this.generateRoomId(this.account_key, ethAddress)
-    return this.convs[roomId]
-  }
-
-  hasConversedWith(ethAddress) {
     const roomId = this.generateRoomId(this.account_key, ethAddress)
     return this.convs[roomId]
   }
@@ -798,16 +778,6 @@ class Messaging {
     }
 
     return convObj
-  }
-
-  getMessagesCount(remoteEthAddress) {
-    const roomId = this.generateRoomId(this.account_key, remoteEthAddress)
-    const convObj = this.convs[roomId]
-
-    if (convObj) {
-      return convObj.messageCount
-    }
-    return 0
   }
 
   async fetchConvs({ limit, offset }) {
