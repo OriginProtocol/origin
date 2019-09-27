@@ -7,8 +7,9 @@ Before you submit a PR, you'll want to make sure that:
 1. Any changes are tested.
 2. All tests pass. Run `yarn test` from the root of the repository to run all
    packages tests or run `lerna run test --scope <package_name>` to run the
-   tests for a single package.
-3. The formatting is correct. Run `yarn lint` from the root of the repository.
+   tests for a single package. For example
+3. The formatting is correct. Run `yarn run prettier` from the root of the repository or `yarn run prettier --scope <package_name>` to run the formatting on a sinle package. For example `yarn run prettier --scope @origin/marketplace` will format the code in the directory dapps/marketplace.
+4. The linter passes. Run `yarn lint` from the root of the repository.
 
 If this is a new feature, make sure you've discussed it with
 [our #engineering channel on Discord](https://www.originprotocol.com/discord).

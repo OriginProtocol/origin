@@ -4,8 +4,14 @@ import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
+import { ethers } from 'ethers'
+import get from 'lodash.get'
 
 import { decodeTransaction } from '../utils/contractDecoder'
+import {
+  findBestAvailableCurrency,
+  getCurrencyTypeFromAddress
+} from 'utils/currencies'
 import Address from 'components/address'
 import OriginButton from 'components/origin-button'
 import currencies from 'utils/currencies'
@@ -13,7 +19,7 @@ import CommonStyles from 'styles/common'
 import CardStyles from 'styles/card'
 
 const TransactionCard = props => {
-  const { msgData, fiatCurrency, wallet, loading } = props
+  const { msgData, wallet, loading } = props
   let { functionName, contractName, parameters } = decodeTransaction(
     msgData.data.data
   )
@@ -26,20 +32,32 @@ const TransactionCard = props => {
     ))
   }
 
+  const fiatCurrency = props.settings.currency || findBestAvailableCurrency()
+
   console.debug(`Contract: ${contractName}, Function: ${functionName}`)
+  console.debug(msgData)
   console.debug(parameters)
 
   // Calculate gas in wei
-  const gasWei = global.web3.utils
-    .toBN(msgData.data.gasPrice)
-    .mul(global.web3.utils.toBN(msgData.data.gasLimit))
+  const gasWei = ethers.utils
+    .bigNumberify(msgData.data.gasPrice)
+    .mul(ethers.utils.bigNumberify(msgData.data.gas))
   // Convert gas price to ether
-  const gas = global.web3.utils.fromWei(gasWei.toString(), 'ether')
-  const ethExchangeRate = props.exchangeRates[`${fiatCurrency[1]}/ETH`].rate
-  const daiExchangeRate = props.exchangeRates[`${fiatCurrency[1]}/DAI`].rate
-  const balances = wallet.accountBalance
+  const gas = ethers.utils.formatEther(gasWei)
+
+  // Get the exchange rates for ETH and DAI
+  const ethExchangeRate = props.exchangeRates[`${fiatCurrency.code}/ETH`].rate
+  const daiExchangeRate = props.exchangeRates[`${fiatCurrency.code}/DAI`].rate
+
+  const networkName = get(props.settings.network, 'name', null)
+  const balances = get(
+    props.wallet.accountBalance,
+    `${networkName}.${props.wallet.activeAccount.address}`,
+    null
+  )
 
   let heading,
+    subheading,
     boost,
     payment = 0,
     paymentCurrency,
@@ -52,48 +70,70 @@ const TransactionCard = props => {
       heading = fbt('Create Listing', 'TransactionCard.headingCreate')
       boost = 0
       break
+
     case 'makeOffer':
-      heading = fbt('Purchase', 'TransactionCard.headingPurchase')
-      payment = global.web3.utils.fromWei(parameters._value)
-      // TODO: handle this detection better, this will only work while there
-      // is a single alternate payment currency
-      if (
-        parameters._currency === '0x0000000000000000000000000000000000000000'
-      ) {
-        paymentCurrency = 'eth'
-        ethRequired += Number(payment)
-      } else {
-        paymentCurrency = 'dai'
-        daiRequired += Number(payment)
+      heading = fbt('Make Offer', 'TransactionCard.headingMakeOffer')
+      paymentCurrency = getCurrencyTypeFromAddress(parameters._currency)
+      if (paymentCurrency) {
+        payment = ethers.utils.formatEther(parameters._value)
+        if (paymentCurrency === 'eth') {
+          ethRequired += Number(payment)
+        } else if (paymentCurrency === 'dai') {
+          daiRequired += Number(payment)
+        }
       }
       ognRequired = parseInt(parameters._commission)
       break
+
     case 'swapAndMakeOffer':
-      heading = fbt('Purchase', 'TransactionCard.headingPurchase')
-      payment =
-        global.web3.utils.fromWei(parameters._value.toString()) /
-        ethExchangeRate
-      paymentCurrency = 'eth'
+      heading = fbt('Make Offer', 'TransactionCard.headingMakeOffer')
+      paymentCurrency = 'eth' // Always swapping eth
+      payment = ethers.utils.formatEther(parameters._value) / ethExchangeRate
       ethRequired += Number(payment)
       break
+
+    case 'transferTokenMarketplaceExecute':
+      heading = fbt('Transfer Tokens', 'TransactionCard.headingTransferTokens')
+      paymentCurrency = getCurrencyTypeFromAddress(parameters._token)
+      if (paymentCurrency) {
+        payment = ethers.utils.formatEther(parameters._value)
+        if (paymentCurrency === 'eth') {
+          ethRequired += Number(payment)
+        } else if (paymentCurrency === 'dai') {
+          daiRequired += Number(payment)
+        } else if (paymentCurrency === 'ogn') {
+          ognRequired += Number(payment)
+        }
+      }
+      break
+
     case 'emitIdentityUpdated':
       heading = fbt(
         'Publish Identity',
         'TransactionCard.headingPublishIdentity'
       )
       break
+
     case 'approve':
-      heading = fbt(
-        'Approve Currency Conversion',
-        'TransactionCard.headingApprove'
-      )
+      heading = fbt('Grant Token Access', 'TransactionCard.grantHeading')
+      const allowanceCurrency = getCurrencyTypeFromAddress(msgData.data.to)
+      if (allowanceCurrency) {
+        subheading = fbt(
+          'We are requesting permission to move ' +
+            fbt.param('currency', allowanceCurrency.toUpperCase()) +
+            ' on your behalf',
+          'TransactionCard.grantSubheading'
+        )
+      }
       break
+
     case 'createProxyWithSenderNonce':
       heading = fbt(
         'Enable Meta Transactions',
         'TransactionCard.createProxyHeading'
       )
       break
+
     default:
       heading = fbt('Blockchain Transaction', 'TransactionCard.default')
   }
@@ -107,7 +147,7 @@ const TransactionCard = props => {
 
   const total =
     calculableTotal &&
-    `${fiatCurrency[2]}${(gasFiatPrice + paymentFiatPrice).toFixed(2)}`
+    `${fiatCurrency.symbol}${(gasFiatPrice + paymentFiatPrice).toFixed(2)}`
 
   const hasSufficientDai = daiRequired <= Number(balances['dai'] || 0)
   const hasSufficientEth = ethRequired <= Number(balances['eth'] || 0)
@@ -116,6 +156,7 @@ const TransactionCard = props => {
   return (
     <View style={styles.card}>
       <Text style={styles.cardHeading}>{heading}</Text>
+      {subheading && <Text style={styles.cardContent}>{subheading}</Text>}
       {calculableTotal ? (
         <>
           <View style={styles.primaryContainer}>
@@ -131,7 +172,7 @@ const TransactionCard = props => {
                 </View>
                 <View>
                   <Text style={[styles.amount, styles.converted]}>{`${
-                    fiatCurrency[2]
+                    fiatCurrency.symbol
                   }${paymentFiatPrice.toFixed(2)}`}</Text>
                   <Text style={styles.amount}>
                     <Image
@@ -151,7 +192,7 @@ const TransactionCard = props => {
               </View>
               <View>
                 <Text style={[styles.amount, styles.converted]}>{`${
-                  fiatCurrency[2]
+                  fiatCurrency.symbol
                 }${gasFiatPrice.toFixed(2)}`}</Text>
                 <Text style={styles.amount}>
                   <Image source={currencies['eth'].icon} style={styles.icon} />
@@ -254,8 +295,8 @@ const TransactionCard = props => {
   )
 }
 
-const mapStateToProps = ({ exchangeRates, wallet }) => {
-  return { exchangeRates, wallet }
+const mapStateToProps = ({ exchangeRates, settings, wallet }) => {
+  return { exchangeRates, settings, wallet }
 }
 
 export default connect(mapStateToProps)(TransactionCard)

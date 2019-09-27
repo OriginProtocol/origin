@@ -3,16 +3,20 @@ export default {
   // -----------
   createListing: 189553,
   updateListing: 38048,
-  makeOffer: 301785,
+  // makeOffer: 301785,
+  makeOffer: 350000, // Temp fix... swapAndMakeOffer transactions are running out of gas
   acceptOffer: 48099,
   finalizeOffer: 150000,
-  withdrawOffer: 41321,
+  withdrawOffer: 150000,
   withdrawListing: 60000,
   addFunds: 200000, // Needs real value. Needs GraphQL tests.
   updateRefund: 200000, // Needs real value. Needs GraphQL tests.
   disputeOffer: 60000, // Contract test at 32164.
   executeRuling: 200000, // If ERC20 token used, actual cost will vary
   addData: 28690, // Contract test. Uses offer addData, since amount is larger.
+
+  withdrawDust: 80000, // For ETH
+  withdrawDustERC20: 200000, // ERC20 transfer might need more gas
 
   // Identity
   // -----------

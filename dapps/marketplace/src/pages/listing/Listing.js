@@ -13,6 +13,13 @@ import query from 'queries/Listing'
 import ListingDetail from './ListingDetail'
 import EditListing from './Edit'
 import Onboard from '../onboard/Onboard'
+import ConfirmPurchase from './ConfirmPuchase'
+import ShippingDetails from './ShippingDetails'
+import PaymentMethods from './PaymentMethods'
+
+import Store from 'utils/store'
+
+const sessionStore = Store('sessionStorage')
 
 const error404 = (
   <Error404>
@@ -23,10 +30,16 @@ const error404 = (
 )
 
 const Listing = props => {
-  const [quantity, setQuantity] = useState('1')
-  const [redirect, setRedirect] = useState()
-
   const listingId = props.match.params.listingID
+
+  const [quantity, setQuantity] = useState(
+    sessionStore.get(`${listingId}-quantity`, '1')
+  )
+  const [redirect, setRedirect] = useState()
+  const [shippingAddress, setShippingAddress] = useState(null)
+  const [bookingRange, setBookingRange] = useState(null)
+  const [paymentMethod, setPaymentMethod] = useState(null)
+
   const variables = { listingId }
 
   const { networkStatus, error, data, refetch } = useQuery(query, {
@@ -88,12 +101,58 @@ const Listing = props => {
           )}
         />
         <Route
+          path="/listing/:listingID/payment"
+          render={() => (
+            <PaymentMethods
+              listing={listing}
+              quantity={quantity}
+              bookingRange={bookingRange}
+              paymentMethod={paymentMethod}
+              setPaymentMethod={setPaymentMethod}
+              next={`/listing/${listing.id}/${
+                listing.requiresShipping ? 'shipping' : 'confirm'
+              }`}
+            />
+          )}
+        />
+        <Route
+          path="/listing/:listingID/shipping"
+          render={() => (
+            <ShippingDetails
+              listing={listing}
+              updateShippingAddress={shippingAddress =>
+                setShippingAddress(shippingAddress)
+              }
+              next={`/listing/${listingId}/confirm`}
+              paymentMethod={paymentMethod}
+            />
+          )}
+        />
+        <Route
+          path="/listing/:listingID/confirm"
+          render={() => (
+            <ConfirmPurchase
+              listing={listing}
+              refetch={wrappedRefetch}
+              quantity={quantity}
+              shippingAddress={shippingAddress}
+              bookingRange={bookingRange}
+              paymentMethod={paymentMethod}
+            />
+          )}
+        />
+        <Route
           render={() => (
             <ListingDetail
               listing={listing}
               refetch={wrappedRefetch}
               quantity={quantity}
-              updateQuantity={quantity => setQuantity(quantity)}
+              updateQuantity={quantity => {
+                sessionStore.set(`${listingId}-quantity`, quantity)
+                setQuantity(quantity)
+              }}
+              updateBookingRange={bookingRange => setBookingRange(bookingRange)}
+              shippingAddress={shippingAddress}
             />
           )}
         />

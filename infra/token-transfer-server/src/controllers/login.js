@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 const passport = require('passport')
 const base32 = require('thirty-two')
-const sendgridMail = require('@sendgrid/mail')
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 
@@ -12,15 +11,9 @@ const { LOGIN } = require('../constants/events')
 const { encrypt } = require('../lib/crypto')
 const { Event, User } = require('../models')
 const logger = require('../logger')
+const { sendEmail } = require('../lib/email')
 const { ensureLoggedIn } = require('../lib/login')
-const {
-  encryptionSecret,
-  portalUrl,
-  sendgridFromEmail,
-  sendgridApiKey
-} = require('../config')
-
-sendgridMail.setApiKey(sendgridApiKey)
+const { encryptionSecret, portalUrl } = require('../config')
 
 /**
  * Sends a login code by email.
@@ -42,18 +35,8 @@ router.post(
         { expiresIn: '5m' }
       )
 
-      const data = {
-        to: email,
-        from: sendgridFromEmail,
-        subject: 'Your Origin Token Portal Verification Code',
-        text: `Welcome to the Origin Investor Portal. Here is your single-use sign in link.
-
-        ${portalUrl}/login_handler/${token}.
-
-        It will expire in 5 minutes. You can reply directly to this email with any questions.`
-      }
-
-      await sendgridMail.send(data)
+      const vars = { url: `${portalUrl}/login_handler/${token}` }
+      await sendEmail(user.email, 'login', vars)
       logger.info(`Sent email token to ${email}`)
     } else {
       // Do nothing in case email not found in our DB.

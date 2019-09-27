@@ -1,3 +1,7 @@
+import pick from 'lodash/pick'
+import get from 'lodash/get'
+import pickBy from 'lodash/pickBy'
+
 import { post } from '@origin/ipfs'
 import validator from '@origin/validator'
 
@@ -5,9 +9,8 @@ import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import validateAttestation from '../../utils/validateAttestation'
 import { hasProxy, proxyOwner, resetProxyCache } from '../../utils/proxy'
+import remoteQuery, { identityQuery } from '../../utils/remoteQuery'
 import costs from '../_gasCost.js'
-
-import pick from 'lodash/pick'
 
 import { identity } from './../../resolvers/IdentityEvents'
 
@@ -53,16 +56,40 @@ async function deployIdentity(
 
   // Note: DApp will send only the unpublished data
   // Merge that with already published identity, if it exists
-  const oldIdentity = await identity({ id: from })
+  let oldIdentity
+  if (
+    typeof window !== 'undefined' &&
+    contracts.config.performanceMode &&
+    context.config.graphql
+  ) {
+    // Use remote server for performance when we can
+    try {
+      const result = await remoteQuery(identityQuery, 'SkinnyIdentity', {
+        id: from
+      })
+      oldIdentity = get(result, 'data.identity')
+    } catch (err) {
+      console.error('Unable to remotely fetch identity')
+      console.error(err)
+      // Fallback to internal resolver
+      oldIdentity = await identity({ id: from })
+    }
+  } else {
+    // Use internal resolver (leverages EventCache)
+    oldIdentity = await identity({ id: from })
+  }
   if (oldIdentity) {
     // Upsert
     profile = {
-      ...pick(oldIdentity, [
-        'firstName',
-        'lastName',
-        'description',
-        'avatarUrl'
-      ]),
+      ...pickBy(
+        pick(oldIdentity, [
+          'firstName',
+          'lastName',
+          'description',
+          'avatarUrl'
+        ]),
+        field => typeof field === 'string'
+      ),
       ...profile
     }
 

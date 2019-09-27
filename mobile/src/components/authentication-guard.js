@@ -21,6 +21,7 @@ import PinInput from 'components/pin-input'
 import OriginButton from 'components/origin-button'
 
 const IMAGES_PATH = '../../assets/images/'
+
 /* The minimum amount of time the app needs to be suspended to trigger a restart when
  * it becomes active again - in seconds.
  *
@@ -44,7 +45,7 @@ class AuthenticationGuard extends Component {
   }
 
   componentDidMount() {
-    if (this.props.settings.biometryType && this.state.appState === 'active') {
+    if (this.props.settings.biometryType) {
       this.touchAuthenticate()
     }
 
@@ -72,9 +73,11 @@ class AuthenticationGuard extends Component {
       const secondsFromSuspend = (new Date() - this.state.suspendTime) / 1000
 
       if (secondsFromSuspend > RESTART_SUSPEND_TIME) {
+        console.debug('Restart called')
         RNRestart.Restart()
       }
     }
+
     this.setState({ appState: nextAppState })
   }
 
@@ -84,8 +87,7 @@ class AuthenticationGuard extends Component {
         this.setState({ error: null })
         this.onSuccess()
       })
-      .catch(e => {
-        console.log(e)
+      .catch(() => {
         this.setState({
           error: String(
             fbt(

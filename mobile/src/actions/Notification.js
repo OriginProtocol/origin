@@ -1,3 +1,5 @@
+'use strict'
+
 import keyMirror from 'utils/keyMirror'
 
 export const NotificationConstants = keyMirror(

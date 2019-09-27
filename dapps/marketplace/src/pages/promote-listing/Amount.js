@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { fbt } from 'fbt-runtime'
+import get from 'lodash/get'
 
 import numberFormat from 'utils/numberFormat'
 
@@ -55,11 +56,15 @@ const PromoteListingAmount = ({
     next = (
       <WithPrices
         price={{ amount: value, currency: { id: 'token-OGN' } }}
-        target={'token-OGN'}
         targets={['token-OGN']}
         allowanceTarget={listing.contractAddr}
       >
         {({ tokenStatus }) => {
+          const { hasBalance, needsAllowance } = get(
+            tokenStatus,
+            'token-OGN',
+            {}
+          )
           if (tokenStatus.loading) {
             return (
               <div
@@ -67,7 +72,7 @@ const PromoteListingAmount = ({
                 children={fbt('Loading', 'Loading')}
               />
             )
-          } else if (!tokenStatus.hasBalance || !value || value === '0') {
+          } else if (!hasBalance || !value || value === '0') {
             return (
               <div
                 className="btn btn-primary btn-rounded btn-lg disabled"
@@ -81,7 +86,7 @@ const PromoteListingAmount = ({
               listing={listing}
               listingTokens={listingTokens}
               tokenBalance={tokenBalance}
-              tokenStatus={tokenStatus}
+              needsAllowance={needsAllowance}
               listingPromotion={true}
               className="btn btn-primary btn-rounded btn-lg"
               children={fbt('Promote Now', 'promoteListing.promoteNow')}
@@ -257,7 +262,7 @@ require('react-styl')(`
     .amount
       .form-control
         border: 0
-        height: 1em
+        height: 1.5em
       .input-wrap
         margin-top: 1.5rem
     .amount,.budget

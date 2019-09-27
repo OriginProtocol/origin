@@ -47,6 +47,12 @@
             "firstName": "Tom",
             "lastName": "Linton",
             "fullName": "Tom Linton",
+            "owner": {
+              "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+              "proxy": {
+                "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732"
+              }
+            },
             "__typename": "Identity"
           },
           "__typename": "Account"
@@ -166,6 +172,12 @@
           "firstName": "Franck",
           "lastName": "Test",
           "fullName": "Franck Test",
+          "owner": {
+            "id": "0x627306090abaB3A6e1400e9345bC60c78a8BEf57",
+            "proxy": {
+              "id": "0x627306090abaB3A6e1400e9345bC60c78a8BEf57"
+            }
+          },
           "__typename": "Identity"
         },
         "__typename": "Account"
@@ -185,6 +197,12 @@
           "firstName": "Tom",
           "lastName": "Linton",
           "fullName": "Tom Linton",
+          "owner": {
+            "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
+            "proxy": {
+              "id": "0xf17f52151EbEF6C7334FAD080c5704D77216b732"
+            }
+          },
           "__typename": "Identity"
         },
         "__typename": "Account"

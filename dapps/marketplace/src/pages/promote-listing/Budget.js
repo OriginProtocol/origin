@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { fbt } from 'fbt-runtime'
+import get from 'lodash/get'
 
 import numberFormat from 'utils/numberFormat'
 
@@ -123,6 +124,11 @@ const PromoteListingBudget = ({
             allowanceTarget={listing.contractAddr}
           >
             {({ tokenStatus }) => {
+              const { hasBalance, needsAllowance } = get(
+                tokenStatus,
+                'token-OGN',
+                {}
+              )
               if (tokenStatus.loading) {
                 return (
                   <div
@@ -130,7 +136,12 @@ const PromoteListingBudget = ({
                     children={fbt('Loading', 'Loading')}
                   />
                 )
-              } else if (!tokenStatus.hasBalance || !value || value === '0') {
+              } else if (
+                !hasBalance ||
+                !value ||
+                value === '0' ||
+                tokenBalance < Number(value)
+              ) {
                 return (
                   <div
                     className="btn btn-primary btn-rounded btn-lg disabled"
@@ -144,7 +155,7 @@ const PromoteListingBudget = ({
                   listing={listing}
                   listingTokens={listingTokens}
                   tokenBalance={tokenBalance}
-                  tokenStatus={tokenStatus}
+                  needsAllowance={needsAllowance}
                   className="btn btn-primary btn-rounded btn-lg"
                   children={fbt('Promote Now', 'promoteListing.promoteNow')}
                   listingPromotion={true}

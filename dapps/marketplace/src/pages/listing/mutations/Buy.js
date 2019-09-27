@@ -23,21 +23,21 @@ import withIdentity from 'hoc/withIdentity'
 import withConfig from 'hoc/withConfig'
 import withMessagingStatus from 'hoc/withMessagingStatus'
 
+import { getTokenSymbol } from 'utils/tokenUtils'
+
 import { fbt } from 'fbt-runtime'
 
 class Buy extends Component {
   state = {}
 
   hasBalance() {
-    return get(this.props, 'tokenStatus.hasBalance', false)
+    const { currency } = this.props
+    return get(this.props, `tokenStatus.${currency}.hasBalance`, false)
   }
 
   hasAllowance() {
-    return get(this.props, 'tokenStatus.hasAllowance', false)
-  }
-
-  hasMessagingEnabled() {
-    return get(this.props, 'messagingStatus.enabled', false)
+    const { currency } = this.props
+    return get(this.props, `tokenStatus.${currency}.hasAllowance`, false)
   }
 
   render() {
@@ -45,6 +45,22 @@ class Buy extends Component {
       return <Redirect to={`/listing/${this.props.listing.id}/onboard`} />
     }
     let content
+
+    const isLoadingData =
+      get(this.props, 'tokenStatus.loading') ||
+      this.props.cannotTransact === 'loading' ||
+      Object.keys(this.props).some(
+        key => key.endsWith('Loading') && this.props[key]
+      )
+
+    if (isLoadingData)
+      return (
+        <button
+          className={this.props.className}
+          disabled={true}
+          children={<fbt desc="Loading...">Loading...</fbt>}
+        />
+      )
 
     let action = (
       <button
@@ -54,8 +70,16 @@ class Buy extends Component {
       />
     )
 
-    const hasIdentity = localStorage.noIdentity || this.props.identity
-    if (!hasIdentity || !this.props.wallet || !this.hasMessagingEnabled()) {
+    const hasIdentity = this.props.identity
+    const hasMessagingKeys = this.props.hasMessagingKeys
+    const needsOnboarding =
+      !hasIdentity || !this.props.wallet || !hasMessagingKeys
+    const onboardingDisabled =
+      localStorage.bypassOnboarding || localStorage.useWeb3Identity
+        ? true
+        : false
+
+    if (needsOnboarding && !onboardingDisabled) {
       action = (
         <UserActivationLink
           className={this.props.className}
@@ -64,7 +88,8 @@ class Buy extends Component {
         />
       )
     } else {
-      const hasEth = get(this.props, 'tokenStatus.hasEthBalance', false)
+      const { tokenStatus } = this.props
+      const hasEth = get(tokenStatus, 'token-ETH.hasBalance', false)
 
       if (this.state.error) {
         content = this.renderTransactionError()
@@ -83,11 +108,7 @@ class Buy extends Component {
       ) {
         action = this.renderMakeOfferMutation(null, true)
       } else if (!this.hasBalance()) {
-        action = this.renderSwapTokenMutation(
-          this.props.cannotTransact
-            ? fbt('Purchase', 'Purchase')
-            : fbt('Swap Now', 'Swap Now')
-        )
+        action = this.renderSwapTokenMutation(fbt('Purchase', 'Purchase'))
         content = this.renderSwapTokenModal()
       } else if (!this.hasAllowance()) {
         action = this.renderAllowTokenMutation(fbt('Purchase', 'Purchase'))
@@ -96,15 +117,13 @@ class Buy extends Component {
         action = this.renderMakeOfferMutation()
       }
     }
-
     return (
       <>
         {action}
         {!this.state.modal ? null : (
           <Modal
-            onClose={() =>
-              this.setState({ error: false, modal: false, shouldClose: false })
-            }
+            disableDismiss={true}
+            onClose={() => this.resetState()}
             shouldClose={this.state.shouldClose}
           >
             {content}
@@ -112,6 +131,15 @@ class Buy extends Component {
         )}
       </>
     )
+  }
+
+  resetState() {
+    const newState = Object.keys(this.state).reduce((m, o) => {
+      m[o] = null
+      return m
+    }, {})
+
+    this.setState(newState)
   }
 
   renderTransactionError() {
@@ -128,8 +156,20 @@ class Buy extends Component {
   renderSwapTokenModal() {
     return (
       <>
-        <h2>Swap for DAI</h2>
-        Click below to swap ETH for DAI
+        <h2>
+          <fbt desc="BuyModal.swapForToken">
+            Swap for{' '}
+            <fbt:param name="token">
+              {getTokenSymbol(this.props.currency)}
+            </fbt:param>
+          </fbt>
+        </h2>
+        <fbt desc="BuyModal.swapForTokenDesc">
+          Click below to swap ETH for{' '}
+          <fbt:param name="token">
+            {getTokenSymbol(this.props.currency)}
+          </fbt:param>
+        </fbt>
         <div className="actions">
           <button
             className="btn btn-outline-light"
@@ -157,7 +197,7 @@ class Buy extends Component {
           <button
             className={buttonContent ? this.props.className : 'btn btn-clear'}
             onClick={() => this.onSwapToToken(swapToToken)}
-            children={buttonContent || fbt('Swap Now', 'Swap Now')}
+            children={buttonContent || fbt('Purchase', 'Purchase')}
           />
         )}
       </Mutation>
@@ -180,7 +220,7 @@ class Buy extends Component {
               ),
               5
             ),
-            dai = numberFormat(
+            tokenValue = numberFormat(
               web3.utils.fromWei(
                 get(event, 'returnValuesArr.2.value', '0'),
                 'ether'
@@ -194,12 +234,14 @@ class Buy extends Component {
                 <fbt desc="success">Success!</fbt>
               </h5>
               <div className="help">
-                <fbt desc="buy.swappedEthForDai">
+                <fbt desc="buy.swappedEthForToken">
                   Swapped
                   <fbt:param name="eth">${eth}</fbt:param>
                   ETH for
-                  <fbt:param name="dai">${dai}</fbt:param>
-                  DAI
+                  <fbt:param name="tokenValue">${tokenValue}</fbt:param>
+                  <fbt:param name="token">
+                    {getTokenSymbol(this.props.currency)}
+                  </fbt:param>
                 </fbt>
               </div>
               {this.hasAllowance() ? (
@@ -209,8 +251,12 @@ class Buy extends Component {
               ) : (
                 <>
                   <div className="help">
-                    <fbt desc="buy.authorizeOriginMoveDai">
-                      Please authorize Origin to move DAI on your behalf.
+                    <fbt desc="buy.authorizeOriginMoveToken">
+                      Please authorize Origin to move{' '}
+                      <fbt:param name="token">
+                        {getTokenSymbol(this.props.currency)}
+                      </fbt:param>{' '}
+                      on your behalf.
                     </fbt>
                   </div>
                   {this.renderAllowTokenMutation()}
@@ -226,9 +272,20 @@ class Buy extends Component {
   renderAllowTokenModal() {
     return (
       <>
-        <h2>Approve DAI</h2>
-        <fbt desc="buy.approveDaiOrigin">
-          Click below to approve DAI for use on Origin
+        <h2>
+          <fbt desc="BuyModal.approveToken">
+            Approve{' '}
+            <fbt:param name="token">
+              {getTokenSymbol(this.props.currency)}
+            </fbt:param>
+          </fbt>
+        </h2>
+        <fbt desc="buy.approveTokenForOrigin">
+          Click below to approve{' '}
+          <fbt:param name="token">
+            {getTokenSymbol(this.props.currency)}
+          </fbt:param>{' '}
+          for use on Origin
         </fbt>
         <div className="actions">
           <button
@@ -299,7 +356,8 @@ class Buy extends Component {
       quantity,
       startDate,
       endDate,
-      currency
+      currency,
+      shippingAddress
     } = this.props
 
     const variables = {
@@ -311,11 +369,32 @@ class Buy extends Component {
       autoswap
     }
 
+    let commission = 0
+    if (listing.commissionPerUnit) {
+      commission = Number(listing.commissionPerUnit) * Number(quantity)
+    } else if (listing.commission) {
+      commission = Number(listing.commission)
+    }
+    if (commission) {
+      const amount = web3.utils.toBN(
+        web3.utils.toWei(String(commission), 'ether')
+      )
+      const depositAvailable = web3.utils.toBN(listing.depositAvailable)
+      const commissionWei = amount.lt(depositAvailable)
+        ? amount.toString()
+        : depositAvailable.toString()
+      variables.commission = web3.utils.fromWei(commissionWei, 'ether')
+    }
+
     if (
       listing.__typename === 'FractionalListing' ||
       listing.__typename === 'FractionalHourlyListing'
     ) {
       variables.fractionalData = { startDate, endDate }
+    }
+
+    if (listing.requiresShipping) {
+      variables.shippingAddress = shippingAddress
     }
 
     makeOffer({ variables })
@@ -348,13 +427,10 @@ class Buy extends Component {
     }
 
     this.setState({ modal: true, waitForSwap: 'pending' })
+    const { currency, walletProxy, tokenStatus } = this.props
+    const tokenValue = get(tokenStatus, `${currency}.needsBalance`)
 
-    const variables = {
-      from: this.props.walletProxy,
-      token: this.props.currency,
-      tokenValue: String(this.props.tokenStatus.needsBalance)
-    }
-
+    const variables = { from: walletProxy, token: currency, tokenValue }
     swapToToken({ variables })
   }
 
@@ -437,8 +513,12 @@ class Buy extends Component {
               <fbt desc="success">Success!</fbt>
             </h5>
             <div className="help">
-              <fbt desc="buy.sucessMoveDai">
-                Origin may now move DAI on your behalf.
+              <fbt desc="buy.sucessMoveToken">
+                Origin may now move{' '}
+                <fbt:param name="token">
+                  {getTokenSymbol(this.props.currency)}
+                </fbt:param>{' '}
+                on your behalf.
               </fbt>
             </div>
             {this.renderMakeOfferMutation(fbt('Continue', 'Continue'))}
@@ -451,11 +531,17 @@ class Buy extends Component {
 
 export default withConfig(
   withMessagingStatus(
-    withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy)))))
+    withWeb3(withWallet(withIdentity(withCanTransact(withRouter(Buy))))),
+    { excludeData: true }
   )
 )
 
 require('react-styl')(`
+  .historical-warning
+    border-radius: 0.625rem
+    border: solid 1px #ffc000
+    background-color: rgba(255, 192, 0, 0.1)
+    padding: 0.75rem 1.25rem
   .make-offer-modal
     display: flex
     flex-direction: column

@@ -127,6 +127,7 @@ const config = {
       DOCKER: false,
       ENABLE_GROWTH: false,
       FACEBOOK_CLIENT_ID: null,
+      GAS_PRICE_KEY: null,
       GIT_COMMIT_HASH: gitCommitHash,
       GIT_BRANCH: gitBranch,
       HOST: 'localhost',
@@ -139,7 +140,8 @@ const config = {
       ENABLE_LINKEDIN_ATTESTATION: false,
       ENABLE_WECHAT_ATTESTATION: false,
       SENTRY_DSN: null,
-      NAMESPACE: 'dev',
+      NAMESPACE: process.env.NAMESPACE || 'dev',
+      ETH_NETWORK_ID: process.env.ETH_NETWORK_ID || null,
       TELEGRAM_BOT_USERNAME: TELEGRAM_BOT_USERNAME,
       NODE_ENV: process.env.NODE_ENV || 'development'
     })
@@ -162,7 +164,7 @@ const config = {
 if (isProduction) {
   config.output.filename = '[name].[hash:8].js'
   config.optimization.minimizer = [
-    new TerserPlugin({ cache: true, parallel: true, sourceMap: true }),
+    new TerserPlugin({ extractComments: false }),
     new OptimizeCSSAssetsPlugin({})
   ]
   config.plugins.push(

@@ -16,7 +16,8 @@ const UserListings = ({
   hideLoadMore,
   horizontal,
   compact,
-  title
+  title,
+  hideIfEmpty
 }) => {
   const vars = {
     first: 8,
@@ -47,6 +48,10 @@ const UserListings = ({
         const { nodes, pageInfo } = data.marketplace.user.listings
 
         const { hasNextPage, endCursor: after } = pageInfo
+
+        if (hideIfEmpty && (!nodes || !nodes.length)) {
+          return null
+        }
 
         return (
           <div className="user-listings">

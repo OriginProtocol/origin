@@ -4,6 +4,8 @@ import { fbt } from 'fbt-runtime'
 
 import Modal from 'components/Modal'
 
+import Sentry from 'utils/sentry'
+
 const UserDenied = /denied (transaction|message) signature/
 const IncorrectNonce = /tx doesn't have the correct nonce/
 
@@ -51,6 +53,11 @@ class CannotTransact extends Component {
           </div>
         )
         console.warn(this.props.data)
+        Sentry.captureException(
+          this.props.data instanceof Error
+            ? this.props.data
+            : new Error(this.props.data)
+        )
       }
     }
 

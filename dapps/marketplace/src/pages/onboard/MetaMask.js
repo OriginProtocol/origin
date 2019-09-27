@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Query } from 'react-apollo'
+import React, { useState, useEffect } from 'react'
+import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { fbt } from 'fbt-runtime'
 
@@ -9,12 +9,17 @@ import HelpOriginWallet from 'components/DownloadApp'
 
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
+import withMessagingStatus from 'hoc/withMessagingStatus'
 
 import WalletHeader from './_WalletHeader'
 import ListingPreview from './_ListingPreview'
 import HelpWallet from './_HelpWallet'
 
 import LoadingSpinner from 'components/LoadingSpinner'
+
+import Store from 'utils/store'
+
+const localStore = Store('localStorage')
 
 const MetaMaskURL = 'https://metamask.io'
 
@@ -90,69 +95,62 @@ const AwaitingLogin = ({ back }) => (
   </div>
 )
 
-class AwaitingApproval extends Component {
-  state = {}
-  componentDidMount() {
-    this.timeout = setTimeout(
-      () =>
-        window.ethereum.enable().catch(() => {
-          this.setState({ declined: true })
-        }),
+const AwaitingApproval = ({ back }) => {
+  const [declined, setDeclined] = useState(false)
+  useEffect(() => {
+    setTimeout(
+      () => window.ethereum.enable().catch(() => setDeclined(true)),
       50
     )
-  }
-  render() {
-    const { back } = this.props
-    if (this.state.declined) {
-      return (
-        <div className="onboard-box">
-          <div className="metamask-logo" />
-          <div className="status">
-            <fbt desc="onboard.Metamask.oops">Oops, you denied permission</fbt>
-          </div>
-          <div className="help">
-            <fbt desc="onboard.Metamask.oopsHelp">
-              You must grant Origin permission to access your MetaMask account
-              so you can buy and sell on our DApp.
-            </fbt>
-          </div>
-          <button
-            className="btn btn-outline-primary mt-4"
-            onClick={() => {
-              window.ethereum
-                .enable()
-                .catch(() => this.setState({ declined: true }))
-              this.setState({ declined: false })
-            }}
-          >
-            <fbt desc="onboard.Metamask.grantPermission">Grant Permission</fbt>
-          </button>
-          <Link to={back} className="cancel">
-            <fbt desc="Cancel">Cancel</fbt>
-          </Link>
-        </div>
-      )
-    }
+  }, [])
+
+  if (declined) {
     return (
       <div className="onboard-box">
-        <MetaMaskAnimation light />
+        <div className="metamask-logo" />
         <div className="status">
-          <fbt desc="onboard.Metamask.waitingForYou">
-            Waiting for you to grant permission
-          </fbt>
+          <fbt desc="onboard.Metamask.oops">Oops, you denied permission</fbt>
         </div>
         <div className="help">
-          <fbt desc="onboard.Metamask.waitingForYouHelp">
-            Please grant Origin permission to access your MetaMask account so
+          <fbt desc="onboard.Metamask.oopsHelp">
+            You must grant Origin permission to access your MetaMask account so
             you can buy and sell on our DApp.
           </fbt>
         </div>
+        <button
+          className="btn btn-outline-primary mt-4"
+          onClick={() => {
+            window.ethereum.enable().catch(() => setDeclined(true))
+            setDeclined(false)
+          }}
+        >
+          <fbt desc="onboard.Metamask.grantPermission">Grant Permission</fbt>
+        </button>
         <Link to={back} className="cancel">
           <fbt desc="Cancel">Cancel</fbt>
         </Link>
       </div>
     )
   }
+  return (
+    <div className="onboard-box">
+      <MetaMaskAnimation light />
+      <div className="status">
+        <fbt desc="onboard.Metamask.waitingForYou">
+          Waiting for you to grant permission
+        </fbt>
+      </div>
+      <div className="help">
+        <fbt desc="onboard.Metamask.waitingForYouHelp">
+          Please grant Origin permission to access your MetaMask account so you
+          can buy and sell on our DApp.
+        </fbt>
+      </div>
+      <Link to={back} className="cancel">
+        <fbt desc="Cancel">Cancel</fbt>
+      </Link>
+    </div>
+  )
 }
 
 const IncorrectNetwork = ({ networkName, connectTo }) => (
@@ -197,82 +195,84 @@ const Connected = ({ networkName, nextLink }) => (
   </div>
 )
 
-class OnboardMetaMask extends Component {
-  state = {}
-  render() {
-    const {
-      listing,
-      linkPrefix,
-      hideOriginWallet,
-      identityLoaded,
-      identity
-    } = this.props
+const OnboardMetaMask = ({
+  linkPrefix,
+  messagingStatusRefetch,
+  hasMessagingKeys,
+  messagingStatusLoading,
+  wallet
+}) => {
+  const [installing, setInstalling] = useState(false)
+  const { error, data, networkStatus } = useQuery(query, {
+    notifyOnNetworkStatusChange: true
+  })
 
+  useEffect(() => {
+    if (wallet) {
+      messagingStatusRefetch()
+    }
+  }, [wallet])
+
+  if (networkStatus === 1 || messagingStatusLoading) {
+    return <LoadingSpinner />
+  } else if (error) {
+    return <p className="p-3">Error :(</p>
+  } else if (!data || !data.web3) {
+    return <p className="p-3">No Web3</p>
+  }
+
+  const onboardCompleted = localStore.get(`${wallet}-onboarding-completed`)
+
+  const backLink = `${linkPrefix}/onboard`
+  const nextLink =
+    onboardCompleted && hasMessagingKeys
+      ? `${linkPrefix}/onboard/back`
+      : `${linkPrefix}/onboard/email`
+
+  const { web3 } = data
+
+  if (!web3.metaMaskAvailable && !installing) {
     return (
-      <>
-        <WalletHeader />
-        <div className="row">
-          <div className="col-md-8">
-            <Query query={query} notifyOnNetworkStatusChange>
-              {({ error, data, networkStatus }) => {
-                if (networkStatus === 1) {
-                  return <LoadingSpinner />
-                } else if (error) {
-                  return <p className="p-3">Error :(</p>
-                } else if (!data || !data.web3) {
-                  return <p className="p-3">No Web3</p>
-                }
-
-                const backLink = `${linkPrefix}/onboard`
-                const nextLink = `${linkPrefix}/onboard/${
-                  identityLoaded && identity ? 'back' : 'email'
-                }`
-
-                const { web3 } = data
-
-                if (!web3.metaMaskAvailable && !this.state.installing) {
-                  return (
-                    <NotInstalled
-                      back={backLink}
-                      onInstall={() => this.setState({ installing: true })}
-                    />
-                  )
-                } else if (!web3.metaMaskAvailable) {
-                  return <ConfirmInstalled />
-                } else if (!web3.metaMaskUnlocked) {
-                  return <AwaitingLogin back={backLink} />
-                } else if (!web3.metaMaskApproved) {
-                  return <AwaitingApproval back={backLink} />
-                } else if (web3.networkId !== web3.metaMaskNetworkId) {
-                  return (
-                    <IncorrectNetwork
-                      connectTo={web3.networkName}
-                      networkName={web3.metaMaskNetworkName}
-                    />
-                  )
-                } else {
-                  return (
-                    <Connected
-                      nextLink={nextLink}
-                      networkName={web3.metaMaskNetworkName}
-                    />
-                  )
-                }
-              }}
-            </Query>
-          </div>
-          <div className="col-md-4">
-            <ListingPreview listing={listing} />
-            {!hideOriginWallet && <HelpOriginWallet />}
-            <HelpWallet />
-          </div>
-        </div>
-      </>
+      <NotInstalled back={backLink} onInstall={() => setInstalling(true)} />
+    )
+  } else if (!web3.metaMaskAvailable) {
+    return <ConfirmInstalled />
+  } else if (!web3.metaMaskUnlocked) {
+    return <AwaitingLogin back={backLink} />
+  } else if (!web3.metaMaskApproved) {
+    return <AwaitingApproval back={backLink} />
+  } else if (web3.networkId !== web3.metaMaskNetworkId) {
+    return (
+      <IncorrectNetwork
+        connectTo={web3.networkName}
+        networkName={web3.metaMaskNetworkName}
+      />
     )
   }
+  return (
+    <Connected nextLink={nextLink} networkName={web3.metaMaskNetworkName} />
+  )
 }
 
-export default withWallet(withIdentity(OnboardMetaMask))
+const OnboardMetaMaskWrap = ({ hideOriginWallet, listing, ...props }) => (
+  <>
+    <WalletHeader />
+    <div className="row">
+      <div className="col-md-8">
+        <OnboardMetaMask {...props} />
+      </div>
+      <div className="col-md-4">
+        <ListingPreview listing={listing} />
+        {!hideOriginWallet && <HelpOriginWallet />}
+        <HelpWallet />
+      </div>
+    </div>
+  </>
+)
+
+export default withWallet(
+  withIdentity(withMessagingStatus(OnboardMetaMaskWrap, { excludeData: true }))
+)
 
 require('react-styl')(`
   .onboard .onboard-box

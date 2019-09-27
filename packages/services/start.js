@@ -13,6 +13,7 @@ program
   .option('-q, --graphql', 'Start GraphQL Server (Performance)')
   .option('-l, --listener', 'Start Listener')
   .option('-d, --discovery', 'Start Discovery server')
+  .option('-q, --quiet', 'Quiet')
   .parse(process.argv)
 
 async function setup() {
@@ -42,6 +43,7 @@ if (!process.argv.slice(2).length) {
     relayer: program.relayer,
     graphqlServer: program.graphql,
     listener: program.listener,
-    discovery: program.discovery
+    discovery: program.discovery,
+    quiet: program.quiet
   })
 }

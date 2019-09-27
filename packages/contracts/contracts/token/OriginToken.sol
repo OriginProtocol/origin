@@ -8,8 +8,15 @@ import "./WhitelistedPausableToken.sol";
 
 
 /**
- * @title Origin token
- * @dev Token that allows minting, burning, and pausing by contract owner
+ * @title Origin token (OGN).
+ *
+ * @dev Token that allows minting, burning, and pausing by contract owner.
+ * @dev Important note:
+ * @dev   There is a known race condition in the ERC20 standard on the approve() method.
+ * @dev   See details: https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
+ * @dev   The Origin token contract implements the increaseApproval() and decreaseApproval() methods.
+ * @dev   It is strongly recommended to use those methods rather than approve()
+ * @dev   when updating the token allowance.
  */
 contract OriginToken is BurnableToken, MintableToken, WhitelistedPausableToken, DetailedERC20 {
     event AddCallSpenderWhitelist(address enabler, address spender);

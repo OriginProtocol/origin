@@ -186,10 +186,10 @@ const messageTemplates = {
       OfferData: {
         subject: _.template('New Review for <%= listing.title %>'),
         html: _.template(
-          fs.readFileSync(`${templateDir}/buyer-OfferRuling.html`).toString()
+          fs.readFileSync(`${templateDir}/buyer-OfferReview.html`).toString()
         ),
         text: _.template(
-          fs.readFileSync(`${templateDir}/buyer-OfferRuling.txt`).toString()
+          fs.readFileSync(`${templateDir}/buyer-OfferReview.txt`).toString()
         )
       }
     }

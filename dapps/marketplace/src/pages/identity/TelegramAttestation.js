@@ -13,8 +13,6 @@ import PublishedInfoBox from 'components/_PublishedInfoBox'
 import GenerateTelegramCodeMutation from 'mutations/GenerateTelegramCode'
 import VerifyTelegramCodeMutation from 'mutations/VerifyTelegramCode'
 
-import ProtocolLink from 'components/ProtocolLink'
-
 class TelegramAttestation extends Component {
   constructor() {
     super()
@@ -31,10 +29,7 @@ class TelegramAttestation extends Component {
 
     return (
       <ModalComponent
-        title={fbt(
-          'Verify Telegram Account',
-          'TelegramAttestation.verifyTelegramNumber'
-        )}
+        title={fbt('Verify Account', 'TelegramAttestation.verifyAccount')}
         className="attestation-modal telegram"
         shouldClose={this.state.shouldClose}
         onClose={() => {
@@ -66,7 +61,7 @@ class TelegramAttestation extends Component {
     const { openedLink } = this.state
 
     const header = isMobile ? null : (
-      <fbt desc="TelegramAttestation.title">Verify your Telegram Account</fbt>
+      <fbt desc="TelegramAttestation.title">Verify Your Telegram Account</fbt>
     )
 
     return (
@@ -96,13 +91,12 @@ class TelegramAttestation extends Component {
         />
         <div className="actions">
           {!openedLink && (
-            <ProtocolLink
-              protocolLink={`tg://resolve?domain=${
-                process.env.TELEGRAM_BOT_USERNAME
-              }&start=${encodeURIComponent(this.state.code)}`}
-              fallbackLink={`https://t.me/${
+            <a
+              href={`https://t.me/${
                 process.env.TELEGRAM_BOT_USERNAME
               }?start=${encodeURIComponent(this.state.code)}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn btn-primary"
               onClick={() => {
                 this.setState({

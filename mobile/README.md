@@ -15,7 +15,6 @@ Origin Wallet is an "ejected" React Native application. Go [here](https://facebo
 This guide will help you to install a local build of Origin Wallet on a device or simulator so that you can modify the application itself.
 
 - run `yarn install` to install dependencies
-- run `yarn run start`
 
 #### iOS Development
 
@@ -25,13 +24,15 @@ This guide will help you to install a local build of Origin Wallet on a device o
 
 - Install CocoaPods: `sudo gem install cocoapods`
 
-- (!) For the project to load with cocoa pods dependencies be sure to open the `OriginCatcher.xcworkspace` file instead of `OriginCatcher.xcodeproj`
+- (!) For the project to load with cocoa pods dependencies be sure to open the `OriginMarketplace.xcworkspace` file instead of `OriginMarketplace.xcodeproj`
 
 #### Android Development
 
 - [Android SDK or Android Studio](https://developer.android.com/studio/) - If you're on Linux, find the instructions for your specific distribution
 
 - jre-openjdk
+
+- The Android build also implements Samsung Blockchain Keystore via the SDK they provide. To build for Android you will need to download this SDK from https://developer.samsung.com/blockchain/keystore and place it in the `android/aar` directory.
 
 ### Backend Services
 
@@ -109,6 +110,17 @@ Add the `NODE_OPTIONS` env var to your Metro builder startup command to add the 
 
 -----------
 
-    INSTALL_FAILED_UPDATE_INCOMPATIBLE: Package com.origincatcher signatures do not match previously installed version; ignoring!
+    INSTALL_FAILED_UPDATE_INCOMPATIBLE: Package com.originmarketplace signatures do not match previously installed version; ignoring!
 
 Uninstall the app from your phone and try again.
+
+-----------	
+
+> Error: Activity class {com.origincatcher/com.originmarketplace.MainActivity} does not exist.
+
+  Error while Launching activity	
+Run the following command in a terminal	
+
+```	
+adb uninstall com.origincatcher
+```

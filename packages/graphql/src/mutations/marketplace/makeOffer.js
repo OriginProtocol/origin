@@ -9,6 +9,7 @@ import currencies from '../../utils/currencies'
 import { proxyOwner, predictedProxy, resetProxyCache } from '../../utils/proxy'
 import { swapToTokenTx } from '../uniswap/swapToToken'
 import createDebug from 'debug'
+import { checkForMessagingOverride } from '../../resolvers/messaging/Messaging'
 const debug = createDebug('origin:makeOffer:')
 
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
@@ -22,6 +23,32 @@ async function makeOffer(_, data) {
   if (!marketplace) {
     throw new Error('No marketplace')
   }
+
+  let messagingOverride
+  if ((messagingOverride = checkForMessagingOverride())) {
+    // Skip encryption in test environment
+    data.shippingAddressEncrypted = JSON.stringify(
+      messagingOverride.shippingOverride
+    )
+  } else if (data.shippingAddress && data.shippingAddress !== '') {
+    const listing = await marketplace.contract.methods.listings(listingId).call()
+    let seller = await proxyOwner(listing.seller)
+    seller = seller || listing.seller
+    const shippingAddress = Object.assign({}, data.shippingAddress)
+    shippingAddress.version = 1
+    const encrypted = await contracts.messaging.createOutOfBandMessage(
+      seller,
+      JSON.stringify(shippingAddress)
+    )
+    if (!encrypted) {
+      throw new Error(
+        'Could not encrypt shipping address. Probably either buyer or seller do not have messaging enabled.'
+      )
+    }
+    data.shippingAddressEncrypted = encrypted
+    data.shippingAddress = undefined
+  }
+
   const ipfsData = await toIpfsData(data, marketplace)
   let mutation = 'makeOffer'
 
@@ -121,7 +148,7 @@ async function makeOffer(_, data) {
           currencyAddress,
           value
         )
-        mutation = 'transferTokenMarketplaceExecute'
+        mutation = 'transferTokenMakeOffer'
       }
     }
   }
@@ -136,36 +163,8 @@ async function makeOffer(_, data) {
   })
 }
 
-async function toIpfsData(data, marketplace) {
-  const { listingId } = parseId(data.listingID)
-  const listing = await marketplace.eventSource.getListing(listingId)
-  const web3 = contracts.web3
-
-  // Validate units purchased vs. available
-  const unitsAvailable = Number(listing.unitsAvailable)
-  const offerQuantity = Number(data.quantity)
-  if (offerQuantity > unitsAvailable) {
-    throw new Error(
-      `Insufficient units available (${unitsAvailable}) for offer (${offerQuantity})`
-    )
-  }
-
-  const commission = { currency: 'OGN', amount: '0' }
-  if (data.commission) {
-    // Passed in commission takes precedence
-    commission.amount = web3.utils.fromWei(data.commission, 'ether')
-  } else if (listing.commissionPerUnit) {
-    // Default commission to min(depositAvailable, commissionPerUnit)
-    const amount = web3.utils
-      .toBN(listing.commissionPerUnit)
-      .mul(web3.utils.toBN(data.quantity))
-    const depositAvailable = web3.utils.toBN(listing.depositAvailable)
-    const commissionWei = amount.lt(depositAvailable)
-      ? amount.toString()
-      : depositAvailable.toString()
-    commission.amount = web3.utils.fromWei(commissionWei, 'ether')
-  }
-
+async function toIpfsData(data) {
+  const commission = { currency: 'OGN', amount: data.commission || '0' }
   const ipfsData = {
     schemaId: 'https://schema.originprotocol.com/offer_2.0.0.json',
     listingId: data.listingID,
@@ -177,6 +176,7 @@ async function toIpfsData(data, marketplace) {
     },
     commission,
     finalizes: data.finalizes || 60 * 60 * 24 * 14,
+    shippingAddressEncrypted: data.shippingAddressEncrypted,
     ...(data.fractionalData || {})
   }
 

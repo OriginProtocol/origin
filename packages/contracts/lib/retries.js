@@ -16,7 +16,7 @@ async function withRetries(opts, fn) {
       return await fn() // Do our action.
     } catch (e) {
       // Double wait time each failure
-      let waitTime = 1000 * 2**(tryCount - 1)
+      let waitTime = 1000 * 2 ** (tryCount - 1)
       // Randomly jiggle wait time by 20% either way. No thundering herd.
       waitTime = Math.floor(waitTime * (1.2 - Math.random() * 0.4))
       // Max out at two minutes
