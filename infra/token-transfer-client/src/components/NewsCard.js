@@ -23,7 +23,9 @@ const NewsCard = props => (
     ></div>
     {!props.feature && (
       <div className="px-4 pt-4">
-        <strong style={{ fontSize: '24px', lineHeight: '28px' }}>{props.title}</strong>
+        <strong style={{ fontSize: '24px', lineHeight: '28px' }}>
+          {props.title}
+        </strong>
       </div>
     )}
     <div className="p-4" style={{ fontSize: '14px' }}>

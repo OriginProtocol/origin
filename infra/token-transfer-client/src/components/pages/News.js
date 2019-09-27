@@ -14,7 +14,7 @@ const News = props => {
   return (
     <div>
       <h1>News</h1>
-         <div className="row">
+      <div className="row">
         {props.news.slice(0, 6).map(item => (
           <div className="col-12 col-lg-6 col-xl-4" key={item.title}>
             <NewsCard
