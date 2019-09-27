@@ -44,7 +44,7 @@ class WithdrawalDetail extends Component {
   }
 
   render() {
-    if (this.props.transferIsLoading) {
+    if (this.props.transferIsLoading || this.props.transferIsConfirming) {
       return (
         <div className="spinner-grow mb-3" role="status">
           <span className="sr-only">Loading...</span>
