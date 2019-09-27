@@ -152,7 +152,7 @@ describe('messaging server', () => {
   })
 
   it('should return 204 if not registered', async () => {
-    const response = await request(app)
+    await request(app)
       .get(`/accounts/0x0000000000000000000000000000000000000000`)
       .expect(204)
   })
