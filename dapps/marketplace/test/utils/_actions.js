@@ -37,11 +37,42 @@ export async function reset({ page, sellerOpts, buyerOpts, reload = false }) {
   return { buyer, seller }
 }
 
-export const purchaseListing = async ({ page, buyer, withShipping, title }) => {
+export const purchaseListing = async ({
+  page,
+  buyer,
+  withShipping,
+  title,
+  withToken
+}) => {
+  withToken = withToken || 'ETH'
+
   await pic(page, 'listing-detail')
   await changeAccount(page, buyer)
 
   await clickByText(page, 'Purchase', 'a')
+
+  let totalValue
+  switch (withToken) {
+    case 'ETH':
+      await clickByText(page, 'Ethereum')
+      await waitForText(page, '0.00632 ETH')
+      totalValue = '0.00632 ETH'
+      break
+
+    case 'DAI':
+      await clickByText(page, 'Maker Dai')
+      await waitForText(page, '1 DAI')
+      totalValue = '1 DAI'
+      break
+
+    case 'OGN':
+      await clickByText(page, 'Origin Token')
+      await waitForText(page, '1 OGN')
+      totalValue = '1 OGN'
+      break
+  }
+
+  await clickByText(page, 'Continue', 'a')
 
   if (withShipping) {
     await page.waitForSelector('.shipping-address-form [name=name]')
@@ -67,104 +98,37 @@ export const purchaseListing = async ({ page, buyer, withShipping, title }) => {
 
   await waitForText(page, 'Total Price')
 
-  const summaryEls = await page.$('.summary')
-  const summaryText = await page.evaluate(el => el.innerText, summaryEls)
+  const summaryEls = await page.$('.purchase-summary')
+  const summaryText = (await page.evaluate(
+    el => el.innerText || '',
+    summaryEls
+  )).replace(/[\n\t\r ]+/g, ' ')
 
   if (withShipping) {
     assert(
-      summaryText.replace(/[\n\t\r ]+/g, ' ') ===
-        `Item ${title} Shipping Address Bruce Wayne 123 Wayne Towers Gotham City New Jersey 123456 USA Total Price $1 Payment 0.00632 ETH`,
+      summaryText ===
+        `${title} Total Price $1 Payment ${totalValue} Shipping Address Bruce Wayne 123 Wayne Towers Gotham City New Jersey 123456 USA`,
       'Invalid Summary'
     )
   } else {
     assert(
-      summaryText.replace(/[\n\t\r ]+/g, ' ') ===
-        `Item ${title} Total Price $1 Payment 0.00632 ETH`,
+      summaryText === `${title} Total Price $1 Payment ${totalValue}`,
       'Invalid Summary'
     )
   }
 
   await clickByText(page, 'Purchase', 'button')
-
-  await waitForText(page, 'View Purchase Details', 'button')
-  await pic(page, 'purchase-listing')
-
-  await clickByText(page, 'View Purchase Details', 'button')
-  await waitForText(page, 'Transaction History')
-  await pic(page, 'transaction-wait-for-seller')
-}
-
-export const purchaseListingWithDAI = async ({
-  page,
-  buyer,
-  autoSwap,
-  withShipping,
-  title,
-  buyerDai
-}) => {
-  await pic(page, 'listing-detail')
-  await changeAccount(page, buyer)
-
-  await clickByText(page, 'Purchase', 'a')
-
-  if (withShipping) {
-    await page.waitForSelector('.shipping-address-form [name=name]')
-    await page.type('.shipping-address-form [name=name]', 'Bruce Wayne')
-    await page.type(
-      '.shipping-address-form [name=address1]',
-      '123 Wayne Towers'
-    )
-    await page.type('.shipping-address-form [name=city]', 'Gotham City')
-    await page.type(
-      '.shipping-address-form [name=stateProvinceRegion]',
-      'New Jersey'
-    )
-    await page.type('.shipping-address-form [name=postalCode]', '123456')
-    await page.type('.shipping-address-form [name=country]', 'USA')
-
-    await clickByText(page, 'Continue', 'button')
-  }
-
-  // Purchase confirmation
-  await waitForText(page, 'Please confirm your purchase', 'h1')
-  await pic(page, 'purchase-confirmation')
-
-  await waitForText(page, 'Total Price')
-
-  const summaryEls = await page.$('.summary')
-  const summaryText = await page.evaluate(el => el.innerText, summaryEls)
-  let buttonText = autoSwap ? 'Purchase' : 'Swap Now'
-
-  if (withShipping) {
-    assert(
-      summaryText.replace(/[\n\t\r ]+/g, ' ') ===
-        `Item ${title} Shipping Address Bruce Wayne 123 Wayne Towers Gotham City New Jersey 123456 USA Total Price $1 Payment 0.00632 ETH`,
-      'Invalid Summary'
-    )
-  } else if (buyerDai) {
-    assert(
-      summaryText.replace(/[\n\t\r ]+/g, ' ') ===
-        `Item ${title} Total Price $1 Payment 1 DAI`,
-      'Invalid Summary'
-    )
-    buttonText = 'Purchase'
-  } else {
-    assert(
-      summaryText.replace(/[\n\t\r ]+/g, ' ') ===
-        `Item ${title} Total Price $1 Payment 0.00632 ETH`,
-      'Invalid Summary'
-    )
-  }
-
-  await clickByText(page, buttonText, 'button')
 }
 
 export const purchaseMultiUnitListing = async ({
   page,
   buyer,
   withShipping,
-  title
+  title,
+  withToken
 }) => {
+  withToken = withToken || 'ETH'
+
   await pic(page, 'listing-detail')
   await changeAccount(page, buyer)
   await page.waitForSelector('.quantity select')
@@ -172,6 +136,29 @@ export const purchaseMultiUnitListing = async ({
 
   await clickByText(page, 'Purchase', 'a')
 
+  let totalValue
+  switch (withToken) {
+    case 'ETH':
+      await clickByText(page, 'Ethereum')
+      await waitForText(page, '0.01265 ETH')
+      totalValue = '0.01265 ETH'
+      break
+
+    case 'DAI':
+      await clickByText(page, 'Maker Dai')
+      await waitForText(page, '2 DAI')
+      totalValue = '2 DAI'
+      break
+
+    case 'OGN':
+      await clickByText(page, 'Origin Token')
+      await waitForText(page, '2 OGN')
+      totalValue = '2 OGN'
+      break
+  }
+
+  await clickByText(page, 'Continue', 'a')
+
   if (withShipping) {
     await page.waitForSelector('.shipping-address-form [name=name]')
     await page.type('.shipping-address-form [name=name]', 'Bruce Wayne')
@@ -196,19 +183,22 @@ export const purchaseMultiUnitListing = async ({
 
   await waitForText(page, 'Total Price')
 
-  const summaryEls = await page.$('.summary')
-  const summaryText = await page.evaluate(el => el.innerText, summaryEls)
+  const summaryEls = await page.$('.purchase-summary')
+  const summaryText = (await page.evaluate(
+    el => el.innerText || '',
+    summaryEls
+  )).replace(/[\n\t\r ]+/g, ' ')
 
   if (withShipping) {
     assert(
-      summaryText.replace(/[\n\t\r ]+/g, ' ') ===
-        `Item ${title} Quantity 2 Shipping Address Bruce Wayne 123 Wayne Towers Gotham City New Jersey 123456 USA Total Price $2 Payment 0.01265 ETH`,
+      summaryText ===
+        `${title} Quantity 2 Total Price $2 Payment ${totalValue} Shipping Address Bruce Wayne 123 Wayne Towers Gotham City New Jersey 123456 USA`,
       'Invalid Summary'
     )
   } else {
     assert(
-      summaryText.replace(/[\n\t\r ]+/g, ' ') ===
-        `Item ${title} Quantity 2 Total Price $2 Payment 0.01265 ETH`,
+      summaryText ===
+        `${title} Quantity 2 Total Price $2 Payment ${totalValue}`,
       'Invalid Summary'
     )
   }
@@ -248,6 +238,10 @@ export const purchaseFractionalListing = async ({ page, buyer }) => {
   await waitForText(page, 'Total Price')
 
   await clickByText(page, 'Book')
+
+  await clickByText(page, 'Ethereum')
+
+  await clickByText(page, 'Continue', 'a')
 
   // Purchase confirmation
   await waitForText(page, 'Please confirm your purchase', 'h1')
