@@ -86,7 +86,9 @@ class Search extends Component {
                 onClick={() =>
                   this.setState({ searchInput: '' }, () => this.doSearch(false))
                 }
-              />
+              >
+                Clear
+              </button>
             </div>
             {isMobile && this.state.active && (
               <button
@@ -217,16 +219,13 @@ require('react-styl')(`
           .clear-button
             display: none
             position: absolute
-            right: 0.25rem
+            right: 0
             top: 1px
             bottom: 1px
-            width: 2rem
-            background-color: white
-            background-image: url('images/nav/close-icon.svg')
-            background-repeat: no-repeat
-            background-position: center
             border: 0
-            background-size: 1.25rem
+            font-size: 12px
+            color: #1d77ff
+            background: #fff
           .form-control
             border-radius: 5px
             flex: 1
@@ -263,16 +262,16 @@ require('react-styl')(`
           margin-bottom: 1rem
 
         .featured-categories-wrapper
-          margin: 0 -2rem
-          overflow-x: scroll
+          margin: 0 0rem
 
         .featured-categories
           display: inline-flex
-          padding: 0 2rem
+          margin: 0 -10px
+          flex-wrap: wrap;
           .category-icon
             width: 60px
             flex: auto 0 0
-            margin-right: 20px
+            margin: 0 10px 10px
             text-align: center
             color: var(--dark)
             font-size: 0.6rem
