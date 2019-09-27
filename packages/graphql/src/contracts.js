@@ -629,6 +629,8 @@ export function shutdown() {
   if (web3.currentProvider.stop) web3.currentProvider.stop()
   if (wsSub) {
     wsSub.unsubscribe()
+  }
+  if (web3WS && web3WS.currentProvider) {
     web3WS.currentProvider.connection.close()
   }
   clearInterval(blockInterval)
