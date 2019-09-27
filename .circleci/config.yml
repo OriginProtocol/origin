@@ -32,7 +32,6 @@ jobs:
             yarn install --frozen-lockfile
             curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | sh
             ./bin/node-prune
-
       - persist_to_workspace:
           root: .
           paths:
@@ -50,9 +49,17 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - run: mkdir ~/junit
       - run:
           name: Run Marketplace Tests
-          command: cd dapps/marketplace && yarn test
+          command: cd dapps/marketplace && mocha -r @babel/register test --reporter mocha-junit-reporter
+          environment:
+            NODE_ENV: test
+            MOCHA_FILE: ~/junit/test-results.xml
+      - store_test_results:
+          path: ~/junit
+      - store_artifacts:
+          path: ~/junit
 
   GraphQL:
     <<: *defaults
