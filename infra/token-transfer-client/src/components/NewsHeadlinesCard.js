@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Swiper from 'react-id-swiper'
@@ -10,6 +10,7 @@ import BorderedCard from '@/components/BorderedCard'
 
 const NewsHeadlinesCard = props => {
   useEffect(props.fetchNews, [])
+  const [swiper, setSwiper] = useState(null)
 
   if (props.newsIsLoading || props.error) return null
 
@@ -20,13 +21,20 @@ const NewsHeadlinesCard = props => {
       el: '.swiper-pagination',
       type: 'bullets',
       clickable: true
+    },
+    loop: true
+  }
+
+  const onCardClick = event => {
+    if (event.target.tagName !== 'A') {
+      swiper.navigation.onNextClick(event)
     }
   }
 
   return (
-    <BorderedCard shadowed={true}>
+    <BorderedCard shadowed={true} onClick={onCardClick}>
       <h2>News</h2>
-      <Swiper {...swiperParams}>
+      <Swiper {...swiperParams} getSwiper={setSwiper}>
         {props.news.map(item => {
           return (
             <div key={item.title}>

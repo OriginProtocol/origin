@@ -109,16 +109,11 @@ class BalanceCard extends Component {
 
   handleTwoFactorFormSubmit = async () => {
     // Do the transfer
-    let result
-    try {
-      result = await this.props.addTransfer({
-        amount: this.state.amount,
-        address: this.state.address,
-        code: this.state.code
-      })
-    } catch (error) {
-      return
-    }
+    const result = await this.props.addTransfer({
+      amount: this.state.amount,
+      address: this.state.address,
+      code: this.state.code
+    })
 
     if (result.type === 'ADD_TRANSFER_SUCCESS') {
       this.setState({ modalState: 'CheckEmail' })
@@ -357,8 +352,7 @@ class BalanceCard extends Component {
           <button
             type="submit"
             className="btn btn-primary btn-lg mt-5"
-            onClick={this.handleConfirm}
-            disabled={this.props.transferIsConfirming}
+            disabled={this.props.transferIsAdding}
           >
             {this.props.transferIsAdding ? (
               <>

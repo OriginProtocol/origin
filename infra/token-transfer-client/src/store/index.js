@@ -5,6 +5,7 @@ import account from '@/reducers/account'
 import event from '@/reducers/event'
 import grant from '@/reducers/grant'
 import news from '@/reducers/news'
+import session from '@/reducers/session'
 import transfer from '@/reducers/transfer'
 import user from '@/reducers/user'
 
@@ -16,6 +17,7 @@ export default createStore(
     event,
     grant,
     news,
+    session,
     transfer,
     user
   }),
