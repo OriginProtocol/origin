@@ -217,20 +217,17 @@ const Growth$FbtEnum = {
     'As an investor in Origin, Foundation Capital is now betting on a better, decentralized future for the sharing economy.',
   'growth.share.content12.link': 'Watch the video',
 
-  'growth.share.content13.title':
-    'Meet Yu Pan, R&D Engineer at Origin',
+  'growth.share.content13.title': 'Meet Yu Pan, R&D Engineer at Origin',
   'growth.share.content13.details':
     'PayPal Co-founder and first YouTube engineer talks about his work at Origin.',
   'growth.share.content13.link': 'Watch the video',
 
-  'growth.share.content14.title':
-    'Origin is live on TV!',
+  'growth.share.content14.title': 'Origin is live on TV!',
   'growth.share.content14.details':
     'Origin was invited for an interview by HKB News, one of the most prominent blockchain media outlets in South Korea.',
   'growth.share.content14.link': 'Read the article',
 
-  'growth.share.content15.title':
-    `Introducing Origin's investors`,
+  'growth.share.content15.title': `Introducing Origin's investors`,
   'growth.share.content15.details':
     'Origin has more than 500+ investors around the world who support the vision of enabling true P2P commerce.',
   'growth.share.content15.link': 'Watch the video'

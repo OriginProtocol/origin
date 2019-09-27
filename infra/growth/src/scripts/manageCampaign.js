@@ -206,7 +206,7 @@ const createByMonth = {
   july: createJulyProdCampaign,
   august: createAugProdCampaign,
   september: createSepProdCampaign,
-  october: createOctoberProdCampaign,
+  october: createOctoberProdCampaign
 }
 
 const updateByMonth = {
