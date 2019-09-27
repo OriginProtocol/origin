@@ -138,7 +138,7 @@
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "react-router-dom": "5.1.0",
     "style-loader": "1.0.0",
-    "terser-webpack-plugin": "2.1.0",
+    "terser-webpack-plugin": "2.1.1",
     "typeface-lato": "0.0.75",
     "typeface-poppins": "0.0.72",
     "url-loader": "2.1.0",
