@@ -40,9 +40,7 @@ export function getStateFromListing(props) {
       'seller',
       'unitsAvailable'
     ]),
-    acceptedTokens: tokens.length
-      ? tokens
-      : ['token-ETH', 'token-DAI', 'token-OGN'],
+    acceptedTokens: tokens.length ? tokens : ['token-ETH'],
     quantity: String(props.listing.unitsTotal),
     currency: get(props, 'listing.price.currency.id', ''),
     price: String(props.listing.price.amount),
