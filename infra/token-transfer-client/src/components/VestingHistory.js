@@ -39,30 +39,24 @@ const VestingHistory = props => {
 
   return (
     <>
-      <div className="row">
-        <div className="col">
-          <h2 className="mb-4">Vesting History</h2>
-        </div>
-      </div>
-      <div className="row">
-        <div className="table-card col">
-          <div className="scrolling-table">
-            <table className="table mb-4">
-              <tbody>
-                {props.isLocked ? (
-                  <tr>
-                    <td className="table-empty-cell" colSpan="100%">
-                      Vesting has not yet started.
-                      <br />
-                      Please check back after Lockup Period ends.
-                    </td>
-                  </tr>
-                ) : (
-                  tableRows
-                )}
-              </tbody>
-            </table>
-          </div>
+      <h2 className="mb-4">Vesting History</h2>
+      <div className="table-card">
+        <div className="scrolling-table">
+          <table className="table mb-4">
+            <tbody>
+              {props.isLocked ? (
+                <tr>
+                  <td className="table-empty-cell" colSpan="100%">
+                    Vesting has not yet started.
+                    <br />
+                    Please check back after Lockup Period ends.
+                  </td>
+                </tr>
+              ) : (
+                tableRows
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </>
