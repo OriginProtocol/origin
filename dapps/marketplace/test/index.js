@@ -41,7 +41,7 @@ function listingTests({ autoSwap } = {}) {
 }
 
 describe('Marketplace Dapp', function() {
-  this.timeout(10000)
+  this.timeout(15000)
   before(async function() {
     const page = await getPage()
     await page.evaluate(() => {
@@ -59,7 +59,7 @@ describe('Marketplace Dapp', function() {
 })
 
 describe('Marketplace Dapp with proxies enabled', function() {
-  this.timeout(10000)
+  this.timeout(15000)
   before(async function() {
     const page = await getPage()
     await page.evaluate(() => {
@@ -78,7 +78,7 @@ describe('Marketplace Dapp with proxies enabled', function() {
 })
 
 describe('Marketplace Dapp with proxies, relayer and performance mode enabled', function() {
-  this.timeout(10000)
+  this.timeout(15000)
 
   let page, didThrow
 

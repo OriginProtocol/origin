@@ -369,6 +369,23 @@ class Buy extends Component {
       autoswap
     }
 
+    let commission = 0
+    if (listing.commissionPerUnit) {
+      commission = Number(listing.commissionPerUnit) * Number(quantity)
+    } else if (listing.commission) {
+      commission = Number(listing.commission)
+    }
+    if (commission) {
+      const amount = web3.utils.toBN(
+        web3.utils.toWei(String(commission), 'ether')
+      )
+      const depositAvailable = web3.utils.toBN(listing.depositAvailable)
+      const commissionWei = amount.lt(depositAvailable)
+        ? amount.toString()
+        : depositAvailable.toString()
+      variables.commission = web3.utils.fromWei(commissionWei, 'ether')
+    }
+
     if (
       listing.__typename === 'FractionalListing' ||
       listing.__typename === 'FractionalHourlyListing'

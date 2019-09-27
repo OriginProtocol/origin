@@ -219,6 +219,7 @@ export const purchaseFractionalListing = async ({ page, buyer }) => {
   await pic(page, 'listing-detail')
   await changeAccount(page, buyer)
 
+  await waitForText(page, 'Availability', 'button')
   await clickByText(page, 'Availability', 'button')
 
   const startDay = await page.$(
