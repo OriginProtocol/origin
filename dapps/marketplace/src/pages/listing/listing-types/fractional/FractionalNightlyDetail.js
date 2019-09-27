@@ -6,7 +6,7 @@ import Modal from 'components/Modal'
 import MobileModal from 'components/MobileModal'
 
 import withIsMobile from 'hoc/withIsMobile'
-import DateRange from '../_DateRange'
+import DateRange from '../../_DateRange'
 
 const FractionalNightlyDetail = ({
   availability,
