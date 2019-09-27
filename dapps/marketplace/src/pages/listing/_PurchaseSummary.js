@@ -1,107 +1,133 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
-import get from 'lodash/get'
 
 import Price from 'components/Price'
+
+const SummaryItem = ({ label, value, columnar }) => {
+  return (
+    <div className={`summary-item${columnar ? ' columnar' : ''}`}>
+      <div className="summary-name">{label}</div>
+      <div className="summary-value">{value}</div>
+    </div>
+  )
+}
 
 const PurchaseSummary = ({
   listing,
   quantity,
   totalPrice,
-  token,
   shippingAddress,
   startDate,
   endDate,
+  paymentMethod,
   tokenStatus = {}
 }) => {
   const { loading } = tokenStatus
 
   if (loading) {
     return (
-      <div className="summary">
+      <div className="purchase-summary">
         <fbt desc="Loading...">Loading...</fbt>
       </div>
     )
   }
 
-  const { hasBalance } = get(tokenStatus, token, {})
-  const hasEthBalance = get(tokenStatus, 'token-ETH.hasBalance')
-  const acceptedTokens = listing.acceptedTokens
-
-  const isEth = token === 'token-ETH'
-  const isDai = token === 'token-DAI'
-  const acceptsDai = acceptedTokens.find(t => t.id === 'token-DAI')
-
-  const needsSwap = isDai && acceptsDai && !hasBalance && hasEthBalance
-
-  const displayToken = isEth || needsSwap ? 'token-ETH' : 'token-DAI'
-
   return (
-    <div className="summary">
-      <div className="summary-row">
-        <div className="summary-name">
-          <fbt desc="PurchaseSummary.name">Item</fbt>
-        </div>
-        <div className="summary-value">{listing.title}</div>
-      </div>
+    <div className="purchase-summary">
+      <div className="listing-title">{listing.title}</div>
       {listing.multiUnit && quantity && (
-        <div className="summary-row">
-          <div className="summary-name">
-            <fbt desc="PurchaseSummary.Quantity">Quantity</fbt>
-          </div>
-          <div className="summary-value">{quantity}</div>
-        </div>
+        <SummaryItem
+          label={<fbt desc="PurchaseSummary.Quantity">Quantity</fbt>}
+          value={quantity}
+        />
       )}
       {startDate && (
-        <div className="summary-row">
-          <div className="summary-name">
-            <fbt desc="PurchaseSummary.checkIn">Check In</fbt>
-          </div>
-          <div className="summary-value">{startDate}</div>
-        </div>
+        <SummaryItem
+          label={<fbt desc="PurchaseSummary.checkIn">Check In</fbt>}
+          value={startDate}
+        />
       )}
       {endDate && (
-        <div className="summary-row">
-          <div className="summary-name">
-            <fbt desc="PurchaseSummary.checkOut">Check Out</fbt>
-          </div>
-          <div className="summary-value">{endDate}</div>
-        </div>
+        <SummaryItem
+          label={<fbt desc="PurchaseSummary.checkOut">Check Out</fbt>}
+          value={endDate}
+        />
       )}
+      <SummaryItem
+        label={<fbt desc="PurchaseSummary.totalPrice">Total Price</fbt>}
+        value={<Price price={totalPrice} />}
+      />
+      <SummaryItem
+        label={<fbt desc="PurchaseSummary.Payment">Payment</fbt>}
+        value={<Price price={totalPrice} target={paymentMethod} />}
+      />
       {shippingAddress && (
-        <div className="summary-row">
-          <div className="summary-name">
+        <SummaryItem
+          label={
             <fbt desc="PurchaseSummary.shippingAddress">Shipping Address</fbt>
-          </div>
-          <div className="summary-value">
-            <div>{shippingAddress.name}</div>
-            <div>{shippingAddress.address1}</div>
-            <div>{shippingAddress.address2}</div>
-            <div>{shippingAddress.city}</div>
-            <div>{`${shippingAddress.stateProvinceRegion} ${shippingAddress.postalCode}`}</div>
-            <div>{shippingAddress.country}</div>
-            <div>{shippingAddress.instructions}</div>
-          </div>
-        </div>
+          }
+          value={
+            <>
+              <div>{shippingAddress.name}</div>
+              <div>{shippingAddress.address1}</div>
+              <div>{shippingAddress.address2}</div>
+              <div>{shippingAddress.city}</div>
+              <div>{`${shippingAddress.stateProvinceRegion} ${shippingAddress.postalCode}`}</div>
+              <div>{shippingAddress.country}</div>
+              <div>{shippingAddress.instructions}</div>
+            </>
+          }
+          columnar
+        />
       )}
-      <div className="summary-row">
-        <div className="summary-name">
-          <fbt desc="PurchaseSummary.totalPrice">Total Price</fbt>
-        </div>
-        <div className="summary-value">
-          <Price price={totalPrice} />
-        </div>
-      </div>
-      <div className="summary-row">
-        <div className="summary-name">
-          <fbt desc="PurchaseSummary.Payment">Payment</fbt>
-        </div>
-        <div className="summary-value">
-          <Price price={totalPrice} target={displayToken} />
-        </div>
-      </div>
     </div>
   )
 }
 
 export default PurchaseSummary
+
+require('react-styl')(`
+  .purchase-summary
+    padding: 1.25rem
+    background-color: #f3f7f9
+    border: solid 1px #eaf0f3
+    border-radius: 10px
+    margin-bottom: 1.5rem
+    margin-bottom: 0.5rem
+    margin: 0 auto
+    width: 100%
+    .listing-title
+      font-size: 24px
+      font-weight: bold
+      text-align: left
+      margin-bottom: 1rem
+    .summary-item
+      display: flex
+      width: 100%
+      margin-bottom: 1rem
+      .summary-name
+        font-size:  1.125rem
+        flex: 50% 0 0
+        text-align: left
+      .summary-value
+        flex: 50% 0 0
+        font-size: 1.125rem
+        font-weight: 700
+        text-align: right
+      &.columnar
+        flex-direction: column
+        border-top: solid 1px #eaf0f3
+        padding-top: 1rem
+        .summary-name
+          font-weight: 700
+          flex: 1
+        .summary-value
+          text-align: left
+          font-weight: normal
+          flex: 1
+          line-height: 1.5
+
+  @media (max-width: 767.98px)
+    .purchase-summary
+      border-radius: 0
+`)
