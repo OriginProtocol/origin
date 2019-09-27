@@ -1,7 +1,7 @@
 import assert from 'assert'
 import { getPage } from './utils/_services'
 
-import { singleUnitTests, singleUnitDaiTests } from './singleUnit'
+import { singleUnitTests, singleUnitTokenTests } from './singleUnit'
 import { multiUnitTests } from './multiUnit'
 import { fractionalTests } from './fractional'
 import { onboardingTests } from './onboarding'
@@ -10,13 +10,29 @@ import { paymentTests } from './payments'
 
 function listingTests({ autoSwap } = {}) {
   singleUnitTests({ autoSwap })
-  singleUnitTests({ autoSwap, EthAndDaiAccepted: true })
+  singleUnitTests({ autoSwap, acceptedTokens: ['ETH', 'DAI', 'OGN'] })
   singleUnitTests({ autoSwap, withShipping: true })
 
-  singleUnitDaiTests({ autoSwap })
-  singleUnitDaiTests({ buyerDai: true })
-  singleUnitDaiTests({ buyerDai: true, deployIdentity: true })
-  singleUnitDaiTests({ autoSwap, withShipping: true })
+  singleUnitTokenTests({ token: 'DAI', autoSwap })
+  singleUnitTokenTests({ token: 'DAI', buyerHasTokens: true })
+  singleUnitTokenTests({
+    token: 'DAI',
+    buyerHasTokens: true,
+    deployIdentity: true
+  })
+  singleUnitTokenTests({ token: 'DAI', autoSwap, withShipping: true })
+
+  singleUnitTokenTests({ token: 'OGN', buyerHasTokens: true })
+  singleUnitTokenTests({
+    token: 'OGN',
+    buyerHasTokens: true,
+    deployIdentity: true
+  })
+  singleUnitTokenTests({
+    token: 'OGN',
+    buyerHasTokens: true,
+    withShipping: true
+  })
 
   multiUnitTests({ autoSwap })
   multiUnitTests({ autoSwap, withShipping: true })

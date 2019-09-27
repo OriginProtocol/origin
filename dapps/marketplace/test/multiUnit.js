@@ -22,9 +22,18 @@ function randomTitle({ isFractional } = {}) {
   return `T-Shirt ${Math.floor(Math.random() * 100000)}`
 }
 
-export function multiUnitTests({ autoSwap, withShipping } = {}) {
+export function multiUnitTests({
+  autoSwap,
+  withShipping,
+  acceptedTokens
+} = {}) {
   let testName = 'Multi Unit Listing, payment in ETH'
   if (withShipping) testName += ', with Shipping'
+
+  acceptedTokens =
+    acceptedTokens && acceptedTokens.length ? acceptedTokens : ['ETH']
+  if (acceptedTokens.length > 1)
+    testName += ` | ${acceptedTokens.join(',')} accepted`
 
   describe(testName, function() {
     let seller, buyer, title, listingHash, page
@@ -72,8 +81,14 @@ export function multiUnitTests({ autoSwap, withShipping } = {}) {
 
     it('should allow price entry', async function() {
       await page.type('input[name=price]', '1')
-      await clickByText(page, 'Ethereum') // Select Eth
-      await clickByText(page, 'Maker Dai') // De-select Dai
+
+      // All three payment modes are selected by default
+      // Deselect tokens that are not accepted by clicking them
+      if (!acceptedTokens.includes('ETH')) await clickByText(page, 'Ethereum')
+      if (!acceptedTokens.includes('DAI')) await clickByText(page, 'Maker Dai')
+      if (!acceptedTokens.includes('OGN'))
+        await clickByText(page, 'Origin Token')
+
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
@@ -157,7 +172,13 @@ export function multiUnitTests({ autoSwap, withShipping } = {}) {
     })
 
     it('should allow a new listing to be purchased', async function() {
-      await purchaseMultiUnitListing({ page, buyer, withShipping, title })
+      await purchaseMultiUnitListing({
+        page,
+        buyer,
+        withShipping,
+        title,
+        withToken: 'ETH'
+      })
     })
 
     it('should allow a new listing to be accepted', async function() {
