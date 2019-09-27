@@ -69,7 +69,7 @@ const PrivateRoute = ({
           )
         }}
       />
-      {rest.sessionExpired && (
+      {rest.sessionExpired && !isLoading && (
         <Modal>
           <h1 className="mb-2">Session Expired</h1>
           <p>
