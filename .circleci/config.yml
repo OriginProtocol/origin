@@ -52,7 +52,9 @@ jobs:
       - run: mkdir ~/junit
       - run:
           name: Run Marketplace Tests
-          command: cd dapps/marketplace && mocha -r @babel/register test --reporter mocha-junit-reporter
+          command:
+            cd dapps/marketplace && ./node_modules/.bin/mocha -r @babel/register
+            test --reporter mocha-junit-reporter
           environment:
             NODE_ENV: test
             MOCHA_FILE: ~/junit/test-results.xml
