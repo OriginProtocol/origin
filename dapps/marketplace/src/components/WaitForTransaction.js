@@ -140,7 +140,9 @@ class WaitForTransaction extends Component {
           } else if (!receipt || !confirmedBlock) {
             content = <WaitForFirstBlock />
           } else if (!event) {
-            console.error('Expected event not found')
+            const msg = `Expected event not found (tx: ${id})`
+            console.error(msg)
+            Sentry.captureException(new Error(msg))
             content = <Error />
           } else if (currentBlock <= confirmedBlock) {
             content = <WaitForConfirmation />
