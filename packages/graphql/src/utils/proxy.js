@@ -1,4 +1,4 @@
-import memoize from 'lodash/memoize'
+import memorize from './memorize'
 import contracts from '../contracts'
 
 async function isContractRaw(address) {
@@ -8,10 +8,10 @@ async function isContractRaw(address) {
 export const isContract =
   process.env.DISABLE_CACHE === 'true'
     ? isContractRaw
-    : memoize(isContractRaw, address => address)
+    : memorize(isContractRaw, address => address)
 
 // Get the creation code for the deployed Proxy implementation
-const proxyCreationCode = memoize(async () => {
+const proxyCreationCode = memorize(async () => {
   const { web3, ProxyImp, ProxyFactory } = contracts
   let code = await ProxyFactory.methods.proxyCreationCode().call()
   code += web3.eth.abi.encodeParameter('uint256', ProxyImp._address).slice(2)
@@ -91,15 +91,15 @@ async function proxyOwnerRaw(address) {
 export const proxyOwner =
   process.env.DISABLE_CACHE === 'true'
     ? proxyOwnerRaw
-    : memoize(proxyOwnerRaw, address => address)
+    : memorize(proxyOwnerRaw, address => address)
 export const hasProxy =
   process.env.DISABLE_CACHE === 'true'
     ? hasProxyRaw
-    : memoize(hasProxyRaw, address => address)
+    : memorize(hasProxyRaw, address => address)
 export const predictedProxy =
   process.env.DISABLE_CACHE === 'true'
     ? predictedProxyRaw
-    : memoize(predictedProxyRaw, address => address)
+    : memorize(predictedProxyRaw, address => address)
 export const resetProxyCache = () => {
   isContract.cache.clear()
   hasProxy.cache.clear()
