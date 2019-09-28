@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
+import { withRouter } from 'react-router-dom'
+
 import withIsMobile from 'hoc/withIsMobile'
 import withWallet from 'hoc/withWallet'
 
@@ -27,6 +29,11 @@ class TelegramAttestation extends Component {
 
     const ModalComponent = this.props.isMobile ? MobileModal : Modal
 
+    const canGoBack =
+      this.props.isMobile &&
+      this.props.history.length &&
+      this.props.location.pathname.endsWith('/telegram')
+
     return (
       <ModalComponent
         title={fbt('Verify Account', 'TelegramAttestation.verifyAccount')}
@@ -50,6 +57,8 @@ class TelegramAttestation extends Component {
         }}
         lightMode={true}
         skipAnimateOnExit={this.props.skipAnimateOnExit}
+        onBack={!canGoBack ? null : () => this.props.history.goBack()}
+        slideUp={false}
       >
         <div>{this.renderVerifyCode()}</div>
       </ModalComponent>
@@ -128,6 +137,10 @@ class TelegramAttestation extends Component {
   }
 
   renderGenerateCode() {
+    if (this.props.walletLoading || this.props.identityLoading) {
+      return null
+    }
+
     return (
       <Mutation
         mutation={GenerateTelegramCodeMutation}
@@ -234,4 +247,4 @@ class TelegramAttestation extends Component {
   }
 }
 
-export default withWallet(withIsMobile(TelegramAttestation))
+export default withRouter(withWallet(withIsMobile(TelegramAttestation)))
