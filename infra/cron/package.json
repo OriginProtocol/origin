@@ -11,7 +11,7 @@
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
-    "@origin/contracts": "^0.1.0",
+    "@origin/contracts": "^0.8.6",
     "@origin/consistency": "^0.1.0",
     "@origin/growth": "^0.1.0",
     "@sendgrid/mail": "6.4.0",
