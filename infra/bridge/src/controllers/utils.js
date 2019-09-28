@@ -7,6 +7,7 @@ const Op = Sequelize.Op
 
 const Identity = require('@origin/identity/src/models').Identity
 
+const Log = require('../models/index').Log
 const { getExchangeRate } = require('../utils/exchange-rate')
 
 /* This method is used for determining if an email or phone has previously
@@ -62,6 +63,23 @@ router.get('/exchange-rate', async (req, res) => {
   res.send({
     price: await getExchangeRate(req.query.market)
   })
+})
+
+/**
+ * Endpoint for the DApp to log events.
+ */
+router.post('/log', async (req, res) => {
+  if (!req.body.data) {
+    return res.status(400).send({ errors: ['Missing data'] })
+  }
+
+  await Log.create({
+    data: req.body.data,
+    ip: req.ip,
+    headers: req.headers
+  })
+
+  return res.sendStatus(200)
 })
 
 module.exports = router
