@@ -1,6 +1,6 @@
 'use strict'
 
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
   onboardingModal: {
@@ -29,6 +29,6 @@ export default StyleSheet.create({
   backArrow: {
     position: 'absolute',
     left: -10,
-    top: 16
+    top: Platform.OS === 'android' ? 8 : 16
   }
 })

@@ -31,7 +31,9 @@ async function makeOffer(_, data) {
       messagingOverride.shippingOverride
     )
   } else if (data.shippingAddress && data.shippingAddress !== '') {
-    const listing = await marketplace.contract.methods.listings(listingId).call()
+    const listing = await marketplace.contract.methods
+      .listings(listingId)
+      .call()
     let seller = await proxyOwner(listing.seller)
     seller = seller || listing.seller
     const shippingAddress = Object.assign({}, data.shippingAddress)

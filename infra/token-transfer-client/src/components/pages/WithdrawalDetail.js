@@ -23,6 +23,14 @@ class WithdrawalDetail extends Component {
 
   componentDidMount() {
     this.props.fetchTransfers()
+    // Force component update every three seconds because time passing won't
+    // trigger an update as it is not in state. This is required to correctly
+    // update when expired.
+    this.interval = setInterval(() => this.forceUpdate(), 3000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval)
   }
 
   componentDidUpdate(prevProps) {
@@ -44,7 +52,7 @@ class WithdrawalDetail extends Component {
   }
 
   render() {
-    if (this.props.transferIsLoading) {
+    if (this.props.transferIsLoading || this.props.transferIsConfirming) {
       return (
         <div className="spinner-grow mb-3" role="status">
           <span className="sr-only">Loading...</span>

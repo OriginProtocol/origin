@@ -6,28 +6,33 @@ const NewsCard = props => (
     style={{ backgroundColor: 'white', borderRadius: '10px' }}
   >
     {props.feature && (
-      <div className="p-3">
+      <div className="p-4">
         <strong style={{ fontSize: '40px' }}>{props.title}</strong>
       </div>
     )}
     <div
       style={{
-        height: '300px',
+        paddingBottom: '70%',
         backgroundImage: `url(${props.image})`,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         borderTopLeftRadius: props.feature ? 0 : '5px',
-        borderTopRightRadius: props.feature ? 0 : '5px'
+        borderTopRightRadius: props.feature ? 0 : '5px',
+        backgroundPosition: 'center bottom'
       }}
     ></div>
     {!props.feature && (
-      <div className="p-3">
-        <strong style={{ fontSize: '20px' }}>{props.title}</strong>
+      <div className="px-4 pt-4">
+        <strong style={{ fontSize: '24px', lineHeight: '28px' }}>
+          {props.title}
+        </strong>
       </div>
     )}
-    <div className="p-3" style={{ fontSize: '18px' }}>
+    <div className="p-4" style={{ fontSize: '14px' }}>
       <p>{props.description}</p>
-      <a href={props.link}>Read more</a>
+      <a href={props.link} target="_blank" rel="noopener noreferrer">
+        Read more
+      </a>
     </div>
   </div>
 )
