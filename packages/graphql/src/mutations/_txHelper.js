@@ -439,8 +439,10 @@ async function sendViaRelayer({
   if (!resp || !resp.id) {
     throw new Error('No transaction hash from relayer!')
   }
-
   const txHash = resp.id
+  if (typeof txHash !== 'string' || ![66, 64].includes(txHash.length)) {
+    throw new Error('Invalid transaction hash returned by relayer!')
+  }
 
   if (hashCallbacks && hashCallbacks.length) {
     await handleCallbacks({
@@ -555,6 +557,10 @@ async function sendViaWeb3({
 
   tx.once('transactionHash', async hash => {
     txHash = hash
+    if (typeof txHash !== 'string' || ![66, 64].includes(txHash.length)) {
+      console.error('Invaild hash: ', txHash)
+      throw new Error('Invalid transaction hash returned by web3!')
+    }
     await handleCallbacks({ callbacks: hashCallbacks, val: hash })
   })
     .once('receipt', async receipt => {

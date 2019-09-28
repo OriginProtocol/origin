@@ -92,11 +92,11 @@ export function fractionalTests({ autoSwap, acceptedTokens } = {}) {
       await page.type('input[name=price]', '1')
       await page.type('input[name=weekendPrice]', '1')
 
-      // All three payment modes are selected by default
-      // Deselect tokens that are not accepted by clicking them
-      if (!acceptedTokens.includes('ETH')) await clickByText(page, 'Ethereum')
-      if (!acceptedTokens.includes('DAI')) await clickByText(page, 'Maker Dai')
-      if (!acceptedTokens.includes('OGN'))
+      // All three payment modes are deselected by default
+      // Select tokens that are not accepted by clicking them
+      if (acceptedTokens.includes('ETH')) await clickByText(page, 'Ethereum')
+      if (acceptedTokens.includes('DAI')) await clickByText(page, 'Maker Dai')
+      if (acceptedTokens.includes('OGN'))
         await clickByText(page, 'Origin Token')
 
       await clickByText(page, 'Continue')

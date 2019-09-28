@@ -39,13 +39,9 @@ const VestingHistory = props => {
 
   return (
     <>
-      <div className="row">
-        <div className="col">
-          <h2 className="mb-4">Vesting History</h2>
-        </div>
-      </div>
-      <div className="row">
-        <div className="table-card col">
+      <h2 className="mb-4">Vesting History</h2>
+      <div className="table-card">
+        <div className="scrolling-table">
           <table className="table mb-4">
             <tbody>
               {props.isLocked ? (

@@ -126,7 +126,14 @@ class ListingPricing extends Component {
                 >
                   <fbt desc="back">Back</fbt>
                 </Link>
-                <button type="submit" className="btn btn-primary">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={
+                    !this.state.acceptedTokens ||
+                    !this.state.acceptedTokens.length
+                  }
+                >
                   <fbt desc="continue">Continue</fbt>
                 </button>
               </div>
