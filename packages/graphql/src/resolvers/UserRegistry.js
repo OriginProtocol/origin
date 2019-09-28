@@ -1,5 +1,5 @@
 function bota(input) {
-  return new Buffer(input.toString(), 'binary').toString('base64')
+  return Buffer.from(input.toString(), 'binary').toString('base64')
 }
 
 function convertCursorToOffset(cursor) {
@@ -7,7 +7,7 @@ function convertCursorToOffset(cursor) {
 }
 
 function atob(input) {
-  return new Buffer(input, 'base64').toString('binary')
+  return Buffer.from(input, 'base64').toString('binary')
 }
 
 async function identities(contract, { first = 10, after }) {
