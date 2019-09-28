@@ -40,42 +40,42 @@ function listingTests({ autoSwap } = {}) {
   fractionalTests({ autoSwap })
 }
 
-// describe('Marketplace Dapp', function() {
-//   this.timeout(15000)
-//   before(async function() {
-//     const page = await getPage()
-//     await page.evaluate(() => {
-//       window.localStorage.clear()
-//       window.localStorage.bypassOnboarding = true
-//       window.transactionPoll = 100
-//     })
-//     await page.goto('http://localhost:8083')
-//   })
+describe('Marketplace Dapp', function() {
+  this.timeout(15000)
+  before(async function() {
+    const page = await getPage()
+    await page.evaluate(() => {
+      window.localStorage.clear()
+      window.localStorage.bypassOnboarding = true
+      window.transactionPoll = 100
+    })
+    await page.goto('http://localhost:8083')
+  })
 
-//   paymentTests()
-//   listingTests()
-//   userProfileTests()
-//   onboardingTests()
-// })
+  paymentTests()
+  listingTests()
+  userProfileTests()
+  onboardingTests()
+})
 
-// describe('Marketplace Dapp with proxies enabled', function() {
-//   this.timeout(15000)
-//   before(async function() {
-//     const page = await getPage()
-//     await page.evaluate(() => {
-//       window.localStorage.clear()
-//       window.localStorage.proxyAccountsEnabled = true
-//       window.localStorage.bypassOnboarding = true
-//       window.localStorage.debug = 'origin:*'
-//       window.transactionPoll = 100
-//     })
-//     await page.goto('http://localhost:8083')
-//   })
-//   paymentTests({ autoSwap: true })
-//   listingTests({ autoSwap: true })
-//   userProfileTests()
-//   onboardingTests()
-// })
+describe('Marketplace Dapp with proxies enabled', function() {
+  this.timeout(15000)
+  before(async function() {
+    const page = await getPage()
+    await page.evaluate(() => {
+      window.localStorage.clear()
+      window.localStorage.proxyAccountsEnabled = true
+      window.localStorage.bypassOnboarding = true
+      window.localStorage.debug = 'origin:*'
+      window.transactionPoll = 100
+    })
+    await page.goto('http://localhost:8083')
+  })
+  paymentTests({ autoSwap: true })
+  listingTests({ autoSwap: true })
+  userProfileTests()
+  onboardingTests()
+})
 
 describe('Marketplace Dapp with proxies, relayer and performance mode enabled', function() {
   this.timeout(15000)
