@@ -73,7 +73,7 @@ export default class MobileModal extends Component {
     if (shouldSlideUp) {
       this.portal.classList.add('animate-slide-up')
     } else {
-      this.portal.classList.add('animate-slide-up')
+      this.portal.classList.remove('animate-slide-up')
     }
 
     if (this.props.fullscreen === false) {
