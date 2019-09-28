@@ -219,10 +219,11 @@ require('react-styl')(`
           .clear-button
             display: none
             position: absolute
-            right: 0
+            right: 1px
             top: 1px
             bottom: 1px
             border: 0
+            border-radius: 5px
             font-size: 12px
             color: #1d77ff
             background: #fff
@@ -267,11 +268,11 @@ require('react-styl')(`
         .featured-categories
           display: inline-flex
           margin: 0 -10px
-          flex-wrap: wrap;
+          flex-wrap: wrap
           .category-icon
-            width: 60px
-            flex: auto 0 0
-            margin: 0 10px 10px
+            max-width: 25%
+            flex: 0 0 25%
+            padding: 0 10px 15px
             text-align: center
             color: var(--dark)
             font-size: 0.6rem
@@ -283,13 +284,14 @@ require('react-styl')(`
                 background-color: #007fff
             &:before
               content: ''
-              display: inline-block
+              display: block
               width: 60px
               height: 60px
               background-color: #f0f6f9
               border-radius: 50%
               background-repeat: no-repeat
               background-position: center
+              margin: 0 auto 5px
 
             &.apparel:before
               background-image: url('images/categories/apparel-icon.svg')
@@ -343,6 +345,8 @@ require('react-styl')(`
   @media (max-width: 767.98px)
     .listing-search-wrapper
       padding: 0 1rem
+      .search-wrapper .search-input-wrapper .search-input   .clear-button
+        right: 0
       .search-wrapper .search-input-wrapper .search-input .form-control
         font-size: 22px
         border: 0
