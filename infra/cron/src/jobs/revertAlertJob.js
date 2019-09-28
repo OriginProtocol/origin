@@ -19,7 +19,7 @@ const contractsJson = esmImport(`@origin/contracts/build/contracts_${net}.json`)
 const API_ENDPOINT =
   net === 'mainnet'
     ? 'https://api.etherscan.io/api'
-    : 'https://etherscan.io/apis#accounts'
+    : 'https://api-rinkeby.etherscan.io/api'
 const DAILY_BLOCKS = 5760 // (24 * 60 * 60) / 15
 
 /**
