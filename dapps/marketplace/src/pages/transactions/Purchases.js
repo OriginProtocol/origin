@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Query } from 'react-apollo'
 import dayjs from 'dayjs'
 import get from 'lodash/get'
@@ -126,40 +126,44 @@ const NoPurchases = () => (
 )
 
 const Purchase = ({ listing, offer }) => (
-  <div className="purchase">
-    <div className="pic">
-      <Pic listing={listing} />
-      {offer.quantity === undefined || offer.quantity <= 1 ? null : (
-        <div className="quantity">{offer.quantity}</div>
-      )}
-    </div>
-    <div className="details">
-      <div className="top">
-        <Link className="title mb-1" to={`/purchases/${offer.id}`}>
-          {listing.title || <i>Untitled Listing</i>}
-        </Link>
-        <div className="right">
-          <span className="time-estimate">
-            {distanceToNow(offer.createdEvent.timestamp, true) + ' ago'}
-          </span>
-          <OfferStatus offer={offer} />
+  <Fragment>
+    <Link to={`/purchases/${offer.id}`}>
+      <div className="purchase">
+        <div className="pic">
+          <Pic listing={listing} />
+          {offer.quantity === undefined || offer.quantity <= 1 ? null : (
+            <div className="quantity">{offer.quantity}</div>
+          )}
+        </div>
+        <div className="details">
+          <div className="top">
+            <h2 className="title mb-1">
+              {listing.title || <i>Untitled Listing</i>}
+            </h2>
+            <div className="right">
+              <span className="time-estimate">
+                {distanceToNow(offer.createdEvent.timestamp, true) + ' ago'}
+              </span>
+              <OfferStatus offer={offer} />
+            </div>
+          </div>
+          <div className="date">
+            {listing.createdEvent &&
+              fbt('Offer made on', 'Purchases.offerMadeOn') +
+              ` ${dayjs
+                .unix(offer.createdEvent.timestamp)
+                .format('MMMM D, YYYY')}`}
+          </div>
+          <div className="price">
+            <div className="d-flex">
+              <Price price={offer.totalPrice} />
+            </div>
+          </div>
+          <Stages mini offer={offer} />
         </div>
       </div>
-      <div className="date">
-        {listing.createdEvent &&
-          fbt('Offer made on', 'Purchases.offerMadeOn') +
-            ` ${dayjs
-              .unix(offer.createdEvent.timestamp)
-              .format('MMMM D, YYYY')}`}
-      </div>
-      <div className="price">
-        <div className="d-flex">
-          <Price price={offer.totalPrice} />
-        </div>
-      </div>
-      <Stages mini offer={offer} />
-    </div>
-  </div>
+    </Link>
+  </Fragment>
 )
 
 export default withWallet(Listings)
