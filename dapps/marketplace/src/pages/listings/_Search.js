@@ -224,7 +224,7 @@ require('react-styl')(`
             bottom: 1px
             border: 0
             border-radius: 5px
-            font-size: 12px
+            font-size: 14px
             color: #1d77ff
             background: #fff
           .form-control
@@ -346,6 +346,7 @@ require('react-styl')(`
     .listing-search-wrapper
       padding: 0 1rem
       .search-wrapper .search-input-wrapper .search-input   .clear-button
+        padding-right: 0
         right: 0
       .search-wrapper .search-input-wrapper .search-input .form-control
         font-size: 22px
