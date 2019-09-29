@@ -150,9 +150,9 @@ const Purchase = ({ listing, offer }) => (
           <div className="date">
             {listing.createdEvent &&
               fbt('Offer made on', 'Purchases.offerMadeOn') +
-              ` ${dayjs
-                .unix(offer.createdEvent.timestamp)
-                .format('MMMM D, YYYY')}`}
+                ` ${dayjs
+                  .unix(offer.createdEvent.timestamp)
+                  .format('MMMM D, YYYY')}`}
           </div>
           <div className="price">
             <div className="d-flex">

@@ -296,7 +296,7 @@ export function singleUnitTokenTests({
 
     it('should allow price entry', async function() {
       await page.type('input[name=price]', '1')
-      
+
       await clickByText(page, 'Ethereum')
       await clickByText(page, 'Maker Dai')
       await clickByText(page, 'Origin Token')
