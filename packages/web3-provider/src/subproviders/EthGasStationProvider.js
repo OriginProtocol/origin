@@ -49,9 +49,8 @@ class EthGasStationProvider extends SubProvider {
 
     if (method === 'eth_gasPrice') {
       const now = new Date()
-
       if (this.cache.time && now - this.cache.time < CACHE_TIME) {
-        return this.cache.data
+        return end(null, this.cache.data)
       }
 
       return this.fetchData()
