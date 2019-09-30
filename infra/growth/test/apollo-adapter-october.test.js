@@ -338,7 +338,7 @@ describe('Apollo adapter - October campaign', () => {
         type: 'ListingIdPurchased',
         status: 'Inactive',
         rewardEarned: { amount: '0', currency: 'OGN' },
-        reward: { amount: tokenToNaturalUnits(100), currency: 'OGN' }
+        reward: { amount: tokenToNaturalUnits(300), currency: 'OGN' }
       }
     }
 

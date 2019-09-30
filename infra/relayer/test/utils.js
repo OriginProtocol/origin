@@ -21,7 +21,7 @@ function waitForTransactionReceipt(web3Inst, txHash, duration = 5000) {
     console.log(txHash)
     throw new Error('Invalid transaction hash!')
   }
-  console.log('txHash', txHash)
+
   // ewww....
   return new Promise((resolve, reject) => {
     try {
@@ -154,7 +154,6 @@ function eventSigInReceipt(receipt, sig) {
  * @returns {string} The decoded address
  */
 function decodeAddress(encoded) {
-  console.log(`decodeAddress(${encoded})`)
   if (encoded.startsWith('0x')) {
     encoded = encoded.slice(2)
   }
