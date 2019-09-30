@@ -268,6 +268,7 @@ require('react-styl')(`
         .featured-categories
           display: inline-flex
           margin: 0 -10px
+          width: 100%
           flex-wrap: wrap
           .category-icon
             max-width: 25%
