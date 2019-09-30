@@ -32,8 +32,8 @@
   },
   "devDependencies": {
     "chalk": "2.4.2",
-    "mocha": "6.2.0",
-    "nodemon": "1.19.2",
+    "mocha": "6.2.1",
+    "nodemon": "1.19.3",
     "prettier": "1.18.2"
   },
   "scripts": {
