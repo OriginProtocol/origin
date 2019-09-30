@@ -720,6 +720,16 @@ class Purse {
   }
 
   /**
+   * Set autofundChildren. This will make sure to trigger balance checks after
+   * changing the setting.
+   * @param {boolean} new value of autofundChildren
+   */
+  setAutofundChildren(bv) {
+    this.autofundChildren = bv
+    this.checkBalances = true
+  }
+
+  /**
    * Get all pending transactions and populate this.pendintTransactions
    */
   async _populatePending() {
@@ -1045,7 +1055,7 @@ class Purse {
       try {
         const pendingHashes = Object.keys(this.pendingTransactions)
 
-        metrics.pendingTxGauge.set(pendingHashes.length)
+        metrics.pendingTxGauge.set(pendingHashes ? pendingHashes.length : 0)
         if (pendingHashes.length > 0) {
           logger.debug(`We have ${pendingHashes.length} pending transactions`)
         }
@@ -1070,8 +1080,7 @@ class Purse {
             typeof this.receiptCallbacks[txHash] !== 'undefined' &&
             this.receiptCallbacks[txHash].length > 0
           ) {
-            for (let i = 0; i < this.receiptCallbacks[txHash].length; i++) {
-              const cb = this.receiptCallbacks[txHash][i]
+            for (const cb of this.receiptCallbacks[txHash]) {
               const cbRet = cb(receipt)
               if (cbRet instanceof Promise) {
                 await cbRet
