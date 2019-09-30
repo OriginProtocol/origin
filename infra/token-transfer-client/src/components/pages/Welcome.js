@@ -54,32 +54,38 @@ class Welcome extends Component {
             </div>
           ) : (
             <>
-              <h1>Welcome to the Origin Investor Portal</h1>
-              <p>
-                You will be able to use this portal to manage your OGN
-                investment.
+              <h1>
+                Welcome to the
+                <br />
+                Origin Investor Portal
+              </h1>
+              <p className="my-4">
+                The wait is finally over! You can now start using this portal to
+                manage your OGN investment.
               </p>
+              <hr className="mx-5" />
               <div className="form-group">
-                <label>Name</label>
+                <label className="mt-0">Investor</label>
                 <br />
                 {this.props.user.name}
               </div>
               <div className="form-group">
-                <label>Email Address</label>
+                <label className="mt-0">Email Address</label>
                 <br />
                 {this.props.user.email}
               </div>
+              <hr className="mx-5" />
+              <p className="my-4">
+                As part of our agreement with our listing exchanges, we’ve
+                modified the token unlock schedule.
+              </p>
               <button
-                className="btn btn-secondary btn-lg mt-5"
+                className="btn btn-secondary btn-lg"
                 onClick={() => {
-                  if (this.props.user.phone) {
-                    this.setState({ redirectTo: '/terms' })
-                  } else {
-                    this.setState({ redirectTo: '/phone' })
-                  }
+                  this.setState({ redirectTo: '/revised_schedule' })
                 }}
               >
-                Continue
+                View Revised Schedule
               </button>
             </>
           )}
