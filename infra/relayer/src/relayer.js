@@ -209,17 +209,16 @@ class Relayer {
       preflight
     })
 
-    // Check to prevent rapid-fire duplicate requests
-    if (typeof this.seenSignatures[signature] !== 'undefined') {
-      return res.status(429).send({ errors: ['Duplicate'] })
-    } else if (!preflight) {
-      // Update seen signatures
-      this.seenSignatures[signature] = new Date()
-    }
-
     Sentry.configureScope(scope => {
       scope.setUser({ id: from })
     })
+
+    // Check to prevent rapid-fire duplicate requests
+    if (typeof this.seenSignatures[signature] !== 'undefined') {
+      const msg = 'Duplicate transaction'
+      Sentry.captureException(new Error(msg))
+      return res.status(429).send({ errors: [msg] })
+    }
 
     // Make sure keys are generated and ready
     await this.purse.init()
@@ -443,6 +442,9 @@ class Relayer {
         Sentry.captureException(reason)
         return res.status(400).send({ errors: [errMsg] })
       }
+
+      // Update seen signatures for dupe checking
+      this.seenSignatures[signature] = new Date()
 
       // Record the transaction hash and gas price in the DB.
       txHash = txOut.txHash

@@ -318,7 +318,7 @@ export function identity({ id, ipfsHash }) {
 function dataURItoBinary(dataURI) {
   const parts = dataURI.split(',')
   const mimeType = parts[0].split(':')[1].split(';')[0]
-  const buffer = new Buffer(parts[1], 'base64')
+  const buffer = Buffer.from(parts[1], 'base64')
   return { buffer, mimeType }
 }
 

@@ -20,6 +20,7 @@ try {
 }
 
 const isProduction = process.env.NODE_ENV === 'production'
+const isTest = process.env.NODE_ENV === 'test'
 
 const isStaging = process.env.NAMESPACE === 'staging'
 const isDev = process.env.NAMESPACE === 'dev'
@@ -32,11 +33,18 @@ if (isStaging) {
   TELEGRAM_BOT_USERNAME = 'originprotocol_production_bot'
 }
 
+let devtool = 'cheap-module-source-map'
+if (isProduction) {
+  devtool = 'source-map'
+} else if (isTest) {
+  devtool = false
+}
+
 const config = {
   entry: {
     app: './src/index.js'
   },
-  devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
+  devtool,
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'public')
@@ -172,7 +180,6 @@ if (isProduction) {
       cleanOnceBeforeBuildPatterns: ['app.*.css', 'app.*.js', 'app.*.js.map']
     }),
     new MiniCssExtractPlugin({ filename: '[name].[hash:8].css' }),
-    new webpack.IgnorePlugin(/redux-logger/),
     new HtmlWebpackPlugin({
       template: 'public/template.html',
       inject: false,
@@ -211,8 +218,6 @@ if (isProduction) {
   //   'react-dom': 'react-dom/umd/react-dom.production.min.js',
   //   'react-styl': 'react-styl/prod.js',
   //   web3: path.resolve(__dirname, 'public/web3.min'),
-  //   redux: 'redux/dist/redux.min.js',
-  //   'react-redux': 'react-redux/dist/react-redux.min.js',
   //   'react-router-dom': 'react-router-dom/umd/react-router-dom.min.js'
   // }
   // config.module.noParse = [

@@ -12,6 +12,8 @@ Origin Wallet is an "ejected" React Native application. Go [here](https://facebo
 
 ## Local Development
 
+Read the guide below and checkout this [Video tutorial](https://drive.google.com/open?id=1OcmT8eufr6TkFJS4uwD1Ta0tpISzpdBJ) for setting up your mobile development environment.
+
 This guide will help you to install a local build of Origin Wallet on a device or simulator so that you can modify the application itself.
 
 - run `yarn install` to install dependencies
