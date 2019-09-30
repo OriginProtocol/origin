@@ -26,7 +26,7 @@ discoveryImageTag: '4cfe733'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '601aa02'
+growthImageTag: '1a657b3'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -51,7 +51,7 @@ creatorIssuerIp: '35.233.181.44'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: 'c414790'
+cronImageTag: 'e9881d6'
 
 # origin-admin
 adminImage: origin-admin
@@ -59,15 +59,15 @@ adminImageTag: '5300560'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: 'fbe561c'
+relayerImageTag: '03a6487'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: '9a25dd7'
+graphqlImageTag: '03a6487'
 
 # origin-token-transfer-client
 t3ClientImage: origin-token-transfer-client
-t3ClientImageTag: '5300560'
+t3ClientImageTag: '86a3414'
 
 # origin-token-transfer-server
 t3ServerImage: origin-token-transfer-server
