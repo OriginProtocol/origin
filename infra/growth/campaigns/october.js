@@ -827,7 +827,7 @@ const septemberConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-000-3197',
             reward: {
-              amount: tokenToNaturalUnits(100),
+              amount: tokenToNaturalUnits(300),
               currency: 'OGN'
             },
             visible: true,
