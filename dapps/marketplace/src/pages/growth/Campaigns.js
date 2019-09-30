@@ -205,10 +205,19 @@ class PastCampaigns extends Component {
   render() {
     const { campaigns, decimalDivision, isMobile } = this.props
 
-    const pastCampaigns = campaigns.filter(
+    let pastCampaigns = campaigns.filter(
       campaign =>
         campaign.status === 'Completed' || campaign.status === 'CapReached'
     )
+
+    pastCampaigns = pastCampaigns.sort(function(a, b){
+      const keyA = new Date(a.endDate),
+          keyB = new Date(b.endDate)
+        // Compare the 2 dates
+        if(keyA > keyB) return -1
+        if(keyA < keyB) return 1
+        return 0
+    })
 
     const totalEarnings = pastCampaigns
       .map(campaign =>
