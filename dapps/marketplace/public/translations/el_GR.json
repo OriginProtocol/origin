@@ -114,7 +114,7 @@
   "4m17sO": "Verify your website",
   "1E0NSv": "Create a listing",
   "3ADm97": "Purchase a listing",
-  "2XiL3b": {
+  "21aIjW": {
     "growth.jan2019.name": "Ιανουάριος 2019 Εκστρατεία",
     "growth.jan2019.short_name": "Ιαν 2019",
     "growth.feb2019.name": "Φεβρουάριος 2019 Εκστρατεία",
@@ -133,6 +133,8 @@
     "growth.aug2019.short_name": "August 2019",
     "growth.sep2019.name": "September 2019 Campaign",
     "growth.sep2019.short_name": "September 2019",
+    "growth.oct2019.name": "October 2019 Campaign",
+    "growth.oct2019.short_name": "October 2019",
     "growth.profile.and.email.requirement": "Επαληθευμένο προφίλ email και προέλευσης",
     "growth.two.attestations.requirement": "Δύο επαληθεύσεις προφίλ",
     "growth.profile.requirement": "Όνομα προφίλ και φωτογραφία",
@@ -251,7 +253,23 @@
     "growth.share.content9.link": "Read the article",
     "growth.share.content10.title": "Decentralized Commerce in Venezuela",
     "growth.share.content10.details": "Inexpensive mobile phones can give 2 billion unbanked access to blockchain-powered marketplaces.",
-    "growth.share.content10.link": "Read the article"
+    "growth.share.content10.link": "Read the article",
+    "growth.purchase.listing-1-000-3197.title": "Korea Traditional House",
+    "growth.share.content11.title": "Meet Franck Chastagnol, Senior Engineer at Origin",
+    "growth.share.content11.details": "Franck, Senior Engineer at Origin talks about the future of decentralized sharing economy & how to participate in Origin Rewards.",
+    "growth.share.content11.link": "Watch the video",
+    "growth.share.content12.title": "Rodolfo Gonzalez Shares Why Foundation Capital Invested in Origin",
+    "growth.share.content12.details": "As an investor in Origin, Foundation Capital is now betting on a better, decentralized future for the sharing economy.",
+    "growth.share.content12.link": "Watch the video",
+    "growth.share.content13.title": "Meet Yu Pan, R&D Engineer at Origin",
+    "growth.share.content13.details": "PayPal Co-founder and first YouTube engineer talks about his work at Origin.",
+    "growth.share.content13.link": "Watch the video",
+    "growth.share.content14.title": "Origin is live on TV!",
+    "growth.share.content14.details": "Origin was invited for an interview by HKB News, one of the most prominent blockchain media outlets in South Korea.",
+    "growth.share.content14.link": "Read the article",
+    "growth.share.content15.title": "Introducing Origin's investors",
+    "growth.share.content15.details": "Origin has more than 500+ investors around the world who support the vision of enabling true P2P commerce.",
+    "growth.share.content15.link": "Watch the video"
   },
   "rouhs": "Sell a listing",
   "3H6hnZ": "Share this on Twitter",
@@ -1278,5 +1296,5 @@
   "3NuPlb": "Origin Token",
   "3JTZtf": "Το Ether είναι καλό για βραχυπρόθεσμες καταχωρήσεις.",
   "3eoCca": "Maker Dai is good for long term listings like rentals or property sales.",
-  "4xJpDb": "Origin Token"
+  "214S0w": "Useful for promoting other listings"
 }
