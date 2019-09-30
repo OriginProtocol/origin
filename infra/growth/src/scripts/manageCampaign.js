@@ -9,6 +9,8 @@ const juneConfig = require('../../campaigns/june')
 const julyConfig = require('../../campaigns/july')
 const augustConfig = require('../../campaigns/august')
 const septemberConfig = require('../../campaigns/september')
+const octoberConfig = require('../../campaigns/october')
+
 
 async function createAprilProdCampaign() {
   console.log('Creating April campaign data in prod...')
@@ -174,7 +176,7 @@ async function createOctoberProdCampaign() {
   await db.GrowthCampaign.create({
     nameKey: 'growth.oct2019.name',
     shortNameKey: 'growth.oct.short_name',
-    rules: JSON.stringify(septemberConfig),
+    rules: JSON.stringify(octoberConfig),
     startDate: Date.parse('October 1, 2019, 00:00 UTC'),
     endDate: Date.parse('November 1, 2019, 00:00 UTC'),
     distributionDate: Date.parse('November 1, 2019, 00:00 UTC'),
@@ -189,7 +191,7 @@ async function updateOctoberProdRules() {
   console.log('Updating October campaign rules in prod...')
 
   const campaign = await db.GrowthCampaign.findOne({ where: { id: 8 } })
-  await campaign.update({ rules: JSON.stringify(septemberConfig) })
+  await campaign.update({ rules: JSON.stringify(octoberConfig) })
 }
 
 const args = {}
