@@ -141,7 +141,9 @@ class Search extends Component {
               </div>
               <div
                 className="category-icon gift-cards"
-                onClick={() => this.onCategoryClick({ subCategory: 'giftCards' })}
+                onClick={() =>
+                  this.onCategoryClick({ subCategory: 'giftCards' })
+                }
               >
                 <fbt desc="Search.GiftCards">Gift Cards</fbt>
               </div>
