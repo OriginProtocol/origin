@@ -173,14 +173,17 @@ class PushNotifications extends Component {
             // Check that we are on the right network
             const url = new URL(notificationObj.url)
             // Find network, default to Docker if network could not be found
-            const network =
-              NETWORKS.find(n => {
-                return n.dappUrl === url.origin
-              }) ||
-              NETWORKS.find(n => {
-                return n.name === 'Docker'
+            let network = NETWORKS.find(n => {
+              return n.dappUrl === url.origin
+            })
+            if (!network) {
+              network = NETWORKS.find(n => {
+                return n.name === 'Mainnet'
               })
-            if (this.props.settings.network.name !== network.name) {
+            }
+            if (
+              get(this.props.settings, 'network.name') !== get(network, 'name')
+            ) {
               console.debug('Change network for notification to: ', network)
               this.props.setNetwork(network)
             }

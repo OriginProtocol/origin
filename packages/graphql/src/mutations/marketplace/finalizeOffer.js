@@ -14,6 +14,7 @@ async function finalizeOffer(_, data) {
     schemaId: 'https://schema.originprotocol.com/review_1.0.0.json'
   }
   const { listingId, offerId, marketplace } = parseId(data.offerID, contracts)
+  const contract = marketplace.contract
 
   if (data.rating !== undefined) {
     ipfsData.rating = data.rating
@@ -35,18 +36,18 @@ async function finalizeOffer(_, data) {
   // method to finalize and transfer funds to seller in single transaction.
   const owner = await proxyOwner(from)
   if (owner) {
-    const listing = await marketplace.eventSource.getListing(listingId)
-    const sellerOwner = await proxyOwner(listing.seller.id)
+    const listing = await contract.methods.listings(listingId).call()
+    const sellerOwner = await proxyOwner(listing.seller)
 
     if (sellerOwner) {
-      const offer = await marketplace.eventSource.getOffer(listingId, offerId)
+      const offer = await contract.methods.offers(listingId, offerId).call()
       const Proxy = new contracts.web3Exec.eth.Contract(IdentityProxy.abi, from)
       const txData = await tx.encodeABI()
 
       tx = Proxy.methods.marketplaceFinalizeAndPay(
         marketplace.contract._address,
         txData,
-        listing.seller.id,
+        listing.seller,
         offer.currency,
         offer.value
       )

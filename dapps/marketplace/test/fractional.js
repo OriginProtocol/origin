@@ -22,7 +22,9 @@ function randomReview() {
   return `Very nice ${Math.floor(Math.random() * 100000)}`
 }
 
-export function fractionalTests({ autoSwap } = {}) {
+export function fractionalTests({ autoSwap, acceptedTokens } = {}) {
+  acceptedTokens =
+    acceptedTokens && acceptedTokens.length ? acceptedTokens : ['ETH']
   describe(`Fractional Listing for Eth`, function() {
     let seller, buyer, title, review, page
     before(async function() {
@@ -89,8 +91,14 @@ export function fractionalTests({ autoSwap } = {}) {
     it('should allow price entry', async function() {
       await page.type('input[name=price]', '1')
       await page.type('input[name=weekendPrice]', '1')
-      await clickByText(page, 'Ethereum') // Select Eth
-      await clickByText(page, 'Maker Dai') // De-select Dai
+
+      // All three payment modes are deselected by default
+      // Select tokens that are not accepted by clicking them
+      if (acceptedTokens.includes('ETH')) await clickByText(page, 'Ethereum')
+      if (acceptedTokens.includes('DAI')) await clickByText(page, 'Maker Dai')
+      if (acceptedTokens.includes('OGN'))
+        await clickByText(page, 'Origin Token')
+
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })

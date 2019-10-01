@@ -23,7 +23,7 @@ export default async function srv() {
     extras: async () => {
       const webpackProcess = spawn(
         './node_modules/.bin/webpack-dev-server',
-        ['--port=8083', '--host=0.0.0.0', '--no-info'],
+        ['--port=8083', '--host=0.0.0.0', '--no-info', '--no-live-reload'],
         {
           stdio: 'inherit',
           env: process.env
