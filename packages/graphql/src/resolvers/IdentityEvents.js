@@ -5,6 +5,7 @@ import pick from 'lodash/pick'
 import get from 'lodash/get'
 import contracts from '../contracts'
 import { getIdsForPage, getConnection } from './_pagination'
+import { isHexIPFSHash } from '../utils/validate'
 import validateAttestation from '../utils/validateAttestation'
 import { proxyOwner, hasProxy } from '../utils/proxy'
 
@@ -208,7 +209,13 @@ export function identity({ id, ipfsHash }) {
           return
         }
         if (event.event === 'IdentityUpdated') {
-          ipfsHash = event.returnValues.ipfsHash
+          if (isHexIPFSHash(event.returnValues.ipfsHash)) {
+            ipfsHash = event.returnValues.ipfsHash
+          } else {
+            console.warn(
+              `Invalid IPFS hash in event in transaction ${event.transactionHash}`
+            )
+          }
         } else if (event.event === 'IdentityDeleted') {
           ipfsHash = null
         }
