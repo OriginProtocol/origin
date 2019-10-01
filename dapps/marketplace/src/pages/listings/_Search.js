@@ -265,7 +265,8 @@ require('react-styl')(`
           margin-bottom: 1rem
 
         .featured-categories-wrapper
-          margin: 0 0rem
+          margin: 0
+          margin-right: -10px
 
         .featured-categories
           display: flex
@@ -284,6 +285,7 @@ require('react-styl')(`
             font-size: 0.6rem
             text-overflow: ellipsis
             cursor: pointer
+            margin-right: 10px
 
             &.blank
               cursor: auto
