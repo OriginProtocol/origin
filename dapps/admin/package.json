@@ -117,7 +117,7 @@
     "mini-css-extract-plugin": "0.8.0",
     "opener": "1.5.1",
     "optimize-css-assets-webpack-plugin": "5.0.3",
-    "react-router-dom": "5.1.1",
+    "react-router-dom": "5.1.2",
     "style-loader": "1.0.0",
     "terser-webpack-plugin": "2.1.2",
     "webpack": "4.41.0",
