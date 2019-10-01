@@ -906,7 +906,7 @@ const septemberConfig = {
     },
     origin_investors: {
       titleKey: 'growth.share.content15.title',
-      detailsKey: 'growth.share.content5.details',
+      detailsKey: 'growth.share.content15.details',
       image: 'images/growth/share-content15.png',
       link: 'https://www.originprotocol.com/video/tAyusRT3ZDQ',
       linkKey: 'growth.share.content15.link',
