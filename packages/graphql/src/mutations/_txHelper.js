@@ -557,10 +557,7 @@ async function sendViaWeb3({
 
   tx.once('transactionHash', async hash => {
     txHash = hash
-    if (
-      typeof txHash === 'object' &&
-      Object.prototype.hasOwnProperty.call(txHash, 'message')
-    ) {
+    if (typeof txHash === 'object' && get(txHash, 'message')) {
       throw new Error(txHash.message)
     } else if (txHash === null) {
       console.error(tx)

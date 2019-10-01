@@ -103,14 +103,17 @@ const Pending = ({ walletType, config, contentOnly, shouldClose, onClose }) => {
 
 const WaitForTransaction = props => {
   const { hash, contentOnly, onClose, event, shouldClose } = props
-
   const { data, client, error, refetch } = useQuery(query, {
     variables: { id: hash },
     skip: !hash || hash === 'pending'
   })
 
   // Auto refetch when there's a new block
-  useSubscription(NewBlock, { onSubscriptionData: () => refetch() })
+  useSubscription(NewBlock, {
+    onSubscriptionData: () => {
+      if (hash !== 'pending') refetch()
+    }
+  })
 
   if (hash === 'pending') {
     return <Pending {...props} />
