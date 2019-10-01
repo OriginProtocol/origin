@@ -855,7 +855,7 @@ const septemberConfig = {
     meet_franck: {
       titleKey: 'growth.share.content11.title',
       detailsKey: 'growth.share.content11.details',
-      image: 'images/growth/share-content11.jpg',
+      image: 'images/growth/share-content11.png',
       link: 'https://youtu.be/AQgqEKNTjFw',
       linkKey: 'growth.share.content11.link',
       post: {
