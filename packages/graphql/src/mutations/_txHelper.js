@@ -557,7 +557,18 @@ async function sendViaWeb3({
 
   tx.once('transactionHash', async hash => {
     txHash = hash
-    if (typeof txHash !== 'string' || ![66, 64].includes(txHash.length)) {
+    if (
+      typeof txHash === 'object' &&
+      Object.prototype.hasOwnProperty.call(txHash, 'message')
+    ) {
+      throw new Error(txHash.message)
+    } else if (txHash === null) {
+      console.error(tx)
+      throw new Error('Transaction hash returned null.  Invalid tx?')
+    } else if (
+      typeof txHash !== 'string' ||
+      ![66, 64].includes(txHash.length)
+    ) {
       console.error('Invaild hash: ', txHash)
       throw new Error('Invalid transaction hash returned by web3!')
     }

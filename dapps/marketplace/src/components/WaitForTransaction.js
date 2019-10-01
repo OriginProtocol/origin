@@ -124,7 +124,7 @@ const WaitForTransaction = props => {
 
   let content
   // Catch errors, but ignore one-off JSON-RPC errors
-  if (error && (error.message && !error.message.indexOf(INVALID_JSON_RPC))) {
+  if (error && (error.message && !error.message.includes(INVALID_JSON_RPC))) {
     console.error(error)
     Sentry.captureException(error)
     content = <Error />
