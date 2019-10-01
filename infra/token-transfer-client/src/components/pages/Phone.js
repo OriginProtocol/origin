@@ -50,7 +50,7 @@ class Phone extends Component {
       phone: `${this.state.countryCode} ${this.state.phone}`
     })
     if (result.type === 'EDIT_USER_SUCCESS') {
-      this.setState({ redirectTo: '/terms' })
+      this.setState({ redirectTo: '/otp/explain' })
     }
   }
 

@@ -60,8 +60,7 @@ async function sendWelcomeEmail(user) {
   logger.info('Email sent')
 }
 
-async function printToken(user) {
-}
+async function printToken(user) {}
 /**
  * Sends emails to a single user or all users depending on args.
  */

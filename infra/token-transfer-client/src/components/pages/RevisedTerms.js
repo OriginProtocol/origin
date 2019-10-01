@@ -1,10 +1,28 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import moment from 'moment'
+
+import { editUser } from '@/actions/user'
+import {
+  getError as getUserError,
+  getIsEditing as getUserIsEditing
+} from '@/reducers/user'
 
 class RevisedTerms extends Component {
   state = {
     accepted: true,
     redirectTo: null
+  }
+
+  handleSubmit = async () => {
+    const result = await this.props.editUser({
+      revisedScheduleAgreedAt: moment()
+    })
+    if (result.type === 'EDIT_USER_SUCCESS') {
+      this.setState({ redirectTo: '/terms' })
+    }
   }
 
   render() {
@@ -46,7 +64,7 @@ class RevisedTerms extends Component {
               type="checkbox"
               id="acceptCheck"
               onClick={e => this.setState({ accepted: e.target.checked })}
-              checked
+              defaultChecked
             />
             <label className="form-check-label mt-0" htmlFor="acceptCheck">
               I have read and agree to the Revised Token Unlock Schedule
@@ -55,8 +73,8 @@ class RevisedTerms extends Component {
           </div>
           <button
             className="btn btn-secondary btn-lg mt-5"
-            disabled={!this.state.accepted}
-            onClick={() => this.setState({ redirectTo: '/phone' })}
+            onClick={this.handleSubmit}
+            disabled={!this.state.accepted || this.props.userIsEditing}
           >
             Accept Agreement
           </button>
@@ -66,4 +84,22 @@ class RevisedTerms extends Component {
   }
 }
 
-export default RevisedTerms
+const mapStateToProps = ({ user }) => {
+  return {
+    userError: getUserError(user),
+    userIsEditing: getUserIsEditing(user)
+  }
+}
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      editUser: editUser
+    },
+    dispatch
+  )
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RevisedTerms)

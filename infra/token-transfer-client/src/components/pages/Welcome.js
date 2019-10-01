@@ -11,7 +11,8 @@ import agent from '@/utils/agent'
 class Welcome extends Component {
   state = {
     loading: true,
-    redirectTo: null
+    redirectTo: null,
+    error: null
   }
 
   componentDidMount() {
@@ -40,58 +41,83 @@ class Welcome extends Component {
     this.setState({ loading: false })
   }
 
+  renderError = () => {
+    return (
+      <>
+        <h1>Error</h1>
+        <p className="my-4">
+          It looks like the link you used to access this page is no longer
+          valid. Please{' '}
+          <a href="mailto:investors@originprotocol.com">contact</a> the Origin
+          Team.
+        </p>
+      </>
+    )
+  }
+
+  renderLoading = () => {
+    return (
+      <div className="spinner-grow" role="status">
+        <span className="sr-only">Loading...</span>
+      </div>
+    )
+  }
+
+  renderWelcome = () => {
+    return (
+      <>
+        <h1>
+          Welcome to the
+          <br />
+          Origin Investor Portal
+        </h1>
+        <p className="my-4">
+          The wait is finally over! You can now start using this portal to
+          manage your OGN investment.
+        </p>
+        <hr className="mx-5" />
+        <div className="form-group">
+          <label className="mt-0">Investor</label>
+          <br />
+          {this.props.user.name}
+        </div>
+        <div className="form-group">
+          <label className="mt-0">Email Address</label>
+          <br />
+          {this.props.user.email}
+        </div>
+        <hr className="mx-5" />
+        <p className="my-4">
+          As part of our agreement with our listing exchanges, we’ve modified
+          the token unlock schedule.
+        </p>
+        <button
+          className="btn btn-secondary btn-lg"
+          onClick={() => {
+            this.setState({ redirectTo: '/revised_schedule' })
+          }}
+        >
+          View Revised Schedule
+        </button>
+      </>
+    )
+  }
+
   render() {
     if (this.state.redirectTo) {
       return <Redirect push to={this.state.redirectTo} />
     }
 
-    return (
-      <>
-        <div className="action-card">
-          {this.state.loading || this.props.isLoading ? (
-            <div className="spinner-grow" role="status">
-              <span className="sr-only">Loading...</span>
-            </div>
-          ) : (
-            <>
-              <h1>
-                Welcome to the
-                <br />
-                Origin Investor Portal
-              </h1>
-              <p className="my-4">
-                The wait is finally over! You can now start using this portal to
-                manage your OGN investment.
-              </p>
-              <hr className="mx-5" />
-              <div className="form-group">
-                <label className="mt-0">Investor</label>
-                <br />
-                {this.props.user.name}
-              </div>
-              <div className="form-group">
-                <label className="mt-0">Email Address</label>
-                <br />
-                {this.props.user.email}
-              </div>
-              <hr className="mx-5" />
-              <p className="my-4">
-                As part of our agreement with our listing exchanges, we’ve
-                modified the token unlock schedule.
-              </p>
-              <button
-                className="btn btn-secondary btn-lg"
-                onClick={() => {
-                  this.setState({ redirectTo: '/revised_schedule' })
-                }}
-              >
-                View Revised Schedule
-              </button>
-            </>
-          )}
-        </div>
-      </>
-    )
+    let cardContent
+    if (this.state.error) {
+      cardContent = this.renderError()
+    } else if (this.state.loading || this.props.isLoading) {
+      cardContent = this.renderLoading()
+    } else {
+      cardContent = this.renderWelcome()
+    }
+
+    return <div className="action-card">{cardContent}</div>
   }
 }
 

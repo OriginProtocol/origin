@@ -1,10 +1,28 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import moment from 'moment'
+
+import { editUser } from '@/actions/user'
+import {
+  getError as getUserError,
+  getIsEditing as getUserIsEditing
+} from '@/reducers/user'
 
 class Terms extends Component {
   state = {
     accepted: false,
     redirectTo: null
+  }
+
+  handleSubmit = async () => {
+    const result = await this.props.editUser({
+      termsAgreedAt: moment()
+    })
+    if (result.type === 'EDIT_USER_SUCCESS') {
+      this.setState({ redirectTo: '/phone' })
+    }
   }
 
   render() {
@@ -15,7 +33,11 @@ class Terms extends Component {
     return (
       <>
         <div className="action-card">
-          <h1>Accept Terms</h1>
+          <h1>
+            Great!
+            <br />
+            Please review our Terms of Use
+          </h1>
           <p>Please agree to our terms below and click Continue to proceed</p>
           <div className="form-group">
             <div className="terms-wrapper">
@@ -47,8 +69,8 @@ class Terms extends Component {
           </div>
           <button
             className="btn btn-secondary btn-lg mt-5"
-            disabled={!this.state.accepted}
-            onClick={() => this.setState({ redirectTo: '/otp/explain' })}
+            onClick={this.handleSubmit}
+            disabled={!this.state.accepted || this.props.userIsEditing}
           >
             Continue
           </button>
@@ -58,4 +80,22 @@ class Terms extends Component {
   }
 }
 
-export default Terms
+const mapStateToProps = ({ user }) => {
+  return {
+    userError: getUserError(user),
+    userIsEditing: getUserIsEditing(user)
+  }
+}
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      editUser: editUser
+    },
+    dispatch
+  )
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Terms)

@@ -12,7 +12,9 @@ module.exports = (sequelize, DataTypes) => {
       // OTP secret key, stored encrypted.
       otpKey: DataTypes.STRING,
       otpVerified: DataTypes.BOOLEAN,
-      employee: DataTypes.BOOLEAN
+      employee: DataTypes.BOOLEAN,
+      revisedScheduleAgreedAt: DataTypes.DATE,
+      termsAgreedAt: DataTypes.DATE
     },
     {
       tableName: 't3_user'
