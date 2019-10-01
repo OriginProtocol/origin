@@ -51,8 +51,8 @@
     "chai": "4.2.0",
     "chai-things": "0.2.0",
     "chalk": "2.4.2",
-    "mocha": "6.2.0",
-    "nodemon": "1.19.2",
+    "mocha": "6.2.1",
+    "nodemon": "1.19.3",
     "prettier": "1.18.2",
     "rewire": "4.0.1",
     "sinon": "7.5.0"
