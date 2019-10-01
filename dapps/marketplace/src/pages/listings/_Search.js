@@ -124,54 +124,48 @@ class Search extends Component {
         )}
         <div className="featured-categories-wrapper">
           <div className="featured-categories">
-            <div className="featured-categories-row">
-              <div
-                className="category-icon rewards"
-                onClick={() => this.onRewardsClick()}
-              >
-                <fbt desc="Search.Rewards">Rewards</fbt>
-              </div>
-              <div
-                className="category-icon apparel"
-                onClick={() =>
-                  this.onCategoryClick({ subCategory: 'clothingAccessories' })
-                }
-              >
-                <fbt desc="Search.Apparel">Apparel</fbt>
-              </div>
-              <div
-                className="category-icon gift-cards"
-                onClick={() =>
-                  this.onCategoryClick({ subCategory: 'giftCards' })
-                }
-              >
-                <fbt desc="Search.GiftCards">Gift Cards</fbt>
-              </div>
-              <div
-                className="category-icon housing"
-                onClick={() => this.onCategoryClick({ subCategory: 'housing' })}
-              >
-                <fbt desc="Search.Housing">Housing</fbt>
-              </div>
+            <div
+              className="category-icon rewards"
+              onClick={() => this.onRewardsClick()}
+            >
+              <fbt desc="Search.Rewards">Rewards</fbt>
             </div>
-            <div className="featured-categories-row">
-              <div
-                className="category-icon services"
-                onClick={() => this.onCategoryClick({ category: 'services' })}
-              >
-                <fbt desc="Search.Services">Services</fbt>
-              </div>
-              <div
-                className="category-icon art"
-                onClick={() =>
-                  this.onCategoryClick({ subCategory: 'artsCrafts' })
-                }
-              >
-                <fbt desc="Search.Art">Art</fbt>
-              </div>
-              <div className="category-icon blank" />
-              <div className="category-icon blank" />
+            <div
+              className="category-icon apparel"
+              onClick={() =>
+                this.onCategoryClick({ subCategory: 'clothingAccessories' })
+              }
+            >
+              <fbt desc="Search.Apparel">Apparel</fbt>
             </div>
+            <div
+              className="category-icon gift-cards"
+              onClick={() => this.onCategoryClick({ subCategory: 'giftCards' })}
+            >
+              <fbt desc="Search.GiftCards">Gift Cards</fbt>
+            </div>
+            <div
+              className="category-icon housing"
+              onClick={() => this.onCategoryClick({ subCategory: 'housing' })}
+            >
+              <fbt desc="Search.Housing">Housing</fbt>
+            </div>
+            <div
+              className="category-icon services"
+              onClick={() => this.onCategoryClick({ category: 'services' })}
+            >
+              <fbt desc="Search.Services">Services</fbt>
+            </div>
+            <div
+              className="category-icon art"
+              onClick={() =>
+                this.onCategoryClick({ subCategory: 'artsCrafts' })
+              }
+            >
+              <fbt desc="Search.Art">Art</fbt>
+            </div>
+            <div className="category-icon blank" />
+            <div className="category-icon blank" />
           </div>
         </div>
       </div>
@@ -274,59 +268,57 @@ require('react-styl')(`
           margin: 0 0rem
 
         .featured-categories
-          display: block
+          display: flex
           margin: 0px
           width: 100%
+          flex-direction: row
+          justify-content: space-between
+          flex-wrap: wrap
 
-          .featured-categories-row
-            display: flex
-            flex-direction: row
-            justify-content: space-between
-            flex-wrap: wrap
+          .category-icon
+            max-width: 60px
+            flex: 0 0 25%
+            padding: 0 0px 15px
+            text-align: center
+            color: var(--dark)
+            font-size: 0.6rem
+            text-overflow: ellipsis
+            cursor: pointer
 
-            .category-icon
-              max-width: 60px
-              flex: 0 0 25%
-              padding: 0 0px 15px
-              text-align: center
-              color: var(--dark)
-              font-size: 0.6rem
-              text-overflow: ellipsis
-              cursor: pointer
-
-              &.blank
-                &:before 
-                  background-color: transparent
-              &.rewards
-                &:before
-                  background-color: #007fff
+            &.blank
+              cursor: auto
+              &:before 
+                background-color: transparent
+            &.rewards
               &:before
-                content: ''
-                display: block
-                width: 60px
-                height: 60px
-                background-color: #f0f6f9
-                border-radius: 50%
-                background-repeat: no-repeat
-                background-position: center
-                margin: 0 auto 5px
+                background-color: #007fff
+            &:before
+              content: ''
+              display: block
+              width: 60px
+              height: 60px
+              background-color: #f0f6f9
+              border-radius: 50%
+              background-repeat: no-repeat
+              background-position: center
+              margin: 0 auto 5px
 
-              &.apparel:before
-                background-image: url('images/categories/apparel-icon.svg')
-              &.rewards:before
-                background-image: url('images/origin-icon-white.svg')
-                background-size: 30px 34px
-              &.gift-cards:before
-                background-image: url('images/categories/gift-card-icon.svg')
-              &.housing:before
-                background-image: url('images/categories/housing-icon.svg')
-              &.services:before
-                background-image: url('images/categories/services-icon.svg')
-              &.art:before
-                background-image: url('images/categories/art-icon.svg')
+            &.apparel:before
+              background-image: url('images/categories/apparel-icon.svg')
+            &.rewards:before
+              background-image: url('images/origin-icon-white.svg')
+              background-size: 30px 34px
+            &.gift-cards:before
+              background-image: url('images/categories/gift-card-icon.svg')
+            &.housing:before
+              background-image: url('images/categories/housing-icon.svg')
+            &.services:before
+              background-image: url('images/categories/services-icon.svg')
+            &.art:before
+              background-image: url('images/categories/art-icon.svg')
 
-              &:last-of-type
-                margin-right: 0
+            &:last-of-type
+              margin-right: 0
 
     &:focus-within
       .form-control
