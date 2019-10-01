@@ -96,7 +96,8 @@ class RejectOffer extends Component {
     withdrawOffer({
       variables: {
         offerID: this.props.offer.id,
-        from: this.props.offer.listing.seller.id
+        from: this.props.offer.listing.seller.id,
+        isReject: true
       }
     })
   }

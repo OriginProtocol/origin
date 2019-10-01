@@ -20,7 +20,7 @@ async function withdrawOffer(_, data) {
   let gas = cost.withdrawOffer
 
   const owner = await proxyOwner(from)
-  if (owner) {
+  if (owner && !data.isReject) {
     const offer = await contract.methods.offers(listingId, offerId).call()
     const Proxy = new contracts.web3Exec.eth.Contract(IdentityProxy.abi, from)
     const txData = await tx.encodeABI()
