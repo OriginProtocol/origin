@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const { check, validationResult } = require('express-validator')
-const get = require('lodash.get')
 
 const { ensureLoggedIn } = require('../lib/login')
 const { asyncMiddleware } = require('../utils')
