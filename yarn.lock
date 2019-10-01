@@ -16666,7 +16666,7 @@ length-prefixed-stream@^2.0.0:
     readable-stream "^3.1.1"
     varint "^5.0.0"
 
-lerna@^3.16.4:
+lerna@3.16.4:
   version "3.16.4"
   resolved "https://registry.yarnpkg.com/lerna/-/lerna-3.16.4.tgz#158cb4f478b680f46f871d5891f531f3a2cb31ec"
   integrity sha512-0HfwXIkqe72lBLZcNO9NMRfylh5Ng1l8tETgYQ260ZdHRbPuaLKE3Wqnd2YYRRkWfwPyEyZO8mZweBR+slVe1A==

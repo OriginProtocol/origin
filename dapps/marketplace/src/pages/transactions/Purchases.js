@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { Query } from 'react-apollo'
 import dayjs from 'dayjs'
 import get from 'lodash/get'
