@@ -1,7 +1,7 @@
 import memoize from 'lodash/memoize'
 
 const MapCache = memoize.Cache
-const DontCache = ['0x', '0x0000000000000000000000000000000000000000']
+const DontCache = ['0x', '0x0', '0x00', '0x0000000000000000000000000000000000000000']
 
 /**
  * memorize is essentially memoize but only caches truthy values.
@@ -27,9 +27,21 @@ export default function memorize(func, resolver) {
     }
     const result = func.apply(this, args)
 
-    // Only cache truthy results
-    if (result && !DontCache.includes(result)) {
-      memorized.cache = cache.set(key, result) || cache
+    /**
+     * We only want to cache truthy results, and we can't afford to cache
+     * unresolved Promises here, either.  So make sure to set the cache only
+     * after a Promise been resolved.
+     */
+    if (result instanceof Promise) {
+      result.then(res => {
+        if (res && !DontCache.includes(res)) {
+          memorized.cache = cache.set(key, res) || cache
+        }
+      })
+    } else {
+      if (result && !DontCache.includes(result)) {
+        memorized.cache = cache.set(key, result) || cache
+      }
     }
 
     return result
