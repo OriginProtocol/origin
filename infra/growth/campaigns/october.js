@@ -855,7 +855,7 @@ const septemberConfig = {
     meet_franck: {
       titleKey: 'growth.share.content11.title',
       detailsKey: 'growth.share.content11.details',
-      image: 'images/growth/share-content11.jpg',
+      image: 'images/growth/share-content11.png',
       link: 'https://youtu.be/AQgqEKNTjFw',
       linkKey: 'growth.share.content11.link',
       post: {
@@ -906,7 +906,7 @@ const septemberConfig = {
     },
     origin_investors: {
       titleKey: 'growth.share.content15.title',
-      detailsKey: 'growth.share.content5.details',
+      detailsKey: 'growth.share.content15.details',
       image: 'images/growth/share-content15.png',
       link: 'https://www.originprotocol.com/video/tAyusRT3ZDQ',
       linkKey: 'growth.share.content15.link',
