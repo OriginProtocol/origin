@@ -85,7 +85,7 @@ export function singleUnitTests({
     })
 
     it('should navigate to the Add Listing page', async function() {
-      await clickByText(page, 'Add Listing')
+      await clickByText(page, 'Add Listing', 'a/span')
       await pic(page, 'add-listing')
     })
 
@@ -264,7 +264,7 @@ export function singleUnitTokenTests({
 
     it('should navigate to the Add Listing page', async function() {
       await changeAccount(page, seller)
-      await clickByText(page, 'Add Listing')
+      await clickByText(page, 'Add Listing', 'a/span')
       await pic(page, 'add-listing')
     })
 
@@ -296,7 +296,7 @@ export function singleUnitTokenTests({
 
     it('should allow price entry', async function() {
       await page.type('input[name=price]', '1')
-      
+
       await clickByText(page, 'Ethereum')
       await clickByText(page, 'Maker Dai')
       await clickByText(page, 'Origin Token')

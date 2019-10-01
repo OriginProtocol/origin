@@ -29,7 +29,7 @@ const options = {
     return err
   },
   context: ({ req }) => {
-    const operation = req.body
+    const operation = req ? req.body : null
     if (operation && operation.query) {
       /**
        * TODO: Maybe check how apollo parses queries and use the same parser.
