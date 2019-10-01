@@ -964,39 +964,56 @@ describe('Marketplace', function() {
   })
 
   describe.only('proxy utils', function() {
-    let eventAddress,
-      predictedAddress
+    let eventAddress, predictedAddress
 
     it('should show no proxy', async function() {
       contracts.config.proxyAccountsEnabled = true
 
       predictedAddress = await predictedProxy(ProxyUser)
-      assert(await hasProxy(ProxyUser) === false, 'hasProxy should have returned false')
+      assert(
+        (await hasProxy(ProxyUser)) === false,
+        'hasProxy should have returned false'
+      )
     })
 
     it('should deploy a proxy', async function() {
       assert(typeof ProxyUser !== 'undefined', 'ProxyUser undefined')
-      const receipt = await mutate(
-        mutations.DeployProxy,
-        {
-          from: ProxyUser,
-          owner: ProxyUser
-        }
-      )
+      const receipt = await mutate(mutations.DeployProxy, {
+        from: ProxyUser,
+        owner: ProxyUser
+      })
       assert(receipt.status, 'transaction failed')
       assert(receipt.logs.length === 2, 'unexpected logs length')
-      assert(receipt.logs[1].topics.length === 1, `unexpected topics length: ${receipt.logs[1].topics.length}`)
+      assert(
+        receipt.logs[1].topics.length === 1,
+        `unexpected topics length: ${receipt.logs[1].topics.length}`
+      )
       // ProxyCreation(address)
-      assert(receipt.logs[1].topics[0] === '0xa38789425dbeee0239e16ff2d2567e31720127fbc6430758c1a4efc6aef29f80', 'unexpected event')
+      assert(
+        receipt.logs[1].topics[0] ===
+          '0xa38789425dbeee0239e16ff2d2567e31720127fbc6430758c1a4efc6aef29f80',
+        'unexpected event'
+      )
       assert(receipt.logs[1].data.length === 66, 'unexpected data')
-      eventAddress = contracts.web3.utils.toChecksumAddress(receipt.logs[1].data.slice(receipt.logs[1].data.length - 40))
+      eventAddress = contracts.web3.utils.toChecksumAddress(
+        receipt.logs[1].data.slice(receipt.logs[1].data.length - 40)
+      )
     })
 
     it('should show a proxy', async function() {
       const addr = await hasProxy(ProxyUser)
-      assert(addr === predictedAddress, 'hasProxy did not return predicted address')
-      assert(addr === eventAddress, 'event address does not match hasProxy address')
-      assert(await proxyOwner(addr) === ProxyUser, 'ProxyUser not proxy owner')
+      assert(
+        addr === predictedAddress,
+        'hasProxy did not return predicted address'
+      )
+      assert(
+        addr === eventAddress,
+        'event address does not match hasProxy address'
+      )
+      assert(
+        (await proxyOwner(addr)) === ProxyUser,
+        'ProxyUser not proxy owner'
+      )
 
       contracts.config.proxyAccountsEnabled = false
     })

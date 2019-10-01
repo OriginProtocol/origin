@@ -1,7 +1,12 @@
 import memoize from 'lodash/memoize'
 
 const MapCache = memoize.Cache
-const DontCache = ['0x', '0x0', '0x00', '0x0000000000000000000000000000000000000000']
+const DontCache = [
+  '0x',
+  '0x0',
+  '0x00',
+  '0x0000000000000000000000000000000000000000'
+]
 
 /**
  * memorize is essentially memoize but only caches truthy values.
