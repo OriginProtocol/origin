@@ -21,12 +21,12 @@
     "commander": "^3.0.0",
     "ganache-core": "2.4.0",
     "http-proxy": "1.18.0",
-    "ipfs": "^0.37.1",
+    "ipfs": "^0.38.0",
     "ipfs-api": "^26.1.2",
     "memdown": "^5.0.0"
   },
   "devDependencies": {
-    "eslint": "6.4.0",
+    "eslint": "6.5.1",
     "prettier": "1.18.2"
   },
   "prettier": {
