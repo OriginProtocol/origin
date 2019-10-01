@@ -869,11 +869,11 @@ const septemberConfig = {
       titleKey: 'growth.share.content12.title',
       detailsKey: 'growth.share.content12.details',
       image: 'images/growth/share-content12.png',
-      link: 'https://www.originprotocol.com/video/OHRkJwdIclE',
+      link: 'https://www.originprotocol.com/en/video/rodolfo-gonzalez-foundation-capital',
       linkKey: 'growth.share.content12.link',
       post: {
         tweet: {
-          default: `As an investor in @OriginProtocol, Foundation Capital is now betting on a better, #decentralized future for the sharing economy. https://www.originprotocol.com/en/video/OHRkJwdIclE`,
+          default: `As an investor in @OriginProtocol, Foundation Capital is now betting on a better, #decentralized future for the sharing economy. https://www.originprotocol.com/en/video/rodolfo-gonzalez-foundation-capital`,
           translations: [ ]
         }
       }
@@ -882,11 +882,11 @@ const septemberConfig = {
       titleKey: 'growth.share.content13.title',
       detailsKey: 'growth.share.content13.details',
       image: 'images/growth/share-content13.png',
-      link: 'https://www.originprotocol.com/video/5zsz1wUFmps',
+      link: 'https://www.originprotocol.com/en/video/yu-pan-paypal-cofounder-and-first-youtube-engineer',
       linkKey: 'growth.share.content13.link',
       post: {
         tweet: {
-          default: `Meet Yu Pan: PayPal's Co-founder, first YouTube engineer and now a R&D engineer at @OriginProtocol. https://www.originprotocol.com/video/5zsz1wUFmps`,
+          default: `Meet Yu Pan: PayPal's Co-founder, first YouTube engineer and now a R&D engineer at @OriginProtocol. https://www.originprotocol.com/en/video/yu-pan-paypal-cofounder-and-first-youtube-engineer`,
           translations: [ ]
         }
       }
@@ -906,13 +906,13 @@ const septemberConfig = {
     },
     origin_investors: {
       titleKey: 'growth.share.content15.title',
-      detailsKey: 'growth.share.content5.details',
+      detailsKey: 'growth.share.content15.details',
       image: 'images/growth/share-content15.png',
-      link: 'https://www.originprotocol.com/video/tAyusRT3ZDQ',
+      link: 'https://www.originprotocol.com/en/video/origin-investor-video',
       linkKey: 'growth.share.content15.link',
       post: {
         tweet: {
-          default: `Here is why investors believe in @OriginProtocol. https://www.originprotocol.com/video/tAyusRT3ZDQ`,
+          default: `Here is why investors believe in @OriginProtocol. https://www.originprotocol.com/en/video/origin-investor-video`,
           translations: [ ]
         }
       }
