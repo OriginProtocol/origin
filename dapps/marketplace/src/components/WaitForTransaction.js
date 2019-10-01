@@ -133,7 +133,7 @@ const WaitForTransaction = props => {
     content = <Error />
   } else if (!receipt || !confirmedBlock) {
     content = <WaitForFirstBlock />
-  } else if (receipt && confirmedBlock && receipt.status === 0) {
+  } else if (receipt && confirmedBlock && receipt.status === false) {
     const msg = `Transaction reverted (tx: ${hash})`
     console.error(msg)
     Sentry.captureException(new Error(msg))
