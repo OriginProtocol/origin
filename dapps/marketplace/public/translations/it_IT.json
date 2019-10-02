@@ -114,7 +114,7 @@
   "4m17sO": "Verifica il tuo sito web",
   "1E0NSv": "Crea un annuncio",
   "3ADm97": "Acquista un annuncio",
-  "21aIjW": {
+  "TTtiK": {
     "growth.jan2019.name": "Campagna di Gennaio 2019",
     "growth.jan2019.short_name": "Gen 2019",
     "growth.feb2019.name": "Campagna di Febbraio 2019",
@@ -133,8 +133,8 @@
     "growth.aug2019.short_name": "Agosto 2019",
     "growth.sep2019.name": "Campagna di Settembre 2019",
     "growth.sep2019.short_name": "Settembre 2019",
-    "growth.oct2019.name": "October 2019 Campaign",
-    "growth.oct2019.short_name": "October 2019",
+    "growth.oct2019.name": "Campagna di Ottobre 2019",
+    "growth.oct2019.short_name": "Ottobre 2019",
     "growth.profile.and.email.requirement": "Email e profilo Origin verificati",
     "growth.two.attestations.requirement": "Due verifiche del profilo",
     "growth.profile.requirement": "Nome e foto del profilo",
@@ -254,9 +254,18 @@
     "growth.share.content10.title": "Commercio decentralizzato in Venezuela",
     "growth.share.content10.details": "Telefoni cellulari a basso prezzo possono dare ai 2 miliardi di unbanked access a marketplaces basati sulla blockchain.",
     "growth.share.content10.link": "Leggi l'articolo",
-    "growth.purchase.listing-1-000-3197.title": "Korea Traditional House",
-    "growth.share.content11.title": "Meet Franck Chastagnol, Senior Engineer at Origin",
-    "growth.share.content11.details": "Franck, Senior Engineer at Origin talks about the future of decentralized sharing economy & how to participate in Origin Rewards.",
+    "growth.purchase.listing-1-000-3197.title": "Casa Tradizionale Coreana",
+    "growth.purchase.listing-1-000-3212.title": "Hanokstay in Hanok Village of Downtown Seoul",
+    "growth.purchase.listing-1-000-3200.title": "Caramel Popcorn by LaCotu",
+    "growth.purchase.listing-1-000-3203.title": "ChéverePixels Portarretratos",
+    "growth.purchase.listing-1-000-3204.title": "ChéverePixels Space Invader",
+    "growth.purchase.listing-1-000-3205.title": "Perros Calientes La elegancia",
+    "growth.purchase.listing-1-000-3211.title": "ChéverePixels - Mario",
+    "growth.purchase.listing-1-000-3206.title": "ChéverePixels",
+    "growth.purchase.listing-1-000-3208.title": "ChéverePixels Avenger - R2D2",
+    "growth.purchase.listing-1-000-3209.title": "ChéverePixels - Unicornio",
+    "growth.share.content11.title": "Incontriamo Franck Chastagnol, Ingegnere Senior di Origin",
+    "growth.share.content11.details": "Franck, ingegnere senior di Origin, parla del futuro della sharing economy decentralizzata e di come partecipare a Origin Rewards.",
     "growth.share.content11.link": "Guarda il video",
     "growth.share.content12.title": "Rodolfo Gonzalez Shares Why Foundation Capital Invested in Origin",
     "growth.share.content12.details": "As an investor in Origin, Foundation Capital is now betting on a better, decentralized future for the sharing economy.",
@@ -1296,5 +1305,5 @@
   "3NuPlb": "Token di Origin",
   "3JTZtf": "Ether è buono per le inserzioni a breve termine.",
   "3eoCca": "Maker Dai è adatto per le inserzioni a lungo termine come affitti o vendite di proprietà.",
-  "4xJpDb": "Token di Origin"
+  "214S0w": "Useful for promoting other listings"
 }

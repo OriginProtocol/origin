@@ -838,6 +838,177 @@ const septemberConfig = {
             titleKey: 'growth.purchase.listing-1-000-3197.title',
             detailsKey: 'growth.purchase.empty.details'
           }
+        },
+        {
+          id: 'ListingPurchase1-000-3212',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-3212',
+            reward: {
+              amount: tokenToNaturalUnits(60),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-3212-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-3212.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-3200',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-3200',
+            reward: {
+              amount: tokenToNaturalUnits(3),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-3200-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-3200.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-3203',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-3203',
+            reward: {
+              amount: tokenToNaturalUnits(3),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-3203-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-3203.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-3204',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-3204',
+            reward: {
+              amount: tokenToNaturalUnits(3),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-3204-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-3204.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-3205',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-3205',
+            reward: {
+              amount: tokenToNaturalUnits(3),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-3205-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-3205.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-3211',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-3211',
+            reward: {
+              amount: tokenToNaturalUnits(3),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-3211-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-3211.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-3206',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-3206',
+            reward: {
+              amount: tokenToNaturalUnits(3),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-3206-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-3206.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-3208',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-3208',
+            reward: {
+              amount: tokenToNaturalUnits(3),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-3208-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-3208.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
+        },
+        {
+          id: 'ListingPurchase1-000-3209',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-000-3209',
+            reward: {
+              amount: tokenToNaturalUnits(3),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-000-3209-icon.png',
+            titleKey: 'growth.purchase.listing-1-000-3209.title',
+            detailsKey: 'growth.purchase.empty.details'
+          }
         }
       ]
     }
@@ -869,11 +1040,11 @@ const septemberConfig = {
       titleKey: 'growth.share.content12.title',
       detailsKey: 'growth.share.content12.details',
       image: 'images/growth/share-content12.png',
-      link: 'https://www.originprotocol.com/en/video/rodolfo-gonzalez-foundation-capital',
+      link: 'https://www.originprotocol.com/video/rodolfo-gonzalez-foundation-capital',
       linkKey: 'growth.share.content12.link',
       post: {
         tweet: {
-          default: `As an investor in @OriginProtocol, Foundation Capital is now betting on a better, #decentralized future for the sharing economy. https://www.originprotocol.com/en/video/rodolfo-gonzalez-foundation-capital`,
+          default: `As an investor in @OriginProtocol, Foundation Capital is now betting on a better, #decentralized future for the sharing economy. https://www.originprotocol.com/video/rodolfo-gonzalez-foundation-capital`,
           translations: [ ]
         }
       }
@@ -882,11 +1053,11 @@ const septemberConfig = {
       titleKey: 'growth.share.content13.title',
       detailsKey: 'growth.share.content13.details',
       image: 'images/growth/share-content13.png',
-      link: 'https://www.originprotocol.com/en/video/yu-pan-paypal-cofounder-and-first-youtube-engineer',
+      link: 'https://www.originprotocol.com/video/yu-pan-paypal-cofounder-and-first-youtube-engineer',
       linkKey: 'growth.share.content13.link',
       post: {
         tweet: {
-          default: `Meet Yu Pan: PayPal's Co-founder, first YouTube engineer and now a R&D engineer at @OriginProtocol. https://www.originprotocol.com/en/video/yu-pan-paypal-cofounder-and-first-youtube-engineer`,
+          default: `Meet Yu Pan: PayPal's Co-founder, first YouTube engineer and now a R&D engineer at @OriginProtocol. https://www.originprotocol.com/video/yu-pan-paypal-cofounder-and-first-youtube-engineer`,
           translations: [ ]
         }
       }
@@ -899,7 +1070,7 @@ const septemberConfig = {
       linkKey: 'growth.share.content14.link',
       post: {
         tweet: {
-          default: `@OriginProtocol was live on TV with HKB News in Korea! Check out the interview in this blog post: https://medium.com/originprotocol/live-on-tv-with-hkb-news-in-korea-a6636be60eef`,
+          default: `Did you know @OriginProtocol was live on TV with HKB News in Korea? Check out this blog for more info: https://medium.com/originprotocol/live-on-tv-with-hkb-news-in-korea-a6636be60eef`,
           translations: [ ]
         }
       }
@@ -908,11 +1079,11 @@ const septemberConfig = {
       titleKey: 'growth.share.content15.title',
       detailsKey: 'growth.share.content15.details',
       image: 'images/growth/share-content15.png',
-      link: 'https://www.originprotocol.com/en/video/origin-investor-video',
+      link: 'https://www.originprotocol.com/video/origin-investor-video',
       linkKey: 'growth.share.content15.link',
       post: {
         tweet: {
-          default: `Here is why investors believe in @OriginProtocol. https://www.originprotocol.com/en/video/origin-investor-video`,
+          default: `Here is why investors believe in @OriginProtocol. https://www.originprotocol.com/video/origin-investor-video`,
           translations: [ ]
         }
       }
