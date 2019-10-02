@@ -8,6 +8,8 @@ import { getIdsForPage, getConnection } from './_pagination'
 import validateAttestation from '../utils/validateAttestation'
 import { proxyOwner, hasProxy } from '../utils/proxy'
 
+const MAX_EVENT_IPFS_FETCH = 3
+
 const progressPct = {
   firstName: 10,
   lastName: 10,
@@ -223,14 +225,16 @@ export function identity({ id, ipfsHash }) {
 
     // Go through each hash until we get valid data
     let data
+    let fetchCount = 0
     for (const hash of ipfsHashes) {
       // TODO: Timeout too long?  What's reasonable here?
       try {
         data = await originIpfs.get(contracts.ipfsGateway, hash, 5000)
+        fetchCount += 1
       } catch (err) {
         console.warn('error fetching identity data', err)
       }
-      if (data) break
+      if (data || fetchCount >= MAX_EVENT_IPFS_FETCH) break
     }
     if (!data) {
       return resolve(null)
