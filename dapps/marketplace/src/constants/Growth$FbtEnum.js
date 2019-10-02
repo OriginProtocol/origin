@@ -204,6 +204,16 @@ const Growth$FbtEnum = {
 
   // October campaign.
   'growth.purchase.listing-1-000-3197.title': 'Korea Traditional House',
+  'growth.purchase.listing-1-000-3212.title':
+    'Hanokstay in Hanok Village of Downtown Seoul',
+  'growth.purchase.listing-1-000-3200.title': 'Caramel Popcorn by LaCotu',
+  'growth.purchase.listing-1-000-3203.title': 'ChéverePixels Portarretratos',
+  'growth.purchase.listing-1-000-3204.title': 'ChéverePixels Space Invader',
+  'growth.purchase.listing-1-000-3205.title': 'Perros Calientes La elegancia',
+  'growth.purchase.listing-1-000-3211.title': 'ChéverePixels - Mario',
+  'growth.purchase.listing-1-000-3206.title': 'ChéverePixels',
+  'growth.purchase.listing-1-000-3208.title': 'ChéverePixels Avenger - R2D2',
+  'growth.purchase.listing-1-000-3209.title': 'ChéverePixels - Unicornio',
 
   'growth.share.content11.title':
     'Meet Franck Chastagnol, Senior Engineer at Origin',
