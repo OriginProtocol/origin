@@ -3,8 +3,17 @@
 const fs = require('fs')
 const template = require('lodash/template')
 const sendgridMail = require('@sendgrid/mail')
+const jwt = require('jsonwebtoken')
 
-const { sendgridFromEmail, sendgridApiKey } = require('../config')
+const { User } = require('../models')
+const {
+  encryptionSecret,
+  portalUrl,
+  sendgridFromEmail,
+  sendgridApiKey
+} = require('../config')
+const logger = require('../logger')
+
 sendgridMail.setApiKey(sendgridApiKey)
 
 // Load and compile the email templates.
@@ -78,4 +87,27 @@ async function sendEmail(to, emailType, vars) {
   })
 }
 
-module.exports = { sendEmail }
+async function sendLoginToken(email) {
+  // Check the user exists before sending an email code.
+  const user = await User.findOne({ where: { email } })
+  if (user) {
+    const token = jwt.sign(
+      {
+        email
+      },
+      encryptionSecret,
+      { expiresIn: '5m' }
+    )
+
+    const vars = { url: `${portalUrl}/login_handler/${token}` }
+    await sendEmail(user.email, 'login', vars)
+    logger.info(`Sent email token to ${email}`)
+  } else {
+    // Do nothing in case email not found in our DB.
+    // But do not let the caller know by returning anything different,
+    // to avoid tipping them on whether or not the email exists.
+    logger.warn(`Email ${email} not found in DB. No token sent.`)
+  }
+}
+
+module.exports = { sendEmail, sendLoginToken }
