@@ -17,8 +17,8 @@ const DontCache = [
  */
 export default function memorize(func, resolver) {
   if (
-    typeof func != 'function' ||
-    (resolver != null && typeof resolver != 'function')
+    typeof func !== 'function' ||
+    (resolver !== null && typeof resolver !== 'function')
   ) {
     throw new TypeError('Not a function')
   }
