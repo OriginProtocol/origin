@@ -1,7 +1,6 @@
 // Ensure storage is cleared on each deploy
 const appHash = process.env.GIT_COMMIT_HASH || 'marketplace'
 const ognNetwork = localStorage.ognNetwork
-
 if (localStorage.appHash !== appHash) {
   let exceptions = ['growth_auth_token']
   exceptions = exceptions
