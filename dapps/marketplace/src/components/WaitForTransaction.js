@@ -133,8 +133,15 @@ const WaitForTransaction = props => {
     content = <Error />
   } else if (!receipt || !confirmedBlock) {
     content = <WaitForFirstBlock />
+  } else if (receipt && confirmedBlock && receipt.status === false) {
+    const msg = `Transaction reverted (tx: ${hash})`
+    console.error(msg)
+    Sentry.captureException(new Error(msg))
+    content = <Error />
   } else if (!foundEvent) {
-    console.error('Expected event not found')
+    const msg = `Expected event not found (tx: ${hash})`
+    console.error(msg)
+    Sentry.captureException(new Error(msg))
     content = <Error />
   } else if (currentBlock <= confirmedBlock) {
     content = <WaitForConfirmation />
