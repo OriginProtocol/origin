@@ -7,6 +7,7 @@ export default gql`
       transactionReceipt(id: $id) {
         id
         blockNumber
+        status
         events {
           id
           event

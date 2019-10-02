@@ -11,7 +11,7 @@ const { tokenToNaturalUnits } = require('../src/util/token')
 
 function checkExpectedState(state, expectedState) {
   expect(state.rewardEarned).to.deep.equal(expectedState.rewardEarned)
-  expect(state.actions.length).to.equal(44) // Note: adjust based on number of rules.
+  expect(state.actions.length).to.equal(53) // Note: adjust based on number of rules.
 
   const actionByRuleId = {}
   for(const action of state.actions) {
@@ -102,7 +102,7 @@ describe('Apollo adapter - October campaign', () => {
     expect(this.crules.levels[1]).to.be.an('object')
     expect(this.crules.levels[1].rules.length).to.equal(24) // Note: adjust based on number of rules.
     expect(this.crules.levels[2]).to.be.an('object')
-    expect(this.crules.levels[2].rules.length).to.equal(19) // Note: adjust based on number of rules.
+    expect(this.crules.levels[2].rules.length).to.equal(28) // Note: adjust based on number of rules.
 
     this.userA = '0xA123'
     this.userB = '0xB456'
@@ -735,7 +735,7 @@ describe('Apollo adapter - October campaign', () => {
       {
         id: 17,
         type: GrowthEventTypes.SharedOnTwitter,
-        customId: 'bd62009c982dbfa00725a32530858bd6',
+        customId: '1c1a58b843d10e79fc704daeb0284b72',
         data: {
           twitterProfile: {
             verified: false,
