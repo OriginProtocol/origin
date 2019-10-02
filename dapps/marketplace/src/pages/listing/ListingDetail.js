@@ -101,6 +101,7 @@ class ListingDetail extends Component {
             'ListingDetail.othersFromSeller'
           )}
           hideIfEmpty={true}
+          excludeListing={listing.id}
         />
       </div>
     )

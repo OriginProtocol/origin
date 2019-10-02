@@ -8,6 +8,10 @@ try {
 
 const express = require('express')
 const app = express()
+const Sentry = require('@sentry/node')
+if (process.env.NODE_ENV === 'production' && process.env.SENTRY_DSN) {
+  Sentry.init({ dsn: process.env.SENTRY_DSN })
+}
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const passport = require('passport')

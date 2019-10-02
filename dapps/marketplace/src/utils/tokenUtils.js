@@ -34,7 +34,7 @@ export function getTokenTooltip(token) {
         'pricingChooser.dai'
       )
     case 'token-OGN':
-      return fbt('Origin Token', 'pricingChooser.ogn')
+      return fbt('Useful for promoting other listings', 'pricingChooser.ogn')
   }
 
   return null

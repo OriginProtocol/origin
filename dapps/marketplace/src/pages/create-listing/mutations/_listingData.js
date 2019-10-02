@@ -40,7 +40,9 @@ export function getStateFromListing(props) {
       'seller',
       'unitsAvailable'
     ]),
-    acceptedTokens: tokens.length ? tokens : ['token-ETH'],
+    // For new listings, there is no default selection.
+    // However, for old listings, if no token is specified, default selection to ETH.
+    acceptedTokens: props.listing.id && !tokens.length ? ['token-ETH'] : tokens,
     quantity: String(props.listing.unitsTotal),
     currency: get(props, 'listing.price.currency.id', ''),
     price: String(props.listing.price.amount),
