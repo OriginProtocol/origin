@@ -4,9 +4,7 @@ const ognNetwork = localStorage.ognNetwork
 if (localStorage.appHash !== appHash) {
   let exceptions = ['growth_auth_token']
   exceptions = exceptions
-    .map(key => {
-      return { key, value: localStorage.getItem(key) }
-    })
+    .map(key => ({ key, value: localStorage.getItem(key) })
     .filter(localStorageEntry => localStorageEntry.value !== null)
   localStorage.clear()
   exceptions.forEach(localStorageEntry =>
