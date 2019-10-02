@@ -108,3 +108,10 @@ watch(consistencyQueue)
 consistencyQueue.process(jobsPath + 'consistency.js')
 consistencyQueue.add({ persist: false }, { repeat: { cron: '30 23 * * *' } })
 logger.info('Scheduled consistencyChecker job.')
+
+// Revert checker job.  Runs daily at 23:00UTC
+const revertAlertQueue = new Queue('revertAlert', redisUrl)
+watch(revertAlertQueue)
+revertAlertQueue.process(jobsPath + 'revertAlertJob.js')
+revertAlertQueue.add({ persist: false }, { repeat: { cron: '0 23 * * *' } })
+logger.info('Scheduled revertAlert job.')

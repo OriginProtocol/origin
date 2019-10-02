@@ -23,22 +23,21 @@ const HelpIcon = ({ tooltip }) => (
 
 const AcceptedTokenListItem = ({ selected, onSelect, token, hideTooltip }) => {
   return (
-    <div
-      className={`accepted-token-list-item${
-        selected ? ' active' : ' disabled'
-      }`}
-      onClick={() => onSelect(token)}
-    >
-      {tokenToCoinLogoMap[token] && (
-        <CoinLogo coin={tokenToCoinLogoMap[token]} className="lg" />
-      )}
-      <div className="name">
-        {getTokenName(token)}
-        {` `}
-        <div className="symbol">{getTokenSymbol(token)}</div>
+    <div className="accepted-token-list-item" onClick={() => onSelect(token)}>
+      <div className={`token-info${selected ? ' active' : ' disabled'}`}>
+        {tokenToCoinLogoMap[token] && (
+          <CoinLogo coin={tokenToCoinLogoMap[token]} className="lg" />
+        )}
+        <div className="name">
+          {getTokenName(token)}
+          {` `}
+          <div className="symbol">{getTokenSymbol(token)}</div>
+        </div>
       </div>
       {hideTooltip === true ? null : (
-        <HelpIcon tooltip={getTokenTooltip(token)} />
+        <div className="token-tooltip">
+          <HelpIcon tooltip={getTokenTooltip(token)} />
+        </div>
       )}
     </div>
   )
@@ -49,28 +48,45 @@ export default AcceptedTokenListItem
 require('react-styl')(`
   .accepted-token-list-item
     display: flex
-    border: 1px solid #c0cbd4
-    background: #eaf0f3
-    padding: 0.5rem 1rem
-    border-radius: 0.5rem
-    font-size: 20px
     align-items: center
-    cursor: pointer
-    &:not(:last-child)
-      margin-bottom: 0.5rem
-    &.disabled
-      background-color: white
-      opacity: 1
-      .coin-price
-        filter: grayscale(100%)
-    .name
-      margin-right: auto
+    margin-bottom: 0.5rem
+    .token-info
       display: flex
-      align-items: baseline
-      margin-left: 0.5rem
-      .symbol
-        font-size: 14px
-        color: var(--bluey-grey)
-        font-weight: bold
+      flex: 1
+      border: solid 1px #6a8296
+      background-color: #eaf0f3
+      padding: 0.5rem 1rem
+      border-radius: 0.5rem
+      font-size: 20px
+      align-items: center
+      cursor: pointer
+      &.disabled
+        background-color: white
+        opacity: 1
+        border-color: #c2cbd3
+        .coin-price
+          filter: grayscale(100%)
+      &.active:after
+        background-image: url('images/checkmark-blue.svg')
+        background-size: 1.5rem
+        background-repeat: no-repeat
+        background-position: center
+        display: inline-block
+        width: 2rem
+        content: ''
+        height: 1.5rem
+      .name
+        margin-right: auto
+        display: flex
+        align-items: baseline
         margin-left: 0.5rem
+        .symbol
+          font-size: 14px
+          color: var(--bluey-grey)
+          font-weight: bold
+          margin-left: 0.5rem
+    .token-tooltip
+      padding: 0 1rem
+      display: flex
+      align-items: center
 `)
