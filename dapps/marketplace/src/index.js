@@ -1,8 +1,19 @@
 // Ensure storage is cleared on each deploy
 const appHash = process.env.GIT_COMMIT_HASH || 'marketplace'
 const ognNetwork = localStorage.ognNetwork
+
 if (localStorage.appHash !== appHash) {
+  let exceptions = ['growth_auth_token']
+  exceptions = exceptions
+    .map(key => {
+      return { key, value: localStorage.getItem(key) }
+    })
+    .filter(localStorageEntry => localStorageEntry.value !== null)
   localStorage.clear()
+  exceptions.forEach(localStorageEntry =>
+    localStorage.setItem(localStorageEntry.key, localStorageEntry.value)
+  )
+
   sessionStorage.clear()
   localStorage.appHash = appHash
   localStorage.ognNetwork = ognNetwork
