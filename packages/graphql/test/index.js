@@ -963,7 +963,7 @@ describe('Marketplace', function() {
     })
   })
 
-  describe.only('proxy utils', function() {
+  describe('proxy utils', function() {
     let eventAddress, predictedAddress
 
     it('should show no proxy', async function() {
