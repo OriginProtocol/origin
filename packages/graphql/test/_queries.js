@@ -129,9 +129,33 @@ const GetListing = gql`
   }
 `
 
+const Wallet = gql`
+  query Wallet {
+    web3 {
+      metaMaskAccount {
+        id
+      }
+      walletType
+      mobileWalletAccount {
+        id
+      }
+      primaryAccount {
+        id
+        proxy {
+          id
+        }
+        predictedProxy {
+          id
+        }
+      }
+    }
+  }
+`
+
 export default {
   GetNodeAccounts,
   GetReceipt,
   GetAllOffers,
-  GetListing
+  GetListing,
+  Wallet
 }
