@@ -22,10 +22,11 @@ import Store from 'utils/store'
 const store = Store('sessionStorage')
 
 function initialState(props) {
+  const isOldListing = props.listing && props.listing.id
   // If a listing is passed in (as when editing) use that, otherwise
   // fall back to anything in `store` (an unfinished listing creation)
   const existingListing =
-    (props.listing && props.listing.id
+    (isOldListing
       ? store.get(`edit-listing-${props.listing.id}`, props.listing)
       : store.get('create-listing')) || {}
 
@@ -45,7 +46,7 @@ function initialState(props) {
     quantity: '1',
     price: '',
     currency: 'fiat-USD',
-    acceptedTokens: ['token-ETH', 'token-DAI', 'token-OGN'],
+    acceptedTokens: isOldListing ? ['token-ETH', 'token-DAI', 'token-OGN'] : [],
 
     // Fractional fields:
     timeZone: '',

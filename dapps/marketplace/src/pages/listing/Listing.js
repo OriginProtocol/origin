@@ -32,13 +32,19 @@ const error404 = (
 const Listing = props => {
   const listingId = props.match.params.listingID
 
+  const [redirect, setRedirect] = useState()
   const [quantity, setQuantity] = useState(
     sessionStore.get(`${listingId}-quantity`, '1')
   )
-  const [redirect, setRedirect] = useState()
-  const [shippingAddress, setShippingAddress] = useState(null)
-  const [bookingRange, setBookingRange] = useState(null)
-  const [paymentMethod, setPaymentMethod] = useState(null)
+  const [shippingAddress, setShippingAddress] = useState(
+    sessionStore.get(`${listingId}-shipping`, null)
+  )
+  const [bookingRange, setBookingRange] = useState(
+    sessionStore.get(`${listingId}-booking-range`, null)
+  )
+  const [paymentMethod, setPaymentMethod] = useState(
+    sessionStore.get(`${listingId}-payment-method`, null)
+  )
 
   const variables = { listingId }
 
@@ -108,7 +114,10 @@ const Listing = props => {
               quantity={quantity}
               bookingRange={bookingRange}
               paymentMethod={paymentMethod}
-              setPaymentMethod={setPaymentMethod}
+              setPaymentMethod={paymentMethod => {
+                sessionStore.set(`${listingId}-payment-method`, paymentMethod)
+                setPaymentMethod(paymentMethod)
+              }}
               next={`/listing/${listing.id}/${
                 listing.requiresShipping ? 'shipping' : 'confirm'
               }`}
@@ -120,9 +129,10 @@ const Listing = props => {
           render={() => (
             <ShippingDetails
               listing={listing}
-              updateShippingAddress={shippingAddress =>
+              updateShippingAddress={shippingAddress => {
+                sessionStore.set(`${listingId}-shipping`, shippingAddress)
                 setShippingAddress(shippingAddress)
-              }
+              }}
               next={`/listing/${listingId}/confirm`}
               paymentMethod={paymentMethod}
             />
@@ -151,7 +161,10 @@ const Listing = props => {
                 sessionStore.set(`${listingId}-quantity`, quantity)
                 setQuantity(quantity)
               }}
-              updateBookingRange={bookingRange => setBookingRange(bookingRange)}
+              updateBookingRange={bookingRange => {
+                sessionStore.set(`${listingId}-booking-range`, bookingRange)
+                setBookingRange(bookingRange)
+              }}
               shippingAddress={shippingAddress}
             />
           )}

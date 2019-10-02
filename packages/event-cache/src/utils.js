@@ -56,11 +56,11 @@ function validateParams(contract, params) {
   if (params.event) {
     if (params.event instanceof Array) {
       if (!params.event.every(ev => availableEvents.includes(ev))) {
-        console.warning('At least one event does not exist in contract')
+        console.warn('At least one event does not exist in contract')
         return false
       }
     } else if (!availableEvents.includes(params.event)) {
-      console.warning(`event does not exist in contract`)
+      console.warn(`event does not exist in contract`)
       debug(`expected ${params.event}`)
       return false
     }

@@ -293,7 +293,7 @@ export function setNetwork(net, customConfig) {
 
   setProxyContracts(config)
 
-  if (config.performanceMode && context.config.graphql) {
+  if (config.performanceMode && context.config.graphql && net !== 'test') {
     queryForBlocks()
   } else if (config.providerWS) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))

@@ -400,6 +400,15 @@ class IdentityEventHandler {
       return null
     }
 
+    // Skip malformed event.
+    // See https://github.com/OriginProtocol/origin/issues/3581
+    if (event.blockNumber === 8646689 && event.transactionIndex === 97) {
+      logger.warn(
+        'Skipping malformed event blockNumber=8646689 transactionIndex=97'
+      )
+      return null
+    }
+
     const account = event.returnValues.account
 
     logger.info(`Processing Identity event for account ${account}`)
