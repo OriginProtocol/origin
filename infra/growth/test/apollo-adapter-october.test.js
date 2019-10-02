@@ -735,7 +735,7 @@ describe('Apollo adapter - October campaign', () => {
       {
         id: 17,
         type: GrowthEventTypes.SharedOnTwitter,
-        customId: 'bd62009c982dbfa00725a32530858bd6',
+        customId: '5f1f0bf76ee75b38155f43d0ee452558',
         data: {
           twitterProfile: {
             verified: false,
