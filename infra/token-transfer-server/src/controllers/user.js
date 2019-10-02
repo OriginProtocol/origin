@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { check, validationResult } = require('express-validator')
+const _ = require('lodash')
 
 const { ensureLoggedIn } = require('../lib/login')
 const { asyncMiddleware } = require('../utils')
@@ -12,7 +13,16 @@ router.get(
   '/user',
   ensureLoggedIn,
   asyncMiddleware(async (req, res) => {
-    res.json(req.user)
+    res.json(
+      _.pick(req.user, [
+        'email',
+        'employee',
+        'name',
+        'phone',
+        'revisedScheduleAgreedAt',
+        'termsAgreedAt'
+      ])
+    )
   })
 )
 
