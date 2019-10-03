@@ -8,7 +8,7 @@ const smallScreen = height < 812
 export default StyleSheet.create({
   // Ganeral background
   greyBackground: {
-    backgroundColor: '#f7f8f8',
+    backgroundColor: '#f7f8f8'
   },
   // Dark background colour used by modals
   darkOverlay: {
