@@ -52,6 +52,13 @@ const AccountItem = ({ item, navigation, settings, wallet }) => {
             address={item.address}
             label={fbt('Address', 'AccountItem.address')}
             styles={{ marginTop: 4 }}
+            onPress={() =>
+              navigation.navigate('Account', {
+                account: {
+                  ...item
+                }
+              })
+            }
           />
         </View>
         {
