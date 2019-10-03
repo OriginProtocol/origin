@@ -8091,11 +8091,6 @@ console-control-strings@^1.0.0, console-control-strings@~1.1.0:
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
   integrity sha1-PXz0Rk22RG6mRL9LOVB/mFEAjo4=
 
-console-log-html@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/console-log-html/-/console-log-html-2.0.2.tgz#3b287c67a3af9c03fc5646ea8c62dd4baafb4b6f"
-  integrity sha1-Oyh8Z6OvnAP8VkbqjGLdS6r7S28=
-
 constants-browserify@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/constants-browserify/-/constants-browserify-1.0.0.tgz#c20b96d8c617748aaf1c16021760cd27fcb8cb75"

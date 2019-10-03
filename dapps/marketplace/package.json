@@ -67,7 +67,6 @@
     "react-linkify": "^0.2.2",
     "react-popper-tooltip": "^2.8.3",
     "react-styl": "^0.0.3",
-    "console-log-html": "^2.0.2",
     "serve-static": "^1.14.1",
     "web3": "1.0.0-beta.34"
   },
