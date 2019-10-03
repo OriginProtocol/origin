@@ -73,7 +73,7 @@ const Nav = ({
 
   useEffect(() => {
     if (wallet && !consoleLogConnected && screenConsoleEnabled) {
-      ConsoleLogHTML.connect(document.getElementById("screen-console"));
+      ConsoleLogHTML.connect(document.getElementById('screen-console'))
       setConsoleLogConnected(true)
       console.log('Console connected')
     }
@@ -120,17 +120,20 @@ const Nav = ({
             <a className="nav-back-icon" onClick={() => history.goBack()} />
           )}
           {!isStacked && (
-            <Mobile {...navProps('mobile')}
+            <Mobile
+              {...navProps('mobile')}
               onShowFooter={onShowFooter}
-              onConsoleClick={() =>{
+              onConsoleClick={() => {
                 setConsoleOpen(!consoleOpen)
               }}
             />
           )}
           {!isProfilePage && getTitle(pathname)}
           {!isStacked && walletEl}
-          <div className={`screen-console-holder ${consoleOpen ? '' : 'd-none'}`}>
-            <ul id="screen-console"/>
+          <div
+            className={`screen-console-holder ${consoleOpen ? '' : 'd-none'}`}
+          >
+            <ul id="screen-console" />
             <div
               className="btn btn-primary"
               onClick={() => {
@@ -222,23 +225,27 @@ const Nav = ({
               </span>
             </EarnTokens>
           </li>
-          {screenConsoleEnabled && <li className="nav-item d-none d-lg-flex">
-            <div
-              className="nav-link text"
-              onClick={() => {
-                setConsoleOpen(!consoleOpen)
-              }}
-            >
-              <span><fbt desc="navbar.console">Console</fbt></span>
-            </div>
-          </li>}
+          {screenConsoleEnabled && (
+            <li className="nav-item d-none d-lg-flex">
+              <div
+                className="nav-link text"
+                onClick={() => {
+                  setConsoleOpen(!consoleOpen)
+                }}
+              >
+                <span>
+                  <fbt desc="navbar.console">Console</fbt>
+                </span>
+              </div>
+            </li>
+          )}
           <Messages {...navProps('messages')} />
           <Notifications {...navProps('notifications')} />
           <Profile {...navProps('profile')} />
         </ul>
       </div>
       <div className={`screen-console-holder ${consoleOpen ? '' : 'd-none'}`}>
-        <ul id="screen-console"/>
+        <ul id="screen-console" />
         <div
           className="btn btn-primary"
           onClick={() => {
