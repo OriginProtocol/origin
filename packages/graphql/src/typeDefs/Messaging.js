@@ -2,7 +2,7 @@ module.exports = `
   extend type Subscription {
     messageAdded: NewMessageResult
     markedAsRead: MarkedAsReadResult
-    messagingReady: Boolean
+    messagingStatusChange: MessagingStatusResult
   }
 
   type NewMessageResult {
@@ -15,6 +15,12 @@ module.exports = `
     conversationId: String
     roomId: String
     messagesRead: Int
+  }
+
+  type MessagingStatusResult {
+    hasGeneratedWallet: Boolean
+    hasSignedWalletAddress: Boolean
+    enabled: Boolean
   }
 
   extend type Query {
