@@ -92,6 +92,8 @@ class Messaging {
     this.pubsub = pubsub
     this.unreadCount = 0
     this.unreadCountLoaded = false
+    this.hasMoreConversations = true
+    this.ready = false
   }
 
   // Helper function for use by outside services
@@ -180,6 +182,8 @@ class Messaging {
     this.unreadCount = 0
     this.unreadCountLoaded = false
     this.convsEnabled = false
+    this.hasMoreConversations = true
+    this.ready = false
     clearInterval(this.refreshIntervalId)
 
     this.account_key = key
@@ -197,6 +201,7 @@ class Messaging {
     }
   }
 
+  // What's the purpose of this method??
   async initRemote() {
     debug('initRemote')
     this.events.emit('initRemote')
@@ -246,14 +251,17 @@ class Messaging {
     } else if (!accountMatch) {
       await this.setRemoteMessagingSig()
     }
-    this.events.emit('ready', this.account_key)
-    this.pubsub.publish('MESSAGING_READY', {
-      messagingReady: true
+
+    await this.loadMyConvs({
+      limit: 10
     })
 
-    // Should this be awaited?
-    this.loadMyConvs({
-      limit: 10
+    this.ready = true
+    this.events.emit('ready', this.account_key)
+    this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
+      hasGeneratedWallet: true,
+      hasSignedWalletAddress: true,
+      messagingEnabled: true
     })
   }
 
@@ -322,6 +330,9 @@ class Messaging {
     const signature = await signer.sign(sigPhrase, this.account_key)
     debug('signedSig', signature)
     this.events.emit('signedSig')
+    this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
+      hasGeneratedWallet: true
+    })
 
     // 32 bytes in hex + 0x
     const sigKey = signature.substring(0, 66)
@@ -336,6 +347,10 @@ class Messaging {
     this.pub_msg = PROMPT_PUB_KEY + this.account.address
     const signer = this.personalSign ? this.web3.eth.personal : this.web3.eth
     this.pub_sig = await signer.sign(this.pub_msg, this.account_key)
+    this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
+      hasGeneratedWallet: true,
+      hasSignedWalletAddress: true
+    })
     const scopedPubSigKeyName = `${PUB_MESSAGING_SIG}:${this.account_key}`
     this.setKeyItem(scopedPubSigKeyName, this.pub_sig)
     const scopedPubMessagingKeyName = `${PUB_MESSAGING}:${this.account_key}`
@@ -409,6 +424,7 @@ class Messaging {
             onEncrypted(content.emsg, content.address)
           } else if (decrypted.error == INVALID_MESSAGE_OBJECT) {
             // Do nothing
+            debug('Could not decrypt', content)
           } else if (decrypted.content) {
             onMessage(decrypted.content, content.address)
           }
@@ -466,6 +482,10 @@ class Messaging {
    * @returns {Object|null} An object with `success` and `messagesRead` keys if successful, null otherwise
    */
   async markConversationRead(remoteEthAddress) {
+    if (!this.ready) {
+      return
+    }
+
     const roomId = this.generateRoomId(this.account_key, remoteEthAddress)
     debug(`Marking conversation ${roomId} as read from account`)
 
@@ -717,6 +737,7 @@ class Messaging {
     }
 
     if (convObj.hasMore) {
+      debug('Fetching room', roomId, { keys, before, after })
       // Fetch only if there are more messages
       const messages = await limiter.schedule(async () => {
         const res = await fetch(url.toString(), {
@@ -733,6 +754,8 @@ class Messaging {
       if (typeof before === 'number' && messages.length === 0) {
         convObj.hasMore = false
       }
+
+      debug(`Got ${messages.length} messages in ${roomId}`)
 
       messages.forEach(entry => {
         this.processContent({
@@ -826,21 +849,29 @@ class Messaging {
    * @param {Integer} params.ofsset No. of conversation to skip
    */
   async loadMyConvs({ limit, offset } = {}) {
-    debug('loading convs:')
-    const conversations = await this.fetchConvs({ limit, offset })
+    if (this.hasMoreConversations) {
+      debug('loading convs:')
+      const conversations = await this.fetchConvs({ limit, offset })
 
-    await Promise.all(
-      conversations.map(conv => {
-        return new Promise(async resolve => {
-          // Populate keys and messages for all loaded conversations
-          await this.getRoom(conv.id, { keys: true })
-          const convObj = await this.getRoom(conv.id)
-          convObj.unreadCount = conv.unread || 0
+      if (conversations.length === 0 && typeof offset === 'number') {
+        this.hasMoreConversations = false
+      }
 
-          resolve(convObj)
+      await Promise.all(
+        conversations.map(conv => {
+          return new Promise(async resolve => {
+            // Populate keys and messages for all loaded conversations
+            await this.getRoom(conv.id, { keys: true })
+            const convObj = await this.getRoom(conv.id)
+            convObj.unreadCount = conv.unread || 0
+
+            this.convs[conv.id] = convObj
+
+            resolve(convObj)
+          })
         })
-      })
-    )
+      )
+    }
 
     if (!this.ws) {
       this.listenForUpdates()
@@ -860,7 +891,7 @@ class Messaging {
       !cachedConvs.length ||
       (offset && cachedConvs.length - (Number(limit) || 10) < offset)
     ) {
-      await this.loadMyConvs({ limit, offset, skipIfLoaded: true })
+      await this.loadMyConvs({ limit, offset })
       cachedConvs = Object.keys(this.convs)
     }
 
@@ -941,6 +972,7 @@ class Messaging {
           keys: true
         })
       }
+
       // Fetch paginated results
       convObj = await this.getRoom(roomId, {
         before,

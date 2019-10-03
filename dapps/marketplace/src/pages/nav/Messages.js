@@ -89,7 +89,6 @@ const MessagesDropdown = ({
     variables: {
       limit: 5
     },
-    skip: !messagingEnabled,
     fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true
   })
