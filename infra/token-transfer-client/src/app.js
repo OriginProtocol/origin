@@ -6,6 +6,8 @@ import PublicRoute from '@/components/PublicRoute'
 
 // Public routes
 import Welcome from '@/components/pages/Welcome'
+import RevisedSchedule from '@/components/pages/RevisedSchedule'
+import RevisedTerms from '@/components/pages/RevisedTerms'
 import Phone from '@/components/pages/Phone'
 import Terms from '@/components/pages/Terms'
 import Login from '@/components/pages/Login'
@@ -25,6 +27,8 @@ const App = () => (
   <Switch>
     <PublicRoute exact path="/" component={Login} />
     <PublicRoute exact path="/welcome/:token" component={Welcome} />
+    <PublicRoute exact path="/revised_schedule" component={RevisedSchedule} />
+    <PublicRoute exact path="/revised_terms" component={RevisedTerms} />
     <PublicRoute exact path="/phone" component={Phone} />
     <PublicRoute exact path="/terms" component={Terms} />
     <PublicRoute path="/check_email" component={CheckEmail} />

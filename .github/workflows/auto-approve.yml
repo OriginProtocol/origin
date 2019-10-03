@@ -1,14 +1,14 @@
 name: Auto approve
 on:
-  push:
+  pull_request:
     branches:
-      - nick/test
+      - master
 
 jobs:
-  build:
+  approve:
     runs-on: ubuntu-latest
+    if: github.actor == 'tomlinton' && github.head_ref == 'crowdin'
     steps:
       - uses: hmarr/auto-approve-action@v2.0.0
-        if: github.actor == 'nick'
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"

@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken')
 const totp = require('notp').totp
 const base32 = require('thirty-two')
 const crypto = require('crypto')
+const moment = require('moment')
 
 const { Event, User, sequelize } = require('../../src/models')
 const { encrypt } = require('../../src/lib/crypto')
@@ -34,7 +35,9 @@ describe('Login HTTP API', () => {
       email: 'user@originprotocol.com',
       name: 'User 1',
       otpKey: encryptedKey,
-      otpVerified: true
+      otpVerified: true,
+      revisedScheduleAgreedAt: moment(),
+      termsAgreedAt: moment().subtract(1, 'hours')
     })
 
     this.user2 = await User.create({
@@ -143,6 +146,131 @@ describe('Login HTTP API', () => {
       .post('/api/verify_email_token')
       .set('Authorization', `Bearer ${token}`)
       .expect(401)
+  })
+
+  it('should allow setting of phone if totp not verified', async () => {
+    const mockApp = express()
+    mockApp.use((req, res, next) => {
+      req.session = {
+        passport: {
+          user: this.user2.id
+        }
+      }
+      next()
+    })
+    mockApp.use(app)
+
+    const phone = '12345678'
+
+    const response = await request(mockApp)
+      .post('/api/user')
+      .send({ phone })
+      .expect(200)
+
+    expect(response.body.phone).to.equal(phone)
+  })
+
+  it('should allow setting of revised schedule agreed date if totp not verified', async () => {
+    const mockApp = express()
+    mockApp.use((req, res, next) => {
+      req.session = {
+        passport: {
+          user: this.user2.id
+        }
+      }
+      next()
+    })
+    mockApp.use(app)
+
+    const revisedScheduleAgreedAt = moment()
+
+    const response = await request(mockApp)
+      .post('/api/user')
+      .send({ revisedScheduleAgreedAt })
+      .expect(200)
+
+    expect(response.body.revisedScheduleAgreedAt).to.equal(
+      revisedScheduleAgreedAt.utc().toISOString()
+    )
+  })
+
+  it('should allow setting of terms agreed date if totp not verified', async () => {
+    const mockApp = express()
+    mockApp.use((req, res, next) => {
+      req.session = {
+        passport: {
+          user: this.user2.id
+        }
+      }
+      next()
+    })
+    mockApp.use(app)
+
+    const termsAgreedAt = moment()
+
+    const response = await request(mockApp)
+      .post('/api/user')
+      .send({ termsAgreedAt })
+      .expect(200)
+
+    expect(response.body.termsAgreedAt).to.equal(
+      termsAgreedAt.utc().toISOString()
+    )
+  })
+
+  it('should not allow changing of revised schedule agreed date if set', async () => {
+    const mockApp = express()
+    mockApp.use((req, res, next) => {
+      req.session = {
+        passport: {
+          user: this.user2.id
+        }
+      }
+      next()
+    })
+    mockApp.use(app)
+
+    await this.user2.update({
+      revisedScheduleAgreedAt: moment().subtract(10, 'minutes')
+    })
+
+    const revisedScheduleAgreedAt = moment()
+    const response = await request(mockApp)
+      .post('/api/user')
+      .send({ revisedScheduleAgreedAt })
+      .expect(200)
+
+    expect(response.body.revisedScheduleAgreedAt).to.equal(
+      this.user2.revisedScheduleAgreedAt.toISOString()
+    )
+  })
+
+  it('should not allow changing of terms agreed date if set', async () => {
+    const mockApp = express()
+    mockApp.use((req, res, next) => {
+      req.session = {
+        passport: {
+          user: this.user2.id
+        }
+      }
+      next()
+    })
+    mockApp.use(app)
+
+    await this.user2.update({
+      termsAgreedAt: moment().subtract(10, 'minutes')
+    })
+
+    const termsAgreedAt = moment()
+
+    const response = await request(mockApp)
+      .post('/api/user')
+      .send({ termsAgreedAt })
+      .expect(200)
+
+    expect(response.body.termsAgreedAt).to.equal(
+      this.user2.termsAgreedAt.toISOString()
+    )
   })
 
   it('should not allow setup of totp if already verified', async () => {

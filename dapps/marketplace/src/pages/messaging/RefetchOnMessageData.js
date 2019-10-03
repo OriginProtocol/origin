@@ -3,7 +3,7 @@ import { useSubscription } from 'react-apollo'
 
 import NewMessageSubscription from 'queries/NewMessageSubscription'
 import MarkedAsReadSubscription from 'queries/MarkedAsReadSubscription'
-import MessagingReadySubscription from 'queries/MessagingReadySubscription'
+import MessagingStatusChangeSubscription from 'queries/MessagingStatusChangeSubscription'
 
 /**
  * Invokes the `refetch` prop when
@@ -28,7 +28,7 @@ const RefetchOnMessageData = ({ refetch }) => {
     onSubscriptionData: callback
   })
 
-  useSubscription(MessagingReadySubscription, {
+  useSubscription(MessagingStatusChangeSubscription, {
     onSubscriptionData: callback
   })
 
