@@ -15,7 +15,7 @@ before(async function() {
   this.timeout(30000)
   // Start Ganache (in-memory) and IPFS
   shutdownServices = await services({
-    ganache: { inMemory: true },
+    ganache: { inMemory: true, total_accounts: 6 },
     ipfs: true,
     deployContracts: true,
     contractsFile: 'tests'

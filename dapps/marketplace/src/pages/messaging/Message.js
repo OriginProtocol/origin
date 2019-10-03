@@ -63,6 +63,7 @@ function showItems(props) {
       }
     }
   }
+
   if (nextMessage) {
     const futureTimeDiff = nextMessage.timestamp - message.timestamp
     const sameSender =
@@ -101,13 +102,20 @@ const Message = props => {
     showTailAndAvatar
   )
 
+  let formattedDate = null
+
+  if (showTime) {
+    const day = dayjs.unix(message.timestamp)
+    const messageYear = day.format('YYYY')
+    const currentYear = dayjs().format('YYYY')
+
+    const format =
+      messageYear === currentYear ? 'MMM Do h:mmA' : 'MMM Do, YYYY h:mmA'
+    formattedDate = day.format(format)
+  }
+
   return (
     <>
-      {showTime && (
-        <div className="timestamp">
-          {dayjs.unix(message.timestamp).format('MMM Do h:mmA')}
-        </div>
-      )}
       <div
         className={`d-flex flex-row ${justifyContent} message${userType}${contentOnly}`}
       >
@@ -129,6 +137,7 @@ const Message = props => {
           </div>
         </div>
       </div>
+      {showTime && <div className="timestamp">{formattedDate}</div>}
     </>
   )
 }
