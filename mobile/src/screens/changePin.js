@@ -84,7 +84,9 @@ class ChangePinScreen extends Component {
             keyboardShouldPersistTaps={'always'}
           >
             <View style={styles.container}>
-              <Text style={styles.subtitle}>{fbt('Enter your old PIN', 'PinScreen.enterYourOldPin')}</Text>
+              <Text style={styles.subtitle}>
+                {fbt('Enter your old PIN', 'PinScreen.enterYourOldPin')}
+              </Text>
               <PinInput
                 value={this.state.pin}
                 pinLength={this.pinLength}

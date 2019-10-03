@@ -39,7 +39,7 @@ export function truncateAddress(address = '', chars = 5) {
   if (address.length <= MAX_ADDRESS_LENGTH) return address
 
   let separator = '...'
-  
+
   if (chars > address.length) {
     separator = ''
   }
