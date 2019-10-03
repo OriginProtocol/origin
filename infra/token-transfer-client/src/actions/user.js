@@ -48,13 +48,13 @@ function fetchUserError(error) {
   }
 }
 
-export function editUser({ phone }) {
+export function editUser({ phone, revisedScheduleAgreedAt, termsAgreedAt }) {
   return dispatch => {
     dispatch(editUserPending())
 
     return agent
       .post(`${apiUrl}/api/user`)
-      .send({ phone })
+      .send({ phone, revisedScheduleAgreedAt, termsAgreedAt })
       .then(response => dispatch(editUserSuccess(response.body)))
       .catch(error => {
         dispatch(editUserError(error))

@@ -38,8 +38,8 @@ class Security extends Component {
           <div className="col-xs-12 col-lg-6">
             <BorderedCard>
               <div className="row">
-                <div className="col-md-6">{get(this.props.user, 'email')}</div>
-                <div className="col-md-6 text-md-right">
+                <div className="col-xl-6">{get(this.props.user, 'email')}</div>
+                <div className="col-xl-6 text-xl-right">
                   <a
                     href="mailto:support@originprotocol.com?subject=Change Investor Email"
                     target="_blank"
