@@ -1,24 +1,27 @@
 'use strict'
 
-import '@babel/polyfill'
-import bodyParser from 'body-parser'
-import express from 'express'
-import expressWs from 'express-ws'
-import fetch from 'cross-fetch'
-import { RateLimiterMemory } from 'rate-limiter-flexible'
-import Web3 from 'web3'
-import db from './models'
-import logger from './logger'
+require('@babel/polyfill')
+const bodyParser = require('body-parser')
+const express = require('express')
+const expressWs = require('express-ws')
+const fetch = require('cross-fetch')
+const { RateLimiterMemory } = require('rate-limiter-flexible')
+const Web3Utils = require('web3-utils')
+const db = require('./models')
+const logger = require('./logger')
 
 const esmImport = require('esm')(module)
 const { isContract } = esmImport('@origin/graphql/src/utils/proxy')
 const { setNetwork } = esmImport('@origin/graphql/src/contracts')
 
-import { verifyNewMessageSignature, verifyRegistrySignature } from './verify'
+const {
+  verifyNewMessageSignature,
+  verifyRegistrySignature
+} = require('./verify')
 
-import * as config from './config'
+const config = require('./config')
 
-import _redis from 'redis'
+const _redis = require('redis')
 
 const redis = _redis.createClient(process.env.REDIS_URL)
 
@@ -54,6 +57,7 @@ app.all((req, res, next) => {
       next()
     })
     .catch(() => {
+      logger.error('Rate limiter kicking in')
       res.status(429).send('<h1>Too Many Requests</h1>')
     })
 })
@@ -67,7 +71,7 @@ app.get('/', async (req, res) => {
 })
 
 app.get('/accounts', async (req, res) => {
-  const count = db.Registry.count()
+  const count = await db.Registry.count()
 
   res.send({ count })
 })
@@ -76,13 +80,13 @@ app.get('/accounts', async (req, res) => {
 app.get('/accounts/:address', async (req, res) => {
   let { address } = req.params
 
-  if (!Web3.utils.isAddress(address)) {
+  if (!Web3Utils.isAddress(address)) {
     res.statusMessage = `Address '${address}' is not a valid Ethereum address`
 
     return res.status(400).end()
   }
 
-  address = Web3.utils.toChecksumAddress(address)
+  address = Web3Utils.toChecksumAddress(address)
 
   // If it's a proxy, make sure we're checking with the owner account address
   if (await isContract(address)) {
@@ -105,13 +109,13 @@ app.get('/accounts/:address', async (req, res) => {
 app.post('/accounts/:address', async (req, res) => {
   let { address } = req.params
 
-  if (!Web3.utils.isAddress(address)) {
+  if (!Web3Utils.isAddress(address)) {
     res.statusMessage = `Address '${address}' is not a valid Ethereum address`
 
     return res.status(400).end()
   }
 
-  address = Web3.utils.toChecksumAddress(address)
+  address = Web3Utils.toChecksumAddress(address)
 
   // If it's a proxy, make sure we're checking with the owner account address
   if (await isContract(address)) {
@@ -123,80 +127,332 @@ app.post('/accounts/:address', async (req, res) => {
   const { signature, data } = req.body
 
   if (
-    verifyRegistrySignature(signature, '', {
-      payload: { value: data, key: address }
+    verifyRegistrySignature(signature, {
+      payload: {
+        value: data,
+        key: address
+      }
     })
   ) {
     const entry = await db.Registry.findOne({ where: { ethAddress: address } })
     console.log('setting registry existing entry:', entry)
-    if (!entry || entry.signature != signature) {
+    if (!entry || entry.signature !== signature) {
       await db.Registry.upsert({ ethAddress: address, data, signature })
     }
+
     return res.status(200).send(address)
   }
   res.statusMessage = 'Cannot verify signature of registry'
   return res.status(400).end()
 })
 
-// Fetch basic information about conversations for an account
-app.get('/conversations/:address', async (req, res) => {
+// Fetch total unread message count of an address
+app.get('/conversations/:address/unread', async (req, res) => {
   let { address } = req.params
 
-  if (!Web3.utils.isAddress(address)) {
+  if (!Web3Utils.isAddress(address)) {
     res.statusMessage = `Address '${address}' is not a valid Ethereum address`
 
     return res.status(400).end()
   }
 
-  address = Web3.utils.toChecksumAddress(address)
+  address = Web3Utils.toChecksumAddress(address)
 
-  const convs = await db.Conversee.findAll({
-    where: { ethAddress: address },
-    include: [{ model: db.Conversation }]
-  })
+  // TODO: Get rid of the custom query and find the correct ORM way
 
-  if (!convs) {
-    return res.status(204).end()
+  try {
+    const [[convs]] = await db.sequelize.query(
+      `
+SELECT SUM(unread) as unread FROM (SELECT messages.unread_count::integer as unread FROM msg_conversee conversee
+  LEFT JOIN 
+    (SELECT m.conversation_id, count(m.conversation_id)::integer as unread_count 
+      FROM msg_message m 
+      WHERE m.read=False AND m.is_keys=False
+        AND m.eth_address<>:address
+      GROUP BY m.conversation_id) messages
+    ON messages.conversation_id=conversee.conversation_id
+  WHERE conversee.eth_address=:address) unread_by_conv`,
+      {
+        replacements: {
+          address
+        }
+      }
+    )
+
+    return res.status(200).send(convs)
+  } catch (e) {
+    logger.error('Cannot mark conversation as read', e)
+    return res.status(500).send(e)
+  }
+})
+
+// Fetch basic information about conversations for an account
+app.get('/conversations/:address', async (req, res) => {
+  let { address } = req.params
+  const { limit, offset } = {
+    limit: 10,
+    offset: 0,
+    ...req.query
   }
 
-  res.status(200).send(
-    convs.map(c => {
-      return {
-        id: c.Conversation.externalId,
-        count: c.Conversation.messageCount
+  if (!Web3Utils.isAddress(address)) {
+    res.statusMessage = `Address '${address}' is not a valid Ethereum address`
+
+    return res.status(400).end()
+  }
+
+  address = Web3Utils.toChecksumAddress(address)
+
+  // TODO: Get rid of the custom query and find the correct ORM way
+
+  // // Limit to 10 conversations per query
+  // const limit = after ? undefined : 10
+
+  // const conversationWhere = {}
+  // const constraints = {}
+  // if (after) {
+  //   constraints[db.Sequelize.Op.gt] = new Date(after)
+  // }
+
+  // if (before) {
+  //   constraints[db.Sequelize.Op.lt] = new Date(before)
+  // }
+
+  // if (before || after) {
+  //   conversationWhere.updatedAt = constraints
+  // }
+
+  // const convs = await db.Conversee.findAll({
+  //   where: { ethAddress: address },
+  //   include: [{
+  //     model: db.Conversation,
+  //     where: conversationWhere,
+  //     as: 'conversations',
+  //     include: [{
+  //       model: db.Message,
+  //       as: 'messages',
+  //       where: {
+  //         read: false
+  //       }
+  //     }],
+  //     // attributes: {
+  //     //   include: [
+  //     //     [db.Sequelize.fn('COUNT', db.Sequelize.col('msg_message.id'), 'unreadCount')]
+  //     //   ]
+  //     // }
+  //     // include: [{
+  //     //   model: db.Message,
+  //     //   // attributes: [],
+  //     //   where: {
+  //     //     read: false
+  //     //   }
+  //     // }]
+  //   }],
+  //   order: [[db.Conversation, 'updatedAt', 'DESC']],
+  //   limit
+  // })
+
+  try {
+    const [convs] = await db.sequelize.query(
+      `
+SELECT conversations.external_id as id, conversations.updated_at as timestamp, conversations.message_count as count, messages.unread_count as unread FROM msg_conversee conversee 
+  INNER JOIN msg_conversation conversations 
+    ON conversations.id=conversee.conversation_id 
+  LEFT JOIN 
+    (SELECT m.conversation_id, count(m.conversation_id)::integer as unread_count 
+      FROM msg_message m 
+      WHERE m.read=False AND m.is_keys=False
+        AND m.eth_address<>:address
+      GROUP BY m.conversation_id) messages
+    ON messages.conversation_id=conversations.id
+  WHERE conversee.eth_address=:address
+  ORDER BY conversations.updated_at DESC
+  LIMIT :limit OFFSET :offset`,
+      {
+        replacements: {
+          address,
+          limit,
+          offset
+        }
       }
+    )
+
+    return res.status(200).send(convs)
+  } catch (e) {
+    logger.error('Cannot get conversation', e)
+    return res.status(500).send(e)
+  }
+})
+
+// Mark the conversation as read
+app.post('/messages/:conversationId/read', async (req, res) => {
+  const { conversationId } = req.params
+
+  const conversation = await db.Conversation.findOne({
+    where: {
+      externalId: conversationId
+    }
+  })
+
+  if (!conversation) {
+    return res.status(404).send({
+      success: false,
+      errors: 'Conversation not found'
+    })
+  }
+
+  const address = Web3Utils.toChecksumAddress(req.query.address)
+
+  const [messagesRead] = await db.Message.update(
+    {
+      read: true
+    },
+    {
+      where: {
+        conversationId: conversation.id,
+        ethAddress: {
+          [db.Sequelize.Op.not]: address
+        },
+        read: false
+      }
+    }
+  )
+
+  await redis.publish(
+    address,
+    JSON.stringify({
+      type: 'MARKED_AS_READ',
+      address,
+      conversationId,
+      messagesRead
     })
   )
+
+  return res.status(200).send({
+    success: true,
+    messagesRead
+  })
+})
+
+/**
+ * Returns paginated results of messages in a given conversation
+ * @param {String} args.conversationId - Conversation ID
+ * @param {Integer} args.after - To get messages with converstationIndex > after
+ * @param {Integer} args.before - To get messages with converstationIndex < before
+ * @param {Integer} args.isKeys - Returns only keys if true, otherwise returns all other messages
+ * @param {Integer} args.read - To filter messages based on read status
+ * @param {Integer} args.returnCount - Returns only the count, if true.
+ * @returns {Promise<[Object]>|Integer} Returns count of records if returnCount is true. Otherwise, returns an array of message objects.
+ *                                      Array will be empty if no messages matched the given constraint.
+ */
+async function getMessages({
+  returnCount,
+  conversationId,
+  after,
+  before,
+  isKeys,
+  read
+}) {
+  const where = {
+    isKeys
+  }
+
+  if (!isKeys) {
+    // Don't paginate when fetching keys
+    const constraints = {}
+
+    if (after) {
+      constraints[db.Sequelize.Op.gt] = parseInt(after)
+    }
+
+    if (before) {
+      constraints[db.Sequelize.Op.lt] = parseInt(before)
+    }
+
+    if (before || after) {
+      where.conversationIndex = constraints
+    }
+
+    if (read === 'true' || read === 'false') {
+      where.read = read === 'true'
+    }
+  }
+
+  // Don't paginate messages if `after` is specified
+  // Don't paginate when fetching keys or count of messages
+  // Limit 10 per query otherwise
+  const limit = returnCount || isKeys || after ? undefined : 10
+
+  const queryOpts = {
+    include: [
+      { model: db.Conversation, where: { externalId: conversationId } }
+    ],
+    order: [['conversationIndex', 'DESC']],
+    where,
+    limit
+  }
+
+  if (returnCount) {
+    return db.Message.count(queryOpts)
+  }
+
+  const messages = await db.Message.findAll(queryOpts)
+
+  return (messages || []).map(m => {
+    return {
+      conversationIndex: m.conversationIndex,
+      address: m.ethAddress,
+      content: m.data.content,
+      ext: m.data.ext,
+      signature: m.signature,
+      isKeys: m.isKeys,
+      timestamp: m.createdAt,
+      read: m.read
+    }
+  })
+}
+
+// Get all messages of type 'key' in a room/conversation
+app.get('/messages/:conversationId/keys', async (req, res) => {
+  const messages = await getMessages({
+    conversationId: req.params.conversationId,
+    isKeys: true
+  })
+
+  if (!messages.length) {
+    return res.status(204).send([])
+  }
+
+  res.status(200).send(messages)
+})
+
+// Get count of all messages in a room/conversation
+app.get('/messages/:conversationId/count', async (req, res) => {
+  const messageCount = await getMessages({
+    conversationId: req.params.conversationId,
+    ...req.query,
+    isKeys: false,
+    returnCount: true
+  })
+
+  return res.status(200).send({
+    messageCount
+  })
 })
 
 // Get all messages in a room/conversation
 app.get('/messages/:conversationId', async (req, res) => {
-  const { conversationId } = req.params
-
-  const messages = await db.Message.findAll({
-    include: [
-      { model: db.Conversation, where: { externalId: conversationId } }
-    ],
-    order: [['conversationIndex', 'ASC']]
+  const messages = await getMessages({
+    conversationId: req.params.conversationId,
+    ...req.query,
+    isKeys: false
   })
 
-  if (!messages) {
-    return res.status(204).end()
+  if (!messages.length) {
+    return res.status(204).send([])
   }
 
-  res.status(200).send(
-    messages.map(m => {
-      return {
-        conversationIndex: m.conversationIndex,
-        address: m.ethAddress,
-        content: m.data.content,
-        ext: m.data.ext,
-        signature: m.signature,
-        isKeys: m.isKeys,
-        timestamp: m.createdAt
-      }
-    })
-  )
+  res.status(200).send(messages)
 })
 
 // Add a message to a room/conversation
@@ -208,6 +464,10 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
   let conv_addresses = conversationId ? conversationId.split('-') : null
 
   const entry = await db.Registry.findOne({ where: { ethAddress: address } })
+
+  if (!entry) {
+    return res.status(400).send('Messaging not enabled')
+  }
 
   // Don't allow a user to message themselves.  It's weird.
   if (
@@ -244,7 +504,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
     where: { externalId: conversationId }
   })
 
-  const contentHash = Web3.utils.sha3(JSON.stringify(content))
+  const contentHash = Web3Utils.sha3(JSON.stringify(content))
 
   let message
   if (!conv) {
@@ -254,9 +514,9 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
         .status(401)
         .send('One of the conversers involved must initiate the conversation.')
     }
-    if (conversationIndex != 0) {
+    if (conversationIndex !== 0) {
       return res.status(409).end()
-    } else if (content.type != 'keys') {
+    } else if (content.type !== 'keys') {
       return res
         .status(400)
         .send('Conversations must be initiated by a keys exchange')
@@ -281,7 +541,8 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
           data: { content },
           contentHash,
           signature,
-          isKeys: true
+          isKeys: true,
+          read: true
         },
         { transaction: t }
       )
@@ -306,7 +567,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
         transaction: t,
         lock: t.LOCK.UPDATE
       })
-      if (conversationIndex != conversation.messageCount) {
+      if (conversationIndex !== conversation.messageCount) {
         return false
       }
       message = await db.Message.create(
@@ -317,7 +578,8 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
           data: { content },
           contentHash,
           signature,
-          isKeys: content.type == 'keys'
+          isKeys: content.type === 'keys',
+          read: content.type !== 'msg' // Mark `events` and `keys` as read by default
         },
         { transaction: t }
       )
@@ -333,6 +595,7 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
       await redis.publish(
         notify_address,
         JSON.stringify({
+          type: 'NEW_MESSAGE',
           content,
           timestamp: message.createdAt,
           conversationIndex,
@@ -386,6 +649,120 @@ app.post('/messages/:conversationId/:conversationIndex', async (req, res) => {
   }
 })
 
+// Subscribe to marketplace events
+function subscribeToMarketplaceEvents() {
+  logger.debug('Subscribing to Marketplace events...')
+  const redis_sub = redis.duplicate()
+  redis_sub.subscribe('MESSAGING:MARKETPLACE_EVENT')
+
+  redis_sub.on('message', async (channel, message) => {
+    try {
+      const { eventData, sender } = JSON.parse(message)
+      const { seller, buyer } = eventData
+
+      const content = {
+        type: 'event',
+        eventData,
+        sender
+      }
+
+      const contentHash = Web3Utils.sha3(JSON.stringify(content))
+
+      const externalId = [
+        Web3Utils.toChecksumAddress(seller),
+        Web3Utils.toChecksumAddress(buyer)
+      ]
+        .sort()
+        .join('-')
+
+      let conversation = await db.Conversation.findOne({
+        where: { externalId }
+      })
+
+      let newMessageIndex = 0
+
+      let newMessage
+
+      if (!conversation) {
+        // Seller and buyer haven't interacted yet
+        // Create a conversation now and let them generate keys later
+        newMessage = await db.sequelize.transaction(async t => {
+          conversation = await db.Conversation.create(
+            { externalId, messageCount: 1 },
+            { transaction: t }
+          )
+
+          for (const converser of Array.from(
+            new Set([buyer, seller, sender])
+          )) {
+            await db.Conversee.create(
+              { conversationId: conversation.id, ethAddress: converser },
+              { transaction: t }
+            )
+          }
+
+          return await db.Message.create(
+            {
+              conversationId: conversation.id,
+              conversationIndex: 0,
+              ethAddress: sender,
+              data: { content },
+              contentHash,
+              signature: null,
+              isKeys: false,
+              read: true
+            },
+            { transaction: t }
+          )
+        })
+        logger.info(`Created conversation room ${externalId}`)
+      } else {
+        newMessageIndex = conversation.messageCount
+        newMessage = await db.sequelize.transaction(async t => {
+          conversation.update({
+            messageCount: newMessageIndex + 1
+          })
+
+          return await db.Message.create(
+            {
+              conversationId: conversation.id,
+              conversationIndex: newMessageIndex,
+              ethAddress: sender,
+              data: { content },
+              contentHash,
+              signature: null,
+              isKeys: false,
+              read: true
+            },
+            { transaction: t }
+          )
+        })
+      }
+
+      // Publish messages to be consumed by the websocket(below)
+      for (const notify_address of [seller, buyer]) {
+        // Push to redis
+        await redis.publish(
+          notify_address,
+          JSON.stringify({
+            type: 'MARKETPLACE_EVENT',
+            content,
+            timestamp: newMessage.createdAt,
+            newMessageIndex,
+            conversationId: externalId
+          })
+        )
+      }
+      logger.info(
+        `Inserted '${eventData.eventType}' event to ${externalId} at ${newMessageIndex}`
+      )
+    } catch (err) {
+      // TODO: Should we retry if it failed because of duplicate conversationIndex?
+      logger.error('Cannot process marketplace event', message, err)
+    }
+  })
+}
+
 // Websocket to listen for new messages
 app.ws('/message-events/:address', (ws, req) => {
   const { address } = req.params
@@ -406,4 +783,7 @@ app.ws('/message-events/:address', (ws, req) => {
 
 app.listen(port, () => {
   logger.debug(`REST endpoint listening on port ${port}`)
+  subscribeToMarketplaceEvents()
 })
+
+module.exports = app
