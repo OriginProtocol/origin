@@ -34,7 +34,7 @@
     "@babel/core": "^7.4.5",
     "@babel/polyfill": "^7.4.4",
     "@babel/preset-env": "^7.4.5",
-    "@babel/register": "7.4.4",
+    "@babel/register": "7.6.2",
     "@origin/graphql": "^0.1.0",
     "cross-fetch": "^3.0.4",
     "dotenv": "^8.0.0",
