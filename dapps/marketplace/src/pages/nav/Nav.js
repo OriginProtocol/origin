@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { fbt } from 'fbt-runtime'
 import { withRouter } from 'react-router-dom'
+import ConsoleLogHTML from 'console-log-html'
 
 import withWallet from 'hoc/withWallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
@@ -66,6 +67,18 @@ const Nav = ({
   history
 }) => {
   const [open, setOpen] = useState()
+  const [consoleOpen, setConsoleOpen] = useState(false)
+  const [consoleLogConnected, setConsoleLogConnected] = useState(false)
+  const screenConsoleEnabled = localStorage.screenConsole
+
+  useEffect(() => {
+    if (wallet && !consoleLogConnected && screenConsoleEnabled) {
+      ConsoleLogHTML.connect(document.getElementById("screen-console"));
+      setConsoleLogConnected(true)
+      console.log('Console connected')
+    }
+  }, [wallet])
+
   const navProps = nav => ({
     onOpen: () => setOpen(nav),
     onClose: () => open === nav && setOpen(false),
@@ -107,10 +120,26 @@ const Nav = ({
             <a className="nav-back-icon" onClick={() => history.goBack()} />
           )}
           {!isStacked && (
-            <Mobile {...navProps('mobile')} onShowFooter={onShowFooter} />
+            <Mobile {...navProps('mobile')}
+              onShowFooter={onShowFooter}
+              onConsoleClick={() =>{
+                setConsoleOpen(!consoleOpen)
+              }}
+            />
           )}
           {!isProfilePage && getTitle(pathname)}
           {!isStacked && walletEl}
+          <div className={`screen-console-holder ${consoleOpen ? '' : 'd-none'}`}>
+            <ul id="screen-console"/>
+            <div
+              className="btn btn-primary"
+              onClick={() => {
+                setConsoleOpen(false)
+              }}
+            >
+              <fbt desc="navbar.close">close</fbt>
+            </div>
+          </div>
         </nav>
         {canShowSearch && <Search className="search" placeholder />}
         {!isStacked && canShowBack && (
@@ -193,10 +222,31 @@ const Nav = ({
               </span>
             </EarnTokens>
           </li>
+          {screenConsoleEnabled && <li className="nav-item d-none d-lg-flex">
+            <div
+              className="nav-link text"
+              onClick={() => {
+                setConsoleOpen(!consoleOpen)
+              }}
+            >
+              <span><fbt desc="navbar.console">Console</fbt></span>
+            </div>
+          </li>}
           <Messages {...navProps('messages')} />
           <Notifications {...navProps('notifications')} />
           <Profile {...navProps('profile')} />
         </ul>
+      </div>
+      <div className={`screen-console-holder ${consoleOpen ? '' : 'd-none'}`}>
+        <ul id="screen-console"/>
+        <div
+          className="btn btn-primary"
+          onClick={() => {
+            setConsoleOpen(false)
+          }}
+        >
+          <fbt desc="navbar.close">close</fbt>
+        </div>
       </div>
     </nav>
   )
@@ -216,6 +266,28 @@ require('react-styl')(`
     > .container
       align-items: stretch
 
+    .screen-console-holder
+      position: fixed
+      top: 50px
+      bottom: 3px
+      left: 3px
+      right: 3px
+      background-color: #222222DD
+      z-index: 1
+      border-radius: 15px
+      padding-top: 40px
+      overflow-y: scroll
+      li[data-level=log]
+        color: white
+      .btn
+        position: fixed
+        bottom: 30px
+        left: 50%
+        right: 50%
+        margin-left: -80px
+        margin-right: -80px
+        border-radius: 15px
+        padding: 0.2rem 1.5rem
     .nav-item
       display: flex
       align-items: center
@@ -256,7 +328,7 @@ require('react-styl')(`
         padding: 0
         position: absolute !important
         margin-top: 0
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1)
         border-radius: 0 0 5px 5px
         border: 1px solid var(--light)
         font-weight: normal

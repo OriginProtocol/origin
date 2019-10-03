@@ -7,7 +7,7 @@ import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
 const SupportLink = 'https://goo.gl/forms/86tKQXZdmux3KNFJ2'
 
-const MobileNav = ({ open, onClose, onOpen, onShowFooter }) => {
+const MobileNav = ({ open, onClose, onOpen, onShowFooter, onConsoleClick }) => {
   // Allow the menu to close before redirecting so it doesn't show when
   // the user clicks or swipes back.
   const [redirect, setRedirect] = useState()
@@ -126,6 +126,14 @@ const MobileNav = ({ open, onClose, onOpen, onShowFooter }) => {
               onClick={() => onClose()}
               className="dropdown-item feedback"
               children={fbt('Feedback', 'navigation.feedback')}
+            />
+            <a
+              onClick={() => {
+                onConsoleClick()
+                onClose()
+              }}
+              className="dropdown-item console"
+              children={fbt('Console', 'navbar.console')}
             />
             <a
               href="#"
