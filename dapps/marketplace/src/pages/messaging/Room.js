@@ -223,7 +223,7 @@ const Room = props => {
       {enabled ? (
         <SendMessage to={props.id} />
       ) : (
-        <div className="col-12">
+        <div className="enable-messaging-action">
           <EnableMessaging />
         </div>
       )}
@@ -253,4 +253,7 @@ require('react-styl')(`
       margin-top: 1rem
     .stages
       min-height: 4rem
+  .enable-messaging-action
+    width: 100%
+    flex: auto 0 0
 `)

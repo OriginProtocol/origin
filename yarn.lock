@@ -4274,6 +4274,15 @@ abstract-leveldown@^6.0.0, abstract-leveldown@~6.0.0, abstract-leveldown@~6.0.1,
     level-concat-iterator "~2.0.0"
     xtend "~4.0.0"
 
+abstract-leveldown@^6.1.1:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/abstract-leveldown/-/abstract-leveldown-6.2.1.tgz#37b655151e13c3d9b20fa3a04ce63ccaa345fce4"
+  integrity sha512-zUgomHedGBCThDkUtc1bfilu2jEhRZ7Dk3RePhtMma/akw7UK2Upm2R5Dd8ynRBEt3uscwbWO0VQNx22/7RtWg==
+  dependencies:
+    level-concat-iterator "~2.0.0"
+    level-supports "~1.0.0"
+    xtend "~4.0.0"
+
 abstract-leveldown@~2.4.1:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/abstract-leveldown/-/abstract-leveldown-2.4.1.tgz#b3bfedb884eb693a12775f0c55e9f0a420ccee64"
@@ -7346,7 +7355,7 @@ chai-things@0.2.0:
   resolved "https://registry.yarnpkg.com/chai-things/-/chai-things-0.2.0.tgz#c55128378f9bb399e994f00052151984ed6ebe70"
   integrity sha1-xVEoN4+bs5nplPAAUhUZhO1uvnA=
 
-chai@4.2.0, chai@^4.1.2, chai@^4.2.0:
+chai@4.2.0, chai@^4.1.2:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/chai/-/chai-4.2.0.tgz#760aa72cf20e3795e84b12877ce0e83737aa29e5"
   integrity sha512-XQU3bhBukrOsQCuwZndwGcCVQHyZi53fQ6Ys1Fym7E4olpIqqZZhhoFJoaKVvV17lWQoXYwgWN2nF5crA8J2jw==
@@ -8480,15 +8489,15 @@ crypto-browserify@3.12.0, crypto-browserify@^3.11.0:
     randombytes "^2.0.0"
     randomfill "^1.0.3"
 
+crypto-js@3.1.9-1, crypto-js@^3.1.9-1:
+  version "3.1.9-1"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.1.9-1.tgz#fda19e761fc077e01ffbfdc6e9fdfc59e8806cd8"
+  integrity sha1-/aGedh/Ad+Af+/3G6f38WeiAbNg=
+
 crypto-js@^3.1.4:
   version "3.1.8"
   resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.1.8.tgz#715f070bf6014f2ae992a98b3929258b713f08d5"
   integrity sha1-cV8HC/YBTyrpkqmLOSkli3E/CNU=
-
-crypto-js@^3.1.9-1:
-  version "3.1.9-1"
-  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.1.9-1.tgz#fda19e761fc077e01ffbfdc6e9fdfc59e8806cd8"
-  integrity sha1-/aGedh/Ad+Af+/3G6f38WeiAbNg=
 
 crypto-random-string@^1.0.0:
   version "1.0.0"
@@ -9156,6 +9165,14 @@ deferred-leveldown@~5.1.0:
     abstract-leveldown "~6.0.0"
     inherits "^2.0.3"
 
+deferred-leveldown@~5.2.1:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/deferred-leveldown/-/deferred-leveldown-5.2.1.tgz#8da87909cd3269c2d6aff67b1e607f93e4d96c15"
+  integrity sha512-PwXZRn5EmW+IKYVAYVc7G9FsRkShr0myPubPuq+mtLhDq9xSUqfvTlNZKoeQGeXACHXkeCFurKrz5oo6TZ3qwg==
+  dependencies:
+    abstract-leveldown "~6.1.0"
+    inherits "^2.0.3"
+
 define-properties@^1.1.1, define-properties@^1.1.2, define-properties@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/define-properties/-/define-properties-1.1.3.tgz#cf88da6cbee26fe6db7094f61d870cbd84cee9f1"
@@ -9764,6 +9781,16 @@ encoding-down@^6.0.2:
     level-codec "^9.0.0"
     level-errors "^2.0.0"
 
+encoding-down@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/encoding-down/-/encoding-down-6.2.0.tgz#7ca52446dac6e0fd09ad3584a7359809ea1a4844"
+  integrity sha512-XlIoQMBMbU4aE01uSKpAix0sXBJWK8YPhuOdvKa1CroThZyUpj0zWzt+bbe7g1KWsdhNFFzHkQHSdDymVtpJ1w==
+  dependencies:
+    abstract-leveldown "^6.1.1"
+    inherits "^2.0.3"
+    level-codec "^9.0.0"
+    level-errors "^2.0.0"
+
 encoding@^0.1.11:
   version "0.1.12"
   resolved "https://registry.yarnpkg.com/encoding/-/encoding-0.1.12.tgz#538b66f3ee62cd1ab51ec323829d1f9480c74beb"
@@ -10030,16 +10057,6 @@ eslint-import-resolver-node@^0.3.2:
   dependencies:
     debug "^2.6.9"
     resolve "^1.5.0"
-
-eslint-loader@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-loader/-/eslint-loader-3.0.0.tgz#fb70bc2d552a674f43f07f5e6575083e565e790d"
-  integrity sha512-rdxyQ0i9VlhwVlR6oEzrIft8WNKYSD2/cOAJ1YVH/F76gAta7Zv1Dr5xJOUyx0fAsHB5cKNz9hwlUVLMFsQlPA==
-  dependencies:
-    loader-fs-cache "^1.0.2"
-    loader-utils "^1.2.3"
-    object-hash "^1.3.1"
-    schema-utils "^2.1.0"
 
 eslint-loader@3.0.2:
   version "3.0.2"
@@ -10533,7 +10550,7 @@ eth-block-tracker@^4.4.2:
     pify "^3.0.0"
     safe-event-emitter "^1.0.1"
 
-eth-ecies@^1.0.3:
+eth-ecies@1.0.3, eth-ecies@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/eth-ecies/-/eth-ecies-1.0.3.tgz#d5a8d294149fbdd4458dd7d4e0b47d09d22872a9"
   integrity sha512-V53TmjK96MROnuj1jUa0a9nguiBSgOJ1J6q1cmkOGzJh/MKT9EIIwL0AsvYQ/R74froMsW8IA0b+xLMIOD0z3w==
@@ -14369,16 +14386,17 @@ ipfs-log@^4.2.0:
     p-map "^1.1.1"
     p-whilst "^1.0.0"
 
-ipfs-log@~4.3.2:
-  version "4.3.6"
-  resolved "https://registry.yarnpkg.com/ipfs-log/-/ipfs-log-4.3.6.tgz#0deccbfbfbfdbbef06e76f0ec62b80115b89433e"
-  integrity sha512-7lEW5tXITcmHHP9dT93mRI+burUm2WdEkjYQ+ERFSL3K9xH5aXMr96IQKnZpFoA6duIwquydlDsiYTXLh6g/Ag==
+ipfs-log@~4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/ipfs-log/-/ipfs-log-4.4.0.tgz#d20111d726017fdc1a0ac73afa52e9153c65d590"
+  integrity sha512-XlZGgZWnIPkdKwhJ1ETESx8yrJbR3Yd527vPhBwQWevb2KziTJQi0XXHpPHOLMRSSRE5dgCzcKnDbatTpJvtWw==
   dependencies:
     cids "~0.7.1"
     ipld-dag-pb "^0.17.4"
     json-stringify-deterministic "^1.0.1"
-    orbit-db-identity-provider "~0.1.0"
-    orbit-db-io "~0.1.0"
+    multihashing-async "^0.7.0"
+    orbit-db-identity-provider "~0.2.0"
+    orbit-db-io "~0.1.1"
     p-each-series "^2.1.0"
     p-map "^1.1.1"
     p-whilst "^1.0.0"
@@ -15260,6 +15278,11 @@ is-negated-glob@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/is-negated-glob/-/is-negated-glob-1.0.0.tgz#6910bca5da8c95e784b5751b976cf5a10fee36d2"
   integrity sha1-aRC8pdqMleeEtXUbl2z1oQ/uNtI=
+
+is-node@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/is-node/-/is-node-1.0.2.tgz#d7d002745ef7debbb7477e988956ab0a4fccb653"
+  integrity sha1-19ACdF733ru3R36YiVarCk/MtlM=
 
 is-npm@^1.0.0:
   version "1.0.0"
@@ -16934,6 +16957,17 @@ level-iterator-stream@~4.0.0:
     readable-stream "^3.0.2"
     xtend "^4.0.0"
 
+level-js@^4.0.0, level-js@~4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/level-js/-/level-js-4.0.1.tgz#3bad57d8bb46ebba7b13bc7442b56f4b45c8a2e0"
+  integrity sha512-m5JRIyHZn5VnCCFeRegJkn5bQd3MJK5qZX12zg3Oivc8+BUIS2yFS6ANMMeHX2ieGxucNvEn6/ZnyjmZQLLUWw==
+  dependencies:
+    abstract-leveldown "~6.0.1"
+    immediate "~3.2.3"
+    inherits "^2.0.3"
+    ltgt "^2.1.2"
+    typedarray-to-buffer "~3.1.5"
+
 "level-js@github:timkuijsten/level.js#idbunwrapper":
   version "2.2.3"
   resolved "https://codeload.github.com/timkuijsten/level.js/tar.gz/18e03adab34c49523be7d3d58fafb0c632f61303"
@@ -16954,17 +16988,6 @@ level-js@~3.0.0:
     ltgt "^2.1.2"
     typedarray-to-buffer "~3.1.5"
 
-level-js@~4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/level-js/-/level-js-4.0.1.tgz#3bad57d8bb46ebba7b13bc7442b56f4b45c8a2e0"
-  integrity sha512-m5JRIyHZn5VnCCFeRegJkn5bQd3MJK5qZX12zg3Oivc8+BUIS2yFS6ANMMeHX2ieGxucNvEn6/ZnyjmZQLLUWw==
-  dependencies:
-    abstract-leveldown "~6.0.1"
-    immediate "~3.2.3"
-    inherits "^2.0.3"
-    ltgt "^2.1.2"
-    typedarray-to-buffer "~3.1.5"
-
 level-mem@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/level-mem/-/level-mem-3.0.1.tgz#7ce8cf256eac40f716eb6489654726247f5a89e5"
@@ -16972,6 +16995,14 @@ level-mem@^3.0.1:
   dependencies:
     level-packager "~4.0.0"
     memdown "~3.0.0"
+
+level-packager@^5.0.0:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/level-packager/-/level-packager-5.0.3.tgz#e22bc9887663d0808ab092453d691bc319b7e5a2"
+  integrity sha512-Ut62o3nvUNCxYldM5+13+0sYow6ifKj2C26/0ToB7zKgdypF5wRKcVkcztQVwsQi+ZnrmDzhimp7FKP5Ynv6Rg==
+  dependencies:
+    encoding-down "^6.2.0"
+    levelup "^4.2.0"
 
 level-packager@~4.0.0:
   version "4.0.1"
@@ -17004,6 +17035,13 @@ level-sublevel@6.6.4:
     typewiselite "~1.0.0"
     xtend "~4.0.0"
 
+level-supports@~1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/level-supports/-/level-supports-1.0.0.tgz#376f3f2339c23be0ba2fe62b0fa0e3ac7d6d9988"
+  integrity sha512-01PKZumFhgysuHUbRz4c9DyA1egmcHJBAsZbm0Vf5agojC3uWOvAnhOD4swNUgHlfJBymXLi/xkBaEckeNRSvA==
+  dependencies:
+    xtend "^4.0.2"
+
 level-ws@0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/level-ws/-/level-ws-0.0.0.tgz#372e512177924a00424b0b43aef2bb42496d228b"
@@ -17020,6 +17058,16 @@ level-ws@^1.0.0:
     inherits "^2.0.3"
     readable-stream "^2.2.8"
     xtend "^4.0.1"
+
+level@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/level/-/level-5.0.1.tgz#8528cc1ee37ac413270129a1eab938c610be3ccb"
+  integrity sha512-wcak5OQeA4rURGacqS62R/xNHjCYnJSQDBOlm4KNUGJVE9bWv2B04TclqReYejN+oD65PzD4FsqeWoI5wNC5Lg==
+  dependencies:
+    level-js "^4.0.0"
+    level-packager "^5.0.0"
+    leveldown "^5.0.0"
+    opencollective-postinstall "^2.0.0"
 
 leveldown@^5.0.0, leveldown@~5.1.1:
   version "5.1.1"
@@ -17040,16 +17088,6 @@ leveldown@~3.0.2:
     fast-future "~1.0.2"
     nan "~2.10.0"
     prebuild-install "^4.0.0"
-
-leveldown@~5.0.3:
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/leveldown/-/leveldown-5.0.3.tgz#66880478e956528ed35d47e30f6609e1201bf79c"
-  integrity sha512-isfWtOQIXbGbQRI8nmU9FqCZM0klmqTAOFi0vF6G/D0O1ZgxLrSh6Xd4Zj9iVQfGt6+8jpYwkRbN07VLrxRM8w==
-  dependencies:
-    abstract-leveldown "~6.0.3"
-    fast-future "~1.0.2"
-    napi-macros "~1.8.1"
-    node-gyp-build "~3.8.0"
 
 levelup@3.1.1, levelup@^3.0.0:
   version "3.1.1"
@@ -17082,6 +17120,17 @@ levelup@^4.0.0, levelup@^4.0.1, levelup@~4.1.0:
     deferred-leveldown "~5.1.0"
     level-errors "~2.0.0"
     level-iterator-stream "~4.0.0"
+    xtend "~4.0.0"
+
+levelup@^4.2.0:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/levelup/-/levelup-4.3.1.tgz#ac740019789de1a2987e109b00fcbdad9ddc6ac9"
+  integrity sha512-vXRqqNDSZxbY4atrfz+yXS2fdfq027chwvc6ihX/pQYplYdFoppkfHFaF0V3PDe2mCnhtyieaizRBzTpmL5wAg==
+  dependencies:
+    deferred-leveldown "~5.2.1"
+    level-errors "~2.0.0"
+    level-iterator-stream "~4.0.0"
+    level-supports "~1.0.0"
     xtend "~4.0.0"
 
 leven@2.1.0:
@@ -18962,6 +19011,18 @@ multihashes@^0.4.12, multihashes@~0.4.12, multihashes@~0.4.13, multihashes@~0.4.
     bs58 "^4.0.1"
     varint "^5.0.0"
 
+multihashing-async@^0.7.0, multihashing-async@~0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/multihashing-async/-/multihashing-async-0.7.0.tgz#3234fb98295be84386b85bfd20377d3e5be20d6b"
+  integrity sha512-SCbfl3f+DzJh+/5piukga9ofIOxwfT05t8R4jfzZIJ88YE9zU9+l3K2X+XB19MYyxqvyK9UJRNWbmQpZqQlbRA==
+  dependencies:
+    blakejs "^1.1.0"
+    buffer "^5.2.1"
+    err-code "^1.1.2"
+    js-sha3 "~0.8.0"
+    multihashes "~0.4.13"
+    murmurhash3js-revisited "^3.0.0"
+
 multihashing-async@~0.4.7:
   version "0.4.8"
   resolved "https://registry.yarnpkg.com/multihashing-async/-/multihashing-async-0.4.8.tgz#41572b25a8fc68eb318b8562409fdd721a727ea1"
@@ -18995,18 +19056,6 @@ multihashing-async@~0.6.0:
     multihashes "~0.4.13"
     murmurhash3js "^3.0.1"
     nodeify "^1.0.1"
-
-multihashing-async@~0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/multihashing-async/-/multihashing-async-0.7.0.tgz#3234fb98295be84386b85bfd20377d3e5be20d6b"
-  integrity sha512-SCbfl3f+DzJh+/5piukga9ofIOxwfT05t8R4jfzZIJ88YE9zU9+l3K2X+XB19MYyxqvyK9UJRNWbmQpZqQlbRA==
-  dependencies:
-    blakejs "^1.1.0"
-    buffer "^5.2.1"
-    err-code "^1.1.2"
-    js-sha3 "~0.8.0"
-    multihashes "~0.4.13"
-    murmurhash3js-revisited "^3.0.0"
 
 multimatch@^3.0.0:
   version "3.0.0"
@@ -19319,11 +19368,6 @@ node-forge@^0.8.0:
   version "0.8.5"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.8.5.tgz#57906f07614dc72762c84cef442f427c0e1b86ee"
   integrity sha512-vFMQIWt+J/7FLNyKouZ9TazT74PRV3wgv9UT4cRjC8BffxFbKXkgIWR42URCPSnHm/QDz6BOlb2Q0U4+VQT67Q==
-
-node-gyp-build@~3.8.0:
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/node-gyp-build/-/node-gyp-build-3.8.0.tgz#0f57efeb1971f404dfcbfab975c284de7c70f14a"
-  integrity sha512-bYbpIHyRqZ7sVWXxGpz8QIRug5JZc/hzZH4GbdT9HTZi6WmKCZ8GLvP8OZ9TTiIBvwPFKgtGrlWQSXDAvYdsPw==
 
 node-gyp-build@~4.1.0:
   version "4.1.0"
@@ -20025,53 +20069,50 @@ options@>=0.0.5:
   resolved "https://registry.yarnpkg.com/options/-/options-0.0.6.tgz#ec22d312806bb53e731773e7cdaefcf1c643128f"
   integrity sha1-7CLTEoBrtT5zF3Pnza788cZDEo8=
 
-orbit-db-access-controllers@~0.2.0:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/orbit-db-access-controllers/-/orbit-db-access-controllers-0.2.2.tgz#4412b01a198208712d2a0a4065709eeea86b39d6"
-  integrity sha512-LbRg3aIo4Za4HYNKxuDoqqLlq5PeUXPml/puxbMOVUzNiyKhHobQL+Xp5dQ6g7Dt9pvMWDM9L7nFQEJRpu/uhw==
+orbit-db-access-controllers@~0.2.2:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/orbit-db-access-controllers/-/orbit-db-access-controllers-0.2.3.tgz#032264e80a28ff1aabaec657631d586e84787ec0"
+  integrity sha512-dP7eYdyzvfV0qQvAxhLiTHaBMqSfCtLOQG24NE6OzZiMXY+nxpgs5QCeQLD87CSL4jmYP24B+W/SDR3Jz1VP2Q==
   dependencies:
     orbit-db-io "~0.1.0"
     p-map-series "^1.0.0"
 
-orbit-db-cache@~0.2.4:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/orbit-db-cache/-/orbit-db-cache-0.2.5.tgz#d52af394782344ff0058df55677a1036b708c676"
-  integrity sha512-e6/jsBk02AMwi4+c02mt5W7oI/GUMdpZhRORcOrnq4QWs5gbP1PkiXcji9IhWakXpMUfuqodldj1nqrBQjPF3Q==
+orbit-db-cache@~0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/orbit-db-cache/-/orbit-db-cache-0.3.0.tgz#a1be218f7c3c16dd6e51c9e137cebbaa577b6db8"
+  integrity sha512-jUsS+D3jXCwvFy92rqvsEroBMRD1SVyBwRJO248F/0/xIJ7zg+DGmhgukivUDvCrx3cpAXqYqh3Ob+kS+K9QBA==
   dependencies:
-    level-js "~4.0.1"
-    leveldown "~5.0.3"
     logplease "~1.2.15"
-    mkdirp "^0.5.1"
 
-orbit-db-counterstore@~1.5.0:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/orbit-db-counterstore/-/orbit-db-counterstore-1.5.1.tgz#c732b94f6eda80afad0505406266253893f2c4d6"
-  integrity sha512-exPHiZH+fkSVTDYBAMwHDPNL8zNjbcPk0e+09pcwRBUJP8QS0JSza9V65iv2lfPBXJu3S7HIfwO8YeHTNCBN8g==
+orbit-db-counterstore@~1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/orbit-db-counterstore/-/orbit-db-counterstore-1.6.0.tgz#3cc003cc6a59bc048d315ce2c1a2a28745c4c9b3"
+  integrity sha512-cIvTg7/9GdKamw5kaQHsvE2K4T64sZGDqeM/YN5w7zWwGi/TGH0V1DDrDfx6CxpB4O4ke9VVSbP9jgMij17E9g==
   dependencies:
     crdts "~0.1.2"
-    orbit-db-store "~2.6.0"
+    orbit-db-store "~2.7.0"
 
-orbit-db-docstore@~1.5.0:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/orbit-db-docstore/-/orbit-db-docstore-1.5.1.tgz#cb9a981b0b8af029c7984a8a40298723e4d842e3"
-  integrity sha512-HzV93dJ6r5K0+elEXam31ZWxz2z6Gvil8jwCM27wceZbqrnjibzkCavIflknsosgA49o0y7ZbL6F1Z9JwI7PCQ==
+orbit-db-docstore@~1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/orbit-db-docstore/-/orbit-db-docstore-1.6.0.tgz#12a71b1d1d8071efb10f0952a023bab2693a2bf3"
+  integrity sha512-U3uJF0dO0vzHMqttv4oTPa7eUh0jXnewbKwvCEx5/thtFfmara21MjafF7oXqmMIi+p/VO3AW9P6UGMtIatqmQ==
   dependencies:
-    orbit-db-store "~2.6.0"
+    orbit-db-store "~2.7.0"
     p-map "~1.1.1"
 
-orbit-db-eventstore@~1.5.0:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/orbit-db-eventstore/-/orbit-db-eventstore-1.5.1.tgz#2412b43da94257b9115adce03d0b686338429226"
-  integrity sha512-ZPRe9jXaf7P5QcJWEJKOZi5WRDt4K62pbTk1wdoQPvZ9xJiB/dUaA7M0Twq4qosv2SfbKVCClUbTzqzreLqIeA==
+orbit-db-eventstore@~1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/orbit-db-eventstore/-/orbit-db-eventstore-1.6.0.tgz#885c7f034b1a755235481ccb64ec910cb8264e38"
+  integrity sha512-yXLIv0U4B87far9oWCa9O25752xtytE81EfLb21731k+L92s3JRGOiuE8ZX3PNeJlMhHRzjBLOcl1WivR/iNnw==
   dependencies:
-    orbit-db-store "~2.6.0"
+    orbit-db-store "~2.7.0"
 
-orbit-db-feedstore@~1.5.0:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/orbit-db-feedstore/-/orbit-db-feedstore-1.5.1.tgz#b786cfd7ffdf143b1783e3a5e95e3b7dd4fe55d1"
-  integrity sha512-o9XYcrhb0+Cx+QgF4W9gynYUTDFLvJA/r94VJM9O1g53Aw9pA/106TGlX/1bo7oUpFFlIjDIWfawRPSWgw9yqw==
+orbit-db-feedstore@~1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/orbit-db-feedstore/-/orbit-db-feedstore-1.6.0.tgz#476e368ed17c1ef2f874f0b2cab9536f79e440ce"
+  integrity sha512-nv4X1vW/kXRGBIsgRTETEP6SDSTRYAVJ+n3FF5r0BA06+8PbKoN+K1c3Ljs4q97aFCwkpU2G6Bw9Gt9AAjb/YQ==
   dependencies:
-    orbit-db-eventstore "~1.5.0"
+    orbit-db-eventstore "~1.6.0"
 
 orbit-db-identity-provider@~0.1.0:
   version "0.1.5"
@@ -20081,28 +20122,21 @@ orbit-db-identity-provider@~0.1.0:
     ethers "^4.0.20"
     orbit-db-keystore "~0.2.0"
 
-orbit-db-io@~0.1.0:
+orbit-db-identity-provider@~0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/orbit-db-identity-provider/-/orbit-db-identity-provider-0.2.0.tgz#babbfc7a6250d3ab7cf02955cb48629b6f6f2c5d"
+  integrity sha512-U6/UpMRkuJFaJGgFuVLE78WPkognBeo9IAULLD9qfB8WMSE3te8S6Zntnj/DtQbJR2tX34rB8e2D4KXtKfaA2g==
+  dependencies:
+    ethers "^4.0.20"
+    orbit-db-keystore "~0.3.0"
+
+orbit-db-io@^0.1.1, orbit-db-io@~0.1.0, orbit-db-io@~0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/orbit-db-io/-/orbit-db-io-0.1.1.tgz#f79db62ccfdba8b9f60eb355cf17705d49989808"
   integrity sha512-akXMNe6Zjj4XOOO3fW08jvNFL7ttn4pyaKhsooNVt1TNhi2f9cdsumz9NJskl2/go2U4IJcnXRPQGqIBdVulFw==
   dependencies:
     cids "^0.7.1"
     ipld-dag-pb "^0.17.4"
-
-orbit-db-keystore@^0.2.1:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/orbit-db-keystore/-/orbit-db-keystore-0.2.2.tgz#acda85ac0cf8e5d75bd71ed7d6bbffdb9a6defc5"
-  integrity sha512-xaWiFeji89rtUNOAxMn4AUsJhZvsWMA9trv6nZ31GhJ3E64yrnF1bG/bRHWDIKpskb9nBJyd00elwtzOeg+nlg==
-  dependencies:
-    elliptic "^6.4.1"
-    level-js "~4.0.1"
-    leveldown "~5.1.1"
-    levelup "~4.1.0"
-    libp2p-crypto "^0.16.0"
-    libp2p-crypto-secp256k1 "^0.3.0"
-    lru "^3.1.0"
-    mkdirp "^0.5.1"
-    safe-buffer "^5.1.2"
 
 orbit-db-keystore@~0.2.0:
   version "0.2.1"
@@ -20119,12 +20153,27 @@ orbit-db-keystore@~0.2.0:
     mkdirp "^0.5.1"
     safe-buffer "^5.1.2"
 
-orbit-db-kvstore@~1.5.0:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/orbit-db-kvstore/-/orbit-db-kvstore-1.5.1.tgz#49c3c8706c5762d1c941c606a597be67d5ed3861"
-  integrity sha512-fCov8iLmUA0GIsZi6oRspsAy3Rh5yaTBTnuJ/gN6MPU0LWuhZwH3sq/WVsrEQI8uGU4or4SKypSFSp8PC/G3qA==
+orbit-db-keystore@~0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/orbit-db-keystore/-/orbit-db-keystore-0.3.0.tgz#ca37cf49ff1948a994e18f34006b6bc51f498b3f"
+  integrity sha512-pyuUxrGEc1tm6UbCj6A4UAVXkBWLMLPSk+rqvK+uKRFmW4HZFC2WWYDN37UaT5V6bH7OFRgUBzy1VaUW9GRQWA==
   dependencies:
-    orbit-db-store "~2.6.0"
+    elliptic "^6.4.1"
+    level-js "~4.0.1"
+    leveldown "~5.1.1"
+    levelup "~4.1.0"
+    libp2p-crypto "^0.16.0"
+    libp2p-crypto-secp256k1 "^0.3.0"
+    lru "^3.1.0"
+    mkdirp "^0.5.1"
+    safe-buffer "^5.1.2"
+
+orbit-db-kvstore@~1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/orbit-db-kvstore/-/orbit-db-kvstore-1.6.0.tgz#173c42fd3b42c1fa5d47db0a8853728348fbdb11"
+  integrity sha512-yr2wNvL6n3smXK6tQ122IAmtX7NOQVTzDx0bxcNACn1ODSNhjDFxwxwwhNpdalYV15Aoq6YyeubH8XSkOrcs5w==
+  dependencies:
+    orbit-db-store "~2.7.0"
 
 orbit-db-pubsub@~0.5.5:
   version "0.5.5"
@@ -20135,39 +20184,50 @@ orbit-db-pubsub@~0.5.5:
     logplease "~1.2.14"
     p-series "^1.1.0"
 
-orbit-db-store@~2.6.0:
-  version "2.6.4"
-  resolved "https://registry.yarnpkg.com/orbit-db-store/-/orbit-db-store-2.6.4.tgz#7e6b411a04eb20675ef50f4ca8cc53cbf057feea"
-  integrity sha512-TL93RMQBU/IQoz9vAdVLiU0JiKpkCgDO2ZVOraWZHJGXhLpK487rU9iKt2gcp5Mj3HrP9SheMUF/FP1FtRA8Lw==
+orbit-db-storage-adapter@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/orbit-db-storage-adapter/-/orbit-db-storage-adapter-0.5.3.tgz#f1a28cf91d6b47011585346670026318e85867e9"
+  integrity sha512-K/YDVcKkhzEnqK1WFtjcADTtNZdskBJyaTCUY+m0dCuf39VHsXO4kRq5htpT1wJ6yI9dlG6TysVh+duA3o+Xig==
   dependencies:
-    ipfs-log "~4.3.2"
+    level "^5.0.1"
+    mkdirp "^0.5.1"
+
+orbit-db-store@~2.7.0:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/orbit-db-store/-/orbit-db-store-2.7.1.tgz#0aebb2e966e2581eb88b53bdddfb4713c26284a5"
+  integrity sha512-dO4YxH69qnKuuV5zZTz0gTb3pNHyUVpLMWHzFTLMksdlyKUxtRbGZbv4w6ynPolOOlyeOU/INCpRKSMX5scngQ==
+  dependencies:
+    ipfs-log "~4.4.0"
     logplease "^1.2.14"
-    orbit-db-io "~0.1.0"
+    orbit-db-io "~0.1.1"
     p-each-series "^1.0.0"
+    p-map "^3.0.0"
     readable-stream "~2.3.5"
 
-orbit-db@^0.21.0:
-  version "0.21.4"
-  resolved "https://registry.yarnpkg.com/orbit-db/-/orbit-db-0.21.4.tgz#0b15d9f23a73e9cd7c673f31d69de152e0753b5f"
-  integrity sha512-3iIUlZT+HSplZCvV7MqMT0n39FrnOXKH899jMfkpml11vf23lYa62K5rDZ3R3odXF/83e1VFVNkclndDaZsofQ==
+orbit-db@^0.22.0:
+  version "0.22.0"
+  resolved "https://registry.yarnpkg.com/orbit-db/-/orbit-db-0.22.0.tgz#2397093e46431089efaa2b83b8bd16aa88de038c"
+  integrity sha512-PEeifMynU2u7Xq0QlF2FWAij8vk5eER7lvpr5yZyWXo7zOWC+rOxSMQN7bmcgQ11TkIOkQwwZBOrsz5/1+LZyA==
   dependencies:
     cids "^0.7.1"
     ipfs-pubsub-1on1 "~0.0.4"
+    is-node "^1.0.2"
     localstorage-down "^0.6.7"
     logplease "^1.2.14"
     multihashes "^0.4.12"
-    orbit-db-access-controllers "~0.2.0"
-    orbit-db-cache "~0.2.4"
-    orbit-db-counterstore "~1.5.0"
-    orbit-db-docstore "~1.5.0"
-    orbit-db-eventstore "~1.5.0"
-    orbit-db-feedstore "~1.5.0"
-    orbit-db-identity-provider "~0.1.0"
-    orbit-db-io "~0.1.0"
-    orbit-db-keystore "^0.2.1"
-    orbit-db-kvstore "~1.5.0"
+    orbit-db-access-controllers "~0.2.2"
+    orbit-db-cache "~0.3.0"
+    orbit-db-counterstore "~1.6.0"
+    orbit-db-docstore "~1.6.0"
+    orbit-db-eventstore "~1.6.0"
+    orbit-db-feedstore "~1.6.0"
+    orbit-db-identity-provider "~0.2.0"
+    orbit-db-io "^0.1.1"
+    orbit-db-keystore "~0.3.0"
+    orbit-db-kvstore "~1.6.0"
     orbit-db-pubsub "~0.5.5"
-    orbit-db-store "~2.6.0"
+    orbit-db-storage-adapter "^0.5.3"
+    orbit-db-store "~2.7.0"
 
 ordered-read-streams@^1.0.0:
   version "1.0.1"
@@ -22839,10 +22899,10 @@ react-apollo@^3.0.0:
     "@apollo/react-hooks" "^3.0.0"
     "@apollo/react-ssr" "^3.0.0"
 
-react-app-polyfill@1.0.3, react-app-polyfill@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/react-app-polyfill/-/react-app-polyfill-1.0.3.tgz#bd7030ebf66569f3aece03e39ab85ca700d8d0f6"
-  integrity sha512-ICvAU2vtO0k+kU0oCS7L7btUcAReTddvEiRiJDmAKc+d98Fy9Z1g6cjkdcKyfLWwopzBsUMcDwxoiNtrtLMs0Q==
+react-app-polyfill@1.0.4, react-app-polyfill@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-app-polyfill/-/react-app-polyfill-1.0.4.tgz#4dd2636846b585c2d842b1e44e1bc29044345874"
+  integrity sha512-5Vte6ki7jpNsNCUKaboyofAhmURmCn2Y6Hu7ydJ6Iu4dct1CIGoh/1FT7gUZKAbowVX2lxVPlijvp1nKxfAl4w==
   dependencies:
     core-js "3.2.1"
     object-assign "4.1.1"
@@ -22879,10 +22939,10 @@ react-day-picker@^7.3.0:
   dependencies:
     prop-types "^15.6.2"
 
-react-dev-utils@9.0.4, react-dev-utils@^9.0.4:
-  version "9.0.4"
-  resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-9.0.4.tgz#5c71a8e8afdec0232c44d4e049d21baa437a92af"
-  integrity sha512-VwR+mBUXPLdYk/rOz6s6qpasIFGd7GW0KXd/3bih+/qGcMQvPG19XxtjDMtiAg0zWiFwp1ugCzAjLThbzFjVqw==
+react-dev-utils@9.1.0, react-dev-utils@^9.1.0:
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-9.1.0.tgz#3ad2bb8848a32319d760d0a84c56c14bdaae5e81"
+  integrity sha512-X2KYF/lIGyGwP/F/oXgGDF24nxDA2KC4b7AFto+eqzc/t838gpSGiaU8trTqHXOohuLxxc5qi1eDzsl9ucPDpg==
   dependencies:
     "@babel/code-frame" "7.5.5"
     address "1.1.2"
@@ -22903,7 +22963,7 @@ react-dev-utils@9.0.4, react-dev-utils@^9.0.4:
     loader-utils "1.2.3"
     open "^6.3.0"
     pkg-up "2.0.0"
-    react-error-overlay "^6.0.2"
+    react-error-overlay "^6.0.3"
     recursive-readdir "2.2.2"
     shell-quote "1.7.2"
     sockjs-client "1.4.0"
@@ -22930,10 +22990,10 @@ react-dom@^16.8.6:
     prop-types "^15.6.2"
     scheduler "^0.13.6"
 
-react-error-overlay@^6.0.2:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.2.tgz#642bd6157c6a4b6e9ca4a816f7ed30b868c47f81"
-  integrity sha512-DHRuRk3K4Lg9obI6J4Y+nKvtwjasYRU9CFL3ud42x9YJG1HbQjSNublapC/WBJOA726gNUbqbj0U2df9+uzspQ==
+react-error-overlay@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.3.tgz#c378c4b0a21e88b2e159a3e62b2f531fd63bf60d"
+  integrity sha512-bOUvMWFQVk5oz8Ded9Xb7WVdEi3QGLC8tH7HmYP0Fdp4Bn3qw0tRFmr5TW6mvahzvmrK4a6bqWGfCevBflP+Xw==
 
 react-id-swiper@2.3.2:
   version "2.3.2"
@@ -23076,10 +23136,10 @@ react-router@5.1.2:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react-scripts@3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/react-scripts/-/react-scripts-3.1.2.tgz#40b166d380bfd8b425a41dee96e8e725c82bf9e6"
-  integrity sha512-aN9E1jn+Qii45/uLUzS7Hjfd/DXbcaAiRkoMwnJXAXShbpJiP2xwmr7yuVF0kR0cnvt0SI+IPZjsOH8MziSYQQ==
+react-scripts@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/react-scripts/-/react-scripts-3.2.0.tgz#58ccd6b4ffa27f1b4d2986cbdcaa916660e9e33c"
+  integrity sha512-6LzuKbE2B4eFQG6i1FnTScn9HDcWBfXXnOwW9xKFPJ/E3rK8i1ufbOZ0ocKyRPxJAKdN7iqg3i7lt0+oxkSVOA==
   dependencies:
     "@babel/core" "7.6.0"
     "@svgr/webpack" "4.3.2"
@@ -23097,7 +23157,7 @@ react-scripts@3.1.2:
     dotenv-expand "5.1.0"
     eslint "^6.1.0"
     eslint-config-react-app "^5.0.2"
-    eslint-loader "3.0.0"
+    eslint-loader "3.0.2"
     eslint-plugin-flowtype "3.13.0"
     eslint-plugin-import "2.18.2"
     eslint-plugin-jsx-a11y "6.2.3"
@@ -23120,8 +23180,8 @@ react-scripts@3.1.2:
     postcss-normalize "7.0.1"
     postcss-preset-env "6.7.0"
     postcss-safe-parser "4.0.1"
-    react-app-polyfill "^1.0.3"
-    react-dev-utils "^9.0.4"
+    react-app-polyfill "^1.0.4"
+    react-dev-utils "^9.1.0"
     resolve "1.12.0"
     resolve-url-loader "3.1.0"
     sass-loader "7.2.0"
@@ -23130,9 +23190,9 @@ react-scripts@3.1.2:
     terser-webpack-plugin "1.4.1"
     ts-pnp "1.1.4"
     url-loader "2.1.0"
-    webpack "4.40.2"
+    webpack "4.41.0"
     webpack-dev-server "3.2.1"
-    webpack-manifest-plugin "2.0.4"
+    webpack-manifest-plugin "2.1.1"
     workbox-webpack-plugin "4.3.1"
   optionalDependencies:
     fsevents "2.0.7"
@@ -24383,7 +24443,7 @@ scryptsy@^1.2.1:
   dependencies:
     pbkdf2 "^3.0.3"
 
-secp256k1@^3.0.1, secp256k1@^3.5.2, secp256k1@^3.6.1, secp256k1@^3.6.2, secp256k1@^3.7.1:
+secp256k1@3.7.1, secp256k1@^3.0.1, secp256k1@^3.5.2, secp256k1@^3.6.1, secp256k1@^3.6.2:
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/secp256k1/-/secp256k1-3.7.1.tgz#12e473e0e9a7c2f2d4d4818e722ad0e14cc1e2f1"
   integrity sha512-1cf8sbnRreXrQFdH6qsg2H71Xw91fCCS9Yp021GnUNJzWJS/py96fS4lHbnTnouLp08Xj6jBoBB6V78Tdbdu5g==
@@ -28621,13 +28681,14 @@ webpack-log@^2.0.0:
     ansi-colors "^3.0.0"
     uuid "^3.3.2"
 
-webpack-manifest-plugin@2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/webpack-manifest-plugin/-/webpack-manifest-plugin-2.0.4.tgz#e4ca2999b09557716b8ba4475fb79fab5986f0cd"
-  integrity sha512-nejhOHexXDBKQOj/5v5IZSfCeTO3x1Dt1RZEcGfBSul891X/eLIcIVH31gwxPDdsi2Z8LKKFGpM4w9+oTBOSCg==
+webpack-manifest-plugin@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/webpack-manifest-plugin/-/webpack-manifest-plugin-2.1.1.tgz#6b3e280327815b83152c79f42d0ca13b665773c4"
+  integrity sha512-2zqJ6mvc3yoiqfDjghAIpljhLSDh/G7vqGrzYcYqqRCd/ZZZCAuc/YPE5xG0LGpLgDJRhUNV1H+znyyhIxahzA==
   dependencies:
     fs-extra "^7.0.0"
     lodash ">=3.5 <5"
+    object.entries "^1.1.0"
     tapable "^1.0.0"
 
 webpack-manifest-plugin@2.2.0:
@@ -28655,35 +28716,6 @@ webpack-sources@^1.4.0, webpack-sources@^1.4.1, webpack-sources@^1.4.3:
   dependencies:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
-
-webpack@4.40.2:
-  version "4.40.2"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.40.2.tgz#d21433d250f900bf0facbabe8f50d585b2dc30a7"
-  integrity sha512-5nIvteTDCUws2DVvP9Qe+JPla7kWPPIDFZv55To7IycHWZ+Z5qBdaBYPyuXWdhggTufZkQwfIK+5rKQTVovm2A==
-  dependencies:
-    "@webassemblyjs/ast" "1.8.5"
-    "@webassemblyjs/helper-module-context" "1.8.5"
-    "@webassemblyjs/wasm-edit" "1.8.5"
-    "@webassemblyjs/wasm-parser" "1.8.5"
-    acorn "^6.2.1"
-    ajv "^6.10.2"
-    ajv-keywords "^3.4.1"
-    chrome-trace-event "^1.0.2"
-    enhanced-resolve "^4.1.0"
-    eslint-scope "^4.0.3"
-    json-parse-better-errors "^1.0.2"
-    loader-runner "^2.4.0"
-    loader-utils "^1.2.3"
-    memory-fs "^0.4.1"
-    micromatch "^3.1.10"
-    mkdirp "^0.5.1"
-    neo-async "^2.6.1"
-    node-libs-browser "^2.2.1"
-    schema-utils "^1.0.0"
-    tapable "^1.1.3"
-    terser-webpack-plugin "^1.4.1"
-    watchpack "^1.6.0"
-    webpack-sources "^1.4.1"
 
 webpack@4.41.0:
   version "4.41.0"
@@ -29313,7 +29345,7 @@ xsalsa20@^1.0.2:
   resolved "https://registry.yarnpkg.com/xsalsa20/-/xsalsa20-1.0.2.tgz#46cc53439d543d88782e42dfada5c5a69ab6314d"
   integrity sha512-g1DFmZ5JJ9Qzvt4dMw6m9IydqoCSP381ucU5zm46Owbk3bwmqAr8eEJirOPc7PrXRn45drzOpAyDp8jsnoyXyw==
 
-xtend@^4.0.0, xtend@^4.0.1, xtend@~4.0.0, xtend@~4.0.1:
+xtend@^4.0.0, xtend@^4.0.1, xtend@^4.0.2, xtend@~4.0.0, xtend@~4.0.1:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.2.tgz#bb72779f5fa465186b1f438f674fa347fdb5db54"
   integrity sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==
