@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { fbt } from 'fbt-runtime'
 import { withRouter } from 'react-router-dom'
-import ConsoleLogHTML from 'console-log-html'
 
 import withWallet from 'hoc/withWallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
@@ -15,6 +14,7 @@ import Messages from './Messages'
 import Mobile from './Mobile'
 import Search from '../listings/_Search'
 import GetStarted from './GetStarted'
+import ConsoleLogCatcher from 'utils/ConsoleLogCatcher'
 
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
@@ -69,21 +69,64 @@ const Nav = ({
   const [open, setOpen] = useState()
   const [consoleOpen, setConsoleOpen] = useState(false)
   const [consoleLogConnected, setConsoleLogConnected] = useState(false)
+
   const screenConsoleEnabled = localStorage.screenConsole
 
   useEffect(() => {
     if (wallet && !consoleLogConnected && screenConsoleEnabled) {
-      ConsoleLogHTML.connect(document.getElementById('screen-console'))
+      ConsoleLogCatcher().connect((method, logString) => {
+        let logs = JSON.parse(localStorage.getItem('capturedLogs') || '[]')
+        // only keep max 15 items in the logs
+        logs.slice(Math.max(0, logs.length - 15))
+        logs.push({ method, log: logString })
+        localStorage.setItem('capturedLogs', JSON.stringify(logs))
+      })
       setConsoleLogConnected(true)
-      console.log('Console connected')
     }
-  }, [wallet])
+  }, [wallet, consoleLogConnected, screenConsoleEnabled])
 
   const navProps = nav => ({
     onOpen: () => setOpen(nav),
     onClose: () => open === nav && setOpen(false),
     open: open === nav
   })
+
+  const consoleCaptureContent = () => {
+    const logs = JSON.parse(localStorage.getItem('capturedLogs') || '[]')
+
+    return (
+      <div className="screen-console-holder">
+        <ul id="screen-console">
+          {logs.map((log, index) => {
+            return (
+              <li key={index} className={`mt-2 ${log.method}`}>
+                {log.log}
+              </li>
+            )
+          })}
+        </ul>
+        <div className="actions d-flex justify-content-center">
+          <div
+            className="btn btn-primary mr-2"
+            onClick={() => {
+              setConsoleOpen(false)
+            }}
+          >
+            <fbt desc="navbar.close">close</fbt>
+          </div>
+          <div
+            className="btn btn-primary ml-2"
+            onClick={() => {
+              localStorage.removeItem('capturedLogs')
+              setConsoleOpen(false)
+            }}
+          >
+            <fbt desc="navbar.close">clear</fbt>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   if (isMobile) {
     const canGoBack = history && history.length > 1
@@ -126,23 +169,12 @@ const Nav = ({
               onConsoleClick={() => {
                 setConsoleOpen(!consoleOpen)
               }}
+              screenConsoleEnabled={screenConsoleEnabled}
             />
           )}
           {!isProfilePage && getTitle(pathname)}
           {!isStacked && walletEl}
-          <div
-            className={`screen-console-holder ${consoleOpen ? '' : 'd-none'}`}
-          >
-            <ul id="screen-console" />
-            <div
-              className="btn btn-primary"
-              onClick={() => {
-                setConsoleOpen(false)
-              }}
-            >
-              <fbt desc="navbar.close">close</fbt>
-            </div>
-          </div>
+          {consoleOpen && consoleCaptureContent()}
         </nav>
         {canShowSearch && <Search className="search" placeholder />}
         {!isStacked && canShowBack && (
@@ -244,17 +276,7 @@ const Nav = ({
           <Profile {...navProps('profile')} />
         </ul>
       </div>
-      <div className={`screen-console-holder ${consoleOpen ? '' : 'd-none'}`}>
-        <ul id="screen-console" />
-        <div
-          className="btn btn-primary"
-          onClick={() => {
-            setConsoleOpen(false)
-          }}
-        >
-          <fbt desc="navbar.close">close</fbt>
-        </div>
-      </div>
+      {consoleOpen && consoleCaptureContent()}
     </nav>
   )
 }
@@ -275,6 +297,7 @@ require('react-styl')(`
 
     .screen-console-holder
       position: fixed
+      font-size: 10px
       top: 50px
       bottom: 3px
       left: 3px
@@ -284,15 +307,20 @@ require('react-styl')(`
       border-radius: 15px
       padding-top: 40px
       overflow-y: scroll
-      li[data-level=log]
+      .log
         color: white
-      .btn
+      .info
+        color: white
+      .warn
+        color: yellow
+      .error
+        color: red
+      .actions
         position: fixed
         bottom: 30px
-        left: 50%
-        right: 50%
-        margin-left: -80px
-        margin-right: -80px
+        width: 100vw
+      .btn
+        bottom: 30px
         border-radius: 15px
         padding: 0.2rem 1.5rem
     .nav-item

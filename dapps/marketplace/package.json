@@ -54,6 +54,7 @@
     "fingerprintjs2": "^2.1.0",
     "graphql-tag": "^2.10.1",
     "jest-docblock": "^24.3.0",
+    "json-prune": "^1.1.0",
     "myetherwallet-blockies": "^0.1.1",
     "prettier": "^1.18.2",
     "puppeteer": "^1.18.1",
