@@ -8,17 +8,57 @@ import withIdentity from 'hoc/withIdentity'
 import Link from 'components/Link'
 import Stages from 'components/TransactionStages'
 
-function eventName(name) {
-  if (name === 'OfferCreated') {
-    return fbt('made an offer', 'EventDescription.offerCreated')
-  } else if (name === 'OfferAccepted') {
-    return fbt('accepted an offer on', 'EventDescription.offerAccepted')
-  } else if (name === 'OfferFinalized') {
-    return fbt('finalized an offer on', 'EventDescription.offerFinalized')
-  } else if (name === 'OfferWithdrawn') {
-    return fbt('withdrew an offer on', 'EventDescription.offerWithdrawn')
-  } else if (name === 'OfferDisputed') {
-    return fbt('disputed an offer on', 'EventDescription.offerDisputed')
+function getEventText(eventName, partyName, offerTimestamp, listingTitle) {
+  if (eventName === 'OfferCreated') {
+    return (
+      <fbt desc="EventDescription.offerCreated">
+        <fbt:param name="partyName">{partyName}</fbt:param>
+        made an offer on
+        <fbt:param name="listingTitle">{listingTitle}</fbt:param>
+        on
+        <fbt:param name="offerTimestamp">{offerTimestamp}</fbt:param>
+      </fbt>
+    )
+  } else if (eventName === 'OfferAccepted') {
+    return (
+      <fbt desc="EventDescription.offerAccepted">
+        <fbt:param name="partyName">{partyName}</fbt:param>
+        accepted an offer on
+        <fbt:param name="listingTitle">{listingTitle}</fbt:param>
+        on
+        <fbt:param name="offerTimestamp">{offerTimestamp}</fbt:param>
+      </fbt>
+    )
+  } else if (eventName === 'OfferFinalized') {
+    return (
+      <fbt desc="EventDescription.offerFinalized">
+        <fbt:param name="partyName">{partyName}</fbt:param>
+        finalized an offer on
+        <fbt:param name="listingTitle">{listingTitle}</fbt:param>
+        on
+        <fbt:param name="offerTimestamp">{offerTimestamp}</fbt:param>
+      </fbt>
+    )
+  } else if (eventName === 'OfferWithdrawn') {
+    return (
+      <fbt desc="EventDescription.offerWithdrawn">
+        <fbt:param name="partyName">{partyName}</fbt:param>
+        withdrew an offer on
+        <fbt:param name="listingTitle">{listingTitle}</fbt:param>
+        on
+        <fbt:param name="offerTimestamp">{offerTimestamp}</fbt:param>
+      </fbt>
+    )
+  } else if (eventName === 'OfferDisputed') {
+    return (
+      <fbt desc="EventDescription.offerDisputed">
+        <fbt:param name="partyName">{partyName}</fbt:param>
+        disputed an offer on
+        <fbt:param name="listingTitle">{listingTitle}</fbt:param>
+        on
+        <fbt:param name="offerTimestamp">{offerTimestamp}</fbt:param>
+      </fbt>
+    )
   }
 }
 
@@ -27,21 +67,21 @@ const OfferEvent = ({ event, wallet, identity, minimal }) => {
     return null
   }
 
-  const offerTitle = minimal ? (
+  const listingTitle = minimal ? (
     event.offer.listing.title
   ) : (
     <Link to={`/purchases/${event.offer.id}`}>{event.offer.listing.title}</Link>
   )
 
+  const eventName = event.eventData.eventType
+  const partyName = event.address === wallet ? 'You' : get(identity, 'fullName')
+  const offerTimestamp = dayjs.unix(event.timestamp).format('MMM Do, YYYY')
   return (
     <>
       <div className="offer-event">
-        {event.address === wallet ? 'You' : get(identity, 'fullName')}
-        {` ${eventName(event.eventData.eventType)} `}
-        {offerTitle}
-        {` on ${dayjs.unix(event.timestamp).format('MMM Do, YYYY')}`}
+        {getEventText(eventName, partyName, offerTimestamp, listingTitle)}
       </div>
-      {minimal || event.eventData.eventType !== 'OfferCreated' ? null : (
+      {minimal || eventName !== 'OfferCreated' ? null : (
         <Stages offer={event.offer} />
       )}
     </>

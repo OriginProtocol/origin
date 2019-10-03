@@ -62,7 +62,6 @@ export default {
 
       resolve({
         id: args.id,
-        // timestamp: Math.round(convos[args.id] / 1000),
         before: args.before,
         after: args.after
       })

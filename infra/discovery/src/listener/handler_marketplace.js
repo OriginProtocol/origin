@@ -10,6 +10,8 @@ const { getOriginListingId, getOriginOfferId } = esmImport(
   '@origin/graphql/src/utils/getId'
 )
 
+const { proxyOwner } = esmImport('@origin/graphql/src/utils/proxy')
+
 const { redisClient } = require('../lib/redis')
 
 const LISTING_EVENTS = [
@@ -276,7 +278,7 @@ class MarketplaceEventHandler {
   }
 
   /**
-   * Store Listing and Offer events for messaging
+   * Store Offer events for messaging
    * @param {Object} block
    * @param {Object} event
    * @param {Object} details
@@ -287,8 +289,10 @@ class MarketplaceEventHandler {
     const { blockNumber, logIndex } = event
     const blockDate = new Date(block.timestamp * 1000)
 
-    const buyer = details.offer.buyer.id
-    const seller = details.listing.seller.id
+    const buyer =
+      (await proxyOwner(details.offer.buyer.id)) || details.offer.buyer.id
+    const seller =
+      (await proxyOwner(details.listing.seller.id)) || details.listing.seller.id
     const sender = event.returnValues.party
 
     switch (event.event) {

@@ -57,6 +57,7 @@ app.all((req, res, next) => {
       next()
     })
     .catch(() => {
+      logger.error('Rate limiter kicking in')
       res.status(429).send('<h1>Too Many Requests</h1>')
     })
 })
@@ -180,6 +181,7 @@ SELECT SUM(unread) as unread FROM (SELECT messages.unread_count::integer as unre
 
     return res.status(200).send(convs)
   } catch (e) {
+    logger.error('Cannot mark conversation as read', e)
     return res.status(500).send(e)
   }
 })
@@ -277,6 +279,7 @@ SELECT conversations.external_id as id, conversations.updated_at as timestamp, c
 
     return res.status(200).send(convs)
   } catch (e) {
+    logger.error('Cannot get conversation', e)
     return res.status(500).send(e)
   }
 })
@@ -754,7 +757,7 @@ function subscribeToMarketplaceEvents() {
         `Inserted '${eventData.eventType}' event to ${externalId} at ${newMessageIndex}`
       )
     } catch (err) {
-      // TODO: Should we try if it failed because of duplicate conversationIndex?
+      // TODO: Should we retry if it failed because of duplicate conversationIndex?
       logger.error('Cannot process marketplace event', message, err)
     }
   })
