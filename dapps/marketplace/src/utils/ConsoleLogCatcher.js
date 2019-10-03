@@ -17,9 +17,7 @@ const ConsoleLogCatcher = () => {
       let finalMsg = ''
       Array.from(arguments).forEach(argument => {
         if (typeof argument === 'object') {
-          try {
-            finalMsg += prune(argument)
-          } catch (e) {}
+          finalMsg += prune(argument)
         } else {
           finalMsg += argument + '' // "safe toString()" (works with null & undefined)
         }
