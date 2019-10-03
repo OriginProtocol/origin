@@ -7,7 +7,8 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
-  View
+  View,
+  Switch
 } from 'react-native'
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
@@ -89,6 +90,41 @@ const settingsScreen = props => (
         </TouchableHighlight>
       </Fragment>
     ))}
+
+    <View style={styles.menuHeadingContainer}>
+      <Text style={styles.menuHeading}>
+        <fbt desc="SettingsScreen.generalHeading">SECURITY</fbt>
+      </Text>
+    </View>
+
+    <TouchableHighlight onPress={() => {}}>
+      <View style={styles.menuItem}>
+        <Text style={styles.menuText}>Face ID</Text>
+        <View style={styles.menuItemIconContainer}>
+          <Switch trackColor={{ true: '#1a82ff' }} />
+        </View>
+      </View>
+    </TouchableHighlight>
+
+    <TouchableHighlight onPress={() => {}}>
+      <View style={styles.menuItem}>
+        <Text style={styles.menuText}>PIN Code</Text>
+        <View style={styles.menuItemIconContainer}>
+          <Switch trackColor={{ true: '#1a82ff' }} value={true} />
+        </View>
+      </View>
+    </TouchableHighlight>
+
+    <TouchableHighlight onPress={() => props.navigation.navigate('ChangePin')}>
+      <View style={styles.menuItem}>
+        <Text style={styles.menuText}>
+          <fbt desc="SettingsScreen.languageItem">Change PIN Code</fbt>
+        </Text>
+        <View style={styles.menuItemIconContainer}>
+          <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
+        </View>
+      </View>
+    </TouchableHighlight>
 
     <View style={styles.menuHeadingContainer}>
       <Text style={styles.menuHeading}>

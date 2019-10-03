@@ -25,6 +25,7 @@ import CurrencyScreen from 'screens/currency'
 import MarketplaceScreen from 'screens/marketplace'
 import SettingsScreen from 'screens/settings'
 import WalletScreen from 'screens/wallet'
+import ChangePinScreen from 'screens/changePin'
 
 // Backup screen
 import BackupScreen from 'screens/backup'
@@ -100,6 +101,7 @@ const SettingsStack = createStackNavigator(
         }
       }
     },
+    ChangePin: ChangePinScreen,
     Settings: SettingsScreen
   },
   {
