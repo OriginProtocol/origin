@@ -75,7 +75,7 @@ const Nav = ({
   useEffect(() => {
     if (wallet && !consoleLogConnected && screenConsoleEnabled) {
       ConsoleLogCatcher().connect((method, logString) => {
-        let logs = JSON.parse(localStorage.getItem('capturedLogs') || '[]')
+        const logs = JSON.parse(localStorage.getItem('capturedLogs') || '[]')
         // only keep max 15 items in the logs
         logs.slice(Math.max(0, logs.length - 15))
         logs.push({ method, log: logString })
