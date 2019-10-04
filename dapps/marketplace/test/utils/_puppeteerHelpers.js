@@ -49,7 +49,7 @@ export const waitForText = async (page, text, path) => {
   const escapedText = escapeXpathString(text)
   const xpath = `/html/body//${path || '*'}[contains(text(), ${escapedText})]`
   try {
-    await page.waitForXPath(xpath, { timeout: 5000 })
+    await page.waitForXPath(xpath, { timeout: 15000 })
   } catch (err) {
     const url = page.url()
     console.error(`Unable to find text "${text}" in ${url}`)
