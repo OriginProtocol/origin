@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { check, validationResult } = require('express-validator')
+const _ = require('lodash')
 
 const { ensureLoggedIn } = require('../lib/login')
 const { asyncMiddleware } = require('../utils')
@@ -12,7 +13,16 @@ router.get(
   '/user',
   ensureLoggedIn,
   asyncMiddleware(async (req, res) => {
-    res.json(req.user)
+    res.json(
+      _.pick(req.user, [
+        'email',
+        'employee',
+        'name',
+        'phone',
+        'revisedScheduleAgreedAt',
+        'termsAgreedAt'
+      ])
+    )
   })
 )
 
@@ -20,9 +30,16 @@ router.post(
   '/user',
   [
     check('phone')
+      .optional()
       .not()
       .isEmpty()
       .withMessage('Phone must not be empty'),
+    check('revisedScheduleAgreedAt')
+      .optional()
+      .isRFC3339(),
+    check('termsAgreedAt')
+      .optional()
+      .isRFC3339(),
     ensureLoggedIn
   ],
   asyncMiddleware(async (req, res) => {
@@ -33,10 +50,24 @@ router.post(
         .json({ errors: errors.array({ onlyFirstError: true }) })
     }
 
+    const toUpdate = {}
     if (req.body.phone) {
-      await req.user.update({ phone: req.body.phone })
+      toUpdate.phone = req.body.phone
     }
-    res.status(200).end()
+    // Terms agreement fields are immutable once set
+    if (req.body.revisedScheduleAgreedAt && !req.user.revisedScheduleAgreedAt) {
+      toUpdate.revisedScheduleAgreedAt = req.body.revisedScheduleAgreedAt
+    }
+    if (req.body.termsAgreedAt && !req.user.termsAgreedAt) {
+      toUpdate.termsAgreedAt = req.body.termsAgreedAt
+    }
+
+    await req.user.update(toUpdate)
+
+    res
+      .status(200)
+      .send(req.user.get({ plain: true }))
+      .end()
   })
 )
 

@@ -209,6 +209,29 @@ jobs:
           name: Run web3-provider Tests
           command: cd packages/web3-provider && yarn test
 
+  Messaging:
+    # Redis and db
+    docker:
+      - image: circleci/node:10-browsers
+      - image: circleci/redis:5
+      - image: circleci/postgres:9.6-alpine-ram
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: circle_ci_test
+    working_directory: ~/origin
+    environment:
+      DATABASE_URL: postgres://postgres@localhost/circle_ci_test
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Starting Ganache
+          command: cd packages/services && node start.js -g
+          background: true
+      - run:
+          name: Run Messaging Server Tests
+          command: cd infra/messaging && yarn migrate && yarn test
+
 workflows:
   version: 2
   test:
@@ -248,6 +271,9 @@ workflows:
           requires:
             - Setup
       - Web3Provider:
+          requires:
+            - Setup
+      - Messaging:
           requires:
             - Setup
   schema:

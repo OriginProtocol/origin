@@ -4,6 +4,7 @@ import fs from 'fs'
 
 import client from '../src/index'
 import contracts, { setNetwork, shutdown } from '../src/contracts'
+import { predictedProxy, hasProxy, proxyOwner } from '../src/utils/proxy'
 
 import { getOffer, mutate } from './_helpers'
 import queries from './_queries'
@@ -14,7 +15,7 @@ const ZeroAddress = '0x0000000000000000000000000000000000000000'
 const testBuildPath = `${__dirname}/../../contracts/build/tests.json`
 
 describe('Marketplace', function() {
-  let Admin, Seller, Buyer, Arbitrator, Affiliate
+  let Admin, Seller, Buyer, Arbitrator, Affiliate, ProxyUser
   let OGN, Marketplace
 
   before(async function() {
@@ -39,7 +40,8 @@ describe('Marketplace', function() {
     await trackGas()
     const res = await client.query({ query: queries.GetNodeAccounts })
     const nodeAccounts = get(res, 'data.web3.nodeAccounts').map(a => a.id)
-    ;[Admin, Seller, Buyer, Arbitrator, Affiliate] = nodeAccounts
+    assert(nodeAccounts.length >= 6, 'not enough accounts')
+    ;[Admin, Seller, Buyer, Arbitrator, Affiliate, ProxyUser] = nodeAccounts
   })
 
   after(async function() {
@@ -958,6 +960,62 @@ describe('Marketplace', function() {
       const sendRatio = ethSent / ethTraded
 
       assert(sendRatio >= 1.01)
+    })
+  })
+
+  describe('proxy utils', function() {
+    let eventAddress, predictedAddress
+
+    it('should show no proxy', async function() {
+      contracts.config.proxyAccountsEnabled = true
+
+      predictedAddress = await predictedProxy(ProxyUser)
+      assert(
+        (await hasProxy(ProxyUser)) === false,
+        'hasProxy should have returned false'
+      )
+    })
+
+    it('should deploy a proxy', async function() {
+      assert(typeof ProxyUser !== 'undefined', 'ProxyUser undefined')
+      const receipt = await mutate(mutations.DeployProxy, {
+        from: ProxyUser,
+        owner: ProxyUser
+      })
+      assert(receipt.status, 'transaction failed')
+      assert(receipt.logs.length === 2, 'unexpected logs length')
+      assert(
+        receipt.logs[1].topics.length === 1,
+        `unexpected topics length: ${receipt.logs[1].topics.length}`
+      )
+      // ProxyCreation(address)
+      assert(
+        receipt.logs[1].topics[0] ===
+          '0xa38789425dbeee0239e16ff2d2567e31720127fbc6430758c1a4efc6aef29f80',
+        'unexpected event'
+      )
+      assert(receipt.logs[1].data.length === 66, 'unexpected data')
+      eventAddress = contracts.web3.utils.toChecksumAddress(
+        receipt.logs[1].data.slice(receipt.logs[1].data.length - 40)
+      )
+    })
+
+    it('should show a proxy', async function() {
+      const addr = await hasProxy(ProxyUser)
+      assert(
+        addr === predictedAddress,
+        'hasProxy did not return predicted address'
+      )
+      assert(
+        addr === eventAddress,
+        'event address does not match hasProxy address'
+      )
+      assert(
+        (await proxyOwner(addr)) === ProxyUser,
+        'ProxyUser not proxy owner'
+      )
+
+      contracts.config.proxyAccountsEnabled = false
     })
   })
 })

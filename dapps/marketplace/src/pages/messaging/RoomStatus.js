@@ -6,18 +6,22 @@ import withIdentity from 'hoc/withIdentity'
 
 import Avatar from 'components/Avatar'
 
-const RoomStatus = ({ conversation, identity, onClick, active }) => {
+import Link from 'components/Link'
+
+import OfferEvent from 'pages/messaging/OfferEvent'
+
+const RoomStatus = ({ conversation, identity, onClick, active, wallet }) => {
   const name = get(identity, 'fullName', conversation.id)
-  if (!conversation.lastMessage) {
-    return null
-  }
-  const timestamp = conversation.lastMessage
-    ? conversation.lastMessage.timestamp
-    : conversation.timestamp
+
+  const lastMessage = conversation.lastMessage
+
+  const timestamp = lastMessage ? lastMessage.timestamp : conversation.timestamp
+
   return (
-    <div
+    <Link
       className={`room-status${active ? ' active' : ''}`}
-      onClick={() => (onClick ? onClick() : {})}
+      to={`/messages/${conversation.id}`}
+      onClick={onClick}
     >
       <Avatar profile={identity} size={40} />
       <div className="right">
@@ -26,19 +30,29 @@ const RoomStatus = ({ conversation, identity, onClick, active }) => {
           <div className="time">{distanceToNow(timestamp)}</div>
         </div>
         <div className="bottom">
-          <div className="last-message">
-            {get(conversation, 'lastMessage.content')}
-          </div>
+          {!lastMessage ? null : (
+            <div className="last-message">
+              {lastMessage.type === 'event' ? (
+                <OfferEvent
+                  event={lastMessage}
+                  wallet={wallet}
+                  minimal={true}
+                />
+              ) : (
+                get(conversation, 'lastMessage.content')
+              )}
+            </div>
+          )}
           {!conversation.totalUnread ? null : (
             <div className="unread">{conversation.totalUnread}</div>
           )}
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
 
-export default withIdentity(RoomStatus, 'wallet')
+export default withIdentity(RoomStatus, 'conversation.id')
 
 require('react-styl')(`
   .room-status
@@ -47,12 +61,16 @@ require('react-styl')(`
     cursor: pointer
     font-size: 16px
     border-bottom: 1px solid #dde6ea
+    color: #000
     &:last-child
       border: 0
     &.active
       background: rgba(0, 0, 0, 0.1)
+      color: #000
       .time
         color: var(--white)
+    &:hover
+      color: #000
     .avatar
       align-self: flex-start
       flex: 0 0 40px
@@ -96,5 +114,8 @@ require('react-styl')(`
           color: white
           padding: 0 0.5rem
           margin-left: 0.25rem
+    .offer-event
+      font-style: italic
+      color: var(--bluey-grey)
 
 `)
