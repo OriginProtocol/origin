@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withIdentity from 'hoc/withIdentity'
+import withOffer from 'hoc/withOffer'
 
 import Link from 'components/Link'
 import Stages from 'components/TransactionStages'
@@ -62,15 +63,32 @@ function getEventText(eventName, partyName, offerTimestamp, listingTitle) {
   }
 }
 
-const OfferEvent = ({ event, wallet, identity, minimal }) => {
-  if (!event.offer) {
+const OfferEvent = ({
+  offerLoading,
+  offerError,
+  offer,
+  event,
+  wallet,
+  identity,
+  minimal
+}) => {
+  if (offerLoading) {
+    return (
+      <div className="offer-event">
+        <fbt desc="Loading event...">Loading event...</fbt>
+      </div>
+    )
+  }
+
+  if (!offer || offerError) {
+    console.error('OfferEvent: Failed to load offer', offerError)
     return null
   }
 
   const listingTitle = minimal ? (
-    event.offer.listing.title
+    offer.listing.title
   ) : (
-    <Link to={`/purchases/${event.offer.id}`}>{event.offer.listing.title}</Link>
+    <Link to={`/purchases/${offer.id}`}>{offer.listing.title}</Link>
   )
 
   const eventName = event.eventData.eventType
@@ -82,13 +100,16 @@ const OfferEvent = ({ event, wallet, identity, minimal }) => {
         {getEventText(eventName, partyName, offerTimestamp, listingTitle)}
       </div>
       {minimal || eventName !== 'OfferCreated' ? null : (
-        <Stages offer={event.offer} />
+        <Stages offer={offer} />
       )}
     </>
   )
 }
 
-export default withIdentity(OfferEvent, 'event.address')
+export default withOffer(
+  withIdentity(OfferEvent, 'event.address'),
+  'event.eventData.offerID'
+)
 
 require('react-styl')(`
   .messages-page .messages

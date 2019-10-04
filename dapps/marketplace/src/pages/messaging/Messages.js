@@ -143,7 +143,14 @@ const Messages = props => {
   const room = get(props, 'match.params.room')
   useEffect(() => {
     // To set a default room
-    if (defaultRoom || back || !props.messaging || room || props.isMobile) {
+    if (
+      defaultRoom ||
+      back ||
+      !props.messaging ||
+      room ||
+      props.isMobile ||
+      props.messagingLoading
+    ) {
       return
     }
 
@@ -154,7 +161,14 @@ const Messages = props => {
       props.history.push(`/messages/${defaultRoom}`)
       setDefaultRoom(true)
     }
-  }, [room, defaultRoom, back, props.messaging, props.isMobile])
+  }, [
+    room,
+    defaultRoom,
+    back,
+    props.messaging,
+    props.isMobile,
+    props.messagingLoading
+  ])
 
   return (
     <div className="container messages-page">

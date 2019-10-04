@@ -2,7 +2,7 @@ module.exports = `
   extend type Subscription {
     messageAdded: NewMessageResult
     markedAsRead: MarkedAsReadResult
-    messagingStatusChange: MessagingStatusResult
+    messagingStatusChange: MessagingStatusChangeResult
   }
 
   type NewMessageResult {
@@ -17,10 +17,8 @@ module.exports = `
     messagesRead: Int
   }
 
-  type MessagingStatusResult {
-    hasGeneratedWallet: Boolean
-    hasSignedWalletAddress: Boolean
-    enabled: Boolean
+  type MessagingStatusChangeResult {
+    newStatus: String
   }
 
   extend type Query {
@@ -79,6 +77,8 @@ module.exports = `
 
   type MarketplaceEventData {
     eventType: String
+    offerID: String
+    listingID: String
   }
 
   type OutOfBandMessage {

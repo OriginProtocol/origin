@@ -62,29 +62,10 @@ export async function getMessage(message) {
   if (!message) return null
 
   if (message.type === 'event') {
-    const { listingID, offerID } = message.msg
-
-    let offer
-    try {
-      offer = await contracts.eventSource.getOffer(
-        listingID.split('-')[2],
-        offerID.split('-')[2]
-      )
-    } catch (err) {
-      // Note: Fails when the listings and offers are on a different contract
-      console.error(
-        'Conversation.js/getMessage()',
-        'listingID',
-        listingID,
-        'offerID',
-        offerID,
-        err
-      )
-    }
-
+    // Not resolving the offerID to offer here due to performance reasons
+    // Moved that to HOC
     return {
       ...message,
-      offer,
       eventData: message.msg,
       content: null,
       media: null,

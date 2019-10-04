@@ -188,6 +188,11 @@ class Messaging {
 
     this.account_key = key
     this.account = undefined
+
+    await this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
+      messagingStatusChange: 'disabled'
+    })
+
     this.events.emit('new', this.account_key)
     // just start it up here
     if (await this.initRemote()) {
@@ -259,9 +264,7 @@ class Messaging {
     this.ready = true
     this.events.emit('ready', this.account_key)
     this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
-      hasGeneratedWallet: true,
-      hasSignedWalletAddress: true,
-      messagingEnabled: true
+      messagingStatusChange: 'ready'
     })
   }
 
@@ -313,6 +316,11 @@ class Messaging {
     //set phrase in the cookie
     const scopedMessagingPhraseName = `${MESSAGING_PHRASE}:${this.account_key}`
     this.setKeyItem(scopedMessagingPhraseName, phraseStr)
+
+    await this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
+      messagingStatusChange: 'sign1'
+    })
+
     await this.initMessaging()
   }
 
@@ -330,9 +338,6 @@ class Messaging {
     const signature = await signer.sign(sigPhrase, this.account_key)
     debug('signedSig', signature)
     this.events.emit('signedSig')
-    this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
-      hasGeneratedWallet: true
-    })
 
     // 32 bytes in hex + 0x
     const sigKey = signature.substring(0, 66)
@@ -347,9 +352,8 @@ class Messaging {
     this.pub_msg = PROMPT_PUB_KEY + this.account.address
     const signer = this.personalSign ? this.web3.eth.personal : this.web3.eth
     this.pub_sig = await signer.sign(this.pub_msg, this.account_key)
-    this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
-      hasGeneratedWallet: true,
-      hasSignedWalletAddress: true
+    await this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
+      messagingStatusChange: 'sign2'
     })
     const scopedPubSigKeyName = `${PUB_MESSAGING_SIG}:${this.account_key}`
     this.setKeyItem(scopedPubSigKeyName, this.pub_sig)
@@ -886,10 +890,14 @@ class Messaging {
    * @returns {[Object]} A sorted array of conversations by time in descending order
    */
   async getMyConvs({ limit, offset } = {}) {
+    const _limit = Number(limit) || 10
+    const startIndex = Number(offset) || 0
+    const endIndex = startIndex + _limit
+
     let cachedConvs = Object.keys(this.convs)
     if (
       !cachedConvs.length ||
-      (offset && cachedConvs.length - (Number(limit) || 10) < offset)
+      (offset && cachedConvs.length - _limit < offset)
     ) {
       await this.loadMyConvs({ limit, offset })
       cachedConvs = Object.keys(this.convs)
@@ -910,7 +918,7 @@ class Messaging {
 
         return conv2LastMessage.msg.created - conv1LastMessage.msg.created
       })
-      .slice(Number(offset) || 0, Number(limit) || 10)
+      .slice(startIndex, endIndex)
       .map(convId => {
         const recipients = this.getRecipients(convId)
         if (recipients.length === 2) {
