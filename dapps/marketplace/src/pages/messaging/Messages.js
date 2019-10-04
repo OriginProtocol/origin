@@ -63,15 +63,16 @@ const ConversationList = ({
 
   const conversations = get(messaging, 'conversations', [])
 
-  let content = !room ? null : (
-    <div className="conversation-view">
-      <Room
-        id={room}
-        markRead={markConversationRead}
-        enabled={messaging.enabled}
-      />
-    </div>
-  )
+  let content =
+    !messaging.enabled || !room ? null : (
+      <div className="conversation-view">
+        <Room
+          id={room}
+          markRead={markConversationRead}
+          enabled={messaging.enabled}
+        />
+      </div>
+    )
 
   if (content && isMobile) {
     content = (
@@ -143,7 +144,14 @@ const Messages = props => {
   const room = get(props, 'match.params.room')
   useEffect(() => {
     // To set a default room
-    if (defaultRoom || back || !props.messaging || room || props.isMobile) {
+    if (
+      defaultRoom ||
+      back ||
+      !props.messaging ||
+      room ||
+      props.isMobile ||
+      !props.messaging.enabled
+    ) {
       return
     }
 

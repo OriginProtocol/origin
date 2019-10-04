@@ -77,6 +77,8 @@ module.exports = `
 
   type MarketplaceEventData {
     eventType: String
+    offerID: String
+    listingID: String
   }
 
   type OutOfBandMessage {
