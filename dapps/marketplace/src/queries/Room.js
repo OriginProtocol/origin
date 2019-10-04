@@ -29,6 +29,7 @@ export default gql`
             }
           }
           eventData {
+            offerID
             eventType
           }
         }
