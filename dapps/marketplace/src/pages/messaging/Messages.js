@@ -63,16 +63,15 @@ const ConversationList = ({
 
   const conversations = get(messaging, 'conversations', [])
 
-  let content =
-    !messaging.enabled || !room ? null : (
-      <div className="conversation-view">
-        <Room
-          id={room}
-          markRead={markConversationRead}
-          enabled={messaging.enabled}
-        />
-      </div>
-    )
+  let content = !room ? null : (
+    <div className="conversation-view">
+      <Room
+        id={room}
+        markRead={markConversationRead}
+        enabled={messaging.enabled}
+      />
+    </div>
+  )
 
   if (content && isMobile) {
     content = (
@@ -150,7 +149,7 @@ const Messages = props => {
       !props.messaging ||
       room ||
       props.isMobile ||
-      !props.messaging.enabled
+      props.messagingLoading
     ) {
       return
     }
@@ -162,7 +161,14 @@ const Messages = props => {
       props.history.push(`/messages/${defaultRoom}`)
       setDefaultRoom(true)
     }
-  }, [room, defaultRoom, back, props.messaging, props.isMobile])
+  }, [
+    room,
+    defaultRoom,
+    back,
+    props.messaging,
+    props.isMobile,
+    props.messagingLoading
+  ])
 
   return (
     <div className="container messages-page">

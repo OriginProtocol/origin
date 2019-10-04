@@ -890,10 +890,14 @@ class Messaging {
    * @returns {[Object]} A sorted array of conversations by time in descending order
    */
   async getMyConvs({ limit, offset } = {}) {
+    const _limit = Number(limit) || 10
+    const startIndex = Number(offset) || 0
+    const endIndex = startIndex + _limit
+
     let cachedConvs = Object.keys(this.convs)
     if (
       !cachedConvs.length ||
-      (offset && cachedConvs.length - (Number(limit) || 10) < offset)
+      (offset && cachedConvs.length - _limit < offset)
     ) {
       await this.loadMyConvs({ limit, offset })
       cachedConvs = Object.keys(this.convs)
@@ -914,7 +918,7 @@ class Messaging {
 
         return conv2LastMessage.msg.created - conv1LastMessage.msg.created
       })
-      .slice(Number(offset) || 0, Number(limit) || 10)
+      .slice(startIndex, endIndex)
       .map(convId => {
         const recipients = this.getRecipients(convId)
         if (recipients.length === 2) {

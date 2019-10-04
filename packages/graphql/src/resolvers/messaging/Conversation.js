@@ -1,5 +1,4 @@
 import contracts from '../../contracts'
-import parseId from './../../utils/parseId'
 
 export function isEnabled() {
   return contracts.messaging.ready
