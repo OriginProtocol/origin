@@ -50,7 +50,6 @@ const AccountItem = ({ item, navigation, settings, wallet }) => {
           ) : (
             <Text style={styles.name}>{truncateAddress(item.address)}</Text>
           )}
-          
         </View>
         {
           <View style={styles.listItemIconContainer}>
