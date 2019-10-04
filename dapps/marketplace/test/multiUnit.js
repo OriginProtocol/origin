@@ -194,8 +194,7 @@ export function multiUnitTests({
     it('should navigate back home', async function() {
       await page.evaluate(l => {
         window.location = l
-      }, `/`)
-      await waitForText(page, 'Taylor Swift')
+      }, `/#/`)
     })
 
     it('should navigate back to the listing', async function() {
@@ -226,8 +225,7 @@ export function multiUnitTests({
     it('should navigate back home', async function() {
       await page.evaluate(l => {
         window.location = l
-      }, `/`)
-      await waitForText(page, 'Taylor Swift')
+      }, `/#/`)
     })
 
     it('should navigate back to the listing', async function() {
