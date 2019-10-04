@@ -1,6 +1,7 @@
 name: Auto approve
 on:
   pull_request:
+    types: opened
     branches:
       - master
 
