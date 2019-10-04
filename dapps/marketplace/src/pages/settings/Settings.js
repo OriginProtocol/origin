@@ -29,6 +29,7 @@ const configurableFields = [
   'provider',
   'providerWS',
   'performanceMode',
+  'screenConsole',
   'relayer',
   'graphql'
 ]
@@ -164,6 +165,10 @@ const Settings = props => {
 
             <ToggleRow config={config} field="performanceMode">
               <fbt desc="settings.performanceMode">Performance Mode</fbt>
+            </ToggleRow>
+
+            <ToggleRow config={config} field="screenConsole">
+              <fbt desc="settings.screenConsole">Screen Console</fbt>
             </ToggleRow>
 
             <ToggleRow config={config} field="proxyAccountsEnabled">

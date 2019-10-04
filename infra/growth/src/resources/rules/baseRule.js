@@ -259,9 +259,18 @@ class BaseRule {
       return []
     }
     const conditions = []
-    for (const rule of this.crules.levels[prevLevel].rules) {
-      if (rule.config.nextLevelCondition) {
-        const ruleConditions = rule.config.unlockConditionMsg.map(c => {
+
+    const additionalRules = this.crules.allRules.filter(rule =>
+      (this.config.additionalLockConditions || []).includes(rule.id)
+    )
+
+    const checkForConditions = (rules, nextLevelConditionCheck) => {
+      for (const rule of rules) {
+        if (nextLevelConditionCheck && !rule.config.nextLevelCondition) {
+          continue
+        }
+
+        const ruleConditions = (rule.config.unlockConditionMsg || []).map(c => {
           return {
             messageKey: c.conditionTranslateKey,
             iconSource: c.conditionIcon
@@ -270,6 +279,10 @@ class BaseRule {
         conditions.push(...ruleConditions)
       }
     }
+
+    checkForConditions(this.crules.levels[prevLevel].rules, true)
+    checkForConditions(additionalRules, false)
+
     return conditions
   }
 
