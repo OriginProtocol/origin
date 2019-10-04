@@ -1,7 +1,7 @@
 const { tokenToNaturalUnits } = require('../src/util/token')
 
 
-const septemberConfig = {
+const octoberConfig = {
   numLevels: 3,
   levels: {
     0: {
@@ -1103,4 +1103,4 @@ const septemberConfig = {
   }
 }
 
-module.exports = septemberConfig
+module.exports = octoberConfig
