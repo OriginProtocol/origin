@@ -260,8 +260,9 @@ class BaseRule {
     }
     const conditions = []
 
-    const additionalRules = this.crules.allRules
-      .filter(rule => (this.config.additionalLockConditions || []).includes(rule.id))
+    const additionalRules = this.crules.allRules.filter(rule =>
+      (this.config.additionalLockConditions || []).includes(rule.id)
+    )
 
     const checkForConditions = (rules, nextLevelConditionCheck) => {
       for (const rule of rules) {
