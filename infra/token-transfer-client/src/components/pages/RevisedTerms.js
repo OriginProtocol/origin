@@ -10,18 +10,18 @@ import {
   getIsEditing as getUserIsEditing
 } from '@/reducers/user'
 
-class Terms extends Component {
+class RevisedTerms extends Component {
   state = {
-    accepted: false,
+    accepted: true,
     redirectTo: null
   }
 
   handleSubmit = async () => {
     const result = await this.props.editUser({
-      termsAgreedAt: moment()
+      revisedScheduleAgreedAt: moment()
     })
     if (result.type === 'EDIT_USER_SUCCESS') {
-      this.setState({ redirectTo: '/phone' })
+      this.setState({ redirectTo: '/terms' })
     }
   }
 
@@ -33,12 +33,10 @@ class Terms extends Component {
     return (
       <>
         <div className="action-card">
-          <h1>
-            Great!
-            <br />
-            Please review our Terms of Use
-          </h1>
-          <p>Please agree to our terms below and click Continue to proceed</p>
+          <h1>Revised Schedule Agreement</h1>
+          <p>
+            Please agree to the agreement below and click Continue to proceed.
+          </p>
           <div className="form-group">
             <div className="terms-wrapper">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris
@@ -53,18 +51,24 @@ class Terms extends Component {
               Maecenas a imperdiet metus. Nulla volutpat lectus ligula, eget
               malesuada eros fringilla eget. Pellentesque porttitor ultricies
               mauris non congue.
+              <br />
+              <br />
+              Nulla non volutpat dolor, vel placerat risus. Maecenas a imperdiet
+              metus. Nulla volutpat lectus ligula, eget malesuada eros fringilla
+              eget. Pellentesque porttitor ultricies mauris non congue.
             </div>
           </div>
           <div className="form-check">
             <input
               className="form-check-input"
               type="checkbox"
-              value=""
               id="acceptCheck"
               onClick={e => this.setState({ accepted: e.target.checked })}
+              defaultChecked
             />
             <label className="form-check-label mt-0" htmlFor="acceptCheck">
-              I have read and agree to the terms and conditions
+              I have read and agree to the Revised Token Unlock Schedule
+              Agreement
             </label>
           </div>
           <button
@@ -72,7 +76,7 @@ class Terms extends Component {
             onClick={this.handleSubmit}
             disabled={!this.state.accepted || this.props.userIsEditing}
           >
-            Continue
+            Accept Agreement
           </button>
         </div>
       </>
@@ -98,4 +102,4 @@ const mapDispatchToProps = dispatch =>
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Terms)
+)(RevisedTerms)

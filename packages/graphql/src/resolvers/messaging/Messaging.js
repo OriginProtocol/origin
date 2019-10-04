@@ -5,16 +5,19 @@ import { getUnreadCount, isEnabled } from './Conversation'
 async function getConversationIds({ limit, offset }) {
   if (!isEnabled()) {
     return contracts.config.messagingAccount
-      ? [contracts.config.messagingAccount]
+      ? [{ id: contracts.config.messagingAccount }]
       : []
   }
 
   const convos = await contracts.messaging.getMyConvs({ limit, offset })
 
-  if (
+  const hasNotConversedWithSupport =
     contracts.config.messagingAccount &&
-    !convos.find(convId => convId === contracts.config.messagingAccount)
-  ) {
+    !contracts.messaging.hasMoreConversations &&
+    !contracts.messaging.getConvo(contracts.config.messagingAccount)
+
+  if (hasNotConversedWithSupport) {
+    // Push it so that we can inject static messages
     convos.push(contracts.config.messagingAccount)
   }
 
@@ -54,9 +57,12 @@ export default {
   },
   conversations: async (_, { limit, offset }) =>
     await getConversationIds({ limit, offset }),
-  conversation: (_, args) =>
-    new Promise(async resolve => {
-      if (!(await contracts.messaging.conversationExists(args.id))) {
+  conversation: async (_, args) => {
+    return await new Promise(async resolve => {
+      if (
+        args.id !== contracts.config.messagingAccount &&
+        !(await contracts.messaging.conversationExists(args.id))
+      ) {
         resolve(null)
       }
 
@@ -65,7 +71,8 @@ export default {
         before: args.before,
         after: args.after
       })
-    }),
+    })
+  },
   totalUnread: async () => {
     if (!isEnabled()) {
       return 1
@@ -95,6 +102,10 @@ export default {
     return contracts.messaging.pub_sig
   },
   canConverseWith: async (_, args) => {
+    if (!isEnabled()) {
+      return false
+    }
+
     const recipient = await contracts.messaging.canReceiveMessages(args.id)
     return recipient ? true : false
   },
