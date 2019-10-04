@@ -1,69 +1,103 @@
 // https://github.com/karl-run/react-bottom-scroll-listener/blob/master/lib/index.js
-import React, { Component } from 'react'
+import React, { useEffect, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import debounce from 'lodash/debounce'
 
-class BottomScrollListener extends Component {
-  constructor(props) {
-    super(props)
+const BottomScrollListener = ({
+  hasMore,
+  debounce: debounceTime,
+  onBottom,
+  offset,
+  ready,
+  children,
+  className,
+  bindOnContainer
+}) => {
+  const elementRef = useRef(document)
 
-    if (props.debounce) {
-      this.handleOnScroll = debounce(
-        this.handleOnScroll.bind(this),
-        props.debounce,
-        { trailing: true }
-      )
-    } else {
-      this.handleOnScroll = this.handleOnScroll.bind(this)
+  const callbackWrapper = debounceTime ? debounce : f => f
+
+  const rebindListenerOnProps = [
+    hasMore,
+    debounce,
+    onBottom,
+    offset,
+    bindOnContainer
+  ]
+
+  const onScrollListener = useCallback(
+    callbackWrapper(
+      () => {
+        if (!hasMore || !ready) {
+          return
+        }
+
+        if (bindOnContainer) {
+          if (
+            elementRef.current.scrollHeight -
+              (elementRef.current.scrollTop + elementRef.current.clientHeight) <
+            offset
+          ) {
+            onBottom()
+          }
+          return
+        }
+
+        const scrollNode = document.scrollingElement || document.documentElement
+        if (
+          scrollNode.scrollHeight - offset <=
+          scrollNode.scrollTop + window.innerHeight
+        ) {
+          onBottom()
+        }
+      },
+      debounceTime,
+      { trailing: true }
+    ),
+    rebindListenerOnProps
+  )
+
+  useEffect(() => {
+    elementRef.current.addEventListener('scroll', onScrollListener)
+
+    return () => {
+      elementRef.current.removeEventListener('scroll', onScrollListener)
     }
-  }
+  }, rebindListenerOnProps)
 
-  componentDidMount() {
-    document.addEventListener('scroll', this.handleOnScroll)
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('scroll', this.handleOnScroll)
-  }
-
-  handleOnScroll() {
-    const scrollNode = document.scrollingElement || document.documentElement
-
+  window.requestAnimationFrame(() => {
     if (
-      scrollNode.scrollHeight - this.props.offset <=
-        scrollNode.scrollTop + window.innerHeight &&
-      this.props.hasMore
+      ((bindOnContainer &&
+        elementRef.current.scrollHeight < elementRef.current.clientHeight) ||
+        (!bindOnContainer &&
+          document.body.clientHeight < window.innerHeight)) &&
+      ready &&
+      hasMore
     ) {
-      this.props.onBottom()
+      onBottom()
     }
-  }
+  })
 
-  render() {
-    window.requestAnimationFrame(() => {
-      if (
-        document.body.clientHeight < window.innerHeight &&
-        this.props.ready &&
-        this.props.hasMore
-      ) {
-        this.props.onBottom()
-      }
-    })
-
-    return !this.props.children ? null : <div>{this.props.children}</div>
-  }
+  return !children ? null : (
+    <div className={className} ref={bindOnContainer ? elementRef : null}>
+      {children}
+    </div>
+  )
 }
 
 BottomScrollListener.defaultProps = {
   debounce: 200,
   offset: 50,
-  children: null
+  children: null,
+  bindOnContainer: false
 }
 
 BottomScrollListener.propTypes = {
   onBottom: PropTypes.func.isRequired,
   debounce: PropTypes.number,
   offset: PropTypes.number,
-  children: PropTypes.element
+  children: PropTypes.element,
+  bindOnContainer: PropTypes.bool
 }
 
 export default BottomScrollListener

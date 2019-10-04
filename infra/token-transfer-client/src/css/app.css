@@ -57,7 +57,7 @@ body {
 h1 {
   font-size: 30px;
   font-weight: bold;
-  margin-bottom: 40px;
+  margin-bottom: 1.5rem;
 }
 
 h2 {
@@ -182,8 +182,17 @@ input, select {
   padding: 40px 80px;
   border-radius: 10px;
   text-align: center;
-  max-width: 650px;
+  max-width: 685px;
   margin: 0 auto;
+}
+
+.action-card.wide {
+  max-width: 825px;
+}
+
+.action-card .form-check label {
+  text-align: left;
+  font-weight: normal;
 }
 
 @media (max-width: 768px) {
@@ -195,7 +204,15 @@ input, select {
 
 .action-card h1 {
   font-size: 40px;
-  margin-bottom: 0.5rem;
+}
+
+.action-card-help {
+  color: white;
+}
+
+.action-card-help a {
+  text-decoration: underline;
+  color: white;
 }
 
 .table-card {
@@ -330,11 +347,11 @@ input, select {
 }
 
 .btn.btn-lg {
-  font-weight: bold;
+  font-weight: 800;
   border-radius: 2rem;
-  padding: 0.5rem 4rem;
+  padding: 0.75rem 3rem;
   min-width: 10rem;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .alert-danger {
@@ -395,6 +412,3 @@ input, select {
   text-align: left;
   margin: 40px 0;
 }
-
-
-

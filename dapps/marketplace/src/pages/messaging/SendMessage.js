@@ -115,7 +115,7 @@ class SendMessage extends Component {
                   'Type something...',
                   'SendMessage.placeholder'
                 )}
-                ref={this.input}
+                innerRef={this.input}
                 value={this.state.message}
                 onChange={e => this.setState({ message: e.target.value })}
                 onKeyPress={e => this.handleKeyPress(e, sendMessage)}

@@ -6,13 +6,14 @@ class FraudEngine {
   }
 
   /**
-   * Check if account is a duplicate.
+   * Check if the growth participant account is a duplicate of another
+   * active participant account.
    * If yes returns type and reasons, null otherwise.
    *
    * @param {string} ethAddress
    * @returns {Promise<{type: string, reasons: Array<string>} || null>}
    */
-  async isDupeAccount(ethAddress) {
+  async isDupeParticipantAccount(ethAddress) {
     logger.debug(`FraudEngine: dupe analysis for account ${ethAddress}`)
     return null
   }
