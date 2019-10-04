@@ -1,5 +1,2 @@
 **/node_modules
-**/build
-!**/contracts/build
-!**/build/contracts
 mobile/
