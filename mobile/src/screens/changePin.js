@@ -75,7 +75,6 @@ class ChangePinScreen extends Component {
     return (
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={'padding'}
         keyboardVerticalOffset={Platform.OS === 'android' ? 40 : 0}
       >
         <SafeAreaView style={{ flex: 1 }}>
