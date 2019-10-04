@@ -32,15 +32,13 @@ export default {
     subscribe: () => pubsub.asyncIterator('MESSAGE_ADDED')
   },
   markedAsRead: {
-    resolve: ({ markedAsRead }) => {
-      return markedAsRead
-    },
+    resolve: ({ markedAsRead }) => markedAsRead,
     subscribe: () => pubsub.asyncIterator('MARKED_AS_READ')
   },
   messagingStatusChange: {
-    resolve: ({ messagingStatusChange }) => {
-      return messagingStatusChange
-    },
+    resolve: ({ messagingStatusChange }) => ({
+      newStatus: messagingStatusChange
+    }),
     subscribe: () => pubsub.asyncIterator('MESSAGING_STATUS_CHANGE')
   }
 }
