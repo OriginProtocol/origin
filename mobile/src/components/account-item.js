@@ -10,11 +10,11 @@ import {
   View
 } from 'react-native'
 import { connect } from 'react-redux'
-import { fbt } from 'fbt-runtime'
+// import { fbt } from 'fbt-runtime'
 import get from 'lodash.get'
 
-import { truncate } from 'utils'
-import Address from 'components/address'
+import { truncate, truncateAddress } from 'utils'
+// import Address from 'components/address'
 import Avatar from 'components/avatar'
 import ListStyles from 'styles/list'
 
@@ -45,21 +45,12 @@ const AccountItem = ({ item, navigation, settings, wallet }) => {
           <View style={{ ...styles.listItemIconContainer, marginRight: 10 }}>
             <Avatar source={avatarUrl} />
           </View>
-          {!!name && (
+          {name ? (
             <Text style={styles.name}>{truncate(name, truncateLength)}</Text>
+          ) : (
+            <Text style={styles.name}>{truncateAddress(item.address)}</Text>
           )}
-          <Address
-            address={item.address}
-            label={fbt('Address', 'AccountItem.address')}
-            styles={{ marginTop: 4 }}
-            onPress={() =>
-              navigation.navigate('Account', {
-                account: {
-                  ...item
-                }
-              })
-            }
-          />
+          
         </View>
         {
           <View style={styles.listItemIconContainer}>
