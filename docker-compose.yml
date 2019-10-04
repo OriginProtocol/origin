@@ -165,7 +165,9 @@ services:
       - PROVIDER_URL=http://services:8545
       - IPFS_GATEWAY_URL=http://ipfs-proxy:9999
       - IPFS_API_URL=http://ipfs-proxy:9999
+      - REDIS_URL=redis://redis-master:6379
       - ENVKEY=
+      - MESSAGING_EVENTS=
     depends_on:
       - postgres
       - elasticsearch

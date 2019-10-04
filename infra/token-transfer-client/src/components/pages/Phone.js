@@ -50,7 +50,7 @@ class Phone extends Component {
       phone: `${this.state.countryCode} ${this.state.phone}`
     })
     if (result.type === 'EDIT_USER_SUCCESS') {
-      this.setState({ redirectTo: '/terms' })
+      this.setState({ redirectTo: '/otp/explain' })
     }
   }
 
@@ -64,7 +64,7 @@ class Phone extends Component {
 
     return (
       <>
-        <div className="action-card">
+        <div className="action-card narrow">
           <h1>Please provide a phone number</h1>
           <p>We will contact you to verify large withdrawals</p>
           <form>

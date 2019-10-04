@@ -113,7 +113,7 @@ async function post(gateway, json, rawHash) {
 //   return decrypted.data
 // }
 
-async function getTextFn(gateway, hashAsBytes) {
+async function getTextFn(gateway, hashAsBytes, timeoutMS) {
   const hash =
     hashAsBytes.indexOf('0x') === 0
       ? getIpfsHashFromBytes32(hashAsBytes)
@@ -123,7 +123,7 @@ async function getTextFn(gateway, hashAsBytes) {
     const timeout = setTimeout(() => {
       didTimeOut = true
       reject()
-    }, 10000)
+    }, timeoutMS)
     fetch(`${gateway}/ipfs/${hash}`)
       .then(response => {
         clearTimeout(timeout)
@@ -147,11 +147,11 @@ async function getTextFn(gateway, hashAsBytes) {
 
 const getText = memoize(getTextFn, (...args) => args[1])
 
-async function get(gateway, hashAsBytes) {
+async function get(gateway, hashAsBytes, timeoutMS = 10000) {
   // }, party) {
   if (!hashAsBytes) return null
 
-  const text = await getText(gateway, hashAsBytes)
+  const text = await getText(gateway, hashAsBytes, timeoutMS)
   // if (text.indexOf('-----BEGIN PGP MESSAGE-----') === 0 && party) {
   //   try {
   //     text = await decode(text, party.privateKey, party.pgpPass)

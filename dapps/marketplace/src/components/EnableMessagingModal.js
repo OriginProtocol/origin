@@ -1,12 +1,14 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
-import { Query, Mutation } from 'react-apollo'
+import { useQuery, useSubscription, useMutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { fbt } from 'fbt-runtime'
 
 import store from 'utils/store'
 import Link from 'components/Link'
 import EnableMessagingMutation from 'mutations/EnableMessaging'
+
+import MessagingStatusChangeSubscription from 'queries/MessagingStatusChangeSubscription'
 
 const sessionStore = store('sessionStorage')
 
@@ -70,36 +72,36 @@ const MessagingSyncing = ({ pct }) => (
   </div>
 )
 
-const EnableMessaging = ({ next }) => (
-  <div className="enable-messaging">
-    <div className="messaging-logo">
-      <div className="qm" />
-      <div className="qm" />
+const EnableMessaging = ({ next }) => {
+  const [enableMessaging] = useMutation(EnableMessagingMutation)
+
+  return (
+    <div className="enable-messaging">
+      <div className="messaging-logo">
+        <div className="qm" />
+        <div className="qm" />
+      </div>
+      <div className="status">
+        <fbt desc="EnableMessaging.originMessaging">Origin Messaging</fbt>
+      </div>
+      <div className="help">
+        <fbt desc="EnableMessaging.help">
+          Origin messaging will allow you to chat with other buyers and sellers
+          on our DApp.
+        </fbt>
+      </div>
+      <em>Metamask will ask you to sign 2 messages</em>
+      <button
+        className="btn btn-primary"
+        onClick={() => {
+          next()
+          enableMessaging()
+        }}
+        children={fbt('Enable Origin Messaging', 'Enable Origin Messaging')}
+      />
     </div>
-    <div className="status">
-      <fbt desc="EnableMessaging.originMessaging">Origin Messaging</fbt>
-    </div>
-    <div className="help">
-      <fbt desc="EnableMessaging.help">
-        Origin messaging will allow you to chat with other buyers and sellers on
-        our DApp.
-      </fbt>
-    </div>
-    <em>Metamask will ask you to sign 2 messages</em>
-    <Mutation mutation={EnableMessagingMutation}>
-      {enableMessaging => (
-        <button
-          className="btn btn-primary"
-          onClick={() => {
-            next()
-            enableMessaging()
-          }}
-          children={fbt('Enable Origin Messaging', 'Enable Origin Messaging')}
-        />
-      )}
-    </Mutation>
-  </div>
-)
+  )
+}
 
 const SignMessage = ({ num }) => (
   <div className="enable-messaging">
@@ -143,44 +145,38 @@ const MessagingEnabled = () => (
   </div>
 )
 
-class EnableMessagingModal extends Component {
-  state = {}
-  render() {
-    return (
-      <Query query={query} notifyOnNetworkStatusChange={true}>
-        {({ data, error, networkStatus }) => {
-          if (networkStatus === 1) {
-            return <MessagingInitializing />
-          } else if (error) {
-            return <p className="p-3">Error :(</p>
-          } else if (!data || !data.web3) {
-            return <p className="p-3">No Web3</p>
-          }
+const EnableMessagingModal = () => {
+  const [waitForSignature, setWaitForSign] = useState(false)
 
-          let cmp
-          if (!data.messaging) {
-            cmp = <Onboard />
-          } else if (!data.messaging.synced) {
-            cmp = <MessagingSyncing pct={data.messaging.syncProgress} />
-          } else if (!data.messaging.enabled && !this.state.waitForSignature) {
-            cmp = (
-              <EnableMessaging
-                next={() => this.setState({ waitForSignature: true })}
-              />
-            )
-          } else if (!data.messaging.pubKey) {
-            cmp = <SignMessage num={1} />
-          } else if (!data.messaging.pubSig) {
-            cmp = <SignMessage num={2} />
-          } else {
-            cmp = <MessagingEnabled />
-          }
+  const { data, error, networkStatus, refetch } = useQuery(query, {
+    notifyOnNetworkStatusChange: true
+  })
 
-          return cmp
-        }}
-      </Query>
-    )
+  useSubscription(MessagingStatusChangeSubscription, {
+    onSubscriptionData: () => networkStatus !== 1 && refetch()
+  })
+
+  if (networkStatus === 1) {
+    return <MessagingInitializing />
+  } else if (error) {
+    return <p className="p-3">Error :(</p>
+  } else if (!data || !data.web3) {
+    return <p className="p-3">No Web3</p>
   }
+
+  if (!data.messaging) {
+    return <Onboard />
+  } else if (!data.messaging.synced) {
+    return <MessagingSyncing pct={data.messaging.syncProgress} />
+  } else if (!data.messaging.enabled && !waitForSignature) {
+    return <EnableMessaging next={() => setWaitForSign(true)} />
+  } else if (!data.messaging.pubKey) {
+    return <SignMessage num={1} />
+  } else if (!data.messaging.pubSig) {
+    return <SignMessage num={2} />
+  }
+
+  return <MessagingEnabled />
 }
 
 export default EnableMessagingModal

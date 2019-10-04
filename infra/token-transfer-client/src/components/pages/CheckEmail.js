@@ -7,7 +7,7 @@ const CheckEmail = () => (
     <h1>Check your email</h1>
     <img src={EmailIcon} className="my-5" />
     <p>
-      We just sent you an email.
+      If you used a valid email we just sent you an email.
       <br />
       Please click the link in the email to proceed.
     </p>

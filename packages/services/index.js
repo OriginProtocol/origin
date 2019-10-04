@@ -221,7 +221,8 @@ const startListener = () =>
         '--network=localhost',
         '--marketplace',
         '--identity',
-        '--elasticsearch'
+        '--elasticsearch',
+        '--messaging-events'
       ],
       {
         cwd,

@@ -6,13 +6,15 @@ export default function Messaging({
   messagingNamespace,
   web3,
   globalKeyServer,
-  personalSign
+  personalSign,
+  pubsub
 }) {
   return new OriginMessaging({
     contractService: { web3 },
     ecies,
     messagingNamespace,
     globalKeyServer,
-    personalSign
+    personalSign,
+    pubsub
   })
 }
