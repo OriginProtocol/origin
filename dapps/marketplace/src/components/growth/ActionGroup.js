@@ -40,6 +40,7 @@ function ActionGroup(props) {
     }
   } else if (type === 'follows') {
     locked = allActionsInactive
+    locked = false // TODO DELETE!
     title = fbt('Follow Origin', 'growth.actionGroup.follow')
     iconSource = locked
       ? 'images/growth/social-media-follow-icon-locked.svg'

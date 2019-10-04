@@ -79,7 +79,13 @@ const septemberConfig = {
             visible: true,
             nextLevelCondition: false,
             scope: 'campaign',
-            statusScope: 'user'
+            statusScope: 'user',
+            unlockConditionMsg: [
+              {
+                conditionTranslateKey: 'growth.attestation.requirement.facebookAttestation',
+                conditionIcon: 'growth.purchase.empty.details'
+              }
+            ]
           }
         },
         {
@@ -111,7 +117,13 @@ const septemberConfig = {
             visible: true,
             nextLevelCondition: false,
             scope: 'campaign',
-            statusScope: 'user'
+            statusScope: 'user',
+            unlockConditionMsg: [
+              {
+                conditionTranslateKey: 'growth.attestation.requirement.twitterAttestation',
+                conditionIcon: 'growth.purchase.empty.details'
+              }
+            ]
           }
         },
         {
@@ -207,7 +219,13 @@ const septemberConfig = {
             visible: true,
             nextLevelCondition: false,
             scope: 'campaign',
-            statusScope: 'user'
+            statusScope: 'user',
+            unlockConditionMsg: [
+              {
+                conditionTranslateKey: 'growth.attestation.requirement.telegram',
+                conditionIcon: 'images/growth/telegram-badge.svg'
+              }
+            ]
           }
         },
         {
@@ -442,13 +460,7 @@ const septemberConfig = {
             visible: true,
             nextLevelCondition: false,
             scope: 'campaign',
-            statusScope: 'user',
-            unlockConditionMsg: [
-              {
-                conditionTranslateKey: 'growth.attestation.requirement.telegram',
-                conditionIcon: 'images/growth/telegram-badge.svg'
-              }
-            ]
+            statusScope: 'user'
           }
         },
         {
