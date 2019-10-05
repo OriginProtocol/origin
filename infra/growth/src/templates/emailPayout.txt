@@ -1,8 +1,8 @@
 You've received Origin Tokens (OGN)!
 
-Congratulations. You've received ${amount} Origin Tokens (OGN) from the August 2019 Campaign of Origin Rewards.
+Congratulations. You've received ${amount} Origin Tokens (OGN) from the September 2019 Campaign of Origin Rewards.
 We've sent your tokens to ${ethAddress} in this transaction: ${txLink}.
 
 As a reminder, Origin Tokens (OGN) are currently locked for usage on the platform. They will be transferable at a later date.
 
-You can earn more Origin Tokens (OGN) in the September 2019 Campaign of Origin Rewards. Checkout the latest rewards today at ${campaignLink} !
+You can earn more Origin Tokens (OGN) in the October 2019 Campaign of Origin Rewards. Checkout the latest rewards today at ${campaignLink} !
