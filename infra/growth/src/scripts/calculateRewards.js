@@ -68,7 +68,14 @@ class CalculateRewards {
   async _insertRewards(ethAddress, campaign, rewards) {
     const txn = await db.sequelize.transaction()
     try {
-      for (const reward of rewards) {
+      // The rule engine may return rewards with a zero amount,
+      // for example for Facebook and Twitter social sharing.
+      // No need to create a payout row for those.
+      const payableRewards = rewards.filter(
+        r => !BigNumber(r.value.amount).isZero()
+      )
+
+      for (const reward of payableRewards) {
         const data = {
           ethAddress,
           campaignId: reward.campaignId,
