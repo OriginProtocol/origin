@@ -90,27 +90,29 @@ const transactionConfirmed = (id, gqlClient) =>
         variables: { id }
       })
       const receipt = get(result, 'data.web3.transactionReceipt')
-      if (receipt) {
-        debug(`got receipt OK`, receipt)
+      if (receipt && !returned) {
         returned = true
-        resolve(receipt)
+        setTimeout(() => resolve(receipt), 100)
       }
     }
 
-    // Backup subscription incase receipt isn't available immediately...
+    // Backup query incase subscription was added after block already mined
+    const backupTimeout = setTimeout(() => {
+      debug('Run backup receipt query')
+      sub.unsubscribe()
+      getReceipt()
+    }, 100)
+
     const sub = gqlClient.subscribe({ query }).subscribe({
       next: async result => {
         const t = result.data.transactionUpdated
         if (t.id === id && t.status === 'receipt') {
           sub.unsubscribe()
-          if (!returned) {
-            getReceipt()
-          }
+          clearTimeout(backupTimeout)
+          getReceipt()
         }
       }
     })
-
-    getReceipt()
   })
 
 async function getNodeAccount(gqlClient) {
