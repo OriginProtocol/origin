@@ -242,12 +242,12 @@ workflows:
   test:
     jobs:
       - Setup
-      - Lint:
-          requires:
-            - Setup
       - Marketplace:
           requires:
             - Setup
+      # - Lint:
+      #     requires:
+      #       - Setup
       # - GraphQL:
       #     requires:
       #       - Setup
