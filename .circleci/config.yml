@@ -47,15 +47,17 @@ jobs:
 
   Marketplace:
     <<: *defaults
-    parallelism: 2
+    parallelism: 4
     steps:
       - attach_workspace:
           at: .
       - run:
           name: Run Marketplace Tests
           command: |
-            if [[ $CIRCLE_NODE_INDEX == "0" ]]; then cd dapps/marketplace && NODE_ENV=test ./node_modules/.bin/mocha -r @babel/register test --bail -g "^Marketplace Dapp( with proxies)?\." ; fi
-            if [[ $CIRCLE_NODE_INDEX == "1" ]]; then cd dapps/marketplace && NODE_ENV=test ./node_modules/.bin/mocha -r @babel/register test --bail -g "^Marketplace Dapp with proxies, performance mode, (broken )?relayer\." ; fi
+            if [[ $CIRCLE_NODE_INDEX == "0" ]]; then cd dapps/marketplace && NODE_ENV=test ./node_modules/.bin/mocha -r @babel/register test --bail -g "^Marketplace Dapp\." ; fi
+            if [[ $CIRCLE_NODE_INDEX == "1" ]]; then cd dapps/marketplace && NODE_ENV=test ./node_modules/.bin/mocha -r @babel/register test --bail -g "^Marketplace Dapp with proxies\." ; fi
+            if [[ $CIRCLE_NODE_INDEX == "2" ]]; then cd dapps/marketplace && NODE_ENV=test ./node_modules/.bin/mocha -r @babel/register test --bail -g "^Marketplace Dapp with proxies, performance mode, relayer\." ; fi
+            if [[ $CIRCLE_NODE_INDEX == "3" ]]; then cd dapps/marketplace && NODE_ENV=test ./node_modules/.bin/mocha -r @babel/register test --bail -g "^Marketplace Dapp with proxies, performance mode, broken relayer\." ; fi
 
   GraphQL:
     <<: *defaults
