@@ -225,6 +225,42 @@ export const acceptOffer = async ({ page, seller }) => {
   await pic(page, 'transaction-accepted')
 }
 
+// withdraw by seller
+export const rejectOffer = async ({ page, seller }) => {
+  await changeAccount(page, seller)
+  await waitForText(page, 'Decline Offer', 'button')
+  await pic(page, 'transaction-accept')
+
+  // Decline on onffer detail
+  await clickByText(page, 'Decline Offer', 'button')
+  // Following to prevent a race
+  await waitForText(page, `Are you sure you want to reject this offer`)
+  // are you sure?
+  await clickByText(page, 'Reject', 'button')
+  // thumbs down
+  await clickByText(page, 'OK', 'button')
+  await waitForText(page, `You've declined this offer`)
+  await pic(page, 'transaction-accepted')
+}
+
+// withdraw by buyer
+export const withdrawOffer = async ({ page, buyer }) => {
+  await changeAccount(page, buyer)
+  await waitForText(page, 'Cancel Purchase', 'button')
+  await pic(page, 'transaction-accept')
+
+  // Cancel link on offer detail
+  await clickByText(page, 'Cancel Purchase', 'button')
+  // Following to prevent a race
+  await waitForText(page, `Are you sure you want to cancel your purchase`)
+  // are you sure?
+  await clickByText(page, 'Yes', 'button')
+  // tx confirm
+  await clickByText(page, 'OK', 'button')
+  await waitForText(page, `You've canceled this purchase`)
+  await pic(page, 'transaction-accepted')
+}
+
 export const confirmReleaseFundsAndRate = async ({ page, buyer, review }) => {
   await changeAccount(page, buyer)
   await waitForText(page, 'Seller has accepted your offer.')
