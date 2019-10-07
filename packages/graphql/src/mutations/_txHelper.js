@@ -111,7 +111,9 @@ async function useProxy({ proxy, destinationContract, to, from, mutation }) {
 
   if (proxy) {
     debug(`useProxy: ${targetIsProxy ? 'execute-no-wrap' : 'execute'}`)
-    return targetIsProxy && mutation !== 'finalizeOffer'
+    return targetIsProxy &&
+      mutation !== 'finalizeOffer' &&
+      mutation !== 'withdrawOffer'
       ? 'execute-no-wrap'
       : 'execute'
   } else if (mutation === 'deployIdentity' || mutation === 'createListing') {
