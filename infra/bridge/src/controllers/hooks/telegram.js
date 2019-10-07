@@ -7,8 +7,8 @@ const Web3 = require('web3')
 
 const logger = require('../../logger')
 
-const { redisClient } = require('../../utils/redis')
 const { subscribeToHooks } = require('../../hooks/telegram')
+const { createTelegramAttestation } = require('../../utils/attestation')
 
 /**
  * To register the webhook
@@ -32,11 +32,10 @@ router.get('/__init', async (req, res) => {
 })
 
 router.post('/', (req, res) => {
-  // Use redis batch for parallelization (without atomicity)
-  const redisBatch = redisClient.batch()
-
   let followCount = 0
   let totalFollowEvents = 0
+
+  let shouldSendReplyMessage = false
 
   const message = req.body.message
 
@@ -44,23 +43,21 @@ router.post('/', (req, res) => {
     // For attestations
     let payload = /^\/start (.+)$/gi.exec(message.text)
 
-    if (payload && payload[1]) {
+    if (payload && payload[1] && Web3.utils.isAddress(payload[1].toLowerCase())) {
       payload = payload[1]
 
-      const key = `telegram/attestation/event/${Web3.utils.sha3(payload)}`
-      redisBatch.set(
-        key,
-        JSON.stringify({
-          message,
-          payload
-        }),
-        'EX',
-        60 * 30
+      logger.debug(
+        `Pushing attestation message with payload '${payload}'`
       )
 
-      logger.debug(
-        `Pushing attestation message with payload '${payload}' to ${key}`
-      )
+      createTelegramAttestation({
+        identity: payload,
+        message
+      })
+
+      shouldSendReplyMessage = true
+    } else {
+      // Log these to DB
     }
   }
 
@@ -80,23 +77,34 @@ router.post('/', (req, res) => {
       // Note: Username is optional in Telegram.
       // ID is returned as number, We don't want to run into the big number issues
       // So use id only if username is not set
-      const key = `telegram/follow/${member.username || member.id}`
-      redisBatch.set(key, JSON.stringify(member), 'EX', 60 * 30)
-      logger.debug(`Pushing telegram new member event to ${key}`)
+      const username = member.username || member.id
+
+      // Not awaiting this async operation intentionally
+      growthEventHelper({
+        type: 'FOLLOW',
+        socialNetwork: 'TELEGRAM',
+        username: username,
+        event: member
+      })
     })
   }
 
-  redisBatch.exec(err => {
-    if (err) {
-      logger.error(
-        `[TELEGRAM] Failed to push ${followCount}/${totalFollowEvents} new chat member events to redis`
-      )
-    } else {
-      logger.debug(
-        `[TELEGRAM] Pushed ${followCount}/${totalFollowEvents} new chat member events to redis`
-      )
-    }
-  })
+  if (totalFollowEvents > 0) { 
+    logger.debug(
+      `[TELEGRAM] Processed ${followCount}/${totalFollowEvents} new chat member events`
+    )
+  }
+
+  if (shouldSendReplyMessage) {
+    return res.status(200)
+      .header('Content-Type', 'application/json')
+      .send({
+        method: 'sendMessage',
+        chat_id: message.chat.id,
+        text: 'Hey there, Get back to the Origin Marketplace app to continue'
+      })
+  }
+
   res.status(200).end()
 })
 

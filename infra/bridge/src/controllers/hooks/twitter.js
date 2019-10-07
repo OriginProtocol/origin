@@ -6,7 +6,6 @@ const querystring = require('querystring')
 const crypto = require('crypto')
 const constants = require('../../constants')
 const logger = require('../../logger')
-const { redisClient } = require('../../utils/redis')
 const { getTwitterWebhookConsumerSecret } = require('../../utils/hooks')
 
 const {
@@ -16,6 +15,8 @@ const {
 } = require('../../utils/twitter')
 
 const { subscribeToHooks } = require('./../../hooks/twitter')
+
+const growthEventHelper = require('../../utils/growth-event-helpers')
 
 /**
  * To generate a authtoken of the target account and subscribe to events
@@ -172,13 +173,16 @@ function verifyRequestSignature(req) {
  * Should always return 200 with no response
  */
 router.post('/', (req, res) => {
+  if (!req.body.follow_events && !req.body.tweet_create_events) {
+    // If there are no follow or tweet event, ignore this
+    return res.status(200).end()
+  }
+
   if (!verifyRequestSignature(req)) {
     return res.status(403).send({
       errors: ['Unauthorized']
     })
   }
-  // Use redis batch for parallelization (without atomicity)
-  const redisBatch = redisClient.batch()
 
   let followCount = 0
   let mentionCount = 0
@@ -195,9 +199,14 @@ router.post('/', (req, res) => {
         process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
       ) {
         followCount++
-        const key = `twitter/follow/${event.source.screen_name}`
-        redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
-        logger.debug(`Pushing twitter follow event to ${key}...`)
+
+        // Not awaiting this async operation intentionally
+        growthEventHelper({
+          type: 'FOLLOW',
+          socialNetwork: 'TWITTER',
+          username: event.source.screen_name,
+          event
+        })
       }
     })
   }
@@ -217,23 +226,22 @@ router.post('/', (req, res) => {
       })
       .forEach(event => {
         mentionCount++
-        const key = `twitter/share/${event.user.screen_name}`
-        redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
-        logger.debug(`Pushing twitter mention event to ${key}...`)
+
+        // Not awaiting this async operation intentionally
+        growthEventHelper({
+          type: 'SHARE',
+          socialNetwork: 'TWITTER',
+          username: event.source.screen_name,
+          event
+        })
       })
   }
 
-  redisBatch.exec(err => {
-    if (err) {
-      logger.error(
-        `[TWITTER] Failed to push ${followCount}/${totalFollowEvents} follow events and ${mentionCount}/${totalMentionEvents} mention events to redis`
-      )
-    } else {
-      logger.debug(
-        `[TWITTER] Pushed ${followCount}/${totalFollowEvents} follow events and ${mentionCount}/${totalMentionEvents} mention events to redis`
-      )
-    }
-  })
+  if (totalFollowEvents > 0 || totalMentionEvents > 0) {
+    logger.debug(
+      `[TWITTER] Pushed ${followCount}/${totalFollowEvents} follow events and ${mentionCount}/${totalMentionEvents} mention events`
+    )
+  }
 
   res.status(200).end()
 })
