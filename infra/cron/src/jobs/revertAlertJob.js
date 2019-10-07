@@ -177,8 +177,13 @@ async function RevertAlertJob(job) {
   job.progress(90)
 
   logger.debug('Sending E-mail...')
-  await sendgridMail.send(email)
-  logger.debug('E-mail sent.')
+  try {
+    await sendgridMail.send(email)
+    logger.debug('E-mail sent.')
+  } catch (err) {
+    console.error('Error sending E-mail: ', email)
+    throw err
+  }
 
   job.progress(100)
   return { jobDone: true }
