@@ -42,6 +42,7 @@ function listingTests({ autoSwap } = {}) {
 
 describe('Marketplace Dapp.', function() {
   this.timeout(15000)
+  this.retries(2) // This can help with flaky tests
   before(async function() {
     const page = await getPage()
     await page.evaluate(() => {
@@ -61,6 +62,7 @@ describe('Marketplace Dapp.', function() {
 
 describe('Marketplace Dapp with proxies.', function() {
   this.timeout(15000)
+  this.retries(2)
   before(async function() {
     const page = await getPage()
     await page.evaluate(() => {
@@ -80,6 +82,7 @@ describe('Marketplace Dapp with proxies.', function() {
 
 describe('Marketplace Dapp with proxies, performance mode, relayer.', function() {
   this.timeout(15000)
+  this.retries(2)
 
   let page, didThrow
 
@@ -120,6 +123,7 @@ describe('Marketplace Dapp with proxies, performance mode, relayer.', function()
 
 describe('Marketplace Dapp with proxies, performance mode, broken relayer.', function() {
   this.timeout(15000)
+  this.retries(2)
 
   let page
 
