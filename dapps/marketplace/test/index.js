@@ -40,13 +40,15 @@ function listingTests({ autoSwap } = {}) {
   fractionalTests({ autoSwap })
 }
 
-describe('Marketplace Dapp', function() {
+describe('Marketplace Dapp.', function() {
   this.timeout(15000)
+  this.retries(2) // This can help with flaky tests
   before(async function() {
     const page = await getPage()
     await page.evaluate(() => {
       window.localStorage.clear()
       window.localStorage.bypassOnboarding = true
+      window.localStorage.debug = 'origin:*'
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
@@ -58,8 +60,9 @@ describe('Marketplace Dapp', function() {
   onboardingTests()
 })
 
-describe('Marketplace Dapp with proxies', function() {
+describe('Marketplace Dapp with proxies.', function() {
   this.timeout(15000)
+  this.retries(2)
   before(async function() {
     const page = await getPage()
     await page.evaluate(() => {
@@ -77,8 +80,9 @@ describe('Marketplace Dapp with proxies', function() {
   onboardingTests()
 })
 
-describe('Marketplace Dapp with proxies, performance mode, relayer', function() {
+describe('Marketplace Dapp with proxies, performance mode, relayer.', function() {
   this.timeout(15000)
+  this.retries(2)
 
   let page, didThrow
 
@@ -117,8 +121,9 @@ describe('Marketplace Dapp with proxies, performance mode, relayer', function() 
   onboardingTests()
 })
 
-describe('Marketplace Dapp with proxies, performance mode, broken relayer', function() {
+describe('Marketplace Dapp with proxies, performance mode, broken relayer.', function() {
   this.timeout(15000)
+  this.retries(2)
 
   let page
 

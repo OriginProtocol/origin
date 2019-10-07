@@ -17,27 +17,35 @@ function randomTitle() {
 function tokenPaymentTests({ deployIdentity, autoSwap, token }) {
   describe(`Listing payments - ${token}`, function() {
     let seller, buyer, title, page, listing
+
     before(async function() {
       page = await getPage()
+    })
+
+    it('should setup buyer / seller accounts', async function() {
       title = randomTitle()
       const accounts = await reset({
         page,
         sellerOpts: { deployIdentity },
-        buyerOpts: {
-          ogn: token === 'OGN' ? '1' : undefined
-        }
+        buyerOpts: { ogn: token === 'OGN' ? '1' : undefined }
       })
       seller = accounts.seller
       buyer = accounts.buyer
     })
 
-    it(`should allow creation of ${token} only listing`, async function() {
+    it('should switch to seller account', async function() {
       await changeAccount(page, seller)
+    })
+
+    it(`should allow creation of ${token} only listing`, async function() {
       listing = await createListing(page, {
         from: seller,
         title,
         acceptedTokens: [`token-${token}`]
       })
+    })
+
+    it(`should navigate to listing`, async function() {
       await page.evaluate(listingId => {
         window.location = `/#/listing/999-001-${listingId}`
       }, listing)

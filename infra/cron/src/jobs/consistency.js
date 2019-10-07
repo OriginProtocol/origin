@@ -87,8 +87,13 @@ async function ConsistencyCheckJob(job) {
   job.progress(95)
 
   logger.debug('Sending E-mail...')
-  await sendgridMail.send(email)
-  logger.debug('E-mail sent.')
+  try {
+    await sendgridMail.send(email)
+    logger.debug('E-mail sent.')
+  } catch (err) {
+    console.error('Error sending E-mail: ', email)
+    throw err
+  }
 
   job.progress(100)
   logger.info(`ConsistencyCheckJob id=${job.id} done`)

@@ -160,7 +160,7 @@ async function createTestData() {
   })
 
   await db.GrowthCampaign.upsert({
-    id: 9,
+    id: 10,
     nameKey: 'growth.oct2019.name',
     shortNameKey: 'growth.oct2019.short_name',
     rules: JSON.stringify(octoberConfig),
