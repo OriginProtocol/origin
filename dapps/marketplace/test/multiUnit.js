@@ -173,68 +173,6 @@ export function multiUnitTests({
       )
     })
 
-    it('should make an offer on a new listing', async function() {
-      await purchaseMultiUnitListing({
-        page,
-        buyer,
-        withShipping,
-        title,
-        withToken: 'ETH'
-      })
-    })
-
-    it('should allow a new offer to be withdrawn', async function() {
-      await withdrawOffer({ page, buyer })
-    })
-
-    /**
-     * TODO: Is this a bug?  going home first I guess kind of requires a
-     * refetch?  If we don't, the item will show "Sold Out"
-     */
-    it('should navigate back home', async function() {
-      await page.evaluate(l => {
-        window.location = l
-      }, `/#/`)
-    })
-
-    it('should navigate back to the listing', async function() {
-      await changeAccount(page, seller)
-      await page.evaluate(l => {
-        window.location = l
-      }, `/${listingHash}`)
-    })
-
-    it('should make an offer on a new listing', async function() {
-      await purchaseMultiUnitListing({
-        page,
-        buyer,
-        withShipping,
-        title,
-        withToken: 'ETH'
-      })
-    })
-
-    it('should allow a new offer to be rejected', async function() {
-      await rejectOffer({ page, seller })
-    })
-
-    /**
-     * TODO: Is this a bug?  going home first I guess kind of requires a
-     * refetch?  If we don't, the item will show "Sold Out"
-     */
-    it('should navigate back home', async function() {
-      await page.evaluate(l => {
-        window.location = l
-      }, `/#/`)
-    })
-
-    it('should navigate back to the listing', async function() {
-      await changeAccount(page, seller)
-      await page.evaluate(l => {
-        window.location = l
-      }, `/${listingHash}`)
-    })
-
     it('should allow a new listing to be purchased', async function() {
       await purchaseMultiUnitListing({
         page,
@@ -308,6 +246,48 @@ export function multiUnitTests({
 
     it('should allow a new listing to be finalized', async function() {
       await confirmReleaseFundsAndRate({ page, buyer })
+    })
+
+    it('should navigate back to the listing', async function() {
+      await changeAccount(page, seller)
+      await page.evaluate(l => {
+        window.location = l
+      }, `/${listingHash}`)
+    })
+
+    it('should make another offer on the listing', async function() {
+      await purchaseMultiUnitListing({
+        page,
+        buyer,
+        withShipping,
+        title,
+        withToken: 'ETH'
+      })
+    })
+
+    it('should allow the offer to be withdrawn by buyer', async function() {
+      await withdrawOffer({ page, buyer })
+    })
+
+    it('should navigate back to the listing', async function() {
+      await changeAccount(page, seller)
+      await page.evaluate(l => {
+        window.location = l
+      }, `/${listingHash}`)
+    })
+
+    it('should make another offer on the listing', async function() {
+      await purchaseMultiUnitListing({
+        page,
+        buyer,
+        withShipping,
+        title,
+        withToken: 'ETH'
+      })
+    })
+
+    it('should allow the offer to be rejected by seller', async function() {
+      await rejectOffer({ page, seller })
     })
   })
 }

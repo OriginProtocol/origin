@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
-import ListingQuery from 'queries/Listing'
 import WithdrawOfferMutation from 'mutations/WithdrawOffer'
 
 import Modal from 'components/Modal'
@@ -16,6 +15,7 @@ class WithdrawOffer extends Component {
   state = {}
   render() {
     const { className } = this.props
+
     return (
       <Mutation
         mutation={WithdrawOfferMutation}
@@ -29,25 +29,6 @@ class WithdrawOffer extends Component {
             errorData
           })
         }
-        refetchQueries={() => {
-          // TODO: Clean this up before merge
-          if (!this.props.offer.listing.id) {
-            console.warn('Missing listingId')
-            return []
-          }
-          // Listing Id here includes block number, we don't want it
-          let idParts = this.props.offer.listing.id.split('-')
-          if (idParts.length > 3) idParts = idParts.slice(0, 3)
-          const listingId = idParts.join('-')
-          console.log('refetching... ', listingId)
-          return [
-            {
-              query: ListingQuery,
-              variables: { listingId }
-            }
-          ]
-        }}
-        awaitRefetchQueries={true}
       >
         {(withdrawOffer, { client }) => (
           <>

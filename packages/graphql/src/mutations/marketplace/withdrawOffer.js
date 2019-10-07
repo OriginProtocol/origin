@@ -39,14 +39,7 @@ async function withdrawOffer(_, data) {
     tx,
     from,
     mutation: 'withdrawOffer',
-    gas,
-    onReceipt: () => {
-      // Clear eventSource cache
-      // TODO: If unneeded, remove before merge
-      Object.keys(contracts.marketplaces).forEach(v => {
-        contracts.marketplaces[v].eventSource.resetCache()
-      })
-    }
+    gas
   })
 }
 
