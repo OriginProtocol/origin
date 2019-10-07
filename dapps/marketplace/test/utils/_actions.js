@@ -7,8 +7,7 @@ import {
   clickByText,
   pic,
   createAccount,
-  giveRating,
-  waitUntilTextHides
+  giveRating
 } from './_puppeteerHelpers'
 
 export async function reset({ page, sellerOpts, buyerOpts, reload = false }) {
@@ -212,55 +211,6 @@ export const purchaseMultiUnitListing = async ({
     page,
     `You've made an offer. Wait for the seller to accept it.`
   )
-  await pic(page, 'transaction-wait-for-seller')
-}
-
-export const purchaseFractionalListing = async ({ page, buyer }) => {
-  await pic(page, 'listing-detail')
-  await changeAccount(page, buyer)
-
-  await waitForText(page, 'Availability', 'button')
-  await clickByText(page, 'Availability', 'button')
-
-  const startDay = await page.$(
-    '.calendar:not(:first-child) .days .day:nth-child(9)'
-  )
-  const endDay = await page.$(
-    '.calendar:not(:first-child) .days .day:nth-child(15)'
-  )
-  await startDay.click()
-  await endDay.click()
-
-  await clickByText(page, 'Save', 'button')
-
-  await waitUntilTextHides(page, 'Save', 'button')
-
-  await waitForText(page, 'Total Price')
-
-  await clickByText(page, 'Book')
-
-  await clickByText(page, 'Ethereum')
-
-  await clickByText(page, 'Continue', 'a')
-
-  // Purchase confirmation
-  await waitForText(page, 'Please confirm your purchase', 'h1')
-  await pic(page, 'purchase-confirmation')
-
-  await waitForText(page, 'Total Price')
-
-  // TODO: Find a way to verify check in and check out dates in summary
-
-  await waitForText(page, 'Check In')
-  await waitForText(page, 'Check Out')
-
-  await clickByText(page, 'Book', 'button')
-
-  await waitForText(page, 'View Purchase Details', 'button')
-  await pic(page, 'purchase-listing')
-
-  await clickByText(page, 'View Purchase Details', 'button')
-  await waitForText(page, 'Transaction History')
   await pic(page, 'transaction-wait-for-seller')
 }
 

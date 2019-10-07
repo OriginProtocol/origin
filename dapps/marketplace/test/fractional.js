@@ -4,14 +4,14 @@ import {
   waitForText,
   clickByText,
   clickBySelector,
-  pic
+  pic,
+  waitUntilTextHides
 } from './utils/_puppeteerHelpers'
 
 import {
   reset,
   acceptOffer,
-  confirmReleaseFundsAndRate,
-  purchaseFractionalListing
+  confirmReleaseFundsAndRate
 } from './utils/_actions'
 
 function randomTitle() {
@@ -181,8 +181,52 @@ export function fractionalTests({ autoSwap, acceptedTokens } = {}) {
       await clickByText(page, 'View My Listing', 'a')
     })
 
+    it('should switch to buyer account', async function() {
+      await pic(page, 'listing-detail')
+      await changeAccount(page, buyer)
+    })
+
+    it('should show availability', async function() {
+      await clickByText(page, 'Availability', 'button')
+    })
+
+    it('should enter checkin/out dates', async function() {
+      const startDay = await page.$(
+        '.calendar:not(:first-child) .days .day:nth-child(9)'
+      )
+      const endDay = await page.$(
+        '.calendar:not(:first-child) .days .day:nth-child(15)'
+      )
+      await startDay.click()
+      await endDay.click()
+    })
+
+    it('should confirm checkin dates', async function() {
+      await clickByText(page, 'Save', 'button')
+      await waitUntilTextHides(page, 'Save', 'button')
+    })
+
     it('should allow a new listing to be purchased', async function() {
-      await purchaseFractionalListing({ page, buyer })
+      await waitForText(page, 'Total Price')
+
+      await clickByText(page, 'Book')
+      await clickByText(page, 'Ethereum')
+      await clickByText(page, 'Continue', 'a')
+
+      // Purchase confirmation
+      await waitForText(page, 'Please confirm your purchase', 'h1')
+      await pic(page, 'purchase-confirmation')
+
+      // // TODO: Find a way to verify check in and check out dates in summary
+
+      await clickByText(page, 'Book', 'button')
+
+      await waitForText(page, 'View Purchase Details', 'button')
+      await pic(page, 'purchase-listing')
+
+      await clickByText(page, 'View Purchase Details', 'button')
+      await waitForText(page, 'Transaction History')
+      await pic(page, 'transaction-wait-for-seller')
     })
 
     it('should allow a new listing to be accepted', async function() {

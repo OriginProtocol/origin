@@ -2,8 +2,6 @@ const chai = require('chai')
 const expect = chai.expect
 const request = require('supertest')
 const express = require('express')
-const sinon = require('sinon')
-const sendgridMail = require('@sendgrid/mail')
 const jwt = require('jsonwebtoken')
 const totp = require('notp').totp
 const base32 = require('thirty-two')
@@ -13,8 +11,6 @@ const moment = require('moment')
 const { Event, User, sequelize } = require('../../src/models')
 const { encrypt } = require('../../src/lib/crypto')
 
-process.env.SENDGRID_FROM_EMAIL = 'test@test.com'
-process.env.SENDGRID_API_KEY = 'test'
 process.env.ENCRYPTION_SECRET = 'test'
 process.env.SESSION_SECRET = 'test'
 
@@ -53,30 +49,11 @@ describe('Login HTTP API', () => {
     })
   })
 
-  it('should send an email token for a valid email', async () => {
-    const sendStub = sinon.stub(sendgridMail, 'send')
-
+  it('should send an email token', async () => {
     await request(app)
       .post('/api/send_email_token')
       .send({ email: this.user.email })
       .expect(200)
-
-    expect(sendStub.called).to.equal(true)
-
-    sendStub.restore()
-  })
-
-  it('should not send an email token for invalid email but should not error', async () => {
-    const sendStub = sinon.stub(sendgridMail, 'send')
-
-    await request(app)
-      .post('/api/send_email_token')
-      .send({ email: 'fakeuser@originprotocol.com' })
-      .expect(200)
-
-    expect(sendStub.called).to.equal(false)
-
-    sendStub.restore()
   })
 
   it('should verify a valid email token', async () => {
