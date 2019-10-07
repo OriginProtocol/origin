@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "pg": "7.12.1",
-    "sequelize": "5.19.3",
+    "sequelize": "5.19.4",
     "sequelize-cli": "5.5.1",
     "web3": "1.0.0-beta.34"
   },
