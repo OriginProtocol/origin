@@ -16,7 +16,7 @@ const {
 
 const { subscribeToHooks } = require('./../../hooks/twitter')
 
-const growthEventHelper = require('../../utils/growth-event-helpers')
+const growthEventHelper = require('../../utils/growth-event-helpers') 
 
 /**
  * To generate a authtoken of the target account and subscribe to events

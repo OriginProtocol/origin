@@ -2,14 +2,12 @@
 
 const logger = require('../logger')
 
-const crypto = require('crypto')
-
 const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
 const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
 
 const db = require('../models/index')
 
-const { isEventValid, getEventContent, getUserProfileFromEvent } = require('./webhook-helpers')
+const { isEventValid, getEventContent, getUserProfileFromEvent, hashContent } = require('./webhook-helpers')
 
 const PromotionEventToGrowthEvent = {
   TWITTER: {
@@ -19,24 +17,6 @@ const PromotionEventToGrowthEvent = {
   TELEGRAM: {
     FOLLOW: GrowthEventTypes.FollowedOnTelegram
   }
-}
-
-/**
- * Hashes content for verification of the user's post.
- *
- * Important: Make sure to keep this hash function in sync with
- * the one used in the growth engine rules.
- * See infra/growth/resources/rules.js
- *
- * @param text
- * @returns {string} Hash of the text, hexadecimal encoded.
- * @private
- */
-const hashContent = text => {
-  return crypto
-    .createHash('md5')
-    .update(text)
-    .digest('hex')
 }
 
 /**

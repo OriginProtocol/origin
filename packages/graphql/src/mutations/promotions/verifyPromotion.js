@@ -2,6 +2,8 @@ import get from 'lodash/get'
 
 import contracts from '../../contracts'
 
+const MAX_TRIES = 30
+
 async function verifyPromotion(
   _,
   { identity, identityProxy, socialNetwork, type, content }
@@ -11,30 +13,40 @@ async function verifyPromotion(
     return { success: false, reason: 'No bridge server configured' }
   }
 
-  const url = `${bridgeServer}/api/promotions/verify`
+  let tries = 0
+  const url = new URL(`${bridgeServer}/api/promotions/verify`)
 
-  const response = await fetch(url, {
-    headers: { 'content-type': 'application/json' },
-    credentials: 'include',
-    method: 'POST',
-    body: JSON.stringify({
-      identity,
-      identityProxy,
-      socialNetwork,
-      type,
-      content
+  url.searchParams.append('identity', identity)
+  url.searchParams.append('identityProxy', identityProxy)
+  url.searchParams.append('socialNetwork', socialNetwork)
+  url.searchParams.append('type', type)
+  if (content) url.searchParams.append('content', content)
+
+  while (tries < MAX_TRIES) {
+    const response = await fetch(url.toString(), {
+      headers: { 'content-type': 'application/json' },
+      credentials: 'include',
+      method: 'GET'
     })
-  })
+  
+    if (!response.ok) {
+      return { success: false, reason: get(data, 'errors[0]') }
+    }
+  
+    const data = await response.json()
+  
+    if (data.verified) {
+      return {
+        success: true
+      }
+    }
 
-  const data = await response.json()
-
-  if (!response.ok) {
-    return { success: false, reason: get(data, 'errors[0]') }
+    tries++
   }
 
   return {
-    success: true,
-    data: JSON.stringify(data)
+    success: false,
+    reason: 'Verification timed out. Please try again'
   }
 }
 

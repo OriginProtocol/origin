@@ -73,3 +73,21 @@ module.exports.getEventContent = ({ type, event }) => {
 
   return decodedContent
 }
+
+/**
+ * Hashes content for verification of the user's post.
+ *
+ * Important: Make sure to keep this hash function in sync with
+ * the one used in the growth engine rules.
+ * See infra/growth/resources/rules.js
+ *
+ * @param text
+ * @returns {String} Hash of the text, hexadecimal encoded.
+ * @private
+ */
+module.exports.hashContent = text => {
+  return crypto
+    .createHash('md5')
+    .update(text)
+    .digest('hex')
+}
