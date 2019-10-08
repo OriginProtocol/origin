@@ -124,6 +124,7 @@ async function RevertAlertJob(job) {
 
   job.progress(30)
 
+  let totalTransactions = 0
   for (const c of contracts) {
     const { address, epoch } = c
     const fromBlock = Math.max(epoch, yesterdaysBlock)
@@ -133,6 +134,8 @@ async function RevertAlertJob(job) {
       endBlock: latestBlock,
       apiKey
     })
+
+    if (transactions) totalTransactions += transactions.length
 
     for (const tx of transactions) {
       total += 1
@@ -148,6 +151,8 @@ async function RevertAlertJob(job) {
       apiKey
     })
 
+    if (internals) totalTransactions += internals.length
+
     for (const tx of internals) {
       total += 1
       if (tx.isError === '1') {
@@ -160,7 +165,9 @@ async function RevertAlertJob(job) {
   // reverts.push('0xdeadbeef')
 
   if (reverts.length === 0) {
-    logger.info('No E-mail to send, no reverts.')
+    let noWhat = 'reverts'
+    if (totalTransactions === 0) noWhat = 'transactions'
+    logger.info(`No E-mail to send, no ${noWhat}.`)
     job.progress(100)
     return { jobDone: true }
   }
