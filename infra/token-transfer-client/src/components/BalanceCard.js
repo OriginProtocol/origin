@@ -224,18 +224,19 @@ class BalanceCard extends Component {
         </div>
         <ul className="my-4 mx-2 text-left">
           <li className="mt-1">
-            Ut non eleifend enim. Curabitur tempor tellus nunc, sit amet
-            vehicula enim porttitor id.
+            You will need to confirm your withdrawal via email within five
+            minutes of making a request.
           </li>
           <li className="mt-1">
-            Nam consequat est mi, eu semper augue interdum nec.
+            Be sure that only you have access to your account and that your
+            private key or seed phrase is backed up and stored safely.
           </li>
           <li className="mt-1">
-            Duis posuere lectus velit, vitae cursus velit molestie congue.
+            Do not send any funds back to the account that they are sent from.
           </li>
           <li className="mt-1">
-            Aenean justo tellus, vestibulum sit amet pharetra id, ultricies ut
-            neque.
+            Large withdrawals may be delayed and will require a phone call for
+            verification.
           </li>
         </ul>
         <button
