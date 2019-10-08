@@ -99,6 +99,7 @@ async function RevertAlertJob(job) {
   }
 
   const latestBlock = await contractsContext.web3.eth.getBlockNumber()
+  if (!latestBlock) throw new Error('Unable to fetch latest block number')
   const yesterdaysBlock = block24HoursAgo(latestBlock)
 
   job.progress(10)
@@ -123,6 +124,7 @@ async function RevertAlertJob(job) {
 
   job.progress(30)
 
+  let totalTransactions = 0
   for (const c of contracts) {
     const { address, epoch } = c
     const fromBlock = Math.max(epoch, yesterdaysBlock)
@@ -132,6 +134,8 @@ async function RevertAlertJob(job) {
       endBlock: latestBlock,
       apiKey
     })
+
+    if (transactions) totalTransactions += transactions.length
 
     for (const tx of transactions) {
       total += 1
@@ -143,8 +147,11 @@ async function RevertAlertJob(job) {
     const internals = await fetchTransactions(c.address, {
       action: 'txlistinternal',
       fromBlock,
+      endBlock: latestBlock,
       apiKey
     })
+
+    if (internals) totalTransactions += internals.length
 
     for (const tx of internals) {
       total += 1
@@ -158,7 +165,9 @@ async function RevertAlertJob(job) {
   // reverts.push('0xdeadbeef')
 
   if (reverts.length === 0) {
-    logger.info('No E-mail to send, no reverts.')
+    let noWhat = 'reverts'
+    if (totalTransactions === 0) noWhat = 'transactions'
+    logger.info(`No E-mail to send, no ${noWhat}.`)
     job.progress(100)
     return { jobDone: true }
   }
