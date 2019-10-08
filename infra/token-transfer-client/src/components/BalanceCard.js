@@ -107,7 +107,9 @@ class BalanceCard extends Component {
     this.setState({ modalState: 'TwoFactor' })
   }
 
-  handleTwoFactorFormSubmit = async () => {
+  handleTwoFactorFormSubmit = async event => {
+    event.preventDefault()
+
     // Do the transfer
     const result = await this.props.addTransfer({
       amount: this.state.amount,

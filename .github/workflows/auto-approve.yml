@@ -1,13 +1,14 @@
 name: Auto approve
 on:
   pull_request:
+    types: opened
     branches:
       - master
 
 jobs:
   approve:
     runs-on: ubuntu-latest
-    if: github.actor == 'tomlinton' && github.head_ref == 'crowdin'
+    if: github.actor == 'tomlinton' && startsWith(github.head_ref, 'crowdin')
     steps:
       - uses: hmarr/auto-approve-action@v2.0.0
         with:

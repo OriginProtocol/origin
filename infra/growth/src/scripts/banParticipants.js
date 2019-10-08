@@ -131,6 +131,9 @@ class BanParticipants {
       logger.info(
         `Banning account ${participant.ethAddress} - Ban type: ${banData.type} reasons: ${banData.reasons}`
       )
+      // Include the date the account was banned in the data.
+      banData.date = Date.now()
+
       // Change status to banned and add the ban data.
       await participant.update({
         status: enums.GrowthParticipantStatuses.Banned,
@@ -204,7 +207,7 @@ class BanParticipants {
       }
 
       // Check if the participant is a duplicate account
-      const fraud = await this.fraudEngine.isDupeAccount(address)
+      const fraud = await this.fraudEngine.isDupeParticipantAccount(address)
       if (fraud) {
         await this._banParticipant(participant, fraud)
         this.stats.numBanned++

@@ -39,7 +39,8 @@ function generateToken(user) {
       email: user.email
     },
     encryptionSecret,
-    { expiresIn: '24h' }
+    // TODO revert to 24h
+    { expiresIn: '14d' }
   )
 }
 

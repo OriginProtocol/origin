@@ -28,7 +28,7 @@ async function withdrawOffer(_, data) {
     tx = Proxy.methods.marketplaceFinalizeAndPay(
       marketplace.contract._address,
       txData,
-      from,
+      offer.buyer,
       offer.currency,
       offer.value
     )

@@ -24,6 +24,8 @@ const Growth$FbtEnum = {
   'growth.two.attestations.requirement': 'Two profile verifications',
   'growth.profile.requirement': 'Profile name and photo',
   'growth.email.requirement': 'Verified email',
+  'growth.attestation.requirement.twitterAttestation': 'Twitter attestation',
+  'growth.attestation.requirement.facebookAttestation': 'Facebook attestation',
   'growth.attestation.requirement.telegram': 'Telegram attestation',
 
   // May campaign

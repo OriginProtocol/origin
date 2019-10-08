@@ -45,6 +45,11 @@ class Phone extends Component {
     }
   }
 
+  isValidPhone() {
+    // Very loose mobile phone validation
+    return /^[0-9]{5,14}$/.test(this.state.phone)
+  }
+
   handleSubmit = async () => {
     const result = await this.props.editUser({
       phone: `${this.state.countryCode} ${this.state.phone}`
@@ -90,7 +95,7 @@ class Phone extends Component {
               type="submit"
               className="btn btn-secondary btn-lg mt-5"
               onClick={this.handleSubmit}
-              disabled={this.props.userIsEditing}
+              disabled={this.props.userIsEditing || !this.isValidPhone()}
             >
               {this.props.userIsEditing ? (
                 <>
