@@ -151,7 +151,7 @@
     semver "^5.4.1"
     source-map "^0.5.0"
 
-"@babel/core@^7.0.0", "@babel/core@^7.1.0", "@babel/core@^7.2.0", "@babel/core@^7.2.2", "@babel/core@^7.4.5":
+"@babel/core@^7.0.0", "@babel/core@^7.1.0", "@babel/core@^7.2.0", "@babel/core@^7.4.5":
   version "7.5.5"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.5.5.tgz#17b2686ef0d6bc58f963dddd68ab669755582c30"
   integrity sha512-i4qoSr2KTtce0DmkuuQBV4AuQgGPUcPXMr9L5MyYAtk06z068lQ10a4O009fe5OB/DfNV+h+qqT7ddNV8UnRjg==
@@ -5701,17 +5701,18 @@ babel-plugin-dynamic-import-node@2.3.0, babel-plugin-dynamic-import-node@^2.3.0:
   dependencies:
     object.assign "^4.1.0"
 
-babel-plugin-fbt-runtime@0.9.4:
-  version "0.9.4"
-  resolved "https://registry.yarnpkg.com/babel-plugin-fbt-runtime/-/babel-plugin-fbt-runtime-0.9.4.tgz#3da48717ce014ef99f8f4d9c4d03ae8f443ae420"
-  integrity sha512-17+R2e+zWjfB805Un2AuvCQ4zrYAqLd63e3s8k0tOfjGIYRUHAMCLXuKMU2qjXNWXW7V76y4rtFCR2CVu3ffgA==
+babel-plugin-fbt-runtime@0.9.5:
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/babel-plugin-fbt-runtime/-/babel-plugin-fbt-runtime-0.9.5.tgz#e9b795e82a61d8e7f51582bfc72b6683f87466e9"
+  integrity sha512-YC75q2KPCSHhNHivazrZTKDGg2CgGOIHGse6lDNXiMki8Y6rs2ReTZPnDQFrh5kiv+zhAJIfNdDrOJ4ZGUSsKw==
   dependencies:
-    "@babel/core" "^7.2.2"
+    "@babel/core" "^7.0.0"
+    fbjs "^1.0.0"
 
-babel-plugin-fbt@0.9.16:
-  version "0.9.16"
-  resolved "https://registry.yarnpkg.com/babel-plugin-fbt/-/babel-plugin-fbt-0.9.16.tgz#b88dd8f562cf0f406ab7f5c510b0539518e92590"
-  integrity sha512-dDXHw6VvYPXpLGZJgRDT18GrNI7CqX/zywvcX2heUPdKubJ8KhGVlnNtOafkpieZsj6yI874OYBsrrQ8R4zq/Q==
+babel-plugin-fbt@0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-fbt/-/babel-plugin-fbt-0.10.0.tgz#8ac9b30b76a79c33526afa92e2523be5583f45fb"
+  integrity sha512-dVKSeeu8RQOY238SUjj2uSxLl+Qvogw4fNtr4iadINRSwQhXZzpmdhcnnY3OelKreCXT1BMVIf7XmdVuP7TZ3g==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/generator" "^7.0.0"
