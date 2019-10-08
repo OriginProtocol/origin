@@ -1686,16 +1686,16 @@
   resolved "https://registry.yarnpkg.com/@google-cloud/promisify/-/promisify-1.0.2.tgz#e581aa79ff71fb6074acc1cc59e3d81bf84ce07b"
   integrity sha512-7WfV4R/3YV5T30WRZW0lqmvZy9hE2/p9MvpI34WuKa2Wz62mLu5XplGTFEMK6uTbJCLWUxTcZ4J4IyClKucE5g==
 
-"@google-cloud/pubsub@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@google-cloud/pubsub/-/pubsub-1.1.0.tgz#48b44559b5a7beacbaaf88d890ba062514d600c5"
-  integrity sha512-5p8U/m4G5l+hbC20l50RG1riSHVAgl3ArwmksCiwcFtPfpIGbLpWLmZOt1DiwxcU1JteWEvI2qncYGhEtiWRsQ==
+"@google-cloud/pubsub@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@google-cloud/pubsub/-/pubsub-1.1.1.tgz#e42456ec50a642874ef7910b790b49ee730b6a08"
+  integrity sha512-Lk6bVjKkC8eywgHVoVBF0KGYrNakPIWzBziVqaElxLKwLUKX0PImCQIZ0WiCewaBG/FBwCh/1LLEg++3WcyfMA==
   dependencies:
     "@google-cloud/paginator" "^2.0.0"
     "@google-cloud/precise-date" "^1.0.0"
     "@google-cloud/projectify" "^1.0.0"
     "@google-cloud/promisify" "^1.0.0"
-    "@grpc/grpc-js" "^0.6.0"
+    "@grpc/grpc-js" "^0.6.6"
     "@sindresorhus/is" "^1.0.0"
     "@types/duplexify" "^3.6.0"
     "@types/long" "^4.0.0"
@@ -1703,7 +1703,7 @@
     async-each "^1.0.1"
     extend "^3.0.2"
     google-auth-library "^5.0.0"
-    google-gax "^1.5.2"
+    google-gax "^1.6.3"
     is-stream-ended "^0.1.4"
     lodash.snakecase "^4.1.1"
     p-defer "^3.0.0"
@@ -1743,10 +1743,10 @@
   dependencies:
     semver "^6.0.0"
 
-"@grpc/grpc-js@^0.6.0":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-0.6.1.tgz#a2e7b5cbcc8422f00a43517b1f920fdb8e951a85"
-  integrity sha512-f7u4bXWaB6HyGLcBO3ZnHgKw9ZxoeAGykaVsWFiV96O6/fLfVcEqZ/VO8rBc37x+9Abk9VSJWwsdyyQfggDQJA==
+"@grpc/grpc-js@^0.6.4", "@grpc/grpc-js@^0.6.6":
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-0.6.6.tgz#30684ddbca75593c6a004a58a2fe8cc06c2c9d6a"
+  integrity sha512-Q+TGfJoXWARgAnga5kWBWhc7tMI3LNHMzGlzsT0i/kn64jQwndkdbYXkyQKr17zPNoouFaG4yAwaKtv3JZ6PEA==
   dependencies:
     semver "^6.2.0"
 
@@ -12655,12 +12655,12 @@ google-gax@^1.1.2:
     semver "^6.0.0"
     walkdir "^0.4.0"
 
-google-gax@^1.5.2:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/google-gax/-/google-gax-1.6.0.tgz#176a25c608eadddcfd37aab057984309053a9e39"
-  integrity sha512-58QrU+a8VtsqYdWGxouKVozsgOrn6vVQYFf5zZDEAMqq1dWjTobSa43FJsXwnTujYLLLHjdx9v78Jto7Hlqggw==
+google-gax@^1.6.3:
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/google-gax/-/google-gax-1.6.4.tgz#7c5e87bcd8ef4832372b0e9483ecc35fd6b5221a"
+  integrity sha512-fQni9tlywernM6eA4Dje0rw+sUARQne3XLTszDiDQFxevbJBcMu30l0n/lNCDSEbRAJcgIRap51pxHu0htF9+A==
   dependencies:
-    "@grpc/grpc-js" "^0.5.2"
+    "@grpc/grpc-js" "^0.6.4"
     "@grpc/proto-loader" "^0.5.1"
     abort-controller "^3.0.0"
     duplexify "^3.6.0"
@@ -22829,10 +22829,10 @@ range-parser@^1.2.1, range-parser@~1.2.1:
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
   integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
 
-rate-limiter-flexible@1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/rate-limiter-flexible/-/rate-limiter-flexible-1.1.3.tgz#bae35170f60d5b50db7c8e9ff2fe180c99b1a9c9"
-  integrity sha512-M2r/0lVcSAYA/yhYVCOF/+PsxB2BGwa5DR1m1cq8vvfc82v5wK2HL9oJpXrIINj4nrowCb5AVCWXRwHpYH+4rA==
+rate-limiter-flexible@1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/rate-limiter-flexible/-/rate-limiter-flexible-1.1.5.tgz#a2e9d2e84a8deb9770b8693ecad8f31a84a2cbe2"
+  integrity sha512-Hbnaqr97xDJwZwgJd7cH6/3JFY0Pv31/MS96f18y0PI42HinP7BEnEx1tnzubfQ8dw7GR3ZoZXnbreFL4khVqQ==
 
 rate-limiter-flexible@^1.0.0:
   version "1.1.1"
