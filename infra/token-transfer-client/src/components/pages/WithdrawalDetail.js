@@ -139,18 +139,21 @@ class WithdrawalDetail extends Component {
             <BorderedCard shadowed={true}>
               <ul>
                 <li className="mb-3">
-                  Ut non eleifend enim. Curabitur tempor tellus nunc, sit amet
-                  vehicula enim porttitor id.
+                  Be sure that only you have access to your account and that
+                  your private key or seed phrase is backed up and stored
+                  safely.
                 </li>
                 <li className="mb-3">
-                  Nam consequat est mi, eu semper augue interdum nec.
+                  Do not send any funds back to the account that they are sent
+                  from.
                 </li>
                 <li className="mb-3">
-                  Duis posuere lectus velit, vitae cursus velit molestie congue.
+                  Large withdrawals may be delayed and will require a phone call
+                  for verification.
                 </li>
                 <li className="mb-3">
-                  Aenean justo tellus, vestibulum sit amet pharetra id,
-                  ultricies ut neque.
+                  Contact support if you have any questions about this
+                  withdrawal.
                 </li>
               </ul>
             </BorderedCard>
