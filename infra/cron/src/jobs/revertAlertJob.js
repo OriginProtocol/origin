@@ -99,6 +99,7 @@ async function RevertAlertJob(job) {
   }
 
   const latestBlock = await contractsContext.web3.eth.getBlockNumber()
+  if (!latestBlock) throw new Error('Unable to fetch latest block number')
   const yesterdaysBlock = block24HoursAgo(latestBlock)
 
   job.progress(10)
@@ -143,6 +144,7 @@ async function RevertAlertJob(job) {
     const internals = await fetchTransactions(c.address, {
       action: 'txlistinternal',
       fromBlock,
+      endBlock: latestBlock,
       apiKey
     })
 
