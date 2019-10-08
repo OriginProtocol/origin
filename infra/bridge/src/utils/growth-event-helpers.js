@@ -116,6 +116,7 @@ module.exports = async ({ type, socialNetwork, username, event }) => {
 
     // TODO: Check if event with same (socialNetwork, contentHash, type) exists
     // before trying to insert
+    // IMPORTANT: I broke rewards for sharing with other languages here
     const stored = await insertGrowthEvent({
       contentHash,
       identity,
@@ -128,6 +129,6 @@ module.exports = async ({ type, socialNetwork, username, event }) => {
       logger.error(`Failed to insert GrowthEvent of ${type} event for ${identity}`)
     }
   } catch (err) {
-    logger.error(`Failed to insert GrowthEvent of ${type} event for ${identity}`, err)
+    logger.error(`Failed to insert GrowthEvent of ${type} event for ${username} on ${socialNetwork}`, err)
   }
 }

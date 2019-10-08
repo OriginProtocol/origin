@@ -231,7 +231,7 @@ router.post('/', (req, res) => {
         growthEventHelper({
           type: 'SHARE',
           socialNetwork: 'TWITTER',
-          username: event.source.screen_name,
+          username: event.user.screen_name,
           event
         })
       })

@@ -4,6 +4,9 @@ const EventValidators = require('../utils/event-validators')
 
 const { decodeHTML } = require('./index')
 
+const logger = require('../logger')
+const crypto = require('crypto')
+
 /**
  * @returns user profile data from the event
  */
