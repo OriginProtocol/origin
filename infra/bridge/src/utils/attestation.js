@@ -112,7 +112,7 @@ const createTelegramAttestation = async ({
   }
 
   try {
-    await generateAttestation(
+    const attestation = await generateAttestation(
       AttestationTypes.TELEGRAM,
       attestationBody,
       {
@@ -127,7 +127,10 @@ const createTelegramAttestation = async ({
 
     redisClient.del(redisKey)
 
-    redisClient.setbit(redisKey + '/completed', 0, 1)
+    redisClient.set(redisKey + '/status', JSON.stringify({
+      attestation,
+      verified: true
+    }))
 
     return true
   } catch (error) {

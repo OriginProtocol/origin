@@ -61,7 +61,16 @@ router.post('/', (req, res) => {
     }
   }
 
-  if (message.new_chat_members) {
+  /**
+   * Bots can be added to any group by anyone. So check the group id
+   * before rewarding the user
+   */
+  const isGroup = message.chat && message.chat.type === 'group'
+  const isValidGroup = isGroup && (
+    message.chat.username.toLowerCase() === 'OriginProtocolKorea'  || 
+    message.chat.username.toLowerCase() === 'originprotocol')
+
+  if (isValidGroup && message.new_chat_members) {
     // For join verifications
     const events = message.new_chat_members
     totalFollowEvents = events.length

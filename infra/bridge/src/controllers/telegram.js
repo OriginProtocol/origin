@@ -5,7 +5,7 @@ const router = express.Router()
 
 const { telegramAttestation } = require('../utils/validation')
 
-const { redisClient, getbitAsync } = require('../utils/redis')
+const { redisClient, getAsync } = require('../utils/redis')
 
 router.post('/generate-code', telegramAttestation, async (req, res) => {
   const identity = req.query.identity.toLowerCase()
@@ -23,11 +23,22 @@ router.post('/generate-code', telegramAttestation, async (req, res) => {
 router.get('/status', telegramAttestation, async (req, res) => {
   const identity = req.query.identity.toLowerCase()
   
-  const value = await getbitAsync(`telegram/attestation/${identity}/completed`, 0)
+  const key = `telegram/attestation/${identity}/status`
+  
+  let statusObj = await getAsync(key)
+
+  statusObj = statusObj ? JSON.parse(statusObj) : null
+
+  const verified = statusObj && statusObj.verified && statusObj.attestation
+
+  // Delete from redis, once verified
+  if (verified) {
+    redisClient.del(key)
+  }
 
   res.status(200)
     .send({
-      success: value === 1
+      ...statusObj
     })
 })
 

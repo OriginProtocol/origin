@@ -1,8 +1,10 @@
-import React, { Component } from 'react'
-import { Mutation } from 'react-apollo'
+import React, { Component, useState, useEffect } from 'react'
+import { Mutation, useQuery } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
 import { withRouter } from 'react-router-dom'
+
+import get from 'lodash/get'
 
 import withIsMobile from 'hoc/withIsMobile'
 import withWallet from 'hoc/withWallet'
@@ -13,7 +15,40 @@ import AutoMutate from 'components/AutoMutate'
 import PublishedInfoBox from 'components/_PublishedInfoBox'
 
 import GenerateTelegramCodeMutation from 'mutations/GenerateTelegramCode'
-import VerifyTelegramCodeMutation from 'mutations/VerifyTelegramCode'
+import CheckTelegramStatusQuery from 'queries/CheckTelegramStatus'
+
+const TelegramStatusPoller = ({ identity, onComplete, onError, children }) => {
+  const { data, error } = useQuery(CheckTelegramStatusQuery, {
+    variables: {
+      identity
+    },
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'network-only',
+    skip: !identity,
+    pollInterval: 1000
+  })
+
+  useEffect(() => {
+    console.error('error', error)
+    if (error) {
+      onError(error)
+    }
+  }, [error])
+
+  const response = get(data, 'checkTelegramStatus', {})
+  const verified = get(data, 'checkTelegramStatus.data.verified', false)
+  const attestation = get(data, 'checkTelegramStatus.data.attestation', null)
+
+  useEffect(() => {
+    if (verified) {
+      onComplete(attestation)
+    } else if (response.reason) {
+      onError(response.reason)
+    }
+  }, [data, verified, response])
+
+  return children
+}
 
 class TelegramAttestation extends Component {
   constructor() {
@@ -122,12 +157,12 @@ class TelegramAttestation extends Component {
               }
             />
           )}
-          {openedLink && this.renderVerifyButton()}
+          {openedLink && this.renderStatus()}
           {!isMobile && (
             <button
               className="btn btn-link"
               type="button"
-              onClick={() => this.setState({ shouldClose: true })}
+              onClick={() => this.setState({ shouldClose: true, openedLink: false })}
               children={fbt('Cancel', 'Cancel')}
             />
           )}
@@ -179,70 +214,34 @@ class TelegramAttestation extends Component {
     )
   }
 
-  renderVerifyButton() {
+  renderStatus() {
     return (
-      <Mutation
-        mutation={VerifyTelegramCodeMutation}
-        onCompleted={res => {
-          const result = res.verifyTelegramCode
-
-          if (!result.success) {
-            this.setState({
-              error: result.reason,
-              loading: false,
-              data: null,
-              openedLink: false
-            })
-            return
-          }
-
+      <TelegramStatusPoller
+        identity={this.props.wallet}
+        onComplete={data => {
           this.setState({
-            data: result.data,
+            data,
             loading: false,
             completed: true,
-            shouldClose: true
+            shouldClose: true,
+            openedLink: false
           })
         }}
-        onError={errorData => {
-          console.error('Error', errorData)
+        onError={error => {
           this.setState({
-            error: 'Check console',
+            error,
             loading: false,
+            data: null,
             openedLink: false
           })
         }}
       >
-        {verifyCode => {
-          const runMutation = () => {
-            if (this.state.loading) return
-            this.setState({ error: false, loading: true })
-
-            verifyCode({
-              variables: {
-                identity: this.props.wallet,
-                code: this.state.code
-              }
-            })
-          }
-
-          return (
-            <>
-              <button
-                className="btn btn-primary"
-                onClick={runMutation}
-                disabled={this.state.loading}
-                children={
-                  this.state.loading ? (
-                    <fbt desc="Loading...">Loading...</fbt>
-                  ) : (
-                    <fbt desc="Verify">Verify</fbt>
-                  )
-                }
-              />
-            </>
-          )
-        }}
-      </Mutation>
+        <button
+          className="btn btn-primary"
+          disabled={true}
+          children={<fbt desc="Loading...">Loading...</fbt>}
+        />
+      </TelegramStatusPoller>
     )
   }
 }
