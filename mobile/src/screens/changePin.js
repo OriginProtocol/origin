@@ -19,9 +19,10 @@ import CommonStyles from 'styles/common'
 import OnboardingStyles from 'styles/onboarding'
 
 class ChangePinScreen extends Component {
-  static navigationOptions = () => {
+  static navigationOptions = ({ navigation }) => {
+    const title = navigation.getParam('new') ? 'Create PIN' : 'Change PIN'
     return {
-      title: String(fbt('Change PIN', 'ChangePinScreen.headerTitle')),
+      title: String(title, 'ChangePinScreen.headerTitle'),
       headerTitleStyle: {
         fontFamily: 'Poppins',
         fontSize: 17,
@@ -35,10 +36,19 @@ class ChangePinScreen extends Component {
     this.state = {
       pin: '',
       oldPin: null,
-      isRetry: false
+      isRetry: false,
+      newAction: false
     }
     this.pinLength = 6
     this.handleChange = this.handleChange.bind(this)
+    this.handleCreate = this.handleCreate.bind(this)
+  }
+
+  componentDidMount() {
+    const action = this.props.navigation.getParam('new')
+    this.setState({
+      newAction: action
+    })
   }
 
   async handleChange(pin) {
@@ -72,10 +82,47 @@ class ChangePinScreen extends Component {
     }
   }
 
+  async handleCreate(pin) {
+    // Validate that the pin is numeric
+    if (pin.length && isNaN(pin)) return
+
+    await this.setState({ pin, isRetry: false })
+
+    if (this.state.pin.length === this.pinLength) {
+      if (!this.state.oldPin) {
+        // Proceed to verify step, copy value to oldPin
+        this.setState({
+          pin: '',
+          oldPin: this.state.pin,
+          isRetry: false
+        })
+      } else {
+        if (this.state.pin === this.state.oldPin) {
+          // Pin was verified
+          this.props.setPin(this.state.pin)
+          this.props.navigation.goBack()
+        } else {
+          // Pin was incorrect, reset state and try again
+          this.setState({
+            isRetry: true,
+            pin: '',
+            oldPin: null
+          })
+        }
+      }
+    }
+  }
+
   render() {
-    const title = this.state.oldPin
+    let title = this.state.oldPin
       ? fbt('Enter your new PIN', 'PinScreen.enterNewPinCode')
       : fbt('Enter your old PIN', 'PinScreen.enterOldPinCode')
+
+    if (this.state.newAction) {
+      title = this.state.oldPin
+        ? fbt('Re-enter Pin Code', 'PinScreen.reenterPinCode')
+        : fbt('Create a Pin Code', 'PinScreen.createPinCode')
+    }
     return (
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -98,7 +145,9 @@ class ChangePinScreen extends Component {
               <PinInput
                 value={this.state.pin}
                 pinLength={this.pinLength}
-                onChangeText={this.handleChange}
+                onChangeText={
+                  this.state.newAction ? this.handleCreate : this.handleChange
+                }
               />
             </View>
           </ScrollView>
