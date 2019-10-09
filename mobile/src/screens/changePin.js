@@ -48,11 +48,12 @@ class ChangePinScreen extends Component {
     await this.setState({ pin, isRetry: false })
 
     if (this.state.pin.length === this.pinLength) {
-      if (!this.state.oldPin) {
+      if (!this.state.oldPin && this.props.settings.pin === this.state.pin) {
         // Proceed to verify step, copy value to oldPin
         this.setState({
           pin: '',
-          oldPin: this.state.pin
+          oldPin: this.state.pin,
+          isRetry: false
         })
       } else {
         if (this.props.settings.pin === this.state.oldPin) {
@@ -72,7 +73,6 @@ class ChangePinScreen extends Component {
   }
 
   render() {
-    console.log(this.props.settings.pin)
     const title = this.state.oldPin
       ? fbt('Enter your new PIN', 'PinScreen.enterNewPinCode')
       : fbt('Enter your old PIN', 'PinScreen.enterOldPinCode')
@@ -88,9 +88,7 @@ class ChangePinScreen extends Component {
             keyboardShouldPersistTaps={'always'}
           >
             <View style={styles.container}>
-              <Text style={styles.subtitle}>
-                {title}
-              </Text>
+              <Text style={styles.subtitle}>{title}</Text>
               {this.state.isRetry === true && (
                 <Text style={styles.invalid}>
                   <fbt desc="PinScreen.pinMatchFailure">
