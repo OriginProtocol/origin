@@ -228,6 +228,11 @@ class EventCache {
    * @returns {Array} An array of event objects
    */
   async _fetchEvents() {
+    // Do not fetch events if this isn't a writer
+    if (typeof process.env.EVENTCACHE_SLAVE !== 'undefined') {
+      debug('_fetchEvents disabled. slave instance')
+      return
+    }
     let toBlock = this.latestBlock
 
     if (this.useLatestFromChain || !toBlock) {

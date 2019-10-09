@@ -169,7 +169,7 @@ services:
       - REDIS_URL=redis://redis-master:6379
       - ENVKEY=
       - MESSAGING_EVENTS=
-      - ENABLE_EVENTCACHE_DB=true
+      - EVENTCACHE_ENABLE_PG=true
     depends_on:
       - postgres
       - elasticsearch
@@ -223,7 +223,8 @@ services:
       - BRIDGE_SERVER_URL=http://bridge:5000
       - GROWTH_SERVER_URL=http://growth:4008
       - DATABASE_URL=postgres://origin:origin@postgres/origin
-      - ENABLE_EVENTCACHE_DB=true
+      - EVENTCACHE_ENABLE_PG=true
+      - EVENTCACHE_SLAVE=true
     depends_on:
       - discovery
     ports:
