@@ -1,23 +1,22 @@
 {
   "name": "@origin/growth-campaign",
-  "version": "0.1.0",
   "description": "Growth Campaign model and migration file",
+  "version": "0.1.0",
+  "engines": {
+    "node": "10.x"
+  },
   "author": "Origin Protocol Inc",
-  "homepage": "https://github.com/OriginProtocol/origin#readme",
-  "license": "ISC",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/OriginProtocol/origin.git"
-  },
-  "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1",
-    "migrate": "sequelize db:migrate"
-  },
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
-    "sequelize": "^5.19.4"
+    "dotenv": "^8.1.0",
+    "pg": "^7.12.1",
+    "sequelize": "^5.19.4",
+    "sequelize-cli": "^5.5.1"
+  },
+  "scripts": {
+    "migrate": "sequelize db:migrate"
   }
 }
