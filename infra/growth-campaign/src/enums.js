@@ -3,12 +3,22 @@
  *  a migration script to add the enum to the DB.
  */
 
-const GrowthCampaignRewardStatuses = {
-  NotReady: 'NotReady',
-  ReadyForCalculation: 'ReadyForCalculation',
-  Calculated: 'Calculated',
-  Distributed: 'Distributed'
+class Enum extends Array {
+  constructor(...args) {
+    super(...args)
+
+    for (const k of args) {
+      this[k] = k
+    }
+  }
 }
+
+const GrowthCampaignRewardStatuses = new Enum(
+  'NotReady',
+  'ReadyForCalculation',
+  'Calculated',
+  'Distributed'
+)
 
 module.exports = {
   GrowthCampaignRewardStatuses
