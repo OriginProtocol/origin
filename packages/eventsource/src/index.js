@@ -95,6 +95,7 @@ class OriginEventSource {
     const events = await this.contract.eventCache.getEvents({
       listingID: String(listingId)
     })
+
     events.forEach(e => {
       if (e.event === 'ListingCreated') {
         ipfsHash = e.returnValues.ipfsHash
@@ -111,9 +112,14 @@ class OriginEventSource {
       }
     })
 
+    if (!ipfsHash)
+      console.error(`Unable to find IPFS hash for listing (${listingId})`)
+
     let data
     try {
       const rawData = await get(this.ipfsGateway, ipfsHash)
+      if (ipfsHash && !rawData)
+        throw new Error(`IPFS Data missing for ${ipfsHash}`)
       data = pick(
         rawData,
         '__typename',
@@ -173,6 +179,7 @@ class OriginEventSource {
       }
     } catch (e) {
       console.log(`Error retrieving IPFS data for ${ipfsHash}`)
+      console.debug(e)
       data = {
         ...data,
         valid: false,
