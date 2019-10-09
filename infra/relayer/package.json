@@ -26,7 +26,7 @@
     "pg": "7.12.1",
     "prom-client": "11.5.3",
     "redis": "2.8.0",
-    "sequelize": "5.19.4",
+    "sequelize": "5.19.5",
     "sequelize-cli": "5.5.1",
     "web3": "1.0.0-beta.34"
   },

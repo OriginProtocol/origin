@@ -22851,10 +22851,10 @@ range-parser@^1.2.1, range-parser@~1.2.1:
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
   integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
 
-rate-limiter-flexible@1.1.5:
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/rate-limiter-flexible/-/rate-limiter-flexible-1.1.5.tgz#a2e9d2e84a8deb9770b8693ecad8f31a84a2cbe2"
-  integrity sha512-Hbnaqr97xDJwZwgJd7cH6/3JFY0Pv31/MS96f18y0PI42HinP7BEnEx1tnzubfQ8dw7GR3ZoZXnbreFL4khVqQ==
+rate-limiter-flexible@1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/rate-limiter-flexible/-/rate-limiter-flexible-1.1.6.tgz#b3620ba1b4d61f34b8a982546600a7a776924c40"
+  integrity sha512-fVjTbMcXlBqbCfYyfmEqzyj5niHVyPl5b4OtWcnaM3M8layKz5K6ooILqeDA8AljKgvH2bv7rmcO/qZqffU6gw==
 
 rate-limiter-flexible@^1.0.0:
   version "1.1.1"
@@ -24621,10 +24621,10 @@ sequelize-pool@^2.3.0:
   resolved "https://registry.yarnpkg.com/sequelize-pool/-/sequelize-pool-2.3.0.tgz#64f1fe8744228172c474f530604b6133be64993d"
   integrity sha512-Ibz08vnXvkZ8LJTiUOxRcj1Ckdn7qafNZ2t59jYHMX1VIebTAOYefWdRYFt6z6+hy52WGthAHAoLc9hvk3onqA==
 
-sequelize@5.19.4:
-  version "5.19.4"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.19.4.tgz#2d943c0037eb7eb6f685e2df6dd8db879a380dba"
-  integrity sha512-MFjwpbcpFY2bbwtdeFfPq0roTSuRwZzAkjNX5e2KELHoIw98mviGKoh1FtK7fb8MpOiXxpyQhoOpAnhOTWGqNg==
+sequelize@5.19.5:
+  version "5.19.5"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.19.5.tgz#87a53437460ee2e527ad9478458e26a87889a2a0"
+  integrity sha512-NdICIFJ0KEjLGrlbnVC3K74tPursZ9yjY5112uCiAxiXK2LXyXP1ePgATEdMJDdeaR5hmP4//qFInTfrnoGe/w==
   dependencies:
     bluebird "^3.5.0"
     cls-bluebird "^2.1.0"
