@@ -1,8 +1,5 @@
 'use strict'
 
-const _growthEventModels = require('@origin/growth-event/src/models')
-const _campaignModels = require('@origin/growth-campaign/src/models')
-
 const fs = require('fs')
 const path = require('path')
 const Sequelize = require('sequelize')
@@ -43,8 +40,4 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize
 db.Sequelize = Sequelize
 
-module.exports = {
-  ...db,
-  ..._growthEventModels,
-  ..._campaignModels
-}
+module.exports = db

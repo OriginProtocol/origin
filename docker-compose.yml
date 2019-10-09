@@ -66,6 +66,7 @@ services:
       - ./infra/notifications/:/app/infra/notifications/
       - ./infra/growth/:/app/infra/growth/
       - ./infra/growth-event/:/app/infra/growth-event/
+      - ./infra/growth-campaign/:/app/infra/growth-campaign/
       - ./infra/identity/:/app/infra/identity/
       # Exclude IPFS and blockchain data from @origin/services
       - /app/packages/services/data
@@ -87,6 +88,7 @@ services:
       - /app/infra/notifications/node_modules/
       - /app/infra/growth/node_modules/
       - /app/infra/growth-event/node_modules/
+      - /app/infra/growth-campaign/node_modules/
       - /app/infra/identity/node_modules/
     ports:
       # IPFS ports are exposed here for convenience but IPFS should be
@@ -105,6 +107,7 @@ services:
       /bin/bash -c "npm run migrate --prefix infra/discovery &&
       npm run migrate --prefix infra/growth &&
       npm run migrate --prefix infra/growth-event &&
+      npm run migrate --prefix infra/growth-campaign &&
       npm run migrate --prefix infra/identity &&
       npm run migrate --prefix infra/notifications &&
       npm run migrate --prefix infra/bridge &&

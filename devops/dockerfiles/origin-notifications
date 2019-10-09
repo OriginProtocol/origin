@@ -30,6 +30,7 @@ COPY ./packages/token ./packages/token
 COPY ./infra/bridge ./infra/bridge
 COPY ./infra/discovery ./infra/discovery
 COPY ./infra/growth-event ./infra/growth-event
+COPY ./infra/growth-campaign ./infra/growth-campaign
 # @origin/identity required for the db model
 COPY ./infra/identity ./infra/identity
 
