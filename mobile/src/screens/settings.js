@@ -39,19 +39,18 @@ class settingsScreen extends React.Component {
   }
 
   touchAuthenticate = () => {
-    if(this.props.settings.biometryType === null){
+    if (this.props.settings.biometryType === null) {
       TouchID.authenticate('Access Origin Marketplace App')
-      .then(() => {
-        this.props.setBiometryType(this.state.biometryType)
-      })
-      .catch(error => {
-        console.warn('Biometry failure: ', error)
-        this.setState({ biometryError: error })
-      })
+        .then(() => {
+          this.props.setBiometryType(this.state.biometryType)
+        })
+        .catch(error => {
+          console.warn('Biometry failure: ', error)
+          this.setState({ biometryError: error })
+        })
     } else {
       this.props.setBiometryType(null)
     }
-    
   }
 
   render() {
@@ -148,7 +147,11 @@ class settingsScreen extends React.Component {
           <View style={styles.menuItem}>
             <Text style={styles.menuText}>Face ID</Text>
             <View style={styles.menuItemIconContainer}>
-              <Switch trackColor={{ true: '#1a82ff' }} value={biometryStatus} onChange={() => this.touchAuthenticate()}/>
+              <Switch
+                trackColor={{ true: '#1a82ff' }}
+                value={biometryStatus}
+                onChange={() => this.touchAuthenticate()}
+              />
             </View>
           </View>
         </TouchableHighlight>
