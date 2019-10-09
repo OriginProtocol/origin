@@ -513,13 +513,13 @@ export function setMarketplace(address, epoch, version = '000') {
         typeof address === 'undefined'
           ? 'Marketplace_'
           : `${address.slice(2, 8)}_`,
-      platform: 
-      typeof window === 'undefined'
-        ? process.env.ENABLE_EVENTCACHE_DB
-          ? 'postgresql'
-          : 'memory'
-        : 'browser',
-    ...context.config
+      platform:
+        typeof window === 'undefined'
+          ? process.env.ENABLE_EVENTCACHE_DB
+            ? 'postgresql'
+            : 'memory'
+          : 'browser',
+      ...context.config
     })
   } catch (err) {
     console.error('Unable to initialize EventCache for Marketplace')
@@ -579,14 +579,14 @@ export function setIdentityEvents(address, epoch) {
         typeof address === 'undefined'
           ? 'IdentityEvents_'
           : `${address.slice(2, 8)}_`,
-      platform: 
-      typeof window === 'undefined'
-        ? process.env.ENABLE_EVENTCACHE_DB
-          ? 'postgresql'
-          : 'memory'
-        : 'browser',
+      platform:
+        typeof window === 'undefined'
+          ? process.env.ENABLE_EVENTCACHE_DB
+            ? 'postgresql'
+            : 'memory'
+          : 'browser',
       batchSize: 2500,
-    ...context.config
+      ...context.config
     })
   } catch (err) {
     console.error('Unable to initialize EventCache for IdentityEvents')
@@ -626,14 +626,14 @@ export function setProxyContracts(config) {
         typeof config.ProxyFactory === 'undefined'
           ? 'ProxyFactory_'
           : `${config.ProxyFactory.slice(2, 8)}_`,
-      platform: 
-      typeof window === 'undefined'
-        ? process.env.ENABLE_EVENTCACHE_DB
-          ? 'postgresql'
-          : 'memory'
-        : 'browser',
+      platform:
+        typeof window === 'undefined'
+          ? process.env.ENABLE_EVENTCACHE_DB
+            ? 'postgresql'
+            : 'memory'
+          : 'browser',
       batchSize: 2500,
-    ...context.config
+      ...context.config
     })
   } catch (err) {
     console.error('Unable to initialize EventCache for ProxyFactory')
