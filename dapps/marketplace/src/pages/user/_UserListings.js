@@ -21,7 +21,6 @@ const UserListings = ({
   excludeListing
 }) => {
   const vars = {
-    first: 8,
     filter: 'active',
     sort: 'featured'
   }
