@@ -15,7 +15,7 @@ services:
 
   elasticsearch:
     container_name: elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.3
     ports:
       - "9200:9200"
     environment:
@@ -109,7 +109,6 @@ services:
       npm run migrate --prefix infra/notifications &&
       npm run migrate --prefix infra/bridge &&
       npm run migrate --prefix infra/messaging &&
-      npm run migrate --prefix packages/event-cache &&
       npm run start --prefix packages/services -- -g -i -p -f -t"
 
   messaging:
@@ -166,7 +165,9 @@ services:
       - PROVIDER_URL=http://services:8545
       - IPFS_GATEWAY_URL=http://ipfs-proxy:9999
       - IPFS_API_URL=http://ipfs-proxy:9999
+      - REDIS_URL=redis://redis-master:6379
       - ENVKEY=
+      - MESSAGING_EVENTS=
       - ENABLE_EVENTCACHE_DB=true
     depends_on:
       - postgres

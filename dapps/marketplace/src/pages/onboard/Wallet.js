@@ -16,8 +16,7 @@ import WalletHeader from './_WalletHeader'
 import query from 'queries/Wallet'
 
 const isFirefox = typeof InstallTrigger !== 'undefined'
-const isChrome =
-  !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)
+const isChrome = !!window.chrome
 
 const MetaMask = ({ linkPrefix }) => (
   <div className="onboard-box">
@@ -50,7 +49,7 @@ const MetaMask = ({ linkPrefix }) => (
   </div>
 )
 
-const Step1 = ({ listing, hideOriginWallet, linkPrefix }) => {
+const OnboardWallet = ({ listing, hideOriginWallet, linkPrefix }) => {
   const showMetaMask = isChrome || isFirefox
 
   return (
@@ -96,7 +95,7 @@ const Step1 = ({ listing, hideOriginWallet, linkPrefix }) => {
   )
 }
 
-export default Step1
+export default OnboardWallet
 
 require('react-styl')(`
   .onboard .connect

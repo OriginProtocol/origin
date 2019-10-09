@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withWeb3 from 'hoc/withWeb3'
+import withWallet from 'hoc/withWallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 import withIsMobile from 'hoc/withIsMobile'
 
@@ -36,8 +37,8 @@ import AboutToken from './about/AboutTokens'
 import AboutPayments from './about/AboutPayments'
 import AboutCrypto from './about/AboutCrypto'
 import { applyConfiguration } from 'utils/marketplaceCreator'
+import Sentry from 'utils/sentry'
 import CurrencyContext from 'constants/CurrencyContext'
-import OpenApp from './OpenApp'
 
 class App extends Component {
   state = {
@@ -45,13 +46,15 @@ class App extends Component {
     displayMobileModal: false,
     mobileModalDismissed: false,
     footer: false,
-    skipOnboardRewards: false
+    skipOnboardRewards: false,
+    isTestBuild: window.location.pathname.startsWith('/test-builds')
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (get(this.props, 'location.state.scrollToTop')) {
       window.scrollTo(0, 0)
     }
+
     if (
       !this.props.web3Loading &&
       !this.props.web3.walletType &&
@@ -60,10 +63,24 @@ class App extends Component {
     ) {
       this.setState({ displayMobileModal: true })
     }
+
+    const accountID = get(this.props, 'wallet')
+    const prevAccountID = get(prevProps, 'wallet')
+
+    if (accountID !== prevAccountID) {
+      // set the user for sentry
+      Sentry.configureScope(scope => {
+        scope.setUser({ id: accountID })
+      })
+    }
   }
 
   static getDerivedStateFromError(err) {
     return { hasError: true, err }
+  }
+
+  componentDidCatch(err) {
+    Sentry.captureException(err)
   }
 
   render() {
@@ -80,6 +97,7 @@ class App extends Component {
       return <LoadingSpinner />
     }
 
+    const { isTestBuild } = this.state
     const { creatorConfig } = this.props
     applyConfiguration(creatorConfig)
 
@@ -89,13 +107,8 @@ class App extends Component {
       /^\/welcome\/?(?!(onboard\/)).*/gi
     )
 
-    const isShowingProtocolLink = this.props.location.pathname.startsWith(
-      '/openapp'
-    )
-
     // TODO: Too many regex here, probably it's better to optimize this sooner or later
     const hideNavbar =
-      isShowingProtocolLink ||
       (isOnWelcomeAndNotOboard && !isMobile) ||
       (isMobile &&
         (this.props.location.pathname.match(/^\/purchases\/.*$/gi) ||
@@ -104,14 +117,21 @@ class App extends Component {
           ) ||
           this.props.location.pathname.match(/\/onboard\/finished/gi) ||
           this.props.location.pathname.match(
-            /^\/(promote\/.+|create\/.+|listing\/[-0-9]+\/edit\/.+)/gi
+            /^\/(promote\/.+|create\/.+|listing\/[-0-9]+\/(edit\/.+|payment|shipping|confirm)\/?)/gi
           )))
 
     return (
       <CurrencyContext.Provider value={this.props.currency}>
+        {isTestBuild ? (
+          <div className="test-build-badge">TEST BUILD</div>
+        ) : null}
         {!hideNavbar && (
           <Nav
-            onGetStarted={() => this.setState({ mobileModalDismissed: false })}
+            onGetStarted={() =>
+              this.setState({
+                mobileModalDismissed: false
+              })
+            }
             onShowFooter={() => this.setState({ footer: true })}
             navbarDarkMode={isOnWelcomeAndNotOboard}
           />
@@ -168,7 +188,6 @@ class App extends Component {
             <Route exact path="/rewards/banned" component={GrowthBanned} />
             <Route path="/welcome/:inviteCode?" component={GrowthWelcome} />
             <Route path="/search" component={Listings} />
-            <Route path="/openapp" component={OpenApp} />
             <Route component={Listings} />
           </Switch>
         </main>
@@ -199,7 +218,9 @@ class App extends Component {
   }
 }
 
-export default withIsMobile(withWeb3(withCreatorConfig(withRouter(App))))
+export default withWallet(
+  withIsMobile(withWeb3(withCreatorConfig(withRouter(App))))
+)
 
 require('react-styl')(`
   .app-spinner
@@ -215,4 +236,16 @@ require('react-styl')(`
     height: 100%
     display: flex
     flex-direction: column
+  .test-build-badge
+    position: fixed
+    top: 0
+    display: inline-block
+    opacity: 0.8
+    background-color: #007bff
+    color: #fff
+    left: 50%
+    transform: translateX(-50%)
+    z-index: 1000
+    padding: 0.2rem 0.4rem
+    font-size: 0.5rem
 `)

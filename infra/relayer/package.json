@@ -26,14 +26,14 @@
     "pg": "7.12.1",
     "prom-client": "11.5.3",
     "redis": "2.8.0",
-    "sequelize": "5.17.2",
-    "sequelize-cli": "5.5.0",
+    "sequelize": "5.19.4",
+    "sequelize-cli": "5.5.1",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
     "chalk": "2.4.2",
-    "mocha": "6.2.0",
-    "nodemon": "1.19.1",
+    "mocha": "6.2.1",
+    "nodemon": "1.19.3",
     "prettier": "1.18.2"
   },
   "scripts": {
@@ -44,7 +44,8 @@
     "start": "per-env",
     "start:development": "nodemon src/app.js",
     "start:production": "node src/app.js",
-    "test": "LOG_LEVEL=NONE NODE_ENV=test mocha --timeout 10000 --file test/setup --exit"
+    "test": "LOG_LEVEL=NONE NODE_ENV=test mocha --timeout 10000 --file test/setup --exit",
+    "test:validator": "LOG_LEVEL=NONE NODE_ENV=test mocha --exit test/validator.test.js"
   },
   "prettier": {
     "semi": false,

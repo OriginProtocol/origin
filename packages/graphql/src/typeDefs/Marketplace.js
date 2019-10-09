@@ -39,6 +39,7 @@ const ListingInterface = `
   "IPFS: commission, in natural units, to be paid for each unit sold"
   commissionPerUnit: String
   marketplacePublisher: String
+  requiresShipping: Boolean
 `
 
 export const mutations = `
@@ -82,6 +83,7 @@ export const mutations = `
       from: String
       withdraw: String
       quantity: Int
+      shippingAddress: ShippingAddressInput
       autoswap: Boolean
 
       # Optional: normally inherited from listing
@@ -118,6 +120,7 @@ export const mutations = `
     disputeOffer(offerID: ID!, from: String): Transaction
     addFunds(offerID: ID!, amount: String!, from: String): Transaction
     updateRefund(offerID: ID!, amount: String!, from: String): Transaction
+    withdrawDust(from: String, currency: String!, amount: String!): Transaction
   }
 `
 
@@ -373,6 +376,9 @@ export const types = `
     statusStr: String
     valid: Boolean
     validationError: String
+    # A json encoded, encrypted OutOfBandMessage 
+    # from @origin/messaging-client.
+    shippingAddressEncrypted: String
 
     # IPFS
     quantity: Int
@@ -429,6 +435,8 @@ export const types = `
     commissionPerUnit: String
 
     marketplacePublisher: String
+
+    requiresShipping: Boolean
   }
 
   input UnitListingInput {
@@ -469,6 +477,17 @@ export const types = `
   input PriceInput {
     amount: String
     currency: String
+  }
+
+  input ShippingAddressInput {
+    name: String
+    address1: String
+    address2: String
+    city: String
+    stateProvinceRegion: String
+    postalCode: String
+    country: String
+    instructions: String
   }
 `
 export default types + mutations

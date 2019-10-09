@@ -1,6 +1,8 @@
 {
   "Marketplace": "0xe842831533c4bf4b0f71b4521c4320bdb669324e",
   "MarketplaceEpoch": 3086315,
+  "Marketplace_V01": "0x3d608cce08819351ada81fc1550841ebc10686fd",
+  "MarketplaceEpoch_V01": 5119455,
   "IdentityEvents": "0x160455a06d8e5aa38862afc34e4eca0566ee4e7e",
   "IdentityEventsEpoch": 3670528,
   "UniswapDaiExchange": "0x77dB9C915809e7BE439D2AB21032B1b8B58F6891",

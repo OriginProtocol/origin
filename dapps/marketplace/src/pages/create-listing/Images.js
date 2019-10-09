@@ -40,21 +40,17 @@ const ListingImages = ({ prev, next, listing, onChange, isMobile }) => {
               <ul className="help-text photo-help list-unstyled">
                 {isMobile ? (
                   <fbt desc="create.listing.photos.helpMobile">
-                    <li>Maximum 10 images per listing.</li>
-                    <li>First image will be featured.</li>
+                    <li>First image will be featured</li>
                     <li>Recommended aspect ratio is 4:3</li>
                   </fbt>
                 ) : (
                   <fbt desc="create.listing.photos.help">
                     <li>
                       Hold down &apos;command&apos; (⌘) to select multiple
-                      images.
+                      images
                     </li>
-                    <li>Maximum 10 images per listing.</li>
-                    <li>
-                      First image will be featured - drag and drop images to
-                      reorder.
-                    </li>
+                    <li>First image will be featured</li>
+                    <li>Drag and drop to reorder</li>
                     <li>Recommended aspect ratio is 4:3</li>
                   </fbt>
                 )}

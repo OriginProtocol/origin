@@ -136,6 +136,7 @@ class OriginEventSource {
         'commission',
         'commissionPerUnit',
         'marketplacePublisher',
+        'requiresShipping',
 
         'weekendPrice',
         'booked',
@@ -485,6 +486,11 @@ class OriginEventSource {
       startDate: _get(data, 'startDate'),
       endDate: _get(data, 'endDate'),
       totalPrice: _get(data, 'totalPrice')
+    }
+    if (data.shippingAddressEncrypted) {
+      offerObj.shippingAddressEncrypted = JSON.stringify(
+        data.shippingAddressEncrypted
+      )
     }
     offerObj.statusStr = offerStatus(offerObj)
     if (offerObj.totalPrice) {

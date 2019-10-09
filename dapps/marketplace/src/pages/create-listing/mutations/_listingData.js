@@ -40,7 +40,9 @@ export function getStateFromListing(props) {
       'seller',
       'unitsAvailable'
     ]),
-    acceptedTokens: tokens.length ? tokens : ['token-ETH'],
+    // For new listings, there is no default selection.
+    // However, for old listings, if no token is specified, default selection to ETH.
+    acceptedTokens: props.listing.id && !tokens.length ? ['token-ETH'] : tokens,
     quantity: String(props.listing.unitsTotal),
     currency: get(props, 'listing.price.currency.id', ''),
     price: String(props.listing.price.amount),
@@ -48,7 +50,8 @@ export function getStateFromListing(props) {
     commissionPerUnit: tokenBalance(
       get(props, 'listing.commissionPerUnit', '0')
     ),
-    media: props.listing.media
+    media: props.listing.media,
+    requiresShipping: get(props, 'listing.requiresShipping', false)
   }
 }
 
@@ -71,7 +74,8 @@ export default function applyListingData(props, data) {
       commissionPerUnit: listing.commissionPerUnit
         ? String(listing.commissionPerUnit)
         : '0',
-      marketplacePublisher: listing.marketplacePublisher
+      marketplacePublisher: listing.marketplacePublisher,
+      requiresShipping: listing.requiresShipping
     }
   }
 

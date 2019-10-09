@@ -36,7 +36,11 @@ class Login extends Component {
   }
 
   render() {
-    const input = formInput(this.state, state => this.setState(state))
+    const input = formInput(
+      this.state,
+      state => this.setState(state),
+      'text-center'
+    )
     const Feedback = formFeedback(this.state)
 
     if (this.state.redirectTo) {
@@ -50,7 +54,7 @@ class Login extends Component {
           <p>We will send you a magic link to your email to confirm access</p>
           <form>
             <div className="form-group">
-              <label htmlFor="email">Email address</label>
+              <label htmlFor="email">Email Address</label>
               <input {...input('email')} type="email" />
               {Feedback('email')}
             </div>

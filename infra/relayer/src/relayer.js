@@ -3,6 +3,7 @@
 const memoize = require('lodash/memoize')
 const Web3 = require('web3')
 const utils = require('ethereumjs-util')
+const { Validator, PROXY_HARDCODE } = require('./validator')
 const ProxyFactoryContract = require('@origin/contracts/build/contracts/ProxyFactory_solc')
 const IdentityProxyContract = require('@origin/contracts/build/contracts/IdentityProxy_solc')
 const MarketplaceContract = require('@origin/contracts/build/contracts/V00_Marketplace')
@@ -126,6 +127,7 @@ class Relayer {
     this.web3 = new Web3(providerUrl)
 
     this.purse = new Purse({
+      networkId,
       web3: this.web3,
       mnemonic: env.FORWARDER_MNEMONIC,
       children: env.FORWARDER_ACCOUNTS ? parseInt(env.FORWARDER_ACCOUNTS) : 3,
@@ -156,6 +158,8 @@ class Relayer {
       .forEach(o => (this.methods[o.signature] = o))
 
     this.riskEngine = new RiskEngine()
+
+    this.validator = new Validator(this.addresses)
   }
 
   /**
@@ -205,17 +209,16 @@ class Relayer {
       preflight
     })
 
-    // Check to prevent rapid-fire duplicate requests
-    if (typeof this.seenSignatures[signature] !== 'undefined') {
-      return res.status(429).send({ errors: ['Duplicate'] })
-    } else if (!preflight) {
-      // Update seen signatures
-      this.seenSignatures[signature] = new Date()
-    }
-
     Sentry.configureScope(scope => {
       scope.setUser({ id: from })
     })
+
+    // Check to prevent rapid-fire duplicate requests
+    if (typeof this.seenSignatures[signature] !== 'undefined') {
+      const msg = 'Duplicate transaction'
+      Sentry.captureException(new Error(msg))
+      return res.status(429).send({ errors: [msg] })
+    }
 
     // Make sure keys are generated and ready
     await this.purse.init()
@@ -334,6 +337,19 @@ class Relayer {
       return res.status(400).send({ errors: ['Invalid function signature'] })
     }
 
+    // 2.1 Deep check that the potentialy nested transaction are calling
+    // approved methods. For now, we don't fail on this, since we might
+    // have the whitelist too tight. We'll check the logs after a while
+    // and see if there is anything we should add.
+    try {
+      // Is the user is calling a method directly on their own proxy
+      const isCallingOwnProxy =
+        normalizeAddress(to) === normalizeAddress(predictedAddress)
+      this.validator.validate(isCallingOwnProxy ? PROXY_HARDCODE : to, txData)
+    } catch (e) {
+      logger.error('Error in transaction validator', e)
+    }
+
     let tx, txHash, dbTx
 
     try {
@@ -405,9 +421,14 @@ class Relayer {
         let status = enums.RelayerTxnStatuses.Failed
         let errMsg = 'Error sending transaction'
 
-        if (reason.message && reason.message.indexOf('gas prices') > -1) {
-          status = enums.RelayerTxnStatuses.GasLimit
-          errMsg = 'Network is too congested right now.  Try again later.'
+        if (reason.message) {
+          if (reason.message.indexOf('gas prices') > -1) {
+            status = enums.RelayerTxnStatuses.GasLimit
+            errMsg = 'Network is too congested right now.  Try again later.'
+          } else if (reason.message.indexOf('acquisition') > -1) {
+            status = enums.RelayerTxnStatuses.NoAvailableAccount
+            errMsg = 'Relayer is overloaded right now.  Try again later.'
+          }
         }
 
         // Revert the failed nonce
@@ -421,6 +442,9 @@ class Relayer {
         Sentry.captureException(reason)
         return res.status(400).send({ errors: [errMsg] })
       }
+
+      // Update seen signatures for dupe checking
+      this.seenSignatures[signature] = new Date()
 
       // Record the transaction hash and gas price in the DB.
       txHash = txOut.txHash

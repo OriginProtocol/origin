@@ -65,6 +65,13 @@ const getPastEvents = memoize(
       debug('Skipped loading event from IPFS cache.')
     }
 
+    // Paranoia check.
+    if (!instance.contract || !instance.contract.options.address) {
+      throw new Error(
+        `EventCache.getPastEvents failure. Contract ${instance.prefix} missing address!`
+      )
+    }
+
     const requests = range(fromBlock, toBlock + 1, batchSize).map(start =>
       limiter.schedule(
         args => instance.contract.getPastEvents('allEvents', args),
@@ -118,6 +125,14 @@ class EventCache {
    */
   constructor(contract, originBlock = 0, config) {
     this._processConfig(config)
+
+    if (
+      !(contract._address || (contract.options && contract.options.address))
+    ) {
+      throw new Error(
+        `Contract ${this.prefix} missing address!  Can not initialize EventCache`
+      )
+    }
 
     this.contract = contract
     this.originBlock = Number(originBlock)

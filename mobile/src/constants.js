@@ -1,5 +1,7 @@
 'use strict'
 
+export const VERSION = '0.25.0'
+
 class Enum extends Array {
   constructor(...args) {
     super(...args)
@@ -9,12 +11,19 @@ class Enum extends Array {
   }
 }
 
-export const ACCOUNT_MAPPING = 'ACCOUNT_MAPPING'
 export const DEFAULT_NOTIFICATION_PERMISSIONS = {
   alert: true,
   badge: true,
   sound: true
 }
+
+// Default user agents to be used by the WebView
+export const DEFAULT_IOS_UA =
+  'Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1'
+
+export const DEFAULT_ANDROID_UA =
+  'Mozilla/5.0 (Linux; Android 8.0.0;) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Mobile Safari/537.36'
+
 export const WALLET_INFO = 'WALLET_INFO'
 export const WALLET_PASSWORD = 'WALLET_PASSWORD'
 export const WALLET_STORE = 'WALLET_STORE'
@@ -24,13 +33,26 @@ export const ETH_NOTIFICATION_TYPES = new Enum('APN', 'FCM')
 export const BALANCE_POLL_INTERVAL = 5000
 
 export const NETWORKS = [
-  { id: 1, name: 'Mainnet', dappUrl: 'https://shoporigin.com' },
+  {
+    id: 1,
+    name: 'Mainnet',
+    dappUrl: 'https://shoporigin.com/#/',
+    provider:
+      'https://eth-mainnet.alchemyapi.io/jsonrpc/FCA-3myPH5VFN8naOWyxDU6VkxelafK6'
+  },
   {
     id: 4,
     name: 'Rinkeby',
-    dappUrl: 'https://dapp.staging.originprotocol.com'
+    dappUrl: 'https://dapp.staging.originprotocol.com/#/',
+    provider:
+      'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI'
   },
-  { id: 2222, name: 'Origin', dappUrl: 'https://dapp.dev.originprotocol.com' }
+  {
+    id: 2222,
+    name: 'Origin',
+    dappUrl: 'https://dapp.dev.originprotocol.com/#/',
+    provider: 'https://testnet.originprotocol.com/rpc'
+  }
 ]
 
 // Push additional networks if in development
@@ -52,13 +74,13 @@ export const PROMPT_MESSAGE = 'I am ready to start messaging on Origin.'
 export const PROMPT_PUB_KEY = 'My public messaging key is: '
 
 export const CURRENCIES = [
-  ['fiat-USD', 'USD', '$'],
-  ['fiat-GBP', 'GBP', '£'],
-  ['fiat-EUR', 'EUR', '€'],
-  ['fiat-KRW', 'KRW', '₩'],
-  ['fiat-JPY', 'JPY', '¥'],
-  ['fiat-CNY', 'CNY', '¥'],
-  ['fiat-SGD', 'SGD', 'S$']
+  { code: 'USD', symbol: '$' },
+  { code: 'GBP', symbol: '£' },
+  { code: 'EUR', symbol: '€' },
+  { code: 'KRW', symbol: '₩' },
+  { code: 'JPY', symbol: '¥' },
+  { code: 'CNY', symbol: '¥' },
+  { code: 'SGD', symbol: 'S$' }
 ]
 
 /* eslint-disable camelcase */
@@ -68,12 +90,12 @@ import * as en_US from 'locales/en_US.json'
 import * as es_ES from 'locales/es_ES.json'
 import * as fr_FR from 'locales/fr_FR.json'
 import * as it_IT from 'locales/it_IT.json'
-// import * as ja_JP from 'locales/ja_JP.json'
-// import * as ko_KR from 'locales/ko_KR.json'
+import * as ja_JP from 'locales/ja_JP.json'
+import * as ko_KR from 'locales/ko_KR.json'
 // import * as nl_NL from 'locales/nl_NL.json'
 // import * as pt_PT from 'locales/pt_PT.json'
 // import * as ro_RO from 'locales/ro_RO.json'
-// import * as ru_RU from 'locales/ru_RU.json'
+import * as ru_RU from 'locales/ru_RU.json'
 // import * as tr_TR from 'locales/tr_TR.json'
 // import * as uk_UA from 'locales/uk_UA.json'
 // import * as vi_VN from 'locales/vi_VN.json'
@@ -88,12 +110,12 @@ export const TRANSLATIONS = {
   es_ES,
   fr_FR,
   it_IT,
-  // ja_JP,
-  // ko_KR,
+  ja_JP,
+  ko_KR,
   // nl_NL,
   // pt_PT,
   // ro_RO,
-  // ru_RU,
+  ru_RU,
   // tr_TR,
   // uk_UA,
   // vi_VN,

@@ -193,6 +193,7 @@ export function setNetwork(net, customConfig) {
   context.graphql = config.graphql
 
   delete context.marketplace
+  delete context.marketplaceVersionByAddress
   delete context.marketplaceExec
   delete context.ogn
   delete context.ognExec
@@ -238,7 +239,11 @@ export function setNetwork(net, customConfig) {
     })
   } else if (!isBrowser && !isWebView) {
     // TODO: Allow for browser?
-    createEngine(web3, { qps, maxConcurrent })
+    createEngine(web3, {
+      qps,
+      maxConcurrent,
+      ethGasStation: ['mainnet', 'rinkeby'].includes(net)
+    })
   }
 
   if (isBrowser) {
@@ -258,7 +263,8 @@ export function setNetwork(net, customConfig) {
     context.messaging = OriginMessaging({
       ...MessagingConfig,
       web3,
-      mobileBridge: context.mobileBridge
+      mobileBridge: context.mobileBridge,
+      pubsub: pubsub
     })
   }
 
@@ -287,7 +293,7 @@ export function setNetwork(net, customConfig) {
 
   setProxyContracts(config)
 
-  if (config.performanceMode && context.config.graphql) {
+  if (config.performanceMode && context.config.graphql && net !== 'test') {
     queryForBlocks()
   } else if (config.providerWS) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
@@ -493,25 +499,33 @@ export function toggleMetaMask(enabled) {
 
 export function setMarketplace(address, epoch, version = '000') {
   if (!address) return
+  address = web3.utils.toChecksumAddress(address)
   const contract = new web3.eth.Contract(MarketplaceContract.abi, address)
-  patchWeb3Contract(contract, epoch, {
-    useLatestFromChain: false,
-    ipfsEventCache:
-      context.config[`V${version.slice(1)}_Marketplace_EventCache`],
-    cacheMaxBlock:
-      context.config[`V${version.slice(1)}_Marketplace_EventCacheMaxBlock`],
-    prefix:
-      typeof address === 'undefined'
-        ? 'Marketplace_'
-        : `${address.slice(2, 8)}_`,
-    platform:
+
+  try {
+    patchWeb3Contract(contract, epoch, {
+      useLatestFromChain: false,
+      ipfsEventCache:
+        context.config[`V${version.slice(1)}_Marketplace_EventCache`],
+      cacheMaxBlock:
+        context.config[`V${version.slice(1)}_Marketplace_EventCacheMaxBlock`],
+      prefix:
+        typeof address === 'undefined'
+          ? 'Marketplace_'
+          : `${address.slice(2, 8)}_`,
+      platform: 
       typeof window === 'undefined'
         ? process.env.ENABLE_EVENTCACHE_DB
           ? 'postgresql'
           : 'memory'
         : 'browser',
     ...context.config
-  })
+    })
+  } catch (err) {
+    console.error('Unable to initialize EventCache for Marketplace')
+    throw err
+  }
+
   context.marketplace = contract
 
   const eventSource = new EventSource({
@@ -531,6 +545,9 @@ export function setMarketplace(address, epoch, version = '000') {
     contract,
     contractExec: contract
   }
+  context.marketplaceVersionByAddress =
+    context.marketplaceVersionByAddress || {}
+  context.marketplaceVersionByAddress[address] = version
 
   if (metaMask) {
     const contractMM = new metaMask.eth.Contract(
@@ -547,27 +564,35 @@ export function setMarketplace(address, epoch, version = '000') {
 
 export function setIdentityEvents(address, epoch) {
   if (!address) return
+  address = web3.utils.toChecksumAddress(address)
   context.identityEvents = new web3.eth.Contract(
     IdentityEventsContract.abi,
     address
   )
-  patchWeb3Contract(context.identityEvents, epoch, {
-    ipfsEventCache: context.config.IdentityEvents_EventCache,
-    cacheMaxBlock: context.config.IdentityEvents_EventCacheMaxBlock,
-    useLatestFromChain: false,
-    prefix:
-      typeof address === 'undefined'
-        ? 'IdentityEvents_'
-        : `${address.slice(2, 8)}_`,
-    platform:
+
+  try {
+    patchWeb3Contract(context.identityEvents, epoch, {
+      ipfsEventCache: context.config.IdentityEvents_EventCache,
+      cacheMaxBlock: context.config.IdentityEvents_EventCacheMaxBlock,
+      useLatestFromChain: false,
+      prefix:
+        typeof address === 'undefined'
+          ? 'IdentityEvents_'
+          : `${address.slice(2, 8)}_`,
+      platform: 
       typeof window === 'undefined'
         ? process.env.ENABLE_EVENTCACHE_DB
           ? 'postgresql'
           : 'memory'
         : 'browser',
-    batchSize: 2500,
+      batchSize: 2500,
     ...context.config
-  })
+    })
+  } catch (err) {
+    console.error('Unable to initialize EventCache for IdentityEvents')
+    throw err
+  }
+
   context.identityEventsExec = context.identityEvents
 
   if (metaMask) {
@@ -592,29 +617,36 @@ export function setProxyContracts(config) {
     config.IdentityProxyImplementation
   )
   // Add an event cache to ProxyFactory.
-  patchWeb3Contract(context.ProxyFactory, config.ProxyFactory_Epoch, {
-    ipfsEventCache: null, // TODO add IPFS cache after Meta-txn launch, once we have a non trivial number of events.
-    cacheMaxBlock: null,
-    useLatestFromChain: false,
-    prefix:
-      typeof config.ProxyFactory === 'undefined'
-        ? 'ProxyFactory_'
-        : `${config.ProxyFactory.slice(2, 8)}_`,
-    platform:
+  try {
+    patchWeb3Contract(context.ProxyFactory, config.ProxyFactory_Epoch, {
+      ipfsEventCache: null, // TODO add IPFS cache after Meta-txn launch, once we have a non trivial number of events.
+      cacheMaxBlock: null,
+      useLatestFromChain: false,
+      prefix:
+        typeof config.ProxyFactory === 'undefined'
+          ? 'ProxyFactory_'
+          : `${config.ProxyFactory.slice(2, 8)}_`,
+      platform: 
       typeof window === 'undefined'
         ? process.env.ENABLE_EVENTCACHE_DB
           ? 'postgresql'
           : 'memory'
         : 'browser',
-    batchSize: 2500,
+      batchSize: 2500,
     ...context.config
-  })
+    })
+  } catch (err) {
+    console.error('Unable to initialize EventCache for ProxyFactory')
+    throw err
+  }
 }
 
 export function shutdown() {
   if (web3.currentProvider.stop) web3.currentProvider.stop()
   if (wsSub) {
     wsSub.unsubscribe()
+  }
+  if (web3WS && web3WS.currentProvider) {
     web3WS.currentProvider.connection.close()
   }
   clearInterval(blockInterval)

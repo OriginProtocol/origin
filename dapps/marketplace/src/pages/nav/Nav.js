@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { fbt } from 'fbt-runtime'
 import { withRouter } from 'react-router-dom'
 
@@ -14,6 +14,7 @@ import Messages from './Messages'
 import Mobile from './Mobile'
 import Search from '../listings/_Search'
 import GetStarted from './GetStarted'
+import ConsoleLogCatcher from 'utils/ConsoleLogCatcher'
 
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
@@ -31,7 +32,6 @@ const Brand = withCreatorConfig(({ creatorConfig }) => {
 
 const ShowBackRegex = /^\/(listing)(\/[-0-9]*\/?)?$/gi
 const ShowSearchRegex = /^\/(listings?|search)?(\/|$)/gi
-const ProfilePageRegex = /^\/(profile|user)/gi
 
 const getTitle = pathname => {
   let title
@@ -67,17 +67,74 @@ const Nav = ({
   history
 }) => {
   const [open, setOpen] = useState()
+  const [consoleOpen, setConsoleOpen] = useState(false)
+  const [consoleLogConnected, setConsoleLogConnected] = useState(false)
+
+  const screenConsoleEnabled = localStorage.screenConsole
+
+  useEffect(() => {
+    if (wallet && !consoleLogConnected && screenConsoleEnabled) {
+      ConsoleLogCatcher().connect((method, logString) => {
+        const logs = JSON.parse(localStorage.getItem('capturedLogs') || '[]')
+        // only keep max 15 items in the logs
+        logs.slice(Math.max(0, logs.length - 15))
+        logs.push({ method, log: logString })
+        localStorage.setItem('capturedLogs', JSON.stringify(logs))
+      })
+      setConsoleLogConnected(true)
+    }
+  }, [wallet, consoleLogConnected, screenConsoleEnabled])
+
   const navProps = nav => ({
     onOpen: () => setOpen(nav),
     onClose: () => open === nav && setOpen(false),
     open: open === nav
   })
 
+  const consoleCaptureContent = () => {
+    const logs = JSON.parse(localStorage.getItem('capturedLogs') || '[]')
+
+    return (
+      <div className="screen-console-holder">
+        <ul id="screen-console">
+          {logs.map((log, index) => {
+            return (
+              <li key={index} className={`mt-2 ${log.method}`}>
+                {log.log}
+              </li>
+            )
+          })}
+        </ul>
+        <div className="actions d-flex justify-content-center">
+          <div
+            className="btn btn-primary mr-2"
+            onClick={() => {
+              setConsoleOpen(false)
+            }}
+          >
+            <fbt desc="navbar.close">close</fbt>
+          </div>
+          <div
+            className="btn btn-primary ml-2"
+            onClick={() => {
+              localStorage.removeItem('capturedLogs')
+              setConsoleOpen(false)
+            }}
+          >
+            <fbt desc="navbar.close">clear</fbt>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   if (isMobile) {
     const canGoBack = history && history.length > 1
 
     // Make the hamburger menu absolute and hide branding and profile icon.
-    const isProfilePage = ProfilePageRegex.test(pathname)
+    const isProfilePage =
+      pathname &&
+      (pathname.startsWith('/profile') || pathname.startsWith('/user'))
 
     const walletEl = wallet ? (
       <Profile {...navProps('profile')} />
@@ -106,10 +163,18 @@ const Nav = ({
             <a className="nav-back-icon" onClick={() => history.goBack()} />
           )}
           {!isStacked && (
-            <Mobile {...navProps('mobile')} onShowFooter={onShowFooter} />
+            <Mobile
+              {...navProps('mobile')}
+              onShowFooter={onShowFooter}
+              onConsoleClick={() => {
+                setConsoleOpen(!consoleOpen)
+              }}
+              screenConsoleEnabled={screenConsoleEnabled}
+            />
           )}
           {!isProfilePage && getTitle(pathname)}
           {!isStacked && walletEl}
+          {consoleOpen && consoleCaptureContent()}
         </nav>
         {canShowSearch && <Search className="search" placeholder />}
         {!isStacked && canShowBack && (
@@ -192,11 +257,26 @@ const Nav = ({
               </span>
             </EarnTokens>
           </li>
+          {screenConsoleEnabled && (
+            <li className="nav-item d-none d-lg-flex">
+              <div
+                className="nav-link text"
+                onClick={() => {
+                  setConsoleOpen(!consoleOpen)
+                }}
+              >
+                <span>
+                  <fbt desc="navbar.console">Console</fbt>
+                </span>
+              </div>
+            </li>
+          )}
           <Messages {...navProps('messages')} />
           <Notifications {...navProps('notifications')} />
           <Profile {...navProps('profile')} />
         </ul>
       </div>
+      {consoleOpen && consoleCaptureContent()}
     </nav>
   )
 }
@@ -215,6 +295,34 @@ require('react-styl')(`
     > .container
       align-items: stretch
 
+    .screen-console-holder
+      position: fixed
+      font-size: 10px
+      top: 50px
+      bottom: 3px
+      left: 3px
+      right: 3px
+      background-color: #222222DD
+      z-index: 1
+      border-radius: 15px
+      padding-top: 40px
+      overflow-y: scroll
+      .log
+        color: white
+      .info
+        color: white
+      .warn
+        color: yellow
+      .error
+        color: red
+      .actions
+        position: fixed
+        bottom: 30px
+        width: 100vw
+      .btn
+        bottom: 30px
+        border-radius: 15px
+        padding: 0.2rem 1.5rem
     .nav-item
       display: flex
       align-items: center
@@ -255,7 +363,7 @@ require('react-styl')(`
         padding: 0
         position: absolute !important
         margin-top: 0
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1)
         border-radius: 0 0 5px 5px
         border: 1px solid var(--light)
         font-weight: normal

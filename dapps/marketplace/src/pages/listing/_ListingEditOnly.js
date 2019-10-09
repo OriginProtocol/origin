@@ -58,10 +58,6 @@ const MultiUnitCommission = ({ listing }) => (
 )
 
 const Commission = ({ listing }) => {
-  if (window.localStorage.promoteEnabled !== 'true') {
-    return null
-  }
-
   if (listing.commissionPerUnit === '0') {
     return <PromoteCTA listingId={listing.id} />
   }
@@ -87,7 +83,7 @@ const Commission = ({ listing }) => {
       <Link
         className="listing-action-link"
         to={`/promote/${listing.id}/amount`}
-        children={fbt('Edit Commisison', 'listing.editCommission')}
+        children={fbt('Edit Commission', 'listing.editCommission')}
       />
     </>
   )

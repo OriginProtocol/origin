@@ -16,7 +16,9 @@ const UserListings = ({
   hideLoadMore,
   horizontal,
   compact,
-  title
+  title,
+  hideIfEmpty,
+  excludeListing
 }) => {
   const vars = {
     first: 8,
@@ -48,6 +50,10 @@ const UserListings = ({
 
         const { hasNextPage, endCursor: after } = pageInfo
 
+        if (hideIfEmpty && (!nodes || !nodes.length)) {
+          return null
+        }
+
         return (
           <div className="user-listings">
             {hideHeader ? null : (
@@ -56,7 +62,9 @@ const UserListings = ({
               </h5>
             )}
             <ListingsGallery
-              listings={nodes}
+              listings={
+                nodes ? nodes.filter(l => l.id !== excludeListing) : null
+              }
               hasNextPage={hasNextPage}
               hideCategory
               horizontal={horizontal}

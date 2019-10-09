@@ -98,7 +98,8 @@ const config = {
   // Default continue block
   defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0),
   enableMetrics:
-    args['--enable-metrics'] || process.env.ENABLE_METRICS === 'true'
+    args['--enable-metrics'] || process.env.ENABLE_METRICS === 'true',
+  messagingEvents: args['--messaging-events'] || process.env.MESSAGING_EVENTS
 }
 
 logger.info('Starting with configuration:')
@@ -112,11 +113,16 @@ async function main() {
   const context = await new Context().init(config, errorCounter)
 
   // List of contracts the listener watches events from.
-  const contracts = {
-    IdentityEvents: contractsContext.identityEvents,
-    Marketplace: contractsContext.marketplaces['000'].contract,
-    ProxyFactory: contractsContext.ProxyFactory
-  }
+  const contracts = {}
+  if (config.identity)
+    contracts['IdentityEvents'] = contractsContext.identityEvents
+  if (config.proxy) contracts['ProxyFactory'] = contractsContext.ProxyFactory
+
+  // Listen to all versions of marketplace
+  Object.keys(contractsContext.marketplaces).forEach(key => {
+    contracts[`V${key}_Marketplace`] =
+      contractsContext.marketplaces[key].contract
+  })
 
   if (context.config.concurrency > 1) {
     logger.warn(`Backfill mode: concurrency=${context.config.concurrency}`)

@@ -1,54 +1,37 @@
 'use strict'
 
-import { createStore, combineReducers, compose } from 'redux'
-import { createTransform } from 'redux-persist'
+import { applyMiddleware, createStore, combineReducers, compose } from 'redux'
+import { persistStore, persistReducer } from 'redux-persist'
+import AsyncStorage from '@react-native-community/async-storage'
+import createEncryptor from 'redux-persist-transform-encrypt'
+import thunk from 'redux-thunk'
 
 import activation from 'reducers/Activation'
 import exchangeRates from 'reducers/ExchangeRates'
 import marketplace from 'reducers/Marketplace'
 import notifications from 'reducers/Notifications'
-import onboarding from 'reducers/Onboarding'
+import samsungBKS from 'reducers/SamsungBKS'
 import settings from 'reducers/Settings'
 import wallet from 'reducers/Wallet'
-import { persistStore, persistReducer } from 'redux-persist'
-import createEncryptor from 'redux-persist-transform-encrypt'
-import storage from 'redux-persist/lib/storage'
 
 const encryptor = createEncryptor({
   secretKey: 'WALLET_PASSWORD'
 })
 
-const ValidateAccountTransform = createTransform(
-  inboundState => inboundState,
-  // Transform state being rehydrated
-  outboundState => {
-    // Make sure all accounts in the store are valid, i.e. that they have
-    // both an address and a private key
-    return {
-      ...outboundState,
-      accounts: outboundState.accounts.filter(account => {
-        return account.address && account.privateKey
-      })
-    }
-  },
-  {
-    // Only apply this to wallet
-    whitelist: ['wallet']
-  }
-)
-
 const persistConfig = {
+  timeout: null,
   key: 'EncryptedOriginWallet',
-  storage: storage,
+  storage: AsyncStorage,
   whitelist: [
     'activation',
     'exchangeRates',
     'notifications',
-    'onboarding',
+    'samsungBKS',
     'settings',
     'wallet'
   ],
-  transforms: [ValidateAccountTransform, encryptor]
+  blacklist: ['onboarding'],
+  transforms: [encryptor]
 }
 
 // eslint-disable-next-line no-underscore-dangle
@@ -62,12 +45,12 @@ const store = createStore(
       exchangeRates,
       marketplace,
       notifications,
-      onboarding,
+      samsungBKS,
       settings,
       wallet
     })
   ),
-  composeEnhancers()
+  composeEnhancers(applyMiddleware(thunk))
 )
 
 const persistor = persistStore(store)

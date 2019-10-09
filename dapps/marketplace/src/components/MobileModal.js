@@ -73,7 +73,7 @@ export default class MobileModal extends Component {
     if (shouldSlideUp) {
       this.portal.classList.add('animate-slide-up')
     } else {
-      this.portal.classList.add('animate-slide-up')
+      this.portal.classList.remove('animate-slide-up')
     }
 
     if (this.props.fullscreen === false) {
@@ -231,7 +231,6 @@ require('react-styl')(`
       opacity: 1
       display: block
   .mobile-modal-light
-    touch-action: none
     position: fixed
     z-index: 2000
     -webkit-transform: translate3d(0, 0, 0)

@@ -20,6 +20,7 @@ try {
 }
 
 const isProduction = process.env.NODE_ENV === 'production'
+const isTest = process.env.NODE_ENV === 'test'
 
 const isStaging = process.env.NAMESPACE === 'staging'
 const isDev = process.env.NAMESPACE === 'dev'
@@ -32,11 +33,18 @@ if (isStaging) {
   TELEGRAM_BOT_USERNAME = 'originprotocol_production_bot'
 }
 
+let devtool = 'cheap-module-source-map'
+if (isProduction) {
+  devtool = 'source-map'
+} else if (isTest) {
+  devtool = false
+}
+
 const config = {
   entry: {
     app: './src/index.js'
   },
-  devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
+  devtool,
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'public')
@@ -128,6 +136,7 @@ const config = {
       DOCKER: false,
       ENABLE_GROWTH: false,
       FACEBOOK_CLIENT_ID: null,
+      GAS_PRICE_KEY: null,
       GIT_COMMIT_HASH: gitCommitHash,
       GIT_BRANCH: gitBranch,
       HOST: 'localhost',
@@ -140,7 +149,8 @@ const config = {
       ENABLE_LINKEDIN_ATTESTATION: false,
       ENABLE_WECHAT_ATTESTATION: false,
       SENTRY_DSN: null,
-      NAMESPACE: 'dev',
+      NAMESPACE: process.env.NAMESPACE || 'dev',
+      ETH_NETWORK_ID: process.env.ETH_NETWORK_ID || null,
       TELEGRAM_BOT_USERNAME: TELEGRAM_BOT_USERNAME,
       NODE_ENV: process.env.NODE_ENV || 'development'
     }),
@@ -167,7 +177,7 @@ const config = {
 if (isProduction) {
   config.output.filename = '[name].[hash:8].js'
   config.optimization.minimizer = [
-    new TerserPlugin({ cache: true, parallel: true, sourceMap: true }),
+    new TerserPlugin({ extractComments: false }),
     new OptimizeCSSAssetsPlugin({})
   ]
   config.plugins.push(
@@ -175,7 +185,6 @@ if (isProduction) {
       cleanOnceBeforeBuildPatterns: ['app.*.css', 'app.*.js', 'app.*.js.map']
     }),
     new MiniCssExtractPlugin({ filename: '[name].[hash:8].css' }),
-    new webpack.IgnorePlugin(/redux-logger/),
     new HtmlWebpackPlugin({
       template: 'public/template.html',
       inject: false,
@@ -214,8 +223,6 @@ if (isProduction) {
   //   'react-dom': 'react-dom/umd/react-dom.production.min.js',
   //   'react-styl': 'react-styl/prod.js',
   //   web3: path.resolve(__dirname, 'public/web3.min'),
-  //   redux: 'redux/dist/redux.min.js',
-  //   'react-redux': 'react-redux/dist/react-redux.min.js',
   //   'react-router-dom': 'react-router-dom/umd/react-router-dom.min.js'
   // }
   // config.module.noParse = [

@@ -2,7 +2,20 @@
 const appHash = process.env.GIT_COMMIT_HASH || 'marketplace'
 const ognNetwork = localStorage.ognNetwork
 if (localStorage.appHash !== appHash) {
+  /* Here we add exceptions we don't want to clear when app hash changes:
+   *  - growth_auth_token: because it logs users out of rewards campaigns
+   *  - screenConsole: because we want this setting of enabling html console
+   *    persist across builds.
+   */
+  let exceptions = ['growth_auth_token', 'screenConsole']
+  exceptions = exceptions
+    .map(key => ({ key, value: localStorage.getItem(key) }))
+    .filter(localStorageEntry => localStorageEntry.value !== null)
   localStorage.clear()
+  exceptions.forEach(localStorageEntry =>
+    localStorage.setItem(localStorageEntry.key, localStorageEntry.value)
+  )
+
   sessionStorage.clear()
   localStorage.appHash = appHash
   localStorage.ognNetwork = ognNetwork
@@ -15,10 +28,10 @@ import { ApolloProvider } from 'react-apollo'
 import { HashRouter } from 'react-router-dom'
 import Styl from 'react-styl'
 import client from '@origin/graphql'
-import * as Sentry from '@sentry/browser'
 
 import setLocale from 'utils/setLocale'
 import Store from 'utils/store'
+import { initSentry } from 'utils/sentry'
 
 import App from './pages/App'
 import Analytics from './components/Analytics'
@@ -33,11 +46,7 @@ if (process.env.NODE_ENV === 'production') {
     console.warn('No built CSS found')
   }
   if (process.env.SENTRY_DSN) {
-    Sentry.init({
-      dsn: process.env.SENTRY_DSN,
-      release: `marketplace-dapp@${process.env.GIT_COMMIT_HASH}`,
-      environment: process.env.NAMESPACE
-    })
+    initSentry()
   }
 } else {
   try {

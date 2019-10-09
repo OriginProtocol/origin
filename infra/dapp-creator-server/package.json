@@ -37,7 +37,7 @@
     "dotenv": "^8.0.0",
     "envkey": "^1.2.6",
     "express": "^4.17.1",
-    "ipfs-http-client": "^34.0.0",
+    "ipfs-http-client": "^38.0.0",
     "logplease": "^1.2.15",
     "per-env": "^1.0.2",
     "raven": "^2.6.4",
@@ -45,8 +45,8 @@
   },
   "devDependencies": {
     "chai": "4.2.0",
-    "mocha": "6.2.0",
-    "nodemon": "1.19.1",
+    "mocha": "6.2.1",
+    "nodemon": "1.19.3",
     "supertest": "4.0.2"
   },
   "babel": {

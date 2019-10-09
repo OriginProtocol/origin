@@ -42,7 +42,7 @@ class PhoneAttestation extends Component {
 
     return (
       <ModalComponent
-        title={fbt('Verify Phone Number', 'PhoneAttestation.verifyPhoneNumber')}
+        title={fbt('Verify Phone', 'PhoneAttestation.verifyPhone')}
         className="attestation-modal phone"
         shouldClose={this.state.shouldClose}
         onClose={() => {
@@ -74,7 +74,7 @@ class PhoneAttestation extends Component {
     const { isMobile } = this.props
 
     const header = isMobile ? null : (
-      <fbt desc="PhoneAttestation.title">Verify your Phone Number</fbt>
+      <fbt desc="PhoneAttestation.title">Verify Your Phone Number</fbt>
     )
 
     const descEl = isMobile ? (
@@ -397,8 +397,6 @@ require('react-styl')(`
       background-image: url(images/growth/airbnb-icon.svg)
     &.google > div h2
       background-image: url(images/growth/google-icon.svg)
-    &.website > div h2
-      background-image: url(images/growth/website-icon.svg)
     &.kakao > div h2
       background-image: url(images/growth/kakao-icon.svg)
     &.github > div h2
@@ -409,6 +407,8 @@ require('react-styl')(`
       background-image: url(images/growth/wechat-icon.svg)
     &.telegram > div h2
       background-image: url(images/growth/telegram-badge.svg)
+    &.website > div h2
+      background-image: url(images/growth/website-icon.svg)
 
   .mobile-modal-light .attestation-modal
     padding: 20px
@@ -436,8 +436,6 @@ require('react-styl')(`
       background-image: url(images/identity/airbnb-icon-light.svg)
     &.google > div h2::before
       background-image: url(images/identity/google-icon.svg)
-    &.website > div h2::before
-      background-image: url(images/identity/website-icon-light.svg)
     &.kakao > div h2::before
       background-image: url(images/identity/kakao-icon-large.svg)
     &.github > div h2::before
@@ -448,6 +446,8 @@ require('react-styl')(`
       background-image: url(images/identity/wechat-icon-large.svg)
     &.telegram > div h2::before
       background-image: url(images/growth/telegram-badge.svg)
+    &.website > div h2::before
+      background-image: url(images/identity/website-icon-light.svg)
     > div
 
       flex: auto

@@ -101,7 +101,7 @@ class AccountTable extends Component {
         <div className="row">
           <div className="col">
             <div className="table-responsive">
-              <table className="table mt-4 mb-4">
+              <table className="table mb-4">
                 <thead>
                   <tr>
                     <th>Nickname</th>

@@ -43,17 +43,24 @@
         }
       ]
     },
-    "LnwecOVmQ25DVugF+RemxQ==": {
+    "fsX2zn/I8IxKM/YS6pNIiA==": {
       "translations": [
         {
-          "translation": "Autenticazione richiesta"
+          "translation": "Authentication Required"
         }
       ]
     },
-    "J/SHV34/Q6NzSn+T7V8i2w==": {
+    "uBbr58ZsBIlotqS29XDzmA==": {
       "translations": [
         {
-          "translation": "Pin richiesto"
+          "translation": "Retry"
+        }
+      ]
+    },
+    "b1eg8txmL9GsnAqK+wcpDA==": {
+      "translations": [
+        {
+          "translation": "Pin Required"
         }
       ]
     },
@@ -729,24 +736,24 @@
         }
       ]
     },
-    "bJwnJVo5lwuFi394jn741w==": {
+    "imEcy9mqva2P4QkCGKkG7w==": {
       "translations": [
         {
-          "translation": "Importa il tuo wallet per guadagnare più OGN"
+          "translation": "Other Wallet Detected"
         }
       ]
     },
-    "nWjFXBqXG9oCHoaLwTYfXw==": {
+    "DktheTKIZ/i7gQzBzStqKQ==": {
       "translations": [
         {
-          "translation": "Abbiamo rilevato un wallet esistente associato a questa email. Si prega di importarlo per continuare a guadagnare premi."
+          "translation": "We've noticed that you previously signed up for Origin Rewards using this email with a different wallet. Please import your other wallet to continue earning Origin Rewards."
         }
       ]
     },
-    "MNlD7ug4Qb5knKTv38TSRA==": {
+    "JdP7rfOo7gmvo9L/wkL+Zg==": {
       "translations": [
         {
-          "translation": "Importa un wallet"
+          "translation": "Import other wallet"
         }
       ]
     },
@@ -761,6 +768,20 @@
       "translations": [
         {
           "translation": "Lingua"
+        }
+      ]
+    },
+    "lPK1A5cn8JlhIPgCDjiuAg==": {
+      "translations": [
+        {
+          "translation": "Connection Error"
+        }
+      ]
+    },
+    "a3s77Iq0FypOEuisvfUcYg==": {
+      "translations": [
+        {
+          "translation": "Retry"
         }
       ]
     },
@@ -1191,10 +1212,10 @@
         }
       ]
     },
-    "Lp93xb08b3XQgFxrkhcWaw==": {
+    "+RVM+8puOIMhob2MxHX2bA==": {
       "translations": [
         {
-          "translation": "Inserisci il numero di telefono"
+          "translation": "Enter phone"
         }
       ]
     },
@@ -1310,17 +1331,17 @@
         }
       ]
     },
-    "/ZRamsgXYO6P2TSz5J9w9Q==": {
+    "lgpP8skCH3wOustvhptxBA==": {
       "translations": [
         {
-          "translation": "In attesa di conferma."
+          "translation": "Waiting for confirmation"
         }
       ]
     },
-    "oIOKtoc/Vu54ytVuwI0Tmw==": {
+    "tWJHZWSsiD6K0ek//UcW6Q==": {
       "translations": [
         {
-          "translation": "Questa operazione potrebbe richiedere un minuto."
+          "translation": "This might take a minute"
         }
       ]
     },
@@ -1398,6 +1419,13 @@
       "translations": [
         {
           "translation": "Rete"
+        }
+      ]
+    },
+    "j5rIPEDyOjXyubSdCUgZ6A==": {
+      "translations": [
+        {
+          "translation": "Version"
         }
       ]
     },

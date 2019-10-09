@@ -48,12 +48,16 @@ const GrowthActionType = new Enum(
   'TelegramFollow'
 )
 
-const GrowthParticipantStatuses = new Enum('Active', 'Banned')
+// Active: account is active.
+// Banned: account was banned by our fraud scripts.
+// Closed: account was closed per the user request (and in most cases user opened a new account).
+const GrowthParticipantStatuses = new Enum('Active', 'Banned', 'Closed')
 
 const GrowthParticipantAuthenticationStatus = new Enum(
   'Enrolled',
   'Banned',
-  'NotEnrolled'
+  'NotEnrolled',
+  'Closed'
 )
 
 // DEPRECATED. Do not use.

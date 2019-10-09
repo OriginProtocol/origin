@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
+import { withRouter } from 'react-router-dom'
+
 import withIsMobile from 'hoc/withIsMobile'
 import withWallet from 'hoc/withWallet'
 
@@ -12,8 +14,6 @@ import PublishedInfoBox from 'components/_PublishedInfoBox'
 
 import GenerateTelegramCodeMutation from 'mutations/GenerateTelegramCode'
 import VerifyTelegramCodeMutation from 'mutations/VerifyTelegramCode'
-
-import ProtocolLink from 'components/ProtocolLink'
 
 class TelegramAttestation extends Component {
   constructor() {
@@ -29,12 +29,14 @@ class TelegramAttestation extends Component {
 
     const ModalComponent = this.props.isMobile ? MobileModal : Modal
 
+    const canGoBack =
+      this.props.isMobile &&
+      this.props.history.length &&
+      this.props.location.pathname.endsWith('/telegram')
+
     return (
       <ModalComponent
-        title={fbt(
-          'Verify Telegram Account',
-          'TelegramAttestation.verifyTelegramNumber'
-        )}
+        title={fbt('Verify Account', 'TelegramAttestation.verifyAccount')}
         className="attestation-modal telegram"
         shouldClose={this.state.shouldClose}
         onClose={() => {
@@ -55,6 +57,8 @@ class TelegramAttestation extends Component {
         }}
         lightMode={true}
         skipAnimateOnExit={this.props.skipAnimateOnExit}
+        onBack={!canGoBack ? null : () => this.props.history.goBack()}
+        slideUp={false}
       >
         <div>{this.renderVerifyCode()}</div>
       </ModalComponent>
@@ -66,7 +70,7 @@ class TelegramAttestation extends Component {
     const { openedLink } = this.state
 
     const header = isMobile ? null : (
-      <fbt desc="TelegramAttestation.title">Verify your Telegram Account</fbt>
+      <fbt desc="TelegramAttestation.title">Verify Your Telegram Account</fbt>
     )
 
     return (
@@ -96,13 +100,12 @@ class TelegramAttestation extends Component {
         />
         <div className="actions">
           {!openedLink && (
-            <ProtocolLink
-              protocolLink={`tg://resolve?domain=${
-                process.env.TELEGRAM_BOT_USERNAME
-              }&start=${encodeURIComponent(this.state.code)}`}
-              fallbackLink={`https://t.me/${
+            <a
+              href={`https://t.me/${
                 process.env.TELEGRAM_BOT_USERNAME
               }?start=${encodeURIComponent(this.state.code)}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn btn-primary"
               onClick={() => {
                 this.setState({
@@ -134,6 +137,10 @@ class TelegramAttestation extends Component {
   }
 
   renderGenerateCode() {
+    if (this.props.walletLoading || this.props.identityLoading) {
+      return null
+    }
+
     return (
       <Mutation
         mutation={GenerateTelegramCodeMutation}
@@ -240,4 +247,4 @@ class TelegramAttestation extends Component {
   }
 }
 
-export default withWallet(withIsMobile(TelegramAttestation))
+export default withRouter(withWallet(withIsMobile(TelegramAttestation)))

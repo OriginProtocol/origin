@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+import setupDebug from 'debug'
 
 import mnemonicToAccounts, {
   mnemonicToMasterAccount
@@ -28,6 +29,8 @@ import {
   UniswapAddLiquidity,
   ToggleMetaMaskMutation
 } from './mutations'
+
+const debug = setupDebug('origin:populate')
 
 const query = gql`
   subscription onTransactionUpdated {
@@ -76,23 +79,41 @@ const TransactionReceipt = gql`
   }
 `
 
-function transactionConfirmed(hash, gqlClient) {
-  return new Promise(resolve => {
+const transactionConfirmed = (id, gqlClient) =>
+  new Promise(resolve => {
+    debug(`waiting for tx ${id}`)
+    let returned
+
+    async function getReceipt() {
+      const result = await gqlClient.query({
+        query: TransactionReceipt,
+        variables: { id }
+      })
+      const receipt = get(result, 'data.web3.transactionReceipt')
+      if (receipt && !returned) {
+        returned = true
+        setTimeout(() => resolve(receipt), 100)
+      }
+    }
+
+    // Backup query incase subscription was added after block already mined
+    const backupTimeout = setTimeout(() => {
+      debug('Run backup receipt query')
+      sub.unsubscribe()
+      getReceipt()
+    }, 100)
+
     const sub = gqlClient.subscribe({ query }).subscribe({
       next: async result => {
         const t = result.data.transactionUpdated
-        if (t.id === hash && t.status === 'receipt') {
+        if (t.id === id && t.status === 'receipt') {
           sub.unsubscribe()
-          const result = await gqlClient.query({
-            query: TransactionReceipt,
-            variables: { id: hash }
-          })
-          resolve(get(result, 'data.web3.transactionReceipt'))
+          clearTimeout(backupTimeout)
+          getReceipt()
         }
       }
     })
   })
-}
 
 async function getNodeAccount(gqlClient) {
   const NodeAcctsData = await gqlClient.query({ query: NodeAccountsQuery })
@@ -101,7 +122,60 @@ async function getNodeAccount(gqlClient) {
   return NodeAccountObj.id
 }
 
-export async function createAccount(gqlClient, ogn) {
+export async function createListing(gqlClient, opts = {}) {
+  const {
+    from,
+    title = 'Product Title',
+    acceptedTokens = ['token-DAI', 'token-ETH']
+  } = opts
+
+  const result = await gqlClient.mutate({
+    mutation: CreateListingMutation,
+    variables: {
+      from: from,
+      version: '001',
+      deposit: '0',
+      depositManager: from,
+      autoApprove: true,
+      data: {
+        typename: 'UnitListing',
+        title,
+        description: 'The amazing Origin Spaceman shirt',
+        category: 'schema.forSale',
+        subCategory: 'schema.clothingAccessories',
+        acceptedTokens,
+        media: [
+          {
+            url: 'ipfs://QmdjjwsF7bbejYJ7CecAmMpGB9RMNtFN1Gbs79KmKSGdHD',
+            contentType: 'image/jpeg'
+          }
+        ],
+        price: {
+          amount: '1',
+          currency: 'fiat-USD'
+        },
+        commission: '0',
+        commissionPerUnit: '0',
+        marketplacePublisher: '',
+        requiresShipping: false
+      },
+      unitData: {
+        unitsTotal: 1
+      }
+    }
+  })
+
+  const tx = await transactionConfirmed(result.data.createListing.id, gqlClient)
+
+  const listingEvent = tx.events.find(e => e.event === 'ListingCreated')
+  const returnValues = get(listingEvent, 'returnValuesArr', [])
+  return get(returnValues.find(e => e.field === 'listingID'), 'value')
+}
+
+export async function createAccount(gqlClient, opts = {}) {
+  debug(`createAccount`, opts)
+
+  const { ogn, dai, eth = '0.5', deployIdentity } = opts
   const NodeAccount = await getNodeAccount(gqlClient)
   await gqlClient.mutate({
     mutation: ToggleMetaMaskMutation,
@@ -112,11 +186,33 @@ export async function createAccount(gqlClient, ogn) {
     variables: { name: 'Seller', role: 'Seller' }
   })
   const user = result.data.createWallet.id
+  debug(`created account ${user}`)
+
   const sendTx = await gqlClient.mutate({
     mutation: SendFromNodeMutation,
-    variables: { from: NodeAccount, to: user, value: '0.5' }
+    variables: { from: NodeAccount, to: user, value: eth }
   })
   await transactionConfirmed(sendTx.data.sendFromNode.id, gqlClient)
+  debug(`sent account ${eth} ETH`)
+
+  if (deployIdentity) {
+    const identity = await gqlClient.mutate({
+      mutation: DeployIdentityMutation,
+      variables: {
+        from: user,
+        profile: {
+          firstName: 'Test',
+          lastName: 'Account',
+          description: 'Tester',
+          avatar: ''
+        },
+        attestations: []
+      }
+    })
+    await transactionConfirmed(identity.data.deployIdentity.id, gqlClient)
+    debug(`deployed identity`)
+  }
+
   if (ogn) {
     const accounts = mnemonicToAccounts()
     await gqlClient.mutate({
@@ -134,36 +230,30 @@ export async function createAccount(gqlClient, ogn) {
       }
     })
     await transactionConfirmed(res.data.transferToken.id, gqlClient)
+    debug(`sent OGN`)
+  }
+
+  if (dai) {
+    const accounts = mnemonicToAccounts()
+    await gqlClient.mutate({
+      mutation: ImportWalletsMutation,
+      variables: { accounts: [accounts[0]] }
+    })
+
+    const res = await gqlClient.mutate({
+      mutation: TransferTokenMutation,
+      variables: {
+        from: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
+        to: user,
+        token: 'DAI',
+        value: dai
+      }
+    })
+    await transactionConfirmed(res.data.transferToken.id, gqlClient)
+    debug(`sent DAI`)
   }
   return user
 }
-
-// export async function deployIdentity(gqlClient, ethAddress) {
-//   const variables = {
-//     profile: {
-//       firstName: 'Test',
-//       lastName: 'Account',
-//       description: 'Tester',
-//       avatar: ''
-//     },
-//     attestations: [],
-//     from: ethAddress
-//   }
-
-//   let result
-//   try {
-//     result = await gqlClient.mutate({ DeployIdentityMutation, variables })
-//   } catch (e) {
-//     console.log(JSON.stringify(e, null, 4))
-//     throw e
-//   }
-//   const key = Object.keys(result.data)[0]
-//   const hash = result.data[key].id
-//   if (hash) {
-//     return await transactionConfirmed(hash, gqlClient)
-//   }
-//   return result.data[key]
-// }
 
 export default async function populate(gqlClient, log, done) {
   async function mutate(mutation, from, variables = {}) {

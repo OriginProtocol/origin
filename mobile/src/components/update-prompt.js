@@ -14,7 +14,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import compareVersions from 'compare-versions'
 import { fbt } from 'fbt-runtime'
 
-import { version } from '../../package.json'
+import { VERSION } from '../constants'
 import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'
 
@@ -40,11 +40,11 @@ class UpdatePrompt extends React.Component {
         console.warn('Could not fetch versions: ', error)
       }
 
-      if (versions && compareVersions(version, versions.force) === -1) {
+      if (versions && compareVersions(VERSION, versions.force) === -1) {
         this.setState({ upgrade: 'force' })
       } else if (
         versions &&
-        compareVersions(version, versions.recommend) === -1
+        compareVersions(VERSION, versions.recommend) === -1
       ) {
         this.setState({ upgrade: 'recommend' })
       }

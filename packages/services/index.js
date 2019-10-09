@@ -221,7 +221,8 @@ const startListener = () =>
         '--network=localhost',
         '--marketplace',
         '--identity',
-        '--elasticsearch'
+        '--elasticsearch',
+        '--messaging-events'
       ],
       {
         cwd,
@@ -289,7 +290,9 @@ module.exports = async function start(opts = {}) {
   if (opts.ganache && !started.ganache) {
     const ganacheOpts = opts.ganache === true ? {} : opts.ganache
     if (await portInUse(8545)) {
-      console.log('Ganache already started')
+      if (!opts.quiet) {
+        console.log('Ganache already started')
+      }
     } else {
       started.ganache = await startGanache(ganacheOpts)
     }
@@ -297,7 +300,9 @@ module.exports = async function start(opts = {}) {
 
   if (opts.ipfs && !started.ipfs) {
     if (await portInUse(5002)) {
-      console.log('IPFS already started')
+      if (!opts.quiet) {
+        console.log('IPFS already started')
+      }
     } else {
       started.ipfs = await startIpfs()
     }
@@ -331,7 +336,9 @@ module.exports = async function start(opts = {}) {
 
   if (opts.graphqlServer) {
     if (await portInUse(PORTS.graphql)) {
-      console.log('GraphQL Server already started')
+      if (!opts.quiet) {
+        console.log('GraphQL Server already started')
+      }
     } else {
       started.graphql = await startGraphql()
     }
@@ -363,7 +370,9 @@ module.exports = async function start(opts = {}) {
 
   if (opts.relayer && !started.relayer) {
     if (await portInUse(5100)) {
-      console.log('Relayer already started')
+      if (!opts.quiet) {
+        console.log('Relayer already started')
+      }
     } else {
       started.relayer = await startRelayer()
     }

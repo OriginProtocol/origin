@@ -27,7 +27,11 @@ const redis = require('redis')
 const BN = require('bn.js')
 const bip39 = require('bip39')
 const hdkey = require('ethereumjs-wallet/hdkey')
-const { createEngine } = require('@origin/web3-provider')
+const {
+  createEngine,
+  addSubprovider,
+  EthGasStationProvider
+} = require('@origin/web3-provider')
 const {
   stringToBN,
   numberToBN,
@@ -39,22 +43,23 @@ const logger = require('./logger')
 const Sentry = require('./sentry')
 const { metrics } = require('./prom')
 
-const MAX_LOCK_TIME = 15000
-const REDIS_RETRY_TIMEOUT = 30000
-const REDIS_RETRY_DELAY = 500
+const MAX_LOCK_TIME = 15000 // msec
+const REDIS_RETRY_TIMEOUT = 30000 // msec
+const REDIS_RETRY_DELAY = 500 // msec
 const DEFAULT_CHILDREN = 5
 const DEFAULT_MNEMONIC = 'one two three four five six'
 const DEFAULT_MAX_PENDING_PER_ACCOUNT = 3
 const ZERO = new BN('0', 10)
 const BASE_FUND_VALUE = new BN('500000000000000000', 10) // 0.5 Ether
 const MIN_CHILD_BALANCE = new BN('100000000000000000', 10) // 0.1 Ether
-const MAX_GAS_PRICE = new BN('25000000000', 10) // 25 gwei
+const MAX_GAS_PRICE = new BN('100000000000', 10) // 100 gwei. Hopefully we'll never have to raise this again...
 const REDIS_TX_COUNT_PREFIX = 'txcount_'
 const REDIS_PENDING_KEY = `pending_txs`
 const REDIS_PENDING_PREFIX = `pending_tx_`
 const REDIS_PENDING_TX_PREFIX = `pending_txobj_`
 const JSONRPC_QPS = 100
 const JSONRPC_MAX_CONCURRENT = 25
+const ACCOUNT_ACQUISITION_TIMEOUT = 15000 // msec
 
 async function tick(wait = 1000) {
   return new Promise(resolve => setTimeout(() => resolve(true), wait))
@@ -102,6 +107,7 @@ class Account {
  */
 class Purse {
   constructor({
+    networkId,
     web3,
     mnemonic = DEFAULT_MNEMONIC,
     children = DEFAULT_CHILDREN,
@@ -122,8 +128,13 @@ class Purse {
       // init the custom provider
       createEngine(web3, {
         qps: jsonrpcQPS,
-        maxConcurrent: JSONRPC_MAX_CONCURRENT
+        maxConcurrent: JSONRPC_MAX_CONCURRENT,
+        ethGasStation: [1, 4].includes(networkId)
       })
+      // add the EthGasStationProvider if mainnet or Rinkeby
+      if ([1, 4].includes(networkId)) {
+        addSubprovider(web3, new EthGasStationProvider())
+      }
     }
 
     this.web3 = web3
@@ -267,7 +278,24 @@ class Purse {
   async getAvailableAccount() {
     let resolvedAccount = null
 
+    /**
+     * Need this function because if we throw in setTimeout it won't bubble up
+     * properly and can't be handled.
+     */
+    const that = this
+    const timeout = () => {
+      that.accountLookupInProgress = false
+      throw new Error('Account acquisition timeout!')
+    }
+
+    // We don't want to be waiting on an account forever
+    let hasTimedOut = false
+    const acquisitionTimeout = setTimeout(() => {
+      hasTimedOut = true
+    }, ACCOUNT_ACQUISITION_TIMEOUT)
+
     do {
+      if (hasTimedOut) timeout()
       // We only want to be doing one lookup at a time
       if (this.accountLookupInProgress) {
         logger.debug('Waiting for lookup in progress to finish...')
@@ -289,6 +317,8 @@ class Purse {
      */
     try {
       do {
+        if (hasTimedOut) timeout()
+
         let totalPending = 0
         let lowestPending = this.maxPendingPerAccount
         for (const child of this.children) {
@@ -317,9 +347,15 @@ class Purse {
         }
       } while (await tick())
     } catch (err) {
+      // We want to throw on timeouts so it can be handled by the sender
+      if (err.message.indexOf('timeout') > -1) throw err
+
       logger.error('Unhandled error in getAvailableAccount()')
       handleError(err)
     }
+
+    // Clear the acquisition timeout
+    clearTimeout(acquisitionTimeout)
 
     // Unlock the lookup process
     this.accountLookupInProgress = false
@@ -684,6 +720,16 @@ class Purse {
   }
 
   /**
+   * Set autofundChildren. This will make sure to trigger balance checks after
+   * changing the setting.
+   * @param {boolean} new value of autofundChildren
+   */
+  setAutofundChildren(bv) {
+    this.autofundChildren = bv
+    this.checkBalances = true
+  }
+
+  /**
    * Get all pending transactions and populate this.pendintTransactions
    */
   async _populatePending() {
@@ -967,7 +1013,9 @@ class Purse {
               }
 
               logger.info(
-                `Will fund children with ${this.web3.utils.fromWei(
+                `Will fund ${
+                  childrenToFund.length
+                } children with ${this.web3.utils.fromWei(
                   valueToSend,
                   'ether'
                 )} ether`
@@ -975,7 +1023,13 @@ class Purse {
 
               if (valueToSend.gte(MIN_CHILD_BALANCE)) {
                 for (const child of childrenToFund) {
-                  await this._fundChild(child, valueToSend)
+                  try {
+                    logger.debug(`Making funding request for ${child}`)
+                    await this._fundChild(child, valueToSend)
+                  } catch (err) {
+                    logger.error(`Unable to fund child ${child} due to error`)
+                    handleError(err)
+                  }
                 }
               } else {
                 logger.warn('Unable to fund children.  Balance too low.')
@@ -1000,7 +1054,12 @@ class Purse {
        */
       try {
         const pendingHashes = Object.keys(this.pendingTransactions)
-        metrics.pendingTxGauge.set(pendingHashes.length)
+
+        metrics.pendingTxGauge.set(pendingHashes ? pendingHashes.length : 0)
+        if (pendingHashes.length > 0) {
+          logger.debug(`We have ${pendingHashes.length} pending transactions`)
+        }
+
         for (const txHash of pendingHashes) {
           const receipt = await this.web3.eth.getTransactionReceipt(txHash)
 
@@ -1021,8 +1080,7 @@ class Purse {
             typeof this.receiptCallbacks[txHash] !== 'undefined' &&
             this.receiptCallbacks[txHash].length > 0
           ) {
-            for (let i = 0; i < this.receiptCallbacks[txHash].length; i++) {
-              const cb = this.receiptCallbacks[txHash][i]
+            for (const cb of this.receiptCallbacks[txHash]) {
               const cbRet = cb(receipt)
               if (cbRet instanceof Promise) {
                 await cbRet

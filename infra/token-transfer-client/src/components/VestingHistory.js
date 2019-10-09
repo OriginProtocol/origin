@@ -26,7 +26,7 @@ const VestingHistory = props => {
             }`}
           ></div>
         </td>
-        <td>{amount.toLocaleString()} OGN</td>
+        <td>{Number(amount).toLocaleString()} OGN</td>
         <td>
           <small className="text-muted">
             {momentDate < moment.now() ? 'vested' : 'unvested'}
@@ -39,13 +39,9 @@ const VestingHistory = props => {
 
   return (
     <>
-      <div className="row">
-        <div className="col">
-          <h2 className="mb-4">Vesting History</h2>
-        </div>
-      </div>
-      <div className="row">
-        <div className="table-card col">
+      <h2 className="mb-4">Vesting History</h2>
+      <div className="table-card">
+        <div className="scrolling-table">
           <table className="table mb-4">
             <tbody>
               {props.isLocked ? (

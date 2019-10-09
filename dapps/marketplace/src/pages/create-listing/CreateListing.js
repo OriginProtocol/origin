@@ -6,6 +6,7 @@ import get from 'lodash/get'
 import withWallet from 'hoc/withWallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 import withIdentity from 'hoc/withIdentity'
+import withMessagingStatus from 'hoc/withMessagingStatus'
 
 import DocumentTitle from 'components/DocumentTitle'
 import UserActivationLink from 'components/UserActivationLink'
@@ -21,9 +22,13 @@ import Store from 'utils/store'
 const store = Store('sessionStorage')
 
 function initialState(props) {
+  const isOldListing = props.listing && props.listing.id
   // If a listing is passed in (as when editing) use that, otherwise
   // fall back to anything in `store` (an unfinished listing creation)
-  const existingListing = props.listing || store.get('create-listing') || {}
+  const existingListing =
+    (isOldListing
+      ? store.get(`edit-listing-${props.listing.id}`, props.listing)
+      : store.get('create-listing')) || {}
 
   return {
     __typename: 'UnitListing', // Default
@@ -35,12 +40,13 @@ function initialState(props) {
     boost: '0',
     boostLimit: '0',
     media: [],
+    requiresShipping: false,
 
     // Unit fields:
     quantity: '1',
     price: '',
     currency: 'fiat-USD',
-    acceptedTokens: ['token-DAI'],
+    acceptedTokens: isOldListing ? ['token-ETH', 'token-DAI', 'token-OGN'] : [],
 
     // Fractional fields:
     timeZone: '',
@@ -71,12 +77,16 @@ const CreateListing = props => {
   if (
     props.creatorConfigLoading ||
     props.walletLoading ||
-    props.identityLoading
+    props.identityLoading ||
+    props.messagingStatusLoading
   ) {
     return <LoadingSpinner />
   }
 
-  if (!props.identity && !localStorage.noIdentity) {
+  if (
+    !props.identity &&
+    !(localStorage.bypassOnboarding || localStorage.useWeb3Identity)
+  ) {
     return (
       <UserActivationLink
         location={{ pathname: '/create' }}
@@ -100,7 +110,11 @@ const CreateListing = props => {
     listing: { ...listing, ...forceType },
     onChange: listing => {
       setListing(listing)
-      store.set('create-listing', listing)
+      if (listing.id) {
+        store.set(`edit-listing-${listing.id}`, listing)
+      } else {
+        store.set('create-listing', listing)
+      }
     }
   }
 
@@ -126,20 +140,11 @@ const CreateListing = props => {
           render={() => <ListingCreated {...cmpProps} />}
         />
         <Route
-          path="/listing/:listingId/edit/:step"
+          path="/listing/:listingId/edit/:step?"
           render={({ match }) => (
             <ListingTypeComponent
               linkPrefix={`/listing/${match.params.listingId}/edit/details`}
               refetch={props.refetch}
-              {...cmpProps}
-            />
-          )}
-        />
-        <Route
-          path="/listing/:listingId/edit"
-          render={({ match }) => (
-            <ChooseListingType
-              next={`/listing/${match.params.listingId}/edit/details`}
               {...cmpProps}
             />
           )}
@@ -165,7 +170,10 @@ const CreateListing = props => {
   )
 }
 
-export default withCreatorConfig(withWallet(withIdentity(CreateListing)))
+export default withMessagingStatus(
+  withCreatorConfig(withWallet(withIdentity(CreateListing))),
+  { excludeData: true }
+)
 
 require('react-styl')(`
   .create-listing

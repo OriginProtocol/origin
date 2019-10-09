@@ -1,10 +1,11 @@
 'use strict'
 
-const sendgridMail = require('@sendgrid/mail')
 const Logger = require('logplease')
 const jwt = require('jsonwebtoken')
 
 const logger = Logger.create('sendWelcomeToken')
+
+const { sendEmail } = require('../lib/email')
 
 try {
   require('envkey')
@@ -13,18 +14,11 @@ try {
 }
 
 const { User } = require('../models')
-const {
-  encryptionSecret,
-  logLevel,
-  portalUrl,
-  sendgridFromEmail,
-  sendgridApiKey
-} = require('../config')
+const { encryptionSecret, logLevel, portalUrl } = require('../config')
 
 Logger.setLogLevel(logLevel)
-sendgridMail.setApiKey(sendgridApiKey)
 
-/*
+/**
  * Parse command line arguments into a dict.
  * @returns {Object} - Parsed arguments.
  */
@@ -39,32 +33,27 @@ function parseArgv() {
   return args
 }
 
-/* Send a welcome email to a user allowing them to start the onboarding process.
- */
-async function sendWelcomeEmail(user) {
-  logger.info('Sending welcome email to', user.email)
-
-  const token = jwt.sign(
+function generateToken(user) {
+  return jwt.sign(
     {
       email: user.email
     },
     encryptionSecret,
-    { expiresIn: '24h' }
+    // TODO revert to 24h
+    { expiresIn: '14d' }
   )
+}
 
-  const data = {
-    to: user.email,
-    from: sendgridFromEmail,
-    subject: 'Welcome to the Origin Investor Portal',
-    text: `The following link will provide you access to the Origin Investor Portal.
+/**
+ * Send a welcome email to a user allowing them to start the onboarding process.
+ */
+async function sendWelcomeEmail(user) {
+  logger.info('Sending welcome email to', user.email)
 
-    ${portalUrl}/welcome/${token}.
-
-    It will expire in 24 hours. You can reply directly to this email with any questions.`
-  }
-
+  const token = generateToken(user)
+  const vars = { url: `${portalUrl}/welcome/${token}` }
   try {
-    await sendgridMail.send(data)
+    await sendEmail(user.email, 'welcome', vars)
   } catch (error) {
     logger.error(error.response.body)
     return
@@ -72,7 +61,8 @@ async function sendWelcomeEmail(user) {
   logger.info('Email sent')
 }
 
-/* Sends emails to a single user or all users depending on args.
+/**
+ * Sends emails to a single user or all users depending on args.
  */
 async function main(config) {
   if (config.email) {
@@ -81,7 +71,11 @@ async function main(config) {
       logger.error('User with that email does not exist')
       process.exit()
     }
-    sendWelcomeEmail(user)
+    if (config.token) {
+      console.log('Token:', generateToken(user))
+    } else {
+      await sendWelcomeEmail(user)
+    }
   } else {
     logger.info('Sending welcome email to all users')
     const users = await User.findAll()
@@ -92,7 +86,8 @@ async function main(config) {
 const args = parseArgv()
 const config = {
   email: args['--email'] || null,
-  all: args['--all'] === 'true' || false
+  all: args['--all'] === 'true' || false,
+  token: args['--token'] === 'true' || false
 }
 
 if (!config.email && !config.all) {

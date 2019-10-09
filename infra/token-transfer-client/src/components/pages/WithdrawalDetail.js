@@ -23,6 +23,14 @@ class WithdrawalDetail extends Component {
 
   componentDidMount() {
     this.props.fetchTransfers()
+    // Force component update every three seconds because time passing won't
+    // trigger an update as it is not in state. This is required to correctly
+    // update when expired.
+    this.interval = setInterval(() => this.forceUpdate(), 3000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval)
   }
 
   componentDidUpdate(prevProps) {
@@ -44,7 +52,7 @@ class WithdrawalDetail extends Component {
   }
 
   render() {
-    if (this.props.transferIsLoading) {
+    if (this.props.transferIsLoading || this.props.transferIsConfirming) {
       return (
         <div className="spinner-grow mb-3" role="status">
           <span className="sr-only">Loading...</span>
@@ -68,14 +76,14 @@ class WithdrawalDetail extends Component {
     return (
       <>
         {hasExpired && (
-          <div className="alert alert-danger">
+          <div className="alert alert-danger mb-4">
             This transaction has expired. It was not confirmed with two factor
             authentication in the required time.
           </div>
         )}
         {!hasExpired &&
           transfer.status === enums.TransferStatuses.WaitingEmailConfirm && (
-            <div className="alert alert-warning">
+            <div className="alert alert-warning mb-4">
               <strong>Next Step:</strong> Confirm your transaction with email
               link
               <br />
@@ -94,7 +102,7 @@ class WithdrawalDetail extends Component {
                   <strong>Amount</strong>
                 </div>
                 <div className="col">
-                  {transfer.amount.toLocaleString()} OGN
+                  {Number(transfer.amount).toLocaleString()} OGN
                 </div>
               </div>
               <div className="row mb-3">
@@ -131,18 +139,21 @@ class WithdrawalDetail extends Component {
             <BorderedCard shadowed={true}>
               <ul>
                 <li className="mb-3">
-                  Ut non eleifend enim. Curabitur tempor tellus nunc, sit amet
-                  vehicula enim porttitor id.
+                  Be sure that only you have access to your account and that
+                  your private key or seed phrase is backed up and stored
+                  safely.
                 </li>
                 <li className="mb-3">
-                  Nam consequat est mi, eu semper augue interdum nec.
+                  Do not send any funds back to the account that they are sent
+                  from.
                 </li>
                 <li className="mb-3">
-                  Duis posuere lectus velit, vitae cursus velit molestie congue.
+                  Large withdrawals may be delayed and will require a phone call
+                  for verification.
                 </li>
                 <li className="mb-3">
-                  Aenean justo tellus, vestibulum sit amet pharetra id,
-                  ultricies ut neque.
+                  Contact support if you have any questions about this
+                  withdrawal.
                 </li>
               </ul>
             </BorderedCard>

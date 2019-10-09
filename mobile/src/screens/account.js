@@ -111,12 +111,15 @@ class AccountScreen extends Component {
   }
 
   render() {
-    const { navigation, wallet } = this.props
+    const { navigation, settings, wallet } = this.props
+
     const account = navigation.getParam('account')
     const { address, privateKey, mnemonic } = account
     const multipleAccounts = wallet.accounts.length > 1
     const isActive = address === wallet.activeAccount.address
-    const identity = get(wallet.identities, address, {})
+
+    const networkName = get(settings.network, 'name', null)
+    const identity = get(wallet.identities, `${networkName}.${address}`, {})
     const avatarUrl = get(identity, 'avatarUrl')
     const fullName = get(identity, 'fullName')
 
@@ -179,33 +182,29 @@ class AccountScreen extends Component {
                 />
               </>
             )}
-            {mnemonic === undefined && (
-              <>
-                <OriginButton
-                  size="large"
-                  type="primary"
-                  title={fbt(
-                    'Show Private Key',
-                    'AccountScreen.showPrivateKeyButton'
-                  )}
-                  onPress={() =>
-                    Alert.alert(
-                      String(fbt('Private Key', 'AccountScreen.privateKey')),
-                      privateKey
-                    )
-                  }
-                />
-                <OriginButton
-                  size="large"
-                  type="primary"
-                  title={fbt(
-                    'Copy Private Key',
-                    'AccountScreen.copyPrivateKeyButton'
-                  )}
-                  onPress={() => this.handleDangerousCopy(privateKey)}
-                />
-              </>
-            )}
+            <OriginButton
+              size="large"
+              type="primary"
+              title={fbt(
+                'Show Private Key',
+                'AccountScreen.showPrivateKeyButton'
+              )}
+              onPress={() =>
+                Alert.alert(
+                  String(fbt('Private Key', 'AccountScreen.privateKey')),
+                  privateKey
+                )
+              }
+            />
+            <OriginButton
+              size="large"
+              type="primary"
+              title={fbt(
+                'Copy Private Key',
+                'AccountScreen.copyPrivateKeyButton'
+              )}
+              onPress={() => this.handleDangerousCopy(privateKey)}
+            />
             {(multipleAccounts || true) && (
               <OriginButton
                 size="large"
@@ -225,8 +224,8 @@ class AccountScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ wallet }) => {
-  return { wallet }
+const mapStateToProps = ({ settings, wallet }) => {
+  return { settings, wallet }
 }
 
 const mapDispatchToProps = dispatch => ({

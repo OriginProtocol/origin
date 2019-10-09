@@ -2,25 +2,16 @@ const express = require('express')
 const router = express.Router()
 const passport = require('passport')
 const base32 = require('thirty-two')
-const sendgridMail = require('@sendgrid/mail')
 const crypto = require('crypto')
-const jwt = require('jsonwebtoken')
 
 require('../passport')()
 const { asyncMiddleware, getFingerprintData } = require('../utils')
 const { LOGIN } = require('../constants/events')
 const { encrypt } = require('../lib/crypto')
-const { Event, User } = require('../models')
+const { Event } = require('../models')
 const logger = require('../logger')
+const { sendLoginToken } = require('../lib/email')
 const { ensureLoggedIn } = require('../lib/login')
-const {
-  encryptionSecret,
-  portalUrl,
-  sendgridFromEmail,
-  sendgridApiKey
-} = require('../config')
-
-sendgridMail.setApiKey(sendgridApiKey)
 
 /**
  * Sends a login code by email.
@@ -31,36 +22,8 @@ router.post(
     const email = req.body.email
     logger.debug('/send_email_code called for', email)
 
-    // Check the user exists before sending an email code.
-    const user = await User.findOne({ where: { email } })
-    if (user) {
-      const token = jwt.sign(
-        {
-          email
-        },
-        encryptionSecret,
-        { expiresIn: '5m' }
-      )
-
-      const data = {
-        to: email,
-        from: sendgridFromEmail,
-        subject: 'Your Origin Token Portal Verification Code',
-        text: `Welcome to the Origin Investor Portal. Here is your single-use sign in link.
-
-        ${portalUrl}/login_handler/${token}.
-
-        It will expire in 5 minutes. You can reply directly to this email with any questions.`
-      }
-
-      await sendgridMail.send(data)
-      logger.info(`Sent email token to ${email}`)
-    } else {
-      // Do nothing in case email not found in our DB.
-      // But do not let the caller know by returning anything different,
-      // to avoid tipping them on whether or not the email exists.
-      logger.info(`Email ${email} not found in DB. No token sent.`)
-    }
+    // No await to prevent enumeration of valid emails
+    sendLoginToken(email)
 
     res.setHeader('Content-Type', 'application/json')
     res.send(JSON.stringify({ email }))

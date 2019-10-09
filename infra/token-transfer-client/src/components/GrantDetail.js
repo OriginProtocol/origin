@@ -39,7 +39,9 @@ const GrantDetail = props => {
           <div className="col">
             <strong>Investment Amount</strong>
           </div>
-          <div className="col">{grant.investmentAmount}</div>
+          <div className="col">
+            {Number(grant.investmentAmount).toLocaleString()}
+          </div>
         </div>
       </div>
     )
@@ -47,11 +49,7 @@ const GrantDetail = props => {
 
   return (
     <>
-      <div className="row">
-        <div className="col">
-          <h2 className="mb-4">Investment Details</h2>
-        </div>
-      </div>
+      <h2 className="mb-4">Investment Details</h2>
       <div className="table-card" style={{ fontSize: '14px' }}>
         {details.length > 1 ? (
           <Swiper {...swiperParams}>{details}</Swiper>

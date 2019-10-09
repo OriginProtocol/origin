@@ -178,6 +178,9 @@
     },
     "commissionPerUnit": {
       "$ref": "#/definitions/money"
+    },
+    "requiresShipping": {
+      "$type": "boolean"
     }
   },
   "anyOf": [
