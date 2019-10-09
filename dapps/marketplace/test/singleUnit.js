@@ -11,7 +11,6 @@ import {
 import {
   reset,
   purchaseListing,
-  purchaseListingWithDAI,
   acceptOffer,
   confirmReleaseFundsAndRate
 } from './utils/_actions'
@@ -27,12 +26,16 @@ function randomReview() {
 export function singleUnitTests({
   autoSwap,
   withShipping,
-  EthAndDaiAccepted,
-  deployIdentity
+  deployIdentity,
+  acceptedTokens
 } = {}) {
   let testName = 'Single Unit Listing, payment in ETH'
   if (withShipping) testName += ', with Shipping'
-  if (EthAndDaiAccepted) testName += ', both ETH and DAI accepted'
+
+  acceptedTokens =
+    acceptedTokens && acceptedTokens.length ? acceptedTokens : ['ETH']
+  if (acceptedTokens.length > 1)
+    testName += ` | ${acceptedTokens.join(',')} accepted`
 
   describe(testName, function() {
     let seller, buyer, title, review, page
@@ -82,7 +85,7 @@ export function singleUnitTests({
     })
 
     it('should navigate to the Add Listing page', async function() {
-      await clickByText(page, 'Add Listing')
+      await clickByText(page, 'Add Listing', 'a/span')
       await pic(page, 'add-listing')
     })
 
@@ -113,12 +116,13 @@ export function singleUnitTests({
 
     it('should allow price entry', async function() {
       await page.type('input[name=price]', '1')
-      // ETH is deselected in the UI by default. Always select it.
-      // DAI is selected in the UI by default. Deselect it if EthAndDaiAccepted is not true.
-      await clickByText(page, 'Ethereum')
-      if (!EthAndDaiAccepted) {
-        await clickByText(page, 'Maker Dai')
-      }
+      // All three payment modes are deselected by default
+      // Select tokens that are not accepted by clicking them
+      if (acceptedTokens.includes('ETH')) await clickByText(page, 'Ethereum')
+      if (acceptedTokens.includes('DAI')) await clickByText(page, 'Maker Dai')
+      if (acceptedTokens.includes('OGN'))
+        await clickByText(page, 'Origin Token')
+
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
@@ -185,8 +189,23 @@ export function singleUnitTests({
     })
 
     it('should allow a new listing to be purchased', async function() {
-      await purchaseListing({ page, buyer, withShipping, title })
-      // Payment should always be in ETH, even if both ETH and DAI are accepted.
+      await purchaseListing({
+        page,
+        buyer,
+        withShipping,
+        title,
+        withToken: 'ETH'
+      })
+    })
+
+    it('should go to transaction detail page and have correct currency', async function() {
+      await waitForText(page, 'View Purchase Details', 'button')
+      await pic(page, 'purchase-listing')
+
+      await clickByText(page, 'View Purchase Details', 'button')
+      await waitForText(page, 'Transaction History')
+      await pic(page, 'transaction-wait-for-seller')
+
       await page.waitForFunction(
         `document.querySelector('.escrow-amount').innerText.includes("ETH")`
       )
@@ -214,14 +233,15 @@ export function singleUnitTests({
   })
 }
 
-export function singleUnitDaiTests({
+export function singleUnitTokenTests({
   autoSwap,
   withShipping,
-  buyerDai,
-  deployIdentity
+  buyerHasTokens,
+  deployIdentity,
+  token
 } = {}) {
-  let testName = 'Single Unit Listing, payment in DAI'
-  if (buyerDai) testName += ', buyer has DAI'
+  let testName = 'Single Unit Listing, payment in ' + token
+  if (buyerHasTokens) testName += ', buyer has ' + token
   if (withShipping) testName += ', with Shipping'
   if (deployIdentity) testName += ', with existing Identity'
 
@@ -230,16 +250,21 @@ export function singleUnitDaiTests({
     before(async function() {
       page = await getPage()
       const resetOpts = { page, deployIdentity }
-      if (buyerDai) {
-        resetOpts.buyerOpts = { dai: '100', deployIdentity }
+      if (buyerHasTokens) {
+        resetOpts.buyerOpts = {
+          dai: token === 'DAI' ? '100' : undefined,
+          ogn: token === 'OGN' ? '100' : undefined,
+          deployIdentity
+        }
       }
-      ({ seller, buyer } = await reset(resetOpts))
+      // eslint-disable-next-line no-extra-semi
+      ;({ seller, buyer } = await reset(resetOpts))
       title = randomTitle()
     })
 
     it('should navigate to the Add Listing page', async function() {
       await changeAccount(page, seller)
-      await clickByText(page, 'Add Listing')
+      await clickByText(page, 'Add Listing', 'a/span')
       await pic(page, 'add-listing')
     })
 
@@ -271,6 +296,11 @@ export function singleUnitDaiTests({
 
     it('should allow price entry', async function() {
       await page.type('input[name=price]', '1')
+
+      await clickByText(page, 'Ethereum')
+      await clickByText(page, 'Maker Dai')
+      await clickByText(page, 'Origin Token')
+
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
@@ -299,31 +329,42 @@ export function singleUnitDaiTests({
     })
 
     it('should allow a new listing to be purchased', async function() {
-      await purchaseListingWithDAI({
+      await purchaseListing({
         page,
         buyer,
         autoSwap,
         withShipping,
         title,
-        buyerDai
+        buyerHasTokens,
+        withToken: token
       })
     })
 
-    if (!autoSwap && !buyerDai) {
-      it('should prompt the user to approve their Dai', async function() {
-        await waitForText(page, 'Approve', 'button')
-        await pic(page, 'listing-detail')
-        await clickByText(page, 'Approve', 'button')
+    if (token === 'DAI' && !autoSwap) {
+      if (!buyerHasTokens) {
+        it('should prompt the user to approve their Dai', async function() {
+          await waitForText(page, 'Approve', 'button')
+          await pic(page, 'listing-detail')
+          await clickByText(page, 'Approve', 'button')
 
-        await waitForText(page, 'Origin may now move DAI on your behalf.')
-        await pic(page, 'listing-detail')
-      })
-    }
-    if (!autoSwap) {
+          await waitForText(page, 'Origin may now move DAI on your behalf.')
+          await pic(page, 'listing-detail')
+        })
+      }
+
       it('should prompt to continue with purchase', async function() {
         await clickByText(page, 'Continue', 'button')
         await waitForText(page, 'View Purchase', 'button')
         await pic(page, 'purchase-listing')
+      })
+    }
+
+    if (token === 'OGN') {
+      it(`should show approved modal for ${token}`, async function() {
+        // TBD: OGN contract is auto-approved? If yes, should we show this modal at all?
+        await waitForText(page, `Origin may now move ${token} on your behalf.`)
+        await pic(page, 'listing-detail')
+        await clickByText(page, 'Continue', 'button')
       })
     }
 

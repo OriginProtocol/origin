@@ -16,6 +16,7 @@ const juneConfig = require('../../campaigns/june.js')
 const julyConfig = require('../../campaigns/july.js')
 const augustConfig = require('../../campaigns/august.js')
 const septemberConfig = require('../../campaigns/september.js')
+const octoberConfig = require('../../campaigns/october.js')
 
 async function createTestData() {
   //
@@ -152,6 +153,20 @@ async function createTestData() {
     startDate: Date.parse('September 1, 2019'),
     endDate: Date.parse('October 1, 2019'),
     distributionDate: Date.parse('October 1, 2019'),
+    cap: 10000 * Math.pow(10, 18),
+    capUsed: 0,
+    currency: 'OGN',
+    rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
+  })
+
+  await db.GrowthCampaign.upsert({
+    id: 10,
+    nameKey: 'growth.oct2019.name',
+    shortNameKey: 'growth.oct2019.short_name',
+    rules: JSON.stringify(octoberConfig),
+    startDate: Date.parse('October 1, 2019'),
+    endDate: Date.parse('November 1, 2019'),
+    distributionDate: Date.parse('November 1, 2019'),
     cap: 10000 * Math.pow(10, 18),
     capUsed: 0,
     currency: 'OGN',

@@ -263,7 +263,8 @@ export function setNetwork(net, customConfig) {
     context.messaging = OriginMessaging({
       ...MessagingConfig,
       web3,
-      mobileBridge: context.mobileBridge
+      mobileBridge: context.mobileBridge,
+      pubsub: pubsub
     })
   }
 
@@ -292,7 +293,7 @@ export function setNetwork(net, customConfig) {
 
   setProxyContracts(config)
 
-  if (config.performanceMode && context.config.graphql) {
+  if (config.performanceMode && context.config.graphql && net !== 'test') {
     queryForBlocks()
   } else if (config.providerWS) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
@@ -629,6 +630,8 @@ export function shutdown() {
   if (web3.currentProvider.stop) web3.currentProvider.stop()
   if (wsSub) {
     wsSub.unsubscribe()
+  }
+  if (web3WS && web3WS.currentProvider) {
     web3WS.currentProvider.connection.close()
   }
   clearInterval(blockInterval)

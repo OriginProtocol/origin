@@ -11,10 +11,12 @@
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
+    "@origin/contracts": "^0.8.6",
     "@origin/consistency": "^0.1.0",
     "@origin/growth": "^0.1.0",
     "@sendgrid/mail": "6.4.0",
     "bull": "3.11.0",
+    "cross-fetch": "3.0.4",
     "dotenv": "8.1.0",
     "envkey": "1.2.7",
     "logplease": "1.2.15",
@@ -22,8 +24,8 @@
     "tmp": "0.1.0"
   },
   "devDependencies": {
-    "mocha": "6.2.0",
-    "nodemon": "1.19.2",
+    "mocha": "6.2.1",
+    "nodemon": "1.19.3",
     "prettier": "1.18.2"
   },
   "scripts": {

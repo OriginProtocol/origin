@@ -1,7 +1,7 @@
 import assert from 'assert'
 import { getPage } from './utils/_services'
 
-import { singleUnitTests, singleUnitDaiTests } from './singleUnit'
+import { singleUnitTests, singleUnitTokenTests } from './singleUnit'
 import { multiUnitTests } from './multiUnit'
 import { fractionalTests } from './fractional'
 import { onboardingTests } from './onboarding'
@@ -10,13 +10,29 @@ import { paymentTests } from './payments'
 
 function listingTests({ autoSwap } = {}) {
   singleUnitTests({ autoSwap })
-  singleUnitTests({ autoSwap, EthAndDaiAccepted: true })
+  singleUnitTests({ autoSwap, acceptedTokens: ['ETH', 'DAI', 'OGN'] })
   singleUnitTests({ autoSwap, withShipping: true })
 
-  singleUnitDaiTests({ autoSwap })
-  singleUnitDaiTests({ buyerDai: true })
-  singleUnitDaiTests({ buyerDai: true, deployIdentity: true })
-  singleUnitDaiTests({ autoSwap, withShipping: true })
+  singleUnitTokenTests({ token: 'DAI', autoSwap })
+  singleUnitTokenTests({ token: 'DAI', buyerHasTokens: true })
+  singleUnitTokenTests({
+    token: 'DAI',
+    buyerHasTokens: true,
+    deployIdentity: true
+  })
+  singleUnitTokenTests({ token: 'DAI', autoSwap, withShipping: true })
+
+  singleUnitTokenTests({ token: 'OGN', buyerHasTokens: true })
+  singleUnitTokenTests({
+    token: 'OGN',
+    buyerHasTokens: true,
+    deployIdentity: true
+  })
+  singleUnitTokenTests({
+    token: 'OGN',
+    buyerHasTokens: true,
+    withShipping: true
+  })
 
   multiUnitTests({ autoSwap })
   multiUnitTests({ autoSwap, withShipping: true })
@@ -24,13 +40,15 @@ function listingTests({ autoSwap } = {}) {
   fractionalTests({ autoSwap })
 }
 
-describe('Marketplace Dapp', function() {
-  this.timeout(10000)
+describe('Marketplace Dapp.', function() {
+  this.timeout(15000)
+  this.retries(2) // This can help with flaky tests
   before(async function() {
     const page = await getPage()
     await page.evaluate(() => {
       window.localStorage.clear()
       window.localStorage.bypassOnboarding = true
+      window.localStorage.debug = 'origin:*'
       window.transactionPoll = 100
     })
     await page.goto('http://localhost:8083')
@@ -42,8 +60,9 @@ describe('Marketplace Dapp', function() {
   onboardingTests()
 })
 
-describe('Marketplace Dapp with proxies enabled', function() {
-  this.timeout(10000)
+describe('Marketplace Dapp with proxies.', function() {
+  this.timeout(15000)
+  this.retries(2)
   before(async function() {
     const page = await getPage()
     await page.evaluate(() => {
@@ -61,8 +80,9 @@ describe('Marketplace Dapp with proxies enabled', function() {
   onboardingTests()
 })
 
-describe('Marketplace Dapp with proxies, relayer and performance mode enabled', function() {
-  this.timeout(10000)
+describe('Marketplace Dapp with proxies, performance mode, relayer.', function() {
+  this.timeout(15000)
+  this.retries(2)
 
   let page, didThrow
 
@@ -93,6 +113,52 @@ describe('Marketplace Dapp with proxies, relayer and performance mode enabled', 
     page.removeListener('pageerror', pageError)
     page.removeListener('error', pageError)
     assert(!didThrow, 'Page error detected: ' + didThrow)
+  })
+
+  paymentTests({ autoSwap: true })
+  listingTests({ autoSwap: true })
+  userProfileTests()
+  onboardingTests()
+})
+
+describe('Marketplace Dapp with proxies, performance mode, broken relayer.', function() {
+  this.timeout(15000)
+  this.retries(2)
+
+  let page
+
+  before(async function() {
+    page = await getPage()
+    await page.evaluate(() => {
+      window.localStorage.clear()
+      window.localStorage.bypassOnboarding = true
+      window.localStorage.performanceMode = true
+      window.localStorage.proxyAccountsEnabled = true
+      window.localStorage.relayerEnabled = true
+      window.localStorage.debug = 'origin:*'
+      window.transactionPoll = 100
+    })
+
+    function intercepted(interceptedRequest) {
+      if (interceptedRequest.url().indexOf('/relay') > 0) {
+        interceptedRequest.abort()
+      } else {
+        interceptedRequest.continue()
+      }
+    }
+
+    before(async function() {
+      // Simulate an unresponsive relay server
+      await page.setRequestInterception(true)
+      page.on('request', intercepted)
+    })
+
+    after(async function() {
+      page.removeListener('request', intercepted)
+      await page.setRequestInterception(false)
+    })
+
+    await page.goto('http://localhost:8083')
   })
 
   paymentTests({ autoSwap: true })

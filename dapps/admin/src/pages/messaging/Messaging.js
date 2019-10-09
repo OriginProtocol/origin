@@ -80,7 +80,6 @@ class Messaging extends Component {
         query={ConversationsQuery}
         variables={{ id: this.state.selected }}
         fetchPolicy="network-only"
-        pollInterval={2000}
       >
         {({ data, loading, error, refetch }) => {
           if (loading || error) {

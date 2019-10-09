@@ -6,7 +6,7 @@ import get from 'lodash/get'
 
 export async function getTransactionReceipt(id) {
   if (!id || typeof id !== 'string' || ![66, 64].includes(id.length)) {
-    console.warn('Invalid transaction hash')
+    console.warn('Invalid transaction hash', id)
     return null
   }
 

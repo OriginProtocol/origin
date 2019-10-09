@@ -64,7 +64,9 @@ class CreateListing extends Component {
         currency: get(props, 'listing.price.currency.id', 'token-ETH'),
         price: props.listing.price ? props.listing.price.amount : '0.1',
         acceptedTokens: props.listing.acceptedTokens.map(t => t.id) || [
-          'token-ETH'
+          'token-ETH',
+          'token-DAI',
+          'token-OGN'
         ],
         from: seller ? seller.id : '',
         deposit: 0,
@@ -82,7 +84,7 @@ class CreateListing extends Component {
         title: '',
         currency: 'fiat-USD',
         price: '5',
-        acceptedTokens: ['token-ETH', 'token-DAI'],
+        acceptedTokens: ['token-ETH', 'token-DAI', 'token-OGN'],
         depositManager: arbitrator ? arbitrator.id : '',
         from: seller ? seller.id : '',
         deposit: 5,

@@ -284,6 +284,7 @@ require('react-styl')(`
             font-size: 0.6rem
             text-overflow: ellipsis
             cursor: pointer
+            margin-right: 10px
 
             &.blank
               cursor: auto

@@ -11,6 +11,8 @@ import {
 import {
   reset,
   acceptOffer,
+  withdrawOffer,
+  rejectOffer,
   confirmReleaseFundsAndRate,
   purchaseMultiUnitListing
 } from './utils/_actions'
@@ -22,9 +24,18 @@ function randomTitle({ isFractional } = {}) {
   return `T-Shirt ${Math.floor(Math.random() * 100000)}`
 }
 
-export function multiUnitTests({ autoSwap, withShipping } = {}) {
+export function multiUnitTests({
+  autoSwap,
+  withShipping,
+  acceptedTokens
+} = {}) {
   let testName = 'Multi Unit Listing, payment in ETH'
   if (withShipping) testName += ', with Shipping'
+
+  acceptedTokens =
+    acceptedTokens && acceptedTokens.length ? acceptedTokens : ['ETH']
+  if (acceptedTokens.length > 1)
+    testName += ` | ${acceptedTokens.join(',')} accepted`
 
   describe(testName, function() {
     let seller, buyer, title, listingHash, page
@@ -72,8 +83,14 @@ export function multiUnitTests({ autoSwap, withShipping } = {}) {
 
     it('should allow price entry', async function() {
       await page.type('input[name=price]', '1')
-      await clickByText(page, 'Ethereum') // Select Eth
-      await clickByText(page, 'Maker Dai') // De-select Dai
+
+      // All three payment modes are deselected by default
+      // Select tokens that are not accepted by clicking them
+      if (acceptedTokens.includes('ETH')) await clickByText(page, 'Ethereum')
+      if (acceptedTokens.includes('DAI')) await clickByText(page, 'Maker Dai')
+      if (acceptedTokens.includes('OGN'))
+        await clickByText(page, 'Origin Token')
+
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
     })
@@ -157,7 +174,13 @@ export function multiUnitTests({ autoSwap, withShipping } = {}) {
     })
 
     it('should allow a new listing to be purchased', async function() {
-      await purchaseMultiUnitListing({ page, buyer, withShipping, title })
+      await purchaseMultiUnitListing({
+        page,
+        buyer,
+        withShipping,
+        title,
+        withToken: 'ETH'
+      })
     })
 
     it('should allow a new listing to be accepted', async function() {
@@ -180,7 +203,6 @@ export function multiUnitTests({ autoSwap, withShipping } = {}) {
         page,
         '.listing-buy-editonly + a.listing-action-link'
       )
-      await clickByText(page, 'For Sale')
       await clickByText(page, 'Continue')
       await page.focus('input[name=quantity]')
       await page.keyboard.press('Backspace')
@@ -224,6 +246,48 @@ export function multiUnitTests({ autoSwap, withShipping } = {}) {
 
     it('should allow a new listing to be finalized', async function() {
       await confirmReleaseFundsAndRate({ page, buyer })
+    })
+
+    it('should navigate back to the listing', async function() {
+      await changeAccount(page, seller)
+      await page.evaluate(l => {
+        window.location = l
+      }, `/${listingHash}`)
+    })
+
+    it('should make another offer on the listing', async function() {
+      await purchaseMultiUnitListing({
+        page,
+        buyer,
+        withShipping,
+        title,
+        withToken: 'ETH'
+      })
+    })
+
+    it('should allow the offer to be withdrawn by buyer', async function() {
+      await withdrawOffer({ page, buyer })
+    })
+
+    it('should navigate back to the listing', async function() {
+      await changeAccount(page, seller)
+      await page.evaluate(l => {
+        window.location = l
+      }, `/${listingHash}`)
+    })
+
+    it('should make another offer on the listing', async function() {
+      await purchaseMultiUnitListing({
+        page,
+        buyer,
+        withShipping,
+        title,
+        withToken: 'ETH'
+      })
+    })
+
+    it('should allow the offer to be rejected by seller', async function() {
+      await rejectOffer({ page, seller })
     })
   })
 }

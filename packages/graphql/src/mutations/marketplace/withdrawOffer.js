@@ -12,6 +12,7 @@ async function withdrawOffer(_, data) {
 
   const ipfsHash = await post(contracts.ipfsRPC, data)
   const { listingId, offerId, marketplace } = parseId(data.offerID, contracts)
+  const contract = marketplace.contract
   const { withdrawOffer } = marketplace.contractExec.methods
 
   let tx = withdrawOffer(listingId, offerId, ipfsHash)
@@ -20,14 +21,14 @@ async function withdrawOffer(_, data) {
 
   const owner = await proxyOwner(from)
   if (owner) {
-    const offer = await marketplace.eventSource.getOffer(listingId, offerId)
+    const offer = await contract.methods.offers(listingId, offerId).call()
     const Proxy = new contracts.web3Exec.eth.Contract(IdentityProxy.abi, from)
     const txData = await tx.encodeABI()
 
     tx = Proxy.methods.marketplaceFinalizeAndPay(
       marketplace.contract._address,
       txData,
-      from,
+      offer.buyer,
       offer.currency,
       offer.value
     )

@@ -23,6 +23,8 @@ import withIdentity from 'hoc/withIdentity'
 import withConfig from 'hoc/withConfig'
 import withMessagingStatus from 'hoc/withMessagingStatus'
 
+import { getTokenSymbol } from 'utils/tokenUtils'
+
 import { fbt } from 'fbt-runtime'
 
 class Buy extends Component {
@@ -106,11 +108,7 @@ class Buy extends Component {
       ) {
         action = this.renderMakeOfferMutation(null, true)
       } else if (!this.hasBalance()) {
-        action = this.renderSwapTokenMutation(
-          this.props.cannotTransact
-            ? fbt('Purchase', 'Purchase')
-            : fbt('Swap Now', 'Swap Now')
-        )
+        action = this.renderSwapTokenMutation(fbt('Purchase', 'Purchase'))
         content = this.renderSwapTokenModal()
       } else if (!this.hasAllowance()) {
         action = this.renderAllowTokenMutation(fbt('Purchase', 'Purchase'))
@@ -158,8 +156,20 @@ class Buy extends Component {
   renderSwapTokenModal() {
     return (
       <>
-        <h2>Swap for DAI</h2>
-        Click below to swap ETH for DAI
+        <h2>
+          <fbt desc="BuyModal.swapForToken">
+            Swap for{' '}
+            <fbt:param name="token">
+              {getTokenSymbol(this.props.currency)}
+            </fbt:param>
+          </fbt>
+        </h2>
+        <fbt desc="BuyModal.swapForTokenDesc">
+          Click below to swap ETH for{' '}
+          <fbt:param name="token">
+            {getTokenSymbol(this.props.currency)}
+          </fbt:param>
+        </fbt>
         <div className="actions">
           <button
             className="btn btn-outline-light"
@@ -187,7 +197,7 @@ class Buy extends Component {
           <button
             className={buttonContent ? this.props.className : 'btn btn-clear'}
             onClick={() => this.onSwapToToken(swapToToken)}
-            children={buttonContent || fbt('Swap Now', 'Swap Now')}
+            children={buttonContent || fbt('Purchase', 'Purchase')}
           />
         )}
       </Mutation>
@@ -210,7 +220,7 @@ class Buy extends Component {
               ),
               5
             ),
-            dai = numberFormat(
+            tokenValue = numberFormat(
               web3.utils.fromWei(
                 get(event, 'returnValuesArr.2.value', '0'),
                 'ether'
@@ -224,12 +234,14 @@ class Buy extends Component {
                 <fbt desc="success">Success!</fbt>
               </h5>
               <div className="help">
-                <fbt desc="buy.swappedEthForDai">
+                <fbt desc="buy.swappedEthForToken">
                   Swapped
                   <fbt:param name="eth">${eth}</fbt:param>
                   ETH for
-                  <fbt:param name="dai">${dai}</fbt:param>
-                  DAI
+                  <fbt:param name="tokenValue">${tokenValue}</fbt:param>
+                  <fbt:param name="token">
+                    {getTokenSymbol(this.props.currency)}
+                  </fbt:param>
                 </fbt>
               </div>
               {this.hasAllowance() ? (
@@ -239,8 +251,12 @@ class Buy extends Component {
               ) : (
                 <>
                   <div className="help">
-                    <fbt desc="buy.authorizeOriginMoveDai">
-                      Please authorize Origin to move DAI on your behalf.
+                    <fbt desc="buy.authorizeOriginMoveToken">
+                      Please authorize Origin to move{' '}
+                      <fbt:param name="token">
+                        {getTokenSymbol(this.props.currency)}
+                      </fbt:param>{' '}
+                      on your behalf.
                     </fbt>
                   </div>
                   {this.renderAllowTokenMutation()}
@@ -256,9 +272,20 @@ class Buy extends Component {
   renderAllowTokenModal() {
     return (
       <>
-        <h2>Approve DAI</h2>
-        <fbt desc="buy.approveDaiOrigin">
-          Click below to approve DAI for use on Origin
+        <h2>
+          <fbt desc="BuyModal.approveToken">
+            Approve{' '}
+            <fbt:param name="token">
+              {getTokenSymbol(this.props.currency)}
+            </fbt:param>
+          </fbt>
+        </h2>
+        <fbt desc="buy.approveTokenForOrigin">
+          Click below to approve{' '}
+          <fbt:param name="token">
+            {getTokenSymbol(this.props.currency)}
+          </fbt:param>{' '}
+          for use on Origin
         </fbt>
         <div className="actions">
           <button
@@ -340,6 +367,23 @@ class Buy extends Component {
       from: this.props.walletProxy,
       quantity: Number(quantity),
       autoswap
+    }
+
+    let commission = 0
+    if (listing.commissionPerUnit) {
+      commission = Number(listing.commissionPerUnit) * Number(quantity)
+    } else if (listing.commission) {
+      commission = Number(listing.commission)
+    }
+    if (commission) {
+      const amount = web3.utils.toBN(
+        web3.utils.toWei(String(commission), 'ether')
+      )
+      const depositAvailable = web3.utils.toBN(listing.depositAvailable)
+      const commissionWei = amount.lt(depositAvailable)
+        ? amount.toString()
+        : depositAvailable.toString()
+      variables.commission = web3.utils.fromWei(commissionWei, 'ether')
     }
 
     if (
@@ -469,8 +513,12 @@ class Buy extends Component {
               <fbt desc="success">Success!</fbt>
             </h5>
             <div className="help">
-              <fbt desc="buy.sucessMoveDai">
-                Origin may now move DAI on your behalf.
+              <fbt desc="buy.sucessMoveToken">
+                Origin may now move{' '}
+                <fbt:param name="token">
+                  {getTokenSymbol(this.props.currency)}
+                </fbt:param>{' '}
+                on your behalf.
               </fbt>
             </div>
             {this.renderMakeOfferMutation(fbt('Continue', 'Continue'))}

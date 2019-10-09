@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
       contentHash: DataTypes.STRING(66),
       data: DataTypes.JSON,
       signature: DataTypes.STRING(256),
-      isKeys: DataTypes.BOOLEAN
+      isKeys: DataTypes.BOOLEAN,
+      read: DataTypes.BOOLEAN
     },
     {
       tableName: 'msg_message'

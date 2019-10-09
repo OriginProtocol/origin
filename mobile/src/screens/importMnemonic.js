@@ -107,7 +107,7 @@ class ImportAccountScreen extends Component {
               />
               <Text style={styles.title}>
                 <fbt desc="ImportMnemonicScreen.recoveryPhraseTitle">
-                  Enter Recovery Phrase
+                  Enter Phrase
                 </fbt>
               </Text>
             </View>
@@ -120,6 +120,7 @@ class ImportAccountScreen extends Component {
                 returnKeyType="done"
                 blurOnSubmit={true}
                 onChangeText={value => this.setState({ value })}
+                value={this.state.value}
                 onSubmitEditing={this.handleSubmit}
                 style={[styles.input, this.state.error ? styles.invalid : {}]}
               />
@@ -173,7 +174,8 @@ const styles = StyleSheet.create({
     padding: 20,
     width: '80%',
     maxWidth: '80%',
-    height: 100
+    height: 100,
+    color: '#000'
   },
   invalid: {
     borderColor: '#ff0000',

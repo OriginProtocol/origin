@@ -217,6 +217,14 @@ const TransferToken = gql`
   }
 `
 
+const DeployProxy = gql`
+  mutation DeployIdentityViaProxy($from: String!, $owner: String!) {
+    deployIdentityViaProxy(from: $from, owner: $owner) {
+      id
+    }
+  }
+`
+
 export default {
   DeployToken,
   DeployMarketplace,
@@ -231,5 +239,6 @@ export default {
   TransferToken,
   AddAffiliate,
   WithdrawOffer,
-  UpdateListing
+  UpdateListing,
+  DeployProxy
 }

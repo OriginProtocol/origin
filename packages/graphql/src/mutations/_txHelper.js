@@ -111,7 +111,9 @@ async function useProxy({ proxy, destinationContract, to, from, mutation }) {
 
   if (proxy) {
     debug(`useProxy: ${targetIsProxy ? 'execute-no-wrap' : 'execute'}`)
-    return targetIsProxy && mutation !== 'finalizeOffer'
+    return targetIsProxy &&
+      mutation !== 'finalizeOffer' &&
+      mutation !== 'withdrawOffer'
       ? 'execute-no-wrap'
       : 'execute'
   } else if (mutation === 'deployIdentity' || mutation === 'createListing') {
@@ -439,8 +441,10 @@ async function sendViaRelayer({
   if (!resp || !resp.id) {
     throw new Error('No transaction hash from relayer!')
   }
-
   const txHash = resp.id
+  if (typeof txHash !== 'string' || ![66, 64].includes(txHash.length)) {
+    throw new Error('Invalid transaction hash returned by relayer!')
+  }
 
   if (hashCallbacks && hashCallbacks.length) {
     await handleCallbacks({
@@ -555,6 +559,18 @@ async function sendViaWeb3({
 
   tx.once('transactionHash', async hash => {
     txHash = hash
+    if (typeof txHash === 'object' && get(txHash, 'message')) {
+      throw new Error(txHash.message)
+    } else if (txHash === null) {
+      console.error(tx)
+      throw new Error('Transaction hash returned null.  Invalid tx?')
+    } else if (
+      typeof txHash !== 'string' ||
+      ![66, 64].includes(txHash.length)
+    ) {
+      console.error('Invaild hash: ', txHash)
+      throw new Error('Invalid transaction hash returned by web3!')
+    }
     await handleCallbacks({ callbacks: hashCallbacks, val: hash })
   })
     .once('receipt', async receipt => {
@@ -682,23 +698,6 @@ export default function txHelper({
       // TODO: result from estimateGas is too low. Need to work out exact amount
       // gas = await toSend.estimateGas({ from })
       gas = SAFETY_GAS_LIMIT
-    } else if (shouldUseProxy === 'execute' && !shouldUseRelayer) {
-      debug(`wrapping tx with Proxy.execute. value: ${value}`)
-
-      // Set the address now that we need
-      const UserProxy = ProxyContract.clone()
-      UserProxy.options.address = proxy
-
-      // Wrap the tx in Proxy.execute
-      toSend = await txWrapExecute({
-        ProxyContract: UserProxy,
-        proxy,
-        tx: toSend,
-        destinationContract,
-        value
-      })
-
-      gas = SAFETY_GAS_LIMIT
     }
 
     if (shouldUseRelayer && shouldUseProxy) {
@@ -729,6 +728,25 @@ export default function txHelper({
           }, 1)
         }
       }
+    }
+
+    if (shouldUseProxy === 'execute') {
+      debug(`wrapping tx with Proxy.execute. value: ${value}`)
+
+      // Set the address now that we need
+      const UserProxy = ProxyContract.clone()
+      UserProxy.options.address = proxy
+
+      // Wrap the tx in Proxy.execute
+      toSend = await txWrapExecute({
+        ProxyContract: UserProxy,
+        proxy,
+        tx: toSend,
+        destinationContract,
+        value
+      })
+
+      gas = SAFETY_GAS_LIMIT
     }
 
     // Send using the availble or given web3 instance
