@@ -76,7 +76,7 @@ class settingsScreen extends React.Component {
   setPin = () => {
     const { settings, setPinStatus, navigation } = this.props
     if (settings.pin === null) {
-      navigation.navigate('Pin')
+      navigation.navigate('ChangePin', { new: true })
     } else {
       setPinStatus(!settings.pinStatus)
     }
@@ -222,18 +222,20 @@ class settingsScreen extends React.Component {
           </View>
         </TouchableHighlight>
 
-        <TouchableHighlight
-          onPress={() => props.navigation.navigate('ChangePin')}
-        >
-          <View style={styles.menuItem}>
-            <Text style={styles.menuText}>
-              <fbt desc="SettingsScreen.languageItem">Change PIN Code</fbt>
-            </Text>
-            <View style={styles.menuItemIconContainer}>
-              <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
+        {props.settings.pin !== null && (
+          <TouchableHighlight
+            onPress={() => props.navigation.navigate('ChangePin')}
+          >
+            <View style={styles.menuItem}>
+              <Text style={styles.menuText}>
+                <fbt desc="SettingsScreen.languageItem">Change PIN Code</fbt>
+              </Text>
+              <View style={styles.menuItemIconContainer}>
+                <Image source={require(`${IMAGES_PATH}arrow-right.png`)} />
+              </View>
             </View>
-          </View>
-        </TouchableHighlight>
+          </TouchableHighlight>
+        )}
 
         <View style={styles.menuHeadingContainer}>
           <Text style={styles.menuHeading}>
