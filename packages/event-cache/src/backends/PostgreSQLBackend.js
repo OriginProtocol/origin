@@ -3,8 +3,8 @@ const { AbstractBackend } = require('./AbstractBackend')
 const { debug } = require('../utils')
 
 /**
- * Convert an undorscored_string to camelCase.
- * @note This converts doubles (listingID) to underscored (listing_id)
+ * Convert an underscored_string to camelCase.
+ * @note This converts underscored (listing_id) do camelCase (myVar) or doubles (listingID)
  * @param v The string to operate on
  * @returns {string} camelCase string
  */
