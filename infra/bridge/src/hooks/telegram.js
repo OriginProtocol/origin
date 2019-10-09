@@ -24,7 +24,9 @@ async function subscribeToHooks() {
   }
 
   if (response.body.result === true) {
-    logger.info(`Webhook already live on the URL: ${decodeURIComponent(webhookURL)}`)
+    logger.info(
+      `Webhook already live on the URL: ${decodeURIComponent(webhookURL)}`
+    )
     return
   }
 

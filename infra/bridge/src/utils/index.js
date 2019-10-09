@@ -58,16 +58,16 @@ function decodeHTML(content) {
   })
 }
 
-function getAbsoluteUrl(relativeUrl, params = {}) {	
-  const protocol = process.env.HTTPS ? 'https' : 'http'	
-  const host = process.env.HOST ? process.env.HOST : 'localhost:5000'	
-  const url = new URL(`${protocol}://${host}${relativeUrl}`)	
+function getAbsoluteUrl(relativeUrl, params = {}) {
+  const protocol = process.env.HTTPS ? 'https' : 'http'
+  const host = process.env.HOST ? process.env.HOST : 'localhost:5000'
+  const url = new URL(`${protocol}://${host}${relativeUrl}`)
 
-  for (const key in params) {	
-    url.searchParams.append(key, params[key])	
-  }	
+  for (const key in params) {
+    url.searchParams.append(key, params[key])
+  }
 
-  return url.toString()	
+  return url.toString()
 }
 
 module.exports = {

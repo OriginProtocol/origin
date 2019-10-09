@@ -7,7 +7,13 @@ const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
 
 const db = require('../models/index')
 
-const { isEventValid, getEventContent, getUserProfileFromEvent, hashContent } = require('./webhook-helpers')
+const {
+  isEventValid,
+  getEventContent,
+  getUserProfileFromEvent,
+  hashContent,
+  getUntranslatedContent
+} = require('./webhook-helpers')
 
 const PromotionEventToGrowthEvent = {
   TWITTER: {
@@ -36,7 +42,6 @@ const insertGrowthEvent = async ({
   socialNetwork,
   type
 }) => {
-
   try {
     const profile = getUserProfileFromEvent({
       event,
@@ -90,33 +95,32 @@ const getAttestation = async ({ username, socialNetwork }) => {
 module.exports = async ({ type, socialNetwork, username, event }) => {
   try {
     if (!isEventValid({ socialNetwork, type, event })) {
-      logger.debug(
-        `Dropping invalid event from ${username}`
-      )
+      logger.debug(`Dropping invalid event from ${username}`)
       return
     }
-  
+
     const attestation = await getAttestation({
       socialNetwork,
       username
     })
-  
+
     if (!attestation) {
       logger.debug('No attestation found for address. Ignoring event.')
       return
     }
 
     const identity = attestation.ethAddress
-  
+
     const content = getEventContent({ type, event })
-  
-    let contentHash = content ? hashContent(content) : null
+
+    let contentHash = content
+      ? hashContent(getUntranslatedContent(content))
+      : null
 
     logger.debug(`content hash: ${contentHash}`)
 
     // TODO: Check if event with same (socialNetwork, contentHash, type) exists
     // before trying to insert
-    // IMPORTANT: I broke rewards for sharing with other languages here
     const stored = await insertGrowthEvent({
       contentHash,
       identity,
@@ -124,11 +128,16 @@ module.exports = async ({ type, socialNetwork, username, event }) => {
       socialNetwork,
       type
     })
-  
+
     if (!stored) {
-      logger.error(`Failed to insert GrowthEvent of ${type} event for ${identity}`)
+      logger.error(
+        `Failed to insert GrowthEvent of ${type} event for ${identity}`
+      )
     }
   } catch (err) {
-    logger.error(`Failed to insert GrowthEvent of ${type} event for ${username} on ${socialNetwork}`, err)
+    logger.error(
+      `Failed to insert GrowthEvent of ${type} event for ${username} on ${socialNetwork}`,
+      err
+    )
   }
 }

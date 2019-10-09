@@ -1,11 +1,47 @@
 'use strict'
 
+const { GrowthCampaign } = require('@origin/growth-campaign/src/models')
+const {
+  GrowthCampaignRewardStatuses
+} = require('@origin/growth-campaign/src/enums')
+
 const EventValidators = require('../utils/event-validators')
 
 const { decodeHTML } = require('./index')
 
 const logger = require('../logger')
 const crypto = require('crypto')
+
+let validContents = []
+
+/**
+ * Populates the `validContents` array with contents that can be rewarded
+ */
+module.exports.populateValidContents = async () => {
+  if (validContents.length) {
+    return
+  }
+
+  const campaign = await GrowthCampaign.findOne({
+    where: {
+      rewardStatus: GrowthCampaignRewardStatuses.NotReady
+    },
+    order: [['createdAt', 'ASC']]
+  })
+
+  if (!campaign) {
+    logger.error('No active campaign found')
+    return false
+  }
+
+  try {
+    const rules = JSON.parse(campaign.rules)
+    const contentIds = Object.keys(rules.content || [])
+    validContents = contentIds.map(contentId => rules.content[contentId])
+  } catch (err) {
+    logger.error('Failed to populate valid contents', err)
+  }
+}
 
 /**
  * @returns user profile data from the event
@@ -32,12 +68,40 @@ module.exports.isEventValid = ({ socialNetwork, ...args }) => {
   const validator = EventValidators[socialNetwork.toUpperCase()]
 
   if (!validator) {
-    logger.error(`Trying to parse event of unknown network: ${socialNetwork}`)
-    // TODO: As of now, only twitter is supported
+    logger.error(`Error when trying to parse event: ${socialNetwork}`, args)
     return false
   }
 
   return validator(args)
+}
+
+/**
+ * Returns the untranslated text content, for the given one
+ */
+module.exports.getUntranslatedContent = translatedContent => {
+  const defaultTextMatch = validContents.find(
+    content => content.post.tweet.default.trim() === translatedContent.trim()
+  )
+
+  if (defaultTextMatch) {
+    // The given text is already untranslated
+    return translatedContent
+  }
+
+  const contentObj = validContents.find(content => {
+    // Check if it is translated text
+    const translation = content.post.tweet.translations.find(
+      content => content.text.trim() === translatedContent.trim()
+    )
+
+    if (translation) {
+      return true
+    }
+
+    return false
+  })
+
+  return contentObj ? contentObj.post.tweet.default.trim() : translatedContent
 }
 
 /**
@@ -75,6 +139,52 @@ module.exports.getEventContent = ({ type, event }) => {
   logger.debug('resolved content:', decodedContent)
 
   return decodedContent
+}
+
+/**
+ * Checks if the event is of content that can be rewarded
+ * @param {Object} args.event
+ * @returns true if valid and can be rewarded, false otherwise
+ */
+module.exports.validateShareableContent = ({ event, type }) => {
+  let sharedContent = getEventContent({ event, type })
+
+  if (!sharedContent) {
+    return false
+  }
+
+  sharedContent = sharedContent.trim()
+
+  const entities = (event.extended_tweet || event).entities
+  const expandedUrls = entities.urls.map(entityUrl => entityUrl.expanded_url)
+
+  return expandedUrls.some(contentLink => {
+    // Find all content that has the link
+    const content = validContents.find(
+      content => content.link.toLowerCase() === contentLink.toLowerCase()
+    )
+
+    if (!content) {
+      // No rewardable content has that link
+      return false
+    }
+
+    if (content.post.tweet.default.trim() === sharedContent) {
+      // User has shared the untranslated text
+      return true
+    }
+
+    // Check if it is translated text
+    const translation = content.post.tweet.translations.find(
+      content => content.text.trim() === sharedContent
+    )
+
+    if (translation) {
+      return translation.text.trim() === sharedContent
+    }
+
+    return false
+  })
 }
 
 /**

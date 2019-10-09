@@ -70,17 +70,16 @@ function generateAttestationSignature(privateKey, subject, data) {
   return generateSignature(privateKey, hashToSign)
 }
 
-const createTelegramAttestation = async ({
-  message,
-  identity
-}) => {
+const createTelegramAttestation = async ({ message, identity }) => {
   const redisKey = `telegram/attestation/${identity.toLowerCase()}`
 
   let data = await getAsync(redisKey)
 
   if (!data) {
     // Most likely, `/generate-code` was not invoked
-    logger.error('Cannot find IP and Identity address in redis for Telegram Attestation')
+    logger.error(
+      'Cannot find IP and Identity address in redis for Telegram Attestation'
+    )
     return
   }
 
@@ -127,10 +126,13 @@ const createTelegramAttestation = async ({
 
     redisClient.del(redisKey)
 
-    redisClient.set(redisKey + '/status', JSON.stringify({
-      attestation,
-      verified: true
-    }))
+    redisClient.set(
+      redisKey + '/status',
+      JSON.stringify({
+        attestation,
+        verified: true
+      })
+    )
 
     return true
   } catch (error) {

@@ -11,9 +11,14 @@ router.post('/generate-code', telegramAttestation, async (req, res) => {
   const identity = req.query.identity.toLowerCase()
 
   // Store IP to redis
-  redisClient.set(`telegram/attestation/${identity}`, JSON.stringify({
-    ip: req.ip
-  }), 'EX', 60 * 30)
+  redisClient.set(
+    `telegram/attestation/${identity}`,
+    JSON.stringify({
+      ip: req.ip
+    }),
+    'EX',
+    60 * 30
+  )
 
   res.send({
     code: identity
@@ -22,9 +27,9 @@ router.post('/generate-code', telegramAttestation, async (req, res) => {
 
 router.get('/status', telegramAttestation, async (req, res) => {
   const identity = req.query.identity.toLowerCase()
-  
+
   const key = `telegram/attestation/${identity}/status`
-  
+
   let statusObj = await getAsync(key)
 
   statusObj = statusObj ? JSON.parse(statusObj) : null
@@ -36,10 +41,9 @@ router.get('/status', telegramAttestation, async (req, res) => {
     redisClient.del(key)
   }
 
-  res.status(200)
-    .send({
-      ...statusObj
-    })
+  res.status(200).send({
+    ...statusObj
+  })
 })
 
 module.exports = router

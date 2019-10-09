@@ -4,7 +4,10 @@ const express = require('express')
 const router = express.Router()
 
 const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
-const { GrowthEventTypes, GrowthEventStatuses } = require('@origin/growth-event/src/enums')
+const {
+  GrowthEventTypes,
+  GrowthEventStatuses
+} = require('@origin/growth-event/src/enums')
 
 const { hashContent } = require('../utils/webhook-helpers')
 
@@ -29,13 +32,19 @@ router.get('/verify', verifyPromotions, async (req, res) => {
   if (identityProxy) addresses.push(identityProxy)
 
   const events = await GrowthEvent.findAll(
-    null, 
-    addresses, 
-    PromotionEventToGrowthEvent[socialNetwork.toUpperCase()][type.toUpperCase()],
+    null,
+    addresses,
+    PromotionEventToGrowthEvent[socialNetwork.toUpperCase()][
+      type.toUpperCase()
+    ],
     contentHash
   )
 
-  const verified = events.some(event => event.status === GrowthEventStatuses.Logged || GrowthEventStatuses.Verified)
+  const verified = events.some(
+    event =>
+      event.status === GrowthEventStatuses.Logged ||
+      GrowthEventStatuses.Verified
+  )
 
   return res.status(200).send({
     success: true,

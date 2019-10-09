@@ -45,12 +45,14 @@ router.post('/', (req, res) => {
     // For attestations
     let payload = /^\/start (.+)$/gi.exec(message.text)
 
-    if (payload && payload[1] && Web3.utils.isAddress(payload[1].toLowerCase())) {
+    if (
+      payload &&
+      payload[1] &&
+      Web3.utils.isAddress(payload[1].toLowerCase())
+    ) {
       payload = payload[1]
 
-      logger.debug(
-        `Pushing attestation message with payload '${payload}'`
-      )
+      logger.debug(`Pushing attestation message with payload '${payload}'`)
 
       createTelegramAttestation({
         identity: payload,
@@ -68,11 +70,11 @@ router.post('/', (req, res) => {
    * before rewarding the user on production
    */
   const isGroup = message.chat && message.chat.type === 'group'
-  const isValidGroup = process.env.NODE_ENV !== 'production' || 
-    (isGroup && (
-      message.chat.username.toLowerCase() === 'OriginProtocolKorea'  || 
-      message.chat.username.toLowerCase() === 'originprotocol'
-    ))
+  const isValidGroup =
+    process.env.NODE_ENV !== 'production' ||
+    (isGroup &&
+      (message.chat.username.toLowerCase() === 'OriginProtocolKorea' ||
+        message.chat.username.toLowerCase() === 'originprotocol'))
 
   if (isValidGroup && message.new_chat_members) {
     // For join verifications
@@ -102,14 +104,15 @@ router.post('/', (req, res) => {
     })
   }
 
-  if (totalFollowEvents > 0) { 
+  if (totalFollowEvents > 0) {
     logger.debug(
       `[TELEGRAM] Processed ${followCount}/${totalFollowEvents} new chat member events`
     )
   }
 
   if (shouldSendReplyMessage) {
-    return res.status(200)
+    return res
+      .status(200)
       .header('Content-Type', 'application/json')
       .send({
         method: 'sendMessage',

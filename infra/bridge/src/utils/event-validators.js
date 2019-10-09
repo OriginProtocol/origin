@@ -2,12 +2,23 @@
 
 const logger = require('../logger')
 
+const {
+  validateShareableContent,
+  populateValidContents
+} = require('./webhook-helpers')
+
 /**
  * Returns true if event is valid, false otherwise
  */
-function validateTwitterEvent({ type }) {
-  if (type === 'FOLLOW' || type === 'SHARE') {
+async function validateTwitterEvent({ type, event }) {
+  if (type === 'FOLLOW') {
     return true
+  }
+
+  if (type === 'SHARE') {
+    await populateValidContents()
+
+    return validateShareableContent({ event, type })
   }
 
   logger.debug(`Unknown telegram event type ${type}`)
