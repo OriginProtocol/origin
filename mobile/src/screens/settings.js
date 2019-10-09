@@ -7,7 +7,8 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
-  View
+  View,
+  Switch
 } from 'react-native'
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
