@@ -27,7 +27,7 @@ function toCamelCase(v) {
 /**
  * Convert a camelCaseString to an undorscored_string
  * @param v The camelCase string string
- * @returns {string} The undersocred string
+ * @returns {string} The underscored string
  */
 function toUnderscored(v) {
   return v

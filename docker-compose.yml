@@ -109,6 +109,7 @@ services:
       npm run migrate --prefix infra/notifications &&
       npm run migrate --prefix infra/bridge &&
       npm run migrate --prefix infra/messaging &&
+      npm run migrate --prefix packages/event-cache &&
       npm run start --prefix packages/services -- -g -i -p -f -t"
 
   messaging:
