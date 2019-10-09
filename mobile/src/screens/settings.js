@@ -194,18 +194,20 @@ class settingsScreen extends React.Component {
           </Text>
         </View>
 
-        <TouchableHighlight>
-          <View style={styles.menuItem}>
-            <Text style={styles.menuText}>{biometrytText}</Text>
-            <View style={styles.menuItemIconContainer}>
-              <Switch
-                trackColor={{ true: '#1a82ff' }}
-                value={biometryStatus}
-                onChange={() => this.touchAuthenticate()}
-              />
+        {this.state.biometryType !== null && (
+          <TouchableHighlight>
+            <View style={styles.menuItem}>
+              <Text style={styles.menuText}>{biometrytText}</Text>
+              <View style={styles.menuItemIconContainer}>
+                <Switch
+                  trackColor={{ true: '#1a82ff' }}
+                  value={biometryStatus}
+                  onChange={() => this.touchAuthenticate()}
+                />
+              </View>
             </View>
-          </View>
-        </TouchableHighlight>
+          </TouchableHighlight>
+        )}
 
         <TouchableHighlight>
           <View style={styles.menuItem}>

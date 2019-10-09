@@ -34,7 +34,7 @@ class ChangePinScreen extends Component {
     super(props)
     this.state = {
       pin: '',
-      verifyPin: null,
+      oldPin: null,
       isRetry: false
     }
     this.pinLength = 6
@@ -48,23 +48,23 @@ class ChangePinScreen extends Component {
     await this.setState({ pin, isRetry: false })
 
     if (this.state.pin.length === this.pinLength) {
-      if (!this.state.verifyPin) {
-        // Proceed to verify step, copy value to verifyPin
+      if (!this.state.oldPin) {
+        // Proceed to verify step, copy value to oldPin
         this.setState({
           pin: '',
-          verifyPin: this.state.pin
+          oldPin: this.state.pin
         })
       } else {
-        if (this.state.pin === this.state.verifyPin) {
+        if (this.props.settings.pin === this.state.oldPin) {
           // Pin was verified
           this.props.setPin(this.state.pin)
-          this.props.navigation.navigate('Main')
+          this.props.navigation.goBack()
         } else {
           // Pin was incorrect, reset state and try again
           this.setState({
             isRetry: true,
             pin: '',
-            verifyPin: null
+            oldPin: null
           })
         }
       }
@@ -72,6 +72,10 @@ class ChangePinScreen extends Component {
   }
 
   render() {
+    console.log(this.props.settings.pin)
+    const title = this.state.oldPin
+      ? fbt('Enter your new PIN', 'PinScreen.enterNewPinCode')
+      : fbt('Enter your old PIN', 'PinScreen.enterOldPinCode')
     return (
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -85,8 +89,15 @@ class ChangePinScreen extends Component {
           >
             <View style={styles.container}>
               <Text style={styles.subtitle}>
-                {fbt('Enter your old PIN', 'PinScreen.enterYourOldPin')}
+                {title}
               </Text>
+              {this.state.isRetry === true && (
+                <Text style={styles.invalid}>
+                  <fbt desc="PinScreen.pinMatchFailure">
+                    Old pins did not match, try again
+                  </fbt>
+                </Text>
+              )}
               <PinInput
                 value={this.state.pin}
                 pinLength={this.pinLength}
@@ -100,8 +111,8 @@ class ChangePinScreen extends Component {
   }
 }
 
-const mapStateToProps = ({ settings, wallet }) => {
-  return { settings, wallet }
+const mapStateToProps = ({ settings }) => {
+  return { settings }
 }
 
 const mapDispatchToProps = dispatch => ({
