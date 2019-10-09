@@ -12,7 +12,8 @@ const initialState = {
   deviceToken: null,
   language: null,
   network: defaultNetwork,
-  pin: null
+  pin: null,
+  pinStatus: false
 }
 
 export default function Settings(state = initialState, action = {}) {
@@ -33,7 +34,10 @@ export default function Settings(state = initialState, action = {}) {
       return { ...state, network: action.network }
 
     case SettingsConstants.SET_PIN:
-      return { ...state, pin: action.pin }
+      return { ...state, pin: action.pin, pinStatus: true }
+
+    case SettingsConstants.SET_PIN_STATUS:
+      return { ...state, pinStatus: action.status }
   }
 
   return state
