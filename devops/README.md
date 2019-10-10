@@ -37,3 +37,6 @@ Helm is a tool used to manage a deployment that consists of many Kubernetes reso
 
 The instructions for installing Helm are available [here](https://github.com/helm/helm/blob/master/docs/install.md). You can ignore everything from the "Installing Tiller" heading down.
 
+## Temporary Deployments
+
+For temporary deployments for one-off tasks and diagnostics, see [docs/temporary.md].

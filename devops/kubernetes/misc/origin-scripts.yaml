@@ -1,0 +1,9 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: origin-scripts
+spec:
+  containers:
+    - name: origin-scripts
+      image: "gcr.io/origin-214503/dev/origin-cron:latest"
+      command: ['sleep', '3600']
