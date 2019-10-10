@@ -64,7 +64,9 @@ describe('telegram attestation', () => {
       .post('/api/attestations/telegram/generate-code')
       .expect(400)
 
-    expect(response.body.errors[0]).to.equal('Field identity must not be empty.')
+    expect(response.body.errors[0]).to.equal(
+      'Field identity must not be empty.'
+    )
   })
 
   it('should fail to get status on missing identity param', async () => {
@@ -72,6 +74,8 @@ describe('telegram attestation', () => {
       .get('/api/attestations/telegram/status')
       .expect(400)
 
-    expect(response.body.errors[0]).to.equal('Field identity must not be empty.')
+    expect(response.body.errors[0]).to.equal(
+      'Field identity must not be empty.'
+    )
   })
 })

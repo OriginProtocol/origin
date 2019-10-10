@@ -9,7 +9,10 @@ const {
   GrowthEventStatuses
 } = require('@origin/growth-event/src/enums')
 
-const { hashContent } = require('../utils/webhook-helpers')
+const {
+  hashContent,
+  getUntranslatedContent
+} = require('../utils/webhook-helpers')
 
 const { verifyPromotions } = require('../utils/validation')
 
@@ -25,7 +28,9 @@ const PromotionEventToGrowthEvent = {
 
 router.get('/verify', verifyPromotions, async (req, res) => {
   const { socialNetwork, type, identity, identityProxy, content } = req.query
-  const contentHash = content ? hashContent(content) : null
+  const contentHash = content
+    ? hashContent(getUntranslatedContent(content))
+    : null
 
   const addresses = []
   if (identity) addresses.push(identity)
