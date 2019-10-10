@@ -25,7 +25,7 @@ class DeployMarketplace extends Component {
       version: '001',
       token: token ? token.id : '',
       from: admin ? admin.id : '',
-      autoWhitelist: true
+      autoWhitelist: false
     }
   }
 
