@@ -34,7 +34,7 @@ router.get('/status', telegramAttestation, async (req, res) => {
 
   statusObj = statusObj ? JSON.parse(statusObj) : null
 
-  const verified = statusObj && statusObj.verified && statusObj.attestation
+  const verified = !!(statusObj && statusObj.verified && statusObj.attestation)
 
   // Delete from redis, once verified
   if (verified) {
@@ -42,7 +42,8 @@ router.get('/status', telegramAttestation, async (req, res) => {
   }
 
   res.status(200).send({
-    ...statusObj
+    ...statusObj,
+    verified
   })
 })
 

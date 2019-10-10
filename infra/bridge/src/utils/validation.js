@@ -162,7 +162,7 @@ const verifyPromotions = [
   handleValidationError
 ]
 
-const telegramAttestation = [identityValidation]
+const telegramAttestation = [identityValidation, handleValidationError]
 
 module.exports = {
   airbnbGenerateCode,
