@@ -1,6 +1,7 @@
 import get from 'lodash/get'
 
 import contracts from '../../contracts'
+import sleep from '../../utils/sleep'
 
 const MAX_TRIES = 30
 
@@ -42,6 +43,8 @@ async function verifyPromotion(
     }
 
     tries++
+
+    await sleep(1000)
   }
 
   return {
