@@ -73,7 +73,7 @@ router.post('/', (req, res) => {
   const isValidGroup =
     process.env.NODE_ENV !== 'production' ||
     (isGroup &&
-      (message.chat.username.toLowerCase() === 'OriginProtocolKorea' ||
+      (message.chat.username.toLowerCase() === 'originprotocolkorea' ||
         message.chat.username.toLowerCase() === 'originprotocol'))
 
   if (isValidGroup && message.new_chat_members) {
