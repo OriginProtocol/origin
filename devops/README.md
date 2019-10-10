@@ -39,4 +39,4 @@ The instructions for installing Helm are available [here](https://github.com/hel
 
 ## Temporary Deployments
 
-For temporary deployments for one-off tasks and diagnostics, see [Temporary Deployment](docs/temporary.md).
+For temporary deployments for one-off tasks and diagnostics, see [Temporary Deployments](docs/temporary.md).
