@@ -12,7 +12,7 @@ async function checkTelegramStatus(_, { identity }) {
   if (!bridgeServer) {
     return { success: false, reason: 'No bridge server configured' }
   }
-  
+
   let tries = 0
   const url = `${bridgeServer}/api/attestations/telegram/status?identity=${identity}`
 
@@ -21,14 +21,14 @@ async function checkTelegramStatus(_, { identity }) {
       headers: { 'content-type': 'application/json' },
       credentials: 'include'
     })
-  
+
     const data = await response.json()
-  
+
     if (!response.ok) {
       const reason = get(data, 'errors[0]')
       return { success: false, reason }
     }
-  
+
     if (data.verified) {
       // Validate only if verified
       try {

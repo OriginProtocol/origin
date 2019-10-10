@@ -129,7 +129,7 @@ module.exports = async ({ type, socialNetwork, username, event }) => {
 
     const content = getEventContent({ type, event })
 
-    let contentHash = content
+    const contentHash = content
       ? hashContent(getUntranslatedContent(content))
       : null
 

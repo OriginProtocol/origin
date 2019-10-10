@@ -1,5 +1,5 @@
-import React, { Component, useState, useEffect } from 'react'
-import { Mutation, useQuery, useMutation } from 'react-apollo'
+import React, { Component, useEffect } from 'react'
+import { Mutation, useQuery } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
 import { withRouter } from 'react-router-dom'

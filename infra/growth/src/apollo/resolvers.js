@@ -10,7 +10,10 @@ const {
   authenticateEnrollment,
   getUserAuthenticationStatus
 } = require('../resources/authentication')
-const { getLocationInfo, getLocationEligibilityInfo } = require('../util/locationInfo')
+const {
+  getLocationInfo,
+  getLocationEligibilityInfo
+} = require('../util/locationInfo')
 const { campaignToApolloObject } = require('./adapter')
 const { GrowthInvite } = require('../resources/invite')
 const { sendInvites, sendInviteReminder } = require('../resources/email')
@@ -106,7 +109,9 @@ const resolvers = {
         }
       } else {
         // Geolocalize based on IP and check eligibility.
-        eligibility = await getLocationEligibilityInfo(context.req.headers['x-real-ip'])
+        eligibility = await getLocationEligibilityInfo(
+          context.req.headers['x-real-ip']
+        )
       }
       logger.debug('Eligibility:', JSON.stringify(eligibility))
       return eligibility
@@ -127,13 +132,17 @@ const resolvers = {
       }
     },
     async telegramGroupName(obj, args, context) {
-      const locationInfo = await getLocationInfo(context.req.headers['x-real-ip'])
+      const locationInfo = await getLocationInfo(
+        context.req.headers['x-real-ip']
+      )
 
       if (!locationInfo) {
         return 'originprotocol'
       }
 
-      return locationInfo.countryCode === 'KR' ? 'originprotocolkorea' : 'originprotocol'
+      return locationInfo.countryCode === 'KR'
+        ? 'originprotocolkorea'
+        : 'originprotocol'
     }
   },
   Mutation: {

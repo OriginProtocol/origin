@@ -2,9 +2,7 @@
 
 const logger = require('../logger')
 
-const {
-  validateShareableContent
-} = require('./webhook-helpers')
+const { validateShareableContent } = require('./webhook-helpers')
 
 /**
  * Returns true if event is valid, false otherwise

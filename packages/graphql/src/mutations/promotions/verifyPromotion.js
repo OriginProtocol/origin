@@ -29,13 +29,13 @@ async function verifyPromotion(
       credentials: 'include',
       method: 'GET'
     })
-  
+
     if (!response.ok) {
       return { success: false, reason: get(data, 'errors[0]') }
     }
-  
+
     const data = await response.json()
-  
+
     if (data.verified) {
       return {
         success: true

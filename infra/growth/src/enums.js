@@ -9,7 +9,9 @@ const {
   GrowthEventTypes
 } = require('@origin/growth-event/src/enums')
 
-const { GrowthCampaignRewardStatuses } = require('@origin/growth-campaign/src/enums')
+const {
+  GrowthCampaignRewardStatuses
+} = require('@origin/growth-campaign/src/enums')
 
 const GrowthCampaignStatuses = new Enum(
   'Pending',

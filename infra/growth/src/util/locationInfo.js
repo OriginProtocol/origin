@@ -45,7 +45,7 @@ async function getLocationEligibilityInfo(ip) {
   let eligibility = 'Eligible'
 
   if (locationInfo.countryCode === 'N/A') {
-    eligibility = 'Unknown' 
+    eligibility = 'Unknown'
   } else if (forbiddenCountryCodes.includes(locationInfo.countryCode)) {
     eligibility = 'Forbidden'
   } else if (restrictedCountryCodes.includes(locationInfo.countryCode)) {
