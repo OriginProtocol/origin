@@ -70,7 +70,7 @@ const Nav = ({
   const [consoleOpen, setConsoleOpen] = useState(false)
   const [consoleLogConnected, setConsoleLogConnected] = useState(false)
 
-  const screenConsoleEnabled = localStorage.screenConsole
+  const screenConsoleEnabled = localStorage.screenConsole === 'true'
 
   useEffect(() => {
     if (wallet && !consoleLogConnected && screenConsoleEnabled) {

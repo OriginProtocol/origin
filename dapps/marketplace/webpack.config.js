@@ -50,6 +50,7 @@ const config = {
     path: path.resolve(__dirname, 'public')
   },
   externals: {
+    sequelize: 'sequelize', // Unused from event-cache
     Web3: 'web3'
   },
   module: {
@@ -152,6 +153,10 @@ const config = {
       ETH_NETWORK_ID: process.env.ETH_NETWORK_ID || null,
       TELEGRAM_BOT_USERNAME: TELEGRAM_BOT_USERNAME,
       NODE_ENV: process.env.NODE_ENV || 'development'
+    }),
+    // This is used for event-cache to conditionally leave out Postgres backend
+    new webpack.EnvironmentPlugin({
+      WEBPACK_BUILD: true
     })
   ],
 

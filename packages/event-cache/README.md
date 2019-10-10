@@ -2,6 +2,26 @@
 
 The `event-cache` package provides an augmentation to web3.js Contracts to allow caching of events as they are fetched.
 
+## Integration
+
+### Webpack
+
+Make sure to configure `EnvironmentPlugin` to define `WEBPACK_BUILD`.  This allows the PostgreSQL dependencies to be left out.
+
+    plugins: [
+        new webpack.EnvironmentPlugin({
+          WEBPACK_BUILD: true
+        })
+    ]
+
+## Environmental Variables
+
+Event cache has a few env vars to adjust behavior.
+
+- `EVENTCACHE_ENABLE_PG` - Enable the PostgreSQL backend
+- `EVENTCACHE_SLAVE` - Disable event fetching and backend writes (useful for sharing a data source with another writer)
+- `WEBPACK_BUILD` - Do not include Postgres native modules during a webpack build (see above)
+
 ## Usage
 
 Best usage is just to patch the Web3 contract with `patchWeb3Contract()`.  Then you can access the EventCache API from the `eventCache` attribute on the Web3 contract.

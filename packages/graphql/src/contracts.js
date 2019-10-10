@@ -504,7 +504,6 @@ export function setMarketplace(address, epoch, version = '000') {
 
   try {
     patchWeb3Contract(contract, epoch, {
-      ...context.config,
       useLatestFromChain: false,
       ipfsEventCache:
         context.config[`V${version.slice(1)}_Marketplace_EventCache`],
@@ -514,7 +513,13 @@ export function setMarketplace(address, epoch, version = '000') {
         typeof address === 'undefined'
           ? 'Marketplace_'
           : `${address.slice(2, 8)}_`,
-      platform: typeof window === 'undefined' ? 'memory' : 'browser'
+      platform:
+        typeof window === 'undefined'
+          ? process.env.EVENTCACHE_ENABLE_PG
+            ? 'postgresql'
+            : 'memory'
+          : 'browser',
+      ...context.config
     })
   } catch (err) {
     console.error('Unable to initialize EventCache for Marketplace')
@@ -567,7 +572,6 @@ export function setIdentityEvents(address, epoch) {
 
   try {
     patchWeb3Contract(context.identityEvents, epoch, {
-      ...context.config,
       ipfsEventCache: context.config.IdentityEvents_EventCache,
       cacheMaxBlock: context.config.IdentityEvents_EventCacheMaxBlock,
       useLatestFromChain: false,
@@ -575,8 +579,14 @@ export function setIdentityEvents(address, epoch) {
         typeof address === 'undefined'
           ? 'IdentityEvents_'
           : `${address.slice(2, 8)}_`,
-      platform: typeof window === 'undefined' ? 'memory' : 'browser',
-      batchSize: 2500
+      platform:
+        typeof window === 'undefined'
+          ? process.env.EVENTCACHE_ENABLE_PG
+            ? 'postgresql'
+            : 'memory'
+          : 'browser',
+      batchSize: 2500,
+      ...context.config
     })
   } catch (err) {
     console.error('Unable to initialize EventCache for IdentityEvents')
@@ -609,7 +619,6 @@ export function setProxyContracts(config) {
   // Add an event cache to ProxyFactory.
   try {
     patchWeb3Contract(context.ProxyFactory, config.ProxyFactory_Epoch, {
-      ...context.config,
       ipfsEventCache: null, // TODO add IPFS cache after Meta-txn launch, once we have a non trivial number of events.
       cacheMaxBlock: null,
       useLatestFromChain: false,
@@ -617,8 +626,14 @@ export function setProxyContracts(config) {
         typeof config.ProxyFactory === 'undefined'
           ? 'ProxyFactory_'
           : `${config.ProxyFactory.slice(2, 8)}_`,
-      platform: typeof window === 'undefined' ? 'memory' : 'browser',
-      batchSize: 2500
+      platform:
+        typeof window === 'undefined'
+          ? process.env.EVENTCACHE_ENABLE_PG
+            ? 'postgresql'
+            : 'memory'
+          : 'browser',
+      batchSize: 2500,
+      ...context.config
     })
   } catch (err) {
     console.error('Unable to initialize EventCache for ProxyFactory')

@@ -112,6 +112,7 @@ services:
       npm run migrate --prefix infra/notifications &&
       npm run migrate --prefix infra/bridge &&
       npm run migrate --prefix infra/messaging &&
+      npm run migrate --prefix packages/event-cache &&
       npm run start --prefix packages/services -- -g -i -p -f -t"
 
   messaging:
@@ -171,6 +172,7 @@ services:
       - REDIS_URL=redis://redis-master:6379
       - ENVKEY=
       - MESSAGING_EVENTS=
+      - EVENTCACHE_ENABLE_PG=true
     depends_on:
       - postgres
       - elasticsearch
@@ -223,6 +225,9 @@ services:
       - DISCOVERY_SERVER_URL=http://discovery:4000/graphql
       - BRIDGE_SERVER_URL=http://bridge:5000
       - GROWTH_SERVER_URL=http://growth:4008
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - EVENTCACHE_ENABLE_PG=true
+      - EVENTCACHE_SLAVE=true
     depends_on:
       - discovery
     ports:
