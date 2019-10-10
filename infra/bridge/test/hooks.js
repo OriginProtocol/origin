@@ -10,16 +10,63 @@ const app = require('../src/app')
 const client = redis.createClient()
 const crypto = require('crypto')
 
-const getAsync = key =>
-  new Promise((resolve, reject) => {
-    client.get(key, (err, data) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(data)
+const Sequelize = require('sequelize')
+
+const env = process.env.NODE_ENV || 'test'
+const config = require(__dirname + '/../config/sequelize.js')[env]
+
+const sequelize = new Sequelize(process.env[config.use_env_variable], config)
+
+const Attestation = require('../src/models/index').Attestation
+
+const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
+
+const sleep = timeInMs => new Promise(resolve => setTimeout(resolve, timeInMs))
+
+const createFakeAttestation = async ({
+  type,
+  ethAddress,
+  uniqueId,
+  username
+}) => {
+  await Attestation.create({
+    method: type || 'TWITTER',
+    ethAddress,
+    value: uniqueId || '123',
+    signature: '',
+    remoteIpAddress: '127.0.0.1',
+    profileUrl: '',
+    username,
+    profileData: '{}'
+  })
+}
+
+const checkIfGrowthEventExists = async ({
+  contentHash,
+  identity,
+  type
+}) => {
+  let data
+  if (contentHash) {
+    data = await sequelize.query(`SELECT * FROM growth_event WHERE eth_address=:ethAddress AND type=:type AND status='Logged' AND custom_id=:customId`, {
+      replacements: {
+        type,
+        ethAddress: identity,
+        customId: contentHash
       }
     })
-  })
+  } else {
+    data = await sequelize.query(`SELECT * FROM growth_event WHERE eth_address=:ethAddress AND type=:type AND status='Logged'`, {
+      replacements: {
+        type,
+        ethAddress: identity
+      }
+    })
+  }
+
+  console.log(data[0])
+  return data[0].length > 0
+}
 
 describe('twitter webhooks', () => {
   beforeEach(async () => {
@@ -28,6 +75,13 @@ describe('twitter webhooks', () => {
 
     // Clear out redis-mock
     await new Promise(resolve => client.flushall(resolve))
+
+    await sequelize.query('DELETE from growth_event')
+
+    await Attestation.destroy({
+      where: {},
+      truncate: true
+    })
   })
 
   it('should return response token', async () => {
@@ -43,7 +97,11 @@ describe('twitter webhooks', () => {
     expect(response.body.response_token).to.equal(`sha256=${hmac}`)
   })
 
-  it('should push follow events to redis', async () => {
+  it('should push follow events to DB', async () => {
+    await createFakeAttestation({
+      username: 'testaccount',
+      ethAddress
+    })
     await request(app)
       .post('/hooks/twitter')
       .set({
@@ -68,18 +126,27 @@ describe('twitter webhooks', () => {
       })
       .expect(200)
 
-    const event = JSON.parse(await getAsync('twitter/follow/testaccount'))
-    expect(event.id).to.equal('abc')
+    await sleep(500)
+
+    expect(await checkIfGrowthEventExists({
+      identity: ethAddress,
+      type: 'FollowedOnTwitter'
+    })).to.equal(true)
   })
 
   it('should push mention events to redis', async () => {
+    await createFakeAttestation({
+      username: 'someuser',
+      ethAddress
+    })
+
     await request(app)
       .post('/hooks/twitter')
       .set({
         // Note: These signs have been hard-coded in the test
         // Don't forget to update it, if you make any change to the body
         'x-twitter-webhooks-signature':
-          'sha256=aMPAoi2EHMNU6/rL0TtAtbBx0R1ZoNbYL72Gbin3X0o='
+          'sha256=hCsjrrpDU6kzSP5TpgW2T3yO7BaU4qdi5Mqlp1BuTKE='
       })
       .send({
         tweet_create_events: [
@@ -91,17 +158,65 @@ describe('twitter webhooks', () => {
             },
             entities: {
               urls: []
+            },
+            text: 'hello world'
+          }
+        ]
+      })
+      .expect(200)
+
+      await sleep(500)
+
+      expect(await checkIfGrowthEventExists({
+        identity: ethAddress,
+        type: 'SharedOnTwitter'
+      })).to.equal(true)
+  })
+
+  it('should not push events if no attestation found', async () => {
+    await request(app)
+      .post('/hooks/twitter')
+      .set({
+        // Note: These signs have been hard-coded in the test
+        // Don't forget to update it, if you make any change to the body
+        'x-twitter-webhooks-signature':
+          'sha256=uK7XMMoqeDXBokDjta1Qh3rwQy18BE9ICS84baL4zHk='
+      })
+      .send({
+        follow_events: [
+          {
+            id: 'abc',
+            target: {
+              screen_name: 'originprotocol'
+            },
+            source: {
+              id: '12345',
+              screen_name: 'testaccountxyz'
             }
           }
         ]
       })
       .expect(200)
 
-    const event = JSON.parse(await getAsync('twitter/share/someuser'))
-    expect(event.id).to.equal('abcd')
+    await sleep(500)
+
+    expect(await checkIfGrowthEventExists({
+      identity: ethAddress,
+      type: 'FollowedOnTwitter'
+    })).to.equal(false)
   })
 
-  it('should not push retweets/favorites/own tweet events to redis', async () => {
+  it('should not push retweets/favorites/own tweet events to DB', async () => {
+    await createFakeAttestation({
+      username: 'unknownuser',
+      ethAddress
+    })
+
+    await createFakeAttestation({
+      username: 'originprotocol',
+      ethAddress
+    })
+
     await request(app)
       .post('/hooks/twitter')
       .set({
@@ -148,43 +263,54 @@ describe('twitter webhooks', () => {
       })
       .expect(200)
 
-    let event = await getAsync('twitter/share/unknownuser')
-    expect(event).to.equal(null)
-    event = await getAsync('twitter/share/originprotocol')
-    expect(event).to.equal(null)
+    expect(await checkIfGrowthEventExists({
+      identity: ethAddress,
+      type: 'SharedOnTwitter'
+    })).to.equal(false)
   })
 
-  // it('should fail on invalid signature', async () => {
-  //   await request(app)
-  //     .post('/hooks/twitter')
-  //     .set({
-  //       // Note: These signs have been hard-coded in the test
-  //       // Don't forget to update it, if you make any change to the body
-  //       'x-twitter-webhooks-signature':
-  //         'sha256=aMPAoi2EHMNU6/rL0TtAtbBx0R1ZoNbYL72Gbin3X0o='
-  //     })
-  //     .send({
-  //       tweet_create_events: [
-  //         {
-  //           id: 'abcd',
-  //           user: {
-  //             id_str: '123456',
-  //             screen_name: 'someuser'
-  //           }
-  //         }
-  //       ]
-  //     })
-  //     .expect(403)
-  // })
+  it('should fail on invalid signature', async () => {
+    await request(app)
+      .post('/hooks/twitter')
+      .set({
+        // Note: These signs have been hard-coded in the test
+        // Don't forget to update it, if you make any change to the body
+        'x-twitter-webhooks-signature':
+          'sha256=aMPAoi2EHMNU6/rL0TtAtbBx0R1ZoNbYL72Gbin3X0o='
+      })
+      .send({
+        tweet_create_events: [
+          {
+            id: 'abcd',
+            user: {
+              id_str: '123456',
+              screen_name: 'someuser'
+            }
+          }
+        ]
+      })
+      .expect(403)
+  })
 })
 
 describe('telegram webhooks', () => {
+
   beforeEach(async () => {
-    // Clear out redis-mock
-    await new Promise(resolve => client.del('*', resolve))
+    await sequelize.query('DELETE from growth_event')
+
+    await Attestation.destroy({
+      where: {},
+      truncate: true
+    })
   })
 
-  it('should push follow events to redis', async () => {
+  it('should push follow events to DB', async () => {
+    await createFakeAttestation({
+      username: 'testaccount',
+      ethAddress,
+      type: 'TELEGRAM'
+    })
+
     await request(app)
       .post('/hooks/telegram')
       .send({
@@ -192,18 +318,27 @@ describe('telegram webhooks', () => {
           new_chat_members: [
             {
               id: 'abc',
-              username: 'testaccount'
+              username: 'testaccount',
+              is_bot: false
             }
           ]
         }
       })
       .expect(200)
 
-    const event = JSON.parse(await getAsync('telegram/follow/testaccount'))
-    expect(event.id).to.equal('abc')
+      expect(await checkIfGrowthEventExists({
+        identity: ethAddress,
+        type: 'FollowedOnTelegram'
+      })).to.equal(true)
   })
 
   it('should ignore follow events of bots', async () => {
+    await createFakeAttestation({
+      username: 'test_bot',
+      ethAddress,
+      type: 'TELEGRAM'
+    })
+
     await request(app)
       .post('/hooks/telegram')
       .send({
@@ -219,25 +354,33 @@ describe('telegram webhooks', () => {
       })
       .expect(200)
 
-    const event = JSON.parse(await getAsync('telegram/follow/test_bot'))
-    expect(event).to.null
+    expect(await checkIfGrowthEventExists({
+      identity: ethAddress,
+      type: 'FollowedOnTelegram'
+    })).to.equal(false)
   })
 
-  it('should use `id` if `username` is not available', async () => {
+  it('should not push events if no attestation found', async () => {
     await request(app)
       .post('/hooks/telegram')
       .send({
         message: {
           new_chat_members: [
             {
-              id: 'abc'
+              id: 'abc',
+              username: 'unknown_user',
+              is_bot: false
             }
           ]
         }
       })
       .expect(200)
 
-    const event = JSON.parse(await getAsync('telegram/follow/abc'))
-    expect(event.id).to.equal('abc')
+    await sleep(500)
+
+    expect(await checkIfGrowthEventExists({
+      identity: ethAddress,
+      type: 'FollowedOnTelegram'
+    })).to.equal(false)
   })
 })

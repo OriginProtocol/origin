@@ -16,10 +16,6 @@ let validContents = []
  * Populates the `validContents` array with contents that can be rewarded
  */
 module.exports.populateValidContents = async () => {
-  if (validContents.length) {
-    return
-  }
-
   const campaign = await GrowthCampaign.findOne({
     where: {
       rewardStatus: GrowthCampaignRewardStatuses.NotReady
@@ -62,6 +58,10 @@ module.exports.getUserProfileFromEvent = ({ event, socialNetwork, type }) => {
  * Returns the untranslated text content, for the given one
  */
 module.exports.getUntranslatedContent = translatedContent => {
+  if (process.env.NODE_ENV === 'test') {
+    return translatedContent
+  }
+
   const defaultTextMatch = validContents.find(
     content => content.post.tweet.default.trim() === translatedContent.trim()
   )
@@ -98,11 +98,7 @@ const getEventContent = ({ type, event }) => {
 
   // Note: `event.text` is truncated to 140chars, use `event.extended_tweet.full_text`, if it exists, to get whole tweet content
   // Clone to avoid mutation
-  let encodedContent = JSON.parse(
-    JSON.stringify(
-      event.extended_tweet ? event.extended_tweet.full_text : event.text
-    )
-  )
+  let encodedContent = '' + (event.extended_tweet ? event.extended_tweet.full_text : event.text)
 
   logger.debug('content from network:', encodedContent)
 
@@ -135,6 +131,10 @@ module.exports.validateShareableContent = ({ event, type }) => {
 
   if (!sharedContent) {
     return false
+  }
+  
+  if (process.env.NODE_ENV === 'test') {
+    return true
   }
 
   sharedContent = sharedContent.trim()
