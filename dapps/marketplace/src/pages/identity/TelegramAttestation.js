@@ -17,15 +17,23 @@ import PublishedInfoBox from 'components/_PublishedInfoBox'
 import GenerateTelegramCodeMutation from 'mutations/GenerateTelegramCode'
 import CheckTelegramStatusQuery from 'queries/CheckTelegramStatus'
 
-const TelegramAttestationStatusQuery = ({ identity, onComplete, onError, children }) => {
-  const { data, error, networkStatus, refetch } = useQuery(CheckTelegramStatusQuery, {
-    variables: {
-      identity
-    },
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'network-only',
-    skip: !identity
-  })
+const TelegramAttestationStatusQuery = ({
+  identity,
+  onComplete,
+  onError,
+  children
+}) => {
+  const { data, error, networkStatus, refetch } = useQuery(
+    CheckTelegramStatusQuery,
+    {
+      variables: {
+        identity
+      },
+      notifyOnNetworkStatusChange: true,
+      fetchPolicy: 'network-only',
+      skip: !identity
+    }
+  )
 
   useEffect(() => {
     console.error('error', error)
@@ -191,7 +199,9 @@ class TelegramAttestation extends Component {
             <button
               className="btn btn-link"
               type="button"
-              onClick={() => this.setState({ shouldClose: true, openedLink: false })}
+              onClick={() =>
+                this.setState({ shouldClose: true, openedLink: false })
+              }
               children={fbt('Cancel', 'Cancel')}
             />
           )}
