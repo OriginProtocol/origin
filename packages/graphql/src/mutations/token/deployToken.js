@@ -3,29 +3,29 @@ import StandardToken from '@origin/contracts/build/contracts/TestToken'
 import contracts from '../../contracts'
 import txHelper, { checkMetaMask } from '../_txHelper'
 
-async function deployToken(_, args) {
+async function deployToken(_, { type, name, decimals, supply, symbol, from }) {
   const web3 = contracts.web3Exec
-  await checkMetaMask(web3.eth.defaultAccount)
-  const supply = web3.utils.toWei(args.supply, 'ether')
+  await checkMetaMask(from)
+  const supplyWei = web3.utils.toWei(supply, 'ether')
   let tx, Contract
 
-  if (args.type === 'Standard') {
+  if (type === 'Standard') {
     Contract = new web3.eth.Contract(StandardToken.abi)
     tx = Contract.deploy({
       data: StandardToken.bytecode,
-      arguments: [args.name, args.symbol, args.decimals, supply]
+      arguments: [name, symbol, decimals, supplyWei]
     })
   } else {
     Contract = new web3.eth.Contract(OriginToken.abi)
     tx = Contract.deploy({
       data: OriginToken.bytecode,
-      arguments: [supply]
+      arguments: [supplyWei]
     })
   }
 
   return txHelper({
     tx,
-    from: args.from,
+    from: from,
     gas: 4612388,
     mutation: 'deployToken',
     onReceipt: receipt => {
@@ -36,12 +36,12 @@ async function deployToken(_, args) {
         /* Ignore */
       }
       const tokenDef = {
-        type: args.type,
+        type: type,
         id: receipt.contractAddress,
-        name: args.name,
-        symbol: args.symbol,
-        decimals: args.decimals,
-        supply
+        name: name,
+        symbol: symbol,
+        decimals: decimals,
+        supplyWei
       }
       tokens.push(tokenDef)
       if (typeof window !== 'undefined') {
@@ -56,9 +56,9 @@ async function deployToken(_, args) {
       })
       contracts[receipt.contractAddress] = Contract
 
-      if (args.type === 'OriginToken') {
+      if (type === 'OriginToken') {
         if (typeof window !== 'undefined') {
-          window.localStorage[`${args.symbol}Contract`] =
+          window.localStorage[`${symbol}Contract`] =
             receipt.contractAddress
         }
         contracts.ogn = Contract
