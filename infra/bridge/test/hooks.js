@@ -41,27 +41,29 @@ const createFakeAttestation = async ({
   })
 }
 
-const checkIfGrowthEventExists = async ({
-  contentHash,
-  identity,
-  type
-}) => {
+const checkIfGrowthEventExists = async ({ contentHash, identity, type }) => {
   let data
   if (contentHash) {
-    data = await sequelize.query(`SELECT * FROM growth_event WHERE eth_address=:ethAddress AND type=:type AND status='Logged' AND custom_id=:customId`, {
-      replacements: {
-        type,
-        ethAddress: identity,
-        customId: contentHash
+    data = await sequelize.query(
+      `SELECT * FROM growth_event WHERE eth_address=:ethAddress AND type=:type AND status='Logged' AND custom_id=:customId`,
+      {
+        replacements: {
+          type,
+          ethAddress: identity,
+          customId: contentHash
+        }
       }
-    })
+    )
   } else {
-    data = await sequelize.query(`SELECT * FROM growth_event WHERE eth_address=:ethAddress AND type=:type AND status='Logged'`, {
-      replacements: {
-        type,
-        ethAddress: identity
+    data = await sequelize.query(
+      `SELECT * FROM growth_event WHERE eth_address=:ethAddress AND type=:type AND status='Logged'`,
+      {
+        replacements: {
+          type,
+          ethAddress: identity
+        }
       }
-    })
+    )
   }
 
   console.log(data[0])
@@ -128,10 +130,12 @@ describe('twitter webhooks', () => {
 
     await sleep(500)
 
-    expect(await checkIfGrowthEventExists({
-      identity: ethAddress,
-      type: 'FollowedOnTwitter'
-    })).to.equal(true)
+    expect(
+      await checkIfGrowthEventExists({
+        identity: ethAddress,
+        type: 'FollowedOnTwitter'
+      })
+    ).to.equal(true)
   })
 
   it('should push mention events to redis', async () => {
@@ -165,12 +169,14 @@ describe('twitter webhooks', () => {
       })
       .expect(200)
 
-      await sleep(500)
+    await sleep(500)
 
-      expect(await checkIfGrowthEventExists({
+    expect(
+      await checkIfGrowthEventExists({
         identity: ethAddress,
         type: 'SharedOnTwitter'
-      })).to.equal(true)
+      })
+    ).to.equal(true)
   })
 
   it('should not push events if no attestation found', async () => {
@@ -200,10 +206,12 @@ describe('twitter webhooks', () => {
 
     await sleep(500)
 
-    expect(await checkIfGrowthEventExists({
-      identity: ethAddress,
-      type: 'FollowedOnTwitter'
-    })).to.equal(false)
+    expect(
+      await checkIfGrowthEventExists({
+        identity: ethAddress,
+        type: 'FollowedOnTwitter'
+      })
+    ).to.equal(false)
   })
 
   it('should not push retweets/favorites/own tweet events to DB', async () => {
@@ -263,10 +271,12 @@ describe('twitter webhooks', () => {
       })
       .expect(200)
 
-    expect(await checkIfGrowthEventExists({
-      identity: ethAddress,
-      type: 'SharedOnTwitter'
-    })).to.equal(false)
+    expect(
+      await checkIfGrowthEventExists({
+        identity: ethAddress,
+        type: 'SharedOnTwitter'
+      })
+    ).to.equal(false)
   })
 
   it('should fail on invalid signature', async () => {
@@ -294,7 +304,6 @@ describe('twitter webhooks', () => {
 })
 
 describe('telegram webhooks', () => {
-
   beforeEach(async () => {
     await sequelize.query('DELETE from growth_event')
 
@@ -326,10 +335,12 @@ describe('telegram webhooks', () => {
       })
       .expect(200)
 
-      expect(await checkIfGrowthEventExists({
+    expect(
+      await checkIfGrowthEventExists({
         identity: ethAddress,
         type: 'FollowedOnTelegram'
-      })).to.equal(true)
+      })
+    ).to.equal(true)
   })
 
   it('should ignore follow events of bots', async () => {
@@ -354,10 +365,12 @@ describe('telegram webhooks', () => {
       })
       .expect(200)
 
-    expect(await checkIfGrowthEventExists({
-      identity: ethAddress,
-      type: 'FollowedOnTelegram'
-    })).to.equal(false)
+    expect(
+      await checkIfGrowthEventExists({
+        identity: ethAddress,
+        type: 'FollowedOnTelegram'
+      })
+    ).to.equal(false)
   })
 
   it('should not push events if no attestation found', async () => {
@@ -378,9 +391,11 @@ describe('telegram webhooks', () => {
 
     await sleep(500)
 
-    expect(await checkIfGrowthEventExists({
-      identity: ethAddress,
-      type: 'FollowedOnTelegram'
-    })).to.equal(false)
+    expect(
+      await checkIfGrowthEventExists({
+        identity: ethAddress,
+        type: 'FollowedOnTelegram'
+      })
+    ).to.equal(false)
   })
 })
