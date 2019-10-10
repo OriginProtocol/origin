@@ -58,8 +58,7 @@ async function deployToken(_, { type, name, decimals, supply, symbol, from }) {
 
       if (type === 'OriginToken') {
         if (typeof window !== 'undefined') {
-          window.localStorage[`${symbol}Contract`] =
-            receipt.contractAddress
+          window.localStorage[`${symbol}Contract`] = receipt.contractAddress
         }
         contracts.ogn = Contract
         contracts.ognExec = Contract
