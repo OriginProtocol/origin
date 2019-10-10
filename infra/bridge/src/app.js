@@ -7,6 +7,7 @@ const session = require('express-session')
 const bodyParser = require('body-parser')
 
 const { startExchangeRatePolling } = require('./utils/exchange-rate')
+const { populateValidContents } = require('./utils/webhook-helpers')
 
 const db = require('./models')
 // Initalize sequelize with session store
@@ -47,6 +48,8 @@ app.listen(5000, () => {
   console.log('Origin-bridge listening on port 5000...')
 
   startExchangeRatePolling()
+
+  populateValidContents()
 })
 
 module.exports = app

@@ -5,8 +5,6 @@ const {
   GrowthCampaignRewardStatuses
 } = require('@origin/growth-campaign/src/enums')
 
-const EventValidators = require('../utils/event-validators')
-
 const { decodeHTML } = require('./index')
 
 const logger = require('../logger')
@@ -61,21 +59,6 @@ module.exports.getUserProfileFromEvent = ({ event, socialNetwork, type }) => {
 }
 
 /**
- * @param socialNetwork Could be one of ['TWITTER', 'TELEGRAM']
- * @returns true if event is valid, false otherwise
- */
-module.exports.isEventValid = ({ socialNetwork, ...args }) => {
-  const validator = EventValidators[socialNetwork.toUpperCase()]
-
-  if (!validator) {
-    logger.error(`Error when trying to parse event: ${socialNetwork}`, args)
-    return false
-  }
-
-  return validator(args)
-}
-
-/**
  * Returns the untranslated text content, for the given one
  */
 module.exports.getUntranslatedContent = translatedContent => {
@@ -108,7 +91,7 @@ module.exports.getUntranslatedContent = translatedContent => {
  * Resolves shortened URLs and returns the tweet content for `SHARE` type
  * @returns the content from the event
  */
-module.exports.getEventContent = ({ type, event }) => {
+const getEventContent = ({ type, event }) => {
   if (type !== 'SHARE') {
     return null
   }
@@ -140,6 +123,7 @@ module.exports.getEventContent = ({ type, event }) => {
 
   return decodedContent
 }
+module.exports.getEventContent = getEventContent
 
 /**
  * Checks if the event is of content that can be rewarded

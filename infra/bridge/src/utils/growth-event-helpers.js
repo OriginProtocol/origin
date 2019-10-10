@@ -7,8 +7,9 @@ const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
 
 const db = require('../models/index')
 
+const EventValidators = require('./event-validators')
+
 const {
-  isEventValid,
   getEventContent,
   getUserProfileFromEvent,
   hashContent,
@@ -23,6 +24,21 @@ const PromotionEventToGrowthEvent = {
   TELEGRAM: {
     FOLLOW: GrowthEventTypes.FollowedOnTelegram
   }
+}
+
+/**
+ * @param socialNetwork Could be one of ['TWITTER', 'TELEGRAM']
+ * @returns true if event is valid, false otherwise
+ */
+const isEventValid = ({ socialNetwork, ...args }) => {
+  const validator = EventValidators[socialNetwork.toUpperCase()]
+
+  if (!validator) {
+    logger.error(`Error when trying to parse event: ${socialNetwork}`, args)
+    return false
+  }
+
+  return validator(args)
 }
 
 /**

@@ -3,21 +3,18 @@
 const logger = require('../logger')
 
 const {
-  validateShareableContent,
-  populateValidContents
+  validateShareableContent
 } = require('./webhook-helpers')
 
 /**
  * Returns true if event is valid, false otherwise
  */
-async function validateTwitterEvent({ type, event }) {
+function validateTwitterEvent({ type, event }) {
   if (type === 'FOLLOW') {
     return true
   }
 
   if (type === 'SHARE') {
-    await populateValidContents()
-
     return validateShareableContent({ event, type })
   }
 
