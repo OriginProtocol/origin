@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react'
-import { Mutation, useQuery } from 'react-apollo'
+import { Mutation, useQuery, useMutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
 import { withRouter } from 'react-router-dom'
@@ -17,15 +17,14 @@ import PublishedInfoBox from 'components/_PublishedInfoBox'
 import GenerateTelegramCodeMutation from 'mutations/GenerateTelegramCode'
 import CheckTelegramStatusQuery from 'queries/CheckTelegramStatus'
 
-const TelegramStatusPoller = ({ identity, onComplete, onError, children }) => {
-  const { data, error } = useQuery(CheckTelegramStatusQuery, {
+const TelegramAttestationStatusQuery = ({ identity, onComplete, onError, children }) => {
+  const { data, error, networkStatus, refetch } = useQuery(CheckTelegramStatusQuery, {
     variables: {
       identity
     },
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'network-only',
-    skip: !identity,
-    pollInterval: 1000
+    skip: !identity
   })
 
   useEffect(() => {
@@ -47,7 +46,15 @@ const TelegramStatusPoller = ({ identity, onComplete, onError, children }) => {
     }
   }, [data, verified, response])
 
-  return children
+  const isLoading = networkStatus === 1
+  return (
+    <button
+      className="btn btn-primary"
+      disabled={isLoading}
+      onClick={refetch}
+      children={isLoading ? <fbt desc="Loading...">Loading...</fbt> : children}
+    />
+  )
 }
 
 class TelegramAttestation extends Component {
@@ -157,7 +164,29 @@ class TelegramAttestation extends Component {
               }
             />
           )}
-          {openedLink && this.renderStatus()}
+          {openedLink && (
+            <TelegramAttestationStatusQuery
+              identity={this.props.wallet}
+              onComplete={data => {
+                this.setState({
+                  data,
+                  loading: false,
+                  completed: true,
+                  shouldClose: true,
+                  openedLink: false
+                })
+              }}
+              onError={error => {
+                this.setState({
+                  error,
+                  loading: false,
+                  data: null,
+                  openedLink: false
+                })
+              }}
+              children={<fbt desc="Verify">Verify</fbt>}
+            />
+          )}
           {!isMobile && (
             <button
               className="btn btn-link"
@@ -211,37 +240,6 @@ class TelegramAttestation extends Component {
           return <AutoMutate mutation={runMutation} />
         }}
       </Mutation>
-    )
-  }
-
-  renderStatus() {
-    return (
-      <TelegramStatusPoller
-        identity={this.props.wallet}
-        onComplete={data => {
-          this.setState({
-            data,
-            loading: false,
-            completed: true,
-            shouldClose: true,
-            openedLink: false
-          })
-        }}
-        onError={error => {
-          this.setState({
-            error,
-            loading: false,
-            data: null,
-            openedLink: false
-          })
-        }}
-      >
-        <button
-          className="btn btn-primary"
-          disabled={true}
-          children={<fbt desc="Loading...">Loading...</fbt>}
-        />
-      </TelegramStatusPoller>
     )
   }
 }
