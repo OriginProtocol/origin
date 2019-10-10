@@ -22,10 +22,11 @@ import Store from 'utils/store'
 const store = Store('sessionStorage')
 
 function initialState(props) {
+  const isOldListing = props.listing && props.listing.id
   // If a listing is passed in (as when editing) use that, otherwise
   // fall back to anything in `store` (an unfinished listing creation)
   const existingListing =
-    (props.listing && props.listing.id
+    (isOldListing
       ? store.get(`edit-listing-${props.listing.id}`, props.listing)
       : store.get('create-listing')) || {}
 
@@ -45,7 +46,7 @@ function initialState(props) {
     quantity: '1',
     price: '',
     currency: 'fiat-USD',
-    acceptedTokens: ['token-DAI'],
+    acceptedTokens: isOldListing ? ['token-ETH', 'token-DAI', 'token-OGN'] : [],
 
     // Fractional fields:
     timeZone: '',
@@ -139,20 +140,11 @@ const CreateListing = props => {
           render={() => <ListingCreated {...cmpProps} />}
         />
         <Route
-          path="/listing/:listingId/edit/:step"
+          path="/listing/:listingId/edit/:step?"
           render={({ match }) => (
             <ListingTypeComponent
               linkPrefix={`/listing/${match.params.listingId}/edit/details`}
               refetch={props.refetch}
-              {...cmpProps}
-            />
-          )}
-        />
-        <Route
-          path="/listing/:listingId/edit"
-          render={({ match }) => (
-            <ChooseListingType
-              next={`/listing/${match.params.listingId}/edit/details`}
               {...cmpProps}
             />
           )}

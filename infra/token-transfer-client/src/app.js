@@ -1,30 +1,34 @@
 import React from 'react'
 import { Switch } from 'react-router-dom'
 
-import PrivateRoute from './components/PrivateRoute'
-import PublicRoute from './components/PublicRoute'
+import PrivateRoute from '@/components/PrivateRoute'
+import PublicRoute from '@/components/PublicRoute'
 
 // Public routes
-import Welcome from './components/pages/Welcome'
-import Phone from './components/pages/Phone'
-import Terms from './components/pages/Terms'
-import Login from './components/pages/Login'
-import CheckEmail from './components/pages/CheckEmail'
-import HandleLogin from './components/pages/HandleLogin'
-import OtpExplain from './components/pages/OtpExplain'
-import OtpSetup from './components/pages/OtpSetup'
-import Otp from './components/pages/Otp'
+import Welcome from '@/components/pages/Welcome'
+import RevisedSchedule from '@/components/pages/RevisedSchedule'
+import RevisedTerms from '@/components/pages/RevisedTerms'
+import Phone from '@/components/pages/Phone'
+import Terms from '@/components/pages/Terms'
+import Login from '@/components/pages/Login'
+import CheckEmail from '@/components/pages/CheckEmail'
+import HandleLogin from '@/components/pages/HandleLogin'
+import OtpExplain from '@/components/pages/OtpExplain'
+import OtpSetup from '@/components/pages/OtpSetup'
+import Otp from '@/components/pages/Otp'
 // Private routes
-import Dashboard from './components/pages/Dashboard'
-import News from './components/pages/News'
-import WithdrawalDetail from './components/pages/WithdrawalDetail'
-import WithdrawalHistory from './components/pages/WithdrawalHistory'
-import Security from './components/pages/Security'
+import Dashboard from '@/components/pages/Dashboard'
+import News from '@/components/pages/News'
+import WithdrawalDetail from '@/components/pages/WithdrawalDetail'
+import WithdrawalHistory from '@/components/pages/WithdrawalHistory'
+import Security from '@/components/pages/Security'
 
 const App = () => (
   <Switch>
     <PublicRoute exact path="/" component={Login} />
     <PublicRoute exact path="/welcome/:token" component={Welcome} />
+    <PublicRoute exact path="/revised_schedule" component={RevisedSchedule} />
+    <PublicRoute exact path="/revised_terms" component={RevisedTerms} />
     <PublicRoute exact path="/phone" component={Phone} />
     <PublicRoute exact path="/terms" component={Terms} />
     <PublicRoute path="/check_email" component={CheckEmail} />

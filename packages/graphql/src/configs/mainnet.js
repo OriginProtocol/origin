@@ -47,6 +47,8 @@ export default {
     'QmRhtc4tksc9BAwjzw2GJ1D9Hvf1KXyYcEtoEUSeqBjXCX',
     'QmS1ZX41WcG4egabpC3BThC5WNUaRvJYm3urBuCXsxgtbb'
   ],
+  V01_Marketplace: addresses.Marketplace_V01,
+  V01_Marketplace_Epoch: addresses.MarketplaceEpoch_V01,
   tokens: [
     {
       id: addresses.DAI,

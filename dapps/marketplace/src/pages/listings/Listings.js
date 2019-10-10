@@ -201,7 +201,7 @@ const Listings = ({ isMobile, creatorConfig, walletType, ...props }) => {
         )}
         {hasNextPage && (
           <button
-            className="btn btn-outline-primary btn-rounded mt-3"
+            className="btn btn-outline-primary btn-rounded mt-3 more"
             onClick={() => {
               if (!loading) {
                 nextPage(fetchMore, { ...vars, after })
@@ -254,4 +254,7 @@ require('react-styl')(`
         margin-bottom: 1.5rem
         &.active
           margin-bottom: 0
+      > .more
+        display: block
+        margin: 1rem auto 2rem auto
 `)

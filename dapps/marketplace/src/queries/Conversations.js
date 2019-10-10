@@ -1,20 +1,15 @@
 import gql from 'graphql-tag'
+import fragments from './Fragments'
 
 export default gql`
-  query Conversations {
+  query Conversations($limit: Int, $offset: Int) {
     messaging(id: "defaultAccount") {
       id
       enabled
-      conversations {
+      conversations(limit: $limit, offset: $offset) {
         id
         timestamp
         totalUnread
-        messages {
-          status
-          address
-          content
-          timestamp
-        }
         lastMessage {
           address
           media {
@@ -23,8 +18,21 @@ export default gql`
           }
           content
           timestamp
+          type
+          offer {
+            ...basicOfferFields
+            listing {
+              ...basicListingFields
+            }
+          }
+          eventData {
+            offerID
+            eventType
+          }
         }
       }
     }
   }
+  ${fragments.Listing.basic}
+  ${fragments.Offer.basic}
 `

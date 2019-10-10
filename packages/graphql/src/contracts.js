@@ -263,7 +263,8 @@ export function setNetwork(net, customConfig) {
     context.messaging = OriginMessaging({
       ...MessagingConfig,
       web3,
-      mobileBridge: context.mobileBridge
+      mobileBridge: context.mobileBridge,
+      pubsub: pubsub
     })
   }
 
@@ -292,7 +293,7 @@ export function setNetwork(net, customConfig) {
 
   setProxyContracts(config)
 
-  if (config.performanceMode && context.config.graphql) {
+  if (config.performanceMode && context.config.graphql && net !== 'test') {
     queryForBlocks()
   } else if (config.providerWS) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
@@ -498,11 +499,11 @@ export function toggleMetaMask(enabled) {
 
 export function setMarketplace(address, epoch, version = '000') {
   if (!address) return
+  address = web3.utils.toChecksumAddress(address)
   const contract = new web3.eth.Contract(MarketplaceContract.abi, address)
 
   try {
     patchWeb3Contract(contract, epoch, {
-      ...context.config,
       useLatestFromChain: false,
       ipfsEventCache:
         context.config[`V${version.slice(1)}_Marketplace_EventCache`],
@@ -512,7 +513,13 @@ export function setMarketplace(address, epoch, version = '000') {
         typeof address === 'undefined'
           ? 'Marketplace_'
           : `${address.slice(2, 8)}_`,
-      platform: typeof window === 'undefined' ? 'memory' : 'browser'
+      platform:
+        typeof window === 'undefined'
+          ? process.env.EVENTCACHE_ENABLE_PG
+            ? 'postgresql'
+            : 'memory'
+          : 'browser',
+      ...context.config
     })
   } catch (err) {
     console.error('Unable to initialize EventCache for Marketplace')
@@ -557,6 +564,7 @@ export function setMarketplace(address, epoch, version = '000') {
 
 export function setIdentityEvents(address, epoch) {
   if (!address) return
+  address = web3.utils.toChecksumAddress(address)
   context.identityEvents = new web3.eth.Contract(
     IdentityEventsContract.abi,
     address
@@ -564,7 +572,6 @@ export function setIdentityEvents(address, epoch) {
 
   try {
     patchWeb3Contract(context.identityEvents, epoch, {
-      ...context.config,
       ipfsEventCache: context.config.IdentityEvents_EventCache,
       cacheMaxBlock: context.config.IdentityEvents_EventCacheMaxBlock,
       useLatestFromChain: false,
@@ -572,8 +579,14 @@ export function setIdentityEvents(address, epoch) {
         typeof address === 'undefined'
           ? 'IdentityEvents_'
           : `${address.slice(2, 8)}_`,
-      platform: typeof window === 'undefined' ? 'memory' : 'browser',
-      batchSize: 2500
+      platform:
+        typeof window === 'undefined'
+          ? process.env.EVENTCACHE_ENABLE_PG
+            ? 'postgresql'
+            : 'memory'
+          : 'browser',
+      batchSize: 2500,
+      ...context.config
     })
   } catch (err) {
     console.error('Unable to initialize EventCache for IdentityEvents')
@@ -606,7 +619,6 @@ export function setProxyContracts(config) {
   // Add an event cache to ProxyFactory.
   try {
     patchWeb3Contract(context.ProxyFactory, config.ProxyFactory_Epoch, {
-      ...context.config,
       ipfsEventCache: null, // TODO add IPFS cache after Meta-txn launch, once we have a non trivial number of events.
       cacheMaxBlock: null,
       useLatestFromChain: false,
@@ -614,8 +626,14 @@ export function setProxyContracts(config) {
         typeof config.ProxyFactory === 'undefined'
           ? 'ProxyFactory_'
           : `${config.ProxyFactory.slice(2, 8)}_`,
-      platform: typeof window === 'undefined' ? 'memory' : 'browser',
-      batchSize: 2500
+      platform:
+        typeof window === 'undefined'
+          ? process.env.EVENTCACHE_ENABLE_PG
+            ? 'postgresql'
+            : 'memory'
+          : 'browser',
+      batchSize: 2500,
+      ...context.config
     })
   } catch (err) {
     console.error('Unable to initialize EventCache for ProxyFactory')
@@ -627,6 +645,8 @@ export function shutdown() {
   if (web3.currentProvider.stop) web3.currentProvider.stop()
   if (wsSub) {
     wsSub.unsubscribe()
+  }
+  if (web3WS && web3WS.currentProvider) {
     web3WS.currentProvider.connection.close()
   }
   clearInterval(blockInterval)

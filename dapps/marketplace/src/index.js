@@ -2,7 +2,20 @@
 const appHash = process.env.GIT_COMMIT_HASH || 'marketplace'
 const ognNetwork = localStorage.ognNetwork
 if (localStorage.appHash !== appHash) {
+  /* Here we add exceptions we don't want to clear when app hash changes:
+   *  - growth_auth_token: because it logs users out of rewards campaigns
+   *  - screenConsole: because we want this setting of enabling html console
+   *    persist across builds.
+   */
+  let exceptions = ['growth_auth_token', 'screenConsole']
+  exceptions = exceptions
+    .map(key => ({ key, value: localStorage.getItem(key) }))
+    .filter(localStorageEntry => localStorageEntry.value !== null)
   localStorage.clear()
+  exceptions.forEach(localStorageEntry =>
+    localStorage.setItem(localStorageEntry.key, localStorageEntry.value)
+  )
+
   sessionStorage.clear()
   localStorage.appHash = appHash
   localStorage.ognNetwork = ognNetwork

@@ -98,7 +98,8 @@ const config = {
   // Default continue block
   defaultContinueBlock: parseInt(process.env.CONTINUE_BLOCK || 0),
   enableMetrics:
-    args['--enable-metrics'] || process.env.ENABLE_METRICS === 'true'
+    args['--enable-metrics'] || process.env.ENABLE_METRICS === 'true',
+  messagingEvents: args['--messaging-events'] || process.env.MESSAGING_EVENTS
 }
 
 logger.info('Starting with configuration:')

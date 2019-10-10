@@ -38,4 +38,12 @@ export function initSentry() {
   })
 }
 
+export function captureWithScope(error, fingerprint) {
+  if (typeof fingerprint === 'string') fingerprint = [fingerprint]
+  Sentry.withScope(function(scope) {
+    scope.setFingerprint(fingerprint)
+    Sentry.captureException(error)
+  })
+}
+
 export default Sentry

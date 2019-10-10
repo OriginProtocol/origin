@@ -21,7 +21,7 @@
     "start": "per-env",
     "start:development": "nodemon src/app.js",
     "start:production": "node src/app.js",
-    "test": "mocha --timeout 10000 --exit"
+    "test": "NODE_ENV=test mocha --timeout 10000 --exit"
   },
   "author": "Origin Protocol Inc",
   "license": "MIT",
@@ -48,9 +48,9 @@
   },
   "devDependencies": {
     "chai": "4.2.0",
-    "eslint": "6.3.0",
-    "mocha": "6.2.0",
-    "nodemon": "1.19.2"
+    "eslint": "6.5.1",
+    "mocha": "6.2.1",
+    "nodemon": "1.19.3"
   },
   "prettier": {
     "semi": false,

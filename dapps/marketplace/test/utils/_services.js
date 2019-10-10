@@ -10,7 +10,7 @@ import services from '@origin/services'
 
 const headless = process.env.HEADLESS === 'false' ? false : true
 
-export default async function() {
+export default async function srv() {
   return await services({
     ganache: { inMemory: true },
     ipfs: true,
@@ -19,10 +19,11 @@ export default async function() {
     relayer: true,
     graphqlServer: true,
     contractsFile: 'tests',
+    quiet: true,
     extras: async () => {
       const webpackProcess = spawn(
         './node_modules/.bin/webpack-dev-server',
-        ['--port=8083', '--host=0.0.0.0', '--no-info'],
+        ['--port=8083', '--host=0.0.0.0', '--no-info', '--no-live-reload'],
         {
           stdio: 'inherit',
           env: process.env
@@ -38,7 +39,11 @@ export default async function() {
           width: 1280,
           height: 1024
         },
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          process.env.DISABLE_GPU === 'false' ? '' : '--disable-gpu'
+        ]
         // dumpio: true
         // slowMo: headless ? undefined : 40
       })
@@ -47,16 +52,16 @@ export default async function() {
       const page = pages[0]
 
       await page.goto('http://localhost:8083')
-      await page.evaluate(
-        () =>
-          new Promise(resolve => {
-            window.transactionPoll = 100
-            // window.localStorage.locale = 'zh_CN'
-            resolve()
-          })
-      )
+      await page.evaluate(() => {
+        window.transactionPoll = 100
+        // window.localStorage.locale = 'zh_CN'
+      })
 
       return { page, browser, webpackProcess }
     }
   })
+}
+
+export async function getPage() {
+  return (await srv()).extrasResult.page
 }

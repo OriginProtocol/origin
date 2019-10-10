@@ -10,6 +10,7 @@ export default gql`
     $fractionalData: FractionalOfferInput
     $shippingAddress: ShippingAddressInput
     $autoswap: Boolean
+    $commission: String
   ) {
     makeOffer(
       listingID: $listingID
@@ -20,6 +21,7 @@ export default gql`
       fractionalData: $fractionalData
       shippingAddress: $shippingAddress
       autoswap: $autoswap
+      commission: $commission
     ) {
       id
     }

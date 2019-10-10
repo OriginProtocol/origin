@@ -24,6 +24,7 @@
     "@origin/ip2geo": "^0.1.0",
     "@origin/token": "^0.1.0",
     "@sendgrid/mail": "^6.4.0",
+    "@sentry/node": "5.7.0",
     "async-lock": "^1.2.2",
     "babel-plugin-rewire": "^1.2.0",
     "bignumber.js": "9.0.0",
@@ -61,17 +62,17 @@
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
-    "@babel/core": "7.6.0",
+    "@babel/core": "7.6.3",
     "@babel/polyfill": "7.6.0",
-    "@babel/preset-env": "7.6.0",
-    "@babel/register": "7.6.0",
+    "@babel/preset-env": "7.6.3",
+    "@babel/register": "7.6.2",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
     "chai-bignumber": "3.0.0",
     "chai-moment": "0.1.0",
-    "mocha": "6.2.0",
-    "nodemon": "1.19.2",
-    "react-scripts": "3.1.1"
+    "mocha": "6.2.1",
+    "nodemon": "1.19.3",
+    "react-scripts": "3.2.0"
   },
   "prettier": {
     "semi": false,

@@ -5,6 +5,22 @@ const CACHE_TIME = 15000
 const GAS_STATION_URL = 'https://ethgasstation.info/json/ethgasAPI.json'
 const GAS_PRICE_KEY = process.env.GAS_PRICE_KEY || 'average' // 'safeLow'
 
+/**
+ * Wraps a fetch with a timeout
+ *
+ * @param url {string} URL to fetch
+ * @param ms {number} timeout in milliseconds
+ * @returns {object} fetch response object
+ */
+function timeoutFetch(url, ms = 10000) {
+  return Promise.race([
+    fetch(url),
+    new Promise((resolve, reject) => {
+      setTimeout(() => reject(new Error('timeout')), ms)
+    })
+  ])
+}
+
 class EthGasStationProvider extends SubProvider {
   constructor() {
     super()
@@ -16,7 +32,7 @@ class EthGasStationProvider extends SubProvider {
   }
 
   async fetchData() {
-    const res = await fetch(GAS_STATION_URL)
+    const res = await timeoutFetch(GAS_STATION_URL)
     if (res.status !== 200) {
       throw new Error(`Fetch returned code ${res.status}`)
     }
@@ -33,9 +49,8 @@ class EthGasStationProvider extends SubProvider {
 
     if (method === 'eth_gasPrice') {
       const now = new Date()
-
       if (this.cache.time && now - this.cache.time < CACHE_TIME) {
-        return this.cache.data
+        return end(null, this.cache.data)
       }
 
       return this.fetchData()

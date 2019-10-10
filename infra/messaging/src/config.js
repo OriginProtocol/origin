@@ -23,7 +23,6 @@ module.exports = Object.freeze({
 
   ORBIT_DB_PATH: process.env.ORBIT_DB_PATH || './odb',
 
-  RPC_SERVER: process.env.RPC_SERVER,
   SNAPSHOT_BATCH_SIZE: process.env.SNAPSHOT_BATCH_SIZE || 150,
   development: {
     use_env_variable: 'DATABASE_URL',
