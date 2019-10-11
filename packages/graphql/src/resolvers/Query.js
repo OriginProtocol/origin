@@ -51,15 +51,16 @@ export default {
     }
   },
   contracts: () => {
-    let contracts = []
+    let _contracts = []
     try {
-      contracts = JSON.parse(window.localStorage.contracts)
+      _contracts = JSON.parse(window.localStorage.contracts)
     } catch (e) {
       /* Ignore  */
     }
-    return contracts
+    return _contracts
   },
   marketplaces: () => {
+    if (!contracts.marketplaces) return null
     return Object.keys(contracts.marketplaces)
       .sort()
       .map(version => ({

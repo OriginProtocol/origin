@@ -104,7 +104,7 @@ const Contracts = () => {
                 <Address address={m.address} />
               </td>
               <td>
-                <Address address={m.owner.id} />
+                <Address address={m.owner ? m.owner.id : 'error'} />
               </td>
               <td>
                 <Button
