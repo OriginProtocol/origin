@@ -107,10 +107,13 @@ class MobileBridge {
 
     // Disable caching subProviders, because they interfere with the provider
     // we're returning.
-    const providersToRemove = ['BlockCacheSubprovider', 'InflightCacheSubprovider']
-    provider._providers = provider
-      ._providers
-      .filter(provider => !providersToRemove.includes(provider.constructor.name))
+    const providersToRemove = [
+      'BlockCacheSubprovider',
+      'InflightCacheSubprovider'
+    ]
+    provider._providers = provider._providers.filter(
+      provider => !providersToRemove.includes(provider.constructor.name)
+    )
     provider._providers.unshift(new EthGasStationProvider())
     provider.isOrigin = true
 
