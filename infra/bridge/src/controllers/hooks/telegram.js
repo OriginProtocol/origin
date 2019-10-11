@@ -11,6 +11,7 @@ const { subscribeToHooks } = require('../../hooks/telegram')
 const { createTelegramAttestation } = require('../../utils/attestation')
 
 const growthEventHelper = require('../../utils/growth-event-helpers')
+const logChat = require('../../utils/log-chat')
 
 /**
  * To register the webhook
@@ -62,6 +63,7 @@ router.post('/', (req, res) => {
       shouldSendReplyMessage = true
     } else {
       // Log these to DB
+      logChat(message)
     }
   }
 
