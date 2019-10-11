@@ -152,11 +152,8 @@ const config = {
       NAMESPACE: process.env.NAMESPACE || 'dev',
       ETH_NETWORK_ID: process.env.ETH_NETWORK_ID || null,
       TELEGRAM_BOT_USERNAME: TELEGRAM_BOT_USERNAME,
-      NODE_ENV: process.env.NODE_ENV || 'development'
-    }),
-    // This is used for event-cache to conditionally leave out Postgres backend
-    new webpack.EnvironmentPlugin({
-      WEBPACK_BUILD: true
+      NODE_ENV: process.env.NODE_ENV || 'development',
+      WEBPACK_BUILD: true // Used by EventCache
     })
   ],
 
