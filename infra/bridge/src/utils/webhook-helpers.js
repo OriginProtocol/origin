@@ -13,6 +13,13 @@ let validContents = []
  * Populates the `validContents` array with contents that can be rewarded
  */
 module.exports.populateValidContents = async () => {
+  if (!process.env.GROWTH_SERVER_URL) {
+    logger.error(
+      'GROWTH_SERVER_URL environmental vairable missing: Coould break social rewards'
+    )
+    return
+  }
+
   const query = `{
     campaign(id:"active") {
       id
@@ -46,7 +53,7 @@ module.exports.populateValidContents = async () => {
       })
       .set({
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        Accept: 'application/json'
       })
 
     if (!response.body.data) {

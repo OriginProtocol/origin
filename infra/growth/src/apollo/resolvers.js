@@ -80,7 +80,6 @@ const resolvers = {
       let campaign
       if (args.id === 'active') {
         campaign = await GrowthCampaign.getActive()
-        
       } else {
         campaign = await GrowthCampaign.get(args.id)
       }
