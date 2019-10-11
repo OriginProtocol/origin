@@ -3,11 +3,9 @@
 const chai = require('chai')
 const expect = chai.expect
 const request = require('supertest')
-const redis = require('redis')
 
 const app = require('../src/app')
 
-const client = redis.createClient()
 const crypto = require('crypto')
 
 const Sequelize = require('sequelize')
@@ -66,7 +64,6 @@ const checkIfGrowthEventExists = async ({ contentHash, identity, type }) => {
     )
   }
 
-  console.log(data[0])
   return data[0].length > 0
 }
 
@@ -74,9 +71,6 @@ describe('twitter webhooks', () => {
   beforeEach(async () => {
     process.env.TWITTER_WEBHOOKS_CONSUMER_SECRET = 'abcdef'
     process.env.TWITTER_ORIGINPROTOCOL_USERNAME = 'OriginProtocol'
-
-    // Clear out redis-mock
-    await new Promise(resolve => client.flushall(resolve))
 
     await sequelize.query('DELETE from growth_event')
 
@@ -138,7 +132,7 @@ describe('twitter webhooks', () => {
     ).to.equal(true)
   })
 
-  it('should push mention events to redis', async () => {
+  it('should push mention events to DB', async () => {
     await createFakeAttestation({
       username: 'someuser',
       ethAddress
@@ -271,6 +265,8 @@ describe('twitter webhooks', () => {
       })
       .expect(200)
 
+    await sleep(500)
+
     expect(
       await checkIfGrowthEventExists({
         identity: ethAddress,
@@ -335,6 +331,8 @@ describe('telegram webhooks', () => {
       })
       .expect(200)
 
+    await sleep(500)
+
     expect(
       await checkIfGrowthEventExists({
         identity: ethAddress,
@@ -364,6 +362,8 @@ describe('telegram webhooks', () => {
         }
       })
       .expect(200)
+
+    await sleep(500)
 
     expect(
       await checkIfGrowthEventExists({

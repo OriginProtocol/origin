@@ -39,6 +39,7 @@ router.post('/', (req, res) => {
   let totalFollowEvents = 0
 
   let shouldSendReplyMessage = false
+  let shouldSendAckMessage = false
 
   const message = req.body.message
 
@@ -63,6 +64,7 @@ router.post('/', (req, res) => {
       shouldSendReplyMessage = true
     } else {
       // Log these to DB
+      shouldSendAckMessage = true
       logChat(message)
     }
   }
@@ -112,14 +114,16 @@ router.post('/', (req, res) => {
     )
   }
 
-  if (shouldSendReplyMessage) {
+  if (shouldSendReplyMessage || shouldSendAckMessage) {
     return res
       .status(200)
       .header('Content-Type', 'application/json')
       .send({
         method: 'sendMessage',
         chat_id: message.chat.id,
-        text: 'Hey there, Get back to the Origin Marketplace app to continue'
+        text: shouldSendReplyMessage
+          ? 'Hey there, Get back to the Origin Marketplace app to continue'
+          : 'Hey there, we have received your message. Our team will reach out to you as soon as possible.'
       })
   }
 
