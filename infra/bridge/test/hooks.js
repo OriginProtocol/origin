@@ -122,7 +122,7 @@ describe('twitter webhooks', () => {
       })
       .expect(200)
 
-    await sleep(500)
+    await sleep(1000)
 
     expect(
       await checkIfGrowthEventExists({
@@ -163,7 +163,7 @@ describe('twitter webhooks', () => {
       })
       .expect(200)
 
-    await sleep(500)
+    await sleep(1000)
 
     expect(
       await checkIfGrowthEventExists({
@@ -198,7 +198,7 @@ describe('twitter webhooks', () => {
       })
       .expect(200)
 
-    await sleep(500)
+    await sleep(1000)
 
     expect(
       await checkIfGrowthEventExists({
@@ -265,7 +265,7 @@ describe('twitter webhooks', () => {
       })
       .expect(200)
 
-    await sleep(500)
+    await sleep(1000)
 
     expect(
       await checkIfGrowthEventExists({
@@ -331,7 +331,7 @@ describe('telegram webhooks', () => {
       })
       .expect(200)
 
-    await sleep(500)
+    await sleep(1000)
 
     expect(
       await checkIfGrowthEventExists({
@@ -363,7 +363,7 @@ describe('telegram webhooks', () => {
       })
       .expect(200)
 
-    await sleep(500)
+    await sleep(1000)
 
     expect(
       await checkIfGrowthEventExists({
@@ -389,7 +389,7 @@ describe('telegram webhooks', () => {
       })
       .expect(200)
 
-    await sleep(500)
+    await sleep(1000)
 
     expect(
       await checkIfGrowthEventExists({

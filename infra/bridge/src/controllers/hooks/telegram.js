@@ -45,25 +45,25 @@ router.post('/', (req, res) => {
 
   if (message.text && !message.from.is_bot && message.chat.type === 'private') {
     // For attestations
-    let payload = /^\/start (.+)$/gi.exec(message.text)
+    let startCmdParam = /^\/start (.+)$/gi.exec(message.text)
 
     if (
-      payload &&
-      payload[1] &&
-      Web3.utils.isAddress(payload[1].toLowerCase())
+      startCmdParam &&
+      startCmdParam[1] &&
+      Web3.utils.isAddress(startCmdParam[1].toLowerCase())
     ) {
-      payload = payload[1]
+      startCmdParam = startCmdParam[1]
 
-      logger.debug(`Pushing attestation message with payload '${payload}'`)
+      logger.debug(`Pushing attestation message for address '${startCmdParam}'`)
 
       createTelegramAttestation({
-        identity: payload,
+        identity: startCmdParam,
         message
       })
 
       shouldSendReplyMessage = true
     } else {
-      // Log these to DB
+      // Log unexpected private chat messages to DB
       shouldSendAckMessage = true
       logChat(message)
     }
@@ -98,7 +98,7 @@ router.post('/', (req, res) => {
       // So use id only if username is not set
       const username = member.username || member.id
 
-      // Not awaiting this async operation intentionally
+      // TODO: Should batch these transactions
       growthEventHelper({
         type: 'FOLLOW',
         socialNetwork: 'TELEGRAM',

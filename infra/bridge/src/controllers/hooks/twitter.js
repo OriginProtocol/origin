@@ -199,7 +199,7 @@ router.post('/', bodyParser.text({ type: '*/*' }), (req, res) => {
       ) {
         followCount++
 
-        // Not awaiting this async operation intentionally
+        // TODO: Should batch these transactions
         growthEventHelper({
           type: 'FOLLOW',
           socialNetwork: 'TWITTER',
@@ -226,7 +226,7 @@ router.post('/', bodyParser.text({ type: '*/*' }), (req, res) => {
       .forEach(event => {
         mentionCount++
 
-        // Not awaiting this async operation intentionally
+        // TODO: Should batch these transactions
         growthEventHelper({
           type: 'SHARE',
           socialNetwork: 'TWITTER',
