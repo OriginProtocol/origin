@@ -33,7 +33,7 @@
     "per-env": "1.0.2",
     "pg": "7.12.1",
     "rate-limiter-flexible": "1.1.6",
-    "sequelize": "5.19.5",
+    "sequelize": "5.19.6",
     "sequelize-cli": "5.5.1",
     "web3": "1.0.0-beta.34"
   },
