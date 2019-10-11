@@ -316,7 +316,7 @@ require('react-styl')(`
       z-index: 1
       border-radius: 15px
       padding-top: 40px
-      overflow-y: scroll
+      overflow: scroll
       .log
         color: white
       .info
