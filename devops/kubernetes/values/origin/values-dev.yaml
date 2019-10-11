@@ -51,7 +51,7 @@ creatorIssuerIp: '35.233.181.44'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: '3b3bd75'
+cronImageTag: '425bcae'
 
 # origin-admin
 adminImage: origin-admin
