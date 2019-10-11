@@ -29,7 +29,6 @@ COPY ./infra/bridge ./infra/bridge
 COPY ./infra/discovery ./infra/discovery
 COPY ./infra/growth ./infra/growth
 COPY ./infra/growth-event ./infra/growth-event
-COPY ./infra/growth-campaign ./infra/growth-campaign
 COPY ./infra/identity ./infra/identity
 
 RUN yarn install
@@ -38,5 +37,4 @@ RUN yarn install
 CMD eval $(envkey-source) && \
 	npm run migrate --prefix infra/growth && \
 	npm run migrate --prefix infra/growth-event && \
-	npm run migrate --prefix infra/growth-campaign && \
 	npm run start --prefix infra/growth

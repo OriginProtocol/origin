@@ -30,6 +30,5 @@ COPY ./infra/growth/package.json ./infra/growth/
 COPY ./infra/identity/package.json ./infra/identity/
 COPY ./infra/bridge/package.json ./infra/bridge/
 COPY ./infra/growth-event/package.json ./infra/growth-event/
-COPY ./infra/growth-campaign/package.json ./infra/growth-campaign/
 
 RUN yarn install

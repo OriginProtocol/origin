@@ -122,7 +122,6 @@ jobs:
           at: .
       - run: cd infra/identity && yarn migrate
       - run: cd infra/growth-event && yarn migrate
-      - run: cd infra/growth-campaign && yarn migrate
       - run:
           name: Run Bridge Tests
           command: cd infra/bridge && yarn migrate && yarn test
@@ -154,7 +153,6 @@ jobs:
       - run: cd infra/discovery && yarn migrate
       - run: cd infra/growth && yarn migrate
       - run: cd infra/growth-event && yarn migrate
-      - run: cd infra/growth-campaign && yarn migrate
       - run: cd infra/identity && yarn migrate
       - run:
           name: Run Discovery Tests
@@ -167,7 +165,6 @@ jobs:
           at: .
       - run: cd infra/growth && yarn migrate
       - run: cd infra/growth-event && yarn migrate
-      - run: cd infra/growth-campaign && yarn migrate
       - run: cd infra/identity && yarn migrate
       - run: cd infra/discovery && yarn migrate
       - run:
@@ -181,7 +178,6 @@ jobs:
           at: .
       - run: cd infra/growth && yarn migrate
       - run: cd infra/growth-event && yarn migrate
-      - run: cd infra/growth-campaign && yarn migrate
       - run: cd infra/identity && yarn migrate
       - run:
           name: Run Notification Tests

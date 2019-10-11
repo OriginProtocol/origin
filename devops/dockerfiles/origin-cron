@@ -31,7 +31,6 @@ COPY ./infra/bridge ./infra/bridge
 COPY ./infra/cron ./infra/cron
 COPY ./infra/discovery ./infra/discovery
 COPY ./infra/growth ./infra/growth
-COPY ./infra/growth-campaign ./infra/growth-campaign
 COPY ./infra/identity ./infra/identity
 
 RUN yarn install

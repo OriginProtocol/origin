@@ -13,7 +13,6 @@
   "dependencies": {
     "@origin/discovery": "^0.1.0",
     "@origin/graphql": "^0.1.1",
-    "@origin/growth-campaign": "^0.1.0",
     "@origin/growth-event": "^0.1.0",
     "@origin/identity": "^0.1.0",
     "@origin/ip2geo": "^0.1.0",

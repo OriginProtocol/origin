@@ -1,7 +1,6 @@
 'use strict'
 
 const _growthEventModels = require('@origin/growth-event/src/models')
-const _campaignModels = require('@origin/growth-campaign/src/models')
 
 const fs = require('fs')
 const path = require('path')
@@ -45,6 +44,5 @@ db.Sequelize = Sequelize
 
 module.exports = {
   ...db,
-  ..._growthEventModels,
-  ..._campaignModels
+  ..._growthEventModels
 }
