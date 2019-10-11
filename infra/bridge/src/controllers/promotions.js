@@ -26,6 +26,16 @@ const PromotionEventToGrowthEvent = {
   }
 }
 
+/**
+ * Checks and returns the verification status
+ * @param {String} req.query.socialNetwork Can be one of (TWITTER, TELEGRAM)
+ * @param {String} req.query.type Type of promotion activity. Can be one of (SHARE, FOLLOW)
+ * @param {String} req.query.identity The eth address of the user
+ * @param {String} req.query.identityProxy The proxy address of the user, if any
+ * @param {String} req.query.content The tweet content to check the status of. Only needed for `SHARE` type
+ * @returns {Boolean} result.success - true, if HTTP request is successful.
+ * @returns {Boolean} result.verified - true, if the promotion activity has been verified; false otherwise.
+ */
 router.get('/verify', verifyPromotions, async (req, res) => {
   const { socialNetwork, type, identity, identityProxy, content } = req.query
   const contentHash = content

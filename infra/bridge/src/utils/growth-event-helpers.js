@@ -135,8 +135,6 @@ module.exports = async ({ type, socialNetwork, username, event }) => {
 
     logger.debug(`content hash: ${contentHash}`)
 
-    // TODO: Check if event with same (socialNetwork, contentHash, type) exists
-    // before trying to insert
     const stored = await insertGrowthEvent({
       contentHash,
       identity,

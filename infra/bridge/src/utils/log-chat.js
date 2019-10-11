@@ -5,6 +5,10 @@ const { TelegramChatLog } = require('../models/index')
 
 const logger = require('../logger')
 
+/**
+ * Stores the `message` event to database and sends 
+ * an email to the support email address
+ */
 module.exports = async message => {
   if (!message) {
     return
