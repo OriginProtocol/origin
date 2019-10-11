@@ -1,14 +1,11 @@
 'use strict'
 
-const { GrowthCampaign } = require('@origin/growth-campaign/src/models')
-const {
-  GrowthCampaignRewardStatuses
-} = require('@origin/growth-campaign/src/enums')
-
 const { decodeHTML } = require('./index')
 
 const logger = require('../logger')
 const crypto = require('crypto')
+
+const request = require('superagent')
 
 let validContents = []
 
@@ -16,22 +13,55 @@ let validContents = []
  * Populates the `validContents` array with contents that can be rewarded
  */
 module.exports.populateValidContents = async () => {
-  const campaign = await GrowthCampaign.findOne({
-    where: {
-      rewardStatus: GrowthCampaignRewardStatuses.NotReady
-    },
-    order: [['createdAt', 'ASC']]
-  })
-
-  if (!campaign) {
-    logger.error('No active campaign found')
-    return false
-  }
+  const query = `{
+    campaign(id:"active") {
+      id
+      startDate
+      endDate
+      status
+      actions {
+        type
+        ... on SocialShareAction {
+          content {
+            post {
+              tweet {
+                default
+                translations {
+                  text
+                }
+              }
+            }
+            link
+          }
+        }
+      }
+    }
+  }`
 
   try {
-    const rules = JSON.parse(campaign.rules)
-    const contentIds = Object.keys(rules.content || [])
-    validContents = contentIds.map(contentId => rules.content[contentId])
+    const response = await request
+      .post(process.env.GROWTH_SERVER_URL + '/graphql')
+      .send({
+        query
+      })
+      .set({
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      })
+
+    if (!response.body.data) {
+      throw new Error(response.body)
+    }
+
+    const { campaign } = response.body.data
+
+    if (!campaign) {
+      throw new Error('No active campaign found')
+    }
+
+    validContents = campaign.actions
+      .filter(action => !!action.content)
+      .map(action => action.content)
   } catch (err) {
     logger.error('Failed to populate valid contents', err)
   }
