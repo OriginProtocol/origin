@@ -20,6 +20,8 @@ const { subscribeToHooks } = require('./../../hooks/twitter')
 
 const growthEventHelper = require('../../utils/growth-event-helpers')
 
+const _chunk = require('lodash/chunk')
+
 /**
  * To generate a authtoken of the target account and subscribe to events
  * Should be run manually once deployed for the first time
@@ -171,7 +173,7 @@ function verifyRequestSignature(req) {
  * Twitter posts events to this endpoint
  * Should always return 200 with no response
  */
-router.post('/', bodyParser.text({ type: '*/*' }), (req, res) => {
+router.post('/', bodyParser.text({ type: '*/*' }), async (req, res) => {
   if (!req.body.follow_events && !req.body.tweet_create_events) {
     // If there are no follow or tweet event, ignore this
     return res.status(200).end()
@@ -183,6 +185,10 @@ router.post('/', bodyParser.text({ type: '*/*' }), (req, res) => {
     })
   }
 
+  // Set status code and send back the empty response,
+  // so that connection doesn't has to be alive
+  res.status(200).end()
+
   let followCount = 0
   let mentionCount = 0
   let totalFollowEvents = 0
@@ -191,49 +197,58 @@ router.post('/', bodyParser.text({ type: '*/*' }), (req, res) => {
   if (req.body.follow_events) {
     // Follow event(s)
     const events = req.body.follow_events
+    const chunks = _chunk(events, process.env.CHUNK_COUNT || 100)
     totalFollowEvents = events.length
-    events.forEach(event => {
-      if (
-        event.target.screen_name.toLowerCase() ===
-        process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
-      ) {
-        followCount++
 
-        // TODO: Should batch these transactions
-        growthEventHelper({
-          type: 'FOLLOW',
-          socialNetwork: 'TWITTER',
-          username: event.source.screen_name,
-          event
-        })
-      }
-    })
+    for (const chunk of chunks) {
+      const promises = chunk.map(event => {
+        if (
+          event.target.screen_name.toLowerCase() ===
+          process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
+        ) {
+          followCount++
+
+          return growthEventHelper({
+            type: 'FOLLOW',
+            socialNetwork: 'TWITTER',
+            username: event.source.screen_name,
+            event
+          })
+        }
+      })
+
+      await Promise.all(promises)
+    }
   }
 
   if (req.body.tweet_create_events) {
     const events = req.body.tweet_create_events
+    const chunks = _chunk(events, process.env.CHUNK_COUNT || 100)
     totalMentionEvents = events.length
-    events
-      .filter(event => {
-        // Ignore own tweets, retweets and favorites
-        return !(
-          event.retweeted ||
-          event.favorited ||
-          event.user.screen_name.toLowerCase() ===
-            process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
-        )
-      })
-      .forEach(event => {
-        mentionCount++
-
-        // TODO: Should batch these transactions
-        growthEventHelper({
-          type: 'SHARE',
-          socialNetwork: 'TWITTER',
-          username: event.user.screen_name,
-          event
+    for (const chunk of chunks) {
+      const promises = chunk
+        .filter(event => {
+          // Ignore own tweets, retweets and favorites
+          return !(
+            event.retweeted ||
+            event.favorited ||
+            event.user.screen_name.toLowerCase() ===
+              process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
+          )
         })
-      })
+        .map(event => {
+          mentionCount++
+
+          return growthEventHelper({
+            type: 'SHARE',
+            socialNetwork: 'TWITTER',
+            username: event.user.screen_name,
+            event
+          })
+        })
+
+      await Promise.all(promises)
+    }
   }
 
   if (totalFollowEvents > 0 || totalMentionEvents > 0) {
@@ -241,8 +256,6 @@ router.post('/', bodyParser.text({ type: '*/*' }), (req, res) => {
       `[TWITTER] Pushed ${followCount}/${totalFollowEvents} follow events and ${mentionCount}/${totalMentionEvents} mention events`
     )
   }
-
-  res.status(200).end()
 })
 
 module.exports = router

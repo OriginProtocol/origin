@@ -13,6 +13,8 @@ const { createTelegramAttestation } = require('../../utils/attestation')
 const growthEventHelper = require('../../utils/growth-event-helpers')
 const logChat = require('../../utils/log-chat')
 
+const _chunk = require('lodash/chunk')
+
 /**
  * To register the webhook
  */
@@ -34,14 +36,21 @@ router.get('/__init', async (req, res) => {
   }
 })
 
-router.post('/', (req, res) => {
-  let followCount = 0
-  let totalFollowEvents = 0
+const replyWithMessage = (res, chatId, message) => {
+  return res
+    .status(200)
+    .header('Content-Type', 'application/json')
+    .send({
+      method: 'sendMessage',
+      chat_id: chatId,
+      text: message
+    })
+}
 
-  let shouldSendReplyMessage = false
-  let shouldSendAckMessage = false
-
+router.post('/', async (req, res) => {
   const message = req.body.message
+
+  let responseSent = false
 
   if (message.text && !message.from.is_bot && message.chat.type === 'private') {
     // For attestations
@@ -56,18 +65,37 @@ router.post('/', (req, res) => {
 
       logger.debug(`Pushing attestation message for address '${startCmdParam}'`)
 
-      createTelegramAttestation({
+      await createTelegramAttestation({
         identity: startCmdParam,
         message
       })
 
-      shouldSendReplyMessage = true
+      replyWithMessage(
+        res,
+        message.chat.id,
+        'Hey there, Get back to the Origin Marketplace app to continue'
+      )
     } else {
       // Log unexpected private chat messages to DB
-      shouldSendAckMessage = true
-      logChat(message)
+      await logChat(message)
+      replyWithMessage(
+        res,
+        message.chat.id,
+        'Hey there, we have received your message. Our team will reach out to you as soon as possible.'
+      )
     }
+
+    responseSent = true
   }
+
+  if (!responseSent) {
+    // Set status code and send back the empty response,
+    // so that connection doesn't has to be alive
+    res.send(200).end()
+  }
+
+  let followCount = 0
+  let totalFollowEvents = 0
 
   /**
    * Bots can be added to any group by anyone. So check the group id
@@ -83,29 +111,32 @@ router.post('/', (req, res) => {
   if (isValidGroup && message.new_chat_members) {
     // For join verifications
     const events = message.new_chat_members
+    const chunks = _chunk(
+      message.new_chat_members,
+      process.env.CHUNK_COUNT || 100
+    )
     totalFollowEvents = events.length
 
-    events.forEach(member => {
-      if (member.is_bot) {
-        // Ignore bots
-        return
-      }
+    for (const chunk of chunks) {
+      const promises = chunk
+        .filter(member => !member.is_bot)
+        .map(member => {
+          followCount++
 
-      followCount++
+          // Note: Username is optional in Telegram.
+          // ID is returned as number, We don't want to run into the big number issues
+          // So use id only if username is not set
+          const username = member.username || member.id
 
-      // Note: Username is optional in Telegram.
-      // ID is returned as number, We don't want to run into the big number issues
-      // So use id only if username is not set
-      const username = member.username || member.id
-
-      // TODO: Should batch these transactions
-      growthEventHelper({
-        type: 'FOLLOW',
-        socialNetwork: 'TELEGRAM',
-        username: username,
-        event: member
-      })
-    })
+          return growthEventHelper({
+            type: 'FOLLOW',
+            socialNetwork: 'TELEGRAM',
+            username: username,
+            event: member
+          })
+        })
+      await Promise.all(promises)
+    }
   }
 
   if (totalFollowEvents > 0) {
@@ -113,21 +144,6 @@ router.post('/', (req, res) => {
       `[TELEGRAM] Processed ${followCount}/${totalFollowEvents} new chat member events`
     )
   }
-
-  if (shouldSendReplyMessage || shouldSendAckMessage) {
-    return res
-      .status(200)
-      .header('Content-Type', 'application/json')
-      .send({
-        method: 'sendMessage',
-        chat_id: message.chat.id,
-        text: shouldSendReplyMessage
-          ? 'Hey there, Get back to the Origin Marketplace app to continue'
-          : 'Hey there, we have received your message. Our team will reach out to you as soon as possible.'
-      })
-  }
-
-  res.status(200).end()
 })
 
 module.exports = router

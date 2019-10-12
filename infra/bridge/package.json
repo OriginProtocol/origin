@@ -42,6 +42,7 @@
     "express-validator": "^6.1.0",
     "json-stable-stringify": "^1.0.1",
     "libphonenumber-js": "^1.7.20",
+    "lodash": "^4.17.15",
     "logplease": "^1.2.15",
     "mock-session": "0.0.5",
     "nock": "^11.0.0",
