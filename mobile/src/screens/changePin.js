@@ -139,7 +139,7 @@ class ChangePinScreen extends Component {
               {this.state.isRetry === true && (
                 <Text style={styles.invalid}>
                   <fbt desc="PinScreen.pinMatchFailure">
-                    Old pins did not match, try again
+                    Incorrect PIN
                   </fbt>
                 </Text>
               )}
