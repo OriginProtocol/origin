@@ -8,8 +8,8 @@ import sleep from '../../utils/sleep'
 const MAX_TRIES = 20
 
 /**
- * Polls the bridge to check if the user has done 
- * any Telegram attestation recently. 
+ * Polls the bridge to check if the user has done
+ * any Telegram attestation recently.
  * @param {String} args.identity User's ETH address
  * @returns {Object} an object similar to `{ success: <Boolean>, data?: <AttestationData> }`
  */
