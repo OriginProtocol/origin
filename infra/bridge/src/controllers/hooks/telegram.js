@@ -111,6 +111,8 @@ router.post('/', async (req, res) => {
   if (isValidGroup && message.new_chat_members) {
     // For join verifications
     const events = message.new_chat_members
+    // Note: Splitting the events into smaller chunks to avoid DB bottleneck
+    // if we receive a very large number of events at once
     const chunks = _chunk(
       message.new_chat_members,
       process.env.CHUNK_COUNT || 100

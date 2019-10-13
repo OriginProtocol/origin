@@ -25,6 +25,11 @@ router.post('/generate-code', telegramAttestation, async (req, res) => {
   })
 })
 
+/**
+ * Used to check if the user has done any attestation recently
+ * @param {String} query.identity User's ETH address
+ * @returns {Object} an object similar to `{ verified: <Boolean>, attestation?: <String> }`
+ */
 router.get('/status', telegramAttestation, async (req, res) => {
   const identity = req.query.identity.toLowerCase()
 

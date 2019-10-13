@@ -197,6 +197,8 @@ router.post('/', bodyParser.text({ type: '*/*' }), async (req, res) => {
   if (req.body.follow_events) {
     // Follow event(s)
     const events = req.body.follow_events
+    // Note: Splitting the events into smaller chunks to avoid DB bottleneck
+    // if we receive a very large number of events at once
     const chunks = _chunk(events, process.env.CHUNK_COUNT || 100)
     totalFollowEvents = events.length
 
@@ -223,6 +225,8 @@ router.post('/', bodyParser.text({ type: '*/*' }), async (req, res) => {
 
   if (req.body.tweet_create_events) {
     const events = req.body.tweet_create_events
+    // Note: Splitting the events into smaller chunks to avoid DB bottleneck
+    // if we receive a very large number of events at once
     const chunks = _chunk(events, process.env.CHUNK_COUNT || 100)
     totalMentionEvents = events.length
     for (const chunk of chunks) {

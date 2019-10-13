@@ -7,6 +7,12 @@ import sleep from '../../utils/sleep'
 
 const MAX_TRIES = 20
 
+/**
+ * Polls the bridge to check if the user has done 
+ * any Telegram attestation recently. 
+ * @param {String} args.identity User's ETH address
+ * @returns {Object} an object similar to `{ success: <Boolean>, data?: <AttestationData> }`
+ */
 async function checkTelegramStatus(_, { identity }) {
   const bridgeServer = contracts.config.bridge
   if (!bridgeServer) {
@@ -18,7 +24,6 @@ async function checkTelegramStatus(_, { identity }) {
 
   while (tries < MAX_TRIES) {
     const response = await fetch(url, {
-      headers: { 'content-type': 'application/json' },
       credentials: 'include'
     })
 
