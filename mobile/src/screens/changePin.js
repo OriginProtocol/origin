@@ -37,17 +37,18 @@ class ChangePinScreen extends Component {
       pin: '',
       oldPin: null,
       isRetry: false,
-      newAction: false
+      action: ''
     }
     this.pinLength = 6
     this.handleChange = this.handleChange.bind(this)
     this.handleCreate = this.handleCreate.bind(this)
+    this.handleConfirm = this.handleConfirm.bind(this)
   }
 
   componentDidMount() {
-    const action = this.props.navigation.getParam('new')
+    const action = this.props.navigation.getParam('action')
     this.setState({
-      newAction: action
+      action: action
     })
   }
 
@@ -113,16 +114,42 @@ class ChangePinScreen extends Component {
     }
   }
 
+  async handleConfirm(pin) {
+    // Validate that the pin is numeric
+    if (pin.length && isNaN(pin)) return
+
+    await this.setState({ pin, isRetry: false })
+
+    if (this.state.pin.length === this.pinLength) {
+      if (!this.state.oldPin && this.props.settings.pin === this.state.pin) {
+        // Proceed to verify step, copy value to oldPin
+        this.props.setPin(null)
+        this.props.navigation.goBack()
+      } else {
+        this.setState({
+          isRetry: true,
+          pin: '',
+          oldPin: null
+        })
+      }
+    }
+  }
+
   render() {
     let title = this.state.oldPin
       ? fbt('Enter your new PIN', 'PinScreen.enterNewPinCode')
       : fbt('Enter your old PIN', 'PinScreen.enterOldPinCode')
 
-    if (this.state.newAction) {
+    if (this.state.action === 'new') {
       title = this.state.oldPin
         ? fbt('Re-enter Pin Code', 'PinScreen.reenterPinCode')
         : fbt('Create a Pin Code', 'PinScreen.createPinCode')
     }
+
+    if (this.state.action === 'confirm') {
+      title = fbt('Enter your PIN', 'PinScreen.confirmPinCode')
+    }
+
     return (
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -138,16 +165,18 @@ class ChangePinScreen extends Component {
               <Text style={styles.subtitle}>{title}</Text>
               {this.state.isRetry === true && (
                 <Text style={styles.invalid}>
-                  <fbt desc="PinScreen.pinMatchFailure">
-                    Incorrect PIN
-                  </fbt>
+                  <fbt desc="PinScreen.pinMatchFailure">Incorrect PIN</fbt>
                 </Text>
               )}
               <PinInput
                 value={this.state.pin}
                 pinLength={this.pinLength}
                 onChangeText={
-                  this.state.newAction ? this.handleCreate : this.handleChange
+                  this.state.action === 'new'
+                    ? this.handleCreate
+                    : this.state.action === 'confirm'
+                    ? this.handleConfirm
+                    : this.handleChange
                 }
               />
             </View>

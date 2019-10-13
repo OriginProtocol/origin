@@ -18,12 +18,7 @@ import { fbt } from 'fbt-runtime'
 import TouchID from 'react-native-touch-id'
 import AndroidOpenSettings from 'react-native-android-open-settings'
 
-import {
-  setNetwork,
-  setBiometryType,
-  setPin,
-  setPinStatus
-} from 'actions/Settings'
+import { setNetwork, setBiometryType, setPin } from 'actions/Settings'
 import { NETWORKS, VERSION } from '../constants'
 import CommonStyles from 'styles/common'
 import MenuStyles from 'styles/menu'
@@ -48,37 +43,37 @@ class settingsScreen extends React.Component {
   }
 
   touchAuthenticate = () => {
-    if (this.props.settings.biometryType === null) {
-      TouchID.authenticate('Access Origin Marketplace App')
-        .then(() => {
+    TouchID.authenticate('Access Origin Marketplace App')
+      .then(() => {
+        if (this.props.settings.biometryType === null) {
           this.props.setBiometryType(this.state.biometryType)
-        })
-        .catch(error => {
-          console.warn('Biometry failure: ', error)
-          this.alertMessage(
-            'Permission denined',
-            `It looks like you have ${this.state.biometryType} disabled. You will need to enable it in the settings for the
+        } else {
+          this.props.setBiometryType(null)
+        }
+      })
+      .catch(error => {
+        console.warn('Biometry failure: ', error)
+        this.alertMessage(
+          'Permission denined',
+          `It looks like you have ${this.state.biometryType} disabled. You will need to enable it in the settings for the
           Origin Marketplace App.`,
-            () => {
-              if (Platform.OS === 'ios') {
-                Linking.openURL('app-settings:')
-              } else {
-                AndroidOpenSettings.appDetailsSettings()
-              }
+          () => {
+            if (Platform.OS === 'ios') {
+              Linking.openURL('app-settings:')
+            } else {
+              AndroidOpenSettings.appDetailsSettings()
             }
-          )
-        })
-    } else {
-      this.props.setBiometryType(null)
-    }
+          }
+        )
+      })
   }
 
   setPin = () => {
-    const { settings, setPinStatus, navigation } = this.props
+    const { settings, navigation } = this.props
     if (settings.pin === null) {
-      navigation.navigate('ChangePin', { new: true })
+      navigation.navigate('ChangePin', { action: 'new' })
     } else {
-      setPinStatus(!settings.pinStatus)
+      navigation.navigate('ChangePin', { action: 'confirm' })
     }
   }
 
@@ -215,7 +210,7 @@ class settingsScreen extends React.Component {
             <View style={styles.menuItemIconContainer}>
               <Switch
                 trackColor={{ true: '#1a82ff' }}
-                value={props.settings.pinStatus}
+                value={props.settings.pin === null ? false : true}
                 onChange={() => this.setPin()}
               />
             </View>
@@ -267,8 +262,7 @@ settingsScreen.navigationOptions = () => {
 const mapDispatchToProps = dispatch => ({
   setNetwork: network => dispatch(setNetwork(network)),
   setBiometryType: biometryType => dispatch(setBiometryType(biometryType)),
-  setPin: pin => dispatch(setPin(pin)),
-  setPinStatus: status => dispatch(setPinStatus(status))
+  setPin: pin => dispatch(setPin(pin))
 })
 
 const mapStateToProps = ({ settings }) => {

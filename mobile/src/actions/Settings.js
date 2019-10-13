@@ -36,13 +36,6 @@ export function setPin(pin) {
   }
 }
 
-export function setPinStatus(status) {
-  return {
-    type: SettingsConstants.SET_PIN_STATUS,
-    status
-  }
-}
-
 export function setBiometryType(biometryType) {
   return {
     type: SettingsConstants.SET_BIOMETRY_TYPE,

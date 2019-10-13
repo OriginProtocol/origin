@@ -105,7 +105,10 @@ const SettingsStack = createStackNavigator(
     Settings: SettingsScreen
   },
   {
-    initialRouteName: 'Settings'
+    initialRouteName: 'Settings',
+    defaultNavigationOptions: {
+      headerBackTitle: null
+    }
   }
 )
 

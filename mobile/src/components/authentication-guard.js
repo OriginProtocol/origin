@@ -58,7 +58,7 @@ class AuthenticationGuard extends Component {
   }
 
   _hasAuthentication = () => {
-    return this.props.settings.biometryType || this.props.settings.pinStatus
+    return this.props.settings.biometryType || this.props.settings.pin
   }
 
   _handleAppStateChange = nextAppState => {
@@ -140,7 +140,7 @@ class AuthenticationGuard extends Component {
       ? this.renderPinGuard()
       : settings.biometryType
       ? this.renderBiometryGuard()
-      : settings.pinStatus
+      : settings.pin
       ? this.renderPinGuard()
       : null
 
@@ -191,7 +191,7 @@ class AuthenticationGuard extends Component {
                 this.touchAuthenticate()
               }}
             />
-            {settings.pinStatus && (
+            {settings.pin && (
               <OriginButton
                 size="large"
                 type="primary"
