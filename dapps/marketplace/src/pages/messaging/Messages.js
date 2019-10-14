@@ -44,14 +44,15 @@ const ConversationList = ({
   onBack,
   messagingFetchMore,
   messagingNetworkStatus,
-  wallet
+  wallet,
+  messagingKeysLoading
 }) => {
   const [markConversationRead] = useMutation(MarkConversationRead)
   const [hasMore, setHasMore] = useState(true)
 
   if (messagingError) {
     return <QueryError query={query} error={messagingError} />
-  } else if (messagingLoading && !messaging) {
+  } else if (messagingLoading || messagingKeysLoading) {
     return <LoadingSpinner />
   } else if (!messagingLoading && !messaging) {
     return (

@@ -1,6 +1,8 @@
 import React from 'react'
 import { useQuery } from '@apollo/react-hooks'
 
+import get from 'lodash/get'
+
 import query from 'queries/Conversations'
 
 function withMessaging(WrappedComponent) {
@@ -18,12 +20,15 @@ function withMessaging(WrappedComponent) {
     })
     if (error) console.error(error)
 
+    const isKeysLoading = get(data, 'messaging.isKeysLoading', true)
+
     return (
       <WrappedComponent
         {...props}
         messaging={data ? data.messaging : null}
         messagingError={error}
         messagingLoading={loading}
+        messagingKeysLoading={isKeysLoading}
         messagingRefetch={refetch}
         messagingFetchMore={fetchMore}
         messagingNetworkStatus={networkStatus}

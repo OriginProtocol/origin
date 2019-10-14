@@ -39,6 +39,7 @@ module.exports = `
   type Messaging {
     id: ID!
     enabled: Boolean
+    isKeysLoading: Boolean
     syncProgress: String
     synced: Boolean
     pubKey: String

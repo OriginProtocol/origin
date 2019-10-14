@@ -30,6 +30,7 @@ const MessagesNav = ({ open, onClose, onOpen, wallet }) => {
   }, [wallet])
 
   const enabled = get(data, 'messaging.enabled', false)
+  const isKeysLoading = get(data, 'messaging.isKeysLoading', true)
   const totalUnread = get(data, 'messaging.totalUnread', 0)
   const hasUnread = totalUnread > 0 ? ' active' : ''
 
@@ -46,6 +47,7 @@ const MessagesNav = ({ open, onClose, onOpen, wallet }) => {
             onClick={() => onClose()}
             totalUnread={totalUnread}
             messagingEnabled={enabled}
+            messagingKeysLoading={isKeysLoading}
             wallet={wallet}
           />
         }
@@ -83,6 +85,7 @@ const MessagesDropdown = ({
   onClick,
   totalUnread,
   messagingEnabled,
+  messagingKeysLoading,
   wallet
 }) => {
   const { data, error, networkStatus, refetch } = useQuery(ConversationsQuery, {
@@ -90,13 +93,14 @@ const MessagesDropdown = ({
       limit: 5
     },
     fetchPolicy: 'network-only',
-    notifyOnNetworkStatusChange: true
+    notifyOnNetworkStatusChange: true,
+    skip: messagingKeysLoading
   })
 
   if (error) {
     console.error(error)
     return <Error />
-  } else if (networkStatus === 1) {
+  } else if (messagingKeysLoading || networkStatus === 1) {
     return <Loading />
   }
 

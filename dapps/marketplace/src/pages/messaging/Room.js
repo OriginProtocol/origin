@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react'
+import React, { Component, useEffect, useState, useCallback } from 'react'
 import { useQuery, useSubscription } from 'react-apollo'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
@@ -123,102 +123,110 @@ class AllMessages extends Component {
 }
 
 const Room = props => {
-  const { id, wallet, markRead, enabled, counterpartyEvents } = props
+  const { id, wallet, markRead, enabled } = props
 
-  const [messages, setMessages] = useState(null)
-  const [loaded, setLoaded] = useState(null)
+  console.log(props)
 
   // Query for initial data
-  const { error, data, networkStatus, fetchMore } = useQuery(query, {
+  const {
+    error,
+    data,
+    networkStatus,
+    fetchMore,
+    subscribeToMore,
+    refetch
+  } = useQuery(query, {
     variables: { id },
     skip: !id,
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'network-only'
   })
 
-  // Subscribe to new messages
-  useSubscription(subscription, {
-    onSubscriptionData: ({
-      subscriptionData: {
-        data: { messageAdded }
-      }
-    }) => {
-      const { conversationId, message } = messageAdded
-
-      if (id === conversationId) {
-        setMessages([message, ...messages])
-      }
-    }
-  })
-
   const isLoading = networkStatus === 1
 
-  useEffect(() => {
-    // To set `loaded` control variable to true
-    // After the data has loaded for the first time
-    if (loaded) {
-      return
-    }
-    if (networkStatus === 7) {
-      setLoaded(true)
-      setMessages(get(data, 'messaging.conversation.messages', []))
-    }
-  }, [networkStatus, loaded, data])
+  const messages = get(data, 'messaging.conversation.messages', [])
+  const hasMore = get(data, 'messaging.conversation.hasMore', false)
 
   useEffect(() => {
-    // Reset state
-    setLoaded(false)
-  }, [id])
+    // Subscribe to New messages
+    subscribeToMore({
+      document: subscription,
+      updateQuery: (prev, { subscriptionData }) => {
+        const { conversationId, message } = subscriptionData.data.messageAdded
+        let newMessages = messages
 
-  if (isLoading && !loaded) {
+        if (id === conversationId) {
+          newMessages = [message, ...messages]
+        }
+
+        return {
+          ...prev,
+          messaging: {
+            ...prev.messaging,
+            conversation: {
+              ...prev.messaging.conversation,
+              messages: [...newMessages]
+            }
+          }
+        }
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    refetch()
+  }, [props.enabled])
+
+  const fetchMoreCallback = useCallback(
+    ({ before }) => {
+      // Fetch more
+      fetchMore({
+        variables: {
+          id,
+          before
+        },
+        updateQuery: (prevData, { fetchMoreResult }) => {
+          const newMessages = fetchMoreResult.messaging.conversation.messages
+
+          console.log('updateQuery', prevData, fetchMoreResult)
+
+          return {
+            ...prevData,
+            messaging: {
+              ...prevData.messaging,
+              conversation: {
+                ...prevData.messaging.conversation,
+                messages: newMessages
+              }
+            }
+          }
+        }
+      })
+    },
+    [id]
+  )
+
+  if (isLoading && !messages.length) {
     return <LoadingSpinner />
   } else if (error) {
     return <QueryError query={query} error={error} />
-  } else if (!isLoading && (!data || !data.messaging || !messages)) {
+  } else if (!isLoading && !messages.length) {
     return (
       <p className="p-3">
-        <fbt desc="Room.cannotQuery">Cannot query messages</fbt>
+        <fbt desc="Room.noMessage">You have no messages in your inbox</fbt>
       </p>
     )
   }
 
-  const hasMore = get(data, 'messaging.conversation.hasMore', false)
-
   return (
     <>
       <AllMessages
-        events={counterpartyEvents}
-        eventsLoading={props.counterpartyEventsLoading}
         messages={messages}
         wallet={wallet}
         convId={id}
         markRead={() => markRead({ variables: { id } })}
         hasMore={hasMore}
-        fetchMore={({ before }) => {
-          fetchMore({
-            variables: {
-              id,
-              before
-            },
-            updateQuery: (prevData, { fetchMoreResult }) => {
-              const newMessages =
-                fetchMoreResult.messaging.conversation.messages
-
-              setMessages(newMessages)
-
-              return {
-                ...prevData,
-                messaging: {
-                  ...prevData.messaging,
-                  conversation: {
-                    ...prevData.messaging.conversation,
-                    messages: newMessages
-                  }
-                }
-              }
-            }
-          })
-        }}
+        fetchMore={args => fetchMoreCallback(args)}
       />
       {enabled ? (
         <SendMessage to={props.id} />

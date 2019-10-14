@@ -66,7 +66,10 @@ class SendMessage extends Component {
               {({ error, data, loading }) => {
                 if (error) {
                   return <QueryError query={query} error={error} />
-                } else if (loading) {
+                } else if (
+                  loading ||
+                  get(data, 'messaging.isKeysLoading', true)
+                ) {
                   return <div>Checking if messaging enabled...</div>
                 } else if (!get(data, 'messaging.enabled')) {
                   return <EnableMessagingModal />
