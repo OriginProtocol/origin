@@ -218,6 +218,11 @@ class UserProfile extends Component {
                   minCount={this.props.isMobile ? 8 : 10}
                   fillToNearest={this.props.isMobile ? 4 : 5}
                   onClick={providerName => {
+                    if (this.props.isMobile && providerName === 'website') {
+                      // Show the website badge on mobile
+                      // But don't do anything on click
+                      return
+                    }
                     this.setState({
                       [providerName]: true
                     })
@@ -277,6 +282,8 @@ class UserProfile extends Component {
       )
 
     const providers = this.props.attestationProviders
+      // Hide website attestation on mobile
+      .filter(providerName => this.props.isMobile && providerName === 'website' ? false : true)
       .map(providerName => {
         const verified = verifiedAttestationsIds.includes(providerName)
         const reward = verified
@@ -293,7 +300,6 @@ class UserProfile extends Component {
           reward
         }
       })
-      .filter(p => (p.id === 'website' && this.props.isMobile ? false : true))
 
     return (
       <ModalComp
