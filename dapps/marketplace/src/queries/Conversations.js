@@ -9,7 +9,6 @@ export default gql`
       isKeysLoading
       conversations(limit: $limit, offset: $offset) {
         id
-        timestamp
         totalUnread
         lastMessage {
           address
@@ -32,6 +31,7 @@ export default gql`
           }
         }
       }
+      totalUnread
     }
   }
   ${fragments.Listing.basic}

@@ -1,5 +1,5 @@
-import React, { Component, useEffect, useState, useCallback } from 'react'
-import { useQuery, useSubscription } from 'react-apollo'
+import React, { Component, useEffect, useCallback } from 'react'
+import { useQuery } from 'react-apollo'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
@@ -84,14 +84,24 @@ class AllMessages extends Component {
   }
 
   render() {
-    const { messages } = this.props
+    const { messages, hasMore, isLoadingMore, wallet } = this.props
+
+    if (!messages || messages.length === 0) {
+      return (
+        <div className="no-conversation">
+          <fbt desc="Room.noMessage">
+            You haven&apos;t started a conversation with this user
+          </fbt>
+        </div>
+      )
+    }
 
     return (
       <TopScrollListener
         onTop={() => {
           this.onTopListener()
         }}
-        hasMore={this.props.hasMore}
+        hasMore={hasMore}
         ready={this.state.ready}
         onInnerRef={el => (this.el = el)}
         className="messages"
@@ -107,7 +117,7 @@ class AllMessages extends Component {
                 <OfferEvent
                   key={`event-${message.index}`}
                   event={message}
-                  wallet={this.props.wallet}
+                  wallet={wallet}
                 />
               )
             }
@@ -120,10 +130,15 @@ class AllMessages extends Component {
                 nextMessage={idx > 0 ? messages[idx - 1] : null}
                 key={`message-${message.index}`}
                 wallet={get(message, 'address')}
-                isUser={this.props.wallet === get(message, 'address')}
+                isUser={wallet === get(message, 'address')}
               />
             )
           })}
+          {isLoadingMore && (
+            <div className="messages-loading-spinner">
+              <fbt desc="Loading...">Loading...</fbt>
+            </div>
+          )}
         </>
       </TopScrollListener>
     )
@@ -132,8 +147,6 @@ class AllMessages extends Component {
 
 const Room = props => {
   const { id, wallet, markRead, enabled } = props
-
-  console.log(props)
 
   // Query for initial data
   const {
@@ -164,6 +177,7 @@ const Room = props => {
         let newMessages = get(prev, 'messaging.conversation.messages', [])
 
         if (id === conversationId) {
+          newMessages = newMessages.filter(m => m.index !== message.index)
           newMessages = [message, ...newMessages]
         }
 
@@ -216,12 +230,6 @@ const Room = props => {
     return <LoadingSpinner />
   } else if (error) {
     return <QueryError query={query} error={error} />
-  } else if (!isLoading && !messages.length) {
-    return (
-      <p className="p-3">
-        <fbt desc="Room.noMessage">You have no messages in your inbox</fbt>
-      </p>
-    )
   }
 
   return (
@@ -233,6 +241,7 @@ const Room = props => {
         markRead={() => markRead({ variables: { id } })}
         hasMore={hasMore}
         fetchMore={args => fetchMoreCallback(args)}
+        isLoadingMore={networkStatus === 3}
       />
       {enabled ? (
         <SendMessage to={props.id} />
@@ -267,6 +276,20 @@ require('react-styl')(`
       margin-top: 1rem
     .stages
       min-height: 4rem
+    .messages-loading-spinner
+      color: var(--bluey-grey)
+      font-style: italic
+      text-align: center
+      display: block
+      width: 100%
+  .no-conversation
+    color: var(--bluey-grey)
+    font-style: italic
+    flex: 1
+    align-items: center
+    display: flex
+    width: 100%
+    justify-content: center
   .enable-messaging-action
     width: 100%
     flex: auto 0 0

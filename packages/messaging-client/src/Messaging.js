@@ -550,7 +550,8 @@ class Messaging {
             messageAdded: {
               conversationId: remoteEthAddress,
               roomId,
-              message: convObj.messages[0]
+              message: convObj.messages[0],
+              totalUnread: convObj.unreadCount
             }
           })
         })()
@@ -584,7 +585,8 @@ class Messaging {
                 messageAdded: {
                   conversationId: remoteEthAddress,
                   roomId,
-                  message
+                  message,
+                  totalUnread: convObj.unreadCount
                 }
               })
             },
@@ -612,7 +614,8 @@ class Messaging {
                   messageAdded: {
                     conversationId: remoteEthAddress,
                     roomId,
-                    message
+                    message,
+                    totalUnread: updatedConvObj.unreadCount
                   }
                 })
               })
@@ -659,7 +662,10 @@ class Messaging {
       markedAsRead: {
         conversationId: remoteEthAddress,
         roomId,
-        messagesRead
+        // Messages marked as read(from this conversation)
+        messagesRead,
+        // Overall count of unread messages (across all conversations)
+        totalUnread: this.unreadCount
       }
     })
   }
