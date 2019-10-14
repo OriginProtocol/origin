@@ -50,9 +50,14 @@ const ConversationList = ({
   const [markConversationRead] = useMutation(MarkConversationRead)
   const [hasMore, setHasMore] = useState(true)
 
+  const conversations = get(messaging, 'conversations', [])
+
   if (messagingError) {
     return <QueryError query={query} error={messagingError} />
-  } else if (messagingLoading || messagingKeysLoading) {
+  } else if (
+    (messagingLoading && !conversations.length) ||
+    messagingKeysLoading
+  ) {
     return <LoadingSpinner />
   } else if (!messagingLoading && !messaging) {
     return (
@@ -61,8 +66,6 @@ const ConversationList = ({
       </p>
     )
   }
-
-  const conversations = get(messaging, 'conversations', [])
 
   let content = !room ? null : (
     <div className="conversation-view">

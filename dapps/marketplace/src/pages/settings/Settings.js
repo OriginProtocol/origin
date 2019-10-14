@@ -37,15 +37,7 @@ const configurableFields = [
 const configurableMessagingFields = ['messagingNamespace', 'globalKeyServer']
 
 const Settings = props => {
-  const {
-    locale,
-    onLocale,
-    currency,
-    onCurrency,
-    isMobile,
-    config,
-    configLoading
-  } = props
+  const { locale, onLocale, currency, onCurrency, isMobile, config } = props
 
   const [devMode, setDevMode] = useState(store.get('developerMode'))
   const [state, _setState] = useState({
@@ -219,6 +211,12 @@ const Settings = props => {
 
             <ToggleRow config={config} field="bypassOnboarding">
               <fbt desc="settings.onboardDisabled">Onboarding Disabled</fbt>
+            </ToggleRow>
+
+            <ToggleRow config={localStorage} field="disableOfferEvents">
+              <fbt desc="settings.disableOfferEvents">
+                Disable Offer Events (for Messaging)
+              </fbt>
             </ToggleRow>
 
             <div className="form-group restore">

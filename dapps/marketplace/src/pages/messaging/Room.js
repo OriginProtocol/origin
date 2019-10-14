@@ -17,6 +17,10 @@ import TopScrollListener from 'components/TopScrollListener'
 
 import OfferEvent from './OfferEvent'
 
+const isOfferEventsDisabled = () => {
+  return get(window, 'localStorage.disableOfferEvents', 'false') === 'true'
+}
+
 class AllMessages extends Component {
   state = {
     ready: false
@@ -95,6 +99,10 @@ class AllMessages extends Component {
         <>
           {messages.map((message, idx) => {
             if (message.type === 'event') {
+              if (isOfferEventsDisabled()) {
+                return null
+              }
+
               return (
                 <OfferEvent
                   key={`event-${message.index}`}
@@ -153,10 +161,10 @@ const Room = props => {
       document: subscription,
       updateQuery: (prev, { subscriptionData }) => {
         const { conversationId, message } = subscriptionData.data.messageAdded
-        let newMessages = messages
+        let newMessages = get(prev, 'messaging.conversation.messages', [])
 
         if (id === conversationId) {
-          newMessages = [message, ...messages]
+          newMessages = [message, ...newMessages]
         }
 
         return {
@@ -171,7 +179,7 @@ const Room = props => {
         }
       }
     })
-  }, [])
+  }, [id])
 
   useEffect(() => {
     refetch()
@@ -187,8 +195,6 @@ const Room = props => {
         },
         updateQuery: (prevData, { fetchMoreResult }) => {
           const newMessages = fetchMoreResult.messaging.conversation.messages
-
-          console.log('updateQuery', prevData, fetchMoreResult)
 
           return {
             ...prevData,
