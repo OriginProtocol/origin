@@ -1,12 +1,11 @@
-import React, { Component, useEffect, useCallback } from 'react'
-import { useQuery } from 'react-apollo'
+import React, { Component } from 'react'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
+import withRoom from 'hoc/withRoom'
 
 import query from 'queries/Room'
-import subscription from 'queries/NewMessageSubscription'
 import SendMessage from './SendMessage'
 import MessageWithIdentity from './Message'
 import QueryError from 'components/QueryError'
@@ -148,88 +147,15 @@ class AllMessages extends Component {
 const Room = props => {
   const { id, wallet, markRead, enabled } = props
 
-  // Query for initial data
-  const {
-    error,
-    data,
-    networkStatus,
-    fetchMore,
-    subscribeToMore,
-    refetch
-  } = useQuery(query, {
-    variables: { id },
-    skip: !id,
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'network-only'
-  })
+  const { roomFetchMore, room, roomError, roomLoading, roomLoadingMore } = props
 
-  const isLoading = networkStatus === 1
+  const messages = get(room, 'messages', [])
+  const hasMore = get(room, 'hasMore', false)
 
-  const messages = get(data, 'messaging.conversation.messages', [])
-  const hasMore = get(data, 'messaging.conversation.hasMore', false)
-
-  useEffect(() => {
-    // Subscribe to New messages
-    subscribeToMore({
-      document: subscription,
-      updateQuery: (prev, { subscriptionData }) => {
-        const { conversationId, message } = subscriptionData.data.messageAdded
-        let newMessages = get(prev, 'messaging.conversation.messages', [])
-
-        if (id === conversationId) {
-          newMessages = newMessages.filter(m => m.index !== message.index)
-          newMessages = [message, ...newMessages]
-        }
-
-        return {
-          ...prev,
-          messaging: {
-            ...prev.messaging,
-            conversation: {
-              ...prev.messaging.conversation,
-              messages: [...newMessages]
-            }
-          }
-        }
-      }
-    })
-  }, [id])
-
-  useEffect(() => {
-    refetch()
-  }, [props.enabled])
-
-  const fetchMoreCallback = useCallback(
-    ({ before }) => {
-      // Fetch more
-      fetchMore({
-        variables: {
-          id,
-          before
-        },
-        updateQuery: (prevData, { fetchMoreResult }) => {
-          const newMessages = fetchMoreResult.messaging.conversation.messages
-
-          return {
-            ...prevData,
-            messaging: {
-              ...prevData.messaging,
-              conversation: {
-                ...prevData.messaging.conversation,
-                messages: newMessages
-              }
-            }
-          }
-        }
-      })
-    },
-    [id]
-  )
-
-  if (isLoading && !messages.length) {
+  if (roomLoading && !messages.length) {
     return <LoadingSpinner />
-  } else if (error) {
-    return <QueryError query={query} error={error} />
+  } else if (roomError) {
+    return <QueryError query={query} error={roomError} />
   }
 
   return (
@@ -240,8 +166,8 @@ const Room = props => {
         convId={id}
         markRead={() => markRead({ variables: { id } })}
         hasMore={hasMore}
-        fetchMore={args => fetchMoreCallback(args)}
-        isLoadingMore={networkStatus === 3}
+        fetchMore={args => roomFetchMore(args)}
+        isLoadingMore={roomLoadingMore}
       />
       {enabled ? (
         <SendMessage to={props.id} />
@@ -254,7 +180,7 @@ const Room = props => {
   )
 }
 
-export default withWallet(Room)
+export default withWallet(withRoom(Room))
 
 require('react-styl')(`
   .messages-page .messages

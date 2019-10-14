@@ -45,7 +45,12 @@ function withConversations(WrappedComponent) {
 
           const newConvObject = {
             id: conversationId,
-            lastMessage: message,
+            lastMessage: {
+              type: 'msg',
+              offer: null,
+              eventData: null,
+              ...message
+            },
             totalUnread,
             __typename: 'Conversation'
           }
