@@ -14773,10 +14773,10 @@ ipfs@0.38.0, ipfs@^0.38.0:
     prom-client "^11.5.3"
     prometheus-gc-stats "~0.6.0"
 
-ipfsd-ctl@0.47.3:
-  version "0.47.3"
-  resolved "https://registry.yarnpkg.com/ipfsd-ctl/-/ipfsd-ctl-0.47.3.tgz#a3b6886f9b482092fe4707727c08a504f24e80b9"
-  integrity sha512-NMAnTiUUsfwFsEa30YnCZ7d1TJlGpfZOCB0KpfbqA4b3sLkjohCDUgSZ9t8AdV5FTPkbzBJljbcxZ9YzOuPdZA==
+ipfsd-ctl@0.47.4:
+  version "0.47.4"
+  resolved "https://registry.yarnpkg.com/ipfsd-ctl/-/ipfsd-ctl-0.47.4.tgz#c281f021261562487cea40d574adb85bbfce50f7"
+  integrity sha512-JTuQ3ybKelEVoQrqNu3RDgW8HcItJDrjF7mlHQejixVssn+1nE9A08yYx0ea40hiKfniL7ojYoHek0mzrzGAHA==
   dependencies:
     "@hapi/boom" "^7.4.7"
     "@hapi/hapi" "^18.3.2"
