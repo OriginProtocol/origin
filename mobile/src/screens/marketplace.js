@@ -239,10 +239,10 @@ class MarketplaceScreen extends Component {
     )
   }
 
-  /* Inject Javascript that causes the page to refresh when it hits the top. There is a 
-   * special workaround implemented for the Android since scrollable modals offsets 
+  /* Inject Javascript that causes the page to refresh when it hits the top. There is a
+   * special workaround implemented for the Android since scrollable modals offsets
    * are not reported by the documentElement.scrollTop. For this reason a function
-   * recursively checks elements from root element down and tries to find scrollable 
+   * recursively checks elements from root element down and tries to find scrollable
    * elements. And reports scrollTop on those.
    *
    * Performance considerations:
@@ -250,7 +250,7 @@ class MarketplaceScreen extends Component {
    *   5-30 ms on a flagship device per check.
    * - current implementation checks for node width/height (offsetWidth/offsetHeight) which is
    *   still rather resource consuming call, and early exits on nodes that take up less than
-   *   half a screen width or height. Checks around 5-10 nodes per call and takes from 0-4 ms 
+   *   half a screen width or height. Checks around 5-10 nodes per call and takes from 0-4 ms
    *   on a flagship device per check
    */
   injectScrollHandler = () => {
@@ -639,12 +639,12 @@ class MarketplaceScreen extends Component {
 
   render = () => {
     const refreshControl = (
-        <RefreshControl
-          enabled={this.state.enablePullToRefresh}
-          refreshing={this.state.refreshing}
-          onRefresh={this.onRefresh}
-        />
-      )
+      <RefreshControl
+        enabled={this.state.enablePullToRefresh}
+        refreshing={this.state.refreshing}
+        onRefresh={this.onRefresh}
+      />
+    )
 
     return (
       <AndroidBackHandler onBackPress={this.onBack}>
