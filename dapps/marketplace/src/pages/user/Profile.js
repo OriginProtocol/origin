@@ -283,7 +283,9 @@ class UserProfile extends Component {
 
     const providers = this.props.attestationProviders
       // Hide website attestation on mobile
-      .filter(providerName => this.props.isMobile && providerName === 'website' ? false : true)
+      .filter(providerName =>
+        this.props.isMobile && providerName === 'website' ? false : true
+      )
       .map(providerName => {
         const verified = verifiedAttestationsIds.includes(providerName)
         const reward = verified
