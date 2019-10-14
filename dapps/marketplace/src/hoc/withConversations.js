@@ -76,7 +76,7 @@ function withConversations(WrappedComponent) {
           totalUnread
         } = subscriptionData.data.markedAsRead
 
-        let newConvs = get(prev, 'messaging.conversations', [])
+        const newConvs = get(prev, 'messaging.conversations', [])
 
         const convIndex = newConvs.findIndex(conv => conv.id === conversationId)
 
