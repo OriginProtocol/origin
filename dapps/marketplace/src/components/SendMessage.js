@@ -177,6 +177,7 @@ require('react-styl')(`
   .message-modal
     textarea
       min-height: 6rem
+      max-height: 10rem
     .to
       white-space: nowrap
       overflow: hidden
