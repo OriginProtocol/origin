@@ -8,6 +8,8 @@ const marketplaceExists = {}
 
 import { identity } from './IdentityEvents'
 
+import Attestations from './attestations/Attestations'
+
 export default {
   config: () => contracts.net,
   configObj: () => contracts.config,
@@ -133,5 +135,6 @@ export default {
       ids = ids.filter(c => args.tokens.indexOf(c) >= 0)
     }
     return await Promise.all(ids.map(id => currencies.get(id)))
-  }
+  },
+  ...Attestations
 }

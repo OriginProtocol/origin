@@ -1,12 +1,12 @@
 {
-  "Marketplace": "0xf3884ecbc6c43383bf7a38c891021380f50abc49",
-  "MarketplaceEpoch": 0,
-  "IdentityEvents": "0xe760d066bd8bbe22d7e9d8107be878102bd8d57d",
-  "IdentityEventsEpoch": 0,
-  "UniswapDaiExchange": "0x68344dCa5e6Ef7F7935f262C91f1319A85947B20",
-  "ProxyFactory": "0x7BF7ae2DA6013aA8de29627E29e4b9fa807D4469",
-  "ProxyFactoryEpoch": 0,
-  "IdentityProxyImplementation": "0xf491289b5DA695D7892B4960dcf48eB7e1ACb6B8",
-  "OGN": "0xc341384f6fe00179b33ef7ae638ed2937a9e4501",
-  "DAI": "0xB9B7e0cb2EDF5Ea031C8B297A5A1Fa20379b6A0a"
+  "Marketplace": "0xBFF408fD7DCb4E9B3fF68941699636a86B93eD7C",
+  "MarketplaceEpoch": 8898,
+  "IdentityEvents": "0xeEEDf6E5f697C1B7D58F13A95b0b65d731A1068B",
+  "IdentityEventsEpoch": 8794,
+  "UniswapDaiExchange": "0x8ba2d7842262a16f9522e7397d467e2cb27e4e54",
+  "ProxyFactory": "0x66654fb666ef2d5e9129242cea3c82b3f9f9d16f",
+  "ProxyFactoryEpoch": 8405,
+  "IdentityProxyImplementation": "0x1372a6c7cf0e6c0a8caf05ea32387a4401af77a8",
+  "OGN": "0xc923fe39022d528889a11738792dd07eac388426",
+  "DAI": "0x0207a4fc06b9905d0c4fb741b3f6d2d134d00b38"
 }
