@@ -2,6 +2,7 @@ const Sequelize = require('sequelize')
 
 const db = require('../models')
 const { CampaignRules } = require('./rules')
+const enums = require('../enums')
 
 class GrowthCampaign {
   /**
@@ -31,6 +32,25 @@ class GrowthCampaign {
     return campaigns.map(
       campaign => new CampaignRules(campaign, JSON.parse(campaign.rules))
     )
+  }
+
+  /**
+   * Fetches the active campaign
+   * @returns {Promise<CampaignRules>}
+   */
+  static async getActive() {
+    const campaign = await db.GrowthCampaign.findOne({
+      where: {
+        rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
+      },
+      order: [['createdAt', 'ASC']]
+    })
+
+    if (!campaign) {
+      return null
+    }
+
+    return new CampaignRules(campaign, JSON.parse(campaign.rules))
   }
 
   /**

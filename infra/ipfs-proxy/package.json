@@ -27,7 +27,7 @@
     "file-type": "12.3.0",
     "http-proxy": "1.18.0",
     "ipfs": "0.38.0",
-    "ipfsd-ctl": "0.47.2",
+    "ipfsd-ctl": "0.47.3",
     "is-json": "2.0.1",
     "logplease": "1.2.15",
     "per-env": "1.0.2",
@@ -35,7 +35,7 @@
     "zlib": "1.0.5"
   },
   "devDependencies": {
-    "@babel/core": "7.6.3",
+    "@babel/core": "7.6.4",
     "@babel/preset-env": "7.6.3",
     "@babel/register": "7.6.2",
     "autocannon": "4.1.1",

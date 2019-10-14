@@ -3,7 +3,87 @@ import { fbt } from 'fbt-runtime'
 import { Link } from 'react-router-dom'
 import { formatTokens, getContentToShare } from 'utils/growthTools'
 
+import TelegramGroupNameQuery from 'queries/TelegramGroupName'
+import { useQuery } from 'react-apollo'
+import get from 'lodash/get'
+
 const GrowthEnum = require('Growth$FbtEnum')
+
+const renderReward = (
+  amount,
+  style = 'normal',
+  { isMobile, decimalDivision }
+) => {
+  return (
+    <div
+      className={`reward d-flex align-items-left pl-2 justify-content-center ${
+        isMobile ? 'pr-0' : ''
+      } align-items-center flex-grow-1`}
+    >
+      {style === 'normal' && <img src="images/ogn-icon.svg" />}
+      {style === 'grayed-out' && <img src="images/ogn-icon-grayed-out.svg" />}
+      <div className={`value ${style}`}>
+        {formatTokens(amount, decimalDivision)}
+      </div>
+    </div>
+  )
+}
+
+const WrapIntoInteraction = ({
+  isInteractable,
+  buttonLink,
+  buttonOnClick,
+  externalLink,
+  showUnlockModalOnClick,
+  unlockConditionText,
+  onMobileLockClick,
+  children,
+  ...props
+}) => {
+  return (
+    <Fragment>
+      {isInteractable && (
+        <div className="with-border">
+          {buttonLink && (
+            <Link
+              to={buttonLink}
+              className="mt-auto mb-auto"
+              onClick={() => buttonOnClick()}
+            >
+              {children}
+            </Link>
+          )}
+          {externalLink && (
+            <a
+              href={externalLink}
+              target="_blank"
+              className="mt-auto mb-auto external-link"
+              rel="noopener noreferrer"
+              onClick={() =>
+                props.onActionClick && props.onActionClick(props.action)
+              }
+            >
+              {children}
+            </a>
+          )}
+          {!buttonLink && !externalLink && (
+            <div className="mt-auto mb-auto" onClick={() => buttonOnClick()}>
+              {children}
+            </div>
+          )}
+        </div>
+      )}
+      {showUnlockModalOnClick && (
+        <div
+          className="mt-auto mb-auto with-border"
+          onClick={() => onMobileLockClick(unlockConditionText)}
+        >
+          {children}
+        </div>
+      )}
+    </Fragment>
+  )
+}
 
 function Action(props) {
   const {
@@ -19,13 +99,18 @@ function Action(props) {
 
   const detailsEmpty =
     !detailsKey || detailsKey === 'growth.purchase.empty.details'
-  const { isMobile, onMobileLockClick } = props
+  const { isMobile } = props
 
   const actionLocked = status === 'Inactive'
   const actionCompleted = ['Exhausted', 'Completed'].includes(status)
   let allowInteractionWhenCompleted = false
 
   const [detailsToggled, toggleDetails] = useState(false)
+
+  const telegramGroupQueryResult = useQuery(TelegramGroupNameQuery, {
+    skip: type !== 'TelegramFollow',
+    notifyOnNetworkStatusChange: true
+  })
 
   let foregroundImgSrc
   let title
@@ -145,30 +230,18 @@ function Action(props) {
     foregroundImgSrc = 'images/growth/telegram-badge.svg'
     title = fbt('Join us on Telegram', 'RewardActions.followOnTelegram')
     allowInteractionWhenCompleted = true
-    // TODO: Move screen name to Enviroment variable
-    externalLink = 'https://t.me/originprotocol'
+    const groupName = get(
+      telegramGroupQueryResult,
+      'data.telegramGroupName',
+      'originprotocol'
+    )
+    externalLink = 'https://t.me/' + groupName
   } else if (type === 'FacebookLike') {
     buttonLink = undefined
     foregroundImgSrc = 'images/growth/facebook-icon.svg'
     title = fbt('Like our Facebook page', 'RewardActions.likePageOnFacebook')
     externalLink = 'https://www.facebook.com/originprotocol/'
     allowInteractionWhenCompleted = true
-  }
-
-  const renderReward = (amount, style = 'normal') => {
-    return (
-      <div
-        className={`reward d-flex align-items-left pl-2 justify-content-center ${
-          isMobile ? 'pr-0' : ''
-        } align-items-center flex-grow-1`}
-      >
-        {style === 'normal' && <img src="images/ogn-icon.svg" />}
-        {style === 'grayed-out' && <img src="images/ogn-icon-grayed-out.svg" />}
-        <div className={`value ${style}`}>
-          {formatTokens(amount, props.decimalDivision)}
-        </div>
-      </div>
-    )
   }
 
   const isInteractable =
@@ -197,53 +270,6 @@ function Action(props) {
     </Fragment>
   )
 
-  const wrapIntoInteraction = actionComponent => {
-    return (
-      <Fragment>
-        {isInteractable && (
-          <div className="with-border">
-            {buttonLink && (
-              <Link
-                to={buttonLink}
-                className="mt-auto mb-auto"
-                onClick={() => buttonOnClick()}
-              >
-                {actionComponent}
-              </Link>
-            )}
-            {externalLink && (
-              <a
-                href={externalLink}
-                target="_blank"
-                className="mt-auto mb-auto external-link"
-                rel="noopener noreferrer"
-                onClick={() =>
-                  props.onActionClick && props.onActionClick(props.action)
-                }
-              >
-                {actionComponent}
-              </a>
-            )}
-            {!buttonLink && !externalLink && (
-              <div className="mt-auto mb-auto" onClick={() => buttonOnClick()}>
-                {actionComponent}
-              </div>
-            )}
-          </div>
-        )}
-        {!isInteractable && !showUnlockModalOnClick && actionComponent}
-        {showUnlockModalOnClick && (
-          <div
-            className="mt-auto mb-auto with-border"
-            onClick={() => onMobileLockClick(unlockConditionText)}
-          >
-            {actionComponent}
-          </div>
-        )}
-      </Fragment>
-    )
-  }
-
   const detailsLink = !detailsEmpty && (
     <div
       className={`toggle-details mr-1 mr-md-3`}
@@ -261,83 +287,98 @@ function Action(props) {
     </div>
   )
 
-  return wrapIntoInteraction(
-    <div
-      className={`action with-border ${isInteractable ? 'active' : ''} ${
-        isMobile ? 'mobile' : ''
-      }`}
-    >
-      <div className="d-flex action-main">
-        <div className="col-2 col-md-1 pr-0 pl-0 d-flex justify-content-center align-items-center">
-          <div className="listing-icon-holder">
-            {type === 'ListingIdPurchased' ? (
-              <img className={type.toLowerCase()} src={foregroundImgSrc} />
-            ) : (
-              <div className="icon-holder">
-                <img className="verification-icon" src={foregroundImgSrc} />
-              </div>
-            )}
-            {isMobile && actionLocked && (
-              <img
-                className={`status-icon ${
-                  isVerificationAction ? 'verification' : ''
-                }`}
-                src="images/growth/lock-icon.svg"
-              />
-            )}
-            {isMobile && actionCompleted && (
-              <img
-                className={`status-icon ${
-                  isVerificationAction ? 'verification' : ''
-                }`}
-                src="images/growth/green-tick-icon.svg"
-              />
-            )}
-          </div>
-        </div>
+  return (
+    <WrapIntoInteraction
+      isInteractable={isInteractable}
+      buttonLink={buttonLink}
+      buttonOnClick={buttonOnClick}
+      externalLink={externalLink}
+      showUnlockModalOnClick={showUnlockModalOnClick}
+      unlockConditionText={unlockConditionText}
+      {...props}
+      children={
         <div
-          className={`d-flex flex-column p-2 p-md-3 justify-content-center col-7 col-md-8`}
+          className={`action with-border ${isInteractable ? 'active' : ''} ${
+            isMobile ? 'mobile' : ''
+          }`}
         >
-          <div className="title">{title}</div>
-          {actionLocked && !isMobile && unlockConditions.length > 0 && (
-            <Fragment>
-              <div className="requirement pr-2 d-flex align-items-center ">
-                {unlockConditionText}
+          <div className="d-flex action-main">
+            <div className="col-2 col-md-1 pr-0 pl-0 d-flex justify-content-center align-items-center">
+              <div className="listing-icon-holder">
+                {type === 'ListingIdPurchased' ? (
+                  <img className={type.toLowerCase()} src={foregroundImgSrc} />
+                ) : (
+                  <div className="icon-holder">
+                    <img className="verification-icon" src={foregroundImgSrc} />
+                  </div>
+                )}
+                {isMobile && actionLocked && (
+                  <img
+                    className={`status-icon ${
+                      isVerificationAction ? 'verification' : ''
+                    }`}
+                    src="images/growth/lock-icon.svg"
+                  />
+                )}
+                {isMobile && actionCompleted && (
+                  <img
+                    className={`status-icon ${
+                      isVerificationAction ? 'verification' : ''
+                    }`}
+                    src="images/growth/green-tick-icon.svg"
+                  />
+                )}
               </div>
-            </Fragment>
-          )}
-          {!actionLocked && detailsLink}
-        </div>
-        <div className="pr-0 pr-md-3 pl-0 pl-md-3 col-3 col-md-3 d-flex align-items-center justify-content-end">
-          {reward !== null &&
-            renderReward(
-              reward.amount,
-              actionCompleted ? 'grayed-out' : 'normal'
-            )}
-          {!actionCompleted && !actionLocked && !isMobile && (
-            <div className="btn btn-primary mt-2 mb-2">
-              <img className="button-caret" src="images/caret-white.svg" />
+            </div>
+            <div
+              className={`d-flex flex-column p-2 p-md-3 justify-content-center col-7 col-md-8`}
+            >
+              <div className="title">{title}</div>
+              {actionLocked && !isMobile && unlockConditions.length > 0 && (
+                <Fragment>
+                  <div className="requirement pr-2 d-flex align-items-center ">
+                    {unlockConditionText}
+                  </div>
+                </Fragment>
+              )}
+              {!actionLocked && detailsLink}
+            </div>
+            <div className="pr-0 pr-md-3 pl-0 pl-md-3 col-3 col-md-3 d-flex align-items-center justify-content-end">
+              {reward !== null &&
+                renderReward(
+                  reward.amount,
+                  actionCompleted ? 'grayed-out' : 'normal',
+                  props
+                )}
+              {!actionCompleted && !actionLocked && !isMobile && (
+                <div className="btn btn-primary mt-2 mb-2">
+                  <img className="button-caret" src="images/caret-white.svg" />
+                </div>
+              )}
+              {!isMobile && actionLocked && (
+                <img
+                  className="status-icon"
+                  src="images/growth/lock-icon.svg"
+                />
+              )}
+              {!isMobile && actionCompleted && (
+                <img
+                  className="status-icon"
+                  src="images/growth/green-tick-icon.svg"
+                />
+              )}
+            </div>
+          </div>
+          {detailsEmpty || !detailsToggled ? null : (
+            <div className="details">
+              <fbt desc="growth">
+                <fbt:enum enum-range={GrowthEnum} value={detailsKey} />
+              </fbt>
             </div>
           )}
-          {!isMobile && actionLocked && (
-            <img className="status-icon" src="images/growth/lock-icon.svg" />
-          )}
-          {!isMobile && actionCompleted && (
-            <img
-              className="status-icon"
-              src="images/growth/green-tick-icon.svg"
-            />
-          )}
         </div>
-      </div>
-      {detailsEmpty || !detailsToggled ? null : (
-        <div className="details">
-          <fbt desc="growth">
-            <fbt:enum enum-range={GrowthEnum} value={detailsKey} />
-          </fbt>
-        </div>
-      )}
-    </div>
+      }
+    />
   )
 }
 

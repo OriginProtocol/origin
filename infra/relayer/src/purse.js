@@ -934,10 +934,15 @@ class Purse {
    */
   async _process() {
     let interval = 0
+    let masterBalanceDepleted = false
     do {
       if (!this.ready) continue
 
-      if (this.checkBalances) {
+      if (
+        this.checkBalances &&
+        (!masterBalanceDepleted ||
+          (masterBalanceDepleted && interval % 3 === 0))
+      ) {
         try {
           // Prompt for funding of the master account
           const masterAddress = this.masterWallet.getChecksumAddressString()
@@ -947,6 +952,7 @@ class Purse {
           const masterBalanceLow = masterBalance.lt(
             BASE_FUND_VALUE.mul(new BN(this.children.length))
           )
+          masterBalanceDepleted = masterBalance.lt(BASE_FUND_VALUE)
           const balanceEther = this.web3.utils.fromWei(
             masterBalance.toString(),
             'ether'
@@ -1039,7 +1045,7 @@ class Purse {
             logger.debug('Not ready or autofund disabled')
           }
           // Balances check completed.
-          this.checkBalances = false
+          if (!masterBalanceDepleted) this.checkBalances = false
         } catch (err) {
           logger.error(
             'Error occurred in the balance checks and funding block of _process()'
