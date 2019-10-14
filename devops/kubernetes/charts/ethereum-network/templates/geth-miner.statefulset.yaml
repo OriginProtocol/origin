@@ -32,6 +32,7 @@ spec:
         args:
         - "-c"
         - "geth
+          --syncmode "full"
           --bootnodes=`cat /root/.ethereum/bootnodes`
           --mine
           --miner.threads 2
