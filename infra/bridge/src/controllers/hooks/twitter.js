@@ -6,8 +6,9 @@ const querystring = require('querystring')
 const crypto = require('crypto')
 const constants = require('../../constants')
 const logger = require('../../logger')
-const { redisClient } = require('../../utils/redis')
 const { getTwitterWebhookConsumerSecret } = require('../../utils/hooks')
+
+const bodyParser = require('body-parser')
 
 const {
   getTwitterOAuthRequestToken,
@@ -16,6 +17,10 @@ const {
 } = require('../../utils/twitter')
 
 const { subscribeToHooks } = require('./../../hooks/twitter')
+
+const growthEventHelper = require('../../utils/growth-event-helpers')
+
+const _chunk = require('lodash/chunk')
 
 /**
  * To generate a authtoken of the target account and subscribe to events
@@ -152,33 +157,37 @@ function getCRCToken(payload) {
  */
 function verifyRequestSignature(req) {
   const sign = req.headers['x-twitter-webhooks-signature']
-  const token = getCRCToken(JSON.stringify(req.body))
+  const token = getCRCToken(req.rawBody)
   logger.debug(`sign:${sign} token:${token}`)
 
-  // Disabling this temporarily for #2883
-  // // Using `.timingSafeEqual` for comparison to avoid timing attacks
-  // const valid = crypto.timingSafeEqual(
-  //  Buffer.from(sign, 'utf-8'),
-  //  Buffer.from(token, 'utf-8')
-  // )
+  // Using `.timingSafeEqual` for comparison to avoid timing attacks
+  const valid = crypto.timingSafeEqual(
+    Buffer.from(sign, 'utf-8'),
+    Buffer.from(token, 'utf-8')
+  )
 
-  // return valid
-
-  return true
+  return valid
 }
 
 /**
  * Twitter posts events to this endpoint
  * Should always return 200 with no response
  */
-router.post('/', (req, res) => {
+router.post('/', bodyParser.text({ type: '*/*' }), async (req, res) => {
+  if (!req.body.follow_events && !req.body.tweet_create_events) {
+    // If there are no follow or tweet event, ignore this
+    return res.status(200).end()
+  }
+
   if (!verifyRequestSignature(req)) {
     return res.status(403).send({
       errors: ['Unauthorized']
     })
   }
-  // Use redis batch for parallelization (without atomicity)
-  const redisBatch = redisClient.batch()
+
+  // Set status code and send back the empty response,
+  // so that connection doesn't has to be alive
+  res.status(200).end()
 
   let followCount = 0
   let mentionCount = 0
@@ -188,54 +197,69 @@ router.post('/', (req, res) => {
   if (req.body.follow_events) {
     // Follow event(s)
     const events = req.body.follow_events
+    // Note: Splitting the events into smaller chunks to avoid DB bottleneck
+    // if we receive a very large number of events at once
+    const chunks = _chunk(events, process.env.CHUNK_COUNT || 100)
     totalFollowEvents = events.length
-    events.forEach(event => {
-      if (
-        event.target.screen_name.toLowerCase() ===
-        process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
-      ) {
-        followCount++
-        const key = `twitter/follow/${event.source.screen_name}`
-        redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
-        logger.debug(`Pushing twitter follow event to ${key}...`)
-      }
-    })
+
+    for (const chunk of chunks) {
+      const promises = chunk.map(event => {
+        if (
+          event.target.screen_name.toLowerCase() ===
+          process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
+        ) {
+          followCount++
+
+          return growthEventHelper({
+            type: 'FOLLOW',
+            socialNetwork: 'TWITTER',
+            username: event.source.screen_name,
+            event
+          })
+        }
+      })
+
+      await Promise.all(promises)
+    }
   }
 
   if (req.body.tweet_create_events) {
     const events = req.body.tweet_create_events
+    // Note: Splitting the events into smaller chunks to avoid DB bottleneck
+    // if we receive a very large number of events at once
+    const chunks = _chunk(events, process.env.CHUNK_COUNT || 100)
     totalMentionEvents = events.length
-    events
-      .filter(event => {
-        // Ignore own tweets, retweets and favorites
-        return !(
-          event.retweeted ||
-          event.favorited ||
-          event.user.screen_name.toLowerCase() ===
-            process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
-        )
-      })
-      .forEach(event => {
-        mentionCount++
-        const key = `twitter/share/${event.user.screen_name}`
-        redisBatch.set(key, JSON.stringify(event), 'EX', 60 * 30)
-        logger.debug(`Pushing twitter mention event to ${key}...`)
-      })
+    for (const chunk of chunks) {
+      const promises = chunk
+        .filter(event => {
+          // Ignore own tweets, retweets and favorites
+          return !(
+            event.retweeted ||
+            event.favorited ||
+            event.user.screen_name.toLowerCase() ===
+              process.env.TWITTER_ORIGINPROTOCOL_USERNAME.toLowerCase()
+          )
+        })
+        .map(event => {
+          mentionCount++
+
+          return growthEventHelper({
+            type: 'SHARE',
+            socialNetwork: 'TWITTER',
+            username: event.user.screen_name,
+            event
+          })
+        })
+
+      await Promise.all(promises)
+    }
   }
 
-  redisBatch.exec(err => {
-    if (err) {
-      logger.error(
-        `[TWITTER] Failed to push ${followCount}/${totalFollowEvents} follow events and ${mentionCount}/${totalMentionEvents} mention events to redis`
-      )
-    } else {
-      logger.debug(
-        `[TWITTER] Pushed ${followCount}/${totalFollowEvents} follow events and ${mentionCount}/${totalMentionEvents} mention events to redis`
-      )
-    }
-  })
-
-  res.status(200).end()
+  if (totalFollowEvents > 0 || totalMentionEvents > 0) {
+    logger.debug(
+      `[TWITTER] Pushed ${followCount}/${totalFollowEvents} follow events and ${mentionCount}/${totalMentionEvents} mention events`
+    )
+  }
 })
 
 module.exports = router
