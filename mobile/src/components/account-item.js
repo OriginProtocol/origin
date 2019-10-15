@@ -10,11 +10,9 @@ import {
   View
 } from 'react-native'
 import { connect } from 'react-redux'
-// import { fbt } from 'fbt-runtime'
 import get from 'lodash.get'
 
 import { truncate, truncateAddress } from 'utils'
-// import Address from 'components/address'
 import Avatar from 'components/avatar'
 import ListStyles from 'styles/list'
 

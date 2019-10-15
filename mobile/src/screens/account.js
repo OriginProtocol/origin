@@ -132,7 +132,7 @@ class AccountScreen extends Component {
             <Address
               address={address}
               label={fbt('Address', 'AccountItem.address')}
-              chars={99999}
+              chars={-1}
               styles={{
                 fontSize: 13,
                 marginVertical: 20,
