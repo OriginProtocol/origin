@@ -166,7 +166,10 @@ function verifyRequestSignature(req) {
   )
 
   if (!valid) {
-    logger.error('Sign verification mismatch', `received:${sign}, expected:${token}`)
+    logger.error(
+      'Sign verification mismatch',
+      `received:${sign}, expected:${token}`
+    )
   }
 
   return valid

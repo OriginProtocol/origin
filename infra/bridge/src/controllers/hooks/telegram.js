@@ -50,7 +50,6 @@ const replyWithMessage = (res, chatId, message) => {
 router.post('/', async (req, res) => {
   const message = req.body.message
 
-  
   if (!message) {
     logger.error('No message in response??', res.body)
     res.send(200).end()
