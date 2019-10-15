@@ -158,13 +158,19 @@ function getCRCToken(payload) {
 function verifyRequestSignature(req) {
   const sign = req.headers['x-twitter-webhooks-signature']
   const token = getCRCToken(req.rawBody)
-  logger.debug(`sign:${sign} token:${token}`)
 
   // Using `.timingSafeEqual` for comparison to avoid timing attacks
   const valid = crypto.timingSafeEqual(
     Buffer.from(sign, 'utf-8'),
     Buffer.from(token, 'utf-8')
   )
+
+  if (!valid) {
+    logger.error(
+      'Sign verification mismatch',
+      `received:${sign}, expected:${token}`
+    )
+  }
 
   return valid
 }
@@ -176,6 +182,7 @@ function verifyRequestSignature(req) {
 router.post('/', bodyParser.text({ type: '*/*' }), async (req, res) => {
   if (!req.body.follow_events && !req.body.tweet_create_events) {
     // If there are no follow or tweet event, ignore this
+    logger.debug('No follow or mention events; ignoring updates.')
     return res.status(200).end()
   }
 

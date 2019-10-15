@@ -16,6 +16,8 @@ const {
 
 const { verifyPromotions } = require('../utils/validation')
 
+const logger = require('../logger')
+
 const PromotionEventToGrowthEvent = {
   TWITTER: {
     FOLLOW: GrowthEventTypes.FollowedOnTwitter,
@@ -38,9 +40,15 @@ const PromotionEventToGrowthEvent = {
  */
 router.get('/verify', verifyPromotions, async (req, res) => {
   const { socialNetwork, type, identity, identityProxy, content } = req.query
-  const contentHash = content
-    ? hashContent(getUntranslatedContent(content))
-    : null
+  const untranslatedContent = content ? getUntranslatedContent(content) : null
+  const contentHash = content ? hashContent(untranslatedContent) : null
+
+  logger.debug(
+    `Checking status of ${socialNetwork} ${type} event for ${identity}`,
+    `\nContent: ${content}`,
+    `\nUntranslatedContent: ${untranslatedContent}`,
+    `\nContentHash: ${contentHash}`
+  )
 
   const addresses = []
   if (identity) addresses.push(identity)
@@ -60,6 +68,9 @@ router.get('/verify', verifyPromotions, async (req, res) => {
       event.status === GrowthEventStatuses.Logged ||
       GrowthEventStatuses.Verified
   )
+
+  logger.debug(`Found ${events.length} matching Growth events`)
+  logger.debug('Verification Status', verified)
 
   return res.status(200).send({
     success: true,

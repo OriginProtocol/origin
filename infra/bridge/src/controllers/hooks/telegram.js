@@ -50,6 +50,14 @@ const replyWithMessage = (res, chatId, message) => {
 router.post('/', async (req, res) => {
   const message = req.body.message
 
+  if (!message) {
+    logger.error('No message in response??', res.body)
+    res.send(200).end()
+    return
+  }
+
+  logger.debug('Message from Telegram', message)
+
   let responseSent = false
 
   if (message.text && !message.from.is_bot && message.chat.type === 'private') {
@@ -77,6 +85,8 @@ router.post('/', async (req, res) => {
       )
     } else {
       // Log unexpected private chat messages to DB
+      logger.debug('Logging chat')
+
       await logChat(message)
       replyWithMessage(
         res,
