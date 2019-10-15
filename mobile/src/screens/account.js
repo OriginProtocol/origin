@@ -137,7 +137,8 @@ class AccountScreen extends Component {
                 fontSize: 13,
                 marginVertical: 20,
                 paddingLeft: 20,
-                paddingRight: 20
+                paddingRight: 20,
+                textAlign: 'center'
               }}
             />
           </View>
