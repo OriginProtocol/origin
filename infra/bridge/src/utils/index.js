@@ -32,43 +32,6 @@ function generateWebsiteCode(ethAddress, host) {
   return sign.slice(2)
 }
 
-function generateTelegramCode(ethAddress, seed) {
-  if (!seed) {
-    // Generating this for randomness
-    seed = generateSixDigitCode()
-  }
-
-  // Stolen from `generateAirbnbCode()` method
-  const hashCode = Web3.utils
-    .sha3(`${ethAddress.toLowerCase()}${seed}`)
-    .substr(-6)
-
-  return {
-    seed,
-    code: Array.prototype.map
-      .call(hashCode, i => dictionary[i.charCodeAt(0)])
-      .join('')
-  }
-}
-
-function verifyTelegramCode(ethAddress, code, seed) {
-  const { code: expectedCode } = generateTelegramCode(ethAddress, seed)
-
-  return expectedCode === code
-}
-
-function getAbsoluteUrl(relativeUrl, params = {}) {
-  const protocol = process.env.HTTPS ? 'https' : 'http'
-  const host = process.env.HOST ? process.env.HOST : 'localhost:5000'
-  const url = new URL(`${protocol}://${host}${relativeUrl}`)
-
-  for (const key in params) {
-    url.searchParams.append(key, params[key])
-  }
-
-  return url.toString()
-}
-
 const htmlEntities = {
   amp: '&',
   '#x26': '&',
@@ -95,12 +58,22 @@ function decodeHTML(content) {
   })
 }
 
+function getAbsoluteUrl(relativeUrl, params = {}) {
+  const protocol = process.env.HTTPS ? 'https' : 'http'
+  const host = process.env.HOST ? process.env.HOST : 'localhost:5000'
+  const url = new URL(`${protocol}://${host}${relativeUrl}`)
+
+  for (const key in params) {
+    url.searchParams.append(key, params[key])
+  }
+
+  return url.toString()
+}
+
 module.exports = {
   generateAirbnbCode,
   generateSignature,
   generateSixDigitCode,
-  generateTelegramCode,
-  verifyTelegramCode,
   generateWebsiteCode,
   getAbsoluteUrl,
   decodeHTML

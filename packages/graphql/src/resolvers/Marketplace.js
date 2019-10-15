@@ -11,13 +11,20 @@ export default {
     if (!contract) {
       return null
     }
-    return contract._address
+    return contract.options.address
   },
-  totalListings: contract => {
+  totalListings: async contract => {
     if (!contract) {
       return null
     }
-    return contract.methods.totalListings().call()
+    let total
+    try {
+      total = await contract.methods.totalListings().call()
+    } catch (err) {
+      if (err && err.message.includes("Couldn't decode")) return null
+      throw err
+    }
+    return total
   },
 
   listing: async (contract, args, context, info) => {
@@ -65,13 +72,27 @@ export default {
     if (!contract) {
       return null
     }
-    return { id: await contract.methods.tokenAddr().call() }
+    let id
+    try {
+      id = await contract.methods.tokenAddr().call()
+    } catch (err) {
+      if (err && err.message.includes("Couldn't decode")) return null
+      throw err
+    }
+    return { id }
   },
   owner: async contract => {
     if (!contract) {
       return null
     }
-    return { id: await contract.methods.owner().call() }
+    let id
+    try {
+      id = await contract.methods.owner().call()
+    } catch (err) {
+      if (err && err.message.includes("Couldn't decode")) return null
+      throw err
+    }
+    return { id }
   },
   events: async (_, { limit = 10, offset = 0 }) => {
     const events = await contracts.marketplace.eventCache.allEvents()
