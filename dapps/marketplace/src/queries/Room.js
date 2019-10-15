@@ -6,6 +6,7 @@ export default gql`
     messaging(id: "defaultAccount") {
       id
       enabled
+      isKeysLoading
       conversation(id: $id, before: $before, after: $after) {
         id
         timestamp

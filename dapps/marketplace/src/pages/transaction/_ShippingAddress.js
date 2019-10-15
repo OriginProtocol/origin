@@ -12,7 +12,8 @@ const ShippingAddress = ({
   className,
   hasMessagingKeys,
   messagingStatusError,
-  messagingStatusLoading
+  messagingStatusLoading,
+  messagingKeysLoading
 }) => {
   const { loading, error, data, refetch } = useQuery(query, {
     variables: {
@@ -54,7 +55,7 @@ const ShippingAddress = ({
     return null
   }
 
-  if (loading || messagingStatusLoading) {
+  if (loading || messagingStatusLoading || messagingKeysLoading) {
     return (
       <div
         className={`decrypted-shipping-address${
