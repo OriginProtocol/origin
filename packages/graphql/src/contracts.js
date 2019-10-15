@@ -275,18 +275,22 @@ export function setNetwork(net, customConfig) {
     )
   }
 
-  let marketplaceVersion
+  let largestMarketVersion
   Object.keys(config)
     .sort()
     .forEach(k => {
-      const marketVersion = k.match(/^V([0-9]+)_Marketplace$/)
-      if (marketVersion) {
-        setMarketplace(config[k], config[`${k}_Epoch`], `0${marketVersion[1]}`)
-        marketplaceVersion = `0${marketVersion[1]}`
+      const marketVersionResult = k.match(/^V([0-9]+)_Marketplace$/)
+      if (marketVersionResult) {
+        const marketVersion = marketVersionResult[1]
+        largestMarketVersion = largestMarketVersion === undefined || largestMarketVersion < marketVersion ?
+          parseInt(marketVersion) :
+          largestMarketVersion
+        setMarketplace(config[k], config[`${k}_Epoch`], `0${marketVersion}`)
       }
     })
+
   if (!config.marketplaceVersion) {
-    config.marketplaceVersion = marketplaceVersion
+    config.marketplaceVersion = largestMarketVersion.toString().padStart(3, '0')
   }
 
   setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
@@ -448,6 +452,11 @@ function setMobileBridge() {
     MarketplaceContract.abi,
     context.marketplace._address
   )
+
+  Object.values(context.marketplaces).forEach(marketplace => {
+    marketplace.contract = context.marketplaceExec
+    marketplace.contractExec = context.marketplaceExec
+  })
 
   context.identityEventsExec = new context.web3Exec.eth.Contract(
     IdentityEventsContract.abi,
