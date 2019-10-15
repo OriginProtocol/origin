@@ -111,7 +111,7 @@ router.post('/', async (req, res) => {
    * Bots can be added to any group by anyone. So check the group id
    * before rewarding the user on production
    */
-  const isGroup = message.chat && message.chat.type === 'group'
+  const isGroup = message.chat && message.chat.type !== 'private'
   const isValidGroup =
     process.env.NODE_ENV !== 'production' ||
     (isGroup &&
