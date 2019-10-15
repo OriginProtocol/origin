@@ -17,6 +17,7 @@ import withIdentity from 'hoc/withIdentity'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withAttestationProviders from 'hoc/withAttestationProviders'
 import withIsMobile from 'hoc/withIsMobile'
+import { withRouter } from 'react-router-dom'
 
 import UserProfileCard from 'components/UserProfileCard'
 import DocumentTitle from 'components/DocumentTitle'
@@ -369,6 +370,12 @@ class UserProfile extends Component {
             }
 
             if (!completed) {
+              const activeAttestation = get(this.props, 'match.params.attestation')
+              if (activeAttestation) {
+                // We have active provider appeneded to the URL
+                // Most likely, user navigated directly to here
+                this.props.history.goBack()
+              }
               // Show the verify modal only if the user closes
               // the attestation modal without making a change
               newState.hideVerifyModal = false
@@ -560,11 +567,11 @@ class UserProfile extends Component {
   }
 }
 
-export default withIsMobile(
+export default withRouter(withIsMobile(
   withAttestationProviders(
     withWallet(withIdentity(withGrowthCampaign(UserProfile)))
   )
-)
+))
 
 require('react-styl')(`
   .profile-page
