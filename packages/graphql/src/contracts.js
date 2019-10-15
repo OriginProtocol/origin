@@ -282,9 +282,11 @@ export function setNetwork(net, customConfig) {
       const marketVersionResult = k.match(/^V([0-9]+)_Marketplace$/)
       if (marketVersionResult) {
         const marketVersion = marketVersionResult[1]
-        largestMarketVersion = largestMarketVersion === undefined || largestMarketVersion < marketVersion ?
-          parseInt(marketVersion) :
-          largestMarketVersion
+        largestMarketVersion =
+          largestMarketVersion === undefined ||
+          largestMarketVersion < marketVersion
+            ? parseInt(marketVersion)
+            : largestMarketVersion
         setMarketplace(config[k], config[`${k}_Epoch`], `0${marketVersion}`)
       }
     })
