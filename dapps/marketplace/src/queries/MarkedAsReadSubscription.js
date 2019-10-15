@@ -6,6 +6,7 @@ export default gql`
       conversationId
       roomId
       messagesRead
+      totalUnread
     }
   }
 `

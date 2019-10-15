@@ -158,7 +158,7 @@ app.get('/conversations/:address/unread', async (req, res) => {
 
   address = Web3Utils.toChecksumAddress(address)
 
-  // TODO: Get rid of the custom query and find the correct ORM way
+  // Note: The following query is bit complex to do using the sequelize ORM
 
   try {
     const [[convs]] = await db.sequelize.query(
@@ -203,55 +203,7 @@ app.get('/conversations/:address', async (req, res) => {
 
   address = Web3Utils.toChecksumAddress(address)
 
-  // TODO: Get rid of the custom query and find the correct ORM way
-
-  // // Limit to 10 conversations per query
-  // const limit = after ? undefined : 10
-
-  // const conversationWhere = {}
-  // const constraints = {}
-  // if (after) {
-  //   constraints[db.Sequelize.Op.gt] = new Date(after)
-  // }
-
-  // if (before) {
-  //   constraints[db.Sequelize.Op.lt] = new Date(before)
-  // }
-
-  // if (before || after) {
-  //   conversationWhere.updatedAt = constraints
-  // }
-
-  // const convs = await db.Conversee.findAll({
-  //   where: { ethAddress: address },
-  //   include: [{
-  //     model: db.Conversation,
-  //     where: conversationWhere,
-  //     as: 'conversations',
-  //     include: [{
-  //       model: db.Message,
-  //       as: 'messages',
-  //       where: {
-  //         read: false
-  //       }
-  //     }],
-  //     // attributes: {
-  //     //   include: [
-  //     //     [db.Sequelize.fn('COUNT', db.Sequelize.col('msg_message.id'), 'unreadCount')]
-  //     //   ]
-  //     // }
-  //     // include: [{
-  //     //   model: db.Message,
-  //     //   // attributes: [],
-  //     //   where: {
-  //     //     read: false
-  //     //   }
-  //     // }]
-  //   }],
-  //   order: [[db.Conversation, 'updatedAt', 'DESC']],
-  //   limit
-  // })
-
+  // Note: The following query is bit complex to do using the sequelize ORM
   try {
     const [convs] = await db.sequelize.query(
       `
