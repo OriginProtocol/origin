@@ -1,12 +1,11 @@
-import React, { Component, useEffect, useState } from 'react'
-import { useQuery, useSubscription } from 'react-apollo'
+import React, { Component } from 'react'
 import get from 'lodash/get'
 import { fbt } from 'fbt-runtime'
 
 import withWallet from 'hoc/withWallet'
+import withRoom from 'hoc/withRoom'
 
 import query from 'queries/Room'
-import subscription from 'queries/NewMessageSubscription'
 import SendMessage from './SendMessage'
 import MessageWithIdentity from './Message'
 import QueryError from 'components/QueryError'
@@ -16,6 +15,10 @@ import LoadingSpinner from 'components/LoadingSpinner'
 import TopScrollListener from 'components/TopScrollListener'
 
 import OfferEvent from './OfferEvent'
+
+const isOfferEventsDisabled = () => {
+  return get(window, 'localStorage.disableOfferEvents', 'false') === 'true'
+}
 
 class AllMessages extends Component {
   state = {
@@ -80,14 +83,24 @@ class AllMessages extends Component {
   }
 
   render() {
-    const { messages } = this.props
+    const { messages, hasMore, isLoadingMore, wallet } = this.props
+
+    if (!messages || messages.length === 0) {
+      return (
+        <div className="no-conversation">
+          <fbt desc="Room.noMessage">
+            You haven&apos;t started a conversation with this user
+          </fbt>
+        </div>
+      )
+    }
 
     return (
       <TopScrollListener
         onTop={() => {
           this.onTopListener()
         }}
-        hasMore={this.props.hasMore}
+        hasMore={hasMore}
         ready={this.state.ready}
         onInnerRef={el => (this.el = el)}
         className="messages"
@@ -95,11 +108,15 @@ class AllMessages extends Component {
         <>
           {messages.map((message, idx) => {
             if (message.type === 'event') {
+              if (isOfferEventsDisabled()) {
+                return null
+              }
+
               return (
                 <OfferEvent
                   key={`event-${message.index}`}
                   event={message}
-                  wallet={this.props.wallet}
+                  wallet={wallet}
                 />
               )
             }
@@ -112,10 +129,15 @@ class AllMessages extends Component {
                 nextMessage={idx > 0 ? messages[idx - 1] : null}
                 key={`message-${message.index}`}
                 wallet={get(message, 'address')}
-                isUser={this.props.wallet === get(message, 'address')}
+                isUser={wallet === get(message, 'address')}
               />
             )
           })}
+          {isLoadingMore && (
+            <div className="messages-loading-spinner">
+              <fbt desc="Loading...">Loading...</fbt>
+            </div>
+          )}
         </>
       </TopScrollListener>
     )
@@ -123,102 +145,29 @@ class AllMessages extends Component {
 }
 
 const Room = props => {
-  const { id, wallet, markRead, enabled, counterpartyEvents } = props
+  const { id, wallet, markRead, enabled } = props
 
-  const [messages, setMessages] = useState(null)
-  const [loaded, setLoaded] = useState(null)
+  const { roomFetchMore, room, roomError, roomLoading, roomLoadingMore } = props
 
-  // Query for initial data
-  const { error, data, networkStatus, fetchMore } = useQuery(query, {
-    variables: { id },
-    skip: !id,
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'network-only'
-  })
+  const messages = get(room, 'messages', [])
+  const hasMore = get(room, 'hasMore', false)
 
-  // Subscribe to new messages
-  useSubscription(subscription, {
-    onSubscriptionData: ({
-      subscriptionData: {
-        data: { messageAdded }
-      }
-    }) => {
-      const { conversationId, message } = messageAdded
-
-      if (id === conversationId) {
-        setMessages([message, ...messages])
-      }
-    }
-  })
-
-  const isLoading = networkStatus === 1
-
-  useEffect(() => {
-    // To set `loaded` control variable to true
-    // After the data has loaded for the first time
-    if (loaded) {
-      return
-    }
-    if (networkStatus === 7) {
-      setLoaded(true)
-      setMessages(get(data, 'messaging.conversation.messages', []))
-    }
-  }, [networkStatus, loaded, data])
-
-  useEffect(() => {
-    // Reset state
-    setLoaded(false)
-  }, [id])
-
-  if (isLoading && !loaded) {
+  if (roomLoading && !messages.length) {
     return <LoadingSpinner />
-  } else if (error) {
-    return <QueryError query={query} error={error} />
-  } else if (!isLoading && (!data || !data.messaging || !messages)) {
-    return (
-      <p className="p-3">
-        <fbt desc="Room.cannotQuery">Cannot query messages</fbt>
-      </p>
-    )
+  } else if (roomError) {
+    return <QueryError query={query} error={roomError} />
   }
-
-  const hasMore = get(data, 'messaging.conversation.hasMore', false)
 
   return (
     <>
       <AllMessages
-        events={counterpartyEvents}
-        eventsLoading={props.counterpartyEventsLoading}
         messages={messages}
         wallet={wallet}
         convId={id}
         markRead={() => markRead({ variables: { id } })}
         hasMore={hasMore}
-        fetchMore={({ before }) => {
-          fetchMore({
-            variables: {
-              id,
-              before
-            },
-            updateQuery: (prevData, { fetchMoreResult }) => {
-              const newMessages =
-                fetchMoreResult.messaging.conversation.messages
-
-              setMessages(newMessages)
-
-              return {
-                ...prevData,
-                messaging: {
-                  ...prevData.messaging,
-                  conversation: {
-                    ...prevData.messaging.conversation,
-                    messages: newMessages
-                  }
-                }
-              }
-            }
-          })
-        }}
+        fetchMore={args => roomFetchMore(args)}
+        isLoadingMore={roomLoadingMore}
       />
       {enabled ? (
         <SendMessage to={props.id} />
@@ -231,7 +180,7 @@ const Room = props => {
   )
 }
 
-export default withWallet(Room)
+export default withWallet(withRoom(Room))
 
 require('react-styl')(`
   .messages-page .messages
@@ -253,6 +202,20 @@ require('react-styl')(`
       margin-top: 1rem
     .stages
       min-height: 4rem
+    .messages-loading-spinner
+      color: var(--bluey-grey)
+      font-style: italic
+      text-align: center
+      display: block
+      width: 100%
+  .no-conversation
+    color: var(--bluey-grey)
+    font-style: italic
+    flex: 1
+    align-items: center
+    display: flex
+    width: 100%
+    justify-content: center
   .enable-messaging-action
     width: 100%
     flex: auto 0 0

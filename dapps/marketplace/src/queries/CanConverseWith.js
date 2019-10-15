@@ -5,6 +5,7 @@ export default gql`
     messaging(id: "defaultAccount") {
       id
       enabled
+      isKeysLoading
       canConverseWith(id: $account)
       forwardTo(id: $account)
     }

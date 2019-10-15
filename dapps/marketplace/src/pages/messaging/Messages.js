@@ -7,7 +7,7 @@ import get from 'lodash/get'
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 import withIsMobile from 'hoc/withIsMobile'
-import withMessaging from 'hoc/withMessaging'
+import withConversations from 'hoc/withConversations'
 import query from 'queries/Conversations'
 import MarkConversationRead from 'mutations/MarkConversationRead'
 
@@ -21,8 +21,6 @@ import MobileModal from 'components/MobileModal'
 
 import { abbreviateName, truncateAddress } from 'utils/user'
 import LoadingSpinner from 'components/LoadingSpinner'
-
-import RefetchOnMessageData from 'pages/messaging/RefetchOnMessageData'
 
 import BottomScrollListener from 'components/BottomScrollListener'
 
@@ -44,14 +42,20 @@ const ConversationList = ({
   onBack,
   messagingFetchMore,
   messagingNetworkStatus,
-  wallet
+  wallet,
+  messagingKeysLoading
 }) => {
   const [markConversationRead] = useMutation(MarkConversationRead)
   const [hasMore, setHasMore] = useState(true)
 
+  const conversations = get(messaging, 'conversations', [])
+
   if (messagingError) {
     return <QueryError query={query} error={messagingError} />
-  } else if (messagingLoading && !messaging) {
+  } else if (
+    (messagingLoading && !conversations.length) ||
+    messagingKeysLoading
+  ) {
     return <LoadingSpinner />
   } else if (!messagingLoading && !messaging) {
     return (
@@ -60,8 +64,6 @@ const ConversationList = ({
       </p>
     )
   }
-
-  const conversations = get(messaging, 'conversations', [])
 
   let content = !room ? null : (
     <div className="conversation-view">
@@ -129,6 +131,11 @@ const ConversationList = ({
               wallet={wallet}
             />
           ))}
+          {messagingNetworkStatus === 3 && (
+            <div className="conversations-loading">
+              <fbt desc="Loading...">Loading...</fbt>
+            </div>
+          )}
         </>
       </BottomScrollListener>
       {content}
@@ -149,7 +156,8 @@ const Messages = props => {
       !props.messaging ||
       room ||
       props.isMobile ||
-      props.messagingLoading
+      props.messagingLoading ||
+      props.messagingKeysLoading
     ) {
       return
     }
@@ -167,13 +175,13 @@ const Messages = props => {
     back,
     props.messaging,
     props.isMobile,
-    props.messagingLoading
+    props.messagingLoading,
+    props.messagingKeysLoading
   ])
 
   return (
     <div className="container messages-page">
       <DocumentTitle pageTitle={<fbt desc="Messages.title">Messages</fbt>} />
-      <RefetchOnMessageData refetch={props.messagingRefetch} />
       <ConversationList
         {...props}
         room={room}
@@ -186,7 +194,7 @@ const Messages = props => {
   )
 }
 
-export default withIsMobile(withWallet(withMessaging(Messages)))
+export default withIsMobile(withWallet(withConversations(Messages)))
 
 require('react-styl')(`
   .messages-page
@@ -255,6 +263,13 @@ require('react-styl')(`
         display: flex
         -webkit-overflow-scrolling: touch
         flex-direction: column
+    .conversations-loading
+      color: var(--bluey-grey)
+      font-style: italic
+      text-align: center
+      display: block
+      width: 100%
+      padding: 0.5rem
 
   .mobile-modal-light
     .messages-modal

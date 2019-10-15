@@ -9,12 +9,14 @@ module.exports = `
     conversationId: String
     roomId: String
     message: Message
+    totalUnread: Int
   }
 
   type MarkedAsReadResult {
     conversationId: String
     roomId: String
     messagesRead: Int
+    totalUnread: Int
   }
 
   type MessagingStatusChangeResult {
@@ -39,6 +41,7 @@ module.exports = `
   type Messaging {
     id: ID!
     enabled: Boolean
+    isKeysLoading: Boolean
     syncProgress: String
     synced: Boolean
     pubKey: String

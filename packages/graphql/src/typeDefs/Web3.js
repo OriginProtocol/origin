@@ -42,6 +42,13 @@ module.exports = `
     performanceMode: Boolean
     relayerEnabled: Boolean
     proxyAccountsEnabled: Boolean
+    messaging: MessagingConfigInput
+    screenConsole: String
+  }
+
+  input MessagingConfigInput {
+    globalKeyServer: String
+    messagingNamespace: String
   }
 
   type Config {
@@ -62,6 +69,12 @@ module.exports = `
     relayer: String
     performanceMode: Boolean
     marketplaceVersion: String
+    messaging: MessagingConfig
+  }
+
+  type MessagingConfig {
+    globalKeyServer: String
+    messagingNamespace: String
   }
 
   extend type Mutation {
