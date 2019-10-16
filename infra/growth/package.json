@@ -43,7 +43,7 @@
     "chai-things": "0.2.0",
     "chalk": "2.4.2",
     "mocha": "6.2.1",
-    "nodemon": "1.19.3",
+    "nodemon": "1.19.4",
     "rewire": "4.0.1"
   },
   "scripts": {
