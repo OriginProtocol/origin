@@ -21,7 +21,7 @@ import Configs from './configs'
 
 const isBrowser =
   typeof window !== 'undefined' && window.localStorage ? true : false
-const isWebView =
+const isWebView = 
   typeof window !== 'undefined' &&
   typeof window.ReactNativeWebView !== 'undefined'
 
@@ -84,7 +84,7 @@ export function newBlock(blockNumber) {
     context.ProxyFactory.eventCache.setLatestBlock(blockNumber)
   }
 
-  pubsub.publish('NEW_BLOCK', { newBlock: { id: blockNumber } })
+  context.pubsub.publish('NEW_BLOCK', { newBlock: { id: blockNumber } })
 }
 
 const blockQuery = `query BlockNumber { web3 { blockNumber } }`
@@ -179,6 +179,7 @@ export function setNetwork(net, customConfig) {
   if (!config) {
     return
   }
+
   config = { ...config, ...customConfig }
 
   context.net = net
@@ -205,30 +206,52 @@ export function setNetwork(net, customConfig) {
     wsSub.unsubscribe()
   }
   clearInterval(blockInterval)
+  context.pubsub = pubsub
+  context.metaMaskEnabled = metaMaskEnabled
 
-  const provider = process.env.PROVIDER_URL
-    ? process.env.PROVIDER_URL
-    : config.provider
-  web3 = applyWeb3Hack(new Web3(provider))
+  web3 = setupWeb3(config, net)
 
-  const qps =
-    typeof process.env.MAX_RPC_QPS !== 'undefined'
-      ? parseInt(process.env.MAX_RPC_QPS)
-      : 100
-  const maxConcurrent =
-    typeof process.env.MAX_RPC_CONCURRENT !== 'undefined'
-      ? parseInt(process.env.MAX_RPC_CONCURRENT)
-      : 25
+  setupOriginProviders(config, net)
+
+  setupMessaging(config)
+
+  setupPrivateKeys(web3)
+
+  setupMarketplaces(config)
+
+  setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
+
+  setupProxyContracts(config)
+
+  setupWsProviderAndBlockQuery(config, net)
+
+  setupTokens(config)
+
+  setupDaiExchange(config)
+
+  setupTransactions()
+
+  setupMetaMask(config)
+
+  overrideMessagingWeb3()
+
+  validateContracts(web3, net)
+}
+
+function setupOriginProviders(config, net) {
+  const getEnvVar = (varName, defaultValue) => {
+    return typeof process.env[varName] !== 'undefined'
+      ? parseInt(process.env[varName])
+      : defaultValue
+  }
+
+  const qps = getEnvVar('MAX_RPC_QPS', 100)
+  const maxConcurrent = getEnvVar('MAX_RPC_CONCURRENT', 25)
+  
   if (config.useMetricsProvider) {
     // These are "every N requests"
-    const echoEvery =
-      typeof process.env.ECHO_EVERY !== 'undefined'
-        ? parseInt(process.env.ECHO_EVERY)
-        : 250
-    const breakdownEvery =
-      typeof process.env.BREAKDOWN_EVERY !== 'undefined'
-        ? parseInt(process.env.BREAKDOWN_EVERY)
-        : 1000
+    const echoEvery = getEnvVar('ECHO_EVERY', 250)
+    const breakdownEvery = getEnvVar('BREAKDOWN_EVERY', 1000)
 
     initStandardSubproviders(web3, {
       echoEvery,
@@ -245,60 +268,200 @@ export function setNetwork(net, customConfig) {
       ethGasStation: ['mainnet', 'rinkeby'].includes(net)
     })
   }
+}
+
+function setupWeb3(config, net) {
+  const provider = process.env.PROVIDER_URL
+    ? process.env.PROVIDER_URL
+    : config.provider
+
+  const web3 = applyWeb3Hack(new Web3(provider))
 
   if (isBrowser) {
     window.localStorage.ognNetwork = net
     window.web3 = web3
   }
 
+  // web3 is used for calls (queries) whereas web3Exec is used for transactions
   context.web3 = web3
-  context.web3Exec = web3
+  // if is running in react native environment
+  if (isBrowser && isWebView) {
+    // Init custom mobile bridge web3 provider which modifies certain methods
+    context.mobileBridge = OriginMobileBridge({ web3 })
+    const mobileBridgeProvider = context.mobileBridge.getProvider()
+    context.web3Exec = applyWeb3Hack(new Web3(mobileBridgeProvider))
+  } else {
+    context.web3Exec = web3
+  }
 
+  return web3
+}
+
+function setupMessaging(config) {
   if (isBrowser) {
     const MessagingConfig = config.messaging || DefaultMessagingConfig
     MessagingConfig.personalSign = metaMask && metaMaskEnabled ? true : false
-    if (isWebView) {
-      context.mobileBridge = OriginMobileBridge({ web3 })
-    }
     context.messaging = OriginMessaging({
       ...MessagingConfig,
-      web3,
+      web3: web3,
       mobileBridge: context.mobileBridge,
       pubsub: pubsub
     })
   }
+}
 
-  context.metaMaskEnabled = metaMaskEnabled
-  if (isBrowser && window.localStorage.privateKeys) {
-    JSON.parse(window.localStorage.privateKeys).forEach(key =>
-      web3.eth.accounts.wallet.add(key)
-    )
-  }
-
-  let largestMarketVersion
+function setupMarketplaces(config) {
+  let latestMarketVersion
   Object.keys(config)
     .sort()
     .forEach(k => {
       const marketVersionResult = k.match(/^V([0-9]+)_Marketplace$/)
       if (marketVersionResult) {
         const marketVersion = marketVersionResult[1]
-        largestMarketVersion =
-          largestMarketVersion === undefined ||
-          largestMarketVersion < marketVersion
+        latestMarketVersion =
+          latestMarketVersion === undefined ||
+          latestMarketVersion < marketVersion
             ? parseInt(marketVersion)
-            : largestMarketVersion
+            : latestMarketVersion
         setMarketplace(config[k], config[`${k}_Epoch`], `0${marketVersion}`)
       }
     })
 
   if (!config.marketplaceVersion) {
-    config.marketplaceVersion = largestMarketVersion.toString().padStart(3, '0')
+    config.marketplaceVersion = latestMarketVersion.toString().padStart(3, '0')
+  }
+}
+
+function setupPrivateKeys(web3) {
+  if (isBrowser && window.localStorage.privateKeys) {
+    JSON.parse(window.localStorage.privateKeys).forEach(key =>
+      web3.eth.accounts.wallet.add(key)
+    )
+  }
+}
+
+function setupTokens(config) {
+  context.tokens = config.tokens || []
+  if (config.OriginToken) {
+    context.ogn = new web3.eth.Contract(
+      OriginTokenContract.abi,
+      config.OriginToken
+    )
+    context[config.OriginToken] = context.ogn
+    context.tokens.unshift({
+      id: config.OriginToken,
+      type: 'OriginToken',
+      name: 'Origin Token',
+      symbol: 'OGN',
+      decimals: '18',
+      supply: '1000000000'
+    })
+
+    if (shouldUseMobileBridge()) {
+      context.ognExec = new context.web3Exec.eth.Contract(
+        OriginTokenContract.abi,
+        context.ogn._address
+      )
+    }
   }
 
-  setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
+  context.tokens.forEach(token => {
+    const contractDef =
+      token.type === 'OriginToken' ? OriginTokenContract : TokenContract
+    let contract
+    if (shouldUseMobileBridge()) {
+      contract = new context.web3Exec.eth.Contract(
+        contractDef.abi,
+        token.id
+      )
+    } else {
+      contract = new web3.eth.Contract(contractDef.abi, token.id)
+    }
+    //contract is used for calls (queries) whereas contractExec is used for transactions
+    token.contract = contract
+    token.contractExec = contract
+  })
+}
 
-  setProxyContracts(config)
+function setupMetaMask(config) {
+  if (metaMask) {
+    context.metaMask = metaMask
+    context.ognMM = new metaMask.eth.Contract(
+      OriginTokenContract.abi,
+      config.OriginToken
+    )
 
+    context.tokens.forEach(token => {
+      token.contractMM = new metaMask.eth.Contract(
+        token.contract.options.jsonInterface,
+        token.contract.options.address
+      )
+    })
+  }
+
+  if (metaMask && metaMaskEnabled) {
+    context.metaMaskEnabled = true
+    context.web3Exec = metaMask
+    context.marketplaceExec = context.marketplaceMM
+    Object.keys(context.marketplaces || {}).forEach(
+      version =>
+        (context.marketplaces[version].contractExec =
+          context.marketplaces[version].contractMM)
+    )
+    context.ognExec = context.ognMM
+    context.tokens.forEach(token => (token.contractExec = token.contractMM))
+    context.daiExchangeExec = context.daiExchangeMM
+  } else if (!shouldUseMobileBridge()){
+    context.metaMaskEnabled = false
+    context.web3Exec = web3
+    Object.keys(context.marketplaces || {}).forEach(
+      version =>
+        (context.marketplaces[version].contractExec =
+          context.marketplaces[version].contract)
+    )
+    context.ognExec = context.ogn
+    context.tokens.forEach(token => (token.contractExec = token.contract))
+    context.daiExchangeExec = context.daiExchange
+  }
+}
+
+function setupDaiExchange(config) {
+  context.uniswapFactory = new web3.eth.Contract(factoryAbi)
+  if (config.DaiExchange) {
+    let contract
+    if (shouldUseMobileBridge()) {
+      contract = new context.web3Exec.eth.Contract(
+        exchangeAbi,
+        config.DaiExchange
+      )
+    } else {
+      contract = new web3.eth.Contract(exchangeAbi, config.DaiExchange)
+    }
+    //daiExchange is used for calls (queries) whereas daiExchangeExec is used for transactions
+    context.daiExchange = contract
+    context.daiExchangeExec = contract
+    if (metaMask) {
+      context.daiExchangeMM = new metaMask.eth.Contract(
+        exchangeAbi,
+        config.DaiExchange
+      )
+      if (metaMaskEnabled) {
+        context.daiExchangeExec = context.daiExchangeMM
+      }
+    }
+  }
+}
+
+function setupTransactions() {
+  context.transactions = {}
+  try {
+    context.transactions = JSON.parse(window.localStorage[`${net}Transactions`])
+  } catch (e) {
+    /* Ignore */
+  }
+}
+
+function setupWsProviderAndBlockQuery(config, net) {
   if (config.performanceMode && context.config.graphql && net !== 'test') {
     queryForBlocks()
   } else if (config.providerWS) {
@@ -320,80 +483,21 @@ export function setNetwork(net, customConfig) {
   } else {
     pollForBlocks()
   }
+
   try {
     web3.eth.getBlockNumber().then(newBlock)
   } catch (error) {
     console.log(`Could not retrieve block: ${error}`)
   }
-  context.pubsub = pubsub
+}
 
-  context.tokens = config.tokens || []
-  if (config.OriginToken) {
-    context.ogn = new web3.eth.Contract(
-      OriginTokenContract.abi,
-      config.OriginToken
-    )
-    context[config.OriginToken] = context.ogn
-    context.tokens.unshift({
-      id: config.OriginToken,
-      type: 'OriginToken',
-      name: 'Origin Token',
-      symbol: 'OGN',
-      decimals: '18',
-      supply: '1000000000'
-    })
+function overrideMessagingWeb3() {
+  if (context.messaging) {
+    context.messaging.web3 = context.web3Exec
   }
+}
 
-  context.tokens.forEach(token => {
-    const contractDef =
-      token.type === 'OriginToken' ? OriginTokenContract : TokenContract
-    const contract = new web3.eth.Contract(contractDef.abi, token.id)
-    token.contract = contract
-    token.contractExec = contract
-  })
-
-  context.uniswapFactory = new web3.eth.Contract(factoryAbi)
-  if (config.DaiExchange) {
-    const contract = new web3.eth.Contract(exchangeAbi, config.DaiExchange)
-    context.daiExchange = contract
-    context.daiExchangeExec = contract
-    if (metaMask) {
-      context.daiExchangeMM = new metaMask.eth.Contract(
-        exchangeAbi,
-        config.DaiExchange
-      )
-      if (metaMaskEnabled) {
-        context.daiExchangeExec = context.daiExchangeMM
-      }
-    }
-  }
-
-  context.transactions = {}
-  try {
-    context.transactions = JSON.parse(window.localStorage[`${net}Transactions`])
-  } catch (e) {
-    /* Ignore */
-  }
-
-  if (metaMask) {
-    context.metaMask = metaMask
-    context.ognMM = new metaMask.eth.Contract(
-      OriginTokenContract.abi,
-      config.OriginToken
-    )
-    context.tokens.forEach(token => {
-      token.contractMM = new metaMask.eth.Contract(
-        token.contract.options.jsonInterface,
-        token.contract.options.address
-      )
-    })
-  }
-  setMetaMask()
-
-  if (isWebView) {
-    setMobileBridge()
-  }
-
+function validateContracts(web3, net) {
   // Do a little contract validation
   if (net !== 'mainnet') {
     Object.keys(context.marketplaces || {}).forEach(version => {
@@ -406,93 +510,14 @@ export function setNetwork(net, customConfig) {
   }
 }
 
-function setMetaMask() {
-  if (metaMask && metaMaskEnabled) {
-    context.metaMaskEnabled = true
-    context.web3Exec = metaMask
-    context.marketplaceExec = context.marketplaceMM
-    Object.keys(context.marketplaces || {}).forEach(
-      version =>
-        (context.marketplaces[version].contractExec =
-          context.marketplaces[version].contractMM)
-    )
-    context.ognExec = context.ognMM
-    context.tokens.forEach(token => (token.contractExec = token.contractMM))
-    context.daiExchangeExec = context.daiExchangeMM
-  } else {
-    context.metaMaskEnabled = false
-    context.web3Exec = web3
-    Object.keys(context.marketplaces || {}).forEach(
-      version =>
-        (context.marketplaces[version].contractExec =
-          context.marketplaces[version].contract)
-    )
-    context.ognExec = context.ogn
-    context.tokens.forEach(token => (token.contractExec = token.contract))
-    context.daiExchangeExec = context.daiExchange
-  }
-  if (context.messaging) {
-    context.messaging.web3 = context.web3Exec
-  }
-}
+function shouldUseMobileBridge() {
+  if (
+    context.metaMaskEnabled ||
+    !context.mobileBridge ||
+    (metaMask && metaMaskEnabled)
+  ) return false
 
-/* Initialize mobile bridge to funnel transactions through a react-native
- * webview from the DApp
- */
-function setMobileBridge() {
-  if (context.metaMaskEnabled) return
-  if (!context.mobileBridge) return
-  if (metaMask && metaMaskEnabled) return
-
-  // Init our custom web3 provider which modifies certain methods
-  const mobileBridgeProvider = context.mobileBridge.getProvider()
-  context.web3Exec = applyWeb3Hack(new Web3(mobileBridgeProvider))
-
-  // Replace all the contracts with versions that use our custom web3 provider
-  // so that contract calls get routed through window.postMessage
-  context.marketplaceExec = new context.web3Exec.eth.Contract(
-    MarketplaceContract.abi,
-    context.marketplace._address
-  )
-
-  Object.values(context.marketplaces).forEach(marketplace => {
-    marketplace.contract = context.marketplaceExec
-    marketplace.contractExec = context.marketplaceExec
-  })
-
-  context.identityEventsExec = new context.web3Exec.eth.Contract(
-    IdentityEventsContract.abi,
-    context.identityEvents._address
-  )
-
-  if (context.config.OriginToken) {
-    context.ognExec = new context.web3Exec.eth.Contract(
-      OriginTokenContract.abi,
-      context.ogn._address
-    )
-  }
-
-  if (context.config.DaiExchange) {
-    context.daiExchangeExec = new context.web3Exec.eth.Contract(
-      exchangeAbi,
-      context.daiExchange._address
-    )
-  }
-
-  context.tokens.forEach(token => {
-    const contractDef =
-      token.type === 'OriginToken' ? OriginTokenContract : TokenContract
-    const contract = new context.web3Exec.eth.Contract(
-      contractDef.abi,
-      token.id
-    )
-    token.contract = contract
-    token.contractExec = contract
-  })
-
-  if (context.messaging) {
-    context.messaging.web3 = context.web3Exec
-  }
+  return isWebView
 }
 
 export function toggleMetaMask(enabled) {
@@ -511,7 +536,17 @@ export function toggleMetaMask(enabled) {
 export function setMarketplace(address, epoch, version = '000') {
   if (!address) return
   address = web3.utils.toChecksumAddress(address)
-  const contract = new web3.eth.Contract(MarketplaceContract.abi, address)
+  let contract
+  if (shouldUseMobileBridge()) {
+    // Create contract so that it uses our custom web3 provider and
+    // contract calls get routed through window.postMessage
+    contract = new context.web3Exec.eth.Contract(
+      MarketplaceContract.abi,
+      address
+    )
+  } else {
+    contract = new web3.eth.Contract(MarketplaceContract.abi, address)
+  }
 
   try {
     patchWeb3Contract(contract, epoch, {
@@ -604,7 +639,14 @@ export function setIdentityEvents(address, epoch) {
     throw err
   }
 
-  context.identityEventsExec = context.identityEvents
+  if (shouldUseMobileBridge()) {
+    context.identityEventsExec = new context.web3Exec.eth.Contract(
+      IdentityEventsContract.abi,
+      address
+    )
+  } else {
+    context.identityEventsExec = context.identityEvents
+  }
 
   if (metaMask) {
     context.identityEventsMM = new metaMask.eth.Contract(
@@ -617,7 +659,7 @@ export function setIdentityEvents(address, epoch) {
   }
 }
 
-export function setProxyContracts(config) {
+export function setupProxyContracts(config) {
   if (!config.ProxyFactory) return
   context.ProxyFactory = new web3.eth.Contract(
     IdentityProxyFactory.abi,
