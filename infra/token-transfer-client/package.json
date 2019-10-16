@@ -8,7 +8,7 @@
     "@material-ui/core": "4.5.1",
     "@material-ui/icons": "4.5.1",
     "@origin/token-transfer-server": "0.1.0",
-    "@sentry/browser": "5.7.0",
+    "@sentry/browser": "5.7.1",
     "@svgr/webpack": "4.3.3",
     "@typescript-eslint/eslint-plugin": "2.4.0",
     "@typescript-eslint/parser": "2.4.0",
@@ -73,7 +73,7 @@
     "typeface-poppins": "0.0.72",
     "url-loader": "2.2.0",
     "web3-utils": "^1.2.1",
-    "webpack": "4.41.1",
+    "webpack": "4.41.2",
     "webpack-dev-server": "3.8.2",
     "webpack-manifest-plugin": "2.2.0",
     "workbox-webpack-plugin": "4.3.1"
