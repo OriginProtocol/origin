@@ -2,7 +2,6 @@ const Sequelize = require('sequelize')
 
 const db = require('../models')
 const { CampaignRules } = require('./rules')
-const enums = require('../enums')
 
 class GrowthCampaign {
   /**
