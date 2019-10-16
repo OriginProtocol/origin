@@ -21,7 +21,7 @@ import Configs from './configs'
 
 const isBrowser =
   typeof window !== 'undefined' && window.localStorage ? true : false
-const isWebView = 
+const isWebView =
   typeof window !== 'undefined' &&
   typeof window.ReactNativeWebView !== 'undefined'
 
@@ -247,7 +247,7 @@ function setupOriginProviders(config, net) {
 
   const qps = getEnvVar('MAX_RPC_QPS', 100)
   const maxConcurrent = getEnvVar('MAX_RPC_CONCURRENT', 25)
-  
+
   if (config.useMetricsProvider) {
     // These are "every N requests"
     const echoEvery = getEnvVar('ECHO_EVERY', 250)
@@ -370,10 +370,7 @@ function setupTokens(config) {
       token.type === 'OriginToken' ? OriginTokenContract : TokenContract
     let contract
     if (shouldUseMobileBridge()) {
-      contract = new context.web3Exec.eth.Contract(
-        contractDef.abi,
-        token.id
-      )
+      contract = new context.web3Exec.eth.Contract(contractDef.abi, token.id)
     } else {
       contract = new web3.eth.Contract(contractDef.abi, token.id)
     }
@@ -411,7 +408,7 @@ function setupMetaMask(config) {
     context.ognExec = context.ognMM
     context.tokens.forEach(token => (token.contractExec = token.contractMM))
     context.daiExchangeExec = context.daiExchangeMM
-  } else if (!shouldUseMobileBridge()){
+  } else if (!shouldUseMobileBridge()) {
     context.metaMaskEnabled = false
     context.web3Exec = web3
     Object.keys(context.marketplaces || {}).forEach(
@@ -515,7 +512,8 @@ function shouldUseMobileBridge() {
     context.metaMaskEnabled ||
     !context.mobileBridge ||
     (metaMask && metaMaskEnabled)
-  ) return false
+  )
+    return false
 
   return isWebView
 }
