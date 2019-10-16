@@ -101,7 +101,7 @@ router.post('/', async (req, res) => {
   if (!responseSent) {
     // Set status code and send back the empty response,
     // so that connection doesn't has to be alive
-    res.send(200).end()
+    res.status(200).end()
   }
 
   let followCount = 0
@@ -138,7 +138,7 @@ router.post('/', async (req, res) => {
           // Note: Username is optional in Telegram.
           // ID is returned as number, We don't want to run into the big number issues
           // So use id only if username is not set
-          const username = member.username || member.id
+          const username = String(member.username || member.id)
 
           return growthEventHelper({
             type: 'FOLLOW',
