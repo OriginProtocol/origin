@@ -229,9 +229,9 @@ export function setNetwork(net, customConfig) {
 
   setupDaiExchange(config)
 
-  setupTransactions()
+  setupTransactions(net)
 
-  setupMetaMask(config)
+  setMetaMask(config)
 
   overrideMessagingWeb3()
 
@@ -380,7 +380,7 @@ function setupTokens(config) {
   })
 }
 
-function setupMetaMask(config) {
+function setMetaMask(config) {
   if (metaMask) {
     context.metaMask = metaMask
     context.ognMM = new metaMask.eth.Contract(
@@ -449,7 +449,7 @@ function setupDaiExchange(config) {
   }
 }
 
-function setupTransactions() {
+function setupTransactions(net) {
   context.transactions = {}
   try {
     context.transactions = JSON.parse(window.localStorage[`${net}Transactions`])
