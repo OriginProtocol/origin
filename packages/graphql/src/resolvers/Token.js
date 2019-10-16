@@ -42,7 +42,11 @@ export default {
   totalSupply: async token => {
     const contract = tokenContract(token.code)
     if (!contract) return ''
-    return await contract.methods.totalSupply().call()
+    try {
+      return await contract.methods.totalSupply().call()
+    } catch (e) {
+      return null
+    }
   },
   priceInUSD: async token => {
     const currency = await currencies.get(token.id)

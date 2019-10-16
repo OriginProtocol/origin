@@ -18,9 +18,15 @@ const AttestationServiceToEventType = {
 }
 
 class GrowthEvent {
-  static async _findAll(ethAddress, eventType, customId) {
+  static async _findAll(addresses, eventType, customId) {
+    const _addresses = Array.isArray(addresses) ? addresses : [addresses]
+
+    const ethAddress = {
+      [db.Sequelize.Op.in]: _addresses.map(address => address.toLowerCase())
+    }
+
     const where = {
-      ethAddress: ethAddress.toLowerCase(),
+      ethAddress,
       type: eventType
     }
     if (customId) {
@@ -89,7 +95,7 @@ class GrowthEvent {
   /**
    * Returns all events matching the specified criteria.
    * @param {Object} logger
-   * @param {string} ethAddress
+   * @param {string|Array} ethAddress
    * @param {GrowthEventTypes} eventType
    * @param {string} customId - Optional custom id. For ex can hold listing or offer Id.
    * @returns {Promise<Array<Object>>}
