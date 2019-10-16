@@ -328,7 +328,7 @@ function setupMarketplaces(config) {
     })
 
   if (!config.marketplaceVersion) {
-    config.marketplaceVersion = (latestMarketVersion
+    config.marketplaceVersion = (latestMarketVersion !== undefined
       ? latestMarketVersion.toString()
       : ''
     ).padStart(3, '0')
