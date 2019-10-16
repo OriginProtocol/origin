@@ -14,8 +14,14 @@ const QueryError = props => {
 
   // Send the Error to Sentry
   let error = props.error
-  if (!(error instanceof Error)) error = new Error(error)
-  captureWithScope(props.error, props.error.message)
+  if (!error) {
+    error = new Error(
+      'Unknown query error occured. Error not provided to component'
+    )
+  } else if (!(error instanceof Error)) {
+    error = new Error(error)
+  }
+  captureWithScope(error, error.message)
 
   // Display a different error depending if the DApp is running inside a WebView
   // in which case the user will not have console access

@@ -7,6 +7,7 @@ const session = require('express-session')
 const bodyParser = require('body-parser')
 
 const { startExchangeRatePolling } = require('./utils/exchange-rate')
+const { populateValidContents } = require('./utils/webhook-helpers')
 
 const db = require('./models')
 // Initalize sequelize with session store
@@ -36,7 +37,16 @@ if (app.get('env') === 'production') {
 }
 
 app.use(session(sess))
-app.use(express.json())
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      if (req.path === '/hooks/twitter' && req.method === 'POST') {
+        // We need the raw payload to verify the signature
+        req.rawBody = buf.toString()
+      }
+    }
+  })
+)
 app.use(cors({ origin: true, credentials: true }))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -47,6 +57,8 @@ app.listen(5000, () => {
   console.log('Origin-bridge listening on port 5000...')
 
   startExchangeRatePolling()
+
+  populateValidContents()
 })
 
 module.exports = app

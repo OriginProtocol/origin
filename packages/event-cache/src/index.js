@@ -8,7 +8,7 @@ const { EventCache } = require('./EventCache')
  * @param config {object} A configuration JS object (See EventCache)
  */
 function patchWeb3Contract(contract, fromBlock = 0, config) {
-  if (contract.hasOwnProperty('eventCache')) {
+  if (Object.prototype.hasOwnProperty.call(contract, 'eventCache')) {
     throw new TypeError(`Contract already has eventCache property!`)
   }
   contract.eventCache = new EventCache(contract, fromBlock, config)

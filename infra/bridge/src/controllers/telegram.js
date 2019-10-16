@@ -3,98 +3,53 @@
 const express = require('express')
 const router = express.Router()
 
-const Web3 = require('web3')
-
-const Attestation = require('../models/index').Attestation
-const AttestationTypes = Attestation.AttestationTypes
-const { generateAttestation } = require('../utils/attestation')
-const { generateTelegramCode, verifyTelegramCode } = require('../utils')
-const logger = require('../logger')
-
-const { telegramGenerateCode, telegramVerify } = require('../utils/validation')
+const { telegramAttestation } = require('../utils/validation')
 
 const { redisClient, getAsync } = require('../utils/redis')
 
-router.get('/generate-code', telegramGenerateCode, async (req, res) => {
+router.post('/generate-code', telegramAttestation, async (req, res) => {
   const identity = req.query.identity.toLowerCase()
 
-  const { code, seed } = generateTelegramCode(identity)
-
-  redisClient.set(`telegram/attestation/seed/${identity}`, seed, 'EX', 60 * 30)
+  // Store IP to redis
+  redisClient.set(
+    `telegram/attestation/${identity}`,
+    JSON.stringify({
+      ip: req.ip
+    }),
+    'EX',
+    60 * 30
+  )
 
   res.send({
-    code: code
+    code: identity
   })
 })
 
-router.post('/verify', telegramVerify, async (req, res) => {
-  const identity = req.body.identity.toLowerCase()
-  const code = req.body.code
+/**
+ * Used to check if the user has done any attestation recently
+ * @param {String} query.identity User's ETH address
+ * @returns {Object} an object similar to `{ verified: <Boolean>, attestation?: <String> }`
+ */
+router.get('/status', telegramAttestation, async (req, res) => {
+  const identity = req.query.identity.toLowerCase()
 
-  const eventKey = `telegram/attestation/event/${Web3.utils.sha3(code)}`
-  const seedKey = `telegram/attestation/seed/${identity}`
+  const key = `telegram/attestation/${identity}/status`
 
-  const storedEvent = await getAsync(eventKey)
-  const seed = await getAsync(seedKey)
+  let statusObj = await getAsync(key)
 
-  if (!storedEvent || !seed) {
-    return res.status(500).send({
-      errors: [`You haven't interacted with the verification bot yet.`]
-    })
+  statusObj = statusObj ? JSON.parse(statusObj) : null
+
+  const verified = !!(statusObj && statusObj.verified && statusObj.attestation)
+
+  // Delete from redis, once verified
+  if (verified) {
+    redisClient.del(key)
   }
 
-  const { payload, message } = JSON.parse(storedEvent)
-
-  if (!verifyTelegramCode(identity, payload, seed)) {
-    return res.status(500).send({
-      errors: [`Code verification failed`]
-    })
-  }
-
-  const userProfileData = message.from
-  const profileUrl = userProfileData.username
-    ? `https://t.me/${userProfileData.username}`
-    : null
-
-  const attestationBody = {
-    verificationMethod: {
-      oAuth: true
-    },
-    site: {
-      siteName: 'telegram.com',
-      userId: {
-        raw: String(userProfileData.id)
-      },
-      username: {
-        raw: userProfileData.username
-      },
-      profileUrl: {
-        raw: profileUrl
-      }
-    }
-  }
-
-  try {
-    const attestation = await generateAttestation(
-      AttestationTypes.TELEGRAM,
-      attestationBody,
-      {
-        uniqueId: userProfileData.id,
-        username: userProfileData.username,
-        profileUrl: profileUrl,
-        profileData: userProfileData
-      },
-      req.body.identity,
-      req.ip
-    )
-
-    return res.send(attestation)
-  } catch (error) {
-    logger.error(error)
-    return res.status(500).send({
-      errors: ['Could not create attestation.']
-    })
-  }
+  res.status(200).send({
+    ...statusObj,
+    verified
+  })
 })
 
 module.exports = router

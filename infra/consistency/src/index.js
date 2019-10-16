@@ -15,7 +15,10 @@ const { validateOffers } = require('./validators/offer')
 
 async function main(config) {
   let commands = 0
-  const log = createLogger({ filename: config.logFile ? config.logFile : null })
+  const log = createLogger({
+    filename: config.logFile ? config.logFile : null,
+    useColors: false
+  })
   config.log = log
 
   log.info(`Performing consistency check on network ${config.network}`)

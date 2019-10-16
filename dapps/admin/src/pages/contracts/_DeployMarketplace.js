@@ -25,7 +25,17 @@ class DeployMarketplace extends Component {
       version: '001',
       token: token ? token.id : '',
       from: admin ? admin.id : '',
-      autoWhitelist: true
+      autoWhitelist: false
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.accounts != prevProps.accounts) {
+      let admin = rnd(this.props.accounts.filter(a => a.role === 'Admin'))
+      if (!admin) admin = rnd(this.props.accounts)
+      this.setState({
+        from: admin ? admin.id : ''
+      })
     }
   }
 

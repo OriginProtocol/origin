@@ -24,6 +24,16 @@ class DeployToken extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.accounts != prevProps.accounts) {
+      let admin = rnd(this.props.accounts.filter(a => a.role === 'Admin'))
+      if (!admin) admin = rnd(this.props.accounts)
+      this.setState({
+        from: admin ? admin.id : ''
+      })
+    }
+  }
+
   render() {
     const input = field => ({
       value: this.state[field],
@@ -49,7 +59,7 @@ class DeployToken extends Component {
                   </FormGroup>
                 </div>
                 <div style={{ flex: 1, marginRight: 20 }}>
-                  <FormGroup label="Owner">
+                  <FormGroup label="Type">
                     <HTMLSelect
                       {...input('type')}
                       fill={true}

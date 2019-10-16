@@ -195,4 +195,6 @@ require('react-styl')(`
         width: 100%
         background-size: contain
         background-repeat: no-repeat
+    textarea
+      max-height: 6rem
 `)

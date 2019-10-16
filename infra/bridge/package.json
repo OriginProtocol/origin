@@ -15,7 +15,7 @@
     "start": "per-env",
     "start:development": "nodemon -r ./src/env.js src/app.js",
     "start:production": "node -r ./src/env.js src/app.js",
-    "test": "mocha --exit",
+    "test": "NODE_ENV=test mocha --exit",
     "backfill:profile": "node -r ./src/env.js ./src/scripts/20190730-backfill-twitter-profile-data.js",
     "backfill:profile:dryrun": "node -r ./src/env.js ./src/scripts/20190730-backfill-twitter-profile-data.js --dry-run"
   },
@@ -42,6 +42,7 @@
     "express-validator": "^6.1.0",
     "json-stable-stringify": "^1.0.1",
     "libphonenumber-js": "^1.7.20",
+    "lodash": "^4.17.15",
     "logplease": "^1.2.15",
     "mock-session": "0.0.5",
     "nock": "^11.0.0",
@@ -61,7 +62,7 @@
     "chai": "4.2.0",
     "eslint": "6.5.1",
     "mocha": "6.2.1",
-    "nodemon": "1.19.3",
+    "nodemon": "1.19.4",
     "supertest": "4.0.2"
   },
   "prettier": {
