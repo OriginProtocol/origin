@@ -39,10 +39,23 @@ class GrowthCampaign {
    * @returns {Promise<CampaignRules>}
    */
   static async getActive() {
-    const campaigns = await db.GrowthCampaign.findAll({})
-    return campaigns
-      .map(campaign => new CampaignRules(campaign, JSON.parse(campaign.rules)))
-      .find(campaign => campaign.getStatus() === enums.GrowthCampaignStatuses.Active)
+    const now = new Date()
+    const campaign = await db.GrowthCampaign.findOne({
+      where: {
+        startDate: {
+          [Sequelize.Op.lte]: now
+        },
+        endDate: {
+          [Sequelize.Op.gt]: now
+        }
+      }
+    })
+
+    if (!campaign) {
+      return null
+    }
+
+    return new CampaignRules(campaign, JSON.parse(campaign.rules))
   }
 
   /**
