@@ -221,7 +221,7 @@ export function setNetwork(net, customConfig) {
 
   setIdentityEvents(config.IdentityEvents, config.IdentityEvents_Epoch)
 
-  setupProxyContracts(config)
+  setProxyContracts(config)
 
   setupWsProviderAndBlockQuery(config, net)
 
@@ -657,7 +657,7 @@ export function setIdentityEvents(address, epoch) {
   }
 }
 
-export function setupProxyContracts(config) {
+export function setProxyContracts(config) {
   if (!config.ProxyFactory) return
   context.ProxyFactory = new web3.eth.Contract(
     IdentityProxyFactory.abi,
