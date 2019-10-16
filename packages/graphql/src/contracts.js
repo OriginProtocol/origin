@@ -328,7 +328,10 @@ function setupMarketplaces(config) {
     })
 
   if (!config.marketplaceVersion) {
-    config.marketplaceVersion = latestMarketVersion.toString().padStart(3, '0')
+    config.marketplaceVersion = (latestMarketVersion
+      ? latestMarketVersion.toString()
+      : ''
+    ).padStart(3, '0')
   }
 }
 
