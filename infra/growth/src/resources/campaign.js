@@ -39,18 +39,10 @@ class GrowthCampaign {
    * @returns {Promise<CampaignRules>}
    */
   static async getActive() {
-    const campaign = await db.GrowthCampaign.findOne({
-      where: {
-        rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
-      },
-      order: [['createdAt', 'ASC']]
-    })
-
-    if (!campaign) {
-      return null
-    }
-
-    return new CampaignRules(campaign, JSON.parse(campaign.rules))
+    const campaigns = await db.GrowthCampaign.findAll({})
+    return campaigns
+      .map(campaign => new CampaignRules(campaign, JSON.parse(campaign.rules)))
+      .find(campaign => campaign.status === enums.GrowthCampaignStatuses.Active)
   }
 
   /**
