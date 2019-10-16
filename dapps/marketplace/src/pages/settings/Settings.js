@@ -34,28 +34,43 @@ const configurableFields = [
   'graphql'
 ]
 
+const configurableMessagingFields = ['messagingNamespace', 'globalKeyServer']
+
 const Settings = props => {
   const { locale, onLocale, currency, onCurrency, isMobile, config } = props
 
   const [devMode, setDevMode] = useState(store.get('developerMode'))
   const [state, _setState] = useState({
-    ...configurableFields.map(key => ({ [key]: '' })),
-    ...pick(config, configurableFields)
+    ...[...configurableFields, ...configurableMessagingFields].reduce(
+      (all, key) => {
+        all[key] = ''
+        return all
+      },
+      {}
+    ),
+    ...pick(config, configurableFields),
+    ...pick(config ? config.messaging : {}, configurableMessagingFields)
   })
 
   const setState = newState => _setState({ ...state, ...newState })
 
-  useEffect(() => setState(pick(config, configurableFields)), [config])
+  useEffect(() => {
+    setState({
+      ...pick(config, configurableFields),
+      ...pick(config ? config.messaging : {}, configurableMessagingFields)
+    })
+  }, [config])
 
   const input = formInput(state, setState, { small: true })
   const [setNetwork] = useMutation(SetNetwork, {
     refetchQueries: () => [{ query: ConfigQuery }]
   })
 
-  const saveConfig = (configUpdate = {}, restoreDefaults = false) => {
+  const saveConfig = (restoreDefaults = false) => {
     let customConfig = {}
     if (!restoreDefaults) {
-      customConfig = { ...pick(state, configurableFields), ...configUpdate }
+      customConfig = { ...pick(state, configurableFields) }
+      customConfig.messaging = { ...pick(state, configurableMessagingFields) }
     }
     window.localStorage.customConfig = JSON.stringify(customConfig)
     setNetwork({
@@ -163,6 +178,21 @@ const Settings = props => {
               <fbt desc="settings.graphqlLabel">GraphQL Server</fbt>
             </TextRow>
 
+            <TextRow {...input('globalKeyServer')} onBlur={() => saveConfig()}>
+              <fbt desc="settings.globalKeyServerLabel">
+                Messaging Key Server
+              </fbt>
+            </TextRow>
+
+            <TextRow
+              {...input('messagingNamespace')}
+              onBlur={() => saveConfig()}
+            >
+              <fbt desc="settings.messagingNamespaceLabel">
+                Messaging Namespace
+              </fbt>
+            </TextRow>
+
             <ToggleRow config={config} field="performanceMode">
               <fbt desc="settings.performanceMode">Performance Mode</fbt>
             </ToggleRow>
@@ -183,12 +213,18 @@ const Settings = props => {
               <fbt desc="settings.onboardDisabled">Onboarding Disabled</fbt>
             </ToggleRow>
 
+            <ToggleRow config={localStorage} field="disableOfferEvents">
+              <fbt desc="settings.disableOfferEvents">
+                Disable Offer Events (for Messaging)
+              </fbt>
+            </ToggleRow>
+
             <div className="form-group restore">
               <a
                 href="#"
                 onClick={e => {
                   e.preventDefault()
-                  saveConfig(setNetwork, {}, true)
+                  saveConfig(true)
                 }}
               >
                 <fbt desc="settings.restoreDefaults">Restore Defaults</fbt>

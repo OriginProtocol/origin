@@ -36,7 +36,7 @@ spec:
         args:
           - "-c"
           - "geth
-            --syncmode "full"
+            --syncmode full
             --ws
             --wsaddr 0.0.0.0
             --wsport 8546

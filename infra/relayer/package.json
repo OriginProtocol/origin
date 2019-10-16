@@ -14,7 +14,7 @@
     "@origin/contracts": "^0.8.6",
     "@origin/ip2geo": "^0.1.0",
     "@origin/web3-provider": "^0.1.0",
-    "@sentry/node": "5.7.0",
+    "@sentry/node": "5.7.1",
     "cors": "2.8.5",
     "dotenv": "8.1.0",
     "envkey": "1.2.7",
@@ -33,7 +33,7 @@
   "devDependencies": {
     "chalk": "2.4.2",
     "mocha": "6.2.1",
-    "nodemon": "1.19.3",
+    "nodemon": "1.19.4",
     "prettier": "1.18.2"
   },
   "scripts": {

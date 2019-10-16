@@ -50,6 +50,14 @@ const replyWithMessage = (res, chatId, message) => {
 router.post('/', async (req, res) => {
   const message = req.body.message
 
+  if (!message) {
+    logger.error('No message in response??', res.body)
+    res.send(200).end()
+    return
+  }
+
+  logger.debug('Message from Telegram', message)
+
   let responseSent = false
 
   if (message.text && !message.from.is_bot && message.chat.type === 'private') {
@@ -77,6 +85,8 @@ router.post('/', async (req, res) => {
       )
     } else {
       // Log unexpected private chat messages to DB
+      logger.debug('Logging chat')
+
       await logChat(message)
       replyWithMessage(
         res,
@@ -91,7 +101,7 @@ router.post('/', async (req, res) => {
   if (!responseSent) {
     // Set status code and send back the empty response,
     // so that connection doesn't has to be alive
-    res.send(200).end()
+    res.status(200).end()
   }
 
   let followCount = 0
@@ -101,7 +111,7 @@ router.post('/', async (req, res) => {
    * Bots can be added to any group by anyone. So check the group id
    * before rewarding the user on production
    */
-  const isGroup = message.chat && message.chat.type === 'group'
+  const isGroup = message.chat && message.chat.type !== 'private'
   const isValidGroup =
     process.env.NODE_ENV !== 'production' ||
     (isGroup &&
@@ -128,7 +138,7 @@ router.post('/', async (req, res) => {
           // Note: Username is optional in Telegram.
           // ID is returned as number, We don't want to run into the big number issues
           // So use id only if username is not set
-          const username = member.username || member.id
+          const username = String(member.username || member.id)
 
           return growthEventHelper({
             type: 'FOLLOW',
