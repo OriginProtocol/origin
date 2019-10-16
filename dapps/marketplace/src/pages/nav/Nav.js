@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { fbt } from 'fbt-runtime'
 import { withRouter } from 'react-router-dom'
+import copy from 'copy-to-clipboard'
 
 import withWallet from 'hoc/withWallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
@@ -74,9 +75,9 @@ const Nav = ({
   useEffect(() => {
     if (wallet && !consoleLogConnected && screenConsoleEnabled) {
       ConsoleLogCatcher().connect((method, logString) => {
-        const logs = JSON.parse(localStorage.getItem('capturedLogs') || '[]')
+        let logs = JSON.parse(localStorage.getItem('capturedLogs') || '[]')
         // only keep max 15 items in the logs
-        logs.slice(Math.max(0, logs.length - 15))
+        logs = logs.slice(Math.max(0, logs.length - 15))
         logs.push({ method, log: logString })
         localStorage.setItem('capturedLogs', JSON.stringify(logs))
       })
@@ -121,6 +122,15 @@ const Nav = ({
             }}
           >
             <fbt desc="navbar.close">clear</fbt>
+          </div>
+          <div
+            className="btn btn-primary ml-2"
+            onClick={() => {
+              copy(JSON.stringify(logs))
+              setConsoleOpen(false)
+            }}
+          >
+            <fbt desc="navbar.copyToClipboard">copy</fbt>
           </div>
         </div>
       </div>
@@ -305,7 +315,7 @@ require('react-styl')(`
       z-index: 1
       border-radius: 15px
       padding-top: 40px
-      overflow-y: scroll
+      overflow: scroll
       .log
         color: white
       .info

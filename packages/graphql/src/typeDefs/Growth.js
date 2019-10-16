@@ -216,6 +216,7 @@ module.exports = `
     inviteCode: String!
     isEligible: EligibilityInfo
     enrollmentStatus(walletAddress: ID!): EnrollmentStatus!
+    telegramGroupName: String
   }
 
   extend type Mutation {

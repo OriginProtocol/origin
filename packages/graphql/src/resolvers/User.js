@@ -9,6 +9,9 @@ import { getIdsForPage, getConnection } from './_pagination'
 import { proxyOwner } from '../utils/proxy'
 import { transactions } from './web3/transactions'
 
+import createDebug from 'debug'
+const debug = createDebug('origin:user:')
+
 const ec = () => contracts.marketplace.eventCache
 
 async function resultsFromIds({ after, allIds, first, fields }) {
@@ -138,9 +141,12 @@ async function reviews(user, { first = 10, after }) {
     party = [party, owner]
   }
 
+  debug('Starting', owner, party)
+
   let totalCount = 0
   const idEvents = {}
   for (const version in contracts.marketplaces) {
+    debug('version', version)
     const ec = contracts.marketplaces[version].contract.eventCache
 
     // Find all the OfferFinalized events associated with this user
@@ -154,6 +160,9 @@ async function reviews(user, { first = 10, after }) {
     events = sortBy(events, event => -event.blockNumber)
 
     totalCount += events.length
+
+    debug('events', events)
+
     for (const event of events) {
       const { listingID, offerID } = event.returnValues
       const id = `x-${version}-${listingID}-${offerID}`
@@ -163,6 +172,7 @@ async function reviews(user, { first = 10, after }) {
        */
       idEvents[id] = idEvents[id] ? [...idEvents[id], event] : [event]
     }
+    debug('idEvents', idEvents)
   }
 
   const allIds = Object.keys(idEvents)
@@ -172,6 +182,8 @@ async function reviews(user, { first = 10, after }) {
   const nodes = []
   for (const id of ids) {
     const events = idEvents[id]
+
+    debug('Fetching reviews of ID')
 
     // fetch all events that may contain a review
     const reviews = (await Promise.all(
@@ -186,13 +198,20 @@ async function reviews(user, { first = 10, after }) {
         )
       })
     ))
+      .map(review => {
+        debug('review', review)
+        return review
+      })
       // Offer objects contain reviews of both parties, filter the other ones out.
-      .filter(review => review.rating > 0 && review.reviewer.id !== user.id)
+      .filter(
+        review => review.rating > 0 && !party.includes(review.reviewer.id)
+      )
 
     if (reviews.length === 0) continue
 
     const review = reviews[0]
 
+    debug('chosen one', review)
     if (review.rating && review.reviewer.id) {
       nodes.push(review)
     }

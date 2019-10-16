@@ -4,10 +4,9 @@ const restrictedCountryCodes = ['US']
 const forbiddenCountryCodes = ['CU', 'IR', 'KP', 'SY']
 
 /**
- * Returns country code, country name and
- * eligibility (Eligible, Forbiddem , Restricted, Unknown)
+ * Returns country code and country name
  * @param ip
- * @returns {{countryName: string, countryCode: string, eligibility: string}}
+ * @returns {{countryName: string, countryCode: string}}
  */
 async function getLocationInfo(ip) {
   if (!ip) {
@@ -17,7 +16,6 @@ async function getLocationInfo(ip) {
   const response = await ip2geo(ip)
   if (!response) {
     return {
-      eligibility: 'Unknown',
       countryName: 'N/A',
       countryCode: 'N/A'
     }
@@ -25,20 +23,42 @@ async function getLocationInfo(ip) {
 
   const { countryName, countryCode } = response
 
+  return {
+    countryName,
+    countryCode
+  }
+}
+
+/**
+ * Returns country code, country name and
+ * eligibility (Eligible, Forbiddem , Restricted, Unknown)
+ * @param ip
+ * @returns {{countryName: string, countryCode: string, eligibility: string}}
+ */
+async function getLocationEligibilityInfo(ip) {
+  const locationInfo = await getLocationInfo(ip)
+
+  if (!locationInfo) {
+    return null
+  }
+
   let eligibility = 'Eligible'
-  if (forbiddenCountryCodes.includes(countryCode)) {
+
+  if (locationInfo.countryCode === 'N/A') {
+    eligibility = 'Unknown'
+  } else if (forbiddenCountryCodes.includes(locationInfo.countryCode)) {
     eligibility = 'Forbidden'
-  } else if (restrictedCountryCodes.includes(countryCode)) {
+  } else if (restrictedCountryCodes.includes(locationInfo.countryCode)) {
     eligibility = 'Restricted'
   }
 
   return {
-    countryName,
-    countryCode,
+    ...locationInfo,
     eligibility
   }
 }
 
 module.exports = {
-  getLocationInfo
+  getLocationInfo,
+  getLocationEligibilityInfo
 }
