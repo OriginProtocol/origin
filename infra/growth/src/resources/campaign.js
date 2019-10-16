@@ -42,7 +42,7 @@ class GrowthCampaign {
     const campaigns = await db.GrowthCampaign.findAll({})
     return campaigns
       .map(campaign => new CampaignRules(campaign, JSON.parse(campaign.rules)))
-      .find(campaign => campaign.status === enums.GrowthCampaignStatuses.Active)
+      .find(campaign => campaign.getStatus() === enums.GrowthCampaignStatuses.Active)
   }
 
   /**
