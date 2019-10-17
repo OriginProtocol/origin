@@ -370,7 +370,10 @@ class UserProfile extends Component {
             }
 
             if (!completed) {
-              const activeAttestation = get(this.props, 'match.params.attestation')
+              const activeAttestation = get(
+                this.props,
+                'match.params.attestation'
+              )
               if (activeAttestation) {
                 // We have active provider appeneded to the URL
                 // Most likely, user navigated directly to here
@@ -567,11 +570,13 @@ class UserProfile extends Component {
   }
 }
 
-export default withRouter(withIsMobile(
-  withAttestationProviders(
-    withWallet(withIdentity(withGrowthCampaign(UserProfile)))
+export default withRouter(
+  withIsMobile(
+    withAttestationProviders(
+      withWallet(withIdentity(withGrowthCampaign(UserProfile)))
+    )
   )
-))
+)
 
 require('react-styl')(`
   .profile-page

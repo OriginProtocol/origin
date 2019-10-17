@@ -8,9 +8,7 @@ const ThirdpartyWalletLogo = ({ link, className, children }) => {
   return (
     <a href={link} target="_blank" rel="noopener noreferrer">
       <div className={`wallet${className ? ' ' + className : ''}`}>
-        <div className="name">
-          {children}
-        </div>
+        <div className="name">{children}</div>
       </div>
     </a>
   )
@@ -28,12 +26,25 @@ const DownloadWalletCTA = ({ isMobile }) => {
             <fbt desc="DownloadWallet.OriginMarketplac">Origin Marketplace</fbt>
           </h1>
           <div className="desc">
-            <fbt desc="DownloadWallet.description">The easiest way to buy and sell with our marketplace and crypto wallet in one app</fbt>
+            <fbt desc="DownloadWallet.description">
+              The easiest way to buy and sell with our marketplace and crypto
+              wallet in one app
+            </fbt>
           </div>
           <img src="/images/onboard/origin-marketplace.png" />
           <div className="actions">
-            <a href="https://itunes.apple.com/app/origin-wallet/id1446091928" className="ios-link" target="_blank" rel="noopener noreferrer"></a>
-            <a href="https://play.google.com/store/apps/details?id=com.origincatcher" className="android-link" target="_blank" rel="noopener noreferrer"></a>
+            <a
+              href="https://itunes.apple.com/app/origin-wallet/id1446091928"
+              className="ios-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            ></a>
+            <a
+              href="https://play.google.com/store/apps/details?id=com.origincatcher"
+              className="android-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            ></a>
           </div>
         </div>
       </div>
@@ -43,22 +54,37 @@ const DownloadWalletCTA = ({ isMobile }) => {
             <ThirdpartyWalletLogo link="https://token.im/" className="imtoken">
               imToken
             </ThirdpartyWalletLogo>
-            <ThirdpartyWalletLogo link="https://wallet.coinbase.com/" className="coinbase">
+            <ThirdpartyWalletLogo
+              link="https://wallet.coinbase.com/"
+              className="coinbase"
+            >
               Coinbase Wallet
             </ThirdpartyWalletLogo>
-            <ThirdpartyWalletLogo link="https://metamask.io/" className="metamask">
+            <ThirdpartyWalletLogo
+              link="https://metamask.io/"
+              className="metamask"
+            >
               MetaMask
             </ThirdpartyWalletLogo>
-            <ThirdpartyWalletLogo link="https://trustwallet.com/" className="trust">
+            <ThirdpartyWalletLogo
+              link="https://trustwallet.com/"
+              className="trust"
+            >
               Trust Wallet
             </ThirdpartyWalletLogo>
           </>
         ) : (
           <>
-            <ThirdpartyWalletLogo link="https://metamask.io/" className="metamask">
+            <ThirdpartyWalletLogo
+              link="https://metamask.io/"
+              className="metamask"
+            >
               MetaMask
             </ThirdpartyWalletLogo>
-            <ThirdpartyWalletLogo link="https://www.meetdapper.com/" className="dapper">
+            <ThirdpartyWalletLogo
+              link="https://www.meetdapper.com/"
+              className="dapper"
+            >
               Dapper
             </ThirdpartyWalletLogo>
           </>
