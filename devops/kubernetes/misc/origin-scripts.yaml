@@ -6,4 +6,5 @@ spec:
   containers:
     - name: origin-scripts
       image: "gcr.io/origin-214503/dev/origin-cron:latest"
-      command: ['sleep', '3600']
+      command: ["/bin/sh","-c"]
+      args: ["while true; do echo -n '.'; sleep 3600; done"]
