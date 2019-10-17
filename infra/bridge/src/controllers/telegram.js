@@ -20,7 +20,7 @@ router.post('/generate-code', telegramAttestation, async (req, res) => {
     60 * 30
   )
 
-  res.send({
+  res.status(200).send({
     code: identity
   })
 })
