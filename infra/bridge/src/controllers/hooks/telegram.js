@@ -15,6 +15,8 @@ const logChat = require('../../utils/log-chat')
 
 const _chunk = require('lodash/chunk')
 
+const telegramIPWhitelistMiddleware = require('../../utils/ip-whitelist')
+
 /**
  * To register the webhook
  */
@@ -47,7 +49,7 @@ const replyWithMessage = (res, chatId, message) => {
     })
 }
 
-router.post('/', async (req, res) => {
+router.post('/', telegramIPWhitelistMiddleware, async (req, res) => {
   const message = req.body.message
 
   if (!message) {

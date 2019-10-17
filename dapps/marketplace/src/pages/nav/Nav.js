@@ -62,7 +62,6 @@ const Nav = ({
   isMobile,
   wallet,
   walletType,
-  onGetStarted,
   onShowFooter,
   navbarDarkMode,
   history
@@ -149,7 +148,7 @@ const Nav = ({
     const walletEl = wallet ? (
       <Profile {...navProps('profile')} />
     ) : (
-      <GetStarted onClick={() => onGetStarted()} />
+      <GetStarted />
     )
 
     const isStacked =
@@ -207,7 +206,7 @@ const Nav = ({
         <div className="container">
           <Brand />
           <Search className="form-inline mr-auto" />
-          <GetStarted onClick={() => onGetStarted()} />
+          <GetStarted />
         </div>
       </nav>
     )
