@@ -1,12 +1,16 @@
 import graphqlFields from 'graphql-fields'
 import originIpfs from '@origin/ipfs'
 import IpfsHash from 'ipfs-only-hash'
-import pick from 'lodash/pick'
+import createDebug from 'debug'
 import get from 'lodash/get'
+import pick from 'lodash/pick'
+
 import contracts from '../contracts'
 import { getIdsForPage, getConnection } from './_pagination'
 import validateAttestation from '../utils/validateAttestation'
-import { proxyOwner, hasProxy } from '../utils/proxy'
+import { getProxyAndOwner } from '../utils/proxy'
+
+const debug = createDebug('origin:identity:read')
 
 const MAX_EVENT_IPFS_FETCH = 3
 
@@ -32,10 +36,40 @@ const attestationProgressPct = {
   telegram: 10
 }
 
-function getAttestations(account, attestations) {
+/**
+ * Filter out duplicate or unknown attestations.
+ * @param {Array<Object>} attestations
+ * @returns {Array<Object>}
+ * @private
+ */
+function _sanitizeAttestations(attestations) {
+  const m = new Map()
+  // In case of a multiple events for same provider,
+  // only the latest one will be returned
+  attestations.forEach(att => m.set(att.id, att))
+
+  return getAttestationProviders().reduce((filtered, provider) => {
+    if (m.has(provider)) {
+      filtered.push(m.get(provider))
+    }
+
+    return filtered
+  }, [])
+}
+
+/**
+ * Parses attestation data from an identity and formats it to fit
+ * into the graphQL schema defined for identity.
+ *
+ * @param {Array<string>} accounts: owner and optionally proxy eth address.
+ * @param {Array<Object>} attestations: attestations from the identity data.
+ * @returns {*}
+ * @private
+ */
+function _getAttestations(accounts, attestations) {
   const verifiedAttestations = attestations
     .map(attestation => {
-      if (!validateAttestation(account, attestation)) {
+      if (!validateAttestation(accounts, attestation)) {
         return null
       }
 
@@ -160,170 +194,235 @@ function getAttestations(account, attestations) {
     })
     .filter(attestation => !!attestation)
 
-  return sortAttestations(verifiedAttestations)
+  return _sanitizeAttestations(verifiedAttestations)
 }
 
-function sortAttestations(attestations) {
-  const m = new Map()
-  // In case of a multiple events for same provider,
-  // only the latest one will be returned
-  attestations.forEach(att => m.set(att.id, att))
 
-  return getAttestationProviders().reduce((filtered, provider) => {
-    if (m.has(provider)) {
-      filtered.push(m.get(provider))
+
+// TODO:
+// - If running in back-end. Read from DB or bridge
+// - If running local and performance mode: read from graphql
+// - If running local and no performance mode: read from graphql
+
+/**
+ * Reads identity data associated with an Eth address from the bridge server.
+ * @param {string} id: Eth address of the user.
+ * @returns {Promise<Object||null>} Returns the identity object or null if no identity found.
+ * @private
+ */
+export async function _getIdentityFromBridgeServer(id) {
+  const bridgeServer = contracts.config.bridge
+  if (!bridgeServer) {
+    throw new Error('Bridge server not configured')
+  }
+  const url = `${bridgeServer}/api/identity?ethAddress=${id}`
+
+  // Query the bridge server.
+  console.log(`Sending query ${url}`)
+  const response = await fetch(url, { credentials: 'include' })
+  if (response.status === 204) {
+    // No identity found for this eth address.
+    return null
+  }
+  if (response.status !== 200) {
+    throw new Error(`Bridge query for identity ${id} failed`)
+  }
+  console.log('LOADED IDENTITY FROM BRIDGE !!!')
+  const data = await response.json()
+  debug('GOT DATA FROM BRIDGE:', JSON.stringify(data, null, 2))
+  return { identity: data.identity, ipfsHash: 'POPULATE ME' }
+}
+
+/**
+ * Reads identity data by querying the IdentityEvent smart contract and IPFS.
+ * Steps:
+ *  - query the IdentityEvents contract to fetch events emitted for the eth address
+ *  - extract IPFS hashes from the events
+ *  - fetch the most recent identity blob from IPFS
+ *
+ * @param {Array<string>} accounts: List with owner and optionally proxy address.
+ * @param {Number} blockNumber: Optional for loading old identity data.
+ * @returns {Promise<{identity: Object, ipfsHash: string}|null>}
+ * @private
+ */
+async function _getIdentityFromContract(accounts, blockNumber) {
+  if (!contracts.identityEvents.options.address || !accounts.length) {
+    return null
+  }
+
+  // Load all events from the IdentityEvents contract that were emitted
+  // by either the owner or the proxy.
+  const events = await contracts.identityEvents.eventCache.getEvents({
+    account: accounts
+  })
+
+  // Go thru all events and build a list of IPFS hashes, with most recent first.
+  let ipfsHashes = []
+  events.forEach(event => {
+    if (blockNumber < event.blockNumber) {
+      return
     }
+    if (event.event === 'IdentityUpdated') {
+      ipfsHashes.unshift(event.returnValues.ipfsHash)
+    } else if (event.event === 'IdentityDeleted') {
+      ipfsHashes = []
+    }
+  })
+  if (ipfsHashes.length < 1) {
+    return null
+  }
 
-    return filtered
-  }, [])
+  // Go through each hash from most to least recent and stop once we find a valid one.
+  let data = null
+  let ipfsHash = null
+  let fetchCount = 0
+  for (const hash of ipfsHashes) {
+    // TODO: Timeout too long?  What's reasonable here?
+    try {
+      data = await originIpfs.get(contracts.ipfsGateway, hash, 5000)
+      fetchCount += 1
+    } catch (err) {
+      console.warn('error fetching identity data', err)
+    }
+    if (data || fetchCount >= MAX_EVENT_IPFS_FETCH) {
+      ipfsHash = hash
+      break
+    }
+  }
+  return { identity: data, ipfsHash }
 }
 
-export function identity({ id, ipfsHash }) {
+/**
+ * Adds fields avatarUrl and avatarUrlExpanded to an identity.
+ *  - avatarUrl is an IPFS url. Ex.: ipfs://QmWnTmoY6Pi5u3gxE9QSSFzw1MoCLgcd1Wg5mxTxzsL57c
+ *  - avatarUrlExpanded is an HTTP URL pointing to an IPFS gateway.
+ *    Ex.: https://ipfs.originprotocol.com/ipfs/QmaAsx4dt3LqiSCe4WCW1Pqkj67dh3wH1xBdUgukt6yWup
+ * @param {Object} identity
+ * @private
+ */
+async function _decorateIdentityWithAvatarUrls(identity) {
+  // Make old style embedded avatars access by their IPFS hash.
+  if (
+    identity.avatarUrl === undefined &&
+    identity.avatar !== undefined &&
+    identity.avatar.length > 0
+  ) {
+    try {
+      const avatarBinary = dataURItoBinary(identity.avatar)
+      const avatarHash = await IpfsHash.of(avatarBinary.buffer)
+      identity.avatarUrl = 'ipfs://' + avatarHash
+    } catch {
+      // If we can't translate an old avatar for any reason, don't worry about it.
+      // We've already tested the backfill script, and not seen a problem
+      // for all valid avatar images.
+    }
+  }
+
+  // We have 149 identity.avatarUrls missing the ipfs:// protocol.
+  // Prepend ipfs:// if needed.
+  if (
+    identity.avatarUrl &&
+    identity.avatarUrl.length === 46 &&
+    identity.avatarUrl.indexOf('://') === -1
+  ) {
+    identity.avatarUrl = 'ipfs://' + identity.avatarUrl
+  }
+
+  if (identity.avatarUrl) {
+    identity.avatarUrlExpanded = originIpfs.gatewayUrl(
+      contracts.ipfsGateway,
+      identity.avatarUrl
+    )
+  }
+}
+
+/**
+ * Identity resolver
+ *
+ * @param {Object} args
+ * @param {string} args.id: User account id. Format: "<ethAddress>-<blockNumber>".
+ *   blockNumber is optional. It can be used to load older version of an identity.
+ * @returns {{owner: {id: (*)}, proxy: {id: (*)}, strength: number, attestations: *, ipfsHash: *, id: *, verifiedAttestations: *}|any}
+ */
+export async function identity({ id }) {
+  console.log('CALLING identity resolver')
   if (typeof localStorage !== 'undefined' && localStorage.useWeb3Identity) {
+    console.log('USING Web3 Identity !')
     return JSON.parse(localStorage.useWeb3Identity)
   }
 
-  const [account, blockNumber] = id.split('-')
-  id = account
-  return new Promise(async resolve => {
-    if (!contracts.identityEvents.options.address || !id) {
-      return null
-    }
-    let accounts = id
-    let owner, proxy
-    let ipfsHashes = []
-    if (!ipfsHash) {
-      owner = await proxyOwner(id)
-      if (owner) {
-        accounts = [id, owner]
-      } else {
-        proxy = await hasProxy(id)
-        if (proxy) {
-          accounts = [id, proxy]
-        }
-      }
+  // Get blocknumber, owner and proxy address associated with the id.
+  const [account, blockNumberStr] = id.split('-')
+  const blockNumber = blockNumberStr ? Number(blockNumberStr) : -1
+  const { owner, proxy } = await getProxyAndOwner(account)
+  const accounts = [owner, proxy].filter(x => x)
 
-      const events = await contracts.identityEvents.eventCache.getEvents({
-        account: accounts
-      })
-      events.forEach(event => {
-        if (blockNumber < event.blockNumber) {
-          return
-        }
-        if (event.event === 'IdentityUpdated') {
-          ipfsHashes.unshift(event.returnValues.ipfsHash)
-        } else if (event.event === 'IdentityDeleted') {
-          ipfsHashes = []
-        }
-      })
-      if (ipfsHashes.length < 1) {
-        return resolve(null)
-      }
-    } else {
-      ipfsHashes.push(ipfsHash)
-    }
+  // Load the IPFS data for the user's identity.
+  let data
+  if (contracts.config.centralizedIdentityEnabled) {
+    data = (await _getIdentityFromBridgeServer(owner))
+  } else {
+    data = (await _getIdentityFromContract(accounts, blockNumber))
+  }
 
-    // Go through each hash until we get valid data
-    let data
-    let fetchCount = 0
-    for (const hash of ipfsHashes) {
-      // TODO: Timeout too long?  What's reasonable here?
-      try {
-        data = await originIpfs.get(contracts.ipfsGateway, hash, 5000)
-        fetchCount += 1
-      } catch (err) {
-        console.warn('error fetching identity data', err)
-      }
-      if (data || fetchCount >= MAX_EVENT_IPFS_FETCH) break
-    }
-    if (!data) {
-      return resolve(null)
-    }
-    const { profile = {}, attestations = [] } = data
+  if (!data || !data.identity) {
+    debug(`No identity found for ${id}`)
+    return null
+  }
+  if (!data.ipfsHash) {
+    throw new Error(`No IPFS hash for identity ${id}`)
+  }
 
-    const identity = {
-      id,
-      attestations: attestations.map(a => JSON.stringify(a)),
-      ...pick(profile, [
-        'firstName',
-        'lastName',
-        'avatar',
-        'avatarUrl',
-        'description'
-      ]),
-      verifiedAttestations: getAttestations(accounts, data.attestations || []),
-      strength: 0,
-      ipfsHash,
-      owner: {
-        id: owner ? owner : id
-      },
-      proxy: {
-        id: proxy ? proxy : id
-      }
+  // Create an identity object from the IPFS data.
+  debug('Read identity', data)
+  const { profile = {}, attestations = [] } = data.identity
+  const identity = {
+    id,
+    attestations: attestations.map(a => JSON.stringify(a)),
+    ...pick(profile, [
+      'firstName',
+      'lastName',
+      'avatar',
+      'avatarUrl',
+      'description'
+    ]),
+    verifiedAttestations: _getAttestations(accounts, data.attestations || []),
+    ipfsHash: data.ipfsHash,
+    owner: {
+      id: owner
+    },
+    proxy: {
+      id: proxy
     }
+  }
 
-    if (identity.firstName) {
-      identity.firstName = identity.firstName.substr(0, 20)
+  // Format first, last and full names.
+  if (identity.firstName) {
+    identity.firstName = identity.firstName.substr(0, 20)
+  }
+  if (identity.lastName) {
+    identity.lastName = identity.lastName.substr(0, 20)
+  }
+
+  identity.fullName = [identity.firstName, identity.lastName]
+    .filter(n => n)
+    .join(' ')
+
+  // Add avatar URLs to the identity object.
+  await _decorateIdentityWithAvatarUrls(identity)
+
+  // Compute a profile strength based firstName, lastName, and attestations that are filled in.
+  Object.keys(progressPct).forEach(key => {
+    if (identity[key]) {
+      identity.strength += progressPct[key]
     }
-    if (identity.lastName) {
-      identity.lastName = identity.lastName.substr(0, 20)
-    }
-
-    identity.fullName = [identity.firstName, identity.lastName]
-      .filter(n => n)
-      .join(' ')
-
-    // Make old style embedded avatars access by their IPFS hash.
-    if (
-      identity.avatarUrl === undefined &&
-      identity.avatar !== undefined &&
-      identity.avatar.length > 0
-    ) {
-      try {
-        const avatarBinary = dataURItoBinary(identity.avatar)
-        const avatarHash = await IpfsHash.of(avatarBinary.buffer)
-        identity.avatarUrl = 'ipfs://' + avatarHash
-      } catch {
-        // If we can't translate an old avatar for any reason, don't worry about it.
-        // We've already tested the backfill script, and not seen a problem
-        // for all valid avatar images.
-      }
-    }
-
-    // We have 149 identity.avatarUrls missing the ipfs:// protocol.
-    // Prepend ipfs:// if needed.
-    if (
-      identity.avatarUrl &&
-      identity.avatarUrl.length === 46 &&
-      identity.avatarUrl.indexOf('://') === -1
-    ) {
-      identity.avatarUrl = 'ipfs://' + identity.avatarUrl
-    }
-
-    if (identity.avatarUrl) {
-      identity.avatarUrlExpanded = originIpfs.gatewayUrl(
-        contracts.ipfsGateway,
-        identity.avatarUrl
-      )
-    }
-
-    // Strength for firstName, lastName, etc..
-    Object.keys(progressPct).forEach(key => {
-      if (identity[key]) {
-        identity.strength += progressPct[key]
-      }
-    })
-
-    // Strength for attestations
-    Array.from(identity.verifiedAttestations || []).map(attestation => {
-      identity.strength += attestationProgressPct[attestation.id] || 0
-    })
-    if (identity.strength > 100) {
-      identity.strength = 100
-    }
-
-    resolve(identity)
   })
+  Array.from(identity.verifiedAttestations || []).map(attestation => {
+    identity.strength += attestationProgressPct[attestation.id] || 0
+  })
+  identity.strength = Math.max(identity.strength, 100)
+
+  return identity
 }
 
 /**
@@ -339,6 +438,19 @@ function dataURItoBinary(dataURI) {
   return { buffer, mimeType }
 }
 
+// TODO: franck port to new system
+
+/**
+ * Returns a paginated list of all identities.
+ * Used by admin, not by the DApp.
+ *
+ * @param contract
+ * @param first
+ * @param after
+ * @param context
+ * @param info
+ * @returns {Promise<null|{nodes, pageInfo, edges, totalCount}>}
+ */
 export async function identities(
   contract,
   { first = 10, after },

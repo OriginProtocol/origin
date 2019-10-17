@@ -15,7 +15,8 @@ const config = {
   ipfsGateway: `http://${HOST}:8080`,
   ipfsRPC: `http://${HOST}:5002`,
   relayer: `http://${HOST}:5100`,
-  bridge: 'https://bridge.dev.originprotocol.com',
+  //bridge: 'https://bridge.dev.originprotocol.com',
+  bridge: 'http://localhost:5000',
   // discovery: `http://${HOST}:4000/graphql`,
   notifications: `http://${HOST}:3456`,
   growth: localStorageHas('localGrowthServer', 'true')

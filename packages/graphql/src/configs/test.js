@@ -14,7 +14,8 @@ const config = {
   providerWS: `ws://${HOST}:8545`,
   ipfsGateway: `http://${HOST}:8080`,
   ipfsRPC: `http://${HOST}:5002`,
-  bridge: 'https://bridge.dev.originprotocol.com',
+  //bridge: 'https://bridge.dev.originprotocol.com',
+  bridge: 'http://localhost:5000',
   performanceMode: localStorageHas('performanceMode', 'true'),
   graphql: `http://${HOST}:4007`,
   relayer: `http://${HOST}:5100`,
@@ -35,6 +36,7 @@ const config = {
   IdentityProxyImplementation: addresses.IdentityProxyImplementation,
   proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled', 'true'),
   relayerEnabled: localStorageHas('relayerEnabled', 'true'),
+  centralizedIdentityEnabled: true,
 
   tokens: []
 }
