@@ -246,7 +246,9 @@ function setupOriginProviders(config, net) {
   if (config.useMetricsProvider) {
     // These are "every N requests"
     const echoEvery = parseInt(getEnvironmentalVar('ECHO_EVERY', 250))
-    const breakdownEvery = parseInt(getEnvironmentalVar('BREAKDOWN_EVERY', 1000))
+    const breakdownEvery = parseInt(
+      getEnvironmentalVar('BREAKDOWN_EVERY', 1000)
+    )
 
     initStandardSubproviders(web3, {
       echoEvery,
