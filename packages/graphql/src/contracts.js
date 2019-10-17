@@ -364,15 +364,15 @@ function setupTokens(config) {
   context.tokens.forEach(token => {
     const contractDef =
       token.type === 'OriginToken' ? OriginTokenContract : TokenContract
-    let contract
-    if (shouldUseMobileBridge()) {
-      contract = new context.web3Exec.eth.Contract(contractDef.abi, token.id)
-    } else {
-      contract = new web3.eth.Contract(contractDef.abi, token.id)
-    }
+    const contract = new web3.eth.Contract(contractDef.abi, token.id)
     //contract is used for calls (queries) whereas contractExec is used for transactions
     token.contract = contract
-    token.contractExec = contract
+
+    if (shouldUseMobileBridge()) {
+      token.contractExec = new context.web3Exec.eth.Contract(contractDef.abi, token.id)
+    } else {
+      token.contractExec = contract  
+    }
   })
 }
 
