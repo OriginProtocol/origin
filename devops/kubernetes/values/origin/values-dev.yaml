@@ -2,11 +2,11 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: 'aa406f9'
+bridgeImageTag: '89053b8'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '9f7d6d1'
+dappImageTag: '89053b8'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
@@ -18,7 +18,7 @@ faucetImageTag: '8fdb4c4'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '9f7d6d1'
+eventlistenerImageTag: '8bae8a9'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -63,7 +63,7 @@ relayerImageTag: '8585c73'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: '9f7d6d1'
+graphqlImageTag: '89053b8'
 
 # origin-token-transfer-client
 t3ClientImage: origin-token-transfer-client
