@@ -14,6 +14,7 @@ import WelcomeScreen from 'screens/welcome'
 import AccountCreatedScreen from 'screens/accountCreated'
 import AccountBackupScreen from 'screens/accountBackup'
 import RecoveryPhraseExplainerScreen from 'screens/recoveryPhraseExplainer'
+import RecoveryPhraseScreen from 'screens/recoveryPhrase'
 import ImportAccountScreen from 'screens/import'
 import ImportMnemonicScreen from 'screens/importMnemonic'
 import ImportPrivateKeyScreen from 'screens/importPrivateKey'
@@ -38,10 +39,8 @@ const OnboardingStack = createStackNavigator(
     // Backup
     AccountBackup: AccountBackupScreen,
     RecoveryPhraseExplainer: RecoveryPhraseExplainerScreen,
-    /*
     RecoveryPhrase: RecoveryPhraseScreen,
-    RecoveryPhraseVerify: RecoveryPhraseVerifyScreen,
-    */
+    // RecoveryPhraseVerify: RecoveryPhraseVerifyScreen,
     ImportAccount: ImportAccountScreen,
     ImportMnemonic: {
       screen: ImportMnemonicScreen,

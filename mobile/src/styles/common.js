@@ -16,6 +16,7 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
   buttonContainer: {
+    paddingBottom: 20,
     width: '100%',
     justifyContent: 'flex-end'
   },
