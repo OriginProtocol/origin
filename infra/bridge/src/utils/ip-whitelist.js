@@ -14,6 +14,11 @@ const telegramSubnets = (process.env.TELEGRAM_SUBNETS || '')
  * they are under the given IP subnets
  */
 const telegramIPWhitelistMiddleware = (req, res, next) => {
+  if (process.env.NODE_ENV === 'test') {
+    // Skip whitelisting on test environment
+    return next()
+  }
+
   if (!telegramSubnets.length) {
     logger.error('IP subnet whitelist is empty')
     return next()
