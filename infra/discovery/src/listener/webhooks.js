@@ -92,7 +92,7 @@ async function postToEmailWebhook(url, data) {
   }
 
   const emailData = `eth_address=${encodeURIComponent(
-    identity.ethAddress
+    identity.owner.id
   )}&email=${encodeURIComponent(
     identity.email
   )}&first_name=${encodeURIComponent(
