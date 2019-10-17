@@ -160,6 +160,7 @@ class TelegramAttestation extends Component {
                 loading: false,
                 code: null
               })
+              return
             }
 
             this.setState({
