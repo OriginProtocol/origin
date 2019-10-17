@@ -69,6 +69,8 @@ module.exports.populateValidContents = async () => {
     validContents = campaign.actions
       .filter(action => !!action.content)
       .map(action => action.content)
+
+    logger.debug('Populated valid contents', validContents)
   } catch (err) {
     logger.error('Failed to populate valid contents', err)
   }
@@ -180,6 +182,8 @@ module.exports.validateShareableContent = ({ event, type }) => {
   const entities = (event.extended_tweet || event).entities
   const expandedUrls = entities.urls.map(entityUrl => entityUrl.expanded_url)
 
+  logger.debug('Links in tweet', expandedUrls)
+
   return expandedUrls.some(contentLink => {
     // Find all content that has the link
     const content = validContents.find(
@@ -188,13 +192,21 @@ module.exports.validateShareableContent = ({ event, type }) => {
 
     if (!content) {
       // No rewardable content has that link
+      logger.debug('No rewardable content has the link', contentLink)
       return false
     }
+
+    logger.debug('Content with matching link', content)
 
     if (content.post.tweet.default.trim() === sharedContent) {
       // User has shared the untranslated text
       return true
     }
+
+    logger.debug(
+      'Could be a translated version of tweet',
+      content.post.tweet.default
+    )
 
     // Check if it is translated text
     const translation = content.post.tweet.translations.find(
@@ -202,10 +214,12 @@ module.exports.validateShareableContent = ({ event, type }) => {
     )
 
     if (translation) {
-      return translation.text.trim() === sharedContent
+      logger.debug('Matching translation', translation)
+    } else {
+      logger.debug('Just a random tweet with the link, drop this event')
     }
 
-    return false
+    return translation ? true : false
   })
 }
 

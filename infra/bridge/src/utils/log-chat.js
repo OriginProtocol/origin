@@ -14,7 +14,7 @@ module.exports = async message => {
     return
   }
 
-  const username = message.from.username || message.from.id
+  const username = String(message.from.username || message.from.id)
   const messageText = message.text
 
   const email = {

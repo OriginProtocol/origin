@@ -10,6 +10,10 @@ import Link from 'components/Link'
 
 import OfferEvent from 'pages/messaging/OfferEvent'
 
+const isOfferEventsDisabled = () => {
+  return get(window, 'localStorage.disableOfferEvents', 'false') === 'true'
+}
+
 const RoomStatus = ({ conversation, identity, onClick, active, wallet }) => {
   const name = get(identity, 'fullName', conversation.id)
 
@@ -30,7 +34,8 @@ const RoomStatus = ({ conversation, identity, onClick, active, wallet }) => {
           <div className="time">{distanceToNow(timestamp)}</div>
         </div>
         <div className="bottom">
-          {!lastMessage ? null : (
+          {!lastMessage ||
+          (lastMessage.type === 'event' && isOfferEventsDisabled()) ? null : (
             <div className="last-message">
               {lastMessage.type === 'event' ? (
                 <OfferEvent

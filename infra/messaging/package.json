@@ -68,7 +68,7 @@
     "crypto-js": "3.1.9-1",
     "eslint": "6.5.1",
     "eth-ecies": "1.0.3",
-    "nodemon": "1.19.3",
+    "nodemon": "1.19.4",
     "prettier": "1.18.2",
     "secp256k1": "3.7.1",
     "supertest": "4.0.2"

@@ -12,6 +12,7 @@ function withMessagingStatus(WrappedComponent, { excludeData } = {}) {
     if (error) console.error('error executing WalletStatusQuery', error)
 
     const messagingEnabled = get(data, 'messaging.enabled', false)
+    const isKeysLoading = get(data, 'messaging.isKeysLoading', true)
     const hasKeys =
       messagingEnabled &&
       get(data, 'messaging.pubKey') &&
@@ -24,6 +25,7 @@ function withMessagingStatus(WrappedComponent, { excludeData } = {}) {
         {...props}
         messagingStatusRefetch={refetch}
         messagingEnabled={messagingEnabled}
+        messagingKeysLoading={isKeysLoading}
         hasMessagingKeys={hasKeys}
         messagingStatusError={error}
         messagingStatusLoading={loading || networkStatus === 1}
