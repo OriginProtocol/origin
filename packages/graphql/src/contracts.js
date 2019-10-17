@@ -16,6 +16,7 @@ import { initStandardSubproviders, createEngine } from '@origin/web3-provider'
 
 import pubsub from './utils/pubsub'
 import currencies from './utils/currencies'
+import getEnvironmentalVar from './utils/getEnvironmentalVar'
 
 import Configs from './configs'
 
@@ -239,19 +240,13 @@ export function setNetwork(net, customConfig) {
 }
 
 function setupOriginProviders(config, net) {
-  const getEnvVar = (varName, defaultValue) => {
-    return typeof process.env[varName] !== 'undefined'
-      ? parseInt(process.env[varName])
-      : defaultValue
-  }
-
-  const qps = getEnvVar('MAX_RPC_QPS', 100)
-  const maxConcurrent = getEnvVar('MAX_RPC_CONCURRENT', 25)
+  const qps = getEnvironmentalVar('MAX_RPC_QPS', 100)
+  const maxConcurrent = getEnvironmentalVar('MAX_RPC_CONCURRENT', 25)
 
   if (config.useMetricsProvider) {
     // These are "every N requests"
-    const echoEvery = getEnvVar('ECHO_EVERY', 250)
-    const breakdownEvery = getEnvVar('BREAKDOWN_EVERY', 1000)
+    const echoEvery = getEnvironmentalVar('ECHO_EVERY', 250)
+    const breakdownEvery = getEnvironmentalVar('BREAKDOWN_EVERY', 1000)
 
     initStandardSubproviders(web3, {
       echoEvery,
@@ -271,9 +266,7 @@ function setupOriginProviders(config, net) {
 }
 
 function setupWeb3(config, net) {
-  const provider = process.env.PROVIDER_URL
-    ? process.env.PROVIDER_URL
-    : config.provider
+  const provider = getEnvironmentalVar('PROVIDER_URL', config.provider)
 
   const web3 = applyWeb3Hack(new Web3(provider))
 
@@ -303,7 +296,7 @@ function setupMessaging(config) {
     MessagingConfig.personalSign = metaMask && metaMaskEnabled ? true : false
     context.messaging = OriginMessaging({
       ...MessagingConfig,
-      web3: web3,
+      web3,
       mobileBridge: context.mobileBridge,
       pubsub: pubsub
     })
@@ -383,7 +376,18 @@ function setupTokens(config) {
   })
 }
 
+/* Find a way to refactor this. setMetaMask is part of the initialisation flow
+ * but can also be called as a toggle to change between enabled/disabled
+ * Metamask.
+ *
+ * Perhaps move all the logic in this function to separate `setup` functions
+ * and just call the relevant ones here once the toggle happens?
+ *
+ */
 function setMetaMask(config) {
+  // Mobile bridge already initialised. Do not do anything
+  if (shouldUseMobileBridge()) return
+
   if (metaMask) {
     context.metaMask = metaMask
     context.ognMM = new metaMask.eth.Contract(
@@ -411,7 +415,7 @@ function setMetaMask(config) {
     context.ognExec = context.ognMM
     context.tokens.forEach(token => (token.contractExec = token.contractMM))
     context.daiExchangeExec = context.daiExchangeMM
-  } else if (!shouldUseMobileBridge()) {
+  } else {
     context.metaMaskEnabled = false
     context.web3Exec = web3
     Object.keys(context.marketplaces || {}).forEach(
