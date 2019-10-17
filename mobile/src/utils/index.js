@@ -48,7 +48,7 @@ export function truncateAddress(address = '', chars = 5) {
   return (
     address.substr(0, firstPortionLength) +
     separator +
-    address.substr(address.length - Math.max(1, chars - 3 - firstPortionLength))
+    address.substr(address.length - Math.max(3, chars - separator.length - firstPortionLength))
   )
 }
 
