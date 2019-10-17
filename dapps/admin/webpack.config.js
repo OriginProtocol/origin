@@ -74,7 +74,10 @@ const config = {
   mode: isProduction ? 'production' : 'development',
   plugins: [
     new HtmlWebpackPlugin({ template: 'public/template.html', inject: false }),
-    new webpack.EnvironmentPlugin({ HOST: 'localhost' })
+    new webpack.EnvironmentPlugin({
+      HOST: 'localhost',
+      WEBPACK_BUILD: true // Used by EventCache
+    })
   ],
 
   optimization: {

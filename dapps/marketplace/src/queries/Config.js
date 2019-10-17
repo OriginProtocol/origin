@@ -21,6 +21,10 @@ export default gql`
       relayer
       performanceMode
       marketplaceVersion
+      messaging {
+        globalKeyServer
+        messagingNamespace
+      }
     }
   }
 `

@@ -1,93 +1,55 @@
-import React from 'react'
-import { Query } from 'react-apollo'
+import React, { useState, useEffect } from 'react'
+import { useQuery } from 'react-apollo'
 import get from 'lodash/get'
-import { fbt } from 'fbt-runtime'
 
-import Link from 'components/Link'
 import Redirect from 'components/Redirect'
 import QueryError from 'components/QueryError'
 import LoadingSpinner from 'components/LoadingSpinner'
 
 import ListingPreview from './_ListingPreview'
 import HelpWallet from './_HelpWallet'
-import HelpOriginWallet from 'components/DownloadApp'
 import WalletHeader from './_WalletHeader'
+
+import DownloadWalletCTA from './_DownloadWalletCTA'
 
 import query from 'queries/Wallet'
 
-const isFirefox = typeof InstallTrigger !== 'undefined'
-const isChrome = !!window.chrome
+const OnboardWallet = ({ listing, linkPrefix }) => {
+  const { error, data, networkStatus } = useQuery(query, {
+    notifyOnNetworkStatusChange: true
+  })
 
-const MetaMask = ({ linkPrefix }) => (
-  <div className="onboard-box">
-    <div className="metamask-logo" />
-    <div className="status">
-      <fbt desc="onboard.Wallet.metamask">MetaMask</fbt>
-    </div>
-    <div className="help mb-3">
-      <fbt desc="onboard.Wallet.metamaskDescription">
-        Metamask is a browser extension for Chrome that will allow you to access
-        the decentralized web.
-      </fbt>
-    </div>
-    <div className="help mb">
-      <i>
-        <fbt desc="onboard.Wallet.metamaskAvailable">
-          Available for
-          <fbt:param name="browser">
-            {isFirefox ? ' Firefox' : ' Google Chrome'}
-          </fbt:param>
-        </fbt>
-      </i>
-    </div>
-    <Link
-      to={`${linkPrefix}/onboard/metamask`}
-      className="btn btn-primary mt-10"
-    >
-      <fbt desc="onboard.Wallet.connectMetaMask">Connect MetaMask</fbt>
-    </Link>
-  </div>
-)
+  const [redirect, setRedirect] = useState(false)
 
-const OnboardWallet = ({ listing, hideOriginWallet, linkPrefix }) => {
-  const showMetaMask = isChrome || isFirefox
+  const wallet =
+    get(data, 'web3.metaMaskAccount.id') ||
+    get(data, 'web3.mobileWalletAccount.id')
+
+  useEffect(() => {
+    if (wallet) {
+      setRedirect(`${linkPrefix}/onboard/email`)
+    }
+  }, [wallet])
+
+  if (redirect) {
+    return <Redirect to={`${linkPrefix}/onboard/email`} />
+  }
+
+  if (networkStatus === 1) {
+    return <LoadingSpinner />
+  } else if (error) {
+    return <QueryError query={query} />
+  }
 
   return (
     <>
       <WalletHeader />
       <div className="row">
-        <div className="col-md-8">
-          <Query query={query} notifyOnNetworkStatusChange={true}>
-            {({ error, data, networkStatus }) => {
-              if (networkStatus === 1) {
-                return <LoadingSpinner />
-              } else if (error) {
-                return <QueryError query={query} />
-              }
-
-              if (
-                get(data, 'web3.metaMaskAccount.id') ||
-                get(data, 'web3.mobileWalletAccount.id')
-              ) {
-                return <Redirect to={`${linkPrefix}/onboard/email`} />
-              }
-
-              return (
-                <>
-                  {!showMetaMask ? null : (
-                    <MetaMask
-                      hideOriginWallet={hideOriginWallet}
-                      linkPrefix={linkPrefix}
-                    />
-                  )}
-                </>
-              )
-            }}
-          </Query>
+        <div className="col-md-7">
+          <DownloadWalletCTA />
         </div>
-        <div className="col-md-4">
+        <div className="col-md-4 offset-md-1">
           <ListingPreview listing={listing} />
-          {hideOriginWallet ? null : <HelpOriginWallet />}
           <HelpWallet />
         </div>
       </div>

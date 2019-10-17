@@ -50,6 +50,7 @@ const config = {
     path: path.resolve(__dirname, 'public')
   },
   externals: {
+    sequelize: 'sequelize', // Unused from event-cache
     Web3: 'web3'
   },
   module: {
@@ -151,7 +152,8 @@ const config = {
       NAMESPACE: process.env.NAMESPACE || 'dev',
       ETH_NETWORK_ID: process.env.ETH_NETWORK_ID || null,
       TELEGRAM_BOT_USERNAME: TELEGRAM_BOT_USERNAME,
-      NODE_ENV: process.env.NODE_ENV || 'development'
+      NODE_ENV: process.env.NODE_ENV || 'development',
+      WEBPACK_BUILD: true // Used by EventCache
     })
   ],
 

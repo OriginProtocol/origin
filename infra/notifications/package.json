@@ -50,7 +50,7 @@
     "chai": "4.2.0",
     "eslint": "6.5.1",
     "mocha": "6.2.1",
-    "nodemon": "1.19.3"
+    "nodemon": "1.19.4"
   },
   "prettier": {
     "semi": false,

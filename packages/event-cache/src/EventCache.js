@@ -8,11 +8,12 @@ const Bottleneck = require('bottleneck')
 const { get, post } = require('@origin/ipfs')
 
 const { debug, validateParams } = require('./utils')
-const {
-  InMemoryBackend,
-  IndexedDBBackend,
-  PostgreSQLBackend
-} = require('./backends/browser')
+const { InMemoryBackend, IndexedDBBackend } = require('./backends/browser')
+
+let PostgreSQLBackend
+if (!process.env.WEBPACK_BUILD) {
+  PostgreSQLBackend = require('./backends/PostgreSQLBackend').PostgreSQLBackend
+}
 
 const limiter = new Bottleneck({ maxConcurrent: 25 })
 limiter.on('error', err => {
@@ -140,6 +141,7 @@ class EventCache {
     this.latestIndexedBlock = 0
 
     const addr = (this.contract._address || 'no-contract').substr(0, 10)
+    debug(`EventCache using backend ${this.backend.type}`)
     debug(`Initialized ${addr} with originBlock ${this.originBlock}`)
   }
 
@@ -165,7 +167,8 @@ class EventCache {
 
     switch (platform) {
       case 'nodejs':
-        return new PostgreSQLBackend()
+      case 'postgresql':
+        return new PostgreSQLBackend({ prefix: this.prefix })
 
       case 'browser':
         return new IndexedDBBackend({ prefix: this.prefix })
@@ -225,6 +228,11 @@ class EventCache {
    * @returns {Array} An array of event objects
    */
   async _fetchEvents() {
+    // Do not fetch events if this isn't a writer
+    if (typeof process.env.EVENTCACHE_SLAVE !== 'undefined') {
+      debug('_fetchEvents disabled. slave instance')
+      return
+    }
     let toBlock = this.latestBlock
 
     if (this.useLatestFromChain || !toBlock) {

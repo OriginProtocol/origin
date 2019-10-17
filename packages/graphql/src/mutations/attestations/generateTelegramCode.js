@@ -12,7 +12,8 @@ async function generateTelegramCode(_, { identity }) {
 
   const response = await fetch(`${url}?${params}`, {
     headers: { 'content-type': 'application/json' },
-    credentials: 'include'
+    credentials: 'include',
+    method: 'POST'
   })
 
   const data = await response.json()

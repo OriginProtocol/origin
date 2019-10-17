@@ -46,7 +46,7 @@
   "devDependencies": {
     "eslint": "6.5.1",
     "prettier": "1.18.2",
-    "webpack": "4.41.0"
+    "webpack": "4.41.2"
   },
   "babel": {
     "presets": [

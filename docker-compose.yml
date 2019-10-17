@@ -109,6 +109,7 @@ services:
       npm run migrate --prefix infra/notifications &&
       npm run migrate --prefix infra/bridge &&
       npm run migrate --prefix infra/messaging &&
+      npm run migrate --prefix packages/event-cache &&
       npm run start --prefix packages/services -- -g -i -p -f -t"
 
   messaging:
@@ -168,6 +169,7 @@ services:
       - REDIS_URL=redis://redis-master:6379
       - ENVKEY=
       - MESSAGING_EVENTS=
+      - EVENTCACHE_ENABLE_PG=true
     depends_on:
       - postgres
       - elasticsearch
@@ -220,6 +222,9 @@ services:
       - DISCOVERY_SERVER_URL=http://discovery:4000/graphql
       - BRIDGE_SERVER_URL=http://bridge:5000
       - GROWTH_SERVER_URL=http://growth:4008
+      - DATABASE_URL=postgres://origin:origin@postgres/origin
+      - EVENTCACHE_ENABLE_PG=true
+      - EVENTCACHE_SLAVE=true
     depends_on:
       - discovery
     ports:
@@ -279,6 +284,10 @@ services:
       # sendgrid.com
       - SENDGRID_FROM_EMAIL=
       - SENDGRID_API_KEY=
+      - EMAIL_ATTESTATION_AUTOPASS=true
+      # Junk key for testing purposes
+      - ATTESTATION_ACCOUNT=0x59F5be04597ed96980B269B8EBdFe1033F201A89
+      - ATTESTATION_SIGNING_KEY=0x88e96d4537bea4d9c05d12549907b32561d3bf31f45aae734cdc119f13406cb6
       # Twilio verify API key for phone attestations
       # https://www.twilio.com/console/verify/applications
       - TWILIO_VERIFY_API_KEY

@@ -10,7 +10,6 @@ import withIsMobile from 'hoc/withIsMobile'
 
 import Nav from './nav/Nav'
 import TranslationModal from './_TranslationModal'
-import MobileModal from './_MobileModal'
 import Footer from './_Footer'
 
 import LoadingSpinner from 'components/LoadingSpinner'
@@ -43,8 +42,6 @@ import CurrencyContext from 'constants/CurrencyContext'
 class App extends Component {
   state = {
     hasError: false,
-    displayMobileModal: false,
-    mobileModalDismissed: false,
     footer: false,
     skipOnboardRewards: false,
     isTestBuild: window.location.pathname.startsWith('/test-builds')
@@ -53,15 +50,6 @@ class App extends Component {
   componentDidUpdate(prevProps) {
     if (get(this.props, 'location.state.scrollToTop')) {
       window.scrollTo(0, 0)
-    }
-
-    if (
-      !this.props.web3Loading &&
-      !this.props.web3.walletType &&
-      this.state.displayMobileModal === false &&
-      !this.state.mobileModalDismissed
-    ) {
-      this.setState({ displayMobileModal: true })
     }
 
     const accountID = get(this.props, 'wallet')
@@ -127,11 +115,6 @@ class App extends Component {
         ) : null}
         {!hideNavbar && (
           <Nav
-            onGetStarted={() =>
-              this.setState({
-                mobileModalDismissed: false
-              })
-            }
             onShowFooter={() => this.setState({ footer: true })}
             navbarDarkMode={isOnWelcomeAndNotOboard}
           />
@@ -193,16 +176,6 @@ class App extends Component {
         </main>
         {!this.props.isMobileApp && (
           <TranslationModal locale={this.props.locale} />
-        )}
-        {this.state.displayMobileModal && (
-          <MobileModal
-            onClose={() =>
-              this.setState({
-                displayMobileModal: false,
-                mobileModalDismissed: true
-              })
-            }
-          />
         )}
         <Footer
           open={this.state.footer}

@@ -5,7 +5,7 @@ const router = express.Router()
 const request = require('superagent')
 const querystring = require('querystring')
 
-const Attestation = require('../models/index').Attestation
+const Attestation = require('@origin/identity/src/models').Attestation
 const AttestationTypes = Attestation.AttestationTypes
 const { generateAttestation } = require('../utils/attestation')
 const { wechatVerify } = require('../utils/validation')
