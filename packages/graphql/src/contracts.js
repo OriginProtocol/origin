@@ -369,9 +369,12 @@ function setupTokens(config) {
     token.contract = contract
 
     if (shouldUseMobileBridge()) {
-      token.contractExec = new context.web3Exec.eth.Contract(contractDef.abi, token.id)
+      token.contractExec = new context.web3Exec.eth.Contract(
+        contractDef.abi,
+        token.id
+      )
     } else {
-      token.contractExec = contract  
+      token.contractExec = contract
     }
   })
 }
