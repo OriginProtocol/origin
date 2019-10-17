@@ -240,13 +240,13 @@ export function setNetwork(net, customConfig) {
 }
 
 function setupOriginProviders(config, net) {
-  const qps = getEnvironmentalVar('MAX_RPC_QPS', 100)
-  const maxConcurrent = getEnvironmentalVar('MAX_RPC_CONCURRENT', 25)
+  const qps = parseInt(getEnvironmentalVar('MAX_RPC_QPS', 100))
+  const maxConcurrent = parseInt(getEnvironmentalVar('MAX_RPC_CONCURRENT', 25))
 
   if (config.useMetricsProvider) {
     // These are "every N requests"
-    const echoEvery = getEnvironmentalVar('ECHO_EVERY', 250)
-    const breakdownEvery = getEnvironmentalVar('BREAKDOWN_EVERY', 1000)
+    const echoEvery = parseInt(getEnvironmentalVar('ECHO_EVERY', 250))
+    const breakdownEvery = parseInt(getEnvironmentalVar('BREAKDOWN_EVERY', 1000))
 
     initStandardSubproviders(web3, {
       echoEvery,
