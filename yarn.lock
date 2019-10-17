@@ -6545,6 +6545,13 @@ bl@^3.0.0:
   dependencies:
     readable-stream "^3.0.1"
 
+bl@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/bl/-/bl-4.0.0.tgz#fc7351c473992110749d3552087e1fe942021e65"
+  integrity sha512-QwQvAZZA1Bw1FWnhNj2X5lu+sPxxB2ITH3mqEqYyahN6JZR13ONjk+XiTnBaGEzMPUrAgOkaD68pBH1rvPRPsw==
+  dependencies:
+    readable-stream "^3.4.0"
+
 blakejs@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/blakejs/-/blakejs-1.1.0.tgz#69df92ef953aa88ca51a32df6ab1c54a155fc7a5"
@@ -11087,6 +11094,11 @@ event-emitter@^0.3.5:
     d "1"
     es5-ext "~0.10.14"
 
+event-iterator@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/event-iterator/-/event-iterator-1.2.0.tgz#2e71dc6ca56f1cf8ebcb2b9be7fdfd10acabbb76"
+  integrity sha512-Daq7YUl0Mv1i4QEgzGQlz0jrx7hUFNyLGbiF+Ap7NCMCjDLCCnolyj6s0TAc6HmrBziO5rNVHsPwGMp7KdRPvw==
+
 event-target-shim@^5.0.0:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/event-target-shim/-/event-target-shim-5.0.1.tgz#5d4d3ebdf9583d63a5333ce2deb7480ab2b05789"
@@ -14323,10 +14335,10 @@ ipfs-http-client@^37.0.1:
     tar-stream "^2.0.1"
     through2 "^3.0.1"
 
-ipfs-http-client@^38.0.0:
-  version "38.0.0"
-  resolved "https://registry.yarnpkg.com/ipfs-http-client/-/ipfs-http-client-38.0.0.tgz#d9ac2f2834e5eec28cde21bd42e21221829aa2ce"
-  integrity sha512-GhPnK5bn0BkaNx5gQVXESuFrCniqv05QDsFWcjpwk11MsocGjdLV/NJwPYc8x5WO9nXOwdWIZArUP660YIJQJw==
+ipfs-http-client@^38.2.0:
+  version "38.2.0"
+  resolved "https://registry.yarnpkg.com/ipfs-http-client/-/ipfs-http-client-38.2.0.tgz#f8f9777a64342ae87505c96e14fbceb95c351684"
+  integrity sha512-fREBfEKJGb0egN10NTjwSiz2HQ+e6RKRcqtL+mlzlmrt8o2jzYSHhizVvv5yPZcQ+2WmEUf1d9WJGXO+S6KY9A==
   dependencies:
     abort-controller "^3.0.0"
     async "^2.6.1"
@@ -14336,6 +14348,7 @@ ipfs-http-client@^38.0.0:
     bl "^3.0.0"
     bs58 "^4.0.1"
     buffer "^5.4.2"
+    callbackify "^1.1.0"
     cids "~0.7.1"
     concat-stream "github:hugomrdias/concat-stream#feat/smaller"
     debug "^4.1.0"
@@ -14389,17 +14402,17 @@ ipfs-http-client@^38.0.0:
     tar-stream "^2.0.1"
     through2 "^3.0.1"
 
-ipfs-http-client@^38.2.0:
-  version "38.2.0"
-  resolved "https://registry.yarnpkg.com/ipfs-http-client/-/ipfs-http-client-38.2.0.tgz#f8f9777a64342ae87505c96e14fbceb95c351684"
-  integrity sha512-fREBfEKJGb0egN10NTjwSiz2HQ+e6RKRcqtL+mlzlmrt8o2jzYSHhizVvv5yPZcQ+2WmEUf1d9WJGXO+S6KY9A==
+ipfs-http-client@^39.0.0:
+  version "39.0.0"
+  resolved "https://registry.yarnpkg.com/ipfs-http-client/-/ipfs-http-client-39.0.0.tgz#687168844816c10f85854a701c603ab72ac076e7"
+  integrity sha512-rtHlwy77jO6btkLcmNJedBWnKTftVZo4jiFnqnM575nf5yMkE2MpweIuUUQkGbbfWGa+AN0CzgHyuGYQAWVASQ==
   dependencies:
     abort-controller "^3.0.0"
     async "^2.6.1"
     async-iterator-all "^1.0.0"
     async-iterator-to-pull-stream "^1.3.0"
     bignumber.js "^9.0.0"
-    bl "^3.0.0"
+    bl "^4.0.0"
     bs58 "^4.0.1"
     buffer "^5.4.2"
     callbackify "^1.1.0"
@@ -14410,6 +14423,7 @@ ipfs-http-client@^38.2.0:
     detect-node "^2.0.4"
     end-of-stream "^1.4.1"
     err-code "^2.0.0"
+    event-iterator "^1.2.0"
     explain-error "^1.0.4"
     flatmap "0.0.3"
     form-data "^2.5.1"
@@ -14425,13 +14439,13 @@ ipfs-http-client@^38.2.0:
     is-stream "^2.0.0"
     iso-stream-http "~0.1.2"
     iso-url "~0.4.6"
-    it-glob "0.0.4"
+    it-glob "0.0.6"
     it-to-stream "^0.1.1"
     iterable-ndjson "^1.1.0"
     just-kebab-case "^1.1.0"
     just-map-keys "^1.1.0"
     kind-of "^6.0.2"
-    ky "^0.14.0"
+    ky "^0.15.0"
     ky-universal "^0.3.0"
     lru-cache "^5.1.1"
     merge-options "^1.0.1"
@@ -15789,6 +15803,14 @@ it-glob@0.0.4:
     fs-extra "^8.1.0"
     minimatch "^3.0.4"
 
+it-glob@0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/it-glob/-/it-glob-0.0.6.tgz#1a111bfd04ae56922a1ace3ea63ecce0c73b02c4"
+  integrity sha512-B2FsVvjP/iDzHIph3g9oSeqwOwTfcxuuiKSC7U78/AIWKbBzM8tyVZAEIgOjMOQDNMqCBUD2MNedt0gSIOJU8w==
+  dependencies:
+    fs-extra "^8.1.0"
+    minimatch "^3.0.4"
+
 it-multipart@~0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/it-multipart/-/it-multipart-0.0.2.tgz#83e8d55aec54026340e94ea9f7928266597adb20"
@@ -16870,6 +16892,11 @@ ky@^0.14.0:
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/ky/-/ky-0.14.0.tgz#b99bda5818d3a493f9857f39532ff567e2773c35"
   integrity sha512-NSjg+WCElQPdlF3BFZnjh8s5QlMIP+vIGoyukrRU+n+23VBUX87bQYOoG5h3HX5tO7kKQYXvg+QZVt8n0uWmhg==
+
+ky@^0.15.0:
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/ky/-/ky-0.15.0.tgz#bea059d57cc179575adadbba2d8e15610d8fd75b"
+  integrity sha512-6IlJRPFHq4ZKRRa9lyh6YqHqlmddAkfyXI9CYvZpLQtg7fQvwncPHyHrmtXAHKCqHOilINPMT88eW6FTA3HwkA==
 
 last-call-webpack-plugin@^3.0.0:
   version "3.0.0"
