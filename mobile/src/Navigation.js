@@ -11,6 +11,9 @@ import {
 
 // Onboarding
 import WelcomeScreen from 'screens/welcome'
+import AccountCreatedScreen from 'screens/accountCreated'
+import AccountBackupScreen from 'screens/accountBackup'
+import RecoveryPhraseExplainerScreen from 'screens/recoveryPhraseExplainer'
 import ImportAccountScreen from 'screens/import'
 import ImportMnemonicScreen from 'screens/importMnemonic'
 import ImportPrivateKeyScreen from 'screens/importPrivateKey'
@@ -26,14 +29,19 @@ import MarketplaceScreen from 'screens/marketplace'
 import SettingsScreen from 'screens/settings'
 import WalletScreen from 'screens/wallet'
 
-// Backup screen
-import BackupScreen from 'screens/backup'
-
 const IMAGES_PATH = '../assets/images/'
 
 const OnboardingStack = createStackNavigator(
   {
     Welcome: WelcomeScreen,
+    AccountCreated: AccountCreatedScreen,
+    // Backup
+    AccountBackup: AccountBackupScreen,
+    RecoveryPhraseExplainer: RecoveryPhraseExplainerScreen,
+    /*
+    RecoveryPhrase: RecoveryPhraseScreen,
+    RecoveryPhraseVerify: RecoveryPhraseVerifyScreen,
+    */
     ImportAccount: ImportAccountScreen,
     ImportMnemonic: {
       screen: ImportMnemonicScreen,
@@ -110,7 +118,6 @@ const SettingsStack = createStackNavigator(
 export const Navigation = createSwitchNavigator(
   {
     Onboarding: OnboardingStack,
-    Backup: BackupScreen,
     Main: createBottomTabNavigator(
       {
         Marketplace: MarketplaceScreen,
