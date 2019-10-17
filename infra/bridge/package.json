@@ -31,6 +31,7 @@
   "dependencies": {
     "@origin/growth-event": "^0.1.0",
     "@origin/identity": "^0.1.0",
+    "@origin/validator": "^0.1.0",
     "@sendgrid/mail": "^6.4.0",
     "body-parser": "^1.19.0",
     "connect-session-sequelize": "^6.0.0",
