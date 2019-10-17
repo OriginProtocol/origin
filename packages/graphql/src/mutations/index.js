@@ -50,7 +50,6 @@ import generateWebsiteCode from './attestations/generateWebsiteCode'
 import verifyWebsite from './attestations/verifyWebsite'
 import verifyOAuthAttestation from './attestations/verifyOAuthAttestation'
 import generateTelegramCode from './attestations/generateTelegramCode'
-import verifyTelegramCode from './attestations/verifyTelegramCode'
 
 import swapToToken from './uniswap/swapToToken'
 import uniswapDeployFactory from './uniswap/uniswapDeployFactory'
@@ -112,7 +111,6 @@ export default {
   verifyOAuthAttestation,
   verifyPhoneCode,
   verifyPromotion,
-  verifyTelegramCode,
   verifyWebsite,
   withdrawDust,
   withdrawListing,

@@ -94,6 +94,7 @@ class Messaging {
     this.unreadCountLoaded = false
     this.hasMoreConversations = true
     this.ready = false
+    this.isKeysLoading = true
   }
 
   // Helper function for use by outside services
@@ -184,6 +185,7 @@ class Messaging {
     this.convsEnabled = false
     this.hasMoreConversations = true
     this.ready = false
+    this.isKeysLoading = true
     clearInterval(this.refreshIntervalId)
 
     this.account_key = key
@@ -203,6 +205,8 @@ class Messaging {
       if (this.convsEnabled || this.getMessagingKey()) {
         await this.initKeys()
       }
+
+      this.isKeysLoading = false
     }
   }
 
@@ -261,6 +265,7 @@ class Messaging {
       limit: 10
     })
 
+    this.isKeysLoading = false
     this.ready = true
     this.events.emit('ready', this.account_key)
     this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
@@ -545,7 +550,8 @@ class Messaging {
             messageAdded: {
               conversationId: remoteEthAddress,
               roomId,
-              message: convObj.messages[0]
+              message: convObj.messages[0],
+              totalUnread: convObj.unreadCount
             }
           })
         })()
@@ -579,7 +585,8 @@ class Messaging {
                 messageAdded: {
                   conversationId: remoteEthAddress,
                   roomId,
-                  message
+                  message,
+                  totalUnread: convObj.unreadCount
                 }
               })
             },
@@ -607,7 +614,8 @@ class Messaging {
                   messageAdded: {
                     conversationId: remoteEthAddress,
                     roomId,
-                    message
+                    message,
+                    totalUnread: updatedConvObj.unreadCount
                   }
                 })
               })
@@ -654,7 +662,10 @@ class Messaging {
       markedAsRead: {
         conversationId: remoteEthAddress,
         roomId,
-        messagesRead
+        // Messages marked as read(from this conversation)
+        messagesRead,
+        // Overall count of unread messages (across all conversations)
+        totalUnread: this.unreadCount
       }
     })
   }

@@ -15,7 +15,10 @@ export const mutations = `
     verifyWebsite(identity: String!, website: String!): AttestationVerifyResult!
 
     generateTelegramCode(identity: String!): AttestationCodeResult!
-    verifyTelegramCode(identity: String!, code: String!): AttestationVerifyResult!
+  }
+
+  extend type Query {
+    checkTelegramStatus(identity: String!): AttestationStatusResult!
   }
 `
 export const types = `
@@ -29,6 +32,17 @@ export const types = `
     success: Boolean
     reason: String
     data: String
+  }
+
+  type AttestationStatusResult {
+    success: Boolean
+    reason: String
+    data: AttestationStatusData
+  }
+
+  type AttestationStatusData {
+    verified: Boolean
+    attestation: String
   }
 `
 

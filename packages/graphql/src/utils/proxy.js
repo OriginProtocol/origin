@@ -1,6 +1,8 @@
 import memorize from './memorize'
 import contracts from '../contracts'
 
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+
 async function isContractRaw(address) {
   const code = await contracts.web3.eth.getCode(address)
   return code && code.length > 2
@@ -82,7 +84,8 @@ async function proxyOwnerRaw(address) {
     const Proxy = contracts.ProxyImp.clone()
     Proxy.options.address = address
     const id = await Proxy.methods.owner().call()
-    return id || null
+    if (!id || id === ZERO_ADDRESS) return null
+    return id
   } catch (e) {
     return null
   }

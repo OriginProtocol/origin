@@ -32,7 +32,7 @@
     "logplease": "1.2.15",
     "per-env": "1.0.2",
     "pg": "7.12.1",
-    "sequelize": "5.19.5",
+    "sequelize": "5.19.6",
     "sequelize-cli": "5.5.1",
     "url": "0.11.0",
     "validator": "11.1.0",
@@ -43,7 +43,7 @@
     "chai-things": "0.2.0",
     "chalk": "2.4.2",
     "mocha": "6.2.1",
-    "nodemon": "1.19.3",
+    "nodemon": "1.19.4",
     "rewire": "4.0.1"
   },
   "scripts": {

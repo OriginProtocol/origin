@@ -8,7 +8,7 @@ toc: true
 
 A buyer makes an Offer to Seller for a listing, and if accepted, the the offer becomes the virtual contract for the transaction between them.
 
-Offers, like [listings](listings.md), have their data stored in JSON in IPFS ([schema](../../reference/protocol/schemas.md#offer-schema)), accompanied by some data on the blockchain. Because offers can be created with any data in them, the seller (or more usualy the DApp that the seller is using) must check that the offer is valid before accepting it. For example, it is possible to make an offer to purchase a book for 0.01 ETH, when the listing said 0.10 ETH. 
+Offers, like [listings](listings.md), have their data stored in JSON in IPFS, accompanied by some data on the blockchain. Because offers can be created with any user supplied data in them, the seller (or more usualy the DApp that the seller is using) must check that the offer is valid before accepting it. For example, it is possible to make an offer to purchase a book for 0.01 ETH, when the listing said 0.10 ETH. 
 
 ## Actors
 

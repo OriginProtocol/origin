@@ -28,6 +28,14 @@ async function verifyEmailCode(_, { identity, email, code }) {
     return { success: false, reason }
   }
 
+  // Testing bypass
+  if (process.env.EMAIL_ATTESTATION_AUTOPASS === 'true') {
+    return {
+      success: true,
+      data: JSON.stringify(data)
+    }
+  }
+
   try {
     validator('https://schema.originprotocol.com/attestation_1.0.0.json', {
       ...data,
