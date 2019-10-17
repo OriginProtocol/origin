@@ -150,7 +150,10 @@ async function reviews(user, { first = 10, after }) {
     const ec = contracts.marketplaces[version].contract.eventCache
 
     // Find all the OfferFinalized events associated with this user
-    const listings = await ec.getEvents({ event: ['ListingCreated', 'OfferFinalized'], party })
+    const listings = await ec.getEvents({
+      event: ['ListingCreated', 'OfferFinalized'],
+      party
+    })
     const listingIds = listings.map(e => String(e.returnValues.listingID))
     let events = await ec.getEvents({
       listingID: listingIds,
