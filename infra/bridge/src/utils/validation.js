@@ -1,6 +1,7 @@
 'use strict'
 
 const { check, validationResult } = require('express-validator')
+const Web3 = require('web3')
 
 const handleValidationError = (req, res, next) => {
   const errors = validationResult(req)
@@ -35,6 +36,13 @@ const urlValidation = website => {
     throw new Error('Field `website` must be a valid URL')
   }
 
+  return true
+}
+
+const ethAddressValidation = address => {
+  if (!Web3.utils.isAddress(address)) {
+    throw new Error(`Invalid Eth address ${address}`)
+  }
   return true
 }
 
@@ -174,6 +182,16 @@ const telegramVerify = [
 
 const telegramGenerateCode = [identityValidation, handleValidationError]
 
+const identityReadVerify = [
+  check('ethAddress').custom(ethAddressValidation),
+  handleValidationError
+]
+
+const identityWriteVerify = [
+  check('ethAddress').custom(ethAddressValidation),
+  handleValidationError
+]
+
 module.exports = {
   airbnbGenerateCode,
   airbnbVerifyCode,
@@ -192,5 +210,7 @@ module.exports = {
   wechatVerify,
   verifyPromotions,
   telegramVerify,
-  telegramGenerateCode
+  telegramGenerateCode,
+  identityReadVerify,
+  identityWriteVerify
 }

@@ -118,153 +118,25 @@ class IdentityEventHandler {
   }
 
   /**
-   * Returns the country of the identity based on IP from the most recent attestation.
-   * @param {Array<string>} addresses
-   * @returns {Promise<string> || null} 2 letters country code or null if lookup failed.
-   * @private
-   */
-  async _countryLookup(addresses) {
-    // Load the most recent attestation.
-    const attestation = await this._loadMostRecentAttestation(addresses, null)
-    if (!attestation) {
-      return null
-    }
-
-    // Do the IP to geo lookup.
-    const geo = await ip2geo(attestation.remoteIpAddress)
-    if (!geo) {
-      return null
-    }
-    return geo.countryCode
-  }
-
-  /**
    * Decorates an identity object with attestation data.
    * @param {{}} identity - result of identityQuery
    * @returns {Promise<Object>}
    * @private
    */
-  async _decorateIdentity(identity) {
-    const decoratedIdentity = Object.assign({}, identity)
-
+  async _loadAttestationMetadata(identity) {
     // Collect owner and proxy addresses for the identity.
-    const owner = decoratedIdentity.owner.id.toLowerCase()
-    const proxy = decoratedIdentity.owner.proxy
-      ? decoratedIdentity.owner.proxy.id.toLowerCase()
+    const owner = identity.owner.id.toLowerCase()
+    const proxy = identity.owner.proxy
+      ? identity.owner.proxy.id.toLowerCase()
       : null
     const addresses = [owner]
     if (proxy && proxy !== owner) {
       addresses.push(proxy)
     }
 
-    // Load attestation data.
-    await Promise.all(
-      decoratedIdentity.attestations.map(async attestationJson => {
-        const attestation = JSON.parse(attestationJson)
-        const attestationService = this._getAttestationService(attestation)
-        switch (attestationService) {
-          case 'email':
-            decoratedIdentity.email = await this._loadValueFromAttestation(
-              addresses,
-              'EMAIL'
-            )
-            break
-          case 'phone':
-            decoratedIdentity.phone = await this._loadValueFromAttestation(
-              addresses,
-              'PHONE'
-            )
-            break
-          case 'twitter': {
-            const attestation = await this._loadMostRecentAttestation(
-              addresses,
-              'TWITTER'
-            )
-            if (attestation) {
-              decoratedIdentity.twitter = attestation.value
-              decoratedIdentity.twitterProfile = attestation.profileData
-            } else {
-              logger.warn(`Could not find TWITTER attestation for ${addresses}`)
-              decoratedIdentity.twitter = null
-              decoratedIdentity.twitterProfile = null
-            }
-            break
-          }
-          case 'airbnb':
-            decoratedIdentity.airbnb = await this._loadValueFromAttestation(
-              addresses,
-              'AIRBNB'
-            )
-            break
-          case 'facebook':
-            decoratedIdentity.facebookVerified = true
-            decoratedIdentity.facebook = await this._loadValueFromAttestation(
-              addresses,
-              'FACEBOOK'
-            )
-            break
-          case 'google':
-            decoratedIdentity.googleVerified = true
-            decoratedIdentity.google = await this._loadValueFromAttestation(
-              addresses,
-              'GOOGLE'
-            )
-            break
-          case 'linkedin':
-            decoratedIdentity.linkedin = await this._loadValueFromAttestation(
-              addresses,
-              'LINKEDIN'
-            )
-            break
-          case 'github':
-            decoratedIdentity.github = await this._loadValueFromAttestation(
-              addresses,
-              'GITHUB'
-            )
-            break
-          case 'kakao':
-            decoratedIdentity.kakao = await this._loadValueFromAttestation(
-              addresses,
-              'KAKAO'
-            )
-            break
-          case 'wechat':
-            decoratedIdentity.wechat = await this._loadValueFromAttestation(
-              addresses,
-              'WECHAT'
-            )
-            break
-          case 'website':
-            decoratedIdentity.website = await this._loadValueFromAttestation(
-              addresses,
-              'WEBSITE'
-            )
-            break
-          case 'telegram': {
-            const attestation = await this._loadMostRecentAttestation(
-              addresses,
-              'TELEGRAM'
-            )
-            if (attestation) {
-              decoratedIdentity.telegram = attestation.value
-              decoratedIdentity.telegramProfile = attestation.profileData
-            } else {
-              logger.warn(
-                `Could not find TELEGRAM attestation for ${addresses}`
-              )
-              decoratedIdentity.telegram = null
-              decoratedIdentity.telegramProfile = null
-            }
-            break
-          }
-        }
-      })
-    )
-
-    // Add country of origin information based on IP.
-    decoratedIdentity.country = await this._countryLookup(addresses)
-
-    return decoratedIdentity
+    // Load extra metadata such as social IDs from the attestation DB table.
+    const attestations = identity.attestations.map(a => JSON.parse(a))
+    return loadIdentityAttestationsMetadata(addresses, attestations)
   }
 
   /**
@@ -275,49 +147,26 @@ class IdentityEventHandler {
    * @private
    */
   async _indexIdentity(identity, blockInfo) {
-    // Decorate the identity object with extra attestation related info.
-    const decoratedIdentity = await this._decorateIdentity(identity)
+    logger.info(`Indexing identity ${identity.id} in DB`)
 
-    logger.info(`Indexing identity ${decoratedIdentity.id} in DB`)
-
-    if (!Web3.utils.isAddress(decoratedIdentity.id)) {
-      throw new Error(`Invalid eth address: ${decoratedIdentity.id}`)
+    if (!Web3.utils.isAddress(identity.id)) {
+      throw new Error(`Invalid eth address: ${identity.id}`)
     }
 
     // Construct a decoratedIdentity object based on the user's profile
     // and data loaded from the attestation table.
     // The identity is recorded under the user's wallet address (aka "owner")
+    const metadata = await this._loadAttestationMetadata(identity)
     const identityRow = {
-      ethAddress: decoratedIdentity.owner.id.toLowerCase(),
-      firstName: decoratedIdentity.firstName,
-      lastName: decoratedIdentity.lastName,
-      email: decoratedIdentity.email,
-      phone: decoratedIdentity.phone,
-      airbnb: decoratedIdentity.airbnb,
-      twitter: decoratedIdentity.twitter,
-      facebookVerified: decoratedIdentity.facebookVerified || false,
-      googleVerified: decoratedIdentity.googleVerified || false,
-      data: {
-        blockInfo,
-        twitterProfile: decoratedIdentity.twitterProfile,
-        telegramProfile: decoratedIdentity.telegramProfile
-      },
-      country: decoratedIdentity.country,
-      avatarUrl: decoratedIdentity.avatarUrl,
-      website: decoratedIdentity.website,
-      google: decoratedIdentity.google,
-      facebook: decoratedIdentity.facebook,
-      kakao: decoratedIdentity.kakao,
-      linkedin: decoratedIdentity.linkedin,
-      github: decoratedIdentity.github,
-      wechat: decoratedIdentity.wechat,
-      telegram: decoratedIdentity.telegram
+      ethAddress: identity.owner.id.toLowerCase(),
+      ...metadata,
+      data: { blockInfo }
     }
 
     logger.debug('Identity=', identityRow)
     await db.Identity.upsert(identityRow)
 
-    return decoratedIdentity
+    return Object.assign({}, identity, metadata)
   }
 
   /**
