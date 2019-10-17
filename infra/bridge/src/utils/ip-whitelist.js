@@ -7,6 +7,7 @@ const logger = require('../logger')
 // Refer this for in case the subnets are changed: https://core.telegram.org/bots/api
 const telegramSubnets = (process.env.TELEGRAM_SUBNETS || '')
   .split(',')
+  .filter(subnet => subnet)
   .map(subnet => ipaddr.parseCIDR(subnet))
 
 /**
