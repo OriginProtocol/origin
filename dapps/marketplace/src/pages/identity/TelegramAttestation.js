@@ -1,5 +1,5 @@
 import React, { Component, useEffect } from 'react'
-import { Mutation, useQuery } from 'react-apollo'
+import { useQuery, useMutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
 import { withRouter } from 'react-router-dom'
@@ -11,7 +11,6 @@ import withWallet from 'hoc/withWallet'
 
 import Modal from 'components/Modal'
 import MobileModal from 'components/MobileModal'
-import AutoMutate from 'components/AutoMutate'
 import PublishedInfoBox from 'components/_PublishedInfoBox'
 
 import GenerateTelegramCodeMutation from 'mutations/GenerateTelegramCode'
@@ -65,11 +64,38 @@ const TelegramAttestationStatusQuery = ({
   )
 }
 
+const TelegramGenerateCode = ({ wallet, onComplete, onError }) => {
+  const [generateTelegramCode] = useMutation(GenerateTelegramCodeMutation)
+
+  useEffect(() => {
+    if (!wallet) {
+      return
+    }
+
+    generateTelegramCode({
+      variables: {
+        identity: wallet
+      }
+    })
+      .then(res => {
+        const result = res.data.generateTelegramCode
+        onComplete(result)
+      })
+      .catch(res => {
+        onError(res)
+      })
+  }, [wallet])
+
+  return null
+}
+
 class TelegramAttestation extends Component {
   constructor() {
     super()
 
-    this.state = {}
+    this.state = {
+      loading: true
+    }
   }
 
   render() {
@@ -117,7 +143,7 @@ class TelegramAttestation extends Component {
 
   renderVerifyCode() {
     const { isMobile } = this.props
-    const { openedLink } = this.state
+    const { openedLink, loading } = this.state
 
     const header = isMobile ? null : (
       <fbt desc="TelegramAttestation.title">Verify Your Telegram Account</fbt>
@@ -125,7 +151,32 @@ class TelegramAttestation extends Component {
 
     return (
       <>
-        {this.renderGenerateCode()}
+        <TelegramGenerateCode
+          wallet={this.props.wallet}
+          onComplete={result => {
+            if (!result.success) {
+              this.setState({
+                error: result.reason,
+                loading: false,
+                code: null
+              })
+            }
+
+            this.setState({
+              loading: false,
+              code: result.code
+            })
+          }}
+          onError={err => {
+            console.error(err)
+
+            this.setState({
+              error: 'Error: Check console',
+              loading: false,
+              code: null
+            })
+          }}
+        />
         <h2>{header}</h2>
         <div className="instructions mb-3">
           <fbt desc="TelegramAttestation.description">
@@ -149,7 +200,15 @@ class TelegramAttestation extends Component {
           }
         />
         <div className="actions">
-          {!openedLink && (
+          {!openedLink && loading && (
+            <button
+              className="btn btn-primary"
+              type="button"
+              disabled={true}
+              children={<fbt desc="Loading...">Loading...</fbt>}
+            />
+          )}
+          {!openedLink && !loading && (
             <a
               href={`https://t.me/${
                 process.env.TELEGRAM_BOT_USERNAME
@@ -162,14 +221,7 @@ class TelegramAttestation extends Component {
                   openedLink: true
                 })
               }}
-              disabled={this.state.loading}
-              children={
-                this.state.loading ? (
-                  <fbt desc="Loading...">Loading...</fbt>
-                ) : (
-                  <fbt desc="Continue">Continue</fbt>
-                )
-              }
+              children={<fbt desc="Continue">Continue</fbt>}
             />
           )}
           {openedLink && (
@@ -207,49 +259,6 @@ class TelegramAttestation extends Component {
           )}
         </div>
       </>
-    )
-  }
-
-  renderGenerateCode() {
-    if (this.props.walletLoading || this.props.identityLoading) {
-      return null
-    }
-
-    return (
-      <Mutation
-        mutation={GenerateTelegramCodeMutation}
-        onCompleted={res => {
-          const result = res.generateTelegramCode
-
-          if (!result.success) {
-            this.setState({
-              error: result.reason,
-              loading: false,
-              code: null
-            })
-          }
-
-          this.setState({
-            loading: false,
-            code: result.code
-          })
-        }}
-      >
-        {generateCode => {
-          const runMutation = () => {
-            if (this.state.loading) return
-            this.setState({ error: false, loading: true })
-
-            generateCode({
-              variables: {
-                identity: this.props.wallet
-              }
-            })
-          }
-
-          return <AutoMutate mutation={runMutation} />
-        }}
-      </Mutation>
     )
   }
 }

@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useQuery } from 'react-apollo'
 import get from 'lodash/get'
-import { fbt } from 'fbt-runtime'
 
-import Link from 'components/Link'
 import Redirect from 'components/Redirect'
 import QueryError from 'components/QueryError'
 import LoadingSpinner from 'components/LoadingSpinner'
 
 import ListingPreview from './_ListingPreview'
 import HelpWallet from './_HelpWallet'
-import HelpOriginWallet from 'components/DownloadApp'
 import WalletHeader from './_WalletHeader'
 
 import DownloadWalletCTA from './_DownloadWalletCTA'
