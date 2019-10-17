@@ -1,4 +1,4 @@
-const db = require('../models')
+const db = require('@origin/identity/src/models')
 const esmImport = require('esm')(module)
 const contracts = esmImport('@origin/graphql/src/contracts').default
 

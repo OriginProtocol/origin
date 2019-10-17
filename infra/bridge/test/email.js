@@ -5,7 +5,7 @@ const sinon = require('sinon')
 const sendgridMail = require('@sendgrid/mail')
 const redis = require('redis')
 
-const Attestation = require('../src/models/index').Attestation
+const Attestation = require('@origin/identity/src/models').Attestation
 const AttestationTypes = Attestation.AttestationTypes
 const app = require('../src/app')
 
