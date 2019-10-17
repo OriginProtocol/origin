@@ -6,7 +6,6 @@ const Web3 = require('web3')
 const eth = require('web3-eth')
 const stringify = require('json-stable-stringify')
 const db = {
-  ...require('@origin/bridge/src/models'),
   ...require('@origin/identity/src/models'),
   ...require('../../models')
 }

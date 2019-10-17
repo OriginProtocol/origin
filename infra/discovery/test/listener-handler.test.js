@@ -6,10 +6,10 @@ const esmImport = require('esm')(module)
 const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
 const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
 
-const _identityModels = require('@origin/identity/src/models')
 const graphqlClient = esmImport('@origin/graphql').default
 
 const _discoveryModels = require('../src/models')
+const _identityModels = require('@origin/identity/src/models')
 const db = { ..._discoveryModels, ..._identityModels }
 const { handleEvent } = require('../src/listener/handler')
 const MarketplaceEventHandler = require('../src/listener/handler_marketplace')

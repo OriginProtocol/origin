@@ -50,7 +50,8 @@ module.exports = (sequelize, DataTypes) => {
       profileData: DataTypes.JSONB
     },
     {
-      tableName: 'attestation'
+      tableName: 'attestation',
+      timestamps: false
     }
   )
   Attestation.AttestationTypes = {

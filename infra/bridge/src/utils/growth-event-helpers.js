@@ -5,7 +5,7 @@ const logger = require('../logger')
 const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
 const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
 
-const db = require('../models/index')
+const db = require('@origin/identity/src/models')
 
 const EventValidators = require('./event-validators')
 
