@@ -7,8 +7,8 @@ import withIsMobile from 'hoc/withIsMobile'
 const ThirdpartyWalletLogo = ({ link, className, children }) => {
   return (
     <a href={link} target="_blank" rel="noopener noreferrer">
-      <div className={`wallet${className ? ' ' + className : ''}`}>
-        <div className="name">{children}</div>
+      <div className={`thirdparty-wallet${className ? ' ' + className : ''}`}>
+        <div className="thirdparty-wallet-name">{children}</div>
       </div>
     </a>
   )
@@ -151,12 +151,12 @@ require('react-styl')(`
       grid-template-columns: calc(50% - 0.5rem) calc(50% - 0.5rem)
       grid-row-gap: 1rem
       grid-column-gap: 1rem
-      .wallet
+      .thirdparty-wallet
         display: flex
         border-radius: 5px
         border: solid 1px #c2cbd3
         padding: 2rem 3rem
-        .name
+        .thirdparty-wallet-name
           color: var(--dark)
           justify-content: center
           display: flex
