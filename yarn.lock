@@ -22989,7 +22989,7 @@ qrcode.react@^0.9.3:
     prop-types "^15.6.0"
     qr.js "0.0.0"
 
-qrcode@^1.4.2:
+qrcode@1.4.2:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/qrcode/-/qrcode-1.4.2.tgz#e7c82a60140916d666541043bd2b0b72ee4e38a6"
   integrity sha512-eR6RgxFYPDFH+zFLTJKtoNP/RlsHANQb52AUmQ2bGDPMuUw7jJb0F+DNEgx7qQGIElrbFxWYMc0/B91zLZPF9Q==
