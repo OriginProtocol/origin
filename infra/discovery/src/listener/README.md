@@ -92,3 +92,4 @@ lerna run start:listener:development --scope origin-discovery --stream
 ### Set the discovery server used by the DApp
 
 Open `https://dapp.originprotocol.com/#/settings` and change the discovery server to `https://localhost:4000/graphql`.
+

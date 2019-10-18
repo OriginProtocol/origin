@@ -18,15 +18,15 @@ faucetImageTag: 'b47578b'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'abdcdf9'
+eventlistenerImageTag: '74bf510'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '425bcae'
+discoveryImageTag: '949a02c'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: 'ad11d0d'
+growthImageTag: 'b044949'
 
 # origin-messaging
 messagingImage: origin-messaging
@@ -34,7 +34,7 @@ messagingImageTag: '8fdb4c4'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '8fdb4c4'
+notificationsImageTag: 'b044949'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
@@ -51,7 +51,7 @@ creatorIssuerIp: '35.233.181.44'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: '8fdb4c4'
+cronImageTag: 'b044949'
 
 # origin-admin
 adminImage: origin-admin
