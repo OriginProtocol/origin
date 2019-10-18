@@ -2,7 +2,7 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: 'abdcdf9'
+bridgeImageTag: 'ed15607'
 
 # origin-dapp
 dappImage: origin-dapp
@@ -14,7 +14,7 @@ ipfsProxyImageTag: '8fdb4c4'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: '8fdb4c4'
+faucetImageTag: 'ed15607'
 
 # event-listener
 eventlistenerImage: event-listener

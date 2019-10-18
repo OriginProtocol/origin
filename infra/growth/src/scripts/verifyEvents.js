@@ -7,9 +7,10 @@ const Sequelize = require('sequelize')
 const Logger = require('logplease')
 
 const enums = require('../enums')
-const _growthModels = require('../models')
 const _discoveryModels = require('@origin/discovery/src/models')
-const db = { ..._growthModels, ..._discoveryModels }
+const _identityModels = require('@origin/identity/src/models')
+const _growthModels = require('../models')
+const db = { ..._discoveryModels, ..._identityModels, ..._growthModels }
 
 const parseArgv = require('../util/args')
 
