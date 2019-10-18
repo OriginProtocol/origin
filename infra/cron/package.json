@@ -17,7 +17,7 @@
     "@sendgrid/mail": "6.4.0",
     "bull": "3.11.0",
     "cross-fetch": "3.0.4",
-    "dotenv": "8.1.0",
+    "dotenv": "8.2.0",
     "envkey": "1.2.7",
     "logplease": "1.2.15",
     "per-env": "1.0.2",
