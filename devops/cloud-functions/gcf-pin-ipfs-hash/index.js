@@ -29,6 +29,12 @@ const offerEvents = [
 const identityEvents = ['IdentityUpdated']
 const allEvents = listingEvents.concat(offerEvents).concat(identityEvents)
 
+/**
+ * Reads messages from the pubsub queue, parses the data looking for IPFS hashes
+ * and pins those hashes onto the configured IPFS cluster.
+ * @param {{event:{ event:string, returnValues.ipfsHash: string}, related: Object}} event
+ * @returns {Promise<void>}
+ */
 const pinService = async event => {
   const pubsubMessage = event.data
   const data = pubsubMessage

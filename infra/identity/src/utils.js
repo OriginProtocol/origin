@@ -20,6 +20,13 @@ const siteNameToService = {
   'telegram.com': 'telegram'
 }
 
+/**
+ * Returns the name of the service associated with an attestation.
+ *
+ * @param {Object} attestation
+ * @returns {string|undefined}
+ * @private
+ */
 function _getAttestationService(attestation) {
   if (attestation.data.attestation.site) {
     const siteName = attestation.data.attestation.site.siteName
@@ -41,6 +48,7 @@ function _getAttestationService(attestation) {
 
 /**
  * Loads the most recent attestation.
+ *
  * @param {Array<string>} addresses: Lower cased eth addresses
  * @param {string || null} method: Optional attestation method
  * @returns {Promise<Model<Attestation> || null>}
@@ -56,6 +64,7 @@ async function _loadMostRecentAttestation(addresses, method) {
 
 /**
  * Loads attestation data such as email, phone, etc... from the attestation table.
+ *
  * @param {Array<string>} addresses
  * @param {string} method - 'EMAIL', 'PHONE', etc...
  * @returns {Promise<string|null>}
@@ -73,6 +82,7 @@ async function _loadValueFromAttestation(addresses, method) {
 
 /**
  * Returns the country of the identity based on IP from the most recent attestation.
+ *
  * @param {Array<string>} addresses
  * @returns {Promise<string> || null} 2 letters country code or null if lookup failed.
  * @private
@@ -92,6 +102,13 @@ async function _countryLookup(addresses) {
   return geo.countryCode
 }
 
+/**
+ * Loads proxy address associated with an owner address.
+ * Returns addresses (or only the owner if not proxy found) in a list.
+ *
+ * @param ownerAddress
+ * @returns {Promise<Array<string>>}
+ */
 async function loadIdentityAddresses(ownerAddress) {
   // Attestation rows in the DB may have been written under the
   // proxy eth address. Load proxy addresses.
@@ -103,6 +120,13 @@ async function loadIdentityAddresses(ownerAddress) {
   return addresses
 }
 
+/**
+ * Reads metadata related to attestations from the DB.
+ *
+ * @param {Array<string>} addresses: owner and optionally proxy eth address.
+ * @param {Array<Object>} attestations: attestations present in the user's identity.
+ * @returns {Promise<Object>}
+ */
 async function loadIdentityAttestationsMetadata(addresses, attestations) {
   const metadata = {}
 

@@ -8,7 +8,8 @@ const { PubSub } = require('@google-cloud/pubsub')
 const logger = require('../logger')
 
 /**
- * Enqueues a message into a GCP pubsub queue for pinning content.
+ * Enqueues a message with the identity data into a GCP pubsub queue
+ * in order for the IPFS hashes it contains to get pinned on an IPFS cluster.
  *
  * @param {Object} identity
  * @returns {Promise<void>}

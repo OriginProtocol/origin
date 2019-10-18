@@ -24,10 +24,10 @@ const logger = require('../logger')
 
 /**
  * Loads the identity associated with an eth address.
- * Returns:
- *  - 200 if identity was found in the database.
+ * Return status:
+ *  - 200 if an identity was found in the database.
  *  - 204 if no identity found.
- *  - 500 if identity row found but with empty data in the database.
+ *  - 500 if an identity row was found but with empty data in the database.
  *
  *  @args {string} req.ethAddress Eth address of the user.
  *  @returns {{identity: Object, ipfsHash: string}}
@@ -65,9 +65,12 @@ router.get('/', identityReadVerify, async (req, res) => {
 /**
  * Writes an identity to the database.
  *
+ * TODO(franck): Authenticate the request.
+ *
  * @args {string} req.query.ethAddress: Eth address of the user.
  * @args {Object} req.body.identity: Identity JSON blob.
  * @args {string} req.body.ipfsHash: IPFS hash of the identity JSON blob.
+ * @returns {{id: string}} Returns the eth addresses passed as input.
  */
 router.post('/', identityWriteVerify, async (req, res) => {
   const ethAddress = req.query.ethAddress.toLowerCase()
