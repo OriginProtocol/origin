@@ -25,14 +25,18 @@ const OnboardWallet = ({ listing, linkPrefix }) => {
     get(data, 'web3.metaMaskAccount.id') ||
     get(data, 'web3.mobileWalletAccount.id')
 
+  const walletType = get(data, 'web3.walletType')
+
   useEffect(() => {
     if (wallet) {
       setRedirect(`${linkPrefix}/onboard/email`)
+    } else if (walletType) {
+      setRedirect(`${linkPrefix}/onboard/metamask`)
     }
-  }, [wallet])
+  }, [walletType, wallet])
 
   if (redirect) {
-    return <Redirect to={`${linkPrefix}/onboard/email`} />
+    return <Redirect to={redirect} />
   }
 
   if (networkStatus === 1) {
