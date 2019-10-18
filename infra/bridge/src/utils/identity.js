@@ -32,7 +32,7 @@ async function pinIdentityToIpfs(identity) {
     centralizedIdentity: true,
     event: {
       event: 'IdentityUpdated',
-        returnValues: {
+      returnValues: {
         ipfsHash: data.ipfsHash
       }
     },
@@ -40,9 +40,7 @@ async function pinIdentityToIpfs(identity) {
   }
 
   const pubsub = new PubSub({ projectId, keyFilename })
-  await pubsub
-    .topic(topic)
-    .publish(Buffer.from(JSON.stringify(data)))
+  await pubsub.topic(topic).publish(Buffer.from(JSON.stringify(data)))
 }
 
 /**
