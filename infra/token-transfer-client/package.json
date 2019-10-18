@@ -52,7 +52,7 @@
     "postcss-normalize": "8.0.1",
     "postcss-preset-env": "6.7.0",
     "postcss-safe-parser": "4.0.1",
-    "qrcode": "^1.4.2",
+    "qrcode": "1.4.2",
     "react": "16.10.2",
     "react-app-polyfill": "1.0.4",
     "react-dev-utils": "9.1.0",
