@@ -5,10 +5,13 @@ const https = require('https')
 const urllib = require('url')
 const { PubSub } = require('@google-cloud/pubsub')
 
-const logger = require('./logger')
-
+const logger = require('../logger')
 
 async function pinIdentityToIpfs(identity) {
+  if (process.env.NODE_ENV !== 'production') {
+    return
+  }
+
   const projectId = process.env.GCLOUD_PROJECT_ID
   const topic = process.env.GCLOUD_PUBSUB_TOPIC
   const pubsub = new PubSub({
@@ -16,7 +19,9 @@ async function pinIdentityToIpfs(identity) {
     keyFilename: process.env.GCLOUD_SERVICE_ACCOUNT_JSON
   })
 
-  return await pubsub.topic(topic).publish(Buffer.from(JSON.stringify(identity)))
+  return await pubsub
+    .topic(topic)
+    .publish(Buffer.from(JSON.stringify(identity)))
 }
 
 /**
@@ -62,6 +67,9 @@ async function _postToWebhook(
  * our global Origin mailing list.
  */
 async function postToEmailWebhook(identity) {
+  if (process.env.NODE_ENV !== 'production') {
+    return
+  }
   const url = process.env.EMAIL_WEBHOOK
   if (!identity.email) {
     logger.warn('No email present in identity, skipping email webhook.')

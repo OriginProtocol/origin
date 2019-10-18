@@ -91,6 +91,42 @@ async function proxyOwnerRaw(address) {
   }
 }
 
+/**
+ * Given an eth address, returns a structure with proxy and owner address.
+ * The proxy address may be null.
+ *
+ * @param {string} id: owner or proxy eth address.
+ * @returns {Promise<{owner: string, proxy: string||null}>}
+ * @private
+ */
+export async function getProxyAndOwner(id) {
+  // If the id has an owner, it is a proxy address.
+  const owner = await proxyOwner(id)
+  if (owner) {
+    return { owner, proxy: id }
+  }
+
+  // If the id has a proxy, it is an owner address.
+  const proxy = await hasProxy(id)
+  if (proxy) {
+    return { owner: id, proxy }
+  }
+
+  // id is an owner address with no proxy.
+  return { owner: id, proxy: null }
+}
+
+/**
+ * Given an eth address, returns a list with proxy and owner address.
+ *
+ * @param {string} id: owner or proxy eth address.
+ * @returns {Promise<Array<string>>}
+ */
+export async function getAccounts(id) {
+  const data = await getProxyAndOwner(id)
+  return data.proxy ? [data.owner, data.proxy] : [data.owner]
+}
+
 export const proxyOwner =
   process.env.DISABLE_CACHE === 'true'
     ? proxyOwnerRaw

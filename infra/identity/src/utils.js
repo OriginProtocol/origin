@@ -1,16 +1,12 @@
 const Sequelize = require('sequelize')
-const logger = require('./logger')
 
 const db = {
   ...require('@origin/growth-event/src/models'),
-  ...require('../models')
+  ...require('./models')
 }
-const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
-const {
-  AttestationServiceToEventType,
-  GrowthEvent
-} = require('@origin/growth-event/src/resources/event')
 const { ip2geo } = require('@origin/ip2geo')
+
+const logger = require('./logger')
 
 
 const siteNameToService = {
@@ -221,4 +217,70 @@ async function loadIdentityAttestationsMetadata(addresses, attestations) {
   return metadata
 }
 
-module.exports = { loadIdentityAddresses, loadIdentityAttestationsMetadata }
+/**
+ * Records a ProfilePublished event in the growth_event table
+ * at the condition that the identity has a first name and last name.
+ *
+ * @param {Object} user: Origin js user model object.
+ * @param {Date} date: Event date.
+ * @param {Object} growthEvent: See infra/growth-event/src/resources/GrowthEvent
+ * @returns {Promise<void>}
+ * @private
+ */
+async function recordGrowthProfileEvent(ethAddress, identity, date, growthEvent) {
+  const validFirstName = identity.firstName && identity.firstName.length > 0
+  const validLastName = identity.lastName && identity.lastName.length > 0
+
+  const validProfile = validFirstName && validLastName
+  if (!validProfile) {
+    return
+  }
+
+  await growthEvent.insert(
+    logger,
+    1,
+    ethAddress,
+    growthEvent.Types.ProfilePublished,
+    null,
+    null,
+    date
+  )
+}
+
+/**
+ * Records AttestationPublished events in the growth_event table.
+ * @param {Object} attestations
+ * @param {Date} date: Event date.
+ * @param {Object} growthEvent: See infra/growth-event/src/resources/GrowthEvent
+ * @returns {Promise<void>}
+ * @private
+ */
+async function recordGrowthAttestationEvents(ethAddress, attestations, date, growthEvent) {
+  await Promise.all(
+    attestations.map(attestation => {
+      const attestationService = _getAttestationService(attestation)
+      const eventType = growthEvent.AttestationServiceToEventType[attestationService]
+      if (!eventType) {
+        logger.error(`Unexpected att. service: ${attestationService}. Skipping.`)
+        return
+      }
+
+      return growthEvent.insert(
+        logger,
+        1,
+        ethAddress,
+        eventType,
+        null,
+        null,
+        date
+      )
+    })
+  )
+}
+
+module.exports = {
+  loadIdentityAddresses,
+  loadIdentityAttestationsMetadata,
+  recordGrowthProfileEvent,
+  recordGrowthAttestationEvents
+}

@@ -4,14 +4,23 @@ const express = require('express')
 const get = require('lodash/get')
 
 const router = express.Router()
-
-const { identityReadVerify, identityWriteVerify } = require('../utils/validation')
-const { loadIdentityAttestationsMetadata } = require('@origin/identity/utils')
+const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
+const {
+  loadIdentityAttestationsMetadata,
+  loadIdentityAddresses,
+  recordGrowthProfileEvent,
+  recordGrowthAttestationEvents
+} = require('@origin/identity/src/utils')
 const Identity = require('@origin/identity/src/models').Identity
 const validator = require('@origin/validator')
 
-const logger = require('../logger')
 const { pinIdentityToIpfs, postToEmailWebhook } = require('../utils/identity')
+const {
+  identityReadVerify,
+  identityWriteVerify
+} = require('../utils/validation')
+
+const logger = require('../logger')
 
 /**
  * Loads the identity associated with an eth address.
@@ -78,23 +87,14 @@ router.get('/', identityReadVerify, async (req, res) => {
  * Writes an identity to the database.
  *
  * @args {string} req.query.ethAddress: Eth address of the user.
- * @args {Object} req.body.identity: Identity JSON blob
+ * @args {Object} req.body.identity: Identity JSON blob.
  * @args {string} req.body.ipfsHash: IPFS hash of the identity JSON blob.
  */
-
-// TODO:
-//  [ ] authenticate user
-//  [X] parse data
-//  [X] store blob in identity.data
-//  [X] store hash in identity.ipfsHash
-//  [X] Query attestations to fill identity
-//  [X] trigger pinning
-//  [X] webhook for website mailing list
-
 router.post('/', identityWriteVerify, async (req, res) => {
   const ethAddress = req.query.ethAddress.toLowerCase()
   const data = req.body || {}
   logger.debug(`identity/write called for addr ${ethAddress}`)
+
   if (!data.identity) {
     return res.status(400).send({ errors: ['Identity data missing'] })
   }
@@ -104,67 +104,82 @@ router.post('/', identityWriteVerify, async (req, res) => {
 
   // Parse the identity data to make sure it is valid.
   try {
-    validator('https://schema.originprotocol.com/identity_1.0.0.json', data.identity)
-    validator('https://schema.originprotocol.com/profile_2.0.0.json', data.identity.profile)
+    validator(
+      'https://schema.originprotocol.com/identity_1.0.0.json',
+      data.identity
+    )
+    validator(
+      'https://schema.originprotocol.com/profile_2.0.0.json',
+      data.identity.profile
+    )
     data.identity.attestations.forEach(a => {
       validator('https://schema.originprotocol.com/attestation_1.0.0.json', a)
     })
-  } catch(err) {
+  } catch (err) {
     logger.error(`Failed parsing identity data for ${ethAddress}`, err)
-    return res.status(400).send({ errors: [`Failed parsing identity data: ${err}`] })
+    return res
+      .status(400)
+      .send({ errors: [`Failed parsing identity data: ${err}`] })
   }
 
   // Load attestation data from the DB.
-  const metadata = loadIdentityAttestationsMetadata(ethAddress, data.identity.attestations)
+  const addresses = loadIdentityAddresses(ethAddress)
+  const metadata = loadIdentityAttestationsMetadata(
+    addresses,
+    data.identity.attestations
+  )
 
-  metadata.firstName = data.identity.profile.firstName
-  metadata.lastName = data.identity.profile.lastName
-  metadata.avatarUrl = data.identity.profile.avatarUrl
+  // Create an object representing the updated identity.
+  const identity = {
+    ethAddress,
+    firstName: get(data.identity, 'profile.firstName'),
+    lastName: get(data.identity, 'profile.lastName'),
+    avatarUrl: get(data.identity, 'profile.avatarUrl'),
+    data: {
+      identity: data.identity,
+      ipfsHash: data.ipfsHash,
+      ipfsHashHistory: []
+    },
+    ...metadata
+  }
 
-  // Lookup any existing identity associated with the eth address.
-  const identity = await Identity.findOne({ where: { ethAddress } })
-  if (identity) {
-    logger.debug(`Updating identity DB row for ${ethAddress}`)
+  // Lookup any existing identity associated with the eth address
+  // to get the ipfs hash history.
+  const identityRow = await Identity.findOne({ where: { ethAddress } })
+  if (identityRow) {
+    logger.debug(`Found existing identity DB row for ${ethAddress}`)
     // Append the old IPFS hash to the history.
-    const ipfsHashHistory = get(identity, 'data.ipfsHashHistory', [])
-    const prevIpfsHash = get(identity, 'data.ipfsHash', null)
+    const ipfsHashHistory = get(identityRow, 'data.ipfsHashHistory', [])
+    const prevIpfsHash = get(identityRow, 'data.ipfsHash')
     if (prevIpfsHash) {
       ipfsHashHistory.push({
         ipfsHash: prevIpfsHash,
-        timestamp: identity.updatedAt.getTime()
+        timestamp: identityRow.updatedAt.getTime()
       })
     }
-    // Update the existing identity row.
-    await identity.update({
-      ...metadata,
-      data: {
-        identity: data.identity,
-        ipfsHash: data.ipfsHash,
-        ipfsHashHistory
-      }
-    })
-  } else {
-    // Create a new identity row.
-    logger.debug(`Creating new identity DB row for ${ethAddress}`)
-    await Identity.create({
-      ethAddress,
-      ...metadata,
-      data: {
-        identity: data.identity,
-        ipfsHash: data.ipfsHash,
-        ipfsHashHistory: []
-      }
-    })
+    identity.data.ipfsHashHistory = ipfsHashHistory
   }
+  await Identity.upsert(identity)
+
+  // Record the growth events.
+  const now = new Date()
+  await recordGrowthProfileEvent(ethAddress, identity, now, GrowthEvent)
+  await recordGrowthAttestationEvents(
+    ethAddress,
+    data.identity.attestations,
+    now,
+    GrowthEvent
+  )
 
   // Pin the Identity data to the IPFS cluster.
-  // TODO: check the the data format expected by the GCP cloud function
+  // TODO: check the data format expected by the GCP cloud function
   await pinIdentityToIpfs(data.identity)
 
   // Call the webhook to record the user's email in the insight tool.
-  await postToEmailWebhook()
+  // TODO: check data format.
+  await postToEmailWebhook(identity)
 
-  return res.status(200).send({ id: ethAddress })
+  return res.status(200).send({ id: req.query.ethAddress })
 })
 
 module.exports = router
