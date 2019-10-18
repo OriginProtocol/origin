@@ -36,29 +36,8 @@ router.get('/', identityReadVerify, async (req, res) => {
   const ethAddress = req.query.ethAddress.toLowerCase()
   logger.debug(`identity/read called for addr ${ethAddress}`)
 
-  // TODO: should we support lookups for both proxy and owner ???
-  // Probably... ?
-  // Lookup in proxy table ?
-
   // Lookup the identity associated with the eth address.
   const identity = await Identity.findOne({ where: { ethAddress } })
-
-  /* FOR TESTING
-  const identity = {
-    data: {
-      "schemaId":"https://schema.originprotocol.com/identity_1.0.0.json",
-      "profile": {
-        "firstName": "Francky" + Math.ceil(Math.random()*100),
-        "lastName": "Baloboa",
-        "description": "I'm a test account! I think?",
-        "avatarUrl": "ipfs://QmWnTmoY6Pi5u3gxE9QSSFzw1MoCLgcd1Wg5mxTxzsL57c",
-        "schemaId": "https://schema.originprotocol.com/profile_2.0.0.json",
-        "ethAddress": ethAddress
-      },
-      "attestations": []
-    }
-  }
-  */
 
   if (!identity || !identity.data) {
     logger.debug(`No identity found for eth address ${ethAddress}.`)
@@ -159,6 +138,8 @@ router.post('/', identityWriteVerify, async (req, res) => {
     }
     identity.data.ipfsHashHistory = ipfsHashHistory
   }
+
+  // Update the identity in the DB.
   await Identity.upsert(identity)
 
   // Record the growth events.
@@ -172,11 +153,10 @@ router.post('/', identityWriteVerify, async (req, res) => {
   )
 
   // Pin the Identity data to the IPFS cluster.
-  // TODO: check the data format expected by the GCP cloud function
+  // TODO (franck): check the data format expected by the GCP cloud function
   await pinIdentityToIpfs(data.identity)
 
   // Call the webhook to record the user's email in the insight tool.
-  // TODO: check data format.
   await postToEmailWebhook(identity)
 
   return res.status(200).send({ id: req.query.ethAddress })
