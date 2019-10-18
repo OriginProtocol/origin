@@ -207,7 +207,8 @@ async function reviews(user, { first = 10, after }) {
       })
       // Offer objects contain reviews of both parties, filter the other ones out.
       .filter(
-        review => review.rating > 0 && !party.includes(review.reviewer.id)
+        review =>
+          review && review.rating > 0 && !party.includes(review.reviewer.id)
       )
 
     if (reviews.length === 0) continue
