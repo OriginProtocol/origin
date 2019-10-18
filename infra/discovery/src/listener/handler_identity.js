@@ -4,7 +4,6 @@ const logger = require('./logger')
 
 const { bytes32ToIpfsHash } = require('./utils')
 const db = {
-  ...require('@origin/bridge/src/models'),
   ...require('@origin/identity/src/models'),
   ...require('../models')
 }

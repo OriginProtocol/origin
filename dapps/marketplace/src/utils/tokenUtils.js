@@ -54,29 +54,3 @@ export const tokenToCoinLogoMap = {
   'token-DAI': 'dai',
   'token-OGN': 'ogn'
 }
-
-// Default token to select by order of preference
-const defaultTokens = ['token-DAI', 'token-ETH', 'token-OGN']
-
-/**
- * Returns the default currency to be selected for a listing
- * @param {Array} acceptedTokens An array of accepted tokens
- */
-export const getDefaultToken = acceptedTokens => {
-  if (!acceptedTokens.length) {
-    return null
-  }
-
-  if (acceptedTokens.length === 1) {
-    return acceptedTokens[0]
-  }
-
-  for (const token of defaultTokens) {
-    if (acceptedTokens.includes(token)) {
-      return token
-    }
-  }
-
-  // This should never happen
-  return null
-}

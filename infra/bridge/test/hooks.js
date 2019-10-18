@@ -15,7 +15,7 @@ const config = require(__dirname + '/../config/sequelize.js')[env]
 
 const sequelize = new Sequelize(process.env[config.use_env_variable], config)
 
-const Attestation = require('../src/models/index').Attestation
+const Attestation = require('@origin/identity/src/models').Attestation
 
 const ethAddress = '0x112234455c3a32fd11230c42e7bccd4a84e02010'
 

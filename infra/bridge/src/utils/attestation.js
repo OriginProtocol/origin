@@ -1,7 +1,7 @@
 'use strict'
 
 const Web3 = require('web3')
-const Attestation = require('../models/index').Attestation
+const Attestation = require('@origin/identity/src/models').Attestation
 const AttestationTypes = Attestation.AttestationTypes
 const constants = require('../constants')
 const stringify = require('json-stable-stringify')

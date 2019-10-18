@@ -91,19 +91,17 @@ class ListingDetail extends Component {
 
     const reviews = <Reviews id={listing.seller.id} seller hideWhenZero />
     const userListings = (
-      <div className="seller-listings">
-        <UserListings
-          user={listing.seller.id}
-          hideLoadMore
-          compact
-          title={fbt(
-            'Other listings by this seller',
-            'ListingDetail.othersFromSeller'
-          )}
-          hideIfEmpty={true}
-          excludeListing={listing.id}
-        />
-      </div>
+      <UserListings
+        user={listing.seller.id}
+        hideLoadMore
+        compact
+        title={fbt(
+          'Other listings by this seller',
+          'ListingDetail.othersFromSeller'
+        )}
+        hideIfEmpty={true}
+        excludeListing={listing.id}
+      />
     )
 
     if (isMobile) {
@@ -526,10 +524,10 @@ require('react-styl')(`
             font-family: var(--heading-font)
             font-size: 18px
             margin-bottom: 1.25rem
-        .seller-listings
+        .user-listings
           border-top: 1px solid #dde6ea
           padding: 1.5rem 0 0 0
-          .user-listings .listings-header
+          .listings-header
             font-family: var(--heading-font)
             font-size: 18px
             margin-bottom: 1.25rem
