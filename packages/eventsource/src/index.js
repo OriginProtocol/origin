@@ -295,11 +295,11 @@ class OriginEventSource {
       commission
     })
 
-    if (process.env.DISABLE_CACHE === 'true') {
-      return listingWithOffers
-    } else {
-      return (this.listingCache[cacheKey] = listingWithOffers)
+    if (process.env.DISABLE_CACHE !== 'true') {
+      this.listingCache[cacheKey] = listingWithOffers
     }
+
+    return listingWithOffers
   }
 
   // Returns a listing with offers and any fields that are computed from the
@@ -576,8 +576,20 @@ class OriginEventSource {
     let data = await get(this.ipfsGateway, ipfsHash)
     // review info in OfferData events is a JSON stringified string data propety
     data = data.data ? JSON.parse(data.data) : data
-    const offerIdExp = await this.getOfferIdExp(listingId, offerId)
-    const listing = await this.getListing(listingId, event.blockNumber)
+
+    let offerIdExp, listing
+
+    try {
+      offerIdExp = await this.getOfferIdExp(listingId, offerId)
+      listing = await this.getListing(listingId, event.blockNumber)
+    } catch (err) {
+      console.error(
+        `Unable to fetch review data for user ${party} on offer ${listingId}-${offerId}`
+      )
+      console.error(err)
+      return null
+    }
+
     return {
       id: offerIdExp,
       reviewer: party ? { id: party, account: { id: party } } : null,
