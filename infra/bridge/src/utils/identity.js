@@ -7,25 +7,52 @@ const { PubSub } = require('@google-cloud/pubsub')
 
 const logger = require('../logger')
 
+/**
+ * Enqueues a message into a GCP pubsub queue for pinning content.
+ *
+ * @param {Object} identity
+ * @returns {Promise<void>}
+ */
 async function pinIdentityToIpfs(identity) {
+  // Bail out if we are in a test environment.
   if (process.env.NODE_ENV !== 'production') {
+    logger.info('Test environment. Skipping pubsub publish.')
     return
   }
 
   const projectId = process.env.GCLOUD_PROJECT_ID
   const topic = process.env.GCLOUD_PUBSUB_TOPIC
-  const pubsub = new PubSub({
-    projectId,
-    keyFilename: process.env.GCLOUD_SERVICE_ACCOUNT_JSON
-  })
+  const keyFilename = process.env.GCLOUD_SERVICE_ACCOUNT_JSON
+  if (!projectId || !topic || !keyFilename) {
+    logger.warn('Pubsub not configured. Skipping.')
+    return
+  }
 
-  return await pubsub
+  const data = {
+    centralizedIdentity: true,
+    event: {
+      event: 'IdentityUpdated',
+        returnValues: {
+        ipfsHash: data.ipfsHash
+      }
+    },
+    related: { identity: identity }
+  }
+
+  const pubsub = new PubSub({ projectId, keyFilename })
+  await pubsub
     .topic(topic)
-    .publish(Buffer.from(JSON.stringify(identity)))
+    .publish(Buffer.from(JSON.stringify(data)))
 }
 
 /**
- * Sends a blob of data to a webhook.
+ * Helper function to send a blob of data to a webhook.
+ *
+ * @param {string} urlString: URL to call.
+ * @param {string} data: data to send.
+ * @param {string} contentType
+ * @returns {Promise<unknown>}
+ * @private
  */
 async function _postToWebhook(
   urlString,
@@ -63,16 +90,25 @@ async function _postToWebhook(
 }
 
 /**
- * Triggers on Identity event to add the user's email to
- * our global Origin mailing list.
+ * Calls a webhook on a remote URL to register the user's basic information.
+ * This can be used for example to add the user to an email distribution list.
+ *
+ * @param {{ethAddress:string, email:string, firstName: string, lastName: string}} identity
+ * @returns {Promise<void>}
  */
 async function postToEmailWebhook(identity) {
   if (process.env.NODE_ENV !== 'production') {
+    logger.info('Test environment. Skipping pubsub publish.')
     return
   }
   const url = process.env.EMAIL_WEBHOOK
+  if (!url) {
+    logger.warn('Email webhook not configured. Skipping')
+    return
+  }
+
   if (!identity.email) {
-    logger.warn('No email present in identity, skipping email webhook.')
+    logger.info('No email present in identity, skipping email webhook.')
     return
   }
 

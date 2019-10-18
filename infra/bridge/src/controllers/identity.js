@@ -153,10 +153,9 @@ router.post('/', identityWriteVerify, async (req, res) => {
   )
 
   // Pin the Identity data to the IPFS cluster.
-  // TODO (franck): check the data format expected by the GCP cloud function
-  await pinIdentityToIpfs(data.identity)
+  await pinIdentityToIpfs(identity)
 
-  // Call the webhook to record the user's email in the insight tool.
+  // Call webhook to record the user's email in the insight tool.
   await postToEmailWebhook(identity)
 
   return res.status(200).send({ id: req.query.ethAddress })

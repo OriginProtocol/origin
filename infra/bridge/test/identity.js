@@ -88,12 +88,25 @@ describe('Identity write', () => {
       },
       ipfsHash: 'identityIpfsHash'
     }
-    const response = await request(app)
+    // Write the identity.
+    let response = await request(app)
       .post(`/api/identity?ethAddress=${ethAddress}`)
       .send(data)
-
     expect(response.status).to.equal(200)
     expect(response.body.id).to.equal(ethAddress)
+
+    // Then read it.
+    response = await request(app).get(
+      `/api/identity?ethAddress=${ethAddress}`
+    )
+    expect(response.status).to.equal(200)
+    const identity = response.body.identity
+    expect(identity.profile.ethAddress).to.equal(ethAddress)
+    expect(identity.profile.firstName).to.equal(data.identity.profile.firstName)
+    expect(identity.profile.lastName).to.equal(data.identity.profile.lastName)
+    expect(identity.profile.description).to.equal(data.identity.profile.description)
+    expect(identity.profile.avatarUrl).to.equal(data.identity.profile.avatarUrl)
+    expect(response.body.ipfsHash).to.equal(data.ipfsHash)
   })
 
   it('should update an existing identity', async () => {
@@ -113,12 +126,25 @@ describe('Identity write', () => {
       },
       ipfsHash: 'identityIpfsHash'
     }
-    const response = await request(app)
+    // Update the identity.
+    let response = await request(app)
       .post(`/api/identity?ethAddress=${ethAddress}`)
       .send(data)
-
     expect(response.status).to.equal(200)
     expect(response.body.id).to.equal(ethAddress)
+
+    // Then read it.
+    response = await request(app).get(
+      `/api/identity?ethAddress=${ethAddress}`
+    )
+    expect(response.status).to.equal(200)
+    const identity = response.body.identity
+    expect(identity.profile.ethAddress).to.equal(ethAddress)
+    expect(identity.profile.firstName).to.equal(data.identity.profile.firstName)
+    expect(identity.profile.lastName).to.equal(data.identity.profile.lastName)
+    expect(identity.profile.description).to.equal(data.identity.profile.description)
+    expect(identity.profile.avatarUrl).to.equal(data.identity.profile.avatarUrl)
+    expect(response.body.ipfsHash).to.equal(data.ipfsHash)
   })
 })
 
