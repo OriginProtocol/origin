@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   ActivityIndicator,
   Clipboard,
@@ -39,7 +39,7 @@ import { PROMPT_MESSAGE, PROMPT_PUB_KEY } from '../constants'
 import CommonStyles from 'styles/common'
 import CardStyles from 'styles/card'
 
-class MarketplaceScreen extends Component {
+class MarketplaceScreen extends PureComponent {
   static navigationOptions = () => {
     return {
       header: null
@@ -262,8 +262,8 @@ class MarketplaceScreen extends Component {
           });
         }
 
-        var windowWidth = window.screen.width
-        var windowHeight = window.screen.height
+        var windowWidth = window.screen.width;
+        var windowHeight = window.screen.height;
 
         var findScrollableChildren = function(element) {
           var excludeAbsoluteChild = false;
@@ -272,7 +272,7 @@ class MarketplaceScreen extends Component {
             var parentCss = getComputedStyle(element.parentNode);
             excludeAbsoluteChild = parentCss.position === 'static';
           }
- 
+
           var elementChildren = Array.from(element.childNodes).filter(function(child) {
             // not an elementNode
             return child.nodeType === 1;
@@ -287,16 +287,16 @@ class MarketplaceScreen extends Component {
             // element too small to continue checking
             if ((element.offsetWidth < windowWidth / 2) ||
               (element.offsetHeight < windowHeight / 2)
-              ) {
-                return [];
+            ) {
+              return [];
             }
 
             var css = getComputedStyle(element);
-            var overf = css.overflow.toLowerCase(); 
+            var overf = css.overflow.toLowerCase();
             var overfY = css.overflowY.toLowerCase();
 
             if ((overf === 'auto' || overf === 'scroll' || overfY === 'auto' || overfY === 'scroll') &&
-             !(excludeAbsoluteChild && css.position === 'absolute')) {
+              !(excludeAbsoluteChild && css.position === 'absolute')) {
               scrollableChildren.push(element);
             }
           }
@@ -304,10 +304,10 @@ class MarketplaceScreen extends Component {
           return scrollableChildren;
         };
 
-        setInterval(function(){
-          var largestScrollTop = Math.max.apply(null, 
+        setInterval(function() {
+          var largestScrollTop = Math.max.apply(null,
             findScrollableChildren(document.documentElement)
-              .map(function(scrollable) {
+            .map(function(scrollable) {
                 return scrollable.scrollTop;
               }
               // default value
@@ -318,7 +318,6 @@ class MarketplaceScreen extends Component {
             scrollTop: largestScrollTop
           })
         }, 500)
-
       `,
       'scroll handler'
     )
