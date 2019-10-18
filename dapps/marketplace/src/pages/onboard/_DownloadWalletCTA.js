@@ -143,9 +143,9 @@ require('react-styl')(`
           background-position: center
           background-size: contain
           &.ios-link
-            background-image: url('/images/onboard/app-store-button.svg')
+            background-image: url('images/onboard/app-store-button.svg')
           &.android-link
-            background-image: url('/images/onboard/google-play-button.svg')
+            background-image: url('images/onboard/google-play-button.svg')
     .thirdparty-wallets
       display: grid
       grid-template-columns: calc(50% - 0.5rem) calc(50% - 0.5rem)
@@ -165,7 +165,7 @@ require('react-styl')(`
         &:before
           content: ''
           display: inline-block
-          background-image: url('/images/onboard/wallets/metamask-icon.svg')
+          background-image: url('images/onboard/wallets/metamask-icon.svg')
           height: 2.5rem
           width: 2.5rem
           background-size: contain
@@ -173,13 +173,13 @@ require('react-styl')(`
           background-position: center
           margin-right: 1rem
         &.dapper:before
-          background-image: url('/images/onboard/wallets/dapper.png')
+          background-image: url('images/onboard/wallets/dapper.png')
         &.imtoken:before
-          background-image: url('/images/onboard/wallets/imtoken.png')
+          background-image: url('images/onboard/wallets/imtoken.png')
         &.trust:before
-          background-image: url('/images/onboard/wallets/trustwallet.png')
+          background-image: url('images/onboard/wallets/trustwallet.png')
         &.coinbase:before
-          background-image: url('/images/onboard/wallets/coinbasewallet.png')
+          background-image: url('images/onboard/wallets/coinbasewallet.png')
   @media (max-width: 767.98px)
     .download-wallet-cta
       .origin-app-banner
