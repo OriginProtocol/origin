@@ -30,6 +30,7 @@ COPY ./packages/token ./packages/token
 COPY ./infra/discovery ./infra/discovery
 COPY ./infra/growth-event ./infra/growth-event
 COPY ./infra/identity ./infra/identity
+COPY ./infra/bridge ./infra/bridge
 
 RUN yarn install
 
