@@ -41,7 +41,7 @@
     "autocannon": "4.1.1",
     "chai": "4.2.0",
     "form-data": "2.5.1",
-    "mocha": "6.2.1",
+    "mocha": "6.2.2",
     "nodemon": "1.19.4",
     "supertest": "4.0.2",
     "webrtcsupport": "2.2.0"

@@ -5787,10 +5787,10 @@ babel-plugin-fbt-runtime@0.9.5:
     "@babel/core" "^7.0.0"
     fbjs "^1.0.0"
 
-babel-plugin-fbt@0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-fbt/-/babel-plugin-fbt-0.10.0.tgz#8ac9b30b76a79c33526afa92e2523be5583f45fb"
-  integrity sha512-dVKSeeu8RQOY238SUjj2uSxLl+Qvogw4fNtr4iadINRSwQhXZzpmdhcnnY3OelKreCXT1BMVIf7XmdVuP7TZ3g==
+babel-plugin-fbt@0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/babel-plugin-fbt/-/babel-plugin-fbt-0.10.1.tgz#d4faf05f4688ec0ed80ec6b3a365282e1edb4809"
+  integrity sha512-UkC1Dre3pegYNachasFW4bbNKmcTL1ODGodNvObMOk68+/sC7WEgDFWZahXhInTp0l7wJDd/PJkeHQm5jvnisg==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/generator" "^7.0.0"
@@ -7866,10 +7866,10 @@ code-point-at@^1.0.0:
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
 
-codemirror-graphql@^0.11.1:
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/codemirror-graphql/-/codemirror-graphql-0.11.1.tgz#8a2fa91f63c6012cd2f333224b8b3cfa3a62ffe4"
-  integrity sha512-3KZRy8lssRevR7HO/yefSHLW94xJNbHYS17ocRuuu4xzQh8ttnrZuoP83WZ7seDCc1+LCuU8cqAkj7xVy9lJVg==
+codemirror-graphql@^0.11.2:
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/codemirror-graphql/-/codemirror-graphql-0.11.2.tgz#d9960a7bb9956485911172af3245fa245219f544"
+  integrity sha512-T5nvjBex1qS6wi87mbOa0x+ZHGoDvzbztlLICpLmgXzARI3kfWZ+UfTbc0rKzFVZN6LrfFD1bQxSc0bA29uL/g==
   dependencies:
     graphql-language-service-interface "^2.3.0"
     graphql-language-service-parser "^1.5.0"
@@ -12875,13 +12875,13 @@ graceful-fs@^4.2.2:
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
   integrity sha1-TK+tdrxi8C+gObL5Tpo906ORpyU=
 
-graphiql@^0.15.0:
-  version "0.15.1"
-  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-0.15.1.tgz#11b9f5cccb3bf5bfdc589e1d787688f1f5052c3a"
-  integrity sha512-rqI0GgQMHlJ2B/I97M+NwShJI80jKlrk9NS9KxEjH1cDY5h28GF2rn+B/ZWpCZhnr4H1FC5nvB0irShSdCkGhQ==
+graphiql@^0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-0.16.0.tgz#3ca3fc8bca22361d9549d5ad47e70d3fd8d79078"
+  integrity sha512-1Dfpo1+8kxxz+tyksriWgZTffBVzYiWLCuKI6xf/uPd+wWjnh2jqQ3km/Yjb4NnuaBLAWpL1beJClFE5L/YMww==
   dependencies:
     codemirror "^5.47.0"
-    codemirror-graphql "^0.11.1"
+    codemirror-graphql "^0.11.2"
     copy-to-clipboard "^3.2.0"
     markdown-it "^8.4.0"
     regenerator-runtime "^0.13.3"
@@ -19020,10 +19020,10 @@ mkdirp@*, mkdirp@0.5.1, mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0
   dependencies:
     minimist "0.0.8"
 
-mocha@6.2.1, mocha@^6.2.0:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/mocha/-/mocha-6.2.1.tgz#da941c99437da9bac412097859ff99543969f94c"
-  integrity sha512-VCcWkLHwk79NYQc8cxhkmI8IigTIhsCwZ6RTxQsqK6go4UvEhzJkYuHm8B2YtlSxcYq2fY+ucr4JBwoD6ci80A==
+mocha@6.2.2:
+  version "6.2.2"
+  resolved "https://registry.yarnpkg.com/mocha/-/mocha-6.2.2.tgz#5d8987e28940caf8957a7d7664b910dc5b2fea20"
+  integrity sha512-FgDS9Re79yU1xz5d+C4rv1G7QagNGHZ+iXF81hO8zY35YZZcLEsJVfFolfsqKFWunATEvNzMK0r/CwWd/szO9A==
   dependencies:
     ansi-colors "3.2.3"
     browser-stdout "1.3.1"
@@ -19093,6 +19093,35 @@ mocha@^6.1.4:
     yargs "13.2.2"
     yargs-parser "13.0.0"
     yargs-unparser "1.5.0"
+
+mocha@^6.2.0:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/mocha/-/mocha-6.2.1.tgz#da941c99437da9bac412097859ff99543969f94c"
+  integrity sha512-VCcWkLHwk79NYQc8cxhkmI8IigTIhsCwZ6RTxQsqK6go4UvEhzJkYuHm8B2YtlSxcYq2fY+ucr4JBwoD6ci80A==
+  dependencies:
+    ansi-colors "3.2.3"
+    browser-stdout "1.3.1"
+    debug "3.2.6"
+    diff "3.5.0"
+    escape-string-regexp "1.0.5"
+    find-up "3.0.0"
+    glob "7.1.3"
+    growl "1.10.5"
+    he "1.2.0"
+    js-yaml "3.13.1"
+    log-symbols "2.2.0"
+    minimatch "3.0.4"
+    mkdirp "0.5.1"
+    ms "2.1.1"
+    node-environment-flags "1.0.5"
+    object.assign "4.1.0"
+    strip-json-comments "2.0.1"
+    supports-color "6.0.0"
+    which "1.3.1"
+    wide-align "1.1.3"
+    yargs "13.3.0"
+    yargs-parser "13.1.1"
+    yargs-unparser "1.6.0"
 
 mock-fs@^4.1.0:
   version "4.10.1"
@@ -24918,10 +24947,10 @@ sequelize-pool@^2.3.0:
   resolved "https://registry.yarnpkg.com/sequelize-pool/-/sequelize-pool-2.3.0.tgz#64f1fe8744228172c474f530604b6133be64993d"
   integrity sha512-Ibz08vnXvkZ8LJTiUOxRcj1Ckdn7qafNZ2t59jYHMX1VIebTAOYefWdRYFt6z6+hy52WGthAHAoLc9hvk3onqA==
 
-sequelize@5.21.0:
-  version "5.21.0"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.21.0.tgz#68e3599ef5986c9ecc3c813c9091adfa95cfd5c2"
-  integrity sha512-eRNFZ7CJ/cYFautGWE3jk5WLopW9mt+EYVa3yzUwGBX94LdUwTPzH0t5loxqdqXP9COEonjXrhrsvLCJ+8GloA==
+sequelize@5.21.1:
+  version "5.21.1"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-5.21.1.tgz#202beb1265ad183904e63478f6e01e3253a75d01"
+  integrity sha512-JI+53MwcClfCFUPJT/l2dDzSpEzWAueyCZus33L/yhJxKTisfdd9OHrUPQ6/dI5nR5eIYT/EafrjkqTAlEQS2w==
   dependencies:
     bluebird "^3.5.0"
     cls-bluebird "^2.1.0"
