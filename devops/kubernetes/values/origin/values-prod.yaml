@@ -34,7 +34,7 @@ messagingImageTag: '3884243'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '3884243'
+notificationsImageTag: 'dea68c4'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
