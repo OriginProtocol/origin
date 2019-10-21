@@ -17,7 +17,6 @@ COPY ./packages/contracts ./packages/contracts
 COPY ./packages/token ./packages/token
 COPY ./infra/identity ./infra/identity
 COPY ./infra/growth-event ./infra/growth-event
-COPY ./infra/bridge ./infra/bridge
 COPY ./infra/faucet ./infra/faucet
 
 RUN yarn install

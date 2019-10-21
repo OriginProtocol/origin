@@ -134,7 +134,6 @@ async function sales(seller, { first = 10, after, filter }, _, info) {
   return await resultsFromIds({ after, allIds, first, fields })
 }
 
-//TODO: Currently this only returns sellers reviews.
 async function reviews(user, { first = 10, after }) {
   let party = user.id
   const owner = await proxyOwner(party)
@@ -151,7 +150,10 @@ async function reviews(user, { first = 10, after }) {
     const ec = contracts.marketplaces[version].contract.eventCache
 
     // Find all the OfferFinalized events associated with this user
-    const listings = await ec.getEvents({ event: 'ListingCreated', party })
+    const listings = await ec.getEvents({
+      event: ['ListingCreated', 'OfferFinalized'],
+      party
+    })
     const listingIds = listings.map(e => String(e.returnValues.listingID))
     let events = await ec.getEvents({
       listingID: listingIds,

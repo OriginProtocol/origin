@@ -6,7 +6,7 @@ const request = require('superagent')
 const crypto = require('crypto')
 const querystring = require('querystring')
 
-const Attestation = require('../models/index').Attestation
+const Attestation = require('@origin/identity/src/models').Attestation
 const AttestationTypes = Attestation.AttestationTypes
 const { generateAttestation } = require('../utils/attestation')
 const { facebookVerify } = require('../utils/validation')

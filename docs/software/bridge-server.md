@@ -15,9 +15,6 @@ You can connect to and use our hosted Bridge Server at [bridge.originprotocol.co
 
 DApps can connect to the Bridge Server of their choosing to handle tasks like issuing identity attestations and decryptying data that is returned from third-party services like Civic. We also need proxies for fetching public data from services like Facebook and Twitter which require authentication keys.
 
-## API documentation
-
-See the [Attestation API](../../reference/origin-js/attestations.html)
 
 ## One-time Setup
 

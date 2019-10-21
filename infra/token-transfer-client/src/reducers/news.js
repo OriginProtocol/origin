@@ -53,7 +53,7 @@ export const getNews = state => {
       item.description.replace(/<[^>]*>?/gm, '').substr(0, 320) + '...'
 
     return {
-      title: item.title,
+      title: convertHtmlEntities(item.title),
       description: convertHtmlEntities(description),
       image: imgSrc,
       link: item.link
