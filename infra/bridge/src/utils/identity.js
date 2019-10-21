@@ -5,7 +5,23 @@ const https = require('https')
 const urllib = require('url')
 const { PubSub } = require('@google-cloud/pubsub')
 
+const Proxy = require('@origin/identity/src/models').Proxy
+
 const logger = require('../logger')
+
+/**
+ * Given an owner or proxy eth address, return the owner address.
+ *
+ * @param {string} ethAddress
+ * @returns {Promise<string>} Lower cased owner address
+ */
+async function getOwnerAddress(ethAddress) {
+  const address = ethAddress.toLowerCase()
+  // Assume address is a proxy and look for owner.
+  const row = await Proxy.findOne({ where: { address } })
+  // If an owner was found, return it otherwise return input address.
+  return row ? row.ownerAddress : address
+}
 
 /**
  * Enqueues a message with the identity data into a GCP pubsub queue
@@ -92,6 +108,10 @@ async function _postToWebhook(
  * Calls a webhook on a remote URL to register the user's basic information.
  * This can be used for example to add the user to an email distribution list.
  *
+ * TODO: Add authentication. Simplest might be a shared secret that can be read
+ * by both client and server from EnvKey. Client would pass it as a header
+ * and server would check it.
+ *
  * @param {{ethAddress:string, email:string, firstName: string, lastName: string}} identity
  * @returns {Promise<void>}
  */
@@ -123,4 +143,4 @@ async function postToEmailWebhook(identity) {
   await _postToWebhook(url, emailData, 'application/x-www-form-urlencoded')
 }
 
-module.exports = { pinIdentityToIpfs, postToEmailWebhook }
+module.exports = { getOwnerAddress, pinIdentityToIpfs, postToEmailWebhook }

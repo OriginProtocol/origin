@@ -14,7 +14,11 @@ const {
 const Identity = require('@origin/identity/src/models').Identity
 const validator = require('@origin/validator')
 
-const { pinIdentityToIpfs, postToEmailWebhook } = require('../utils/identity')
+const {
+  getOwnerAddress,
+  pinIdentityToIpfs,
+  postToEmailWebhook
+} = require('../utils/identity')
 const {
   identityReadVerify,
   identityWriteVerify
@@ -29,18 +33,21 @@ const logger = require('../logger')
  *  - 204 if no identity found.
  *  - 500 if an identity row was found but with empty data in the database.
  *
- *  @args {string} req.ethAddress Eth address of the user.
+ *  @args {string} req.ethAddress: Address of the user. Accepts either owner or proxy address.
  *  @returns {{identity: Object, ipfsHash: string}}
  */
 router.get('/', identityReadVerify, async (req, res) => {
-  const ethAddress = req.query.ethAddress.toLowerCase()
+  const ethAddress = req.query.ethAddress
   logger.debug(`identity/read called for addr ${ethAddress}`)
 
-  // Lookup the identity associated with the eth address.
-  const identity = await Identity.findOne({ where: { ethAddress } })
+  // In case the input address was a proxy, load the owner address.
+  const owner = await getOwnerAddress(ethAddress)
+
+  // Lookup the identity associated with the owner address.
+  const identity = await Identity.findOne({ where: { ethAddress: owner } })
 
   if (!identity || !identity.data) {
-    logger.debug(`No identity found for eth address ${ethAddress}.`)
+    logger.debug(`No identity found for eth address ${owner}.`)
     return res.status(204).end()
   }
 
@@ -48,7 +55,7 @@ router.get('/', identityReadVerify, async (req, res) => {
   const errors = []
   for (const field of ['identity', 'ipfsHash', 'ipfsHashHistory']) {
     if (!get(identity.data, field)) {
-      errors.push(`Identity ${ethAddress} is missing field data.${field}`)
+      errors.push(`Identity ${owner} is missing field data.${field}`)
     }
   }
   if (errors.length) {
@@ -67,13 +74,13 @@ router.get('/', identityReadVerify, async (req, res) => {
  *
  * TODO(franck): Authenticate the request.
  *
- * @args {string} req.query.ethAddress: Eth address of the user.
+ * @args {string} req.query.ethAddress: Address of the user. Accepts either owner or proxy address.
  * @args {Object} req.body.identity: Identity JSON blob.
  * @args {string} req.body.ipfsHash: IPFS hash of the identity JSON blob.
- * @returns {{id: string}} Returns the eth addresses passed as input.
+ * @returns {{id: string}} Returns the owner address used to write the identity to the DB.
  */
 router.post('/', identityWriteVerify, async (req, res) => {
-  const ethAddress = req.query.ethAddress.toLowerCase()
+  const ethAddress = req.query.ethAddress
   const data = req.body || {}
   logger.debug(`identity/write called for addr ${ethAddress}`)
 
@@ -111,9 +118,13 @@ router.post('/', identityWriteVerify, async (req, res) => {
     data.identity.attestations
   )
 
+  // In case the input address was a proxy, load the owner address.
+  const owner = await getOwnerAddress(ethAddress)
+
   // Create an object representing the updated identity.
+  // Note that by convention, the identity is stored under the owner's address in the DB.
   const identity = {
-    ethAddress,
+    ethAddress: owner,
     firstName: get(data.identity, 'profile.firstName'),
     lastName: get(data.identity, 'profile.lastName'),
     avatarUrl: get(data.identity, 'profile.avatarUrl'),
@@ -125,11 +136,10 @@ router.post('/', identityWriteVerify, async (req, res) => {
     ...metadata
   }
 
-  // Lookup any existing identity associated with the eth address
-  // to get the ipfs hash history.
-  const identityRow = await Identity.findOne({ where: { ethAddress } })
+  // Look for an existing identity to get the IPFS hash history.
+  const identityRow = await Identity.findOne({ where: { ethAddress: owner } })
   if (identityRow) {
-    logger.debug(`Found existing identity DB row for ${ethAddress}`)
+    logger.debug(`Found existing identity DB row for ${owner}`)
     // Append the old IPFS hash to the history.
     const ipfsHashHistory = get(identityRow, 'data.ipfsHashHistory', [])
     const prevIpfsHash = get(identityRow, 'data.ipfsHash')
@@ -147,9 +157,9 @@ router.post('/', identityWriteVerify, async (req, res) => {
 
   // Record the growth events.
   const now = new Date()
-  await recordGrowthProfileEvent(ethAddress, identity, now, GrowthEvent)
+  await recordGrowthProfileEvent(owner, identity, now, GrowthEvent)
   await recordGrowthAttestationEvents(
-    ethAddress,
+    owner,
     data.identity.attestations,
     now,
     GrowthEvent
@@ -161,7 +171,7 @@ router.post('/', identityWriteVerify, async (req, res) => {
   // Call webhook to record the user's email in the insight tool.
   await postToEmailWebhook(identity)
 
-  return res.status(200).send({ id: req.query.ethAddress })
+  return res.status(200).send({ id: owner })
 })
 
 module.exports = router
