@@ -24,7 +24,7 @@
     "tmp": "0.1.0"
   },
   "devDependencies": {
-    "mocha": "6.2.1",
+    "mocha": "6.2.2",
     "nodemon": "1.19.4",
     "prettier": "1.18.2"
   },
