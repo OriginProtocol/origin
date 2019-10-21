@@ -30,7 +30,7 @@ const VestingBars = props => {
   const totalDuration = lastEndDate - firstStartDate
 
   const generateMarkers = () => {
-    const maxMarkers = 5
+    const maxMarkers = 4
     if (grants.length > 1 || props.user.employee) {
       return generateMonthMarkers(maxMarkers)
     } else {
@@ -171,16 +171,19 @@ const VestingBars = props => {
           )
         })}
       </div>
-      <div style={{ display: 'flex', marginTop: '4rem' }}>
-        <div>
-          <div className="status-circle status-circle-success ml-3 mr-2"></div>
+      <div className="row" style={{ marginTop: '4rem' }}>
+        <div className="col">
+          <div
+            className="status-circle status-circle-success mr-2"
+            style={{ marginLeft: '0.8rem' }}
+          ></div>
           {Number(props.vested).toLocaleString()} OGN{' '}
-          <small className="ml-2">vested</small>
+          <span className=" text-muted ml-2">vested</span>
         </div>
-        <div>
+        <div className="col">
           <div className="status-circle ml-3 mr-2"></div>
           {Number(props.unvested).toLocaleString()} OGN{' '}
-          <small className="ml-2">unvested</small>
+          <span className=" text-muted ml-2">unvested</span>
         </div>
       </div>
     </div>

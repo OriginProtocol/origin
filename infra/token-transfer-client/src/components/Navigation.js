@@ -56,6 +56,11 @@ const Navigation = props => {
             </NavLink>
           </li>
           <li className="nav-item mb-3">
+            <NavLink to="/earn" className="nav-link text">
+              Earn OGN
+            </NavLink>
+          </li>
+          <li className="nav-item mb-3">
             <NavLink to="/withdrawal" className="nav-link text">
               <History className="icon" />
               Withdrawal History

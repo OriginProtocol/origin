@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
+import get from 'lodash.get'
 
 import { fetchAccounts } from '@/actions/account'
 import {
@@ -22,9 +23,10 @@ import {
 import { unlockDate } from '@/constants'
 import BalanceCard from '@/components/BalanceCard'
 import NewsHeadlinesCard from '@/components/NewsHeadlinesCard'
-import VestingBars from '@/components/VestingBars'
-import VestingHistory from '@/components/VestingHistory'
-import GrantDetails from '@/components/GrantDetail'
+import VestingCard from '@/components/VestingCard'
+import GrantDetailCard from '@/components/GrantDetailCard'
+import WithdrawalSummaryCard from '@/components/WithdrawalSummaryCard'
+import EarnCard from '@/components/EarnCard'
 
 const Dashboard = props => {
   useEffect(() => {
@@ -49,45 +51,46 @@ const Dashboard = props => {
   return (
     <>
       <div className="row">
-        <div className="col-12 col-lg-6">
+        <div className="col mb-4">
           <BalanceCard
             balance={vestedTotal.minus(props.withdrawnAmount)}
             accounts={props.accounts}
             isLocked={isLocked}
           />
         </div>
+      </div>
+      <div className="row mb-4">
         <div className="col-12 col-lg-6">
+          <VestingCard
+            grants={props.grants}
+            user={props.user}
+            vested={vestedTotal}
+            unvested={unvestedTotal}
+            isLocked={isLocked}
+          />
+        </div>
+        <div className="col-12 col-lg-6">
+          <WithdrawalSummaryCard
+            vested={vestedTotal}
+            unvested={unvestedTotal}
+            isLocked={isLocked}
+            withdrawnAmount={props.withdrawnAmount}
+          />
+          <div className="mt-4">
+            <EarnCard />
+          </div>
+        </div>
+      </div>
+      <div className="row">
+        {!get(props.user, 'employee') && (
+          <div className="col-12 col-lg-6 mb-5">
+            <GrantDetailCard grants={props.grants} />
+          </div>
+        )}
+        <div className="col-12 col-lg-6 mb-4">
           <NewsHeadlinesCard />
         </div>
       </div>
-      {props.grants.length > 0 ? (
-        <>
-          <div className="row my-4">
-            <div className="col">
-              <VestingBars
-                grants={props.grants}
-                user={props.user}
-                vested={vestedTotal}
-                unvested={unvestedTotal}
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-12 col-lg-6 mb-5">
-              <VestingHistory grants={props.grants} isLocked={isLocked} />
-            </div>
-            {!props.user.employee && (
-              <div className="col-12 col-lg-6 mb-5">
-                <GrantDetails grants={props.grants} />
-              </div>
-            )}
-          </div>
-        </>
-      ) : (
-        <div className="row my-4">
-          <div className="col empty">You don&apos;t have any token grants</div>
-        </div>
-      )}
     </>
   )
 }

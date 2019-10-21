@@ -174,10 +174,10 @@ class BalanceCard extends Component {
                 <img src={ClockIcon} className="ml-3 mr-1 mb-1" />{' '}
                 <strong>{unlockDate.fromNow(true)}</strong>
                 <div className="alert alert-warning mt-3 mb-1 my-2">
-                  <small className="text-muted">
+                  <span className="text-muted">
                     Tokens will become available for withdrawal on{' '}
                     {unlockDate.format('L')}
-                  </small>
+                  </span>
                 </div>
               </>
             ) : (
@@ -194,9 +194,9 @@ class BalanceCard extends Component {
             )}
           </div>
           {!this.props.isLocked && (
-            <small className="text-muted">
+            <span className="text-muted">
               You will need an Ethereum wallet to withdraw OGN
-            </small>
+            </span>
           )}
         </BorderedCard>
       </>
