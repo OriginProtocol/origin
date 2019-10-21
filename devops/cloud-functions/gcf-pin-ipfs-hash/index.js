@@ -29,6 +29,12 @@ const offerEvents = [
 const identityEvents = ['IdentityUpdated']
 const allEvents = listingEvents.concat(offerEvents).concat(identityEvents)
 
+/**
+ * Reads messages from the pubsub queue, parses the data looking for IPFS hashes
+ * and pins those hashes onto the configured IPFS cluster.
+ * @param {{event:{ event:string, returnValues.ipfsHash: string}, related: Object}} event
+ * @returns {Promise<void>}
+ */
 const pinService = async event => {
   const pubsubMessage = event.data
   const data = pubsubMessage
@@ -132,7 +138,15 @@ const parseIncomingData = data => {
   // Identity events.
   if (identityEvents.includes(eventName)) {
     console.log(`Processing identity event ${eventName}`)
-    hashesToPin.push(getIpfsHashFromBytes32(data.event.returnValues.ipfsHash))
+    if (data.centralizedIdentity) {
+      // Event from an identity stored in central storage.
+      // IPFS hash is base58 encoded and does not need decoding.
+      hashesToPin.push(data.event.returnValues.ipfsHash)
+    } else {
+      // Event from an identity stored on the blockchain.
+      // IPFS hash is bytes32 encoded and needs decoding.
+      hashesToPin.push(getIpfsHashFromBytes32(data.event.returnValues.ipfsHash))
+    }
     const identity = data.related.identity
     if (identity.avatarUrl) {
       hashesToPin.push(extractIpfsHashFromUrl(identity.avatarUrl))

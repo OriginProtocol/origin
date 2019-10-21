@@ -9,13 +9,6 @@ const db = {
 }
 const identityQuery = require('./queries/Identity')
 
-const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
-const {
-  AttestationServiceToEventType,
-  GrowthEvent
-} = require('@origin/growth-event/src/resources/event')
-const { ip2geo } = require('@origin/ip2geo')
-
 const siteNameToService = {
   'airbnb.com': 'airbnb',
   'facebook.com': 'facebook',

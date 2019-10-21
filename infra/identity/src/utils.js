@@ -8,7 +8,6 @@ const { ip2geo } = require('@origin/ip2geo')
 
 const logger = require('./logger')
 
-
 const siteNameToService = {
   'airbnb.com': 'airbnb',
   'facebook.com': 'facebook',
@@ -21,6 +20,13 @@ const siteNameToService = {
   'telegram.com': 'telegram'
 }
 
+/**
+ * Returns the name of the service associated with an attestation.
+ *
+ * @param {Object} attestation
+ * @returns {string|undefined}
+ * @private
+ */
 function _getAttestationService(attestation) {
   if (attestation.data.attestation.site) {
     const siteName = attestation.data.attestation.site.siteName
@@ -42,6 +48,7 @@ function _getAttestationService(attestation) {
 
 /**
  * Loads the most recent attestation.
+ *
  * @param {Array<string>} addresses: Lower cased eth addresses
  * @param {string || null} method: Optional attestation method
  * @returns {Promise<Model<Attestation> || null>}
@@ -52,11 +59,12 @@ async function _loadMostRecentAttestation(addresses, method) {
   if (method) {
     where.method = method
   }
-  return db.Attestation.findOne({ where, order: [['id', 'DESC']], })
+  return db.Attestation.findOne({ where, order: [['id', 'DESC']] })
 }
 
 /**
  * Loads attestation data such as email, phone, etc... from the attestation table.
+ *
  * @param {Array<string>} addresses
  * @param {string} method - 'EMAIL', 'PHONE', etc...
  * @returns {Promise<string|null>}
@@ -74,6 +82,7 @@ async function _loadValueFromAttestation(addresses, method) {
 
 /**
  * Returns the country of the identity based on IP from the most recent attestation.
+ *
  * @param {Array<string>} addresses
  * @returns {Promise<string> || null} 2 letters country code or null if lookup failed.
  * @private
@@ -93,10 +102,17 @@ async function _countryLookup(addresses) {
   return geo.countryCode
 }
 
+/**
+ * Loads proxy address associated with an owner address.
+ * Returns addresses (or only the owner if not proxy found) in a list.
+ *
+ * @param ownerAddress
+ * @returns {Promise<Array<string>>}
+ */
 async function loadIdentityAddresses(ownerAddress) {
   // Attestation rows in the DB may have been written under the
   // proxy eth address. Load proxy addresses.
-  const addresses = [ ownerAddress ]
+  const addresses = [ownerAddress]
   const proxies = await db.Proxy.findAll({ where: { ownerAddress } })
   for (const proxy of proxies) {
     addresses.push(proxy.address)
@@ -104,7 +120,13 @@ async function loadIdentityAddresses(ownerAddress) {
   return addresses
 }
 
-
+/**
+ * Reads metadata related to attestations from the DB.
+ *
+ * @param {Array<string>} addresses: owner and optionally proxy eth address.
+ * @param {Array<Object>} attestations: attestations present in the user's identity.
+ * @returns {Promise<Object>}
+ */
 async function loadIdentityAttestationsMetadata(addresses, attestations) {
   const metadata = {}
 
@@ -114,16 +136,10 @@ async function loadIdentityAttestationsMetadata(addresses, attestations) {
       const attestationService = _getAttestationService(attestation)
       switch (attestationService) {
         case 'email':
-          metadata.email = await _loadValueFromAttestation(
-            addresses,
-            'EMAIL'
-          )
+          metadata.email = await _loadValueFromAttestation(addresses, 'EMAIL')
           break
         case 'phone':
-          metadata.phone = await _loadValueFromAttestation(
-            addresses,
-            'PHONE'
-          )
+          metadata.phone = await _loadValueFromAttestation(addresses, 'PHONE')
           break
         case 'twitter': {
           const attestation = await _loadMostRecentAttestation(
@@ -141,10 +157,7 @@ async function loadIdentityAttestationsMetadata(addresses, attestations) {
           break
         }
         case 'airbnb':
-          metadata.airbnb = await _loadValueFromAttestation(
-            addresses,
-            'AIRBNB'
-          )
+          metadata.airbnb = await _loadValueFromAttestation(addresses, 'AIRBNB')
           break
         case 'facebook':
           metadata.facebookVerified = true
@@ -155,10 +168,7 @@ async function loadIdentityAttestationsMetadata(addresses, attestations) {
           break
         case 'google':
           metadata.googleVerified = true
-          metadata.google = await _loadValueFromAttestation(
-            addresses,
-            'GOOGLE'
-          )
+          metadata.google = await _loadValueFromAttestation(addresses, 'GOOGLE')
           break
         case 'linkedin':
           metadata.linkedin = await _loadValueFromAttestation(
@@ -167,22 +177,13 @@ async function loadIdentityAttestationsMetadata(addresses, attestations) {
           )
           break
         case 'github':
-          metadata.github = await _loadValueFromAttestation(
-            addresses,
-            'GITHUB'
-          )
+          metadata.github = await _loadValueFromAttestation(addresses, 'GITHUB')
           break
         case 'kakao':
-          metadata.kakao = await _loadValueFromAttestation(
-            addresses,
-            'KAKAO'
-          )
+          metadata.kakao = await _loadValueFromAttestation(addresses, 'KAKAO')
           break
         case 'wechat':
-          metadata.wechat = await _loadValueFromAttestation(
-            addresses,
-            'WECHAT'
-          )
+          metadata.wechat = await _loadValueFromAttestation(addresses, 'WECHAT')
           break
         case 'website':
           metadata.website = await _loadValueFromAttestation(
@@ -199,9 +200,7 @@ async function loadIdentityAttestationsMetadata(addresses, attestations) {
             metadata.telegram = attestation.value
             metadata.telegramProfile = attestation.profileData
           } else {
-            logger.warn(
-              `Could not find TELEGRAM attestation for ${addresses}`
-            )
+            logger.warn(`Could not find TELEGRAM attestation for ${addresses}`)
             metadata.telegram = null
             metadata.telegramProfile = null
           }
@@ -227,7 +226,12 @@ async function loadIdentityAttestationsMetadata(addresses, attestations) {
  * @returns {Promise<void>}
  * @private
  */
-async function recordGrowthProfileEvent(ethAddress, identity, date, growthEvent) {
+async function recordGrowthProfileEvent(
+  ethAddress,
+  identity,
+  date,
+  growthEvent
+) {
   const validFirstName = identity.firstName && identity.firstName.length > 0
   const validLastName = identity.lastName && identity.lastName.length > 0
 
@@ -255,13 +259,21 @@ async function recordGrowthProfileEvent(ethAddress, identity, date, growthEvent)
  * @returns {Promise<void>}
  * @private
  */
-async function recordGrowthAttestationEvents(ethAddress, attestations, date, growthEvent) {
+async function recordGrowthAttestationEvents(
+  ethAddress,
+  attestations,
+  date,
+  growthEvent
+) {
   await Promise.all(
     attestations.map(attestation => {
       const attestationService = _getAttestationService(attestation)
-      const eventType = growthEvent.AttestationServiceToEventType[attestationService]
+      const eventType =
+        growthEvent.AttestationServiceToEventType[attestationService]
       if (!eventType) {
-        logger.error(`Unexpected att. service: ${attestationService}. Skipping.`)
+        logger.error(
+          `Unexpected att. service: ${attestationService}. Skipping.`
+        )
         return
       }
 
