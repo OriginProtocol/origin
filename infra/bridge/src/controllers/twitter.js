@@ -12,7 +12,7 @@ const {
 const { generateAttestation } = require('../utils/attestation')
 const { twitterVerifyCode } = require('../utils/validation')
 const constants = require('../constants')
-const Attestation = require('../models/index').Attestation
+const Attestation = require('@origin/identity/src/models').Attestation
 const AttestationTypes = Attestation.AttestationTypes
 const logger = require('../logger')
 

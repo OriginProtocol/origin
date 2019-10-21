@@ -62,7 +62,6 @@ const Nav = ({
   isMobile,
   wallet,
   walletType,
-  onGetStarted,
   onShowFooter,
   navbarDarkMode,
   history
@@ -74,17 +73,17 @@ const Nav = ({
   const screenConsoleEnabled = localStorage.screenConsole === 'true'
 
   useEffect(() => {
-    if (wallet && !consoleLogConnected && screenConsoleEnabled) {
+    if (!consoleLogConnected && screenConsoleEnabled) {
       ConsoleLogCatcher().connect((method, logString) => {
-        const logs = JSON.parse(localStorage.getItem('capturedLogs') || '[]')
+        let logs = JSON.parse(localStorage.getItem('capturedLogs') || '[]')
         // only keep max 15 items in the logs
-        logs.slice(Math.max(0, logs.length - 15))
+        logs = logs.slice(Math.max(0, logs.length - 30))
         logs.push({ method, log: logString })
         localStorage.setItem('capturedLogs', JSON.stringify(logs))
       })
       setConsoleLogConnected(true)
     }
-  }, [wallet, consoleLogConnected, screenConsoleEnabled])
+  }, [consoleLogConnected, screenConsoleEnabled])
 
   const navProps = nav => ({
     onOpen: () => setOpen(nav),
@@ -149,7 +148,7 @@ const Nav = ({
     const walletEl = wallet ? (
       <Profile {...navProps('profile')} />
     ) : (
-      <GetStarted onClick={() => onGetStarted()} />
+      <GetStarted />
     )
 
     const isStacked =
@@ -207,7 +206,7 @@ const Nav = ({
         <div className="container">
           <Brand />
           <Search className="form-inline mr-auto" />
-          <GetStarted onClick={() => onGetStarted()} />
+          <GetStarted />
         </div>
       </nav>
     )

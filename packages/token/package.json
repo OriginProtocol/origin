@@ -29,7 +29,7 @@
   "devDependencies": {
     "chai": "4.2.0",
     "ganache-core": "2.4.0",
-    "mocha": "6.2.1",
+    "mocha": "6.2.2",
     "openzeppelin-solidity": "^1.10.0",
     "prettier": "1.18.2",
     "solc": "0.5.12"

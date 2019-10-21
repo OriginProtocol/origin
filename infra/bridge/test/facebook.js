@@ -8,7 +8,7 @@ const nock = require('nock')
 const request = require('supertest')
 const querystring = require('querystring')
 
-const Attestation = require('../src/models/index').Attestation
+const Attestation = require('@origin/identity/src/models').Attestation
 const AttestationTypes = Attestation.AttestationTypes
 const app = require('../src/app')
 const { getAbsoluteUrl } = require('../src/utils')

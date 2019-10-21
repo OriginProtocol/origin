@@ -55,3 +55,4 @@ Run the following command to increase the value of `vm.max_map_count`
 ```
 sudo sysctl -w vm.max_map_count=262144
 ```
+

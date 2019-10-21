@@ -15,6 +15,8 @@ const logChat = require('../../utils/log-chat')
 
 const _chunk = require('lodash/chunk')
 
+const telegramIPWhitelistMiddleware = require('../../utils/ip-whitelist')
+
 /**
  * To register the webhook
  */
@@ -47,7 +49,7 @@ const replyWithMessage = (res, chatId, message) => {
     })
 }
 
-router.post('/', async (req, res) => {
+router.post('/', telegramIPWhitelistMiddleware, async (req, res) => {
   const message = req.body.message
 
   if (!message) {
@@ -101,7 +103,7 @@ router.post('/', async (req, res) => {
   if (!responseSent) {
     // Set status code and send back the empty response,
     // so that connection doesn't has to be alive
-    res.send(200).end()
+    res.status(200).end()
   }
 
   let followCount = 0
@@ -138,7 +140,7 @@ router.post('/', async (req, res) => {
           // Note: Username is optional in Telegram.
           // ID is returned as number, We don't want to run into the big number issues
           // So use id only if username is not set
-          const username = member.username || member.id
+          const username = String(member.username || member.id)
 
           return growthEventHelper({
             type: 'FOLLOW',

@@ -6,7 +6,7 @@ const request = require('superagent')
 const get = require('lodash/get')
 const { parsePhoneNumberFromString } = require('libphonenumber-js')
 
-const Attestation = require('../models/index').Attestation
+const Attestation = require('@origin/identity/src/models').Attestation
 const AttestationTypes = Attestation.AttestationTypes
 const { generateAttestation } = require('../utils/attestation')
 const { phoneGenerateCode, phoneVerifyCode } = require('../utils/validation')

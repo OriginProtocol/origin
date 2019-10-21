@@ -27,7 +27,6 @@ COPY ./packages/services ./packages/services
 COPY ./packages/validator ./packages/validator
 COPY ./packages/contracts ./packages/contracts
 COPY ./packages/token ./packages/token
-COPY ./infra/bridge ./infra/bridge
 COPY ./infra/discovery ./infra/discovery
 COPY ./infra/growth-event ./infra/growth-event
 # @origin/identity required for the db model

@@ -23,7 +23,7 @@ class RevisedSchedule extends Component {
             part of this agreement our token unlock schedule has been revised.
           </p>
           <p>
-            Origin Schedule: 3 month waiting period then 100% unlock
+            Original Schedule: 3 month waiting period then 100% unlock
             <br />
             Revised Schedule: 4% unlock immediately then 12% every 3 months
           </p>

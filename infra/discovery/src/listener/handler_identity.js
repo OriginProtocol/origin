@@ -4,17 +4,13 @@ const logger = require('./logger')
 
 const { bytes32ToIpfsHash } = require('./utils')
 const db = {
-  ...require('@origin/bridge/src/models'),
   ...require('@origin/identity/src/models'),
   ...require('../models')
 }
 const identityQuery = require('./queries/Identity')
 
 const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
-const {
-  AttestationServiceToEventType,
-  GrowthEvent
-} = require('@origin/growth-event/src/resources/event')
+const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
 const { ip2geo } = require('@origin/ip2geo')
 
 const siteNameToService = {
@@ -366,7 +362,8 @@ class IdentityEventHandler {
         // TODO: Clean this up
         const attestation = JSON.parse(attestationJson)
         const attestationService = this._getAttestationService(attestation)
-        const eventType = AttestationServiceToEventType[attestationService]
+        const eventType =
+          GrowthEvent.AttestationServiceToEventType[attestationService]
         if (!eventType) {
           logger.error(
             `Unrecognized attestation service received: ${attestationService}. Skipping.`
