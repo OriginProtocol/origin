@@ -3,6 +3,7 @@ defaults: &defaults
     - image: circleci/node:10-browsers
   working_directory: ~/origin
 
+# Node.js and postgres container
 db: &db
   docker:
     - image: circleci/node:10-browsers
@@ -14,11 +15,25 @@ db: &db
   environment:
     DATABASE_URL: postgres://postgres@localhost/circle_ci_test
 
+# Node.js and redis container
 redis: &redis
   docker:
     - image: circleci/node:10-browsers
     - image: circleci/redis:5
   working_directory: ~/origin
+
+# Node.js, postgres and redis container
+dbandredis: &dbandredis
+  docker:
+    - image: circleci/node:10-browsers
+    - image: circleci/redis:5
+    - image: circleci/postgres:9.6-alpine-ram
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_DB: circle_ci_test
+  working_directory: ~/origin
+  environment:
+    DATABASE_URL: postgres://postgres@localhost/circle_ci_test
 
 version: 2
 jobs:
@@ -106,17 +121,7 @@ jobs:
           command: cd packages/event-cache && yarn migrate && yarn test
 
   Bridge:
-    # Redis and db
-    docker:
-      - image: circleci/node:10-browsers
-      - image: circleci/redis:5
-      - image: circleci/postgres:9.6-alpine-ram
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: circle_ci_test
-    working_directory: ~/origin
-    environment:
-      DATABASE_URL: postgres://postgres@localhost/circle_ci_test
+    <<: *dbandredis
     steps:
       - attach_workspace:
           at: .
@@ -215,17 +220,7 @@ jobs:
           command: cd packages/web3-provider && yarn test
 
   Messaging:
-    # Redis and db
-    docker:
-      - image: circleci/node:10-browsers
-      - image: circleci/redis:5
-      - image: circleci/postgres:9.6-alpine-ram
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: circle_ci_test
-    working_directory: ~/origin
-    environment:
-      DATABASE_URL: postgres://postgres@localhost/circle_ci_test
+    <<: *dbandredis
     steps:
       - attach_workspace:
           at: .
@@ -235,6 +230,15 @@ jobs:
           background: true
       - run:
           name: Run Messaging Server Tests
+          command: cd infra/messaging && yarn migrate && yarn test
+
+  AuthServer:
+    <<: *dbandredis
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run Origin Auth Server Tests
           command: cd infra/messaging && yarn migrate && yarn test
 
 workflows:
@@ -279,6 +283,9 @@ workflows:
           requires:
             - Setup
       - Messaging:
+          requires:
+            - Setup
+      - AuthServer:
           requires:
             - Setup
   schema:
