@@ -1,0 +1,41 @@
+'use strict'
+
+const tableName = 't3_lockup'
+
+module.exports = {
+  up: (queryInterface, Sequelize) => {
+    return queryInterface.createTable(tableName, {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      user_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: { model: 't3_user', key: 'id' }
+      },
+      start_date: {
+        type: Sequelize.DATE
+      },
+      end_date: {
+        type: Sequelize.DATE
+      },
+      bonus_rate: {
+        type: Sequelize.FLOAT
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updated_at: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
+    })
+  },
+  down: queryInterface => {
+    return queryInterface.dropTable(tableName)
+  }
+}
