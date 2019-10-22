@@ -53,7 +53,21 @@ async function hasBalance(userId, amount) {
     },
     BigNumber(0)
   )
+
   logger.info('Vested tokens', vested.toString())
+
+  // Sum the tokens earned through lockups
+  const lockupEarnings = user.Lockups.map(lockup =>
+    lockup.get({ plain: true })
+  ).reduce((total, lockup) => {
+    if (lockup.end <= moment.now()) {
+      const earnings = BigNumber(lockup.amount)
+        .times(lockup.bonusRate)
+        .div(BigNumber(100))
+      return total.plus(earnings)
+    }
+    return total
+  }, BigNumber(0))
 
   const pendingOrCompleteAmount = user.Transfers.reduce((total, transfer) => {
     if (pendingOrCompleteTransfers.includes(transfer.status)) {
@@ -76,7 +90,12 @@ async function hasBalance(userId, amount) {
 
   logger.info('Tokens in lockup', lockedAmount.toString())
 
-  const available = vested.minus(pendingOrCompleteAmount).minus(lockedAmount)
+  // Calculate total available tokens
+  const available = vested
+    .plus(lockupEarnings)
+    .minus(pendingOrCompleteAmount)
+    .minus(lockedAmount)
+
   if (amount > available) {
     logger.info(
       `Amount of ${amount} OGN exceeds the ${available} available for user ${user.email}`

@@ -41,14 +41,14 @@ describe('Lockup HTTP API', () => {
     this.lockups = [
       await Lockup.create({
         userId: this.user.id,
-        start: new Date('2018-10-10'),
-        end: new Date('2019-10-10'),
+        start: new Date('2020-10-10'),
+        end: new Date('2021-10-10'),
         amount: 1000
       }),
       await Lockup.create({
         userId: this.user.id,
-        startDate: new Date('2020-05-05'),
-        endDate: new Date('2021-05-05'),
+        start: new Date('2020-05-05'),
+        end: new Date('2021-05-05'),
         amount: 10000
       })
     ]
@@ -94,13 +94,13 @@ describe('Lockup HTTP API', () => {
   })
 
   it('should add a lockup', async () => {
-    const response = await request(this.mockApp)
+    await request(this.mockApp)
       .post('/api/lockups')
       .send({
         amount: 1000,
         code: totp.gen(this.otpKey)
       })
-      .expect(200)
+      .expect(201)
 
     expect(
       (await request(this.mockApp).get('/api/lockups')).body.length
@@ -110,7 +110,7 @@ describe('Lockup HTTP API', () => {
   it('should add a lockup if enough tokens with matured lockups', async () => {})
 
   it('should not add a lockup if not enough tokens (vested)', async () => {
-    const response = await request(this.mockApp)
+    await request(this.mockApp)
       .post('/api/lockups')
       .send({
         amount: 1000001,

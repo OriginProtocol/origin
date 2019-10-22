@@ -14,11 +14,11 @@ const logger = require('../logger')
  */
 async function addLockup(userId, amount, data = {}) {
   const user = await hasBalance(userId, amount)
-  const now = moment.now()
 
   let lockup
   const txn = await sequelize.transaction()
   try {
+    const now = moment()
     lockup = await Lockup.create({
       userId: user.id,
       start: now,
