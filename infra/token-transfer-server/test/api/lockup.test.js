@@ -41,14 +41,14 @@ describe('Lockup HTTP API', () => {
     this.lockups = [
       await Lockup.create({
         userId: this.user.id,
-        start: new Date('2020-10-10'),
-        end: new Date('2021-10-10'),
+        start: moment().add(1, 'years'),
+        end: moment().add(2, 'years'),
         amount: 1000
       }),
       await Lockup.create({
         userId: this.user.id,
-        start: new Date('2020-05-05'),
-        end: new Date('2021-05-05'),
+        start: moment().add(2, 'years'),
+        end: moment().add(3, 'years'),
         amount: 10000
       })
     ]
@@ -56,17 +56,17 @@ describe('Lockup HTTP API', () => {
     this.grants = [
       await Grant.create({
         userId: this.user.id,
-        start: new Date('2018-10-10'),
-        end: new Date('2021-10-10'),
-        cliff: new Date('2019-10-10'),
+        start: moment().subtract(4, 'years'),
+        end: moment(),
+        cliff: moment().subtract(3, 'years'),
         amount: 100000,
         interval: 'days'
       }),
       await Grant.create({
         userId: this.user.id,
-        start: new Date('2020-05-05'),
-        end: new Date('2024-05-05'),
-        cliff: new Date('2021-05-05'),
+        start: moment().add(1, 'years'),
+        end: moment().add(4, 'years'),
+        cliff: moment().add(1, 'years'),
         amount: 10000000,
         interval: 'days'
       })
@@ -107,7 +107,34 @@ describe('Lockup HTTP API', () => {
     ).to.equal(3)
   })
 
-  it('should add a lockup if enough tokens with matured lockups', async () => {})
+  it('should add a lockup if enough tokens with matured lockups', async () => {
+    await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 1000001,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(422)
+
+    await Lockup.create({
+      userId: this.user.id,
+      amount: 1000,
+      start: moment()
+        .subtract(1, 'years')
+        .subtract(1, 'days'),
+      end: moment().subtract(1, 'years'),
+      code: totp.gen(this.otpKey),
+      bonusRate: 10.0
+    })
+
+    await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 1000001,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(201)
+  })
 
   it('should not add a lockup if not enough tokens (vested)', async () => {
     await request(this.mockApp)
@@ -198,6 +225,31 @@ describe('Lockup HTTP API', () => {
       toAddress: toAddress,
       amount: 2,
       currency: 'OGN'
+    })
+
+    const response = await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 999999,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(422)
+
+    expect(response.text).to.match(/exceeds/)
+  })
+
+  it('should not add a lockup if not enough tokens (vested minus locked)', async () => {
+    const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
+    transferController.__Rewire__('getUnlockDate', unlockFake)
+
+    await Lockup.create({
+      userId: this.user.id,
+      amount: 2,
+      start: moment().subtract(1, 'days'),
+      end: moment()
+        .add(1, 'years')
+        .add(1, 'days'),
+      bonusRate: 10.0
     })
 
     const response = await request(this.mockApp)

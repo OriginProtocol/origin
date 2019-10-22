@@ -23,7 +23,9 @@ router.post(
     logger.debug('/send_email_code called for', email)
 
     // No await to prevent enumeration of valid emails
-    sendLoginToken(email)
+    if (process.env.NODE_ENV !== 'test') {
+      sendLoginToken(email)
+    }
 
     res.setHeader('Content-Type', 'application/json')
     res.send(JSON.stringify({ email }))
