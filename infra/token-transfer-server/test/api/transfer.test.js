@@ -198,7 +198,7 @@ describe('Transfer HTTP API', () => {
     ).to.equal(0)
   })
 
-  it('should not add a transfer if not enough tokens (vested minus addd)', async () => {
+  it('should not add a transfer if not enough tokens (vested minus enqueued)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 

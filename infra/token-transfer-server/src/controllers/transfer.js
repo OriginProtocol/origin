@@ -11,12 +11,10 @@ const { Transfer } = require('../../src/models')
 const { ensureLoggedIn } = require('../lib/login')
 const {
   asyncMiddleware,
-  isEthereumAddress,
-  isValidTotp,
   getFingerprintData,
-  getUnlockDate,
-  hasBalance
+  getUnlockDate
 } = require('../utils')
+const { hasBalance, isEthereumAddress, isValidTotp } = require('../validators')
 const { encryptionSecret, unlockDate } = require('../config')
 const { addTransfer, confirmTransfer } = require('../lib/transfer')
 

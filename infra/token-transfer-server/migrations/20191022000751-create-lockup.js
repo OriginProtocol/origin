@@ -16,13 +16,16 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: { model: 't3_user', key: 'id' }
       },
-      start_date: {
+      start: {
+        allowNull: false,
         type: Sequelize.DATE
       },
-      end_date: {
+      end: {
+        allowNull: false,
         type: Sequelize.DATE
       },
       bonus_rate: {
+        allowNull: false,
         type: Sequelize.FLOAT
       },
       created_at: {

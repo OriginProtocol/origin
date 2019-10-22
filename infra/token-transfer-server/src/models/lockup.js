@@ -4,12 +4,15 @@ module.exports = (sequelize, DataTypes) => {
   const Lockup = sequelize.define(
     'Lockup',
     {
-      user_id: DataTypes.INTEGER,
-      start_date: DataTypes.DATE,
-      end_date: DataTypes.DATE,
+      id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+      userId: { type: DataTypes.INTEGER, allowNull: false },
+      start: DataTypes.DATE,
+      end: DataTypes.DATE,
       bonus_rate: DataTypes.INTEGER
     },
-    {}
+    {
+      tableName: 't3_lockup'
+    }
   )
 
   Lockup.associate = models => {
