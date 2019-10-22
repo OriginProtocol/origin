@@ -305,6 +305,10 @@ input, select {
 .status-circle-success {
 }
 
+.status-circle-info {
+  background-color: #007cff !important;
+}
+
 .empty {
   text-align: center;
   color: #8fa7b7;
@@ -395,6 +399,7 @@ input, select {
  */
 .swiper-pagination {
   position: relative !important;
+  bottom: 0 !important;
 }
 
 .terms-wrapper {

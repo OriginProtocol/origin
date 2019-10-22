@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import get from 'lodash.get'
 import BigNumber from 'bignumber.js'
 import web3Utils from 'web3-utils'
+import { Doughnut } from 'react-chartjs-2'
 
 import { addAccount } from '@/actions/account'
 import {
@@ -16,12 +17,9 @@ import {
   getIsAdding as getTransferIsAdding
 } from '@/reducers/transfer'
 import { formInput, formFeedback } from '@/utils/formHelpers'
-import { unlockDate } from '@/constants'
 import BorderedCard from '@/components/BorderedCard'
 import Modal from '@/components/Modal'
-import ClockIcon from '@/assets/clock-icon.svg'
 import EmailIcon from '@/assets/email-icon.svg'
-import ExportIcon from '@/assets/export-icon.svg'
 
 class BalanceCard extends Component {
   constructor(props) {
@@ -148,56 +146,78 @@ class BalanceCard extends Component {
     })
   }
 
+  doughnutData = () => {
+    return {
+      labels: ['Available', 'Locked'],
+      datasets: [
+        {
+          data: [Number(this.props.balance), 0],
+          backgroundColor: ['#00db8d', '#007cff'],
+          borderWidth: 0
+        }
+      ]
+    }
+  }
+
   render() {
     return (
       <>
         {this.state.displayModal && this.renderModal()}
 
         <BorderedCard shadowed={true}>
-          <div className="row header">
-            <div className="col-8">
-              <h2>Available Balance</h2>
+          <div className="row header mb-3">
+            <div className="col">
+              <h2>My Vested Tokens</h2>
             </div>
           </div>
-          <div style={{ fontSize: '40px' }}>
-            <strong>
-              {this.props.isLocked
-                ? 0
-                : Number(this.props.balance).toLocaleString()}{' '}
-              <span style={{ fontSize: '20px', color: '#007cff' }}>OGN</span>
-            </strong>
-          </div>
-          <div>
-            {this.props.isLocked ? (
-              <>
-                Lockup Period Ends{' '}
-                <img src={ClockIcon} className="ml-3 mr-1 mb-1" />{' '}
-                <strong>{unlockDate.fromNow(true)}</strong>
-                <div className="alert alert-warning mt-3 mb-1 my-2">
-                  <span className="text-muted">
-                    Tokens will become available for withdrawal on{' '}
-                    {unlockDate.format('L')}
+          <div className="row">
+            <div className="col-12 col-lg-4 col-xl-2">
+              <Doughnut
+                data={this.doughnutData}
+                options={{ cutoutPercentage: 60 }}
+                legend={{ display: false }}
+              />
+            </div>
+            <div className="col" style={{ alignSelf: 'center' }}>
+              <div className="row mb-2" style={{ fontSize: '24px' }}>
+                <div className="col">
+                  <div className="status-circle status-circle-success mr-3"></div>
+                  Available
+                </div>
+                <div className="col-5 text-right">
+                  <strong>
+                    {this.props.isLocked
+                      ? 0
+                      : Number(this.props.balance).toLocaleString()}{' '}
+                    <small className="ogn">OGN</small>
+                  </strong>
+                  <span
+                    className="ml-2"
+                    style={{ fontWeight: 900, color: '#bdcbd5' }}
+                  >
+                    &#8942;
                   </span>
                 </div>
-              </>
-            ) : (
-              <button
-                className="btn btn-secondary btn-lg"
-                onClick={() => this.setState({ displayModal: true })}
-                disabled={
-                  this.props.isLocked || Number(this.props.balance) === 0
-                }
-              >
-                <img src={ExportIcon} className="mr-2 pb-1" />
-                Withdraw
-              </button>
-            )}
+              </div>
+              <div className="row" style={{ fontSize: '24px' }}>
+                <div className="col">
+                  <div className="status-circle status-circle-info mr-3"></div>
+                  Locked Tokens
+                </div>
+                <div className="col-5 text-right">
+                  <strong>
+                    0 <small className="ogn">OGN</small>
+                  </strong>
+                  <span
+                    className="ml-2"
+                    style={{ fontWeight: 900, color: '#bdcbd5' }}
+                  >
+                    &#8942;
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
-          {!this.props.isLocked && (
-            <span className="text-muted">
-              You will need an Ethereum wallet to withdraw OGN
-            </span>
-          )}
         </BorderedCard>
       </>
     )
