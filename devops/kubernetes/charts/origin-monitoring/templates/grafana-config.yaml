@@ -1,0 +1,8 @@
+apiVersion: v1
+  data:
+    grafana.ini: "{{ .Values.grafanaINI }}"
+  kind: Secret
+  metadata:
+    name: grafana-config
+    namespace: monitoring
+  type: Opaque
