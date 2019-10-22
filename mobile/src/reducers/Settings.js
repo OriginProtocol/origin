@@ -33,7 +33,7 @@ export default function Settings(state = initialState, action = {}) {
       return { ...state, network: action.network }
 
     case SettingsConstants.SET_PIN:
-      return { ...state, pin: action.pin, pinStatus: true }
+      return { ...state, pin: action.pin }
   }
 
   return state

@@ -194,8 +194,7 @@ class AuthenticationGuard extends Component {
             {settings.pin && (
               <OriginButton
                 size="large"
-                type="primary"
-                style={{ marginTop: 40 }}
+                type="link"
                 title={fbt(
                   'Retry With Pin',
                   'AuthenticationGuard.retryWithPinButton'

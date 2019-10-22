@@ -9,8 +9,7 @@ export const SettingsConstants = keyMirror(
     SET_PIN: null,
     SET_BIOMETRY_TYPE: null,
     SET_LANGUAGE: null,
-    SET_CURRENCY: null,
-    SET_PIN_STATUS: null
+    SET_CURRENCY: null
   },
   'SETTINGS'
 )

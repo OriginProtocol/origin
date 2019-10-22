@@ -54,9 +54,12 @@ class settingsScreen extends React.Component {
       .catch(error => {
         console.warn('Biometry failure: ', error)
         this.alertMessage(
-          'Permission denined',
-          `It looks like you have ${this.state.biometryType} disabled. You will need to enable it in the settings for the
+          fbt('Permission denied', 'Authentication.permissionDeniedTitle'),
+          fbt(
+            `It looks like you have ${this.state.biometryType} disabled. You will need to enable it in the settings for the
           Origin Marketplace App.`,
+            'Authentication.permissionDeniedDesciption'
+          ),
           () => {
             if (Platform.OS === 'ios') {
               Linking.openURL('app-settings:')
@@ -96,14 +99,14 @@ class settingsScreen extends React.Component {
       biometryStatus = true
     }
 
-    let biometrytText = ''
+    let biometryText = ''
     if (this.state.biometryType === 'FaceID') {
-      biometrytText = 'Face ID'
+      biometryText = 'Face ID'
     } else if (
       this.state.biometryType === 'TouchID' ||
       this.state.biometryType
     ) {
-      biometrytText = 'Touch ID'
+      biometryText = 'Touch ID'
     }
 
     return (
@@ -192,7 +195,7 @@ class settingsScreen extends React.Component {
         {this.state.biometryType !== null && (
           <TouchableHighlight>
             <View style={styles.menuItem}>
-              <Text style={styles.menuText}>{biometrytText}</Text>
+              <Text style={styles.menuText}>{biometryText}</Text>
               <View style={styles.menuItemIconContainer}>
                 <Switch
                   trackColor={{ true: '#1a82ff' }}
@@ -206,7 +209,9 @@ class settingsScreen extends React.Component {
 
         <TouchableHighlight>
           <View style={styles.menuItem}>
-            <Text style={styles.menuText}>PIN Code</Text>
+            <Text style={styles.menuText}>
+              <fbt desc="SettingsScreen.pinHeading">PIN Code</fbt>
+            </Text>
             <View style={styles.menuItemIconContainer}>
               <Switch
                 trackColor={{ true: '#1a82ff' }}
