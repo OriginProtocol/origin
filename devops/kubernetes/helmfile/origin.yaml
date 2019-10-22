@@ -41,6 +41,8 @@ releases:
   - name: prometheus-operator
     namespace: monitoring
     chart: coreos/prometheus-operator
+    values:
+      - ../values/origin-monitoring/values.yaml
 
   - name: kube-prometheus
     namespace: monitoring

@@ -1,0 +1,4 @@
+grafana.extraSecretMounts:
+    - name: grafana-config
+      mountPath: /etc/grafana
+      readOnly: true
