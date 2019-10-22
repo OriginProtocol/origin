@@ -232,6 +232,6 @@ describe('Lockup HTTP API', () => {
     // 1 lockup should be created because 1 failed
     expect(
       (await request(this.mockApp).get('/api/lockups')).body.length
-    ).to.equal(1)
+    ).to.equal(3)
   })
 })

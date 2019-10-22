@@ -69,6 +69,8 @@ async function hasBalance(userId, amount) {
     return total
   }, BigNumber(0))
 
+  logger.info('Earnings from lockup', lockupEarnings.toString())
+
   const pendingOrCompleteAmount = user.Transfers.reduce((total, transfer) => {
     if (pendingOrCompleteTransfers.includes(transfer.status)) {
       return total.plus(BigNumber(transfer.amount))
@@ -82,7 +84,7 @@ async function hasBalance(userId, amount) {
   )
 
   const lockedAmount = user.Lockups.reduce((total, lockup) => {
-    if (lockup.end > moment.now()) {
+    if (lockup.end > moment()) {
       return total.plus(BigNumber(lockup.amount))
     }
     return total

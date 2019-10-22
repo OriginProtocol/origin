@@ -28,6 +28,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.FLOAT
       },
+      amount: {
+        type: Sequelize.DECIMAL
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
