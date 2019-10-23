@@ -1,7 +1,6 @@
 const Web3 = require('web3')
 const totp = require('notp').totp
 
-const { hasBalance: _hasBalance } = require('./utils')
 const { Account } = require('./models')
 const { decrypt } = require('./lib/crypto')
 
@@ -54,15 +53,9 @@ const isValidTotp = (value, { req }) => {
   return true
 }
 
-// Validator wrapper of the hasBalance method
-const hasBalance = (value, { req }) => {
-  return _hasBalance(req.user.id, value)
-}
-
 module.exports = {
   isEthereumAddress,
   isExistingAddress,
   isExistingNickname,
-  isValidTotp,
-  hasBalance
+  isValidTotp
 }

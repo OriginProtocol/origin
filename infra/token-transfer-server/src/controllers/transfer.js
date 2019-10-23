@@ -14,7 +14,7 @@ const {
   getFingerprintData,
   getUnlockDate
 } = require('../utils')
-const { hasBalance, isEthereumAddress, isValidTotp } = require('../validators')
+const { isEthereumAddress, isValidTotp } = require('../validators')
 const { encryptionSecret, unlockDate } = require('../config')
 const { addTransfer, confirmTransfer } = require('../lib/transfer')
 
@@ -41,8 +41,7 @@ router.post(
   [
     check('amount')
       .isNumeric()
-      .toInt()
-      .custom(hasBalance),
+      .toInt(),
     check('address').custom(isEthereumAddress),
     check('code').custom(isValidTotp),
     ensureLoggedIn

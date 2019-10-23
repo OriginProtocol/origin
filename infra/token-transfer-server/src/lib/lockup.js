@@ -2,8 +2,8 @@ const moment = require('moment')
 
 const { LOCKUP_REQUEST } = require('../constants/events')
 const { Event, Lockup, sequelize } = require('../models')
-const { hasBalance } = require('../utils')
 const { lockupBonusRate, lockupDuration } = require('../config')
+const { hasBalance } = require('./balance')
 const logger = require('../logger')
 
 /**
@@ -37,7 +37,7 @@ async function addLockup(userId, amount, data = {}) {
     await txn.commit()
   } catch (e) {
     await txn.rollback()
-    logger.error(`Failed to add lockup for user ${user.email}: ${e}`)
+    logger.error(`Failed to add lockup for user ${userId}: ${e}`)
     throw e
   }
 

@@ -5,7 +5,7 @@ const lock = new AsyncLock()
 const { check, validationResult } = require('express-validator')
 
 const { asyncMiddleware } = require('../utils')
-const { hasBalance, isValidTotp } = require('../validators')
+const { isValidTotp } = require('../validators')
 const { ensureLoggedIn } = require('../lib/login')
 const { Lockup } = require('../models')
 const { addLockup } = require('../lib/lockup')
@@ -35,8 +35,7 @@ router.post(
   [
     check('amount')
       .isNumeric()
-      .toInt()
-      .custom(hasBalance),
+      .toInt(),
     check('code').custom(isValidTotp),
     ensureLoggedIn
   ],

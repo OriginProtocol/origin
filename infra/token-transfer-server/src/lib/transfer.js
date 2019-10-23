@@ -7,14 +7,13 @@ const Token = require('@origin/token/src/token')
 const { discordWebhookUrl } = require('../config')
 const { sendEmail } = require('../lib/email')
 const { postToWebhook } = require('./webhook')
-
 const {
   TRANSFER_DONE,
   TRANSFER_FAILED,
   TRANSFER_REQUEST
 } = require('../constants/events')
 const { Event, Transfer, sequelize } = require('../models')
-const { hasBalance } = require('../utils')
+const { hasBalance } = require('./balance')
 const enums = require('../enums')
 const logger = require('../logger')
 
@@ -234,7 +233,6 @@ async function executeTransfer(transfer, opts) {
 
 module.exports = {
   addTransfer,
-  hasBalance,
   confirmTransfer,
   executeTransfer
 }
