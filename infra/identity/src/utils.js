@@ -1,10 +1,12 @@
 const Sequelize = require('sequelize')
+const get = require('lodash/get')
 
 const db = {
   ...require('@origin/growth-event/src/models'),
   ...require('./models')
 }
 const { ip2geo } = require('@origin/ip2geo')
+const validator = require('@origin/validator')
 
 const logger = require('./logger')
 
@@ -127,7 +129,7 @@ async function loadIdentityAddresses(ownerAddress) {
  * @param {Array<Object>} attestations: attestations present in the user's identity.
  * @returns {Promise<Object>}
  */
-async function loadIdentityAttestationsMetadata(addresses, attestations) {
+async function loadAttestationMetadata(addresses, attestations) {
   const metadata = {}
 
   // Load attestation data.
@@ -217,6 +219,74 @@ async function loadIdentityAttestationsMetadata(addresses, attestations) {
 }
 
 /**
+ * Validates identity data stored in IPFS by checking against JSON schemas.
+ * Throws in case of a validation error.
+ *
+ * @param {Object} ipfsData: JSON parsed identity data stored on IPFS.
+ */
+function validateIdentityIpfsData(ipfsData) {
+  // Parse the identity data to make sure it is valid.
+  // Throws in case of an error.
+  validator('https://schema.originprotocol.com/identity_1.0.0.json', ipfsData)
+  validator(
+    'https://schema.originprotocol.com/profile_2.0.0.json',
+    ipfsData.profile
+  )
+  ipfsData.attestations.forEach(a => {
+    validator('https://schema.originprotocol.com/attestation_1.0.0.json', a)
+  })
+}
+
+/**
+ * Saves an identity in the DB.
+ *
+ * @param {string} owner: Eth address of the user
+ * @param {string} ipfsHash: IPFS hash of the identity blob.
+ * @param {Object} ipfsData: JSON parsed identity blob stored in IPFS.
+ * @param {Object} attestationMetadata: Attestation specific metadata loaded from the DB.
+ * @returns {Promise<{firstName: *, lastName: *, data: {identity: *, ipfsHash: *, ipfsHashHistory: []}, avatarUrl: *, ethAddress: *}>}
+ */
+async function saveIdentity(owner, ipfsHash, ipfsData, attestationMetadata) {
+  // Create an object representing the updated identity.
+  // Note that by convention, the identity is stored under the owner's address in the DB.
+  const identity = {
+    ethAddress: owner.toLowerCase(),
+    firstName: get(ipfsData, 'profile.firstName'),
+    lastName: get(ipfsData, 'profile.lastName'),
+    avatarUrl: get(ipfsData, 'profile.avatarUrl'),
+    data: {
+      identity: ipfsData,
+      ipfsHash: ipfsHash,
+      ipfsHashHistory: []
+    },
+    ...attestationMetadata
+  }
+
+  // Look for an existing identity to get the IPFS hash history.
+  const identityRow = await db.Identity.findOne({
+    where: { ethAddress: owner }
+  })
+  if (identityRow) {
+    logger.debug(`Found existing identity DB row for ${owner}`)
+    // Append the old IPFS hash to the history.
+    const ipfsHashHistory = get(identityRow, 'data.ipfsHashHistory', [])
+    const prevIpfsHash = get(identityRow, 'data.ipfsHash')
+    if (prevIpfsHash) {
+      ipfsHashHistory.push({
+        ipfsHash: prevIpfsHash,
+        timestamp: identityRow.updatedAt.getTime()
+      })
+    }
+    identity.data.ipfsHashHistory = ipfsHashHistory
+  }
+
+  // Persist the identity in the DB.
+  await db.Identity.upsert(identity)
+
+  return identity
+}
+
+/**
  * Records a ProfilePublished event in the growth_event table
  * at the condition that the identity has a first name and last name.
  *
@@ -291,8 +361,10 @@ async function recordGrowthAttestationEvents(
 }
 
 module.exports = {
+  loadAttestationMetadata,
   loadIdentityAddresses,
-  loadIdentityAttestationsMetadata,
+  recordGrowthAttestationEvents,
   recordGrowthProfileEvent,
-  recordGrowthAttestationEvents
+  saveIdentity,
+  validateIdentityIpfsData
 }

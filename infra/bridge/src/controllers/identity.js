@@ -6,13 +6,14 @@ const get = require('lodash/get')
 const router = express.Router()
 const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
 const {
-  loadIdentityAttestationsMetadata,
+  loadAttestationMetadata,
   loadIdentityAddresses,
+  recordGrowthAttestationEvents,
   recordGrowthProfileEvent,
-  recordGrowthAttestationEvents
+  saveIdentity,
+  validateIdentityIpfsData
 } = require('@origin/identity/src/utils')
 const Identity = require('@origin/identity/src/models').Identity
-const validator = require('@origin/validator')
 
 const {
   getOwnerAddress,
@@ -75,7 +76,7 @@ router.get('/', identityReadVerify, async (req, res) => {
  * TODO(franck): Authenticate the request.
  *
  * @args {string} req.query.ethAddress: Address of the user. Accepts either owner or proxy address.
- * @args {Object} req.body.identity: Identity JSON blob.
+ * @args {Object} req.body.ipfsData: Identity JSON blob store in IPFS
  * @args {string} req.body.ipfsHash: IPFS hash of the identity JSON blob.
  * @returns {{id: string}} Returns the owner address used to write the identity to the DB.
  */
@@ -84,26 +85,19 @@ router.post('/', identityWriteVerify, async (req, res) => {
   const data = req.body || {}
   logger.debug(`identity/write called for addr ${ethAddress}`)
 
-  if (!data.identity) {
+  const ipfsData = data.ipfsData
+  const ipfsHash = data.ipfsHash
+
+  if (!ipfsData) {
     return res.status(400).send({ errors: ['Identity data missing'] })
   }
-  if (!data.ipfsHash) {
+  if (!ipfsHash) {
     return res.status(400).send({ errors: ['IPFS hash missing'] })
   }
 
   // Parse the identity data to make sure it is valid.
   try {
-    validator(
-      'https://schema.originprotocol.com/identity_1.0.0.json',
-      data.identity
-    )
-    validator(
-      'https://schema.originprotocol.com/profile_2.0.0.json',
-      data.identity.profile
-    )
-    data.identity.attestations.forEach(a => {
-      validator('https://schema.originprotocol.com/attestation_1.0.0.json', a)
-    })
+    validateIdentityIpfsData(ipfsData)
   } catch (err) {
     logger.error(`Failed parsing identity data for ${ethAddress}`, err)
     return res
@@ -113,54 +107,23 @@ router.post('/', identityWriteVerify, async (req, res) => {
 
   // Load attestation data from the DB.
   const addresses = loadIdentityAddresses(ethAddress)
-  const metadata = loadIdentityAttestationsMetadata(
+  const metadata = await loadAttestationMetadata(
     addresses,
-    data.identity.attestations
+    ipfsData.attestations
   )
 
   // In case the input address was a proxy, load the owner address.
   const owner = await getOwnerAddress(ethAddress)
 
-  // Create an object representing the updated identity.
-  // Note that by convention, the identity is stored under the owner's address in the DB.
-  const identity = {
-    ethAddress: owner,
-    firstName: get(data.identity, 'profile.firstName'),
-    lastName: get(data.identity, 'profile.lastName'),
-    avatarUrl: get(data.identity, 'profile.avatarUrl'),
-    data: {
-      identity: data.identity,
-      ipfsHash: data.ipfsHash,
-      ipfsHashHistory: []
-    },
-    ...metadata
-  }
-
-  // Look for an existing identity to get the IPFS hash history.
-  const identityRow = await Identity.findOne({ where: { ethAddress: owner } })
-  if (identityRow) {
-    logger.debug(`Found existing identity DB row for ${owner}`)
-    // Append the old IPFS hash to the history.
-    const ipfsHashHistory = get(identityRow, 'data.ipfsHashHistory', [])
-    const prevIpfsHash = get(identityRow, 'data.ipfsHash')
-    if (prevIpfsHash) {
-      ipfsHashHistory.push({
-        ipfsHash: prevIpfsHash,
-        timestamp: identityRow.updatedAt.getTime()
-      })
-    }
-    identity.data.ipfsHashHistory = ipfsHashHistory
-  }
-
-  // Update the identity in the DB.
-  await Identity.upsert(identity)
+  // Save the identity in the DB.
+  const identity = await saveIdentity(owner, ipfsHash, ipfsData, metadata)
 
   // Record the growth events.
   const now = new Date()
   await recordGrowthProfileEvent(owner, identity, now, GrowthEvent)
   await recordGrowthAttestationEvents(
     owner,
-    data.identity.attestations,
+    ipfsData.attestations,
     now,
     GrowthEvent
   )

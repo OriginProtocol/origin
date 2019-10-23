@@ -94,7 +94,7 @@ describe('Identity write', () => {
   it('should write a new identity', async () => {
     const ethAddress = '0x5b2A5d1AB8a5B83C0f22cB1Df372d23946aA7d8F'
     const data = {
-      identity: {
+      ipfsData: {
         schemaId: 'https://schema.originprotocol.com/identity_1.0.0.json',
         profile: {
           firstName: 'Francky',
@@ -120,19 +120,19 @@ describe('Identity write', () => {
     expect(response.status).to.equal(200)
     const identity = response.body.identity
     expect(identity.profile.ethAddress).to.equal(ethAddress)
-    expect(identity.profile.firstName).to.equal(data.identity.profile.firstName)
-    expect(identity.profile.lastName).to.equal(data.identity.profile.lastName)
+    expect(identity.profile.firstName).to.equal(data.ipfsData.profile.firstName)
+    expect(identity.profile.lastName).to.equal(data.ipfsData.profile.lastName)
     expect(identity.profile.description).to.equal(
-      data.identity.profile.description
+      data.ipfsData.profile.description
     )
-    expect(identity.profile.avatarUrl).to.equal(data.identity.profile.avatarUrl)
+    expect(identity.profile.avatarUrl).to.equal(data.ipfsData.profile.avatarUrl)
     expect(response.body.ipfsHash).to.equal(data.ipfsHash)
   })
 
   it('should update an existing identity', async () => {
     const ethAddress = '0x5b2A5d1AB8a5B83C0f22cB1Df372d23946aA7d8F'
     const data = {
-      identity: {
+      ipfsData: {
         schemaId: 'https://schema.originprotocol.com/identity_1.0.0.json',
         profile: {
           firstName: 'New Francky',
@@ -158,12 +158,12 @@ describe('Identity write', () => {
     expect(response.status).to.equal(200)
     const identity = response.body.identity
     expect(identity.profile.ethAddress).to.equal(ethAddress)
-    expect(identity.profile.firstName).to.equal(data.identity.profile.firstName)
-    expect(identity.profile.lastName).to.equal(data.identity.profile.lastName)
+    expect(identity.profile.firstName).to.equal(data.ipfsData.profile.firstName)
+    expect(identity.profile.lastName).to.equal(data.ipfsData.profile.lastName)
     expect(identity.profile.description).to.equal(
-      data.identity.profile.description
+      data.ipfsData.profile.description
     )
-    expect(identity.profile.avatarUrl).to.equal(data.identity.profile.avatarUrl)
+    expect(identity.profile.avatarUrl).to.equal(data.ipfsData.profile.avatarUrl)
     expect(response.body.ipfsHash).to.equal(data.ipfsHash)
   })
 
@@ -175,7 +175,7 @@ describe('Identity write', () => {
       ownerAddress: ethAddress.toLowerCase()
     })
     const data = {
-      identity: {
+      ipfsData: {
         schemaId: 'https://schema.originprotocol.com/identity_1.0.0.json',
         profile: {
           firstName: 'Proxy Francky',
@@ -200,7 +200,7 @@ describe('Identity write', () => {
     response = await request(app).get(`/api/identity?ethAddress=${ethAddress}`)
     expect(response.status).to.equal(200)
     const identity = response.body.identity
-    expect(identity.profile.firstName).to.equal(data.identity.profile.firstName)
+    expect(identity.profile.firstName).to.equal(data.ipfsData.profile.firstName)
   })
 })
 

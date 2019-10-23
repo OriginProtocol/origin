@@ -14,9 +14,11 @@ const validator = require('@origin/validator')
 
 const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
 const {
-  loadIdentityAttestationsMetadata,
+  loadAttestationMetadata,
+  recordGrowthAttestationEvents,
   recordGrowthProfileEvent,
-  recordGrowthAttestationEvents
+  saveIdentity,
+  validateIdentityIpfsData
 } = require('@origin/identity/src/utils')
 
 class IdentityEventHandler {
@@ -52,6 +54,7 @@ class IdentityEventHandler {
 
   /**
    * Loads an identity's JSON blob from IPFS and validates it.
+   * Throws an exception in case of failure.
    *
    * @param ipfsHash
    * @returns {Promise<Object>}
@@ -60,20 +63,8 @@ class IdentityEventHandler {
   async _loadAndValidateIpfsIdentity(ipfsHash) {
     // Load the identity blob from IPFS.
     const ipfsData = await originIpfs.get(contracts.ipfsGateway, ipfsHash, 5000)
-
-    // Parse the identity data to make sure it is valid.
-    // Throws in case of an error.
-    validator(
-      'https://schema.originprotocol.com/identity_1.0.0.json',
-      ipfsData.identity
-    )
-    validator(
-      'https://schema.originprotocol.com/profile_2.0.0.json',
-      ipfsData.profile
-    )
-    ipfsData.attestations.forEach(a => {
-      validator('https://schema.originprotocol.com/attestation_1.0.0.json', a)
-    })
+    // Validate the data.
+    validateIdentityIpfsData(ipfsData)
     return ipfsData
   }
 
@@ -81,7 +72,7 @@ class IdentityEventHandler {
    * Helper function for loading owner and proxy addresses.
    *
    * @param {string} account: Cna be either an owner or proxy address.
-   * @returns {Promise<{owner: *, proxy: *, addresses: *}>}
+   * @returns {Promise<{owner: string, proxy: string, addresses: Set<string>}>}
    * @private
    */
   async _getAccountInfo(account) {
@@ -101,47 +92,10 @@ class IdentityEventHandler {
   }
 
   /**
-   * Indexes an identity in the DB.
-   *
-   * @param {{owner:string, proxy: sting||null, addresses:Array<string>}} accountInfo
-   * @param {string} ipfsHash
-   * @param {string} ipfsData: Identity JSON blob stored in IPFS.
-   * @returns {Promise<Object>} An identity object as written to the DB.
-   * @private
-   */
-  async _indexIdentity(accountInfo, ipfsHash, ipfsData) {
-    // Load attestation data from the DB.
-    const metadata = await loadIdentityAttestationsMetadata(
-      accountInfo.addresses,
-      ipfsData.attestations
-    )
-
-    // Create an object representing the updated identity.
-    // Note that by convention, the identity is stored under the owner's address in the DB.
-    const identity = {
-      ethAddress: accountInfo.owner,
-      firstName: get(ipfsData, 'profile.firstName'),
-      lastName: get(ipfsData, 'profile.lastName'),
-      avatarUrl: get(ipfsData, 'profile.avatarUrl'),
-      data: {
-        identity: ipfsData,
-        ipfsHash: ipfsHash,
-        ipfsHashHistory: []
-      },
-      ...metadata
-    }
-
-    logger.debug('Writing identity:', identity)
-    await db.Identity.upsert(identity)
-
-    return identity
-  }
-
-  /**
    * Main entry point for the identity event handler.
    * @param {Object} block
    * @param {Object} event
-   * @returns {Promise<{user: User}>}
+   * @returns {Promise<{identity: Object}>}
    */
   async process(block, event) {
     if (!this.config.identity) {
@@ -186,8 +140,20 @@ class IdentityEventHandler {
     // Get the account's addresses.
     const accountInfo = await this._getAccountInfo(account)
 
-    // Write the updated identity in the DB.
-    const identity = await this._indexIdentity(accountInfo, ipfsHash, ipfsData)
+    // Load attestation data from the DB.
+    const metadata = await loadAttestationMetadata(
+      accountInfo.addresses,
+      ipfsData.attestations
+    )
+
+    // Save the identity in the DB.
+    const identity = await saveIdentity(
+      accountInfo.owner,
+      ipfsHash,
+      ipfsData,
+      metadata
+    )
+    logger.debug('Wrote identity:', identity)
 
     // Insert growth events using the blockchain date as timestamp.
     if (this.config.growth) {

@@ -30,9 +30,9 @@ const mockListing = {
 const mockIpfsIdentity = {
   schemaId: 'https://schema.originprotocol.com/identity_1.0.0.json',
   profile: {
-    firstName: 'Inspecteur',
-    lastName: 'Gadget',
-    description: 'Gogo gadgeto go',
+    firstName: 'Origin',
+    lastName: 'Protocol',
+    description: 'p2p stuff',
     avatarUrl: '',
     schemaId: 'https://schema.originprotocol.com/profile_2.0.0.json',
     ethAddress: seller
@@ -309,12 +309,9 @@ describe('Listener Handlers', () => {
     // Check expected entry was added into user DB table.
     const identityRow = await db.Identity.findOne({
       where: {
-        ethAddress: seller
-        //firstName: 'Origin',
-        //lastName: 'Protocol',
-        //email: 'test@originprotocol.com',
-        //phone: '+00 00000000',
-        //country: 'FR'
+        ethAddress: seller,
+        firstName: 'Origin',
+        lastName: 'Protocol'
       }
     })
     expect(identityRow).to.be.an('object')
