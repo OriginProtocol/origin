@@ -53,27 +53,29 @@ describe('Transfer HTTP API', () => {
       await Grant.create({
         // Fully vested grant
         userId: this.user.id,
-        start: new Date('2014-10-10'),
-        end: new Date('2018-10-10'),
-        cliff: new Date('2015-10-10'),
+        start: moment().subtract(4, 'years'),
+        end: moment(),
+        cliff: moment().subtract(3, 'years'),
         amount: 1000000,
         interval: 'days'
       }),
       // Fully unvested grant
       await Grant.create({
         userId: this.user.id,
-        start: new Date('2030-05-05'),
-        end: new Date('2034-05-05'),
-        cliff: new Date('2031-05-05'),
+        start: moment().add(10, 'years'),
+        end: moment().add(14, 'years'),
+        cliff: moment().add(11, 'years'),
         amount: 10000000,
         interval: 'days'
       }),
       // Grant for second user
       await Grant.create({
         userId: this.user2.id,
-        start: new Date('2019-04-04'),
-        end: new Date('2023-04-04'),
-        cliff: new Date('2020-04-04'),
+        start: moment().subtract(6, 'months'),
+        end: moment()
+          .add(6, 'months')
+          .add(3, 'years'),
+        cliff: moment().add(6, 'months'),
         amount: 20000,
         interval: 'days'
       })
@@ -198,7 +200,7 @@ describe('Transfer HTTP API', () => {
     ).to.equal(0)
   })
 
-  it('should not add a transfer if not enough tokens (vested minus addd)', async () => {
+  it('should not add a transfer if not enough tokens (vested minus enqueued)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
     transferController.__Rewire__('getUnlockDate', unlockFake)
 

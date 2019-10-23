@@ -11,12 +11,10 @@ const { Transfer } = require('../../src/models')
 const { ensureLoggedIn } = require('../lib/login')
 const {
   asyncMiddleware,
-  isEthereumAddress,
-  isValidTotp,
   getFingerprintData,
-  getUnlockDate,
-  hasBalance
+  getUnlockDate
 } = require('../utils')
+const { isEthereumAddress, isValidTotp } = require('../validators')
 const { encryptionSecret, unlockDate } = require('../config')
 const { addTransfer, confirmTransfer } = require('../lib/transfer')
 
@@ -43,8 +41,7 @@ router.post(
   [
     check('amount')
       .isNumeric()
-      .toInt()
-      .custom(hasBalance),
+      .toInt(),
     check('address').custom(isEthereumAddress),
     check('code').custom(isValidTotp),
     ensureLoggedIn
