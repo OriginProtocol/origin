@@ -6,7 +6,7 @@ const logger = require('../logger')
 const { Sequelize, AuthTokenBlacklist } = require('../models')
 const { getbitAsync, setbitAsync, redisClient } = require('./redis')
 
-const isBlacklisted = async (authToken) => {
+const isBlacklisted = async authToken => {
   const key = 'authtokens/' + authToken + '/revoked'
   const revoked = await getbitAsync(key, 0)
 
@@ -15,7 +15,7 @@ const isBlacklisted = async (authToken) => {
     return true
   }
 
-  const monthAgo = Date.now() - (1000 * 60 * 60 * 24 * 30)
+  const monthAgo = Date.now() - 1000 * 60 * 60 * 24 * 30
 
   const entry = await AuthTokenBlacklist.findOne({
     where: {

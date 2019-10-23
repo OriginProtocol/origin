@@ -6,7 +6,10 @@ const request = require('supertest')
 
 const app = require('../src/app')
 
-const { AuthTokenGenerationLog, AuthTokenBlacklist } = require('../src/models/index')
+const {
+  AuthTokenGenerationLog,
+  AuthTokenBlacklist
+} = require('../src/models/index')
 
 const Eth = require('web3-eth')
 

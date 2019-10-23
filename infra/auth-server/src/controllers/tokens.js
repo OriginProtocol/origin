@@ -36,11 +36,10 @@ router.post('/', async (req, res) => {
   })
 
   if (!authToken) {
-    return res.status(500)
-      .send({
-        success: false,
-        errors: ['Failed to generate auth token']
-      })
+    return res.status(500).send({
+      success: false,
+      errors: ['Failed to generate auth token']
+    })
   }
 
   return res.status(201).send({
@@ -51,30 +50,30 @@ router.post('/', async (req, res) => {
 
 // TODO: Add param validation
 router.post('/revoke', authMiddleware, async (req, res) => {
-  const user = req.__originAuth 
+  const user = req.__originAuth
   const { token } = req.body
 
   const tokenData = await verifyToken(token, true)
 
   if (!tokenData) {
-    return res.status(404)
-      .send({
-        success: false,
-        errors: ['Invalid token']
-      })
+    return res.status(404).send({
+      success: false,
+      errors: ['Invalid token']
+    })
   }
 
   if (tokenData.address !== user.address) {
-    logger.error(`${user.address} trying to revoke token of ${tokenData.address}`)
-    return res.status(403)
-      .send({
-        success: false,
-        errors: ['Unauthorized to revoke token']
-      })
+    logger.error(
+      `${user.address} trying to revoke token of ${tokenData.address}`
+    )
+    return res.status(403).send({
+      success: false,
+      errors: ['Unauthorized to revoke token']
+    })
   }
 
   // TODO: What if req.body.token === req.headers.authorization?
-  // Can the user revoke the token he is using for this request? 
+  // Can the user revoke the token he is using for this request?
 
   const revoked = await revokeToken(token, {
     ...user,
@@ -82,17 +81,15 @@ router.post('/revoke', authMiddleware, async (req, res) => {
   })
 
   if (!revoked) {
-    return res.status(500)
-      .send({
-        success: false,
-        errors: ['Failed to revoke token']
-      })
+    return res.status(500).send({
+      success: false,
+      errors: ['Failed to revoke token']
+    })
   }
 
-  return res.status(200)
-    .send({
-      success: true
-    })
+  return res.status(200).send({
+    success: true
+  })
 })
 
 module.exports = router
