@@ -10,6 +10,22 @@ const authMiddleware = require('../middlewares/auth')
 
 const logger = require('../logger')
 
+router.get('/', authMiddleware, async (req, res) => {
+  if (req.__originAuth) {
+    return res
+      .status(200)
+      .send({
+        success: true
+      })
+  }
+
+  return res
+    .status(401)
+    .send({
+      success: false
+    })
+})
+
 // TODO: Add param validation
 router.post('/', async (req, res) => {
   const { payload, signature, address } = req.body
