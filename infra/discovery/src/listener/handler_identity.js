@@ -1,17 +1,8 @@
-const originIpfs = require('@origin/ipfs')
-const contracts = require('@origin/graphql/src/contracts')
-
 const get = require('lodash/get')
 const Web3 = require('web3')
-const logger = require('./logger')
 
-const db = {
-  ...require('@origin/identity/src/models'),
-  ...require('../models')
-}
-const identityQuery = require('./queries/Identity')
-const validator = require('@origin/validator')
-
+const originIpfs = require('@origin/ipfs')
+const contracts = require('@origin/graphql/src/contracts')
 const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
 const {
   loadAttestationMetadata,
@@ -20,6 +11,9 @@ const {
   saveIdentity,
   validateIdentityIpfsData
 } = require('@origin/identity/src/utils')
+
+const logger = require('./logger')
+const identityQuery = require('./queries/Identity')
 
 class IdentityEventHandler {
   constructor(config, graphqlClient) {
