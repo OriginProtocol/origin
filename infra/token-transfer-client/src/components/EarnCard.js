@@ -17,16 +17,14 @@ const EarnCard = () => {
       </div>
       <div className="row mb-4">
         <div className="col">
-          <strong style={{ fontSize: '24px' }}>0</strong> <span className="ml-1 ogn">OGN</span>
-          <div className="mt-1">
-            Earned
-          </div>
+          <strong style={{ fontSize: '24px' }}>0</strong>{' '}
+          <span className="ml-1 ogn">OGN</span>
+          <div className="mt-1">Earned</div>
         </div>
         <div className="col">
-          <strong style={{ fontSize: '24px' }}>0</strong> <span className="ml-1 ogn">OGN</span>
-          <div className="mt-1">
-            Locked up
-          </div>
+          <strong style={{ fontSize: '24px' }}>0</strong>{' '}
+          <span className="ml-1 ogn">OGN</span>
+          <div className="mt-1">Locked up</div>
         </div>
       </div>
       <div className="row mb-2">

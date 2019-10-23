@@ -58,7 +58,7 @@ const Navigation = props => {
           </li>
           <li className="nav-item mb-3">
             <NavLink to="/earn" className="nav-link text">
-              <Earn className="icon" style={{ transform: 'rotate(-90deg)' }}/>
+              <Earn className="icon" style={{ transform: 'rotate(-90deg)' }} />
               Bonus Tokens
             </NavLink>
           </li>
