@@ -15,7 +15,8 @@
     "start": "per-env",
     "start:development": "nodemon -r ./src/env.js src/app.js",
     "start:production": "node -r ./src/env.js src/app.js",
-    "test": "LOG_LEVEL=NONE NODE_ENV=test mocha -r @babel/register  -r @babel/polyfill -t 10000 --exit test/**/*.js"
+    "test": "LOG_LEVEL=NONE NODE_ENV=test mocha -r @babel/register  -r @babel/polyfill -t 10000 --exit test/**/*.js",
+    "test:debug": "LOG_LEVEL=DEBUG DEBUG=origin-auth-server NODE_ENV=test mocha -r @babel/register  -r @babel/polyfill -t 10000 --exit test/**/*.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

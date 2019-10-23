@@ -3,8 +3,8 @@
 const Sequelize = require('sequelize')
 
 module.exports = (sequelize, DataTypes) => {
-  const AuthToken = sequelize.define(
-    'AuthToken',
+  const AuthTokenBlacklist = sequelize.define(
+    'AuthTokenBlacklist',
     {
       id: {
         allowNull: false,
@@ -16,29 +16,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING
       },
-      data: {
-        allowNull: false,
-        type: DataTypes.JSONB
-      },
-      signature: {
-        allowNull: false,
-        type: DataTypes.STRING(256)
-      },
       authToken: {
         allowNull: false,
-        type: DataTypes.STRING
-      },
-      expiresAt: {
-        allowNull: false,
-        type: DataTypes.DATE
+        type: DataTypes.STRING,
+        unique: true
       },
       ipAddress: {
         allowNull: false,
         type: DataTypes.INET
-      },
-      revoked: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
       },
       createdAt: {
         allowNull: false,
@@ -52,13 +37,13 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     {
-      tableName: 'auth_tokens'
+      tableName: 'auth_tokens_blacklist'
     }
   )
 
-  AuthToken.associate = () => {
+  AuthTokenBlacklist.associate = () => {
     // associations can be defined here
   }
 
-  return AuthToken
+  return AuthTokenBlacklist
 }

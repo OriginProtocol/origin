@@ -6,7 +6,7 @@ const request = require('supertest')
 
 const app = require('../src/app')
 
-const { AuthToken } = require('../src/models/index')
+const { AuthTokenGenerationLog, AuthTokenBlacklist } = require('../src/models/index')
 
 const Eth = require('web3-eth')
 
@@ -73,7 +73,11 @@ describe('auth server', () => {
     process.env.JWT_EXPIRE_IN = '10s'
     process.env.JWT_SECRET = 'origin'
 
-    await AuthToken.destroy({
+    await AuthTokenBlacklist.destroy({
+      where: {},
+      truncate: true
+    })
+    await AuthTokenGenerationLog.destroy({
       where: {},
       truncate: true
     })
@@ -106,7 +110,11 @@ describe('auth server middleware', () => {
     process.env.JWT_EXPIRE_IN = '1s'
     process.env.JWT_SECRET = 'origin'
 
-    await AuthToken.destroy({
+    await AuthTokenBlacklist.destroy({
+      where: {},
+      truncate: true
+    })
+    await AuthTokenGenerationLog.destroy({
       where: {},
       truncate: true
     })

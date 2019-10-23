@@ -1,6 +1,6 @@
 'use strict'
 
-const tableName = 'auth_tokens'
+const tableName = 'auth_tokens_blacklist'
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -15,29 +15,13 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      data: {
-        allowNull: false,
-        type: Sequelize.JSONB
-      },
-      signature: {
-        allowNull: false,
-        type: Sequelize.STRING(256)
-      },
       auth_token: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      expires_at: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
       ip_address: {
         allowNull: false,
         type: Sequelize.INET
-      },
-      revoked: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
       },
       created_at: {
         allowNull: false,

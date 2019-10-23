@@ -6,10 +6,9 @@ const logger = require('../logger')
 
 const verifyToken = require('../utils/verify-token')
 
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
   if (!req.headers || !req.headers.authorization) {
-    // TODO: What params to log?
-    logger.debug('Trying to access without authorization header')
+    logger.debug('Trying to access without authorization header', req.ip)
     return res.status(401).send({
       errors: ['Authorization required']
     })
@@ -24,7 +23,7 @@ const authMiddleware = (req, res, next) => {
     })
   }
 
-  const data = verifyToken(token)
+  const data = await verifyToken(token)
 
   if (!data) {
     logger.debug('Invalid token type', type, token)
