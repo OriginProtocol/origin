@@ -19,7 +19,7 @@ const VestingHistory = props => {
     const momentDate = moment(date)
     tableRows.push(
       <tr key={date}>
-        <td>
+        <td className="pl-0">
           <div
             className={`status-circle ${
               momentDate < moment.now() ? `status-circle-success` : ''
