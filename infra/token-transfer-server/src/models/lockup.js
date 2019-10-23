@@ -8,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
       userId: { type: DataTypes.INTEGER, allowNull: false },
       start: DataTypes.DATE,
       end: DataTypes.DATE,
-      bonus_rate: DataTypes.INTEGER,
-      amount: DataTypes.INTEGER
+      bonus_rate: DataTypes.FLOAT,
+      amount: DataTypes.DECIMAL
     },
     {
       tableName: 't3_lockup'
