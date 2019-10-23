@@ -94,7 +94,6 @@ class Messaging {
     this.unreadCountLoaded = false
     this.hasMoreConversations = true
     this.ready = false
-    this.isKeysLoading = true
   }
 
   // Helper function for use by outside services
@@ -116,6 +115,10 @@ class Messaging {
     }
   }
 
+  isKeysLoading() {
+    return !this.getPublicMessagingSignature()
+  }
+
   async onPreGenKeys({ address, signatureKey, pubMessage, pubSignature }) {
     debug('onPreGenKeys')
     const accounts = await this.web3.eth.getAccounts()
@@ -127,8 +130,14 @@ class Messaging {
       this.setKeyItem(`${PUB_MESSAGING_SIG}:${address}`, pubSignature)
       this.pub_sig = pubSignature
       this.pub_msg = pubMessage
+
       if (address == this.account_key) {
         this.startConversing()
+        this.ready = true
+        this.events.emit('ready', this.account_key)
+        await this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
+          messagingStatusChange: 'ready'
+        })
       }
     }
   }
@@ -185,7 +194,6 @@ class Messaging {
     this.convsEnabled = false
     this.hasMoreConversations = true
     this.ready = false
-    this.isKeysLoading = true
     clearInterval(this.refreshIntervalId)
 
     this.account_key = key
@@ -205,8 +213,6 @@ class Messaging {
       if (this.convsEnabled || this.getMessagingKey()) {
         await this.initKeys()
       }
-
-      this.isKeysLoading = false
     }
   }
 
@@ -265,7 +271,6 @@ class Messaging {
       limit: 10
     })
 
-    this.isKeysLoading = false
     this.ready = true
     this.events.emit('ready', this.account_key)
     this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
