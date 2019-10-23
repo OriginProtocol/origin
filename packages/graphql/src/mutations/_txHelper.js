@@ -13,7 +13,6 @@ import relayer from './_relayer'
 
 const GAS_STATION_URL = 'https://ethgasstation.info/json/ethgasAPI.json'
 const GAS_PRICE_KEY = process.env.GAS_PRICE_KEY || 'average'
-const SAFETY_GAS_LIMIT = 1000000 // 1m
 
 const debug = createDebug('origin:tx-helper:')
 const formatAddr = address => (address ? address.substr(0, 8) : '')
@@ -695,9 +694,11 @@ export default function txHelper({
       // Wrap the tx in a ProxyFactory createProxyWithSenderNonce call
       toSend = await txWrapCreateProxy({ ProxyFactory, tx: toSend, from })
 
-      // TODO: result from estimateGas is too low. Need to work out exact amount
-      // gas = await toSend.estimateGas({ from })
-      gas = SAFETY_GAS_LIMIT
+      // Add gas overhead from creating proxy
+      gas += 250000 // Cost of creating a new identity contract, and executing
+      gas -= 21000 // Minus the transaction base cost for the main transaction
+      gas += Math.ceil((gas / 64) * 4) // Extra unused gas for the three CALLs
+      gas += 60000 // Temporary safety factor
     }
 
     if (shouldUseRelayer && shouldUseProxy) {
@@ -745,8 +746,11 @@ export default function txHelper({
         destinationContract,
         value
       })
-
-      gas = SAFETY_GAS_LIMIT
+      gas += 42000 // Cost of running execute method
+      gas -= 21000 // Minus the transaction base cost for the main transaction
+      // since we don't have to pay it twice
+      gas += Math.ceil((gas / 64) * 3) // Extra unused gas for the two CALLs
+      gas += 40000 // Temporary safety factor
     }
 
     // Send using the availble or given web3 instance
