@@ -35,7 +35,9 @@ router.post(
   [
     check('amount')
       .isNumeric()
-      .toInt(),
+      .toInt()
+      .isInt({ min: 0 })
+      .withMessage('Amount must be greater than 0'),
     check('code').custom(isValidTotp),
     ensureLoggedIn
   ],

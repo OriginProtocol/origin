@@ -286,4 +286,16 @@ describe('Lockup HTTP API', () => {
       (await request(this.mockApp).get('/api/lockups')).body.length
     ).to.equal(3)
   })
+
+  it('should not add lockups with below 0 amount', async () => {
+    const response = await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: -10,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(422)
+
+    expect(response.text).to.match(/greater/)
+  })
 })
