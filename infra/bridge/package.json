@@ -29,8 +29,11 @@
     "DApp"
   ],
   "dependencies": {
+    "@google-cloud/pubsub": "1.1.5",
     "@origin/growth-event": "^0.1.0",
     "@origin/identity": "^0.1.0",
+    "@origin/ip2geo": "^0.1.0",
+    "@origin/validator": "^0.1.0",
     "@sendgrid/mail": "^6.4.0",
     "body-parser": "^1.19.0",
     "connect-session-sequelize": "^6.0.0",
@@ -62,7 +65,7 @@
   "devDependencies": {
     "chai": "4.2.0",
     "eslint": "6.5.1",
-    "mocha": "6.2.1",
+    "mocha": "6.2.2",
     "nodemon": "1.19.4",
     "supertest": "4.0.2"
   },
