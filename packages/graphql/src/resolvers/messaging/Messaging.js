@@ -58,7 +58,7 @@ export default {
   isKeysLoading: () => {
     return checkForMessagingOverride()
       ? messagingOverride.isKeysLoading
-      : contracts.messaging.isKeysLoading
+      : contracts.messaging.isKeysLoading()
   },
   conversations: async (_, { limit, offset }) =>
     await getConversationIds({ limit, offset }),
