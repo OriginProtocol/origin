@@ -15,6 +15,12 @@ import {
   getIsLoading as getGrantIsLoading,
   getTotals as getGrantTotals
 } from '@/reducers/grant'
+import { fetchLockups } from '@/actions/lockup'
+import {
+  getLockups,
+  getIsLoading as getLockupIsLoading,
+  getTotals as getLockupTotals
+} from '@/reducers/lockup'
 import { fetchTransfers } from '@/actions/transfer'
 import {
   getIsLoading as getTransferIsLoading,
@@ -30,13 +36,17 @@ import EarnCard from '@/components/EarnCard'
 
 const Dashboard = props => {
   useEffect(() => {
-    props.fetchAccounts(), props.fetchTransfers(), props.fetchGrants()
+    props.fetchAccounts(),
+      props.fetchGrants(),
+      props.fetchLockups(),
+      props.fetchTransfers()
   }, [])
 
   if (
     props.accountIsLoading ||
     props.transferIsLoading ||
-    props.grantIsLoading
+    props.grantIsLoading ||
+    props.lockupIsLoading
   ) {
     return (
       <div className="spinner-grow" role="status">
@@ -95,13 +105,16 @@ const Dashboard = props => {
   )
 }
 
-const mapStateToProps = ({ account, grant, transfer }) => {
+const mapStateToProps = ({ account, grant, lockup, transfer }) => {
   return {
     accounts: getAccounts(account),
     accountIsLoading: getAccountIsLoading(account),
     grants: getGrants(grant),
     grantIsLoading: getGrantIsLoading(grant),
     grantTotals: getGrantTotals(grant),
+    lockups: getLockups(lockup),
+    lockupIsLoading: getLockupIsLoading(lockup),
+    lockupTotals: getLockupTotals(lockup),
     transferIsLoading: getTransferIsLoading(transfer),
     withdrawnAmount: getWithdrawnAmount(transfer)
   }
@@ -112,6 +125,7 @@ const mapDispatchToProps = dispatch =>
     {
       fetchAccounts: fetchAccounts,
       fetchGrants: fetchGrants,
+      fetchLockups: fetchLockups,
       fetchTransfers: fetchTransfers
     },
     dispatch
