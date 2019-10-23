@@ -202,7 +202,7 @@ class BalanceCard extends Component {
               <div className="row" style={{ fontSize: '24px' }}>
                 <div className="col">
                   <div className="status-circle status-circle-info mr-3"></div>
-                  Locked Tokens
+                  Bonus Locked Tokens
                 </div>
                 <div className="col-5 text-right">
                   <strong>

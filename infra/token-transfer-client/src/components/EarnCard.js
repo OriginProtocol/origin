@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
+import Lock from '-!react-svg-loader!@/assets/lock-icon.svg'
 import BorderedCard from '@/components/BorderedCard'
 
 const EarnCard = () => {
@@ -15,8 +16,18 @@ const EarnCard = () => {
         </div>
       </div>
       <div className="row mb-4">
-        <div className="col"></div>
-        <div className="col"></div>
+        <div className="col">
+          <strong style={{ fontSize: '24px' }}>0</strong> <span className="ml-1 ogn">OGN</span>
+          <div className="mt-1">
+            Earned
+          </div>
+        </div>
+        <div className="col">
+          <strong style={{ fontSize: '24px' }}>0</strong> <span className="ml-1 ogn">OGN</span>
+          <div className="mt-1">
+            Locked up
+          </div>
+        </div>
       </div>
       <div className="row mb-2">
         <div className="col">
@@ -24,6 +35,14 @@ const EarnCard = () => {
         </div>
         <div className="col text-right">
           <NavLink to="/earn">View Details &gt;</NavLink>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col text-center text-muted p-4">
+          <div className="mb-3">
+            <Lock className="icon" />
+          </div>
+          You have not locked up any tokens
         </div>
       </div>
     </BorderedCard>

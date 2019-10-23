@@ -4,6 +4,9 @@ import { NavLink } from 'react-router-dom'
 import BorderedCard from '@/components/BorderedCard'
 
 const WithdrawalSummaryCard = props => {
+  const total = Number(props.vested)
+  const withdrawnPercent = (Number(props.withdrawnAmount) / total) * 100
+  const remainingPercent = 100 - withdrawnPercent
   return (
     <BorderedCard shadowed={true}>
       <div className="row mb-2">
@@ -17,7 +20,7 @@ const WithdrawalSummaryCard = props => {
       <div className="row mb-2">
         <div className="col">Vested tokens to date</div>
         <div className="col text-right">
-          {Number(props.vested).toLocaleString()}{' '}
+          <strong>{Number(props.vested).toLocaleString()}{' '}</strong>
           <span className="ogn">OGN</span>
         </div>
       </div>
@@ -27,7 +30,7 @@ const WithdrawalSummaryCard = props => {
           Withdrawn
         </div>
         <div className="col text-right">
-          {Number(props.withdrawnAmount).toLocaleString()}{' '}
+          <strong>{Number(props.withdrawnAmount).toLocaleString()}{' '}</strong>
           <span className="ogn">OGN</span>
         </div>
       </div>
@@ -37,9 +40,13 @@ const WithdrawalSummaryCard = props => {
           Remaining
         </div>
         <div className="col text-right">
-          {Number(props.vested.minus(props.withdrawnAmount)).toLocaleString()}{' '}
+          <strong>{Number(props.vested.minus(props.withdrawnAmount)).toLocaleString()}{' '}</strong>
           <span className="ogn">OGN</span>
         </div>
+      </div>
+      <div className="progress mt-4" style={{ height: '5px' }}>
+        <div className="progress-bar bg-success" role="progressbar" style={{ width: `${remainingPercent}%` }}></div>
+        <div className="progress-bar bg-error" role="progressbar" style={{ width: `${withdrawnPercent}%` }}></div>
       </div>
     </BorderedCard>
   )

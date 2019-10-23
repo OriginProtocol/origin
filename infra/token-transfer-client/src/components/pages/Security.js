@@ -34,7 +34,7 @@ class Security extends Component {
     return (
       <>
         <h1>Security</h1>
-        <div className="row">
+        <div className="row mb-4">
           <div className="col-xs-12 col-lg-6">
             <BorderedCard>
               <div className="row">
