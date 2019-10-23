@@ -1,6 +1,7 @@
 # Uncomment the next line to define a global platform for your project
 platform :ios, '9.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+project './OriginMarketplace.xcodeproj'
 
 target 'OriginMarketplace' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
