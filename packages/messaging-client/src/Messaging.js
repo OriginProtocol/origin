@@ -172,6 +172,9 @@ class Messaging {
       await this.initKeys()
     } else {
       this.convsEnabled = true
+      this.isKeysLoading = false
+      this.ready = true
+      this.events.emit('ready', this.account_key)
       await this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
         messagingStatusChange: 'ready'
       })
