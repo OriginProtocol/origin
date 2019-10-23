@@ -57,9 +57,7 @@ async function hasBalance(userId, amount) {
   if (available < 0) {
     logger.info(`Amount of available OGN is below 0 for user ${user.email}`)
 
-    throw new RangeError(
-      `Amount of available OGN is below 0`
-    )
+    throw new RangeError(`Amount of available OGN is below 0`)
   }
 
   if (amount > available) {
