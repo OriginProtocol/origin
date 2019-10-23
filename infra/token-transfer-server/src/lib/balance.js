@@ -54,6 +54,12 @@ async function hasBalance(userId, amount) {
     .minus(transferWithdrawnAmount)
     .minus(lockedAmount)
 
+  if (available < 0) {
+    logger.info(`Amount of available OGN is below 0 for user ${user.email}`)
+
+    throw new RangeError(`Amount of available OGN is below 0`)
+  }
+
   if (amount > available) {
     logger.info(
       `Amount of ${amount} OGN exceeds the ${available} available for user ${user.email}`
