@@ -3,6 +3,7 @@ const router = express.Router()
 const passport = require('passport')
 const base32 = require('thirty-two')
 const crypto = require('crypto')
+const qrcode = require('qrcode')
 
 require('../passport')()
 const { asyncMiddleware, getFingerprintData } = require('../utils')
@@ -66,9 +67,7 @@ router.post(
     // Generate QR token for scanning into Google Authenticator
     // Reference: https://code.google.com/p/google-authenticator/wiki/KeyUriFormat
     const otpUrl = `otpauth://totp/${req.user.email}?secret=${encodedKey}&period=30&issuer=OriginProtocol`
-    const otpQrUrl =
-      'https://chart.googleapis.com/chart?chs=166x166&chld=L|0&cht=qr&chl=' +
-      encodeURIComponent(otpUrl)
+    const otpQrUrl = await qrcode.toDataURL(otpUrl)
 
     res.setHeader('Content-Type', 'application/json')
     res.send(
