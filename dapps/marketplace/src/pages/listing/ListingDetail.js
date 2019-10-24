@@ -238,7 +238,7 @@ class ListingDetail extends Component {
 
     return (
       <LocationMap
-        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyCIWC3x1Xn5lDGRDLvI1O9vAyIjoJRCsg0"
+        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=xxx"
         loadingElement={<div style={{ height: '100%' }} />}
         containerElement={
           <div className="mt-2 mt-md-4" style={containerStyle} />

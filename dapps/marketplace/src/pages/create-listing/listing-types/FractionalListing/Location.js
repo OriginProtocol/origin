@@ -4,7 +4,6 @@ import { fbt } from 'fbt-runtime'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
 import Geocode from 'react-geocode'
-import { formFeedback } from 'utils/formHelpers'
 
 const ListingLocation = ({ prev, next, listing, onChange }) => {
   const [redirect, setRedirect] = useState(false)
