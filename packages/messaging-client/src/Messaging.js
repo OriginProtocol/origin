@@ -116,7 +116,7 @@ class Messaging {
   }
 
   isKeysLoading() {
-    return !this.getPublicMessagingSignature()
+    return this.account && !this.getPublicMessagingSignature()
   }
 
   async onPreGenKeys({ address, signatureKey, pubMessage, pubSignature }) {
