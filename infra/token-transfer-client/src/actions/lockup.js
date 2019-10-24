@@ -38,3 +38,6 @@ export function fetchLockups() {
       })
   }
 }
+
+export function addLockup() {
+}

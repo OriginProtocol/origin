@@ -1,14 +1,20 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
 import { Doughnut } from 'react-chartjs-2'
+import Dropdown from 'react-bootstrap/Dropdown'
 
+import BonusModal from '@/components/BonusModal'
 import BorderedCard from '@/components/BorderedCard'
+import DropdownDotsToggle from '@/components/DropdownDotsToggle'
 import WithdrawModal from '@/components/WithdrawModal'
 
 class BalanceCard extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      displayWithdrawModal: false
+      displayBonusModal: false,
+      displayWithdrawModal: false,
+      redirectTo: null
     }
   }
 
@@ -26,9 +32,24 @@ class BalanceCard extends Component {
   }
 
   render() {
+    if (this.state.redirectTo) {
+      return (
+        <Redirect to={this.state.redirectTo} />
+      )
+    }
+
     return (
       <>
-        {this.state.displayModal && <WithdrawModal />}
+        {this.state.displayWithdrawModal && (
+          <WithdrawModal
+            accounts={this.props.accounts}
+            isLocked={this.props.isLocked}
+          />
+        )}
+
+        {this.state.displayBonusModal && (
+          <BonusModal />
+        )}
 
         <BorderedCard shadowed={true}>
           <div className="row header mb-3">
@@ -62,12 +83,34 @@ class BalanceCard extends Component {
                       : Number(this.props.balance).toLocaleString()}{' '}
                     <small className="ogn">OGN</small>
                   </strong>
-                  <span
-                    className="ml-2"
-                    style={{ fontWeight: 900, color: '#bdcbd5' }}
-                  >
-                    &#8942;
-                  </span>
+                  <Dropdown drop={'left'} style={{ display: 'inline' }}>
+                    <Dropdown.Toggle
+                      as={DropdownDotsToggle}
+                      id="available-dropdown"
+                    ></Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        onClick={() => this.setState({ displayBonusModal: true })}
+                      >
+                        Earn Bonus Tokens
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() =>
+                          this.setState({ displayWithdrawModal: true })
+                        }
+                      >
+                        Withdraw
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() =>
+                          this.setState({ redirectTo: '/withdrawal' })
+                        }
+                      >
+                        Withdrawal History
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </div>
               </div>
               <div className="row" style={{ fontSize: '24px' }}>
@@ -77,14 +120,28 @@ class BalanceCard extends Component {
                 </div>
                 <div className="col-5 text-right">
                   <strong>
-                    0 <small className="ogn">OGN</small>
+                    {this.props.lockedBalance}{' '}
+                    <small className="ogn">OGN</small>
                   </strong>
-                  <span
-                    className="ml-2"
-                    style={{ fontWeight: 900, color: '#bdcbd5' }}
-                  >
-                    &#8942;
-                  </span>
+                  <Dropdown drop={'left'} style={{ display: 'inline' }}>
+                    <Dropdown.Toggle
+                      as={DropdownDotsToggle}
+                      id="bonus-dropdown"
+                    ></Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        onClick={() => this.setState({ displayBonusModal: true })}
+                      >
+                        Earn Bonus Tokens
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        onClick={() => this.setState({ redirectTo: '/bonus' })}
+                      >
+                        View Details
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </div>
               </div>
             </div>

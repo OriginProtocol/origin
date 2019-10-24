@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
@@ -10,9 +10,11 @@ import {
   getIsLoading as getLockupIsLoading
 } from '@/reducers/lockup'
 import LockupCard from '@/components/LockupCard'
+import BonusModal from '@/components/BonusModal'
 
 const BonusTokens = props => {
   useEffect(props.fetchLockups, [])
+  const [displayBonusModal, setDisplayBonusModal] = useState(false)
 
   if (props.lockupIsLoading) {
     return (
@@ -30,12 +32,18 @@ const BonusTokens = props => {
 
   return (
     <>
+      {displayBonusModal && (
+        <BonusModal />
+      )}
+
       <div className="row">
         <div className="col mt-4 mb-4">
           <h1>Bonus Tokens</h1>
         </div>
         <div className="col text-right">
-          <button className="btn btn-lg btn-dark">Start Earning</button>
+          <button className="btn btn-lg btn-dark" onClick={() => setDisplayBonusModal(true) }>
+            Start Earning
+          </button>
         </div>
       </div>
       <div className="row">

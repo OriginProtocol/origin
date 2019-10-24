@@ -417,3 +417,7 @@ input, select {
   color: #007cff;
   font-weight: bold;
 }
+
+.dropdown-menu .icon > path {
+  fill: #007cff;
+}

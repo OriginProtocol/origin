@@ -141,7 +141,7 @@ class WithdrawModal extends Component {
     })
   }
 
-  renderModal() {
+  render() {
     return (
       <Modal appendToId="main" onClose={this.handleModalClose} closeBtn={true}>
         {this.state.modalState === 'Disclaimer' && this.renderDisclaimer()}
