@@ -6,7 +6,11 @@ import get from 'lodash/get'
 import pick from 'lodash/pick'
 
 import contracts from '../contracts'
-import { getIdsForPage, getConnection } from './_pagination'
+import {
+  getIdsForPage,
+  getConnection,
+  convertCursorToOffset
+} from './_pagination'
 import validateAttestation from '../utils/validateAttestation'
 import { getProxyAndOwner } from '../utils/proxy'
 
@@ -197,20 +201,14 @@ function _getAttestations(accounts, attestations) {
   return _sanitizeAttestations(verifiedAttestations)
 }
 
-
-
-// TODO:
-// - If running in back-end. Read from DB or bridge
-// - If running local and performance mode: read from graphql
-// - If running local and no performance mode: read from graphql
-
 /**
  * Reads identity data associated with an Eth address from the bridge server.
+ *
  * @param {string} id: Eth address of the user.
  * @returns {Promise<Object||null>} Returns the identity object or null if no identity found.
  * @private
  */
-export async function _getIdentityFromBridgeServer(id) {
+async function _getIdentityFromBridgeServer(id) {
   const bridgeServer = contracts.config.bridge
   if (!bridgeServer) {
     throw new Error('Bridge server not configured')
@@ -230,7 +228,7 @@ export async function _getIdentityFromBridgeServer(id) {
   console.log('LOADED IDENTITY FROM BRIDGE !!!')
   const data = await response.json()
   debug('GOT DATA FROM BRIDGE:', JSON.stringify(data, null, 2))
-  return { identity: data.identity, ipfsHash: 'POPULATE ME' }
+  return { identity: data.identity, ipfsHash: data.ipfsHash }
 }
 
 /**
@@ -297,6 +295,7 @@ async function _getIdentityFromContract(accounts, blockNumber) {
  *  - avatarUrl is an IPFS url. Ex.: ipfs://QmWnTmoY6Pi5u3gxE9QSSFzw1MoCLgcd1Wg5mxTxzsL57c
  *  - avatarUrlExpanded is an HTTP URL pointing to an IPFS gateway.
  *    Ex.: https://ipfs.originprotocol.com/ipfs/QmaAsx4dt3LqiSCe4WCW1Pqkj67dh3wH1xBdUgukt6yWup
+ *
  * @param {Object} identity
  * @private
  */
@@ -344,7 +343,7 @@ async function _decorateIdentityWithAvatarUrls(identity) {
  *   blockNumber is optional. It can be used to load older version of an identity.
  * @returns {{owner: {id: (*)}, proxy: {id: (*)}, strength: number, attestations: *, ipfsHash: *, id: *, verifiedAttestations: *}|any}
  */
-export async function identity({ id }) {
+async function identity({ id }) {
   console.log('CALLING identity resolver')
   if (typeof localStorage !== 'undefined' && localStorage.useWeb3Identity) {
     console.log('USING Web3 Identity !')
@@ -360,9 +359,9 @@ export async function identity({ id }) {
   // Load the IPFS data for the user's identity.
   let data
   if (contracts.config.centralizedIdentityEnabled) {
-    data = (await _getIdentityFromBridgeServer(owner))
+    data = await _getIdentityFromBridgeServer(owner)
   } else {
-    data = (await _getIdentityFromContract(accounts, blockNumber))
+    data = await _getIdentityFromContract(accounts, blockNumber)
   }
 
   if (!data || !data.identity) {
@@ -438,54 +437,102 @@ function dataURItoBinary(dataURI) {
   return { buffer, mimeType }
 }
 
-// TODO: franck port to new system
+/**
+ * Queries the blockchain to get <first> identities starting at cursor <after>.
+ *
+ * @param {Integer} first: the number of identities to fetch (e.g. limit).
+ * @param {string} after: cursor.
+ * @returns {Promise<{start: *, ids: *, totalCount: *, first: *}>}
+ * @private
+ */
+async function _getIdentitiesFromBridgeServer(first, after) {
+  const bridgeServer = contracts.config.bridge
+  if (!bridgeServer) {
+    throw new Error('Bridge server not configured')
+  }
+  const offset = after ? convertCursorToOffset(after) : 0
+  const url = `${bridgeServer}/api/identity/list?limit=${first}&offset=${offset}`
+
+  // Query the bridge server.
+  const response = await fetch(url, { credentials: 'include' })
+  if (response.status !== 200) {
+    throw new Error(
+      `Bridge query for ${first} identities at offset ${after} failed`
+    )
+  }
+  const data = await response.json()
+  return {
+    start: first + offset + 1,
+    ids: data.identities.map(identity => identity.ethAddress),
+    totalCount: data.totalCount
+  }
+}
+
+/**
+ * Queries the blockchain to get <first> identities starting at cursor <after>.
+ * TODO: This is very inefficient as it scans the entire event set.
+ *       Optimize if our user base grows to a significant size...
+ *
+ * @param {Object} contract: Identity contract
+ * @param {Integer} first: the number of identities to fetch (e.g. limit).
+ * @param {string} after: cursor.
+ * @returns {Promise<{start: *, ids: *, totalCount: *, first: *}>}
+ * @private
+ */
+async function _getIdentitiesFromBlockchain(contract, first, after) {
+  // Build a list of identity eth addresses by scanning
+  // all the events from the blockchain.
+  //
+  const events = await contract.eventCache.allEvents()
+  const allIds = new Set()
+  events.forEach(event => {
+    const id = event.returnValues.account
+    if (!id) {
+      return
+    }
+    if (event.event === 'IdentityUpdated') {
+      allIds.add(id)
+    } else if (event.event === 'IdentityDeleted') {
+      allIds.delete(id)
+    }
+  })
+  const page = getIdsForPage({ after, ids: allIds, first })
+  return { start: page.start, ids: page.ids, totalCount: allIds.length }
+}
 
 /**
  * Returns a paginated list of all identities.
  * Used by admin, not by the DApp.
  *
- * @param contract
- * @param first
- * @param after
- * @param context
- * @param info
+ * @param {Object} contract: IdentityEvents contract
+ * @param {Number} first: number of identities desired
+ * @param {string} after: encoded cursor. Decode with _pagination.convertCursorToOffset
+ * @param {Object} context: GraphQL context
+ * @param {Object} info: GraphQL info
  * @returns {Promise<null|{nodes, pageInfo, edges, totalCount}>}
  */
-export async function identities(
-  contract,
-  { first = 10, after },
-  context,
-  info
-) {
+async function identities(contract, { first = 10, after }, context, info) {
   if (!contract) {
     return null
   }
 
   const fields = graphqlFields(info)
 
-  const events = await contract.eventCache.allEvents()
+  // Get the list of identity addresses.
+  let data
+  if (contracts.config.centralizedIdentityEnabled) {
+    // Call the central server to get a page of identity addresses.
+    data = await _getIdentitiesFromBridgeServer(first, after)
+  } else {
+    // Get identity addresses by querying the blockchain.
+    data = await _getIdentitiesFromBlockchain(contract, first, after)
+  }
+  const { start, ids, totalCount } = data
 
-  const identities = {}
-  events.forEach(event => {
-    const id = event.returnValues.account
-    if (id) {
-      identities[id] = identities[id] || { id }
-      if (event.event === 'IdentityUpdated') {
-        identities[id].ipfsHash = event.returnValues.ipfsHash
-      } else if (event.event === 'IdentityDeleted') {
-        identities[id].ipfsHash = null
-      }
-    }
-  })
-
-  const totalCount = Object.keys(identities).length
-  const allIds = Object.keys(identities)
-
-  const { ids, start } = getIdsForPage({ after, ids: allIds, first })
-
+  // Fetch the identities.
   let nodes = []
   if (!fields || fields.nodes) {
-    nodes = await Promise.all(ids.map(id => identity(identities[id])))
+    nodes = await Promise.all(ids.map(id => identity({ id })))
   }
 
   return getConnection({ start, first, nodes, ids, totalCount })
@@ -541,6 +588,7 @@ function getAttestationProviders() {
 
 export default {
   id: contract => contract.options.address,
+  identity,
   identities,
   getAuthUrl: (_, { provider, ...args }) => getAuthUrl(provider, args),
   attestationProviders: () => getAttestationProviders()

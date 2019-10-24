@@ -17,7 +17,6 @@ import { identity } from './../../resolvers/IdentityEvents'
 
 const debug = createDebug('origin:identity:write')
 
-
 const deduplicateAttestations = attestations => {
   // Note: sortAttestations() method under `packages/graphql/src/resolvers/IdentityEvent.js`
   // will filter out multiple attestations for same provider
@@ -156,9 +155,11 @@ async function deployIdentity(
   // Write the identity data to IPFS.
   const ipfsHash = await post(contracts.ipfsRPC, identity)
 
-  debug('contracts.config.centralizedIdentityEnabled=', contracts.config.centralizedIdentityEnabled)
-  if (true) {
-  //if (contracts.config.centralizedIdentityEnabled) {
+  debug(
+    'contracts.config.centralizedIdentityEnabled=',
+    contracts.config.centralizedIdentityEnabled
+  )
+  if (contracts.config.centralizedIdentityEnabled) {
     // Write the identity data to centralized storage via the bridge server.
     console.log('WRITING IDENTITY !!!!!!')
     const bridgeServer = contracts.config.bridge

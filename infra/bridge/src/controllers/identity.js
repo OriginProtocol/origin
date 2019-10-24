@@ -21,6 +21,7 @@ const {
   postToEmailWebhook
 } = require('../utils/identity')
 const {
+  identityListVerify,
   identityReadVerify,
   identityWriteVerify
 } = require('../utils/validation')
@@ -35,7 +36,7 @@ const logger = require('../logger')
  *  - 500 if an identity row was found but with empty data in the database.
  *
  *  @args {string} req.ethAddress: Address of the user. Accepts either owner or proxy address.
- *  @returns {{identity: Object, ipfsHash: string}}
+ *  @returns {{ethAddress: string, identity: Object, ipfsHash: string}}
  */
 router.get('/', identityReadVerify, async (req, res) => {
   const ethAddress = req.query.ethAddress
@@ -65,6 +66,7 @@ router.get('/', identityReadVerify, async (req, res) => {
   }
 
   return res.status(200).send({
+    ethAddress: identity.ethAddress,
     identity: identity.data.identity,
     ipfsHash: identity.data.ipfsHash
   })
@@ -135,6 +137,31 @@ router.post('/', identityWriteVerify, async (req, res) => {
   await postToEmailWebhook(identity)
 
   return res.status(200).send({ id: owner })
+})
+
+/**
+ * Returns a list of identities.
+ **
+ * @args {string} req.query.limit: Max number of identities to return.
+ * @args {Integer} req.body.offset: Offset
+ * @returns {{identities: Array<Object>, totalCount: Integer}} List of identities and total number of identities.
+ */
+router.get('/list', identityListVerify, async (req, res) => {
+  const limit = req.query.limit
+  const offset = req.query.offset
+  logger.debug(`identity/list called limit=${limit} offset=${offset}`)
+
+  const rows = await Identity.findAll({ limit, offset })
+  const totalCount = await Identity.count()
+  const identities = rows.map(row => {
+    return {
+      ethAddress: row.ethAddress,
+      identity: row.data.identity,
+      ipfsHash: row.data.ipfsHash
+    }
+  })
+
+  return res.status(200).send({ identities, totalCount })
 })
 
 module.exports = router
