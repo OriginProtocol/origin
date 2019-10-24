@@ -142,7 +142,6 @@ async function postToWebhook(
   })
 }
 
-
 /**
  * Sends a blob of data to a Google Cloud pubsub topic.
  */
