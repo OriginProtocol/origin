@@ -11,18 +11,13 @@ export default withScriptjs(
   withGoogleMap(
     ({
       readonly,
-      listing,
       onMapMonted,
       recalculateCircle,
-      circleCenter,
       defaultZoom,
-      circleRadius,
-      showMarker,
-      showCircle
+      defaultCenter,
+      markerOptions,
+      circleOptions
     }) => {
-      const { lat, lng } = circleCenter
-      const defaultLat = listing.exactLocation.latitude
-      const defaultLng = listing.exactLocation.longitude
       let options = {
         zoomControl: false,
         mapTypeControl: false,
@@ -45,30 +40,29 @@ export default withScriptjs(
         <GoogleMap
           ref={onMapMonted}
           defaultZoom={defaultZoom}
-          defaultCenter={{ lat, lng }}
-          defaultOptions={{
-            zoomControl: false,
-            mapTypeControl: false,
-            scaleControl: false,
-            streetViewControl: false,
-            rotateControl: false,
-            fullscreenControl: false
+          defaultCenter={{
+            lat: defaultCenter.latitude,
+            lng: defaultCenter.longitude
           }}
+          defaultOptions={options}
           onDrag={recalculateCircle}
           onZoomChanged={recalculateCircle}
         >
-          {showMarker && (
+          {markerOptions && (
             <Marker
               position={{
-                lat: defaultLat,
-                lng: defaultLng
+                lat: markerOptions.latitude,
+                lng: markerOptions.longitude
               }}
             />
           )}
-          {showCircle && (
+          {circleOptions && (
             <Circle
-              center={{ lat, lng }}
-              radius={circleRadius}
+              center={{
+                lat: circleOptions.latitude,
+                lng: circleOptions.longitude
+              }}
+              radius={circleOptions.radius}
               options={{
                 strokeColor: '#1a82ff',
                 strokeWidth: '10px',

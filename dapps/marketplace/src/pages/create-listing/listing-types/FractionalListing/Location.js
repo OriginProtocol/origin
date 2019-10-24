@@ -1,16 +1,13 @@
 import React, { useState } from 'react'
 import { fbt } from 'fbt-runtime'
 
-import withIsMobile from 'hoc/withIsMobile'
-
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
 import Geocode from 'react-geocode'
 import { formFeedback } from 'utils/formHelpers'
 
-const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
+const ListingLocation = ({ prev, next, listing, onChange }) => {
   const [redirect, setRedirect] = useState(false)
-  const [location, setLocation] = useState(null)
   const [fetchingLocation, setFetchingLocation] = useState(false)
   const [formLocationValue, setFormLocationValue] = useState('')
   const [formLocationError, setFormLocationError] = useState(null)
@@ -34,7 +31,6 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
   }
 
   const input = locationInput()
-  const Feedback = formFeedback(formLocationValue)
 
   if (redirect) {
     return <Redirect to={next} push />
@@ -102,26 +98,19 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
             className="listing-step"
             onSubmit={e => {
               e.preventDefault()
-              if (!location) {
-                //TODO put this into config
-                Geocode.setApiKey('AIzaSyCIWC3x1Xn5lDGRDLvI1O9vAyIjoJRCsg0')
-                Geocode.enableDebug()
-                console.log('11111')
-                Geocode.fromAddress(formLocationValue).then(
-                  response => {
-                    console.log('111112')
-                    const { lat, lng } = response.results[0].geometry.location
-                    saveLocation(lat, lng)
-                  },
-                  error => {
-                    console.log('11113')
-                    setFormLocationError(error.message)
-                    console.error(error.message)
-                  }
-                )
-              } else {
-                saveLocation(location.latitude, location.longitude)
-              }
+              //TODO put this into config
+              Geocode.setApiKey('AIzaSyCIWC3x1Xn5lDGRDLvI1O9vAyIjoJRCsg0')
+              Geocode.enableDebug()
+              Geocode.fromAddress(formLocationValue).then(
+                response => {
+                  const { lat, lng } = response.results[0].geometry.location
+                  saveLocation(lat, lng)
+                },
+                error => {
+                  setFormLocationError(error.message)
+                  console.error(error.message)
+                }
+              )
             }}
           >
             <div className="form-group">
@@ -166,7 +155,7 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
   )
 }
 
-export default withIsMobile(ListingLocation)
+export default ListingLocation
 
 require('react-styl')(`
   .location

@@ -1,12 +1,5 @@
 import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
-import {
-  withScriptjs,
-  withGoogleMap,
-  GoogleMap,
-  Marker,
-  Circle
-} from 'react-google-maps'
 
 import withWallet from 'hoc/withWallet'
 import withIsMobile from 'hoc/withIsMobile'
@@ -20,6 +13,7 @@ import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
 import DocumentTitle from 'components/DocumentTitle'
 import Category from 'components/Category'
+import LocationMap from 'components/LocationMap'
 import UserListings from 'pages/user/_UserListings'
 import {
   isHistoricalListing,
@@ -46,39 +40,6 @@ import BuySingleUnitWidget from './listing-types/single-unit/BuySingleUnitWidget
 import BuyMultiUnitWidget from './listing-types/multi-unit/BuyMultiUnitWidget'
 import BuyFractionalWidget from './listing-types/fractional/BuyFractionalWidget'
 import BuyFractionalHourlyWidget from './listing-types/fractional-hourly/BuyFractionalHourlyWidget'
-
-const LocationObfuscationMap = withScriptjs(
-  withGoogleMap(({ listing }) => {
-    const lat = listing.location.latitude
-    const lng = listing.location.longitude
-    const circleRadius = listing.location.accuracyInMeters
-
-    return (
-      <GoogleMap
-        defaultZoom={16}
-        defaultCenter={{ lat, lng }}
-        defaultOptions={{
-          zoomControl: false,
-          mapTypeControl: false,
-          scaleControl: false,
-          streetViewControl: false,
-          rotateControl: false,
-          fullscreenControl: false
-        }}
-      >
-        <Circle
-          center={{ lat, lng }}
-          radius={circleRadius}
-          options={{
-            strokeColor: '#1a82ff',
-            strokeWidth: '10px',
-            fillColor: '#1a82ff99'
-          }}
-        />
-      </GoogleMap>
-    )
-  })
-)
 
 class ListingDetail extends Component {
   constructor(props) {
@@ -143,6 +104,7 @@ class ListingDetail extends Component {
         excludeListing={listing.id}
       />
     )
+    const hasLocation = !!listing.location
 
     if (isMobile) {
       return (
@@ -150,11 +112,11 @@ class ListingDetail extends Component {
           <div className="listing-info">
             {this.renderHeading()}
             {this.renderAction()}
-            {this.renderMap()}
           </div>
           {gallery}
           <div className="listing-description">
             {this.renderListingDetail()}
+            {hasLocation && this.renderMap()}
           </div>
           <div className="about-seller">{this.renderSellerInfo()}</div>
           <div className="seller-info">
@@ -173,12 +135,14 @@ class ListingDetail extends Component {
             <div className="listing-info">
               {this.renderHeading()}
               {this.renderAction()}
-              {this.renderMap()}
               {this.renderSellerInfo()}
             </div>
           </div>
         </div>
-        <div className="listing-description">{this.renderListingDetail()}</div>
+        <div className="listing-description">
+          {this.renderListingDetail()}
+          {hasLocation && this.renderMap()}
+        </div>
         <div className="seller-info">
           {reviews}
           {userListings}
@@ -261,20 +225,42 @@ class ListingDetail extends Component {
 
   renderMap() {
     const { listing } = this.props
+    let containerStyle = {
+      height: '400px'
+    }
+    if (this.props.isMobile) {
+      containerStyle = {
+        ...containerStyle,
+        marginLeft: '-15px',
+        marginRight: '-15px'
+      }
+    }
+
     return (
-      <LocationObfuscationMap
-        listing={listing}
+      <LocationMap
         googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyCIWC3x1Xn5lDGRDLvI1O9vAyIjoJRCsg0"
-        loadingElement={<div style={{ height: `100%` }} />}
-        containerElement={<div style={{ height: `400px` }} />}
-        mapElement={<div style={{ height: `100%` }} />}
+        loadingElement={<div style={{ height: '100%' }} />}
+        containerElement={
+          <div className="mt-2 mt-md-4" style={containerStyle} />
+        }
+        mapElement={<div style={{ height: '100%' }} />}
+        defaultZoom={16}
+        defaultCenter={{
+          latitude: listing.location.latitude,
+          longitude: listing.location.longitude
+        }}
+        circleOptions={{
+          latitude: listing.location.latitude,
+          longitude: listing.location.longitude,
+          radius: listing.location.accuracyInMeters
+        }}
+        readonly={true}
       />
     )
   }
 
   renderAction() {
     const { listing, wallet, walletProxy, ognListingRewards } = this.props
-    console.log('LISTING', listing)
 
     if (isHistoricalListing(listing)) {
       return <HistoricalListingWarning listing={listing} />
