@@ -112,7 +112,11 @@ logger.info(config)
  * @return {Promise<void>}
  */
 async function main() {
-  const context = await new Context().init(config, contractsContext, errorCounter)
+  const context = await new Context().init(
+    config,
+    contractsContext,
+    errorCounter
+  )
 
   // List of contracts the listener watches events from.
   const contracts = {}
