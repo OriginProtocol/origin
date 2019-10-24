@@ -141,7 +141,7 @@ async function getTextFn(gateway, hashAsBytes, timeoutMS) {
     let didTimeOut = false
     const timeout = setTimeout(() => {
       didTimeOut = true
-      reject()
+      reject('IPFS gateway timeout')
     }, timeoutMS)
     fetch(`${gateway}/ipfs/${hash}`)
       .then(response => {
@@ -150,10 +150,10 @@ async function getTextFn(gateway, hashAsBytes, timeoutMS) {
           resolve(response)
         }
       })
-      .catch(() => {
+      .catch(error => {
         clearTimeout(timeout)
         if (!didTimeOut) {
-          reject()
+          reject(error)
         }
       })
     if (didTimeOut) console.log(`Timeout when fetching ${hash}`)
