@@ -39,5 +39,4 @@ export function fetchLockups() {
   }
 }
 
-export function addLockup() {
-}
+export function addLockup() {}

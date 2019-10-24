@@ -32,16 +32,17 @@ const BonusTokens = props => {
 
   return (
     <>
-      {displayBonusModal && (
-        <BonusModal />
-      )}
+      {displayBonusModal && <BonusModal />}
 
       <div className="row">
         <div className="col mt-4 mb-4">
           <h1>Bonus Tokens</h1>
         </div>
         <div className="col text-right">
-          <button className="btn btn-lg btn-dark" onClick={() => setDisplayBonusModal(true) }>
+          <button
+            className="btn btn-lg btn-dark"
+            onClick={() => setDisplayBonusModal(true)}
+          >
             Start Earning
           </button>
         </div>

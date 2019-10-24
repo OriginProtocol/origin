@@ -33,9 +33,7 @@ class BalanceCard extends Component {
 
   render() {
     if (this.state.redirectTo) {
-      return (
-        <Redirect to={this.state.redirectTo} />
-      )
+      return <Redirect to={this.state.redirectTo} />
     }
 
     return (
@@ -47,9 +45,7 @@ class BalanceCard extends Component {
           />
         )}
 
-        {this.state.displayBonusModal && (
-          <BonusModal />
-        )}
+        {this.state.displayBonusModal && <BonusModal />}
 
         <BorderedCard shadowed={true}>
           <div className="row header mb-3">
@@ -91,7 +87,9 @@ class BalanceCard extends Component {
 
                     <Dropdown.Menu>
                       <Dropdown.Item
-                        onClick={() => this.setState({ displayBonusModal: true })}
+                        onClick={() =>
+                          this.setState({ displayBonusModal: true })
+                        }
                       >
                         Earn Bonus Tokens
                       </Dropdown.Item>
@@ -131,7 +129,9 @@ class BalanceCard extends Component {
 
                     <Dropdown.Menu>
                       <Dropdown.Item
-                        onClick={() => this.setState({ displayBonusModal: true })}
+                        onClick={() =>
+                          this.setState({ displayBonusModal: true })
+                        }
                       >
                         Earn Bonus Tokens
                       </Dropdown.Item>
