@@ -99,16 +99,6 @@ class IdentityEventHandler {
     const eventId = `${event.blockNumber}:${event.transactionIndex}`
     logger.debug(`Identity handler processing event ${eventId}`)
 
-    // TODO(franck): confirm we can remove this HACK
-    // Skip malformed event.
-    // See https://github.com/OriginProtocol/origin/issues/3581
-    //if (event.blockNumber === 8646689 && event.transactionIndex === 97) {
-    //  logger.warn(
-    //    'Skipping malformed event blockNumber=8646689 transactionIndex=97'
-    //  )
-    //  return null
-    //}
-
     const account = get(event, 'returnValues.account')
     let ipfsHash = get(event, 'returnValues.ipfsHash')
 
