@@ -11,6 +11,7 @@
     "url": "https://github.com/OriginProtocol/origin/issues"
   },
   "dependencies": {
+    "@origin/ipfs": "^0.1.0",
     "dotenv": "8.2.0",
     "envkey": "1.2.7",
     "lodash": "^4.17.15",

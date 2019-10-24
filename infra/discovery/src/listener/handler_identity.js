@@ -4,6 +4,7 @@ const Web3 = require('web3')
 const originIpfs = require('@origin/ipfs')
 const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
 const {
+  convertLegacyAvatar,
   loadAttestationMetadata,
   recordGrowthAttestationEvents,
   recordGrowthProfileEvent,
@@ -129,6 +130,14 @@ class IdentityEventHandler {
     } catch (err) {
       logger.error(`Failed loading IPFS data for hash ${ipfsHash}:`, err)
       return null
+    }
+
+    // Some legacy identities were storing the avatar picture
+    // as data URI in the profile data. Convert those to the new format
+    // where the avatar picture is stored as a separate IPFS blob.
+    if (ipfsData.profile.avatar && ipfsData.profile.avatar.length > 0) {
+      logger.debug('Converting to new style avatar.')
+      await convertLegacyAvatar(this.ipfsGateway, ipfsData)
     }
 
     // Get the account's addresses.
