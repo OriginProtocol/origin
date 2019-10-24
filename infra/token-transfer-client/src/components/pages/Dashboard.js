@@ -65,6 +65,7 @@ const Dashboard = props => {
           <BalanceCard
             balance={vestedTotal.minus(props.withdrawnAmount)}
             accounts={props.accounts}
+            locked={props.lockupTotals.locked}
             isLocked={isLocked}
           />
         </div>

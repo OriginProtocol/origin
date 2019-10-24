@@ -35,7 +35,7 @@ class Security extends Component {
       <>
         <h1>Security</h1>
         <div className="row mb-4">
-          <div className="col-xs-12 col-lg-6">
+          <div className="col-xs-12 col-lg-6 mb-4">
             <BorderedCard>
               <div className="row">
                 <div className="col-xl-6">{get(this.props.user, 'email')}</div>
@@ -52,7 +52,7 @@ class Security extends Component {
             </BorderedCard>
           </div>
 
-          <div className="col-xs-12 col-lg-6">
+          <div className="col-xs-12 col-lg-6 mb-4">
             <BorderedCard>
               <div className="row">
                 <div

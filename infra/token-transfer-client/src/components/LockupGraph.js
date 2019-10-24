@@ -8,30 +8,35 @@ const LockupGraph = ({ percentage }) => {
     return {
       datasets: [
         {
-          data: [percentage, 90],
-          backgroundColor: ['#007cff', '#bdcbd5'],
-          borderWidth: 2,
-          borderDash: [10, 5]
+          data: [percentage, 100 - percentage],
+          backgroundColor: ['#007cff', 'rgba(0, 0, 0, 0)']
         },
         {
-          data: [percentage, 90],
-          backgroundColor: ['#8900fd', '#bdcbd5'],
-          borderWidth: 2
+          data: [percentage, 100 - percentage],
+          backgroundColor: ['#8900fd', 'rgba(0, 0, 0, 0)']
         }
       ]
     }
   }
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div
+      style={{
+        position: 'relative',
+        height: '93px',
+        width: '93px'
+      }}
+    >
       <Doughnut
         data={doughnutData}
-        options={{ cutoutPercentage: 60 }}
+        options={{ cutoutPercentage: 60, responsive: false }}
         legend={{ display: false }}
+        width="93"
+        height="93"
       />
       <Lock
         className="icon"
-        style={{ position: 'absolute', top: '40%', left: '46%' }}
+        style={{ position: 'absolute', top: '30px', left: '37px' }}
       />
     </div>
   )

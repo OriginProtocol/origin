@@ -32,13 +32,15 @@ const BonusTokens = props => {
 
   return (
     <>
-      {displayBonusModal && <BonusModal />}
+      {displayBonusModal && (
+        <BonusModal onModalClose={() => setDisplayBonusModal(false)} />
+      )}
 
       <div className="row">
-        <div className="col mt-4 mb-4">
-          <h1>Bonus Tokens</h1>
+        <div className="col-12 col-md-6 mt-4">
+          <h1 className="mb-0 mb-lg-4">Bonus Tokens</h1>
         </div>
-        <div className="col text-right">
+        <div className="col-12 col-md-6 mb-3 mb-md-0 text-lg-right">
           <button
             className="btn btn-lg btn-dark"
             onClick={() => setDisplayBonusModal(true)}
@@ -64,8 +66,18 @@ const BonusTokens = props => {
       <hr />
       <div className="row">
         <div className="col">
-          {renderLockups(props.lockups)}
-          <LockupCard />
+          {props.lockups && props.lockups.length > 0 ? (
+            renderLockups(props.lockups)
+          ) : (
+            <div className="p-5 text-muted text-center">
+              <div className="mb-3" style={{ fontSize: '28px' }}>
+                You don&apos;t have any OGN locked up
+              </div>
+              <div style={{ fontSize: '18px' }}>
+                Something here about why this is great...
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

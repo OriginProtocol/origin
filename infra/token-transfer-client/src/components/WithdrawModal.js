@@ -120,6 +120,9 @@ class WithdrawModal extends Component {
   handleModalClose = () => {
     // Reset the state of the modal back to defaults
     this.setState(this.getInitialState())
+    if (this.props.onModalClose) {
+      this.props.onModalClose()
+    }
   }
 
   handleAddAccount = () => {

@@ -340,6 +340,10 @@ input, select {
   background-color: #ff0000;
 }
 
+.status-circle-secondary {
+  background-color: #8900fd;
+}
+
 .btn {
   margin-top: 20px;
   margin-bottom: 10px;
@@ -420,4 +424,10 @@ input, select {
 
 .dropdown-menu .icon > path {
   fill: #007cff;
+}
+
+canvas {
+  background-image: url('/static/media/dotted-lines.9b6f5b0c.svg');
+  background-repeat: no-repeat;
+  background-position: center;
 }
