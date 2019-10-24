@@ -227,8 +227,6 @@ async function loadAttestationMetadata(addresses, attestations) {
  * @param {Object} ipfsData: JSON parsed identity data stored on IPFS.
  */
 function validateIdentityIpfsData(ipfsData) {
-  // Parse the identity data to make sure it is valid.
-  // Throws in case of an error.
   validator('https://schema.originprotocol.com/identity_1.0.0.json', ipfsData)
   validator(
     'https://schema.originprotocol.com/profile_2.0.0.json',

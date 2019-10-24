@@ -120,10 +120,12 @@ async function main() {
 
   // List of contracts the listener watches events from.
   const contracts = {}
-  if (config.identity)
+  if (config.identity) {
     contracts['IdentityEvents'] = contractsContext.identityEvents
-  //if (config.proxy) contracts['ProxyFactory'] = contractsContext.ProxyFactory
-
+  }
+  if (config.proxy) {
+    contracts['ProxyFactory'] = contractsContext.ProxyFactory
+  }
   if (config.marketplace) {
     // Listen to all versions of marketplace
     Object.keys(contractsContext.marketplaces).forEach(key => {
