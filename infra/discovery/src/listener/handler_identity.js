@@ -2,7 +2,6 @@ const get = require('lodash/get')
 const Web3 = require('web3')
 
 const originIpfs = require('@origin/ipfs')
-const contracts = require('@origin/graphql/src/contracts')
 const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
 const {
   loadAttestationMetadata,
@@ -16,13 +15,14 @@ const logger = require('./logger')
 const identityQuery = require('./queries/Identity')
 
 class IdentityEventHandler {
-  constructor(config, graphqlClient) {
-    this.config = config
+  constructor(context, graphqlClient) {
+    this.config = context.config
+    this.ipfsGateway = context.contracts.ipfsGateway
     this.graphqlClient = graphqlClient
   }
 
   /**
-   * Queries graphQL to get informataion about an account.
+   * Queries graphQL to get information about an account.
    *
    * @param {String} account: eth address of account
    * @returns {Object} result of GraphQL query
@@ -42,7 +42,6 @@ class IdentityEventHandler {
       logger.error(error)
       return null
     }
-
     return result.data.web3.account.identity
   }
 
@@ -56,7 +55,7 @@ class IdentityEventHandler {
    */
   async _loadAndValidateIpfsIdentity(ipfsHash) {
     // Load the identity blob from IPFS.
-    const ipfsData = await originIpfs.get(contracts.ipfsGateway, ipfsHash, 5000)
+    const ipfsData = await originIpfs.get(this.ipfsGateway, ipfsHash, 5000)
     // Validate the data.
     validateIdentityIpfsData(ipfsData)
     return ipfsData
@@ -64,23 +63,24 @@ class IdentityEventHandler {
 
   /**
    * Helper function for loading owner and proxy addresses.
+   * Returns lower cased addresses.
    *
-   * @param {string} account: Cna be either an owner or proxy address.
-   * @returns {Promise<{owner: string, proxy: string, addresses: Set<string>}>}
+   * @param {string} account: Can be either an owner or proxy address.
+   * @returns {Promise<{owner: string, proxy: string, addresses: Array<string>}>}
    * @private
    */
   async _getAccountInfo(account) {
-    const identity = this._getIdentityDetails(account)
+    const identity = await this._getIdentityDetails(account)
 
-    // Collect owner and proxy addresses for the identity.
-    const owner = identity.owner.id
+    // Collect owner address and the optional proxy address for the identity.
+    const owner = identity.owner.id.toLowerCase()
     const proxy =
-      identity.owner.proxy && identity.owner.proxy !== owner
-        ? identity.owner.proxy
+      identity.owner.proxy && identity.owner.proxy.id !== owner
+        ? identity.owner.proxy.id.toLowerCase()
         : null
 
-    const addresses = new Set([owner])
-    addresses.add(proxy)
+    const addresses = [owner]
+    if (proxy) addresses.push(proxy)
 
     return { owner, proxy, addresses }
   }

@@ -1,5 +1,7 @@
 const Sequelize = require('sequelize')
 const get = require('lodash/get')
+const uniqWith = require('lodash/uniqWith')
+const isEqual = require('lodash/isEqual')
 
 const db = {
   ...require('@origin/growth-event/src/models'),
@@ -264,18 +266,21 @@ async function saveIdentity(owner, ipfsHash, ipfsData, attestationMetadata) {
 
   // Look for an existing identity to get the IPFS hash history.
   const identityRow = await db.Identity.findOne({
-    where: { ethAddress: owner }
+    where: { ethAddress: owner.toLowerCase() }
   })
   if (identityRow) {
     logger.debug(`Found existing identity DB row for ${owner}`)
-    // Append the old IPFS hash to the history.
-    const ipfsHashHistory = get(identityRow, 'data.ipfsHashHistory', [])
+    // Append the old IPFS hash to the history, handling the possibility
+    // we may be reprocessing data (ex: in the case of a listener backfill).
+    let ipfsHashHistory = get(identityRow, 'data.ipfsHashHistory', [])
     const prevIpfsHash = get(identityRow, 'data.ipfsHash')
-    if (prevIpfsHash) {
+    if (prevIpfsHash && prevIpfsHash !== ipfsHash) {
       ipfsHashHistory.push({
         ipfsHash: prevIpfsHash,
         timestamp: identityRow.updatedAt.getTime()
       })
+      // Dedupe.
+      ipfsHashHistory = uniqWith(ipfsHashHistory, isEqual)
     }
     identity.data.ipfsHashHistory = ipfsHashHistory
   }
