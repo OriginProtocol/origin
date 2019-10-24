@@ -149,7 +149,10 @@ describe('Listener Handlers', () => {
     this.context = {
       web3: {},
       config: this.config,
-      graphqlClient: graphqlClient
+      graphqlClient: graphqlClient,
+      contracts: {
+        ipfsGateway: 'testGatewayUrl'
+      }
     }
 
     this.context.web3.eth = new MockWeb3Eth({
@@ -227,7 +230,7 @@ describe('Listener Handlers', () => {
 
   it(`Marketplace`, async () => {
     const handler = new MarketplaceEventHandler(
-      this.config,
+      this.context,
       this.context.graphqlClient
     )
 
@@ -279,7 +282,7 @@ describe('Listener Handlers', () => {
 
   it(`Identity`, async () => {
     const handler = new IdentityEventHandler(
-      this.config,
+      this.context,
       this.context.graphqlClient
     )
 
