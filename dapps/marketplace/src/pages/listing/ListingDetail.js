@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
 import { fbt } from 'fbt-runtime'
-import { withScriptjs, withGoogleMap, GoogleMap, Marker, Circle } from 'react-google-maps'
+import {
+  withScriptjs,
+  withGoogleMap,
+  GoogleMap,
+  Marker,
+  Circle
+} from 'react-google-maps'
 
 import withWallet from 'hoc/withWallet'
 import withIsMobile from 'hoc/withIsMobile'
@@ -41,36 +47,38 @@ import BuyMultiUnitWidget from './listing-types/multi-unit/BuyMultiUnitWidget'
 import BuyFractionalWidget from './listing-types/fractional/BuyFractionalWidget'
 import BuyFractionalHourlyWidget from './listing-types/fractional-hourly/BuyFractionalHourlyWidget'
 
-const LocationObfuscationMap = withScriptjs(withGoogleMap(({ listing }) => {
-  const lat = listing.location.latitude
-  const lng = listing.location.longitude
-  const circleRadius = listing.location.accuracyInMeters
+const LocationObfuscationMap = withScriptjs(
+  withGoogleMap(({ listing }) => {
+    const lat = listing.location.latitude
+    const lng = listing.location.longitude
+    const circleRadius = listing.location.accuracyInMeters
 
-  return (
-    <GoogleMap
-      defaultZoom={16}
-      defaultCenter={{ lat, lng }}
-      defaultOptions={{
-        zoomControl: false,
-        mapTypeControl: false,
-        scaleControl: false,
-        streetViewControl: false,
-        rotateControl: false,
-        fullscreenControl: false
-      }}
-    >
-      <Circle
-        center={{ lat, lng }}
-        radius={circleRadius}
-        options={{
-          strokeColor: '#1a82ff',
-          strokeWidth: '10px',
-          fillColor: '#1a82ff99'
+    return (
+      <GoogleMap
+        defaultZoom={16}
+        defaultCenter={{ lat, lng }}
+        defaultOptions={{
+          zoomControl: false,
+          mapTypeControl: false,
+          scaleControl: false,
+          streetViewControl: false,
+          rotateControl: false,
+          fullscreenControl: false
         }}
-      />
-    </GoogleMap>
-  )
-}))
+      >
+        <Circle
+          center={{ lat, lng }}
+          radius={circleRadius}
+          options={{
+            strokeColor: '#1a82ff',
+            strokeWidth: '10px',
+            fillColor: '#1a82ff99'
+          }}
+        />
+      </GoogleMap>
+    )
+  })
+)
 
 class ListingDetail extends Component {
   constructor(props) {
@@ -260,12 +268,13 @@ class ListingDetail extends Component {
         loadingElement={<div style={{ height: `100%` }} />}
         containerElement={<div style={{ height: `400px` }} />}
         mapElement={<div style={{ height: `100%` }} />}
-      />)
+      />
+    )
   }
 
   renderAction() {
     const { listing, wallet, walletProxy, ognListingRewards } = this.props
-    console.log("LISTING", listing)
+    console.log('LISTING', listing)
 
     if (isHistoricalListing(listing)) {
       return <HistoricalListingWarning listing={listing} />

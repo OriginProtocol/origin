@@ -71,10 +71,10 @@ async function createListing(_, input) {
   const from = input.from || contracts.defaultMobileAccount
   await checkMetaMask(from)
 
-  console.log("LISTING DATA: ", data)
+  console.log('LISTING DATA: ', data)
   const ipfsData = listingInputToIPFS(data, unitData, fractionalData)
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
-  console.log("IPFS DATA: ", ipfsData)
+  console.log('IPFS DATA: ', ipfsData)
 
   let tx
   const deposit = contracts.web3.utils.toWei(String(input.deposit), 'ether')

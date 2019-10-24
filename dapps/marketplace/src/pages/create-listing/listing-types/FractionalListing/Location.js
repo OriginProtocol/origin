@@ -51,7 +51,7 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
     setRedirect(true)
   }
 
-  const fetchCurrentLocation = async (e) => {
+  const fetchCurrentLocation = async e => {
     e.preventDefault()
     setFetchingLocation(true)
     setCurrentLocationError(null)
@@ -59,9 +59,12 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
     // TODO add some fetching location spinner that times out
     if (window.webViewBridge) {
       if (window.webViewBridge.send) {
-        const onSuccess = (data) => { 
+        const onSuccess = data => {
           if (data.locationAvailable) {
-            saveLocation(data.position.coords.latitude, data.position.coords.longitude)
+            saveLocation(
+              data.position.coords.latitude,
+              data.position.coords.longitude
+            )
           } else {
             setCurrentLocationError(data.error)
           }
@@ -70,13 +73,15 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
         window.webViewBridge.send('getCurrentPosition', null, onSuccess)
       }
     } else if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        saveLocation(position.coords.latitude, position.coords.longitude)
-      },
-      (error) => {
-        setCurrentLocationError(error.message)
-        setFetchingLocation(false)
-      })
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          saveLocation(position.coords.latitude, position.coords.longitude)
+        },
+        error => {
+          setCurrentLocationError(error.message)
+          setFetchingLocation(false)
+        }
+      )
     }
   }
 
@@ -98,18 +103,18 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
             onSubmit={e => {
               e.preventDefault()
               if (!location) {
-                //TODO put this into config 
+                //TODO put this into config
                 Geocode.setApiKey('AIzaSyCIWC3x1Xn5lDGRDLvI1O9vAyIjoJRCsg0')
                 Geocode.enableDebug()
-                console.log("11111")
+                console.log('11111')
                 Geocode.fromAddress(formLocationValue).then(
                   response => {
-                    console.log("111112")
+                    console.log('111112')
                     const { lat, lng } = response.results[0].geometry.location
                     saveLocation(lat, lng)
                   },
                   error => {
-                    console.log("11113")
+                    console.log('11113')
                     setFormLocationError(error.message)
                     console.error(error.message)
                   }
@@ -131,14 +136,23 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
                 className="btn btn-outline-primary btn-location"
                 onClick={fetchCurrentLocation}
               >
-                {!fetchingLocation && <fbt desc="createListing.useCurrentLocation">Use current location</fbt>}
-                {fetchingLocation && <fbt desc="createListing.fetchingLocation">Fetching location</fbt>}
+                {!fetchingLocation && (
+                  <fbt desc="createListing.useCurrentLocation">
+                    Use current location
+                  </fbt>
+                )}
+                {fetchingLocation && (
+                  <fbt desc="createListing.fetchingLocation">
+                    Fetching location
+                  </fbt>
+                )}
               </button>
-              {currentLocationError && <div className="invalid-feedback d-flex justify-content-center mt-3">
-                {currentLocationError}
-              </div>}
+              {currentLocationError && (
+                <div className="invalid-feedback d-flex justify-content-center mt-3">
+                  {currentLocationError}
+                </div>
+              )}
             </div>
-
 
             <div className="actions mt-auto">
               <button type="submit" className="btn btn-primary">

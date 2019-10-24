@@ -13,7 +13,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 import PushNotification from 'react-native-push-notification'
 import RNSamsungBKS from 'react-native-samsung-bks'
 import * as Sentry from '@sentry/react-native'
-import Geolocation from 'react-native-geolocation-service';
+import Geolocation from 'react-native-geolocation-service'
 
 import { decodeTransaction } from 'utils/contractDecoder'
 import { isValidMetaTransaction } from 'utils'
@@ -302,10 +302,11 @@ const OriginWeb3View = React.forwardRef(({ onMessage, ...props }, ref) => {
 
   async function getCurrentPosition(callback) {
     const hasLocationPermission = await requestLocationPermission()
-    /* This will only be fired on Android. On Apple we can not detect when/if a 
-     * location permission has been granted or denied. For that reason after a 
+    /* This will only be fired on Android. On Apple we can not detect when/if a
+     * location permission has been granted or denied. For that reason after a
      * predefined period we just timeout.
-     */ 
+     */
+
     if (hasLocationPermission === false) {
       callback({
         locationAvailable: false,
@@ -315,13 +316,13 @@ const OriginWeb3View = React.forwardRef(({ onMessage, ...props }, ref) => {
     }
 
     Geolocation.getCurrentPosition(
-      (position) => {
+      position => {
         callback({
           locationAvailable: true,
           position
         })
       },
-      (error) => {
+      error => {
         callback({
           locationAvailable: false,
           error: error.message,
@@ -331,7 +332,7 @@ const OriginWeb3View = React.forwardRef(({ onMessage, ...props }, ref) => {
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 }
     )
   }
-  
+
   const onWebViewMessage = async event => {
     let msgData
     try {

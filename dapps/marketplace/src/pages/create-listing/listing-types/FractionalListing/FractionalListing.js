@@ -10,7 +10,7 @@ import Images from '../../Images'
 import Review from './Review'
 
 const FractionalListing = props => {
-  const isHausing = props.listing.subCategory === 'schema.housing' 
+  const isHausing = props.listing.subCategory === 'schema.housing'
 
   const steps = [
     { step: 1, component: TitleDescription, require: 'subCategory' },
@@ -24,18 +24,22 @@ const FractionalListing = props => {
   ]
   if (isHausing) {
     steps.push({ step: 4, component: Location, path: 'location' })
-    steps.push({ step: 5, component: LocationObfuscation, path: 'locationObfuscate' })
+    steps.push({
+      step: 5,
+      component: LocationObfuscation,
+      path: 'locationObfuscate'
+    })
   }
 
-  steps.push({ step: isHausing ? 6 : 4, component: Images, path: 'images', require: 'price' })
+  steps.push({
+    step: isHausing ? 6 : 4,
+    component: Images,
+    path: 'images',
+    require: 'price'
+  })
   steps.push({ step: isHausing ? 7 : 5, component: Review, path: 'review' })
 
-  return (
-    <Steps
-      {...props}
-      steps={steps}
-    />
-  )
+  return <Steps {...props} steps={steps} />
 }
 
 export default FractionalListing
