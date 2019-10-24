@@ -171,12 +171,17 @@ class BalanceCard extends Component {
             </div>
           </div>
           <div className="row">
-            <div className="col-12 col-lg-4 col-xl-2">
-              <Doughnut
-                data={this.doughnutData}
-                options={{ cutoutPercentage: 60 }}
-                legend={{ display: false }}
-              />
+            <div
+              className="col-12 col-lg-4 col-xl-1 mb-3 mb-lg-0"
+              style={{ minWidth: '200px' }}
+            >
+              <div style={{ position: 'relative', height: '100%' }}>
+                <Doughnut
+                  data={this.doughnutData}
+                  options={{ cutoutPercentage: 60 }}
+                  legend={{ display: false }}
+                />
+              </div>
             </div>
             <div className="col" style={{ alignSelf: 'center' }}>
               <div className="row mb-2" style={{ fontSize: '24px' }}>

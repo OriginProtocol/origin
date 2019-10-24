@@ -57,7 +57,7 @@ body {
 h1 {
   font-size: 30px;
   font-weight: bold;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
 h2 {
@@ -348,7 +348,7 @@ input, select {
 .btn.btn-lg {
   font-weight: 800;
   border-radius: 2rem;
-  padding: 0.75rem 3rem;
+  padding: 0.5rem 3rem;
   min-width: 10rem;
   font-size: 20px;
 }
