@@ -63,6 +63,8 @@
     "react-apollo": "^3.0.0",
     "react-autosize-textarea": "^7.0.0",
     "react-dom": "^16.8.6",
+    "react-geocode": "^0.2.0",
+    "react-google-maps": "^9.4.5",
     "react-image-crop": "^6.0.18",
     "react-linkify": "^0.2.2",
     "react-popper-tooltip": "^2.8.3",

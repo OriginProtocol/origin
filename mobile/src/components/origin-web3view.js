@@ -6,13 +6,14 @@
 
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { Modal, StyleSheet } from 'react-native'
+import { Modal, StyleSheet, PermissionsAndroid, Platform } from 'react-native'
 import { ethers } from 'ethers'
 import { WebView } from 'react-native-webview'
 import SafeAreaView from 'react-native-safe-area-view'
 import PushNotification from 'react-native-push-notification'
 import RNSamsungBKS from 'react-native-samsung-bks'
 import * as Sentry from '@sentry/react-native'
+import Geolocation from 'react-native-geolocation-service';
 
 import { decodeTransaction } from 'utils/contractDecoder'
 import { isValidMetaTransaction } from 'utils'
@@ -273,6 +274,64 @@ const OriginWeb3View = React.forwardRef(({ onMessage, ...props }, ref) => {
     )
   }
 
+  async function requestLocationPermission() {
+    if (Platform.OS === 'ios') {
+      Geolocation.setRNConfiguration({
+        authorizationLevel: 'whenInUse'
+      })
+
+      Geolocation.requestAuthorization()
+      // IOS permission request does not offer a callback :/
+      return null
+    } else if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+        )
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          return true
+        } else {
+          return false
+        }
+      } catch (err) {
+        console.warn(err.message)
+        return false
+      }
+    }
+  }
+
+  async function getCurrentPosition(callback) {
+    const hasLocationPermission = await requestLocationPermission()
+    /* This will only be fired on Android. On Apple we can not detect when/if a 
+     * location permission has been granted or denied. For that reason after a 
+     * predefined period we just timeout.
+     */ 
+    if (hasLocationPermission === false) {
+      callback({
+        locationAvailable: false,
+        error: 'Can not obtain location permission'
+      })
+      return
+    }
+
+    Geolocation.getCurrentPosition(
+      (position) => {
+        callback({
+          locationAvailable: true,
+          position
+        })
+      },
+      (error) => {
+        callback({
+          locationAvailable: false,
+          error: error.message,
+          errorCode: error.code
+        })
+      },
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 }
+    )
+  }
+  
   const onWebViewMessage = async event => {
     let msgData
     try {
@@ -300,6 +359,8 @@ const OriginWeb3View = React.forwardRef(({ onMessage, ...props }, ref) => {
       onSignPersonalMessage(callback, msgData)
     } else if (msgData.targetFunc === 'processTransaction') {
       onWeb3Call(callback, msgData)
+    } else if (msgData.targetFunc === 'getCurrentPosition') {
+      getCurrentPosition(callback)
     }
   }
 

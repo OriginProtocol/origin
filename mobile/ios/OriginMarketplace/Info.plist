@@ -48,7 +48,7 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>We will not be using the location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We will not be using the location</string>
+	<string>We would like to determine listing&apos;s location. </string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We will not be using microphone</string>
 	<key>NSContactsUsageDescription</key>

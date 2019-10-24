@@ -8,9 +8,10 @@ import cost from '../_gasCost'
 
 export function listingInputToIPFS(data, unitData, fractionalData) {
   const listingType = fractionalData ? 'fractional' : 'unit'
+  const listingSchema = 'https://schema.originprotocol.com/listing_3.0.0.json'
   const ipfsData = {
     __typename: data.typename || 'UnitListing',
-    schemaId: 'https://schema.originprotocol.com/listing_2.0.0.json',
+    schemaId: listingSchema,
     listingType,
     category: data.category || '',
     subCategory: data.subCategory || '',
@@ -19,6 +20,7 @@ export function listingInputToIPFS(data, unitData, fractionalData) {
     description: data.description,
     media: data.media,
     price: data.price,
+    location: data.location,
     acceptedTokens: data.acceptedTokens || [
       'token-ETH',
       'token-DAI',
@@ -60,7 +62,7 @@ export function listingInputToIPFS(data, unitData, fractionalData) {
     ipfsData.unitsTotal = 1
   }
 
-  validator('https://schema.originprotocol.com/listing_2.0.0.json', ipfsData)
+  validator(listingSchema, ipfsData)
   return ipfsData
 }
 
@@ -69,8 +71,10 @@ async function createListing(_, input) {
   const from = input.from || contracts.defaultMobileAccount
   await checkMetaMask(from)
 
+  console.log("LISTING DATA: ", data)
   const ipfsData = listingInputToIPFS(data, unitData, fractionalData)
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
+  console.log("IPFS DATA: ", ipfsData)
 
   let tx
   const deposit = contracts.web3.utils.toWei(String(input.deposit), 'ether')
