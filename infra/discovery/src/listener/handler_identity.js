@@ -1,56 +1,30 @@
-const Sequelize = require('sequelize')
+const get = require('lodash/get')
 const Web3 = require('web3')
-const logger = require('./logger')
 
-const { bytes32ToIpfsHash } = require('./utils')
-const db = {
-  ...require('@origin/identity/src/models'),
-  ...require('../models')
-}
+const originIpfs = require('@origin/ipfs')
+const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
+const {
+  convertLegacyAvatar,
+  loadAttestationMetadata,
+  recordGrowthAttestationEvents,
+  recordGrowthProfileEvent,
+  saveIdentity,
+  validateIdentityIpfsData
+} = require('@origin/identity/src/utils')
+
+const logger = require('./logger')
 const identityQuery = require('./queries/Identity')
 
-const siteNameToService = {
-  'airbnb.com': 'airbnb',
-  'facebook.com': 'facebook',
-  'github.com': 'github',
-  'google.com': 'google',
-  'kakao.com': 'kakao',
-  'linkedin.com': 'linkedin',
-  'twitter.com': 'twitter',
-  'wechat.com': 'wechat',
-  'telegram.com': 'telegram'
-}
-
 class IdentityEventHandler {
-  constructor(config, graphqlClient) {
-    this.config = config
+  constructor(context, graphqlClient) {
+    this.config = context.config
+    this.ipfsGateway = context.contracts.ipfsGateway
     this.graphqlClient = graphqlClient
   }
 
-  /*
-   *
-   */
-  _getAttestationService(attestation) {
-    if (attestation.data.attestation.site) {
-      const siteName = attestation.data.attestation.site.siteName
-      const service = siteNameToService[siteName]
-      if (!service) {
-        logger.error(`Unexpected siteName for attestation ${attestation}`)
-      }
-      return service
-    } else if (attestation.data.attestation.phone) {
-      return 'phone'
-    } else if (attestation.data.attestation.email) {
-      return 'email'
-    } else if (attestation.data.attestation.domain) {
-      return 'website'
-    } else {
-      logger.error(`Failed extracting service from attestation ${attestation}`)
-    }
-  }
-
   /**
-   * Get details about an account from @origin/graphql
+   * Queries graphQL to get information about an account.
+   *
    * @param {String} account: eth address of account
    * @returns {Object} result of GraphQL query
    * @private
@@ -69,163 +43,129 @@ class IdentityEventHandler {
       logger.error(error)
       return null
     }
-
     return result.data.web3.account.identity
   }
 
   /**
-   * Loads the most recent attestation.
-   * @param {Array<string>} addresses: Lower cased eth addresses
-   * @param {string || null} method: Optional attestation method
-   * @returns {Promise<Model<Attestation> || null>}
-   * @private
-   */
-  async _loadMostRecentAttestation(addresses, method) {
-    const where = { ethAddress: { [Sequelize.Op.in]: addresses } }
-    if (method) {
-      where.method = method
-    }
-    return await db.Attestation.findOne({
-      where,
-      order: [['id', 'DESC']],
-      limit: 1
-    })
-  }
-
-  /**
-   * Loads attestation data such as email, phone, etc... from the attestation table.
-   * @param {Array<string>} addresses
-   * @param {string} method - 'EMAIL', 'PHONE', etc...
-   * @returns {Promise<string|null>}
-   * @private
-   */
-  async _loadValueFromAttestation(addresses, method) {
-    // Loads the most recent value.
-    const attestation = await this._loadMostRecentAttestation(addresses, method)
-    if (!attestation) {
-      logger.warn(`Could not find ${method} attestation for ${addresses}`)
-      return null
-    }
-    return attestation.value
-  }
-
-  /**
-   * Decorates an identity object with attestation data.
-   * @param {{}} identity - result of identityQuery
+   * Loads an identity's JSON blob from IPFS and validates it.
+   * Throws an exception in case of failure.
+   *
+   * @param ipfsHash
    * @returns {Promise<Object>}
    * @private
    */
-  async _loadAttestationMetadata(identity) {
-    // Collect owner and proxy addresses for the identity.
+  async _loadAndValidateIpfsIdentity(ipfsHash) {
+    // Load the identity blob from IPFS.
+    const ipfsData = await originIpfs.get(this.ipfsGateway, ipfsHash, 5000)
+    // Validate the data.
+    validateIdentityIpfsData(ipfsData)
+    return ipfsData
+  }
+
+  /**
+   * Helper function for loading owner and proxy addresses.
+   * Returns lower cased addresses.
+   *
+   * @param {string} account: Can be either an owner or proxy address.
+   * @returns {Promise<{owner: string, proxy: string, addresses: Array<string>}>}
+   * @private
+   */
+  async _getAccountInfo(account) {
+    const identity = await this._getIdentityDetails(account)
+
+    // Collect owner address and the optional proxy address for the identity.
     const owner = identity.owner.id.toLowerCase()
-    const proxy = identity.owner.proxy
-      ? identity.owner.proxy.id.toLowerCase()
-      : null
+    const proxy =
+      identity.owner.proxy && identity.owner.proxy.id !== owner
+        ? identity.owner.proxy.id.toLowerCase()
+        : null
+
     const addresses = [owner]
-    if (proxy && proxy !== owner) {
-      addresses.push(proxy)
-    }
+    if (proxy) addresses.push(proxy)
 
-    // Load extra metadata such as social IDs from the attestation DB table.
-    const attestations = identity.attestations.map(a => JSON.parse(a))
-    return loadIdentityAttestationsMetadata(addresses, attestations)
-  }
-
-  /**
-   * Indexes an identity in the DB.
-   * @param {Object} identity: result of identityQuery
-   * @param {{blockNumber: number, logIndex: number}} blockInfo
-   * @returns {Promise<Object>}
-   * @private
-   */
-  async _indexIdentity(identity, blockInfo) {
-    logger.info(`Indexing identity ${identity.id} in DB`)
-
-    if (!Web3.utils.isAddress(identity.id)) {
-      throw new Error(`Invalid eth address: ${identity.id}`)
-    }
-
-    // Construct a decoratedIdentity object based on the user's profile
-    // and data loaded from the attestation table.
-    // The identity is recorded under the user's wallet address (aka "owner")
-    const metadata = await this._loadAttestationMetadata(identity)
-    const identityRow = {
-      ethAddress: identity.owner.id.toLowerCase(),
-      ...metadata,
-      data: { blockInfo }
-    }
-
-    logger.debug('Identity=', identityRow)
-    await db.Identity.upsert(identityRow)
-
-    return Object.assign({}, identity, metadata)
+    return { owner, proxy, addresses }
   }
 
   /**
    * Main entry point for the identity event handler.
    * @param {Object} block
    * @param {Object} event
-   * @returns {Promise<{user: User}>}
+   * @returns {Promise<{identity: Object}>}
    */
   async process(block, event) {
     if (!this.config.identity) {
       return null
     }
+    const eventId = `${event.blockNumber}:${event.transactionIndex}`
+    logger.debug(`Identity handler processing event ${eventId}`)
 
-    // Skip malformed event.
-    // See https://github.com/OriginProtocol/origin/issues/3581
-    if (event.blockNumber === 8646689 && event.transactionIndex === 97) {
-      logger.warn(
-        'Skipping malformed event blockNumber=8646689 transactionIndex=97'
-      )
+    const account = get(event, 'returnValues.account')
+    let ipfsHash = get(event, 'returnValues.ipfsHash')
+
+    if (!account || !Web3.utils.isAddress(account)) {
+      logger.error(`Skipping event with invalid account: ${eventId}`)
+      return null
+    }
+    if (!ipfsHash) {
+      logger.error(`Skipping event with no IPFS hash ${eventId}`)
+      return null
+    }
+    logger.info(`Identity account ${account}, hash ${ipfsHash}`)
+
+    // Load the identity JSON data from IPFS.
+    let ipfsData
+    try {
+      ipfsHash = originIpfs.getIpfsHashFromBytes32(ipfsHash)
+      ipfsData = await this._loadAndValidateIpfsIdentity(ipfsHash)
+    } catch (err) {
+      logger.error(`Failed loading IPFS data for hash ${ipfsHash}:`, err)
       return null
     }
 
-    const account = event.returnValues.account
-
-    logger.info(`Processing Identity event for account ${account}`)
-
-    const idWithBlock = account + '-' + event.blockNumber
-    const identity = await this._getIdentityDetails(idWithBlock)
-
-    // Avatar can be large binary data. Clip it for logging purposes.
-    if (identity.avatar) {
-      identity.avatar = identity.avatar.slice(0, 32) + '...'
+    // Some legacy identities were storing the avatar picture
+    // as data URI in the profile data. Convert those to the new format
+    // where the avatar picture is stored as a separate IPFS blob.
+    if (ipfsData.profile.avatar && ipfsData.profile.avatar.length > 0) {
+      logger.debug('Converting to new style avatar.')
+      await convertLegacyAvatar(this.ipfsGateway, ipfsData)
     }
 
-    if (event.returnValues.ipfsHash) {
-      if (event.returnValues.ipfsHash !== identity.ipfsHash) {
-        /**
-         * GraphQL and the listener use two different instances of contracts,
-         * with two different instances of EventCache.  It's possible, this is
-         * also a JSON-RPC node sync issue...  They also use two different
-         * EC queries (allEvents() vs getEvents({ account: '0x...' })), which
-         * has a slight chance of causing this.  Be on the lookout for the
-         * following log message:
-         */
-        logger.warn(
-          `GraphQL IPFS hash does not match event IPFS hash. This is probably \
-           a bug! (event: ${event.returnValues.ipfsHash}, GraphQL: \
-           ${identity.ipfsHash}`
-        )
-      }
-      identity.ipfsHash = bytes32ToIpfsHash(event.returnValues.ipfsHash)
-    }
+    // Get the account's addresses.
+    const accountInfo = await this._getAccountInfo(account)
 
-    const blockInfo = {
-      blockNumber: event.blockNumber,
-      logIndex: event.logIndex
-    }
-    const blockDate = new Date(block.timestamp * 1000)
+    // Load attestation data from the DB.
+    const metadata = await loadAttestationMetadata(
+      accountInfo.addresses,
+      ipfsData.attestations
+    )
 
-    const decoratedIdentity = await this._indexIdentity(identity, blockInfo)
+    // Save the identity in the DB.
+    const identity = await saveIdentity(
+      accountInfo.owner,
+      ipfsHash,
+      ipfsData,
+      metadata
+    )
+    logger.debug('Wrote identity:', identity)
 
+    // Insert growth events using the blockchain date as timestamp.
     if (this.config.growth) {
-      await this._recordGrowthProfileEvent(identity, blockInfo, blockDate)
-      await this._recordGrowthAttestationEvents(identity, blockInfo, blockDate)
+      const blockDate = new Date(block.timestamp * 1000)
+      await recordGrowthProfileEvent(
+        accountInfo.owner,
+        identity,
+        blockDate,
+        GrowthEvent
+      )
+      await recordGrowthAttestationEvents(
+        accountInfo.owner,
+        ipfsData.attestations,
+        blockDate,
+        GrowthEvent
+      )
     }
 
-    return { identity: decoratedIdentity }
+    return { identity }
   }
 
   // Do not call the notification webhook for identity events.
