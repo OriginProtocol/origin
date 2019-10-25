@@ -1,4 +1,5 @@
 import get from 'lodash/get'
+const localStorageHas = require('./_localStorageHas')
 
 let addresses = {}
 try {
@@ -38,7 +39,6 @@ const config = {
     `http://${DISCOVERY_HOST}:4000/graphql`
   ),
   notifications: `http://${NOTIFICATIONS_HOST}:3456`,
-  performanceMode: false,
   graphql: `http://${GRAPHQL_HOST}:4002`,
   automine: 2000,
   attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
@@ -59,7 +59,11 @@ const config = {
   ProxyFactory: addresses.ProxyFactory,
   ProxyFactory_Epoch: addresses.ProxyFactoryEpoch,
   IdentityProxyImplementation: addresses.IdentityProxyImplementation,
-  tokens: []
+  tokens: [],
+
+  // Wire-on/off configs.
+  centralizedIdentityEnabled: localStorageHas('centralizedIdentityEnabled', true),
+  performanceMode: false,
 }
 
 if (addresses.DAI) {

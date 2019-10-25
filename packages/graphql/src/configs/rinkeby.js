@@ -57,7 +57,8 @@ export default {
   arbitrator: '0xc9c1a92ba54c61045ebf566b154dfd6afedea992',
   messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
 
-  // Configs
+  // Wire-on/off configs.
+  centralizedIdentityEnabled: true,
   performanceMode: true,
   proxyAccountsEnabled: true,
   relayerEnabled: true

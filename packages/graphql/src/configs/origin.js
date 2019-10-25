@@ -46,8 +46,9 @@ export default {
   arbitrator: addresses.Arbitrator,
   messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
 
-  // Configs
-  performanceMode: localStorageHas('performanceMode', 'true'),
+  // Wire-on/off configs.
+  centralizedIdentityEnabled: true,
+  performanceMode: true,
   proxyAccountsEnabled: true,
   relayerEnabled: true
 }

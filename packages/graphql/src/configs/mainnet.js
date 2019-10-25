@@ -80,7 +80,8 @@ export default {
   attestationIssuer: '0x8EAbA82d8D1046E4F242D4501aeBB1a6d4b5C4Aa',
   messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
 
-  // Configs
+  // Wire-on/off configs.
+  centralizedIdentityEnabled: false,
   performanceMode: true,
   proxyAccountsEnabled: true,
   relayerEnabled: true

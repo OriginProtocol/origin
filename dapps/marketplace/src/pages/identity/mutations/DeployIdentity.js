@@ -141,16 +141,10 @@ class DeployIdentity extends Component {
       </div>
     )
 
-    // TODO: add that env var to webpack/config.
-    if (process.env.CENTRALIZED_IDENTITY_ENABLED === 'true') {
+    if (process.env.ENABLE_CENTRALIZED_IDENTITY === 'true') {
       console.log(
         '###### DeployIdentity.js::renderWaitModal::CentralizedIdentity code'
       )
-      //if (this.props.onComplete) {
-      //  console.log('###### DeployIdentity.js::renderWaitModal::CentralizedIdentity call onComplete')
-      //  this.props.onComplete()
-      // }
-      ///this.setState({ waitFor: false, error: false, shouldClose: false })
       return content
     }
 

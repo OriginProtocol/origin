@@ -234,6 +234,14 @@ const DappInfo = () => {
                       <td>{process.env.DOCKER}</td>
                     </tr>
                     <tr>
+                      <th>ENABLE_CENTRALIZED_IDENTITY</th>
+                      <td>{process.env.ENABLE_CENTRALIZED_IDENTITY}</td>
+                    </tr>
+                    <tr>
+                      <th>ENABLE_WECHAT_ATTESTATION</th>
+                      <td>{process.env.ENABLE_WECHAT_ATTESTATION}</td>
+                    </tr>
+                    <tr>
                       <th>HOST</th>
                       <td>{process.env.HOST}</td>
                     </tr>

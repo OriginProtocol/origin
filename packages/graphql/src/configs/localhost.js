@@ -19,10 +19,9 @@ const config = {
   bridge: 'http://localhost:5000',
   // discovery: `http://${HOST}:4000/graphql`,
   notifications: `http://${HOST}:3456`,
-  growth: localStorageHas('localGrowthServer', 'true')
+  growth: localStorageHas('localGrowthServer', true)
     ? 'http://localhost:4008'
     : null,
-  performanceMode: localStorageHas('performanceMode', 'true'),
   graphql: `http://${HOST}:4007`,
   automine: 2000,
   attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
@@ -39,15 +38,18 @@ const config = {
   ProxyFactory: addresses.ProxyFactory,
   ProxyFactory_Epoch: addresses.ProxyFactoryEpoch,
   IdentityProxyImplementation: addresses.IdentityProxyImplementation,
-  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled', 'true'),
-  relayerEnabled: localStorageHas('relayerEnabled', 'true'),
   tokens: [],
-
   messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
   messaging: {
     messagingNamespace: 'origin',
     globalKeyServer: 'http://localhost:6647'
-  }
+  },
+
+  // Wire-on/off configs.
+  centralizedIdentityEnabled: localStorageHas('centralizedIdentityEnabled', true),
+  performanceMode: localStorageHas('performanceMode', true),
+  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled', true),
+  relayerEnabled: localStorageHas('relayerEnabled', true)
 }
 
 if (addresses.DAI) {
