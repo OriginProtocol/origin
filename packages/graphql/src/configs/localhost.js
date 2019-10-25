@@ -46,7 +46,9 @@ const config = {
   messaging: {
     messagingNamespace: 'origin',
     globalKeyServer: 'http://localhost:6647'
-  }
+  },
+
+  authServer: `http://${HOST}:5200`
 }
 
 if (addresses.DAI) {

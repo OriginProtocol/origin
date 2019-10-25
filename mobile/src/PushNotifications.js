@@ -7,16 +7,21 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios'
 import * as Sentry from '@sentry/react-native'
 import { connect } from 'react-redux'
 import get from 'lodash.get'
+import { ethers } from 'ethers'
+import stringify from 'json-stable-stringify'
 
 import { addNotification } from 'actions/Notification'
 import { setDeviceToken, setNetwork } from 'actions/Settings'
 import {
   DEFAULT_NOTIFICATION_PERMISSIONS,
   ETH_NOTIFICATION_TYPES,
-  NETWORKS
+  NETWORKS,
+  AUTH_MESSAGE
 } from './constants'
 import NavigationService from './NavigationService'
 import withConfig from 'hoc/withConfig'
+
+import AuthClient from '@origin/auth-client/src/auth-client'
 
 class PushNotifications extends Component {
   constructor(props) {
@@ -36,18 +41,18 @@ class PushNotifications extends Component {
 
     PushNotification.configure({
       // Called when Token is generated (iOS and Android) (optional)
-      onRegister: function(deviceToken) {
+      onRegister: deviceToken => {
         // Save the device token into redux for later use with other accounts
         this.props.setDeviceToken(deviceToken['token'])
-      }.bind(this),
+      },
       // Called when a remote or local notification is opened or received
-      onNotification: function(notification) {
+      onNotification: notification => {
         this.onNotification(notification)
         // https://facebook.github.io/react-native/docs/pushnotificationios.html
         if (Platform.OS === 'ios') {
           notification.finish(PushNotificationIOS.FetchResult.NoData)
         }
-      }.bind(this),
+      },
       // Android only
       senderID: '162663374736',
       // iOS only
@@ -117,7 +122,7 @@ class PushNotifications extends Component {
     //  - Change of device token
     //  - Change of network (due to different notifications server)
 
-    const registerConditions = [
+    const shouldRegister = [
       // Change of active account
       get(prevProps, 'wallet.activeAccount.address') !==
         get(this.props, 'wallet.activeAccount.address'),
@@ -128,10 +133,11 @@ class PushNotifications extends Component {
       get(prevProps.config, 'notifications') !==
         get(this.props.config, 'notifications')
     ]
+    .some(constraint => constraint)
 
     // Trigger a register query to notifications server if any of the above
     // conditions are true
-    if (registerConditions.includes(true)) {
+    if (shouldRegister) {
       console.debug('Registering with notifications server')
       await this.register()
     }
@@ -232,7 +238,8 @@ class PushNotifications extends Component {
         method: 'POST',
         headers: {
           Accept: 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${await this.getAuthToken()}`
         },
         body: JSON.stringify(data)
       }).catch(error => {
@@ -262,7 +269,8 @@ class PushNotifications extends Component {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${await this.getAuthToken()}`
       },
       body: JSON.stringify(data)
     }).catch(error => {
@@ -288,6 +296,61 @@ class PushNotifications extends Component {
     } else if (Platform.OS === 'android') {
       return ETH_NOTIFICATION_TYPES.FCM
     }
+  }
+
+  /**
+   * Generates and returns an auth token
+   */
+  async getAuthToken() {
+    const { wallet } = this.props
+
+    // No active account, can't proceed
+    if (!wallet || !wallet.activeAccount) {
+      console.debug('Cannot generate auth token, no active account')
+      return
+    }
+
+    // No private key (Samsung BKS account), can't proceed
+    if (wallet.activeAccount.hdPath) {
+      console.debug('Cannot generate auth token for Samsung BKS account')
+      return
+    }
+
+    const { privateKey, mnemonic } = wallet.activeAccount
+
+    let ethersWallet
+    if (privateKey) {
+      ethersWallet = new ethers.Wallet(privateKey)
+    } else {
+      ethersWallet = new ethers.Wallet.fromMnemonic(mnemonic)
+    }
+
+    const message = AUTH_MESSAGE
+    const payload = {
+      message,
+      timestamp: Date.now()
+    }
+
+    const signature = await ethersWallet.signMessage(stringify(payload))
+
+    const authClient = new AuthClient({
+      authServer: this.props.config.authServer || 'https://auth.originprotocol.com',
+      activeWallet: ethAddress,
+      disablePersistence: true
+    })
+
+    try {
+      const tokenData = await authClient.getTokenWithSignature(signature, payload)
+
+      return tokenData.authToken
+    } catch (err) {
+      Sentry.captureException(error)
+      console.warn(
+        'Failed to generate auth token',
+        error
+      )
+    }
+    return null
   }
 
   render() {

@@ -23,6 +23,7 @@ const DISCOVERY_HOST = HOST || 'discovery'
 const NOTIFICATIONS_HOST = HOST || 'notifications'
 const GRAPHQL_HOST = HOST || 'graphql'
 const MESSAGING_HOST = HOST || 'messaging'
+const AUTH_SERVER_HOST = HOST || 'auth'
 
 const config = {
   networkId: 999,
@@ -46,6 +47,8 @@ const config = {
     messagingNamespace: 'origin:docker',
     globalKeyServer: `http://${MESSAGING_HOST}:6647`
   },
+
+  authServer: `http://${AUTH_SERVER_HOST}:5200`,
 
   affiliate: addresses.Affiliate,
   arbitrator: addresses.Arbitrator,
