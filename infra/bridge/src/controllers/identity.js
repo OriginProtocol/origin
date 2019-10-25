@@ -156,8 +156,8 @@ router.get('/list', identityListVerify, async (req, res) => {
   const identities = rows.map(row => {
     return {
       ethAddress: row.ethAddress,
-      identity: row.data.identity,
-      ipfsHash: row.data.ipfsHash
+      identity: get(row, 'data.identity'),
+      ipfsHash: get(row, 'data.ipfsHash')
     }
   })
 
