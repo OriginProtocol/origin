@@ -153,7 +153,7 @@ const EnableMessagingModal = () => {
   })
 
   useSubscription(MessagingStatusChangeSubscription, {
-    onSubscriptionData: () => networkStatus !== 1 && refetch()
+    onSubscriptionData: () => refetch()
   })
 
   if (networkStatus === 1) {
