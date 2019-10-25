@@ -131,10 +131,12 @@ const DappInfo = () => {
                   <tbody>
                     {dataTr({ key: 'network', value: data.config })}
                     {Object.entries(data.configObj).map(entry => {
-                      const [key, value] = entry
-                      if (key == '__typename') {
+                      const [key, val] = entry
+                      if (key === '__typename') {
                         return
                       }
+                      const value =
+                        typeof val === 'object' ? JSON.stringify(val) : val
                       return dataTr({ key, value })
                     })}
                   </tbody>
