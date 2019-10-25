@@ -131,15 +131,13 @@ const DappInfo = () => {
                   <tbody>
                     {dataTr({ key: 'network', value: data.config })}
                     {Object.entries(data.configObj).map(entry => {
-                      const [key, value] = entry
-                      if (key == '__typename') {
+                      const [key, val] = entry
+                      if (key === '__typename') {
                         return
                       }
+                      const value =
+                        typeof val === 'object' ? JSON.stringify(val) : val
                       return dataTr({ key, value })
-                    })}
-                    {dataTr({
-                      key: 'Growth Enabled',
-                      value: process.env.ENABLE_GROWTH
                     })}
                   </tbody>
                 </table>
@@ -236,16 +234,8 @@ const DappInfo = () => {
                       <td>{process.env.DOCKER}</td>
                     </tr>
                     <tr>
-                      <th>ENABLE_GROWTH</th>
-                      <td>{process.env.ENABLE_GROWTH}</td>
-                    </tr>
-                    <tr>
                       <th>HOST</th>
                       <td>{process.env.HOST}</td>
-                    </tr>
-                    <tr>
-                      <th>ORIGIN_LINKING</th>
-                      <td>{process.env.ORIGIN_LINKING}</td>
                     </tr>
                   </tbody>
                 </table>
