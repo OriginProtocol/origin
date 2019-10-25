@@ -148,6 +148,12 @@ class Messaging {
   async onPreGenKeys({ address, signatureKey, pubMessage, pubSignature }) {
     debug('onPreGenKeys')
     const accounts = await this.web3.eth.getAccounts()
+
+    if (!this.account_key) {
+      // Initialize if not done already
+      await this.init(accounts[0])
+    }
+
     if (address === accounts[0]) {
       this.currentStorage = sessionStorage
       this.setKeyItem(`${MESSAGING_KEY}:${address}`, signatureKey)
@@ -157,7 +163,7 @@ class Messaging {
       this.pub_sig = pubSignature
       this.pub_msg = pubMessage
 
-      if (address == this.account_key) {
+      if (address === this.account_key) {
         this.startConversing()
         // On mobile, messaging is always enabled, if there is a wallet
         await this.publishStatus('ready')
@@ -682,30 +688,18 @@ class Messaging {
   }
 
   /**
-   * Pushes an event to the messages
-   * @param {Object} entry Message received from socket
-   */
-  async onMarketplaceEventUpdate(entry) {
-    debug('Received event update', entry)
-    // TODO
-    console.log('Received event update', entry)
-  }
-
-  /**
    * Parses the update from socket server and invokes corresponding callbacks
    * @param {Object} entry Message from socket server
    */
   onMessageUpdate(entry) {
     debug('we got a new message entry:', entry)
     switch (entry.type) {
+      case 'MARKETPLACE_EVENT':
       case 'NEW_MESSAGE':
         this.onNewMessageUpdate(entry)
         break
       case 'MARKED_AS_READ':
         this.onMarkedAsReadUpdate(entry)
-        break
-      case 'MARKETPLACE_EVENT':
-        this.onMarketplaceEventUpdate(entry)
         break
       default:
         debug('dropping update')
