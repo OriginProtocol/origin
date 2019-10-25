@@ -6,9 +6,9 @@ const WithdrawalHistoryCard = props => {
   return (
     <BorderedCard shadowed={true}>
       <div className="row">
-        <div className="col">
+        <div className="col mb-2" style={{ fontSize: '18px' }}>
           Available Balance{' '}
-          <strong className="ml-2">
+          <strong className="ml-1">
             {props.isLocked
               ? 0
               : Number(
@@ -22,20 +22,19 @@ const WithdrawalHistoryCard = props => {
       </div>
       <div className="row">
         <div className="col-12 col-md-4">
-          <small className="text-muted">
-            Total Withdrawn: {Number(props.withdrawnAmount).toLocaleString()}{' '}
-            OGN
-          </small>
+          <span className="text-muted">
+            Total Withdrawn: {Number(props.withdrawnAmount).toLocaleString()}{' '} OGN
+          </span>
         </div>
         <div className="col-12 col-md-4">
-          <small className="text-muted">
+          <span className="text-muted">
             Unvested: {Number(props.unvestedTotal).toLocaleString()} OGN
-          </small>
+          </span>
         </div>
         <div className="col-12 col-md-4">
-          <small className="text-muted">
+          <span className="text-muted">
             Total Purchase: {Number(props.grantTotal).toLocaleString()} OGN
-          </small>
+          </span>
         </div>
       </div>
     </BorderedCard>

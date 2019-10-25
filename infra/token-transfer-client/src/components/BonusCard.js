@@ -5,7 +5,7 @@ import BorderedCard from '@/components/BorderedCard'
 import Lock from '-!react-svg-loader!@/assets/lock-icon.svg'
 import LockupGraph from './LockupGraph'
 
-const BonusCard = ({ lockups }) => {
+const BonusCard = ({ earnings, locked, lockups }) => {
   const renderLockupGraphs = lockups => {
     return lockups.slice(0, 3).map(lockup => {
       return (
@@ -28,12 +28,12 @@ const BonusCard = ({ lockups }) => {
       </div>
       <div className="row mb-4">
         <div className="col">
-          <strong style={{ fontSize: '24px' }}>0</strong>{' '}
+          <strong style={{ fontSize: '24px' }}>{earnings.toLocaleString()}</strong>{' '}
           <span className="ml-1 ogn">OGN</span>
           <div>Earned</div>
         </div>
         <div className="col">
-          <strong style={{ fontSize: '24px' }}>0</strong>{' '}
+          <strong style={{ fontSize: '24px' }}>{locked.toLocaleString()}</strong>{' '}
           <span className="ml-1 ogn">OGN</span>
           <div>Locked up</div>
         </div>
