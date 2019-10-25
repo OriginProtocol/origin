@@ -32,7 +32,7 @@ import NewsHeadlinesCard from '@/components/NewsHeadlinesCard'
 import VestingCard from '@/components/VestingCard'
 import GrantDetailCard from '@/components/GrantDetailCard'
 import WithdrawalSummaryCard from '@/components/WithdrawalSummaryCard'
-import EarnCard from '@/components/EarnCard'
+import BonusCard from '@/components/BonusCard'
 
 const Dashboard = props => {
   useEffect(() => {
@@ -88,7 +88,7 @@ const Dashboard = props => {
             withdrawnAmount={props.withdrawnAmount}
           />
           <div className="mt-4">
-            <EarnCard />
+            <BonusCard lockups={props.lockups} />
           </div>
         </div>
       </div>

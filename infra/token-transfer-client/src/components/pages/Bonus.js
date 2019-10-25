@@ -27,7 +27,13 @@ const BonusTokens = props => {
   // const isLocked = moment.utc() < unlockDate
 
   const renderLockups = lockups => {
-    return lockups.map(lockup => <LockupCard key={lockup.id} lockup={lockup} />)
+    return lockups.map(lockup => {
+      return (
+        <div key={lockup.id} className="mb-3">
+          <LockupCard lockup={lockup} />
+        </div>
+      )
+    })
   }
 
   return (

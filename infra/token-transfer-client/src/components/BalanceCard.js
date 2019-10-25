@@ -18,7 +18,7 @@ const BalanceCard = props => {
       labels: ['Available', 'Locked'],
       datasets: [
         {
-          data: [Number(props.balance), 0],
+          data: [Number(props.balance), Number(props.locked)],
           backgroundColor: ['#00db8d', '#007cff'],
           borderWidth: 0
         }
@@ -55,7 +55,7 @@ const BalanceCard = props => {
             className="col-12 col-lg-4 col-xl-1 mb-3 mb-lg-0"
             style={{ minWidth: '200px' }}
           >
-            <div style={{ position: 'relative', height: '100%' }}>
+            <div style={{ position: 'relative' }}>
               <Doughnut
                 data={doughnutData}
                 options={{ cutoutPercentage: 60 }}

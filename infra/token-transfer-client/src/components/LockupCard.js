@@ -5,13 +5,11 @@ import BorderedCard from './BorderedCard'
 import LockupGraph from './LockupGraph'
 
 const LockupCard = ({ lockup }) => {
-  const completePercentage = 10
-
   return (
-    <BorderedCard>
+    <BorderedCard shadowed={true}>
       <div className="row text-center text-lg-left" style={{ alignItems: 'center' }}>
         <div className="mx-auto">
-          <LockupGraph percentage={completePercentage} />
+          <LockupGraph lockup={lockup} />
         </div>
         <div className="col-12 col-lg mb-3 mx-auto">
           <strong style={{ fontSize: '28px' }}>

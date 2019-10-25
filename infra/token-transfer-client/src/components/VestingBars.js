@@ -90,7 +90,7 @@ const VestingBars = props => {
 
   return (
     <div className="mb-5">
-      <h2 style={{ marginBottom: '2.5rem' }}>Vesting Progress</h2>
+      <h2 style={{ marginBottom: '1.5rem' }}>Vesting Progress</h2>
       <div id="vestingBars" style={{ position: 'relative' }}>
         {grants.map(grant => {
           // Calculate the percentage of the grant that is complete with a
@@ -172,7 +172,7 @@ const VestingBars = props => {
           )
         })}
       </div>
-      <div className="row" style={{ marginTop: '4rem' }}>
+      <div className="row" style={{ marginTop: '3rem' }}>
         <div className="col">
           <div className="status-circle status-circle-success mr-2"></div>
           {Number(props.vested).toLocaleString()} OGN{' '}
