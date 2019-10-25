@@ -28,12 +28,16 @@ const BonusCard = ({ earnings, locked, lockups }) => {
       </div>
       <div className="row mb-4">
         <div className="col">
-          <strong style={{ fontSize: '24px' }}>{earnings.toLocaleString()}</strong>{' '}
+          <strong style={{ fontSize: '24px' }}>
+            {earnings.toLocaleString()}
+          </strong>{' '}
           <span className="ml-1 ogn">OGN</span>
           <div>Earned</div>
         </div>
         <div className="col">
-          <strong style={{ fontSize: '24px' }}>{locked.toLocaleString()}</strong>{' '}
+          <strong style={{ fontSize: '24px' }}>
+            {locked.toLocaleString()}
+          </strong>{' '}
           <span className="ml-1 ogn">OGN</span>
           <div>Locked up</div>
         </div>
@@ -47,7 +51,9 @@ const BonusCard = ({ earnings, locked, lockups }) => {
         </div>
       </div>
       <div className="row">
-        {lockups && lockups.length > 0 ? renderLockupGraphs(lockups) : (
+        {lockups && lockups.length > 0 ? (
+          renderLockupGraphs(lockups)
+        ) : (
           <div className="col text-center text-muted p-4">
             <div className="mb-3">
               <Lock className="icon" />

@@ -23,7 +23,8 @@ const WithdrawalHistoryCard = props => {
       <div className="row">
         <div className="col-12 col-md-4">
           <span className="text-muted">
-            Total Withdrawn: {Number(props.withdrawnAmount).toLocaleString()}{' '} OGN
+            Total Withdrawn: {Number(props.withdrawnAmount).toLocaleString()}{' '}
+            OGN
           </span>
         </div>
         <div className="col-12 col-md-4">

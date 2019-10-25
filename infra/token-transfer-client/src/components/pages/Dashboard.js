@@ -88,7 +88,11 @@ const Dashboard = props => {
             withdrawnAmount={props.withdrawnAmount}
           />
           <div className="mt-4">
-            <BonusCard lockups={props.lockups} locked={props.lockupTotals.locked} earnings={props.lockupTotals.earnings}  />
+            <BonusCard
+              lockups={props.lockups}
+              locked={props.lockupTotals.locked}
+              earnings={props.lockupTotals.earnings}
+            />
           </div>
         </div>
       </div>

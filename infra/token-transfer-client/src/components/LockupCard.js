@@ -7,7 +7,10 @@ import LockupGraph from './LockupGraph'
 const LockupCard = ({ lockup }) => {
   return (
     <BorderedCard shadowed={true}>
-      <div className="row text-center text-lg-left" style={{ alignItems: 'center' }}>
+      <div
+        className="row text-center text-lg-left"
+        style={{ alignItems: 'center' }}
+      >
         <div className="mx-auto">
           <LockupGraph lockup={lockup} />
         </div>

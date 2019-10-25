@@ -5,7 +5,6 @@ import { Doughnut } from 'react-chartjs-2'
 import Lock from '-!react-svg-loader!@/assets/lock-icon.svg'
 
 const LockupGraph = ({ lockup }) => {
-
   const totalDuration = moment(lockup.end).diff(moment(lockup.start))
   const remainingDuration = moment(lockup.end).diff(moment.utc())
   const percentage = (1 - remainingDuration / totalDuration) * 100
@@ -37,7 +36,11 @@ const LockupGraph = ({ lockup }) => {
     >
       <Doughnut
         data={doughnutData}
-        options={{ cutoutPercentage: 60, responsive: false, tooltips: { enabled: false } }}
+        options={{
+          cutoutPercentage: 60,
+          responsive: false,
+          tooltips: { enabled: false }
+        }}
         legend={{ display: false }}
         width={93}
         height={93}
