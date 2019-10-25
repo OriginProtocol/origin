@@ -44,14 +44,14 @@ router.post('/', async (req, res) => {
     })
   }
 
-  const authToken = await generateToken({
+  const tokenData = await generateToken({
     address,
     signature,
     payload,
     ip: req.ip
   })
 
-  if (!authToken) {
+  if (!tokenData) {
     return res.status(500).send({
       success: false,
       errors: ['Failed to generate auth token']
@@ -59,8 +59,8 @@ router.post('/', async (req, res) => {
   }
 
   return res.status(201).send({
-    success: true,
-    authToken
+    ...tokenData,
+    success: true
   })
 })
 

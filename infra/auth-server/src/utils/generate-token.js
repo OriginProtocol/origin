@@ -6,8 +6,6 @@ const jwt = require('jsonwebtoken')
 
 const pick = require('lodash/pick')
 
-const verifyToken = require('./verify-token')
-
 const logger = require('../logger')
 
 /**
@@ -15,12 +13,8 @@ const logger = require('../logger')
  * @param {String} token Token whose data to log
  * @param {String} ipAddress IP address to log
  */
-const logTokenData = async (token, ipAddress) => {
+const logTokenData = async ({ ipAddress, ...data }) => {
   try {
-    // Note: Using `verifyToken` instead of directly passing the param here
-    // Otherwise, we would not get the `iat` and `exp` parameters
-    const data = await verifyToken(token, true)
-
     if (!data) {
       throw new Error('Verification failed')
     }
@@ -52,10 +46,19 @@ const generateToken = async params => {
     const authToken = jwt.sign(tokenParams, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRE_IN || '30 days'
     })
+    
+    const decoded = jwt.decode(authToken)
 
-    await logTokenData(authToken, params.ip)
+    await logTokenData({
+      ...decoded,
+      ipAddress: params.ip
+    })
 
-    return authToken
+    return {
+      authToken,
+      expiresAt: decoded.exp,
+      issuedAt: decoded.iat
+    }
   } catch (err) {
     logger.error('Failed to generate token', params, err)
   }
