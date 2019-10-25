@@ -137,10 +137,6 @@ const DappInfo = () => {
                       }
                       return dataTr({ key, value })
                     })}
-                    {dataTr({
-                      key: 'Growth Enabled',
-                      value: process.env.ENABLE_GROWTH
-                    })}
                   </tbody>
                 </table>
               )
@@ -236,16 +232,8 @@ const DappInfo = () => {
                       <td>{process.env.DOCKER}</td>
                     </tr>
                     <tr>
-                      <th>ENABLE_GROWTH</th>
-                      <td>{process.env.ENABLE_GROWTH}</td>
-                    </tr>
-                    <tr>
                       <th>HOST</th>
                       <td>{process.env.HOST}</td>
-                    </tr>
-                    <tr>
-                      <th>ORIGIN_LINKING</th>
-                      <td>{process.env.ORIGIN_LINKING}</td>
                     </tr>
                   </tbody>
                 </table>
