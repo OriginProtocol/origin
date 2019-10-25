@@ -119,10 +119,6 @@ class Messaging {
 
   async publishStatus(newStatus) {
     debug('messaging status change', this._keyStatus, 'to', newStatus)
-    if (newStatus === this._keyStatus) {
-      // Nothing to publish
-      return
-    }
 
     // Set state
     this._keyStatus = newStatus

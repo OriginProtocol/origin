@@ -149,6 +149,7 @@ const EnableMessagingModal = () => {
   const [waitForSignature, setWaitForSign] = useState(false)
 
   const { data, error, networkStatus, refetch } = useQuery(query, {
+    fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true
   })
 
