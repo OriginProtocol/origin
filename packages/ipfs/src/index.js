@@ -78,6 +78,25 @@ async function post(gateway, json, rawHash) {
   }
 }
 
+/**
+ * Posts binary data to IPFS and return the base 58 encoded hash.
+ * Throws in case of an error.
+ *
+ * @param {string} gateway: URL of the IPFS gateway to use.
+ * @param {Buffer} buffer: binary data to upload.
+ * @returns {Promise<{string}>}
+ */
+async function postBinary(gateway, buffer) {
+  const formData = new FormData()
+  formData.append('file', buffer)
+  const rawRes = await fetch(`${gateway}/api/v0/add`, {
+    method: 'POST',
+    body: formData
+  })
+  const res = await rawRes.json()
+  return res.Hash
+}
+
 // async function postEnc(gateway, json, pubKeys) {
 //   const formData = new FormData()
 //
@@ -122,7 +141,7 @@ async function getTextFn(gateway, hashAsBytes, timeoutMS) {
     let didTimeOut = false
     const timeout = setTimeout(() => {
       didTimeOut = true
-      reject()
+      reject('IPFS gateway timeout')
     }, timeoutMS)
     fetch(`${gateway}/ipfs/${hash}`)
       .then(response => {
@@ -131,10 +150,10 @@ async function getTextFn(gateway, hashAsBytes, timeoutMS) {
           resolve(response)
         }
       })
-      .catch(() => {
+      .catch(error => {
         clearTimeout(timeout)
         if (!didTimeOut) {
-          reject()
+          reject(error)
         }
       })
     if (didTimeOut) console.log(`Timeout when fetching ${hash}`)
@@ -167,6 +186,7 @@ module.exports = {
   get,
   getText,
   post,
+  postBinary,
   getBytes32FromIpfsHash,
   getIpfsHashFromBytes32,
   gatewayUrl
