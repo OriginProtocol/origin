@@ -47,6 +47,7 @@ lerna run start:listener:development --prefix infra/discovery --stream
  - `--continue-file=path` Will start following events at the block number defined in the file, and will keep this file updated as it listens to events. The continue file is JSON, in the format `{"lastLogBlock":222, "version":1}`.
  - `--concurrency` Warning: only use concurrency > 1 for backfills. Not under normal operation.
  - `--network` Possible values: origin, rinkeby, mainnet, ..
+ - `--messaging-events` Forward offer events to messaging server
 
 # Env variables
 
@@ -91,3 +92,4 @@ lerna run start:listener:development --scope origin-discovery --stream
 ### Set the discovery server used by the DApp
 
 Open `https://dapp.originprotocol.com/#/settings` and change the discovery server to `https://localhost:4000/graphql`.
+

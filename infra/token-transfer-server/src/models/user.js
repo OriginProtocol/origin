@@ -12,7 +12,9 @@ module.exports = (sequelize, DataTypes) => {
       // OTP secret key, stored encrypted.
       otpKey: DataTypes.STRING,
       otpVerified: DataTypes.BOOLEAN,
-      employee: DataTypes.BOOLEAN
+      employee: DataTypes.BOOLEAN,
+      revisedScheduleAgreedAt: DataTypes.DATE,
+      termsAgreedAt: DataTypes.DATE
     },
     {
       tableName: 't3_user'
@@ -21,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = models => {
     User.hasMany(models.Grant)
+    User.hasMany(models.Lockup)
     User.hasMany(models.Transfer)
   }
 

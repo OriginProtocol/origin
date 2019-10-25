@@ -1,36 +1,34 @@
 import contracts from '../../contracts'
 import { proxyOwner } from '../../utils/proxy'
-import { totalUnread } from './Conversation'
+import { getUnreadCount, isEnabled } from './Conversation'
 
-function isEnabled() {
-  return contracts.messaging.pub_sig &&
-    contracts.messaging.account &&
-    contracts.messaging.account.publicKey
-    ? true
-    : false
-}
-
-async function getMyConvs() {
-  const rawConvos = isEnabled() ? await contracts.messaging.getMyConvs() : {}
-  if (contracts.config.messagingAccount) {
-    rawConvos[contracts.config.messagingAccount] = +new Date()
+async function getConversationIds({ limit, offset }) {
+  if (!isEnabled()) {
+    return contracts.config.messagingAccount
+      ? [{ id: contracts.config.messagingAccount }]
+      : []
   }
-  return rawConvos
-}
 
-async function convosWithSupport() {
-  const rawConvos = await getMyConvs()
-  return Object.keys(rawConvos).map(id => ({
-    id,
-    timestamp: Math.round(rawConvos[id] / 1000)
-  }))
+  const convos = await contracts.messaging.getMyConvs({ limit, offset })
+
+  const hasNotConversedWithSupport =
+    contracts.config.messagingAccount &&
+    !contracts.messaging.hasMoreConversations &&
+    !contracts.messaging.getConvo(contracts.config.messagingAccount)
+
+  if (hasNotConversedWithSupport) {
+    // Push it so that we can inject static messages
+    convos.push(contracts.config.messagingAccount)
+  }
+
+  return convos.map(convId => ({ id: convId }))
 }
 
 let messagingOverride
 
 // We need to do this check inside the resolver function
 export const checkForMessagingOverride = () => {
-  // needed for testing pu
+  // needed for testing
   if (typeof localStorage !== 'undefined' && localStorage.useMessagingObject) {
     messagingOverride = JSON.parse(localStorage.useMessagingObject)
     return messagingOverride
@@ -57,24 +55,35 @@ export default {
   enabled: () => {
     return checkForMessagingOverride() ? messagingOverride.enabled : isEnabled()
   },
-  conversations: () => convosWithSupport(),
-  conversation: (_, args) =>
-    new Promise(async resolve => {
-      const convos = await getMyConvs()
-      if (!convos[args.id]) {
+  isKeysLoading: () => {
+    return checkForMessagingOverride()
+      ? messagingOverride.isKeysLoading
+      : contracts.messaging.isKeysLoading()
+  },
+  conversations: async (_, { limit, offset }) =>
+    await getConversationIds({ limit, offset }),
+  conversation: async (_, args) => {
+    return await new Promise(async resolve => {
+      if (
+        args.id !== contracts.config.messagingAccount &&
+        !(await contracts.messaging.conversationExists(args.id))
+      ) {
         resolve(null)
       }
-      resolve({ id: args.id, timestamp: Math.round(convos[args.id] / 1000) })
-    }),
+
+      resolve({
+        id: args.id,
+        before: args.before,
+        after: args.after
+      })
+    })
+  },
   totalUnread: async () => {
-    // Show 1 unread when messaging disabled. Intro message from Origin Support
     if (!isEnabled()) {
       return 1
     }
-    const convos = await contracts.messaging.getMyConvs()
-    const ids = Object.keys(convos)
-    const allUnreads = await Promise.all(ids.map(c => totalUnread(c)))
-    return allUnreads.reduce((m, o) => m + o, 0)
+
+    return await getUnreadCount()
   },
   synced: () => {
     if (contracts.messaging.globalKeyServer) return true
@@ -98,6 +107,10 @@ export default {
     return contracts.messaging.pub_sig
   },
   canConverseWith: async (_, args) => {
+    if (!isEnabled()) {
+      return false
+    }
+
     const recipient = await contracts.messaging.canReceiveMessages(args.id)
     return recipient ? true : false
   },

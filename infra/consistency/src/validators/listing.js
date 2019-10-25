@@ -11,9 +11,9 @@ const db = {
 
 const { assert, getListenerBlock, getPastEvents } = require('./utils')
 
-async function listingCreatedEvents(contract, fromBlock, toBlock) {
+async function listingCreatedEvents(contract, fromBlock, toBlock, prefix) {
   if (!toBlock || toBlock === 'latest') {
-    toBlock = await getListenerBlock('main', 'Marketplace_')
+    toBlock = await getListenerBlock('main', prefix)
   }
   return await getPastEvents(contract, 'ListingCreated', {
     fromBlock,
@@ -21,9 +21,9 @@ async function listingCreatedEvents(contract, fromBlock, toBlock) {
   })
 }
 
-async function verifyListingDBRecord(netId, event) {
+async function verifyListingDBRecord(netId, version, event) {
   const listingId = event.returnValues.listingID
-  const fqListingID = `${netId}-000-${listingId}`
+  const fqListingID = `${netId}-${version}-${listingId}`
 
   const records = await db.Listing.findAll({
     where: {
@@ -76,29 +76,33 @@ async function verifyListingDBRecord(netId, event) {
  * @param args {object} map of function arguments
  */
 async function validateListings({ log, contractsContext, fromBlock }) {
-  const events = await listingCreatedEvents(
-    contractsContext.marketplace,
-    fromBlock
-  )
+  for (const version in contractsContext.marketplaces) {
+    const events = await listingCreatedEvents(
+      contractsContext.marketplaces[version].contract,
+      fromBlock || contractsContext.marketplaces[version].epoch || 0,
+      'latest',
+      `V${version}_Marketplace_`
+    )
 
-  const netId = await contractsContext.web3.eth.net.getId()
+    const netId = await contractsContext.web3.eth.net.getId()
 
-  log.debug(`Found ${events.length} ListingCreated events`)
+    log.debug(`Found ${events.length} ListingCreated events`)
 
-  for (const ev of events) {
-    try {
-      const valid = await verifyListingDBRecord(netId, ev)
-      if (valid) {
-        log.debug('Listing valid. :)')
-      }
-    } catch (err) {
-      if (err.name === 'AssertionError') {
-        log.error(
-          `Unable to validate ${ev.event} event for listing #${netId}-000-${ev.returnValues.listingID},  transaction ${ev.transactionHash}`
-        )
-        log.error(err.toString())
-      } else {
-        throw err
+    for (const ev of events) {
+      try {
+        const valid = await verifyListingDBRecord(netId, version, ev)
+        if (valid) {
+          log.debug('Listing valid. :)')
+        }
+      } catch (err) {
+        if (err.name === 'AssertionError') {
+          log.error(
+            `Unable to validate ${ev.event} event for listing #${netId}-${version}-${ev.returnValues.listingID},  transaction ${ev.transactionHash}`
+          )
+          log.error(err.toString())
+        } else {
+          throw err
+        }
       }
     }
   }

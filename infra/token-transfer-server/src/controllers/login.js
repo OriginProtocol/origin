@@ -3,17 +3,16 @@ const router = express.Router()
 const passport = require('passport')
 const base32 = require('thirty-two')
 const crypto = require('crypto')
-const jwt = require('jsonwebtoken')
+const qrcode = require('qrcode')
 
 require('../passport')()
 const { asyncMiddleware, getFingerprintData } = require('../utils')
 const { LOGIN } = require('../constants/events')
 const { encrypt } = require('../lib/crypto')
-const { Event, User } = require('../models')
+const { Event } = require('../models')
 const logger = require('../logger')
-const { sendEmail } = require('../lib/email')
+const { sendLoginToken } = require('../lib/email')
 const { ensureLoggedIn } = require('../lib/login')
-const { encryptionSecret, portalUrl } = require('../config')
 
 /**
  * Sends a login code by email.
@@ -24,25 +23,9 @@ router.post(
     const email = req.body.email
     logger.debug('/send_email_code called for', email)
 
-    // Check the user exists before sending an email code.
-    const user = await User.findOne({ where: { email } })
-    if (user) {
-      const token = jwt.sign(
-        {
-          email
-        },
-        encryptionSecret,
-        { expiresIn: '5m' }
-      )
-
-      const vars = { url: `${portalUrl}/login_handler/${token}` }
-      await sendEmail(user.email, 'login', vars)
-      logger.info(`Sent email token to ${email}`)
-    } else {
-      // Do nothing in case email not found in our DB.
-      // But do not let the caller know by returning anything different,
-      // to avoid tipping them on whether or not the email exists.
-      logger.info(`Email ${email} not found in DB. No token sent.`)
+    // No await to prevent enumeration of valid emails
+    if (process.env.NODE_ENV !== 'test') {
+      sendLoginToken(email)
     }
 
     res.setHeader('Content-Type', 'application/json')
@@ -84,9 +67,7 @@ router.post(
     // Generate QR token for scanning into Google Authenticator
     // Reference: https://code.google.com/p/google-authenticator/wiki/KeyUriFormat
     const otpUrl = `otpauth://totp/${req.user.email}?secret=${encodedKey}&period=30&issuer=OriginProtocol`
-    const otpQrUrl =
-      'https://chart.googleapis.com/chart?chs=166x166&chld=L|0&cht=qr&chl=' +
-      encodeURIComponent(otpUrl)
+    const otpQrUrl = await qrcode.toDataURL(otpUrl)
 
     res.setHeader('Content-Type', 'application/json')
     res.send(

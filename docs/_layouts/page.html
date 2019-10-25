@@ -12,8 +12,7 @@
     <div class="header">
         <div class="logo"><a href="/">Origin Documentation</a> Docs</div>
         <nav>
-                <a class="topNav {% unless page.dir contains 'reference' %}{% unless page.dir contains 'software' %}current{% endunless %}{% endunless %}" href="/">Guides</a>
-                <a class="topNav {% if page.dir contains 'reference' %}current{% endif %}" href="/reference/">API Reference</a>
+                <a class="topNav {% unless page.dir contains 'software' %}current{% endunless %}" href="/">Overview</a>
                 <a class="topNav {% if page.dir contains 'software' %}current{% endif %}" href="/software/">Software</a>
         </nav>
     </div>
@@ -24,9 +23,6 @@
             {% if page.dir contains "software" %}
                 {% assign menuPages = site.pages | where_exp:"page",
             "page.dir contains 'software'" %}
-            {% elsif page.dir contains "reference" %}
-                {% assign menuPages = site.pages | where_exp:"page",
-            "page.dir contains 'reference'" %}
             {% elsif page.dir contains "guides" %}
                 {% assign menuPages = site.pages | where_exp:"page",
             "page.dir contains 'guides'" %}

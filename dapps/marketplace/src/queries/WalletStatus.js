@@ -12,6 +12,7 @@ export default gql`
       pubKey
       pubSig
       enabled
+      isKeysLoading
       synced
       syncProgress
     }

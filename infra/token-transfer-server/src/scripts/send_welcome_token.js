@@ -33,20 +33,24 @@ function parseArgv() {
   return args
 }
 
+function generateToken(user) {
+  return jwt.sign(
+    {
+      email: user.email
+    },
+    encryptionSecret,
+    // TODO revert to 24h
+    { expiresIn: '14d' }
+  )
+}
+
 /**
  * Send a welcome email to a user allowing them to start the onboarding process.
  */
 async function sendWelcomeEmail(user) {
   logger.info('Sending welcome email to', user.email)
 
-  const token = jwt.sign(
-    {
-      email: user.email
-    },
-    encryptionSecret,
-    { expiresIn: '24h' }
-  )
-
+  const token = generateToken(user)
   const vars = { url: `${portalUrl}/welcome/${token}` }
   try {
     await sendEmail(user.email, 'welcome', vars)
@@ -67,7 +71,11 @@ async function main(config) {
       logger.error('User with that email does not exist')
       process.exit()
     }
-    await sendWelcomeEmail(user)
+    if (config.token) {
+      console.log('Token:', generateToken(user))
+    } else {
+      await sendWelcomeEmail(user)
+    }
   } else {
     logger.info('Sending welcome email to all users')
     const users = await User.findAll()
@@ -78,7 +86,8 @@ async function main(config) {
 const args = parseArgv()
 const config = {
   email: args['--email'] || null,
-  all: args['--all'] === 'true' || false
+  all: args['--all'] === 'true' || false,
+  token: args['--token'] === 'true' || false
 }
 
 if (!config.email && !config.all) {

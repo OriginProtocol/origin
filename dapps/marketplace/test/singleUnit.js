@@ -85,7 +85,7 @@ export function singleUnitTests({
     })
 
     it('should navigate to the Add Listing page', async function() {
-      await clickByText(page, 'Add Listing')
+      await clickByText(page, 'Add Listing', 'a/span')
       await pic(page, 'add-listing')
     })
 
@@ -264,7 +264,7 @@ export function singleUnitTokenTests({
 
     it('should navigate to the Add Listing page', async function() {
       await changeAccount(page, seller)
-      await clickByText(page, 'Add Listing')
+      await clickByText(page, 'Add Listing', 'a/span')
       await pic(page, 'add-listing')
     })
 

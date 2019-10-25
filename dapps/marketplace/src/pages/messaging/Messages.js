@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Mutation } from 'react-apollo'
+import React, { useState, useEffect } from 'react'
+import { useMutation } from 'react-apollo'
 import { Link } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
@@ -7,7 +7,7 @@ import get from 'lodash/get'
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 import withIsMobile from 'hoc/withIsMobile'
-import withMessaging from 'hoc/withMessaging'
+import withConversations from 'hoc/withConversations'
 import query from 'queries/Conversations'
 import MarkConversationRead from 'mutations/MarkConversationRead'
 
@@ -22,6 +22,8 @@ import MobileModal from 'components/MobileModal'
 import { abbreviateName, truncateAddress } from 'utils/user'
 import LoadingSpinner from 'components/LoadingSpinner'
 
+import BottomScrollListener from 'components/BottomScrollListener'
+
 const RoomTitle = withIdentity(({ identity, walletProxy }) => (
   <Link to={`/user/${walletProxy}`} className="user-profile-link">
     <Avatar profile={identity} size={30} />
@@ -31,111 +33,91 @@ const RoomTitle = withIdentity(({ identity, walletProxy }) => (
   </Link>
 ))
 
-class Messages extends Component {
-  constructor(props) {
-    super(props)
+const ConversationList = ({
+  isMobile,
+  messagingError,
+  messaging,
+  messagingLoading,
+  room,
+  onBack,
+  messagingFetchMore,
+  messagingNetworkStatus,
+  wallet,
+  messagingKeysLoading
+}) => {
+  const [markConversationRead] = useMutation(MarkConversationRead)
+  const [hasMore, setHasMore] = useState(true)
 
-    this.state = { defaultRoomSet: false, back: false }
-  }
+  const conversations = get(messaging, 'conversations', [])
 
-  componentDidUpdate() {
-    const room = get(this.props, 'match.params.room')
-
-    if (
-      this.state.defaultRoomSet ||
-      this.state.back ||
-      !this.props.messaging ||
-      room ||
-      this.props.isMobile
-    ) {
-      return
-    }
-
-    const conversations = this.getSortedConversations()
-
-    const defaultRoom = get(conversations, '0.id')
-
-    if (defaultRoom) {
-      this.props.history.push(`/messages/${defaultRoom}`)
-      this.setState({
-        defaultRoomSet: true
-      })
-    }
-  }
-
-  getSortedConversations() {
-    return get(this.props, 'messaging.conversations', [])
-      .sort((a, b) => {
-        const alm = a.lastMessage || { timestamp: Date.now() }
-        const blm = b.lastMessage || { timestamp: Date.now() }
-
-        return alm.timestamp > blm.timestamp ? -1 : 1
-      })
-      .filter(
-        conv =>
-          conv.id !== this.props.wallet && conv.id !== this.props.walletProxy
-      )
-  }
-
-  goBack() {
-    this.setState({
-      back: true
-    })
-    this.props.history.goBack()
-  }
-
-  renderRoom({ room, enabled }) {
-    if (!room) {
-      return null
-    }
-
+  if (messagingError) {
+    return <QueryError query={query} error={messagingError} />
+  } else if (
+    (messagingLoading && !conversations.length) ||
+    messagingKeysLoading
+  ) {
+    return <LoadingSpinner />
+  } else if (!messagingLoading && !messaging) {
     return (
-      <Mutation mutation={MarkConversationRead}>
-        {markConversationRead => (
-          <div className="conversation-view">
-            <Room id={room} markRead={markConversationRead} enabled={enabled} />
-          </div>
-        )}
-      </Mutation>
+      <p className="p-3">
+        <fbt desc="Messages.no Message">You have no messages</fbt>
+      </p>
     )
   }
 
-  renderContent() {
-    const { isMobile, messagingError, messaging, messagingLoading } = this.props
+  let content = !room ? null : (
+    <div className="conversation-view">
+      <Room
+        id={room}
+        markRead={markConversationRead}
+        enabled={messaging.enabled}
+      />
+    </div>
+  )
 
-    if (messagingError) {
-      return <QueryError query={query} error={messagingError} />
-    } else if (messagingLoading) {
-      return <LoadingSpinner />
-    } else if (!messaging) {
-      return (
-        <p className="p-3">
-          <fbt desc="Messages.cannotQuery">Cannot query messages</fbt>
-        </p>
-      )
-    }
+  if (content && isMobile) {
+    content = (
+      <MobileModal
+        className="messages-page messages-modal"
+        title={<RoomTitle walletProxy={room} wallet={room} />}
+        onBack={onBack}
+      >
+        <div className="conversations-wrapper">{content}</div>
+      </MobileModal>
+    )
+  }
 
-    const conversations = this.getSortedConversations()
+  return (
+    <div className="conversations-wrapper">
+      <BottomScrollListener
+        className="conversations-list"
+        ready={messaging.enabled && messagingNetworkStatus === 7}
+        bindOnContainer={true}
+        hasMore={hasMore}
+        onBottom={() => {
+          messagingFetchMore({
+            variables: {
+              offset: conversations.length
+            },
+            updateQuery: (prevData, { fetchMoreResult }) => {
+              const convs = fetchMoreResult.messaging.conversations
 
-    const room = get(this.props, 'match.params.room')
+              if (convs.length === 0) {
+                setHasMore(false)
+              }
 
-    let content = this.renderRoom({ room, enabled: messaging.enabled })
-
-    if (content && isMobile) {
-      content = (
-        <MobileModal
-          className="messages-page messages-modal"
-          title={<RoomTitle walletProxy={room} wallet={room} />}
-          onBack={() => this.goBack()}
-        >
-          <div className="conversations-wrapper">{content}</div>
-        </MobileModal>
-      )
-    }
-
-    return (
-      <div className="conversations-wrapper">
-        <div className={`conversations-list`}>
+              return {
+                ...prevData,
+                messaging: {
+                  ...prevData.messaging,
+                  conversations: [...prevData.messaging.conversations, ...convs]
+                }
+              }
+            }
+          })
+        }}
+      >
+        <>
           {conversations.length ? null : (
             <div>
               <fbt desc="Messages.none">No conversations!</fbt>
@@ -146,29 +128,73 @@ class Messages extends Component {
               key={idx}
               active={room === conv.id}
               conversation={conv}
-              wallet={conv.id}
-              onClick={() => {
-                this.props.history.push(`/messages/${conv.id}`)
-              }}
+              wallet={wallet}
             />
           ))}
-        </div>
-        {content}
-      </div>
-    )
-  }
-
-  render() {
-    return (
-      <div className="container messages-page">
-        <DocumentTitle pageTitle={<fbt desc="Messages.title">Messages</fbt>} />
-        {this.renderContent()}
-      </div>
-    )
-  }
+          {messagingNetworkStatus === 3 && (
+            <div className="conversations-loading">
+              <fbt desc="Loading...">Loading...</fbt>
+            </div>
+          )}
+        </>
+      </BottomScrollListener>
+      {content}
+    </div>
+  )
 }
 
-export default withIsMobile(withWallet(withMessaging(Messages)))
+const Messages = props => {
+  const [defaultRoom, setDefaultRoom] = useState(false)
+  const [back, setBack] = useState(false)
+
+  const room = get(props, 'match.params.room')
+  useEffect(() => {
+    // To set a default room
+    if (
+      defaultRoom ||
+      back ||
+      !props.messaging ||
+      room ||
+      props.isMobile ||
+      props.messagingLoading ||
+      props.messagingKeysLoading
+    ) {
+      return
+    }
+
+    const conversations = get(props, 'messaging.conversations', [])
+    const defaultRoom = get(conversations, '0.id')
+
+    if (defaultRoom) {
+      props.history.push(`/messages/${defaultRoom}`)
+      setDefaultRoom(true)
+    }
+  }, [
+    room,
+    defaultRoom,
+    back,
+    props.messaging,
+    props.isMobile,
+    props.messagingLoading,
+    props.messagingKeysLoading
+  ])
+
+  return (
+    <div className="container messages-page">
+      <DocumentTitle pageTitle={<fbt desc="Messages.title">Messages</fbt>} />
+      <ConversationList
+        {...props}
+        room={room}
+        onBack={() => {
+          setBack(true)
+          props.history.goBack()
+        }}
+      />
+    </div>
+  )
+}
+
+export default withIsMobile(withWallet(withConversations(Messages)))
 
 require('react-styl')(`
   .messages-page
@@ -237,6 +263,13 @@ require('react-styl')(`
         display: flex
         -webkit-overflow-scrolling: touch
         flex-direction: column
+    .conversations-loading
+      color: var(--bluey-grey)
+      font-style: italic
+      text-align: center
+      display: block
+      width: 100%
+      padding: 0.5rem
 
   .mobile-modal-light
     .messages-modal

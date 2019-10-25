@@ -86,7 +86,9 @@ class Search extends Component {
                 onClick={() =>
                   this.setState({ searchInput: '' }, () => this.doSearch(false))
                 }
-              />
+              >
+                Clear
+              </button>
             </div>
             {isMobile && this.state.active && (
               <button
@@ -162,6 +164,8 @@ class Search extends Component {
             >
               <fbt desc="Search.Art">Art</fbt>
             </div>
+            <div className="category-icon blank" />
+            <div className="category-icon blank" />
           </div>
         </div>
       </div>
@@ -209,21 +213,22 @@ require('react-styl')(`
       position: relative
       width: 100%
       .search-input-wrapper
+        display: flex
+        width: 100%
         .search-input
+          flex: 1;
           position: relative
           .clear-button
             display: none
             position: absolute
-            right: 0.25rem
+            right: 1px
             top: 1px
             bottom: 1px
-            width: 2rem
-            background-color: white
-            background-image: url('images/nav/close-icon.svg')
-            background-repeat: no-repeat
-            background-position: center
             border: 0
-            background-size: 1.25rem
+            border-radius: 5px
+            font-size: 14px
+            color: #1d77ff
+            background: #fff
           .form-control
             border-radius: 5px
             flex: 1
@@ -260,34 +265,45 @@ require('react-styl')(`
           margin-bottom: 1rem
 
         .featured-categories-wrapper
-          margin: 0 -2rem
-          overflow-x: scroll
+          margin: 0
+          margin-right: -10px
 
         .featured-categories
-          display: inline-flex
-          padding: 0 2rem
+          display: flex
+          margin: 0px
+          width: 100%
+          flex-direction: row
+          justify-content: space-between
+          flex-wrap: wrap
+
           .category-icon
-            width: 60px
-            flex: auto 0 0
-            margin-right: 20px
+            max-width: 60px
+            flex: 0 0 25%
+            padding: 0 0px 15px
             text-align: center
             color: var(--dark)
             font-size: 0.6rem
             text-overflow: ellipsis
             cursor: pointer
+            margin-right: 10px
 
+            &.blank
+              cursor: auto
+              &:before 
+                background-color: transparent
             &.rewards
               &:before
                 background-color: #007fff
             &:before
               content: ''
-              display: inline-block
+              display: block
               width: 60px
               height: 60px
               background-color: #f0f6f9
               border-radius: 50%
               background-repeat: no-repeat
               background-position: center
+              margin: 0 auto 5px
 
             &.apparel:before
               background-image: url('images/categories/apparel-icon.svg')
@@ -341,6 +357,9 @@ require('react-styl')(`
   @media (max-width: 767.98px)
     .listing-search-wrapper
       padding: 0 1rem
+      .search-wrapper .search-input-wrapper .search-input   .clear-button
+        padding-right: 0
+        right: 0
       .search-wrapper .search-input-wrapper .search-input .form-control
         font-size: 22px
         border: 0

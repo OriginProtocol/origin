@@ -24,23 +24,23 @@
     "start:production": "node src/app.js"
   },
   "dependencies": {
-    "@origin/bridge": "^0.1.0",
+    "@origin/identity": "^0.1.0",
     "@origin/token": "^0.1.0",
-    "dotenv": "8.1.0",
+    "dotenv": "8.2.0",
     "envkey": "1.2.7",
     "express": "4.17.1",
     "logplease": "1.2.15",
     "per-env": "1.0.2",
     "pg": "7.12.1",
-    "rate-limiter-flexible": "1.1.2",
-    "sequelize": "5.19.1",
+    "rate-limiter-flexible": "1.1.6",
+    "sequelize": "5.21.1",
     "sequelize-cli": "5.5.1",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
     "chai": "4.2.0",
-    "mocha": "6.2.0",
-    "nodemon": "1.19.2"
+    "mocha": "6.2.2",
+    "nodemon": "1.19.4"
   },
   "prettier": {
     "semi": false,

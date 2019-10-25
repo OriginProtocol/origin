@@ -17,6 +17,7 @@ import withIdentity from 'hoc/withIdentity'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withAttestationProviders from 'hoc/withAttestationProviders'
 import withIsMobile from 'hoc/withIsMobile'
+import { withRouter } from 'react-router-dom'
 
 import UserProfileCard from 'components/UserProfileCard'
 import DocumentTitle from 'components/DocumentTitle'
@@ -218,6 +219,11 @@ class UserProfile extends Component {
                   minCount={this.props.isMobile ? 8 : 10}
                   fillToNearest={this.props.isMobile ? 4 : 5}
                   onClick={providerName => {
+                    if (this.props.isMobile && providerName === 'website') {
+                      // Show the website badge on mobile
+                      // But don't do anything on click
+                      return
+                    }
                     this.setState({
                       [providerName]: true
                     })
@@ -277,6 +283,10 @@ class UserProfile extends Component {
       )
 
     const providers = this.props.attestationProviders
+      // Hide website attestation on mobile
+      .filter(providerName =>
+        this.props.isMobile && providerName === 'website' ? false : true
+      )
       .map(providerName => {
         const verified = verifiedAttestationsIds.includes(providerName)
         const reward = verified
@@ -293,7 +303,6 @@ class UserProfile extends Component {
           reward
         }
       })
-      .filter(p => (p.id === 'website' && this.props.isMobile ? false : true))
 
     return (
       <ModalComp
@@ -361,6 +370,15 @@ class UserProfile extends Component {
             }
 
             if (!completed) {
+              const activeAttestation = get(
+                this.props,
+                'match.params.attestation'
+              )
+              if (activeAttestation) {
+                // We have active provider appeneded to the URL
+                // Most likely, user navigated directly to here
+                this.props.history.goBack()
+              }
               // Show the verify modal only if the user closes
               // the attestation modal without making a change
               newState.hideVerifyModal = false
@@ -552,9 +570,11 @@ class UserProfile extends Component {
   }
 }
 
-export default withIsMobile(
-  withAttestationProviders(
-    withWallet(withIdentity(withGrowthCampaign(UserProfile)))
+export default withRouter(
+  withIsMobile(
+    withAttestationProviders(
+      withWallet(withIdentity(withGrowthCampaign(UserProfile)))
+    )
   )
 )
 

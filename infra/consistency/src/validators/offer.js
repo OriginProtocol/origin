@@ -11,9 +11,9 @@ const db = {
 
 const { assert, getListenerBlock, getPastEvents } = require('./utils')
 
-async function offerCreatedEvents(contract, fromBlock, toBlock) {
+async function offerCreatedEvents(contract, fromBlock, toBlock, prefix) {
   if (!toBlock || toBlock === 'latest') {
-    toBlock = await getListenerBlock('main', 'Marketplace_')
+    toBlock = await getListenerBlock('main', prefix)
   }
   return await getPastEvents(contract, 'OfferCreated', {
     fromBlock,
@@ -29,10 +29,10 @@ async function offerCreatedEvents(contract, fromBlock, toBlock) {
  * @returns {bool} whether or not it was validated
  * @throws {Error} describing the assertion error (offer invalid)
  */
-async function verifyOfferDBRecord(netId, event) {
+async function verifyOfferDBRecord(netId, version, event) {
   const listingId = event.returnValues.listingID
   const offerId = event.returnValues.offerID
-  const fqListingID = `${netId}-000-${listingId}`
+  const fqListingID = `${netId}-${version}-${listingId}`
   const fqOfferID = `${fqListingID}-${offerId}`
 
   const records = await db.Offer.findAll({
@@ -69,29 +69,33 @@ async function verifyOfferDBRecord(netId, event) {
  * @param args {object} map of function arguments
  */
 async function validateOffers({ log, contractsContext, fromBlock }) {
-  const events = await offerCreatedEvents(
-    contractsContext.marketplace,
-    fromBlock
-  )
+  for (const version in contractsContext.marketplaces) {
+    const events = await offerCreatedEvents(
+      contractsContext.marketplaces[version].contract,
+      fromBlock,
+      'latest',
+      `V${version}_Marketplace_`
+    )
 
-  const netId = await contractsContext.web3.eth.net.getId()
+    const netId = await contractsContext.web3.eth.net.getId()
 
-  log.debug(`Found ${events.length} OfferCreated events`)
+    log.debug(`Found ${events.length} OfferCreated events`)
 
-  for (const ev of events) {
-    try {
-      const valid = await verifyOfferDBRecord(netId, ev)
-      if (valid) {
-        log.debug('Offer valid. :)')
-      }
-    } catch (err) {
-      if (err.name === 'AssertionError') {
-        log.error(
-          `Unable to validate ${ev.event} event for offer #${netId}-000-${ev.returnValues.listingID}-${ev.returnValues.offerID} transaction ${ev.transactionHash}`
-        )
-        log.error(err.toString())
-      } else {
-        throw err
+    for (const ev of events) {
+      try {
+        const valid = await verifyOfferDBRecord(netId, version, ev)
+        if (valid) {
+          log.debug('Offer valid. :)')
+        }
+      } catch (err) {
+        if (err.name === 'AssertionError') {
+          log.error(
+            `Unable to validate ${ev.event} event for offer #${netId}-${version}-${ev.returnValues.listingID}-${ev.returnValues.offerID} transaction ${ev.transactionHash}`
+          )
+          log.error(err.toString())
+        } else {
+          throw err
+        }
       }
     }
   }

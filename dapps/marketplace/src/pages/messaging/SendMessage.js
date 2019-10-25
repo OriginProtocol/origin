@@ -115,7 +115,7 @@ class SendMessage extends Component {
                   'Type something...',
                   'SendMessage.placeholder'
                 )}
-                ref={this.input}
+                innerRef={this.input}
                 value={this.state.message}
                 onChange={e => this.setState({ message: e.target.value })}
                 onKeyPress={e => this.handleKeyPress(e, sendMessage)}
@@ -195,4 +195,6 @@ require('react-styl')(`
         width: 100%
         background-size: contain
         background-repeat: no-repeat
+    textarea
+      max-height: 6rem
 `)

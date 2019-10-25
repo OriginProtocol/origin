@@ -78,6 +78,25 @@ async function post(gateway, json, rawHash) {
   }
 }
 
+/**
+ * Posts binary data to IPFS and return the base 58 encoded hash.
+ * Throws in case of an error.
+ *
+ * @param {string} gateway: URL of the IPFS gateway to use.
+ * @param {Buffer} buffer: binary data to upload.
+ * @returns {Promise<{string}>}
+ */
+async function postBinary(gateway, buffer) {
+  const formData = new FormData()
+  formData.append('file', buffer)
+  const rawRes = await fetch(`${gateway}/api/v0/add`, {
+    method: 'POST',
+    body: formData
+  })
+  const res = await rawRes.json()
+  return res.Hash
+}
+
 // async function postEnc(gateway, json, pubKeys) {
 //   const formData = new FormData()
 //
@@ -113,7 +132,7 @@ async function post(gateway, json, rawHash) {
 //   return decrypted.data
 // }
 
-async function getTextFn(gateway, hashAsBytes) {
+async function getTextFn(gateway, hashAsBytes, timeoutMS) {
   const hash =
     hashAsBytes.indexOf('0x') === 0
       ? getIpfsHashFromBytes32(hashAsBytes)
@@ -122,8 +141,8 @@ async function getTextFn(gateway, hashAsBytes) {
     let didTimeOut = false
     const timeout = setTimeout(() => {
       didTimeOut = true
-      reject()
-    }, 10000)
+      reject('IPFS gateway timeout')
+    }, timeoutMS)
     fetch(`${gateway}/ipfs/${hash}`)
       .then(response => {
         clearTimeout(timeout)
@@ -131,10 +150,10 @@ async function getTextFn(gateway, hashAsBytes) {
           resolve(response)
         }
       })
-      .catch(() => {
+      .catch(error => {
         clearTimeout(timeout)
         if (!didTimeOut) {
-          reject()
+          reject(error)
         }
       })
     if (didTimeOut) console.log(`Timeout when fetching ${hash}`)
@@ -147,11 +166,11 @@ async function getTextFn(gateway, hashAsBytes) {
 
 const getText = memoize(getTextFn, (...args) => args[1])
 
-async function get(gateway, hashAsBytes) {
+async function get(gateway, hashAsBytes, timeoutMS = 10000) {
   // }, party) {
   if (!hashAsBytes) return null
 
-  const text = await getText(gateway, hashAsBytes)
+  const text = await getText(gateway, hashAsBytes, timeoutMS)
   // if (text.indexOf('-----BEGIN PGP MESSAGE-----') === 0 && party) {
   //   try {
   //     text = await decode(text, party.privateKey, party.pgpPass)
@@ -167,6 +186,7 @@ module.exports = {
   get,
   getText,
   post,
+  postBinary,
   getBytes32FromIpfsHash,
   getIpfsHashFromBytes32,
   gatewayUrl

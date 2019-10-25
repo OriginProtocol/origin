@@ -39,9 +39,20 @@ Assuming you are starting from scratch, run the following from the root of the m
 
     cd infra/discovery/
     node devops/es-cli.js createIndex listings
-    npm run start:listener:development -- --network=localhost --verbose --marketplace --identity --elasticsearch
+    npm run start:listener:development -- --network=localhost --verbose --marketplace --identity --elasticsearch --messaging-events
     npm run start:discovery:development -- --network=localhost --verbose --marketplace --identity --elasticsearch
 
 To reset database:
 
     docker-compose down postgres && docker-compose up postgres
+
+## Troubleshooting
+
+### `elasticsearch` container fails with exit code 78
+
+Run the following command to increase the value of `vm.max_map_count`
+
+```
+sudo sysctl -w vm.max_map_count=262144
+```
+

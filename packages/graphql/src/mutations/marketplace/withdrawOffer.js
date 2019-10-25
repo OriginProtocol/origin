@@ -21,14 +21,14 @@ async function withdrawOffer(_, data) {
 
   const owner = await proxyOwner(from)
   if (owner) {
-    const offer = await contract.methods.offer(listingId, offerId).call()
+    const offer = await contract.methods.offers(listingId, offerId).call()
     const Proxy = new contracts.web3Exec.eth.Contract(IdentityProxy.abi, from)
     const txData = await tx.encodeABI()
 
     tx = Proxy.methods.marketplaceFinalizeAndPay(
       marketplace.contract._address,
       txData,
-      from,
+      offer.buyer,
       offer.currency,
       offer.value
     )

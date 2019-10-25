@@ -6,10 +6,10 @@ const esmImport = require('esm')(module)
 const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
 const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
 
-const _identityModels = require('@origin/identity/src/models')
 const graphqlClient = esmImport('@origin/graphql').default
 
 const _discoveryModels = require('../src/models')
+const _identityModels = require('@origin/identity/src/models')
 const db = { ..._discoveryModels, ..._identityModels }
 const { handleEvent } = require('../src/listener/handler')
 const MarketplaceEventHandler = require('../src/listener/handler_marketplace')
@@ -27,37 +27,74 @@ const mockListing = {
     id: seller
   }
 }
-const mockIdentity = {
-  id: seller,
-  owner: {
-    id: seller
+const mockIpfsIdentity = {
+  schemaId: 'https://schema.originprotocol.com/identity_1.0.0.json',
+  profile: {
+    firstName: 'Origin',
+    lastName: 'Protocol',
+    description: 'p2p stuff',
+    avatarUrl: '',
+    schemaId: 'https://schema.originprotocol.com/profile_2.0.0.json',
+    ethAddress: seller
   },
-  firstName: 'Origin',
-  lastName: 'Protocol',
-  avatar: '0xABCDEF',
   attestations: [
-    JSON.stringify({
+    {
+      schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json',
       data: {
-        attestation: {
-          verificationMethod: {
-            phone: true
-          },
-          phone: '+00 00000000'
-        }
-      }
-    }),
-    JSON.stringify({
-      data: {
+        issuer: {
+          name: 'Origin Protocol',
+          url: 'https://www.originprotocol.com',
+          ethAddress: seller
+        },
+        issueDate: '2019-07-04T16:39:26.091Z',
         attestation: {
           verificationMethod: {
             email: true
           },
-          email: 'test@originprotocol.com'
+          email: {
+            verified: true
+          }
         }
+      },
+      signature: {
+        bytes: '0xTestSignature',
+        version: '1.0.0'
       }
-    })
+    },
+    {
+      schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json',
+      data: {
+        issuer: {
+          name: 'Origin Protocol',
+          url: 'https://www.originprotocol.com',
+          ethAddress: seller
+        },
+        issueDate: '2019-07-04T16:39:26.091Z',
+        attestation: {
+          verificationMethod: {
+            phone: true
+          },
+          phone: {
+            verified: true
+          }
+        }
+      },
+      signature: {
+        bytes: '0xTestSignature',
+        version: '1.0.0'
+      }
+    }
   ]
 }
+
+// Identity data returned by GraphQL.
+const mockGraphqldentity = {
+  id: seller,
+  owner: {
+    id: seller
+  }
+}
+
 const mockOffer = {
   id: offerId,
   statusStr: 'Finalized',
@@ -80,7 +117,7 @@ describe('Listener Handlers', () => {
   before(() => {
     sinon
       .stub(IdentityEventHandler.prototype, '_getIdentityDetails')
-      .returns(mockIdentity)
+      .returns(mockGraphqldentity)
     sinon
       .stub(MarketplaceEventHandler.prototype, 'discordWebhookEnabled')
       .returns(false)
@@ -112,7 +149,10 @@ describe('Listener Handlers', () => {
     this.context = {
       web3: {},
       config: this.config,
-      graphqlClient: graphqlClient
+      graphqlClient: graphqlClient,
+      contracts: {
+        ipfsGateway: 'testGatewayUrl'
+      }
     }
 
     this.context.web3.eth = new MockWeb3Eth({
@@ -164,7 +204,7 @@ describe('Listener Handlers', () => {
       blockNumber: 1,
       logIndex: 1,
       returnValues: {
-        address: seller,
+        account: seller,
         ipfsHash:
           '0xaa492b632a1435f500be37bd7e123f9c82e6aa28b385ed05b45bbe4a12c6f18c'
       },
@@ -190,7 +230,7 @@ describe('Listener Handlers', () => {
 
   it(`Marketplace`, async () => {
     const handler = new MarketplaceEventHandler(
-      this.config,
+      this.context,
       this.context.graphqlClient
     )
 
@@ -242,10 +282,11 @@ describe('Listener Handlers', () => {
 
   it(`Identity`, async () => {
     const handler = new IdentityEventHandler(
-      this.config,
+      this.context,
       this.context.graphqlClient
     )
 
+    // Mock some methods for testing.
     handler._loadValueFromAttestation = (ethAddress, method) => {
       if (method === 'EMAIL') {
         return 'test@originprotocol.com'
@@ -255,32 +296,28 @@ describe('Listener Handlers', () => {
         return null
       }
     }
-
-    handler._countryLookup = () => {
-      return 'FR'
+    handler._loadAndValidateIpfsIdentity = () => {
+      return mockIpfsIdentity
     }
 
     const result = await handler.process({ timestamp: 1 }, this.identityEvent)
 
     // Check output.
     expect(result.identity).to.be.an('object')
-    expect(result.identity.id).to.equal(seller)
-    expect(result.identity.ipfsHash).to.equal(
+    expect(result.identity.ethAddress).to.equal(seller)
+    expect(result.identity.data.ipfsHash).to.equal(
       'QmZoNjGgrzMAwVsmNpdStcQDsHCUYcmff8ayVJQhxZ1av7'
     )
 
     // Check expected entry was added into user DB table.
-    const identityRow = await db.Identity.findAll({
+    const identityRow = await db.Identity.findOne({
       where: {
         ethAddress: seller,
         firstName: 'Origin',
-        lastName: 'Protocol',
-        email: 'test@originprotocol.com',
-        phone: '+00 00000000',
-        country: 'FR'
+        lastName: 'Protocol'
       }
     })
-    expect(identityRow.length).to.equal(1)
+    expect(identityRow).to.be.an('object')
 
     // Check expected growth rows were inserted in the DB.
     const profileEvents = await GrowthEvent.findAll(

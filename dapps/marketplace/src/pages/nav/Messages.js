@@ -1,68 +1,64 @@
-import React, { Component } from 'react'
-import { Query } from 'react-apollo'
+import React, { useEffect } from 'react'
 import get from 'lodash/get'
-import { withRouter } from 'react-router-dom'
 import { fbt } from 'fbt-runtime'
 
-import MessagingQuery from 'queries/Messaging'
-import ConversationsQuery from 'queries/Conversations'
-
 import withWallet from 'hoc/withWallet'
+import withConversations from 'hoc/withConversations'
 
 import Dropdown from 'components/Dropdown'
 import Link from 'components/Link'
 import EnableMessaging from 'components/EnableMessaging'
 import RoomStatus from 'pages/messaging/RoomStatus'
 
-class MessagesNav extends Component {
-  constructor() {
-    super()
-    this.state = {}
-  }
-  render() {
-    return (
-      <Query query={MessagingQuery} pollInterval={2000}>
-        {({ data, loading, error }) => {
-          const enabled = get(data, 'messaging.enabled', false)
-          const totalUnread = get(data, 'messaging.totalUnread', 0)
-          const hasUnread = totalUnread > 0 ? ' active' : ''
+const MessagesNav = ({ open, onClose, onOpen, ...props }) => {
+  const { messaging, wallet, messagingNetworkStatus, messagingRefetch } = props
 
-          return (
-            <Dropdown
-              el="li"
-              className="nav-item messages d-none d-md-flex"
-              open={this.props.open}
-              onClose={() => this.props.onClose()}
-              content={
-                <MessagesDropdownWithRouter
-                  error={error}
-                  loading={loading}
-                  enabled={enabled}
-                  onClick={() => this.props.onClose()}
-                  totalUnread={totalUnread}
-                  wallet={this.props.wallet}
-                />
-              }
-            >
-              <a
-                className="nav-link"
-                href="#"
-                onClick={e => {
-                  e.preventDefault()
-                  this.props.open ? this.props.onClose() : this.props.onOpen()
-                }}
-                role="button"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                <div className={`messages-icon${hasUnread}`} />
-              </a>
-            </Dropdown>
-          )
-        }}
-      </Query>
-    )
-  }
+  useEffect(() => {
+    // Rerender on wallet or messaging status change
+    if (
+      wallet &&
+      messagingNetworkStatus !== 1 &&
+      messagingNetworkStatus !== 4
+    ) {
+      messagingRefetch()
+    }
+  }, [wallet])
+
+  const totalUnread = get(messaging, 'totalUnread', 0)
+  const hasUnread = totalUnread > 0 ? ' active' : ''
+
+  return (
+    <>
+      <Dropdown
+        el="li"
+        className="nav-item messages d-none d-md-flex"
+        open={open}
+        onClose={() => onClose()}
+        content={
+          <MessagesDropdown
+            onClick={() => onClose()}
+            totalUnread={totalUnread}
+            wallet={wallet}
+            {...props}
+          />
+        }
+      >
+        <a
+          className="nav-link"
+          href="#"
+          onClick={e => {
+            e.preventDefault()
+            open ? onClose() : onOpen()
+          }}
+          role="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <div className={`messages-icon${hasUnread}`} />
+        </a>
+      </Dropdown>
+    </>
+  )
 }
 
 const Error = () => (
@@ -76,39 +72,32 @@ const Loading = () => (
   </div>
 )
 
-class MessagesDropdown extends Component {
-  state = {}
-  render() {
-    const { onClick, totalUnread, enabled, loading, error } = this.props
+const MessagesDropdown = ({
+  onClick,
+  totalUnread,
+  messaging,
+  messagingEnabled,
+  messagingKeysLoading,
+  messagingError,
+  wallet,
+  messagingNetworkStatus
+}) => {
+  if (messagingError) {
+    console.error(messagingError)
+    return <Error />
+  } else if (messagingKeysLoading || messagingNetworkStatus === 1) {
+    return <Loading />
+  }
 
-    if (error) {
-      return <Error />
-    } else if (loading) {
-      return <Loading />
-    }
+  const conversations = get(messaging, 'conversations', []).slice(0, 5)
 
-    return (
-      <Query query={ConversationsQuery} pollInterval={500}>
-        {({ data, error, loading }) => {
-          if (error) {
-            return <Error />
-          } else if (loading) {
-            return <Loading />
-          }
-
-          const conversations = get(data, 'messaging.conversations', [])
-            .filter(c => c.totalUnread > 0)
-            .sort((a, b) => {
-              const alm = a.lastMessage || { timestamp: Date.now() }
-              const blm = b.lastMessage || { timestamp: Date.now() }
-
-              return alm.timestamp > blm.timestamp ? -1 : 1
-            })
-            .slice(0, 5)
-
-          return (
-            <div className="dropdown-menu dropdown-menu-right show">
-              <div className="count">
+  return (
+    <>
+      <div className="dropdown-menu dropdown-menu-right show">
+        {messagingEnabled && totalUnread <= 0 ? null : (
+          <div className="count">
+            {totalUnread <= 0 ? null : (
+              <>
                 <div className="total">{totalUnread}</div>
                 <div className="title">
                   <fbt desc="messages.unreadMessages">
@@ -118,43 +107,32 @@ class MessagesDropdown extends Component {
                     </fbt:plural>
                   </fbt>
                 </div>
-                {enabled ? null : (
-                  <EnableMessaging
-                    className="btn-sm"
-                    onClose={() => onClick()}
-                  />
-                )}
-              </div>
-              <div className="messaging-dropdown-content">
-                {conversations.map((conv, idx) => (
-                  <RoomStatus
-                    onClick={() => {
-                      this.props.history.push({
-                        pathname: `/messages/${conv.id}`,
-                        state: { scrollToTop: true }
-                      })
-                      onClick()
-                    }}
-                    key={idx}
-                    conversation={conv}
-                    wallet={conv.id}
-                  />
-                ))}
-              </div>
-              <Link to="/messages" onClick={() => onClick()}>
-                <fbt desc="messages.viewMessages">View Messages</fbt>
-              </Link>
-            </div>
-          )
-        }}
-      </Query>
-    )
-  }
+              </>
+            )}
+            {messagingEnabled ? null : (
+              <EnableMessaging className="btn-sm" onClose={onClick} />
+            )}
+          </div>
+        )}
+        <div className="messaging-dropdown-content">
+          {conversations.map((conv, idx) => (
+            <RoomStatus
+              onClick={onClick}
+              key={idx}
+              conversation={conv}
+              wallet={wallet}
+            />
+          ))}
+        </div>
+        <Link to="/messages" onClick={() => onClick()}>
+          <fbt desc="messages.viewMessages">View Messages</fbt>
+        </Link>
+      </div>
+    </>
+  )
 }
 
-const MessagesDropdownWithRouter = withRouter(MessagesDropdown)
-
-export default withWallet(MessagesNav)
+export default withWallet(withConversations(MessagesNav))
 
 // Shares some styles with ./Notifications.js
 require('react-styl')(`

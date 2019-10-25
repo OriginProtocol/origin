@@ -10,6 +10,10 @@ const { getOriginListingId, getOriginOfferId } = esmImport(
   '@origin/graphql/src/utils/getId'
 )
 
+const { proxyOwner } = esmImport('@origin/graphql/src/utils/proxy')
+
+const { redisClient } = require('../lib/redis')
+
 const LISTING_EVENTS = [
   'ListingCreated',
   'ListingUpdated',
@@ -49,8 +53,8 @@ function removeListingIdBlockNumber(listingId) {
 }
 
 class MarketplaceEventHandler {
-  constructor(config, graphqlClient) {
-    this.config = config
+  constructor(context, graphqlClient) {
+    this.config = context.config
     this.graphqlClient = graphqlClient
   }
 
@@ -211,8 +215,9 @@ class MarketplaceEventHandler {
   /**
    * Records ListingCreated, ListingPurchased and ListingSold events
    * in the growth DB.
-   * @param log
-   * @param details
+   * @param {Object} block
+   * @param {Object} event
+   * @param {Object} details
    * @returns {Promise<void>}
    * @private
    */
@@ -273,6 +278,58 @@ class MarketplaceEventHandler {
   }
 
   /**
+   * Store Offer events for messaging
+   * @param {Object} block
+   * @param {Object} event
+   * @param {Object} details
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _storeEventForMessaging(block, event, details) {
+    const { blockNumber, logIndex } = event
+    const blockDate = new Date(block.timestamp * 1000)
+
+    const buyer =
+      (await proxyOwner(details.offer.buyer.id)) || details.offer.buyer.id
+    const seller =
+      (await proxyOwner(details.listing.seller.id)) || details.listing.seller.id
+    const sender = event.returnValues.party
+
+    switch (event.event) {
+      case 'OfferCreated':
+      case 'OfferWithdrawn':
+      case 'OfferAccepted':
+      case 'OfferDisputed':
+      case 'OfferRuling':
+      case 'OfferFinalized':
+      case 'OfferData':
+        break
+
+      default:
+        // Ignore any other event
+        return
+    }
+
+    // Publish to redis channel
+    await redisClient.publish(
+      'MESSAGING:MARKETPLACE_EVENT',
+      JSON.stringify({
+        eventData: {
+          blockNumber,
+          blockDate,
+          logIndex,
+          eventType: event.event,
+          seller,
+          buyer,
+          listingID: details.listing.id,
+          offerID: details.offer.id
+        },
+        sender
+      })
+    )
+  }
+
+  /**
    * Main entry point for the MarketplaceHandler.
    * @param block
    * @param event
@@ -299,13 +356,19 @@ class MarketplaceEventHandler {
     // ES is used for full-text search use cases.
     await this._indexListing(block, event, details)
 
+    const isOffer = isOfferEvent(event.event)
+
     // On offer event, index the offer in the DB.
-    if (isOfferEvent(event.event)) {
+    if (isOffer) {
       await this._indexOffer(block, event, details)
     }
 
     if (this.config.growth) {
       await this._recordGrowthEvent(block, event, details)
+    }
+
+    if (isOffer && this.messagingEventsEnabled()) {
+      await this._storeEventForMessaging(block, event, details)
     }
 
     return details
@@ -325,6 +388,10 @@ class MarketplaceEventHandler {
 
   gcloudPubsubEnabled() {
     return this.config.marketplace
+  }
+
+  messagingEventsEnabled() {
+    return this.config.messagingEvents
   }
 }
 

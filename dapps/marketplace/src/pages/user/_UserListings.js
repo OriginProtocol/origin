@@ -1,5 +1,5 @@
 import React from 'react'
-import { Query } from 'react-apollo'
+import { useQuery } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 
 import QueryError from 'components/QueryError'
@@ -26,68 +26,68 @@ const UserListings = ({
     sort: 'featured'
   }
 
+  const { error, data, fetchMore, networkStatus, loading } = useQuery(query, {
+    skip: !user,
+    variables: {
+      id: user,
+      ...vars
+    },
+    notifyOnNetworkStatusChange: true
+  })
+
+  if (networkStatus === 1) {
+    return <LoadingSpinner />
+  } else if (error) {
+    return <QueryError error={error} query={query} vars={vars} />
+  } else if (!data || !data.marketplace) {
+    return (
+      <p className="p-3">
+        <fbt desc="UserListing.noContract">No marketplace contract?</fbt>
+      </p>
+    )
+  }
+
+  const { nodes, pageInfo } = data.marketplace.user.listings
+
+  const { hasNextPage, endCursor: after } = pageInfo
+
+  const filteredNodes = nodes
+    ? nodes.filter(l => l.id !== excludeListing)
+    : null
+
+  if (hideIfEmpty && (!filteredNodes || !filteredNodes.length)) {
+    return null
+  }
+
   return (
-    <Query
-      query={query}
-      skip={!user}
-      variables={{ id: user, ...vars }}
-      notifyOnNetworkStatusChange={true}
-    >
-      {({ error, data, fetchMore, networkStatus, loading }) => {
-        if (networkStatus === 1) {
-          return <LoadingSpinner />
-        } else if (error) {
-          return <QueryError error={error} query={query} vars={vars} />
-        } else if (!data || !data.marketplace) {
-          return (
-            <p className="p-3">
-              <fbt desc="UserListing.noContract">No marketplace contract?</fbt>
-            </p>
-          )
-        }
-
-        const { nodes, pageInfo } = data.marketplace.user.listings
-
-        const { hasNextPage, endCursor: after } = pageInfo
-
-        if (hideIfEmpty && (!nodes || !nodes.length)) {
-          return null
-        }
-
-        return (
-          <div className="user-listings">
-            {hideHeader ? null : (
-              <h5 className="listings-header">
-                {title || fbt('Listings', 'UserListing.listings')}
-              </h5>
-            )}
-            <ListingsGallery
-              listings={
-                nodes ? nodes.filter(l => l.id !== excludeListing) : null
-              }
-              hasNextPage={hasNextPage}
-              hideCategory
-              horizontal={horizontal}
-              compact={compact}
-            />
-            {hideLoadMore || !hasNextPage ? null : (
-              <button
-                className="btn btn-outline-primary btn-rounded mt-3"
-                onClick={() => {
-                  if (!loading) {
-                    nextPage(fetchMore, { ...vars, after })
-                  }
-                }}
-              >
-                {loading
-                  ? fbt('Loading...', 'UserListing.loading')
-                  : fbt('Load more', 'userListing.loadMore')}
-              </button>
-            )}
-          </div>
-        )
-      }}
-    </Query>
+    <div className="user-listings">
+      {hideHeader ? null : (
+        <h5 className="listings-header">
+          {title || fbt('Listings', 'UserListing.listings')}
+        </h5>
+      )}
+      <ListingsGallery
+        listings={filteredNodes}
+        hasNextPage={hasNextPage}
+        hideCategory
+        horizontal={horizontal}
+        compact={compact}
+      />
+      {hideLoadMore || !hasNextPage ? null : (
+        <button
+          className="btn btn-outline-primary btn-rounded mt-3"
+          onClick={() => {
+            if (!loading) {
+              nextPage(fetchMore, { ...vars, after })
+            }
+          }}
+        >
+          {loading
+            ? fbt('Loading...', 'UserListing.loading')
+            : fbt('Load more', 'userListing.loadMore')}
+        </button>
+      )}
+    </div>
   )
 }
 
