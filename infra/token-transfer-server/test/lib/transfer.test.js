@@ -189,7 +189,7 @@ describe('Token transfer library', () => {
     ).to.eventually.be.rejectedWith(/exceeds/)
   })
 
-  it('should not add a transfer if not enough tokens (vested minus waiting 2fa)', async () => {
+  it('should not add a transfer if not enough tokens (vested minus waiting email confirmation)', async () => {
     await Transfer.create({
       userId: this.user.id,
       status: enums.TransferStatuses.WaitingEmailConfirm,
@@ -234,7 +234,7 @@ describe('Token transfer library', () => {
     ).to.eventually.be.rejectedWith(/exceeds/)
   })
 
-  it('should not add a transfer if not enough tokens (vested minus waiting)', async () => {
+  it('should not add a transfer if not enough tokens (vested minus waiting confirmation)', async () => {
     await Transfer.create({
       userId: this.user.id,
       status: enums.TransferStatuses.WaitingConfirmation,
