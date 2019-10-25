@@ -93,7 +93,9 @@ class Messaging {
     this.unreadCount = 0
     this.unreadCountLoaded = false
     this.hasMoreConversations = true
+
     this.ready = false
+    this._keyStatus = 'disabled'
   }
 
   // Helper function for use by outside services
@@ -115,8 +117,32 @@ class Messaging {
     }
   }
 
+  async publishStatus(newStatus) {
+    debug('messaging status change', this._keyStatus, 'to', newStatus)
+    if (newStatus === this._keyStatus) {
+      // Nothing to publish
+      return
+    }
+
+    // Set state
+    this._keyStatus = newStatus
+
+    this.ready = newStatus === 'ready'
+    this.events.emit(newStatus, this.account_key)
+
+    if (!this.pubsub) {
+      console.error('PubSub is not intialized')
+      return
+    }
+
+    // Notify the DApp about the state change
+    await this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
+      messagingStatusChange: newStatus
+    })
+  }
+
   isKeysLoading() {
-    return this.account && !this.getPublicMessagingSignature()
+    return !this.ready && this._keyStatus === 'disabled'
   }
 
   async onPreGenKeys({ address, signatureKey, pubMessage, pubSignature }) {
@@ -133,11 +159,8 @@ class Messaging {
 
       if (address == this.account_key) {
         this.startConversing()
-        this.ready = true
-        this.events.emit('ready', this.account_key)
-        await this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
-          messagingStatusChange: 'ready'
-        })
+        // On mobile, messaging is always enabled, if there is a wallet
+        await this.publishStatus('ready')
       }
     }
   }
@@ -199,28 +222,19 @@ class Messaging {
     this.account_key = key
     this.account = undefined
 
-    await this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
-      messagingStatusChange: 'disabled'
-    })
-
-    this.events.emit('new', this.account_key)
-    // just start it up here
-    if (await this.initRemote()) {
-      this.pub_sig = this.getKeyItem(`${PUB_MESSAGING_SIG}:${this.account_key}`)
-      this.pub_msg = this.getKeyItem(`${PUB_MESSAGING}:${this.account_key}`)
-
-      this.events.emit('initialized', this.account_key)
-      if (this.convsEnabled || this.getMessagingKey()) {
-        await this.initKeys()
-      }
-    }
-  }
-
-  // What's the purpose of this method??
-  async initRemote() {
-    debug('initRemote')
     this.events.emit('initRemote')
-    return true
+
+    this.pub_sig = this.getKeyItem(`${PUB_MESSAGING_SIG}:${this.account_key}`)
+    this.pub_msg = this.getKeyItem(`${PUB_MESSAGING}:${this.account_key}`)
+
+    if (this.convsEnabled || this.getMessagingKey()) {
+      // Keys found
+      await this.initKeys()
+    } else {
+      // Initialized but keys are not signed yet
+      // This means messaging client has done loading
+      await this.publishStatus('initialized')
+    }
   }
 
   async getGlobalKey(key) {
@@ -271,11 +285,7 @@ class Messaging {
       limit: 10
     })
 
-    this.ready = true
-    this.events.emit('ready', this.account_key)
-    this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
-      messagingStatusChange: 'ready'
-    })
+    await this.publishStatus('ready')
   }
 
   async getRemoteMessagingSig() {
@@ -327,10 +337,6 @@ class Messaging {
     const scopedMessagingPhraseName = `${MESSAGING_PHRASE}:${this.account_key}`
     this.setKeyItem(scopedMessagingPhraseName, phraseStr)
 
-    await this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
-      messagingStatusChange: 'sign1'
-    })
-
     await this.initMessaging()
   }
 
@@ -352,6 +358,8 @@ class Messaging {
     // 32 bytes in hex + 0x
     const sigKey = signature.substring(0, 66)
 
+    await this.publishStatus('sign1')
+
     // Delay to prevent hidden MetaMask popup
     await this.sleep(500)
     await this.setAccount(sigKey, sigPhrase)
@@ -362,9 +370,7 @@ class Messaging {
     this.pub_msg = PROMPT_PUB_KEY + this.account.address
     const signer = this.personalSign ? this.web3.eth.personal : this.web3.eth
     this.pub_sig = await signer.sign(this.pub_msg, this.account_key)
-    await this.pubsub.publish('MESSAGING_STATUS_CHANGE', {
-      messagingStatusChange: 'sign2'
-    })
+    await this.publishStatus('sign2')
     const scopedPubSigKeyName = `${PUB_MESSAGING_SIG}:${this.account_key}`
     this.setKeyItem(scopedPubSigKeyName, this.pub_sig)
     const scopedPubMessagingKeyName = `${PUB_MESSAGING}:${this.account_key}`
