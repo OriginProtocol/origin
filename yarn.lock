@@ -26370,10 +26370,10 @@ swarm-js@0.1.39:
     tar "^4.0.2"
     xhr-request-promise "^0.1.2"
 
-swiper@5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/swiper/-/swiper-5.1.0.tgz#38876d343157133930098e44027112ad906197bc"
-  integrity sha512-jqpTFnOfnvEPJ8q3nz5va7VI93IDYm3sQaOkYGAdNNGvPn3eFp6Z3MsABDmDyCL5/C6LDoSH6CWkA8IxOP2ZOQ==
+swiper@5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/swiper/-/swiper-5.2.0.tgz#834aaf6053d324bcb60578ba50bb62f54342f9ca"
+  integrity sha512-pGyQ7+X7ndp6r6L0Wb+vjX5xaORdKws5mLucjen3yJrZYv9M18dd13xmSjPB8isgWVbwaFL7UxXvu8ojcfjajg==
   dependencies:
     dom7 "^2.1.3"
     ssr-window "^1.0.1"
