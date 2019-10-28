@@ -344,10 +344,7 @@ describe('Listener Handlers', () => {
   })
 
   it(`Proxy`, async () => {
-    const handler = new ProxyEventHandler(
-      this.config,
-      this.context.graphqlClient
-    )
+    const handler = new ProxyEventHandler({ config: this.config })
 
     const proxyAddress = '0xAB123'
     const ownerAddress = '0xCD456'
