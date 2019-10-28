@@ -5,7 +5,8 @@ metadata:
   namespace: monitoring
   labels:
     app: nginx-ingress-service-monitor
-    prometheus: kube-prometheus
+    prometheus: prometheus-operator
+    release: prometheus-operator
 spec:
   jobLabel: nginx-ingress
   selector:

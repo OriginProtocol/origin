@@ -3,6 +3,14 @@ kind: ConfigMap
 metadata:
   name: grafana-dashboards-default
   namespace: monitoring
+  labels:
+    app.kubernetes.io/name: origin-monitoring
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    prometheus: prometheus-operator
+    release: prometheus-operator
 data:
   relayer-dev-dashboard.json: |
     {
