@@ -4,8 +4,9 @@ import { NavLink } from 'react-router-dom'
 import BorderedCard from '@/components/BorderedCard'
 import Lock from '-!react-svg-loader!@/assets/lock-icon.svg'
 import LockupGraph from './LockupGraph'
+import OgnTokens from '-!react-svg-loader!@/assets/ogn-tokens.svg'
 
-const BonusCard = ({ earnings, locked, lockups }) => {
+const BonusCard = ({ earnings, isLocked, locked, lockups }) => {
   const renderLockupGraphs = lockups => {
     return lockups.slice(0, 3).map(lockup => {
       return (
@@ -14,6 +15,22 @@ const BonusCard = ({ earnings, locked, lockups }) => {
         </div>
       )
     })
+  }
+
+  if (isLocked) {
+    return (
+      <BorderedCard shadowed={true}>
+        <div className="text-center">
+          <img src={OgnTokens} />
+          <OgnTokens />
+          <h1 className="mt-3 mb-1">Earn bonus tokens</h1>
+          <p>
+            Place your vested tokens into lockup periods to earn even more OGN
+            over time.
+          </p>
+        </div>
+      </BorderedCard>
+    )
   }
 
   return (

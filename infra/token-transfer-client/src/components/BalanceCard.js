@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import { Doughnut } from 'react-chartjs-2'
 import Dropdown from 'react-bootstrap/Dropdown'
+import moment from 'moment'
 
 import BonusModal from '@/components/BonusModal'
 import BorderedCard from '@/components/BorderedCard'
@@ -28,6 +29,40 @@ const BalanceCard = props => {
 
   if (redirectTo) {
     return <Redirect to={redirectTo} />
+  }
+
+  if (props.isLocked) {
+    const now = moment.utc()
+    return (
+      <BorderedCard shadowed={true}>
+        <div className="row">
+          <div className="col-12 col-lg-6 my-4">
+            <h1 className="mb-1">Your tokens are almost here!</h1>
+            <span style={{ fontSize: '18px' }}>
+              Your first tokens will be available in...
+            </span>
+          </div>
+          <div className="col-12 col-lg-6" style={{ alignSelf: 'center' }}>
+            <div
+              className="p-2 text-center"
+              style={{
+                borderColor: '#dbe6eb',
+                backgroundColor: '#eff6f9',
+                color: '#007cff',
+                fontSize: '40px',
+                fontWeight: '500',
+                borderRadius: '8px',
+                fontFamily: 'Poppins'
+              }}
+            >
+              {props.unlockDate.diff(now, 'days')}d{' '}
+              {props.unlockDate.diff(now, 'hours') % 24}h{' '}
+              {props.unlockDate.diff(now, 'minutes') % 60}m
+            </div>
+          </div>
+        </div>
+      </BorderedCard>
+    )
   }
 
   return (

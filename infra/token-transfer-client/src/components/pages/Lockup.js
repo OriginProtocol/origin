@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
+import moment from 'moment'
 
 import { confirmLockup, fetchLockups } from '@/actions/lockup'
 import {
@@ -9,6 +10,7 @@ import {
   getTotals as getLockupTotals,
   getIsLoading as getLockupIsLoading
 } from '@/reducers/lockup'
+import { unlockDate } from '@/constants'
 import LockupCard from '@/components/LockupCard'
 import BonusModal from '@/components/BonusModal'
 
@@ -16,6 +18,8 @@ const Lockup = props => {
   useEffect(props.fetchLockups, [])
 
   const [displayBonusModal, setDisplayBonusModal] = useState(false)
+
+  const isLocked = moment.utc() < unlockDate
 
   if (props.lockupIsLoading) {
     return (
@@ -47,14 +51,16 @@ const Lockup = props => {
         <div className="col-12 col-md-6 mt-4">
           <h1 className="mb-0 mb-lg-4">Bonus Tokens</h1>
         </div>
-        <div className="col-12 col-md-6 mb-3 mb-md-0 text-lg-right">
-          <button
-            className="btn btn-lg btn-dark"
-            onClick={() => setDisplayBonusModal(true)}
-          >
-            Start Earning
-          </button>
-        </div>
+        {!isLocked && (
+          <div className="col-12 col-md-6 mb-3 mb-md-0 text-lg-right">
+            <button
+              className="btn btn-lg btn-dark"
+              onClick={() => setDisplayBonusModal(true)}
+            >
+              Start Earning
+            </button>
+          </div>
+        )}
       </div>
       <div className="row">
         <div className="col">

@@ -54,6 +54,7 @@ const Dashboard = props => {
       </div>
     )
   }
+
   const isLocked = moment.utc() < unlockDate
 
   const { vestedTotal, unvestedTotal } = props.grantTotals
@@ -67,11 +68,12 @@ const Dashboard = props => {
             accounts={props.accounts}
             locked={props.lockupTotals.locked}
             isLocked={isLocked}
+            unlockDate={unlockDate}
           />
         </div>
       </div>
-      <div className="row mb-4">
-        <div className="col-12 col-lg-6">
+      <div className="row">
+        <div className="col-12 col-xl-6 mb-4">
           <VestingCard
             grants={props.grants}
             user={props.user}
@@ -80,7 +82,7 @@ const Dashboard = props => {
             isLocked={isLocked}
           />
         </div>
-        <div className="col-12 col-lg-6">
+        <div className="col-12 col-xl-6 mb-4">
           <WithdrawalSummaryCard
             vested={vestedTotal}
             unvested={unvestedTotal}
@@ -92,6 +94,7 @@ const Dashboard = props => {
               lockups={props.lockups}
               locked={props.lockupTotals.locked}
               earnings={props.lockupTotals.earnings}
+              isLocked={isLocked}
             />
           </div>
         </div>
