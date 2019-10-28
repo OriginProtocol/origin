@@ -1,4 +1,11 @@
-grafana.extraSecretMounts:
-    - name: grafana-config
-      mountPath: /etc/grafana
-      readOnly: true
+# grafana:
+#   extraSecretMounts:
+#     - name: grafana-config
+#       secretName: grafana-config
+#       mountPath: /etc/grafana
+#       readOnly: true
+grafana:
+  grafana.ini:
+    smtp:
+      enabled: true
+      host: smtp.sendgrid.net

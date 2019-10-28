@@ -2,6 +2,9 @@ repositories:
   - name: coreos
     url: https://s3-eu-west-1.amazonaws.com/coreos-charts/stable
 
+helmDefaults:
+  verify: false
+
 releases:
   - name: cert-manager
     namespace: kube-system
@@ -40,13 +43,6 @@ releases:
 
   - name: prometheus-operator
     namespace: monitoring
-    chart: coreos/prometheus-operator
+    chart: stable/prometheus-operator
     values:
       - ../values/origin-monitoring/values.yaml
-
-  - name: kube-prometheus
-    namespace: monitoring
-    chart: coreos/kube-prometheus
-    set:
-      - name: global.rbacEnable
-        value: true
