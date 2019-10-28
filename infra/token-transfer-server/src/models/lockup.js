@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
       start: DataTypes.DATE,
       end: DataTypes.DATE,
       bonusRate: DataTypes.INTEGER,
-      amount: DataTypes.INTEGER
+      amount: DataTypes.INTEGER,
+      confirmed: DataTypes.BOOLEAN
     },
     {
       tableName: 't3_lockup'

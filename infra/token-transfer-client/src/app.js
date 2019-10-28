@@ -17,7 +17,8 @@ import OtpExplain from '@/components/pages/OtpExplain'
 import OtpSetup from '@/components/pages/OtpSetup'
 import Otp from '@/components/pages/Otp'
 // Private routes
-import Bonus from '@/components/pages/Bonus'
+import Lockup from '@/components/pages/Lockup'
+import LockupConfirm from '@/components/pages/LockupConfirm'
 import Dashboard from '@/components/pages/Dashboard'
 import News from '@/components/pages/News'
 import WithdrawalDetail from '@/components/pages/WithdrawalDetail'
@@ -39,7 +40,8 @@ const App = () => (
     <PublicRoute exact path="/otp" component={Otp} />
     <PrivateRoute path="/dashboard" component={Dashboard} />
     <PrivateRoute path="/news" component={News} />
-    <PrivateRoute path="/bonus" component={Bonus} />
+    <PrivateRoute exact path="/lockup" component={Lockup} />
+    <PrivateRoute path="/lockup/:id/:token" component={LockupConfirm} />
     <PrivateRoute exact path="/withdrawal" component={WithdrawalHistory} />
     <PrivateRoute path="/withdrawal/:id/:token?" component={WithdrawalDetail} />
     <PrivateRoute path="/security" component={Security} />

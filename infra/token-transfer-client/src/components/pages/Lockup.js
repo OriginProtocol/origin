@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 
-import { fetchLockups } from '@/actions/lockup'
+import { confirmLockup, fetchLockups } from '@/actions/lockup'
 import {
   getLockups,
   getTotals as getLockupTotals,
@@ -12,8 +12,9 @@ import {
 import LockupCard from '@/components/LockupCard'
 import BonusModal from '@/components/BonusModal'
 
-const BonusTokens = props => {
+const Lockup = props => {
   useEffect(props.fetchLockups, [])
+
   const [displayBonusModal, setDisplayBonusModal] = useState(false)
 
   if (props.lockupIsLoading) {
@@ -101,7 +102,8 @@ const mapStateToProps = ({ lockup }) => {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      fetchLockups: fetchLockups
+      fetchLockups: fetchLockups,
+      confirmLockup: confirmLockup
     },
     dispatch
   )
@@ -110,5 +112,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(BonusTokens)
+  )(Lockup)
 )

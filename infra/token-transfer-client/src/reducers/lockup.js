@@ -64,7 +64,8 @@ export default function lockupsReducer(state = initialState, action) {
   }
 }
 
-export const getLockups = state => state.lockups.map(momentizeLockup)
+export const getLockups = state =>
+  state.lockups.filter(l => l.confirmed).map(momentizeLockup)
 export const getError = state => state.error
 export const getIsLoading = state => state.isLoading
 export const getIsAdding = state => state.isAdding
