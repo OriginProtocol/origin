@@ -119,12 +119,15 @@ async function main() {
   )
 
   // List of contracts the listener watches events from.
+  // Note: The identity and listing handlers have a dependency on the data extracted
+  // by the proxy handler. Therefore it is important to process the proxy contract
+  // events first.
   const contracts = {}
-  if (config.identity) {
-    contracts['IdentityEvents'] = contractsContext.identityEvents
-  }
   if (config.proxy) {
     contracts['ProxyFactory'] = contractsContext.ProxyFactory
+  }
+  if (config.identity) {
+    contracts['IdentityEvents'] = contractsContext.identityEvents
   }
   if (config.marketplace) {
     // Listen to all versions of marketplace
@@ -156,6 +159,7 @@ async function main() {
       return context.web3.eth.getBlockNumber()
     })
 
+    // Note: Object.keys() returns keys in the same order they were inserted.
     for (const contractKey of Object.keys(contracts)) {
       let processedToBlock = await getLastBlock(
         context.config,
