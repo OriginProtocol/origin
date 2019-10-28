@@ -11,28 +11,11 @@
 <body>
     <div class="header">
         <div class="logo"><a href="/">Origin Documentation</a> Docs</div>
-        <nav>
-                <a class="topNav {% unless page.dir contains 'software' %}current{% endunless %}" href="/">Overview</a>
-                <a class="topNav {% if page.dir contains 'software' %}current{% endif %}" href="/software/">Software</a>
-        </nav>
     </div>
 
     <div class="layout">
         <div class="sidebar">
-            {% assign menuPages = site.pages %}
-            {% if page.dir contains "software" %}
-                {% assign menuPages = site.pages | where_exp:"page",
-            "page.dir contains 'software'" %}
-            {% elsif page.dir contains "guides" %}
-                {% assign menuPages = site.pages | where_exp:"page",
-            "page.dir contains 'guides'" %}
-            {% else %}
-                {% assign menuPages = site.pages | where_exp:"page",
-            "page.dir contains 'guides'" %}
-            {% endif %}
-
-
-            {% assign menuPages = menuPages | sort: 'nav_weight' | reverse %}
+            {% assign menuPages = site.pages | sort: 'nav_weight' | reverse %}
             {% assign pageGroups = menuPages | group_by: "category" %}
             <ul>
             {% for cat in pageGroups %}

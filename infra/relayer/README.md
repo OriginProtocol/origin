@@ -1,1 +1,3 @@
-Meta-txn relayer service.
+To drive adoption, we want to be able to pay for a user's gas for certain transactions. This capability is not built into Ethereum, but can be done via contract magic. We create a proxy contract for a user and turn over ownership of that proxy to the user. The user can then sign a transaction to this proxy, which we can  submit and pay for. The proxy contract will authenicate the transaction that the user wants to run, then run it on their behalf.
+
+The Origin Relayer validates these proxy transactions, and then submits them to the blockchain.
