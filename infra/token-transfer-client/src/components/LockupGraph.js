@@ -28,6 +28,7 @@ const LockupGraph = ({ lockup }) => {
 
   return (
     <div
+      className="lockup-graph"
       style={{
         position: 'relative',
         height: '93px',

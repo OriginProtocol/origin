@@ -426,8 +426,8 @@ input, select {
   fill: #007cff;
 }
 
-canvas {
-  background-image: url('/static/media/dotted-lines.9b6f5b0c.svg');
+.lockup-graph canvas {
+  background-image: url('../assets/dotted-lines.svg');
   background-repeat: no-repeat;
   background-position: center;
 }
