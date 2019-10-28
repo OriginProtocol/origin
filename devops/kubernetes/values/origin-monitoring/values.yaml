@@ -2,7 +2,9 @@ grafana:
   grafana.ini:
     smtp:
       enabled: true
-      host: smtp.sendgrid.net
+      skip_verify: true
+      host: smtp.sendgrid.net:2525
+      from_address: no-reply@originprotocol.com
   dashboardsConfigMaps:
     default: grafana-dashboards-default
   dashboardProviders:
