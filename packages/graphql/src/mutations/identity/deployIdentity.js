@@ -150,10 +150,10 @@ async function deployIdentity(
   const { owner, proxy } = await getProxyAndOwner(from)
 
   // Create the identity data.
-  const identity = await _buildIdentity(owner, proxy, profile, attestations)
+  const ipfsData = await _buildIdentity(owner, proxy, profile, attestations)
 
   // Write the identity data to IPFS.
-  const ipfsHash = await post(contracts.ipfsRPC, identity)
+  const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
 
   debug(
     'contracts.config.centralizedIdentityEnabled=',
@@ -161,7 +161,7 @@ async function deployIdentity(
   )
   if (contracts.config.centralizedIdentityEnabled) {
     // Write the identity data to centralized storage via the bridge server.
-    console.log('WRITING IDENTITY !!!!!!')
+    console.log('WRITING IDENTITY VIA BRIDGE!!!!!!')
     const bridgeServer = contracts.config.bridge
     if (!bridgeServer) {
       throw new Error('Bridge server not configured')
@@ -173,14 +173,14 @@ async function deployIdentity(
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ identity, ipfsHash })
+      body: JSON.stringify({ ipfsData, ipfsHash })
     })
     if (response.status !== 200) {
       throw new Error(`Bridge write for identity ${from} failed`)
     }
     const data = await response.json()
     console.log('GOT RESPONSE !!! ID=', data.id)
-    return { id: data.id }
+    return { id: data.ethAddress }
   } else {
     // Write the identity data to the blockchain via the IdentityEvents contract.
     return txHelper({

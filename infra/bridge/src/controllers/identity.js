@@ -136,7 +136,7 @@ router.post('/', identityWriteVerify, async (req, res) => {
   // Call webhook to record the user's email in the insight tool.
   await postToEmailWebhook(identity)
 
-  return res.status(200).send({ id: owner })
+  return res.status(200).send({ ethAddress: owner })
 })
 
 /**

@@ -343,7 +343,7 @@ async function _decorateIdentityWithAvatarUrls(identity) {
  *   blockNumber is optional. It can be used to load older version of an identity.
  * @returns {{owner: {id: (*)}, proxy: {id: (*)}, strength: number, attestations: *, ipfsHash: *, id: *, verifiedAttestations: *}|any}
  */
-async function identity({ id }) {
+export async function identity({ id }) {
   console.log('CALLING identity resolver')
   if (typeof localStorage !== 'undefined' && localStorage.useWeb3Identity) {
     console.log('USING Web3 Identity !')
@@ -359,8 +359,10 @@ async function identity({ id }) {
   // Load the IPFS data for the user's identity.
   let data
   if (contracts.config.centralizedIdentityEnabled) {
+    console.log("CENTRALIZED IDENTITY ENABLED")
     data = await _getIdentityFromBridgeServer(owner)
   } else {
+    console.log("BLOCKCHAIN IDENTITY")
     data = await _getIdentityFromContract(accounts, blockNumber)
   }
 
@@ -511,7 +513,7 @@ async function _getIdentitiesFromBlockchain(contract, first, after) {
  * @param {Object} info: GraphQL info
  * @returns {Promise<null|{nodes, pageInfo, edges, totalCount}>}
  */
-async function identities(contract, { first = 10, after }, context, info) {
+export async function identities(contract, { first = 10, after }, context, info) {
   if (!contract) {
     return null
   }
@@ -588,7 +590,6 @@ function getAttestationProviders() {
 
 export default {
   id: contract => contract.options.address,
-  identity,
   identities,
   getAuthUrl: (_, { provider, ...args }) => getAuthUrl(provider, args),
   attestationProviders: () => getAttestationProviders()

@@ -23,7 +23,7 @@ const sectionThead = ({ title }) => (
 const dataTr = ({ key, value }) => (
   <tr key={key}>
     <th>{key}</th>
-    <td>{value}</td>
+    <td>{String(value)}</td>
   </tr>
 )
 

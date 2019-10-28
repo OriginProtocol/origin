@@ -37,10 +37,10 @@ const config = {
   tokens: [],
 
   // Wire-on/off configs.
-  centralizedIdentityEnabled: localStorageHas('centralizedIdentityEnabled', true),
-  performanceMode: localStorageHas('performanceMode', true),
-  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled', true),
-  relayerEnabled: localStorageHas('relayerEnabled', true),
+  centralizedIdentityEnabled: localStorageHas('centralizedIdentityEnabled', 'true'),
+  performanceMode: localStorageHas('performanceMode', 'true'),
+  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled', 'true'),
+  relayerEnabled: localStorageHas('relayerEnabled', 'true'),
 }
 
 if (addresses.DAI) {

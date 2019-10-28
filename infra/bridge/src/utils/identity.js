@@ -117,7 +117,7 @@ async function _postToWebhook(
  */
 async function postToEmailWebhook(identity) {
   if (process.env.NODE_ENV !== 'production') {
-    logger.info('Test environment. Skipping pubsub publish.')
+    logger.info('Test environment. Skipping email webhook.')
     return
   }
   const url = process.env.EMAIL_WEBHOOK

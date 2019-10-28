@@ -164,6 +164,8 @@ export function setNetwork(net, customConfig) {
     net = 'rinkeby'
   }
 
+  console.log("##### SETTING NETWORK TO:", net)
+
   let config = JSON.parse(JSON.stringify(Configs[net]))
   if (
     isBrowser &&
@@ -182,6 +184,8 @@ export function setNetwork(net, customConfig) {
   }
 
   config = { ...config, ...customConfig }
+
+  console.log("###### CONFIG=", JSON.stringify(config, null, 2))
 
   context.net = net
   context.networkId = config.networkId
