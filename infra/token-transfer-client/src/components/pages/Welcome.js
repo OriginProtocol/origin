@@ -64,6 +64,9 @@ class Welcome extends Component {
   }
 
   renderWelcome = () => {
+    const skipRevisedSchedule =
+      this.props.user.revisedTermsAgreedAt ||
+      this.props.user.revisedScheduleRejected
     return (
       <>
         <h1>
@@ -94,19 +97,14 @@ class Welcome extends Component {
         <button
           className="btn btn-secondary btn-lg"
           onClick={() => {
-            if (
-              this.props.user.revised_terms_agreed_at ||
-              this.props.user.revised_schedule_rejected
-            ) {
+            if (skipRevisedSchedule) {
               this.setState({ redirectTo: '/terms' })
             } else {
               this.setState({ redirectTo: '/revised_schedule' })
             }
           }}
         >
-          {this.props.user.revised_terms_agreed_at
-            ? 'Continue'
-            : 'View Revised Schedule'}
+          {skipRevisedSchedule ? 'Continue' : 'View Revised Schedule'}
         </button>
       </>
     )
