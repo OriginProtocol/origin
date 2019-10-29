@@ -87,7 +87,7 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
     }
   }
 
-  const renderMap = () => {
+  const renderExistingLocationMap = () => {
     let containerStyle = {
       height: '400px'
     }
@@ -137,7 +137,7 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
         <div className="row location-obfuscation-map">
           <div className="listing-step">
             <div className="col-md-8 px-0 px-md-3">
-              <div className="form-group">{renderMap()}</div>
+              <div className="form-group">{renderExistingLocationMap()}</div>
             </div>
             <div className="actions mt-auto">
               <button
