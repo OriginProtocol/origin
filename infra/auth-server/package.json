@@ -32,6 +32,7 @@
     "pg": "^7.12.1",
     "redis": "^2.8.0",
     "sequelize": "^5.20.0",
+    "sequelize-cli": "^5.5.0",
     "supertest": "^4.0.2",
     "web3-eth": "^1.2.1",
     "web3-utils": "^1.2.1"
@@ -43,7 +44,8 @@
     "@babel/register": "^7.6.2",
     "chai": "^4.2.0",
     "eslint": "^6.5.1",
-    "mocha": "^6.2.1"
+    "mocha": "^6.2.1",
+    "nodemon": "1.19.4"
   },
   "prettier": {
     "semi": false,

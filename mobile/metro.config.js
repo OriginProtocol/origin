@@ -10,7 +10,7 @@ const path = require('path')
 const externalPackages = {
   '@origin/graphql': path.resolve(__dirname + '/../packages/graphql/'),
   '@origin/contracts': path.resolve(__dirname + '/../packages/contracts/'),
-  '@origin/auth-client': path.resolve(__dirname + '/../packages/auht-client')
+  '@origin/auth-client': path.resolve(__dirname + '/../packages/auth-client/')
 }
 
 const extraNodeModules = {

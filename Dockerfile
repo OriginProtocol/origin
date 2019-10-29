@@ -21,6 +21,7 @@ COPY ./packages/eventsource/package.json ./packages/eventsource/
 COPY ./packages/event-cache/package.json ./packages/event-cache/
 COPY ./packages/services/package.json ./packages/services/
 COPY ./packages/token/package.json ./packages/token/
+COPY ./packages/auth-client/package.json ./packages/auth-client/
 COPY ./packages/ip2geo/package.json ./packages/ip2geo/
 COPY ./infra/discovery/package.json ./infra/discovery/
 COPY ./infra/messaging/package.json ./infra/messaging/
