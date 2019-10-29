@@ -389,15 +389,7 @@ async function recordGrowthAttestationEvents(
       continue
     }
 
-    await growthEvent.insert(
-      logger,
-      1,
-      ethAddress,
-      eventType,
-      null,
-      null,
-      date
-    )
+    await growthEvent.insert(logger, 1, ethAddress, eventType, null, null, date)
   }
 }
 
