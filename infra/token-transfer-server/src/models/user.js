@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       otpVerified: DataTypes.BOOLEAN,
       employee: DataTypes.BOOLEAN,
       revisedScheduleAgreedAt: DataTypes.DATE,
+      revisedScheduleRejected: DataTypes.BOOLEAN,
       termsAgreedAt: DataTypes.DATE,
       investorType: DataTypes.ENUM(enums.InvestorTypes)
     },

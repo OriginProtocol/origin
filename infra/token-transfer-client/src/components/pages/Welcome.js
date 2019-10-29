@@ -96,7 +96,7 @@ class Welcome extends Component {
           onClick={() => {
             if (
               this.props.user.revised_terms_agreed_at ||
-              this.props.user.revised_terms_agreed_at === false
+              this.props.user.revised_schedule_rejected
             ) {
               this.setState({ redirectTo: '/terms' })
             } else {
