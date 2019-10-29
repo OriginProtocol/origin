@@ -27,7 +27,11 @@ class Welcome extends Component {
         .post(`${apiUrl}/api/verify_email_token`)
         .set('Authorization', `Bearer ${token}`)
     } catch (error) {
-      this.setState({ loading: false, error: 'Invalid token' })
+      if (!error.response) {
+        this.setState({ loading: false, error: 'Server' })
+      } else {
+        this.setState({ loading: false, error: 'Token' })
+      }
       return
     }
 
@@ -44,12 +48,21 @@ class Welcome extends Component {
   renderError = () => {
     return (
       <>
-        <h1>Error</h1>
+        <h1>{this.state.error} Error</h1>
         <p className="my-4">
-          It looks like the link you used to access this page is no longer
-          valid. Please{' '}
-          <a href="mailto:investors@originprotocol.com">contact</a> the Origin
-          Team.
+          {this.state.error === 'Token' && (
+            <>
+              It looks like the link you used to access this page is no longer
+              valid. Please{' '}
+              <a href="mailto:investors@originprotocol.com">contact</a> the Origin
+              Team.
+            </>
+          )}
+          {this.state.error === 'Server' && (
+            <>
+              A server error occurred, please try again later.
+            </>
+          )}
         </p>
       </>
     )
