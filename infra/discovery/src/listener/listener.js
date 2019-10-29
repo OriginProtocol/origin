@@ -36,15 +36,17 @@ class Context {
   constructor() {
     this.config = undefined
     this.web3 = undefined
+    this.contracts = undefined
   }
 
-  async init(config, errorCounter) {
+  async init(config, contracts, errorCounter) {
     const web3Provider = new Web3.providers.HttpProvider(
       contractsContext.config.provider
     )
     this.web3 = new Web3(web3Provider)
     this.config = config
     this.config.networkId = await this.web3.eth.net.getId()
+    this.contracts = contracts
     this.errorCounter = errorCounter
     return this
   }
@@ -110,19 +112,30 @@ logger.info(config)
  * @return {Promise<void>}
  */
 async function main() {
-  const context = await new Context().init(config, errorCounter)
+  const context = await new Context().init(
+    config,
+    contractsContext,
+    errorCounter
+  )
 
   // List of contracts the listener watches events from.
+  // Note: The identity and listing handlers have a dependency on the data extracted
+  // by the proxy handler. Therefore it is important to process the proxy contract
+  // events first.
   const contracts = {}
-  if (config.identity)
+  if (config.proxy) {
+    contracts['ProxyFactory'] = contractsContext.ProxyFactory
+  }
+  if (config.identity) {
     contracts['IdentityEvents'] = contractsContext.identityEvents
-  if (config.proxy) contracts['ProxyFactory'] = contractsContext.ProxyFactory
-
-  // Listen to all versions of marketplace
-  Object.keys(contractsContext.marketplaces).forEach(key => {
-    contracts[`V${key}_Marketplace`] =
-      contractsContext.marketplaces[key].contract
-  })
+  }
+  if (config.marketplace) {
+    // Listen to all versions of marketplace
+    Object.keys(contractsContext.marketplaces).forEach(key => {
+      contracts[`V${key}_Marketplace`] =
+        contractsContext.marketplaces[key].contract
+    })
+  }
 
   if (context.config.concurrency > 1) {
     logger.warn(`Backfill mode: concurrency=${context.config.concurrency}`)
@@ -146,6 +159,7 @@ async function main() {
       return context.web3.eth.getBlockNumber()
     })
 
+    // Note: Object.keys() returns keys in the same order they were inserted.
     for (const contractKey of Object.keys(contracts)) {
       let processedToBlock = await getLastBlock(
         context.config,
