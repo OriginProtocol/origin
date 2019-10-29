@@ -33,9 +33,10 @@ class RevisedTerms extends Component {
     return (
       <>
         <div className="action-card">
-          <h1>Revised Schedule Agreement</h1>
+          <h1>Investor Amendment Agreement</h1>
           <p>
-            Please agree to the agreement below and click Continue to proceed.
+            Please agree to the investor amendment below to use the Origin
+            Investor Portal.
           </p>
           <div className="form-group">
             <div className="terms-wrapper">
@@ -78,6 +79,13 @@ class RevisedTerms extends Component {
           >
             Accept Agreement
           </button>
+          <p>
+            If you do not agree with the proposed amendment, you can contact
+            Origin Investor Relations at
+            <a href="mailto:investor-relations@originprotocol.com">
+              investor-relations@originprotocol.com
+            </a>
+          </p>
         </div>
       </>
     )
