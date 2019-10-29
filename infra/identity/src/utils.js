@@ -281,13 +281,10 @@ function validateIdentityIpfsData(ipfsData) {
  */
 async function saveIdentity(owner, ipfsHash, ipfsData, attestationMetadata) {
   // Create an object representing the updated identity.
-  // Notes:
-  //  - By convention, the identity is stored under the owner's address in the DB.
-  //  - We omit a few fields coming from the attestation metadata such as
-  //    twitterProfile and telegramProfilesince. Those are large JSON objects
-  //    that would clutter the identity and they can be retrieved if needed
-  //    from the attestation table.
-  const blacklistedFields = ['twitterProfile', 'telegramProfile']
+  // Note: by convention, the identity is stored under the owner's address in the DB.
+  // TODO(franck): consider backlisting twitterProfile and telegramProfile to
+  //               reduce the amount of data stored in the data column.
+  const blacklistedFields = []
   const identity = {
     ethAddress: owner.toLowerCase(),
     firstName: get(ipfsData, 'profile.firstName'),
