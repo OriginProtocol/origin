@@ -36,6 +36,11 @@ export default withScriptjs(
         }
       }
 
+      if (readonly && circleOptions && circleOptions.radius) {
+        // 30 is minRaidius. This is a reverse function of getCircleRadius in ListingObfscation
+        defaultZoom = 20 - Math.log(circleOptions.radius / 30) / Math.log(2) - 2
+      }
+
       return (
         <GoogleMap
           ref={onMapMonted}
@@ -73,5 +78,5 @@ export default withScriptjs(
         </GoogleMap>
       )
     }
-  )
+  ),
 )

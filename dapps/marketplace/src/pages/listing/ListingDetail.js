@@ -7,6 +7,7 @@ import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withTokenBalance from 'hoc/withTokenBalance'
 import withGrowthRewards from 'hoc/withGrowthRewards'
 
+import { DEFAULT_GOOGLE_MAPS_API_KEY } from 'constants/config'
 import Gallery from 'components/Gallery'
 import GalleryScroll from 'components/GalleryScroll'
 import Reviews from 'components/Reviews'
@@ -238,13 +239,12 @@ class ListingDetail extends Component {
 
     return (
       <LocationMap
-        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=xxx"
+        googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process.env.GOOGLE_MAPS_API_KEY || DEFAULT_GOOGLE_MAPS_API_KEY}`}
         loadingElement={<div style={{ height: '100%' }} />}
         containerElement={
           <div className="mt-2 mt-md-4" style={containerStyle} />
         }
         mapElement={<div style={{ height: '100%' }} />}
-        defaultZoom={16}
         defaultCenter={{
           latitude: listing.location.latitude,
           longitude: listing.location.longitude

@@ -17,7 +17,15 @@ const ListingImages = ({ prev, next, listing, onChange, isMobile }) => {
   return (
     <>
       <h1>
-        <Link to={prev} className="back d-md-none" />
+        <Link
+          onClick={() => {
+            // If a location is already set we can skip the locationObfuscation step
+            listing.skipLocationObfuscationBackward = true
+            onChange({ ...listing })
+          }}
+          to={prev}
+          className="back d-md-none"
+        />
         <fbt desc="createListing.addPhotos">Add Photos</fbt>
       </h1>
       <div className="step-description mb-0">

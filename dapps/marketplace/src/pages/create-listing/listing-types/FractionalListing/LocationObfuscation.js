@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { fbt } from 'fbt-runtime'
 
+import { DEFAULT_GOOGLE_MAPS_API_KEY } from 'constants/config'
 import Redirect from 'components/Redirect'
 import Link from 'components/Link'
 import LocationMap from 'components/LocationMap'
@@ -11,6 +12,7 @@ const LocationObfuscation = ({ prev, next, listing, onChange }) => {
    * 20 doubles the previous zoom.
    */
   const getCircleRadius = zoomLevel => {
+    // if 30 is changed, it should also be changed in circleRadiusToZoom in LocationMap component
     const minRadius = 30
     return Math.pow(2, 20 - zoomLevel - 1) * minRadius
   }
@@ -35,14 +37,24 @@ const LocationObfuscation = ({ prev, next, listing, onChange }) => {
     setCircleRadius(getCircleRadius(map.getZoom()))
   }
 
-  if (redirect) {
+  if (listing.skipLocationObfuscationBackward) {
+    delete listing.skipLocationObfuscationBackward
+    onChange({ ...listing })
+    return <Redirect to={prev} push />
+  }
+
+  if (redirect || listing.skipLocationObfuscationForward) {
+    delete listing.skipLocationObfuscationForward
+    onChange({ ...listing })
     return <Redirect to={next} push />
   }
 
   return (
     <>
       <h1>
-        <Link to={prev} className="back d-md-none" />
+        <Link onClick={() => {
+          delete listing.exactLocation
+        }} to={prev} className="back d-md-none" />
         <fbt desc="createListing.listingLocation">Listing Location</fbt>
       </h1>
       <div className="step-description mb-0">
@@ -70,7 +82,7 @@ const LocationObfuscation = ({ prev, next, listing, onChange }) => {
           >
             <div className="form-group">
               <LocationMap
-                googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=xxx"
+                googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process.env.GOOGLE_MAPS_API_KEY || DEFAULT_GOOGLE_MAPS_API_KEY}`}
                 loadingElement={<div style={{ height: `100%` }} />}
                 containerElement={
                   <div style={{ height: '50vh', maxHeight: '400px' }} />
