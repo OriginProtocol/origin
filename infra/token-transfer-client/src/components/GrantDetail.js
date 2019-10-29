@@ -1,4 +1,5 @@
 import React from 'react'
+import moment from 'moment'
 
 import Swiper from 'react-id-swiper'
 import 'react-id-swiper/lib/styles/css/swiper.css'
@@ -21,7 +22,7 @@ const GrantDetail = props => {
           <div className="col">
             <strong>Purchase Date</strong>
           </div>
-          <div className="col text-right">{grant.purchaseDate}</div>
+          <div className="col text-right">{moment(grant.purchaseDate).format('LL')}</div>
         </div>
         <div className="row mb-2">
           <div className="col">
