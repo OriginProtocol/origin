@@ -16,14 +16,6 @@ const ReviewFractionalListing = props => {
   const listing = props.listing
 
   const renderMap = () => {
-    /* Zoom level goes from 1 - 20 where 1 is the whole world and each level up to
-     * 20 doubles the previous zoom.
-     */
-    const getCircleRadius = zoomLevel => {
-      const minRadius = 30
-      return Math.pow(2, 20 - zoomLevel - 1) * minRadius
-    }
-
     let containerStyle = {
       height: '400px'
     }
