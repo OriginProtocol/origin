@@ -22,7 +22,9 @@ const GrantDetail = props => {
           <div className="col">
             <strong>Purchase Date</strong>
           </div>
-          <div className="col text-right">{moment(grant.purchaseDate).format('LL')}</div>
+          <div className="col text-right">
+            {moment(grant.purchaseDate).format('LL')}
+          </div>
         </div>
         <div className="row mb-2">
           <div className="col">
