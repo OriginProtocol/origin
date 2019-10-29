@@ -53,8 +53,8 @@ function removeListingIdBlockNumber(listingId) {
 }
 
 class MarketplaceEventHandler {
-  constructor(config, graphqlClient) {
-    this.config = config
+  constructor(context, graphqlClient) {
+    this.config = context.config
     this.graphqlClient = graphqlClient
   }
 

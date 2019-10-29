@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = models => {
     User.hasMany(models.Grant)
+    User.hasMany(models.Lockup)
     User.hasMany(models.Transfer)
   }
 

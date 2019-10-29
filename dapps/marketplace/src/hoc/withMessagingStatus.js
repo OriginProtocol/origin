@@ -1,13 +1,22 @@
 import React from 'react'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useSubscription } from '@apollo/react-hooks'
 
 import query from 'queries/WalletStatus'
 
 import get from 'lodash/get'
 
+import MessagingStatusChangeSubscription from 'queries/MessagingStatusChangeSubscription'
+
 function withMessagingStatus(WrappedComponent, { excludeData } = {}) {
   const WithMessagingStatus = props => {
-    const { data, loading, error, networkStatus, refetch } = useQuery(query)
+    const { data, loading, error, networkStatus, refetch } = useQuery(query, {
+      fetchPolicy: 'network-only',
+      notifyOnNetworkStatusChange: true
+    })
+
+    useSubscription(MessagingStatusChangeSubscription, {
+      onSubscriptionData: () => refetch()
+    })
 
     if (error) console.error('error executing WalletStatusQuery', error)
 

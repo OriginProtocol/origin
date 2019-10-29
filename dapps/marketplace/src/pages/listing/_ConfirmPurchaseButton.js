@@ -25,9 +25,15 @@ const ConfirmPurchaseButton = ({
   identity,
   messagingStatusLoading,
   identityLoading,
-  walletLoading
+  walletLoading,
+  messagingKeysLoading
 }) => {
-  if (messagingStatusLoading || identityLoading || walletLoading) {
+  if (
+    messagingStatusLoading ||
+    identityLoading ||
+    walletLoading ||
+    messagingKeysLoading
+  ) {
     return (
       <button
         className={className}

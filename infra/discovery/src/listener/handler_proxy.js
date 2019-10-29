@@ -7,8 +7,8 @@ const logger = require('./logger')
 const ZeroAddress = '0x0000000000000000000000000000000000000000'
 
 class ProxyEventHandler {
-  constructor(config) {
-    this.config = config
+  constructor(context) {
+    this.config = context.config
   }
 
   /**

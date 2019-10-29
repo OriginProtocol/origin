@@ -10,7 +10,6 @@ function toMoment(date) {
 }
 
 /* Convert the dates of a grant object to moments.
- *
  */
 function momentizeGrant(grant) {
   return {
@@ -107,6 +106,7 @@ function vestedAmount(grantObj) {
 
 module.exports = {
   momentizeGrant,
+  toMoment,
   vestingEvents,
   vestingSchedule,
   vestedAmount

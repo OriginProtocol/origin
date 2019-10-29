@@ -1,10 +1,16 @@
 const Sequelize = require('sequelize')
+const get = require('lodash/get')
+const isEqual = require('lodash/isEqual')
+const omitBy = require('lodash/omitBy')
+const uniqWith = require('lodash/uniqWith')
 
 const db = {
   ...require('@origin/growth-event/src/models'),
   ...require('./models')
 }
+const originIpfs = require('@origin/ipfs')
 const { ip2geo } = require('@origin/ip2geo')
+const validator = require('@origin/validator')
 
 const logger = require('./logger')
 
@@ -18,6 +24,37 @@ const siteNameToService = {
   'twitter.com': 'twitter',
   'wechat.com': 'wechat',
   'telegram.com': 'telegram'
+}
+
+/**
+ * Some legacy identities were storing the avatar picture as data URI in the
+ * profile data. This methods extracts the picture, uploads it to IPFS and
+ * modifies the identity so that it contains the IPFS hash of the picture
+ * rather than the binary picture data. In case of an error during the conversion,
+ * the binary data is stripped from the identity and the error is logged but not returned.
+ *
+ * @param {string} ipfsGateway: URL of the IPFS gateway to use.
+ * @param {Object} identity: JSON blob of the identity fetched from IPFS.
+ * @returns {Promise<void>}
+ */
+async function convertLegacyAvatar(ipfsGateway, identity) {
+  const profile = identity.profile
+  if (!profile || !profile.avatar || !profile.avatar.length) {
+    logger.debug('No legacy avatar conversion needed.')
+    return
+  }
+  try {
+    // Extract the binary data from the data URI.
+    const parts = profile.avatar.split(',')
+    const avatarBinary = Buffer.from(parts[1], 'base64')
+    // Upload the binary data to IPFS.
+    const avatarHash = await originIpfs.postBinary(ipfsGateway, avatarBinary)
+    profile.avatarUrl = 'ipfs://' + avatarHash
+    logger.debug(`Legacy avatar conversion successful. Hash: ${avatarHash}`)
+  } catch (err) {
+    logger.warn('Failed to convert legacy avatar:', err)
+  }
+  delete profile.avatar
 }
 
 /**
@@ -127,7 +164,7 @@ async function loadIdentityAddresses(ownerAddress) {
  * @param {Array<Object>} attestations: attestations present in the user's identity.
  * @returns {Promise<Object>}
  */
-async function loadIdentityAttestationsMetadata(addresses, attestations) {
+async function loadAttestationMetadata(addresses, attestations) {
   const metadata = {}
 
   // Load attestation data.
@@ -217,6 +254,78 @@ async function loadIdentityAttestationsMetadata(addresses, attestations) {
 }
 
 /**
+ * Validates identity data stored in IPFS by checking against JSON schemas.
+ * Throws in case of a validation error.
+ *
+ * @param {Object} ipfsData: JSON parsed identity data stored on IPFS.
+ */
+function validateIdentityIpfsData(ipfsData) {
+  validator('https://schema.originprotocol.com/identity_1.0.0.json', ipfsData)
+  validator(
+    'https://schema.originprotocol.com/profile_2.0.0.json',
+    ipfsData.profile
+  )
+  ipfsData.attestations.forEach(a => {
+    validator('https://schema.originprotocol.com/attestation_1.0.0.json', a)
+  })
+}
+
+/**
+ * Saves an identity in the DB.
+ *
+ * @param {string} owner: Eth address of the user
+ * @param {string} ipfsHash: IPFS hash of the identity blob.
+ * @param {Object} ipfsData: JSON parsed identity blob stored in IPFS.
+ * @param {Object} attestationMetadata: Attestation specific metadata loaded from the DB.
+ * @returns {Promise<{firstName: *, lastName: *, data: {identity: *, ipfsHash: *, ipfsHashHistory: []}, avatarUrl: *, ethAddress: *}>}
+ */
+async function saveIdentity(owner, ipfsHash, ipfsData, attestationMetadata) {
+  // Create an object representing the updated identity.
+  // Note: by convention, the identity is stored under the owner's address in the DB.
+  // TODO(franck): consider backlisting twitterProfile and telegramProfile to
+  //               reduce the amount of data stored in the data column.
+  const blacklistedFields = []
+  const identity = {
+    ethAddress: owner.toLowerCase(),
+    firstName: get(ipfsData, 'profile.firstName'),
+    lastName: get(ipfsData, 'profile.lastName'),
+    avatarUrl: get(ipfsData, 'profile.avatarUrl'),
+    data: {
+      identity: ipfsData,
+      ipfsHash: ipfsHash,
+      ipfsHashHistory: []
+    },
+    ...omitBy(attestationMetadata, (v, k) => blacklistedFields.includes(k))
+  }
+
+  // Look for an existing identity to get the IPFS hash history.
+  const identityRow = await db.Identity.findOne({
+    where: { ethAddress: owner.toLowerCase() }
+  })
+  if (identityRow) {
+    logger.debug(`Found existing identity DB row for ${owner}`)
+    // Append the old IPFS hash to the history, handling the possibility
+    // we may be reprocessing data (ex: in the case of a listener backfill).
+    let ipfsHashHistory = get(identityRow, 'data.ipfsHashHistory', [])
+    const prevIpfsHash = get(identityRow, 'data.ipfsHash')
+    if (prevIpfsHash && prevIpfsHash !== ipfsHash) {
+      ipfsHashHistory.push({
+        ipfsHash: prevIpfsHash,
+        timestamp: identityRow.updatedAt.getTime()
+      })
+      // Dedupe.
+      ipfsHashHistory = uniqWith(ipfsHashHistory, isEqual)
+    }
+    identity.data.ipfsHashHistory = ipfsHashHistory
+  }
+
+  // Persist the identity in the DB.
+  await db.Identity.upsert(identity)
+
+  return identity
+}
+
+/**
  * Records a ProfilePublished event in the growth_event table
  * at the condition that the identity has a first name and last name.
  *
@@ -291,8 +400,11 @@ async function recordGrowthAttestationEvents(
 }
 
 module.exports = {
+  convertLegacyAvatar,
+  loadAttestationMetadata,
   loadIdentityAddresses,
-  loadIdentityAttestationsMetadata,
+  recordGrowthAttestationEvents,
   recordGrowthProfileEvent,
-  recordGrowthAttestationEvents
+  saveIdentity,
+  validateIdentityIpfsData
 }
