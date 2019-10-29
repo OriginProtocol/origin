@@ -94,10 +94,16 @@ class Welcome extends Component {
         <button
           className="btn btn-secondary btn-lg"
           onClick={() => {
-            this.setState({ redirectTo: '/revised_schedule' })
+            if (this.props.user.revised_terms_agreed_at || this.props.user.revised_terms_agreed_at === false) {
+              this.setState({ redirectTo: '/terms' })
+            } else {
+              this.setState({ redirectTo: '/revised_schedule' })
+            }
           }}
         >
-          View Revised Schedule
+          {this.props.user.revised_terms_agreed_at
+            ? 'Continue'
+            : 'View Revised Schedule'}
         </button>
       </>
     )
