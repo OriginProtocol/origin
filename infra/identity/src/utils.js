@@ -374,12 +374,12 @@ async function recordGrowthAttestationEvents(
   date,
   growthEvent
 ) {
-  // Note: this could be optimized by inserting events in parallel rather than serially.
-  // Though one caveat is that the identity data structure may contain more
-  // than one attestation of the same type. For example if a user verifies
-  // their email more than once at different point in time. This could then
-  // cause a race condition within the growthEvent.insert() method and more than one
-  // row for a given attestation type could get inserted in the growth_event table.
+  // Note: this could be optimized by inserting events in parallel rather
+  // than serially. A caveat is that the identity data structure may contain
+  // multiple attestations of the same type. For example if a user verifies
+  // their email more than once. This could then cause a race condition within
+  // the growthEvent.insert() method where the checks for ensuring there is
+  // one growth-event row per attestation type can fail.
   for (const attestation of attestations) {
     const attestationService = _getAttestationService(attestation)
     const eventType =
