@@ -245,6 +245,7 @@ services:
     volumes: *volumes
     depends_on:
       - postgres
+      - redis-master
     environment:
       - APNS_BUNDLE_ID=com.originprotocol.catcher
       - APNS_KEY_FILE=
@@ -255,6 +256,9 @@ services:
         # Service account for Firebase
       - FIREBASE_SERVICE_JSON=
       - FIREBASE_DB_URL=
+      - REDIS_URL=redis://redis-master:6379
+      - JWT_SECRET=secret
+      - JWT_EXPIRE_IN=30 days
     ports:
       - "3456:3456"
     command:
