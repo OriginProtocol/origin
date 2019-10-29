@@ -59,7 +59,6 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
     setFetchingLocation(true)
     setCurrentLocationError(null)
 
-    // TODO add some fetching location spinner that times out
     if (window.webViewBridge) {
       if (window.webViewBridge.send) {
         const onSuccess = data => {
