@@ -5,6 +5,7 @@ nav_weight: 200
 category: Software
 ---
 
+<img src="assets/system-diagram.dot.png" style="height:300px">
 
 The Origin ecosystem builds from blockchain and IPFS data to provide the speed and features that enable real user growth and fast application development.
 

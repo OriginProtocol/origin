@@ -1,0 +1,68 @@
+digraph G {
+    graph [ dpi = 300 ];
+    node [shape=box style=filled color=white fontcolor=white fillcolor="#007cff" fontname="Lato"]
+    edge [arrowhead=none]
+
+    "DApp" [group=g1]
+    "DApp" -> "IPFS Proxy"
+    "DApp" -> "GraphQL Library"
+
+    "IPFS Proxy"
+    "IPFS Proxy" -> "IPFS Network"
+    
+    "GraphQL Library" [group=g1]
+    "GraphQL Library" -> "GraphQL Server"
+    "GraphQL Library" -> "Discovery Server"
+    "GraphQL Library" -> "Messaging Server"
+    "GraphQL Library" -> "Bridge Server"
+    "GraphQL Library" -> "IPFS Proxy"
+    "GraphQL Library" -> "Notification Server"
+    "GraphQL Library" -> "Relayer Server"
+    "GraphQL Library" -> "Ethereum Blockchain"
+
+    "GraphQL Server" [group=g1]
+    "GraphQL Server" -> "Postgres"
+    "GraphQL Server" -> "GraphQL Library" [color=grey]
+
+    "Discovery Server"
+    "Discovery Server" -> "Elasticsearch"
+    "Discovery Server" -> "Postgres"
+    
+
+    "Bridge Server"
+    "Bridge Server" -> "Redis"
+    "Bridge Server" -> "Postgres"
+
+    "Event Listener"
+    "Event Listener" -> "Ethereum Blockchain"
+    "Event Listener" -> "IPFS Network"
+    "Event Listener" -> "GraphQL Library" [color=grey]
+    
+    "Messaging Server"
+    "Messaging Server" -> "Redis"
+    "Messaging Server" -> "Postgres"
+    
+    "Notification Server"
+    "Notification Server" -> "Event Listener"
+    "Notification Server" -> "Postgres"
+
+
+    "Relayer Server"
+    "Relayer Server" -> "Ethereum Blockchain"
+    "Relayer Server" -> "Redis"
+    "Relayer Server" -> "Postgres"
+
+    "Postgres" [fillcolor="#6644e1"]
+    "Postgres" -> "Event Listener"
+
+    "Redis" [fillcolor="#6644e1"]
+    "Redis" -> "Event Listener"
+
+    "Elasticsearch" [fillcolor="#6644e1"]
+    "Elasticsearch" -> "Event Listener"
+
+    "IPFS Network" [fillcolor="#0C1C29"]
+
+    "Ethereum Blockchain" [fillcolor="#0C1C29"]
+    
+}
