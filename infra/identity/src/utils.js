@@ -282,7 +282,7 @@ function validateIdentityIpfsData(ipfsData) {
 async function saveIdentity(owner, ipfsHash, ipfsData, attestationMetadata) {
   // Create an object representing the updated identity.
   // Note: by convention, the identity is stored under the owner's address in the DB.
-  // TODO(franck): consider backlisting twitterProfile and telegramProfile to
+  // TODO(franck): consider blacklisting twitterProfile and telegramProfile to
   //               reduce the amount of data stored in the data column.
   const blacklistedFields = []
   const identity = {
@@ -374,29 +374,31 @@ async function recordGrowthAttestationEvents(
   date,
   growthEvent
 ) {
-  await Promise.all(
-    attestations.map(attestation => {
-      const attestationService = _getAttestationService(attestation)
-      const eventType =
-        growthEvent.AttestationServiceToEventType[attestationService]
-      if (!eventType) {
-        logger.error(
-          `Unexpected att. service: ${attestationService}. Skipping.`
-        )
-        return
-      }
+  // Note: this could be optimized by inserting events in parallel rather than serially.
+  // Though one caveat is that the identity data structure may contain more
+  // than one attestation of the same type. For example if a user verifies
+  // their email more than once at different point in time. This could then
+  // cause a race condition within the growthEvent.insert() method and more than one
+  // row for a given attestation type could get inserted in the growth_event table.
+  for (const attestation of attestations) {
+    const attestationService = _getAttestationService(attestation)
+    const eventType =
+      growthEvent.AttestationServiceToEventType[attestationService]
+    if (!eventType) {
+      logger.error(`Skipping unexpected service: ${attestationService}.`)
+      continue
+    }
 
-      return growthEvent.insert(
-        logger,
-        1,
-        ethAddress,
-        eventType,
-        null,
-        null,
-        date
-      )
-    })
-  )
+    await growthEvent.insert(
+      logger,
+      1,
+      ethAddress,
+      eventType,
+      null,
+      null,
+      date
+    )
+  }
 }
 
 module.exports = {
