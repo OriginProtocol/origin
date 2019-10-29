@@ -1,6 +1,7 @@
 const moment = require('moment')
 const get = require('lodash.get')
 const jwt = require('jsonwebtoken')
+const Sequelize = require('sequelize')
 
 const { discordWebhookUrl } = require('../config')
 const { sendEmail } = require('../lib/email')
@@ -25,6 +26,22 @@ const {
  */
 async function addLockup(userId, amount, data = {}) {
   const user = await hasBalance(userId, amount)
+
+  const unconfirmedLockups = await Lockup.findAll({
+    where: {
+      userId: user.id,
+      confirmed: null,
+      created_at: {
+        [Sequelize.Op.gte]: moment.utc().subtract(5, 'minutes')
+      }
+    }
+  })
+
+  if (unconfirmedLockups.length > 0) {
+    throw new ReferenceError(
+      'Unconfirmed lockups exist, please confirm or wait until expiry'
+    )
+  }
 
   let lockup
   const txn = await sequelize.transaction()

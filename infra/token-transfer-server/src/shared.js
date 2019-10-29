@@ -78,7 +78,11 @@ function calculateEarnings(lockups) {
  */
 function calculateLocked(lockups) {
   return lockups.reduce((total, lockup) => {
-    if (lockup.confirmed && lockup.end > moment.utc()) {
+    if (
+      lockup.confirmed &&
+      lockup.start < moment.utc() &&
+      lockup.end > moment.utc()
+    ) {
       return total.plus(BigNumber(lockup.amount))
     }
     return total

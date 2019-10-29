@@ -7,14 +7,19 @@ const sinon = require('sinon')
 const totp = require('notp').totp
 const base32 = require('thirty-two')
 const crypto = require('crypto')
+const sendgridMail = require('@sendgrid/mail')
+const jwt = require('jsonwebtoken')
 
 const { Grant, Lockup, Transfer, User, sequelize } = require('../../src/models')
 const { encrypt } = require('../../src/lib/crypto')
 const transferController = require('../../src/controllers/transfer')
 const enums = require('../../src/enums')
 
+process.env.ENCRYPTION_SECRET = 'test'
 process.env.LOCKUP_BONUS_RATE = 10
 process.env.LOCKUP_DURATION = 12
+
+const { encryptionSecret } = require('../../src/config')
 
 const app = require('../../src/app')
 
@@ -43,13 +48,15 @@ describe('Lockup HTTP API', () => {
         userId: this.user.id,
         start: moment().add(1, 'years'),
         end: moment().add(2, 'years'),
-        amount: 1000
+        amount: 1000,
+        confirmed: true
       }),
       await Lockup.create({
         userId: this.user.id,
         start: moment().add(2, 'years'),
         end: moment().add(3, 'years'),
-        amount: 10000
+        amount: 10000,
+        confirmed: true
       })
     ]
 
@@ -94,6 +101,8 @@ describe('Lockup HTTP API', () => {
   })
 
   it('should add a lockup', async () => {
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
     await request(this.mockApp)
       .post('/api/lockups')
       .send({
@@ -105,13 +114,19 @@ describe('Lockup HTTP API', () => {
     expect(
       (await request(this.mockApp).get('/api/lockups')).body.length
     ).to.equal(3)
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
   })
 
   it('should add a lockup if enough tokens with matured lockups', async () => {
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
     await request(this.mockApp)
       .post('/api/lockups')
       .send({
-        amount: 1000001,
+        amount: 100001,
         code: totp.gen(this.otpKey)
       })
       .expect(422)
@@ -124,16 +139,21 @@ describe('Lockup HTTP API', () => {
         .subtract(1, 'days'),
       end: moment().subtract(1, 'years'),
       code: totp.gen(this.otpKey),
-      bonusRate: 10.0
+      bonusRate: 10.0,
+      confirmed: true
     })
 
-    await request(this.mockApp)
+    const response = await request(this.mockApp)
       .post('/api/lockups')
       .send({
-        amount: 1000001,
+        amount: 100001,
         code: totp.gen(this.otpKey)
       })
       .expect(201)
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
   })
 
   it('should not add a lockup if not enough tokens (vested)', async () => {
@@ -297,5 +317,25 @@ describe('Lockup HTTP API', () => {
       .expect(422)
 
     expect(response.text).to.match(/greater/)
+  })
+
+  it('should not confirm a lockup with invalid token', async () => {
+    const transfer = await Transfer.create({
+      userId: this.user.id,
+      amount: 1000000
+    })
+
+    const token = jwt.sign(
+      {
+        lockupId: 'invalid'
+      },
+      encryptionSecret,
+      { expiresIn: '5m' }
+    )
+
+    await request(this.mockApp)
+      .post(`/api/lockups/${transfer.id}`)
+      .send({ token })
+      .expect(400)
   })
 })
