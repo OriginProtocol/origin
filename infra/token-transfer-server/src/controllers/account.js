@@ -2,13 +2,13 @@ const express = require('express')
 const router = express.Router()
 const { check, validationResult } = require('express-validator')
 
+const { asyncMiddleware } = require('../utils')
 const { ensureLoggedIn } = require('../lib/login')
 const {
-  asyncMiddleware,
   isEthereumAddress,
   isExistingAddress,
   isExistingNickname
-} = require('../utils')
+} = require('../validators')
 const { Account } = require('../models')
 
 /**

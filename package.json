@@ -2,7 +2,7 @@
   "name": "root",
   "private": true,
   "dependencies": {
-    "lerna": "3.18.1"
+    "lerna": "3.18.3"
   },
   "workspaces": {
     "packages": [
@@ -17,7 +17,7 @@
   "devDependencies": {
     "babel-eslint": "10.0.3",
     "chai": "4.2.0",
-    "eslint": "6.5.1",
+    "eslint": "6.6.0",
     "eslint-config-react-app": "5.0.2",
     "eslint-config-standard": "14.1.0",
     "eslint-plugin-flowtype": "4.3.0",
