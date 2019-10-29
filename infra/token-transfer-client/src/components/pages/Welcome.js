@@ -54,14 +54,12 @@ class Welcome extends Component {
             <>
               It looks like the link you used to access this page is no longer
               valid. Please{' '}
-              <a href="mailto:investors@originprotocol.com">contact</a> the Origin
-              Team.
+              <a href="mailto:investors@originprotocol.com">contact</a> the
+              Origin Team.
             </>
           )}
           {this.state.error === 'Server' && (
-            <>
-              A server error occurred, please try again later.
-            </>
+            <>A server error occurred, please try again later.</>
           )}
         </p>
       </>
