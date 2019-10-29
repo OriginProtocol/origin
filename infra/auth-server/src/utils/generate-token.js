@@ -37,7 +37,9 @@ const logTokenData = async ({ ipAddress, ...data }) => {
  * @param {String} params.address ETH Address of the signer
  * @param {String} params.signature Sign of `address` on `payload`
  * @param {Object} params.payload the payload that was signed
- * @retuns <String>authToken if successful; null otherwise
+ * @retuns result.authToken if successful; null otherwise
+ * @retuns result.expiresAt timestamp of token expiration date
+ * @retuns result.issuedAt timestamp of token issued date
  */
 const generateToken = async params => {
   try {
@@ -46,7 +48,7 @@ const generateToken = async params => {
     const authToken = jwt.sign(tokenParams, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRE_IN || '30 days'
     })
-    
+
     const decoded = jwt.decode(authToken)
 
     await logTokenData({

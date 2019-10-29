@@ -19,6 +19,9 @@ const jwt = require('jsonwebtoken')
 
 const express = require('express')
 
+const redis = require('redis')
+const client = redis.createClient()
+
 const authMiddleware = require('../src/middlewares/auth')
 
 const Web3Eth = new Eth()
@@ -84,6 +87,7 @@ describe('auth server', () => {
       where: {},
       truncate: true
     })
+    await new Promise(resolve => client.flushall(resolve))
   })
 
   it('should generate an auth token', async () => {
@@ -106,6 +110,29 @@ describe('auth server', () => {
     expect(data.payload).to.deep.equal(payload)
     expect(data.exp - data.iat).to.equal(10)
   })
+
+  it('should allow token to be revoked', async () => {
+    const token = jwt.sign(
+      {
+        signature: 'signature',
+        payload: 'some payload',
+        address: USER_ADDRESS
+      },
+      'origin'
+    )
+
+    const response = await request(app)
+      .post(`/api/tokens/revoke`)
+      .set({
+        authorization: 'Bearer ' + token
+      })
+      .send({
+        token
+      })
+      .expect(200)
+
+    expect(response.body.success).to.be.true
+  })
 })
 
 describe('auth server middleware', () => {
@@ -121,6 +148,7 @@ describe('auth server middleware', () => {
       where: {},
       truncate: true
     })
+    await new Promise(resolve => client.flushall(resolve))
   })
 
   it('should populate auth data if token is valid', async () => {

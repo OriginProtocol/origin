@@ -6,6 +6,12 @@ const logger = require('../logger')
 const { Sequelize, AuthTokenBlacklist } = require('../models')
 const { getbitAsync, setbitAsync, redisClient } = require('./redis')
 
+/**
+ * To check if token is blacklisted or revoked
+ *
+ * @param {String} authToken Token to verify
+ * @returns {Boolean} true if token is blacklisted
+ */
 const isBlacklisted = async authToken => {
   const key = 'authtokens/' + authToken + '/revoked'
   const revoked = await getbitAsync(key, 0)
@@ -39,6 +45,13 @@ const isBlacklisted = async authToken => {
   return true
 }
 
+/**
+ * Verifies the validity of a token
+ *
+ * @param {String} authToken Token to verify
+ * @param {Boolean} skipBlacklistCheck Skips running the token against the blacklist, if true
+ * @returns {Boolean} true if `signature` is signed by `address` on `payload` in the last 30 days; false otherwise
+ */
 const verifyToken = async (authToken, skipBlacklistCheck) => {
   try {
     if (!skipBlacklistCheck) {
