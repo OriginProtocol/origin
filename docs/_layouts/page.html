@@ -25,7 +25,8 @@
                 {% endif %}                   
                 {% for p in cat.items %}
                 <li class="normal"> 
-                    <a href="{{ p.url }}">{{ p.title }}</a> <!-- {{ p.nav_weight }}-->
+                    <a href="{{ p.url }}">{% if p.menu_title%}{{ p.menu_title }}{% else %}{{ p.title }}{% endif %}</a>
+                    
                     {% if p.toc == true and p.url == page.url %}
                         {{ content | toc_only }}
                     {% endif %}
