@@ -132,8 +132,7 @@ class PushNotifications extends Component {
       // Change of network
       get(prevProps.config, 'notifications') !==
         get(this.props.config, 'notifications')
-    ]
-    .some(constraint => constraint)
+    ].some(constraint => constraint)
 
     // Trigger a register query to notifications server if any of the above
     // conditions are true
@@ -223,7 +222,7 @@ class PushNotifications extends Component {
 
     console.debug(`Adding ${activeAddress} to mobile registry`)
 
-    PushNotification.checkPermissions(permissions => {
+    PushNotification.checkPermissions(async permissions => {
       const data = {
         eth_address: activeAddress,
         device_type: this.getNotificationType(),
@@ -316,7 +315,7 @@ class PushNotifications extends Component {
       return
     }
 
-    const { privateKey, mnemonic } = wallet.activeAccount
+    const { privateKey, mnemonic, address } = wallet.activeAccount
 
     let ethersWallet
     if (privateKey) {
@@ -334,21 +333,22 @@ class PushNotifications extends Component {
     const signature = await ethersWallet.signMessage(stringify(payload))
 
     const authClient = new AuthClient({
-      authServer: this.props.config.authServer || 'https://auth.originprotocol.com',
-      activeWallet: ethAddress,
+      authServer:
+        this.props.config.authServer || 'https://auth.originprotocol.com',
+      activeWallet: address,
       disablePersistence: true
     })
 
     try {
-      const tokenData = await authClient.getTokenWithSignature(signature, payload)
+      const tokenData = await authClient.getTokenWithSignature(
+        signature,
+        payload
+      )
 
       return tokenData.authToken
-    } catch (err) {
+    } catch (error) {
       Sentry.captureException(error)
-      console.warn(
-        'Failed to generate auth token',
-        error
-      )
+      console.warn('Failed to generate auth token', error)
     }
     return null
   }
