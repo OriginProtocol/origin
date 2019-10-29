@@ -88,8 +88,8 @@ class Welcome extends Component {
         </div>
         <hr className="mx-5" />
         <p className="my-4">
-          As part of our agreement with our listing exchanges, we’ve modified
-          the token unlock schedule.
+          At the request of multiple top-tier exchanges, we’ve modified the
+          investor token release schedule.
         </p>
         <button
           className="btn btn-secondary btn-lg"
