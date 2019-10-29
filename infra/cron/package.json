@@ -17,14 +17,14 @@
     "@sendgrid/mail": "6.4.0",
     "bull": "3.11.0",
     "cross-fetch": "3.0.4",
-    "dotenv": "8.1.0",
+    "dotenv": "8.2.0",
     "envkey": "1.2.7",
     "logplease": "1.2.15",
     "per-env": "1.0.2",
     "tmp": "0.1.0"
   },
   "devDependencies": {
-    "mocha": "6.2.1",
+    "mocha": "6.2.2",
     "nodemon": "1.19.4",
     "prettier": "1.18.2"
   },

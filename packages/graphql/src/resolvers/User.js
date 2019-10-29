@@ -20,7 +20,7 @@ async function resultsFromIds({ after, allIds, first, fields }) {
   const { ids, start } = getIdsForPage({ after, ids: allIds, first })
 
   if (fields.nodes) {
-    nodes = await Promise.all(
+    nodes = (await Promise.all(
       ids.map(id => {
         const [version, listingId, offerId] = id.split('-')
         return contracts.marketplaces[version].eventSource.getOffer(
@@ -28,7 +28,7 @@ async function resultsFromIds({ after, allIds, first, fields }) {
           offerId
         )
       })
-    )
+    )).filter(offer => offer !== null)
   }
 
   return getConnection({ start, first, nodes, ids, totalCount })
@@ -207,7 +207,8 @@ async function reviews(user, { first = 10, after }) {
       })
       // Offer objects contain reviews of both parties, filter the other ones out.
       .filter(
-        review => review.rating > 0 && !party.includes(review.reviewer.id)
+        review =>
+          review && review.rating > 0 && !party.includes(review.reviewer.id)
       )
 
     if (reviews.length === 0) continue

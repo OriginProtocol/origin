@@ -4,7 +4,7 @@ const express = require('express')
 const router = express.Router()
 const sendgridMail = require('@sendgrid/mail')
 
-const Attestation = require('../models/index').Attestation
+const Attestation = require('@origin/identity/src/models').Attestation
 const AttestationTypes = Attestation.AttestationTypes
 const {
   generateAttestation,

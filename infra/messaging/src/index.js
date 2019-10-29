@@ -700,7 +700,7 @@ function subscribeToMarketplaceEvents() {
             type: 'MARKETPLACE_EVENT',
             content,
             timestamp: newMessage.createdAt,
-            newMessageIndex,
+            conversationIndex: newMessageIndex,
             conversationId: externalId
           })
         )

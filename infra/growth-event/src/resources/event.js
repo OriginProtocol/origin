@@ -2,21 +2,6 @@ const Web3 = require('web3')
 const db = require('../models')
 const { GrowthEventStatuses, GrowthEventTypes } = require('../enums')
 
-const AttestationServiceToEventType = {
-  airbnb: GrowthEventTypes.AirbnbAttestationPublished,
-  email: GrowthEventTypes.EmailAttestationPublished,
-  facebook: GrowthEventTypes.FacebookAttestationPublished,
-  phone: GrowthEventTypes.PhoneAttestationPublished,
-  twitter: GrowthEventTypes.TwitterAttestationPublished,
-  google: GrowthEventTypes.GoogleAttestationPublished,
-  github: GrowthEventTypes.GitHubAttestationPublished,
-  linkedin: GrowthEventTypes.LinkedInAttestationPublished,
-  kakao: GrowthEventTypes.KakaoAttestationPublished,
-  wechat: GrowthEventTypes.WeChatAttestationPublished,
-  website: GrowthEventTypes.WebsiteAttestationPublished,
-  telegram: GrowthEventTypes.TelegramAttestationPublished
-}
-
 class GrowthEvent {
   static async _findAll(addresses, eventType, customId) {
     const _addresses = Array.isArray(addresses) ? addresses : [addresses]
@@ -105,4 +90,21 @@ class GrowthEvent {
   }
 }
 
-module.exports = { AttestationServiceToEventType, GrowthEvent }
+GrowthEvent.AttestationServiceToEventType = {
+  airbnb: GrowthEventTypes.AirbnbAttestationPublished,
+  email: GrowthEventTypes.EmailAttestationPublished,
+  facebook: GrowthEventTypes.FacebookAttestationPublished,
+  phone: GrowthEventTypes.PhoneAttestationPublished,
+  twitter: GrowthEventTypes.TwitterAttestationPublished,
+  google: GrowthEventTypes.GoogleAttestationPublished,
+  github: GrowthEventTypes.GitHubAttestationPublished,
+  linkedin: GrowthEventTypes.LinkedInAttestationPublished,
+  kakao: GrowthEventTypes.KakaoAttestationPublished,
+  wechat: GrowthEventTypes.WeChatAttestationPublished,
+  website: GrowthEventTypes.WebsiteAttestationPublished,
+  telegram: GrowthEventTypes.TelegramAttestationPublished
+}
+
+GrowthEvent.Types = GrowthEventTypes
+
+module.exports = { GrowthEvent }
