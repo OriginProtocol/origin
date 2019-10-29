@@ -156,6 +156,29 @@ describe('Lockup HTTP API', () => {
     sendStub.restore()
   })
 
+  it('should not add a lockup if unconfirmed lockup exists', async () => {
+    await Lockup.create({
+      userId: this.user.id,
+      amount: 1000,
+      start: moment()
+        .subtract(1, 'years')
+        .subtract(1, 'days'),
+      end: moment().subtract(1, 'years'),
+      code: totp.gen(this.otpKey),
+      bonusRate: 10.0
+    })
+
+    const response = await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 1,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(422)
+
+    expect(response.text).to.match(/Unconfirmed/)
+  })
+
   it('should not add a lockup if not enough tokens (vested)', async () => {
     await request(this.mockApp)
       .post('/api/lockups')
