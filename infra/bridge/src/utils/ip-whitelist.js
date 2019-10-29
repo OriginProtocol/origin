@@ -5,9 +5,10 @@ const ipaddr = require('ipaddr.js')
 const logger = require('../logger')
 
 // Refer this for in case the subnets are changed: https://core.telegram.org/bots/api
-const telegramSubnets = (process.env.TELEGRAM_SUBNETS || '')
-  .split(',')
-  .map(subnet => ipaddr.parseCIDR(subnet))
+const telegramSubnets = (process.env.TELEGRAM_SUBNETS
+  ? process.env.TELEGRAM_SUBNETS.split(',')
+  : []
+).map(subnet => ipaddr.parseCIDR(subnet))
 
 /**
  * A middleware that forwards requests only if it

@@ -1,10 +1,6 @@
 'use strict'
 
-import {
-  loadTokenCookie,
-  saveTokenCookie,
-  removeTokenCookie
-} from './cookie-helpers'
+import { removeTokenCookie } from './cookie-helpers'
 
 import get from 'lodash/get'
 
@@ -13,11 +9,7 @@ import createDebug from 'debug'
 const debug = createDebug('origin:auth-client:')
 
 class AuthClient {
-  constructor({
-    authServer,
-    activeWallet,
-    disablePersistence
-  }) {
+  constructor({ authServer, activeWallet, disablePersistence }) {
     this.authServer = authServer
     this.disablePersistence = disablePersistence
 

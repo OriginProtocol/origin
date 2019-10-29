@@ -177,13 +177,14 @@ jobs:
           command: cd infra/growth && yarn test
 
   Notifications:
-    <<: *db
+    <<: *dbandredis
     steps:
       - attach_workspace:
           at: .
       - run: cd infra/growth && yarn migrate
       - run: cd infra/growth-event && yarn migrate
       - run: cd infra/identity && yarn migrate
+      - run: cd infra/auth-server && yarn migrate
       - run:
           name: Run Notification Tests
           command: cd infra/notifications && yarn migrate && yarn test

@@ -30,8 +30,4 @@ function removeTokenCookie(walletAddress) {
   Cookies.remove(key)
 }
 
-export {
-  loadTokenCookie,
-  saveTokenCookie,
-  removeTokenCookie
-}
+export { loadTokenCookie, saveTokenCookie, removeTokenCookie }
