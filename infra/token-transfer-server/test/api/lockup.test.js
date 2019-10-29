@@ -143,7 +143,7 @@ describe('Lockup HTTP API', () => {
       confirmed: true
     })
 
-    const response = await request(this.mockApp)
+    await request(this.mockApp)
       .post('/api/lockups')
       .send({
         amount: 100001,
