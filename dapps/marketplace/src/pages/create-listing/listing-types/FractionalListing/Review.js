@@ -37,7 +37,8 @@ const ReviewFractionalListing = props => {
 
     return (
       <LocationMap
-        googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process.env.GOOGLE_MAPS_API_KEY || DEFAULT_GOOGLE_MAPS_API_KEY}`}
+        googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process
+          .env.GOOGLE_MAPS_API_KEY || DEFAULT_GOOGLE_MAPS_API_KEY}`}
         loadingElement={<div style={{ height: '100%' }} />}
         containerElement={
           <div className="mt-3 mt-md-4" style={containerStyle} />
@@ -99,14 +100,14 @@ const ReviewFractionalListing = props => {
               }}
             />
           </dd>
-          {listing.location && <>
-            <dt>
-              <fbt desc="listing.review.location">Location</fbt>
-            </dt>
-            <dd>
-              {renderMap()}
-            </dd>
-          </>}
+          {listing.location && (
+            <>
+              <dt>
+                <fbt desc="listing.review.location">Location</fbt>
+              </dt>
+              <dd>{renderMap()}</dd>
+            </>
+          )}
         </dl>
       </div>
     </Review>

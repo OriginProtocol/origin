@@ -14,7 +14,9 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
   const [redirect, setRedirect] = useState(false)
   const [fetchingLocation, setFetchingLocation] = useState(false)
   const [forceEditLocation, setForceEditLocation] = useState(false)
-  const [formLocationValue, setFormLocationValue] = useState(listing.locationAddress || '')
+  const [formLocationValue, setFormLocationValue] = useState(
+    listing.locationAddress || ''
+  )
   const [formLocationError, setFormLocationError] = useState(null)
   const [currentLocationError, setCurrentLocationError] = useState(null)
 
@@ -100,7 +102,8 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
 
     return (
       <LocationMap
-        googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process.env.GOOGLE_MAPS_API_KEY || DEFAULT_GOOGLE_MAPS_API_KEY}`}
+        googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process
+          .env.GOOGLE_MAPS_API_KEY || DEFAULT_GOOGLE_MAPS_API_KEY}`}
         loadingElement={<div style={{ height: '100%' }} />}
         containerElement={
           <div className="mt-3 mt-md-4" style={containerStyle} />
@@ -122,48 +125,48 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
 
   const renderExistingLocation = () => {
     return (
-    <>
-      <h1>
-        <Link to={prev} className="back d-md-none" />
-        <fbt desc="createListing.listingLocation">Listing Location</fbt>
-      </h1>
-      <div className="step-description mb-0">
-        <fbt desc="createListing.existingListingLocation">
-          This is the location currently set on the listing.
-        </fbt>
-      </div>
-      <div className="row location-obfuscation-map">
-        <div className="listing-step">
-          <div className="col-md-8 px-0 px-md-3">
-              <div className="form-group">
-                {renderMap()}
-              </div>
-          </div>
-          <div className="actions mt-auto">
-            <button
-              className="btn btn-outline-primary mb-3"
-              onClick={() => {
-                delete listing.location
-                setForceEditLocation(true)
-              }}
-            >
-              <fbt desc="editListing.editLocation">Edit location</fbt>
-            </button>
-            <button
-              className="btn btn-primary"
-              onClick={() => {
-                listing.skipLocationObfuscationForward = true
-                onChange({ ...listing })
-                setRedirect(true)
-              }}
-            >
-              <fbt desc="editListing.useCurrentLocation">Use current location</fbt>
-            </button>
+      <>
+        <h1>
+          <Link to={prev} className="back d-md-none" />
+          <fbt desc="createListing.listingLocation">Listing Location</fbt>
+        </h1>
+        <div className="step-description mb-0">
+          <fbt desc="createListing.existingListingLocation">
+            This is the location currently set on the listing.
+          </fbt>
+        </div>
+        <div className="row location-obfuscation-map">
+          <div className="listing-step">
+            <div className="col-md-8 px-0 px-md-3">
+              <div className="form-group">{renderMap()}</div>
+            </div>
+            <div className="actions mt-auto">
+              <button
+                className="btn btn-outline-primary mb-3"
+                onClick={() => {
+                  delete listing.location
+                  setForceEditLocation(true)
+                }}
+              >
+                <fbt desc="editListing.editLocation">Edit location</fbt>
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  listing.skipLocationObfuscationForward = true
+                  onChange({ ...listing })
+                  setRedirect(true)
+                }}
+              >
+                <fbt desc="editListing.useCurrentLocation">
+                  Use current location
+                </fbt>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </>
-  )
+      </>
+    )
   }
 
   const renderInputLocation = () => {
@@ -184,7 +187,9 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
               className="listing-step"
               onSubmit={e => {
                 e.preventDefault()
-                Geocode.setApiKey(process.env.GOOGLE_MAPS_API_KEY || DEFAULT_GOOGLE_MAPS_API_KEY)
+                Geocode.setApiKey(
+                  process.env.GOOGLE_MAPS_API_KEY || DEFAULT_GOOGLE_MAPS_API_KEY
+                )
                 Geocode.enableDebug()
                 listing.locationAddress = formLocationValue
                 Geocode.fromAddress(formLocationValue).then(
@@ -213,10 +218,12 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
                 >
                   {!fetchingLocation && (
                     <>
-                      <img className="mr-2" src="images/location-icon.svg"/>
-                      <div><fbt desc="createListing.useCurrentLocation">
-                        Use current location
-                      </fbt></div>
+                      <img className="mr-2" src="images/location-icon.svg" />
+                      <div>
+                        <fbt desc="createListing.useCurrentLocation">
+                          Use current location
+                        </fbt>
+                      </div>
                     </>
                   )}
                   {fetchingLocation && (
@@ -244,7 +251,9 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
     )
   }
 
-  return listing.location && isEditingListing && !forceEditLocation ? renderExistingLocation() : renderInputLocation()
+  return listing.location && isEditingListing && !forceEditLocation
+    ? renderExistingLocation()
+    : renderInputLocation()
 }
 
 export default withIsMobile(ListingLocation)

@@ -52,9 +52,13 @@ const LocationObfuscation = ({ prev, next, listing, onChange }) => {
   return (
     <>
       <h1>
-        <Link onClick={() => {
-          delete listing.exactLocation
-        }} to={prev} className="back d-md-none" />
+        <Link
+          onClick={() => {
+            delete listing.exactLocation
+          }}
+          to={prev}
+          className="back d-md-none"
+        />
         <fbt desc="createListing.listingLocation">Listing Location</fbt>
       </h1>
       <div className="step-description mb-0">
@@ -82,7 +86,8 @@ const LocationObfuscation = ({ prev, next, listing, onChange }) => {
           >
             <div className="form-group">
               <LocationMap
-                googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process.env.GOOGLE_MAPS_API_KEY || DEFAULT_GOOGLE_MAPS_API_KEY}`}
+                googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process
+                  .env.GOOGLE_MAPS_API_KEY || DEFAULT_GOOGLE_MAPS_API_KEY}`}
                 loadingElement={<div style={{ height: `100%` }} />}
                 containerElement={
                   <div style={{ height: '50vh', maxHeight: '400px' }} />
