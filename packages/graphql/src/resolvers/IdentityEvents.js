@@ -504,7 +504,12 @@ async function _getIdentitiesFromBlockchain(contract, first, after) {
  * @param {Object} info: GraphQL info
  * @returns {Promise<null|{nodes, pageInfo, edges, totalCount}>}
  */
-export async function identities(contract, { first = 10, after }, context, info) {
+export async function identities(
+  contract,
+  { first = 10, after },
+  context,
+  info
+) {
   if (!contract) {
     return null
   }

@@ -63,7 +63,7 @@ const config = {
 
   // Wire-on/off configs.
   centralizedIdentityEnabled: true,
-  performanceMode: false,
+  performanceMode: false
 }
 
 if (addresses.DAI) {
