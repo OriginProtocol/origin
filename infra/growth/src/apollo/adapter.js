@@ -130,6 +130,13 @@ class ApolloAdapter {
           titleKey: data.titleKey,
           detailsKey: data.detailsKey
         }
+        const optionalFields = ['titleKey', 'title', 'detailsKey', 'details']
+        optionalFields.forEach(field => {
+          if (data[field]) {
+            listingInfo[field] = data[field]
+          }
+        })
+
         action = { ...action, ...listingInfo }
         break
       case 'TwitterShare':

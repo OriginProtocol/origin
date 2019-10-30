@@ -140,8 +140,10 @@ module.exports = `
     reward: GrowthPrice
     unlockConditions: [UnlockCondition]
     listingId: String!
-    titleKey: String!
-    detailsKey: String!
+    titleKey: String
+    detailsKey: String
+    title: String
+    details: String
     iconSrc: String!
   }
 
@@ -160,12 +162,14 @@ module.exports = `
   }
 
   type SocialContent {
-    id: String!,
-    titleKey: String!,
-    detailsKey: String!,
+    id: String!
+    titleKey: String!
+    detailsKey: String!
+    title: String
+    details: String
     image: String!
-    link: String!,
-    linkKey: String!,
+    link: String!
+    linkKey: String!
     post: Post
   }
 

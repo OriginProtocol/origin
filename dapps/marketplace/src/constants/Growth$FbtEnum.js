@@ -19,6 +19,8 @@ const Growth$FbtEnum = {
   'growth.sep2019.short_name': 'September 2019',
   'growth.oct2019.name': 'October 2019 Campaign',
   'growth.oct2019.short_name': 'October 2019',
+  'growth.nov2019.name': 'November 2019 Campaign',
+  'growth.nov2019.short_name': 'November 2019',
 
   'growth.profile.and.email.requirement': 'Verified email and Origin profile',
   'growth.two.attestations.requirement': 'Two profile verifications',
@@ -242,7 +244,37 @@ const Growth$FbtEnum = {
   'growth.share.content15.title': `Introducing Origin's investors`,
   'growth.share.content15.details':
     'Origin has more than 500+ investors around the world who support the vision of enabling true P2P commerce.',
-  'growth.share.content15.link': 'Watch the video'
+  'growth.share.content15.link': 'Watch the video',
+
+  // November campaign.
+  'growth.share.content16.title':
+    'Anna Wang Wants to Decentralize the Sharing Economy',
+  'growth.share.content16.details':
+    'Anna Wang, Regional Manager of China shares her thoughts on Origin’s mission and what a decentralized sharing economy means to her.',
+  'growth.share.content16.link': 'Watch the video',
+
+  'growth.share.content17.title':
+    'Ryan Kim from Hashed on Why They Invested in Origin',
+  'growth.share.content17.details':
+    'Ryan Kim, Partner at Hashed shares why Hashed decided to invest in Origin and continues to support the project today.',
+  'growth.share.content17.link': 'Watch the video',
+
+  'growth.share.content18.title': 'As Free As Possible. The Ideal Dream.',
+  'growth.share.content18.details':
+    'Watch Obi, Founder of NodeTokyo sharing his dream for the future of the sharing economy. ',
+  'growth.share.content18.link': 'Watch the video',
+
+  'growth.share.content19.title':
+    'These Venezuelan Merchants are Reshaping Commerce with Origin',
+  'growth.share.content19.details':
+    'By enabling local merchants to adopt crypto and DApps in their everyday commerce, we can empower local communities to thrive.',
+  'growth.share.content19.link': 'Read the article',
+
+  'growth.share.content20.title':
+    'CoinList Founder Discusses Decentralized Marketplaces of the Future',
+  'growth.share.content20.details':
+    'Andy Bromberg, Co-Founder and President of CoinList discusses what he thinks of Origin and our long term vision.',
+  'growth.share.content20.link': 'Watch the video'
 }
 
 module.exports = Growth$FbtEnum
