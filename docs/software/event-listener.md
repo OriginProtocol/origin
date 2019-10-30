@@ -9,6 +9,6 @@ The Origin event listener follows the blockchain, finding origin events as they 
 
 The data from the listener can be used to build and keep up-to-date an offline index of all Origin Protocol data on the chain. The listener has built in support for updating an Elasticsearch and a Postgres database with the current state of listings, offers, and profiles.
 
-The listener does at-least-once notifiations. Make sure your webhooks used with the listener are idempotent, and can handle receiving the same data multiple times!
+The listener does at-least-once notifications. Make sure your webhooks used with the listener are idempotent, and can handle receiving the same data multiple times!
 
 More details in the [Listener README](https://github.com/OriginProtocol/origin/tree/master/infra/discovery/src/listener).
