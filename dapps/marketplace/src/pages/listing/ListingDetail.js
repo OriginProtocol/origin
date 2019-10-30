@@ -7,12 +7,14 @@ import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withTokenBalance from 'hoc/withTokenBalance'
 import withGrowthRewards from 'hoc/withGrowthRewards'
 
+import { DEFAULT_GOOGLE_MAPS_API_KEY } from 'constants/config'
 import Gallery from 'components/Gallery'
 import GalleryScroll from 'components/GalleryScroll'
 import Reviews from 'components/Reviews'
 import AboutParty from 'components/AboutParty'
 import DocumentTitle from 'components/DocumentTitle'
 import Category from 'components/Category'
+import LocationMap from 'components/LocationMap'
 import UserListings from 'pages/user/_UserListings'
 import {
   isHistoricalListing,
@@ -103,6 +105,7 @@ class ListingDetail extends Component {
         excludeListing={listing.id}
       />
     )
+    const hasLocation = !!listing.location
 
     if (isMobile) {
       return (
@@ -114,6 +117,7 @@ class ListingDetail extends Component {
           {gallery}
           <div className="listing-description">
             {this.renderListingDetail()}
+            {hasLocation && this.renderMap()}
           </div>
           <div className="about-seller">{this.renderSellerInfo()}</div>
           <div className="seller-info">
@@ -136,7 +140,10 @@ class ListingDetail extends Component {
             </div>
           </div>
         </div>
-        <div className="listing-description">{this.renderListingDetail()}</div>
+        <div className="listing-description">
+          {this.renderListingDetail()}
+          {hasLocation && this.renderMap()}
+        </div>
         <div className="seller-info">
           {reviews}
           {userListings}
@@ -214,6 +221,42 @@ class ListingDetail extends Component {
         )}
         <h2>{listing.title}</h2>
       </div>
+    )
+  }
+
+  renderMap() {
+    const { listing } = this.props
+    let containerStyle = {
+      height: '400px'
+    }
+    if (this.props.isMobile) {
+      containerStyle = {
+        ...containerStyle,
+        marginLeft: '-15px',
+        marginRight: '-15px'
+      }
+    }
+
+    return (
+      <LocationMap
+        googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${process
+          .env.GOOGLE_MAPS_API_KEY || DEFAULT_GOOGLE_MAPS_API_KEY}`}
+        loadingElement={<div style={{ height: '100%' }} />}
+        containerElement={
+          <div className="mt-2 mt-md-4" style={containerStyle} />
+        }
+        mapElement={<div style={{ height: '100%' }} />}
+        defaultCenter={{
+          latitude: listing.location.latitude,
+          longitude: listing.location.longitude
+        }}
+        circleOptions={{
+          latitude: listing.location.latitude,
+          longitude: listing.location.longitude,
+          radius: listing.location.accuracyInMeters
+        }}
+        readonly={true}
+      />
     )
   }
 
