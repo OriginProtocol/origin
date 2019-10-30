@@ -43,12 +43,13 @@ export function truncateAddress(address = '', chars = 5) {
   ) {
     return address
   }
-  
-  let separator = '...'
 
+  let separator = '...'
   if (chars > address.length) {
     separator = ''
   }
+
+  const firstPortionLength = Math.floor(chars / 2)
 
   return (
     address.substr(0, firstPortionLength) +
