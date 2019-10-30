@@ -70,7 +70,6 @@ export default function applyListingData(props, data) {
       acceptedTokens: listing.acceptedTokens,
       category: listing.category,
       subCategory: listing.subCategory,
-      location: listing.location,
       media: listing.media.map(m => pick(m, 'contentType', 'url')),
       commission: listing.commission ? String(listing.commission) : '0',
       commissionPerUnit: listing.commissionPerUnit
