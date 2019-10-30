@@ -135,32 +135,32 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
           </fbt>
         </div>
         <div className="row location-obfuscation-map">
-          <div className="listing-step">
-            <div className="col-md-8 px-0 px-md-3">
+          <div className="col-md-8 px-0 px-md-3">
+            <div className="listing-step location">
               <div className="form-group">{renderExistingLocationMap()}</div>
-            </div>
-            <div className="actions mt-auto">
-              <button
-                className="btn btn-outline-primary mb-3"
-                onClick={() => {
-                  delete listing.location
-                  setForceEditLocation(true)
-                }}
-              >
-                <fbt desc="editListing.editLocation">Edit location</fbt>
-              </button>
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  listing.skipLocationObfuscationForward = true
-                  onChange({ ...listing })
-                  setRedirect(true)
-                }}
-              >
-                <fbt desc="editListing.useCurrentLocation">
-                  Use current location
-                </fbt>
-              </button>
+              <div className="actions mt-auto">
+                <button
+                  className="btn btn-outline-primary mb-3 mb-md-0"
+                  onClick={() => {
+                    delete listing.location
+                    setForceEditLocation(true)
+                  }}
+                >
+                  <fbt desc="editListing.editLocation">Edit location</fbt>
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    listing.skipLocationObfuscationForward = true
+                    onChange({ ...listing })
+                    setRedirect(true)
+                  }}
+                >
+                  <fbt desc="editListing.useCurrentLocation">
+                    Use current location
+                  </fbt>
+                </button>
+              </div>
             </div>
           </div>
         </div>
