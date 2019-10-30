@@ -285,9 +285,21 @@ async function saveIdentity(owner, ipfsHash, ipfsData, attestationMetadata) {
   // TODO(franck): consider blacklisting twitterProfile and telegramProfile to
   //               reduce the amount of data stored in the data column.
   const identityFields = [
-    'email', 'phone', 'twitter', 'airbnb', 'facebook', 'facebook_verified',
-    'google', 'google_verified', 'website', 'kakao', 'github',
-    'linkedin', 'wechat', 'telegram', 'country'
+    'email',
+    'phone',
+    'twitter',
+    'airbnb',
+    'facebook',
+    'facebook_verified',
+    'google',
+    'google_verified',
+    'website',
+    'kakao',
+    'github',
+    'linkedin',
+    'wechat',
+    'telegram',
+    'country'
   ]
   const dataFields = ['twitterProfile', 'telegramProfile']
   const identity = {
