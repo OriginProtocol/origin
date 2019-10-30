@@ -131,6 +131,7 @@ class OriginEventSource {
         'acceptedTokens',
         'category',
         'subCategory',
+        'location',
         'media',
         'unitsTotal',
         'commission',

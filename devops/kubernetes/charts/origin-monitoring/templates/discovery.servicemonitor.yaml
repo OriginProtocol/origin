@@ -10,7 +10,8 @@ metadata:
     app.kubernetes.io/version: {{ .Chart.AppVersion }}
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: origin-discovery
-    prometheus: kube-prometheus
+    prometheus: prometheus-operator
+    release: prometheus-operator
 spec:
   jobLabel: discovery
   selector:
