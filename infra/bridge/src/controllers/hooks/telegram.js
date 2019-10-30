@@ -7,8 +7,15 @@ const Web3 = require('web3')
 
 const logger = require('../../logger')
 
-const { redisClient } = require('../../utils/redis')
 const { subscribeToHooks } = require('../../hooks/telegram')
+const { createTelegramAttestation } = require('../../utils/attestation')
+
+const growthEventHelper = require('../../utils/growth-event-helpers')
+const logChat = require('../../utils/log-chat')
+
+const _chunk = require('lodash/chunk')
+
+const telegramIPWhitelistMiddleware = require('../../utils/ip-whitelist')
 
 /**
  * To register the webhook
@@ -31,73 +38,126 @@ router.get('/__init', async (req, res) => {
   }
 })
 
-router.post('/', (req, res) => {
-  // Use redis batch for parallelization (without atomicity)
-  const redisBatch = redisClient.batch()
+const replyWithMessage = (res, chatId, message) => {
+  return res
+    .status(200)
+    .header('Content-Type', 'application/json')
+    .send({
+      method: 'sendMessage',
+      chat_id: chatId,
+      text: message
+    })
+}
+
+router.post('/', telegramIPWhitelistMiddleware, async (req, res) => {
+  const message = req.body.message
+
+  if (!message) {
+    logger.error('No message in response??', res.body)
+    res.send(200).end()
+    return
+  }
+
+  logger.debug('Message from Telegram', message)
+
+  let responseSent = false
+
+  if (message.text && !message.from.is_bot && message.chat.type === 'private') {
+    // For attestations
+    let startCmdParam = /^\/start (.+)$/gi.exec(message.text)
+
+    if (
+      startCmdParam &&
+      startCmdParam[1] &&
+      Web3.utils.isAddress(startCmdParam[1].toLowerCase())
+    ) {
+      startCmdParam = startCmdParam[1]
+
+      logger.debug(`Pushing attestation message for address '${startCmdParam}'`)
+
+      await createTelegramAttestation({
+        identity: startCmdParam,
+        message
+      })
+
+      replyWithMessage(
+        res,
+        message.chat.id,
+        'Hey there, Get back to the Origin Marketplace app to continue'
+      )
+    } else {
+      // Log unexpected private chat messages to DB
+      logger.debug('Logging chat')
+
+      await logChat(message)
+      replyWithMessage(
+        res,
+        message.chat.id,
+        'Hey there, we have received your message. Our team will reach out to you as soon as possible.'
+      )
+    }
+
+    responseSent = true
+  }
+
+  if (!responseSent) {
+    // Set status code and send back the empty response,
+    // so that connection doesn't has to be alive
+    res.status(200).end()
+  }
 
   let followCount = 0
   let totalFollowEvents = 0
 
-  const message = req.body.message
+  /**
+   * Bots can be added to any group by anyone. So check the group id
+   * before rewarding the user on production
+   */
+  const isGroup = message.chat && message.chat.type !== 'private'
+  const isValidGroup =
+    process.env.NODE_ENV !== 'production' ||
+    (isGroup &&
+      (message.chat.username.toLowerCase() === 'originprotocolkorea' ||
+        message.chat.username.toLowerCase() === 'originprotocol'))
 
-  if (message.text && !message.from.is_bot && message.chat.type === 'private') {
-    // For attestations
-    let payload = /^\/start (.+)$/gi.exec(message.text)
-
-    if (payload && payload[1]) {
-      payload = payload[1]
-
-      const key = `telegram/attestation/event/${Web3.utils.sha3(payload)}`
-      redisBatch.set(
-        key,
-        JSON.stringify({
-          message,
-          payload
-        }),
-        'EX',
-        60 * 30
-      )
-
-      logger.debug(
-        `Pushing attestation message with payload '${payload}' to ${key}`
-      )
-    }
-  }
-
-  if (message.new_chat_members) {
+  if (isValidGroup && message.new_chat_members) {
     // For join verifications
     const events = message.new_chat_members
+    // Note: Splitting the events into smaller chunks to avoid DB bottleneck
+    // if we receive a very large number of events at once
+    const chunks = _chunk(
+      message.new_chat_members,
+      process.env.CHUNK_COUNT || 100
+    )
     totalFollowEvents = events.length
 
-    events.forEach(member => {
-      if (member.is_bot) {
-        // Ignore bots
-        return
-      }
+    for (const chunk of chunks) {
+      const promises = chunk
+        .filter(member => !member.is_bot)
+        .map(member => {
+          followCount++
 
-      followCount++
+          // Note: Username is optional in Telegram.
+          // ID is returned as number, We don't want to run into the big number issues
+          // So use id only if username is not set
+          const username = String(member.username || member.id)
 
-      // Note: Username is optional in Telegram.
-      // ID is returned as number, We don't want to run into the big number issues
-      // So use id only if username is not set
-      const key = `telegram/follow/${member.username || member.id}`
-      redisBatch.set(key, JSON.stringify(member), 'EX', 60 * 30)
-      logger.debug(`Pushing telegram new member event to ${key}`)
-    })
+          return growthEventHelper({
+            type: 'FOLLOW',
+            socialNetwork: 'TELEGRAM',
+            username: username,
+            event: member
+          })
+        })
+      await Promise.all(promises)
+    }
   }
 
-  redisBatch.exec(err => {
-    if (err) {
-      logger.error(
-        `[TELEGRAM] Failed to push ${followCount}/${totalFollowEvents} new chat member events to redis`
-      )
-    } else {
-      logger.debug(
-        `[TELEGRAM] Pushed ${followCount}/${totalFollowEvents} new chat member events to redis`
-      )
-    }
-  })
-  res.status(200).end()
+  if (totalFollowEvents > 0) {
+    logger.debug(
+      `[TELEGRAM] Processed ${followCount}/${totalFollowEvents} new chat member events`
+    )
+  }
 })
 
 module.exports = router

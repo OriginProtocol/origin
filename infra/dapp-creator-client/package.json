@@ -57,7 +57,7 @@
     "rework": "^1.0.1",
     "style-loader": "1.0.0",
     "superagent": "^5.1.0",
-    "terser": "4.3.8",
+    "terser": "4.3.9",
     "terser-webpack-plugin": "^2.0.0",
     "web3": "1.0.0-beta.34",
     "webpack": "^4.35.0",
@@ -67,7 +67,7 @@
     "bootstrap": "4.3.1",
     "typeface-lato": "0.0.75",
     "typeface-poppins": "0.0.72",
-    "webpack-dev-server": "3.8.2"
+    "webpack-dev-server": "3.9.0"
   },
   "babel": {
     "presets": [

@@ -34,6 +34,30 @@ class GrowthCampaign {
   }
 
   /**
+   * Fetches the active campaign
+   * @returns {Promise<CampaignRules>}
+   */
+  static async getActive() {
+    const now = new Date()
+    const campaign = await db.GrowthCampaign.findOne({
+      where: {
+        startDate: {
+          [Sequelize.Op.lte]: now
+        },
+        endDate: {
+          [Sequelize.Op.gt]: now
+        }
+      }
+    })
+
+    if (!campaign) {
+      return null
+    }
+
+    return new CampaignRules(campaign, JSON.parse(campaign.rules))
+  }
+
+  /**
    * Helper function that returns all campaign rules.
    * @returns {Promise<Array<CampaignRules>>}
    */

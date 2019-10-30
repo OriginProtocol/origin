@@ -6,8 +6,6 @@ import { withRouter } from 'react-router-dom'
 
 import get from 'lodash/get'
 
-import { getDefaultToken } from 'utils/tokenUtils'
-
 import DocumentTitle from 'components/DocumentTitle'
 import MobileModalHeader from 'components/MobileModalHeader'
 
@@ -29,13 +27,22 @@ import getAvailabilityCalculator from 'utils/getAvailabilityCalculator'
 
 const PaymentAmountRaw = ({
   paymentMethod,
+  setPaymentMethod,
   totalPrice,
   tokenStatus,
   isMobile,
   history,
-  next
+  next,
+  token
 }) => {
   const tokenObj = tokenStatus[paymentMethod]
+
+  useEffect(() => {
+    // Set suggested token as default token
+    if (!paymentMethod) {
+      setPaymentMethod(token)
+    }
+  }, [paymentMethod, token])
 
   if (!tokenObj || tokenObj.loading) {
     return (
@@ -157,13 +164,6 @@ const PaymentMethods = ({
 
   const setTokenCallback = useCallback(token => setPaymentMethod(token))
 
-  useEffect(() => {
-    if (!paymentMethod) {
-      // Set default payment method
-      setPaymentMethod(getDefaultToken(acceptedTokens))
-    }
-  }, [])
-
   const title = <fbt desc="PaymentMethod.title">Payment Method</fbt>
 
   return (
@@ -196,6 +196,7 @@ const PaymentMethods = ({
           quantity={quantity}
           range={bookingRange}
           paymentMethod={paymentMethod}
+          setPaymentMethod={setPaymentMethod}
           acceptedTokens={acceptedTokens}
           history={history}
           next={next}

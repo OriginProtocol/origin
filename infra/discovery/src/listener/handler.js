@@ -82,7 +82,7 @@ async function handleEvent(event, context) {
     return
   }
 
-  const handler = new handlerClass(context.config, graphqlClient)
+  const handler = new handlerClass(context, graphqlClient)
 
   let result
   try {

@@ -2,25 +2,16 @@ const Web3 = require('web3')
 const db = require('../models')
 const { GrowthEventStatuses, GrowthEventTypes } = require('../enums')
 
-const AttestationServiceToEventType = {
-  airbnb: GrowthEventTypes.AirbnbAttestationPublished,
-  email: GrowthEventTypes.EmailAttestationPublished,
-  facebook: GrowthEventTypes.FacebookAttestationPublished,
-  phone: GrowthEventTypes.PhoneAttestationPublished,
-  twitter: GrowthEventTypes.TwitterAttestationPublished,
-  google: GrowthEventTypes.GoogleAttestationPublished,
-  github: GrowthEventTypes.GitHubAttestationPublished,
-  linkedin: GrowthEventTypes.LinkedInAttestationPublished,
-  kakao: GrowthEventTypes.KakaoAttestationPublished,
-  wechat: GrowthEventTypes.WeChatAttestationPublished,
-  website: GrowthEventTypes.WebsiteAttestationPublished,
-  telegram: GrowthEventTypes.TelegramAttestationPublished
-}
-
 class GrowthEvent {
-  static async _findAll(ethAddress, eventType, customId) {
+  static async _findAll(addresses, eventType, customId) {
+    const _addresses = Array.isArray(addresses) ? addresses : [addresses]
+
+    const ethAddress = {
+      [db.Sequelize.Op.in]: _addresses.map(address => address.toLowerCase())
+    }
+
     const where = {
-      ethAddress: ethAddress.toLowerCase(),
+      ethAddress,
       type: eventType
     }
     if (customId) {
@@ -89,7 +80,7 @@ class GrowthEvent {
   /**
    * Returns all events matching the specified criteria.
    * @param {Object} logger
-   * @param {string} ethAddress
+   * @param {string|Array} ethAddress
    * @param {GrowthEventTypes} eventType
    * @param {string} customId - Optional custom id. For ex can hold listing or offer Id.
    * @returns {Promise<Array<Object>>}
@@ -99,4 +90,21 @@ class GrowthEvent {
   }
 }
 
-module.exports = { AttestationServiceToEventType, GrowthEvent }
+GrowthEvent.AttestationServiceToEventType = {
+  airbnb: GrowthEventTypes.AirbnbAttestationPublished,
+  email: GrowthEventTypes.EmailAttestationPublished,
+  facebook: GrowthEventTypes.FacebookAttestationPublished,
+  phone: GrowthEventTypes.PhoneAttestationPublished,
+  twitter: GrowthEventTypes.TwitterAttestationPublished,
+  google: GrowthEventTypes.GoogleAttestationPublished,
+  github: GrowthEventTypes.GitHubAttestationPublished,
+  linkedin: GrowthEventTypes.LinkedInAttestationPublished,
+  kakao: GrowthEventTypes.KakaoAttestationPublished,
+  wechat: GrowthEventTypes.WeChatAttestationPublished,
+  website: GrowthEventTypes.WebsiteAttestationPublished,
+  telegram: GrowthEventTypes.TelegramAttestationPublished
+}
+
+GrowthEvent.Types = GrowthEventTypes
+
+module.exports = { GrowthEvent }

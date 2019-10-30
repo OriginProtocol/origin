@@ -29,8 +29,8 @@ const App = () => (
     <PublicRoute exact path="/welcome/:token" component={Welcome} />
     <PublicRoute exact path="/revised_schedule" component={RevisedSchedule} />
     <PublicRoute exact path="/revised_terms" component={RevisedTerms} />
-    <PublicRoute exact path="/phone" component={Phone} />
     <PublicRoute exact path="/terms" component={Terms} />
+    <PublicRoute exact path="/phone" component={Phone} />
     <PublicRoute path="/check_email" component={CheckEmail} />
     <PublicRoute path="/login_handler/:token" component={HandleLogin} />
     <PublicRoute path="/otp/explain" component={OtpExplain} />

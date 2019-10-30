@@ -20,7 +20,7 @@ class VerifiableSocialShareRule extends SocialShareRule {
    *
    * Important: Make sure to keep this hash function in sync with
    * the one used in the bridge server.
-   * See infra/bridge/src/promotions.js
+   * See infra/bridge/src/utils/webhook-helpers.js
    *
    * @param text
    * @returns {string} Hash of the text, hexadecimal encoded.

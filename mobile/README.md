@@ -126,3 +126,10 @@ Run the following command in a terminal
 ```	
 adb uninstall com.origincatcher
 ```
+
+> Compiling on Android. Javac react-native-geolocation-service error: cannot find symbol
+import android.support.v4.app.ActivityCompat
+
+```
+npx jetify
+```

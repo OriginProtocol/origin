@@ -15,7 +15,7 @@ services:
 
   elasticsearch:
     container_name: elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.3
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.4
     ports:
       - "9200:9200"
     environment:
@@ -284,6 +284,10 @@ services:
       # sendgrid.com
       - SENDGRID_FROM_EMAIL=
       - SENDGRID_API_KEY=
+      - EMAIL_ATTESTATION_AUTOPASS=true
+      # Junk key for testing purposes
+      - ATTESTATION_ACCOUNT=0x59F5be04597ed96980B269B8EBdFe1033F201A89
+      - ATTESTATION_SIGNING_KEY=0x88e96d4537bea4d9c05d12549907b32561d3bf31f45aae734cdc119f13406cb6
       # Twilio verify API key for phone attestations
       # https://www.twilio.com/console/verify/applications
       - TWILIO_VERIFY_API_KEY

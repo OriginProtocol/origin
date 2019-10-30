@@ -100,6 +100,7 @@ async function postToEmailWebhook(url, data) {
   )}&last_name=${encodeURIComponent(
     identity.lastName || ''
   )}&phone=${encodeURIComponent(identity.phone || '')}&dapp_user=1`
+  logger.debug(`Calling email webhook with data ${emailData}`)
   await postToWebhook(url, emailData, 'application/x-www-form-urlencoded')
 }
 

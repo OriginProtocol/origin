@@ -1,4 +1,3 @@
-const BigNumber = require('bignumber.js')
 const moment = require('moment')
 const get = require('lodash.get')
 const jwt = require('jsonwebtoken')
@@ -8,17 +7,15 @@ const Token = require('@origin/token/src/token')
 const { discordWebhookUrl } = require('../config')
 const { sendEmail } = require('../lib/email')
 const { postToWebhook } = require('./webhook')
-
 const {
   TRANSFER_DONE,
   TRANSFER_FAILED,
   TRANSFER_REQUEST
 } = require('../constants/events')
-const { Event, Grant, Transfer, User, sequelize } = require('../models')
+const { Event, Transfer, sequelize } = require('../models')
+const { hasBalance } = require('./balance')
 const enums = require('../enums')
 const logger = require('../logger')
-
-const { vestedAmount } = require('./vesting')
 
 const { encryptionSecret, portalUrl } = require('../config')
 
@@ -30,78 +27,14 @@ const ConfirmationTimeoutSec = 20 * 60 * 60
 const TwofactorTimeoutMinutes = 5
 
 /**
- * Helper method to check the validity of a transfer request.
- * Throws an exception in case the request is invalid.
- * @param userId
- * @param amount
- * @returns (Promise<User>)
- * @private
- */
-async function checkTransferRequest(userId, amount) {
-  const user = await User.findOne({
-    where: {
-      id: userId
-    },
-    include: [{ model: Grant }, { model: Transfer }]
-  })
-  // Load the user and check there enough tokens available to fulfill the
-  // transfer request
-  if (!user) {
-    throw new Error(`Could not find specified user id ${userId}`)
-  }
-
-  // Sum the amount from transfers that are in a pending or complete state
-  const pendingOrCompleteTransfers = [
-    enums.TransferStatuses.WaitingEmailConfirm,
-    enums.TransferStatuses.Enqueued,
-    enums.TransferStatuses.Paused,
-    enums.TransferStatuses.WaitingConfirmation,
-    enums.TransferStatuses.Success
-  ]
-
-  // Sum the vested tokens for all of the users grants
-  const vested = user.Grants.map(grant => grant.get({ plain: true })).reduce(
-    (total, grant) => {
-      return total.plus(vestedAmount(grant))
-    },
-    BigNumber(0)
-  )
-  logger.info('Vested tokens', vested.toString())
-
-  const pendingOrCompleteAmount = user.Transfers.reduce((total, transfer) => {
-    if (pendingOrCompleteTransfers.includes(transfer.status)) {
-      return total.plus(BigNumber(transfer.amount))
-    }
-    return total
-  }, BigNumber(0))
-  logger.info(
-    'Pending or transferred tokens',
-    pendingOrCompleteAmount.toString()
-  )
-
-  const available = vested.minus(pendingOrCompleteAmount)
-  if (amount > available) {
-    logger.info(
-      `Amount of ${amount} OGN exceeds the ${available} available for user ${user.email}`
-    )
-
-    throw new RangeError(
-      `Amount of ${amount} OGN exceeds the ${available} available balance`
-    )
-  }
-
-  return user
-}
-
-/**
  * Enqueues a request to transfer tokens.
  * @param userId
  * @param address
  * @param amount
- * @returns {Promise<integer>} Transfer object.
+ * @returns {Promise<Transfer>} Transfer object.
  */
 async function addTransfer(userId, address, amount, data = {}) {
-  const user = await checkTransferRequest(userId, amount)
+  const user = await hasBalance(userId, amount)
 
   // Enqueue the request by inserting a row in the transfer table.
   // It will get picked up asynchronously by the offline job that processes transfers.
@@ -224,11 +157,7 @@ async function confirmTransfer(transfer, user) {
 async function executeTransfer(transfer, opts) {
   const { networkId, tokenMock } = opts
 
-  const user = await checkTransferRequest(
-    transfer.userId,
-    transfer.amount,
-    transfer
-  )
+  const user = await hasBalance(transfer.userId, transfer.amount, transfer)
 
   // Setup token library. tokenMock is used for testing.
   const token = tokenMock || new Token(networkId)
@@ -304,7 +233,6 @@ async function executeTransfer(transfer, opts) {
 
 module.exports = {
   addTransfer,
-  checkTransferRequest,
   confirmTransfer,
   executeTransfer
 }

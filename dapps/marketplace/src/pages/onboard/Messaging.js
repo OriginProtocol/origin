@@ -165,12 +165,13 @@ const OnboardMessagingRaw = ({
   messagingStatusError,
   messagingStatusLoading,
   messagingStatus,
-  nextLink
+  nextLink,
+  messagingKeysLoading
 }) => {
   const [waitForSignature, setWaitForSignature] = useState(false)
   const [signatureError, setSignatureError] = useState(null)
 
-  if (messagingStatusLoading) {
+  if (messagingStatusLoading || messagingKeysLoading) {
     return <MessagingInitializing />
   } else if (messagingStatusError) {
     return (

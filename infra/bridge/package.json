@@ -15,7 +15,7 @@
     "start": "per-env",
     "start:development": "nodemon -r ./src/env.js src/app.js",
     "start:production": "node -r ./src/env.js src/app.js",
-    "test": "mocha --exit",
+    "test": "NODE_ENV=test mocha --exit",
     "backfill:profile": "node -r ./src/env.js ./src/scripts/20190730-backfill-twitter-profile-data.js",
     "backfill:profile:dryrun": "node -r ./src/env.js ./src/scripts/20190730-backfill-twitter-profile-data.js --dry-run"
   },
@@ -29,8 +29,10 @@
     "DApp"
   ],
   "dependencies": {
+    "@google-cloud/pubsub": "1.1.5",
     "@origin/growth-event": "^0.1.0",
     "@origin/identity": "^0.1.0",
+    "@origin/ip2geo": "^0.1.0",
     "@sendgrid/mail": "^6.4.0",
     "body-parser": "^1.19.0",
     "connect-session-sequelize": "^6.0.0",
@@ -40,8 +42,10 @@
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "express-validator": "^6.1.0",
+    "ipaddr.js": "^1.9.1",
     "json-stable-stringify": "^1.0.1",
     "libphonenumber-js": "^1.7.20",
+    "lodash": "^4.17.15",
     "logplease": "^1.2.15",
     "mock-session": "0.0.5",
     "nock": "^11.0.0",
@@ -59,9 +63,9 @@
   },
   "devDependencies": {
     "chai": "4.2.0",
-    "eslint": "6.5.1",
-    "mocha": "6.2.1",
-    "nodemon": "1.19.3",
+    "eslint": "6.6.0",
+    "mocha": "6.2.2",
+    "nodemon": "1.19.4",
     "supertest": "4.0.2"
   },
   "prettier": {

@@ -23,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
       data: DataTypes.JSONB,
       country: DataTypes.CHAR(2),
       avatarUrl: DataTypes.STRING,
-      website: DataTypes.STRING
+      website: DataTypes.STRING,
+      telegram: DataTypes.STRING
     },
     {
       tableName: 'identity'

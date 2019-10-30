@@ -18,29 +18,26 @@ class RevisedSchedule extends Component {
         <div className="action-card wide">
           <h1>Revised Token Unlock Schedule</h1>
           <p>
-            As we mentioned previously, we’ve also reached an agreement with our
-            listing exchanges to start distributing our tokens. As a necessary
-            part of this agreement our token unlock schedule has been revised.
+            As we have previously communicated, the top-tier exchanges we are
+            partnering with to list Origin Tokens (OGN) have required us to
+            modify our token release schedule. These amendments have been
+            approved by our largest investors, including Pantera Capital,
+            Foundation Capital, Blocktower Capital, PreAngel Fund, Hashed,
+            Danhua Capital, and dozens of other funds and individuals.
           </p>
           <p>
-            Origin Schedule: 3 month waiting period then 100% unlock
+            Original Schedule: 3 month waiting period then 100% unlock
             <br />
-            Revised Schedule: 4% unlock immediately then 12% every 3 months
+            Revised Schedule: 6% unlocked immediately, followed by a 4-month
+            lockup, then 11.75% vesting quarterly
           </p>
           <img className="img-fluid my-4" src={UnlockSchedule} />
           <h2 className="mb-3">Why is this necessary?</h2>
           <p>
-            This has been done in order to benefit you, the investor, as well as
-            the overall health of the OGN token. We seek to avoid individuals
-            receiving their full token amount and cashing out right away thereby
-            hurting the value of the token and all the other investors who
-            choose to hold.
-          </p>
-          <p>
-            Questions?{' '}
-            <a href="mailto:investors@originprotocol.com">
-              Contact Origin Investor Services
-            </a>
+            Origin, our top investors, and our exchange partners all believe
+            that having a more gradual release is to the benefit of all our
+            investors and token holders. The new release schedule has been
+            designed to foster long-term community growth and participation.
           </p>
           <button
             className="btn btn-secondary btn-lg mt-5"
