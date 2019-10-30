@@ -221,8 +221,8 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
                     <>
                       <img className="mr-2" src="images/location-icon.svg" />
                       <div>
-                        <fbt desc="createListing.useCurrentLocation">
-                          Use current location
+                        <fbt desc="createListing.looksGood">
+                          Looks good
                         </fbt>
                       </div>
                     </>
