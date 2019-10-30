@@ -27,7 +27,11 @@ class Welcome extends Component {
         .post(`${apiUrl}/api/verify_email_token`)
         .set('Authorization', `Bearer ${token}`)
     } catch (error) {
-      this.setState({ loading: false, error: 'Invalid token' })
+      if (!error.response) {
+        this.setState({ loading: false, error: 'Server' })
+      } else {
+        this.setState({ loading: false, error: 'Token' })
+      }
       return
     }
 
@@ -44,12 +48,19 @@ class Welcome extends Component {
   renderError = () => {
     return (
       <>
-        <h1>Error</h1>
+        <h1>{this.state.error} Error</h1>
         <p className="my-4">
-          It looks like the link you used to access this page is no longer
-          valid. Please{' '}
-          <a href="mailto:investors@originprotocol.com">contact</a> the Origin
-          Team.
+          {this.state.error === 'Token' && (
+            <>
+              It looks like the link you used to access this page is no longer
+              valid. Please{' '}
+              <a href="mailto:investors@originprotocol.com">contact</a> the
+              Origin Team.
+            </>
+          )}
+          {this.state.error === 'Server' && (
+            <>A server error occurred, please try again later.</>
+          )}
         </p>
       </>
     )
@@ -64,6 +75,9 @@ class Welcome extends Component {
   }
 
   renderWelcome = () => {
+    const skipRevisedSchedule =
+      this.props.user.revisedTermsAgreedAt ||
+      this.props.user.revisedScheduleRejected
     return (
       <>
         <h1>
@@ -88,16 +102,20 @@ class Welcome extends Component {
         </div>
         <hr className="mx-5" />
         <p className="my-4">
-          As part of our agreement with our listing exchanges, we’ve modified
-          the token unlock schedule.
+          At the request of multiple top-tier exchanges, we’ve modified the
+          investor token release schedule.
         </p>
         <button
           className="btn btn-secondary btn-lg"
           onClick={() => {
-            this.setState({ redirectTo: '/revised_schedule' })
+            if (skipRevisedSchedule) {
+              this.setState({ redirectTo: '/terms' })
+            } else {
+              this.setState({ redirectTo: '/revised_schedule' })
+            }
           }}
         >
-          View Revised Schedule
+          {skipRevisedSchedule ? 'Continue' : 'View Revised Schedule'}
         </button>
       </>
     )

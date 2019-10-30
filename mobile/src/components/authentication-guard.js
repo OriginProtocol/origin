@@ -40,7 +40,8 @@ class AuthenticationGuard extends Component {
       // If authentication is set display on init
       display: this._hasAuthentication(),
       suspendTime: null,
-      appState: AppState.currentState
+      appState: AppState.currentState,
+      changePin: false
     }
   }
 
@@ -133,8 +134,11 @@ class AuthenticationGuard extends Component {
 
   renderModal() {
     const { settings } = this.props
+    const { changePin } = this.state
 
-    const guard = settings.biometryType
+    const guard = changePin
+      ? this.renderPinGuard()
+      : settings.biometryType
       ? this.renderBiometryGuard()
       : settings.pin
       ? this.renderPinGuard()
@@ -158,7 +162,14 @@ class AuthenticationGuard extends Component {
     )
   }
 
+  changePinAuthenticate = value => {
+    this.setState({
+      changePin: value
+    })
+  }
+
   renderBiometryGuard() {
+    const { settings } = this.props
     return (
       <>
         <TouchableOpacity onPress={this.touchAuthenticate}>
@@ -180,6 +191,19 @@ class AuthenticationGuard extends Component {
                 this.touchAuthenticate()
               }}
             />
+            {settings.pin && (
+              <OriginButton
+                size="large"
+                type="link"
+                title={fbt(
+                  'Retry With Pin',
+                  'AuthenticationGuard.retryWithPinButton'
+                )}
+                onPress={() => {
+                  this.changePinAuthenticate(true)
+                }}
+              />
+            )}
           </>
         )}
       </>

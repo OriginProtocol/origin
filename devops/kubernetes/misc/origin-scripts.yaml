@@ -5,6 +5,6 @@ metadata:
 spec:
   containers:
     - name: origin-scripts
-      image: "gcr.io/origin-214503/dev/origin-cron:latest"
+      image: "gcr.io/origin-214503/prod/origin-cron:latest"
       command: ["/bin/sh","-c"]
       args: ["while true; do echo -n '.'; sleep 3600; done"]
