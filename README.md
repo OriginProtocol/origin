@@ -79,7 +79,7 @@ attestations).
 
 The `@origin/mobile` package is not managed by `Lerna` due to issues with
 `react-native` and hoisting.
-
+ 
 ## Contributing
 
 Origin is an 100% open-source and community-driven project and we welcome

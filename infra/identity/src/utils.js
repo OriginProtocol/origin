@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const get = require('lodash/get')
 const isEqual = require('lodash/isEqual')
-const omitBy = require('lodash/omitBy')
+const pick = require('lodash/pick')
 const uniqWith = require('lodash/uniqWith')
 
 const db = {
@@ -282,9 +282,26 @@ function validateIdentityIpfsData(ipfsData) {
 async function saveIdentity(owner, ipfsHash, ipfsData, attestationMetadata) {
   // Create an object representing the updated identity.
   // Note: by convention, the identity is stored under the owner's address in the DB.
-  // TODO(franck): consider backlisting twitterProfile and telegramProfile to
+  // TODO(franck): consider blacklisting twitterProfile and telegramProfile to
   //               reduce the amount of data stored in the data column.
-  const blacklistedFields = []
+  const identityFields = [
+    'email',
+    'phone',
+    'twitter',
+    'airbnb',
+    'facebook',
+    'facebook_verified',
+    'google',
+    'google_verified',
+    'website',
+    'kakao',
+    'github',
+    'linkedin',
+    'wechat',
+    'telegram',
+    'country'
+  ]
+  const dataFields = ['twitterProfile', 'telegramProfile']
   const identity = {
     ethAddress: owner.toLowerCase(),
     firstName: get(ipfsData, 'profile.firstName'),
@@ -293,9 +310,10 @@ async function saveIdentity(owner, ipfsHash, ipfsData, attestationMetadata) {
     data: {
       identity: ipfsData,
       ipfsHash: ipfsHash,
-      ipfsHashHistory: []
+      ipfsHashHistory: [],
+      ...pick(attestationMetadata, dataFields)
     },
-    ...omitBy(attestationMetadata, (v, k) => blacklistedFields.includes(k))
+    ...pick(attestationMetadata, identityFields)
   }
 
   // Look for an existing identity to get the IPFS hash history.
@@ -374,29 +392,23 @@ async function recordGrowthAttestationEvents(
   date,
   growthEvent
 ) {
-  await Promise.all(
-    attestations.map(attestation => {
-      const attestationService = _getAttestationService(attestation)
-      const eventType =
-        growthEvent.AttestationServiceToEventType[attestationService]
-      if (!eventType) {
-        logger.error(
-          `Unexpected att. service: ${attestationService}. Skipping.`
-        )
-        return
-      }
+  // Note: this could be optimized by inserting events in parallel rather
+  // than serially. A caveat is that the identity data structure may contain
+  // multiple attestations of the same type. For example if a user verifies
+  // their email more than once. This could then cause a race condition within
+  // the growthEvent.insert() method where the checks for ensuring there is
+  // one growth-event row per attestation type can fail.
+  for (const attestation of attestations) {
+    const attestationService = _getAttestationService(attestation)
+    const eventType =
+      growthEvent.AttestationServiceToEventType[attestationService]
+    if (!eventType) {
+      logger.error(`Skipping unexpected service: ${attestationService}.`)
+      continue
+    }
 
-      return growthEvent.insert(
-        logger,
-        1,
-        ethAddress,
-        eventType,
-        null,
-        null,
-        date
-      )
-    })
-  )
+    await growthEvent.insert(logger, 1, ethAddress, eventType, null, null, date)
+  }
 }
 
 module.exports = {
