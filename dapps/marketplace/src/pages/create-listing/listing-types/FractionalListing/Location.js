@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { fbt } from 'fbt-runtime'
 import Geocode from 'react-geocode'
 
@@ -39,11 +39,7 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
 
   const input = locationInput()
 
-  if (redirect) {
-    return <Redirect to={next} push />
-  }
-
-  const saveLocation = (latitude, longitude) => {
+  const saveLocation = useCallback((latitude, longitude) => {
     listing.exactLocation = {
       latitude,
       longitude
@@ -52,7 +48,7 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
     setFetchingLocation(false)
     setCurrentLocationError(null)
     setRedirect(true)
-  }
+  }, [listing])
 
   const fetchCurrentLocation = async e => {
     e.preventDefault()
@@ -122,7 +118,7 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
     )
   }
 
-  const renderExistingLocation = () => {
+  const renderExistingLocation = useCallback(() => {
     return (
       <>
         <h1>
@@ -168,9 +164,9 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
         </div>
       </>
     )
-  }
+  }, [prev, listing, isMobile])
 
-  const renderInputLocation = () => {
+  const renderInputLocation = useCallback(() => {
     return (
       <>
         <h1>
@@ -213,6 +209,11 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
                     'createListing.locationPlaceholder'
                   )}
                 />
+                {formLocationError && (
+                  <div className="invalid-feedback d-flex justify-content-center mt-3">
+                    {formLocationError}
+                  </div>
+                )}
                 <button
                   className={`btn btn-outline-primary btn-location d-flex align-items-center justify-content-center`}
                   onClick={fetchCurrentLocation}
@@ -256,6 +257,10 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
         </div>
       </>
     )
+  }, [prev, listing, navigator, fetchingLocation, currentLocationError, formLocationError, formLocationValue])
+
+  if (redirect) {
+    return <Redirect to={next} push />
   }
 
   return listing.location && isEditingListing && !forceEditLocation
@@ -274,6 +279,9 @@ require('react-styl')(`
         min-height: 50px
         border-radius: 5px
         border: solid 1px #c2cbd3
+        &.is-invalid
+          color: var(--red)
+          border: solid 1px var(--red)
         &.lat-lng-location
           text-align: center
           color: var(--clear-blue)
