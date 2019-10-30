@@ -1,5 +1,4 @@
 const addresses = require('@origin/contracts/build/contracts_origin.json')
-const localStorageHas = require('./_localStorageHas')
 
 export default {
   networkId: 2222,

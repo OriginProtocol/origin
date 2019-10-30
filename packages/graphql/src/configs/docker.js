@@ -1,5 +1,4 @@
 import get from 'lodash/get'
-const localStorageHas = require('./_localStorageHas')
 
 let addresses = {}
 try {
