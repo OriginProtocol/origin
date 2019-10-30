@@ -37,7 +37,7 @@ export default withScriptjs(
       }
 
       if (readonly && circleOptions && circleOptions.radius) {
-        // 30 is minRaidius. This is a reverse function of getCircleRadius in ListingObfscation
+        // 30 is minRadius. This is a reverse function of getCircleRadius in ListingObfuscation
         defaultZoom = 20 - Math.log(circleOptions.radius / 30) / Math.log(2) - 2
       }
 
