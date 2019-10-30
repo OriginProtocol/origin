@@ -40,11 +40,16 @@ export function truncateAddress(address = '', chars = 5) {
     address.length <= MAX_ADDRESS_LENGTH ||
     chars === -1 ||
     chars > address.length
-  )
+  ) {
     return address
+  }
+  
+  let separator = '...'
 
-  const separator = '...'
-  const firstPortionLength = Math.floor(chars / 2)
+  if (chars > address.length) {
+    separator = ''
+  }
+
   return (
     address.substr(0, firstPortionLength) +
     separator +
