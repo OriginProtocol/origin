@@ -35,7 +35,7 @@
     "sequelize": "5.21.2",
     "sequelize-cli": "5.5.1",
     "url": "0.11.0",
-    "validator": "11.1.0",
+    "validator": "12.0.0",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
