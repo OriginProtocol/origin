@@ -25,7 +25,7 @@ class DeployIdentity extends Component {
     return (
       <Mutation
         mutation={DeployIdentityMutation}
-        onCompleted={({ deployIdentity }) => {
+        onCompleted={() => {
           this.setState({ mutationCompleted: true })
           if (this.props.onComplete) {
             this.props.onComplete()
