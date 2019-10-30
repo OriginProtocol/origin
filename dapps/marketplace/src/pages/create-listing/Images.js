@@ -22,11 +22,7 @@ const ListingImages = ({ prev, next, listing, onChange, isMobile }) => {
   return (
     <>
       <h1>
-        <Link
-          onClick={onBack}
-          to={prev}
-          className="back d-md-none"
-        />
+        <Link onClick={onBack} to={prev} className="back d-md-none" />
         <fbt desc="createListing.addPhotos">Add Photos</fbt>
       </h1>
       <div className="step-description mb-0">

@@ -14,7 +14,12 @@ const FractionalListing = props => {
   let counter = 1
   const steps = [
     { step: counter++, component: TitleDescription, require: 'subCategory' },
-    { step: counter++, component: Pricing, path: 'pricing', require: 'quantity' },
+    {
+      step: counter++,
+      component: Pricing,
+      path: 'pricing',
+      require: 'quantity'
+    },
     {
       step: counter++,
       component: Availability,

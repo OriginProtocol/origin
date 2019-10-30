@@ -35,16 +35,19 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
     }
   }
 
-  const saveLocation = useCallback((latitude, longitude) => {
-    listing.exactLocation = {
-      latitude,
-      longitude
-    }
-    onChange({ ...listing })
-    setFetchingLocation(false)
-    setCurrentLocationError(null)
-    setRedirect(true)
-  }, [listing])
+  const saveLocation = useCallback(
+    (latitude, longitude) => {
+      listing.exactLocation = {
+        latitude,
+        longitude
+      }
+      onChange({ ...listing })
+      setFetchingLocation(false)
+      setCurrentLocationError(null)
+      setRedirect(true)
+    },
+    [listing]
+  )
 
   const fetchCurrentLocation = async e => {
     e.preventDefault()
@@ -153,7 +156,7 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
                   <fbt desc="editListing.useCurrentLocation">
                     Use current location
                   </fbt>
-                </button> 
+                </button>
               </div>
             </div>
           </div>
@@ -253,7 +256,15 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
         </div>
       </>
     )
-  }, [prev, listing, navigator, fetchingLocation, currentLocationError, formLocationError, formLocationValue])
+  }, [
+    prev,
+    listing,
+    navigator,
+    fetchingLocation,
+    currentLocationError,
+    formLocationError,
+    formLocationValue
+  ])
 
   if (redirect) {
     return <Redirect to={next} push />
