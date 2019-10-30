@@ -202,32 +202,29 @@ function _getAttestations(accounts, attestations) {
 }
 
 /**
- * Reads identity data associated with an Eth address from the bridge server.
+ * Reads identity data associated with an Eth address from the identity server.
  *
  * @param {string} id: Eth address of the user.
  * @returns {Promise<Object||null>} Returns the identity object or null if no identity found.
  * @private
  */
 async function _getIdentityFromBridgeServer(id) {
-  const bridgeServer = contracts.config.bridge
-  if (!bridgeServer) {
-    throw new Error('Bridge server not configured')
+  const identityServer = contracts.config.identityServer
+  if (!identityServer) {
+    throw new Error('identityServer server not configured')
   }
-  const url = `${bridgeServer}/api/identity?ethAddress=${id}`
+  const url = `${identityServer}/api/identity?ethAddress=${id}`
 
   // Query the bridge server.
-  console.log(`Sending query ${url}`)
   const response = await fetch(url, { credentials: 'include' })
   if (response.status === 204) {
     // No identity found for this eth address.
     return null
   }
   if (response.status !== 200) {
-    throw new Error(`Bridge query for identity ${id} failed`)
+    throw new Error(`Query for identity ${id} failed`)
   }
-  console.log('LOADED IDENTITY FROM BRIDGE !!!')
   const data = await response.json()
-  debug('GOT DATA FROM BRIDGE:', JSON.stringify(data, null, 2))
   return { identity: data.identity, ipfsHash: data.ipfsHash }
 }
 
@@ -344,9 +341,7 @@ async function _decorateIdentityWithAvatarUrls(identity) {
  * @returns {{owner: {id: (*)}, proxy: {id: (*)}, strength: number, attestations: *, ipfsHash: *, id: *, verifiedAttestations: *}|any}
  */
 export async function identity({ id }) {
-  console.log('CALLING identity resolver')
   if (typeof localStorage !== 'undefined' && localStorage.useWeb3Identity) {
-    console.log('USING Web3 Identity !')
     return JSON.parse(localStorage.useWeb3Identity)
   }
 
@@ -359,10 +354,8 @@ export async function identity({ id }) {
   // Load the IPFS data for the user's identity.
   let data
   if (contracts.config.centralizedIdentityEnabled) {
-    console.log("CENTRALIZED IDENTITY ENABLED")
     data = await _getIdentityFromBridgeServer(owner)
   } else {
-    console.log("BLOCKCHAIN IDENTITY")
     data = await _getIdentityFromContract(accounts, blockNumber)
   }
 
@@ -387,7 +380,7 @@ export async function identity({ id }) {
       'avatarUrl',
       'description'
     ]),
-    verifiedAttestations: _getAttestations(accounts, data.attestations || []),
+    verifiedAttestations: _getAttestations(accounts, attestations),
     ipfsHash: data.ipfsHash,
     owner: {
       id: owner
@@ -440,7 +433,7 @@ function dataURItoBinary(dataURI) {
 }
 
 /**
- * Queries the blockchain to get <first> identities starting at cursor <after>.
+ * Queries the identity server to get <first> identities starting at cursor <after>.
  *
  * @param {Integer} first: the number of identities to fetch (e.g. limit).
  * @param {string} after: cursor.
@@ -448,19 +441,17 @@ function dataURItoBinary(dataURI) {
  * @private
  */
 async function _getIdentitiesFromBridgeServer(first, after) {
-  const bridgeServer = contracts.config.bridge
-  if (!bridgeServer) {
-    throw new Error('Bridge server not configured')
+  const identityServer = contracts.config.identityServer
+  if (!identityServer) {
+    throw new Error('identityServer server not configured')
   }
   const offset = after ? convertCursorToOffset(after) : 0
-  const url = `${bridgeServer}/api/identity/list?limit=${first}&offset=${offset}`
+  const url = `${identityServer}/api/identity/list?limit=${first}&offset=${offset}`
 
-  // Query the bridge server.
+  // Query the identity server.
   const response = await fetch(url, { credentials: 'include' })
   if (response.status !== 200) {
-    throw new Error(
-      `Bridge query for ${first} identities at offset ${after} failed`
-    )
+    throw new Error(`Query for ${first} identities at offset ${after} failed`)
   }
   const data = await response.json()
   return {

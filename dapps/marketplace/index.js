@@ -28,6 +28,7 @@ async function start() {
     ipfs: true,
     populate: true,
     graphqlServer: process.env.PERFORMANCE ? true : false,
+    bridge: process.env.ENABLE_CENTRALIZED_IDENTITY ? true : false,
     skipContractsIfExists: process.env.CLEAN ? false : true,
     relayer: process.env.RELAYER ? true : false,
     sslProxy

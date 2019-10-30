@@ -14,10 +14,6 @@ import AutoMutate from 'components/AutoMutate'
 class DeployIdentity extends Component {
   state = {}
 
-  componentWillUnmount() {
-    console.log('##### DEPLOY IDENTITY WILL UNMOUNT')
-  }
-
   render() {
     if (
       this.props.autoDeploy &&
@@ -26,19 +22,12 @@ class DeployIdentity extends Component {
       return null
     }
 
-    console.log('DAPP: render DeployIdentity component')
     return (
       <Mutation
         mutation={DeployIdentityMutation}
         onCompleted={({ deployIdentity }) => {
-          console.log(
-            'YAHOOOO GOT RESP=',
-            JSON.stringify(deployIdentity, null, 2)
-          )
-          //this.setState({ waitFor: deployIdentity.id, mutationCompleted: true })
           this.setState({ mutationCompleted: true })
           if (this.props.onComplete) {
-            console.log('####CALLING props.onComplete')
             this.props.onComplete()
           }
         }}
@@ -113,18 +102,12 @@ class DeployIdentity extends Component {
 
   renderWaitModal() {
     if (!this.state.waitFor) return null
-    console.log('###### DeployIdentity.js::renderWaitModal ')
 
     const { skipSuccessScreen } = this.props
     const content = skipSuccessScreen ? (
       <AutoMutate
         mutation={() => {
-          console.log('IN AUTOMUTATE')
           this.setState({ shouldClose: true })
-          //if (this.props.onComplete) {
-          //  console.log("####CALLING props.onComplete")
-          //  this.props.onComplete()
-          //}
         }}
       />
     ) : (
@@ -142,9 +125,6 @@ class DeployIdentity extends Component {
     )
 
     if (process.env.ENABLE_CENTRALIZED_IDENTITY === 'true') {
-      console.log(
-        '###### DeployIdentity.js::renderWaitModal::CentralizedIdentity code'
-      )
       return content
     }
 

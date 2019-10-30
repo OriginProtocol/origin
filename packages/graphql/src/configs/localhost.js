@@ -15,8 +15,8 @@ const config = {
   ipfsGateway: `http://${HOST}:8080`,
   ipfsRPC: `http://${HOST}:5002`,
   relayer: `http://${HOST}:5100`,
-  //bridge: 'https://bridge.dev.originprotocol.com',
-  bridge: 'http://localhost:5000',
+  bridge: 'https://bridge.dev.originprotocol.com',
+  identityServer: 'http://localhost:5000',
   // discovery: `http://${HOST}:4000/graphql`,
   notifications: `http://${HOST}:3456`,
   growth: localStorageHas('localGrowthServer', true)
@@ -46,7 +46,7 @@ const config = {
   },
 
   // Wire-on/off configs.
-  centralizedIdentityEnabled: true,
+  centralizedIdentityEnabled: !!process.env.ENABLE_CENTRALIZED_IDENTITY,
   performanceMode: localStorageHas('performanceMode', 'true'),
   proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled', 'true'),
   relayerEnabled: localStorageHas('relayerEnabled', 'true')

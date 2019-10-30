@@ -62,7 +62,7 @@ const config = {
   tokens: [],
 
   // Wire-on/off configs.
-  centralizedIdentityEnabled: localStorageHas('centralizedIdentityEnabled', 'true'),
+  centralizedIdentityEnabled: true,
   performanceMode: false,
 }
 

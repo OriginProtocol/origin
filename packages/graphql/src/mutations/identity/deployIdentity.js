@@ -140,12 +140,6 @@ async function deployIdentity(
   debug('In deployIdentity ')
   await checkMetaMask(from)
 
-  // DEPRECATE ????
-  //const proxy = await hasProxy(from)
-  //const owner = !proxy ? await proxyOwner(from) : null
-  //const wallet = proxy || from
-  //const accounts = owner ? [wallet, owner] : [wallet]
-
   // Get owner and proxy address.
   const { owner, proxy } = await getProxyAndOwner(from)
 
@@ -161,14 +155,12 @@ async function deployIdentity(
   )
   if (contracts.config.centralizedIdentityEnabled) {
     // Write the identity data to centralized storage via the bridge server.
-    console.log('WRITING IDENTITY VIA BRIDGE!!!!!!')
-    const bridgeServer = contracts.config.bridge
-    if (!bridgeServer) {
-      throw new Error('Bridge server not configured')
+    const identityServer = contracts.config.identityServer
+    if (!identityServer) {
+      throw new Error('identity server not configured')
     }
-    const url = `${bridgeServer}/api/identity?ethAddress=${from}`
+    const url = `${identityServer}/api/identity?ethAddress=${from}`
 
-    console.log(`Sending query ${url}`)
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -176,10 +168,9 @@ async function deployIdentity(
       body: JSON.stringify({ ipfsData, ipfsHash })
     })
     if (response.status !== 200) {
-      throw new Error(`Bridge write for identity ${from} failed`)
+      throw new Error(`Write for identity ${from} failed`)
     }
     const data = await response.json()
-    console.log('GOT RESPONSE !!! ID=', data.id)
     return { id: data.ethAddress }
   } else {
     // Write the identity data to the blockchain via the IdentityEvents contract.
