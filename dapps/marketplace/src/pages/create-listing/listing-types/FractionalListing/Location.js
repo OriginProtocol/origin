@@ -20,24 +20,20 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
   const [formLocationError, setFormLocationError] = useState(null)
   const [currentLocationError, setCurrentLocationError] = useState(null)
 
-  const locationInput = () => {
-    let className = 'px-3'
-    if (formLocationError) {
-      className += ' is-invalid'
-    }
-
-    return {
-      value: formLocationValue,
-      className,
-      name: 'location',
-      onChange: e => {
-        setFormLocationValue(e.target.value)
-        setFormLocationError(null)
-      }
-    }
+  let className = 'px-3'
+  if (formLocationError) {
+    className += ' is-invalid'
   }
 
-  const input = locationInput()
+  const input = {
+    value: formLocationValue,
+    className,
+    name: 'location',
+    onChange: e => {
+      setFormLocationValue(e.target.value)
+      setFormLocationError(null)
+    }
+  }
 
   const saveLocation = useCallback((latitude, longitude) => {
     listing.exactLocation = {
