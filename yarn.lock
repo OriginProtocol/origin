@@ -7496,7 +7496,7 @@ charenc@~0.0.1:
   resolved "https://registry.yarnpkg.com/charenc/-/charenc-0.0.2.tgz#c0a1d2f3a7092e03774bfa83f14c0fc5790a8667"
   integrity sha1-wKHS86cJLgN3S/qD8UwPxXkKhmc=
 
-chart.js@^2.8.0:
+chart.js@2.9.1:
   version "2.9.1"
   resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-2.9.1.tgz#e98893a810d40d1c0a016e6872a13fa5faedcdf8"
   integrity sha512-DA5dFt0Bz79oz56ezmrwmZqj0hXGs+i9VbCFOcHqbwrHIGv7RI4YqninJKNIAC0qa29WBI9qYTN7LzULlOeunA==
@@ -23330,7 +23330,7 @@ react-autosize-textarea@^7.0.0:
     line-height "^0.3.1"
     prop-types "^15.5.6"
 
-react-bootstrap@^1.0.0-beta.14:
+react-bootstrap@1.0.0-beta.14:
   version "1.0.0-beta.14"
   resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-1.0.0-beta.14.tgz#30330df61edbed1f0405f75363ef72d77c1fed57"
   integrity sha512-UGK5f78FE8wAei1YL/oSwFlJZLqxJ/h4S8DCwHyY8hQjFCrjEW5PoEBTOOhQ6PQL6WOsZe1jkiOJG7L5TZWu+w==
@@ -23351,7 +23351,7 @@ react-bootstrap@^1.0.0-beta.14:
     uncontrollable "^7.0.0"
     warning "^4.0.3"
 
-react-chartjs-2@^2.8.0:
+react-chartjs-2@2.8.0:
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/react-chartjs-2/-/react-chartjs-2-2.8.0.tgz#1c24de91fb3755f8c4302675de7d66fdda339759"
   integrity sha512-BPpC+qfnh37DkcXvxRwA1rdD9rX/0AQrwru4VZTLofCCuZBwRsc7PbfxjilvoB6YlHhorwZu40YDWEQkoz7xfQ==
