@@ -142,7 +142,7 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
                     setForceEditLocation(true)
                   }}
                 >
-                  <fbt desc="editListing.editLocation">Edit location</fbt>
+                  <fbt desc="createListing.editLocation">Edit location</fbt>
                 </button>
                 <button
                   className="btn btn-primary"
@@ -153,9 +153,7 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
                     setRedirect(true)
                   }}
                 >
-                  <fbt desc="editListing.useCurrentLocation">
-                    Use current location
-                  </fbt>
+                  <fbt desc="createListing.looksGood">Looks good</fbt>
                 </button>
               </div>
             </div>
@@ -221,7 +219,9 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
                     <>
                       <img className="mr-2" src="images/location-icon.svg" />
                       <div>
-                        <fbt desc="createListing.looksGood">Looks good</fbt>
+                        <fbt desc="createListing.useCurrentLocation">
+                          Use current location
+                        </fbt>
                       </div>
                     </>
                   )}
