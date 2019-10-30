@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const get = require('lodash/get')
 const isEqual = require('lodash/isEqual')
-const pick = require('lodash/pickBy')
+const pick = require('lodash/pick')
 const uniqWith = require('lodash/uniqWith')
 
 const db = {
