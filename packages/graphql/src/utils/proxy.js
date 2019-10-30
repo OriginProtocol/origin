@@ -117,7 +117,7 @@ export async function getProxyAndOwner(id) {
 }
 
 /**
- * Given an eth address, returns a list with proxy and owner address.
+ * Given an eth address, returns a list containing owner address and proxy address (if any).
  *
  * @param {string} id: owner or proxy eth address.
  * @returns {Promise<Array<string>>}

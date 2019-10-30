@@ -14,6 +14,7 @@ export default {
   discovery: 'https://discovery.originprotocol.com',
   growth: 'https://growth.originprotocol.com',
   bridge: 'https://bridge.originprotocol.com',
+  identityServer: 'https://bridge.originprotocol.com',
   graphql: 'https://graphql.originprotocol.com',
   notifications: 'https://notifications.originprotocol.com',
   relayer: 'https://relayer.originprotocol.com',

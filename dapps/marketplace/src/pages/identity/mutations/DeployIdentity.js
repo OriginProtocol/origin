@@ -25,10 +25,17 @@ class DeployIdentity extends Component {
     return (
       <Mutation
         mutation={DeployIdentityMutation}
-        onCompleted={() => {
-          this.setState({ mutationCompleted: true })
-          if (this.props.onComplete) {
-            this.props.onComplete()
+        onCompleted={({ deployIdentity }) => {
+          if (process.env.ENABLE_CENTRALIZED_IDENTITY === 'true') {
+            this.setState({ mutationCompleted: true })
+            if (this.props.onComplete) {
+              this.props.onComplete()
+            }
+          } else {
+            this.setState({
+              waitFor: deployIdentity.id,
+              mutationCompleted: true
+            })
           }
         }}
         onError={errorData =>

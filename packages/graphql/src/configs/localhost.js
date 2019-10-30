@@ -19,7 +19,7 @@ const config = {
   identityServer: 'http://localhost:5000',
   // discovery: `http://${HOST}:4000/graphql`,
   notifications: `http://${HOST}:3456`,
-  growth: localStorageHas('localGrowthServer', true)
+  growth: localStorageHas('localGrowthServer', 'true')
     ? 'http://localhost:4008'
     : null,
   graphql: `http://${HOST}:4007`,

@@ -48,7 +48,7 @@ const attestationProgressPct = {
  */
 function _sanitizeAttestations(attestations) {
   const m = new Map()
-  // In case of a multiple events for same provider,
+  // In case of multiple events for same provider,
   // only the latest one will be returned
   attestations.forEach(att => m.set(att.id, att))
 
@@ -215,7 +215,7 @@ async function _getIdentityFromBridgeServer(id) {
   }
   const url = `${identityServer}/api/identity?ethAddress=${id}`
 
-  // Query the bridge server.
+  // Query the identity server.
   const response = await fetch(url, { credentials: 'include' })
   if (response.status === 204) {
     // No identity found for this eth address.
@@ -254,7 +254,7 @@ async function _getIdentityFromContract(accounts, blockNumber) {
   // Go thru all events and build a list of IPFS hashes, with most recent first.
   let ipfsHashes = []
   events.forEach(event => {
-    if (blockNumber < event.blockNumber) {
+    if (blockNumber !== undefined && blockNumber < event.blockNumber) {
       return
     }
     if (event.event === 'IdentityUpdated') {
@@ -347,7 +347,7 @@ export async function identity({ id }) {
 
   // Get blocknumber, owner and proxy address associated with the id.
   const [account, blockNumberStr] = id.split('-')
-  const blockNumber = blockNumberStr ? Number(blockNumberStr) : -1
+  const blockNumber = blockNumberStr ? Number(blockNumberStr) : undefined
   const { owner, proxy } = await getProxyAndOwner(account)
   const accounts = [owner, proxy].filter(x => x)
 
@@ -475,7 +475,6 @@ async function _getIdentitiesFromBridgeServer(first, after) {
 async function _getIdentitiesFromBlockchain(contract, first, after) {
   // Build a list of identity eth addresses by scanning
   // all the events from the blockchain.
-  //
   const events = await contract.eventCache.allEvents()
   const allIds = new Set()
   events.forEach(event => {
