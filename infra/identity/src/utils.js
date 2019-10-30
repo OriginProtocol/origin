@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const get = require('lodash/get')
 const isEqual = require('lodash/isEqual')
-const omitBy = require('lodash/omitBy')
+const pick = require('lodash/pickBy')
 const uniqWith = require('lodash/uniqWith')
 
 const db = {
@@ -284,7 +284,24 @@ async function saveIdentity(owner, ipfsHash, ipfsData, attestationMetadata) {
   // Note: by convention, the identity is stored under the owner's address in the DB.
   // TODO(franck): consider blacklisting twitterProfile and telegramProfile to
   //               reduce the amount of data stored in the data column.
-  const blacklistedFields = []
+  const identityFields = [
+    'email',
+    'phone',
+    'twitter',
+    'airbnb',
+    'facebook',
+    'facebook_verified',
+    'google',
+    'google_verified',
+    'website',
+    'kakao',
+    'github',
+    'linkedin',
+    'wechat',
+    'telegram',
+    'country'
+  ]
+  const dataFields = ['twitterProfile', 'telegramProfile']
   const identity = {
     ethAddress: owner.toLowerCase(),
     firstName: get(ipfsData, 'profile.firstName'),
@@ -293,9 +310,10 @@ async function saveIdentity(owner, ipfsHash, ipfsData, attestationMetadata) {
     data: {
       identity: ipfsData,
       ipfsHash: ipfsHash,
-      ipfsHashHistory: []
+      ipfsHashHistory: [],
+      ...pick(attestationMetadata, dataFields)
     },
-    ...omitBy(attestationMetadata, (v, k) => blacklistedFields.includes(k))
+    ...pick(attestationMetadata, identityFields)
   }
 
   // Look for an existing identity to get the IPFS hash history.
