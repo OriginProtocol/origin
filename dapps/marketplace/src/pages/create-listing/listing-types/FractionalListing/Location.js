@@ -152,6 +152,7 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
                   className="btn btn-primary"
                   onClick={() => {
                     listing.skipLocationObfuscationForward = true
+                    listing.exactLocation = listing.location
                     onChange({ ...listing })
                     setRedirect(true)
                   }}

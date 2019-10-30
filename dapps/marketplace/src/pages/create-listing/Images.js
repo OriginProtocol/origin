@@ -14,15 +14,16 @@ const ListingImages = ({ prev, next, listing, onChange, isMobile }) => {
     return <Redirect to={next} push />
   }
 
+  const onBack = () => {
+    // If a location is already set we can skip the locationObfuscation step
+    listing.skipLocationObfuscationBackward = true
+    onChange({ ...listing })
+  }
   return (
     <>
       <h1>
         <Link
-          onClick={() => {
-            // If a location is already set we can skip the locationObfuscation step
-            listing.skipLocationObfuscationBackward = true
-            onChange({ ...listing })
-          }}
+          onClick={onBack}
           to={prev}
           className="back d-md-none"
         />
@@ -68,6 +69,7 @@ const ListingImages = ({ prev, next, listing, onChange, isMobile }) => {
             <div className="actions">
               <Link
                 className="btn btn-outline-primary d-none d-md-inline-block"
+                onClick={onBack}
                 to={prev}
               >
                 <fbt desc="back">Back</fbt>

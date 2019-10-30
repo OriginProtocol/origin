@@ -10,34 +10,34 @@ import Images from '../../Images'
 import Review from './Review'
 
 const FractionalListing = props => {
-  const isHausing = props.listing.subCategory === 'schema.housing'
-
+  const isHousing = props.listing.subCategory === 'schema.housing'
+  let counter = 1
   const steps = [
-    { step: 1, component: TitleDescription, require: 'subCategory' },
-    { step: 2, component: Pricing, path: 'pricing', require: 'quantity' },
+    { step: counter++, component: TitleDescription, require: 'subCategory' },
+    { step: counter++, component: Pricing, path: 'pricing', require: 'quantity' },
     {
-      step: 3,
+      step: counter++,
       component: Availability,
       path: 'availability',
       require: 'title'
     }
   ]
-  if (isHausing) {
-    steps.push({ step: 4, component: Location, path: 'location' })
+  if (isHousing) {
+    steps.push({ step: counter++, component: Location, path: 'location' })
     steps.push({
-      step: 5,
+      step: counter++,
       component: LocationObfuscation,
       path: 'locationObfuscate'
     })
   }
 
   steps.push({
-    step: isHausing ? 6 : 4,
+    step: counter++,
     component: Images,
     path: 'images',
     require: 'price'
   })
-  steps.push({ step: isHausing ? 7 : 5, component: Review, path: 'review' })
+  steps.push({ step: counter++, component: Review, path: 'review' })
 
   return <Steps {...props} steps={steps} />
 }
