@@ -35,7 +35,7 @@ class Welcome extends Component {
       return
     }
 
-    if (response.body.otpVerified) {
+    if (response.body.otpReady) {
       // Looks like user has already onboarding, probably wants to login
       this.setState({ redirectTo: '/' })
     }
