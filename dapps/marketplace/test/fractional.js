@@ -123,7 +123,11 @@ export function fractionalTests({ autoSwap, acceptedTokens } = {}) {
       await waitForText(page, 'Where is your listing located', 'div')
       await page.type('input[name=location]', 'Origin Protocol SF')
       await clickByText(page, 'Next', 'button')
-      await waitForText(page, 'This is what will be shown to potential guests', 'div')
+      await waitForText(
+        page,
+        'This is what will be shown to potential guests',
+        'div'
+      )
       await clickByText(page, 'Continue', 'button')
     })
 
