@@ -3,7 +3,6 @@
 import React, { useState } from 'react'
 import {
   Dimensions,
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -15,10 +14,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 
 import BackArrow from 'components/back-arrow'
 import OriginButton from 'components/origin-button'
-import Disclaimer from 'components/disclaimer'
 import CommonStyles from 'styles/common'
-
-const IMAGES_PATH = '../../assets/images/'
 
 const { height } = Dimensions.get('window')
 const smallScreen = height < 812
@@ -105,7 +101,7 @@ const RecoveryPhraseVerifyScreen = ({ navigation, wallet }) => {
         <Text style={styles.title}>
           {isRetry ? (
             <fbt desc="RecoveryPhraseVerify.titleRetry">
-              Oops, let's try again
+              Oops, let&apos;s try again
             </fbt>
           ) : (
             <fbt desc="RecoveryPhraseVerify.title">

@@ -1,7 +1,7 @@
 'use strict'
 
 import React from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import { fbt } from 'fbt-runtime'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
@@ -10,8 +10,6 @@ import BackArrow from 'components/back-arrow'
 import OriginButton from 'components/origin-button'
 import Disclaimer from 'components/disclaimer'
 import CommonStyles from 'styles/common'
-
-const IMAGES_PATH = '../../assets/images/'
 
 const RecoveryPhraseScreen = ({ navigation, wallet }) => (
   <SafeAreaView style={styles.container}>
