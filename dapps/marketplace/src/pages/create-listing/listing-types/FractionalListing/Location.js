@@ -143,6 +143,7 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
                   className="btn btn-outline-primary mb-3 mb-md-0"
                   onClick={() => {
                     delete listing.location
+                    onChange({ ...listing })
                     setForceEditLocation(true)
                   }}
                 >
@@ -160,7 +161,7 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
                   <fbt desc="editListing.useCurrentLocation">
                     Use current location
                   </fbt>
-                </button>
+                </button> 
               </div>
             </div>
           </div>
@@ -240,6 +241,12 @@ const ListingLocation = ({ prev, next, listing, onChange, isMobile }) => {
               </div>
 
               <div className="actions mt-auto">
+                <Link
+                  className="btn btn-outline-primary d-none d-md-inline-block"
+                  to={prev}
+                >
+                  <fbt desc="back">Back</fbt>
+                </Link>
                 <button type="submit" className="btn btn-primary">
                   <fbt desc="next">Next</fbt>
                 </button>

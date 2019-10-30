@@ -113,6 +113,12 @@ const LocationObfuscation = ({ prev, next, listing, onChange }) => {
               />
             </div>
             <div className="actions mt-auto px-3 px-md-0">
+              <Link
+                className="btn btn-outline-primary d-none d-md-inline-block"
+                to={prev}
+              >
+                <fbt desc="back">Back</fbt>
+              </Link>
               <button type="submit" className="btn btn-primary">
                 <fbt desc="Continue">Continue</fbt>
               </button>
