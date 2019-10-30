@@ -19,7 +19,7 @@ const VestingHistory = props => {
     const momentDate = moment(date)
     tableRows.push(
       <tr key={date}>
-        <td>
+        <td className="pl-0">
           <div
             className={`status-circle ${
               momentDate < moment.now() ? `status-circle-success` : ''
@@ -28,9 +28,9 @@ const VestingHistory = props => {
         </td>
         <td>{Number(amount).toLocaleString()} OGN</td>
         <td>
-          <small className="text-muted">
+          <span className="text-muted">
             {momentDate < moment.now() ? 'vested' : 'unvested'}
-          </small>
+          </span>
         </td>
         <td>{momentDate.format('L')}</td>
       </tr>
@@ -40,6 +40,7 @@ const VestingHistory = props => {
   return (
     <>
       <h2 className="mb-4">Vesting History</h2>
+      <hr />
       <div className="table-card">
         <div className="scrolling-table">
           <table className="table mb-4">

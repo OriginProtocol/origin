@@ -1,4 +1,5 @@
 import React from 'react'
+import moment from 'moment'
 
 import Swiper from 'react-id-swiper'
 import 'react-id-swiper/lib/styles/css/swiper.css'
@@ -17,29 +18,31 @@ const GrantDetail = props => {
   const details = props.grants.map(grant => {
     return (
       <div key={grant.id}>
-        <div className="row mt-4 mb-4">
+        <div className="row mt-4 mb-2">
           <div className="col">
             <strong>Purchase Date</strong>
           </div>
-          <div className="col">{grant.purchaseDate}</div>
+          <div className="col text-right">
+            {moment(grant.purchaseDate).format('LL')}
+          </div>
         </div>
-        <div className="row mb-4">
+        <div className="row mb-2">
           <div className="col">
             <strong>Purchase Round</strong>
           </div>
-          <div className="col">{grant.purchaseRound}</div>
+          <div className="col text-right">{grant.purchaseRound}</div>
         </div>
-        <div className="row mb-4">
+        <div className="row mb-2">
           <div className="col">
             <strong>Total Purchase</strong>
           </div>
-          <div className="col">{grant.purchaseTotal}</div>
+          <div className="col text-right">{grant.purchaseTotal}</div>
         </div>
-        <div className="row mb-4">
+        <div className="row mb-2">
           <div className="col">
             <strong>Investment Amount</strong>
           </div>
-          <div className="col">
+          <div className="col text-right">
             {Number(grant.investmentAmount).toLocaleString()}
           </div>
         </div>
@@ -49,7 +52,7 @@ const GrantDetail = props => {
 
   return (
     <>
-      <h2 className="mb-4">Investment Details</h2>
+      <h2 className="mb-2">Investment Details</h2>
       <div className="table-card" style={{ fontSize: '14px' }}>
         {details.length > 1 ? (
           <Swiper {...swiperParams}>{details}</Swiper>

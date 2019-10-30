@@ -431,6 +431,6 @@ describe('Transfer HTTP API', () => {
     await request(this.mockApp)
       .post(`/api/transfers/${transfer.id}`)
       .send({ token })
-      .expect(401)
+      .expect(400)
   })
 })
