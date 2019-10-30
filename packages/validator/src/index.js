@@ -3,7 +3,8 @@ const Ajv = require('ajv')
 const attestationSchema = require('./schemas/attestation_1.0.0.json')
 const disputeSchema = require('./schemas/dispute.json')
 const identitySchema = require('./schemas/identity_1.0.0.json')
-const listingSchema = require('./schemas/listing_2.0.0.json')
+const oldListingSchema = require('./schemas/listing_2.0.0.json')
+const listingSchema = require('./schemas/listing_3.0.0.json')
 const listingWithdrawnSchema = require('./schemas/listing-withdraw.json')
 const offerAcceptedSchema = require('./schemas/offer-accept.json')
 const offerSchema = require('./schemas/offer_2.0.0.json')
@@ -18,6 +19,7 @@ ajv.addSchema([
   attestationSchema,
   disputeSchema,
   identitySchema,
+  oldListingSchema,
   listingSchema,
   listingWithdrawnSchema,
   offerAcceptedSchema,
