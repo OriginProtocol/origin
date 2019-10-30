@@ -81,7 +81,11 @@ export default function applyListingData(props, data) {
   }
 
   if (listing.location) {
-    variables.data.location = listing.location
+    variables.data.location = {
+      latitude: listing.latitude,
+      longitude: listing.longitude,
+      accuracyInMeters: listing.accuracyInMeters
+    }
   }
 
   switch (listing.__typename) {
