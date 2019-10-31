@@ -245,11 +245,63 @@ jobs:
       - attach_workspace:
           at: .
       - setup_remote_docker
-      - run: echo "$ENVKEY"
-      - run: pwd
-      - run: ls -lah
-      - run: ls -lah devops/dockerfiles
       - run: docker build --build-arg ENVKEY=$ENVKEY -t origin-cron -f devops/dockerfiles/origin-cron .
+  DiscoveryBuild:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker
+      - run: docker build --build-arg ENVKEY=$ENVKEY -t origin-discovery -f devops/dockerfiles/origin-discovery .
+  EventListenerBuild:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker
+      - run: docker build --build-arg ENVKEY=$ENVKEY -t event-listener -f devops/dockerfiles/event-listener .
+  GraphQLBuild:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker
+      - run: docker build --build-arg ENVKEY=$ENVKEY -t origin-graphql -f devops/dockerfiles/origin-graphql
+  GrowthBuild:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker
+      - run: docker build --build-arg ENVKEY=$ENVKEY -t origin-growth -f devops/dockerfiles/origin-growth .
+  IPFSBuild:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker
+      - run: docker build --build-arg ENVKEY=$ENVKEY -t origin-ipfs -f devops/dockerfiles/origin-ipfs .
+  MessagingBuild:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker
+      - run: docker build --build-arg ENVKEY=$ENVKEY -t origin-messaging -f devops/dockerfiles/origin-messaging .
+  NotificationsBuild:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker
+      - run: docker build --build-arg ENVKEY=$ENVKEY -t origin-notifications -f devops/dockerfiles/origin-notifications .
+  RelayerBuild:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker
+      - run: docker build --build-arg ENVKEY=$ENVKEY -t origin-relayer -f devops/dockerfiles/origin-relayer .
   DappBuild:
     <<: *defaults
     steps:
@@ -335,7 +387,7 @@ workflows:
                 - staging
                 - stable
           context: origin
-      - DappBuild:
+      - DiscoveryBuild:
           requires:
             - Setup
           filters:
@@ -346,3 +398,92 @@ workflows:
                 - staging
                 - stable
           context: origin
+      - EventListenerBuild:
+          requires:
+            - Setup
+          filters:
+            branches:
+              # The idea is to catch build errors BEFORE these branches
+              ignore:
+                - master
+                - staging
+                - stable
+          context: origin
+      - GraphQLBuild:
+          requires:
+            - Setup
+          filters:
+            branches:
+              # The idea is to catch build errors BEFORE these branches
+              ignore:
+                - master
+                - staging
+                - stable
+          context: origin
+      - GrowthBuild:
+          requires:
+            - Setup
+          filters:
+            branches:
+              # The idea is to catch build errors BEFORE these branches
+              ignore:
+                - master
+                - staging
+                - stable
+          context: origin
+      - IPFSBuild:
+          requires:
+            - Setup
+          filters:
+            branches:
+              # The idea is to catch build errors BEFORE these branches
+              ignore:
+                - master
+                - staging
+                - stable
+          context: origin
+      - MessagingBuild:
+          requires:
+            - Setup
+          filters:
+            branches:
+              # The idea is to catch build errors BEFORE these branches
+              ignore:
+                - master
+                - staging
+                - stable
+          context: origin
+      - NotificationsBuild:
+          requires:
+            - Setup
+          filters:
+            branches:
+              # The idea is to catch build errors BEFORE these branches
+              ignore:
+                - master
+                - staging
+                - stable
+          context: origin
+      - RelayerBuild:
+          requires:
+            - Setup
+          filters:
+            branches:
+              # The idea is to catch build errors BEFORE these branches
+              ignore:
+                - master
+                - staging
+                - stable
+          context: origin
+      # This currently fails on CircleCI with heap out of memory
+      # - DappBuild:
+      #     requires:
+      #       - Setup
+      #     filters:
+      #       branches:
+      #         # The idea is to catch build errors BEFORE these branches
+      #         ignore:
+      #           - master
+      #           - staging
+      #           - stable
+      #     context: origin
