@@ -487,7 +487,7 @@ const novemberConfig = {
             scope: 'user',
             unlockConditionMsg: [
               {
-                conditionTranslateKey: 'growth.two.attestations.requirement',
+                conditionTranslateKey: 'growth.three.attestations.requirement',
                 conditionIcon: 'images/growth/attestation-icon.svg'
               }
             ]

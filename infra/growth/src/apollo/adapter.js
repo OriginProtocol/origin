@@ -126,9 +126,7 @@ class ApolloAdapter {
       case 'ListingIdPurchased':
         const listingInfo = {
           listingId: data.listingId,
-          iconSrc: data.iconSrc,
-          titleKey: data.titleKey,
-          detailsKey: data.detailsKey
+          iconSrc: data.iconSrc
         }
         const optionalFields = ['titleKey', 'title', 'detailsKey', 'details']
         optionalFields.forEach(field => {

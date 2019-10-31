@@ -24,6 +24,7 @@ const Growth$FbtEnum = {
 
   'growth.profile.and.email.requirement': 'Verified email and Origin profile',
   'growth.two.attestations.requirement': 'Two profile verifications',
+  'growth.three.attestations.requirement': 'Three profile verifications',
   'growth.profile.requirement': 'Profile name and photo',
   'growth.email.requirement': 'Verified email',
   'growth.attestation.requirement.twitterAttestation': 'Twitter attestation',

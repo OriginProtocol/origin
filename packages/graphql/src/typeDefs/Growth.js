@@ -165,8 +165,6 @@ module.exports = `
     id: String!
     titleKey: String!
     detailsKey: String!
-    title: String
-    details: String
     image: String!
     link: String!
     linkKey: String!
