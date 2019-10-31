@@ -14,14 +14,22 @@ class ListingIdPurchaseRule extends SingleEventRule {
       throw new Error(`${this.str()}: missing iconSrc field`)
     }
     this.iconSrc = this.config.iconSrc
-    if (!this.config.titleKey) {
-      throw new Error(`${this.str()}: missing titleKey field`)
-    }
     this.titleKey = this.config.titleKey
-    if (!this.config.detailsKey) {
-      throw new Error(`${this.str()}: missing detailsKey field`)
-    }
     this.detailsKey = this.config.detailsKey
+    this.title = this.config.title
+    this.details = this.config.details
+
+    if (!this.config.titleKey && !this.config.title) {
+      throw new Error(
+        `${this.str()}: either title or titleKey should be present`
+      )
+    }
+
+    if (!this.config.detailsKey && !this.config.details) {
+      throw new Error(
+        `${this.str()}: either details or detailsKey should be present`
+      )
+    }
     this.addEventType('ListingPurchased')
   }
 

@@ -232,6 +232,8 @@ export default {
             listingId
             titleKey
             detailsKey
+            title
+            details
             iconSrc
           }
           ... on ReferralAction {
