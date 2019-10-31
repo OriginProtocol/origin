@@ -239,6 +239,17 @@ jobs:
   ##############################################################################
   # Build tests
   ##############################################################################
+  CronBuild:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker
+      - run: echo "$ENVKEY"
+      - run: pwd
+      - run: ls -lah
+      - run: ls -lah devops/dockerfiles
+      - run: docker build --build-arg ENVKEY=$ENVKEY -t origin-cron -f devops/dockerfiles/origin-cron .
   DappBuild:
     <<: *defaults
     steps:
