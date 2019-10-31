@@ -6,8 +6,6 @@ const { height } = Dimensions.get('window')
 const smallScreen = height < 812
 
 export default StyleSheet.create({
-<<<<<<< HEAD
-  container: {
   // General background
   greyBackground: {
     backgroundColor: '#f7f8f8'
