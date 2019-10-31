@@ -10,6 +10,7 @@ const julyConfig = require('../../campaigns/july')
 const augustConfig = require('../../campaigns/august')
 const septemberConfig = require('../../campaigns/september')
 const octoberConfig = require('../../campaigns/october')
+const novemberConfig = require('../../campaigns/november')
 
 async function createAprilProdCampaign() {
   console.log('Creating April campaign data in prod...')
@@ -193,6 +194,33 @@ async function updateOctoberProdRules() {
   await campaign.update({ rules: JSON.stringify(octoberConfig) })
 }
 
+async function createNovemberProdCampaign() {
+  console.log('Creating November campaign data in prod...')
+
+  /* IMPORTANT when adding new translatable fields update the enums document:
+   * origin-dapp/src/constants/Growth$FbtEnum.js
+   */
+  await db.GrowthCampaign.create({
+    nameKey: 'growth.nov2019.name',
+    shortNameKey: 'growth.nov.short_name',
+    rules: JSON.stringify(novemberConfig),
+    startDate: Date.parse('November 1, 2019, 00:00 UTC'),
+    endDate: Date.parse('December 1, 2019, 00:00 UTC'),
+    distributionDate: Date.parse('December 1, 2019, 00:00 UTC'),
+    cap: tokenToNaturalUnits(1000000), // Set cap to 1M tokens
+    capUsed: 0,
+    currency: 'OGN',
+    rewardStatus: enums.GrowthCampaignRewardStatuses.NotReady
+  })
+}
+
+async function updateNovemberProdRules() {
+  console.log('Updating November campaign rules in prod...')
+
+  const campaign = await db.GrowthCampaign.findOne({ where: { id: 9 } })
+  await campaign.update({ rules: JSON.stringify(novemberConfig) })
+}
+
 const args = {}
 process.argv.forEach(arg => {
   const t = arg.split('=')
@@ -207,7 +235,8 @@ const createByMonth = {
   july: createJulyProdCampaign,
   august: createAugProdCampaign,
   september: createSepProdCampaign,
-  october: createOctoberProdCampaign
+  october: createOctoberProdCampaign,
+  november: createNovemberProdCampaign
 }
 
 const updateByMonth = {
@@ -216,7 +245,8 @@ const updateByMonth = {
   july: updateJulyProdRules,
   august: updateAugProdRules,
   september: updateSepProdRules,
-  october: updateOctoberProdRules
+  october: updateOctoberProdRules,
+  november: updateNovemberProdRules
 }
 
 const action = args['--action']
