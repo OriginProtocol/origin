@@ -41,4 +41,14 @@ if (addresses.DAI) {
   })
 }
 
+if (addresses.OKB) {
+  config.tokens.push({
+    id: addresses.DAI,
+    type: 'Standard',
+    name: 'OKB Token',
+    symbol: 'OKB',
+    decimals: '18'
+  })
+}
+
 export default config

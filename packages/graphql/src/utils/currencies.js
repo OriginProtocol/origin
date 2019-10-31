@@ -110,6 +110,13 @@ class Currencies {
         code: 'GUSD',
         priceInUSD: 1,
         decimals: 2
+      },
+      'token-OKB': {
+        id: 'token-OKB',
+        name: 'OKB Token',
+        code: 'OKB',
+        priceInUSD: 3,
+        decimals: 18
       }
     }
 
@@ -134,6 +141,7 @@ class Currencies {
    */
   async _poll() {
     const currencyCodes = this.currencyCodes
+      // We don't fetch values of DAI and OGN from API
       .filter(c => c !== 'DAI' && c !== 'OGN')
       .join(',')
     // Fetch rates from CryptoCompare.

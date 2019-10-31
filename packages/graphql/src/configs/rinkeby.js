@@ -48,6 +48,13 @@ export default {
       name: 'DAI Stablecoin',
       symbol: 'DAI',
       decimals: '18'
+    },
+    {
+      id: addresses.DAI,
+      type: 'Standard',
+      name: 'OKB Token',
+      symbol: 'OKB',
+      decimals: '18'
     }
   ],
 

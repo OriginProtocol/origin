@@ -305,6 +305,15 @@ export default async function populate(gqlClient, log, done) {
   })
   log(`Deployed DAI stablecoin to ${DAI.contractAddress}`)
 
+  const OKB = await mutate(DeployTokenMutation, Admin, {
+    type: 'Standard',
+    name: 'OKB Token',
+    symbol: 'OKB',
+    decimals: '18',
+    supply: '1000000000'
+  })
+  log(`Deployed OKB token to ${OKB.contractAddress}`)
+
   const MarketplaceV1 = await mutate(DeployMarketplaceMutation, Admin, {
     token: OGN.contractAddress,
     version: '001',
@@ -379,6 +388,20 @@ export default async function populate(gqlClient, log, done) {
     value: '500'
   })
   log('Set buyer dai token allowance')
+
+  await mutate(TransferTokenMutation, Admin, {
+    to: Buyer,
+    token: OKB.contractAddress,
+    value: '500'
+  })
+  log('Sent OKB to buyer')
+
+  await mutate(UpdateTokenAllowanceMutation, Buyer, {
+    to: Marketplace.contractAddress,
+    token: OKB.contractAddress,
+    value: '500'
+  })
+  log('Set buyer OKB token allowance')
 
   await mutate(SendFromNodeMutation, NodeAccount, {
     to: Arbitrator,
@@ -468,6 +491,7 @@ export default async function populate(gqlClient, log, done) {
       Affiliate,
       OGN: OGN.contractAddress,
       DAI: DAI.contractAddress,
+      OKB: OKB.contractAddress,
       Marketplace: Marketplace.contractAddress,
       MarketplaceEpoch: Marketplace.blockNumber,
       Marketplace_V01: MarketplaceV1.contractAddress,

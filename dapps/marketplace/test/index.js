@@ -10,9 +10,10 @@ import { paymentTests } from './payments'
 
 function listingTests({ autoSwap } = {}) {
   singleUnitTests({ autoSwap })
-  singleUnitTests({ autoSwap, acceptedTokens: ['ETH', 'DAI', 'OGN'] })
+  singleUnitTests({ autoSwap, acceptedTokens: ['ETH', 'DAI', 'OGN', 'OKB'] })
   singleUnitTests({ autoSwap, withShipping: true })
 
+  // Tests for DAI listings
   singleUnitTokenTests({ token: 'DAI', autoSwap })
   singleUnitTokenTests({ token: 'DAI', buyerHasTokens: true })
   singleUnitTokenTests({
@@ -22,6 +23,7 @@ function listingTests({ autoSwap } = {}) {
   })
   singleUnitTokenTests({ token: 'DAI', autoSwap, withShipping: true })
 
+  // Tests for OGN listings
   singleUnitTokenTests({ token: 'OGN', buyerHasTokens: true })
   singleUnitTokenTests({
     token: 'OGN',
@@ -30,6 +32,19 @@ function listingTests({ autoSwap } = {}) {
   })
   singleUnitTokenTests({
     token: 'OGN',
+    buyerHasTokens: true,
+    withShipping: true
+  })
+
+  // Tests for OKB listings
+  singleUnitTokenTests({ token: 'OKB', buyerHasTokens: true })
+  singleUnitTokenTests({
+    token: 'OKB',
+    buyerHasTokens: true,
+    deployIdentity: true
+  })
+  singleUnitTokenTests({
+    token: 'OKB',
     buyerHasTokens: true,
     withShipping: true
   })

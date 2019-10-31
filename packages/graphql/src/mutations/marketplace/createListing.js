@@ -22,7 +22,8 @@ export function listingInputToIPFS(data, unitData, fractionalData) {
     acceptedTokens: data.acceptedTokens || [
       'token-ETH',
       'token-DAI',
-      'token-OGN'
+      'token-OGN',
+      'token-OKB'
     ],
     commission: {
       currency: 'OGN',

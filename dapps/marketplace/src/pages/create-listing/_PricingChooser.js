@@ -45,6 +45,11 @@ const PricingChooser = ({ value: selectedTokens, onChange, children }) => {
           selected={selectedTokens.includes('token-OGN')}
           onSelect={toggleCurrencies}
         />
+        <AcceptedTokenListItem
+          token="token-OKB"
+          selected={selectedTokens.includes('token-OKB')}
+          onSelect={toggleCurrencies}
+        />
       </div>
     </div>
   )

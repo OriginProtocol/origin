@@ -116,12 +116,13 @@ export function singleUnitTests({
 
     it('should allow price entry', async function() {
       await page.type('input[name=price]', '1')
-      // All three payment modes are deselected by default
+      // All four payment modes are deselected by default
       // Select tokens that are not accepted by clicking them
       if (acceptedTokens.includes('ETH')) await clickByText(page, 'Ethereum')
       if (acceptedTokens.includes('DAI')) await clickByText(page, 'Maker Dai')
       if (acceptedTokens.includes('OGN'))
         await clickByText(page, 'Origin Token')
+      if (acceptedTokens.includes('OKB')) await clickByText(page, 'OKB Token')
 
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
@@ -254,6 +255,7 @@ export function singleUnitTokenTests({
         resetOpts.buyerOpts = {
           dai: token === 'DAI' ? '100' : undefined,
           ogn: token === 'OGN' ? '100' : undefined,
+          okb: token === 'OKB' ? '100' : undefined,
           deployIdentity
         }
       }
@@ -340,16 +342,22 @@ export function singleUnitTokenTests({
       })
     })
 
-    if (token === 'DAI' && !autoSwap) {
+    if ((token === 'DAI' || token === 'OKB') && !autoSwap) {
       if (!buyerHasTokens) {
-        it('should prompt the user to approve their Dai', async function() {
-          await waitForText(page, 'Approve', 'button')
-          await pic(page, 'listing-detail')
-          await clickByText(page, 'Approve', 'button')
+        it(
+          'should prompt the user to approve their ' + token,
+          async function() {
+            await waitForText(page, 'Approve', 'button')
+            await pic(page, 'listing-detail')
+            await clickByText(page, 'Approve', 'button')
 
-          await waitForText(page, 'Origin may now move DAI on your behalf.')
-          await pic(page, 'listing-detail')
-        })
+            await waitForText(
+              page,
+              `Origin may now move ${token} on your behalf.`
+            )
+            await pic(page, 'listing-detail')
+          }
+        )
       }
 
       it('should prompt to continue with purchase', async function() {
