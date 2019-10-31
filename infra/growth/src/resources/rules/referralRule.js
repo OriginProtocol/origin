@@ -104,8 +104,10 @@ class ReferralRule extends BaseRule {
       rewards.push(reward)
     }
 
-    // Enforce rules limit.
-    rewards = rewards.slice(0, this.limit)
+    if (this.limit !== -1) {
+      // Enforce rules limit.
+      rewards = rewards.slice(0, this.limit)
+    }
 
     return rewards
   }
