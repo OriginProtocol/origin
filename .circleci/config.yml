@@ -239,26 +239,13 @@ jobs:
   ##############################################################################
   # Build tests
   ##############################################################################
-  BuildSetup:
-    <<: *defaults
-    steps:
-      - checkout
-      - run:
-          name: Yarn Install
-          command: |
-            yarn install --frozen-lockfile
-            curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | sh
-            ./bin/node-prune
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
   DappBuild:
     <<: *defaults
     steps:
       - attach_workspace:
           at: .
       - setup_remote_docker
+      - run: echo "$ENVKEY"
       - run: pwd
       - run: ls -lah
       - run: ls -lah devops/dockerfiles
@@ -325,7 +312,7 @@ workflows:
           context: origin
   build:
     jobs:
-      - BuildSetup
+      - Setup
       - DappBuild:
           requires:
             - BuildSetup
@@ -336,3 +323,4 @@ workflows:
                 - master
                 - staging
                 - stable
+          context: origin
