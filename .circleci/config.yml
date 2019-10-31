@@ -266,7 +266,7 @@ jobs:
       - attach_workspace:
           at: .
       - setup_remote_docker
-      - run: docker build --build-arg ENVKEY=$ENVKEY -t origin-graphql -f devops/dockerfiles/origin-graphql
+      - run: docker build --build-arg ENVKEY=$ENVKEY -t origin-graphql -f devops/dockerfiles/origin-graphql .
   GrowthBuild:
     <<: *defaults
     steps:
@@ -280,7 +280,7 @@ jobs:
       - attach_workspace:
           at: .
       - setup_remote_docker
-      - run: docker build --build-arg ENVKEY=$ENVKEY -t origin-ipfs -f devops/dockerfiles/origin-ipfs .
+      - run: docker build --build-arg ENVKEY=$ENVKEY -t origin-ipfs-proxy -f devops/dockerfiles/origin-ipfs-proxy .
   MessagingBuild:
     <<: *defaults
     steps:
