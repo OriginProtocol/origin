@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   ActivityIndicator,
   Clipboard,
@@ -39,7 +39,7 @@ import { PROMPT_MESSAGE, PROMPT_PUB_KEY } from '../constants'
 import CommonStyles from 'styles/common'
 import CardStyles from 'styles/card'
 
-class MarketplaceScreen extends Component {
+class MarketplaceScreen extends PureComponent {
   static navigationOptions = () => {
     return {
       header: null
@@ -239,7 +239,19 @@ class MarketplaceScreen extends Component {
     )
   }
 
-  /* Inject Javascript that causes the page to refresh when it hits the top
+  /* Inject Javascript that causes the page to refresh when it hits the top. There is a
+   * special workaround implemented for the Android since scrollable modals offsets
+   * are not reported by the documentElement.scrollTop. For this reason a function
+   * recursively checks elements from root element down and tries to find scrollable
+   * elements. And reports scrollTop on those.
+   *
+   * Performance considerations:
+   * - tried function running through all nodes recursively. It checked up to 250 nodes and took
+   *   5-30 ms on a flagship device per check.
+   * - current implementation checks for node width/height (offsetWidth/offsetHeight) which is
+   *   still rather resource consuming call, and early exits on nodes that take up less than
+   *   half a screen width or height. Checks around 5-10 nodes per call and takes from 0-4 ms
+   *   on a flagship device per check
    */
   injectScrollHandler = () => {
     this.injectJavaScript(
@@ -249,6 +261,63 @@ class MarketplaceScreen extends Component {
             scrollTop: document.documentElement.scrollTop || document.body.scrollTop
           });
         }
+
+        var windowWidth = window.screen.width;
+        var windowHeight = window.screen.height;
+
+        var findScrollableChildren = function(element) {
+          var excludeAbsoluteChild = false;
+
+          if (element.parentNode.nodeType === 1 || !['body', 'html', '#document'].includes(element.parentNode.nodeName.toLowerCase())) {
+            var parentCss = getComputedStyle(element.parentNode);
+            excludeAbsoluteChild = parentCss.position === 'static';
+          }
+
+          var elementChildren = Array.from(element.childNodes).filter(function(child) {
+            // not an elementNode
+            return child.nodeType === 1;
+          })
+
+          var scrollableChildren = [].concat.apply([], (elementChildren.map(function(child) {
+            return findScrollableChildren(child);
+          })))
+
+          // skip this for document node
+          if (element.nodeType === 1) {
+            // element too small to continue checking
+            if ((element.offsetWidth < windowWidth / 2) ||
+              (element.offsetHeight < windowHeight / 2)
+            ) {
+              return [];
+            }
+
+            var css = getComputedStyle(element);
+            var overf = css.overflow.toLowerCase();
+            var overfY = css.overflowY.toLowerCase();
+
+            if ((overf === 'auto' || overf === 'scroll' || overfY === 'auto' || overfY === 'scroll') &&
+              !(excludeAbsoluteChild && css.position === 'absolute')) {
+              scrollableChildren.push(element);
+            }
+          }
+
+          return scrollableChildren;
+        };
+
+        setInterval(function() {
+          var largestScrollTop = Math.max.apply(null,
+            findScrollableChildren(document.documentElement)
+            .map(function(scrollable) {
+                return scrollable.scrollTop;
+              }
+              // default value
+            ).concat(document.documentElement.scrollTop || document.body.scrollTop)
+          )
+
+          window.webViewBridge.send('handleScrollHandlerResponse', {
+            scrollTop: largestScrollTop
+          })
+        }, 500)
       `,
       'scroll handler'
     )
@@ -498,10 +567,7 @@ class MarketplaceScreen extends Component {
     } else if (msg.targetFunc === 'handleGraphqlError') {
       DeviceEventEmitter.emit('graphqlError', msg.data)
     } else if (msg.targetFunc === 'handleScrollHandlerResponse') {
-      // TODO disabled due to https://github.com/OriginProtocol/origin/issues/2884
-      // Requires implementation where scrolling in modals can be detected,
-      // possibly from React side?
-      // this.setState({ enablePullToRefresh: msg.data.scrollTop === 0 })
+      this.setState({ enablePullToRefresh: msg.data.scrollTop === 0 })
     }
   }
 
@@ -571,15 +637,13 @@ class MarketplaceScreen extends Component {
   }
 
   render = () => {
-    const refreshControl =
-      Platform.OS === 'android' ? (
-        <></>
-      ) : (
-        <RefreshControl
-          refreshing={this.state.refreshing}
-          onRefresh={this.onRefresh}
-        />
-      )
+    const refreshControl = (
+      <RefreshControl
+        enabled={this.state.enablePullToRefresh}
+        refreshing={this.state.refreshing}
+        onRefresh={this.onRefresh}
+      />
+    )
 
     return (
       <AndroidBackHandler onBackPress={this.onBack}>

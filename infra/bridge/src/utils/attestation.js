@@ -1,7 +1,7 @@
 'use strict'
 
 const Web3 = require('web3')
-const Attestation = require('../models/index').Attestation
+const Attestation = require('@origin/identity/src/models').Attestation
 const AttestationTypes = Attestation.AttestationTypes
 const constants = require('../constants')
 const stringify = require('json-stable-stringify')
@@ -10,6 +10,33 @@ const { generateSignature } = require('./index.js')
 const { redisClient, getAsync } = require('./redis')
 
 const logger = require('../logger')
+
+function generateTestAttestation(attestationType, attestationBody) {
+  const ethAddress = '0x0000000000000000000000000000000000000000'
+
+  const data = {
+    issuer: constants.ISSUER,
+    issueDate: new Date(),
+    attestation: attestationBody
+  }
+
+  const signature = {
+    bytes: generateAttestationSignature(
+      process.env.ATTESTATION_SIGNING_KEY,
+      ethAddress,
+      // Use stringify rather than JSON.stringify to produce deterministic JSON
+      // so the validation of the signature works.
+      stringify(data)
+    ),
+    version: '1.0.0'
+  }
+
+  return {
+    schemaId: 'https://schema.originprotocol.com/attestation_1.0.0.json',
+    data: data,
+    signature: signature
+  }
+}
 
 async function generateAttestation(
   attestationType,
@@ -143,6 +170,7 @@ const createTelegramAttestation = async ({ message, identity }) => {
 }
 
 module.exports = {
+  generateTestAttestation,
   generateAttestation,
   generateAttestationSignature,
   createTelegramAttestation

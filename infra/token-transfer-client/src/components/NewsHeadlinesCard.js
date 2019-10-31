@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { NavLink } from 'react-router-dom'
 import Swiper from 'react-id-swiper'
 import 'react-id-swiper/lib/styles/css/swiper.css'
 
 import { fetchNews } from '@/actions/news'
-import { getNews, getIsLoading as getNewsIsLoading } from '@/reducers/news'
+import {
+  getNews,
+  getIsLoaded as getNewsIsLoaded,
+  getIsLoading as getNewsIsLoading
+} from '@/reducers/news'
 import BorderedCard from '@/components/BorderedCard'
 
 const NewsHeadlinesCard = props => {
-  useEffect(props.fetchNews, [])
+  useEffect(() => {
+    if (!props.newsIsLoaded) {
+      props.fetchNews()
+    }
+  }, [])
   const [swiper, setSwiper] = useState(null)
 
   if (props.newsIsLoading || props.error) return null
@@ -33,7 +42,14 @@ const NewsHeadlinesCard = props => {
 
   return (
     <BorderedCard shadowed={true} onClick={onCardClick}>
-      <h2>News</h2>
+      <div className="row">
+        <div className="col">
+          <h2>News</h2>
+        </div>
+        <div className="col text-right">
+          <NavLink to="/news">Read all &gt;</NavLink>
+        </div>
+      </div>
       <Swiper {...swiperParams} getSwiper={setSwiper}>
         {props.news.map(item => {
           return (
@@ -58,7 +74,8 @@ const NewsHeadlinesCard = props => {
 const mapStateToProps = ({ news }) => {
   return {
     news: getNews(news),
-    newsIsLoading: getNewsIsLoading(news)
+    newsIsLoading: getNewsIsLoading(news),
+    newsIsLoaded: getNewsIsLoaded(news)
   }
 }
 

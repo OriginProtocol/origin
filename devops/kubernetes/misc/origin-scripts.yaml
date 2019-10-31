@@ -1,0 +1,10 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: origin-scripts
+spec:
+  containers:
+    - name: origin-scripts
+      image: "gcr.io/origin-214503/prod/origin-cron:latest"
+      command: ["/bin/sh","-c"]
+      args: ["while true; do echo -n '.'; sleep 3600; done"]

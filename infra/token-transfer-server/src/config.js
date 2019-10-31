@@ -40,9 +40,20 @@ const unlockDate = process.env.UNLOCK_DATE
   ? moment.utc(process.env.UNLOCK_DATE)
   : moment.utc('2020-01-01')
 
+// Lockup bonus rate as a percentage
+const lockupBonusRate = process.env.LOCKUP_BONUS_RATE || 10
+
+// Lockup duration in months
+const lockupDuration = process.env.LOCKUP_DURATION || 12
+
+const emailConfirmTimeout = process.env.EMAIL_CONFIRMATION_TIMEOUT || 5
+
 module.exports = {
   discordWebhookUrl,
+  emailConfirmTimeout,
   encryptionSecret,
+  lockupBonusRate,
+  lockupDuration,
   networkId,
   port,
   portalUrl,

@@ -4,9 +4,12 @@ const express = require('express')
 const router = express.Router()
 const sendgridMail = require('@sendgrid/mail')
 
-const Attestation = require('../models/index').Attestation
+const Attestation = require('@origin/identity/src/models').Attestation
 const AttestationTypes = Attestation.AttestationTypes
-const { generateAttestation } = require('../utils/attestation')
+const {
+  generateAttestation,
+  generateTestAttestation
+} = require('../utils/attestation')
 const { emailGenerateCode, emailVerifyCode } = require('../utils/validation')
 const { generateSixDigitCode } = require('../utils')
 const logger = require('../logger')
@@ -16,6 +19,11 @@ const { redisClient, getAsync } = require('../utils/redis')
 sendgridMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 router.post('/generate-code', emailGenerateCode, async (req, res) => {
+  // for testing bypass
+  if (process.env.EMAIL_ATTESTATION_AUTOPASS === 'true') {
+    return res.end()
+  }
+
   const code = generateSixDigitCode()
 
   // Set the code in redis with a 30 minute expiry
@@ -43,6 +51,19 @@ router.post('/generate-code', emailGenerateCode, async (req, res) => {
 })
 
 router.post('/verify', emailVerifyCode, async (req, res) => {
+  // for testing bypass
+  if (process.env.EMAIL_ATTESTATION_AUTOPASS === 'true') {
+    return res.send(
+      generateTestAttestation(AttestationTypes.EMAIL, {
+        verificationMethod: {
+          email: true
+        },
+        email: {
+          verified: true
+        }
+      })
+    )
+  }
   const code = await getAsync(req.body.email)
 
   if (!code) {

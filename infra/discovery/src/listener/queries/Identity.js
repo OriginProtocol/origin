@@ -6,19 +6,6 @@ const identityQuery = gql`
       account(id: $id) {
         identity {
           id
-          firstName
-          lastName
-          fullName
-          description
-          avatar
-          avatarUrl
-          strength
-          attestations
-
-          verifiedAttestations {
-            id
-          }
-
           ipfsHash
           owner {
             id

@@ -1,6 +1,6 @@
 'use strict'
 
-const db = require('./../models/index')
+const db = require('@origin/identity/src/models')
 const logger = require('./../logger')
 
 const { OAuth } = require('oauth')

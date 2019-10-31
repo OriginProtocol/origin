@@ -149,11 +149,12 @@ const EnableMessagingModal = () => {
   const [waitForSignature, setWaitForSign] = useState(false)
 
   const { data, error, networkStatus, refetch } = useQuery(query, {
+    fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true
   })
 
   useSubscription(MessagingStatusChangeSubscription, {
-    onSubscriptionData: () => networkStatus !== 1 && refetch()
+    onSubscriptionData: () => refetch()
   })
 
   if (networkStatus === 1) {

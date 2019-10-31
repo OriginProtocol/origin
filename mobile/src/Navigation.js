@@ -30,6 +30,7 @@ import CurrencyScreen from 'screens/currency'
 import MarketplaceScreen from 'screens/marketplace'
 import SettingsScreen from 'screens/settings'
 import WalletScreen from 'screens/wallet'
+import ChangePinScreen from 'screens/changePin'
 
 const IMAGES_PATH = '../assets/images/'
 
@@ -108,10 +109,14 @@ const SettingsStack = createStackNavigator(
         }
       }
     },
+    ChangePin: ChangePinScreen,
     Settings: SettingsScreen
   },
   {
-    initialRouteName: 'Settings'
+    initialRouteName: 'Settings',
+    defaultNavigationOptions: {
+      headerBackTitle: null
+    }
   }
 )
 

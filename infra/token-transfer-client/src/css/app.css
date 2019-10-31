@@ -57,7 +57,7 @@ body {
 h1 {
   font-size: 30px;
   font-weight: bold;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
 h2 {
@@ -66,7 +66,7 @@ h2 {
 }
 
 .text-muted {
-  color: #8fa7b7
+  color: #8fa7b7 !important;
 }
 
 a:not([href]):not([tabindex]),
@@ -161,7 +161,7 @@ input, select {
   background-color: white;
   padding: 30px;
   border-radius: 10px;
-  margin-bottom: 40px;
+  font-size: 14px;
 }
 
 .shadowed {
@@ -215,11 +215,6 @@ input, select {
   color: white;
 }
 
-.table-card {
-  border-top: 1px solid #dbe6eb;
-  border-bottom: 1px solid #dbe6eb;
-}
-
 .table-card .table thead th {
   border-bottom: none;
 }
@@ -231,7 +226,7 @@ input, select {
 .table-card .scrolling-table {
   padding-top: 0;
   margin: 20px 0;
-  max-height: 310px;
+  max-height: 230px;
   overflow-y: scroll;
 }
 
@@ -310,6 +305,10 @@ input, select {
 .status-circle-success {
 }
 
+.status-circle-info {
+  background-color: #007cff !important;
+}
+
 .empty {
   text-align: center;
   color: #8fa7b7;
@@ -341,6 +340,10 @@ input, select {
   background-color: #ff0000;
 }
 
+.status-circle-secondary {
+  background-color: #8900fd;
+}
+
 .btn {
   margin-top: 20px;
   margin-bottom: 10px;
@@ -349,7 +352,7 @@ input, select {
 .btn.btn-lg {
   font-weight: 800;
   border-radius: 2rem;
-  padding: 0.75rem 3rem;
+  padding: 0.5rem 3rem;
   min-width: 10rem;
   font-size: 20px;
 }
@@ -400,6 +403,7 @@ input, select {
  */
 .swiper-pagination {
   position: relative !important;
+  bottom: 0 !important;
 }
 
 .terms-wrapper {
@@ -411,4 +415,19 @@ input, select {
   padding: 20px;
   text-align: left;
   margin: 40px 0;
+}
+
+.ogn {
+  color: #007cff;
+  font-weight: bold;
+}
+
+.dropdown-menu .icon > path {
+  fill: #007cff;
+}
+
+.lockup-graph canvas {
+  background-image: url('../assets/dotted-lines.svg');
+  background-repeat: no-repeat;
+  background-position: center;
 }

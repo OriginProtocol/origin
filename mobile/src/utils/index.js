@@ -36,13 +36,28 @@ export function evenlySplitAddress(address = '') {
 export function truncateAddress(address = '', chars = 5) {
   const MAX_ADDRESS_LENGTH = 10
 
-  if (address.length <= MAX_ADDRESS_LENGTH) return address
+  if (
+    address.length <= MAX_ADDRESS_LENGTH ||
+    chars === -1 ||
+    chars > address.length
+  ) {
+    return address
+  }
 
-  const separator = '...'
+  let separator = '...'
+  if (chars > address.length) {
+    separator = ''
+  }
+
+  const firstPortionLength = Math.floor(chars / 2)
+
   return (
-    address.substr(0, chars) +
+    address.substr(0, firstPortionLength) +
     separator +
-    address.substr(address.length - chars)
+    address.substr(
+      address.length -
+        Math.max(3, chars - separator.length - firstPortionLength)
+    )
   )
 }
 

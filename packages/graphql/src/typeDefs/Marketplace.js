@@ -34,6 +34,7 @@ const ListingInterface = `
   subCategory: String
   categoryStr: String
   media: [Media]
+  location: Location
   "IPFS: total commission, in natural units, available across all units"
   commission: String
   "IPFS: commission, in natural units, to be paid for each unit sold"
@@ -342,6 +343,12 @@ export const types = `
     contentType: String
   }
 
+  type Location {
+    latitude: Float
+    longitude: Float
+    accuracyInMeters: Float
+  }
+
   type Offer {
     id: ID!
     listingId: String!
@@ -428,6 +435,7 @@ export const types = `
     acceptedTokens: [String]
     media: [MediaInput]
     price: PriceInput
+    location: LocationInput
 
     "total commission, in natural units, for all units"
     commission: String
@@ -463,6 +471,12 @@ export const types = `
   input MediaInput {
     url: String
     contentType: String
+  }
+
+  input LocationInput {
+    latitude: Float
+    longitude: Float
+    accuracyInMeters: Float
   }
 
   input MakeOfferInput {

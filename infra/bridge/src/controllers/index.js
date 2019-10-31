@@ -15,9 +15,10 @@ router.use('/api/attestations/github', require('./github'))
 router.use('/api/attestations/linkedin', require('./linkedin'))
 router.use('/api/attestations/wechat', require('./wechat'))
 router.use('/api/attestations/telegram', require('./telegram'))
-router.use('/redirects', require('./redirects'))
-router.use('/utils', require('./utils'))
+router.use('/api/identity', require('./identity'))
 router.use('/api/promotions', require('./promotions'))
 router.use('/hooks', require('./hooks/index'))
+router.use('/redirects', require('./redirects'))
+router.use('/utils', require('./utils'))
 
 module.exports = router

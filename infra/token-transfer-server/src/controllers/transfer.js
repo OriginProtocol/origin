@@ -11,12 +11,10 @@ const { Transfer } = require('../../src/models')
 const { ensureLoggedIn } = require('../lib/login')
 const {
   asyncMiddleware,
-  isEthereumAddress,
-  isValidTotp,
   getFingerprintData,
-  getUnlockDate,
-  hasBalance
+  getUnlockDate
 } = require('../utils')
+const { isEthereumAddress, isValidTotp } = require('../validators')
 const { encryptionSecret, unlockDate } = require('../config')
 const { addTransfer, confirmTransfer } = require('../lib/transfer')
 
@@ -44,7 +42,8 @@ router.post(
     check('amount')
       .isNumeric()
       .toInt()
-      .custom(hasBalance),
+      .isInt({ min: 0 })
+      .withMessage('Amount must be greater than 0'),
     check('address').custom(isEthereumAddress),
     check('code').custom(isValidTotp),
     ensureLoggedIn
@@ -76,7 +75,6 @@ router.post(
           await getFingerprintData(req)
         )
       })
-      // TODO: update to be more useful, e.g. users email
       logger.info(
         `User ${req.user.email} transferred ${amount} OGN to ${address}`
       )
@@ -115,11 +113,15 @@ router.post(
     try {
       decodedToken = jwt.verify(req.body.token, encryptionSecret)
     } catch (error) {
-      return res.status(401).send('Could not decode email confirmation token')
+      logger.error(error)
+      if (error.name === 'TokenExpiredError') {
+        return res.status(400).send('Token has expired')
+      }
+      return res.status(400).send('Could not decode email confirmation token')
     }
 
     if (decodedToken.transferId !== Number(req.params.id)) {
-      return res.status(401).end('Invalid transfer id')
+      return res.status(400).end('Invalid transfer id')
     }
 
     const transfer = await Transfer.findOne({
