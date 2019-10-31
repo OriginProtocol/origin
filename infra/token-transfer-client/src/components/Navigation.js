@@ -5,6 +5,7 @@ import { apiUrl } from '@/constants'
 import agent from '@/utils/agent'
 import NavLink from '@/components/NavLink'
 import Logo from '@/assets/origin-logo.svg'
+import Earn from '-!react-svg-loader!@/assets/earn-icon.svg'
 import Dashboard from '-!react-svg-loader!@/assets/dashboard-icon.svg'
 import History from '-!react-svg-loader!@/assets/history-icon.svg'
 import News from '-!react-svg-loader!@/assets/news-icon.svg'
@@ -53,6 +54,12 @@ const Navigation = props => {
             <NavLink to="/news" className="nav-link text">
               <News className="icon" />
               News
+            </NavLink>
+          </li>
+          <li className="nav-item mb-3">
+            <NavLink to="/lockup" className="nav-link text">
+              <Earn className="icon" style={{ transform: 'rotate(-90deg)' }} />
+              Bonus Tokens
             </NavLink>
           </li>
           <li className="nav-item mb-3">

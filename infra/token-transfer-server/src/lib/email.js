@@ -36,6 +36,12 @@ const transferTextTemplate = template(
 const transferHtmlTemplate = template(
   fs.readFileSync(`${templateDir}/transfer.html`).toString()
 )
+const lockupTextTemplate = template(
+  fs.readFileSync(`${templateDir}/lockup.txt`).toString()
+)
+const lockupHtmlTemplate = template(
+  fs.readFileSync(`${templateDir}/lockup.html`).toString()
+)
 
 /**
  * Returns the content to be used for an email.
@@ -61,6 +67,11 @@ function _generateEmail(emailType, vars) {
       subject = `Confirm Your Origin Token Withdrawal`
       text = transferTextTemplate(vars)
       html = transferHtmlTemplate(vars)
+      break
+    case 'lockup':
+      subject = `Confirm Your Origin Token Lockup`
+      text = lockupTextTemplate(vars)
+      html = lockupHtmlTemplate(vars)
       break
     default:
       throw new Error(`Invalid email type ${emailType}`)

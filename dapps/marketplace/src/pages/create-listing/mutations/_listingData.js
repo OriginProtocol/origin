@@ -25,6 +25,7 @@ export function getStateFromListing(props) {
     isDigital: get(props, 'listing.isDigital', false),
     isCashPurchase: get(props, 'listing.isCashPurchase', false),
     receiptAvailable: get(props, 'listing.receiptAvailable', false),
+    location: get(props, 'listing.location', ''),
 
     // Marketplace creator fields:
     marketplacePublisher: get(props, 'listing.marketplacePublisher'),
@@ -76,6 +77,14 @@ export default function applyListingData(props, data) {
         : '0',
       marketplacePublisher: listing.marketplacePublisher,
       requiresShipping: listing.requiresShipping
+    }
+  }
+
+  if (listing.location) {
+    variables.data.location = {
+      latitude: listing.location.latitude,
+      longitude: listing.location.longitude,
+      accuracyInMeters: listing.location.accuracyInMeters
     }
   }
 

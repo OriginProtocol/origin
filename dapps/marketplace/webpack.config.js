@@ -142,6 +142,7 @@ const config = {
       GIT_BRANCH: gitBranch,
       HOST: 'localhost',
       LINKER_HOST: 'localhost',
+      GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY || null,
       NAMESPACE: process.env.NAMESPACE || 'dev',
       NODE_ENV: process.env.NODE_ENV || 'development',
       SENTRY_DSN: null,

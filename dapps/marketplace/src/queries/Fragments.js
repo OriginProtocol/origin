@@ -56,6 +56,11 @@ export default {
             }
           }
         }
+        location {
+          latitude
+          longitude
+          accuracyInMeters
+        }
         acceptedTokens {
           id
         }

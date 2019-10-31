@@ -20,7 +20,9 @@ router.get(
         'name',
         'phone',
         'revisedScheduleAgreedAt',
-        'termsAgreedAt'
+        'revisedScheduleRejected',
+        'termsAgreedAt',
+        'investorType'
       ])
     )
   })
