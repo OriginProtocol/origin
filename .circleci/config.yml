@@ -37,7 +37,21 @@ jobs:
           root: .
           paths:
             - .
-
+  BuildSetup:
+    <<: *defaults
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          name: Yarn Install
+          command: |
+            yarn install --frozen-lockfile
+            curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | sh
+            ./bin/node-prune
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
   Lint:
     <<: *defaults
     steps:
@@ -237,6 +251,13 @@ jobs:
           name: Run Messaging Server Tests
           command: cd infra/messaging && yarn migrate && yarn test
 
+  DappBuild:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/origin
+    steps:
+      - run: docker build --build-arg ENVKEY="$ENVKEY" -t origin-dapp -f devops/dockerfiles/origin-dapp .
+
 workflows:
   version: 2
   test:
@@ -295,4 +316,18 @@ workflows:
             branches:
               only:
                 - master
+          context: origin
+  build:
+    jobs:
+      - BuildSetup
+      - DappBuild:
+          requires:
+            - BuildSetup
+          filters:
+            branches:
+              # The idea is to catch build errors BEFORE these branches
+              ignore:
+                - master
+                - staging
+                - stable
           context: origin
