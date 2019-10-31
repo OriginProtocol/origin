@@ -315,7 +315,7 @@ workflows:
       - Setup
       - DappBuild:
           requires:
-            - BuildSetup
+            - Setup
           filters:
             branches:
               # The idea is to catch build errors BEFORE these branches
