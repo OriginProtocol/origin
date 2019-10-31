@@ -368,13 +368,13 @@ export function singleUnitTokenTests({
 
       it('should prompt to continue with purchase', async function() {
         await clickByText(page, 'Continue', 'button')
-        await waitForText(page, 'View Purchase', 'button')
+        await waitForText(page, 'View Purchase Details', 'button')
         await pic(page, 'purchase-listing')
       })
     }
 
     it('should view the purchase', async function() {
-      await clickByText(page, 'View Purchase', 'button')
+      await clickByText(page, 'View Purchase Details', 'button')
       await waitForText(
         page,
         `You've made an offer. Wait for the seller to accept it.`

@@ -58,30 +58,31 @@ function tokenPaymentTests({ deployIdentity, autoSwap, token }) {
       await changeAccount(page, buyer)
       await purchaseListing({ page, buyer, title, withToken: token })
     })
-    if (!autoSwap) {
-      if (token === 'DAI') {
-        it('should have swapped ETH for DAI', async () => {
-          await waitForText(page, 'Swapped 0.00001 ETH for 1DAI')
-          await pic(page, 'listing-detail')
-          await waitForText(page, 'Approve', 'button')
-          await clickByText(page, 'Approve', 'button')
-        })
-      }
 
-      it(`should prompt the user to approve their ${token}`, async function() {
-        await waitForText(page, `Origin may now move ${token} on your behalf.`)
+    if (!autoSwap && token === 'DAI') {
+      it('should have swapped ETH for DAI', async () => {
+        await waitForText(page, 'Swapped 0.00001 ETH for 1DAI')
         await pic(page, 'listing-detail')
-      })
-
-      it('should prompt to continue with purchase', async function() {
-        await clickByText(page, 'Continue', 'button')
-        await waitForText(page, 'View Purchase', 'button')
-        await pic(page, 'purchase-listing')
+        await waitForText(page, 'Approve', 'button')
+        await clickByText(page, 'Approve', 'button')
       })
     }
 
+    if (token !== 'DAI' || (!autoSwap && token === 'DAI')) {
+      it(`should prompt the user to approve their ${token}`, async function() {
+        await waitForText(page, `Origin may now move ${token} on your behalf.`)
+        await pic(page, 'listing-detail')
+        await clickByText(page, 'Continue', 'button')
+      })
+    }
+
+    it('should prompt to continue with purchase', async function() {
+      await waitForText(page, 'View Purchase Details', 'button')
+      await pic(page, 'purchase-listing')
+    })
+
     it('should view the purchase', async function() {
-      await clickByText(page, 'View Purchase', 'button')
+      await clickByText(page, 'View Purchase Details', 'button')
       await waitForText(page, `You've made an offer.`)
       await pic(page, 'transaction-wait-for-seller')
     })

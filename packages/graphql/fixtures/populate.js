@@ -318,7 +318,7 @@ export default async function populate(gqlClient, log, done) {
     name: 'OKB Token',
     symbol: 'OKB',
     decimals: '18',
-    supply: '1000000000'
+    supply: '3000000000'
   })
   log(`Deployed OKB token to ${OKB.contractAddress}`)
 

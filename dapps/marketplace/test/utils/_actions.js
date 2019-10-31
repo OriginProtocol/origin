@@ -215,10 +215,10 @@ export const purchaseMultiUnitListing = async ({
   }
 
   await clickByText(page, 'Purchase', 'button')
-  await waitForText(page, 'View Purchase', 'button')
+  await waitForText(page, 'View Purchase Details', 'button')
   await pic(page, 'purchase-listing')
 
-  await clickByText(page, 'View Purchase', 'button')
+  await clickByText(page, 'View Purchase Details', 'button')
   await waitForText(
     page,
     `You've made an offer. Wait for the seller to accept it.`
