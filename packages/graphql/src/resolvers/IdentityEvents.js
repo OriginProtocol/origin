@@ -208,7 +208,7 @@ function _getAttestations(accounts, attestations) {
  * @returns {Promise<Object||null>} Returns the identity object or null if no identity found.
  * @private
  */
-async function _getIdentityFromBridgeServer(id) {
+async function _getIdentityFromIdentityServer(id) {
   const identityServer = contracts.config.identityServer
   if (!identityServer) {
     throw new Error('identityServer server not configured')
@@ -354,7 +354,7 @@ export async function identity({ id }) {
   // Load the IPFS data for the user's identity.
   let data
   if (contracts.config.centralizedIdentityEnabled) {
-    data = await _getIdentityFromBridgeServer(owner)
+    data = await _getIdentityFromIdentityServer(owner)
   } else {
     data = await _getIdentityFromContract(accounts, blockNumber)
   }
@@ -440,7 +440,7 @@ function dataURItoBinary(dataURI) {
  * @returns {Promise<{start: *, ids: *, totalCount: *, first: *}>}
  * @private
  */
-async function _getIdentitiesFromBridgeServer(first, after) {
+async function _getIdentitiesFromIdentityServer(first, after) {
   const identityServer = contracts.config.identityServer
   if (!identityServer) {
     throw new Error('identityServer server not configured')
@@ -518,8 +518,8 @@ export async function identities(
   // Get the list of identity addresses.
   let data
   if (contracts.config.centralizedIdentityEnabled) {
-    // Call the central server to get a page of identity addresses.
-    data = await _getIdentitiesFromBridgeServer(first, after)
+    // Call the server to get a page of identity addresses.
+    data = await _getIdentitiesFromIdentityServer(first, after)
   } else {
     // Get identity addresses by querying the blockchain.
     data = await _getIdentitiesFromBlockchain(contract, first, after)

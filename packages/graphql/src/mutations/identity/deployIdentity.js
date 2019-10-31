@@ -137,7 +137,6 @@ async function deployIdentity(
   _,
   { from = contracts.defaultMobileAccount, profile, attestations }
 ) {
-  debug('In deployIdentity ')
   await checkMetaMask(from)
 
   // Get owner and proxy address.
@@ -149,12 +148,9 @@ async function deployIdentity(
   // Write the identity data to IPFS.
   const ipfsHash = await post(contracts.ipfsRPC, ipfsData)
 
-  debug(
-    'contracts.config.centralizedIdentityEnabled=',
-    contracts.config.centralizedIdentityEnabled
-  )
   if (contracts.config.centralizedIdentityEnabled) {
-    // Write the identity data to centralized storage via the bridge server.
+    // Write the identity data to centralized storage via the identity server.
+    debug('Writing identity to central server')
     const identityServer = contracts.config.identityServer
     if (!identityServer) {
       throw new Error('identity server not configured')
@@ -174,6 +170,7 @@ async function deployIdentity(
     return { id: data.ethAddress }
   } else {
     // Write the identity data to the blockchain via the IdentityEvents contract.
+    debug('Writing identity to blockchain')
     return txHelper({
       tx: contracts.identityEventsExec.methods.emitIdentityUpdated(ipfsHash),
       from,
