@@ -257,6 +257,8 @@ jobs:
   DappBuild:
     <<: *defaults
     steps:
+      - attach_workspace:
+          at: .
       - run: pwd
       - run: ls -lah
       - run: ls -lah devops/dockerfiles
@@ -334,4 +336,3 @@ workflows:
                 - master
                 - staging
                 - stable
-          context: origin
