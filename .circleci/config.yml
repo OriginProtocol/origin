@@ -255,10 +255,9 @@ jobs:
           paths:
             - .
   DappBuild:
-    docker:
-      - image: circleci/node:10
-    working_directory: ~/origin
+    <<: *defaults
     steps:
+      - run: pwd
       - run: ls -lah
       - run: ls -lah devops/dockerfiles
       - run: docker build --build-arg ENVKEY="$ENVKEY" -t origin-dapp -f devops/dockerfiles/origin-dapp .
