@@ -70,7 +70,7 @@ class PinScreen extends Component {
       <KeyboardAvoidingView
         style={styles.darkOverlay}
         behavior={'padding'}
-        keyboardVerticalOffset={Platform.OS === 'android' ? 40 : 0}
+        keyboardVerticalOffset={Platform.OS === 'android' ? 40 : 10}
       >
         <SafeAreaView style={{ flex: 1 }}>
           <ScrollView

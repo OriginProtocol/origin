@@ -60,7 +60,7 @@ class AuthenticationScreen extends Component {
 
     return (
       <SafeAreaView style={styles.content}>
-        <View style={{ ...styles.container, flexGrow: 2 }}>
+        <View style={styles.content}>
           {biometryPermissionDenied ? (
             <>
               <Text style={styles.title}>
@@ -117,7 +117,7 @@ class AuthenticationScreen extends Component {
             </>
           )}
         </View>
-        <View style={{ ...styles.container, ...styles.buttonContainer }}>
+        <View style={styles.buttonContainer}>
           {biometryButtonTitle && (
             <OriginButton
               size="large"
