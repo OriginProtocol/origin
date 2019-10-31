@@ -67,7 +67,7 @@ function tokenPaymentTests({ deployIdentity, autoSwap, token }) {
           await clickByText(page, 'Approve', 'button')
         })
       }
-  
+
       it(`should prompt the user to approve their ${token}`, async function() {
         await waitForText(page, `Origin may now move ${token} on your behalf.`)
         await pic(page, 'listing-detail')
