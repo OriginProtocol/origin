@@ -172,10 +172,24 @@ export async function createListing(gqlClient, opts = {}) {
   return get(returnValues.find(e => e.field === 'listingID'), 'value')
 }
 
+async function transferTokens(gqlClient, { to, token, value }) {
+  const res = await gqlClient.mutate({
+    mutation: TransferTokenMutation,
+    variables: {
+      from: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
+      to,
+      token,
+      value
+    }
+  })
+  await transactionConfirmed(res.data.transferToken.id, gqlClient)
+  debug(`sent ${token}`)
+}
+
 export async function createAccount(gqlClient, opts = {}) {
   debug(`createAccount`, opts)
 
-  const { ogn, dai, eth = '0.5', deployIdentity } = opts
+  const { ogn, dai, okb, eth = '0.5', deployIdentity } = opts
   const NodeAccount = await getNodeAccount(gqlClient)
   await gqlClient.mutate({
     mutation: ToggleMetaMaskMutation,
@@ -213,45 +227,39 @@ export async function createAccount(gqlClient, opts = {}) {
     debug(`deployed identity`)
   }
 
-  if (ogn) {
+  if (dai || ogn || okb) {
     const accounts = mnemonicToAccounts()
     await gqlClient.mutate({
       mutation: ImportWalletsMutation,
       variables: { accounts: [accounts[0]] }
     })
 
-    const res = await gqlClient.mutate({
-      mutation: TransferTokenMutation,
-      variables: {
-        from: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
-        to: user,
-        token: 'OGN',
-        value: ogn
-      }
-    })
-    await transactionConfirmed(res.data.transferToken.id, gqlClient)
-    debug(`sent OGN`)
-  }
-
-  if (dai) {
-    const accounts = mnemonicToAccounts()
-    await gqlClient.mutate({
-      mutation: ImportWalletsMutation,
-      variables: { accounts: [accounts[0]] }
-    })
-
-    const res = await gqlClient.mutate({
-      mutation: TransferTokenMutation,
-      variables: {
-        from: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
+    if (dai) {
+      await transferTokens(gqlClient, {
         to: user,
         token: 'DAI',
         value: dai
-      }
-    })
-    await transactionConfirmed(res.data.transferToken.id, gqlClient)
-    debug(`sent DAI`)
+      })
+    }
+
+    if (ogn) {
+      await transferTokens(gqlClient, {
+        to: user,
+        token: 'OGN',
+        value: ogn
+      })
+    }
+
+    if (okb) {
+      await transferTokens(gqlClient, {
+        to: user,
+        token: 'OKB',
+        value: okb
+      })
+    }
+
   }
+
   return user
 }
 

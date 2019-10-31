@@ -63,11 +63,11 @@ const PaymentAmountRaw = ({
     switch (paymentMethod) {
       case 'token-ETH':
       case 'token-OGN':
-      case 'token-DAI':
+      case 'token-OKB':
         message = <InsufficientBalance token={paymentMethod} />
         break
 
-      case 'token-OKB':
+      case 'token-DAI':
         if (tokenStatus['token-ETH'].hasBalance) {
           // Has ETH. Can exchange that to DAI
           message = <TokenExchangeNote />

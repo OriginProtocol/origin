@@ -27,7 +27,10 @@ function tokenPaymentTests({ deployIdentity, autoSwap, token }) {
       const accounts = await reset({
         page,
         sellerOpts: { deployIdentity },
-        buyerOpts: { ogn: token === 'OGN' ? '1' : undefined }
+        buyerOpts: {
+          ogn: token === 'OGN' ? '1' : undefined,
+          okb: token === 'OKB' ? '1' : undefined
+        }
       })
       seller = accounts.seller
       buyer = accounts.buyer
@@ -53,15 +56,19 @@ function tokenPaymentTests({ deployIdentity, autoSwap, token }) {
 
     it('should allow the listing to be purchased', async function() {
       await changeAccount(page, buyer)
-      await purchaseListing({ page, buyer, title, autoSwap, withToken: token })
+      await purchaseListing({ page, buyer, title, withToken: token })
     })
-
-    if (!autoSwap && token === 'DAI') {
+    if (!autoSwap) {
+      if (token === 'DAI') {
+        it('should have swapped ETH for DAI', async () => {
+          await waitForText(page, 'Swapped 0.00001 ETH for 1DAI')
+          await pic(page, 'listing-detail')
+          await waitForText(page, 'Approve', 'button')
+          await clickByText(page, 'Approve', 'button')
+        })
+      }
+  
       it(`should prompt the user to approve their ${token}`, async function() {
-        await waitForText(page, 'Approve', 'button')
-        await pic(page, 'listing-detail')
-        await clickByText(page, 'Approve', 'button')
-
         await waitForText(page, `Origin may now move ${token} on your behalf.`)
         await pic(page, 'listing-detail')
       })
@@ -70,15 +77,6 @@ function tokenPaymentTests({ deployIdentity, autoSwap, token }) {
         await clickByText(page, 'Continue', 'button')
         await waitForText(page, 'View Purchase', 'button')
         await pic(page, 'purchase-listing')
-      })
-    }
-
-    if (token === 'OGN') {
-      // OGN token cannot be auto swapped
-      it(`should show approved modal for ${token}`, async function() {
-        await waitForText(page, `Origin may now move ${token} on your behalf.`)
-        await pic(page, 'listing-detail')
-        await clickByText(page, 'Continue', 'button')
       })
     }
 
@@ -93,4 +91,5 @@ function tokenPaymentTests({ deployIdentity, autoSwap, token }) {
 export function paymentTests({ deployIdentity, autoSwap } = {}) {
   tokenPaymentTests({ deployIdentity, autoSwap, token: 'DAI' })
   tokenPaymentTests({ deployIdentity, autoSwap, token: 'OGN' })
+  tokenPaymentTests({ deployIdentity, autoSwap, token: 'OKB' })
 }

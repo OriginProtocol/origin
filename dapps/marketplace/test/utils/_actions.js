@@ -69,6 +69,12 @@ export const purchaseListing = async ({
       await waitForText(page, '1 OGN')
       totalValue = '1 OGN'
       break
+
+    case 'OKB':
+      await clickByText(page, 'OKB Token')
+      await waitForText(page, '0.33333 OKB')
+      totalValue = '0.33333 OKB'
+      break
   }
 
   await clickByText(page, 'Continue', 'a')
@@ -157,8 +163,8 @@ export const purchaseMultiUnitListing = async ({
 
     case 'OKB':
       await clickByText(page, 'OKB Token')
-      await waitForText(page, '0.66667 OKB')
-      totalValue = '0.66667 OKB'
+      await waitForText(page, '0.66666 OKB')
+      totalValue = '0.66666 OKB'
       break
   }
 

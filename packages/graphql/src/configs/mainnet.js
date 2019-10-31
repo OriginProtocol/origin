@@ -72,7 +72,7 @@ export default {
       decimals: '2'
     },
     {
-      id: addresses.DAI,
+      id: addresses.OKB,
       type: 'Standard',
       name: 'OKB Token',
       symbol: 'OKB',

@@ -302,6 +302,7 @@ export function singleUnitTokenTests({
       await clickByText(page, 'Ethereum')
       await clickByText(page, 'Maker Dai')
       await clickByText(page, 'Origin Token')
+      await clickByText(page, 'OKB Token')
 
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
@@ -342,15 +343,20 @@ export function singleUnitTokenTests({
       })
     })
 
-    if ((token === 'DAI' || token === 'OKB') && !autoSwap) {
+    if (token === 'DAI' && !autoSwap && !buyerHasTokens) {
+      it('should have swapped ETH for DAI', async () => {
+        await waitForText(page, 'Swapped 0.00001 ETH for 1DAI')
+        await waitForText(page, 'Approve', 'button')
+        await pic(page, 'listing-detail')
+        await clickByText(page, 'Approve', 'button')
+      })
+    }
+
+    if ((token === 'DAI' || token === 'OKB' || token === 'OGN') && !autoSwap) {
       if (!buyerHasTokens) {
         it(
-          'should prompt the user to approve their ' + token,
+          'should notify the user about approval of ' + token,
           async function() {
-            await waitForText(page, 'Approve', 'button')
-            await pic(page, 'listing-detail')
-            await clickByText(page, 'Approve', 'button')
-
             await waitForText(
               page,
               `Origin may now move ${token} on your behalf.`
@@ -364,15 +370,6 @@ export function singleUnitTokenTests({
         await clickByText(page, 'Continue', 'button')
         await waitForText(page, 'View Purchase', 'button')
         await pic(page, 'purchase-listing')
-      })
-    }
-
-    if (token === 'OGN') {
-      it(`should show approved modal for ${token}`, async function() {
-        // TBD: OGN contract is auto-approved? If yes, should we show this modal at all?
-        await waitForText(page, `Origin may now move ${token} on your behalf.`)
-        await pic(page, 'listing-detail')
-        await clickByText(page, 'Continue', 'button')
       })
     }
 

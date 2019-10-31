@@ -61,7 +61,7 @@ if (addresses.DAI) {
 
 if (addresses.OKB) {
   config.tokens.push({
-    id: addresses.DAI,
+    id: addresses.OKB,
     type: 'Standard',
     name: 'OKB Token',
     symbol: 'OKB',
