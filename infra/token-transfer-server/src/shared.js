@@ -46,7 +46,7 @@ function calculateVested(grants) {
  */
 function calculateUnlockedEarnings(lockups) {
   return lockups.reduce((total, lockup) => {
-    if (lockup.end <= moment.utc()) {
+    if (lockup.confirmed && lockup.end <= moment.utc()) {
       const earnings = BigNumber(lockup.amount)
         .times(lockup.bonusRate)
         .div(BigNumber(100))
@@ -63,10 +63,13 @@ function calculateUnlockedEarnings(lockups) {
  */
 function calculateEarnings(lockups) {
   return lockups.reduce((total, lockup) => {
-    const earnings = BigNumber(lockup.amount)
-      .times(lockup.bonusRate)
-      .div(BigNumber(100))
-    return total.plus(earnings)
+    if (lockup.confirmed) {
+      const earnings = BigNumber(lockup.amount)
+        .times(lockup.bonusRate)
+        .div(BigNumber(100))
+      return total.plus(earnings)
+    }
+    return total
   }, BigNumber(0))
 }
 
@@ -75,7 +78,11 @@ function calculateEarnings(lockups) {
  */
 function calculateLocked(lockups) {
   return lockups.reduce((total, lockup) => {
-    if (lockup.end > moment.utc()) {
+    if (
+      lockup.confirmed &&
+      lockup.start < moment.utc() &&
+      lockup.end > moment.utc()
+    ) {
       return total.plus(BigNumber(lockup.amount))
     }
     return total

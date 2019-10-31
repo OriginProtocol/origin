@@ -17,14 +17,17 @@ const { hasBalance } = require('./balance')
 const enums = require('../enums')
 const logger = require('../logger')
 
-const { encryptionSecret, portalUrl } = require('../config')
+const {
+  emailConfirmTimeout,
+  encryptionSecret,
+  portalUrl
+} = require('../config')
 
 // Number of block confirmations required for a transfer to be consider completed.
 const NumBlockConfirmation = 8
 
 // Wait up to 20 min for a transaction to get confirmed
 const ConfirmationTimeoutSec = 20 * 60 * 60
-const TwofactorTimeoutMinutes = 5
 
 /**
  * Enqueues a request to transfer tokens.
@@ -95,7 +98,7 @@ async function sendTransferConfirmationEmail(transfer, user) {
   )
 }
 
-/* Moves a transfer from waiting for two factor to enqueued.
+/* Moves a transfer from waiting for email confirmation to enqueued.
  * Throws an exception if the request is invalid.
  * @param transfer
  * @param user
@@ -106,8 +109,7 @@ async function confirmTransfer(transfer, user) {
   }
 
   if (
-    moment().diff(moment(transfer.createdAt), 'minutes') >
-    TwofactorTimeoutMinutes
+    moment().diff(moment(transfer.createdAt), 'minutes') > emailConfirmTimeout
   ) {
     await transfer.update({
       status: enums.TransferStatuses.Expired

@@ -121,8 +121,8 @@
     "@babel/runtime": "7.6.3",
     "babel-eslint": "10.0.3",
     "babel-loader": "8.0.6",
-    "babel-plugin-fbt": "0.10.2",
-    "babel-plugin-fbt-runtime": "0.9.7",
+    "babel-plugin-fbt": "0.10.3",
+    "babel-plugin-fbt-runtime": "0.9.8",
     "bip39": "2.6.0",
     "bootstrap": "4.3.1",
     "clean-webpack-plugin": "3.0.0",
@@ -146,7 +146,7 @@
     "typeface-poppins": "0.0.72",
     "url-loader": "2.2.0",
     "webpack": "4.41.2",
-    "webpack-cli": "3.3.9",
+    "webpack-cli": "3.3.10",
     "webpack-dev-server": "3.9.0"
   },
   "eslintIgnore": [

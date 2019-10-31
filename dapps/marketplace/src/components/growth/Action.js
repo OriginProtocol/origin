@@ -93,12 +93,29 @@ function Action(props) {
     unlockConditions,
     listingId,
     titleKey,
+    title: titleUntranslated,
     detailsKey,
+    details: detailsUntranslated,
     iconSrc
   } = props.action
 
   const detailsEmpty =
-    !detailsKey || detailsKey === 'growth.purchase.empty.details'
+    (!detailsKey && !detailsUntranslated) ||
+    detailsKey === 'growth.purchase.empty.details'
+
+  let details = ''
+  if (!detailsEmpty) {
+    details = detailsKey ? (
+      <div className="details">
+        <fbt desc="growth">
+          <fbt:enum enum-range={GrowthEnum} value={detailsKey} />
+        </fbt>
+      </div>
+    ) : (
+      detailsUntranslated
+    )
+  }
+
   const { isMobile } = props
 
   const actionLocked = status === 'Inactive'
@@ -184,12 +201,14 @@ function Action(props) {
     isVerificationAction = false
   } else if (type === 'ListingIdPurchased') {
     foregroundImgSrc = iconSrc
-    title = (
+    title = titleKey ? (
       <Fragment>
         <fbt desc="growth">
           <fbt:enum enum-range={GrowthEnum} value={titleKey} />
         </fbt>
       </Fragment>
+    ) : (
+      titleUntranslated
     )
     buttonLink = `/listing/${listingId}`
     isVerificationAction = false
@@ -369,13 +388,7 @@ function Action(props) {
               )}
             </div>
           </div>
-          {detailsEmpty || !detailsToggled ? null : (
-            <div className="details">
-              <fbt desc="growth">
-                <fbt:enum enum-range={GrowthEnum} value={detailsKey} />
-              </fbt>
-            </div>
-          )}
+          {detailsEmpty || !detailsToggled ? null : details}
         </div>
       }
     />

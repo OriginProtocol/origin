@@ -5,6 +5,7 @@ import {
 } from '../actions/news'
 
 const initialState = {
+  isLoaded: false,
   isLoading: true,
   news: [],
   error: null
@@ -20,6 +21,7 @@ export default function newsReducer(state = initialState, action) {
     case FETCH_NEWS_SUCCESS:
       return {
         ...state,
+        isLoaded: true,
         isLoading: false,
         news: action.payload,
         error: null
@@ -60,4 +62,5 @@ export const getNews = state => {
     }
   })
 }
+export const getIsLoaded = state => state.isLoaded
 export const getIsLoading = state => state.isLoading

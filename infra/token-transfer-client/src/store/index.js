@@ -4,6 +4,7 @@ import thunk from 'redux-thunk'
 import account from '@/reducers/account'
 import event from '@/reducers/event'
 import grant from '@/reducers/grant'
+import lockup from '@/reducers/lockup'
 import news from '@/reducers/news'
 import session from '@/reducers/session'
 import transfer from '@/reducers/transfer'
@@ -16,6 +17,7 @@ export default createStore(
     account,
     event,
     grant,
+    lockup,
     news,
     session,
     transfer,
