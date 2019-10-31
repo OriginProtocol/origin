@@ -796,7 +796,9 @@
   "1sKft4": "Ethereum insuffisant",
   "22ZEKT": "DAI insuffisant",
   "4zUJH3": "Jetons Origin insuffisants",
-  "1ECzYo": "Solde insuffisant",
+  "4Ed2iA": "Not enough OKB Tokens. {=Get More}",
+  "4DOKEk": "Get More",
+  "49t4a6": "Not enough balance",
   "2t43zy": "Où puis-je en récupérer ?",
   "2nApoY": "Commission",
   "2QlAhE": "Commission par Unité",
@@ -1309,7 +1311,9 @@
   "2tAdFF": "Ethereum",
   "3M0Mkc": "Maker Dai",
   "3NuPlb": "Jetons Origin",
+  "1w0kdV": "OKB Token",
   "3JTZtf": "Ether marche mieux pour des annonces à court terme.",
   "3eoCca": "Maker Dai est un bon choix pour des annonces à long terme, comme des locations ou ventes de propriétés.",
-  "214S0w": "Utile pour promouvoir d'autres annonces"
+  "214S0w": "Utile pour promouvoir d'autres annonces",
+  "4nb5Gu": "For use with one of our exchange partners"
 }
