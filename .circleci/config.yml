@@ -324,6 +324,17 @@ workflows:
   build:
     jobs:
       - Setup
+      - CronBuild:
+          requires:
+            - Setup
+          filters:
+            branches:
+              # The idea is to catch build errors BEFORE these branches
+              ignore:
+                - master
+                - staging
+                - stable
+          context: origin
       - DappBuild:
           requires:
             - Setup
