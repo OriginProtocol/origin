@@ -32,6 +32,9 @@ const TransferStatuses = new Enum(
   'Expired'
 )
 
+const InvestorTypes = new Enum('Advisor', 'Strategic', 'CoinList')
+
 module.exports = {
+  InvestorTypes,
   TransferStatuses
 }
