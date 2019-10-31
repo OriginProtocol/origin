@@ -242,7 +242,6 @@ jobs:
   BuildSetup:
     <<: *defaults
     steps:
-      - setup_remote_docker
       - checkout
       - run:
           name: Yarn Install
@@ -259,6 +258,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - setup_remote_docker
       - run: pwd
       - run: ls -lah
       - run: ls -lah devops/dockerfiles
