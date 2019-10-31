@@ -108,7 +108,7 @@ router.post('/', identityWriteVerify, async (req, res) => {
   }
 
   // Load attestation data from the DB.
-  const addresses = loadIdentityAddresses(ethAddress)
+  const addresses = await loadIdentityAddresses(ethAddress)
   const metadata = await loadAttestationMetadata(
     addresses,
     ipfsData.attestations
