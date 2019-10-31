@@ -166,8 +166,8 @@ async function createTestData() {
     shortNameKey: 'growth.oct2019.short_name',
     rules: JSON.stringify(octoberConfig),
     startDate: Date.parse('October 1, 2019'),
-    endDate: Date.parse('October 12, 2019'),
-    distributionDate: Date.parse('October 12, 2019'),
+    endDate: Date.parse('November 1, 2019'),
+    distributionDate: Date.parse('November 1, 2019'),
     cap: 10000 * Math.pow(10, 18),
     capUsed: 0,
     currency: 'OGN',
@@ -179,7 +179,7 @@ async function createTestData() {
     nameKey: 'growth.nov2019.name',
     shortNameKey: 'growth.nov2019.short_name',
     rules: JSON.stringify(novemberConfig),
-    startDate: Date.parse('October 1, 2019'), // TODO CHANGE THIS
+    startDate: Date.parse('November 1, 2019'), // TODO CHANGE THIS
     endDate: Date.parse('December 1, 2019'),
     distributionDate: Date.parse('December 1, 2019'),
     cap: 10000 * Math.pow(10, 18),
