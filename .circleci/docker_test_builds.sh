@@ -18,7 +18,7 @@ echo "git version: $(git --version)"
 retval=""
 fails=0
 do_build() {
-    DIFF=$(git diff --name-only $(git branch --show-current)..master | grep $2 | wc -l)
+    DIFF=$(git diff --name-only $(git branch | grep \* | cut -d ' ' -f2)..master | grep $2 | wc -l)
     if [[ "$DIFF" != "0" ]]; then
         echo "Building $1..."
         docker build --build-arg ENVKEY=$ENVKEY -t $1 -f $DIR/devops/dockerfiles/$1 .
