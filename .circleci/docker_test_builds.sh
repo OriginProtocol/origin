@@ -13,6 +13,8 @@ echo "Testing builds..."
 DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/null 2>&1 && pwd)"
 REPO_COMMIT=$(git rev-parse master)
 
+echo "git version: $(git --version)"
+
 retval=""
 fails=0
 do_build() {

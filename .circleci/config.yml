@@ -237,7 +237,9 @@ jobs:
           command: cd infra/messaging && yarn migrate && yarn test
 
   Builds:
-    <<: *defaults
+    docker:
+      - image: circleci/node:10-buster
+    working_directory: ~/origin
     steps:
       - attach_workspace:
           at: .
