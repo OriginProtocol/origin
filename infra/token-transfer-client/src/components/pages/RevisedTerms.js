@@ -38,13 +38,6 @@ class RevisedTerms extends Component {
             Please agree to the investor amendment below to use the Origin
             Investor Portal.
           </p>
-          <p>
-            If you do not agree with the proposed amendment, you can contact
-            Origin Investor Relations at{' '}
-            <a href="mailto:investor-relations@originprotocol.com">
-              investor-relations@originprotocol.com
-            </a>
-          </p>
           <div className="form-group">
             <div className="terms-wrapper">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris
@@ -66,6 +59,13 @@ class RevisedTerms extends Component {
               eget. Pellentesque porttitor ultricies mauris non congue.
             </div>
           </div>
+          <p>
+            If you do not agree with the proposed amendment, you can contact
+            Origin Investor Relations at{' '}
+            <a href="mailto:investor-relations@originprotocol.com">
+              investor-relations@originprotocol.com
+            </a>
+          </p>
           <div className="form-check">
             <input
               className="form-check-input"
