@@ -11,20 +11,20 @@
 echo "Testing builds..."
 
 DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/null 2>&1 && pwd)"
-REPO_COMMIT=$(git rev-parse HEAD)
+REPO_COMMIT=$(git rev-parse master)
 
 retval=""
 fails=0
 do_build() {
-    COMMIT=$(git log -1 --format=format:%H --full-diff $2)
-    if [[ "$REPO_COMMIT" = "$COMMIT" ]]; then
+    DIFF=$(git diff --name-only $(git branch --show-current)..master | grep $2 | wc -l)
+    if [[ "$DIFF" != "0" ]]; then
         echo "Building $1..."
         docker build --build-arg ENVKEY=$ENVKEY -t $1 -f $DIR/devops/dockerfiles/$1 .
         RC=$?
         if [[ $RC -eq 0 ]]; then
             retval="[ OK  ] $1"
         else
-            retval="[ERROR] $1"
+            retval="[ERROR!] $1"
             fails=$((fails++))
         fi
         echo "$1 build complete."
