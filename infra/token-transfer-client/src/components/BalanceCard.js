@@ -28,7 +28,7 @@ const BalanceCard = props => {
   }
 
   if (redirectTo) {
-    return <Redirect to={redirectTo} />
+    return <Redirect push to={redirectTo} />
   }
 
   if (props.isLocked) {
@@ -150,7 +150,7 @@ const BalanceCard = props => {
                     <Dropdown.Item onClick={() => setDisplayBonusModal(true)}>
                       Earn Bonus Tokens
                     </Dropdown.Item>
-                    <Dropdown.Item onClick={() => setRedirectTo('/bonus')}>
+                    <Dropdown.Item onClick={() => setRedirectTo('/lockup')}>
                       View Details
                     </Dropdown.Item>
                   </Dropdown.Menu>
