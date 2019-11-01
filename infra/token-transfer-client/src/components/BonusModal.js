@@ -88,6 +88,14 @@ class BonusModal extends Component {
     }
   }
 
+  onMaxAmount = event => {
+    event.preventDefault()
+
+    this.setState({
+      amount: Number(this.props.balance)
+    })
+  }
+
   render() {
     return (
       <Modal appendToId="main" onClose={this.handleModalClose} closeBtn={true}>
@@ -114,6 +122,19 @@ class BonusModal extends Component {
             <div className="input-group">
               <input {...input('amount')} type="number" />
               <div className="input-group-append">
+                <a
+                  href="#"
+                  onClick={this.onMaxAmount}
+                  className="mr-2"
+                  style={{
+                    color: '#007cff',
+                    fontSize: '14px',
+                    textDecoration: 'none',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Max amount
+                </a>
                 <span className="badge badge-secondary">OGN</span>
               </div>
             </div>
