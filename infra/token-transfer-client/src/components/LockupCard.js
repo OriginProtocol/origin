@@ -44,7 +44,9 @@ const LockupCard = ({ lockup }) => {
           Bonus tokens
           <br />
           <strong>
-            {Number((lockup.amount * lockup.bonusRate) / 100).toLocaleString()}
+            {Math.floor(
+              Number((lockup.amount * lockup.bonusRate) / 100)
+            ).toLocaleString()}
           </strong>{' '}
           <span className="ogn">OGN</span>
         </div>

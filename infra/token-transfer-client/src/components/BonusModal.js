@@ -153,7 +153,11 @@ class BonusModal extends Component {
                   </span>
                 </div>
                 <div className="col-4 text-right">
-                  <strong>{this.state.amount * (bonusRate / 100)}</strong>{' '}
+                  <strong>
+                    {Math.floor(
+                      this.state.amount * (bonusRate / 100)
+                    ).toLocaleString()}
+                  </strong>{' '}
                   <span className="ogn">OGN</span>
                 </div>
               </div>
