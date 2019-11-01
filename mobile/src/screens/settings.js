@@ -56,8 +56,9 @@ class settingsScreen extends React.Component {
         this.alertMessage(
           fbt('Permission denied', 'Authentication.permissionDeniedTitle'),
           fbt(
-            `It looks like you have ${this.state.biometryType} disabled. You will need to enable it in the settings for the
-          Origin Marketplace App.`,
+            'It looks like you have ' +
+              fbt.param('biometryType', this.state.biometryType) +
+              ' disabled. You will need to enable it in the settings for the Origin Marketplace App.',
             'Authentication.permissionDeniedDesciption'
           ),
           () => {
