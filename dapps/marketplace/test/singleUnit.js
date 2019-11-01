@@ -228,7 +228,7 @@ export function singleUnitTests({
       await clickByText(page, 'Purchases', 'a/span')
       await waitForText(page, 'Purchases', 'h1')
       await clickByText(page, 'Complete', 'a')
-      await waitForText(page, title, 'a')
+      await waitForText(page, title, 'h2')
     })
   })
 }
