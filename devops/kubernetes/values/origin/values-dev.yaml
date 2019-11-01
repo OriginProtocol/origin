@@ -6,11 +6,11 @@ bridgeImageTag: '81f2ee2'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '663f4e5'
+dappImageTag: '26f9fcc'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
-ipfsProxyImageTag: '8de0133'
+ipfsProxyImageTag: 'dc0c559'
 
 # origin-faucet
 faucetImage: origin-faucet
