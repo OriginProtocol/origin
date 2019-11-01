@@ -56,8 +56,8 @@ class OtpSetup extends Component {
             <div className="d-md-none">
               <h1>Copy Secret Key</h1>
               <p>
-                Open Google Authenticator, add using "Manual Entry", and paste
-                in this key:
+                Open Google Authenticator, add using &quot;Manual Entry&quot;,
+                and paste in this key:
               </p>
             </div>
             <div className="d-none d-md-block">
