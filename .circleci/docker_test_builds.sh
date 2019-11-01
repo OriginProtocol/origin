@@ -20,7 +20,7 @@ fails=0
 do_build() {
     CURRENT_BRANCH=$(git branch | grep \* | cut -d ' ' -f2)
     echo "Current branch: $CURRENT_BRANCH"
-    DIFF=$(git diff --name-only $CURRENT_BRANCH..master | grep $2 | wc -l)
+    DIFF=$(git diff --name-only $CURRENT_BRANCH..origin/master | grep $2 | wc -l)
     echo "Changed $2? $DIFF"
     if [[ "$DIFF" != "0" ]]; then
         echo "Building $1..."
