@@ -119,6 +119,18 @@ export function fractionalTests({ autoSwap, acceptedTokens } = {}) {
       await clickByText(page, 'Continue', 'button')
     })
 
+    it('should allow location entry', async function() {
+      await waitForText(page, 'Where is your listing located', 'div')
+      await page.type('input[name=location]', 'Origin Protocol SF')
+      await clickByText(page, 'Next', 'button')
+      await waitForText(
+        page,
+        'This is what will be shown to potential guests',
+        'div'
+      )
+      await clickByText(page, 'Continue', 'button')
+    })
+
     it('should allow image entry', async function() {
       const input = await page.$('input[type="file"]')
       await input.uploadFile(__dirname + '/fixtures/image-1.jpg')
