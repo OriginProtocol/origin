@@ -126,7 +126,7 @@ const NoPurchases = () => (
 )
 
 const Purchase = ({ listing, offer }) => (
-  <div className="purchase">
+  <Link className="purchase" to={`/purchases/${offer.id}`}>
     <div className="pic">
       <Pic listing={listing} />
       {offer.quantity === undefined || offer.quantity <= 1 ? null : (
@@ -135,9 +135,9 @@ const Purchase = ({ listing, offer }) => (
     </div>
     <div className="details">
       <div className="top">
-        <Link className="title mb-1" to={`/purchases/${offer.id}`}>
+        <h2 className="title mb-1">
           {listing.title || <i>Untitled Listing</i>}
-        </Link>
+        </h2>
         <div className="right">
           <span className="time-estimate">
             {distanceToNow(offer.createdEvent.timestamp, true) + ' ago'}
@@ -159,7 +159,7 @@ const Purchase = ({ listing, offer }) => (
       </div>
       <Stages mini offer={offer} />
     </div>
-  </div>
+  </Link>
 )
 
 export default withWallet(Listings)

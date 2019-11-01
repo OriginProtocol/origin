@@ -1,0 +1,21 @@
+grafana:
+  grafana.ini:
+    smtp:
+      enabled: true
+      skip_verify: true
+      host: smtp.sendgrid.net:2525
+      from_address: no-reply@originprotocol.com
+  dashboardsConfigMaps:
+    default: grafana-dashboards-default
+  dashboardProviders:
+    dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+        - name: default
+          orgId: 1
+          folder: ''
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+              path: /var/lib/grafana/dashboards/default

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <title>Welcome to the Origin Investor Portal</title>
+
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Lato:400,300,500"
+    />
+
+    <style>
+      /* What it does: Remove spaces around the email design added by some email clients. */
+      /* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
+      html,
+      body {
+        margin: 0 auto !important;
+        padding: 0 !important;
+        height: 100% !important;
+        width: 100% !important;
+        font-family: 'Lato', 'Helvetica Neue', 'Arial', sans-serif;
+      }
+
+      * {
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      div[style*='margin: 16px 0'] {
+        margin: 0 !important;
+      }
+
+      table,
+      td {
+        mso-table-lspace: 0pt !important;
+        mso-table-rspace: 0pt !important;
+      }
+
+      table {
+        border-spacing: 0 !important;
+        border-collapse: collapse !important;
+        table-layout: fixed !important;
+        margin: 0 auto !important;
+      }
+
+      table table table {
+        table-layout: auto;
+      }
+
+      img {
+        -ms-interpolation-mode: bicubic;
+      }
+
+      *[x-apple-data-detectors] {
+        color: inherit !important;
+        text-decoration: none !important;
+      }
+
+      .x-gmail-data-detectors,
+      .x-gmail-data-detectors *,
+      .aBn {
+        border-bottom: 0 !important;
+        cursor: default !important;
+      }
+
+      .button-link {
+        text-decoration: none !important;
+      }
+
+      @media only screen and (min-device-width: 375px) and (max-device-width: 413px) {
+        /* iPhone 6 and 6+ */
+        .email-container {
+          min-width: 375px !important;
+        }
+      }
+    </style>
+
+    <style>
+      .button-td,
+      .button-a {
+        transition: all 100ms ease-in;
+      }
+      .button-td:hover,
+      .button-a:hover {
+        background: #2e97ff !important;
+        border-color: #2e97ff !important;
+      }
+
+      .button-share,
+      .button-share-a {
+        transition: all 100ms ease-in;
+      }
+    </style>
+  </head>
+  <body
+    width="100%"
+    bgcolor="#f1f6f9"
+    style="margin: 0; mso-line-height-rule: exactly;"
+  >
+    <center style="width: 100%; background: #f1f6f9;">
+      <!--
+      Set the email width. Defined in two places:
+      1. max-width for all clients except Desktop Windows Outlook, allowing the email to squish on narrow but never go wider than 600px.
+      2. MSO tags for Desktop Windows Outlook enforce a 600px width.
+    -->
+      <div style="max-width: 600px; margin: auto;" class="email-container">
+        <!--[if mso]>
+      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" align="center">
+      <tr>
+      <td>
+      <![endif]-->
+        <br/>
+        <table
+          role="presentation"
+          cellspacing="0"
+          cellpadding="0"
+          border="0"
+          align="center"
+          width="100%"
+          style="max-width: 600px;"
+        >
+          <tr>
+            <td style="width: 600px; height: 125px; background-color: #007cff">
+              <center>
+                <img
+                  src="https://www.originprotocol.com/static/img/origin-logo@3x.png"
+                  srcset="
+                    https://www.originprotocol.com/static/img/origin-logo.png
+                    https://www.originprotocol.com/static/img/origin-logo@2x.png 2x,
+                    https://www.originprotocol.com/static/img/origin-logo@3x.png 3x"
+                  alt="Origin Protocol logo"
+                  style="width: 138px; height: 32px;"
+                >
+              </center>
+            </td>
+          </tr>
+          <tr>
+            <td bgcolor="#ffffff" style="max-width: 550px; margin: auto; font-family: Arial;">
+              <div style="margin-left: 30px; margin-right: 40px;">
+                <br />
+                <div
+                  style="
+                    font-size: 28px;
+                    font-weight: bold;"
+                >
+                  Origin Investor Portal
+                </div>
+                <br /><br />
+                <div
+                  style="font-size:18px; "
+                  class="email-container"
+                >
+                  Please confirm your lockup of Origin tokens by clicking the link below.
+                  This link will expire in 5 minutes.
+                </div>
+              </div>
+              <br /><br />
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td
+                          align="center"
+                          style="border-radius: 43px"
+                          bgcolor="#345d7a"
+                        >
+                          <a
+                            href="<%= url %>"
+                            target="_blank"
+                            style="
+                              font-size: 18px;
+                              color: #ffffff;
+                              text-decoration: none;
+                              border-radius: 43px;
+                              padding: 10px 36px;
+                              display: inline-block;"
+                            >Confirm withdrawal</a
+                          >
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+              <br />
+              <div
+                style="
+                  text-align: center;
+                  font-size: 18px;
+                  color: #007cff;"
+                >
+                <%= url %>
+              </div>
+              <br /><br /><br />
+            </td>
+          </tr>
+        </table>
+
+        <!-- Email Footer : BEGIN -->
+        <table
+          role="presentation"
+          cellspacing="0"
+          cellpadding="0"
+          border="0"
+          align="center"
+          width="100%"
+          style="max-width: 680px;"
+        >
+          <tr>
+            <td
+              style="
+                width: 540px;
+                height: 61.1px;
+                font-family: Arial;
+                font-size: 18px;
+                font-weight: normal;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.67;
+                letter-spacing: normal;
+                text-align: center;
+                color: #98a7b4;"
+              >
+              <br />
+              <b>Questions or feedback?</b>
+              <br />
+              If you have any questions, reach out to
+              <a href="mailto:support@shoporigin.com" style="color: #98a7b4; text-decoration: none;">
+                support@shoporigin.com
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td
+              style="
+                width: 408px;
+                height: 42.1px;
+                font-family: Arial;
+                font-size: 12px;
+                font-weight: normal;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: normal;
+                letter-spacing: normal;
+                text-align: center;
+                color: #98a7b4;"
+              class="x-gmail-data-detectors"
+            >
+              <br />
+              745 Clementina Street, Unit A, San Francisco, CA, 94103
+              <br /><br />
+              <a href="https://www.originprotocol.com" style="color: #98a7b4; text-decoration: none;">
+                originprotocol.com
+              </a>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Email Footer : END -->
+
+        <!--[if mso]>
+      </td>
+      </tr>
+      </table>
+    <![endif]-->
+      </div>
+    </center>
+  </body>
+</html>
