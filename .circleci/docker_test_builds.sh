@@ -21,12 +21,11 @@ do_build() {
     if [[ "$DIFF" != "0" ]]; then
         echo "Building $1..."
         docker build --build-arg ENVKEY=$ENVKEY -t $1 -f $DIR/devops/dockerfiles/$1 .
-        RC=$?
-        if [[ $RC -eq 0 ]]; then
+        if [[ $? -eq 0 ]]; then
             retval="[ OK  ] $1"
         else
             retval="[ERROR!] $1"
-            fails=$((fails++))
+            fails=$((fails+=1))
         fi
         echo "$1 build complete."
     else
