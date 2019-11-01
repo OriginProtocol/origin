@@ -315,8 +315,8 @@ class WithdrawModal extends Component {
   renderCheckEmail() {
     return (
       <>
-        <h1 className="mb-2">Check your email</h1>
-        <p>Please click the link in the email we just sent you</p>
+        <h1 className="mb-2">Check Your Email</h1>
+        <p>Please click the link in the email we just sent you.</p>
         <div className="mt-5">
           <img src={EmailIcon} />
         </div>
