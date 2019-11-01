@@ -134,7 +134,7 @@ const BalanceCard = props => {
             <div className="row" style={{ fontSize: '24px' }}>
               <div className="col">
                 <div className="status-circle status-circle-info mr-3"></div>
-                Bonus Locked Tokens
+                Locked Tokens
               </div>
               <div className="col-5 text-right">
                 <strong>
