@@ -242,7 +242,7 @@ class BaseRule {
         ethAddress,
         this.config.statusScope === 'user' ? events : this._inScope(events)
       )
-      return numRewards < this.limit
+      return numRewards < this.limit || this.limit === -1
         ? GrowthActionStatus.Active
         : GrowthActionStatus.Completed
     } else {
@@ -318,11 +318,17 @@ class BaseRule {
       // Fields specific to the ListingIdPurchased rule.
       listingId: this.listingId,
       iconSrc: this.iconSrc,
-      titleKey: this.titleKey,
-      detailsKey: this.detailsKey,
       // Fields specific to the SocialShare rule
       content: this.content
     }
+
+    const optionalFields = ['titleKey', 'title', 'detailsKey', 'details']
+    optionalFields.forEach(field => {
+      if (this[field]) {
+        data[field] = this[field]
+      }
+    })
+
     return adapter.process(data)
   }
 }
