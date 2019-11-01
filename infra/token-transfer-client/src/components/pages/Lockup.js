@@ -87,7 +87,8 @@ const Lockup = props => {
                 You don&apos;t have any OGN locked up.
               </div>
               <div style={{ fontSize: '18px' }}>
-                This program is only available to our existing Advisor, Strategic, and CoinList investors.
+                This program is only available to our existing Advisor,
+                Strategic, and CoinList investors.
               </div>
             </div>
           )}

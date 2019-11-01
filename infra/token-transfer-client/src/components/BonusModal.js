@@ -127,9 +127,7 @@ class BonusModal extends Component {
               <div className="row">
                 <div className="col">
                   <strong>Bonus Tokens Earned</strong>{' '}
-                  <span style={{ fontSize: '14px' }}>
-                    ({bonusRate}%)
-                  </span>
+                  <span style={{ fontSize: '14px' }}>({bonusRate}%)</span>
                 </div>
                 <div className="col-4 text-right">
                   <strong>{this.state.amount * (bonusRate / 100)}</strong>{' '}
@@ -209,7 +207,8 @@ class BonusModal extends Component {
               rel="noopener noreferrer"
             >
               accredited investor
-            </a>.
+            </a>
+            .
           </label>
         </div>
         <button
@@ -235,7 +234,8 @@ class BonusModal extends Component {
       <>
         <h1 className="mb-2">2-Step Verification</h1>
         <p>
-          Please use Google Authenticator to confirm your lockup and earn more OGN.
+          Please use Google Authenticator to confirm your lockup and earn more
+          OGN.
         </p>
         <form onSubmit={this.handleTwoFactorFormSubmit}>
           <div className="form-group">

@@ -22,7 +22,8 @@ class OtpExplain extends Component {
           code you can use to secure your account.
         </p>
         <p>
-          To get started, click continue once you have the Google Authenticator app installed.
+          To get started, click continue once you have the Google Authenticator
+          app installed.
         </p>
         <button
           className="btn btn-secondary btn-lg mt-5"
