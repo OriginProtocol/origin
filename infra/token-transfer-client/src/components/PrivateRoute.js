@@ -73,10 +73,10 @@ const PrivateRoute = ({
         <Modal>
           <h1 className="mb-2">Session Expired</h1>
           <p>
-            Your session has expired. You will need to login again to continue.
+            Your session has expired. You will need to sign in again to continue.
           </p>
           <Link to="/">
-            <button className="btn btn-primary btn-lg">Login</button>
+            <button className="btn btn-primary btn-lg">Sign In</button>
           </Link>
         </Modal>
       )}

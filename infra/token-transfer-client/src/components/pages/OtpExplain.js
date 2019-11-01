@@ -18,12 +18,11 @@ class OtpExplain extends Component {
         <h1>Install Google Authenticator</h1>
         <img src={GoogleAuthenticatorIcon} />
         <p className="mb-3">
-          Google Authenticator will generate a unique time-sensitive security
+          Google Authenticator will generate a unique, time-sensitive security
           code you can use to secure your account.
         </p>
         <p>
-          To get started, install Google Authenticator on your mobile device, if
-          you haven&apos;t already, then click continue
+          To get started, click continue once you have the Google Authenticator app installed.
         </p>
         <button
           className="btn btn-secondary btn-lg mt-5"

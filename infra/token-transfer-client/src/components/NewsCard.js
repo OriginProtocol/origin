@@ -31,7 +31,7 @@ const NewsCard = props => (
     <div className="p-4" style={{ fontSize: '14px' }}>
       <p>{props.description}</p>
       <a href={props.link} target="_blank" rel="noopener noreferrer">
-        Read more
+        Read More
       </a>
     </div>
   </div>

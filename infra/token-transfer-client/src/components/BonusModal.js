@@ -110,7 +110,7 @@ class BonusModal extends Component {
         <h1 className="mb-2">Earn Bonus Tokens</h1>
         <form onSubmit={this.handleFormSubmit}>
           <div className="form-group">
-            <label htmlFor="amount">Amount of Tokens to Lockup</label>
+            <label htmlFor="amount">Number of Tokens to Lock Up</label>
             <div className="input-group">
               <input {...input('amount')} type="number" />
               <div className="input-group-append">
@@ -126,9 +126,9 @@ class BonusModal extends Component {
             <div className="text-left">
               <div className="row">
                 <div className="col">
-                  <strong>Bonus tokens earned</strong>{' '}
+                  <strong>Bonus Tokens Earned</strong>{' '}
                   <span style={{ fontSize: '14px' }}>
-                    ({bonusRate}% of lockup)
+                    ({bonusRate}%)
                   </span>
                 </div>
                 <div className="col-4 text-right">
@@ -138,7 +138,7 @@ class BonusModal extends Component {
               </div>
               <div className="row">
                 <div className="col">
-                  <strong>Lock up amount</strong>
+                  <strong>Tokens Locked Up</strong>
                 </div>
                 <div className="col-4 text-right">
                   <strong>{this.state.amount}</strong>{' '}
@@ -149,7 +149,7 @@ class BonusModal extends Component {
           ) : (
             <>
               <div className="p-5 mx-4 text-muted text-center">
-                Please select an amount of tokens to lock up for one year. Bonus
+                Please enter a number of tokens to lock up for one year. Bonus
                 tokens will be calculated based on that amount.
               </div>
               <hr />
@@ -209,7 +209,7 @@ class BonusModal extends Component {
               rel="noopener noreferrer"
             >
               accredited investor
-            </a>
+            </a>.
           </label>
         </div>
         <button
@@ -235,8 +235,7 @@ class BonusModal extends Component {
       <>
         <h1 className="mb-2">2-Step Verification</h1>
         <p>
-          To lock up your tokens to earn more OGN, please confirm with your
-          authenticator app
+          Please use Google Authenticator to confirm your lockup and earn more OGN.
         </p>
         <form onSubmit={this.handleTwoFactorFormSubmit}>
           <div className="form-group">
@@ -266,8 +265,8 @@ class BonusModal extends Component {
   renderCheckEmail() {
     return (
       <>
-        <h1 className="mb-2">Check your email</h1>
-        <p>Please click the link in the email we just sent you</p>
+        <h1 className="mb-2">Check Your Email</h1>
+        <p>Please click the link in the email we just sent you.</p>
         <div className="mt-5">
           <img src={EmailIcon} />
         </div>
