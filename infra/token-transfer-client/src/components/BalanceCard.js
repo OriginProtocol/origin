@@ -69,6 +69,7 @@ const BalanceCard = props => {
     <>
       {displayWithdrawModal && (
         <WithdrawModal
+          balance={props.balance}
           accounts={props.accounts}
           isLocked={props.isLocked}
           onModalClose={() => setDisplayWithdrawModal(false)}
@@ -76,7 +77,10 @@ const BalanceCard = props => {
       )}
 
       {displayBonusModal && (
-        <BonusModal onModalClose={() => setDisplayBonusModal(false)} />
+        <BonusModal
+          balance={props.balance}
+          onModalClose={() => setDisplayBonusModal(false)}
+        />
       )}
 
       <BorderedCard shadowed={true}>

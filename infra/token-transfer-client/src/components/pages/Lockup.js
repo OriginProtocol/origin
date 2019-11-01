@@ -4,24 +4,39 @@ import { withRouter } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
+import { fetchGrants } from '@/actions/grant'
+import {
+  getGrants,
+  getIsLoading as getGrantIsLoading,
+  getTotals as getGrantTotals
+} from '@/reducers/grant'
 import { confirmLockup, fetchLockups } from '@/actions/lockup'
 import {
   getLockups,
   getTotals as getLockupTotals,
   getIsLoading as getLockupIsLoading
 } from '@/reducers/lockup'
+import { fetchTransfers } from '@/actions/transfer'
+import {
+  getIsLoading as getTransferIsLoading,
+  getWithdrawnAmount
+} from '@/reducers/transfer'
 import { unlockDate } from '@/constants'
 import LockupCard from '@/components/LockupCard'
 import BonusModal from '@/components/BonusModal'
 
 const Lockup = props => {
-  useEffect(props.fetchLockups, [])
+  useEffect(() => {
+    props.fetchGrants(), props.fetchLockups(), props.fetchTransfers()
+  }, [])
 
   const [displayBonusModal, setDisplayBonusModal] = useState(false)
-
-  const isLocked = moment.utc() < unlockDate
-
-  if (props.lockupIsLoading) {
+  if (
+    props.accountIsLoading ||
+    props.transferIsLoading ||
+    props.grantIsLoading ||
+    props.lockupIsLoading
+  ) {
     return (
       <div className="spinner-grow" role="status">
         <span className="sr-only">Loading...</span>
@@ -29,7 +44,11 @@ const Lockup = props => {
     )
   }
 
-  // const isLocked = moment.utc() < unlockDate
+  const isLocked = moment.utc() < unlockDate
+  const { vestedTotal } = props.grantTotals
+  const balanceAvailable = vestedTotal
+    .minus(props.withdrawnAmount)
+    .minus(props.lockupTotals.locked)
 
   const renderLockups = lockups => {
     return lockups.map(lockup => {
@@ -44,7 +63,10 @@ const Lockup = props => {
   return (
     <>
       {displayBonusModal && (
-        <BonusModal onModalClose={() => setDisplayBonusModal(false)} />
+        <BonusModal
+          balance={balanceAvailable}
+          onModalClose={() => setDisplayBonusModal(false)}
+        />
       )}
 
       <div className="row">
@@ -97,19 +119,26 @@ const Lockup = props => {
   )
 }
 
-const mapStateToProps = ({ lockup }) => {
+const mapStateToProps = ({ grant, lockup, transfer }) => {
   return {
+    grants: getGrants(grant),
+    grantIsLoading: getGrantIsLoading(grant),
+    grantTotals: getGrantTotals(grant),
     lockups: getLockups(lockup),
     lockupIsLoading: getLockupIsLoading(lockup),
-    lockupTotals: getLockupTotals(lockup)
+    lockupTotals: getLockupTotals(lockup),
+    transferIsLoading: getTransferIsLoading(transfer),
+    withdrawnAmount: getWithdrawnAmount(transfer)
   }
 }
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
+      confirmLockup: confirmLockup,
+      fetchGrants: fetchGrants,
       fetchLockups: fetchLockups,
-      confirmLockup: confirmLockup
+      fetchTransfers: fetchTransfers
     },
     dispatch
   )

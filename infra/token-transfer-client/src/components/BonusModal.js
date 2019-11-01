@@ -159,7 +159,7 @@ class BonusModal extends Component {
           <button
             type="submit"
             className="btn btn-primary btn-lg mt-5"
-            disabled={this.props.lockupIsAdding}
+            disabled={!this.state.amount || this.props.lockupIsAdding}
           >
             {this.props.lockupIsAdding ? (
               <>
