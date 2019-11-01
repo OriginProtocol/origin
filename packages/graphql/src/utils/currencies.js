@@ -1,5 +1,7 @@
 import fetch from 'node-fetch'
 
+import contracts from '../contracts'
+
 const API_TIMEOUT_MS = 5000 // 5sec
 const EXCHANGE_RATES_POLL_INTERVAL = 10 * 60 * 1000 // 10 min.
 
@@ -120,12 +122,6 @@ class Currencies {
       }
     }
 
-    // Make a list of supported currency codes.
-    this.currencyCodes = []
-    for (const key of Object.keys(this.data)) {
-      this.currencyCodes.push(this.data[key].code)
-    }
-
     // Start the background polling of exchange rates.
     this.polled = false
     if (process.env.NODE_ENV !== 'test') {
@@ -140,33 +136,25 @@ class Currencies {
    * @returns {Promise<boolean>} Returns true if rates updated successfully. False otherwise.
    */
   async _poll() {
-    const currencyCodes = this.currencyCodes
-      // We don't fetch values of DAI and OGN from API
-      .filter(c => c !== 'DAI' && c !== 'OGN')
-      .join(',')
-    // Fetch rates from CryptoCompare.
-    const url =
-      'https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=' +
-      currencyCodes
+    // Fetch rates from @origin/bridge.
+    const url = `${contracts.config.bridge}/utils/exchange-rates`
+
     let rates
     try {
       const response = await fetch(url, { timeout: API_TIMEOUT_MS })
       rates = await response.json()
     } catch (e) {
-      console.error('API call to fetch xrates from CryptoCompare failed.')
+      console.error('API call to fetch xrates from @origin/bridge failed.')
       return false
     }
-
-    // DAI is always a constant
-    rates.DAI = 1
-    // OGN is constant for now, might change later
-    rates.OGN = OGN_PER_USD
 
     // Update rates in our data structure.
     for (const key of Object.keys(this.data)) {
       const currencyCode = this.data[key].code
       if (!rates[currencyCode]) {
-        console.error(`CryptoCompare did not return xrate for ${currencyCode}.`)
+        console.error(
+          `@origin/bridge did not return xrate for ${currencyCode}.`
+        )
         continue
       }
       // Note: We inverse the rate since we query CryptoCompare for rates
