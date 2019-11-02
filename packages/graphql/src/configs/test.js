@@ -15,7 +15,7 @@ const config = {
   ipfsGateway: `http://${HOST}:8080`,
   ipfsRPC: `http://${HOST}:5002`,
   bridge: 'https://bridge.dev.originprotocol.com',
-  identityServer: 'https://bridge.dev.originprotocol.com',
+  identityServer: `http://${HOST}:5000`,
   graphql: `http://${HOST}:4007`,
   relayer: `http://${HOST}:5100`,
   automine: 500,
@@ -37,7 +37,7 @@ const config = {
   tokens: [],
 
   // Wire-on/off configs.
-  centralizedIdentityEnabled: false,
+  centralizedIdentityEnabled: localStorageHas('centralizedIdentityEnabled', 'true'),
   performanceMode: localStorageHas('performanceMode', 'true'),
   proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled', 'true'),
   relayerEnabled: localStorageHas('relayerEnabled', 'true')

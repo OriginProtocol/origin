@@ -232,6 +232,23 @@ const startBridge = () =>
     resolve(startServer)
   })
 
+const startMockBridge = () =>
+  new Promise(resolve => {
+    console.log('Starting mock bridge server...')
+    const cwd = path.resolve(__dirname, '../../infra/bridge')
+    const startServer = spawn(`node`, ['src/mockServer.js'], {
+      cwd,
+      stdio: 'inherit',
+      env: {
+        ...process.env
+      }
+    })
+    startServer.on('exit', () => {
+      console.log('Mock bridge stopped.')
+    })
+    resolve(startServer)
+  })
+
 const startListener = () =>
   new Promise(resolve => {
     console.log('Starting listener server...')
@@ -373,7 +390,24 @@ module.exports = async function start(opts = {}) {
     } else if (await portInUse(5000)) {
       console.log('Bridge server already started')
     } else {
+      if (!(await portInUse(6379))) {
+        // Without Redis, bridge server can be used for some actions such
+        // as reading/writing identity.
+        console.warn(
+          'Redis not started. Bridge server will not be fully functional'
+        )
+      }
       started.bridge = await startBridge()
+    }
+  }
+
+  if (opts.mockBridge) {
+    if (await portInUse(5000)) {
+      if (!opts.quiet) {
+        console.log('Mock bridge server already started')
+      }
+    } else {
+      started.mockBridge = await startMockBridge()
     }
   }
 

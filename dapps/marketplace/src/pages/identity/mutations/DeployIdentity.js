@@ -26,7 +26,10 @@ class DeployIdentity extends Component {
       <Mutation
         mutation={DeployIdentityMutation}
         onCompleted={({ deployIdentity }) => {
-          if (process.env.ENABLE_CENTRALIZED_IDENTITY === 'true') {
+          if (
+            window.localStorage.centralizedIdentityEnabled ||
+            process.env.ENABLE_CENTRALIZED_IDENTITY === 'true'
+          ) {
             this.setState({ mutationCompleted: true })
             if (this.props.onComplete) {
               this.props.onComplete()
@@ -131,7 +134,10 @@ class DeployIdentity extends Component {
       </div>
     )
 
-    if (process.env.ENABLE_CENTRALIZED_IDENTITY === 'true') {
+    if (
+      window.localStorage.centralizedIdentityEnabled ||
+      process.env.ENABLE_CENTRALIZED_IDENTITY === 'true'
+    ) {
       return content
     }
 

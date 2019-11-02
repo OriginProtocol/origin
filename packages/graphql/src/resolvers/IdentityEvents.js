@@ -354,8 +354,10 @@ export async function identity({ id }) {
   // Load the IPFS data for the user's identity.
   let data
   if (contracts.config.centralizedIdentityEnabled) {
+    debug('Reading identity from central server')
     data = await _getIdentityFromIdentityServer(owner)
   } else {
+    debug('Reading identity from blockchain')
     data = await _getIdentityFromContract(accounts, blockNumber)
   }
 
