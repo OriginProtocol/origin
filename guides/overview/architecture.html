@@ -10,20 +10,11 @@
 </head>
 <body>
     <div class="header">
-        <div class="logo"><a href="/">Origin Documentation</a> Docs</div>
-        <nav>
-                <a class="topNav current" href="/">Guides</a>
-                <a class="topNav " href="/reference/">API Reference</a>
-                <a class="topNav " href="/software/">Software</a>
-        </nav>
+        <div class="logo"><a href="/"><img src="/assets/origin-logo@2x.png" height="23" alt="Origin Protocol logo"></a></div>
     </div>
 
     <div class="layout">
         <div class="sidebar">
-            
-            
-
-
             
             
             <ul>
@@ -34,17 +25,14 @@
                                    
                 
                 <li class="normal"> 
-                    <a href="/guides/getting_started/getting-started.html">Getting Started</a> <!-- 3020-->
+                    <a href="/guides/getting_started/local-development.html">Local Development</a>
+                    
                     
                 </li>
                 
                 <li class="normal"> 
-                    <a href="/guides/getting_started/local-development.html">Local Development</a> <!-- 3010-->
+                    <a href="/guides/getting_started/contributing.html">Contributing</a>
                     
-                </li>
-                
-                <li class="normal"> 
-                    <a href="/guides/getting_started/contributing.html">Contributing</a> <!-- -->
                     
                 </li>
                 
@@ -58,7 +46,14 @@
                                    
                 
                 <li class="normal"> 
-                    <a href="/guides/overview/architecture.html">Architecture</a> <!-- 2010-->
+                    <a href="/">Introduction</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/overview/architecture.html">Architecture</a>
+                    
                     
                 </li>
                 
@@ -72,22 +67,131 @@
                                    
                 
                 <li class="normal"> 
-                    <a href="/guides/concepts/listing.html">Listing</a> <!-- 1100-->
+                    <a href="/guides/concepts/listing.html">Listing</a>
+                    
                     
                 </li>
                 
                 <li class="normal"> 
-                    <a href="/guides/concepts/offer.html">Offer</a> <!-- 1090-->
+                    <a href="/guides/concepts/offer.html">Offer</a>
+                    
                     
                 </li>
                 
                 <li class="normal"> 
-                    <a href="/guides/concepts/identity.html">Identity</a> <!-- 1-->
+                    <a href="/guides/concepts/messaging.html">Messaging</a>
+                    
                     
                 </li>
                 
                 <li class="normal"> 
-                    <a href="/guides/concepts/messaging.html">Messaging</a> <!-- 1-->
+                    <a href="/guides/concepts/identity.html">Identity</a>
+                    
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+                
+                    <li class="category"><strong>Software</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/software/">Overview</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/dapp.html">DApp</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/graphql-server.html">GraphQL Server</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/event-listener.html">Event Listener</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/discovery-server.html">Discovery Server</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/notification-server.html">Notification Server</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/relayer.html">Relayer</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/bridge-server.html">Bridge Server</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/messaging.html">Messaging Server</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/ipfs-proxy.html">IPFS Proxy</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/faucet.html">Testnet Faucet</a>
+                    
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+                                   
+                
+                <li class="normal"> 
+                    <a href="/feed.xml"></a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/assets/main.css"></a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/cloudbuild.yaml"></a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/404.html"></a>
+                    
                     
                 </li>
                 
@@ -111,11 +215,11 @@ optionally sign their listings cryptographically to verify their identity using
 publicly auditable proofs or trusted third parties. The IPFS gateway will publish the
 listing to the IPFS network making the listing instantly available via hundreds of
 distributed computers around the world to anyone who knows the content hash. The
-content hash of the listing is then sent to a smart contract which formally publishes
+content hash of the listing is then sent to a smart contract, which formally publishes
 the listing and stores pricing and availability information along with any specified
 booking rules and policies.</p>
 
-<p>Listings can easily be searched, browsed, and booked via a frontend DApp. Since we
+<p>Listings can easily be searched, browsed, and booked via a front-end DApp. Since we
 anticipate having too many listings to reasonably parse in a browser, the frontend
 DApp connects to an open-source bridge server of the user’s choosing, making it
 possible to search and filter the entire public corpus of listings. Once a listing has
@@ -125,7 +229,7 @@ book. The smart contract will verify that the booking is valid and handle the tr
 of tokens between the buyer and the seller, including the escrow of funds when
 applicable.</p>
 
-<p>We anticipate most sellers will prefer to list their prices in fiat currencies which
+<p>We anticipate that most sellers will prefer to list their prices in fiat currencies which
 often have less volatility than digital currencies. To solve this challenge, both the
 booking smart contract and the bridge servers will use a common set of oracles and a
 shared algorithm to determine the exchange rate to be used. This allows prices to be

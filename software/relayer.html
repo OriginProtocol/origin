@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Software Overview - Origin</title>
+  <title>Relayer - Origin</title>
 
   <link rel="stylesheet" href="/assets/css/highlight.css"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,500,700%7CPoppins:200,300,400,500,800%7COpen+Sans:400,600,800%7CRoboto+Mono:350"/>
@@ -202,25 +202,17 @@
             </ul>
         </div>
         <div class="content">
-            <h1 class="title">Software Overview</h1>
+            <h1 class="title">Relayer</h1>
 
-            <p><img src="assets/system-diagram.dot.png" style="height:300px" /></p>
+            <p>To drive adoption, we want to be able to pay for a user’s gas for certain transactions. This capability is not built into Ethereum, but can be done via contract magic. We create a proxy contract for a user and turn over ownership of that proxy to the user. The user can then sign a transaction to this proxy, which we can  submit and pay for. The proxy contract will authenticate the transaction that the user wants to run, then run it on their behalf.</p>
 
-<p>The Origin ecosystem builds from blockchain and IPFS data to provide the speed and features that enable real user growth and fast application development.</p>
+<p>The Origin Relayer validates these proxy transactions, and then submits them to the blockchain.</p>
 
-<h3 id="software-systems">Software Systems</h3>
+<p>Two blog posts contain information about the relayer architecture.</p>
 
 <ul>
-  <li><strong><a href="dapp">DApp</a></strong> - Example DAPP built on the Origin Protocol</li>
-  <li><strong><a href="graphql-server">GraphQL Server</a></strong> - Fast access to Origin data over GraphQL</li>
-  <li><a href="event-listener">Event Listener</a> - Stream Origin events and data to other systems</li>
-  <li><a href="discovery-server">Discovery Server</a> - Search Origin listings</li>
-  <li><a href="notification-server">Notification Server</a> - Live in browser notification of Origin events</li>
-  <li><a href="bridge-server">Bridge Server</a> - verifies identity attestations usings third parties</li>
-  <li><a href="relayer">Relayer</a> - Pays for gas on behalf of users</li>
-  <li><a href="messaging">Messaging</a> - Persistant storage of Origin messaging</li>
-  <li><a href="ipfs-proxy">IPFS Proxy</a> - Anti-abuse IPFS proxy</li>
-  <li><a href="faucet">Testnet Faucet</a> - Handing out testnet OGN tokens on testnet</li>
+  <li><a href="https://medium.com/originprotocol/driving-user-adoption-with-meta-transactions-3539aa6c5ae3">Meta transaction overview</a></li>
+  <li><a href="https://medium.com/originprotocol/supporting-volume-with-meta-transactions-7fcd0e8bf443">More about the architecture</a></li>
 </ul>
 
 

@@ -10,23 +10,89 @@
 </head>
 <body>
     <div class="header">
-        <div class="logo"><a href="/">Origin Documentation</a> Docs</div>
-        <nav>
-                <a class="topNav " href="/">Guides</a>
-                <a class="topNav " href="/reference/">API Reference</a>
-                <a class="topNav current" href="/software/">Software</a>
-        </nav>
+        <div class="logo"><a href="/"><img src="/assets/origin-logo@2x.png" height="23" alt="Origin Protocol logo"></a></div>
     </div>
 
     <div class="layout">
         <div class="sidebar">
             
             
-
-
-            
-            
             <ul>
+            
+                
+                    <li class="category"><strong>Getting started</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/guides/getting_started/local-development.html">Local Development</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/getting_started/contributing.html">Contributing</a>
+                    
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+                
+                    <li class="category"><strong>Overview</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/">Introduction</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/overview/architecture.html">Architecture</a>
+                    
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+                
+                    <li class="category"><strong>Concepts</strong>
+                        <ul>
+                                   
+                
+                <li class="normal"> 
+                    <a href="/guides/concepts/listing.html">Listing</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/concepts/offer.html">Offer</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/concepts/messaging.html">Messaging</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/guides/concepts/identity.html">Identity</a>
+                    
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
             
                 
                     <li class="category"><strong>Software</strong>
@@ -34,47 +100,98 @@
                                    
                 
                 <li class="normal"> 
-                    <a href="/software/">Overview</a> <!-- 200-->
+                    <a href="/software/">Overview</a>
+                    
                     
                 </li>
                 
                 <li class="normal"> 
-                    <a href="/software/dapp.html">DApp</a> <!-- 110-->
+                    <a href="/software/dapp.html">DApp</a>
+                    
                     
                 </li>
                 
                 <li class="normal"> 
-                    <a href="/software/discovery-server.html">Discovery Server</a> <!-- 100-->
+                    <a href="/software/graphql-server.html">GraphQL Server</a>
+                    
                     
                 </li>
                 
                 <li class="normal"> 
-                    <a href="/software/event-listener.html">Event Listener</a> <!-- 90-->
+                    <a href="/software/event-listener.html">Event Listener</a>
+                    
                     
                 </li>
                 
                 <li class="normal"> 
-                    <a href="/software/notification-server.html">Notification Server</a> <!-- 85-->
+                    <a href="/software/discovery-server.html">Discovery Server</a>
+                    
                     
                 </li>
                 
                 <li class="normal"> 
-                    <a href="/software/bridge-server.html">Bridge Server</a> <!-- 80-->
+                    <a href="/software/notification-server.html">Notification Server</a>
+                    
                     
                 </li>
                 
                 <li class="normal"> 
-                    <a href="/software/ipfs-proxy.html">IPFS Proxy</a> <!-- -->
+                    <a href="/software/relayer.html">Relayer</a>
+                    
                     
                 </li>
                 
                 <li class="normal"> 
-                    <a href="/software/messaging.html">Messaging</a> <!-- -->
+                    <a href="/software/bridge-server.html">Bridge Server</a>
+                    
                     
                 </li>
                 
                 <li class="normal"> 
-                    <a href="/software/faucet.html">Testnet Faucet</a> <!-- -->
+                    <a href="/software/messaging.html">Messaging Server</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/ipfs-proxy.html">IPFS Proxy</a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/software/faucet.html">Testnet Faucet</a>
+                    
+                    
+                </li>
+                
+                
+                    </ul></li>
+                 
+            
+                                   
+                
+                <li class="normal"> 
+                    <a href="/feed.xml"></a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/assets/main.css"></a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/cloudbuild.yaml"></a>
+                    
+                    
+                </li>
+                
+                <li class="normal"> 
+                    <a href="/404.html"></a>
+                    
                     
                 </li>
                 
@@ -87,96 +204,13 @@
         <div class="content">
             <h1 class="title">Event Listener</h1>
 
-            <h1 id="origin-event-listener">Origin Event Listener</h1>
+            <p>The Origin event listener follows the blockchain, finding origin events as they happen and passes those events on to whatever systems need this data. These events are annotated with the full information about the origin resources (listings/offers) related to the event.</p>
 
-<p>The Origin Event Listener follows the blockchain, looking for Origin events and passing those events on to whatever systems need that data. These events are annotated with full information about the Origin resources (listings/offers/) that fired off these events.</p>
+<p>The data from the listener can be used to build and keep up-to-date an offline index of all Origin Protocol data on the chain. The listener has built in support for updating an Elasticsearch and a Postgres database with the current state of listings, offers, and profiles.</p>
 
-<p>The data from the listener can be used to build and keep up-to-date an offline index of all Origin Protocol data on the chain.</p>
+<p>The listener does at-least-once notifications. Make sure your webhooks used with the listener are idempotent, and can handle receiving the same data multiple times!</p>
 
-<p>The listener will let you know one or more times about an event. Make sure your webhook endpoint is idempotent, and can handle receiving the same data multiple times!</p>
-
-<p>To allow the listener to be compatible with <a href="https://infura.io/">infura.io</a>, the listener does not use subscriptions, only API queries.</p>
-
-<h2 id="running-localy">Running Localy</h2>
-
-<p>Start the event-listener container.</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose up event-listener
-</code></pre></div></div>
-
-<p>You should see messages in the console indicating events are being indexed.</p>
-
-<h2 id="command-line-options">Command line options</h2>
-
-<p>Output:</p>
-
-<p><code class="highlighter-rouge">--verbose</code> Optional. Output json for all event information to stdout.</p>
-
-<p><code class="highlighter-rouge">--notifications-webhook=yoururl</code> Optional. Post json for each event to the URL.</p>
-
-<p><code class="highlighter-rouge">--discord-webhook=discordurl</code> Optional. Post a short Discord notification for each marketplace event.</p>
-
-<p><code class="highlighter-rouge">--elasticsearch</code> Optional. Record data into Elasticsearch.</p>
-
-<p><code class="highlighter-rouge">--db</code> Optional. Record data into Postgres.</p>
-
-<p>Config:
-<code class="highlighter-rouge">--blockEpoch=blockNumber</code> Optional. Block number corresponding to Origin’s plaform launch date.</p>
-
-<p><code class="highlighter-rouge">--defaultContinueBlock=blockNumber</code> Optional. Block number value to use if there is no continue data (ex. when listener is started for the first time).</p>
-
-<p><code class="highlighter-rouge">--continue-file=path</code> Optional. Will start following events at the block number defined in the file, and will keep this file updated as it listens to events. The continue file is JSON, in the format <code class="highlighter-rouge">{"lastLogBlock":222, "version":1}</code>. If no continue file is specified, the event listener stores the continue data in the Postgres DB.</p>
-
-<p><code class="highlighter-rouge">--trailBlocks=numBlocks</code> Optional. Number of confirmation blocks before data is indexed</p>
-
-<p><code class="highlighter-rouge">--web3Url=URL</code> Optional. Web3 provider. For example https://mainnet.infura.io/v2/<your key=""></your></p>
-
-<p><code class="highlighter-rouge">--ipfsUrl=URL</code> Optional. IPFS cluster to use for fetching the off-chain data.</p>
-
-<p><code class="highlighter-rouge">--arbitratorAccount=ethereumAddress</code> Optional. Address of the Origin arbitrator account.</p>
-
-<p><code class="highlighter-rouge">--affiliateAccount=ethereumAddress</code> Optional. Address of the Origin affiliate account.</p>
-
-<p><code class="highlighter-rouge">--attestationAccount=ethereumAddress</code> Optional. Address of the Origin attestation account.</p>
-
-<h2 id="env-variables">Env variables</h2>
-
-<p>The listener calls out origin.js to load and validate data from the blockchain. In order to properly configure an origin.js object, the listener uses the following environment variables:</p>
-<ul>
-  <li>AFFILIATE_ACCOUNT:  Ethereum address of the Origin marketplace affilicate account.</li>
-  <li>ARBITRATOR_ACCOUNT: Ethereum address of the Origin marketplace arbitrator account.</li>
-  <li>ATTESTATION_ACCOUNT: Ethereum address of the Origin attestation account.</li>
-  <li>BLOCK_EPOCH: Start block to use when scanning the blockchain for Origin events.</li>
-</ul>
-
-<p>Those values can be found via the DApp info page:</p>
-<ul>
-  <li>Mainnet: https://dapp.originprotocol.com/#/dapp-info</li>
-  <li>Rinkeby: https://dapp.staging.originprotocol.com/#/dapp-info</li>
-  <li>Local blockchain: http://localhost:3000/#/dapp-info</li>
-</ul>
-
-<h2 id="how-the-listener-works">How the listener works</h2>
-
-<p>The listener checks every few seconds for a new block number. If it sees one, it requests all Origin related events from the last block it saw an event on, to the new block.</p>
-
-<p>For each of those events, the listener decodes them, annotates them with some useful fields, then runs a rule based on the event/contract to load additional information about the event through origin.js. For example, a <code class="highlighter-rouge">ListingCreated</code> event on a marketplace contract will have the results of <code class="highlighter-rouge">origin.marketplace.get</code> added to it. The code that uses the event listener output doesn’t need to talk to the blockchain or IPFS at all.</p>
-
-<p>After being annotated with more information, the event is then output to the places set by the command line options.</p>
-
-<h2 id="error-handling">Error handling</h2>
-
-<ul>
-  <li>
-    <p>If there is an error loading information about an origin.js object, then the listener will skip that event and continue to the next. Because of the design of the Origin Protocol, there is zero guarantees that the associated IPFS data for a resource will be valid, or even there at all. Anyone can put whatever they want there.</p>
-  </li>
-  <li>
-    <p>When an error is raised when outputting to specific output handler (webhook, db, etc), the listener will attempt retries with increasing delays, up to two minutes. These retries will block all further event processing until the event goes through. If a maximum number of retries on one event has failed, then listener will quit, allowing it to be restarted from outside.</p>
-  </li>
-  <li>
-    <p>When an error is raised when getting event or block number information, the same retry strategy as for output errors is tried (increasing delays).</p>
-  </li>
-</ul>
+<p>More details in the <a href="https://github.com/OriginProtocol/origin/tree/master/infra/discovery/src/listener">Listener README</a>.</p>
 
 
         </div>    
