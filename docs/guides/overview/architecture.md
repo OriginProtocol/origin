@@ -16,11 +16,11 @@ optionally sign their listings cryptographically to verify their identity using
 publicly auditable proofs or trusted third parties. The IPFS gateway will publish the
 listing to the IPFS network making the listing instantly available via hundreds of
 distributed computers around the world to anyone who knows the content hash. The
-content hash of the listing is then sent to a smart contract which formally publishes
+content hash of the listing is then sent to a smart contract, which formally publishes
 the listing and stores pricing and availability information along with any specified
 booking rules and policies.
 
-Listings can easily be searched, browsed, and booked via a frontend DApp. Since we
+Listings can easily be searched, browsed, and booked via a front-end DApp. Since we
 anticipate having too many listings to reasonably parse in a browser, the frontend
 DApp connects to an open-source bridge server of the user’s choosing, making it
 possible to search and filter the entire public corpus of listings. Once a listing has
@@ -30,7 +30,7 @@ book. The smart contract will verify that the booking is valid and handle the tr
 of tokens between the buyer and the seller, including the escrow of funds when
 applicable.
 
-We anticipate most sellers will prefer to list their prices in fiat currencies which
+We anticipate that most sellers will prefer to list their prices in fiat currencies which
 often have less volatility than digital currencies. To solve this challenge, both the
 booking smart contract and the bridge servers will use a common set of oracles and a
 shared algorithm to determine the exchange rate to be used. This allows prices to be
