@@ -457,6 +457,7 @@ module.exports = async function start(opts = {}) {
   }
 
   const shutdownFn = async function shutdown() {
+    console.log('Shutting services down...')
     if (started.ganache) {
       await started.ganache.close()
     }
@@ -474,6 +475,9 @@ module.exports = async function start(opts = {}) {
     }
     if (started.bridge) {
       started.bridge.kill('SIGHUP')
+    }
+    if (started.mockBridge) {
+      started.mockBridge.kill('SIGHUP')
     }
     if (started.ipfs) {
       await started.ipfs.stop()
