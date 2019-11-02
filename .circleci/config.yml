@@ -37,7 +37,6 @@ jobs:
           root: .
           paths:
             - .
-
   Lint:
     <<: *defaults
     steps:
@@ -237,6 +236,18 @@ jobs:
           name: Run Messaging Server Tests
           command: cd infra/messaging && yarn migrate && yarn test
 
+  Builds:
+    docker:
+      - image: circleci/node:10-buster
+    working_directory: ~/origin
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker
+      - run:
+          name: Run build Tests
+          command: bash .circleci/docker_test_builds.sh
+
 workflows:
   version: 2
   test:
@@ -281,6 +292,10 @@ workflows:
       - Messaging:
           requires:
             - Setup
+      - Builds:
+          requires:
+            - Setup
+          context: origin
   schema:
     jobs:
       - Setup
