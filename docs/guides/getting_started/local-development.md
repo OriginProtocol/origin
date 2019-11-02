@@ -36,11 +36,13 @@ npm start
 
 4. You will then need to connect to your locally running blockchain in MetaMask. Follow these steps:
 
+-  ⚠️ ***Be 100% sure that you have your existing wallet backed up!***
+
 - Log out of MetaMask.
 
 - Click `Restore from seed phrase`
 
-- Enter the following seed phrase (Mnemonic):
+- Enter the following seed phrase (mnemonic):
 
 ```
 candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
@@ -146,7 +148,7 @@ If a container is failing with code 137 it could be that it has encountered Out 
 
 #### Port errors
 
-The environment requires a number of ports to be free on your machine (3000, 5000, 5002, 8080, 8081 and 8545). If one of these ports isn't available spinning up the development environment may fail.
+The environment requires a number of ports to be free on your machine (3000, 5000, 5002, 8080, 8081 and 8545). If one of these ports isn't available, spinning up the development environment may fail.
 
 #### Metamask errors
 
