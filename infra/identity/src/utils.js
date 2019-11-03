@@ -148,7 +148,8 @@ async function _countryLookup(addresses) {
 async function loadIdentityAddresses(ownerAddress) {
   // Attestation rows in the DB may have been written under the
   // proxy eth address. Load proxy addresses.
-  const addresses = [ownerAddress.toLowerCase()]
+  ownerAddress = ownerAddress.toLowerCase()
+  const addresses = [ownerAddress]
   const proxies = await db.Proxy.findAll({ where: { ownerAddress } })
   for (const proxy of proxies) {
     addresses.push(proxy.address)
