@@ -10,12 +10,23 @@ import {
 
 import { reset } from './utils/_actions'
 
-export function userProfileTests() {
+export function userProfileTests(centralizedIdentity = false) {
   describe('Edit user profile', function() {
     let page
     before(async function() {
       page = await getPage()
-      const { seller } = await reset({ page })
+      if (centralizedIdentity) {
+        // If centralized identity is being tested, set the local
+        // storage flag before running the tests.
+        // We can't rely on the higher level test setup to have set this
+        // flag since the DApp clears local storage during its initialization.
+        await page.evaluate(() => {
+          window.localStorage.centralizedIdentityEnabled = true
+        })
+      }
+      const buyerOpts = { centralizedIdentity }
+      const sellerOpts = { centralizedIdentity }
+      const { seller } = await reset({ page, buyerOpts, sellerOpts })
       await changeAccount(page, seller)
     })
 
