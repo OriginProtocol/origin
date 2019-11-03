@@ -1,6 +1,7 @@
 controller:
   service:
     loadBalancerIP: 35.203.166.86
+    clusterIP: 10.11.255.4
     externalTrafficPolicy: "Local"
   ingressClass: prod-ingress
   stats:
