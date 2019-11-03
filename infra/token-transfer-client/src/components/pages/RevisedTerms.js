@@ -6,6 +6,7 @@ import moment from 'moment'
 
 import { editUser } from '@/actions/user'
 import {
+  getUser,
   getError as getUserError,
   getIsEditing as getUserIsEditing
 } from '@/reducers/user'
@@ -215,7 +216,9 @@ class RevisedTerms extends Component {
           </p>
           <div className="form-group">
             <div className="terms-wrapper">
-              {this.renderCoinListAmendments()}
+              {this.props.user.investorType === 'CoinList'
+                ? this.renderCoinListAmendments()
+                : this.renderStrategicAmendments()}
             </div>
           </div>
           <p>
@@ -253,6 +256,7 @@ class RevisedTerms extends Component {
 
 const mapStateToProps = ({ user }) => {
   return {
+    user: getUser(user),
     userError: getUserError(user),
     userIsEditing: getUserIsEditing(user)
   }
