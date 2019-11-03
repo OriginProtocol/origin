@@ -47,7 +47,7 @@ const NewsHeadlinesCard = props => {
           <h2>News</h2>
         </div>
         <div className="col text-right">
-          <NavLink to="/news">Read all &gt;</NavLink>
+          <NavLink to="/news">Read All &gt;</NavLink>
         </div>
       </div>
       <Swiper {...swiperParams} getSwiper={setSwiper}>
@@ -60,7 +60,7 @@ const NewsHeadlinesCard = props => {
               <p>
                 {item.description.substr(0, 120) + '...'}{' '}
                 <a href={item.link} target="_blank" rel="noopener noreferrer">
-                  [Read more]
+                  [Read More]
                 </a>
               </p>
             </div>

@@ -5,10 +5,12 @@ FROM node:10 as build
 ARG GIT_COMMIT_HASH=dev
 ARG GIT_BRANCH=dev
 ARG ENVKEY
+ARG GENERATE_SOURCEMAP=false
 
 WORKDIR /app
 
 ENV GIT_COMMIT_HASH=$GIT_COMMIT_HASH GIT_BRANCH=$GIT_BRANCH NAMESPACE=$NAMESPACE
+ENV GENERATE_SOURCEMAP=$GENERATE_SOURCEMAP
 
 # Install envkey-source
 RUN curl -s -L -o envkey-source.tar.gz https://github.com/envkey/envkey-source/releases/download/v1.2.5/envkey-source_1.2.5_linux_amd64.tar.gz

@@ -19,6 +19,7 @@ export default async function srv() {
     relayer: true,
     graphqlServer: true,
     contractsFile: 'tests',
+    mockBridge: true,
     quiet: true,
     extras: async () => {
       const webpackProcess = spawn(
