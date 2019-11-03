@@ -1,6 +1,7 @@
 controller:
   service:
     loadBalancerIP: 35.197.88.39
+    clusterIP: 10.11.253.107
     externalTrafficPolicy: "Local"
   ingressClass: staging-ingress
   stats:

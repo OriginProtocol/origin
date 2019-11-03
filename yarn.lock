@@ -5536,10 +5536,10 @@ atob@^2.1.1:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-autocannon@4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/autocannon/-/autocannon-4.1.1.tgz#e5b24090f10fb5fb382f15ee539d5b8c4cb2f284"
-  integrity sha512-xzIcXB6uZ9K2MuX75giS5SQ1IJrOFSEE3gNvmYRc52FtVMkraeFtPBVzWEmYBAdoNtHJul7lvEaRHfHJ9ZP4lw==
+autocannon@4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/autocannon/-/autocannon-4.3.0.tgz#74dcba009ef0d467f689645980eb4f7aa6b7765c"
+  integrity sha512-JXv9PQstil7wl1V8KLhPORZtHHZCMGX3EmSx+GQVi1tYsATbO31uyAmvpfy0i9/kT7suIGe4HgAKhN6epvNU2Q==
   dependencies:
     chalk "^2.4.2"
     cli-table3 "^0.5.1"
@@ -5824,18 +5824,18 @@ babel-plugin-dynamic-import-node@2.3.0, babel-plugin-dynamic-import-node@^2.3.0:
   dependencies:
     object.assign "^4.1.0"
 
-babel-plugin-fbt-runtime@0.9.8:
-  version "0.9.8"
-  resolved "https://registry.yarnpkg.com/babel-plugin-fbt-runtime/-/babel-plugin-fbt-runtime-0.9.8.tgz#3c5e57aaade786bb0c396e3f9abfb80fd7683ce1"
-  integrity sha512-n5+UTKe3+H0YsRhWbcsrtdnu/OVb4+JX16ZCHRWlUA2ji2vZAD8rwl5Gr92MUdV9bcnhwMmJrU4TD37tmepg6A==
+babel-plugin-fbt-runtime@0.9.9:
+  version "0.9.9"
+  resolved "https://registry.yarnpkg.com/babel-plugin-fbt-runtime/-/babel-plugin-fbt-runtime-0.9.9.tgz#a82b7e667de5b5235a6e72325d714b1bd9d16c83"
+  integrity sha512-n6alSpTNutBHYDhvGyWuWo3wTNY65O2LBZGcLQ/h26u+l+ln9FDHNjS8OawGDvUPGO02tkp6sIq/xlwtx19oeQ==
   dependencies:
     "@babel/core" "^7.0.0"
     fbjs "^1.0.0"
 
-babel-plugin-fbt@0.10.3:
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/babel-plugin-fbt/-/babel-plugin-fbt-0.10.3.tgz#b256b5b6726ed63c52c51d2cb3cbc98bf35896c0"
-  integrity sha512-VEeuVgBf58hetF7VjJI8ILAE4aMckebLJpLY7gQLM+QDSRaT4Kxiy/ogmvXjBKBR2436GI/PMjebhM9LgN4RWw==
+babel-plugin-fbt@0.10.4:
+  version "0.10.4"
+  resolved "https://registry.yarnpkg.com/babel-plugin-fbt/-/babel-plugin-fbt-0.10.4.tgz#aed9294cf24854fa80c3d048d9de5e19e69d44a6"
+  integrity sha512-iyZj1vu5TwD19vgagRhRtHwifcj5am1JaawNYP54oQReA7HEk1MXUbq7Y0ziNLKhAkcRXETwbZGHktAAEliaiQ==
   dependencies:
     "@babel/core" "^7.0.0"
     "@babel/generator" "^7.0.0"
@@ -7575,10 +7575,10 @@ charenc@~0.0.1:
   resolved "https://registry.yarnpkg.com/charenc/-/charenc-0.0.2.tgz#c0a1d2f3a7092e03774bfa83f14c0fc5790a8667"
   integrity sha1-wKHS86cJLgN3S/qD8UwPxXkKhmc=
 
-chart.js@2.9.1:
-  version "2.9.1"
-  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-2.9.1.tgz#e98893a810d40d1c0a016e6872a13fa5faedcdf8"
-  integrity sha512-DA5dFt0Bz79oz56ezmrwmZqj0hXGs+i9VbCFOcHqbwrHIGv7RI4YqninJKNIAC0qa29WBI9qYTN7LzULlOeunA==
+chart.js@2.9.2:
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-2.9.2.tgz#5f7397f2fc33ca406836dbaed3cc39943bbb9f80"
+  integrity sha512-AagP9h27gU7hhx8F64BOFpNZGV0R1Pz1nhsi0M1+KLhtniX6ElqLl0z0obKSiuGMl9tcRe6ZhruCGCJWmH6snQ==
   dependencies:
     chartjs-color "^2.1.0"
     moment "^2.10.2"
@@ -8113,10 +8113,10 @@ commander@^2.11.0, commander@^2.15.0, commander@^2.19.0, commander@^2.20.0, comm
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.0.tgz#d58bb2b5c1ee8f87b0d340027e9e94e222c5a422"
   integrity sha512-7j2y+40w61zy6YC2iRNpUe/NwhNyoXrYpHMrSunaMG64nRnaf96zO/KMQR4OyN/UnE5KLyEBnKHd4aG3rskjpQ==
 
-commander@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-3.0.0.tgz#0641ea00838c7a964627f04cddc336a2deddd60a"
-  integrity sha512-pl3QrGOBa9RZaslQiqnnKX2J068wcQw7j9AIaBQ9/JEp5RY6je4jKTImg0Bd+rpoONSe7GUFSgkxLeo17m3Pow==
+commander@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-4.0.0.tgz#e782b6afe6a0f1b1408be59429919e1305160e3f"
+  integrity sha512-SEa2abMBTZuEjLVYpNrAFoRgxPwG4rXP3+SGY6CM/HZGeDzIA7Pzp+7H3AHDukKEpyy2SoSGGPShKqqfH9T9AQ==
 
 commander@~2.19.0:
   version "2.19.0"
