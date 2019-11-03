@@ -22,7 +22,7 @@ class RevisedTerms extends Component {
       revisedScheduleAgreedAt: moment()
     })
     if (result.type === 'EDIT_USER_SUCCESS') {
-      this.setState({ redirectTo: '/terms' })
+      this.setState({ redirectTo: '/phone' })
     }
   }
 
