@@ -34,10 +34,10 @@ if (isStaging) {
 }
 
 let devtool = 'cheap-module-source-map'
-if (isProduction) {
-  devtool = 'source-map'
-} else if (isTest) {
+if (isTest || process.env.GENERATE_SOURCEMAP === 'false') {
   devtool = false
+} else if (isProduction) {
+  devtool = 'source-map'
 }
 
 const config = {
