@@ -12,6 +12,7 @@ import {
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
 import EmailIcon from '@/assets/email-icon.svg'
+import { lockupBonusRate } from '@/constants'
 
 class BonusModal extends Component {
   constructor(props) {
@@ -111,8 +112,6 @@ class BonusModal extends Component {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
-    const bonusRate = 10.0
-
     return (
       <>
         <h1 className="mb-2">Earn Bonus Tokens</h1>
@@ -149,13 +148,13 @@ class BonusModal extends Component {
                 <div className="col">
                   <strong>Bonus tokens earned</strong>{' '}
                   <span style={{ fontSize: '14px' }}>
-                    ({bonusRate}% of lockup)
+                    ({lockupBonusRate}% of lockup)
                   </span>
                 </div>
                 <div className="col-4 text-right">
                   <strong>
                     {Math.floor(
-                      this.state.amount * (bonusRate / 100)
+                      this.state.amount * (lockupBonusRate / 100)
                     ).toLocaleString()}
                   </strong>{' '}
                   <span className="ogn">OGN</span>
