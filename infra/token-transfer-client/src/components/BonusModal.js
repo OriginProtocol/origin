@@ -153,9 +153,9 @@ class BonusModal extends Component {
                 </div>
                 <div className="col-4 text-right">
                   <strong>
-                    {Math.floor(
-                      this.state.amount * (lockupBonusRate / 100)
-                    ).toLocaleString()}
+                    {BigNumber(this.state.amount * (lockupBonusRate / 100))
+                      .toFixed(0, 1)
+                      .toLocaleString()}
                   </strong>{' '}
                   <span className="ogn">OGN</span>
                 </div>

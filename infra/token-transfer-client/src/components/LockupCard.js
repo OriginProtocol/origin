@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import BigNumber from 'bignumber.js'
 
 import BorderedCard from './BorderedCard'
 import LockupGraph from './LockupGraph'
@@ -44,9 +45,9 @@ const LockupCard = ({ lockup }) => {
           Bonus tokens
           <br />
           <strong>
-            {Math.floor(
-              Number((lockup.amount * lockup.bonusRate) / 100)
-            ).toLocaleString()}
+            {BigNumber((lockup.amount * lockup.bonusRate) / 100)
+              .toFixed(0, 1)
+              .toLocaleString()}
           </strong>{' '}
           <span className="ogn">OGN</span>
         </div>
