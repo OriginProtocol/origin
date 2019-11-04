@@ -34,10 +34,10 @@ if (isStaging) {
 }
 
 let devtool = 'cheap-module-source-map'
-if (isProduction) {
-  devtool = 'source-map'
-} else if (isTest) {
+if (isTest || process.env.GENERATE_SOURCEMAP === 'false') {
   devtool = false
+} else if (isProduction) {
+  devtool = 'source-map'
 }
 
 const config = {
@@ -135,6 +135,7 @@ const config = {
       BUILD_TIMESTAMP: +new Date(),
       DOCKER: false,
       ENABLE_WECHAT_ATTESTATION: false,
+      ENABLE_CENTRALIZED_IDENTITY: false,
       ETH_NETWORK_ID: process.env.ETH_NETWORK_ID || null,
       FACEBOOK_CLIENT_ID: null,
       GAS_PRICE_KEY: null,

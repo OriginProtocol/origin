@@ -75,7 +75,6 @@ router.post(
           await getFingerprintData(req)
         )
       })
-      // TODO: update to be more useful, e.g. users email
       logger.info(
         `User ${req.user.email} transferred ${amount} OGN to ${address}`
       )
@@ -114,11 +113,15 @@ router.post(
     try {
       decodedToken = jwt.verify(req.body.token, encryptionSecret)
     } catch (error) {
-      return res.status(401).send('Could not decode email confirmation token')
+      logger.error(error)
+      if (error.name === 'TokenExpiredError') {
+        return res.status(400).send('Token has expired')
+      }
+      return res.status(400).send('Could not decode email confirmation token')
     }
 
     if (decodedToken.transferId !== Number(req.params.id)) {
-      return res.status(401).end('Invalid transfer id')
+      return res.status(400).end('Invalid transfer id')
     }
 
     const transfer = await Transfer.findOne({

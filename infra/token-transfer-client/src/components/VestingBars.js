@@ -30,7 +30,7 @@ const VestingBars = props => {
   const totalDuration = lastEndDate - firstStartDate
 
   const generateMarkers = () => {
-    const maxMarkers = 5
+    const maxMarkers = 4
     if (grants.length > 1 || props.user.employee) {
       return generateMonthMarkers(maxMarkers)
     } else {
@@ -90,7 +90,7 @@ const VestingBars = props => {
 
   return (
     <div className="mb-5">
-      <h2>Vesting Progress</h2>
+      <h2 style={{ marginBottom: '1.5rem' }}>Vesting Progress</h2>
       <div id="vestingBars" style={{ position: 'relative' }}>
         {grants.map(grant => {
           // Calculate the percentage of the grant that is complete with a
@@ -117,7 +117,7 @@ const VestingBars = props => {
               <div
                 className="progress-bar bg-success"
                 role="progressbar"
-                style={{ width: `${complete}%` }}
+                style={{ width: `${complete}%`, zIndex: 10 }}
               />
               {displayPopover[grant.id] && (
                 <div
@@ -152,7 +152,8 @@ const VestingBars = props => {
             position: 'absolute',
             left: `${marker.left}%`,
             top: 0,
-            height: '150%',
+            height: '3rem',
+            marginTop: '-1rem',
             pointerEvents: 'none' // Stop absolute positioning from stealing clicks
           }
           return (
@@ -171,16 +172,16 @@ const VestingBars = props => {
           )
         })}
       </div>
-      <div style={{ display: 'flex', marginTop: '4rem' }}>
-        <div>
-          <div className="status-circle status-circle-success ml-3 mr-2"></div>
+      <div className="row" style={{ marginTop: '3rem' }}>
+        <div className="col">
+          <div className="status-circle status-circle-success mr-2"></div>
           {Number(props.vested).toLocaleString()} OGN{' '}
-          <small className="ml-2">vested</small>
+          <span className=" text-muted">vested</span>
         </div>
-        <div>
+        <div className="col">
           <div className="status-circle ml-3 mr-2"></div>
           {Number(props.unvested).toLocaleString()} OGN{' '}
-          <small className="ml-2">unvested</small>
+          <span className=" text-muted">unvested</span>
         </div>
       </div>
     </div>

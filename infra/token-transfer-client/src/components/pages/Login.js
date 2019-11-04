@@ -51,7 +51,7 @@ class Login extends Component {
       <>
         <div className="action-card">
           <h1>Sign In</h1>
-          <p>We will send you a magic link to your email to confirm access</p>
+          <p>We will send you a magic link to your email to confirm access.</p>
           <form>
             <div className="form-group">
               <label htmlFor="email">Email Address</label>

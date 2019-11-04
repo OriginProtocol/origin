@@ -44,6 +44,7 @@ module.exports = `
     proxyAccountsEnabled: Boolean
     messaging: MessagingConfigInput
     screenConsole: String
+    centralizedIdentityEnabled: Boolean
   }
 
   input MessagingConfigInput {
@@ -70,6 +71,7 @@ module.exports = `
     performanceMode: Boolean
     marketplaceVersion: String
     messaging: MessagingConfig
+    centralizedIdentityEnabled: Boolean
   }
 
   type MessagingConfig {

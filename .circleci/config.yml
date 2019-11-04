@@ -52,7 +52,6 @@ jobs:
           root: .
           paths:
             - .
-
   Lint:
     <<: *defaults
     steps:
@@ -62,7 +61,7 @@ jobs:
 
   Marketplace:
     <<: *defaults
-    parallelism: 4
+    parallelism: 5
     steps:
       - attach_workspace:
           at: .
@@ -73,6 +72,7 @@ jobs:
             if [[ $CIRCLE_NODE_INDEX == "1" ]]; then cd dapps/marketplace && NODE_ENV=test ./node_modules/.bin/mocha -r @babel/register test --bail -g "^Marketplace Dapp with proxies\." ; fi
             if [[ $CIRCLE_NODE_INDEX == "2" ]]; then cd dapps/marketplace && NODE_ENV=test ./node_modules/.bin/mocha -r @babel/register test --bail -g "^Marketplace Dapp with proxies, performance mode, relayer\." ; fi
             if [[ $CIRCLE_NODE_INDEX == "3" ]]; then cd dapps/marketplace && NODE_ENV=test ./node_modules/.bin/mocha -r @babel/register test --bail -g "^Marketplace Dapp with proxies, performance mode, broken relayer\." ; fi
+            if [[ $CIRCLE_NODE_INDEX == "4" ]]; then cd dapps/marketplace && NODE_ENV=test ./node_modules/.bin/mocha -r @babel/register test --bail -g "^Centralized Identity\." ; fi
 
   GraphQL:
     <<: *defaults
@@ -251,6 +251,18 @@ jobs:
           name: Run Origin Auth Server Tests
           command: cd packages/auth-utils && yarn migrate && yarn test
 
+  Builds:
+    docker:
+      - image: circleci/node:10-buster
+    working_directory: ~/origin
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker
+      - run:
+          name: Run build Tests
+          command: bash .circleci/docker_test_builds.sh
+
 workflows:
   version: 2
   test:
@@ -301,6 +313,10 @@ workflows:
       - AuthServer:
           requires:
             - Setup
+      - Builds:
+          requires:
+            - Setup
+          context: origin
   schema:
     jobs:
       - Setup
