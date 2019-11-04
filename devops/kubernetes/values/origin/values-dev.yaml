@@ -74,5 +74,5 @@ t3ServerImage: origin-token-transfer-server
 t3ServerImageTag: '4709656'
 
 # origin-auth
-relayerImage: origin-auth
-relayerImageTag: latest
+authImage: origin-auth
+authImageTag: latest
