@@ -96,7 +96,21 @@ class Terms extends Component {
               onClick={e => this.setState({ accepted: e.target.checked })}
             />
             <label className="form-check-label mt-0" htmlFor="acceptCheck">
-              I have read and agree to the terms and conditions
+              I have read and agree to the above terms and conditions and the <a
+                href="https://www.originprotocol.com/en/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                privacy policy
+              </a>{' '}
+              and{' '}
+              <a
+                href="https://www.originprotocol.com/en/tos"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                terms of service
+              </a> of Origin Protocol Inc.
             </label>
           </div>
           <button
