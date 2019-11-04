@@ -4,8 +4,30 @@ import BorderedCard from '@/components/BorderedCard'
 import VestingBars from '@/components/VestingBars'
 import VestingHistory from '@/components/VestingHistory'
 import VestingSchedule from '@/assets/vesting-schedule@3x.png'
+import Calendar from '-!react-svg-loader!@/assets/cal.svg'
 
 const VestingCard = props => {
+  const isRejectedCoinList =
+    props.user &&
+    props.isLocked &&
+    props.user.investorType === 'CoinList' &&
+    props.user.revisedScheduleRejected
+
+  if (isRejectedCoinList) {
+    return (
+      <BorderedCard shadowed={true}>
+        <div className="text-center" style={{ padding: '5.7rem 0' }}>
+          <Calendar />
+          <h1 className="mt-3 mb-1">Vesting schedule in progress</h1>
+          <p>
+            Details of the schedule are still being worked out, please check
+            back later.
+          </p>
+        </div>
+      </BorderedCard>
+    )
+  }
+
   return (
     <BorderedCard shadowed={true}>
       <VestingBars
