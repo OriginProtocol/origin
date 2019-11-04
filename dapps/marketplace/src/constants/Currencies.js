@@ -38,7 +38,6 @@ export const CurrenciesByCountryCode = {
   SG: CurrenciesByCode['SGD']
 }
 
-
 export const getCurrencyForLocale = locale => {
   const countryCode = locale.split('_')[1]
   if (CurrenciesByCountryCode[countryCode]) {
