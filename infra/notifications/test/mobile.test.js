@@ -5,7 +5,7 @@ const request = require('supertest')
 const app = require('../src/app')
 const MobileRegistry = require('../src/models/index').MobileRegistry
 
-const generateToken = require('@origin/auth-server/src/utils/generate-token')
+const generateToken = require('@origin/auth-utils/src/utils')
 
 const Eth = require('web3-eth')
 
