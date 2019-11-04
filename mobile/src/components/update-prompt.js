@@ -54,7 +54,7 @@ class UpdatePrompt extends React.Component {
   openStore() {
     const APP_STORE_LINK =
       'itms-apps://itunes.apple.com/us/app/apple-store/id1446091928?mt=8'
-    const PLAY_STORE_LINK = 'market://details?id=com.origincatcher'
+    const PLAY_STORE_LINK = 'market://details?id=com.originmarketplace'
     const storeLink = Platform.OS === 'ios' ? APP_STORE_LINK : PLAY_STORE_LINK
     Linking.canOpenURL(storeLink).then(supported => {
       if (supported) {
