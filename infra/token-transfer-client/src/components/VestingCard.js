@@ -7,6 +7,8 @@ import VestingSchedule from '@/assets/vesting-schedule@3x.png'
 import Calendar from '-!react-svg-loader!@/assets/cal.svg'
 
 const VestingCard = props => {
+  // Special case during lockup period for CoinList investors while the
+  // token vesting schedule is finalised
   const isRejectedCoinList =
     props.user &&
     props.isLocked &&
