@@ -32,6 +32,6 @@ COPY ./infra/identity/package.json ./infra/identity/
 COPY ./infra/bridge/package.json ./infra/bridge/
 COPY ./infra/growth-event/package.json ./infra/growth-event/
 COPY ./infra/auth-server/package.json ./infra/auth-server/
-COPY ./infra/auth-utils/package.json ./infra/auth-utils/
+COPY ./packages/auth-utils/package.json ./packages/auth-utils/
 
 RUN yarn install

@@ -1,11 +1,3 @@
 # `@origin/auth-server`
 
-> TODO: description
-
-## Usage
-
-```
-const authServer = require('@origin/auth-server');
-
-// TODO: DEMONSTRATE API
-```
+Origin Auth server. Provides API endpoints to generate and revoke auth tokens.

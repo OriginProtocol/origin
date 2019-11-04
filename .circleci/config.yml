@@ -184,7 +184,7 @@ jobs:
       - run: cd infra/growth && yarn migrate
       - run: cd infra/growth-event && yarn migrate
       - run: cd infra/identity && yarn migrate
-      - run: cd infra/auth-server && yarn migrate
+      - run: cd packages/auth-utils && yarn migrate
       - run:
           name: Run Notification Tests
           command: cd infra/notifications && yarn migrate && yarn test
@@ -240,7 +240,7 @@ jobs:
           at: .
       - run:
           name: Run Auth Utils Tests
-          command: cd infra/auth-utils && yarn migrate && yarn test
+          command: cd packages/auth-utils && yarn migrate && yarn test
 
   AuthServer:
     <<: *dbandredis
@@ -249,8 +249,7 @@ jobs:
           at: .
       - run:
           name: Run Origin Auth Server Tests
-          command: cd infra/auth-utils && yarn migrate && yarn test
-          command: cd infra/auth-server && yarn migrate && yarn test
+          command: cd packages/auth-utils && yarn migrate && yarn test
 
 workflows:
   version: 2
@@ -294,6 +293,9 @@ workflows:
           requires:
             - Setup
       - Messaging:
+          requires:
+            - Setup
+      - AuthUtils:
           requires:
             - Setup
       - AuthServer:

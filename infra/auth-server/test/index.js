@@ -4,25 +4,15 @@ const chai = require('chai')
 const expect = chai.expect
 const request = require('supertest')
 
-const app = require('../src/app')
+const crypto = require('crypto')
 
-const {
-  AuthTokenGenerationLog,
-  AuthTokenBlacklist
-} = require('../src/models/index')
+const { generateToken, verifyToken } = require('@origin/auth-utils/src/utils')
+
+const app = require('../src/app')
 
 const Eth = require('web3-eth')
 
 const stringify = require('json-stable-stringify')
-
-const jwt = require('jsonwebtoken')
-
-const express = require('express')
-
-const redis = require('redis')
-const client = redis.createClient()
-
-const authMiddleware = require('../src/middlewares/auth')
 
 const Web3Eth = new Eth()
 
@@ -48,46 +38,26 @@ const signAuthMessage = (timestamp = Date.now()) => {
   }
 }
 
-let lastUsedApp
-const getRouterWithAuthMiddleware = () => {
-  if (lastUsedApp) {
-    return lastUsedApp
-  }
-
-  const app = express()
-
-  app.use(express.json())
-
-  app.get('/', authMiddleware, (req, res) => {
-    res.status(200).send({
-      success: true,
-      authData: req.__originAuth
-    })
-  })
-
-  app.listen(5299)
-
-  lastUsedApp = app
-
-  return app
-}
-
-const sleep = timeInMs => new Promise(resolve => setTimeout(resolve, timeInMs))
-
-describe('auth server', () => {
+describe('token generation', () => {
   beforeEach(async () => {
-    process.env.JWT_EXPIRE_IN = '10s'
-    process.env.JWT_SECRET = 'origin'
+    const keyPair = crypto.generateKeyPairSync('rsa', {
+      modulusLength: 4096,
+      publicKeyEncoding: {
+        type: 'spki',
+        format: 'pem'
+      },
+      privateKeyEncoding: {
+        type: 'pkcs8',
+        format: 'pem',
+        cipher: 'aes-256-cbc',
+        passphrase: ''
+      }
+    })
 
-    await AuthTokenBlacklist.destroy({
-      where: {},
-      truncate: true
-    })
-    await AuthTokenGenerationLog.destroy({
-      where: {},
-      truncate: true
-    })
-    await new Promise(resolve => client.flushall(resolve))
+    process.env.AUTH_PRIV_KEY = keyPair.privateKey
+    process.env.AUTH_PUB_KEY = keyPair.publicKey
+    process.env.TOKEN_EXPIRES_IN = 30
+    process.env.SIGN_EXPIRES_IN = 15
   })
 
   it('should generate an auth token', async () => {
@@ -103,147 +73,177 @@ describe('auth server', () => {
       .expect(201)
 
     expect(response.body.success).to.be.true
-    const data = jwt.verify(response.body.authToken, 'origin')
+    const data = await verifyToken(response.body.authToken)
 
     expect(data.address).to.equal(USER_ADDRESS)
-    expect(data.signature).to.equal(signature)
-    expect(data.payload).to.deep.equal(payload)
-    expect(data.exp - data.iat).to.equal(10)
+    expect(data.expiresAt - data.issuedAt).to.equal(30 * 24 * 60 * 60 * 1000)
+  })
+
+  it('should fail if signature is invalid', async () => {
+    const { signature } = signAuthMessage()
+    const fakePayload = {
+      message: 'fake',
+      timestamp: Date.now()
+    }
+
+    const response = await request(app)
+      .post(`/api/tokens`)
+      .send({
+        signature,
+        payload: fakePayload,
+        address: USER_ADDRESS
+      })
+      .expect(400)
+
+    expect(response.body.success).to.be.false
+    expect(response.body.errors[0]).to.equal('Failed to verify signature')
+  })
+
+  it('should fail if signer is different', async () => {
+    const { signature, payload } = signAuthMessage()
+
+    const response = await request(app)
+      .post(`/api/tokens`)
+      .send({
+        signature,
+        payload,
+        address: '0xaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbb'
+      })
+      .expect(400)
+
+    expect(response.body.success).to.be.false
+    expect(response.body.errors[0]).to.equal('Failed to verify signature')
+  })
+
+  it('should fail if sign is older', async () => {
+    const { signature, payload } = signAuthMessage(
+      Date.now() - 30 * 24 * 60 * 60 * 1000
+    )
+
+    const response = await request(app)
+      .post(`/api/tokens`)
+      .send({
+        signature,
+        payload,
+        address: USER_ADDRESS
+      })
+      .expect(400)
+
+    expect(response.body.success).to.be.false
+    expect(response.body.errors[0]).to.equal('Failed to verify signature')
+  })
+
+  it('should fail if sign is in future', async () => {
+    const { signature, payload } = signAuthMessage(
+      Date.now() + 30 * 24 * 60 * 60 * 1000
+    )
+
+    const response = await request(app)
+      .post(`/api/tokens`)
+      .send({
+        signature,
+        payload,
+        address: USER_ADDRESS
+      })
+      .expect(400)
+
+    expect(response.body.success).to.be.false
+    expect(response.body.errors[0]).to.equal('Failed to verify signature')
+  })
+})
+
+describe('token revoking', () => {
+  beforeEach(async () => {
+    const keyPair = crypto.generateKeyPairSync('rsa', {
+      modulusLength: 4096,
+      publicKeyEncoding: {
+        type: 'spki',
+        format: 'pem'
+      },
+      privateKeyEncoding: {
+        type: 'pkcs8',
+        format: 'pem',
+        cipher: 'aes-256-cbc',
+        passphrase: ''
+      }
+    })
+
+    process.env.AUTH_PRIV_KEY = keyPair.privateKey
+    process.env.AUTH_PUB_KEY = keyPair.publicKey
+    process.env.TOKEN_EXPIRES_IN = 30
+    process.env.SIGN_EXPIRES_IN = 15
   })
 
   it('should allow token to be revoked', async () => {
-    const token = jwt.sign(
-      {
-        signature: 'signature',
-        payload: 'some payload',
-        address: USER_ADDRESS
-      },
-      'origin'
-    )
+    const { authToken } = generateToken({
+      address: USER_ADDRESS
+    })
 
     const response = await request(app)
       .post(`/api/tokens/revoke`)
       .set({
-        authorization: 'Bearer ' + token
+        authorization: 'Bearer ' + authToken
       })
       .send({
-        token
+        token: authToken
       })
       .expect(200)
 
     expect(response.body.success).to.be.true
-  })
-})
 
-describe('auth server middleware', () => {
-  beforeEach(async () => {
-    process.env.JWT_EXPIRE_IN = '1s'
-    process.env.JWT_SECRET = 'origin'
-
-    await AuthTokenBlacklist.destroy({
-      where: {},
-      truncate: true
-    })
-    await AuthTokenGenerationLog.destroy({
-      where: {},
-      truncate: true
-    })
-    await new Promise(resolve => client.flushall(resolve))
-  })
-
-  it('should populate auth data if token is valid', async () => {
-    const token = jwt.sign(
-      {
-        signature: 'signature',
-        payload: 'some payload',
-        address: USER_ADDRESS
-      },
-      'origin'
-    )
-
-    const response = await request(getRouterWithAuthMiddleware())
-      .get('/')
+    const response2 = await request(app)
+      .get(`/api/tokens`)
       .set({
-        authorization: 'Bearer ' + token
+        authorization: 'Bearer ' + authToken
       })
-      .expect(200)
+      .expect(401)
 
-    expect(response.body.success).to.be.true
-    expect(response.body.authData).to.deep.equal({
-      signature: 'signature',
-      payload: 'some payload',
+    expect(response2.body.errors[0]).to.equal('Token has been revoked')
+  })
+
+  it('should fail if revoking from different address', async () => {
+    const { authToken: tokenToRevoke } = generateToken({
       address: USER_ADDRESS
     })
+
+    const { authToken } = generateToken({
+      address: '0xaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbb'
+    })
+
+    const response = await request(app)
+      .post(`/api/tokens/revoke`)
+      .set({
+        authorization: 'Bearer ' + authToken
+      })
+      .send({
+        token: tokenToRevoke
+      })
+      .expect(403)
+
+    expect(response.body.success).to.be.false
+
+    expect(response.body.errors[0]).to.equal('Unauthorized to revoke token')
   })
 
-  it('should fail if no token is present', async () => {
-    const response = await request(getRouterWithAuthMiddleware())
-      .get('/')
-      .expect(401)
+  it('should fail if revoking invalid token', async () => {
+    const tokenToRevoke = 'invalidToken'
 
-    expect(response.body).to.deep.equal({
-      errors: ['Authorization required']
+    const { authToken } = generateToken({
+      address: '0xaaaaabbbbbaaaaabbbbbaaaaabbbbbaaaaabbbbb'
     })
-  })
 
-  it('should fail if no token type is invalid', async () => {
-    const response = await request(getRouterWithAuthMiddleware())
-      .get('/')
+    const response = await request(app)
+      .post(`/api/tokens/revoke`)
       .set({
-        authorization: 'Invalid token'
+        authorization: 'Bearer ' + authToken
       })
-      .expect(401)
-
-    expect(response.body).to.deep.equal({
-      errors: [`Expected 'Bearer' token but got 'Invalid'`]
-    })
-  })
-
-  it('should fail if token is invalid', async () => {
-    const response = await request(getRouterWithAuthMiddleware())
-      .get('/')
-      .set({
-        authorization: 'Bearer invalid-token'
+      .send({
+        token: tokenToRevoke
       })
-      .expect(401)
+      .expect(400)
 
-    expect(response.body).to.deep.equal({
-      errors: ['Invalid token']
-    })
-  })
+    expect(response.body.success).to.be.false
 
-  it('should fail if token has expired', async () => {
-    const token = jwt.sign(
-      {
-        signature: 'signature',
-        payload: 'some payload',
-        address: USER_ADDRESS
-      },
-      'origin'
-    )
-
-    const router = getRouterWithAuthMiddleware()
-
-    // Confirm token is valid
-    await request(router)
-      .get('/')
-      .set({
-        authorization: 'Bearer ' + token
-      })
-      .expect(200)
-
-    // Wait until token expires
-    await sleep(1000)
-
-    const response = await request(router)
-      .get('/')
-      .set({
-        authorization: 'Bearer ' + token
-      })
-      .expect(401)
-
-    expect(response.body).to.deep.equal({
-      errors: ['Invalid token']
-    })
+    expect(response.body.errors[0]).to.equal('Invalid token')
   })
 })
