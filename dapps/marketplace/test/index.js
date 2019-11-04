@@ -166,3 +166,22 @@ describe('Marketplace Dapp with proxies, performance mode, broken relayer.', fun
   userProfileTests()
   onboardingTests()
 })
+
+describe('Centralized Identity.', function() {
+  this.timeout(15000)
+  this.retries(2) // This can help with flaky tests
+  before(async function() {
+    const page = await getPage()
+    await page.evaluate(() => {
+      window.localStorage.clear()
+      window.localStorage.bypassOnboarding = true
+      window.localStorage.centralizedIdentityEnabled = true
+      window.localStorage.proxyAccountsEnabled = true
+      window.localStorage.debug = 'origin:*'
+      window.transactionPoll = 100
+    })
+    await page.goto('http://localhost:8083')
+  })
+
+  userProfileTests(true)
+})
