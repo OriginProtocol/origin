@@ -76,7 +76,8 @@ class AppWrapper extends Component {
 
   onLocale = async newLocale => {
     const locale = await setLocale(newLocale)
-    this.setState({ locale })
+    const currency = store.get('currency', getCurrencyForLocale(locale)[0])
+    this.setState({ locale, currency })
     window.scrollTo(0, 0)
   }
 
