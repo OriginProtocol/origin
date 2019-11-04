@@ -59,8 +59,14 @@ describe('Auth Client', () => {
   })
 
   it('should generate a token', async () => {
+    const { signature, payload } = signAuthMessage()
+
     nock(AUTH_SERVER_HOST)
-      .post('/api/tokens')
+      .post('/api/tokens', {
+        payload,
+        signature,
+        address: USER_ADDRESS
+      })
       .reply(201, {
         success: true,
         authToken: 'Hello Token'
@@ -72,16 +78,20 @@ describe('Auth Client', () => {
       disablePersistence: true
     })
 
-    const { signature, payload } = signAuthMessage()
-
     const { authToken } = await client.getTokenWithSignature(signature, payload)
 
     expect(authToken).to.equal('Hello Token')
   })
 
   it('should throw if failed to generate token', async () => {
+    const { signature, payload } = signAuthMessage()
+
     nock(AUTH_SERVER_HOST)
-      .post('/api/tokens')
+      .post('/api/tokens', {
+        payload,
+        signature,
+        address: USER_ADDRESS
+      })
       .reply(200, {
         success: false,
         errors: ['Some error']
@@ -92,8 +102,6 @@ describe('Auth Client', () => {
       activeWallet: USER_ADDRESS,
       disablePersistence: true
     })
-
-    const { signature, payload } = signAuthMessage()
 
     let error
     try {
