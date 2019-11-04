@@ -13,11 +13,11 @@ RUN mv envkey-source /usr/local/bin
 COPY package.json ./
 COPY yarn.lock ./
 COPY lerna.json ./
-COPY ./infra/auth-utils ./infra/auth-utils
+COPY ./packages/auth-utils ./packages/auth-utils
 COPY ./infra/auth-server ./infra/auth-server
 
 RUN yarn install
 
 CMD eval $(envkey-source) && \
-	npm run migrate --prefix infra/auth-utils && \
+	npm run migrate --prefix packages/auth-utils && \
 	npm run start --prefix infra/auth-server
