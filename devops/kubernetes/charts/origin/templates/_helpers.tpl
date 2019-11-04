@@ -223,3 +223,11 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- printf "investor.%s.originprotocol.com" .Release.Namespace -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "auth.host" -}}
+{{- if eq .Release.Namespace "prod" -}}
+{{- printf "auth.originprotocol.com" }}
+{{- else -}}
+{{- printf "auth.%s.originprotocol.com" .Release.Namespace -}}
+{{- end -}}
+{{- end -}}

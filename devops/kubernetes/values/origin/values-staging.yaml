@@ -76,3 +76,7 @@ t3ClientImageTag: 'latest'
 # origin-token-transfer-server
 t3ServerImage: origin-token-transfer-server
 t3ServerImageTag: 'latest'
+
+# origin-auth
+relayerImage: origin-auth
+relayerImageTag: latest

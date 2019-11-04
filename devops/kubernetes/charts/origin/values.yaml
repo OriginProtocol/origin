@@ -65,3 +65,7 @@ adminImageTag: latest
 # origin-relayer
 relayerImage: origin-relayer
 relayerImageTag: latest
+
+# origin-auth
+relayerImage: origin-auth
+relayerImageTag: latest
