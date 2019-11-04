@@ -6,6 +6,8 @@ import BorderedCard from './BorderedCard'
 import LockupGraph from './LockupGraph'
 
 const LockupCard = ({ lockup }) => {
+  const now = moment.utc()
+
   return (
     <BorderedCard shadowed={true}>
       <div
@@ -20,7 +22,9 @@ const LockupCard = ({ lockup }) => {
             {Number(lockup.amount).toLocaleString()} OGN Lockup
           </strong>
           <br />
-          Unlocks in {moment(lockup.end).fromNow()}
+          Unlocks in {moment(lockup.end).diff(now, 'days')}d{' '}
+          {moment(lockup.end).diff(now, 'hours') % 24}h{' '}
+          {moment(lockup.end).diff(now, 'minutes') % 60}m
         </div>
         <div className="col-12 col-lg mb-3 mx-auto">
           Created
