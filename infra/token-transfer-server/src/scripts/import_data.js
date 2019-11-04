@@ -16,15 +16,17 @@
 const assert = require('assert')
 const csv = require('csvtojson')
 const Logger = require('logplease')
+const jwt = require('jsonwebtoken')
 
 const db = require('../models')
+const { encryptionSecret, portalUrl } = require('../config')
 
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('import_data', { showTimestamp: false })
 
 const employeesVestingInterval = 'months'
 
-const purchaseRounds = ['Advisor', 'Strategic', 'Coinlist']
+const purchaseRounds = ['Advisor', 'Strategic', 'CoinList']
 
 // TODO(franck): Update those values based on final investors vesting schedule.
 const investorsVestingStart = new Date('2020/01/01')
@@ -42,6 +44,8 @@ class CsvFileParser {
     assert(row['Name'] !== undefined)
     assert(row['Email'] !== undefined)
     assert(row['OGN Amount'] !== undefined)
+    assert(row['Revised Schedule Agreed At'] !== undefined)
+    assert(row['Revised Schedule Rejected'] !== undefined)
     if (this.employee) {
       assert(row['Vesting Start'] !== undefined)
       assert(row['Vesting End'] !== undefined)
@@ -81,6 +85,18 @@ class CsvFileParser {
       const amount = Number(row['OGN Amount'].trim().replace(/,/g, ''))
       assert(!Number.isNaN(amount))
       record.amount = amount
+
+      if (row['Revised Schedule Rejected']) {
+        record.revisedScheduleRejected = Boolean(
+          row['Revised Schedule Rejected']
+        )
+      }
+
+      if (row['Revised Schedule Agreed At']) {
+        record.revisedScheduleAgreedAt = new Date(
+          row['Revised Schedule Agreed At']
+        )
+      }
 
       if (this.employee) {
         // Parse employee specific fields
@@ -155,8 +171,19 @@ class ImportData {
           user = await db.User.create({
             name: record.name,
             email: record.email,
-            employee: this.config.employee
+            employee: this.config.employee,
+            investorType: record.purchaseRound,
+            revisedScheduleAgreedAt: record.revisedScheduleAgreedAt,
+            revisedScheduleRejected: record.revisedScheduleRejected
           })
+        }
+
+        if (this.config.token) {
+          logger.info(
+            `${record.email} ${portalUrl}/welcome/${generateToken(
+              record.email
+            )}`
+          )
         }
         this.stats.numUserRowsInserted++
       }
@@ -178,6 +205,16 @@ class ImportData {
       this.stats.numGrantRowsInserted++
     }
   }
+}
+
+function generateToken(email) {
+  return jwt.sign(
+    {
+      email
+    },
+    encryptionSecret,
+    { expiresIn: '14d' }
+  )
 }
 
 function parseArgv() {
@@ -202,7 +239,9 @@ const config = {
   // Investor by default.
   employee: args['--employee'] === 'true' || false,
   // Run in in dry-run mode by default.
-  doIt: args['--doIt'] === 'true' || false
+  doIt: args['--doIt'] === 'true' || false,
+  // Generate and print a welcome token
+  token: args['--token'] === 'true' || false
 }
 logger.info('Config:')
 logger.info(config)
