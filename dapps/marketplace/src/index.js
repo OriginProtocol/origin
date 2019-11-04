@@ -32,6 +32,7 @@ import client from '@origin/graphql'
 import setLocale from 'utils/setLocale'
 import Store from 'utils/store'
 import { initSentry } from 'utils/sentry'
+import { getCurrencyForLocale } from 'constants/Currencies'
 
 import App from './pages/App'
 import Analytics from './components/Analytics'
@@ -60,13 +61,14 @@ class AppWrapper extends Component {
   state = {
     ready: false,
     client: null,
-    currency: store.get('currency', 'fiat-USD')
+    currency: null
   }
 
   async componentDidMount() {
     try {
       const locale = await setLocale()
-      this.setState({ ready: true, client, locale })
+      const currency = store.get('currency', getCurrencyForLocale(locale)[0])
+      this.setState({ ready: true, client, locale, currency })
     } catch (error) {
       console.error('Error restoring Apollo cache', error)
     }
