@@ -309,33 +309,38 @@ class PushNotifications extends Component {
       return
     }
 
-    // No private key (Samsung BKS account), can't proceed
-    if (wallet.activeAccount.hdPath) {
-      console.debug('Cannot generate auth token for Samsung BKS account')
-      return
-    }
-
-    const { privateKey, mnemonic, address } = wallet.activeAccount
-
-    let ethersWallet
-    if (privateKey) {
-      ethersWallet = new ethers.Wallet(privateKey)
-    } else {
-      ethersWallet = new ethers.Wallet.fromMnemonic(mnemonic)
-    }
-
     const message = AUTH_MESSAGE
     const payload = {
       message,
       timestamp: Date.now()
     }
 
-    const signature = await ethersWallet.signMessage(stringify(payload))
+    let signature
+
+    // No private key (Samsung BKS account), can't proceed
+    if (wallet.activeAccount.hdPath) {
+      const messageToSign = Buffer.from(payload).toString('base64')
+      signature = await RNSamsungBKS.signEthPersonalMessage(
+        props.wallet.activeAccount.hdPath,
+        messageToSign
+      )
+    } else {
+      const { privateKey, mnemonic } = wallet.activeAccount
+
+      let ethersWallet
+      if (privateKey) {
+        ethersWallet = new ethers.Wallet(privateKey)
+      } else {
+        ethersWallet = new ethers.Wallet.fromMnemonic(mnemonic)
+      }
+
+      signature = await ethersWallet.signMessage(stringify(payload))
+    }
 
     const authClient = new AuthClient({
       authServer:
         this.props.config.authServer || 'https://auth.originprotocol.com',
-      activeWallet: address,
+      activeWallet: wallet.activeAccount.address,
       disablePersistence: true
     })
 

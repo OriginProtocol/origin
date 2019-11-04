@@ -233,6 +233,15 @@ jobs:
           name: Run Messaging Server Tests
           command: cd infra/messaging && yarn migrate && yarn test
 
+  AuthUtils:
+    <<: *db
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run Auth Utils Tests
+          command: cd infra/auth-utils && yarn migrate && yarn test
+
   AuthServer:
     <<: *dbandredis
     steps:
@@ -240,6 +249,7 @@ jobs:
           at: .
       - run:
           name: Run Origin Auth Server Tests
+          command: cd infra/auth-utils && yarn migrate && yarn test
           command: cd infra/auth-server && yarn migrate && yarn test
 
 workflows:
