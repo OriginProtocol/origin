@@ -182,9 +182,7 @@ class ImportData {
       }
       if (this.config.token) {
         logger.info(
-          `${record.email} ${portalUrl}/welcome/${generateToken(
-            record.email
-          )}`
+          `${record.email} ${portalUrl}/welcome/${generateToken(record.email)}`
         )
       }
       if (this.config.doIt) {
