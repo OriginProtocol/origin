@@ -225,7 +225,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end -}}
 
 {{- define "auth.fullname" -}}
-{{- printf "%s-%s" .Release.Name "t3" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Release.Name "auth" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "auth.host" -}}
