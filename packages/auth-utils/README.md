@@ -38,7 +38,7 @@ const { tokenBlacklist }  = require('@origin/auth-utils/src/utils')
 await tokenBlacklist.revokeToken(authToken, revokedBy, reason)
 ```
 
-### Check if token is blacklisting
+### Check if token is blacklisted
 ```
 const { tokenBlacklist }  = require('@origin/auth-utils/src/utils')
 const blacklisted = await tokenBlacklist.isBlacklisted(authToken)
