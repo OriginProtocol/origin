@@ -31,6 +31,28 @@ describe('register device token endpoint', () => {
     })
   })
 
+  // A temporary test to prevent hard-fail of notifications. 
+  it(`should not fail without token`, async () => {
+    await request(app)
+      .post('/mobile/register')
+      .send({
+        address: USER_ADDRESS,
+        device_token: '5678',
+        device_type: 'FCM',
+        permissions: {}
+      })
+      .expect(201)
+
+    const results = await MobileRegistry.findAll()
+    expect(results.length).to.equal(1)
+    expect(results[0].ethAddress).to.equal(
+      '0x627306090abab3a6e1400e9345bc60c78a8bef57'
+    )
+    expect(results[0].deviceToken).to.equal('5678')
+    expect(results[0].deviceType).to.equal('FCM')
+    expect(results[0].deleted).to.equal(false)
+  })
+
   it(`should add a new row`, async () => {
     await request(app)
       .post('/mobile/register')
