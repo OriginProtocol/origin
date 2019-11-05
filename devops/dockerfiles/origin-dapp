@@ -38,7 +38,7 @@ RUN yarn install
 
 ENV NODE_ENV=production
 
-RUN eval $(envkey-source) && yarn run build --scope @origin/marketplace
+RUN eval "$(envkey-source)" && yarn run build --scope @origin/marketplace
 
 # Conditional copy of config depending on NAMESPACE build arg using multi stage
 # builds

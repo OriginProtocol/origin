@@ -21,6 +21,6 @@ COPY ./infra/faucet ./infra/faucet
 
 RUN yarn install
 
-CMD eval $(envkey-source) && \
+CMD eval "$(envkey-source)" && \
 	npm run migrate --prefix infra/faucet && \
 	npm run start --prefix infra/faucet

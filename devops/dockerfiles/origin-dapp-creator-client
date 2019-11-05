@@ -32,7 +32,7 @@ RUN yarn install
 ENV NODE_ENV=production
 
 # Use EnvKey so that environment variables are available to webpack at build time
-RUN eval $(envkey-source) && yarn run build --scope @origin/dapp-creator-client
+RUN eval "$(envkey-source)" && yarn run build --scope @origin/dapp-creator-client
 
 # Copy built static files to nginx for serving
 FROM nginx:1.15.2-alpine

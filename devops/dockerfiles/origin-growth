@@ -33,7 +33,7 @@ COPY ./infra/identity ./infra/identity
 RUN yarn install
 
 # Run migrations then start the growth server.
-CMD eval $(envkey-source) && \
+CMD eval "$(envkey-source)" && \
 	npm run migrate --prefix infra/growth && \
 	npm run migrate --prefix infra/growth-event && \
 	npm run start --prefix infra/growth

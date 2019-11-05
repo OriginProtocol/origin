@@ -34,6 +34,6 @@ COPY ./packages/auth-utils ./packages/auth-utils
 
 RUN yarn install
 
-CMD eval $(envkey-source) && \
+CMD eval "$(envkey-source)" && \
 	npm run migrate --prefix infra/notifications && \
 	npm run start --prefix infra/notifications
