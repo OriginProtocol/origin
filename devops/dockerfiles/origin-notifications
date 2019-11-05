@@ -31,6 +31,7 @@ COPY ./infra/discovery ./infra/discovery
 COPY ./infra/growth-event ./infra/growth-event
 # @origin/identity required for the db model
 COPY ./infra/identity ./infra/identity
+COPY ./packages/auth-utils ./packages/auth-utils
 
 RUN yarn install
 
