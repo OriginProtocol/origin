@@ -14,7 +14,6 @@ COPY package.json ./
 COPY yarn.lock ./
 COPY lerna.json ./
 COPY ./infra/notifications ./infra/notifications
-# @origin/growth and its dependencies required for recording growth events.
 COPY ./packages/eventsource ./packages/eventsource
 COPY ./packages/event-cache ./packages/event-cache
 COPY ./packages/web3-provider ./packages/web3-provider
