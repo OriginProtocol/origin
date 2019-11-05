@@ -20,7 +20,10 @@ function saveTokenCookie(walletAddress, tokenData) {
   debug('Saving token data to cookies', key, tokenData)
   Cookies.set(key, tokenData, {
     // Cookies should expire in 30 days
-    expires: 30
+    expires: 30,
+    secure: true,
+    sameSite: 'strict',
+    path: ''
   })
 }
 
