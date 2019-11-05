@@ -31,7 +31,7 @@ describe('register device token endpoint', () => {
     })
   })
 
-  // A temporary test to prevent hard-fail of notifications. 
+  // A temporary test to prevent hard-fail of notifications.
   it(`should not fail without token`, async () => {
     await request(app)
       .post('/mobile/register')
