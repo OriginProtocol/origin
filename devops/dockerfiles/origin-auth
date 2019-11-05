@@ -18,6 +18,6 @@ COPY ./infra/auth-server ./infra/auth-server
 
 RUN yarn install
 
-CMD eval $(envkey-source) && \
+CMD eval "$(envkey-source)" && \
 	npm run migrate --prefix packages/auth-utils && \
 	npm run start --prefix infra/auth-server
