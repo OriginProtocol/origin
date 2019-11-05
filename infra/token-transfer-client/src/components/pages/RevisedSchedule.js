@@ -18,12 +18,12 @@ class RevisedSchedule extends Component {
         <div className="action-card wide">
           <h1>Revised Token Unlock Schedule</h1>
           <p>
-            As we have previously communicated, the top-tier exchanges we are
-            partnering with to list Origin Tokens (OGN) have required us to
-            modify our token release schedule. These amendments have been
-            approved by our largest investors, including Pantera Capital,
-            Foundation Capital, Blocktower Capital, PreAngel Fund, Hashed,
-            Danhua Capital, and dozens of other funds and individuals.
+            At the request of multiple top-tier exchanges we are partnering with
+            to list Origin Tokens (OGN), we are required to modify our token
+            release schedule. These amendments have been approved by our largest
+            investors, including Pantera Capital, Foundation Capital, Blocktower
+            Capital, PreAngel Fund, Hashed, Danhua Capital, and dozens of other
+            funds and individuals.
           </p>
           <p>
             Original Schedule: 3 month waiting period then 100% unlock

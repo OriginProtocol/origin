@@ -12,6 +12,7 @@ import {
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
 import EmailIcon from '@/assets/email-icon.svg'
+import { lockupBonusRate } from '@/constants'
 
 class BonusModal extends Component {
   constructor(props) {
@@ -88,6 +89,14 @@ class BonusModal extends Component {
     }
   }
 
+  onMaxAmount = event => {
+    event.preventDefault()
+
+    this.setState({
+      amount: Number(this.props.balance)
+    })
+  }
+
   render() {
     return (
       <Modal appendToId="main" onClose={this.handleModalClose} closeBtn={true}>
@@ -103,8 +112,6 @@ class BonusModal extends Component {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
-    const bonusRate = 10.0
-
     return (
       <>
         <h1 className="mb-2">Earn Bonus Tokens</h1>
@@ -114,6 +121,19 @@ class BonusModal extends Component {
             <div className="input-group">
               <input {...input('amount')} type="number" />
               <div className="input-group-append">
+                <a
+                  href="#"
+                  onClick={this.onMaxAmount}
+                  className="mr-2"
+                  style={{
+                    color: '#007cff',
+                    fontSize: '14px',
+                    textDecoration: 'none',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Max amount
+                </a>
                 <span className="badge badge-secondary">OGN</span>
               </div>
             </div>
@@ -126,11 +146,17 @@ class BonusModal extends Component {
             <div className="text-left">
               <div className="row">
                 <div className="col">
-                  <strong>Bonus Tokens Earned</strong>{' '}
-                  <span style={{ fontSize: '14px' }}>({bonusRate}%)</span>
+                  <strong>Bonus tokens earned</strong>{' '}
+                  <span style={{ fontSize: '14px' }}>
+                    ({lockupBonusRate}% of lockup)
+                  </span>
                 </div>
                 <div className="col-4 text-right">
-                  <strong>{this.state.amount * (bonusRate / 100)}</strong>{' '}
+                  <strong>
+                    {BigNumber(this.state.amount * (lockupBonusRate / 100))
+                      .toFixed(0, BigNumber.ROUND_UP)
+                      .toLocaleString()}
+                  </strong>{' '}
                   <span className="ogn">OGN</span>
                 </div>
               </div>
@@ -157,7 +183,7 @@ class BonusModal extends Component {
           <button
             type="submit"
             className="btn btn-primary btn-lg mt-5"
-            disabled={this.props.lockupIsAdding}
+            disabled={!this.state.amount || this.props.lockupIsAdding}
           >
             {this.props.lockupIsAdding ? (
               <>
