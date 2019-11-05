@@ -31,6 +31,12 @@ class DeployIdentity extends Component {
             process.env.ENABLE_CENTRALIZED_IDENTITY === 'true'
           ) {
             this.setState({ mutationCompleted: true })
+            if (this.props.refetch) {
+              this.props.refetch()
+            }
+            if (this.props.refetchObservables !== false) {
+              this.props.client.reFetchObservableQueries()
+            }
             if (this.props.onComplete) {
               this.props.onComplete()
             }
