@@ -90,20 +90,21 @@ const BalanceCard = props => {
           </div>
         </div>
         <div className="row">
-          {props.balance > 0 || props.locked > 0 && (
-            <div
-              className="col-12 col-lg-4 col-xl-1 mb-3 mb-lg-0"
-              style={{ minWidth: '200px' }}
-            >
-              <div style={{ position: 'relative' }}>
-                <Doughnut
-                  data={doughnutData}
-                  options={{ cutoutPercentage: 60 }}
-                  legend={{ display: false }}
-                />
+          {props.balance > 0 ||
+            (props.locked > 0 && (
+              <div
+                className="col-12 col-lg-4 col-xl-1 mb-3 mb-lg-0"
+                style={{ minWidth: '200px' }}
+              >
+                <div style={{ position: 'relative' }}>
+                  <Doughnut
+                    data={doughnutData}
+                    options={{ cutoutPercentage: 60 }}
+                    legend={{ display: false }}
+                  />
+                </div>
               </div>
-            </div>
-          )}
+            ))}
           <div className="col" style={{ alignSelf: 'center' }}>
             <div className="row mb-2" style={{ fontSize: '24px' }}>
               <div className="col">
