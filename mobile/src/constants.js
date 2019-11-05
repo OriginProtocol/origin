@@ -154,3 +154,5 @@ export const LANGUAGES = [
   ['zh_TW', '繁體中文'],
   ['en_US', 'English']
 ].filter(l => Object.keys(TRANSLATIONS).includes(l[0]))
+
+export const AUTH_MESSAGE = 'I intend to sign in to Origin Marketplace app'

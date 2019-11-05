@@ -1,0 +1,51 @@
+{
+  "name": "@origin/auth-server",
+  "version": "0.1.0",
+  "description": "Everything related to authorization",
+  "author": "Origin Protocol Inc",
+  "license": "MIT",
+  "main": "src/auth.js",
+  "scripts": {
+    "lint": "eslint '**/*.js' && npm run prettier:check",
+    "prettier": "prettier --write *.js \"**/*.js\"",
+    "prettier:check": "prettier -c *.js \"**/*.js\"",
+    "migrate": "sequelize db:migrate",
+    "build": "per-env",
+    "build:production": "babel src -d dist",
+    "start": "per-env",
+    "start:development": "nodemon -r ./src/env.js src/app.js",
+    "start:production": "node -r ./src/env.js src/app.js",
+    "test": "LOG_LEVEL=NONE NODE_ENV=test mocha -r @babel/register  -r @babel/polyfill -t 10000 --exit test/**/*.js",
+    "test:debug": "LOG_LEVEL=DEBUG DEBUG=origin-auth-server NODE_ENV=test mocha -r @babel/register  -r @babel/polyfill -t 10000 --exit test/**/*.js"
+  },
+  "dependencies": {
+    "@origin/auth-utils": "^0.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "envkey": "^1.2.7",
+    "express": "^4.17.1",
+    "express-validator": "^6.2.0",
+    "json-stable-stringify": "^1.0.1",
+    "logplease": "^1.2.15",
+    "per-env": "^1.0.2",
+    "supertest": "^4.0.2",
+    "web3-eth": "^1.2.1",
+    "web3-utils": "^1.2.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/polyfill": "^7.6.0",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/register": "^7.6.2",
+    "chai": "^4.2.0",
+    "crypto": "^1.0.1",
+    "eslint": "^6.5.1",
+    "mocha": "^6.2.1",
+    "nodemon": "1.19.4",
+    "prettier": "1.18.2"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  }
+}

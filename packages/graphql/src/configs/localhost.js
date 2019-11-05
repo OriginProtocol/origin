@@ -45,6 +45,8 @@ const config = {
     globalKeyServer: 'http://localhost:6647'
   },
 
+  authServer: `http://${HOST}:5200`,
+
   // Wire-on/off configs.
   centralizedIdentityEnabled: !!process.env.ENABLE_CENTRALIZED_IDENTITY,
   performanceMode: localStorageHas('performanceMode', 'true'),

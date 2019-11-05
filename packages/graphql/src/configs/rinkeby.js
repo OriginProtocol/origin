@@ -22,6 +22,7 @@ export default {
     messagingNamespace: 'origin:staging',
     globalKeyServer: 'https://messaging.staging.originprotocol.com'
   },
+  authServer: 'https://auth.staging.originprotocol.com',
 
   // Contracts
   OriginToken: addresses.OGN,

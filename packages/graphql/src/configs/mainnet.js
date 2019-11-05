@@ -22,6 +22,7 @@ export default {
     messagingNamespace: 'origin',
     globalKeyServer: 'https://messaging.originprotocol.com'
   },
+  authServer: 'https://auth.originprotocol.com',
 
   // Contracts
   IdentityEvents: addresses.IdentityEvents,

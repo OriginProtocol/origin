@@ -19,6 +19,7 @@ export default {
     messagingNamespace: 'origin:dev',
     globalKeyServer: 'https://messaging.dev.originprotocol.com'
   },
+  authServer: 'https://auth.dev.originprotocol.com',
 
   // Contracts
   OriginToken: addresses.OGN,
