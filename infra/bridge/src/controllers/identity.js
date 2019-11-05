@@ -107,15 +107,15 @@ router.post('/', identityWriteVerify, async (req, res) => {
       .send({ errors: [`Failed parsing identity data: ${err}`] })
   }
 
+  // In case the input address was a proxy, load the owner address.
+  const owner = await getOwnerAddress(ethAddress)
+
   // Load attestation data from the DB.
-  const addresses = await loadIdentityAddresses(ethAddress)
+  const addresses = await loadIdentityAddresses(owner)
   const metadata = await loadAttestationMetadata(
     addresses,
     ipfsData.attestations
   )
-
-  // In case the input address was a proxy, load the owner address.
-  const owner = await getOwnerAddress(ethAddress)
 
   // Save the identity in the DB.
   const identity = await saveIdentity(owner, ipfsHash, ipfsData, metadata)
