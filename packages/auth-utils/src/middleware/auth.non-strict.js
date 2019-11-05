@@ -20,7 +20,7 @@ const authMiddleware = async (req, res, next) => {
     req.__originAuth = {
       // If there is any address on body or query param,
       // Consider that as user's address
-      address: req.body.address || req.query.address
+      address: req.body.eth_address || req.query.eth_address
     }
 
     return next()

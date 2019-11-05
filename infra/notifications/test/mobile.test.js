@@ -36,7 +36,7 @@ describe('register device token endpoint', () => {
     await request(app)
       .post('/mobile/register')
       .send({
-        address: USER_ADDRESS,
+        eth_address: USER_ADDRESS,
         device_token: '5678',
         device_type: 'FCM',
         permissions: {}
