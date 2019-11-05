@@ -2,7 +2,7 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: '61b75c1'
+bridgeImageTag: 'd48064f'
 
 # origin-dapp
 dappImage: origin-dapp
@@ -18,7 +18,7 @@ faucetImageTag: 'd8f4fa4'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: 'f2ee058'
+eventlistenerImageTag: 'd48064f'
 
 # origin-discovery
 discoveryImage: origin-discovery
@@ -34,7 +34,7 @@ messagingImageTag: '8de0133'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: '9b7dab9'
+notificationsImageTag: 'd48064f'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
@@ -75,4 +75,4 @@ t3ServerImageTag: 'ad1d753'
 
 # origin-auth
 authImage: origin-auth
-authImageTag: 'f599571'
+authImageTag: 'd48064f'
