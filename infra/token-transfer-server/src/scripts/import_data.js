@@ -178,14 +178,14 @@ class ImportData {
           })
         }
 
-        if (this.config.token) {
-          logger.info(
-            `${record.email} ${portalUrl}/welcome/${generateToken(
-              record.email
-            )}`
-          )
-        }
         this.stats.numUserRowsInserted++
+      }
+      if (this.config.token) {
+        logger.info(
+          `${record.email} ${portalUrl}/welcome/${generateToken(
+            record.email
+          )}`
+        )
       }
       if (this.config.doIt) {
         await db.Grant.create({
