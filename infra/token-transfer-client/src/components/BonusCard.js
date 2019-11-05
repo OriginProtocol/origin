@@ -74,7 +74,7 @@ const BonusCard = ({ earnings, isLocked, locked, lockups }) => {
             <div className="mb-3">
               <Lock className="icon" />
             </div>
-            You have not locked up any tokens
+            You don&apos;t have any OGN locked up.
           </div>
         )}
       </div>

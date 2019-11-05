@@ -86,12 +86,12 @@ const Lockup = props => {
       </div>
       <div className="row">
         <div className="col">
-          Total locked up{' '}
+          Total Locked Up{' '}
           <strong className="ml-2">{Number(props.lockupTotals.locked)}</strong>{' '}
           <span className="ogn">OGN</span>
         </div>
         <div className="col">
-          Total earned{' '}
+          Total Earned{' '}
           <strong className="ml-2">
             {Number(props.lockupTotals.earnings)}
           </strong>{' '}
@@ -106,10 +106,11 @@ const Lockup = props => {
           ) : (
             <div className="p-5 text-muted text-center">
               <div className="mb-3" style={{ fontSize: '28px' }}>
-                You don&apos;t have any OGN locked up
+                You don&apos;t have any OGN locked up.
               </div>
               <div style={{ fontSize: '18px' }}>
-                Something here about why this is great...
+                This program is only available to our existing Advisor,
+                Strategic, and CoinList investors.
               </div>
             </div>
           )}

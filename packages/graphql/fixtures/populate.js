@@ -175,7 +175,7 @@ export async function createListing(gqlClient, opts = {}) {
 export async function createAccount(gqlClient, opts = {}) {
   debug(`createAccount`, opts)
 
-  const { ogn, dai, eth = '0.5', deployIdentity } = opts
+  const { ogn, dai, eth = '0.5', deployIdentity, centralizedIdentity } = opts
   const NodeAccount = await getNodeAccount(gqlClient)
   await gqlClient.mutate({
     mutation: ToggleMetaMaskMutation,
@@ -209,7 +209,11 @@ export async function createAccount(gqlClient, opts = {}) {
         attestations: []
       }
     })
-    await transactionConfirmed(identity.data.deployIdentity.id, gqlClient)
+    // Wait for the tx confirmation if the identity was save on the blockchain.
+    // If a centralized server was used, this is not needed.
+    if (!centralizedIdentity) {
+      await transactionConfirmed(identity.data.deployIdentity.id, gqlClient)
+    }
     debug(`deployed identity`)
   }
 

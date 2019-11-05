@@ -36,7 +36,7 @@ const LockupCard = ({ lockup }) => {
             className="status-circle status-circle-info"
             style={{ marginLeft: '-1.5rem', marginRight: '0.5rem' }}
           ></div>{' '}
-          Lock up amount
+          Lockup Amount
           <br />
           <strong>{Number(lockup.amount).toLocaleString()}</strong>{' '}
           <span className="ogn">OGN</span>
@@ -46,7 +46,7 @@ const LockupCard = ({ lockup }) => {
             className="status-circle status-circle-secondary"
             style={{ marginLeft: '-1.5rem', marginRight: '0.5rem' }}
           ></div>{' '}
-          Bonus tokens
+          Bonus Tokens
           <br />
           <strong>
             {BigNumber((lockup.amount * lockup.bonusRate) / 100)

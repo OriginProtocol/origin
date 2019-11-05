@@ -15,7 +15,7 @@ import Link from 'components/Link'
 import formatTimeDifference from 'utils/formatTimeDifference'
 
 //TODO: put this into constants
-const maxProgressBarTokens = 1000
+const maxProgressBarTokens = 2500
 
 const renderEnrolledBox = (props, walletAddress) => {
   const campaigns = props.growthCampaigns
