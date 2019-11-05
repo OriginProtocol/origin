@@ -23,10 +23,14 @@ const verifySign = ({ address, signature, payload }) => {
   try {
     const now = Date.now()
     const signExpLimit =
-      (parseInt(process.env.SIGN_EXPIRES_IN) || 15) * 1000 * 60
+      (parseInt(process.env.SIGN_EXPIRES_IN) || 15) * 1000 * 60 // Default: 15 mins
     const minTimestamp = now - signExpLimit
 
-    if (payload.timestamp < minTimestamp || payload.timestamp > now) {
+    // To account for clock differences among clients
+    const clockDiffOffset = 5 * 60 * 1000 // 5 mins
+    const maxTimestamp = now + clockDiffOffset
+
+    if (payload.timestamp < minTimestamp || payload.timestamp > maxTimestamp) {
       // Disallow generation of auth token if
       // sign is older than `SIGN_EXPIRES_IN` minutes OR
       // payload contains a future timestamp
