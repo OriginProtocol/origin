@@ -15,6 +15,7 @@ COPY yarn.lock ./
 COPY lerna.json ./
 COPY ./packages/contracts ./packages/contracts
 COPY ./packages/token ./packages/token
+COPY ./packages/ipfs ./packages/ipfs
 COPY ./infra/identity ./infra/identity
 COPY ./infra/growth-event ./infra/growth-event
 COPY ./infra/faucet ./infra/faucet

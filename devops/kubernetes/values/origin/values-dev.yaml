@@ -2,11 +2,11 @@ databaseInstance: origin-214503:us-west1:dev
 
 # origin-bridge
 bridgeImage: origin-bridge
-bridgeImageTag: 'd48064f'
+bridgeImageTag: 'f2a9315'
 
 # origin-dapp
 dappImage: origin-dapp
-dappImageTag: '9b7dab9'
+dappImageTag: 'f2a9315'
 
 # origin-ipfs-proxy
 ipfsProxyImage: origin-ipfs-proxy
@@ -14,35 +14,35 @@ ipfsProxyImageTag: 'f87bc15'
 
 # origin-faucet
 faucetImage: origin-faucet
-faucetImageTag: 'd8f4fa4'
+faucetImageTag: '9cf55d2'
 
 # event-listener
 eventlistenerImage: event-listener
-eventlistenerImageTag: '502712c'
+eventlistenerImageTag: '45893c2'
 
 # origin-discovery
 discoveryImage: origin-discovery
-discoveryImageTag: '949a02c'
+discoveryImageTag: 'f2a9315'
 
 # origin-growth
 growthImage: origin-growth
-growthImageTag: '502712c'
+growthImageTag: 'a99b17e'
 
 # origin-messaging
 messagingImage: origin-messaging
-messagingImageTag: '8de0133'
+messagingImageTag: 'a99b17e'
 
 # origin-notifications
 notificationsImage: origin-notifications
-notificationsImageTag: 'd48064f'
+notificationsImageTag: 'a99b17e'
 
 # origin-dapp-creator-client
 creatorClientImage: origin-dapp-creator-client
-creatorClientImageTag: '502712c'
+creatorClientImageTag: 'f2a9315'
 
 # origin-dapp-creator-server
 creatorServerImage: origin-dapp-creator-server
-creatorServerImageTag: '7428c36'
+creatorServerImageTag: 'f2a9315'
 
 # origin-dapp-creator-issuer
 creatorIssuerImage: origin-dapp-creator-issuer
@@ -51,7 +51,7 @@ creatorIssuerIp: '35.233.181.44'
 
 # origin-cron
 cronImage: origin-cron
-cronImageTag: '502712c'
+cronImageTag: 'f2a9315'
 
 # origin-admin
 adminImage: origin-admin
@@ -59,20 +59,20 @@ adminImageTag: '8de0133'
 
 # origin-relayer
 relayerImage: origin-relayer
-relayerImageTag: '502712c'
+relayerImageTag: 'a99b17e'
 
 # origin-graphql
 graphqlImage: origin-graphql
-graphqlImageTag: 'f2ee058'
+graphqlImageTag: 'a99b17e'
 
 # origin-token-transfer-client
 t3ClientImage: origin-token-transfer-client
-t3ClientImageTag: '502712c'
+t3ClientImageTag: '7ee91db'
 
 # origin-token-transfer-server
 t3ServerImage: origin-token-transfer-server
-t3ServerImageTag: '502712c'
+t3ServerImageTag: '7ee91db'
 
 # origin-auth
 authImage: origin-auth
-authImageTag: '502712c'
+authImageTag: 'f2a9315'
