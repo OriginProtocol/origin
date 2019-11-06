@@ -107,7 +107,7 @@ async function sendLoginToken(email) {
         email
       },
       encryptionSecret,
-      { expiresIn: '5m' }
+      { expiresIn: '30m' }
     )
 
     const vars = { url: `${portalUrl}/login_handler/${token}` }

@@ -16,7 +16,7 @@ const Navigation = props => {
 
   const handleLogout = async () => {
     await agent.post(`${apiUrl}/api/logout`)
-    setRedirectTo('/')
+    setRedirectTo('/login')
   }
 
   if (redirectTo) {
@@ -45,7 +45,7 @@ const Navigation = props => {
       >
         <ul className="navbar-nav">
           <li className="nav-item mb-3">
-            <NavLink to="/dashboard" exact className="nav-link text">
+            <NavLink to="/" exact className="nav-link text">
               <Dashboard className="icon" />
               Dashboard
             </NavLink>

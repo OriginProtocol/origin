@@ -76,7 +76,7 @@ const PrivateRoute = ({
             Your session has expired. You will need to sign in again to
             continue.
           </p>
-          <Link to="/">
+          <Link to="/login">
             <button className="btn btn-primary btn-lg">Sign In</button>
           </Link>
         </Modal>
