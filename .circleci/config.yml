@@ -47,6 +47,13 @@ jobs:
             yarn install --frozen-lockfile
             curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | sh
             ./bin/node-prune
+      - run:
+          name: Install Mobile Deps
+          command: |
+            cd mobile
+            yarn install --frozen-lockfile --ignore-scripts
+            curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | sh
+            ./bin/node-prune
 
       - persist_to_workspace:
           root: .
