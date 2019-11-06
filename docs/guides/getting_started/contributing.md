@@ -31,7 +31,7 @@ We work in public and our company Discord is open to all. If you have questions 
 
 We have an open weekly engineering call on Google Hangouts every Wednesday at 12:30 Pacific Time. [Add to Calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=YXBiOThhc2s3cnE4NGltMXFwbWhpY3ZpNm9fMjAxOTAxMDlUMjAzMDAwWiBtaWNhaEBvcmlnaW5wcm90b2NvbC5jb20&tmsrc=micah%40originprotocol.com&scp=ALL)
 
-<div style="background-color: #061d2a; border: 30px solid #061d2a;"><img src="/source/images/last-sun-oct.svg" alt="Origin Engineering Call" /></div>
+<div style="background-color: #061d2a; border: 30px solid #061d2a;"><img src="/source/images/1-st-sun-nov.svg" alt="Origin Engineering Call" /></div>
 
 Join the call here: [https://meet.google.com/pws-cgyd-tqp](https://meet.google.com/pws-cgyd-tqp)
 
