@@ -40,7 +40,7 @@ class OnboardEmail extends Component {
     if (
       this.props.identityLoaded &&
       this.props.identity &&
-      !this.props.finished
+      this.props.finished
     ) {
       this.setState({
         finished: true,
@@ -53,7 +53,7 @@ class OnboardEmail extends Component {
       if (
         storedAccounts &&
         storedAccounts.emailAttestation &&
-        !this.props.finished
+        this.props.finished
       ) {
         this.setState({ finished: true })
       }
