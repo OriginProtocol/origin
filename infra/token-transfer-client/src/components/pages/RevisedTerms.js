@@ -4,17 +4,24 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-import { editUser } from '@/actions/user'
+import { editUser, fetchUser } from '@/actions/user'
 import {
   getUser,
   getError as getUserError,
-  getIsEditing as getUserIsEditing
+  getIsEditing as getUserIsEditing,
+  getIsLoading as getUserIsLoading
 } from '@/reducers/user'
 
 class RevisedTerms extends Component {
   state = {
     accepted: true,
     redirectTo: null
+  }
+
+  componentDidMount() {
+    if (!this.props.user) {
+      this.props.fetchUser()
+    }
   }
 
   handleSubmit = async () => {
@@ -26,7 +33,17 @@ class RevisedTerms extends Component {
     }
   }
 
-  renderStrategicAmendments() {
+  renderLoading = () => {
+    return (
+      <div className="action-card">
+        <div className="spinner-grow" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>
+    )
+  }
+
+  renderStrategicAmendments = () => {
     return (
       <>
         <p>
@@ -114,7 +131,7 @@ class RevisedTerms extends Component {
     )
   }
 
-  renderCoinListAmendments() {
+  renderCoinListAmendments = () => {
     return (
       <>
         <p>
@@ -204,6 +221,8 @@ class RevisedTerms extends Component {
   render() {
     if (this.state.redirectTo) {
       return <Redirect push to={this.state.redirectTo} />
+    } else if (!this.props.user || this.props.userIsLoading) {
+      return this.renderLoading()
     }
 
     return (
@@ -221,12 +240,17 @@ class RevisedTerms extends Component {
                 : this.renderStrategicAmendments()}
             </div>
           </div>
-          <p>
+          <p style={{ textAlign: 'left', fontSize: '12px' }}>
             If you do not agree with the proposed amendment, you can contact
             Origin Investor Relations at{' '}
             <a href="mailto:investor-relations@originprotocol.com">
               investor-relations@originprotocol.com
-            </a>
+            </a>{' '}
+            to voice your dissent or abstain. Declining to accept the amendment
+            will not give you different token release terms from other
+            investors. All investors will be treated the same. If the proposed
+            amendment fails to pass, we will be unable to proceed with our plans
+            to list on top-tier exchanges.
           </p>
           <div className="form-check">
             <input
@@ -258,14 +282,16 @@ const mapStateToProps = ({ user }) => {
   return {
     user: getUser(user),
     userError: getUserError(user),
-    userIsEditing: getUserIsEditing(user)
+    userIsEditing: getUserIsEditing(user),
+    userIsLoading: getUserIsLoading(user)
   }
 }
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      editUser: editUser
+      editUser: editUser,
+      fetchUser: fetchUser
     },
     dispatch
   )
