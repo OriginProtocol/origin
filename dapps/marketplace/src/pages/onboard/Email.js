@@ -37,10 +37,21 @@ class OnboardEmail extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const shouldUpdate = [
+      this.props.identityLoaded !== prevProps.identityLoaded,
+      this.props.identity !== prevProps.identity,
+      this.props.finished !== prevProps.finished,
+      this.props.wallet !== prevProps.wallet
+    ].reduce((prev, current) => prev || current, false)
+
+    if (!shouldUpdate) {
+      return
+    }
+
     if (
       this.props.identityLoaded &&
       this.props.identity &&
-      this.props.finished
+      !this.props.finished
     ) {
       this.setState({
         finished: true,
@@ -53,7 +64,7 @@ class OnboardEmail extends Component {
       if (
         storedAccounts &&
         storedAccounts.emailAttestation &&
-        this.props.finished
+        !this.props.finished
       ) {
         this.setState({ finished: true })
       }
