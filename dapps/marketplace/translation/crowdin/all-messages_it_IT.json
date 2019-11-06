@@ -5,7 +5,7 @@
   "LPiWLWGpM6wt/gyp8EqfNA==": "Indirizzo ETH",
   "XdsDQhPh9CMbM6iZjcnBtw==": "Contatto {VAR_ROLE_B64_cm9sZQ}",
   "qbsz7fb4XG3Z8z8rjQUx7g==": "Recensioni",
-  "BNiTz6TMpmADBvpVMcU3Ow==": "Saldo del conto",
+  "BNiTz6TMpmADBvpVMcU3Ow==": "Saldo",
   "FZq75E4kmR98PiIxYXB/RQ==": "Ancora",
   "lnRohWpsGR7uMhMbL9Uc4A==": "In vendita",
   "IXnxuAx0PfImJ3UuUrtKNA==": "In Affitto",
@@ -798,7 +798,9 @@
   "4wDamMQbpsJY1XFmVIepBA==": "Ethereum insufficienti",
   "9/i+Ey3QDDZNsandMN5zxQ==": "DAI insufficienti",
   "Zwcu3zpr3n5/gvuuGPLM7w==": "Token Origin insufficienti",
-  "7n36V3HBOmjco7PgTuds+Q==": "Fondi insufficienti",
+  "mZyol0ZBIvZVwrMuiIQYEQ==": "Token OKB non sufficienti. {E_VAR_GET_MORE_B64_R2V0IE1vcmU}",
+  "GjBu2vHFw0ZvH+4WgZAzvQ==": "Ancora",
+  "7H/M3jg7K5QazQc2pEleKA==": "Saldo insufficiente",
   "O4p/HWu2u4U5gZ+vruUU1Q==": "Dove posso trovarne?",
   "FC/gJV+Syi5Bjue937Ch8g==": "Commissione",
   "C66gQt5HUEVn1kC+GTZ0FA==": "Commissione per unità",
@@ -1293,7 +1295,9 @@
   "PYBxe3twCxInwgQ1E9GBOg==": "Ethereum",
   "ArSf4J+dNUiZfj6mamImnw==": "Maker Dai",
   "2H8IF+VEDTnNHQ7c+dw9zA==": "Token di Origin",
+  "aGfKK6ZJD6P22TIxY6gdkA==": "Token OKB",
   "pI4vrj8dSJJLdh0ejJjMWA==": "Ether è buono per le inserzioni a breve termine.",
   "12RmZS0/aijc4qIbrWjHow==": "Maker Dai è adatto per le inserzioni a lungo termine come affitti o vendite di proprietà.",
-  "1ihLeuNdlY4LXygu4xmuTw==": "Utile per promuovere altri annunci"
+  "1ihLeuNdlY4LXygu4xmuTw==": "Utile per promuovere altri annunci",
+  "Cimm0w0HZEQCNC34hAofsQ==": "Da utilizzare con uno dei nostri exchange partner"
 }
