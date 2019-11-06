@@ -28,7 +28,7 @@ const BalanceCard = props => {
   }
 
   if (redirectTo) {
-    return <Redirect to={redirectTo} />
+    return <Redirect push to={redirectTo} />
   }
 
   if (props.isLocked) {
@@ -69,6 +69,7 @@ const BalanceCard = props => {
     <>
       {displayWithdrawModal && (
         <WithdrawModal
+          balance={props.balance}
           accounts={props.accounts}
           isLocked={props.isLocked}
           onModalClose={() => setDisplayWithdrawModal(false)}
@@ -76,7 +77,10 @@ const BalanceCard = props => {
       )}
 
       {displayBonusModal && (
-        <BonusModal onModalClose={() => setDisplayBonusModal(false)} />
+        <BonusModal
+          balance={props.balance}
+          onModalClose={() => setDisplayBonusModal(false)}
+        />
       )}
 
       <BorderedCard shadowed={true}>
@@ -86,18 +90,21 @@ const BalanceCard = props => {
           </div>
         </div>
         <div className="row">
-          <div
-            className="col-12 col-lg-4 col-xl-1 mb-3 mb-lg-0"
-            style={{ minWidth: '200px' }}
-          >
-            <div style={{ position: 'relative' }}>
-              <Doughnut
-                data={doughnutData}
-                options={{ cutoutPercentage: 60 }}
-                legend={{ display: false }}
-              />
-            </div>
-          </div>
+          {props.balance > 0 ||
+            (props.locked > 0 && (
+              <div
+                className="col-12 col-lg-4 col-xl-1 mb-3 mb-lg-0"
+                style={{ minWidth: '200px' }}
+              >
+                <div style={{ position: 'relative' }}>
+                  <Doughnut
+                    data={doughnutData}
+                    options={{ cutoutPercentage: 60 }}
+                    legend={{ display: false }}
+                  />
+                </div>
+              </div>
+            ))}
           <div className="col" style={{ alignSelf: 'center' }}>
             <div className="row mb-2" style={{ fontSize: '24px' }}>
               <div className="col">
@@ -134,7 +141,7 @@ const BalanceCard = props => {
             <div className="row" style={{ fontSize: '24px' }}>
               <div className="col">
                 <div className="status-circle status-circle-info mr-3"></div>
-                Bonus Locked Tokens
+                Locked Tokens
               </div>
               <div className="col-5 text-right">
                 <strong>
@@ -150,7 +157,7 @@ const BalanceCard = props => {
                     <Dropdown.Item onClick={() => setDisplayBonusModal(true)}>
                       Earn Bonus Tokens
                     </Dropdown.Item>
-                    <Dropdown.Item onClick={() => setRedirectTo('/bonus')}>
+                    <Dropdown.Item onClick={() => setRedirectTo('/lockup')}>
                       View Details
                     </Dropdown.Item>
                   </Dropdown.Menu>

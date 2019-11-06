@@ -1,7 +1,12 @@
 ---
 layout: page
-title: Messaging
+title: Messaging Server
 category: Software
 ---
 
-Origin Messaging currently uses the peer to peer distributed database, [OrbitDB](https://github.com/orbitdb/orbit-db). To allow messages to be exchanged when both conversation partners are not online, Origin runs a server that stores the latest entry heads for all chat conversations.
+Origin Messaging is an end-to-end encrypted messaging system based on Ethereum addresses. The messaging server stores encrypted messages and public keys, allowing users to communicate. The message and key format is designed to support a more distributed messaging backend in the future.
+
+For more details on the Origin Messaging Server setup, see the [README](https://github.com/OriginProtocol/origin/blob/master/infra/messaging/src/models/message.js).
+
+
+

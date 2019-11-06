@@ -23,6 +23,7 @@ const DISCOVERY_HOST = HOST || 'discovery'
 const NOTIFICATIONS_HOST = HOST || 'notifications'
 const GRAPHQL_HOST = HOST || 'graphql'
 const MESSAGING_HOST = HOST || 'messaging'
+const AUTH_SERVER_HOST = HOST || 'auth'
 
 const config = {
   networkId: 999,
@@ -31,6 +32,11 @@ const config = {
   ipfsGateway: get(process.env, 'IPFS_GATEWAY_URL', `http://${IPFS_HOST}:9999`),
   ipfsRPC: get(process.env, 'IPFS_API_URL', `http://${IPFS_HOST}:9999`),
   bridge: get(process.env, 'BRIDGE_SERVER_URL', `http://${BRIDGE_HOST}:5000`),
+  identityServer: get(
+    process.env,
+    'BRIDGE_SERVER_URL',
+    `http://${BRIDGE_HOST}:5000`
+  ),
   growth: get(process.env, 'GROWTH_SERVER_URL', `http://${GROWTH_HOST}:4008`),
   discovery: get(
     process.env,
@@ -38,7 +44,6 @@ const config = {
     `http://${DISCOVERY_HOST}:4000/graphql`
   ),
   notifications: `http://${NOTIFICATIONS_HOST}:3456`,
-  performanceMode: false,
   graphql: `http://${GRAPHQL_HOST}:4002`,
   automine: 2000,
   attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
@@ -46,6 +51,8 @@ const config = {
     messagingNamespace: 'origin:docker',
     globalKeyServer: `http://${MESSAGING_HOST}:6647`
   },
+
+  authServer: `http://${AUTH_SERVER_HOST}:5200`,
 
   affiliate: addresses.Affiliate,
   arbitrator: addresses.Arbitrator,
@@ -59,7 +66,11 @@ const config = {
   ProxyFactory: addresses.ProxyFactory,
   ProxyFactory_Epoch: addresses.ProxyFactoryEpoch,
   IdentityProxyImplementation: addresses.IdentityProxyImplementation,
-  tokens: []
+  tokens: [],
+
+  // Wire-on/off configs.
+  centralizedIdentityEnabled: true,
+  performanceMode: false
 }
 
 if (addresses.DAI) {

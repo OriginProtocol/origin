@@ -14,6 +14,7 @@ export default {
   discovery: 'https://discovery.originprotocol.com',
   growth: 'https://growth.originprotocol.com',
   bridge: 'https://bridge.originprotocol.com',
+  identityServer: 'https://bridge.originprotocol.com',
   graphql: 'https://graphql.originprotocol.com',
   notifications: 'https://notifications.originprotocol.com',
   relayer: 'https://relayer.originprotocol.com',
@@ -21,6 +22,7 @@ export default {
     messagingNamespace: 'origin',
     globalKeyServer: 'https://messaging.originprotocol.com'
   },
+  authServer: 'https://auth.originprotocol.com',
 
   // Contracts
   IdentityEvents: addresses.IdentityEvents,
@@ -87,7 +89,8 @@ export default {
   attestationIssuer: '0x8EAbA82d8D1046E4F242D4501aeBB1a6d4b5C4Aa',
   messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
 
-  // Configs
+  // Wire-on/off configs.
+  centralizedIdentityEnabled: false,
   performanceMode: true,
   proxyAccountsEnabled: true,
   relayerEnabled: true

@@ -13,6 +13,7 @@ import AutoMutate from 'components/AutoMutate'
 
 class DeployIdentity extends Component {
   state = {}
+
   render() {
     if (
       this.props.autoDeploy &&
@@ -24,9 +25,28 @@ class DeployIdentity extends Component {
     return (
       <Mutation
         mutation={DeployIdentityMutation}
-        onCompleted={({ deployIdentity }) =>
-          this.setState({ waitFor: deployIdentity.id, mutationCompleted: true })
-        }
+        onCompleted={({ deployIdentity }) => {
+          if (
+            window.localStorage.centralizedIdentityEnabled ||
+            process.env.ENABLE_CENTRALIZED_IDENTITY === 'true'
+          ) {
+            this.setState({ mutationCompleted: true })
+            if (this.props.refetch) {
+              this.props.refetch()
+            }
+            if (this.props.refetchObservables !== false) {
+              this.props.client.reFetchObservableQueries()
+            }
+            if (this.props.onComplete) {
+              this.props.onComplete()
+            }
+          } else {
+            this.setState({
+              waitFor: deployIdentity.id,
+              mutationCompleted: true
+            })
+          }
+        }}
         onError={errorData =>
           this.setState({ waitFor: false, error: 'mutation', errorData })
         }
@@ -101,7 +121,11 @@ class DeployIdentity extends Component {
 
     const { skipSuccessScreen } = this.props
     const content = skipSuccessScreen ? (
-      <AutoMutate mutation={() => this.setState({ shouldClose: true })} />
+      <AutoMutate
+        mutation={() => {
+          this.setState({ shouldClose: true })
+        }}
+      />
     ) : (
       <div className="make-offer-modal">
         <div className="success-icon" />
@@ -115,6 +139,13 @@ class DeployIdentity extends Component {
         />
       </div>
     )
+
+    if (
+      window.localStorage.centralizedIdentityEnabled ||
+      process.env.ENABLE_CENTRALIZED_IDENTITY === 'true'
+    ) {
+      return content
+    }
 
     return (
       <WaitForTransaction

@@ -23,6 +23,6 @@ COPY ./infra/growth-event ./infra/growth-event
 
 RUN yarn install
 
-CMD eval $(envkey-source) && \
+CMD eval "$(envkey-source)" && \
 	npm run migrate --prefix infra/bridge && \
 	npm run start --prefix infra/bridge

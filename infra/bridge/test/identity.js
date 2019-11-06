@@ -113,7 +113,7 @@ describe('Identity write', () => {
       .post(`/api/identity?ethAddress=${ethAddress}`)
       .send(data)
     expect(response.status).to.equal(200)
-    expect(response.body.id).to.equal(ethAddress.toLowerCase())
+    expect(response.body.ethAddress).to.equal(ethAddress.toLowerCase())
 
     // Then read it.
     response = await request(app).get(`/api/identity?ethAddress=${ethAddress}`)
@@ -151,7 +151,7 @@ describe('Identity write', () => {
       .post(`/api/identity?ethAddress=${ethAddress}`)
       .send(data)
     expect(response.status).to.equal(200)
-    expect(response.body.id).to.equal(ethAddress.toLowerCase())
+    expect(response.body.ethAddress).to.equal(ethAddress.toLowerCase())
 
     // Then read it.
     response = await request(app).get(`/api/identity?ethAddress=${ethAddress}`)
@@ -194,7 +194,7 @@ describe('Identity write', () => {
       .post(`/api/identity?ethAddress=${proxy}`)
       .send(data)
     expect(response.status).to.equal(200)
-    expect(response.body.id).to.equal(ethAddress.toLowerCase())
+    expect(response.body.ethAddress).to.equal(ethAddress.toLowerCase())
 
     // Then read it using owner address.
     response = await request(app).get(`/api/identity?ethAddress=${ethAddress}`)

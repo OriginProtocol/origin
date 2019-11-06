@@ -182,6 +182,12 @@ const identityWriteVerify = [
   handleValidationError
 ]
 
+const identityListVerify = [
+  check('limit').isInt(),
+  check('offset').isInt(),
+  handleValidationError
+]
+
 module.exports = {
   airbnbGenerateCode,
   airbnbVerifyCode,
@@ -201,5 +207,6 @@ module.exports = {
   verifyPromotions,
   identityReadVerify,
   identityWriteVerify,
+  identityListVerify,
   telegramAttestation
 }

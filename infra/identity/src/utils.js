@@ -140,15 +140,15 @@ async function _countryLookup(addresses) {
 }
 
 /**
- * Loads proxy address associated with an owner address.
- * Returns addresses (or only the owner if not proxy found) in a list.
+ * Loads proxy address(es) (if any) associated with an owner address.
  *
  * @param ownerAddress
- * @returns {Promise<Array<string>>}
+ * @returns {Promise<Array<string>>} Lower cased addresses, incuding owner and proxy(ies).
  */
 async function loadIdentityAddresses(ownerAddress) {
   // Attestation rows in the DB may have been written under the
   // proxy eth address. Load proxy addresses.
+  ownerAddress = ownerAddress.toLowerCase()
   const addresses = [ownerAddress]
   const proxies = await db.Proxy.findAll({ where: { ownerAddress } })
   for (const proxy of proxies) {

@@ -3,6 +3,7 @@ defaults: &defaults
     - image: circleci/node:10-browsers
   working_directory: ~/origin
 
+# Node.js and postgres container
 db: &db
   docker:
     - image: circleci/node:10-browsers
@@ -14,11 +15,25 @@ db: &db
   environment:
     DATABASE_URL: postgres://postgres@localhost/circle_ci_test
 
+# Node.js and redis container
 redis: &redis
   docker:
     - image: circleci/node:10-browsers
     - image: circleci/redis:5
   working_directory: ~/origin
+
+# Node.js, postgres and redis container
+dbandredis: &dbandredis
+  docker:
+    - image: circleci/node:10-browsers
+    - image: circleci/redis:5
+    - image: circleci/postgres:9.6-alpine-ram
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_DB: circle_ci_test
+  working_directory: ~/origin
+  environment:
+    DATABASE_URL: postgres://postgres@localhost/circle_ci_test
 
 version: 2
 jobs:
@@ -37,7 +52,6 @@ jobs:
           root: .
           paths:
             - .
-
   Lint:
     <<: *defaults
     steps:
@@ -47,7 +61,7 @@ jobs:
 
   Marketplace:
     <<: *defaults
-    parallelism: 4
+    parallelism: 5
     steps:
       - attach_workspace:
           at: .
@@ -58,6 +72,7 @@ jobs:
             if [[ $CIRCLE_NODE_INDEX == "1" ]]; then cd dapps/marketplace && NODE_ENV=test ./node_modules/.bin/mocha -r @babel/register test --bail -g "^Marketplace Dapp with proxies\." ; fi
             if [[ $CIRCLE_NODE_INDEX == "2" ]]; then cd dapps/marketplace && NODE_ENV=test ./node_modules/.bin/mocha -r @babel/register test --bail -g "^Marketplace Dapp with proxies, performance mode, relayer\." ; fi
             if [[ $CIRCLE_NODE_INDEX == "3" ]]; then cd dapps/marketplace && NODE_ENV=test ./node_modules/.bin/mocha -r @babel/register test --bail -g "^Marketplace Dapp with proxies, performance mode, broken relayer\." ; fi
+            if [[ $CIRCLE_NODE_INDEX == "4" ]]; then cd dapps/marketplace && NODE_ENV=test ./node_modules/.bin/mocha -r @babel/register test --bail -g "^Centralized Identity\." ; fi
 
   GraphQL:
     <<: *defaults
@@ -106,17 +121,7 @@ jobs:
           command: cd packages/event-cache && yarn migrate && yarn test
 
   Bridge:
-    # Redis and db
-    docker:
-      - image: circleci/node:10-browsers
-      - image: circleci/redis:5
-      - image: circleci/postgres:9.6-alpine-ram
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: circle_ci_test
-    working_directory: ~/origin
-    environment:
-      DATABASE_URL: postgres://postgres@localhost/circle_ci_test
+    <<: *dbandredis
     steps:
       - attach_workspace:
           at: .
@@ -172,13 +177,14 @@ jobs:
           command: cd infra/growth && yarn test
 
   Notifications:
-    <<: *db
+    <<: *dbandredis
     steps:
       - attach_workspace:
           at: .
       - run: cd infra/growth && yarn migrate
       - run: cd infra/growth-event && yarn migrate
       - run: cd infra/identity && yarn migrate
+      - run: cd packages/auth-utils && yarn migrate
       - run:
           name: Run Notification Tests
           command: cd infra/notifications && yarn migrate && yarn test
@@ -215,17 +221,7 @@ jobs:
           command: cd packages/web3-provider && yarn test
 
   Messaging:
-    # Redis and db
-    docker:
-      - image: circleci/node:10-browsers
-      - image: circleci/redis:5
-      - image: circleci/postgres:9.6-alpine-ram
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: circle_ci_test
-    working_directory: ~/origin
-    environment:
-      DATABASE_URL: postgres://postgres@localhost/circle_ci_test
+    <<: *dbandredis
     steps:
       - attach_workspace:
           at: .
@@ -236,6 +232,36 @@ jobs:
       - run:
           name: Run Messaging Server Tests
           command: cd infra/messaging && yarn migrate && yarn test
+
+  AuthUtils:
+    <<: *db
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run Auth Utils Tests
+          command: cd packages/auth-utils && yarn migrate && yarn test
+
+  AuthServer:
+    <<: *dbandredis
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run Origin Auth Server Tests
+          command: cd packages/auth-utils && yarn migrate && yarn test
+
+  Builds:
+    docker:
+      - image: circleci/node:10-buster
+    working_directory: ~/origin
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker
+      - run:
+          name: Run build Tests
+          command: bash .circleci/docker_test_builds.sh
 
 workflows:
   version: 2
@@ -281,6 +307,16 @@ workflows:
       - Messaging:
           requires:
             - Setup
+      - AuthUtils:
+          requires:
+            - Setup
+      - AuthServer:
+          requires:
+            - Setup
+      - Builds:
+          requires:
+            - Setup
+          context: origin
   schema:
     jobs:
       - Setup

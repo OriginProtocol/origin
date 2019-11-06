@@ -20,6 +20,6 @@ COPY ./infra/token-transfer-server ./infra/token-transfer-server
 
 RUN yarn install
 
-CMD eval $(envkey-source) && \
+CMD eval "$(envkey-source)" && \
 	npm run migrate --prefix infra/token-transfer-server && \
 	npm run start --prefix infra/token-transfer-server

@@ -21,7 +21,6 @@ const BonusCard = ({ earnings, isLocked, locked, lockups }) => {
     return (
       <BorderedCard shadowed={true}>
         <div className="text-center">
-          <img src={OgnTokens} />
           <OgnTokens />
           <h1 className="mt-3 mb-1">Earn bonus tokens</h1>
           <p>
@@ -75,7 +74,7 @@ const BonusCard = ({ earnings, isLocked, locked, lockups }) => {
             <div className="mb-3">
               <Lock className="icon" />
             </div>
-            You have not locked up any tokens
+            You don&apos;t have any OGN locked up.
           </div>
         )}
       </div>

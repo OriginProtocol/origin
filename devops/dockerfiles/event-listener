@@ -33,7 +33,7 @@ COPY ./infra/identity ./infra/identity
 
 RUN yarn install
 
-CMD eval $(envkey-source) && \
+CMD eval "$(envkey-source)" && \
     npm run migrate --prefix infra/discovery && \
 	npm run migrate --prefix packages/event-cache && \
 	npm run migrate --prefix infra/identity && \
