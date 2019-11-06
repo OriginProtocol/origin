@@ -76,7 +76,7 @@ do_build origin-relayer infra/relayer/package.json
 results="$results
 $retval"
 
-do_build origin-auth-server infra/auth-server/package.json
+do_build origin-auth infra/auth-server/package.json
 results="$results
 $retval"
 
