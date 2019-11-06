@@ -45,7 +45,8 @@ const PricingChooser = ({ value: selectedTokens, onChange, children }) => {
           selected={selectedTokens.includes('token-OGN')}
           onSelect={toggleCurrencies}
         />
-        {(process.env.NODE_ENV === 'test' || process.env.ENABLE_OKB === 'true') && (
+        {(process.env.NODE_ENV === 'test' ||
+          process.env.ENABLE_OKB === 'true') && (
           <AcceptedTokenListItem
             token="token-OKB"
             selected={selectedTokens.includes('token-OKB')}
