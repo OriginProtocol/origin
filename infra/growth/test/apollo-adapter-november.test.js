@@ -753,7 +753,7 @@ describe('Apollo adapter - November campaign', () => {
       {
         id: eventId++,
         type: GrowthEventTypes.SharedOnTwitter,
-        customId: 'de79297e418671c9b321e26cbb788415',
+        customId: '23d52b3383770b6d632fff32a0f33c0a',
         data: {
           twitterProfile: {
             verified: false,
@@ -780,6 +780,8 @@ describe('Apollo adapter - November campaign', () => {
     this.expectedState.rewardEarned = { amount: '300000000000000000000', currency: 'OGN' }
     this.expectedState.TwitterShare20.status = 'Completed'
     this.expectedState.TwitterShare20.rewardEarned = { amount: tokenToNaturalUnits(100), currency: 'OGN' }
+
+    // console.log(this.crules)
 
     checkExpectedState(state, this.expectedState)
   })
