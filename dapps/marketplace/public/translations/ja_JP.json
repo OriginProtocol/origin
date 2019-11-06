@@ -825,7 +825,9 @@
   "1sKft4": "Ethereumが不足しています",
   "22ZEKT": "DAIが不足しています。",
   "4zUJH3": "Originトークンが不足しています",
-  "1ECzYo": "残高が不足しています",
+  "4Ed2iA": "Not enough OKB Tokens. {=Get More}",
+  "4DOKEk": "Get More",
+  "49t4a6": "Not enough balance",
   "2t43zy": "どこで入手できますか？",
   "2nApoY": "手数料",
   "2QlAhE": "単位あたりのコミッション",
@@ -1338,7 +1340,9 @@
   "2tAdFF": "Ethereum",
   "3M0Mkc": "Maker Dai",
   "3NuPlb": "Origin Token",
+  "1w0kdV": "OKB Token",
   "3JTZtf": "Ethereumは短期間の出品に適しています。",
   "3eoCca": "Maker Daiは、レンタルや不動産販売などの長期の出品に適しています。",
-  "214S0w": "他の出品情報をプロモーションするのに便利です。"
+  "214S0w": "他の出品情報をプロモーションするのに便利です。",
+  "4nb5Gu": "For use with one of our exchange partners"
 }

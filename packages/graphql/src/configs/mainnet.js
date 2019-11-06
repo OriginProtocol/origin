@@ -72,6 +72,13 @@ export default {
       name: 'Gemini Dollar',
       symbol: 'GUSD',
       decimals: '2'
+    },
+    {
+      id: addresses.OKB,
+      type: 'Standard',
+      name: 'OKB Token',
+      symbol: 'OKB',
+      decimals: '18'
     }
   ],
   DaiExchange: addresses.UniswapDaiExchange,

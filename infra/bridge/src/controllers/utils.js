@@ -7,7 +7,7 @@ const Op = Sequelize.Op
 
 const Identity = require('@origin/identity/src/models').Identity
 
-const { getExchangeRate } = require('../utils/exchange-rate')
+const { getExchangeRates } = require('../utils/exchange-rate')
 
 /* This method is used for determining if an email or phone has previously
  * been used to create an identity, and so is likely to be excluded from Origin
@@ -59,9 +59,22 @@ router.post('/exists', async (req, res) => {
  * Returns exchange rate of given market
  */
 router.get('/exchange-rate', async (req, res) => {
-  res.send({
-    price: await getExchangeRate(req.query.market)
+  if (!req.query.market) {
+    return res.status(400).send({
+      errors: ['Field market is required']
+    })
+  }
+
+  return res.status(200).send({
+    price: await getExchangeRates(req.query.market)
   })
+})
+
+/**
+ * Returns exchange rates of all markets
+ */
+router.get('/exchange-rates', async (req, res) => {
+  return res.status(200).send(await getExchangeRates())
 })
 
 module.exports = router
