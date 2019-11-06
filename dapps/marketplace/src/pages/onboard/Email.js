@@ -42,7 +42,7 @@ class OnboardEmail extends Component {
       this.props.identity !== prevProps.identity,
       this.props.finished !== prevProps.finished,
       this.props.wallet !== prevProps.wallet
-    ].reduce((prev, current) => prev || current, false)
+    ].some(t => t)
 
     if (!shouldUpdate) {
       return
