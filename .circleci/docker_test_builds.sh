@@ -43,30 +43,43 @@ results=""
 do_build origin-cron infra/cron/package.json
 results="$results
 $retval"
+
 do_build origin-discovery infra/discovery/package.json
 results="$results
 $retval"
+
 do_build event-listener infra/discovery/package.json
 results="$results
 $retval"
+
 do_build origin-graphql packages/graphql/package.json
 results="$results
 $retval"
+
 do_build origin-growth infra/growth/package.json
 results="$results
 $retval"
+
 do_build origin-ipfs-proxy packages/ipfs/package.json
 results="$results
 $retval"
+
 do_build origin-messaging infra/messaging/package.json
 results="$results
 $retval"
+
 do_build origin-notifications infra/notifications/package.json
 results="$results
 $retval"
+
 do_build origin-relayer infra/relayer/package.json
 results="$results
 $retval"
+
+do_build origin-auth infra/auth-server/package.json
+results="$results
+$retval"
+
 do_build origin-dapp dapps/marketplace/package.json
 results="$results
 $retval"

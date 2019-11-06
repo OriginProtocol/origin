@@ -46,21 +46,21 @@
     "fsX2zn/I8IxKM/YS6pNIiA==": {
       "translations": [
         {
-          "translation": "Authentication Required"
+          "translation": "認証が必要です"
         }
       ]
     },
     "uBbr58ZsBIlotqS29XDzmA==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "リトライ"
         }
       ]
     },
     "b1eg8txmL9GsnAqK+wcpDA==": {
       "translations": [
         {
-          "translation": "Pin Required"
+          "translation": "Pinコードが必要です"
         }
       ]
     },
@@ -176,17 +176,31 @@
         }
       ]
     },
-    "2UTQi1Ij4joTFsZVJtd81g==": {
+    "pO5CQpny+muZsUdbI/OMjQ==": {
       "translations": [
         {
           "translation": "通知が無効になっているようです。あなたの取引に関する最新の更新を入手するには、Origin アプリの設定で通知を有効にしてください。"
         }
       ]
     },
-    "lOwKCA3REqk0Tz8uOBf3Pw==": {
+    "kpnxGAkY7wwhA034sRjlgg==": {
+      "translations": [
+        {
+          "translation": "通知を有効にし、あなたの取引に関する最新の情報を受け取ってください。"
+        }
+      ]
+    },
+    "HP2OsxjZ92s0ZkiHRLCq+Q==": {
       "translations": [
         {
           "translation": "設定を開く"
+        }
+      ]
+    },
+    "cNC6HEwSQ2MTdQc9xbDrAw==": {
+      "translations": [
+        {
+          "translation": "通知を有効にする"
         }
       ]
     },
@@ -194,6 +208,34 @@
       "translations": [
         {
           "translation": "閉じる"
+        }
+      ]
+    },
+    "21hMnXPcxTGJHmoWgpA7Og==": {
+      "translations": [
+        {
+          "translation": "Samsung Blockchain Keystore エラー"
+        }
+      ]
+    },
+    "qzN5RGfNbk86/n/jcpMdfg==": {
+      "translations": [
+        {
+          "translation": "Samsung Blockchain Keystore.へのアクセスでエラーが発生しました。"
+        }
+      ]
+    },
+    "DEMLFz9zBSsNpmhGgY6piw==": {
+      "translations": [
+        {
+          "translation": "リトライ"
+        }
+      ]
+    },
+    "rCsEaxa+oEKoe7c42xpG0A==": {
+      "translations": [
+        {
+          "translation": "続ける"
         }
       ]
     },
@@ -232,10 +274,17 @@
         }
       ]
     },
-    "kht+lHwylljzghuxx6U44Q==": {
+    "X272L09aOTnFbVTziChx1g==": {
       "translations": [
         {
-          "translation": "購入"
+          "translation": "オファーする"
+        }
+      ]
+    },
+    "8XqYinU0zAemee1+B/gY3g==": {
+      "translations": [
+        {
+          "translation": "トークンを送る"
         }
       ]
     },
@@ -246,10 +295,17 @@
         }
       ]
     },
-    "HcQ+0ssTVx9JP0dbueE6EA==": {
+    "lNW3S1SBg7rOFjjAt8j26Q==": {
       "translations": [
         {
-          "translation": "通貨換算を承認する"
+          "translation": "トークンのアクセスを許可する"
+        }
+      ]
+    },
+    "VqHNzpP2gO7q8zCyzsy2wA==": {
+      "translations": [
+        {
+          "translation": "{currency} の移動を許可してください。"
         }
       ]
     },
@@ -526,6 +582,55 @@
         }
       ]
     },
+    "qB0LirQx9SttKH4w9wrLOg==": {
+      "translations": [
+        {
+          "translation": "Samsung Blockchain Keystore"
+        }
+      ]
+    },
+    "eeZwTjiz+eTRGp9qpIdbUg==": {
+      "translations": [
+        {
+          "translation": "{biometryType} 利用不可"
+        }
+      ]
+    },
+    "IaE+AHV4HvjUVM7WH5QGEQ==": {
+      "translations": [
+        {
+          "translation": "{biometryType} が無効になっています。Originアプリの設定から有効にしてください。"
+        }
+      ]
+    },
+    "+2JgKmxomPm6EphuMZAFIg==": {
+      "translations": [
+        {
+          "translation": "設定を開く"
+        }
+      ]
+    },
+    "33H9wgLoaZ0e06VAnLqWDQ==": {
+      "translations": [
+        {
+          "translation": "ウォレットを守る"
+        }
+      ]
+    },
+    "LeVyToxA5TxqpAsWD4H61w==": {
+      "translations": [
+        {
+          "translation": "暗号通貨を安全に保つため、セキュリティをさらに強化してください。"
+        }
+      ]
+    },
+    "Rs0apd73mOXN6yDQ2xy9/w==": {
+      "translations": [
+        {
+          "translation": "Pinコードを作成する"
+        }
+      ]
+    },
     "0j7TBsobep8YH0Qkvtrqcg==": {
       "translations": [
         {
@@ -666,17 +771,10 @@
         }
       ]
     },
-    "P19QeS8TSjISSt0doVlLyA==": {
+    "/Dpz63y5rPCTt9TIGPA08A==": {
       "translations": [
         {
-          "translation": "他のウォレットをインポート"
-        }
-      ]
-    },
-    "31RyFwYE/GDQQsrh3Ulvtw==": {
-      "translations": [
-        {
-          "translation": "以下のいずれかの方法を使用してウォレットをインポートできます。"
+          "translation": "通貨"
         }
       ]
     },
@@ -694,6 +792,34 @@
         }
       ]
     },
+    "02GRYVGDDELAIPbO8x8GoQ==": {
+      "translations": [
+        {
+          "translation": "Samsung Keystore"
+        }
+      ]
+    },
+    "YgQAbQzQfarXS32FHToKpA==": {
+      "translations": [
+        {
+          "translation": "Samsung Blockchain Keystore. であなたのウォレットは管理されています。"
+        }
+      ]
+    },
+    "P19QeS8TSjISSt0doVlLyA==": {
+      "translations": [
+        {
+          "translation": "他のウォレットをインポート"
+        }
+      ]
+    },
+    "31RyFwYE/GDQQsrh3Ulvtw==": {
+      "translations": [
+        {
+          "translation": "以下のいずれかの方法を使用してウォレットをインポートできます。"
+        }
+      ]
+    },
     "EAvFlbnkWZvKJZAe/pfhsA==": {
       "translations": [
         {
@@ -701,10 +827,10 @@
         }
       ]
     },
-    "HSUBJXtSYEYyVbjVfwQmtg==": {
+    "S/j+cIqLysC5PQLYuvycXw==": {
       "translations": [
         {
-          "translation": "リカバリフレーズを入力してください"
+          "translation": "Enter Phrase"
         }
       ]
     },
@@ -736,34 +862,6 @@
         }
       ]
     },
-    "imEcy9mqva2P4QkCGKkG7w==": {
-      "translations": [
-        {
-          "translation": "検出されたその他のウォレット"
-        }
-      ]
-    },
-    "DktheTKIZ/i7gQzBzStqKQ==": {
-      "translations": [
-        {
-          "translation": "以前に別のウォレットでこのメールを使用してOrigin Rewardsにサインアップしたことがわかりました。 Origin Rewardsを獲得し続けるには、そちらのウォレットをインポートしてください。"
-        }
-      ]
-    },
-    "JdP7rfOo7gmvo9L/wkL+Zg==": {
-      "translations": [
-        {
-          "translation": "他のウォレットをインポート"
-        }
-      ]
-    },
-    "QxzO198tsuRhwRSgbXnSSA==": {
-      "translations": [
-        {
-          "translation": "報酬なしで続ける"
-        }
-      ]
-    },
     "59TOqnoYcFhWfpYdUrJdiw==": {
       "translations": [
         {
@@ -774,504 +872,21 @@
     "lPK1A5cn8JlhIPgCDjiuAg==": {
       "translations": [
         {
-          "translation": "Connection Error"
+          "translation": "接続エラー"
         }
       ]
     },
     "a3s77Iq0FypOEuisvfUcYg==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "リトライ"
         }
       ]
     },
-    "eeZwTjiz+eTRGp9qpIdbUg==": {
+    "c95LW4bvkZe+dGIftWiDVg==": {
       "translations": [
         {
-          "translation": "{biometryType} 利用不可"
-        }
-      ]
-    },
-    "IaE+AHV4HvjUVM7WH5QGEQ==": {
-      "translations": [
-        {
-          "translation": "{biometryType} が無効になっています。Originアプリの設定から有効にしてください。"
-        }
-      ]
-    },
-    "+2JgKmxomPm6EphuMZAFIg==": {
-      "translations": [
-        {
-          "translation": "設定を開く"
-        }
-      ]
-    },
-    "33H9wgLoaZ0e06VAnLqWDQ==": {
-      "translations": [
-        {
-          "translation": "ウォレットを守る"
-        }
-      ]
-    },
-    "LeVyToxA5TxqpAsWD4H61w==": {
-      "translations": [
-        {
-          "translation": "暗号通貨を安全に保つため、セキュリティをさらに強化してください。"
-        }
-      ]
-    },
-    "Rs0apd73mOXN6yDQ2xy9/w==": {
-      "translations": [
-        {
-          "translation": "Pinコードを作成する"
-        }
-      ]
-    },
-    "JzJZ+OTpb9hzNw77rQa8nw==": {
-      "translations": [
-        {
-          "translation": "写真のアップロードに失敗しました"
-        }
-      ]
-    },
-    "mVZ3B6uerQ4HZmCph0E5tQ==": {
-      "translations": [
-        {
-          "translation": "写真ライブラリの権限が付与されていません"
-        }
-      ]
-    },
-    "8ZM8FmUk6ZfijCtumgXusw==": {
-      "translations": [
-        {
-          "translation": "この写真はブロックチェーン上で表示されます。"
-        }
-      ]
-    },
-    "qMaDEzxqr8Ix4ron05p/oQ==": {
-      "translations": [
-        {
-          "translation": "続ける"
-        }
-      ]
-    },
-    "XEjWdGrZ6rODE6mbkHNr8A==": {
-      "translations": [
-        {
-          "translation": "ギャラリーへのアクセスが拒否されました"
-        }
-      ]
-    },
-    "AtumglY5rafPmxS5bIbDRQ==": {
-      "translations": [
-        {
-          "translation": "フォトギャラリーにアクセスできないようです。 Origin Marketplaceアプリのアクセスを許可する必要があります。"
-        }
-      ]
-    },
-    "1BsZZVEF1PmW8lwWzkHYmg==": {
-      "translations": [
-        {
-          "translation": "写真をアップロードする"
-        }
-      ]
-    },
-    "Sgdsg46ONGdu6O6X2qxfcg==": {
-      "translations": [
-        {
-          "translation": "いいですね！"
-        }
-      ]
-    },
-    "HIo5dv7pY9YsS7Fqm3bXfg==": {
-      "translations": [
-        {
-          "translation": "Emailアドレスが無効です"
-        }
-      ]
-    },
-    "Peq94zFjleGar7Rv3g1lgg==": {
-      "translations": [
-        {
-          "translation": "始めましょう"
-        }
-      ]
-    },
-    "RNEgkK4iv5gSEf8ZLkbgjg==": {
-      "translations": [
-        {
-          "translation": "メールアドレスを教えてください"
-        }
-      ]
-    },
-    "En1GXA0gOCZoss4o/D8dNg==": {
-      "translations": [
-        {
-          "translation": "あなたが販売または購入する際に、Originはメールで重要な通知をお知らせします。"
-        }
-      ]
-    },
-    "gneL+SMREOKfFfW2Ust3kg==": {
-      "translations": [
-        {
-          "translation": "続ける"
-        }
-      ]
-    },
-    "6bERcxQ2fGSwj490/D7Vuw==": {
-      "translations": [
-        {
-          "translation": "電子メールアドレスの確認"
-        }
-      ]
-    },
-    "MKqWd/5PlnVqEJThDppnRw==": {
-      "translations": [
-        {
-          "translation": "コードを入力する"
-        }
-      ]
-    },
-    "2gZws9N5PqCKOwXVtEAC4Q==": {
-      "translations": [
-        {
-          "translation": "提供されたメールアドレス宛に認証コードを送信しました。上にそのコードを入力してください。"
-        }
-      ]
-    },
-    "5Ytz1SpM8+qqFM6zuiP0yw==": {
-      "translations": [
-        {
-          "translation": "認証"
-        }
-      ]
-    },
-    "yA8uydHyuptDK//yqS34XA==": {
-      "translations": [
-        {
-          "translation": "認証済みのメールはありますが、これはあなたの本当のメールアドレスではありません。"
-        }
-      ]
-    },
-    "yCoiTqACk89DXAWoi3BMoA==": {
-      "translations": [
-        {
-          "translation": "資格の確認"
-        }
-      ]
-    },
-    "TF+HFktY9AXDNH8LNJQhUQ==": {
-      "translations": [
-        {
-          "translation": "Originリワード"
-        }
-      ]
-    },
-    "CJ0/lS8MDCaa37qmXjKQFg==": {
-      "translations": [
-        {
-          "translation": "おっと、 {countryName} は対象外です"
-        }
-      ]
-    },
-    "Riq5Tdahtx7XxXBl7aX1Ug==": {
-      "translations": [
-        {
-          "translation": "残念ながら、あなたは現在、政府の規制によりOriginリワードに参加することが許可されていない国にいるようです。"
-        }
-      ]
-    },
-    "4YNELtqVCN8E2G3QYp1Cqg==": {
-      "translations": [
-        {
-          "translation": "あなたの国が誤って検出されましたか？"
-        }
-      ]
-    },
-    "3SE1zCnFKOuvd6Jp635bRQ==": {
-      "translations": [
-        {
-          "translation": "私は私が {countryName} の市民でも居住者でもないことを証明します。"
-        }
-      ]
-    },
-    "lLkgrumZR50TcaB65im+QA==": {
-      "translations": [
-        {
-          "translation": "続ける"
-        }
-      ]
-    },
-    "e2u4nhuK5gTY0CktzGnp9g==": {
-      "translations": [
-        {
-          "translation": "キャンセル"
-        }
-      ]
-    },
-    "/UBlfxY244oqVerZ50a4kA==": {
-      "translations": [
-        {
-          "translation": "Origin リワード規約"
-        }
-      ]
-    },
-    "M0aW3hsME0GRN2erlboMPQ==": {
-      "translations": [
-        {
-          "translation": "Originのリワードプログラムに参加して、Originトークン（OGN）を獲得してください。これには、規約が適用されます。"
-        }
-      ]
-    },
-    "qkndnSlpAK84Dm13IY+AbA==": {
-      "translations": [
-        {
-          "translation": "獲得したOGNは、各キャンペーンの最後に配布されます。 OGNは現在、Originプラットフォームでの使用がロックされており、転送できません。 OGNのロックは解除され、将来譲渡可能になる予定です。 Originの報酬プログラムに参加することにより、トークンを獲得した日から少なくとも1年間、将来獲得したOriginトークンを他者に譲渡または販売しないことに同意します。"
-        }
-      ]
-    },
-    "9Wy3RxCzhQrxJlnXfTVo7g==": {
-      "translations": [
-        {
-          "translation": "OGNは、もともと1933年の米国証券法の下で修正された（「証券法」）登録から免除された取引で発行されており、米国で、または米国の口座または利益のために譲渡することはできません。証券法および該当するすべての州証券法の登録要件の利用可能な免除に従う場合を除き、個人。上記で使用されている用語は、証券法および適用されるすべての法律および規制に基づく規則で与えられている意味を持ちます。"
-        }
-      ]
-    },
-    "mV7gMrH1PUulSFXaNYOdvg==": {
-      "translations": [
-        {
-          "translation": "利用規約に同意します"
-        }
-      ]
-    },
-    "H+BZVjVjM4+IejWLGWVyhA==": {
-      "translations": [
-        {
-          "translation": "利用規約に同意する"
-        }
-      ]
-    },
-    "wnFr35kFZ4iM1Ku4hZwUmA==": {
-      "translations": [
-        {
-          "translation": "キャンセル"
-        }
-      ]
-    },
-    "YNkCMDVkWdODeqZBgGdakw==": {
-      "translations": [
-        {
-          "translation": "Origin からの報酬は不要ですか？"
-        }
-      ]
-    },
-    "ZybZxwhEQLQFw3K7TlMb5Q==": {
-      "translations": [
-        {
-          "translation": "OriginでOGNを獲得することはできませんが、プロフィールを認証することはできます。"
-        }
-      ]
-    },
-    "0q0HZMWU7Zaxkf21fXF7bw==": {
-      "translations": [
-        {
-          "translation": "いや、待って"
-        }
-      ]
-    },
-    "caWiQ9MV++tRiOpjfzGXbg==": {
-      "translations": [
-        {
-          "translation": "はい、了解です"
-        }
-      ]
-    },
-    "8kzZqWiXkbW+TAsfJ2wF2w==": {
-      "translations": [
-        {
-          "translation": "はい！サインアップします。"
-        }
-      ]
-    },
-    "vvayvkUbDXMztNsDHtqVxg==": {
-      "translations": [
-        {
-          "translation": "いいえ、結構です。"
-        }
-      ]
-    },
-    "cKNz7tWusaI7mgYnY6GJjg==": {
-      "translations": [
-        {
-          "translation": "アカウントを探しています"
-        }
-      ]
-    },
-    "KeWVNCqIuy/5jj5oxSE76A==": {
-      "translations": [
-        {
-          "translation": "こんにちは {name}！"
-        }
-      ]
-    },
-    "b2pa9zJ/zom712iIyfwpAw==": {
-      "translations": [
-        {
-          "translation": "Originアカウントを完了するには、さらにいくつかの手順が必要です。"
-        }
-      ]
-    },
-    "jxC2CYxK7d6CUoJX8yjOjw==": {
-      "translations": [
-        {
-          "translation": "全ての準備が整いました！"
-        }
-      ]
-    },
-    "c0kC64N++nnO7YdUXpPkJA==": {
-      "translations": [
-        {
-          "translation": "続ける"
-        }
-      ]
-    },
-    "nT671l79mnT9TUemKKeA8g==": {
-      "translations": [
-        {
-          "translation": "ウォレットをインポートしました"
-        }
-      ]
-    },
-    "492X/a02RgI2kX1CY4OWfA==": {
-      "translations": [
-        {
-          "translation": "次に、このウォレットにリンクされるOriginプロファイルを作成します。"
-        }
-      ]
-    },
-    "weAsFjgd4z8GxgH80OrGeg==": {
-      "translations": [
-        {
-          "translation": "ウォレットは匿名ではなくなりますのでご注意ください"
-        }
-      ]
-    },
-    "3ZoiRX1L5tYXGwsTNPAyYA==": {
-      "translations": [
-        {
-          "translation": "詳細について"
-        }
-      ]
-    },
-    "t3fzdBVeOZ+86XM456+6OQ==": {
-      "translations": [
-        {
-          "translation": "プロフィールを作成する"
-        }
-      ]
-    },
-    "NMOn9OVOm+Q83MCggA+Qhw==": {
-      "translations": [
-        {
-          "translation": "ちょっと待って！最初からやり直してみましょう..."
-        }
-      ]
-    },
-    "lCIO39XYueDt+SlnJ14ozA==": {
-      "translations": [
-        {
-          "translation": "プロフィールを作成する"
-        }
-      ]
-    },
-    "6YgdpUZBYWeBELyMTnFapw==": {
-      "translations": [
-        {
-          "translation": "名を入力してください"
-        }
-      ]
-    },
-    "jQ/kAfe+VaXifrBypObqtQ==": {
-      "translations": [
-        {
-          "translation": "姓を入力してください"
-        }
-      ]
-    },
-    "Jl+otuv0Lja5dPoHRGgnPQ==": {
-      "translations": [
-        {
-          "translation": "続ける"
-        }
-      ]
-    },
-    "3pU9dBapWm3w0SdYNr/Zkw==": {
-      "translations": [
-        {
-          "translation": "この名前はブロックチェーン上で表示されます。"
-        }
-      ]
-    },
-    "+RVM+8puOIMhob2MxHX2bA==": {
-      "translations": [
-        {
-          "translation": "電話番号を入力する"
-        }
-      ]
-    },
-    "uqaHngk+36/IrdZ9m9dU1Q==": {
-      "translations": [
-        {
-          "translation": "電話番号を承認することで、あなたはOriginがあなたの取引について通知などを送る事に同意する事になります。"
-        }
-      ]
-    },
-    "3g9qvEu1GiNMNh6JBijqHg==": {
-      "translations": [
-        {
-          "translation": "続ける"
-        }
-      ]
-    },
-    "XwrNYmVJlDBLt6bAM+2xFg==": {
-      "translations": [
-        {
-          "translation": "電話番号を認証"
-        }
-      ]
-    },
-    "XAWHUFhdiQP6HPqgZSD9Ow==": {
-      "translations": [
-        {
-          "translation": "コードを入力する"
-        }
-      ]
-    },
-    "0afMb8DymUzAeiwd1ZoCOA==": {
-      "translations": [
-        {
-          "translation": "提供されたメールアドレス宛に認証コードを送信しました。上にそのコードを入力してください。"
-        }
-      ]
-    },
-    "cVQ5WUbAd0AwThKrYa0XUg==": {
-      "translations": [
-        {
-          "translation": "スキップ"
-        }
-      ]
-    },
-    "hSS4TyNhyW0XIRPWLPTNkQ==": {
-      "translations": [
-        {
-          "translation": "認証"
-        }
-      ]
-    },
-    "PyFVYexIJiaH2u8MLa9guA==": {
-      "translations": [
-        {
-          "translation": "認証済みの電話番号はありますが、これはあなたの本当の電話番号ではありません。"
+          "translation": "設定"
         }
       ]
     },
@@ -1303,97 +918,6 @@
         }
       ]
     },
-    "Ip7Mr7tIHRRsNQPeJcaJFA==": {
-      "translations": [
-        {
-          "translation": "Originで売買を開始する準備が整いました"
-        }
-      ]
-    },
-    "SbM4isH7VRSRb3Kzhb2Xdw==": {
-      "translations": [
-        {
-          "translation": "残念ながら、あなたの情報を公開することはできませんでした。"
-        }
-      ]
-    },
-    "OEbNUu60r5gTdbiIFyusag==": {
-      "translations": [
-        {
-          "translation": "Originを使い始める"
-        }
-      ]
-    },
-    "MB0ie95S2AA9xAwYRkPG2Q==": {
-      "translations": [
-        {
-          "translation": "アカウントを公開する"
-        }
-      ]
-    },
-    "lgpP8skCH3wOustvhptxBA==": {
-      "translations": [
-        {
-          "translation": "Waiting for confirmation"
-        }
-      ]
-    },
-    "tWJHZWSsiD6K0ek//UcW6Q==": {
-      "translations": [
-        {
-          "translation": "This might take a minute"
-        }
-      ]
-    },
-    "RQqR7szL1Z0RUueooggK8w==": {
-      "translations": [
-        {
-          "translation": "暗号資産を使って売買する"
-        }
-      ]
-    },
-    "NS4tuPyGpGvlopEQ9CgpaQ==": {
-      "translations": [
-        {
-          "translation": "報酬を稼ぐ"
-        }
-      ]
-    },
-    "4ngVhZSzyusgelFj2N7DSA==": {
-      "translations": [
-        {
-          "translation": "ウォレットを作成する"
-        }
-      ]
-    },
-    "DqUT7JADQFjo22wU9bvsmg==": {
-      "translations": [
-        {
-          "translation": "既にウォレットを持っています"
-        }
-      ]
-    },
-    "XSqsabas04tq+ha/t4s+cQ==": {
-      "translations": [
-        {
-          "translation": "続ける"
-        }
-      ]
-    },
-    "qrLh9UBi6Dk+4Sjgbqwhmg==": {
-      "translations": [
-        {
-          "translation": "サインアップすることであなたは利用規約とプライバシーポリシーに同意したことになります。"
-        }
-      ]
-    },
-    "O1VMdGobKc4WbUg9gMwhBQ==": {
-      "translations": [
-        {
-          "translation": "設定"
-        }
-      ]
-    },
     "LcZb2FnXOZvXBJaKB/sXTw==": {
       "translations": [
         {
@@ -1415,6 +939,13 @@
         }
       ]
     },
+    "GHSZ2Asae082vH5nd+9RuA==": {
+      "translations": [
+        {
+          "translation": "通貨"
+        }
+      ]
+    },
     "ob6dsrEPfJxAbOpd4plQGA==": {
       "translations": [
         {
@@ -1425,14 +956,14 @@
     "j5rIPEDyOjXyubSdCUgZ6A==": {
       "translations": [
         {
-          "translation": "Version"
+          "translation": "バージョン"
         }
       ]
     },
-    "suj8KDO/kpGSuWSeoiYk7A==": {
+    "O1VMdGobKc4WbUg9gMwhBQ==": {
       "translations": [
         {
-          "translation": "ウォレット"
+          "translation": "設定"
         }
       ]
     },
@@ -1478,6 +1009,13 @@
         }
       ]
     },
+    "k9ik7lp8zzY9UDgOal86Tg==": {
+      "translations": [
+        {
+          "translation": "ウォレットアドレス"
+        }
+      ]
+    },
     "MqIZn3Tps2BNhT8GpKl49Q==": {
       "translations": [
         {
@@ -1485,10 +1023,52 @@
         }
       ]
     },
-    "k9ik7lp8zzY9UDgOal86Tg==": {
+    "suj8KDO/kpGSuWSeoiYk7A==": {
       "translations": [
         {
-          "translation": "ウォレットアドレス"
+          "translation": "ウォレット"
+        }
+      ]
+    },
+    "RQqR7szL1Z0RUueooggK8w==": {
+      "translations": [
+        {
+          "translation": "暗号資産を使って売買する"
+        }
+      ]
+    },
+    "NS4tuPyGpGvlopEQ9CgpaQ==": {
+      "translations": [
+        {
+          "translation": "報酬を稼ぐ"
+        }
+      ]
+    },
+    "qrLh9UBi6Dk+4Sjgbqwhmg==": {
+      "translations": [
+        {
+          "translation": "サインアップすることであなたは利用規約とプライバシーポリシーに同意したことになります。"
+        }
+      ]
+    },
+    "XSqsabas04tq+ha/t4s+cQ==": {
+      "translations": [
+        {
+          "translation": "続ける"
+        }
+      ]
+    },
+    "4ngVhZSzyusgelFj2N7DSA==": {
+      "translations": [
+        {
+          "translation": "ウォレットを作成する"
+        }
+      ]
+    },
+    "DqUT7JADQFjo22wU9bvsmg==": {
+      "translations": [
+        {
+          "translation": "既にウォレットを持っています"
         }
       ]
     }

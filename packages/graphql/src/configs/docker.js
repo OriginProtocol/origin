@@ -23,6 +23,7 @@ const DISCOVERY_HOST = HOST || 'discovery'
 const NOTIFICATIONS_HOST = HOST || 'notifications'
 const GRAPHQL_HOST = HOST || 'graphql'
 const MESSAGING_HOST = HOST || 'messaging'
+const AUTH_SERVER_HOST = HOST || 'auth'
 
 const config = {
   networkId: 999,
@@ -51,6 +52,8 @@ const config = {
     globalKeyServer: `http://${MESSAGING_HOST}:6647`
   },
 
+  authServer: `http://${AUTH_SERVER_HOST}:5200`,
+
   affiliate: addresses.Affiliate,
   arbitrator: addresses.Arbitrator,
   OriginToken: addresses.OGN,
@@ -76,6 +79,16 @@ if (addresses.DAI) {
     type: 'Standard',
     name: 'DAI Stablecoin',
     symbol: 'DAI',
+    decimals: '18'
+  })
+}
+
+if (addresses.OKB) {
+  config.tokens.push({
+    id: addresses.OKB,
+    type: 'Standard',
+    name: 'OKB Token',
+    symbol: 'OKB',
     decimals: '18'
   })
 }

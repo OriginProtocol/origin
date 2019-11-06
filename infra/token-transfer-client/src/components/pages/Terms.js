@@ -4,16 +4,24 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-import { editUser } from '@/actions/user'
+import { editUser, fetchUser } from '@/actions/user'
 import {
+  getUser,
   getError as getUserError,
-  getIsEditing as getUserIsEditing
+  getIsEditing as getUserIsEditing,
+  getIsLoading as getUserIsLoading
 } from '@/reducers/user'
 
 class Terms extends Component {
   state = {
     accepted: false,
     redirectTo: null
+  }
+
+  componentDidMount() {
+    if (!this.props.user) {
+      this.props.fetchUser()
+    }
   }
 
   handleSubmit = async () => {
@@ -25,10 +33,26 @@ class Terms extends Component {
     }
   }
 
+  renderLoading = () => {
+    return (
+      <div className="action-card">
+        <div className="spinner-grow" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>
+    )
+  }
+
   render() {
     if (this.state.redirectTo) {
       return <Redirect push to={this.state.redirectTo} />
+    } else if (this.props.userIsLoading) {
+      return this.renderLoading()
     }
+
+    const skipRevisedSchedule =
+      this.props.user.revisedScheduleAgreedAt ||
+      this.props.user.revisedScheduleRejected
 
     return (
       <>
@@ -72,13 +96,34 @@ class Terms extends Component {
               onClick={e => this.setState({ accepted: e.target.checked })}
             />
             <label className="form-check-label mt-0" htmlFor="acceptCheck">
-              I have read and agree to the terms and conditions
+              I have read and agree to the above terms and conditions and the{' '}
+              <a
+                href="https://www.originprotocol.com/en/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                privacy policy
+              </a>{' '}
+              and{' '}
+              <a
+                href="https://www.originprotocol.com/en/tos"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                terms of service
+              </a>{' '}
+              of Origin Protocol Inc.
             </label>
           </div>
           <button
-            className="btn btn-secondary btn-lg mt-5"
-            onClick={this.handleSubmit}
-            disabled={!this.state.accepted || this.props.userIsEditing}
+            className="btn btn-secondary btn-lg"
+            onClick={() => {
+              if (skipRevisedSchedule) {
+                this.setState({ redirectTo: '/phone' })
+              } else {
+                this.setState({ redirectTo: '/revised_schedule' })
+              }
+            }}
           >
             Continue
           </button>
@@ -90,15 +135,18 @@ class Terms extends Component {
 
 const mapStateToProps = ({ user }) => {
   return {
+    user: getUser(user),
     userError: getUserError(user),
-    userIsEditing: getUserIsEditing(user)
+    userIsEditing: getUserIsEditing(user),
+    userIsLoading: getUserIsLoading(user)
   }
 }
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      editUser: editUser
+      editUser: editUser,
+      fetchUser: fetchUser
     },
     dispatch
   )

@@ -45,6 +45,8 @@ const config = {
     globalKeyServer: 'http://localhost:6647'
   },
 
+  authServer: `http://${HOST}:5200`,
+
   // Wire-on/off configs.
   centralizedIdentityEnabled: !!process.env.ENABLE_CENTRALIZED_IDENTITY,
   performanceMode: localStorageHas('performanceMode', 'true'),
@@ -58,6 +60,16 @@ if (addresses.DAI) {
     type: 'Standard',
     name: 'DAI Stablecoin',
     symbol: 'DAI',
+    decimals: '18'
+  })
+}
+
+if (addresses.OKB) {
+  config.tokens.push({
+    id: addresses.OKB,
+    type: 'Standard',
+    name: 'OKB Token',
+    symbol: 'OKB',
     decimals: '18'
   })
 }

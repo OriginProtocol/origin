@@ -134,3 +134,8 @@ Thumbs.db
 
 # Redis #
 *dump.rdb
+
+# Secrets #
+devops/github
+devops/kubernetes/values/origin/secrets-*.enc.yaml
+devops/kubernetes/values/origin-monitoring/secrets

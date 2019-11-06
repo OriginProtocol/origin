@@ -20,8 +20,9 @@ const config = {
   automine: 2000,
   attestationIssuer: '0x99C03fBb0C995ff1160133A8bd210D0E77bCD101',
   messaging: {
-    globalKeyServer: 'http://${HOST}:6647'
+    globalKeyServer: `http://${HOST}:6647`
   },
+  authServer: `http://${HOST}:5200`,
   affiliate: addresses.Affiliate,
   arbitrator: addresses.Arbitrator,
   OriginToken: addresses.OGN,
@@ -37,6 +38,16 @@ if (addresses.DAI) {
     type: 'Standard',
     name: 'DAI Stablecoin',
     symbol: 'DAI',
+    decimals: '18'
+  })
+}
+
+if (addresses.OKB) {
+  config.tokens.push({
+    id: addresses.OKB,
+    type: 'Standard',
+    name: 'OKB Token',
+    symbol: 'OKB',
     decimals: '18'
   })
 }

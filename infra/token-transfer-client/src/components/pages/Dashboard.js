@@ -56,15 +56,17 @@ const Dashboard = props => {
   }
 
   const isLocked = moment.utc() < unlockDate
-
   const { vestedTotal, unvestedTotal } = props.grantTotals
+  const balanceAvailable = vestedTotal
+    .minus(props.withdrawnAmount)
+    .minus(props.lockupTotals.locked)
 
   return (
     <>
       <div className="row">
         <div className="col mb-4">
           <BalanceCard
-            balance={vestedTotal.minus(props.withdrawnAmount)}
+            balance={balanceAvailable}
             accounts={props.accounts}
             locked={props.lockupTotals.locked}
             isLocked={isLocked}

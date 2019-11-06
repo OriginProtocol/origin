@@ -22,6 +22,7 @@ export default {
     messagingNamespace: 'origin:staging',
     globalKeyServer: 'https://messaging.staging.originprotocol.com'
   },
+  authServer: 'https://auth.staging.originprotocol.com',
 
   // Contracts
   OriginToken: addresses.OGN,
@@ -48,6 +49,13 @@ export default {
       type: 'Standard',
       name: 'DAI Stablecoin',
       symbol: 'DAI',
+      decimals: '18'
+    },
+    {
+      id: addresses.OKB,
+      type: 'Standard',
+      name: 'OKB Token',
+      symbol: 'OKB',
       decimals: '18'
     }
   ],

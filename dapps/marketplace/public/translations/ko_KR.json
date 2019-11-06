@@ -825,7 +825,9 @@
   "1sKft4": "Not enough Ethereum",
   "22ZEKT": "Not enough DAI",
   "4zUJH3": "Not enough Origin Tokens",
-  "1ECzYo": "Not enough balance",
+  "4Ed2iA": "Not enough OKB Tokens. {=Get More}",
+  "4DOKEk": "Get More",
+  "49t4a6": "Not enough balance",
   "2t43zy": "Where can I get some?",
   "2nApoY": "수수료",
   "2QlAhE": "Commission per Unit",
@@ -1338,7 +1340,9 @@
   "2tAdFF": "Ethereum",
   "3M0Mkc": "Maker Dai",
   "3NuPlb": "Origin Token",
+  "1w0kdV": "OKB Token",
   "3JTZtf": "이더리움(ETH) 은 단기 상품 목록에 적합합니다",
   "3eoCca": "Maker Dai is good for long term listings like rentals or property sales.",
-  "214S0w": "Useful for promoting other listings"
+  "214S0w": "Useful for promoting other listings",
+  "4nb5Gu": "For use with one of our exchange partners"
 }

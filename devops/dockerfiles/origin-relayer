@@ -20,6 +20,6 @@ COPY ./infra/relayer ./infra/relayer
 
 RUN yarn install
 
-CMD eval $(envkey-source) && \
+CMD eval "$(envkey-source)" && \
   npm run migrate --prefix infra/relayer && \
   npm run start --prefix infra/relayer
