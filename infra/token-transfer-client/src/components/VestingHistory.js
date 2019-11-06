@@ -39,7 +39,7 @@ const VestingHistory = props => {
 
   return (
     <>
-      <h2 className="mb-4">Vesting History</h2>
+      <h2 className="mb-4">Vesting Schedule</h2>
       <hr />
       <div className="table-card">
         <div className="scrolling-table">
