@@ -172,10 +172,24 @@ export async function createListing(gqlClient, opts = {}) {
   return get(returnValues.find(e => e.field === 'listingID'), 'value')
 }
 
+async function transferTokens(gqlClient, { to, token, value }) {
+  const res = await gqlClient.mutate({
+    mutation: TransferTokenMutation,
+    variables: {
+      from: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
+      to,
+      token,
+      value
+    }
+  })
+  await transactionConfirmed(res.data.transferToken.id, gqlClient)
+  debug(`sent ${token}`)
+}
+
 export async function createAccount(gqlClient, opts = {}) {
   debug(`createAccount`, opts)
 
-  const { ogn, dai, eth = '0.5', deployIdentity } = opts
+  const { ogn, dai, okb, eth = '0.5', deployIdentity, centralizedIdentity } = opts
   const NodeAccount = await getNodeAccount(gqlClient)
   await gqlClient.mutate({
     mutation: ToggleMetaMaskMutation,
@@ -209,49 +223,47 @@ export async function createAccount(gqlClient, opts = {}) {
         attestations: []
       }
     })
-    await transactionConfirmed(identity.data.deployIdentity.id, gqlClient)
+    // Wait for the tx confirmation if the identity was save on the blockchain.
+    // If a centralized server was used, this is not needed.
+    if (!centralizedIdentity) {
+      await transactionConfirmed(identity.data.deployIdentity.id, gqlClient)
+    }
     debug(`deployed identity`)
   }
 
-  if (ogn) {
+  if (dai || ogn || okb) {
     const accounts = mnemonicToAccounts()
     await gqlClient.mutate({
       mutation: ImportWalletsMutation,
       variables: { accounts: [accounts[0]] }
     })
 
-    const res = await gqlClient.mutate({
-      mutation: TransferTokenMutation,
-      variables: {
-        from: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
-        to: user,
-        token: 'OGN',
-        value: ogn
-      }
-    })
-    await transactionConfirmed(res.data.transferToken.id, gqlClient)
-    debug(`sent OGN`)
-  }
-
-  if (dai) {
-    const accounts = mnemonicToAccounts()
-    await gqlClient.mutate({
-      mutation: ImportWalletsMutation,
-      variables: { accounts: [accounts[0]] }
-    })
-
-    const res = await gqlClient.mutate({
-      mutation: TransferTokenMutation,
-      variables: {
-        from: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
+    if (dai) {
+      await transferTokens(gqlClient, {
         to: user,
         token: 'DAI',
         value: dai
-      }
-    })
-    await transactionConfirmed(res.data.transferToken.id, gqlClient)
-    debug(`sent DAI`)
+      })
+    }
+
+    if (ogn) {
+      await transferTokens(gqlClient, {
+        to: user,
+        token: 'OGN',
+        value: ogn
+      })
+    }
+
+    if (okb) {
+      await transferTokens(gqlClient, {
+        to: user,
+        token: 'OKB',
+        value: okb
+      })
+    }
+
   }
+
   return user
 }
 
@@ -304,6 +316,15 @@ export default async function populate(gqlClient, log, done) {
     supply: '1000000000'
   })
   log(`Deployed DAI stablecoin to ${DAI.contractAddress}`)
+
+  const OKB = await mutate(DeployTokenMutation, Admin, {
+    type: 'Standard',
+    name: 'OKB Token',
+    symbol: 'OKB',
+    decimals: '18',
+    supply: '3000000000'
+  })
+  log(`Deployed OKB token to ${OKB.contractAddress}`)
 
   const MarketplaceV1 = await mutate(DeployMarketplaceMutation, Admin, {
     token: OGN.contractAddress,
@@ -379,6 +400,20 @@ export default async function populate(gqlClient, log, done) {
     value: '500'
   })
   log('Set buyer dai token allowance')
+
+  await mutate(TransferTokenMutation, Admin, {
+    to: Buyer,
+    token: OKB.contractAddress,
+    value: '500'
+  })
+  log('Sent OKB to buyer')
+
+  await mutate(UpdateTokenAllowanceMutation, Buyer, {
+    to: Marketplace.contractAddress,
+    token: OKB.contractAddress,
+    value: '500'
+  })
+  log('Set buyer OKB token allowance')
 
   await mutate(SendFromNodeMutation, NodeAccount, {
     to: Arbitrator,
@@ -468,6 +503,7 @@ export default async function populate(gqlClient, log, done) {
       Affiliate,
       OGN: OGN.contractAddress,
       DAI: DAI.contractAddress,
+      OKB: OKB.contractAddress,
       Marketplace: Marketplace.contractAddress,
       MarketplaceEpoch: Marketplace.blockNumber,
       Marketplace_V01: MarketplaceV1.contractAddress,

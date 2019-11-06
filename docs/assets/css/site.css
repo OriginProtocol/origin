@@ -65,14 +65,11 @@ th {
   display: flex;
   flex-direction: row;
   padding:20px;
-  background-color:#111d28;
+  background-color:#007cff;
 }
 .header > .logo {
   padding-left:10px;
-  background-image:url('/assets/origin-logo-white.png');
-  background-repeat: no-repeat;
-  text-indent:-999px;
-  width:98px;
+  width:99px;
   height:23px;
 }
 

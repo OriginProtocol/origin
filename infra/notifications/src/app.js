@@ -20,6 +20,8 @@ const MobileRegistry = require('./models').MobileRegistry
 const { GrowthEventTypes } = require('@origin/growth-event/src/enums')
 const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
 
+const authMiddleware = require('@origin/auth-utils/src/middleware/auth.non-strict')
+
 const app = express()
 const port = 3456
 const emailAddress = process.env.VAPID_EMAIL_ADDRESS
@@ -178,9 +180,9 @@ app.post('/', async (req, res) => {
  *  - On iOS devices, the app may call this endpoint before the user accepts
  *    to turn on notifications. So the deviceToken argument may be empty.
  */
-app.post('/mobile/register', async (req, res) => {
+app.post('/mobile/register', authMiddleware, async (req, res) => {
   const mobileRegister = {
-    ethAddress: _.get(req.body, 'eth_address', null),
+    ethAddress: req.__originAuth.address,
     deviceType: _.get(req.body, 'device_type', null),
     deviceToken: _.get(req.body, 'device_token', null),
     permissions: _.get(req.body, 'permissions', null)
@@ -249,9 +251,9 @@ app.post('/mobile/register', async (req, res) => {
 /**
  * Unregisters a device for push notifications.
  */
-app.delete('/mobile/register', async (req, res) => {
+app.delete('/mobile/register', authMiddleware, async (req, res) => {
   const mobileRegister = {
-    ethAddress: _.get(req.body, 'eth_address', null),
+    ethAddress: req.__originAuth.address,
     deviceToken: _.get(req.body, 'device_token', null)
   }
   logger.info(`DELETE /mobile/register for ${mobileRegister.ethAddress}`)

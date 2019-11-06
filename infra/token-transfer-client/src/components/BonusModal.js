@@ -12,6 +12,7 @@ import {
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import Modal from '@/components/Modal'
 import EmailIcon from '@/assets/email-icon.svg'
+import { lockupBonusRate } from '@/constants'
 
 class BonusModal extends Component {
   constructor(props) {
@@ -88,6 +89,14 @@ class BonusModal extends Component {
     }
   }
 
+  onMaxAmount = event => {
+    event.preventDefault()
+
+    this.setState({
+      amount: Number(this.props.balance)
+    })
+  }
+
   render() {
     return (
       <Modal appendToId="main" onClose={this.handleModalClose} closeBtn={true}>
@@ -103,17 +112,28 @@ class BonusModal extends Component {
     const input = formInput(this.state, state => this.setState(state))
     const Feedback = formFeedback(this.state)
 
-    const bonusRate = 10.0
-
     return (
       <>
         <h1 className="mb-2">Earn Bonus Tokens</h1>
         <form onSubmit={this.handleFormSubmit}>
           <div className="form-group">
-            <label htmlFor="amount">Amount of Tokens to Lockup</label>
+            <label htmlFor="amount">Number of Tokens to Lock Up</label>
             <div className="input-group">
               <input {...input('amount')} type="number" />
               <div className="input-group-append">
+                <a
+                  href="#"
+                  onClick={this.onMaxAmount}
+                  className="mr-2"
+                  style={{
+                    color: '#007cff',
+                    fontSize: '14px',
+                    textDecoration: 'none',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Max amount
+                </a>
                 <span className="badge badge-secondary">OGN</span>
               </div>
             </div>
@@ -128,17 +148,21 @@ class BonusModal extends Component {
                 <div className="col">
                   <strong>Bonus tokens earned</strong>{' '}
                   <span style={{ fontSize: '14px' }}>
-                    ({bonusRate}% of lockup)
+                    ({lockupBonusRate}% of lockup)
                   </span>
                 </div>
                 <div className="col-4 text-right">
-                  <strong>{this.state.amount * (bonusRate / 100)}</strong>{' '}
+                  <strong>
+                    {BigNumber(this.state.amount * (lockupBonusRate / 100))
+                      .toFixed(0, BigNumber.ROUND_UP)
+                      .toLocaleString()}
+                  </strong>{' '}
                   <span className="ogn">OGN</span>
                 </div>
               </div>
               <div className="row">
                 <div className="col">
-                  <strong>Lock up amount</strong>
+                  <strong>Tokens Locked Up</strong>
                 </div>
                 <div className="col-4 text-right">
                   <strong>{this.state.amount}</strong>{' '}
@@ -149,7 +173,7 @@ class BonusModal extends Component {
           ) : (
             <>
               <div className="p-5 mx-4 text-muted text-center">
-                Please select an amount of tokens to lock up for one year. Bonus
+                Please enter a number of tokens to lock up for one year. Bonus
                 tokens will be calculated based on that amount.
               </div>
               <hr />
@@ -159,7 +183,7 @@ class BonusModal extends Component {
           <button
             type="submit"
             className="btn btn-primary btn-lg mt-5"
-            disabled={this.props.lockupIsAdding}
+            disabled={!this.state.amount || this.props.lockupIsAdding}
           >
             {this.props.lockupIsAdding ? (
               <>
@@ -210,6 +234,7 @@ class BonusModal extends Component {
             >
               accredited investor
             </a>
+            .
           </label>
         </div>
         <button
@@ -235,8 +260,8 @@ class BonusModal extends Component {
       <>
         <h1 className="mb-2">2-Step Verification</h1>
         <p>
-          To lock up your tokens to earn more OGN, please confirm with your
-          authenticator app
+          Please use Google Authenticator to confirm your lockup and earn more
+          OGN.
         </p>
         <form onSubmit={this.handleTwoFactorFormSubmit}>
           <div className="form-group">
@@ -266,8 +291,8 @@ class BonusModal extends Component {
   renderCheckEmail() {
     return (
       <>
-        <h1 className="mb-2">Check your email</h1>
-        <p>Please click the link in the email we just sent you</p>
+        <h1 className="mb-2">Check Your Email</h1>
+        <p>Please click the link in the email we just sent you.</p>
         <div className="mt-5">
           <img src={EmailIcon} />
         </div>

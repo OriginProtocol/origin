@@ -34,4 +34,4 @@ COPY ./infra/identity ./infra/identity
 
 RUN yarn install
 
-CMD eval $(envkey-source) && npm run start --prefix infra/cron
+CMD eval "$(envkey-source)" && npm run start --prefix infra/cron

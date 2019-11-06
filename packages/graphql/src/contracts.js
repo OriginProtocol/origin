@@ -389,7 +389,7 @@ function setupTokens(config) {
  * and just call the relevant ones here once the toggle happens?
  *
  */
-function setMetaMask(config) {
+function setMetaMask(config = {}) {
   // Mobile bridge already initialised. Do not do anything
   if (shouldUseMobileBridge()) return
 

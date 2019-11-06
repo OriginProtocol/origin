@@ -46,11 +46,10 @@ async function addLockup(userId, amount, data = {}) {
   let lockup
   const txn = await sequelize.transaction()
   try {
-    const now = moment()
     lockup = await Lockup.create({
       userId: user.id,
-      start: now,
-      end: now.add(lockupDuration, 'months'),
+      start: moment.utc(),
+      end: moment.utc().add(lockupDuration, 'months'),
       bonusRate: lockupBonusRate,
       amount,
       data

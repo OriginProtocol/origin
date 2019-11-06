@@ -20,7 +20,7 @@ function bota(input) {
   return Buffer.from(input.toString(), 'binary').toString('base64')
 }
 
-function convertCursorToOffset(cursor) {
+export function convertCursorToOffset(cursor) {
   return atob(cursor)
 }
 

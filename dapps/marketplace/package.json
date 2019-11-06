@@ -14,7 +14,7 @@
     "test:browser": "NODE_ENV=test HEADLESS=false mocha -r @babel/register --file test/setup test",
     "test:watch": "NODE_ENV=test HEADLESS=false mocha -r @babel/register --file test/setup test -w -b",
     "start": "node -r @babel/register index",
-    "start:performance": "PERFORMANCE=true NETWORK=localhost node -r @babel/register index",
+    "start:centralized": "PERFORMANCE=true ENABLE_CENTRALIZED_IDENTITY=true NETWORK=localhost node -r @babel/register index",
     "start:clean": "CLEAN=true node -r @babel/register index",
     "start:test": "NODE_ENV=test node -r @babel/register index",
     "start:development": "DEPLOY_CONTRACTS=1 node -r @babel/register index",
@@ -110,19 +110,19 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-class-properties": "7.5.5",
-    "@babel/plugin-proposal-decorators": "7.6.0",
+    "@babel/plugin-proposal-class-properties": "7.7.0",
+    "@babel/plugin-proposal-decorators": "7.7.0",
     "@babel/plugin-proposal-export-default-from": "7.5.2",
     "@babel/plugin-proposal-object-rest-spread": "7.6.2",
     "@babel/plugin-transform-destructuring": "7.6.0",
     "@babel/plugin-transform-object-assign": "7.2.0",
     "@babel/plugin-transform-runtime": "7.6.2",
-    "@babel/preset-env": "7.6.3",
-    "@babel/runtime": "7.6.3",
+    "@babel/preset-env": "7.7.1",
+    "@babel/runtime": "7.7.1",
     "babel-eslint": "10.0.3",
     "babel-loader": "8.0.6",
-    "babel-plugin-fbt": "0.10.3",
-    "babel-plugin-fbt-runtime": "0.9.8",
+    "babel-plugin-fbt": "0.10.4",
+    "babel-plugin-fbt-runtime": "0.9.9",
     "bip39": "2.6.0",
     "bootstrap": "4.3.1",
     "clean-webpack-plugin": "3.0.0",
@@ -159,3 +159,4 @@
     "proseWrap": "always"
   }
 }
+

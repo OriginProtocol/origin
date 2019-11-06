@@ -72,6 +72,13 @@ class EscrowDetails extends Component {
                   {' OGN'}
                 </>
               )}
+              {offer.totalPrice.currency.id.match('OKB') && (
+                <>
+                  <CoinLogo coin="okb" />
+                  {numberFormat(offer.totalPrice.amount, 5)}
+                  {' OKB'}
+                </>
+              )}
             </span>
           </li>
           <li className="escrow-value">

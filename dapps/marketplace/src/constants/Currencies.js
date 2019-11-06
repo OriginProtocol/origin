@@ -37,3 +37,12 @@ export const CurrenciesByCountryCode = {
   CN: CurrenciesByCode['CNY'],
   SG: CurrenciesByCode['SGD']
 }
+
+export const getCurrencyForLocale = locale => {
+  const countryCode = locale.split('_')[1]
+  if (CurrenciesByCountryCode[countryCode]) {
+    return CurrenciesByCountryCode[countryCode]
+  }
+  // Default to United States
+  return CurrenciesByCountryCode['US']
+}

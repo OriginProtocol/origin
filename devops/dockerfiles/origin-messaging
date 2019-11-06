@@ -31,6 +31,6 @@ COPY ./infra/messaging ./infra/messaging
 RUN yarn install
 RUN yarn run build
 
-CMD eval $(envkey-source) && \
+CMD eval "$(envkey-source)" && \
   npm run migrate --prefix infra/messaging && \
   npm start --prefix infra/messaging

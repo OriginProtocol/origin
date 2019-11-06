@@ -53,7 +53,8 @@ const Balances = ({ currencies, title, className, onClose }) => {
 export default withWalletBalances(Balances, [
   'token-ETH',
   'token-DAI',
-  'token-OGN'
+  'token-OGN',
+  'token-OKB'
 ])
 
 require('react-styl')(`
@@ -80,6 +81,8 @@ require('react-styl')(`
         background-image: url(images/dai-icon.svg)
       &.ogn:before
         background-image: url(images/ogn-icon.svg)
+      &.okb:before
+        background-image: url(images/okb-icon.svg)
       > div
         font-weight: normal
         display: flex
