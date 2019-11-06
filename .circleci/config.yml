@@ -57,7 +57,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - run: yarn lint
+      - run: yarn lint && npm run lint --prefix mobile
 
   Marketplace:
     <<: *defaults
