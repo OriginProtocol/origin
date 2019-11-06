@@ -15,6 +15,7 @@ const withMultiUnitData = WrappedComponent => {
           'token-ETH',
           'token-DAI',
           'token-OGN',
+          'token-OKB',
           totalPrice.currency.id
         ]}
         allowanceTarget={listing.contractAddr}

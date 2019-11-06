@@ -2,135 +2,139 @@
 
 const request = require('superagent')
 
-const { getAsync, redisClient } = require('../utils/redis')
+const { redisClient } = require('../utils/redis')
 const logger = require('../logger')
 
+const baseCurrency = 'USD'
+
+// TODO: Store the markets to be polled somewhere or
+// in ENV and start poll with that.
+// Markets to fetch the exchange rate of.
 const currencies = [
-  'ETH-USD',
-  'DAI-USD',
-  'KRW-USD',
-  'SGD-USD',
-  'GBP-USD',
-  'EUR-USD',
-  'JPY-USD',
-  'CNY-USD'
+  'ETH',
+  'DAI',
+  'KRW',
+  'SGD',
+  'GBP',
+  'EUR',
+  'JPY',
+  'CNY',
+  'USDC',
+  'GUSD',
+  'OKB'
 ]
 
-function startExchangeRatePolling() {
-  // TODO: Store the markets to be polled somewhere or in ENV and start poll with that.
-  pollExchangeRate(currencies)
-  fetchExchangeRate(currencies)
+let pollInterval
+
+// OGN price is constant for now
+const USD_PER_OGN = 0.15 // 1 OGN = 0.15 USD
+
+// To be used when API is down and there is nothing in cache
+// Kind of very rare edge case
+const FALLBACK_EXCHANGE_RATES = {
+  ETH: 0.005515,
+  DAI: 0.9957,
+  KRW: 1169.8,
+  SGD: 1.358,
+  GBP: 0.7724,
+  EUR: 0.8986,
+  JPY: 107.94,
+  CNY: 7.144,
+  USDC: 1.001,
+  GUSD: 1.036,
+  OKB: 0.3377,
+  OGN: USD_PER_OGN
 }
+
+// To cache the rates in memory
+const CACHED_EXCHANGE_RATES = {}
 
 /**
  * Recursively polls the exchange rate in fixed intervals
  */
-async function pollExchangeRate(markets) {
-  setTimeout(() => {
-    fetchExchangeRate(markets).then(() => pollExchangeRate(markets))
-  }, process.env.EXCHANGE_RATE_POLL_INTERVAL || 30000)
+async function pollExchangeRate() {
+  if (pollInterval) {
+    clearInterval(pollInterval)
+  }
+  // Initial fetch
+  await fetchExchangeRates()
+
+  // Start the poll
+  pollInterval = setInterval(async () => {
+    // Poll every 5mins
+    await fetchExchangeRates()
+  }, process.env.EXCHANGE_RATE_POLL_INTERVAL || 5 * 60 * 1000)
 }
 
 /**
- * Fetch exchange rate from coingecko
- * Alternatively https://api.cryptonator.com/api/ticker/${market}
- * can be used but the data payload is different and this function would need
- * updating
- * @param {string|Array<string>} markets - Can be single or multiple markets
+ * Fetches and populates the exchange rates of all tokens
+ *
+ * @returns {{[token: String] => [rate: Number]}} An object of token => rate values
  */
-async function fetchExchangeRate(markets) {
+async function fetchExchangeRates() {
   try {
-    const exchangeURL = `https://api.coingecko.com/api/v3/exchange_rates`
+    const exchangeURL = `https://min-api.cryptocompare.com/data/price?fsym=${baseCurrency}&tsyms=${currencies.join(
+      ','
+    )}`
+
     const response = await request.get(exchangeURL)
     if (!response.ok) {
       throw new Error(response.error)
     }
 
-    const rates = response.body.rates
-    if (rates) {
-      if (Array.isArray(markets)) {
-        return markets.map(market => parseAndSetRateData(market, rates))
-      } else if (typeof markets === 'string') {
-        return parseAndSetRateData(markets, rates)
-      } else {
-        throw new Error('Unexpected type for markets')
-      }
-    }
-  } catch (e) {
-    logger.error(`Error getting ${markets} exchange rate:`, e)
-  }
-}
+    const batch = redisClient.batch()
 
-function parseAndSetRateData(market, rates) {
-  const symbols = market.toLowerCase().split('-')
-  let exchangeFromSymbol = symbols[0]
-  let exchangeToSymbol = symbols[1]
-  let rate = ''
-  // setting DAI to value of USD because coingecko doesn't support it
-  // and this is a stable coin pegged to USD value. Variation should
-  // be so small its irrelevant.
-  exchangeFromSymbol === 'dai' ? (exchangeFromSymbol = 'usd') : null
-  exchangeToSymbol === 'dai' ? (exchangeToSymbol = 'usd') : null
-  if (
-    rates[exchangeFromSymbol] &&
-    rates[exchangeFromSymbol].value &&
-    rates[exchangeToSymbol] &&
-    rates[exchangeToSymbol].value
-  ) {
-    // rates returned by coingecko are against btc value, here that value is
-    // converted to usd and then used to get the exchange rate
-    rate = (
-      1 /
-      ((rates.btc.value / rates[exchangeToSymbol].value) *
-        rates[exchangeFromSymbol].value)
-    ).toString()
-  } else {
-    throw new Error(`${market} not found`)
+    for (const token in response.body) {
+      logger.debug(
+        `Exchange rate of ${token}/${baseCurrency} set to ${response.body[token]}`
+      )
+      // Store a copy of value in memory
+      CACHED_EXCHANGE_RATES[token] = response.body[token]
+
+      batch.set(`${token}-${baseCurrency}_price`, response.body[token])
+    }
+
+    // This is constant forever
+    CACHED_EXCHANGE_RATES[baseCurrency] = 1
+    // This is constant for now
+    CACHED_EXCHANGE_RATES.OGN = USD_PER_OGN
+
+    // Storing to redis since `@origin/discovery` uses it.
+    batch.exec(err => {
+      if (err) {
+        logger.error('Failed to cache exchange rates', err)
+      }
+    })
+  } catch (e) {
+    logger.error(`Error getting ${currencies.join(',')} exchange rate:`, e)
   }
-  redisClient.set(`${market}_price`, rate)
-  logger.debug(`Exchange rate for ${market} set to ${rate}`)
-  return rate
 }
 
 /**
- * Get exchange rate from redis
+ * Get exchange rate from redis. In case of a cache-miss,
+ * fetch from API or fallback to hardcoded constants.
+ *
+ * @param {String} market Target market
+ * @returns {Number|{[token: String] => [rate: Number]}} The exchange rate for `market`, or the exchanges rate of all markets
  */
-async function getExchangeRate(market) {
-  let price
-  try {
-    price = await getAsync(`${market}_price`)
-  } catch (error) {
-    logger.error(`Cannot read ${market} exchange rate from redis`, error)
+async function getExchangeRates(market) {
+  if (!Object.keys(CACHED_EXCHANGE_RATES).length) {
+    // We don't have anything in cache yet.
+    // Fetch before proceeding
+    await fetchExchangeRates()
   }
 
-  if (!price) {
-    // Cache miss?
-    logger.warn(`Exchange rate for ${market} missing in Redis`)
-
-    price = await fetchExchangeRate(market)
-
-    if (Number.isNaN(Number(price))) {
-      // API is also down, send back the fallback values from google 07/08/19
-      const FALLBACK_EXCHANGE_RATES = {
-        ETH_USD: '222.91',
-        DAI_USD: '1',
-        JPY_USD: '0.0094',
-        KRW_USD: '0.00082',
-        CNY_USD: '0.14',
-        GBP_USD: '1.22',
-        EUR_USD: '1.12',
-        SGD_USD: '0.72'
-      }
-      return FALLBACK_EXCHANGE_RATES[`${market.replace('-', '_')}`]
-    }
+  if (!market) {
+    return CACHED_EXCHANGE_RATES
   }
 
-  return price
+  const token = market.split('-')[0]
+
+  return CACHED_EXCHANGE_RATES[token] || FALLBACK_EXCHANGE_RATES[token]
 }
 
 module.exports = {
   pollExchangeRate,
-  fetchExchangeRate,
-  getExchangeRate,
-  startExchangeRatePolling
+  fetchExchangeRates,
+  getExchangeRates
 }

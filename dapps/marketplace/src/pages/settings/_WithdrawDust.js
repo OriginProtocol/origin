@@ -129,7 +129,7 @@ const WithdrawDust = ({
 export default withCanTransact(
   withWalletBalances(
     WithdrawDust,
-    ['token-ETH', 'token-DAI', 'token-OGN'],
+    ['token-ETH', 'token-DAI', 'token-OGN', 'token-OKB'],
     'walletProxy'
   )
 )

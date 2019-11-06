@@ -46,7 +46,9 @@ function initialState(props) {
     quantity: '1',
     price: '',
     currency: 'fiat-USD',
-    acceptedTokens: isOldListing ? ['token-ETH', 'token-DAI', 'token-OGN'] : [],
+    acceptedTokens: isOldListing
+      ? ['token-ETH', 'token-DAI', 'token-OGN', 'token-OKB']
+      : [],
 
     // Fractional fields:
     timeZone: '',

@@ -136,6 +136,7 @@ const config = {
       DOCKER: false,
       ENABLE_WECHAT_ATTESTATION: false,
       ENABLE_CENTRALIZED_IDENTITY: false,
+      ENABLE_OKB: false,
       ETH_NETWORK_ID: process.env.ETH_NETWORK_ID || null,
       FACEBOOK_CLIENT_ID: null,
       GAS_PRICE_KEY: null,
