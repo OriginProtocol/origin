@@ -6657,10 +6657,10 @@ builtins@^1.0.3:
   resolved "https://registry.yarnpkg.com/builtins/-/builtins-1.0.3.tgz#cb94faeb61c8696451db36534e1422f94f0aee88"
   integrity sha1-y5T662HIaWRR2zZTThQi+U8K7og=
 
-bull@3.11.0:
-  version "3.11.0"
-  resolved "https://registry.yarnpkg.com/bull/-/bull-3.11.0.tgz#02782e3ff4afe80c0beb1a46bb09b76f178ee6d2"
-  integrity sha512-QQOn63RkL6CfnmZcacPVg1EF42SwQcYxNSn9OGlM5S2JW+Gah/dwCcXxZQ3h2nYnhsNfBsherJ7EpLzIsi2kSQ==
+bull@3.12.0:
+  version "3.12.0"
+  resolved "https://registry.yarnpkg.com/bull/-/bull-3.12.0.tgz#48d06d0d4e77140b5db8eee613385e252163a8a2"
+  integrity sha512-Gv/x7SHx0mugaqeDmUnh/ub4GqEcF0cBBZ2rmUUXvwLC4FVzrcOie9VkqNJjYLcvia4xTzr43WP3aMWJXtlYMA==
   dependencies:
     cron-parser "^2.13.0"
     debuglog "^1.0.0"
@@ -22090,10 +22090,10 @@ react-google-maps@^9.4.5:
     scriptjs "^2.5.8"
     warning "^3.0.0"
 
-react-id-swiper@2.3.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/react-id-swiper/-/react-id-swiper-2.3.2.tgz#acd35e51f1068b94a8066829b121ff9b29febaaa"
-  integrity sha512-lxlASsBok+M8YmwYICEXUaVj44AyCaGfSc+YGZX5vWCqKLnVj3ceUbFFBfO+G8Glrya7WJhrfvzMae0r77MCSQ==
+react-id-swiper@2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/react-id-swiper/-/react-id-swiper-2.4.0.tgz#7080b2e49f2a6db82649360c2ac218eb50facd21"
+  integrity sha512-TyKVyux5fUTvXdR9rz+rGW5W1QaRDDCF+5kG40vtVrQqtjI1nmAlzcWMsKz6DFn4d05bvW6ZBcgYREjugDAThg==
   dependencies:
     object-assign "^4.1.1"
 
