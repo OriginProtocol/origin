@@ -41,7 +41,9 @@ class AuthenticationGuard extends Component {
       display: this._hasAuthentication(),
       suspendTime: null,
       appState: AppState.currentState,
-      changePin: false
+      // User chooses to authenticate via PIN rather than FaceID even though
+      // FaceID is available
+      pinOverride: false
     }
   }
 
@@ -134,15 +136,17 @@ class AuthenticationGuard extends Component {
 
   renderModal() {
     const { settings } = this.props
-    const { changePin } = this.state
+    const { pinOverride } = this.state
 
-    const guard = changePin
-      ? this.renderPinGuard()
-      : settings.biometryType
-      ? this.renderBiometryGuard()
-      : settings.pin
-      ? this.renderPinGuard()
-      : null
+    let guard
+    if (pinOverride) {
+      guard = this.renderPinGuard()
+    } else if (settings.biometryType) {
+      guard = this.renderBiometryGuard()
+    } else {
+      // User must have at least PIN available otherwise they would not be here
+      guard = this.renderPinGuard()
+    }
 
     return (
       <Modal visible={true}>
@@ -160,12 +164,6 @@ class AuthenticationGuard extends Component {
         </KeyboardAvoidingView>
       </Modal>
     )
-  }
-
-  changePinAuthenticate = value => {
-    this.setState({
-      changePin: value
-    })
   }
 
   renderBiometryGuard() {
@@ -200,7 +198,7 @@ class AuthenticationGuard extends Component {
                   'AuthenticationGuard.retryWithPinButton'
                 )}
                 onPress={() => {
-                  this.changePinAuthenticate(true)
+                  this.setState({ pinOverride: true })
                 }}
               />
             )}
