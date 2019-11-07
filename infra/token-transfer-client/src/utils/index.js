@@ -7,7 +7,7 @@ const getNextOnboardingPage = user => {
     return '/terms'
   } else if (
     !user.revisedScheduleAgreedAt &&
-    user.revisedScheduleRejected !== false
+    !user.revisedScheduleRejected
   ) {
     return '/revised_schedule'
   } else if (!user.phone) {

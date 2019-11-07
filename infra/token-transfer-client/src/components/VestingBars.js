@@ -155,7 +155,7 @@ const VestingBars = props => {
             position: 'absolute',
             left: `${marker.left}%`,
             top: 0,
-            height: '3rem',
+            height: `${1 + (2 * grants.length)}rem`,
             marginTop: '-1rem',
             pointerEvents: 'none' // Stop absolute positioning from stealing clicks
           }
@@ -175,7 +175,7 @@ const VestingBars = props => {
           )
         })}
       </div>
-      <div className="row" style={{ marginTop: '3rem' }}>
+      <div className="row" style={{ marginTop: `${(2 * grants.length)}rem` }}>
         <div className="col">
           <div className="status-circle status-circle-success mr-2"></div>
           {Number(props.vested).toLocaleString()} OGN{' '}

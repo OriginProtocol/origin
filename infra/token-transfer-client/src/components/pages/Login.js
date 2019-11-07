@@ -61,6 +61,12 @@ class Login extends Component {
           Your login token is invalid or has expired. Please login again.
         </div>
       )
+    } else if (error === 'server') {
+      messageElement = (
+        <div className="alert alert-danger mb-4">
+          An error occurred communicating with the server. Please try again later.
+        </div>
+      )
     }
 
     return (

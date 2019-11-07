@@ -9,7 +9,7 @@ import { getIsEditing as getUserIsEditing } from '@/reducers/user'
 import { getNextOnboardingPage } from '@/utils'
 
 const RevisedTerms = ({ editUser, user, userIsEditing }) => {
-  const [accepted, setAccepted] = useState(false)
+  const [accepted, setAccepted] = useState(true)
   const [redirectTo, setRedirectTo] = useState(null)
 
   const handleSubmit = async () => {
