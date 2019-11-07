@@ -35,13 +35,10 @@ const signAuthMessage = (timestamp = Date.now()) => {
 
 describe('Auth Client', () => {
   it('should create an instance', () => {
-    const client = new AuthClient({
+    new AuthClient({
       authServer: AUTH_SERVER_HOST,
-      activeWallet: USER_ADDRESS,
       disablePersistence: true
     })
-
-    expect(client.getActiveWallet()).to.equal(USER_ADDRESS)
   })
 
   it('should generate a token', async () => {
