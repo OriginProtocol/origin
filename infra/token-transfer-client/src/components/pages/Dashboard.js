@@ -59,9 +59,8 @@ const Dashboard = props => {
   const balanceAvailable = vestedTotal
     .minus(props.withdrawnAmount)
     .minus(props.lockupTotals.locked)
-  const unlockDate = props.user && props.user.employee
-    ? employeeUnlockDate
-    : investorUnlockDate
+  const unlockDate =
+    props.user && props.user.employee ? employeeUnlockDate : investorUnlockDate
   const isLocked = moment.utc() < unlockDate
 
   return (

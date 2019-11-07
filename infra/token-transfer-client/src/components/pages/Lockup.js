@@ -44,9 +44,8 @@ const Lockup = props => {
     )
   }
 
-  const unlockDate = props.user && props.user.employee
-    ? employeeUnlockDate
-    : investorUnlockDate
+  const unlockDate =
+    props.user && props.user.employee ? employeeUnlockDate : investorUnlockDate
   const isLocked = moment.utc() < unlockDate
   const { vestedTotal } = props.grantTotals
   const balanceAvailable = vestedTotal
