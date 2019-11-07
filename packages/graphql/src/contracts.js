@@ -30,9 +30,11 @@ let metaMask, metaMaskEnabled, web3WS, wsSub, web3, blockInterval
 
 let OriginMessaging
 let OriginMobileBridge
+let AuthClient
 if (typeof window !== 'undefined') {
   OriginMessaging = require('@origin/messaging-client').default
   OriginMobileBridge = require('@origin/mobile-bridge').default
+  AuthClient = require('@origin/auth-client').default
 }
 
 const DefaultMessagingConfig = {
@@ -234,8 +236,10 @@ export function setNetwork(net, customConfig) {
 
   setMetaMask(config)
 
-  overrideMessagingWeb3()
+  setupAuthClient(config)
 
+  overrideMessagingWeb3()
+  
   validateContracts(web3, net)
 }
 
@@ -301,6 +305,20 @@ function setupMessaging(config) {
       web3,
       mobileBridge: context.mobileBridge,
       pubsub: pubsub
+    })
+  }
+}
+
+function setupAuthClient(config) {
+  if (isBrowser) {
+    const authServer = config.authServer
+
+    context.authClient = new AuthClient({
+      authServer,
+      web3,
+      pubsub,
+      personalSign: metaMask && metaMaskEnabled ? true : false,
+      autoRenew: context.mobileBridge ? true : false
     })
   }
 }

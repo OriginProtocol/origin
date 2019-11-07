@@ -6,6 +6,7 @@ import copy from 'copy-to-clipboard'
 import withWallet from 'hoc/withWallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 import withIsMobile from 'hoc/withIsMobile'
+import withAuthStatus from 'hoc/withAuthStatus'
 
 import Link from 'components/Link'
 import NavLink from 'components/NavLink'
@@ -18,6 +19,7 @@ import GetStarted from './GetStarted'
 import ConsoleLogCatcher from 'utils/ConsoleLogCatcher'
 
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
+import SignIn from './SignIn'
 
 const Brand = withCreatorConfig(({ creatorConfig }) => {
   return creatorConfig.logoUrl ? (
@@ -64,7 +66,8 @@ const Nav = ({
   walletType,
   onShowFooter,
   navbarDarkMode,
-  history
+  history,
+  isLoggedIn
 }) => {
   const [open, setOpen] = useState()
   const [consoleOpen, setConsoleOpen] = useState(false)
@@ -145,11 +148,14 @@ const Nav = ({
       pathname &&
       (pathname.startsWith('/profile') || pathname.startsWith('/user'))
 
-    const walletEl = wallet ? (
-      <Profile {...navProps('profile')} />
-    ) : (
-      <GetStarted />
-    )
+    let walletEl
+    if (wallet && isLoggedIn) {
+      walletEl = <Profile {...navProps('profile')} />
+    } else if (wallet && !isLoggedIn) {
+      walletEl = <SignIn {...navProps('login')} />
+    } else {
+      walletEl = <GetStarted />
+    }
 
     const isStacked =
       (locationState && locationState.canGoBack) || (isProfilePage && canGoBack)
@@ -224,27 +230,31 @@ const Nav = ({
         <Brand />
         <Search className="form-inline mr-auto" />
         <ul className="navbar-nav ml-3">
-          <li className="nav-item">
-            <NavLink to="/my-purchases" className="nav-link text">
-              <span>
-                <fbt desc="navbar.purchases">Purchases</fbt>
-              </span>
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/my-listings" className="nav-link text">
-              <span>
-                <fbt desc="navbar.listings">Listings</fbt>
-              </span>
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/my-sales" className="nav-link text">
-              <span>
-                <fbt desc="navbar.sales">Sales</fbt>
-              </span>
-            </NavLink>
-          </li>
+          {isLoggedIn && (
+            <>
+              <li className="nav-item">
+                <NavLink to="/my-purchases" className="nav-link text">
+                  <span>
+                    <fbt desc="navbar.purchases">Purchases</fbt>
+                  </span>
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink to="/my-listings" className="nav-link text">
+                  <span>
+                    <fbt desc="navbar.listings">Listings</fbt>
+                  </span>
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink to="/my-sales" className="nav-link text">
+                  <span>
+                    <fbt desc="navbar.sales">Sales</fbt>
+                  </span>
+                </NavLink>
+              </li>
+            </>
+          )}
           <li className="nav-item d-none d-lg-flex">
             <NavLink to="/create" className="nav-link text">
               <span>
@@ -252,20 +262,22 @@ const Nav = ({
               </span>
             </NavLink>
           </li>
-          <li className="nav-item d-none d-lg-flex">
-            <EarnTokens
-              className="nav-link text"
-              href="#"
-              goToWelcomeWhenNotEnrolled="true"
-            >
-              <span className="d-md-none d-xl-flex">
-                <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
-              </span>
-              <span className="d-xl-none">
-                <fbt desc="navbar.tokens">Tokens</fbt>
-              </span>
-            </EarnTokens>
-          </li>
+          {isLoggedIn && (
+            <li className="nav-item d-none d-lg-flex">
+              <EarnTokens
+                className="nav-link text"
+                href="#"
+                goToWelcomeWhenNotEnrolled="true"
+              >
+                <span className="d-md-none d-xl-flex">
+                  <fbt desc="navbar.earnTokens">Earn Tokens</fbt>
+                </span>
+                <span className="d-xl-none">
+                  <fbt desc="navbar.tokens">Tokens</fbt>
+                </span>
+              </EarnTokens>
+            </li>
+          )}
           {screenConsoleEnabled && (
             <li className="nav-item d-none d-lg-flex">
               <div
@@ -280,9 +292,16 @@ const Nav = ({
               </div>
             </li>
           )}
-          <Messages {...navProps('messages')} />
-          <Notifications {...navProps('notifications')} />
-          <Profile {...navProps('profile')} />
+          {isLoggedIn && (
+            <>
+              <Messages {...navProps('messages')} />
+              <Notifications {...navProps('notifications')} />
+              <Profile {...navProps('profile')} />
+            </>
+          )}
+          {!isLoggedIn && (
+            <SignIn />
+          )}
         </ul>
       </div>
       {consoleOpen && consoleCaptureContent()}
@@ -290,7 +309,7 @@ const Nav = ({
   )
 }
 
-export default withRouter(withWallet(withIsMobile(Nav)))
+export default withRouter(withWallet(withIsMobile(withAuthStatus(Nav))))
 
 require('react-styl')(`
   .navbar
@@ -344,7 +363,7 @@ require('react-styl')(`
         background-color: var(--white)
         .nav-link
           color: var(--dark)
-      button
+      button:not(.btn-bordered)
         border: 0px
       .nav-link
         padding: 0 0.75rem

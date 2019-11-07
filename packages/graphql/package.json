@@ -26,6 +26,7 @@
     "@babel/core": "^7.4.5",
     "@babel/register": "^7.4.4",
     "@babel/runtime": "^7.5.4",
+    "@origin/auth-client": "^0.1.0",
     "@origin/contracts": "^0.8.6",
     "@origin/event-cache": "^0.1.0",
     "@origin/eventsource": "^0.1.0",

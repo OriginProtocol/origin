@@ -44,20 +44,6 @@ describe('Auth Client', () => {
     expect(client.getActiveWallet()).to.equal(USER_ADDRESS)
   })
 
-  it('should allow active wallet to be changed', () => {
-    const client = new AuthClient({
-      authServer: AUTH_SERVER_HOST,
-      activeWallet: USER_ADDRESS,
-      disablePersistence: true
-    })
-
-    expect(client.getActiveWallet()).to.equal(USER_ADDRESS)
-    client.setActiveWallet('0x0000000000000000000000000000000000000000')
-    expect(client.getActiveWallet()).to.equal(
-      '0x0000000000000000000000000000000000000000'
-    )
-  })
-
   it('should generate a token', async () => {
     const { signature, payload } = signAuthMessage()
 
@@ -74,11 +60,14 @@ describe('Auth Client', () => {
 
     const client = new AuthClient({
       authServer: AUTH_SERVER_HOST,
-      activeWallet: USER_ADDRESS,
       disablePersistence: true
     })
 
-    const { authToken } = await client.getTokenWithSignature(signature, payload)
+    const { authToken } = await client.getTokenWithSignature(
+      USER_ADDRESS,
+      signature,
+      payload
+    )
 
     expect(authToken).to.equal('Hello Token')
   })
@@ -99,13 +88,12 @@ describe('Auth Client', () => {
 
     const client = new AuthClient({
       authServer: AUTH_SERVER_HOST,
-      activeWallet: USER_ADDRESS,
       disablePersistence: true
     })
 
     let error
     try {
-      await client.getTokenWithSignature(signature, payload)
+      await client.getTokenWithSignature(USER_ADDRESS, signature, payload)
     } catch (err) {
       error = err
     }
