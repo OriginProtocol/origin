@@ -13,11 +13,25 @@ const tokenToMessageMap = {
   'token-OGN': (
     <fbt desc="InsufficientBalance.notEnoughOGN">Not enough Origin Tokens</fbt>
   ),
-  generic: <fbt desc="InsufficientBalance.notEnoughOGN">Not enough balance</fbt>
+  'token-OKB': (
+    <fbt desc="InsufficientBalance.notEnoughOKB">
+      Not enough OKB Tokens.{' '}
+      <a
+        href="https://www.okex.com/activities/pro/okb"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Get More
+      </a>
+    </fbt>
+  ),
+  generic: (
+    <fbt desc="InsufficientBalance.notEnoughBalance">Not enough balance</fbt>
+  )
 }
 
 const InsufficientBalance = ({ token }) => {
-  const message = tokenToMessageMap[token] || tokenToMessageMap['generic']
+  const message = tokenToMessageMap[token] || tokenToMessageMap.generic
 
   return (
     <div className="insufficient-token-balance">

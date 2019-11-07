@@ -69,6 +69,12 @@ export const purchaseListing = async ({
       await waitForText(page, '1 OGN')
       totalValue = '1 OGN'
       break
+
+    case 'OKB':
+      await clickByText(page, 'OKB Token')
+      await waitForText(page, '0.33333 OKB')
+      totalValue = '0.33333 OKB'
+      break
   }
 
   await clickByText(page, 'Continue', 'a')
@@ -154,6 +160,12 @@ export const purchaseMultiUnitListing = async ({
       await waitForText(page, '2 OGN')
       totalValue = '2 OGN'
       break
+
+    case 'OKB':
+      await clickByText(page, 'OKB Token')
+      await waitForText(page, '0.66666 OKB')
+      totalValue = '0.66666 OKB'
+      break
   }
 
   await clickByText(page, 'Continue', 'a')
@@ -203,10 +215,10 @@ export const purchaseMultiUnitListing = async ({
   }
 
   await clickByText(page, 'Purchase', 'button')
-  await waitForText(page, 'View Purchase', 'button')
+  await waitForText(page, 'View Purchase Details', 'button')
   await pic(page, 'purchase-listing')
 
-  await clickByText(page, 'View Purchase', 'button')
+  await clickByText(page, 'View Purchase Details', 'button')
   await waitForText(
     page,
     `You've made an offer. Wait for the seller to accept it.`

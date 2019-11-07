@@ -825,7 +825,9 @@
   "1sKft4": "Недостаточно Ethereum",
   "22ZEKT": "Недостаточно DAI",
   "4zUJH3": "Недостаточно токенов Origin",
-  "1ECzYo": "Недостаточно средств",
+  "4Ed2iA": "Not enough OKB Tokens. {=Get More}",
+  "4DOKEk": "Get More",
+  "49t4a6": "Not enough balance",
   "2t43zy": "Где можно купить?",
   "2nApoY": "Комиссия",
   "2QlAhE": "Комиссия за единицу",
@@ -1338,7 +1340,9 @@
   "2tAdFF": "Ethereum",
   "3M0Mkc": "Maker Dai",
   "3NuPlb": "Токен Origin",
+  "1w0kdV": "OKB Token",
   "3JTZtf": "Эфир хорош для краткосрочных сделок.",
   "3eoCca": "Maker DAI подходит для долгосрочных объявлений - например, аренда или продажа собственности.",
-  "214S0w": "Полезно для продвижения других объявлений"
+  "214S0w": "Полезно для продвижения других объявлений",
+  "4nb5Gu": "For use with one of our exchange partners"
 }

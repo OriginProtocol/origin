@@ -91,15 +91,28 @@ const WithPrices = ({
 
   let suggestedToken
   if (listing) {
-    const acceptsEth = listing.acceptedTokens.find(t => t.id === 'token-ETH')
-    const acceptsDai = listing.acceptedTokens.find(t => t.id === 'token-DAI')
+    const acceptsETH = listing.acceptedTokens.find(t => t.id === 'token-ETH')
+    const acceptsDAI = listing.acceptedTokens.find(t => t.id === 'token-DAI')
+    const acceptsOGN = listing.acceptedTokens.find(t => t.id === 'token-OGN')
+    const acceptsOKB = listing.acceptedTokens.find(t => t.id === 'token-OKB')
 
-    if (acceptsEth && get(tokenStatus, 'token-ETH.hasBalance')) {
+    const hasETH = get(tokenStatus, 'token-ETH.hasBalance')
+    const hasDAI = get(tokenStatus, 'token-DAI.hasBalance')
+    const hasOGN = get(tokenStatus, 'token-OGN.hasBalance')
+    const hasOKB = get(tokenStatus, 'token-OKB.hasBalance')
+
+    if (acceptsETH && hasETH) {
       suggestedToken = 'token-ETH'
-    } else if (acceptsDai) {
+    } else if (acceptsDAI && hasDAI) {
       suggestedToken = 'token-DAI'
+    } else if (acceptsOGN && hasOGN) {
+      suggestedToken = 'token-OGN'
+    } else if (acceptsOKB && hasOKB) {
+      suggestedToken = 'token-OKB'
     } else {
-      suggestedToken = 'token-ETH'
+      // User doesn't have sufficient balance in any of the accepted tokens
+      // Fallback to ETH or any accepted token
+      suggestedToken = get(listing, 'acceptedTokens[0].id', 'token-ETH')
     }
   }
 

@@ -1043,7 +1043,7 @@ const novemberConfig = {
       linkKey: 'growth.share.content16.link',
       post: {
         tweet: {
-          default: `In this video, @AbsolumentAnna shares her thoughts on @OriginProtocol's mission and what a #decentralized sharing economy means to her.`,
+          default: `In this video, @AbsolumentAnna shares her thoughts on @OriginProtocol's mission and what a #decentralized sharing economy means to her. https://www.originprotocol.com/video/anna-wang-decentralized-sharing-economy`,
           translations: [ ]
         }
       }
@@ -1056,7 +1056,7 @@ const novemberConfig = {
       linkKey: 'growth.share.content17.link',
       post: {
         tweet: {
-          default: `Ryan Kim is a partner at @Hashed_official, the largest blockchain accelerator in Korea. In this video, Ryan shares why Hashed decided to invest in @OriginProtocol and continues to support the project today.`,
+          default: `Ryan Kim is a partner at @Hashed_official, the largest blockchain accelerator in Korea. In this video, Ryan shares why Hashed decided to invest in @OriginProtocol and continues to support the project today. https://www.originprotocol.com/video/ryan-kim-hashed`,
           translations: [ ]
         }
       }
@@ -1069,7 +1069,7 @@ const novemberConfig = {
       linkKey: 'growth.share.content18.link',
       post: {
         tweet: {
-          default: `Watch @obnty, Founder of NodeTokyo sharing how @OriginProtocol maximizes freedom and allows people to buy and sell without any restrictions.`,
+          default: `Watch @obnty, Founder of NodeTokyo sharing how @OriginProtocol maximizes freedom and allows people to buy and sell without any restrictions. https://www.originprotocol.com/video/yusuke-obinata-nodetokyo`,
           translations: [ ]
         }
       }
@@ -1082,7 +1082,7 @@ const novemberConfig = {
       linkKey: 'growth.share.content19.link',
       post: {
         tweet: {
-          default: `Decentralized commerce can empower local communities to buy and sell freely in the emerging world. Here is a recap of @OriginProtocol's recent meetup in Venezuela.`,
+          default: `Decentralized commerce can empower local communities to buy and sell freely in the emerging world. Here is a recap of @OriginProtocol's recent meetup in Venezuela. https://medium.com/originprotocol/these-venezuelan-merchants-are-reshaping-commerce-with-origin-c28e6d2169d9`,
           translations: [ ]
         }
       }
@@ -1095,7 +1095,7 @@ const novemberConfig = {
       linkKey: 'growth.share.content20.link',
       post: {
         tweet: {
-          default: `In this video, @Andy_Bromberg, Founder and President of @CoinList discusses some of the incredible new possibilities enabled by @OriginProtocol and peer-to-peer marketplaces.`,
+          default: `In this video, @Andy_Bromberg, Founder and President of @CoinList discusses some of the incredible new possibilities enabled by @OriginProtocol and peer-to-peer marketplaces. https://www.originprotocol.com/video/coinlist-founder-decentralized-marketplace-future`,
           translations: [ ]
         }
       }

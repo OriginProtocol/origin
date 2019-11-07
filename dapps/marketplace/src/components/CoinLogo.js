@@ -26,4 +26,6 @@ require('react-styl')(`
       background-image: url(images/ogn-icon.svg)
     &.dai
       background-image: url(images/dai-icon.svg)
+    &.okb
+      background-image: url(images/okb-icon.svg)
 `)
