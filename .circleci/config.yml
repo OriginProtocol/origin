@@ -324,18 +324,19 @@ workflows:
           requires:
             - Setup
           context: origin
-  schema:
-    jobs:
-      - Setup
-      - GraphQLEngineSchemaCheck:
-          requires:
-            - Setup
-          context: origin
-      - GraphQLEngineSchemaUpload:
-          requires:
-            - Setup
-          filters:
-            branches:
-              only:
-                - master
-          context: origin
+  # Requires Apollo Engine subscription
+  # schema:
+  #   jobs:
+  #     - Setup
+  #     - GraphQLEngineSchemaCheck:
+  #         requires:
+  #           - Setup
+  #         context: origin
+  #     - GraphQLEngineSchemaUpload:
+  #         requires:
+  #           - Setup
+  #         filters:
+  #           branches:
+  #             only:
+  #               - master
+  #         context: origin
