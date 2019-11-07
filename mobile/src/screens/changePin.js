@@ -6,7 +6,8 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text
+  Text,
+  View
 } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
@@ -160,23 +161,25 @@ class ChangePinScreen extends Component {
             contentContainerStyle={[styles.content, styles.greyBackground]}
             keyboardShouldPersistTaps={'always'}
           >
-            <Text style={styles.subtitle}>{title}</Text>
-            {this.state.isRetry === true && (
-              <Text style={styles.invalid}>
-                <fbt desc="PinScreen.pinMatchFailure">Incorrect PIN</fbt>
-              </Text>
-            )}
-            <PinInput
-              value={this.state.pin}
-              pinLength={this.pinLength}
-              onChangeText={
-                this.state.action === 'new'
-                  ? this.handleCreate
-                  : this.state.action === 'confirm'
-                  ? this.handleConfirm
-                  : this.handleChange
-              }
-            />
+            <View style={styles.container}>
+              <Text style={styles.subtitle}>{title}</Text>
+              {this.state.isRetry === true && (
+                <Text style={styles.invalid}>
+                  <fbt desc="PinScreen.pinMatchFailure">Incorrect PIN</fbt>
+                </Text>
+              )}
+              <PinInput
+                value={this.state.pin}
+                pinLength={this.pinLength}
+                onChangeText={
+                  this.state.action === 'new'
+                    ? this.handleCreate
+                    : this.state.action === 'confirm'
+                    ? this.handleConfirm
+                    : this.handleChange
+                }
+              />
+            </View>
           </ScrollView>
         </SafeAreaView>
       </KeyboardAvoidingView>
