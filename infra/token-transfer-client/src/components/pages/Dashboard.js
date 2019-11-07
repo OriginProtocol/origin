@@ -26,7 +26,7 @@ import {
   getIsLoading as getTransferIsLoading,
   getWithdrawnAmount
 } from '@/reducers/transfer'
-import { unlockDate } from '@/constants'
+import { employeeUnlockDate, investorUnlockDate } from '@/constants'
 import BalanceCard from '@/components/BalanceCard'
 import NewsHeadlinesCard from '@/components/NewsHeadlinesCard'
 import VestingCard from '@/components/VestingCard'
@@ -55,11 +55,13 @@ const Dashboard = props => {
     )
   }
 
-  const isLocked = moment.utc() < unlockDate
   const { vestedTotal, unvestedTotal } = props.grantTotals
   const balanceAvailable = vestedTotal
     .minus(props.withdrawnAmount)
     .minus(props.lockupTotals.locked)
+  const unlockDate =
+    props.user && props.user.employee ? employeeUnlockDate : investorUnlockDate
+  const isLocked = moment.utc() < unlockDate
 
   return (
     <>

@@ -20,7 +20,7 @@ const logger = require('../logger')
 const {
   emailConfirmTimeout,
   encryptionSecret,
-  portalUrl
+  clientUrl
 } = require('../config')
 
 // Number of block confirmations required for a transfer to be consider completed.
@@ -90,7 +90,7 @@ async function sendTransferConfirmationEmail(transfer, user) {
     { expiresIn: '5m' }
   )
 
-  const vars = { url: `${portalUrl}/withdrawal/${transfer.id}/${token}` }
+  const vars = { url: `${clientUrl}/withdrawal/${transfer.id}/${token}` }
   await sendEmail(user.email, 'transfer', vars)
 
   logger.info(

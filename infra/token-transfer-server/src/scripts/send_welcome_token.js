@@ -14,7 +14,7 @@ try {
 }
 
 const { User } = require('../models')
-const { encryptionSecret, logLevel, portalUrl } = require('../config')
+const { encryptionSecret, logLevel, clientUrl } = require('../config')
 
 Logger.setLogLevel(logLevel)
 
