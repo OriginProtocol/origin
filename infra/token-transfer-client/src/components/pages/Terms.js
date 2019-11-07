@@ -51,9 +51,9 @@ const Terms = ({ editUser, userIsEditing }) => {
             laws of the United States.
             <br />
             <br />
-            The recipient acknowledges that he, she or it is solely responsible
-            for maintaining the security of his, her or its login password as
-            well as maintaining a secure backup.
+            The recipient acknowledges that they are solely responsible for
+            maintaining the security of his, her or its login password as well
+            as maintaining a secure backup.
           </div>
         </div>
         <div className="form-check">

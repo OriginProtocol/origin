@@ -214,14 +214,19 @@ const RevisedTerms = ({ editUser, user, userIsEditing }) => {
               ? renderCoinListAmendments()
               : renderStrategicAmendments()}
           </div>
+          <p style={{ textAlign: 'left', fontSize: '12px' }}>
+            If you do not agree with the proposed amendment, you can contact
+            Origin Investor Relations at{' '}
+            <a href="mailto:investor-relations@originprotocol.com">
+              investor-relations@originprotocol.com
+            </a>{' '}
+            to voice your dissent or abstain. Declining to accept the amendment
+            will not give you different token release terms from other
+            investors. All investors will be treated the same. If the proposed
+            amendment fails to pass, we will be unable to proceed with our plans
+            to list on top-tier exchanges.
+          </p>
         </div>
-        <p>
-          If you do not agree with the proposed amendment, you can contact
-          Origin Investor Relations at{' '}
-          <a href="mailto:investor-relations@originprotocol.com">
-            investor-relations@originprotocol.com
-          </a>
-        </p>
         <div className="form-check">
           <input
             className="form-check-input"
