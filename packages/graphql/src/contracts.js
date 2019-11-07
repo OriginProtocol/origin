@@ -473,6 +473,9 @@ function setupTransactions(net) {
 function setupWsProviderAndBlockQuery(config, net) {
   if (config.performanceMode && context.config.graphql && net !== 'test') {
     queryForBlocks()
+    /*
+  Franck 11/07/2019 - Disabled this code path temporarily
+  to troubleshoot https://github.com/OriginProtocol/origin/issues/3898
   } else if (config.providerWS) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
     context.web3WS = web3WS
@@ -489,6 +492,7 @@ function setupWsProviderAndBlockQuery(config, net) {
       console.error(err)
       pollForBlocks()
     }
+ */
   } else {
     pollForBlocks()
   }
