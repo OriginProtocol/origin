@@ -51,7 +51,7 @@ async function sendWelcomeEmail(user) {
   logger.info('Sending welcome email to', user.email)
 
   const token = generateToken(user)
-  const vars = { url: `${portalUrl}/login_handler/${token}` }
+  const vars = { url: `${clientUrl}/login_handler/${token}` }
   try {
     await sendEmail(user.email, 'welcome', vars)
   } catch (error) {
