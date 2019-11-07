@@ -159,7 +159,7 @@ describe('Lockup HTTP API', () => {
   })
 
   it('should not add a lockup if unlock date has not passed', async () => {
-  const unlockFake = sinon.fake.returns(moment().add(1, 'days'))
+    const unlockFake = sinon.fake.returns(moment().add(1, 'days'))
     lockupController.__Rewire__('getInvestorUnlockDate', unlockFake)
 
     const response = await request(this.mockApp)
