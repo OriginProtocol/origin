@@ -33,9 +33,7 @@ const SignInDropdown = ({ wallet, onClose }) => {
           Close
         </a>
         <h3>
-          <fbt desc="auth.notSignedIn">
-            You&apos;re not signed in
-          </fbt>
+          <fbt desc="auth.notSignedIn">You&apos;re not signed in</fbt>
         </h3>
         <p>
           <fbt desc="auth.getAccess">

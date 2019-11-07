@@ -299,9 +299,7 @@ const Nav = ({
               <Profile {...navProps('profile')} />
             </>
           )}
-          {!isLoggedIn && (
-            <SignIn />
-          )}
+          {!isLoggedIn && <SignIn />}
         </ul>
       </div>
       {consoleOpen && consoleCaptureContent()}

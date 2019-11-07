@@ -21,14 +21,11 @@ function withAuthStatus(WrappedComponent) {
     return (
       <WrappedComponent
         {...props}
-
         isLoggedIn={get(data, 'isLoggedIn', false)}
         isAuthTokenValid={get(data, 'tokenStatus.valid', false)}
         hasAuthTokenExpired={get(data, 'tokenStatus.expired', false)}
         willAuthTokenExpire={get(data, 'tokenStatus.willExpire', false)}
-
         authStatusRefetch={refetch}
-
         authStatusLoading={networkStatus === 1}
       />
     )

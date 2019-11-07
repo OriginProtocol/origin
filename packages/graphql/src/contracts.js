@@ -239,7 +239,7 @@ export function setNetwork(net, customConfig) {
   setupAuthClient(config)
 
   overrideMessagingWeb3()
-  
+
   validateContracts(web3, net)
 }
 

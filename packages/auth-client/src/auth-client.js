@@ -33,7 +33,13 @@ const debug = createDebug('origin:auth-client:')
  * ```
  */
 class AuthClient {
-  constructor({ authServer, disablePersistence, web3, personalSign, autoRenew }) {
+  constructor({
+    authServer,
+    disablePersistence,
+    web3,
+    personalSign,
+    autoRenew
+  }) {
     this.authServer = authServer
     this.disablePersistence = disablePersistence
     this.web3 = web3
@@ -106,7 +112,9 @@ class AuthClient {
     }
 
     try {
-      const sign = this.personalSign ? this.web3.eth.personal.sign : this.web3.eth.sign
+      const sign = this.personalSign
+        ? this.web3.eth.personal.sign
+        : this.web3.eth.sign
       const signature = await sign(stringify(payload), wallet)
 
       const tokenData = await this.getTokenWithSignature(
@@ -184,6 +192,7 @@ class AuthClient {
    * Check if token is valid
    *
    * @param {Object} tokenData
+   * @param {String} wallet
    *
    * @returns {{
    *  valid
@@ -191,7 +200,7 @@ class AuthClient {
    *  willExpire
    * }}
    */
-  checkTokenValidity(tokenData) {
+  checkTokenValidity(tokenData, wallet) {
     if (!tokenData) {
       return {
         valid: false
@@ -245,13 +254,13 @@ class AuthClient {
   /**
    * A wrapper around `checkTokenValidity` that fetches
    * the token from cookies and validates it
-   * 
-   * @param {String} wallet 
+   *
+   * @param {String} wallet
    */
   getWalletTokenStatus(wallet) {
     const tokenData = this.loadToken(wallet)
 
-    return this.checkTokenValidity(tokenData)
+    return this.checkTokenValidity(tokenData, wallet)
   }
 
   /**
@@ -268,7 +277,10 @@ class AuthClient {
 
     const tokenData = this.loadToken(wallet)
 
-    const { valid, expired, willExpire } = this.checkTokenValidity(tokenData)
+    const { valid, expired, willExpire } = this.checkTokenValidity(
+      tokenData,
+      wallet
+    )
 
     debug('Token status', JSON.stringify({ valid, expired, willExpire }))
 

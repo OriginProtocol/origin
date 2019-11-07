@@ -100,9 +100,7 @@ const CreateIdentity = ({ id, onClose, isMobileApp }) => (
     <div className="create-identity text-center">
       <Avatar />
       <p>
-        <fbt desc="nav.profile.noProfile">
-          No profile created
-        </fbt>
+        <fbt desc="nav.profile.noProfile">No profile created</fbt>
       </p>
 
       <UserActivationLink
@@ -111,12 +109,9 @@ const CreateIdentity = ({ id, onClose, isMobileApp }) => (
         onClick={onClose}
       >
         <span>
-          <fbt desc="nav.profile.createAProfile">
-            Create a Profile
-          </fbt>
+          <fbt desc="nav.profile.createAProfile">Create a Profile</fbt>
         </span>
       </UserActivationLink>
-
 
       {!isMobileApp && (
         <Balances
@@ -150,7 +145,9 @@ const Identity = ({
   }
 
   if (!identity) {
-    return <CreateIdentity id={id} onClose={onClose} isMobileApp={isMobileApp} />
+    return (
+      <CreateIdentity id={id} onClose={onClose} isMobileApp={isMobileApp} />
+    )
   }
   const strengthPct = `${identity.strength || '0'}%`
   const EarnTokens = withEnrolmentModal('a')
@@ -246,13 +243,16 @@ const ProfileDropdownRaw = ({
             )}
           </div>
           <div className="signout-link">
-            <button className="btn btn-link" onClick={async () => {
-              const res = await logout()
-                           
-              if (res.success) {
-                await client.reFetchObservableQueries()
-              }
-            }}>
+            <button
+              className="btn btn-link"
+              onClick={async () => {
+                const res = await logout()
+
+                if (res.success) {
+                  await client.reFetchObservableQueries()
+                }
+              }}
+            >
               <fbt desc="Auth.SignOut">Sign Out</fbt>
             </button>
           </div>

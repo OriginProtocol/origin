@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { useQuery, useApolloClient, useMutation } from 'react-apollo'
+import { useApolloClient, useMutation } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
-import get from 'lodash/get'
 import { useHistory } from 'react-router-dom'
 
 import Redirect from 'components/Redirect'
@@ -29,9 +28,7 @@ const SignInContent = ({ wallet, className }) => {
   return (
     <div className={`${className ? className + ' ' : ''}onboard-signin`}>
       <h3>
-        <fbt desc="auth.notSignedIn">
-          You&apos;re not signed in
-        </fbt>
+        <fbt desc="auth.notSignedIn">You&apos;re not signed in</fbt>
       </h3>
       <p>
         <fbt desc="auth.getAccess">
@@ -55,7 +52,14 @@ const SignInContent = ({ wallet, className }) => {
   )
 }
 
-const OnboardSignIn = ({ listing, linkPrefix, wallet, isLoggedIn, isMobile, walletLoading }) => {
+const OnboardSignIn = ({
+  listing,
+  linkPrefix,
+  wallet,
+  isLoggedIn,
+  isMobile,
+  walletLoading
+}) => {
   const [completed, setCompleted] = useState(false)
 
   useEffect(() => {
@@ -74,16 +78,14 @@ const OnboardSignIn = ({ listing, linkPrefix, wallet, isLoggedIn, isMobile, wall
     return <LoadingSpinner />
   }
 
-  const content = <SignInContent wallet={wallet} className={isMobile ? '' : 'onboard-box'} />
+  const content = (
+    <SignInContent wallet={wallet} className={isMobile ? '' : 'onboard-box'} />
+  )
 
   if (isMobile) {
     return (
       <MobileModal
-        title={
-          <fbt desc="onboard.signIn.signIn">
-            Sign In
-          </fbt>
-        }
+        title={<fbt desc="onboard.signIn.signIn">Sign In</fbt>}
         onBack={() => history.goBack()}
         className="onboard-signin-modal"
       >
@@ -95,9 +97,7 @@ const OnboardSignIn = ({ listing, linkPrefix, wallet, isLoggedIn, isMobile, wall
   return (
     <>
       <h1 className="mb-1">
-        <fbt desc="onboard.signIn.signIn">
-          Sign In
-        </fbt>
+        <fbt desc="onboard.signIn.signIn">Sign In</fbt>
       </h1>
       <p className="description mb-5">
         <fbt desc="auth.getAccess">
@@ -105,9 +105,7 @@ const OnboardSignIn = ({ listing, linkPrefix, wallet, isLoggedIn, isMobile, wall
         </fbt>
       </p>
       <div className="row">
-        <div className="col-md-7">
-          {content}
-        </div>
+        <div className="col-md-7">{content}</div>
         <div className="col-md-4 offset-md-1">
           <ListingPreview listing={listing} />
           <HelpWallet />

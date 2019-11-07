@@ -29,7 +29,7 @@ function loadTokenCookie(walletAddress) {
 
 /**
  * Stores the token to cookies
- * 
+ *
  * @param {String} walletAddress
  * @param {{
  *  authToken: String
@@ -42,7 +42,9 @@ function saveTokenCookie(walletAddress, tokenData) {
   debug('Saving token data to cookies', key, tokenData)
   Cookies.set(key, tokenData, {
     // Set expiration time relative to `tokenData.expiresAt`
-    expires: Math.floor((tokenData.expiresAt - tokenData.issuedAt) / (1000 * 60 * 60 * 24)), // ms to days
+    expires: Math.floor(
+      (tokenData.expiresAt - tokenData.issuedAt) / (1000 * 60 * 60 * 24)
+    ), // ms to days
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
     path: ''
