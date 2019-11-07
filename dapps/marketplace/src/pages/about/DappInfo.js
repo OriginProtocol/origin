@@ -148,13 +148,13 @@ const DappInfo = () => {
 
         <Query query={contractsQuery} notifyOnNetworkStatusChange={true}>
           {({ error, data, networkStatus }) => {
-            const marketplaces = data.marketplaces || []
-            const tokens = data.tokens || []
             if (networkStatus === 1) {
               return <LoadingSpinner />
-            } else if (error) {
-              return <LoadingSpinner />
+            } else if (error || !data) {
+              return <p>Error :(</p>
             }
+            const marketplaces = data.marketplaces || []
+            const tokens = data.tokens || []
             return (
               <section className="col-lg-6">
                 <table className="config-table">
