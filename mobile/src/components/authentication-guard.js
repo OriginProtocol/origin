@@ -104,6 +104,9 @@ class AuthenticationGuard extends Component {
 
   onSuccess = () => {
     this.setState({ display: false })
+    if (this.props.onSuccess) {
+      this.props.onSuccess()
+    }
   }
 
   handleChange = async pin => {
