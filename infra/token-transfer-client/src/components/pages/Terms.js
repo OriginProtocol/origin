@@ -46,12 +46,12 @@ class Terms extends Component {
   render() {
     if (this.state.redirectTo) {
       return <Redirect push to={this.state.redirectTo} />
-    } else if (!this.props.user || this.props.userIsLoading) {
+    } else if (this.props.userIsLoading) {
       return this.renderLoading()
     }
 
     const skipRevisedSchedule =
-      (this.props.user && this.props.user.revisedScheduleAgreedAt) ||
+      this.props.user.revisedScheduleAgreedAt ||
       this.props.user.revisedScheduleRejected
 
     return (

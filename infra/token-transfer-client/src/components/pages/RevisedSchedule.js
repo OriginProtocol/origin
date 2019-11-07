@@ -19,7 +19,7 @@ class RevisedSchedule extends Component {
           <h1>Revised Token Unlock Schedule</h1>
           <p>
             Multiple top-tier exchanges that we are partnering with to list
-            Origin Tokens (OGN), have required us to modify our token release
+            Origin Tokens (OGN) have required us to modify our token release
             schedule. These amendments have been approved by our largest
             investors, including Pantera Capital, Foundation Capital, Blocktower
             Capital, PreAngel Fund, Hashed, Danhua Capital, and dozens of other

@@ -4,24 +4,17 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-import { editUser, fetchUser } from '@/actions/user'
+import { editUser } from '@/actions/user'
 import {
   getUser,
   getError as getUserError,
-  getIsEditing as getUserIsEditing,
-  getIsLoading as getUserIsLoading
+  getIsEditing as getUserIsEditing
 } from '@/reducers/user'
 
 class RevisedTerms extends Component {
   state = {
     accepted: true,
     redirectTo: null
-  }
-
-  componentDidMount() {
-    if (!this.props.user) {
-      this.props.fetchUser()
-    }
   }
 
   handleSubmit = async () => {
@@ -33,17 +26,7 @@ class RevisedTerms extends Component {
     }
   }
 
-  renderLoading = () => {
-    return (
-      <div className="action-card">
-        <div className="spinner-grow" role="status">
-          <span className="sr-only">Loading...</span>
-        </div>
-      </div>
-    )
-  }
-
-  renderStrategicAmendments = () => {
+  renderStrategicAmendments() {
     return (
       <>
         <p>
@@ -131,7 +114,7 @@ class RevisedTerms extends Component {
     )
   }
 
-  renderCoinListAmendments = () => {
+  renderCoinListAmendments() {
     return (
       <>
         <p>
@@ -221,8 +204,6 @@ class RevisedTerms extends Component {
   render() {
     if (this.state.redirectTo) {
       return <Redirect push to={this.state.redirectTo} />
-    } else if (!this.props.user || this.props.userIsLoading) {
-      return this.renderLoading()
     }
 
     return (
@@ -282,16 +263,14 @@ const mapStateToProps = ({ user }) => {
   return {
     user: getUser(user),
     userError: getUserError(user),
-    userIsEditing: getUserIsEditing(user),
-    userIsLoading: getUserIsLoading(user)
+    userIsEditing: getUserIsEditing(user)
   }
 }
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      editUser: editUser,
-      fetchUser: fetchUser
+      editUser: editUser
     },
     dispatch
   )
