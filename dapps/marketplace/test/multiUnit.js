@@ -90,6 +90,7 @@ export function multiUnitTests({
       if (acceptedTokens.includes('DAI')) await clickByText(page, 'Maker Dai')
       if (acceptedTokens.includes('OGN'))
         await clickByText(page, 'Origin Token')
+      if (acceptedTokens.includes('OKB')) await clickByText(page, 'OKB Token')
 
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')

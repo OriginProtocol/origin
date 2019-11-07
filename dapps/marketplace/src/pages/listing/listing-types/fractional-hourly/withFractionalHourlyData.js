@@ -41,6 +41,7 @@ const withFractionalHourlyData = WrappedComponent => {
           'token-ETH',
           'token-DAI',
           'token-OGN',
+          'token-OKB',
           listing.price.currency.id
         ]}
         allowanceTarget={listing.contractAddr}

@@ -825,7 +825,9 @@
   "1sKft4": "不够以太币（Ethereum）",
   "22ZEKT": "不够DAI",
   "4zUJH3": "不够Origin代币（OGN)",
-  "1ECzYo": "余额不够",
+  "4Ed2iA": "Not enough OKB Tokens. {=Get More}",
+  "4DOKEk": "Get More",
+  "49t4a6": "Not enough balance",
   "2t43zy": "Where can I get some?",
   "2nApoY": "委任",
   "2QlAhE": "单位佣金",
@@ -1338,7 +1340,9 @@
   "2tAdFF": "以太币（Ethereum）",
   "3M0Mkc": "Maker Dai",
   "3NuPlb": "Origin 代币",
+  "1w0kdV": "OKB Token",
   "3JTZtf": "Ether适用于短期列表。",
   "3eoCca": "Maker Dai 适用于长期的商品或服务列表，例如房屋租赁和房地产销售。",
-  "214S0w": "有助于推广其他商品"
+  "214S0w": "有助于推广其他商品",
+  "4nb5Gu": "For use with one of our exchange partners"
 }

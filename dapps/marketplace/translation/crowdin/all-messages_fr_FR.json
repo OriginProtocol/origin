@@ -798,7 +798,9 @@
   "4wDamMQbpsJY1XFmVIepBA==": "Ethereum insuffisant",
   "9/i+Ey3QDDZNsandMN5zxQ==": "DAI insuffisant",
   "Zwcu3zpr3n5/gvuuGPLM7w==": "Jetons Origin insuffisants",
-  "7n36V3HBOmjco7PgTuds+Q==": "Solde insuffisant",
+  "mZyol0ZBIvZVwrMuiIQYEQ==": "Not enough OKB Tokens. {E_VAR_GET_MORE_B64_R2V0IE1vcmU}",
+  "GjBu2vHFw0ZvH+4WgZAzvQ==": "Get More",
+  "7H/M3jg7K5QazQc2pEleKA==": "Not enough balance",
   "O4p/HWu2u4U5gZ+vruUU1Q==": "Où puis-je en récupérer ?",
   "FC/gJV+Syi5Bjue937Ch8g==": "Commission",
   "C66gQt5HUEVn1kC+GTZ0FA==": "Commission par Unité",
@@ -1293,7 +1295,9 @@
   "PYBxe3twCxInwgQ1E9GBOg==": "Ethereum",
   "ArSf4J+dNUiZfj6mamImnw==": "Maker Dai",
   "2H8IF+VEDTnNHQ7c+dw9zA==": "Jetons Origin",
+  "aGfKK6ZJD6P22TIxY6gdkA==": "OKB Token",
   "pI4vrj8dSJJLdh0ejJjMWA==": "Ether marche mieux pour des annonces à court terme.",
   "12RmZS0/aijc4qIbrWjHow==": "Maker Dai est un bon choix pour des annonces à long terme, comme des locations ou ventes de propriétés.",
-  "1ihLeuNdlY4LXygu4xmuTw==": "Utile pour promouvoir d'autres annonces"
+  "1ihLeuNdlY4LXygu4xmuTw==": "Utile pour promouvoir d'autres annonces",
+  "Cimm0w0HZEQCNC34hAofsQ==": "For use with one of our exchange partners"
 }

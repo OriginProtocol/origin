@@ -116,12 +116,13 @@ export function singleUnitTests({
 
     it('should allow price entry', async function() {
       await page.type('input[name=price]', '1')
-      // All three payment modes are deselected by default
+      // All four payment modes are deselected by default
       // Select tokens that are not accepted by clicking them
       if (acceptedTokens.includes('ETH')) await clickByText(page, 'Ethereum')
       if (acceptedTokens.includes('DAI')) await clickByText(page, 'Maker Dai')
       if (acceptedTokens.includes('OGN'))
         await clickByText(page, 'Origin Token')
+      if (acceptedTokens.includes('OKB')) await clickByText(page, 'OKB Token')
 
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
@@ -254,6 +255,7 @@ export function singleUnitTokenTests({
         resetOpts.buyerOpts = {
           dai: token === 'DAI' ? '100' : undefined,
           ogn: token === 'OGN' ? '100' : undefined,
+          okb: token === 'OKB' ? '100' : undefined,
           deployIdentity
         }
       }
@@ -300,6 +302,7 @@ export function singleUnitTokenTests({
       await clickByText(page, 'Ethereum')
       await clickByText(page, 'Maker Dai')
       await clickByText(page, 'Origin Token')
+      await clickByText(page, 'OKB Token')
 
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
@@ -340,36 +343,38 @@ export function singleUnitTokenTests({
       })
     })
 
-    if (token === 'DAI' && !autoSwap) {
-      if (!buyerHasTokens) {
-        it('should prompt the user to approve their Dai', async function() {
-          await waitForText(page, 'Approve', 'button')
-          await pic(page, 'listing-detail')
-          await clickByText(page, 'Approve', 'button')
+    if (token === 'DAI' && !autoSwap && !buyerHasTokens) {
+      it('should have swapped ETH for DAI', async () => {
+        await waitForText(page, 'Swapped 0.00001 ETH for 1DAI')
+        await waitForText(page, 'Approve', 'button')
+        await pic(page, 'listing-detail')
+        await clickByText(page, 'Approve', 'button')
+      })
+    }
 
-          await waitForText(page, 'Origin may now move DAI on your behalf.')
-          await pic(page, 'listing-detail')
-        })
+    if ((token === 'DAI' || token === 'OKB' || token === 'OGN') && !autoSwap) {
+      if (!buyerHasTokens) {
+        it(
+          'should notify the user about approval of ' + token,
+          async function() {
+            await waitForText(
+              page,
+              `Origin may now move ${token} on your behalf.`
+            )
+            await pic(page, 'listing-detail')
+          }
+        )
       }
 
       it('should prompt to continue with purchase', async function() {
         await clickByText(page, 'Continue', 'button')
-        await waitForText(page, 'View Purchase', 'button')
+        await waitForText(page, 'View Purchase Details', 'button')
         await pic(page, 'purchase-listing')
       })
     }
 
-    if (token === 'OGN') {
-      it(`should show approved modal for ${token}`, async function() {
-        // TBD: OGN contract is auto-approved? If yes, should we show this modal at all?
-        await waitForText(page, `Origin may now move ${token} on your behalf.`)
-        await pic(page, 'listing-detail')
-        await clickByText(page, 'Continue', 'button')
-      })
-    }
-
     it('should view the purchase', async function() {
-      await clickByText(page, 'View Purchase', 'button')
+      await clickByText(page, 'View Purchase Details', 'button')
       await waitForText(
         page,
         `You've made an offer. Wait for the seller to accept it.`

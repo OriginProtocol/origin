@@ -23,6 +23,8 @@ import withConfig from 'hoc/withConfig'
 
 import AuthClient from '@origin/auth-client/src/auth-client'
 
+import RNSamsungBKS from 'react-native-samsung-bks'
+
 class PushNotifications extends Component {
   constructor(props) {
     super(props)
@@ -321,7 +323,7 @@ class PushNotifications extends Component {
     if (wallet.activeAccount.hdPath) {
       const messageToSign = Buffer.from(payload).toString('base64')
       signature = await RNSamsungBKS.signEthPersonalMessage(
-        props.wallet.activeAccount.hdPath,
+        wallet.activeAccount.hdPath,
         messageToSign
       )
     } else {
