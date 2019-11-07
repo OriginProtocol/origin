@@ -6,8 +6,7 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
-  View
+  Text
 } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
@@ -35,7 +34,7 @@ class ChangePinScreen extends Component {
     super(props)
     this.state = {
       pin: '',
-      oldPin: null,
+      oldPin: this.props.pin,
       isRetry: false,
       action: ''
     }
@@ -123,7 +122,7 @@ class ChangePinScreen extends Component {
     if (this.state.pin.length === this.pinLength) {
       if (!this.state.oldPin && this.props.settings.pin === this.state.pin) {
         // Proceed to verify step, copy value to oldPin
-        this.props.setPin(null)
+        this.props.setPin(false)
         this.props.navigation.goBack()
       } else {
         this.setState({
@@ -161,25 +160,23 @@ class ChangePinScreen extends Component {
             contentContainerStyle={[styles.content, styles.greyBackground]}
             keyboardShouldPersistTaps={'always'}
           >
-            <View style={styles.container}>
-              <Text style={styles.subtitle}>{title}</Text>
-              {this.state.isRetry === true && (
-                <Text style={styles.invalid}>
-                  <fbt desc="PinScreen.pinMatchFailure">Incorrect PIN</fbt>
-                </Text>
-              )}
-              <PinInput
-                value={this.state.pin}
-                pinLength={this.pinLength}
-                onChangeText={
-                  this.state.action === 'new'
-                    ? this.handleCreate
-                    : this.state.action === 'confirm'
-                    ? this.handleConfirm
-                    : this.handleChange
-                }
-              />
-            </View>
+            <Text style={styles.subtitle}>{title}</Text>
+            {this.state.isRetry === true && (
+              <Text style={styles.invalid}>
+                <fbt desc="PinScreen.pinMatchFailure">Incorrect PIN</fbt>
+              </Text>
+            )}
+            <PinInput
+              value={this.state.pin}
+              pinLength={this.pinLength}
+              onChangeText={
+                this.state.action === 'new'
+                  ? this.handleCreate
+                  : this.state.action === 'confirm'
+                  ? this.handleConfirm
+                  : this.handleChange
+              }
+            />
           </ScrollView>
         </SafeAreaView>
       </KeyboardAvoidingView>

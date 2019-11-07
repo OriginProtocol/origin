@@ -24,7 +24,9 @@ class WelcomeScreen extends Component {
 
   componentDidMount = async () => {
     const { biometryType, pin } = this.props.settings
-    const hasAuthentication = biometryType || pin
+    // Authentication type of null means it has never been set, and false
+    // means it was once set but was disabled in settings
+    const hasAuthentication = biometryType !== null || pin !== null
     const hasAccount = this.props.wallet.accounts.length > 0
     if (hasAuthentication && hasAccount) {
       console.debug('Onboarding is completed')

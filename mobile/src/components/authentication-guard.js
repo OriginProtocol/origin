@@ -147,7 +147,7 @@ class AuthenticationGuard extends Component {
     return (
       <Modal visible={true}>
         <KeyboardAvoidingView
-          style={styles.container}
+          style={styles.content}
           behavior={Platform.OS === 'ios' ? 'padding' : null}
         >
           <Image
