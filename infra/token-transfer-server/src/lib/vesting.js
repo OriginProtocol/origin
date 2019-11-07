@@ -104,7 +104,7 @@ function investorVestingSchedule(grantObj) {
   })
 
   // First quarterly vest
-  let vestingDate = firstQuarterlyVestDate
+  const vestingDate = firstQuarterlyVestDate
   // Iterate over quarterly vests and push
   for (let i = 0; i <= 8; i++) {
     vestingSchedule.push({

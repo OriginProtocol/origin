@@ -44,7 +44,10 @@ describe('Employee vesting', () => {
 
     it('should not vest before cliff', () => {
       const clock = sinon.useFakeTimers(
-        moment.utc(grant.cliff).subtract(1, 's').valueOf()
+        moment
+          .utc(grant.cliff)
+          .subtract(1, 's')
+          .valueOf()
       )
       const amount = vestedAmount(this.user, grant)
       expect(amount).to.be.bignumber.equal(0)
@@ -52,9 +55,7 @@ describe('Employee vesting', () => {
     })
 
     it('should vest 12/48 at the cliff', () => {
-      const clock = sinon.useFakeTimers(
-        moment(grant.cliff).valueOf()
-      )
+      const clock = sinon.useFakeTimers(moment(grant.cliff).valueOf())
       const amount = vestedAmount(this.user, grant)
       expect(amount).to.be.bignumber.equal(1200)
       clock.restore()
@@ -62,7 +63,9 @@ describe('Employee vesting', () => {
 
     it('should vest 12/48 after the cliff', () => {
       const clock = sinon.useFakeTimers(
-        moment(grant.cliff).add(1, 's').valueOf()
+        moment(grant.cliff)
+          .add(1, 's')
+          .valueOf()
       )
       const amount = vestedAmount(this.user, grant)
       expect(amount).to.be.bignumber.equal(1200)
@@ -70,18 +73,14 @@ describe('Employee vesting', () => {
     })
 
     it('should have vested the correct total at grant end', async () => {
-      const clock = sinon.useFakeTimers(
-        moment(grant.end).valueOf()
-      )
+      const clock = sinon.useFakeTimers(moment(grant.end).valueOf())
       const amount = vestedAmount(this.user, grant)
       expect(amount).to.be.bignumber.equal(4800)
       clock.restore()
     })
 
     it('should vest the correct amount each month', () => {
-      const clock = sinon.useFakeTimers(
-        moment.utc(grant.end)
-      )
+      const clock = sinon.useFakeTimers(moment.utc(grant.end))
       const schedule = vestingSchedule(this.user, grant)
       // Remove the first element of the array, which is the cliff vest
       schedule.shift()
@@ -94,31 +93,28 @@ describe('Employee vesting', () => {
 })
 
 describe('Investor vesting', () => {
-    let grant
+  let grant
 
-    beforeEach(async () => {
-      await setupDatabase()
-      this.user = await User.create({
-        email: 'user+investor@originprotocol.com',
-        otpKey: '123',
-        otpVerified: true,
-      })
-      const grantObj = new Grant({
-        userId: this.user.id,
-        start: '2014-01-01 00:00:00',
-        end: '2016-01-01 00:00:00',
-        amount: 10000
-      })
-      await grantObj.save()
-      grant = momentizeGrant(grantObj.get({ plain: true }))
+  beforeEach(async () => {
+    await setupDatabase()
+    this.user = await User.create({
+      email: 'user+investor@originprotocol.com',
+      otpKey: '123',
+      otpVerified: true
     })
-
-  it('should vest 6% at start of grant', async () => {
+    const grantObj = new Grant({
+      userId: this.user.id,
+      start: '2014-01-01 00:00:00',
+      end: '2016-01-01 00:00:00',
+      amount: 10000
+    })
+    await grantObj.save()
+    grant = momentizeGrant(grantObj.get({ plain: true }))
   })
 
-  it('should vest 11.75% each quarter after 4 months', async() => {
-  })
+  it('should vest 6% at start of grant', async () => {})
 
-  it('should have vested the correct total at grant end', async () => {
-  })
+  it('should vest 11.75% each quarter after 4 months', async () => {})
+
+  it('should have vested the correct total at grant end', async () => {})
 })
