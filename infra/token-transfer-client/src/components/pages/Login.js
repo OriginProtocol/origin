@@ -64,7 +64,8 @@ class Login extends Component {
     } else if (error === 'server') {
       messageElement = (
         <div className="alert alert-danger mb-4">
-          An error occurred communicating with the server. Please try again later.
+          An error occurred communicating with the server. Please try again
+          later.
         </div>
       )
     }
