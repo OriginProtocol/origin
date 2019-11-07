@@ -17,6 +17,8 @@ COPY ./packages/services ./packages/services
 COPY ./packages/validator ./packages/validator
 COPY ./packages/web3-provider ./packages/web3-provider
 COPY ./packages/graphql ./packages/graphql
+COPY ./packages/auth-utils ./packages/auth-utils
+COPY ./packages/auth-client ./packages/auth-client
 
 RUN yarn install
 
