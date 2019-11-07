@@ -20,13 +20,13 @@ async function setupDatabase() {
 }
 
 describe('Employee vesting', () => {
-  describe('4 year grant with 1 year cliff and monthly vesting', () => {
+  describe('4 year grant with 1 year cliff', () => {
     let grant
 
     beforeEach(async () => {
       await setupDatabase()
       this.user = await User.create({
-        email: 'user@originprotocol.com',
+        email: 'user+employee@originprotocol.com',
         otpKey: '123',
         otpVerified: true,
         employee: true
@@ -36,8 +36,7 @@ describe('Employee vesting', () => {
         start: '2014-01-01 00:00:00',
         end: '2018-01-01 00:00:00',
         cliff: '2015-01-01 00:00:00',
-        amount: 4800,
-        interval: 'months'
+        amount: 4800
       })
       await grantObj.save()
       grant = momentizeGrant(grantObj.get({ plain: true }))
@@ -70,7 +69,7 @@ describe('Employee vesting', () => {
       clock.restore()
     })
 
-    it('should have the correct amount vested total', () => {
+    it('should have vested the correct total at grant end', async () => {
       const clock = sinon.useFakeTimers(
         moment(grant.end).valueOf()
       )
@@ -95,4 +94,31 @@ describe('Employee vesting', () => {
 })
 
 describe('Investor vesting', () => {
+    let grant
+
+    beforeEach(async () => {
+      await setupDatabase()
+      this.user = await User.create({
+        email: 'user+investor@originprotocol.com',
+        otpKey: '123',
+        otpVerified: true,
+      })
+      const grantObj = new Grant({
+        userId: this.user.id,
+        start: '2014-01-01 00:00:00',
+        end: '2016-01-01 00:00:00',
+        amount: 10000
+      })
+      await grantObj.save()
+      grant = momentizeGrant(grantObj.get({ plain: true }))
+    })
+
+  it('should vest 6% at start of grant', async () => {
+  })
+
+  it('should vest 11.75% each quarter after 4 months', async() => {
+  })
+
+  it('should have vested the correct total at grant end', async () => {
+  })
 })
