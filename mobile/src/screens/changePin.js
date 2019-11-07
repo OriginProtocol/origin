@@ -19,7 +19,7 @@ import CommonStyles from 'styles/common'
 import OnboardingStyles from 'styles/onboarding'
 
 class ChangePinScreen extends Component {
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = () => {
     return {
       title: String('Change PIN', 'ChangePinScreen.headerTitle'),
       headerTitleStyle: {
