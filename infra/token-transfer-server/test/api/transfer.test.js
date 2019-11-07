@@ -117,6 +117,21 @@ describe('Transfer HTTP API', () => {
     expect(response.body.length).to.equal(2)
   })
 
+  it('should not add a transfer if unlock date has not passed', async () => {
+    const unlockFake = sinon.fake.returns(moment().add(1, 'days'))
+    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+
+    const response = await request(this.mockApp)
+      .post('/api/transfers')
+      .send({
+        amount: 1000,
+        address: toAddress,
+        code: totp.gen(this.otpKey)
+      })
+
+    expect(response.text).to.match(/Unlock/)
+  })
+
   it('should not return transfers for other users', async () => {
     // Create a transfer for a grant for the second user
     await Transfer.create({
@@ -139,7 +154,7 @@ describe('Transfer HTTP API', () => {
 
   it('should add a transfer if lockup date has passed', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getUnlockDate', unlockFake)
+    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
 
     const sendStub = sinon.stub(sendgridMail, 'send')
 
@@ -162,7 +177,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer before lockup date passed', async () => {
     const unlockFake = sinon.fake.returns(moment().add(1, 'days'))
-    transferController.__Rewire__('getUnlockDate', unlockFake)
+    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
 
     const response = await request(this.mockApp)
       .post('/api/transfers')
@@ -182,7 +197,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (vested)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getUnlockDate', unlockFake)
+    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
 
     const response = await request(this.mockApp)
       .post('/api/transfers')
@@ -202,7 +217,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (vested minus enqueued)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getUnlockDate', unlockFake)
+    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
 
     await Transfer.create({
       userId: this.user.id,
@@ -230,7 +245,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (vested minus paused)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getUnlockDate', unlockFake)
+    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
 
     await Transfer.create({
       userId: this.user.id,
@@ -258,7 +273,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (vested minus waiting)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getUnlockDate', unlockFake)
+    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
 
     await Transfer.create({
       userId: this.user.id,
@@ -286,7 +301,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (vested minus success)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getUnlockDate', unlockFake)
+    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
 
     await Transfer.create({
       userId: this.user.id,
@@ -314,7 +329,7 @@ describe('Transfer HTTP API', () => {
 
   it('should not add a transfer if not enough tokens (multiple states)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getUnlockDate', unlockFake)
+    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
 
     const promises = [
       enums.TransferStatuses.Enqueued,

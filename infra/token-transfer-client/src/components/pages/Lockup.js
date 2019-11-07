@@ -21,7 +21,7 @@ import {
   getIsLoading as getTransferIsLoading,
   getWithdrawnAmount
 } from '@/reducers/transfer'
-import { unlockDate } from '@/constants'
+import { employeeUnlockDate, investorUnlockDate } from '@/constants'
 import LockupCard from '@/components/LockupCard'
 import BonusModal from '@/components/BonusModal'
 
@@ -44,6 +44,9 @@ const Lockup = props => {
     )
   }
 
+  const unlockDate = props.user && props.user.employee
+    ? employeeUnlockDate
+    : investorUnlockDate
   const isLocked = moment.utc() < unlockDate
   const { vestedTotal } = props.grantTotals
   const balanceAvailable = vestedTotal

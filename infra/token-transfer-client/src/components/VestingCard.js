@@ -37,6 +37,7 @@ const VestingCard = props => {
         user={props.user}
         vested={props.vested}
         unvested={props.unvested}
+        isLocked={props.isLocked}
       />
       {props.isLocked ? (
         <>
