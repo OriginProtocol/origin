@@ -1094,13 +1094,13 @@
   "6btwGtad/5GSZtylvW7VCA==": "Relayer服务器",
   "1M0cd+HrrxRrgFE9h5wEGQ==": "GraphQL 服务器",
   "nMHq4jUNsPtbTmo52Zsuog==": "消息传递密钥服务器",
-  "5Dc4HOV/IE0f9tWQHC1AcQ==": "Messaging Namespace",
+  "5Dc4HOV/IE0f9tWQHC1AcQ==": "消息命名空间",
   "+KUxRg63UmZMGCLj5m6/+g==": "性能模式",
   "na3KpIra5mSsS3lY6jAzVw==": "屏幕控制台",
   "ybSEkGCp44omLheoCNX6LQ==": "代理账号",
   "jyc0ayCyMnuPahLPXWFF8g==": "继电器",
   "EfL9vP2A0UjXL1yRWZbYfA==": "禁止入职",
-  "qiMU/Hn5qlxbevm1/B9LAw==": "Disable Offer Events (for Messaging)",
+  "qiMU/Hn5qlxbevm1/B9LAw==": "禁用优惠事件（用于消息传递）",
   "yJ3ZzLOEjVebc+2EC5ndIA==": "恢复默认设置",
   "LDEaohS80mEG8oPaz4LzlA==": "托管中",
   "+DxfrZhs2DBTlHbKxOa1Vg==": "已释放",
@@ -1295,9 +1295,9 @@
   "PYBxe3twCxInwgQ1E9GBOg==": "以太币（Ethereum）",
   "ArSf4J+dNUiZfj6mamImnw==": "Maker Dai",
   "2H8IF+VEDTnNHQ7c+dw9zA==": "Origin 代币",
-  "aGfKK6ZJD6P22TIxY6gdkA==": "OKB Token",
+  "aGfKK6ZJD6P22TIxY6gdkA==": "OKB代币",
   "pI4vrj8dSJJLdh0ejJjMWA==": "Ether适用于短期列表。",
   "12RmZS0/aijc4qIbrWjHow==": "Maker Dai 适用于长期的商品或服务列表，例如房屋租赁和房地产销售。",
   "1ihLeuNdlY4LXygu4xmuTw==": "有助于推广其他商品",
-  "Cimm0w0HZEQCNC34hAofsQ==": "For use with one of our exchange partners"
+  "Cimm0w0HZEQCNC34hAofsQ==": "与我们的交易所合作伙伴之一一起使用"
 }
