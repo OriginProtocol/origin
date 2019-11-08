@@ -1,4 +1,6 @@
-const getNextOnboardingPage = user => {
+import { employeeUnlockDate, investorUnlockDate } from '@/constants'
+
+export const getNextOnboardingPage = user => {
   if (user.otpVerified) {
     // Verified OTP can no longer perform any onboarding as OTP would be required
     // for any login action
@@ -15,6 +17,7 @@ const getNextOnboardingPage = user => {
   }
 }
 
-module.exports = {
-  getNextOnboardingPage
+export const getUnlockDate = user => {
+  if (!user) return
+  return user.employee ? employeeUnlockDate : investorUnlockDate
 }
