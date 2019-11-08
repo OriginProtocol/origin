@@ -19,7 +19,7 @@ const Logger = require('logplease')
 const jwt = require('jsonwebtoken')
 
 const db = require('../models')
-const { encryptionSecret, portalUrl } = require('../config')
+const { encryptionSecret, clientUrl } = require('../config')
 
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('import_data', { showTimestamp: false })
@@ -182,7 +182,7 @@ class ImportData {
       }
       if (this.config.token) {
         logger.info(
-          `${record.email} ${portalUrl}/welcome/${generateToken(record.email)}`
+          `${record.email} ${clientUrl}/welcome/${generateToken(record.email)}`
         )
       }
       if (this.config.doIt) {

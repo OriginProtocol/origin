@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken')
 const { User } = require('../models')
 const {
   encryptionSecret,
-  portalUrl,
+  clientUrl,
   sendgridFromEmail,
   sendgridApiKey
 } = require('../config')
@@ -110,7 +110,7 @@ async function sendLoginToken(email) {
       { expiresIn: '5m' }
     )
 
-    const vars = { url: `${portalUrl}/login_handler/${token}` }
+    const vars = { url: `${clientUrl}/login_handler/${token}` }
     await sendEmail(user.email, 'login', vars)
     logger.info(`Sent email token to ${email}`)
   } else {
