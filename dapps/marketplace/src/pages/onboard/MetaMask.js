@@ -227,7 +227,7 @@ const OnboardMetaMask = ({
   const nextLink =
     onboardCompleted && hasMessagingKeys
       ? `${linkPrefix}/onboard/back`
-      : `${linkPrefix}/onboard/email`
+      : `${linkPrefix}/onboard/signin`
 
   const { web3 } = data
 
