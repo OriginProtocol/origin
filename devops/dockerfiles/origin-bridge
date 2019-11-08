@@ -20,6 +20,7 @@ COPY ./packages/validator ./packages/validator
 COPY ./infra/bridge ./infra/bridge
 COPY ./infra/identity ./infra/identity
 COPY ./infra/growth-event ./infra/growth-event
+COPY ./packages/auth-utils ./packages/auth-utils
 
 RUN yarn install
 

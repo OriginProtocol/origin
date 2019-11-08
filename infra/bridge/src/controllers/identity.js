@@ -4,6 +4,8 @@ const express = require('express')
 const get = require('lodash/get')
 
 const router = express.Router()
+
+const authMiddleware = require('@origin/auth-utils/src/middleware/auth')
 const { GrowthEvent } = require('@origin/growth-event/src/resources/event')
 const {
   loadAttestationMetadata,
@@ -82,7 +84,8 @@ router.get('/', identityReadVerify, async (req, res) => {
  * @args {string} req.body.ipfsHash: IPFS hash of the identity JSON blob.
  * @returns {{id: string}} Returns the owner address used to write the identity to the DB.
  */
-router.post('/', identityWriteVerify, async (req, res) => {
+router.post('/', authMiddleware, identityWriteVerify, async (req, res) => {
+  const authAddress = req.__originAuth.address.toLowerCase()
   const ethAddress = req.query.ethAddress
   const data = req.body || {}
   logger.debug(`identity/write called for addr ${ethAddress}`)
@@ -109,6 +112,13 @@ router.post('/', identityWriteVerify, async (req, res) => {
 
   // In case the input address was a proxy, load the owner address.
   const owner = await getOwnerAddress(ethAddress)
+
+  // Ensure a user can only writes their own identity by
+  // checking the auth address matches the owner's address.
+  if (authAddress !== owner) {
+    logger.error(`${authAddress} is not allowed to write identity ${owner}`)
+    return res.status(403).send({ errors: [`Can not write identity ${owner}`] })
+  }
 
   // Load attestation data from the DB.
   const addresses = await loadIdentityAddresses(owner)
