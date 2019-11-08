@@ -740,6 +740,16 @@ export function shutdown() {
 
 if (isBrowser) {
   if (window.ethereum) {
+    /**
+     * imToken kludge to deal with a misbehaving provider wanting eth_subscribe
+     * but imToken doesn't actually support is.  web3.js detect websocket
+     * support by checking for provider.on.   This could change after
+     * web3.beta.34
+     */
+    if (window.ethereum.isImToken) {
+      window.ethereum.on = undefined
+    }
+
     metaMask = applyWeb3Hack(new Web3(window.ethereum))
     metaMaskEnabled = window.localStorage.metaMaskEnabled ? true : false
   } else if (window.web3) {
