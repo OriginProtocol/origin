@@ -1,6 +1,7 @@
 // Code shared between token-transfer-client and token-transfer-server
 // The imports in here should be kept as minimal as possible to avoid issues
 // with webpack building and node
+
 const BigNumber = require('bignumber.js')
 const moment = require('moment')
 
@@ -113,6 +114,20 @@ function calculateWithdrawn(transfers) {
   }, BigNumber(0))
 }
 
+const employeeUnlockDate = process.env.EMPLOYEE_UNLOCK_DATE
+  ? moment.utc(process.env.EMPLOYEE_UNLOCK_DATE)
+  : moment.utc('2020-01-01')
+
+const investorUnlockDate = process.env.INVESTOR_UNLOCK_DATE
+  ? moment.utc(process.env.INVESTOR_UNLOCK_DATE)
+  : moment.utc('2019-12-01')
+
+// Lockup bonus rate as a percentage
+const lockupBonusRate = process.env.LOCKUP_BONUS_RATE || 10
+
+// Lockup duration in months
+const lockupDuration = process.env.LOCKUP_DURATION || 12
+
 module.exports = {
   calculateGranted,
   calculateVested,
@@ -122,5 +137,9 @@ module.exports = {
   calculateWithdrawn,
   toMoment,
   momentizeLockup,
-  momentizeGrant
+  momentizeGrant,
+  employeeUnlockDate,
+  investorUnlockDate,
+  lockupBonusRate,
+  lockupDuration
 }

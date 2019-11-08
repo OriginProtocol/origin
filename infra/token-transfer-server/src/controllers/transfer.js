@@ -6,17 +6,18 @@ const AsyncLock = require('async-lock')
 const lock = new AsyncLock()
 const jwt = require('jsonwebtoken')
 
-const logger = require('../logger')
 const { Transfer } = require('../../src/models')
 const { ensureLoggedIn } = require('../lib/login')
 const {
   asyncMiddleware,
+  getEmployeeUnlockDate,
   getFingerprintData,
-  getUnlockDate
+  getInvestorUnlockDate
 } = require('../utils')
 const { isEthereumAddress, isValidTotp } = require('../validators')
-const { encryptionSecret, unlockDate } = require('../config')
+const { encryptionSecret } = require('../config')
 const { addTransfer, confirmTransfer } = require('../lib/transfer')
+const logger = require('../logger')
 
 /*
  * Returns transfers for the authenticated user.
@@ -56,7 +57,10 @@ router.post(
         .json({ errors: errors.array({ onlyFirstError: true }) })
     }
 
-    if (moment() < getUnlockDate()) {
+    const unlockDate = req.user.employee
+      ? getEmployeeUnlockDate()
+      : getInvestorUnlockDate()
+    if (moment.utc() < unlockDate) {
       res
         .status(422)
         .send(`Tokens are still locked. Unlock date is ${unlockDate}`)

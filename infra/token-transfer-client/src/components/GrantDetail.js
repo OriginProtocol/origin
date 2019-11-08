@@ -2,7 +2,7 @@ import React from 'react'
 import moment from 'moment'
 
 import Swiper from 'react-id-swiper'
-import 'react-id-swiper/lib/styles/css/swiper.css'
+import 'swiper/css/swiper.css'
 
 const GrantDetail = props => {
   const swiperParams = {
