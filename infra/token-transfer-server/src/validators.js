@@ -44,7 +44,7 @@ const isExistingNickname = (value, { req }) => {
 
 // Validator for TOTP codes
 const isValidTotp = (value, { req }) => {
-  if (!req.user.otpVerified) {
+  if (!req.user.otpKey) {
     throw new Error('No OTP key configured')
   }
   if (!totp.verify(value, decrypt(req.user.otpKey), { window: 1 })) {
