@@ -65,7 +65,8 @@ class CreateListing extends Component {
         title: props.listing.title || '',
         currency: get(props, 'listing.price.currency.id', 'token-ETH'),
         price: props.listing.price ? props.listing.price.amount : '0.1',
-        acceptedTokens: props.listing.acceptedTokens.map(t => t.id) || supportedTokens,
+        acceptedTokens:
+          props.listing.acceptedTokens.map(t => t.id) || supportedTokens,
         from: seller ? seller.id : '',
         deposit: 0,
         category,
