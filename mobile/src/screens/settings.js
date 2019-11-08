@@ -97,22 +97,6 @@ class settingsScreen extends React.Component {
   }
 
   render() {
-    const props = this.props
-    let biometryStatus = false
-    if (props.settings.biometryType !== null) {
-      biometryStatus = true
-    }
-
-    let biometryText = ''
-    if (this.state.biometryType === 'FaceID') {
-      biometryText = 'Face ID'
-    } else if (
-      this.state.biometryType === 'TouchID' ||
-      this.state.biometryType
-    ) {
-      biometryText = 'Touch ID'
-    }
-
     return (
       <>
         {this.state.displayRemovePinGuard && (
@@ -126,7 +110,7 @@ class settingsScreen extends React.Component {
           </View>
 
           <TouchableHighlight
-            onPress={() => props.navigation.navigate('Accounts')}
+            onPress={() => this.props.navigation.navigate('Accounts')}
           >
             <View style={styles.menuItem}>
               <Text style={styles.menuText}>
@@ -139,7 +123,7 @@ class settingsScreen extends React.Component {
           </TouchableHighlight>
 
           <TouchableHighlight
-            onPress={() => props.navigation.navigate('Language')}
+            onPress={() => this.props.navigation.navigate('Language')}
           >
             <View style={styles.menuItem}>
               <Text style={styles.menuText}>
@@ -152,7 +136,7 @@ class settingsScreen extends React.Component {
           </TouchableHighlight>
 
           <TouchableHighlight
-            onPress={() => props.navigation.navigate('Currency')}
+            onPress={() => this.props.navigation.navigate('Currency')}
           >
             <View style={styles.menuItem}>
               <Text style={styles.menuText}>
@@ -172,17 +156,19 @@ class settingsScreen extends React.Component {
 
           {NETWORKS.map(network => (
             <Fragment key={network.name}>
-              <TouchableHighlight onPress={() => props.setNetwork(network)}>
+              <TouchableHighlight
+                onPress={() => this.props.setNetwork(network)}
+              >
                 <View style={styles.menuItem}>
                   <Text style={styles.menuText}>{network.name}</Text>
                   <View style={styles.menuItemIconContainer}>
-                    {network.name === props.settings.network.name && (
+                    {network.name === this.props.settings.network.name && (
                       <Image
                         source={require(`${IMAGES_PATH}selected.png`)}
                         style={styles.menuItemIcon}
                       />
                     )}
-                    {network.name !== props.settings.network.name && (
+                    {network.name !== this.props.settings.network.name && (
                       <Image
                         source={require(`${IMAGES_PATH}deselected.png`)}
                         style={styles.menuItemIcon}
@@ -203,11 +189,15 @@ class settingsScreen extends React.Component {
           {this.state.biometryType !== null && (
             <TouchableHighlight>
               <View style={styles.menuItem}>
-                <Text style={styles.menuText}>{biometryText}</Text>
+                <Text style={styles.menuText}>
+                  {this.state.biometryType === 'FaceID'
+                    ? 'Face ID'
+                    : 'Touch ID'}
+                </Text>
                 <View style={styles.menuItemIconContainer}>
                   <Switch
                     trackColor={{ true: '#1a82ff' }}
-                    value={biometryStatus}
+                    value={!!this.props.settings.biometryType}
                     onChange={() => this.touchAuthenticate()}
                   />
                 </View>
@@ -223,12 +213,12 @@ class settingsScreen extends React.Component {
               <View style={styles.menuItemIconContainer}>
                 <Switch
                   trackColor={{ true: '#1a82ff' }}
-                  value={!!props.settings.pin}
+                  value={!!this.props.settings.pin}
                   onValueChange={value => {
                     if (!value) {
                       this.setState({ displayRemovePinGuard: true })
                     } else {
-                      props.navigation.navigate('ChangePin')
+                      this.props.navigation.navigate('ChangePin')
                     }
                   }}
                 />
@@ -236,9 +226,9 @@ class settingsScreen extends React.Component {
             </View>
           </TouchableHighlight>
 
-          {!!props.settings.pin && (
+          {!!this.props.settings.pin && (
             <TouchableHighlight
-              onPress={() => props.navigation.navigate('ChangePin')}
+              onPress={() => this.props.navigation.navigate('ChangePin')}
             >
               <View style={styles.menuItem}>
                 <Text style={styles.menuText}>
