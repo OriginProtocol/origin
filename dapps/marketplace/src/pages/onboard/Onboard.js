@@ -12,6 +12,7 @@ import Profile from './Profile'
 import Finished from './Finished'
 import Messaging from './Messaging'
 import RewardsSignUp from './RewardsSignUp'
+import SignIn from './SignIn'
 
 const sessionStore = store('sessionStorage')
 
@@ -38,6 +39,16 @@ class Onboard extends Component {
             path={`${linkPathPrefix}/onboard/metamask`}
             render={() => (
               <MetaMask listing={listing} linkPrefix={linkPrefix} />
+            )}
+          />
+          <Route
+            path={`${linkPathPrefix}/onboard/signin`}
+            render={() => (
+              <SignIn
+                listing={listing}
+                linkPrefix={linkPrefix}
+                hideOriginWallet={hideOriginWallet}
+              />
             )}
           />
           <Route
