@@ -48,9 +48,7 @@ function initialState(props) {
     quantity: '1',
     price: '',
     currency: 'fiat-USD',
-    acceptedTokens: isOldListing
-      ? supportedTokens
-      : [],
+    acceptedTokens: isOldListing ? supportedTokens : [],
 
     // Fractional fields:
     timeZone: '',

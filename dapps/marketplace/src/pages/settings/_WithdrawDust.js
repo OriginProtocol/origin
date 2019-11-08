@@ -128,11 +128,7 @@ const WithdrawDust = ({
 }
 
 export default withCanTransact(
-  withWalletBalances(
-    WithdrawDust,
-    supportedTokens,
-    'walletProxy'
-  )
+  withWalletBalances(WithdrawDust, supportedTokens, 'walletProxy')
 )
 
 require('react-styl')(`

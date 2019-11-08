@@ -83,9 +83,7 @@ const SignIn = ({ wallet, isMobile }) => {
           setOpen(!open)
         }}
       >
-        {isMobile ? null : (
-          <fbt desc="Auth.SignIn">Sign In</fbt>
-        )}
+        {isMobile ? null : <fbt desc="Auth.SignIn">Sign In</fbt>}
       </a>
     </Dropdown>
   )

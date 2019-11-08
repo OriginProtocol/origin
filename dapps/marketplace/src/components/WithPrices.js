@@ -110,9 +110,15 @@ const WithPrices = ({
     } else {
       const otherSupportToken = supportedTokens
         // Find all other tokens
-        .filter(tokenId => ['token-ETH', 'token-DAI', 'token-OGN'].includes(tokenId) ? false : true)
+        .filter(tokenId =>
+          ['token-ETH', 'token-DAI', 'token-OGN'].includes(tokenId)
+            ? false
+            : true
+        )
         // Get the ones accepted by seller
-        .filter(tokenId => listing.acceptedTokens.find(t => t.id === tokenId) ? true : false)
+        .filter(tokenId =>
+          listing.acceptedTokens.find(t => t.id === tokenId) ? true : false
+        )
         // Find the one token that the buyer has enough balance of.
         .find(tokenId => get(tokenStatus, `${tokenId}.hasBalance`))
 

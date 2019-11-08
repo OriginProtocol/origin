@@ -70,13 +70,13 @@ const PaymentAmountRaw = ({
           // Not enough ETH either. :/
           message = <InsufficientBalance token={paymentMethod} />
         }
+        break
 
       case 'token-ETH':
       case 'token-OGN':
       case 'token-OKB':
       default:
         message = <InsufficientBalance token={paymentMethod} />
-        break
     }
   }
 

@@ -32,17 +32,14 @@ const PricingChooser = ({ value: selectedTokens, onChange, children }) => {
             Accepted Cryptocurrencies
           </fbt>
         </label>
-        {
-          supportedTokens.map(tokenId => (
-            <AcceptedTokenListItem
-              key={tokenId}
-              token={tokenId}
-              selected={selectedTokens.includes(tokenId)}
-              onSelect={toggleCurrencies}
-            />
-            
-          ))
-        }
+        {supportedTokens.map(tokenId => (
+          <AcceptedTokenListItem
+            key={tokenId}
+            token={tokenId}
+            selected={selectedTokens.includes(tokenId)}
+            onSelect={toggleCurrencies}
+          />
+        ))}
       </div>
     </div>
   )
