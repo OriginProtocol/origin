@@ -60,6 +60,9 @@ import uniswapAddLiquidity from './uniswap/uniswapAddLiquidity'
 
 import verifyPromotion from './promotions/verifyPromotion'
 
+import login from './auth/login'
+import logout from './auth/logout'
+
 export default {
   acceptOffer,
   addAffiliate,
@@ -85,6 +88,8 @@ export default {
   generateWebsiteCode,
   importWallet,
   importWallets,
+  login,
+  logout,
   makeOffer,
   markConversationRead,
   removeWallet,
