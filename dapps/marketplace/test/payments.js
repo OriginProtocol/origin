@@ -48,7 +48,8 @@ function tokenPaymentTests({ deployIdentity, autoSwap, token }) {
       })
     })
 
-    it(`should navigate to listing`, async function() {
+    it('should navigate to listing', async function() {
+      await page.reload()
       await page.evaluate(listingId => {
         window.location = `/#/listing/999-001-${listingId}`
       }, listing)
