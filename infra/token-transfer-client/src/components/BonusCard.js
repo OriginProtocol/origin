@@ -39,7 +39,7 @@ const BonusCard = ({ earnings, isLocked, locked, lockups }) => {
           <h2>Bonus Tokens</h2>
         </div>
         <div className="col text-right">
-          <NavLink to="/bonus">Earn More &gt;</NavLink>
+          <NavLink to="/lockup">Earn More &gt;</NavLink>
         </div>
       </div>
       <div className="row mb-4">
@@ -63,7 +63,7 @@ const BonusCard = ({ earnings, isLocked, locked, lockups }) => {
           <h2>Recent Lockups</h2>
         </div>
         <div className="col text-right">
-          <NavLink to="/bonus">View Details &gt;</NavLink>
+          <NavLink to="/lockup">View Details &gt;</NavLink>
         </div>
       </div>
       <div className="row">
