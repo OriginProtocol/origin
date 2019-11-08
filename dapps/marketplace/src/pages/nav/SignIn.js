@@ -76,14 +76,14 @@ const SignIn = ({ wallet, isMobile }) => {
       }
     >
       <a
-        className="nav-link"
+        className="nav-link signin-nav-link"
         href="#"
         onClick={e => {
           e.preventDefault()
           setOpen(!open)
         }}
       >
-        <fbt desc="Auth.SignIn">Sign In</fbt>
+        {isMobile ? null : <fbt desc="Auth.SignIn">Sign In</fbt>}
       </a>
     </Dropdown>
   )
@@ -121,4 +121,16 @@ require('react-styl')(`
     .btn
       max-width: 80%
       margin: 0 auto
+  
+  @media (max-width: 767.98px)
+    .signin-nav-link:before
+      display: inline-block
+      min-width: 28px
+      min-height: 28px
+      background-image: url('images/nav/login-button.svg')
+      background-size: contain
+      background-position: center
+      content: ''
+      background-repeat: no-repeat
+
 `)

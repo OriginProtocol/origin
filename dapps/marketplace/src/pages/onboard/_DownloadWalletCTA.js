@@ -194,6 +194,6 @@ require('react-styl')(`
           a
             height: 2.5rem
       .thirdparty-wallets
-        .wallet
+        .thirdparty-wallet
           padding: 1rem
 `)
