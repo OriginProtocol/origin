@@ -158,6 +158,10 @@ async function deployIdentity(
     const url = `${identityServer}/api/identity?ethAddress=${from}`
 
     const authToken = contracts.authClient.getAccessToken(owner)
+    if (!authToken) {
+      throw new Error('Identity write failure. Auth token missing.')
+    }
+
     const response = await fetch(url, {
       method: 'POST',
       headers: {
