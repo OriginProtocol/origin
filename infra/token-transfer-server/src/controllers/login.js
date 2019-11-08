@@ -4,9 +4,11 @@ const passport = require('passport')
 const base32 = require('thirty-two')
 const crypto = require('crypto')
 const qrcode = require('qrcode')
+const { check, validationResult } = require('express-validator')
 
 require('../passport')()
 const { asyncMiddleware, getFingerprintData } = require('../utils')
+const { isValidTotp } = require('../validators')
 const { LOGIN } = require('../constants/events')
 const { encrypt } = require('../lib/crypto')
 const { Event } = require('../models')
@@ -85,12 +87,21 @@ router.post(
  */
 router.post(
   '/verify_totp',
-  (req, res, next) => {
-    // Skip two factor auth for this endpoint
-    ensureLoggedIn(req, res, next, true)
-  },
-  passport.authenticate('totp'),
+  [
+    (req, res, next) => {
+      // Skip two factor auth for this endpoint
+      ensureLoggedIn(req, res, next, true)
+    },
+    check('code').custom(isValidTotp)
+  ],
   asyncMiddleware(async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res
+        .status(422)
+        .json({ errors: errors.array({ onlyFirstError: true }) })
+    }
+
     // Set otpVerified to true if it is not already to signify TOTP setup is
     // complete.
     await req.user.update({ otpVerified: true })
