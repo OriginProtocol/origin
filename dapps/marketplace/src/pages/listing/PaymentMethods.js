@@ -61,12 +61,6 @@ const PaymentAmountRaw = ({
     canTransact = false
     // When you don't have enough balance
     switch (paymentMethod) {
-      case 'token-ETH':
-      case 'token-OGN':
-      case 'token-OKB':
-        message = <InsufficientBalance token={paymentMethod} />
-        break
-
       case 'token-DAI':
         if (tokenStatus['token-ETH'].hasBalance) {
           // Has ETH. Can exchange that to DAI
@@ -76,6 +70,13 @@ const PaymentAmountRaw = ({
           // Not enough ETH either. :/
           message = <InsufficientBalance token={paymentMethod} />
         }
+        break
+
+      case 'token-ETH':
+      case 'token-OGN':
+      case 'token-OKB':
+      default:
+        message = <InsufficientBalance token={paymentMethod} />
     }
   }
 

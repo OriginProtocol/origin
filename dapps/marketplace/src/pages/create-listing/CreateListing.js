@@ -18,6 +18,8 @@ import ChooseCategory from './ChooseCategory'
 
 import ListingCreated from './ListingCreated'
 
+import supportedTokens from '@origin/graphql/src/utils/supportedTokens'
+
 import Store from 'utils/store'
 const store = Store('sessionStorage')
 
@@ -46,9 +48,7 @@ function initialState(props) {
     quantity: '1',
     price: '',
     currency: 'fiat-USD',
-    acceptedTokens: isOldListing
-      ? ['token-ETH', 'token-DAI', 'token-OGN', 'token-OKB']
-      : [],
+    acceptedTokens: isOldListing ? supportedTokens : [],
 
     // Fractional fields:
     timeZone: '',
