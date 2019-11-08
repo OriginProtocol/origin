@@ -77,7 +77,8 @@ router.get('/', identityReadVerify, async (req, res) => {
 /**
  * Writes an identity to the database.
  *
- * TODO(franck): Authenticate the request.
+ * TODO(franck): Get rid of the ethAddress argument and solely use
+ * the address from the auth token.
  *
  * @args {string} req.query.ethAddress: Address of the user. Accepts either owner or proxy address.
  * @args {Object} req.body.ipfsData: Identity JSON blob store in IPFS
@@ -115,6 +116,7 @@ router.post('/', authMiddleware, identityWriteVerify, async (req, res) => {
 
   // Ensure a user can only write to their own identity by
   // checking the auth address matches the owner's address.
+  // TODO(franck): remove this check once we get rid of the ethAddress arg.
   if (authAddress !== owner) {
     logger.error(`${authAddress} is not allowed to write identity ${owner}`)
     return res.status(403).send({ errors: [`Can not write identity ${owner}`] })
