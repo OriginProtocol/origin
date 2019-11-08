@@ -113,7 +113,7 @@ router.post('/', authMiddleware, identityWriteVerify, async (req, res) => {
   // In case the input address was a proxy, load the owner address.
   const owner = await getOwnerAddress(ethAddress)
 
-  // Ensure a user can only writes their own identity by
+  // Ensure a user can only write to their own identity by
   // checking the auth address matches the owner's address.
   if (authAddress !== owner) {
     logger.error(`${authAddress} is not allowed to write identity ${owner}`)
