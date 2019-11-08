@@ -1,6 +1,7 @@
 import React from 'react'
 
 import WithPrices from 'components/WithPrices'
+import supportedTokens from '@origin/graphql/src/utils/supportedTokens'
 
 const withMultiUnitData = WrappedComponent => {
   const WithMultiUnitData = ({ listing, quantity, ...props }) => {
@@ -11,13 +12,7 @@ const withMultiUnitData = WrappedComponent => {
       <WithPrices
         listing={listing}
         price={totalPrice}
-        targets={[
-          'token-ETH',
-          'token-DAI',
-          'token-OGN',
-          'token-OKB',
-          totalPrice.currency.id
-        ]}
+        targets={[...supportedTokens, totalPrice.currency.id]}
         allowanceTarget={listing.contractAddr}
       >
         {({ prices, tokenStatus, suggestedToken }) => (

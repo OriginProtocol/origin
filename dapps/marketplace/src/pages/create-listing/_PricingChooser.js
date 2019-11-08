@@ -3,6 +3,8 @@ import { fbt } from 'fbt-runtime'
 
 import AcceptedTokenListItem from 'components/AcceptedTokenListItem'
 
+import supportedTokens from '@origin/graphql/src/utils/supportedTokens'
+
 const PricingChooser = ({ value: selectedTokens, onChange, children }) => {
   const toggleCurrencies = useCallback(
     token => {
@@ -30,29 +32,14 @@ const PricingChooser = ({ value: selectedTokens, onChange, children }) => {
             Accepted Cryptocurrencies
           </fbt>
         </label>
-        <AcceptedTokenListItem
-          token="token-ETH"
-          selected={selectedTokens.includes('token-ETH')}
-          onSelect={toggleCurrencies}
-        />
-        <AcceptedTokenListItem
-          token="token-DAI"
-          selected={selectedTokens.includes('token-DAI')}
-          onSelect={toggleCurrencies}
-        />
-        <AcceptedTokenListItem
-          token="token-OGN"
-          selected={selectedTokens.includes('token-OGN')}
-          onSelect={toggleCurrencies}
-        />
-        {(process.env.NODE_ENV === 'test' ||
-          process.env.ENABLE_OKB === 'true') && (
+        {supportedTokens.map(tokenId => (
           <AcceptedTokenListItem
-            token="token-OKB"
-            selected={selectedTokens.includes('token-OKB')}
+            key={tokenId}
+            token={tokenId}
+            selected={selectedTokens.includes(tokenId)}
             onSelect={toggleCurrencies}
           />
-        )}
+        ))}
       </div>
     </div>
   )
