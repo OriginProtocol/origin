@@ -330,4 +330,4 @@ services:
       - redis-master
     ports:
       - "5200:5200"
-    command: npm run start --prefix packages/auth-utils
+    command: npm run start --prefix infra/auth-server
