@@ -3,6 +3,8 @@ import dayjs from 'dayjs'
 
 import WithPrices from 'components/WithPrices'
 
+import supportedTokens from '@origin/graphql/src/utils/supportedTokens'
+
 const withFractionalHourlyData = WrappedComponent => {
   const WithFractionalHourlyData = ({
     listing,
@@ -38,10 +40,7 @@ const withFractionalHourlyData = WrappedComponent => {
         listing={listing}
         price={totalPrice}
         targets={[
-          'token-ETH',
-          'token-DAI',
-          'token-OGN',
-          'token-OKB',
+          ...supportedTokens,
           listing.price.currency.id
         ]}
         allowanceTarget={listing.contractAddr}

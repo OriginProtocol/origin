@@ -4,6 +4,8 @@ import pick from 'lodash/pick'
 import get from 'lodash/get'
 import Categories from '@origin/graphql/src/constants/Categories'
 
+import supportedTokens from '@origin/graphql/src/utils/supportedTokens'
+
 import {
   Button,
   Dialog,
@@ -63,12 +65,7 @@ class CreateListing extends Component {
         title: props.listing.title || '',
         currency: get(props, 'listing.price.currency.id', 'token-ETH'),
         price: props.listing.price ? props.listing.price.amount : '0.1',
-        acceptedTokens: props.listing.acceptedTokens.map(t => t.id) || [
-          'token-ETH',
-          'token-DAI',
-          'token-OGN',
-          'token-OKB'
-        ],
+        acceptedTokens: props.listing.acceptedTokens.map(t => t.id) || supportedTokens,
         from: seller ? seller.id : '',
         deposit: 0,
         category,
@@ -85,7 +82,7 @@ class CreateListing extends Component {
         title: '',
         currency: 'fiat-USD',
         price: '5',
-        acceptedTokens: ['token-ETH', 'token-DAI', 'token-OGN', 'token-OKB'],
+        acceptedTokens: supportedTokens,
         depositManager: arbitrator ? arbitrator.id : '',
         from: seller ? seller.id : '',
         deposit: 5,

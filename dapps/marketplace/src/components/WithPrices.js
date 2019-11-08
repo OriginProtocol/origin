@@ -2,6 +2,8 @@ import withCurrencyBalances from 'hoc/withCurrencyBalances'
 import get from 'lodash/get'
 import floor from 'lodash/floor'
 
+import supportedTokens from '@origin/graphql/src/utils/supportedTokens'
+
 // web3.utils.toWei only accepts up to 18 decimal places
 function removeExtraDecimals(numStr) {
   return numStr.replace(/^([0-9]+\.[0-9]{18}).*/, '$1')
@@ -94,12 +96,10 @@ const WithPrices = ({
     const acceptsETH = listing.acceptedTokens.find(t => t.id === 'token-ETH')
     const acceptsDAI = listing.acceptedTokens.find(t => t.id === 'token-DAI')
     const acceptsOGN = listing.acceptedTokens.find(t => t.id === 'token-OGN')
-    const acceptsOKB = listing.acceptedTokens.find(t => t.id === 'token-OKB')
 
     const hasETH = get(tokenStatus, 'token-ETH.hasBalance')
     const hasDAI = get(tokenStatus, 'token-DAI.hasBalance')
     const hasOGN = get(tokenStatus, 'token-OGN.hasBalance')
-    const hasOKB = get(tokenStatus, 'token-OKB.hasBalance')
 
     if (acceptsETH && hasETH) {
       suggestedToken = 'token-ETH'
@@ -107,12 +107,22 @@ const WithPrices = ({
       suggestedToken = 'token-DAI'
     } else if (acceptsOGN && hasOGN) {
       suggestedToken = 'token-OGN'
-    } else if (acceptsOKB && hasOKB) {
-      suggestedToken = 'token-OKB'
     } else {
-      // User doesn't have sufficient balance in any of the accepted tokens
-      // Fallback to ETH or any accepted token
-      suggestedToken = get(listing, 'acceptedTokens[0].id', 'token-ETH')
+      const otherSupportToken = supportedTokens
+        // Find all other tokens
+        .filter(tokenId => ['token-ETH', 'token-DAI', 'token-OGN'].includes(tokenId) ? false : true)
+        // Get the ones accepted by seller
+        .filter(tokenId => listing.acceptedTokens.find(t => t.id === tokenId) ? true : false)
+        // Find the one token that the buyer has enough balance of.
+        .find(tokenId => get(tokenStatus, `${tokenId}.hasBalance`))
+
+      if (otherSupportToken) {
+        suggestedToken = otherSupportToken
+      } else {
+        // User doesn't have sufficient balance in any of the accepted tokens
+        // Fallback to ETH or any accepted token
+        suggestedToken = get(listing, 'acceptedTokens[0].id', 'token-ETH')
+      }
     }
   }
 

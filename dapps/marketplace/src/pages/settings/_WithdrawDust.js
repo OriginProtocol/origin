@@ -10,6 +10,7 @@ import { useMutation } from 'react-apollo'
 
 import TransactionError from 'components/TransactionError'
 import WaitForTransaction from 'components/WaitForTransaction'
+import supportedTokens from '@origin/graphql/src/utils/supportedTokens'
 
 const WithdrawDust = ({
   wallet,
@@ -129,7 +130,7 @@ const WithdrawDust = ({
 export default withCanTransact(
   withWalletBalances(
     WithdrawDust,
-    ['token-ETH', 'token-DAI', 'token-OGN', 'token-OKB'],
+    supportedTokens,
     'walletProxy'
   )
 )

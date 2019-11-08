@@ -1,6 +1,7 @@
 import React from 'react'
 
 import WithPrices from 'components/WithPrices'
+import supportedTokens from '@origin/graphql/src/utils/supportedTokens'
 
 /**
  * HOC that returns all the data that you need for running the
@@ -32,10 +33,7 @@ const withFractionalData = WrappedComponent => {
         listing={listing}
         price={totalPrice}
         targets={[
-          'token-ETH',
-          'token-DAI',
-          'token-OGN',
-          'token-OKB',
+          ...supportedTokens,
           listing.price.currency.id
         ]}
         allowanceTarget={listing.contractAddr}
