@@ -17,13 +17,13 @@ import {
   getIsLoading as getGrantIsLoading,
   getTotals as getGrantTotals
 } from '@/reducers/grant'
-import { employeeUnlockDate, investorUnlockDate } from '@/constants'
 import { fetchTransfers } from '@/actions/transfer'
 import {
   getTransfers,
   getIsLoading as getTransferIsLoading,
   getWithdrawnAmount
 } from '@/reducers/transfer'
+import { getUnlockDate } from '@/utils'
 import WithdrawalHistoryCard from '@/components/WithdrawalHistoryCard'
 import EthAddress from '@/components/EthAddress'
 
@@ -44,9 +44,7 @@ const WithdrawalHistory = props => {
     )
   }
 
-  const unlockDate = props.user.employee
-    ? employeeUnlockDate
-    : investorUnlockDate
+  const unlockDate = getUnlockDate(props.user)
   const isLocked = moment.utc() < unlockDate
 
   const accountNicknameMap = {}
