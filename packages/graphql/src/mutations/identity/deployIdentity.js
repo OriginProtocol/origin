@@ -157,9 +157,13 @@ async function deployIdentity(
     }
     const url = `${identityServer}/api/identity?ethAddress=${from}`
 
+    const authToken = contracts.authClient.getAccessToken(owner)
     const response = await fetch(url, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        authorization: 'Bearer ' + authToken,
+        'content-type': 'application/json'
+      },
       credentials: 'include',
       body: JSON.stringify({ ipfsData, ipfsHash })
     })
