@@ -7,6 +7,7 @@ import withWallet from 'hoc/withWallet'
 import withCreatorConfig from 'hoc/withCreatorConfig'
 import withIdentity from 'hoc/withIdentity'
 import withMessagingStatus from 'hoc/withMessagingStatus'
+import withAuthStatus from 'hoc/withAuthStatus'
 
 import DocumentTitle from 'components/DocumentTitle'
 import UserActivationLink from 'components/UserActivationLink'
@@ -86,8 +87,9 @@ const CreateListing = props => {
   }
 
   if (
-    !props.identity &&
-    !(localStorage.bypassOnboarding || localStorage.useWeb3Identity)
+    !props.isLoggedIn ||
+    (!props.identity &&
+      !(localStorage.bypassOnboarding || localStorage.useWeb3Identity))
   ) {
     return (
       <UserActivationLink
@@ -173,7 +175,7 @@ const CreateListing = props => {
 }
 
 export default withMessagingStatus(
-  withCreatorConfig(withWallet(withIdentity(CreateListing))),
+  withCreatorConfig(withWallet(withAuthStatus(withIdentity(CreateListing)))),
   { excludeData: true }
 )
 

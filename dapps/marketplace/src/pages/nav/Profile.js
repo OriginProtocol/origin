@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Query, useMutation, useApolloClient } from 'react-apollo'
+import { useMutation, useApolloClient, useQuery } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
 import formatHash from 'utils/formatHash'
@@ -37,61 +37,60 @@ const ProfileNav = ({
 
   const [rewardsModal, setRewardsModal] = useState(false)
 
-  return (
-    <Query query={ProfileQuery} pollInterval={window.transactionPoll || 1000}>
-      {({ data, error }) => {
-        if (error) {
-          console.error(error)
-          return null
-        }
-        const accountID = get(data, 'web3.primaryAccount.id')
-        if (!accountID) {
-          return null
-        }
+  const { data, error } = useQuery(ProfileQuery, {
+    pollInterval: window.transactionPoll || 1000
+  })
 
-        return (
-          <>
-            <Dropdown
-              el="li"
-              className="nav-item profile"
-              open={open}
-              onClose={() => onClose()}
-              animateOnExit={isMobile}
-              content={
-                <ProfileDropdown
-                  identity={identity}
-                  identityLoaded={identityLoaded}
-                  onClose={() => onClose()}
-                  onRewardsClick={() => {
-                    onClose()
-                  }}
-                  data={data}
-                />
-              }
-            >
-              <a
-                className="nav-link"
-                href="#"
-                onClick={e => {
-                  e.preventDefault()
-                  open ? onClose() : onOpen()
-                }}
-              >
-                <Avatar profile={identity} />
-              </a>
-            </Dropdown>
-            {rewardsModal && (
-              <EarnTokens
-                className="d-none"
-                startopen="true"
-                onNavigation={() => setRewardsModal(false)}
-                onClose={() => setRewardsModal(false)}
-              />
-            )}
-          </>
-        )
-      }}
-    </Query>
+  if (error) {
+    console.error(error)
+    return null
+  }
+
+  const accountID = get(data, 'web3.primaryAccount.id')
+  if (!accountID) {
+    return null
+  }
+
+  return (
+    <>
+      <Dropdown
+        el="li"
+        className="nav-item profile"
+        open={open}
+        onClose={() => onClose()}
+        animateOnExit={isMobile}
+        content={
+          <ProfileDropdown
+            identity={identity}
+            identityLoaded={identityLoaded}
+            onClose={() => onClose()}
+            onRewardsClick={() => {
+              onClose()
+            }}
+            data={data}
+          />
+        }
+      >
+        <a
+          className="nav-link"
+          href="#"
+          onClick={e => {
+            e.preventDefault()
+            open ? onClose() : onOpen()
+          }}
+        >
+          <Avatar profile={identity} />
+        </a>
+      </Dropdown>
+      {rewardsModal && (
+        <EarnTokens
+          className="d-none"
+          startopen="true"
+          onNavigation={() => setRewardsModal(false)}
+          onClose={() => setRewardsModal(false)}
+        />
+      )}
+    </>
   )
 }
 
