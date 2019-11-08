@@ -12,7 +12,7 @@ const jwt = require('jsonwebtoken')
 
 const { Grant, Lockup, Transfer, User, sequelize } = require('../../src/models')
 const { encrypt } = require('../../src/lib/crypto')
-const transferController = require('../../src/controllers/transfer')
+const lockupController = require('../../src/controllers/lockup')
 const enums = require('../../src/enums')
 
 process.env.ENCRYPTION_SECRET = 'test'
@@ -102,6 +102,8 @@ describe('Lockup HTTP API', () => {
 
   it('should add a lockup', async () => {
     const sendStub = sinon.stub(sendgridMail, 'send')
+    const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
+    lockupController.__Rewire__('getInvestorUnlockDate', unlockFake)
 
     await request(this.mockApp)
       .post('/api/lockups')
@@ -156,7 +158,25 @@ describe('Lockup HTTP API', () => {
     sendStub.restore()
   })
 
+  it('should not add a lockup if unlock date has not passed', async () => {
+    const unlockFake = sinon.fake.returns(moment().add(1, 'days'))
+    lockupController.__Rewire__('getInvestorUnlockDate', unlockFake)
+
+    const response = await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 1,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(422)
+
+    expect(response.text).to.match(/Unlock/)
+  })
+
   it('should not add a lockup if unconfirmed lockup exists', async () => {
+    const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
+    lockupController.__Rewire__('getInvestorUnlockDate', unlockFake)
+
     await Lockup.create({
       userId: this.user.id,
       amount: 1000,
@@ -191,7 +211,7 @@ describe('Lockup HTTP API', () => {
 
   it('should not add a lockup if not enough tokens (vested minus transfer enqueued)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getUnlockDate', unlockFake)
+    lockupController.__Rewire__('getInvestorUnlockDate', unlockFake)
 
     await Transfer.create({
       userId: this.user.id,
@@ -214,7 +234,7 @@ describe('Lockup HTTP API', () => {
 
   it('should not add a lockup if not enough tokens (vested minus transfer paused)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getUnlockDate', unlockFake)
+    lockupController.__Rewire__('getInvestorUnlockDate', unlockFake)
 
     await Transfer.create({
       userId: this.user.id,
@@ -237,7 +257,7 @@ describe('Lockup HTTP API', () => {
 
   it('should not add a lockup if not enough tokens (vested minus transfer waiting)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getUnlockDate', unlockFake)
+    lockupController.__Rewire__('getInvestorUnlockDate', unlockFake)
 
     await Transfer.create({
       userId: this.user.id,
@@ -260,7 +280,7 @@ describe('Lockup HTTP API', () => {
 
   it('should not add a lockup if not enough tokens (vested minus transfer succcess)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getUnlockDate', unlockFake)
+    lockupController.__Rewire__('getInvestorUnlockDate', unlockFake)
 
     await Transfer.create({
       userId: this.user.id,
@@ -283,7 +303,7 @@ describe('Lockup HTTP API', () => {
 
   it('should not add a lockup if not enough tokens (vested minus locked)', async () => {
     const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
-    transferController.__Rewire__('getUnlockDate', unlockFake)
+    lockupController.__Rewire__('getInvestorUnlockDate', unlockFake)
 
     await Lockup.create({
       userId: this.user.id,

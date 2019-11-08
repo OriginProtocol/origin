@@ -15,7 +15,7 @@ const logger = require('../logger')
 const {
   emailConfirmTimeout,
   encryptionSecret,
-  portalUrl
+  clientUrl
 } = require('../config')
 
 /**
@@ -87,7 +87,7 @@ async function sendLockupConfirmationEmail(lockup, user) {
     { expiresIn: '5m' }
   )
 
-  const vars = { url: `${portalUrl}/lockup/${lockup.id}/${token}` }
+  const vars = { url: `${clientUrl}/lockup/${lockup.id}/${token}` }
 
   await sendEmail(user.email, 'lockup', vars)
 
