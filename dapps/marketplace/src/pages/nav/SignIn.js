@@ -7,7 +7,7 @@ import Dropdown from 'components/Dropdown'
 import withWallet from 'hoc/withWallet'
 import withIsMobile from 'hoc/withIsMobile'
 
-import LoginMutation from 'mutations/login'
+import LoginMutation from 'mutations/Login'
 
 const SignInDropdown = ({ wallet, onClose }) => {
   const [login] = useMutation(LoginMutation, {
