@@ -63,6 +63,7 @@ const PaymentAmountRaw = ({
     switch (paymentMethod) {
       case 'token-ETH':
       case 'token-OGN':
+      case 'token-OKB':
         message = <InsufficientBalance token={paymentMethod} />
         break
 

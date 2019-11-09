@@ -17,7 +17,7 @@
     "cross-fetch": "3.0.4",
     "eslint": "6.6.0",
     "prettier": "1.18.2",
-    "form-data": "2.5.1"
+    "form-data": "3.0.0"
   },
   "prettier": {
     "semi": false,

@@ -2,7 +2,7 @@ import { fbt } from 'fbt-runtime'
 
 /**
  * Returns the display name of tokens
- * @param {String} token Can be one of [token-ETH, token-DAI, token-OGN]
+ * @param {String} token Can be one of [token-ETH, token-DAI, token-OGN, token-OKB]
  */
 export function getTokenName(token) {
   switch (token) {
@@ -12,6 +12,8 @@ export function getTokenName(token) {
       return fbt('Maker Dai', 'MakerDai')
     case 'token-OGN':
       return fbt('Origin Token', 'OriginToken')
+    case 'token-OKB':
+      return fbt('OKB Token', 'OKBToken')
   }
 
   return null
@@ -19,7 +21,7 @@ export function getTokenName(token) {
 
 /**
  * Returns tooltip content for the given token
- * @param {String} token Can be one of [token-ETH, token-DAI, token-OGN]
+ * @param {String} token Can be one of [token-ETH, token-DAI, token-OGN, token-OKB]
  */
 export function getTokenTooltip(token) {
   switch (token) {
@@ -35,6 +37,11 @@ export function getTokenTooltip(token) {
       )
     case 'token-OGN':
       return fbt('Useful for promoting other listings', 'pricingChooser.ogn')
+    case 'token-OKB':
+      return fbt(
+        'For use with one of our exchange partners',
+        'pricingChooser.okb'
+      )
   }
 
   return null
@@ -45,12 +52,14 @@ export function getTokenTooltip(token) {
  * @param {String} token Can be one of [token-ETH, token-DAI, token-OGN]
  */
 export function getTokenSymbol(token) {
-  // token-ETH => ETH, token-DAI => token-OGN => OGN
+  // token-ETH => ETH, token-DAI => DAI,
+  // token-OGN => OGN, token-OKB => OKB
   return token ? token.split('-').pop() : null
 }
 
 export const tokenToCoinLogoMap = {
   'token-ETH': 'eth',
   'token-DAI': 'dai',
-  'token-OGN': 'ogn'
+  'token-OGN': 'ogn',
+  'token-OKB': 'okb'
 }

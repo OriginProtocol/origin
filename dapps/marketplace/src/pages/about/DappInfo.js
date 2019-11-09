@@ -23,7 +23,7 @@ const sectionThead = ({ title }) => (
 const dataTr = ({ key, value }) => (
   <tr key={key}>
     <th>{key}</th>
-    <td>{value}</td>
+    <td>{String(value)}</td>
   </tr>
 )
 
@@ -148,13 +148,13 @@ const DappInfo = () => {
 
         <Query query={contractsQuery} notifyOnNetworkStatusChange={true}>
           {({ error, data, networkStatus }) => {
-            const marketplaces = data.marketplaces || []
-            const tokens = data.tokens || []
             if (networkStatus === 1) {
               return <LoadingSpinner />
-            } else if (error) {
-              return <LoadingSpinner />
+            } else if (error || !data) {
+              return <p>Error :(</p>
             }
+            const marketplaces = data.marketplaces || []
+            const tokens = data.tokens || []
             return (
               <section className="col-lg-6">
                 <table className="config-table">
@@ -232,6 +232,14 @@ const DappInfo = () => {
                     <tr>
                       <th>DOCKER</th>
                       <td>{process.env.DOCKER}</td>
+                    </tr>
+                    <tr>
+                      <th>ENABLE_CENTRALIZED_IDENTITY</th>
+                      <td>{process.env.ENABLE_CENTRALIZED_IDENTITY}</td>
+                    </tr>
+                    <tr>
+                      <th>ENABLE_WECHAT_ATTESTATION</th>
+                      <td>{process.env.ENABLE_WECHAT_ATTESTATION}</td>
                     </tr>
                     <tr>
                       <th>HOST</th>

@@ -15,9 +15,10 @@ const config = {
   ipfsGateway: `http://${HOST}:8080`,
   ipfsRPC: `http://${HOST}:5002`,
   bridge: 'https://bridge.dev.originprotocol.com',
-  performanceMode: localStorageHas('performanceMode', 'true'),
+  identityServer: `http://${HOST}:5000`,
   graphql: `http://${HOST}:4007`,
   relayer: `http://${HOST}:5100`,
+  authServer: `http://${HOST}:5200`,
   automine: 500,
   attestationIssuer: '0x5be37555816d258f5e316e0f84D59335DB2400B2',
 
@@ -33,10 +34,17 @@ const config = {
   DaiExchange: addresses.UniswapDaiExchange,
   ProxyFactory: addresses.ProxyFactory,
   IdentityProxyImplementation: addresses.IdentityProxyImplementation,
-  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled', 'true'),
-  relayerEnabled: localStorageHas('relayerEnabled', 'true'),
 
-  tokens: []
+  tokens: [],
+
+  // Wire-on/off configs.
+  centralizedIdentityEnabled: localStorageHas(
+    'centralizedIdentityEnabled',
+    'true'
+  ),
+  performanceMode: localStorageHas('performanceMode', 'true'),
+  proxyAccountsEnabled: localStorageHas('proxyAccountsEnabled', 'true'),
+  relayerEnabled: localStorageHas('relayerEnabled', 'true')
 }
 
 if (addresses.DAI) {
@@ -45,6 +53,16 @@ if (addresses.DAI) {
     type: 'Standard',
     name: 'DAI Stablecoin',
     symbol: 'DAI',
+    decimals: '18'
+  })
+}
+
+if (addresses.OKB) {
+  config.tokens.push({
+    id: addresses.OKB,
+    type: 'Standard',
+    name: 'OKB Token',
+    symbol: 'OKB',
     decimals: '18'
   })
 }

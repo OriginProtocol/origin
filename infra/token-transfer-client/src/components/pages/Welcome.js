@@ -75,9 +75,6 @@ class Welcome extends Component {
   }
 
   renderWelcome = () => {
-    const skipRevisedSchedule =
-      this.props.user.revisedTermsAgreedAt ||
-      this.props.user.revisedScheduleRejected
     return (
       <>
         <h1>
@@ -101,21 +98,13 @@ class Welcome extends Component {
           {this.props.user.email}
         </div>
         <hr className="mx-5" />
-        <p className="my-4">
-          At the request of multiple top-tier exchanges, we’ve modified the
-          investor token release schedule.
-        </p>
         <button
           className="btn btn-secondary btn-lg"
           onClick={() => {
-            if (skipRevisedSchedule) {
-              this.setState({ redirectTo: '/terms' })
-            } else {
-              this.setState({ redirectTo: '/revised_schedule' })
-            }
+            this.setState({ redirectTo: '/terms' })
           }}
         >
-          {skipRevisedSchedule ? 'Continue' : 'View Revised Schedule'}
+          Continue
         </button>
       </>
     )

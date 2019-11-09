@@ -10,9 +10,10 @@ import { paymentTests } from './payments'
 
 function listingTests({ autoSwap } = {}) {
   singleUnitTests({ autoSwap })
-  singleUnitTests({ autoSwap, acceptedTokens: ['ETH', 'DAI', 'OGN'] })
+  singleUnitTests({ autoSwap, acceptedTokens: ['ETH', 'DAI', 'OGN', 'OKB'] })
   singleUnitTests({ autoSwap, withShipping: true })
 
+  // Tests for DAI listings
   singleUnitTokenTests({ token: 'DAI', autoSwap })
   singleUnitTokenTests({ token: 'DAI', buyerHasTokens: true })
   singleUnitTokenTests({
@@ -22,6 +23,7 @@ function listingTests({ autoSwap } = {}) {
   })
   singleUnitTokenTests({ token: 'DAI', autoSwap, withShipping: true })
 
+  // Tests for OGN listings
   singleUnitTokenTests({ token: 'OGN', buyerHasTokens: true })
   singleUnitTokenTests({
     token: 'OGN',
@@ -30,6 +32,19 @@ function listingTests({ autoSwap } = {}) {
   })
   singleUnitTokenTests({
     token: 'OGN',
+    buyerHasTokens: true,
+    withShipping: true
+  })
+
+  // Tests for OKB listings
+  singleUnitTokenTests({ token: 'OKB', buyerHasTokens: true })
+  singleUnitTokenTests({
+    token: 'OKB',
+    buyerHasTokens: true,
+    deployIdentity: true
+  })
+  singleUnitTokenTests({
+    token: 'OKB',
     buyerHasTokens: true,
     withShipping: true
   })
@@ -165,4 +180,23 @@ describe('Marketplace Dapp with proxies, performance mode, broken relayer.', fun
   listingTests({ autoSwap: true })
   userProfileTests()
   onboardingTests()
+})
+
+describe('Centralized Identity.', function() {
+  this.timeout(15000)
+  this.retries(2) // This can help with flaky tests
+  before(async function() {
+    const page = await getPage()
+    await page.evaluate(() => {
+      window.localStorage.clear()
+      window.localStorage.bypassOnboarding = true
+      window.localStorage.centralizedIdentityEnabled = true
+      window.localStorage.proxyAccountsEnabled = true
+      window.localStorage.debug = 'origin:*'
+      window.transactionPoll = 100
+    })
+    await page.goto('http://localhost:8083')
+  })
+
+  userProfileTests(true)
 })

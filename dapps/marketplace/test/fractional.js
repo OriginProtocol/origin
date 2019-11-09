@@ -98,6 +98,7 @@ export function fractionalTests({ autoSwap, acceptedTokens } = {}) {
       if (acceptedTokens.includes('DAI')) await clickByText(page, 'Maker Dai')
       if (acceptedTokens.includes('OGN'))
         await clickByText(page, 'Origin Token')
+      if (acceptedTokens.includes('OKB')) await clickByText(page, 'OKB Token')
 
       await clickByText(page, 'Continue')
       await pic(page, 'add-listing')
@@ -258,7 +259,7 @@ export function fractionalTests({ autoSwap, acceptedTokens } = {}) {
       await clickByText(page, 'Purchases', 'a/span')
       await waitForText(page, 'Purchases', 'h1')
       await clickByText(page, 'Complete', 'a')
-      await waitForText(page, title, 'a')
+      await waitForText(page, title, 'h2')
     })
   })
 }

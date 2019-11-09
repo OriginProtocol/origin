@@ -1,5 +1,4 @@
 const addresses = require('@origin/contracts/build/contracts_origin.json')
-const localStorageHas = require('./_localStorageHas')
 
 export default {
   networkId: 2222,
@@ -12,6 +11,7 @@ export default {
   discovery: 'https://discovery.dev.originprotocol.com',
   growth: 'https://growth.dev.originprotocol.com',
   bridge: 'https://bridge.dev.originprotocol.com',
+  identityServer: 'https://bridge.dev.originprotocol.com',
   graphql: 'https://graphql.dev.originprotocol.com',
   notifications: 'https://notifications.dev.originprotocol.com',
   relayer: 'https://relayer.dev.originprotocol.com',
@@ -19,6 +19,7 @@ export default {
     messagingNamespace: 'origin:dev',
     globalKeyServer: 'https://messaging.dev.originprotocol.com'
   },
+  authServer: 'https://auth.dev.originprotocol.com',
 
   // Contracts
   OriginToken: addresses.OGN,
@@ -39,6 +40,13 @@ export default {
       name: 'DAI Stablecoin',
       symbol: 'DAI',
       decimals: '18'
+    },
+    {
+      id: addresses.OKB,
+      type: 'Standard',
+      name: 'OKB Token',
+      symbol: 'OKB',
+      decimals: '18'
     }
   ],
 
@@ -48,8 +56,9 @@ export default {
   arbitrator: addresses.Arbitrator,
   messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
 
-  // Configs
-  performanceMode: localStorageHas('performanceMode', 'true'),
+  // Wire-on/off configs.
+  centralizedIdentityEnabled: true,
+  performanceMode: true,
   proxyAccountsEnabled: true,
   relayerEnabled: true
 }

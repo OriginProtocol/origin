@@ -13,10 +13,10 @@ We use a monorepo for almost all of our development -- see [Origin](https://gith
 
 You are most likely interested in these projects inside the monorepo:
 
-- [Origin.js](https://github.com/OriginProtocol/origin/tree/master/origin-js#origin-js) - Solidity contracts and JavaScript API
-- [Origin DApp](https://github.com/OriginProtocol/origin/tree/master/origin-dapp#origin-dapp) - example React-powered decentralized application
-- [Origin Bridge Server](https://github.com/OriginProtocol/origin/tree/master/origin-bridge#origin-bridge-server) - Python and JavaScript for indexing, attestations, and messaging
-- [Origin Box](https://github.com/OriginProtocol/origin/blob/master/DEVELOPMENT.md#using-docker-compose) - Docker container for simplifying local development
+- [Marketplace DApp](https://github.com/OriginProtocol/origin/tree/master/dapps/marketplace) - React-powered decentralized application built on Origin's platform
+- [Core Packages](https://github.com/OriginProtocol/origin/tree/master/packages) - A suite of smart contracts and standards for creating listings, offers, and identities on decentralized marketplaces
+- [Infrastructure](https://github.com/OriginProtocol/origin/tree/master/infra) - Services enabling functionality that is either impossible or impractical to do directly on-chain, such as indexing, messaging, and notifications
+- [Mobile App](https://github.com/OriginProtocol/origin/tree/master/mobile) - Native application that offers a fully-integrated marketplace experiences with a built-in Ethereum wallet
 
 Other repos of interest:
 
@@ -31,7 +31,7 @@ We work in public and our company Discord is open to all. If you have questions 
 
 We have an open weekly engineering call on Google Hangouts every Wednesday at 12:30 Pacific Time. [Add to Calendar](https://calendar.google.com/event?action=TEMPLATE&tmeid=YXBiOThhc2s3cnE4NGltMXFwbWhpY3ZpNm9fMjAxOTAxMDlUMjAzMDAwWiBtaWNhaEBvcmlnaW5wcm90b2NvbC5jb20&tmsrc=micah%40originprotocol.com&scp=ALL)
 
-![Origin Engineering Call](/source/images/origin_engineering_call.png "Origin Engineering Call")
+<div style="background-color: #061d2a; border: 30px solid #061d2a;"><img src="/source/images/1-st-sun-nov.svg" alt="Origin Engineering Call" /></div>
 
 Join the call here: [https://meet.google.com/pws-cgyd-tqp](https://meet.google.com/pws-cgyd-tqp)
 
@@ -42,16 +42,13 @@ Everyone is welcome to join, even if you're just lurking. All we ask is that you
 
 ## Dive Right In
 
-If you're ready to start hacking on Origin right now and you just need an issue to focus on, check out our [open issues](https://github.com/search?utf8=%E2%9C%93&q=user%3AOriginProtocol+is%3Aopen+&type=Issues) especially those tagged as a [good first issue](
-https://github.com/search?utf8=%E2%9C%93&q=user%3AOriginProtocol+is%3Aopen++label%3A%22good+first+issue%22&type=Issues&ref=advsearch&l=&l=).
+If you're ready to start hacking on Origin right now and you just need an issue to focus on, check out our ["good first issues"](https://github.com/OriginProtocol/origin/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) and [let one of us know](https://www.originprotocol.com/discord) which one you plan to tackle.
 
-We use two week development sprints and you can see what we're currently prioritizing on [our Github project board](https://github.com/orgs/OriginProtocol/projects/2).
+We use [ZenHub](https://www.zenhub.com/) to manage our engineering tasks and product development. [Download their browser extension](https://www.zenhub.com/extension) and check out our open workspace at [github.com/originprotocol/origin#zenhub](https://github.com/originprotocol/origin#zenhub).
 
 Read our [development process](#contributing-email-development-process) and [community guidelines](#contributing-email-community-guidelines) first and have fun!
 
 ## Development Process
-
-Getting your local environment running is easy with [Origin Box](https://github.com/OriginProtocol/origin/tree/master/development#origin-box). We recommend using this Docker container for any development or testing that involves running a local blockchain.
 
 Our branching strategy is similar to [GitFlow](http://nvie.com/posts/a-successful-git-branching-model/), but we do all of our development in the `master` branch and have a `stable` branch for code that has been released.
 
@@ -75,12 +72,6 @@ We use a variety of programming languages in our repositories. When contributing
 For JavaScript, we use [NPM's style](https://docs.npmjs.com/misc/coding-style), which is automatically enforced via [prettier](https://prettier.io/).
 
 For Solidity, we use two space indents.
-
-## Troubleshooting a Development Environment
-
-* If you encounter errors while executing `npm install` for any of the Origin repositories, try running a recent LTS version of Node.js. [nvm](https://github.com/creationix/nvm) is a tool that can install specific versions of Node.js. After installing `nvm`, run `nvm install --lts`, remove your `node_modules` directory, and run `npm install` again.
-
-* If you are using `origin-box` Docker setup and are running OSX Sierra below 10.13.4 Docker volumes might randomly stop syncing. This results in problems where host machine source code updates do not get propagated to file system inside Docker. To resolve this issue update OSX Sierra to 10.13.4 or above. See [this thread](https://github.com/EugenMayer/docker-sync/issues/517) for more details. 
 
 ## Protocol Design
 
@@ -108,9 +99,8 @@ We want to keep the Origin community awesome, growing and collaborative. We need
 
 ## Reporting Issues
 
-If you find bugs, mistakes or inconsistencies in the Origin project's code or
-documents, please let us know by filing an issue at the appropriate issue
-tracker (we use multiple repositories). 
+If you find bugs, mistakes or inconsistencies in Origin's code or
+documents, please let us know by filing a GitHub issue. 
 
 <aside class="notice">
 No issue is too small. Help us fix our tpyos!
@@ -118,14 +108,13 @@ No issue is too small. Help us fix our tpyos!
 
 - [Good first issues](https://github.com/OriginProtocol/origin/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22+)
 - [Docs issues](https://github.com/OriginProtocol/origin/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3Adocs)
-- [Origin.js issues (JS API & Solidity contracts)](https://github.com/OriginProtocol/origin/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3Aorigin.js)
 - [DApp issues](https://github.com/OriginProtocol/origin/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3Adapp)
 - [Playground issues](https://github.com/OriginProtocol/origin-playground/issues)
 - [Company website issues](https://github.com/OriginProtocol/origin-website/issues)
 
 ## Security Issues
 
-The Origin Protocol and its implementations are still in early development, which means there may be problems with the protocol or in our implementations. We take security vulnerabilities very seriously. If you discover a security issue, please bring it to our attention right away!
+Origin is still in early development, which means there may be problems with the protocol or in our implementations. We take security vulnerabilities very seriously. If you discover a security issue, please bring it to our attention right away!
 
 If you find a vulnerability please send your report privately to [security@originprotocol.com](mailto:security@originprotocol.com) or [contact Josh Fraser via Keybase](https://keybase.io/joshfraser). Please DO NOT file a public issue.
 
@@ -137,12 +126,12 @@ Origin is just as much about community as it is about our technology.
 
 We need constant help in improving our documentation, building new tools to interface with our platform, spreading the word to new users, helping new users getting setup and much more.
 
-Please get in touch if you would like to help out. Our `general` channel on [Discord](https://discord.gg/jyxpUSe) is a great place to share ideas and volunteer to help.
+Please get in touch if you would like to help out. Our `general` channel on [Discord](https://www.originprotocol.com/discord) is a great place to share ideas and volunteer to help.
 
 ## Full Time Positions
 
 Origin occasionally hires developers for part time or full time positions. 
 
-We have a strong preference for hiring people who have already started contributing to the project. If you want a full time position on our team, your best shot is to engage with our team and start contributing code. It is very unlikely that we would offer you a full time position on our engineering team unless you've had at least a few pull requests merged.
+We have a strong preference for hiring people who have already started contributing to the project. If you want a full time position on our team, your best shot is to engage with our team and start contributing code. It is very unlikely that we would offer you a full-time position on our engineering team unless you've had at least a few pull requests merged.
 
-If you are interested, check out [the Origin Protocol job listings](https://angel.co/originprotocol/jobs). If you'd like to help in other ways, please propose your ideas in the [Origin Discord](https://discord.gg/jyxpUSe).
+If you are interested, check out [the Origin Protocol job listings](https://angel.co/originprotocol/jobs). If you'd like to help in other ways, please propose your ideas in [our Discord channel](https://www.originprotocol.com/discord).

@@ -545,8 +545,10 @@ function withEnrolmentModal(WrappedComponent) {
 
       return (
         <Query query={profileQuery} notifyOnNetworkStatusChange={true}>
-          {({ error, data }) => {
-            if (error) {
+          {({ error, data, networkStatus, loading }) => {
+            if (networkStatus === 1 || loading) {
+              return null
+            } else if (error) {
               return <QueryError error={error} query={profileQuery} />
             }
 

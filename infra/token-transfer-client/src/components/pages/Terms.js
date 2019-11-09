@@ -4,16 +4,24 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
-import { editUser } from '@/actions/user'
+import { editUser, fetchUser } from '@/actions/user'
 import {
+  getUser,
   getError as getUserError,
-  getIsEditing as getUserIsEditing
+  getIsEditing as getUserIsEditing,
+  getIsLoading as getUserIsLoading
 } from '@/reducers/user'
 
 class Terms extends Component {
   state = {
     accepted: false,
     redirectTo: null
+  }
+
+  componentDidMount() {
+    if (!this.props.user) {
+      this.props.fetchUser()
+    }
   }
 
   handleSubmit = async () => {
@@ -25,10 +33,26 @@ class Terms extends Component {
     }
   }
 
+  renderLoading = () => {
+    return (
+      <div className="action-card">
+        <div className="spinner-grow" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>
+    )
+  }
+
   render() {
     if (this.state.redirectTo) {
       return <Redirect push to={this.state.redirectTo} />
+    } else if (this.props.userIsLoading) {
+      return this.renderLoading()
     }
+
+    const skipRevisedSchedule =
+      this.props.user.revisedScheduleAgreedAt ||
+      this.props.user.revisedScheduleRejected
 
     return (
       <>
@@ -41,26 +65,26 @@ class Terms extends Component {
           <p>Please agree to our terms below and click Continue to proceed</p>
           <div className="form-group">
             <div className="terms-wrapper">
-              The recipient acknowledges that he, she or it has been advised
-              that the offers and sales of OGN have not been registered under
-              any country’s securities laws and, therefore, cannot be resold
-              except in compliance with the applicable country’s laws. Based on
-              recent guidance from the SEC, it is possible that transfers of OGN
-              would be deemed to be securities offerings in the United States at
-              launch. While we plan to work towards meeting the standards set by
+              The recipient acknowledges that they have been advised that the
+              offers and sales of OGN have not been registered under any
+              country’s securities laws and, therefore, cannot be resold except
+              in compliance with the applicable country’s laws. Based on recent
+              guidance from the SEC, it is possible that transfers of OGN would
+              be deemed to be securities offerings in the United States at
+              launch. We plan to work towards meeting the standards set by
               various jurisdictions around the world, including the United
               States, for transfers of OGN to not be considered offers and sales
-              of securities in those jurisdictions, we cannot assure you that
-              those standards have been met as of now. In recognition of the
-              foregoing, the recipient covenants to the Company that it will
+              of securities in those jurisdictions; however we cannot assure you
+              that those standards have been met as of now. In recognition of
+              the foregoing, the recipient covenants to the Company that it will
               comply with all applicable laws, including United States
               securities laws, with respect to any transfer of OGN as if OGN was
               a security under the laws of the United States.
               <br />
               <br />
-              The recipient acknowledges that he, she or it is solely
-              responsible for maintaining the security of his, her or its login
-              password as well as maintaining a secure backup.
+              The recipient acknowledges that they are solely responsible for
+              maintaining the security of his, her or its login password as well
+              as maintaining a secure backup.
             </div>
           </div>
           <div className="form-check">
@@ -72,13 +96,34 @@ class Terms extends Component {
               onClick={e => this.setState({ accepted: e.target.checked })}
             />
             <label className="form-check-label mt-0" htmlFor="acceptCheck">
-              I have read and agree to the terms and conditions
+              I have read and agree to the above terms and conditions and the{' '}
+              <a
+                href="https://www.originprotocol.com/en/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                privacy policy
+              </a>{' '}
+              and{' '}
+              <a
+                href="https://www.originprotocol.com/en/tos"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                terms of service
+              </a>{' '}
+              of Origin Protocol Inc.
             </label>
           </div>
           <button
-            className="btn btn-secondary btn-lg mt-5"
-            onClick={this.handleSubmit}
-            disabled={!this.state.accepted || this.props.userIsEditing}
+            className="btn btn-secondary btn-lg"
+            onClick={() => {
+              if (skipRevisedSchedule) {
+                this.setState({ redirectTo: '/phone' })
+              } else {
+                this.setState({ redirectTo: '/revised_schedule' })
+              }
+            }}
           >
             Continue
           </button>
@@ -90,15 +135,18 @@ class Terms extends Component {
 
 const mapStateToProps = ({ user }) => {
   return {
+    user: getUser(user),
     userError: getUserError(user),
-    userIsEditing: getUserIsEditing(user)
+    userIsEditing: getUserIsEditing(user),
+    userIsLoading: getUserIsLoading(user)
   }
 }
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      editUser: editUser
+      editUser: editUser,
+      fetchUser: fetchUser
     },
     dispatch
   )

@@ -2,6 +2,8 @@
 
 # origin-ipfs-proxy
 
+The Origin IPFS proxy is a layer between Origin's IPFS servers and the outside world. It is responsible for validating requests and ensuring no malicious content is being served from Origin's IPFS servers. The proxy restricts the content that is stored/retrieved on IPFS to images and JSON files. It also restricts the size of files that are being uploaded.
+
 This directory contains a node server that sites in front of Origin's IPFS nodes to validate files being uploaded and downloaded. It allows the following filetypes:
 
 - png

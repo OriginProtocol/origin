@@ -14,6 +14,7 @@ export default {
   discovery: 'https://discovery.staging.originprotocol.com',
   growth: 'https://growth.staging.originprotocol.com',
   bridge: 'https://bridge.staging.originprotocol.com',
+  identityServer: 'https://bridge.staging.originprotocol.com',
   graphql: 'https://graphql.staging.originprotocol.com',
   notifications: 'https://notifications.staging.originprotocol.com',
   relayer: 'https://relayer.staging.originprotocol.com',
@@ -21,6 +22,7 @@ export default {
     messagingNamespace: 'origin:staging',
     globalKeyServer: 'https://messaging.staging.originprotocol.com'
   },
+  authServer: 'https://auth.staging.originprotocol.com',
 
   // Contracts
   OriginToken: addresses.OGN,
@@ -48,6 +50,13 @@ export default {
       name: 'DAI Stablecoin',
       symbol: 'DAI',
       decimals: '18'
+    },
+    {
+      id: addresses.OKB,
+      type: 'Standard',
+      name: 'OKB Token',
+      symbol: 'OKB',
+      decimals: '18'
     }
   ],
 
@@ -57,7 +66,8 @@ export default {
   arbitrator: '0xc9c1a92ba54c61045ebf566b154dfd6afedea992',
   messagingAccount: '0xA9F10E485DD35d38F962BF2A3CB7D6b58585D591',
 
-  // Configs
+  // Wire-on/off configs.
+  centralizedIdentityEnabled: true,
   performanceMode: true,
   proxyAccountsEnabled: true,
   relayerEnabled: true

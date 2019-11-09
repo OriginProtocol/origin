@@ -15,7 +15,7 @@ const logger = require('../logger')
 const {
   emailConfirmTimeout,
   encryptionSecret,
-  portalUrl
+  clientUrl
 } = require('../config')
 
 /**
@@ -46,11 +46,10 @@ async function addLockup(userId, amount, data = {}) {
   let lockup
   const txn = await sequelize.transaction()
   try {
-    const now = moment()
     lockup = await Lockup.create({
       userId: user.id,
-      start: now,
-      end: now.add(lockupDuration, 'months'),
+      start: moment.utc(),
+      end: moment.utc().add(lockupDuration, 'months'),
       bonusRate: lockupBonusRate,
       amount,
       data
@@ -88,7 +87,7 @@ async function sendLockupConfirmationEmail(lockup, user) {
     { expiresIn: '5m' }
   )
 
-  const vars = { url: `${portalUrl}/lockup/${lockup.id}/${token}` }
+  const vars = { url: `${clientUrl}/lockup/${lockup.id}/${token}` }
 
   await sendEmail(user.email, 'lockup', vars)
 

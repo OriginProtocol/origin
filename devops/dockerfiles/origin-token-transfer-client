@@ -28,7 +28,7 @@ RUN yarn install
 
 ENV NODE_ENV=production
 
-RUN eval $(envkey-source) && yarn run build
+RUN eval "$(envkey-source)" && yarn run build
 
 # Copy built static files to nginx for serving
 FROM nginx:1.15.2-alpine

@@ -14,7 +14,7 @@ const WithdrawalSummaryCard = props => {
           <h2>Withdrawals</h2>
         </div>
         <div className="col text-right">
-          <NavLink to="/withdrawal">View history &gt;</NavLink>
+          <NavLink to="/withdrawal">View History &gt;</NavLink>
         </div>
       </div>
       <div className="row mb-2">

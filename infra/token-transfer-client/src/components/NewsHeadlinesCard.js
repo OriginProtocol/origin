@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { NavLink } from 'react-router-dom'
 import Swiper from 'react-id-swiper'
-import 'react-id-swiper/lib/styles/css/swiper.css'
+import 'swiper/css/swiper.css'
 
 import { fetchNews } from '@/actions/news'
 import {
@@ -47,7 +47,7 @@ const NewsHeadlinesCard = props => {
           <h2>News</h2>
         </div>
         <div className="col text-right">
-          <NavLink to="/news">Read all &gt;</NavLink>
+          <NavLink to="/news">Read All &gt;</NavLink>
         </div>
       </div>
       <Swiper {...swiperParams} getSwiper={setSwiper}>
@@ -60,7 +60,7 @@ const NewsHeadlinesCard = props => {
               <p>
                 {item.description.substr(0, 120) + '...'}{' '}
                 <a href={item.link} target="_blank" rel="noopener noreferrer">
-                  [Read more]
+                  [Read More]
                 </a>
               </p>
             </div>

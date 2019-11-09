@@ -176,17 +176,31 @@
         }
       ]
     },
-    "2UTQi1Ij4joTFsZVJtd81g==": {
+    "pO5CQpny+muZsUdbI/OMjQ==": {
       "translations": [
         {
-          "translation": "Упс! Похоже, у вас отключены уведомления. Чтобы получать последние обновления о ваших транзакциях, мы рекомендуем включить их в настройках приложения Origin Marketplace."
+          "translation": "Woops! It looks like you have notifications disabled. To get the latest updates about your transactions we recommend enabling them in the settings for the Origin Marketplace application."
         }
       ]
     },
-    "lOwKCA3REqk0Tz8uOBf3Pw==": {
+    "kpnxGAkY7wwhA034sRjlgg==": {
       "translations": [
         {
-          "translation": "Открыть настройки"
+          "translation": "We highly recommend enabling notifications to get the latest updates about your transaction with timely alerts."
+        }
+      ]
+    },
+    "HP2OsxjZ92s0ZkiHRLCq+Q==": {
+      "translations": [
+        {
+          "translation": "Open Settings"
+        }
+      ]
+    },
+    "cNC6HEwSQ2MTdQc9xbDrAw==": {
+      "translations": [
+        {
+          "translation": "Enable Notifications"
         }
       ]
     },
@@ -194,6 +208,34 @@
       "translations": [
         {
           "translation": "Закрыть"
+        }
+      ]
+    },
+    "21hMnXPcxTGJHmoWgpA7Og==": {
+      "translations": [
+        {
+          "translation": "Samsung Blockchain Keystore Error"
+        }
+      ]
+    },
+    "qzN5RGfNbk86/n/jcpMdfg==": {
+      "translations": [
+        {
+          "translation": "An error occurred accessing Samsung Blockchain Keystore."
+        }
+      ]
+    },
+    "DEMLFz9zBSsNpmhGgY6piw==": {
+      "translations": [
+        {
+          "translation": "Retry"
+        }
+      ]
+    },
+    "rCsEaxa+oEKoe7c42xpG0A==": {
+      "translations": [
+        {
+          "translation": "Continue"
         }
       ]
     },
@@ -232,10 +274,17 @@
         }
       ]
     },
-    "kht+lHwylljzghuxx6U44Q==": {
+    "X272L09aOTnFbVTziChx1g==": {
       "translations": [
         {
-          "translation": "Купить"
+          "translation": "Make Offer"
+        }
+      ]
+    },
+    "8XqYinU0zAemee1+B/gY3g==": {
+      "translations": [
+        {
+          "translation": "Transfer Tokens"
         }
       ]
     },
@@ -246,10 +295,17 @@
         }
       ]
     },
-    "HcQ+0ssTVx9JP0dbueE6EA==": {
+    "lNW3S1SBg7rOFjjAt8j26Q==": {
       "translations": [
         {
-          "translation": "Подтвердить конвертацию валюты"
+          "translation": "Grant Token Access"
+        }
+      ]
+    },
+    "VqHNzpP2gO7q8zCyzsy2wA==": {
+      "translations": [
+        {
+          "translation": "We are requesting permission to move {currency} on your behalf"
         }
       ]
     },
@@ -526,6 +582,55 @@
         }
       ]
     },
+    "qB0LirQx9SttKH4w9wrLOg==": {
+      "translations": [
+        {
+          "translation": "Samsung Blockchain Keystore"
+        }
+      ]
+    },
+    "eeZwTjiz+eTRGp9qpIdbUg==": {
+      "translations": [
+        {
+          "translation": "{biometryType} Недоступен"
+        }
+      ]
+    },
+    "IaE+AHV4HvjUVM7WH5QGEQ==": {
+      "translations": [
+        {
+          "translation": "Похоже, что у вас отключен {biometryType}. Вам нужно будет включить его в настройках приложения Origin Marketplace."
+        }
+      ]
+    },
+    "+2JgKmxomPm6EphuMZAFIg==": {
+      "translations": [
+        {
+          "translation": "Открыть настройки"
+        }
+      ]
+    },
+    "33H9wgLoaZ0e06VAnLqWDQ==": {
+      "translations": [
+        {
+          "translation": "Защитите свой кошелек"
+        }
+      ]
+    },
+    "LeVyToxA5TxqpAsWD4H61w==": {
+      "translations": [
+        {
+          "translation": "Добавьте дополнительный уровень безопасности, чтобы обеспечить безопасность ваших криптоактивов."
+        }
+      ]
+    },
+    "Rs0apd73mOXN6yDQ2xy9/w==": {
+      "translations": [
+        {
+          "translation": "Создать пин-код"
+        }
+      ]
+    },
     "0j7TBsobep8YH0Qkvtrqcg==": {
       "translations": [
         {
@@ -666,17 +771,10 @@
         }
       ]
     },
-    "P19QeS8TSjISSt0doVlLyA==": {
+    "/Dpz63y5rPCTt9TIGPA08A==": {
       "translations": [
         {
-          "translation": "Import your wallet"
-        }
-      ]
-    },
-    "31RyFwYE/GDQQsrh3Ulvtw==": {
-      "translations": [
-        {
-          "translation": "You can import a wallet using one of the methods below."
+          "translation": "Currency"
         }
       ]
     },
@@ -694,6 +792,34 @@
         }
       ]
     },
+    "02GRYVGDDELAIPbO8x8GoQ==": {
+      "translations": [
+        {
+          "translation": "Samsung Keystore"
+        }
+      ]
+    },
+    "YgQAbQzQfarXS32FHToKpA==": {
+      "translations": [
+        {
+          "translation": "Your wallet is managed by the Samsung Blockchain Keystore."
+        }
+      ]
+    },
+    "P19QeS8TSjISSt0doVlLyA==": {
+      "translations": [
+        {
+          "translation": "Import your wallet"
+        }
+      ]
+    },
+    "31RyFwYE/GDQQsrh3Ulvtw==": {
+      "translations": [
+        {
+          "translation": "You can import a wallet using one of the methods below."
+        }
+      ]
+    },
     "EAvFlbnkWZvKJZAe/pfhsA==": {
       "translations": [
         {
@@ -701,10 +827,10 @@
         }
       ]
     },
-    "HSUBJXtSYEYyVbjVfwQmtg==": {
+    "S/j+cIqLysC5PQLYuvycXw==": {
       "translations": [
         {
-          "translation": "Enter Recovery Phrase"
+          "translation": "Enter Phrase"
         }
       ]
     },
@@ -736,34 +862,6 @@
         }
       ]
     },
-    "imEcy9mqva2P4QkCGKkG7w==": {
-      "translations": [
-        {
-          "translation": "Other Wallet Detected"
-        }
-      ]
-    },
-    "DktheTKIZ/i7gQzBzStqKQ==": {
-      "translations": [
-        {
-          "translation": "We've noticed that you previously signed up for Origin Rewards using this email with a different wallet. Please import your other wallet to continue earning Origin Rewards."
-        }
-      ]
-    },
-    "JdP7rfOo7gmvo9L/wkL+Zg==": {
-      "translations": [
-        {
-          "translation": "Import other wallet"
-        }
-      ]
-    },
-    "QxzO198tsuRhwRSgbXnSSA==": {
-      "translations": [
-        {
-          "translation": "Continue without rewards"
-        }
-      ]
-    },
     "59TOqnoYcFhWfpYdUrJdiw==": {
       "translations": [
         {
@@ -785,493 +883,10 @@
         }
       ]
     },
-    "eeZwTjiz+eTRGp9qpIdbUg==": {
+    "c95LW4bvkZe+dGIftWiDVg==": {
       "translations": [
         {
-          "translation": "{biometryType} Недоступен"
-        }
-      ]
-    },
-    "IaE+AHV4HvjUVM7WH5QGEQ==": {
-      "translations": [
-        {
-          "translation": "Похоже, что у вас отключен {biometryType}. Вам нужно будет включить его в настройках приложения Origin Marketplace."
-        }
-      ]
-    },
-    "+2JgKmxomPm6EphuMZAFIg==": {
-      "translations": [
-        {
-          "translation": "Открыть настройки"
-        }
-      ]
-    },
-    "33H9wgLoaZ0e06VAnLqWDQ==": {
-      "translations": [
-        {
-          "translation": "Защитите свой кошелек"
-        }
-      ]
-    },
-    "LeVyToxA5TxqpAsWD4H61w==": {
-      "translations": [
-        {
-          "translation": "Добавьте дополнительный уровень безопасности, чтобы обеспечить безопасность ваших криптоактивов."
-        }
-      ]
-    },
-    "Rs0apd73mOXN6yDQ2xy9/w==": {
-      "translations": [
-        {
-          "translation": "Создать пин-код"
-        }
-      ]
-    },
-    "JzJZ+OTpb9hzNw77rQa8nw==": {
-      "translations": [
-        {
-          "translation": "Photo uploaded failed"
-        }
-      ]
-    },
-    "mVZ3B6uerQ4HZmCph0E5tQ==": {
-      "translations": [
-        {
-          "translation": "Photo library permissions not granted"
-        }
-      ]
-    },
-    "8ZM8FmUk6ZfijCtumgXusw==": {
-      "translations": [
-        {
-          "translation": "Your photo will be visible on the blockchain"
-        }
-      ]
-    },
-    "qMaDEzxqr8Ix4ron05p/oQ==": {
-      "translations": [
-        {
-          "translation": "Continue"
-        }
-      ]
-    },
-    "XEjWdGrZ6rODE6mbkHNr8A==": {
-      "translations": [
-        {
-          "translation": "Gallery access denied"
-        }
-      ]
-    },
-    "AtumglY5rafPmxS5bIbDRQ==": {
-      "translations": [
-        {
-          "translation": "It looks like we cannot access your photo gallery. You will need to allow access in the onboarding for the Origin Marketplace App."
-        }
-      ]
-    },
-    "1BsZZVEF1PmW8lwWzkHYmg==": {
-      "translations": [
-        {
-          "translation": "Upload a photo"
-        }
-      ]
-    },
-    "Sgdsg46ONGdu6O6X2qxfcg==": {
-      "translations": [
-        {
-          "translation": "Looking good"
-        }
-      ]
-    },
-    "HIo5dv7pY9YsS7Fqm3bXfg==": {
-      "translations": [
-        {
-          "translation": "Это не похоже на адрес электронной почты."
-        }
-      ]
-    },
-    "Peq94zFjleGar7Rv3g1lgg==": {
-      "translations": [
-        {
-          "translation": "Let's get started"
-        }
-      ]
-    },
-    "RNEgkK4iv5gSEf8ZLkbgjg==": {
-      "translations": [
-        {
-          "translation": "What's your email address?"
-        }
-      ]
-    },
-    "En1GXA0gOCZoss4o/D8dNg==": {
-      "translations": [
-        {
-          "translation": "We will use your email to notify you of important notifications when you buy or sell."
-        }
-      ]
-    },
-    "gneL+SMREOKfFfW2Ust3kg==": {
-      "translations": [
-        {
-          "translation": "Continue"
-        }
-      ]
-    },
-    "6bERcxQ2fGSwj490/D7Vuw==": {
-      "translations": [
-        {
-          "translation": "Verify your email"
-        }
-      ]
-    },
-    "MKqWd/5PlnVqEJThDppnRw==": {
-      "translations": [
-        {
-          "translation": "Enter code"
-        }
-      ]
-    },
-    "2gZws9N5PqCKOwXVtEAC4Q==": {
-      "translations": [
-        {
-          "translation": "We sent you a code to the email address you provided. Please enter it above."
-        }
-      ]
-    },
-    "5Ytz1SpM8+qqFM6zuiP0yw==": {
-      "translations": [
-        {
-          "translation": "Verify"
-        }
-      ]
-    },
-    "yA8uydHyuptDK//yqS34XA==": {
-      "translations": [
-        {
-          "translation": "That you have a verified email, but NOT your actual email address."
-        }
-      ]
-    },
-    "yCoiTqACk89DXAWoi3BMoA==": {
-      "translations": [
-        {
-          "translation": "Checking eligibility"
-        }
-      ]
-    },
-    "TF+HFktY9AXDNH8LNJQhUQ==": {
-      "translations": [
-        {
-          "translation": "Origin Rewards"
-        }
-      ]
-    },
-    "CJ0/lS8MDCaa37qmXjKQFg==": {
-      "translations": [
-        {
-          "translation": "Oops, {countryName} is not eligible"
-        }
-      ]
-    },
-    "Riq5Tdahtx7XxXBl7aX1Ug==": {
-      "translations": [
-        {
-          "translation": "Unfortunately, it looks like you’re currently in a country where government regulations do not allow you to participate in Origin Rewards."
-        }
-      ]
-    },
-    "4YNELtqVCN8E2G3QYp1Cqg==": {
-      "translations": [
-        {
-          "translation": "Did we detect your country incorrectly?"
-        }
-      ]
-    },
-    "3SE1zCnFKOuvd6Jp635bRQ==": {
-      "translations": [
-        {
-          "translation": "I certify that I am not a citizen or resident of {countryName}"
-        }
-      ]
-    },
-    "lLkgrumZR50TcaB65im+QA==": {
-      "translations": [
-        {
-          "translation": "Continue"
-        }
-      ]
-    },
-    "e2u4nhuK5gTY0CktzGnp9g==": {
-      "translations": [
-        {
-          "translation": "Cancel"
-        }
-      ]
-    },
-    "/UBlfxY244oqVerZ50a4kA==": {
-      "translations": [
-        {
-          "translation": "Origin Rewards Terms"
-        }
-      ]
-    },
-    "M0aW3hsME0GRN2erlboMPQ==": {
-      "translations": [
-        {
-          "translation": "Join Origin’s reward program to earn Origin tokens (OGN). Terms & conditions apply."
-        }
-      ]
-    },
-    "qkndnSlpAK84Dm13IY+AbA==": {
-      "translations": [
-        {
-          "translation": "Earned OGN will be distributed at the end of each campaign. OGN is currently locked for usage on the Origin platform and cannot be transferred. It is expected that OGN will be unlocked and transferrable in the future. By joining the Origin rewards program, you agree that you will not transfer or sell future earned Origin tokens to other for at least 1 year from the date of earning your tokens."
-        }
-      ]
-    },
-    "9Wy3RxCzhQrxJlnXfTVo7g==": {
-      "translations": [
-        {
-          "translation": "OGN are being issued in a transaction originally exempt from registration under the U.S. Securities Act of 1933, as amended (the “Securities Act”), and may not be transferred in the United States to, or for the account or benefit of, any U.S. person except pursuant to an available exemption from the registration requirements of the Securities Act and all applicable state securities laws. Terms used above have the meanings given to them in Regulation S under the Securities Act and all applicable laws and regulations."
-        }
-      ]
-    },
-    "mV7gMrH1PUulSFXaNYOdvg==": {
-      "translations": [
-        {
-          "translation": "I accept the terms and conditions"
-        }
-      ]
-    },
-    "H+BZVjVjM4+IejWLGWVyhA==": {
-      "translations": [
-        {
-          "translation": "Accept Terms"
-        }
-      ]
-    },
-    "wnFr35kFZ4iM1Ku4hZwUmA==": {
-      "translations": [
-        {
-          "translation": "Cancel"
-        }
-      ]
-    },
-    "YNkCMDVkWdODeqZBgGdakw==": {
-      "translations": [
-        {
-          "translation": "Are you sure you don't want Origin Rewards?"
-        }
-      ]
-    },
-    "ZybZxwhEQLQFw3K7TlMb5Q==": {
-      "translations": [
-        {
-          "translation": "You will not be able to earn OGN on Origin, but you can still verify your profile."
-        }
-      ]
-    },
-    "0q0HZMWU7Zaxkf21fXF7bw==": {
-      "translations": [
-        {
-          "translation": "No, wait"
-        }
-      ]
-    },
-    "caWiQ9MV++tRiOpjfzGXbg==": {
-      "translations": [
-        {
-          "translation": "I'm, sure"
-        }
-      ]
-    },
-    "8kzZqWiXkbW+TAsfJ2wF2w==": {
-      "translations": [
-        {
-          "translation": "Yes! Sign me up"
-        }
-      ]
-    },
-    "vvayvkUbDXMztNsDHtqVxg==": {
-      "translations": [
-        {
-          "translation": "No, thanks"
-        }
-      ]
-    },
-    "cKNz7tWusaI7mgYnY6GJjg==": {
-      "translations": [
-        {
-          "translation": "Looking for your account"
-        }
-      ]
-    },
-    "KeWVNCqIuy/5jj5oxSE76A==": {
-      "translations": [
-        {
-          "translation": "Hi {name}!"
-        }
-      ]
-    },
-    "b2pa9zJ/zom712iIyfwpAw==": {
-      "translations": [
-        {
-          "translation": "There are a few more steps required to complete your Origin account."
-        }
-      ]
-    },
-    "jxC2CYxK7d6CUoJX8yjOjw==": {
-      "translations": [
-        {
-          "translation": "Looks like you are all set to go!"
-        }
-      ]
-    },
-    "c0kC64N++nnO7YdUXpPkJA==": {
-      "translations": [
-        {
-          "translation": "Continue"
-        }
-      ]
-    },
-    "nT671l79mnT9TUemKKeA8g==": {
-      "translations": [
-        {
-          "translation": "You've imported your wallet"
-        }
-      ]
-    },
-    "492X/a02RgI2kX1CY4OWfA==": {
-      "translations": [
-        {
-          "translation": "Next, create an Origin profile that will be linked to this wallet."
-        }
-      ]
-    },
-    "weAsFjgd4z8GxgH80OrGeg==": {
-      "translations": [
-        {
-          "translation": "Please note, your wallet will no longer be anonymous"
-        }
-      ]
-    },
-    "3ZoiRX1L5tYXGwsTNPAyYA==": {
-      "translations": [
-        {
-          "translation": "Learn more"
-        }
-      ]
-    },
-    "t3fzdBVeOZ+86XM456+6OQ==": {
-      "translations": [
-        {
-          "translation": "Create a profile"
-        }
-      ]
-    },
-    "NMOn9OVOm+Q83MCggA+Qhw==": {
-      "translations": [
-        {
-          "translation": "Oops, wait. Let's start over..."
-        }
-      ]
-    },
-    "lCIO39XYueDt+SlnJ14ozA==": {
-      "translations": [
-        {
-          "translation": "Create a profile"
-        }
-      ]
-    },
-    "6YgdpUZBYWeBELyMTnFapw==": {
-      "translations": [
-        {
-          "translation": "Enter your first name"
-        }
-      ]
-    },
-    "jQ/kAfe+VaXifrBypObqtQ==": {
-      "translations": [
-        {
-          "translation": "Enter your last name"
-        }
-      ]
-    },
-    "Jl+otuv0Lja5dPoHRGgnPQ==": {
-      "translations": [
-        {
-          "translation": "Continue"
-        }
-      ]
-    },
-    "3pU9dBapWm3w0SdYNr/Zkw==": {
-      "translations": [
-        {
-          "translation": "Your name will be visible on the blockchain"
-        }
-      ]
-    },
-    "+RVM+8puOIMhob2MxHX2bA==": {
-      "translations": [
-        {
-          "translation": "Enter phone"
-        }
-      ]
-    },
-    "uqaHngk+36/IrdZ9m9dU1Q==": {
-      "translations": [
-        {
-          "translation": "By verifying your phone number, you give Origin permission to send you occasional messages such as notifications about your transactions."
-        }
-      ]
-    },
-    "3g9qvEu1GiNMNh6JBijqHg==": {
-      "translations": [
-        {
-          "translation": "Continue"
-        }
-      ]
-    },
-    "XwrNYmVJlDBLt6bAM+2xFg==": {
-      "translations": [
-        {
-          "translation": "Verify phone"
-        }
-      ]
-    },
-    "XAWHUFhdiQP6HPqgZSD9Ow==": {
-      "translations": [
-        {
-          "translation": "Enter code"
-        }
-      ]
-    },
-    "0afMb8DymUzAeiwd1ZoCOA==": {
-      "translations": [
-        {
-          "translation": "We sent you a code to the phone address you provided. Please enter it above."
-        }
-      ]
-    },
-    "cVQ5WUbAd0AwThKrYa0XUg==": {
-      "translations": [
-        {
-          "translation": "Skip"
-        }
-      ]
-    },
-    "hSS4TyNhyW0XIRPWLPTNkQ==": {
-      "translations": [
-        {
-          "translation": "Verify"
-        }
-      ]
-    },
-    "PyFVYexIJiaH2u8MLa9guA==": {
-      "translations": [
-        {
-          "translation": "That you have a verified phone, but NOT your actual phone number."
+          "translation": "Settings"
         }
       ]
     },
@@ -1303,97 +918,6 @@
         }
       ]
     },
-    "Ip7Mr7tIHRRsNQPeJcaJFA==": {
-      "translations": [
-        {
-          "translation": "Теперь вы можете начать покупать и продавать на Origin"
-        }
-      ]
-    },
-    "SbM4isH7VRSRb3Kzhb2Xdw==": {
-      "translations": [
-        {
-          "translation": "Unfortunately we could not publish your identity on your behalf."
-        }
-      ]
-    },
-    "OEbNUu60r5gTdbiIFyusag==": {
-      "translations": [
-        {
-          "translation": "Start Using Origin"
-        }
-      ]
-    },
-    "MB0ie95S2AA9xAwYRkPG2Q==": {
-      "translations": [
-        {
-          "translation": "Publishing your account"
-        }
-      ]
-    },
-    "lgpP8skCH3wOustvhptxBA==": {
-      "translations": [
-        {
-          "translation": "Waiting for confirmation"
-        }
-      ]
-    },
-    "tWJHZWSsiD6K0ek//UcW6Q==": {
-      "translations": [
-        {
-          "translation": "This might take a minute"
-        }
-      ]
-    },
-    "RQqR7szL1Z0RUueooggK8w==": {
-      "translations": [
-        {
-          "translation": "Покупайте и продавайте вещи с помощью криптовалют."
-        }
-      ]
-    },
-    "NS4tuPyGpGvlopEQ9CgpaQ==": {
-      "translations": [
-        {
-          "translation": "Зарабатывать награды."
-        }
-      ]
-    },
-    "4ngVhZSzyusgelFj2N7DSA==": {
-      "translations": [
-        {
-          "translation": "Создать кошелек"
-        }
-      ]
-    },
-    "DqUT7JADQFjo22wU9bvsmg==": {
-      "translations": [
-        {
-          "translation": "У меня уже есть кошелек"
-        }
-      ]
-    },
-    "XSqsabas04tq+ha/t4s+cQ==": {
-      "translations": [
-        {
-          "translation": "Continue"
-        }
-      ]
-    },
-    "qrLh9UBi6Dk+4Sjgbqwhmg==": {
-      "translations": [
-        {
-          "translation": "Регистрируясь, вы соглашаетесь с Условиями использования и Политикой конфиденциальности"
-        }
-      ]
-    },
-    "O1VMdGobKc4WbUg9gMwhBQ==": {
-      "translations": [
-        {
-          "translation": "Настройки"
-        }
-      ]
-    },
     "LcZb2FnXOZvXBJaKB/sXTw==": {
       "translations": [
         {
@@ -1415,6 +939,13 @@
         }
       ]
     },
+    "GHSZ2Asae082vH5nd+9RuA==": {
+      "translations": [
+        {
+          "translation": "Currency"
+        }
+      ]
+    },
     "ob6dsrEPfJxAbOpd4plQGA==": {
       "translations": [
         {
@@ -1429,10 +960,10 @@
         }
       ]
     },
-    "suj8KDO/kpGSuWSeoiYk7A==": {
+    "O1VMdGobKc4WbUg9gMwhBQ==": {
       "translations": [
         {
-          "translation": "Кошелек"
+          "translation": "Настройки"
         }
       ]
     },
@@ -1478,6 +1009,13 @@
         }
       ]
     },
+    "k9ik7lp8zzY9UDgOal86Tg==": {
+      "translations": [
+        {
+          "translation": "Адрес кошелька"
+        }
+      ]
+    },
     "MqIZn3Tps2BNhT8GpKl49Q==": {
       "translations": [
         {
@@ -1485,10 +1023,52 @@
         }
       ]
     },
-    "k9ik7lp8zzY9UDgOal86Tg==": {
+    "suj8KDO/kpGSuWSeoiYk7A==": {
       "translations": [
         {
-          "translation": "Адрес кошелька"
+          "translation": "Кошелек"
+        }
+      ]
+    },
+    "RQqR7szL1Z0RUueooggK8w==": {
+      "translations": [
+        {
+          "translation": "Покупайте и продавайте вещи с помощью криптовалют."
+        }
+      ]
+    },
+    "NS4tuPyGpGvlopEQ9CgpaQ==": {
+      "translations": [
+        {
+          "translation": "Зарабатывать награды."
+        }
+      ]
+    },
+    "qrLh9UBi6Dk+4Sjgbqwhmg==": {
+      "translations": [
+        {
+          "translation": "Регистрируясь, вы соглашаетесь с Условиями использования и Политикой конфиденциальности"
+        }
+      ]
+    },
+    "XSqsabas04tq+ha/t4s+cQ==": {
+      "translations": [
+        {
+          "translation": "Continue"
+        }
+      ]
+    },
+    "4ngVhZSzyusgelFj2N7DSA==": {
+      "translations": [
+        {
+          "translation": "Создать кошелек"
+        }
+      ]
+    },
+    "DqUT7JADQFjo22wU9bvsmg==": {
+      "translations": [
+        {
+          "translation": "У меня уже есть кошелек"
         }
       ]
     }

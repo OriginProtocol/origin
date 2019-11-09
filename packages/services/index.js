@@ -26,6 +26,7 @@ const portInUse = port =>
 
 const startGanache = (opts = {}) =>
   new Promise((resolve, reject) => {
+    console.log('Starting ganache...')
     const ganacheOpts = {
       total_accounts: opts.total_accounts || 5,
       default_balance_ether: 100,
@@ -162,6 +163,7 @@ const startSslProxy = () =>
 
 const deployContracts = ({ skipIfExists, filename = 'contracts' }) =>
   new Promise((resolve, reject) => {
+    console.log('Deploying contracts...')
     const filePath = `${contractsPath}/${filename}.json`
     if (skipIfExists && fs.existsSync(filePath)) {
       try {
@@ -194,6 +196,7 @@ const deployContracts = ({ skipIfExists, filename = 'contracts' }) =>
 
 const startRelayer = () =>
   new Promise(resolve => {
+    console.log('Starting relayer server...')
     const cwd = path.resolve(__dirname, '../../infra/relayer')
     const startServer = spawn(`node`, ['src/app.js'], {
       cwd,
@@ -210,10 +213,46 @@ const startRelayer = () =>
     resolve(startServer)
   })
 
+const startBridge = () =>
+  new Promise(resolve => {
+    console.log('Starting bridge server...')
+    const cwd = path.resolve(__dirname, '../../infra/bridge')
+    const startServer = spawn(`node`, ['src/app.js'], {
+      cwd,
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        DATABASE_URL: 'postgres://origin:origin@localhost/origin',
+        LOG_LEVEL: process.env.LOG_LEVEL || 'NONE'
+      }
+    })
+    startServer.on('exit', () => {
+      console.log('Bridge stopped.')
+    })
+    resolve(startServer)
+  })
+
+const startMockBridge = () =>
+  new Promise(resolve => {
+    console.log('Starting mock bridge server...')
+    const cwd = path.resolve(__dirname, '../../infra/bridge')
+    const startServer = spawn(`node`, ['src/mockServer.js'], {
+      cwd,
+      stdio: 'inherit',
+      env: {
+        ...process.env
+      }
+    })
+    startServer.on('exit', () => {
+      console.log('Mock bridge stopped.')
+    })
+    resolve(startServer)
+  })
+
 const startListener = () =>
   new Promise(resolve => {
+    console.log('Starting listener server...')
     const cwd = path.resolve(__dirname, '../../infra/discovery')
-
     const spawnedListener = spawn(
       `node`,
       [
@@ -243,8 +282,8 @@ const startListener = () =>
 
 const startDiscovery = () =>
   new Promise(resolve => {
+    console.log('Starting discovery server...')
     const cwd = path.resolve(__dirname, '../../infra/discovery')
-
     const spawnedDiscovery = spawn(
       `node`,
       [
@@ -274,6 +313,7 @@ const startDiscovery = () =>
 
 const startGraphql = () =>
   new Promise(resolve => {
+    console.log('Starting graphql server...')
     const startServer = spawn(`node`, ['-r', '@babel/register', 'server'], {
       cwd: path.resolve(__dirname, '../graphql'),
       stdio: 'inherit',
@@ -344,6 +384,33 @@ module.exports = async function start(opts = {}) {
     }
   }
 
+  if (opts.bridge) {
+    if (!(await portInUse(5432))) {
+      console.log('Bridge server requires Postgres to be running on port 5432')
+    } else if (await portInUse(5000)) {
+      console.log('Bridge server already started')
+    } else {
+      if (!(await portInUse(6379))) {
+        // Without Redis, bridge server can be used for some actions such
+        // as reading/writing identity.
+        console.warn(
+          'Redis not started. Bridge server will not be fully functional'
+        )
+      }
+      started.bridge = await startBridge()
+    }
+  }
+
+  if (opts.mockBridge) {
+    if (await portInUse(5000)) {
+      if (!opts.quiet) {
+        console.log('Mock bridge server already started')
+      }
+    } else {
+      started.mockBridge = await startMockBridge()
+    }
+  }
+
   if (opts.listener) {
     if (!(await portInUse(5432))) {
       console.log('Listener requires Postgres to be running on port 5432')
@@ -390,6 +457,7 @@ module.exports = async function start(opts = {}) {
   }
 
   const shutdownFn = async function shutdown() {
+    console.log('Shutting services down...')
     if (started.ganache) {
       await started.ganache.close()
     }
@@ -404,6 +472,12 @@ module.exports = async function start(opts = {}) {
     }
     if (started.discovery) {
       started.discovery.kill('SIGHUP')
+    }
+    if (started.bridge) {
+      started.bridge.kill('SIGHUP')
+    }
+    if (started.mockBridge) {
+      started.mockBridge.kill('SIGHUP')
     }
     if (started.ipfs) {
       await started.ipfs.stop()

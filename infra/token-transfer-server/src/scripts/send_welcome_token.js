@@ -14,7 +14,7 @@ try {
 }
 
 const { User } = require('../models')
-const { encryptionSecret, logLevel, portalUrl } = require('../config')
+const { encryptionSecret, logLevel, clientUrl } = require('../config')
 
 Logger.setLogLevel(logLevel)
 
@@ -51,7 +51,7 @@ async function sendWelcomeEmail(user) {
   logger.info('Sending welcome email to', user.email)
 
   const token = generateToken(user)
-  const vars = { url: `${portalUrl}/welcome/${token}` }
+  const vars = { url: `${clientUrl}/welcome/${token}` }
   try {
     await sendEmail(user.email, 'welcome', vars)
   } catch (error) {
