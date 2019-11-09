@@ -19,10 +19,9 @@ import CommonStyles from 'styles/common'
 import OnboardingStyles from 'styles/onboarding'
 
 class ChangePinScreen extends Component {
-  static navigationOptions = ({ navigation }) => {
-    const title = navigation.getParam('new') ? 'Create PIN' : 'Change PIN'
+  static navigationOptions = () => {
     return {
-      title: String(title, 'ChangePinScreen.headerTitle'),
+      title: String('Change PIN', 'ChangePinScreen.headerTitle'),
       headerTitleStyle: {
         fontFamily: 'Poppins',
         fontSize: 17,
@@ -35,119 +34,77 @@ class ChangePinScreen extends Component {
     super(props)
     this.state = {
       pin: '',
-      oldPin: null,
-      isRetry: false,
-      action: ''
+      enteredPin: false,
+      isRetry: false
     }
     this.pinLength = 6
-    this.handleChange = this.handleChange.bind(this)
-    this.handleCreate = this.handleCreate.bind(this)
-    this.handleConfirm = this.handleConfirm.bind(this)
   }
 
-  componentDidMount() {
-    const action = this.props.navigation.getParam('action')
-    this.setState({
-      action: action
-    })
-  }
-
-  async handleChange(pin) {
+  handleInput = async pin => {
     // Validate that the pin is numeric
     if (pin.length && isNaN(pin)) return
 
     await this.setState({ pin, isRetry: false })
 
     if (this.state.pin.length === this.pinLength) {
-      if (!this.state.oldPin && this.props.settings.pin === this.state.pin) {
-        // Proceed to verify step, copy value to oldPin
-        this.setState({
-          pin: '',
-          oldPin: this.state.pin,
-          isRetry: false
-        })
-      } else {
-        if (this.props.settings.pin === this.state.oldPin) {
-          // Pin was verified
+      if (this.props.settings.pin) {
+        // Changing an old PIN
+        if (this.state.enteredPin) {
+          // Setting of new PIN
           this.props.setPin(this.state.pin)
           this.props.navigation.goBack()
-        } else {
-          // Pin was incorrect, reset state and try again
+        } else if (this.state.pin === this.props.settings.pin) {
+          // Correct entry of old PIN, move to confirm
           this.setState({
-            isRetry: true,
             pin: '',
-            oldPin: null
+            enteredPin: this.state.pin,
+            isRetry: false
+          })
+        } else {
+          // Incorrect entry of old PIN
+          this.setState({ pin: '', isRetry: true })
+        }
+      } else {
+        if (this.state.enteredPin) {
+          if (this.state.pin === this.state.enteredPin) {
+            // Correct confirmation of PIN, update and navigate back
+            this.props.setPin(this.state.pin)
+            this.props.navigation.goBack()
+          } else {
+            // Confirm failure, start of scratch
+            this.setState({
+              pin: '',
+              enteredPin: '',
+              isRetry: true
+            })
+          }
+        } else {
+          this.setState({
+            pin: '',
+            enteredPin: this.state.pin,
+            isRetry: false
           })
         }
-      }
-    }
-  }
-
-  async handleCreate(pin) {
-    // Validate that the pin is numeric
-    if (pin.length && isNaN(pin)) return
-
-    await this.setState({ pin, isRetry: false })
-
-    if (this.state.pin.length === this.pinLength) {
-      if (!this.state.oldPin) {
-        // Proceed to verify step, copy value to oldPin
-        this.setState({
-          pin: '',
-          oldPin: this.state.pin,
-          isRetry: false
-        })
-      } else {
-        if (this.state.pin === this.state.oldPin) {
-          // Pin was verified
-          this.props.setPin(this.state.pin)
-          this.props.navigation.goBack()
-        } else {
-          // Pin was incorrect, reset state and try again
-          this.setState({
-            isRetry: true,
-            pin: '',
-            oldPin: null
-          })
-        }
-      }
-    }
-  }
-
-  async handleConfirm(pin) {
-    // Validate that the pin is numeric
-    if (pin.length && isNaN(pin)) return
-
-    await this.setState({ pin, isRetry: false })
-
-    if (this.state.pin.length === this.pinLength) {
-      if (!this.state.oldPin && this.props.settings.pin === this.state.pin) {
-        // Proceed to verify step, copy value to oldPin
-        this.props.setPin(null)
-        this.props.navigation.goBack()
-      } else {
-        this.setState({
-          isRetry: true,
-          pin: '',
-          oldPin: null
-        })
       }
     }
   }
 
   render() {
-    let title = this.state.oldPin
-      ? fbt('Enter your new PIN', 'PinScreen.enterNewPinCode')
-      : fbt('Enter your old PIN', 'PinScreen.enterOldPinCode')
-
-    if (this.state.action === 'new') {
-      title = this.state.oldPin
-        ? fbt('Re-enter Pin Code', 'PinScreen.reenterPinCode')
-        : fbt('Create a Pin Code', 'PinScreen.createPinCode')
-    }
-
-    if (this.state.action === 'confirm') {
-      title = fbt('Enter your PIN', 'PinScreen.confirmPinCode')
+    let titleElement
+    if (this.props.settings.pin) {
+      if (this.state.enteredPin) {
+        titleElement = <fbt desc="PinScreen.newPinTitle">Enter New PIN</fbt>
+      } else {
+        titleElement = <fbt desc="PinScreen.oldPinTitle">Enter Old PIN</fbt>
+      }
+    } else {
+      if (this.state.enteredPin) {
+        titleElement = (
+          <fbt desc="PinScreen.confirmPinTitle">Confirm New PIN</fbt>
+        )
+      } else {
+        titleElement = <fbt desc="PinScreen.newPinTitle">Enter New PIN</fbt>
+      }
     }
 
     return (
@@ -162,7 +119,7 @@ class ChangePinScreen extends Component {
             keyboardShouldPersistTaps={'always'}
           >
             <View style={styles.container}>
-              <Text style={styles.subtitle}>{title}</Text>
+              <Text style={styles.subtitle}>{titleElement}</Text>
               {this.state.isRetry === true && (
                 <Text style={styles.invalid}>
                   <fbt desc="PinScreen.pinMatchFailure">Incorrect PIN</fbt>
@@ -171,13 +128,7 @@ class ChangePinScreen extends Component {
               <PinInput
                 value={this.state.pin}
                 pinLength={this.pinLength}
-                onChangeText={
-                  this.state.action === 'new'
-                    ? this.handleCreate
-                    : this.state.action === 'confirm'
-                    ? this.handleConfirm
-                    : this.handleChange
-                }
+                onChangeText={this.handleInput}
               />
             </View>
           </ScrollView>

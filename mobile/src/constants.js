@@ -68,13 +68,6 @@ if (__DEV__) {
     name: 'Docker',
     dappUrl: `http://${process.env.HOST || 'localhost'}:3000/docker#/`
   })
-  NETWORKS.push({
-    id: 4,
-    name: 'LocalhostRinkeby',
-    dappUrl: `http://${process.env.HOST || 'localhost'}:3000/rinkeby#/`,
-    provider:
-      'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI'
-  })
 }
 
 export const PROMPT_MESSAGE = 'I am ready to start messaging on Origin.'
