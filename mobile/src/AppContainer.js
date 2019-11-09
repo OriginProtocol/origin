@@ -17,7 +17,6 @@ import { findBestAvailableCurrency } from 'utils/currencies'
 import PushNotifications from './PushNotifications'
 import AuthenticationGuard from 'components/authentication-guard'
 import UpdatePrompt from 'components/update-prompt'
-import BackupPrompt from 'components/backup-prompt'
 import SamsungBKS from 'components/samsung-bks'
 
 class MarketplaceApp extends React.Component {
@@ -131,7 +130,6 @@ class MarketplaceApp extends React.Component {
               <AuthenticationGuard />
               <PushNotifications />
               <UpdatePrompt />
-              <BackupPrompt />
               <Navigation navigation={this.props.navigation} />
             </>
           ))}
