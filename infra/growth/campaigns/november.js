@@ -535,7 +535,7 @@ const novemberConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-001-51',
             reward: {
-              amount: tokenToNaturalUnits(20),
+              amount: tokenToNaturalUnits(40),
               currency: 'OGN'
             },
             visible: true,
@@ -573,7 +573,7 @@ const novemberConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-001-53',
             reward: {
-              amount: tokenToNaturalUnits(3),
+              amount: tokenToNaturalUnits(5),
               currency: 'OGN'
             },
             visible: true,
@@ -592,7 +592,7 @@ const novemberConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-001-54',
             reward: {
-              amount: tokenToNaturalUnits(2),
+              amount: tokenToNaturalUnits(5),
               currency: 'OGN'
             },
             visible: true,
@@ -611,7 +611,7 @@ const novemberConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-001-47',
             reward: {
-              amount: tokenToNaturalUnits(2),
+              amount: tokenToNaturalUnits(5),
               currency: 'OGN'
             },
             visible: true,
@@ -630,7 +630,7 @@ const novemberConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-001-55',
             reward: {
-              amount: tokenToNaturalUnits(3),
+              amount: tokenToNaturalUnits(5),
               currency: 'OGN'
             },
             visible: true,
@@ -649,7 +649,7 @@ const novemberConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-001-56',
             reward: {
-              amount: tokenToNaturalUnits(3),
+              amount: tokenToNaturalUnits(5),
               currency: 'OGN'
             },
             visible: true,
@@ -725,7 +725,7 @@ const novemberConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-001-59',
             reward: {
-              amount: tokenToNaturalUnits(15),
+              amount: tokenToNaturalUnits(20),
               currency: 'OGN'
             },
             visible: true,
@@ -744,7 +744,7 @@ const novemberConfig = {
             eventType: 'ListingPurchased',
             listingId: '1-001-48',
             reward: {
-              amount: tokenToNaturalUnits(10),
+              amount: tokenToNaturalUnits(15),
               currency: 'OGN'
             },
             visible: true,
