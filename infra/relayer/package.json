@@ -18,7 +18,7 @@
     "cors": "2.8.5",
     "dotenv": "8.2.0",
     "envkey": "1.2.7",
-    "ethereumjs-util": "6.1.0",
+    "ethereumjs-util": "6.2.0",
     "express": "4.17.1",
     "express-prom-bundle": "5.1.5",
     "logplease": "1.2.15",
@@ -34,7 +34,7 @@
     "chalk": "2.4.2",
     "mocha": "6.2.2",
     "nodemon": "1.19.4",
-    "prettier": "1.18.2"
+    "prettier": "1.19.0"
   },
   "scripts": {
     "lint": "eslint . && npm run prettier:check",

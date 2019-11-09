@@ -53,6 +53,6 @@
     "debug": "4.1.1",
     "mocha": "6.2.2",
     "eslint": "6.6.0",
-    "prettier": "1.18.2"
+    "prettier": "1.19.0"
   }
 }
