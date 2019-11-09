@@ -648,6 +648,7 @@ class MarketplaceScreen extends PureComponent {
 
     return (
       <AndroidBackHandler onBackPress={this.onBack}>
+        <UpdatePrompt />
         <SafeAreaView style={styles.container}>
           <KeyboardAvoidingView
             behavior="padding"
