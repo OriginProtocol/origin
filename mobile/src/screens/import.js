@@ -50,7 +50,7 @@ const importAccountScreen = props => {
   if (props.samsungBKS.enabled) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={{ ...styles.container, flexGrow: 2 }}>
+        <View style={styles.content}>
           <Text style={styles.title}>
             <fbt desc="ImportScreen.keystoreTitle">Samsung Keystore</fbt>
           </Text>
@@ -60,7 +60,7 @@ const importAccountScreen = props => {
             </fbt>
           </Text>
         </View>
-        <View style={{ ...styles.container, ...styles.buttonContainer }}>
+        <View style={styles.buttonContainer}>
           {/*renderAddSamsungBKSAccountButton()*/}
           {__DEV__ && (
             <>
@@ -77,7 +77,7 @@ const importAccountScreen = props => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ ...styles.container, flexGrow: 2 }}>
+      <View style={styles.content}>
         <Text style={styles.title}>
           <fbt desc="ImportScreen.title">Import your wallet</fbt>
         </Text>
@@ -87,7 +87,7 @@ const importAccountScreen = props => {
           </fbt>
         </Text>
       </View>
-      <View style={{ ...styles.container, ...styles.buttonContainer }}>
+      <View style={styles.buttonContainer}>
         {renderImportButtons()}
       </View>
     </SafeAreaView>

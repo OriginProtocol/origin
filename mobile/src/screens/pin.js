@@ -72,17 +72,16 @@ class PinScreen extends Component {
         behavior={'padding'}
         keyboardVerticalOffset={Platform.OS === 'android' ? 40 : 10}
       >
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={styles.container}>
           <ScrollView
             style={styles.onboardingModal}
-            contentContainerStyle={styles.content}
+            contentContainerStyle={styles.container}
             keyboardShouldPersistTaps={'always'}
           >
-            <View style={styles.container}>
-              <BackArrow
-                onClick={() => this.props.navigation.goBack(null)}
-                style={styles.backArrow}
-              />
+            <BackArrow
+              onClick={() => this.props.navigation.goBack(null)}
+            />
+            <View style={styles.content}>
               <Text style={styles.title}>{title}</Text>
               {this.state.isRetry === true && (
                 <Text style={styles.invalid}>

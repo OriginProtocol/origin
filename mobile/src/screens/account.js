@@ -124,9 +124,9 @@ class AccountScreen extends Component {
     const fullName = get(identity, 'fullName')
 
     return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content}>
-          <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
+          <View style={styles.content}>
             <Avatar source={avatarUrl} size={100} />
             {fullName && <Text style={styles.title}>{fullName}</Text>}
             <Address
@@ -142,7 +142,7 @@ class AccountScreen extends Component {
               }}
             />
           </View>
-          <View style={[styles.containner, styles.buttonContainer]}>
+          <View style={styles.buttonContainer}>
             {multipleAccounts && (
               <OriginButton
                 size="large"

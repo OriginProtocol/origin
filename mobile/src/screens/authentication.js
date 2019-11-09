@@ -59,7 +59,7 @@ class AuthenticationScreen extends Component {
     ].includes(this.state.biometryError.name)
 
     return (
-      <SafeAreaView style={styles.content}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.content}>
           {biometryPermissionDenied ? (
             <>
