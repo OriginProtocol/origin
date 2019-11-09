@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "lodash-es": "4.17.15",
-    "prettier": "1.19.0",
+    "prettier": "1.19.1",
     "eslint": "6.6.0"
   },
   "prettier": {
