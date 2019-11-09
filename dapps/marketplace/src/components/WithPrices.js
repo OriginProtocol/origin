@@ -126,8 +126,7 @@ const WithPrices = ({
         suggestedToken = otherSupportToken
       } else {
         // User doesn't have sufficient balance in any of the accepted tokens
-        // Fallback to ETH or any accepted token
-        suggestedToken = get(listing, 'acceptedTokens[0].id', null)
+        suggestedToken = null
       }
     }
   }
