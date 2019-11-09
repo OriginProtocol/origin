@@ -13,11 +13,6 @@ export default StyleSheet.create({
   greyBackground: {
     backgroundColor: '#f7f8f8'
   },
-  // Dark background colour used by modals
-  darkOverlay: {
-    flex: 1,
-    padding: 10
-  },
   content: {
     flex: 1,
     alignItems: 'center',

@@ -87,9 +87,7 @@ const importAccountScreen = props => {
           </fbt>
         </Text>
       </View>
-      <View style={styles.buttonContainer}>
-        {renderImportButtons()}
-      </View>
+      <View style={styles.buttonContainer}>{renderImportButtons()}</View>
     </SafeAreaView>
   )
 }

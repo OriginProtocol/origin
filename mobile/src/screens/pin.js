@@ -78,9 +78,7 @@ class PinScreen extends Component {
             contentContainerStyle={styles.container}
             keyboardShouldPersistTaps={'always'}
           >
-            <BackArrow
-              onClick={() => this.props.navigation.goBack(null)}
-            />
+            <BackArrow onClick={() => this.props.navigation.goBack(null)} />
             <View style={styles.content}>
               <Text style={styles.title}>{title}</Text>
               {this.state.isRetry === true && (
