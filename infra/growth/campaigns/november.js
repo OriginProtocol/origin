@@ -529,296 +529,11 @@ const novemberConfig = {
           }
         },
         {
-          id: 'ListingPurchase1-000-2991',
+          id: 'ListingPurchase1-001-51',
           class: 'ListingIdPurchase',
           config: {
             eventType: 'ListingPurchased',
-            listingId: '1-000-2991',
-            reward: {
-              amount: tokenToNaturalUnits(80),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 100,
-            nextLevelCondition: false,
-            scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-2991-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-2991.title',
-            detailsKey: 'growth.purchase.empty.details'
-          }
-        },
-        {
-          id: 'ListingPurchase1-000-2959',
-          class: 'ListingIdPurchase',
-          config: {
-            eventType: 'ListingPurchased',
-            listingId: '1-000-2959',
-            reward: {
-              amount: tokenToNaturalUnits(80),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 100,
-            nextLevelCondition: false,
-            scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-2959-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-2959.title',
-            detailsKey: 'growth.purchase.empty.details'
-          }
-        },
-        {
-          id: 'ListingPurchase1-000-2871',
-          class: 'ListingIdPurchase',
-          config: {
-            eventType: 'ListingPurchased',
-            listingId: '1-000-2871',
-            reward: {
-              amount: tokenToNaturalUnits(80),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 100,
-            nextLevelCondition: false,
-            scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-2871-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-2871.title',
-            detailsKey: 'growth.purchase.empty.details'
-          }
-        },
-        {
-          id: 'ListingPurchase1-000-2854',
-          class: 'ListingIdPurchase',
-          config: {
-            eventType: 'ListingPurchased',
-            listingId: '1-000-2854',
-            reward: {
-              amount: tokenToNaturalUnits(130),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 100,
-            nextLevelCondition: false,
-            scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-2854-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-2854.title',
-            detailsKey: 'growth.purchase.empty.details'
-          }
-        },
-        {
-          id: 'ListingPurchase1-000-2783',
-          class: 'ListingIdPurchase',
-          config: {
-            eventType: 'ListingPurchased',
-            listingId: '1-000-2783',
-            reward: {
-              amount: tokenToNaturalUnits(200),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 100,
-            nextLevelCondition: false,
-            scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-2783-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-2783.title',
-            detailsKey: 'growth.purchase.empty.details'
-          }
-        },
-        {
-          id: 'ListingPurchase1-000-2782',
-          class: 'ListingIdPurchase',
-          config: {
-            eventType: 'ListingPurchased',
-            listingId: '1-000-2782',
-            reward: {
-              amount: tokenToNaturalUnits(500),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 100,
-            nextLevelCondition: false,
-            scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-2782-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-2782.title',
-            detailsKey: 'growth.purchase.empty.details'
-          }
-        },
-        {
-          id: 'ListingPurchase1-000-2769',
-          class: 'ListingIdPurchase',
-          config: {
-            eventType: 'ListingPurchased',
-            listingId: '1-000-2769',
-            reward: {
-              amount: tokenToNaturalUnits(50),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 100,
-            nextLevelCondition: false,
-            scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-2769-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-2769.title',
-            detailsKey: 'growth.purchase.empty.details'
-          }
-        },
-        {
-          id: 'ListingPurchase1-000-2760',
-          class: 'ListingIdPurchase',
-          config: {
-            eventType: 'ListingPurchased',
-            listingId: '1-000-2760',
-            reward: {
-              amount: tokenToNaturalUnits(90),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 100,
-            nextLevelCondition: false,
-            scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-2760-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-2760.title',
-            detailsKey: 'growth.purchase.empty.details'
-          }
-        },
-        {
-          id: 'ListingPurchase1-000-2781',
-          class: 'ListingIdPurchase',
-          config: {
-            eventType: 'ListingPurchased',
-            listingId: '1-000-2781',
-            reward: {
-              amount: tokenToNaturalUnits(200),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 100,
-            nextLevelCondition: false,
-            scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-2781-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-2781.title',
-            detailsKey: 'growth.purchase.empty.details'
-          }
-        },
-        {
-          id: 'ListingPurchase1-000-2699',
-          class: 'ListingIdPurchase',
-          config: {
-            eventType: 'ListingPurchased',
-            listingId: '1-000-2699',
-            reward: {
-              amount: tokenToNaturalUnits(350),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 100,
-            nextLevelCondition: false,
-            scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-2699-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-2699.title',
-            detailsKey: 'growth.purchase.empty.details'
-          }
-        },
-        {
-          id: 'ListingPurchase1-000-2912',
-          class: 'ListingIdPurchase',
-          config: {
-            eventType: 'ListingPurchased',
-            listingId: '1-000-2912',
-            reward: {
-              amount: tokenToNaturalUnits(75),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 100,
-            nextLevelCondition: false,
-            scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-2912-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-2912.title',
-            detailsKey: 'growth.purchase.empty.details'
-          }
-        },
-        {
-          id: 'ListingPurchase1-000-2892',
-          class: 'ListingIdPurchase',
-          config: {
-            eventType: 'ListingPurchased',
-            listingId: '1-000-2892',
-            reward: {
-              amount: tokenToNaturalUnits(75),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 100,
-            nextLevelCondition: false,
-            scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-2892-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-2892.title',
-            detailsKey: 'growth.purchase.empty.details'
-          }
-        },
-        {
-          id: 'ListingPurchase1-000-292',
-          class: 'ListingIdPurchase',
-          config: {
-            eventType: 'ListingPurchased',
-            listingId: '1-000-292',
-            reward: {
-              amount: tokenToNaturalUnits(700),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 100,
-            nextLevelCondition: false,
-            scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-292-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-292.title',
-            detailsKey: 'growth.purchase.empty.details'
-          }
-        },
-        {
-          id: 'ListingPurchase1-000-60',
-          class: 'ListingIdPurchase',
-          config: {
-            eventType: 'ListingPurchased',
-            listingId: '1-000-60',
-            reward: {
-              amount: tokenToNaturalUnits(600),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 100,
-            nextLevelCondition: false,
-            scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-60-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-60.title',
-            detailsKey: 'growth.purchase.empty.details'
-          }
-        },
-        {
-          id: 'ListingPurchase1-000-2877',
-          class: 'ListingIdPurchase',
-          config: {
-            eventType: 'ListingPurchased',
-            listingId: '1-000-2877',
-            reward: {
-              amount: tokenToNaturalUnits(700),
-              currency: 'OGN'
-            },
-            visible: true,
-            limit: 100,
-            nextLevelCondition: false,
-            scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-2877-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-2877.title',
-            detailsKey: 'growth.purchase.empty.details'
-          }
-        },
-        {
-          id: 'ListingPurchase1-000-2999',
-          class: 'ListingIdPurchase',
-          config: {
-            eventType: 'ListingPurchased',
-            listingId: '1-000-2999',
+            listingId: '1-001-51',
             reward: {
               amount: tokenToNaturalUnits(40),
               currency: 'OGN'
@@ -827,199 +542,218 @@ const novemberConfig = {
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-2999-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-2999.title',
-            detailsKey: 'growth.purchase.empty.details'
+            iconSrc: 'images/growth/listing-1-001-51-icon.jpg',
+            title: '送礼还送Dai | 开吃卡-购卡即返30元Dai! 198元得12个吃货大福袋，还送168元惊喜礼包',
+            details: '我们派出农业买手团队，让他们前往全国各地，走遍山河田野，精选最佳产物；我们成立吃货俱乐部，以吃货福袋的形式推出【开吃卡】，邀请吃货品鉴。'
           }
         },
         {
-          id: 'ListingPurchase1-000-3197',
+          id: 'ListingPurchase1-001-52',
           class: 'ListingIdPurchase',
           config: {
             eventType: 'ListingPurchased',
-            listingId: '1-000-3197',
+            listingId: '1-001-52',
             reward: {
-              amount: tokenToNaturalUnits(300),
+              amount: tokenToNaturalUnits(80),
               currency: 'OGN'
             },
             visible: true,
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-3197-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-3197.title',
-            detailsKey: 'growth.purchase.empty.details'
+            iconSrc: 'images/growth/listing-1-001-52-icon.jpg',
+            title: '送礼还送Dai | 如程会员卡-购卡即返100元Dai! 688元享特色度假酒店全年免费住',
+            details: '如程是一家会员制特色度假酒店预订平台，成为如程会员，仅需688即享如程平台上全国热门城市、景区的特色度假酒店提前预订免费住。一年内所有如程合作的特色度假酒店，你都可以不限酒店，不限房型，不限节假日免费入住。'
           }
         },
         {
-          id: 'ListingPurchase1-000-3212',
+          id: 'ListingPurchase1-001-53',
           class: 'ListingIdPurchase',
           config: {
             eventType: 'ListingPurchased',
-            listingId: '1-000-3212',
+            listingId: '1-001-53',
             reward: {
-              amount: tokenToNaturalUnits(60),
+              amount: tokenToNaturalUnits(5),
               currency: 'OGN'
             },
             visible: true,
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-3212-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-3212.title',
-            detailsKey: 'growth.purchase.empty.details'
+            iconSrc: 'images/growth/listing-1-001-53-icon.jpg',
+            title: '送礼还送Dai | 王者荣耀皮肤288点券-下单即返7元Dai！',
+            details: ' '
           }
         },
         {
-          id: 'ListingPurchase1-000-3200',
+          id: 'ListingPurchase1-001-54',
           class: 'ListingIdPurchase',
           config: {
             eventType: 'ListingPurchased',
-            listingId: '1-000-3200',
+            listingId: '1-001-54',
             reward: {
-              amount: tokenToNaturalUnits(3),
+              amount: tokenToNaturalUnits(5),
               currency: 'OGN'
             },
             visible: true,
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-3200-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-3200.title',
-            detailsKey: 'growth.purchase.empty.details'
+            iconSrc: 'images/growth/listing-1-001-54-icon.jpg',
+            title: '送礼还送Dai | Hellobike骑行单车周卡-下单即返2.5元Dai！',
+            details: 'Hellobike骑行周卡 全国通用兑换券'
           }
         },
         {
-          id: 'ListingPurchase1-000-3203',
+          id: 'ListingPurchase1-001-47',
           class: 'ListingIdPurchase',
           config: {
             eventType: 'ListingPurchased',
-            listingId: '1-000-3203',
+            listingId: '1-001-47',
             reward: {
-              amount: tokenToNaturalUnits(3),
+              amount: tokenToNaturalUnits(5),
               currency: 'OGN'
             },
             visible: true,
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-3203-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-3203.title',
-            detailsKey: 'growth.purchase.empty.details'
+            iconSrc: 'images/growth/listing-1-001-47-icon.jpg',
+            title: '送礼还送Dai | Mobike骑行单车7次卡-下单即返2.5元Dai！',
+            details: '摩拜单车7天7次骑行卡。'
           }
         },
         {
-          id: 'ListingPurchase1-000-3204',
+          id: 'ListingPurchase1-001-55',
           class: 'ListingIdPurchase',
           config: {
             eventType: 'ListingPurchased',
-            listingId: '1-000-3204',
+            listingId: '1-001-55',
             reward: {
-              amount: tokenToNaturalUnits(3),
+              amount: tokenToNaturalUnits(5),
               currency: 'OGN'
             },
             visible: true,
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-3204-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-3204.title',
-            detailsKey: 'growth.purchase.empty.details'
+            iconSrc: 'images/growth/listing-1-001-55-icon.jpg',
+            title: '送礼还送Dai | 杭州西湖秀酒店1079元福利券-下单即返6.9元Dai！',
+            details: '该券用于入住杭州西湖区秀酒店复式厅堂影院房抵扣。'
           }
         },
         {
-          id: 'ListingPurchase1-000-3205',
+          id: 'ListingPurchase1-001-56',
           class: 'ListingIdPurchase',
           config: {
             eventType: 'ListingPurchased',
-            listingId: '1-000-3205',
+            listingId: '1-001-56',
             reward: {
-              amount: tokenToNaturalUnits(3),
+              amount: tokenToNaturalUnits(5),
               currency: 'OGN'
             },
             visible: true,
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-3205-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-3205.title',
-            detailsKey: 'growth.purchase.empty.details'
+            iconSrc: 'images/growth/listing-1-001-56-icon.jpg',
+            title: '送礼还送Dai | 北京三段锦大片摄影1000元福利券-下单即返6.9元Dai！',
+            details: '该券用于明星御用拍摄团队打造个人形象片拍摄抵扣。'
           }
         },
         {
-          id: 'ListingPurchase1-000-3211',
+          id: 'ListingPurchase1-001-57',
           class: 'ListingIdPurchase',
           config: {
             eventType: 'ListingPurchased',
-            listingId: '1-000-3211',
+            listingId: '1-001-57',
             reward: {
-              amount: tokenToNaturalUnits(3),
+              amount: tokenToNaturalUnits(35),
               currency: 'OGN'
             },
             visible: true,
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-3211-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-3211.title',
-            detailsKey: 'growth.purchase.empty.details'
+            iconSrc: 'images/growth/listing-1-001-57-icon.jpg',
+            title: '送礼还送Dai | BEPAL Q硬件钱包-下单即返30元Dai！',
+            details: '采用分层确定性的方案进行 (HD Wallet) 货币管理，即单助记词种子密码（联合支付密码）可管理所有区块链资产。'
           }
         },
         {
-          id: 'ListingPurchase1-000-3206',
+          id: 'ListingPurchase1-001-49',
           class: 'ListingIdPurchase',
           config: {
             eventType: 'ListingPurchased',
-            listingId: '1-000-3206',
+            listingId: '1-001-49',
             reward: {
-              amount: tokenToNaturalUnits(3),
+              amount: tokenToNaturalUnits(10),
               currency: 'OGN'
             },
             visible: true,
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-3206-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-3206.title',
-            detailsKey: 'growth.purchase.empty.details'
+            iconSrc: 'images/growth/listing-1-001-49-icon.jpg',
+            title: '送礼还送Dai | 大岩蛇数据线-下单即返11元Dai！',
+            details: 'TEGIC 大岩蛇数据线 苹果数据线 安卓苹果数据线通用 快充数据线 数据线 三合一 钛灰色  '
           }
         },
         {
-          id: 'ListingPurchase1-000-3208',
+          id: 'ListingPurchase1-001-58',
           class: 'ListingIdPurchase',
           config: {
             eventType: 'ListingPurchased',
-            listingId: '1-000-3208',
+            listingId: '1-001-58',
             reward: {
-              amount: tokenToNaturalUnits(3),
+              amount: tokenToNaturalUnits(30),
               currency: 'OGN'
             },
             visible: true,
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-3208-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-3208.title',
-            detailsKey: 'growth.purchase.empty.details'
+            iconSrc: 'images/growth/listing-1-001-58-icon.jpg',
+            title: '送礼还送Dai | 冰格透视移动电源充电宝-下单即返40元Dai！',
+            details: 'TEGIC 冰格充电宝 PD18W快速充电 透视移动电源 充电宝 自带线 灰色(20号发货) 自带Lightning'
           }
         },
         {
-          id: 'ListingPurchase1-000-3209',
+          id: 'ListingPurchase1-001-59',
           class: 'ListingIdPurchase',
           config: {
             eventType: 'ListingPurchased',
-            listingId: '1-000-3209',
+            listingId: '1-001-59',
             reward: {
-              amount: tokenToNaturalUnits(3),
+              amount: tokenToNaturalUnits(20),
               currency: 'OGN'
             },
             visible: true,
             limit: 100,
             nextLevelCondition: false,
             scope: 'campaign',
-            iconSrc: 'images/growth/listing-1-000-3209-icon.png',
-            titleKey: 'growth.purchase.listing-1-000-3209.title',
-            detailsKey: 'growth.purchase.empty.details'
+            iconSrc: 'images/growth/listing-1-001-59-icon.jpg',
+            title: '送礼还送Dai | 电磁块无线TS1充电宝-下单即返29元Dai！',
+            details: 'TEGIC 无线充电器 无线充电宝 无线10W QI协议充电宝 移动电源苹果安卓通用 TS1 电磁块'
+          }
+        },
+        {
+          id: 'ListingPurchase1-001-48',
+          class: 'ListingIdPurchase',
+          config: {
+            eventType: 'ListingPurchased',
+            listingId: '1-001-48',
+            reward: {
+              amount: tokenToNaturalUnits(15),
+              currency: 'OGN'
+            },
+            visible: true,
+            limit: 100,
+            nextLevelCondition: false,
+            scope: 'campaign',
+            iconSrc: 'images/growth/listing-1-001-48-icon.jpg',
+            title: '送礼还送Dai | 小拳石双接口充电头-下单即返14元Dai！',
+            details: 'TEGIC PD充电器 双口充电头 45W快充笔记本手机快充QC3.0 PD45W小拳石'
           }
         }
       ]
