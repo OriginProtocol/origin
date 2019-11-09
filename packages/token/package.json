@@ -31,7 +31,7 @@
     "ganache-core": "2.4.0",
     "mocha": "6.2.2",
     "openzeppelin-solidity": "^1.10.0",
-    "prettier": "1.18.2",
+    "prettier": "1.19.0",
     "solc": "0.5.12"
   },
   "prettier": {
