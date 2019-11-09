@@ -132,6 +132,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - run: cd packages/auth-utils && yarn migrate
       - run: cd infra/identity && yarn migrate
       - run: cd infra/growth-event && yarn migrate
       - run:
@@ -324,18 +325,19 @@ workflows:
           requires:
             - Setup
           context: origin
-  schema:
-    jobs:
-      - Setup
-      - GraphQLEngineSchemaCheck:
-          requires:
-            - Setup
-          context: origin
-      - GraphQLEngineSchemaUpload:
-          requires:
-            - Setup
-          filters:
-            branches:
-              only:
-                - master
-          context: origin
+  # Requires Apollo Engine subscription
+  # schema:
+  #   jobs:
+  #     - Setup
+  #     - GraphQLEngineSchemaCheck:
+  #         requires:
+  #           - Setup
+  #         context: origin
+  #     - GraphQLEngineSchemaUpload:
+  #         requires:
+  #           - Setup
+  #         filters:
+  #           branches:
+  #             only:
+  #               - master
+  #         context: origin

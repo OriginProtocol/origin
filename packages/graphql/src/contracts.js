@@ -30,9 +30,11 @@ let metaMask, metaMaskEnabled, web3WS, wsSub, web3, blockInterval
 
 let OriginMessaging
 let OriginMobileBridge
+let AuthClient
 if (typeof window !== 'undefined') {
   OriginMessaging = require('@origin/messaging-client').default
   OriginMobileBridge = require('@origin/mobile-bridge').default
+  AuthClient = require('@origin/auth-client').default
 }
 
 const DefaultMessagingConfig = {
@@ -234,6 +236,8 @@ export function setNetwork(net, customConfig) {
 
   setMetaMask(config)
 
+  setupAuthClient(config)
+
   overrideMessagingWeb3()
 
   validateContracts(web3, net)
@@ -301,6 +305,20 @@ function setupMessaging(config) {
       web3,
       mobileBridge: context.mobileBridge,
       pubsub: pubsub
+    })
+  }
+}
+
+function setupAuthClient(config) {
+  if (isBrowser) {
+    const authServer = config.authServer
+
+    context.authClient = new AuthClient({
+      authServer,
+      web3,
+      pubsub,
+      personalSign: metaMask && metaMaskEnabled ? true : false,
+      autoRenew: context.mobileBridge ? true : false
     })
   }
 }
@@ -473,6 +491,9 @@ function setupTransactions(net) {
 function setupWsProviderAndBlockQuery(config, net) {
   if (config.performanceMode && context.config.graphql && net !== 'test') {
     queryForBlocks()
+    /*
+  Franck 11/07/2019 - Disabled this code path temporarily
+  to troubleshoot https://github.com/OriginProtocol/origin/issues/3898
   } else if (config.providerWS) {
     web3WS = applyWeb3Hack(new Web3(config.providerWS))
     context.web3WS = web3WS
@@ -489,6 +510,7 @@ function setupWsProviderAndBlockQuery(config, net) {
       console.error(err)
       pollForBlocks()
     }
+ */
   } else {
     pollForBlocks()
   }
@@ -718,6 +740,16 @@ export function shutdown() {
 
 if (isBrowser) {
   if (window.ethereum) {
+    /**
+     * imToken kludge to deal with a misbehaving provider wanting eth_subscribe
+     * but imToken doesn't actually support is.  web3.js detect websocket
+     * support by checking for provider.on.   This could change after
+     * web3.beta.34
+     */
+    if (window.ethereum.isImToken) {
+      window.ethereum.on = undefined
+    }
+
     metaMask = applyWeb3Hack(new Web3(window.ethereum))
     metaMaskEnabled = window.localStorage.metaMaskEnabled ? true : false
   } else if (window.web3) {

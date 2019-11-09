@@ -1,6 +1,6 @@
 const { ip2geo } = require('@origin/ip2geo')
 
-const { unlockDate } = require('./config')
+const { employeeUnlockDate, investorUnlockDate } = require('./config')
 
 /**
  * Allows use of async functions for an Express route.
@@ -10,8 +10,12 @@ const asyncMiddleware = fn => (req, res, next) => {
 }
 
 // Use a function so that this value can be mocked in tests
-const getUnlockDate = () => {
-  return unlockDate
+const getEmployeeUnlockDate = () => {
+  return employeeUnlockDate
+}
+
+const getInvestorUnlockDate = () => {
+  return investorUnlockDate
 }
 
 // Get fingerprint data about the current device
@@ -35,6 +39,7 @@ const getFingerprintData = async req => {
 
 module.exports = {
   asyncMiddleware,
+  getEmployeeUnlockDate,
   getFingerprintData,
-  getUnlockDate
+  getInvestorUnlockDate
 }

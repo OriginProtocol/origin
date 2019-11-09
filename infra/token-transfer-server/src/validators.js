@@ -44,11 +44,11 @@ const isExistingNickname = (value, { req }) => {
 
 // Validator for TOTP codes
 const isValidTotp = (value, { req }) => {
-  if (!req.user.otpVerified) {
-    throw new Error('No 2fa configured')
+  if (!req.user.otpKey) {
+    throw new Error('No OTP key configured')
   }
-  if (!totp.verify(value, decrypt(req.user.otpKey))) {
-    throw new Error('Invalid 2fa value')
+  if (!totp.verify(value, decrypt(req.user.otpKey), { window: 1 })) {
+    throw new Error('Invalid OTP code')
   }
   return true
 }

@@ -1,10 +1,7 @@
 import React, { useState } from 'react'
 import moment from 'moment'
 import numeral from 'numeral'
-
-import { unlockDate } from '@/constants'
-
-const isLocked = moment.utc() < unlockDate
+import BigNumber from 'bignumber.js'
 
 const VestingBars = props => {
   const [displayPopover, setDisplayPopover] = useState({})
@@ -88,14 +85,20 @@ const VestingBars = props => {
     })
   }
 
+  const total = BigNumber(props.vested).plus(BigNumber(props.unvested))
+
   return (
     <div className="mb-5">
-      <h2 style={{ marginBottom: '1.5rem' }}>Vesting Progress</h2>
+      <h2 style={{ marginBottom: '2.5rem' }}>Vesting Progress</h2>
       <div id="vestingBars" style={{ position: 'relative' }}>
+        <div style={{ position: 'absolute', right: 0, marginTop: '-1.5rem' }}>
+          <strong>{Number(total).toLocaleString()}</strong>{' '}
+          <span className="ogn">OGN</span>
+        </div>
         {grants.map(grant => {
           // Calculate the percentage of the grant that is complete with a
           // upper bound of 100
-          const complete = isLocked
+          const complete = props.isLocked
             ? 0
             : Math.min(
                 ((now - grant.start) / (grant.end - grant.start)) * 100,
