@@ -310,11 +310,13 @@ class OriginEventSource {
       .totalOffers(listingId)
       .call()
 
-    const allOffers = (await Promise.all(
-      Array.from({ length: totalOffers }, (_, i) => i).map(id =>
-        this._getOffer(listing, listingId, id)
+    const allOffers = (
+      await Promise.all(
+        Array.from({ length: totalOffers }, (_, i) => i).map(id =>
+          this._getOffer(listing, listingId, id)
+        )
       )
-    )).filter(offer => offer !== null)
+    ).filter(offer => offer !== null)
 
     // Compute fields from valid offers
     // The "deposit" on a listing is actualy the amount of OGN available to
