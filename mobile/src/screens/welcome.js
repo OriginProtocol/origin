@@ -101,12 +101,10 @@ class WelcomeScreen extends Component {
   renderSamsungBKSRequiresSetup() {
     return (
       <>
-        <View style={styles.container}>
-          <Text style={styles.text}>
-            Your phone supports Samsung Blockchain Keystore but it needs to be
-            configured.
-          </Text>
-        </View>
+        <Text style={styles.text}>
+          Your phone supports Samsung Blockchain Keystore but it needs to be
+          configured.
+        </Text>
         <OriginButton
           size="large"
           type="primary"
@@ -149,12 +147,10 @@ class WelcomeScreen extends Component {
   renderSamsungBKSDetectedMessage() {
     return (
       <>
-        <View style={styles.container}>
-          <Text style={styles.text}>
-            Your phone supports Samsung Blockchain Keystore and we&apos;ve
-            detected an account.
-          </Text>
-        </View>
+        <Text style={styles.text}>
+          Your phone supports Samsung Blockchain Keystore and we&apos;ve
+          detected an account.
+        </Text>
         {this.renderContinueButton()}
       </>
     )
@@ -205,6 +201,7 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
     color: 'white',
-    fontFamily: 'Lato'
+    fontFamily: 'Lato',
+    marginBottom: 20
   }
 })
