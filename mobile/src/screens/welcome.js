@@ -191,10 +191,7 @@ const mapDispatchToProps = dispatch => ({
   createAccount: () => dispatch(createAccount())
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WelcomeScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(WelcomeScreen)
 
 const styles = StyleSheet.create({
   ...CommonStyles,
