@@ -114,10 +114,7 @@ const mapDispatchToProps = dispatch => ({
   setPin: pin => dispatch(setPin(pin))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PinScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(PinScreen)
 
 const styles = StyleSheet.create({
   ...CommonStyles,
