@@ -582,7 +582,7 @@ const novemberConfig = {
             scope: 'campaign',
             iconSrc: 'images/growth/listing-1-001-53-icon.jpg',
             title: '送礼还送Dai | 王者荣耀皮肤288点券-下单即返7元Dai！',
-            details: 'Hellobike骑行周卡 全国通用兑换券'
+            details: '王者荣耀App内价值288点券的英雄皮肤可任选一。'
           }
         },
         {
@@ -601,7 +601,7 @@ const novemberConfig = {
             scope: 'campaign',
             iconSrc: 'images/growth/listing-1-001-54-icon.jpg',
             title: '送礼还送Dai | Hellobike骑行单车周卡-下单即返2.5元Dai！',
-            details: ''
+            details: 'Hellobike骑行周卡 全国通用兑换券'
           }
         },
         {
