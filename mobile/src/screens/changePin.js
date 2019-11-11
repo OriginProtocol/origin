@@ -6,7 +6,8 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text
+  Text,
+  View
 } from 'react-native'
 import { connect } from 'react-redux'
 import SafeAreaView from 'react-native-safe-area-view'
@@ -46,20 +47,6 @@ class ChangePinScreen extends Component {
     await this.setState({ pin, isRetry: false })
 
     if (this.state.pin.length === this.pinLength) {
-<<<<<<< HEAD
-      if (this.props.settings.pin) {
-        // Changing an old PIN
-        if (this.state.enteredPin) {
-          // Setting of new PIN
-          this.props.setPin(this.state.pin)
-          this.props.navigation.goBack()
-        } else if (this.state.pin === this.props.settings.pin) {
-          // Correct entry of old PIN, move to confirm
-          this.setState({
-            pin: '',
-            enteredPin: this.state.pin,
-            isRetry: false
-=======
       if (this.state.enteredPin) {
         if (this.state.pin === this.state.enteredPin) {
           // Correct confirmation of PIN, update and navigate back
@@ -71,55 +58,8 @@ class ChangePinScreen extends Component {
             pin: '',
             enteredPin: '',
             isRetry: true
->>>>>>> master
-          })
-        } else {
-          // Incorrect entry of old PIN
-          this.setState({ pin: '', isRetry: true })
-        }
-<<<<<<< HEAD
-      } else {
-        if (this.state.enteredPin) {
-          if (this.state.pin === this.state.enteredPin) {
-            // Correct confirmation of PIN, update and navigate back
-            this.props.setPin(this.state.pin)
-            this.props.navigation.goBack()
-          } else {
-            // Confirm failure, start of scratch
-            this.setState({
-              pin: '',
-              enteredPin: '',
-              isRetry: true
-            })
-          }
-        } else {
-          this.setState({
-            pin: '',
-            enteredPin: this.state.pin,
-            isRetry: false
           })
         }
-      }
-    }
-  }
-
-  render() {
-    let titleElement
-    if (this.props.settings.pin) {
-      if (this.state.enteredPin) {
-        titleElement = <fbt desc="PinScreen.newPinTitle">Enter New PIN</fbt>
-      } else {
-        titleElement = <fbt desc="PinScreen.oldPinTitle">Enter Old PIN</fbt>
-      }
-    } else {
-      if (this.state.enteredPin) {
-        titleElement = (
-          <fbt desc="PinScreen.confirmPinTitle">Confirm New PIN</fbt>
-        )
-      } else {
-        titleElement = <fbt desc="PinScreen.newPinTitle">Enter New PIN</fbt>
-      }
-=======
       } else {
         this.setState({
           pin: '',
@@ -136,7 +76,6 @@ class ChangePinScreen extends Component {
       titleElement = <fbt desc="PinScreen.confirmPinTitle">Confirm New PIN</fbt>
     } else {
       titleElement = <fbt desc="PinScreen.newPinTitle">Enter New PIN</fbt>
->>>>>>> master
     }
 
     return (
@@ -150,19 +89,6 @@ class ChangePinScreen extends Component {
             contentContainerStyle={[styles.content, styles.greyBackground]}
             keyboardShouldPersistTaps={'always'}
           >
-<<<<<<< HEAD
-            <Text style={styles.subtitle}>{titleElement}</Text>
-            {this.state.isRetry === true && (
-              <Text style={styles.invalid}>
-                <fbt desc="PinScreen.pinMatchFailure">Incorrect PIN</fbt>
-              </Text>
-            )}
-            <PinInput
-              value={this.state.pin}
-              pinLength={this.pinLength}
-              onChangeText={this.handleInput}
-            />
-=======
             <View style={styles.container}>
               <Text style={styles.subtitle}>{titleElement}</Text>
               {this.state.isRetry === true && (
@@ -176,7 +102,6 @@ class ChangePinScreen extends Component {
                 onChangeText={this.handleInput}
               />
             </View>
->>>>>>> master
           </ScrollView>
         </SafeAreaView>
       </KeyboardAvoidingView>
