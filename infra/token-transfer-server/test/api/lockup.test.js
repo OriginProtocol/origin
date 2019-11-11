@@ -10,17 +10,15 @@ const crypto = require('crypto')
 const sendgridMail = require('@sendgrid/mail')
 const jwt = require('jsonwebtoken')
 
-const { Grant, Lockup, Transfer, User, sequelize } = require('../../src/models')
-const { encrypt } = require('../../src/lib/crypto')
-const lockupController = require('../../src/controllers/lockup')
-const enums = require('../../src/enums')
-
 process.env.ENCRYPTION_SECRET = 'test'
 process.env.LOCKUP_BONUS_RATE = 10
 process.env.LOCKUP_DURATION = 12
 
+const { Grant, Lockup, Transfer, User, sequelize } = require('../../src/models')
+const { encrypt } = require('../../src/lib/crypto')
+const lockupController = require('../../src/controllers/lockup')
+const enums = require('../../src/enums')
 const { encryptionSecret } = require('../../src/config')
-
 const app = require('../../src/app')
 
 const toAddress = '0xf17f52151ebef6c7334fad080c5704d77216b732'
@@ -90,6 +88,9 @@ describe('Lockup HTTP API', () => {
       next()
     })
     this.mockApp.use(app)
+
+    const earnOgnFake = sinon.fake.returns(true)
+    lockupController.__Rewire__('getEarnOgnEnabled', earnOgnFake)
   })
 
   it('should return the lockups', async () => {
@@ -156,6 +157,21 @@ describe('Lockup HTTP API', () => {
     // Check an email was sent with the confirmation token
     expect(sendStub.called).to.equal(true)
     sendStub.restore()
+  })
+
+  it('should not add a lockup if earn ogn flag is disabled', async () => {
+    const earnOgnFake = sinon.fake.returns(false)
+    lockupController.__Rewire__('getEarnOgnEnabled', earnOgnFake)
+
+    await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 1,
+        code: totp.gen(this.otpKey)
+      })
+      .expect(404)
+
+    process.env.EARN_OGN_ENABLED = true
   })
 
   it('should not add a lockup if unlock date has not passed', async () => {

@@ -7,7 +7,7 @@
   "scripts": {
     "android": "react-native run-android --appId com.origincatcher",
     "clean": "git clean -fdX .",
-    "postinstall": "cd ios && pod install",
+    "postinstall": "npx jetify; cd ios && pod install",
     "ios": "react-native run-ios",
     "lint": "eslint . && npm run prettier:check",
     "prettier": "prettier --write *.js \"**/*.js\"",
@@ -44,6 +44,7 @@
     "graphql-tag": "^2.10.1",
     "jest": "^24.9.0",
     "jest-react-native": "^18.0.0",
+    "jetifier": "^1.6.4",
     "json-stable-stringify": "^1.0.1",
     "lodash.get": "^4.4.2",
     "metro-react-native-babel-preset": "^0.57.0",

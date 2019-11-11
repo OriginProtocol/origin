@@ -5,6 +5,8 @@ import Price from 'components/Price'
 import withWalletBalances from 'hoc/withWalletBalances'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
+import supportedTokens from '@origin/graphql/src/utils/supportedTokens'
+
 const Balances = ({ currencies, title, className, onClose }) => {
   const EnrollButton = withEnrolmentModal('button')
 
@@ -50,12 +52,7 @@ const Balances = ({ currencies, title, className, onClose }) => {
   )
 }
 
-export default withWalletBalances(Balances, [
-  'token-ETH',
-  'token-DAI',
-  'token-OGN',
-  'token-OKB'
-])
+export default withWalletBalances(Balances, supportedTokens)
 
 require('react-styl')(`
   .balances

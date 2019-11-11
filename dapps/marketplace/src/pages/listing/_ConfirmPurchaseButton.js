@@ -6,6 +6,7 @@ import UserActivationLink from 'components/UserActivationLink'
 import withWallet from 'hoc/withWallet'
 import withIdentity from 'hoc/withIdentity'
 import withMessagingStatus from 'hoc/withMessagingStatus'
+import withAuthStatus from 'hoc/withAuthStatus'
 
 import { fbt } from 'fbt-runtime'
 
@@ -26,7 +27,8 @@ const ConfirmPurchaseButton = ({
   messagingStatusLoading,
   identityLoading,
   walletLoading,
-  messagingKeysLoading
+  messagingKeysLoading,
+  isLoggedIn
 }) => {
   if (
     messagingStatusLoading ||
@@ -44,8 +46,9 @@ const ConfirmPurchaseButton = ({
   }
 
   if (
-    !(localStorage.bypassOnboarding || localStorage.useWeb3Identity) &&
-    (!wallet || !identity || !hasMessagingKeys)
+    !isLoggedIn ||
+    (!(localStorage.bypassOnboarding || localStorage.useWeb3Identity) &&
+      (!wallet || !identity || !hasMessagingKeys))
   ) {
     return (
       <UserActivationLink
@@ -69,9 +72,11 @@ const ConfirmPurchaseButton = ({
 }
 
 export default withWallet(
-  withIdentity(
-    withMessagingStatus(ConfirmPurchaseButton, {
-      excludeData: true
-    })
+  withAuthStatus(
+    withIdentity(
+      withMessagingStatus(ConfirmPurchaseButton, {
+        excludeData: true
+      })
+    )
   )
 )

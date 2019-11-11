@@ -1,32 +1,27 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import moment from 'moment'
 
 import { editUser } from '@/actions/user'
-import {
-  getUser,
-  getError as getUserError,
-  getIsEditing as getUserIsEditing
-} from '@/reducers/user'
+import { getIsEditing as getUserIsEditing } from '@/reducers/user'
+import { getNextOnboardingPage } from '@/utils'
 
-class RevisedTerms extends Component {
-  state = {
-    accepted: true,
-    redirectTo: null
-  }
+const RevisedTerms = ({ editUser, user, userIsEditing }) => {
+  const [accepted, setAccepted] = useState(true)
+  const [redirectTo, setRedirectTo] = useState(null)
 
-  handleSubmit = async () => {
-    const result = await this.props.editUser({
+  const handleSubmit = async () => {
+    const result = await editUser({
       revisedScheduleAgreedAt: moment()
     })
     if (result.type === 'EDIT_USER_SUCCESS') {
-      this.setState({ redirectTo: '/phone' })
+      setRedirectTo(getNextOnboardingPage(result.payload))
     }
   }
 
-  renderStrategicAmendments() {
+  const renderStrategicAmendments = () => {
     return (
       <>
         <p>
@@ -114,7 +109,7 @@ class RevisedTerms extends Component {
     )
   }
 
-  renderCoinListAmendments() {
+  const renderCoinListAmendments = () => {
     return (
       <>
         <p>
@@ -201,25 +196,23 @@ class RevisedTerms extends Component {
     )
   }
 
-  render() {
-    if (this.state.redirectTo) {
-      return <Redirect push to={this.state.redirectTo} />
-    }
+  if (redirectTo) {
+    return <Redirect push to={redirectTo} />
+  }
 
-    return (
-      <>
-        <div className="action-card">
-          <h1>Investor Amendment Agreement</h1>
-          <p>
-            Please agree to the investor amendment below to use the Origin
-            Investor Portal.
-          </p>
-          <div className="form-group">
-            <div className="terms-wrapper">
-              {this.props.user.investorType === 'CoinList'
-                ? this.renderCoinListAmendments()
-                : this.renderStrategicAmendments()}
-            </div>
+  return (
+    <>
+      <div className="action-card">
+        <h1>Investor Amendment Agreement</h1>
+        <p>
+          Please agree to the investor amendment below to use the Origin
+          Investor Portal.
+        </p>
+        <div className="form-group">
+          <div className="terms-wrapper">
+            {user.investorType === 'CoinList'
+              ? renderCoinListAmendments()
+              : renderStrategicAmendments()}
           </div>
           <p style={{ textAlign: 'left', fontSize: '12px' }}>
             If you do not agree with the proposed amendment, you can contact
@@ -233,36 +226,33 @@ class RevisedTerms extends Component {
             amendment fails to pass, we will be unable to proceed with our plans
             to list on top-tier exchanges.
           </p>
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              id="acceptCheck"
-              onClick={e => this.setState({ accepted: e.target.checked })}
-              defaultChecked
-            />
-            <label className="form-check-label mt-0" htmlFor="acceptCheck">
-              I have read and agree to the Revised Token Unlock Schedule
-              Agreement
-            </label>
-          </div>
-          <button
-            className="btn btn-secondary btn-lg mt-5"
-            onClick={this.handleSubmit}
-            disabled={!this.state.accepted || this.props.userIsEditing}
-          >
-            Accept Agreement
-          </button>
         </div>
-      </>
-    )
-  }
+        <div className="form-check">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id="acceptCheck"
+            onClick={e => setAccepted(e.target.checked)}
+            defaultChecked
+          />
+          <label className="form-check-label mt-0" htmlFor="acceptCheck">
+            I have read and agree to the Revised Token Unlock Schedule Agreement
+          </label>
+        </div>
+        <button
+          className="btn btn-secondary btn-lg mt-5"
+          onClick={handleSubmit}
+          disabled={!accepted || userIsEditing}
+        >
+          Accept Agreement
+        </button>
+      </div>
+    </>
+  )
 }
 
 const mapStateToProps = ({ user }) => {
   return {
-    user: getUser(user),
-    userError: getUserError(user),
     userIsEditing: getUserIsEditing(user)
   }
 }
@@ -275,7 +265,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RevisedTerms)
+export default connect(mapStateToProps, mapDispatchToProps)(RevisedTerms)

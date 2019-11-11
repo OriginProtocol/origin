@@ -128,6 +128,8 @@ const lockupBonusRate = process.env.LOCKUP_BONUS_RATE || 10
 // Lockup duration in months
 const lockupDuration = process.env.LOCKUP_DURATION || 12
 
+const earnOgnEnabled = process.env.EARN_OGN_ENABLED || false
+
 module.exports = {
   calculateGranted,
   calculateVested,
@@ -135,6 +137,7 @@ module.exports = {
   calculateEarnings,
   calculateLocked,
   calculateWithdrawn,
+  earnOgnEnabled,
   toMoment,
   momentizeLockup,
   momentizeGrant,

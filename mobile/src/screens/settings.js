@@ -32,7 +32,11 @@ class settingsScreen extends React.Component {
     this.state = {
       biometryType: null,
       biometryError: {},
+<<<<<<< HEAD
       displayRemovePinGuard: false
+=======
+      authGuardCallback: false
+>>>>>>> master
     }
   }
 
@@ -55,6 +59,7 @@ class settingsScreen extends React.Component {
       })
       .catch(error => {
         console.warn('Biometry failure: ', error)
+<<<<<<< HEAD
         this.alertMessage(
           String(
             fbt('Permission denied', 'Authentication.permissionDeniedTitle')
@@ -73,9 +78,31 @@ class settingsScreen extends React.Component {
               Linking.openURL('app-settings:')
             } else {
               AndroidOpenSettings.appDetailsSettings()
+=======
+        if (error.name === 'LAErrorTouchIDNotEnrolled') {
+          this.alertMessage(
+            String(
+              fbt('Permission denied', 'Authentication.permissionDeniedTitle')
+            ),
+            String(
+              fbt(
+                `It looks like you have ` +
+                  fbt.param('biometryType', this.state.biometryType) +
+                  ` disabled. You will need to enable it in the settings for the
+            Origin Marketplace App.`,
+                'Authentication.permissionDeniedDescription'
+              )
+            ),
+            () => {
+              if (Platform.OS === 'ios') {
+                Linking.openURL('app-settings:')
+              } else {
+                AndroidOpenSettings.appDetailsSettings()
+              }
+>>>>>>> master
             }
-          }
-        )
+          )
+        }
       })
   }
 
@@ -99,8 +126,22 @@ class settingsScreen extends React.Component {
   render() {
     return (
       <>
+<<<<<<< HEAD
         {this.state.displayRemovePinGuard && (
           <AuthenticationGuard onSuccess={this.onRemovePin} />
+=======
+        {this.state.authGuardCallback && (
+          <AuthenticationGuard
+            onSuccess={() => {
+              if (this.state.authGuardCallback === 'RemovePin') {
+                this.props.setPin(false)
+              } else if (this.state.authGuardCallback === 'ChangePin') {
+                this.props.navigation.navigate('ChangePin')
+              }
+              this.setState({ authGuardCallback: false })
+            }}
+          />
+>>>>>>> master
         )}
         <ScrollView style={styles.menuContainer}>
           <View style={styles.menuHeadingContainer}>
@@ -216,9 +257,24 @@ class settingsScreen extends React.Component {
                   value={!!this.props.settings.pin}
                   onValueChange={value => {
                     if (!value) {
+<<<<<<< HEAD
                       this.setState({ displayRemovePinGuard: true })
                     } else {
                       this.props.navigation.navigate('ChangePin')
+=======
+                      // Removing a PIN
+                      this.setState({ authGuardCallback: 'RemovePin' })
+                    } else {
+                      if (
+                        this.props.settings.pin ||
+                        this.props.settings.biometryType
+                      ) {
+                        // Have some sort of auth, display the authentication guard
+                        this.setState({ authGuardCallback: 'ChangePin' })
+                      } else {
+                        this.props.navigation.navigate('ChangePin')
+                      }
+>>>>>>> master
                     }
                   }}
                 />
@@ -228,7 +284,13 @@ class settingsScreen extends React.Component {
 
           {!!this.props.settings.pin && (
             <TouchableHighlight
+<<<<<<< HEAD
               onPress={() => this.props.navigation.navigate('ChangePin')}
+=======
+              onPress={() => {
+                this.setState({ authGuardCallback: 'ChangePin' })
+              }}
+>>>>>>> master
             >
               <View style={styles.menuItem}>
                 <Text style={styles.menuText}>

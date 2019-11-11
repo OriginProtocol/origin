@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 
 import { apiUrl } from '@/constants'
+import { earnOgnEnabled } from '@/constants'
 import agent from '@/utils/agent'
 import NavLink from '@/components/NavLink'
 import Logo from '@/assets/origin-logo.svg'
@@ -16,7 +17,7 @@ const Navigation = props => {
 
   const handleLogout = async () => {
     await agent.post(`${apiUrl}/api/logout`)
-    setRedirectTo('/')
+    setRedirectTo('/login')
   }
 
   if (redirectTo) {
@@ -45,7 +46,7 @@ const Navigation = props => {
       >
         <ul className="navbar-nav">
           <li className="nav-item mb-3">
-            <NavLink to="/dashboard" exact className="nav-link text">
+            <NavLink to="/" exact className="nav-link text">
               <Dashboard className="icon" />
               Dashboard
             </NavLink>
@@ -56,12 +57,17 @@ const Navigation = props => {
               News
             </NavLink>
           </li>
-          <li className="nav-item mb-3">
-            <NavLink to="/lockup" className="nav-link text">
-              <Earn className="icon" style={{ transform: 'rotate(-90deg)' }} />
-              Bonus Tokens
-            </NavLink>
-          </li>
+          {earnOgnEnabled && (
+            <li className="nav-item mb-3">
+              <NavLink to="/lockup" className="nav-link text">
+                <Earn
+                  className="icon"
+                  style={{ transform: 'rotate(-90deg)' }}
+                />
+                Bonus Tokens
+              </NavLink>
+            </li>
+          )}
           <li className="nav-item mb-3">
             <NavLink to="/withdrawal" className="nav-link text">
               <History className="icon" />

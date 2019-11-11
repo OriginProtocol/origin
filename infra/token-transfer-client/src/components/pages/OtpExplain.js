@@ -1,39 +1,35 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 
 import GoogleAuthenticatorIcon from '@/assets/google-authenticator-icon@3x.jpg'
 
-class OtpExplain extends Component {
-  state = {
-    redirectTo: false
+const OtpExplain = () => {
+  const [redirectTo, setRedirectTo] = useState(null)
+
+  if (redirectTo) {
+    return <Redirect push to={redirectTo} />
   }
 
-  render() {
-    if (this.state.redirectTo) {
-      return <Redirect push to={this.state.redirectTo} />
-    }
-
-    return (
-      <div className="action-card">
-        <h1>Install Google Authenticator</h1>
-        <img src={GoogleAuthenticatorIcon} />
-        <p className="mb-3">
-          Google Authenticator will generate a unique, time-sensitive security
-          code you can use to secure your account.
-        </p>
-        <p>
-          To get started, click continue once you have the Google Authenticator
-          app installed.
-        </p>
-        <button
-          className="btn btn-secondary btn-lg mt-5"
-          onClick={() => this.setState({ redirectTo: '/otp/setup' })}
-        >
-          <span>Continue</span>
-        </button>
-      </div>
-    )
-  }
+  return (
+    <div className="action-card">
+      <h1>Install Google Authenticator</h1>
+      <img src={GoogleAuthenticatorIcon} />
+      <p className="mb-3">
+        Google Authenticator will generate a unique, time-sensitive security
+        code you can use to secure your account.
+      </p>
+      <p>
+        To get started, click continue once you have the Google Authenticator
+        app installed.
+      </p>
+      <button
+        className="btn btn-secondary btn-lg mt-5"
+        onClick={() => setRedirectTo('/otp/setup')}
+      >
+        <span>Continue</span>
+      </button>
+    </div>
+  )
 }
 
 export default OtpExplain
