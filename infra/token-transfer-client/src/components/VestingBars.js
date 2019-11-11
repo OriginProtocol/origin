@@ -175,7 +175,10 @@ const VestingBars = props => {
           )
         })}
       </div>
-      <div className="row" style={{ marginTop: `${2 + 0.5 * grants.length}rem` }}>
+      <div
+        className="row"
+        style={{ marginTop: `${2 + 0.5 * grants.length}rem` }}
+      >
         <div className="col">
           <div className="status-circle status-circle-success mr-2"></div>
           {Number(props.vested).toLocaleString()} OGN{' '}
