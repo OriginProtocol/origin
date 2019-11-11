@@ -57,6 +57,7 @@
     "json-stable-stringify": "^1.0.1",
     "lodash-es": "^4.17.11",
     "mocha": "^6.1.4",
+    "node-fetch": "^2.6.0",
     "prettier": "^1.18.2",
     "rlp": "^2.2.3",
     "subscriptions-transport-ws": "^0.9.16",

@@ -4,6 +4,7 @@ import IpfsHash from 'ipfs-only-hash'
 import createDebug from 'debug'
 import get from 'lodash/get'
 import pick from 'lodash/pick'
+import fetch from 'node-fetch'
 
 import contracts from '../contracts'
 import {
