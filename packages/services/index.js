@@ -142,12 +142,7 @@ const writeTruffle = () =>
 const startSslProxy = () =>
   new Promise(resolve => {
     console.log('Starting secure proxies...')
-    const Ports = [
-      [443, 3000],
-      [8546, 8545],
-      [8081, 8080],
-      [5003, 5002]
-    ]
+    const Ports = [[443, 3000], [8546, 8545], [8081, 8080], [5003, 5002]]
 
     Ports.map(pair => {
       const [src, port] = pair
