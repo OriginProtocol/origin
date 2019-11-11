@@ -13,6 +13,8 @@ RUN mv envkey-source /usr/local/bin
 COPY package.json ./
 COPY yarn.lock ./
 COPY lerna.json ./
+COPY ./packages/auth-client ./packages/auth-client
+COPY ./packages/auth-utils ./packages/auth-utils
 COPY ./packages/eventsource ./packages/eventsource
 COPY ./packages/event-cache ./packages/event-cache
 COPY ./packages/web3-provider ./packages/web3-provider

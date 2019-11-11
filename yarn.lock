@@ -2367,15 +2367,15 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@lerna/add@3.18.0":
-  version "3.18.0"
-  resolved "https://registry.yarnpkg.com/@lerna/add/-/add-3.18.0.tgz#86e38f14d7a0a7c61315dccb402377feb1c9db83"
-  integrity sha512-Z5EaQbBnJn1LEPb0zb0Q2o9T8F8zOnlCsj6JYpY6aSke17UUT7xx0QMN98iBK+ueUHKjN/vdFdYlNCYRSIdujA==
+"@lerna/add@3.18.4":
+  version "3.18.4"
+  resolved "https://registry.yarnpkg.com/@lerna/add/-/add-3.18.4.tgz#0d97c75b64febc10a9a38546a3019f0f2c24b0e6"
+  integrity sha512-R+9RmYrSbcmnmaFL2aB0HJtTq95ePEa0FMS4r4NnA7Xw07l5buVBPOfxv6P8kFrVvIcNpaa7S0Eo/KkbycMhKA==
   dependencies:
     "@evocateur/pacote" "^9.6.3"
-    "@lerna/bootstrap" "3.18.0"
+    "@lerna/bootstrap" "3.18.4"
     "@lerna/command" "3.18.0"
-    "@lerna/filter-options" "3.18.0"
+    "@lerna/filter-options" "3.18.4"
     "@lerna/npm-conf" "3.16.0"
     "@lerna/validation-error" "3.13.0"
     dedent "^0.7.0"
@@ -2383,13 +2383,13 @@
     p-map "^2.1.0"
     semver "^6.2.0"
 
-"@lerna/bootstrap@3.18.0":
-  version "3.18.0"
-  resolved "https://registry.yarnpkg.com/@lerna/bootstrap/-/bootstrap-3.18.0.tgz#705d9eb51a24d549518796a09f24d24526ed975b"
-  integrity sha512-3DZKWIaKvr7sUImoKqSz6eqn84SsOVMnA5QHwgzXiQjoeZ/5cg9x2r+Xj3+3w/lvLoh0j8U2GNtrIaPNis4bKQ==
+"@lerna/bootstrap@3.18.4":
+  version "3.18.4"
+  resolved "https://registry.yarnpkg.com/@lerna/bootstrap/-/bootstrap-3.18.4.tgz#b5340800358e4916e9d2ba728d266a23fdd7665c"
+  integrity sha512-mvqMyionPSqhbeGhoUQYEBTgbJ47LkONHfQ1AKBET0fJOjIZf6x0pWC17KvfCjsiE017325ySLKDH23z1Kb9ww==
   dependencies:
     "@lerna/command" "3.18.0"
-    "@lerna/filter-options" "3.18.0"
+    "@lerna/filter-options" "3.18.4"
     "@lerna/has-npm-version" "3.16.5"
     "@lerna/npm-install" "3.16.5"
     "@lerna/package-graph" "3.18.0"
@@ -2412,16 +2412,15 @@
     read-package-tree "^5.1.6"
     semver "^6.2.0"
 
-"@lerna/changed@3.18.3":
-  version "3.18.3"
-  resolved "https://registry.yarnpkg.com/@lerna/changed/-/changed-3.18.3.tgz#50529e8bd5d7fe2d0ace046a6e274d3de652a493"
-  integrity sha512-xZW7Rm+DlDIGc0EvKGyJZgT9f8FFa4d52mr/Y752dZuXR2qRmf9tXhVloRG39881s2A6yi3jqLtXZggKhsQW4Q==
+"@lerna/changed@3.18.4":
+  version "3.18.4"
+  resolved "https://registry.yarnpkg.com/@lerna/changed/-/changed-3.18.4.tgz#2453ad7b3545554eaa365347a229042918b6decc"
+  integrity sha512-Ui4UsneDk9gCuJRfTpR5js+Ctt9Je+j+3Q4z7H7HhBn6WeWDTp6FBGJZ7SfrBCdQ47EKK27Mr95LbJ4I77xFfQ==
   dependencies:
     "@lerna/collect-updates" "3.18.0"
     "@lerna/command" "3.18.0"
-    "@lerna/listable" "3.18.0"
+    "@lerna/listable" "3.18.4"
     "@lerna/output" "3.13.0"
-    "@lerna/version" "3.18.3"
 
 "@lerna/check-working-tree@3.16.5":
   version "3.16.5"
@@ -2441,13 +2440,13 @@
     execa "^1.0.0"
     strong-log-transformer "^2.0.0"
 
-"@lerna/clean@3.18.0":
-  version "3.18.0"
-  resolved "https://registry.yarnpkg.com/@lerna/clean/-/clean-3.18.0.tgz#cc67d7697db969a70e989992fdf077126308fb2e"
-  integrity sha512-BiwBELZNkarRQqj+v5NPB1aIzsOX+Y5jkZ9a5UbwHzEdBUQ5lQa0qaMLSOve/fSkaiZQxe6qnTyatN75lOcDMg==
+"@lerna/clean@3.18.4":
+  version "3.18.4"
+  resolved "https://registry.yarnpkg.com/@lerna/clean/-/clean-3.18.4.tgz#704b345dfec4610823d6670e37f9984196d58874"
+  integrity sha512-puuL0sBHIv3Tvq8cdu3kCGfRpdsXuaDGIRha33GVmRPfMBi2GN8nPPysVyWmP99PfgfafO6eT5R3jqXjvASAZA==
   dependencies:
     "@lerna/command" "3.18.0"
-    "@lerna/filter-options" "3.18.0"
+    "@lerna/filter-options" "3.18.4"
     "@lerna/prompt" "3.13.0"
     "@lerna/pulse-till-done" "3.13.0"
     "@lerna/rimraf-dir" "3.16.5"
@@ -2570,22 +2569,22 @@
     "@lerna/validation-error" "3.13.0"
     npmlog "^4.1.2"
 
-"@lerna/exec@3.18.0":
-  version "3.18.0"
-  resolved "https://registry.yarnpkg.com/@lerna/exec/-/exec-3.18.0.tgz#d9ec0b7ca06b7521f0b9f14a164e2d4ca5e1b3b9"
-  integrity sha512-hwkuzg1+38+pbzdZPhGtLIYJ59z498/BCNzR8d4/nfMYm8lFbw9RgJJajLcdbuJ9LJ08cZ93hf8OlzetL84TYg==
+"@lerna/exec@3.18.4":
+  version "3.18.4"
+  resolved "https://registry.yarnpkg.com/@lerna/exec/-/exec-3.18.4.tgz#7f722abc3c7074dffe6aa48bca71171e0635f84a"
+  integrity sha512-BpBFxyCQXcfess9Nmj/OwQ9e1IhzPzNxqF5JK7dPIjko5oBn5Hm2EWVAcgUGSHKPZGLiOWPu3Wx/C92NtDBS1w==
   dependencies:
     "@lerna/child-process" "3.16.5"
     "@lerna/command" "3.18.0"
-    "@lerna/filter-options" "3.18.0"
+    "@lerna/filter-options" "3.18.4"
     "@lerna/run-topologically" "3.18.0"
     "@lerna/validation-error" "3.13.0"
     p-map "^2.1.0"
 
-"@lerna/filter-options@3.18.0":
-  version "3.18.0"
-  resolved "https://registry.yarnpkg.com/@lerna/filter-options/-/filter-options-3.18.0.tgz#406667dc75a8fc813c26a91bde754b6a73e1a868"
-  integrity sha512-UGVcixs3TGzD8XSmFSbwUVVQnAjaZ6Rmt8Vuq2RcR98ULkGB1LiGNMY89XaNBhaaA8vx7yQWiLmJi2AfmD63Qg==
+"@lerna/filter-options@3.18.4":
+  version "3.18.4"
+  resolved "https://registry.yarnpkg.com/@lerna/filter-options/-/filter-options-3.18.4.tgz#f5476a7ee2169abed27ad433222e92103f56f9f1"
+  integrity sha512-4giVQD6tauRwweO/322LP2gfVDOVrt/xN4khkXyfkJDfcsZziFXq+668otD9KSLL8Ps+To4Fah3XbK0MoNuEvA==
   dependencies:
     "@lerna/collect-updates" "3.18.0"
     "@lerna/filter-packages" "3.18.0"
@@ -2687,20 +2686,20 @@
     p-map "^2.1.0"
     slash "^2.0.0"
 
-"@lerna/list@3.18.0":
-  version "3.18.0"
-  resolved "https://registry.yarnpkg.com/@lerna/list/-/list-3.18.0.tgz#6e5fe545ce4ba7c1eeb6d6cf69240d06c02bd496"
-  integrity sha512-mpB7Q6T+n2CaiPFz0LuOE+rXphDfHm0mKIwShnyS/XDcii8jXv+z9Iytj8p3rfCH2I1L80j2qL6jWzyGy/uzKA==
+"@lerna/list@3.18.4":
+  version "3.18.4"
+  resolved "https://registry.yarnpkg.com/@lerna/list/-/list-3.18.4.tgz#4320f262cdb2df54b57b3ef0da935c568e30f1e9"
+  integrity sha512-bgtlhAwhjHOTLq0iIuPs30abeuLbwZvVB60Ym8kPp+chh939obKU3vy2KMyX+Gpxf8pzuQG+k986YXcUBvXVsw==
   dependencies:
     "@lerna/command" "3.18.0"
-    "@lerna/filter-options" "3.18.0"
-    "@lerna/listable" "3.18.0"
+    "@lerna/filter-options" "3.18.4"
+    "@lerna/listable" "3.18.4"
     "@lerna/output" "3.13.0"
 
-"@lerna/listable@3.18.0":
-  version "3.18.0"
-  resolved "https://registry.yarnpkg.com/@lerna/listable/-/listable-3.18.0.tgz#752b014406a9a012486626d22e940edb8205973a"
-  integrity sha512-9gLGKYNLSKeurD+sJ2RA+nz4Ftulr91U127gefz0RlmAPpYSjwcJkxwa0UfJvpQTXv9C7yzHLnn0BjyAQRjuew==
+"@lerna/listable@3.18.4":
+  version "3.18.4"
+  resolved "https://registry.yarnpkg.com/@lerna/listable/-/listable-3.18.4.tgz#45d14ad4eba00d7da71deba839312bed78e02680"
+  integrity sha512-EKSsnST5k3dZfw+UTwBH1/sHQ1YfgjYjGxXCabyn55mMgc2GjoDekODMYzZ1TNF2NNy6RgIZ24X2JI8G22nZUw==
   dependencies:
     "@lerna/query-graph" "3.18.0"
     chalk "^2.3.1"
@@ -2854,10 +2853,10 @@
     inquirer "^6.2.0"
     npmlog "^4.1.2"
 
-"@lerna/publish@3.18.3":
-  version "3.18.3"
-  resolved "https://registry.yarnpkg.com/@lerna/publish/-/publish-3.18.3.tgz#478bb94ee712a40b723413e437bcb9e307d3709c"
-  integrity sha512-XlfWOWIhaSK0Y2sX5ppNWI5Y3CDtlxMcQa1hTbZlC5rrDA6vD32iutbmH6Ix3c6wtvVbSkgA39GWsQEXxPS+7w==
+"@lerna/publish@3.18.4":
+  version "3.18.4"
+  resolved "https://registry.yarnpkg.com/@lerna/publish/-/publish-3.18.4.tgz#2f3de9d00ae63ec89b5411199e8bac96445b9f17"
+  integrity sha512-Q+MqM5DUZvk+uT6hdEyO3khXET6LwED0YEuCu8fRwtHad03HkZ9i8PtTY5h8Sn6D6RCyCOlHTuf8O0KKAUy3ow==
   dependencies:
     "@evocateur/libnpmaccess" "^3.1.2"
     "@evocateur/npm-registry-fetch" "^4.0.0"
@@ -2880,7 +2879,7 @@
     "@lerna/run-lifecycle" "3.16.2"
     "@lerna/run-topologically" "3.18.0"
     "@lerna/validation-error" "3.13.0"
-    "@lerna/version" "3.18.3"
+    "@lerna/version" "3.18.4"
     figgy-pudding "^3.5.1"
     fs-extra "^8.1.0"
     npm-package-arg "^6.1.0"
@@ -2943,13 +2942,13 @@
     figgy-pudding "^3.5.1"
     p-queue "^4.0.0"
 
-"@lerna/run@3.18.0":
-  version "3.18.0"
-  resolved "https://registry.yarnpkg.com/@lerna/run/-/run-3.18.0.tgz#b7069880f6313e4c6026b564b7b76e5d0f30a521"
-  integrity sha512-sblxHBZ9djaaG7wefPcfEicDqzrB7CP1m/jIB0JvPEQwG4C2qp++ewBpkjRw/mBtjtzg0t7v0nNMXzaWYrQckQ==
+"@lerna/run@3.18.4":
+  version "3.18.4"
+  resolved "https://registry.yarnpkg.com/@lerna/run/-/run-3.18.4.tgz#c3ab3bffe4f098761c210a3215582f3b5b0d7227"
+  integrity sha512-u2ZNO2fVk5kVEpbpn4DLJZZxZ08LFnIFuaXJMAhxvOgvm12ZF2rabA9kZc3NXp5+DedG5nHHgyoyLVVbStKzBA==
   dependencies:
     "@lerna/command" "3.18.0"
-    "@lerna/filter-options" "3.18.0"
+    "@lerna/filter-options" "3.18.4"
     "@lerna/npm-run-script" "3.16.5"
     "@lerna/output" "3.13.0"
     "@lerna/run-topologically" "3.18.0"
@@ -2992,10 +2991,10 @@
   dependencies:
     npmlog "^4.1.2"
 
-"@lerna/version@3.18.3":
-  version "3.18.3"
-  resolved "https://registry.yarnpkg.com/@lerna/version/-/version-3.18.3.tgz#01344b39c0749fdeb6c178714733bacbde4d602f"
-  integrity sha512-IXXRlyM3Q/jrc+QZio+bgjG4ZaK+4LYmY4Yql1xyY0wZhAKsWP/Q6ho7e1EJNjNC5dUJO99Fq7qB05MkDf2OcQ==
+"@lerna/version@3.18.4":
+  version "3.18.4"
+  resolved "https://registry.yarnpkg.com/@lerna/version/-/version-3.18.4.tgz#48261a8a69d1b15ab40a7cc6400381c4e480ec6b"
+  integrity sha512-+gR9H89qSP8iqzNi4tRVQUbWlFMOlhbY6+5TXkP72Ibb/z87O+C46DBqizSMVaPQYdSYjS1c9Xfa1oOhEWxGaw==
   dependencies:
     "@lerna/check-working-tree" "3.16.5"
     "@lerna/child-process" "3.16.5"
@@ -3547,7 +3546,7 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/bn.js@^4.11.4":
+"@types/bn.js@^4.11.3", "@types/bn.js@^4.11.4":
   version "4.11.5"
   resolved "https://registry.yarnpkg.com/@types/bn.js/-/bn.js-4.11.5.tgz#40e36197433f78f807524ec623afcf0169ac81dc"
   integrity sha512-AEAZcIZga0JgVMHNtl1CprA/hXX7/wPt79AgR4XqaDt7jyj3QWYw6LPoOiznPtugDmlubUnAahMs2PFxGcQrng==
@@ -4488,6 +4487,13 @@ ansi-styles@^3.2.0, ansi-styles@^3.2.1:
   dependencies:
     color-convert "^1.9.0"
 
+ansi-styles@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-4.1.0.tgz#d3ba8047b818293eaaa7978321dd61bff9842cfc"
+  integrity sha512-Qts4KCLKG+waHc9C4m07weIY8qyeixoS0h6RnbsNVD6Fw+pEZGW3vTyObL3WXpE09Mq4Oi7/lBEyLmOiLtlYWQ==
+  dependencies:
+    color-convert "^2.0.1"
+
 ansi-wrap@0.1.0, ansi-wrap@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/ansi-wrap/-/ansi-wrap-0.1.0.tgz#a82250ddb0015e9a27ca82e82ea603bbfa45efaf"
@@ -5159,16 +5165,17 @@ atob@^2.1.1:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-autocannon@4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/autocannon/-/autocannon-4.3.0.tgz#74dcba009ef0d467f689645980eb4f7aa6b7765c"
-  integrity sha512-JXv9PQstil7wl1V8KLhPORZtHHZCMGX3EmSx+GQVi1tYsATbO31uyAmvpfy0i9/kT7suIGe4HgAKhN6epvNU2Q==
+autocannon@4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/autocannon/-/autocannon-4.4.0.tgz#dbaca2b3d2e2d5505a12a14600f6741e0376d3e3"
+  integrity sha512-S+RwQtMgDkEkhS2+3vwqfspDGWM7rQNuGHbBPssABR2HoY1rpqFNfCsOdaFze+I476chZd20TCSyNDimSTFcXw==
   dependencies:
-    chalk "^2.4.2"
+    chalk "^3.0.0"
     cli-table3 "^0.5.1"
     clone "^2.1.2"
     color-support "^1.1.1"
     cross-argv "^1.0.0"
+    form-data "^2.5.1"
     has-async-hooks "^1.0.0"
     hdr-histogram-js "^1.1.4"
     hdr-histogram-percentiles-obj "^2.0.0"
@@ -7074,6 +7081,14 @@ chalk@2.4.2, chalk@^2.0.0, chalk@^2.0.1, chalk@^2.1.0, chalk@^2.3.0, chalk@^2.3.
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
 
+chalk@3.0.0, chalk@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/chalk/-/chalk-3.0.0.tgz#3f73c2bf526591f574cc492c51e2456349f844e4"
+  integrity sha512-4D3B6Wf41KOYRFdszmDqMCGq5VV/uMAB273JILmO+3jAlh8X4qDtdtgCR3fxtbLEMzSx22QdhnDcJvu2u1fVwg==
+  dependencies:
+    ansi-styles "^4.1.0"
+    supports-color "^7.1.0"
+
 chalk@^1.0.0, chalk@^1.1.1, chalk@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-1.1.3.tgz#a8115c55e4a702fe4d150abd3872822a7e09fc98"
@@ -7496,12 +7511,19 @@ color-convert@^1.9.0, color-convert@^1.9.1, color-convert@^1.9.3:
   dependencies:
     color-name "1.1.3"
 
+color-convert@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-2.0.1.tgz#72d3a68d598c9bdb3af2ad1e84f21d896abd4de3"
+  integrity sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==
+  dependencies:
+    color-name "~1.1.4"
+
 color-name@1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.3.tgz#a7d0558bd89c42f795dd42328f740831ca53bc25"
   integrity sha1-p9BVi9icQveV3UIyj3QIMcpTvCU=
 
-color-name@^1.0.0:
+color-name@^1.0.0, color-name@~1.1.4:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
@@ -10476,6 +10498,19 @@ ethereumjs-util@6.1.0, ethereumjs-util@^6.0.0:
     safe-buffer "^5.1.1"
     secp256k1 "^3.0.1"
 
+ethereumjs-util@6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-6.2.0.tgz#23ec79b2488a7d041242f01e25f24e5ad0357960"
+  integrity sha512-vb0XN9J2QGdZGIEKG2vXM+kUdEivUfU6Wmi5y0cg+LRhDYKnXIZ/Lz7XjFbHRR9VIKq2lVGLzGBkA++y2nOdOQ==
+  dependencies:
+    "@types/bn.js" "^4.11.3"
+    bn.js "^4.11.0"
+    create-hash "^1.1.2"
+    ethjs-util "0.1.6"
+    keccak "^2.0.0"
+    rlp "^2.2.3"
+    secp256k1 "^3.0.1"
+
 ethereumjs-util@^4.3.0, ethereumjs-util@^4.4.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-4.5.0.tgz#3e9428b317eebda3d7260d854fddda954b1f1bc6"
@@ -12530,6 +12565,11 @@ has-flag@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-3.0.0.tgz#b5d454dc2199ae225699f3467e5a07f3b955bafd"
   integrity sha1-tdRU3CGZriJWmfNGfloH87lVuv0=
+
+has-flag@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-4.0.0.tgz#944771fd9c81c81265c4d6941860da06bb59479b"
+  integrity sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==
 
 has-localstorage@^1.0.1:
   version "1.0.1"
@@ -15492,6 +15532,19 @@ jest-watch-typeahead@0.4.0:
     string-length "^3.1.0"
     strip-ansi "^5.0.0"
 
+jest-watch-typeahead@0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/jest-watch-typeahead/-/jest-watch-typeahead-0.4.2.tgz#e5be959698a7fa2302229a5082c488c3c8780a4a"
+  integrity sha512-f7VpLebTdaXs81rg/oj4Vg/ObZy2QtGzAmGLNsqUS5G5KtSN68tFcIsbvNODfNyQxU78g7D8x77o3bgfBTR+2Q==
+  dependencies:
+    ansi-escapes "^4.2.1"
+    chalk "^2.4.1"
+    jest-regex-util "^24.9.0"
+    jest-watcher "^24.3.0"
+    slash "^3.0.0"
+    string-length "^3.1.0"
+    strip-ansi "^5.0.0"
+
 jest-watcher@^24.3.0, jest-watcher@^24.9.0:
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/jest-watcher/-/jest-watcher-24.9.0.tgz#4b56e5d1ceff005f5b88e528dc9afc8dd4ed2b3b"
@@ -16035,6 +16088,16 @@ keccak@^1.0.2:
     nan "^2.2.1"
     safe-buffer "^5.1.0"
 
+keccak@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/keccak/-/keccak-2.0.0.tgz#7456ea5023284271e6f362b4397e8df4d2bb994c"
+  integrity sha512-rKe/lRr0KGhjoz97cwg+oeT1Rj/Y4cjae6glArioUC8JBF9ROGZctwIaaruM7d7naovME4Q8WcQSO908A8qcyQ==
+  dependencies:
+    bindings "^1.2.1"
+    inherits "^2.0.3"
+    nan "^2.2.1"
+    safe-buffer "^5.1.0"
+
 keccakjs@^0.2.0, keccakjs@^0.2.1:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/keccakjs/-/keccakjs-0.2.3.tgz#5e4e969ce39689a3861f445d7752ee3477f9fe72"
@@ -16216,26 +16279,26 @@ length-prefixed-stream@^2.0.0:
     readable-stream "^3.1.1"
     varint "^5.0.0"
 
-lerna@3.18.3:
-  version "3.18.3"
-  resolved "https://registry.yarnpkg.com/lerna/-/lerna-3.18.3.tgz#c94556e76f98df9c7ae4ed3bc0166117cc42cd13"
-  integrity sha512-Bnr/RjyDSVA2Vu+NArK7do4UIpyy+EShOON7tignfAekPbi7cNDnMMGgSmbCQdKITkqPACMfCMdyq0hJlg6n3g==
+lerna@3.18.4:
+  version "3.18.4"
+  resolved "https://registry.yarnpkg.com/lerna/-/lerna-3.18.4.tgz#132858cabb8fc8393341ddddbbbd85dd0ca82a79"
+  integrity sha512-DiU53cvMxaU07Bj2HwBwUQ2O3c/ORNq/QwKj1vGJH4vSkZSTUxPryp2baSNlt8PmnLNXOVpw0vOTRkEF+6n/cA==
   dependencies:
-    "@lerna/add" "3.18.0"
-    "@lerna/bootstrap" "3.18.0"
-    "@lerna/changed" "3.18.3"
-    "@lerna/clean" "3.18.0"
+    "@lerna/add" "3.18.4"
+    "@lerna/bootstrap" "3.18.4"
+    "@lerna/changed" "3.18.4"
+    "@lerna/clean" "3.18.4"
     "@lerna/cli" "3.18.0"
     "@lerna/create" "3.18.0"
     "@lerna/diff" "3.18.0"
-    "@lerna/exec" "3.18.0"
+    "@lerna/exec" "3.18.4"
     "@lerna/import" "3.18.0"
     "@lerna/init" "3.18.0"
     "@lerna/link" "3.18.0"
-    "@lerna/list" "3.18.0"
-    "@lerna/publish" "3.18.3"
-    "@lerna/run" "3.18.0"
-    "@lerna/version" "3.18.3"
+    "@lerna/list" "3.18.4"
+    "@lerna/publish" "3.18.4"
+    "@lerna/run" "3.18.4"
+    "@lerna/version" "3.18.4"
     import-local "^2.0.0"
     npmlog "^4.1.2"
 
@@ -18829,7 +18892,7 @@ normalize.css@^8.0.1:
   resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-8.0.1.tgz#9b98a208738b9cc2634caacbc42d131c97487bf3"
   integrity sha512-qizSNPO93t1YUuUhP22btGOo3chcvDFqFaj2TRybP0DMxkHOCTYwp3n34fel4a31ORXy4m1Xq0Gyqpb5m33qIg==
 
-notp@2.0.x, notp@^2.0.3:
+notp@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/notp/-/notp-2.0.3.tgz#a9fd11e25cfe1ccb39fc6689544ee4c10ef9a577"
   integrity sha1-qf0R4lz+HMs5/GaJVE7kwQ75pXc=
@@ -19903,19 +19966,10 @@ passport-http-bearer@^1.0.1:
   dependencies:
     passport-strategy "1.x.x"
 
-passport-strategy@1.0.0, passport-strategy@1.x.x:
+passport-strategy@1.x.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
   integrity sha1-tVOaqPwiWj0a0XlHbd8ja0QPUuQ=
-
-passport-totp@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/passport-totp/-/passport-totp-0.0.2.tgz#3173815af6b75186f969fd4256be7ffd4c1be59a"
-  integrity sha1-MXOBWva3UYb5af1CVr5//Uwb5Zo=
-  dependencies:
-    notp "2.0.x"
-    passport-strategy "1.0.0"
-    pkginfo "0.2.x"
 
 passport@^0.4.0:
   version "0.4.0"
@@ -20269,11 +20323,6 @@ pkg-up@2.0.0, pkg-up@^2.0.0:
   integrity sha1-yBmscoBZpGHKscOImivjxJoATX8=
   dependencies:
     find-up "^2.1.0"
-
-pkginfo@0.2.x:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/pkginfo/-/pkginfo-0.2.3.tgz#7239c42a5ef6c30b8f328439d9b9ff71042490f8"
-  integrity sha1-cjnEKl72wwuPMoQ52bn/cQQkkPg=
 
 please-upgrade-node@^3.2.0:
   version "3.2.0"
@@ -21140,7 +21189,12 @@ prettier-eslint@^9.0.0:
     typescript "^3.2.1"
     vue-eslint-parser "^2.0.2"
 
-prettier@1.18.2, prettier@^1.16.4, prettier@^1.18.2, prettier@^1.7.0:
+prettier@1.19.1:
+  version "1.19.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
+  integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
+
+prettier@^1.16.4, prettier@^1.18.2, prettier@^1.7.0:
   version "1.18.2"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.18.2.tgz#6823e7c5900017b4bd3acf46fe9ac4b4d7bda9ea"
   integrity sha512-OeHeMc0JhFE9idD4ZdtNibzY0+TPHSpSSb9h8FqtP+YnoZZ1sl8Vc9b1sasjfymH3SonAF4QcA2+mzHPhMvIiw==
@@ -21752,11 +21806,12 @@ qr.js@0.0.0:
   resolved "https://registry.yarnpkg.com/qr.js/-/qr.js-0.0.0.tgz#cace86386f59a0db8050fa90d9b6b0e88a1e364f"
   integrity sha1-ys6GOG9ZoNuAUPqQ2baw6IoeNk8=
 
-qrcode.react@^0.9.3:
-  version "0.9.3"
-  resolved "https://registry.yarnpkg.com/qrcode.react/-/qrcode.react-0.9.3.tgz#91de1287912bdc5ccfb3b091737b828d6ced60c5"
-  integrity sha512-gGd30Ez7cmrKxyN2M3nueaNLk/f9J7NDRgaD5fVgxGpPLsYGWMn9UQ+XnDpv95cfszTQTdaf4QGLNMf3xU0hmw==
+qrcode.react@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/qrcode.react/-/qrcode.react-1.0.0.tgz#7e8889db3b769e555e8eb463d4c6de221c36d5de"
+  integrity sha512-jBXleohRTwvGBe1ngV+62QvEZ/9IZqQivdwzo9pJM4LQMoCM2VnvNBnKdjvGnKyDZ/l0nCDgsPod19RzlPvm/Q==
   dependencies:
+    loose-envify "^1.4.0"
     prop-types "^15.6.0"
     qr.js "0.0.0"
 
@@ -24939,6 +24994,13 @@ supports-color@^5.3.0, supports-color@^5.5.0:
   dependencies:
     has-flag "^3.0.0"
 
+supports-color@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-7.1.0.tgz#68e32591df73e25ad1c4b49108a2ec507962bfd1"
+  integrity sha512-oRSIpR8pxT1Wr2FquTNnGet79b3BWljqOuoW/h4oBhxJ/HUbX5nX6JSruTkvXDCFMwDPvsaTTbvMLKZWSy0R5g==
+  dependencies:
+    has-flag "^4.0.0"
+
 svg-parser@^2.0.0:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/svg-parser/-/svg-parser-2.0.2.tgz#d134cc396fa2681dc64f518330784e98bd801ec8"
@@ -25209,7 +25271,16 @@ terser-webpack-plugin@2.2.1, terser-webpack-plugin@^2.0.0:
     terser "^4.3.9"
     webpack-sources "^1.4.3"
 
-terser@4.3.9, terser@^4.1.2, terser@^4.3.9:
+terser@4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-4.4.0.tgz#22c46b4817cf4c9565434bfe6ad47336af259ac3"
+  integrity sha512-oDG16n2WKm27JO8h4y/w3iqBGAOSCtq7k8dRmrn4Wf9NouL0b2WpMHGChFGZq4nFAQy1FsNJrVQHfurXOSTmOA==
+  dependencies:
+    commander "^2.20.0"
+    source-map "~0.6.1"
+    source-map-support "~0.5.12"
+
+terser@^4.1.2, terser@^4.3.9:
   version "4.3.9"
   resolved "https://registry.yarnpkg.com/terser/-/terser-4.3.9.tgz#e4be37f80553d02645668727777687dad26bbca8"
   integrity sha512-NFGMpHjlzmyOtPL+fDw3G7+6Ueh/sz4mkaUYa4lJCxOPTNzd0Uj0aZJOmsDYoSQyfuVoWDMSWTPU3huyOm2zdA==
@@ -25575,6 +25646,11 @@ ts-pnp@1.1.4, ts-pnp@^1.1.2:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/ts-pnp/-/ts-pnp-1.1.4.tgz#ae27126960ebaefb874c6d7fa4729729ab200d90"
   integrity sha512-1J/vefLC+BWSo+qe8OnJQfWTYRS6ingxjwqmHMqaMxXMj7kFtKLgAaYW3JeX3mktjgUL+etlU8/B4VUAUI9QGw==
+
+ts-pnp@1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/ts-pnp/-/ts-pnp-1.1.5.tgz#840e0739c89fce5f3abd9037bb091dbff16d9dec"
+  integrity sha512-ti7OGMOUOzo66wLF3liskw6YQIaSsBgc4GOAlWRnIEj8htCxJUxskanMUoJOD6MDCRAXo36goXJZch+nOS0VMA==
 
 tslib@1.10.0, tslib@^1.10.0, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3:
   version "1.10.0"

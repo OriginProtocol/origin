@@ -25,7 +25,7 @@ metadata:
           more_set_headers 'Access-Control-Allow-Origin: $http_origin';
           more_set_headers 'Access-Control-Allow-Credentials: true';
           more_set_headers 'Access-Control-Allow-Methods: GET, POST, OPTIONS';
-          more_set_headers 'Access-Control-Allow-Headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+          more_set_headers 'Access-Control-Allow-Headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization';
       }
 
       if ($request_method = 'OPTIONS') {
@@ -35,7 +35,7 @@ metadata:
           more_set_headers 'Access-Control-Allow-Credentials: true';
           more_set_headers 'Access-Control-Allow-Methods: GET, POST, OPTIONS';
 
-          more_set_headers 'Access-Control-Allow-Headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+          more_set_headers 'Access-Control-Allow-Headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization';
 
           # Tell client that this pre-flight info is valid for 20 days
           more_set_headers 'Access-Control-Max-Age: 1728000';
@@ -48,7 +48,7 @@ metadata:
           more_set_headers 'Access-Control-Allow-Origin: $http_origin';
           more_set_headers 'Access-Control-Allow-Credentials: true';
           more_set_headers 'Access-Control-Allow-Methods: GET, POST, OPTIONS';
-          more_set_headers 'Access-Control-Allow-Headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+          more_set_headers 'Access-Control-Allow-Headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization';
       }
 spec:
   tls:

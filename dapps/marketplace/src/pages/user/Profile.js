@@ -17,6 +17,7 @@ import withIdentity from 'hoc/withIdentity'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withAttestationProviders from 'hoc/withAttestationProviders'
 import withIsMobile from 'hoc/withIsMobile'
+
 import { withRouter } from 'react-router-dom'
 
 import UserProfileCard from 'components/UserProfileCard'
@@ -132,7 +133,8 @@ class UserProfile extends Component {
     const walletChanged =
       get(this.props, 'identity.id') !== get(prevProps, 'identity.id')
 
-    const identityLoaded = this.props.identityLoaded
+    const { identityLoaded } = this.props
+
     if (
       (walletChanged || identityLoaded) &&
       !identity &&
@@ -142,7 +144,8 @@ class UserProfile extends Component {
       ) &&
       !this.state.redirectToOnboarding
     ) {
-      // redirect to onboarding, if user doesn't have a deployed profile
+      // Redirect to onboarding, if user doesn't have a deployed profile
+      // or isn't logged in
       this.setState({
         redirectToOnboarding: true
       })

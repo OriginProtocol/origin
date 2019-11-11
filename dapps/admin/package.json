@@ -42,7 +42,7 @@
     "graphql-tag": "^2.10.1",
     "node-fetch": "^2.6.0",
     "prettier": "^1.18.2",
-    "qrcode.react": "^0.9.3",
+    "qrcode.react": "^1.0.0",
     "react": "^16.8.6",
     "react-apollo": "^3.0.0",
     "react-dom": "^16.8.6",

@@ -47,7 +47,6 @@
     "notp": "^2.0.3",
     "passport": "^0.4.0",
     "passport-http-bearer": "^1.0.1",
-    "passport-totp": "^0.0.2",
     "per-env": "^1.0.2",
     "pg": "^7.11.0",
     "qrcode": "^1.4.2",
