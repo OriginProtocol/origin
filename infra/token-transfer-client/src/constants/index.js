@@ -1,4 +1,5 @@
 import {
+  earnOgnEnabled,
   employeeUnlockDate,
   investorUnlockDate,
   lockupBonusRate
@@ -6,4 +7,10 @@ import {
 
 const apiUrl = process.env.API_URL || 'http://localhost:5000'
 
-export { apiUrl, employeeUnlockDate, investorUnlockDate, lockupBonusRate }
+export {
+  apiUrl,
+  earnOgnEnabled,
+  employeeUnlockDate,
+  investorUnlockDate,
+  lockupBonusRate
+}
