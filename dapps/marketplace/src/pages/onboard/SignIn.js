@@ -25,6 +25,9 @@ const SignInContent = ({ wallet, className }) => {
     }
   })
 
+  const [loading, setLoading] = useState(loading)
+  const [error, setError] = useState(null)
+
   return (
     <div className={`${className ? className + ' ' : ''}onboard-signin`}>
       <h3>
@@ -35,18 +38,35 @@ const SignInContent = ({ wallet, className }) => {
           Get secure access to your data by signing with your private key
         </fbt>
       </p>
+      {error && <div className="alert alert-danger my-3">{error}</div>}
       <button
         className="btn btn-outline-primary btn-bordered btn-block"
         onClick={async e => {
           e.preventDefault()
-          const resp = await login()
+          setLoading(true)
+          setError(null)
+          try {
+            const resp = await login()
 
-          if (resp.success) {
-            await client.reFetchObservableQueries()
+            if (resp.data.login.success) {
+              await client.reFetchObservableQueries()
+            } else {
+              setError(resp.data.login.reason)
+            }
+          } catch (err) {
+            console.error(err)
+            setError('Failed to generate auth token')
           }
+
+          setLoading(false)
         }}
+        disabled={loading}
       >
-        <fbt desc="Auth.SignIn">Sign In</fbt>
+        {loading ? (
+          <fbt desc="Loading...">Loading...</fbt>
+        ) : (
+          <fbt desc="Auth.SignIn">Sign In</fbt>
+        )}
       </button>
     </div>
   )
