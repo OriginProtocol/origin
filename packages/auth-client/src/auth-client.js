@@ -6,11 +6,11 @@ import createDebug from 'debug'
 
 import stringify from 'json-stable-stringify'
 
-import {
-  loadTokenCookie,
-  saveTokenCookie,
-  removeTokenCookie
-} from './cookie-helpers'
+// import {
+//   loadTokenCookie,
+//   saveTokenCookie,
+//   removeTokenCookie
+// } from './cookie-helpers'
 
 const debug = createDebug('origin:auth-client:')
 
@@ -111,11 +111,13 @@ class AuthClient {
       timestamp: Date.now()
     }
 
+    let signature
+
     try {
       const sign = this.personalSign
         ? this.web3.eth.personal.sign
         : this.web3.eth.sign
-      const signature = await sign(stringify(payload), wallet)
+      signature = await sign(stringify(payload), wallet)
 
       const tokenData = await this.getTokenWithSignature(
         wallet,
@@ -124,7 +126,8 @@ class AuthClient {
       )
 
       // Persist to cookies
-      saveTokenCookie(wallet, tokenData)
+      // saveTokenCookie(wallet, tokenData)
+      localStorage.setItem(`auth:${wallet}`, JSON.stringify(tokenData))
 
       // TODO: Fire onLogin Event
 
@@ -134,9 +137,13 @@ class AuthClient {
     } catch (err) {
       console.error(err)
       debug('Failed to login', err)
+      
+      if (!signature) {
+        throw new Error('Signature is needed to login')
+      } else {
+        throw new Error('Failed to generate auth token')
+      }
     }
-
-    return false
   }
 
   /**
@@ -152,8 +159,9 @@ class AuthClient {
       return true
     }
 
-    // In case of a log out, just forget that such a cookie exists
-    removeTokenCookie(wallet)
+    // In case of a log out, just forget that such a token exists
+    // removeTokenCookie(wallet)
+    localStorage.removeItem(`auth:${wallet}`)
 
     debug('Logout successful')
 
@@ -181,7 +189,12 @@ class AuthClient {
     }
 
     // Try to load any tokens
-    const tokenData = loadTokenCookie(wallet)
+    // const tokenData = loadTokenCookie(wallet)
+    let tokenData = localStorage.getItem(`auth:${wallet}`)
+
+    if (tokenData) {
+      tokenData = JSON.parse(tokenData)
+    }
 
     debug(`Loaded token data for ${wallet}: ${!!tokenData}`)
 
