@@ -63,6 +63,8 @@ const Dashboard = props => {
   const unlockDate = getUnlockDate(props.user)
   const isLocked = moment.utc() < unlockDate
 
+  console.log(isLocked)
+
   return (
     <>
       <div className="row">
