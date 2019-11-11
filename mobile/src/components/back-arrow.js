@@ -6,7 +6,7 @@ import { Text, TouchableOpacity } from 'react-native'
 const BackArrow = ({ onClick, style }) => {
   return (
     <TouchableOpacity onPress={() => onClick()} style={style}>
-      <Text style={{ fontSize: 40, color: '#e7e6f1' }}>&lsaquo;</Text>
+      <Text style={{ fontSize: 40, color: '#94a7b5' }}>&lsaquo;</Text>
     </TouchableOpacity>
   )
 }
