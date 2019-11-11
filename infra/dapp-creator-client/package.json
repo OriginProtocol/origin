@@ -57,7 +57,7 @@
     "rework": "^1.0.1",
     "style-loader": "1.0.0",
     "superagent": "^5.1.0",
-    "terser": "4.3.9",
+    "terser": "4.4.0",
     "terser-webpack-plugin": "^2.0.0",
     "web3": "1.0.0-beta.34",
     "webpack": "^4.35.0",

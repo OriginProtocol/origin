@@ -10,6 +10,8 @@ import { identity } from './IdentityEvents'
 
 import Attestations from './attestations/Attestations'
 
+import Auth from './Auth'
+
 export default {
   config: () => contracts.net,
   configObj: () => contracts.config,
@@ -137,5 +139,6 @@ export default {
     }
     return await Promise.all(ids.map(id => currencies.get(id)))
   },
-  ...Attestations
+  ...Attestations,
+  ...Auth
 }

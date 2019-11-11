@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { fbt } from 'fbt-runtime'
 
+import withWallet from 'hoc/withWallet'
+import withAuthStatus from 'hoc/withAuthStatus'
+
 import Dropdown from 'components/Dropdown'
 import Redirect from 'components/Redirect'
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
@@ -13,7 +16,8 @@ const MobileNav = ({
   onOpen,
   onShowFooter,
   onConsoleClick,
-  screenConsoleEnabled
+  screenConsoleEnabled,
+  isLoggedIn
 }) => {
   // Allow the menu to close before redirecting so it doesn't show when
   // the user clicks or swipes back.
@@ -82,46 +86,50 @@ const MobileNav = ({
               className="dropdown-item add"
               children={fbt('Add a Listing', 'navigation.AddaListing')}
             />
-            <EarnTokens
-              className="dropdown-item earn"
-              onClose={() => onClose()}
-              onNavigation={() => onClose()}
-              goToWelcomeWhenNotEnrolled="true"
-            >
-              <fbt desc="navbar.earnTokens">Earn Origin Tokens</fbt>
-            </EarnTokens>
-            <div className="dropdown-divider" />
-            <a
-              href="#/my-purchases"
-              onClick={e => click(e, '/my-purchases')}
-              className="dropdown-item purchases"
-              children={fbt('Purchases', 'navigation.purchases')}
-            />
-            <a
-              href="#/my-listings"
-              onClick={e => click(e, '/my-listings')}
-              className="dropdown-item listings"
-              children={fbt('Listings', 'navigation.listings')}
-            />
-            <a
-              href="#/my-sales"
-              onClick={e => click(e, '/my-sales')}
-              className="dropdown-item sales"
-              children={fbt('Sales', 'navigation.sales')}
-            />
-            <div className="dropdown-divider" />
-            <a
-              href="#/messages"
-              onClick={e => click(e, '/messages')}
-              className="dropdown-item messages"
-              children={fbt('Messages', 'navigation.messages')}
-            />
-            <a
-              href="#/notifications"
-              onClick={e => click(e, '/notifications')}
-              className="dropdown-item notifications"
-              children={fbt('Notifications', 'navigation.notifications')}
-            />
+            {isLoggedIn && (
+              <>
+                <EarnTokens
+                  className="dropdown-item earn"
+                  onClose={() => onClose()}
+                  onNavigation={() => onClose()}
+                  goToWelcomeWhenNotEnrolled="true"
+                >
+                  <fbt desc="navbar.earnTokens">Earn Origin Tokens</fbt>
+                </EarnTokens>
+                <div className="dropdown-divider" />
+                <a
+                  href="#/my-purchases"
+                  onClick={e => click(e, '/my-purchases')}
+                  className="dropdown-item purchases"
+                  children={fbt('Purchases', 'navigation.purchases')}
+                />
+                <a
+                  href="#/my-listings"
+                  onClick={e => click(e, '/my-listings')}
+                  className="dropdown-item listings"
+                  children={fbt('Listings', 'navigation.listings')}
+                />
+                <a
+                  href="#/my-sales"
+                  onClick={e => click(e, '/my-sales')}
+                  className="dropdown-item sales"
+                  children={fbt('Sales', 'navigation.sales')}
+                />
+                <div className="dropdown-divider" />
+                <a
+                  href="#/messages"
+                  onClick={e => click(e, '/messages')}
+                  className="dropdown-item messages"
+                  children={fbt('Messages', 'navigation.messages')}
+                />
+                <a
+                  href="#/notifications"
+                  onClick={e => click(e, '/notifications')}
+                  className="dropdown-item notifications"
+                  children={fbt('Notifications', 'navigation.notifications')}
+                />
+              </>
+            )}
             <a
               href="#/settings"
               onClick={e => click(e, '/settings')}
@@ -172,7 +180,7 @@ const MobileNav = ({
   )
 }
 
-export default MobileNav
+export default withWallet(withAuthStatus(MobileNav))
 
 require('react-styl')(`
   .navbar .nav-item.mobile
