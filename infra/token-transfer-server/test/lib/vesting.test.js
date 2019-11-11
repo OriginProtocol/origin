@@ -105,16 +105,48 @@ describe('Investor vesting', () => {
     const grantObj = new Grant({
       userId: this.user.id,
       start: '2014-01-01 00:00:00',
-      end: '2016-01-01 00:00:00',
+      end: '2016-02-01 00:00:00',
       amount: 10000
     })
     await grantObj.save()
     grant = momentizeGrant(grantObj.get({ plain: true }))
   })
 
-  it('should vest 6% at start of grant', async () => {})
+  it('should vest 6% at start of grant', async () => {
+    const clock = sinon.useFakeTimers(moment.utc(grant.start).valueOf())
+    const amount = vestedAmount(this.user, grant)
+    const expectedAmount = BigNumber(grant.amount).times(6).div(100)
+    expect(amount).to.be.bignumber.equal(expectedAmount)
+    clock.restore()
+  })
 
-  it('should vest 11.75% each quarter after 4 months', async () => {})
+  it('should not vest anything before start of grant', async () => {
+    const clock = sinon.useFakeTimers(moment.utc(grant.start).subtract(1, 'second').valueOf())
+    const amount = vestedAmount(this.user, grant)
+    expect(amount).to.be.bignumber.equal(BigNumber(0))
+    clock.restore()
+  })
 
-  it('should have vested the correct total at grant end', async () => {})
+  it('should vest 11.75% each quarter after 4 months', async () => {
+    const initialVestAmount = BigNumber(grant.amount).times(6).div(100)
+    const quarterlyVestAmount = BigNumber(grant.amount).times(11.75).div(100)
+    const clock = sinon.useFakeTimers(moment.utc(grant.start).add(4, 'months').valueOf())
+    const amount = vestedAmount(this.user, grant)
+    expect(amount).to.be.bignumber.equal(initialVestAmount.plus(quarterlyVestAmount))
+    clock.restore()
+  })
+
+  it('should have vested the correct total at grant end', async () => {
+    const clock = sinon.useFakeTimers(moment.utc(grant.end).valueOf())
+    const amount = vestedAmount(this.user, grant)
+    expect(amount).to.be.bignumber.equal(BigNumber(grant.amount))
+    clock.restore()
+  })
+
+  it('should have vested the correct total years after grant end', async () => {
+    const clock = sinon.useFakeTimers(moment.utc(grant.end).add(10, 'years').valueOf())
+    const amount = vestedAmount(this.user, grant)
+    expect(amount).to.be.bignumber.equal(BigNumber(grant.amount))
+    clock.restore()
+  })
 })

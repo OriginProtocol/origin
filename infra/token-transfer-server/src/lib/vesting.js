@@ -85,7 +85,7 @@ function investorVestingSchedule(grantObj) {
   const initialVestPercentage = 6
   // Time after which regular quarterly vesting begins
   const quarterlyVestDelayMonths = 4
-  const firstQuarterlyVestDate = grant.start.add(
+  const firstQuarterlyVestDate = grant.start.clone().add(
     quarterlyVestDelayMonths,
     'months'
   )
@@ -99,21 +99,27 @@ function investorVestingSchedule(grantObj) {
     amount: BigNumber(grant.amount)
       .times(initialVestPercentage)
       .div(100),
-    date: grant.start,
-    vested: grant.start < now
+    date: grant.start.clone(),
+    vested: grant.start <= now
   })
 
   // First quarterly vest
   const vestingDate = firstQuarterlyVestDate
-  // Iterate over quarterly vests and push
-  for (let i = 0; i <= 8; i++) {
+  vestingSchedule.push({
+    amount: quarterlyVestingAmount,
+    date: vestingDate.clone(),
+    vested: vestingDate <= now
+  })
+
+  // Iterate over remaining quarterly vests and push
+  for (let i = 1; i <= 7; i++) {
+    // Add quarter of a year to the last vesting date
+    vestingDate.add(3, 'months')
     vestingSchedule.push({
       amount: quarterlyVestingAmount,
-      date: vestingDate,
-      vested: vestingDate < now
+      date: vestingDate.clone(),
+      vested: vestingDate <= now
     })
-    // Add quarter of a year to the last vesting date
-    vestingDate.add(i * 3, 'months')
   }
 
   return vestingSchedule
