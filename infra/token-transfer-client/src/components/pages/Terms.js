@@ -65,26 +65,26 @@ class Terms extends Component {
           <p>Please agree to our terms below and click Continue to proceed</p>
           <div className="form-group">
             <div className="terms-wrapper">
-              The recipient acknowledges that he, she or it has been advised
-              that the offers and sales of OGN have not been registered under
-              any country’s securities laws and, therefore, cannot be resold
-              except in compliance with the applicable country’s laws. Based on
-              recent guidance from the SEC, it is possible that transfers of OGN
-              would be deemed to be securities offerings in the United States at
-              launch. While we plan to work towards meeting the standards set by
+              The recipient acknowledges that they have been advised that the
+              offers and sales of OGN have not been registered under any
+              country’s securities laws and, therefore, cannot be resold except
+              in compliance with the applicable country’s laws. Based on recent
+              guidance from the SEC, it is possible that transfers of OGN would
+              be deemed to be securities offerings in the United States at
+              launch. We plan to work towards meeting the standards set by
               various jurisdictions around the world, including the United
               States, for transfers of OGN to not be considered offers and sales
-              of securities in those jurisdictions, we cannot assure you that
-              those standards have been met as of now. In recognition of the
-              foregoing, the recipient covenants to the Company that it will
+              of securities in those jurisdictions; however we cannot assure you
+              that those standards have been met as of now. In recognition of
+              the foregoing, the recipient covenants to the Company that it will
               comply with all applicable laws, including United States
               securities laws, with respect to any transfer of OGN as if OGN was
               a security under the laws of the United States.
               <br />
               <br />
-              The recipient acknowledges that he, she or it is solely
-              responsible for maintaining the security of his, her or its login
-              password as well as maintaining a secure backup.
+              The recipient acknowledges that they are solely responsible for
+              maintaining the security of his, her or its login password as well
+              as maintaining a secure backup.
             </div>
           </div>
           <div className="form-check">
@@ -151,7 +151,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Terms)
+export default connect(mapStateToProps, mapDispatchToProps)(Terms)

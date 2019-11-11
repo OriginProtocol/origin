@@ -37,11 +37,19 @@ const VestingCard = props => {
         user={props.user}
         vested={props.vested}
         unvested={props.unvested}
+        isLocked={props.isLocked}
       />
       {props.isLocked ? (
         <>
           <h2>Revised Vesting Schedule</h2>
-          <p>The purple line shows how your tokens will vest over 2 years.</p>
+          {props.user.investorType === 'CoinList' ? (
+            <p>
+              The purple line shows the proposed amendment to the token release
+              schedule.
+            </p>
+          ) : (
+            <p>The purple line shows how your tokens will vest over 2 years.</p>
+          )}
           <img src={VestingSchedule} className="img-fluid mx-auto mt-2" />
         </>
       ) : (

@@ -21,7 +21,7 @@ import {
   getIsLoading as getTransferIsLoading,
   getWithdrawnAmount
 } from '@/reducers/transfer'
-import { unlockDate } from '@/constants'
+import { getUnlockDate } from '@/utils'
 import LockupCard from '@/components/LockupCard'
 import BonusModal from '@/components/BonusModal'
 
@@ -44,6 +44,7 @@ const Lockup = props => {
     )
   }
 
+  const unlockDate = getUnlockDate(props.user)
   const isLocked = moment.utc() < unlockDate
   const { vestedTotal } = props.grantTotals
   const balanceAvailable = vestedTotal
@@ -144,9 +145,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Lockup)
-)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Lockup))

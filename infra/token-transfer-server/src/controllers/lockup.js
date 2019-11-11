@@ -4,13 +4,19 @@ const AsyncLock = require('async-lock')
 const lock = new AsyncLock()
 const { check, validationResult } = require('express-validator')
 const jwt = require('jsonwebtoken')
+const moment = require('moment')
 
-const { asyncMiddleware } = require('../utils')
-const { encryptionSecret } = require('../config')
+const {
+  asyncMiddleware,
+  getEarnOgnEnabled,
+  getEmployeeUnlockDate,
+  getInvestorUnlockDate
+} = require('../utils')
 const { ensureLoggedIn } = require('../lib/login')
 const { isValidTotp } = require('../validators')
 const { Lockup } = require('../models')
 const { getFingerprintData } = require('../utils')
+const { encryptionSecret } = require('../config')
 const { addLockup, confirmLockup } = require('../lib/lockup')
 const logger = require('../logger')
 
@@ -50,6 +56,20 @@ router.post(
       return res
         .status(422)
         .json({ errors: errors.array({ onlyFirstError: true }) })
+    }
+
+    if (!getEarnOgnEnabled()) {
+      return res.status(404).end()
+    }
+
+    const unlockDate = req.user.employee
+      ? getEmployeeUnlockDate()
+      : getInvestorUnlockDate()
+    if (moment.utc() < unlockDate) {
+      res
+        .status(422)
+        .send(`Tokens are still locked. Unlock date is ${unlockDate}`)
+      return
     }
 
     const { amount } = req.body

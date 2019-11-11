@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { NavLink } from 'react-router-dom'
 import Swiper from 'react-id-swiper'
-import 'react-id-swiper/lib/styles/css/swiper.css'
+import 'swiper/css/swiper.css'
 
 import { fetchNews } from '@/actions/news'
 import {
@@ -87,7 +87,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(NewsHeadlinesCard)
+export default connect(mapStateToProps, mapDispatchToProps)(NewsHeadlinesCard)

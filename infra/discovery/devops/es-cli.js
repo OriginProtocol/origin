@@ -197,9 +197,11 @@ async function showIndexInfo() {
     valuesToBeMapped => valuesToBeMapped.map(aliasObject => aliasObject.alias)
   )
 
-  const docCounts = (await Promise.all(
-    indexes.map(async index => executeGetRequest(`${index}/_stats/docs`))
-  )).map(docCountResponse => JSON.parse(docCountResponse)._all.total.docs.count)
+  const docCounts = (
+    await Promise.all(
+      indexes.map(async index => executeGetRequest(`${index}/_stats/docs`))
+    )
+  ).map(docCountResponse => JSON.parse(docCountResponse)._all.total.docs.count)
 
   const paddingSize = 25
   console.log()

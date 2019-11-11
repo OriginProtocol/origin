@@ -2,9 +2,7 @@
 
 const passport = require('passport')
 const BearerStrategy = require('passport-http-bearer').Strategy
-const TotpStrategy = require('passport-totp').Strategy
 const logger = require('./logger')
-const { decrypt } = require('./lib/crypto')
 const jwt = require('jsonwebtoken')
 
 const { User } = require('./models')
@@ -57,16 +55,6 @@ module.exports = function() {
         logger.error(e)
         return done(e)
       }
-    })
-  )
-
-  passport.use(
-    new TotpStrategy((user, done) => {
-      logger.debug('Passport TOTP strategy called for', user.email)
-      // Supply key and period to done callback for verification.
-      const otpKey = decrypt(user.otpKey)
-      const period = 30
-      return done(null, otpKey, period)
     })
   )
 }
