@@ -31,6 +31,8 @@ COPY ./packages/mobile-bridge/ ./packages/mobile-bridge
 COPY ./packages/messaging-client/ ./packages/messaging-client
 COPY ./packages/services/ ./packages/services
 COPY ./packages/validator ./packages/validator
+COPY ./packages/auth-utils ./packages/auth-utils
+COPY ./packages/auth-client ./packages/auth-client
 
 COPY ./dapps/marketplace ./dapps/marketplace
 

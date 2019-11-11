@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Query } from 'react-apollo'
+import { useMutation, useApolloClient, useQuery } from 'react-apollo'
 import { fbt } from 'fbt-runtime'
 import get from 'lodash/get'
 import formatHash from 'utils/formatHash'
@@ -21,6 +21,8 @@ import UserActivationLink from 'components/UserActivationLink'
 
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
+import LogoutMutation from 'mutations/Logout'
+
 const store = Store('sessionStorage')
 
 const ProfileNav = ({
@@ -35,93 +37,89 @@ const ProfileNav = ({
 
   const [rewardsModal, setRewardsModal] = useState(false)
 
-  return (
-    <Query query={ProfileQuery} pollInterval={window.transactionPoll || 1000}>
-      {({ data, error }) => {
-        if (error) {
-          console.error(error)
-          return null
-        }
-        const accountID = get(data, 'web3.primaryAccount.id')
-        if (!accountID) {
-          return null
-        }
+  const { data, error } = useQuery(ProfileQuery, {
+    pollInterval: window.transactionPoll || 1000
+  })
 
-        return (
-          <>
-            <Dropdown
-              el="li"
-              className="nav-item profile"
-              open={open}
-              onClose={() => onClose()}
-              animateOnExit={isMobile}
-              content={
-                <ProfileDropdown
-                  identity={identity}
-                  identityLoaded={identityLoaded}
-                  onClose={() => onClose()}
-                  onRewardsClick={() => {
-                    onClose()
-                  }}
-                  data={data}
-                />
-              }
-            >
-              <a
-                className="nav-link"
-                href="#"
-                onClick={e => {
-                  e.preventDefault()
-                  open ? onClose() : onOpen()
-                }}
-              >
-                <Avatar profile={identity} />
-              </a>
-            </Dropdown>
-            {rewardsModal && (
-              <EarnTokens
-                className="d-none"
-                startopen="true"
-                onNavigation={() => setRewardsModal(false)}
-                onClose={() => setRewardsModal(false)}
-              />
-            )}
-          </>
-        )
-      }}
-    </Query>
+  if (error) {
+    console.error(error)
+    return null
+  }
+
+  const accountID = get(data, 'web3.primaryAccount.id')
+  if (!accountID) {
+    return null
+  }
+
+  return (
+    <>
+      <Dropdown
+        el="li"
+        className="nav-item profile"
+        open={open}
+        onClose={() => onClose()}
+        animateOnExit={isMobile}
+        content={
+          <ProfileDropdown
+            identity={identity}
+            identityLoaded={identityLoaded}
+            onClose={() => onClose()}
+            onRewardsClick={() => {
+              onClose()
+            }}
+            data={data}
+          />
+        }
+      >
+        <a
+          className="nav-link"
+          href="#"
+          onClick={e => {
+            e.preventDefault()
+            open ? onClose() : onOpen()
+          }}
+        >
+          <Avatar profile={identity} />
+        </a>
+      </Dropdown>
+      {rewardsModal && (
+        <EarnTokens
+          className="d-none"
+          startopen="true"
+          onNavigation={() => setRewardsModal(false)}
+          onClose={() => setRewardsModal(false)}
+        />
+      )}
+    </>
   )
 }
 
-const CreateIdentity = ({ onClose }) => (
+const CreateIdentity = ({ id, onClose, isMobileApp }) => (
   <>
     <div className="create-identity text-center">
       <Avatar />
-      <h3>
-        <fbt desc="nav.profile.profileNotCreated">
-          You haven&apos;t created a profile
-        </fbt>
-      </h3>
-
-      <div className="strength">
-        <div className="progress" />
-        <fbt desc="nav.profile.ProfileStrength">
-          {'Profile Strength - '}
-          <fbt:param name="percent">{'0%'}</fbt:param>
-        </fbt>
-      </div>
       <p>
-        <fbt desc="nav.profile.createYourProfile">
-          Creating a profile allows other users to know that you are real and
-          increases the chances of successful transactions on Origin.
-        </fbt>
+        <fbt desc="nav.profile.noProfile">No profile created</fbt>
       </p>
 
       <UserActivationLink
         className="btn btn-primary"
         onClose={onClose}
         onClick={onClose}
-      />
+      >
+        <span>
+          <fbt desc="nav.profile.createAProfile">Create a Profile</fbt>
+        </span>
+      </UserActivationLink>
+
+      {!isMobileApp && (
+        <Balances
+          account={id}
+          onClose={onClose}
+          title={<fbt desc="nav.profile.walletBalance">Wallet balances</fbt>}
+          className="pt-3 pb-3"
+        />
+      )}
     </div>
   </>
 )
@@ -146,7 +144,9 @@ const Identity = ({
   }
 
   if (!identity) {
-    return <CreateIdentity onClose={onClose} />
+    return (
+      <CreateIdentity id={id} onClose={onClose} isMobileApp={isMobileApp} />
+    )
   }
   const strengthPct = `${identity.strength || '0'}%`
   const EarnTokens = withEnrolmentModal('a')
@@ -205,6 +205,11 @@ const ProfileDropdownRaw = ({
   const address = `ETH Address: ${formatHash(wallet)}`
   const devMode = store.get('developerMode')
 
+  const client = useApolloClient()
+  const [logout] = useMutation(LogoutMutation, {
+    variables: { wallet }
+  })
+
   return (
     <>
       <div className="dropdown-menu-bg" onClick={onClose} />
@@ -235,6 +240,20 @@ const ProfileDropdownRaw = ({
                 {walletProxy === wallet ? 'No Proxy' : `Proxy: ${walletProxy}`}
               </div>
             )}
+          </div>
+          <div className="signout-link">
+            <button
+              className="btn btn-link"
+              onClick={async () => {
+                const res = await logout()
+
+                if (res.success) {
+                  await client.reFetchObservableQueries()
+                }
+              }}
+            >
+              <fbt desc="Auth.SignOut">Sign Out</fbt>
+            </button>
           </div>
         </div>
       </div>
@@ -268,7 +287,7 @@ require('react-styl')(`
       .avatar
         min-width: 28px
   .dropdown-menu.profile
-    width: 250px
+    width: 300px
     font-size: 14px
     display: flex
     &:before
@@ -299,13 +318,18 @@ require('react-styl')(`
           line-height: normal
         .btn
           border-radius: 2rem
-          padding: 0.5rem 3rem
+          padding: 0.5rem 2rem
           margin-bottom: 2rem
+          font-size: 1.125rem
         p
-          font-size: 14px
+          font-size: 1.125rem
+          margin-top: 1.75rem
           margin-bottom: 1.75rem
-          color: var(--bluey-grey)
+          color: #0d1d29
           line-height: normal
+        .balances
+          border-top: 1px solid #dde6ea
+          width: 100%
         .strength
           margin: 0.25rem 0 1.5rem 0
 
@@ -370,6 +394,11 @@ require('react-styl')(`
         margin: 0.5rem 0 1rem 0
         text-align: center
 
+      .signout-link
+        text-align: center
+        .btn
+          font-size: 0.875rem
+
   @media (max-width: 767.98px)
     .dropdown.show .nav-link
       border-left-color: transparent
@@ -377,7 +406,7 @@ require('react-styl')(`
       &::after
         content: unset
 
-    .dropdown-menu.profile
+    .dropdown-menu.profile,.dropdown-menu.signin
       max-width: 300px
       .close-icon
         display: block

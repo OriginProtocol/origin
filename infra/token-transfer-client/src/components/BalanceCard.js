@@ -4,6 +4,7 @@ import { Doughnut } from 'react-chartjs-2'
 import Dropdown from 'react-bootstrap/Dropdown'
 import moment from 'moment'
 
+import { earnOgnEnabled } from '@/constants'
 import BonusModal from '@/components/BonusModal'
 import BorderedCard from '@/components/BorderedCard'
 import DropdownDotsToggle from '@/components/DropdownDotsToggle'
@@ -90,21 +91,20 @@ const BalanceCard = props => {
           </div>
         </div>
         <div className="row">
-          {props.balance > 0 ||
-            (props.locked > 0 && (
-              <div
-                className="col-12 col-lg-4 col-xl-1 mb-3 mb-lg-0"
-                style={{ minWidth: '200px' }}
-              >
-                <div style={{ position: 'relative' }}>
-                  <Doughnut
-                    data={doughnutData}
-                    options={{ cutoutPercentage: 60 }}
-                    legend={{ display: false }}
-                  />
-                </div>
+          {earnOgnEnabled && (props.balance > 0 || props.locked > 0) && (
+            <div
+              className="col-12 col-lg-4 col-xl-1 mb-3 mb-lg-0"
+              style={{ minWidth: '200px' }}
+            >
+              <div style={{ position: 'relative' }}>
+                <Doughnut
+                  data={doughnutData}
+                  options={{ cutoutPercentage: 60 }}
+                  legend={{ display: false }}
+                />
               </div>
-            ))}
+            </div>
+          )}
           <div className="col" style={{ alignSelf: 'center' }}>
             <div className="row mb-2" style={{ fontSize: '24px' }}>
               <div className="col">
@@ -123,9 +123,11 @@ const BalanceCard = props => {
                   ></Dropdown.Toggle>
 
                   <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => setDisplayBonusModal(true)}>
-                      Earn Bonus Tokens
-                    </Dropdown.Item>
+                    {earnOgnEnabled && (
+                      <Dropdown.Item onClick={() => setDisplayBonusModal(true)}>
+                        Earn Bonus Tokens
+                      </Dropdown.Item>
+                    )}
                     <Dropdown.Item
                       onClick={() => setDisplayWithdrawModal(true)}
                     >
@@ -138,32 +140,34 @@ const BalanceCard = props => {
                 </Dropdown>
               </div>
             </div>
-            <div className="row" style={{ fontSize: '24px' }}>
-              <div className="col">
-                <div className="status-circle status-circle-info mr-3"></div>
-                Locked Tokens
-              </div>
-              <div className="col-5 text-right">
-                <strong>
-                  {props.locked} <small className="ogn">OGN</small>
-                </strong>
-                <Dropdown drop={'left'} style={{ display: 'inline' }}>
-                  <Dropdown.Toggle
-                    as={DropdownDotsToggle}
-                    id="bonus-dropdown"
-                  ></Dropdown.Toggle>
+            {earnOgnEnabled && (
+              <div className="row" style={{ fontSize: '24px' }}>
+                <div className="col">
+                  <div className="status-circle status-circle-info mr-3"></div>
+                  Locked Tokens
+                </div>
+                <div className="col-5 text-right">
+                  <strong>
+                    {props.locked} <small className="ogn">OGN</small>
+                  </strong>
+                  <Dropdown drop={'left'} style={{ display: 'inline' }}>
+                    <Dropdown.Toggle
+                      as={DropdownDotsToggle}
+                      id="bonus-dropdown"
+                    ></Dropdown.Toggle>
 
-                  <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => setDisplayBonusModal(true)}>
-                      Earn Bonus Tokens
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={() => setRedirectTo('/lockup')}>
-                      View Details
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
+                    <Dropdown.Menu>
+                      <Dropdown.Item onClick={() => setDisplayBonusModal(true)}>
+                        Earn Bonus Tokens
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => setRedirectTo('/lockup')}>
+                        View Details
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </BorderedCard>

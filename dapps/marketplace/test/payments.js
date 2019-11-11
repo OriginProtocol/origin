@@ -18,6 +18,9 @@ function tokenPaymentTests({ deployIdentity, autoSwap, token }) {
   describe(`Listing payments - ${token}`, function() {
     let seller, buyer, title, page, listing
 
+    const isDAI = token === 'DAI'
+    const shouldExchangeTokens = !autoSwap && isDAI
+
     before(async function() {
       page = await getPage()
     })
@@ -28,6 +31,7 @@ function tokenPaymentTests({ deployIdentity, autoSwap, token }) {
         page,
         sellerOpts: { deployIdentity },
         buyerOpts: {
+          dai: !shouldExchangeTokens ? '1' : undefined,
           ogn: token === 'OGN' ? '1' : undefined,
           okb: token === 'OKB' ? '1' : undefined
         }
@@ -48,7 +52,8 @@ function tokenPaymentTests({ deployIdentity, autoSwap, token }) {
       })
     })
 
-    it(`should navigate to listing`, async function() {
+    it('should navigate to listing', async function() {
+      await page.reload()
       await page.evaluate(listingId => {
         window.location = `/#/listing/999-001-${listingId}`
       }, listing)
@@ -59,7 +64,7 @@ function tokenPaymentTests({ deployIdentity, autoSwap, token }) {
       await purchaseListing({ page, buyer, title, withToken: token })
     })
 
-    if (!autoSwap && token === 'DAI') {
+    if (shouldExchangeTokens) {
       it('should have swapped ETH for DAI', async () => {
         await waitForText(page, 'Swapped 0.00001 ETH for 1DAI')
         await pic(page, 'listing-detail')
@@ -68,13 +73,11 @@ function tokenPaymentTests({ deployIdentity, autoSwap, token }) {
       })
     }
 
-    if (token !== 'DAI' || (!autoSwap && token === 'DAI')) {
-      it(`should prompt the user to approve their ${token}`, async function() {
-        await waitForText(page, `Origin may now move ${token} on your behalf.`)
-        await pic(page, 'listing-detail')
-        await clickByText(page, 'Continue', 'button')
-      })
-    }
+    it(`should prompt the user to approve their ${token}`, async function() {
+      await waitForText(page, `Origin may now move ${token} on your behalf.`)
+      await pic(page, 'listing-detail')
+      await clickByText(page, 'Continue', 'button')
+    })
 
     it('should prompt to continue with purchase', async function() {
       await waitForText(page, 'View Purchase Details', 'button')

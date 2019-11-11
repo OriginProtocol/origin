@@ -25,6 +25,7 @@ describe('Login HTTP API', () => {
     // Generate an OTP key
     this.otpKey = crypto.randomBytes(10).toString('hex')
     this.encodedKey = base32.encode(this.otpKey).toString()
+
     const encryptedKey = encrypt(this.otpKey)
 
     this.user = await User.create({
@@ -71,7 +72,7 @@ describe('Login HTTP API', () => {
       .expect(200)
 
     expect(response.body.email).to.equal(this.user.email)
-    expect(response.body.otpReady).to.equal(true)
+    expect(response.body.otpVerified).to.equal(true)
   })
 
   it('should verify and return data correctly for second user', async () => {
@@ -89,7 +90,7 @@ describe('Login HTTP API', () => {
       .expect(200)
 
     expect(response.body.email).to.equal(this.user2.email)
-    expect(response.body.otpReady).to.equal(false)
+    expect(response.body.otpVerified).to.equal(null)
   })
 
   it('should verify and return data correctly for third user', async () => {
@@ -106,8 +107,9 @@ describe('Login HTTP API', () => {
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
 
+    console.log(response.body)
     expect(response.body.email).to.equal(this.user3.email)
-    expect(response.body.otpReady).to.equal(false)
+    expect(response.body.otpVerified).to.equal(true)
   })
 
   it('should reject an invalid token', async () => {
