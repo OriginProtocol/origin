@@ -14,7 +14,8 @@ export default Disclaimer
 const styles = StyleSheet.create({
   container: {
     fontSize: 14,
-    paddingVertical: 10
+    paddingVertical: 10,
+    width: '80%'
   },
   text: {
     textAlign: 'center',
