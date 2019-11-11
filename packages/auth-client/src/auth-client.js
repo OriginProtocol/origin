@@ -137,7 +137,7 @@ class AuthClient {
     } catch (err) {
       console.error(err)
       debug('Failed to login', err)
-      
+
       if (!signature) {
         throw new Error('Signature is needed to login')
       } else {
