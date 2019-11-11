@@ -8,6 +8,7 @@ const moment = require('moment')
 
 const {
   asyncMiddleware,
+  getEarnOgnEnabled,
   getEmployeeUnlockDate,
   getInvestorUnlockDate
 } = require('../utils')
@@ -55,6 +56,10 @@ router.post(
       return res
         .status(422)
         .json({ errors: errors.array({ onlyFirstError: true }) })
+    }
+
+    if (!getEarnOgnEnabled()) {
+      return res.status(404).end()
     }
 
     const unlockDate = req.user.employee

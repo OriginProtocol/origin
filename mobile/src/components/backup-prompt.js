@@ -79,10 +79,7 @@ const mapDispatchToProps = dispatch => ({
   setBackupWarningStatus: address => dispatch(setBackupWarningStatus(address))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(BackupPrompt)
+export default connect(mapStateToProps, mapDispatchToProps)(BackupPrompt)
 
 const styles = StyleSheet.create({
   modalSafeAreaView: {

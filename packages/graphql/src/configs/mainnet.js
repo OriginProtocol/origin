@@ -90,7 +90,7 @@ export default {
   messagingAccount: '0xBfDd843382B36FFbAcd00b190de6Cb85ff840118',
 
   // Wire-on/off configs.
-  centralizedIdentityEnabled: false,
+  centralizedIdentityEnabled: true,
   performanceMode: true,
   proxyAccountsEnabled: true,
   relayerEnabled: true

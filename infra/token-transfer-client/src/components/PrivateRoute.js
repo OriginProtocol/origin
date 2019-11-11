@@ -103,8 +103,5 @@ const mapDispatchToProps = dispatch =>
   )
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(PrivateRoute)
+  connect(mapStateToProps, mapDispatchToProps)(PrivateRoute)
 )

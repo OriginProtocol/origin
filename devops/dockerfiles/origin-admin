@@ -16,6 +16,8 @@ COPY ./packages/messaging-client/ ./packages/messaging-client/
 COPY ./packages/services/ ./packages/services/
 COPY ./packages/validator/ ./packages/validator/
 COPY ./dapps/admin/ ./dapps/admin/
+COPY ./packages/auth-utils ./packages/auth-utils
+COPY ./packages/auth-client ./packages/auth-client
 
 RUN yarn install
 RUN yarn run build --scope @origin/admin

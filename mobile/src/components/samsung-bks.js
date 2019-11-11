@@ -298,10 +298,7 @@ const mapDispatchToProps = dispatch => ({
   setSamsungBKSError: error => dispatch(setSamsungBKSError(error))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SamsungBKS)
+export default connect(mapStateToProps, mapDispatchToProps)(SamsungBKS)
 
 const styles = StyleSheet.create({
   ...CommonStyles,

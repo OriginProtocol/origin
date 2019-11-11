@@ -248,6 +248,10 @@ export function singleUnitTokenTests({
 
   describe(testName, function() {
     let seller, buyer, title, page
+
+    const isDAI = token === 'DAI'
+    const shouldExchangeTokens = !autoSwap && isDAI
+
     before(async function() {
       page = await getPage()
       const resetOpts = { page, deployIdentity }
@@ -256,6 +260,11 @@ export function singleUnitTokenTests({
           dai: token === 'DAI' ? '100' : undefined,
           ogn: token === 'OGN' ? '100' : undefined,
           okb: token === 'OKB' ? '100' : undefined,
+          deployIdentity
+        }
+      } else if (!shouldExchangeTokens) {
+        resetOpts.buyerOpts = {
+          dai: '100',
           deployIdentity
         }
       }
@@ -343,16 +352,16 @@ export function singleUnitTokenTests({
       })
     })
 
-    if (token === 'DAI' && !autoSwap && !buyerHasTokens) {
+    if (shouldExchangeTokens && !buyerHasTokens) {
       it('should have swapped ETH for DAI', async () => {
         await waitForText(page, 'Swapped 0.00001 ETH for 1DAI')
-        await waitForText(page, 'Approve', 'button')
         await pic(page, 'listing-detail')
+        await waitForText(page, 'Approve', 'button')
         await clickByText(page, 'Approve', 'button')
       })
     }
 
-    if ((token === 'DAI' || token === 'OKB' || token === 'OGN') && !autoSwap) {
+    if (token !== 'ETH') {
       if (!buyerHasTokens) {
         it(
           'should notify the user about approval of ' + token,

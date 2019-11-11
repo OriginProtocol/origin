@@ -342,12 +342,12 @@ class PushNotifications extends Component {
     const authClient = new AuthClient({
       authServer:
         this.props.config.authServer || 'https://auth.originprotocol.com',
-      activeWallet: wallet.activeAccount.address,
       disablePersistence: true
     })
 
     try {
       const tokenData = await authClient.getTokenWithSignature(
+        wallet.activeAccount.address,
         signature,
         payload
       )
@@ -376,8 +376,5 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default withConfig(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(PushNotifications)
+  connect(mapStateToProps, mapDispatchToProps)(PushNotifications)
 )
