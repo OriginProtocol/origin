@@ -29,7 +29,7 @@ const OnboardWallet = ({ listing, linkPrefix }) => {
 
   useEffect(() => {
     if (wallet) {
-      setRedirect(`${linkPrefix}/onboard/email`)
+      setRedirect(`${linkPrefix}/onboard/signin`)
     } else if (walletType) {
       setRedirect(`${linkPrefix}/onboard/metamask`)
     }

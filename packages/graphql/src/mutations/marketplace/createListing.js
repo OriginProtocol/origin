@@ -5,6 +5,7 @@ import { resetProxyCache } from '../../utils/proxy'
 import txHelper, { checkMetaMask } from '../_txHelper'
 import contracts from '../../contracts'
 import cost from '../_gasCost'
+import supportedTokens from '../../utils/supportedTokens'
 
 export function listingInputToIPFS(data, unitData, fractionalData) {
   const listingType = fractionalData ? 'fractional' : 'unit'
@@ -21,12 +22,7 @@ export function listingInputToIPFS(data, unitData, fractionalData) {
     media: data.media,
     price: data.price,
     location: data.location,
-    acceptedTokens: data.acceptedTokens || [
-      'token-ETH',
-      'token-DAI',
-      'token-OGN',
-      'token-OKB'
-    ],
+    acceptedTokens: data.acceptedTokens || supportedTokens,
     commission: {
       currency: 'OGN',
       amount: data.commission || '0'
