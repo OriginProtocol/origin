@@ -55,7 +55,9 @@ async function createMayProdCampaign() {
 async function updateMayProdRules() {
   console.log('Updating May campaign rules in prod...')
 
-  const campaign = await db.GrowthCampaign.findOne({ where: { id: 5 } })
+  const campaign = await db.GrowthCampaign.findOne({
+    where: { nameKey: 'growth.may2019.name' }
+  })
   await campaign.update({ rules: JSON.stringify(mayConfig) })
 }
 
@@ -82,7 +84,9 @@ async function createJuneProdCampaign() {
 async function updateJuneProdRules() {
   console.log('Updating June campaign rules in prod...')
 
-  const campaign = await db.GrowthCampaign.findOne({ where: { id: 6 } })
+  const campaign = await db.GrowthCampaign.findOne({
+    where: { nameKey: 'growth.june2019.name' }
+  })
   await campaign.update({ rules: JSON.stringify(juneConfig) })
 }
 
@@ -107,9 +111,11 @@ async function createJulyProdCampaign() {
 }
 
 async function updateJulyProdRules() {
-  console.log('Updating August campaign rules in prod...')
+  console.log('Updating July campaign rules in prod...')
 
-  const campaign = await db.GrowthCampaign.findOne({ where: { id: 7 } })
+  const campaign = await db.GrowthCampaign.findOne({
+    where: { nameKey: 'growth.july2019.name' }
+  })
   await campaign.update({ rules: JSON.stringify(julyConfig) })
 }
 
@@ -136,7 +142,9 @@ async function createAugProdCampaign() {
 async function updateAugProdRules() {
   console.log('Updating June campaign rules in prod...')
 
-  const campaign = await db.GrowthCampaign.findOne({ where: { id: 8 } })
+  const campaign = await db.GrowthCampaign.findOne({
+    where: { nameKey: 'growth.aug2019.name' }
+  })
   await campaign.update({ rules: JSON.stringify(augustConfig) })
 }
 
@@ -163,7 +171,9 @@ async function createSepProdCampaign() {
 async function updateSepProdRules() {
   console.log('Updating September campaign rules in prod...')
 
-  const campaign = await db.GrowthCampaign.findOne({ where: { id: 9 } })
+  const campaign = await db.GrowthCampaign.findOne({
+    where: { nameKey: 'growth.sep2019.name' }
+  })
   await campaign.update({ rules: JSON.stringify(septemberConfig) })
 }
 
@@ -190,7 +200,9 @@ async function createOctoberProdCampaign() {
 async function updateOctoberProdRules() {
   console.log('Updating October campaign rules in prod...')
 
-  const campaign = await db.GrowthCampaign.findOne({ where: { id: 10 } })
+  const campaign = await db.GrowthCampaign.findOne({
+    where: { nameKey: 'growth.oct2019.name' }
+  })
   await campaign.update({ rules: JSON.stringify(octoberConfig) })
 }
 
@@ -217,7 +229,9 @@ async function createNovemberProdCampaign() {
 async function updateNovemberProdRules() {
   console.log('Updating November campaign rules in prod...')
 
-  const campaign = await db.GrowthCampaign.findOne({ where: { id: 11 } })
+  const campaign = await db.GrowthCampaign.findOne({
+    where: { nameKey: 'growth.nov2019.name' }
+  })
   await campaign.update({ rules: JSON.stringify(novemberConfig) })
 }
 

@@ -87,6 +87,12 @@ const web3Resolver = {
     if (contracts.mobileBridge) {
       return 'Mobile'
     }
+    if (
+      typeof window !== 'undefined' &&
+      (!!window.imToken || (window.ethereum && window.ethereum.isImToken))
+    ) {
+      return 'imToken'
+    }
     if (contracts.metaMaskEnabled) {
       const provider = get(contracts, 'web3Exec.currentProvider') || {}
       if (provider.isOrigin) return 'Origin Wallet'
