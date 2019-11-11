@@ -85,10 +85,9 @@ function investorVestingSchedule(grantObj) {
   const initialVestPercentage = 6
   // Time after which regular quarterly vesting begins
   const quarterlyVestDelayMonths = 4
-  const firstQuarterlyVestDate = grant.start.clone().add(
-    quarterlyVestDelayMonths,
-    'months'
-  )
+  const firstQuarterlyVestDate = grant.start
+    .clone()
+    .add(quarterlyVestDelayMonths, 'months')
   const quarterlyVestingPercentage = (100 - initialVestPercentage) / 8
   const quarterlyVestingAmount = BigNumber(grant.amount)
     .times(quarterlyVestingPercentage)

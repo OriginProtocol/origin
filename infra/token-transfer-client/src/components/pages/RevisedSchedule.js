@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 
-import UnlockSchedule from '@/assets/unlock-schedule.png'
+import UnlockSchedule from '@/assets/schedule@3x.png'
 
 class RevisedSchedule extends Component {
   state = {

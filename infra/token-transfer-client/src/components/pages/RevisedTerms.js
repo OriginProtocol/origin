@@ -216,7 +216,7 @@ class RevisedTerms extends Component {
           </p>
           <div className="form-group">
             <div className="terms-wrapper">
-              {this.props.user.investorType === 'CoinList'
+              {this.props.user && this.props.user.investorType === 'CoinList'
                 ? this.renderCoinListAmendments()
                 : this.renderStrategicAmendments()}
             </div>

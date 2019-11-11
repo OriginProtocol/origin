@@ -176,13 +176,13 @@ const WithdrawalHistory = props => {
   )
 }
 
-const mapStateToProps = ({ account, grant, transfer }) => {
+const mapStateToProps = ({ account, grant, transfer, user }) => {
   return {
     accounts: getAccounts(account),
     accountIsLoading: getAccountIsLoading(account),
     grants: getGrants(grant),
     grantIsLoading: getGrantIsLoading(grant),
-    grantTotals: getGrantTotals(grant),
+    grantTotals: getGrantTotals(user.user, grant),
     transfers: getTransfers(transfer),
     transferIsLoading: getTransferIsLoading(transfer),
     withdrawnAmount: getWithdrawnAmount(transfer)
