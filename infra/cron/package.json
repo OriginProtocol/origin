@@ -26,7 +26,7 @@
   "devDependencies": {
     "mocha": "6.2.2",
     "nodemon": "1.19.4",
-    "prettier": "1.19.0"
+    "prettier": "1.19.1"
   },
   "scripts": {
     "lint": "eslint . && npm run prettier:check",

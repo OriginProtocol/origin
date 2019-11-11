@@ -29,7 +29,10 @@ async function verifyListingDBRecord(netId, version, event) {
     where: {
       id: fqListingID
     },
-    order: [['block_number', 'DESC'], ['log_index', 'DESC']]
+    order: [
+      ['block_number', 'DESC'],
+      ['log_index', 'DESC']
+    ]
   })
 
   // Make sure we have at least one record (there can be multiple indicating

@@ -14,7 +14,7 @@
     "@origin/contracts": "^0.8.6",
     "@origin/ip2geo": "^0.1.0",
     "@origin/web3-provider": "^0.1.0",
-    "@sentry/node": "5.7.1",
+    "@sentry/node": "5.8.0",
     "cors": "2.8.5",
     "dotenv": "8.2.0",
     "envkey": "1.2.7",
@@ -31,10 +31,10 @@
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
-    "chalk": "2.4.2",
+    "chalk": "3.0.0",
     "mocha": "6.2.2",
     "nodemon": "1.19.4",
-    "prettier": "1.19.0"
+    "prettier": "1.19.1"
   },
   "scripts": {
     "lint": "eslint . && npm run prettier:check",
