@@ -5,7 +5,9 @@ const db = require('../models')
 const enums = require('../enums')
 
 if (process.env.NODE_ENV === 'production') {
-  throw new Error('Do NOT run this script in production! For test environment only')
+  throw new Error(
+    'Do NOT run this script in production! For test environment only'
+  )
 }
 
 // Accounts generated using Truffle default mnemonic:
