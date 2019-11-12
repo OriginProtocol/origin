@@ -17,6 +17,7 @@ const assert = require('assert')
 const csv = require('csvtojson')
 const Logger = require('logplease')
 const jwt = require('jsonwebtoken')
+const moment = require('moment')
 
 const db = require('../models')
 const { encryptionSecret, clientUrl } = require('../config')
@@ -24,15 +25,11 @@ const { encryptionSecret, clientUrl } = require('../config')
 Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('import_data', { showTimestamp: false })
 
-const employeesVestingInterval = 'months'
-
 const purchaseRounds = ['Advisor', 'Strategic', 'CoinList']
 
 // TODO(franck): Update those values based on final investors vesting schedule.
-const investorsVestingStart = new Date('2020/01/01')
-const investorsVestingEnd = new Date('2020/12/31')
-const investorsVestingCliff = new Date('2020/04/01')
-const investorsVestingInterval = 'days'
+const investorsVestingStart = moment.utc('2020/01/01')
+const investorsVestingEnd = moment.utc('2020/12/31')
 
 class CsvFileParser {
   constructor(filename, employee) {
@@ -93,33 +90,27 @@ class CsvFileParser {
       }
 
       if (row['Revised Schedule Agreed At']) {
-        record.revisedScheduleAgreedAt = new Date(
+        record.revisedScheduleAgreedAt = moment.utc(
           row['Revised Schedule Agreed At']
         )
       }
 
       if (this.employee) {
         // Parse employee specific fields
-        const vestingStart = new Date(row['Vesting Start'])
-        assert(vestingStart instanceof Date)
+        const vestingStart = moment.utc(row['Vesting Start'])
         record.start = vestingStart
 
-        const vestingEnd = new Date(row['Vesting End'])
-        assert(vestingEnd instanceof Date)
+        const vestingEnd = moment.utc(row['Vesting End'])
         assert(vestingEnd > vestingStart)
         record.end = vestingEnd
 
-        const vestingCliff = new Date(row['Vesting Cliff'])
-        assert(vestingCliff instanceof Date)
+        const vestingCliff = moment.utc(row['Vesting Cliff'])
         assert(vestingCliff > vestingStart)
         assert(vestingCliff < vestingEnd)
         record.cliff = vestingCliff
-
-        record.interval = employeesVestingInterval
       } else {
         // Parse investor specific fields
-        const purchaseDate = new Date(row['Purchase Date'])
-        assert(purchaseDate instanceof Date)
+        const purchaseDate = moment.utc(row['Purchase Date'])
         record.purchaseDate = purchaseDate
 
         // TODO(franck): this DB field may get renamed.
@@ -138,8 +129,6 @@ class CsvFileParser {
         // Those fields are constant for all investors.
         record.start = investorsVestingStart
         record.end = investorsVestingEnd
-        record.cliff = investorsVestingCliff
-        record.interval = investorsVestingInterval
       }
 
       records.push(record)
@@ -196,7 +185,6 @@ class ImportData {
           // Note: Some investors were granted a decimal amount of OGN.
           // We round it up to an integer amount.
           amount: Math.ceil(record.amount),
-          interval: record.interval,
           purchaseDate: record.purchaseDate,
           purchaseRound: record.purchaseRound,
           investmentAmount: record.investmentAmount
