@@ -136,6 +136,8 @@ android {
         ndk {
             abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
         }
+	// https://github.com/facebook/facebook-android-sdk/issues/614
+	resConfigs "en", "US"
     }
     splits {
         abi {

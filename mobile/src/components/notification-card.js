@@ -92,10 +92,7 @@ const mapDispatchToProps = dispatch => ({
   setNotificationsRequested: value => dispatch(setNotificationsRequested(value))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(NotificationCard)
+export default connect(mapStateToProps, mapDispatchToProps)(NotificationCard)
 
 const styles = StyleSheet.create({
   ...CommonStyles,

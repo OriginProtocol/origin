@@ -322,7 +322,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(BonusModal)
+export default connect(mapStateToProps, mapDispatchToProps)(BonusModal)

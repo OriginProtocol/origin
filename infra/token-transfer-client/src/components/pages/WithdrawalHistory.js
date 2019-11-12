@@ -200,8 +200,5 @@ const mapDispatchToProps = dispatch =>
   )
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(WithdrawalHistory)
+  connect(mapStateToProps, mapDispatchToProps)(WithdrawalHistory)
 )

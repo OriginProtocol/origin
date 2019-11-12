@@ -145,9 +145,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Lockup)
-)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Lockup))

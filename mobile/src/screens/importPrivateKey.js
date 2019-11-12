@@ -87,26 +87,21 @@ class ImportAccountScreen extends Component {
       <KeyboardAvoidingView
         style={styles.darkOverlay}
         behavior={'padding'}
-        keyboardVerticalOffset={Platform.OS === 'android' ? 40 : 0}
+        keyboardVerticalOffset={Platform.OS === 'android' ? 40 : 10}
       >
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={styles.container}>
           <ScrollView
             style={styles.onboardingModal}
-            contentContainerStyle={styles.content}
+            contentContainerStyle={styles.container}
             keyboardShouldPersistTaps={'always'}
           >
-            <View style={{ ...styles.container, justifyContent: 'flex-start' }}>
-              <BackArrow
-                onClick={() => this.props.navigation.goBack(null)}
-                style={styles.backArrow}
-              />
+            <BackArrow onClick={() => this.props.navigation.goBack(null)} />
+            <View style={styles.content}>
               <Text style={styles.title}>
                 <fbt desc="ImportPrivateKeyScreen.privateKeyTitle">
                   Enter Private Key
                 </fbt>
               </Text>
-            </View>
-            <View style={styles.container}>
               <TextInput
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -121,7 +116,7 @@ class ImportAccountScreen extends Component {
               />
               <Text style={styles.invalid}>{this.state.error}</Text>
             </View>
-            <View style={{ ...styles.container, ...styles.buttonContainer }}>
+            <View style={styles.buttonContainer}>
               <OriginButton
                 size="large"
                 type="primary"
@@ -152,10 +147,7 @@ const mapDispatchToProps = dispatch => ({
   setBackupWarningStatus: address => dispatch(setBackupWarningStatus(address))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ImportAccountScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(ImportAccountScreen)
 
 const styles = StyleSheet.create({
   ...CommonStyles,
