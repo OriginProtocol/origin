@@ -152,10 +152,7 @@ const mapDispatchToProps = dispatch => ({
   setBackupWarningStatus: address => dispatch(setBackupWarningStatus(address))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ImportAccountScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(ImportAccountScreen)
 
 const styles = StyleSheet.create({
   ...CommonStyles,

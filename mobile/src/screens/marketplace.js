@@ -741,10 +741,7 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default withOriginGraphql(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(MarketplaceScreen)
+  connect(mapStateToProps, mapDispatchToProps)(MarketplaceScreen)
 )
 
 const styles = StyleSheet.create({
