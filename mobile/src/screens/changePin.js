@@ -4,13 +4,10 @@ import React, { Component } from 'react'
 import {
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
   StyleSheet,
   Text,
-  View
 } from 'react-native'
 import { connect } from 'react-redux'
-import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 
 import { setPin } from 'actions/Settings'
