@@ -30,13 +30,13 @@ function calculateGranted(grants) {
 /* Calculate the amount of vested tokens for an array of grants
  * @param grants
  */
-function calculateVested(grants) {
+function calculateVested(user, grants) {
   return grants.reduce((total, grant) => {
     if (grant.dataValues) {
       // Convert if instance of sequelize model
       grant = grant.get({ plain: true })
     }
-    return total.plus(vestedAmount(grant))
+    return total.plus(vestedAmount(user, grant))
   }, BigNumber(0))
 }
 
@@ -82,9 +82,8 @@ function calculateEarnings(lockups) {
 function calculateLocked(lockups) {
   return lockups.reduce((total, lockup) => {
     if (
-      lockup.confirmed &&
-      lockup.start < moment.utc() &&
-      lockup.end > moment.utc()
+      lockup.start < moment.utc() && // Lockup has started
+      lockup.end > moment.utc() // Lockup has not yet ended
     ) {
       return total.plus(BigNumber(lockup.amount))
     }
@@ -128,6 +127,8 @@ const lockupBonusRate = process.env.LOCKUP_BONUS_RATE || 10
 // Lockup duration in months
 const lockupDuration = process.env.LOCKUP_DURATION || 12
 
+const earnOgnEnabled = process.env.EARN_OGN_ENABLED || false
+
 module.exports = {
   calculateGranted,
   calculateVested,
@@ -135,6 +136,7 @@ module.exports = {
   calculateEarnings,
   calculateLocked,
   calculateWithdrawn,
+  earnOgnEnabled,
   toMoment,
   momentizeLockup,
   momentizeGrant,

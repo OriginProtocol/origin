@@ -121,11 +121,11 @@ const Lockup = props => {
   )
 }
 
-const mapStateToProps = ({ grant, lockup, transfer }) => {
+const mapStateToProps = ({ grant, lockup, transfer, user }) => {
   return {
     grants: getGrants(grant),
     grantIsLoading: getGrantIsLoading(grant),
-    grantTotals: getGrantTotals(grant),
+    grantTotals: getGrantTotals(user, grant),
     lockups: getLockups(lockup),
     lockupIsLoading: getLockupIsLoading(lockup),
     lockupTotals: getLockupTotals(lockup),
@@ -145,9 +145,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Lockup)
-)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Lockup))

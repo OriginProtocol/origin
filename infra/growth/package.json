@@ -21,6 +21,7 @@
     "apollo-server-express": "2.9.7",
     "bignumber.js": "9.0.0",
     "cors": "2.8.5",
+    "csvtojson": "2.0.10",
     "dotenv": "8.2.0",
     "envkey": "1.2.7",
     "express": "4.17.1",
@@ -41,7 +42,7 @@
   "devDependencies": {
     "chai": "4.2.0",
     "chai-things": "0.2.0",
-    "chalk": "2.4.2",
+    "chalk": "3.0.0",
     "mocha": "6.2.2",
     "nodemon": "1.19.4",
     "rewire": "4.0.1"

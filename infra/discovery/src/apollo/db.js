@@ -58,7 +58,11 @@ async function _getListings(whereClause, orderByIds = []) {
     attributes: [Sequelize.literal('DISTINCT ON(id) 1')].concat(
       Object.keys(db.Listing.rawAttributes)
     ),
-    order: [['id', 'DESC'], ['blockNumber', 'DESC'], ['logIndex', 'DESC']]
+    order: [
+      ['id', 'DESC'],
+      ['blockNumber', 'DESC'],
+      ['logIndex', 'DESC']
+    ]
   })
   if (rows.length === 0) {
     return []
@@ -144,13 +148,20 @@ async function getListing(listingId, blockInfo = null) {
           }
         ]
       },
-      order: [['blockNumber', 'DESC'], ['logIndex', 'DESC']]
+      order: [
+        ['blockNumber', 'DESC'],
+        ['logIndex', 'DESC']
+      ]
     })
   } else {
     // Return most recent row for the listing.
     row = await db.Listing.findOne({
       where: { id: listingId },
-      order: [['id', 'DESC'], ['blockNumber', 'DESC'], ['logIndex', 'DESC']],
+      order: [
+        ['id', 'DESC'],
+        ['blockNumber', 'DESC'],
+        ['logIndex', 'DESC']
+      ],
       limit: 1
     })
   }

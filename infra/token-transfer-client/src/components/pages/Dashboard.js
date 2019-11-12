@@ -33,6 +33,7 @@ import VestingCard from '@/components/VestingCard'
 import GrantDetailCard from '@/components/GrantDetailCard'
 import WithdrawalSummaryCard from '@/components/WithdrawalSummaryCard'
 import BonusCard from '@/components/BonusCard'
+import { earnOgnEnabled } from '@/constants'
 
 const Dashboard = props => {
   useEffect(() => {
@@ -61,6 +62,8 @@ const Dashboard = props => {
     .minus(props.lockupTotals.locked)
   const unlockDate = getUnlockDate(props.user)
   const isLocked = moment.utc() < unlockDate
+
+  console.log(isLocked)
 
   return (
     <>
@@ -93,12 +96,16 @@ const Dashboard = props => {
             withdrawnAmount={props.withdrawnAmount}
           />
           <div className="mt-4">
-            <BonusCard
-              lockups={props.lockups}
-              locked={props.lockupTotals.locked}
-              earnings={props.lockupTotals.earnings}
-              isLocked={isLocked}
-            />
+            {earnOgnEnabled ? (
+              <BonusCard
+                lockups={props.lockups}
+                locked={props.lockupTotals.locked}
+                earnings={props.lockupTotals.earnings}
+                isLocked={isLocked}
+              />
+            ) : (
+              <NewsHeadlinesCard />
+            )}
           </div>
         </div>
       </div>
@@ -109,20 +116,20 @@ const Dashboard = props => {
           </div>
         )}
         <div className="col-12 col-lg-6 mb-4">
-          <NewsHeadlinesCard />
+          {earnOgnEnabled && <NewsHeadlinesCard />}
         </div>
       </div>
     </>
   )
 }
 
-const mapStateToProps = ({ account, grant, lockup, transfer }) => {
+const mapStateToProps = ({ account, grant, lockup, transfer, user }) => {
   return {
     accounts: getAccounts(account),
     accountIsLoading: getAccountIsLoading(account),
     grants: getGrants(grant),
     grantIsLoading: getGrantIsLoading(grant),
-    grantTotals: getGrantTotals(grant),
+    grantTotals: getGrantTotals(user.user, grant),
     lockups: getLockups(lockup),
     lockupIsLoading: getLockupIsLoading(lockup),
     lockupTotals: getLockupTotals(lockup),
@@ -142,7 +149,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Dashboard)
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)

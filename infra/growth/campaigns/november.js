@@ -582,7 +582,7 @@ const novemberConfig = {
             scope: 'campaign',
             iconSrc: 'images/growth/listing-1-001-53-icon.jpg',
             title: '送礼还送Dai | 王者荣耀皮肤288点券-下单即返7元Dai！',
-            details: ' '
+            details: '王者荣耀App内价值288点券的英雄皮肤可任选一。'
           }
         },
         {
@@ -696,7 +696,7 @@ const novemberConfig = {
             scope: 'campaign',
             iconSrc: 'images/growth/listing-1-001-49-icon.jpg',
             title: '送礼还送Dai | 大岩蛇数据线-下单即返11元Dai！',
-            details: 'TEGIC 大岩蛇数据线 苹果数据线 安卓苹果数据线通用 快充数据线 数据线 三合一 钛灰色  '
+            details: 'TEGIC 大岩蛇数据线 苹果数据线 安卓苹果数据线通用 快充数据线 数据线 三合一 钛灰色'
           }
         },
         {
