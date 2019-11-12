@@ -34,8 +34,8 @@ const AccountBackupScreen = ({ navigation }) => (
         <fbt desc="AccountBackup.warning">
           But what happens if you lose this device? Unless you back up your
           wallet, you will lose access to it forever. We don&apos;t store your
-          recovery phrase, so we won&apos;t be able to help you access your account
-          or your funds.
+          recovery phrase, so we won&apos;t be able to help you access your
+          account or your funds.
         </fbt>
       </Text>
     </View>
