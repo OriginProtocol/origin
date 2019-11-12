@@ -210,9 +210,9 @@ const RevisedTerms = ({ editUser, user, userIsEditing }) => {
         </p>
         <div className="form-group">
           <div className="terms-wrapper">
-            {this.props.user && this.props.user.investorType === 'CoinList'
-              ? this.renderCoinListAmendments()
-              : this.renderStrategicAmendments()}
+            {user && user.investorType === 'CoinList'
+              ? renderCoinListAmendments()
+              : renderStrategicAmendments()}
           </div>
           <p style={{ textAlign: 'left', fontSize: '12px' }}>
             If you do not agree with the proposed amendment, you can contact
