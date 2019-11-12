@@ -342,7 +342,7 @@ describe('Lockup HTTP API', () => {
     expect(response.text).to.match(/exceeds/)
   })
 
-  it('should not add lockups simultaneously due to requirement of no unconfirmed lockups', async () => {
+  it('should not add lockups simultaneously if not enough balance', async () => {
     const sendStub = sinon.stub(sendgridMail, 'send')
 
     const results = await Promise.all([
@@ -362,7 +362,7 @@ describe('Lockup HTTP API', () => {
 
     expect(
       results.filter(
-        result => result.status !== 201 && result.text.match(/Unconfirmed/)
+        result => result.status !== 201 && result.text.match(/exceeds/)
       ).length
     ).to.equal(1)
 
