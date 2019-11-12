@@ -53,7 +53,11 @@ const VestingCard = props => {
           <img src={VestingSchedule} className="img-fluid mx-auto mt-2" />
         </>
       ) : (
-        <VestingHistory grants={props.grants} isLocked={props.isLocked} />
+        <VestingHistory
+          grants={props.grants}
+          user={props.user}
+          isLocked={props.isLocked}
+        />
       )}
     </BorderedCard>
   )
