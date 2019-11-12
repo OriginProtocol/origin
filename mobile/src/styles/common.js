@@ -15,6 +15,7 @@ export default StyleSheet.create({
   },
   content: {
     flex: 1,
+    padding: 20,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -31,7 +32,7 @@ export default StyleSheet.create({
   // General title styling
   title: {
     fontFamily: 'Lato',
-    fontSize: smallScreen ? 28 : 34,
+    fontSize: 28,
     fontWeight: '600',
     padding: 20,
     color: '#0b1823',
@@ -39,9 +40,8 @@ export default StyleSheet.create({
   },
   subtitle: {
     fontFamily: 'Lato',
-    fontSize: smallScreen ? 18 : 20,
+    fontSize: 18,
     paddingBottom: 10,
-    fontWeight: '300',
     textAlign: 'center',
     paddingHorizontal: 20
   },

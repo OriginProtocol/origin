@@ -69,11 +69,12 @@ const styles = StyleSheet.create({
   recoveryContainer: {
     paddingHorizontal: 10,
     paddingVertical: 10,
+    marginVertical: 20,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     backgroundColor: '#f0f6f9',
-    borderRadius: 15
+    borderRadius: 15,
   },
   recoveryWordContainer: {
     paddingVertical: 10,
