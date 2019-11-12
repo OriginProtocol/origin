@@ -107,7 +107,6 @@ describe('Login HTTP API', () => {
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
 
-    console.log(response.body)
     expect(response.body.email).to.equal(this.user3.email)
     expect(response.body.otpVerified).to.equal(true)
   })

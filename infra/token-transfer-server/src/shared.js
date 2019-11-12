@@ -30,13 +30,13 @@ function calculateGranted(grants) {
 /* Calculate the amount of vested tokens for an array of grants
  * @param grants
  */
-function calculateVested(grants) {
+function calculateVested(user, grants) {
   return grants.reduce((total, grant) => {
     if (grant.dataValues) {
       // Convert if instance of sequelize model
       grant = grant.get({ plain: true })
     }
-    return total.plus(vestedAmount(grant))
+    return total.plus(vestedAmount(user, grant))
   }, BigNumber(0))
 }
 

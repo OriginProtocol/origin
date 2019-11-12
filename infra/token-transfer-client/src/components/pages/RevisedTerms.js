@@ -210,7 +210,7 @@ const RevisedTerms = ({ editUser, user, userIsEditing }) => {
         </p>
         <div className="form-group">
           <div className="terms-wrapper">
-            {user.investorType === 'CoinList'
+            {user && user.investorType === 'CoinList'
               ? renderCoinListAmendments()
               : renderStrategicAmendments()}
           </div>

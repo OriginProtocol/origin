@@ -20,7 +20,7 @@ router.get(
         const plainGrant = grant.get({ plain: true })
         return {
           ...plainGrant,
-          vestedAmount: vestedAmount(plainGrant)
+          vestedAmount: vestedAmount(req.user, plainGrant)
         }
       })
     )
