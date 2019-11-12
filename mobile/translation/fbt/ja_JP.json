@@ -1,13 +1,6 @@
 {
   "fb-locale": "ja_JP",
   "translations": {
-    "Ri5Gg2SNwcgIl8+233d8Ag==": {
-      "translations": [
-        {
-          "translation": "アドレス"
-        }
-      ]
-    },
     "xcXF5fEWXTaRWnAPnImIEA==": {
       "translations": [
         {
@@ -54,6 +47,13 @@
       "translations": [
         {
           "translation": "リトライ"
+        }
+      ]
+    },
+    "ErD20CBa67cXCzpYJD/Lqw==": {
+      "translations": [
+        {
+          "translation": "ピンで再試行"
         }
       ]
     },
@@ -505,6 +505,13 @@
         }
       ]
     },
+    "Ri5Gg2SNwcgIl8+233d8Ag==": {
+      "translations": [
+        {
+          "translation": "アドレス"
+        }
+      ]
+    },
     "KaZkh00tsKdzL4PMvmqOWw==": {
       "translations": [
         {
@@ -771,6 +778,48 @@
         }
       ]
     },
+    "ovdpavP9sKYKI/XXkeRgPQ==": {
+      "translations": [
+        {
+          "translation": "新しいPINを入力してください"
+        }
+      ]
+    },
+    "W3VHEa7n4bmUNgzaKj3xuw==": {
+      "translations": [
+        {
+          "translation": "古いPINを入力してください"
+        }
+      ]
+    },
+    "/aGURKePsq3sTnkUrus4+g==": {
+      "translations": [
+        {
+          "translation": "Pinコードを再入力してください"
+        }
+      ]
+    },
+    "6TNQrsvPH7Jg+9BxOuTPQw==": {
+      "translations": [
+        {
+          "translation": "Pinコードを作成する"
+        }
+      ]
+    },
+    "tH+M0ZY76tfrE3XPNeiUnw==": {
+      "translations": [
+        {
+          "translation": "PINを入力してください"
+        }
+      ]
+    },
+    "Jqw0AiXS00Vx8U1XL+9Uwg==": {
+      "translations": [
+        {
+          "translation": "間違ったPIN"
+        }
+      ]
+    },
     "/Dpz63y5rPCTt9TIGPA08A==": {
       "translations": [
         {
@@ -830,7 +879,7 @@
     "S/j+cIqLysC5PQLYuvycXw==": {
       "translations": [
         {
-          "translation": "Enter Phrase"
+          "translation": "フレーズを入力"
         }
       ]
     },
@@ -890,20 +939,6 @@
         }
       ]
     },
-    "/aGURKePsq3sTnkUrus4+g==": {
-      "translations": [
-        {
-          "translation": "Pinコードを再入力してください"
-        }
-      ]
-    },
-    "6TNQrsvPH7Jg+9BxOuTPQw==": {
-      "translations": [
-        {
-          "translation": "Pinコードを作成する"
-        }
-      ]
-    },
     "K/aDJpTjmvmNt/MSEGDQUQ==": {
       "translations": [
         {
@@ -915,6 +950,34 @@
       "translations": [
         {
           "translation": "Pinはアプリにログインするために使用されます。"
+        }
+      ]
+    },
+    "1xII+dDcYWSOu0jzDlP23w==": {
+      "translations": [
+        {
+          "translation": "アクセス拒否"
+        }
+      ]
+    },
+    "YvZQnI6IbpRDeY9FhGhoaw==": {
+      "translations": [
+        {
+          "translation": "{biometryType} 無効になっているようです。 Origin Marketplaceアプリの設定で有効にする必要があります。"
+        }
+      ]
+    },
+    "g+wmZ6xm0Zlw6f0FYy18xg==": {
+      "translations": [
+        {
+          "translation": "OK"
+        }
+      ]
+    },
+    "u3sOSat8+WAAQ8EuhbirNg==": {
+      "translations": [
+        {
+          "translation": "キャンセル"
         }
       ]
     },
@@ -950,6 +1013,27 @@
       "translations": [
         {
           "translation": "ネットワーク"
+        }
+      ]
+    },
+    "qCsRh42AI/i+tq1jYI5pcA==": {
+      "translations": [
+        {
+          "translation": "セキュリティ"
+        }
+      ]
+    },
+    "JqYbscHWSnagurtMN955jQ==": {
+      "translations": [
+        {
+          "translation": "ピンコード"
+        }
+      ]
+    },
+    "sDCHJ6X+2GJiE4xVdiR+fw==": {
+      "translations": [
+        {
+          "translation": "PINコードを変更"
         }
       ]
     },

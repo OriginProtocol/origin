@@ -1,13 +1,6 @@
 {
   "fb-locale": "en_US",
   "translations": {
-    "Ri5Gg2SNwcgIl8+233d8Ag==": {
-      "translations": [
-        {
-          "translation": "Address"
-        }
-      ]
-    },
     "xcXF5fEWXTaRWnAPnImIEA==": {
       "translations": [
         {
@@ -54,6 +47,13 @@
       "translations": [
         {
           "translation": "Retry"
+        }
+      ]
+    },
+    "ErD20CBa67cXCzpYJD/Lqw==": {
+      "translations": [
+        {
+          "translation": "Retry With Pin"
         }
       ]
     },
@@ -505,6 +505,13 @@
         }
       ]
     },
+    "Ri5Gg2SNwcgIl8+233d8Ag==": {
+      "translations": [
+        {
+          "translation": "Address"
+        }
+      ]
+    },
     "KaZkh00tsKdzL4PMvmqOWw==": {
       "translations": [
         {
@@ -771,6 +778,48 @@
         }
       ]
     },
+    "ovdpavP9sKYKI/XXkeRgPQ==": {
+      "translations": [
+        {
+          "translation": "Enter your new PIN"
+        }
+      ]
+    },
+    "W3VHEa7n4bmUNgzaKj3xuw==": {
+      "translations": [
+        {
+          "translation": "Enter your old PIN"
+        }
+      ]
+    },
+    "/aGURKePsq3sTnkUrus4+g==": {
+      "translations": [
+        {
+          "translation": "Re-enter Pin Code"
+        }
+      ]
+    },
+    "6TNQrsvPH7Jg+9BxOuTPQw==": {
+      "translations": [
+        {
+          "translation": "Create a Pin Code"
+        }
+      ]
+    },
+    "tH+M0ZY76tfrE3XPNeiUnw==": {
+      "translations": [
+        {
+          "translation": "Enter your PIN"
+        }
+      ]
+    },
+    "Jqw0AiXS00Vx8U1XL+9Uwg==": {
+      "translations": [
+        {
+          "translation": "Incorrect PIN"
+        }
+      ]
+    },
     "/Dpz63y5rPCTt9TIGPA08A==": {
       "translations": [
         {
@@ -890,20 +939,6 @@
         }
       ]
     },
-    "/aGURKePsq3sTnkUrus4+g==": {
-      "translations": [
-        {
-          "translation": "Re-enter Pin Code"
-        }
-      ]
-    },
-    "6TNQrsvPH7Jg+9BxOuTPQw==": {
-      "translations": [
-        {
-          "translation": "Create a Pin Code"
-        }
-      ]
-    },
     "K/aDJpTjmvmNt/MSEGDQUQ==": {
       "translations": [
         {
@@ -915,6 +950,34 @@
       "translations": [
         {
           "translation": "Your Pin Code will be used to login to the app."
+        }
+      ]
+    },
+    "1xII+dDcYWSOu0jzDlP23w==": {
+      "translations": [
+        {
+          "translation": "Permission denied"
+        }
+      ]
+    },
+    "YvZQnI6IbpRDeY9FhGhoaw==": {
+      "translations": [
+        {
+          "translation": "It looks like you have {biometryType} disabled. You will need to enable it in the settings for the Origin Marketplace App."
+        }
+      ]
+    },
+    "g+wmZ6xm0Zlw6f0FYy18xg==": {
+      "translations": [
+        {
+          "translation": "OK"
+        }
+      ]
+    },
+    "u3sOSat8+WAAQ8EuhbirNg==": {
+      "translations": [
+        {
+          "translation": "Cancel"
         }
       ]
     },
@@ -950,6 +1013,27 @@
       "translations": [
         {
           "translation": "Network"
+        }
+      ]
+    },
+    "qCsRh42AI/i+tq1jYI5pcA==": {
+      "translations": [
+        {
+          "translation": "SECURITY"
+        }
+      ]
+    },
+    "JqYbscHWSnagurtMN955jQ==": {
+      "translations": [
+        {
+          "translation": "PIN Code"
+        }
+      ]
+    },
+    "sDCHJ6X+2GJiE4xVdiR+fw==": {
+      "translations": [
+        {
+          "translation": "Change PIN Code"
         }
       ]
     },
