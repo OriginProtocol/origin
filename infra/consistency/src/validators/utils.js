@@ -66,7 +66,10 @@ async function getListenerBlock(id, prefix) {
     where: {
       id: listenerId
     },
-    order: [['created_at', 'DESC'], ['updated_at', 'DESC']]
+    order: [
+      ['created_at', 'DESC'],
+      ['updated_at', 'DESC']
+    ]
   })
 
   if (!res) {

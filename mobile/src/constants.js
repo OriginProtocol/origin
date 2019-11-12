@@ -1,6 +1,6 @@
 'use strict'
 
-export const VERSION = '0.25.0'
+export const VERSION = '0.26.1'
 
 class Enum extends Array {
   constructor(...args) {
@@ -67,13 +67,6 @@ if (__DEV__) {
     id: 999,
     name: 'Docker',
     dappUrl: `http://${process.env.HOST || 'localhost'}:3000/docker#/`
-  })
-  NETWORKS.push({
-    id: 4,
-    name: 'LocalhostRinkeby',
-    dappUrl: `http://${process.env.HOST || 'localhost'}:3000/rinkeby#/`,
-    provider:
-      'https://eth-rinkeby.alchemyapi.io/jsonrpc/D0SsolVDcXCw6K6j2LWqcpW49QIukUkI'
   })
 }
 

@@ -1,6 +1,6 @@
 'use strict'
 
-import { Platform, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
   onboardingModal: {
@@ -9,10 +9,6 @@ export default StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     backgroundColor: 'white'
-  },
-  invalid: {
-    borderColor: '#ff0000',
-    color: '#ff0000'
   },
   input: {
     fontSize: 18,
@@ -25,10 +21,5 @@ export default StyleSheet.create({
     width: '80%',
     color: '#98a7b4',
     fontFamily: 'Lato'
-  },
-  backArrow: {
-    position: 'absolute',
-    left: -10,
-    top: Platform.OS === 'android' ? 8 : 16
   }
 })
