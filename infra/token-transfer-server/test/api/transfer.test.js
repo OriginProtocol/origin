@@ -13,6 +13,7 @@ const jwt = require('jsonwebtoken')
 const { Grant, Transfer, User, sequelize } = require('../../src/models')
 const { encrypt } = require('../../src/lib/crypto')
 const transferController = require('../../src/controllers/transfer')
+const lockupController = require('../../src/controllers/lockup')
 const enums = require('../../src/enums')
 
 process.env.SENDGRID_FROM_EMAIL = 'test@test.com'
@@ -447,5 +448,42 @@ describe('Transfer HTTP API', () => {
       .post(`/api/transfers/${transfer.id}`)
       .send({ token })
       .expect(400)
+  })
+
+  it('should not add a transfer if unconfirmed lockups greater than balance', async () => {
+    const unlockFake = sinon.fake.returns(moment().subtract(1, 'days'))
+    transferController.__Rewire__('getInvestorUnlockDate', unlockFake)
+    lockupController.__Rewire__('getInvestorUnlockDate', unlockFake)
+
+    const earnOgnFake = sinon.fake.returns(true)
+    lockupController.__Rewire__('getEarnOgnEnabled', earnOgnFake)
+
+    const otpCode = totp.gen(this.otpKey)
+
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
+    await request(this.mockApp)
+      .post('/api/lockups')
+      .send({
+        amount: 1000000,
+        code: otpCode
+      })
+      .expect(201)
+
+    const response = await request(this.mockApp)
+      .post('/api/transfers')
+      .send({
+        amount: 1,
+        address: toAddress,
+        code: otpCode
+      })
+      .expect(422)
+
+    expect(response.text).to.match(/exceeds/)
+
+    // Check an email was sent with the confirmation token for one of the
+    // two requests
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
   })
 })

@@ -10,7 +10,8 @@ const { postToWebhook } = require('./webhook')
 const {
   TRANSFER_DONE,
   TRANSFER_FAILED,
-  TRANSFER_REQUEST
+  TRANSFER_REQUEST,
+  TRANSFER_CONFIRMED
 } = require('../constants/events')
 const { Event, Transfer, sequelize } = require('../models')
 const { hasBalance } = require('./balance')
@@ -117,6 +118,29 @@ async function confirmTransfer(transfer, user) {
     throw new Error('Transfer was not confirmed in the required time')
   }
 
+  const txn = await sequelize.transaction()
+  // Change state of transfer and add event
+  try {
+    await transfer.update({
+      status: enums.TransferStatuses.Enqueued
+    })
+    const event = {
+      userId: user.id,
+      action: TRANSFER_CONFIRMED,
+      data: JSON.stringify({
+        transferId: transfer.id
+      })
+    }
+    await Event.create(event)
+    await txn.commit()
+  } catch (e) {
+    await txn.rollback()
+    logger.error(
+      `Failed writing confirmation data for transfer ${transfer.id}: ${e}`
+    )
+    throw e
+  }
+
   try {
     if (discordWebhookUrl) {
       const countryDisplay = get(
@@ -145,9 +169,7 @@ async function confirmTransfer(transfer, user) {
     )
   }
 
-  return await transfer.update({
-    status: enums.TransferStatuses.Enqueued
-  })
+  return true
 }
 
 /**

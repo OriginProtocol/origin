@@ -342,12 +342,14 @@ describe('Lockup HTTP API', () => {
     expect(response.text).to.match(/exceeds/)
   })
 
-  it('should not add lockups simultaneously if not enough tokens', async () => {
+  it('should not add lockups simultaneously if not enough balance', async () => {
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
     const results = await Promise.all([
       request(this.mockApp)
         .post('/api/lockups')
         .send({
-          amount: 1000000,
+          amount: 100000,
           code: totp.gen(this.otpKey)
         }),
       request(this.mockApp)
@@ -358,12 +360,46 @@ describe('Lockup HTTP API', () => {
         })
     ])
 
-    expect(results.some(result => result.status === 422)).to.equal(true)
+    expect(
+      results.filter(
+        result => result.status !== 201 && result.text.match(/exceeds/)
+      ).length
+    ).to.equal(1)
 
     // 1 lockup should be created because 1 failed
     expect(
       (await request(this.mockApp).get('/api/lockups')).body.length
     ).to.equal(3)
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
+  })
+
+  it('should not add a transfer and lockup simultaneously if not enough balance', async () => {
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
+    const results = await Promise.all([
+      request(this.mockApp)
+        .post('/api/transfers')
+        .send({
+          amount: 100000,
+          address: '0xf17f52151ebef6c7334fad080c5704d77216b732',
+          code: totp.gen(this.otpKey)
+        }),
+      request(this.mockApp)
+        .post('/api/lockups')
+        .send({
+          amount: 1,
+          code: totp.gen(this.otpKey)
+        })
+    ])
+
+    expect(results.filter(result => result.status !== 201).length).to.equal(1)
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
   })
 
   it('should not add lockups with below 0 amount', async () => {

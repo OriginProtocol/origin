@@ -6,7 +6,7 @@ const Sequelize = require('sequelize')
 const { discordWebhookUrl } = require('../config')
 const { sendEmail } = require('../lib/email')
 const { postToWebhook } = require('./webhook')
-const { LOCKUP_DONE, LOCKUP_REQUEST } = require('../constants/events')
+const { LOCKUP_CONFIRMED, LOCKUP_REQUEST } = require('../constants/events')
 const { Event, Lockup, sequelize } = require('../models')
 const { lockupBonusRate, lockupDuration } = require('../config')
 const { hasBalance } = require('./balance')
@@ -119,7 +119,7 @@ async function confirmLockup(lockup, user) {
     })
     const event = {
       userId: user.id,
-      action: LOCKUP_DONE,
+      action: LOCKUP_CONFIRMED,
       data: JSON.stringify({
         lockupId: lockup.id
       })
