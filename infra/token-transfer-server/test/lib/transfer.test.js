@@ -360,8 +360,8 @@ describe('Token transfer library', () => {
       currency: 'OGN',
       createdAt: moment().subtract(10, 'minutes')
     })
-    await expect(confirmTransfer(transfer, this.user)).to.eventually.be.rejectedWith(
-      /required time/
-    )
+    await expect(
+      confirmTransfer(transfer, this.user)
+    ).to.eventually.be.rejectedWith(/required time/)
   })
 })
