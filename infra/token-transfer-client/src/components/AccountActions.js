@@ -10,7 +10,7 @@ const AccountActions = props => {
 
   const handleLogout = async () => {
     await agent.post(`${apiUrl}/api/logout`)
-    setRedirectTo('/')
+    setRedirectTo('/login')
   }
 
   if (redirectTo) {

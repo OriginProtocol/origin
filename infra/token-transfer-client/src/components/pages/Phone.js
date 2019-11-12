@@ -11,6 +11,7 @@ import {
 } from '@/reducers/user'
 import { formInput, formFeedback } from '@/utils/formHelpers'
 import CountryCodes from '@/constants/countryCodes'
+import { getNextOnboardingPage } from '@/utils'
 
 const TopCountries = ['us', 'gb', 'cn', 'kr', 'it', 'fr', 'es']
 const SortedCountryCodes = [
@@ -55,7 +56,7 @@ class Phone extends Component {
       phone: `${this.state.countryCode} ${this.state.phone}`
     })
     if (result.type === 'EDIT_USER_SUCCESS') {
-      this.setState({ redirectTo: '/otp/explain' })
+      this.setState({ redirectTo: getNextOnboardingPage(result.payload) })
     }
   }
 
@@ -128,7 +129,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Phone)
+export default connect(mapStateToProps, mapDispatchToProps)(Phone)

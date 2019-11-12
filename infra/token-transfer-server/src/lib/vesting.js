@@ -21,27 +21,41 @@ function momentizeGrant(grant) {
   }
 }
 
-/**
- * Returns the vesting schedule for the grant. The vesting schedule is just an
- * array of integers representing a vested amount. The date/time associated with
- * each vesting event is not calculated.
+/* Returns an array of vesting objects that include a datetime and status
+ * associated with each vesting event.
  */
-function vestingEvents(grantObj) {
+function vestingSchedule(user, grantObj) {
+  return user.employee
+    ? employeeVestingSchedule(grantObj)
+    : investorVestingSchedule(grantObj)
+}
+
+function employeeVestingSchedule(grantObj) {
   const grant = momentizeGrant(grantObj)
 
-  const vestingEventCount = grant.end.diff(grant.start, grant.interval)
-  const vestedPerEvent = BigNumber(grant.amount).div(vestingEventCount)
-  const cliffVestingCount = grant.cliff.diff(grant.start, grant.interval)
-
-  const cliffVestAmount = vestedPerEvent
+  const vestingEventCount = grant.end.diff(grant.start, 'months')
+  const cliffVestingCount = grant.cliff.diff(grant.start, 'months')
+  const cliffVestAmount = BigNumber(grant.amount)
     .times(cliffVestingCount)
+    .div(vestingEventCount)
     .integerValue(BigNumber.ROUND_FLOOR)
+
+  // Calculate the amount vested per remaining event
+  const vestedPerEvent = BigNumber(grant.amount)
+    .minus(cliffVestAmount)
+    .div(vestingEventCount - cliffVestingCount)
+
+  // Calculate the value for the remaining vesting amount and fill an array
+  // with length of the number of remaining vesting events with that value
   const remainingVestingCount = vestingEventCount - cliffVestingCount
   const remainingVestingAmounts = Array(remainingVestingCount).fill(
     vestedPerEvent.integerValue(BigNumber.ROUND_FLOOR)
   )
 
+  // Complete vesting array
   const vestingEvents = [cliffVestAmount, ...remainingVestingAmounts]
+
+  // Add an rounding errors to the last vesting event
   const roundingError = BigNumber(grant.amount).minus(
     vestingEvents.reduce((a, b) => a.plus(b), BigNumber(0))
   )
@@ -49,65 +63,95 @@ function vestingEvents(grantObj) {
     vestingEvents.length - 1
   ].plus(roundingError)
 
-  return vestingEvents
-}
-
-/* Returns an array of vesting objects that include a datetime and status
- * associated with each vesting event.
- */
-function vestingSchedule(grantObj /* start = null, end = null */) {
-  const now = grantObj.now || moment()
-  const grant = momentizeGrant(grantObj)
-
-  // TODO implement filtering on start and end
-  /*
-  let bottomThreshold, topThreshold
-  if (start) {
-    bottomThreshold = start.diff(grant.cliff, grant.interval)
-  }
-  if (end) {
-    topThreshold = end.diff(grant.cliff, grant.interval)
-  }
-  */
-
-  return vestingEvents(grant).map((currentVestingEvent, index) => {
-    const vestingEventDate = grant.cliff.clone()
+  const events = vestingEvents.map((currentVestingEvent, index) => {
+    const vestingDate = grant.cliff.clone()
     if (index > 0) {
-      vestingEventDate.add(index, grant.interval)
+      vestingDate.add(index, 'months')
     }
     return {
       amount: currentVestingEvent,
-      date: vestingEventDate,
-      vested: vestingEventDate < now
+      date: vestingDate.clone(),
+      vested: hasVested(vestingDate, grant)
     }
   })
+  return events
+}
+
+function investorVestingSchedule(grantObj) {
+  const grant = momentizeGrant(grantObj)
+
+  const vestingSchedule = []
+
+  // Calculate initial vest percentage granted on grant start date
+  const initialVestPercentage = 6
+  const initialVestAmount = BigNumber(grant.amount)
+    .times(initialVestPercentage)
+    .div(100)
+    .integerValue(BigNumber.ROUND_FLOOR)
+
+  // Time after which regular quarterly vesting begins
+  const quarterlyVestDelayMonths = 4
+  const quarterlyVestingPercentage = (100 - initialVestPercentage) / 8
+  const quarterlyVestAmount = BigNumber(grant.amount)
+    .times(quarterlyVestingPercentage)
+    .div(100)
+    .integerValue(BigNumber.ROUND_FLOOR)
+
+  // Rounding error caused by ROUND_FLOOR over total grant which should be added to the final vesting
+  // event
+  const roundingError = BigNumber(grant.amount).minus(
+    quarterlyVestAmount.times(8).plus(initialVestAmount)
+  )
+  const adjustedFinalVest = quarterlyVestAmount.plus(roundingError)
+
+  // Add initial vest
+  vestingSchedule.push({
+    amount: initialVestAmount,
+    date: grant.start.clone(),
+    vested: hasVested(grant.start, grantObj)
+  })
+
+  const vestingDate = grant.start.clone()
+  // Iterate over quarterly vests and push
+  for (let i = 0; i < 8; i++) {
+    if (i === 0) {
+      // Add initial delay to vesting fdate
+      vestingDate.add(quarterlyVestDelayMonths, 'months')
+    } else {
+      // Add quarter of a year to the last vesting date
+      vestingDate.add(3, 'months')
+    }
+    vestingSchedule.push({
+      amount: i === 7 ? adjustedFinalVest : quarterlyVestAmount,
+      date: vestingDate.clone(),
+      vested: hasVested(vestingDate, grant)
+    })
+  }
+
+  return vestingSchedule
+}
+
+function hasVested(vestingDate, grant) {
+  const now = moment.utc()
+  return (
+    vestingDate <= now && (!grant.cancelled || grant.cancelled >= vestingDate)
+  )
 }
 
 /* Returns the number of tokens vested by a grant.
  *
  */
-function vestedAmount(grantObj) {
-  const now = grantObj.now || moment()
-  const grant = momentizeGrant(grantObj)
-
-  if (now < grant.cliff) {
-    return BigNumber(0)
-  } else if (now > grant.end) {
-    return BigNumber(grant.amount)
-  } else {
-    // Number of vesting events that have occurred since the cliff determines
-    // the index of the array for calculating events that have already vested
-    const threshold = now.diff(grant.cliff, grant.interval)
-    // Buld array of already vested amounts
-    const vested = vestingEvents(grant).slice(0, threshold + 1)
-    return vested.length ? Math.round(BigNumber.sum(...vested)) : BigNumber(0)
-  }
+function vestedAmount(user, grantObj) {
+  return vestingSchedule(user, grantObj)
+    .filter(v => v.vested)
+    .reduce((total, vestingEvent) => {
+      return total.plus(BigNumber(vestingEvent.amount))
+    }, BigNumber(0))
 }
 
 module.exports = {
   momentizeGrant,
   toMoment,
-  vestingEvents,
   vestingSchedule,
   vestedAmount
 }

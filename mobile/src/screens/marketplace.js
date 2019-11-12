@@ -38,6 +38,7 @@ import withOriginGraphql from 'hoc/withOriginGraphql'
 import { PROMPT_MESSAGE, PROMPT_PUB_KEY } from '../constants'
 import CommonStyles from 'styles/common'
 import CardStyles from 'styles/card'
+import UpdatePrompt from 'components/update-prompt'
 
 class MarketplaceScreen extends PureComponent {
   static navigationOptions = () => {
@@ -647,7 +648,8 @@ class MarketplaceScreen extends PureComponent {
 
     return (
       <AndroidBackHandler onBackPress={this.onBack}>
-        <SafeAreaView style={{ flex: 1 }}>
+        <UpdatePrompt />
+        <SafeAreaView style={styles.container}>
           <KeyboardAvoidingView
             behavior="padding"
             keyboardVerticalOffset={40}
@@ -655,7 +657,7 @@ class MarketplaceScreen extends PureComponent {
             enabled={Platform.OS === 'android'}
           >
             <ScrollView
-              contentContainerStyle={{ flex: 1 }}
+              contentContainerStyle={styles.container}
               refreshControl={refreshControl}
               {...this.state.panResponder.panHandlers}
             >
@@ -698,7 +700,7 @@ class MarketplaceScreen extends PureComponent {
   renderWebViewError = () => {
     return (
       <SafeAreaView style={styles.webviewLoadingOrError}>
-        <View style={{ ...styles.container, flexGrow: 2 }}>
+        <View style={styles.content}>
           <Text style={styles.title}>
             <fbt desc="MarketplaceScreen.heading">Connection Error</fbt>
           </Text>
@@ -709,7 +711,7 @@ class MarketplaceScreen extends PureComponent {
             </fbt>
           </Text>
         </View>
-        <View style={{ ...styles.container, ...styles.buttonContainer }}>
+        <View style={styles.buttonContainer}>
           <OriginButton
             size="large"
             type="primary"

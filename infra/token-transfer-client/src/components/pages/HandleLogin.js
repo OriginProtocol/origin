@@ -1,55 +1,64 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router-dom'
 
 import { apiUrl } from '@/constants'
+import { getNextOnboardingPage } from '@/utils'
 import agent from '@/utils/agent'
 
-class HandleLogin extends Component {
-  state = {
-    loading: true,
-    error: false,
-    redirectTo: null
-  }
+const HandleLogin = props => {
+  const [redirectTo, setRedirectTo] = useState(null)
 
-  componentDidMount() {
-    this.handleVerifyEmailToken(this.props.match.params.token)
-  }
+  useEffect(() => {
+    if (props.match.params.token) {
+      handleLoginToken(props.match.params.token)
+    } else {
+      // Redirect to login if no token present in URL
+      setRedirectTo('/login')
+    }
+  }, [])
 
-  handleVerifyEmailToken = async token => {
+  const handleLoginToken = async token => {
     let response
     try {
       response = await agent
         .post(`${apiUrl}/api/verify_email_token`)
         .set('Authorization', `Bearer ${token}`)
     } catch (error) {
-      this.setState({ loading: false, error: 'Invalid login token' })
+      if (error.response) {
+        setRedirectTo('/login?error=expired')
+      } else {
+        setRedirectTo('/login?error=server')
+      }
       return
     }
 
-    const redirectTo = response.body.otpReady ? '/otp' : '/otp/explain'
+    const nextOnboardingPage = getNextOnboardingPage(response.body)
 
-    this.setState({ loading: false, redirectTo })
-  }
-
-  render() {
-    if (this.state.loading) {
-      return (
-        <div className="action-card">
-          <div className="spinner-grow" role="status">
-            <span className="sr-only">Loading...</span>
-          </div>
-        </div>
-      )
-    } else if (this.state.error) {
-      return (
-        <div className="action-card">
-          <h1>{this.state.error}</h1>
-        </div>
-      )
-    } else if (this.state.redirectTo) {
-      return <Redirect to={this.state.redirectTo} />
+    let redirectTo
+    if (nextOnboardingPage === '/terms') {
+      // Assume no onboarding done, send user to welcome page
+      redirectTo = '/welcome'
+    } else if (nextOnboardingPage) {
+      // If there is still onboarding to do, send them to the relevant page
+      redirectTo = nextOnboardingPage
+    } else {
+      // No more onboarding, login via 2fa
+      redirectTo = '/otp'
     }
+    setRedirectTo(redirectTo)
   }
+
+  if (redirectTo) {
+    return <Redirect to={redirectTo} />
+  }
+
+  return (
+    <div className="action-card">
+      <div className="spinner-grow" role="status">
+        <span className="sr-only">Loading...</span>
+      </div>
+    </div>
+  )
 }
 
 export default HandleLogin
