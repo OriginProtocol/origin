@@ -79,7 +79,7 @@ const importAccountScreen = props => {
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>
-          <fbt desc="ImportScreen.title">Import your wallet</fbt>
+          <fbt desc="ImportScreen.title">Import A Wallet</fbt>
         </Text>
         <Text style={styles.subtitle}>
           <fbt desc="ImportScreen.subtitle">
