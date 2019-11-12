@@ -1,16 +1,8 @@
 'use strict'
 
 import React, { Component } from 'react'
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native'
+import { KeyboardAvoidingView, Platform, StyleSheet, Text } from 'react-native'
 import { connect } from 'react-redux'
-import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
 
 import { setPin } from 'actions/Settings'
@@ -80,30 +72,20 @@ class ChangePinScreen extends Component {
 
     return (
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={'padding'}
-        keyboardVerticalOffset={Platform.OS === 'android' ? 40 : 0}
+        style={styles.content}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
       >
-        <SafeAreaView style={{ flex: 1 }}>
-          <ScrollView
-            contentContainerStyle={[styles.content, styles.greyBackground]}
-            keyboardShouldPersistTaps={'always'}
-          >
-            <View style={styles.container}>
-              <Text style={styles.subtitle}>{titleElement}</Text>
-              {this.state.isRetry === true && (
-                <Text style={styles.invalid}>
-                  <fbt desc="PinScreen.pinMatchFailure">Incorrect PIN</fbt>
-                </Text>
-              )}
-              <PinInput
-                value={this.state.pin}
-                pinLength={this.pinLength}
-                onChangeText={this.handleInput}
-              />
-            </View>
-          </ScrollView>
-        </SafeAreaView>
+        <Text style={styles.subtitle}>{titleElement}</Text>
+        {this.state.isRetry === true && (
+          <Text style={styles.invalid}>
+            <fbt desc="PinScreen.pinMatchFailure">Incorrect PIN</fbt>
+          </Text>
+        )}
+        <PinInput
+          value={this.state.pin}
+          pinLength={this.pinLength}
+          onChangeText={this.handleInput}
+        />
       </KeyboardAvoidingView>
     )
   }

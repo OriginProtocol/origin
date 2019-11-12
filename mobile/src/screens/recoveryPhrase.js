@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
   recoveryContainer: {
     paddingHorizontal: 10,
     paddingVertical: 10,
+    marginVertical: 20,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
