@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     backgroundColor: '#f0f6f9',
-    borderRadius: 15,
+    borderRadius: 15
   },
   recoveryWordContainer: {
     paddingVertical: 10,

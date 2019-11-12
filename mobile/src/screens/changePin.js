@@ -1,12 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import {
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-} from 'react-native'
+import { KeyboardAvoidingView, Platform, StyleSheet, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { fbt } from 'fbt-runtime'
 
