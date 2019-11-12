@@ -123,13 +123,13 @@ const Dashboard = props => {
   )
 }
 
-const mapStateToProps = ({ account, grant, lockup, transfer }) => {
+const mapStateToProps = ({ account, grant, lockup, transfer, user }) => {
   return {
     accounts: getAccounts(account),
     accountIsLoading: getAccountIsLoading(account),
     grants: getGrants(grant),
     grantIsLoading: getGrantIsLoading(grant),
-    grantTotals: getGrantTotals(grant),
+    grantTotals: getGrantTotals(user.user, grant),
     lockups: getLockups(lockup),
     lockupIsLoading: getLockupIsLoading(lockup),
     lockupTotals: getLockupTotals(lockup),
