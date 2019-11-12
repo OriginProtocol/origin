@@ -33,7 +33,7 @@ const RecoveryPhraseExplainerScreen = ({ navigation }) => (
       <Text style={styles.subtitle}>
         <fbt desc="RecoveryPhraseExplainer.warning">
           Keep your recovery phrase safe! Never share it with anyone and make
-          sure that it can't be lost or destroyed.
+          sure that it can&apos;t be lost or destroyed.
         </fbt>
       </Text>
     </View>

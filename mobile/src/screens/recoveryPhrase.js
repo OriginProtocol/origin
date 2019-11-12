@@ -41,7 +41,7 @@ const RecoveryPhraseScreen = ({ navigation, wallet }) => (
       <Disclaimer>
         <fbt desc="RecoveryPhrase.disclaimer">
           Remember: You are solely responsible for your recovery phrase. We
-          don't store it and there's no other way to recover your account.
+          don&apos;t store it and there&apos;s no other way to recover your account.
         </fbt>
       </Disclaimer>
     </View>
