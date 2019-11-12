@@ -147,6 +147,9 @@ const mapDispatchToProps = dispatch => ({
   setSamsungBKSEnabled: payload => dispatch(setSamsungBKSEnabled(payload))
 })
 
-const App = connect(mapStateToProps, mapDispatchToProps)(MarketplaceApp)
+const App = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MarketplaceApp)
 
 export default createAppContainer(App)

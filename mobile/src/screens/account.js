@@ -239,7 +239,10 @@ const mapDispatchToProps = dispatch => ({
   setAccountActive: account => dispatch(setAccountActive(account))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(AccountScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AccountScreen)
 
 const styles = StyleSheet.create({
   ...CommonStyles

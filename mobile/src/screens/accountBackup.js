@@ -22,18 +22,20 @@ const AccountBackupScreen = ({ navigation }) => (
         style={styles.image}
       />
       <Text style={styles.title}>
-        <fbt desc="AccountBackup.title">Back up your wallet</fbt>
+        <fbt desc="AccountBackup.title">Back Up Your Wallet</fbt>
       </Text>
       <Text style={styles.subtitle}>
         <fbt desc="AccountBackup.subtitle">
-          Now that your wallet has been stored on this device, you’re free to
-          start using it.
+          Now that your wallet has been created, it's ready to be used with
+          Origin.
         </fbt>
       </Text>
       <Text style={styles.subtitle}>
         <fbt desc="AccountBackup.warning">
-          But, what happens if you lose this device? Unless you back up your
-          wallet you will lose your funds forever.
+          But what happens if you lose this device? Unless you back up your
+          wallet, you will lose access to it forever. We don't store your
+          recovery phrase, so we won't be able to help you access your account
+          or your funds.
         </fbt>
       </Text>
     </View>

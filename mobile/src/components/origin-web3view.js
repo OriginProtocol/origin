@@ -377,9 +377,14 @@ const mapStateToProps = ({ samsungBKS, settings, wallet }) => {
   return { samsungBKS, settings, wallet }
 }
 
-export default connect(mapStateToProps, null, null, {
-  forwardRef: true
-})(OriginWeb3View)
+export default connect(
+  mapStateToProps,
+  null,
+  null,
+  {
+    forwardRef: true
+  }
+)(OriginWeb3View)
 
 const styles = StyleSheet.create({
   modalSafeAreaView: {

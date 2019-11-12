@@ -296,7 +296,10 @@ const mapStateToProps = ({ settings }) => {
   return { settings }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(settingsScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(settingsScreen)
 
 const styles = StyleSheet.create({
   ...CommonStyles,

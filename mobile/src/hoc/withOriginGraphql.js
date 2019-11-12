@@ -261,7 +261,10 @@ const withOriginGraphql = WrappedComponent => {
     setAccountBalances: balance => dispatch(setAccountBalances(balance))
   })
 
-  return connect(mapStateToProps, mapDispatchToProps)(WithOriginGraphql)
+  return connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(WithOriginGraphql)
 }
 
 export default withOriginGraphql

@@ -22,7 +22,10 @@ function withConfig(WrappedComponent) {
     return { settings }
   }
 
-  return connect(mapStateToProps, {})(WithConfig)
+  return connect(
+    mapStateToProps,
+    {}
+  )(WithConfig)
 }
 
 export default withConfig

@@ -84,7 +84,10 @@ const mapDispatchToProps = dispatch => ({
   setCurrency: currency => dispatch(setCurrency(currency))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(currencyScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(currencyScreen)
 
 const styles = StyleSheet.create({
   ...ListStyles

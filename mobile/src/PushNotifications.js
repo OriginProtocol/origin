@@ -376,5 +376,8 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default withConfig(
-  connect(mapStateToProps, mapDispatchToProps)(PushNotifications)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(PushNotifications)
 )

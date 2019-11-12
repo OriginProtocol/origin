@@ -1,13 +1,6 @@
 {
   "fb-locale": "el_GR",
   "translations": {
-    "Ri5Gg2SNwcgIl8+233d8Ag==": {
-      "translations": [
-        {
-          "translation": "Διεύθυνση"
-        }
-      ]
-    },
     "xcXF5fEWXTaRWnAPnImIEA==": {
       "translations": [
         {
@@ -32,553 +25,567 @@
     "vpHbx0KGwimfUDMM2yWJiw==": {
       "translations": [
         {
-          "translation": "Authentication failed"
+          "translation": "Η ταυτοποίηση απέτυχε"
         }
       ]
     },
     "RDq5ZjyJ3If5xODxIb74hg==": {
       "translations": [
         {
-          "translation": "Incorrect pin code"
+          "translation": "Λανθασμένος κωδικός PIN"
         }
       ]
     },
     "fsX2zn/I8IxKM/YS6pNIiA==": {
       "translations": [
         {
-          "translation": "Authentication Required"
+          "translation": "Απαιτείται πιστοποίηση"
         }
       ]
     },
     "uBbr58ZsBIlotqS29XDzmA==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Ξαναδοκιμάσετε"
+        }
+      ]
+    },
+    "ErD20CBa67cXCzpYJD/Lqw==": {
+      "translations": [
+        {
+          "translation": "Επανάληψη με την καρφίτσα"
         }
       ]
     },
     "b1eg8txmL9GsnAqK+wcpDA==": {
       "translations": [
         {
-          "translation": "Pin Required"
+          "translation": "Απαιτείται καρφίτσα"
         }
       ]
     },
     "jakn3qdMee3dY1QQSnxPBw==": {
       "translations": [
         {
-          "translation": "Back up account"
+          "translation": "Δημιουργία αντιγράφων ασφαλείας λογαριασμού"
         }
       ]
     },
     "zq6BJdlScS7RmSd1QYOx/w==": {
       "translations": [
         {
-          "translation": "If you lose your account private key, you will not be able to access your funds."
+          "translation": "Εάν χάσετε το ιδιωτικό κλειδί του λογαριασμού σας, δεν θα έχετε πρόσβαση στα χρήματά σας."
         }
       ]
     },
     "4usqugeX/QJAVYFd20+Juw==": {
       "translations": [
         {
-          "translation": "If you lose your account recovery phrase, you will not be able to access your funds."
+          "translation": "Αν χάσετε τη φράση ανάκτησης του λογαριασμού σας, δεν θα έχετε πρόσβαση στα χρήματά σας."
         }
       ]
     },
     "tnjbZFYtRWMI0Cvx7tUoLw==": {
       "translations": [
         {
-          "translation": "Back up private key"
+          "translation": "Δημιουργήστε αντίγραφα ασφαλείας ιδιωτικού κλειδιού"
         }
       ]
     },
     "NtSYu4dP1gx3Q867CPSNqA==": {
       "translations": [
         {
-          "translation": "Back up recovery phrase"
+          "translation": "Δημιουργία αντιγράφων ασφαλείας φράσης ανάκτησης"
         }
       ]
     },
     "gS5uLfzsGn8W+iy1wGPcFA==": {
       "translations": [
         {
-          "translation": "Back up later"
+          "translation": "Δημιουργήστε αντίγραφα ασφαλείας αργότερα"
         }
       ]
     },
     "leoyo7yPyqCZYLzdYarxVg==": {
       "translations": [
         {
-          "translation": "Blockchain & Your Personal Data"
+          "translation": "Blockchain & τα προσωπικά σας δεδομένα"
         }
       ]
     },
     "TsWyCTUsQI/nO9f3+35sXw==": {
       "translations": [
         {
-          "translation": "By creating a profile, you are associating your name and photo with your Ethereum account. This means that others will be able to connect your blockchain transactions to your name and photo."
+          "translation": "Δημιουργώντας ένα προφίλ, συνδέετε το όνομα και τη φωτογραφία σας με το λογαριασμό σας στο Ethereum. Αυτό σημαίνει ότι άλλοι θα μπορούν να συνδέσουν τις συναλλαγές blockchain με το όνομα και τη φωτογραφία σας."
         }
       ]
     },
     "293hkFZBDThJ9B1cWDqFeA==": {
       "translations": [
         {
-          "translation": "Got it"
+          "translation": "Το κατάλαβα"
         }
       ]
     },
     "53OPnmUdKU2hcrljQxQZLA==": {
       "translations": [
         {
-          "translation": "An error occurred loading the Origin Marketplace. Please check your internet connection."
+          "translation": "Παρουσιάστηκε σφάλμα κατά τη φόρτωση του Origin Market. Ελέγξτε τη σύνδεση στο διαδίκτυο."
         }
       ]
     },
     "y5hrsKtem9k4a3YYBARQUQ==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Ξαναδοκιμάσετε"
         }
       ]
     },
     "KU9ATM6FUSyE4otzmBVDgA==": {
       "translations": [
         {
-          "translation": "Are you sure you don't want Origin Rewards?"
+          "translation": "Είστε βέβαιοι ότι δεν θέλετε Rewards Origins;"
         }
       ]
     },
     "09diYnabOsFOs1TD+djfhw==": {
       "translations": [
         {
-          "translation": "Your new wallet will be ineligible to earn OGN."
+          "translation": "Το νέο σας πορτοφόλι δεν θα είναι κατάλληλο για να κερδίσει το OGN."
         }
       ]
     },
     "irOaYRzzICZEzzJSVHZuPw==": {
       "translations": [
         {
-          "translation": "I'm sure"
+          "translation": "είμαι σίγουρος"
         }
       ]
     },
     "ElbsZ92b2NSuDKUhrEhInA==": {
       "translations": [
         {
-          "translation": "No, wait"
+          "translation": "Οχι περίμενε"
         }
       ]
     },
     "FCBgGtybLVdEFPoBHMNwRw==": {
       "translations": [
         {
-          "translation": "Enable Notifications"
+          "translation": "Ενεργοποίηση ειδοποιήσεων"
         }
       ]
     },
     "pO5CQpny+muZsUdbI/OMjQ==": {
       "translations": [
         {
-          "translation": "Woops! It looks like you have notifications disabled. To get the latest updates about your transactions we recommend enabling them in the settings for the Origin Marketplace application."
+          "translation": "Woops! Φαίνεται ότι έχετε ειδοποιήσεις απενεργοποιημένες. Για να λάβετε τις τελευταίες ενημερώσεις σχετικά με τις συναλλαγές σας, συνιστούμε να τις ενεργοποιήσετε στις ρυθμίσεις για την εφαρμογή Origin Marketplace."
         }
       ]
     },
     "kpnxGAkY7wwhA034sRjlgg==": {
       "translations": [
         {
-          "translation": "We highly recommend enabling notifications to get the latest updates about your transaction with timely alerts."
+          "translation": "Συνιστούμε ιδιαίτερα να ενεργοποιήσετε τις ειδοποιήσεις για να λάβετε τις πιο πρόσφατες ενημερώσεις σχετικά με τη συναλλαγή σας με έγκαιρες ειδοποιήσεις."
         }
       ]
     },
     "HP2OsxjZ92s0ZkiHRLCq+Q==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "Ανοίξτε τις ρυθμίσεις"
         }
       ]
     },
     "cNC6HEwSQ2MTdQc9xbDrAw==": {
       "translations": [
         {
-          "translation": "Enable Notifications"
+          "translation": "Ενεργοποίηση ειδοποιήσεων"
         }
       ]
     },
     "Ka8PTaoYl8PmXeWLQ8Qrzw==": {
       "translations": [
         {
-          "translation": "Close"
+          "translation": "Κλείσε"
         }
       ]
     },
     "21hMnXPcxTGJHmoWgpA7Og==": {
       "translations": [
         {
-          "translation": "Samsung Blockchain Keystore Error"
+          "translation": "Σφάλμα κλειδιού Samsung Blockchain"
         }
       ]
     },
     "qzN5RGfNbk86/n/jcpMdfg==": {
       "translations": [
         {
-          "translation": "An error occurred accessing Samsung Blockchain Keystore."
+          "translation": "Παρουσιάστηκε σφάλμα κατά την πρόσβαση στο Samsung Blockchain Keystore."
         }
       ]
     },
     "DEMLFz9zBSsNpmhGgY6piw==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Ξαναδοκιμάσετε"
         }
       ]
     },
     "rCsEaxa+oEKoe7c42xpG0A==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "Να συνεχίσει"
         }
       ]
     },
     "Hd7GnyffrmsytOC81wf1og==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "Ανοίξτε τις ρυθμίσεις"
         }
       ]
     },
     "2Ys/u9LEtc69RMwvBUge9g==": {
       "translations": [
         {
-          "translation": "Signature Request"
+          "translation": "Υποβολή αίτησης υπογραφής"
         }
       ]
     },
     "/EqSe0JWGoaELSz+mVvOhw==": {
       "translations": [
         {
-          "translation": "Sign"
+          "translation": "Σημάδι"
         }
       ]
     },
     "aHPwi7q8WIdH6tItKZGWpQ==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "Ματαίωση"
         }
       ]
     },
     "BSXd24qMR/v2kkJGZSzAkA==": {
       "translations": [
         {
-          "translation": "Create Listing"
+          "translation": "Δημιουργία καταχώρισης"
         }
       ]
     },
     "X272L09aOTnFbVTziChx1g==": {
       "translations": [
         {
-          "translation": "Make Offer"
+          "translation": "Κάνετε την προσφορά"
         }
       ]
     },
     "8XqYinU0zAemee1+B/gY3g==": {
       "translations": [
         {
-          "translation": "Transfer Tokens"
+          "translation": "Μεταφορά σημάτων"
         }
       ]
     },
     "I2HWbFKlgUggmCCeJAAi6w==": {
       "translations": [
         {
-          "translation": "Publish Identity"
+          "translation": "Δημοσιεύστε ταυτότητα"
         }
       ]
     },
     "lNW3S1SBg7rOFjjAt8j26Q==": {
       "translations": [
         {
-          "translation": "Grant Token Access"
+          "translation": "Πρόσβαση στο Token Grant"
         }
       ]
     },
     "VqHNzpP2gO7q8zCyzsy2wA==": {
       "translations": [
         {
-          "translation": "We are requesting permission to move {currency} on your behalf"
+          "translation": "Ζητούμε την άδεια να μετακινήσετε το {currency} εκ μέρους σας"
         }
       ]
     },
     "6i7qqM7tIY6QrQPlZk0sgA==": {
       "translations": [
         {
-          "translation": "Enable Meta Transactions"
+          "translation": "Ενεργοποιήστε τις μεταβιβάσεις Meta"
         }
       ]
     },
     "UptEXt/80yEZlV42llBLzQ==": {
       "translations": [
         {
-          "translation": "Blockchain Transaction"
+          "translation": "Blockchain Συναλλαγή"
         }
       ]
     },
     "0Hcb7EEcgWvM/wgaryT03g==": {
       "translations": [
         {
-          "translation": "Payment"
+          "translation": "Πληρωμή"
         }
       ]
     },
     "2immGCBCROovRIdEMKqUlw==": {
       "translations": [
         {
-          "translation": "Gas Cost"
+          "translation": "Κόστος αερίου"
         }
       ]
     },
     "aHqIW5wN2myfcutOuKhMCA==": {
       "translations": [
         {
-          "translation": "Boost"
+          "translation": "Ωθηση"
         }
       ]
     },
     "ATXUAJSbJ1McXJqB89l9lQ==": {
       "translations": [
         {
-          "translation": "Your Account"
+          "translation": "Του λογαριασμού σας"
         }
       ]
     },
     "8vFUXSEVa7KZBhBbxn2FHw==": {
       "translations": [
         {
-          "translation": "Your Balances"
+          "translation": "Οι ισορροπίες σας"
         }
       ]
     },
     "VjPzFy1pA4SOMEquZR4l8w==": {
       "translations": [
         {
-          "translation": "Your Balance"
+          "translation": "Η ισορροπία σου"
         }
       ]
     },
     "WGap/aXIb4uxFVQuBIhjuw==": {
       "translations": [
         {
-          "translation": "You don't have enough ETH to submit this transaction."
+          "translation": "Δεν έχετε αρκετό ETH για να υποβάλετε αυτήν τη συναλλαγή."
         }
       ]
     },
     "bpJjuZr6/qPESAQkORoCMg==": {
       "translations": [
         {
-          "translation": "You don't have enough ETH to publish your identity."
+          "translation": "Δεν έχετε αρκετό ETH για να δημοσιεύσετε την ταυτότητά σας."
         }
       ]
     },
     "4/6+bbpzXA+zeU20pC0xdQ==": {
       "translations": [
         {
-          "translation": "Confirm"
+          "translation": "Επιβεβαιώνω"
         }
       ]
     },
     "nxwmAvEdE7w9cM6fSB+fHw==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "Ματαίωση"
         }
       ]
     },
     "Yzqk2XJTQiSxv2t8cdh3nw==": {
       "translations": [
         {
-          "translation": "Update required"
+          "translation": "Απαιτείται αναβάθμιση"
         }
       ]
     },
     "VgnIScPQ4MxmjP3MHHSlpA==": {
       "translations": [
         {
-          "translation": "Woops! It looks like you are using an old version of the Origin Marketplace App. Please update to proceed."
+          "translation": "Woops! Φαίνεται ότι χρησιμοποιείτε μια παλιά έκδοση της εφαρμογής Origin Marketplace. Ενημερώστε για να προχωρήσετε."
         }
       ]
     },
     "HSJ4lSFH52qxe5hmSMBLaQ==": {
       "translations": [
         {
-          "translation": "Update available"
+          "translation": "Υπάρχει διαθέσιμη ενημέρωση"
         }
       ]
     },
     "6QOETx2H8d657NCFME14fQ==": {
       "translations": [
         {
-          "translation": "It looks like you are using an old version of the Origin Marketplace App. For the best experience, we recommend you update."
+          "translation": "Φαίνεται ότι χρησιμοποιείτε μια παλιά έκδοση της εφαρμογής Origin Marketplace. Για την καλύτερη εμπειρία, συνιστούμε να ενημερώσετε."
         }
       ]
     },
     "QpVi6Q8bytL6nnct+8vJDg==": {
       "translations": [
         {
-          "translation": "Update"
+          "translation": "Εκσυγχρονίζω"
         }
       ]
     },
     "BY1VaMBt7Cf6hcIW3G+xTw==": {
       "translations": [
         {
-          "translation": "Not now"
+          "translation": "Οχι τώρα"
         }
       ]
     },
     "XsJI4lHivUR4kWUoxiX2XA==": {
       "translations": [
         {
-          "translation": "What will be visible on the blockchain?"
+          "translation": "Τι θα είναι ορατό στο blockchain;"
         }
       ]
     },
     "rfyOc2A6KqTaGmyE0aHtuA==": {
       "translations": [
         {
-          "translation": "Account Details"
+          "translation": "λεπτομέρειες λογαριασμού"
         }
       ]
     },
     "63n7ZrjXs/xul67zZMRH6Q==": {
       "translations": [
         {
-          "translation": "Important!"
+          "translation": "Σπουδαίος!"
         }
       ]
     },
     "fbdJ5PgCtMiZoKwpqFSHFw==": {
       "translations": [
         {
-          "translation": "As a security precaution, the clipboard will be cleared after one minute."
+          "translation": "Ως προφύλαξη ασφαλείας, το πρόχειρο θα διαγραφεί μετά από ένα λεπτό."
         }
       ]
     },
     "fr/gqa6K0WToleM5Z+fKjQ==": {
       "translations": [
         {
-          "translation": "Got it"
+          "translation": "Το κατάλαβα"
         }
       ]
     },
     "rVHYls86LiL2qXmPeABLyg==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Αντιγραφή στο πρόχειρο!"
         }
       ]
     },
     "ARxpkvUPK0jFYXwVrYuIMw==": {
       "translations": [
         {
-          "translation": "Important!"
+          "translation": "Σπουδαίος!"
         }
       ]
     },
     "Fj7mSGlzBW8WmXnCJpygjA==": {
       "translations": [
         {
-          "translation": "Have you backed up your private key or recovery phrase for this account? The account will be permanently deleted and you must have the private key or recovery phrase to recover it. Are you sure that you want to delete this account?"
+          "translation": "Έχετε δημιουργήσει αντίγραφο ασφαλείας για το ιδιωτικό σας κλειδί ή τη φράση ανάκτησης για αυτόν το λογαριασμό; Ο λογαριασμός θα διαγραφεί οριστικά και θα πρέπει να έχετε το ιδιωτικό κλειδί ή τη φράση ανάκτησης για να τον ανακτήσετε. Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτόν τον λογαριασμό;"
         }
       ]
     },
     "0bq6YbxhOXa2A6WJpEaL+g==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "Ματαίωση"
         }
       ]
     },
     "lpp3lYIsSATmD+bTHnp7fA==": {
       "translations": [
         {
-          "translation": "Delete"
+          "translation": "Διαγράφω"
+        }
+      ]
+    },
+    "Ri5Gg2SNwcgIl8+233d8Ag==": {
+      "translations": [
+        {
+          "translation": "Διεύθυνση"
         }
       ]
     },
     "KaZkh00tsKdzL4PMvmqOWw==": {
       "translations": [
         {
-          "translation": "Make Active Account"
+          "translation": "Κάντε ενεργό λογαριασμό"
         }
       ]
     },
     "p3W1jjM1O7xwySSBNKVkeQ==": {
       "translations": [
         {
-          "translation": "Show Recovery Phrase"
+          "translation": "Εμφάνιση φράσης ανάκτησης"
         }
       ]
     },
     "vHA/IbKFZOLZEIvk17fbOQ==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Φράση ανάκτησης"
         }
       ]
     },
     "3T0ncUvbWQQYHxwCYIWCzQ==": {
       "translations": [
         {
-          "translation": "Copy Recovery Phrase"
+          "translation": "Αντιγραφή φράσης ανάκτησης"
         }
       ]
     },
     "2Ql766BBWhadduhv1A8mCg==": {
       "translations": [
         {
-          "translation": "Show Private Key"
+          "translation": "Εμφάνιση ιδιωτικού κλειδιού"
         }
       ]
     },
     "qgFPa2G/IoAt9CIVn6ey1A==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "Ιδιωτικό κλειδί"
         }
       ]
     },
     "YL1+Pt1Th3TvLZQaVxak9w==": {
       "translations": [
         {
-          "translation": "Copy Private Key"
+          "translation": "Αντιγράψτε το ιδιωτικό κλειδί"
         }
       ]
     },
     "sL6k42V4vn/2x26sVAldkw==": {
       "translations": [
         {
-          "translation": "Delete Account"
+          "translation": "Διαγραφή λογαριασμού"
         }
       ]
     },
     "IiicX5WBjylfRHl57pd/cw==": {
       "translations": [
         {
-          "translation": "Accounts"
+          "translation": "Λογαριασμοί"
         }
       ]
     },
     "dcugbzsCXlIcz+MDEjVWhw==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Φράση ανάκτησης"
         }
       ]
     },
     "/qUSB40G8z1yEmSpGgnhpw==": {
       "translations": [
         {
-          "translation": "Imported from Private Key"
+          "translation": "Εισαγόμενα από ιδιωτικό κλειδί"
         }
       ]
     },
@@ -592,203 +599,245 @@
     "eeZwTjiz+eTRGp9qpIdbUg==": {
       "translations": [
         {
-          "translation": "{biometryType} Unavailable"
+          "translation": "{biometryType} Μη διαθέσιμο"
         }
       ]
     },
     "IaE+AHV4HvjUVM7WH5QGEQ==": {
       "translations": [
         {
-          "translation": "It looks like you have {biometryType} disabled. You will need to enable it in the settings for the Origin Marketplace App."
+          "translation": "Φαίνεται ότι έχετε {biometryType} άτομα με ειδικές ανάγκες. Θα πρέπει να το ενεργοποιήσετε στις ρυθμίσεις για την εφαρμογή Origin Marketplace."
         }
       ]
     },
     "+2JgKmxomPm6EphuMZAFIg==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "Ανοίξτε τις ρυθμίσεις"
         }
       ]
     },
     "33H9wgLoaZ0e06VAnLqWDQ==": {
       "translations": [
         {
-          "translation": "Protect your wallet"
+          "translation": "Προστατέψτε το πορτοφόλι σας"
         }
       ]
     },
     "LeVyToxA5TxqpAsWD4H61w==": {
       "translations": [
         {
-          "translation": "Add an extra layer of security to keep your crypto safe."
+          "translation": "Προσθέστε ένα επιπλέον επίπεδο ασφαλείας για να διατηρήσετε ασφαλή την κρυπτογράφηση σας."
         }
       ]
     },
     "Rs0apd73mOXN6yDQ2xy9/w==": {
       "translations": [
         {
-          "translation": "Create a Pin Code"
+          "translation": "Δημιουργήστε έναν κωδικό PIN"
         }
       ]
     },
     "0j7TBsobep8YH0Qkvtrqcg==": {
       "translations": [
         {
-          "translation": "Important!"
+          "translation": "Σπουδαίος!"
         }
       ]
     },
     "PwgVT2B+QoumKmdtky/t5Q==": {
       "translations": [
         {
-          "translation": "As a security precaution, the clipboard will be cleared after one minute."
+          "translation": "Ως προφύλαξη ασφαλείας, το πρόχειρο θα διαγραφεί μετά από ένα λεπτό."
         }
       ]
     },
     "BM9rEF51uzQdLEjljSVj0A==": {
       "translations": [
         {
-          "translation": "Got it"
+          "translation": "Το κατάλαβα"
         }
       ]
     },
     "2s+9bYBUsRvylceP3dEVLA==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Αντιγραφή στο πρόχειρο!"
         }
       ]
     },
     "5e+ltpuxscfACFNaS2dcOw==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "Ιδιωτικό κλειδί"
         }
       ]
     },
     "XyxrGJkJ5zgb6isZ0BdDlg==": {
       "translations": [
         {
-          "translation": "Write down your private key"
+          "translation": "Καταγράψτε το ιδιωτικό κλειδί σας"
         }
       ]
     },
     "KmMOc82inx1QRhhp/fyMyQ==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Φράση ανάκτησης"
         }
       ]
     },
     "DIhU+yQs2asm5wXqej7dfg==": {
       "translations": [
         {
-          "translation": "Write down your recovery phrase"
+          "translation": "Καταγράψτε τη φράση ανάκτησης"
         }
       ]
     },
     "qS83Klnh433/5rED9+ibOg==": {
       "translations": [
         {
-          "translation": "Copy to clipboard"
+          "translation": "Αντιγραφή στο πρόχειρο"
         }
       ]
     },
     "zLMFuSkl3GBjE3tx50sIhw==": {
       "translations": [
         {
-          "translation": "This private key is the key to your account. Write it down, or copy it to a password manager. We recommend NOT emailing it to yourself."
+          "translation": "Αυτό το ιδιωτικό κλειδί είναι το κλειδί στο λογαριασμό σας. Καταγράψτε το ή αντιγράψτε το σε έναν διαχειριστή κωδικών πρόσβασης. Σας συνιστούμε να μην στέλνετε μήνυμα ηλεκτρονικού ταχυδρομείου σε εσάς"
         }
       ]
     },
     "MAOXf1kKWz/7TYu8RqMmFQ==": {
       "translations": [
         {
-          "translation": "This recovery phrase is the key to your account. Write it down, or copy it to a password manager. We recommend NOT emailing it to yourself."
+          "translation": "Αυτή η φράση ανάκτησης είναι το κλειδί του λογαριασμού σας. Καταγράψτε το ή αντιγράψτε το σε έναν διαχειριστή κωδικών πρόσβασης. Σας συνιστούμε να μην στέλνετε μήνυμα ηλεκτρονικού ταχυδρομείου σε εσάς"
         }
       ]
     },
     "XMtHJ6TJ3X8ym6yKQ0KKVQ==": {
       "translations": [
         {
-          "translation": "Next"
+          "translation": "Επόμενο"
         }
       ]
     },
     "zTv/d3wo3BWrq3lxTDiPvA==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "Ματαίωση"
         }
       ]
     },
     "KOevTAZaVtyeDehBuvlCrA==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "Ιδιωτικό κλειδί"
         }
       ]
     },
     "EhJiSCEWoUvWM8XEDOzT/g==": {
       "translations": [
         {
-          "translation": "Enter your private key"
+          "translation": "Εισαγάγετε το ιδιωτικό σας κλειδί"
         }
       ]
     },
     "yzRqhh/Qk+7ZfmQcdOrjUw==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Φράση ανάκτησης"
         }
       ]
     },
     "myq3OtUs+Fi+a0kMs+wbIg==": {
       "translations": [
         {
-          "translation": "Select the words in the correct order"
+          "translation": "Επιλέξτε τις λέξεις με τη σωστή σειρά"
         }
       ]
     },
     "EDxEE4K6bae2M7ydCHp6Zw==": {
       "translations": [
         {
-          "translation": "Go Back"
+          "translation": "Πήγαινε πίσω"
         }
       ]
     },
     "GkFF5s8F0GpJycWhOhK/iA==": {
       "translations": [
         {
-          "translation": "You have successfully backed up your recovery phrase"
+          "translation": "Έχετε δημιουργήσει επιτυχώς αντίγραφο ασφαλείας της φράσης ανάκτησης"
         }
       ]
     },
     "ODOQveQR0RNc0DEs0MLAxg==": {
       "translations": [
         {
-          "translation": "Done"
+          "translation": "Εγινε"
+        }
+      ]
+    },
+    "ovdpavP9sKYKI/XXkeRgPQ==": {
+      "translations": [
+        {
+          "translation": "Εισαγάγετε το νέο σας PIN"
+        }
+      ]
+    },
+    "W3VHEa7n4bmUNgzaKj3xuw==": {
+      "translations": [
+        {
+          "translation": "Εισαγάγετε το παλιό σας PIN"
+        }
+      ]
+    },
+    "/aGURKePsq3sTnkUrus4+g==": {
+      "translations": [
+        {
+          "translation": "Εισαγάγετε ξανά τον κωδικό PIN"
+        }
+      ]
+    },
+    "6TNQrsvPH7Jg+9BxOuTPQw==": {
+      "translations": [
+        {
+          "translation": "Δημιουργήστε έναν κωδικό PIN"
+        }
+      ]
+    },
+    "tH+M0ZY76tfrE3XPNeiUnw==": {
+      "translations": [
+        {
+          "translation": "Εισαγάγετε το PIN σας"
+        }
+      ]
+    },
+    "Jqw0AiXS00Vx8U1XL+9Uwg==": {
+      "translations": [
+        {
+          "translation": "Λανθασμένο PIN"
         }
       ]
     },
     "/Dpz63y5rPCTt9TIGPA08A==": {
       "translations": [
         {
-          "translation": "Currency"
+          "translation": "Νόμισμα"
         }
       ]
     },
     "2eAz/IqchpMLxH7uzquWIg==": {
       "translations": [
         {
-          "translation": "Use Recovery Phrase"
+          "translation": "Χρησιμοποιήστε τη φράση ανάκτησης"
         }
       ]
     },
     "FvAa7D4zZNCqy+i4K2/9PQ==": {
       "translations": [
         {
-          "translation": "Use Private Key"
+          "translation": "Χρησιμοποιήστε το ιδιωτικό κλειδί"
         }
       ]
     },
@@ -802,273 +851,308 @@
     "YgQAbQzQfarXS32FHToKpA==": {
       "translations": [
         {
-          "translation": "Your wallet is managed by the Samsung Blockchain Keystore."
+          "translation": "Το πορτοφόλι σας διαχειρίζεται το Samsung Blockchain Keystore."
         }
       ]
     },
     "P19QeS8TSjISSt0doVlLyA==": {
       "translations": [
         {
-          "translation": "Import your wallet"
+          "translation": "Εισαγάγετε το πορτοφόλι σας"
         }
       ]
     },
     "31RyFwYE/GDQQsrh3Ulvtw==": {
       "translations": [
         {
-          "translation": "You can import a wallet using one of the methods below."
+          "translation": "Μπορείτε να εισαγάγετε ένα πορτοφόλι χρησιμοποιώντας μία από τις παρακάτω μεθόδους."
         }
       ]
     },
     "EAvFlbnkWZvKJZAe/pfhsA==": {
       "translations": [
         {
-          "translation": "That does not look like a valid recovery phrase."
+          "translation": "Αυτό δεν μοιάζει με μια έγκυρη φράση ανάκαμψης."
         }
       ]
     },
     "S/j+cIqLysC5PQLYuvycXw==": {
       "translations": [
         {
-          "translation": "Enter Phrase"
+          "translation": "Εισαγάγετε φράση"
         }
       ]
     },
     "peoX+3Gbnsy8TqdLquCI1g==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "Να συνεχίσει"
         }
       ]
     },
     "5/XzkOw7jsXF3hNFdAOfVw==": {
       "translations": [
         {
-          "translation": "That is not a valid private key."
+          "translation": "Αυτό δεν είναι έγκυρο ιδιωτικό κλειδί."
         }
       ]
     },
     "6kOIRuFPg13nKeGrxENaaw==": {
       "translations": [
         {
-          "translation": "Enter Private Key"
+          "translation": "Πληκτρολογήστε το ιδιωτικό κλειδί"
         }
       ]
     },
     "Aw26GuAppbsDwcsIGOynqA==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "Να συνεχίσει"
         }
       ]
     },
     "59TOqnoYcFhWfpYdUrJdiw==": {
       "translations": [
         {
-          "translation": "Language"
+          "translation": "Γλώσσα"
         }
       ]
     },
     "lPK1A5cn8JlhIPgCDjiuAg==": {
       "translations": [
         {
-          "translation": "Connection Error"
+          "translation": "Σφάλμα σύνδεσης"
         }
       ]
     },
     "a3s77Iq0FypOEuisvfUcYg==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Ξαναδοκιμάσετε"
         }
       ]
     },
     "c95LW4bvkZe+dGIftWiDVg==": {
       "translations": [
         {
-          "translation": "Settings"
-        }
-      ]
-    },
-    "/aGURKePsq3sTnkUrus4+g==": {
-      "translations": [
-        {
-          "translation": "Re-enter Pin Code"
-        }
-      ]
-    },
-    "6TNQrsvPH7Jg+9BxOuTPQw==": {
-      "translations": [
-        {
-          "translation": "Create a Pin Code"
+          "translation": "Ρυθμίσεις"
         }
       ]
     },
     "K/aDJpTjmvmNt/MSEGDQUQ==": {
       "translations": [
         {
-          "translation": "Pins did not match, try again"
+          "translation": "Οι καρφίτσες δεν ταιριάζουν, προσπαθήστε ξανά"
         }
       ]
     },
     "N/BpKgn5giDbaBNOo6O9HQ==": {
       "translations": [
         {
-          "translation": "Your Pin Code will be used to login to the app."
+          "translation": "Ο Κωδικός Pin θα χρησιμοποιηθεί για να συνδεθεί στην εφαρμογή."
+        }
+      ]
+    },
+    "1xII+dDcYWSOu0jzDlP23w==": {
+      "translations": [
+        {
+          "translation": "Η άδεια αρνήθηκε"
+        }
+      ]
+    },
+    "YvZQnI6IbpRDeY9FhGhoaw==": {
+      "translations": [
+        {
+          "translation": "Φαίνεται ότι έχετε {biometryType} άτομα με ειδικές ανάγκες. Θα πρέπει να το ενεργοποιήσετε στις ρυθμίσεις για την εφαρμογή Origin Marketplace."
+        }
+      ]
+    },
+    "g+wmZ6xm0Zlw6f0FYy18xg==": {
+      "translations": [
+        {
+          "translation": "Εντάξει"
+        }
+      ]
+    },
+    "u3sOSat8+WAAQ8EuhbirNg==": {
+      "translations": [
+        {
+          "translation": "Ματαίωση"
         }
       ]
     },
     "LcZb2FnXOZvXBJaKB/sXTw==": {
       "translations": [
         {
-          "translation": "General"
+          "translation": "Γενικός"
         }
       ]
     },
     "rRrFuJKbAi/LO7RrEyMt2Q==": {
       "translations": [
         {
-          "translation": "Accounts"
+          "translation": "Λογαριασμοί"
         }
       ]
     },
     "5RkbvYJ6la3jlOnXZ5KIoQ==": {
       "translations": [
         {
-          "translation": "Language"
+          "translation": "Γλώσσα"
         }
       ]
     },
     "GHSZ2Asae082vH5nd+9RuA==": {
       "translations": [
         {
-          "translation": "Currency"
+          "translation": "Νόμισμα"
         }
       ]
     },
     "ob6dsrEPfJxAbOpd4plQGA==": {
       "translations": [
         {
-          "translation": "Network"
+          "translation": "Δίκτυο"
+        }
+      ]
+    },
+    "qCsRh42AI/i+tq1jYI5pcA==": {
+      "translations": [
+        {
+          "translation": "ΑΣΦΑΛΕΙΑ"
+        }
+      ]
+    },
+    "JqYbscHWSnagurtMN955jQ==": {
+      "translations": [
+        {
+          "translation": "Κωδικό PIN"
+        }
+      ]
+    },
+    "sDCHJ6X+2GJiE4xVdiR+fw==": {
+      "translations": [
+        {
+          "translation": "Αλλαγή κωδικού PIN"
         }
       ]
     },
     "j5rIPEDyOjXyubSdCUgZ6A==": {
       "translations": [
         {
-          "translation": "Version"
+          "translation": "Εκδοχή"
         }
       ]
     },
     "O1VMdGobKc4WbUg9gMwhBQ==": {
       "translations": [
         {
-          "translation": "Settings"
+          "translation": "Ρυθμίσεις"
         }
       ]
     },
     "qwt5DPbEmQbgHhDgriLciA==": {
       "translations": [
         {
-          "translation": "Funding"
+          "translation": "Χρηματοδότηση"
         }
       ]
     },
     "yEmOPvByK+VpH6+CO13qdw==": {
       "translations": [
         {
-          "translation": "For now, you will need to transfer {currency} into your Origin Wallet from another source."
+          "translation": "Προς το παρόν, θα χρειαστεί να μεταφέρετε {currency} στο πορτοφόλι προέλευσης από άλλη πηγή."
         }
       ]
     },
     "yHd/aoBlbe3kUXfROlRz4Q==": {
       "translations": [
         {
-          "translation": "Show Address"
+          "translation": "Εμφάνιση διεύθυνσης"
         }
       ]
     },
     "ba+qT6IM6x1p9Zq2KM/sOA==": {
       "translations": [
         {
-          "translation": "Wallet Address"
+          "translation": "Διεύθυνση Πορτοφολιού"
         }
       ]
     },
     "kaZsDMAAk9n+m4vDL24hhg==": {
       "translations": [
         {
-          "translation": "Copy Address"
+          "translation": "Αντιγραφή διεύθυνσης"
         }
       ]
     },
     "cev6fBNlultWVlLlmimovA==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Αντιγραφή στο πρόχειρο!"
         }
       ]
     },
     "k9ik7lp8zzY9UDgOal86Tg==": {
       "translations": [
         {
-          "translation": "Wallet Address"
+          "translation": "Διεύθυνση Πορτοφολιού"
         }
       ]
     },
     "MqIZn3Tps2BNhT8GpKl49Q==": {
       "translations": [
         {
-          "translation": "Add Account"
+          "translation": "Προσθήκη λογαριασμού"
         }
       ]
     },
     "suj8KDO/kpGSuWSeoiYk7A==": {
       "translations": [
         {
-          "translation": "Wallet"
+          "translation": "Πορτοφόλι"
         }
       ]
     },
     "RQqR7szL1Z0RUueooggK8w==": {
       "translations": [
         {
-          "translation": "Buy and sell stuff with crypto."
+          "translation": "Αγοράστε και πωλήστε αντικείμενα με κρυπτογραφία."
         }
       ]
     },
     "NS4tuPyGpGvlopEQ9CgpaQ==": {
       "translations": [
         {
-          "translation": "Earn rewards."
+          "translation": "Κερδίστε ανταμοιβές."
         }
       ]
     },
     "qrLh9UBi6Dk+4Sjgbqwhmg==": {
       "translations": [
         {
-          "translation": "By signing up you agree to the Terms of Use and Privacy Policy"
+          "translation": "Με την εγγραφή συμφωνείτε με τους Όρους Χρήσης και την Πολιτική Απορρήτου"
         }
       ]
     },
     "XSqsabas04tq+ha/t4s+cQ==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "Να συνεχίσει"
         }
       ]
     },
     "4ngVhZSzyusgelFj2N7DSA==": {
       "translations": [
         {
-          "translation": "Create a wallet"
+          "translation": "Δημιουργήστε ένα πορτοφόλι"
         }
       ]
     },
     "DqUT7JADQFjo22wU9bvsmg==": {
       "translations": [
         {
-          "translation": "I already have a wallet"
+          "translation": "Έχω ήδη ένα πορτοφόλι"
         }
       ]
     }

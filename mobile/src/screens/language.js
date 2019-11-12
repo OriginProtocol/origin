@@ -83,7 +83,10 @@ const mapDispatchToProps = dispatch => ({
   setLanguage: language => dispatch(setLanguage(language))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(languageScreen)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(languageScreen)
 
 const styles = StyleSheet.create({
   ...ListStyles

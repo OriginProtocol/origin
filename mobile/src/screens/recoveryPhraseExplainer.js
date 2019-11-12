@@ -22,20 +22,18 @@ const RecoveryPhraseExplainerScreen = ({ navigation }) => (
         style={styles.image}
       />
       <Text style={styles.title}>
-        <fbt desc="RecoveryPhraseExplainer.title">
-          Write down your recovery phrase
-        </fbt>
+        <fbt desc="RecoveryPhraseExplainer.title">Write It Down</fbt>
       </Text>
       <Text style={styles.subtitle}>
         <fbt desc="RecoveryPhraseExplainer.subtitle">
-          If your device gets lost or stolen, you can restore your wallet by
-          using your recovery phrase.
+          If your device gets lost or stolen, you must use your recovery phrase
+          to restore access to your wallet.
         </fbt>
       </Text>
       <Text style={styles.subtitle}>
         <fbt desc="RecoveryPhraseExplainer.warning">
-          Please keep your recovery phrase safe. We will not store it anywhere
-          and cannot help you get it back if you lose it.
+          Keep your recovery phrase safe! Never share it with anyone and make
+          sure that it can't be lost or destroyed.
         </fbt>
       </Text>
     </View>
