@@ -33,7 +33,7 @@ async function hasBalance(userId, amount) {
   }
 
   // Sum the vested tokens for all of the users grants
-  const vested = calculateVested(req.user, user.Grants)
+  const vested = calculateVested(user, user.Grants)
   logger.info('Vested tokens', vested.toString())
   // Sum the unlocked tokens from lockup earnings
   const lockupEarnings = calculateUnlockedEarnings(user.Lockups)
