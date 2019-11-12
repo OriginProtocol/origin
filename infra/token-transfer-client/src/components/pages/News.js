@@ -52,7 +52,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(News)
+export default connect(mapStateToProps, mapDispatchToProps)(News)

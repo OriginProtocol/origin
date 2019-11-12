@@ -182,7 +182,9 @@ class ImportData {
       }
       if (this.config.token) {
         logger.info(
-          `${record.email} ${clientUrl}/welcome/${generateToken(record.email)}`
+          `${record.email} ${clientUrl}/login_handler/${generateToken(
+            record.email
+          )}`
         )
       }
       if (this.config.doIt) {

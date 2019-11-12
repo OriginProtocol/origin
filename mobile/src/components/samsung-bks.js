@@ -108,7 +108,7 @@ class SamsungBKS extends React.Component {
     if (this.props.samsungBKS.error) {
       return (
         <View style={styles.error}>
-          <View style={styles.container}>
+          <View style={styles.content}>
             <Text style={styles.title}>
               <fbt desc="SamsungBKSScreen.heading">
                 Samsung Blockchain Keystore Error
@@ -243,7 +243,7 @@ class SamsungBKS extends React.Component {
 
   renderRetryButton() {
     return (
-      <View style={[styles.container, styles.buttonContainer]}>
+      <View style={styles.buttonContainer}>
         <OriginButton
           size="large"
           type="primary"
@@ -256,7 +256,7 @@ class SamsungBKS extends React.Component {
 
   renderSamsungBKSSettingsLink() {
     return (
-      <View style={[styles.container, styles.buttonContainer]}>
+      <View style={styles.buttonContainer}>
         <OriginButton
           size="large"
           type="primary"
@@ -272,7 +272,7 @@ class SamsungBKS extends React.Component {
 
   renderDisableKeystoreButton() {
     return (
-      <View style={[styles.container, styles.buttonContainer]}>
+      <View style={styles.buttonContainer}>
         <OriginButton
           size="large"
           type="primary"
@@ -298,10 +298,7 @@ const mapDispatchToProps = dispatch => ({
   setSamsungBKSError: error => dispatch(setSamsungBKSError(error))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SamsungBKS)
+export default connect(mapStateToProps, mapDispatchToProps)(SamsungBKS)
 
 const styles = StyleSheet.create({
   ...CommonStyles,

@@ -47,11 +47,34 @@ class Login extends Component {
       return <Redirect push to={this.state.redirectTo} />
     }
 
+    const query = new URLSearchParams(this.props.location.search)
+    const error = query.get('error')
+
+    let messageElement
+    if (!error) {
+      messageElement = (
+        <p>We will send you a magic link to your email to confirm access.</p>
+      )
+    } else if (error === 'expired') {
+      messageElement = (
+        <div className="alert alert-danger mb-4">
+          Your login token is invalid or has expired. Please login again.
+        </div>
+      )
+    } else if (error === 'server') {
+      messageElement = (
+        <div className="alert alert-danger mb-4">
+          An error occurred communicating with the server. Please try again
+          later.
+        </div>
+      )
+    }
+
     return (
       <>
         <div className="action-card">
           <h1>Sign In</h1>
-          <p>We will send you a magic link to your email to confirm access.</p>
+          {messageElement}
           <form>
             <div className="form-group">
               <label htmlFor="email">Email Address</label>

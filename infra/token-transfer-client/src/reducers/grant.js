@@ -44,10 +44,10 @@ export default function grantsReducer(state = initialState, action) {
 export const getGrants = state => state.grants.map(momentizeGrant)
 export const getError = state => state.error
 export const getIsLoading = state => state.isLoading
-export const getTotals = state => {
+export const getTotals = (user, state) => {
   const grants = getGrants(state)
   const grantTotal = calculateGranted(grants)
-  const vestedTotal = calculateVested(grants)
+  const vestedTotal = calculateVested(user, grants)
   const unvestedTotal = grantTotal.minus(vestedTotal)
   return { grantTotal, vestedTotal, unvestedTotal }
 }
