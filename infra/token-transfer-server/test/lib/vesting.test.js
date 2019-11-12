@@ -139,6 +139,8 @@ describe('Employee vesting', () => {
   })
 
   describe('4 year grant with 1 year cliff and rounding', () => {
+    let grant
+
     beforeEach(async () => {
       await setupDatabase()
       this.user = await User.create({
