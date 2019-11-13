@@ -142,7 +142,7 @@ class BonusModal extends Component {
             </div>
           </div>
 
-          {this.state.amount ? (
+          {this.state.amount && this.state.amount >= 10 ? (
             <div className="text-left">
               <div className="row">
                 <div className="col">
@@ -173,8 +173,8 @@ class BonusModal extends Component {
           ) : (
             <>
               <div className="p-5 mx-4 text-muted text-center">
-                Please enter a number of tokens to lock up for one year. Bonus
-                tokens will be calculated based on that amount.
+                Please enter a number of tokens to lock up for one year (minimum
+                10 OGN). Bonus tokens will be calculated based on that amount.
               </div>
               <hr />
             </>
@@ -183,7 +183,11 @@ class BonusModal extends Component {
           <button
             type="submit"
             className="btn btn-primary btn-lg mt-5"
-            disabled={!this.state.amount || this.props.lockupIsAdding}
+            disabled={
+              !this.state.amount ||
+              this.state.amount <= 10 ||
+              this.props.lockupIsAdding
+            }
           >
             {this.props.lockupIsAdding ? (
               <>
