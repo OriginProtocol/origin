@@ -80,7 +80,9 @@ const importAccountScreen = props => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {renderBackArrow && <BackArrow onClick={() => props.navigation.goBack(null)} />}
+      {renderBackArrow && (
+        <BackArrow onClick={() => props.navigation.goBack(null)} />
+      )}
       <View style={styles.content}>
         <Text style={styles.title}>
           <fbt desc="ImportScreen.title">Import A Wallet</fbt>
