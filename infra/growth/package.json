@@ -18,7 +18,7 @@
     "@origin/ip2geo": "^0.1.0",
     "@origin/token": "^0.1.0",
     "@sendgrid/mail": "6.4.0",
-    "apollo-server-express": "2.9.7",
+    "apollo-server-express": "2.9.8",
     "bignumber.js": "9.0.0",
     "cors": "2.8.5",
     "csvtojson": "2.0.10",
