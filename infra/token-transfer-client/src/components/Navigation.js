@@ -83,7 +83,9 @@ const Navigation = props => {
         </ul>
         <ul className="navbar-nav small-links mt-4 d-md-none">
           <li className="mt-4 mb-3">
-            <a href="mailto:support@originprotocol.com">Contact Support</a>
+            <a href="mailto:investor-relations@originprotocol.com">
+              Contact Support
+            </a>
           </li>
           <li>
             <a onClick={handleLogout} style={{ cursor: 'pointer' }}>
