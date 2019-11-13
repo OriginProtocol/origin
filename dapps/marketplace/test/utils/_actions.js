@@ -166,6 +166,12 @@ export const purchaseMultiUnitListing = async ({
       await waitForText(page, '0.66666 OKB')
       totalValue = '0.66666 OKB'
       break
+
+    case 'USDT':
+      await clickByText(page, 'Tether')
+      await waitForText(page, '2 USDT')
+      totalValue = '2 USDT'
+      break
   }
 
   await clickByText(page, 'Continue', 'a')

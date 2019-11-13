@@ -28,4 +28,6 @@ require('react-styl')(`
       background-image: url(images/dai-icon.svg)
     &.okb
       background-image: url(images/okb-icon.svg)
+    &.usdt
+      background-image: url(images/usdt-icon.svg)
 `)
