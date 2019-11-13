@@ -95,7 +95,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   )
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(Security)
+export default connect(null, mapDispatchToProps)(Security)

@@ -50,9 +50,11 @@ class Level {
    * @returns {Promise<Array<Object>>} List representing state of each rule.
    */
   async export(adapter, ethAddress, events, level) {
-    return (await Promise.all(
-      this.rules.map(rule => rule.export(adapter, ethAddress, events, level))
-    )).filter(data => data)
+    return (
+      await Promise.all(
+        this.rules.map(rule => rule.export(adapter, ethAddress, events, level))
+      )
+    ).filter(data => data)
   }
 }
 

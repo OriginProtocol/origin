@@ -22,9 +22,11 @@ const GrantDetail = props => {
           <div className="col">
             <strong>Purchase Date</strong>
           </div>
-          <div className="col text-right">
-            {moment(grant.purchaseDate).format('LL')}
-          </div>
+          {grant.purchaseDate && (
+            <div className="col text-right">
+              {moment(grant.purchaseDate).format('LL')}
+            </div>
+          )}
         </div>
         <div className="row mb-2">
           <div className="col">
@@ -36,7 +38,9 @@ const GrantDetail = props => {
           <div className="col">
             <strong>Total Purchase</strong>
           </div>
-          <div className="col text-right">{grant.purchaseTotal}</div>
+          <div className="col text-right">
+            {grant.amount} <span className="ogn">OGN</span>
+          </div>
         </div>
         <div className="row mb-2">
           <div className="col">

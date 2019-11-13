@@ -3,7 +3,7 @@ import React from 'react'
 import BorderedCard from '@/components/BorderedCard'
 import VestingBars from '@/components/VestingBars'
 import VestingHistory from '@/components/VestingHistory'
-import VestingSchedule from '@/assets/vesting-schedule@3x.png'
+import VestingSchedule from '@/assets/schedule@3x.png'
 import Calendar from '-!react-svg-loader!@/assets/cal.svg'
 
 const VestingCard = props => {
@@ -53,7 +53,11 @@ const VestingCard = props => {
           <img src={VestingSchedule} className="img-fluid mx-auto mt-2" />
         </>
       ) : (
-        <VestingHistory grants={props.grants} isLocked={props.isLocked} />
+        <VestingHistory
+          grants={props.grants}
+          user={props.user}
+          isLocked={props.isLocked}
+        />
       )}
     </BorderedCard>
   )

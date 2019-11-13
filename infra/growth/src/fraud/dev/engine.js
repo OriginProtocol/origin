@@ -19,6 +19,19 @@ class FraudEngine {
   }
 
   /**
+   * Check if the growth participant account was flagged as fraudulent
+   * during the manual review process.
+   * If yes returns type and reasons, null otherwise.
+   *
+   * @param {string} ethAddress
+   * @returns {{type: string, reasons: Array<string>} || null}
+   */
+  isManuallyBannedParticipant(ethAddress) {
+    logger.debug(`FraudEngine: checked manual review data for ${ethAddress}`)
+    return null
+  }
+
+  /**
    * Check if account is a fraudulent referrer.
    * If yes returns type and reasons, null otherwise.
    *
@@ -38,7 +51,7 @@ class FraudEngine {
    * @param {models.GrowthEvent} event
    * @returns {Promise<{type: string, reasons: string} || null>}
    */
-  async isFraudEvent(participant, event) {
+  static async isFraudEvent(participant, event) {
     logger.debug(`FraudEngine: analyzing event ${event.id}`)
     return null
   }

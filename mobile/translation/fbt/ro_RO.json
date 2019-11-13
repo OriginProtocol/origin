@@ -1,213 +1,213 @@
 {
   "fb-locale": "ro_RO",
   "translations": {
-    "Ri5Gg2SNwcgIl8+233d8Ag==": {
-      "translations": [
-        {
-          "translation": "Adresa"
-        }
-      ]
-    },
     "xcXF5fEWXTaRWnAPnImIEA==": {
       "translations": [
         {
-          "translation": "Copy"
+          "translation": "Copie"
         }
       ]
     },
     "FZRVHsdXqI51WS0/rgsmvQ==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Copiat în clipboard!"
         }
       ]
     },
     "Z97eNnRtwWFrWlkTjsP9Dw==": {
       "translations": [
         {
-          "translation": "OK"
+          "translation": "O.K"
         }
       ]
     },
     "vpHbx0KGwimfUDMM2yWJiw==": {
       "translations": [
         {
-          "translation": "Authentication failed"
+          "translation": "Autentificare esuata"
         }
       ]
     },
     "RDq5ZjyJ3If5xODxIb74hg==": {
       "translations": [
         {
-          "translation": "Incorrect pin code"
+          "translation": "Cod PIN incorect"
         }
       ]
     },
     "fsX2zn/I8IxKM/YS6pNIiA==": {
       "translations": [
         {
-          "translation": "Authentication Required"
+          "translation": "Autentificare necesara"
         }
       ]
     },
     "uBbr58ZsBIlotqS29XDzmA==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Reîncercați"
+        }
+      ]
+    },
+    "ErD20CBa67cXCzpYJD/Lqw==": {
+      "translations": [
+        {
+          "translation": "Încercați din nou cu știft"
         }
       ]
     },
     "b1eg8txmL9GsnAqK+wcpDA==": {
       "translations": [
         {
-          "translation": "Pin Required"
+          "translation": "Pin Obligatoriu"
         }
       ]
     },
     "jakn3qdMee3dY1QQSnxPBw==": {
       "translations": [
         {
-          "translation": "Back up account"
+          "translation": "Copie de rezervă"
         }
       ]
     },
     "zq6BJdlScS7RmSd1QYOx/w==": {
       "translations": [
         {
-          "translation": "If you lose your account private key, you will not be able to access your funds."
+          "translation": "Dacă vă pierdeți cheia privată a contului, nu veți putea accesa fondurile dvs."
         }
       ]
     },
     "4usqugeX/QJAVYFd20+Juw==": {
       "translations": [
         {
-          "translation": "If you lose your account recovery phrase, you will not be able to access your funds."
+          "translation": "Dacă vă pierdeți fraza de recuperare a contului, nu veți putea să vă accesați fondurile."
         }
       ]
     },
     "tnjbZFYtRWMI0Cvx7tUoLw==": {
       "translations": [
         {
-          "translation": "Back up private key"
+          "translation": "Backup cheie privată"
         }
       ]
     },
     "NtSYu4dP1gx3Q867CPSNqA==": {
       "translations": [
         {
-          "translation": "Back up recovery phrase"
+          "translation": "Back up frază de recuperare"
         }
       ]
     },
     "gS5uLfzsGn8W+iy1wGPcFA==": {
       "translations": [
         {
-          "translation": "Back up later"
+          "translation": "Back up mai târziu"
         }
       ]
     },
     "leoyo7yPyqCZYLzdYarxVg==": {
       "translations": [
         {
-          "translation": "Blockchain & Your Personal Data"
+          "translation": "Blockchain și datele dvs. personale"
         }
       ]
     },
     "TsWyCTUsQI/nO9f3+35sXw==": {
       "translations": [
         {
-          "translation": "By creating a profile, you are associating your name and photo with your Ethereum account. This means that others will be able to connect your blockchain transactions to your name and photo."
+          "translation": "Prin crearea unui profil, vă asociați numele și fotografia cu contul dvs. Ethereum. Aceasta înseamnă că alții vor putea conecta tranzacțiile blockchain la numele și fotografia dvs."
         }
       ]
     },
     "293hkFZBDThJ9B1cWDqFeA==": {
       "translations": [
         {
-          "translation": "Got it"
+          "translation": "Am înțeles"
         }
       ]
     },
     "53OPnmUdKU2hcrljQxQZLA==": {
       "translations": [
         {
-          "translation": "An error occurred loading the Origin Marketplace. Please check your internet connection."
+          "translation": "A apărut o eroare la încărcarea pieței originare. Verificați conexiunea la internet."
         }
       ]
     },
     "y5hrsKtem9k4a3YYBARQUQ==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Reîncercați"
         }
       ]
     },
     "KU9ATM6FUSyE4otzmBVDgA==": {
       "translations": [
         {
-          "translation": "Are you sure you don't want Origin Rewards?"
+          "translation": "Ești sigur că nu vrei recompensele de origine?"
         }
       ]
     },
     "09diYnabOsFOs1TD+djfhw==": {
       "translations": [
         {
-          "translation": "Your new wallet will be ineligible to earn OGN."
+          "translation": "Noul tău portofel nu va fi eligibil pentru a câștiga OGN."
         }
       ]
     },
     "irOaYRzzICZEzzJSVHZuPw==": {
       "translations": [
         {
-          "translation": "I'm sure"
+          "translation": "sunt sigur"
         }
       ]
     },
     "ElbsZ92b2NSuDKUhrEhInA==": {
       "translations": [
         {
-          "translation": "No, wait"
+          "translation": "Nu așteptați"
         }
       ]
     },
     "FCBgGtybLVdEFPoBHMNwRw==": {
       "translations": [
         {
-          "translation": "Enable Notifications"
+          "translation": "Activați notificările"
         }
       ]
     },
     "pO5CQpny+muZsUdbI/OMjQ==": {
       "translations": [
         {
-          "translation": "Woops! It looks like you have notifications disabled. To get the latest updates about your transactions we recommend enabling them in the settings for the Origin Marketplace application."
+          "translation": "Hopa! Se pare că aveți notificări dezactivate. Pentru a obține cele mai recente actualizări despre tranzacțiile dvs., vă recomandăm să le activați în setările pentru aplicația Origin Marketplace."
         }
       ]
     },
     "kpnxGAkY7wwhA034sRjlgg==": {
       "translations": [
         {
-          "translation": "We highly recommend enabling notifications to get the latest updates about your transaction with timely alerts."
+          "translation": "Vă recomandăm să permiteți notificărilor pentru a primi cele mai recente actualizări despre tranzacția dvs. cu alerte în timp util."
         }
       ]
     },
     "HP2OsxjZ92s0ZkiHRLCq+Q==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "Deschide setările"
         }
       ]
     },
     "cNC6HEwSQ2MTdQc9xbDrAw==": {
       "translations": [
         {
-          "translation": "Enable Notifications"
+          "translation": "Activați notificările"
         }
       ]
     },
     "Ka8PTaoYl8PmXeWLQ8Qrzw==": {
       "translations": [
         {
-          "translation": "Close"
+          "translation": "Închide"
         }
       ]
     },
@@ -221,119 +221,119 @@
     "qzN5RGfNbk86/n/jcpMdfg==": {
       "translations": [
         {
-          "translation": "An error occurred accessing Samsung Blockchain Keystore."
+          "translation": "A apărut o eroare la accesarea Samsung Blockchain Keystore."
         }
       ]
     },
     "DEMLFz9zBSsNpmhGgY6piw==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Reîncercați"
         }
       ]
     },
     "rCsEaxa+oEKoe7c42xpG0A==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "Continua"
         }
       ]
     },
     "Hd7GnyffrmsytOC81wf1og==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "Deschide setările"
         }
       ]
     },
     "2Ys/u9LEtc69RMwvBUge9g==": {
       "translations": [
         {
-          "translation": "Signature Request"
+          "translation": "Cerere de semnătură"
         }
       ]
     },
     "/EqSe0JWGoaELSz+mVvOhw==": {
       "translations": [
         {
-          "translation": "Sign"
+          "translation": "Semn"
         }
       ]
     },
     "aHPwi7q8WIdH6tItKZGWpQ==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "Anulare"
         }
       ]
     },
     "BSXd24qMR/v2kkJGZSzAkA==": {
       "translations": [
         {
-          "translation": "Create Listing"
+          "translation": "Creați lista"
         }
       ]
     },
     "X272L09aOTnFbVTziChx1g==": {
       "translations": [
         {
-          "translation": "Make Offer"
+          "translation": "A face o ofertă"
         }
       ]
     },
     "8XqYinU0zAemee1+B/gY3g==": {
       "translations": [
         {
-          "translation": "Transfer Tokens"
+          "translation": "Jetoane de transfer"
         }
       ]
     },
     "I2HWbFKlgUggmCCeJAAi6w==": {
       "translations": [
         {
-          "translation": "Publish Identity"
+          "translation": "Publicați identitatea"
         }
       ]
     },
     "lNW3S1SBg7rOFjjAt8j26Q==": {
       "translations": [
         {
-          "translation": "Grant Token Access"
+          "translation": "Acordare acces token"
         }
       ]
     },
     "VqHNzpP2gO7q8zCyzsy2wA==": {
       "translations": [
         {
-          "translation": "We are requesting permission to move {currency} on your behalf"
+          "translation": "Solicităm permisiunea de a muta {currency} în numele dvs."
         }
       ]
     },
     "6i7qqM7tIY6QrQPlZk0sgA==": {
       "translations": [
         {
-          "translation": "Enable Meta Transactions"
+          "translation": "Activați tranzacțiile meta"
         }
       ]
     },
     "UptEXt/80yEZlV42llBLzQ==": {
       "translations": [
         {
-          "translation": "Blockchain Transaction"
+          "translation": "Tranzacție Blockchain"
         }
       ]
     },
     "0Hcb7EEcgWvM/wgaryT03g==": {
       "translations": [
         {
-          "translation": "Payment"
+          "translation": "Plată"
         }
       ]
     },
     "2immGCBCROovRIdEMKqUlw==": {
       "translations": [
         {
-          "translation": "Gas Cost"
+          "translation": "Costul gazelor"
         }
       ]
     },
@@ -347,105 +347,105 @@
     "ATXUAJSbJ1McXJqB89l9lQ==": {
       "translations": [
         {
-          "translation": "Your Account"
+          "translation": "Contul tău"
         }
       ]
     },
     "8vFUXSEVa7KZBhBbxn2FHw==": {
       "translations": [
         {
-          "translation": "Your Balances"
+          "translation": "Soldurile tale"
         }
       ]
     },
     "VjPzFy1pA4SOMEquZR4l8w==": {
       "translations": [
         {
-          "translation": "Your Balance"
+          "translation": "Echilibrul tau"
         }
       ]
     },
     "WGap/aXIb4uxFVQuBIhjuw==": {
       "translations": [
         {
-          "translation": "You don't have enough ETH to submit this transaction."
+          "translation": "Nu aveți suficient ETH pentru a trimite această tranzacție."
         }
       ]
     },
     "bpJjuZr6/qPESAQkORoCMg==": {
       "translations": [
         {
-          "translation": "You don't have enough ETH to publish your identity."
+          "translation": "Nu aveți suficient ETH pentru a vă publica identitatea."
         }
       ]
     },
     "4/6+bbpzXA+zeU20pC0xdQ==": {
       "translations": [
         {
-          "translation": "Confirm"
+          "translation": "A confirma"
         }
       ]
     },
     "nxwmAvEdE7w9cM6fSB+fHw==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "Anulare"
         }
       ]
     },
     "Yzqk2XJTQiSxv2t8cdh3nw==": {
       "translations": [
         {
-          "translation": "Update required"
+          "translation": "Actualizare necesara"
         }
       ]
     },
     "VgnIScPQ4MxmjP3MHHSlpA==": {
       "translations": [
         {
-          "translation": "Woops! It looks like you are using an old version of the Origin Marketplace App. Please update to proceed."
+          "translation": "Hopa! Se pare că folosești o versiune veche a aplicației Origin Marketplace. Vă rugăm să actualizați pentru a continua."
         }
       ]
     },
     "HSJ4lSFH52qxe5hmSMBLaQ==": {
       "translations": [
         {
-          "translation": "Update available"
+          "translation": "Actualizare disponibila"
         }
       ]
     },
     "6QOETx2H8d657NCFME14fQ==": {
       "translations": [
         {
-          "translation": "It looks like you are using an old version of the Origin Marketplace App. For the best experience, we recommend you update."
+          "translation": "Se pare că folosești o versiune veche a aplicației Origin Marketplace. Pentru cea mai bună experiență, vă recomandăm să actualizați."
         }
       ]
     },
     "QpVi6Q8bytL6nnct+8vJDg==": {
       "translations": [
         {
-          "translation": "Update"
+          "translation": "Actualizați"
         }
       ]
     },
     "BY1VaMBt7Cf6hcIW3G+xTw==": {
       "translations": [
         {
-          "translation": "Not now"
+          "translation": "Nu acum"
         }
       ]
     },
     "XsJI4lHivUR4kWUoxiX2XA==": {
       "translations": [
         {
-          "translation": "What will be visible on the blockchain?"
+          "translation": "Ce va fi vizibil pe blockchain?"
         }
       ]
     },
     "rfyOc2A6KqTaGmyE0aHtuA==": {
       "translations": [
         {
-          "translation": "Account Details"
+          "translation": "Detalii cont"
         }
       ]
     },
@@ -459,21 +459,21 @@
     "fbdJ5PgCtMiZoKwpqFSHFw==": {
       "translations": [
         {
-          "translation": "As a security precaution, the clipboard will be cleared after one minute."
+          "translation": "Ca măsură de securitate, clipboard-ul va fi șters după un minut."
         }
       ]
     },
     "fr/gqa6K0WToleM5Z+fKjQ==": {
       "translations": [
         {
-          "translation": "Got it"
+          "translation": "Am înțeles"
         }
       ]
     },
     "rVHYls86LiL2qXmPeABLyg==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Copiat în clipboard!"
         }
       ]
     },
@@ -487,98 +487,105 @@
     "Fj7mSGlzBW8WmXnCJpygjA==": {
       "translations": [
         {
-          "translation": "Have you backed up your private key or recovery phrase for this account? The account will be permanently deleted and you must have the private key or recovery phrase to recover it. Are you sure that you want to delete this account?"
+          "translation": "Ați salvat cheia privată sau fraza de recuperare pentru acest cont? Contul va fi șters definitiv și trebuie să aveți cheia privată sau fraza de recuperare pentru a-l recupera. Sunteți sigur că doriți să ștergeți acest cont?"
         }
       ]
     },
     "0bq6YbxhOXa2A6WJpEaL+g==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "Anulare"
         }
       ]
     },
     "lpp3lYIsSATmD+bTHnp7fA==": {
       "translations": [
         {
-          "translation": "Delete"
+          "translation": "Șterge"
+        }
+      ]
+    },
+    "Ri5Gg2SNwcgIl8+233d8Ag==": {
+      "translations": [
+        {
+          "translation": "Adresa"
         }
       ]
     },
     "KaZkh00tsKdzL4PMvmqOWw==": {
       "translations": [
         {
-          "translation": "Make Active Account"
+          "translation": "Faceți un cont activ"
         }
       ]
     },
     "p3W1jjM1O7xwySSBNKVkeQ==": {
       "translations": [
         {
-          "translation": "Show Recovery Phrase"
+          "translation": "Afișați fraza de recuperare"
         }
       ]
     },
     "vHA/IbKFZOLZEIvk17fbOQ==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Fraza de recuperare"
         }
       ]
     },
     "3T0ncUvbWQQYHxwCYIWCzQ==": {
       "translations": [
         {
-          "translation": "Copy Recovery Phrase"
+          "translation": "Copiază fraza de recuperare"
         }
       ]
     },
     "2Ql766BBWhadduhv1A8mCg==": {
       "translations": [
         {
-          "translation": "Show Private Key"
+          "translation": "Afișați cheia privată"
         }
       ]
     },
     "qgFPa2G/IoAt9CIVn6ey1A==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "Cheie privată"
         }
       ]
     },
     "YL1+Pt1Th3TvLZQaVxak9w==": {
       "translations": [
         {
-          "translation": "Copy Private Key"
+          "translation": "Copiați cheia privată"
         }
       ]
     },
     "sL6k42V4vn/2x26sVAldkw==": {
       "translations": [
         {
-          "translation": "Delete Account"
+          "translation": "Șterge cont"
         }
       ]
     },
     "IiicX5WBjylfRHl57pd/cw==": {
       "translations": [
         {
-          "translation": "Accounts"
+          "translation": "Conturi"
         }
       ]
     },
     "dcugbzsCXlIcz+MDEjVWhw==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Fraza de recuperare"
         }
       ]
     },
     "/qUSB40G8z1yEmSpGgnhpw==": {
       "translations": [
         {
-          "translation": "Imported from Private Key"
+          "translation": "Importat din cheie privată"
         }
       ]
     },
@@ -592,42 +599,42 @@
     "eeZwTjiz+eTRGp9qpIdbUg==": {
       "translations": [
         {
-          "translation": "{biometryType} Unavailable"
+          "translation": "{biometryType} Indisponibil"
         }
       ]
     },
     "IaE+AHV4HvjUVM7WH5QGEQ==": {
       "translations": [
         {
-          "translation": "It looks like you have {biometryType} disabled. You will need to enable it in the settings for the Origin Marketplace App."
+          "translation": "Se pare că ai {biometryType} dezactivat. Va trebui să o activați în setările pentru aplicația Origin Marketplace."
         }
       ]
     },
     "+2JgKmxomPm6EphuMZAFIg==": {
       "translations": [
         {
-          "translation": "Open Settings"
+          "translation": "Deschide setările"
         }
       ]
     },
     "33H9wgLoaZ0e06VAnLqWDQ==": {
       "translations": [
         {
-          "translation": "Protect your wallet"
+          "translation": "Protejați-vă portofelul"
         }
       ]
     },
     "LeVyToxA5TxqpAsWD4H61w==": {
       "translations": [
         {
-          "translation": "Add an extra layer of security to keep your crypto safe."
+          "translation": "Adăugați un strat suplimentar de securitate pentru a vă păstra cripto-ul în siguranță."
         }
       ]
     },
     "Rs0apd73mOXN6yDQ2xy9/w==": {
       "translations": [
         {
-          "translation": "Create a Pin Code"
+          "translation": "Creați un cod PIN"
         }
       ]
     },
@@ -641,154 +648,196 @@
     "PwgVT2B+QoumKmdtky/t5Q==": {
       "translations": [
         {
-          "translation": "As a security precaution, the clipboard will be cleared after one minute."
+          "translation": "Ca măsură de securitate, clipboard-ul va fi șters după un minut."
         }
       ]
     },
     "BM9rEF51uzQdLEjljSVj0A==": {
       "translations": [
         {
-          "translation": "Got it"
+          "translation": "Am înțeles"
         }
       ]
     },
     "2s+9bYBUsRvylceP3dEVLA==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Copiat în clipboard!"
         }
       ]
     },
     "5e+ltpuxscfACFNaS2dcOw==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "Cheie privată"
         }
       ]
     },
     "XyxrGJkJ5zgb6isZ0BdDlg==": {
       "translations": [
         {
-          "translation": "Write down your private key"
+          "translation": "Notează-ți cheia privată"
         }
       ]
     },
     "KmMOc82inx1QRhhp/fyMyQ==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Fraza de recuperare"
         }
       ]
     },
     "DIhU+yQs2asm5wXqej7dfg==": {
       "translations": [
         {
-          "translation": "Write down your recovery phrase"
+          "translation": "Scrieți-vă fraza de recuperare"
         }
       ]
     },
     "qS83Klnh433/5rED9+ibOg==": {
       "translations": [
         {
-          "translation": "Copy to clipboard"
+          "translation": "Copiați în clipboard"
         }
       ]
     },
     "zLMFuSkl3GBjE3tx50sIhw==": {
       "translations": [
         {
-          "translation": "This private key is the key to your account. Write it down, or copy it to a password manager. We recommend NOT emailing it to yourself."
+          "translation": "Această cheie privată este cheia contului. Scrieți-l sau copiați-l într-un manager de parole. Vă recomandăm să NU vi-l trimiteți prin e-mail."
         }
       ]
     },
     "MAOXf1kKWz/7TYu8RqMmFQ==": {
       "translations": [
         {
-          "translation": "This recovery phrase is the key to your account. Write it down, or copy it to a password manager. We recommend NOT emailing it to yourself."
+          "translation": "Această frază de recuperare este cheia contului. Scrieți-l sau copiați-l într-un manager de parole. Vă recomandăm să NU vi-l trimiteți prin e-mail."
         }
       ]
     },
     "XMtHJ6TJ3X8ym6yKQ0KKVQ==": {
       "translations": [
         {
-          "translation": "Next"
+          "translation": "Următor →"
         }
       ]
     },
     "zTv/d3wo3BWrq3lxTDiPvA==": {
       "translations": [
         {
-          "translation": "Cancel"
+          "translation": "Anulare"
         }
       ]
     },
     "KOevTAZaVtyeDehBuvlCrA==": {
       "translations": [
         {
-          "translation": "Private Key"
+          "translation": "Cheie privată"
         }
       ]
     },
     "EhJiSCEWoUvWM8XEDOzT/g==": {
       "translations": [
         {
-          "translation": "Enter your private key"
+          "translation": "Introduceți cheia privată"
         }
       ]
     },
     "yzRqhh/Qk+7ZfmQcdOrjUw==": {
       "translations": [
         {
-          "translation": "Recovery Phrase"
+          "translation": "Fraza de recuperare"
         }
       ]
     },
     "myq3OtUs+Fi+a0kMs+wbIg==": {
       "translations": [
         {
-          "translation": "Select the words in the correct order"
+          "translation": "Selectați cuvintele în ordinea corectă"
         }
       ]
     },
     "EDxEE4K6bae2M7ydCHp6Zw==": {
       "translations": [
         {
-          "translation": "Go Back"
+          "translation": "Întoarce-te"
         }
       ]
     },
     "GkFF5s8F0GpJycWhOhK/iA==": {
       "translations": [
         {
-          "translation": "You have successfully backed up your recovery phrase"
+          "translation": "Ați salvat cu succes fraza de recuperare"
         }
       ]
     },
     "ODOQveQR0RNc0DEs0MLAxg==": {
       "translations": [
         {
-          "translation": "Done"
+          "translation": "Terminat"
+        }
+      ]
+    },
+    "ovdpavP9sKYKI/XXkeRgPQ==": {
+      "translations": [
+        {
+          "translation": "Introduceți noul PIN"
+        }
+      ]
+    },
+    "W3VHEa7n4bmUNgzaKj3xuw==": {
+      "translations": [
+        {
+          "translation": "Introduceți codul PIN vechi"
+        }
+      ]
+    },
+    "/aGURKePsq3sTnkUrus4+g==": {
+      "translations": [
+        {
+          "translation": "Reintroduceți codul Pin"
+        }
+      ]
+    },
+    "6TNQrsvPH7Jg+9BxOuTPQw==": {
+      "translations": [
+        {
+          "translation": "Creați un cod PIN"
+        }
+      ]
+    },
+    "tH+M0ZY76tfrE3XPNeiUnw==": {
+      "translations": [
+        {
+          "translation": "Introduceți codul PIN"
+        }
+      ]
+    },
+    "Jqw0AiXS00Vx8U1XL+9Uwg==": {
+      "translations": [
+        {
+          "translation": "PIN incorect"
         }
       ]
     },
     "/Dpz63y5rPCTt9TIGPA08A==": {
       "translations": [
         {
-          "translation": "Currency"
+          "translation": "Valută"
         }
       ]
     },
     "2eAz/IqchpMLxH7uzquWIg==": {
       "translations": [
         {
-          "translation": "Use Recovery Phrase"
+          "translation": "Utilizați fraza de recuperare"
         }
       ]
     },
     "FvAa7D4zZNCqy+i4K2/9PQ==": {
       "translations": [
         {
-          "translation": "Use Private Key"
+          "translation": "Utilizați cheia privată"
         }
       ]
     },
@@ -802,119 +851,133 @@
     "YgQAbQzQfarXS32FHToKpA==": {
       "translations": [
         {
-          "translation": "Your wallet is managed by the Samsung Blockchain Keystore."
+          "translation": "Portofelul dvs. este gestionat de Samsung Blockchain Keystore."
         }
       ]
     },
     "P19QeS8TSjISSt0doVlLyA==": {
       "translations": [
         {
-          "translation": "Import your wallet"
+          "translation": "Importați portofelul"
         }
       ]
     },
     "31RyFwYE/GDQQsrh3Ulvtw==": {
       "translations": [
         {
-          "translation": "You can import a wallet using one of the methods below."
+          "translation": "Puteți importa un portofel folosind una dintre metodele de mai jos."
         }
       ]
     },
     "EAvFlbnkWZvKJZAe/pfhsA==": {
       "translations": [
         {
-          "translation": "That does not look like a valid recovery phrase."
+          "translation": "Asta nu arată ca o frază de recuperare valabilă."
         }
       ]
     },
     "S/j+cIqLysC5PQLYuvycXw==": {
       "translations": [
         {
-          "translation": "Enter Phrase"
+          "translation": "Introduceți fraza"
         }
       ]
     },
     "peoX+3Gbnsy8TqdLquCI1g==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "Continua"
         }
       ]
     },
     "5/XzkOw7jsXF3hNFdAOfVw==": {
       "translations": [
         {
-          "translation": "That is not a valid private key."
+          "translation": "Aceasta nu este o cheie privată validă."
         }
       ]
     },
     "6kOIRuFPg13nKeGrxENaaw==": {
       "translations": [
         {
-          "translation": "Enter Private Key"
+          "translation": "Introduceți cheia privată"
         }
       ]
     },
     "Aw26GuAppbsDwcsIGOynqA==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "Continua"
         }
       ]
     },
     "59TOqnoYcFhWfpYdUrJdiw==": {
       "translations": [
         {
-          "translation": "Language"
+          "translation": "Limba"
         }
       ]
     },
     "lPK1A5cn8JlhIPgCDjiuAg==": {
       "translations": [
         {
-          "translation": "Connection Error"
+          "translation": "Eroare de conexiune"
         }
       ]
     },
     "a3s77Iq0FypOEuisvfUcYg==": {
       "translations": [
         {
-          "translation": "Retry"
+          "translation": "Reîncercați"
         }
       ]
     },
     "c95LW4bvkZe+dGIftWiDVg==": {
       "translations": [
         {
-          "translation": "Settings"
-        }
-      ]
-    },
-    "/aGURKePsq3sTnkUrus4+g==": {
-      "translations": [
-        {
-          "translation": "Re-enter Pin Code"
-        }
-      ]
-    },
-    "6TNQrsvPH7Jg+9BxOuTPQw==": {
-      "translations": [
-        {
-          "translation": "Create a Pin Code"
+          "translation": "Setări"
         }
       ]
     },
     "K/aDJpTjmvmNt/MSEGDQUQ==": {
       "translations": [
         {
-          "translation": "Pins did not match, try again"
+          "translation": "Pinii nu s-au potrivit, încercați din nou"
         }
       ]
     },
     "N/BpKgn5giDbaBNOo6O9HQ==": {
       "translations": [
         {
-          "translation": "Your Pin Code will be used to login to the app."
+          "translation": "Codul dvs. Pin va fi folosit pentru a vă conecta la aplicație."
+        }
+      ]
+    },
+    "1xII+dDcYWSOu0jzDlP23w==": {
+      "translations": [
+        {
+          "translation": "Acces refuzat"
+        }
+      ]
+    },
+    "YvZQnI6IbpRDeY9FhGhoaw==": {
+      "translations": [
+        {
+          "translation": "Se pare că ai {biometryType} dezactivat. Va trebui să o activați în setările pentru aplicația Origin Marketplace."
+        }
+      ]
+    },
+    "g+wmZ6xm0Zlw6f0FYy18xg==": {
+      "translations": [
+        {
+          "translation": "O.K"
+        }
+      ]
+    },
+    "u3sOSat8+WAAQ8EuhbirNg==": {
+      "translations": [
+        {
+          "translation": "Anulare"
         }
       ]
     },
@@ -928,147 +991,168 @@
     "rRrFuJKbAi/LO7RrEyMt2Q==": {
       "translations": [
         {
-          "translation": "Accounts"
+          "translation": "Conturi"
         }
       ]
     },
     "5RkbvYJ6la3jlOnXZ5KIoQ==": {
       "translations": [
         {
-          "translation": "Language"
+          "translation": "Limba"
         }
       ]
     },
     "GHSZ2Asae082vH5nd+9RuA==": {
       "translations": [
         {
-          "translation": "Currency"
+          "translation": "Valută"
         }
       ]
     },
     "ob6dsrEPfJxAbOpd4plQGA==": {
       "translations": [
         {
-          "translation": "Network"
+          "translation": "Reţea"
+        }
+      ]
+    },
+    "qCsRh42AI/i+tq1jYI5pcA==": {
+      "translations": [
+        {
+          "translation": "SECURITATE"
+        }
+      ]
+    },
+    "JqYbscHWSnagurtMN955jQ==": {
+      "translations": [
+        {
+          "translation": "Cod PIN"
+        }
+      ]
+    },
+    "sDCHJ6X+2GJiE4xVdiR+fw==": {
+      "translations": [
+        {
+          "translation": "Schimbă codul PIN"
         }
       ]
     },
     "j5rIPEDyOjXyubSdCUgZ6A==": {
       "translations": [
         {
-          "translation": "Version"
+          "translation": "Versiune"
         }
       ]
     },
     "O1VMdGobKc4WbUg9gMwhBQ==": {
       "translations": [
         {
-          "translation": "Settings"
+          "translation": "Setări"
         }
       ]
     },
     "qwt5DPbEmQbgHhDgriLciA==": {
       "translations": [
         {
-          "translation": "Funding"
+          "translation": "Finanțarea"
         }
       ]
     },
     "yEmOPvByK+VpH6+CO13qdw==": {
       "translations": [
         {
-          "translation": "For now, you will need to transfer {currency} into your Origin Wallet from another source."
+          "translation": "Deocamdată, va trebui să transferați {currency} în portofelul Origin dintr-o altă sursă."
         }
       ]
     },
     "yHd/aoBlbe3kUXfROlRz4Q==": {
       "translations": [
         {
-          "translation": "Show Address"
+          "translation": "Afișați adresa"
         }
       ]
     },
     "ba+qT6IM6x1p9Zq2KM/sOA==": {
       "translations": [
         {
-          "translation": "Wallet Address"
+          "translation": "Adresa portofel"
         }
       ]
     },
     "kaZsDMAAk9n+m4vDL24hhg==": {
       "translations": [
         {
-          "translation": "Copy Address"
+          "translation": "Copiere adresă"
         }
       ]
     },
     "cev6fBNlultWVlLlmimovA==": {
       "translations": [
         {
-          "translation": "Copied to clipboard!"
+          "translation": "Copiat în clipboard!"
         }
       ]
     },
     "k9ik7lp8zzY9UDgOal86Tg==": {
       "translations": [
         {
-          "translation": "Wallet Address"
+          "translation": "Adresa portofel"
         }
       ]
     },
     "MqIZn3Tps2BNhT8GpKl49Q==": {
       "translations": [
         {
-          "translation": "Add Account"
+          "translation": "Adaugă cont"
         }
       ]
     },
     "suj8KDO/kpGSuWSeoiYk7A==": {
       "translations": [
         {
-          "translation": "Wallet"
+          "translation": "Portofel"
         }
       ]
     },
     "RQqR7szL1Z0RUueooggK8w==": {
       "translations": [
         {
-          "translation": "Buy and sell stuff with crypto."
+          "translation": "Cumpărați și vindeți lucruri cu Crypto."
         }
       ]
     },
     "NS4tuPyGpGvlopEQ9CgpaQ==": {
       "translations": [
         {
-          "translation": "Earn rewards."
+          "translation": "A castiga premii."
         }
       ]
     },
     "qrLh9UBi6Dk+4Sjgbqwhmg==": {
       "translations": [
         {
-          "translation": "By signing up you agree to the Terms of Use and Privacy Policy"
+          "translation": "Prin înscriere, sunteți de acord cu Termenii de utilizare și politica de confidențialitate"
         }
       ]
     },
     "XSqsabas04tq+ha/t4s+cQ==": {
       "translations": [
         {
-          "translation": "Continue"
+          "translation": "Continua"
         }
       ]
     },
     "4ngVhZSzyusgelFj2N7DSA==": {
       "translations": [
         {
-          "translation": "Create a wallet"
+          "translation": "Creați un portofel"
         }
       ]
     },
     "DqUT7JADQFjo22wU9bvsmg==": {
       "translations": [
         {
-          "translation": "I already have a wallet"
+          "translation": "Am deja un portofel"
         }
       ]
     }

@@ -7,6 +7,8 @@ ENV NODE_ENV=production
 COPY package.json ./
 COPY yarn.lock ./
 COPY lerna.json ./
+COPY ./packages/auth-utils ./packages/auth-utils
+COPY ./packages/auth-client ./packages/auth-client
 COPY ./packages/contracts ./packages/contracts
 COPY ./packages/eventsource ./packages/eventsource
 COPY ./packages/event-cache ./packages/event-cache

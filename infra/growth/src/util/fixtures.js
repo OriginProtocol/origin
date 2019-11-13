@@ -1,6 +1,14 @@
-// Insert data in the DB for testing purposes.
+// Insert data in the DB for TESTING purposes.
+// For managing campaigns in production, use the manageCampaign.js script.
+
 const db = require('../models')
 const enums = require('../enums')
+
+if (process.env.NODE_ENV === 'production') {
+  throw new Error(
+    'Do NOT run this script in production! For test environment only'
+  )
+}
 
 // Accounts generated using Truffle default mnemonic:
 // "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
