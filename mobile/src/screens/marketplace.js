@@ -23,6 +23,7 @@ import { ShareDialog } from 'react-native-fbsdk'
 import { ethers } from 'ethers'
 import SafeAreaView from 'react-native-safe-area-view'
 import get from 'lodash.get'
+import stringify from 'json-stable-stringify'
 
 import OriginButton from 'components/origin-button'
 import OriginWeb3View from 'components/origin-web3view'
@@ -35,7 +36,7 @@ import {
   setMarketplaceWebViewError
 } from 'actions/Marketplace'
 import withOriginGraphql from 'hoc/withOriginGraphql'
-import { PROMPT_MESSAGE, PROMPT_PUB_KEY } from '../constants'
+import { PROMPT_MESSAGE, PROMPT_PUB_KEY, AUTH_MESSAGE } from '../constants'
 import CommonStyles from 'styles/common'
 import CardStyles from 'styles/card'
 
@@ -85,6 +86,8 @@ class MarketplaceScreen extends PureComponent {
     ) {
       // Active account changed, update messaging keys
       this.injectMessagingKeys()
+      // Inject auth signature
+      this.injectAuthSign()
     }
   }
 
@@ -202,6 +205,54 @@ class MarketplaceScreen extends PureComponent {
         }
       `,
       'messaging keys'
+    )
+  }
+
+  /**
+   * Inject auth signature for actice wallet
+   */
+  injectAuthSign = async () => {
+    const { wallet } = this.props
+    // No active account, can't proceed
+    if (!wallet.activeAccount) {
+      console.debug('Cannot inject auth signature, no active account')
+      return
+    }
+    // No private key (Samsung BKS account), can't proceed
+    if (wallet.activeAccount.hdPath) {
+      console.debug('Cannot inject auth signature for Samsung BKS account')
+      return
+    }
+
+    const { privateKey, mnemonic } = wallet.activeAccount
+
+    let ethersWallet
+    if (privateKey) {
+      ethersWallet = new ethers.Wallet(privateKey)
+    } else {
+      ethersWallet = new ethers.Wallet.fromMnemonic(mnemonic)
+    }
+
+    const message = AUTH_MESSAGE
+    const payload = {
+      message,
+      timestamp: Date.now()
+    }
+
+    // Sign the message
+    const signature = await ethersWallet.signMessage(stringify(payload))
+
+    this.injectJavaScript(
+      `
+        if (window && window.context && window.context.authClient) {
+          window.context.authClient.onAuthSign(
+            '${wallet.activeAccount.address}',
+            '${signature}',
+            JSON.parse('${JSON.stringify(payload)}')
+          );
+        }
+      `,
+      'auth sign'
     )
   }
 
@@ -578,6 +629,8 @@ class MarketplaceScreen extends PureComponent {
     this.injectCurrency()
     // Preload messaging keys so user doesn't have to enable messaging
     this.injectMessagingKeys()
+    // Inject auth signature
+    this.injectAuthSign()
     // Check if a growth invie code needs to be set
     this.injectInviteCode()
     // Inject scroll handler for pull to refresh function

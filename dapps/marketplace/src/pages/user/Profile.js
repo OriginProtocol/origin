@@ -17,6 +17,7 @@ import withIdentity from 'hoc/withIdentity'
 import withGrowthCampaign from 'hoc/withGrowthCampaign'
 import withAttestationProviders from 'hoc/withAttestationProviders'
 import withIsMobile from 'hoc/withIsMobile'
+import withAuthStatus from 'hoc/withAuthStatus'
 
 import { withRouter } from 'react-router-dom'
 
@@ -133,17 +134,25 @@ class UserProfile extends Component {
     const walletChanged =
       get(this.props, 'identity.id') !== get(prevProps, 'identity.id')
 
-    const { identityLoaded } = this.props
+    const { redirectToOnboarding } = this.state
+    const {
+      identityLoading,
+      walletLoading,
+      isLoggedIn,
+      authStatusLoading
+    } = this.props
 
-    if (
-      (walletChanged || identityLoaded) &&
-      !identity &&
-      !(
-        window.localStorage.bypassOnboarding ||
-        window.localStorage.useWeb3Identity
-      ) &&
-      !this.state.redirectToOnboarding
-    ) {
+    const isNotLoggedIn = !walletLoading && !authStatusLoading && !isLoggedIn
+
+    const skipIdentityCheck = !!(
+      window.localStorage.bypassOnboarding ||
+      window.localStorage.useWeb3Identity
+    )
+
+    const hasNoIdentity =
+      !skipIdentityCheck && !walletLoading && !identityLoading && !identity
+
+    if (!redirectToOnboarding && (isNotLoggedIn || hasNoIdentity)) {
       // Redirect to onboarding, if user doesn't have a deployed profile
       // or isn't logged in
       this.setState({
@@ -576,7 +585,7 @@ class UserProfile extends Component {
 export default withRouter(
   withIsMobile(
     withAttestationProviders(
-      withWallet(withIdentity(withGrowthCampaign(UserProfile)))
+      withWallet(withAuthStatus(withIdentity(withGrowthCampaign(UserProfile))))
     )
   )
 )

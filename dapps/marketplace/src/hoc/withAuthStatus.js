@@ -12,8 +12,7 @@ function withAuthStatus(WrappedComponent) {
       variables: {
         wallet: props.wallet
       },
-      skip: props.walletLoading || !props.wallet,
-      pollInterval: 1000
+      skip: props.walletLoading || !props.wallet
     })
 
     if (error) console.error(error)
