@@ -55,7 +55,7 @@ cronImageTag: '9c1e6d2'
 
 # origin-admin
 adminImage: origin-admin
-adminImageTag: 'c681f3d'
+adminImageTag: '718c3b5'
 
 # origin-relayer
 relayerImage: origin-relayer
