@@ -3,13 +3,16 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { StyleSheet, Text, View } from 'react-native'
-import SafeAreaView from 'react-native-safe-area-view'
 import { fbt } from 'fbt-runtime'
+import SafeAreaView from 'react-native-safe-area-view'
+import BackArrow from 'components/back-arrow'
 
 import OriginButton from 'components/origin-button'
 import CommonStyles from 'styles/common'
 
 const importAccountScreen = props => {
+  const renderBackArrow = props.navigation.getParam('renderBackArrow')
+
   const renderImportButtons = () => {
     return (
       <>
@@ -77,6 +80,7 @@ const importAccountScreen = props => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {renderBackArrow && <BackArrow onClick={() => props.navigation.goBack(null)} />}
       <View style={styles.content}>
         <Text style={styles.title}>
           <fbt desc="ImportScreen.title">Import A Wallet</fbt>
