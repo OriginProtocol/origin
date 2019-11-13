@@ -189,7 +189,6 @@ function Campaign(props) {
       <MobileDownloadAction
         action={mobileAction}
         decimalDivision={decimalDivision}
-        isMobile={isMobile}
       />
       <ActionGroupList
         campaign={campaign}

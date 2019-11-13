@@ -1,15 +1,27 @@
 import React from 'react'
 import { fbt } from 'fbt-runtime'
 import numberFormat from 'utils/numberFormat'
+import withIsMobile from 'hoc/withIsMobile'
+import withWallet from 'hoc/withWallet'
 
 function MobileDownloadAction(props) {
   if (!props.action) return ''
 
-  const { status, reward, rewardEarned } = props.action
+  const { status, reward } = props.action
 
-  const { isMobile } = props
+  const { isMobile, walletType } = props
+
+  if (walletType === 'Origin Wallet' || walletType === 'Mobile') {
+    // Don't show on Mobile app
+    return null
+  }
 
   const actionCompleted = ['Exhausted', 'Completed'].includes(status)
+
+  if (actionCompleted) {
+    // Don't show if completed
+    return null
+  }
 
   const formatTokens = tokenAmount => {
     return numberFormat(
@@ -25,8 +37,6 @@ function MobileDownloadAction(props) {
   }
 
   const storeBadges = () => {
-    if (actionCompleted) return ''
-
     return (
       <div className={`d-flex mt-1 ${!isMobile ? 'mr-3' : ''}`}>
         <img
@@ -51,42 +61,21 @@ function MobileDownloadAction(props) {
         <fbt desc="growth.mobileRewards.featured">FEATURED</fbt>
       </div>
       <div className="phone-holder">
-        <img
-          className={`phones mr-3 ${actionCompleted ? 'small' : ''}`}
-          src="images/mobile/devices-layered.png"
-        />
-        {actionCompleted && (
-          <img className="green-tick" src="images/growth/green-tick-icon.svg" />
-        )}
+        <img className="phones mr-3" src="images/mobile/devices-layered.png" />
       </div>
       <div className="d-flex flex-column mr-0 mr-md-4">
         <h2>
-          {!actionCompleted && (
-            <fbt desc="growth.mobileRewards.downloadMarketplaceApp">
-              Download the Origin Marketplace app
-            </fbt>
-          )}
-          {actionCompleted && (
-            <fbt desc="growth.mobileRewards.marketplaceInstalled">
-              Origin Marketplace installed
-            </fbt>
-          )}
+          <fbt desc="growth.mobileRewards.downloadMarketplaceApp">
+            Download the Origin Marketplace app
+          </fbt>
         </h2>
         <div className="d-flex">
           <div className="install mt-0 mt-md-2 mb-2 mb-md-0">
-            {!actionCompleted && (
-              <fbt desc="growth.mobileRewards.installAndComplete">
-                Install & complete 3 verifications to earn
-              </fbt>
-            )}
-            {actionCompleted && (
-              <fbt desc="growth.mobileRewards.earned">Earned</fbt>
-            )}
+            <fbt desc="growth.mobileRewards.installAndComplete">
+              Install &amp; complete 3 verifications to earn
+            </fbt>
             <img className="ogn-icon-small" src="images/ogn-icon.svg" />
-            <span className="ogn-value">
-              {actionCompleted && formatTokens(rewardEarned.amount)}
-              {!actionCompleted && formatTokens(reward.amount)}
-            </span>
+            <span className="ogn-value">{formatTokens(reward.amount)}</span>
           </div>
         </div>
         {isMobile && storeBadges()}
@@ -96,7 +85,7 @@ function MobileDownloadAction(props) {
   )
 }
 
-export default MobileDownloadAction
+export default withWallet(withIsMobile(MobileDownloadAction))
 
 require('react-styl')(`
   .mobile-rewards-box
