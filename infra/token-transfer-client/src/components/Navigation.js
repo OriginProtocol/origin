@@ -62,7 +62,7 @@ const Navigation = props => {
               <NavLink to="/lockup" className="nav-link text">
                 <Earn
                   className="icon"
-                  style={{ transform: 'rotate(-90deg)' }}
+                  style={{ transform: 'rotate(-90deg)', marginTop: '-10px' }}
                 />
                 Bonus Tokens
               </NavLink>

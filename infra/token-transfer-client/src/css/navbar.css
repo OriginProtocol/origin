@@ -60,14 +60,17 @@
 .navbar .nav-item a.nav-link .icon {
   width: 28px;
   margin-right: 15px;
-  fill-opacity: 0.8;
 }
 
 .navbar .nav-item a.nav-link {
   color: rgba(255, 255, 255, 0.8);
 }
 
-.navbar .nav-item a.nav-link.active .icon {
+.navbar .nav-item a.nav-link .icon > path {
+  fill-opacity: 0.8;
+}
+
+.navbar .nav-item a.nav-link.active .icon > path {
   fill-opacity: 1;
 }
 

@@ -153,9 +153,11 @@ class BonusModal extends Component {
                 </div>
                 <div className="col-4 text-right">
                   <strong>
-                    {BigNumber(this.state.amount * (lockupBonusRate / 100))
-                      .toFixed(0, BigNumber.ROUND_UP)
-                      .toLocaleString()}
+                    {Number(
+                      BigNumber(
+                        this.state.amount * (lockupBonusRate / 100)
+                      ).toFixed(0, BigNumber.ROUND_UP)
+                    ).toLocaleString()}
                   </strong>{' '}
                   <span className="ogn">OGN</span>
                 </div>
@@ -165,7 +167,7 @@ class BonusModal extends Component {
                   <strong>Tokens Locked Up</strong>
                 </div>
                 <div className="col-4 text-right">
-                  <strong>{this.state.amount}</strong>{' '}
+                  <strong>{Number(this.state.amount).toLocaleString()}</strong>{' '}
                   <span className="ogn">OGN</span>
                 </div>
               </div>
@@ -205,8 +207,8 @@ class BonusModal extends Component {
         <h1 className="mb-2">Earn Bonus Tokens</h1>
         <ul className="my-4 mx-2 text-left">
           <li className="mt-1">
-            Earn 10% bonus tokens immediately by locking up your vested OGN
-            tokens.
+            Earn {lockupBonusRate}% bonus tokens immediately by locking up your
+            vested OGN tokens.
           </li>
           <li className="mt-1">
             Locked and bonus tokens will be available for withdrawal after 1
