@@ -31,7 +31,7 @@
             <mj-section background-color="white">
                 <mj-column>
                     <mj-button href="<%= url %>" color="white" background-color="#345d7a" border-radius="43px" font-size="18px">
-                        Confirm lockup
+                        Confirm withdrawal
                     </mj-button>
                 </mj-column>
             </mj-section>
