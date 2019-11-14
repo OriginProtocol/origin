@@ -162,20 +162,25 @@ class MarketplaceScreen extends PureComponent {
     }
   }
 
-  /* Inject the cookies required for messaging to allow preenabling of messaging
-   * for accounts
+  /**
+   * Signs the message using the current wallet
+   * without showing a prompt to the user
+   *
+   * @param {String} payload Data to sign
+   *
+   * @returns {String|null} Signaure hex if signed, null otherwise
    */
-  injectMessagingKeys = async () => {
+  async signMessageWithoutPrompt(payload) {
     const { wallet } = this.props
     // No active account, can't proceed
     if (!wallet.activeAccount) {
-      console.debug('Cannot inject messaging keys, no active account')
-      return
+      console.debug('Cannot sign under the hood, no active account')
+      return null
     }
     // No private key (Samsung BKS account), can't proceed
     if (wallet.activeAccount.hdPath) {
-      console.debug('Cannot inject messaging keys for Samsung BKS account')
-      return
+      console.debug('Cannot sign under the hood for Samsung BKS account')
+      return null
     }
 
     const { privateKey, mnemonic } = wallet.activeAccount
@@ -187,12 +192,35 @@ class MarketplaceScreen extends PureComponent {
       ethersWallet = new ethers.Wallet.fromMnemonic(mnemonic)
     }
 
+    // Sign and return the message
+    return await ethersWallet.signMessage(payload)
+  }
+
+  /* Inject the cookies required for messaging to allow preenabling of messaging
+   * for accounts
+   */
+  injectMessagingKeys = async () => {
+    const { wallet } = this.props
+
     // Sign the first message
-    const signature = await ethersWallet.signMessage(PROMPT_MESSAGE)
+    const signature = await this.signMessageWithoutPrompt(PROMPT_MESSAGE)
+    if (!signature) {
+      console.debug(
+        'Cannot inject messaging keys, failed to sign under the hood'
+      )
+      return
+    }
+
     const signatureKey = signature.substring(0, 66)
     const msgAccount = new ethers.Wallet(signatureKey)
     const pubMessage = PROMPT_PUB_KEY + msgAccount.address
-    const pubSignature = await ethersWallet.signMessage(pubMessage)
+    const pubSignature = await this.signMessageWithoutPrompt(pubMessage)
+    if (!pubSignature) {
+      console.debug(
+        'Cannot inject messaging keys, failed to sign under the hood'
+      )
+      return
+    }
 
     this.injectJavaScript(
       `
@@ -210,38 +238,25 @@ class MarketplaceScreen extends PureComponent {
   }
 
   /**
-   * Inject auth signature for actice wallet
+   * Inject auth signature for active wallet
    */
   injectAuthSign = async () => {
     const { wallet } = this.props
-    // No active account, can't proceed
-    if (!wallet.activeAccount) {
-      console.debug('Cannot inject auth signature, no active account')
-      return
-    }
-    // No private key (Samsung BKS account), can't proceed
-    if (wallet.activeAccount.hdPath) {
-      console.debug('Cannot inject auth signature for Samsung BKS account')
-      return
-    }
 
-    const { privateKey, mnemonic } = wallet.activeAccount
-
-    let ethersWallet
-    if (privateKey) {
-      ethersWallet = new ethers.Wallet(privateKey)
-    } else {
-      ethersWallet = new ethers.Wallet.fromMnemonic(mnemonic)
-    }
-
-    const message = AUTH_MESSAGE
     const payload = {
-      message,
+      message: AUTH_MESSAGE,
       timestamp: Date.now()
     }
 
     // Sign the message
-    const signature = await ethersWallet.signMessage(stringify(payload))
+    const signature = await this.signMessageWithoutPrompt(stringify(payload))
+
+    if (!signature) {
+      console.debug(
+        'Cannot inject auth signature, failed to sign under the hood'
+      )
+      return
+    }
 
     this.injectJavaScript(
       `
