@@ -26,6 +26,7 @@ Logger.setLogLevel(process.env.LOG_LEVEL || 'INFO')
 const logger = Logger.create('import_data', { showTimestamp: false })
 
 const purchaseRounds = ['Advisor', 'Strategic', 'CoinList']
+const signedAmendmentResponses = ['Yes', 'No', 'Abstain', 'Did not respond']
 
 // TODO(franck): Update those values based on final investors vesting schedule.
 const investorsVestingStart = moment.utc('2020/01/01')
@@ -41,14 +42,13 @@ class CsvFileParser {
     assert(row['Name'] !== undefined)
     assert(row['Email'] !== undefined)
     assert(row['OGN Amount'] !== undefined)
-    assert(row['Revised Schedule Agreed At'] !== undefined)
-    assert(row['Revised Schedule Rejected'] !== undefined)
     if (this.employee) {
       assert(row['Vesting Start'] !== undefined)
       assert(row['Vesting End'] !== undefined)
       assert(row['Vesting Cliff'] !== undefined)
       assert(row['Vesting Interval'] !== undefined)
     } else {
+      assert(row['Signed Amendment'] !== undefined)
       assert(row['Purchase Date'] !== undefined)
       assert(row['Purchase Round'] !== undefined)
       assert(row['Investment Amount'] !== undefined)
@@ -83,16 +83,21 @@ class CsvFileParser {
       assert(!Number.isNaN(amount))
       record.amount = amount
 
-      if (row['Revised Schedule Rejected']) {
-        record.revisedScheduleRejected = Boolean(
-          row['Revised Schedule Rejected']
-        )
-      }
-
-      if (row['Revised Schedule Agreed At']) {
-        record.revisedScheduleAgreedAt = moment.utc(
-          row['Revised Schedule Agreed At']
-        )
+      const signedAmendment = row['Signed Amendment'].trim()
+      assert(signedAmendmentResponses.includes(signedAmendment))
+      switch (signedAmendment) {
+        case 'Yes':
+          record.revisedScheduleStatus = 'Accepted'
+          break
+        case 'Abstain':
+          record.revisedScheduleStatus = 'Abstained'
+          break
+        case 'No':
+          record.revisedScheduleStatus = 'No'
+          break
+        case 'Did not respond':
+          record.revisedScheduleStatus = null
+          break
       }
 
       if (this.employee) {
@@ -113,7 +118,6 @@ class CsvFileParser {
         const purchaseDate = moment.utc(row['Purchase Date'])
         record.purchaseDate = purchaseDate
 
-        // TODO(franck): this DB field may get renamed.
         const purchaseRound = row['Purchase Round'].trim()
         assert(purchaseRounds.includes(purchaseRound))
         record.purchaseRound = purchaseRound
@@ -162,8 +166,7 @@ class ImportData {
             email: record.email,
             employee: this.config.employee,
             investorType: record.purchaseRound,
-            revisedScheduleAgreedAt: record.revisedScheduleAgreedAt,
-            revisedScheduleRejected: record.revisedScheduleRejected
+            revisedScheduleStatus: record.revisedScheduleStatus
           })
         }
 
