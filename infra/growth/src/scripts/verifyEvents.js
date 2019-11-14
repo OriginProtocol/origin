@@ -70,9 +70,6 @@ class VerifyEvents {
       )
     }
 
-    // Initialize the fraud engine.
-    await this.fraudEngine.init()
-
     // Load all events that were created prior to the campaign end and
     // and that are still in Logged state.
     const events = await db.GrowthEvent.findAll({

@@ -24,12 +24,12 @@ const AccountCreatedScreen = ({ navigation, wallet }) => (
         style={styles.image}
       />
       <Text style={styles.title}>
-        <fbt desc="AccountCreated.title">Wallet created</fbt>
+        <fbt desc="AccountCreated.title">Wallet Created</fbt>
       </Text>
       <Text style={styles.subtitle}>
         <fbt desc="AccountCreated.subtitle">
-          Your Ethereum address and your pricvate key have been stored locally
-          on this device.
+          Your Ethereum address and your recovery phrase have been stored on
+          this device.
         </fbt>
       </Text>
     </View>

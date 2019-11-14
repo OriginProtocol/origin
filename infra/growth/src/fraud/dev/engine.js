@@ -51,7 +51,7 @@ class FraudEngine {
    * @param {models.GrowthEvent} event
    * @returns {Promise<{type: string, reasons: string} || null>}
    */
-  async isFraudEvent(participant, event) {
+  static async isFraudEvent(participant, event) {
     logger.debug(`FraudEngine: analyzing event ${event.id}`)
     return null
   }

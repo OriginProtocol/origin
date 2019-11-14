@@ -100,12 +100,10 @@ const RecoveryPhraseVerifyScreen = ({ navigation, wallet }) => {
       <View style={styles.content}>
         <Text style={styles.title}>
           {isRetry ? (
-            <fbt desc="RecoveryPhraseVerify.titleRetry">
-              Oops, let&apos;s try again
-            </fbt>
+            <fbt desc="RecoveryPhraseVerify.titleRetry">Oops, Try Again</fbt>
           ) : (
             <fbt desc="RecoveryPhraseVerify.title">
-              Confirm part of your recovery phrase
+              Confirm Part of Recovery Phrase
             </fbt>
           )}
         </Text>

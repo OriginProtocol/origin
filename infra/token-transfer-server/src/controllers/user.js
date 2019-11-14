@@ -59,6 +59,8 @@ router.post(
     // Terms agreement fields are immutable once set
     if (req.body.revisedScheduleAgreedAt && !req.user.revisedScheduleAgreedAt) {
       toUpdate.revisedScheduleAgreedAt = req.body.revisedScheduleAgreedAt
+      // Mark the status as accepted
+      toUpdate.revisedScheduleStatus = 'Accepted'
     }
     if (req.body.termsAgreedAt && !req.user.termsAgreedAt) {
       toUpdate.termsAgreedAt = req.body.termsAgreedAt

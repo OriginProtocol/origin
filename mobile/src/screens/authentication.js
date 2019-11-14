@@ -107,11 +107,12 @@ class AuthenticationScreen extends Component {
                 style={[styles.image, smallScreen ? { height: '33%' } : {}]}
               />
               <Text style={styles.title}>
-                <fbt desc="AuthenticationScreen.title">Protect your wallet</fbt>
+                <fbt desc="AuthenticationScreen.title">Protect Your Wallet</fbt>
               </Text>
               <Text style={styles.subtitle}>
                 <fbt desc="AuthenticationScreen.subtitle">
-                  Add an extra layer of security to keep your crypto safe.
+                  Now that you have backed up your wallet, add an extra layer of
+                  security to this device, in case someone walks off with it.
                 </fbt>
               </Text>
             </>
