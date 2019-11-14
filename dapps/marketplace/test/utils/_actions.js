@@ -75,6 +75,12 @@ export const purchaseListing = async ({
       await waitForText(page, '0.33333 OKB')
       totalValue = '0.33333 OKB'
       break
+
+    case 'USDT':
+      await clickByText(page, 'Tether')
+      await waitForText(page, '1 USDT')
+      totalValue = '1 USDT'
+      break
   }
 
   await clickByText(page, 'Continue', 'a')
