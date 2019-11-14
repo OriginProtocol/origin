@@ -79,7 +79,6 @@ const User = ({ match, isMobile, history }) => {
     <UserListings
       user={id}
       hideHeader={isMobile}
-      hideLoadMore
       horizontal={isMobile ? false : true}
       hideIfEmpty={true}
     />
