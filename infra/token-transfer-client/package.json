@@ -21,7 +21,7 @@
     "bootstrap": "4.3.1",
     "camelcase": "5.3.1",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
-    "chart.js": "2.9.2",
+    "chart.js": "2.9.3",
     "css-loader": "3.2.0",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
