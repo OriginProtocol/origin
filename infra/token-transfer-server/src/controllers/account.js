@@ -55,32 +55,34 @@ router.post(
       address: req.body.address
     })
 
-    // Add account address to Wallet Insights. Only logs a warning on failure,
-    // doesn't block the account add action.
-    request
-      .post('https://www.originprotocol.com/mailing-list/join')
-      .send(`email=${req.user.email}`)
-      .send(`investor=1`)
-      .send(`eth_address=${req.body.address}`)
-      .send(`name=${req.user.name || req.user.email}`)
-      .then(
-        response => {
-          if (response.body.success) {
-            logger.info(
-              `Added ${req.body.address} to wallet insights for ${req.user.email}`
-            )
-          } else {
+    if (!req.user.employee) {
+      // Add account address to Wallet Insights. Only logs a warning on failure,
+      // doesn't block the account add action.
+      request
+        .post('https://www.originprotocol.com/mailing-list/join')
+        .send(`email=${req.user.email}`)
+        .send(`investor=1`)
+        .send(`eth_address=${req.body.address}`)
+        .send(`name=${req.user.name || req.user.email}`)
+        .then(
+          response => {
+            if (response.body.success) {
+              logger.info(
+                `Added ${req.body.address} to wallet insights for ${req.user.email}`
+              )
+            } else {
+              logger.warn(
+                `Could not add ${req.body.address} to wallet insights for ${req.user.email}: ${response.body.message}`
+              )
+            }
+          },
+          error => {
             logger.warn(
-              `Could not add ${req.body.address} to wallet insights for ${req.user.email}: ${response.body.message}`
+              `Could not add ${req.body.address} to wallet insights for ${req.user.email}: ${error.response.body}`
             )
           }
-        },
-        error => {
-          logger.warn(
-            `Could not add ${req.body.address} to wallet insights for ${req.user.email}: ${error.response.body}`
-          )
-        }
-      )
+        )
+    }
 
     res.status(201).json(account.get({ plain: true }))
   })
