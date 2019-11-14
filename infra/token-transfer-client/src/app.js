@@ -1,6 +1,7 @@
 import React from 'react'
 import { Switch } from 'react-router-dom'
 
+import ScrollToTop from '@/components/ScrollToTop'
 import OnboardingRoute from '@/components/OnboardingRoute'
 import PrivateRoute from '@/components/PrivateRoute'
 import PublicRoute from '@/components/PublicRoute'
@@ -27,30 +28,36 @@ import WithdrawalHistory from '@/components/pages/WithdrawalHistory'
 import Security from '@/components/pages/Security'
 
 const App = () => (
-  <Switch>
-    <PublicRoute path="/login" component={Login} />
-    <PublicRoute path="/check_email" component={CheckEmail} />
-    <PublicRoute path="/login_handler/:token" component={HandleLogin} />
-    <PublicRoute path="/otp/explain" component={OtpExplain} />
-    <PublicRoute exact path="/otp" component={Otp} />
-    <OnboardingRoute exact path="/welcome" component={Welcome} />
-    <OnboardingRoute
-      exact
-      path="/revised_schedule"
-      component={RevisedSchedule}
-    />
-    <OnboardingRoute exact path="/revised_terms" component={RevisedTerms} />
-    <OnboardingRoute exact path="/terms" component={Terms} />
-    <OnboardingRoute exact path="/phone" component={Phone} />
-    <OnboardingRoute path="/otp/setup" component={OtpSetup} />
-    <PrivateRoute exact path="/" component={Dashboard} />
-    <PrivateRoute path="/news" component={News} />
-    <PrivateRoute exact path="/lockup" component={Lockup} />
-    <PrivateRoute path="/lockup/:id/:token" component={LockupConfirm} />
-    <PrivateRoute exact path="/withdrawal" component={WithdrawalHistory} />
-    <PrivateRoute path="/withdrawal/:id/:token?" component={WithdrawalDetail} />
-    <PrivateRoute path="/security" component={Security} />
-  </Switch>
+  <>
+    <ScrollToTop />
+    <Switch>
+      <PublicRoute path="/login" component={Login} />
+      <PublicRoute path="/check_email" component={CheckEmail} />
+      <PublicRoute path="/login_handler/:token" component={HandleLogin} />
+      <PublicRoute path="/otp/explain" component={OtpExplain} />
+      <PublicRoute exact path="/otp" component={Otp} />
+      <OnboardingRoute exact path="/welcome" component={Welcome} />
+      <OnboardingRoute
+        exact
+        path="/revised_schedule"
+        component={RevisedSchedule}
+      />
+      <OnboardingRoute exact path="/revised_terms" component={RevisedTerms} />
+      <OnboardingRoute exact path="/terms" component={Terms} />
+      <OnboardingRoute exact path="/phone" component={Phone} />
+      <OnboardingRoute path="/otp/setup" component={OtpSetup} />
+      <PrivateRoute exact path="/" component={Dashboard} />
+      <PrivateRoute path="/news" component={News} />
+      <PrivateRoute exact path="/lockup" component={Lockup} />
+      <PrivateRoute path="/lockup/:id/:token" component={LockupConfirm} />
+      <PrivateRoute exact path="/withdrawal" component={WithdrawalHistory} />
+      <PrivateRoute
+        path="/withdrawal/:id/:token?"
+        component={WithdrawalDetail}
+      />
+      <PrivateRoute path="/security" component={Security} />
+    </Switch>
+  </>
 )
 
 export default App
