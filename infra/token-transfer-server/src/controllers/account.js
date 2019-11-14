@@ -77,7 +77,7 @@ router.post(
         },
         error => {
           logger.warn(
-            `Could not add ${req.body.address} to wallet insights for ${req.user.email}`
+            `Could not add ${req.body.address} to wallet insights for ${req.user.email}: ${error.response.body}`
           )
         }
       )
