@@ -7,7 +7,14 @@ export const getNextOnboardingPage = user => {
     return null
   } else if (!user.termsAgreedAt) {
     return '/terms'
-  } else if (!user.revisedScheduleAgreedAt && !user.revisedScheduleRejected) {
+  } else if (
+    // Already agreed, don't display revised schedule
+    !user.revisedScheduleAgreedAt &&
+    // If rejected, don't display revised schedule
+    !user.revisedScheduleRejected &&
+    // If abstained, don't display revised schedule
+    !user.revisedScheduleAbstained
+  ) {
     return '/revised_schedule'
   } else if (!user.phone) {
     return '/phone'
