@@ -77,7 +77,7 @@ const FractionalNightlyDetail = ({
                   onChange(selectedRange)
                   setCloseModal(true)
                 }}
-                disabled={!startDate && !endDate}
+                disabled={!startDate || !endDate}
               >
                 <fbt desc="Save">Save</fbt>
               </button>
