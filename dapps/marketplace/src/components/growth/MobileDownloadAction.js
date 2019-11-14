@@ -5,7 +5,7 @@ import withIsMobile from 'hoc/withIsMobile'
 import withWallet from 'hoc/withWallet'
 
 function MobileDownloadAction(props) {
-  if (!props.action) return ''
+  if (!props.action) return null
 
   const { status, reward } = props.action
 
