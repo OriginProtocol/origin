@@ -113,13 +113,19 @@ function calculateWithdrawn(transfers) {
   }, BigNumber(0))
 }
 
-const employeeUnlockDate = process.env.EMPLOYEE_UNLOCK_DATE
+const employeeUnlockDate = moment(
+  process.env.EMPLOYEE_UNLOCK_DATE,
+  'YYYY-MM-DD'
+).isValid()
   ? moment.utc(process.env.EMPLOYEE_UNLOCK_DATE)
-  : moment.utc('2020-01-01')
+  : true
 
-const investorUnlockDate = process.env.INVESTOR_UNLOCK_DATE
+const investorUnlockDate = moment(
+  process.env.INVESTOR_UNLOCK_DATE,
+  'YYYY-MM-DD'
+).isValid()
   ? moment.utc(process.env.INVESTOR_UNLOCK_DATE)
-  : moment.utc('2019-12-01')
+  : true
 
 // Lockup bonus rate as a percentage
 const lockupBonusRate = process.env.LOCKUP_BONUS_RATE || 10

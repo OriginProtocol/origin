@@ -45,7 +45,7 @@ const Lockup = props => {
   }
 
   const unlockDate = getUnlockDate(props.user)
-  const isLocked = moment.utc() < unlockDate
+  const isLocked = unlockDate === true || moment.utc() < unlockDate
   const { vestedTotal } = props.grantTotals
   const balanceAvailable = vestedTotal
     .minus(props.withdrawnAmount)
@@ -111,10 +111,16 @@ const Lockup = props => {
               <div className="mb-3" style={{ fontSize: '28px' }}>
                 You don&apos;t have any OGN locked up.
               </div>
-              <div style={{ fontSize: '18px' }}>
-                This program is only available to our existing Advisor,
-                Strategic, and CoinList investors.
-              </div>
+              {isLocked ? (
+                <div style={{ fontSize: '18px' }}>
+                  Token unlock date has not been reached, check back soon!
+                </div>
+              ) : (
+                <div style={{ fontSize: '18px' }}>
+                  This program is only available to our existing Advisor,
+                  Strategic, and CoinList investors.
+                </div>
+              )}
             </div>
           )}
         </div>

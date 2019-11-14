@@ -65,7 +65,7 @@ router.post(
     const unlockDate = req.user.employee
       ? getEmployeeUnlockDate()
       : getInvestorUnlockDate()
-    if (moment.utc() < unlockDate) {
+    if (unlockDate === true || moment.utc() < unlockDate) {
       res
         .status(422)
         .send(`Tokens are still locked. Unlock date is ${unlockDate}`)
