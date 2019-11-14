@@ -26,11 +26,7 @@ const Terms = ({ editUser, userIsEditing }) => {
   return (
     <>
       <div className="action-card">
-        <h1>
-          Great!
-          <br />
-          Please review our Terms of Use
-        </h1>
+        <h1>Great! Please review our Terms of Use</h1>
         <p>Please agree to our terms below and click Continue to proceed</p>
         <div className="form-group">
           <div className="terms-wrapper">
@@ -39,7 +35,7 @@ const Terms = ({ editUser, userIsEditing }) => {
             securities laws and, therefore, cannot be resold except in
             compliance with the applicable country’s laws. Based on recent
             guidance from the SEC, it is possible that transfers of OGN would be
-            deemed to be securities offerings in the United States a launch. We
+            deemed to be securities offerings in the United States at launch. We
             plan to work towards meeting the standards set by various
             jurisdictions around the world, including the United States, for
             transfers of OGN to not be considered offers and sales of securities
@@ -52,8 +48,8 @@ const Terms = ({ editUser, userIsEditing }) => {
             <br />
             <br />
             The recipient acknowledges that they are solely responsible for
-            maintaining the security of his, her or its login password as well
-            as maintaining a secure backup.
+            maintaining the security of his, her or its login as well as
+            maintaining a secure backup.
           </div>
         </div>
         <div className="form-check">
@@ -65,7 +61,7 @@ const Terms = ({ editUser, userIsEditing }) => {
             onClick={e => setAccepted(e.target.checked)}
           />
           <label className="form-check-label mt-0" htmlFor="acceptCheck">
-            I have read and agree to the above terms and conditions and the{' '}
+            I have read and agree to the above terms of use and the{' '}
             <a
               href="https://www.originprotocol.com/en/privacy"
               target="_blank"
@@ -81,7 +77,7 @@ const Terms = ({ editUser, userIsEditing }) => {
             >
               terms of service
             </a>{' '}
-            of Origin Protocol Inc.
+            of Origin Protocol Labs.
           </label>
         </div>
         <button
