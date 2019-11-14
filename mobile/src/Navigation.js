@@ -43,7 +43,12 @@ const OnboardingStack = createStackNavigator(
     RecoveryPhraseExplainer: RecoveryPhraseExplainerScreen,
     RecoveryPhrase: RecoveryPhraseScreen,
     RecoveryPhraseVerify: RecoveryPhraseVerifyScreen,
-    ImportAccount: ImportAccountScreen,
+    ImportAccount: {
+      screen: ImportAccountScreen,
+      params: {
+        renderBackArrow: true
+      }
+    },
     ImportMnemonic: {
       screen: ImportMnemonicScreen,
       params: {

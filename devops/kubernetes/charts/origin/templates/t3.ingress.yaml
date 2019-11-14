@@ -1,4 +1,3 @@
-{{- if ne .Release.Namespace "prod" -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -35,4 +34,3 @@ spec:
           backend:
             serviceName: {{ template "t3.fullname" . }}
             servicePort: 5000
-{{- end }}
