@@ -166,7 +166,7 @@ describe('Lockup HTTP API', () => {
     await request(this.mockApp)
       .post('/api/lockups')
       .send({
-        amount: 1,
+        amount: 10,
         code: totp.gen(this.otpKey)
       })
       .expect(404)
@@ -181,7 +181,7 @@ describe('Lockup HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/lockups')
       .send({
-        amount: 1,
+        amount: 10,
         code: totp.gen(this.otpKey)
       })
       .expect(422)
@@ -207,7 +207,7 @@ describe('Lockup HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/lockups')
       .send({
-        amount: 1,
+        amount: 10,
         code: totp.gen(this.otpKey)
       })
       .expect(422)
@@ -355,7 +355,7 @@ describe('Lockup HTTP API', () => {
       request(this.mockApp)
         .post('/api/lockups')
         .send({
-          amount: 1,
+          amount: 10,
           code: totp.gen(this.otpKey)
         })
     ])
@@ -390,7 +390,7 @@ describe('Lockup HTTP API', () => {
       request(this.mockApp)
         .post('/api/lockups')
         .send({
-          amount: 1,
+          amount: 10,
           code: totp.gen(this.otpKey)
         })
     ])
@@ -402,7 +402,7 @@ describe('Lockup HTTP API', () => {
     sendStub.restore()
   })
 
-  it('should not add lockups with below 0 amount', async () => {
+  it('should not add lockups with below 10 amount', async () => {
     const response = await request(this.mockApp)
       .post('/api/lockups')
       .send({

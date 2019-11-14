@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       employee: DataTypes.BOOLEAN,
       revisedScheduleAgreedAt: DataTypes.DATE,
       revisedScheduleRejected: DataTypes.BOOLEAN,
+      revisedScheduleAbstained: DataTypes.BOOLEAN,
       termsAgreedAt: DataTypes.DATE,
       investorType: DataTypes.ENUM(enums.InvestorTypes)
     },
