@@ -23,7 +23,7 @@ const RevisedSchedule = () => {
           individuals.
         </p>
         <p>
-          Original Schedule: 3 month waiting period then 100% unlock
+          Original Schedule: 3 month lockup then 100% vested
           <br />
           <br />
           Revised Schedule: 6% unlocked immediately, followed by a 4-month
