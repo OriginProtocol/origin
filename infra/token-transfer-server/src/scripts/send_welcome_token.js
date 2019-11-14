@@ -48,13 +48,7 @@ function generateToken(user) {
  * Send a welcome email to a user allowing them to start the onboarding process.
  */
 async function sendWelcomeEmail(user) {
-  if (user.welcomed) {
-    logger.error(
-      `Not sending a welcome email to ${user.email}, use --force=true to force delivery`
-    )
-  } else {
-    logger.info('Sending welcome email to', user.email)
-  }
+  logger.info('Sending welcome email to', user.email)
 
   const token = generateToken(user)
   const vars = { url: `${clientUrl}/login_handler/${token}` }
@@ -64,12 +58,7 @@ async function sendWelcomeEmail(user) {
     logger.error(error.response.body)
     return
   }
-
   logger.info('Email sent')
-
-  await user.update({
-    welcomed: true
-  })
 }
 
 /**
@@ -96,15 +85,9 @@ async function main(config) {
 
 const args = parseArgv()
 const config = {
-  // Send a welcome email to a specific email
   email: args['--email'] || null,
-  // Send a welcome email to all users
   all: args['--all'] === 'true' || false,
-  // Print the token
-  token: args['--token'] === 'true' || false,
-  // Default behaviour does not redeliver welcome emails to users who have
-  // already been marked as welcomed, use this flag to force redelivery
-  force: args['--force'] === true || false
+  token: args['--token'] === 'true' || false
 }
 
 if (!config.email && !config.all) {

@@ -18,8 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       revisedScheduleAgreedAt: DataTypes.DATE,
       revisedScheduleStatus: DataTypes.ENUM(enums.RevisedScheduleStatus),
       termsAgreedAt: DataTypes.DATE,
-      investorType: DataTypes.ENUM(enums.InvestorTypes),
-      welcomed: DataTypes.BOOLEAN
+      investorType: DataTypes.ENUM(enums.InvestorTypes)
     },
     {
       tableName: 't3_user'
