@@ -175,8 +175,7 @@ class BonusModal extends Component {
           ) : (
             <>
               <div className="p-5 mx-4 text-muted text-center">
-                Please enter a number of tokens (minimum
-                10 OGN) to lock up for one year. Bonus tokens will be calculated based on that amount.
+                Please enter the number of tokens (minimum 100 OGN) to lock up for one year. Bonus tokens will be calculated based on this amount. Locked up and bonus tokens will be unavailable for withdrawal during the one-year lockup.
               </div>
               <hr />
             </>
