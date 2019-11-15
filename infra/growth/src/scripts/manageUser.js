@@ -1,7 +1,9 @@
 // Script to manage growth user accounts in production.
 const BigNumber = require('bignumber.js')
 
-const db = require('../models')
+const _growthModels = require('../models')
+const _identityModels = require('@origin/identity/src/models')
+const db = { ..._growthModels, ..._identityModels }
 const enums = require('../enums')
 
 const Logger = require('logplease')
@@ -21,6 +23,17 @@ async function _loadAccount(ethAddress) {
 }
 
 async function _loadAccountDetails(ethAddress) {
+  // Load identity
+  const i = await db.Identity.findOne({ where: { ethAddress } })
+  logger.info('Identity:')
+  logger.info('First/LastName\tCountry\tEmail\tPhone\tTwitter\tCreatedAd')
+  logger.info('=================')
+  logger.info(
+    `${i.firstName} ${i.lastName}\t${i.country}\t${i.email}\t${i.phone}\t${
+      i.twitter
+    }\t${i.createdAt.toLocaleString()}`
+  )
+
   // Load events
   logger.info('Events:')
   logger.info('Id\tType\tStatus\tCreatedAt')
@@ -30,7 +43,28 @@ async function _loadAccountDetails(ethAddress) {
     order: [['createdAt', 'ASC']]
   })
   for (const e of events) {
-    logger.info(`${e.id}\t${e.type.slice(0, 20)}\t${e.status}\t${e.createdAt}`)
+    logger.info(
+      `${e.id}\t${e.type.slice(0, 20)}\t${
+        e.status
+      }\t${e.createdAt.toLocaleString()}`
+    )
+  }
+
+  // Load referrals
+  logger.info('Referrals')
+  logger.info('EthAddress\tStatus\tCreatedAt')
+  logger.info('=================')
+  const referrals = await db.GrowthReferral.findAll({
+    where: { referrerEthAddress: ethAddress },
+    order: [['createdAt', 'ASC']]
+  })
+  for (const r of referrals) {
+    const referee = await _loadAccount(r.refereeEthAddress)
+    logger.info(
+      `${referee.ethAddress}\t${
+        referee.status
+      }\t${referee.createdAt.toLocaleString()}`
+    )
   }
 
   // Load rewards
@@ -49,23 +83,24 @@ async function _loadAccountDetails(ethAddress) {
     )
   }
 
-  // Load referrals
-  logger.info('Referrals')
-  logger.info('EthAddress\tStatus\tCreatedAt')
+  // Load payouts
+  logger.info('Payouts')
+  logger.info('CampaignId\tAmount\tDate')
   logger.info('=================')
-  const referrals = await db.GrowthReferral.findAll({
-    where: { referrerEthAddress: ethAddress },
+  const payouts = await db.GrowthPayout.findAll({
+    where: { toAddress: ethAddress },
     order: [['createdAt', 'ASC']]
   })
-  for (const r of referrals) {
-    const referee = _loadAccount(r.refereeEthAddress)
+  for (const p of payouts) {
     logger.info(
-      `${referee.ethAddress}\t${referee.status}\t${referee.createdAt}`
+      `${p.campaignId}\t${BigNumber(p.amount).dividedBy(
+        scaling
+      )} OGN\t${p.createdAt.toLocaleString()}`
     )
   }
 }
 
-async function banAccount(account, reason) {
+async function banAccount(account, reason, doIt) {
   if (!reason) {
     throw new Error(`Can't ban account ${account} without a reason`)
   }
@@ -80,18 +115,22 @@ async function banAccount(account, reason) {
 
   await _loadAccountDetails(account)
 
-  logger.info(`Banning account ${account}`)
   const ban = {
     date: Date.now(),
     overwrite: reason
   }
-  await participant.update({
-    status: enums.GrowthParticipantStatuses.Banned,
-    ban
-  })
+  if (doIt) {
+    await participant.update({
+      status: enums.GrowthParticipantStatuses.Banned,
+      ban
+    })
+    logger.info(`Banned account ${account}`)
+  } else {
+    logger.info(`Would ban account ${account}`)
+  }
 }
 
-async function closeAccount(account, reason) {
+async function closeAccount(account, reason, doIt) {
   if (!reason) {
     throw new Error(`Can't close account ${account} without a reason`)
   }
@@ -106,24 +145,28 @@ async function closeAccount(account, reason) {
 
   await _loadAccountDetails(account)
 
-  logger.info(`Closing account ${account}`)
   const ban = {
     date: Date.now(),
     overwrite: reason
   }
-  await participant.update({
-    status: enums.GrowthParticipantStatuses.Closed,
-    ban
-  })
+  if (doIt) {
+    await participant.update({
+      status: enums.GrowthParticipantStatuses.Closed,
+      ban
+    })
+    logger.info(`Closed account ${account}`)
+  } else {
+    logger.info(`Would close account ${account}`)
+  }
 }
 
 async function main(config) {
   switch (config.action) {
     case 'ban':
-      await banAccount(config.account, config.reason)
+      await banAccount(config.account, config.reason, config.doIt)
       break
     case 'close':
-      await closeAccount(config.account, config.reason)
+      await closeAccount(config.account, config.reason, config.doIt)
       break
     default:
       throw new Error(`Invalid action ${config.action}`)
@@ -153,7 +196,7 @@ const config = {
   action,
   account: account.toLowerCase(),
   reason: args['--reason'],
-  doIt: args['--persist'] === 'true' || false
+  doIt: args['--doIt'] === 'true' || false
 }
 
 main(config)
