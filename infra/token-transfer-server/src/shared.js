@@ -134,13 +134,21 @@ function lockupHasExpired(lockup) {
   )
 }
 
-const employeeUnlockDate = process.env.EMPLOYEE_UNLOCK_DATE
+// Unlock dates, if undefined assume tokens are locked with an unknown unlock
+// date
+const employeeUnlockDate = moment(
+  process.env.EMPLOYEE_UNLOCK_DATE,
+  'YYYY-MM-DD'
+).isValid()
   ? moment.utc(process.env.EMPLOYEE_UNLOCK_DATE)
-  : moment.utc('2020-01-01')
+  : undefined
 
-const investorUnlockDate = process.env.INVESTOR_UNLOCK_DATE
+const investorUnlockDate = moment(
+  process.env.INVESTOR_UNLOCK_DATE,
+  'YYYY-MM-DD'
+).isValid()
   ? moment.utc(process.env.INVESTOR_UNLOCK_DATE)
-  : moment.utc('2019-12-01')
+  : undefined
 
 // Lockup bonus rate as a percentage
 const lockupBonusRate = process.env.LOCKUP_BONUS_RATE || 10

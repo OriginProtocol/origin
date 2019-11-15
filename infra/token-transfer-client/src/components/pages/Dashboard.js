@@ -61,7 +61,7 @@ const Dashboard = props => {
     .minus(props.withdrawnAmount)
     .minus(props.lockupTotals.locked)
   const unlockDate = getUnlockDate(props.user)
-  const isLocked = moment.utc() < unlockDate
+  const isLocked = !unlockDate || moment.utc() < unlockDate
 
   return (
     <>
