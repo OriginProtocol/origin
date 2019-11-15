@@ -21,6 +21,7 @@ process.env.SENDGRID_API_KEY = 'test'
 process.env.ENCRYPTION_SECRET = 'test'
 process.env.SESSION_SECRET = 'test'
 
+const { transferConfirmationTimeout } = require('../../src/shared')
 const { encryptionSecret } = require('../../src/config')
 const app = require('../../src/app')
 
@@ -418,13 +419,19 @@ describe('Transfer HTTP API', () => {
         transferId: transfer.id
       },
       encryptionSecret,
-      { expiresIn: '5m' }
+      { expiresIn: `${transferConfirmationTimeout}m` }
     )
 
     await request(this.mockApp)
       .post(`/api/transfers/${transfer.id}`)
       .send({ token })
       .expect(201)
+
+    const updatedTransfer = await Transfer.findOne({
+      where: { id: transfer.id }
+    })
+
+    expect(updatedTransfer.status).to.equal(enums.TransferStatuses.Enqueued)
   })
 
   it('should not confirm a transfer with invalid token', async () => {
@@ -441,13 +448,49 @@ describe('Transfer HTTP API', () => {
         transferId: 'invalid'
       },
       encryptionSecret,
-      { expiresIn: '5m' }
+      { expiresIn: `${transferConfirmationTimeout}m` }
     )
 
-    await request(this.mockApp)
+    const response = await request(this.mockApp)
       .post(`/api/transfers/${transfer.id}`)
       .send({ token })
       .expect(400)
+
+    expect(response.text).to.match(/Invalid/)
+  })
+
+  it('should not confirm a transfer with an expired token', async () => {
+    const transfer = await Transfer.create({
+      userId: this.user.id,
+      status: enums.TransferStatuses.WaitingEmailConfirm,
+      toAddress: toAddress,
+      amount: 1000000,
+      currency: 'OGN'
+    })
+
+    const token = jwt.sign(
+      {
+        transferId: transfer.id
+      },
+      encryptionSecret,
+      { expiresIn: `${transferConfirmationTimeout}m` }
+    )
+
+    // Go forward in time to expire the token
+    const clock = sinon.useFakeTimers(
+      moment
+        .utc()
+        .add(transferConfirmationTimeout, 'm')
+        .valueOf()
+    )
+
+    const response = await request(this.mockApp)
+      .post(`/api/transfers/${transfer.id}`)
+      .send({ token })
+      .expect(400)
+
+    expect(response.text).to.match(/expired/)
+    clock.restore()
   })
 
   it('should not add a transfer if unconfirmed lockups greater than balance', async () => {

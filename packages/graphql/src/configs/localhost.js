@@ -45,7 +45,7 @@ const config = {
     globalKeyServer: 'http://localhost:6647'
   },
 
-  authServer: `http://${HOST}:5200`,
+  authServer: 'https://auth.dev.originprotocol.com',
 
   // Wire-on/off configs.
   centralizedIdentityEnabled: !!process.env.ENABLE_CENTRALIZED_IDENTITY,
@@ -70,6 +70,16 @@ if (addresses.OKB) {
     type: 'Standard',
     name: 'OKB Token',
     symbol: 'OKB',
+    decimals: '18'
+  })
+}
+
+if (addresses.USDT) {
+  config.tokens.push({
+    id: addresses.USDT,
+    type: 'Standard',
+    name: 'Tether',
+    symbol: 'USDT',
     decimals: '18'
   })
 }

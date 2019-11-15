@@ -23,7 +23,7 @@ const GrantDetail = props => {
           <div className="col">
             <strong>Investor</strong>
           </div>
-          <div>{get(props.user, 'name', '')}</div>
+          <div className="col text-right">{get(props.user, 'name', '')}</div>
         </div>
         <div className="row mb-2">
           <div className="col">
@@ -31,7 +31,9 @@ const GrantDetail = props => {
           </div>
           {grant.purchaseDate && (
             <div className="col text-right">
-              {moment(grant.purchaseDate).format('LL')}
+              {moment(grant.purchaseDate)
+                .utc()
+                .format('LL')}
             </div>
           )}
         </div>

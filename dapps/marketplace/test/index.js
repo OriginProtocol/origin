@@ -9,8 +9,13 @@ import { userProfileTests } from './userProfile'
 import { paymentTests } from './payments'
 
 function listingTests({ autoSwap } = {}) {
+  const nonSwappableTokens = ['OGN', 'OKB', 'USDT']
+
   singleUnitTests({ autoSwap })
-  singleUnitTests({ autoSwap, acceptedTokens: ['ETH', 'DAI', 'OGN', 'OKB'] })
+  singleUnitTests({
+    autoSwap,
+    acceptedTokens: ['ETH', 'DAI', ...nonSwappableTokens]
+  })
   singleUnitTests({ autoSwap, withShipping: true })
 
   // Tests for DAI listings
@@ -23,30 +28,19 @@ function listingTests({ autoSwap } = {}) {
   })
   singleUnitTokenTests({ token: 'DAI', autoSwap, withShipping: true })
 
-  // Tests for OGN listings
-  singleUnitTokenTests({ token: 'OGN', buyerHasTokens: true })
-  singleUnitTokenTests({
-    token: 'OGN',
-    buyerHasTokens: true,
-    deployIdentity: true
-  })
-  singleUnitTokenTests({
-    token: 'OGN',
-    buyerHasTokens: true,
-    withShipping: true
-  })
-
-  // Tests for OKB listings
-  singleUnitTokenTests({ token: 'OKB', buyerHasTokens: true })
-  singleUnitTokenTests({
-    token: 'OKB',
-    buyerHasTokens: true,
-    deployIdentity: true
-  })
-  singleUnitTokenTests({
-    token: 'OKB',
-    buyerHasTokens: true,
-    withShipping: true
+  nonSwappableTokens.map(token => {
+    // Tests for OGN listings
+    singleUnitTokenTests({ token, buyerHasTokens: true })
+    singleUnitTokenTests({
+      token,
+      buyerHasTokens: true,
+      deployIdentity: true
+    })
+    singleUnitTokenTests({
+      token,
+      buyerHasTokens: true,
+      withShipping: true
+    })
   })
 
   multiUnitTests({ autoSwap })

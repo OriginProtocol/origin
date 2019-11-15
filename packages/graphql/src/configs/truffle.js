@@ -52,4 +52,14 @@ if (addresses.OKB) {
   })
 }
 
+if (addresses.USDT) {
+  config.tokens.push({
+    id: addresses.USDT,
+    type: 'Standard',
+    name: 'Tether',
+    symbol: 'USDT',
+    decimals: '18'
+  })
+}
+
 export default config

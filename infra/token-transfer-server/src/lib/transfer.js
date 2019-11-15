@@ -1,4 +1,3 @@
-const moment = require('moment')
 const get = require('lodash.get')
 const jwt = require('jsonwebtoken')
 
@@ -15,14 +14,11 @@ const {
 } = require('../constants/events')
 const { Event, Transfer, sequelize } = require('../models')
 const { hasBalance } = require('./balance')
+const { transferConfirmationTimeout, transferHasExpired } = require('../shared')
 const enums = require('../enums')
 const logger = require('../logger')
 
-const {
-  emailConfirmTimeout,
-  encryptionSecret,
-  clientUrl
-} = require('../config')
+const { encryptionSecret, clientUrl } = require('../config')
 
 // Number of block confirmations required for a transfer to be consider completed.
 const NumBlockConfirmation = 8
@@ -88,7 +84,7 @@ async function sendTransferConfirmationEmail(transfer, user) {
       transferId: transfer.id
     },
     encryptionSecret,
-    { expiresIn: '5m' }
+    { expiresIn: `${transferConfirmationTimeout}m` }
   )
 
   const vars = { url: `${clientUrl}/withdrawal/${transfer.id}/${token}` }
@@ -109,9 +105,7 @@ async function confirmTransfer(transfer, user) {
     throw new Error('Transfer is not waiting for confirmation')
   }
 
-  if (
-    moment().diff(moment(transfer.createdAt), 'minutes') > emailConfirmTimeout
-  ) {
+  if (transferHasExpired(transfer)) {
     await transfer.update({
       status: enums.TransferStatuses.Expired
     })

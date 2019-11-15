@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { check, validationResult } = require('express-validator')
+const request = require('superagent')
 
 const { asyncMiddleware } = require('../utils')
 const { ensureLoggedIn } = require('../lib/login')
@@ -10,6 +11,7 @@ const {
   isExistingNickname
 } = require('../validators')
 const { Account } = require('../models')
+const logger = require('../logger')
 
 /**
  * Return users accounts.
@@ -53,6 +55,39 @@ router.post(
       address: req.body.address
     })
 
+    logger.info(
+      `User ${req.user.email} added account ${account.nickname} with address ${account.address}`
+    )
+
+    if (!req.user.employee) {
+      // Add account address to Wallet Insights. Only logs a warning on failure,
+      // doesn't block the account add action.
+      request
+        .post('https://www.originprotocol.com/mailing-list/join')
+        .send(`email=${req.user.email}`)
+        .send(`investor=1`)
+        .send(`eth_address=${req.body.address}`)
+        .send(`name=${req.user.name || req.user.email}`)
+        .then(
+          response => {
+            if (response.body.success) {
+              logger.info(
+                `Added ${req.body.address} to wallet insights for ${req.user.email}`
+              )
+            } else {
+              logger.warn(
+                `Could not add ${req.body.address} to wallet insights for ${req.user.email}: ${response.body.message}`
+              )
+            }
+          },
+          error => {
+            logger.warn(
+              `Could not add ${req.body.address} to wallet insights for ${req.user.email}: ${error.response.body}`
+            )
+          }
+        )
+    }
+
     res.status(201).json(account.get({ plain: true }))
   })
 )
@@ -70,6 +105,9 @@ router.delete(
     if (!account) {
       res.status(404).end()
     } else {
+      logger.info(
+        `User ${req.user.email} removed account ${account.nickname} with address ${account.address}`
+      )
       await account.destroy()
       res.status(204).end()
     }

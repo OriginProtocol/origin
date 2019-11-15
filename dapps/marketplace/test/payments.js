@@ -33,7 +33,8 @@ function tokenPaymentTests({ deployIdentity, autoSwap, token }) {
         buyerOpts: {
           dai: !shouldExchangeTokens ? '1' : undefined,
           ogn: token === 'OGN' ? '1' : undefined,
-          okb: token === 'OKB' ? '1' : undefined
+          okb: token === 'OKB' ? '1' : undefined,
+          usdt: token === 'USDT' ? '1' : undefined
         }
       })
       seller = accounts.seller
@@ -96,4 +97,5 @@ export function paymentTests({ deployIdentity, autoSwap } = {}) {
   tokenPaymentTests({ deployIdentity, autoSwap, token: 'DAI' })
   tokenPaymentTests({ deployIdentity, autoSwap, token: 'OGN' })
   tokenPaymentTests({ deployIdentity, autoSwap, token: 'OKB' })
+  tokenPaymentTests({ deployIdentity, autoSwap, token: 'USDT' })
 }

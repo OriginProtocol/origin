@@ -17,13 +17,16 @@ import Dropdown from 'components/Dropdown'
 import Balances from 'components/Balances'
 import Avatar from 'components/Avatar'
 import Attestations from 'components/Attestations'
-import UserActivationLink from 'components/UserActivationLink'
+
+import CreateIdentity from './_CreateIdentity'
 
 import withEnrolmentModal from 'pages/growth/WithEnrolmentModal'
 
 import LogoutMutation from 'mutations/Logout'
 
 const store = Store('sessionStorage')
+
+const EarnTokens = withEnrolmentModal('a')
 
 const ProfileNav = ({
   identity,
@@ -33,8 +36,6 @@ const ProfileNav = ({
   onClose,
   isMobile
 }) => {
-  const EarnTokens = withEnrolmentModal('a')
-
   const [rewardsModal, setRewardsModal] = useState(false)
 
   const { data, error } = useQuery(ProfileQuery, {
@@ -93,36 +94,6 @@ const ProfileNav = ({
     </>
   )
 }
-
-const CreateIdentity = ({ id, onClose, isMobileApp }) => (
-  <>
-    <div className="create-identity text-center">
-      <Avatar />
-      <p>
-        <fbt desc="nav.profile.noProfile">No profile created</fbt>
-      </p>
-
-      <UserActivationLink
-        className="btn btn-primary"
-        onClose={onClose}
-        onClick={onClose}
-      >
-        <span>
-          <fbt desc="nav.profile.createAProfile">Create a Profile</fbt>
-        </span>
-      </UserActivationLink>
-
-      {!isMobileApp && (
-        <Balances
-          account={id}
-          onClose={onClose}
-          title={<fbt desc="nav.profile.walletBalance">Wallet balances</fbt>}
-          className="pt-3 pb-3"
-        />
-      )}
-    </div>
-  </>
-)
 
 const Identity = ({
   id,
@@ -247,7 +218,7 @@ const ProfileDropdownRaw = ({
               onClick={async () => {
                 const res = await logout()
 
-                if (res.success) {
+                if (res.data.logout.success) {
                   await client.reFetchObservableQueries()
                 }
               }}
@@ -302,37 +273,6 @@ require('react-styl')(`
         border-radius: 50%
         width: 4.5rem
         padding-top: 4.5rem
-      .create-identity
-        margin-top: 3rem
-        display: flex
-        flex-direction: column
-        align-items: center
-        flex: 1
-        h3
-          padding: 0.5rem 0
-          margin-bottom: 0.5rem
-          font-family: var(--default-font)
-          font-weight: bold
-          color: #000
-          font-size: 22px
-          line-height: normal
-        .btn
-          border-radius: 2rem
-          padding: 0.5rem 2rem
-          margin-bottom: 2rem
-          font-size: 1.125rem
-        p
-          font-size: 1.125rem
-          margin-top: 1.75rem
-          margin-bottom: 1.75rem
-          color: #0d1d29
-          line-height: normal
-        .balances
-          border-top: 1px solid #dde6ea
-          width: 100%
-        .strength
-          margin: 0.25rem 0 1.5rem 0
-
       .identity-loading
          padding-top: 3rem
       .identity

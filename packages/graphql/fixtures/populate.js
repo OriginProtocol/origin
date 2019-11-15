@@ -189,7 +189,7 @@ async function transferTokens(gqlClient, { to, token, value }) {
 export async function createAccount(gqlClient, opts = {}) {
   debug(`createAccount`, opts)
 
-  const { ogn, dai, okb, eth = '0.5', deployIdentity, centralizedIdentity } = opts
+  const { ogn, dai, okb, usdt, eth = '0.5', deployIdentity, centralizedIdentity } = opts
   const NodeAccount = await getNodeAccount(gqlClient)
   await gqlClient.mutate({
     mutation: ToggleMetaMaskMutation,
@@ -231,7 +231,7 @@ export async function createAccount(gqlClient, opts = {}) {
     debug(`deployed identity`)
   }
 
-  if (dai || ogn || okb) {
+  if (dai || ogn || okb || usdt) {
     const accounts = mnemonicToAccounts()
     await gqlClient.mutate({
       mutation: ImportWalletsMutation,
@@ -262,6 +262,13 @@ export async function createAccount(gqlClient, opts = {}) {
       })
     }
 
+    if (usdt) {
+      await transferTokens(gqlClient, {
+        to: user,
+        token: 'USDT',
+        value: usdt
+      })
+    }
   }
 
   return user
@@ -325,6 +332,15 @@ export default async function populate(gqlClient, log, done) {
     supply: '3000000000'
   })
   log(`Deployed OKB token to ${OKB.contractAddress}`)
+
+  const USDT = await mutate(DeployTokenMutation, Admin, {
+    type: 'Standard',
+    name: 'Tether',
+    symbol: 'USDT',
+    decimals: '18',
+    supply: '3000000000'
+  })
+  log(`Deployed Tether to ${USDT.contractAddress}`)
 
   const MarketplaceV1 = await mutate(DeployMarketplaceMutation, Admin, {
     token: OGN.contractAddress,
@@ -415,6 +431,20 @@ export default async function populate(gqlClient, log, done) {
   })
   log('Set buyer OKB token allowance')
 
+  await mutate(TransferTokenMutation, Admin, {
+    to: Buyer,
+    token: USDT.contractAddress,
+    value: '500'
+  })
+  log('Sent USDT to buyer')
+
+  await mutate(UpdateTokenAllowanceMutation, Buyer, {
+    to: Marketplace.contractAddress,
+    token: USDT.contractAddress,
+    value: '500'
+  })
+  log('Set buyer USDT token allowance')
+
   await mutate(SendFromNodeMutation, NodeAccount, {
     to: Arbitrator,
     value: '0.5'
@@ -504,6 +534,7 @@ export default async function populate(gqlClient, log, done) {
       OGN: OGN.contractAddress,
       DAI: DAI.contractAddress,
       OKB: OKB.contractAddress,
+      USDT: USDT.contractAddress,
       Marketplace: Marketplace.contractAddress,
       MarketplaceEpoch: Marketplace.blockNumber,
       Marketplace_V01: MarketplaceV1.contractAddress,

@@ -40,11 +40,8 @@ if (!sessionSecret) {
   process.exit(1)
 }
 
-const emailConfirmTimeout = process.env.EMAIL_CONFIRMATION_TIMEOUT || 5
-
 module.exports = {
   discordWebhookUrl,
-  emailConfirmTimeout,
   encryptionSecret,
   employeeUnlockDate,
   investorUnlockDate,
