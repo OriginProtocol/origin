@@ -1,10 +1,9 @@
 import { post } from '@origin/ipfs'
 
-const rawPubKey = process.env.PGP_PUBLIC_KEY
+const pubKey = process.env.PGP_PUBLIC_KEY
 
 async function addData(data) {
   const gateway = context.config.ipfsRPC
-  const pubKey = await rawPubKey.text()
   const pubKeyObj = await openpgp.key.readArmored(pubKey)
 
   const randomArray = Array.from(crypto.getRandomValues(new Uint32Array(5)))

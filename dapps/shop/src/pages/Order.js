@@ -24,7 +24,7 @@ const OrderDetails = ({ cart }) => {
   return (
     <div className="checkout-confirmation">
       <div className="d-none d-md-block">
-        <h3>{Site.title}</h3>
+        <h3>{Site.fullTitle}</h3>
       </div>
       <div className="thankyou">
         <div className="check">

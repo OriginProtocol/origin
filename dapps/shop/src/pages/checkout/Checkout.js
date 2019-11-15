@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, useHistory } from 'react-router-dom'
 import { StripeProvider } from 'react-stripe-elements'
 import { ApolloProvider } from 'react-apollo'
 import client from '@origin/graphql'
@@ -18,10 +18,15 @@ import Summary from './Summary'
 const StripeKey = process.env.STRIPE_KEY
 
 const Checkout = () => {
+  const history = useHistory()
   const [{ cart }] = useStateValue()
   const [stripe, setStripe] = useState(null)
 
   useEffect(() => {
+    if (!cart.items.length) {
+      history.push('/cart')
+      return
+    }
     if (window.Stripe) {
       setStripe(window.Stripe(StripeKey))
     } else {
@@ -41,7 +46,7 @@ const Checkout = () => {
       <StripeProvider stripe={stripe}>
         <Elements>
           <div className="checkout">
-            <h3 className="d-md-none my-4 ml-4">{Site.title}</h3>
+            <h3 className="d-md-none my-4 ml-4">{Site.fullTitle}</h3>
             <div className="user-details">
               <Switch>
                 <Route path="/checkout/shipping" component={Shipping} />

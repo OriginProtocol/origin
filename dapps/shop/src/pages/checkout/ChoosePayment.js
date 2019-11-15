@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 import get from 'lodash/get'
 
 import {
-  PaymentRequestButtonElement,
+  // PaymentRequestButtonElement,
   CardElement,
   injectStripe
 } from 'react-stripe-elements'
@@ -33,11 +33,11 @@ const MarketplaceContract = process.env.MARKETPLACE_CONTRACT
 
 const CreditCardForm = injectStripe(({ stripe }) => {
   // const [paymentMethod, setPaymentMethod] = useState()
-  const [token, setToken] = useState()
+  const [token, setToken] = useState('token-ETH')
   const [tokenStatus, setTokenStatus] = useState({})
   const [formData, setFormData] = useState({})
   const [loading, setLoading] = useState(false)
-  const [applePay, setApplePay] = useState(false)
+  // const [applePay, setApplePay] = useState(false)
   const [paymentReq, setPaymentReq] = useState()
   const [{ cart }, dispatch] = useStateValue()
   const [approveOfferTx, setApproveOfferTx] = useState()
@@ -93,9 +93,9 @@ const CreditCardForm = injectStripe(({ stripe }) => {
         complete('success')
       })
 
-      paymentRequest.canMakePayment().then(result => {
-        setApplePay(!!result)
-      })
+      // paymentRequest.canMakePayment().then(result => {
+      //   setApplePay(!!result)
+      // })
 
       setPaymentReq(paymentRequest)
     } catch (e) {
@@ -265,7 +265,7 @@ const CreditCardForm = injectStripe(({ stripe }) => {
                 )}
               </WaitForTransaction>
             ) : approveOfferTx ? (
-              'Awaiting approval...'
+              <>Awaiting approval...</>
             ) : (
               <>
                 {`Pay `}

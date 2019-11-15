@@ -38,7 +38,7 @@ try {
 
 const reducer = (state, action) => {
   let newState = state
-  console.log('reduce', action)
+  // console.log('reduce', action)
   if (action.type === 'addToCart') {
     const { product, variant } = action.item
     const existing = state.cart.items.findIndex(

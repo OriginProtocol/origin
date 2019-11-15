@@ -39,7 +39,7 @@ const CheckoutShipping = () => {
   return (
     <div className="checkout-shipping">
       <div className="d-none d-md-block">
-        <h3>{Site.title}</h3>
+        <h3>{Site.fullTitle}</h3>
         <div className="breadcrumbs">
           <Link to="/cart">Cart</Link>
           <Link to="/checkout">Information</Link>
