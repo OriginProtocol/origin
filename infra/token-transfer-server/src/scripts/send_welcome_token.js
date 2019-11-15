@@ -38,7 +38,7 @@ function parseArgv() {
 async function sendWelcomeEmail(user) {
   logger.info('Sending welcome email to', user.email)
 
-  const vars = { url: clientUrl }
+  const vars = { url: `${clientUrl}/login` }
   try {
     await sendEmail(user.email, 'welcome', vars)
   } catch (error) {
