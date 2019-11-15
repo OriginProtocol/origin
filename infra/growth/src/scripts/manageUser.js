@@ -100,7 +100,7 @@ async function _loadAccountDetails(ethAddress) {
   }
 }
 
-async function banAccount(account, reason, doIt) {
+async function banAccount(account, type, reason, doIt) {
   if (!reason) {
     throw new Error(`Can't ban account ${account} without a reason`)
   }
@@ -117,7 +117,8 @@ async function banAccount(account, reason, doIt) {
 
   const ban = {
     date: Date.now(),
-    overwrite: reason
+    type,
+    reasons: [reason]
   }
   if (doIt) {
     await participant.update({
@@ -130,7 +131,7 @@ async function banAccount(account, reason, doIt) {
   }
 }
 
-async function closeAccount(account, reason, doIt) {
+async function closeAccount(account, type, reason, doIt) {
   if (!reason) {
     throw new Error(`Can't close account ${account} without a reason`)
   }
@@ -147,7 +148,8 @@ async function closeAccount(account, reason, doIt) {
 
   const ban = {
     date: Date.now(),
-    overwrite: reason
+    type,
+    reasons: [reason]
   }
   if (doIt) {
     await participant.update({
@@ -163,10 +165,15 @@ async function closeAccount(account, reason, doIt) {
 async function main(config) {
   switch (config.action) {
     case 'ban':
-      await banAccount(config.account, config.reason, config.doIt)
+      await banAccount(config.account, config.type, config.reason, config.doIt)
       break
     case 'close':
-      await closeAccount(config.account, config.reason, config.doIt)
+      await closeAccount(
+        config.account,
+        config.type,
+        config.reason,
+        config.doIt
+      )
       break
     default:
       throw new Error(`Invalid action ${config.action}`)
@@ -196,6 +203,7 @@ const config = {
   action,
   account: account.toLowerCase(),
   reason: args['--reason'],
+  type: args['--type'] || 'ManualReview',
   doIt: args['--doIt'] === 'true' || false
 }
 
