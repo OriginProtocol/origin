@@ -430,3 +430,13 @@ input, select {
   background-repeat: no-repeat;
   background-position: center;
 }
+
+.bluebox {
+  border-color: #dbe6eb;
+  background-color: #eff6f9;
+  color: #007cff;
+  font-size: 40px;
+  font-weight: 500;
+  border-radius: 8px;
+  font-family: 'Poppins';
+}

@@ -34,7 +34,7 @@
     "bottleneck": "^2.19.1",
     "debug": "^4.1.1",
     "dexie": "^2.0.4",
-    "fake-indexeddb": "^2.1.1",
+    "fake-indexeddb": "^3.0.0",
     "lodash-es": "^4.17.11",
     "lodash": "^4.17.11",
     "mocha": "^6.1.4",
