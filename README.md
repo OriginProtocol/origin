@@ -31,6 +31,7 @@ Example DApps that we have built.
 | ----------------------------------------------------------- | ---------------------------------------------------------------------- |
 | [`@origin/marketplace`](/dapps/marketplace)                 | Our marketplace DApp. [https://shoporigin.com](https://shoporigin.com) |
 | [`@origin/admin`](/dapps/admin)                             | DApp similar to `@origin/marketplace` but exposes more functionality   |
+| [`@origin/shop`](/dapps/shop)                               | Experimental decentralized e-commerce store                            |
 | [`@origin/graphql-simple-demo`](/dapps/graphql-simple-demo) | Example of building a DApp with `@origin/graphql`                      |
 
 ### Core packages
@@ -79,7 +80,7 @@ attestations).
 
 The `@origin/mobile` package is not managed by `Lerna` due to issues with
 `react-native` and hoisting.
- 
+
 ## Contributing
 
 Origin is an 100% open-source and community-driven project and we welcome

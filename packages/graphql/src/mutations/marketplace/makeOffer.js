@@ -179,6 +179,7 @@ async function toIpfsData(data) {
     commission,
     finalizes: data.finalizes || 60 * 60 * 24 * 14,
     shippingAddressEncrypted: data.shippingAddressEncrypted,
+    encryptedData: data.encryptedData,
     ...(data.fractionalData || {})
   }
 

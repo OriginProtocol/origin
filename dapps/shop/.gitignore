@@ -1,0 +1,15 @@
+node_modules
+.DS_Store
+public/dist
+public/*.js
+public/*.css
+public/*.html
+!public/template.html
+public/fonts
+/data*
+scripts/output*
+scripts/conv.sh
+backend/db/*.db
+backend/tstEmail.js
+backend/.git
+TODO
