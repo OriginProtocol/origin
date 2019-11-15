@@ -69,6 +69,7 @@ const FractionalNightlyDetail = ({
               currency={listing.price.currency}
               startDate={startDate}
               endDate={endDate}
+              listing={listing}
             />
             <div className="actions mt-auto">
               <button
