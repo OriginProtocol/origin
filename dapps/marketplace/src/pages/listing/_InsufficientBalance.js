@@ -25,6 +25,9 @@ const tokenToMessageMap = {
       </a>
     </fbt>
   ),
+  'token-USDT': (
+    <fbt desc="InsufficientBalance.notEnoughUSDT">Not enough Tether</fbt>
+  ),
   generic: (
     <fbt desc="InsufficientBalance.notEnoughBalance">Not enough balance</fbt>
   )
