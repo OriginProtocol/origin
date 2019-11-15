@@ -165,7 +165,9 @@ class AccountTable extends Component {
           <button
             type="submit"
             className="btn btn-primary btn-lg mt-5"
-            disabled={this.props.isAdding}
+            disabled={
+              !this.state.nickname || !this.state.address || this.props.isAdding
+            }
           >
             {this.props.isAdding ? (
               <>
