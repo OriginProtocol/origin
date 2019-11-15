@@ -31,7 +31,9 @@ const GrantDetail = props => {
           </div>
           {grant.purchaseDate && (
             <div className="col text-right">
-              {moment(grant.purchaseDate).format('LL')}
+              {moment(grant.purchaseDate)
+                .utc()
+                .format('LL')}
             </div>
           )}
         </div>
