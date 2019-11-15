@@ -45,7 +45,7 @@ const WithdrawalHistory = props => {
   }
 
   const unlockDate = getUnlockDate(props.user)
-  const isLocked = moment.utc() < unlockDate
+  const isLocked = !unlockDate || moment.utc() < unlockDate
 
   const accountNicknameMap = {}
   props.accounts.forEach(account => {
