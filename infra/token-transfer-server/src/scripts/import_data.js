@@ -93,7 +93,7 @@ class CsvFileParser {
           record.revisedScheduleStatus = 'Abstained'
           break
         case 'No':
-          record.revisedScheduleStatus = 'No'
+          record.revisedScheduleStatus = 'Rejected'
           break
         case 'Did not respond':
           record.revisedScheduleStatus = null
