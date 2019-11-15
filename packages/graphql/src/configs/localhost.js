@@ -45,7 +45,7 @@ const config = {
     globalKeyServer: 'http://localhost:6647'
   },
 
-  authServer: `http://${HOST}:5200`,
+  authServer: 'https://auth.dev.originprotocol.com',
 
   // Wire-on/off configs.
   centralizedIdentityEnabled: !!process.env.ENABLE_CENTRALIZED_IDENTITY,
