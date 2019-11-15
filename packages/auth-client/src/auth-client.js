@@ -6,12 +6,6 @@ import createDebug from 'debug'
 
 import stringify from 'json-stable-stringify'
 
-// import {
-//   loadTokenCookie,
-//   saveTokenCookie,
-//   removeTokenCookie
-// } from './cookie-helpers'
-
 const debug = createDebug('origin:auth-client:')
 
 /**
@@ -19,10 +13,9 @@ const debug = createDebug('origin:auth-client:')
  *
  * Params accepted by constructor:
  * @param {String}  authServer Auth server host URL
- * @param {Boolean} disablePersistence Should store and retrieve tokens from cookies if set to true.
+ * @param {Boolean} disablePersistence Should store and retrieve tokens from localStorage if set to true.
  * @param {Object}  web3 Web3 instance to be used to sign data
  * @param {Object}  personalSign uses `web3.eth.personal.sign` if true.
- * @param {Object}  autoRenew autoRenews token if it is about to expire
  *
  * Usage:
  * 1. Stateless mode with no persistence
@@ -33,18 +26,11 @@ const debug = createDebug('origin:auth-client:')
  * ```
  */
 class AuthClient {
-  constructor({
-    authServer,
-    disablePersistence,
-    web3,
-    personalSign,
-    autoRenew
-  }) {
+  constructor({ authServer, disablePersistence, web3, personalSign }) {
     this.authServer = authServer
     this.disablePersistence = disablePersistence
     this.web3 = web3
     this.personalSign = personalSign
-    this.autoRenew = autoRenew
 
     this.renewalPromise = null
   }
@@ -56,7 +42,7 @@ class AuthClient {
   /**
    * Generates a token using the signature provided as a param
    *
-   * @param {String} address Wallet address
+   * @param {String} wallet Wallet address
    * @param {String} signature Signature Hex
    * @param {any} data Payload that was signed
    * @returns {Boolean} result.success = true if token generated successfully.
@@ -64,7 +50,7 @@ class AuthClient {
    * @returns {Number} result.expiresAt = Timestamp of token expiration date
    * @returns {Number} result.issuedAt = Timestamp of token issued date
    */
-  async getTokenWithSignature(address, signature, data) {
+  async getTokenWithSignature(wallet, signature, data) {
     let url = new URL(this.authServer)
     url.pathname = '/api/tokens'
     url = url.toString()
@@ -76,7 +62,7 @@ class AuthClient {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        address: address,
+        address: wallet,
         signature,
         payload: data
       })
@@ -113,21 +99,48 @@ class AuthClient {
 
     let signature
 
+    // Generate sign
     try {
       const sign = this.personalSign
         ? this.web3.eth.personal.sign
         : this.web3.eth.sign
       signature = await sign(stringify(payload), wallet)
+    } catch (err) {
+      console.error(err)
+      debug('Failed to login', err)
 
+      throw new Error('Signature is needed to login')
+    }
+
+    // Get auth token and persist it
+    return this.loginWithSign(wallet, signature, payload)
+  }
+
+  /**
+   * Gets auth token for the `wallet` using `signature`
+   * and stores that to localStorage
+   *
+   * @param {String} wallet Wallet address
+   * @param {String} signature Signature Hex
+   * @param {any} payload Payload that was signed
+   *
+   * @returns {Boolean} true if successful
+   */
+  async loginWithSign(wallet, signature, payload) {
+    if (this.disablePersistence) {
+      debug('Cannot login with persistnce disabled')
+      throw new Error('Cannot login with persistnce disabled')
+    }
+
+    try {
       const tokenData = await this.getTokenWithSignature(
         wallet,
         signature,
         payload
       )
 
-      // Persist to cookies
-      // saveTokenCookie(wallet, tokenData)
-      localStorage.setItem(`auth:${wallet}`, JSON.stringify(tokenData))
+      // Persist to localStorage
+      this._cacheToken(wallet, tokenData)
 
       // TODO: Fire onLogin Event
 
@@ -137,17 +150,12 @@ class AuthClient {
     } catch (err) {
       console.error(err)
       debug('Failed to login', err)
-
-      if (!signature) {
-        throw new Error('Signature is needed to login')
-      } else {
-        throw new Error('Failed to generate auth token')
-      }
+      throw new Error('Failed to generate auth token')
     }
   }
 
   /**
-   * Removes token from cookies and sets nothing
+   * Removes token from localStorage and sets nothing
    *
    * @param {String} wallet Wallet address
    */
@@ -160,8 +168,7 @@ class AuthClient {
     }
 
     // In case of a log out, just forget that such a token exists
-    // removeTokenCookie(wallet)
-    localStorage.removeItem(`auth:${wallet}`)
+    this._removeCache(wallet)
 
     debug('Logout successful')
 
@@ -171,7 +178,7 @@ class AuthClient {
   }
 
   /**
-   * Check if user has a token in cookies
+   * Check if user has a token in localStorage
    * and load if it is valid
    *
    * @param {String} wallet Wallet address
@@ -189,12 +196,7 @@ class AuthClient {
     }
 
     // Try to load any tokens
-    // const tokenData = loadTokenCookie(wallet)
-    let tokenData = localStorage.getItem(`auth:${wallet}`)
-
-    if (tokenData) {
-      tokenData = JSON.parse(tokenData)
-    }
+    const tokenData = this._loadCachedToken(wallet)
 
     debug(`Loaded token data for ${wallet}: ${!!tokenData}`)
 
@@ -205,7 +207,6 @@ class AuthClient {
    * Check if token is valid
    *
    * @param {Object} tokenData
-   * @param {String} wallet
    *
    * @returns {{
    *  valid
@@ -213,7 +214,7 @@ class AuthClient {
    *  willExpire
    * }}
    */
-  checkTokenValidity(tokenData, wallet) {
+  checkTokenValidity(tokenData) {
     if (!tokenData) {
       return {
         valid: false
@@ -244,17 +245,6 @@ class AuthClient {
 
       // TODO: fire OnTokenWillExpire
 
-      // Renew in background
-      if (this.autoRenew && !this.renewalPromise) {
-        this.renewalPromise = this.login(wallet)
-          .catch(err => {
-            console.err('Failed to renew token in background', err)
-          })
-          .then(() => {
-            this.renewalPromise = null
-          })
-      }
-
       willExpire = true
     }
 
@@ -266,14 +256,14 @@ class AuthClient {
 
   /**
    * A wrapper around `checkTokenValidity` that fetches
-   * the token from cookies and validates it
+   * the token from localStorage and validates it
    *
    * @param {String} wallet
    */
   getWalletTokenStatus(wallet) {
     const tokenData = this.loadToken(wallet)
 
-    return this.checkTokenValidity(tokenData, wallet)
+    return this.checkTokenValidity(tokenData)
   }
 
   /**
@@ -290,23 +280,81 @@ class AuthClient {
 
     const tokenData = this.loadToken(wallet)
 
-    const { valid, expired, willExpire } = this.checkTokenValidity(
-      tokenData,
-      wallet
-    )
+    const { valid, expired, willExpire } = this.checkTokenValidity(tokenData)
 
     debug('Token status', JSON.stringify({ valid, expired, willExpire }))
-
-    // if (valid && willExpire) {
-    //   // TODO
-    //   // Load a new token in the background, for mobile
-    // }
 
     if (!valid) {
       return null
     }
 
     return tokenData.authToken
+  }
+
+  /**
+   * Checks if existing auth token is valid and
+   * generates a new one if it is not or if it is
+   * about to expire.
+   *
+   * To be used only from mobile
+   *
+   * @param {String} wallet Wallet address
+   * @param {String} signature Signature Hex
+   * @param {any} payload Payload that was signed
+   */
+  async onAuthSign(wallet, signature, payload) {
+    const tokenData = this.loadToken(wallet)
+
+    debug('onAuthSign', wallet, payload)
+
+    const { valid, expired, willExpire } = this.checkTokenValidity(tokenData)
+
+    if (!valid || expired || willExpire) {
+      // The current token is invalid or will expire soon
+      // Generate a new one
+      await this.loginWithSign(wallet, signature, payload)
+      debug('Generated new auth token for ', wallet)
+    } else {
+      debug('Existing token is valid. Skipping generation of new token')
+    }
+  }
+
+  /**
+   * Loads token from localStorage if it exists
+   *
+   * @param {String} wallet
+   *
+   * @returns {{
+   *  authToken
+   *  expiredAt
+   *  issuedAt
+   * }|null} Object if found, null otherwise
+   */
+  _loadCachedToken(wallet) {
+    debug('Loading token from cache for wallet:', wallet)
+
+    const tokenData = window.localStorage.getItem(`auth:${wallet}`)
+
+    return tokenData ? JSON.parse(tokenData) : null
+  }
+
+  /**
+   * Stores token data to localStorage
+   *
+   * @param {String} wallet
+   * @param {Object} tokenData
+   */
+  _cacheToken(wallet, tokenData) {
+    window.localStorage.setItem(`auth:${wallet}`, JSON.stringify(tokenData))
+  }
+
+  /**
+   * Clears token cache from localStorage
+   *
+   * @param {String} wallet
+   */
+  _removeCache(wallet) {
+    window.localStorage.removeItem(`auth:${wallet}`)
   }
 }
 

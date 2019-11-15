@@ -85,11 +85,13 @@ class WelcomeScreen extends Component {
             />
             <Text style={{ ...styles.title, color: 'white' }}>
               <fbt desc="WelcomeScreen.title">
-                Buy and sell stuff with crypto.
+                Buy and sell anything using crypto.
               </fbt>
             </Text>
             <Text style={{ ...styles.title, color: 'white' }}>
-              <fbt desc="WelcomeScreen.subtitle">Earn rewards.</fbt>
+              <fbt desc="WelcomeScreen.subtitle">
+                Earn rewards and own a stake in the network.
+              </fbt>
             </Text>
           </View>
           <View style={styles.buttonContainer}>{action}</View>

@@ -6,7 +6,7 @@ import { vestingSchedule } from '@origin/token-transfer-server/src/lib/vesting'
 const VestingHistory = props => {
   const schedule = {}
   props.grants.forEach(grant => {
-    vestingSchedule(grant).forEach(vest => {
+    vestingSchedule(props.user, grant).forEach(vest => {
       const dateKey = vest.date.format()
       schedule[dateKey] = schedule[dateKey]
         ? schedule[dateKey].plus(vest.amount)

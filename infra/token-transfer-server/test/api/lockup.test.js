@@ -18,6 +18,7 @@ const { Grant, Lockup, Transfer, User, sequelize } = require('../../src/models')
 const { encrypt } = require('../../src/lib/crypto')
 const lockupController = require('../../src/controllers/lockup')
 const enums = require('../../src/enums')
+const { lockupConfirmationTimeout } = require('../../src/shared')
 const { encryptionSecret } = require('../../src/config')
 const app = require('../../src/app')
 
@@ -166,7 +167,7 @@ describe('Lockup HTTP API', () => {
     await request(this.mockApp)
       .post('/api/lockups')
       .send({
-        amount: 1,
+        amount: 10,
         code: totp.gen(this.otpKey)
       })
       .expect(404)
@@ -181,7 +182,7 @@ describe('Lockup HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/lockups')
       .send({
-        amount: 1,
+        amount: 10,
         code: totp.gen(this.otpKey)
       })
       .expect(422)
@@ -207,7 +208,7 @@ describe('Lockup HTTP API', () => {
     const response = await request(this.mockApp)
       .post('/api/lockups')
       .send({
-        amount: 1,
+        amount: 10,
         code: totp.gen(this.otpKey)
       })
       .expect(422)
@@ -342,31 +343,67 @@ describe('Lockup HTTP API', () => {
     expect(response.text).to.match(/exceeds/)
   })
 
-  it('should not add lockups simultaneously if not enough tokens', async () => {
+  it('should not add lockups simultaneously if not enough balance', async () => {
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
     const results = await Promise.all([
       request(this.mockApp)
         .post('/api/lockups')
         .send({
-          amount: 1000000,
+          amount: 100000,
           code: totp.gen(this.otpKey)
         }),
       request(this.mockApp)
         .post('/api/lockups')
         .send({
-          amount: 1,
+          amount: 10,
           code: totp.gen(this.otpKey)
         })
     ])
 
-    expect(results.some(result => result.status === 422)).to.equal(true)
+    expect(
+      results.filter(
+        result => result.status !== 201 && result.text.match(/exceeds/)
+      ).length
+    ).to.equal(1)
 
     // 1 lockup should be created because 1 failed
     expect(
       (await request(this.mockApp).get('/api/lockups')).body.length
     ).to.equal(3)
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
   })
 
-  it('should not add lockups with below 0 amount', async () => {
+  it('should not add a transfer and lockup simultaneously if not enough balance', async () => {
+    const sendStub = sinon.stub(sendgridMail, 'send')
+
+    const results = await Promise.all([
+      request(this.mockApp)
+        .post('/api/transfers')
+        .send({
+          amount: 100000,
+          address: '0xf17f52151ebef6c7334fad080c5704d77216b732',
+          code: totp.gen(this.otpKey)
+        }),
+      request(this.mockApp)
+        .post('/api/lockups')
+        .send({
+          amount: 10,
+          code: totp.gen(this.otpKey)
+        })
+    ])
+
+    expect(results.filter(result => result.status !== 201).length).to.equal(1)
+
+    // Check an email was sent with the confirmation token
+    expect(sendStub.called).to.equal(true)
+    sendStub.restore()
+  })
+
+  it('should not add lockups with below 10 amount', async () => {
     const response = await request(this.mockApp)
       .post('/api/lockups')
       .send({
@@ -378,8 +415,34 @@ describe('Lockup HTTP API', () => {
     expect(response.text).to.match(/greater/)
   })
 
+  it('should confirm a lockup', async () => {
+    const lockup = await Lockup.create({
+      userId: this.user.id,
+      amount: 1000000
+    })
+
+    const token = jwt.sign(
+      {
+        lockupId: lockup.id
+      },
+      encryptionSecret,
+      { expiresIn: `${lockupConfirmationTimeout}m` }
+    )
+
+    await request(this.mockApp)
+      .post(`/api/lockups/${lockup.id}`)
+      .send({ token })
+      .expect(201)
+
+    const updatedLockup = await Lockup.findOne({
+      where: { id: lockup.id }
+    })
+
+    expect(updatedLockup.confirmed).to.equal(true)
+  })
+
   it('should not confirm a lockup with invalid token', async () => {
-    const transfer = await Transfer.create({
+    const lockup = await Lockup.create({
       userId: this.user.id,
       amount: 1000000
     })
@@ -389,12 +452,45 @@ describe('Lockup HTTP API', () => {
         lockupId: 'invalid'
       },
       encryptionSecret,
-      { expiresIn: '5m' }
+      { expiresIn: `${lockupConfirmationTimeout}m` }
     )
 
-    await request(this.mockApp)
-      .post(`/api/lockups/${transfer.id}`)
+    const response = await request(this.mockApp)
+      .post(`/api/lockups/${lockup.id}`)
       .send({ token })
       .expect(400)
+
+    expect(response.text).to.match(/Invalid/)
+  })
+
+  it('should not confirm a lockup with an expired token', async () => {
+    const lockup = await Lockup.create({
+      userId: this.user.id,
+      amount: 1000000
+    })
+
+    const token = jwt.sign(
+      {
+        lockupId: lockup.id
+      },
+      encryptionSecret,
+      { expiresIn: `${lockupConfirmationTimeout}m` }
+    )
+
+    // Go forward in time to expire the token
+    const clock = sinon.useFakeTimers(
+      moment
+        .utc()
+        .add(lockupConfirmationTimeout, 'm')
+        .valueOf()
+    )
+
+    const response = await request(this.mockApp)
+      .post(`/api/lockups/${lockup.id}`)
+      .send({ token })
+      .expect(400)
+
+    expect(response.text).to.match(/expired/)
+    clock.restore()
   })
 })

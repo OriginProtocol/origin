@@ -57,6 +57,13 @@ export default {
       name: 'OKB Token',
       symbol: 'OKB',
       decimals: '18'
+    },
+    {
+      id: addresses.USDT,
+      type: 'Standard',
+      name: 'Tether',
+      symbol: 'USDT',
+      decimals: '18'
     }
   ],
 

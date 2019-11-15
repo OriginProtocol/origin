@@ -800,6 +800,7 @@
   "Zwcu3zpr3n5/gvuuGPLM7w==": "Недостаточно токенов Origin",
   "mZyol0ZBIvZVwrMuiIQYEQ==": "Недостаточно токенов OKB. {E_VAR_GET_MORE_B64_R2V0IE1vcmU}",
   "GjBu2vHFw0ZvH+4WgZAzvQ==": "Получить больше",
+  "0Vu+Bjsw4nD9rCFmP670og==": "Недостаточно Tether",
   "7H/M3jg7K5QazQc2pEleKA==": "Недостаточно средств",
   "O4p/HWu2u4U5gZ+vruUU1Q==": "Где можно купить?",
   "FC/gJV+Syi5Bjue937Ch8g==": "Комиссия",
@@ -1302,8 +1303,10 @@
   "ArSf4J+dNUiZfj6mamImnw==": "Maker Dai",
   "2H8IF+VEDTnNHQ7c+dw9zA==": "Токен Origin",
   "aGfKK6ZJD6P22TIxY6gdkA==": "Токен OKB",
+  "szRo+nZJoOPIP4jpYwW+pA==": "Tether",
   "pI4vrj8dSJJLdh0ejJjMWA==": "Эфир хорош для краткосрочных сделок.",
   "12RmZS0/aijc4qIbrWjHow==": "Maker DAI подходит для долгосрочных объявлений - например, аренда или продажа собственности.",
   "1ihLeuNdlY4LXygu4xmuTw==": "Полезно для продвижения других объявлений",
-  "Cimm0w0HZEQCNC34hAofsQ==": "Для использования одним из наших биржевых партнеров"
+  "Cimm0w0HZEQCNC34hAofsQ==": "Для использования одним из наших биржевых партнеров",
+  "mTC5G/fed1Tk89NehaYQgQ==": "Tether хорош для долгосрочных сделок, таких как аренда или продажа недвижимости."
 }
