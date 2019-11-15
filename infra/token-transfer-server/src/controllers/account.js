@@ -55,6 +55,10 @@ router.post(
       address: req.body.address
     })
 
+    logger.info(
+      `User ${req.user.email} added account ${account.nickname} with address ${account.address}`
+    )
+
     if (!req.user.employee) {
       // Add account address to Wallet Insights. Only logs a warning on failure,
       // doesn't block the account add action.
@@ -101,6 +105,9 @@ router.delete(
     if (!account) {
       res.status(404).end()
     } else {
+      logger.info(
+        `User ${req.user.email} removed account ${account.nickname} with address ${account.address}`
+      )
       await account.destroy()
       res.status(204).end()
     }

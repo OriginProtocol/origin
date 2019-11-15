@@ -66,6 +66,9 @@ router.post(
       ? getEmployeeUnlockDate()
       : getInvestorUnlockDate()
     if (moment.utc() < unlockDate) {
+      logger.warn(
+        `Token lockup attempted by ${req.user.email} before unlock date`
+      )
       res
         .status(422)
         .send(`Tokens are still locked. Unlock date is ${unlockDate}`)
@@ -119,10 +122,13 @@ router.post(
     try {
       decodedToken = jwt.verify(req.body.token, encryptionSecret)
     } catch (error) {
-      logger.error(error)
       if (error.name === 'TokenExpiredError') {
+        logger.warn(
+          `Token lockup attempted by ${req.user.email} with expired token`
+        )
         return res.status(400).send('Token has expired')
       }
+      logger.error(error)
       return res.status(400).send('Could not decode email confirmation token')
     }
 
@@ -142,6 +148,8 @@ router.post(
     } catch (e) {
       return res.status(422).send(e.message)
     }
+
+    logger.info(`Token lockup ${lockup.id} confirmed for ${req.user.email}`)
 
     return res
       .status(201)
